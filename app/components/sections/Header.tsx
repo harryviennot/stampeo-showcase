@@ -4,10 +4,14 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
 import { MenuIcon, XMarkIcon } from "../icons";
+import { useAuth } from "@/lib/supabase/auth-provider";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { user, loading, signOut } = useAuth();
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +20,11 @@ export function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    setMobileMenuOpen(false);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -45,15 +54,33 @@ export function Header() {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-              <Link
-                href="#"
-                className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-              >
-                Log in
-              </Link>
-              <Button href="#" size="default">
-                Get started
-              </Button>
+              {loading ? (
+                <div className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg" />
+              ) : user ? (
+                <>
+                  <button
+                    onClick={handleSignOut}
+                    className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                  >
+                    Sign out
+                  </button>
+                  <Button href={appUrl} size="default">
+                    Dashboard
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                  >
+                    Log in
+                  </Link>
+                  <Button href="/signup" size="default">
+                    Get started
+                  </Button>
+                </>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -84,15 +111,32 @@ export function Header() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-[var(--border)]">
-                  <Link
-                    href="#"
-                    className="px-4 py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                  >
-                    Log in
-                  </Link>
-                  <Button href="#" size="default" className="mx-4">
-                    Get started
-                  </Button>
+                  {user ? (
+                    <>
+                      <button
+                        onClick={handleSignOut}
+                        className="px-4 py-3 text-sm text-left text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                      >
+                        Sign out
+                      </button>
+                      <Button href={appUrl} size="default" className="mx-4">
+                        Dashboard
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        className="px-4 py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Log in
+                      </Link>
+                      <Button href="/signup" size="default" className="mx-4">
+                        Get started
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
