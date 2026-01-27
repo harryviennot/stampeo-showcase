@@ -278,8 +278,7 @@ export function OnboardingWizard() {
     }
   };
 
-  // Variants for step transitions
-
+  // Variants for step transitions (full card animation - used for special 2↔3 transitions)
   const stepVariants = {
     enter: (custom: { direction: number; isSpecial: boolean }) => {
       // Standard transition
@@ -314,51 +313,54 @@ export function OnboardingWizard() {
         duration: 0.5
       }
     },
-    exit: (custom: { direction: number; isSpecial: boolean }) => {
-      if (custom.isSpecial) {
-        // Step 2 -> 3 (Exit Form 2 to Right)
-        if (custom.direction > 0) {
-          return {
-            zIndex: 0,
-            x: "150%",
-            opacity: 0,
-            scale: 0.7,
-            position: "absolute",
-            top: 0, // Align to top of container
-            left: 0,
-            width: "100%", // Maintain width
-            transition: { duration: 0.5, ease: "easeInOut" as const }
-          };
-        }
-        // Step 3 -> 2 (Exit Form 3 to Left)
-        return {
-          zIndex: 0,
-          x: "-150%",
-          opacity: 0,
-          scale: 0.7,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          transition: { duration: 0.5, ease: "easeInOut" as const }
-        };
-      }
+    exit: () => {
+      // Instant exit - form just disappears, no animation
       return {
-        zIndex: 0,
-        x: custom.direction < 0 ? 50 : -50,
         opacity: 0,
-        scale: 0.98,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        transition: {
-          duration: 0.3,
-          ease: "easeInOut" as const
-        }
+        transition: { duration: 0 }
       };
     }
   };
+
+  // Determine if this is a special transition (2↔3) that needs full card animation
+  const isSpecialTransition =
+    (prevStep === 2 && store.currentStep === 3) ||
+    (prevStep === 3 && store.currentStep === 2);
+
+  // Step labels component - extracted to avoid duplication
+  const renderStepLabels = () => (
+    <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
+      {[
+        { step: 1, label: "Business" },
+        { step: 2, label: "Type" },
+        { step: 3, label: "Design" },
+        { step: 4, label: "Account" },
+        { step: 5, label: "Plan" },
+        { step: 6, label: "Ready" },
+      ].map(({ step, label }) => (
+        <button
+          key={step}
+          type="button"
+          onClick={() => {
+            if (store.completedSteps.includes(step) && step !== store.currentStep) {
+              setPrevStep(store.currentStep);
+              setDirection(step > store.currentStep ? 1 : -1);
+              store.goToStep(step);
+            }
+          }}
+          disabled={!store.completedSteps.includes(step)}
+          className={`transition-colors duration-200 ${step === store.currentStep
+            ? "text-[var(--accent)] font-medium"
+            : store.completedSteps.includes(step)
+              ? "text-[var(--accent)] hover:underline cursor-pointer"
+              : "text-[var(--muted-foreground)] cursor-default"
+            }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -415,7 +417,7 @@ export function OnboardingWizard() {
           {/* Form Panel */}
           <motion.div
             layout
-            className="flex flex-col justify-center relative" // Added relative for absolute positioning of children
+            className="flex flex-col justify-center relative"
             style={{
               order: cardPosition === "left" ? 1 : 0,
             }}
@@ -425,61 +427,41 @@ export function OnboardingWizard() {
               duration: 0.5
             }}
           >
-            {/* Step Content with AnimatePresence */}
-            <AnimatePresence mode="popLayout" custom={{
-              direction,
-              isSpecial: (prevStep === 2 && store.currentStep === 3) || (prevStep === 3 && store.currentStep === 2)
-            }}>
-              <motion.div
-                key={store.currentStep}
-                custom={{
-                  direction,
-                  isSpecial: (prevStep === 2 && store.currentStep === 3) || (prevStep === 3 && store.currentStep === 2)
-                }}
-                variants={stepVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="w-full"
-              >
-                {/* Step labels */}
-                <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
-                  {[
-                    { step: 1, label: "Business" },
-                    { step: 2, label: "Type" },
-                    { step: 3, label: "Design" },
-                    { step: 4, label: "Account" },
-                    { step: 5, label: "Plan" },
-                    { step: 6, label: "Ready" },
-                  ].map(({ step, label }) => (
-                    <button
-                      key={step}
-                      type="button"
-                      onClick={() => {
-                        if (store.completedSteps.includes(step) && step !== store.currentStep) {
-                          setPrevStep(store.currentStep);
-                          setDirection(step > store.currentStep ? 1 : -1);
-                          store.goToStep(step);
-                        }
-                      }}
-                      disabled={!store.completedSteps.includes(step)}
-                      className={`transition-colors duration-200 ${step === store.currentStep
-                        ? "text-[var(--accent)] font-medium"
-                        : store.completedSteps.includes(step)
-                          ? "text-[var(--accent)] hover:underline cursor-pointer"
-                          : "text-[var(--muted-foreground)] cursor-default"
-                        }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm">
+            {isSpecialTransition ? (
+              // SPECIAL TRANSITION (2↔3): New form animates in, old form disappears instantly
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={store.currentStep}
+                  custom={{ direction, isSpecial: true }}
+                  variants={stepVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="w-full"
+                >
+                  {renderStepLabels()}
+                  <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm">
+                    {renderStep()}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            ) : (
+              // NON-SPECIAL TRANSITION: Static card, no animation - instant content swap
+              <>
+                {renderStepLabels()}
+                <motion.div
+                  layout
+                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm"
+                  transition={{
+                    type: "tween",
+                    ease: "easeInOut",
+                    duration: 0.3
+                  }}
+                >
                   {renderStep()}
-                </div>
-              </motion.div>
-            </AnimatePresence>
+                </motion.div>
+              </>
+            )}
           </motion.div>
         </div>
       </LayoutGroup>

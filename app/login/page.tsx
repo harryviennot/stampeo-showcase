@@ -31,7 +31,7 @@ export default function LoginPage() {
     }
 
     // Redirect to business app after successful login
-    window.location.href =
+    globalThis.location.href =
       process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
   };
 
