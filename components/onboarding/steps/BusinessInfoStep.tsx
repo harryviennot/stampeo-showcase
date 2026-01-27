@@ -124,7 +124,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
               onChange={(e) => updateSlug(e.target.value)}
               required
               minLength={3}
-              className="w-full pl-[100px] pr-12 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+              className="w-full pl-[104px] py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
               placeholder="cafe-aroma"
             />
             {/* Availability indicator */}

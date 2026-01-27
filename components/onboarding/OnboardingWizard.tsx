@@ -27,6 +27,8 @@ function adjustBrightness(hex: string, percent: number): string {
   return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
 }
 
+const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
+
 export function OnboardingWizard() {
   const { session, loading: authLoading } = useAuth();
   const isAuthenticated = !!session?.access_token;
@@ -34,8 +36,25 @@ export function OnboardingWizard() {
   const [checkingBusinesses, setCheckingBusinesses] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [animatingStampIndex, setAnimatingStampIndex] = useState<number | null>(null);
+  const [vanishingStampIndex, setVanishingStampIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
   const [prevStep, setPrevStep] = useState(1);
+
+  // Clear session storage when leaving the page
+  useEffect(() => {
+    const clearSessionStorage = () => {
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    };
+
+    // Clear on tab/window close or navigation to external site
+    window.addEventListener("beforeunload", clearSessionStorage);
+
+    // Clear on component unmount (navigation within app)
+    return () => {
+      window.removeEventListener("beforeunload", clearSessionStorage);
+      clearSessionStorage();
+    };
+  }, []);
 
   // Card position: left for steps 1-2, right for steps 3+
   const cardPosition = store.currentStep < 3 ? "left" : "right";
@@ -216,6 +235,27 @@ export function OnboardingWizard() {
     handleStepComplete(6);
   }, [handleStepComplete]);
 
+  // Handle going back with vanishing stamp animation
+  const handleGoBack = useCallback(() => {
+    const currentStep = store.currentStep;
+
+    // Animate the stamp vanishing (the stamp for the previous step, 0-indexed)
+    // When on step 2, going back means stamp at index 0 (step 1) should vanish
+    const stampToVanish = currentStep - 2; // -2 because: current step - 1 (to get prev step) - 1 (for 0-index)
+
+    if (stampToVanish >= 0) {
+      setVanishingStampIndex(stampToVanish);
+    }
+
+    // Wait for animation, then go back
+    setTimeout(() => {
+      setVanishingStampIndex(null);
+      setPrevStep(currentStep);
+      setDirection(-1);
+      store.prevStep();
+    }, 300);
+  }, [store]);
+
   // Don't render until we've loaded from localStorage and checked auth
   if (!store.isInitialized || authLoading || checkingBusinesses || !authChecked) {
     return (
@@ -234,11 +274,7 @@ export function OnboardingWizard() {
           <BusinessTypeStep
             store={store}
             onNext={handleStep2Next}
-            onBack={() => {
-              setDirection(-1);
-              setPrevStep(2);
-              store.prevStep();
-            }}
+            onBack={handleGoBack}
           />
         );
       case 3:
@@ -246,11 +282,7 @@ export function OnboardingWizard() {
           <CardPreviewStep
             store={store}
             onNext={handleStep3Next}
-            onBack={() => {
-              setDirection(-1);
-              setPrevStep(3);
-              store.prevStep();
-            }}
+            onBack={handleGoBack}
           />
         );
       case 4:
@@ -258,19 +290,11 @@ export function OnboardingWizard() {
           <CreateAccountStep
             store={store}
             onNext={handleStep4Next}
-            onBack={() => {
-              setDirection(-1);
-              setPrevStep(4);
-              store.prevStep();
-            }}
+            onBack={handleGoBack}
           />
         );
       case 5:
-        return <ChoosePlanStep store={store} onNext={handleStep5Next} onBack={() => {
-          setDirection(-1);
-          setPrevStep(5);
-          store.prevStep();
-        }} />;
+        return <ChoosePlanStep store={store} onNext={handleStep5Next} onBack={handleGoBack} />;
       case 6:
         return <CongratsStep store={store} />;
       default:
@@ -362,49 +386,60 @@ export function OnboardingWizard() {
     </div>
   );
 
+  // For step 5 (plan selection), use full-width layout
+  const isFullWidthStep = store.currentStep === 5;
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       {/* LayoutGroup enables layout animations across components */}
       <LayoutGroup>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[70vh]">
-          {/* Card Panel */}
-          <motion.div
-            layout="position"
-            className="flex items-center justify-center"
-            style={{
-              order: cardPosition === "left" ? 0 : 1,
-            }}
-            transition={{
-              type: "tween",
-              ease: "easeInOut",
-              duration: 0.5
-            }}
-          >
-            <div className="w-full max-w-[360px]">
-              <OnboardingCardPreview
-                businessName={store.data.businessName}
-                category={store.data.category}
-                completedSteps={store.completedSteps.length}
-                animatingStampIndex={animatingStampIndex}
-                design={store.data.cardDesign}
-              />
-
-              {/* Step indicator */}
-              <div className="mt-6 flex justify-center gap-2 lg:hidden">
-                {[1, 2, 3, 4, 5, 6].map((step) => (
-                  <div
-                    key={step}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
-                      ? "bg-[var(--accent)]"
-                      : step === store.currentStep
-                        ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
-                        : "bg-[var(--muted)]"
-                      }`}
+        <div className={`grid grid-cols-1 gap-8 lg:gap-12 items-center min-h-[70vh] ${isFullWidthStep ? "" : "lg:grid-cols-2"}`}>
+          {/* Card Panel - animated in/out for full-width steps */}
+          <AnimatePresence>
+            {!isFullWidthStep && (
+              <motion.div
+                layout="position"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="flex items-center justify-center"
+                style={{
+                  order: cardPosition === "left" ? 0 : 1,
+                }}
+                transition={{
+                  type: "tween",
+                  ease: "easeInOut",
+                  duration: 0.4
+                }}
+              >
+                <div className="w-full max-w-[360px]">
+                  <OnboardingCardPreview
+                    businessName={store.data.businessName}
+                    category={store.data.category}
+                    completedSteps={store.currentStep === 6 ? 6 : store.currentStep - 1}
+                    animatingStampIndex={animatingStampIndex}
+                    vanishingStampIndex={vanishingStampIndex}
+                    design={store.data.cardDesign}
                   />
-                ))}
-              </div>
-            </div>
-          </motion.div>
+
+                  {/* Step indicator */}
+                  <div className="mt-6 flex justify-center gap-2 lg:hidden">
+                    {[1, 2, 3, 4, 5, 6].map((step) => (
+                      <div
+                        key={step}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
+                          ? "bg-[var(--accent)]"
+                          : step === store.currentStep
+                            ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
+                            : "bg-[var(--muted)]"
+                          }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Form Panel */}
           <motion.div

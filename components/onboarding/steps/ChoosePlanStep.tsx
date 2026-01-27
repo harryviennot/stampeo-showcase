@@ -45,7 +45,7 @@ const plans = [
   },
 ];
 
-export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
+export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanStepProps>) {
   const { data, updateData } = store;
   const { session } = useAuth();
 
@@ -93,7 +93,7 @@ export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
   );
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
           Choose your plan
@@ -114,15 +114,13 @@ export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
         {plans.map((plan) => (
           <div
             key={plan.id}
-            className={`relative p-6 rounded-2xl transition-all duration-200 ${
-              plan.featured
-                ? "bg-[var(--foreground)] text-[var(--background)]"
-                : "bg-[var(--card-bg)] border border-[var(--border)]"
-            } ${
-              data.selectedPlan === plan.id
+            className={`relative p-6 rounded-2xl transition-all duration-200 ${plan.featured
+              ? "bg-[var(--foreground)] text-[var(--background)]"
+              : "bg-[var(--card-bg)] border border-[var(--border)]"
+              } ${data.selectedPlan === plan.id
                 ? "ring-2 ring-[var(--accent)] ring-offset-2"
                 : ""
-            }`}
+              }`}
           >
             {plan.featured && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[var(--accent)] text-white text-xs font-bold uppercase tracking-wide">
@@ -132,20 +130,18 @@ export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
 
             <div className="mb-4">
               <h3
-                className={`text-lg font-semibold ${
-                  plan.featured
-                    ? "text-[var(--background)]"
-                    : "text-[var(--foreground)]"
-                }`}
+                className={`text-lg font-semibold ${plan.featured
+                  ? "text-[var(--background)]"
+                  : "text-[var(--foreground)]"
+                  }`}
               >
                 {plan.name}
               </h3>
               <p
-                className={`text-sm ${
-                  plan.featured
-                    ? "text-[var(--background)]/70"
-                    : "text-[var(--muted-foreground)]"
-                }`}
+                className={`text-sm ${plan.featured
+                  ? "text-[var(--background)]/70"
+                  : "text-[var(--muted-foreground)]"
+                  }`}
               >
                 {plan.description}
               </p>
@@ -153,20 +149,18 @@ export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
 
             <div className="mb-4">
               <span
-                className={`text-4xl font-bold ${
-                  plan.featured
-                    ? "text-[var(--background)]"
-                    : "text-[var(--foreground)]"
-                }`}
+                className={`text-4xl font-bold ${plan.featured
+                  ? "text-[var(--background)]"
+                  : "text-[var(--foreground)]"
+                  }`}
               >
                 &euro;{plan.price}
               </span>
               <span
-                className={`text-sm ${
-                  plan.featured
-                    ? "text-[var(--background)]/70"
-                    : "text-[var(--muted-foreground)]"
-                }`}
+                className={`text-sm ${plan.featured
+                  ? "text-[var(--background)]/70"
+                  : "text-[var(--muted-foreground)]"
+                  }`}
               >
                 /month
               </span>
@@ -176,18 +170,16 @@ export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
               {plan.features.map((feature, index) => (
                 <li key={index} className="flex items-center gap-2">
                   <div
-                    className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      plan.featured ? "bg-[var(--accent)]" : "bg-green-500"
-                    }`}
+                    className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${plan.featured ? "bg-[var(--accent)]" : "bg-green-500"
+                      }`}
                   >
                     <CheckIcon className="w-2.5 h-2.5 text-white" />
                   </div>
                   <span
-                    className={`text-sm ${
-                      plan.featured
-                        ? "text-[var(--background)]/90"
-                        : "text-[var(--foreground)]"
-                    }`}
+                    className={`text-sm ${plan.featured
+                      ? "text-[var(--background)]/90"
+                      : "text-[var(--foreground)]"
+                      }`}
                   >
                     {feature.text}
                   </span>
@@ -198,11 +190,10 @@ export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
             <button
               onClick={() => handleSelectPlan(plan.id)}
               disabled={loading}
-              className={`w-full py-3 px-4 font-semibold rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                plan.featured
-                  ? "bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--background)]/90"
-                  : "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
-              }`}
+              className={`w-full py-3 px-4 font-semibold rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${plan.featured
+                ? "bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--background)]/90"
+                : "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
+                }`}
             >
               {loading && data.selectedPlan === plan.id
                 ? "Setting up..."

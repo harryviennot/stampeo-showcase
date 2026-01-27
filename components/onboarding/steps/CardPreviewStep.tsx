@@ -19,7 +19,7 @@ const backgroundColors = [
 ];
 
 const accentColors = [
-  { name: "Terracotta", value: "#c75b39" },
+  { name: "Terracotta", value: "#f97316" },
   { name: "Gold", value: "#d4a853" },
   { name: "Coral", value: "#e57373" },
   { name: "Teal", value: "#26a69a" },

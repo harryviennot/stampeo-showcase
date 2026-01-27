@@ -9,6 +9,7 @@ interface OnboardingCardPreviewProps {
   // Progress tracking - 6 stamps for 6 onboarding steps
   completedSteps?: number;
   animatingStampIndex?: number | null;
+  vanishingStampIndex?: number | null;
   // Design colors - always applied
   design?: CardDesign;
 }
@@ -67,6 +68,7 @@ export function OnboardingCardPreview({
   category,
   completedSteps = 0,
   animatingStampIndex = null,
+  vanishingStampIndex = null,
   design,
 }: OnboardingCardPreviewProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -80,7 +82,7 @@ export function OnboardingCardPreview({
 
   // Always use design colors (they have defaults in the store)
   const backgroundColor = design?.backgroundColor ?? "#1c1c1e";
-  const accentColor = design?.accentColor ?? "#c75b39";
+  const accentColor = design?.accentColor ?? "#f97316";
 
   // Determine text color based on background
   const isLightBg = isLightColor(backgroundColor);
@@ -112,8 +114,8 @@ export function OnboardingCardPreview({
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateY = ((x - centerX) / centerX) * 8;
-    const rotateX = ((centerY - y) / centerY) * 8;
+    const rotateY = ((x - centerX) / centerX) * 4;
+    const rotateX = ((centerY - y) / centerY) * 4;
 
     const glareX = (x / rect.width) * 100;
     const glareY = (y / rect.height) * 100;
@@ -222,6 +224,7 @@ export function OnboardingCardPreview({
                     key={`stamp-${i}`}
                     isFilled={i < filledCount}
                     isAnimating={animatingStampIndex === i || recentlyAnimated === i}
+                    isVanishing={vanishingStampIndex === i}
                     accentColor={accentColor}
                     emptyBg={emptyStampBg}
                     emptyBorder={emptyStampBorder}
@@ -233,14 +236,17 @@ export function OnboardingCardPreview({
                 <div className="flex justify-between w-full px-1">
                   {Array.from({ length: row2Count }, (_, i) => {
                     const actualIndex = row1Count + i;
+                    const isLastStamp = actualIndex === stampCount - 1;
                     return (
                       <Stamp
                         key={`stamp-${actualIndex}`}
                         isFilled={actualIndex < filledCount}
                         isAnimating={animatingStampIndex === actualIndex || recentlyAnimated === actualIndex}
+                        isVanishing={vanishingStampIndex === actualIndex}
                         accentColor={accentColor}
                         emptyBg={emptyStampBg}
                         emptyBorder={emptyStampBorder}
+                        isLast={isLastStamp}
                       />
                     );
                   })}
@@ -281,7 +287,7 @@ export function OnboardingCardPreview({
         <div
           className="absolute inset-0 rounded-[1.5rem] pointer-events-none z-20"
           style={{
-            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%)`,
+            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%)`,
             opacity: glare.opacity,
             transition: "opacity 0.5s ease",
           }}
@@ -302,17 +308,21 @@ export function OnboardingCardPreview({
 interface StampProps {
   readonly isFilled: boolean;
   readonly isAnimating: boolean;
+  readonly isVanishing: boolean;
   readonly accentColor: string;
   readonly emptyBg: string;
   readonly emptyBorder: string;
+  readonly isLast?: boolean;
 }
 
 function Stamp({
   isFilled,
   isAnimating,
+  isVanishing,
   accentColor,
   emptyBg,
   emptyBorder,
+  isLast = false,
 }: StampProps) {
   return (
     <div className="flex justify-center">
@@ -321,25 +331,38 @@ function Stamp({
           w-14 h-14 sm:w-12 sm:h-12 rounded-full flex items-center justify-center
           transition-all duration-300
           ${isAnimating ? "stamp-fill-animation" : ""}
+          ${isVanishing ? "stamp-poof-animation" : ""}
         `}
         style={{
-          backgroundColor: isFilled ? accentColor : emptyBg,
-          border: isFilled ? "none" : `1px solid ${emptyBorder}`,
-          boxShadow: isFilled ? `0 4px 12px ${accentColor}40` : "none",
+          backgroundColor: isFilled && !isVanishing ? accentColor : emptyBg,
+          border: isFilled && !isVanishing ? "none" : `1px solid ${emptyBorder}`,
+          boxShadow: isFilled && !isVanishing ? `0 4px 12px ${accentColor}40` : "none",
         }}
       >
-        {isFilled && (
-          <svg
-            className={`w-4 h-4 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-              clipRule="evenodd"
-            />
-          </svg>
+        {isFilled && !isVanishing && (
+          isLast ? (
+            <svg
+              className={`w-5 h-5 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {/* Gift icon */}
+              <path d="M20 7h-1.209A4.92 4.92 0 0019 5.5C19 3.57 17.43 2 15.5 2c-1.622 0-2.705 1.482-3.404 3.085C11.498 3.527 10.122 2 8.5 2 6.57 2 5 3.57 5 5.5c0 .596.079 1.089.209 1.5H4c-1.103 0-2 .897-2 2v2c0 1.103.897 2 2 2v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zm-4.5-3c.827 0 1.5.673 1.5 1.5C17 7 15.5 7 15.5 7h-1.834C14.556 4.818 15.06 4 15.5 4zm-7 0c.44 0 .944.818 1.834 3H8.5S7 7 7 5.5C7 4.673 7.673 4 8.5 4zM4 9h7v2H4V9zm2 11v-7h5v7H6zm12 0h-5v-7h5v7zm-5-9V9h7l.001 2H13z" />
+            </svg>
+          ) : (
+            <svg
+              className={`w-4 h-4 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              {/* Checkmark icon */}
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )
         )}
       </div>
     </div>

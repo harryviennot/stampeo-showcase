@@ -17,8 +17,8 @@ export function LoyaltyCardPreview() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateY = ((x - centerX) / centerX) * 8;
-    const rotateX = ((centerY - y) / centerY) * 8;
+    const rotateY = ((x - centerX) / centerX) * 4;
+    const rotateX = ((centerY - y) / centerY) * 4;
 
     const glareX = (x / rect.width) * 100;
     const glareY = (y / rect.height) * 100;
@@ -122,7 +122,7 @@ export function LoyaltyCardPreview() {
         <div
           className="absolute inset-0 rounded-[1.5rem] pointer-events-none z-20"
           style={{
-            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%)`,
+            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%)`,
             opacity: glare.opacity,
             transition: 'opacity 0.5s ease',
           }}
