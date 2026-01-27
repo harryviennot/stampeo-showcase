@@ -109,7 +109,7 @@ export function CreateAccountStep({
             value={data.email}
             onChange={(e) => updateData({ email: e.target.value })}
             required
-            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             placeholder="you@example.com"
           />
         </div>
@@ -129,7 +129,7 @@ export function CreateAccountStep({
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             placeholder="At least 6 characters"
           />
           <p className="text-xs text-[var(--muted-foreground)]">
@@ -150,7 +150,7 @@ export function CreateAccountStep({
           <button
             type="submit"
             disabled={!isValid || loading}
-            className="flex-1 py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {loading
               ? mode === "signup"
@@ -172,7 +172,7 @@ export function CreateAccountStep({
                   setMode("login");
                   setError(null);
                 }}
-                className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                className="text-[var(--accent)] hover:opacity-80 font-medium transition-colors"
               >
                 Sign in
               </button>
@@ -186,7 +186,7 @@ export function CreateAccountStep({
                   setMode("signup");
                   setError(null);
                 }}
-                className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                className="text-[var(--accent)] hover:opacity-80 font-medium transition-colors"
               >
                 Create one
               </button>

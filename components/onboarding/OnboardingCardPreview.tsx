@@ -1,14 +1,23 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { CardDesign } from "@/hooks/useOnboardingStore";
 
 interface OnboardingCardPreviewProps {
   businessName: string;
   category?: string | null;
+  // Progress tracking - always 5 stamps for 5 onboarding steps
+  completedSteps?: number;
+  animatingStampIndex?: number | null;
+  // Design colors - always applied
+  design?: CardDesign;
 }
+
+const TOTAL_STEPS = 5;
 
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/);
+  if (words.length === 0 || !words[0]) return "YB";
   if (words.length === 1) {
     return words[0].substring(0, 2).toUpperCase();
   }
@@ -29,17 +38,69 @@ function getCategoryLabel(category: string | null | undefined): string {
   return category ? labels[category] || "Loyalty Card" : "Loyalty Card";
 }
 
+// Helper to determine if a color is light or dark
+function isLightColor(color: string): boolean {
+  if (!color || color.startsWith("var(")) return false;
+
+  let r = 0, g = 0, b = 0;
+  if (color.startsWith("#")) {
+    const hex = color.slice(1);
+    r = Number.parseInt(hex.slice(0, 2), 16);
+    g = Number.parseInt(hex.slice(2, 4), 16);
+    b = Number.parseInt(hex.slice(4, 6), 16);
+  } else if (color.startsWith("rgb")) {
+    const match = color.match(/\d+/g);
+    if (match) {
+      [r, g, b] = match.map(Number);
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5;
+}
+
 export function OnboardingCardPreview({
   businessName,
   category,
+  completedSteps = 0,
+  animatingStampIndex = null,
+  design,
 }: OnboardingCardPreviewProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
+  const [recentlyAnimated, setRecentlyAnimated] = useState<number | null>(null);
 
   const displayName = businessName.trim() || "Your Business";
   const initials = getInitials(displayName);
   const categoryLabel = getCategoryLabel(category);
+
+  // Always use design colors (they have defaults in the store)
+  const backgroundColor = design?.backgroundColor ?? "#1c1c1e";
+  const accentColor = design?.accentColor ?? "#c75b39";
+
+  // Determine text color based on background
+  const isLightBg = isLightColor(backgroundColor);
+  const textColor = isLightBg ? "rgba(0,0,0,0.9)" : "rgba(255,255,255,1)";
+  const mutedTextColor = isLightBg ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)";
+  const emptyStampBg = isLightBg ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)";
+  const emptyStampBorder = isLightBg ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.2)";
+
+  // Always 5 stamps for 5 onboarding steps
+  const stampCount = TOTAL_STEPS;
+  const filledCount = completedSteps;
+
+  // Track animation
+  useEffect(() => {
+    if (animatingStampIndex !== null) {
+      setRecentlyAnimated(animatingStampIndex);
+      const timer = setTimeout(() => setRecentlyAnimated(null), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [animatingStampIndex]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -66,6 +127,10 @@ export function OnboardingCardPreview({
     setGlare((prev) => ({ ...prev, opacity: 0 }));
   };
 
+  // Calculate stamp rows (for 5 stamps: 3 on top, 2 on bottom)
+  const row1Count = Math.ceil(stampCount / 2);
+  const row2Count = stampCount - row1Count;
+
   return (
     <div
       className="relative w-full max-w-[340px] mx-auto aspect-[10/12]"
@@ -87,10 +152,20 @@ export function OnboardingCardPreview({
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Card Content Layer - Apple Wallet Style */}
-        <div className="absolute inset-0 rounded-[1.5rem] bg-[#1c1c1e] overflow-hidden">
+        {/* Card Content Layer */}
+        <div
+          className="absolute inset-0 rounded-[1.5rem] overflow-hidden transition-colors duration-300"
+          style={{ backgroundColor }}
+        >
           {/* Subtle gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-black/20" />
+          <div
+            className="absolute inset-0 transition-opacity duration-300"
+            style={{
+              background: isLightBg
+                ? "linear-gradient(to bottom right, rgba(0,0,0,0.02), transparent, rgba(0,0,0,0.08))"
+                : "linear-gradient(to bottom right, rgba(255,255,255,0.08), transparent, rgba(0,0,0,0.2))"
+            }}
+          />
 
           {/* Content Layout */}
           <div className="relative h-full px-5 py-4 flex flex-col z-10">
@@ -98,56 +173,96 @@ export function OnboardingCardPreview({
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2">
-                  <div className="w-9 h-9 rounded-lg bg-[var(--accent)] flex items-center justify-center">
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-300"
+                    style={{ backgroundColor: accentColor }}
+                  >
                     <span className="text-white font-bold text-xs">
                       {initials}
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[14px] text-white tracking-tight leading-tight">
+                    <h3
+                      className="font-semibold text-[14px] tracking-tight leading-tight transition-colors duration-300"
+                      style={{ color: textColor }}
+                    >
                       {displayName}
                     </h3>
-                    <p className="text-[11px] font-bold text-white/50 uppercase tracking-wider">
+                    <p
+                      className="text-[11px] font-bold uppercase tracking-wider transition-colors duration-300"
+                      style={{ color: mutedTextColor }}
+                    >
                       {categoryLabel}
                     </p>
                   </div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-[11px] font-bold text-white/50 uppercase tracking-wider">
-                  Stamps
+                <div
+                  className="text-[11px] font-bold uppercase tracking-wider transition-colors duration-300"
+                  style={{ color: mutedTextColor }}
+                >
+                  Progress
                 </div>
-                <div className="text-lg font-medium text-white flex items-baseline gap-1 justify-end">
-                  5 / 8
+                <div
+                  className="text-lg font-medium flex items-baseline gap-1 justify-end transition-colors duration-300"
+                  style={{ color: textColor }}
+                >
+                  {filledCount} / {stampCount}
                 </div>
               </div>
             </div>
 
-            {/* Middle: Stamps Grid */}
+            {/* Middle: Stamps Grid - always 5 stamps */}
             <div className="flex flex-col justify-center gap-5 w-full my-5">
-              {/* Row 1 */}
+              {/* Row 1 (3 stamps) */}
               <div className="flex justify-between w-full px-1">
-                {[...Array(4)].map((_, i) => (
-                  <Stamp key={i} index={i} />
+                {Array.from({ length: row1Count }, (_, i) => (
+                  <Stamp
+                    key={`stamp-${i}`}
+                    isFilled={i < filledCount}
+                    isAnimating={animatingStampIndex === i || recentlyAnimated === i}
+                    accentColor={accentColor}
+                    emptyBg={emptyStampBg}
+                    emptyBorder={emptyStampBorder}
+                  />
                 ))}
               </div>
-              {/* Row 2 */}
-              <div className="flex justify-between w-full px-1">
-                {[...Array(4)].map((_, i) => (
-                  <Stamp key={i + 4} index={i + 4} />
-                ))}
-              </div>
+              {/* Row 2 (2 stamps) */}
+              {row2Count > 0 && (
+                <div className="flex justify-center gap-8 w-full px-1">
+                  {Array.from({ length: row2Count }, (_, i) => {
+                    const actualIndex = row1Count + i;
+                    return (
+                      <Stamp
+                        key={`stamp-${actualIndex}`}
+                        isFilled={actualIndex < filledCount}
+                        isAnimating={animatingStampIndex === actualIndex || recentlyAnimated === actualIndex}
+                        accentColor={accentColor}
+                        emptyBg={emptyStampBg}
+                        emptyBorder={emptyStampBorder}
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            {/* Footer: Reward info */}
+            {/* Footer: Progress info */}
             <div className="border-white/10">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-[11px] font-bold text-white/50 uppercase tracking-wider">
-                    Reward
+                  <p
+                    className="text-[11px] font-bold uppercase tracking-wider transition-colors duration-300"
+                    style={{ color: mutedTextColor }}
+                  >
+                    Complete setup
                   </p>
-                  <p className="text-[14px] text-white/90">
-                    Free item at 8 stamps
+                  <p
+                    className="text-[14px] transition-colors duration-300"
+                    style={{ color: textColor, opacity: 0.9 }}
+                  >
+                    to unlock your loyalty card
                   </p>
                 </div>
               </div>
@@ -176,7 +291,7 @@ export function OnboardingCardPreview({
         <div
           className="absolute inset-0 rounded-[1.5rem] pointer-events-none z-30"
           style={{
-            boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.1)`,
+            boxShadow: `inset 0 0 0 1px ${isLightBg ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)"}`,
           }}
         />
       </div>
@@ -184,23 +299,38 @@ export function OnboardingCardPreview({
   );
 }
 
-function Stamp({ index }: { index: number }) {
-  const isFilled = index < 5;
+interface StampProps {
+  readonly isFilled: boolean;
+  readonly isAnimating: boolean;
+  readonly accentColor: string;
+  readonly emptyBg: string;
+  readonly emptyBorder: string;
+}
+
+function Stamp({
+  isFilled,
+  isAnimating,
+  accentColor,
+  emptyBg,
+  emptyBorder,
+}: StampProps) {
   return (
     <div className="flex justify-center">
       <div
         className={`
-          w-14 h-14 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300
-          ${
-            isFilled
-              ? "bg-[var(--accent)] shadow-lg shadow-orange-500/30"
-              : "bg-white/10 border border-white/20"
-          }
+          w-14 h-14 sm:w-12 sm:h-12 rounded-full flex items-center justify-center
+          transition-all duration-300
+          ${isAnimating ? "stamp-fill-animation" : ""}
         `}
+        style={{
+          backgroundColor: isFilled ? accentColor : emptyBg,
+          border: isFilled ? "none" : `1px solid ${emptyBorder}`,
+          boxShadow: isFilled ? `0 4px 12px ${accentColor}40` : "none",
+        }}
       >
         {isFilled && (
           <svg
-            className="w-4 h-4 text-white"
+            className={`w-4 h-4 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >

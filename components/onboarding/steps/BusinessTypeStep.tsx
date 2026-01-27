@@ -87,26 +87,25 @@ export function BusinessTypeStep({
           ))}
         </div>
 
-        {/* Optional description */}
-        <div className="space-y-2">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-[var(--foreground)]"
-          >
-            Description{" "}
-            <span className="text-[var(--muted-foreground)] font-normal">
-              (optional)
-            </span>
-          </label>
-          <textarea
-            id="description"
-            value={data.description}
-            onChange={(e) => updateData({ description: e.target.value })}
-            rows={3}
-            className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none"
-            placeholder="Tell us more about your business..."
-          />
-        </div>
+        {/* Description - only shown for 'other' category */}
+        {data.category === "other" && (
+          <div className="space-y-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-[var(--foreground)]"
+            >
+              Please let us know what type of business you are
+            </label>
+            <textarea
+              id="description"
+              value={data.description}
+              onChange={(e) => updateData({ description: e.target.value })}
+              rows={2}
+              className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none"
+              placeholder="e.g. Pet grooming, Car wash, Tattoo studio..."
+            />
+          </div>
+        )}
 
         {/* Navigation buttons */}
         <div className="flex gap-3">
@@ -120,7 +119,7 @@ export function BusinessTypeStep({
           <button
             type="submit"
             disabled={!isValid}
-            className="flex-1 py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             Continue
           </button>

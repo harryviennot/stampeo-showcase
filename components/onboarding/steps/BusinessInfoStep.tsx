@@ -11,7 +11,7 @@ interface BusinessInfoStepProps {
 }
 
 export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
-  const { data, updateBusinessName, updateSlug, updateData, isSlugAvailable, slugErrorReason, isSlugChecking, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking } = store;
+  const { data, updateBusinessName, updateSlug, updateData, isSlugAvailable, slugErrorReason, isSlugChecking, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking, validatedSlug, markSlugValidated } = store;
   const [debouncedSlug, setDebouncedSlug] = useState(data.urlSlug);
 
   // Debounce slug checking
@@ -30,6 +30,14 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
       return;
     }
 
+    // Skip check if this slug was already validated
+    if (debouncedSlug === validatedSlug) {
+      setIsSlugAvailable(true);
+      setSlugErrorReason(null);
+      setIsSlugChecking(false);
+      return;
+    }
+
     let cancelled = false;
     setIsSlugChecking(true);
 
@@ -38,13 +46,17 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
         setIsSlugAvailable(result.available);
         setSlugErrorReason(result.reason || null);
         setIsSlugChecking(false);
+        // Cache the slug if it's available
+        if (result.available) {
+          markSlugValidated();
+        }
       }
     });
 
     return () => {
       cancelled = true;
     };
-  }, [debouncedSlug, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking]);
+  }, [debouncedSlug, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking, validatedSlug, markSlugValidated]);
 
   const isValid =
     data.businessName.trim().length >= 2 &&
@@ -88,7 +100,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             value={data.businessName}
             onChange={(e) => updateBusinessName(e.target.value)}
             required
-            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             placeholder="e.g. Cafe Aroma"
           />
         </div>
@@ -112,7 +124,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
               onChange={(e) => updateSlug(e.target.value)}
               required
               minLength={3}
-              className="w-full pl-[100px] pr-12 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+              className="w-full pl-[100px] pr-12 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
               placeholder="cafe-aroma"
             />
             {/* Availability indicator */}
@@ -163,7 +175,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             value={data.ownerName}
             onChange={(e) => updateData({ ownerName: e.target.value })}
             required
-            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             placeholder="John Doe"
           />
         </div>
@@ -171,7 +183,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
         <button
           type="submit"
           disabled={!isValid}
-          className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           Continue
         </button>
