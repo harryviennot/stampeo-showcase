@@ -15,8 +15,10 @@ import { CardPreviewStep } from "./steps/CardPreviewStep";
 import { CreateAccountStep } from "./steps/CreateAccountStep";
 import { ChoosePlanStep } from "./steps/ChoosePlanStep";
 import { CongratsStep } from "./steps/CongratsStep";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 
 // Helper to adjust color brightness for hover states
+
 function adjustBrightness(hex: string, percent: number): string {
   const num = Number.parseInt(hex.replace("#", ""), 16);
   const r = Math.min(255, Math.max(0, (num >> 16) + percent));
@@ -32,6 +34,8 @@ export function OnboardingWizard() {
   const [checkingBusinesses, setCheckingBusinesses] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [animatingStampIndex, setAnimatingStampIndex] = useState<number | null>(null);
+  const [direction, setDirection] = useState(0);
+  const [prevStep, setPrevStep] = useState(1);
 
   // Card position: left for steps 1-2, right for steps 3+
   const cardPosition = store.currentStep < 3 ? "left" : "right";
@@ -184,9 +188,11 @@ export function OnboardingWizard() {
       if (nextStep === 4 && isAuthenticated) {
         store.goToStep(5);
       } else {
+        setPrevStep(currentStep); // Update previous step for animation logic
+        setDirection(nextStep > currentStep ? 1 : -1);
         store.goToStep(nextStep);
       }
-    }, 500);
+    }, 50);
   }, [store, isAuthenticated]);
 
   // Custom next step handlers for each step
@@ -228,7 +234,11 @@ export function OnboardingWizard() {
           <BusinessTypeStep
             store={store}
             onNext={handleStep2Next}
-            onBack={store.prevStep}
+            onBack={() => {
+              setDirection(-1);
+              setPrevStep(2);
+              store.prevStep();
+            }}
           />
         );
       case 3:
@@ -236,7 +246,11 @@ export function OnboardingWizard() {
           <CardPreviewStep
             store={store}
             onNext={handleStep3Next}
-            onBack={store.prevStep}
+            onBack={() => {
+              setDirection(-1);
+              setPrevStep(3);
+              store.prevStep();
+            }}
           />
         );
       case 4:
@@ -244,11 +258,19 @@ export function OnboardingWizard() {
           <CreateAccountStep
             store={store}
             onNext={handleStep4Next}
-            onBack={store.prevStep}
+            onBack={() => {
+              setDirection(-1);
+              setPrevStep(4);
+              store.prevStep();
+            }}
           />
         );
       case 5:
-        return <ChoosePlanStep store={store} onNext={handleStep5Next} onBack={store.prevStep} />;
+        return <ChoosePlanStep store={store} onNext={handleStep5Next} onBack={() => {
+          setDirection(-1);
+          setPrevStep(5);
+          store.prevStep();
+        }} />;
       case 6:
         return <CongratsStep store={store} />;
       default:
@@ -256,90 +278,204 @@ export function OnboardingWizard() {
     }
   };
 
+  // Variants for step transitions
+
+  const stepVariants = {
+    enter: (custom: { direction: number; isSpecial: boolean }) => {
+      // Standard transition
+      let x = custom.direction > 0 ? 50 : -50;
+      let opacity = 0;
+      let scale = 0.98;
+
+      if (custom.isSpecial) {
+        // Step 2 -> 3 (Enter Form 3 from Left)
+        if (custom.direction > 0) {
+          x = -100; // Use % in string if needed, but here simple number might be safer or string "-100%"
+          return { x: "-100%", opacity: 0, scale: 0.7, zIndex: 10 };
+        }
+        // Step 3 -> 2 (Enter Form 2 from Right)
+        return { x: "100%", opacity: 0, scale: 0.7, zIndex: 10 };
+      }
+
+      return { x, opacity, scale, zIndex: 10 };
+    },
+    center: {
+      zIndex: 10,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "tween" as const,
+        ease: "easeInOut" as const,
+        duration: 0.5
+      }
+    },
+    exit: (custom: { direction: number; isSpecial: boolean }) => {
+      if (custom.isSpecial) {
+        // Step 2 -> 3 (Exit Form 2 to Right)
+        if (custom.direction > 0) {
+          return {
+            zIndex: 0,
+            x: "150%",
+            opacity: 0,
+            scale: 0.7,
+            position: "absolute",
+            top: 0, // Align to top of container
+            width: "100%", // Maintain width
+            transition: { duration: 0.5, ease: "easeInOut" as const }
+          };
+        }
+        // Step 3 -> 2 (Exit Form 3 to Left)
+        return {
+          zIndex: 0,
+          x: "-150%",
+          opacity: 0,
+          scale: 0.7,
+          position: "absolute",
+          top: 0,
+          width: "100%",
+          transition: { duration: 0.5, ease: "easeInOut" as const }
+        };
+      }
+      return {
+        zIndex: 0,
+        x: custom.direction < 0 ? 50 : -50,
+        opacity: 0,
+        scale: 0.98,
+        position: "absolute",
+        top: 0,
+        width: "100%",
+        transition: {
+          duration: 0.3,
+          ease: "easeInOut" as const
+        }
+      };
+    }
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[70vh]">
-        {/* Card Panel */}
-        <div
-          className="flex items-center justify-center transition-all duration-500 ease-out"
-          style={{
-            order: cardPosition === "left" ? 0 : 1,
-          }}
-        >
-          <div className="w-full max-w-[360px] transition-transform duration-500">
-            <OnboardingCardPreview
-              businessName={store.data.businessName}
-              category={store.data.category}
-              completedSteps={store.completedSteps.length}
-              animatingStampIndex={animatingStampIndex}
-              design={store.data.cardDesign}
-            />
-
-            {/* Step indicator below card on mobile */}
-            <div className="mt-6 flex justify-center gap-2 lg:hidden">
-              {[1, 2, 3, 4, 5, 6].map((step) => (
-                <div
-                  key={step}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
-                    ? "bg-[var(--accent)]"
-                    : step === store.currentStep
-                      ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
-                      : "bg-[var(--muted)]"
-                    }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Form Panel */}
-        <div
-          className="flex flex-col justify-center transition-all duration-500 ease-out"
-          style={{
-            order: cardPosition === "left" ? 1 : 0,
-          }}
-        >
-          {/* Step labels below form - desktop only */}
-          <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
-            {[
-              { step: 1, label: "Business" },
-              { step: 2, label: "Type" },
-              { step: 3, label: "Design" },
-              { step: 4, label: "Account" },
-              { step: 5, label: "Plan" },
-              { step: 6, label: "Ready" },
-            ].map(({ step, label }) => (
-              <button
-                key={step}
-                onClick={() => {
-                  if (store.completedSteps.includes(step)) {
-                    store.goToStep(step);
-                  }
-                }}
-                disabled={!store.completedSteps.includes(step)}
-                className={`transition-colors duration-200 ${step === store.currentStep
-                  ? "text-[var(--accent)] font-medium"
-                  : store.completedSteps.includes(step)
-                    ? "text-[var(--accent)] hover:underline cursor-pointer"
-                    : "text-[var(--muted-foreground)] cursor-default"
-                  }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-          {/* Step content */}
-          <div
-            className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm"
-            key={store.currentStep}
+      {/* LayoutGroup enables layout animations across components */}
+      <LayoutGroup>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[70vh]">
+          {/* Card Panel */}
+          <motion.div
+            layout
+            className="flex items-center justify-center"
+            style={{
+              order: cardPosition === "left" ? 0 : 1,
+            }}
+            transition={{
+              type: "tween",
+              ease: "easeInOut",
+              duration: 0.5
+            }}
           >
-            {renderStep()}
-          </div>
+            <motion.div
+              layout
+              className="w-full max-w-[360px]"
+              transition={{
+                type: "tween",
+                ease: "easeInOut",
+                duration: 0.5
+              }}
+            >
+              <OnboardingCardPreview
+                businessName={store.data.businessName}
+                category={store.data.category}
+                completedSteps={store.completedSteps.length}
+                animatingStampIndex={animatingStampIndex}
+                design={store.data.cardDesign}
+              />
 
+              {/* Step indicator */}
+              <motion.div className="mt-6 flex justify-center gap-2 lg:hidden" layout>
+                {[1, 2, 3, 4, 5, 6].map((step) => (
+                  <div
+                    key={step}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
+                      ? "bg-[var(--accent)]"
+                      : step === store.currentStep
+                        ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
+                        : "bg-[var(--muted)]"
+                      }`}
+                  />
+                ))}
+              </motion.div>
+            </motion.div>
+          </motion.div>
 
+          {/* Form Panel */}
+          <motion.div
+            layout
+            className="flex flex-col justify-center relative" // Added relative for absolute positioning of children
+            style={{
+              order: cardPosition === "left" ? 1 : 0,
+            }}
+            transition={{
+              type: "tween",
+              ease: "easeInOut",
+              duration: 0.5
+            }}
+          >
+            {/* Step Content with AnimatePresence */}
+            <AnimatePresence mode="popLayout" custom={{
+              direction,
+              isSpecial: (prevStep === 2 && store.currentStep === 3) || (prevStep === 3 && store.currentStep === 2)
+            }}>
+              <motion.div
+                key={store.currentStep}
+                custom={{
+                  direction,
+                  isSpecial: (prevStep === 2 && store.currentStep === 3) || (prevStep === 3 && store.currentStep === 2)
+                }}
+                variants={stepVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="w-full"
+              >
+                {/* Step labels */}
+                <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
+                  {[
+                    { step: 1, label: "Business" },
+                    { step: 2, label: "Type" },
+                    { step: 3, label: "Design" },
+                    { step: 4, label: "Account" },
+                    { step: 5, label: "Plan" },
+                    { step: 6, label: "Ready" },
+                  ].map(({ step, label }) => (
+                    <button
+                      key={step}
+                      type="button"
+                      onClick={() => {
+                        if (store.completedSteps.includes(step) && step !== store.currentStep) {
+                          setPrevStep(store.currentStep);
+                          setDirection(step > store.currentStep ? 1 : -1);
+                          store.goToStep(step);
+                        }
+                      }}
+                      disabled={!store.completedSteps.includes(step)}
+                      className={`transition-colors duration-200 ${step === store.currentStep
+                        ? "text-[var(--accent)] font-medium"
+                        : store.completedSteps.includes(step)
+                          ? "text-[var(--accent)] hover:underline cursor-pointer"
+                          : "text-[var(--muted-foreground)] cursor-default"
+                        }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm">
+                  {renderStep()}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </motion.div>
         </div>
-      </div>
+      </LayoutGroup>
     </div>
   );
 }

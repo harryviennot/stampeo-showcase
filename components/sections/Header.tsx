@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MenuIcon, XMarkIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
-
+import { StampeoLogo } from "../logo";
 import type { User } from "@supabase/supabase-js";
 
 function DesktopAuthButtons({
@@ -59,19 +59,6 @@ function DesktopAuthButtons({
   );
 }
 
-function StampeoLogo() {
-  return (
-    <svg className="w-8 h-8" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-      <path
-        clipRule="evenodd"
-        d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-    </svg>
-  );
-}
-
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -97,11 +84,10 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div
-        className={`transition-all duration-300 border-b ${
-          scrolled
+        className={`transition-all duration-300 border-b ${scrolled
             ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
             : "bg-transparent border-transparent"
-        }`}
+          }`}
       >
         <nav className="flex items-center justify-between px-6 lg:px-10 py-5 max-w-[1400px] mx-auto">
           {/* Logo */}
