@@ -369,7 +369,7 @@ export function OnboardingWizard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[70vh]">
           {/* Card Panel */}
           <motion.div
-            layout
+            layout="position"
             className="flex items-center justify-center"
             style={{
               order: cardPosition === "left" ? 0 : 1,
@@ -380,15 +380,7 @@ export function OnboardingWizard() {
               duration: 0.5
             }}
           >
-            <motion.div
-              layout
-              className="w-full max-w-[360px]"
-              transition={{
-                type: "tween",
-                ease: "easeInOut",
-                duration: 0.5
-              }}
-            >
+            <div className="w-full max-w-[360px]">
               <OnboardingCardPreview
                 businessName={store.data.businessName}
                 category={store.data.category}
@@ -398,7 +390,7 @@ export function OnboardingWizard() {
               />
 
               {/* Step indicator */}
-              <motion.div className="mt-6 flex justify-center gap-2 lg:hidden" layout>
+              <div className="mt-6 flex justify-center gap-2 lg:hidden">
                 {[1, 2, 3, 4, 5, 6].map((step) => (
                   <div
                     key={step}
@@ -410,13 +402,13 @@ export function OnboardingWizard() {
                       }`}
                   />
                 ))}
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </motion.div>
 
           {/* Form Panel */}
           <motion.div
-            layout
+            layout="position"
             className="flex flex-col justify-center relative"
             style={{
               order: cardPosition === "left" ? 1 : 0,
@@ -449,17 +441,9 @@ export function OnboardingWizard() {
               // NON-SPECIAL TRANSITION: Static card, no animation - instant content swap
               <>
                 {renderStepLabels()}
-                <motion.div
-                  layout
-                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm"
-                  transition={{
-                    type: "tween",
-                    ease: "easeInOut",
-                    duration: 0.3
-                  }}
-                >
+                <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm">
                   {renderStep()}
-                </motion.div>
+                </div>
               </>
             )}
           </motion.div>

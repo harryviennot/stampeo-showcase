@@ -130,7 +130,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             {/* Availability indicator */}
             <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
               {isSlugChecking && (
-                <div className="w-5 h-5 border-2 border-[var(--muted-foreground)] border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-[var(--muted-foreground)] border-t-transparent rounded-full animate-spin" />
               )}
               {!isSlugChecking && isSlugAvailable === true && (
                 <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
@@ -144,21 +144,24 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
               )}
             </div>
           </div>
-          {data.urlSlug.length > 0 && data.urlSlug.length < 3 && (
-            <p className="text-xs text-[var(--muted-foreground)]">
-              Must be at least 3 characters
-            </p>
-          )}
-          {!isSlugChecking && isSlugAvailable === false && slugErrorReason && (
-            <p className="text-xs text-red-500">
-              {slugErrorReason}
-            </p>
-          )}
-          {!isSlugChecking && isSlugAvailable === true && (
-            <p className="text-xs text-green-600">
-              This URL is available!
-            </p>
-          )}
+          {/* Fixed height container to prevent jitter */}
+          <div className="h-5">
+            {data.urlSlug.length > 0 && data.urlSlug.length < 3 && (
+              <p className="text-xs text-[var(--muted-foreground)]">
+                Must be at least 3 characters
+              </p>
+            )}
+            {!isSlugChecking && isSlugAvailable === false && slugErrorReason && (
+              <p className="text-xs text-red-500">
+                {slugErrorReason}
+              </p>
+            )}
+            {!isSlugChecking && isSlugAvailable === true && (
+              <p className="text-xs text-green-600">
+                This URL is available!
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Owner Name */}

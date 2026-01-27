@@ -175,7 +175,14 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   }, []);
 
   const updateSlug = useCallback((slug: string) => {
-    const cleanSlug = slugify(slug);
+    // Convert spaces to dashes immediately, allow dashes
+    const cleanSlug = slug
+      .toLowerCase()
+      .replace(/\s+/g, "-")           // Spaces → dashes
+      .replace(/[^a-z0-9-]/g, "")     // Only allow lowercase, numbers, dashes
+      .replace(/-+/g, "-")            // Collapse multiple dashes
+      .replace(/^-/, "");             // No leading dash
+
     setData((prev) => ({ ...prev, urlSlug: cleanSlug }));
     // Only reset availability if slug changed from the validated one
     if (cleanSlug !== validatedSlug) {

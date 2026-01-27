@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 
 interface BusinessTypeStepProps {
@@ -88,24 +89,34 @@ export function BusinessTypeStep({
         </div>
 
         {/* Description - only shown for 'other' category */}
-        {data.category === "other" && (
-          <div className="space-y-2">
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-[var(--foreground)]"
+        <AnimatePresence>
+          {data.category === "other" && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="overflow-hidden"
             >
-              Please let us know what type of business you are
-            </label>
-            <textarea
-              id="description"
-              value={data.description}
-              onChange={(e) => updateData({ description: e.target.value })}
-              rows={2}
-              className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none"
-              placeholder="e.g. Pet grooming, Car wash, Tattoo studio..."
-            />
-          </div>
-        )}
+              <div className="space-y-2">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-[var(--foreground)]"
+                >
+                  Please let us know what type of business you are
+                </label>
+                <textarea
+                  id="description"
+                  value={data.description}
+                  onChange={(e) => updateData({ description: e.target.value })}
+                  rows={2}
+                  className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none"
+                  placeholder="e.g. Pet grooming, Car wash, Tattoo studio..."
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Navigation buttons */}
         <div className="flex gap-3">
