@@ -20,7 +20,7 @@ export function FinalCTASection() {
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/signup" size="lg">
+            <Button href="/onboarding" size="lg">
               Start your free trial
               <ArrowRightIcon className="w-5 h-5" />
             </Button>

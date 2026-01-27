@@ -36,7 +36,7 @@ export function HeroSection() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button href="/signup" size="lg">
+              <Button href="/onboarding" size="lg">
                 Start your free trial
                 <ArrowRightIcon className="w-5 h-5" />
               </Button>

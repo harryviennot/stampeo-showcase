@@ -167,7 +167,7 @@ export function PricingSection() {
                 </ul>
 
                 <Button
-                  href="/signup"
+                  href="/onboarding"
                   variant={plan.featured ? "secondary" : "primary"}
                   className={`w-full ${
                     plan.featured

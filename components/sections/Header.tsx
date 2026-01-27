@@ -76,7 +76,7 @@ export function Header() {
                   >
                     Log in
                   </Link>
-                  <Button href="/signup" size="default">
+                  <Button href="/onboarding" size="default">
                     Start free trial
                   </Button>
                 </>
