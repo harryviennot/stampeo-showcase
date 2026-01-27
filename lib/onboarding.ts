@@ -86,10 +86,14 @@ export async function createBusiness(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      return {
-        data: null,
-        error: errorData.detail || `Failed to create business (${response.status})`,
-      };
+      // FastAPI detail can be a string or an array of validation errors
+      let errorMessage = `Failed to create business (${response.status})`;
+      if (typeof errorData.detail === "string") {
+        errorMessage = errorData.detail;
+      } else if (Array.isArray(errorData.detail) && errorData.detail.length > 0) {
+        errorMessage = errorData.detail[0]?.msg || errorMessage;
+      }
+      return { data: null, error: errorMessage };
     }
 
     const data = await response.json();
@@ -126,6 +130,139 @@ export async function getUserBusinesses(
     return {
       data: [],
       error: err instanceof Error ? err.message : "Failed to fetch businesses",
+    };
+  }
+}
+
+// ============================================
+// Onboarding Progress API
+// ============================================
+
+export interface OnboardingProgressPayload {
+  business_name: string;
+  url_slug: string;
+  owner_name?: string;
+  category?: string;
+  description?: string;
+  email?: string;
+  card_design?: {
+    background_color: string;
+    accent_color: string;
+  };
+  current_step: number;
+  completed_steps: number[];
+}
+
+export interface OnboardingProgressResponse {
+  id: string;
+  user_id: string;
+  business_name: string;
+  url_slug: string;
+  owner_name?: string;
+  category?: string;
+  description?: string;
+  email?: string;
+  card_design?: {
+    background_color: string;
+    accent_color: string;
+  };
+  current_step: number;
+  completed_steps: number[];
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Save onboarding progress to the backend
+ * Allows users to resume onboarding on another device
+ */
+export async function saveOnboardingProgress(
+  payload: OnboardingProgressPayload,
+  accessToken: string
+): Promise<{ data: OnboardingProgressResponse | null; error: string | null }> {
+  try {
+    const response = await fetch(`${API_URL}/onboarding/progress`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      let errorMessage = `Failed to save progress (${response.status})`;
+      if (typeof errorData.detail === "string") {
+        errorMessage = errorData.detail;
+      }
+      return { data: null, error: errorMessage };
+    }
+
+    const data = await response.json();
+    return { data, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Failed to save progress",
+    };
+  }
+}
+
+/**
+ * Get onboarding progress from the backend
+ * Used when a user returns to continue onboarding
+ */
+export async function getOnboardingProgress(
+  accessToken: string
+): Promise<{ data: OnboardingProgressResponse | null; error: string | null }> {
+  try {
+    const response = await fetch(`${API_URL}/onboarding/progress`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return { data: null, error: null }; // No progress saved yet
+      }
+      return { data: null, error: `Failed to fetch progress (${response.status})` };
+    }
+
+    const data = await response.json();
+    return { data, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Failed to fetch progress",
+    };
+  }
+}
+
+/**
+ * Delete onboarding progress after completion
+ */
+export async function deleteOnboardingProgress(
+  accessToken: string
+): Promise<{ success: boolean; error: string | null }> {
+  try {
+    const response = await fetch(`${API_URL}/onboarding/progress`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      return { success: false, error: `Failed to delete progress (${response.status})` };
+    }
+
+    return { success: true, error: null };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to delete progress",
     };
   }
 }

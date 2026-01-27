@@ -8,6 +8,7 @@ import { CheckIcon } from "@/components/icons";
 
 interface ChoosePlanStepProps {
   store: OnboardingStore;
+  onNext: () => void;
   onBack: () => void;
 }
 
@@ -44,8 +45,8 @@ const plans = [
   },
 ];
 
-export function ChoosePlanStep({ store, onBack }: ChoosePlanStepProps) {
-  const { data, updateData, clearStore } = store;
+export function ChoosePlanStep({ store, onNext, onBack }: ChoosePlanStepProps) {
+  const { data, updateData } = store;
   const { session } = useAuth();
 
   const [loading, setLoading] = useState(false);
@@ -79,22 +80,16 @@ export function ChoosePlanStep({ store, onBack }: ChoosePlanStepProps) {
           return;
         }
 
-        // Business created successfully - clear localStorage
-        clearStore();
-
-        // Small delay to ensure database consistency before redirect
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Redirect to the business app with the new business ID
-        const appUrl =
-          process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
-        window.location.href = `${appUrl}?onboarding=complete&business_id=${business.id}`;
+        // Business created successfully - go to congrats step
+        // Don't clear store yet - CongratsStep needs the data
+        setLoading(false);
+        onNext();
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         setLoading(false);
       }
     },
-    [data, updateData, clearStore, session]
+    [data, updateData, onNext, session]
   );
 
   return (
@@ -206,7 +201,7 @@ export function ChoosePlanStep({ store, onBack }: ChoosePlanStepProps) {
               className={`w-full py-3 px-4 font-semibold rounded-full transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                 plan.featured
                   ? "bg-[var(--background)] text-[var(--foreground)] hover:bg-[var(--background)]/90"
-                  : "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600"
+                  : "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)]"
               }`}
             >
               {loading && data.selectedPlan === plan.id

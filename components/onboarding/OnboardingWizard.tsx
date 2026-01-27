@@ -3,13 +3,18 @@
 import { useEffect, useState, useCallback } from "react";
 import { useOnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
-import { getUserBusinesses } from "@/lib/onboarding";
+import {
+  getUserBusinesses,
+  saveOnboardingProgress,
+  getOnboardingProgress,
+} from "@/lib/onboarding";
 import { OnboardingCardPreview } from "./OnboardingCardPreview";
 import { BusinessInfoStep } from "./steps/BusinessInfoStep";
 import { BusinessTypeStep } from "./steps/BusinessTypeStep";
 import { CardPreviewStep } from "./steps/CardPreviewStep";
 import { CreateAccountStep } from "./steps/CreateAccountStep";
 import { ChoosePlanStep } from "./steps/ChoosePlanStep";
+import { CongratsStep } from "./steps/CongratsStep";
 
 // Helper to adjust color brightness for hover states
 function adjustBrightness(hex: string, percent: number): string {
@@ -23,7 +28,7 @@ function adjustBrightness(hex: string, percent: number): string {
 export function OnboardingWizard() {
   const { session, loading: authLoading } = useAuth();
   const isAuthenticated = !!session?.access_token;
-  const store = useOnboardingStore(isAuthenticated);
+  const store = useOnboardingStore(isAuthenticated, authLoading);
   const [checkingBusinesses, setCheckingBusinesses] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [animatingStampIndex, setAnimatingStampIndex] = useState<number | null>(null);
@@ -81,6 +86,86 @@ export function OnboardingWizard() {
     }
   }, [session, authLoading, authChecked, store]);
 
+  // Sync progress to backend when authenticated and data changes
+  useEffect(() => {
+    if (!session?.access_token || !store.isInitialized) return;
+    // Only save if we have meaningful data (at least business name)
+    if (!store.data.businessName) return;
+
+    const saveToBackend = async () => {
+      await saveOnboardingProgress(
+        {
+          business_name: store.data.businessName,
+          url_slug: store.data.urlSlug,
+          owner_name: store.data.ownerName || undefined,
+          category: store.data.category || undefined,
+          description: store.data.description || undefined,
+          email: store.data.email || undefined,
+          card_design: store.data.cardDesign ? {
+            background_color: store.data.cardDesign.backgroundColor,
+            accent_color: store.data.cardDesign.accentColor,
+          } : undefined,
+          current_step: store.currentStep,
+          completed_steps: store.completedSteps,
+        },
+        session.access_token
+      );
+    };
+
+    // Debounce the save to avoid too many API calls
+    const timeoutId = setTimeout(saveToBackend, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [
+    session?.access_token,
+    store.isInitialized,
+    store.data.businessName,
+    store.data.urlSlug,
+    store.data.ownerName,
+    store.data.category,
+    store.data.description,
+    store.data.email,
+    store.data.cardDesign,
+    store.currentStep,
+    store.completedSteps,
+  ]);
+
+  // On initial load, fetch progress from backend if authenticated
+  useEffect(() => {
+    if (!session?.access_token || authLoading || !authChecked) return;
+
+    const fetchFromBackend = async () => {
+      const { data: serverProgress } = await getOnboardingProgress(session.access_token);
+
+      // Only restore from server if we have server data and local data is empty/default
+      if (serverProgress && !store.data.businessName) {
+        store.updateData({
+          businessName: serverProgress.business_name,
+          urlSlug: serverProgress.url_slug,
+          ownerName: serverProgress.owner_name || "",
+          category: serverProgress.category || null,
+          description: serverProgress.description || "",
+          email: serverProgress.email || "",
+          cardDesign: serverProgress.card_design ? {
+            backgroundColor: serverProgress.card_design.background_color,
+            accentColor: serverProgress.card_design.accent_color,
+          } : store.data.cardDesign,
+        });
+
+        // Restore step progress
+        if (serverProgress.current_step > store.currentStep) {
+          store.goToStep(serverProgress.current_step);
+        }
+        serverProgress.completed_steps.forEach((step) => {
+          if (!store.completedSteps.includes(step)) {
+            store.markStepCompleted(step);
+          }
+        });
+      }
+    };
+
+    fetchFromBackend();
+  }, [session?.access_token, authLoading, authChecked]);
+
   // Handle step completion with animation
   const handleStepComplete = useCallback((nextStep: number) => {
     const currentStep = store.currentStep;
@@ -121,6 +206,10 @@ export function OnboardingWizard() {
     handleStepComplete(5);
   }, [handleStepComplete]);
 
+  const handleStep5Next = useCallback(() => {
+    handleStepComplete(6);
+  }, [handleStepComplete]);
+
   // Don't render until we've loaded from localStorage and checked auth
   if (!store.isInitialized || authLoading || checkingBusinesses || !authChecked) {
     return (
@@ -159,7 +248,9 @@ export function OnboardingWizard() {
           />
         );
       case 5:
-        return <ChoosePlanStep store={store} onBack={store.prevStep} />;
+        return <ChoosePlanStep store={store} onNext={handleStep5Next} onBack={store.prevStep} />;
+      case 6:
+        return <CongratsStep store={store} />;
       default:
         return <BusinessInfoStep store={store} onNext={handleStep1Next} />;
     }
@@ -187,7 +278,7 @@ export function OnboardingWizard() {
 
             {/* Step indicator below card on mobile */}
             <div className="mt-6 flex justify-center gap-2 lg:hidden">
-              {[1, 2, 3, 4, 5].map((step) => (
+              {[1, 2, 3, 4, 5, 6].map((step) => (
                 <div
                   key={step}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
@@ -217,6 +308,7 @@ export function OnboardingWizard() {
               { step: 3, label: "Design" },
               { step: 4, label: "Account" },
               { step: 5, label: "Plan" },
+              { step: 6, label: "Ready" },
             ].map(({ step, label }) => (
               <button
                 key={step}

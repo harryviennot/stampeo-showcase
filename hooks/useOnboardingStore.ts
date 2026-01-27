@@ -32,6 +32,7 @@ export interface OnboardingState {
 }
 
 const STORAGE_KEY = "stampeo_onboarding";
+const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
 const STORAGE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 const defaultCardDesign: CardDesign = {
@@ -66,7 +67,7 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export function useOnboardingStore(isAuthenticated = false) {
+export function useOnboardingStore(isAuthenticated = false, authLoading = true) {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [data, setData] = useState<OnboardingData>(initialData);
@@ -77,41 +78,75 @@ export function useOnboardingStore(isAuthenticated = false) {
   // Cache the validated slug so we don't re-check it
   const [validatedSlug, setValidatedSlug] = useState<string | null>(null);
 
-  // Load from localStorage on mount - only if authenticated
+  // Load from storage on mount - prioritize sessionStorage for current session
   useEffect(() => {
-    if (!isAuthenticated) {
-      // Not authenticated - start fresh, don't load from storage
-      setIsInitialized(true);
-      return;
-    }
+    // Wait for auth to finish loading before initializing
+    if (authLoading) return;
+    // Only initialize once
+    if (isInitialized) return;
 
+    let restored = false;
+
+    // 1. Try sessionStorage first (current browser session - survives auth state changes)
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed: StoredState = JSON.parse(stored);
-        const now = Date.now();
-
-        // Check if data is still valid (not expired)
-        if (now - parsed.timestamp < STORAGE_EXPIRY_MS) {
-          setData({ ...initialData, ...parsed.data });
-          setCurrentStep(parsed.currentStep);
-          setCompletedSteps(parsed.completedSteps || []);
-          // Restore validated slug if it matches
-          if (parsed.data.urlSlug) {
-            setValidatedSlug(parsed.data.urlSlug);
-            setIsSlugAvailable(true);
-          }
-        } else {
-          localStorage.removeItem(STORAGE_KEY);
+      const sessionData = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      if (sessionData) {
+        const parsed: StoredState = JSON.parse(sessionData);
+        setData({ ...initialData, ...parsed.data });
+        setCurrentStep(parsed.currentStep);
+        setCompletedSteps(parsed.completedSteps || []);
+        if (parsed.data.urlSlug) {
+          setValidatedSlug(parsed.data.urlSlug);
+          setIsSlugAvailable(true);
         }
+        restored = true;
       }
     } catch {
-      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(SESSION_STORAGE_KEY);
     }
-    setIsInitialized(true);
-  }, [isAuthenticated]);
 
-  // Save to localStorage when data or step changes - only if authenticated
+    // 2. If no session data and authenticated, try localStorage (cross-session persistence)
+    if (!restored && isAuthenticated) {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed: StoredState = JSON.parse(stored);
+          const now = Date.now();
+
+          if (now - parsed.timestamp < STORAGE_EXPIRY_MS) {
+            setData({ ...initialData, ...parsed.data });
+            setCurrentStep(parsed.currentStep);
+            setCompletedSteps(parsed.completedSteps || []);
+            if (parsed.data.urlSlug) {
+              setValidatedSlug(parsed.data.urlSlug);
+              setIsSlugAvailable(true);
+            }
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+        }
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    setIsInitialized(true);
+  }, [authLoading, isAuthenticated, isInitialized]);
+
+  // Always save to sessionStorage (survives auth state changes within session)
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const state: StoredState = {
+      data,
+      currentStep,
+      completedSteps,
+      timestamp: Date.now(),
+    };
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(state));
+  }, [data, currentStep, completedSteps, isInitialized]);
+
+  // Also save to localStorage when authenticated (for cross-session persistence)
   useEffect(() => {
     if (!isInitialized || !isAuthenticated) return;
 
@@ -155,7 +190,7 @@ export function useOnboardingStore(isAuthenticated = false) {
   }, [data.urlSlug]);
 
   const nextStep = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, 5));
+    setCurrentStep((prev) => Math.min(prev + 1, 6));
   }, []);
 
   const prevStep = useCallback(() => {
@@ -163,7 +198,7 @@ export function useOnboardingStore(isAuthenticated = false) {
   }, []);
 
   const goToStep = useCallback((step: number) => {
-    if (step >= 1 && step <= 5) {
+    if (step >= 1 && step <= 6) {
       setCurrentStep(step);
     }
   }, []);
@@ -183,6 +218,7 @@ export function useOnboardingStore(isAuthenticated = false) {
   }, []);
 
   const clearStore = useCallback(() => {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
     localStorage.removeItem(STORAGE_KEY);
     setData(initialData);
     setCurrentStep(1);

@@ -6,14 +6,14 @@ import { CardDesign } from "@/hooks/useOnboardingStore";
 interface OnboardingCardPreviewProps {
   businessName: string;
   category?: string | null;
-  // Progress tracking - always 5 stamps for 5 onboarding steps
+  // Progress tracking - 6 stamps for 6 onboarding steps
   completedSteps?: number;
   animatingStampIndex?: number | null;
   // Design colors - always applied
   design?: CardDesign;
 }
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 function getInitials(name: string): string {
   const words = name.trim().split(/\s+/);
@@ -213,9 +213,9 @@ export function OnboardingCardPreview({
               </div>
             </div>
 
-            {/* Middle: Stamps Grid - always 5 stamps */}
+            {/* Middle: Stamps Grid - 6 stamps (3 per row) */}
             <div className="flex flex-col justify-center gap-5 w-full my-5">
-              {/* Row 1 (3 stamps) */}
+              {/* Row 1 */}
               <div className="flex justify-between w-full px-1">
                 {Array.from({ length: row1Count }, (_, i) => (
                   <Stamp
@@ -228,9 +228,9 @@ export function OnboardingCardPreview({
                   />
                 ))}
               </div>
-              {/* Row 2 (2 stamps) */}
+              {/* Row 2 */}
               {row2Count > 0 && (
-                <div className="flex justify-center gap-8 w-full px-1">
+                <div className="flex justify-between w-full px-1">
                   {Array.from({ length: row2Count }, (_, i) => {
                     const actualIndex = row1Count + i;
                     return (

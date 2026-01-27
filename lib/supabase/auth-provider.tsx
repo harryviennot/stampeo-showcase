@@ -82,6 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const signOut = useCallback(async () => {
+    // Clear onboarding session data on logout
+    sessionStorage.removeItem("stampeo_onboarding_session");
+    localStorage.removeItem("stampeo_onboarding");
     await supabase.auth.signOut();
   }, [supabase.auth]);
 
