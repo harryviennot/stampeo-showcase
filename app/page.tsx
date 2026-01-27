@@ -1,14 +1,14 @@
-import { Header } from "./components/sections/Header";
-import { HeroSection } from "./components/sections/HeroSection";
-import { SocialProofBar } from "./components/sections/SocialProofBar";
-import { ProblemSection } from "./components/sections/ProblemSection";
-import { HowItWorks } from "./components/sections/HowItWorks";
-import { BenefitsSection } from "./components/sections/BenefitsSection";
-import { DashboardPreview } from "./components/sections/DashboardPreview";
-import { PricingSection } from "./components/sections/PricingSection";
-import { FAQSection } from "./components/sections/FAQSection";
-import { FinalCTASection } from "./components/sections/FinalCTASection";
-import { Footer } from "./components/sections/Footer";
+import { Header } from "@/components/sections/Header";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { SocialProofBar } from "@/components/sections/SocialProofBar";
+import { ProblemSection } from "@/components/sections/ProblemSection";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { BenefitsSection } from "@/components/sections/BenefitsSection";
+import { DashboardPreview } from "@/components/sections/DashboardPreview";
+import { PricingSection } from "@/components/sections/PricingSection";
+import { FAQSection } from "@/components/sections/FAQSection";
+import { FinalCTASection } from "@/components/sections/FinalCTASection";
+import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
   return (

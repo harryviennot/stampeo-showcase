@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useScrollReveal } from "../../hooks/useScrollReveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 type RevealVariant = "default" | "left" | "right" | "scale" | "blur" | "stagger";
 
