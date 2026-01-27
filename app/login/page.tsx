@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
 
 export default function LoginPage() {
@@ -37,20 +38,21 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
       {/* Card container */}
-      <div
-        className={`w-full max-w-md p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm transition-all duration-700 ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-      >
-        <div className="text-center">
-          <Link href="/" className="inline-block mb-6 group">
-            <span className="text-3xl font-bold gradient-text transition-transform group-hover:scale-105 inline-block">
+
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+        <Link href="/" className="inline-block group">
+          <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
+            <StampeoLogo />
+            <span className="text-2xl font-bold gradient-text ">
               Stampeo
             </span>
-          </Link>
-          <h1 className="text-2xl font-bold text-[var(--foreground)]">Welcome back</h1>
-          <p className="text-[var(--muted-foreground)] mt-2">Sign in to your account</p>
-        </div>
+          </div>
+        </Link>
+      </header>
+      <div
+        className={`w-full max-w-md p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm transition-all duration-700 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+      >
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
@@ -107,10 +109,10 @@ export default function LoginPage() {
         <p className="text-center text-sm text-[var(--muted-foreground)]">
           Don&apos;t have an account?{" "}
           <Link
-            href="/signup"
+            href="/onboarding"
             className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
           >
-            Sign up
+            Get Started
           </Link>
         </p>
       </div>
