@@ -28,11 +28,11 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className={`mx-4 mt-4 sm:mx-6 lg:mx-8 transition-all duration-500 ${scrolled ? "mx-2 sm:mx-4 lg:mx-6" : ""}`}>
-        <div className={`glass-premium rounded-2xl px-4 sm:px-6 transition-all duration-500 ${scrolled ? "shadow-glass-scrolled" : ""}`}>
+      <div className={`mx-4 mt-4 sm:mx-6 lg:mx-8 transition-all duration-300 ${scrolled ? "mx-2 sm:mx-4 lg:mx-6" : ""}`}>
+        <div className={`bg-[var(--background)] rounded-2xl px-4 sm:px-6 transition-all duration-300 border border-[var(--border)] ${scrolled ? "shadow-lg" : "shadow-sm"}`}>
           <nav className="flex items-center justify-between h-14 max-w-7xl mx-auto">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+              <div className="w-9 h-9 bg-[var(--accent)] rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S</span>
               </div>
               <span className="font-semibold text-lg text-[var(--foreground)]">
@@ -46,7 +46,7 @@ export function Header() {
                 <Link
                   key={item}
                   href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05] rounded-lg transition-all duration-200"
+                  className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] rounded-lg transition-colors duration-200"
                 >
                   {item}
                 </Link>
@@ -55,7 +55,7 @@ export function Header() {
 
             <div className="hidden md:flex items-center gap-3">
               {loading ? (
-                <div className="w-20 h-8 bg-gray-200 animate-pulse rounded-lg" />
+                <div className="w-20 h-8 bg-[var(--muted)] animate-pulse rounded-lg" />
               ) : user ? (
                 <>
                   <button
@@ -77,7 +77,7 @@ export function Header() {
                     Log in
                   </Link>
                   <Button href="/signup" size="default">
-                    Get started
+                    Start free trial
                   </Button>
                 </>
               )}
@@ -104,7 +104,7 @@ export function Header() {
                   <Link
                     key={item}
                     href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="px-4 py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05] rounded-lg transition-all"
+                    className="px-4 py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] rounded-lg transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item}
@@ -133,7 +133,7 @@ export function Header() {
                         Log in
                       </Link>
                       <Button href="/signup" size="default" className="mx-4">
-                        Get started
+                        Start free trial
                       </Button>
                     </>
                   )}

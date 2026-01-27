@@ -56,7 +56,7 @@ export function BenefitsSection() {
     >
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200/50 text-violet-700 text-sm font-medium mb-6 dark:from-violet-900/20 dark:to-purple-900/20 dark:border-violet-800/30 dark:text-violet-400">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--muted)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
             Why Stampeo
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
@@ -69,9 +69,9 @@ export function BenefitsSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Customer benefits */}
-          <ScrollReveal variant="left" className="premium-card rounded-3xl p-8 sm:p-10">
+          <ScrollReveal variant="left" className="clean-card rounded-3xl p-8 sm:p-10">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+              <div className="w-12 h-12 bg-[#3b82f6] rounded-2xl flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -94,9 +94,9 @@ export function BenefitsSection() {
               {customerBenefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="flex gap-4 p-4 rounded-2xl hover:bg-[var(--muted)] transition-colors group"
+                  className="flex gap-4 p-4 rounded-2xl hover:bg-[var(--muted)] transition-colors"
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-[var(--muted)] group-hover:bg-[var(--background)] rounded-xl flex items-center justify-center transition-colors">
+                  <div className="flex-shrink-0 w-12 h-12 bg-[var(--muted)] rounded-xl flex items-center justify-center">
                     <benefit.icon className="w-6 h-6 text-[var(--muted-foreground)]" />
                   </div>
                   <div>
@@ -113,9 +113,9 @@ export function BenefitsSection() {
           </ScrollReveal>
 
           {/* Business benefits */}
-          <ScrollReveal variant="right" delay={150} className="premium-card rounded-3xl p-8 sm:p-10">
+          <ScrollReveal variant="right" delay={150} className="clean-card rounded-3xl p-8 sm:p-10">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/30">
+              <div className="w-12 h-12 bg-[var(--accent)] rounded-2xl flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -138,9 +138,9 @@ export function BenefitsSection() {
               {businessBenefits.map((benefit, index) => (
                 <div
                   key={index}
-                  className="flex gap-4 p-4 rounded-2xl hover:bg-[var(--muted)] transition-colors group"
+                  className="flex gap-4 p-4 rounded-2xl hover:bg-[var(--muted)] transition-colors"
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-[var(--muted)] group-hover:bg-[var(--background)] rounded-xl flex items-center justify-center transition-colors">
+                  <div className="flex-shrink-0 w-12 h-12 bg-[var(--muted)] rounded-xl flex items-center justify-center">
                     <benefit.icon className="w-6 h-6 text-[var(--muted-foreground)]" />
                   </div>
                   <div>

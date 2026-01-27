@@ -10,7 +10,7 @@ export function SocialProofBar() {
   return (
     <section className="py-16 relative overflow-hidden">
       <Container>
-        <div className="premium-card rounded-3xl p-8 sm:p-12">
+        <div className="clean-card rounded-3xl p-8 sm:p-12">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left">
               <p className="text-sm font-medium text-[var(--muted-foreground)] mb-1">
@@ -24,7 +24,7 @@ export function SocialProofBar() {
             <div className="flex items-center gap-8 sm:gap-12">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <p className="text-3xl sm:text-4xl font-bold gradient-text">
+                  <p className="text-3xl sm:text-4xl font-bold text-[var(--foreground)]">
                     {stat.value}
                     {stat.suffix && (
                       <span className="text-lg text-[var(--muted-foreground)]">

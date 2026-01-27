@@ -7,47 +7,38 @@ import { ScrollReveal } from "../ui/ScrollReveal";
 
 const plans = [
   {
-    name: "Free",
-    price: "0",
-    description: "Perfect for getting started",
+    name: "Pay",
+    price: "20",
+    description: "For single-location businesses",
     features: [
-      "1 card design",
-      "Up to 100 customers",
-      "Basic analytics",
-      "Email support",
+      { text: "1 card template", included: true },
+      { text: "Unlimited customers", included: true },
+      { text: "Unlimited scans", included: true },
+      { text: "Up to 3 scanner accounts", included: true },
+      { text: "Basic analytics", included: true },
+      { text: "Push notifications", included: true },
+      { text: "Scheduled campaigns", included: false },
+      { text: "Multi-location support", included: false },
     ],
-    cta: "Start free",
+    cta: "Start free trial",
     featured: false,
   },
   {
     name: "Pro",
-    price: "19",
-    description: "For growing businesses",
+    price: "40",
+    description: "For growing & multi-location businesses",
     features: [
-      "Unlimited card designs",
-      "Unlimited customers",
-      "Advanced analytics",
-      "Push notifications",
-      "Custom branding",
-      "Priority support",
+      { text: "Multiple card templates", included: true },
+      { text: "Unlimited customers", included: true },
+      { text: "Unlimited scans", included: true },
+      { text: "Unlimited scanner accounts", included: true },
+      { text: "Advanced analytics", included: true },
+      { text: "Push notifications", included: true },
+      { text: "Scheduled campaigns", included: true },
+      { text: "Multi-location & geofencing", included: true },
     ],
     cta: "Start free trial",
     featured: true,
-  },
-  {
-    name: "Business",
-    price: "49",
-    description: "For multi-location businesses",
-    features: [
-      "Everything in Pro",
-      "Multiple locations",
-      "Team access",
-      "API access",
-      "White-label option",
-      "Dedicated support",
-    ],
-    cta: "Contact sales",
-    featured: false,
   },
 ];
 
@@ -59,42 +50,33 @@ export function PricingSection() {
     >
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 text-emerald-700 text-sm font-medium mb-6 dark:from-emerald-900/20 dark:to-teal-900/20 dark:border-emerald-800/30 dark:text-emerald-400">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--muted)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
             Simple pricing
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-            Start free. Grow when you&apos;re ready.
+            Start free. Scale when you&apos;re ready.
           </h2>
           <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-            No hidden fees. Cancel anytime.
+            14-day free trial. No credit card required.
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, index) => (
             <ScrollReveal
               key={plan.name}
               delay={index * 100}
               variant="scale"
-              className={`relative rounded-3xl transition-all duration-300 ${
-                plan.featured
-                  ? "lg:scale-105 lg:-my-4"
-                  : ""
-              }`}
             >
-              {plan.featured && (
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-500 rounded-3xl blur-xl opacity-20" />
-              )}
-
               <div
                 className={`relative h-full p-8 rounded-3xl ${
                   plan.featured
-                    ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-2xl shadow-amber-500/30"
-                    : "premium-card"
+                    ? "bg-[var(--foreground)] text-[var(--background)]"
+                    : "clean-card"
                 }`}
               >
                 {plan.featured && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white text-amber-600 text-xs font-bold uppercase tracking-wide shadow-lg">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-[var(--accent)] text-white text-xs font-bold uppercase tracking-wide">
                     Most popular
                   </div>
                 )}
@@ -102,7 +84,7 @@ export function PricingSection() {
                 <div className="mb-8">
                   <h3
                     className={`text-xl font-semibold ${
-                      plan.featured ? "text-white" : "text-[var(--foreground)]"
+                      plan.featured ? "text-[var(--background)]" : "text-[var(--foreground)]"
                     }`}
                   >
                     {plan.name}
@@ -110,7 +92,7 @@ export function PricingSection() {
                   <p
                     className={`text-sm mt-1 ${
                       plan.featured
-                        ? "text-white/80"
+                        ? "text-[var(--background)]/70"
                         : "text-[var(--muted-foreground)]"
                     }`}
                   >
@@ -121,15 +103,15 @@ export function PricingSection() {
                 <div className="mb-8">
                   <span
                     className={`text-5xl font-bold ${
-                      plan.featured ? "text-white" : "text-[var(--foreground)]"
+                      plan.featured ? "text-[var(--background)]" : "text-[var(--foreground)]"
                     }`}
                   >
-                    €{plan.price}
+                    &euro;{plan.price}
                   </span>
                   <span
                     className={`text-sm ${
                       plan.featured
-                        ? "text-white/80"
+                        ? "text-[var(--background)]/70"
                         : "text-[var(--muted-foreground)]"
                     }`}
                   >
@@ -138,42 +120,58 @@ export function PricingSection() {
                 </div>
 
                 <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center gap-3">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          plan.featured
-                            ? "bg-white/20"
-                            : "bg-emerald-100 dark:bg-emerald-900/30"
+                          feature.included
+                            ? plan.featured
+                              ? "bg-[var(--accent)]"
+                              : "bg-[#22c55e]"
+                            : plan.featured
+                              ? "bg-[var(--background)]/10"
+                              : "bg-[var(--muted)]"
                         }`}
                       >
-                        <CheckIcon
-                          className={`w-3 h-3 ${
-                            plan.featured
-                              ? "text-white"
-                              : "text-emerald-600 dark:text-emerald-400"
-                          }`}
-                        />
+                        {feature.included ? (
+                          <CheckIcon
+                            className={`w-3 h-3 ${
+                              plan.featured ? "text-white" : "text-white"
+                            }`}
+                          />
+                        ) : (
+                          <span
+                            className={`w-1.5 h-0.5 rounded-full ${
+                              plan.featured
+                                ? "bg-[var(--background)]/30"
+                                : "bg-[var(--muted-foreground)]/50"
+                            }`}
+                          />
+                        )}
                       </div>
                       <span
                         className={`text-sm ${
-                          plan.featured
-                            ? "text-white/90"
-                            : "text-[var(--muted-foreground)]"
+                          feature.included
+                            ? plan.featured
+                              ? "text-[var(--background)]/90"
+                              : "text-[var(--foreground)]"
+                            : plan.featured
+                              ? "text-[var(--background)]/40"
+                              : "text-[var(--muted-foreground)]/60"
                         }`}
                       >
-                        {feature}
+                        {feature.text}
                       </span>
                     </li>
                   ))}
                 </ul>
 
                 <Button
-                  href="#"
+                  href="/signup"
                   variant={plan.featured ? "secondary" : "primary"}
                   className={`w-full ${
                     plan.featured
-                      ? "!bg-white !text-amber-600 hover:!bg-white/90 !border-0 !shadow-lg"
+                      ? "!bg-[var(--background)] !text-[var(--foreground)] hover:!bg-[var(--background)]/90"
                       : ""
                   }`}
                 >
@@ -183,6 +181,10 @@ export function PricingSection() {
             </ScrollReveal>
           ))}
         </div>
+
+        <p className="text-center mt-8 text-sm text-[var(--muted-foreground)]">
+          Both plans include a 14-day free trial. Cancel anytime.
+        </p>
       </Container>
     </section>
   );

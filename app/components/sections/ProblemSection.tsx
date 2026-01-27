@@ -21,8 +21,8 @@ export function ProblemSection() {
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Problem card 1 */}
-            <div className="premium-card rounded-3xl p-8 text-left group">
-              <div className="w-14 h-14 bg-gradient-to-br from-red-100 to-red-50 dark:from-red-900/30 dark:to-red-950/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="clean-card rounded-3xl p-8 text-left">
+              <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
                 <svg
                   className="w-7 h-7 text-red-500"
                   fill="none"
@@ -47,8 +47,8 @@ export function ProblemSection() {
             </div>
 
             {/* Problem card 2 */}
-            <div className="premium-card rounded-3xl p-8 text-left group">
-              <div className="w-14 h-14 bg-gradient-to-br from-red-100 to-red-50 dark:from-red-900/30 dark:to-red-950/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="clean-card rounded-3xl p-8 text-left">
+              <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
                 <svg
                   className="w-7 h-7 text-red-500"
                   fill="none"
@@ -75,12 +75,11 @@ export function ProblemSection() {
 
           {/* Solution callout */}
           <div className="mt-12 relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/20 rounded-3xl blur-xl" />
-            <div className="relative premium-card rounded-3xl p-8 border-2 border-amber-200/50 dark:border-amber-800/30">
+            <div className="clean-card rounded-3xl p-8 border-2 border-[var(--accent)]/20">
               <p className="text-lg sm:text-xl font-medium text-[var(--foreground)]">
                 Stampeo solves this by putting your loyalty card exactly where
                 they already look:{" "}
-                <span className="gradient-text font-bold">
+                <span className="text-[var(--accent)] font-bold">
                   their phone wallet.
                 </span>
               </p>

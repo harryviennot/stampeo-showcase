@@ -5,35 +5,50 @@ import { ChevronDownIcon } from "../icons";
 
 const faqs = [
   {
+    question: "How does the 14-day free trial work?",
+    answer:
+      "Start using Stampeo immediately with full access to all features. No credit card required to begin. At the end of 14 days, choose a plan that fits your business or downgrade to limited functionality.",
+  },
+  {
     question: "Do my customers need to download an app?",
     answer:
       "No. The card goes straight into Apple Wallet or Google Wallet, which are already on their phone. One tap and they're done — no app store, no account creation, no friction.",
   },
   {
-    question: "What do I need to scan the cards?",
+    question: "Can I use Stampeo across multiple locations?",
     answer:
-      "Just your phone. Our scanner works in any browser — no special hardware required. Open the scanner, point at the customer's card, and you're done.",
+      "Yes, with the Pro plan. You can manage multiple locations from a single dashboard, with separate analytics and scanner accounts per location. Geofencing lets you send location-based notifications.",
+  },
+  {
+    question: "Does it work offline?",
+    answer:
+      "Yes. Customers can show their pass without an internet connection — the QR code is stored locally on their device. When your scanner reconnects, all stamps sync automatically.",
+  },
+  {
+    question: "What equipment do I need?",
+    answer:
+      "Just your phone. The Stampeo scanner app works on any modern smartphone — no special hardware required. Point your camera at the customer's QR code, and you're done.",
   },
   {
     question: "Can I customize the card design?",
     answer:
-      "Yes — your logo, colors, reward structure, and back-of-card info (hours, website, social links). Your card should look like your brand, not a generic template.",
+      "Absolutely. Add your logo, choose your colors, set your reward structure, and include back-of-card info like hours, website, or social links. Your card should represent your brand.",
   },
   {
-    question: "What if a customer doesn't have Apple or Google Wallet?",
+    question: "How do I cancel?",
     answer:
-      "They can still access their card via a web link. It works on any device with a browser, though the wallet experience is smoother for most customers.",
+      "Cancel anytime from your dashboard. No cancellation fees, no long-term contracts. Your customers keep their passes until they expire or you choose to deactivate them.",
   },
 ];
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-20 sm:py-28 lg:py-36 relative">
+    <section id="faq" className="py-20 sm:py-28 lg:py-36 relative bg-[var(--background-subtle)]">
       <Container>
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 text-blue-700 text-sm font-medium mb-6 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-800/30 dark:text-blue-400">
-              Got questions?
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
+              FAQ
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
               Frequently asked questions
@@ -44,7 +59,7 @@ export function FAQSection() {
             {faqs.map((faq, index) => (
               <details
                 key={index}
-                className="group premium-card rounded-2xl overflow-hidden"
+                className="group clean-card rounded-2xl overflow-hidden"
               >
                 <summary className="p-6 cursor-pointer list-none flex items-center justify-between gap-4 text-left font-semibold text-lg text-[var(--foreground)] hover:text-[var(--muted-foreground)] transition-colors duration-200">
                   <span>{faq.question}</span>

@@ -3,7 +3,7 @@ import { Container } from "../ui/Container";
 
 const footerLinks = {
   Product: [
-    { name: "Features", href: "#" },
+    { name: "Features", href: "#benefits" },
     { name: "Pricing", href: "#pricing" },
     { name: "FAQ", href: "#faq" },
   ],
@@ -26,7 +26,7 @@ export function Footer() {
           {/* Logo and description */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+              <div className="w-10 h-10 bg-[var(--accent)] rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold">S</span>
               </div>
               <span className="font-semibold text-xl text-[var(--foreground)]">
@@ -69,7 +69,7 @@ export function Footer() {
             {/* Social links */}
             <a
               href="#"
-              className="w-10 h-10 bg-[var(--muted)] hover:bg-[var(--border)] rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all"
+              className="w-10 h-10 bg-[var(--muted)] hover:bg-[var(--border)] rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
               aria-label="Twitter"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -78,7 +78,7 @@ export function Footer() {
             </a>
             <a
               href="#"
-              className="w-10 h-10 bg-[var(--muted)] hover:bg-[var(--border)] rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all"
+              className="w-10 h-10 bg-[var(--muted)] hover:bg-[var(--border)] rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
               aria-label="LinkedIn"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -87,7 +87,7 @@ export function Footer() {
             </a>
             <a
               href="#"
-              className="w-10 h-10 bg-[var(--muted)] hover:bg-[var(--border)] rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all"
+              className="w-10 h-10 bg-[var(--muted)] hover:bg-[var(--border)] rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
               aria-label="Instagram"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
