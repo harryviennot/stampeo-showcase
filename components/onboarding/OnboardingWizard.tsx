@@ -283,27 +283,31 @@ export function OnboardingWizard() {
   const stepVariants = {
     enter: (custom: { direction: number; isSpecial: boolean }) => {
       // Standard transition
-      let x = custom.direction > 0 ? 50 : -50;
-      let opacity = 0;
-      let scale = 0.98;
 
       if (custom.isSpecial) {
         // Step 2 -> 3 (Enter Form 3 from Left)
         if (custom.direction > 0) {
-          x = -100; // Use % in string if needed, but here simple number might be safer or string "-100%"
-          return { x: "-100%", opacity: 0, scale: 0.7, zIndex: 10 };
+          // Use % in string if needed, but here simple number might be safer or string "-100%"
+          return { x: "-100%", opacity: 0, scale: 0.7, zIndex: 10, width: "100%" };
         }
         // Step 3 -> 2 (Enter Form 2 from Right)
-        return { x: "100%", opacity: 0, scale: 0.7, zIndex: 10 };
+        return { x: "100%", opacity: 0, scale: 0.7, zIndex: 10, width: "100%" };
       }
 
-      return { x, opacity, scale, zIndex: 10 };
+      return {
+        x: custom.direction > 0 ? 50 : -50,
+        opacity: 0,
+        scale: 0.98,
+        zIndex: 10,
+        width: "100%"
+      };
     },
     center: {
       zIndex: 10,
       x: 0,
       opacity: 1,
       scale: 1,
+      width: "100%", // Explicit width to match exit state
       transition: {
         type: "tween" as const,
         ease: "easeInOut" as const,
@@ -321,6 +325,7 @@ export function OnboardingWizard() {
             scale: 0.7,
             position: "absolute",
             top: 0, // Align to top of container
+            left: 0,
             width: "100%", // Maintain width
             transition: { duration: 0.5, ease: "easeInOut" as const }
           };
@@ -333,6 +338,7 @@ export function OnboardingWizard() {
           scale: 0.7,
           position: "absolute",
           top: 0,
+          left: 0,
           width: "100%",
           transition: { duration: 0.5, ease: "easeInOut" as const }
         };
@@ -344,6 +350,7 @@ export function OnboardingWizard() {
         scale: 0.98,
         position: "absolute",
         top: 0,
+        left: 0,
         width: "100%",
         transition: {
           duration: 0.3,
