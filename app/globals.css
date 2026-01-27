@@ -1,84 +1,172 @@
 @import "tailwindcss";
 
 :root {
-  /* Base - Clean white/neutral */
-  --background: #ffffff;
-  --background-subtle: #fafafa;
-  --foreground: #111827;
-  --primary: #1e293b;
+  /* Base - Soft warm gray (professional, appeals to all businesses) */
+  --background: #f7f7f5;
+  --background-subtle: #f0efe9;
+  --foreground: #1a1a1a;
+  --near-black: #191210;
 
-  /* Stamp colors - Multicolor for visual variety */
-  --stamp-coral: #f97316;
-  --stamp-pink: #ec4899;
-  --stamp-violet: #8b5cf6;
-  --stamp-blue: #3b82f6;
-  --stamp-teal: #14b8a6;
-  --stamp-green: #22c55e;
-  --stamp-yellow: #eab308;
+  /* Paper feel - Light cream (evokes physical loyalty cards) */
+  --paper: #faf9f6;
+  --paper-hover: #f5f4f0;
+  --cream: #faf9f6;
+
+  /* Primary - Dark slate */
+  --primary: #2d3436;
+  --primary-hover: #1e2324;
+
+  /* Accent - Terracotta/Burnt orange (CTAs, stamps, highlights) */
+  --accent: #c75b39;
+  --accent-hover: #b04e2f;
+  --accent-light: #f5ebe7;
+  --accent-muted: rgba(199, 91, 57, 0.1);
+  --terracotta: #c75b39;
+
+  /* Decorative stamp colors (geometric elements) */
+  --stamp-terracotta: #c75b39;
+  --stamp-coral: #e07b5d;
+  --stamp-sand: #d4a574;
+  --stamp-sage: #7d9f7d;
 
   /* Neutrals */
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
-  --border-light: #f1f5f9;
+  --muted: #e8e6e1;
+  --muted-foreground: #6b7280;
+  --muted-gray: #8c655a;
+  --border: #ddd9d0;
+  --border-light: #e8e6e1;
 
-  /* Accent for CTAs */
-  --accent: #f97316;
-  --accent-hover: #ea580c;
-
-  /* Card styles - clean, solid */
-  --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
-  --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+  /* Card styles */
+  --card-bg: var(--cream);
+  --card-border: rgba(255, 255, 255, 0.5);
+  --card-shadow: 0 2px 8px rgba(45, 52, 54, 0.06), 0 8px 24px rgba(45, 52, 54, 0.04);
+  --card-shadow-hover: 0 8px 32px rgba(45, 52, 54, 0.1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
+  --color-primary: var(--accent);
   --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-/* Force light mode - remove dark mode support */
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Clean card style */
-.clean-card {
-  background: var(--card-bg);
+/* Paper-textured card style */
+.paper-card {
+  background: var(--cream);
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
-  transition: box-shadow 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.clean-card:hover {
+.paper-card:hover {
   box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
-/* Subtle grid pattern */
-.grid-pattern {
-  background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
-  background-size: 48px 48px;
+/* Geometric stamp decoration */
+.stamp-decoration {
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-size: contain;
 }
 
+/* Floating geometric shapes container */
+.geo-decorations {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
 
-/* ===== Scroll Reveal Animations - Simple fade-in only ===== */
+.geo-shape {
+  position: absolute;
+  opacity: 0.1;
+}
 
-/* Base state for scroll reveal elements */
+.geo-shape.terracotta { color: var(--stamp-terracotta); }
+.geo-shape.coral { color: var(--stamp-coral); }
+.geo-shape.sand { color: var(--stamp-sand); }
+.geo-shape.sage { color: var(--stamp-sage); }
+
+/* Stamp pattern for bold sections */
+.stamp-pattern {
+  background-color: var(--background);
+  position: relative;
+  overflow: hidden;
+}
+
+.stamp-shape {
+  position: absolute;
+  opacity: 0.25;
+  z-index: 0;
+}
+
+/* Float animation for geometric elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+.geo-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Pulse animation for badges */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Button styles */
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--foreground);
+  font-weight: 700;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--muted);
+}
+
+/* ===== Scroll Reveal Animations ===== */
+
 .scroll-reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -92,7 +180,6 @@ html {
   transform: translateY(0);
 }
 
-/* Staggered children animation */
 .scroll-reveal-stagger > * {
   opacity: 0;
   transform: translateY(16px);
@@ -113,7 +200,6 @@ html {
   transform: translateY(0);
 }
 
-/* Slide from left - simplified */
 .scroll-reveal-left {
   opacity: 0;
   transform: translateX(-30px);
@@ -127,7 +213,6 @@ html {
   transform: translateX(0);
 }
 
-/* Slide from right - simplified */
 .scroll-reveal-right {
   opacity: 0;
   transform: translateX(30px);
@@ -141,7 +226,6 @@ html {
   transform: translateX(0);
 }
 
-/* Scale up reveal - simplified */
 .scroll-reveal-scale {
   opacity: 0;
   transform: scale(0.95);
@@ -155,16 +239,7 @@ html {
   transform: scale(1);
 }
 
-/* Blur reveal - just fade, no blur */
-.scroll-reveal-blur {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.6s ease-out,
-    transform 0.6s ease-out;
-}
-
-.scroll-reveal-blur.revealed {
-  opacity: 1;
-  transform: translateY(0);
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }

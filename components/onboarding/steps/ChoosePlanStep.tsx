@@ -79,13 +79,16 @@ export function ChoosePlanStep({ store, onBack }: ChoosePlanStepProps) {
           return;
         }
 
-        // Success! Clear localStorage and redirect to app
+        // Business created successfully - clear localStorage
         clearStore();
 
-        // Redirect to the business app
+        // Small delay to ensure database consistency before redirect
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Redirect to the business app with the new business ID
         const appUrl =
           process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
-        window.location.href = `${appUrl}?onboarding=complete`;
+        window.location.href = `${appUrl}?onboarding=complete&business_id=${business.id}`;
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         setLoading(false);

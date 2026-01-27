@@ -2,9 +2,75 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button } from "../ui/Button";
 import { MenuIcon, XMarkIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
+
+import type { User } from "@supabase/supabase-js";
+
+function DesktopAuthButtons({
+  loading,
+  user,
+  appUrl,
+  onSignOut,
+}: Readonly<{
+  loading: boolean;
+  user: User | null;
+  appUrl: string;
+  onSignOut: () => void;
+}>) {
+  if (loading) {
+    return <div className="w-24 h-10 bg-[var(--muted)] animate-pulse rounded-xl" />;
+  }
+
+  if (user) {
+    return (
+      <>
+        <button
+          onClick={onSignOut}
+          className="px-4 py-2 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+        >
+          Sign out
+        </button>
+        <Link
+          href={appUrl}
+          className="flex items-center justify-center h-10 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all"
+        >
+          Dashboard
+        </Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Link
+        href="/login"
+        className="px-4 py-2 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+      >
+        Log in
+      </Link>
+      <Link
+        href="/onboarding"
+        className="flex items-center justify-center h-10 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all active:scale-95"
+      >
+        Get Started
+      </Link>
+    </>
+  );
+}
+
+function StampeoLogo() {
+  return (
+    <svg className="w-8 h-8" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+      <path
+        clipRule="evenodd"
+        d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+    </svg>
+  );
+}
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -26,122 +92,116 @@ export function Header() {
     setMobileMenuOpen(false);
   };
 
+  const navItems = ["Features", "Pricing", "FAQ"];
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <div className={`mx-4 mt-4 sm:mx-6 lg:mx-8 transition-all duration-300 ${scrolled ? "mx-2 sm:mx-4 lg:mx-6" : ""}`}>
-        <div className={`bg-[var(--background)] rounded-2xl px-4 sm:px-6 transition-all duration-300 border border-[var(--border)] ${scrolled ? "shadow-lg" : "shadow-sm"}`}>
-          <nav className="flex items-center justify-between h-14 max-w-7xl mx-auto">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 bg-[var(--accent)] rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-sm">S</span>
-              </div>
-              <span className="font-semibold text-lg text-[var(--foreground)]">
-                Stampeo
-              </span>
-            </Link>
+      <div
+        className={`transition-all duration-300 border-b ${
+          scrolled
+            ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
+            : "bg-transparent border-transparent"
+        }`}
+      >
+        <nav className="flex items-center justify-between px-6 lg:px-10 py-5 max-w-[1400px] mx-auto">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <div className="text-[var(--accent)]">
+              <StampeoLogo />
+            </div>
+            <span className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">
+              Stampeo
+            </span>
+          </Link>
 
-            {/* Desktop navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {["How it works", "Benefits", "Pricing", "FAQ"].map((item) => (
+          {/* Desktop navigation */}
+          <div className="hidden md:flex items-center gap-9">
+            {navItems.map((item) => (
+              <Link
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className="text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              >
+                {item}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop auth */}
+          <div className="hidden md:flex items-center gap-3">
+            <DesktopAuthButtons
+              loading={loading}
+              user={user}
+              appUrl={appUrl}
+              onSignOut={handleSignOut}
+            />
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <XMarkIcon className="w-6 h-6" />
+            ) : (
+              <MenuIcon className="w-6 h-6" />
+            )}
+          </button>
+        </nav>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden px-6 py-4 border-t border-[var(--accent)]/10 bg-[var(--cream)]">
+            <div className="flex flex-col gap-1">
+              {navItems.map((item) => (
                 <Link
                   key={item}
-                  href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                  className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] rounded-lg transition-colors duration-200"
+                  href={`#${item.toLowerCase()}`}
+                  className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 rounded-xl transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   {item}
                 </Link>
               ))}
-            </div>
-
-            <div className="hidden md:flex items-center gap-3">
-              {loading ? (
-                <div className="w-20 h-8 bg-[var(--muted)] animate-pulse rounded-lg" />
-              ) : user ? (
-                <>
-                  <button
-                    onClick={handleSignOut}
-                    className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                  >
-                    Sign out
-                  </button>
-                  <Button href={appUrl} size="default">
-                    Dashboard
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="px-4 py-2 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                  >
-                    Log in
-                  </Link>
-                  <Button href="/onboarding" size="default">
-                    Start free trial
-                  </Button>
-                </>
-              )}
-            </div>
-
-            {/* Mobile menu button */}
-            <button
-              className="md:hidden p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <XMarkIcon className="w-6 h-6" />
-              ) : (
-                <MenuIcon className="w-6 h-6" />
-              )}
-            </button>
-          </nav>
-
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-[var(--border)]">
-              <div className="flex flex-col gap-1">
-                {["How it works", "Benefits", "Pricing", "FAQ"].map((item) => (
-                  <Link
-                    key={item}
-                    href={`#${item.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="px-4 py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] rounded-lg transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item}
-                  </Link>
-                ))}
-                <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-[var(--border)]">
-                  {user ? (
-                    <>
-                      <button
-                        onClick={handleSignOut}
-                        className="px-4 py-3 text-sm text-left text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                      >
-                        Sign out
-                      </button>
-                      <Button href={appUrl} size="default" className="mx-4">
-                        Dashboard
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href="/login"
-                        className="px-4 py-3 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Log in
-                      </Link>
-                      <Button href="/signup" size="default" className="mx-4">
-                        Start free trial
-                      </Button>
-                    </>
-                  )}
-                </div>
+              <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-[var(--accent)]/10">
+                {user ? (
+                  <>
+                    <button
+                      onClick={handleSignOut}
+                      className="px-4 py-3 text-sm text-left font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+                    >
+                      Sign out
+                    </button>
+                    <Link
+                      href={appUrl}
+                      className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
+                    >
+                      Dashboard
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      href="/onboarding"
+                      className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </header>
   );

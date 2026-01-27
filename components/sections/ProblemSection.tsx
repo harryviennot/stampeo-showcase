@@ -1,92 +1,114 @@
-import { Container } from "../ui/Container";
+"use client";
+
+import { ScrollReveal } from "../ui/ScrollReveal";
 
 export function ProblemSection() {
   return (
-    <section className="py-20 sm:py-28 lg:py-36 relative">
-      <Container>
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)] leading-tight">
-            Paper cards disappear.
-            <br />
-            <span className="text-[var(--muted-foreground)]">
-              Apps never get downloaded.
-            </span>
-          </h2>
+    <section id="features" className="relative py-24 lg:py-32">
+      {/* Floating Geometric Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-[var(--accent)]/10" />
+        <div className="absolute top-[40%] right-[5%] w-24 h-24 rotate-45 bg-[var(--stamp-coral)]/10 rounded-lg" />
+        <div className="absolute bottom-20 left-[15%] w-40 h-40 rounded-full border-4 border-[var(--accent)]/5" />
+      </div>
 
-          <p className="mt-8 text-lg sm:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-2xl mx-auto">
-            Your customers want to support you — but they forget punch cards at
-            home, lose them in a drawer, or won&apos;t install another app for
-            one coffee shop.
+      <div className="relative z-10 max-w-[960px] mx-auto px-6">
+        {/* Problem Statement */}
+        <ScrollReveal className="text-center mb-16">
+          <p className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed text-[var(--foreground)]">
+            <span>&ldquo;Every business has loyal customers. </span>
+            <span className="text-[var(--muted-foreground)]">
+              But 87% of paper punch cards end up lost in a drawer. And nobody downloads another loyalty app.
+            </span>
+            <span>&rdquo;</span>
+          </p>
+        </ScrollReveal>
+
+        {/* Problem Cards */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+          {/* Lost Cards */}
+          <div className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-lg border border-white/50 transition-transform duration-300 hover:-translate-y-2">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+              <span className="text-3xl">📄</span>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="text-2xl font-bold text-[var(--foreground)]">Lost in drawers</h3>
+              <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
+                Paper cards get crumpled, forgotten in pockets, or thrown away. Your loyalty program becomes invisible.
+              </p>
+            </div>
+          </div>
+
+          {/* App Fatigue */}
+          <div className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-lg border border-white/50 transition-transform duration-300 hover:-translate-y-2">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+              <span className="text-3xl">📱</span>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="text-2xl font-bold text-[var(--foreground)]">App fatigue</h3>
+              <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
+                Customers won&apos;t download another app just for stamps. The friction kills engagement before it starts.
+              </p>
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Divider Arrow */}
+        <ScrollReveal delay={300} className="flex justify-center mb-20">
+          <div className="flex flex-col items-center gap-4 text-[var(--accent)]">
+            <div className="w-px h-16 bg-gradient-to-b from-transparent via-[var(--accent)]/30 to-[var(--accent)]" />
+            <span className="text-2xl">↓</span>
+          </div>
+        </ScrollReveal>
+
+        {/* Solution Statement */}
+        <ScrollReveal delay={400} className="text-center">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-[var(--foreground)] mb-6">
+            Stampeo puts your loyalty card where customers already look:
+          </h2>
+          <p className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[var(--accent)]">
+            Their phone wallet.
           </p>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Problem card 1 */}
-            <div className="clean-card rounded-3xl p-8 text-left">
-              <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
-                <svg
-                  className="w-7 h-7 text-red-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+          {/* Phone Illustration */}
+          <div className="mt-16 flex justify-center">
+            <div className="relative">
+              <div className="w-64 h-[500px] bg-[var(--foreground)] rounded-[3rem] p-3 shadow-2xl">
+                <div className="w-full h-full bg-[var(--background)] rounded-[2.5rem] overflow-hidden flex flex-col">
+                  {/* Status bar */}
+                  <div className="h-8 bg-[var(--foreground)] flex items-center justify-center">
+                    <div className="w-20 h-5 bg-[var(--foreground)] rounded-full" />
+                  </div>
+                  {/* Wallet notification */}
+                  <div className="flex-1 flex items-center justify-center p-4">
+                    <div className="w-full bg-[var(--cream)] rounded-2xl p-4 shadow-lg border border-[var(--accent)]/20">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 bg-[var(--accent)] rounded-xl flex items-center justify-center text-white font-bold">
+                          S
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm">Stampeo</p>
+                          <p className="text-xs text-[var(--muted-foreground)]">You earned a stamp! 🎉</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div
+                            key={i}
+                            className={`w-6 h-6 rounded-full ${
+                              i <= 4 ? "bg-[var(--accent)]" : "border-2 border-dashed border-[var(--border)]"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-[var(--foreground)] mb-3">
-                Lost paper cards
-              </h3>
-              <p className="text-[var(--muted-foreground)] leading-relaxed">
-                87% of paper loyalty cards are lost or forgotten within 2 weeks.
-                That&apos;s a lot of missed return visits.
-              </p>
-            </div>
-
-            {/* Problem card 2 */}
-            <div className="clean-card rounded-3xl p-8 text-left">
-              <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
-                <svg
-                  className="w-7 h-7 text-red-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-[var(--foreground)] mb-3">
-                App fatigue
-              </h3>
-              <p className="text-[var(--muted-foreground)] leading-relaxed">
-                Only 5% of customers will download yet another loyalty app.
-                They&apos;re already drowning in apps they don&apos;t use.
-              </p>
             </div>
           </div>
-
-          {/* Solution callout */}
-          <div className="mt-12 relative">
-            <div className="clean-card rounded-3xl p-8 border-2 border-[var(--accent)]/20">
-              <p className="text-lg sm:text-xl font-medium text-[var(--foreground)]">
-                Stampeo solves this by putting your loyalty card exactly where
-                they already look:{" "}
-                <span className="text-[var(--accent)] font-bold">
-                  their phone wallet.
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </Container>
+        </ScrollReveal>
+      </div>
     </section>
   );
 }
