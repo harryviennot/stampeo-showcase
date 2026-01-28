@@ -374,13 +374,15 @@ export function OnboardingWizard() {
           key={step}
           type="button"
           onClick={() => {
+            // Prevent going back to earlier steps once business is created
+            if (store.data.businessId && step < 5) return;
             if (store.completedSteps.includes(step) && step !== store.currentStep) {
               setPrevStep(store.currentStep);
               setDirection(step > store.currentStep ? 1 : -1);
               store.goToStep(step);
             }
           }}
-          disabled={!store.completedSteps.includes(step)}
+          disabled={!store.completedSteps.includes(step) || (step === 4 && isAuthenticated) || (!!store.data.businessId && step < 6)}
           className={`transition-colors duration-200 ${step === store.currentStep
             ? "text-[var(--accent)] font-medium"
             : store.completedSteps.includes(step)
@@ -397,6 +399,9 @@ export function OnboardingWizard() {
   // For step 5 (plan selection), use full-width layout
   const isFullWidthStep = store.currentStep === 5;
 
+  // Detect if entering from step 5 for slide-in animation
+  const isEnteringFromStep5 = prevStep === 5 && store.currentStep === 6;
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       {/* LayoutGroup enables layout animations across components */}
@@ -407,8 +412,8 @@ export function OnboardingWizard() {
             {!isFullWidthStep && (
               <motion.div
                 layout="position"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={isEnteringFromStep5 ? { x: "100%", opacity: 0 } : { opacity: 0, scale: 0.9 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="flex items-center justify-center"
                 style={{

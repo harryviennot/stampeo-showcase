@@ -18,7 +18,6 @@ const backgroundColors = [
   { name: "Dark", value: "#1c1c1e" },
   { name: "Black", value: "#000000" },
   { name: "Navy", value: "#1a237e" },
-  { name: "Forest", value: "#1b5e20" },
   { name: "Wine", value: "#4a1c40" },
   { name: "Slate", value: "#37474f" },
   { name: "Cream", value: "#f5f0e8" },
@@ -27,7 +26,6 @@ const backgroundColors = [
 
 const accentColors = [
   { name: "Orange", value: "#f97316" },
-  { name: "Gold", value: "#d4a853" },
   { name: "Coral", value: "#e57373" },
   { name: "Red", value: "#f44336" },
   { name: "Teal", value: "#26a69a" },
@@ -39,12 +37,11 @@ const accentColors = [
 const iconColors = [
   { name: "White", value: "#ffffff" },
   { name: "Black", value: "#000000" },
-  { name: "Gold", value: "#d4a853" },
-  { name: "Coral", value: "#e57373" },
-  { name: "Red", value: "#f44336" },
-  { name: "Purple", value: "#7e57c2" },
-  { name: "Blue", value: "#42a5f5" },
-  { name: "Green", value: "#4caf50" },
+  { name: "Blue", value: "#3b82f6" },
+  { name: "Emerald", value: "#10b981" },
+  { name: "Amber", value: "#f59e0b" },
+  { name: "Rose", value: "#f43f5e" },
+  { name: "Cyan", value: "#06b6d4" },
 ];
 
 
@@ -251,6 +248,11 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
   // Ensure iconColor has a fallback to accentColor for existing data without it
   const effectiveIconColor = cardDesign.iconColor || cardDesign.accentColor;
 
+  // Check if current colors are custom (not in predefined lists)
+  const isCustomBackground = !backgroundColors.some(c => c.value === cardDesign.backgroundColor);
+  const isCustomAccent = !accentColors.some(c => c.value === cardDesign.accentColor);
+  const isCustomIcon = !iconColors.some(c => c.value === effectiveIconColor);
+
   return (
     <div className="space-y-5">
       {/* Background Color */}
@@ -258,17 +260,17 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
         <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
           Card Background
         </legend>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-8 gap-4">
           {backgroundColors.map((color) => (
             <button
               key={color.value}
               type="button"
               onClick={() => updateCardDesign({ backgroundColor: color.value })}
               className={`
-                w-11 h-11 rounded-xl transition-all duration-200 mx-auto
+                w-12 h-12 rounded-xl transition-all duration-200 mx-auto
                 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
                 ${cardDesign.backgroundColor === color.value
-                  ? "ring-2 ring-[var(--accent)] ring-offset-2 scale-110"
+                  ? "ring-2 ring-[var(--accent)] ring-offset-2 "
                   : "ring-1 ring-black/10"
                 }
               `}
@@ -279,7 +281,9 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
           ))}
           {/* Custom color input */}
           <div
-            className="w-11 h-11 rounded-xl cursor-pointer transition-all duration-200 mx-auto hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400 ring-1 ring-black/10 relative"
+            className={`w-12 h-12 rounded-xl cursor-pointer transition-all duration-200 mx-auto focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-white relative ${
+              isCustomBackground ? "ring-2 ring-[var(--accent)] ring-offset-2" : "ring-1 ring-black/20"
+            }`}
             title="Custom color"
           >
             <input
@@ -289,7 +293,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
               className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
               aria-label="Custom background color"
             />
-            <Palette className="w-5 h-5 text-white drop-shadow pointer-events-none" weight="bold" />
+            <Palette className="w-5 h-5 text-[var(--muted-foreground)] pointer-events-none" weight="bold" />
           </div>
         </div>
       </fieldset>
@@ -299,17 +303,17 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
         <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
           Accent Color
         </legend>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-8 gap-4">
           {accentColors.map((color) => (
             <button
               key={color.value}
               type="button"
               onClick={() => updateCardDesign({ accentColor: color.value })}
               className={`
-                w-11 h-11 rounded-xl transition-all duration-200 mx-auto
+                w-12 h-12 rounded-xl transition-all duration-200 mx-auto
                 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
                 ${cardDesign.accentColor === color.value
-                  ? "ring-2 ring-[var(--accent)] ring-offset-2 scale-110"
+                  ? "ring-2 ring-[var(--accent)] ring-offset-2 "
                   : "ring-1 ring-black/10"
                 }
               `}
@@ -320,7 +324,9 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
           ))}
           {/* Custom color input */}
           <div
-            className="w-11 h-11 rounded-xl cursor-pointer transition-all duration-200 mx-auto hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400 ring-1 ring-black/10 relative"
+            className={`w-12 h-12 rounded-xl cursor-pointer transition-all duration-200 mx-auto focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-white relative ${
+              isCustomAccent ? "ring-2 ring-[var(--accent)] ring-offset-2" : "ring-1 ring-black/20"
+            }`}
             title="Custom color"
           >
             <input
@@ -330,7 +336,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
               className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
               aria-label="Custom accent color"
             />
-            <Palette className="w-5 h-5 text-white drop-shadow pointer-events-none" weight="bold" />
+            <Palette className="w-5 h-5 text-[var(--muted-foreground)] pointer-events-none" weight="bold" />
           </div>
         </div>
       </fieldset>
@@ -340,17 +346,17 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
         <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
           Icon Color
         </legend>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
+        <div className="grid grid-cols-4 sm:grid-cols-8 gap-4">
           {iconColors.map((color) => (
             <button
               key={color.value}
               type="button"
               onClick={() => updateCardDesign({ iconColor: color.value })}
               className={`
-                w-11 h-11 rounded-xl transition-all duration-200 mx-auto
+                w-12 h-12 rounded-xl transition-all duration-200 mx-auto
                 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
                 ${effectiveIconColor === color.value
-                  ? "ring-2 ring-[var(--accent)] ring-offset-2 scale-110"
+                  ? "ring-2 ring-[var(--accent)] ring-offset-2"
                   : "ring-1 ring-black/10"
                 }
               `}
@@ -361,7 +367,9 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
           ))}
           {/* Custom color input */}
           <div
-            className="w-11 h-11 rounded-xl cursor-pointer transition-all duration-200 mx-auto hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400 ring-1 ring-black/10 relative"
+            className={`w-12 h-12 rounded-xl cursor-pointer transition-all duration-200 mx-auto focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-white relative ${
+              isCustomIcon ? "ring-2 ring-[var(--accent)] ring-offset-2" : "ring-1 ring-black/20"
+            }`}
             title="Custom color"
           >
             <input
@@ -371,7 +379,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
               className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
               aria-label="Custom icon color"
             />
-            <Palette className="w-5 h-5 text-white drop-shadow pointer-events-none" weight="bold" />
+            <Palette className="w-5 h-5 text-[var(--muted-foreground)] pointer-events-none" weight="bold" />
           </div>
         </div>
       </fieldset>

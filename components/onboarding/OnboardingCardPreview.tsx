@@ -64,6 +64,16 @@ function isLightColor(color: string): boolean {
   return luminance > 0.5;
 }
 
+// Helper to adjust color brightness
+function adjustBrightness(hex: string, percent: number): string {
+  if (!hex?.startsWith("#")) return hex; // Fallback for var() or rgba
+  const num = Number.parseInt(hex.replace("#", ""), 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + percent));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + percent));
+  const b = Math.min(255, Math.max(0, (num & 0x0000ff) + percent));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+}
+
 export function OnboardingCardPreview({
   businessName,
   category,
@@ -85,6 +95,10 @@ export function OnboardingCardPreview({
   const backgroundColor = design?.backgroundColor ?? "#1c1c1e";
   const accentColor = design?.accentColor ?? "#f97316";
   const iconColor = design?.iconColor ?? accentColor;
+
+  // Calculate gradient colors for more depth
+  const bgGradientFrom = adjustBrightness(backgroundColor, 15);
+  const bgGradientTo = adjustBrightness(backgroundColor, -10);
 
   // Determine text color based on background
   const isLightBg = isLightColor(backgroundColor);
@@ -158,16 +172,18 @@ export function OnboardingCardPreview({
       >
         {/* Card Content Layer */}
         <div
-          className="absolute inset-0 rounded-[1.5rem] overflow-hidden transition-colors duration-300"
-          style={{ backgroundColor }}
+          className="absolute inset-0 rounded-[1.5rem] overflow-hidden transition-all duration-300"
+          style={{
+            background: `linear-gradient(135deg, ${bgGradientFrom}, ${bgGradientTo})`
+          }}
         >
           {/* Subtle gradient overlay */}
           <div
             className="absolute inset-0 transition-opacity duration-300"
             style={{
               background: isLightBg
-                ? "linear-gradient(to bottom right, rgba(0,0,0,0.02), transparent, rgba(0,0,0,0.08))"
-                : "linear-gradient(to bottom right, rgba(255,255,255,0.08), transparent, rgba(0,0,0,0.2))"
+                ? "linear-gradient(to bottom right, rgba(255,255,255,0.4), transparent, rgba(0,0,0,0.05))"
+                : "linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent, rgba(0,0,0,0.2))"
             }}
           />
 

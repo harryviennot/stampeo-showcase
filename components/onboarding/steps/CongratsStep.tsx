@@ -11,9 +11,11 @@ export function CongratsStep({ store }: CongratsStepProps) {
   const { data } = store;
 
   const handleLetsGo = useCallback(() => {
+    // Clear onboarding data before redirecting for a clean slate
+    store.clearStore();
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
     window.location.href = appUrl;
-  }, []);
+  }, [store]);
 
   return (
     <div className="w-full max-w-md mx-auto text-center py-4">

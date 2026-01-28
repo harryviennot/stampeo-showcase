@@ -59,6 +59,13 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
       setLoading(true);
 
       try {
+        // Skip business creation if already created (user went back and returned)
+        if (data.businessId) {
+          setLoading(false);
+          onNext();
+          return;
+        }
+
         // Create business via API
         const payload: BusinessCreatePayload = {
           name: data.businessName,
@@ -79,6 +86,9 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
           setLoading(false);
           return;
         }
+
+        // Store the business ID to prevent re-creation if user goes back
+        updateData({ businessId: business.id });
 
         // Business created successfully - go to congrats step
         // Don't clear store yet - CongratsStep needs the data
@@ -203,17 +213,19 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
         ))}
       </div>
 
-      {/* Back button */}
-      <div className="text-center">
-        <button
-          type="button"
-          onClick={onBack}
-          disabled={loading}
-          className="py-2 px-6 text-[var(--muted-foreground)] hover:text-[var(--foreground)] font-medium transition-colors disabled:opacity-50"
-        >
-          Go back
-        </button>
-      </div>
+      {/* Back button - hidden if business already created */}
+      {!data.businessId && (
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={onBack}
+            disabled={loading}
+            className="py-2 px-6 text-[var(--muted-foreground)] hover:text-[var(--foreground)] font-medium transition-colors disabled:opacity-50"
+          >
+            Go back
+          </button>
+        </div>
+      )}
 
       <p className="text-center mt-4 text-xs text-[var(--muted-foreground)]">
         Both plans include a 14-day free trial. Cancel anytime.
