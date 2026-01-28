@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback } from "react";
+import { Info } from "@phosphor-icons/react";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { ImageUploadBox } from "@/components/ui/ImageUploadBox";
-import { StampIconPicker, StampIconType } from "../StampIconPicker";
+import { StampIconPicker, RewardIconPicker, StampIconType } from "../StampIconPicker";
 import { uploadOnboardingLogo, deleteOnboardingLogo } from "@/lib/onboarding";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface AssetUploadSubstepProps {
   store: OnboardingStore;
@@ -59,12 +61,19 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
     [updateCardDesign]
   );
 
+  const handleRewardIconChange = useCallback(
+    (icon: StampIconType) => {
+      updateCardDesign({ rewardIcon: icon });
+    },
+    [updateCardDesign]
+  );
+
   return (
     <div className="space-y-6">
       {/* Logo Upload - horizontal layout */}
-      <div className="flex items-start gap-4">
+      <div className="flex items-end gap-4">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-[var(--foreground)] mb-1">
+          <label className="block text-sm font-medium text-[var(--foreground)] mb-1.5">
             Business Logo
             <span className="text-[var(--muted-foreground)] font-normal ml-1">(optional)</span>
           </label>
@@ -83,12 +92,44 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
 
       {/* Stamp Icon Picker */}
       <div>
-        <label className="block text-sm font-medium text-[var(--foreground)] mb-3">
+        <label className="flex items-center gap-1.5 text-sm font-medium text-[var(--foreground)] mb-3">
           Stamp Icon
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="cursor-help">
+                <Info className="w-4 h-4 text-[var(--muted-foreground)]" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              You can request a custom icon in the dashboard!
+            </TooltipContent>
+          </Tooltip>
         </label>
         <StampIconPicker
           value={data.cardDesign.stampIcon as StampIconType}
           onChange={handleStampIconChange}
+          accentColor={data.cardDesign.accentColor}
+        />
+      </div>
+
+      {/* Reward Icon Picker */}
+      <div>
+        <label className="flex items-center gap-1.5 text-sm font-medium text-[var(--foreground)] mb-3">
+          Reward Icon
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="cursor-help">
+                <Info className="w-4 h-4 text-[var(--muted-foreground)]" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              Icon shown on the final stamp
+            </TooltipContent>
+          </Tooltip>
+        </label>
+        <RewardIconPicker
+          value={data.cardDesign.rewardIcon as StampIconType}
+          onChange={handleRewardIconChange}
           accentColor={data.cardDesign.accentColor}
         />
       </div>

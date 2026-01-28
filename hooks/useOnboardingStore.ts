@@ -5,8 +5,10 @@ import { useState, useEffect, useCallback } from "react";
 export interface CardDesign {
   backgroundColor: string;
   accentColor: string;
+  iconColor: string;              // Stamp icon color (the icon inside the stamp)
   logoUrl: string | null;         // URL or base64 data URL
   stampIcon: string;              // Preset icon: 'checkmark' | 'coffee' | 'star' | 'heart' | 'gift' | 'thumbsup'
+  rewardIcon: string;             // Final stamp (reward) icon: 'gift' | 'trophy' | 'star' | 'crown' | etc.
 }
 
 export interface OnboardingData {
@@ -39,9 +41,11 @@ const STORAGE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 const defaultCardDesign: CardDesign = {
   backgroundColor: "#1c1c1e",
-  accentColor: "#c75b39",
+  accentColor: "#f97316",
+  iconColor: "#ffffff",
   logoUrl: null,
   stampIcon: "checkmark",
+  rewardIcon: "gift",
 };
 
 const initialData: OnboardingData = {

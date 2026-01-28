@@ -113,7 +113,7 @@ export function ImageUploadBox({
           <span className="block text-xs text-[var(--muted-foreground)] mb-1">{label}</span>
         )}
         <div
-          className="relative rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)]/30 flex items-center justify-center p-2"
+          className="group relative rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)]/30 flex items-center justify-center p-2"
           style={{ height: LOGO_HEIGHT + 16, maxWidth: LOGO_MAX_WIDTH + 16 }}
         >
           <img
@@ -125,7 +125,7 @@ export function ImageUploadBox({
           <button
             type="button"
             onClick={onClear}
-            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors"
+            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
             aria-label="Remove image"
           >
             <X className="w-3 h-3 text-white" weight="bold" />
@@ -143,7 +143,7 @@ export function ImageUploadBox({
         {label && (
           <span className="block text-xs text-[var(--muted-foreground)] mb-1">{label}</span>
         )}
-        <div className="relative w-[100px] h-[100px] rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)]/30">
+        <div className="group relative w-[100px] h-[100px] rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)]/30">
           <img
             src={value}
             alt="Uploaded"
@@ -152,7 +152,7 @@ export function ImageUploadBox({
           <button
             type="button"
             onClick={onClear}
-            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors"
+            className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
             aria-label="Remove image"
           >
             <X className="w-3 h-3 text-white" weight="bold" />

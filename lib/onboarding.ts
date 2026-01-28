@@ -148,8 +148,10 @@ export interface OnboardingProgressPayload {
   card_design?: {
     background_color: string;
     accent_color: string;
+    icon_color?: string;
     logo_url?: string;
     stamp_icon?: string;
+    reward_icon?: string;
   };
   current_step: number;
   completed_steps: number[];
@@ -167,8 +169,10 @@ export interface OnboardingProgressResponse {
   card_design?: {
     background_color: string;
     accent_color: string;
+    icon_color?: string;
     logo_url?: string;
     stamp_icon?: string;
+    reward_icon?: string;
   };
   current_step: number;
   completed_steps: number[];

@@ -13,23 +13,38 @@ interface CardPreviewStepProps {
   onBack: () => void;
 }
 
-// Predefined color palette for quick selection
+// Predefined color palette for quick selection (8 colors each)
 const backgroundColors = [
   { name: "Dark", value: "#1c1c1e" },
+  { name: "Black", value: "#000000" },
   { name: "Navy", value: "#1a237e" },
   { name: "Forest", value: "#1b5e20" },
   { name: "Wine", value: "#4a1c40" },
   { name: "Slate", value: "#37474f" },
   { name: "Cream", value: "#f5f0e8" },
+  { name: "White", value: "#ffffff" },
 ];
 
 const accentColors = [
-  { name: "Terracotta", value: "#f97316" },
+  { name: "Orange", value: "#f97316" },
   { name: "Gold", value: "#d4a853" },
   { name: "Coral", value: "#e57373" },
+  { name: "Red", value: "#f44336" },
   { name: "Teal", value: "#26a69a" },
   { name: "Purple", value: "#7e57c2" },
   { name: "Blue", value: "#42a5f5" },
+  { name: "Green", value: "#4caf50" },
+];
+
+const iconColors = [
+  { name: "White", value: "#ffffff" },
+  { name: "Black", value: "#000000" },
+  { name: "Gold", value: "#d4a853" },
+  { name: "Coral", value: "#e57373" },
+  { name: "Red", value: "#f44336" },
+  { name: "Purple", value: "#7e57c2" },
+  { name: "Blue", value: "#42a5f5" },
+  { name: "Green", value: "#4caf50" },
 ];
 
 
@@ -152,7 +167,7 @@ export function CardPreviewStep({
       <SubstepDots current={substep} total={2} />
 
       {/* Animated substep content */}
-      <div className="min-h-[280px] relative">
+      <div className="min-h-[320px] relative">
         <AnimatePresence mode="wait" initial={false} custom={direction}>
           <motion.div
             key={substep}
@@ -227,26 +242,30 @@ interface ColorPickerSubstepProps {
   cardDesign: {
     backgroundColor: string;
     accentColor: string;
+    iconColor?: string;
   };
-  updateCardDesign: (updates: Partial<{ backgroundColor: string; accentColor: string }>) => void;
+  updateCardDesign: (updates: Partial<{ backgroundColor: string; accentColor: string; iconColor: string }>) => void;
 }
 
 function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstepProps) {
+  // Ensure iconColor has a fallback to accentColor for existing data without it
+  const effectiveIconColor = cardDesign.iconColor || cardDesign.accentColor;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Background Color */}
       <fieldset>
-        <legend className="block text-sm font-medium text-[var(--foreground)] mb-3">
+        <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
           Card Background
         </legend>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
           {backgroundColors.map((color) => (
             <button
               key={color.value}
               type="button"
               onClick={() => updateCardDesign({ backgroundColor: color.value })}
               className={`
-                w-11 h-11 rounded-xl transition-all duration-200
+                w-11 h-11 rounded-xl transition-all duration-200 mx-auto
                 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
                 ${cardDesign.backgroundColor === color.value
                   ? "ring-2 ring-[var(--accent)] ring-offset-2 scale-110"
@@ -260,12 +279,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
           ))}
           {/* Custom color input */}
           <div
-            className={`
-              w-11 h-11 rounded-xl cursor-pointer transition-all duration-200
-              hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2
-              flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400
-              ring-1 ring-black/10 relative
-            `}
+            className="w-11 h-11 rounded-xl cursor-pointer transition-all duration-200 mx-auto hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400 ring-1 ring-black/10 relative"
             title="Custom color"
           >
             <input
@@ -282,17 +296,17 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
 
       {/* Accent Color */}
       <fieldset>
-        <legend className="block text-sm font-medium text-[var(--foreground)] mb-3">
+        <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
           Accent Color
         </legend>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
           {accentColors.map((color) => (
             <button
               key={color.value}
               type="button"
               onClick={() => updateCardDesign({ accentColor: color.value })}
               className={`
-                w-11 h-11 rounded-xl transition-all duration-200
+                w-11 h-11 rounded-xl transition-all duration-200 mx-auto
                 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
                 ${cardDesign.accentColor === color.value
                   ? "ring-2 ring-[var(--accent)] ring-offset-2 scale-110"
@@ -306,12 +320,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
           ))}
           {/* Custom color input */}
           <div
-            className={`
-              w-11 h-11 rounded-xl cursor-pointer transition-all duration-200
-              hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2
-              flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400
-              ring-1 ring-black/10 relative
-            `}
+            className="w-11 h-11 rounded-xl cursor-pointer transition-all duration-200 mx-auto hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400 ring-1 ring-black/10 relative"
             title="Custom color"
           >
             <input
@@ -320,6 +329,47 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
               onChange={(e) => updateCardDesign({ accentColor: e.target.value })}
               className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
               aria-label="Custom accent color"
+            />
+            <Palette className="w-5 h-5 text-white drop-shadow pointer-events-none" weight="bold" />
+          </div>
+        </div>
+      </fieldset>
+
+      {/* Icon Color */}
+      <fieldset>
+        <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
+          Icon Color
+        </legend>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
+          {iconColors.map((color) => (
+            <button
+              key={color.value}
+              type="button"
+              onClick={() => updateCardDesign({ iconColor: color.value })}
+              className={`
+                w-11 h-11 rounded-xl transition-all duration-200 mx-auto
+                hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
+                ${effectiveIconColor === color.value
+                  ? "ring-2 ring-[var(--accent)] ring-offset-2 scale-110"
+                  : "ring-1 ring-black/10"
+                }
+              `}
+              style={{ backgroundColor: color.value }}
+              title={color.name}
+              aria-label={`Select ${color.name} icon color`}
+            />
+          ))}
+          {/* Custom color input */}
+          <div
+            className="w-11 h-11 rounded-xl cursor-pointer transition-all duration-200 mx-auto hover:scale-110 focus-within:ring-2 focus-within:ring-[var(--accent)] focus-within:ring-offset-2 flex items-center justify-center bg-gradient-to-br from-red-400 via-green-400 to-blue-400 ring-1 ring-black/10 relative"
+            title="Custom color"
+          >
+            <input
+              type="color"
+              value={effectiveIconColor}
+              onChange={(e) => updateCardDesign({ iconColor: e.target.value })}
+              className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
+              aria-label="Custom icon color"
             />
             <Palette className="w-5 h-5 text-white drop-shadow pointer-events-none" weight="bold" />
           </div>

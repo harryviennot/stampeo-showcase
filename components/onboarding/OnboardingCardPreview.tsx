@@ -84,6 +84,7 @@ export function OnboardingCardPreview({
   // Always use design colors (they have defaults in the store)
   const backgroundColor = design?.backgroundColor ?? "#1c1c1e";
   const accentColor = design?.accentColor ?? "#f97316";
+  const iconColor = design?.iconColor ?? accentColor;
 
   // Determine text color based on background
   const isLightBg = isLightColor(backgroundColor);
@@ -236,9 +237,11 @@ export function OnboardingCardPreview({
                     isAnimating={animatingStampIndex === i || recentlyAnimated === i}
                     isVanishing={vanishingStampIndex === i}
                     accentColor={accentColor}
+                    iconColor={iconColor}
                     emptyBg={emptyStampBg}
                     emptyBorder={emptyStampBorder}
                     stampIcon={design?.stampIcon as StampIconType}
+                    rewardIcon={design?.rewardIcon as StampIconType}
                   />
                 ))}
               </div>
@@ -255,10 +258,12 @@ export function OnboardingCardPreview({
                         isAnimating={animatingStampIndex === actualIndex || recentlyAnimated === actualIndex}
                         isVanishing={vanishingStampIndex === actualIndex}
                         accentColor={accentColor}
+                        iconColor={iconColor}
                         emptyBg={emptyStampBg}
                         emptyBorder={emptyStampBorder}
                         isLast={isLastStamp}
                         stampIcon={design?.stampIcon as StampIconType}
+                        rewardIcon={design?.rewardIcon as StampIconType}
                       />
                     );
                   })}
@@ -322,10 +327,12 @@ interface StampProps {
   readonly isAnimating: boolean;
   readonly isVanishing: boolean;
   readonly accentColor: string;
+  readonly iconColor: string;
   readonly emptyBg: string;
   readonly emptyBorder: string;
   readonly isLast?: boolean;
   readonly stampIcon?: StampIconType;
+  readonly rewardIcon?: StampIconType;
 }
 
 function Stamp({
@@ -333,11 +340,14 @@ function Stamp({
   isAnimating,
   isVanishing,
   accentColor,
+  iconColor,
   emptyBg,
   emptyBorder,
   isLast = false,
   stampIcon = "checkmark",
+  rewardIcon = "gift",
 }: StampProps) {
+  // accentColor = stamp background, iconColor = icon inside the stamp
   return (
     <div className="flex justify-center">
       <div
@@ -354,21 +364,11 @@ function Stamp({
         }}
       >
         {isFilled && !isVanishing && (
-          isLast ? (
-            <svg
-              className={`w-5 h-5 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {/* Gift icon for final stamp */}
-              <path d="M20 7h-1.209A4.92 4.92 0 0019 5.5C19 3.57 17.43 2 15.5 2c-1.622 0-2.705 1.482-3.404 3.085C11.498 3.527 10.122 2 8.5 2 6.57 2 5 3.57 5 5.5c0 .596.079 1.089.209 1.5H4c-1.103 0-2 .897-2 2v2c0 1.103.897 2 2 2v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zm-4.5-3c.827 0 1.5.673 1.5 1.5C17 7 15.5 7 15.5 7h-1.834C14.556 4.818 15.06 4 15.5 4zm-7 0c.44 0 .944.818 1.834 3H8.5S7 7 7 5.5C7 4.673 7.673 4 8.5 4zM4 9h7v2H4V9zm2 11v-7h5v7H6zm12 0h-5v-7h5v7zm-5-9V9h7l.001 2H13z" />
-            </svg>
-          ) : (
-            <StampIconSvg
-              icon={stampIcon}
-              className={`w-4 h-4 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
-            />
-          )
+          <StampIconSvg
+            icon={isLast ? rewardIcon : stampIcon}
+            className={`w-6 h-6 ${isAnimating ? "checkmark-fade-in" : ""}`}
+            color={iconColor}
+          />
         )}
       </div>
     </div>

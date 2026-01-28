@@ -65,10 +65,9 @@ export function BusinessTypeStep({
               onClick={() => selectCategory(category.id)}
               className={`
                 flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200
-                ${
-                  data.category === category.id
-                    ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
-                    : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
+                ${data.category === category.id
+                  ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
+                  : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
                 }
               `}
             >
@@ -76,11 +75,10 @@ export function BusinessTypeStep({
                 {category.icon}
               </span>
               <span
-                className={`text-sm font-medium ${
-                  data.category === category.id
+                className={`text-sm font-medium ${data.category === category.id
                     ? "text-[var(--foreground)]"
                     : "text-[var(--foreground)]/80"
-                }`}
+                  }`}
               >
                 {category.label}
               </span>
@@ -96,7 +94,7 @@ export function BusinessTypeStep({
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="overflow-hidden"
+            // className="overflow-hidden"
             >
               <div className="space-y-2">
                 <label

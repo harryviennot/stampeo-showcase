@@ -127,8 +127,10 @@ export function OnboardingWizard() {
           card_design: store.data.cardDesign ? {
             background_color: store.data.cardDesign.backgroundColor,
             accent_color: store.data.cardDesign.accentColor,
+            icon_color: store.data.cardDesign.iconColor || undefined,
             logo_url: store.data.cardDesign.logoUrl || undefined,
             stamp_icon: store.data.cardDesign.stampIcon || undefined,
+            reward_icon: store.data.cardDesign.rewardIcon || undefined,
           } : undefined,
           current_step: store.currentStep,
           completed_steps: store.completedSteps,
@@ -173,8 +175,10 @@ export function OnboardingWizard() {
           cardDesign: serverProgress.card_design ? {
             backgroundColor: serverProgress.card_design.background_color,
             accentColor: serverProgress.card_design.accent_color,
+            iconColor: serverProgress.card_design.icon_color || serverProgress.card_design.accent_color,
             logoUrl: serverProgress.card_design.logo_url || null,
             stampIcon: serverProgress.card_design.stamp_icon || 'checkmark',
+            rewardIcon: serverProgress.card_design.reward_icon || 'gift',
           } : store.data.cardDesign,
         });
 
@@ -480,7 +484,7 @@ export function OnboardingWizard() {
               // NON-SPECIAL TRANSITION: Static card, no animation - instant content swap
               <>
                 {renderStepLabels()}
-                <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm">
+                <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden">
                   {renderStep()}
                 </div>
               </>
