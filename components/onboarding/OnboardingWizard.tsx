@@ -127,6 +127,8 @@ export function OnboardingWizard() {
           card_design: store.data.cardDesign ? {
             background_color: store.data.cardDesign.backgroundColor,
             accent_color: store.data.cardDesign.accentColor,
+            logo_url: store.data.cardDesign.logoUrl || undefined,
+            stamp_icon: store.data.cardDesign.stampIcon || undefined,
           } : undefined,
           current_step: store.currentStep,
           completed_steps: store.completedSteps,
@@ -171,6 +173,8 @@ export function OnboardingWizard() {
           cardDesign: serverProgress.card_design ? {
             backgroundColor: serverProgress.card_design.background_color,
             accentColor: serverProgress.card_design.accent_color,
+            logoUrl: serverProgress.card_design.logo_url || null,
+            stampIcon: serverProgress.card_design.stamp_icon || 'checkmark',
           } : store.data.cardDesign,
         });
 

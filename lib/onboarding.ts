@@ -148,6 +148,8 @@ export interface OnboardingProgressPayload {
   card_design?: {
     background_color: string;
     accent_color: string;
+    logo_url?: string;
+    stamp_icon?: string;
   };
   current_step: number;
   completed_steps: number[];
@@ -165,6 +167,8 @@ export interface OnboardingProgressResponse {
   card_design?: {
     background_color: string;
     accent_color: string;
+    logo_url?: string;
+    stamp_icon?: string;
   };
   current_step: number;
   completed_steps: number[];
@@ -264,5 +268,59 @@ export async function deleteOnboardingProgress(
       success: false,
       error: err instanceof Error ? err.message : "Failed to delete progress",
     };
+  }
+}
+
+// ============================================
+// Logo Upload API
+// ============================================
+
+/**
+ * Upload a logo image during onboarding
+ * @param file - The PNG file to upload
+ * @param accessToken - The user's access token
+ * @returns The URL of the uploaded logo
+ */
+export async function uploadOnboardingLogo(
+  file: File,
+  accessToken: string
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${API_URL}/onboarding/progress/upload/logo`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Failed to upload logo (${response.status})`);
+  }
+
+  const data = await response.json();
+  return data.url;
+}
+
+/**
+ * Delete the user's onboarding logo
+ * @param accessToken - The user's access token
+ */
+export async function deleteOnboardingLogo(
+  accessToken: string
+): Promise<void> {
+  const response = await fetch(`${API_URL}/onboarding/progress/upload/logo`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Failed to delete logo (${response.status})`);
   }
 }

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import { CardDesign } from "@/hooks/useOnboardingStore";
+import { StampIconSvg, StampIconType } from "./StampIconPicker";
 
 interface OnboardingCardPreviewProps {
   businessName: string;
@@ -175,14 +176,23 @@ export function OnboardingCardPreview({
             <div className="flex justify-between items-start">
               <div>
                 <div className="flex items-center gap-2">
-                  <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-300"
-                    style={{ backgroundColor: accentColor }}
-                  >
-                    <span className="text-white font-bold text-xs">
-                      {initials}
-                    </span>
-                  </div>
+                  {design?.logoUrl ? (
+                    <img
+                      src={design.logoUrl}
+                      alt={displayName}
+                      className="object-contain transition-all duration-300"
+                      style={{ height: 36, maxWidth: 115 }}
+                    />
+                  ) : (
+                    <div
+                      className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors duration-300"
+                      style={{ backgroundColor: accentColor }}
+                    >
+                      <span className="text-white font-bold text-xs">
+                        {initials}
+                      </span>
+                    </div>
+                  )}
                   <div>
                     <h3
                       className="font-semibold text-[14px] tracking-tight leading-tight transition-colors duration-300"
@@ -228,6 +238,7 @@ export function OnboardingCardPreview({
                     accentColor={accentColor}
                     emptyBg={emptyStampBg}
                     emptyBorder={emptyStampBorder}
+                    stampIcon={design?.stampIcon as StampIconType}
                   />
                 ))}
               </div>
@@ -247,6 +258,7 @@ export function OnboardingCardPreview({
                         emptyBg={emptyStampBg}
                         emptyBorder={emptyStampBorder}
                         isLast={isLastStamp}
+                        stampIcon={design?.stampIcon as StampIconType}
                       />
                     );
                   })}
@@ -313,6 +325,7 @@ interface StampProps {
   readonly emptyBg: string;
   readonly emptyBorder: string;
   readonly isLast?: boolean;
+  readonly stampIcon?: StampIconType;
 }
 
 function Stamp({
@@ -323,6 +336,7 @@ function Stamp({
   emptyBg,
   emptyBorder,
   isLast = false,
+  stampIcon = "checkmark",
 }: StampProps) {
   return (
     <div className="flex justify-center">
@@ -346,22 +360,14 @@ function Stamp({
               fill="currentColor"
               viewBox="0 0 24 24"
             >
-              {/* Gift icon */}
+              {/* Gift icon for final stamp */}
               <path d="M20 7h-1.209A4.92 4.92 0 0019 5.5C19 3.57 17.43 2 15.5 2c-1.622 0-2.705 1.482-3.404 3.085C11.498 3.527 10.122 2 8.5 2 6.57 2 5 3.57 5 5.5c0 .596.079 1.089.209 1.5H4c-1.103 0-2 .897-2 2v2c0 1.103.897 2 2 2v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7c1.103 0 2-.897 2-2V9c0-1.103-.897-2-2-2zm-4.5-3c.827 0 1.5.673 1.5 1.5C17 7 15.5 7 15.5 7h-1.834C14.556 4.818 15.06 4 15.5 4zm-7 0c.44 0 .944.818 1.834 3H8.5S7 7 7 5.5C7 4.673 7.673 4 8.5 4zM4 9h7v2H4V9zm2 11v-7h5v7H6zm12 0h-5v-7h5v7zm-5-9V9h7l.001 2H13z" />
             </svg>
           ) : (
-            <svg
+            <StampIconSvg
+              icon={stampIcon}
               className={`w-4 h-4 text-white ${isAnimating ? "checkmark-fade-in" : ""}`}
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              {/* Checkmark icon */}
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
+            />
           )
         )}
       </div>

@@ -5,6 +5,8 @@ import { useState, useEffect, useCallback } from "react";
 export interface CardDesign {
   backgroundColor: string;
   accentColor: string;
+  logoUrl: string | null;         // URL or base64 data URL
+  stampIcon: string;              // Preset icon: 'checkmark' | 'coffee' | 'star' | 'heart' | 'gift' | 'thumbsup'
 }
 
 export interface OnboardingData {
@@ -38,6 +40,8 @@ const STORAGE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 const defaultCardDesign: CardDesign = {
   backgroundColor: "#1c1c1e",
   accentColor: "#c75b39",
+  logoUrl: null,
+  stampIcon: "checkmark",
 };
 
 const initialData: OnboardingData = {
