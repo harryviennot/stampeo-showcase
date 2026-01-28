@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 
 export default function OnboardingLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <div className="min-h-screen bg-[var(--background)]">
       {/* Minimal header with just logo */}
