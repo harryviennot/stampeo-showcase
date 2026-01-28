@@ -240,8 +240,20 @@ export function OnboardingWizard() {
   }, [handleStepComplete]);
 
   const handleStep5Next = useCallback(() => {
-    handleStepComplete(6);
-  }, [handleStepComplete]);
+    const currentStep = store.currentStep;
+
+    // Transition to step 6 immediately (don't mark step 5 as completed yet)
+    setPrevStep(currentStep);
+    setDirection(1);
+    store.goToStep(6);
+
+    // After card slides in, mark step completed and animate the reward stamp
+    setTimeout(() => {
+      store.markStepCompleted(currentStep);
+      setAnimatingStampIndex(5); // 6th stamp (reward) is index 5
+      setTimeout(() => setAnimatingStampIndex(null), 50);
+    }, 600);
+  }, [store]);
 
   // Handle going back with vanishing stamp animation
   const handleGoBack = useCallback(() => {
@@ -402,6 +414,11 @@ export function OnboardingWizard() {
   // Detect if entering from step 5 for slide-in animation
   const isEnteringFromStep5 = prevStep === 5 && store.currentStep === 6;
 
+  // Calculate filled stamps count - on step 6, show 5 initially then 6 after step 5 is marked complete
+  const filledStampsCount = store.currentStep === 6
+    ? (store.completedSteps.includes(5) ? 6 : 5)
+    : store.currentStep - 1;
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
       {/* LayoutGroup enables layout animations across components */}
@@ -429,7 +446,7 @@ export function OnboardingWizard() {
                   <OnboardingCardPreview
                     businessName={store.data.businessName}
                     category={store.data.category}
-                    completedSteps={store.currentStep === 6 ? 6 : store.currentStep - 1}
+                    completedSteps={filledStampsCount}
                     animatingStampIndex={animatingStampIndex}
                     vanishingStampIndex={vanishingStampIndex}
                     design={store.data.cardDesign}
