@@ -1,80 +1,107 @@
 "use client";
 
-import { Container } from "../ui/Container";
-import { ChevronDownIcon } from "../icons";
+import { ScrollReveal } from "../ui/ScrollReveal";
+import Link from "next/link";
 
 const faqs = [
   {
-    question: "How does the 14-day free trial work?",
+    question: "How long is the free trial?",
     answer:
-      "Start using Stampeo immediately with full access to all features. No credit card required to begin. At the end of 14 days, choose a plan that fits your business or downgrade to limited functionality.",
+      "30 days, no credit card required. You get full access to all features during the trial, allowing you to experience the complete platform before deciding.",
   },
   {
     question: "Do my customers need to download an app?",
     answer:
-      "No. The card goes straight into Apple Wallet or Google Wallet, which are already on their phone. One tap and they're done — no app store, no account creation, no friction.",
-  },
-  {
-    question: "Can I use Stampeo across multiple locations?",
-    answer:
-      "Yes, with the Pro plan. You can manage multiple locations from a single dashboard, with separate analytics and scanner accounts per location. Geofencing lets you send location-based notifications.",
-  },
-  {
-    question: "Does it work offline?",
-    answer:
-      "Yes. Customers can show their pass without an internet connection — the QR code is stored locally on their device. When your scanner reconnects, all stamps sync automatically.",
+      "No, Stampeo works directly through the web browser or can be added to digital wallets like Apple Wallet or Google Pay. Zero friction for your customers.",
   },
   {
     question: "What equipment do I need?",
     answer:
-      "Just your phone. The Stampeo scanner app works on any modern smartphone — no special hardware required. Point your camera at the customer's QR code, and you're done.",
+      "Any device with an internet connection. You can use a tablet, smartphone, or even a laptop at your POS to manage stamps and rewards.",
   },
   {
     question: "Can I customize the card design?",
     answer:
-      "Absolutely. Add your logo, choose your colors, set your reward structure, and include back-of-card info like hours, website, or social links. Your card should represent your brand.",
+      "Yes! You can customize colors, logo, stamps, and rewards to match your brand perfectly. Our editor is intuitive and reflects changes in real-time.",
   },
   {
-    question: "How do I cancel?",
+    question: "How do customers get stamped?",
     answer:
-      "Cancel anytime from your dashboard. No cancellation fees, no long-term contracts. Your customers keep their passes until they expire or you choose to deactivate them.",
+      "Customers simply scan a unique QR code displayed at your checkout, or you can scan their digital card. Both methods are fast and secure.",
+  },
+  {
+    question: "What happens when I cancel?",
+    answer:
+      "You can cancel at any time. Your data will be held for 30 days if you change your mind, after which it will be permanently deleted. No hidden fees.",
   },
 ];
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-20 sm:py-28 lg:py-36 relative bg-[var(--background-subtle)]">
-      <Container>
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
-              FAQ
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-              Frequently asked questions
-            </h2>
-          </div>
+    <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
+      {/* Decoration: Top Right Stamp */}
+      <div className="absolute -top-10 -right-10 w-64 h-64 bg-[var(--accent)]/5 stamp-decoration pointer-events-none" />
+      <div className="absolute top-20 -right-20 w-48 h-48 bg-[var(--accent)]/10 stamp-decoration rotate-12 pointer-events-none" />
 
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <details
-                key={index}
-                className="group clean-card rounded-2xl overflow-hidden"
-              >
-                <summary className="p-6 cursor-pointer list-none flex items-center justify-between gap-4 text-left font-semibold text-lg text-[var(--foreground)] hover:text-[var(--muted-foreground)] transition-colors duration-200">
-                  <span>{faq.question}</span>
-                  <div className="w-8 h-8 bg-[var(--muted)] rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--border)] transition-colors">
-                    <ChevronDownIcon className="w-4 h-4 transition-transform duration-300 group-open:rotate-180" />
-                  </div>
-                </summary>
-                <div className="px-6 pb-6 text-[var(--muted-foreground)] leading-relaxed -mt-2">
-                  {faq.answer}
+      <div className="max-w-[840px] mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <ScrollReveal className="mb-12">
+          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
+            Frequently asked questions
+          </h2>
+          <p className="mt-4 text-[var(--muted-foreground)] text-lg font-medium">
+            Everything you need to know about setting up your digital loyalty program.
+          </p>
+        </ScrollReveal>
+
+        {/* Accordion List */}
+        <ScrollReveal delay={200} className="flex flex-col gap-5">
+          {faqs.map((faq) => (
+            <details
+              key={faq.question}
+              className="group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4"
+              open={faq.question === "How long is the free trial?" || faq.question === "Can I customize the card design?"}
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+                <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
+                  {faq.question}
+                </p>
+                <div className="text-[var(--muted-foreground)] transition-transform duration-300 group-open:rotate-180 group-open:text-[var(--accent)]">
+                  <span className="text-xl font-bold">↓</span>
                 </div>
-              </details>
-            ))}
+              </summary>
+              <div className="pt-2 pb-4">
+                <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            </details>
+          ))}
+        </ScrollReveal>
+
+        {/* CTA Section inside FAQ */}
+        <ScrollReveal delay={400} className="mt-20 p-10 bg-[var(--foreground)] rounded-xl text-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)]" />
+          <h3 className="text-white text-3xl font-bold mb-4">Still have questions?</h3>
+          <p className="text-gray-400 mb-8 max-w-lg mx-auto">
+            We&apos;re here to help you grow your business and build lasting customer relationships.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link
+              href="/onboarding"
+              className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-xl font-bold transition-all"
+            >
+              Start Free Trial
+            </Link>
+            <Link
+              href="#"
+              className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-xl font-bold transition-all border border-white/10"
+            >
+              Contact Support
+            </Link>
           </div>
-        </div>
-      </Container>
+        </ScrollReveal>
+      </div>
     </section>
   );
 }

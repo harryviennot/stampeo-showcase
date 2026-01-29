@@ -1,191 +1,132 @@
 "use client";
 
-import { Container } from "../ui/Container";
-import { Button } from "../ui/Button";
-import { CheckIcon } from "../icons";
+import Link from "next/link";
 import { ScrollReveal } from "../ui/ScrollReveal";
 
-const plans = [
-  {
-    name: "Pay",
-    price: "20",
-    description: "For single-location businesses",
-    features: [
-      { text: "1 card template", included: true },
-      { text: "Unlimited customers", included: true },
-      { text: "Unlimited scans", included: true },
-      { text: "Up to 3 scanner accounts", included: true },
-      { text: "Basic analytics", included: true },
-      { text: "Push notifications", included: true },
-      { text: "Scheduled campaigns", included: false },
-      { text: "Multi-location support", included: false },
-    ],
-    cta: "Start free trial",
-    featured: false,
-  },
-  {
-    name: "Pro",
-    price: "40",
-    description: "For growing & multi-location businesses",
-    features: [
-      { text: "Multiple card templates", included: true },
-      { text: "Unlimited customers", included: true },
-      { text: "Unlimited scans", included: true },
-      { text: "Unlimited scanner accounts", included: true },
-      { text: "Advanced analytics", included: true },
-      { text: "Push notifications", included: true },
-      { text: "Scheduled campaigns", included: true },
-      { text: "Multi-location & geofencing", included: true },
-    ],
-    cta: "Start free trial",
-    featured: true,
-  },
+const payFeatures = [
+  "1 card template",
+  "Unlimited customers",
+  "Unlimited scans",
+  "3 scanner accounts",
+  "Basic analytics",
+  "1 location",
+  "Push notifications",
+];
+
+const proFeatures = [
+  "Multiple card templates",
+  "Unlimited customers",
+  "Unlimited scans",
+  "Unlimited scanner accounts",
+  "Advanced analytics",
+  "Multi-location support",
+  "Scheduled campaigns",
 ];
 
 export function PricingSection() {
   return (
-    <section
-      id="pricing"
-      className="py-20 sm:py-28 lg:py-36 relative"
-    >
-      <Container>
-        <ScrollReveal className="text-center max-w-2xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--muted)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
-            Simple pricing
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-            Start free. Scale when you&apos;re ready.
+    <section id="pricing" className="relative py-24 lg:py-32">
+      {/* Floating Geometric Decorations */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-[var(--accent)]/10 rounded-full -z-10 blur-xl" />
+      <div className="absolute bottom-20 right-10 w-48 h-48 bg-[var(--accent)]/5 rounded-xl rotate-12 -z-10 blur-lg" />
+
+      <div className="max-w-[1000px] mx-auto px-6">
+        {/* Header Section */}
+        <ScrollReveal className="text-center mb-16">
+          <span className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-widest">
+            Plans & Pricing
+          </span>
+          <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
+            Simple, transparent pricing
           </h2>
-          <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-            14-day free trial. No credit card required.
+          <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
+            30-day free trial. No credit card required.
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {plans.map((plan, index) => (
-            <ScrollReveal
-              key={plan.name}
-              delay={index * 100}
-              variant="scale"
-            >
-              <div
-                className={`relative h-full p-8 rounded-3xl ${
-                  plan.featured
-                    ? "bg-[var(--foreground)] text-[var(--background)]"
-                    : "clean-card"
-                }`}
-              >
-                {plan.featured && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-[var(--accent)] text-white text-xs font-bold uppercase tracking-wide">
-                    Most popular
-                  </div>
-                )}
-
-                <div className="mb-8">
-                  <h3
-                    className={`text-xl font-semibold ${
-                      plan.featured ? "text-[var(--background)]" : "text-[var(--foreground)]"
-                    }`}
-                  >
-                    {plan.name}
-                  </h3>
-                  <p
-                    className={`text-sm mt-1 ${
-                      plan.featured
-                        ? "text-[var(--background)]/70"
-                        : "text-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    {plan.description}
-                  </p>
-                </div>
-
-                <div className="mb-8">
-                  <span
-                    className={`text-5xl font-bold ${
-                      plan.featured ? "text-[var(--background)]" : "text-[var(--foreground)]"
-                    }`}
-                  >
-                    &euro;{plan.price}
-                  </span>
-                  <span
-                    className={`text-sm ${
-                      plan.featured
-                        ? "text-[var(--background)]/70"
-                        : "text-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    /month
-                  </span>
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-3">
-                      <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          feature.included
-                            ? plan.featured
-                              ? "bg-[var(--accent)]"
-                              : "bg-[#22c55e]"
-                            : plan.featured
-                              ? "bg-[var(--background)]/10"
-                              : "bg-[var(--muted)]"
-                        }`}
-                      >
-                        {feature.included ? (
-                          <CheckIcon
-                            className={`w-3 h-3 ${
-                              plan.featured ? "text-white" : "text-white"
-                            }`}
-                          />
-                        ) : (
-                          <span
-                            className={`w-1.5 h-0.5 rounded-full ${
-                              plan.featured
-                                ? "bg-[var(--background)]/30"
-                                : "bg-[var(--muted-foreground)]/50"
-                            }`}
-                          />
-                        )}
-                      </div>
-                      <span
-                        className={`text-sm ${
-                          feature.included
-                            ? plan.featured
-                              ? "text-[var(--background)]/90"
-                              : "text-[var(--foreground)]"
-                            : plan.featured
-                              ? "text-[var(--background)]/40"
-                              : "text-[var(--muted-foreground)]/60"
-                        }`}
-                      >
-                        {feature.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  href="/signup"
-                  variant={plan.featured ? "secondary" : "primary"}
-                  className={`w-full ${
-                    plan.featured
-                      ? "!bg-[var(--background)] !text-[var(--foreground)] hover:!bg-[var(--background)]/90"
-                      : ""
-                  }`}
-                >
-                  {plan.cta}
-                </Button>
+        {/* Pricing Cards */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+          {/* Pay Tier Card */}
+          <div className="group flex flex-col gap-8 rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm hover:shadow-xl transition-all duration-300">
+            <div className="flex flex-col gap-4">
+              <h3 className="text-2xl font-bold">Pay</h3>
+              <div className="flex items-baseline gap-1">
+                <span className="text-5xl font-black tracking-tight">€20</span>
+                <span className="text-[var(--muted-foreground)] text-lg font-bold">/month</span>
               </div>
-            </ScrollReveal>
-          ))}
-        </div>
+              <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
+                Perfect for small local businesses starting their digital journey.
+              </p>
+            </div>
 
-        <p className="text-center mt-8 text-sm text-[var(--muted-foreground)]">
-          Both plans include a 14-day free trial. Cancel anytime.
-        </p>
-      </Container>
+            <Link
+              href="/onboarding"
+              className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
+            >
+              <span>Start Free Trial</span>
+            </Link>
+
+            <div className="flex flex-col gap-4">
+              <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
+                Everything in Basic:
+              </p>
+              <ul className="flex flex-col gap-4">
+                {payFeatures.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-[15px] font-medium">
+                    <span className="text-[var(--accent)] text-lg">✓</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Pro Tier Card (Highlighted) */}
+          <div className="relative flex flex-col gap-8 rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl scale-[1.02] z-10">
+            {/* Badge */}
+            <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
+              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
+                MOST POPULAR
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold">Pro</h3>
+                <span className="text-[var(--accent)] text-xl">⭐</span>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-5xl font-black tracking-tight">€40</span>
+                <span className="text-[var(--muted-foreground)] text-lg font-bold">/month</span>
+              </div>
+              <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
+                The ultimate solution for scaling businesses and multiple locations.
+              </p>
+            </div>
+
+            <Link
+              href="/onboarding"
+              className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
+            >
+              <span>Start Free Trial</span>
+            </Link>
+
+            <div className="flex flex-col gap-4">
+              <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
+                Everything in Pay, plus:
+              </p>
+              <ul className="flex flex-col gap-4">
+                {proFeatures.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-[15px] font-medium">
+                    <span className="text-[var(--accent)] text-lg">✓</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
     </section>
   );
 }

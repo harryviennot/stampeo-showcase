@@ -1,162 +1,123 @@
 "use client";
 
-import { Container } from "../ui/Container";
-import {
-  DevicePhoneMobileIcon,
-  BellIcon,
-  ShieldCheckIcon,
-  ChartIcon,
-  UserGroupIcon,
-  SparklesIcon,
-} from "../icons";
+import { useState } from "react";
 import { ScrollReveal } from "../ui/ScrollReveal";
 
 const customerBenefits = [
   {
-    icon: DevicePhoneMobileIcon,
+    icon: "💳",
     title: "Always in their pocket",
-    description: "No app to install, no card to forget",
+    description: "Lives in Apple Wallet or Google Wallet. No app to find or open at the counter.",
   },
   {
-    icon: BellIcon,
-    title: "Real-time updates",
-    description:
-      "Instant notifications when they earn stamps or unlock rewards",
-  },
-  {
-    icon: ShieldCheckIcon,
+    icon: "📡",
     title: "Works offline",
-    description: "Cards sync automatically when connected",
+    description: "No internet needed to show their card at checkout. Works reliably anywhere.",
+  },
+  {
+    icon: "🔔",
+    title: "Instant updates",
+    description: "Real-time push notifications when they earn stamps or unlock exclusive rewards.",
   },
 ];
 
 const businessBenefits = [
   {
-    icon: ChartIcon,
-    title: "See every visit",
-    description: "Track every customer, every stamp, every reward claimed",
+    icon: "⚡",
+    title: "Setup in 10 minutes",
+    description: "No hardware required. Design your card, share a link, and start collecting stamps today.",
   },
   {
-    icon: UserGroupIcon,
-    title: "Know your regulars",
-    description: "See who's one stamp away from coming back",
+    icon: "📊",
+    title: "Track everything",
+    description: "See who visits, how often, and what drives them back. Data you can actually use.",
   },
   {
-    icon: SparklesIcon,
-    title: "Your brand, your way",
-    description: "Design cards that look like your brand, not a template",
+    icon: "🚀",
+    title: "Unlimited scans",
+    description: "No per-scan fees. Your team can stamp as many customers as walk through the door.",
   },
 ];
 
 export function BenefitsSection() {
+  const [activeTab, setActiveTab] = useState<"customers" | "business">("customers");
+
+  const benefits = activeTab === "customers" ? customerBenefits : businessBenefits;
+
   return (
-    <section
-      id="benefits"
-      className="py-20 sm:py-28 lg:py-36 relative"
-    >
-      <Container>
-        <ScrollReveal className="text-center max-w-2xl mx-auto mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--muted)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
-            Why Stampeo
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-            Simple for them.{" "}
-            <span className="text-[var(--muted-foreground)]">
-              Powerful for you.
-            </span>
+    <section className="relative py-24 lg:py-32">
+      {/* Floating Geometric Decorations */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-[var(--accent)]/10" />
+        <div className="absolute top-[40%] right-[5%] w-24 h-24 rotate-45 bg-[var(--stamp-coral)]/10 rounded-lg" />
+        <div className="absolute bottom-20 left-[15%] w-40 h-40 rounded-full border-4 border-[var(--accent)]/5" />
+        <div className="absolute top-[15%] right-[20%] w-16 h-16 bg-[var(--stamp-sage)]/10 rounded-full" />
+        <div className="absolute bottom-[30%] right-[15%] w-28 h-28 bg-[var(--stamp-sand)]/10 rounded-full" />
+      </div>
+
+      <div className="relative z-10 max-w-[1100px] mx-auto px-6">
+        {/* Section Header */}
+        <ScrollReveal className="flex flex-col items-center text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight px-4 pb-3">
+            Works for everyone
           </h2>
+          <p className="text-[var(--muted-foreground)] text-lg max-w-2xl px-4">
+            A seamless experience designed for modern shoppers and growing businesses.
+          </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Customer benefits */}
-          <ScrollReveal variant="left" className="clean-card rounded-3xl p-8 sm:p-10">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-[#3b82f6] rounded-2xl flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-[var(--foreground)]">
-                For your customers
-              </h3>
-            </div>
-            <div className="space-y-6">
-              {customerBenefits.map((benefit, index) => (
-                <div
-                  key={index}
-                  className="flex gap-4 p-4 rounded-2xl hover:bg-[var(--muted)] transition-colors"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-[var(--muted)] rounded-xl flex items-center justify-center">
-                    <benefit.icon className="w-6 h-6 text-[var(--muted-foreground)]" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-[var(--foreground)] mb-1">
-                      {benefit.title}
-                    </h4>
-                    <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
-                      {benefit.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ScrollReveal>
+        {/* Toggle */}
+        <ScrollReveal delay={100} className="flex justify-center px-4 py-8 mb-4">
+          <div className="flex h-14 w-full max-w-md items-center justify-center rounded-full bg-[var(--accent)]/5 p-1.5 border border-[var(--accent)]/10">
+            <button
+              onClick={() => setActiveTab("customers")}
+              className={`flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-6 transition-all duration-300 text-base font-bold leading-normal ${
+                activeTab === "customers"
+                  ? "bg-[var(--accent)] text-white"
+                  : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
+              }`}
+            >
+              <span className="truncate">For Your Customers</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("business")}
+              className={`flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-6 transition-all duration-300 text-base font-bold leading-normal ${
+                activeTab === "business"
+                  ? "bg-[var(--accent)] text-white"
+                  : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
+              }`}
+            >
+              <span className="truncate">For Your Business</span>
+            </button>
+          </div>
+        </ScrollReveal>
 
-          {/* Business benefits */}
-          <ScrollReveal variant="right" delay={150} className="clean-card rounded-3xl p-8 sm:p-10">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 bg-[var(--accent)] rounded-2xl flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"
-                  />
-                </svg>
+        {/* Benefit Cards */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
+          {benefits.map((benefit, index) => (
+            <div
+              key={`${activeTab}-${index}`}
+              className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-xl shadow-[var(--accent)]/5 border border-white/50 transition-transform duration-300 hover:-translate-y-2"
+            >
+              {/* Corner Decoration */}
+              <div className="absolute -bottom-4 -right-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+                <span className="text-8xl">✦</span>
               </div>
-              <h3 className="text-xl font-semibold text-[var(--foreground)]">
-                For you
-              </h3>
+
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+                <span className="text-3xl">{benefit.icon}</span>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <h3 className="text-2xl font-bold leading-tight">{benefit.title}</h3>
+                <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
+                  {benefit.description}
+                </p>
+              </div>
             </div>
-            <div className="space-y-6">
-              {businessBenefits.map((benefit, index) => (
-                <div
-                  key={index}
-                  className="flex gap-4 p-4 rounded-2xl hover:bg-[var(--muted)] transition-colors"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-[var(--muted)] rounded-xl flex items-center justify-center">
-                    <benefit.icon className="w-6 h-6 text-[var(--muted-foreground)]" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-[var(--foreground)] mb-1">
-                      {benefit.title}
-                    </h4>
-                    <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
-                      {benefit.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </ScrollReveal>
-        </div>
-      </Container>
+          ))}
+        </ScrollReveal>
+      </div>
     </section>
   );
 }
