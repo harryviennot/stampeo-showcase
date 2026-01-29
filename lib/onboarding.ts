@@ -11,7 +11,9 @@ export interface BusinessCreatePayload {
     description?: string;
     owner_name?: string;
     accentColor?: string;
+    backgroundColor?: string;
   };
+  logo_url?: string;
 }
 
 export interface BusinessResponse {
@@ -20,6 +22,7 @@ export interface BusinessResponse {
   url_slug: string;
   subscription_tier: string;
   settings: Record<string, unknown>;
+  logo_url?: string | null;
   created_at: string;
   updated_at: string;
 }

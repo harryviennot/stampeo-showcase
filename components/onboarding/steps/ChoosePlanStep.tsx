@@ -83,7 +83,9 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
             description: data.description || undefined,
             owner_name: data.ownerName || undefined,
             accentColor: themeColor,
+            backgroundColor: data.cardDesign.backgroundColor,
           },
+          logo_url: data.cardDesign.logoUrl || undefined,
         };
 
         const { data: business, error: apiError } =
