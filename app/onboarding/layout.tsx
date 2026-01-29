@@ -20,7 +20,7 @@ export default function OnboardingLayout({
         <Link href="/" className="inline-block group">
           <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
             <StampeoLogo />
-            <span className="text-2xl font-bold gradient-text ">
+            <span className="text-2xl font-bold gradient-text">
               Stampeo
             </span>
           </div>

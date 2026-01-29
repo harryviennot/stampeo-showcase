@@ -8,6 +8,7 @@ import {
   saveOnboardingProgress,
   getOnboardingProgress,
 } from "@/lib/onboarding";
+import { applyTheme, resetTheme, getThemeColor } from "@/lib/theme";
 import { OnboardingCardPreview } from "./OnboardingCardPreview";
 import { BusinessInfoStep } from "./steps/BusinessInfoStep";
 import { BusinessTypeStep } from "./steps/BusinessTypeStep";
@@ -16,16 +17,6 @@ import { CreateAccountStep } from "./steps/CreateAccountStep";
 import { ChoosePlanStep } from "./steps/ChoosePlanStep";
 import { CongratsStep } from "./steps/CongratsStep";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-
-// Helper to adjust color brightness for hover states
-
-function adjustBrightness(hex: string, percent: number): string {
-  const num = Number.parseInt(hex.replace("#", ""), 16);
-  const r = Math.min(255, Math.max(0, (num >> 16) + percent));
-  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + percent));
-  const b = Math.min(255, Math.max(0, (num & 0x0000ff) + percent));
-  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
-}
 
 const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
 
@@ -64,18 +55,17 @@ export function OnboardingWizard() {
 
   // Update page accent color to match their business color (once they've reached design step)
   useEffect(() => {
-    const accentColor = store.data.cardDesign?.accentColor;
-    if (accentColor && hasVisitedDesignStep) {
-      document.documentElement.style.setProperty("--accent", accentColor);
-      document.documentElement.style.setProperty("--accent-hover", adjustBrightness(accentColor, -15));
+    const { backgroundColor, accentColor } = store.data.cardDesign || {};
+    if (backgroundColor && accentColor && hasVisitedDesignStep) {
+      const themeColor = getThemeColor(accentColor, backgroundColor);
+      applyTheme(themeColor);
     }
 
     // Cleanup: reset to default when leaving onboarding
     return () => {
-      document.documentElement.style.removeProperty("--accent");
-      document.documentElement.style.removeProperty("--accent-hover");
+      resetTheme();
     };
-  }, [store.data.cardDesign?.accentColor, hasVisitedDesignStep]);
+  }, [store.data.cardDesign?.backgroundColor, store.data.cardDesign?.accentColor, hasVisitedDesignStep]);
 
   // Check if authenticated user already has a business (completed onboarding)
   useEffect(() => {

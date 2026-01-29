@@ -85,19 +85,19 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50">
       <div
         className={`transition-all duration-300 border-b ${scrolled
-            ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
-            : "bg-transparent border-transparent"
+          ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
+          : "bg-transparent border-transparent"
           }`}
       >
         <nav className="flex items-center justify-between px-6 lg:px-10 py-5 max-w-[1400px] mx-auto">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="text-[var(--accent)]">
+            <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
               <StampeoLogo />
+              <span className="text-2xl font-bold gradient-text">
+                Stampeo
+              </span>
             </div>
-            <span className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">
-              Stampeo
-            </span>
           </Link>
 
           {/* Desktop navigation */}

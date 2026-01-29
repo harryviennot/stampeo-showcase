@@ -10,6 +10,7 @@ export interface BusinessCreatePayload {
     category?: string;
     description?: string;
     owner_name?: string;
+    accentColor?: string;
   };
 }
 

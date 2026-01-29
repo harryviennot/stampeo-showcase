@@ -92,7 +92,7 @@ export function HeroSection() {
           {/* Right Column: 3D Digital Card */}
           <ScrollReveal delay={200} className="flex flex-col order-1 lg:order-2">
             <LoyaltyCardPreview />
-            <VerificationBox />
+            {/* <VerificationBox /> */}
           </ScrollReveal>
         </div>
       </main>

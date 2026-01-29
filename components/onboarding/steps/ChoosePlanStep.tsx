@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { createBusiness, BusinessCreatePayload } from "@/lib/onboarding";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { getThemeColor } from "@/lib/theme";
 import { CheckIcon } from "@/components/icons";
 
 interface ChoosePlanStepProps {
@@ -67,6 +68,12 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
         }
 
         // Create business via API
+        // Pick the best theme color: accent if it has good contrast, otherwise background
+        const themeColor = getThemeColor(
+          data.cardDesign.accentColor,
+          data.cardDesign.backgroundColor
+        );
+
         const payload: BusinessCreatePayload = {
           name: data.businessName,
           url_slug: data.urlSlug,
@@ -75,6 +82,7 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
             category: data.category || undefined,
             description: data.description || undefined,
             owner_name: data.ownerName || undefined,
+            accentColor: themeColor,
           },
         };
 
