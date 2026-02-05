@@ -1,8 +1,26 @@
 'use client';
 
 import React, { useRef, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { QRCodeSkeleton } from "./QRCodeSkeleton";
 
-export function LoyaltyCardPreview() {
+interface LoyaltyCardPreviewProps {
+  /** URL for the QR code. If null, shows skeleton/fake QR */
+  qrUrl?: string | null;
+  /** Number of filled stamps (0-8) */
+  stamps?: number;
+  /** Total number of stamps */
+  totalStamps?: number;
+  /** Whether the QR code is loading */
+  isLoading?: boolean;
+}
+
+export function LoyaltyCardPreview({
+  qrUrl = null,
+  stamps = 5,
+  totalStamps = 8,
+  isLoading = false,
+}: LoyaltyCardPreviewProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
@@ -77,7 +95,7 @@ export function LoyaltyCardPreview() {
               <div className="text-right">
                 <div className="text-[12px] font-bold text-white/50 uppercase tracking-wider">Stamps</div>
                 <div className="text-xl font-medium text-white flex items-baseline gap-1 justify-end">
-                  5 / 8
+                  {stamps} / {totalStamps}
                 </div>
               </div>
             </div>
@@ -87,13 +105,13 @@ export function LoyaltyCardPreview() {
               {/* Row 1 */}
               <div className="flex justify-between w-full px-2">
                 {[...Array(4)].map((_, i) => (
-                  <Stamp key={i} index={i} />
+                  <Stamp key={i} isFilled={i < stamps} />
                 ))}
               </div>
               {/* Row 2 */}
               <div className="flex justify-between w-full px-2">
                 {[...Array(4)].map((_, i) => (
-                  <Stamp key={i + 4} index={i + 4} />
+                  <Stamp key={i + 4} isFilled={i + 4 < stamps} />
                 ))}
               </div>
             </div>
@@ -103,7 +121,7 @@ export function LoyaltyCardPreview() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-[12px] font-bold text-white/50 uppercase tracking-wider">Reward</p>
-                  <p className="text-[16px] text-white/90">Free coffee at 8 stamps</p>
+                  <p className="text-[16px] text-white/90">Free coffee at {totalStamps} stamps</p>
                 </div>
               </div>
             </div>
@@ -111,7 +129,13 @@ export function LoyaltyCardPreview() {
             {/* QR Code */}
             <div className="mt-auto pt-4 flex justify-center">
               <div className="bg-white p-2 rounded-lg">
-                <FakeQRCode size={100} />
+                {isLoading ? (
+                  <QRCodeSkeleton size={100} />
+                ) : qrUrl ? (
+                  <QRCodeSVG value={qrUrl} size={100} />
+                ) : (
+                  <FakeQRCode size={100} />
+                )}
               </div>
             </div>
 
@@ -140,8 +164,7 @@ export function LoyaltyCardPreview() {
   );
 }
 
-function Stamp({ index }: { index: number }) {
-  const isFilled = index < 5;
+function Stamp({ isFilled }: { isFilled: boolean }) {
   return (
     <div className="flex justify-center">
       <div

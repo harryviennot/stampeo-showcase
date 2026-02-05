@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { LoyaltyCardPreview } from "../ui/LoyaltyCardPreview";
 import { AppleIcon, GoogleIcon } from "../icons";
+import { useDemoSession } from "@/hooks/useDemoSession";
 
 function GeometricDecorations() {
   return (
@@ -16,28 +17,84 @@ function GeometricDecorations() {
   );
 }
 
-function VerificationBox() {
+function StampButton({
+  onClick,
+  stamps,
+  isDisabled
+}: {
+  onClick: () => void;
+  stamps: number;
+  isDisabled: boolean;
+}) {
+  const isComplete = stamps >= 8;
+
   return (
-    <div className="relative mt-8 bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/5 max-w-[380px] mx-auto">
-      <p className="text-sm font-bold mb-4 flex items-center gap-2">
-        <span className="text-[var(--accent)]">📷</span>
-        <span>Scanned your card? Enter the number:</span>
-      </p>
-      <div className="flex gap-2">
-        <input
-          type="text"
-          placeholder="6-digit code"
-          className="flex-1 rounded-full border border-[var(--border)] bg-[var(--background)] text-sm px-5 h-12 focus:ring-2 focus:ring-[var(--accent)] focus:border-[var(--accent)] outline-none transition-all"
-        />
-        <button className="bg-[var(--accent)] text-white px-6 rounded-full font-bold text-sm hover:brightness-110 active:scale-95 transition-all">
-          Verify
+    <div className="relative mt-6 max-w-[380px] mx-auto animate-in slide-in-from-bottom-4 fade-in duration-500">
+      <div className="bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/10">
+        <div className="text-center mb-4">
+          <p className="text-sm font-bold text-[var(--muted-foreground)]">
+            {isComplete
+              ? "Card complete! Create your own loyalty program."
+              : "Your pass is ready! Try adding a stamp."}
+          </p>
+        </div>
+
+        <button
+          onClick={onClick}
+          disabled={isDisabled || isComplete}
+          className={`
+            w-full py-4 rounded-full font-bold text-lg transition-all
+            ${isComplete
+              ? "bg-green-500 text-white cursor-default"
+              : isDisabled
+                ? "bg-gray-200 text-gray-400 cursor-wait"
+                : "bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
+            }
+          `}
+        >
+          {isComplete ? "Card Complete!" : "Add Stamp"}
         </button>
+
+        <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
+          Watch your phone - the pass updates in real-time!
+        </p>
       </div>
     </div>
   );
 }
 
+function DemoStatusHint({ status }: { status: string }) {
+  if (status === "pending") {
+    return (
+      <div className="relative mt-6 max-w-[380px] mx-auto">
+        <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
+          <p className="text-sm text-[var(--muted-foreground)]">
+            <span className="font-semibold">Scan the QR code</span> with your iPhone to try the demo
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "pass_downloaded") {
+    return (
+      <div className="relative mt-6 max-w-[380px] mx-auto">
+        <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
+          <p className="text-sm text-[var(--muted-foreground)]">
+            <span className="inline-block animate-pulse mr-2">⏳</span>
+            Add the pass to your Apple Wallet...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export function HeroSection() {
+  const { qrUrl, status, stamps, isLoading, addStamp } = useDemoSession();
+
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
       <GeometricDecorations />
@@ -93,10 +150,25 @@ export function HeroSection() {
             </div>
           </ScrollReveal>
 
-          {/* Right Column: 3D Digital Card */}
+          {/* Right Column: 3D Digital Card + Demo Controls */}
           <ScrollReveal delay={200} className="flex flex-col order-1 lg:order-2">
-            <LoyaltyCardPreview />
-            {/* <VerificationBox /> */}
+            <LoyaltyCardPreview
+              qrUrl={qrUrl}
+              stamps={stamps}
+              totalStamps={8}
+              isLoading={isLoading}
+            />
+
+            {/* Demo controls */}
+            {status === "pass_installed" ? (
+              <StampButton
+                onClick={addStamp}
+                stamps={stamps}
+                isDisabled={false}
+              />
+            ) : (
+              <DemoStatusHint status={status} />
+            )}
           </ScrollReveal>
         </div>
       </main>
