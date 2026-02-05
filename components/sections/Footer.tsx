@@ -18,18 +18,10 @@ export function Footer() {
     <footer className="relative w-full bg-[var(--foreground)] text-white pt-20 pb-10 overflow-hidden">
       {/* Subtle Geometric Background Shapes */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-10 left-[10%] text-[var(--accent)] opacity-[0.07]">
-          <span className="text-7xl">☆</span>
-        </div>
-        <div className="absolute bottom-20 left-[25%] text-[var(--stamp-sage)] opacity-[0.07]">
-          <span className="text-9xl">●</span>
-        </div>
-        <div className="absolute top-20 right-[15%] text-[var(--accent)] opacity-[0.07]">
-          <span className="text-8xl">✦</span>
-        </div>
-        <div className="absolute -bottom-10 right-[5%] text-[var(--stamp-sage)] opacity-[0.07]">
-          <span className="text-[120px]">◉</span>
-        </div>
+        <div className="absolute top-10 left-[10%] w-16 h-16 rounded-full bg-[var(--accent)]/5" />
+        <div className="absolute bottom-20 left-[25%] w-24 h-24 rounded-full bg-[var(--stamp-sage)]/5" />
+        <div className="absolute top-20 right-[15%] w-20 h-20 rounded-lg bg-[var(--accent)]/5 rotate-12" />
+        <div className="absolute -bottom-10 right-[5%] w-32 h-32 rounded-full border-2 border-[var(--stamp-sage)]/5" />
       </div>
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 lg:px-12">
@@ -135,8 +127,8 @@ export function Footer() {
           <p className="text-[#a1a1aa] text-xs font-normal">
             © {new Date().getFullYear()} Stampeo. All rights reserved.
           </p>
-          <p className="text-[#a1a1aa] text-xs italic font-medium">
-            Made with <span className="text-[var(--accent)] not-italic">♥</span> for small businesses
+          <p className="text-[#a1a1aa] text-xs font-medium">
+            Built for local businesses
           </p>
         </div>
       </div>

@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { LoyaltyCardPreview } from "../ui/LoyaltyCardPreview";
+import { AppleIcon, GoogleIcon } from "../icons";
 
 function GeometricDecorations() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
       <div className="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-[var(--accent)]/20 blur-3xl" />
-      <div className="absolute bottom-20 right-[5%] w-96 h-96 bg-[var(--accent)]/10 blur-2xl rotate-45">
-        <span className="text-[300px] text-[var(--accent)]">★</span>
-      </div>
+      <div className="absolute bottom-20 right-[5%] w-96 h-96 bg-[var(--accent)]/10 blur-2xl rotate-45" />
       <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-[var(--stamp-sage)]/30 rounded-full blur-2xl" />
       <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-[var(--stamp-coral)]/20 blur-3xl rotate-12" />
     </div>
@@ -60,8 +59,8 @@ export function HeroSection() {
               </h1>
 
               <p className="text-lg lg:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-xl">
-                Digital passes that live in their phone wallet. No app to download.
-                Stamps update in real-time.
+                Digital passes that live in Apple Wallet. Upload your logo, pick your colors,
+                and your card is ready in minutes. No app for your customers to download.
               </p>
             </div>
 
@@ -81,11 +80,16 @@ export function HeroSection() {
               </Link>
             </div>
 
-            {/* Trust icons */}
-            <div className="flex items-center gap-6 pt-4 opacity-40">
-              <span className="text-3xl">💳</span>
-              <span className="text-3xl">📱</span>
-              <span className="text-3xl">✨</span>
+            {/* Wallet badges */}
+            <div className="flex items-center gap-4 pt-4">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black text-white text-sm font-medium">
+                <AppleIcon className="w-5 h-5" />
+                <span>Apple Wallet</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-[var(--border)] text-sm font-medium">
+                <GoogleIcon className="w-5 h-5" />
+                <span>Google Wallet</span>
+              </div>
             </div>
           </ScrollReveal>
 

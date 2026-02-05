@@ -160,7 +160,7 @@ export function generatePalette(hex: string): ColorPalette {
   const hsl = hexToHsl(hex);
 
   const palette = {} as ColorPalette;
-  const shades = Object.keys(LIGHTNESS_MAP) as Array<keyof ColorPalette>;
+  const shades = Object.keys(LIGHTNESS_MAP).map(Number) as Array<keyof ColorPalette>;
 
   for (const shade of shades) {
     const lightness = LIGHTNESS_MAP[shade];

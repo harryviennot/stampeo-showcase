@@ -2,40 +2,41 @@
 
 import { useState } from "react";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { WalletIcon, SignalIcon, BellIcon, SparklesIcon, ChartIcon, DevicePhoneMobileIcon } from "../icons";
 
 const customerBenefits = [
   {
-    icon: "💳",
-    title: "Always in their pocket",
-    description: "Lives in Apple Wallet or Google Wallet. No app to find or open at the counter.",
+    icon: WalletIcon,
+    title: "Always with them",
+    description: "Lives in Apple Wallet or Google Wallet. No app to download, no login to remember.",
   },
   {
-    icon: "📡",
-    title: "Works offline",
-    description: "No internet needed to show their card at checkout. Works reliably anywhere.",
+    icon: SignalIcon,
+    title: "Works everywhere",
+    description: "No internet needed to show their card. Reliable at busy markets, basements, anywhere.",
   },
   {
-    icon: "🔔",
-    title: "Instant updates",
-    description: "Real-time push notifications when they earn stamps or unlock exclusive rewards.",
+    icon: BellIcon,
+    title: "Instant feedback",
+    description: "A notification pops up the moment they earn a stamp. Satisfying and impossible to miss.",
   },
 ];
 
 const businessBenefits = [
   {
-    icon: "⚡",
-    title: "Setup in 10 minutes",
-    description: "No hardware required. Design your card, share a link, and start collecting stamps today.",
+    icon: SparklesIcon,
+    title: "Ready in minutes",
+    description: "Upload your logo, pick your colors, see your card instantly. No design skills needed.",
   },
   {
-    icon: "📊",
-    title: "Track everything",
-    description: "See who visits, how often, and what drives them back. Data you can actually use.",
+    icon: ChartIcon,
+    title: "See what's working",
+    description: "Know who's coming back, how often, and when. Simple insights, no spreadsheets.",
   },
   {
-    icon: "🚀",
-    title: "Unlimited scans",
-    description: "No per-scan fees. Your team can stamp as many customers as walk through the door.",
+    icon: DevicePhoneMobileIcon,
+    title: "Scan your way",
+    description: "Use our free app or scan from any browser. No special equipment, no POS integration.",
   },
 ];
 
@@ -99,13 +100,8 @@ export function BenefitsSection() {
               key={`${activeTab}-${index}`}
               className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-xl shadow-[var(--accent)]/5 border border-white/50 transition-transform duration-300 hover:-translate-y-2"
             >
-              {/* Corner Decoration */}
-              <div className="absolute -bottom-4 -right-4 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
-                <span className="text-8xl">✦</span>
-              </div>
-
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                <span className="text-3xl">{benefit.icon}</span>
+                <benefit.icon className="w-7 h-7" />
               </div>
 
               <div className="flex flex-col gap-3">

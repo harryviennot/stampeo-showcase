@@ -1,6 +1,7 @@
 "use client";
 
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { DocumentIcon, DevicePhoneMobileIcon } from "../icons";
 
 export function ProblemSection() {
   return (
@@ -16,11 +17,10 @@ export function ProblemSection() {
         {/* Problem Statement */}
         <ScrollReveal className="text-center mb-16">
           <p className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed text-[var(--foreground)]">
-            <span>&ldquo;Every business has loyal customers. </span>
+            <span>Paper cards get lost. </span>
             <span className="text-[var(--muted-foreground)]">
-              But 87% of paper punch cards end up lost in a drawer. And nobody downloads another loyalty app.
+              Loyalty apps don&apos;t get downloaded. There&apos;s a better way.
             </span>
-            <span>&rdquo;</span>
           </p>
         </ScrollReveal>
 
@@ -29,7 +29,7 @@ export function ProblemSection() {
           {/* Lost Cards */}
           <div className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-lg border border-white/50 transition-transform duration-300 hover:-translate-y-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
-              <span className="text-3xl">📄</span>
+              <DocumentIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
               <h3 className="text-2xl font-bold text-[var(--foreground)]">Lost in drawers</h3>
@@ -42,7 +42,7 @@ export function ProblemSection() {
           {/* App Fatigue */}
           <div className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-lg border border-white/50 transition-transform duration-300 hover:-translate-y-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
-              <span className="text-3xl">📱</span>
+              <DevicePhoneMobileIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
               <h3 className="text-2xl font-bold text-[var(--foreground)]">App fatigue</h3>
@@ -88,7 +88,7 @@ export function ProblemSection() {
                         </div>
                         <div>
                           <p className="font-bold text-sm">Stampeo</p>
-                          <p className="text-xs text-[var(--muted-foreground)]">You earned a stamp! 🎉</p>
+                          <p className="text-xs text-[var(--muted-foreground)]">You earned a stamp!</p>
                         </div>
                       </div>
                       <div className="flex gap-1">

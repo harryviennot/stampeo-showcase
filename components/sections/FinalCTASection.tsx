@@ -6,37 +6,19 @@ import { ScrollReveal } from "../ui/ScrollReveal";
 export function FinalCTASection() {
   return (
     <section className="relative stamp-pattern flex flex-col items-center justify-center px-6 py-24 md:py-32 lg:py-48 text-center overflow-hidden">
-      {/* Decorative Stamp Shapes */}
-      <div className="stamp-shape top-10 left-10 md:left-20 text-[var(--accent)]">
-        <span className="text-7xl">★</span>
-      </div>
-      <div className="stamp-shape top-32 left-32 hidden lg:block text-[var(--stamp-coral)]">
-        <span className="text-6xl">⬠</span>
-      </div>
-      <div className="stamp-shape top-1/4 left-1/4 opacity-10 text-[var(--stamp-sand)]">
-        <span className="text-9xl">●</span>
-      </div>
+      {/* Decorative Geometric Shapes */}
+      <div className="absolute top-10 left-10 md:left-20 w-16 h-16 rounded-full bg-[var(--accent)]/10 pointer-events-none" />
+      <div className="absolute top-32 left-32 hidden lg:block w-12 h-12 rounded-lg bg-[var(--stamp-coral)]/10 rotate-12 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-24 h-24 rounded-full bg-[var(--stamp-sand)]/5 pointer-events-none" />
 
-      <div className="stamp-shape bottom-20 left-10 md:left-40 text-[var(--stamp-sage)]">
-        <span className="text-8xl">⬡</span>
-      </div>
-      <div className="stamp-shape bottom-40 left-10 hidden md:block text-[var(--accent)]">
-        <span className="text-5xl">■</span>
-      </div>
+      <div className="absolute bottom-20 left-10 md:left-40 w-20 h-20 rounded-full border-4 border-[var(--stamp-sage)]/10 pointer-events-none" />
+      <div className="absolute bottom-40 left-10 hidden md:block w-10 h-10 bg-[var(--accent)]/10 rotate-45 pointer-events-none" />
 
-      <div className="stamp-shape top-12 right-12 md:right-24 text-[var(--stamp-coral)]">
-        <span className="text-8xl">●</span>
-      </div>
-      <div className="stamp-shape top-48 right-1/4 hidden lg:block text-[var(--stamp-sage)]">
-        <span className="text-6xl">★</span>
-      </div>
+      <div className="absolute top-12 right-12 md:right-24 w-20 h-20 rounded-full bg-[var(--stamp-coral)]/10 pointer-events-none" />
+      <div className="absolute top-48 right-1/4 hidden lg:block w-14 h-14 rounded-full bg-[var(--stamp-sage)]/10 pointer-events-none" />
 
-      <div className="stamp-shape bottom-16 right-16 md:right-32 text-[var(--stamp-sand)]">
-        <span className="text-9xl">⬠</span>
-      </div>
-      <div className="stamp-shape bottom-1/3 right-10 hidden md:block text-[var(--accent)]">
-        <span className="text-7xl">⬡</span>
-      </div>
+      <div className="absolute bottom-16 right-16 md:right-32 w-24 h-24 rounded-lg bg-[var(--stamp-sand)]/10 rotate-12 pointer-events-none" />
+      <div className="absolute bottom-1/3 right-10 hidden md:block w-16 h-16 rounded-full border-4 border-[var(--accent)]/10 pointer-events-none" />
 
       {/* Central Content */}
       <ScrollReveal className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-8 md:gap-12">
@@ -55,14 +37,9 @@ export function FinalCTASection() {
             <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
           </Link>
 
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium flex items-center gap-2">
-              <span className="text-[var(--stamp-sage)]">✓</span>
-              <span>No credit card required.</span>
-              <span className="mx-1 text-[var(--border)]">•</span>
-              <span>Setup in under 10 minutes.</span>
-            </p>
-          </div>
+          <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
+            No credit card required · Ready in minutes
+          </p>
         </div>
       </ScrollReveal>
     </section>

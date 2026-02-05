@@ -10,6 +10,11 @@ const faqs = [
       "30 days, no credit card required. You get full access to all features during the trial, allowing you to experience the complete platform before deciding.",
   },
   {
+    question: "How do I create my loyalty card?",
+    answer:
+      "Your card is created automatically during setup. Just upload your logo and pick your colors — you'll see a preview instantly. Customize anything you like, then publish when you're happy with it.",
+  },
+  {
     question: "Do my customers need to download an app?",
     answer:
       "No, Stampeo works directly through the web browser or can be added to digital wallets like Apple Wallet or Google Pay. Zero friction for your customers.",
@@ -17,12 +22,7 @@ const faqs = [
   {
     question: "What equipment do I need?",
     answer:
-      "Any device with an internet connection. You can use a tablet, smartphone, or even a laptop at your POS to manage stamps and rewards.",
-  },
-  {
-    question: "Can I customize the card design?",
-    answer:
-      "Yes! You can customize colors, logo, stamps, and rewards to match your brand perfectly. Our editor is intuitive and reflects changes in real-time.",
+      "Any device with an internet connection. You can scan from our free app or directly from your browser — your choice.",
   },
   {
     question: "How do customers get stamped?",
@@ -60,7 +60,7 @@ export function FAQSection() {
             <details
               key={faq.question}
               className="group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4"
-              open={faq.question === "How long is the free trial?" || faq.question === "Can I customize the card design?"}
+              open={faq.question === "How long is the free trial?" || faq.question === "How do I create my loyalty card?"}
             >
               <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
                 <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">

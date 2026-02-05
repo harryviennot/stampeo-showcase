@@ -4,22 +4,19 @@ import Link from "next/link";
 import { ScrollReveal } from "../ui/ScrollReveal";
 
 const payFeatures = [
-  "1 card template",
-  "Unlimited customers",
-  "Unlimited scans",
-  "3 scanner accounts",
-  "Basic analytics",
-  "1 location",
+  "1 active card template",
+  "Unlimited customers & scans",
+  "Up to 3 team members",
+  "Offline scanning",
   "Push notifications",
 ];
 
 const proFeatures = [
   "Multiple card templates",
-  "Unlimited customers",
-  "Unlimited scans",
-  "Unlimited scanner accounts",
-  "Advanced analytics",
+  "Unlimited team members",
   "Multi-location support",
+  "Custom notification messages",
+  "Advanced analytics",
   "Scheduled campaigns",
 ];
 
@@ -51,11 +48,11 @@ export function PricingSection() {
             <div className="flex flex-col gap-4">
               <h3 className="text-2xl font-bold">Pay</h3>
               <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">€20</span>
+                <span className="text-5xl font-black tracking-tight">€14.99</span>
                 <span className="text-[var(--muted-foreground)] text-lg font-bold">/month</span>
               </div>
               <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
-                Perfect for small local businesses starting their digital journey.
+                Everything you need to run a digital loyalty program.
               </p>
             </div>
 
@@ -91,16 +88,13 @@ export function PricingSection() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold">Pro</h3>
-                <span className="text-[var(--accent)] text-xl">⭐</span>
-              </div>
+              <h3 className="text-2xl font-bold">Pro</h3>
               <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">€40</span>
+                <span className="text-5xl font-black tracking-tight">€29.99</span>
                 <span className="text-[var(--muted-foreground)] text-lg font-bold">/month</span>
               </div>
               <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
-                The ultimate solution for scaling businesses and multiple locations.
+                For growing businesses and multiple locations.
               </p>
             </div>
 
