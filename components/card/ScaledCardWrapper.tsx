@@ -4,7 +4,10 @@ import { useRef, useEffect, useState, ReactNode } from 'react';
 
 interface ScaledCardWrapperProps {
   children: ReactNode;
+  /** Width at which content is laid out (before scaling) */
   baseWidth?: number;
+  /** Target visual width - if provided, scales content from baseWidth to targetWidth */
+  targetWidth?: number;
   aspectRatio?: number;
   minScale?: number;
 }
@@ -12,6 +15,7 @@ interface ScaledCardWrapperProps {
 export function ScaledCardWrapper({
   children,
   baseWidth = 280,
+  targetWidth,
   aspectRatio = 1.282,
   minScale = 0.6,
 }: ScaledCardWrapperProps) {
@@ -25,13 +29,16 @@ export function ScaledCardWrapper({
 
     const observer = new ResizeObserver((entries) => {
       const width = entries[0].contentRect.width;
-      const newScale = Math.max(minScale, width / baseWidth);
+      // Scale based on parent width relative to baseWidth
+      // If targetWidth is set, use it to calculate the reference for scaling
+      const referenceWidth = targetWidth || baseWidth;
+      const newScale = Math.max(minScale, width / referenceWidth) * (targetWidth ? targetWidth / baseWidth : 1);
       setScale(newScale);
     });
 
     observer.observe(container);
     return () => observer.disconnect();
-  }, [baseWidth, minScale]);
+  }, [baseWidth, targetWidth, minScale]);
 
   return (
     <div

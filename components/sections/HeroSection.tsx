@@ -159,9 +159,9 @@ export function HeroSection() {
           </ScrollReveal>
 
           {/* Right Column: 3D Digital Card + Demo Controls */}
-          <ScrollReveal delay={200} className="flex flex-col order-1 lg:order-2">
-            <div className="w-full max-w-[380px] mx-auto">
-              <ScaledCardWrapper baseWidth={380} minScale={0.7}>
+          <ScrollReveal delay={200} className="flex flex-col items-center order-1 lg:order-2">
+            <div className="w-full max-w-[380px]">
+              <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
                   design={{
                     organization_name: "Stampeo",

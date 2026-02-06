@@ -604,11 +604,11 @@ export function WalletCard({
               >
                 <div className="bg-white p-2 rounded-lg">
                   {isQRLoading ? (
-                    <QRCodeSkeleton size={80} />
+                    <QRCodeSkeleton size={100} />
                   ) : qrUrl ? (
-                    <QRCodeSVG value={qrUrl} size={80} />
+                    <QRCodeSVG value={qrUrl} size={100} />
                   ) : (
-                    <FakeQRCode size={80} />
+                    <FakeQRCode size={100} />
                   )}
                 </div>
               </div>
