@@ -63,7 +63,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen flex flex-col"
       style={{
         "--business-accent": accentColor,
         "--business-bg": backgroundColor,
@@ -71,7 +71,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
     >
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-[var(--border)] sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
           {business.logo_url ? (
             <img
               src={business.logo_url}
@@ -98,12 +98,12 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
       </header>
 
       {/* Main content */}
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="grid gap-8 md:grid-cols-2 md:items-start">
+      <div className="max-w-4xl mx-auto px-4 py-8 flex-1 flex flex-col justify-center">
+        <div className="grid gap-8 md:grid-cols-2 md:items-center">
           {/* Card Preview */}
           <div className="order-1 md:order-2">
-            <div className="w-full max-w-[320px] mx-auto">
-              <ScaledCardWrapper baseWidth={320} aspectRatio={1.2} minScale={0.7}>
+            <div className="w-full max-w-[380px] mx-auto">
+              <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
                   design={{
                     organization_name: business.name,
@@ -125,7 +125,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
           </div>
 
           {/* Form / Success / Email Sent */}
-          <div className="order-2 md:order-1">
+          <div className="order-2 md:order-1 min-h-[320px] flex flex-col justify-center">
             {flowState === "form" && (
               <FormCard business={business} onSubmit={handleSubmit} />
             )}
@@ -194,7 +194,7 @@ function FormCard({
 
 function LoadingCard() {
   return (
-    <div className="paper-card rounded-2xl p-6 text-center">
+    <div className="paper-card rounded-2xl p-6 text-center min-h-[280px] flex flex-col items-center justify-center">
       <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-[var(--accent)] border-t-transparent animate-spin" />
       <p className="text-[var(--muted-foreground)]">Creating your card...</p>
     </div>
