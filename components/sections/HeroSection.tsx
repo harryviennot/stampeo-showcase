@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { LoyaltyCardPreview } from "../ui/LoyaltyCardPreview";
+import { WalletCard } from "../card/WalletCard";
+import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 
@@ -100,7 +101,7 @@ function DemoStatusHint({ status }: { status: string }) {
 }
 
 export function HeroSection() {
-  const { qrUrl, status, stamps, isLoading, addStamp } = useDemoSession();
+  const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
@@ -158,20 +159,34 @@ export function HeroSection() {
           </ScrollReveal>
 
           {/* Right Column: 3D Digital Card + Demo Controls */}
-          <ScrollReveal delay={200} className="flex flex-col order-1 lg:order-2">
-            <LoyaltyCardPreview
-              qrUrl={qrUrl}
-              stamps={stamps}
-              totalStamps={8}
-              isLoading={isLoading}
-            />
+          <ScrollReveal delay={200} className="flex flex-col items-center order-1 lg:order-2">
+            <div className="w-full max-w-[380px]">
+              <ScaledCardWrapper baseWidth={280} targetWidth={380}>
+                <WalletCard
+                  design={{
+                    organization_name: "Stampeo",
+                    total_stamps: 8,
+                    background_color: "#1c1c1e",
+                    stamp_filled_color: "#f97316",
+                    secondary_fields: [
+                      { key: "reward", label: "Reward", value: "30 days free trial" }
+                    ],
+                  }}
+                  stamps={stamps}
+                  showQR={true}
+                  qrUrl={qrUrl}
+                  isQRLoading={isLoading || isStamping}
+                  interactive3D={true}
+                />
+              </ScaledCardWrapper>
+            </div>
 
             {/* Demo controls */}
             {status === "pass_installed" ? (
               <StampButton
                 onClick={addStamp}
                 stamps={stamps}
-                isDisabled={false}
+                isDisabled={isStamping}
               />
             ) : (
               <DemoStatusHint status={status} />
