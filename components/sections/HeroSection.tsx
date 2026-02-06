@@ -34,26 +34,33 @@ function StampButton({
         <div className="text-center mb-4">
           <p className="text-sm font-bold text-[var(--muted-foreground)]">
             {isComplete
-              ? "Card complete! Create your own loyalty program."
+              ? "You've unlocked 30 days free!"
               : "Your pass is ready! Try adding a stamp."}
           </p>
         </div>
 
-        <button
-          onClick={onClick}
-          disabled={isDisabled || isComplete}
-          className={`
-            w-full py-4 rounded-full font-bold text-lg transition-all
-            ${isComplete
-              ? "bg-green-500 text-white cursor-default"
-              : isDisabled
+        {isComplete ? (
+          <Link
+            href="/onboarding"
+            className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
+          >
+            Claim Your 30 Days Free →
+          </Link>
+        ) : (
+          <button
+            onClick={onClick}
+            disabled={isDisabled}
+            className={`
+              w-full py-4 rounded-full font-bold text-lg transition-all
+              ${isDisabled
                 ? "bg-gray-200 text-gray-400 cursor-wait"
                 : "bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
-            }
-          `}
-        >
-          {isComplete ? "Card Complete!" : "Add Stamp"}
-        </button>
+              }
+            `}
+          >
+            Add Stamp
+          </button>
+        )}
 
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
           Watch your phone - the pass updates in real-time!

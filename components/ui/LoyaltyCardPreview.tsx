@@ -3,6 +3,7 @@
 import React, { useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { QRCodeSkeleton } from "./QRCodeSkeleton";
+import { StampeoLogo } from "../logo";
 
 interface LoyaltyCardPreviewProps {
   /** URL for the QR code. If null, shows skeleton/fake QR */
@@ -83,12 +84,12 @@ export function LoyaltyCardPreview({
             <div className="flex justify-between items-start ">
               <div>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--accent)] flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">CA</span>
+                  <div className="w-10 h-10 flex items-center justify-center text-[var(--accent)]">
+                    <StampeoLogo />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[15px] text-white tracking-tight">Cafe Aroma</h3>
-                    <p className="text-[12px] font-bold text-white/50 uppercase tracking-wider">Loyalty Card</p>
+                    <h3 className="font-semibold text-[15px] text-white tracking-tight">Stampeo</h3>
+                    <p className="text-[12px] font-bold text-white/50 uppercase tracking-wider">Experience Card</p>
                   </div>
                 </div>
               </div>
@@ -121,7 +122,7 @@ export function LoyaltyCardPreview({
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-[12px] font-bold text-white/50 uppercase tracking-wider">Reward</p>
-                  <p className="text-[16px] text-white/90">Free coffee at {totalStamps} stamps</p>
+                  <p className="text-[16px] text-white/90">30 days free trial</p>
                 </div>
               </div>
             </div>
