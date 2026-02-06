@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { LoyaltyCardPreview } from "../ui/LoyaltyCardPreview";
+import { WalletCard } from "../card/WalletCard";
+import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 
@@ -159,12 +160,26 @@ export function HeroSection() {
 
           {/* Right Column: 3D Digital Card + Demo Controls */}
           <ScrollReveal delay={200} className="flex flex-col order-1 lg:order-2">
-            <LoyaltyCardPreview
-              qrUrl={qrUrl}
-              stamps={stamps}
-              totalStamps={8}
-              isLoading={isLoading}
-            />
+            <div className="w-full max-w-[380px] mx-auto">
+              <ScaledCardWrapper baseWidth={380} minScale={0.7}>
+                <WalletCard
+                  design={{
+                    organization_name: "Stampeo",
+                    total_stamps: 8,
+                    background_color: "#1c1c1e",
+                    stamp_filled_color: "#f97316",
+                    secondary_fields: [
+                      { key: "reward", label: "Reward", value: "30 days free trial" }
+                    ],
+                  }}
+                  stamps={stamps}
+                  showQR={true}
+                  qrUrl={qrUrl}
+                  isQRLoading={isLoading}
+                  interactive3D={true}
+                />
+              </ScaledCardWrapper>
+            </div>
 
             {/* Demo controls */}
             {status === "pass_installed" ? (

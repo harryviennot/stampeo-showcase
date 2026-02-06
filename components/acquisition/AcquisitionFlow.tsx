@@ -11,7 +11,8 @@ import {
 } from "@/lib/acquisition";
 import { AcquisitionForm } from "./AcquisitionForm";
 import { WalletButtons } from "./WalletButtons";
-import { BusinessCardPreview } from "./BusinessCardPreview";
+import { WalletCard } from "../card/WalletCard";
+import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 
 type FlowState = "form" | "submitting" | "success" | "email_sent" | "error";
 
@@ -101,14 +102,26 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
         <div className="grid gap-8 md:grid-cols-2 md:items-start">
           {/* Card Preview */}
           <div className="order-1 md:order-2">
-            <BusinessCardPreview
-              businessName={business.name}
-              category={business.settings?.category}
-              logoUrl={business.logo_url}
-              accentColor={accentColor}
-              backgroundColor={backgroundColor}
-              cardDesign={cardDesign}
-            />
+            <div className="w-full max-w-[320px] mx-auto">
+              <ScaledCardWrapper baseWidth={320} aspectRatio={1.2} minScale={0.7}>
+                <WalletCard
+                  design={{
+                    organization_name: business.name,
+                    logo_url: business.logo_url || cardDesign?.logo_url || undefined,
+                    background_color: backgroundColor,
+                    stamp_filled_color: accentColor,
+                    total_stamps: cardDesign?.total_stamps || 10,
+                    description: cardDesign?.description || "Free item on completion",
+                    secondary_fields: [
+                      { key: "reward", label: "Reward", value: cardDesign?.description || "Free item on completion" }
+                    ],
+                  }}
+                  stamps={3}
+                  showQR={true}
+                  interactive3D={true}
+                />
+              </ScaledCardWrapper>
+            </div>
           </div>
 
           {/* Form / Success / Email Sent */}
