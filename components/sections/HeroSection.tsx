@@ -101,7 +101,7 @@ function DemoStatusHint({ status }: { status: string }) {
 }
 
 export function HeroSection() {
-  const { qrUrl, status, stamps, isLoading, addStamp } = useDemoSession();
+  const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
@@ -175,7 +175,7 @@ export function HeroSection() {
                   stamps={stamps}
                   showQR={true}
                   qrUrl={qrUrl}
-                  isQRLoading={isLoading}
+                  isQRLoading={isLoading || isStamping}
                   interactive3D={true}
                 />
               </ScaledCardWrapper>
@@ -186,7 +186,7 @@ export function HeroSection() {
               <StampButton
                 onClick={addStamp}
                 stamps={stamps}
-                isDisabled={false}
+                isDisabled={isStamping}
               />
             ) : (
               <DemoStatusHint status={status} />

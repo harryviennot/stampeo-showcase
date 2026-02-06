@@ -26,6 +26,8 @@ interface UseDemoSessionReturn {
   sessionToken: string | null;
   /** Whether the hook is loading initial state */
   isLoading: boolean;
+  /** Whether a stamp request is in progress */
+  isStamping: boolean;
   /** Error message if any */
   error: string | null;
   /** Add a stamp (only works when status === 'pass_installed') */
@@ -46,6 +48,7 @@ export function useDemoSession(): UseDemoSessionReturn {
   const [stamps, setStamps] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isStamping, setIsStamping] = useState(false);
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -189,6 +192,7 @@ export function useDemoSession(): UseDemoSessionReturn {
   const addStamp = useCallback(async () => {
     if (!session || status !== 'pass_installed') return;
 
+    setIsStamping(true);
     try {
       const response = await fetch(`${API_URL}/demo/sessions/${session.session_token}/stamp`, {
         method: 'POST',
@@ -203,6 +207,8 @@ export function useDemoSession(): UseDemoSessionReturn {
     } catch (err) {
       console.error('Error adding stamp:', err);
       setError(err instanceof Error ? err.message : 'Failed to add stamp');
+    } finally {
+      setIsStamping(false);
     }
   }, [session, status]);
 
@@ -255,6 +261,7 @@ export function useDemoSession(): UseDemoSessionReturn {
     stamps,
     sessionToken: session?.session_token ?? null,
     isLoading,
+    isStamping,
     error,
     addStamp,
     reset,
