@@ -57,6 +57,7 @@ export interface CustomerPublicResponse {
   status: "created" | "exists_email_sent";
   customer_id?: string;
   pass_url?: string;
+  google_wallet_url?: string;
   message: string;
 }
 

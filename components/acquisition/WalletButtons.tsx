@@ -1,58 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 interface WalletButtonsProps {
   passUrl: string;
-  customerId?: string;
+  googleWalletUrl?: string | null;
 }
 
-interface GoogleWalletResponse {
-  save_url: string;
-  object_id: string;
-  configured: boolean;
-}
-
-export function WalletButtons({ passUrl, customerId }: WalletButtonsProps) {
-  const [googleSaveUrl, setGoogleSaveUrl] = useState<string | null>(null);
-  const [loadingGoogle, setLoadingGoogle] = useState(!!customerId);
-  const [googleAvailable, setGoogleAvailable] = useState(false);
-
-  useEffect(() => {
-    if (!customerId) {
-      setLoadingGoogle(false);
-      return;
-    }
-
-    // Fetch Google Wallet save URL
-    async function fetchGoogleUrl() {
-      try {
-        const response = await fetch(
-          `${API_URL}/google-wallet/save-url/${customerId}`
-        );
-
-        if (response.ok) {
-          const data: GoogleWalletResponse = await response.json();
-          setGoogleSaveUrl(data.save_url);
-          setGoogleAvailable(data.configured);
-        } else if (response.status === 503) {
-          // Google Wallet not configured
-          setGoogleAvailable(false);
-        }
-      } catch (error) {
-        console.error("Failed to fetch Google Wallet URL:", error);
-        setGoogleAvailable(false);
-      } finally {
-        setLoadingGoogle(false);
-      }
-    }
-
-    fetchGoogleUrl();
-  }, [customerId]);
-
+export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) {
+  console.log("googleWalletUrl", googleWalletUrl);
   return (
     <div className="flex flex-row items-center justify-center gap-3">
       {/* Apple Wallet Button */}
@@ -67,11 +23,9 @@ export function WalletButtons({ passUrl, customerId }: WalletButtonsProps) {
       </a>
 
       {/* Google Wallet Button */}
-      {loadingGoogle ? (
-        <div className="h-[50px] w-[170px] bg-gray-100 animate-pulse rounded-lg" />
-      ) : googleSaveUrl && googleAvailable ? (
+      {googleWalletUrl ? (
         <a
-          href={googleSaveUrl}
+          href={googleWalletUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="block hover:opacity-90 transition-opacity"
