@@ -52,6 +52,7 @@ export function useDemoSession(): UseDemoSessionReturn {
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const startPollingRef = useRef<(token: string) => void>(() => {});
 
   // Fetch session by token
   const fetchSession = useCallback(async (token: string): Promise<DemoSession | null> => {
@@ -113,15 +114,14 @@ export function useDemoSession(): UseDemoSessionReturn {
     });
 
     eventSource.onerror = () => {
-      // SSE failed, fall back to polling
-      console.log('SSE connection failed, falling back to polling');
+      // SSE failed (likely due to proxy like Cloudflare), fall back to polling
       eventSource.close();
-      startPolling(token);
+      startPollingRef.current(token);
     };
   }, []);
 
   // Fallback polling
-  const startPolling = useCallback((token: string) => {
+  startPollingRef.current = (token: string) => {
     // Clear existing interval
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
@@ -143,9 +143,9 @@ export function useDemoSession(): UseDemoSessionReturn {
       setStamps(session.stamps);
     };
 
-    // Poll every 2 seconds
-    pollingIntervalRef.current = setInterval(poll, 2000);
-  }, [fetchSession]);
+    // Poll every 5 seconds (SSE preferred but falls back to polling through proxies)
+    pollingIntervalRef.current = setInterval(poll, 5000);
+  };
 
   // Initialize session (called on mount and after reset)
   const initSession = useCallback(async () => {
