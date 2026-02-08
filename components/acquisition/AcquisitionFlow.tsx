@@ -136,6 +136,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
               <SuccessCard
                 businessName={business.name}
                 passUrl={customerResponse.pass_url}
+                googleWalletUrl={customerResponse.google_wallet_url}
               />
             )}
 
@@ -204,9 +205,11 @@ function LoadingCard() {
 function SuccessCard({
   businessName,
   passUrl,
+  googleWalletUrl,
 }: {
   businessName: string;
   passUrl: string;
+  googleWalletUrl?: string;
 }) {
   return (
     <div className="paper-card rounded-2xl p-6 text-center">
@@ -232,7 +235,7 @@ function SuccessCard({
         Add your {businessName} loyalty card to your wallet and start collecting
         stamps.
       </p>
-      <WalletButtons passUrl={passUrl} />
+      <WalletButtons passUrl={passUrl} googleWalletUrl={googleWalletUrl} />
     </div>
   );
 }
