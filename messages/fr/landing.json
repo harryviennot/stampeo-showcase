@@ -1,0 +1,159 @@
+{
+  "landing": {
+    "hero": {
+      "badge": "Essai gratuit de 30 jours",
+      "title": "Des cartes de fidélité que vos clients <accent>gardent vraiment.</accent>",
+      "subtitle": "Des cartes digitales directement dans Apple Wallet. Importez votre logo, choisissez vos couleurs, et votre carte est prête en quelques minutes. Aucune application à télécharger pour vos clients.",
+      "cta": "Commencer gratuitement",
+      "secondaryCta": "Voir comment ça marche",
+      "stamp": {
+        "complete": "Vous avez débloqué 30 jours gratuits !",
+        "ready": "Votre carte est prête ! Essayez d'ajouter un tampon.",
+        "claimFree": "Réclamez vos 30 jours gratuits →",
+        "addStamp": "Ajouter un tampon",
+        "watchPhone": "Regardez votre téléphone – la carte se met à jour en temps réel !",
+        "scanQR": "<bold>Scannez le QR code</bold> avec votre iPhone pour tester la démo",
+        "addToWallet": "Ajoutez la carte à votre Apple Wallet..."
+      }
+    },
+    "problem": {
+      "statement": "Les cartes papier se perdent. <muted>Les applis de fidélité ne sont jamais téléchargées. Il existe une meilleure solution.</muted>",
+      "lostTitle": "Perdues dans les tiroirs",
+      "lostDesc": "Les cartes papier se froissent, s'oublient dans les poches ou finissent à la poubelle. Votre programme de fidélité devient invisible.",
+      "fatigueTitle": "La lassitude des applis",
+      "fatigueDesc": "Vos clients ne vont pas télécharger une énième application juste pour des tampons. Cette friction tue l'engagement avant même qu'il commence.",
+      "solution": "Stampeo place votre carte de fidélité là où vos clients regardent déjà :",
+      "solutionHighlight": "Leur portefeuille téléphone.",
+      "notification": "Vous avez gagné un tampon !"
+    },
+    "benefits": {
+      "title": "Ça marche pour tout le monde",
+      "subtitle": "Une expérience fluide pensée pour les clients modernes et les commerces en croissance.",
+      "tabCustomers": "Pour vos clients",
+      "tabBusiness": "Pour votre commerce",
+      "customers": [
+        {
+          "title": "Toujours avec eux",
+          "description": "Directement dans Apple Wallet ou Google Wallet. Pas d'appli à télécharger, pas d'identifiant à retenir."
+        },
+        {
+          "title": "Fonctionne partout",
+          "description": "Pas besoin d'internet pour afficher leur carte. Fiable sur les marchés, en sous-sol, partout."
+        },
+        {
+          "title": "Retour instantané",
+          "description": "Une notification apparaît dès qu'ils gagnent un tampon. Satisfaisant et impossible à rater."
+        }
+      ],
+      "business": [
+        {
+          "title": "Prêt en quelques minutes",
+          "description": "Importez votre logo, choisissez vos couleurs, visualisez votre carte instantanément. Aucune compétence en design requise."
+        },
+        {
+          "title": "Voyez ce qui fonctionne",
+          "description": "Sachez qui revient, à quelle fréquence et quand. Des statistiques simples, sans tableur."
+        },
+        {
+          "title": "Scannez comme vous voulez",
+          "description": "Utilisez notre application gratuite ou scannez depuis n'importe quel navigateur. Aucun équipement spécial, aucune intégration caisse."
+        }
+      ]
+    },
+    "howItWorks": {
+      "badge": "Comment ça marche",
+      "title": "Le moment magique en 5 étapes.",
+      "subtitle": "Du premier scan au client fidèle en quelques secondes",
+      "steps": [
+        {
+          "title": "Le client scanne le QR code",
+          "description": "Affichez un QR code à votre comptoir ou sur vos reçus. Les clients le scannent avec l'appareil photo de leur téléphone."
+        },
+        {
+          "title": "Télécharge la carte dans son wallet",
+          "description": "Un tap suffit pour ajouter votre carte de fidélité à Apple Wallet ou Google Wallet. Aucune appli à installer, aucun compte à créer."
+        },
+        {
+          "title": "Présente sa carte à l'employé",
+          "description": "À la prochaine visite, les clients ouvrent leur wallet et vous montrent la carte. Elle est toujours avec eux, toujours prête."
+        },
+        {
+          "title": "L'employé scanne, le tampon est ajouté",
+          "description": "Vous scannez leur QR code avec l'appli Stampeo. Tampon ajouté instantanément. Simple pour tout le monde."
+        },
+        {
+          "title": "Le client est notifié",
+          "description": "Sa carte se met à jour en temps réel avec une notification push. Il voit sa progression et sent la récompense se rapprocher."
+        }
+      ]
+    },
+    "dashboard": {
+      "badge": "Tableau de bord analytique",
+      "title": "Connaissez vos habitués.",
+      "subtitle": "Votre tableau de bord vous montre qui visite, à quelle fréquence, et quand ils approchent d'une récompense. Repérez vos meilleurs clients. Voyez ce qui fonctionne. Prenez de meilleures décisions.",
+      "features": [
+        "Fréquence et habitudes de visite",
+        "Récompenses réclamées et en attente",
+        "Identifiez vos clients les plus fidèles",
+        "Exportez vos données à tout moment"
+      ],
+      "stats": {
+        "totalCustomers": "Clients totaux",
+        "visitsThisWeek": "Visites cette semaine",
+        "rewardsClaimed": "Récompenses réclamées"
+      },
+      "recentCustomers": "Clients récents",
+      "progress": "Progression",
+      "visitedToday": "Visite aujourd'hui",
+      "almost": "Presque !"
+    },
+    "socialProof": {
+      "trustedBy": "Des commerces du monde entier nous font confiance",
+      "joinCount": "Rejoignez les 200+ commerces indépendants qui utilisent déjà Stampeo",
+      "stats": {
+        "businesses": "Commerces",
+        "cardsIssued": "Cartes créées",
+        "rating": "Note"
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "subtitle": "Tout ce que vous devez savoir pour lancer votre programme de fidélité digital.",
+      "items": [
+        {
+          "question": "Quelle est la durée de l'essai gratuit ?",
+          "answer": "30 jours, sans carte bancaire. Vous avez accès à toutes les fonctionnalités pendant l'essai, ce qui vous permet de découvrir la plateforme complète avant de vous décider."
+        },
+        {
+          "question": "Comment créer ma carte de fidélité ?",
+          "answer": "Votre carte est créée automatiquement lors de la configuration. Importez simplement votre logo et choisissez vos couleurs — vous verrez un aperçu instantanément. Personnalisez ce que vous voulez, puis publiez quand vous êtes satisfait."
+        },
+        {
+          "question": "Mes clients doivent-ils télécharger une application ?",
+          "answer": "Non, Stampeo fonctionne directement via le navigateur web ou peut être ajouté aux portefeuilles digitaux comme Apple Wallet ou Google Pay. Zéro friction pour vos clients."
+        },
+        {
+          "question": "De quel équipement ai-je besoin ?",
+          "answer": "N'importe quel appareil avec une connexion internet. Vous pouvez scanner depuis notre application gratuite ou directement depuis votre navigateur — à vous de choisir."
+        },
+        {
+          "question": "Comment les clients se font-ils tamponner ?",
+          "answer": "Les clients scannent simplement un QR code unique affiché à votre caisse, ou vous pouvez scanner leur carte digitale. Les deux méthodes sont rapides et sécurisées."
+        },
+        {
+          "question": "Que se passe-t-il si je résilie ?",
+          "answer": "Vous pouvez résilier à tout moment. Vos données seront conservées 30 jours au cas où vous changeriez d'avis, après quoi elles seront définitivement supprimées. Aucun frais caché."
+        }
+      ],
+      "stillQuestions": "Encore des questions ?",
+      "stillQuestionsDesc": "Nous sommes là pour vous aider à développer votre commerce et à fidéliser vos clients.",
+      "startFreeTrial": "Essai gratuit",
+      "contactSupport": "Contacter le support"
+    },
+    "finalCta": {
+      "title": "Prêt à transformer vos visiteurs en <accent>habitués ?</accent>",
+      "cta": "Commencez votre essai gratuit de 30 jours",
+      "subtitle": "Sans carte bancaire · Prêt en quelques minutes"
+    }
+  }
+}

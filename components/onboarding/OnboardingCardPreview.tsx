@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { CardDesign } from "@/hooks/useOnboardingStore";
 import { StampIconSvg, StampIconType } from "./StampIconPicker";
 
@@ -17,27 +18,13 @@ interface OnboardingCardPreviewProps {
 
 const TOTAL_STEPS = 6;
 
-function getInitials(name: string): string {
+function getInitials(name: string, fallback: string): string {
   const words = name.trim().split(/\s+/);
-  if (words.length === 0 || !words[0]) return "YB";
+  if (words.length === 0 || !words[0]) return fallback;
   if (words.length === 1) {
     return words[0].substring(0, 2).toUpperCase();
   }
   return (words[0][0] + words[1][0]).toUpperCase();
-}
-
-function getCategoryLabel(category: string | null | undefined): string {
-  const labels: Record<string, string> = {
-    cafe: "Coffee Shop",
-    restaurant: "Restaurant",
-    bakery: "Bakery",
-    retail: "Retail Store",
-    salon: "Beauty & Wellness",
-    fitness: "Fitness Center",
-    services: "Services",
-    other: "Loyalty Card",
-  };
-  return category ? labels[category] || "Loyalty Card" : "Loyalty Card";
 }
 
 // Helper to determine if a color is light or dark
@@ -82,14 +69,17 @@ export function OnboardingCardPreview({
   vanishingStampIndex = null,
   design,
 }: OnboardingCardPreviewProps) {
+  const t = useTranslations("onboarding.cardPreview");
+  const tCat = useTranslations("onboarding.businessType.categories");
+
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50, opacity: 0 });
   const [recentlyAnimated, setRecentlyAnimated] = useState<number | null>(null);
 
-  const displayName = businessName.trim() || "Your Business";
-  const initials = getInitials(displayName);
-  const categoryLabel = getCategoryLabel(category);
+  const displayName = businessName.trim() || t("defaultBusiness");
+  const initials = getInitials(displayName, t("defaultInitials"));
+  const categoryLabel = category ? (tCat.has(category) ? tCat(category) : t("loyaltyCard")) : t("loyaltyCard");
 
   // Always use design colors (they have defaults in the store)
   const backgroundColor = design?.backgroundColor ?? "#1c1c1e";
@@ -231,7 +221,7 @@ export function OnboardingCardPreview({
                   className="text-[11px] font-bold uppercase tracking-wider transition-colors duration-300"
                   style={{ color: mutedTextColor }}
                 >
-                  Progress
+                  {t("progress")}
                 </div>
                 <div
                   className="text-lg font-medium flex items-baseline gap-1 justify-end transition-colors duration-300"
@@ -295,13 +285,13 @@ export function OnboardingCardPreview({
                     className="text-[11px] font-bold uppercase tracking-wider transition-colors duration-300"
                     style={{ color: mutedTextColor }}
                   >
-                    Complete setup
+                    {t("completeSetup")}
                   </p>
                   <p
                     className="text-[14px] transition-colors duration-300"
                     style={{ color: textColor, opacity: 0.9 }}
                   >
-                    to unlock your loyalty card
+                    {t("unlockCard")}
                   </p>
                 </div>
               </div>

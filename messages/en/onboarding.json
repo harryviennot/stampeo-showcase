@@ -1,0 +1,123 @@
+{
+  "onboarding": {
+    "steps": {
+      "business": "Business",
+      "type": "Type",
+      "design": "Design",
+      "account": "Account",
+      "plan": "Plan",
+      "ready": "Ready"
+    },
+    "businessInfo": {
+      "title": "Let's set up your business",
+      "subtitle": "Tell us about your business to get started",
+      "businessName": "Business name",
+      "businessNamePlaceholder": "e.g. Cafe Aroma",
+      "uniqueUrl": "Your unique URL",
+      "urlPlaceholder": "cafe-aroma",
+      "slugMinLength": "Must be at least 3 characters",
+      "slugAvailable": "This URL is available!",
+      "ownerName": "Your name",
+      "ownerNamePlaceholder": "John Doe"
+    },
+    "businessType": {
+      "title": "What type of business?",
+      "subtitle": "This helps us tailor your loyalty card",
+      "categories": {
+        "cafe": "Cafe / Coffee Shop",
+        "restaurant": "Restaurant",
+        "bakery": "Bakery / Patisserie",
+        "retail": "Retail Store",
+        "salon": "Hair Salon / Spa",
+        "fitness": "Gym / Fitness",
+        "services": "Services",
+        "other": "Other"
+      },
+      "otherLabel": "Please let us know what type of business you are",
+      "otherPlaceholder": "e.g. Pet grooming, Car wash, Tattoo studio..."
+    },
+    "cardPreview": {
+      "title": "Customize your card",
+      "subtitleAssets": "Add your logo and choose a stamp icon",
+      "subtitleColors": "Choose colors that match your brand",
+      "editLater": "You can always edit your card design later in the dashboard",
+      "cardBackground": "Card Background",
+      "accentColor": "Accent Color",
+      "iconColor": "Icon Color",
+      "businessLogo": "Business Logo",
+      "logoOptional": "(optional)",
+      "logoDesc": "Upload your logo to replace the initials on your card. PNG format, max 2MB.",
+      "stampIcon": "Stamp Icon",
+      "stampIconTooltip": "You can request a custom icon in the dashboard!",
+      "rewardIcon": "Reward Icon",
+      "rewardIconTooltip": "Icon shown on the final stamp",
+      "defaultInitials": "YB",
+      "defaultBusiness": "Your Business",
+      "progress": "Progress",
+      "completeSetup": "Complete setup",
+      "unlockCard": "to unlock your loyalty card",
+      "loyaltyCard": "Loyalty Card"
+    },
+    "createAccount": {
+      "signupTitle": "Create your account",
+      "loginTitle": "Welcome back",
+      "signupSubtitle": "Almost there! Set up your login credentials",
+      "loginSubtitle": "Log in to continue setting up your business",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "At least 6 characters",
+      "passwordHint": "Minimum 6 characters",
+      "createAccount": "Create account",
+      "creatingAccount": "Creating account...",
+      "signIn": "Sign in",
+      "signingIn": "Signing in...",
+      "alreadyHaveAccount": "Already have an account?",
+      "noAccount": "Don't have an account?",
+      "createOne": "Create one",
+      "alreadyRegistered": "This email is already registered. Please log in instead."
+    },
+    "choosePlan": {
+      "title": "Choose your plan",
+      "subtitle": "30-day free trial. No credit card required.",
+      "mostPopular": "Most popular",
+      "perMonth": "/month",
+      "startFreeTrial": "Start free trial",
+      "settingUp": "Setting up...",
+      "trialNote": "Both plans include a 30-day free trial. Cancel anytime.",
+      "pay": {
+        "name": "Pay",
+        "price": "14.99",
+        "description": "Everything you need to run a digital loyalty program.",
+        "features": [
+          "1 active card template",
+          "Unlimited customers & scans",
+          "Up to 3 team members",
+          "Offline scanning",
+          "Push notifications"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "29.99",
+        "description": "For growing businesses and multiple locations.",
+        "features": [
+          "Multiple card templates",
+          "Unlimited team members",
+          "Multi-location support",
+          "Custom notification messages",
+          "Advanced analytics",
+          "Scheduled campaigns"
+        ]
+      }
+    },
+    "congrats": {
+      "title": "You're all set!",
+      "subtitle": "Welcome to your new loyalty program",
+      "spaceReady": "Your business space is ready",
+      "cardDesigned": "Your loyalty card is designed",
+      "readyForCustomers": "Ready to welcome customers",
+      "letsGo": "Let's go!"
+    }
+  }
+}

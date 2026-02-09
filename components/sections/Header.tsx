@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { MenuIcon, XMarkIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
+import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import type { User } from "@supabase/supabase-js";
 
 function DesktopAuthButtons({
@@ -18,6 +20,8 @@ function DesktopAuthButtons({
   appUrl: string;
   onSignOut: () => void;
 }>) {
+  const t = useTranslations();
+
   if (loading) {
     return <div className="w-24 h-10 bg-[var(--muted)] animate-pulse rounded-xl" />;
   }
@@ -29,13 +33,13 @@ function DesktopAuthButtons({
           onClick={onSignOut}
           className="px-4 py-2 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
         >
-          Sign out
+          {t("common.auth.signOut")}
         </button>
         <Link
           href={appUrl}
           className="flex items-center justify-center h-10 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all"
         >
-          Dashboard
+          {t("common.auth.dashboard")}
         </Link>
       </>
     );
@@ -47,13 +51,13 @@ function DesktopAuthButtons({
         href="/login"
         className="px-4 py-2 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
       >
-        Log in
+        {t("common.auth.logIn")}
       </Link>
       <Link
         href="/onboarding"
         className="flex items-center justify-center h-10 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all active:scale-95"
       >
-        Get Started
+        {t("common.auth.getStarted")}
       </Link>
     </>
   );
@@ -63,6 +67,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, loading, signOut } = useAuth();
+  const t = useTranslations();
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
 
@@ -79,7 +84,11 @@ export function Header() {
     setMobileMenuOpen(false);
   };
 
-  const navItems = ["Features", "Pricing", "FAQ"];
+  const navItems = [
+    { label: t("common.nav.features"), href: "#features" },
+    { label: t("common.nav.pricing"), href: "#pricing" },
+    { label: t("common.nav.faq"), href: "#faq" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
@@ -104,17 +113,18 @@ export function Header() {
           <div className="hidden md:flex items-center gap-9">
             {navItems.map((item) => (
               <Link
-                key={item}
-                href={`#${item.toLowerCase()}`}
+                key={item.href}
+                href={item.href}
                 className="text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </div>
 
           {/* Desktop auth */}
           <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
             <DesktopAuthButtons
               loading={loading}
               user={user}
@@ -142,28 +152,31 @@ export function Header() {
             <div className="flex flex-col gap-1">
               {navItems.map((item) => (
                 <Link
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
+                  key={item.href}
+                  href={item.href}
                   className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 rounded-xl transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {item}
+                  {item.label}
                 </Link>
               ))}
-              <div className="flex flex-col gap-2 pt-4 mt-2 border-t border-[var(--accent)]/10">
+              <div className="flex items-center justify-between pt-4 mt-2 border-t border-[var(--accent)]/10">
+                <LanguageSwitcher />
+              </div>
+              <div className="flex flex-col gap-2">
                 {user ? (
                   <>
                     <button
                       onClick={handleSignOut}
                       className="px-4 py-3 text-sm text-left font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
                     >
-                      Sign out
+                      {t("common.auth.signOut")}
                     </button>
                     <Link
                       href={appUrl}
                       className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
                     >
-                      Dashboard
+                      {t("common.auth.dashboard")}
                     </Link>
                   </>
                 ) : (
@@ -173,14 +186,14 @@ export function Header() {
                       className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Log in
+                      {t("common.auth.logIn")}
                     </Link>
                     <Link
                       href="/onboarding"
                       className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Get Started
+                      {t("common.auth.getStarted")}
                     </Link>
                   </>
                 )}

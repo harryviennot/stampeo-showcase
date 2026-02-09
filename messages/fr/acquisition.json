@@ -1,0 +1,36 @@
+{
+  "acquisition": {
+    "getCard": "Obtenez votre carte de fidélité",
+    "defaultDescription": "Rejoignez notre programme de fidélité et commencez à cumuler des récompenses !",
+    "getMyCard": "Obtenir ma carte",
+    "privacyNote": "Vos informations sont uniquement partagées avec <bold>ce commerce</bold> pour son programme de fidélité.",
+    "form": {
+      "name": "Votre nom",
+      "namePlaceholder": "Entrez votre nom",
+      "email": "Adresse email",
+      "emailPlaceholder": "vous@exemple.com",
+      "phone": "Numéro de téléphone",
+      "phonePlaceholder": "+33 6 12 34 56 78",
+      "nameRequired": "Le nom est requis",
+      "emailRequired": "L'email est requis",
+      "emailInvalid": "Veuillez saisir un email valide",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "phoneInvalid": "Veuillez saisir un numéro valide",
+      "emailOrPhoneRequired": "Un email ou un téléphone est requis"
+    },
+    "loading": "Création de votre carte...",
+    "success": {
+      "title": "Votre carte est prête !",
+      "description": "Ajoutez votre carte de fidélité {businessName} à votre wallet et commencez à collecter des tampons."
+    },
+    "emailSent": {
+      "title": "Vérifiez vos emails",
+      "defaultMessage": "Nous avons envoyé votre carte de fidélité à votre adresse email."
+    },
+    "error": {
+      "title": "Une erreur est survenue",
+      "defaultMessage": "Nous n'avons pas pu créer votre carte. Veuillez réessayer."
+    },
+    "poweredBy": "Propulsé par"
+  }
+}

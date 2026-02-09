@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useOnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import {
@@ -21,6 +22,7 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
 
 export function OnboardingWizard() {
+  const t = useTranslations("onboarding.steps");
   const { session, loading: authLoading } = useAuth();
   const isAuthenticated = !!session?.access_token;
   const store = useOnboardingStore(isAuthenticated, authLoading);
@@ -365,12 +367,12 @@ export function OnboardingWizard() {
   const renderStepLabels = () => (
     <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
       {[
-        { step: 1, label: "Business" },
-        { step: 2, label: "Type" },
-        { step: 3, label: "Design" },
-        { step: 4, label: "Account" },
-        { step: 5, label: "Plan" },
-        { step: 6, label: "Ready" },
+        { step: 1, label: t("business") },
+        { step: 2, label: t("type") },
+        { step: 3, label: t("design") },
+        { step: 4, label: t("account") },
+        { step: 5, label: t("plan") },
+        { step: 6, label: t("ready") },
       ].map(({ step, label }) => (
         <button
           key={step}

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
 
 export default function LoginPage() {
+  const t = useTranslations("auth.login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -66,7 +68,7 @@ export default function LoginPage() {
               htmlFor="email"
               className="block text-sm font-medium text-[var(--foreground)]"
             >
-              Email
+              {t("email")}
             </label>
             <input
               id="email"
@@ -75,7 +77,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-              placeholder="you@example.com"
+              placeholder={t("emailPlaceholder")}
             />
           </div>
 
@@ -84,7 +86,7 @@ export default function LoginPage() {
               htmlFor="password"
               className="block text-sm font-medium text-[var(--foreground)]"
             >
-              Password
+              {t("password")}
             </label>
             <input
               id="password"
@@ -93,7 +95,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-              placeholder="Enter your password"
+              placeholder={t("passwordPlaceholder")}
             />
           </div>
 
@@ -102,17 +104,17 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? t("signingIn") : t("signIn")}
           </button>
         </form>
 
         <p className="text-center text-sm text-[var(--muted-foreground)]">
-          Don&apos;t have an account?{" "}
+          {t("noAccount")}{" "}
           <Link
             href="/onboarding"
             className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
           >
-            Get Started
+            {t("getStarted")}
           </Link>
         </p>
       </div>

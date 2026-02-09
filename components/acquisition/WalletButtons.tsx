@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface WalletButtonsProps {
   passUrl: string;
@@ -8,6 +9,7 @@ interface WalletButtonsProps {
 }
 
 export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) {
+  const t = useTranslations("common.wallet");
   console.log("googleWalletUrl", googleWalletUrl);
   return (
     <div className="flex flex-row items-center justify-center gap-3">
@@ -15,7 +17,7 @@ export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) 
       <a href={passUrl} className="block hover:opacity-90 transition-opacity">
         <Image
           src="/AppleWallet.svg"
-          alt="Add to Apple Wallet"
+          alt={t("addToAppleWallet")}
           width={200}
           height={50}
           className="h-[50px] w-auto"
@@ -32,7 +34,7 @@ export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) 
         >
           <Image
             src="/GoogleWallet.svg"
-            alt="Add to Google Wallet"
+            alt={t("addToGoogleWallet")}
             width={200}
             height={50}
             className="h-[50px] w-auto"
@@ -42,13 +44,13 @@ export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) 
         <div className="relative">
           <Image
             src="/GoogleWallet.svg"
-            alt="Add to Google Wallet"
+            alt={t("addToGoogleWallet")}
             width={200}
             height={50}
             className="h-[50px] w-auto opacity-50 grayscale"
           />
           <span className="absolute -top-2 -right-2 bg-[var(--accent)] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-            Soon
+            {t("soon")}
           </span>
         </div>
       )}

@@ -1,33 +1,35 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import { getBusinessBySlug, getActiveCardDesign } from "@/lib/acquisition";
 import { AcquisitionFlow } from "@/components/acquisition/AcquisitionFlow";
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const t = await getTranslations("metadata.acquisition");
   const { data: business } = await getBusinessBySlug(slug);
 
   if (!business) {
     return {
-      title: "Business Not Found | Stampeo",
-      description: "This business could not be found.",
+      title: t("notFound"),
+      description: t("notFoundDesc"),
     };
   }
 
   const description =
     business.settings?.description ||
-    `Join ${business.name}'s loyalty program and earn rewards with every visit.`;
+    t("defaultDesc", { businessName: business.name });
 
   return {
-    title: `Get your ${business.name} loyalty card | Stampeo`,
+    title: t("title", { businessName: business.name }),
     description,
     openGraph: {
-      title: `${business.name} Loyalty Card`,
+      title: t("cardTitle", { businessName: business.name }),
       description,
       type: "website",
     },

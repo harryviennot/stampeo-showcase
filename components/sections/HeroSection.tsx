@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
@@ -21,11 +22,13 @@ function GeometricDecorations() {
 function StampButton({
   onClick,
   stamps,
-  isDisabled
+  isDisabled,
+  t,
 }: {
   onClick: () => void;
   stamps: number;
   isDisabled: boolean;
+  t: ReturnType<typeof useTranslations<"landing.hero">>;
 }) {
   const isComplete = stamps >= 8;
 
@@ -35,8 +38,8 @@ function StampButton({
         <div className="text-center mb-4">
           <p className="text-sm font-bold text-[var(--muted-foreground)]">
             {isComplete
-              ? "You've unlocked 30 days free!"
-              : "Your pass is ready! Try adding a stamp."}
+              ? t("stamp.complete")
+              : t("stamp.ready")}
           </p>
         </div>
 
@@ -45,7 +48,7 @@ function StampButton({
             href="/onboarding"
             className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
           >
-            Claim Your 30 Days Free →
+            {t("stamp.claimFree")}
           </Link>
         ) : (
           <button
@@ -59,25 +62,33 @@ function StampButton({
               }
             `}
           >
-            Add Stamp
+            {t("stamp.addStamp")}
           </button>
         )}
 
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
-          Watch your phone - the pass updates in real-time!
+          {t("stamp.watchPhone")}
         </p>
       </div>
     </div>
   );
 }
 
-function DemoStatusHint({ status }: { status: string }) {
+function DemoStatusHint({
+  status,
+  t,
+}: {
+  status: string;
+  t: ReturnType<typeof useTranslations<"landing.hero">>;
+}) {
   if (status === "pending") {
     return (
       <div className="relative mt-6 max-w-[380px] mx-auto">
         <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
           <p className="text-sm text-[var(--muted-foreground)]">
-            <span className="font-semibold">Scan the QR code</span> with your iPhone to try the demo
+            {t.rich("stamp.scanQR", {
+              bold: (chunks) => <span className="font-semibold">{chunks}</span>,
+            })}
           </p>
         </div>
       </div>
@@ -90,7 +101,7 @@ function DemoStatusHint({ status }: { status: string }) {
         <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
           <p className="text-sm text-[var(--muted-foreground)]">
             <span className="inline-block animate-pulse mr-2">⏳</span>
-            Add the pass to your Apple Wallet...
+            {t("stamp.addToWallet")}
           </p>
         </div>
       </div>
@@ -102,6 +113,7 @@ function DemoStatusHint({ status }: { status: string }) {
 
 export function HeroSection() {
   const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
+  const t = useTranslations("landing.hero");
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
@@ -115,17 +127,17 @@ export function HeroSection() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--accent)]/10 shadow-sm mb-6">
                 <span className="flex h-2 w-2 rounded-full bg-[var(--accent)] pulse-dot" />
-                <span className="text-sm font-bold tracking-wide">30-day free trial</span>
+                <span className="text-sm font-bold tracking-wide">{t("badge")}</span>
               </div>
 
               <h1 className="text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
-                Loyalty cards your customers{" "}
-                <span className="text-[var(--accent)]">actually keep.</span>
+                {t.rich("title", {
+                  accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
+                })}
               </h1>
 
               <p className="text-lg lg:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-xl">
-                Digital passes that live in Apple Wallet. Upload your logo, pick your colors,
-                and your card is ready in minutes. No app for your customers to download.
+                {t("subtitle")}
               </p>
             </div>
 
@@ -134,14 +146,14 @@ export function HeroSection() {
                 href="/onboarding"
                 className="group flex items-center gap-2 bg-[var(--accent)] text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-[var(--accent)]/25 hover:scale-105 transition-all"
               >
-                <span>Get Started</span>
+                <span>{t("cta")}</span>
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
               <Link
                 href="#features"
                 className="flex items-center gap-2 bg-white border-2 border-[var(--border)] px-8 py-4 rounded-full font-bold text-lg hover:bg-[var(--muted)] transition-all"
               >
-                See how it works
+                {t("secondaryCta")}
               </Link>
             </div>
 
@@ -189,9 +201,10 @@ export function HeroSection() {
                 onClick={addStamp}
                 stamps={stamps}
                 isDisabled={isStamping}
+                t={t}
               />
             ) : (
-              <DemoStatusHint status={status} />
+              <DemoStatusHint status={status} t={t} />
             )}
           </ScrollReveal>
         </div>
