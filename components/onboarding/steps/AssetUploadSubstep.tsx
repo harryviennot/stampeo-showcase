@@ -41,7 +41,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
         updateCardDesign({ logoUrl: url });
       }
     },
-    [session?.access_token, updateCardDesign]
+    [session, updateCardDesign]
   );
 
   const handleLogoClear = useCallback(async () => {
@@ -54,7 +54,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
       }
     }
     updateCardDesign({ logoUrl: null });
-  }, [session?.access_token, data.cardDesign.logoUrl, updateCardDesign]);
+  }, [session, data.cardDesign.logoUrl, updateCardDesign]);
 
   const handleStampIconChange = useCallback(
     (icon: StampIconType) => {

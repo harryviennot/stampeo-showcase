@@ -75,6 +75,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
       <header className="bg-white/80 backdrop-blur-sm border-b border-[var(--border)] sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
           {business.logo_url ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={business.logo_url}
               alt={business.name}

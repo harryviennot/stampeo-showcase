@@ -104,6 +104,7 @@ export function OnboardingCardPreview({
   // Track animation
   useEffect(() => {
     if (animatingStampIndex !== null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRecentlyAnimated(animatingStampIndex);
       const timer = setTimeout(() => setRecentlyAnimated(null), 600);
       return () => clearTimeout(timer);
@@ -184,6 +185,7 @@ export function OnboardingCardPreview({
               <div>
                 <div className="flex items-center gap-2">
                   {design?.logoUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={design.logoUrl}
                       alt={displayName}

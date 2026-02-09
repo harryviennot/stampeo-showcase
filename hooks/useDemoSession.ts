@@ -118,6 +118,7 @@ export function useDemoSession(): UseDemoSessionReturn {
       eventSource.close();
       startPollingRef.current(token);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fallback polling
@@ -250,6 +251,7 @@ export function useDemoSession(): UseDemoSessionReturn {
         clearInterval(pollingIntervalRef.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Build QR URL

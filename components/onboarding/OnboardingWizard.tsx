@@ -67,6 +67,7 @@ export function OnboardingWizard() {
     return () => {
       resetTheme();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.data.cardDesign?.backgroundColor, store.data.cardDesign?.accentColor, hasVisitedDesignStep]);
 
   // Check if authenticated user already has a business (completed onboarding)
@@ -187,6 +188,7 @@ export function OnboardingWizard() {
     };
 
     fetchFromBackend();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.access_token, authLoading, authChecked]);
 
   // Handle step completion with animation
