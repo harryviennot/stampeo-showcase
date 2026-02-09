@@ -1,0 +1,47 @@
+{
+  "common": {
+    "nav": {
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "faq": "FAQ"
+    },
+    "auth": {
+      "signOut": "Se déconnecter",
+      "dashboard": "Tableau de bord",
+      "logIn": "Se connecter",
+      "getStarted": "Commencer"
+    },
+    "buttons": {
+      "continue": "Continuer",
+      "back": "Retour",
+      "next": "Suivant",
+      "skip": "Passer pour l'instant",
+      "tryAgain": "Réessayer",
+      "goBack": "Retour"
+    },
+    "wallet": {
+      "appleWallet": "Apple Wallet",
+      "googleWallet": "Google Wallet",
+      "addToAppleWallet": "Ajouter à Apple Wallet",
+      "addToGoogleWallet": "Ajouter à Google Wallet",
+      "soon": "Bientôt"
+    },
+    "footer": {
+      "brand": "Stampeo",
+      "description": "Cartes de fidélité digitales pour les commerces modernes. Stimulez votre croissance grâce à des expériences simples et engageantes.",
+      "product": "Produit",
+      "features": "Fonctionnalités",
+      "pricing": "Tarifs",
+      "howItWorks": "Comment ça marche",
+      "company": "Entreprise",
+      "about": "À propos",
+      "contact": "Contact",
+      "careers": "Carrières",
+      "legal": "Mentions légales",
+      "privacyPolicy": "Politique de confidentialité",
+      "termsOfService": "Conditions d'utilisation",
+      "allRightsReserved": "© {year} Stampeo. Tous droits réservés.",
+      "builtForLocal": "Conçu pour les commerces de proximité"
+    }
+  }
+}

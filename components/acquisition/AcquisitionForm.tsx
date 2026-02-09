@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CustomerCreatePublic } from "@/lib/acquisition";
 
 interface DataCollectionSettings {
@@ -18,6 +19,9 @@ export function AcquisitionForm({
   dataCollection,
   onSubmit,
 }: AcquisitionFormProps) {
+  const t = useTranslations("acquisition.form");
+  const ta = useTranslations("acquisition");
+
   // Default to collecting name and email if not specified
   const collectName = dataCollection?.collect_name ?? true;
   const collectEmail = dataCollection?.collect_email ?? true;
@@ -46,19 +50,19 @@ export function AcquisitionForm({
 
     // Validate required fields
     if (collectName && !name.trim()) {
-      newErrors.name = "Name is required";
+      newErrors.name = t("nameRequired");
     }
 
     if (collectEmail && !email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("emailRequired");
     } else if (collectEmail && !validateEmail(email)) {
-      newErrors.email = "Please enter a valid email";
+      newErrors.email = t("emailInvalid");
     }
 
     if (collectPhone && !phone.trim()) {
-      newErrors.phone = "Phone number is required";
+      newErrors.phone = t("phoneRequired");
     } else if (collectPhone && phone.trim() && !validatePhone(phone)) {
-      newErrors.phone = "Please enter a valid phone number";
+      newErrors.phone = t("phoneInvalid");
     }
 
     // At least one identifier is required
@@ -66,10 +70,10 @@ export function AcquisitionForm({
       // Business doesn't collect either - this shouldn't happen but handle gracefully
     } else if (!email.trim() && !phone.trim() && (collectEmail || collectPhone)) {
       if (collectEmail) {
-        newErrors.email = "Email or phone is required";
+        newErrors.email = t("emailOrPhoneRequired");
       }
       if (collectPhone) {
-        newErrors.phone = "Email or phone is required";
+        newErrors.phone = t("emailOrPhoneRequired");
       }
     }
 
@@ -94,7 +98,7 @@ export function AcquisitionForm({
             htmlFor="name"
             className="block text-sm font-medium text-[var(--primary)] mb-1.5"
           >
-            Your name
+            {t("name")}
           </label>
           <input
             type="text"
@@ -104,7 +108,7 @@ export function AcquisitionForm({
               setName(e.target.value);
               if (errors.name) setErrors({ ...errors, name: "" });
             }}
-            placeholder="Enter your name"
+            placeholder={t("namePlaceholder")}
             className={`
               w-full px-4 py-3 rounded-xl border bg-white
               text-[var(--primary)] placeholder:text-[var(--muted-foreground)]
@@ -125,7 +129,7 @@ export function AcquisitionForm({
             htmlFor="email"
             className="block text-sm font-medium text-[var(--primary)] mb-1.5"
           >
-            Email address
+            {t("email")}
           </label>
           <input
             type="email"
@@ -135,7 +139,7 @@ export function AcquisitionForm({
               setEmail(e.target.value);
               if (errors.email) setErrors({ ...errors, email: "" });
             }}
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
             className={`
               w-full px-4 py-3 rounded-xl border bg-white
               text-[var(--primary)] placeholder:text-[var(--muted-foreground)]
@@ -156,7 +160,7 @@ export function AcquisitionForm({
             htmlFor="phone"
             className="block text-sm font-medium text-[var(--primary)] mb-1.5"
           >
-            Phone number
+            {t("phone")}
           </label>
           <input
             type="tel"
@@ -166,7 +170,7 @@ export function AcquisitionForm({
               setPhone(e.target.value);
               if (errors.phone) setErrors({ ...errors, phone: "" });
             }}
-            placeholder="+1 (555) 123-4567"
+            placeholder={t("phonePlaceholder")}
             className={`
               w-full px-4 py-3 rounded-xl border bg-white
               text-[var(--primary)] placeholder:text-[var(--muted-foreground)]
@@ -185,13 +189,13 @@ export function AcquisitionForm({
         type="submit"
         className="w-full btn-primary py-3.5 text-base font-semibold mt-2"
       >
-        Get my card
+        {ta("getMyCard")}
       </button>
 
       <p className="text-xs text-center text-[var(--muted-foreground)]">
-        Your information is only shared with {" "}
-        <span className="font-medium">this business</span> for their loyalty
-        program.
+        {ta.rich("privacyNote", {
+          bold: (chunks) => <span className="font-medium">{chunks}</span>,
+        })}
       </p>
     </form>
   );

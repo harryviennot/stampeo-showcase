@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { X, Image } from "@phosphor-icons/react";
+import { X, Image as ImageIcon } from "@phosphor-icons/react";
 
 interface ImageUploadBoxProps {
   value: string | null;
@@ -116,6 +116,7 @@ export function ImageUploadBox({
           className="group relative rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)]/30 flex items-center justify-center p-2"
           style={{ height: LOGO_HEIGHT + 16, maxWidth: LOGO_MAX_WIDTH + 16 }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={value}
             alt="Uploaded logo"
@@ -144,6 +145,7 @@ export function ImageUploadBox({
           <span className="block text-xs text-[var(--muted-foreground)] mb-1">{label}</span>
         )}
         <div className="group relative w-[100px] h-[100px] rounded-xl overflow-hidden border border-[var(--border)] bg-[var(--muted)]/30">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={value}
             alt="Uploaded"
@@ -205,7 +207,7 @@ export function ImageUploadBox({
           <div className="w-5 h-5 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
         ) : (
           <>
-            <Image className="w-5 h-5 text-[var(--muted-foreground)]" />
+            <ImageIcon className="w-5 h-5 text-[var(--muted-foreground)]" />
             <span className="text-[10px] text-[var(--muted-foreground)] text-center px-1">
               {hint}
             </span>

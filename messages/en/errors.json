@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "notFound": {
+      "title": "Business Not Found",
+      "description": "We couldn't find the business you're looking for. The link may be incorrect or the business may have been removed.",
+      "backToStampeo": "Go to Stampeo"
+    }
+  }
+}

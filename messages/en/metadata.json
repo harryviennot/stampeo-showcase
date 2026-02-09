@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "home": {
+      "title": "Stampeo - Loyalty cards your customers actually keep",
+      "description": "Digital loyalty cards for Apple Wallet and Google Wallet. No app to download, no card to lose. Create your free loyalty card in minutes.",
+      "keywords": "loyalty cards, digital loyalty, Apple Wallet, Google Wallet, customer rewards, stamp cards"
+    },
+    "onboarding": {
+      "title": "Get Started - Stampeo",
+      "description": "Set up your digital loyalty card in minutes"
+    },
+    "acquisition": {
+      "notFound": "Business Not Found | Stampeo",
+      "notFoundDesc": "This business could not be found.",
+      "title": "Get your {businessName} loyalty card | Stampeo",
+      "cardTitle": "{businessName} Loyalty Card",
+      "defaultDesc": "Join {businessName}'s loyalty program and earn rewards with every visit."
+    }
+  }
+}

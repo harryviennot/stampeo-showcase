@@ -1,0 +1,37 @@
+{
+  "pricing": {
+    "badge": "Plans & Tarifs",
+    "title": "Des tarifs simples et transparents",
+    "subtitle": "Essai gratuit de 30 jours. Aucune carte bancaire requise.",
+    "mostPopular": "LE PLUS POPULAIRE",
+    "perMonth": "/mois",
+    "startFreeTrial": "Commencer l'essai gratuit",
+    "pay": {
+      "name": "Pay",
+      "price": "14,99",
+      "description": "Tout ce qu'il faut pour un programme de fidélité digital.",
+      "featuresLabel": "Inclus dans Basic :",
+      "features": [
+        "1 modèle de carte actif",
+        "Clients et scans illimités",
+        "Jusqu'à 3 membres d'équipe",
+        "Scan hors ligne",
+        "Notifications push"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "29,99",
+      "description": "Pour les commerces en croissance et multi-sites.",
+      "featuresLabel": "Tout le plan Pay, plus :",
+      "features": [
+        "Plusieurs modèles de carte",
+        "Membres d'équipe illimités",
+        "Support multi-établissement",
+        "Messages de notification personnalisés",
+        "Analytiques avancées",
+        "Campagnes programmées"
+      ]
+    }
+  }
+}

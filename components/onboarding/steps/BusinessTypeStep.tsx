@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 
@@ -11,14 +12,14 @@ interface BusinessTypeStepProps {
 }
 
 const categories = [
-  { id: "cafe", label: "Cafe / Coffee Shop", icon: "☕" },
-  { id: "restaurant", label: "Restaurant", icon: "🍽️" },
-  { id: "bakery", label: "Bakery / Patisserie", icon: "🥐" },
-  { id: "retail", label: "Retail Store", icon: "🛍️" },
-  { id: "salon", label: "Hair Salon / Spa", icon: "💇" },
-  { id: "fitness", label: "Gym / Fitness", icon: "💪" },
-  { id: "services", label: "Services", icon: "🔧" },
-  { id: "other", label: "Other", icon: "✨" },
+  { id: "cafe", icon: "☕" },
+  { id: "restaurant", icon: "🍽️" },
+  { id: "bakery", icon: "🥐" },
+  { id: "retail", icon: "🛍️" },
+  { id: "salon", icon: "💇" },
+  { id: "fitness", icon: "💪" },
+  { id: "services", icon: "🔧" },
+  { id: "other", icon: "✨" },
 ];
 
 export function BusinessTypeStep({
@@ -26,6 +27,8 @@ export function BusinessTypeStep({
   onNext,
   onBack,
 }: BusinessTypeStepProps) {
+  const t = useTranslations("onboarding.businessType");
+  const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
 
   const isValid = data.category !== null;
@@ -48,10 +51,10 @@ export function BusinessTypeStep({
     <div className="w-full max-w-lg mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          What type of business?
+          {t("title")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">
-          This helps us tailor your loyalty card
+          {t("subtitle")}
         </p>
       </div>
 
@@ -71,7 +74,7 @@ export function BusinessTypeStep({
                 }
               `}
             >
-              <span className="text-2xl" role="img" aria-label={category.label}>
+              <span className="text-2xl" role="img" aria-label={t(`categories.${category.id}`)}>
                 {category.icon}
               </span>
               <span
@@ -80,7 +83,7 @@ export function BusinessTypeStep({
                     : "text-[var(--foreground)]/80"
                   }`}
               >
-                {category.label}
+                {t(`categories.${category.id}`)}
               </span>
             </button>
           ))}
@@ -101,7 +104,7 @@ export function BusinessTypeStep({
                   htmlFor="description"
                   className="block text-sm font-medium text-[var(--foreground)]"
                 >
-                  Please let us know what type of business you are
+                  {t("otherLabel")}
                 </label>
                 <textarea
                   id="description"
@@ -109,7 +112,7 @@ export function BusinessTypeStep({
                   onChange={(e) => updateData({ description: e.target.value })}
                   rows={2}
                   className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none"
-                  placeholder="e.g. Pet grooming, Car wash, Tattoo studio..."
+                  placeholder={t("otherPlaceholder")}
                 />
               </div>
             </motion.div>
@@ -123,14 +126,14 @@ export function BusinessTypeStep({
             onClick={onBack}
             className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
           >
-            Back
+            {tc("back")}
           </button>
           <button
             type="submit"
             disabled={!isValid}
             className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            Continue
+            {tc("continue")}
           </button>
         </div>
       </form>

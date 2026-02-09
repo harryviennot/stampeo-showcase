@@ -1,49 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { WalletIcon, SignalIcon, BellIcon, SparklesIcon, ChartIcon, DevicePhoneMobileIcon } from "../icons";
 
-const customerBenefits = [
-  {
-    icon: WalletIcon,
-    title: "Always with them",
-    description: "Lives in Apple Wallet or Google Wallet. No app to download, no login to remember.",
-  },
-  {
-    icon: SignalIcon,
-    title: "Works everywhere",
-    description: "No internet needed to show their card. Reliable at busy markets, basements, anywhere.",
-  },
-  {
-    icon: BellIcon,
-    title: "Instant feedback",
-    description: "A notification pops up the moment they earn a stamp. Satisfying and impossible to miss.",
-  },
-];
-
-const businessBenefits = [
-  {
-    icon: SparklesIcon,
-    title: "Ready in minutes",
-    description: "Upload your logo, pick your colors, see your card instantly. No design skills needed.",
-  },
-  {
-    icon: ChartIcon,
-    title: "See what's working",
-    description: "Know who's coming back, how often, and when. Simple insights, no spreadsheets.",
-  },
-  {
-    icon: DevicePhoneMobileIcon,
-    title: "Scan your way",
-    description: "Use our free app or scan from any browser. No special equipment, no POS integration.",
-  },
-];
+const customerIcons = [WalletIcon, SignalIcon, BellIcon];
+const businessIcons = [SparklesIcon, ChartIcon, DevicePhoneMobileIcon];
 
 export function BenefitsSection() {
   const [activeTab, setActiveTab] = useState<"customers" | "business">("customers");
+  const t = useTranslations("landing.benefits");
 
-  const benefits = activeTab === "customers" ? customerBenefits : businessBenefits;
+  const translatedBenefits = t.raw(activeTab) as Array<{ title: string; description: string }>;
+  const icons = activeTab === "customers" ? customerIcons : businessIcons;
 
   return (
     <section className="relative py-24 lg:py-32">
@@ -60,10 +30,10 @@ export function BenefitsSection() {
         {/* Section Header */}
         <ScrollReveal className="flex flex-col items-center text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight px-4 pb-3">
-            Works for everyone
+            {t("title")}
           </h2>
           <p className="text-[var(--muted-foreground)] text-lg max-w-2xl px-4">
-            A seamless experience designed for modern shoppers and growing businesses.
+            {t("subtitle")}
           </p>
         </ScrollReveal>
 
@@ -78,7 +48,7 @@ export function BenefitsSection() {
                   : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
               }`}
             >
-              <span className="truncate">For Your Customers</span>
+              <span className="truncate">{t("tabCustomers")}</span>
             </button>
             <button
               onClick={() => setActiveTab("business")}
@@ -88,30 +58,33 @@ export function BenefitsSection() {
                   : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
               }`}
             >
-              <span className="truncate">For Your Business</span>
+              <span className="truncate">{t("tabBusiness")}</span>
             </button>
           </div>
         </ScrollReveal>
 
         {/* Benefit Cards */}
         <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
-          {benefits.map((benefit, index) => (
-            <div
-              key={`${activeTab}-${index}`}
-              className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-xl shadow-[var(--accent)]/5 border border-white/50 transition-transform duration-300 hover:-translate-y-2"
-            >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                <benefit.icon className="w-7 h-7" />
-              </div>
+          {translatedBenefits.map((benefit, index) => {
+            const Icon = icons[index];
+            return (
+              <div
+                key={`${activeTab}-${index}`}
+                className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-xl shadow-[var(--accent)]/5 border border-white/50 transition-transform duration-300 hover:-translate-y-2"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+                  <Icon className="w-7 h-7" />
+                </div>
 
-              <div className="flex flex-col gap-3">
-                <h3 className="text-2xl font-bold leading-tight">{benefit.title}</h3>
-                <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
-                  {benefit.description}
-                </p>
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-2xl font-bold leading-tight">{benefit.title}</h3>
+                  <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
+                    {benefit.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </ScrollReveal>
       </div>
     </section>

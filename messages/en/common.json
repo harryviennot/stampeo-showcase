@@ -1,0 +1,47 @@
+{
+  "common": {
+    "nav": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ"
+    },
+    "auth": {
+      "signOut": "Sign out",
+      "dashboard": "Dashboard",
+      "logIn": "Log in",
+      "getStarted": "Get Started"
+    },
+    "buttons": {
+      "continue": "Continue",
+      "back": "Back",
+      "next": "Next",
+      "skip": "Skip for now",
+      "tryAgain": "Try Again",
+      "goBack": "Go back"
+    },
+    "wallet": {
+      "appleWallet": "Apple Wallet",
+      "googleWallet": "Google Wallet",
+      "addToAppleWallet": "Add to Apple Wallet",
+      "addToGoogleWallet": "Add to Google Wallet",
+      "soon": "Soon"
+    },
+    "footer": {
+      "brand": "Stampeo",
+      "description": "Digital loyalty cards for modern businesses. Empowering growth through simple, rewarding experiences.",
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "howItWorks": "How it works",
+      "company": "Company",
+      "about": "About",
+      "contact": "Contact",
+      "careers": "Careers",
+      "legal": "Legal",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "allRightsReserved": "© {year} Stampeo. All rights reserved.",
+      "builtForLocal": "Built for local businesses"
+    }
+  }
+}

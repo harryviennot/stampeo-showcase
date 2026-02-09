@@ -13,27 +13,6 @@ const stampColors = {
   yellow: "#eab308",
 };
 
-interface StampItemProps {
-  type: "circle" | "star" | "heart" | "coffee";
-  color: string;
-  size: number;
-  filled?: boolean;
-  delay?: number;
-  className?: string;
-}
-
-function StampItem({ type, color, size, filled = true, className = "" }: StampItemProps) {
-  const stamps = {
-    circle: CircleStamp,
-    star: StarStamp,
-    heart: HeartStamp,
-    coffee: CoffeeStamp,
-  };
-
-  const StampComponent = stamps[type];
-  return <StampComponent color={color} size={size} filled={filled} className={className} />;
-}
-
 export function StampCollection() {
   return (
     <div className="relative w-full max-w-[400px] aspect-square mx-auto">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { createBusiness, BusinessCreatePayload } from "@/lib/onboarding";
 import { useAuth } from "@/lib/supabase/auth-provider";
@@ -13,45 +14,28 @@ interface ChoosePlanStepProps {
   onBack: () => void;
 }
 
-const plans = [
-  {
-    id: "pay" as const,
-    name: "Pay",
-    price: "20",
-    description: "For single-location businesses",
-    features: [
-      { text: "1 card template", included: true },
-      { text: "Unlimited customers", included: true },
-      { text: "Unlimited scans", included: true },
-      { text: "Up to 3 scanner accounts", included: true },
-      { text: "Basic analytics", included: true },
-      { text: "Push notifications", included: true },
-    ],
-    featured: false,
-  },
-  {
-    id: "pro" as const,
-    name: "Pro",
-    price: "40",
-    description: "For growing & multi-location businesses",
-    features: [
-      { text: "Multiple card templates", included: true },
-      { text: "Unlimited customers", included: true },
-      { text: "Unlimited scans", included: true },
-      { text: "Unlimited scanner accounts", included: true },
-      { text: "Advanced analytics", included: true },
-      { text: "Push notifications", included: true },
-    ],
-    featured: true,
-  },
-];
-
 export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanStepProps>) {
+  const t = useTranslations("onboarding.choosePlan");
+  const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
   const { session } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const planIds = ["pay", "pro"] as const;
+
+  const plans = planIds.map((id) => ({
+    id,
+    name: t(`${id}.name`),
+    price: t(`${id}.price`),
+    description: t(`${id}.description`),
+    features: (t.raw(`${id}.features`) as string[]).map((text) => ({
+      text,
+      included: true,
+    })),
+    featured: id === "pro",
+  }));
 
   const handleSelectPlan = useCallback(
     async (planId: "pay" | "pro") => {
@@ -116,10 +100,10 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
     <div className="w-full max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          Choose your plan
+          {t("title")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">
-          Start with a 14-day free trial. No credit card required.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -144,7 +128,7 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
           >
             {plan.featured && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[var(--accent)] text-white text-xs font-bold uppercase tracking-wide">
-                Most popular
+                {t("mostPopular")}
               </div>
             )}
 
@@ -182,7 +166,7 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
                   : "text-[var(--muted-foreground)]"
                   }`}
               >
-                /month
+                {t("perMonth")}
               </span>
             </div>
 
@@ -216,8 +200,8 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
                 }`}
             >
               {loading && data.selectedPlan === plan.id
-                ? "Setting up..."
-                : "Start free trial"}
+                ? t("settingUp")
+                : t("startFreeTrial")}
             </button>
           </div>
         ))}
@@ -232,13 +216,13 @@ export function ChoosePlanStep({ store, onNext, onBack }: Readonly<ChoosePlanSte
             disabled={loading}
             className="py-2 px-6 text-[var(--muted-foreground)] hover:text-[var(--foreground)] font-medium transition-colors disabled:opacity-50"
           >
-            Go back
+            {tc("goBack")}
           </button>
         </div>
       )}
 
       <p className="text-center mt-4 text-xs text-[var(--muted-foreground)]">
-        Both plans include a 14-day free trial. Cancel anytime.
+        {t("trialNote")}
       </p>
     </div>
   );

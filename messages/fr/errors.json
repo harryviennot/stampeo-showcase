@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "notFound": {
+      "title": "Commerce introuvable",
+      "description": "Nous n'avons pas trouvé le commerce que vous cherchez. Le lien est peut-être incorrect ou le commerce a été supprimé.",
+      "backToStampeo": "Aller sur Stampeo"
+    }
+  }
+}

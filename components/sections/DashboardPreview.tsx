@@ -1,9 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 
 export function DashboardPreview() {
+  const t = useTranslations("landing.dashboard");
+
   return (
     <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--background-subtle)]">
       <Container>
@@ -11,24 +14,17 @@ export function DashboardPreview() {
           {/* Content */}
           <ScrollReveal variant="left">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
-              Analytics dashboard
+              {t("badge")}
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-              Know your regulars.
+              {t("title")}
             </h2>
             <p className="mt-6 text-lg text-[var(--muted-foreground)] leading-relaxed">
-              Your dashboard shows you who&apos;s visiting, how often, and when
-              they&apos;re close to a reward. Spot your best customers. See
-              what&apos;s working. Make smarter decisions.
+              {t("subtitle")}
             </p>
 
             <div className="mt-10 space-y-4">
-              {[
-                "See visit frequency and patterns",
-                "Track rewards claimed and pending",
-                "Identify your most loyal customers",
-                "Export data anytime",
-              ].map((item, index) => (
+              {(t.raw("features") as string[]).map((item, index) => (
                 <div key={index} className="flex items-center gap-4">
                   <div className="w-6 h-6 bg-[#22c55e] rounded-full flex items-center justify-center flex-shrink-0">
                     <svg
@@ -75,9 +71,9 @@ export function DashboardPreview() {
                 {/* Stats row */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   {[
-                    { label: "Total Customers", value: "1,234", change: "+12%" },
-                    { label: "Visits This Week", value: "89", change: "+23%" },
-                    { label: "Rewards Claimed", value: "156", change: "+8%" },
+                    { label: t("stats.totalCustomers"), value: "1,234", change: "+12%" },
+                    { label: t("stats.visitsThisWeek"), value: "89", change: "+23%" },
+                    { label: t("stats.rewardsClaimed"), value: "156", change: "+8%" },
                   ].map((stat, index) => (
                     <div
                       key={index}
@@ -101,8 +97,8 @@ export function DashboardPreview() {
                 {/* Customer list */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-xs text-[var(--muted-foreground)] px-2 font-medium">
-                    <span>Recent customers</span>
-                    <span>Progress</span>
+                    <span>{t("recentCustomers")}</span>
+                    <span>{t("progress")}</span>
                   </div>
                   {[
                     { name: "Sarah M.", stamps: 7, total: 8, recent: true },
@@ -124,7 +120,7 @@ export function DashboardPreview() {
                           </p>
                           {customer.recent && (
                             <p className="text-xs text-green-600 ">
-                              Visited today
+                              {t("visitedToday")}
                             </p>
                           )}
                         </div>
@@ -132,7 +128,7 @@ export function DashboardPreview() {
                       <div className="flex items-center gap-3">
                         {customer.stamps === 7 && (
                           <span className="text-xs bg-[var(--accent)]/10 text-[var(--accent)] px-2 py-1 rounded-full font-medium">
-                            Almost!
+                            {t("almost")}
                           </span>
                         )}
                         {/* Progress bar */}

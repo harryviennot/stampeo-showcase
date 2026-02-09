@@ -1,26 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 
-const payFeatures = [
-  "1 active card template",
-  "Unlimited customers & scans",
-  "Up to 3 team members",
-  "Offline scanning",
-  "Push notifications",
-];
-
-const proFeatures = [
-  "Multiple card templates",
-  "Unlimited team members",
-  "Multi-location support",
-  "Custom notification messages",
-  "Advanced analytics",
-  "Scheduled campaigns",
-];
-
 export function PricingSection() {
+  const t = useTranslations("pricing");
+
   return (
     <section id="pricing" className="relative py-24 lg:py-32">
       {/* Floating Geometric Decorations */}
@@ -31,13 +17,13 @@ export function PricingSection() {
         {/* Header Section */}
         <ScrollReveal className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-widest">
-            Plans & Pricing
+            {t("badge")}
           </span>
           <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
-            Simple, transparent pricing
+            {t("title")}
           </h2>
           <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
-            30-day free trial. No credit card required.
+            {t("subtitle")}
           </p>
         </ScrollReveal>
 
@@ -46,13 +32,13 @@ export function PricingSection() {
           {/* Pay Tier Card */}
           <div className="group flex flex-col gap-8 rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm hover:shadow-xl transition-all duration-300">
             <div className="flex flex-col gap-4">
-              <h3 className="text-2xl font-bold">Pay</h3>
+              <h3 className="text-2xl font-bold">{t("pay.name")}</h3>
               <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">€14.99</span>
-                <span className="text-[var(--muted-foreground)] text-lg font-bold">/month</span>
+                <span className="text-5xl font-black tracking-tight">&euro;{t("pay.price")}</span>
+                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
               </div>
               <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
-                Everything you need to run a digital loyalty program.
+                {t("pay.description")}
               </p>
             </div>
 
@@ -60,17 +46,17 @@ export function PricingSection() {
               href="/onboarding"
               className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
             >
-              <span>Start Free Trial</span>
+              <span>{t("startFreeTrial")}</span>
             </Link>
 
             <div className="flex flex-col gap-4">
               <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
-                Everything in Basic:
+                {t("pay.featuresLabel")}
               </p>
               <ul className="flex flex-col gap-4">
-                {payFeatures.map((feature) => (
+                {(t.raw("pay.features") as string[]).map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-[15px] font-medium">
-                    <span className="text-[var(--accent)] text-lg">✓</span>
+                    <span className="text-[var(--accent)] text-lg">&#10003;</span>
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -83,18 +69,18 @@ export function PricingSection() {
             {/* Badge */}
             <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
               <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
-                MOST POPULAR
+                {t("mostPopular")}
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
-              <h3 className="text-2xl font-bold">Pro</h3>
+              <h3 className="text-2xl font-bold">{t("pro.name")}</h3>
               <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">€29.99</span>
-                <span className="text-[var(--muted-foreground)] text-lg font-bold">/month</span>
+                <span className="text-5xl font-black tracking-tight">&euro;{t("pro.price")}</span>
+                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
               </div>
               <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
-                For growing businesses and multiple locations.
+                {t("pro.description")}
               </p>
             </div>
 
@@ -102,17 +88,17 @@ export function PricingSection() {
               href="/onboarding"
               className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
             >
-              <span>Start Free Trial</span>
+              <span>{t("startFreeTrial")}</span>
             </Link>
 
             <div className="flex flex-col gap-4">
               <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
-                Everything in Pay, plus:
+                {t("pro.featuresLabel")}
               </p>
               <ul className="flex flex-col gap-4">
-                {proFeatures.map((feature) => (
+                {(t.raw("pro.features") as string[]).map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-[15px] font-medium">
-                    <span className="text-[var(--accent)] text-lg">✓</span>
+                    <span className="text-[var(--accent)] text-lg">&#10003;</span>
                     <span>{feature}</span>
                   </li>
                 ))}
