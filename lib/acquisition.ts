@@ -3,7 +3,13 @@
  * These endpoints are public (no authentication required).
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+if (!API_URL) {
+  throw new Error("NEXT_PUBLIC_API_URL is not defined");
+} else {
+  console.log(`[API] API_BASE_URL: ${API_URL}`);
+}
 
 // ============================================
 // Types
