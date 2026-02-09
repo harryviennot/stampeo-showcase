@@ -1,15 +1,15 @@
 {
   "landing": {
     "hero": {
-      "badge": "Essai gratuit de 30 jours",
+      "badge": "Accès Anticipé — France",
       "title": "Des cartes de fidélité que vos clients <accent>gardent vraiment.</accent>",
       "subtitle": "Des cartes digitales directement dans Apple Wallet. Importez votre logo, choisissez vos couleurs, et votre carte est prête en quelques minutes. Aucune application à télécharger pour vos clients.",
-      "cta": "Commencer gratuitement",
+      "cta": "Devenir Partenaire Fondateur",
       "secondaryCta": "Voir comment ça marche",
       "stamp": {
-        "complete": "Vous avez débloqué 30 jours gratuits !",
+        "complete": "Vous avez débloqué l'accès anticipé !",
         "ready": "Votre carte est prête ! Essayez d'ajouter un tampon.",
-        "claimFree": "Réclamez vos 30 jours gratuits →",
+        "claimFree": "Devenir Partenaire Fondateur →",
         "addStamp": "Ajouter un tampon",
         "watchPhone": "Regardez votre téléphone – la carte se met à jour en temps réel !",
         "scanQR": "<bold>Scannez le QR code</bold> avec votre iPhone pour tester la démo",
@@ -59,6 +59,18 @@
           "description": "Utilisez notre application gratuite ou scannez depuis n'importe quel navigateur. Aucun équipement spécial, aucune intégration caisse."
         }
       ]
+    },
+    "foundingPartner": {
+      "badge": "Programme Partenaire Fondateur",
+      "title": "Aidez-nous à construire un produit que vous adorerez",
+      "subtitle": "Rejoignez-nous en tant que partenaire fondateur et bloquez votre tarif à vie tout en façonnant la plateforme.",
+      "valueProps": [
+        "Façonnez le produit avec vos retours directs",
+        "Canal direct avec notre équipe",
+        "3 mois offerts, puis 14,99 €/mois à vie",
+        "Toutes les fonctionnalités Pro incluses dès le premier jour"
+      ],
+      "cta": "Devenir Partenaire Fondateur"
     },
     "howItWorks": {
       "badge": "Comment ça marche",
@@ -121,8 +133,8 @@
       "subtitle": "Tout ce que vous devez savoir pour lancer votre programme de fidélité digital.",
       "items": [
         {
-          "question": "Quelle est la durée de l'essai gratuit ?",
-          "answer": "30 jours, sans carte bancaire. Vous avez accès à toutes les fonctionnalités pendant l'essai, ce qui vous permet de découvrir la plateforme complète avant de vous décider."
+          "question": "Qu'est-ce que le programme partenaire fondateur ?",
+          "answer": "En tant que partenaire fondateur, vous bénéficiez d'un accès anticipé à Stampeo avec toutes les fonctionnalités Pro. Vous contribuez à façonner le produit avec vos retours directs. Après 3 mois offerts, vous bloquez votre tarif à 14,99 €/mois à vie (au lieu de 29,99 €)."
         },
         {
           "question": "Comment créer ma carte de fidélité ?",
@@ -141,19 +153,19 @@
           "answer": "Les clients scannent simplement un QR code unique affiché à votre caisse, ou vous pouvez scanner leur carte digitale. Les deux méthodes sont rapides et sécurisées."
         },
         {
-          "question": "Que se passe-t-il si je résilie ?",
-          "answer": "Vous pouvez résilier à tout moment. Vos données seront conservées 30 jours au cas où vous changeriez d'avis, après quoi elles seront définitivement supprimées. Aucun frais caché."
+          "question": "Comment fonctionne l'accès anticipé ?",
+          "answer": "Après votre inscription, nous examinons les candidatures par petits groupes. Vous recevrez un email lorsque votre compte sera activé. Cela nous permet d'assurer un accompagnement de qualité pour chaque partenaire."
         }
       ],
       "stillQuestions": "Encore des questions ?",
       "stillQuestionsDesc": "Nous sommes là pour vous aider à développer votre commerce et à fidéliser vos clients.",
-      "startFreeTrial": "Essai gratuit",
+      "startFreeTrial": "Demander l'accès anticipé",
       "contactSupport": "Contacter le support"
     },
     "finalCta": {
       "title": "Prêt à transformer vos visiteurs en <accent>habitués ?</accent>",
-      "cta": "Commencez votre essai gratuit de 30 jours",
-      "subtitle": "Sans carte bancaire · Prêt en quelques minutes"
+      "cta": "Devenir Partenaire Fondateur",
+      "subtitle": "Accès anticipé · 3 mois offerts · 14,99 €/mois à vie"
     }
   }
 }

@@ -5,8 +5,8 @@
       "type": "Type",
       "design": "Design",
       "account": "Account",
-      "plan": "Plan",
-      "ready": "Ready"
+      "partner": "Partner",
+      "done": "Done"
     },
     "businessInfo": {
       "title": "Let's set up your business",
@@ -77,47 +77,22 @@
       "createOne": "Create one",
       "alreadyRegistered": "This email is already registered. Please log in instead."
     },
-    "choosePlan": {
-      "title": "Choose your plan",
-      "subtitle": "30-day free trial. No credit card required.",
-      "mostPopular": "Most popular",
-      "perMonth": "/month",
-      "startFreeTrial": "Start free trial",
-      "settingUp": "Setting up...",
-      "trialNote": "Both plans include a 30-day free trial. Cancel anytime.",
-      "pay": {
-        "name": "Pay",
-        "price": "14.99",
-        "description": "Everything you need to run a digital loyalty program.",
-        "features": [
-          "1 active card template",
-          "Unlimited customers & scans",
-          "Up to 3 team members",
-          "Offline scanning",
-          "Push notifications"
-        ]
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "29.99",
-        "description": "For growing businesses and multiple locations.",
-        "features": [
-          "Multiple card templates",
-          "Unlimited team members",
-          "Multi-location support",
-          "Custom notification messages",
-          "Advanced analytics",
-          "Scheduled campaigns"
-        ]
-      }
+    "foundingPartner": {
+      "title": "Become a Founding Partner",
+      "subtitle": "Help us build a product you'll love — and lock in pricing for life",
+      "valueProps": ["Pro features included", "3 months free", "Then €14.99/month for life", "Direct feedback channel with our team"],
+      "cta": "Become a Founding Partner",
+      "settingUp": "Setting up your space...",
+      "limitedSpots": "Limited early access spots available in France"
     },
-    "congrats": {
-      "title": "You're all set!",
-      "subtitle": "Welcome to your new loyalty program",
-      "spaceReady": "Your business space is ready",
+    "applicationSubmitted": {
+      "title": "Your card is ready!",
+      "subtitle": "We're reviewing applications in small batches",
+      "waitingMessage": "You'll receive an email when your account is activated.",
+      "goToDashboard": "Go to dashboard",
+      "spaceReady": "Your business space is set up",
       "cardDesigned": "Your loyalty card is designed",
-      "readyForCustomers": "Ready to welcome customers",
-      "letsGo": "Let's go!"
+      "pendingReview": "Application pending review"
     }
   }
 }

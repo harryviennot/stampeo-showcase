@@ -1,15 +1,15 @@
 {
   "landing": {
     "hero": {
-      "badge": "30-day free trial",
+      "badge": "Early Access — France",
       "title": "Loyalty cards your customers <accent>actually keep.</accent>",
       "subtitle": "Digital passes that live in Apple Wallet. Upload your logo, pick your colors, and your card is ready in minutes. No app for your customers to download.",
-      "cta": "Get Started",
+      "cta": "Become a Founding Partner",
       "secondaryCta": "See how it works",
       "stamp": {
-        "complete": "You've unlocked 30 days free!",
+        "complete": "You've unlocked early access!",
         "ready": "Your pass is ready! Try adding a stamp.",
-        "claimFree": "Claim Your 30 Days Free →",
+        "claimFree": "Become a Founding Partner →",
         "addStamp": "Add Stamp",
         "watchPhone": "Watch your phone - the pass updates in real-time!",
         "scanQR": "<bold>Scan the QR code</bold> with your iPhone to try the demo",
@@ -59,6 +59,18 @@
           "description": "Use our free app or scan from any browser. No special equipment, no POS integration."
         }
       ]
+    },
+    "foundingPartner": {
+      "badge": "Founding Partner Program",
+      "title": "Help us build a product you'll love",
+      "subtitle": "Join as a founding partner and lock in lifetime pricing while helping shape the platform.",
+      "valueProps": [
+        "Shape the product with direct feedback",
+        "Direct channel with our team",
+        "3 months free, then €14.99/month for life",
+        "All Pro features included from day one"
+      ],
+      "cta": "Become a Founding Partner"
     },
     "howItWorks": {
       "badge": "How it works",
@@ -121,8 +133,8 @@
       "subtitle": "Everything you need to know about setting up your digital loyalty program.",
       "items": [
         {
-          "question": "How long is the free trial?",
-          "answer": "30 days, no credit card required. You get full access to all features during the trial, allowing you to experience the complete platform before deciding."
+          "question": "What is the founding partner program?",
+          "answer": "As a founding partner, you get early access to Stampeo with all Pro features. You'll help shape the product with direct feedback. After 3 free months, you lock in €14.99/month for life (normally €29.99)."
         },
         {
           "question": "How do I create my loyalty card?",
@@ -141,19 +153,19 @@
           "answer": "Customers simply scan a unique QR code displayed at your checkout, or you can scan their digital card. Both methods are fast and secure."
         },
         {
-          "question": "What happens when I cancel?",
-          "answer": "You can cancel at any time. Your data will be held for 30 days if you change your mind, after which it will be permanently deleted. No hidden fees."
+          "question": "How does early access work?",
+          "answer": "After signing up, we review applications in small batches. You'll receive an email when your account is activated. This lets us ensure quality support for every partner."
         }
       ],
       "stillQuestions": "Still have questions?",
       "stillQuestionsDesc": "We're here to help you grow your business and build lasting customer relationships.",
-      "startFreeTrial": "Start Free Trial",
+      "startFreeTrial": "Apply for Early Access",
       "contactSupport": "Contact Support"
     },
     "finalCta": {
       "title": "Ready to turn visitors into <accent>regulars?</accent>",
-      "cta": "Start Your 30-Day Free Trial",
-      "subtitle": "No credit card required · Ready in minutes"
+      "cta": "Become a Founding Partner",
+      "subtitle": "Early access · 3 months free · €14.99/month for life"
     }
   }
 }

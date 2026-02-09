@@ -2,6 +2,7 @@ import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { BenefitsSection } from "@/components/sections/BenefitsSection";
+import { FoundingPartnerSection } from "@/components/sections/FoundingPartnerSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -15,6 +16,7 @@ export default function Home() {
         <HeroSection />
         <ProblemSection />
         <BenefitsSection />
+        <FoundingPartnerSection />
         <PricingSection />
         <FAQSection />
         <FinalCTASection />

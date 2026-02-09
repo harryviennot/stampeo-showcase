@@ -5,8 +5,8 @@
       "type": "Type",
       "design": "Design",
       "account": "Compte",
-      "plan": "Plan",
-      "ready": "Prêt"
+      "partner": "Partenaire",
+      "done": "Terminé"
     },
     "businessInfo": {
       "title": "Configurons votre commerce",
@@ -77,47 +77,22 @@
       "createOne": "Créer un compte",
       "alreadyRegistered": "Cet email est déjà enregistré. Veuillez vous connecter."
     },
-    "choosePlan": {
-      "title": "Choisissez votre plan",
-      "subtitle": "Essai gratuit de 30 jours. Aucune carte bancaire requise.",
-      "mostPopular": "Le plus populaire",
-      "perMonth": "/mois",
-      "startFreeTrial": "Commencer l'essai gratuit",
-      "settingUp": "Configuration...",
-      "trialNote": "Les deux plans incluent un essai gratuit de 30 jours. Résiliez à tout moment.",
-      "pay": {
-        "name": "Pay",
-        "price": "14,99",
-        "description": "Tout ce qu'il faut pour un programme de fidélité digital.",
-        "features": [
-          "1 modèle de carte actif",
-          "Clients et scans illimités",
-          "Jusqu'à 3 membres d'équipe",
-          "Scan hors ligne",
-          "Notifications push"
-        ]
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "29,99",
-        "description": "Pour les commerces en croissance et multi-sites.",
-        "features": [
-          "Plusieurs modèles de carte",
-          "Membres d'équipe illimités",
-          "Support multi-établissement",
-          "Messages de notification personnalisés",
-          "Analytiques avancées",
-          "Campagnes programmées"
-        ]
-      }
+    "foundingPartner": {
+      "title": "Devenez Partenaire Fondateur",
+      "subtitle": "Aidez-nous à construire un produit que vous adorerez — et bloquez votre tarif à vie",
+      "valueProps": ["Fonctionnalités Pro incluses", "3 mois offerts", "Puis 14,99 €/mois à vie", "Canal de feedback direct avec notre équipe"],
+      "cta": "Devenir Partenaire Fondateur",
+      "settingUp": "Préparation de votre espace...",
+      "limitedSpots": "Places limitées en accès anticipé en France"
     },
-    "congrats": {
-      "title": "Tout est prêt !",
-      "subtitle": "Bienvenue dans votre nouveau programme de fidélité",
-      "spaceReady": "Votre espace est prêt",
+    "applicationSubmitted": {
+      "title": "Votre carte est prête !",
+      "subtitle": "Nous examinons les candidatures par petits groupes",
+      "waitingMessage": "Vous recevrez un email lorsque votre compte sera activé.",
+      "goToDashboard": "Aller au tableau de bord",
+      "spaceReady": "Votre espace est configuré",
       "cardDesigned": "Votre carte de fidélité est créée",
-      "readyForCustomers": "Prêt à accueillir vos clients",
-      "letsGo": "C'est parti !"
+      "pendingReview": "Candidature en cours d'examen"
     }
   }
 }

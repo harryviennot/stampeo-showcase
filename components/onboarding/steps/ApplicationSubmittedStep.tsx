@@ -4,16 +4,15 @@ import { useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 
-interface CongratsStepProps {
+interface ApplicationSubmittedStepProps {
   store: OnboardingStore;
 }
 
-export function CongratsStep({ store }: CongratsStepProps) {
-  const t = useTranslations("onboarding.congrats");
+export function ApplicationSubmittedStep({ store }: ApplicationSubmittedStepProps) {
+  const t = useTranslations("onboarding.applicationSubmitted");
   const { data } = store;
 
-  const handleLetsGo = useCallback(() => {
-    // Clear onboarding data before redirecting for a clean slate
+  const handleGoToDashboard = useCallback(() => {
     store.clearStore();
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
     window.location.href = appUrl;
@@ -21,7 +20,7 @@ export function CongratsStep({ store }: CongratsStepProps) {
 
   return (
     <div className="w-full max-w-md mx-auto text-center py-4">
-      {/* Celebration icon */}
+      {/* Hourglass / pending icon */}
       <div className="mb-6">
         <div
           className="w-20 h-20 mx-auto rounded-full flex items-center justify-center"
@@ -49,8 +48,11 @@ export function CongratsStep({ store }: CongratsStepProps) {
       </h1>
 
       {/* Subtitle */}
-      <p className="text-[var(--muted-foreground)] text-lg mb-6">
+      <p className="text-[var(--muted-foreground)] text-lg mb-2">
         {t("subtitle")}
+      </p>
+      <p className="text-[var(--muted-foreground)] text-sm mb-6">
+        {t("waitingMessage")}
       </p>
 
       {/* Business info card */}
@@ -113,20 +115,20 @@ export function CongratsStep({ store }: CongratsStepProps) {
             </svg>
             <span>{t("cardDesigned")}</span>
           </div>
-          <div className="flex items-center gap-2 text-[var(--foreground)]">
+          <div className="flex items-center gap-2 text-[var(--muted-foreground)]">
             <svg
-              className="w-4 h-4"
+              className="w-4 h-4 animate-pulse"
               style={{ color: "var(--accent)" }}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
               <path
                 fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                 clipRule="evenodd"
               />
             </svg>
-            <span>{t("readyForCustomers")}</span>
+            <span>{t("pendingReview")}</span>
           </div>
         </div>
       </div>
@@ -134,10 +136,10 @@ export function CongratsStep({ store }: CongratsStepProps) {
       {/* CTA Button */}
       <button
         type="button"
-        onClick={handleLetsGo}
+        onClick={handleGoToDashboard}
         className="w-full py-4 px-6 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 text-lg"
       >
-        {t("letsGo")}
+        {t("goToDashboard")}
       </button>
     </div>
   );
