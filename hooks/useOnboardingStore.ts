@@ -103,6 +103,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
       const sessionData = sessionStorage.getItem(SESSION_STORAGE_KEY);
       if (sessionData) {
         const parsed: StoredState = JSON.parse(sessionData);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setData({ ...initialData, ...parsed.data });
         setCurrentStep(parsed.currentStep);
         setCompletedSteps(parsed.completedSteps || []);

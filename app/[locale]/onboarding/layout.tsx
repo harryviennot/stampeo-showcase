@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
 import { StampeoLogo } from "@/components/logo";
 
-export const metadata: Metadata = {
-  title: "Get Started - Stampeo",
-  description: "Set up your digital loyalty card in minutes",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata.onboarding");
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
-export default function OnboardingLayout({
+export default async function OnboardingLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <div className="min-h-screen bg-[var(--background)]">
       {/* Minimal header with just logo */}

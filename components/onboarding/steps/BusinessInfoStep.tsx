@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
+import { useTranslations } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { checkSlugAvailability } from "@/lib/onboarding";
 import { CheckIcon, XMarkIcon } from "@/components/icons";
@@ -11,6 +12,8 @@ interface BusinessInfoStepProps {
 }
 
 export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
+  const t = useTranslations("onboarding.businessInfo");
+  const tc = useTranslations("common.buttons");
   const { data, updateBusinessName, updateSlug, updateData, isSlugAvailable, slugErrorReason, isSlugChecking, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking, validatedSlug, markSlugValidated } = store;
   const [debouncedSlug, setDebouncedSlug] = useState(data.urlSlug);
 
@@ -78,10 +81,10 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
     <div className="w-full max-w-md mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          Let&apos;s set up your business
+          {t("title")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">
-          Tell us about your business to get started
+          {t("subtitle")}
         </p>
       </div>
 
@@ -92,7 +95,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             htmlFor="businessName"
             className="block text-sm font-medium text-[var(--foreground)]"
           >
-            Business name
+            {t("businessName")}
           </label>
           <input
             id="businessName"
@@ -101,7 +104,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             onChange={(e) => updateBusinessName(e.target.value)}
             required
             className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-            placeholder="e.g. Cafe Aroma"
+            placeholder={t("businessNamePlaceholder")}
           />
         </div>
 
@@ -111,7 +114,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             htmlFor="urlSlug"
             className="block text-sm font-medium text-[var(--foreground)]"
           >
-            Your unique URL
+            {t("uniqueUrl")}
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted-foreground)] text-sm">
@@ -125,7 +128,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
               required
               minLength={3}
               className="w-full pl-[104px] py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-              placeholder="cafe-aroma"
+              placeholder={t("urlPlaceholder")}
             />
             {/* Availability indicator */}
             <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
@@ -148,7 +151,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
           <div className="h-5">
             {data.urlSlug.length > 0 && data.urlSlug.length < 3 && (
               <p className="text-xs text-[var(--muted-foreground)]">
-                Must be at least 3 characters
+                {t("slugMinLength")}
               </p>
             )}
             {!isSlugChecking && isSlugAvailable === false && slugErrorReason && (
@@ -158,7 +161,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             )}
             {!isSlugChecking && isSlugAvailable === true && (
               <p className="text-xs text-green-600">
-                This URL is available!
+                {t("slugAvailable")}
               </p>
             )}
           </div>
@@ -170,7 +173,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             htmlFor="ownerName"
             className="block text-sm font-medium text-[var(--foreground)]"
           >
-            Your name
+            {t("ownerName")}
           </label>
           <input
             id="ownerName"
@@ -179,7 +182,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
             onChange={(e) => updateData({ ownerName: e.target.value })}
             required
             className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-            placeholder="John Doe"
+            placeholder={t("ownerNamePlaceholder")}
           />
         </div>
 
@@ -188,7 +191,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
           disabled={!isValid}
           className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
-          Continue
+          {tc("continue")}
         </button>
       </form>
     </div>

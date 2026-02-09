@@ -44,53 +44,6 @@ export interface WalletCardProps {
 // Sub-components
 // ============================================================================
 
-interface StampCircleProps {
-  readonly isFilled: boolean;
-  readonly accentColor: string;
-  readonly iconColor: string;
-  readonly emptyBg: string;
-  readonly emptyBorder: string;
-  readonly isLast?: boolean;
-  readonly stampIcon: StampIconType;
-  readonly rewardIcon: StampIconType;
-  readonly sizeClass: string;
-  readonly iconSizeClass: string;
-}
-
-function StampCircle({
-  isFilled,
-  accentColor,
-  iconColor,
-  emptyBg,
-  emptyBorder,
-  isLast = false,
-  stampIcon,
-  rewardIcon,
-  sizeClass,
-  iconSizeClass,
-}: StampCircleProps) {
-  return (
-    <div className="flex justify-center">
-      <div
-        className={`${sizeClass} rounded-full flex items-center justify-center transition-all duration-300`}
-        style={{
-          backgroundColor: isFilled ? accentColor : emptyBg,
-          border: isFilled ? "none" : `1px solid ${emptyBorder}`,
-          boxShadow: isFilled ? `0 4px 12px ${accentColor}40` : "none",
-        }}
-      >
-        {isFilled && (
-          <StampIconSvg
-            icon={isLast ? rewardIcon : stampIcon}
-            className={iconSizeClass}
-            color={iconColor}
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
 interface StampGridProps {
   readonly totalStamps: number;
   readonly filledCount: number;

@@ -1,12 +1,17 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Container } from "../ui/Container";
 
-const stats = [
-  { value: "200+", label: "Businesses" },
-  { value: "50K+", label: "Cards issued" },
-  { value: "4.9", label: "Rating", suffix: "/5" },
-];
-
 export function SocialProofBar() {
+  const t = useTranslations("landing.socialProof");
+
+  const stats = [
+    { value: "200+", label: t("stats.businesses") },
+    { value: "50K+", label: t("stats.cardsIssued") },
+    { value: "4.9", label: t("stats.rating"), suffix: "/5" },
+  ];
+
   return (
     <section className="py-16 relative overflow-hidden">
       <Container>
@@ -14,10 +19,10 @@ export function SocialProofBar() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left">
               <p className="text-sm font-medium text-[var(--muted-foreground)] mb-1">
-                Trusted by businesses worldwide
+                {t("trustedBy")}
               </p>
               <p className="text-lg font-semibold text-[var(--foreground)]">
-                Join 200+ independent businesses already using Stampeo
+                {t("joinCount")}
               </p>
             </div>
 

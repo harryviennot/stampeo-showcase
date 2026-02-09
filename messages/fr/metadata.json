@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "home": {
+      "title": "Stampeo - Des cartes de fidélité que vos clients gardent vraiment",
+      "description": "Cartes de fidélité digitales pour Apple Wallet et Google Wallet. Aucune appli à télécharger, aucune carte à perdre. Créez votre carte de fidélité gratuite en quelques minutes.",
+      "keywords": "cartes de fidélité, fidélité digitale, Apple Wallet, Google Wallet, récompenses clients, cartes à tampons"
+    },
+    "onboarding": {
+      "title": "Commencer - Stampeo",
+      "description": "Créez votre carte de fidélité digitale en quelques minutes"
+    },
+    "acquisition": {
+      "notFound": "Commerce introuvable | Stampeo",
+      "notFoundDesc": "Ce commerce n'a pas été trouvé.",
+      "title": "Obtenez votre carte de fidélité {businessName} | Stampeo",
+      "cardTitle": "Carte de fidélité {businessName}",
+      "defaultDesc": "Rejoignez le programme de fidélité de {businessName} et gagnez des récompenses à chaque visite."
+    }
+  }
+}

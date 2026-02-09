@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette } from "@phosphor-icons/react/dist/ssr";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
@@ -111,6 +112,8 @@ export function CardPreviewStep({
   onNext,
   onBack,
 }: CardPreviewStepProps) {
+  const t = useTranslations("onboarding.cardPreview");
+  const tc = useTranslations("common.buttons");
   const { data, updateCardDesign } = store;
   const { cardDesign } = data;
 
@@ -151,12 +154,12 @@ export function CardPreviewStep({
     <div className="w-full max-w-lg mx-auto">
       <div className="text-center mb-4">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          Customize your card
+          {t("title")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">
           {substep === 1
-            ? "Add your logo and choose a stamp icon"
-            : "Choose colors that match your brand"}
+            ? t("subtitleAssets")
+            : t("subtitleColors")}
         </p>
       </div>
 
@@ -181,6 +184,7 @@ export function CardPreviewStep({
               <ColorPickerSubstep
                 cardDesign={cardDesign}
                 updateCardDesign={updateCardDesign}
+                t={t}
               />
             )}
           </motion.div>
@@ -190,7 +194,7 @@ export function CardPreviewStep({
       {/* Info note */}
       <div className="text-center mb-6 mt-4">
         <p className="text-sm text-[var(--muted-foreground)]">
-          You can always edit your card design later in the dashboard
+          {t("editLater")}
         </p>
       </div>
 
@@ -201,14 +205,14 @@ export function CardPreviewStep({
           onClick={handleBack}
           className="py-3.5 px-6 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
         >
-          Back
+          {tc("back")}
         </button>
         <button
           type="button"
           onClick={onNext}
           className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--muted-foreground)] font-medium rounded-full hover:bg-[var(--muted)] hover:text-[var(--foreground)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
         >
-          Skip for now
+          {tc("skip")}
         </button>
         <button
           type="button"
@@ -227,7 +231,7 @@ export function CardPreviewStep({
             e.currentTarget.style.boxShadow = "none";
           }}
         >
-          {substep === 1 ? "Next" : "Continue"}
+          {substep === 1 ? tc("next") : tc("continue")}
         </button>
       </div>
     </div>
@@ -242,9 +246,10 @@ interface ColorPickerSubstepProps {
     iconColor?: string;
   };
   updateCardDesign: (updates: Partial<{ backgroundColor: string; accentColor: string; iconColor: string }>) => void;
+  t: (key: string) => string;
 }
 
-function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstepProps) {
+function ColorPickerSubstep({ cardDesign, updateCardDesign, t }: ColorPickerSubstepProps) {
   // Ensure iconColor has a fallback to accentColor for existing data without it
   const effectiveIconColor = cardDesign.iconColor || cardDesign.accentColor;
 
@@ -258,7 +263,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
       {/* Background Color */}
       <fieldset>
         <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
-          Card Background
+          {t("cardBackground")}
         </legend>
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-4">
           {backgroundColors.map((color) => (
@@ -301,7 +306,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
       {/* Accent Color */}
       <fieldset>
         <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
-          Accent Color
+          {t("accentColor")}
         </legend>
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-4">
           {accentColors.map((color) => (
@@ -344,7 +349,7 @@ function ColorPickerSubstep({ cardDesign, updateCardDesign }: ColorPickerSubstep
       {/* Icon Color */}
       <fieldset>
         <legend className="block text-sm font-medium text-[var(--foreground)] mb-2">
-          Icon Color
+          {t("iconColor")}
         </legend>
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-4">
           {iconColors.map((color) => (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import {
   BusinessPublicResponse,
@@ -22,6 +23,7 @@ interface AcquisitionFlowProps {
 }
 
 export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) {
+  const t = useTranslations("acquisition");
   const [flowState, setFlowState] = useState<FlowState>("form");
   const [customerResponse, setCustomerResponse] = useState<CustomerPublicResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -73,6 +75,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
       <header className="bg-white/80 backdrop-blur-sm border-b border-[var(--border)] sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
           {business.logo_url ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={business.logo_url}
               alt={business.name}
@@ -154,7 +157,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
       {/* Footer */}
       <footer className="mt-auto py-6 text-center">
         <p className="text-sm text-[var(--muted-foreground)]">
-          Powered by{" "}
+          {t("poweredBy")}{" "}
           <a
             href="https://stampeo.app"
             className="font-medium hover:text-[var(--accent)] transition-colors"
@@ -176,14 +179,15 @@ function FormCard({
   business: BusinessPublicResponse;
   onSubmit: (data: CustomerCreatePublic) => void;
 }) {
+  const t = useTranslations("acquisition");
   return (
     <div className="paper-card rounded-2xl p-6">
       <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
-        Get your loyalty card
+        {t("getCard")}
       </h2>
       <p className="text-[var(--muted-foreground)] mb-6">
         {business.settings?.description ||
-          "Join our loyalty program and start earning rewards!"}
+          t("defaultDescription")}
       </p>
       <AcquisitionForm
         dataCollection={business.settings?.customer_data_collection}
@@ -194,10 +198,11 @@ function FormCard({
 }
 
 function LoadingCard() {
+  const t = useTranslations("acquisition");
   return (
     <div className="paper-card rounded-2xl p-6 text-center min-h-[280px] flex flex-col items-center justify-center">
       <div className="w-12 h-12 mx-auto mb-4 rounded-full border-4 border-[var(--accent)] border-t-transparent animate-spin" />
-      <p className="text-[var(--muted-foreground)]">Creating your card...</p>
+      <p className="text-[var(--muted-foreground)]">{t("loading")}</p>
     </div>
   );
 }
@@ -211,6 +216,7 @@ function SuccessCard({
   passUrl: string;
   googleWalletUrl?: string;
 }) {
+  const t = useTranslations("acquisition");
   return (
     <div className="paper-card rounded-2xl p-6 text-center">
       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center stamp-fill-animation">
@@ -229,11 +235,10 @@ function SuccessCard({
         </svg>
       </div>
       <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
-        Your card is ready!
+        {t("success.title")}
       </h2>
       <p className="text-[var(--muted-foreground)] mb-6">
-        Add your {businessName} loyalty card to your wallet and start collecting
-        stamps.
+        {t("success.description", { businessName })}
       </p>
       <WalletButtons passUrl={passUrl} googleWalletUrl={googleWalletUrl} />
     </div>
@@ -241,6 +246,7 @@ function SuccessCard({
 }
 
 function EmailSentCard({ message }: { message?: string }) {
+  const t = useTranslations("acquisition");
   return (
     <div className="paper-card rounded-2xl p-6 text-center">
       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
@@ -259,10 +265,10 @@ function EmailSentCard({ message }: { message?: string }) {
         </svg>
       </div>
       <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
-        Check your email
+        {t("emailSent.title")}
       </h2>
       <p className="text-[var(--muted-foreground)]">
-        {message || "We've sent your loyalty card to your email address."}
+        {message || t("emailSent.defaultMessage")}
       </p>
     </div>
   );
@@ -275,6 +281,8 @@ function ErrorCard({
   message: string | null;
   onRetry: () => void;
 }) {
+  const t = useTranslations("acquisition");
+  const tc = useTranslations("common.buttons");
   return (
     <div className="paper-card rounded-2xl p-6 text-center">
       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
@@ -293,16 +301,16 @@ function ErrorCard({
         </svg>
       </div>
       <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
-        Something went wrong
+        {t("error.title")}
       </h2>
       <p className="text-[var(--muted-foreground)] mb-6">
-        {message || "We couldn't create your card. Please try again."}
+        {message || t("error.defaultMessage")}
       </p>
       <button
         onClick={onRetry}
         className="btn-primary px-6 py-3 text-sm font-semibold"
       >
-        Try Again
+        {tc("tryAgain")}
       </button>
     </div>
   );

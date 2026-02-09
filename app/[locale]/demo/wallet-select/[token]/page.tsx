@@ -2,11 +2,14 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function WalletSelectPage() {
+  const t = useTranslations("auth.walletSelect");
+  const tw = useTranslations("common.wallet");
   const params = useParams();
   const token = params.token as string;
 
@@ -28,10 +31,10 @@ export default function WalletSelectPage() {
         {/* Card */}
         <div className="bg-[var(--card)] rounded-2xl p-8 shadow-lg border border-[var(--border)]">
           <h1 className="text-2xl font-bold text-[var(--foreground)] mb-2">
-            Add to Wallet
+            {t("title")}
           </h1>
           <p className="text-[var(--muted-foreground)] mb-8">
-            Choose your wallet to add the demo loyalty card
+            {t("subtitle")}
           </p>
 
           <div className="space-y-4">
@@ -42,7 +45,7 @@ export default function WalletSelectPage() {
             >
               <Image
                 src="/AppleWallet.svg"
-                alt="Add to Apple Wallet"
+                alt={tw("addToAppleWallet")}
                 width={280}
                 height={56}
                 className="w-full h-auto"
@@ -56,7 +59,7 @@ export default function WalletSelectPage() {
             >
               <Image
                 src="/GoogleWallet.svg"
-                alt="Add to Google Wallet"
+                alt={tw("addToGoogleWallet")}
                 width={280}
                 height={56}
                 className="w-full h-auto"
@@ -65,7 +68,7 @@ export default function WalletSelectPage() {
           </div>
 
           <p className="mt-8 text-sm text-[var(--muted-foreground)]">
-            For the best experience, scan the QR code directly with your phone
+            {t("tip")}
           </p>
         </div>
 
@@ -75,7 +78,7 @@ export default function WalletSelectPage() {
             href="/"
             className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
           >
-            Back to Stampeo
+            {t("backToStampeo")}
           </Link>
         </div>
       </div>

@@ -1,9 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { DocumentIcon, DevicePhoneMobileIcon } from "../icons";
 
 export function ProblemSection() {
+  const t = useTranslations("landing.problem");
+
   return (
     <section id="features" className="relative py-24 lg:py-32">
       {/* Floating Geometric Decorations */}
@@ -17,10 +20,11 @@ export function ProblemSection() {
         {/* Problem Statement */}
         <ScrollReveal className="text-center mb-16">
           <p className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed text-[var(--foreground)]">
-            <span>Paper cards get lost. </span>
-            <span className="text-[var(--muted-foreground)]">
-              Loyalty apps don&apos;t get downloaded. There&apos;s a better way.
-            </span>
+            {t.rich("statement", {
+              muted: (chunks) => (
+                <span className="text-[var(--muted-foreground)]">{chunks}</span>
+              ),
+            })}
           </p>
         </ScrollReveal>
 
@@ -32,9 +36,9 @@ export function ProblemSection() {
               <DocumentIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">Lost in drawers</h3>
+              <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("lostTitle")}</h3>
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                Paper cards get crumpled, forgotten in pockets, or thrown away. Your loyalty program becomes invisible.
+                {t("lostDesc")}
               </p>
             </div>
           </div>
@@ -45,9 +49,9 @@ export function ProblemSection() {
               <DevicePhoneMobileIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">App fatigue</h3>
+              <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("fatigueTitle")}</h3>
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                Customers won&apos;t download another app just for stamps. The friction kills engagement before it starts.
+                {t("fatigueDesc")}
               </p>
             </div>
           </div>
@@ -64,10 +68,10 @@ export function ProblemSection() {
         {/* Solution Statement */}
         <ScrollReveal delay={400} className="text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-[var(--foreground)] mb-6">
-            Stampeo puts your loyalty card where customers already look:
+            {t("solution")}
           </h2>
           <p className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[var(--accent)]">
-            Their phone wallet.
+            {t("solutionHighlight")}
           </p>
 
           {/* Phone Illustration */}
@@ -88,7 +92,7 @@ export function ProblemSection() {
                         </div>
                         <div>
                           <p className="font-bold text-sm">Stampeo</p>
-                          <p className="text-xs text-[var(--muted-foreground)]">You earned a stamp!</p>
+                          <p className="text-xs text-[var(--muted-foreground)]">{t("notification")}</p>
                         </div>
                       </div>
                       <div className="flex gap-1">

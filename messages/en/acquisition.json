@@ -1,0 +1,36 @@
+{
+  "acquisition": {
+    "getCard": "Get your loyalty card",
+    "defaultDescription": "Join our loyalty program and start earning rewards!",
+    "getMyCard": "Get my card",
+    "privacyNote": "Your information is only shared with <bold>this business</bold> for their loyalty program.",
+    "form": {
+      "name": "Your name",
+      "namePlaceholder": "Enter your name",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "phone": "Phone number",
+      "phonePlaceholder": "+1 (555) 123-4567",
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid phone number",
+      "emailOrPhoneRequired": "Email or phone is required"
+    },
+    "loading": "Creating your card...",
+    "success": {
+      "title": "Your card is ready!",
+      "description": "Add your {businessName} loyalty card to your wallet and start collecting stamps."
+    },
+    "emailSent": {
+      "title": "Check your email",
+      "defaultMessage": "We've sent your loyalty card to your email address."
+    },
+    "error": {
+      "title": "Something went wrong",
+      "defaultMessage": "We couldn't create your card. Please try again."
+    },
+    "poweredBy": "Powered by"
+  }
+}

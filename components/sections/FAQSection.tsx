@@ -1,42 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import Link from "next/link";
-
-const faqs = [
-  {
-    question: "How long is the free trial?",
-    answer:
-      "30 days, no credit card required. You get full access to all features during the trial, allowing you to experience the complete platform before deciding.",
-  },
-  {
-    question: "How do I create my loyalty card?",
-    answer:
-      "Your card is created automatically during setup. Just upload your logo and pick your colors — you'll see a preview instantly. Customize anything you like, then publish when you're happy with it.",
-  },
-  {
-    question: "Do my customers need to download an app?",
-    answer:
-      "No, Stampeo works directly through the web browser or can be added to digital wallets like Apple Wallet or Google Pay. Zero friction for your customers.",
-  },
-  {
-    question: "What equipment do I need?",
-    answer:
-      "Any device with an internet connection. You can scan from our free app or directly from your browser — your choice.",
-  },
-  {
-    question: "How do customers get stamped?",
-    answer:
-      "Customers simply scan a unique QR code displayed at your checkout, or you can scan their digital card. Both methods are fast and secure.",
-  },
-  {
-    question: "What happens when I cancel?",
-    answer:
-      "You can cancel at any time. Your data will be held for 30 days if you change your mind, after which it will be permanently deleted. No hidden fees.",
-  },
-];
+import { Link } from "@/i18n/navigation";
 
 export function FAQSection() {
+  const t = useTranslations("landing.faq");
+  const faqs = t.raw("items") as Array<{ question: string; answer: string }>;
+
   return (
     <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
       {/* Decoration: Top Right Stamp */}
@@ -47,20 +18,20 @@ export function FAQSection() {
         {/* Section Header */}
         <ScrollReveal className="mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
-            Frequently asked questions
+            {t("title")}
           </h2>
           <p className="mt-4 text-[var(--muted-foreground)] text-lg font-medium">
-            Everything you need to know about setting up your digital loyalty program.
+            {t("subtitle")}
           </p>
         </ScrollReveal>
 
         {/* Accordion List */}
         <ScrollReveal delay={200} className="flex flex-col gap-5">
-          {faqs.map((faq) => (
+          {faqs.map((faq, index) => (
             <details
-              key={faq.question}
+              key={index}
               className="group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4"
-              open={faq.question === "How long is the free trial?" || faq.question === "How do I create my loyalty card?"}
+              open={index === 0 || index === 1}
             >
               <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
                 <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
@@ -82,22 +53,22 @@ export function FAQSection() {
         {/* CTA Section inside FAQ */}
         <ScrollReveal delay={400} className="mt-20 p-10 bg-[var(--foreground)] rounded-xl text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)]" />
-          <h3 className="text-white text-3xl font-bold mb-4">Still have questions?</h3>
+          <h3 className="text-white text-3xl font-bold mb-4">{t("stillQuestions")}</h3>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-            We&apos;re here to help you grow your business and build lasting customer relationships.
+            {t("stillQuestionsDesc")}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/onboarding"
               className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-xl font-bold transition-all"
             >
-              Start Free Trial
+              {t("startFreeTrial")}
             </Link>
             <Link
               href="#"
               className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-xl font-bold transition-all border border-white/10"
             >
-              Contact Support
+              {t("contactSupport")}
             </Link>
           </div>
         </ScrollReveal>

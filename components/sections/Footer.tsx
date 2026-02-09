@@ -1,4 +1,7 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 function StampeoLogo() {
   return (
@@ -14,6 +17,8 @@ function StampeoLogo() {
 }
 
 export function Footer() {
+  const t = useTranslations("common.footer");
+
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white pt-20 pb-10 overflow-hidden">
       {/* Subtle Geometric Background Shapes */}
@@ -36,38 +41,38 @@ export function Footer() {
               <h2 className="text-2xl font-bold tracking-tight text-white">Stampeo</h2>
             </Link>
             <p className="text-[#a1a1aa] text-sm leading-relaxed max-w-[240px]">
-              Digital loyalty cards for modern businesses. Empowering growth through simple, rewarding experiences.
+              {t("description")}
             </p>
           </div>
 
           {/* Column 2: Product */}
           <div className="flex flex-col gap-6">
-            <h3 className="text-white text-base font-bold">Product</h3>
+            <h3 className="text-white text-base font-bold">{t("product")}</h3>
             <nav className="flex flex-col gap-4">
               <Link href="#features" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                Features
+                {t("features")}
               </Link>
               <Link href="#pricing" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                Pricing
+                {t("pricing")}
               </Link>
               <Link href="#faq" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                How it works
+                {t("howItWorks")}
               </Link>
             </nav>
           </div>
 
           {/* Column 3: Company */}
           <div className="flex flex-col gap-6">
-            <h3 className="text-white text-base font-bold">Company</h3>
+            <h3 className="text-white text-base font-bold">{t("company")}</h3>
             <nav className="flex flex-col gap-4">
               <Link href="#" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                About
+                {t("about")}
               </Link>
               <Link href="#" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                Contact
+                {t("contact")}
               </Link>
               <Link href="#" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                Careers
+                {t("careers")}
               </Link>
             </nav>
           </div>
@@ -75,13 +80,13 @@ export function Footer() {
           {/* Column 4: Legal & Social */}
           <div className="flex flex-col gap-6">
             <div>
-              <h3 className="text-white text-base font-bold mb-6">Legal</h3>
+              <h3 className="text-white text-base font-bold mb-6">{t("legal")}</h3>
               <nav className="flex flex-col gap-4">
                 <Link href="#" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  Privacy Policy
+                  {t("privacyPolicy")}
                 </Link>
                 <Link href="#" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  Terms of Service
+                  {t("termsOfService")}
                 </Link>
               </nav>
             </div>
@@ -125,10 +130,10 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[#a1a1aa] text-xs font-normal">
-            © {new Date().getFullYear()} Stampeo. All rights reserved.
+            {t("allRightsReserved", { year: new Date().getFullYear() })}
           </p>
           <p className="text-[#a1a1aa] text-xs font-medium">
-            Built for local businesses
+            {t("builtForLocal")}
           </p>
         </div>
       </div>

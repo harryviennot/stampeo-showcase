@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 
 interface CongratsStepProps {
@@ -8,6 +9,7 @@ interface CongratsStepProps {
 }
 
 export function CongratsStep({ store }: CongratsStepProps) {
+  const t = useTranslations("onboarding.congrats");
   const { data } = store;
 
   const handleLetsGo = useCallback(() => {
@@ -43,12 +45,12 @@ export function CongratsStep({ store }: CongratsStepProps) {
 
       {/* Title */}
       <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] mb-3">
-        You&apos;re all set!
+        {t("title")}
       </h1>
 
       {/* Subtitle */}
       <p className="text-[var(--muted-foreground)] text-lg mb-6">
-        Welcome to your new loyalty program
+        {t("subtitle")}
       </p>
 
       {/* Business info card */}
@@ -94,7 +96,7 @@ export function CongratsStep({ store }: CongratsStepProps) {
                 clipRule="evenodd"
               />
             </svg>
-            <span>Your business space is ready</span>
+            <span>{t("spaceReady")}</span>
           </div>
           <div className="flex items-center gap-2 text-[var(--foreground)]">
             <svg
@@ -109,7 +111,7 @@ export function CongratsStep({ store }: CongratsStepProps) {
                 clipRule="evenodd"
               />
             </svg>
-            <span>Your loyalty card is designed</span>
+            <span>{t("cardDesigned")}</span>
           </div>
           <div className="flex items-center gap-2 text-[var(--foreground)]">
             <svg
@@ -124,7 +126,7 @@ export function CongratsStep({ store }: CongratsStepProps) {
                 clipRule="evenodd"
               />
             </svg>
-            <span>Ready to welcome customers</span>
+            <span>{t("readyForCustomers")}</span>
           </div>
         </div>
       </div>
@@ -135,7 +137,7 @@ export function CongratsStep({ store }: CongratsStepProps) {
         onClick={handleLetsGo}
         className="w-full py-4 px-6 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 text-lg"
       >
-        Let&apos;s go!
+        {t("letsGo")}
       </button>
     </div>
   );

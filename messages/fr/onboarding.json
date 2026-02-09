@@ -1,0 +1,123 @@
+{
+  "onboarding": {
+    "steps": {
+      "business": "Commerce",
+      "type": "Type",
+      "design": "Design",
+      "account": "Compte",
+      "plan": "Plan",
+      "ready": "Prêt"
+    },
+    "businessInfo": {
+      "title": "Configurons votre commerce",
+      "subtitle": "Dites-nous en plus sur votre activité pour commencer",
+      "businessName": "Nom du commerce",
+      "businessNamePlaceholder": "ex. Café Arôme",
+      "uniqueUrl": "Votre URL unique",
+      "urlPlaceholder": "cafe-arome",
+      "slugMinLength": "Minimum 3 caractères",
+      "slugAvailable": "Cette URL est disponible !",
+      "ownerName": "Votre nom",
+      "ownerNamePlaceholder": "Jean Dupont"
+    },
+    "businessType": {
+      "title": "Quel type de commerce ?",
+      "subtitle": "Cela nous aide à personnaliser votre carte de fidélité",
+      "categories": {
+        "cafe": "Café / Coffee Shop",
+        "restaurant": "Restaurant",
+        "bakery": "Boulangerie / Pâtisserie",
+        "retail": "Commerce de détail",
+        "salon": "Salon de coiffure / Spa",
+        "fitness": "Salle de sport / Fitness",
+        "services": "Services",
+        "other": "Autre"
+      },
+      "otherLabel": "Précisez votre type d'activité",
+      "otherPlaceholder": "ex. Toilettage, Lavage auto, Tatoueur..."
+    },
+    "cardPreview": {
+      "title": "Personnalisez votre carte",
+      "subtitleAssets": "Ajoutez votre logo et choisissez une icône de tampon",
+      "subtitleColors": "Choisissez des couleurs qui correspondent à votre marque",
+      "editLater": "Vous pourrez toujours modifier le design de votre carte dans le tableau de bord",
+      "cardBackground": "Fond de la carte",
+      "accentColor": "Couleur d'accent",
+      "iconColor": "Couleur des icônes",
+      "businessLogo": "Logo du commerce",
+      "logoOptional": "(optionnel)",
+      "logoDesc": "Importez votre logo pour remplacer les initiales sur votre carte. Format PNG, max 2 Mo.",
+      "stampIcon": "Icône de tampon",
+      "stampIconTooltip": "Vous pourrez demander une icône personnalisée dans le tableau de bord !",
+      "rewardIcon": "Icône de récompense",
+      "rewardIconTooltip": "Icône affichée sur le dernier tampon",
+      "defaultInitials": "VC",
+      "defaultBusiness": "Votre commerce",
+      "progress": "Progression",
+      "completeSetup": "Complétez la configuration",
+      "unlockCard": "pour débloquer votre carte",
+      "loyaltyCard": "Carte de fidélité"
+    },
+    "createAccount": {
+      "signupTitle": "Créez votre compte",
+      "loginTitle": "Bon retour",
+      "signupSubtitle": "Dernière étape ! Configurez vos identifiants",
+      "loginSubtitle": "Connectez-vous pour continuer la configuration",
+      "email": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Au moins 6 caractères",
+      "passwordHint": "Minimum 6 caractères",
+      "createAccount": "Créer le compte",
+      "creatingAccount": "Création du compte...",
+      "signIn": "Se connecter",
+      "signingIn": "Connexion en cours...",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "noAccount": "Pas encore de compte ?",
+      "createOne": "Créer un compte",
+      "alreadyRegistered": "Cet email est déjà enregistré. Veuillez vous connecter."
+    },
+    "choosePlan": {
+      "title": "Choisissez votre plan",
+      "subtitle": "Essai gratuit de 30 jours. Aucune carte bancaire requise.",
+      "mostPopular": "Le plus populaire",
+      "perMonth": "/mois",
+      "startFreeTrial": "Commencer l'essai gratuit",
+      "settingUp": "Configuration...",
+      "trialNote": "Les deux plans incluent un essai gratuit de 30 jours. Résiliez à tout moment.",
+      "pay": {
+        "name": "Pay",
+        "price": "14,99",
+        "description": "Tout ce qu'il faut pour un programme de fidélité digital.",
+        "features": [
+          "1 modèle de carte actif",
+          "Clients et scans illimités",
+          "Jusqu'à 3 membres d'équipe",
+          "Scan hors ligne",
+          "Notifications push"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "29,99",
+        "description": "Pour les commerces en croissance et multi-sites.",
+        "features": [
+          "Plusieurs modèles de carte",
+          "Membres d'équipe illimités",
+          "Support multi-établissement",
+          "Messages de notification personnalisés",
+          "Analytiques avancées",
+          "Campagnes programmées"
+        ]
+      }
+    },
+    "congrats": {
+      "title": "Tout est prêt !",
+      "subtitle": "Bienvenue dans votre nouveau programme de fidélité",
+      "spaceReady": "Votre espace est prêt",
+      "cardDesigned": "Votre carte de fidélité est créée",
+      "readyForCustomers": "Prêt à accueillir vos clients",
+      "letsGo": "C'est parti !"
+    }
+  }
+}

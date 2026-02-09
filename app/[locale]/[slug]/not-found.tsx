@@ -1,6 +1,11 @@
-import Link from "next/link";
+"use client";
+
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export default function NotFound() {
+  const t = useTranslations("errors.notFound");
+
   return (
     <main className="min-h-screen bg-[var(--cream)] flex items-center justify-center p-6">
       <div className="paper-card rounded-2xl p-8 max-w-md text-center">
@@ -21,19 +26,18 @@ export default function NotFound() {
         </div>
 
         <h1 className="text-2xl font-bold text-[var(--primary)] mb-2">
-          Business Not Found
+          {t("title")}
         </h1>
 
         <p className="text-[var(--muted-foreground)] mb-6">
-          We couldn&apos;t find the business you&apos;re looking for. The link may be
-          incorrect or the business may have been removed.
+          {t("description")}
         </p>
 
         <Link
           href="/"
           className="btn-primary inline-block px-6 py-3 text-sm font-semibold"
         >
-          Go to Stampeo
+          {t("backToStampeo")}
         </Link>
       </div>
     </main>

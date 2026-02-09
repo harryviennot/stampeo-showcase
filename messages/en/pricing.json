@@ -1,0 +1,37 @@
+{
+  "pricing": {
+    "badge": "Plans & Pricing",
+    "title": "Simple, transparent pricing",
+    "subtitle": "30-day free trial. No credit card required.",
+    "mostPopular": "MOST POPULAR",
+    "perMonth": "/month",
+    "startFreeTrial": "Start Free Trial",
+    "pay": {
+      "name": "Pay",
+      "price": "14.99",
+      "description": "Everything you need to run a digital loyalty program.",
+      "featuresLabel": "Everything in Basic:",
+      "features": [
+        "1 active card template",
+        "Unlimited customers & scans",
+        "Up to 3 team members",
+        "Offline scanning",
+        "Push notifications"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "29.99",
+      "description": "For growing businesses and multiple locations.",
+      "featuresLabel": "Everything in Pay, plus:",
+      "features": [
+        "Multiple card templates",
+        "Unlimited team members",
+        "Multi-location support",
+        "Custom notification messages",
+        "Advanced analytics",
+        "Scheduled campaigns"
+      ]
+    }
+  }
+}

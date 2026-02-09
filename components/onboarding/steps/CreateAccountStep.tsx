@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 
@@ -15,6 +16,8 @@ export function CreateAccountStep({
   onNext,
   onBack,
 }: CreateAccountStepProps) {
+  const t = useTranslations("onboarding.createAccount");
+  const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
   const { signUp, signIn } = useAuth();
 
@@ -46,7 +49,7 @@ export function CreateAccountStep({
             // Check if user already exists
             const errorMsg = authError.message.toLowerCase();
             if (errorMsg.includes("already registered") || errorMsg.includes("already exists")) {
-              setError("This email is already registered. Please log in instead.");
+              setError(t("alreadyRegistered"));
               setMode("login");
             } else {
               setError(authError.message);
@@ -72,19 +75,19 @@ export function CreateAccountStep({
         setLoading(false);
       }
     },
-    [isValid, data.email, data.ownerName, password, signUp, signIn, onNext, mode]
+    [isValid, data.email, data.ownerName, password, signUp, signIn, onNext, mode, t]
   );
 
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          {mode === "signup" ? "Create your account" : "Welcome back"}
+          {mode === "signup" ? t("signupTitle") : t("loginTitle")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">
           {mode === "signup"
-            ? "Almost there! Set up your login credentials"
-            : "Log in to continue setting up your business"}
+            ? t("signupSubtitle")
+            : t("loginSubtitle")}
         </p>
       </div>
 
@@ -101,7 +104,7 @@ export function CreateAccountStep({
             htmlFor="email"
             className="block text-sm font-medium text-[var(--foreground)]"
           >
-            Email
+            {t("email")}
           </label>
           <input
             id="email"
@@ -110,7 +113,7 @@ export function CreateAccountStep({
             onChange={(e) => updateData({ email: e.target.value })}
             required
             className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-            placeholder="you@example.com"
+            placeholder={t("emailPlaceholder")}
           />
         </div>
 
@@ -120,7 +123,7 @@ export function CreateAccountStep({
             htmlFor="password"
             className="block text-sm font-medium text-[var(--foreground)]"
           >
-            Password
+            {t("password")}
           </label>
           <input
             id="password"
@@ -130,10 +133,10 @@ export function CreateAccountStep({
             required
             minLength={6}
             className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-            placeholder="At least 6 characters"
+            placeholder={t("passwordPlaceholder")}
           />
           <p className="text-xs text-[var(--muted-foreground)]">
-            Minimum 6 characters
+            {t("passwordHint")}
           </p>
         </div>
 
@@ -145,7 +148,7 @@ export function CreateAccountStep({
             disabled={loading}
             className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50"
           >
-            Back
+            {tc("back")}
           </button>
           <button
             type="submit"
@@ -154,18 +157,18 @@ export function CreateAccountStep({
           >
             {loading
               ? mode === "signup"
-                ? "Creating account..."
-                : "Signing in..."
+                ? t("creatingAccount")
+                : t("signingIn")
               : mode === "signup"
-                ? "Create account"
-                : "Sign in"}
+                ? t("createAccount")
+                : t("signIn")}
           </button>
         </div>
 
         <p className="text-center text-sm text-[var(--muted-foreground)] pt-2">
           {mode === "signup" ? (
             <>
-              Already have an account?{" "}
+              {t("alreadyHaveAccount")}{" "}
               <button
                 type="button"
                 onClick={() => {
@@ -174,12 +177,12 @@ export function CreateAccountStep({
                 }}
                 className="text-[var(--accent)] hover:opacity-80 font-medium transition-colors"
               >
-                Sign in
+                {t("signIn")}
               </button>
             </>
           ) : (
             <>
-              Don&apos;t have an account?{" "}
+              {t("noAccount")}{" "}
               <button
                 type="button"
                 onClick={() => {
@@ -188,7 +191,7 @@ export function CreateAccountStep({
                 }}
                 className="text-[var(--accent)] hover:opacity-80 font-medium transition-colors"
               >
-                Create one
+                {t("createOne")}
               </button>
             </>
           )}

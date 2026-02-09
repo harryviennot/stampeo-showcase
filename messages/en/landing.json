@@ -1,0 +1,159 @@
+{
+  "landing": {
+    "hero": {
+      "badge": "30-day free trial",
+      "title": "Loyalty cards your customers <accent>actually keep.</accent>",
+      "subtitle": "Digital passes that live in Apple Wallet. Upload your logo, pick your colors, and your card is ready in minutes. No app for your customers to download.",
+      "cta": "Get Started",
+      "secondaryCta": "See how it works",
+      "stamp": {
+        "complete": "You've unlocked 30 days free!",
+        "ready": "Your pass is ready! Try adding a stamp.",
+        "claimFree": "Claim Your 30 Days Free →",
+        "addStamp": "Add Stamp",
+        "watchPhone": "Watch your phone - the pass updates in real-time!",
+        "scanQR": "<bold>Scan the QR code</bold> with your iPhone to try the demo",
+        "addToWallet": "Add the pass to your Apple Wallet..."
+      }
+    },
+    "problem": {
+      "statement": "Paper cards get lost. <muted>Loyalty apps don't get downloaded. There's a better way.</muted>",
+      "lostTitle": "Lost in drawers",
+      "lostDesc": "Paper cards get crumpled, forgotten in pockets, or thrown away. Your loyalty program becomes invisible.",
+      "fatigueTitle": "App fatigue",
+      "fatigueDesc": "Customers won't download another app just for stamps. The friction kills engagement before it starts.",
+      "solution": "Stampeo puts your loyalty card where customers already look:",
+      "solutionHighlight": "Their phone wallet.",
+      "notification": "You earned a stamp!"
+    },
+    "benefits": {
+      "title": "Works for everyone",
+      "subtitle": "A seamless experience designed for modern shoppers and growing businesses.",
+      "tabCustomers": "For Your Customers",
+      "tabBusiness": "For Your Business",
+      "customers": [
+        {
+          "title": "Always with them",
+          "description": "Lives in Apple Wallet or Google Wallet. No app to download, no login to remember."
+        },
+        {
+          "title": "Works everywhere",
+          "description": "No internet needed to show their card. Reliable at busy markets, basements, anywhere."
+        },
+        {
+          "title": "Instant feedback",
+          "description": "A notification pops up the moment they earn a stamp. Satisfying and impossible to miss."
+        }
+      ],
+      "business": [
+        {
+          "title": "Ready in minutes",
+          "description": "Upload your logo, pick your colors, see your card instantly. No design skills needed."
+        },
+        {
+          "title": "See what's working",
+          "description": "Know who's coming back, how often, and when. Simple insights, no spreadsheets."
+        },
+        {
+          "title": "Scan your way",
+          "description": "Use our free app or scan from any browser. No special equipment, no POS integration."
+        }
+      ]
+    },
+    "howItWorks": {
+      "badge": "How it works",
+      "title": "The magic moment in 5 steps.",
+      "subtitle": "From first scan to loyal customer in seconds",
+      "steps": [
+        {
+          "title": "Customer scans QR code",
+          "description": "Display a QR code at your counter or include it on receipts. Customers scan it with their phone camera."
+        },
+        {
+          "title": "Downloads pass to wallet",
+          "description": "One tap adds your loyalty card to Apple Wallet or Google Wallet. No app to install, no account to create."
+        },
+        {
+          "title": "Shows pass to employee",
+          "description": "Next visit, customers open their wallet and show you the pass. It's always with them, always ready."
+        },
+        {
+          "title": "Employee scans, stamp awarded",
+          "description": "You scan their QR code with the Stampeo app. Stamp added instantly. Simple for everyone."
+        },
+        {
+          "title": "Customer gets notified",
+          "description": "Their pass updates in real-time with a push notification. They see their progress and feel the reward getting closer."
+        }
+      ]
+    },
+    "dashboard": {
+      "badge": "Analytics dashboard",
+      "title": "Know your regulars.",
+      "subtitle": "Your dashboard shows you who's visiting, how often, and when they're close to a reward. Spot your best customers. See what's working. Make smarter decisions.",
+      "features": [
+        "See visit frequency and patterns",
+        "Track rewards claimed and pending",
+        "Identify your most loyal customers",
+        "Export data anytime"
+      ],
+      "stats": {
+        "totalCustomers": "Total Customers",
+        "visitsThisWeek": "Visits This Week",
+        "rewardsClaimed": "Rewards Claimed"
+      },
+      "recentCustomers": "Recent customers",
+      "progress": "Progress",
+      "visitedToday": "Visited today",
+      "almost": "Almost!"
+    },
+    "socialProof": {
+      "trustedBy": "Trusted by businesses worldwide",
+      "joinCount": "Join 200+ independent businesses already using Stampeo",
+      "stats": {
+        "businesses": "Businesses",
+        "cardsIssued": "Cards issued",
+        "rating": "Rating"
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know about setting up your digital loyalty program.",
+      "items": [
+        {
+          "question": "How long is the free trial?",
+          "answer": "30 days, no credit card required. You get full access to all features during the trial, allowing you to experience the complete platform before deciding."
+        },
+        {
+          "question": "How do I create my loyalty card?",
+          "answer": "Your card is created automatically during setup. Just upload your logo and pick your colors — you'll see a preview instantly. Customize anything you like, then publish when you're happy with it."
+        },
+        {
+          "question": "Do my customers need to download an app?",
+          "answer": "No, Stampeo works directly through the web browser or can be added to digital wallets like Apple Wallet or Google Pay. Zero friction for your customers."
+        },
+        {
+          "question": "What equipment do I need?",
+          "answer": "Any device with an internet connection. You can scan from our free app or directly from your browser — your choice."
+        },
+        {
+          "question": "How do customers get stamped?",
+          "answer": "Customers simply scan a unique QR code displayed at your checkout, or you can scan their digital card. Both methods are fast and secure."
+        },
+        {
+          "question": "What happens when I cancel?",
+          "answer": "You can cancel at any time. Your data will be held for 30 days if you change your mind, after which it will be permanently deleted. No hidden fees."
+        }
+      ],
+      "stillQuestions": "Still have questions?",
+      "stillQuestionsDesc": "We're here to help you grow your business and build lasting customer relationships.",
+      "startFreeTrial": "Start Free Trial",
+      "contactSupport": "Contact Support"
+    },
+    "finalCta": {
+      "title": "Ready to turn visitors into <accent>regulars?</accent>",
+      "cta": "Start Your 30-Day Free Trial",
+      "subtitle": "No credit card required · Ready in minutes"
+    }
+  }
+}

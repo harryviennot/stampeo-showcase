@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { Info } from "@phosphor-icons/react";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
@@ -24,6 +25,7 @@ async function fileToDataUrl(file: File): Promise<string> {
 }
 
 export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
+  const t = useTranslations("onboarding.cardPreview");
   const { data, updateCardDesign } = store;
   const { session } = useAuth();
 
@@ -39,7 +41,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
         updateCardDesign({ logoUrl: url });
       }
     },
-    [session?.access_token, updateCardDesign]
+    [session, updateCardDesign]
   );
 
   const handleLogoClear = useCallback(async () => {
@@ -52,7 +54,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
       }
     }
     updateCardDesign({ logoUrl: null });
-  }, [session?.access_token, data.cardDesign.logoUrl, updateCardDesign]);
+  }, [session, data.cardDesign.logoUrl, updateCardDesign]);
 
   const handleStampIconChange = useCallback(
     (icon: StampIconType) => {
@@ -74,11 +76,11 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
       <div className="flex items-end gap-4">
         <div className="flex-1">
           <label className="block text-sm font-medium text-[var(--foreground)] mb-1.5">
-            Business Logo
-            <span className="text-[var(--muted-foreground)] font-normal ml-1">(optional)</span>
+            {t("businessLogo")}
+            <span className="text-[var(--muted-foreground)] font-normal ml-1">{t("logoOptional")}</span>
           </label>
           <p className="text-sm text-[var(--muted-foreground)]">
-            Upload your logo to replace the initials on your card. PNG format, max 2MB.
+            {t("logoDesc")}
           </p>
         </div>
         <ImageUploadBox
@@ -93,7 +95,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
       {/* Stamp Icon Picker */}
       <div>
         <label className="flex items-center gap-1.5 text-sm font-medium text-[var(--foreground)] mb-3">
-          Stamp Icon
+          {t("stampIcon")}
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="cursor-help">
@@ -101,7 +103,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
               </span>
             </TooltipTrigger>
             <TooltipContent>
-              You can request a custom icon in the dashboard!
+              {t("stampIconTooltip")}
             </TooltipContent>
           </Tooltip>
         </label>
@@ -115,7 +117,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
       {/* Reward Icon Picker */}
       <div>
         <label className="flex items-center gap-1.5 text-sm font-medium text-[var(--foreground)] mb-3">
-          Reward Icon
+          {t("rewardIcon")}
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="cursor-help">
@@ -123,7 +125,7 @@ export function AssetUploadSubstep({ store }: AssetUploadSubstepProps) {
               </span>
             </TooltipTrigger>
             <TooltipContent>
-              Icon shown on the final stamp
+              {t("rewardIconTooltip")}
             </TooltipContent>
           </Tooltip>
         </label>
