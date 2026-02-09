@@ -2,10 +2,10 @@
   "pricing": {
     "badge": "Plans & Tarifs",
     "title": "Des tarifs simples et transparents",
-    "subtitle": "Essai gratuit de 30 jours. Aucune carte bancaire requise.",
-    "mostPopular": "LE PLUS POPULAIRE",
+    "subtitle": "Les partenaires fondateurs bénéficient du Pro à un tarif à vie.",
+    "foundingPartner": "PARTENAIRE FONDATEUR",
     "perMonth": "/mois",
-    "startFreeTrial": "Commencer l'essai gratuit",
+    "cta": "Demander l'accès anticipé",
     "pay": {
       "name": "Pay",
       "price": "14,99",
@@ -21,8 +21,11 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "29,99",
-      "description": "Pour les commerces en croissance et multi-sites.",
+      "originalPrice": "29,99",
+      "foundingPrice": "14,99",
+      "freeMonths": "3 mois offerts",
+      "forLife": "/mois à vie",
+      "description": "Pour les partenaires fondateurs — toutes les fonctionnalités, tarif à vie.",
       "featuresLabel": "Tout le plan Pay, plus :",
       "features": [
         "Plusieurs modèles de carte",

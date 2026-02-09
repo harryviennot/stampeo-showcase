@@ -23,8 +23,6 @@ export interface OnboardingData {
   cardDesign: CardDesign;
   // Step 4
   email: string;
-  // Step 5
-  selectedPlan: "pay" | "pro" | null;
   // Track created business to prevent re-creation
   businessId: string | null;
 }
@@ -58,7 +56,6 @@ const initialData: OnboardingData = {
   description: "",
   cardDesign: defaultCardDesign,
   email: "",
-  selectedPlan: null,
   businessId: null,
 };
 

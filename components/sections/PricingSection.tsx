@@ -46,7 +46,7 @@ export function PricingSection() {
               href="/onboarding"
               className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
             >
-              <span>{t("startFreeTrial")}</span>
+              <span>{t("cta")}</span>
             </Link>
 
             <div className="flex flex-col gap-4">
@@ -64,20 +64,26 @@ export function PricingSection() {
             </div>
           </div>
 
-          {/* Pro Tier Card (Highlighted) */}
+          {/* Pro Tier Card (Highlighted - Founding Partner) */}
           <div className="relative flex flex-col gap-8 rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl scale-[1.02] z-10">
             {/* Badge */}
             <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
               <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
-                {t("mostPopular")}
+                {t("foundingPartner")}
               </div>
             </div>
 
             <div className="flex flex-col gap-4">
               <h3 className="text-2xl font-bold">{t("pro.name")}</h3>
-              <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">&euro;{t("pro.price")}</span>
-                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-[var(--muted-foreground)] line-through">&euro;{t("pro.originalPrice")}</span>
+                  <span className="text-sm font-semibold text-[var(--accent)]">{t("pro.freeMonths")}</span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-black tracking-tight">&euro;{t("pro.foundingPrice")}</span>
+                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("pro.forLife")}</span>
+                </div>
               </div>
               <p className="text-sm text-[var(--muted-foreground)] font-medium leading-relaxed">
                 {t("pro.description")}
@@ -88,7 +94,7 @@ export function PricingSection() {
               href="/onboarding"
               className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
             >
-              <span>{t("startFreeTrial")}</span>
+              <span>{t("cta")}</span>
             </Link>
 
             <div className="flex flex-col gap-4">

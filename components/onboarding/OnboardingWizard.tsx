@@ -15,8 +15,8 @@ import { BusinessInfoStep } from "./steps/BusinessInfoStep";
 import { BusinessTypeStep } from "./steps/BusinessTypeStep";
 import { CardPreviewStep } from "./steps/CardPreviewStep";
 import { CreateAccountStep } from "./steps/CreateAccountStep";
-import { ChoosePlanStep } from "./steps/ChoosePlanStep";
-import { CongratsStep } from "./steps/CongratsStep";
+import { FoundingPartnerStep } from "./steps/FoundingPartnerStep";
+import { ApplicationSubmittedStep } from "./steps/ApplicationSubmittedStep";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 
 const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
@@ -308,9 +308,9 @@ export function OnboardingWizard() {
           />
         );
       case 5:
-        return <ChoosePlanStep store={store} onNext={handleStep5Next} onBack={handleGoBack} />;
+        return <FoundingPartnerStep store={store} onNext={handleStep5Next} onBack={handleGoBack} />;
       case 6:
-        return <CongratsStep store={store} />;
+        return <ApplicationSubmittedStep store={store} />;
       default:
         return <BusinessInfoStep store={store} onNext={handleStep1Next} />;
     }
@@ -373,8 +373,8 @@ export function OnboardingWizard() {
         { step: 2, label: t("type") },
         { step: 3, label: t("design") },
         { step: 4, label: t("account") },
-        { step: 5, label: t("plan") },
-        { step: 6, label: t("ready") },
+        { step: 5, label: t("partner") },
+        { step: 6, label: t("done") },
       ].map(({ step, label }) => (
         <button
           key={step}

@@ -5,7 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export interface BusinessCreatePayload {
   name: string;
   url_slug: string;
-  subscription_tier: "pay" | "pro";
+  subscription_tier: "pro";
   settings: {
     category?: string;
     description?: string;

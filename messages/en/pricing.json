@@ -2,10 +2,10 @@
   "pricing": {
     "badge": "Plans & Pricing",
     "title": "Simple, transparent pricing",
-    "subtitle": "30-day free trial. No credit card required.",
-    "mostPopular": "MOST POPULAR",
+    "subtitle": "Founding partners get Pro at a special lifetime rate.",
+    "foundingPartner": "FOUNDING PARTNER",
     "perMonth": "/month",
-    "startFreeTrial": "Start Free Trial",
+    "cta": "Apply for Early Access",
     "pay": {
       "name": "Pay",
       "price": "14.99",
@@ -21,8 +21,11 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "29.99",
-      "description": "For growing businesses and multiple locations.",
+      "originalPrice": "29.99",
+      "foundingPrice": "14.99",
+      "freeMonths": "3 months free",
+      "forLife": "/month for life",
+      "description": "For founding partners — all features, lifetime pricing.",
       "featuresLabel": "Everything in Pay, plus:",
       "features": [
         "Multiple card templates",
