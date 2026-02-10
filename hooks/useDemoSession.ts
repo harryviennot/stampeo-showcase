@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const STORAGE_KEY = 'stampeo_demo_session';
+const MAX_SSE_RETRIES = 3;
+const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
 
 export type DemoStatus = 'loading' | 'pending' | 'pass_downloaded' | 'pass_installed' | 'error';
 
@@ -54,6 +56,33 @@ export function useDemoSession(): UseDemoSessionReturn {
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const startPollingRef = useRef<(token: string) => void>(() => {});
 
+  // SSE retry state
+  const sseRetryCountRef = useRef(0);
+  const sseRetryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Track current token for visibility reconnection (avoids stale closures)
+  const activeTokenRef = useRef<string | null>(null);
+
+  // Inactivity tracking
+  const lastStatusChangeRef = useRef(Date.now());
+  const statusRef = useRef<DemoStatus>('loading');
+
+  // Stop all connections and timers
+  const stopAllConnections = useCallback(() => {
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+    }
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+    if (sseRetryTimeoutRef.current) {
+      clearTimeout(sseRetryTimeoutRef.current);
+      sseRetryTimeoutRef.current = null;
+    }
+  }, []);
+
   // Fetch session by token
   const fetchSession = useCallback(async (token: string): Promise<DemoSession | null> => {
     try {
@@ -99,8 +128,19 @@ export function useDemoSession(): UseDemoSessionReturn {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        setStatus(data.status as DemoStatus);
+        const newStatus = data.status as DemoStatus;
+
+        // Track actual status changes for inactivity timeout
+        if (newStatus !== statusRef.current) {
+          lastStatusChangeRef.current = Date.now();
+          statusRef.current = newStatus;
+        }
+
+        setStatus(newStatus);
         setStamps(data.stamps);
+
+        // SSE is working — reset retry counter
+        sseRetryCountRef.current = 0;
       } catch (err) {
         console.error('Error parsing SSE data:', err);
       }
@@ -114,9 +154,21 @@ export function useDemoSession(): UseDemoSessionReturn {
     });
 
     eventSource.onerror = () => {
-      // SSE failed (likely due to proxy like Cloudflare), fall back to polling
       eventSource.close();
-      startPollingRef.current(token);
+      eventSourceRef.current = null;
+
+      // Retry SSE with exponential backoff before falling back to polling
+      if (sseRetryCountRef.current < MAX_SSE_RETRIES) {
+        const delay = Math.pow(2, sseRetryCountRef.current + 1) * 1000; // 2s, 4s, 8s
+        sseRetryCountRef.current++;
+        sseRetryTimeoutRef.current = setTimeout(() => {
+          sseRetryTimeoutRef.current = null;
+          startSSE(token);
+        }, delay);
+      } else {
+        // Exhausted retries — fall back to polling
+        startPollingRef.current(token);
+      }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -129,6 +181,15 @@ export function useDemoSession(): UseDemoSessionReturn {
     }
 
     const poll = async () => {
+      // Inactivity check: stop polling if status hasn't changed in 10 minutes
+      if (Date.now() - lastStatusChangeRef.current > INACTIVITY_TIMEOUT_MS) {
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
+        }
+        return;
+      }
+
       const session = await fetchSession(token);
       if (!session) {
         // Session expired or not found
@@ -140,7 +201,15 @@ export function useDemoSession(): UseDemoSessionReturn {
         return;
       }
 
-      setStatus(session.status as DemoStatus);
+      const newStatus = session.status as DemoStatus;
+
+      // Track actual status changes for inactivity timeout
+      if (newStatus !== statusRef.current) {
+        lastStatusChangeRef.current = Date.now();
+        statusRef.current = newStatus;
+      }
+
+      setStatus(newStatus);
       setStamps(session.stamps);
     };
 
@@ -164,8 +233,11 @@ export function useDemoSession(): UseDemoSessionReturn {
         // Resume session
         setSession(existingSession);
         setStatus(existingSession.status as DemoStatus);
+        statusRef.current = existingSession.status as DemoStatus;
         setStamps(existingSession.stamps);
         setIsLoading(false);
+        activeTokenRef.current = savedToken;
+        lastStatusChangeRef.current = Date.now();
         startSSE(savedToken);
         return;
       }
@@ -180,7 +252,10 @@ export function useDemoSession(): UseDemoSessionReturn {
       localStorage.setItem(STORAGE_KEY, newSession.session_token);
       setSession(newSession);
       setStatus(newSession.status as DemoStatus);
+      statusRef.current = newSession.status as DemoStatus;
       setStamps(newSession.stamps);
+      activeTokenRef.current = newSession.session_token;
+      lastStatusChangeRef.current = Date.now();
       startSSE(newSession.session_token);
     } else {
       setStatus('error');
@@ -215,41 +290,46 @@ export function useDemoSession(): UseDemoSessionReturn {
 
   // Reset session
   const reset = useCallback(() => {
-    // Close SSE connection
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-      eventSourceRef.current = null;
-    }
-
-    // Clear polling interval
-    if (pollingIntervalRef.current) {
-      clearInterval(pollingIntervalRef.current);
-      pollingIntervalRef.current = null;
-    }
+    stopAllConnections();
 
     // Clear localStorage and state
     localStorage.removeItem(STORAGE_KEY);
     setSession(null);
     setStatus('loading');
+    statusRef.current = 'loading';
     setStamps(0);
     setError(null);
+    activeTokenRef.current = null;
+    sseRetryCountRef.current = 0;
 
     // Create new session
     initSession();
-  }, [initSession]);
+  }, [initSession, stopAllConnections]);
 
-  // Initialize on mount
+  // Initialize on mount + visibility handling
   useEffect(() => {
     initSession();
 
-    // Cleanup on unmount
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Tab hidden — stop all background traffic
+        stopAllConnections();
+      } else {
+        // Tab visible — reconnect
+        const token = activeTokenRef.current;
+        if (token) {
+          sseRetryCountRef.current = 0;
+          lastStatusChangeRef.current = Date.now();
+          startSSE(token);
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      stopAllConnections();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
