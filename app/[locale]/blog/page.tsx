@@ -39,7 +39,7 @@ export default async function BlogPage() {
         <div className="max-w-6xl mx-auto px-6">
           {/* Hero */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-[var(--near-black)]">
               {t("title")}
             </h1>
             <p className="text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto">

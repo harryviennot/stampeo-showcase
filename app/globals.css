@@ -483,23 +483,22 @@ html {
   box-shadow: 0 8px 0 var(--near-black);
 }
 
-/* Blog prose overrides for heading hierarchy */
-.blog-prose h2 {
-  font-size: 2.5rem;
-  font-weight: 900;
-  margin-top: 3rem;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.03em;
-  -webkit-text-stroke: 0.5px currentColor;
+/* Blog prose — override typography plugin via CSS variables + direct styles */
+.blog-prose {
+  --tw-prose-headings: var(--near-black);
+  --tw-prose-links: var(--accent);
 }
 
-.blog-prose h3 {
-  font-size: 1.85rem;
-  font-weight: 900;
-  margin-top: 2rem;
-  margin-bottom: 0.4rem;
-  letter-spacing: -0.025em;
-  -webkit-text-stroke: 0.3px currentColor;
+.blog-prose a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.blog-prose h2 a,
+.blog-prose h3 a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
 }
 
 .blog-prose blockquote {
@@ -524,3 +523,4 @@ html {
   margin-top: 3rem;
   margin-bottom: 3rem;
 }
+

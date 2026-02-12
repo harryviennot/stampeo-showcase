@@ -16,7 +16,7 @@ export function BlogHeader({ post }: { post: BlogPostMeta }) {
           {post.readingTime}
         </span>
       </div>
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 leading-[1.1]">
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 leading-[1.1] text-[var(--near-black)]">
         {post.title}
       </h1>
       <p className="text-lg md:text-xl text-[var(--muted-foreground)] mb-6 leading-relaxed">

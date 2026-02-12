@@ -151,7 +151,7 @@ export default async function BlogPostPage({
 
             {/* Article */}
             <div className="flex-1 min-w-0">
-              <article className="prose prose-lg leading-[1.6] max-w-none blog-prose prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[var(--accent)] prose-a:no-underline">
+              <article className="prose prose-lg leading-[1.6] max-w-none blog-prose">
                 {content}
               </article>
 
