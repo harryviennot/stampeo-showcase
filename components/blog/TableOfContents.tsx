@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface Heading {
   id: string;
@@ -9,6 +10,7 @@ interface Heading {
 }
 
 export function TableOfContents() {
+  const t = useTranslations("blog");
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
   const initialized = useRef(false);
@@ -29,7 +31,6 @@ export function TableOfContents() {
   }, []);
 
   useEffect(() => {
-    // Defer DOM reading to avoid synchronous setState in effect
     requestAnimationFrame(initHeadings);
   }, [initHeadings]);
 
@@ -55,19 +56,20 @@ export function TableOfContents() {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="hidden xl:block sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto">
+    <nav className="sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto">
       <h4 className="text-sm font-bold mb-3 text-[var(--foreground)]">
-        On this page
+        {t("tableOfContents")}
       </h4>
-      <ul className="space-y-1.5 text-sm">
+      <ul className="border-l-2 border-[var(--border)] space-y-0.5 text-sm">
         {headings.map((heading) => (
-          <li key={heading.id} style={{ paddingLeft: `${(heading.level - 2) * 12}px` }}>
+          <li key={heading.id}>
             <a
               href={`#${heading.id}`}
-              className={`block py-1 transition-colors ${
+              style={{ paddingLeft: `${(heading.level - 2) * 12 + 16}px` }}
+              className={`block py-1.5 -ml-[2px] border-l-2 transition-colors ${
                 activeId === heading.id
-                  ? "text-[var(--accent)] font-medium"
-                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  ? "border-[var(--accent)] text-[var(--accent)] font-medium"
+                  : "border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:border-[var(--muted-foreground)]"
               }`}
             >
               {heading.text}

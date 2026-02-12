@@ -84,7 +84,7 @@ export default async function BlogPostPage({
   const related = getRelatedPosts(slug, locale, 3);
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
+    <div className="min-h-screen bg-[var(--blog-bg)]">
       <JsonLd
         data={articleJsonLd({
           title: post.title,
@@ -106,7 +106,7 @@ export default async function BlogPostPage({
       />
       <Header />
       <main className="pt-32 pb-20">
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           {/* Back link */}
           <Link
             href="/blog"
@@ -128,29 +128,35 @@ export default async function BlogPostPage({
             {t("backToBlog")}
           </Link>
 
+          <BlogHeader post={post} />
+
+          {/* Full-width hero image */}
+          {post.coverImage && (
+            <div className="relative w-full aspect-[2.2/1] rounded-2xl overflow-hidden mb-12 shadow-lg">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
           <div className="flex gap-12">
+            {/* TOC — left side */}
+            <aside className="hidden lg:block w-64 shrink-0">
+              <TableOfContents />
+            </aside>
+
             {/* Article */}
             <div className="flex-1 min-w-0">
-              <BlogHeader post={post} />
-
-              {post.coverImage && (
-                <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-10">
-                  <Image
-                    src={post.coverImage}
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-              )}
-
-              <article className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline">
+              <article className="prose prose-lg leading-[1.6] max-w-none blog-prose prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[var(--accent)] prose-a:no-underline">
                 {content}
               </article>
 
               {/* Share */}
-              <div className="flex items-center justify-between mt-10 pt-6 border-t border-[var(--accent)]/10">
+              <div className="flex items-center justify-between mt-10 pt-6 border-t border-[var(--border)]">
                 <span className="text-sm font-semibold">{t("share")}</span>
                 <ShareButtons
                   title={post.title}
@@ -161,11 +167,6 @@ export default async function BlogPostPage({
 
               <AuthorCard name={post.author} />
             </div>
-
-            {/* Sidebar TOC */}
-            <aside className="hidden xl:block w-56 shrink-0">
-              <TableOfContents />
-            </aside>
           </div>
 
           {/* Related posts */}

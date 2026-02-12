@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Blog */
+  --blog-bg: #f6f2e9;
+  --blog-bg-alt: #faf8f3;
+  --highlight-yellow: rgba(255, 206, 33, 0.4);
   /* Base - Soft warm gray (professional, appeals to all businesses) */
   --background-subtle: #f0efe9;
   --near-black: #191210;
@@ -459,4 +464,63 @@ html {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ===== Blog Styles ===== */
+
+.blog-highlight {
+  background: linear-gradient(to top, var(--highlight-yellow) 40%, transparent 40%);
+}
+
+.blog-card-3d {
+  box-shadow: 0 3px 0 var(--near-black);
+  border: 1.5px solid var(--near-black);
+  transition: all 0.2s ease;
+}
+
+.blog-card-3d:hover {
+  transform: translate(4px, -4px);
+  box-shadow: 0 8px 0 var(--near-black);
+}
+
+/* Blog prose overrides for heading hierarchy */
+.blog-prose h2 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-top: 3rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+  -webkit-text-stroke: 0.5px currentColor;
+}
+
+.blog-prose h3 {
+  font-size: 1.85rem;
+  font-weight: 900;
+  margin-top: 2rem;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.025em;
+  -webkit-text-stroke: 0.3px currentColor;
+}
+
+.blog-prose blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--blog-bg-alt);
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.25rem;
+}
+
+.blog-prose ul > li::marker,
+.blog-prose ol > li::marker {
+  color: var(--accent);
+}
+
+.blog-prose > p:first-of-type {
+  font-size: 1.2rem;
+  line-height: 1.75;
+}
+
+.blog-prose hr {
+  border-color: var(--border);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }

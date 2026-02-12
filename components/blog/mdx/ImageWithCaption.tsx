@@ -11,7 +11,7 @@ export function ImageWithCaption({
 }) {
   return (
     <figure className="my-8">
-      <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden">
+      <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-lg">
         <Image
           src={src}
           alt={alt}
@@ -20,7 +20,7 @@ export function ImageWithCaption({
         />
       </div>
       {caption && (
-        <figcaption className="text-center text-sm text-[var(--muted-foreground)] mt-3">
+        <figcaption className="text-center text-sm text-[var(--muted-foreground)] mt-3 italic">
           {caption}
         </figcaption>
       )}

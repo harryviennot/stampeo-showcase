@@ -54,7 +54,7 @@ export function ShareButtons({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Share on ${link.label}`}
-          className="w-9 h-9 rounded-lg bg-[var(--accent)]/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[var(--muted-foreground)]"
+          className="w-9 h-9 rounded-full bg-white border border-[var(--border)] flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--accent)] hover:text-white hover:border-[var(--accent)] transition-all"
         >
           {link.icon}
         </a>

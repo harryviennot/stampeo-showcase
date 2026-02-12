@@ -11,6 +11,7 @@
     "backToBlog": "Retour au Blog",
     "noPostsYet": "Pas encore d'articles. Revenez bientôt !",
     "tags": "Tags",
-    "allTags": "Tous"
+    "allTags": "Tous",
+    "tableOfContents": "Sommaire"
   }
 }

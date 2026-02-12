@@ -1,17 +1,17 @@
 const styles = {
   tip: {
-    bg: "bg-emerald-50",
-    border: "border-emerald-200",
+    bg: "bg-emerald-50/70",
+    border: "border-emerald-500",
     icon: "💡",
   },
   info: {
-    bg: "bg-blue-50",
-    border: "border-blue-200",
+    bg: "bg-blue-50/70",
+    border: "border-blue-500",
     icon: "ℹ️",
   },
   warning: {
-    bg: "bg-amber-50",
-    border: "border-amber-200",
+    bg: "bg-amber-50/70",
+    border: "border-amber-500",
     icon: "⚠️",
   },
 };
@@ -22,14 +22,14 @@ export function InfoBox({
   children,
 }: {
   type?: "tip" | "info" | "warning";
-  title?: string;
   children: React.ReactNode;
+  title?: string;
 }) {
   const style = styles[type];
 
   return (
     <div
-      className={`my-6 p-5 rounded-xl border ${style.bg} ${style.border}`}
+      className={`my-6 p-5 rounded-r-xl border-l-4 ${style.bg} ${style.border}`}
     >
       {title && (
         <p className="font-bold mb-1">

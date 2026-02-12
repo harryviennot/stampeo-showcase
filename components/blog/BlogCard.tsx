@@ -6,10 +6,10 @@ export function BlogCard({ post }: { post: BlogPostMeta }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col bg-[var(--cream)] rounded-xl border border-white/50 overflow-hidden shadow-lg shadow-[var(--accent)]/5 transition-transform duration-300 hover:-translate-y-1"
+      className="group flex flex-col bg-white rounded-2xl overflow-hidden blog-card-3d"
     >
       {post.coverImage && (
-        <div className="relative aspect-[16/9] overflow-hidden bg-[var(--accent)]/5">
+        <div className="relative aspect-[16/9] overflow-hidden">
           <Image
             src={post.coverImage}
             alt={post.title}
@@ -18,30 +18,25 @@ export function BlogCard({ post }: { post: BlogPostMeta }) {
           />
         </div>
       )}
-      <div className="flex flex-col gap-3 p-6">
-        <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
-          <span className="px-2 py-0.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] font-semibold">
+      <div className="flex flex-col gap-3 p-5">
+        <div className="flex items-center gap-2 text-xs">
+          <span className="px-2.5 py-1 rounded-full bg-[var(--accent)] text-white font-semibold">
             {post.category}
           </span>
-          <span>{post.readingTime}</span>
         </div>
         <h3 className="text-lg font-bold leading-tight group-hover:text-[var(--accent)] transition-colors">
           {post.title}
         </h3>
-        <p className="text-sm text-[var(--muted-foreground)] leading-relaxed line-clamp-2">
-          {post.description}
-        </p>
-        <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)] mt-auto pt-2">
-          <span>{post.author}</span>
-          <span>·</span>
-          <time dateTime={post.publishedAt}>
-            {new Date(post.publishedAt).toLocaleDateString(post.locale, {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
-        </div>
+        <time
+          dateTime={post.publishedAt}
+          className="text-xs text-[var(--muted-foreground)] mt-auto"
+        >
+          {new Date(post.publishedAt).toLocaleDateString(post.locale, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </time>
       </div>
     </Link>
   );
