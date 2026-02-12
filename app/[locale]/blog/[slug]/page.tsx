@@ -1,0 +1,178 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { Header } from "@/components/sections/Header";
+import { Footer } from "@/components/sections/Footer";
+import { BlogHeader } from "@/components/blog/BlogHeader";
+import { TableOfContents } from "@/components/blog/TableOfContents";
+import { ShareButtons } from "@/components/blog/ShareButtons";
+import { AuthorCard } from "@/components/blog/AuthorCard";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
+import { JsonLd } from "@/components/JsonLd";
+import { articleJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
+import { getPostBySlug, getAllSlugs, getRelatedPosts } from "@/lib/blog";
+import { compileBlogMDX } from "@/lib/blog/mdx";
+
+export async function generateStaticParams() {
+  const locales = ["fr", "en"];
+  const params: { locale: string; slug: string }[] = [];
+
+  for (const locale of locales) {
+    const slugs = getAllSlugs(locale);
+    for (const slug of slugs) {
+      params.push({ locale, slug });
+    }
+  }
+
+  return params;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const post = getPostBySlug(slug, locale);
+
+  if (!post) return {};
+
+  const alternates: Record<string, string> = {};
+  if (locale === "fr") {
+    alternates.fr = `/blog/${slug}`;
+    if (post.translationSlug) alternates.en = `/en/blog/${post.translationSlug}`;
+  } else {
+    alternates.en = `/en/blog/${slug}`;
+    if (post.translationSlug) alternates.fr = `/blog/${post.translationSlug}`;
+  }
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt || post.publishedAt,
+      authors: [post.author],
+      tags: post.tags,
+      images: post.coverImage ? [{ url: post.coverImage }] : undefined,
+    },
+    alternates: {
+      canonical:
+        locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
+      languages: alternates,
+    },
+  };
+}
+
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const locale = await getLocale();
+  const t = await getTranslations("blog");
+
+  const post = getPostBySlug(slug, locale);
+  if (!post) notFound();
+
+  const content = await compileBlogMDX(post.content);
+  const related = getRelatedPosts(slug, locale, 3);
+
+  return (
+    <div className="min-h-screen bg-[var(--background)]">
+      <JsonLd
+        data={articleJsonLd({
+          title: post.title,
+          description: post.description,
+          publishedAt: post.publishedAt,
+          updatedAt: post.updatedAt,
+          author: post.author,
+          coverImage: post.coverImage,
+          slug: post.slug,
+          locale,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", url: "/" },
+          { name: t("title"), url: "/blog" },
+          { name: post.title, url: `/blog/${slug}` },
+        ])}
+      />
+      <Header />
+      <main className="pt-32 pb-20">
+        <div className="max-w-5xl mx-auto px-6">
+          {/* Back link */}
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1 text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors mb-8"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5L8.25 12l7.5-7.5"
+              />
+            </svg>
+            {t("backToBlog")}
+          </Link>
+
+          <div className="flex gap-12">
+            {/* Article */}
+            <div className="flex-1 min-w-0">
+              <BlogHeader post={post} />
+
+              {post.coverImage && (
+                <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-10">
+                  <Image
+                    src={post.coverImage}
+                    alt={post.title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+              )}
+
+              <article className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline">
+                {content}
+              </article>
+
+              {/* Share */}
+              <div className="flex items-center justify-between mt-10 pt-6 border-t border-[var(--accent)]/10">
+                <span className="text-sm font-semibold">{t("share")}</span>
+                <ShareButtons
+                  title={post.title}
+                  slug={slug}
+                  locale={locale}
+                />
+              </div>
+
+              <AuthorCard name={post.author} />
+            </div>
+
+            {/* Sidebar TOC */}
+            <aside className="hidden xl:block w-56 shrink-0">
+              <TableOfContents />
+            </aside>
+          </div>
+
+          {/* Related posts */}
+          <RelatedPosts posts={related} title={t("relatedPosts")} />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}

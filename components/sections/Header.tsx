@@ -88,6 +88,7 @@ export function Header() {
     { label: t("common.nav.features"), href: "#features" },
     { label: t("common.nav.pricing"), href: "#pricing" },
     { label: t("common.nav.faq"), href: "#faq" },
+    { label: t("common.nav.blog"), href: "/blog" },
   ];
 
   return (

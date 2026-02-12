@@ -3,7 +3,8 @@
     "nav": {
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "blog": "Blog"
     },
     "auth": {
       "signOut": "Se déconnecter",
@@ -33,6 +34,7 @@
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
       "howItWorks": "Comment ça marche",
+      "blog": "Blog",
       "company": "Entreprise",
       "about": "À propos",
       "contact": "Contact",

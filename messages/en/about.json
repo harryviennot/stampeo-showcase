@@ -1,0 +1,48 @@
+{
+  "about": {
+    "title": "About Stampeo",
+    "hero": {
+      "badge": "Our Story",
+      "headline": "We believe every local business deserves loyal customers.",
+      "description": "Stampeo was born from a simple observation: paper loyalty cards get lost, and loyalty apps never get downloaded. We built the bridge — digital loyalty cards that live where your customers already are: their phone wallet."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "To make customer loyalty effortless for local businesses. No expensive hardware, no complex software, no friction for customers. Just a simple, beautiful digital loyalty card that works."
+    },
+    "values": {
+      "title": "What We Stand For",
+      "items": [
+        {
+          "title": "Simplicity First",
+          "description": "If it takes more than 5 minutes to set up, we've failed. Every feature we build passes the simplicity test."
+        },
+        {
+          "title": "Built for Local",
+          "description": "We serve the bakery on the corner, the café downtown, the salon around the block. Our features are designed for businesses that know their customers by name."
+        },
+        {
+          "title": "No Friction for Customers",
+          "description": "Your customers shouldn't need to download an app or create an account. One scan, one tap — loyalty card in their wallet."
+        },
+        {
+          "title": "Fair Pricing",
+          "description": "We charge what's fair and transparent. No hidden fees, no per-transaction charges, no surprises."
+        }
+      ]
+    },
+    "story": {
+      "title": "How It Started",
+      "paragraphs": [
+        "We noticed that every café, bakery, and local shop we visited had the same problem: paper stamp cards that got lost, damaged, or forgotten. And the \"solutions\" out there — bloated apps that customers never download — weren't any better.",
+        "So we asked: what if the loyalty card lived in the one thing everyone already carries? Their phone wallet. No app, no login, no friction. Just scan, tap, done.",
+        "That's Stampeo. A loyalty platform built from the ground up for Apple Wallet and Google Wallet, designed specifically for local businesses who want to reward their regulars without the complexity."
+      ]
+    },
+    "cta": {
+      "title": "Ready to join us?",
+      "description": "Start your digital loyalty program today.",
+      "button": "Become a Founding Partner"
+    }
+  }
+}

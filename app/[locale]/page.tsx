@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
@@ -7,10 +8,27 @@ import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { Footer } from "@/components/sections/Footer";
+import { JsonLd } from "@/components/JsonLd";
+import {
+  organizationJsonLd,
+  webSiteJsonLd,
+  softwareApplicationJsonLd,
+  faqPageJsonLd,
+} from "@/lib/structured-data";
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("landing.faq");
+  const faqItems = t.raw("items") as Array<{
+    question: string;
+    answer: string;
+  }>;
+
   return (
     <div className="min-h-screen bg-[var(--background)] overflow-x-hidden relative">
+      <JsonLd data={organizationJsonLd()} />
+      <JsonLd data={webSiteJsonLd()} />
+      <JsonLd data={softwareApplicationJsonLd()} />
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <Header />
       <main className="relative">
         <HeroSection />
