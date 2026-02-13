@@ -1,19 +1,9 @@
-const styles = {
-  tip: {
-    bg: "bg-emerald-50/70",
-    border: "border-emerald-500",
-    icon: "💡",
-  },
-  info: {
-    bg: "bg-blue-50/70",
-    border: "border-blue-500",
-    icon: "ℹ️",
-  },
-  warning: {
-    bg: "bg-amber-50/70",
-    border: "border-amber-500",
-    icon: "⚠️",
-  },
+import { Lightbulb, Info, AlertTriangle } from "lucide-react";
+
+const icons = {
+  tip: Lightbulb,
+  info: Info,
+  warning: AlertTriangle,
 };
 
 export function InfoBox({
@@ -25,18 +15,23 @@ export function InfoBox({
   children: React.ReactNode;
   title?: string;
 }) {
-  const style = styles[type];
+  const Icon = icons[type];
 
   return (
-    <div
-      className={`my-6 p-5 rounded-r-xl border-l-4 ${style.bg} ${style.border}`}
-    >
-      {title && (
-        <p className="font-bold mb-1">
-          {style.icon} {title}
-        </p>
-      )}
-      <div className="text-sm leading-relaxed">{children}</div>
+    <div className="not-prose relative my-6 bg-white rounded-2xl blog-card-3d overflow-hidden">
+      <Icon
+        className="absolute top-4 right-4 text-[var(--accent)]"
+        size={28}
+        strokeWidth={2.5}
+      />
+      <div className="px-5 pt-4 pb-2 pr-14">
+        <span className="text-lg font-bold text-[var(--near-black)]">
+          {title ?? (type === "tip" ? "Astuce" : type === "info" ? "Info" : "Attention")}
+        </span>
+      </div>
+      <div className="px-5 pb-5 text-lg leading-relaxed text-[var(--near-black)]/80">
+        {children}
+      </div>
     </div>
   );
 }
