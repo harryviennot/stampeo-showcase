@@ -495,8 +495,9 @@ html {
 }
 
 .blog-prose h2 a,
-.blog-prose h3 a {
-  color: inherit;
+.blog-prose h3 a,
+.blog-prose h4 a {
+  color: inherit !important;
   font-weight: inherit;
   text-decoration: none;
 }

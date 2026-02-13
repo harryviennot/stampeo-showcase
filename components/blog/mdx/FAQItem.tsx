@@ -34,21 +34,32 @@ export function FAQItem({
   }, []);
 
   return (
-    <div className="not-prose group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4 mt-4">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex cursor-pointer items-center justify-between gap-6 py-2 text-left"
-      >
-        <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => setOpen((o) => !o)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setOpen((o) => !o);
+        }
+      }}
+      className="not-prose group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4 mt-4 cursor-pointer"
+    >
+      <div className="flex items-center justify-between gap-6 py-2 text-left">
+        <p
+          style={{ color: open ? "var(--accent)" : "var(--near-black)" }}
+          className="text-lg font-bold leading-normal transition-colors group-hover:text-[var(--accent)]"
+        >
           {question}
         </p>
         <div
-          className={`text-[var(--muted-foreground)] transition-transform duration-300 ${open ? "rotate-180 text-[var(--accent)]" : ""}`}
+          style={{ color: open ? "var(--accent)" : "var(--muted-foreground)" }}
+          className={`transition-all duration-300 ${open ? "rotate-180" : ""}`}
         >
           <span className="text-xl font-bold">↓</span>
         </div>
-      </button>
+      </div>
       <div
         className="overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out"
         style={{
