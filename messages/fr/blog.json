@@ -1,0 +1,17 @@
+{
+  "blog": {
+    "title": "Blog",
+    "description": "Conseils, guides et actualités sur les programmes de fidélité digitaux pour les commerces locaux.",
+    "featured": "À la une",
+    "allPosts": "Tous les articles",
+    "readMore": "Lire la suite",
+    "readingTime": "{time} de lecture",
+    "share": "Partager cet article",
+    "relatedPosts": "Articles similaires",
+    "backToBlog": "Retour au Blog",
+    "noPostsYet": "Pas encore d'articles. Revenez bientôt !",
+    "tags": "Tags",
+    "allTags": "Tous",
+    "tableOfContents": "Sommaire"
+  }
+}

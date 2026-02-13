@@ -1,8 +1,13 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Blog */
+  --blog-bg: #f6f2e9;
+  --blog-bg-alt: #faf8f3;
+  --highlight-yellow: rgba(255, 206, 33, 0.4);
   /* Base - Soft warm gray (professional, appeals to all businesses) */
   --background-subtle: #f0efe9;
   --near-black: #191210;
@@ -460,3 +465,63 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+/* ===== Blog Styles ===== */
+
+.blog-highlight {
+  background: linear-gradient(to top, var(--highlight-yellow) 40%, transparent 40%);
+}
+
+.blog-card-3d {
+  box-shadow: 0 3px 0 var(--near-black);
+  border: 1.5px solid var(--near-black);
+  transition: all 0.2s ease;
+}
+
+.blog-card-3d:hover {
+  transform: translate(4px, -4px);
+  box-shadow: 0 8px 0 var(--near-black);
+}
+
+/* Blog prose — override typography plugin via CSS variables + direct styles */
+.blog-prose {
+  --tw-prose-headings: var(--near-black);
+  --tw-prose-links: var(--accent);
+}
+
+.blog-prose a:not(.not-prose a) {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.blog-prose h2 a,
+.blog-prose h3 a,
+.blog-prose h4 a {
+  color: inherit !important;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.blog-prose blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--blog-bg-alt);
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.25rem;
+}
+
+.blog-prose ul > li::marker,
+.blog-prose ol > li::marker {
+  color: var(--accent);
+}
+
+.blog-prose > p:first-of-type {
+  font-size: 1.2rem;
+  line-height: 1.75;
+}
+
+.blog-prose hr {
+  border-color: var(--border);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+

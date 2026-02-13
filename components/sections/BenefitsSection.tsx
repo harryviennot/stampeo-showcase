@@ -16,7 +16,7 @@ export function BenefitsSection() {
   const icons = activeTab === "customers" ? customerIcons : businessIcons;
 
   return (
-    <section className="relative py-24 lg:py-32">
+    <section id="features" className="relative py-24 lg:py-32">
       {/* Floating Geometric Decorations */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-[var(--accent)]/10" />

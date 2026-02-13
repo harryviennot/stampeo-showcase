@@ -1,0 +1,48 @@
+{
+  "about": {
+    "title": "À propos de Stampeo",
+    "hero": {
+      "badge": "Notre Histoire",
+      "headline": "Chaque commerce de proximité mérite des clients fidèles.",
+      "description": "Stampeo est né d'une observation simple : les cartes de fidélité papier se perdent, et les applications de fidélité ne sont jamais téléchargées. Nous avons construit le pont — des cartes de fidélité digitales qui vivent là où vos clients sont déjà : leur portefeuille téléphone."
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "description": "Rendre la fidélisation client sans effort pour les commerces locaux. Pas de matériel coûteux, pas de logiciel complexe, pas de friction pour les clients. Juste une carte de fidélité digitale simple et belle qui fonctionne."
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "items": [
+        {
+          "title": "La simplicité avant tout",
+          "description": "Si ça prend plus de 5 minutes à configurer, c'est un échec. Chaque fonctionnalité passe le test de la simplicité."
+        },
+        {
+          "title": "Conçu pour le local",
+          "description": "Nous servons la boulangerie du coin, le café du centre-ville, le salon de coiffure du quartier. Nos fonctionnalités sont pensées pour les commerces qui connaissent leurs clients par leur prénom."
+        },
+        {
+          "title": "Zéro friction pour les clients",
+          "description": "Vos clients ne devraient pas avoir à télécharger une application ni créer un compte. Un scan, un tap — la carte de fidélité dans leur wallet."
+        },
+        {
+          "title": "Tarifs justes",
+          "description": "Nous facturons ce qui est juste et transparent. Pas de frais cachés, pas de commission par transaction, pas de surprises."
+        }
+      ]
+    },
+    "story": {
+      "title": "Comment tout a commencé",
+      "paragraphs": [
+        "Nous avons remarqué que chaque café, boulangerie et commerce que nous visitions avait le même problème : des cartes à tampons papier qui se perdent, s'abîment ou se font oublier. Et les « solutions » existantes — des applications surchargées que personne ne télécharge — n'étaient pas mieux.",
+        "Alors nous nous sommes demandé : et si la carte de fidélité vivait dans la seule chose que tout le monde a déjà sur soi ? Le portefeuille de leur téléphone. Pas d'appli, pas de connexion, pas de friction. Scannez, tapez, c'est fait.",
+        "C'est Stampeo. Une plateforme de fidélité construite de A à Z pour Apple Wallet et Google Wallet, pensée spécialement pour les commerces locaux qui veulent récompenser leurs habitués sans la complexité."
+      ]
+    },
+    "cta": {
+      "title": "Prêt à nous rejoindre ?",
+      "description": "Lancez votre programme de fidélité digital dès aujourd'hui.",
+      "button": "Devenir Partenaire Fondateur"
+    }
+  }
+}

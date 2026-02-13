@@ -1,0 +1,17 @@
+{
+  "blog": {
+    "title": "Blog",
+    "description": "Insights, guides, and news about digital loyalty programs for local businesses.",
+    "featured": "Featured",
+    "allPosts": "All Articles",
+    "readMore": "Read more",
+    "readingTime": "{time} read",
+    "share": "Share this article",
+    "relatedPosts": "Related Articles",
+    "backToBlog": "Back to Blog",
+    "noPostsYet": "No articles yet. Check back soon!",
+    "tags": "Tags",
+    "allTags": "All",
+    "tableOfContents": "On this page"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "contact": {
+    "title": "Contact Us",
+    "hero": {
+      "badge": "Get in Touch",
+      "headline": "We'd love to hear from you.",
+      "description": "Have a question, feedback, or just want to say hello? We're here to help."
+    },
+    "form": {
+      "name": "Your name",
+      "namePlaceholder": "John Doe",
+      "email": "Email address",
+      "emailPlaceholder": "john@example.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "How can we help?",
+      "message": "Message",
+      "messagePlaceholder": "Tell us more...",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent! We'll get back to you soon.",
+      "error": "Something went wrong. Please try again or email us directly."
+    },
+    "info": {
+      "title": "Other ways to reach us",
+      "email": {
+        "title": "Email",
+        "value": "hello@stampeo.app",
+        "description": "For general inquiries"
+      },
+      "support": {
+        "title": "Support",
+        "value": "support@stampeo.app",
+        "description": "For technical help"
+      },
+      "location": {
+        "title": "Location",
+        "value": "Paris, France",
+        "description": "Where we're based"
+      }
+    },
+    "social": {
+      "title": "Follow us",
+      "description": "Stay up to date with the latest from Stampeo."
+    }
+  }
+}
