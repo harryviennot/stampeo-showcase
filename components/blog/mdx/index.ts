@@ -5,6 +5,7 @@ import { ImageWithCaption } from "./ImageWithCaption";
 import { Highlight } from "./Highlight";
 import { StatBox } from "./StatBox";
 import { Heading } from "./Heading";
+import { FAQItem } from "./FAQItem";
 
 export const mdxComponents: MDXComponents = {
   h2: (props) => Heading({ level: 2, ...props }),
@@ -14,4 +15,5 @@ export const mdxComponents: MDXComponents = {
   ImageWithCaption,
   Highlight,
   StatBox,
+  FAQItem,
 };
