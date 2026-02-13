@@ -3,7 +3,8 @@
     "nav": {
       "features": "Features",
       "pricing": "Pricing",
-      "faq": "FAQ"
+      "faq": "FAQ",
+      "blog": "Blog"
     },
     "auth": {
       "signOut": "Sign out",
@@ -33,6 +34,7 @@
       "features": "Features",
       "pricing": "Pricing",
       "howItWorks": "How it works",
+      "blog": "Blog",
       "company": "Company",
       "about": "About",
       "contact": "Contact",

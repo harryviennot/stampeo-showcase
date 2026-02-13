@@ -1,0 +1,46 @@
+{
+  "contact": {
+    "title": "Nous Contacter",
+    "hero": {
+      "badge": "Contact",
+      "headline": "Nous serions ravis d'échanger avec vous.",
+      "description": "Une question, un retour, ou simplement envie de dire bonjour ? Nous sommes là pour vous aider."
+    },
+    "form": {
+      "name": "Votre nom",
+      "namePlaceholder": "Jean Dupont",
+      "email": "Adresse e-mail",
+      "emailPlaceholder": "jean@exemple.fr",
+      "subject": "Sujet",
+      "subjectPlaceholder": "Comment pouvons-nous vous aider ?",
+      "message": "Message",
+      "messagePlaceholder": "Dites-nous en plus...",
+      "send": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé ! Nous vous répondrons rapidement.",
+      "error": "Une erreur est survenue. Veuillez réessayer ou nous envoyer un e-mail directement."
+    },
+    "info": {
+      "title": "Autres moyens de nous contacter",
+      "email": {
+        "title": "E-mail",
+        "value": "hello@stampeo.app",
+        "description": "Pour les demandes générales"
+      },
+      "support": {
+        "title": "Support",
+        "value": "support@stampeo.app",
+        "description": "Pour l'aide technique"
+      },
+      "location": {
+        "title": "Localisation",
+        "value": "Paris, France",
+        "description": "Là où nous sommes basés"
+      }
+    },
+    "social": {
+      "title": "Suivez-nous",
+      "description": "Restez informé des dernières nouvelles de Stampeo."
+    }
+  }
+}

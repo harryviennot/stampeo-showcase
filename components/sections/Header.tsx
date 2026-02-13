@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { MenuIcon, XMarkIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
@@ -68,6 +68,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const { user, loading, signOut } = useAuth();
   const t = useTranslations();
+  const locale = useLocale();
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
 
@@ -88,6 +89,9 @@ export function Header() {
     { label: t("common.nav.features"), href: "#features" },
     { label: t("common.nav.pricing"), href: "#pricing" },
     { label: t("common.nav.faq"), href: "#faq" },
+    ...(locale === "fr"
+      ? [{ label: t("common.nav.blog"), href: "/blog" }]
+      : []),
   ];
 
   return (
