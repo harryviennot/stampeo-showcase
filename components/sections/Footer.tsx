@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 function StampeoLogo() {
   return (
@@ -18,6 +18,7 @@ function StampeoLogo() {
 
 export function Footer() {
   const t = useTranslations("common.footer");
+  const locale = useLocale();
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white pt-20 pb-10 overflow-hidden">
@@ -58,9 +59,11 @@ export function Footer() {
               <Link href="/#faq" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {t("howItWorks")}
               </Link>
-              <Link href="/blog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                {t("blog")}
-              </Link>
+              {locale === "fr" && (
+                <Link href="/blog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  {t("blog")}
+                </Link>
+              )}
             </nav>
           </div>
 

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/sections/Header";
@@ -15,17 +15,8 @@ import { getPostBySlug, getAllSlugs, getRelatedPosts } from "@/lib/blog";
 import { compileBlogMDX } from "@/lib/blog/mdx";
 
 export async function generateStaticParams() {
-  const locales = ["fr", "en"];
-  const params: { locale: string; slug: string }[] = [];
-
-  for (const locale of locales) {
-    const slugs = getAllSlugs(locale);
-    for (const slug of slugs) {
-      params.push({ locale, slug });
-    }
-  }
-
-  return params;
+  const slugs = getAllSlugs("fr");
+  return slugs.map((slug) => ({ locale: "fr", slug }));
 }
 
 export async function generateMetadata({
@@ -34,18 +25,10 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  if (locale !== "fr") return {};
+
   const post = getPostBySlug(slug, locale);
-
   if (!post) return {};
-
-  const alternates: Record<string, string> = {};
-  if (locale === "fr") {
-    alternates.fr = `/blog/${slug}`;
-    if (post.translationSlug) alternates.en = `/en/blog/${post.translationSlug}`;
-  } else {
-    alternates.en = `/en/blog/${slug}`;
-    if (post.translationSlug) alternates.fr = `/blog/${post.translationSlug}`;
-  }
 
   return {
     title: post.title,
@@ -61,9 +44,7 @@ export async function generateMetadata({
       images: post.coverImage ? [{ url: post.coverImage }] : undefined,
     },
     alternates: {
-      canonical:
-        locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
-      languages: alternates,
+      canonical: `/blog/${slug}`,
     },
   };
 }
@@ -75,6 +56,11 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
   const locale = await getLocale();
+
+  if (locale !== "fr") {
+    redirect(`/blog/${slug}`);
+  }
+
   const t = await getTranslations("blog");
 
   const post = getPostBySlug(slug, locale);

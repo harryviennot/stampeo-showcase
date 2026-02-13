@@ -489,7 +489,7 @@ html {
   --tw-prose-links: var(--accent);
 }
 
-.blog-prose a {
+.blog-prose a:not(.not-prose a) {
   color: var(--accent);
   text-decoration: none;
 }

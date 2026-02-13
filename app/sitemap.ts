@@ -13,12 +13,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const },
     { path: "/privacy", priority: 0.3, changeFrequency: "yearly" as const },
     { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const },
-    { path: "/blog", priority: 0.8, changeFrequency: "weekly" as const },
     { path: "/onboarding", priority: 0.7, changeFrequency: "monthly" as const },
     { path: "/login", priority: 0.4, changeFrequency: "monthly" as const },
   ];
 
   const entries: MetadataRoute.Sitemap = [];
+
+  // Blog index — French only
+  entries.push({
+    url: `${BASE_URL}/blog`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  });
 
   // Static pages with i18n alternates
   for (const page of staticPages) {
@@ -43,34 +50,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Blog posts
-  for (const locale of locales) {
-    const posts = getAllPosts(locale);
-    for (const post of posts) {
-      const url =
-        locale === "fr"
-          ? `${BASE_URL}/blog/${post.slug}`
-          : `${BASE_URL}/${locale}/blog/${post.slug}`;
-
-      const alternates: Record<string, string> = {};
-      alternates[locale] = url;
-
-      if (post.translationSlug) {
-        const otherLocale = locale === "fr" ? "en" : "fr";
-        alternates[otherLocale] =
-          otherLocale === "fr"
-            ? `${BASE_URL}/blog/${post.translationSlug}`
-            : `${BASE_URL}/${otherLocale}/blog/${post.translationSlug}`;
-      }
-
-      entries.push({
-        url,
-        lastModified: post.updatedAt || post.publishedAt,
-        changeFrequency: "monthly",
-        priority: 0.6,
-        alternates: { languages: alternates },
-      });
-    }
+  // Blog posts — French only
+  const posts = getAllPosts("fr");
+  for (const post of posts) {
+    entries.push({
+      url: `${BASE_URL}/blog/${post.slug}`,
+      lastModified: post.updatedAt || post.publishedAt,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    });
   }
 
   return entries;

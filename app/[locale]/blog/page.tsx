@@ -1,4 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { BlogCard } from "@/components/blog/BlogCard";
@@ -11,19 +12,23 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (locale !== "fr") return {};
   const t = await getTranslations({ locale, namespace: "blog" });
   return {
     title: t("title"),
     description: t("description"),
     alternates: {
-      canonical: locale === "fr" ? "/blog" : `/${locale}/blog`,
-      languages: { fr: "/blog", en: "/en/blog" },
+      canonical: "/blog",
     },
   };
 }
 
 export default async function BlogPage() {
   const locale = await getLocale();
+
+  if (locale !== "fr") {
+    redirect("/blog");
+  }
   const t = await getTranslations("blog");
   const posts = getAllPosts(locale);
 
