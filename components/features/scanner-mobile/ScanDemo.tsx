@@ -256,21 +256,20 @@ export function ScanDemo() {
                   {Array.from({ length: 10 }).map((_, i) => (
                     <motion.div
                       key={i}
-                      className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                        i < 5
+                      className={`w-4 h-4 rounded-full flex items-center justify-center ${i < 5
                           ? "bg-[var(--accent)]"
                           : "border-[1.5px] border-dashed border-gray-300"
-                      }`}
+                        }`}
                       initial={i === 4 ? { scale: 0 } : {}}
                       animate={i === 4 ? { scale: 1 } : {}}
                       transition={
                         i === 4
                           ? {
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 12,
-                              delay: 0.2,
-                            }
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 12,
+                            delay: 0.2,
+                          }
                           : {}
                       }
                     >
@@ -323,7 +322,7 @@ export function ScanDemo() {
         {/* Bottom hint text */}
         <div className="pb-4 pt-2 flex justify-center">
           <AnimatePresence>
-            {phase === "scanning" && (
+            {phase === "scanning" ? (
               <motion.p
                 className="text-white/40 text-[10px] text-center"
                 initial={{ opacity: 0 }}
@@ -331,6 +330,15 @@ export function ScanDemo() {
                 exit={{ opacity: 0 }}
               >
                 Placez le QR code dans le cadre
+              </motion.p>
+            ) : (
+              <motion.p
+                className="text-white/40 text-[10px] text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {t("toast")}
               </motion.p>
             )}
           </AnimatePresence>
