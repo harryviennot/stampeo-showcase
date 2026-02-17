@@ -34,26 +34,7 @@ export function ScanDemo() {
           if (cycleCountRef.current === 1 && !hasScrolledRef.current && typeof window !== "undefined" && window.innerWidth < 1024) {
             hasScrolledRef.current = true;
             setTimeout(() => {
-              const el = document.getElementById("scanner-hero-title");
-              if (el) {
-                const rect = el.getBoundingClientRect();
-                const target = window.scrollY + rect.top - 200;
-                const start = window.scrollY;
-                const distance = target - start;
-                if (Math.abs(distance) < 5) return;
-                const duration = 1200;
-                let startTime: number | null = null;
-                const easeInOutCubic = (t: number) =>
-                  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-                const step = (timestamp: number) => {
-                  if (!startTime) startTime = timestamp;
-                  const elapsed = timestamp - startTime;
-                  const progress = Math.min(elapsed / duration, 1);
-                  window.scrollTo(0, start + distance * easeInOutCubic(progress));
-                  if (progress < 1) requestAnimationFrame(step);
-                };
-                requestAnimationFrame(step);
-              }
+              document.getElementById("scanner-hero-title")?.scrollIntoView({ behavior: "smooth", block: "center" });
             }, 500);
           }
         }

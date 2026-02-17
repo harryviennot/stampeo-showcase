@@ -10,9 +10,9 @@
         "scannerMobile": { "label": "Scanner mobile", "description": "Scannez en une seconde depuis votre téléphone" },
         "notificationsPush": { "label": "Notifications push", "description": "Engagez vos clients sur leur écran de verrouillage" },
         "analytiques": { "label": "Analytiques", "description": "Comprenez vos clients avec des données concrètes" },
-        "geolocalisation": { "label": "Géolocalisation", "description": "Rappelez-leur que vous existez au bon moment" },
-        "programmeFondateur": { "label": "Programme fondateur", "description": "Rejoignez les premiers partenaires" }
-      }
+        "geolocalisation": { "label": "Géolocalisation", "description": "Rappelez-leur que vous existez au bon moment" }
+      },
+      "foundingProgram": "Programme fondateur"
     },
     "auth": {
       "signOut": "Se déconnecter",

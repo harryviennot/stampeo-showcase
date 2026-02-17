@@ -225,7 +225,7 @@ Icone : ChartIcon ou EyeSlashIcon
 | Scanner mobile | CameraIcon | Un scan, un tampon. Meme sans internet. | /features/scanner-mobile |
 | Analytiques | ChartIcon | Connaissez vos habitues. Pas juste de vue. | /features/analytiques |
 | Design de carte | PaletteIcon | Vos couleurs, votre logo, pret en 5 minutes. | /features/design-de-carte |
-| Programme fondateur | StarIcon | 3 mois offerts. Tarif bloque a vie. | /features/programme-fondateur |
+| Programme fondateur | StarIcon | 3 mois offerts. Tarif bloque a vie. | /programme-fondateur |
 
 <!-- COMPONENT: FeatureGrid
 - 3×2 grid of clickable cards (links to /features/*)

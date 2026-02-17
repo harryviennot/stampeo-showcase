@@ -152,4 +152,4 @@ Cette fonctionnalite est en cours de developpement et arrivera dans les prochain
 
 - [Notifications push](/features/notifications-push) — Mesurez l'impact de vos notifications
 - [Scanner mobile](/features/scanner-mobile) — Chaque scan alimente votre tableau de bord
-- [Programme fondateur](/features/programme-fondateur) — Acces aux analytiques Growth inclus
+- [Programme fondateur](/programme-fondateur) — Acces aux analytiques Growth inclus

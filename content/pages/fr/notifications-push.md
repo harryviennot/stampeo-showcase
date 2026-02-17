@@ -170,4 +170,4 @@ Ciblez vos messages selon :
 
 - [Scanner mobile](/features/scanner-mobile) — Le scan qui declenche la notification
 - [Analytiques](/features/analytiques) — Mesurez l'impact de vos notifications
-- [Programme fondateur](/features/programme-fondateur) — Acces a toutes les fonctionnalites Growth
+- [Programme fondateur](/programme-fondateur) — Acces a toutes les fonctionnalites Growth

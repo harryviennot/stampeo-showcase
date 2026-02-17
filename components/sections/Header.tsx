@@ -12,7 +12,6 @@ import {
   BellIcon,
   ChartIcon,
   MapPinIcon,
-  StarIcon,
 } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
@@ -25,7 +24,6 @@ const FEATURES_DROPDOWN_ITEMS = [
   { key: "notificationsPush", slug: "notifications-push", Icon: BellIcon },
   { key: "analytiques", slug: "analytiques", Icon: ChartIcon },
   { key: "geolocalisation", slug: "geolocalisation", Icon: MapPinIcon },
-  { key: "programmeFondateur", slug: "programme-fondateur", Icon: StarIcon },
 ] as const;
 
 function DesktopAuthButtons({
@@ -211,6 +209,7 @@ export function Header() {
   };
 
   const navItems = [
+    { label: t("common.nav.foundingProgram"), href: "/programme-fondateur" },
     { label: t("common.nav.pricing"), href: "#pricing" },
     { label: t("common.nav.faq"), href: "#faq" },
     ...(locale === "fr"

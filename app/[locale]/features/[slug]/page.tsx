@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
-import { FeaturePageLayout } from "@/components/features/FeaturePageLayout";
 import { AnalyticsPageContent } from "@/components/features/analytics/AnalyticsPageContent";
 import { NotificationsPushPage } from "@/components/features/notifications-push/NotificationsPushPage";
 import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
@@ -16,7 +15,6 @@ const FEATURE_SLUGS = [
   "notifications-push",
   "analytiques",
   "geolocalisation",
-  "programme-fondateur",
 ] as const;
 
 type FeatureSlug = (typeof FEATURE_SLUGS)[number];
@@ -76,9 +74,7 @@ export default async function FeaturePage({ params }: PageProps) {
           <AnalyticsPageContent />
         ) : slug === "geolocalisation" ? (
           <GeofencingPage />
-        ) : (
-          <FeaturePageLayout slug={slug} />
-        )}
+        ) : null}
       </main>
       <Footer />
     </div>

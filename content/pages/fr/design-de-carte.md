@@ -167,4 +167,4 @@ Le changement est transparent pour le client : sa carte se met a jour automatiqu
 
 - [Scanner mobile](/features/scanner-mobile) — L'appli qui scanne les cartes que vous creez
 - [Notifications push](/features/notifications-push) — Les messages qui accompagnent votre carte
-- [Programme fondateur](/features/programme-fondateur) — Votre premiere carte designee gratuitement
+- [Programme fondateur](/programme-fondateur) — Votre premiere carte designee gratuitement
