@@ -59,6 +59,11 @@ export async function generateMetadata({
       description: t("description"),
       images: ["/og-image.png"],
     },
+    verification: {
+      other: {
+        "msvalidate.01": "7306B78C81A951C4E332C053B9367FD7",
+      },
+    },
     alternates: {
       canonical: locale === "fr" ? "/" : `/${locale}`,
       languages: {
