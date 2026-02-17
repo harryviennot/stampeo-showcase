@@ -561,8 +561,8 @@ export function ProChartCards() {
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {/* Row 1 — all screens */}
+        {/* Mobile: single column */}
+        <div className="flex flex-col gap-6 md:hidden">
           <ScrollReveal delay={0}>
             <LineChart
               label={t("proCharts.lineChart.label")}
@@ -581,62 +581,75 @@ export function ProChartCards() {
               valueLabel={t("proCharts.donut.value")}
             />
           </ScrollReveal>
+        </div>
 
-          {/* Row 2 — desktop only */}
-          <div className="hidden md:block">
-            <ScrollReveal delay={300}>
-              <SegmentsChart
-                label={t("proCharts.segments.label")}
-                categories={t.raw("proCharts.segments.categories") as string[]}
-              />
-            </ScrollReveal>
-          </div>
-          <div className="hidden md:block">
-            <ScrollReveal delay={400}>
-              <ChurnChart
-                label={t("proCharts.churn.label")}
-                value={t("proCharts.churn.value")}
-                subtitle={t("proCharts.churn.subtitle")}
-              />
-            </ScrollReveal>
-          </div>
-          <div className="hidden md:block">
-            <ScrollReveal delay={500}>
-              <BestDaysChart
-                label={t("proCharts.bestDays.label")}
-                days={t.raw("proCharts.bestDays.days") as string[]}
-              />
-            </ScrollReveal>
-          </div>
+        {/* Desktop: masonry via CSS columns */}
+        <div className="hidden md:block columns-3 gap-6 [&>*]:mb-6 [&>*]:break-inside-avoid">
+          {/* Col 1: LineChart → Segments → ReturnRate */}
+          <ScrollReveal delay={0}>
+            <LineChart
+              label={t("proCharts.lineChart.label")}
+              trend={t("proCharts.lineChart.trend")}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={300}>
+            <SegmentsChart
+              label={t("proCharts.segments.label")}
+              categories={t.raw("proCharts.segments.categories") as string[]}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={600}>
 
-          {/* Row 3 — desktop only */}
-          <div className="hidden md:block">
-            <ScrollReveal delay={600}>
-              <TimeToRewardChart
-                label={t("proCharts.timeToReward.label")}
-                value={t("proCharts.timeToReward.value")}
-                unit={t("proCharts.timeToReward.unit")}
-              />
-            </ScrollReveal>
-          </div>
-          <div className="hidden md:block">
-            <ScrollReveal delay={700}>
-              <CompletionRateChart
-                label={t("proCharts.completionRate.label")}
-                value={t("proCharts.completionRate.value")}
-                subtitle={t("proCharts.completionRate.subtitle")}
-              />
-            </ScrollReveal>
-          </div>
-          <div className="hidden md:block">
-            <ScrollReveal delay={800}>
-              <ReturnRateChart
-                label={t("proCharts.returnRate.label")}
-                value={t("proCharts.returnRate.value")}
-                subtitle={t("proCharts.returnRate.subtitle")}
-              />
-            </ScrollReveal>
-          </div>
+            <CompletionRateChart
+              label={t("proCharts.completionRate.label")}
+              value={t("proCharts.completionRate.value")}
+              subtitle={t("proCharts.completionRate.subtitle")}
+            />
+          </ScrollReveal>
+
+          {/* Col 2: Churn → Heatmap → TimeToReward */}
+          <ScrollReveal delay={100}>
+            <ChurnChart
+              label={t("proCharts.churn.label")}
+              value={t("proCharts.churn.value")}
+              subtitle={t("proCharts.churn.subtitle")}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={400}>
+            <Heatmap
+              label={t("proCharts.heatmap.label")}
+              days={t.raw("proCharts.heatmap.days") as string[]}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={700}>
+            <BestDaysChart
+              label={t("proCharts.bestDays.label")}
+              days={t.raw("proCharts.bestDays.days") as string[]}
+            />
+          </ScrollReveal>
+
+          {/* Col 3: DonutChart → BestDays → CompletionRate */}
+          <ScrollReveal delay={200}>
+            <DonutChart
+              label={t("proCharts.donut.label")}
+              valueLabel={t("proCharts.donut.value")}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={500}>
+
+            <TimeToRewardChart
+              label={t("proCharts.timeToReward.label")}
+              value={t("proCharts.timeToReward.value")}
+              unit={t("proCharts.timeToReward.unit")}
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={800}>
+            <ReturnRateChart
+              label={t("proCharts.returnRate.label")}
+              value={t("proCharts.returnRate.value")}
+              subtitle={t("proCharts.returnRate.subtitle")}
+            />
+          </ScrollReveal>
         </div>
       </Container>
     </section>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
@@ -13,6 +13,17 @@ export function BlindSpotCards() {
   const [flipped, setFlipped] = useState<boolean[]>(
     new Array(questions.length).fill(false)
   );
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px)");
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    handler({ matches: mql.matches } as MediaQueryListEvent);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  const rotateAxis = isDesktop ? "rotateX" : "rotateY";
 
   const toggle = (index: number) => {
     setFlipped((prev) => {
@@ -46,7 +57,7 @@ export function BlindSpotCards() {
                 style={{ perspective: 1000 }}
                 onClick={() => toggle(index)}
                 onMouseEnter={() => {
-                  if (window.innerWidth >= 768) {
+                  if (isDesktop) {
                     setFlipped((prev) => {
                       const next = [...prev];
                       next[index] = true;
@@ -55,7 +66,7 @@ export function BlindSpotCards() {
                   }
                 }}
                 onMouseLeave={() => {
-                  if (window.innerWidth >= 768) {
+                  if (isDesktop) {
                     setFlipped((prev) => {
                       const next = [...prev];
                       next[index] = false;
@@ -67,7 +78,7 @@ export function BlindSpotCards() {
                 <motion.div
                   className="relative w-full"
                   style={{ transformStyle: "preserve-3d" }}
-                  animate={{ rotateY: flipped[index] ? 180 : 0 }}
+                  animate={{ [rotateAxis]: flipped[index] ? 180 : 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                 >
                   {/* Front */}
@@ -88,7 +99,7 @@ export function BlindSpotCards() {
                     className="blog-card-3d rounded-2xl bg-[var(--blog-bg-alt)] p-6 sm:p-8 flex flex-col items-center justify-center text-center min-h-[160px] sm:min-h-[180px] absolute inset-0"
                     style={{
                       backfaceVisibility: "hidden",
-                      transform: "rotateY(180deg)",
+                      transform: `${rotateAxis}(180deg)`,
                     }}
                   >
                     <span className="text-3xl mb-2">🤷</span>

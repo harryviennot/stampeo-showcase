@@ -393,12 +393,12 @@
       "custom": {
         "blindSpotCards": {
           "questions": [
-            "Combien de clients réguliers ?",
-            "À quelle fréquence reviennent-ils ?",
-            "Qui a arrêté de venir ?",
-            "Quel jour est le plus calme ?",
-            "Combien de récompenses ce mois ?",
-            "Votre programme fonctionne-t-il ?"
+            "Combien de clients réguliers",
+            "À quelle fréquence reviennent-ils",
+            "Qui a arrêté de venir",
+            "Quel jour est le plus calme",
+            "Combien de récompenses ce mois",
+            "Votre programme fonctionne-t-il"
           ],
           "noAnswer": "???"
         },

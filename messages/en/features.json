@@ -393,12 +393,12 @@
       "custom": {
         "blindSpotCards": {
           "questions": [
-            "How many regular customers?",
-            "How often do they come back?",
-            "Who stopped coming?",
-            "Which day is quietest?",
-            "How many rewards this month?",
-            "Is your program working?"
+            "How many regular customers",
+            "How often do they come back",
+            "Who stopped coming",
+            "Which day is quietest",
+            "How many rewards this month",
+            "Is your program working"
           ],
           "noAnswer": "???"
         },
