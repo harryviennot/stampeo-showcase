@@ -51,7 +51,7 @@ export function ScannerMobilePage() {
         <Container className="relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left */}
-            <ScrollReveal className="flex flex-col gap-6 order-2 lg:order-1">
+            <ScrollReveal id="scanner-hero-title" className="flex flex-col gap-6 order-2 lg:order-1">
               <div>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--accent)]/10 shadow-sm mb-6">
                   <CameraIcon className="w-4 h-4 text-[var(--accent)]" />

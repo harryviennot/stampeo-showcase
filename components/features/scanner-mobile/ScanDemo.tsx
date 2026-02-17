@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { PhoneMockup } from "./PhoneMockup";
 
@@ -17,12 +17,48 @@ const PHASE_DURATIONS: Record<Phase, number> = {
 export function ScanDemo() {
   const t = useTranslations("features.scanner-mobile.custom.scanDemo");
   const [phase, setPhase] = useState<Phase>("scanning");
+  const cycleCountRef = useRef(0);
+  const hasScrolledRef = useRef(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setPhase((prev) => {
         const order: Phase[] = ["scanning", "success", "result", "idle"];
-        return order[(order.indexOf(prev) + 1) % order.length];
+        const nextIndex = (order.indexOf(prev) + 1) % order.length;
+        const next = order[nextIndex];
+
+        // Track when a full cycle completes (idle → scanning)
+        if (prev === "idle" && next === "scanning") {
+          cycleCountRef.current += 1;
+
+          if (cycleCountRef.current === 1 && !hasScrolledRef.current && typeof window !== "undefined" && window.innerWidth < 1024) {
+            hasScrolledRef.current = true;
+            setTimeout(() => {
+              const el = document.getElementById("scanner-hero-title");
+              if (el) {
+                const rect = el.getBoundingClientRect();
+                const target = window.scrollY + rect.top - 200;
+                const start = window.scrollY;
+                const distance = target - start;
+                if (Math.abs(distance) < 5) return;
+                const duration = 1200;
+                let startTime: number | null = null;
+                const easeInOutCubic = (t: number) =>
+                  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                const step = (timestamp: number) => {
+                  if (!startTime) startTime = timestamp;
+                  const elapsed = timestamp - startTime;
+                  const progress = Math.min(elapsed / duration, 1);
+                  window.scrollTo(0, start + distance * easeInOutCubic(progress));
+                  if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+              }
+            }, 500);
+          }
+        }
+
+        return next;
       });
     }, PHASE_DURATIONS[phase]);
     return () => clearTimeout(timeout);

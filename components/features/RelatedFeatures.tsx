@@ -55,7 +55,7 @@ export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProp
             return (
               <ScrollReveal key={relSlug} delay={index * 100} className="h-full">
                 <Link
-                  href={`/features/${relSlug}` as "/features/design-de-carte"}
+                  href={(relSlug === "programme-fondateur" ? "/programme-fondateur" : `/features/${relSlug}`) as "/features/design-de-carte"}
                   className="group flex flex-col gap-4 p-6 bg-white rounded-2xl border border-[var(--accent)]/10 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 h-full"
                 >
                   <div className="flex items-start gap-4">

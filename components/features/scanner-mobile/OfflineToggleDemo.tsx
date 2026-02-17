@@ -20,6 +20,7 @@ export function OfflineToggleDemo() {
   const [state, setState] = useState<DemoState>("online");
   const [isOffline, setIsOffline] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
+  const [hasToggled, setHasToggled] = useState(false);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const clearTimers = useCallback(() => {
@@ -42,7 +43,10 @@ export function OfflineToggleDemo() {
           }, 1800)
         );
         timersRef.current.push(
-          setTimeout(() => setState("syncing"), 3800)
+          setTimeout(() => {
+            setState("syncing");
+            setIsOffline(false);
+          }, 3800)
         );
         timersRef.current.push(
           setTimeout(() => {
@@ -52,7 +56,6 @@ export function OfflineToggleDemo() {
         );
         timersRef.current.push(
           setTimeout(() => {
-            setIsOffline(false);
             setState("online");
           }, 6500)
         );
@@ -74,6 +77,7 @@ export function OfflineToggleDemo() {
 
   const handleToggle = () => {
     if (state === "online" || state === "stamped-online") {
+      setHasToggled(true);
       setIsOffline(true);
       runSequence(true);
     }
@@ -253,33 +257,45 @@ export function OfflineToggleDemo() {
               >
                 <motion.div
                   className="w-20 h-20 mb-4 rounded-2xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30"
-                  animate={{ rotate: 360 }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
                   transition={{
-                    duration: 1.2,
-                    repeat: Infinity,
-                    ease: "linear",
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 18,
                   }}
                 >
-                  <svg
+                  <motion.svg
                     className="w-10 h-10 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                     strokeWidth={2}
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1.2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
-                  </svg>
+                  </motion.svg>
                 </motion.div>
                 <p className="text-[13px] font-bold text-blue-600">
                   {t("syncing")}
                 </p>
-                <p className="text-[11px] text-gray-500 mt-0.5">
+                <motion.p
+                  className="text-xs font-semibold text-blue-500 mt-0.5"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
                   Connexion rétablie
-                </p>
+                </motion.p>
               </motion.div>
             )}
 
@@ -382,11 +398,25 @@ export function OfflineToggleDemo() {
 
         {/* Bottom instruction */}
         <div className="px-5 pb-5">
-          <p className="text-[10px] text-gray-400 text-center">
-            {isOffline
-              ? "Mode hors ligne activé"
-              : "Appuyez sur le toggle pour simuler"}
-          </p>
+          {isOffline ? (
+            <p className="text-xs text-gray-500 text-center font-medium">
+              Mode hors ligne activé
+            </p>
+          ) : (
+            <motion.p
+              className="text-xs text-gray-600 text-center font-medium flex items-center justify-center gap-1"
+              animate={!hasToggled ? { opacity: [0.6, 1, 0.6] } : {}}
+              transition={!hasToggled ? { duration: 2, repeat: Infinity, ease: "easeInOut" } : {}}
+            >
+              <motion.span
+                animate={!hasToggled ? { y: [0, -3, 0] } : {}}
+                transition={!hasToggled ? { duration: 1.2, repeat: Infinity, ease: "easeInOut" } : {}}
+              >
+                ↑
+              </motion.span>
+              Appuyez sur le toggle pour simuler
+            </motion.p>
+          )}
         </div>
       </div>
     </PhoneMockup>
