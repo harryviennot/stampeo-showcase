@@ -302,6 +302,20 @@
           "link": "/features/programme-fondateur"
         }
       ]
+    },
+    "roi": {
+      "title": "Ce que la fidélisation rapporte vraiment",
+      "subtitle": "Ajustez les curseurs selon votre activité.",
+      "clientsLabel": "Clients par jour",
+      "basketLabel": "Panier moyen",
+      "assumption": "Hypothèse : un programme de fidélité génère ~8% de visites supplémentaires",
+      "breakdownClients": "{clients} clients/jour × 8% = ~{extra} clients en plus par jour",
+      "breakdownRevenue": "{extra} clients × {basket}€ × 30 jours = {total}€/mois de revenus en plus",
+      "extraRevenue": "Revenus en plus",
+      "perMonth": "/mois",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Se rembourse",
+      "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients."
     }
   }
 }

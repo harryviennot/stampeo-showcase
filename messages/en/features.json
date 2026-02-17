@@ -444,7 +444,10 @@
       "problemNarrative": "What if their phone could do it for you?",
       "demo": {
         "lockScreenDate": "Monday, February 17",
-        "radiusLabel": "~300m"
+        "radiusLabel": "~300m",
+        "notificationTitle": "Café Le Comptoir nearby",
+        "notificationBody": "Feeling thirsty? You're 3 stamps away from a free coffee ☕",
+        "timeAgo": "now"
       },
       "howItWorks": {
         "badge": "How it works",
@@ -661,11 +664,14 @@
           "subtitle": "Do the math yourself.",
           "clientsLabel": "Customers per day",
           "basketLabel": "Average basket",
-          "assumption": "+15% return rate from loyalty program",
+          "assumption": "Assumption: a loyalty program generates ~8% additional visits",
+          "breakdownClients": "{clients} clients/day × 8% = ~{extra} extra clients per day",
+          "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month in extra revenue",
           "extraRevenue": "Extra revenue",
           "perMonth": "/month",
           "stampeoCost": "Stampeo",
-          "roiLabel": "ROI"
+          "roiLabel": "Pays for itself",
+          "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program."
         },
         "price": {
           "original": "€29.99/month",

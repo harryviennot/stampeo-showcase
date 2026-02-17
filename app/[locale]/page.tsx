@@ -9,6 +9,7 @@ import { DashboardPreview } from "@/components/sections/DashboardPreview";
 import { SectorCards } from "@/components/sections/SectorCards";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
 import { FoundingPartnerSection } from "@/components/sections/FoundingPartnerSection";
+import { ROICalculator } from "@/components/features/programme-fondateur/ROICalculator";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -45,6 +46,7 @@ export default async function Home() {
         <SectorCards />
         <FeatureGrid />
         <FoundingPartnerSection />
+        <ROICalculator namespace="landing.roi" />
         <PricingSection />
         <FAQSection />
         <FinalCTASection />

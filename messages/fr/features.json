@@ -444,7 +444,10 @@
       "problemNarrative": "Et si son téléphone pouvait le faire à votre place ?",
       "demo": {
         "lockScreenDate": "Lundi 17 février",
-        "radiusLabel": "~300m"
+        "radiusLabel": "~300m",
+        "notificationTitle": "Café Le Comptoir à proximité",
+        "notificationBody": "Une petite soif ? Vous êtes à 3 tampons de votre café offert ☕",
+        "timeAgo": "maintenant"
       },
       "howItWorks": {
         "badge": "Comment ça marche",
@@ -661,11 +664,14 @@
           "subtitle": "Faites vos propres calculs.",
           "clientsLabel": "Clients par jour",
           "basketLabel": "Panier moyen",
-          "assumption": "+15% de taux de retour grâce à la fidélisation",
-          "extraRevenue": "Revenus supplémentaires",
+          "assumption": "Hypothèse : un programme de fidélité génère ~8% de visites supplémentaires",
+          "breakdownClients": "{clients} clients/jour × 8% = ~{extra} clients en plus par jour",
+          "breakdownRevenue": "{extra} clients × {basket}€ × 30 jours = {total}€/mois de revenus en plus",
+          "extraRevenue": "Revenus en plus",
           "perMonth": "/mois",
           "stampeoCost": "Stampeo",
-          "roiLabel": "ROI"
+          "roiLabel": "Se rembourse",
+          "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients."
         },
         "price": {
           "original": "29,99 €/mois",

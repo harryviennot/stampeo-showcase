@@ -6,19 +6,9 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { NumberStamp } from "@/components/stamps/StampIcons";
 import { PhoneMockup } from "@/components/features/notifications-push/PhoneMockup";
-import { WalletCard } from "@/components/card/WalletCard";
-import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
+import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 
 const stepColors = ["#f97316", "#ec4899", "#8b5cf6", "#3b82f6"];
-
-const cafeDesign = {
-  background_color: "#3C2415",
-  accent_color: "#D4A574",
-  organization_name: "Café Le Comptoir",
-  total_stamps: 10,
-  stamp_icon: "coffee" as const,
-  reward_icon: "gift" as const,
-};
 
 export function GeofencingHowItWorks() {
   const t = useTranslations("features.geolocalisation");
@@ -88,20 +78,33 @@ export function GeofencingHowItWorks() {
               >
                 <div className="scale-[0.7] origin-center">
                   <PhoneMockup>
-                    <div className="p-3 mt-2">
-                      <div className="text-center mb-4">
-                        <p className="text-[13px] font-light text-black/60">
-                          {t("demo.lockScreenDate")}
-                        </p>
+                    {/* Lock screen wallpaper */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
+
+                    {/* Lock screen content */}
+                    <div className="relative z-10 flex flex-col items-center pt-8">
+                      <div
+                        className="text-[64px] font-thin text-white leading-none tracking-tight"
+                        style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
+                      >
+                        9:41
                       </div>
-                      <ScaledCardWrapper baseWidth={254}>
-                        <WalletCard
-                          design={cafeDesign}
-                          stamps={8}
-                          showQR={false}
-                          showSecondaryFields={false}
-                        />
-                      </ScaledCardWrapper>
+                      <div
+                        className="text-[15px] font-medium text-white/80 mt-1"
+                        style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
+                      >
+                        {t("demo.lockScreenDate")}
+                      </div>
+                    </div>
+
+                    {/* Notification */}
+                    <div className="relative z-10 px-3 mt-8">
+                      <NotificationBanner
+                        appName="Stampeo"
+                        title={t("demo.notificationTitle")}
+                        body={t("demo.notificationBody")}
+                        timeAgo={t("demo.timeAgo")}
+                      />
                     </div>
                   </PhoneMockup>
                 </div>

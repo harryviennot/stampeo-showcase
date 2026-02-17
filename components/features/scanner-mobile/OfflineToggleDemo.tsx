@@ -5,7 +5,15 @@ import { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { PhoneMockup } from "./PhoneMockup";
 
-type DemoState = "online" | "scanning-online" | "stamped-online" | "offline" | "scanning-offline" | "pending" | "syncing" | "synced";
+type DemoState =
+  | "online"
+  | "scanning-online"
+  | "stamped-online"
+  | "offline"
+  | "scanning-offline"
+  | "pending"
+  | "syncing"
+  | "synced";
 
 export function OfflineToggleDemo() {
   const t = useTranslations("features.scanner-mobile.custom.offline");
@@ -19,31 +27,50 @@ export function OfflineToggleDemo() {
     timersRef.current = [];
   }, []);
 
-  const runSequence = useCallback((offline: boolean) => {
-    clearTimers();
-    if (offline) {
-      setState("offline");
-      timersRef.current.push(setTimeout(() => setState("scanning-offline"), 800));
-      timersRef.current.push(setTimeout(() => {
-        setState("pending");
-        setPendingCount(1);
-      }, 1800));
-      timersRef.current.push(setTimeout(() => setState("syncing"), 3800));
-      timersRef.current.push(setTimeout(() => {
-        setState("synced");
-        setPendingCount(0);
-      }, 5000));
-      timersRef.current.push(setTimeout(() => {
-        setIsOffline(false);
+  const runSequence = useCallback(
+    (offline: boolean) => {
+      clearTimers();
+      if (offline) {
+        setState("offline");
+        timersRef.current.push(
+          setTimeout(() => setState("scanning-offline"), 800)
+        );
+        timersRef.current.push(
+          setTimeout(() => {
+            setState("pending");
+            setPendingCount(1);
+          }, 1800)
+        );
+        timersRef.current.push(
+          setTimeout(() => setState("syncing"), 3800)
+        );
+        timersRef.current.push(
+          setTimeout(() => {
+            setState("synced");
+            setPendingCount(0);
+          }, 5000)
+        );
+        timersRef.current.push(
+          setTimeout(() => {
+            setIsOffline(false);
+            setState("online");
+          }, 6500)
+        );
+      } else {
         setState("online");
-      }, 6500));
-    } else {
-      setState("online");
-      timersRef.current.push(setTimeout(() => setState("scanning-online"), 800));
-      timersRef.current.push(setTimeout(() => setState("stamped-online"), 1800));
-      timersRef.current.push(setTimeout(() => setState("online"), 3500));
-    }
-  }, [clearTimers]);
+        timersRef.current.push(
+          setTimeout(() => setState("scanning-online"), 800)
+        );
+        timersRef.current.push(
+          setTimeout(() => setState("stamped-online"), 1800)
+        );
+        timersRef.current.push(
+          setTimeout(() => setState("online"), 3500)
+        );
+      }
+    },
+    [clearTimers]
+  );
 
   const handleToggle = () => {
     if (state === "online" || state === "stamped-online") {
@@ -52,84 +79,122 @@ export function OfflineToggleDemo() {
     }
   };
 
-  const statusColor =
-    state === "pending" || state === "scanning-offline" || state === "offline"
-      ? "bg-amber-400"
-      : state === "syncing"
-        ? "bg-blue-400"
-        : "bg-green-400";
+  const isOfflineState =
+    state === "pending" ||
+    state === "scanning-offline" ||
+    state === "offline";
 
-  const statusText =
-    state === "pending" || state === "scanning-offline" || state === "offline"
-      ? t("offline_label")
-      : state === "syncing"
-        ? t("syncing")
-        : state === "synced"
-          ? t("synced")
-          : t("online");
+  const statusColor = isOfflineState
+    ? "bg-amber-400"
+    : state === "syncing"
+      ? "bg-blue-400"
+      : "bg-green-400";
+
+  const statusText = isOfflineState
+    ? t("offline_label")
+    : state === "syncing"
+      ? t("syncing")
+      : state === "synced"
+        ? t("synced")
+        : t("online");
 
   return (
     <PhoneMockup>
-      <div className="h-full flex flex-col bg-gray-50">
-        {/* Status bar */}
-        <div className="pt-10 px-4 pb-3 bg-white border-b border-gray-100">
+      <div className="h-full flex flex-col bg-[#f8f8fa]">
+        {/* App header */}
+        <div className="pt-14 px-5 pb-4 bg-white">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-900">Stampeo</span>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-[var(--accent)] rounded-lg flex items-center justify-center">
+                <span className="text-white text-[10px] font-bold">S</span>
+              </div>
+              <span className="text-[13px] font-semibold text-gray-900">
+                Stampeo
+              </span>
+            </div>
             <button
               onClick={handleToggle}
-              className={`relative w-10 h-5 rounded-full transition-colors duration-300 ${
+              className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${
                 isOffline ? "bg-amber-400" : "bg-green-400"
               }`}
               aria-label="Toggle offline mode"
             >
               <motion.div
-                className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm"
-                animate={{ left: isOffline ? "calc(100% - 18px)" : "2px" }}
+                className="absolute top-[3px] w-[18px] h-[18px] bg-white rounded-full shadow-sm"
+                animate={{
+                  left: isOffline ? "calc(100% - 21px)" : "3px",
+                }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             </button>
           </div>
-          <div className="flex items-center gap-1.5 mt-1">
-            <div className={`w-1.5 h-1.5 rounded-full ${statusColor}`} />
-            <span className="text-[10px] text-gray-500">{statusText}</span>
-            {pendingCount > 0 && state === "pending" && (
-              <span className="text-[10px] text-amber-600 font-medium ml-1">
-                ({pendingCount})
-              </span>
-            )}
+
+          {/* Status pill */}
+          <div className="mt-2.5 flex items-center gap-2">
+            <div
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium ${
+                isOfflineState
+                  ? "bg-amber-50 text-amber-700"
+                  : state === "syncing"
+                    ? "bg-blue-50 text-blue-700"
+                    : "bg-green-50 text-green-700"
+              }`}
+            >
+              <div className={`w-1.5 h-1.5 rounded-full ${statusColor}`} />
+              {statusText}
+              {pendingCount > 0 && state === "pending" && (
+                <span className="font-semibold"> · {pendingCount}</span>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Main content */}
-        <div className="flex-1 flex items-center justify-center p-4">
+        <div className="flex-1 flex items-center justify-center p-5">
           <AnimatePresence mode="wait">
             {/* Online scan success */}
             {state === "stamped-online" && (
               <motion.div
                 key="stamped"
-                className="text-center"
+                className="text-center flex flex-col items-center"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.25 }}
               >
                 <motion.div
-                  className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-100 flex items-center justify-center"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="w-20 h-20 mb-4 rounded-2xl bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30"
+                  initial={{ scale: 0, rotate: -10 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 18,
+                  }}
                 >
-                  <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <motion.svg
+                    className="w-10 h-10 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
                     <motion.path
                       d="M5 13l4 4L19 7"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.4 }}
+                      transition={{ duration: 0.4, delay: 0.15 }}
                     />
-                  </svg>
+                  </motion.svg>
                 </motion.div>
-                <p className="text-sm font-bold text-gray-900">{t("../scanDemo.toast")}</p>
+                <p className="text-[13px] font-bold text-gray-900">
+                  Tampon ajouté
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Synchronisé instantanément
+                </p>
               </motion.div>
             )}
 
@@ -137,22 +202,42 @@ export function OfflineToggleDemo() {
             {state === "pending" && (
               <motion.div
                 key="pending"
-                className="text-center"
+                className="text-center flex flex-col items-center"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.25 }}
               >
                 <motion.div
-                  className="w-16 h-16 mx-auto mb-3 rounded-full bg-amber-100 flex items-center justify-center"
+                  className="w-20 h-20 mb-4 rounded-2xl bg-amber-400 flex items-center justify-center shadow-lg shadow-amber-400/30"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 18,
+                  }}
                 >
-                  <svg className="w-8 h-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-10 h-10 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </motion.div>
-                <p className="text-sm font-bold text-amber-700">{t("pending")}</p>
+                <p className="text-[13px] font-bold text-amber-700">
+                  {t("pending")}
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  1 tampon en file d&apos;attente
+                </p>
               </motion.div>
             )}
 
@@ -160,21 +245,41 @@ export function OfflineToggleDemo() {
             {state === "syncing" && (
               <motion.div
                 key="syncing"
-                className="text-center"
+                className="text-center flex flex-col items-center"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.25 }}
               >
                 <motion.div
-                  className="w-16 h-16 mx-auto mb-3 rounded-full bg-blue-100 flex items-center justify-center"
+                  className="w-20 h-20 mb-4 rounded-2xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30"
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
                 >
-                  <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  <svg
+                    className="w-10 h-10 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                   </svg>
                 </motion.div>
-                <p className="text-sm font-bold text-blue-600">{t("syncing")}</p>
+                <p className="text-[13px] font-bold text-blue-600">
+                  {t("syncing")}
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Connexion rétablie
+                </p>
               </motion.div>
             )}
 
@@ -182,18 +287,29 @@ export function OfflineToggleDemo() {
             {state === "synced" && (
               <motion.div
                 key="synced"
-                className="text-center"
+                className="text-center flex flex-col items-center"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.25 }}
               >
                 <motion.div
-                  className="w-16 h-16 mx-auto mb-3 rounded-full bg-green-100 flex items-center justify-center"
+                  className="w-20 h-20 mb-4 rounded-2xl bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 18,
+                  }}
                 >
-                  <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <motion.svg
+                    className="w-10 h-10 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
                     <motion.path
                       d="M5 13l4 4L19 7"
                       strokeLinecap="round"
@@ -202,41 +318,75 @@ export function OfflineToggleDemo() {
                       animate={{ pathLength: 1 }}
                       transition={{ duration: 0.4 }}
                     />
-                  </svg>
+                  </motion.svg>
                 </motion.div>
-                <p className="text-sm font-bold text-green-600">{t("synced")}</p>
+                <p className="text-[13px] font-bold text-green-600">
+                  {t("synced")}
+                </p>
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  Aucun tampon perdu
+                </p>
               </motion.div>
             )}
 
-            {/* Default scanning states */}
-            {(state === "online" || state === "scanning-online" || state === "offline" || state === "scanning-offline") && (
+            {/* Default: viewfinder */}
+            {(state === "online" ||
+              state === "scanning-online" ||
+              state === "offline" ||
+              state === "scanning-offline") && (
               <motion.div
                 key="viewfinder"
-                className="w-32 h-32 relative"
+                className="w-36 h-36 relative"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
                 {/* Corner brackets */}
                 {[
-                  "top-0 left-0 border-t-2 border-l-2 rounded-tl-lg",
-                  "top-0 right-0 border-t-2 border-r-2 rounded-tr-lg",
-                  "bottom-0 left-0 border-b-2 border-l-2 rounded-bl-lg",
-                  "bottom-0 right-0 border-b-2 border-r-2 rounded-br-lg",
+                  "top-0 left-0 border-t-[3px] border-l-[3px] rounded-tl-xl",
+                  "top-0 right-0 border-t-[3px] border-r-[3px] rounded-tr-xl",
+                  "bottom-0 left-0 border-b-[3px] border-l-[3px] rounded-bl-xl",
+                  "bottom-0 right-0 border-b-[3px] border-r-[3px] rounded-br-xl",
                 ].map((pos, i) => (
-                  <div key={i} className={`absolute w-6 h-6 ${pos} border-gray-400`} />
+                  <div
+                    key={i}
+                    className={`absolute w-8 h-8 ${pos} border-gray-300`}
+                  />
                 ))}
                 {/* Scanning line */}
-                {(state === "scanning-online" || state === "scanning-offline") && (
+                {(state === "scanning-online" ||
+                  state === "scanning-offline") && (
                   <motion.div
-                    className={`absolute left-2 right-2 h-0.5 ${isOffline ? "bg-amber-400" : "bg-[var(--accent)]"}`}
+                    className={`absolute left-3 right-3 h-[2px] ${
+                      isOffline
+                        ? "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.4)]"
+                        : "bg-[var(--accent)] shadow-[0_0_8px_rgba(var(--accent-rgb),0.4)]"
+                    }`}
                     animate={{ top: ["10%", "90%", "10%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                   />
                 )}
+                {/* Center hint */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-12 h-12 border-2 border-dashed border-gray-200 rounded-lg" />
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+
+        {/* Bottom instruction */}
+        <div className="px-5 pb-5">
+          <p className="text-[10px] text-gray-400 text-center">
+            {isOffline
+              ? "Mode hors ligne activé"
+              : "Appuyez sur le toggle pour simuler"}
+          </p>
         </div>
       </div>
     </PhoneMockup>

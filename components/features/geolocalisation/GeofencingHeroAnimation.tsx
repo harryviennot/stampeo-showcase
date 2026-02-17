@@ -5,17 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { MapPinIcon } from "@/components/icons";
 import { PhoneMockup } from "@/components/features/notifications-push/PhoneMockup";
-import { WalletCard } from "@/components/card/WalletCard";
-import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
-
-const cafeDesign = {
-  background_color: "#3C2415",
-  accent_color: "#D4A574",
-  organization_name: "Café Le Comptoir",
-  total_stamps: 10,
-  stamp_icon: "coffee" as const,
-  reward_icon: "gift" as const,
-};
+import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 
 export function GeofencingHeroAnimation() {
   const t = useTranslations("features.geolocalisation");
@@ -23,7 +13,7 @@ export function GeofencingHeroAnimation() {
 
   return (
     <div className="relative w-full max-w-lg mx-auto">
-      {/* CSS keyframe for the pulse — runs on compositor thread, no JS overhead */}
+      {/* CSS keyframe for the pulse */}
       <style>{`
         @keyframes geofence-pulse {
           0% { transform: scale(0.3); opacity: 0.45; }
@@ -33,8 +23,8 @@ export function GeofencingHeroAnimation() {
           animation: geofence-pulse 3.6s cubic-bezier(0.2, 0, 0.2, 1) infinite;
           will-change: transform, opacity;
         }
-        .geofence-ring:nth-child(2) { animation-delay: 0.8s; }
-        .geofence-ring:nth-child(3) { animation-delay: 1.6s; }
+        .geofence-ring:nth-child(2) { animation-delay: 1.2s; }
+        .geofence-ring:nth-child(3) { animation-delay: 2.4s; }
       `}</style>
 
       {/* Map area */}
@@ -53,7 +43,7 @@ export function GeofencingHeroAnimation() {
           <div className="absolute top-[45%] left-[10%] right-[30%] h-[2px] bg-white/40 rotate-[15deg]" />
         </div>
 
-        {/* Pulsing geofence circles — pure CSS animation */}
+        {/* Pulsing geofence circles */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {[0, 1, 2].map((i) => (
             <div
@@ -98,27 +88,44 @@ export function GeofencingHeroAnimation() {
         >
           <div className="scale-[0.55] origin-bottom-right">
             <PhoneMockup>
-              <motion.div
-                className="p-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 0.6 }}
-              >
-                {/* Lock screen date */}
-                <div className="text-center mb-4 mt-2">
-                  <p className="text-[13px] font-light text-black/60">
-                    {t("demo.lockScreenDate")}
-                  </p>
-                </div>
+              {/* Lock screen wallpaper */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
 
-                <ScaledCardWrapper baseWidth={254}>
-                  <WalletCard
-                    design={cafeDesign}
-                    stamps={7}
-                    showQR={false}
-                    showSecondaryFields={false}
-                  />
-                </ScaledCardWrapper>
+              {/* Lock screen content */}
+              <div className="relative z-10 flex flex-col items-center pt-8">
+                <div
+                  className="text-[64px] font-thin text-white leading-none tracking-tight"
+                  style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
+                >
+                  9:41
+                </div>
+                <div
+                  className="text-[15px] font-medium text-white/80 mt-1"
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
+                >
+                  {t("demo.lockScreenDate")}
+                </div>
+              </div>
+
+              {/* Notification */}
+              <motion.div
+                className="relative z-10 px-3 mt-8"
+                initial={{ y: -80, opacity: 0, scale: 0.9 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 24,
+                  mass: 0.8,
+                  delay: 1.5,
+                }}
+              >
+                <NotificationBanner
+                  appName="Stampeo"
+                  title={t("demo.notificationTitle")}
+                  body={t("demo.notificationBody")}
+                  timeAgo={t("demo.timeAgo")}
+                />
               </motion.div>
             </PhoneMockup>
           </div>

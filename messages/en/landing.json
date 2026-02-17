@@ -302,6 +302,20 @@
           "link": "/features/programme-fondateur"
         }
       ]
+    },
+    "roi": {
+      "title": "What loyalty actually brings in",
+      "subtitle": "Adjust the sliders to match your business.",
+      "clientsLabel": "Customers per day",
+      "basketLabel": "Average basket",
+      "assumption": "Assumption: a loyalty program generates ~8% additional visits",
+      "breakdownClients": "{clients} clients/day × 8% = ~{extra} extra clients per day",
+      "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month in extra revenue",
+      "extraRevenue": "Extra revenue",
+      "perMonth": "/month",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Pays for itself",
+      "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program."
     }
   }
 }

@@ -4,14 +4,19 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../../ui/ScrollReveal";
 
-export function ROICalculator() {
-  const t = useTranslations("features.programme-fondateur.custom.roi");
-  const [clients, setClients] = useState(50);
-  const [basket, setBasket] = useState(5);
+interface ROICalculatorProps {
+  namespace?: string;
+}
 
-  const extraRevenue = Math.round(clients * basket * 0.15 * 30);
+export function ROICalculator({ namespace = "features.programme-fondateur.custom.roi" }: ROICalculatorProps) {
+  const t = useTranslations(namespace);
+  const [clients, setClients] = useState(40);
+  const [basket, setBasket] = useState(8);
+
+  const extraClientsPerDay = clients * 0.08;
+  const extraRevenue = Math.round(extraClientsPerDay * basket * 30);
   const stampeoCost = 14.99;
-  const roi = Math.round((extraRevenue / stampeoCost) * 100);
+  const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (
     <section className="py-24 lg:py-32">
@@ -42,7 +47,7 @@ export function ROICalculator() {
                 <input
                   type="range"
                   min={10}
-                  max={200}
+                  max={100}
                   step={5}
                   value={clients}
                   onChange={(e) => setClients(Number(e.target.value))}
@@ -50,7 +55,7 @@ export function ROICalculator() {
                 />
                 <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
                   <span>10</span>
-                  <span>200</span>
+                  <span>100</span>
                 </div>
               </div>
 
@@ -66,7 +71,7 @@ export function ROICalculator() {
                 </div>
                 <input
                   type="range"
-                  min={2}
+                  min={3}
                   max={50}
                   step={1}
                   value={basket}
@@ -74,17 +79,36 @@ export function ROICalculator() {
                   className="roi-slider w-full"
                 />
                 <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
-                  <span>2€</span>
+                  <span>3€</span>
                   <span>50€</span>
                 </div>
               </div>
             </div>
 
-            {/* Fixed assumption */}
-            <div className="flex items-center gap-2 mb-8 p-3 rounded-lg bg-[var(--accent)]/5 border border-[var(--accent)]/10">
-              <span className="text-sm font-medium text-[var(--muted-foreground)]">
+            {/* Visible calculation breakdown */}
+            <div className="mb-8 p-4 rounded-xl bg-[var(--blog-bg)] space-y-2">
+              <p className="text-sm font-medium text-[var(--muted-foreground)]">
                 {t("assumption")}
-              </span>
+              </p>
+              <div className="text-sm text-[var(--muted-foreground)] space-y-1">
+                <p>
+                  {t("breakdownClients", {
+                    clients,
+                    extra: extraClientsPerDay % 1 === 0
+                      ? extraClientsPerDay
+                      : extraClientsPerDay.toFixed(1),
+                  })}
+                </p>
+                <p>
+                  {t("breakdownRevenue", {
+                    extra: extraClientsPerDay % 1 === 0
+                      ? extraClientsPerDay
+                      : extraClientsPerDay.toFixed(1),
+                    basket,
+                    total: extraRevenue,
+                  })}
+                </p>
+              </div>
             </div>
 
             {/* Results */}
@@ -118,10 +142,15 @@ export function ROICalculator() {
                   {t("roiLabel")}
                 </p>
                 <p className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)] tabular-nums transition-all duration-300">
-                  +{roi}%
+                  ×{multiplier}
                 </p>
               </div>
             </div>
+
+            {/* Disclaimer */}
+            <p className="mt-6 text-xs text-[var(--muted-foreground)] text-center">
+              {t("disclaimer")}
+            </p>
           </div>
         </ScrollReveal>
       </div>
