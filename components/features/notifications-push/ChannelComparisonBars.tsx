@@ -46,6 +46,7 @@ function ChannelBarRow({
   isInView: boolean;
 }) {
   const [count, setCount] = useState(0);
+  const [fillDone, setFillDone] = useState(false);
 
   useEffect(() => {
     if (!isInView) return;
@@ -61,11 +62,12 @@ function ChannelBarRow({
         return;
       }
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.round(eased * channel.rate));
       if (progress < 1) {
         requestAnimationFrame(animate);
+      } else {
+        setFillDone(true);
       }
     };
 
@@ -88,9 +90,10 @@ function ChannelBarRow({
             initial={{ width: "0%" }}
             animate={isInView ? { width: `${channel.rate}%` } : { width: "0%" }}
             transition={{
-              duration: 1.2,
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
               delay,
-              ease: [0.25, 0.1, 0.25, 1],
             }}
           >
             <span
@@ -101,6 +104,31 @@ function ChannelBarRow({
               ~{count}%
             </span>
           </motion.div>
+
+          {/* Shine sweep for wallet bar */}
+          {channel.isAccent && fillDone && (
+            <motion.div
+              className="absolute inset-0 rounded-full pointer-events-none overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <motion.div
+                className="absolute inset-0"
+                initial={{ x: "-100%" }}
+                animate={{ x: "200%" }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.2,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
+                  width: "50%",
+                }}
+              />
+            </motion.div>
+          )}
         </div>
         {channel.isAccent && isInView && (
           <motion.div

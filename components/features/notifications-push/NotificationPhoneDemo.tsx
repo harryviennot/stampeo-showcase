@@ -11,50 +11,61 @@ export function NotificationPhoneDemo() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Initial delay before first appearance
-    const initialDelay = setTimeout(() => setIsVisible(true), 1200);
+    const initialDelay = setTimeout(() => setIsVisible(true), 2000);
     return () => clearTimeout(initialDelay);
   }, []);
 
   useEffect(() => {
     if (!isVisible) {
-      // When hidden, show again after 2s
-      const timer = setTimeout(() => setIsVisible(true), 2000);
+      // Gap before next notification
+      const timer = setTimeout(() => setIsVisible(true), 2500);
       return () => clearTimeout(timer);
     }
-    // When visible, hide after 3s
-    const timer = setTimeout(() => setIsVisible(false), 3500);
+    // Notification holds — enough time to read
+    const timer = setTimeout(() => setIsVisible(false), 5000);
     return () => clearTimeout(timer);
   }, [isVisible]);
 
   return (
-    <PhoneMockup>
-      {/* Lock screen wallpaper - subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
+    <PhoneMockup statusBarColor="white">
+      {/* Lock screen wallpaper — deep dark gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460]" />
+
+      {/* Subtle noise texture overlay */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
 
       {/* Lock screen content */}
-      <div className="relative z-10 flex flex-col items-center pt-8">
-        {/* Time */}
-        <div className="text-[64px] font-thin text-white leading-none tracking-tight" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}>
+      <div className="relative z-10 flex flex-col items-center pt-6">
+        {/* Clock — iOS ultralight */}
+        <div
+          className="text-[72px] leading-none tracking-tight text-white"
+          style={{
+            fontWeight: 200,
+            textShadow: "0 1px 8px rgba(0,0,0,0.3)",
+          }}
+        >
           9:41
         </div>
-        <div className="text-[15px] font-medium text-white/80 mt-1" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
+        <div
+          className="text-[13px] font-medium text-white/70 mt-1"
+          style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
+        >
           {t("lockScreenDate")}
         </div>
       </div>
 
       {/* Notification area */}
-      <div className="relative z-10 px-3 mt-8">
+      <div className="relative z-10 px-3 mt-6">
         <AnimatePresence>
           {isVisible && (
             <motion.div
-              initial={{ y: -80, opacity: 0, scale: 0.9 }}
+              initial={{ y: -60, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: -60, opacity: 0, scale: 0.95 }}
+              exit={{ y: -30, opacity: 0 }}
               transition={{
                 type: "spring",
-                stiffness: 300,
-                damping: 24,
+                stiffness: 200,
+                damping: 26,
                 mass: 0.8,
               }}
             >
@@ -67,6 +78,25 @@ export function NotificationPhoneDemo() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
+      {/* Bottom lock screen icons */}
+      <div className="absolute bottom-8 left-0 right-0 z-10 flex items-center justify-between px-6">
+        {/* Flashlight */}
+        <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/15 border border-white/10 flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 2h6l1 7H8L9 2Z" />
+            <rect x="8" y="9" width="8" height="12" rx="1" />
+            <circle cx="12" cy="15" r="1" fill="white" />
+          </svg>
+        </div>
+        {/* Camera */}
+        <div className="w-10 h-10 rounded-full backdrop-blur-xl bg-white/15 border border-white/10 flex items-center justify-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14.5 4h-5L7.5 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3.5L14.5 4Z" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+        </div>
       </div>
     </PhoneMockup>
   );

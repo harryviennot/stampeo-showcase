@@ -22,6 +22,7 @@ export function NotificationSequenceDemo() {
   const [activeTab, setActiveTab] = useState<TabKey>("stamp");
   const [isPaused, setIsPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
+  const stamps = tabStamps[activeTab];
 
   // Auto-advance tabs every 4s
   useEffect(() => {
@@ -40,13 +41,13 @@ export function NotificationSequenceDemo() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
       {/* Phone demo */}
       <div className="flex justify-center order-1 lg:order-2">
-        <PhoneMockup>
+        <PhoneMockup statusBarStyle="time-only">
           {/* Light background */}
           <div className="absolute inset-0 bg-[#f2f2f7]" />
 
           <div className="relative z-10 flex flex-col h-full">
             {/* Mini wallet card */}
-            <div className="px-3 pt-1">
+            <div className="px-3">
               <ScaledCardWrapper baseWidth={280} targetWidth={240}>
                 <WalletCard
                   design={{
@@ -56,10 +57,14 @@ export function NotificationSequenceDemo() {
                     stamp_filled_color: "#f97316",
                     label_color: "#fff",
                     secondary_fields: [
-                      { key: "reward", label: "Reward", value: "Café offert" },
+                      {
+                        key: "reward",
+                        label: "Reward",
+                        value: "Café offert",
+                      },
                     ],
                   }}
-                  stamps={tabStamps[activeTab]}
+                  stamps={stamps}
                   showQR={false}
                   showSecondaryFields={false}
                 />
@@ -71,14 +76,10 @@ export function NotificationSequenceDemo() {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
-                  initial={{ y: -30, opacity: 0, scale: 0.95 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  exit={{ y: 20, opacity: 0, scale: 0.95 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 350,
-                    damping: 28,
-                  }}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
                 >
                   <NotificationBanner
                     appName="Stampeo"
@@ -95,7 +96,7 @@ export function NotificationSequenceDemo() {
 
       {/* Tab descriptions */}
       <div className="order-2 lg:order-1">
-        <div className="space-y-3">
+        <div className="space-y-2">
           {TABS.map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -104,53 +105,57 @@ export function NotificationSequenceDemo() {
                 onClick={() => {
                   setActiveTab(tab);
                   setIsPaused(true);
-                  // Resume auto-advance after 8s
                   setTimeout(() => setIsPaused(false), 8000);
                 }}
-                className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 ${
-                  isActive
-                    ? "bg-white border-[var(--accent)]/20 shadow-md shadow-[var(--accent)]/5"
-                    : "bg-transparent border-transparent hover:bg-white/50"
-                }`}
+                className="relative w-full text-left px-5 py-4 rounded-2xl"
               >
-                <div className="flex items-center gap-3 mb-1.5">
-                  <div
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      isActive ? "bg-[var(--accent)]" : "bg-gray-300"
-                    }`}
+                {/* Animated background */}
+                {isActive && (
+                  <motion.div
+                    className="absolute inset-0 bg-white shadow-sm rounded-2xl"
+                    layoutId="active-tab-bg"
+                    transition={{
+                      type: "spring",
+                      stiffness: 350,
+                      damping: 30,
+                    }}
                   />
-                  <h4
-                    className={`text-base font-bold transition-colors ${
-                      isActive
-                        ? "text-[var(--foreground)]"
-                        : "text-[var(--muted-foreground)]"
-                    }`}
-                  >
-                    {t(`${tab}.title`)}
-                  </h4>
-                </div>
-                <p
-                  className={`text-sm leading-relaxed pl-5 transition-colors ${
-                    isActive
-                      ? "text-[var(--muted-foreground)]"
-                      : "text-[var(--muted-foreground)]/60"
-                  }`}
-                >
-                  {t(`${tab}.description`)}
-                </p>
-
-                {/* Progress bar for active tab */}
-                {isActive && !isPaused && (
-                  <div className="mt-3 ml-5 h-0.5 rounded-full bg-gray-200 overflow-hidden">
-                    <motion.div
-                      className="h-full bg-[var(--accent)] rounded-full"
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 4, ease: "linear" }}
-                      key={`progress-${tab}-${progressKey}`}
-                    />
-                  </div>
                 )}
+
+                <div className="relative">
+                  <div className="flex items-center gap-2.5 mb-1">
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                        isActive ? "bg-[var(--accent)]" : "bg-gray-300"
+                      }`}
+                    />
+                    <h4
+                      className={`text-sm font-semibold transition-colors duration-200 ${
+                        isActive
+                          ? "text-[var(--foreground)]"
+                          : "text-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      {t(`${tab}.title`)}
+                    </h4>
+                  </div>
+                  <p className="text-sm leading-relaxed text-[var(--muted-foreground)] pl-4 pt-0.5">
+                    {t(`${tab}.description`)}
+                  </p>
+
+                  {/* Progress bar */}
+                  {isActive && !isPaused && (
+                    <div className="mt-3 ml-4 h-[2px] rounded-full bg-gray-100 overflow-hidden">
+                      <motion.div
+                        className="h-full rounded-full bg-[var(--accent)]/40"
+                        initial={{ width: "0%" }}
+                        animate={{ width: "100%" }}
+                        transition={{ duration: 4, ease: "linear" }}
+                        key={`progress-${tab}-${progressKey}`}
+                      />
+                    </div>
+                  )}
+                </div>
               </button>
             );
           })}
