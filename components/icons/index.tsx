@@ -24,6 +24,7 @@ export {
   Star as StarIcon,
   WifiSlash as WifiOffIcon,
   Broadcast as SignalIcon,
+  Info as InfoIcon,
 } from "@phosphor-icons/react";
 
 interface IconProps {

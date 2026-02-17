@@ -187,8 +187,8 @@
           "title": "Toute votre équipe peut scanner",
           "subtitle": "Ajoutez vos employés et gérez les accès selon votre plan.",
           "pay": {
-            "title": "Plan Pay",
-            "price": "24,99 €/mois",
+            "title": "Plan Starter",
+            "price": "14,99 €/mois",
             "members": "3 membres",
             "features": [
               "3 comptes employé inclus",
@@ -198,14 +198,14 @@
             ]
           },
           "pro": {
-            "title": "Plan Pro",
-            "price": "49,99 €/mois",
+            "title": "Plan Growth",
+            "price": "29,99 €/mois",
             "members": "Illimité",
             "features": [
               "Membres d'équipe illimités",
               "Rôles et permissions",
               "Statistiques par employé",
-              "Tout le plan Pay inclus"
+              "Tout le plan Starter inclus"
             ]
           }
         },
@@ -310,7 +310,7 @@
           {
             "title": "Messages personnalisés",
             "description": "Personnalisez le texte de vos notifications avec le prénom du client, le nombre de tampons restants, et le nom de la récompense.",
-            "badge": "Pro"
+            "badge": "Growth"
           },
           {
             "title": "Campagnes ciblées",
@@ -375,18 +375,18 @@
           "title": "Tendances et heures de pointe",
           "description": "Visualisez l'évolution de vos métriques jour par jour. Découvrez quand vos clients viennent et identifiez les creux pour optimiser votre activité.",
           "icon": "trending-up",
-          "badge": "Pro"
+          "badge": "Growth"
         },
         {
           "title": "Fréquence et rétention",
           "description": "Comprenez le rythme de vos clients : quotidiens, hebdomadaires, mensuels. Suivez votre taux de rétention et identifiez les clients à risque.",
           "icon": "users",
-          "badge": "Pro"
+          "badge": "Growth"
         }
       ],
       "cta": {
         "title": "Arrêtez de deviner. Commencez à savoir.",
-        "subtitle": "Le tableau de bord est inclus dans tous les plans. Les analytiques avancées sont disponibles sur le plan Pro."
+        "subtitle": "Le tableau de bord est inclus dans tous les plans. Les analytiques avancées sont disponibles sur le plan Growth."
       },
       "related": ["notifications-push", "scanner-mobile", "programme-fondateur"],
       "custom": {
@@ -402,9 +402,9 @@
           "noAnswer": "???"
         },
         "dashboard": {
-          "badge": "Plan Pay",
+          "badge": "Plan Starter",
           "title": "L'essentiel pour commencer",
-          "description": "Le plan Pay inclut un tableau de bord simple et clair qui répond aux questions fondamentales.",
+          "description": "Le plan Starter inclut un tableau de bord simple et clair qui répond aux questions fondamentales.",
           "features": [
             "Nombre total de clients inscrits",
             "Scans cette semaine et ce mois",
@@ -420,9 +420,9 @@
           "timeAgo": "il y a {seconds}s"
         },
         "proAnalytics": {
-          "badge": "Plan Pro",
+          "badge": "Plan Growth",
           "title": "Comprenez les tendances, pas juste les chiffres",
-          "description": "Le plan Pro ajoute une couche d'analyse qui vous aide à prendre des décisions."
+          "description": "Le plan Growth ajoute une couche d'analyse qui vous aide à prendre des décisions."
         },
         "proCharts": {
           "lineChart": { "label": "Scans / semaine", "trend": "+23%" },
@@ -432,7 +432,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Pro",
+      "heroBadge": "Growth",
       "hero": {
         "title": "Rappelez-leur que vous existez. Au bon moment.",
         "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien."
@@ -511,7 +511,7 @@
             "title": "Multi-établissement",
             "description": "Ajoutez jusqu'à 10 adresses par carte. Chaque point de vente déclenche le rappel automatiquement.",
             "icon": "building",
-            "badge": "Pro"
+            "badge": "Growth"
           },
           {
             "title": "Mise à jour en temps réel",
@@ -548,13 +548,14 @@
       ],
       "cta": {
         "title": "Soyez présent au bon moment",
-        "subtitle": "Le géofencing est inclus dans le plan Pro. Rejoignez le programme fondateur pour en bénéficier dès maintenant."
+        "subtitle": "Le géofencing est inclus dans le plan Growth. Rejoignez le programme fondateur pour en bénéficier dès maintenant."
       },
       "related": ["notifications-push", "analytiques", "design-de-carte"]
     },
     "programme-fondateur": {
       "hero": {
         "title": "Vous n'êtes pas juste un client. Vous <accent>construisez le produit</accent> avec nous.",
+        "navTitle": "Programme Fondateur — 3 mois gratuits, 14,99 €/mois à vie",
         "subtitle": "Stampeo est un produit jeune. On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais.",
         "badge": "Programme Fondateur",
         "secondaryCta": "3 mois gratuits · 14,99 €/mois à vie"
@@ -575,14 +576,14 @@
           "icon": "tag"
         },
         {
-          "title": "Toutes les fonctionnalités Pro",
+          "title": "Toutes les fonctionnalités Growth",
           "description": "Pas de plan basique pour les fondateurs. Plusieurs modèles de carte, équipe illimitée, analytiques avancées, géolocalisation, et canal direct avec notre équipe.",
           "icon": "crown"
         }
       ],
       "cta": {
         "title": "Rejoignez les premiers",
-        "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Pro."
+        "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Growth."
       },
       "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
       "custom": {
@@ -600,7 +601,7 @@
               "icon": "tag"
             },
             {
-              "title": "Toutes les fonctionnalités Pro",
+              "title": "Toutes les fonctionnalités Growth",
               "description": "Plusieurs modèles de carte, membres d'équipe illimités, analytiques avancées, géolocalisation, et canal direct avec notre équipe.",
               "icon": "crown"
             },
@@ -706,7 +707,7 @@
             },
             {
               "question": "Est-ce que je garde le tarif fondateur si vous augmentez les prix ?",
-              "answer": "Oui. 14,99 €/mois à vie signifie à vie. Même si le plan Pro passe à 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel."
+              "answer": "Oui. 14,99 €/mois à vie signifie à vie. Même si le plan Growth passe à 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel."
             },
             {
               "question": "Puis-je changer d'avis et annuler ?",
@@ -716,12 +717,13 @@
         },
         "finalCta": {
           "title": "Rejoignez les premiers",
-          "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Pro.",
+          "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Growth.",
           "urgency": "Prochaine vague d'acceptation : mars 2026"
         }
       }
     },
     "relatedTitle": "Découvrez aussi",
+    "discoverLink": "Découvrir",
     "ctaButton": "Devenir Partenaire Fondateur"
   }
 }

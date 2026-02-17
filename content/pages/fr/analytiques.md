@@ -49,7 +49,7 @@ Avec des cartes en carton, ces questions n'ont pas de reponse. Vous gerez votre 
 
 **Titre :** L'essentiel pour commencer
 
-Le plan Pay inclut un tableau de bord simple et clair qui repond aux questions fondamentales.
+Le plan Starter inclut un tableau de bord simple et clair qui repond aux questions fondamentales.
 
 ### Ce que vous voyez
 
@@ -85,7 +85,7 @@ Vous passez de "je ne sais rien" a "je vois l'essentiel". Vous savez combien de 
 
 **Titre :** Comprenez les tendances, pas juste les chiffres
 
-Le plan Pro ajoute une couche d'analyse qui vous aide a prendre des decisions.
+Le plan Growth ajoute une couche d'analyse qui vous aide a prendre des decisions.
 
 ### Tendances dans le temps
 
@@ -142,7 +142,7 @@ Cette fonctionnalite est en cours de developpement et arrivera dans les prochain
 
 **Titre :** Arretez de deviner. Commencez a savoir.
 
-**Sous-titre :** Le tableau de bord est inclus dans tous les plans. Les analytiques avancees sont disponibles sur le plan Pro.
+**Sous-titre :** Le tableau de bord est inclus dans tous les plans. Les analytiques avancees sont disponibles sur le plan Growth.
 
 **CTA :** Devenir Partenaire Fondateur → /onboarding
 
@@ -152,4 +152,4 @@ Cette fonctionnalite est en cours de developpement et arrivera dans les prochain
 
 - [Notifications push](/features/notifications-push) — Mesurez l'impact de vos notifications
 - [Scanner mobile](/features/scanner-mobile) — Chaque scan alimente votre tableau de bord
-- [Programme fondateur](/features/programme-fondateur) — Acces aux analytiques Pro inclus
+- [Programme fondateur](/features/programme-fondateur) — Acces aux analytiques Growth inclus

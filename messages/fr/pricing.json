@@ -2,38 +2,53 @@
   "pricing": {
     "badge": "Plans & Tarifs",
     "title": "Des tarifs simples et transparents",
-    "subtitle": "Les partenaires fondateurs bénéficient du Pro à un tarif à vie.",
+    "subtitle": "Les partenaires fondateurs bénéficient du Growth à un tarif à vie.",
     "foundingPartner": "PARTENAIRE FONDATEUR",
     "perMonth": "/mois",
     "cta": "Demander l'accès anticipé",
+    "ctaSubtext": "Sans carte bancaire · Annulez quand vous voulez",
     "pay": {
-      "name": "Pay",
+      "name": "Starter",
+      "tagline": "Tout ce qu'il faut pour lancer votre programme de fidélité",
       "price": "14,99",
       "description": "Tout ce qu'il faut pour un programme de fidélité digital.",
-      "featuresLabel": "Inclus dans Basic :",
+      "featuresLabel": "Tout inclus :",
       "features": [
         "1 modèle de carte actif",
         "Clients et scans illimités",
         "Jusqu'à 3 membres d'équipe",
         "Scan hors ligne",
-        "Notifications push"
+        {
+          "text": "Notifications push",
+          "tooltip": "Vos clients reçoivent une notification sur leur écran de verrouillage à chaque tampon, jalon atteint ou récompense débloquée. Fonctionne via Apple Wallet et Google Wallet — aucune app nécessaire."
+        }
       ]
     },
     "pro": {
-      "name": "Pro",
+      "name": "Growth",
+      "tagline": "Pour les commerces prêts à développer leur relation client",
       "originalPrice": "29,99",
       "foundingPrice": "14,99",
       "freeMonths": "3 mois offerts",
       "forLife": "/mois à vie",
       "description": "Pour les partenaires fondateurs — toutes les fonctionnalités, tarif à vie.",
-      "featuresLabel": "Tout le plan Pay, plus :",
+      "featuresLabel": "Tout le plan Starter, plus :",
       "features": [
         "Plusieurs modèles de carte",
         "Membres d'équipe illimités",
-        "Support multi-établissement",
+        {
+          "text": "Support multi-établissement",
+          "tooltip": "Ajoutez plusieurs adresses. Chaque établissement peut scanner et tamponner indépendamment. Idéal pour les commerces avec plusieurs points de vente."
+        },
         "Messages de notification personnalisés",
-        "Analytiques avancées",
-        "Campagnes programmées"
+        {
+          "text": "Analytiques avancées",
+          "tooltip": "Visualisez la fréquence de visite, les heures de pointe, les taux de rétention et les tendances clients. Identifiez vos meilleurs clients et ceux à risque de départ."
+        },
+        {
+          "text": "Campagnes programmées",
+          "tooltip": "Planifiez et programmez vos notifications promotionnelles à l'avance. Envoyez des messages ciblés à des segments spécifiques — comme les clients inactifs depuis 30 jours."
+        }
       ]
     }
   }

@@ -187,8 +187,8 @@
           "title": "Your whole team can scan",
           "subtitle": "Add your employees and manage access based on your plan.",
           "pay": {
-            "title": "Pay Plan",
-            "price": "€24.99/mo",
+            "title": "Starter Plan",
+            "price": "€14.99/mo",
             "members": "3 members",
             "features": [
               "3 employee accounts included",
@@ -198,14 +198,14 @@
             ]
           },
           "pro": {
-            "title": "Pro Plan",
-            "price": "€49.99/mo",
+            "title": "Growth Plan",
+            "price": "€29.99/mo",
             "members": "Unlimited",
             "features": [
               "Unlimited team members",
               "Roles and permissions",
               "Per-employee statistics",
-              "Everything in Pay plan"
+              "Everything in Starter plan"
             ]
           }
         },
@@ -310,7 +310,7 @@
           {
             "title": "Custom messages",
             "description": "Customize your notification text with the customer's first name, remaining stamps, and reward name.",
-            "badge": "Pro"
+            "badge": "Growth"
           },
           {
             "title": "Targeted campaigns",
@@ -375,18 +375,18 @@
           "title": "Trends and peak hours",
           "description": "Visualize your metrics day by day. Discover when your customers visit and identify slow periods to optimize your business.",
           "icon": "trending-up",
-          "badge": "Pro"
+          "badge": "Growth"
         },
         {
           "title": "Frequency and retention",
           "description": "Understand your customers' rhythm: daily, weekly, monthly. Track your retention rate and identify at-risk customers.",
           "icon": "users",
-          "badge": "Pro"
+          "badge": "Growth"
         }
       ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "The dashboard is included in all plans. Advanced analytics are available on the Pro plan."
+        "subtitle": "The dashboard is included in all plans. Advanced analytics are available on the Growth plan."
       },
       "related": ["notifications-push", "scanner-mobile", "programme-fondateur"],
       "custom": {
@@ -402,9 +402,9 @@
           "noAnswer": "???"
         },
         "dashboard": {
-          "badge": "Pay Plan",
+          "badge": "Starter Plan",
           "title": "The essentials to get started",
-          "description": "The Pay plan includes a simple, clear dashboard that answers the fundamental questions.",
+          "description": "The Starter plan includes a simple, clear dashboard that answers the fundamental questions.",
           "features": [
             "Total registered customers",
             "Scans this week and this month",
@@ -420,9 +420,9 @@
           "timeAgo": "{seconds}s ago"
         },
         "proAnalytics": {
-          "badge": "Pro Plan",
+          "badge": "Growth Plan",
           "title": "Understand trends, not just numbers",
-          "description": "The Pro plan adds an analytics layer that helps you make decisions."
+          "description": "The Growth plan adds an analytics layer that helps you make decisions."
         },
         "proCharts": {
           "lineChart": { "label": "Scans / week", "trend": "+23%" },
@@ -432,7 +432,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Pro",
+      "heroBadge": "Growth",
       "hero": {
         "title": "Remind them you exist. At the right moment.",
         "subtitle": "When your customer passes near your business, their phone reminds them they have a loyalty card with you. Without you doing anything."
@@ -511,7 +511,7 @@
             "title": "Multi-location",
             "description": "Add up to 10 addresses per card. Each location triggers the reminder automatically.",
             "icon": "building",
-            "badge": "Pro"
+            "badge": "Growth"
           },
           {
             "title": "Real-time updates",
@@ -548,13 +548,14 @@
       ],
       "cta": {
         "title": "Be present at the right moment",
-        "subtitle": "Geofencing is included in the Pro plan. Join the founding program to benefit from it now."
+        "subtitle": "Geofencing is included in the Growth plan. Join the founding program to benefit from it now."
       },
       "related": ["notifications-push", "analytiques", "design-de-carte"]
     },
     "programme-fondateur": {
       "hero": {
         "title": "You're not just a customer. You're <accent>building the product</accent> with us.",
+        "navTitle": "Founding Program — 3 months free, €14.99/month for life",
         "subtitle": "We're looking for 50 French business owners ready to test, critique, and shape the best digital loyalty tool. In exchange, conditions we'll never offer again.",
         "badge": "Founding Program",
         "secondaryCta": "3 months free · €14.99/month for life"
@@ -575,14 +576,14 @@
           "icon": "tag"
         },
         {
-          "title": "All Pro features included",
+          "title": "All Growth features included",
           "description": "No basic plan for founders. Multiple card templates, unlimited team members, advanced analytics, geolocation, and a direct channel with our team.",
           "icon": "crown"
         }
       ],
       "cta": {
         "title": "Join the first ones",
-        "subtitle": "Limited spots. 3 months free. €14.99/month for life. All Pro features."
+        "subtitle": "Limited spots. 3 months free. €14.99/month for life. All Growth features."
       },
       "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
       "custom": {
@@ -600,7 +601,7 @@
               "icon": "tag"
             },
             {
-              "title": "All Pro features included",
+              "title": "All Growth features included",
               "description": "Multiple card templates, unlimited team members, advanced analytics, geolocation, and a direct channel with our team.",
               "icon": "crown"
             },
@@ -706,7 +707,7 @@
             },
             {
               "question": "Do I keep the founding rate if you raise prices?",
-              "answer": "Yes. €14.99/month for life means for life. Even if the Pro plan goes to €49.99 in 3 years, your rate doesn't change. It's contractual."
+              "answer": "Yes. €14.99/month for life means for life. Even if the Growth plan goes to €49.99 in 3 years, your rate doesn't change. It's contractual."
             },
             {
               "question": "Can I change my mind and cancel?",
@@ -716,12 +717,13 @@
         },
         "finalCta": {
           "title": "Join the first ones",
-          "subtitle": "Limited spots. 3 months free. €14.99/month for life. All Pro features.",
+          "subtitle": "Limited spots. 3 months free. €14.99/month for life. All Growth features.",
           "urgency": "Next acceptance wave: March 2026"
         }
       }
     },
     "relatedTitle": "Discover more",
+    "discoverLink": "Discover",
     "ctaButton": "Become a Founding Partner"
   }
 }

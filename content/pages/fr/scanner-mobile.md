@@ -146,13 +146,13 @@ A chaque scan reussi, le telephone vibre brievement. Ce retour physique est impo
 
 **Titre :** Qui peut scanner ?
 
-### Plan Pay — Jusqu'a 3 membres [Pay]
+### Plan Starter — Jusqu'a 3 membres [Pay]
 
 Le proprietaire du commerce peut inviter jusqu'a 3 employes. Chaque employe recoit un email d'invitation, cree un compte (ou se connecte si il en a deja un), et peut scanner immediatement.
 
 L'employe n'a acces qu'au scanner. Il ne voit pas le dashboard, les statistiques, ni la liste complete des clients.
 
-### Plan Pro — Equipe illimitee [Pro]
+### Plan Growth — Equipe illimitee [Pro]
 
 Aucune limite sur le nombre de scanners. Ideal pour les commerces avec beaucoup de personnel ou plusieurs etablissements.
 

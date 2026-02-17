@@ -1,6 +1,6 @@
 # Geolocalisation — Page Feature
 
-> Brouillon de contenu pour la page dediee a la geolocalisation (geofencing). Fonctionnalite Pro.
+> Brouillon de contenu pour la page dediee a la geolocalisation (geofencing). Fonctionnalite Growth.
 
 ---
 
@@ -125,7 +125,7 @@ C'est un point important, et on veut etre transparent :
 
 **Titre :** Soyez present au bon moment
 
-**Sous-titre :** Le geofencing est inclus dans le plan Pro. Rejoignez le programme fondateur pour en beneficier des maintenant.
+**Sous-titre :** Le geofencing est inclus dans le plan Growth. Rejoignez le programme fondateur pour en beneficier des maintenant.
 
 **CTA :** Devenir Partenaire Fondateur → /onboarding
 

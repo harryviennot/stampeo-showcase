@@ -121,7 +121,7 @@ Le moment de satisfaction maximale. La carte affiche clairement "RECOMPENSE PRET
 
 ### Messages personnalises [Pro]
 
-Sur le plan Pay, les messages sont predefinis et fonctionnent tres bien. Sur le plan Pro, vous pouvez ecrire vos propres messages pour chaque type de notification.
+Sur le plan Starter, les messages sont predefinis et fonctionnent tres bien. Sur le plan Growth, vous pouvez ecrire vos propres messages pour chaque type de notification.
 
 Exemples :
 - Tampon : "Merci Marc ! Ton allonge du matin est note. Plus que 5 !"
@@ -170,4 +170,4 @@ Ciblez vos messages selon :
 
 - [Scanner mobile](/features/scanner-mobile) — Le scan qui declenche la notification
 - [Analytiques](/features/analytiques) — Mesurez l'impact de vos notifications
-- [Programme fondateur](/features/programme-fondateur) — Acces a toutes les fonctionnalites Pro
+- [Programme fondateur](/features/programme-fondateur) — Acces a toutes les fonctionnalites Growth

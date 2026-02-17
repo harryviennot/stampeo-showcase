@@ -26,7 +26,7 @@ Pas de carte bancaire a l'inscription. Pas de piege. Vous testez Stampeo pendant
 
 Apres la periode gratuite, votre tarif est bloque a 14,99 €/mois. Pour toujours. Meme quand le prix augmentera pour les nouveaux clients. C'est notre facon de remercier ceux qui nous font confiance des le debut.
 
-### Toutes les fonctionnalites Pro incluses
+### Toutes les fonctionnalites Growth incluses
 
 Pas de plan basique pour les fondateurs. Vous avez acces a tout :
 - Plusieurs modeles de carte
@@ -129,7 +129,7 @@ On accepte les candidatures par petites vagues pour assurer un accompagnement de
 ### 3. On configure votre compte et votre carte
 
 Une fois accepte :
-- Votre compte est active avec toutes les fonctionnalites Pro
+- Votre compte est active avec toutes les fonctionnalites Growth
 - On cree votre premiere carte de fidelite (envoyez-nous vos elements visuels)
 - On vous installe l'appli scanner et on fait un test ensemble
 - Vous recevez votre QR code a afficher au comptoir
@@ -164,7 +164,7 @@ Vous passez automatiquement a 14,99 €/mois. On vous previent 2 semaines avant 
 
 ### Est-ce que je garde le tarif fondateur si vous augmentez les prix ?
 
-Oui. 14,99 €/mois a vie signifie a vie. Meme si le plan Pro passe a 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel.
+Oui. 14,99 €/mois a vie signifie a vie. Meme si le plan Growth passe a 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel.
 
 ### Puis-je changer d'avis et annuler ?
 
@@ -176,7 +176,7 @@ A tout moment. Pas de periode d'engagement apres les 3 mois gratuits. Si vous an
 
 **Titre :** Rejoignez les premiers
 
-**Sous-titre :** Places limitees. 3 mois gratuits. 14,99 €/mois a vie. Toutes les fonctionnalites Pro.
+**Sous-titre :** Places limitees. 3 mois gratuits. 14,99 €/mois a vie. Toutes les fonctionnalites Growth.
 
 **CTA :** Devenir Partenaire Fondateur → /onboarding
 

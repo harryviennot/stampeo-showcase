@@ -249,7 +249,7 @@ Icone : ChartIcon ou EyeSlashIcon
 - Faconnez le produit avec vos retours directs
 - Canal direct avec notre equipe (pas un chatbot, un humain)
 - 3 mois offerts, puis 14,99 €/mois a vie (au lieu de 29,99 €)
-- Toutes les fonctionnalites Pro incluses des le premier jour
+- Toutes les fonctionnalites Growth incluses des le premier jour
 - *Places limitees — nous acceptons les candidatures par vagues* (NOUVEAU)
 - *Votre premiere carte de fidelite designee par notre equipe, gratuitement* (NOUVEAU)
 
@@ -261,14 +261,14 @@ Icone : ChartIcon ou EyeSlashIcon
 
 ## 11. Tarifs (existant — garder tel quel)
 
-### Pay — 14,99 €/mois
+### Starter — 14,99 €/mois
 - 1 modele de carte actif
 - Clients et scans illimites
 - Jusqu'a 3 membres d'equipe
 - Scan hors ligne
 - Notifications push
 
-### Pro — 29,99 €/mois (14,99 € pour les fondateurs)
+### Growth — 29,99 €/mois (14,99 € pour les fondateurs)
 - 3 mois offerts
 - Plusieurs modeles de carte
 - Membres d'equipe illimites
@@ -297,10 +297,10 @@ Icone : ChartIcon ou EyeSlashIcon
 Oui. Stampeo genere des cartes compatibles avec Apple Wallet et Google Wallet. La grande majorite des smartphones (iPhone et Android) sont couverts. Les fonctionnalites sont identiques sur les deux plateformes, a l'exception des notifications de geolocalisation qui ne sont disponibles que sur Apple Wallet pour le moment.
 
 **8. Un commerce peut-il avoir plusieurs cartes de fidelite ?**
-Avec le plan Pro, oui. Vous pouvez creer plusieurs modeles de carte — par exemple une carte "cafe" et une carte "brunch du dimanche" — chacune avec ses propres recompenses. Sur le plan Pay, vous avez un modele actif a la fois, ce qui suffit pour la plupart des commerces.
+Avec le plan Growth, oui. Vous pouvez creer plusieurs modeles de carte — par exemple une carte "cafe" et une carte "brunch du dimanche" — chacune avec ses propres recompenses. Sur le plan Starter, vous avez un modele actif a la fois, ce qui suffit pour la plupart des commerces.
 
 **9. Peut-on envoyer des campagnes promotionnelles ?**
-Avec le plan Pro, vous pourrez envoyer des notifications promotionnelles a tous vos clients ou a des segments specifiques (par exemple, les clients qui ne sont pas venus depuis 30 jours). Cette fonctionnalite est en cours de developpement et sera disponible dans les prochains mois. En attendant, les notifications automatiques (tampon, jalon, recompense) sont actives sur tous les plans.
+Avec le plan Growth, vous pourrez envoyer des notifications promotionnelles a tous vos clients ou a des segments specifiques (par exemple, les clients qui ne sont pas venus depuis 30 jours). Cette fonctionnalite est en cours de developpement et sera disponible dans les prochains mois. En attendant, les notifications automatiques (tampon, jalon, recompense) sont actives sur tous les plans.
 
 ---
 

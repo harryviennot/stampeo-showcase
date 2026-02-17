@@ -78,7 +78,7 @@
         "Shape the product with direct feedback",
         "Direct channel with our team (not a chatbot, a human)",
         "3 months free, then €14.99/month for life (instead of €29.99)",
-        "All Pro features included from day one",
+        "All Growth features included from day one",
         "Limited spots — we accept applications in waves",
         "Your first loyalty card designed by our team, for free"
       ],
@@ -147,7 +147,7 @@
       "items": [
         {
           "question": "What is the founding partner program?",
-          "answer": "As a founding partner, you get early access to Stampeo with all Pro features. You'll help shape the product with direct feedback. After 3 free months, you lock in €14.99/month for life (normally €29.99)."
+          "answer": "As a founding partner, you get early access to Stampeo with all Growth features. You'll help shape the product with direct feedback. After 3 free months, you lock in €14.99/month for life (normally €29.99)."
         },
         {
           "question": "How do I create my loyalty card?",
@@ -175,11 +175,11 @@
         },
         {
           "question": "Can a business have multiple loyalty cards?",
-          "answer": "With the Pro plan, yes. You can create multiple card templates — for example a \"coffee\" card and a \"Sunday brunch\" card — each with its own rewards. On the Pay plan, you have one active template at a time, which is enough for most businesses."
+          "answer": "With the Growth plan, yes. You can create multiple card templates — for example a \"coffee\" card and a \"Sunday brunch\" card — each with its own rewards. On the Starter plan, you have one active template at a time, which is enough for most businesses."
         },
         {
           "question": "Can I send promotional campaigns?",
-          "answer": "With the Pro plan, you'll be able to send promotional notifications to all your customers or specific segments (e.g., customers who haven't visited in 30 days). This feature is under development and will be available in the coming months. In the meantime, automatic notifications (stamp, milestone, reward) are active on all plans."
+          "answer": "With the Growth plan, you'll be able to send promotional notifications to all your customers or specific segments (e.g., customers who haven't visited in 30 days). This feature is under development and will be available in the coming months. In the meantime, automatic notifications (stamp, milestone, reward) are active on all plans."
         }
       ],
       "stillQuestions": "Still have questions?",

@@ -7,38 +7,16 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   CameraIcon,
   CheckIcon,
-  ArrowRightIcon,
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
   SparklesIcon,
   BellIcon,
-  ChartIcon,
-  StarIcon,
-  MapPinIcon,
-  PaletteIcon,
   WifiOffIcon,
   ClockIcon,
 } from "@/components/icons";
 import { ScanDemo } from "./ScanDemo";
 import { OfflineToggleDemo } from "./OfflineToggleDemo";
-import type { ComponentType } from "react";
-
-type FeatureSlug =
-  | "design-de-carte"
-  | "scanner-mobile"
-  | "notifications-push"
-  | "analytiques"
-  | "geolocalisation"
-  | "programme-fondateur";
-
-const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>> = {
-  "design-de-carte": PaletteIcon,
-  "scanner-mobile": CameraIcon,
-  "notifications-push": BellIcon,
-  analytiques: ChartIcon,
-  geolocalisation: MapPinIcon,
-  "programme-fondateur": StarIcon,
-};
+import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 
 const securityIcons = [ShieldCheckIcon, ClockIcon, SparklesIcon, ShieldCheckIcon];
 
@@ -337,7 +315,7 @@ export function ScannerMobilePage() {
             <ScrollReveal delay={100}>
               <div className="relative p-8 bg-white rounded-2xl border-2 border-[var(--accent)] shadow-lg h-full">
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[var(--accent)] text-white text-xs font-bold">
-                  Pro
+                  Growth
                 </span>
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="text-xl font-bold text-[var(--foreground)]">
@@ -421,44 +399,7 @@ export function ScannerMobilePage() {
         </Container>
       </section>
 
-      {/* ============ 9. Related Features ============ */}
-      <section className="py-16 sm:py-24">
-        <Container>
-          <ScrollReveal className="mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
-              {t("relatedTitle")}
-            </h2>
-          </ScrollReveal>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {related.map((relSlug, index) => {
-              const Icon =
-                featureNavIcons[relSlug as FeatureSlug] || SparklesIcon;
-              return (
-                <ScrollReveal key={relSlug} delay={index * 100}>
-                  <Link
-                    href={
-                      `/features/${relSlug}` as "/features/design-de-carte"
-                    }
-                    className="group flex items-start gap-4 p-6 bg-white rounded-2xl border border-[var(--accent)]/10 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] group-hover:scale-110 transition-transform">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-bold text-[var(--foreground)] mb-1">
-                        {t(`${relSlug}.hero.title`)}
-                      </h3>
-                      <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] group-hover:gap-2 transition-all">
-                        <ArrowRightIcon className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              );
-            })}
-          </div>
-        </Container>
-      </section>
+      <RelatedFeatures related={related} />
     </>
   );
 }
