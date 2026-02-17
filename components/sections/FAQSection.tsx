@@ -56,13 +56,13 @@ export function FAQSection() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/onboarding"
-              className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-xl font-bold transition-all"
+              className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-full font-bold transition-all"
             >
               {t("startFreeTrial")}
             </Link>
             <Link
-              href="#"
-              className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-xl font-bold transition-all border border-white/10"
+              href="/contact"
+              className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full font-bold transition-all border border-white/10"
             >
               {t("contactSupport")}
             </Link>

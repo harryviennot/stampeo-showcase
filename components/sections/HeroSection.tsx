@@ -133,9 +133,18 @@ export function HeroSection() {
   const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
   const t = useTranslations("landing.hero");
 
+  // After 3s, stop showing skeleton so the fake QR appears as fallback
+  const [qrTimedOut, setQrTimedOut] = useState(false);
+  useEffect(() => {
+    if (!isLoading && !isStamping) return;
+    const timer = setTimeout(() => setQrTimedOut(true), 3000);
+    return () => clearTimeout(timer);
+  }, [isLoading, isStamping]);
+
   const isOffline = !isLoading && status === "error";
-  const offlineStamps = useOfflineStampAnimation(isOffline, 8);
-  const displayStamps = isOffline ? offlineStamps : stamps;
+  const showFakeDemo = isOffline || (qrTimedOut && !qrUrl);
+  const offlineStamps = useOfflineStampAnimation(showFakeDemo, 8);
+  const displayStamps = showFakeDemo ? offlineStamps : stamps;
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
@@ -209,7 +218,7 @@ export function HeroSection() {
                   stamps={displayStamps}
                   showQR={true}
                   qrUrl={qrUrl}
-                  isQRLoading={isLoading || isStamping}
+                  isQRLoading={!qrTimedOut && (isLoading || isStamping)}
                   interactive3D={true}
                 />
               </ScaledCardWrapper>

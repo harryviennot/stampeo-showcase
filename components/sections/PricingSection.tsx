@@ -89,7 +89,7 @@ export function PricingSection() {
             <div className="flex flex-col gap-2 mt-auto">
               <Link
                 href="/onboarding"
-                className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
+                className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
               >
                 <span>{t("cta")}</span>
               </Link>
@@ -103,7 +103,7 @@ export function PricingSection() {
           <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl scale-[1.02] z-10">
             {/* Badge */}
             <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
+              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg whitespace-nowrap text-center">
                 {t("foundingPartner")}
               </div>
             </div>
@@ -139,7 +139,7 @@ export function PricingSection() {
             <div className="flex flex-col gap-2 mt-auto">
               <Link
                 href="/onboarding"
-                className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
+                className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
               >
                 <span>{t("cta")}</span>
               </Link>

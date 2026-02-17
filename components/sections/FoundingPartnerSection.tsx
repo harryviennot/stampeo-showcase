@@ -37,7 +37,7 @@ export function FoundingPartnerSection() {
 
             <Link
               href="/onboarding"
-              className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
+              className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
             >
               <span>{t("cta")}</span>
             </Link>

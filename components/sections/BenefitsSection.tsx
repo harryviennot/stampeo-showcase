@@ -30,10 +30,10 @@ export function BenefitsSection() {
 
         {/* Toggle — sticky on mobile so users can switch without scrolling back */}
         <div className="sticky top-16 z-20 flex justify-center px-4 py-4 mb-4 bg-[var(--background)]/80 backdrop-blur-md md:static md:bg-transparent md:backdrop-blur-none md:py-8">
-          <div className="flex h-12 sm:h-14 w-full max-w-md items-center justify-center rounded-full bg-[var(--accent)]/5 p-1.5 border border-[var(--accent)]/10">
+          <div className="flex h-auto min-h-12 sm:min-h-14 w-full max-w-md items-center justify-center rounded-full bg-[var(--accent)]/5 p-1.5 border border-[var(--accent)]/10">
             <button
               onClick={() => setActiveTab("business")}
-              className={`flex cursor-pointer h-full grow items-center justify-center rounded-full px-4 sm:px-6 transition-all duration-300 text-sm sm:text-base font-bold leading-normal ${
+              className={`flex cursor-pointer h-full grow items-center justify-center rounded-full px-4 sm:px-6 py-1 transition-all duration-300 text-sm sm:text-base font-bold leading-normal ${
                 activeTab === "business"
                   ? "bg-[var(--accent)] text-white"
                   : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
@@ -43,7 +43,7 @@ export function BenefitsSection() {
             </button>
             <button
               onClick={() => setActiveTab("customers")}
-              className={`flex cursor-pointer h-full grow items-center justify-center rounded-full px-4 sm:px-6 transition-all duration-300 text-sm sm:text-base font-bold leading-normal ${
+              className={`flex cursor-pointer h-full grow items-center justify-center rounded-full px-4 sm:px-6 py-1 transition-all duration-300 text-sm sm:text-base font-bold leading-normal ${
                 activeTab === "customers"
                   ? "bg-[var(--accent)] text-white"
                   : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
@@ -55,7 +55,7 @@ export function BenefitsSection() {
         </div>
 
         {/* Benefit Cards — 2-column grid instead of 4 for more breathing room */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 p-4">
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {translatedBenefits.map((benefit, index) => {
             const Icon = icons[index];
             return (

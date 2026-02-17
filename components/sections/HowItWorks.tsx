@@ -59,7 +59,7 @@ export function HowItWorks() {
                     number={item.step}
                   />
                   {index < steps.length - 1 && (
-                    <div className="w-0.5 flex-1 bg-[var(--border)] mt-4" />
+                    <div className="w-0.5 flex-1 bg-[var(--border)]" />
                   )}
                 </div>
 
