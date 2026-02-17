@@ -4,6 +4,11 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { FeaturePageLayout } from "@/components/features/FeaturePageLayout";
+import { AnalyticsPageContent } from "@/components/features/analytics/AnalyticsPageContent";
+import { NotificationsPushPage } from "@/components/features/notifications-push/NotificationsPushPage";
+import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
+import { ScannerMobilePage } from "@/components/features/scanner-mobile/ScannerMobilePage";
+import { GeofencingPage } from "@/components/features/geolocalisation/GeofencingPage";
 
 const FEATURE_SLUGS = [
   "design-de-carte",
@@ -61,7 +66,19 @@ export default async function FeaturePage({ params }: PageProps) {
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
       <main className="relative">
-        <FeaturePageLayout slug={slug} />
+        {slug === "design-de-carte" ? (
+          <CardDesignPageContent />
+        ) : slug === "scanner-mobile" ? (
+          <ScannerMobilePage />
+        ) : slug === "notifications-push" ? (
+          <NotificationsPushPage />
+        ) : slug === "analytiques" ? (
+          <AnalyticsPageContent />
+        ) : slug === "geolocalisation" ? (
+          <GeofencingPage />
+        ) : (
+          <FeaturePageLayout slug={slug} />
+        )}
       </main>
       <Footer />
     </div>

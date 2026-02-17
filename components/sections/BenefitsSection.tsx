@@ -9,7 +9,7 @@ const customerIcons = [WalletIcon, SignalIcon, BellIcon, CheckIcon];
 const businessIcons = [SparklesIcon, ChartIcon, DevicePhoneMobileIcon, BellIcon];
 
 export function BenefitsSection() {
-  const [activeTab, setActiveTab] = useState<"customers" | "business">("customers");
+  const [activeTab, setActiveTab] = useState<"customers" | "business">("business");
   const t = useTranslations("landing.benefits");
 
   const translatedBenefits = t.raw(activeTab) as Array<{ title: string; description: string }>;
@@ -28,34 +28,34 @@ export function BenefitsSection() {
           </p>
         </ScrollReveal>
 
-        {/* Toggle */}
-        <ScrollReveal delay={100} className="flex justify-center px-4 py-8 mb-4">
-          <div className="flex h-14 w-full max-w-md items-center justify-center rounded-full bg-[var(--accent)]/5 p-1.5 border border-[var(--accent)]/10">
-            <button
-              onClick={() => setActiveTab("customers")}
-              className={`flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-6 transition-all duration-300 text-base font-bold leading-normal ${
-                activeTab === "customers"
-                  ? "bg-[var(--accent)] text-white"
-                  : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
-              }`}
-            >
-              <span className="truncate">{t("tabCustomers")}</span>
-            </button>
+        {/* Toggle — sticky on mobile so users can switch without scrolling back */}
+        <div className="sticky top-16 z-20 flex justify-center px-4 py-4 mb-4 bg-[var(--background)]/80 backdrop-blur-md md:static md:bg-transparent md:backdrop-blur-none md:py-8">
+          <div className="flex h-12 sm:h-14 w-full max-w-md items-center justify-center rounded-full bg-[var(--accent)]/5 p-1.5 border border-[var(--accent)]/10">
             <button
               onClick={() => setActiveTab("business")}
-              className={`flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-6 transition-all duration-300 text-base font-bold leading-normal ${
+              className={`flex cursor-pointer h-full grow items-center justify-center rounded-full px-4 sm:px-6 transition-all duration-300 text-sm sm:text-base font-bold leading-normal ${
                 activeTab === "business"
                   ? "bg-[var(--accent)] text-white"
                   : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
               }`}
             >
-              <span className="truncate">{t("tabBusiness")}</span>
+              {t("tabBusiness")}
+            </button>
+            <button
+              onClick={() => setActiveTab("customers")}
+              className={`flex cursor-pointer h-full grow items-center justify-center rounded-full px-4 sm:px-6 transition-all duration-300 text-sm sm:text-base font-bold leading-normal ${
+                activeTab === "customers"
+                  ? "bg-[var(--accent)] text-white"
+                  : "text-[var(--accent)]/70 hover:text-[var(--accent)]"
+              }`}
+            >
+              {t("tabCustomers")}
             </button>
           </div>
-        </ScrollReveal>
+        </div>
 
-        {/* Benefit Cards */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-4">
+        {/* Benefit Cards — 2-column grid instead of 4 for more breathing room */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 p-4">
           {translatedBenefits.map((benefit, index) => {
             const Icon = icons[index];
             return (

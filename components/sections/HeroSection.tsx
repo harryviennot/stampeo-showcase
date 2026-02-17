@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
@@ -100,16 +101,48 @@ function DemoStatusHint({
   return null;
 }
 
+function useOfflineStampAnimation(isOffline: boolean, totalStamps: number) {
+  const [animatedStamps, setAnimatedStamps] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!isOffline) return;
+
+    // Start animation after a short delay
+    const startDelay = setTimeout(() => {
+      let current = 0;
+      timerRef.current = setInterval(() => {
+        current += 1;
+        setAnimatedStamps(current);
+        if (current >= totalStamps) {
+          if (timerRef.current) clearInterval(timerRef.current);
+        }
+      }, 400);
+    }, 800);
+
+    return () => {
+      clearTimeout(startDelay);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isOffline, totalStamps]);
+
+  return animatedStamps;
+}
+
 export function HeroSection() {
   const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
   const t = useTranslations("landing.hero");
+
+  const isOffline = !isLoading && status === "error";
+  const offlineStamps = useOfflineStampAnimation(isOffline, 8);
+  const displayStamps = isOffline ? offlineStamps : stamps;
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
       <main className="relative z-10 flex-1 flex items-center px-6 lg:px-10 py-12 lg:py-24">
         <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Column: Content */}
-          <ScrollReveal className="flex flex-col gap-8 order-2 lg:order-1">
+          <ScrollReveal className="flex flex-col gap-8">
             <div>
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--accent)]/10 shadow-sm mb-6">
@@ -158,7 +191,7 @@ export function HeroSection() {
           </ScrollReveal>
 
           {/* Right Column: 3D Digital Card + Demo Controls */}
-          <ScrollReveal delay={200} className="flex flex-col items-center order-1 lg:order-2">
+          <ScrollReveal delay={200} className="flex flex-col items-center">
             <div className="w-full max-w-[380px]">
               <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
@@ -173,7 +206,7 @@ export function HeroSection() {
                       { key: "reward", label: "Reward", value: "30 days free trial" }
                     ],
                   }}
-                  stamps={stamps}
+                  stamps={displayStamps}
                   showQR={true}
                   qrUrl={qrUrl}
                   isQRLoading={isLoading || isStamping}

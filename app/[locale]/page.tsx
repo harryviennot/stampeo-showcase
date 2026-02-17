@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { SocialProofBar } from "@/components/sections/SocialProofBar";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { BenefitsSection } from "@/components/sections/BenefitsSection";
@@ -38,7 +37,6 @@ export default async function Home() {
       <Header />
       <main className="relative">
         <HeroSection />
-        <SocialProofBar />
         <ProblemSection />
         <HowItWorks />
         <BenefitsSection />

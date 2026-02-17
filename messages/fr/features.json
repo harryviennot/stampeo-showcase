@@ -31,7 +31,60 @@
         "title": "Votre carte, prête en 5 minutes",
         "subtitle": "On la crée pour vous, ou vous la créez vous-même. Dans tous les cas, elle sera professionnelle."
       },
-      "related": ["scanner-mobile", "notifications-push", "programme-fondateur"]
+      "related": ["scanner-mobile", "notifications-push", "programme-fondateur"],
+      "custom": {
+        "colorDemo": {
+          "hint": "Cliquez pour changer de thème — votre carte, vos couleurs"
+        },
+        "methods": {
+          "sectionTitle": "Choisissez votre méthode",
+          "sectionSubtitle": "3 façons de créer votre carte. De la plus simple à la plus créative.",
+          "handoff": {
+            "title": "On la crée pour vous",
+            "description": "C'est notre approche préférée et ce qui nous différencie. Vous nous envoyez vos éléments, et on s'occupe du reste.",
+            "badge": "Recommandé",
+            "steps": [
+              "Uploadez votre logo ou un lien vers votre site",
+              "Notre équipe crée votre carte en 24-48h",
+              "Vous validez ou demandez des ajustements",
+              "Votre carte est publiée"
+            ]
+          },
+          "ai": {
+            "title": "Création assistée par IA",
+            "description": "Prenez une photo de votre carte en carton actuelle. Notre IA extrait votre logo, vos couleurs et votre structure de récompense.",
+            "badge": "Bientôt",
+            "steps": [
+              "Photographiez votre carte en carton",
+              "L'IA extrait logo, couleurs et texte",
+              "Ajustez le résultat si nécessaire",
+              "Publiez en un clic"
+            ]
+          },
+          "editor": {
+            "title": "L'éditeur en libre-service",
+            "description": "Pour ceux qui aiment tout contrôler. Logo, couleurs, icônes de tampon, image de fond — personnalisez chaque détail.",
+            "badge": null,
+            "steps": [
+              "Choisissez vos couleurs et importez votre logo",
+              "Sélectionnez vos icônes de tampon",
+              "Personnalisez le texte de récompense",
+              "Prévisualisez et publiez"
+            ]
+          }
+        },
+        "anatomy": {
+          "title": "Anatomie d'une carte Stampeo",
+          "description": "Chaque élément est pensé pour être lisible, professionnel et conforme aux contraintes d'Apple Wallet et Google Wallet.",
+          "labels": [
+            "Logo",
+            "Nom du commerce",
+            "Bande de tampons",
+            "Récompense",
+            "QR code client"
+          ]
+        }
+      }
     },
     "scanner-mobile": {
       "hero": {
@@ -63,9 +116,125 @@
         "title": "Tamponnez en une seconde",
         "subtitle": "Application gratuite sur iOS et Android. Scanner web disponible sur tous les appareils."
       },
-      "related": ["notifications-push", "design-de-carte", "analytiques"]
+      "related": ["notifications-push", "design-de-carte", "analytiques"],
+      "custom": {
+        "heroBadge": "Scanner Mobile",
+        "scanDemo": {
+          "customerName": "Marc D.",
+          "stampCount": "5/10 tampons",
+          "toast": "Tampon ajouté ✓",
+          "timer": "0.8s"
+        },
+        "howItWorks": {
+          "title": "Deux façons de scanner",
+          "subtitle": "Application dédiée ou scanner web — choisissez ce qui vous convient.",
+          "app": {
+            "title": "L'application dédiée",
+            "badge": "Recommandé",
+            "steps": [
+              "Téléchargez l'appli Stampeo (iOS / Android)",
+              "Connectez-vous avec votre compte",
+              "Pointez la caméra vers le QR code client",
+              "Vibration haptique — tampon ajouté en 0.8s"
+            ]
+          },
+          "web": {
+            "title": "Le scanner web",
+            "badge": null,
+            "steps": [
+              "Ouvrez le dashboard sur votre navigateur",
+              "Cliquez sur « Scanner » dans le menu",
+              "Autorisez l'accès à la caméra",
+              "Scannez le QR code — tampon ajouté"
+            ]
+          }
+        },
+        "offline": {
+          "title": "Ça marche même sans Wi-Fi",
+          "subtitle": "Marché en plein air, sous-sol, festival — le scan fonctionne partout, même sans connexion.",
+          "situations": [
+            "Marché de plein air sans Wi-Fi",
+            "Sous-sol ou cave à vin",
+            "Festival ou événement temporaire",
+            "Zone rurale avec réseau instable",
+            "Panne internet temporaire"
+          ],
+          "online": "En ligne",
+          "offline_label": "Hors ligne",
+          "pending": "En attente de sync",
+          "synced": "Synchronisé",
+          "syncing": "Synchronisation..."
+        },
+        "employee": {
+          "title": "Pensé pour vos employés",
+          "subtitle": "Vos employés ne sont pas des techniciens. L'interface est si simple qu'aucune formation n'est nécessaire.",
+          "features": [
+            {
+              "title": "Zéro formation",
+              "description": "Ouvrir l'appli, scanner, c'est fait. Vos employés l'utilisent dès le premier jour."
+            },
+            {
+              "title": "Retour haptique",
+              "description": "Vibration et son de confirmation. Votre employé sait que le tampon est ajouté sans regarder l'écran."
+            },
+            {
+              "title": "Historique des scans",
+              "description": "Chaque scan est horodaté avec l'identifiant de l'employé. Traçabilité complète."
+            }
+          ]
+        },
+        "team": {
+          "title": "Toute votre équipe peut scanner",
+          "subtitle": "Ajoutez vos employés et gérez les accès selon votre plan.",
+          "pay": {
+            "title": "Plan Pay",
+            "price": "24,99 €/mois",
+            "members": "3 membres",
+            "features": [
+              "3 comptes employé inclus",
+              "Application dédiée + scanner web",
+              "Mode hors ligne",
+              "Historique des scans"
+            ]
+          },
+          "pro": {
+            "title": "Plan Pro",
+            "price": "49,99 €/mois",
+            "members": "Illimité",
+            "features": [
+              "Membres d'équipe illimités",
+              "Rôles et permissions",
+              "Statistiques par employé",
+              "Tout le plan Pay inclus"
+            ]
+          }
+        },
+        "security": {
+          "title": "Sécurité et fiabilité",
+          "subtitle": "Chaque scan est sécurisé, traçable et infalsifiable.",
+          "features": [
+            {
+              "title": "QR codes uniques",
+              "description": "Chaque client a un UUID unique encodé dans son QR code. Impossible de dupliquer ou de falsifier."
+            },
+            {
+              "title": "Horodatage serveur",
+              "description": "Chaque tampon est horodaté côté serveur avec l'identifiant de l'employé et la localisation."
+            },
+            {
+              "title": "Anti-fraude",
+              "description": "Détection de scans en double, limitation de fréquence, et alertes automatiques en cas d'activité suspecte."
+            },
+            {
+              "title": "Chiffrement de bout en bout",
+              "description": "Les données de scan transitent via HTTPS. Aucune information sensible n'est stockée sur l'appareil."
+            }
+          ]
+        }
+      }
     },
     "notifications-push": {
+      "heroBadge": "Notifications Wallet",
       "hero": {
         "title": "Vos clients lisent vos messages. Enfin.",
         "subtitle": "Les emails finissent en spam. Les SMS coûtent cher. Les notifications wallet apparaissent directement sur l'écran de verrouillage — et 85 % sont lues."
@@ -73,6 +242,96 @@
       "problem": {
         "title": "Le problème avec les canaux classiques",
         "description": "Vous avez des choses à dire à vos clients. Sauf qu'ils ne vous entendent pas. Les emails finissent en spam (~20 % de lecture), les SMS sont intrusifs et coûteux (~45 %), les apps push exigent une installation (~30 %). Les notifications wallet atteignent ~85 % de taux de lecture."
+      },
+      "demo": {
+        "lockScreenDate": "Lundi 17 février",
+        "notificationTitle": "Nouveau tampon !",
+        "notificationBody": "Plus que 4 tampons avant votre café offert. Continuez comme ça !",
+        "timeAgo": "maintenant"
+      },
+      "channels": {
+        "statement": "Vos messages ne sont pas lus. Le problème n'est pas le contenu — c'est le canal. Comparez les taux de lecture moyens par canal de communication.",
+        "email": "Email",
+        "sms": "SMS",
+        "appPush": "App Push",
+        "wallet": "Wallet Push"
+      },
+      "howItWorks": {
+        "badge": "Comment ça marche",
+        "title": "De l'action au message, en automatique",
+        "steps": [
+          {
+            "title": "Le client est tamponné",
+            "description": "Vous scannez le QR code du client. Son tampon est ajouté instantanément à sa carte wallet."
+          },
+          {
+            "title": "Notre serveur détecte l'événement",
+            "description": "Notre système identifie le type d'événement : nouveau tampon, jalon atteint, ou récompense débloquée."
+          },
+          {
+            "title": "La notification est envoyée via APNs",
+            "description": "Apple Push Notification Service délivre la mise à jour directement au wallet du client. Aucune app tierce requise."
+          },
+          {
+            "title": "Le client voit la notification",
+            "description": "La notification apparaît sur l'écran de verrouillage. Le client ouvre sa carte wallet mise à jour en un tap."
+          }
+        ]
+      },
+      "notificationTypes": {
+        "title": "Trois moments, trois messages",
+        "subtitle": "Chaque interaction génère la bonne notification au bon moment.",
+        "stamp": {
+          "title": "Notification de tampon",
+          "description": "Envoyée à chaque scan. Le client sait immédiatement que son passage a été enregistré. Sa carte est mise à jour en temps réel.",
+          "notifTitle": "Nouveau tampon !",
+          "notifBody": "Plus que 4 tampons avant votre café offert. Continuez comme ça !",
+          "timeAgo": "maintenant"
+        },
+        "milestone": {
+          "title": "Notification de jalon",
+          "description": "Envoyée quand le client approche de sa récompense. Crée un sentiment d'anticipation et motive le retour.",
+          "notifTitle": "Presque là !",
+          "notifBody": "Plus qu'un seul tampon avant votre café offert. On vous attend !",
+          "timeAgo": "maintenant"
+        },
+        "reward": {
+          "title": "Notification de récompense",
+          "description": "Le moment de satisfaction maximale. La carte affiche clairement que la récompense est disponible.",
+          "notifTitle": "Récompense débloquée ! 🎉",
+          "notifBody": "Félicitations ! Votre café offert est prêt. Présentez votre carte pour en profiter.",
+          "timeAgo": "maintenant"
+        }
+      },
+      "advanced": {
+        "title": "Allez plus loin",
+        "subtitle": "Des fonctionnalités avancées pour maximiser l'impact de vos notifications.",
+        "features": [
+          {
+            "title": "Messages personnalisés",
+            "description": "Personnalisez le texte de vos notifications avec le prénom du client, le nombre de tampons restants, et le nom de la récompense.",
+            "badge": "Pro"
+          },
+          {
+            "title": "Campagnes ciblées",
+            "description": "Envoyez des notifications groupées à vos clients : promotions flash, événements spéciaux, rappel de fidélité pour les clients inactifs.",
+            "badge": "Bientôt"
+          },
+          {
+            "title": "Segmentation intelligente",
+            "description": "Ciblez vos messages selon la fréquence de visite, le nombre de tampons, ou la date de dernière visite.",
+            "badge": "Bientôt"
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Vie privée respectée",
+        "points": [
+          "Aucune donnée personnelle n'est partagée avec des tiers.",
+          "Les notifications transitent par Apple Push Notification Service — un canal sécurisé et chiffré.",
+          "Le client peut désactiver les notifications wallet à tout moment depuis ses réglages.",
+          "Conforme au RGPD. Aucun tracking publicitaire."
+        ]
       },
       "sections": [
         {
@@ -129,17 +388,146 @@
         "title": "Arrêtez de deviner. Commencez à savoir.",
         "subtitle": "Le tableau de bord est inclus dans tous les plans. Les analytiques avancées sont disponibles sur le plan Pro."
       },
-      "related": ["notifications-push", "scanner-mobile", "programme-fondateur"]
+      "related": ["notifications-push", "scanner-mobile", "programme-fondateur"],
+      "custom": {
+        "blindSpotCards": {
+          "questions": [
+            "Combien de clients réguliers ?",
+            "À quelle fréquence reviennent-ils ?",
+            "Qui a arrêté de venir ?",
+            "Quel jour est le plus calme ?",
+            "Combien de récompenses ce mois ?",
+            "Votre programme fonctionne-t-il ?"
+          ],
+          "noAnswer": "???"
+        },
+        "dashboard": {
+          "badge": "Plan Pay",
+          "title": "L'essentiel pour commencer",
+          "description": "Le plan Pay inclut un tableau de bord simple et clair qui répond aux questions fondamentales.",
+          "features": [
+            "Nombre total de clients inscrits",
+            "Scans cette semaine et ce mois",
+            "Récompenses réclamées",
+            "Recherche client instantanée"
+          ]
+        },
+        "activityFeed": {
+          "title": "Activité en direct",
+          "stampAction": "a obtenu un tampon",
+          "rewardAction": "a réclamé sa récompense",
+          "newCustomerAction": "vient de s'inscrire",
+          "timeAgo": "il y a {seconds}s"
+        },
+        "proAnalytics": {
+          "badge": "Plan Pro",
+          "title": "Comprenez les tendances, pas juste les chiffres",
+          "description": "Le plan Pro ajoute une couche d'analyse qui vous aide à prendre des décisions."
+        },
+        "proCharts": {
+          "lineChart": { "label": "Scans / semaine", "trend": "+23%" },
+          "heatmap": { "label": "Heures de pointe", "days": ["L", "M", "M", "J", "V", "S", "D"] },
+          "donut": { "label": "Rétention 30j", "value": "72%" }
+        }
+      }
     },
     "geolocalisation": {
+      "heroBadge": "Pro",
       "hero": {
         "title": "Rappelez-leur que vous existez. Au bon moment.",
-        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien.",
-        "badge": "Pro"
+        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien."
       },
       "problem": {
         "title": "Votre client fidèle vous oublie. Ce n'est pas de sa faute.",
         "description": "Marc passe devant votre café tous les matins. Mais ce matin, il est pressé. Il ne pense pas à sa carte de fidélité à 8 tampons sur 10. Il va au Starbucks d'en face, par réflexe. Le problème n'est pas la concurrence. C'est l'oubli."
+      },
+      "problemNarrative": "Et si son téléphone pouvait le faire à votre place ?",
+      "demo": {
+        "lockScreenDate": "Lundi 17 février",
+        "radiusLabel": "~300m"
+      },
+      "howItWorks": {
+        "badge": "Comment ça marche",
+        "title": "Du commerce au lock screen, sans effort",
+        "steps": [
+          {
+            "title": "Vous renseignez votre adresse",
+            "description": "Dans votre tableau de bord Stampeo, ajoutez l'adresse de votre commerce. Vous pouvez en ajouter plusieurs si vous avez plusieurs établissements."
+          },
+          {
+            "title": "L'adresse est encodée dans la carte",
+            "description": "Chaque carte wallet générée contient vos coordonnées GPS. Apple Wallet sait où déclencher le rappel."
+          },
+          {
+            "title": "Le client passe à proximité",
+            "description": "Apple Wallet détecte la proximité en local, sur l'appareil du client. Aucune donnée n'est envoyée à nos serveurs."
+          },
+          {
+            "title": "Sa carte apparaît sur le lock screen",
+            "description": "Le client voit sa carte de fidélité s'afficher automatiquement. Un rappel visuel discret mais efficace."
+          }
+        ],
+        "customerNarrative": {
+          "title": "Ce que voit le client",
+          "description": "Marc passe devant votre café. Son iPhone affiche automatiquement sa carte de fidélité sur l'écran de verrouillage. Il se souvient qu'il est à 2 tampons de son café offert. Il pousse la porte."
+        }
+      },
+      "scenarios": {
+        "title": "3 commerces, 3 histoires",
+        "subtitle": "Le géofencing s'adapte à tous les types de commerce.",
+        "items": [
+          {
+            "name": "Sophie",
+            "business": "Café Le Comptoir",
+            "initial": "S",
+            "quote": "Depuis le géofencing, mes habitués reviennent plus souvent. Ils me disent 'j'ai vu ma carte en passant, ça m'a rappelé mon café'.",
+            "description": "Café de quartier — 7/10 tampons"
+          },
+          {
+            "name": "Léa",
+            "business": "Salon Belle & Zen",
+            "initial": "L",
+            "quote": "Mes clientes passent devant le salon sans y penser. Maintenant, leur téléphone leur rappelle qu'elles ont un soin à débloquer.",
+            "description": "Salon de beauté — 5/8 tampons"
+          },
+          {
+            "name": "Thomas",
+            "business": "Bistrot du Port",
+            "initial": "T",
+            "quote": "On est sur le chemin du bureau de beaucoup de gens. Le rappel wallet fait la différence entre 'je passerai' et 'j'y vais maintenant'.",
+            "description": "Restaurant — 3/6 tampons"
+          }
+        ]
+      },
+      "technical": {
+        "title": "Technologie native, zéro friction",
+        "items": [
+          {
+            "title": "Géofencing natif Apple Wallet",
+            "description": "Pas d'app à installer. La détection de proximité est gérée nativement par iOS via les données GPS encodées dans le pass.",
+            "icon": "map-pin"
+          },
+          {
+            "title": "Multi-établissement",
+            "description": "Ajoutez jusqu'à 10 adresses par carte. Chaque point de vente déclenche le rappel automatiquement.",
+            "icon": "building",
+            "badge": "Pro"
+          },
+          {
+            "title": "Mise à jour en temps réel",
+            "description": "Changez d'adresse ou ajoutez un nouveau point de vente ? La carte se met à jour automatiquement sur tous les appareils.",
+            "icon": "refresh"
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Vie privée respectée",
+        "points": [
+          "Stampeo ne collecte aucune donnée de localisation de vos clients.",
+          "La détection de proximité est gérée localement par Apple Wallet sur l'appareil.",
+          "Le client peut désactiver l'affichage contextuel à tout moment dans ses réglages.",
+          "Conforme au RGPD. Aucun tracking, aucune donnée partagée avec des tiers."
+        ]
       },
       "sections": [
         {
@@ -166,8 +554,10 @@
     },
     "programme-fondateur": {
       "hero": {
-        "title": "Vous n'êtes pas juste un client. Vous construisez le produit avec nous.",
-        "subtitle": "On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais."
+        "title": "Vous n'êtes pas juste un client. Vous <accent>construisez le produit</accent> avec nous.",
+        "subtitle": "Stampeo est un produit jeune. On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais.",
+        "badge": "Programme Fondateur",
+        "secondaryCta": "3 mois gratuits · 14,99 €/mois à vie"
       },
       "problem": {
         "title": "On joue cartes sur table",
@@ -194,7 +584,142 @@
         "title": "Rejoignez les premiers",
         "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Pro."
       },
-      "related": ["notifications-push", "scanner-mobile", "design-de-carte"]
+      "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
+      "custom": {
+        "benefits": {
+          "title": "Les avantages concrets",
+          "items": [
+            {
+              "title": "3 mois entièrement gratuits",
+              "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez pendant 3 mois sans rien payer. Si ça ne vous convient pas, vous partez — sans frais.",
+              "icon": "calendar"
+            },
+            {
+              "title": "14,99 €/mois à vie",
+              "description": "Après la période gratuite, votre tarif est bloqué à 14,99 €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
+              "icon": "tag"
+            },
+            {
+              "title": "Toutes les fonctionnalités Pro",
+              "description": "Plusieurs modèles de carte, membres d'équipe illimités, analytiques avancées, géolocalisation, et canal direct avec notre équipe.",
+              "icon": "crown"
+            },
+            {
+              "title": "Canal direct avec l'équipe",
+              "description": "Pas de chatbot. Pas de ticket #47832. Un canal direct avec les gens qui construisent Stampeo. Un bug ? Une idée ? On s'en occupe.",
+              "icon": "signal"
+            },
+            {
+              "title": "Votre carte designée par nos soins",
+              "description": "Envoyez-nous votre logo et vos couleurs. On crée votre carte de fidélité digitale — professionnelle, aux normes Apple et Google Wallet. Inclus.",
+              "icon": "palette"
+            },
+            {
+              "title": "Priorité sur tout",
+              "description": "Nouvelles fonctionnalités en avant-première. Support prioritaire. Vous passez en tête de file, toujours.",
+              "icon": "sparkles"
+            }
+          ]
+        },
+        "transparency": {
+          "title": "On joue cartes sur table",
+          "description": "Stampeo est un produit jeune. On ne va pas prétendre qu'on a 10 000 utilisateurs. Voici où on en est :",
+          "worksNow": {
+            "title": "Ce qui marche déjà",
+            "items": [
+              "Génération de cartes Apple Wallet et Google Wallet",
+              "Scan QR code avec notification push en temps réel",
+              "Tableau de bord avec liste de clients et statistiques",
+              "Mode hors ligne pour le scanner",
+              "Éditeur de carte avec aperçu en temps réel"
+            ]
+          },
+          "comingSoon": {
+            "title": "Ce qui arrive bientôt",
+            "items": [
+              "Campagnes promotionnelles et segmentation",
+              "Analytiques avancées (tendances, heures de pointe)",
+              "Création de carte assistée par IA",
+              "Designs programmés et saisonniers",
+              "Géolocalisation (Apple Wallet)"
+            ]
+          },
+          "expectFromYou": {
+            "title": "Ce qu'on attend de vous",
+            "items": [
+              "Utiliser Stampeo au quotidien dans votre commerce",
+              "Nous dire ce qui marche et ce qui ne marche pas",
+              "Suggérer des améliorations",
+              "Être patient quand quelque chose ne fonctionne pas encore parfaitement"
+            ]
+          },
+          "disclaimer": "Si vous cherchez un produit fini et rodé, attendez quelques mois. Si vous voulez participer à la création d'un outil qui colle vraiment à vos besoins — on est faits pour s'entendre."
+        },
+        "roi": {
+          "title": "Est-ce que ça vaut le coup ?",
+          "subtitle": "Faites vos propres calculs.",
+          "clientsLabel": "Clients par jour",
+          "basketLabel": "Panier moyen",
+          "assumption": "+15% de taux de retour grâce à la fidélisation",
+          "extraRevenue": "Revenus supplémentaires",
+          "perMonth": "/mois",
+          "stampeoCost": "Stampeo",
+          "roiLabel": "ROI"
+        },
+        "price": {
+          "original": "29,99 €/mois",
+          "founding": "14,99 €/mois",
+          "forLife": "à vie"
+        },
+        "timeline": {
+          "badge": "Comment ça marche",
+          "title": "4 étapes pour devenir partenaire fondateur",
+          "steps": [
+            {
+              "title": "Remplissez le formulaire",
+              "description": "2 minutes, c'est tout"
+            },
+            {
+              "title": "On examine votre candidature",
+              "description": "Réponse sous 48h"
+            },
+            {
+              "title": "On configure votre compte",
+              "description": "Carte + app + QR code"
+            },
+            {
+              "title": "Vous lancez votre programme",
+              "description": "Premier client dès le jour 1"
+            }
+          ]
+        },
+        "faq": {
+          "title": "Questions fréquentes",
+          "items": [
+            {
+              "question": "Combien de places sont disponibles ?",
+              "answer": "On accepte les partenaires fondateurs par vagues de 10-15 commerces. Le tarif fondateur (14,99 €/mois à vie) ne sera plus proposé après la clôture du programme."
+            },
+            {
+              "question": "Que se passe-t-il après les 3 mois gratuits ?",
+              "answer": "Vous passez automatiquement à 14,99 €/mois. On vous prévient 2 semaines avant. Si vous ne souhaitez pas continuer, vous annulez en un clic — sans frais."
+            },
+            {
+              "question": "Est-ce que je garde le tarif fondateur si vous augmentez les prix ?",
+              "answer": "Oui. 14,99 €/mois à vie signifie à vie. Même si le plan Pro passe à 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel."
+            },
+            {
+              "question": "Puis-je changer d'avis et annuler ?",
+              "answer": "À tout moment. Pas de période d'engagement après les 3 mois gratuits. Si vous annulez, vous perdez l'accès mais vos clients gardent leurs cartes."
+            }
+          ]
+        },
+        "finalCta": {
+          "title": "Rejoignez les premiers",
+          "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Pro.",
+          "urgency": "Prochaine vague d'acceptation : mars 2026"
+        }
+      }
     },
     "relatedTitle": "Découvrez aussi",
     "ctaButton": "Devenir Partenaire Fondateur"

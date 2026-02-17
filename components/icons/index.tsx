@@ -392,6 +392,24 @@ export function StarIcon({ className = "w-6 h-6" }: IconProps) {
   );
 }
 
+export function WifiOffIcon({ className = "w-6 h-6" }: IconProps) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 3l18 18M8.288 8.288C5.6 9.399 3.456 11.352 2.04 13.79m3.594.9A9.96 9.96 0 0112 12.75c2.02 0 3.89.6 5.462 1.625m2.498 2.498A13.935 13.935 0 0021.96 13.79M9.348 9.348C10.148 9.127 11.06 9 12 9c3.038 0 5.8 1.222 7.8 3.2m-9.455 4.456A3.744 3.744 0 0112 16.125c.64 0 1.249.16 1.78.444M12 19.875h.008v.008H12v-.008z"
+      />
+    </svg>
+  );
+}
+
 export function SignalIcon({ className = "w-6 h-6" }: IconProps) {
   return (
     <svg
