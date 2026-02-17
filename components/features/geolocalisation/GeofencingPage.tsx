@@ -2,20 +2,21 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   MapPinIcon,
-  ShieldCheckIcon,
-  CheckIcon,
   SparklesIcon,
   ClockIcon,
   SignalIcon,
 } from "@/components/icons";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
+import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { PhoneMockup } from "@/components/features/notifications-push/PhoneMockup";
+import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { GeofencingHeroAnimation } from "./GeofencingHeroAnimation";
-import { GeofencingHowItWorks } from "./GeofencingHowItWorks";
-import { GeofencingScenarios } from "./GeofencingScenarios";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 
 const technicalIcons = [MapPinIcon, SignalIcon, ClockIcon];
@@ -30,8 +31,6 @@ export function GeofencingPage() {
     icon: string;
     badge?: string;
   }[];
-
-  const privacyPoints = tp.raw("privacy.points") as string[];
 
   const related = tp.raw("related") as string[];
 
@@ -126,27 +125,48 @@ export function GeofencingPage() {
       </section>
 
       {/* ============ 3. How It Works ============ */}
-      <section className="py-20 sm:py-28 relative bg-[var(--blog-bg-alt)]">
-        <GeofencingHowItWorks />
-      </section>
+      <HowItWorks
+        translationKey="features.geolocalisation.howItWorks"
+        sectionClassName="py-20 sm:py-28 relative bg-[var(--blog-bg-alt)]"
+        aside={
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <div className="scale-100 origin-top-right">
+              <PhoneMockup showStatusBar={false}>
+                <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
+                <div className="relative z-10 flex flex-col items-center pt-8">
+                  <div
+                    className="text-[64px] font-light text-white leading-none tracking-tight"
+                    style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
+                  >
+                    9:41
+                  </div>
+                  <div
+                    className="text-[15px] font-medium text-white/80 mt-1"
+                    style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
+                  >
+                    {tp("demo.lockScreenDate")}
+                  </div>
+                </div>
+                <div className="relative z-10 px-3 mt-8">
+                  <NotificationBanner
+                    appName="Stampeo"
+                    title={tp("demo.notificationTitle")}
+                    body={tp("demo.notificationBody")}
+                    timeAgo={tp("demo.timeAgo")}
+                  />
+                </div>
+              </PhoneMockup>
+            </div>
+          </motion.div>
+        }
+      />
 
-      {/* ============ 4. Scenarios ============ */}
-      <section className="py-20 sm:py-28">
-        <Container>
-          <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
-              {tp("scenarios.title")}
-            </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
-              {tp("scenarios.subtitle")}
-            </p>
-          </ScrollReveal>
-
-          <GeofencingScenarios />
-        </Container>
-      </section>
-
-      {/* ============ 5. Technical Details ============ */}
+      {/* ============ 4. Technical Details ============ */}
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
@@ -184,32 +204,12 @@ export function GeofencingPage() {
       </section>
 
       {/* ============ 6. Privacy ============ */}
-      <section className="py-20 sm:py-28">
-        <Container>
-          <ScrollReveal className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl p-8 sm:p-10 border border-[var(--accent)]/10 shadow-sm">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                  <ShieldCheckIcon className="w-6 h-6" />
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-                  {tp("privacy.title")}
-                </h2>
-              </div>
-              <ul className="space-y-4">
-                {privacyPoints.map((point, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckIcon className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" />
-                    <span className="text-[var(--muted-foreground)] leading-relaxed">
-                      {point}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </ScrollReveal>
-        </Container>
-      </section>
+      <FeaturePrivacy
+        title={tp("privacy.title")}
+        subtitle={tp("privacy.subtitle")}
+        points={tp.raw("privacy.points") as string[]}
+        gdprLabel={tp("privacy.gdprLabel")}
+      />
 
       {/* ============ 7. CTA ============ */}
       <FeatureCTA title={tp("cta.title")} subtitle={tp("cta.subtitle")} />

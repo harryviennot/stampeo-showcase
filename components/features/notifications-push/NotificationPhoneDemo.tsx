@@ -27,7 +27,7 @@ export function NotificationPhoneDemo() {
   }, [isVisible]);
 
   return (
-    <PhoneMockup statusBarColor="white">
+    <PhoneMockup statusBarColor="white" showStatusBar={false}>
       {/* Lock screen wallpaper — deep dark gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460]" />
 

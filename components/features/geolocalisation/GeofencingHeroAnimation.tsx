@@ -87,14 +87,14 @@ export function GeofencingHeroAnimation() {
           transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
         >
           <div className="scale-[0.55] origin-bottom-right">
-            <PhoneMockup>
+            <PhoneMockup showStatusBar={false}>
               {/* Lock screen wallpaper */}
               <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
 
               {/* Lock screen content */}
               <div className="relative z-10 flex flex-col items-center pt-8">
                 <div
-                  className="text-[64px] font-thin text-white leading-none tracking-tight"
+                  className="text-[64px] font-light text-white leading-none tracking-tight"
                   style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
                 >
                   9:41

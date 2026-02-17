@@ -260,6 +260,7 @@
       "howItWorks": {
         "badge": "Comment ça marche",
         "title": "De l'action au message, en automatique",
+        "subtitle": "",
         "steps": [
           {
             "title": "Le client est tamponné",
@@ -327,12 +328,14 @@
       },
       "privacy": {
         "title": "Vie privée respectée",
+        "subtitle": "Les données de vos clients restent en sécurité. Nous ne faisons aucun compromis sur la vie privée.",
         "points": [
           "Aucune donnée personnelle n'est partagée avec des tiers.",
           "Les notifications transitent par Apple Push Notification Service — un canal sécurisé et chiffré.",
           "Le client peut désactiver les notifications wallet à tout moment depuis ses réglages.",
           "Conforme au RGPD. Aucun tracking publicitaire."
-        ]
+        ],
+        "gdprLabel": "RGPD"
       },
       "sections": [
         {
@@ -461,6 +464,7 @@
       "howItWorks": {
         "badge": "Comment ça marche",
         "title": "Du commerce au lock screen, sans effort",
+        "subtitle": "Apple Wallet gère tout — pas d'app, pas de Bluetooth, aucune configuration.",
         "steps": [
           {
             "title": "Vous renseignez votre adresse",
@@ -534,12 +538,14 @@
       },
       "privacy": {
         "title": "Vie privée respectée",
+        "subtitle": "Les données de localisation de vos clients ne sont jamais collectées ni stockées.",
         "points": [
           "Stampeo ne collecte aucune donnée de localisation de vos clients.",
           "La détection de proximité est gérée localement par Apple Wallet sur l'appareil.",
           "Le client peut désactiver l'affichage contextuel à tout moment dans ses réglages.",
           "Conforme au RGPD. Aucun tracking, aucune donnée partagée avec des tiers."
-        ]
+        ],
+        "gdprLabel": "RGPD"
       },
       "sections": [
         {

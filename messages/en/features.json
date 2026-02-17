@@ -260,6 +260,7 @@
       "howItWorks": {
         "badge": "How it works",
         "title": "From action to message, automatically",
+        "subtitle": "",
         "steps": [
           {
             "title": "The customer gets stamped",
@@ -327,12 +328,14 @@
       },
       "privacy": {
         "title": "Privacy respected",
+        "subtitle": "Your customers' data stays safe. We never compromise on privacy.",
         "points": [
           "No personal data is shared with third parties.",
           "Notifications go through Apple Push Notification Service — a secure, encrypted channel.",
           "Customers can disable wallet notifications at any time from their settings.",
           "GDPR compliant. No advertising tracking."
-        ]
+        ],
+        "gdprLabel": "GDPR"
       },
       "sections": [
         {
@@ -461,6 +464,7 @@
       "howItWorks": {
         "badge": "How it works",
         "title": "From your shop to the lock screen, effortlessly",
+        "subtitle": "Apple Wallet handles everything — no app, no Bluetooth, no extra setup.",
         "steps": [
           {
             "title": "Enter your address",
@@ -534,12 +538,14 @@
       },
       "privacy": {
         "title": "Privacy respected",
+        "subtitle": "Your customers' location data is never collected or stored.",
         "points": [
           "Stampeo collects no location data from your customers.",
           "Proximity detection is handled locally by Apple Wallet on the device.",
           "Customers can disable contextual display at any time in their settings.",
           "GDPR compliant. No tracking, no data shared with third parties."
-        ]
+        ],
+        "gdprLabel": "GDPR"
       },
       "sections": [
         {

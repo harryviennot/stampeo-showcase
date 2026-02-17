@@ -4,22 +4,19 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { NumberStamp } from "@/components/stamps/StampIcons";
 import {
   BellIcon,
   SparklesIcon,
-  ShieldCheckIcon,
-  CheckIcon,
   ChartIcon,
   ClockIcon,
 } from "@/components/icons";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
+import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
 import { NotificationPhoneDemo } from "./NotificationPhoneDemo";
 import { ChannelComparisonBars } from "./ChannelComparisonBars";
 import { NotificationSequenceDemo } from "./NotificationSequenceDemo";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
-
-const stepColors = ["#f97316", "#ec4899", "#8b5cf6", "#3b82f6"];
 
 const advancedIcons = [SparklesIcon, ChartIcon, ClockIcon];
 
@@ -27,18 +24,11 @@ export function NotificationsPushPage() {
   const t = useTranslations("features");
   const tp = useTranslations("features.notifications-push");
 
-  const howItWorksSteps = tp.raw("howItWorks.steps") as {
-    title: string;
-    description: string;
-  }[];
-
   const advancedFeatures = tp.raw("advanced.features") as {
     title: string;
     description: string;
     badge?: string;
   }[];
-
-  const privacyPoints = tp.raw("privacy.points") as string[];
 
   const related = tp.raw("related") as string[];
 
@@ -134,45 +124,11 @@ export function NotificationsPushPage() {
       </section>
 
       {/* ============ 3. How It Works ============ */}
-      <section className="py-20 sm:py-28 relative bg-[var(--blog-bg-alt)]">
-        <Container>
-          <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
-              {tp("howItWorks.badge")}
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-              {tp("howItWorks.title")}
-            </h2>
-          </ScrollReveal>
-
-          <div className="max-w-4xl mx-auto">
-            {howItWorksSteps.map((step, index) => (
-              <ScrollReveal key={index} delay={index * 100} className="relative">
-                <div className="flex gap-6 sm:gap-8 pb-12 last:pb-0">
-                  <div className="flex flex-col items-center">
-                    <NumberStamp
-                      color={stepColors[index]}
-                      size={48}
-                      number={index + 1}
-                    />
-                    {index < howItWorksSteps.length - 1 && (
-                      <div className="w-0.5 flex-1 bg-[var(--border)] mt-4" />
-                    )}
-                  </div>
-                  <div className="flex-1 pb-8">
-                    <h3 className="text-xl font-semibold text-[var(--foreground)] mb-2">
-                      {step.title}
-                    </h3>
-                    <p className="text-[var(--muted-foreground)] leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </Container>
-      </section>
+      <HowItWorks
+        translationKey="features.notifications-push.howItWorks"
+        sectionClassName="py-20 sm:py-28 relative bg-[var(--blog-bg-alt)]"
+        id="how-notifications-work"
+      />
 
       {/* ============ 4. Notification Types ============ */}
       <section className="py-20 sm:py-28">
@@ -233,32 +189,12 @@ export function NotificationsPushPage() {
       </section>
 
       {/* ============ 6. Privacy ============ */}
-      <section className="py-20 sm:py-28">
-        <Container>
-          <ScrollReveal className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl p-8 sm:p-10 border border-[var(--accent)]/10 shadow-sm">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                  <ShieldCheckIcon className="w-6 h-6" />
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-                  {tp("privacy.title")}
-                </h2>
-              </div>
-              <ul className="space-y-4">
-                {privacyPoints.map((point, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckIcon className="w-5 h-5 text-[var(--accent)] mt-0.5 flex-shrink-0" />
-                    <span className="text-[var(--muted-foreground)] leading-relaxed">
-                      {point}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </ScrollReveal>
-        </Container>
-      </section>
+      <FeaturePrivacy
+        title={tp("privacy.title")}
+        subtitle={tp("privacy.subtitle")}
+        points={tp.raw("privacy.points") as string[]}
+        gdprLabel={tp("privacy.gdprLabel")}
+      />
 
       {/* ============ 7. CTA ============ */}
       <FeatureCTA title={tp("cta.title")} subtitle={tp("cta.subtitle")} />

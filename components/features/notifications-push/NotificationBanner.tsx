@@ -46,18 +46,18 @@ export function NotificationBanner({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1">
-            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">
+            <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
               {appName}
             </span>
-            <span className="text-[10px] text-gray-400">·</span>
-            <span className="text-[10px] text-gray-400 flex-shrink-0">
+            <span className="text-[10px] text-gray-500">·</span>
+            <span className="text-[10px] text-gray-500 flex-shrink-0">
               {timeAgo}
             </span>
           </div>
           <p className="text-[13px] font-semibold text-gray-900 leading-tight mt-0.5">
             {title}
           </p>
-          <p className="text-[12px] text-gray-500 leading-snug mt-0.5">
+          <p className="text-[12px] text-gray-700 leading-snug mt-0.5">
             {body}
           </p>
         </div>
