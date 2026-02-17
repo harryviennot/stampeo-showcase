@@ -34,7 +34,16 @@
       "related": ["scanner-mobile", "notifications-push", "programme-fondateur"],
       "custom": {
         "colorDemo": {
-          "hint": "Cliquez pour changer de thème — votre carte, vos couleurs"
+          "hint": "Cliquez pour changer de thème — votre carte, vos couleurs",
+          "rewardLabel": "Récompense",
+          "rewardValue": "8ᵉ offert",
+          "memberLabel": "Membre",
+          "themes": [
+            { "name": "Stampeo", "orgName": "Mon Café" },
+            { "name": "Crème", "orgName": "Boulangerie Marie" },
+            { "name": "Nuit", "orgName": "Le Comptoir Bleu" },
+            { "name": "Rose", "orgName": "Fleur de Thé" }
+          ]
         },
         "methods": {
           "sectionTitle": "Choisissez votre méthode",
@@ -83,7 +92,12 @@
             "Champs de votre choix",
             "Récompense",
             "QR code client"
-          ]
+          ],
+          "card": {
+            "orgName": "Mon Café Parisien",
+            "rewardLabel": "Récompense",
+            "rewardValue": "Café offert"
+          }
         }
       }
     },

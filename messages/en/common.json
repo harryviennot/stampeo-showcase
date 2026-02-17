@@ -1,16 +1,35 @@
 {
   "common": {
+    "stamps": "Stamps",
+    "reward": "Reward",
+    "rewarded": "You're eligible for 30 days free!",
+    "rewardText": "30 days free with 8 stamps!",
     "nav": {
       "features": "Features",
       "pricing": "Pricing",
       "faq": "FAQ",
       "blog": "Blog",
       "featuresItems": {
-        "designDeCarte": { "label": "Card Design", "description": "Customize your card in 5 minutes" },
-        "scannerMobile": { "label": "Mobile Scanner", "description": "Scan in one second from your phone" },
-        "notificationsPush": { "label": "Push Notifications", "description": "Engage customers on their lock screen" },
-        "analytiques": { "label": "Analytics", "description": "Understand your customers with real data" },
-        "geolocalisation": { "label": "Geolocation", "description": "Remind them you exist at the right moment" }
+        "designDeCarte": {
+          "label": "Card Design",
+          "description": "Customize your card in 5 minutes"
+        },
+        "scannerMobile": {
+          "label": "Mobile Scanner",
+          "description": "Scan in one second from your phone"
+        },
+        "notificationsPush": {
+          "label": "Push Notifications",
+          "description": "Engage customers on their lock screen"
+        },
+        "analytiques": {
+          "label": "Analytics",
+          "description": "Understand your customers with real data"
+        },
+        "geolocalisation": {
+          "label": "Geolocation",
+          "description": "Remind them you exist at the right moment"
+        }
       },
       "foundingProgram": "Founding Program"
     },

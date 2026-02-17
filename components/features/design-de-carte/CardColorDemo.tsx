@@ -9,56 +9,28 @@ import type { CardDesign } from "@/lib/types/design";
 import type { StampIconType } from "@/components/onboarding/StampIconPicker";
 
 interface ColorTheme {
-  name: string;
   bg: string;
   accent: string;
   icon: string;
   stampIcon: StampIconType;
-  orgName: string;
 }
 
 const THEMES: ColorTheme[] = [
-  {
-    name: "Stampeo",
-    bg: "#1c1c1e",
-    accent: "#f97316",
-    icon: "#ffffff",
-    stampIcon: "coffee",
-    orgName: "Mon Café",
-  },
-  {
-    name: "Crème",
-    bg: "#F5E6D3",
-    accent: "#8B4513",
-    icon: "#ffffff",
-    stampIcon: "heart",
-    orgName: "Boulangerie Marie",
-  },
-  {
-    name: "Nuit",
-    bg: "#1A2332",
-    accent: "#60A5FA",
-    icon: "#ffffff",
-    stampIcon: "star",
-    orgName: "Le Comptoir Bleu",
-  },
-  {
-    name: "Rose",
-    bg: "#F8E8F0",
-    accent: "#D4688E",
-    icon: "#ffffff",
-    stampIcon: "flower",
-    orgName: "Fleur de Thé",
-  },
+  { bg: "#1c1c1e", accent: "#f97316", icon: "#ffffff", stampIcon: "coffee" },
+  { bg: "#F5E6D3", accent: "#8B4513", icon: "#ffffff", stampIcon: "heart" },
+  { bg: "#1A2332", accent: "#60A5FA", icon: "#ffffff", stampIcon: "star" },
+  { bg: "#F8E8F0", accent: "#D4688E", icon: "#ffffff", stampIcon: "flower" },
 ];
 
 export function CardColorDemo() {
   const t = useTranslations("features.design-de-carte.custom.colorDemo");
   const [activeIndex, setActiveIndex] = useState(0);
   const theme = THEMES[activeIndex];
+  const themeTranslations = t.raw("themes") as Array<{ name: string; orgName: string }>;
+  const themeT = themeTranslations[activeIndex];
 
   const design: Partial<CardDesign> = {
-    organization_name: theme.orgName,
+    organization_name: themeT.orgName,
     background_color: theme.bg,
     stamp_filled_color: theme.accent,
     icon_color: theme.icon,
@@ -66,8 +38,8 @@ export function CardColorDemo() {
     reward_icon: "gift",
     total_stamps: 8,
     secondary_fields: [
-      { key: "reward", label: "Récompense", value: "8ᵉ offert" },
-      { key: "member", label: "Membre", value: "Sophie M." },
+      { key: "reward", label: t("rewardLabel"), value: t("rewardValue") },
+      { key: "member", label: t("memberLabel"), value: "Sophie M." },
     ],
   };
 
@@ -93,10 +65,10 @@ export function CardColorDemo() {
       <div className="flex items-center gap-3">
         {THEMES.map((th, index) => (
           <button
-            key={th.name}
+            key={index}
             onClick={() => setActiveIndex(index)}
             className="group relative flex flex-col items-center gap-2"
-            aria-label={th.name}
+            aria-label={themeTranslations[index].name}
           >
             <div className="relative">
               {/* Swatch pair: bg + accent */}

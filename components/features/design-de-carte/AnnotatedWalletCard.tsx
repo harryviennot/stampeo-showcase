@@ -16,20 +16,6 @@ interface Annotation {
   side: "left" | "right";
 }
 
-const CARD_DESIGN: Partial<CardDesign> = {
-  organization_name: "Mon Café Parisien",
-  background_color: "#2C1810",
-  stamp_filled_color: "#D4A574",
-  icon_color: "#ffffff",
-  stamp_icon: "coffee",
-  reward_icon: "gift",
-  total_stamps: 8,
-  secondary_fields: [
-    { key: "reward", label: "Récompense", value: "Café offert" },
-    { key: "points", label: "Points", value: "5/8" },
-  ],
-};
-
 const ANNOTATIONS: Annotation[] = [
   { label: "logo", cardX: 15, cardY: 1, side: "left" },
   { label: "orgName", cardX: 85, cardY: 3, side: "right" },
@@ -191,6 +177,20 @@ export function AnnotatedWalletCard() {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
   const labels = t.raw("labels") as string[];
 
+  const cardDesign: Partial<CardDesign> = {
+    organization_name: t("card.orgName"),
+    background_color: "#2C1810",
+    stamp_filled_color: "#D4A574",
+    icon_color: "#ffffff",
+    stamp_icon: "coffee",
+    reward_icon: "gift",
+    total_stamps: 8,
+    secondary_fields: [
+      { key: "reward", label: t("card.rewardLabel"), value: t("card.rewardValue") },
+      { key: "points", label: "Points", value: "5/8" },
+    ],
+  };
+
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
       <Container>
@@ -210,7 +210,7 @@ export function AnnotatedWalletCard() {
               <MobileAnnotations />
               <ScaledCardWrapper baseWidth={300}>
                 <WalletCard
-                  design={CARD_DESIGN}
+                  design={cardDesign}
                   stamps={5}
                   showQR={true}
                   interactive3D={true}

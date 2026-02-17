@@ -34,7 +34,16 @@
       "related": ["scanner-mobile", "notifications-push", "programme-fondateur"],
       "custom": {
         "colorDemo": {
-          "hint": "Click to switch themes — your card, your colors"
+          "hint": "Click to switch themes — your card, your colors",
+          "rewardLabel": "Reward",
+          "rewardValue": "8th free",
+          "memberLabel": "Member",
+          "themes": [
+            { "name": "Stampeo", "orgName": "My Café" },
+            { "name": "Cream", "orgName": "Marie's Bakery" },
+            { "name": "Night", "orgName": "The Blue Counter" },
+            { "name": "Rose", "orgName": "Tea Blossom" }
+          ]
         },
         "methods": {
           "sectionTitle": "Choose your method",
@@ -83,7 +92,12 @@
             "Custom fields",
             "Reward",
             "Customer QR code"
-          ]
+          ],
+          "card": {
+            "orgName": "My Parisian Café",
+            "rewardLabel": "Reward",
+            "rewardValue": "Free coffee"
+          }
         }
       }
     },

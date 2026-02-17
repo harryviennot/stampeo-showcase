@@ -1,16 +1,35 @@
 {
   "common": {
+    "stamps": "Tampons",
+    "reward": "Récompense",
+    "rewarded": "Vous avez droit à 30 jours gratuits !",
+    "rewardText": "30 jours gratuit à 8 tampons !",
     "nav": {
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
       "faq": "FAQ",
       "blog": "Blog",
       "featuresItems": {
-        "designDeCarte": { "label": "Design de carte", "description": "Personnalisez votre carte en 5 minutes" },
-        "scannerMobile": { "label": "Scanner mobile", "description": "Scannez en une seconde depuis votre téléphone" },
-        "notificationsPush": { "label": "Notifications push", "description": "Engagez vos clients sur leur écran de verrouillage" },
-        "analytiques": { "label": "Analytiques", "description": "Comprenez vos clients avec des données concrètes" },
-        "geolocalisation": { "label": "Géolocalisation", "description": "Rappelez-leur que vous existez au bon moment" }
+        "designDeCarte": {
+          "label": "Design de carte",
+          "description": "Personnalisez votre carte en 5 minutes"
+        },
+        "scannerMobile": {
+          "label": "Scanner mobile",
+          "description": "Scannez en une seconde depuis votre téléphone"
+        },
+        "notificationsPush": {
+          "label": "Notifications push",
+          "description": "Engagez vos clients sur leur écran de verrouillage"
+        },
+        "analytiques": {
+          "label": "Analytiques",
+          "description": "Comprenez vos clients avec des données concrètes"
+        },
+        "geolocalisation": {
+          "label": "Géolocalisation",
+          "description": "Rappelez-leur que vous existez au bon moment"
+        }
       },
       "foundingProgram": "Programme fondateur"
     },
