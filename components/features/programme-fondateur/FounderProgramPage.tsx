@@ -16,6 +16,7 @@ import {
   CheckIcon,
 } from "../../icons";
 import { RelatedFeatures } from "../RelatedFeatures";
+import { FeatureCTA } from "../FeatureCTA";
 import type { ComponentType } from "react";
 
 const benefitIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -256,34 +257,11 @@ export function FounderProgramPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-[840px] mx-auto px-6">
-          <ScrollReveal>
-            <div className="p-10 sm:p-14 bg-[var(--foreground)] rounded-2xl text-center relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)]" />
-
-              <h2 className="text-white text-3xl sm:text-4xl font-extrabold mb-4">
-                {c("finalCta.title")}
-              </h2>
-              <p className="text-gray-400 mb-8 max-w-lg mx-auto text-lg">
-                {c("finalCta.subtitle")}
-              </p>
-
-              <Link
-                href="/onboarding"
-                className="inline-flex items-center gap-2 bg-[var(--accent)] hover:brightness-110 text-white px-10 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-lg shadow-[var(--accent)]/25"
-              >
-                {t("ctaButton")}
-                <span>→</span>
-              </Link>
-
-              <p className="mt-6 text-sm text-gray-500 font-medium">
-                {c("finalCta.urgency")}
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
+      <FeatureCTA
+        title={c("finalCta.title")}
+        subtitle={c("finalCta.subtitle")}
+        urgencyText={c("finalCta.urgency")}
+      />
 
       <RelatedFeatures related={related} className="bg-[var(--blog-bg)]" />
     </>

@@ -12,6 +12,7 @@ import {
   ClockIcon,
   SignalIcon,
 } from "@/components/icons";
+import { FeatureCTA } from "@/components/features/FeatureCTA";
 import { GeofencingHeroAnimation } from "./GeofencingHeroAnimation";
 import { GeofencingHowItWorks } from "./GeofencingHowItWorks";
 import { GeofencingScenarios } from "./GeofencingScenarios";
@@ -211,27 +212,7 @@ export function GeofencingPage() {
       </section>
 
       {/* ============ 7. CTA ============ */}
-      <section className="relative stamp-pattern flex flex-col items-center justify-center px-6 py-24 md:py-32 text-center overflow-hidden">
-        <ScrollReveal className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-8">
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[1.05]">
-            {tp("cta.title")}
-          </h2>
-          <div className="flex flex-col items-center gap-6">
-            <Link
-              href="/onboarding"
-              className="group flex min-w-[280px] md:min-w-[340px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-16 md:h-20 px-10 bg-[var(--accent)] text-white text-lg md:text-xl font-extrabold leading-normal tracking-wide shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
-            >
-              <span>{t("ctaButton")}</span>
-              <span className="ml-2 group-hover:translate-x-1 transition-transform">
-                →
-              </span>
-            </Link>
-            <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
-              {tp("cta.subtitle")}
-            </p>
-          </div>
-        </ScrollReveal>
-      </section>
+      <FeatureCTA title={tp("cta.title")} subtitle={tp("cta.subtitle")} />
 
       <RelatedFeatures related={related} />
     </>
