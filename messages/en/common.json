@@ -39,19 +39,35 @@
       "brand": "Stampeo",
       "description": "Digital loyalty cards for modern businesses. Empowering growth through simple, rewarding experiences.",
       "product": "Product",
+      "featuresTitle": "Features",
       "features": "Features",
+      "resources": "Resources",
       "pricing": "Pricing",
       "howItWorks": "How it works",
+      "help": "Help Center",
       "blog": "Blog",
       "company": "Company",
       "about": "About",
       "contact": "Contact",
-      "careers": "Careers",
       "legal": "Legal",
       "privacyPolicy": "Privacy Policy",
       "termsOfService": "Terms of Service",
       "allRightsReserved": "© {year} Stampeo. All rights reserved.",
-      "builtForLocal": "Built for local businesses"
+      "builtForLocal": "Built for local businesses",
+      "madeInFrance": "Made in France",
+      "gdprCompliant": "GDPR Compliant",
+      "cta": {
+        "title": "Ready to get started?",
+        "subtitle": "Join the businesses building customer loyalty with Stampeo.",
+        "button": "Get started for free"
+      },
+      "newsletter": {
+        "title": "Stay in the loop",
+        "placeholder": "Your email",
+        "button": "Subscribe",
+        "disclaimer": "No spam. Unsubscribe anytime.",
+        "success": "Thanks! You're subscribed."
+      }
     }
   }
 }
