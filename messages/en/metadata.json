@@ -9,6 +9,10 @@
       "title": "Get Started - Stampeo",
       "description": "Set up your digital loyalty card in minutes"
     },
+    "contact": {
+      "title": "Contact - Stampeo",
+      "description": "Get in touch with the Stampeo team. Questions about our digital loyalty cards? We're here to help."
+    },
     "acquisition": {
       "notFound": "Business Not Found | Stampeo",
       "notFoundDesc": "This business could not be found.",

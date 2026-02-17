@@ -46,7 +46,7 @@ export async function generateMetadata({
       locale: locale === "fr" ? "fr_FR" : "en_US",
       images: [
         {
-          url: "/og-image.svg",
+          url: "/og-image.png",
           width: 1200,
           height: 630,
           alt: "Stampeo - Digital loyalty cards for Apple Wallet & Google Wallet",
@@ -57,7 +57,12 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      images: ["/og-image.svg"],
+      images: ["/og-image.png"],
+    },
+    verification: {
+      other: {
+        "msvalidate.01": "7306B78C81A951C4E332C053B9367FD7",
+      },
     },
     alternates: {
       canonical: locale === "fr" ? "/" : `/${locale}`,

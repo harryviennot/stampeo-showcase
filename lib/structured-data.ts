@@ -35,6 +35,10 @@ export function webSiteJsonLd() {
       target: `${BASE_URL}/blog?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", "h2", "[data-speakable]"],
+    },
   };
 }
 
@@ -45,12 +49,24 @@ export function softwareApplicationJsonLd() {
     name: "Stampeo",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
-    offers: {
-      "@type": "Offer",
-      price: "14.99",
-      priceCurrency: "EUR",
-      priceValidUntil: "2027-12-31",
-    },
+    offers: [
+      {
+        "@type": "Offer",
+        name: "Pay",
+        price: "14.99",
+        priceCurrency: "EUR",
+        description:
+          "1 card template, unlimited customers & scans, up to 3 team members, push notifications.",
+      },
+      {
+        "@type": "Offer",
+        name: "Pro",
+        price: "29.99",
+        priceCurrency: "EUR",
+        description:
+          "Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
+      },
+    ],
     description:
       "Digital loyalty card platform for local businesses. Create Apple Wallet and Google Wallet passes in minutes.",
   };
@@ -108,6 +124,10 @@ export function articleJsonLd(article: {
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${BASE_URL}${article.locale === "fr" ? "" : `/${article.locale}`}/blog/${article.slug}`,
+    },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".article-summary", "[data-speakable]"],
     },
   };
 }
