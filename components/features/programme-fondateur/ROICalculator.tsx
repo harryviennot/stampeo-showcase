@@ -19,28 +19,28 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
   const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (
-    <section className="py-24 lg:py-32">
-      <div className="max-w-[840px] mx-auto px-6">
-        <ScrollReveal className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--foreground)]">
+    <section className="py-12 sm:py-24 lg:py-32">
+      <div className="max-w-[840px] mx-auto px-4 sm:px-6">
+        <ScrollReveal className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-4 text-lg text-[var(--muted-foreground)]">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-[var(--muted-foreground)]">
             {t("subtitle")}
           </p>
         </ScrollReveal>
 
         <ScrollReveal delay={200}>
-          <div className="bg-white rounded-2xl blog-card-3d p-8 sm:p-10">
+          <div className="bg-white rounded-2xl blog-card-3d p-5 sm:p-8 md:p-10">
             {/* Sliders */}
-            <div className="space-y-8 mb-10">
+            <div className="space-y-6 sm:space-y-8 mb-6 sm:mb-10">
               {/* Clients per day */}
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="text-base font-bold text-[var(--foreground)]">
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <label className="text-sm sm:text-base font-bold text-[var(--foreground)]">
                     {t("clientsLabel")}
                   </label>
-                  <span className="text-lg font-extrabold text-[var(--accent)] tabular-nums">
+                  <span className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
                     {clients}
                   </span>
                 </div>
@@ -61,11 +61,11 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
 
               {/* Average basket */}
               <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="text-base font-bold text-[var(--foreground)]">
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <label className="text-sm sm:text-base font-bold text-[var(--foreground)]">
                     {t("basketLabel")}
                   </label>
-                  <span className="text-lg font-extrabold text-[var(--accent)] tabular-nums">
+                  <span className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
                     {basket}€
                   </span>
                 </div>
@@ -86,11 +86,11 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
             </div>
 
             {/* Visible calculation breakdown */}
-            <div className="mb-8 p-4 rounded-xl bg-[var(--blog-bg)] space-y-2">
-              <p className="text-sm font-medium text-[var(--muted-foreground)]">
+            <div className="mb-5 sm:mb-8 p-3 sm:p-4 rounded-xl bg-[var(--blog-bg)] space-y-1.5 sm:space-y-2">
+              <p className="text-xs sm:text-sm font-medium text-[var(--muted-foreground)]">
                 {t("assumption")}
               </p>
-              <div className="text-sm text-[var(--muted-foreground)] space-y-1">
+              <div className="text-xs sm:text-sm text-[var(--muted-foreground)] space-y-0.5 sm:space-y-1">
                 <p>
                   {t("breakdownClients", {
                     clients,
@@ -112,43 +112,52 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
             </div>
 
             {/* Results */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-              <div className="p-4 rounded-xl bg-[var(--blog-bg)]">
-                <p className="text-sm font-medium text-[var(--muted-foreground)] mb-1">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+              <div className="p-2.5 sm:p-4 rounded-xl bg-[var(--blog-bg)] flex flex-col justify-between">
+                <p className="text-xs sm:text-sm font-medium text-[var(--muted-foreground)] mb-1">
                   {t("extraRevenue")}
                 </p>
-                <p className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums transition-all duration-300">
-                  {extraRevenue}€
-                  <span className="text-sm font-medium text-[var(--muted-foreground)]">
+                <div className="mt-auto">
+                  <p className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums transition-all duration-300">
+                    {extraRevenue}€
+                  </p>
+                  <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
-                  </span>
-                </p>
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-[var(--blog-bg)]">
-                <p className="text-sm font-medium text-[var(--muted-foreground)] mb-1">
+              <div className="p-2.5 sm:p-4 rounded-xl bg-[var(--blog-bg)] flex flex-col justify-between">
+                <p className="text-xs sm:text-sm font-medium text-[var(--muted-foreground)] mb-1">
                   {t("stampeoCost")}
                 </p>
-                <p className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums">
-                  {stampeoCost}€
-                  <span className="text-sm font-medium text-[var(--muted-foreground)]">
+                <div className="mt-auto">
+                  <p className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums">
+                    {stampeoCost}€
+                  </p>
+                  <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
-                  </span>
-                </p>
+                  </p>
+                </div>
               </div>
 
-              <div className="p-4 rounded-xl bg-[var(--accent)]/10">
-                <p className="text-sm font-medium text-[var(--accent)] mb-1">
+              <div className="p-2.5 sm:p-4 rounded-xl bg-[var(--accent)]/10 flex flex-col justify-between">
+                <p className="text-xs sm:text-sm font-medium text-[var(--accent)] mb-1">
                   {t("roiLabel")}
                 </p>
-                <p className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)] tabular-nums transition-all duration-300">
-                  ×{multiplier}
-                </p>
+                <div className="mt-auto">
+                  <p className="text-lg sm:text-3xl font-extrabold text-[var(--accent)] tabular-nums transition-all duration-300">
+                    ×{multiplier}
+                  </p>
+                  <p className="text-xs font-medium invisible" aria-hidden="true">
+                    {t("perMonth")}
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Disclaimer */}
-            <p className="mt-6 text-xs text-[var(--muted-foreground)] text-center">
+            <p className="mt-4 sm:mt-6 text-[10px] sm:text-xs text-[var(--muted-foreground)] text-center">
               {t("disclaimer")}
             </p>
           </div>

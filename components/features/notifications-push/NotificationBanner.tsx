@@ -57,7 +57,7 @@ export function NotificationBanner({
           <p className="text-[13px] font-semibold text-gray-900 leading-tight mt-0.5">
             {title}
           </p>
-          <p className="text-[12px] text-gray-500 leading-snug mt-0.5 line-clamp-2">
+          <p className="text-[12px] text-gray-500 leading-snug mt-0.5">
             {body}
           </p>
         </div>

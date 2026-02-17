@@ -9,6 +9,8 @@ interface PhoneMockupProps {
   statusBarColor?: "white" | "black";
   /** "full" shows time + icons, "time-only" shows just the clock */
   statusBarStyle?: "full" | "time-only";
+  /** Phone frame width in pixels (default 280) */
+  width?: number;
 }
 
 export function PhoneMockup({
@@ -17,6 +19,7 @@ export function PhoneMockup({
   showStatusBar = true,
   statusBarColor = "black",
   statusBarStyle = "full",
+  width = 280,
 }: PhoneMockupProps) {
   const barColor = statusBarColor === "white" ? "text-white" : "text-black/80";
   const barFill = statusBarColor === "white" ? "white" : "rgba(0,0,0,0.8)";
@@ -35,8 +38,9 @@ export function PhoneMockup({
 
       {/* Phone frame */}
       <div
-        className="relative w-[280px] bg-[#1c1c1e] rounded-[2.5rem] p-[10px]"
+        className="relative bg-[#1c1c1e] rounded-[2.5rem] p-[10px]"
         style={{
+          width: `${width}px`,
           boxShadow:
             "0 1px 0 0 rgba(255,255,255,0.08) inset, 0 25px 50px -12px rgba(0,0,0,0.4), 0 8px 20px -4px rgba(0,0,0,0.3)",
         }}
