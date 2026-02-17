@@ -195,35 +195,102 @@
     "comparisonTable": {
       "title": "Pourquoi le wallet ?",
       "subtitle": "Comparez les solutions de fidélisation pour un commerce indépendant.",
-      "columns": ["Carte papier", "App mobile", "Stampeo (Wallet)"],
+      "columns": [
+        "Carte papier (pour 500 cartes)",
+        "App mobile",
+        "Stampeo (Wallet)"
+      ],
       "rows": [
         {
           "criteria": "Coût de démarrage",
-          "values": ["~0 € (tampon + cartons)", "50-200 €/mois", "À partir de 14,99 €/mois"]
+          "values": [
+            "~50–100 € (+ tampon)",
+            "50-200 €/mois",
+            "À partir de 14,99 €/mois"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
         },
         {
           "criteria": "Adoption client",
-          "values": ["Moyenne — il faut y penser", "Faible — personne ne télécharge", "Élevée — déjà dans le téléphone"]
+          "values": [
+            "Moyenne — il faut y penser",
+            "Faible — personne ne télécharge",
+            "Élevée — déjà dans le téléphone"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
         },
         {
           "criteria": "Notifications push",
-          "values": ["Impossible", "Oui (si l'app est installée)", "Oui, directement dans le wallet"]
+          "values": [
+            "Impossible",
+            "Oui (si l'app est installée)",
+            "Oui, directement dans le wallet"
+          ],
+          "icons": [
+            "x",
+            "minus",
+            "check"
+          ]
         },
         {
           "criteria": "Fonctionne hors ligne",
-          "values": ["Oui", "Ça dépend", "Oui, toujours"]
+          "values": [
+            "Oui",
+            "Ça dépend",
+            "Oui, toujours"
+          ],
+          "icons": [
+            "check",
+            "minus",
+            "check"
+          ]
         },
         {
           "criteria": "Risque de fraude",
-          "values": ["Élevé (tampon générique)", "Faible", "Aucun (QR unique + chiffré)"]
+          "values": [
+            "Élevé (tampon générique)",
+            "Faible",
+            "Aucun (QR unique + chiffré)"
+          ],
+          "icons": [
+            "x",
+            "check",
+            "check"
+          ]
         },
         {
           "criteria": "Données clients",
-          "values": ["Aucune", "Oui, mais peu de gens installent", "Oui, dès le premier scan"]
+          "values": [
+            "Aucune",
+            "Oui, mais peu de gens installent",
+            "Oui, dès le premier scan"
+          ],
+          "icons": [
+            "x",
+            "minus",
+            "check"
+          ]
         },
         {
           "criteria": "Temps de mise en place",
-          "values": ["1 heure (imprimeur)", "2-4 semaines", "5 minutes"]
+          "values": [
+            "~1 heure (maquette + impression)",
+            "2-4 semaines",
+            "5 minutes"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
         }
       ],
       "footnote": "Les cartes wallet combinent le meilleur des deux mondes : la simplicité du carton et la puissance du digital — sans les inconvénients de chacun."

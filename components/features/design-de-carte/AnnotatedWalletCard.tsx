@@ -17,19 +17,19 @@ interface Annotation {
 }
 
 const ANNOTATIONS: Annotation[] = [
-  { label: "logo", cardX: 15, cardY: 1, side: "left" },
-  { label: "orgName", cardX: 85, cardY: 3, side: "right" },
-  { label: "stampGrid", cardX: 15, cardY: 33, side: "left" },
+  { label: "logo", cardX: 15, cardY: 4, side: "left" },
+  { label: "orgName", cardX: 85, cardY: 4, side: "right" },
+  { label: "stampGrid", cardX: 15, cardY: 27, side: "left" },
   { label: "customFields", cardX: 85, cardY: 50, side: "right" },
-  { label: "reward", cardX: 15, cardY: 53, side: "left" },
-  { label: "qrCode", cardX: 85, cardY: 75, side: "right" },
+  { label: "reward", cardX: 15, cardY: 50, side: "left" },
+  { label: "qrCode", cardX: 85, cardY: 76, side: "right" },
 ];
 
 function DesktopAnnotations({ labels }: { labels: string[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
   const isMounted = useSyncExternalStore(
-    () => () => {},
+    () => () => { },
     () => true,
     () => false
   );
@@ -55,16 +55,16 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
             style={
               isLeft
                 ? {
-                    // Anchor right edge near card left edge — content right-aligns naturally
-                    right: `${100 - CARD_LEFT_EDGE}%`,
-                    top: `${ann.cardY}%`,
-                    transform: "translateY(-50%)",
-                  }
+                  // Anchor right edge near card left edge — content right-aligns naturally
+                  right: `${100 - CARD_LEFT_EDGE}%`,
+                  top: `${ann.cardY}%`,
+                  transform: "translateY(-50%)",
+                }
                 : {
-                    left: `${CARD_RIGHT_EDGE}%`,
-                    top: `${ann.cardY}%`,
-                    transform: "translateY(-50%)",
-                  }
+                  left: `${CARD_RIGHT_EDGE}%`,
+                  top: `${ann.cardY}%`,
+                  transform: "translateY(-50%)",
+                }
             }
             initial={{ opacity: 0, x: isLeft ? -15 : 15 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -109,7 +109,7 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
 
 function MobileAnnotations() {
   const isMounted = useSyncExternalStore(
-    () => () => {},
+    () => () => { },
     () => true,
     () => false
   );

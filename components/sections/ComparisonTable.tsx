@@ -5,9 +5,9 @@ import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Check, X, Minus } from "@phosphor-icons/react";
 
-function ValueIcon({ colIndex }: { colIndex: number }) {
-  if (colIndex === 2) return <Check className="w-5 h-5 text-[var(--accent)]" weight="bold" />;
-  if (colIndex === 0) return <X className="w-4 h-4 text-red-400" weight="bold" />;
+function ValueIcon({ icon }: { icon: string }) {
+  if (icon === "check") return <Check className="w-4 h-4 text-green-500" weight="bold" />;
+  if (icon === "x") return <X className="w-4 h-4 text-red-400" weight="bold" />;
   return <Minus className="w-4 h-4 text-amber-400" weight="bold" />;
 }
 
@@ -18,6 +18,7 @@ export function ComparisonTable() {
   const rows = t.raw("rows") as Array<{
     criteria: string;
     values: string[];
+    icons: string[];
   }>;
 
   return (
@@ -42,11 +43,10 @@ export function ComparisonTable() {
                   {columns.map((col, i) => (
                     <th
                       key={i}
-                      className={`p-6 text-center text-sm font-bold w-[24%] ${
-                        i === 2
+                      className={`p-6 text-center text-sm font-bold w-[24%] ${i === 2
                           ? "bg-[var(--accent)] text-white"
                           : "text-[var(--foreground)]"
-                      }`}
+                        }`}
                     >
                       {col}
                     </th>
@@ -65,14 +65,13 @@ export function ComparisonTable() {
                     {row.values.map((value, colIndex) => (
                       <td
                         key={colIndex}
-                        className={`p-6 text-center text-sm leading-relaxed ${
-                          colIndex === 2
+                        className={`p-6 text-center text-sm leading-relaxed ${colIndex === 2
                             ? "bg-[var(--accent)]/5 font-semibold text-[var(--foreground)]"
                             : "text-[var(--muted-foreground)]"
-                        }`}
+                          }`}
                       >
                         <span className="inline-flex items-center justify-center gap-2">
-                          <ValueIcon colIndex={colIndex} />
+                          <ValueIcon icon={row.icons[colIndex]} />
                           {value}
                         </span>
                       </td>
@@ -96,14 +95,16 @@ export function ComparisonTable() {
                   {columns.map((col, colIndex) => (
                     <div
                       key={colIndex}
-                      className={`flex items-start justify-between gap-3 text-sm ${
-                        colIndex === 2 ? "font-semibold text-[var(--accent)]" : "text-[var(--muted-foreground)]"
-                      }`}
+                      className={`flex items-start justify-between gap-3 text-sm ${colIndex === 2 ? "font-semibold text-[var(--accent)]" : "text-[var(--muted-foreground)]"
+                        }`}
                     >
                       <span className="text-[var(--muted-foreground)] text-xs flex-shrink-0">
                         {col}
                       </span>
-                      <span className="text-right">{row.values[colIndex]}</span>
+                      <span className="inline-flex items-center gap-1.5 text-right">
+                        <ValueIcon icon={row.icons[colIndex]} />
+                        {row.values[colIndex]}
+                      </span>
                     </div>
                   ))}
                 </div>

@@ -195,35 +195,102 @@
     "comparisonTable": {
       "title": "Why wallet?",
       "subtitle": "Compare loyalty solutions for independent businesses.",
-      "columns": ["Paper card", "Mobile app", "Stampeo (Wallet)"],
+      "columns": [
+        "Paper card (for 500 cards)",
+        "Mobile app",
+        "Stampeo (Wallet)"
+      ],
       "rows": [
         {
           "criteria": "Startup cost",
-          "values": ["~€0 (stamp + cards)", "€50–200/month", "From €14.99/month"]
+          "values": [
+            "~€50–100 (+ stamp)",
+            "€50–200/month",
+            "From €14.99/month"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
         },
         {
           "criteria": "Customer adoption",
-          "values": ["Average — they have to remember", "Low — nobody downloads", "High — already on their phone"]
+          "values": [
+            "Average — they have to remember",
+            "Low — nobody downloads",
+            "High — already on their phone"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
         },
         {
           "criteria": "Push notifications",
-          "values": ["Impossible", "Yes (if the app is installed)", "Yes, directly in the wallet"]
+          "values": [
+            "Impossible",
+            "Yes (if the app is installed)",
+            "Yes, directly in the wallet"
+          ],
+          "icons": [
+            "x",
+            "minus",
+            "check"
+          ]
         },
         {
           "criteria": "Works offline",
-          "values": ["Yes", "Depends", "Yes, always"]
+          "values": [
+            "Yes",
+            "Depends",
+            "Yes, always"
+          ],
+          "icons": [
+            "check",
+            "minus",
+            "check"
+          ]
         },
         {
           "criteria": "Fraud risk",
-          "values": ["High (generic stamp)", "Low", "None (unique encrypted QR)"]
+          "values": [
+            "High (generic stamp)",
+            "Low",
+            "None (unique encrypted QR)"
+          ],
+          "icons": [
+            "x",
+            "check",
+            "check"
+          ]
         },
         {
           "criteria": "Customer data",
-          "values": ["None", "Yes, but few people install", "Yes, from the first scan"]
+          "values": [
+            "None",
+            "Yes, but few people install",
+            "Yes, from the first scan"
+          ],
+          "icons": [
+            "x",
+            "minus",
+            "check"
+          ]
         },
         {
           "criteria": "Setup time",
-          "values": ["1 hour (printer)", "2–4 weeks", "5 minutes"]
+          "values": [
+            "~1 hour (design + printing)",
+            "2–4 weeks",
+            "5 minutes"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
         }
       ],
       "footnote": "Wallet cards combine the best of both worlds: the simplicity of paper and the power of digital — without the downsides of either."
