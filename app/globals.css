@@ -525,3 +525,75 @@ html {
   margin-bottom: 3rem;
 }
 
+/* ROI Calculator slider */
+/* ===== Feature CTA Card ===== */
+
+.feature-cta-card {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 4px 6px rgba(0, 0, 0, 0.08),
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 0 60px rgba(249, 115, 22, 0.06);
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.feature-cta-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.18),
+    0 0 80px rgba(249, 115, 22, 0.1);
+}
+
+.feature-cta-button {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-cta-button:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 24px rgba(249, 115, 22, 0.5),
+    0 4px 16px rgba(249, 115, 22, 0.3);
+}
+
+/* ROI Calculator slider */
+.roi-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+.roi-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.roi-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.roi-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+

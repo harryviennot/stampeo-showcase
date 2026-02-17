@@ -25,7 +25,7 @@ export function FoundingPartnerSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={200} className="max-w-lg mx-auto">
-          <div className="rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl">
+          <div className="rounded-3xl border-[3px] border-[var(--accent)] bg-white blog-card-3d p-8 lg:p-10">
             <ul className="flex flex-col gap-4 mb-8">
               {valueProps.map((prop) => (
                 <li key={prop} className="flex items-start gap-3 text-[15px] font-medium">
@@ -37,10 +37,14 @@ export function FoundingPartnerSection() {
 
             <Link
               href="/onboarding"
-              className="w-full flex cursor-pointer items-center justify-center rounded-xl h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
+              className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
             >
               <span>{t("cta")}</span>
             </Link>
+
+            <p className="mt-4 text-center text-sm text-[var(--muted-foreground)]">
+              {t("urgency")}
+            </p>
           </div>
         </ScrollReveal>
       </div>

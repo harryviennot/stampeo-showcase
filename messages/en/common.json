@@ -1,10 +1,37 @@
 {
   "common": {
+    "stamps": "Stamps",
+    "reward": "Reward",
+    "rewarded": "You're eligible for 30 days free!",
+    "rewardText": "30 days free with 8 stamps!",
     "nav": {
       "features": "Features",
       "pricing": "Pricing",
       "faq": "FAQ",
-      "blog": "Blog"
+      "blog": "Blog",
+      "featuresItems": {
+        "designDeCarte": {
+          "label": "Card Design",
+          "description": "Customize your card in 5 minutes"
+        },
+        "scannerMobile": {
+          "label": "Mobile Scanner",
+          "description": "Scan in one second from your phone"
+        },
+        "notificationsPush": {
+          "label": "Push Notifications",
+          "description": "Engage customers on their lock screen"
+        },
+        "analytiques": {
+          "label": "Analytics",
+          "description": "Understand your customers with real data"
+        },
+        "geolocalisation": {
+          "label": "Geolocation",
+          "description": "Remind them you exist at the right moment"
+        }
+      },
+      "foundingProgram": "Founding Program"
     },
     "auth": {
       "signOut": "Sign out",
@@ -31,19 +58,35 @@
       "brand": "Stampeo",
       "description": "Digital loyalty cards for modern businesses. Empowering growth through simple, rewarding experiences.",
       "product": "Product",
+      "featuresTitle": "Features",
       "features": "Features",
+      "resources": "Resources",
       "pricing": "Pricing",
       "howItWorks": "How it works",
+      "help": "Help Center",
       "blog": "Blog",
       "company": "Company",
       "about": "About",
       "contact": "Contact",
-      "careers": "Careers",
       "legal": "Legal",
       "privacyPolicy": "Privacy Policy",
       "termsOfService": "Terms of Service",
       "allRightsReserved": "© {year} Stampeo. All rights reserved.",
-      "builtForLocal": "Built for local businesses"
+      "builtForLocal": "Built for local businesses",
+      "madeInFrance": "Made in France",
+      "gdprCompliant": "GDPR Compliant",
+      "cta": {
+        "title": "Ready to get started?",
+        "subtitle": "Join the businesses building customer loyalty with Stampeo.",
+        "button": "Get started for free"
+      },
+      "newsletter": {
+        "title": "Stay in the loop",
+        "placeholder": "Your email",
+        "button": "Subscribe",
+        "disclaimer": "No spam. Unsubscribe anytime.",
+        "success": "Thanks! You're subscribed."
+      }
     }
   }
 }

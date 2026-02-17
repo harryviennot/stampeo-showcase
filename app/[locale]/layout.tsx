@@ -6,6 +6,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
+import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -105,7 +106,10 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <FloatingLanguageSwitcher />
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

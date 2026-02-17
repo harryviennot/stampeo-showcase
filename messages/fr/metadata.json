@@ -13,6 +13,32 @@
       "title": "Contact - Stampeo",
       "description": "Contactez l'équipe Stampeo. Une question sur nos cartes de fidélité digitales ? Nous sommes là pour vous aider."
     },
+    "features": {
+      "design-de-carte": {
+        "title": "Design de carte de fidélité - Stampeo",
+        "description": "Créez votre carte de fidélité digitale en 5 minutes. Personnalisez couleurs, logo et design, ou laissez-nous faire."
+      },
+      "scanner-mobile": {
+        "title": "Scanner mobile - Stampeo",
+        "description": "Tamponnez vos clients en une seconde avec votre téléphone. Application dédiée ou scanner web, avec mode hors ligne."
+      },
+      "notifications-push": {
+        "title": "Notifications push - Stampeo",
+        "description": "Engagez vos clients directement sur leur écran de verrouillage. 85 % de taux de lecture via les notifications wallet."
+      },
+      "analytiques": {
+        "title": "Analytiques et tableau de bord - Stampeo",
+        "description": "Connaissez vos habitués avec des données concrètes. Tendances, heures de pointe, fréquence de visite et rétention."
+      },
+      "geolocalisation": {
+        "title": "Géolocalisation et géofencing - Stampeo",
+        "description": "Rappelez à vos clients que vous existez quand ils passent à proximité. Géofencing natif Apple Wallet, conforme RGPD."
+      },
+      "programme-fondateur": {
+        "title": "Programme partenaire fondateur - Stampeo",
+        "description": "3 mois gratuits, 14,99 €/mois à vie, toutes les fonctionnalités Pro. Rejoignez les 50 premiers commerçants partenaires."
+      }
+    },
     "acquisition": {
       "notFound": "Commerce introuvable | Stampeo",
       "notFoundDesc": "Ce commerce n'a pas été trouvé.",

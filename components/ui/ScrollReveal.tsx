@@ -11,6 +11,7 @@ interface ScrollRevealProps {
   className?: string;
   delay?: number;
   threshold?: number;
+  id?: string;
 }
 
 const variantClasses: Record<RevealVariant, string> = {
@@ -28,12 +29,14 @@ export function ScrollReveal({
   className = "",
   delay = 0,
   threshold = 0.1,
+  id,
 }: ScrollRevealProps) {
   const { ref, isRevealed } = useScrollReveal({ threshold });
 
   return (
     <div
       ref={ref}
+      id={id}
       className={`${variantClasses[variant]} ${isRevealed ? "revealed" : ""} ${className}`}
       style={{ transitionDelay: delay ? `${delay}ms` : undefined }}
     >

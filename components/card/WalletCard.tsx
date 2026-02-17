@@ -14,6 +14,7 @@ import {
   calculateStampLayout,
 } from "@/lib/card-utils";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
+import { useTranslations } from "next-intl";
 
 // ============================================================================
 // Types
@@ -411,6 +412,7 @@ export function WalletCard({
 }: WalletCardProps) {
   const { cardRef, rotate, glare, handleMouseMove, handleMouseLeave } =
     use3DEffect(interactive3D);
+  const t = useTranslations("common");
 
   const displayName =
     organizationName || design.organization_name || "Your Business";
@@ -504,7 +506,7 @@ export function WalletCard({
                   className="text-[8px] font-bold uppercase tracking-wider transition-colors duration-300"
                   style={{ color: colors.mutedTextColor }}
                 >
-                  stamps
+                  {t("stamps")}
                 </div>
                 <div
                   className="text-md font-medium flex items-baseline gap-1 justify-end transition-colors duration-300 leading-tight"

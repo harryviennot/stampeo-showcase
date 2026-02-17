@@ -2,8 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { BenefitsSection } from "@/components/sections/BenefitsSection";
+import { ComparisonTable } from "@/components/sections/ComparisonTable";
+import { DashboardPreview } from "@/components/sections/DashboardPreview";
+import { SectorCards } from "@/components/sections/SectorCards";
+import { FeatureGrid } from "@/components/sections/FeatureGrid";
 import { FoundingPartnerSection } from "@/components/sections/FoundingPartnerSection";
+import { ROICalculator } from "@/components/features/programme-fondateur/ROICalculator";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -33,8 +39,14 @@ export default async function Home() {
       <main className="relative">
         <HeroSection />
         <ProblemSection />
+        <HowItWorks />
         <BenefitsSection />
+        <ComparisonTable />
+        <DashboardPreview />
+        <SectorCards />
+        <FeatureGrid />
         <FoundingPartnerSection />
+        <ROICalculator namespace="landing.roi" />
         <PricingSection />
         <FAQSection />
         <FinalCTASection />

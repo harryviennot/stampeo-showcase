@@ -2,21 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { DocumentIcon, DevicePhoneMobileIcon } from "../icons";
+import { DocumentIcon, DevicePhoneMobileIcon, EyeSlashIcon } from "../icons";
 
 export function ProblemSection() {
   const t = useTranslations("landing.problem");
 
   return (
-    <section id="features" className="relative py-24 lg:py-32">
-      {/* Floating Geometric Decorations */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-[var(--accent)]/10" />
-        <div className="absolute top-[40%] right-[5%] w-24 h-24 rotate-45 bg-[var(--stamp-coral)]/10 rounded-lg" />
-        <div className="absolute bottom-20 left-[15%] w-40 h-40 rounded-full border-4 border-[var(--accent)]/5" />
-      </div>
-
-      <div className="relative z-10 max-w-[960px] mx-auto px-6">
+    <section id="features" className="relative py-24 lg:py-32 bg-[var(--blog-bg)]">
+      <div className="relative z-10 max-w-[1100px] mx-auto px-6">
         {/* Problem Statement */}
         <ScrollReveal className="text-center mb-16">
           <p className="text-2xl md:text-3xl lg:text-4xl font-bold leading-relaxed text-[var(--foreground)]">
@@ -29,9 +22,9 @@ export function ProblemSection() {
         </ScrollReveal>
 
         {/* Problem Cards */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           {/* Lost Cards */}
-          <div className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-lg border border-white/50 transition-transform duration-300 hover:-translate-y-2">
+          <div className="group relative flex flex-col gap-6 p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
               <DocumentIcon className="w-7 h-7" />
             </div>
@@ -44,7 +37,7 @@ export function ProblemSection() {
           </div>
 
           {/* App Fatigue */}
-          <div className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-lg border border-white/50 transition-transform duration-300 hover:-translate-y-2">
+          <div className="group relative flex flex-col gap-6 p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
               <DevicePhoneMobileIcon className="w-7 h-7" />
             </div>
@@ -52,6 +45,19 @@ export function ProblemSection() {
               <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("fatigueTitle")}</h3>
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                 {t("fatigueDesc")}
+              </p>
+            </div>
+          </div>
+
+          {/* Zero Visibility */}
+          <div className="group relative flex flex-col gap-6 p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+              <EyeSlashIcon className="w-7 h-7" />
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("zeroVisibilityTitle")}</h3>
+              <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
+                {t("zeroVisibilityDesc")}
               </p>
             </div>
           </div>
