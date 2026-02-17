@@ -269,6 +269,7 @@
     "featureGrid": {
       "title": "Tout ce qu'il faut pour fidéliser",
       "subtitle": "Six fonctionnalités pensées pour les commerces indépendants. Pas de superflu.",
+      "learnMore": "En savoir plus",
       "features": [
         {
           "title": "Notifications push",

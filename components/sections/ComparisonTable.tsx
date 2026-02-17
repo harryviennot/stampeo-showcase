@@ -3,7 +3,13 @@
 import { useTranslations } from "next-intl";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { CheckIcon } from "../icons";
+import { Check, X, Minus } from "@phosphor-icons/react";
+
+function ValueIcon({ colIndex }: { colIndex: number }) {
+  if (colIndex === 2) return <Check className="w-5 h-5 text-[var(--accent)]" weight="bold" />;
+  if (colIndex === 0) return <X className="w-4 h-4 text-red-400" weight="bold" />;
+  return <Minus className="w-4 h-4 text-amber-400" weight="bold" />;
+}
 
 export function ComparisonTable() {
   const t = useTranslations("landing.comparisonTable");
@@ -29,16 +35,16 @@ export function ComparisonTable() {
         {/* Desktop Table */}
         <ScrollReveal delay={200} className="hidden md:block">
           <div className="bg-white blog-card-3d rounded-3xl overflow-hidden">
-            <table className="w-full">
+            <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="text-left p-5 text-sm font-medium text-[var(--muted-foreground)]" />
+                  <th className="text-left p-6 text-sm font-medium text-[var(--muted-foreground)] w-[28%]" />
                   {columns.map((col, i) => (
                     <th
                       key={i}
-                      className={`p-5 text-center text-sm font-bold ${
+                      className={`p-6 text-center text-sm font-bold w-[24%] ${
                         i === 2
-                          ? "bg-[var(--accent)] text-white rounded-t-xl"
+                          ? "bg-[var(--accent)] text-white"
                           : "text-[var(--foreground)]"
                       }`}
                     >
@@ -51,28 +57,24 @@ export function ComparisonTable() {
                 {rows.map((row, rowIndex) => (
                   <tr
                     key={rowIndex}
-                    className="border-t border-[var(--border)]"
+                    className={rowIndex % 2 === 0 ? "bg-[var(--muted)]/30" : ""}
                   >
-                    <td className="p-5 text-sm font-semibold text-[var(--foreground)]">
+                    <td className="p-6 text-sm font-semibold text-[var(--foreground)]">
                       {row.criteria}
                     </td>
                     {row.values.map((value, colIndex) => (
                       <td
                         key={colIndex}
-                        className={`p-5 text-center text-sm ${
+                        className={`p-6 text-center text-sm leading-relaxed ${
                           colIndex === 2
                             ? "bg-[var(--accent)]/5 font-semibold text-[var(--foreground)]"
                             : "text-[var(--muted-foreground)]"
                         }`}
                       >
-                        {colIndex === 2 ? (
-                          <span className="flex items-center justify-center gap-2">
-                            <CheckIcon className="w-4 h-4 text-[var(--accent)] flex-shrink-0" />
-                            {value}
-                          </span>
-                        ) : (
-                          value
-                        )}
+                        <span className="inline-flex items-center justify-center gap-2">
+                          <ValueIcon colIndex={colIndex} />
+                          {value}
+                        </span>
                       </td>
                     ))}
                   </tr>

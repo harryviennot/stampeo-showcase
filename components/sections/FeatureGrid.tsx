@@ -42,10 +42,10 @@ export function FeatureGrid() {
           {features.map((feature, index) => {
             const Icon = featureIcons[index];
             return (
-              <ScrollReveal key={index} delay={index * 100}>
+              <ScrollReveal key={index} delay={index * 100} className="flex">
                 <Link
                   href={feature.link as "/features/notifications-push"}
-                  className="group block bg-white blog-card-3d rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
+                  className="group flex flex-col w-full bg-white blog-card-3d rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
                 >
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-4 transition-transform duration-300 group-hover:scale-110">
                     <Icon className="w-6 h-6" />
@@ -53,11 +53,11 @@ export function FeatureGrid() {
                   <h3 className="text-lg font-bold text-[var(--foreground)] mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-[var(--muted-foreground)] leading-relaxed mb-4">
+                  <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
                     {feature.description}
                   </p>
-                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] group-hover:gap-2 transition-all">
-                    En savoir plus
+                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] group-hover:gap-2 transition-all mt-auto pt-4">
+                    {t("learnMore")}
                     <ArrowRightIcon className="w-4 h-4" />
                   </span>
                 </Link>

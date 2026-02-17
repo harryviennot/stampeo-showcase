@@ -269,6 +269,7 @@
     "featureGrid": {
       "title": "Everything you need to build loyalty",
       "subtitle": "Six features designed for independent businesses. No bloat.",
+      "learnMore": "Learn more",
       "features": [
         {
           "title": "Push notifications",
