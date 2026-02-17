@@ -17,15 +17,6 @@ export function BenefitsSection() {
 
   return (
     <section id="features" className="relative py-24 lg:py-32">
-      {/* Floating Geometric Decorations */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-[var(--accent)]/10" />
-        <div className="absolute top-[40%] right-[5%] w-24 h-24 rotate-45 bg-[var(--stamp-coral)]/10 rounded-lg" />
-        <div className="absolute bottom-20 left-[15%] w-40 h-40 rounded-full border-4 border-[var(--accent)]/5" />
-        <div className="absolute top-[15%] right-[20%] w-16 h-16 bg-[var(--stamp-sage)]/10 rounded-full" />
-        <div className="absolute bottom-[30%] right-[15%] w-28 h-28 bg-[var(--stamp-sand)]/10 rounded-full" />
-      </div>
-
       <div className="relative z-10 max-w-[1100px] mx-auto px-6">
         {/* Section Header */}
         <ScrollReveal className="flex flex-col items-center text-center mb-12">

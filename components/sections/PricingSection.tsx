@@ -9,10 +9,6 @@ export function PricingSection() {
 
   return (
     <section id="pricing" className="relative py-24 lg:py-32">
-      {/* Floating Geometric Decorations */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-[var(--accent)]/10 rounded-full -z-10 blur-xl" />
-      <div className="absolute bottom-20 right-10 w-48 h-48 bg-[var(--accent)]/5 rounded-xl rotate-12 -z-10 blur-lg" />
-
       <div className="max-w-[1000px] mx-auto px-6">
         {/* Header Section */}
         <ScrollReveal className="text-center mb-16">

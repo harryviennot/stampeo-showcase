@@ -9,13 +9,6 @@ export function ProblemSection() {
 
   return (
     <section id="features" className="relative py-24 lg:py-32 bg-[var(--blog-bg)]">
-      {/* Floating Geometric Decorations */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-[var(--accent)]/10" />
-        <div className="absolute top-[40%] right-[5%] w-24 h-24 rotate-45 bg-[var(--stamp-coral)]/10 rounded-lg" />
-        <div className="absolute bottom-20 left-[15%] w-40 h-40 rounded-full border-4 border-[var(--accent)]/5" />
-      </div>
-
       <div className="relative z-10 max-w-[1100px] mx-auto px-6">
         {/* Problem Statement */}
         <ScrollReveal className="text-center mb-16">

@@ -10,10 +10,6 @@ export function FAQSection() {
 
   return (
     <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Decoration: Top Right Stamp */}
-      <div className="absolute -top-10 -right-10 w-64 h-64 bg-[var(--accent)]/5 stamp-decoration pointer-events-none" />
-      <div className="absolute top-20 -right-20 w-48 h-48 bg-[var(--accent)]/10 stamp-decoration rotate-12 pointer-events-none" />
-
       <div className="max-w-[840px] mx-auto px-6 relative z-10">
         {/* Section Header */}
         <ScrollReveal className="mb-12">

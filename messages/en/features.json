@@ -1,0 +1,202 @@
+{
+  "features": {
+    "design-de-carte": {
+      "hero": {
+        "title": "Your card. Your colors. In 5 minutes.",
+        "subtitle": "No design skills needed. Import your logo, choose your colors, and your card is ready. Or better: we create it for you."
+      },
+      "problem": {
+        "title": "Creating a pro card shouldn't be a project",
+        "description": "Ever tried to create a visual on Canva? Or worse, configure software with 47 customization options? You have a business to run — not a design agency. The result: either you spend 2 hours cobbling something mediocre together, or you don't do it at all."
+      },
+      "sections": [
+        {
+          "title": "We create it for you",
+          "description": "Our preferred approach. Send us your assets, and we handle the rest. Our team creates your digital card respecting your brand identity. Professional result guaranteed, zero effort on your side.",
+          "icon": "sparkles"
+        },
+        {
+          "title": "AI-assisted creation",
+          "description": "Take a photo of your current paper card. Our AI extracts your logo, colors, reward structure and business name. In seconds, you get a pre-filled digital card.",
+          "icon": "cpu",
+          "badge": "Coming soon"
+        },
+        {
+          "title": "Self-service editor",
+          "description": "For those who like full control: logo, colors, stamp icons, background image, reward text. Every change is instantly visible in a realistic wallet preview.",
+          "icon": "palette"
+        }
+      ],
+      "cta": {
+        "title": "Your card, ready in 5 minutes",
+        "subtitle": "We create it for you, or you create it yourself. Either way, it'll be professional."
+      },
+      "related": ["scanner-mobile", "notifications-push", "programme-fondateur"]
+    },
+    "scanner-mobile": {
+      "hero": {
+        "title": "One scan. One stamp. That's it.",
+        "subtitle": "No POS system. No special hardware. Your phone is all you need to stamp your customers in one second."
+      },
+      "problem": {
+        "title": "Stamping should be invisible",
+        "description": "The customer pays, you look for the stamp, the card is at the bottom of the bag, the line grows. With a physical stamp, the act of rewarding loyalty slows down your service. And anything that slows service eventually disappears. Stamping should be as fast as contactless payment."
+      },
+      "sections": [
+        {
+          "title": "Dedicated app",
+          "description": "The Stampeo app is lightweight and dedicated to scanning. Open the app, point the camera at the customer's QR code, and a stamp is added — with haptic confirmation. Total time: 1 second.",
+          "icon": "smartphone"
+        },
+        {
+          "title": "Web scanner",
+          "description": "Don't want to install an app? Scan directly from your phone or tablet browser. Ideal for businesses using a shared tablet at the counter.",
+          "icon": "globe"
+        },
+        {
+          "title": "Offline mode",
+          "description": "Works even without internet. Scans are saved locally and synced automatically when connection returns. No stamp is ever lost.",
+          "icon": "wifi-off"
+        }
+      ],
+      "cta": {
+        "title": "Stamp in one second",
+        "subtitle": "Free app on iOS and Android. Web scanner available on all devices."
+      },
+      "related": ["notifications-push", "design-de-carte", "analytiques"]
+    },
+    "notifications-push": {
+      "hero": {
+        "title": "Your customers actually read your messages. Finally.",
+        "subtitle": "Emails end up in spam. SMS is expensive. Wallet notifications appear directly on the lock screen — and 85% are read."
+      },
+      "problem": {
+        "title": "The problem with traditional channels",
+        "description": "You have things to tell your customers. Except they don't hear you. Emails end up in spam (~20% read rate), SMS is intrusive and costly (~45%), app push requires installation (~30%). Wallet notifications reach ~85% read rate."
+      },
+      "sections": [
+        {
+          "title": "Stamp notification",
+          "description": "\"You earned a stamp! Only 7 more until your reward.\" Sent with every scan, the customer instantly knows their visit was recorded.",
+          "icon": "stamp"
+        },
+        {
+          "title": "Milestone notification",
+          "description": "\"Only 2 more stamps! Your free coffee is almost here.\" Sent when the customer approaches the reward. Creates anticipation and motivates return visits.",
+          "icon": "target"
+        },
+        {
+          "title": "Reward notification",
+          "description": "\"Congratulations! You've unlocked your reward.\" The moment of maximum satisfaction. The card clearly displays \"REWARD READY\".",
+          "icon": "gift"
+        }
+      ],
+      "cta": {
+        "title": "Messages your customers actually read",
+        "subtitle": "Join the founding program and start communicating with your customers through their wallet."
+      },
+      "related": ["scanner-mobile", "analytiques", "programme-fondateur"]
+    },
+    "analytiques": {
+      "hero": {
+        "title": "Know your regulars. Not just by sight.",
+        "subtitle": "With a paper card, you know nothing about your customers. With Stampeo, you see who comes back, how often, and what works."
+      },
+      "problem": {
+        "title": "What you don't know today",
+        "description": "How many regular customers do you have? How often do they come back? Who stopped coming? Which day is quietest? With paper cards, these questions have no answers. You're managing loyalty blind."
+      },
+      "sections": [
+        {
+          "title": "Essential dashboard",
+          "description": "Total customers, scans this week, rewards claimed. Search a customer by name or email and instantly find their history.",
+          "icon": "layout-dashboard"
+        },
+        {
+          "title": "Trends and peak hours",
+          "description": "Visualize your metrics day by day. Discover when your customers visit and identify slow periods to optimize your business.",
+          "icon": "trending-up",
+          "badge": "Pro"
+        },
+        {
+          "title": "Frequency and retention",
+          "description": "Understand your customers' rhythm: daily, weekly, monthly. Track your retention rate and identify at-risk customers.",
+          "icon": "users",
+          "badge": "Pro"
+        }
+      ],
+      "cta": {
+        "title": "Stop guessing. Start knowing.",
+        "subtitle": "The dashboard is included in all plans. Advanced analytics are available on the Pro plan."
+      },
+      "related": ["notifications-push", "scanner-mobile", "programme-fondateur"]
+    },
+    "geolocalisation": {
+      "hero": {
+        "title": "Remind them you exist. At the right moment.",
+        "subtitle": "When your customer passes near your business, their phone reminds them they have a loyalty card with you. Without you doing anything.",
+        "badge": "Pro"
+      },
+      "problem": {
+        "title": "Your loyal customer forgets you. It's not their fault.",
+        "description": "Marc walks past your cafe every morning. But this morning, he's in a hurry. He doesn't think about his loyalty card with 8 out of 10 stamps. He goes to the Starbucks across the street, out of habit. The problem isn't competition. It's forgetting."
+      },
+      "sections": [
+        {
+          "title": "Native Apple Wallet geofencing",
+          "description": "Enter your business address. Stampeo encodes it in every card. When the customer is nearby, their card appears on the lock screen. No intrusive notification, just a visual reminder.",
+          "icon": "map-pin"
+        },
+        {
+          "title": "Multi-location",
+          "description": "Multiple addresses? Each address is encoded in the card. The customer is reminded near each of your locations.",
+          "icon": "building"
+        },
+        {
+          "title": "Privacy protected",
+          "description": "Stampeo doesn't track anyone. Apple Wallet handles proximity detection locally. No location data is collected or stored. GDPR compliant.",
+          "icon": "shield"
+        }
+      ],
+      "cta": {
+        "title": "Be present at the right moment",
+        "subtitle": "Geofencing is included in the Pro plan. Join the founding program to benefit from it now."
+      },
+      "related": ["notifications-push", "analytiques", "design-de-carte"]
+    },
+    "programme-fondateur": {
+      "hero": {
+        "title": "You're not just a customer. You're building the product with us.",
+        "subtitle": "We're looking for 50 French business owners ready to test, critique, and shape the best digital loyalty tool. In exchange, conditions we'll never offer again."
+      },
+      "problem": {
+        "title": "Let's be transparent",
+        "description": "Stampeo is a young product. We're not going to pretend we have 10,000 users. We're looking for partners ready to join us in building a tool that truly fits your needs."
+      },
+      "sections": [
+        {
+          "title": "3 months completely free",
+          "description": "No credit card at signup. No catch. Test Stampeo for 3 months without paying anything. If it doesn't work for you, leave with no fees.",
+          "icon": "calendar"
+        },
+        {
+          "title": "\u20ac14.99/month for life",
+          "description": "After the free period, your rate is locked at \u20ac14.99/month. Forever. Even when the price increases for new customers.",
+          "icon": "tag"
+        },
+        {
+          "title": "All Pro features included",
+          "description": "No basic plan for founders. Multiple card templates, unlimited team members, advanced analytics, geolocation, and a direct channel with our team.",
+          "icon": "crown"
+        }
+      ],
+      "cta": {
+        "title": "Join the first ones",
+        "subtitle": "Limited spots. 3 months free. \u20ac14.99/month for life. All Pro features."
+      },
+      "related": ["notifications-push", "scanner-mobile", "design-de-carte"]
+    },
+    "relatedTitle": "Discover more",
+    "ctaButton": "Become a Founding Partner"
+  }
+}

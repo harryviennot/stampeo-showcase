@@ -1,13 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { MenuIcon, XMarkIcon } from "../icons";
+import {
+  MenuIcon,
+  XMarkIcon,
+  ChevronDownIcon,
+  PaletteIcon,
+  CameraIcon,
+  BellIcon,
+  ChartIcon,
+  MapPinIcon,
+  StarIcon,
+} from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import type { User } from "@supabase/supabase-js";
+
+const FEATURES_DROPDOWN_ITEMS = [
+  { key: "designDeCarte", slug: "design-de-carte", Icon: PaletteIcon },
+  { key: "scannerMobile", slug: "scanner-mobile", Icon: CameraIcon },
+  { key: "notificationsPush", slug: "notifications-push", Icon: BellIcon },
+  { key: "analytiques", slug: "analytiques", Icon: ChartIcon },
+  { key: "geolocalisation", slug: "geolocalisation", Icon: MapPinIcon },
+  { key: "programmeFondateur", slug: "programme-fondateur", Icon: StarIcon },
+] as const;
 
 function DesktopAuthButtons({
   loading,
@@ -63,6 +82,112 @@ function DesktopAuthButtons({
   );
 }
 
+function FeaturesDropdown() {
+  const t = useTranslations("common.nav");
+  const [open, setOpen] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <button
+        className="flex items-center gap-1 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+        onClick={() => setOpen(!open)}
+      >
+        {t("features")}
+        <ChevronDownIcon
+          className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50">
+          <div className="w-[520px] bg-white rounded-2xl shadow-xl border border-[var(--accent)]/10 p-4 grid grid-cols-2 gap-1">
+            {FEATURES_DROPDOWN_ITEMS.map(({ key, slug, Icon }) => (
+              <Link
+                key={slug}
+                href={`/features/${slug}` as "/features/design-de-carte"}
+                className="group flex items-start gap-3 p-3 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] group-hover:scale-110 transition-transform">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
+                    {t(`featuresItems.${key}.label`)}
+                  </div>
+                  <div className="text-xs text-[var(--muted-foreground)] mt-0.5 leading-snug">
+                    {t(`featuresItems.${key}.description`)}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileFeaturesAccordion({
+  onNavigate,
+}: {
+  onNavigate: () => void;
+}) {
+  const t = useTranslations("common.nav");
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        className="flex items-center justify-between w-full px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 rounded-xl transition-colors"
+        onClick={() => setOpen(!open)}
+      >
+        {t("features")}
+        <ChevronDownIcon
+          className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="pl-4 pb-2 space-y-0.5">
+          {FEATURES_DROPDOWN_ITEMS.map(({ key, slug, Icon }) => (
+            <Link
+              key={slug}
+              href={`/features/${slug}` as "/features/design-de-carte"}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
+              onClick={onNavigate}
+            >
+              <Icon className="w-4 h-4 text-[var(--accent)]" />
+              <span className="text-sm font-medium text-[var(--foreground)]">
+                {t(`featuresItems.${key}.label`)}
+              </span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -86,7 +211,6 @@ export function Header() {
   };
 
   const navItems = [
-    { label: t("common.nav.features"), href: "#features" },
     { label: t("common.nav.pricing"), href: "#pricing" },
     { label: t("common.nav.faq"), href: "#faq" },
     ...(locale === "fr"
@@ -115,6 +239,7 @@ export function Header() {
 
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center gap-9">
+            <FeaturesDropdown />
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -154,6 +279,7 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden px-6 py-4 border-t border-[var(--accent)]/10 bg-[var(--cream)]">
             <div className="flex flex-col gap-1">
+              <MobileFeaturesAccordion onNavigate={() => setMobileMenuOpen(false)} />
               {navItems.map((item) => (
                 <Link
                   key={item.href}

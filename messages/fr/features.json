@@ -1,0 +1,202 @@
+{
+  "features": {
+    "design-de-carte": {
+      "hero": {
+        "title": "Votre carte. Vos couleurs. En 5 minutes.",
+        "subtitle": "Pas besoin d'être designer. Importez votre logo, choisissez vos couleurs, et votre carte est prête. Ou mieux : on la crée pour vous."
+      },
+      "problem": {
+        "title": "Créer une carte pro ne devrait pas être un projet",
+        "description": "Vous avez déjà essayé de créer un visuel sur Canva ? Ou pire, de configurer un logiciel avec 47 options de personnalisation ? Vous avez un commerce à gérer — pas une agence de design à diriger. Le résultat : soit vous passez 2 heures à bricoler quelque chose de moyen, soit vous ne le faites pas du tout."
+      },
+      "sections": [
+        {
+          "title": "On la crée pour vous",
+          "description": "C'est notre approche préférée. Vous nous envoyez vos éléments, et on s'occupe du reste. Notre équipe crée votre carte digitale en respectant votre identité visuelle. Résultat professionnel garanti, zéro effort de votre côté.",
+          "icon": "sparkles"
+        },
+        {
+          "title": "Création assistée par IA",
+          "description": "Prenez une photo de votre carte en carton actuelle. Notre IA extrait votre logo, vos couleurs, votre structure de récompense et le nom de votre commerce. En quelques secondes, vous obtenez une carte digitale pré-remplie.",
+          "icon": "cpu",
+          "badge": "Bientôt"
+        },
+        {
+          "title": "L'éditeur en libre-service",
+          "description": "Pour ceux qui aiment tout contrôler : logo, couleurs, icônes de tampon, image de fond, texte de récompense. Chaque modification est visible immédiatement dans un aperçu réaliste de wallet.",
+          "icon": "palette"
+        }
+      ],
+      "cta": {
+        "title": "Votre carte, prête en 5 minutes",
+        "subtitle": "On la crée pour vous, ou vous la créez vous-même. Dans tous les cas, elle sera professionnelle."
+      },
+      "related": ["scanner-mobile", "notifications-push", "programme-fondateur"]
+    },
+    "scanner-mobile": {
+      "hero": {
+        "title": "Un scan. Un tampon. C'est tout.",
+        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en une seconde."
+      },
+      "problem": {
+        "title": "Tamponner devrait être invisible",
+        "description": "Le client paie, vous cherchez le tampon, la carte est au fond du sac, la file s'allonge. Avec un tampon physique, l'acte de fidéliser ralentit votre service. Et tout ce qui ralentit le service finit par disparaître. Le tamponnage doit être aussi rapide qu'un paiement sans contact."
+      },
+      "sections": [
+        {
+          "title": "L'application dédiée",
+          "description": "L'appli Stampeo est légère et dédiée au scan. Ouvrez l'appli, pointez la caméra vers le QR code du client, et un tampon est ajouté — vibration haptique de confirmation. Temps total : 1 seconde.",
+          "icon": "smartphone"
+        },
+        {
+          "title": "Le scanner web",
+          "description": "Pas envie d'installer une app ? Scannez directement depuis le navigateur de votre téléphone ou tablette. Idéal pour les commerces qui utilisent une tablette partagée au comptoir.",
+          "icon": "globe"
+        },
+        {
+          "title": "Mode hors ligne",
+          "description": "Ça marche même sans internet. Les scans sont enregistrés localement et synchronisés automatiquement dès que la connexion revient. Aucun tampon n'est perdu.",
+          "icon": "wifi-off"
+        }
+      ],
+      "cta": {
+        "title": "Tamponnez en une seconde",
+        "subtitle": "Application gratuite sur iOS et Android. Scanner web disponible sur tous les appareils."
+      },
+      "related": ["notifications-push", "design-de-carte", "analytiques"]
+    },
+    "notifications-push": {
+      "hero": {
+        "title": "Vos clients lisent vos messages. Enfin.",
+        "subtitle": "Les emails finissent en spam. Les SMS coûtent cher. Les notifications wallet apparaissent directement sur l'écran de verrouillage — et 85 % sont lues."
+      },
+      "problem": {
+        "title": "Le problème avec les canaux classiques",
+        "description": "Vous avez des choses à dire à vos clients. Sauf qu'ils ne vous entendent pas. Les emails finissent en spam (~20 % de lecture), les SMS sont intrusifs et coûteux (~45 %), les apps push exigent une installation (~30 %). Les notifications wallet atteignent ~85 % de taux de lecture."
+      },
+      "sections": [
+        {
+          "title": "Notification de tampon",
+          "description": "\"Vous avez gagné un tampon ! Plus que 7 avant votre récompense.\" Envoyée à chaque scan, le client sait immédiatement que son passage a été enregistré.",
+          "icon": "stamp"
+        },
+        {
+          "title": "Notification de jalon",
+          "description": "\"Plus que 2 tampons ! Votre café offert est presque là.\" Envoyée quand le client approche de la récompense. Crée un sentiment d'anticipation et motive le retour.",
+          "icon": "target"
+        },
+        {
+          "title": "Notification de récompense",
+          "description": "\"Félicitations ! Vous avez débloqué votre récompense.\" Le moment de satisfaction maximale. La carte affiche clairement \"RÉCOMPENSE PRÊTE\".",
+          "icon": "gift"
+        }
+      ],
+      "cta": {
+        "title": "Des messages que vos clients lisent vraiment",
+        "subtitle": "Rejoignez le programme fondateur et commencez à communiquer avec vos clients via leur wallet."
+      },
+      "related": ["scanner-mobile", "analytiques", "programme-fondateur"]
+    },
+    "analytiques": {
+      "hero": {
+        "title": "Connaissez vos habitués. Pas juste de vue.",
+        "subtitle": "Avec une carte en carton, vous ne savez rien de vos clients. Avec Stampeo, vous voyez qui revient, à quelle fréquence, et ce qui fonctionne."
+      },
+      "problem": {
+        "title": "Ce que vous ne savez pas aujourd'hui",
+        "description": "Combien de clients réguliers avez-vous ? À quelle fréquence reviennent-ils ? Qui a arrêté de venir ? Quel jour est le plus calme ? Avec des cartes en carton, ces questions n'ont pas de réponse. Vous gérez votre fidélisation à l'aveugle."
+      },
+      "sections": [
+        {
+          "title": "Tableau de bord essentiel",
+          "description": "Nombre total de clients, scans cette semaine, récompenses réclamées. Recherchez un client par nom ou email et retrouvez instantanément son historique.",
+          "icon": "layout-dashboard"
+        },
+        {
+          "title": "Tendances et heures de pointe",
+          "description": "Visualisez l'évolution de vos métriques jour par jour. Découvrez quand vos clients viennent et identifiez les creux pour optimiser votre activité.",
+          "icon": "trending-up",
+          "badge": "Pro"
+        },
+        {
+          "title": "Fréquence et rétention",
+          "description": "Comprenez le rythme de vos clients : quotidiens, hebdomadaires, mensuels. Suivez votre taux de rétention et identifiez les clients à risque.",
+          "icon": "users",
+          "badge": "Pro"
+        }
+      ],
+      "cta": {
+        "title": "Arrêtez de deviner. Commencez à savoir.",
+        "subtitle": "Le tableau de bord est inclus dans tous les plans. Les analytiques avancées sont disponibles sur le plan Pro."
+      },
+      "related": ["notifications-push", "scanner-mobile", "programme-fondateur"]
+    },
+    "geolocalisation": {
+      "hero": {
+        "title": "Rappelez-leur que vous existez. Au bon moment.",
+        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien.",
+        "badge": "Pro"
+      },
+      "problem": {
+        "title": "Votre client fidèle vous oublie. Ce n'est pas de sa faute.",
+        "description": "Marc passe devant votre café tous les matins. Mais ce matin, il est pressé. Il ne pense pas à sa carte de fidélité à 8 tampons sur 10. Il va au Starbucks d'en face, par réflexe. Le problème n'est pas la concurrence. C'est l'oubli."
+      },
+      "sections": [
+        {
+          "title": "Géofencing natif Apple Wallet",
+          "description": "Vous renseignez l'adresse de votre commerce. Stampeo l'encode dans chaque carte. Quand le client est à proximité, sa carte apparaît sur l'écran de verrouillage. Pas de notification intrusive, juste un rappel visuel.",
+          "icon": "map-pin"
+        },
+        {
+          "title": "Multi-établissement",
+          "description": "Plusieurs adresses ? Chaque adresse est encodée dans la carte. Le client est rappelé près de chacun de vos établissements.",
+          "icon": "building"
+        },
+        {
+          "title": "Vie privée protégée",
+          "description": "Stampeo ne localise personne. C'est Apple Wallet qui gère la détection en local. Aucune donnée de localisation n'est collectée ni stockée. Conforme au RGPD.",
+          "icon": "shield"
+        }
+      ],
+      "cta": {
+        "title": "Soyez présent au bon moment",
+        "subtitle": "Le géofencing est inclus dans le plan Pro. Rejoignez le programme fondateur pour en bénéficier dès maintenant."
+      },
+      "related": ["notifications-push", "analytiques", "design-de-carte"]
+    },
+    "programme-fondateur": {
+      "hero": {
+        "title": "Vous n'êtes pas juste un client. Vous construisez le produit avec nous.",
+        "subtitle": "On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais."
+      },
+      "problem": {
+        "title": "On joue cartes sur table",
+        "description": "Stampeo est un produit jeune. On ne va pas prétendre qu'on a 10 000 utilisateurs. On cherche des partenaires prêts à nous accompagner dans la construction d'un outil qui colle vraiment à vos besoins."
+      },
+      "sections": [
+        {
+          "title": "3 mois entièrement gratuits",
+          "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez Stampeo pendant 3 mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
+          "icon": "calendar"
+        },
+        {
+          "title": "14,99 €/mois à vie",
+          "description": "Après la période gratuite, votre tarif est bloqué à 14,99 €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
+          "icon": "tag"
+        },
+        {
+          "title": "Toutes les fonctionnalités Pro",
+          "description": "Pas de plan basique pour les fondateurs. Plusieurs modèles de carte, équipe illimitée, analytiques avancées, géolocalisation, et canal direct avec notre équipe.",
+          "icon": "crown"
+        }
+      ],
+      "cta": {
+        "title": "Rejoignez les premiers",
+        "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Pro."
+      },
+      "related": ["notifications-push", "scanner-mobile", "design-de-carte"]
+    },
+    "relatedTitle": "Découvrez aussi",
+    "ctaButton": "Devenir Partenaire Fondateur"
+  }
+}

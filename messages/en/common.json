@@ -4,7 +4,15 @@
       "features": "Features",
       "pricing": "Pricing",
       "faq": "FAQ",
-      "blog": "Blog"
+      "blog": "Blog",
+      "featuresItems": {
+        "designDeCarte": { "label": "Card Design", "description": "Customize your card in 5 minutes" },
+        "scannerMobile": { "label": "Mobile Scanner", "description": "Scan in one second from your phone" },
+        "notificationsPush": { "label": "Push Notifications", "description": "Engage customers on their lock screen" },
+        "analytiques": { "label": "Analytics", "description": "Understand your customers with real data" },
+        "geolocalisation": { "label": "Geolocation", "description": "Remind them you exist at the right moment" },
+        "programmeFondateur": { "label": "Founding Program", "description": "Join the first partners" }
+      }
     },
     "auth": {
       "signOut": "Sign out",

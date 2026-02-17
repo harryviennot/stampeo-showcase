@@ -4,7 +4,15 @@
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
       "faq": "FAQ",
-      "blog": "Blog"
+      "blog": "Blog",
+      "featuresItems": {
+        "designDeCarte": { "label": "Design de carte", "description": "Personnalisez votre carte en 5 minutes" },
+        "scannerMobile": { "label": "Scanner mobile", "description": "Scannez en une seconde depuis votre téléphone" },
+        "notificationsPush": { "label": "Notifications push", "description": "Engagez vos clients sur leur écran de verrouillage" },
+        "analytiques": { "label": "Analytiques", "description": "Comprenez vos clients avec des données concrètes" },
+        "geolocalisation": { "label": "Géolocalisation", "description": "Rappelez-leur que vous existez au bon moment" },
+        "programmeFondateur": { "label": "Programme fondateur", "description": "Rejoignez les premiers partenaires" }
+      }
     },
     "auth": {
       "signOut": "Se déconnecter",

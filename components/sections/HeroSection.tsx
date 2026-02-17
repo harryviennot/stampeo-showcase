@@ -8,17 +8,6 @@ import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 
-function GeometricDecorations() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-      <div className="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-[var(--accent)]/20 blur-3xl" />
-      <div className="absolute bottom-20 right-[5%] w-96 h-96 bg-[var(--accent)]/10 blur-2xl rotate-45" />
-      <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-[var(--stamp-sage)]/30 rounded-full blur-2xl" />
-      <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-[var(--stamp-coral)]/20 blur-3xl rotate-12" />
-    </div>
-  );
-}
-
 function StampButton({
   onClick,
   stamps,
@@ -117,8 +106,6 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
-      <GeometricDecorations />
-
       <main className="relative z-10 flex-1 flex items-center px-6 lg:px-10 py-12 lg:py-24">
         <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Column: Content */}

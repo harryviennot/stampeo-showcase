@@ -22,14 +22,6 @@ export function Footer() {
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white pt-20 pb-10 overflow-hidden">
-      {/* Subtle Geometric Background Shapes */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-10 left-[10%] w-16 h-16 rounded-full bg-[var(--accent)]/5" />
-        <div className="absolute bottom-20 left-[25%] w-24 h-24 rounded-full bg-[var(--stamp-sage)]/5" />
-        <div className="absolute top-20 right-[15%] w-20 h-20 rounded-lg bg-[var(--accent)]/5 rotate-12" />
-        <div className="absolute -bottom-10 right-[5%] w-32 h-32 rounded-full border-2 border-[var(--stamp-sage)]/5" />
-      </div>
-
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 lg:px-12">
         {/* Top Section: Four Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
