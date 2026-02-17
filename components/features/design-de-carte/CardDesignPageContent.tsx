@@ -50,7 +50,7 @@ export function CardDesignPageContent() {
               </p>
               <Link
                 href="/onboarding"
-                className="inline-flex items-center justify-center h-14 px-8 bg-[var(--accent)] text-white text-base font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all active:scale-95"
+                className="inline-flex items-center justify-center h-14 px-8 bg-[var(--accent)] text-white text-base font-bold rounded-full hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all active:scale-95"
               >
                 {t("ctaButton")}
               </Link>

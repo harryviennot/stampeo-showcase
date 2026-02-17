@@ -80,6 +80,7 @@
             "Logo",
             "Business name",
             "Stamp strip",
+            "Custom fields",
             "Reward",
             "Customer QR code"
           ]
@@ -363,7 +364,7 @@
       },
       "problem": {
         "title": "What you don't know today",
-        "description": "How many regular customers do you have? How often do they come back? Who stopped coming? Which day is quietest? With paper cards, these questions have no answers. You're managing loyalty blind."
+        "description": "With paper cards, you're managing loyalty blind. No data, no visibility, no way to improve what you can't measure."
       },
       "sections": [
         {
@@ -414,6 +415,8 @@
         },
         "activityFeed": {
           "title": "Live activity",
+          "sectionTitle": "Your business, in real time",
+          "sectionDescription": "Every stamp, every reward, every signup — follow your loyalty program activity live.",
           "stampAction": "earned a stamp",
           "rewardAction": "claimed their reward",
           "newCustomerAction": "just signed up",
@@ -427,7 +430,13 @@
         "proCharts": {
           "lineChart": { "label": "Scans / week", "trend": "+23%" },
           "heatmap": { "label": "Peak hours", "days": ["M", "T", "W", "T", "F", "S", "S"] },
-          "donut": { "label": "30d retention", "value": "72%" }
+          "donut": { "label": "30d retention", "value": "72%" },
+          "segments": { "label": "Customer segments", "categories": ["New", "Occasional", "Regular", "VIP"] },
+          "churn": { "label": "At-risk customers", "value": "23", "subtitle": "inactive 30d+" },
+          "bestDays": { "label": "Most active days", "days": ["M", "T", "W", "T", "F", "S", "S"] },
+          "timeToReward": { "label": "Avg time to complete card", "value": "18", "unit": "days" },
+          "completionRate": { "label": "Completion rate", "value": "64", "subtitle": "complete their card" },
+          "returnRate": { "label": "Post-reward return", "value": "78", "subtitle": "start a 2nd card" }
         }
       }
     },

@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { BlindSpotCards } from "./BlindSpotCards";
 import { DashboardSection } from "./DashboardSection";
+import { LiveActivityFeed } from "./LiveActivityFeed";
 import { ProChartCards } from "./ProChartCards";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
@@ -54,8 +55,11 @@ export function AnalyticsPageContent() {
       {/* Blind Spot Cards (problem section) */}
       <BlindSpotCards />
 
-      {/* Dashboard Section (Pay tier) */}
+      {/* Dashboard Section (Starter tier) */}
       <DashboardSection />
+
+      {/* Live Activity Feed */}
+      <LiveActivityFeed />
 
       {/* Pro Chart Cards */}
       <ProChartCards />

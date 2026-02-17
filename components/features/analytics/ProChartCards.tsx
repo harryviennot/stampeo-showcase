@@ -6,7 +6,7 @@ import { motion, useInView } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
-// Heatmap data: 7 days × 5 time slots, values 0.1–0.9
+// Heatmap data: 7 days x 5 time slots, values 0.1-0.9
 const HEATMAP_DATA = [
   [0.3, 0.5, 0.8, 0.6, 0.2],
   [0.4, 0.7, 0.9, 0.7, 0.3],
@@ -16,6 +16,8 @@ const HEATMAP_DATA = [
   [0.8, 0.7, 0.4, 0.3, 0.1],
   [0.7, 0.6, 0.3, 0.2, 0.1],
 ];
+
+/* ─── Row 1 (all screens): existing charts ─── */
 
 function LineChart({ label, trend }: { label: string; trend: string }) {
   const ref = useRef(null);
@@ -33,7 +35,6 @@ function LineChart({ label, trend }: { label: string; trend: string }) {
         {label}
       </p>
       <svg viewBox="0 0 200 100" className="w-full h-auto mb-3">
-        {/* Grid lines */}
         {[25, 50, 75].map((y) => (
           <line
             key={y}
@@ -46,7 +47,6 @@ function LineChart({ label, trend }: { label: string; trend: string }) {
             strokeDasharray="4 4"
           />
         ))}
-        {/* Filled area */}
         <motion.polygon
           points={areaPoints}
           fill="var(--accent)"
@@ -55,7 +55,6 @@ function LineChart({ label, trend }: { label: string; trend: string }) {
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 1, delay: 0.5 }}
         />
-        {/* Line */}
         <motion.polyline
           points={points}
           fill="none"
@@ -114,7 +113,6 @@ function Heatmap({ label, days }: { label: string; days: string[] }) {
             />
           ))
         )}
-        {/* Day labels */}
         {days.map((day, i) => (
           <text
             key={i}
@@ -166,7 +164,6 @@ function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }
       </p>
       <div className="flex justify-center">
         <svg viewBox="0 0 100 100" className="w-32 h-32">
-          {/* Background circle */}
           <circle
             cx="50"
             cy="50"
@@ -175,7 +172,6 @@ function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }
             stroke="var(--border)"
             strokeWidth="8"
           />
-          {/* Foreground arc */}
           <motion.circle
             cx="50"
             cy="50"
@@ -193,7 +189,6 @@ function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }
               transform: "rotate(-90deg)",
             }}
           />
-          {/* Center text */}
           <text
             x="50"
             y="50"
@@ -214,6 +209,340 @@ function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }
   );
 }
 
+/* ─── Row 2 (desktop only): customer segments, churn risk, best days ─── */
+
+function SegmentsChart({ label, categories }: { label: string; categories: string[] }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  const data = [
+    { pct: 28, color: "var(--accent)", opacity: 0.4 },
+    { pct: 24, color: "var(--accent)", opacity: 0.65 },
+    { pct: 33, color: "var(--stamp-sage)", opacity: 0.8 },
+    { pct: 15, color: "var(--stamp-sage)", opacity: 1 },
+  ];
+
+  return (
+    <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
+        Pro
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
+        {label}
+      </p>
+      <div className="space-y-2.5">
+        {data.map((d, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <span className="text-[11px] font-medium text-[var(--muted-foreground)] w-[80px] text-right shrink-0 truncate">
+              {categories[i]}
+            </span>
+            <div className="flex-1 h-6 bg-[var(--muted)] rounded-lg overflow-hidden">
+              <motion.div
+                className="h-full rounded-lg"
+                style={{ backgroundColor: d.color, opacity: d.opacity }}
+                initial={{ width: 0 }}
+                animate={isInView ? { width: `${d.pct}%` } : {}}
+                transition={{ duration: 0.7, delay: i * 0.1, ease: "easeOut" }}
+              />
+            </div>
+            <span className="text-xs font-bold text-[var(--foreground)] w-8 tabular-nums">
+              {d.pct}%
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ChurnChart({ label, value, subtitle }: { label: string; value: string; subtitle: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
+  const target = parseInt(value, 10);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let current = 0;
+    const step = () => {
+      current += 1;
+      if (current <= target) {
+        setCount(current);
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+  }, [isInView, target]);
+
+  return (
+    <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
+        Pro
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
+        {label}
+      </p>
+      <div className="flex items-end gap-4">
+        <span className="text-5xl font-extrabold text-[#ef4444] leading-none tabular-nums">
+          {count}
+        </span>
+        <svg width="80" height="32" viewBox="0 0 80 32" className="flex-shrink-0 mb-1">
+          <motion.path
+            d="M0 4 L13 8 L26 6 L40 14 L53 18 L66 24 L80 30"
+            fill="none"
+            stroke="#ef4444"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0 }}
+            animate={isInView ? { pathLength: 1 } : {}}
+            transition={{ duration: 1, ease: "easeOut" }}
+          />
+        </svg>
+      </div>
+      <p className="text-xs text-[var(--muted-foreground)] mt-2">{subtitle}</p>
+    </div>
+  );
+}
+
+function BestDaysChart({ label, days }: { label: string; days: string[] }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  const values = [32, 45, 38, 41, 52, 28, 14];
+  const maxVal = Math.max(...values);
+  const minVal = Math.min(...values);
+  const maxH = 60;
+
+  return (
+    <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
+        Pro
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
+        {label}
+      </p>
+      <div className="flex items-end justify-between gap-2" style={{ height: maxH + 20 }}>
+        {values.map((val, i) => {
+          const h = (val / maxVal) * maxH;
+          const isBest = val === maxVal;
+          const isWorst = val === minVal;
+          return (
+            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+              <motion.div
+                className="w-full rounded-md"
+                style={{
+                  backgroundColor: isBest
+                    ? "var(--stamp-sage)"
+                    : isWorst
+                      ? "#ef4444"
+                      : "var(--accent)",
+                  opacity: isBest || isWorst ? 1 : 0.3,
+                }}
+                initial={{ height: 0 }}
+                animate={isInView ? { height: h } : {}}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: "easeOut" }}
+              />
+              <span
+                className="text-[10px] font-semibold"
+                style={{
+                  color: isBest
+                    ? "var(--stamp-sage)"
+                    : isWorst
+                      ? "#ef4444"
+                      : "var(--muted-foreground)",
+                }}
+              >
+                {days[i]}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Row 3 (desktop only): time to reward, completion rate, return rate ─── */
+
+function TimeToRewardChart({ label, value, unit }: { label: string; value: string; unit: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
+  const target = parseInt(value, 10);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let current = 0;
+    const step = () => {
+      current += 1;
+      if (current <= target) {
+        setCount(current);
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+  }, [isInView, target]);
+
+  return (
+    <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
+        Pro
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
+        {label}
+      </p>
+      <div className="flex items-end gap-1 mb-3">
+        <span className="text-5xl font-extrabold text-[var(--foreground)] leading-none tabular-nums">
+          {count}
+        </span>
+        <span className="text-sm font-medium text-[var(--muted-foreground)] mb-1">
+          {unit}
+        </span>
+      </div>
+      <svg viewBox="0 0 200 50" className="w-full h-auto">
+        <motion.polygon
+          points="0,50 20,42 40,35 60,25 80,18 100,12 120,10 140,14 160,22 180,34 200,50"
+          fill="var(--accent)"
+          fillOpacity={0.12}
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        />
+        <motion.polyline
+          points="20,42 40,35 60,25 80,18 100,12 120,10 140,14 160,22 180,34"
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 0 }}
+          animate={isInView ? { pathLength: 1 } : {}}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        />
+      </svg>
+    </div>
+  );
+}
+
+function CompletionRateChart({ label, value, subtitle }: { label: string; value: string; subtitle: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
+  const target = parseInt(value, 10);
+
+  const radius = 40;
+  const circumference = 2 * Math.PI * radius;
+  const targetOffset = circumference * (1 - target / 100);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let current = 0;
+    const step = () => {
+      current += 1;
+      if (current <= target) {
+        setCount(current);
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+  }, [isInView, target]);
+
+  return (
+    <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
+        Pro
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
+        {label}
+      </p>
+      <div className="flex items-center gap-5">
+        <svg viewBox="0 0 100 100" className="w-28 h-28 shrink-0">
+          <circle cx="50" cy="50" r={radius} fill="none" stroke="var(--border)" strokeWidth="8" />
+          <motion.circle
+            cx="50"
+            cy="50"
+            r={radius}
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="8"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            initial={{ strokeDashoffset: circumference }}
+            animate={isInView ? { strokeDashoffset: targetOffset } : {}}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            style={{ transformOrigin: "50% 50%", transform: "rotate(-90deg)" }}
+          />
+          <text x="50" y="50" textAnchor="middle" dominantBaseline="central" fill="var(--foreground)" fontSize="18" fontWeight="800">
+            {count}%
+          </text>
+        </svg>
+        <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
+          {subtitle}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ReturnRateChart({ label, value, subtitle }: { label: string; value: string; subtitle: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const [count, setCount] = useState(0);
+  const target = parseInt(value, 10);
+
+  useEffect(() => {
+    if (!isInView) return;
+    let current = 0;
+    const step = () => {
+      current += 1;
+      if (current <= target) {
+        setCount(current);
+        requestAnimationFrame(step);
+      }
+    };
+    requestAnimationFrame(step);
+  }, [isInView, target]);
+
+  return (
+    <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
+      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
+        Pro
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
+        {label}
+      </p>
+      <div className="flex items-end gap-1 mb-4">
+        <span className="text-5xl font-extrabold text-[var(--stamp-sage)] leading-none tabular-nums">
+          {count}%
+        </span>
+      </div>
+      <div className="space-y-2">
+        <div className="h-5 bg-[var(--muted)] rounded-lg overflow-hidden">
+          <motion.div
+            className="h-full rounded-lg bg-[var(--accent)]"
+            initial={{ width: 0 }}
+            animate={isInView ? { width: "100%" } : {}}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          />
+        </div>
+        <div className="h-5 bg-[var(--muted)] rounded-lg overflow-hidden">
+          <motion.div
+            className="h-full rounded-lg"
+            style={{ backgroundColor: "var(--stamp-sage)" }}
+            initial={{ width: 0 }}
+            animate={isInView ? { width: `${target}%` } : {}}
+            transition={{ duration: 0.9, delay: 0.2, ease: "easeOut" }}
+          />
+        </div>
+      </div>
+      <p className="text-xs text-[var(--muted-foreground)] mt-2">{subtitle}</p>
+    </div>
+  );
+}
+
+/* ─── Section ─── */
+
 export function ProChartCards() {
   const t = useTranslations("features.analytiques.custom");
 
@@ -233,6 +562,7 @@ export function ProChartCards() {
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {/* Row 1 — all screens */}
           <ScrollReveal delay={0}>
             <LineChart
               label={t("proCharts.lineChart.label")}
@@ -251,6 +581,62 @@ export function ProChartCards() {
               valueLabel={t("proCharts.donut.value")}
             />
           </ScrollReveal>
+
+          {/* Row 2 — desktop only */}
+          <div className="hidden md:block">
+            <ScrollReveal delay={300}>
+              <SegmentsChart
+                label={t("proCharts.segments.label")}
+                categories={t.raw("proCharts.segments.categories") as string[]}
+              />
+            </ScrollReveal>
+          </div>
+          <div className="hidden md:block">
+            <ScrollReveal delay={400}>
+              <ChurnChart
+                label={t("proCharts.churn.label")}
+                value={t("proCharts.churn.value")}
+                subtitle={t("proCharts.churn.subtitle")}
+              />
+            </ScrollReveal>
+          </div>
+          <div className="hidden md:block">
+            <ScrollReveal delay={500}>
+              <BestDaysChart
+                label={t("proCharts.bestDays.label")}
+                days={t.raw("proCharts.bestDays.days") as string[]}
+              />
+            </ScrollReveal>
+          </div>
+
+          {/* Row 3 — desktop only */}
+          <div className="hidden md:block">
+            <ScrollReveal delay={600}>
+              <TimeToRewardChart
+                label={t("proCharts.timeToReward.label")}
+                value={t("proCharts.timeToReward.value")}
+                unit={t("proCharts.timeToReward.unit")}
+              />
+            </ScrollReveal>
+          </div>
+          <div className="hidden md:block">
+            <ScrollReveal delay={700}>
+              <CompletionRateChart
+                label={t("proCharts.completionRate.label")}
+                value={t("proCharts.completionRate.value")}
+                subtitle={t("proCharts.completionRate.subtitle")}
+              />
+            </ScrollReveal>
+          </div>
+          <div className="hidden md:block">
+            <ScrollReveal delay={800}>
+              <ReturnRateChart
+                label={t("proCharts.returnRate.label")}
+                value={t("proCharts.returnRate.value")}
+                subtitle={t("proCharts.returnRate.subtitle")}
+              />
+            </ScrollReveal>
+          </div>
         </div>
       </Container>
     </section>

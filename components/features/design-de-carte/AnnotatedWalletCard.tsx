@@ -11,33 +11,32 @@ import type { CardDesign } from "@/lib/types/design";
 
 interface Annotation {
   label: string;
-  // Position on the card as % from top-left
   cardX: number;
   cardY: number;
-  // Label offset direction
   side: "left" | "right";
 }
 
 const CARD_DESIGN: Partial<CardDesign> = {
   organization_name: "Mon Café Parisien",
-  background_color: "#1c1c1e",
-  stamp_filled_color: "#f97316",
+  background_color: "#2C1810",
+  stamp_filled_color: "#D4A574",
   icon_color: "#ffffff",
   stamp_icon: "coffee",
   reward_icon: "gift",
   total_stamps: 8,
   secondary_fields: [
-    { key: "reward", label: "Récompense", value: "8ᵉ café offert" },
-    { key: "member", label: "Membre", value: "Sophie Martin" },
+    { key: "reward", label: "Récompense", value: "Café offert" },
+    { key: "points", label: "Points", value: "5/8" },
   ],
 };
 
 const ANNOTATIONS: Annotation[] = [
-  { label: "logo", cardX: 12, cardY: 8, side: "left" },
-  { label: "orgName", cardX: 88, cardY: 8, side: "right" },
-  { label: "stampGrid", cardX: 50, cardY: 40, side: "right" },
-  { label: "reward", cardX: 15, cardY: 65, side: "left" },
-  { label: "qrCode", cardX: 50, cardY: 85, side: "right" },
+  { label: "logo", cardX: 15, cardY: 1, side: "left" },
+  { label: "orgName", cardX: 85, cardY: 3, side: "right" },
+  { label: "stampGrid", cardX: 15, cardY: 33, side: "left" },
+  { label: "customFields", cardX: 85, cardY: 50, side: "right" },
+  { label: "reward", cardX: 15, cardY: 53, side: "left" },
+  { label: "qrCode", cardX: 85, cardY: 75, side: "right" },
 ];
 
 function DesktopAnnotations({ labels }: { labels: string[] }) {
@@ -51,23 +50,36 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
 
   if (!isMounted) return null;
 
+  // Card is 300px centered inside a max-w-3xl (~768px) container.
+  // Card left edge ≈ 30.5%, right edge ≈ 69.5%.
+  // Left labels: anchored by `right` so their right edge (line tip) aligns to card left edge.
+  // Right labels: anchored by `left` so their left edge (line tip) starts at card right edge.
+  const CARD_LEFT_EDGE = 28; // % — a few px gap before the card
+  const CARD_RIGHT_EDGE = 72; // % — a few px gap after the card
+
   return (
     <div ref={ref} className="hidden lg:block absolute inset-0 pointer-events-none">
       {ANNOTATIONS.map((ann, i) => {
         const isLeft = ann.side === "left";
-        // Calculate label position with offset
-        const labelX = isLeft ? ann.cardX - 32 : ann.cardX + 32;
-        const labelY = ann.cardY;
 
         return (
           <motion.div
             key={i}
             className="absolute"
-            style={{
-              left: `${labelX}%`,
-              top: `${labelY}%`,
-              transform: "translate(-50%, -50%)",
-            }}
+            style={
+              isLeft
+                ? {
+                    // Anchor right edge near card left edge — content right-aligns naturally
+                    right: `${100 - CARD_LEFT_EDGE}%`,
+                    top: `${ann.cardY}%`,
+                    transform: "translateY(-50%)",
+                  }
+                : {
+                    left: `${CARD_RIGHT_EDGE}%`,
+                    top: `${ann.cardY}%`,
+                    transform: "translateY(-50%)",
+                  }
+            }
             initial={{ opacity: 0, x: isLeft ? -15 : 15 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.3 + i * 0.12 }}
@@ -103,6 +115,45 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
               )}
             </div>
           </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+function MobileAnnotations() {
+  const isMounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+
+  if (!isMounted) return null;
+
+  return (
+    <div className="lg:hidden absolute inset-0 pointer-events-none z-20">
+      {ANNOTATIONS.map((ann, i) => {
+        const isLeft = ann.side === "left";
+        return (
+          <motion.span
+            key={i}
+            className="absolute w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+            style={{
+              background: "var(--accent)",
+              color: "#fff",
+              boxShadow: "0 2px 6px rgba(249, 115, 22, 0.4)",
+              top: `${ann.cardY}%`,
+              left: isLeft ? "-10px" : undefined,
+              right: isLeft ? undefined : "-10px",
+              transform: "translateY(-50%)",
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: 0.2 + i * 0.08 }}
+          >
+            {i + 1}
+          </motion.span>
         );
       })}
     </div>
@@ -152,10 +203,11 @@ export function AnnotatedWalletCard() {
           </p>
         </ScrollReveal>
 
-        <ScrollReveal className="max-w-lg mx-auto">
+        <ScrollReveal className="max-w-3xl mx-auto">
           <div className="relative">
             {/* The card */}
             <div className="relative z-10 mx-auto max-w-[300px]">
+              <MobileAnnotations />
               <ScaledCardWrapper baseWidth={300}>
                 <WalletCard
                   design={CARD_DESIGN}

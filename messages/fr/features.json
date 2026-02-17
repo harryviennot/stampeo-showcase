@@ -80,6 +80,7 @@
             "Logo",
             "Nom du commerce",
             "Bande de tampons",
+            "Champs de votre choix",
             "Récompense",
             "QR code client"
           ]
@@ -363,7 +364,7 @@
       },
       "problem": {
         "title": "Ce que vous ne savez pas aujourd'hui",
-        "description": "Combien de clients réguliers avez-vous ? À quelle fréquence reviennent-ils ? Qui a arrêté de venir ? Quel jour est le plus calme ? Avec des cartes en carton, ces questions n'ont pas de réponse. Vous gérez votre fidélisation à l'aveugle."
+        "description": "Avec des cartes en carton, vous gérez votre fidélisation à l'aveugle. Aucune donnée, aucune visibilité, aucune possibilité d'améliorer ce que vous ne mesurez pas."
       },
       "sections": [
         {
@@ -414,6 +415,8 @@
         },
         "activityFeed": {
           "title": "Activité en direct",
+          "sectionTitle": "Votre commerce, en temps réel",
+          "sectionDescription": "Chaque tampon, chaque récompense, chaque inscription — suivez l'activité de votre programme de fidélité en direct.",
           "stampAction": "a obtenu un tampon",
           "rewardAction": "a réclamé sa récompense",
           "newCustomerAction": "vient de s'inscrire",
@@ -427,7 +430,13 @@
         "proCharts": {
           "lineChart": { "label": "Scans / semaine", "trend": "+23%" },
           "heatmap": { "label": "Heures de pointe", "days": ["L", "M", "M", "J", "V", "S", "D"] },
-          "donut": { "label": "Rétention 30j", "value": "72%" }
+          "donut": { "label": "Rétention 30j", "value": "72%" },
+          "segments": { "label": "Segments clients", "categories": ["Nouveaux", "Occasionnels", "Réguliers", "VIP"] },
+          "churn": { "label": "Clients à risque", "value": "23", "subtitle": "inactifs depuis 30j+" },
+          "bestDays": { "label": "Jours les plus actifs", "days": ["L", "M", "M", "J", "V", "S", "D"] },
+          "timeToReward": { "label": "Temps moyen carte complète", "value": "18", "unit": "jours" },
+          "completionRate": { "label": "Taux de complétion", "value": "64", "subtitle": "complètent leur carte" },
+          "returnRate": { "label": "Retour après récompense", "value": "78", "subtitle": "entament une 2e carte" }
         }
       }
     },
