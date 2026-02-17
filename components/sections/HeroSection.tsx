@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
@@ -7,17 +8,6 @@ import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
-
-function GeometricDecorations() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-      <div className="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-[var(--accent)]/20 blur-3xl" />
-      <div className="absolute bottom-20 right-[5%] w-96 h-96 bg-[var(--accent)]/10 blur-2xl rotate-45" />
-      <div className="absolute top-1/3 right-1/4 w-48 h-48 bg-[var(--stamp-sage)]/30 rounded-full blur-2xl" />
-      <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-[var(--stamp-coral)]/20 blur-3xl rotate-12" />
-    </div>
-  );
-}
 
 function StampButton({
   onClick,
@@ -111,18 +101,58 @@ function DemoStatusHint({
   return null;
 }
 
+function useOfflineStampAnimation(isOffline: boolean, totalStamps: number) {
+  const [animatedStamps, setAnimatedStamps] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!isOffline) return;
+
+    // Start animation after a short delay
+    const startDelay = setTimeout(() => {
+      let current = 0;
+      timerRef.current = setInterval(() => {
+        current += 1;
+        setAnimatedStamps(current);
+        if (current >= totalStamps) {
+          if (timerRef.current) clearInterval(timerRef.current);
+        }
+      }, 400);
+    }, 800);
+
+    return () => {
+      clearTimeout(startDelay);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isOffline, totalStamps]);
+
+  return animatedStamps;
+}
+
 export function HeroSection() {
   const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
   const t = useTranslations("landing.hero");
+  const tCommon = useTranslations("common");
+
+  // After 3s, stop showing skeleton so the fake QR appears as fallback
+  const [qrTimedOut, setQrTimedOut] = useState(false);
+  useEffect(() => {
+    if (!isLoading && !isStamping) return;
+    const timer = setTimeout(() => setQrTimedOut(true), 3000);
+    return () => clearTimeout(timer);
+  }, [isLoading, isStamping]);
+
+  const isOffline = !isLoading && status === "error";
+  const showFakeDemo = isOffline || (qrTimedOut && !qrUrl);
+  const offlineStamps = useOfflineStampAnimation(showFakeDemo, 8);
+  const displayStamps = showFakeDemo ? offlineStamps : stamps;
 
   return (
     <section className="relative min-h-screen flex flex-col pt-24">
-      <GeometricDecorations />
-
       <main className="relative z-10 flex-1 flex items-center px-6 lg:px-10 py-12 lg:py-24">
         <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Column: Content */}
-          <ScrollReveal className="flex flex-col gap-8 order-2 lg:order-1">
+          <ScrollReveal className="flex flex-col gap-8">
             <div>
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--accent)]/10 shadow-sm mb-6">
@@ -171,7 +201,7 @@ export function HeroSection() {
           </ScrollReveal>
 
           {/* Right Column: 3D Digital Card + Demo Controls */}
-          <ScrollReveal delay={200} className="flex flex-col items-center order-1 lg:order-2">
+          <ScrollReveal delay={200} className="flex flex-col items-center">
             <div className="w-full max-w-[380px]">
               <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
@@ -183,13 +213,13 @@ export function HeroSection() {
                     label_color: "#fff",
                     logo_url: "data:image/svg+xml,%3Csvg fill='none' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath clip-rule='evenodd' d='M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z' fill='%23f97316' fill-rule='evenodd'/%3E%3C/svg%3E",
                     secondary_fields: [
-                      { key: "reward", label: "Reward", value: "30 days free trial" }
+                      { key: "reward", label: tCommon("reward"), value: displayStamps === 8 ? tCommon("rewarded") : tCommon("rewardText") }
                     ],
                   }}
-                  stamps={stamps}
+                  stamps={displayStamps}
                   showQR={true}
                   qrUrl={qrUrl}
-                  isQRLoading={isLoading || isStamping}
+                  isQRLoading={!qrTimedOut && (isLoading || isStamping)}
                   interactive3D={true}
                 />
               </ScaledCardWrapper>

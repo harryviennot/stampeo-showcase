@@ -3,7 +3,7 @@
     "hero": {
       "badge": "Early Access — France",
       "title": "Loyalty cards your customers <accent>actually keep.</accent>",
-      "subtitle": "Digital passes that live in Apple Wallet. Upload your logo, pick your colors, and your card is ready in minutes. No app for your customers to download.",
+      "subtitle": "Digital passes that live in Apple Wallet and Google Wallet. Upload your logo, pick your colors, and your card is ready in minutes. No app for your customers to download.",
       "cta": "Become a Founding Partner",
       "secondaryCta": "See how it works",
       "stamp": {
@@ -22,6 +22,8 @@
       "lostDesc": "Paper cards get crumpled, forgotten in pockets, or thrown away. Your loyalty program becomes invisible.",
       "fatigueTitle": "App fatigue",
       "fatigueDesc": "Customers won't download another app just for stamps. The friction kills engagement before it starts.",
+      "zeroVisibilityTitle": "Zero visibility on your customers",
+      "zeroVisibilityDesc": "With a paper card, you don't know who comes back, how often, or when a customer stops visiting. You're flying blind.",
       "solution": "Stampeo puts your loyalty card where customers already look:",
       "solutionHighlight": "Their phone wallet.",
       "notification": "You earned a stamp!"
@@ -43,6 +45,10 @@
         {
           "title": "Instant feedback",
           "description": "A notification pops up the moment they earn a stamp. Satisfying and impossible to miss."
+        },
+        {
+          "title": "Clear rewards",
+          "description": "Your customers see exactly where they stand. No more \"I lost my card at stamp 7\". Progress is always visible."
         }
       ],
       "business": [
@@ -57,6 +63,10 @@
         {
           "title": "Scan your way",
           "description": "Use our free app or scan from any browser. No special equipment, no POS integration."
+        },
+        {
+          "title": "Notifications that land",
+          "description": "85% open rate on wallet notifications vs 20% for email. Your messages get read, not ignored."
         }
       ]
     },
@@ -66,11 +76,14 @@
       "subtitle": "Join as a founding partner and lock in lifetime pricing while helping shape the platform.",
       "valueProps": [
         "Shape the product with direct feedback",
-        "Direct channel with our team",
-        "3 months free, then €14.99/month for life",
-        "All Pro features included from day one"
+        "Direct channel with our team (not a chatbot, a human)",
+        "3 months free, then €14.99/month for life (instead of €29.99)",
+        "All Growth features included from day one",
+        "Limited spots — we accept applications in waves",
+        "Your first loyalty card designed by our team, for free"
       ],
-      "cta": "Become a Founding Partner"
+      "cta": "Become a Founding Partner",
+      "urgency": "Next wave: March 2026 — limited spots"
     },
     "howItWorks": {
       "badge": "How it works",
@@ -134,7 +147,7 @@
       "items": [
         {
           "question": "What is the founding partner program?",
-          "answer": "As a founding partner, you get early access to Stampeo with all Pro features. You'll help shape the product with direct feedback. After 3 free months, you lock in €14.99/month for life (normally €29.99)."
+          "answer": "As a founding partner, you get early access to Stampeo with all Growth features. You'll help shape the product with direct feedback. After 3 free months, you lock in €14.99/month for life (normally €29.99)."
         },
         {
           "question": "How do I create my loyalty card?",
@@ -155,17 +168,221 @@
         {
           "question": "How does early access work?",
           "answer": "After signing up, we review applications in small batches. You'll receive an email when your account is activated. This lets us ensure quality support for every partner."
+        },
+        {
+          "question": "Does it work with Google Wallet?",
+          "answer": "Yes. Stampeo generates cards compatible with both Apple Wallet and Google Wallet. The vast majority of smartphones (iPhone and Android) are covered. Features are identical on both platforms, except for location-based notifications which are currently only available on Apple Wallet."
+        },
+        {
+          "question": "Can a business have multiple loyalty cards?",
+          "answer": "With the Growth plan, yes. You can create multiple card templates — for example a \"coffee\" card and a \"Sunday brunch\" card — each with its own rewards. On the Starter plan, you have one active template at a time, which is enough for most businesses."
+        },
+        {
+          "question": "Can I send promotional campaigns?",
+          "answer": "With the Growth plan, you'll be able to send promotional notifications to all your customers or specific segments (e.g., customers who haven't visited in 30 days). This feature is under development and will be available in the coming months. In the meantime, automatic notifications (stamp, milestone, reward) are active on all plans."
         }
       ],
       "stillQuestions": "Still have questions?",
       "stillQuestionsDesc": "We're here to help you grow your business and build lasting customer relationships.",
       "startFreeTrial": "Apply for Early Access",
-      "contactSupport": "Contact Support"
+      "contactSupport": "Contact Us"
     },
     "finalCta": {
       "title": "Ready to turn visitors into <accent>regulars?</accent>",
       "cta": "Become a Founding Partner",
       "subtitle": "Early access · 3 months free · €14.99/month for life"
+    },
+    "comparisonTable": {
+      "title": "Why wallet?",
+      "subtitle": "Compare loyalty solutions for independent businesses.",
+      "columns": [
+        "Paper card (for 500 cards)",
+        "Mobile app",
+        "Stampeo (Wallet)"
+      ],
+      "rows": [
+        {
+          "criteria": "Startup cost",
+          "values": [
+            "~€50–100 (+ stamp)",
+            "€50–200/month",
+            "From €14.99/month"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
+        },
+        {
+          "criteria": "Customer adoption",
+          "values": [
+            "Average — they have to remember",
+            "Low — nobody downloads",
+            "High — already on their phone"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
+        },
+        {
+          "criteria": "Push notifications",
+          "values": [
+            "Impossible",
+            "Yes (if the app is installed)",
+            "Yes, directly in the wallet"
+          ],
+          "icons": [
+            "x",
+            "minus",
+            "check"
+          ]
+        },
+        {
+          "criteria": "Works offline",
+          "values": [
+            "Yes",
+            "Depends",
+            "Yes, always"
+          ],
+          "icons": [
+            "check",
+            "minus",
+            "check"
+          ]
+        },
+        {
+          "criteria": "Fraud risk",
+          "values": [
+            "High (generic stamp)",
+            "Low",
+            "None (unique encrypted QR)"
+          ],
+          "icons": [
+            "x",
+            "check",
+            "check"
+          ]
+        },
+        {
+          "criteria": "Customer data",
+          "values": [
+            "None",
+            "Yes, but few people install",
+            "Yes, from the first scan"
+          ],
+          "icons": [
+            "x",
+            "minus",
+            "check"
+          ]
+        },
+        {
+          "criteria": "Setup time",
+          "values": [
+            "~1 hour (design + printing)",
+            "2–4 weeks",
+            "5 minutes"
+          ],
+          "icons": [
+            "minus",
+            "x",
+            "check"
+          ]
+        }
+      ],
+      "footnote": "Wallet cards combine the best of both worlds: the simplicity of paper and the power of digital — without the downsides of either."
+    },
+    "sectorCards": {
+      "title": "Stampeo adapts to your business",
+      "subtitle": "Whether you sell coffees, baguettes, or haircuts, the principle is the same: reward loyalty.",
+      "sectors": [
+        {
+          "name": "Café",
+          "quote": "Marc orders his long black every morning. With Stampeo, he earns his 10th coffee automatically — and you know he's your best customer.",
+          "reward": "10 coffees bought = 1 free",
+          "advantage": "Scanning takes 1 second, no slowdown at the counter",
+          "link": "/blog/carte-fidelite-cafe",
+          "linkLabel": "Read the café guide"
+        },
+        {
+          "name": "Bakery",
+          "quote": "Sophie picks up her baguette every morning. Her paper card? Lost in her bag since last week. With the wallet, she always has it.",
+          "reward": "8 purchases = 1 free pastry",
+          "advantage": "No card to pull out, the phone is enough",
+          "link": "/blog/carte-fidelite-boulangerie",
+          "linkLabel": "Read the bakery guide"
+        },
+        {
+          "name": "Hair salon",
+          "quote": "Claire comes every month for her color. With Stampeo, it's automatic and Claire gets a free treatment after 6 visits.",
+          "reward": "6 appointments = 1 free treatment",
+          "advantage": "Notification when she passes near the salon",
+          "link": "/blog/programme-fidelite-salon-coiffure",
+          "linkLabel": "Read the salon guide"
+        },
+        {
+          "name": "Restaurant",
+          "quote": "Thomas has lunch at your place twice a week. He'd love to be rewarded, but he won't download an app for it. With the wallet card, it's simple.",
+          "reward": "€1 spent = 1 point, free dessert at 100 points",
+          "advantage": "Promotional campaigns to fill quiet days",
+          "link": "/blog/carte-fidelite-restaurant",
+          "linkLabel": "Read the restaurant guide"
+        }
+      ]
+    },
+    "featureGrid": {
+      "title": "Everything you need to build loyalty",
+      "subtitle": "Six features designed for independent businesses. No bloat.",
+      "learnMore": "Learn more",
+      "features": [
+        {
+          "title": "Push notifications",
+          "description": "Your customers finally read your messages. 85% open rate.",
+          "link": "/features/notifications-push"
+        },
+        {
+          "title": "Geolocation",
+          "description": "Remind them you exist when they walk by.",
+          "link": "/features/geolocalisation"
+        },
+        {
+          "title": "Mobile scanner",
+          "description": "One scan, one stamp. Even without internet.",
+          "link": "/features/scanner-mobile"
+        },
+        {
+          "title": "Analytics",
+          "description": "Know your regulars. Not just by sight.",
+          "link": "/features/analytiques"
+        },
+        {
+          "title": "Card design",
+          "description": "Your colors, your logo, ready in 5 minutes.",
+          "link": "/features/design-de-carte"
+        },
+        {
+          "title": "Founding program",
+          "description": "3 months free. Price locked for life.",
+          "link": "/programme-fondateur"
+        }
+      ]
+    },
+    "roi": {
+      "title": "What loyalty actually brings in",
+      "subtitle": "Adjust the sliders to match your business.",
+      "clientsLabel": "Customers per day",
+      "basketLabel": "Average basket",
+      "assumption": "Assumption: a loyalty program generates ~8% additional visits",
+      "breakdownClients": "{clients} clients/day × 8% = ~{extra} extra clients per day",
+      "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month in extra revenue",
+      "extraRevenue": "Extra revenue",
+      "perMonth": "/month",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Pays for itself",
+      "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program."
     }
   }
 }

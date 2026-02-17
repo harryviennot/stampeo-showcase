@@ -10,10 +10,6 @@ export function FAQSection() {
 
   return (
     <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
-      {/* Decoration: Top Right Stamp */}
-      <div className="absolute -top-10 -right-10 w-64 h-64 bg-[var(--accent)]/5 stamp-decoration pointer-events-none" />
-      <div className="absolute top-20 -right-20 w-48 h-48 bg-[var(--accent)]/10 stamp-decoration rotate-12 pointer-events-none" />
-
       <div className="max-w-[840px] mx-auto px-6 relative z-10">
         {/* Section Header */}
         <ScrollReveal className="mb-12">
@@ -30,7 +26,7 @@ export function FAQSection() {
           {faqs.map((faq, index) => (
             <details
               key={index}
-              className="group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4"
+              className="group flex flex-col rounded-xl bg-white blog-card-3d px-6 py-4"
               open={index === 0 || index === 1}
             >
               <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
@@ -60,13 +56,13 @@ export function FAQSection() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/onboarding"
-              className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-xl font-bold transition-all"
+              className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-full font-bold transition-all"
             >
               {t("startFreeTrial")}
             </Link>
             <Link
-              href="#"
-              className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-xl font-bold transition-all border border-white/10"
+              href="/contact"
+              className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full font-bold transition-all border border-white/10"
             >
               {t("contactSupport")}
             </Link>

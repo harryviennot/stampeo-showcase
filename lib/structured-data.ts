@@ -52,7 +52,7 @@ export function softwareApplicationJsonLd() {
     offers: [
       {
         "@type": "Offer",
-        name: "Pay",
+        name: "Starter",
         price: "14.99",
         priceCurrency: "EUR",
         description:
@@ -60,7 +60,7 @@ export function softwareApplicationJsonLd() {
       },
       {
         "@type": "Offer",
-        name: "Pro",
+        name: "Growth",
         price: "29.99",
         priceCurrency: "EUR",
         description:

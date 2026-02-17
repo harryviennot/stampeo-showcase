@@ -1,10 +1,37 @@
 {
   "common": {
+    "stamps": "Tampons",
+    "reward": "Récompense",
+    "rewarded": "Vous avez droit à 30 jours gratuits !",
+    "rewardText": "30 jours gratuit à 8 tampons !",
     "nav": {
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
       "faq": "FAQ",
-      "blog": "Blog"
+      "blog": "Blog",
+      "featuresItems": {
+        "designDeCarte": {
+          "label": "Design de carte",
+          "description": "Personnalisez votre carte en 5 minutes"
+        },
+        "scannerMobile": {
+          "label": "Scanner mobile",
+          "description": "Scannez en une seconde depuis votre téléphone"
+        },
+        "notificationsPush": {
+          "label": "Notifications push",
+          "description": "Engagez vos clients sur leur écran de verrouillage"
+        },
+        "analytiques": {
+          "label": "Analytiques",
+          "description": "Comprenez vos clients avec des données concrètes"
+        },
+        "geolocalisation": {
+          "label": "Géolocalisation",
+          "description": "Rappelez-leur que vous existez au bon moment"
+        }
+      },
+      "foundingProgram": "Programme fondateur"
     },
     "auth": {
       "signOut": "Se déconnecter",
@@ -31,19 +58,35 @@
       "brand": "Stampeo",
       "description": "Cartes de fidélité digitales pour les commerces modernes. Stimulez votre croissance grâce à des expériences simples et engageantes.",
       "product": "Produit",
+      "featuresTitle": "Fonctionnalités",
       "features": "Fonctionnalités",
+      "resources": "Ressources",
       "pricing": "Tarifs",
       "howItWorks": "Comment ça marche",
+      "help": "Centre d'aide",
       "blog": "Blog",
       "company": "Entreprise",
       "about": "À propos",
       "contact": "Contact",
-      "careers": "Carrières",
       "legal": "Mentions légales",
       "privacyPolicy": "Politique de confidentialité",
       "termsOfService": "Conditions d'utilisation",
       "allRightsReserved": "© {year} Stampeo. Tous droits réservés.",
-      "builtForLocal": "Conçu pour les commerces de proximité"
+      "builtForLocal": "Conçu pour les commerces de proximité",
+      "madeInFrance": "Made in France",
+      "gdprCompliant": "Conforme RGPD",
+      "cta": {
+        "title": "Prêt à vous lancer ?",
+        "subtitle": "Rejoignez les commerçants qui fidélisent leurs clients avec Stampeo.",
+        "button": "Commencer gratuitement"
+      },
+      "newsletter": {
+        "title": "Restez informé",
+        "placeholder": "Votre email",
+        "button": "S'inscrire",
+        "disclaimer": "Pas de spam. Désabonnement en un clic.",
+        "success": "Merci ! Vous êtes inscrit."
+      }
     }
   }
 }

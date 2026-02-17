@@ -13,6 +13,32 @@
       "title": "Contact - Stampeo",
       "description": "Get in touch with the Stampeo team. Questions about our digital loyalty cards? We're here to help."
     },
+    "features": {
+      "design-de-carte": {
+        "title": "Loyalty Card Design - Stampeo",
+        "description": "Create your digital loyalty card in 5 minutes. Customize colors, logo and design, or let us handle it."
+      },
+      "scanner-mobile": {
+        "title": "Mobile Scanner - Stampeo",
+        "description": "Stamp your customers in one second with your phone. Dedicated app or web scanner, with offline mode."
+      },
+      "notifications-push": {
+        "title": "Push Notifications - Stampeo",
+        "description": "Engage your customers directly on their lock screen. 85% read rate via wallet notifications."
+      },
+      "analytiques": {
+        "title": "Analytics Dashboard - Stampeo",
+        "description": "Know your regulars with real data. Trends, peak hours, visit frequency and retention."
+      },
+      "geolocalisation": {
+        "title": "Geolocation & Geofencing - Stampeo",
+        "description": "Remind your customers you exist when they pass nearby. Native Apple Wallet geofencing, GDPR compliant."
+      },
+      "programme-fondateur": {
+        "title": "Founding Partner Program - Stampeo",
+        "description": "3 months free, \u20ac14.99/month for life, all Pro features. Join the first 50 partner businesses."
+      }
+    },
     "acquisition": {
       "notFound": "Business Not Found | Stampeo",
       "notFoundDesc": "This business could not be found.",

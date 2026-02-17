@@ -2,38 +2,53 @@
   "pricing": {
     "badge": "Plans & Pricing",
     "title": "Simple, transparent pricing",
-    "subtitle": "Founding partners get Pro at a special lifetime rate.",
+    "subtitle": "Founding partners get Growth at a special lifetime rate.",
     "foundingPartner": "FOUNDING PARTNER",
     "perMonth": "/month",
     "cta": "Apply for Early Access",
+    "ctaSubtext": "No credit card required · Cancel anytime",
     "pay": {
-      "name": "Pay",
+      "name": "Starter",
+      "tagline": "Everything you need to launch your loyalty program",
       "price": "14.99",
       "description": "Everything you need to run a digital loyalty program.",
-      "featuresLabel": "Everything in Basic:",
+      "featuresLabel": "Everything included:",
       "features": [
         "1 active card template",
         "Unlimited customers & scans",
         "Up to 3 team members",
         "Offline scanning",
-        "Push notifications"
+        {
+          "text": "Push notifications",
+          "tooltip": "Customers receive a lock screen notification every time they earn a stamp, reach a milestone, or unlock a reward. Works through Apple Wallet and Google Wallet — no app needed."
+        }
       ]
     },
     "pro": {
-      "name": "Pro",
+      "name": "Growth",
+      "tagline": "For businesses ready to scale their customer relationships",
       "originalPrice": "29.99",
       "foundingPrice": "14.99",
       "freeMonths": "3 months free",
       "forLife": "/month for life",
       "description": "For founding partners — all features, lifetime pricing.",
-      "featuresLabel": "Everything in Pay, plus:",
+      "featuresLabel": "Everything in Starter, plus:",
       "features": [
         "Multiple card templates",
         "Unlimited team members",
-        "Multi-location support",
+        {
+          "text": "Multi-location support",
+          "tooltip": "Add multiple business addresses. Each location can scan and stamp independently. Perfect for businesses with several shops or pop-up locations."
+        },
         "Custom notification messages",
-        "Advanced analytics",
-        "Scheduled campaigns"
+        {
+          "text": "Advanced analytics",
+          "tooltip": "See visit frequency, peak hours, retention rates, and customer trends. Identify your best customers and spot those at risk of leaving."
+        },
+        {
+          "text": "Scheduled campaigns",
+          "tooltip": "Plan and schedule promotional notifications in advance. Send targeted messages to specific customer segments — like those who haven't visited in 30 days."
+        }
       ]
     }
   }
