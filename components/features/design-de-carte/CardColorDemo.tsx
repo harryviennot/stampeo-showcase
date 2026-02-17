@@ -99,7 +99,7 @@ export function CardColorDemo() {
                     : "var(--muted-foreground)",
               }}
             >
-              {th.name}
+              {themeTranslations[index].name}
             </span>
           </button>
         ))}
