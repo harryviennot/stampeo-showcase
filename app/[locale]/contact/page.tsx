@@ -12,7 +12,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
       <main className="pt-32 pb-20">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6">
           {/* Hero */}
           <div className="text-center mb-16">
             <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-4">
@@ -26,9 +26,9 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Form */}
-            <div className="bg-[var(--cream)] rounded-2xl p-8 border border-white/50">
+            <div className="bg-[var(--cream)] rounded-2xl p-8 md:p-10 border border-white/50">
               <form
                 className="space-y-5"
                 action={`mailto:hello@stampeo.app`}
@@ -93,7 +93,7 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-8">
+            <div className="bg-[var(--cream)] rounded-2xl p-8 md:p-10 border border-white/50 space-y-8 h-fit">
               <h2 className="text-xl font-bold">{t("info.title")}</h2>
 
               <div className="space-y-6">
