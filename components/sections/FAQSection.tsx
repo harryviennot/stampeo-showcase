@@ -30,7 +30,7 @@ export function FAQSection() {
           {faqs.map((faq, index) => (
             <details
               key={index}
-              className="group flex flex-col rounded-xl bg-[var(--cream)] shadow-sm border border-[var(--accent)]/5 px-6 py-4"
+              className="group flex flex-col rounded-xl bg-white blog-card-3d px-6 py-4"
               open={index === 0 || index === 1}
             >
               <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">

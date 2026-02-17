@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { WalletIcon, SignalIcon, BellIcon, SparklesIcon, ChartIcon, DevicePhoneMobileIcon } from "../icons";
+import { WalletIcon, SignalIcon, BellIcon, CheckIcon, SparklesIcon, ChartIcon, DevicePhoneMobileIcon } from "../icons";
 
-const customerIcons = [WalletIcon, SignalIcon, BellIcon];
-const businessIcons = [SparklesIcon, ChartIcon, DevicePhoneMobileIcon];
+const customerIcons = [WalletIcon, SignalIcon, BellIcon, CheckIcon];
+const businessIcons = [SparklesIcon, ChartIcon, DevicePhoneMobileIcon, BellIcon];
 
 export function BenefitsSection() {
   const [activeTab, setActiveTab] = useState<"customers" | "business">("customers");
@@ -64,13 +64,13 @@ export function BenefitsSection() {
         </ScrollReveal>
 
         {/* Benefit Cards */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-4">
           {translatedBenefits.map((benefit, index) => {
             const Icon = icons[index];
             return (
               <div
                 key={`${activeTab}-${index}`}
-                className="group relative flex flex-col gap-6 p-8 bg-[var(--cream)] rounded-xl shadow-xl shadow-[var(--accent)]/5 border border-white/50 transition-transform duration-300 hover:-translate-y-2"
+                className="group relative flex flex-col gap-6 p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2"
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
                   <Icon className="w-7 h-7" />

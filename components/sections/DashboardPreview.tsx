@@ -8,7 +8,7 @@ export function DashboardPreview() {
   const t = useTranslations("landing.dashboard");
 
   return (
-    <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--background-subtle)]">
+    <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg-alt)]">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
           {/* Content */}
@@ -51,7 +51,7 @@ export function DashboardPreview() {
 
           {/* Dashboard mockup */}
           <ScrollReveal variant="right" delay={150} className="relative">
-            <div className="clean-card rounded-3xl overflow-hidden">
+            <div className="bg-white blog-card-3d rounded-3xl overflow-hidden">
               {/* Browser chrome */}
               <div className="flex items-center gap-3 px-5 py-4 bg-[var(--muted)] border-b border-[var(--border)]">
                 <div className="flex gap-2">
@@ -86,7 +86,7 @@ export function DashboardPreview() {
                         <p className="text-2xl font-bold text-[var(--foreground)]">
                           {stat.value}
                         </p>
-                        <span className="text-xs text-green-600  font-medium mb-1">
+                        <span className="text-xs text-green-600 font-medium mb-1">
                           {stat.change}
                         </span>
                       </div>
@@ -101,10 +101,10 @@ export function DashboardPreview() {
                     <span>{t("progress")}</span>
                   </div>
                   {[
-                    { name: "Sarah M.", stamps: 7, total: 8, recent: true },
-                    { name: "John D.", stamps: 4, total: 8, recent: false },
-                    { name: "Emma W.", stamps: 6, total: 8, recent: true },
-                    { name: "Michael R.", stamps: 2, total: 8, recent: false },
+                    { name: "Sophie M.", stamps: 7, total: 8, recent: true },
+                    { name: "Marc D.", stamps: 4, total: 8, recent: false },
+                    { name: "Claire T.", stamps: 6, total: 8, recent: true },
+                    { name: "Thomas R.", stamps: 2, total: 8, recent: false },
                   ].map((customer, index) => (
                     <div
                       key={index}
@@ -119,7 +119,7 @@ export function DashboardPreview() {
                             {customer.name}
                           </p>
                           {customer.recent && (
-                            <p className="text-xs text-green-600 ">
+                            <p className="text-xs text-green-600">
                               {t("visitedToday")}
                             </p>
                           )}
@@ -143,7 +143,6 @@ export function DashboardPreview() {
                         <span className="text-sm font-medium text-[var(--foreground)] min-w-[35px]">
                           {customer.stamps}/{customer.total}
                         </span>
-
                       </div>
                     </div>
                   ))}

@@ -22,6 +22,8 @@
       "lostDesc": "Les cartes papier se froissent, s'oublient dans les poches ou finissent à la poubelle. Votre programme de fidélité devient invisible.",
       "fatigueTitle": "La lassitude des applis",
       "fatigueDesc": "Vos clients ne vont pas télécharger une énième application juste pour des tampons. Cette friction tue l'engagement avant même qu'il commence.",
+      "zeroVisibilityTitle": "Zéro visibilité sur vos clients",
+      "zeroVisibilityDesc": "Avec une carte en carton, vous ne savez pas qui revient, à quelle fréquence, ni quand un client arrête de venir. Vous pilotez à l'aveugle.",
       "solution": "Stampeo place votre carte de fidélité là où vos clients regardent déjà :",
       "solutionHighlight": "Leur portefeuille téléphone.",
       "notification": "Vous avez gagné un tampon !"
@@ -43,6 +45,10 @@
         {
           "title": "Retour instantané",
           "description": "Une notification apparaît dès qu'ils gagnent un tampon. Satisfaisant et impossible à rater."
+        },
+        {
+          "title": "Récompenses claires",
+          "description": "Vos clients voient exactement où ils en sont. Plus de \"j'ai perdu ma carte au 7e tampon\". La progression est toujours visible."
         }
       ],
       "business": [
@@ -57,20 +63,27 @@
         {
           "title": "Scannez comme vous voulez",
           "description": "Utilisez notre application gratuite ou scannez depuis n'importe quel navigateur. Aucun équipement spécial, aucune intégration caisse."
+        },
+        {
+          "title": "Notifications qui arrivent",
+          "description": "85 % de taux de lecture sur les notifications wallet, contre 20 % par email. Vos messages sont lus, pas ignorés."
         }
       ]
     },
     "foundingPartner": {
       "badge": "Programme Partenaire Fondateur",
       "title": "Aidez-nous à construire un produit que vous adorerez",
-      "subtitle": "Rejoignez-nous en tant que partenaire fondateur et bloquez votre tarif à vie tout en façonnant la plateforme.",
+      "subtitle": "Nous cherchons 50 commerçants français prêts à tester Stampeo en avant-première. En échange de vos retours, vous bénéficiez du meilleur tarif — à vie. Places limitées.",
       "valueProps": [
         "Façonnez le produit avec vos retours directs",
-        "Canal direct avec notre équipe",
-        "3 mois offerts, puis 14,99 €/mois à vie",
-        "Toutes les fonctionnalités Pro incluses dès le premier jour"
+        "Canal direct avec notre équipe (pas un chatbot, un humain)",
+        "3 mois offerts, puis 14,99 €/mois à vie (au lieu de 29,99 €)",
+        "Toutes les fonctionnalités Pro incluses dès le premier jour",
+        "Places limitées — nous acceptons les candidatures par vagues",
+        "Votre première carte de fidélité designée par notre équipe, gratuitement"
       ],
-      "cta": "Devenir Partenaire Fondateur"
+      "cta": "Devenir Partenaire Fondateur",
+      "urgency": "Prochaine vague : mars 2026 — places limitées"
     },
     "howItWorks": {
       "badge": "Comment ça marche",
@@ -120,12 +133,12 @@
       "almost": "Presque !"
     },
     "socialProof": {
-      "trustedBy": "Des commerces du monde entier nous font confiance",
-      "joinCount": "Rejoignez les 200+ commerces indépendants qui utilisent déjà Stampeo",
+      "trustedBy": "Des commerces français nous font déjà confiance",
+      "joinCount": "Rejoignez les 50+ partenaires fondateurs qui utilisent déjà Stampeo",
       "stats": {
-        "businesses": "Commerces",
-        "cardsIssued": "Cartes créées",
-        "rating": "Note"
+        "businesses": "partenaires fondateurs",
+        "cardsIssued": "cartes en circulation",
+        "rating": "note de satisfaction"
       }
     },
     "faq": {
@@ -155,6 +168,18 @@
         {
           "question": "Comment fonctionne l'accès anticipé ?",
           "answer": "Après votre inscription, nous examinons les candidatures par petits groupes. Vous recevrez un email lorsque votre compte sera activé. Cela nous permet d'assurer un accompagnement de qualité pour chaque partenaire."
+        },
+        {
+          "question": "Est-ce que ça marche avec Google Wallet ?",
+          "answer": "Oui. Stampeo génère des cartes compatibles avec Apple Wallet et Google Wallet. La grande majorité des smartphones (iPhone et Android) sont couverts. Les fonctionnalités sont identiques sur les deux plateformes, à l'exception des notifications de géolocalisation qui ne sont disponibles que sur Apple Wallet pour le moment."
+        },
+        {
+          "question": "Un commerce peut-il avoir plusieurs cartes de fidélité ?",
+          "answer": "Avec le plan Pro, oui. Vous pouvez créer plusieurs modèles de carte — par exemple une carte \"café\" et une carte \"brunch du dimanche\" — chacune avec ses propres récompenses. Sur le plan Pay, vous avez un modèle actif à la fois, ce qui suffit pour la plupart des commerces."
+        },
+        {
+          "question": "Peut-on envoyer des campagnes promotionnelles ?",
+          "answer": "Avec le plan Pro, vous pourrez envoyer des notifications promotionnelles à tous vos clients ou à des segments spécifiques (par exemple, les clients qui ne sont pas venus depuis 30 jours). Cette fonctionnalité est en cours de développement et sera disponible dans les prochains mois. En attendant, les notifications automatiques (tampon, jalon, récompense) sont actives sur tous les plans."
         }
       ],
       "stillQuestions": "Encore des questions ?",
@@ -166,6 +191,116 @@
       "title": "Prêt à transformer vos visiteurs en <accent>habitués ?</accent>",
       "cta": "Devenir Partenaire Fondateur",
       "subtitle": "Accès anticipé · 3 mois offerts · 14,99 €/mois à vie"
+    },
+    "comparisonTable": {
+      "title": "Pourquoi le wallet ?",
+      "subtitle": "Comparez les solutions de fidélisation pour un commerce indépendant.",
+      "columns": ["Carte papier", "App mobile", "Stampeo (Wallet)"],
+      "rows": [
+        {
+          "criteria": "Coût de démarrage",
+          "values": ["~0 € (tampon + cartons)", "50-200 €/mois", "À partir de 14,99 €/mois"]
+        },
+        {
+          "criteria": "Adoption client",
+          "values": ["Moyenne — il faut y penser", "Faible — personne ne télécharge", "Élevée — déjà dans le téléphone"]
+        },
+        {
+          "criteria": "Notifications push",
+          "values": ["Impossible", "Oui (si l'app est installée)", "Oui, directement dans le wallet"]
+        },
+        {
+          "criteria": "Fonctionne hors ligne",
+          "values": ["Oui", "Ça dépend", "Oui, toujours"]
+        },
+        {
+          "criteria": "Risque de fraude",
+          "values": ["Élevé (tampon générique)", "Faible", "Aucun (QR unique + chiffré)"]
+        },
+        {
+          "criteria": "Données clients",
+          "values": ["Aucune", "Oui, mais peu de gens installent", "Oui, dès le premier scan"]
+        },
+        {
+          "criteria": "Temps de mise en place",
+          "values": ["1 heure (imprimeur)", "2-4 semaines", "5 minutes"]
+        }
+      ],
+      "footnote": "Les cartes wallet combinent le meilleur des deux mondes : la simplicité du carton et la puissance du digital — sans les inconvénients de chacun."
+    },
+    "sectorCards": {
+      "title": "Stampeo s'adapte à votre commerce",
+      "subtitle": "Que vous vendiez des cafés, des baguettes ou des coupes de cheveux, le principe est le même : récompensez la fidélité.",
+      "sectors": [
+        {
+          "name": "Café",
+          "quote": "Marc commande son allongé tous les matins depuis deux ans. Avec Stampeo, il gagne son 10e café automatiquement — et vous, vous savez qu'il est votre meilleur client.",
+          "reward": "10 cafés achetés = 1 offert",
+          "advantage": "Le scan prend 1 seconde, aucun ralentissement au comptoir",
+          "link": "/blog/carte-fidelite-cafe",
+          "linkLabel": "Lire le guide pour les cafés"
+        },
+        {
+          "name": "Boulangerie",
+          "quote": "Sophie passe chercher sa baguette chaque matin. Sa carte en carton ? Perdue dans son sac depuis la semaine dernière. Avec le wallet, elle l'a toujours.",
+          "reward": "8 achats = 1 viennoiserie offerte",
+          "advantage": "Pas de carte à sortir, le téléphone suffit",
+          "link": "/blog/carte-fidelite-boulangerie",
+          "linkLabel": "Lire le guide pour les boulangeries"
+        },
+        {
+          "name": "Salon de coiffure",
+          "quote": "Claire vient tous les mois pour sa couleur. Avec Stampeo, c'est automatique et Claire reçoit un soin offert au bout de 6 visites.",
+          "reward": "6 prestations = 1 soin offert",
+          "advantage": "Notification quand elle passe près du salon",
+          "link": "/blog/programme-fidelite-salon-coiffure",
+          "linkLabel": "Lire le guide pour les salons"
+        },
+        {
+          "name": "Restaurant",
+          "quote": "Thomas déjeune chez vous deux fois par semaine. Il adorerait être récompensé, mais il ne va pas télécharger une app pour ça. Avec la carte wallet, c'est simple.",
+          "reward": "1 € dépensé = 1 point, dessert offert à 100 points",
+          "advantage": "Campagnes promotionnelles pour remplir les jours creux",
+          "link": "/blog/carte-fidelite-restaurant",
+          "linkLabel": "Lire le guide pour les restaurants"
+        }
+      ]
+    },
+    "featureGrid": {
+      "title": "Tout ce qu'il faut pour fidéliser",
+      "subtitle": "Six fonctionnalités pensées pour les commerces indépendants. Pas de superflu.",
+      "features": [
+        {
+          "title": "Notifications push",
+          "description": "Vos clients lisent enfin vos messages. 85 % de taux d'ouverture.",
+          "link": "/features/notifications-push"
+        },
+        {
+          "title": "Géolocalisation",
+          "description": "Rappelez-leur que vous existez quand ils passent à côté.",
+          "link": "/features/geolocalisation"
+        },
+        {
+          "title": "Scanner mobile",
+          "description": "Un scan, un tampon. Même sans internet.",
+          "link": "/features/scanner-mobile"
+        },
+        {
+          "title": "Analytiques",
+          "description": "Connaissez vos habitués. Pas juste de vue.",
+          "link": "/features/analytiques"
+        },
+        {
+          "title": "Design de carte",
+          "description": "Vos couleurs, votre logo, prêt en 5 minutes.",
+          "link": "/features/design-de-carte"
+        },
+        {
+          "title": "Programme fondateur",
+          "description": "3 mois offerts. Tarif bloqué à vie.",
+          "link": "/features/programme-fondateur"
+        }
+      ]
     }
   }
 }

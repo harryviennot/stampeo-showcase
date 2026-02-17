@@ -28,7 +28,7 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="py-20 sm:py-28 lg:py-36 relative bg-[var(--background-subtle)]"
+      className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg-alt)]"
     >
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-20">
