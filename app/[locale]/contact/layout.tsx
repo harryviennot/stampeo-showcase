@@ -8,12 +8,22 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata.contact" });
 
+  const baseUrl = "https://stampeo.app";
+
   return {
     title: t("title"),
     description: t("description"),
     openGraph: {
       title: t("title"),
       description: t("description"),
+    },
+    alternates: {
+      canonical: locale === "fr" ? `${baseUrl}/contact` : `${baseUrl}/${locale}/contact`,
+      languages: {
+        "x-default": `${baseUrl}/contact`,
+        fr: `${baseUrl}/contact`,
+        en: `${baseUrl}/en/contact`,
+      },
     },
   };
 }
