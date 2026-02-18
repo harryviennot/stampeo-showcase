@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@/i18n/navigation";
 
 const CYCLE_INTERVAL = 4000;
 
@@ -48,7 +49,7 @@ export function PromoBanner({
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="overflow-hidden"
         >
-          <a
+          <Link
             href="/programme-fondateur"
             className="relative h-10 flex items-center justify-center bg-black text-white overflow-hidden cursor-pointer group px-10"
           >
@@ -88,7 +89,7 @@ export function PromoBanner({
                 />
               </svg>
             </button>
-          </a>
+          </Link>
         </motion.div>
       )}
     </AnimatePresence>

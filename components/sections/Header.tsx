@@ -272,21 +272,18 @@ export function Header() {
   ];
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
-  const [bannerVisible, setBannerVisible] = useState(false);
-
-  useEffect(() => {
+  const [bannerVisible, setBannerVisible] = useState(() => {
+    if (typeof window === "undefined") return false;
     const dismissed = localStorage.getItem(BANNER_STORAGE_KEY);
-    if (!dismissed) {
-      setBannerVisible(true);
-    } else {
-      const elapsed = Date.now() - Number(dismissed);
-      const ONE_DAY = 24 * 60 * 60 * 1000;
-      if (elapsed > ONE_DAY) {
-        localStorage.removeItem(BANNER_STORAGE_KEY);
-        setBannerVisible(true);
-      }
+    if (!dismissed) return true;
+    const elapsed = Date.now() - Number(dismissed);
+    const ONE_DAY = 24 * 60 * 60 * 1000;
+    if (elapsed > ONE_DAY) {
+      localStorage.removeItem(BANNER_STORAGE_KEY);
+      return true;
     }
-  }, []);
+    return false;
+  });
 
   const dismissBanner = useCallback(() => {
     setBannerVisible(false);
