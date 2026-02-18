@@ -17,10 +17,14 @@ export function FoundingPartnerSection() {
             {t("badge")}
           </span>
           <h2 className="text-4xl lg:text-5xl font-extrabold tracking-tight mb-6">
-            {t("title")}
+            {t.rich("title", {
+              br: () => <br className="hidden md:block" />,
+            })}
           </h2>
           <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
-            {t("subtitle")}
+            {t.rich("subtitle", {
+              br: () => <br className="hidden md:block" />,
+            })}
           </p>
         </ScrollReveal>
 

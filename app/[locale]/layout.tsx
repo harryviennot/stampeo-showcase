@@ -45,20 +45,11 @@ export async function generateMetadata({
       type: "website",
       siteName: "Stampeo",
       locale: locale === "fr" ? "fr_FR" : "en_US",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: "Stampeo - Digital loyalty cards for Apple Wallet & Google Wallet",
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      images: ["/og-image.png"],
     },
     verification: {
       other: {

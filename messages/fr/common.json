@@ -31,13 +31,21 @@
           "description": "Rappelez-leur que vous existez au bon moment"
         }
       },
-      "foundingProgram": "Programme fondateur"
+      "foundingProgram": "Programme fondateur",
+      "contact": "Contact"
+    },
+    "promoBanner": {
+      "item1": "On vient de lancer — découvrez le <bold>Programme Fondateur</bold>",
+      "item2": "Les fondateurs bénéficient de <bold>-50% à vie</bold>",
+      "item3": "Aidez-nous à construire Stampeo — <bold>devenez fondateur</bold>",
+      "item4": "Accès prioritaire + <bold>-50% à vie</bold> — tant qu'il reste des places",
+      "dismiss": "Fermer"
     },
     "auth": {
       "signOut": "Se déconnecter",
       "dashboard": "Tableau de bord",
       "logIn": "Se connecter",
-      "getStarted": "Devenir Partenaire Fondateur"
+      "getStarted": "Démarrer\u00a0\u00a0→"
     },
     "buttons": {
       "continue": "Continuer",

@@ -49,11 +49,16 @@ export function HowItWorks({
             {t("badge")}
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-            {t("title")}
+            {t.rich("title", {
+              br: () => <br className="hidden md:block" />,
+              mbr: () => <br className="md:hidden" />,
+            })}
           </h2>
-          {t("subtitle") && (
+          {t.raw("subtitle") && (
             <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-              {t("subtitle")}
+              {t.rich("subtitle", {
+                mbr: () => <br className="md:hidden" />,
+              })}
             </p>
           )}
         </ScrollReveal>

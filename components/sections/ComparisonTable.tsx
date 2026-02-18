@@ -29,7 +29,9 @@ export function ComparisonTable() {
             {t("title")}
           </h2>
           <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-            {t("subtitle")}
+            {t.rich("subtitle", {
+              mbr: () => <br className="md:hidden" />,
+            })}
           </p>
         </ScrollReveal>
 
@@ -39,9 +41,10 @@ export function ComparisonTable() {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="text-left p-6 text-sm font-medium text-[var(--muted-foreground)] w-[28%]" />
+                  <th scope="col" className="text-left p-6 text-sm font-medium text-[var(--muted-foreground)] w-[28%]" />
                   {columns.map((col, i) => (
                     <th
+                      scope="col"
                       key={i}
                       className={`p-6 text-center text-sm font-bold w-[24%] ${i === 2
                           ? "bg-[var(--accent)] text-white"
@@ -59,9 +62,9 @@ export function ComparisonTable() {
                     key={rowIndex}
                     className={rowIndex % 2 === 0 ? "bg-[var(--muted)]/30" : ""}
                   >
-                    <td className="p-6 text-sm font-semibold text-[var(--foreground)]">
+                    <th scope="row" className="p-6 text-left text-sm font-semibold text-[var(--foreground)]">
                       {row.criteria}
-                    </td>
+                    </th>
                     {row.values.map((value, colIndex) => (
                       <td
                         key={colIndex}

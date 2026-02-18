@@ -31,13 +31,21 @@
           "description": "Remind them you exist at the right moment"
         }
       },
-      "foundingProgram": "Founding Program"
+      "foundingProgram": "Founding Program",
+      "contact": "Contact"
+    },
+    "promoBanner": {
+      "item1": "We just launched — meet the <bold>Founding Program</bold>",
+      "item2": "Founding members get <bold>50% off forever</bold>",
+      "item3": "Help us shape Stampeo — <bold>become a founder</bold>",
+      "item4": "Early access + <bold>50% off for life</bold> — while spots last",
+      "dismiss": "Dismiss"
     },
     "auth": {
       "signOut": "Sign out",
       "dashboard": "Dashboard",
       "logIn": "Log in",
-      "getStarted": "Become a Founding Partner"
+      "getStarted": "Get started\u00a0\u00a0→"
     },
     "buttons": {
       "continue": "Continue",
