@@ -144,9 +144,9 @@ Conformément au RGPD, vous disposez des droits suivants :
 - **Portabilité** — recevoir vos données dans un format structuré
 - **Opposition** — vous opposer au traitement
 
-**Utilisateurs Business et employés :** contactez-nous à privacy@stampeo.com.
+**Utilisateurs Business et employés :** contactez-nous à contact@stampeo.app.
 
-**Clients finaux :** contactez en priorité l'entreprise gérant votre carte. Vous pouvez aussi nous écrire à privacy@stampeo.com.
+**Clients finaux :** contactez en priorité l'entreprise gérant votre carte. Vous pouvez aussi nous écrire à contact@stampeo.app.
 
 Nous répondons dans un délai de 30 jours. En cas de litige, vous pouvez saisir la CNIL : www.cnil.fr.
 
@@ -170,5 +170,5 @@ Nous pouvons mettre à jour cette politique. En cas de modifications substantiel
 
 ## 14. Contact
 
-- **Email :** privacy@stampeo.com
+- **Email :** contact@stampeo.app
 - **Responsable :** Harry Viennot, Stampéo

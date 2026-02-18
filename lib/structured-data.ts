@@ -16,7 +16,7 @@ export function organizationJsonLd() {
     ],
     contactPoint: {
       "@type": "ContactPoint",
-      email: "hello@stampeo.app",
+      email: "contact@stampeo.app",
       contactType: "customer support",
       availableLanguage: ["French", "English"],
     },

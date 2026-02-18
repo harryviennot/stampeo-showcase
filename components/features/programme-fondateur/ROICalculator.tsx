@@ -4,6 +4,13 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../../ui/ScrollReveal";
 
+type Mode = "prudent" | "optimiste";
+
+const PERCENTAGES: Record<Mode, number> = {
+  prudent: 0.06,
+  optimiste: 0.12,
+};
+
 interface ROICalculatorProps {
   namespace?: string;
 }
@@ -12,8 +19,11 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
   const t = useTranslations(namespace);
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
+  const [mode, setMode] = useState<Mode>("prudent");
 
-  const extraClientsPerDay = clients * 0.08;
+  const percent = PERCENTAGES[mode];
+  const percentDisplay = Math.round(percent * 100);
+  const extraClientsPerDay = clients * percent;
   const extraRevenue = Math.round(extraClientsPerDay * basket * 30);
   const stampeoCost = 14.99;
   const multiplier = Math.round(extraRevenue / stampeoCost);
@@ -28,6 +38,32 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
           <p className="mt-3 sm:mt-4 text-base sm:text-lg text-[var(--muted-foreground)]">
             {t("subtitle")}
           </p>
+
+          {/* Prudent / Optimiste pill switcher */}
+          <div className="mt-5 sm:mt-6 inline-flex items-center rounded-full bg-[var(--blog-bg)] p-1">
+            <button
+              type="button"
+              onClick={() => setMode("prudent")}
+              className={`px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                mode === "prudent"
+                  ? "bg-white text-[var(--foreground)] shadow-sm"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              }`}
+            >
+              {t("modePrudent")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("optimiste")}
+              className={`px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
+                mode === "optimiste"
+                  ? "bg-white text-[var(--foreground)] shadow-sm"
+                  : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+              }`}
+            >
+              {t("modeOptimiste")}
+            </button>
+          </div>
         </ScrollReveal>
 
         <ScrollReveal delay={200}>
@@ -88,12 +124,13 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
             {/* Visible calculation breakdown */}
             <div className="mb-5 sm:mb-8 p-3 sm:p-4 rounded-xl bg-[var(--blog-bg)] space-y-1.5 sm:space-y-2">
               <p className="text-xs sm:text-sm font-medium text-[var(--muted-foreground)]">
-                {t("assumption")}
+                {t("assumption", { percent: percentDisplay })}
               </p>
               <div className="text-xs sm:text-sm text-[var(--muted-foreground)] space-y-0.5 sm:space-y-1">
                 <p>
                   {t("breakdownClients", {
                     clients,
+                    percent: percentDisplay,
                     extra: extraClientsPerDay % 1 === 0
                       ? extraClientsPerDay
                       : extraClientsPerDay.toFixed(1),
@@ -156,9 +193,12 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
               </div>
             </div>
 
-            {/* Disclaimer */}
+            {/* Disclaimer + Sources */}
             <p className="mt-4 sm:mt-6 text-[10px] sm:text-xs text-[var(--muted-foreground)] text-center">
               {t("disclaimer")}
+            </p>
+            <p className="mt-1.5 text-[10px] sm:text-xs text-[var(--muted-foreground)] text-center opacity-70">
+              {t("sources")}
             </p>
           </div>
         </ScrollReveal>

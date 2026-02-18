@@ -1,12 +1,47 @@
 "use client";
 
+import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+type FormStatus = "idle" | "sending" | "success" | "error";
+
 export default function ContactPage() {
   const t = useTranslations("contact");
+  const [status, setStatus] = useState<FormStatus>("idle");
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    setStatus("sending");
+
+    const formData = new FormData(form);
+    const body = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    };
+
+    try {
+      const res = await fetch(`${API_URL}/public/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setStatus("success");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[var(--background)]">
@@ -29,67 +64,89 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Form */}
             <div className="bg-[var(--cream)] rounded-2xl p-8 md:p-10 border border-white/50">
-              <form
-                className="space-y-5"
-                action={`mailto:hello@stampeo.app`}
-                method="POST"
-                encType="text/plain"
-              >
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.name")}
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder={t("form.namePlaceholder")}
-                    className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                  />
+              {status === "success" ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="text-lg font-semibold mb-2">{t("form.success")}</p>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    className="mt-4 text-sm text-[var(--accent)] hover:underline"
+                  >
+                    {t("form.send")}
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.email")}
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder={t("form.emailPlaceholder")}
-                    className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.subject")}
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    placeholder={t("form.subjectPlaceholder")}
-                    className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.message")}
-                  </label>
-                  <textarea
-                    name="message"
-                    rows={5}
-                    placeholder={t("form.messagePlaceholder")}
-                    className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full h-12 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all"
-                >
-                  {t("form.send")}
-                </button>
-              </form>
+              ) : (
+                <form className="space-y-5" onSubmit={handleSubmit}>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5">
+                      {t("form.name")}
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      autoComplete="name"
+                      placeholder={t("form.namePlaceholder")}
+                      className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                      required
+                      disabled={status === "sending"}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5">
+                      {t("form.email")}
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      autoComplete="email"
+                      placeholder={t("form.emailPlaceholder")}
+                      className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                      required
+                      disabled={status === "sending"}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5">
+                      {t("form.subject")}
+                    </label>
+                    <input
+                      type="text"
+                      name="subject"
+                      placeholder={t("form.subjectPlaceholder")}
+                      className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                      required
+                      disabled={status === "sending"}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-1.5">
+                      {t("form.message")}
+                    </label>
+                    <textarea
+                      name="message"
+                      rows={5}
+                      placeholder={t("form.messagePlaceholder")}
+                      className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                      required
+                      disabled={status === "sending"}
+                    />
+                  </div>
+                  {status === "error" && (
+                    <p className="text-sm text-red-600">{t("form.error")}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={status === "sending"}
+                    className="w-full h-12 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {status === "sending" ? t("form.sending") : t("form.send")}
+                  </button>
+                </form>
+              )}
             </div>
 
             {/* Contact Info */}
