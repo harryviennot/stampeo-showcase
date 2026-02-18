@@ -41,10 +41,15 @@ export function SectorCards() {
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
-            {t("title")}
+            {t.rich("title", {
+              br: () => <br className="hidden md:block" />,
+              mbr: () => <br className="md:hidden" />,
+            })}
           </h2>
           <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-            {t("subtitle")}
+            {t.rich("subtitle", {
+              br: () => <br className="hidden md:block" />,
+            })}
           </p>
         </ScrollReveal>
 

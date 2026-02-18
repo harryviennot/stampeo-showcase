@@ -73,7 +73,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
               {/* Clients per day */}
               <div>
                 <div className="flex items-center justify-between mb-2 sm:mb-3">
-                  <label className="text-sm sm:text-base font-bold text-[var(--foreground)]">
+                  <label htmlFor="roi-clients" className="text-sm sm:text-base font-bold text-[var(--foreground)]">
                     {t("clientsLabel")}
                   </label>
                   <span className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
@@ -81,6 +81,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                   </span>
                 </div>
                 <input
+                  id="roi-clients"
                   type="range"
                   min={10}
                   max={100}
@@ -98,7 +99,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
               {/* Average basket */}
               <div>
                 <div className="flex items-center justify-between mb-2 sm:mb-3">
-                  <label className="text-sm sm:text-base font-bold text-[var(--foreground)]">
+                  <label htmlFor="roi-basket" className="text-sm sm:text-base font-bold text-[var(--foreground)]">
                     {t("basketLabel")}
                   </label>
                   <span className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
@@ -106,6 +107,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                   </span>
                 </div>
                 <input
+                  id="roi-basket"
                   type="range"
                   min={3}
                   max={50}

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@/i18n/navigation";
 
 const CYCLE_INTERVAL = 4000;
 
@@ -48,9 +49,9 @@ export function PromoBanner({
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="overflow-hidden"
         >
-          <a
+          <Link
             href="/programme-fondateur"
-            className="relative h-10 flex items-center justify-center bg-black text-white overflow-hidden cursor-pointer group"
+            className="relative h-10 flex items-center justify-center bg-black text-white overflow-hidden cursor-pointer group px-10"
           >
             <AnimatePresence mode="wait">
               <motion.span
@@ -59,7 +60,7 @@ export function PromoBanner({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="text-sm group-hover:underline decoration-white/40"
+                className="text-xs sm:text-sm text-center leading-tight group-hover:underline decoration-white/40"
               >
                 {items[index]}
               </motion.span>
@@ -88,7 +89,7 @@ export function PromoBanner({
                 />
               </svg>
             </button>
-          </a>
+          </Link>
         </motion.div>
       )}
     </AnimatePresence>

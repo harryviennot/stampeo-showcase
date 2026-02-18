@@ -25,7 +25,7 @@ function FeatureListItem({ feature }: { feature: FeatureItem }) {
         {feature.text}
         <Tooltip>
           <TooltipTrigger asChild>
-            <button type="button" className="inline-flex text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
+            <button type="button" aria-label="Info" className="inline-flex text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">
               <InfoIcon className="w-4 h-4" />
             </button>
           </TooltipTrigger>

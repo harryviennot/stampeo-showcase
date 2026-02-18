@@ -492,12 +492,12 @@ export function WalletCard({
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h3
+                  <p
                     className="font-semibold text-sm tracking-tight leading-tight truncate transition-colors duration-300"
                     style={{ color: colors.mutedTextColor }}
                   >
                     {displayName}
-                  </h3>
+                  </p>
 
                 </div>
               </div>

@@ -93,6 +93,14 @@
             "Reward",
             "Customer QR code"
           ],
+          "mobileLabels": [
+            "Logo",
+            "Name",
+            "Stamps",
+            "Fields",
+            "Reward",
+            "QR code"
+          ],
           "card": {
             "orgName": "My Parisian Café",
             "rewardLabel": "Reward",
@@ -713,6 +721,7 @@
         "timeline": {
           "badge": "How it works",
           "title": "4 steps to become a founding partner",
+          "subtitle": "",
           "steps": [
             {
               "title": "Fill out the application",

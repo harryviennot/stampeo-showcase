@@ -6,7 +6,7 @@ import { Container } from "../../ui/Container";
 import { ScrollReveal } from "../../ui/ScrollReveal";
 import { ROICalculator } from "./ROICalculator";
 import { PriceReveal } from "./PriceReveal";
-import { FounderTimeline } from "./FounderTimeline";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import {
   ClockIcon,
   StarIcon,
@@ -219,7 +219,7 @@ export function FounderProgramPage() {
       <PriceReveal />
 
       {/* Founder Timeline */}
-      <FounderTimeline />
+      <HowItWorks translationKey="features.programme-fondateur.custom.timeline" />
 
       {/* FAQ */}
       <section className="py-24 lg:py-32">
