@@ -57,7 +57,7 @@ export default async function BlogPostPage({
   const locale = await getLocale();
 
   if (locale !== "fr") {
-    redirect(`/blog/${slug}`);
+    redirect(`/fr/blog/${slug}`);
   }
 
   const t = await getTranslations("blog");
