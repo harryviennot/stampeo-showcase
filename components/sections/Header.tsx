@@ -10,6 +10,7 @@ import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
+import { PromoBanner } from "./PromoBanner";
 
 function DesktopAuthButtons({
   loading,
@@ -265,14 +266,38 @@ export function Header() {
   const navItems = [
     { label: t("common.nav.foundingProgram"), href: "/programme-fondateur" },
     { label: t("common.nav.pricing"), href: "/#pricing" },
-    { label: t("common.nav.faq"), href: "/#faq" },
     ...(locale === "fr"
       ? [{ label: t("common.nav.blog"), href: "/blog" }]
       : []),
+    { label: t("common.nav.contact"), href: "/contact" },
   ];
 
+  const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
+  const [bannerVisible, setBannerVisible] = useState(false);
+
+  useEffect(() => {
+    const dismissed = localStorage.getItem(BANNER_STORAGE_KEY);
+    if (!dismissed) {
+      setBannerVisible(true);
+    } else {
+      const elapsed = Date.now() - Number(dismissed);
+      const ONE_DAY = 24 * 60 * 60 * 1000;
+      if (elapsed > ONE_DAY) {
+        localStorage.removeItem(BANNER_STORAGE_KEY);
+        setBannerVisible(true);
+      }
+    }
+  }, []);
+
+  const dismissBanner = useCallback(() => {
+    setBannerVisible(false);
+    localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
+  }, []);
+
   return (
+    <>
     <header className="fixed top-0 left-0 right-0 z-50">
+      <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
       <div
         className={`transition-all duration-300 border-b ${scrolled
           ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
@@ -409,5 +434,10 @@ export function Header() {
         </AnimatePresence>
       </div>
     </header>
+    <div
+      className="transition-all duration-300"
+      style={{ height: bannerVisible ? 40 : 0 }}
+    />
+    </>
   );
 }
