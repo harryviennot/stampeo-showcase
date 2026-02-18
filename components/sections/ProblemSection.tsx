@@ -32,7 +32,7 @@ export function ProblemSection() {
               <DocumentIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("lostTitle")}</h3>
+              <p className="text-2xl font-bold text-[var(--foreground)]">{t("lostTitle")}</p>
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                 {t("lostDesc")}
               </p>
@@ -45,7 +45,7 @@ export function ProblemSection() {
               <DevicePhoneMobileIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("fatigueTitle")}</h3>
+              <p className="text-2xl font-bold text-[var(--foreground)]">{t("fatigueTitle")}</p>
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                 {t("fatigueDesc")}
               </p>
@@ -58,7 +58,7 @@ export function ProblemSection() {
               <EyeSlashIcon className="w-7 h-7" />
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-2xl font-bold text-[var(--foreground)]">{t("zeroVisibilityTitle")}</h3>
+              <p className="text-2xl font-bold text-[var(--foreground)]">{t("zeroVisibilityTitle")}</p>
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                 {t("zeroVisibilityDesc")}
               </p>
