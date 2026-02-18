@@ -3,6 +3,9 @@
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { DocumentIcon, DevicePhoneMobileIcon, EyeSlashIcon } from "../icons";
+import { PhoneMockup } from "../features/notifications-push/PhoneMockup";
+import { WalletCard } from "../card/WalletCard";
+import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 
 export function ProblemSection() {
   const t = useTranslations("landing.problem");
@@ -82,40 +85,28 @@ export function ProblemSection() {
 
           {/* Phone Illustration */}
           <div className="mt-16 flex justify-center">
-            <div className="relative">
-              <div className="w-64 h-[500px] bg-[var(--foreground)] rounded-[3rem] p-3 shadow-2xl">
-                <div className="w-full h-full bg-[var(--background)] rounded-[2.5rem] overflow-hidden flex flex-col">
-                  {/* Status bar */}
-                  <div className="h-8 bg-[var(--foreground)] flex items-center justify-center">
-                    <div className="w-20 h-5 bg-[var(--foreground)] rounded-full" />
-                  </div>
-                  {/* Wallet notification */}
-                  <div className="flex-1 flex items-center justify-center p-4">
-                    <div className="w-full bg-[var(--cream)] rounded-2xl p-4 shadow-lg border border-[var(--accent)]/20">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-[var(--accent)] rounded-xl flex items-center justify-center text-white font-bold">
-                          S
-                        </div>
-                        <div>
-                          <p className="font-bold text-sm">Stampeo</p>
-                          <p className="text-xs text-[var(--muted-foreground)]">{t("notification")}</p>
-                        </div>
-                      </div>
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                          <div
-                            key={i}
-                            className={`w-6 h-6 rounded-full ${
-                              i <= 4 ? "bg-[var(--accent)]" : "border-2 border-dashed border-[var(--border)]"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <PhoneMockup width={260}>
+              <div className="flex-1 flex items-center justify-center p-3">
+                <ScaledCardWrapper baseWidth={280} targetWidth={230}>
+                  <WalletCard
+                    design={{
+                      organization_name: "Stampeo",
+                      total_stamps: 8,
+                      background_color: "#1c1c1e",
+                      stamp_filled_color: "#f97316",
+                      label_color: "#fff",
+                      logo_url: "data:image/svg+xml,%3Csvg fill='none' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath clip-rule='evenodd' d='M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z' fill='%23f97316' fill-rule='evenodd'/%3E%3C/svg%3E",
+                      secondary_fields: [
+                        { key: "reward", label: "Reward", value: "Free coffee" }
+                      ],
+                    }}
+                    stamps={4}
+                    showQR={true}
+                    interactive3D={false}
+                  />
+                </ScaledCardWrapper>
               </div>
-            </div>
+            </PhoneMockup>
           </div>
         </ScrollReveal>
       </div>

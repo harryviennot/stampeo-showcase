@@ -116,7 +116,7 @@ La Plateforme, son code source, son interface, son design et ses fonctionnalité
 
 L'Utilisateur Business conserve la propriété de ses contenus (logo, images, textes). En uploadant du contenu sur la Plateforme, l'Utilisateur Business accorde à Stampéo une licence non exclusive, mondiale et gratuite pour utiliser, afficher et distribuer ce contenu dans le cadre du fonctionnement du service.
 
-L'Utilisateur Business autorise également Stampéo à présenter sa carte de fidélité et son logo à titre de référence commerciale sur le site vitrine de Stampéo (ex : témoignages, exemples de cartes). L'Utilisateur Business peut retirer cette autorisation à tout moment par simple demande à support@stampeo.com.
+L'Utilisateur Business autorise également Stampéo à présenter sa carte de fidélité et son logo à titre de référence commerciale sur le site vitrine de Stampéo (ex : témoignages, exemples de cartes). L'Utilisateur Business peut retirer cette autorisation à tout moment par simple demande à support@stampeo.app.
 
 ## 9. Données des Clients Finaux
 
@@ -203,6 +203,6 @@ La poursuite de l'utilisation de la Plateforme après l'entrée en vigueur des m
 
 ## 17. Contact
 
-- **Email :** support@stampeo.com
+- **Email :** support@stampeo.app
 - **Éditeur :** Harry Viennot, auto-entrepreneur — France
 - **Hébergement :** Supabase (Irlande, UE) et OVH (France)

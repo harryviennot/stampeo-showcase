@@ -116,7 +116,7 @@ The Platform, its source code, interface, design, and features are the exclusive
 
 Business Users retain ownership of their content (logo, images, text). By uploading content to the Platform, Business Users grant Stampéo a non-exclusive, worldwide, royalty-free license to use, display, and distribute such content for the purpose of operating the service.
 
-Business Users also authorize Stampéo to showcase their loyalty card and logo as commercial references on the Stampéo website (e.g., testimonials, card examples). Business Users may withdraw this authorization at any time by contacting support@stampeo.com.
+Business Users also authorize Stampéo to showcase their loyalty card and logo as commercial references on the Stampéo website (e.g., testimonials, card examples). Business Users may withdraw this authorization at any time by contacting support@stampeo.app.
 
 ## 9. End Customer Data
 
@@ -203,6 +203,6 @@ Continued use of the Platform after the effective date of modifications constitu
 
 ## 17. Contact
 
-- **Email:** support@stampeo.com
+- **Email:** support@stampeo.app
 - **Publisher:** Harry Viennot, sole proprietor — France
 - **Hosting:** Supabase (Ireland, EU) and OVH (France)

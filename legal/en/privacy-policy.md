@@ -144,9 +144,9 @@ Under the GDPR, you have the following rights:
 - **Portability** — receive your data in a structured format
 - **Objection** — object to processing of your data
 
-**Business users and employees:** contact us at privacy@stampeo.com.
+**Business users and employees:** contact us at contact@stampeo.app.
 
-**End customers:** contact the business managing your loyalty card first. You may also reach us at privacy@stampeo.com.
+**End customers:** contact the business managing your loyalty card first. You may also reach us at contact@stampeo.app.
 
 We respond to all requests within 30 days. If you have a complaint, you may file it with the CNIL (French data protection authority): www.cnil.fr.
 
@@ -170,5 +170,5 @@ We may update this privacy policy. In case of substantial changes, Business user
 
 ## 14. Contact
 
-- **Email:** privacy@stampeo.com
+- **Email:** contact@stampeo.app
 - **Data Controller:** Harry Viennot, Stampéo
