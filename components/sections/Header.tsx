@@ -305,7 +305,7 @@ export function Header() {
         >
           <nav className="relative flex items-center justify-between px-4 lg:px-10 lg:py-5 py-3 max-w-[1400px] mx-auto">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 relative z-10">
+            <Link href="/" className="flex items-center gap-2 shrink-0">
               <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
                 <StampeoLogo />
                 <span className="text-2xl font-bold gradient-text">
@@ -314,8 +314,8 @@ export function Header() {
               </div>
             </Link>
 
-            {/* Desktop navigation — centered on page */}
-            <div className="hidden lg:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
+            {/* Desktop navigation — centered via flex */}
+            <div className="hidden lg:flex items-center gap-6 xl:gap-9">
               <FeaturesDropdown />
               {navItems.map((item) => (
                 <Link
@@ -332,7 +332,7 @@ export function Header() {
             </div>
 
             {/* Desktop auth */}
-            <div className="hidden lg:flex items-center gap-3 relative z-10">
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
               <DesktopAuthButtons
                 loading={loading}
                 user={user}

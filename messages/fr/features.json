@@ -721,6 +721,7 @@
         "timeline": {
           "badge": "Comment ça marche",
           "title": "4 étapes pour devenir partenaire fondateur",
+          "subtitle": "",
           "steps": [
             {
               "title": "Remplissez le formulaire",
