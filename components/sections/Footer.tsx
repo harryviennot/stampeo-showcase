@@ -62,7 +62,7 @@ export function Footer() {
               <span className="text-[var(--accent)]">
                 <StampeoLogo />
               </span>
-              <h2 className="text-2xl font-bold tracking-tight text-white">Stampeo</h2>
+              <span className="text-2xl font-bold tracking-tight text-white">Stampeo</span>
             </Link>
             <p className="text-[#a1a1aa] text-sm leading-relaxed">
               {t("description")}
@@ -70,7 +70,7 @@ export function Footer() {
 
             {/* Newsletter */}
             <div className="mt-2">
-              <h4 className="text-white text-sm font-semibold mb-3">{t("newsletter.title")}</h4>
+              <p className="text-white text-sm font-semibold mb-3">{t("newsletter.title")}</p>
               <NewsletterForm />
             </div>
 
@@ -116,7 +116,7 @@ export function Footer() {
           <div className="grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-4 flex-1">
             {/* Features */}
             <div className="flex flex-col gap-4">
-              <h3 className="text-white text-sm font-bold">{t("featuresTitle")}</h3>
+              <p className="text-white text-sm font-bold">{t("featuresTitle")}</p>
               <nav className="flex flex-col gap-3">
                 {FEATURE_ITEMS.map(({ key, slug }) => (
                   <Link
@@ -132,7 +132,7 @@ export function Footer() {
 
             {/* Resources */}
             <div className="flex flex-col gap-4">
-              <h3 className="text-white text-sm font-bold">{t("resources")}</h3>
+              <p className="text-white text-sm font-bold">{t("resources")}</p>
               <nav className="flex flex-col gap-3">
                 {locale === "fr" && (
                   <Link href="/blog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
@@ -153,7 +153,7 @@ export function Footer() {
 
             {/* Company */}
             <div className="flex flex-col gap-4">
-              <h3 className="text-white text-sm font-bold">{t("company")}</h3>
+              <p className="text-white text-sm font-bold">{t("company")}</p>
               <nav className="flex flex-col gap-3">
                 <Link href="/about" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("about")}
@@ -166,7 +166,7 @@ export function Footer() {
 
             {/* Legal */}
             <div className="flex flex-col gap-4">
-              <h3 className="text-white text-sm font-bold">{t("legal")}</h3>
+              <p className="text-white text-sm font-bold">{t("legal")}</p>
               <nav className="flex flex-col gap-3">
                 <Link href="/privacy" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("privacyPolicy")}

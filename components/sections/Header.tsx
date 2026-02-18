@@ -321,7 +321,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
+                  className={`py-2 text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
                     ? "text-[var(--accent)]"
                     : "text-[var(--foreground)] hover:text-[var(--accent)]"
                     }`}
