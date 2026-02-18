@@ -11,10 +11,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", priority: 1.0, changeFrequency: "weekly" as const },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" as const },
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const },
+    { path: "/programme-fondateur", priority: 0.8, changeFrequency: "monthly" as const },
     { path: "/privacy", priority: 0.3, changeFrequency: "yearly" as const },
     { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const },
-    { path: "/onboarding", priority: 0.7, changeFrequency: "monthly" as const },
-    { path: "/login", priority: 0.4, changeFrequency: "monthly" as const },
+  ];
+
+  const featureSlugs = [
+    "design-de-carte",
+    "scanner-mobile",
+    "notifications-push",
+    "analytiques",
+    "geolocalisation",
   ];
 
   const entries: MetadataRoute.Sitemap = [];
@@ -45,6 +52,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
             "x-default": `${BASE_URL}${page.path}`,
             fr: `${BASE_URL}${page.path}`,
             en: `${BASE_URL}/en${page.path}`,
+          },
+        },
+      });
+    }
+  }
+
+  // Feature pages with i18n alternates
+  for (const slug of featureSlugs) {
+    for (const locale of locales) {
+      const url =
+        locale === "fr"
+          ? `${BASE_URL}/features/${slug}`
+          : `${BASE_URL}/${locale}/features/${slug}`;
+
+      entries.push({
+        url,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.7,
+        alternates: {
+          languages: {
+            "x-default": `${BASE_URL}/features/${slug}`,
+            fr: `${BASE_URL}/features/${slug}`,
+            en: `${BASE_URL}/en/features/${slug}`,
           },
         },
       });
