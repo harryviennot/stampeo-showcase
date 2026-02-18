@@ -176,6 +176,7 @@ function MobileLegend({ labels }: { labels: string[] }) {
 export function AnnotatedWalletCard() {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
   const labels = t.raw("labels") as string[];
+  const mobileLabels = t.raw("mobileLabels") as string[];
 
   const cardDesign: Partial<CardDesign> = {
     organization_name: t("card.orgName"),
@@ -223,7 +224,7 @@ export function AnnotatedWalletCard() {
           </div>
 
           {/* Mobile legend */}
-          <MobileLegend labels={labels} />
+          <MobileLegend labels={mobileLabels} />
         </ScrollReveal>
       </Container>
     </section>

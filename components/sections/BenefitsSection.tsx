@@ -24,7 +24,10 @@ export function BenefitsSection() {
             {t("title")}
           </h2>
           <p className="text-[var(--muted-foreground)] text-lg max-w-2xl px-4">
-            {t("subtitle")}
+            {t.rich("subtitle", {
+              br: () => <br className="hidden md:block" />,
+              mbr: () => <br className="md:hidden" />,
+            })}
           </p>
         </ScrollReveal>
 

@@ -29,7 +29,9 @@ export function ComparisonTable() {
             {t("title")}
           </h2>
           <p className="mt-6 text-lg text-[var(--muted-foreground)]">
-            {t("subtitle")}
+            {t.rich("subtitle", {
+              mbr: () => <br className="md:hidden" />,
+            })}
           </p>
         </ScrollReveal>
 

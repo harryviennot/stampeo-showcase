@@ -93,6 +93,14 @@
             "Reward",
             "Customer QR code"
           ],
+          "mobileLabels": [
+            "Logo",
+            "Name",
+            "Stamps",
+            "Fields",
+            "Reward",
+            "QR code"
+          ],
           "card": {
             "orgName": "My Parisian Café",
             "rewardLabel": "Reward",

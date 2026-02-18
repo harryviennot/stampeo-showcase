@@ -24,13 +24,13 @@
       "fatigueDesc": "Customers won't download another app just for stamps. The friction kills engagement before it starts.",
       "zeroVisibilityTitle": "Zero visibility on your customers",
       "zeroVisibilityDesc": "With a paper card, you don't know who comes back, how often, or when a customer stops visiting. You're flying blind.",
-      "solution": "Stampeo puts your loyalty card where customers already look:",
+      "solution": "Stampeo puts your loyalty card <br></br>where customers already look:",
       "solutionHighlight": "Their phone wallet.",
       "notification": "You earned a stamp!"
     },
     "benefits": {
       "title": "Works for everyone",
-      "subtitle": "A seamless experience designed for modern shoppers and growing businesses.",
+      "subtitle": "A seamless experience designed for modern shoppers <br></br>and growing <mbr></mbr>businesses.",
       "tabCustomers": "For Your Customers",
       "tabBusiness": "For Your Business",
       "customers": [
@@ -72,8 +72,8 @@
     },
     "foundingPartner": {
       "badge": "Founding Partner Program",
-      "title": "Help us build a product you'll love",
-      "subtitle": "Join as a founding partner and lock in lifetime pricing while helping shape the platform.",
+      "title": "Help us build a product <br></br>you'll love",
+      "subtitle": "Join as a founding partner and lock in lifetime pricing <br></br>while helping shape the platform.",
       "valueProps": [
         "Shape the product with direct feedback",
         "Direct channel with our team (not a chatbot, a human)",
@@ -87,8 +87,8 @@
     },
     "howItWorks": {
       "badge": "How it works",
-      "title": "The magic moment in 5 steps.",
-      "subtitle": "From first scan to loyal customer in seconds",
+      "title": "The magic moment <mbr></mbr><br></br>in 5 steps.",
+      "subtitle": "From first scan to loyal customer <mbr></mbr>in seconds",
       "steps": [
         {
           "title": "Customer scans QR code",
@@ -194,7 +194,7 @@
     },
     "comparisonTable": {
       "title": "Why wallet?",
-      "subtitle": "Compare loyalty solutions for independent businesses.",
+      "subtitle": "Compare loyalty solutions <mbr></mbr>for independent businesses.",
       "columns": [
         "Paper card (for 500 cards)",
         "Mobile app",
@@ -293,11 +293,11 @@
           ]
         }
       ],
-      "footnote": "Wallet cards combine the best of both worlds: the simplicity of paper and the power of digital — without the downsides of either."
+      "footnote": "Wallet cards combine the best of both worlds: the simplicity of paper and the power of digital\u00A0— without the downsides of either."
     },
     "sectorCards": {
-      "title": "Stampeo adapts to your business",
-      "subtitle": "Whether you sell coffees, baguettes, or haircuts, the principle is the same: reward loyalty.",
+      "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
+      "subtitle": "Whether you sell coffees, baguettes, or haircuts, <br></br>the principle is the same: reward loyalty.",
       "sectors": [
         {
           "name": "Café",

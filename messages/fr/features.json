@@ -93,6 +93,14 @@
             "Récompense",
             "QR code client"
           ],
+          "mobileLabels": [
+            "Logo",
+            "Nom",
+            "Tampons",
+            "Champs",
+            "Récompense",
+            "QR code"
+          ],
           "card": {
             "orgName": "Mon Café Parisien",
             "rewardLabel": "Récompense",

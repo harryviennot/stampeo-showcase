@@ -77,7 +77,9 @@ export function ProblemSection() {
         {/* Solution Statement */}
         <ScrollReveal delay={400} className="text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-[var(--foreground)] mb-6">
-            {t("solution")}
+            {t.rich("solution", {
+              br: () => <br className="hidden md:block" />,
+            })}
           </h2>
           <p className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-[var(--accent)]">
             {t("solutionHighlight")}

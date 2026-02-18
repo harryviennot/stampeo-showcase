@@ -104,11 +104,10 @@ function FeaturesDropdown() {
       onMouseLeave={handleMouseLeave}
     >
       <button
-        className={`flex items-center gap-1 text-sm font-semibold transition-colors ${
-          isFeatureActive
-            ? "text-[var(--accent)]"
-            : "text-[var(--foreground)] hover:text-[var(--accent)]"
-        }`}
+        className={`flex items-center gap-1 text-sm font-semibold transition-colors ${isFeatureActive
+          ? "text-[var(--accent)]"
+          : "text-[var(--foreground)] hover:text-[var(--accent)]"
+          }`}
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-haspopup="true"
@@ -296,148 +295,146 @@ export function Header() {
 
   return (
     <>
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
-      <div
-        className={`transition-all duration-300 border-b ${scrolled
-          ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
-          : "bg-transparent border-transparent"
-          }`}
-      >
-        <nav className="relative flex items-center justify-between px-6 lg:px-10 py-5 max-w-[1400px] mx-auto">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 relative z-10">
-            <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
-              <StampeoLogo />
-              <span className="text-2xl font-bold gradient-text">
-                Stampeo
-              </span>
-            </div>
-          </Link>
+      <header className="fixed top-0 left-0 right-0 z-50">
+        <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
+        <div
+          className={`transition-all duration-300 border-b ${scrolled
+            ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
+            : "bg-transparent border-transparent"
+            }`}
+        >
+          <nav className="relative flex items-center justify-between px-4 lg:px-10 lg:py-5 py-3 max-w-[1400px] mx-auto">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 relative z-10">
+              <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
+                <StampeoLogo />
+                <span className="text-2xl font-bold gradient-text">
+                  Stampeo
+                </span>
+              </div>
+            </Link>
 
-          {/* Desktop navigation — centered on page */}
-          <div className="hidden md:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
-            <FeaturesDropdown />
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm font-semibold transition-colors whitespace-nowrap ${
-                  isActive(item.href)
+            {/* Desktop navigation — centered on page */}
+            <div className="hidden lg:flex items-center gap-9 absolute left-1/2 -translate-x-1/2">
+              <FeaturesDropdown />
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
                     ? "text-[var(--accent)]"
                     : "text-[var(--foreground)] hover:text-[var(--accent)]"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
 
-          {/* Desktop auth */}
-          <div className="hidden md:flex items-center gap-3 relative z-10">
-            <DesktopAuthButtons
-              loading={loading}
-              user={user}
-              appUrl={appUrl}
-              onSignOut={handleSignOut}
-            />
-          </div>
+            {/* Desktop auth */}
+            <div className="hidden lg:flex items-center gap-3 relative z-10">
+              <DesktopAuthButtons
+                loading={loading}
+                user={user}
+                appUrl={appUrl}
+                onSignOut={handleSignOut}
+              />
+            </div>
 
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-expanded={mobileMenuOpen}
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
-            )}
-          </button>
-        </nav>
-
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="md:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
+            {/* Mobile menu button */}
+            <button
+              className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
-              <div className="px-6 py-4">
-                <div className="flex flex-col gap-1">
-                  <MobileFeaturesAccordion onNavigate={closeMobileMenu} />
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${
-                        isActive(item.href)
+              {mobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              )}
+            </button>
+          </nav>
+
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="lg:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
+              >
+                <div className="px-6 py-4">
+                  <div className="flex flex-col gap-1">
+                    <MobileFeaturesAccordion onNavigate={closeMobileMenu} />
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
                           ? "text-[var(--accent)] bg-[var(--accent)]/5"
                           : "text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5"
-                      }`}
-                      onClick={closeMobileMenu}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                  <div className="flex items-center justify-between pt-4 mt-2 border-t border-[var(--accent)]/10">
-                    <LanguageSwitcher />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    {user ? (
-                      <>
-                        <button
-                          onClick={handleSignOut}
-                          className="px-4 py-3 text-sm text-left font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-                        >
-                          {t("common.auth.signOut")}
-                        </button>
-                        <Link
-                          href={appUrl}
-                          className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
-                        >
-                          {t("common.auth.dashboard")}
-                        </Link>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          href="/login"
-                          className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-                          onClick={closeMobileMenu}
-                        >
-                          {t("common.auth.logIn")}
-                        </Link>
-                        <Link
-                          href="/onboarding"
-                          className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
-                          onClick={closeMobileMenu}
-                        >
-                          {t("common.auth.getStarted")}
-                        </Link>
-                      </>
-                    )}
+                          }`}
+                        onClick={closeMobileMenu}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                    <div className="flex items-center justify-between pt-4 mt-2 border-t border-[var(--accent)]/10">
+                      <LanguageSwitcher />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {user ? (
+                        <>
+                          <button
+                            onClick={handleSignOut}
+                            className="px-4 py-3 text-sm text-left font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+                          >
+                            {t("common.auth.signOut")}
+                          </button>
+                          <Link
+                            href={appUrl}
+                            className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
+                          >
+                            {t("common.auth.dashboard")}
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            href="/login"
+                            className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+                            onClick={closeMobileMenu}
+                          >
+                            {t("common.auth.logIn")}
+                          </Link>
+                          <Link
+                            href="/onboarding"
+                            className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
+                            onClick={closeMobileMenu}
+                          >
+                            {t("common.auth.getStarted")}
+                          </Link>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </header>
-    <div
-      className="transition-all duration-300"
-      style={{ height: bannerVisible ? 40 : 0 }}
-    />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </header>
+      <div
+        className="transition-all duration-300"
+        style={{ height: bannerVisible ? 40 : 0 }}
+      />
     </>
   );
 }
