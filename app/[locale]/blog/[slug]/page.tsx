@@ -41,7 +41,6 @@ export async function generateMetadata({
       modifiedTime: post.updatedAt || post.publishedAt,
       authors: [post.author],
       tags: post.tags,
-      images: post.coverImage ? [{ url: post.coverImage }] : undefined,
     },
     alternates: {
       canonical: `/blog/${slug}`,
