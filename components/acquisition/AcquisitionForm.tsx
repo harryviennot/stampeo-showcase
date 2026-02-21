@@ -65,15 +65,15 @@ export function AcquisitionForm({
       newErrors.phone = t("phoneInvalid");
     }
 
-    // At least one identifier is required
-    if (!collectEmail && !collectPhone) {
-      // Business doesn't collect either - this shouldn't happen but handle gracefully
-    } else if (!email.trim() && !phone.trim() && (collectEmail || collectPhone)) {
-      if (collectEmail) {
-        newErrors.email = t("emailOrPhoneRequired");
-      }
-      if (collectPhone) {
-        newErrors.phone = t("emailOrPhoneRequired");
+    // At least one identifier is required (only if business collects them)
+    if (collectEmail || collectPhone) {
+      if (!email.trim() && !phone.trim()) {
+        if (collectEmail) {
+          newErrors.email = t("emailOrPhoneRequired");
+        }
+        if (collectPhone) {
+          newErrors.phone = t("emailOrPhoneRequired");
+        }
       }
     }
 
@@ -89,6 +89,28 @@ export function AcquisitionForm({
       phone: phone.trim() || undefined,
     });
   };
+
+  const isAnonymous = !collectName && !collectEmail && !collectPhone;
+
+  // Anonymous mode: no form fields, just a single button
+  if (isAnonymous) {
+    return (
+      <div className="space-y-4">
+        <button
+          type="button"
+          onClick={() => onSubmit({})}
+          className="w-full btn-primary py-3.5 text-base font-semibold"
+        >
+          {ta("getMyCard")}
+        </button>
+        <p className="text-xs text-center text-[var(--muted-foreground)]">
+          {ta.rich("privacyNote", {
+            bold: (chunks) => <span className="font-medium">{chunks}</span>,
+          })}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
