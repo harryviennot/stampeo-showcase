@@ -31,6 +31,10 @@
       "title": "Something went wrong",
       "defaultMessage": "We couldn't create your card. Please try again."
     },
+    "notReady": {
+      "title": "Coming soon!",
+      "description": "This loyalty program isn't quite ready yet. Check back soon — great rewards are on the way!"
+    },
     "poweredBy": "Powered by"
   }
 }
