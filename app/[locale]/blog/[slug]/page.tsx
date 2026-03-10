@@ -10,7 +10,11 @@ import { ShareButtons } from "@/components/blog/ShareButtons";
 import { AuthorCard } from "@/components/blog/AuthorCard";
 import { RelatedPosts } from "@/components/blog/RelatedPosts";
 import { JsonLd } from "@/components/JsonLd";
-import { articleJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
+import {
+  articleJsonLd,
+  breadcrumbJsonLd,
+  faqPageJsonLd,
+} from "@/lib/structured-data";
 import { getPostBySlug, getAllSlugs, getRelatedPosts } from "@/lib/blog";
 import { compileBlogMDX } from "@/lib/blog/mdx";
 
@@ -89,6 +93,9 @@ export default async function BlogPostPage({
           { name: post.title, url: `/blog/${slug}` },
         ])}
       />
+      {post.faqs && post.faqs.length > 0 && (
+        <JsonLd data={faqPageJsonLd(post.faqs)} />
+      )}
       <Header />
       <main className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6">

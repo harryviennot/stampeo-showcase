@@ -148,7 +148,7 @@ export function HeroSection() {
   const displayStamps = showFakeDemo ? offlineStamps : stamps;
 
   return (
-    <section className="relative min-h-screen flex flex-col pt-24">
+    <section className="relative min-h-screen flex flex-col pt-8 sm:pt-0">
       <main className="relative z-10 flex-1 flex items-center px-6 lg:px-10 py-12 lg:py-24">
         <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Column: Content */}
