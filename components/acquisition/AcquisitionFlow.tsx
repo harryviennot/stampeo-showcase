@@ -129,26 +129,32 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
 
           {/* Form / Success / Email Sent */}
           <div className="order-2 md:order-1 min-h-[320px] flex flex-col justify-center">
-            {flowState === "form" && (
-              <FormCard business={business} onSubmit={handleSubmit} />
-            )}
+            {cardDesign ? (
+              <>
+                {flowState === "form" && (
+                  <FormCard business={business} onSubmit={handleSubmit} />
+                )}
 
-            {flowState === "submitting" && <LoadingCard />}
+                {flowState === "submitting" && <LoadingCard />}
 
-            {flowState === "success" && customerResponse?.pass_url && (
-              <SuccessCard
-                businessName={business.name}
-                passUrl={customerResponse.pass_url}
-                googleWalletUrl={customerResponse.google_wallet_url}
-              />
-            )}
+                {flowState === "success" && customerResponse?.pass_url && (
+                  <SuccessCard
+                    businessName={business.name}
+                    passUrl={customerResponse.pass_url}
+                    googleWalletUrl={customerResponse.google_wallet_url}
+                  />
+                )}
 
-            {flowState === "email_sent" && (
-              <EmailSentCard message={customerResponse?.message} />
-            )}
+                {flowState === "email_sent" && (
+                  <EmailSentCard message={customerResponse?.message} />
+                )}
 
-            {flowState === "error" && (
-              <ErrorCard message={errorMessage} onRetry={handleRetry} />
+                {flowState === "error" && (
+                  <ErrorCard message={errorMessage} onRetry={handleRetry} />
+                )}
+              </>
+            ) : (
+              <NotReadyCard />
             )}
           </div>
         </div>
@@ -269,6 +275,35 @@ function EmailSentCard({ message }: { message?: string }) {
       </h2>
       <p className="text-[var(--muted-foreground)]">
         {message || t("emailSent.defaultMessage")}
+      </p>
+    </div>
+  );
+}
+
+function NotReadyCard() {
+  const t = useTranslations("acquisition");
+  return (
+    <div className="paper-card rounded-2xl p-6 text-center">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
+        <svg
+          className="w-8 h-8 text-amber-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
+      <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
+        {t("notReady.title")}
+      </h2>
+      <p className="text-[var(--muted-foreground)]">
+        {t("notReady.description")}
       </p>
     </div>
   );

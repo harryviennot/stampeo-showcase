@@ -31,6 +31,10 @@
       "title": "Une erreur est survenue",
       "defaultMessage": "Nous n'avons pas pu créer votre carte. Veuillez réessayer."
     },
+    "notReady": {
+      "title": "Bientôt disponible !",
+      "description": "Ce programme de fidélité n'est pas encore actif. Revenez bientôt — de belles récompenses vous attendent !"
+    },
     "poweredBy": "Propulsé par"
   }
 }
