@@ -37,6 +37,21 @@ export function BlogHeader({ post }: { post: BlogPostMeta }) {
             day: "numeric",
           })}
         </time>
+        {post.updatedAt && post.updatedAt !== post.publishedAt && (
+          <>
+            <span>·</span>
+            <span>
+              Mis à jour le{" "}
+              <time dateTime={post.updatedAt}>
+                {new Date(post.updatedAt).toLocaleDateString(post.locale, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+            </span>
+          </>
+        )}
       </div>
       {post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-5">

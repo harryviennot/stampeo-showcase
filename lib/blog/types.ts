@@ -6,6 +6,7 @@ export interface BlogPostMeta {
   author: string;
   coverImage?: string;
   tags: string[];
+  faqs?: Array<{ question: string; answer: string }>;
   category: string;
   translationSlug?: string;
   featured?: boolean;
