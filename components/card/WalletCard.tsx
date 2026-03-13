@@ -414,9 +414,8 @@ export function WalletCard({
     use3DEffect(interactive3D);
   const t = useTranslations("common");
 
-  const displayName =
-    organizationName || design.organization_name || "Your Business";
-  const initials = getInitials(displayName);
+  const displayName = organizationName || design.organization_name || "";
+  const initials = getInitials(displayName || "YB");
   const totalStamps = design.total_stamps ?? 10;
   const colors = computeCardColors(design);
 
@@ -491,15 +490,16 @@ export function WalletCard({
                     </span>
                   </div>
                 )}
-                <div className="min-w-0">
-                  <p
-                    className="font-semibold text-sm tracking-tight leading-tight truncate transition-colors duration-300"
-                    style={{ color: colors.mutedTextColor }}
-                  >
-                    {displayName}
-                  </p>
-
-                </div>
+                {displayName && (
+                  <div className="min-w-0">
+                    <p
+                      className="font-semibold text-sm tracking-tight leading-tight truncate transition-colors duration-300"
+                      style={{ color: colors.mutedTextColor }}
+                    >
+                      {displayName}
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="text-right items-center">
                 <div
