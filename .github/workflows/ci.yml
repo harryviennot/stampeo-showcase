@@ -43,8 +43,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install
-      - name: Security audit (fail on high/critical only)
-        run: |
-          OUTPUT=$(bun audit 2>&1) || true
-          echo "$OUTPUT"
-          echo "$OUTPUT" | grep -qi '\bhigh\b\|critical' && exit 1 || true
+      - run: bun audit --audit-level=moderate
