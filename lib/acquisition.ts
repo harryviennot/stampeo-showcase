@@ -27,9 +27,9 @@ export interface BusinessPublicResponse {
     accentColor?: string;
     backgroundColor?: string;
     customer_data_collection?: {
-      collect_name: boolean;
-      collect_email: boolean;
-      collect_phone: boolean;
+      collect_name: "off" | "required" | "optional" | boolean;
+      collect_email: "off" | "required" | "optional" | boolean;
+      collect_phone: "off" | "required" | "optional" | boolean;
     };
   };
   created_at: string;

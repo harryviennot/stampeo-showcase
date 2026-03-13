@@ -11,6 +11,8 @@
       "emailPlaceholder": "vous@exemple.com",
       "phone": "Numéro de téléphone",
       "phonePlaceholder": "+33 6 12 34 56 78",
+      "optional": "(facultatif)",
+      "emailOptionalHint": "Ajouter votre email vous permettra de récupérer votre carte en cas de suppression.",
       "nameRequired": "Le nom est requis",
       "emailRequired": "L'email est requis",
       "emailInvalid": "Veuillez saisir un email valide",

@@ -11,6 +11,8 @@
       "emailPlaceholder": "you@example.com",
       "phone": "Phone number",
       "phonePlaceholder": "+1 (555) 123-4567",
+      "optional": "(optional)",
+      "emailOptionalHint": "Adding your email lets you recover your card if it's ever deleted.",
       "nameRequired": "Name is required",
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email",
