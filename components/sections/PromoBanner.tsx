@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  type ReactNode,
-} from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
@@ -22,11 +16,6 @@ export function PromoBanner({
 }) {
   const t = useTranslations("common.promoBanner");
   const [index, setIndex] = useState(0);
-  const isInitialRender = useRef(true);
-
-  useEffect(() => {
-    isInitialRender.current = false;
-  }, []);
 
   const bold = useCallback(
     (chunks: ReactNode) => (
@@ -51,10 +40,10 @@ export function PromoBanner({
   }, [visible, items.length]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {visible && (
         <motion.div
-          initial={isInitialRender.current ? false : { height: 0, opacity: 0 }}
+          initial={{ height: 0, opacity: 0 }}
           animate={{ height: 40, opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
