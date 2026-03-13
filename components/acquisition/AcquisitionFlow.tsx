@@ -124,6 +124,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
                     stamp_filled_color: "#f97316",
                     total_stamps: 10,
                   }}
+                  organizationName={business.name}
                   stamps={3}
                   showQR={true}
                   interactive3D={true}
