@@ -190,6 +190,9 @@ export function AcquisitionForm({
           {errors.email && (
             <p className="mt-1 text-sm text-red-500">{errors.email}</p>
           )}
+          {!emailRequired && !errors.email && (
+            <p className="mt-1 text-xs text-[var(--muted-foreground)]">{t("emailOptionalHint")}</p>
+          )}
         </div>
       )}
 
