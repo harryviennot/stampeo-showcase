@@ -11,6 +11,7 @@
       "emailPlaceholder": "you@example.com",
       "phone": "Phone number",
       "phonePlaceholder": "+1 (555) 123-4567",
+      "optional": "(optional)",
       "nameRequired": "Name is required",
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email",

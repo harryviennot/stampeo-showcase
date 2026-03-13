@@ -4,10 +4,20 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { CustomerCreatePublic } from "@/lib/acquisition";
 
+type FieldCollectionMode = "off" | "required" | "optional";
+
 interface DataCollectionSettings {
-  collect_name?: boolean;
-  collect_email?: boolean;
-  collect_phone?: boolean;
+  collect_name?: FieldCollectionMode | boolean;
+  collect_email?: FieldCollectionMode | boolean;
+  collect_phone?: FieldCollectionMode | boolean;
+}
+
+/** Normalize legacy boolean values to the new tri-state */
+function normalizeFieldMode(value: FieldCollectionMode | boolean | undefined, fallback: FieldCollectionMode): FieldCollectionMode {
+  if (value === true) return "required";
+  if (value === false) return "off";
+  if (value === undefined) return fallback;
+  return value;
 }
 
 interface AcquisitionFormProps {
@@ -22,10 +32,17 @@ export function AcquisitionForm({
   const t = useTranslations("acquisition.form");
   const ta = useTranslations("acquisition");
 
-  // Default to collecting name and email if not specified
-  const collectName = dataCollection?.collect_name ?? true;
-  const collectEmail = dataCollection?.collect_email ?? true;
-  const collectPhone = dataCollection?.collect_phone ?? false;
+  // Normalize settings (handles legacy booleans)
+  const nameMode = normalizeFieldMode(dataCollection?.collect_name, "required");
+  const emailMode = normalizeFieldMode(dataCollection?.collect_email, "required");
+  const phoneMode = normalizeFieldMode(dataCollection?.collect_phone, "off");
+
+  const showName = nameMode !== "off";
+  const showEmail = emailMode !== "off";
+  const showPhone = phoneMode !== "off";
+  const nameRequired = nameMode === "required";
+  const emailRequired = emailMode === "required";
+  const phoneRequired = phoneMode === "required";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -49,29 +66,29 @@ export function AcquisitionForm({
     const newErrors: Record<string, string> = {};
 
     // Validate required fields
-    if (collectName && !name.trim()) {
+    if (nameRequired && !name.trim()) {
       newErrors.name = t("nameRequired");
     }
 
-    if (collectEmail && !email.trim()) {
+    if (emailRequired && !email.trim()) {
       newErrors.email = t("emailRequired");
-    } else if (collectEmail && !validateEmail(email)) {
+    } else if (showEmail && email.trim() && !validateEmail(email)) {
       newErrors.email = t("emailInvalid");
     }
 
-    if (collectPhone && !phone.trim()) {
+    if (phoneRequired && !phone.trim()) {
       newErrors.phone = t("phoneRequired");
-    } else if (collectPhone && phone.trim() && !validatePhone(phone)) {
+    } else if (showPhone && phone.trim() && !validatePhone(phone)) {
       newErrors.phone = t("phoneInvalid");
     }
 
-    // At least one identifier is required (only if business collects them)
-    if (collectEmail || collectPhone) {
+    // At least one identifier is required (only if business requires them)
+    if (emailRequired || phoneRequired) {
       if (!email.trim() && !phone.trim()) {
-        if (collectEmail) {
+        if (emailRequired) {
           newErrors.email = t("emailOrPhoneRequired");
         }
-        if (collectPhone) {
+        if (phoneRequired) {
           newErrors.phone = t("emailOrPhoneRequired");
         }
       }
@@ -84,13 +101,13 @@ export function AcquisitionForm({
 
     setErrors({});
     onSubmit({
-      name: collectName ? name.trim() : undefined,
+      name: showName ? name.trim() : undefined,
       email: email.trim() || undefined,
       phone: phone.trim() || undefined,
     });
   };
 
-  const isAnonymous = !collectName && !collectEmail && !collectPhone;
+  const isAnonymous = !showName && !showEmail && !showPhone;
 
   // Anonymous mode: no form fields, just a single button
   if (isAnonymous) {
@@ -114,13 +131,13 @@ export function AcquisitionForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {collectName && (
+      {showName && (
         <div>
           <label
             htmlFor="name"
             className="block text-sm font-medium text-[var(--primary)] mb-1.5"
           >
-            {t("name")}
+            {t("name")} {!nameRequired && <span className="text-[var(--muted-foreground)] font-normal">{t("optional")}</span>}
           </label>
           <input
             type="text"
@@ -145,13 +162,13 @@ export function AcquisitionForm({
         </div>
       )}
 
-      {collectEmail && (
+      {showEmail && (
         <div>
           <label
             htmlFor="email"
             className="block text-sm font-medium text-[var(--primary)] mb-1.5"
           >
-            {t("email")}
+            {t("email")} {!emailRequired && <span className="text-[var(--muted-foreground)] font-normal">{t("optional")}</span>}
           </label>
           <input
             type="email"
@@ -176,13 +193,13 @@ export function AcquisitionForm({
         </div>
       )}
 
-      {collectPhone && (
+      {showPhone && (
         <div>
           <label
             htmlFor="phone"
             className="block text-sm font-medium text-[var(--primary)] mb-1.5"
           >
-            {t("phone")}
+            {t("phone")} {!phoneRequired && <span className="text-[var(--muted-foreground)] font-normal">{t("optional")}</span>}
           </label>
           <input
             type="tel"
