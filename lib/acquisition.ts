@@ -50,7 +50,16 @@ export interface CardDesignPublicResponse {
   stamp_filled_color: string;
   stamp_empty_color: string;
   stamp_border_color: string;
+  stamp_icon?: string | null;
+  reward_icon?: string | null;
+  icon_color?: string | null;
   logo_url?: string | null;
+  custom_filled_stamp_url?: string | null;
+  custom_empty_stamp_url?: string | null;
+  strip_background_url?: string | null;
+  secondary_fields: { key: string; label: string; value: string }[];
+  auxiliary_fields: { key: string; label: string; value: string }[];
+  back_fields: { key: string; label: string; value: string }[];
 }
 
 export interface CustomerCreatePublic {
