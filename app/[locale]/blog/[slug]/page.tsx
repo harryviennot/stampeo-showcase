@@ -19,8 +19,10 @@ import { getPostBySlug, getAllSlugs, getRelatedPosts } from "@/lib/blog";
 import { compileBlogMDX } from "@/lib/blog/mdx";
 
 export async function generateStaticParams() {
-  const slugs = getAllSlugs("fr");
-  return slugs.map((slug) => ({ locale: "fr", slug }));
+  const blogLocales = ["fr", "en"] as const;
+  return blogLocales.flatMap((locale) =>
+    getAllSlugs(locale).map((slug) => ({ locale, slug }))
+  );
 }
 
 export async function generateMetadata({
@@ -29,7 +31,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  if (locale !== "fr") return {};
+  if (locale !== "fr" && locale !== "en") return {};
 
   const post = getPostBySlug(slug, locale);
   if (!post) return {};
@@ -47,7 +49,8 @@ export async function generateMetadata({
       tags: post.tags,
     },
     alternates: {
-      canonical: `/blog/${slug}`,
+      canonical:
+        locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
     },
   };
 }
@@ -60,8 +63,8 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const locale = await getLocale();
 
-  if (locale !== "fr") {
-    redirect(`/fr/blog/${slug}`);
+  if (locale !== "fr" && locale !== "en") {
+    redirect(`/blog/${slug}`);
   }
 
   const t = await getTranslations("blog");

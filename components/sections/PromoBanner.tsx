@@ -40,7 +40,7 @@ export function PromoBanner({
   }, [visible, items.length]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {visible && (
         <motion.div
           initial={{ height: 0, opacity: 0 }}

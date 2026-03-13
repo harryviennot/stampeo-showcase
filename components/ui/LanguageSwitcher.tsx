@@ -9,8 +9,8 @@ export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Hide language switcher on blog pages (French-only content)
-  if (pathname.startsWith("/blog")) return null;
+  // Hide language switcher on individual blog posts (different slugs per language)
+  if (/^\/blog\/.+/.test(pathname)) return null;
 
   const nextLocale = locale === "fr" ? "en" : "fr";
   const label = locale === "fr" ? "EN" : "FR";

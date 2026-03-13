@@ -26,13 +26,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // Blog index — French only
-  entries.push({
-    url: `${BASE_URL}/blog`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.8,
-  });
+  // Blog index — both languages with alternates
+  for (const locale of ["fr", "en"]) {
+    const url =
+      locale === "fr" ? `${BASE_URL}/blog` : `${BASE_URL}/${locale}/blog`;
+    entries.push({
+      url,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          "x-default": `${BASE_URL}/blog`,
+          fr: `${BASE_URL}/blog`,
+          en: `${BASE_URL}/en/blog`,
+        },
+      },
+    });
+  }
 
   // Static pages with i18n alternates
   for (const page of staticPages) {
@@ -82,11 +93,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Blog posts — French only
-  const posts = getAllPosts("fr");
-  for (const post of posts) {
+  // Blog posts — French
+  const frPosts = getAllPosts("fr");
+  for (const post of frPosts) {
     entries.push({
       url: `${BASE_URL}/blog/${post.slug}`,
+      lastModified: post.updatedAt || post.publishedAt,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    });
+  }
+
+  // Blog posts — English
+  const enPosts = getAllPosts("en");
+  for (const post of enPosts) {
+    entries.push({
+      url: `${BASE_URL}/en/blog/${post.slug}`,
       lastModified: post.updatedAt || post.publishedAt,
       changeFrequency: "monthly",
       priority: 0.6,
