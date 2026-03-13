@@ -99,7 +99,8 @@ export function FloatingLanguageSwitcher() {
     };
   }, [detectBackground]);
 
-  if (pathname.startsWith("/blog")) return null;
+  // Hide on individual blog posts (different slugs per language)
+  if (/^\/blog\/.+/.test(pathname)) return null;
 
   const nextLocale = locale === "fr" ? "en" : "fr";
   const label = locale === "fr" ? "EN" : "FR";

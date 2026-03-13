@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (locale !== "fr") return {};
+  if (locale !== "fr" && locale !== "en") return {};
   const t = await getTranslations({ locale, namespace: "blog" });
   return {
     title: t("title"),
@@ -26,8 +26,8 @@ export async function generateMetadata({
 export default async function BlogPage() {
   const locale = await getLocale();
 
-  if (locale !== "fr") {
-    redirect("/fr/blog");
+  if (locale !== "fr" && locale !== "en") {
+    redirect("/blog");
   }
   const t = await getTranslations("blog");
   const posts = getAllPosts(locale);
