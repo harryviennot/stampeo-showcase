@@ -108,17 +108,23 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
             <div className="w-full max-w-[380px] mx-auto">
               <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
-                  design={{
+                  design={cardDesign ? {
+                    ...cardDesign,
+                    logo_text: cardDesign.logo_text ?? undefined,
+                    logo_url: cardDesign.logo_url ?? undefined,
+                    stamp_icon: cardDesign.stamp_icon ?? undefined,
+                    reward_icon: cardDesign.reward_icon ?? undefined,
+                    icon_color: cardDesign.icon_color ?? undefined,
+                    custom_filled_stamp_url: cardDesign.custom_filled_stamp_url ?? undefined,
+                    custom_empty_stamp_url: cardDesign.custom_empty_stamp_url ?? undefined,
+                    strip_background_url: cardDesign.strip_background_url ?? undefined,
+                  } : {
                     organization_name: business.name,
-                    logo_url: business.logo_url || cardDesign?.logo_url || undefined,
-                    background_color: backgroundColor,
-                    stamp_filled_color: accentColor,
-                    total_stamps: cardDesign?.total_stamps || 10,
-                    description: cardDesign?.description || "Free item on completion",
-                    secondary_fields: [
-                      { key: "reward", label: "Reward", value: cardDesign?.description || "Free item on completion" }
-                    ],
+                    background_color: "#1c1c1e",
+                    stamp_filled_color: "#f97316",
+                    total_stamps: 10,
                   }}
+                  organizationName={business.name}
                   stamps={3}
                   showQR={true}
                   interactive3D={true}
