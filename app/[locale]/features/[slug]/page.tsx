@@ -8,30 +8,39 @@ import { NotificationsPushPage } from "@/components/features/notifications-push/
 import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
 import { ScannerMobilePage } from "@/components/features/scanner-mobile/ScannerMobilePage";
 import { GeofencingPage } from "@/components/features/geolocalisation/GeofencingPage";
+import {
+  type FeatureSlug,
+  isValidSlug,
+  generateFeatureStaticParams,
+} from "@/lib/feature-slugs";
 
-const FEATURE_SLUGS = [
-  "design-de-carte",
-  "scanner-mobile",
-  "notifications-push",
-  "analytiques",
-  "geolocalisation",
-] as const;
-
-type FeatureSlug = (typeof FEATURE_SLUGS)[number];
-
-function isValidSlug(slug: string): slug is FeatureSlug {
-  return (FEATURE_SLUGS as readonly string[]).includes(slug);
-}
+const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {
+  "design-de-carte": CardDesignPageContent,
+  "scanner-mobile": ScannerMobilePage,
+  "notifications-push": NotificationsPushPage,
+  analytiques: AnalyticsPageContent,
+  geolocalisation: GeofencingPage,
+};
 
 export function generateStaticParams() {
-  return FEATURE_SLUGS.map((slug) => ({ slug }));
+  return generateFeatureStaticParams();
 }
 
 interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+const DEFAULT_LOCALE = "fr";
+
+function featureUrl(slug: string, locale: string) {
+  return locale === DEFAULT_LOCALE
+    ? `/features/${slug}`
+    : `/${locale}/features/${slug}`;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
 
   if (!isValidSlug(slug)) {
@@ -39,16 +48,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const t = await getTranslations({ locale, namespace: "metadata.features" });
+  const title = t(`${slug}.title`);
+  const description = t(`${slug}.description`);
 
   return {
-    title: t(`${slug}.title`),
-    description: t(`${slug}.description`),
+    title,
+    description,
     alternates: {
-      canonical: locale === "fr" ? `/features/${slug}` : `/${locale}/features/${slug}`,
+      canonical: featureUrl(slug, locale),
       languages: {
         fr: `/features/${slug}`,
         en: `/en/features/${slug}`,
       },
+    },
+    openGraph: {
+      title,
+      description,
+      url: featureUrl(slug, locale),
+      type: "website",
     },
   };
 }
@@ -60,21 +77,13 @@ export default async function FeaturePage({ params }: PageProps) {
     notFound();
   }
 
+  const FeatureContent = FEATURE_COMPONENTS[slug];
+
   return (
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
       <main className="relative">
-        {slug === "design-de-carte" ? (
-          <CardDesignPageContent />
-        ) : slug === "scanner-mobile" ? (
-          <ScannerMobilePage />
-        ) : slug === "notifications-push" ? (
-          <NotificationsPushPage />
-        ) : slug === "analytiques" ? (
-          <AnalyticsPageContent />
-        ) : slug === "geolocalisation" ? (
-          <GeofencingPage />
-        ) : null}
+        <FeatureContent />
       </main>
       <Footer />
     </div>

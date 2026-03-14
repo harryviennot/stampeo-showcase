@@ -13,3 +13,11 @@ export const FEATURE_ITEMS = [
   { key: "analytiques", slug: "analytiques", Icon: ChartIcon },
   { key: "geolocalisation", slug: "geolocalisation", Icon: MapPinIcon },
 ] as const;
+
+export {
+  FEATURES,
+  FEATURE_SLUGS,
+  type FeatureSlug,
+  isValidSlug,
+  generateFeatureStaticParams,
+} from "@/lib/feature-slugs";
