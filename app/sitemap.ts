@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { FEATURE_SLUGS } from "@/lib/feature-slugs";
 
 const BASE_URL = "https://stampeo.app";
 
@@ -14,14 +15,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/programme-fondateur", priority: 0.8, changeFrequency: "monthly" as const },
     { path: "/privacy", priority: 0.3, changeFrequency: "yearly" as const },
     { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const },
-  ];
-
-  const featureSlugs = [
-    "design-de-carte",
-    "scanner-mobile",
-    "notifications-push",
-    "analytiques",
-    "geolocalisation",
   ];
 
   const entries: MetadataRoute.Sitemap = [];
@@ -70,7 +63,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   // Feature pages with i18n alternates
-  for (const slug of featureSlugs) {
+  for (const slug of FEATURE_SLUGS) {
     for (const locale of locales) {
       const url =
         locale === "fr"
