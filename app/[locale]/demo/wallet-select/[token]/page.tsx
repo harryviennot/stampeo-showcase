@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import posthog from "posthog-js";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -41,6 +42,7 @@ export default function WalletSelectPage() {
             {/* Apple Wallet Button */}
             <a
               href={appleUrl}
+              onClick={() => posthog.capture("demo_wallet_selected", { wallet: "apple" })}
               className="block hover:opacity-90 transition-opacity"
             >
               <Image
@@ -55,6 +57,7 @@ export default function WalletSelectPage() {
             {/* Google Wallet Button */}
             <a
               href={googleUrl}
+              onClick={() => posthog.capture("demo_wallet_selected", { wallet: "google" })}
               className="block hover:opacity-90 transition-opacity"
             >
               <Image

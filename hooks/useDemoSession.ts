@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import posthog from 'posthog-js';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const STORAGE_KEY = 'stampeo_demo_session';
@@ -133,6 +134,11 @@ export function useDemoSession(): UseDemoSessionReturn {
         // Track actual status changes for inactivity timeout
         if (newStatus !== statusRef.current) {
           lastStatusChangeRef.current = Date.now();
+          posthog.capture('demo_step_reached', {
+            step: newStatus,
+            previous_step: statusRef.current,
+            stamps: data.stamps,
+          });
           statusRef.current = newStatus;
         }
 
@@ -257,6 +263,7 @@ export function useDemoSession(): UseDemoSessionReturn {
       activeTokenRef.current = newSession.session_token;
       lastStatusChangeRef.current = Date.now();
       startSSE(newSession.session_token);
+      posthog.capture('demo_started', { session_token: newSession.session_token });
     } else {
       setStatus('error');
     }
@@ -280,6 +287,10 @@ export function useDemoSession(): UseDemoSessionReturn {
 
       const data = await response.json();
       setStamps(data.stamps);
+      posthog.capture('demo_stamp_added', {
+        stamp_number: data.stamps,
+        is_complete: data.stamps >= 8,
+      });
     } catch (err) {
       console.error('Error adding stamp:', err);
       setError(err instanceof Error ? err.message : 'Failed to add stamp');
