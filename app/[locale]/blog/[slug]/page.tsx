@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
+import { notFound, redirect, permanentRedirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/sections/Header";
@@ -15,7 +15,12 @@ import {
   breadcrumbJsonLd,
   faqPageJsonLd,
 } from "@/lib/structured-data";
-import { getPostBySlug, getAllSlugs, getRelatedPosts } from "@/lib/blog";
+import {
+  getPostBySlug,
+  getAllSlugs,
+  getRelatedPosts,
+  postExistsInLocale,
+} from "@/lib/blog";
 import { compileBlogMDX } from "@/lib/blog/mdx";
 
 export async function generateStaticParams() {
@@ -51,6 +56,10 @@ export async function generateMetadata({
     alternates: {
       canonical:
         locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
+      languages: {
+        "x-default":
+          locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
+      },
     },
   };
 }
@@ -70,7 +79,16 @@ export default async function BlogPostPage({
   const t = await getTranslations("blog");
 
   const post = getPostBySlug(slug, locale);
-  if (!post) notFound();
+  if (!post) {
+    // If the post exists in the other locale, redirect there (fixes crawler locale-redirect 404s)
+    const otherLocale = locale === "fr" ? "en" : "fr";
+    if (postExistsInLocale(slug, otherLocale)) {
+      const targetUrl =
+        otherLocale === "fr" ? `/blog/${slug}` : `/en/blog/${slug}`;
+      permanentRedirect(targetUrl);
+    }
+    notFound();
+  }
 
   const content = await compileBlogMDX(post.content);
   const related = getRelatedPosts(slug, locale, 3);
@@ -108,6 +126,7 @@ export default async function BlogPostPage({
             className="inline-flex items-center gap-1 text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors mb-8"
           >
             <svg
+              aria-hidden="true"
               className="w-4 h-4"
               fill="none"
               viewBox="0 0 24 24"
@@ -160,7 +179,7 @@ export default async function BlogPostPage({
                 />
               </div>
 
-              <AuthorCard name={post.author} />
+              <AuthorCard name={post.author} locale={locale} />
             </div>
           </div>
 

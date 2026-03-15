@@ -6,36 +6,36 @@
       "keywords": "cartes de fidélité, fidélité digitale, Apple Wallet, Google Wallet, récompenses clients, cartes à tampons"
     },
     "onboarding": {
-      "title": "Commencer - Stampeo",
+      "title": "Commencer",
       "description": "Créez votre carte de fidélité digitale en quelques minutes"
     },
     "contact": {
-      "title": "Contact - Stampeo",
+      "title": "Contact",
       "description": "Contactez l'équipe Stampeo. Une question sur nos cartes de fidélité digitales ? Nous sommes là pour vous aider."
     },
     "features": {
       "design-de-carte": {
-        "title": "Design de carte de fidélité - Stampeo",
+        "title": "Design de carte de fidélité",
         "description": "Créez votre carte de fidélité digitale en 5 minutes. Personnalisez couleurs, logo et design, ou laissez-nous faire."
       },
       "scanner-mobile": {
-        "title": "Scanner mobile - Stampeo",
+        "title": "Scanner mobile",
         "description": "Tamponnez vos clients en une seconde avec votre téléphone. Application dédiée ou scanner web, avec mode hors ligne."
       },
       "notifications-push": {
-        "title": "Notifications push - Stampeo",
+        "title": "Notifications push",
         "description": "Engagez vos clients directement sur leur écran de verrouillage. 85 % de taux de lecture via les notifications wallet."
       },
       "analytiques": {
-        "title": "Analytiques et tableau de bord - Stampeo",
+        "title": "Analytiques et tableau de bord",
         "description": "Connaissez vos habitués avec des données concrètes. Tendances, heures de pointe, fréquence de visite et rétention."
       },
       "geolocalisation": {
-        "title": "Géolocalisation et géofencing - Stampeo",
+        "title": "Géolocalisation et géofencing",
         "description": "Rappelez à vos clients que vous existez quand ils passent à proximité. Géofencing natif Apple Wallet, conforme RGPD."
       },
       "programme-fondateur": {
-        "title": "Programme partenaire fondateur - Stampeo",
+        "title": "Programme partenaire fondateur",
         "description": "3 mois gratuits, 14,99 €/mois à vie, toutes les fonctionnalités Pro. Rejoignez les 50 premiers commerçants partenaires."
       }
     },

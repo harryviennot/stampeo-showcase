@@ -18,6 +18,43 @@ export const FEATURES = {
 
 export type FeatureSlug = keyof typeof FEATURES;
 
+/** FR slug → EN slug */
+const FR_TO_EN: Record<FeatureSlug, string> = {
+  "design-de-carte": "card-design",
+  "scanner-mobile": "mobile-scanner",
+  "notifications-push": "push-notifications",
+  analytiques: "analytics",
+  geolocalisation: "geolocation",
+};
+
+/** EN slug → FR slug */
+const EN_TO_FR: Record<string, FeatureSlug> = Object.fromEntries(
+  Object.entries(FR_TO_EN).map(([fr, en]) => [en, fr as FeatureSlug])
+) as Record<string, FeatureSlug>;
+
+/** Get the locale-appropriate slug for a feature */
+export function getLocalizedSlug(frSlug: FeatureSlug, locale: string): string {
+  return locale === "en" ? FR_TO_EN[frSlug] : frSlug;
+}
+
+/** Resolve any slug (FR or EN) to its canonical FR slug, or null if invalid */
+export function resolveToCanonicalSlug(slug: string): FeatureSlug | null {
+  if (slug in FEATURES) return slug as FeatureSlug;
+  if (slug in EN_TO_FR) return EN_TO_FR[slug];
+  return null;
+}
+
+/** Check if a slug is the correct one for the given locale */
+export function isCorrectSlugForLocale(
+  slug: string,
+  locale: string
+): boolean {
+  const canonical = resolveToCanonicalSlug(slug);
+  if (!canonical) return false;
+  const expected = getLocalizedSlug(canonical, locale);
+  return slug === expected;
+}
+
 export function isValidSlug(slug: string): slug is FeatureSlug {
   return slug in FEATURES;
 }
@@ -25,5 +62,8 @@ export function isValidSlug(slug: string): slug is FeatureSlug {
 export const FEATURE_SLUGS = Object.keys(FEATURES) as FeatureSlug[];
 
 export function generateFeatureStaticParams() {
-  return FEATURE_SLUGS.map((slug) => ({ slug }));
+  // Generate both FR and EN slugs so all URLs are statically available
+  const frSlugs = FEATURE_SLUGS.map((slug) => ({ slug }));
+  const enSlugs = FEATURE_SLUGS.map((slug) => ({ slug: FR_TO_EN[slug] }));
+  return [...frSlugs, ...enSlugs];
 }

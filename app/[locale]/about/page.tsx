@@ -15,7 +15,7 @@ export async function generateMetadata({
     description: t("hero.description"),
     alternates: {
       canonical: locale === "fr" ? "/about" : `/${locale}/about`,
-      languages: { fr: "/about", en: "/en/about" },
+      languages: { "x-default": "/about", fr: "/about", en: "/en/about" },
     },
   };
 }

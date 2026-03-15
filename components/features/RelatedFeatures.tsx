@@ -1,7 +1,8 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { resolveToCanonicalSlug, getLocalizedSlug } from "@/lib/feature-slugs";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import {
@@ -40,6 +41,18 @@ interface RelatedFeaturesProps {
 
 export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProps) {
   const t = useTranslations("features");
+  const locale = useLocale();
+
+  function getRelatedHref(relSlug: string): string {
+    if (relSlug === "programme-fondateur") {
+      return locale === "en" ? "/founding-partner" : "/programme-fondateur";
+    }
+    const canonical = resolveToCanonicalSlug(relSlug);
+    if (canonical) {
+      return `/features/${getLocalizedSlug(canonical, locale)}`;
+    }
+    return `/features/${relSlug}`;
+  }
 
   return (
     <section className={`py-16 sm:py-24 ${className}`}>
@@ -55,7 +68,7 @@ export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProp
             return (
               <ScrollReveal key={relSlug} delay={index * 100} className="h-full">
                 <Link
-                  href={(relSlug === "programme-fondateur" ? "/programme-fondateur" : `/features/${relSlug}`) as "/features/design-de-carte"}
+                  href={getRelatedHref(relSlug) as "/features/design-de-carte"}
                   className="group flex flex-col gap-4 p-6 bg-white rounded-2xl border border-[var(--accent)]/10 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 h-full"
                 >
                   <div className="flex items-start gap-4">

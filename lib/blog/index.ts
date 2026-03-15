@@ -106,6 +106,10 @@ export function getRelatedPosts(
   return scored.slice(0, limit).map((s) => s.post);
 }
 
+export function postExistsInLocale(slug: string, locale: string): boolean {
+  return fs.existsSync(path.join(CONTENT_DIR, locale, `${slug}.mdx`));
+}
+
 export function getAllTags(locale: string): string[] {
   const posts = getAllPosts(locale);
   const tags = new Set<string>();

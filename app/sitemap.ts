@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
-import { FEATURE_SLUGS } from "@/lib/feature-slugs";
+import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
 
 const BASE_URL = "https://stampeo.app";
 
@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", priority: 1.0, changeFrequency: "weekly" as const },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" as const },
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const },
-    { path: "/programme-fondateur", priority: 0.8, changeFrequency: "monthly" as const },
+    { path: "/programme-fondateur", enPath: "/founding-partner", priority: 0.8, changeFrequency: "monthly" as const },
     { path: "/privacy", priority: 0.3, changeFrequency: "yearly" as const },
     { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const },
   ];
@@ -40,11 +40,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Static pages with i18n alternates
   for (const page of staticPages) {
+    const enPath = page.enPath || page.path;
     for (const locale of locales) {
       const url =
         locale === "fr"
           ? `${BASE_URL}${page.path}`
-          : `${BASE_URL}/${locale}${page.path}`;
+          : `${BASE_URL}/${locale}${enPath}`;
 
       entries.push({
         url,
@@ -55,20 +56,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
           languages: {
             "x-default": `${BASE_URL}${page.path}`,
             fr: `${BASE_URL}${page.path}`,
-            en: `${BASE_URL}/en${page.path}`,
+            en: `${BASE_URL}/en${enPath}`,
           },
         },
       });
     }
   }
 
-  // Feature pages with i18n alternates
-  for (const slug of FEATURE_SLUGS) {
+  // Feature pages with i18n alternates (locale-specific slugs)
+  for (const frSlug of FEATURE_SLUGS) {
+    const enSlug = getLocalizedSlug(frSlug, "en");
+
     for (const locale of locales) {
       const url =
         locale === "fr"
-          ? `${BASE_URL}/features/${slug}`
-          : `${BASE_URL}/${locale}/features/${slug}`;
+          ? `${BASE_URL}/features/${frSlug}`
+          : `${BASE_URL}/${locale}/features/${enSlug}`;
 
       entries.push({
         url,
@@ -77,9 +80,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.7,
         alternates: {
           languages: {
-            "x-default": `${BASE_URL}/features/${slug}`,
-            fr: `${BASE_URL}/features/${slug}`,
-            en: `${BASE_URL}/en/features/${slug}`,
+            "x-default": `${BASE_URL}/features/${frSlug}`,
+            fr: `${BASE_URL}/features/${frSlug}`,
+            en: `${BASE_URL}/en/features/${enSlug}`,
           },
         },
       });

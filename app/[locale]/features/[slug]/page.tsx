@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
@@ -10,8 +10,10 @@ import { ScannerMobilePage } from "@/components/features/scanner-mobile/ScannerM
 import { GeofencingPage } from "@/components/features/geolocalisation/GeofencingPage";
 import {
   type FeatureSlug,
-  isValidSlug,
   generateFeatureStaticParams,
+  resolveToCanonicalSlug,
+  isCorrectSlugForLocale,
+  getLocalizedSlug,
 } from "@/lib/feature-slugs";
 
 const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {
@@ -43,41 +45,50 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
 
-  if (!isValidSlug(slug)) {
-    return { title: "Not Found" };
-  }
+  const canonical = resolveToCanonicalSlug(slug);
+  if (!canonical) return { title: "Not Found" };
 
+  // Use canonical (FR) slug for translation keys
   const t = await getTranslations({ locale, namespace: "metadata.features" });
-  const title = t(`${slug}.title`);
-  const description = t(`${slug}.description`);
+  const title = t(`${canonical}.title`);
+  const description = t(`${canonical}.description`);
+
+  const frSlug = canonical;
+  const enSlug = getLocalizedSlug(canonical, "en");
 
   return {
     title,
     description,
     alternates: {
-      canonical: featureUrl(slug, locale),
+      canonical: featureUrl(getLocalizedSlug(canonical, locale), locale),
       languages: {
-        fr: `/features/${slug}`,
-        en: `/en/features/${slug}`,
+        "x-default": `/features/${frSlug}`,
+        fr: `/features/${frSlug}`,
+        en: `/en/features/${enSlug}`,
       },
     },
     openGraph: {
       title,
       description,
-      url: featureUrl(slug, locale),
+      url: featureUrl(getLocalizedSlug(canonical, locale), locale),
       type: "website",
     },
   };
 }
 
 export default async function FeaturePage({ params }: PageProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
 
-  if (!isValidSlug(slug)) {
-    notFound();
+  const canonical = resolveToCanonicalSlug(slug);
+  if (!canonical) notFound();
+
+  // Redirect to the correct locale-specific slug (e.g., /en/features/design-de-carte → /en/features/card-design)
+  if (!isCorrectSlugForLocale(slug, locale)) {
+    const correctSlug = getLocalizedSlug(canonical, locale);
+    permanentRedirect(featureUrl(correctSlug, locale));
   }
 
-  const FeatureContent = FEATURE_COMPONENTS[slug];
+  const FeatureContent = FEATURE_COMPONENTS[canonical];
 
   return (
     <div className="min-h-screen bg-[var(--background)]">

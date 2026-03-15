@@ -112,6 +112,9 @@ export function articleJsonLd(article: {
     author: {
       "@type": "Person",
       name: article.author,
+      url: "https://linkedin.com/company/stampeo",
+      description:
+        "Founder of Stampeo, building digital loyalty cards for local businesses.",
     },
     publisher: {
       "@type": "Organization",
@@ -128,6 +131,37 @@ export function articleJsonLd(article: {
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: ["h1", ".article-summary", "[data-speakable]"],
+    },
+  };
+}
+
+export function collectionPageJsonLd(collection: {
+  name: string;
+  description: string;
+  locale: string;
+  posts: Array<{
+    title: string;
+    description: string;
+    slug: string;
+    publishedAt: string;
+  }>;
+}) {
+  const localePrefix =
+    collection.locale === "fr" ? "" : `/${collection.locale}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: collection.name,
+    description: collection.description,
+    url: `${BASE_URL}${localePrefix}/blog`,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: collection.posts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${BASE_URL}${localePrefix}/blog/${post.slug}`,
+        name: post.title,
+      })),
     },
   };
 }

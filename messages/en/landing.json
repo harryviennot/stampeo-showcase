@@ -341,32 +341,32 @@
         {
           "title": "Push notifications",
           "description": "Your customers finally read your messages. 85% open rate.",
-          "link": "/features/notifications-push"
+          "link": "/features/push-notifications"
         },
         {
           "title": "Geolocation",
           "description": "Remind them you exist when they walk by.",
-          "link": "/features/geolocalisation"
+          "link": "/features/geolocation"
         },
         {
           "title": "Mobile scanner",
           "description": "One scan, one stamp. Even without internet.",
-          "link": "/features/scanner-mobile"
+          "link": "/features/mobile-scanner"
         },
         {
           "title": "Analytics",
           "description": "Know your regulars. Not just by sight.",
-          "link": "/features/analytiques"
+          "link": "/features/analytics"
         },
         {
           "title": "Card design",
           "description": "Your colors, your logo, ready in 5 minutes.",
-          "link": "/features/design-de-carte"
+          "link": "/features/card-design"
         },
         {
           "title": "Founding program",
           "description": "3 months free. Price locked for life.",
-          "link": "/programme-fondateur"
+          "link": "/founding-partner"
         }
       ]
     },

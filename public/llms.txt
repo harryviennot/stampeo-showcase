@@ -1,0 +1,37 @@
+# Stampeo
+
+> Digital loyalty cards for Apple Wallet and Google Wallet. No app to download, no card to lose.
+
+Stampeo is a SaaS platform that helps local businesses create and manage digital loyalty cards. Customers add their loyalty card to Apple Wallet or Google Wallet — no app download required. Employees scan QR codes to add stamps, and passes auto-update via push notifications.
+
+## Key Pages
+
+- Homepage: https://stampeo.app
+- Features: https://stampeo.app/features/card-design
+- Blog: https://stampeo.app/blog
+- Contact: https://stampeo.app/contact
+- About: https://stampeo.app/about
+
+## Product
+
+- **What it does**: Creates digital stamp cards (loyalty cards) that live in Apple Wallet and Google Wallet
+- **Target audience**: Local businesses — bakeries, cafés, restaurants, hair salons, beauty institutes
+- **How it works**: Business creates a card design → customers scan a QR code to add it to their wallet → employees scan the customer's pass to add stamps → after N stamps, the customer earns a reward
+- **Key features**: Card design editor, mobile QR scanner, push notifications (85% read rate), analytics dashboard, geofencing
+
+## Pricing
+
+- **Starter**: €14.99/month — 1 card template, unlimited customers & scans, up to 3 team members, push notifications
+- **Growth**: €29.99/month — Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns
+
+## Languages
+
+- French (default): https://stampeo.app
+- English: https://stampeo.app/en
+
+## Contact
+
+- Email: contact@stampeo.app
+- X/Twitter: https://x.com/stampeo_app
+- LinkedIn: https://linkedin.com/company/stampeo
+- Instagram: https://instagram.com/stampeo.app

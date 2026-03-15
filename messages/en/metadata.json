@@ -6,37 +6,37 @@
       "keywords": "loyalty cards, digital loyalty, Apple Wallet, Google Wallet, customer rewards, stamp cards"
     },
     "onboarding": {
-      "title": "Get Started - Stampeo",
+      "title": "Get Started",
       "description": "Set up your digital loyalty card in minutes"
     },
     "contact": {
-      "title": "Contact - Stampeo",
+      "title": "Contact",
       "description": "Get in touch with the Stampeo team. Questions about our digital loyalty cards? We're here to help."
     },
     "features": {
       "design-de-carte": {
-        "title": "Loyalty Card Design - Stampeo",
+        "title": "Loyalty Card Design",
         "description": "Create your digital loyalty card in 5 minutes. Customize colors, logo and design, or let us handle it."
       },
       "scanner-mobile": {
-        "title": "Mobile Scanner - Stampeo",
+        "title": "Mobile Scanner",
         "description": "Stamp your customers in one second with your phone. Dedicated app or web scanner, with offline mode."
       },
       "notifications-push": {
-        "title": "Push Notifications - Stampeo",
+        "title": "Push Notifications",
         "description": "Engage your customers directly on their lock screen. 85% read rate via wallet notifications."
       },
       "analytiques": {
-        "title": "Analytics Dashboard - Stampeo",
+        "title": "Analytics Dashboard",
         "description": "Know your regulars with real data. Trends, peak hours, visit frequency and retention."
       },
       "geolocalisation": {
-        "title": "Geolocation & Geofencing - Stampeo",
+        "title": "Geolocation & Geofencing",
         "description": "Remind your customers you exist when they pass nearby. Native Apple Wallet geofencing, GDPR compliant."
       },
       "programme-fondateur": {
-        "title": "Founding Partner Program - Stampeo",
-        "description": "3 months free, \u20ac14.99/month for life, all Pro features. Join the first 50 partner businesses."
+        "title": "Founding Partner Program",
+        "description": "3 months free, €14.99/month for life, all Pro features. Join the first 50 partner businesses."
       }
     },
     "acquisition": {
