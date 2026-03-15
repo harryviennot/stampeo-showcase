@@ -4,6 +4,8 @@ import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { FeaturedHeroCard } from "@/components/blog/FeaturedHeroCard";
+import { JsonLd } from "@/components/JsonLd";
+import { collectionPageJsonLd } from "@/lib/structured-data";
 import { getAllPosts } from "@/lib/blog";
 
 export async function generateMetadata({
@@ -39,6 +41,19 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[var(--blog-bg)]">
+      <JsonLd
+        data={collectionPageJsonLd({
+          name: t("title"),
+          description: t("description"),
+          locale,
+          posts: posts.map((p) => ({
+            title: p.title,
+            description: p.description,
+            slug: p.slug,
+            publishedAt: p.publishedAt,
+          })),
+        })}
+      />
       <Header />
       <main className="pt-32 pb-20">
         <div className="max-w-6xl mx-auto px-6">

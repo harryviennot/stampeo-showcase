@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { permanentRedirect } from "next/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { FounderProgramPage } from "@/components/features/programme-fondateur/FounderProgramPage";
@@ -12,8 +12,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
 
-  // EN uses /founding-partner route
-  if (locale === "en") return {};
+  // Only EN uses this route; FR should use /programme-fondateur
+  if (locale === "fr") return {};
 
   const t = await getTranslations({ locale, namespace: "metadata.features" });
 
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: t("programme-fondateur.title"),
     description: t("programme-fondateur.description"),
     alternates: {
-      canonical: "/programme-fondateur",
+      canonical: `/${locale}/founding-partner`,
       languages: {
         fr: "/programme-fondateur",
         en: "/en/founding-partner",
@@ -30,12 +30,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ProgrammeFondateurPage({ params }: PageProps) {
+export default async function FoundingPartnerPage({ params }: PageProps) {
   const { locale } = await params;
 
-  // EN users visiting /en/programme-fondateur → redirect to /en/founding-partner
-  if (locale === "en") {
-    permanentRedirect("/en/founding-partner");
+  // FR users should use the French URL
+  if (locale === "fr") {
+    permanentRedirect("/programme-fondateur");
   }
 
   return (

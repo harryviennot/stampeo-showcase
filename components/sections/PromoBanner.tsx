@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "@/i18n/navigation";
 
@@ -15,6 +15,7 @@ export function PromoBanner({
   onDismiss: () => void;
 }) {
   const t = useTranslations("common.promoBanner");
+  const locale = useLocale();
   const [index, setIndex] = useState(0);
 
   const bold = useCallback(
@@ -50,7 +51,7 @@ export function PromoBanner({
           className="overflow-hidden"
         >
           <Link
-            href="/programme-fondateur"
+            href={locale === "en" ? "/founding-partner" : "/programme-fondateur"}
             className="relative h-10 flex items-center justify-center bg-black text-white overflow-hidden cursor-pointer group px-10"
           >
             <AnimatePresence mode="wait">
