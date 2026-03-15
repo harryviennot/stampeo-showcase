@@ -17,10 +17,15 @@ export async function generateMetadata({
   if (locale !== "fr" && locale !== "en") return {};
   const t = await getTranslations({ locale, namespace: "blog" });
   return {
-    title: t("title"),
+    title: t("metaTitle"),
     description: t("description"),
     alternates: {
-      canonical: "/blog",
+      canonical: locale === "fr" ? "/blog" : `/${locale}/blog`,
+      languages: {
+        "x-default": "/blog",
+        fr: "/blog",
+        en: "/en/blog",
+      },
     },
   };
 }

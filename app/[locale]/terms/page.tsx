@@ -17,7 +17,7 @@ export async function generateMetadata({
     title: legal.title,
     alternates: {
       canonical: locale === "fr" ? "/terms" : `/${locale}/terms`,
-      languages: { fr: "/terms", en: "/en/terms" },
+      languages: { "x-default": "/terms", fr: "/terms", en: "/en/terms" },
     },
   };
 }

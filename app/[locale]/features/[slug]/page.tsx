@@ -62,6 +62,7 @@ export async function generateMetadata({
     alternates: {
       canonical: featureUrl(getLocalizedSlug(canonical, locale), locale),
       languages: {
+        "x-default": `/features/${frSlug}`,
         fr: `/features/${frSlug}`,
         en: `/en/features/${enSlug}`,
       },

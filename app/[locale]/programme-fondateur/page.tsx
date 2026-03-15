@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: "/programme-fondateur",
       languages: {
+        "x-default": "/programme-fondateur",
         fr: "/programme-fondateur",
         en: "/en/founding-partner",
       },

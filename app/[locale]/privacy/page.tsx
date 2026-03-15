@@ -17,7 +17,7 @@ export async function generateMetadata({
     title: legal.title,
     alternates: {
       canonical: locale === "fr" ? "/privacy" : `/${locale}/privacy`,
-      languages: { fr: "/privacy", en: "/en/privacy" },
+      languages: { "x-default": "/privacy", fr: "/privacy", en: "/en/privacy" },
     },
   };
 }

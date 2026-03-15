@@ -56,6 +56,10 @@ export async function generateMetadata({
     alternates: {
       canonical:
         locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
+      languages: {
+        "x-default":
+          locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
+      },
     },
   };
 }
@@ -122,6 +126,7 @@ export default async function BlogPostPage({
             className="inline-flex items-center gap-1 text-sm text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors mb-8"
           >
             <svg
+              aria-hidden="true"
               className="w-4 h-4"
               fill="none"
               viewBox="0 0 24 24"
