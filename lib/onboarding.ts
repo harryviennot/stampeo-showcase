@@ -155,6 +155,9 @@ export interface OnboardingProgressPayload {
   category?: string;
   description?: string;
   email?: string;
+  website?: string;
+  phone?: string;
+  heard_from?: string;
   card_design?: {
     background_color: string;
     accent_color: string;
@@ -176,6 +179,9 @@ export interface OnboardingProgressResponse {
   category?: string;
   description?: string;
   email?: string;
+  website?: string;
+  phone?: string;
+  heard_from?: string;
   card_design?: {
     background_color: string;
     accent_color: string;

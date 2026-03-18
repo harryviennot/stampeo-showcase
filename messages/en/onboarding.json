@@ -11,6 +11,7 @@
     "businessInfo": {
       "title": "Let's set up your business",
       "subtitle": "Tell us about your business to get started",
+      "subtitleDiscovery": "One last thing — how did you find us?",
       "businessName": "Business name",
       "businessNamePlaceholder": "e.g. Cafe Aroma",
       "uniqueUrl": "Your unique URL",
@@ -18,7 +19,19 @@
       "slugMinLength": "Must be at least 3 characters",
       "slugAvailable": "This URL is available!",
       "ownerName": "Your name",
-      "ownerNamePlaceholder": "John Doe"
+      "ownerNamePlaceholder": "John Doe",
+      "website": "Website",
+      "websitePlaceholder": "https://mybusiness.com",
+      "phone": "Phone number",
+      "phonePlaceholder": "+33 6 12 34 56 78",
+      "heardFrom": "How did you hear about us?",
+      "heardFromOptions": {
+        "google": "Google Search",
+        "social": "Social Media",
+        "word_of_mouth": "Word of Mouth",
+        "event": "Event / Trade Show",
+        "other": "Other"
+      }
     },
     "businessType": {
       "title": "What type of business?",

@@ -11,6 +11,7 @@
     "businessInfo": {
       "title": "Configurons votre commerce",
       "subtitle": "Dites-nous en plus sur votre activité pour commencer",
+      "subtitleDiscovery": "Dernière chose — comment nous avez-vous trouvé ?",
       "businessName": "Nom du commerce",
       "businessNamePlaceholder": "ex. Café Arôme",
       "uniqueUrl": "Votre URL unique",
@@ -18,7 +19,19 @@
       "slugMinLength": "Minimum 3 caractères",
       "slugAvailable": "Cette URL est disponible !",
       "ownerName": "Votre nom",
-      "ownerNamePlaceholder": "Jean Dupont"
+      "ownerNamePlaceholder": "Jean Dupont",
+      "website": "Site web",
+      "websitePlaceholder": "https://moncommerce.fr",
+      "phone": "Numéro de téléphone",
+      "phonePlaceholder": "+33 6 12 34 56 78",
+      "heardFrom": "Comment avez-vous entendu parler de nous ?",
+      "heardFromOptions": {
+        "google": "Recherche Google",
+        "social": "Réseaux sociaux",
+        "word_of_mouth": "Bouche-à-oreille",
+        "event": "Événement / Salon",
+        "other": "Autre"
+      }
     },
     "businessType": {
       "title": "Quel type de commerce ?",
