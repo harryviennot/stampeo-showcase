@@ -374,15 +374,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
                 <button
                   type="button"
                   onClick={onNext}
-                  className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--muted-foreground)] font-medium rounded-full hover:bg-[var(--muted)] hover:text-[var(--foreground)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
-                >
-                  {tc("skip")}
-                </button>
-                <button
-                  type="button"
-                  onClick={onNext}
-                  disabled={!data.heardFrom}
-                  className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
                 >
                   {tc("continue")}
                 </button>

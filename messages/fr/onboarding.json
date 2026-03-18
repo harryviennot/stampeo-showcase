@@ -31,8 +31,8 @@
         "tiktok": "TikTok",
         "linkedin": "LinkedIn",
         "article": "Un article / Blog",
-        "friend": "Recommandé par un ami ou collègue",
-        "business": "Recommandé par un commerce qui utilise Stampeo",
+        "friend": "Ami / Collègue",
+        "business": "Un commerce Stampeo",
         "other": "Autre"
       },
       "heardFromOtherLabel": "Précisez",
