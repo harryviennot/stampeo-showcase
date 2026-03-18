@@ -55,6 +55,10 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
           backgroundColor: data.cardDesign.backgroundColor,
         },
         logo_url: data.cardDesign.logoUrl || undefined,
+        website: data.website || undefined,
+        phone: data.phone || undefined,
+        heard_from: data.heardFrom || undefined,
+        heard_from_other: data.heardFromOther || undefined,
       };
 
       const { data: business, error: apiError } =

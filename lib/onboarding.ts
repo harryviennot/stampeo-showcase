@@ -20,6 +20,10 @@ export interface BusinessCreatePayload {
     backgroundColor?: string;
   };
   logo_url?: string;
+  website?: string;
+  phone?: string;
+  heard_from?: string;
+  heard_from_other?: string;
 }
 
 export interface BusinessResponse {
