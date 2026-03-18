@@ -12,10 +12,15 @@ export interface CardDesign {
 }
 
 export interface OnboardingData {
-  // Step 1
+  // Step 1 - Substep 1
   businessName: string;
   urlSlug: string;
   ownerName: string;
+  website: string;
+  phone: string;
+  // Step 1 - Substep 2
+  heardFrom: string | null;
+  heardFromOther: string;
   // Step 2
   category: string | null;
   description: string;
@@ -52,6 +57,10 @@ const initialData: OnboardingData = {
   businessName: "",
   urlSlug: "",
   ownerName: "",
+  website: "",
+  phone: "",
+  heardFrom: null,
+  heardFromOther: "",
   category: null,
   description: "",
   cardDesign: defaultCardDesign,
