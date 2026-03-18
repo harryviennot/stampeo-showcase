@@ -15,9 +15,12 @@ interface BusinessInfoStepProps {
 
 const heardFromOptions = [
   { id: "google", icon: "🔍" },
-  { id: "social", icon: "📱" },
-  { id: "word_of_mouth", icon: "🗣️" },
-  { id: "event", icon: "🎪" },
+  { id: "instagram", icon: "📸" },
+  { id: "tiktok", icon: "🎵" },
+  { id: "linkedin", icon: "💼" },
+  { id: "article", icon: "📰" },
+  { id: "friend", icon: "🗣️" },
+  { id: "business", icon: "🏪" },
   { id: "other", icon: "✨" },
 ];
 
@@ -144,222 +147,251 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
       <SubstepDots current={substep} total={2} />
 
       {/* Animated substep content */}
-      <div className="min-h-[380px] relative">
-        <AnimatePresence mode="wait" initial={false} custom={direction}>
-          <motion.div
-            key={substep}
-            custom={direction}
-            variants={substepVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="w-full"
-          >
-            {substep === 1 ? (
-              <form onSubmit={handleContinue} className="space-y-5">
-                {/* Business Name */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="businessName"
-                    className="block text-sm font-medium text-[var(--foreground)]"
-                  >
-                    {t("businessName")}
-                  </label>
-                  <input
-                    id="businessName"
-                    type="text"
-                    value={data.businessName}
-                    onChange={(e) => updateBusinessName(e.target.value)}
-                    required
-                    className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                    placeholder={t("businessNamePlaceholder")}
-                  />
-                </div>
+      <motion.div layout transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}>
+      <AnimatePresence mode="wait" initial={false} custom={direction}>
+        <motion.div
+          key={substep}
+          custom={direction}
+          variants={substepVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          className="w-full"
+        >
+          {substep === 1 ? (
+            <form onSubmit={handleContinue} className="space-y-5">
+              {/* Business Name */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="businessName"
+                  className="block text-sm font-medium text-[var(--foreground)]"
+                >
+                  {t("businessName")}
+                </label>
+                <input
+                  id="businessName"
+                  type="text"
+                  value={data.businessName}
+                  onChange={(e) => updateBusinessName(e.target.value)}
+                  required
+                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                  placeholder={t("businessNamePlaceholder")}
+                />
+              </div>
 
-                {/* URL Slug */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="urlSlug"
-                    className="block text-sm font-medium text-[var(--foreground)]"
-                  >
-                    {t("uniqueUrl")}
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted-foreground)] text-sm">
-                      stampeo.app/
-                    </div>
-                    <input
-                      id="urlSlug"
-                      type="text"
-                      value={data.urlSlug}
-                      onChange={(e) => updateSlug(e.target.value)}
-                      required
-                      minLength={3}
-                      className="w-full pl-[104px] py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                      placeholder={t("urlPlaceholder")}
-                    />
-                    {/* Availability indicator */}
-                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
-                      {isSlugChecking && (
-                        <div className="w-6 h-6 border-2 border-[var(--muted-foreground)] border-t-transparent rounded-full animate-spin" />
-                      )}
-                      {!isSlugChecking && isSlugAvailable === true && (
-                        <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                          <CheckIcon className="w-4 h-4 text-white" />
-                        </div>
-                      )}
-                      {!isSlugChecking && isSlugAvailable === false && (
-                        <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
-                          <XMarkIcon className="w-4 h-4 text-white" />
-                        </div>
-                      )}
-                    </div>
+              {/* URL Slug */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="urlSlug"
+                  className="block text-sm font-medium text-[var(--foreground)]"
+                >
+                  {t("uniqueUrl")}
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted-foreground)] text-sm">
+                    stampeo.app/
                   </div>
-                  {/* Fixed height container to prevent jitter */}
-                  <div className="h-5">
-                    {data.urlSlug.length > 0 && data.urlSlug.length < 3 && (
-                      <p className="text-xs text-[var(--muted-foreground)]">
-                        {t("slugMinLength")}
-                      </p>
-                    )}
-                    {!isSlugChecking && isSlugAvailable === false && slugErrorReason && (
-                      <p className="text-xs text-red-500">
-                        {slugErrorReason}
-                      </p>
+                  <input
+                    id="urlSlug"
+                    type="text"
+                    value={data.urlSlug}
+                    onChange={(e) => updateSlug(e.target.value)}
+                    required
+                    minLength={3}
+                    className="w-full pl-[104px] py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                    placeholder={t("urlPlaceholder")}
+                  />
+                  {/* Availability indicator */}
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+                    {isSlugChecking && (
+                      <div className="w-6 h-6 border-2 border-[var(--muted-foreground)] border-t-transparent rounded-full animate-spin" />
                     )}
                     {!isSlugChecking && isSlugAvailable === true && (
-                      <p className="text-xs text-green-600">
-                        {t("slugAvailable")}
-                      </p>
+                      <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                        <CheckIcon className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                    {!isSlugChecking && isSlugAvailable === false && (
+                      <div className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                        <XMarkIcon className="w-4 h-4 text-white" />
+                      </div>
                     )}
                   </div>
                 </div>
-
-                {/* Owner Name */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="ownerName"
-                    className="block text-sm font-medium text-[var(--foreground)]"
-                  >
-                    {t("ownerName")}
-                  </label>
-                  <input
-                    id="ownerName"
-                    type="text"
-                    value={data.ownerName}
-                    onChange={(e) => updateData({ ownerName: e.target.value })}
-                    required
-                    className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                    placeholder={t("ownerNamePlaceholder")}
-                  />
-                </div>
-
-                {/* Website (optional) */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="website"
-                    className="block text-sm font-medium text-[var(--foreground)]"
-                  >
-                    {t("website")} <span className="text-[var(--muted-foreground)] font-normal text-xs">(optional)</span>
-                  </label>
-                  <input
-                    id="website"
-                    type="url"
-                    value={data.website}
-                    onChange={(e) => updateData({ website: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                    placeholder={t("websitePlaceholder")}
-                  />
-                </div>
-
-                {/* Phone (optional) */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-[var(--foreground)]"
-                  >
-                    {t("phone")} <span className="text-[var(--muted-foreground)] font-normal text-xs">(optional)</span>
-                  </label>
-                  <input
-                    id="phone"
-                    type="tel"
-                    value={data.phone}
-                    onChange={(e) => updateData({ phone: e.target.value })}
-                    className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                    placeholder={t("phonePlaceholder")}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={!isValid}
-                  className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                >
-                  {tc("next")}
-                </button>
-              </form>
-            ) : (
-              /* Substep 2: Where did you hear about us? */
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-3">
-                  {heardFromOptions.map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => updateData({ heardFrom: option.id })}
-                      className={`
-                        flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200
-                        ${data.heardFrom === option.id
-                          ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
-                          : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
-                        }
-                      `}
-                    >
-                      <span className="text-2xl" role="img" aria-label={t(`heardFromOptions.${option.id}`)}>
-                        {option.icon}
-                      </span>
-                      <span
-                        className={`text-sm font-medium ${data.heardFrom === option.id
-                            ? "text-[var(--foreground)]"
-                            : "text-[var(--foreground)]/80"
-                          }`}
-                      >
-                        {t(`heardFromOptions.${option.id}`)}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Navigation buttons */}
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="py-3.5 px-6 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
-                  >
-                    {tc("back")}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onNext}
-                    className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--muted-foreground)] font-medium rounded-full hover:bg-[var(--muted)] hover:text-[var(--foreground)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
-                  >
-                    {tc("skip")}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={onNext}
-                    disabled={!data.heardFrom}
-                    className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  >
-                    {tc("continue")}
-                  </button>
+                {/* Fixed height container to prevent jitter */}
+                <div className="h-5">
+                  {data.urlSlug.length > 0 && data.urlSlug.length < 3 && (
+                    <p className="text-xs text-[var(--muted-foreground)]">
+                      {t("slugMinLength")}
+                    </p>
+                  )}
+                  {!isSlugChecking && isSlugAvailable === false && slugErrorReason && (
+                    <p className="text-xs text-red-500">
+                      {slugErrorReason}
+                    </p>
+                  )}
+                  {!isSlugChecking && isSlugAvailable === true && (
+                    <p className="text-xs text-green-600">
+                      {t("slugAvailable")}
+                    </p>
+                  )}
                 </div>
               </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+
+              {/* Owner Name */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="ownerName"
+                  className="block text-sm font-medium text-[var(--foreground)]"
+                >
+                  {t("ownerName")}
+                </label>
+                <input
+                  id="ownerName"
+                  type="text"
+                  value={data.ownerName}
+                  onChange={(e) => updateData({ ownerName: e.target.value })}
+                  required
+                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                  placeholder={t("ownerNamePlaceholder")}
+                />
+              </div>
+
+              {/* Website (optional) */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="website"
+                  className="block text-sm font-medium text-[var(--foreground)]"
+                >
+                  {t("website")} <span className="text-[var(--muted-foreground)] font-normal text-xs">(optional)</span>
+                </label>
+                <input
+                  id="website"
+                  type="url"
+                  value={data.website}
+                  onChange={(e) => updateData({ website: e.target.value })}
+                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                  placeholder={t("websitePlaceholder")}
+                />
+              </div>
+
+              {/* Phone (optional) */}
+              <div className="space-y-2">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-[var(--foreground)]"
+                >
+                  {t("phone")} <span className="text-[var(--muted-foreground)] font-normal text-xs">(optional)</span>
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={data.phone}
+                  onChange={(e) => updateData({ phone: e.target.value })}
+                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                  placeholder={t("phonePlaceholder")}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={!isValid}
+                className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              >
+                {tc("next")}
+              </button>
+            </form>
+          ) : (
+            /* Substep 2: Where did you hear about us? */
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-3">
+                {heardFromOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => updateData({ heardFrom: option.id })}
+                    className={`
+                      flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200
+                      ${data.heardFrom === option.id
+                        ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
+                        : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
+                      }
+                    `}
+                  >
+                    <span className="text-2xl" role="img" aria-label={t(`heardFromOptions.${option.id}`)}>
+                      {option.icon}
+                    </span>
+                    <span
+                      className={`text-sm font-medium ${data.heardFrom === option.id
+                          ? "text-[var(--foreground)]"
+                          : "text-[var(--foreground)]/80"
+                        }`}
+                    >
+                      {t(`heardFromOptions.${option.id}`)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Other text input - shown when "other" is selected */}
+              <AnimatePresence>
+                {data.heardFrom === "other" && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                  >
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="heardFromOther"
+                        className="block text-sm font-medium text-[var(--foreground)]"
+                      >
+                        {t("heardFromOtherLabel")}
+                      </label>
+                      <textarea
+                        id="heardFromOther"
+                        value={data.heardFromOther}
+                        onChange={(e) => updateData({ heardFromOther: e.target.value })}
+                        rows={2}
+                        className="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none"
+                        placeholder={t("heardFromOtherPlaceholder")}
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Navigation buttons */}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleBack}
+                  className="py-3.5 px-6 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
+                >
+                  {tc("back")}
+                </button>
+                <button
+                  type="button"
+                  onClick={onNext}
+                  className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--muted-foreground)] font-medium rounded-full hover:bg-[var(--muted)] hover:text-[var(--foreground)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
+                >
+                  {tc("skip")}
+                </button>
+                <button
+                  type="button"
+                  onClick={onNext}
+                  disabled={!data.heardFrom}
+                  className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                  {tc("continue")}
+                </button>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

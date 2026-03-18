@@ -26,12 +26,17 @@
       "phonePlaceholder": "+33 6 12 34 56 78",
       "heardFrom": "Comment avez-vous entendu parler de nous ?",
       "heardFromOptions": {
-        "google": "Recherche Google",
-        "social": "Réseaux sociaux",
-        "word_of_mouth": "Bouche-à-oreille",
-        "event": "Événement / Salon",
+        "google": "Google / Recherche internet",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "linkedin": "LinkedIn",
+        "article": "Un article / Blog",
+        "friend": "Recommandé par un ami ou collègue",
+        "business": "Recommandé par un commerce qui utilise Stampeo",
         "other": "Autre"
-      }
+      },
+      "heardFromOtherLabel": "Précisez",
+      "heardFromOtherPlaceholder": "Comment avez-vous entendu parler de nous ?"
     },
     "businessType": {
       "title": "Quel type de commerce ?",

@@ -158,6 +158,7 @@ export interface OnboardingProgressPayload {
   website?: string;
   phone?: string;
   heard_from?: string;
+  heard_from_other?: string;
   card_design?: {
     background_color: string;
     accent_color: string;
@@ -182,6 +183,7 @@ export interface OnboardingProgressResponse {
   website?: string;
   phone?: string;
   heard_from?: string;
+  heard_from_other?: string;
   card_design?: {
     background_color: string;
     accent_color: string;

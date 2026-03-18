@@ -26,12 +26,17 @@
       "phonePlaceholder": "+33 6 12 34 56 78",
       "heardFrom": "How did you hear about us?",
       "heardFromOptions": {
-        "google": "Google Search",
-        "social": "Social Media",
-        "word_of_mouth": "Word of Mouth",
-        "event": "Event / Trade Show",
+        "google": "Google / Internet search",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "linkedin": "LinkedIn",
+        "article": "Article / Blog",
+        "friend": "Recommended by a friend or colleague",
+        "business": "Recommended by a business using Stampeo",
         "other": "Other"
-      }
+      },
+      "heardFromOtherLabel": "Please tell us more",
+      "heardFromOtherPlaceholder": "How did you hear about us?"
     },
     "businessType": {
       "title": "What type of business?",
