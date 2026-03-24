@@ -83,7 +83,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
       setError(err instanceof Error ? err.message : "An error occurred");
       setLoading(false);
     }
-  }, [data, updateData, onNext, session]);
+  }, [data, updateData, onNext, session, businessLocale]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
