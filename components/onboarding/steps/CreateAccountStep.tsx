@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 
@@ -20,6 +20,7 @@ export function CreateAccountStep({
   const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
   const { signUp, signIn } = useAuth();
+  const locale = useLocale();
 
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +43,8 @@ export function CreateAccountStep({
           const { error: authError } = await signUp(
             data.email,
             password,
-            data.ownerName
+            data.ownerName,
+            locale
           );
 
           if (authError) {
@@ -75,7 +77,7 @@ export function CreateAccountStep({
         setLoading(false);
       }
     },
-    [isValid, data.email, data.ownerName, password, signUp, signIn, onNext, mode, t]
+    [isValid, data.email, data.ownerName, password, signUp, signIn, onNext, mode, t, locale]
   );
 
   return (

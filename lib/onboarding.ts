@@ -24,6 +24,7 @@ export interface BusinessCreatePayload {
   phone?: string;
   heard_from?: string;
   heard_from_other?: string;
+  primary_locale?: string;
 }
 
 export interface BusinessResponse {

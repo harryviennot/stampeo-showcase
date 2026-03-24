@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { createBusiness, BusinessCreatePayload } from "@/lib/onboarding";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { getThemeColor } from "@/lib/theme";
+import { detectBusinessLocale } from "@/lib/locale-detect";
 import { CheckIcon } from "@/components/icons";
 
 interface FoundingPartnerStepProps {
@@ -19,6 +20,8 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
   const { session } = useAuth();
+  const locale = useLocale();
+  const businessLocale = detectBusinessLocale(locale);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +62,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         phone: data.phone || undefined,
         heard_from: data.heardFrom || undefined,
         heard_from_other: data.heardFromOther || undefined,
+        primary_locale: businessLocale,
       };
 
       const { data: business, error: apiError } =
@@ -79,7 +83,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
       setError(err instanceof Error ? err.message : "An error occurred");
       setLoading(false);
     }
-  }, [data, updateData, onNext, session]);
+  }, [data, updateData, onNext, session, businessLocale]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
