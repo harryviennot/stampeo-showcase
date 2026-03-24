@@ -6,23 +6,8 @@ import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { createBusiness, BusinessCreatePayload } from "@/lib/onboarding";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { getThemeColor } from "@/lib/theme";
+import { detectBusinessLocale } from "@/lib/locale-detect";
 import { CheckIcon } from "@/components/icons";
-
-const FRENCH_SPEAKING_COUNTRIES = new Set([
-  "FR", "BE", "CH", "CA", "LU", "MC", "SN", "CI", "ML", "BF", "NE",
-  "TG", "BJ", "GN", "CG", "CD", "CM", "GA", "DJ", "KM", "MG", "HT",
-]);
-
-function detectBusinessLocale(fallbackLocale: string): "fr" | "en" {
-  if (typeof navigator === "undefined") return fallbackLocale === "fr" ? "fr" : "en";
-  const lang = navigator.language || "";
-  const country = lang.split("-")[1]?.toUpperCase();
-  if (country) {
-    return FRENCH_SPEAKING_COUNTRIES.has(country) ? "fr" : "en";
-  }
-  // No region subtag — fall back to language
-  return lang.startsWith("fr") ? "fr" : "en";
-}
 
 interface FoundingPartnerStepProps {
   store: OnboardingStore;
