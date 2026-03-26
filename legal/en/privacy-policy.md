@@ -1,10 +1,10 @@
 # Privacy Policy — Stampéo
 
-**Last updated: February 16, 2026**
+**Last updated: March 26, 2026**
 
 ## 1. Introduction
 
-This privacy policy describes how Stampéo (hereinafter "we", "our", or "the Platform"), operated by Harry Viennot, sole proprietor registered in France, collects, uses, stores, and protects personal data in connection with its digital loyalty card service.
+This privacy policy describes how Stampéo (hereinafter "we", "our", or "the Platform"), operated by Harry Viennot, sole proprietor registered in France under SIRET **currently being obtained**, collects, uses, stores, and protects personal data in connection with its digital loyalty card service.
 
 We are committed to complying with the General Data Protection Regulation (GDPR — EU Regulation 2016/679) and the French Data Protection Act (Loi Informatique et Libertés).
 
@@ -26,14 +26,17 @@ Each business chooses what information to collect from its customers (anonymous,
 
 ### 3.1 Business Users
 
-| Data | Purpose | Legal Basis |
-|------|---------|-------------|
-| Email address | Account creation, communication | Performance of contract |
-| Password (hashed) | Authentication | Performance of contract |
-| Full name | Account identification | Performance of contract |
-| Business name | Service personalization | Performance of contract |
-| Payment information | Billing via Stripe | Performance of contract |
-| Logo and brand assets | Loyalty card creation | Performance of contract |
+| Data | Purpose | Legal Basis | Required |
+|------|---------|-------------|----------|
+| Email address | Account creation, communication | Performance of contract | Yes |
+| Password (hashed) | Authentication | Performance of contract | Yes |
+| Full name | Account identification | Performance of contract | Yes |
+| Business name | Service personalization | Performance of contract | Yes |
+| Business website | Verification and personalization | Legitimate interest | No |
+| Phone number | Contact and support | Legitimate interest | No |
+| Source of discovery | Internal statistics (how you heard about Stampéo) | Legitimate interest | No |
+| Payment information | Billing via Stripe | Performance of contract | Yes |
+| Logo and brand assets | Service operation | Performance of contract | Yes |
 
 ### 3.2 Employees (Scanners)
 
@@ -44,17 +47,18 @@ Each business chooses what information to collect from its customers (anonymous,
 
 ### 3.3 End Customers
 
-Data collected depends on the configuration chosen by the business:
+Data collected depends entirely on the configuration chosen by the business. All three identification fields are optional and can be disabled independently:
 
 | Data | Collection | Purpose |
 |------|------------|---------|
 | Unique card identifier | Always | Service operation |
 | Email address | Default (can be disabled) | Pass recovery, communication |
-| First name | Default (can be disabled) | Personalization |
-| Phone number | Optional (Pro) | Communication |
-| Birthday | Optional (Pro) | Personalized offers |
+| First name / Last name | Default (can be disabled) | Personalization |
+| Phone number | Optional (can be disabled) | Communication |
 | Visit history | Automatic | Loyalty tracking and statistics |
 | Stamps/points balance | Automatic | Loyalty program |
+
+It is possible to configure the Platform in fully anonymous mode (no personal data collected, only a card identifier).
 
 ### 3.4 Technical Data
 
@@ -63,7 +67,7 @@ For all users, we may collect:
 - Pass type (Apple Wallet or Google Wallet)
 - Device token for pass updates
 - Scan geolocation data (if available)
-- Anonymized usage data via Plausible Analytics (no cookies, no personal data)
+- Anonymized usage data via PostHog (no cookies, no personal data)
 
 ## 4. Third-Party Services
 
@@ -74,20 +78,20 @@ We use the following sub-processors:
 | Supabase | Database hosting | Ireland (EU) |
 | OVH | VPS server | France (EU) |
 | Stripe | Payment processing | EU (possible US transfers under Data Privacy Framework) |
-| Resend | Transactional emails | United States (Data Privacy Framework) |
+| Resend | Transactional emails | Ireland (EU) |
 | Apple (APNs) | Apple Wallet pass updates | United States (Data Privacy Framework) |
 | Google (Pay API) | Google Wallet pass updates | United States (Data Privacy Framework) |
-| Plausible Analytics | Website analytics | EU |
+| PostHog | Website analytics (cookieless) | EU |
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Resend, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission.
+Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Resend, Supabase, OVH, and PostHog process data exclusively within the EU.
 
 ## 5. Cookies
 
-Stampéo uses Plausible Analytics, a privacy-friendly solution that **uses no cookies** and collects no personal data. No third-party tracking cookies are used on our platform.
+Stampéo uses PostHog (hosted in the EU) for website analytics. PostHog is configured in cookieless mode: **no tracking cookies are set**, and no personal data is collected for analytics purposes. This configuration does not require a cookie consent banner in accordance with the ePrivacy Directive and CNIL guidelines.
 
-Strictly necessary cookies may be used for authentication and session management. These cookies do not require consent under the ePrivacy Directive.
+Strictly necessary cookies may be used for authentication and session management. These cookies do not require consent.
 
 ## 6. Use of Data
 
@@ -172,3 +176,5 @@ We may update this privacy policy. In case of substantial changes, Business user
 
 - **Email:** contact@stampeo.app
 - **Data Controller:** Harry Viennot, Stampéo
+- **SIRET:** **currently being obtained**
+- **Address:** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France
