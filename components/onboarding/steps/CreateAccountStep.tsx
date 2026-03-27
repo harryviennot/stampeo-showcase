@@ -34,7 +34,7 @@ export function CreateAccountStep({
   const isFormValid =
     data.email.includes("@") && data.email.includes(".") && password.length >= 6;
 
-  const isOtpValid = otpCode.length === 6;
+  const isOtpValid = otpCode.length === 8;
 
   // Resend cooldown timer
   useEffect(() => {
@@ -165,7 +165,7 @@ export function CreateAccountStep({
 
   // OTP input handler — only allow digits
   const handleOtpChange = useCallback((value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 6);
+    const digits = value.replace(/\D/g, "").slice(0, 8);
     setOtpCode(digits);
   }, []);
 
@@ -209,7 +209,7 @@ export function CreateAccountStep({
               autoComplete="one-time-code"
               value={otpCode}
               onChange={(e) => handleOtpChange(e.target.value)}
-              maxLength={6}
+              maxLength={8}
               className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] text-center text-2xl font-mono tracking-[0.5em] placeholder:text-[var(--muted-foreground)] placeholder:tracking-[0.5em] placeholder:text-lg"
               placeholder={t("verifyCodePlaceholder")}
             />
