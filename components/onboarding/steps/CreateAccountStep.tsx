@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 
@@ -23,6 +24,7 @@ export function CreateAccountStep({
   const locale = useLocale();
 
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [phase, setPhase] = useState<"form" | "verify">("form");
@@ -31,10 +33,20 @@ export function CreateAccountStep({
   const [codeSentMessage, setCodeSentMessage] = useState(false);
   const otpInputRef = useRef<HTMLInputElement>(null);
 
-  const isFormValid =
-    data.email.includes("@") && data.email.includes(".") && password.length >= 6;
+  const passwordChecks = useMemo(() => ({
+    lowercase: /[a-z]/.test(password),
+    uppercase: /[A-Z]/.test(password),
+    number: /[0-9]/.test(password),
+    symbol: /[^a-zA-Z0-9]/.test(password),
+    minLength: password.length >= 6,
+  }), [password]);
 
-  const isOtpValid = otpCode.length === 8;
+  const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
+
+  const isFormValid =
+    data.email.includes("@") && data.email.includes(".") && isPasswordStrong;
+
+  const isOtpValid = otpCode.length === 6;
 
   // Resend cooldown timer
   useEffect(() => {
@@ -60,7 +72,7 @@ export function CreateAccountStep({
 
       try {
         // 1. Try signup first
-        const { error: signUpError } = await signUp(
+        const { data: signUpData, error: signUpError } = await signUp(
           data.email,
           password,
           data.ownerName,
@@ -68,6 +80,32 @@ export function CreateAccountStep({
         );
 
         if (!signUpError) {
+          // Supabase returns user with empty identities[] when email already exists
+          // (email enumeration protection with enable_confirmations)
+          const isExistingUser = !signUpData?.user || signUpData.user.identities?.length === 0;
+          if (isExistingUser) {
+            // User already exists — try sign-in
+            const { error: signInError } = await signIn(data.email, password);
+
+            if (!signInError) {
+              onNext();
+              return;
+            }
+
+            const signInMsg = signInError.message.toLowerCase();
+            if (signInMsg.includes("email not confirmed")) {
+              await resendOtp(data.email);
+              setResendCooldown(60);
+              setPhase("verify");
+              setLoading(false);
+              return;
+            }
+
+            setError(t("accountExistsWrongPassword"));
+            setLoading(false);
+            return;
+          }
+
           // New user created — move to OTP verification
           setResendCooldown(60);
           setPhase("verify");
@@ -75,7 +113,7 @@ export function CreateAccountStep({
           return;
         }
 
-        // 2. If already registered, silently try sign-in
+        // 2. If already registered (explicit error), silently try sign-in
         const errorMsg = signUpError.message.toLowerCase();
         if (
           errorMsg.includes("already registered") ||
@@ -85,14 +123,12 @@ export function CreateAccountStep({
           const { error: signInError } = await signIn(data.email, password);
 
           if (!signInError) {
-            // Existing verified user — proceed directly
             onNext();
             return;
           }
 
           const signInMsg = signInError.message.toLowerCase();
           if (signInMsg.includes("email not confirmed")) {
-            // Existing unverified user — resend OTP and show verify phase
             await resendOtp(data.email);
             setResendCooldown(60);
             setPhase("verify");
@@ -100,7 +136,6 @@ export function CreateAccountStep({
             return;
           }
 
-          // Wrong password for existing account
           setError(t("accountExistsWrongPassword"));
           setLoading(false);
           return;
@@ -165,7 +200,7 @@ export function CreateAccountStep({
 
   // OTP input handler — only allow digits
   const handleOtpChange = useCallback((value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 8);
+    const digits = value.replace(/\D/g, "").slice(0, 6);
     setOtpCode(digits);
   }, []);
 
@@ -209,7 +244,7 @@ export function CreateAccountStep({
               autoComplete="one-time-code"
               value={otpCode}
               onChange={(e) => handleOtpChange(e.target.value)}
-              maxLength={8}
+              maxLength={6}
               className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] text-center text-2xl font-mono tracking-[0.5em] placeholder:text-[var(--muted-foreground)] placeholder:tracking-[0.5em] placeholder:text-lg"
               placeholder={t("verifyCodePlaceholder")}
             />
@@ -307,19 +342,43 @@ export function CreateAccountStep({
           >
             {t("password")}
           </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
-            className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-            placeholder={t("passwordPlaceholder")}
-          />
-          <p className="text-xs text-[var(--muted-foreground)]">
-            {t("passwordHint")}
-          </p>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+              placeholder={t("passwordPlaceholder")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {password.length > 0 && (
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
+              {(["lowercase", "uppercase", "number", "symbol", "minLength"] as const).map((key) => (
+                <li
+                  key={key}
+                  className={`flex items-center gap-1.5 text-xs transition-colors ${
+                    passwordChecks[key]
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-[var(--muted-foreground)]"
+                  }`}
+                >
+                  <Check size={12} weight={passwordChecks[key] ? "bold" : "regular"} />
+                  {t(`passwordRequirements.${key}`)}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Navigation buttons */}

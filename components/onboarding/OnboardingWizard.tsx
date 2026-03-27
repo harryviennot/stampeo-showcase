@@ -33,19 +33,17 @@ export function OnboardingWizard() {
   const [direction, setDirection] = useState(0);
   const [prevStep, setPrevStep] = useState(1);
 
-  // Clear session storage when leaving the page
+  // Clear session storage only when actually leaving the site (tab close / external navigation)
+  // Do NOT clear on component unmount — locale changes cause unmount/remount
   useEffect(() => {
     const clearSessionStorage = () => {
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
     };
 
-    // Clear on tab/window close or navigation to external site
     window.addEventListener("beforeunload", clearSessionStorage);
 
-    // Clear on component unmount (navigation within app)
     return () => {
       window.removeEventListener("beforeunload", clearSessionStorage);
-      clearSessionStorage();
     };
   }, []);
 

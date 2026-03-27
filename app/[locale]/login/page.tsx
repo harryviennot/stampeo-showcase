@@ -64,7 +64,7 @@ export default function LoginPage() {
   const handleVerifySubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      if (otpCode.length !== 8) return;
+      if (otpCode.length !== 6) return;
 
       setError(null);
       setLoading(true);
@@ -96,7 +96,7 @@ export default function LoginPage() {
   }, [resendCooldown, resendOtp, email]);
 
   const handleOtpChange = useCallback((value: string) => {
-    const digits = value.replace(/\D/g, "").slice(0, 8);
+    const digits = value.replace(/\D/g, "").slice(0, 6);
     setOtpCode(digits);
   }, []);
 
@@ -149,7 +149,7 @@ export default function LoginPage() {
                   autoComplete="one-time-code"
                   value={otpCode}
                   onChange={(e) => handleOtpChange(e.target.value)}
-                  maxLength={8}
+                  maxLength={6}
                   className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] text-center text-2xl font-mono tracking-[0.5em] placeholder:text-[var(--muted-foreground)] placeholder:tracking-[0.5em] placeholder:text-lg"
                   placeholder={t("verifyCodePlaceholder")}
                 />
@@ -157,7 +157,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={otpCode.length !== 8 || loading}
+                disabled={otpCode.length !== 6 || loading}
                 className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? t("verifying") : t("verifyButton")}
