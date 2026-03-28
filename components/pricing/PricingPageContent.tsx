@@ -1,9 +1,9 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { Check, X, ArrowRight } from "@phosphor-icons/react";
+import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRICING } from "@/lib/pricing";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
@@ -143,8 +143,22 @@ function CellValue({
   );
 }
 
+const TIERS = ["starter", "growth", "pro"] as const;
+type Tier = (typeof TIERS)[number];
+
+const TIER_PRICES: Record<Tier, number> = {
+  starter: PRICING.starter.price,
+  growth: PRICING.growth.price,
+  pro: PRICING.pro.price,
+};
+
 function FeatureComparisonTable() {
   const t = useTranslations("pricingPage");
+  const [mobileTier, setMobileTier] = useState<Tier>("growth");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Build a flat row index for alternating colors (skip category headers)
+  let globalRowIndex = 0;
 
   return (
     <div className="mt-24 lg:mt-32">
@@ -159,7 +173,7 @@ function FeatureComparisonTable() {
 
       {/* Desktop Table */}
       <ScrollReveal delay={200} className="hidden md:block">
-        <div className="bg-white rounded-3xl border border-[var(--border)] overflow-hidden shadow-sm">
+        <div className="bg-white blog-card-3d rounded-3xl overflow-hidden hover:!transform-none hover:!shadow-[0_3px_0_var(--near-black)]">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
@@ -203,11 +217,13 @@ function FeatureComparisonTable() {
                     const rowData = t.raw(
                       `comparison.rows.${row.key}`
                     ) as Record<string, string>;
+                    const isEven = globalRowIndex % 2 === 0;
+                    globalRowIndex++;
 
                     return (
                       <tr
                         key={row.key}
-                        className="border-t border-[var(--border)]/50 hover:bg-[var(--cream)]/50 transition-colors"
+                        className={`border-t border-[var(--border)]/50 hover:bg-[var(--cream)]/50 transition-colors ${isEven ? "bg-[var(--muted)]/30" : ""}`}
                       >
                         <td className="px-6 py-2.5 text-[13px] font-medium text-[var(--muted-foreground)]">
                           {rowData.label}
@@ -247,98 +263,87 @@ function FeatureComparisonTable() {
         </div>
       </ScrollReveal>
 
-      {/* Mobile: scrollable table */}
+      {/* Mobile: tier selector + single column */}
       <div className="md:hidden">
         <ScrollReveal delay={200}>
-          <div className="overflow-x-auto -mx-6 px-6">
-            <div className="min-w-[600px]">
-              <div className="bg-white rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="border-b border-[var(--border)]">
-                      <th className="text-left p-4 w-[40%] sticky left-0 bg-white z-10" />
-                      <th className="p-4 text-center w-[20%]">
-                        <div className="text-xs font-bold">{t("starter.name")}</div>
-                        <div className="text-[var(--muted-foreground)] text-[10px] mt-0.5">
-                          &euro;{PRICING.starter.price}
-                        </div>
-                      </th>
-                      <th className="p-4 text-center w-[20%] bg-[var(--accent)]/5">
-                        <div className="text-xs font-bold text-[var(--accent)]">
-                          {t("growth.name")}
-                        </div>
-                        <div className="text-[var(--muted-foreground)] text-[10px] mt-0.5">
-                          &euro;{PRICING.growth.price}
-                        </div>
-                      </th>
-                      <th className="p-4 text-center w-[20%] opacity-50">
-                        <div className="text-xs font-bold text-[var(--muted-foreground)]">
-                          {t("pro.name")}
-                        </div>
-                        <div className="text-[var(--muted-foreground)] text-[10px] mt-0.5">
-                          &euro;{PRICING.pro.price}
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {FEATURE_CATEGORIES.map((category) => (
-                      <Fragment key={`m-${category.key}`}>
-                        <tr>
-                          <td
-                            colSpan={4}
-                            className="px-4 pt-6 pb-1.5 text-xs font-bold text-[var(--foreground)]"
-                          >
-                            {t(`comparison.categories.${category.key}`)}
-                          </td>
-                        </tr>
-                        {category.rows.map((row) => {
-                          const rowData = t.raw(
-                            `comparison.rows.${row.key}`
-                          ) as Record<string, string>;
-
-                          return (
-                            <tr
-                              key={row.key}
-                              className="border-t border-[var(--border)]/50"
-                            >
-                              <td className="px-4 py-2 text-[11px] font-medium sticky left-0 bg-white z-10">
-                                {rowData.label}
-                              </td>
-                              <td className="px-4 py-2 text-center">
-                                <span className="inline-flex justify-center text-[11px]">
-                                  <CellValue
-                                    type={row.starter}
-                                    text={rowData.starter}
-                                  />
-                                </span>
-                              </td>
-                              <td className="px-4 py-2 text-center bg-[var(--accent)]/5">
-                                <span className="inline-flex justify-center text-[11px]">
-                                  <CellValue
-                                    type={row.growth}
-                                    text={rowData.growth}
-                                  />
-                                </span>
-                              </td>
-                              <td className="px-4 py-2 text-center opacity-50">
-                                <span className="inline-flex justify-center text-[11px]">
-                                  <CellValue
-                                    type={row.pro}
-                                    text={rowData.pro}
-                                    muted
-                                  />
-                                </span>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </Fragment>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Tier selector dropdown */}
+          <div className="relative mb-4">
+            <button
+              type="button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-full flex items-center justify-between px-5 py-3.5 bg-white rounded-xl border border-[var(--border)] text-sm font-bold shadow-sm"
+            >
+              <span className={mobileTier === "growth" ? "text-[var(--accent)]" : ""}>
+                {t(`${mobileTier}.name`)} — &euro;{TIER_PRICES[mobileTier]}{t("perMonth")}
+              </span>
+              <CaretDown
+                className={`w-4 h-4 text-[var(--muted-foreground)] transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
+                weight="bold"
+              />
+            </button>
+            {dropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl border border-[var(--border)] shadow-lg z-20 overflow-hidden">
+                {TIERS.map((tier) => (
+                  <button
+                    key={tier}
+                    type="button"
+                    onClick={() => {
+                      setMobileTier(tier);
+                      setDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-5 py-3 text-sm font-semibold transition-colors ${
+                      mobileTier === tier
+                        ? "bg-[var(--accent)]/5 text-[var(--accent)]"
+                        : "hover:bg-[var(--cream)]"
+                    } ${tier === "pro" ? "opacity-50" : ""}`}
+                  >
+                    <span>{t(`${tier}.name`)}</span>
+                    <span className="text-xs text-[var(--muted-foreground)]">
+                      &euro;{TIER_PRICES[tier]}{t("perMonth")}
+                      {tier === "pro" && ` · ${t("comingSoon")}`}
+                    </span>
+                  </button>
+                ))}
               </div>
-            </div>
+            )}
+          </div>
+
+          {/* Single-tier feature list */}
+          <div className="bg-white blog-card-3d rounded-2xl overflow-hidden hover:!transform-none hover:!shadow-[0_3px_0_var(--near-black)]">
+            {FEATURE_CATEGORIES.map((category) => (
+              <div key={category.key}>
+                <div className="px-5 pt-5 pb-1.5 text-xs font-bold text-[var(--foreground)]">
+                  {t(`comparison.categories.${category.key}`)}
+                </div>
+                {category.rows.map((row, rowIdx) => {
+                  const rowData = t.raw(
+                    `comparison.rows.${row.key}`
+                  ) as Record<string, string>;
+                  const cellType = row[mobileTier];
+                  const cellText = rowData[mobileTier];
+
+                  return (
+                    <div
+                      key={row.key}
+                      className={`flex items-center justify-between px-5 py-2.5 border-t border-[var(--border)]/50 ${
+                        rowIdx % 2 === 0 ? "bg-[var(--muted)]/30" : ""
+                      } ${mobileTier === "pro" ? "opacity-50" : ""}`}
+                    >
+                      <span className="text-[13px] font-medium text-[var(--muted-foreground)]">
+                        {rowData.label}
+                      </span>
+                      <span className="text-[13px] font-medium shrink-0 ml-4">
+                        <CellValue
+                          type={cellType}
+                          text={cellText}
+                          muted={mobileTier === "pro"}
+                        />
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </ScrollReveal>
       </div>
