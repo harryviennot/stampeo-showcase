@@ -67,20 +67,6 @@ function StampButton({
   );
 }
 
-function DesktopDemoCallout({ t }: { t: ReturnType<typeof useTranslations<"landing.hero">> }) {
-  return (
-    <div className="flex justify-center mb-4 animate-in fade-in slide-in-from-top-2 duration-700">
-      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20 shadow-sm">
-        <span className="flex h-2 w-2 rounded-full bg-[var(--accent)] animate-pulse" />
-        <span className="text-sm font-bold text-[var(--accent)]">
-          {t("stamp.demoCallout")}
-        </span>
-        <span className="text-[var(--accent)] animate-bounce">↓</span>
-      </div>
-    </div>
-  );
-}
-
 function MobileWalletButton({
   sessionToken,
   t,
@@ -97,7 +83,7 @@ function MobileWalletButton({
       <div className="bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/10">
         <a
           href={passUrl}
-          className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
+          className="block w-full py-4 px-4 rounded-full font-bold text-sm sm:text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
         >
           {t("stamp.mobileAddWallet")}
         </a>
@@ -210,12 +196,6 @@ export function HeroSection() {
           {/* Left Column: Content */}
           <ScrollReveal className="flex flex-col gap-8">
             <div>
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--accent)]/10 shadow-sm mb-6">
-                <span className="flex h-2 w-2 rounded-full bg-[var(--accent)] pulse-dot" />
-                <span className="text-sm font-bold tracking-wide">{t("badge")}</span>
-              </div>
-
               <h1 className="text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
                 {t.rich("title", {
                   accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
@@ -235,12 +215,6 @@ export function HeroSection() {
                 <span>{t("cta")}</span>
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
-              <Link
-                href="#features"
-                className="flex items-center gap-2 bg-white border-2 border-[var(--border)] px-8 py-4 rounded-full font-bold text-lg hover:bg-[var(--muted)] transition-all"
-              >
-                {t("secondaryCta")}
-              </Link>
             </div>
 
             {/* Wallet badges */}
@@ -258,11 +232,6 @@ export function HeroSection() {
 
           {/* Right Column: Card + Demo Controls */}
           <ScrollReveal delay={200} className="flex flex-col items-center">
-            {/* Desktop: demo call-out */}
-            {!isMobilePhone && !showFakeDemo && status !== "pass_installed" && (
-              <DesktopDemoCallout t={t} />
-            )}
-
             <div className="w-full max-w-[380px]">
               <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard

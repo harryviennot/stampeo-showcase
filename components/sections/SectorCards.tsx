@@ -55,9 +55,11 @@ export function SectorCards() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {sectors.map((sector, index) => {
+            // Show only first 2 on mobile to reduce scroll length
+            const mobileHidden = index >= 2 ? "hidden md:block" : "";
             const theme = sectorThemes[index];
             return (
-              <ScrollReveal key={index} delay={index * 100}>
+              <ScrollReveal key={index} delay={index * 100} className={mobileHidden}>
                 <div className="bg-white blog-card-3d rounded-2xl p-6 flex flex-col gap-5">
                   {/* Mini wallet card */}
                   <div className="flex items-start gap-5">

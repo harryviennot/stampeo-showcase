@@ -39,15 +39,6 @@ function FeatureListItem({ feature }: { feature: FeatureItem }) {
   );
 }
 
-function SpotsLeftBadge({ text }: { text: string }) {
-  return (
-    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs font-bold">
-      <span className="flex h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
-      {text}
-    </div>
-  );
-}
-
 export function PricingSection() {
   const t = useTranslations("pricing");
 
@@ -60,9 +51,6 @@ export function PricingSection() {
       <div className="max-w-[1200px] mx-auto px-6">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-widest">
-            {t("badge")}
-          </span>
           <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
             {t("title")}
           </h2>
@@ -71,18 +59,13 @@ export function PricingSection() {
           </p>
         </ScrollReveal>
 
-        {/* 3 Pricing Cards */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        {/* 3 Pricing Cards — lg breakpoint to avoid squeeze on tablets */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto">
 
           {/* Starter */}
           <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm hover:shadow-xl transition-all duration-300">
             <div className="flex flex-col gap-4 mb-8">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold">{t("starter.name")}</h3>
-                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)]">
-                  {t("foundingPartner")}
-                </span>
-              </div>
+              <h3 className="text-2xl font-bold">{t("starter.name")}</h3>
               <p className="text-sm text-[var(--muted-foreground)] font-medium">
                 {t("starter.tagline")}
               </p>
@@ -96,7 +79,6 @@ export function PricingSection() {
                   <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
                 </div>
               </div>
-              <SpotsLeftBadge text={t("spotsLeft", { count: PRICING.spotsLeft })} />
             </div>
 
             <div className="flex flex-col gap-4 flex-1 mb-8">
@@ -124,11 +106,11 @@ export function PricingSection() {
           </div>
 
           {/* Growth (Highlighted) */}
-          <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl md:scale-[1.03] z-10">
+          <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl lg:scale-[1.03] z-10">
             {/* Badge */}
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
-                {t("foundingPartner")} · {t("popular")}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+              <div className="bg-[var(--accent)] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+                {t("popular")}
               </div>
             </div>
 
@@ -147,7 +129,6 @@ export function PricingSection() {
                   <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
                 </div>
               </div>
-              <SpotsLeftBadge text={t("spotsLeft", { count: PRICING.spotsLeft })} />
             </div>
 
             <div className="flex flex-col gap-4 flex-1 mb-8">
@@ -175,11 +156,11 @@ export function PricingSection() {
           </div>
 
           {/* Pro (Coming Soon) */}
-          <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm opacity-75">
+          <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm opacity-60">
             <div className="flex flex-col gap-4 mb-8">
               <div className="flex items-center justify-between">
                 <h3 className="text-2xl font-bold text-[var(--muted-foreground)]">{t("pro.name")}</h3>
-                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-[var(--muted)] text-[var(--muted-foreground)]">
+                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[var(--muted)] text-[var(--muted-foreground)]">
                   {t("comingSoon")}
                 </span>
               </div>

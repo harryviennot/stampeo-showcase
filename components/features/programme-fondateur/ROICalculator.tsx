@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../../ui/ScrollReveal";
+import { PRICING } from "@/lib/pricing";
 
 type Mode = "prudent" | "optimiste";
 
@@ -25,7 +26,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
   const percentDisplay = Math.round(percent * 100);
   const extraClientsPerDay = clients * percent;
   const extraRevenue = Math.round(extraClientsPerDay * basket * 30);
-  const stampeoCost = 14.99;
+  const stampeoCost = PRICING.starter.foundingPrice;
   const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (
