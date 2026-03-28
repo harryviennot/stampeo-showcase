@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Check, X, Minus } from "@phosphor-icons/react";
+import { interpolatePricing } from "@/lib/pricing";
 
 function ValueIcon({ icon }: { icon: string }) {
   if (icon === "check") return <Check className="w-4 h-4 text-green-500" weight="bold" />;
@@ -15,11 +16,15 @@ export function ComparisonTable() {
   const t = useTranslations("landing.comparisonTable");
 
   const columns = t.raw("columns") as string[];
-  const rows = t.raw("rows") as Array<{
+  const rawRows = t.raw("rows") as Array<{
     criteria: string;
     values: string[];
     icons: string[];
   }>;
+  const rows = rawRows.map((row) => ({
+    ...row,
+    values: row.values.map(interpolatePricing),
+  }));
 
   return (
     <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg)]">

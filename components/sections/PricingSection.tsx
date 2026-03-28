@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InfoIcon } from "@/components/icons";
+import { PRICING } from "@/lib/pricing";
 
 type FeatureItem = string | { text: string; tooltip: string };
 
@@ -38,16 +39,26 @@ function FeatureListItem({ feature }: { feature: FeatureItem }) {
   );
 }
 
+function SpotsLeftBadge({ text }: { text: string }) {
+  return (
+    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-xs font-bold">
+      <span className="flex h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+      {text}
+    </div>
+  );
+}
+
 export function PricingSection() {
   const t = useTranslations("pricing");
 
-  const payFeatures = t.raw("pay.features") as FeatureItem[];
+  const starterFeatures = t.raw("starter.features") as FeatureItem[];
+  const growthFeatures = t.raw("growth.features") as FeatureItem[];
   const proFeatures = t.raw("pro.features") as FeatureItem[];
 
   return (
     <section id="pricing" className="relative py-24 lg:py-32">
-      <div className="max-w-[1000px] mx-auto px-6">
-        {/* Header Section */}
+      <div className="max-w-[1200px] mx-auto px-6">
+        {/* Header */}
         <ScrollReveal className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-widest">
             {t("badge")}
@@ -60,27 +71,40 @@ export function PricingSection() {
           </p>
         </ScrollReveal>
 
-        {/* Pricing Cards */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          {/* Starter Tier Card */}
+        {/* 3 Pricing Cards */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+
+          {/* Starter */}
           <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm hover:shadow-xl transition-all duration-300">
             <div className="flex flex-col gap-4 mb-8">
-              <h3 className="text-2xl font-bold">{t("pay.name")}</h3>
-              <p className="text-sm text-[var(--muted-foreground)] font-medium">
-                {t("pay.tagline")}
-              </p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">&euro;{t("pay.price")}</span>
-                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold">{t("starter.name")}</h3>
+                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)]">
+                  {t("foundingPartner")}
+                </span>
               </div>
+              <p className="text-sm text-[var(--muted-foreground)] font-medium">
+                {t("starter.tagline")}
+              </p>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.starter.price}</span>
+                  <span className="text-sm font-semibold text-[var(--accent)]">{t("freeMonths")}</span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-black tracking-tight">&euro;{PRICING.starter.foundingPrice}</span>
+                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
+                </div>
+              </div>
+              <SpotsLeftBadge text={t("spotsLeft", { count: PRICING.spotsLeft })} />
             </div>
 
             <div className="flex flex-col gap-4 flex-1 mb-8">
               <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
-                {t("pay.featuresLabel")}
+                {t("starter.featuresLabel")}
               </p>
               <ul className="flex flex-col gap-4">
-                {payFeatures.map((feature, i) => (
+                {starterFeatures.map((feature, i) => (
                   <FeatureListItem key={i} feature={feature} />
                 ))}
               </ul>
@@ -99,38 +123,39 @@ export function PricingSection() {
             </div>
           </div>
 
-          {/* Growth Tier Card (Highlighted - Founding Partner) */}
-          <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl scale-[1.02] z-10">
+          {/* Growth (Highlighted) */}
+          <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl md:scale-[1.03] z-10">
             {/* Badge */}
             <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg whitespace-nowrap text-center">
-                {t("foundingPartner")}
+              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
+                {t("foundingPartner")} · {t("popular")}
               </div>
             </div>
 
             <div className="flex flex-col gap-4 mb-8">
-              <h3 className="text-2xl font-bold">{t("pro.name")}</h3>
+              <h3 className="text-2xl font-bold">{t("growth.name")}</h3>
               <p className="text-sm text-[var(--muted-foreground)] font-medium">
-                {t("pro.tagline")}
+                {t("growth.tagline")}
               </p>
               <div className="flex flex-col gap-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-[var(--muted-foreground)] line-through">&euro;{t("pro.originalPrice")}</span>
-                  <span className="text-sm font-semibold text-[var(--accent)]">{t("pro.freeMonths")}</span>
+                  <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.growth.price}</span>
+                  <span className="text-sm font-semibold text-[var(--accent)]">{t("freeMonths")}</span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-black tracking-tight">&euro;{t("pro.foundingPrice")}</span>
-                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("pro.forLife")}</span>
+                  <span className="text-5xl font-black tracking-tight">&euro;{PRICING.growth.foundingPrice}</span>
+                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
                 </div>
               </div>
+              <SpotsLeftBadge text={t("spotsLeft", { count: PRICING.spotsLeft })} />
             </div>
 
             <div className="flex flex-col gap-4 flex-1 mb-8">
               <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
-                {t("pro.featuresLabel")}
+                {t("growth.featuresLabel")}
               </p>
               <ul className="flex flex-col gap-4">
-                {proFeatures.map((feature, i) => (
+                {growthFeatures.map((feature, i) => (
                   <FeatureListItem key={i} feature={feature} />
                 ))}
               </ul>
@@ -148,6 +173,43 @@ export function PricingSection() {
               </p>
             </div>
           </div>
+
+          {/* Pro (Coming Soon) */}
+          <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm opacity-75">
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-[var(--muted-foreground)]">{t("pro.name")}</h3>
+                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full bg-[var(--muted)] text-[var(--muted-foreground)]">
+                  {t("comingSoon")}
+                </span>
+              </div>
+              <p className="text-sm text-[var(--muted-foreground)] font-medium">
+                {t("pro.tagline")}
+              </p>
+              <div className="flex items-baseline gap-1">
+                <span className="text-5xl font-black tracking-tight text-[var(--muted-foreground)]">&euro;{PRICING.pro.price}</span>
+                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 flex-1 mb-8">
+              <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
+                {t("pro.featuresLabel")}
+              </p>
+              <ul className="flex flex-col gap-4 text-[var(--muted-foreground)]">
+                {proFeatures.map((feature, i) => (
+                  <FeatureListItem key={i} feature={feature} />
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-2 mt-auto">
+              <div className="w-full flex items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--border)] text-[var(--muted-foreground)] text-base font-extrabold cursor-not-allowed">
+                <span>{t("ctaComingSoon")}</span>
+              </div>
+            </div>
+          </div>
+
         </ScrollReveal>
       </div>
     </section>

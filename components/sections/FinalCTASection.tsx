@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { PRICING } from "@/lib/pricing";
 
 export function FinalCTASection() {
   const t = useTranslations("landing.finalCta");
@@ -27,7 +28,7 @@ export function FinalCTASection() {
           </Link>
 
           <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
-            {t("subtitle")}
+            {t("subtitle", { freeMonths: PRICING.freeMonths, price: PRICING.starter.foundingPrice })}
           </p>
         </div>
       </ScrollReveal>

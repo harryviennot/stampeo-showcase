@@ -2,53 +2,71 @@
   "pricing": {
     "badge": "Plans & Pricing",
     "title": "Simple, transparent pricing",
-    "subtitle": "Founding partners get Growth at a special lifetime rate.",
+    "subtitle": "Founding partners get 50% off — locked for life.",
     "foundingPartner": "FOUNDING PARTNER",
+    "popular": "MOST POPULAR",
+    "comingSoon": "COMING SOON",
     "perMonth": "/month",
-    "cta": "Apply for Early Access",
+    "forLife": "/month for life",
+    "freeMonths": "3 months free",
+    "spotsLeft": "{count} spots left",
+    "cta": "Start Free",
+    "ctaComingSoon": "Coming soon",
     "ctaSubtext": "No credit card required · Cancel anytime",
-    "pay": {
+    "starter": {
       "name": "Starter",
       "tagline": "Everything you need to launch your loyalty program",
-      "price": "14.99",
-      "description": "Everything you need to run a digital loyalty program.",
+      "price": "20",
+      "foundingPrice": "10",
       "featuresLabel": "Everything included:",
       "features": [
         "1 active card template",
         "Unlimited customers & scans",
-        "Up to 3 team members",
-        "Offline scanning",
+        "1 scanner (business owner)",
         {
-          "text": "Push notifications",
-          "tooltip": "Customers receive a lock screen notification every time they earn a stamp, reach a milestone, or unlock a reward. Works through Apple Wallet and Google Wallet — no app needed."
+          "text": "Automatic push notifications",
+          "tooltip": "Customers get a lock screen notification every time they earn a stamp, reach a milestone, or unlock a reward. Works via Apple Wallet and Google Wallet — no app needed."
+        },
+        "Basic dashboard & stats"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "For businesses ready to scale their customer relationships",
+      "price": "40",
+      "foundingPrice": "20",
+      "featuresLabel": "Everything in Starter, plus:",
+      "features": [
+        "Stamps or points (choose one)",
+        "Unlimited team members",
+        "Custom notification messages",
+        {
+          "text": "2–3 promo campaigns/month",
+          "tooltip": "Send promotional notifications to all your customers. Announce new products, happy hours, or seasonal offers — directly in their wallet."
+        },
+        {
+          "text": "Trends & analytics",
+          "tooltip": "See visit frequency, peak hours, retention rates, and customer trends. Identify your best customers and spot those at risk of leaving."
         }
       ]
     },
     "pro": {
-      "name": "Growth",
-      "tagline": "For businesses ready to scale their customer relationships",
-      "originalPrice": "29.99",
-      "foundingPrice": "14.99",
-      "freeMonths": "3 months free",
-      "forLife": "/month for life",
-      "description": "For founding partners — all features, lifetime pricing.",
-      "featuresLabel": "Everything in Starter, plus:",
+      "name": "Pro",
+      "tagline": "Multi-location, segmentation, and advanced tools",
+      "price": "60",
+      "featuresLabel": "Everything in Growth, plus:",
       "features": [
-        "Multiple card templates",
-        "Unlimited team members",
+        "Multiple active card templates",
         {
           "text": "Multi-location support",
-          "tooltip": "Add multiple business addresses. Each location can scan and stamp independently. Perfect for businesses with several shops or pop-up locations."
-        },
-        "Custom notification messages",
-        {
-          "text": "Advanced analytics",
-          "tooltip": "See visit frequency, peak hours, retention rates, and customer trends. Identify your best customers and spot those at risk of leaving."
+          "tooltip": "Add multiple business addresses. Each location can scan and stamp independently. Track analytics per location."
         },
         {
-          "text": "Scheduled campaigns",
-          "tooltip": "Plan and schedule promotional notifications in advance. Send targeted messages to specific customer segments — like those who haven't visited in 30 days."
-        }
+          "text": "Geofencing notifications",
+          "tooltip": "Customers get notified when they're near your location — 'You're 2 stamps away from a free coffee!' Available on Apple Wallet."
+        },
+        "Unlimited campaigns + segmentation",
+        "Advanced analytics & retention"
       ]
     }
   }

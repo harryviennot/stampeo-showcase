@@ -8,6 +8,9 @@ import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
+import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 function StampButton({
   onClick,
@@ -59,6 +62,58 @@ function StampButton({
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
           {t("stamp.watchPhone")}
         </p>
+      </div>
+    </div>
+  );
+}
+
+function DesktopDemoCallout({ t }: { t: ReturnType<typeof useTranslations<"landing.hero">> }) {
+  return (
+    <div className="flex justify-center mb-4 animate-in fade-in slide-in-from-top-2 duration-700">
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20 shadow-sm">
+        <span className="flex h-2 w-2 rounded-full bg-[var(--accent)] animate-pulse" />
+        <span className="text-sm font-bold text-[var(--accent)]">
+          {t("stamp.demoCallout")}
+        </span>
+        <span className="text-[var(--accent)] animate-bounce">↓</span>
+      </div>
+    </div>
+  );
+}
+
+function MobileWalletButton({
+  sessionToken,
+  t,
+}: {
+  sessionToken: string | null;
+  t: ReturnType<typeof useTranslations<"landing.hero">>;
+}) {
+  if (!sessionToken) return null;
+
+  const passUrl = `${API_URL}/demo/pass/${sessionToken}`;
+
+  return (
+    <div className="relative mt-6 max-w-[380px] mx-auto animate-in slide-in-from-bottom-4 fade-in duration-500">
+      <div className="bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/10">
+        <a
+          href={passUrl}
+          className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
+        >
+          {t("stamp.mobileAddWallet")}
+        </a>
+        <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
+          {t("stamp.mobileHint")}
+        </p>
+        <div className="flex items-center justify-center gap-3 mt-3">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
+            <AppleIcon className="w-4 h-4" />
+            <span>Apple Wallet</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
+            <GoogleIcon className="w-4 h-4" />
+            <span>Google Wallet</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -130,9 +185,10 @@ function useOfflineStampAnimation(isOffline: boolean, totalStamps: number) {
 }
 
 export function HeroSection() {
-  const { qrUrl, status, stamps, isLoading, isStamping, addStamp } = useDemoSession();
+  const { qrUrl, status, stamps, isLoading, isStamping, addStamp, sessionToken } = useDemoSession();
   const t = useTranslations("landing.hero");
   const tCommon = useTranslations("common");
+  const isMobilePhone = useIsMobilePhone();
 
   // After 3s, stop showing skeleton so the fake QR appears as fallback
   const [qrTimedOut, setQrTimedOut] = useState(false);
@@ -200,8 +256,13 @@ export function HeroSection() {
             </div>
           </ScrollReveal>
 
-          {/* Right Column: 3D Digital Card + Demo Controls */}
+          {/* Right Column: Card + Demo Controls */}
           <ScrollReveal delay={200} className="flex flex-col items-center">
+            {/* Desktop: demo call-out */}
+            {!isMobilePhone && !showFakeDemo && status !== "pass_installed" && (
+              <DesktopDemoCallout t={t} />
+            )}
+
             <div className="w-full max-w-[380px]">
               <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
@@ -217,7 +278,7 @@ export function HeroSection() {
                     ],
                   }}
                   stamps={displayStamps}
-                  showQR={true}
+                  showQR={!isMobilePhone}
                   qrUrl={qrUrl}
                   isQRLoading={!qrTimedOut && (isLoading || isStamping)}
                   interactive3D={true}
@@ -226,15 +287,32 @@ export function HeroSection() {
             </div>
 
             {/* Demo controls */}
-            {status === "pass_installed" ? (
-              <StampButton
-                onClick={addStamp}
-                stamps={stamps}
-                isDisabled={isStamping}
-                t={t}
-              />
+            {isMobilePhone ? (
+              // Mobile: direct wallet download or stamp button
+              status === "pass_installed" ? (
+                <StampButton
+                  onClick={addStamp}
+                  stamps={stamps}
+                  isDisabled={isStamping}
+                  t={t}
+                />
+              ) : status === "pass_downloaded" ? (
+                <DemoStatusHint status={status} t={t} />
+              ) : (
+                <MobileWalletButton sessionToken={sessionToken} t={t} />
+              )
             ) : (
-              <DemoStatusHint status={status} t={t} />
+              // Desktop: QR scan flow
+              status === "pass_installed" ? (
+                <StampButton
+                  onClick={addStamp}
+                  stamps={stamps}
+                  isDisabled={isStamping}
+                  t={t}
+                />
+              ) : (
+                <DemoStatusHint status={status} t={t} />
+              )
             )}
           </ScrollReveal>
         </div>

@@ -8,8 +8,9 @@ import { ComparisonTable } from "@/components/sections/ComparisonTable";
 import { DashboardPreview } from "@/components/sections/DashboardPreview";
 import { SectorCards } from "@/components/sections/SectorCards";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
-import { FoundingPartnerSection } from "@/components/sections/FoundingPartnerSection";
-import { ROICalculator } from "@/components/features/programme-fondateur/ROICalculator";
+// Removed from landing page — founding offer now embedded in PricingSection
+// import { FoundingPartnerSection } from "@/components/sections/FoundingPartnerSection";
+// import { ROICalculator } from "@/components/features/programme-fondateur/ROICalculator";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -45,8 +46,8 @@ export default async function Home() {
         <DashboardPreview />
         <SectorCards />
         <FeatureGrid />
-        <FoundingPartnerSection />
-        <ROICalculator namespace="landing.roi" />
+        {/* Removed: FoundingPartnerSection — founding offer now in PricingSection */}
+        {/* Removed: ROICalculator — available on /programme-fondateur page */}
         <PricingSection />
         <FAQSection />
         <FinalCTASection />

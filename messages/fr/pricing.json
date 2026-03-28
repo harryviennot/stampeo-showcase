@@ -2,53 +2,71 @@
   "pricing": {
     "badge": "Plans & Tarifs",
     "title": "Des tarifs simples et transparents",
-    "subtitle": "Les partenaires fondateurs bénéficient du Growth à un tarif à vie.",
-    "foundingPartner": "PARTENAIRE FONDATEUR",
+    "subtitle": "Les partenaires fondateurs bénéficient de -50% — à vie.",
+    "foundingPartner": "FONDATEUR",
+    "popular": "LE PLUS POPULAIRE",
+    "comingSoon": "BIENTÔT",
     "perMonth": "/mois",
-    "cta": "Demander l'accès anticipé",
+    "forLife": "/mois à vie",
+    "freeMonths": "3 mois offerts",
+    "spotsLeft": "{count} places restantes",
+    "cta": "Commencer gratuitement",
+    "ctaComingSoon": "Bientôt disponible",
     "ctaSubtext": "Sans carte bancaire · Annulez quand vous voulez",
-    "pay": {
+    "starter": {
       "name": "Starter",
       "tagline": "Tout ce qu'il faut pour lancer votre programme de fidélité",
-      "price": "14,99",
-      "description": "Tout ce qu'il faut pour un programme de fidélité digital.",
+      "price": "20",
+      "foundingPrice": "10",
       "featuresLabel": "Tout inclus :",
       "features": [
         "1 modèle de carte actif",
         "Clients et scans illimités",
-        "Jusqu'à 3 membres d'équipe",
-        "Scan hors ligne",
+        "1 scanner (propriétaire)",
         {
-          "text": "Notifications push",
+          "text": "Notifications push automatiques",
           "tooltip": "Vos clients reçoivent une notification sur leur écran de verrouillage à chaque tampon, jalon atteint ou récompense débloquée. Fonctionne via Apple Wallet et Google Wallet — aucune app nécessaire."
+        },
+        "Tableau de bord et statistiques de base"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "Pour les commerces prêts à développer leur relation client",
+      "price": "40",
+      "foundingPrice": "20",
+      "featuresLabel": "Tout le plan Starter, plus :",
+      "features": [
+        "Tampons ou points (au choix)",
+        "Membres d'équipe illimités",
+        "Messages de notification personnalisés",
+        {
+          "text": "2–3 campagnes promo/mois",
+          "tooltip": "Envoyez des notifications promotionnelles à tous vos clients. Annoncez vos nouveautés, happy hours ou offres saisonnières — directement dans leur wallet."
+        },
+        {
+          "text": "Tendances et analytiques",
+          "tooltip": "Visualisez la fréquence de visite, les heures de pointe, les taux de rétention et les tendances clients. Identifiez vos meilleurs clients et ceux à risque de départ."
         }
       ]
     },
     "pro": {
-      "name": "Growth",
-      "tagline": "Pour les commerces prêts à développer leur relation client",
-      "originalPrice": "29,99",
-      "foundingPrice": "14,99",
-      "freeMonths": "3 mois offerts",
-      "forLife": "/mois à vie",
-      "description": "Pour les partenaires fondateurs — toutes les fonctionnalités, tarif à vie.",
-      "featuresLabel": "Tout le plan Starter, plus :",
+      "name": "Pro",
+      "tagline": "Multi-établissement, segmentation et outils avancés",
+      "price": "60",
+      "featuresLabel": "Tout le plan Growth, plus :",
       "features": [
-        "Plusieurs modèles de carte",
-        "Membres d'équipe illimités",
+        "Plusieurs modèles de carte actifs",
         {
           "text": "Support multi-établissement",
-          "tooltip": "Ajoutez plusieurs adresses. Chaque établissement peut scanner et tamponner indépendamment. Idéal pour les commerces avec plusieurs points de vente."
-        },
-        "Messages de notification personnalisés",
-        {
-          "text": "Analytiques avancées",
-          "tooltip": "Visualisez la fréquence de visite, les heures de pointe, les taux de rétention et les tendances clients. Identifiez vos meilleurs clients et ceux à risque de départ."
+          "tooltip": "Ajoutez plusieurs adresses. Chaque établissement peut scanner et tamponner indépendamment. Analytiques par établissement."
         },
         {
-          "text": "Campagnes programmées",
-          "tooltip": "Planifiez et programmez vos notifications promotionnelles à l'avance. Envoyez des messages ciblés à des segments spécifiques — comme les clients inactifs depuis 30 jours."
-        }
+          "text": "Notifications de géolocalisation",
+          "tooltip": "Vos clients reçoivent une notification quand ils passent près de votre commerce — « Plus que 2 tampons pour un café offert ! » Disponible sur Apple Wallet."
+        },
+        "Campagnes illimitées + segmentation",
+        "Analytiques avancées et rétention"
       ]
     }
   }

@@ -3,10 +3,15 @@
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
+import { interpolatePricing } from "@/lib/pricing";
 
 export function FAQSection() {
   const t = useTranslations("landing.faq");
-  const faqs = t.raw("items") as Array<{ question: string; answer: string }>;
+  const rawFaqs = t.raw("items") as Array<{ question: string; answer: string }>;
+  const faqs = rawFaqs.map((faq) => ({
+    question: faq.question,
+    answer: interpolatePricing(faq.answer),
+  }));
 
   return (
     <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
