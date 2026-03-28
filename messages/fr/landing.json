@@ -166,11 +166,11 @@
         },
         {
           "question": "Comment les clients se font-ils tamponner ?",
-          "answer": "Les clients scannent simplement un QR code unique affiché à votre caisse, ou vous pouvez scanner leur carte digitale. Les deux méthodes sont rapides et sécurisées."
+          "answer": "Vos clients présentent leur carte digitale (dans Apple Wallet ou Google Wallet) et vous la scannez avec l'application Stampeo ou depuis votre navigateur. C'est vous qui ajoutez les tampons — pas le client — ce qui évite toute fraude."
         },
         {
           "question": "Comment fonctionne l'accès anticipé ?",
-          "answer": "Après votre inscription, nous examinons les candidatures par petits groupes. Vous recevrez un email lorsque votre compte sera activé. Cela nous permet d'assurer un accompagnement de qualité pour chaque partenaire."
+          "answer": "Après votre inscription, on vous contacte directement pour faire connaissance et mettre en place votre programme ensemble. On s'occupe de la configuration de votre carte, de l'installation de l'app scanner, et on reste disponible pour vous accompagner."
         },
         {
           "question": "Est-ce que ça marche avec Google Wallet ?",
@@ -178,11 +178,11 @@
         },
         {
           "question": "Un commerce peut-il avoir plusieurs cartes de fidélité ?",
-          "answer": "Avec le plan Growth, oui. Vous pouvez créer plusieurs modèles de carte — par exemple une carte \"café\" et une carte \"brunch du dimanche\" — chacune avec ses propres récompenses. Sur le plan Starter, vous avez un modèle actif à la fois, ce qui suffit pour la plupart des commerces."
+          "answer": "Cette fonctionnalité sera disponible avec le plan Pro (en cours de développement). Vous pourrez créer plusieurs modèles de carte actifs en même temps — par exemple une carte \"café\" et une carte \"brunch du dimanche\" — chacune avec ses propres récompenses. Sur les plans Starter et Growth, vous avez un modèle actif à la fois, ce qui suffit pour la plupart des commerces."
         },
         {
           "question": "Peut-on envoyer des campagnes promotionnelles ?",
-          "answer": "Avec le plan Growth, vous pourrez envoyer des notifications promotionnelles à tous vos clients ou à des segments spécifiques (par exemple, les clients qui ne sont pas venus depuis 30 jours). Cette fonctionnalité est en cours de développement et sera disponible dans les prochains mois. En attendant, les notifications automatiques (tampon, jalon, récompense) sont actives sur tous les plans."
+          "answer": "Avec le plan Growth, vous pourrez envoyer des notifications promotionnelles à tous vos clients (jusqu'à 2-3 campagnes par mois). Avec le plan Pro, vous aurez des campagnes illimitées et la segmentation client (par exemple, cibler les clients qui ne sont pas venus depuis 30 jours). Ces fonctionnalités sont en cours de développement. En attendant, les notifications automatiques (tampon, jalon, récompense) sont actives sur tous les plans."
         }
       ],
       "stillQuestions": "Encore des questions ?",
