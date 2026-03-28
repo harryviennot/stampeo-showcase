@@ -1,6 +1,4 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
@@ -17,8 +15,8 @@ const featureIcons: ComponentType<{ className?: string }>[] = [
   StarIcon,
 ];
 
-export function FeatureGrid() {
-  const t = useTranslations("landing.featureGrid");
+export async function FeatureGrid() {
+  const t = await getTranslations("landing.featureGrid");
 
   const features = t.raw("features") as Array<{
     title: string;

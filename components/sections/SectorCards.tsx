@@ -1,13 +1,10 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
-import { ArrowRightIcon } from "../icons";
-import { Gift, Lightning } from "@phosphor-icons/react";
+import { ArrowRightIcon, Gift, Lightning } from "../icons";
 import type { StampIconType } from "@/components/onboarding/StampIconPicker";
 
 const sectorThemes: {
@@ -24,8 +21,8 @@ const sectorThemes: {
   { bg: "#1A2332", accent: "#60A5FA", icon: "#ffffff", stamps: 10, stampIcon: "star", orgName: "Le Comptoir Bleu" },
 ];
 
-export function SectorCards() {
-  const t = useTranslations("landing.sectorCards");
+export async function SectorCards() {
+  const t = await getTranslations("landing.sectorCards");
 
   const sectors = t.raw("sectors") as Array<{
     name: string;

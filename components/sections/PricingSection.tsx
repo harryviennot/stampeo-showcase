@@ -1,7 +1,5 @@
-"use client";
-
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InfoIcon } from "@/components/icons";
@@ -39,8 +37,8 @@ function FeatureListItem({ feature }: { feature: FeatureItem }) {
   );
 }
 
-export function PricingSection() {
-  const t = useTranslations("pricing");
+export async function PricingSection() {
+  const t = await getTranslations("pricing");
 
   const starterFeatures = t.raw("starter.features") as FeatureItem[];
   const growthFeatures = t.raw("growth.features") as FeatureItem[];

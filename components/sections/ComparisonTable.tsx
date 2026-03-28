@@ -1,9 +1,7 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { Check, X, Minus } from "@phosphor-icons/react";
+import { Check, X, Minus } from "../icons";
 import { interpolatePricing } from "@/lib/pricing";
 
 function ValueIcon({ icon }: { icon: string }) {
@@ -12,8 +10,8 @@ function ValueIcon({ icon }: { icon: string }) {
   return <Minus className="w-4 h-4 text-amber-400" weight="bold" />;
 }
 
-export function ComparisonTable() {
-  const t = useTranslations("landing.comparisonTable");
+export async function ComparisonTable() {
+  const t = await getTranslations("landing.comparisonTable");
 
   const columns = t.raw("columns") as string[];
   const rawRows = t.raw("rows") as Array<{

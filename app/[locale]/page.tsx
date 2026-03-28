@@ -3,7 +3,11 @@ import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
 import { HowItWorks } from "@/components/sections/HowItWorks";
-import { BenefitsSection } from "@/components/sections/BenefitsSection";
+import dynamic from "next/dynamic";
+
+const BenefitsSection = dynamic(() =>
+  import("@/components/sections/BenefitsSection").then((m) => m.BenefitsSection)
+);
 import { ComparisonTable } from "@/components/sections/ComparisonTable";
 import { DashboardPreview } from "@/components/sections/DashboardPreview";
 import { SectorCards } from "@/components/sections/SectorCards";

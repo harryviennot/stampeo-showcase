@@ -1,12 +1,10 @@
-"use client";
-
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { PRICING } from "@/lib/pricing";
 
-export function FinalCTASection() {
-  const t = useTranslations("landing.finalCta");
+export async function FinalCTASection() {
+  const t = await getTranslations("landing.finalCta");
 
   return (
     <section className="relative stamp-pattern flex flex-col items-center justify-center px-6 py-24 md:py-32 lg:py-48 text-center overflow-hidden">

@@ -1,12 +1,10 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
 import { interpolatePricing } from "@/lib/pricing";
 
-export function FAQSection() {
-  const t = useTranslations("landing.faq");
+export async function FAQSection() {
+  const t = await getTranslations("landing.faq");
   const rawFaqs = t.raw("items") as Array<{ question: string; answer: string }>;
   const faqs = rawFaqs.map((faq) => ({
     question: faq.question,

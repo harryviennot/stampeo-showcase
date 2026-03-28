@@ -1,8 +1,12 @@
+"use client";
+
 // Re-export Phosphor icons with a consistent interface for the codebase.
 // Only AppleIcon and GoogleIcon are custom (brand icons not in Phosphor).
+// "use client" is required because @phosphor-icons/react calls createContext at module level.
 
 export {
   Check as CheckIcon,
+  Check,
   Wallet as WalletIcon,
   QrCode as QRCodeIcon,
   Palette as PaletteIcon,
@@ -16,7 +20,9 @@ export {
   Sparkle as SparklesIcon,
   ShieldCheck as ShieldCheckIcon,
   List as MenuIcon,
+  X,
   X as XMarkIcon,
+  Minus,
   FileText as DocumentIcon,
   EyeSlash as EyeSlashIcon,
   MapPin as MapPinIcon,
@@ -25,6 +31,10 @@ export {
   WifiSlash as WifiOffIcon,
   Broadcast as SignalIcon,
   Info as InfoIcon,
+  Gift,
+  Lightning,
+  TrendUp,
+  TrendDown,
 } from "@phosphor-icons/react";
 
 interface IconProps {
