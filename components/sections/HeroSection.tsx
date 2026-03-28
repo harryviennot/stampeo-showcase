@@ -234,7 +234,7 @@ export function HeroSection() {
           <ScrollReveal delay={200} className="flex flex-col items-center">
             {/* Desktop demo hint */}
             {!isMobilePhone && !showFakeDemo && status !== "pass_installed" && status !== "pass_downloaded" && (
-              <p className="text-base font-bold mb-4 text-center bg-gradient-to-r from-[var(--foreground)] via-[var(--accent)] to-[var(--foreground)] bg-[length:200%_100%] bg-clip-text text-transparent animate-shimmer">
+              <p className="text-base font-bold text-[var(--foreground)] mb-4 text-center">
                 {t("stamp.demoCallout")}
                 <svg className="inline-block w-5 h-5 text-[var(--accent)] animate-bounce ml-1.5 -mb-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />

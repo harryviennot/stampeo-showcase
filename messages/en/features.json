@@ -595,10 +595,10 @@
     "programme-fondateur": {
       "hero": {
         "title": "You're not just a customer. You're <accent>building the product</accent> with us.",
-        "navTitle": "Founding Program — 3 months free, €14.99/month for life",
+        "navTitle": "Founding Program — {freeMonths} months free, €{growthFoundingPrice}/month for life",
         "subtitle": "We're looking for 50 French business owners ready to test, critique, and shape the best digital loyalty tool. In exchange, conditions we'll never offer again.",
         "badge": "Founding Program",
-        "secondaryCta": "3 months free · €14.99/month for life"
+        "secondaryCta": "{freeMonths} months free · €{growthFoundingPrice}/month for life"
       },
       "problem": {
         "title": "Let's be transparent",
@@ -606,13 +606,13 @@
       },
       "sections": [
         {
-          "title": "3 months completely free",
-          "description": "No credit card at signup. No catch. Test Stampeo for 3 months without paying anything. If it doesn't work for you, leave with no fees.",
+          "title": "{freeMonths} months completely free",
+          "description": "No credit card at signup. No catch. Test Stampeo for {freeMonths} months without paying anything. If it doesn't work for you, leave with no fees.",
           "icon": "calendar"
         },
         {
-          "title": "€14.99/month for life",
-          "description": "After the free period, your rate is locked at €14.99/month. Forever. Even when the price increases for new customers.",
+          "title": "€{growthFoundingPrice}/month for life",
+          "description": "After the free period, your rate is locked at €{growthFoundingPrice}/month. Forever. Even when the price increases for new customers.",
           "icon": "tag"
         },
         {
@@ -623,7 +623,7 @@
       ],
       "cta": {
         "title": "Join the first ones",
-        "subtitle": "Limited spots. 3 months free. €14.99/month for life. All Growth features."
+        "subtitle": "Limited spots. {freeMonths} months free. €{growthFoundingPrice}/month for life. All Growth features."
       },
       "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
       "custom": {
@@ -631,13 +631,13 @@
           "title": "Concrete benefits",
           "items": [
             {
-              "title": "3 months completely free",
-              "description": "No credit card at signup. No catch. Test for 3 months without paying anything. If it doesn't work for you, leave — no fees.",
+              "title": "{freeMonths} months completely free",
+              "description": "No credit card at signup. No catch. Test for {freeMonths} months without paying anything. If it doesn't work for you, leave — no fees.",
               "icon": "calendar"
             },
             {
-              "title": "€14.99/month for life",
-              "description": "After the free period, your rate is locked at €14.99/month. Forever. Even when the price increases for new customers.",
+              "title": "€{growthFoundingPrice}/month for life",
+              "description": "After the free period, your rate is locked at €{growthFoundingPrice}/month. Forever. Even when the price increases for new customers.",
               "icon": "tag"
             },
             {
@@ -714,8 +714,8 @@
           "sources": "Sources: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
         },
         "price": {
-          "original": "€29.99/month",
-          "founding": "€14.99/month",
+          "original": "€{growthPrice}/month",
+          "founding": "€{growthFoundingPrice}/month",
           "forLife": "for life"
         },
         "timeline": {
@@ -746,7 +746,7 @@
           "items": [
             {
               "question": "How many spots are available?",
-              "answer": "We accept founding partners in waves of 10-15 businesses. The founding rate (€14.99/month for life) won't be offered after the program closes."
+              "answer": "We accept founding partners in waves of 10-15 businesses. The founding rate (€{growthFoundingPrice}/month for life) won't be offered after the program closes."
             },
             {
               "question": "What happens after the 3 free months?",
@@ -764,7 +764,7 @@
         },
         "finalCta": {
           "title": "Join the first ones",
-          "subtitle": "Limited spots. 3 months free. €14.99/month for life. All Growth features.",
+          "subtitle": "Limited spots. {freeMonths} months free. €{growthFoundingPrice}/month for life. All Growth features.",
           "urgency": "Next acceptance wave: March 2026"
         }
       }

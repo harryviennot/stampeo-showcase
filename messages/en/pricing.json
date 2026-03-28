@@ -69,5 +69,202 @@
         "Advanced analytics & retention"
       ]
     }
+  },
+  "pricingPage": {
+    "meta": {
+      "title": "Pricing — Compare Plans | Stampeo",
+      "description": "Compare Stampeo plans and features. From solo operators to multi-location businesses — find the right plan for your loyalty program."
+    },
+    "hero": {
+      "badge": "Plans & Pricing",
+      "title": "Choose the right plan for your business",
+      "subtitle": "No hidden fees. No per-customer charges. Unlimited customers on every plan."
+    },
+    "foundingCallout": "Founding partners get 50% off — locked for life.",
+    "foundingLink": "Learn more about the Founding Program",
+    "popular": "MOST POPULAR",
+    "comingSoon": "COMING SOON",
+    "perMonth": "/mo",
+    "cta": "Get started",
+    "ctaComingSoon": "Coming soon",
+    "ctaSubtext": "No credit card required",
+    "starter": {
+      "name": "Starter",
+      "tagline": "For solo operators and single-location businesses",
+      "features": [
+        "1 active card template",
+        "Unlimited customers & scans",
+        "1 scanner (business owner)",
+        "Automatic push notifications",
+        "Basic dashboard & stats",
+        "Email support"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "For businesses with a team and a need to engage customers",
+      "features": [
+        "Everything in Starter, plus:",
+        "Stamps or points (choose one)",
+        "Unlimited team members",
+        "Custom notification messages",
+        "2–3 promo campaigns/month",
+        "Trends & analytics"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Multi-location, segmentation, and advanced tools",
+      "features": [
+        "Everything in Growth, plus:",
+        "Multiple active card templates",
+        "Multi-location support",
+        "Geofencing notifications",
+        "Unlimited campaigns + segmentation",
+        "Advanced analytics & retention"
+      ]
+    },
+    "comparison": {
+      "title": "Compare all features",
+      "subtitle": "See exactly what's included in each plan.",
+      "categories": {
+        "loyalty": "Loyalty Program",
+        "cardDesign": "Card Design",
+        "locations": "Locations",
+        "notifications": "Notifications",
+        "team": "Team",
+        "analytics": "Analytics",
+        "mobileApp": "Mobile App",
+        "support": "Support"
+      },
+      "rows": {
+        "unlimitedCustomers": {
+          "label": "Unlimited customers"
+        },
+        "unlimitedScans": {
+          "label": "Unlimited scans"
+        },
+        "activeTemplates": {
+          "label": "Active card templates",
+          "starter": "1",
+          "growth": "1",
+          "pro": "Multiple"
+        },
+        "savedTemplates": {
+          "label": "Saved templates",
+          "starter": "1",
+          "growth": "Unlimited",
+          "pro": "Unlimited"
+        },
+        "loyaltyType": {
+          "label": "Loyalty type",
+          "starter": "Stamps only",
+          "growth": "Stamps or Points",
+          "pro": "Both + Multiple"
+        },
+        "fullCustomisation": {
+          "label": "Full card customisation"
+        },
+        "scheduledChanges": {
+          "label": "Scheduled card changes"
+        },
+        "locations": {
+          "label": "Locations",
+          "starter": "1",
+          "growth": "1",
+          "pro": "Multiple"
+        },
+        "locationAnalytics": {
+          "label": "Location-specific analytics"
+        },
+        "geofencing": {
+          "label": "Geofencing notifications"
+        },
+        "stampMilestoneReward": {
+          "label": "Stamp/milestone/reward notifications",
+          "starter": "Predefined",
+          "growth": "Custom text",
+          "pro": "Custom text"
+        },
+        "promoCampaigns": {
+          "label": "Promotional campaigns",
+          "growth": "2–3/month",
+          "pro": "Unlimited"
+        },
+        "segmentation": {
+          "label": "Customer segmentation"
+        },
+        "scheduledSends": {
+          "label": "Scheduled sends"
+        },
+        "scannerAccounts": {
+          "label": "Scanner accounts",
+          "starter": "1 (owner)",
+          "growth": "Unlimited",
+          "pro": "Unlimited"
+        },
+        "employeeTracking": {
+          "label": "Employee scan tracking"
+        },
+        "basicStats": {
+          "label": "Basic stats"
+        },
+        "trends": {
+          "label": "Trends & peak hours"
+        },
+        "advancedAnalytics": {
+          "label": "Advanced analytics & retention"
+        },
+        "offlineScanning": {
+          "label": "Offline scanning"
+        },
+        "supportLevel": {
+          "label": "Support",
+          "starter": "Email",
+          "growth": "Email",
+          "pro": "Priority email"
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "subtitle": "Everything you need to know about our pricing.",
+      "items": [
+        {
+          "question": "Is there a free trial?",
+          "answer": "Yes! Every plan starts with 3 months free as part of our Founding Partner program. No credit card required to get started."
+        },
+        {
+          "question": "Can I switch plans later?",
+          "answer": "Absolutely. You can upgrade or downgrade at any time. When you upgrade, you get immediate access to the new features. When you downgrade, the change takes effect at the end of your current billing cycle."
+        },
+        {
+          "question": "Are there per-customer charges?",
+          "answer": "No. Every plan includes unlimited customers and unlimited scans. Your price stays the same whether you have 10 customers or 10,000."
+        },
+        {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept all major credit and debit cards (Visa, Mastercard, Amex) as well as SEPA direct debit for European businesses."
+        },
+        {
+          "question": "When will the Pro plan be available?",
+          "answer": "The Pro plan is currently in development. We're building multi-location support, geofencing, and advanced segmentation. Join the waitlist to be notified when it launches."
+        },
+        {
+          "question": "Can I cancel anytime?",
+          "answer": "Yes. There are no contracts or cancellation fees. Cancel anytime and you'll keep access until the end of your current billing period."
+        },
+        {
+          "question": "What is the Founding Partner program?",
+          "answer": "Our Founding Partner program gives early adopters 50% off their plan — locked for life. You also get 3 months completely free to test the platform. Spots are limited."
+        }
+      ]
+    },
+    "cta2": {
+      "title": "Ready to get started?",
+      "subtitle": "Join the businesses building customer loyalty with Stampeo.",
+      "button": "Start free trial",
+      "contact": "Contact us"
+    }
   }
 }

@@ -595,10 +595,10 @@
     "programme-fondateur": {
       "hero": {
         "title": "Vous n'êtes pas juste un client. Vous <accent>construisez le produit</accent> avec nous.",
-        "navTitle": "Programme Fondateur — 3 mois gratuits, 14,99 €/mois à vie",
+        "navTitle": "Programme Fondateur — {freeMonths} mois gratuits, {growthFoundingPrice} €/mois à vie",
         "subtitle": "Stampeo est un produit jeune. On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais.",
         "badge": "Programme Fondateur",
-        "secondaryCta": "3 mois gratuits · 14,99 €/mois à vie"
+        "secondaryCta": "{freeMonths} mois gratuits · {growthFoundingPrice} €/mois à vie"
       },
       "problem": {
         "title": "On joue cartes sur table",
@@ -606,13 +606,13 @@
       },
       "sections": [
         {
-          "title": "3 mois entièrement gratuits",
-          "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez Stampeo pendant 3 mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
+          "title": "{freeMonths} mois entièrement gratuits",
+          "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez Stampeo pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
           "icon": "calendar"
         },
         {
-          "title": "14,99 €/mois à vie",
-          "description": "Après la période gratuite, votre tarif est bloqué à 14,99 €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
+          "title": "{growthFoundingPrice} €/mois à vie",
+          "description": "Après la période gratuite, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
           "icon": "tag"
         },
         {
@@ -623,7 +623,7 @@
       ],
       "cta": {
         "title": "Rejoignez les premiers",
-        "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Growth."
+        "subtitle": "Places limitées. {freeMonths} mois gratuits. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth."
       },
       "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
       "custom": {
@@ -631,13 +631,13 @@
           "title": "Les avantages concrets",
           "items": [
             {
-              "title": "3 mois entièrement gratuits",
-              "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez pendant 3 mois sans rien payer. Si ça ne vous convient pas, vous partez — sans frais.",
+              "title": "{freeMonths} mois entièrement gratuits",
+              "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez — sans frais.",
               "icon": "calendar"
             },
             {
-              "title": "14,99 €/mois à vie",
-              "description": "Après la période gratuite, votre tarif est bloqué à 14,99 €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
+              "title": "{growthFoundingPrice} €/mois à vie",
+              "description": "Après la période gratuite, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
               "icon": "tag"
             },
             {
@@ -714,8 +714,8 @@
           "sources": "Sources : Observatoire de la Fidélité · Bain & Company · LSA Conso"
         },
         "price": {
-          "original": "29,99 €/mois",
-          "founding": "14,99 €/mois",
+          "original": "{growthPrice} €/mois",
+          "founding": "{growthFoundingPrice} €/mois",
           "forLife": "à vie"
         },
         "timeline": {
@@ -746,15 +746,15 @@
           "items": [
             {
               "question": "Combien de places sont disponibles ?",
-              "answer": "On accepte les partenaires fondateurs par vagues de 10-15 commerces. Le tarif fondateur (14,99 €/mois à vie) ne sera plus proposé après la clôture du programme."
+              "answer": "On accepte les partenaires fondateurs par vagues de 10-15 commerces. Le tarif fondateur ({growthFoundingPrice} €/mois à vie) ne sera plus proposé après la clôture du programme."
             },
             {
               "question": "Que se passe-t-il après les 3 mois gratuits ?",
-              "answer": "Vous passez automatiquement à 14,99 €/mois. On vous prévient 2 semaines avant. Si vous ne souhaitez pas continuer, vous annulez en un clic — sans frais."
+              "answer": "Vous passez automatiquement à {growthFoundingPrice} €/mois. On vous prévient 2 semaines avant. Si vous ne souhaitez pas continuer, vous annulez en un clic — sans frais."
             },
             {
               "question": "Est-ce que je garde le tarif fondateur si vous augmentez les prix ?",
-              "answer": "Oui. 14,99 €/mois à vie signifie à vie. Même si le plan Growth passe à 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel."
+              "answer": "Oui. {growthFoundingPrice} €/mois à vie signifie à vie. Même si le plan Growth passe à 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel."
             },
             {
               "question": "Puis-je changer d'avis et annuler ?",
@@ -764,7 +764,7 @@
         },
         "finalCta": {
           "title": "Rejoignez les premiers",
-          "subtitle": "Places limitées. 3 mois gratuits. 14,99 €/mois à vie. Toutes les fonctionnalités Growth.",
+          "subtitle": "Places limitées. {freeMonths} mois gratuits. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth.",
           "urgency": "Prochaine vague d'acceptation : mars 2026"
         }
       }

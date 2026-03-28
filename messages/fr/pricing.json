@@ -69,5 +69,202 @@
         "Analytiques avancées et rétention"
       ]
     }
+  },
+  "pricingPage": {
+    "meta": {
+      "title": "Tarifs — Comparer les plans | Stampeo",
+      "description": "Comparez les plans et fonctionnalités Stampeo. De l'auto-entrepreneur au multi-établissement — trouvez le plan adapté à votre programme de fidélité."
+    },
+    "hero": {
+      "badge": "Plans & Tarifs",
+      "title": "Choisissez le plan adapté à votre commerce",
+      "subtitle": "Pas de frais cachés. Pas de facturation par client. Clients illimités sur chaque plan."
+    },
+    "foundingCallout": "Les partenaires fondateurs bénéficient de -50% — à vie.",
+    "foundingLink": "En savoir plus sur le Programme Fondateur",
+    "popular": "LE PLUS POPULAIRE",
+    "comingSoon": "BIENTÔT",
+    "perMonth": "/mois",
+    "cta": "Commencer",
+    "ctaComingSoon": "Bientôt disponible",
+    "ctaSubtext": "Sans carte bancaire",
+    "starter": {
+      "name": "Starter",
+      "tagline": "Pour les indépendants et commerces mono-établissement",
+      "features": [
+        "1 modèle de carte actif",
+        "Clients et scans illimités",
+        "1 scanner (propriétaire)",
+        "Notifications push automatiques",
+        "Tableau de bord et statistiques",
+        "Support par email"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "Pour les commerces avec une équipe et un besoin d'engagement client",
+      "features": [
+        "Tout le plan Starter, plus :",
+        "Tampons ou points (au choix)",
+        "Membres d'équipe illimités",
+        "Messages de notification personnalisés",
+        "2–3 campagnes promo/mois",
+        "Tendances et analytiques"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Multi-établissement, segmentation et outils avancés",
+      "features": [
+        "Tout le plan Growth, plus :",
+        "Plusieurs modèles de carte actifs",
+        "Support multi-établissement",
+        "Notifications de géolocalisation",
+        "Campagnes illimitées + segmentation",
+        "Analytiques avancées et rétention"
+      ]
+    },
+    "comparison": {
+      "title": "Comparer toutes les fonctionnalités",
+      "subtitle": "Voyez exactement ce qui est inclus dans chaque plan.",
+      "categories": {
+        "loyalty": "Programme de fidélité",
+        "cardDesign": "Design de carte",
+        "locations": "Établissements",
+        "notifications": "Notifications",
+        "team": "Équipe",
+        "analytics": "Analytiques",
+        "mobileApp": "Application mobile",
+        "support": "Support"
+      },
+      "rows": {
+        "unlimitedCustomers": {
+          "label": "Clients illimités"
+        },
+        "unlimitedScans": {
+          "label": "Scans illimités"
+        },
+        "activeTemplates": {
+          "label": "Modèles de carte actifs",
+          "starter": "1",
+          "growth": "1",
+          "pro": "Plusieurs"
+        },
+        "savedTemplates": {
+          "label": "Modèles sauvegardés",
+          "starter": "1",
+          "growth": "Illimités",
+          "pro": "Illimités"
+        },
+        "loyaltyType": {
+          "label": "Type de fidélité",
+          "starter": "Tampons uniquement",
+          "growth": "Tampons ou Points",
+          "pro": "Les deux + Multiples"
+        },
+        "fullCustomisation": {
+          "label": "Personnalisation complète de la carte"
+        },
+        "scheduledChanges": {
+          "label": "Changements de carte programmés"
+        },
+        "locations": {
+          "label": "Établissements",
+          "starter": "1",
+          "growth": "1",
+          "pro": "Plusieurs"
+        },
+        "locationAnalytics": {
+          "label": "Analytiques par établissement"
+        },
+        "geofencing": {
+          "label": "Notifications de géolocalisation"
+        },
+        "stampMilestoneReward": {
+          "label": "Notifications tampon/jalon/récompense",
+          "starter": "Prédéfinies",
+          "growth": "Texte personnalisé",
+          "pro": "Texte personnalisé"
+        },
+        "promoCampaigns": {
+          "label": "Campagnes promotionnelles",
+          "growth": "2–3/mois",
+          "pro": "Illimitées"
+        },
+        "segmentation": {
+          "label": "Segmentation client"
+        },
+        "scheduledSends": {
+          "label": "Envois programmés"
+        },
+        "scannerAccounts": {
+          "label": "Comptes scanner",
+          "starter": "1 (propriétaire)",
+          "growth": "Illimités",
+          "pro": "Illimités"
+        },
+        "employeeTracking": {
+          "label": "Suivi des scans par employé"
+        },
+        "basicStats": {
+          "label": "Statistiques de base"
+        },
+        "trends": {
+          "label": "Tendances et heures de pointe"
+        },
+        "advancedAnalytics": {
+          "label": "Analytiques avancées et rétention"
+        },
+        "offlineScanning": {
+          "label": "Scan hors-ligne"
+        },
+        "supportLevel": {
+          "label": "Support",
+          "starter": "Email",
+          "growth": "Email",
+          "pro": "Email prioritaire"
+        }
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "subtitle": "Tout ce que vous devez savoir sur nos tarifs.",
+      "items": [
+        {
+          "question": "Y a-t-il un essai gratuit ?",
+          "answer": "Oui ! Chaque plan commence avec 3 mois gratuits dans le cadre de notre Programme Fondateur. Aucune carte bancaire requise pour démarrer."
+        },
+        {
+          "question": "Puis-je changer de plan plus tard ?",
+          "answer": "Bien sûr. Vous pouvez passer à un plan supérieur ou inférieur à tout moment. Lors d'un upgrade, vous accédez immédiatement aux nouvelles fonctionnalités. Lors d'un downgrade, le changement prend effet à la fin de votre cycle de facturation."
+        },
+        {
+          "question": "Y a-t-il des frais par client ?",
+          "answer": "Non. Chaque plan inclut des clients et des scans illimités. Votre tarif reste le même que vous ayez 10 clients ou 10 000."
+        },
+        {
+          "question": "Quels moyens de paiement acceptez-vous ?",
+          "answer": "Nous acceptons toutes les cartes bancaires principales (Visa, Mastercard, Amex) ainsi que le prélèvement SEPA pour les entreprises européennes."
+        },
+        {
+          "question": "Quand le plan Pro sera-t-il disponible ?",
+          "answer": "Le plan Pro est actuellement en développement. Nous construisons le support multi-établissement, le geofencing et la segmentation avancée. Inscrivez-vous à la liste d'attente pour être notifié de son lancement."
+        },
+        {
+          "question": "Puis-je résilier à tout moment ?",
+          "answer": "Oui. Pas de contrat ni de frais de résiliation. Résiliez quand vous voulez et conservez l'accès jusqu'à la fin de votre période de facturation en cours."
+        },
+        {
+          "question": "Qu'est-ce que le Programme Fondateur ?",
+          "answer": "Notre Programme Fondateur offre aux premiers utilisateurs -50% sur leur plan — verrouillé à vie. Vous bénéficiez aussi de 3 mois entièrement gratuits pour tester la plateforme. Les places sont limitées."
+        }
+      ]
+    },
+    "cta2": {
+      "title": "Prêt à commencer ?",
+      "subtitle": "Rejoignez les commerces qui fidélisent leurs clients avec Stampeo.",
+      "button": "Commencer l'essai gratuit",
+      "contact": "Nous contacter"
+    }
   }
 }
