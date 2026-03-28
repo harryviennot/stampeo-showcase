@@ -4,16 +4,19 @@
       "badge": "Early Access — France",
       "title": "Loyalty cards your customers <accent>actually keep.</accent>",
       "subtitle": "Digital passes that live in Apple Wallet and Google Wallet. Upload your logo, pick your colors, and your card is ready in minutes. No app for your customers to download.",
-      "cta": "Become a Founding Partner",
+      "cta": "Start Free",
       "secondaryCta": "See how it works",
       "stamp": {
         "complete": "You've unlocked early access!",
         "ready": "Your pass is ready! Try adding a stamp.",
-        "claimFree": "Become a Founding Partner →",
+        "claimFree": "Start Free →",
         "addStamp": "Add Stamp",
         "watchPhone": "Watch your phone - the pass updates in real-time!",
         "scanQR": "<bold>Scan the QR code</bold> with your iPhone to try the demo",
-        "addToWallet": "Add the pass to your Apple Wallet..."
+        "addToWallet": "Add the pass to your Apple Wallet...",
+        "demoCallout": "Try it out! Scan with your phone",
+        "mobileAddWallet": "Try it — add to your Wallet",
+        "mobileHint": "The pass will be added to your phone wallet"
       }
     },
     "problem": {
@@ -77,13 +80,13 @@
       "valueProps": [
         "Shape the product with direct feedback",
         "Direct channel with our team (not a chatbot, a human)",
-        "3 months free, then €14.99/month for life (instead of €29.99)",
+        "{freeMonths} months free, then €{starterFoundingPrice}/month for life (instead of €{starterPrice})",
         "All Growth features included from day one",
         "Limited spots — we accept applications in waves",
         "Your first loyalty card designed by our team, for free"
       ],
-      "cta": "Become a Founding Partner",
-      "urgency": "Next wave: March 2026 — limited spots"
+      "cta": "Start Free",
+      "urgency": "9 spots left — limited availability"
     },
     "howItWorks": {
       "badge": "How it works",
@@ -147,7 +150,7 @@
       "items": [
         {
           "question": "What is the founding partner program?",
-          "answer": "As a founding partner, you get early access to Stampeo with all Growth features. You'll help shape the product with direct feedback. After 3 free months, you lock in €14.99/month for life (normally €29.99)."
+          "answer": "As a founding partner, you get early access to Stampeo with all Growth features. You'll help shape the product with direct feedback. After {freeMonths} free months, you lock in €{growthFoundingPrice}/month for life (normally €{growthPrice})."
         },
         {
           "question": "How do I create my loyalty card?",
@@ -163,11 +166,11 @@
         },
         {
           "question": "How do customers get stamped?",
-          "answer": "Customers simply scan a unique QR code displayed at your checkout, or you can scan their digital card. Both methods are fast and secure."
+          "answer": "Your customers show their digital card (in Apple Wallet or Google Wallet) and you scan it with the Stampeo app or from your browser. Only you add stamps — not the customer — which prevents any fraud."
         },
         {
           "question": "How does early access work?",
-          "answer": "After signing up, we review applications in small batches. You'll receive an email when your account is activated. This lets us ensure quality support for every partner."
+          "answer": "After signing up, we get in touch directly to get to know you and set up your program together. We handle your card configuration, scanner app setup, and stay available to support you along the way."
         },
         {
           "question": "Does it work with Google Wallet?",
@@ -175,22 +178,22 @@
         },
         {
           "question": "Can a business have multiple loyalty cards?",
-          "answer": "With the Growth plan, yes. You can create multiple card templates — for example a \"coffee\" card and a \"Sunday brunch\" card — each with its own rewards. On the Starter plan, you have one active template at a time, which is enough for most businesses."
+          "answer": "This feature will be available with the Pro plan (currently in development). You'll be able to create multiple active card templates simultaneously — for example a \"coffee\" card and a \"Sunday brunch\" card — each with its own rewards. On the Starter and Growth plans, you have one active template at a time, which is enough for most businesses."
         },
         {
           "question": "Can I send promotional campaigns?",
-          "answer": "With the Growth plan, you'll be able to send promotional notifications to all your customers or specific segments (e.g., customers who haven't visited in 30 days). This feature is under development and will be available in the coming months. In the meantime, automatic notifications (stamp, milestone, reward) are active on all plans."
+          "answer": "With the Growth plan, you'll be able to send promotional notifications to all your customers (up to 2-3 campaigns per month). With the Pro plan, you'll get unlimited campaigns and customer segmentation (e.g., targeting customers who haven't visited in 30 days). These features are under development. In the meantime, automatic notifications (stamp, milestone, reward) are active on all plans."
         }
       ],
       "stillQuestions": "Still have questions?",
       "stillQuestionsDesc": "We're here to help you grow your business and build lasting customer relationships.",
-      "startFreeTrial": "Apply for Early Access",
+      "startFreeTrial": "Start Free",
       "contactSupport": "Contact Us"
     },
     "finalCta": {
       "title": "Ready to turn visitors into <accent>regulars?</accent>",
-      "cta": "Become a Founding Partner",
-      "subtitle": "Early access · 3 months free · €14.99/month for life"
+      "cta": "Start Free",
+      "subtitle": "{freeMonths} months free · From €{price}/month for life"
     },
     "comparisonTable": {
       "title": "Why wallet?",
@@ -206,7 +209,7 @@
           "values": [
             "~€50–100 (+ stamp)",
             "€50–200/month",
-            "From €14.99/month"
+            "From €{starterPrice}/month"
           ],
           "icons": [
             "minus",

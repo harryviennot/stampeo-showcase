@@ -1,10 +1,9 @@
-"use client";
-
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InfoIcon } from "@/components/icons";
+import { PRICING } from "@/lib/pricing";
 
 type FeatureItem = string | { text: string; tooltip: string };
 
@@ -38,49 +37,57 @@ function FeatureListItem({ feature }: { feature: FeatureItem }) {
   );
 }
 
-export function PricingSection() {
-  const t = useTranslations("pricing");
+export async function PricingSection() {
+  const t = await getTranslations("pricing");
 
-  const payFeatures = t.raw("pay.features") as FeatureItem[];
+  const starterFeatures = t.raw("starter.features") as FeatureItem[];
+  const growthFeatures = t.raw("growth.features") as FeatureItem[];
   const proFeatures = t.raw("pro.features") as FeatureItem[];
 
   return (
     <section id="pricing" className="relative py-24 lg:py-32">
-      <div className="max-w-[1000px] mx-auto px-6">
-        {/* Header Section */}
+      <div className="max-w-[1200px] mx-auto px-6">
+        {/* Header */}
         <ScrollReveal className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 mb-4 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-widest">
-            {t("badge")}
-          </span>
           <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
             {t("title")}
           </h2>
           <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
+          <p className="text-sm font-semibold text-[var(--accent)] mt-4">
+            {t("spotsLeft", { count: PRICING.spotsLeft })}
+          </p>
         </ScrollReveal>
 
-        {/* Pricing Cards */}
-        <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-          {/* Starter Tier Card */}
+        {/* 3 Pricing Cards — lg breakpoint to avoid squeeze on tablets */}
+        <ScrollReveal delay={200} className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto">
+
+          {/* Starter */}
           <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm hover:shadow-xl transition-all duration-300">
             <div className="flex flex-col gap-4 mb-8">
-              <h3 className="text-2xl font-bold">{t("pay.name")}</h3>
+              <h3 className="text-2xl font-bold">{t("starter.name")}</h3>
               <p className="text-sm text-[var(--muted-foreground)] font-medium">
-                {t("pay.tagline")}
+                {t("starter.tagline")}
               </p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-black tracking-tight">&euro;{t("pay.price")}</span>
-                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.starter.price}</span>
+                  <span className="text-sm font-semibold text-[var(--accent)]">{t("freeMonths")}</span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-5xl font-black tracking-tight">&euro;{PRICING.starter.foundingPrice}</span>
+                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
+                </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-4 flex-1 mb-8">
               <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
-                {t("pay.featuresLabel")}
+                {t("starter.featuresLabel")}
               </p>
               <ul className="flex flex-col gap-4">
-                {payFeatures.map((feature, i) => (
+                {starterFeatures.map((feature, i) => (
                   <FeatureListItem key={i} feature={feature} />
                 ))}
               </ul>
@@ -99,38 +106,38 @@ export function PricingSection() {
             </div>
           </div>
 
-          {/* Growth Tier Card (Highlighted - Founding Partner) */}
-          <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl scale-[1.02] z-10">
+          {/* Growth (Highlighted) */}
+          <div className="relative flex flex-col rounded-3xl border-[3px] border-[var(--accent)] bg-[var(--cream)] p-8 lg:p-10 shadow-2xl lg:scale-[1.03] z-10">
             {/* Badge */}
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-              <div className="bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg whitespace-nowrap text-center">
-                {t("foundingPartner")}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+              <div className="bg-[var(--accent)] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+                {t("popular")}
               </div>
             </div>
 
             <div className="flex flex-col gap-4 mb-8">
-              <h3 className="text-2xl font-bold">{t("pro.name")}</h3>
+              <h3 className="text-2xl font-bold">{t("growth.name")}</h3>
               <p className="text-sm text-[var(--muted-foreground)] font-medium">
-                {t("pro.tagline")}
+                {t("growth.tagline")}
               </p>
               <div className="flex flex-col gap-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-[var(--muted-foreground)] line-through">&euro;{t("pro.originalPrice")}</span>
-                  <span className="text-sm font-semibold text-[var(--accent)]">{t("pro.freeMonths")}</span>
+                  <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.growth.price}</span>
+                  <span className="text-sm font-semibold text-[var(--accent)]">{t("freeMonths")}</span>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-5xl font-black tracking-tight">&euro;{t("pro.foundingPrice")}</span>
-                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("pro.forLife")}</span>
+                  <span className="text-5xl font-black tracking-tight">&euro;{PRICING.growth.foundingPrice}</span>
+                  <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-4 flex-1 mb-8">
               <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
-                {t("pro.featuresLabel")}
+                {t("growth.featuresLabel")}
               </p>
               <ul className="flex flex-col gap-4">
-                {proFeatures.map((feature, i) => (
+                {growthFeatures.map((feature, i) => (
                   <FeatureListItem key={i} feature={feature} />
                 ))}
               </ul>
@@ -148,6 +155,43 @@ export function PricingSection() {
               </p>
             </div>
           </div>
+
+          {/* Pro (Coming Soon) */}
+          <div className="group flex flex-col rounded-3xl border border-[var(--border)] bg-[var(--cream)] p-8 lg:p-10 shadow-sm opacity-60">
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-[var(--muted-foreground)]">{t("pro.name")}</h3>
+                <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-[var(--muted)] text-[var(--muted-foreground)]">
+                  {t("comingSoon")}
+                </span>
+              </div>
+              <p className="text-sm text-[var(--muted-foreground)] font-medium">
+                {t("pro.tagline")}
+              </p>
+              <div className="flex items-baseline gap-1">
+                <span className="text-5xl font-black tracking-tight text-[var(--muted-foreground)]">&euro;{PRICING.pro.price}</span>
+                <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("perMonth")}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-4 flex-1 mb-8">
+              <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
+                {t("pro.featuresLabel")}
+              </p>
+              <ul className="flex flex-col gap-4 text-[var(--muted-foreground)]">
+                {proFeatures.map((feature, i) => (
+                  <FeatureListItem key={i} feature={feature} />
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-col gap-2 mt-auto">
+              <div className="w-full flex items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--border)] text-[var(--muted-foreground)] text-base font-extrabold cursor-not-allowed">
+                <span>{t("ctaComingSoon")}</span>
+              </div>
+            </div>
+          </div>
+
         </ScrollReveal>
       </div>
     </section>

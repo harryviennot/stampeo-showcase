@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
+import { ScrollRevealInit } from "@/components/ui/ScrollRevealInit";
 import "../globals.css";
 
 const geistSans = Geist({
@@ -86,6 +87,7 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ScrollRevealInit />
         <NextIntlClientProvider>
           <AuthProvider>
             {children}

@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 import { createClient } from "./client";
 import type { User, Session, AuthError } from "@supabase/supabase-js";
@@ -36,31 +37,91 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Clear all Supabase auth storage to break infinite refresh loops.
+ * When a stale refresh token triggers 429 → _removeSession → _handleTokenChanged
+ * → getSession → _callRefreshToken → 429 ..., the only way to break it is to
+ * remove the stale token from storage so the next getSession finds nothing.
+ */
+function nukeSupabaseAuthStorage() {
+  // Clear sb-* cookies
+  document.cookie.split(";").forEach((c) => {
+    const name = c.trim().split("=")[0];
+    if (name.startsWith("sb-")) {
+      document.cookie = `${name}=; Max-Age=0; Path=/`;
+      // Also try with domain
+      const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+      if (cookieDomain) {
+        document.cookie = `${name}=; Max-Age=0; Path=/; Domain=${cookieDomain}`;
+      }
+    }
+  });
+  // Clear sb-* localStorage keys
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const key = localStorage.key(i);
+    if (key?.startsWith("sb-")) {
+      localStorage.removeItem(key);
+    }
+  }
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const signedOutCountRef = useRef(0);
+  const signedOutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const supabase = createClient();
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        // Stale or invalid session — nuke storage to prevent retry loops
+        nukeSupabaseAuthStorage();
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
       setLoading(false);
     });
 
-    // Listen for auth changes
+    // Listen for auth changes — detect infinite refresh loops
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        signedOutCountRef.current++;
+
+        // If we get 3+ SIGNED_OUT events within 5 seconds, it's a loop
+        if (signedOutCountRef.current >= 3) {
+          nukeSupabaseAuthStorage();
+          signedOutCountRef.current = 0;
+          setSession(null);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        // Reset counter after 5 seconds of no SIGNED_OUT events
+        if (signedOutTimerRef.current) clearTimeout(signedOutTimerRef.current);
+        signedOutTimerRef.current = setTimeout(() => {
+          signedOutCountRef.current = 0;
+        }, 5000);
+      }
+
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      if (signedOutTimerRef.current) clearTimeout(signedOutTimerRef.current);
+    };
   }, [supabase.auth]);
 
   const signUp = useCallback(

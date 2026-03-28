@@ -3,11 +3,13 @@
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { interpolatePricing } from "@/lib/pricing";
 
 export function FoundingPartnerSection() {
   const t = useTranslations("landing.foundingPartner");
 
-  const valueProps = t.raw("valueProps") as string[];
+  const rawValueProps = t.raw("valueProps") as string[];
+  const valueProps = rawValueProps.map(interpolatePricing);
 
   return (
     <section className="relative py-24 lg:py-32">
