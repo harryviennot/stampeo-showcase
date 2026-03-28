@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { ChevronDownIcon } from "../icons";
@@ -264,7 +264,7 @@ export function Header() {
 
   const navItems = [
     { label: t("common.nav.foundingProgram"), href: locale === "en" ? "/founding-partner" : "/programme-fondateur" },
-    { label: t("common.nav.pricing"), href: "/#pricing" },
+    { label: t("common.nav.pricing"), href: "/pricing" },
     ...(locale === "fr" || locale === "en"
       ? [{ label: t("common.nav.blog"), href: "/blog" }]
       : []),
@@ -272,21 +272,33 @@ export function Header() {
   ];
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
-  const [bannerVisible, setBannerVisible] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const dismissed = localStorage.getItem(BANNER_STORAGE_KEY);
-    if (!dismissed) return true;
-    const elapsed = Date.now() - Number(dismissed);
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-    if (elapsed > ONE_DAY) {
-      localStorage.removeItem(BANNER_STORAGE_KEY);
-      return true;
-    }
-    return false;
-  });
+
+  const bannerShouldShow = useSyncExternalStore(
+    // subscribe — listen for storage changes (e.g. dismiss in another tab)
+    (callback) => {
+      window.addEventListener("storage", callback);
+      return () => window.removeEventListener("storage", callback);
+    },
+    // getSnapshot — check localStorage
+    () => {
+      const dismissed = localStorage.getItem(BANNER_STORAGE_KEY);
+      if (!dismissed) return true;
+      const elapsed = Date.now() - Number(dismissed);
+      if (elapsed > 24 * 60 * 60 * 1000) {
+        localStorage.removeItem(BANNER_STORAGE_KEY);
+        return true;
+      }
+      return false;
+    },
+    // getServerSnapshot — always false on server
+    () => false
+  );
+
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const bannerVisible = bannerShouldShow && !bannerDismissed;
 
   const dismissBanner = useCallback(() => {
-    setBannerVisible(false);
+    setBannerDismissed(true);
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 

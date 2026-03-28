@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 
 const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "";
-// Extract IP from cookie domain (e.g., ".10.10.10.102.nip.io" -> "10.10.10.102")
+// Extract IP from cookie domain (e.g., ".10.196.9.69.nip.io" -> "10.196.9.69")
 const ipMatch = /\.?(\d+\.\d+\.\d+\.\d+)\.nip\.io/.exec(cookieDomain);
 const ip = ipMatch?.[1];
 

@@ -1,9 +1,8 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { Check, X, Minus } from "@phosphor-icons/react";
+import { Check, X, Minus } from "../icons";
+import { interpolatePricing } from "@/lib/pricing";
 
 function ValueIcon({ icon }: { icon: string }) {
   if (icon === "check") return <Check className="w-4 h-4 text-green-500" weight="bold" />;
@@ -11,15 +10,19 @@ function ValueIcon({ icon }: { icon: string }) {
   return <Minus className="w-4 h-4 text-amber-400" weight="bold" />;
 }
 
-export function ComparisonTable() {
-  const t = useTranslations("landing.comparisonTable");
+export async function ComparisonTable() {
+  const t = await getTranslations("landing.comparisonTable");
 
   const columns = t.raw("columns") as string[];
-  const rows = t.raw("rows") as Array<{
+  const rawRows = t.raw("rows") as Array<{
     criteria: string;
     values: string[];
     icons: string[];
   }>;
+  const rows = rawRows.map((row) => ({
+    ...row,
+    values: row.values.map(interpolatePricing),
+  }));
 
   return (
     <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg)]">
@@ -86,25 +89,25 @@ export function ComparisonTable() {
           </div>
         </ScrollReveal>
 
-        {/* Mobile Cards */}
-        <div className="md:hidden space-y-4">
+        {/* Mobile Cards — compact */}
+        <div className="md:hidden space-y-3">
           {rows.map((row, rowIndex) => (
-            <ScrollReveal key={rowIndex} delay={rowIndex * 80}>
-              <div className="bg-white blog-card-3d rounded-2xl p-5">
-                <p className="text-sm font-bold text-[var(--foreground)] mb-3">
+            <ScrollReveal key={rowIndex} delay={rowIndex * 60}>
+              <div className="bg-white blog-card-3d rounded-xl p-4">
+                <p className="text-xs font-bold text-[var(--foreground)] mb-2">
                   {row.criteria}
                 </p>
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {columns.map((col, colIndex) => (
                     <div
                       key={colIndex}
-                      className={`flex items-start justify-between gap-3 text-sm ${colIndex === 2 ? "font-semibold text-[var(--accent)]" : "text-[var(--muted-foreground)]"
+                      className={`flex items-start justify-between gap-2 text-xs ${colIndex === 2 ? "font-semibold text-[var(--accent)]" : "text-[var(--muted-foreground)]"
                         }`}
                     >
-                      <span className="text-[var(--muted-foreground)] text-xs flex-shrink-0">
+                      <span className="text-[var(--muted-foreground)] text-[11px] flex-shrink-0">
                         {col}
                       </span>
-                      <span className="inline-flex items-center gap-1.5 text-right">
+                      <span className="inline-flex items-center gap-1 text-right">
                         <ValueIcon icon={row.icons[colIndex]} />
                         {row.values[colIndex]}
                       </span>

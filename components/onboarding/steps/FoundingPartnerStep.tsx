@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { createBusiness, BusinessCreatePayload } from "@/lib/onboarding";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { getThemeColor } from "@/lib/theme";
+import { detectBusinessLocale } from "@/lib/locale-detect";
 import { CheckIcon } from "@/components/icons";
+import { PRICING } from "@/lib/pricing";
 
 interface FoundingPartnerStepProps {
   store: OnboardingStore;
@@ -19,6 +21,8 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
   const { session } = useAuth();
+  const locale = useLocale();
+  const businessLocale = detectBusinessLocale(locale);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +63,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         phone: data.phone || undefined,
         heard_from: data.heardFrom || undefined,
         heard_from_other: data.heardFromOther || undefined,
+        primary_locale: businessLocale,
       };
 
       const { data: business, error: apiError } =
@@ -79,7 +84,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
       setError(err instanceof Error ? err.message : "An error occurred");
       setLoading(false);
     }
-  }, [data, updateData, onNext, session]);
+  }, [data, updateData, onNext, session, businessLocale]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -108,19 +113,19 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         <div className="bg-[var(--foreground)] text-[var(--background)] rounded-2xl p-6">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-[var(--background)]">
-              Pro
+              Growth
             </h3>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-sm line-through text-[var(--background)]/50">
-                &euro;29.99
+                &euro;{PRICING.growth.price}
               </span>
               <span className="text-sm text-[var(--accent)] font-semibold">
-                3 months free
+                {PRICING.freeMonths} months free
               </span>
             </div>
             <div className="mt-1">
               <span className="text-3xl font-bold text-[var(--background)]">
-                &euro;14.99
+                &euro;{PRICING.growth.foundingPrice}
               </span>
               <span className="text-sm text-[var(--background)]/70">
                 /month for life

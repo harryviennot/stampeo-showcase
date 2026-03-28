@@ -1,10 +1,10 @@
 # Politique de Confidentialité — Stampéo
 
-**Dernière mise à jour : 16 février 2026**
+**Dernière mise à jour : 26 mars 2026**
 
 ## 1. Introduction
 
-La présente politique de confidentialité décrit comment Stampéo (ci-après « nous », « notre » ou « la Plateforme »), opéré par Harry Viennot, auto-entrepreneur immatriculé en France, collecte, utilise, stocke et protège les données personnelles dans le cadre de son service de cartes de fidélité numériques.
+La présente politique de confidentialité décrit comment Stampéo (ci-après « nous », « notre » ou « la Plateforme »), opéré par Harry Viennot, auto-entrepreneur immatriculé en France sous le numéro SIRET **en cours d'obtention**, collecte, utilise, stocke et protège les données personnelles dans le cadre de son service de cartes de fidélité numériques.
 
 Nous nous engageons à respecter le Règlement Général sur la Protection des Données (RGPD — Règlement UE 2016/679) ainsi que la loi française Informatique et Libertés.
 
@@ -26,14 +26,17 @@ Chaque entreprise choisit les informations qu'elle collecte auprès de ses clien
 
 ### 3.1 Utilisateurs Business
 
-| Donnée | Finalité | Base légale |
-|--------|----------|-------------|
-| Adresse email | Création de compte, communication | Exécution du contrat |
-| Mot de passe (hashé) | Authentification | Exécution du contrat |
-| Nom et prénom | Identification du compte | Exécution du contrat |
-| Nom de l'entreprise | Personnalisation du service | Exécution du contrat |
-| Informations de paiement | Facturation via Stripe | Exécution du contrat |
-| Logo et visuels de marque | Création de la carte de fidélité | Exécution du contrat |
+| Donnée | Finalité | Base légale | Obligatoire |
+|--------|----------|-------------|-------------|
+| Adresse email | Création de compte, communication | Exécution du contrat | Oui |
+| Mot de passe (hashé) | Authentification | Exécution du contrat | Oui |
+| Nom et prénom | Identification du compte | Exécution du contrat | Oui |
+| Nom de l'entreprise | Personnalisation du service | Exécution du contrat | Oui |
+| Site web de l'entreprise | Vérification et personnalisation | Intérêt légitime | Non |
+| Numéro de téléphone | Contact et support | Intérêt légitime | Non |
+| Source de découverte | Statistiques internes (comment vous avez connu Stampéo) | Intérêt légitime | Non |
+| Informations de paiement | Facturation via Stripe | Exécution du contrat | Oui |
+| Logo et visuels de marque | Fonctionnement du service | Exécution du contrat | Oui |
 
 ### 3.2 Employés (Scanners)
 
@@ -44,17 +47,18 @@ Chaque entreprise choisit les informations qu'elle collecte auprès de ses clien
 
 ### 3.3 Clients finaux
 
-Les données collectées dépendent de la configuration choisie par l'entreprise :
+Les données collectées dépendent entièrement de la configuration choisie par l'entreprise. Les trois champs d'identification sont tous optionnels et désactivables indépendamment :
 
 | Donnée | Collecte | Finalité |
 |--------|----------|----------|
 | Identifiant unique de carte | Toujours | Fonctionnement du service |
 | Adresse email | Par défaut (désactivable) | Récupération du pass, communication |
-| Prénom | Par défaut (désactivable) | Personnalisation |
-| Numéro de téléphone | Optionnel (Pro) | Communication |
-| Date d'anniversaire | Optionnel (Pro) | Offres personnalisées |
+| Prénom / Nom | Par défaut (désactivable) | Personnalisation |
+| Numéro de téléphone | Optionnel (désactivable) | Communication |
 | Historique de visites | Automatique | Suivi de fidélité et statistiques |
 | Tampons/points accumulés | Automatique | Programme de fidélité |
+
+Il est possible de configurer la Plateforme en mode entièrement anonyme (aucune donnée personnelle collectée, uniquement un identifiant de carte).
 
 ### 3.4 Données techniques
 
@@ -63,7 +67,7 @@ Pour tous les utilisateurs, nous pouvons collecter :
 - Type de pass (Apple Wallet ou Google Wallet)
 - Jeton d'appareil (device token) pour les mises à jour du pass
 - Données de géolocalisation des scans (si disponibles)
-- Données d'utilisation anonymisées via Plausible Analytics (sans cookies, sans données personnelles)
+- Données d'utilisation anonymisées via PostHog (sans cookies, sans données personnelles)
 
 ## 4. Services tiers
 
@@ -74,20 +78,20 @@ Nous faisons appel aux sous-traitants suivants :
 | Supabase | Hébergement base de données | Irlande (UE) |
 | OVH | Serveur VPS | France (UE) |
 | Stripe | Traitement des paiements | UE (transferts possibles vers les US sous Data Privacy Framework) |
-| Resend | Envoi d'emails transactionnels | États-Unis (Data Privacy Framework) |
+| Resend | Envoi d'emails transactionnels | Irlande (UE) |
 | Apple (APNs) | Mises à jour des pass Apple Wallet | États-Unis (Data Privacy Framework) |
 | Google (Pay API) | Mises à jour des pass Google Wallet | États-Unis (Data Privacy Framework) |
-| Plausible Analytics | Statistiques du site | UE |
+| PostHog | Statistiques du site (sans cookies) | UE |
 
 ### Transferts hors UE
 
-Certains de nos sous-traitants (Stripe, Resend, Apple, Google) peuvent transférer des données vers les États-Unis. Ces transferts sont encadrés par le EU-US Data Privacy Framework ou par des clauses contractuelles types approuvées par la Commission européenne.
+Certains de nos sous-traitants (Stripe, Apple, Google) peuvent transférer des données vers les États-Unis. Ces transferts sont encadrés par le EU-US Data Privacy Framework ou par des clauses contractuelles types approuvées par la Commission européenne. Resend, Supabase, OVH et PostHog traitent les données exclusivement dans l'UE.
 
 ## 5. Cookies
 
-Stampéo utilise Plausible Analytics, une solution qui **ne dépose aucun cookie** et ne collecte aucune donnée personnelle. Aucun cookie de suivi tiers n'est utilisé.
+Stampéo utilise PostHog (hébergé dans l'UE) pour les statistiques du site. PostHog est configuré en mode sans cookies : **aucun cookie de suivi n'est déposé**, et aucune donnée personnelle n'est collectée à des fins analytiques. Ce mode de fonctionnement ne nécessite pas de bannière de consentement conformément à la directive ePrivacy et aux recommandations de la CNIL.
 
-Des cookies strictement nécessaires peuvent être utilisés pour l'authentification et la gestion de session. Ces cookies ne requièrent pas de consentement conformément à la directive ePrivacy.
+Des cookies strictement nécessaires peuvent être utilisés pour l'authentification et la gestion de session. Ces cookies ne requièrent pas de consentement.
 
 ## 6. Utilisation des données
 
@@ -172,3 +176,5 @@ Nous pouvons mettre à jour cette politique. En cas de modifications substantiel
 
 - **Email :** contact@stampeo.app
 - **Responsable :** Harry Viennot, Stampéo
+- **SIRET :** en cours d'obtention
+- **Adresse :** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France

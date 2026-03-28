@@ -1,12 +1,12 @@
 # Conditions Générales d'Utilisation — Stampéo
 
-**Dernière mise à jour : 16 février 2026**
+**Dernière mise à jour : 26 mars 2026**
 
 ## 1. Objet
 
 Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») régissent l'accès et l'utilisation de la plateforme Stampéo (ci-après « la Plateforme »), un service de cartes de fidélité numériques pour Apple Wallet et Google Wallet.
 
-La Plateforme est éditée par Harry Viennot, auto-entrepreneur en cours d'immatriculation en France, ci-après « Stampéo », « nous » ou « notre ».
+La Plateforme est éditée par Harry Viennot, auto-entrepreneur immatriculé en France sous le numéro SIRET **en cours d'obtention**, ci-après « Stampéo », « nous » ou « notre ».
 
 En utilisant la Plateforme, vous acceptez les présentes CGU dans leur intégralité.
 
@@ -57,10 +57,10 @@ Chaque nouvel Utilisateur Business bénéficie d'un essai gratuit de 30 jours, s
 
 | Tier | Prix | Caractéristiques principales |
 |------|------|------------------------------|
-| Pay | 20 €/mois HT | 1 carte active, jusqu'à 3 scanners, clients et scans illimités |
-| Pro | 40 €/mois HT | Cartes multiples, scanners illimités, campagnes promo, multi-localisation, analytics avancés |
+| Pay | 20 €/mois | 1 carte active, jusqu'à 3 scanners, clients et scans illimités |
+| Pro | 60 €/mois | Cartes multiples, scanners illimités, campagnes promo, multi-localisation, analytics avancés |
 
-Les prix sont indiqués hors taxes. La TVA applicable sera ajoutée conformément à la réglementation en vigueur.
+Les prix sont indiqués toutes taxes comprises. TVA non applicable — article 293B du CGI.
 
 ### 5.3 Paiement
 
@@ -98,33 +98,25 @@ Après résiliation :
 - Passé ce délai, toutes les données sont supprimées, y compris les données des Clients Finaux
 - Les Pass déjà installés dans les wallets des clients restent présents mais ne sont plus mis à jour
 
-## 7. Conception de la première carte
+## 7. Propriété intellectuelle
 
-Stampéo propose de concevoir la première carte de fidélité de chaque Utilisateur Business, sur la base des éléments fournis (logo, couleurs, carte physique existante, etc.).
-
-L'Utilisateur Business conserve l'entière propriété de ses éléments de marque (logo, nom commercial, charte graphique). Stampéo ne revendique aucun droit de propriété sur ces éléments.
-
-Le design de la carte produit par Stampéo peut être librement utilisé par l'Utilisateur Business dans le cadre de la Plateforme.
-
-## 8. Propriété intellectuelle
-
-### 8.1 Propriété de Stampéo
+### 7.1 Propriété de Stampéo
 
 La Plateforme, son code source, son interface, son design et ses fonctionnalités sont la propriété exclusive de Stampéo. L'Abonnement confère un droit d'utilisation non exclusif et non transférable de la Plateforme, pour la durée de l'Abonnement.
 
-### 8.2 Contenu des Utilisateurs Business
+### 7.2 Contenu des Utilisateurs Business
 
 L'Utilisateur Business conserve la propriété de ses contenus (logo, images, textes). En uploadant du contenu sur la Plateforme, l'Utilisateur Business accorde à Stampéo une licence non exclusive, mondiale et gratuite pour utiliser, afficher et distribuer ce contenu dans le cadre du fonctionnement du service.
 
 L'Utilisateur Business autorise également Stampéo à présenter sa carte de fidélité et son logo à titre de référence commerciale sur le site vitrine de Stampéo (ex : témoignages, exemples de cartes). L'Utilisateur Business peut retirer cette autorisation à tout moment par simple demande à support@stampeo.app.
 
-## 9. Données des Clients Finaux
+## 8. Données des Clients Finaux
 
-### 9.1 Responsabilité
+### 8.1 Responsabilité
 
 L'Utilisateur Business est responsable de traitement des données de ses Clients Finaux. Il détermine quelles informations sont collectées et dans quel but. Stampéo agit en qualité de sous-traitant conformément à l'article 28 du RGPD.
 
-### 9.2 Obligations de l'Utilisateur Business
+### 8.2 Obligations de l'Utilisateur Business
 
 L'Utilisateur Business s'engage à :
 
@@ -134,27 +126,27 @@ L'Utilisateur Business s'engage à :
 - Respecter les droits de ses Clients Finaux (accès, rectification, suppression)
 - Ne pas utiliser la Plateforme pour envoyer des communications non sollicitées en violation de la réglementation applicable
 
-### 9.3 Isolation des données
+### 8.3 Isolation des données
 
 Les données des Clients Finaux sont strictement isolées par entreprise. Stampéo n'effectue aucun croisement de données entre les différentes entreprises utilisatrices.
 
-## 10. Obligations des utilisateurs
+## 9. Obligations des utilisateurs
 
-### 10.1 L'Utilisateur Business s'engage à :
+### 9.1 L'Utilisateur Business s'engage à :
 
 - Utiliser la Plateforme conformément à sa destination et aux lois en vigueur
-- Ne pas revendre ou sous-licencier l'accès à la Plateforme
+- Ne pas revendre, sous-licencier ou proposer l'accès à la Plateforme à des tiers sans autorisation écrite préalable de Stampéo. Toute activité de type agence ou revendeur (gestion de programmes de fidélité pour le compte de tiers, facturation de services additionnels à des clients finaux basés sur la Plateforme) est soumise à un accord de partenariat spécifique. Pour toute demande : contact@stampeo.app
 - Ne pas tenter de contourner les limitations techniques de son tier d'abonnement
 - Être responsable de la confidentialité de ses identifiants de connexion
 - Garantir que les contenus qu'il publie via la Plateforme ne portent pas atteinte aux droits de tiers
 
-### 10.2 L'Employé s'engage à :
+### 9.2 L'Employé s'engage à :
 
 - Utiliser l'application scanner uniquement dans le cadre de ses fonctions
 - Ne pas partager ses identifiants de connexion
 - Respecter la confidentialité des données des Clients Finaux
 
-## 11. Disponibilité et maintenance
+## 10. Disponibilité et maintenance
 
 Stampéo s'efforce d'assurer la disponibilité de la Plateforme 24h/24 et 7j/7. Toutefois, Stampéo ne garantit pas un fonctionnement ininterrompu et ne saurait être tenu responsable en cas de :
 
@@ -164,7 +156,7 @@ Stampéo s'efforce d'assurer la disponibilité de la Plateforme 24h/24 et 7j/7. 
 
 L'application scanner fonctionne en mode hors-ligne : les scans sont enregistrés localement et synchronisés dès le retour de la connexion.
 
-## 12. Limitation de responsabilité
+## 11. Limitation de responsabilité
 
 Dans les limites autorisées par la loi :
 
@@ -173,7 +165,7 @@ Dans les limites autorisées par la loi :
 - Stampéo ne saurait être tenu responsable des dommages indirects, pertes de données, pertes de chiffre d'affaires ou de bénéfices
 - Stampéo n'est pas responsable du contenu des programmes de fidélité créés par les Utilisateurs Business ni de leurs relations commerciales avec leurs Clients Finaux
 
-## 13. Droit de rétractation
+## 12. Droit de rétractation
 
 Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne s'applique pas aux contrats de fourniture de contenu numérique non fourni sur support matériel dont l'exécution a commencé avec l'accord du consommateur.
 
@@ -181,28 +173,35 @@ En souscrivant un Abonnement et en commençant à utiliser la Plateforme, l'Util
 
 Toutefois, l'essai gratuit de 30 jours sans carte bancaire permet de tester le service sans engagement.
 
-## 14. Droit applicable et litiges
+## 13. Droit applicable et litiges
 
 Les présentes CGU sont régies par le droit français.
 
-En cas de litige, les parties s'engagent à rechercher une solution amiable. À défaut d'accord amiable dans un délai de 30 jours, le litige sera soumis aux tribunaux compétents français.
+En cas de litige, les parties s'engagent à rechercher une solution amiable en contactant Stampéo à support@stampeo.app. À défaut d'accord amiable dans un délai de 30 jours, les voies suivantes sont disponibles :
 
-Conformément à la réglementation, l'Utilisateur Business consommateur peut recourir gratuitement à un service de médiation. Le médiateur de la consommation compétent sera indiqué sur le site de la Plateforme.
+**Pour les Utilisateurs Business consommateurs (personnes physiques)**, conformément à l'article L612-1 du Code de la consommation, vous pouvez recourir gratuitement au service de médiation suivant :
 
-## 15. Modifications des CGU
+**CM2C — Centre de Médiation de la Consommation de Conciliateurs de Justice**
+Site : www.cm2c.net
+Email : cm2c@cm2c.net
+
+**Pour les Utilisateurs Business professionnels**, le litige sera soumis aux tribunaux compétents français.
+
+## 14. Modifications des CGU
 
 Stampéo se réserve le droit de modifier les présentes CGU. Toute modification substantielle sera notifiée par email au moins 30 jours avant son entrée en vigueur.
 
 La poursuite de l'utilisation de la Plateforme après l'entrée en vigueur des modifications vaut acceptation des nouvelles CGU.
 
-## 16. Dispositions diverses
+## 15. Dispositions diverses
 
 - Si une clause des présentes CGU est jugée nulle ou inapplicable, les autres clauses restent en vigueur.
 - Le fait de ne pas exercer un droit prévu par les présentes CGU ne constitue pas une renonciation à ce droit.
 - Les présentes CGU constituent l'intégralité de l'accord entre les parties concernant l'utilisation de la Plateforme.
 
-## 17. Contact
+## 16. Contact et mentions légales
 
 - **Email :** support@stampeo.app
-- **Éditeur :** Harry Viennot, auto-entrepreneur — France
+- **Éditeur :** Harry Viennot, auto-entrepreneur — SIRET **en cours d'obtention**
+- **Adresse :** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France
 - **Hébergement :** Supabase (Irlande, UE) et OVH (France)
