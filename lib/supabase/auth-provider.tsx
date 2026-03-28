@@ -31,6 +31,8 @@ interface AuthContextType {
     token: string
   ) => Promise<{ error: AuthError | null }>;
   resendOtp: (email: string) => Promise<{ error: AuthError | null }>;
+  resetPasswordForEmail: (email: string) => Promise<{ error: AuthError | null }>;
+  updatePassword: (password: string) => Promise<{ error: AuthError | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,7 +47,7 @@ function nukeSupabaseAuthStorage() {
   // Clear sb-* cookies
   document.cookie.split(";").forEach((c) => {
     const name = c.trim().split("=")[0];
-    if (name.startsWith("sb-")) {
+    if (name.startsWith("sb-") && !name.includes("code-verifier")) {
       document.cookie = `${name}=; Max-Age=0; Path=/`;
       // Also try with domain
       const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
@@ -171,6 +173,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [supabase.auth]
   );
 
+  const resetPasswordForEmail = useCallback(
+    async (email: string) => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${globalThis.location.origin}/reset-password`,
+      });
+      return { error };
+    },
+    [supabase.auth]
+  );
+
+  const updatePassword = useCallback(
+    async (password: string) => {
+      const { error } = await supabase.auth.updateUser({ password });
+      return { error };
+    },
+    [supabase.auth]
+  );
+
   const signOut = useCallback(async () => {
     // Clear onboarding session data on logout
     sessionStorage.removeItem("stampeo_onboarding_session");
@@ -180,7 +200,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, session, loading, signUp, signIn, signOut, verifyOtp, resendOtp }}
+      value={{ user, session, loading, signUp, signIn, signOut, verifyOtp, resendOtp, resetPasswordForEmail, updatePassword }}
     >
       {children}
     </AuthContext.Provider>
