@@ -47,7 +47,7 @@ function nukeSupabaseAuthStorage() {
   // Clear sb-* cookies
   document.cookie.split(";").forEach((c) => {
     const name = c.trim().split("=")[0];
-    if (name.startsWith("sb-")) {
+    if (name.startsWith("sb-") && !name.includes("code-verifier")) {
       document.cookie = `${name}=; Max-Age=0; Path=/`;
       // Also try with domain
       const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
@@ -176,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const resetPasswordForEmail = useCallback(
     async (email: string) => {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${globalThis.location.origin}/auth/callback/reset`,
+        redirectTo: `${globalThis.location.origin}/reset-password`,
       });
       return { error };
     },

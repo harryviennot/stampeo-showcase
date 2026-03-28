@@ -1,47 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { createClient } from "@supabase/supabase-js";
+
+// Standalone client, independent from the auth provider's singleton.
+// This avoids the auth provider's nukeSupabaseAuthStorage interfering
+// with the session established by verifyOtp.
+function createStandaloneClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+}
 
 export default function ResetPasswordPage() {
   const t = useTranslations("auth.resetPassword");
+  const searchParams = useSearchParams();
+  const { signIn } = useAuth();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const { updatePassword, loading: authLoading } = useAuth();
+  const hasTokenHash = searchParams.has("token_hash");
+  const [ready, setReady] = useState(!hasTokenHash);
+  const verified = useRef(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  // Non-singleton client — session lives in memory, unaffected by auth provider
+  const supabaseRef = useRef(createStandaloneClient());
 
-    if (newPassword.length < 8) {
-      setError(t("passwordTooShort"));
-      return;
-    }
+  // Verify the token hash to establish a session (no PKCE needed, works cross-browser)
+  useEffect(() => {
+    if (verified.current || !hasTokenHash) return;
+    verified.current = true;
 
-    if (newPassword !== confirmPassword) {
-      setError(t("passwordMismatch"));
-      return;
-    }
+    const tokenHash = searchParams.get("token_hash")!;
+    supabaseRef.current.auth
+      .verifyOtp({ token_hash: tokenHash, type: "recovery" })
+      .then(({ error }) => {
+        if (error) {
+          setError(error.message);
+        }
+        setReady(true);
+      });
+  }, [searchParams, hasTokenHash]);
 
-    setLoading(true);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError(null);
 
-    const { error } = await updatePassword(newPassword);
+      if (newPassword.length < 8) {
+        setError(t("passwordTooShort"));
+        return;
+      }
 
-    if (error) {
-      setError(error.message);
+      if (newPassword !== confirmPassword) {
+        setError(t("passwordMismatch"));
+        return;
+      }
+
+      setLoading(true);
+
+      const { error, data } = await supabaseRef.current.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        setError(error.message);
+        setLoading(false);
+        return;
+      }
+
+      // Auto-login via the auth provider (sets SSR cookies) then redirect
+      const email = data.user?.email;
+      if (email) {
+        const { error: signInError } = await signIn(email, newPassword);
+        if (!signInError) {
+          globalThis.location.href =
+            process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+          return;
+        }
+      }
+
+      // Fallback: show success with sign-in link
+      setSuccess(true);
       setLoading(false);
-      return;
-    }
-
-    setSuccess(true);
-    setLoading(false);
-  };
+    },
+    [newPassword, confirmPassword, t, signIn]
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
@@ -56,7 +108,7 @@ export default function ResetPasswordPage() {
         </Link>
       </header>
       <div className="w-full max-w-md p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm">
-        {authLoading ? (
+        {!ready ? (
           <div className="text-center py-8">
             <div className="animate-spin h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full mx-auto" />
           </div>
