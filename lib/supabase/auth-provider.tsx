@@ -30,6 +30,8 @@ interface AuthContextType {
     token: string
   ) => Promise<{ error: AuthError | null }>;
   resendOtp: (email: string) => Promise<{ error: AuthError | null }>;
+  resetPasswordForEmail: (email: string) => Promise<{ error: AuthError | null }>;
+  updatePassword: (password: string) => Promise<{ error: AuthError | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -110,6 +112,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [supabase.auth]
   );
 
+  const resetPasswordForEmail = useCallback(
+    async (email: string) => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${globalThis.location.origin}/auth/callback/reset`,
+      });
+      return { error };
+    },
+    [supabase.auth]
+  );
+
+  const updatePassword = useCallback(
+    async (password: string) => {
+      const { error } = await supabase.auth.updateUser({ password });
+      return { error };
+    },
+    [supabase.auth]
+  );
+
   const signOut = useCallback(async () => {
     // Clear onboarding session data on logout
     sessionStorage.removeItem("stampeo_onboarding_session");
@@ -119,7 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, session, loading, signUp, signIn, signOut, verifyOtp, resendOtp }}
+      value={{ user, session, loading, signUp, signIn, signOut, verifyOtp, resendOtp, resetPasswordForEmail, updatePassword }}
     >
       {children}
     </AuthContext.Provider>

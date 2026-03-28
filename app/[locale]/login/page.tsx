@@ -12,12 +12,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [phase, setPhase] = useState<"login" | "verify">("login");
+  const [phase, setPhase] = useState<"login" | "verify" | "forgot">("login");
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
   const otpInputRef = useRef<HTMLInputElement>(null);
-  const { signIn, verifyOtp, resendOtp } = useAuth();
+  const [resetSent, setResetSent] = useState(false);
+  const { signIn, verifyOtp, resendOtp, resetPasswordForEmail } = useAuth();
+  const tForgot = useTranslations("auth.forgotPassword");
 
   // Resend cooldown timer
   useEffect(() => {
@@ -100,6 +102,23 @@ export default function LoginPage() {
     setOtpCode(digits);
   }, []);
 
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const { error } = await resetPasswordForEmail(email);
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    setResetSent(true);
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
@@ -113,7 +132,78 @@ export default function LoginPage() {
         </Link>
       </header>
       <div className="w-full max-w-md p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm">
-        {phase === "verify" ? (
+        {phase === "forgot" ? (
+          <>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">
+                {tForgot("title")}
+              </h1>
+              <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+                {tForgot("subtitle")}
+              </p>
+            </div>
+
+            {resetSent ? (
+              <div className="space-y-5">
+                <div className="p-4 rounded-2xl bg-green-50 text-green-600 text-sm border border-green-100 dark:bg-green-950/50 dark:border-green-900/50 dark:text-green-400">
+                  <p className="font-medium">{tForgot("emailSent")}</p>
+                  <p className="mt-1">{tForgot("emailSentDescription", { email })}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setPhase("login"); setResetSent(false); setError(null); }}
+                  className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200"
+                >
+                  {tForgot("backToLogin")}
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotSubmit} className="space-y-5">
+                {error && (
+                  <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
+                    {error}
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <label
+                    htmlFor="forgot-email"
+                    className="block text-sm font-medium text-[var(--foreground)]"
+                  >
+                    {t("email")}
+                  </label>
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                    placeholder={t("emailPlaceholder")}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading || !email}
+                  className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                >
+                  {loading ? tForgot("sending") : tForgot("sendLink")}
+                </button>
+
+                <p className="text-center">
+                  <button
+                    type="button"
+                    onClick={() => { setPhase("login"); setError(null); }}
+                    className="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                  >
+                    {tForgot("backToLogin")}
+                  </button>
+                </p>
+              </form>
+            )}
+          </>
+        ) : phase === "verify" ? (
           <>
             <div className="text-center">
               <h1 className="text-2xl font-bold text-[var(--foreground)]">
@@ -236,6 +326,15 @@ export default function LoginPage() {
                   className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
                   placeholder={t("passwordPlaceholder")}
                 />
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => { setPhase("forgot"); setError(null); setResetSent(false); }}
+                    className="text-sm text-amber-600 hover:text-amber-700 font-medium transition-colors"
+                  >
+                    {t("forgotPassword")}
+                  </button>
+                </div>
               </div>
 
               <button
