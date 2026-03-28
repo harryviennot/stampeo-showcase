@@ -1,9 +1,7 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { Check, TrendUp, TrendDown } from "@phosphor-icons/react";
+import { Check, TrendUp, TrendDown } from "../icons";
 
 const AVATAR_COLORS = ["#8b5cf6", "#f59e0b", "#ec4899", "#3b82f6"];
 
@@ -28,8 +26,8 @@ function Sparkline({ trend }: { trend: "up" | "down" }) {
   );
 }
 
-export function DashboardPreview() {
-  const t = useTranslations("landing.dashboard");
+export async function DashboardPreview() {
+  const t = await getTranslations("landing.dashboard");
 
   return (
     <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg-alt)]">

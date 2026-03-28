@@ -4,16 +4,19 @@
       "badge": "Accès Anticipé — France",
       "title": "Des cartes de fidélité que vos clients <accent>gardent vraiment.</accent>",
       "subtitle": "Des cartes digitales directement dans Apple Wallet et Google Wallet. Importez votre logo, choisissez vos couleurs, et votre carte est prête en quelques minutes. Aucune application à télécharger pour vos clients.",
-      "cta": "Devenir Partenaire Fondateur",
+      "cta": "Commencer gratuitement",
       "secondaryCta": "Voir comment ça marche",
       "stamp": {
         "complete": "Vous avez débloqué l'accès anticipé !",
         "ready": "Votre carte est prête ! Essayez d'ajouter un tampon.",
-        "claimFree": "Devenir Partenaire Fondateur →",
+        "claimFree": "Commencer gratuitement →",
         "addStamp": "Ajouter un tampon",
         "watchPhone": "Regardez votre téléphone – la carte se met à jour en temps réel !",
         "scanQR": "<bold>Scannez le QR code</bold> avec votre iPhone pour tester la démo",
-        "addToWallet": "Ajoutez la carte à votre Apple Wallet..."
+        "addToWallet": "Ajoutez la carte à votre Apple Wallet...",
+        "demoCallout": "Essayez ! Scannez avec votre téléphone",
+        "mobileAddWallet": "Essayez — ajoutez à votre Wallet",
+        "mobileHint": "La carte sera ajoutée à votre wallet téléphone"
       }
     },
     "problem": {
@@ -77,13 +80,13 @@
       "valueProps": [
         "Façonnez le produit avec vos retours directs",
         "Canal direct avec notre équipe (pas un chatbot, un humain)",
-        "3 mois offerts, puis 14,99 €/mois à vie (au lieu de 29,99 €)",
+        "{freeMonths} mois offerts, puis {starterFoundingPrice} €/mois à vie (au lieu de {starterPrice} €)",
         "Toutes les fonctionnalités Growth incluses dès le premier jour",
         "Places limitées — nous acceptons les candidatures par vagues",
         "Votre première carte de fidélité designée par notre équipe, gratuitement"
       ],
-      "cta": "Devenir Partenaire Fondateur",
-      "urgency": "Prochaine vague : mars 2026 — places limitées"
+      "cta": "Commencer gratuitement",
+      "urgency": "9 places restantes — disponibilité limitée"
     },
     "howItWorks": {
       "badge": "Comment ça marche",
@@ -147,7 +150,7 @@
       "items": [
         {
           "question": "Qu'est-ce que le programme partenaire fondateur ?",
-          "answer": "En tant que partenaire fondateur, vous bénéficiez d'un accès anticipé à Stampeo avec toutes les fonctionnalités Growth. Vous contribuez à façonner le produit avec vos retours directs. Après 3 mois offerts, vous bloquez votre tarif à 14,99 €/mois à vie (au lieu de 29,99 €)."
+          "answer": "En tant que partenaire fondateur, vous bénéficiez d'un accès anticipé à Stampeo avec toutes les fonctionnalités Growth. Vous contribuez à façonner le produit avec vos retours directs. Après {freeMonths} mois offerts, vous bloquez votre tarif à {growthFoundingPrice} €/mois à vie (au lieu de {growthPrice} €)."
         },
         {
           "question": "Comment créer ma carte de fidélité ?",
@@ -163,11 +166,11 @@
         },
         {
           "question": "Comment les clients se font-ils tamponner ?",
-          "answer": "Les clients scannent simplement un QR code unique affiché à votre caisse, ou vous pouvez scanner leur carte digitale. Les deux méthodes sont rapides et sécurisées."
+          "answer": "Vos clients présentent leur carte digitale (dans Apple Wallet ou Google Wallet) et vous la scannez avec l'application Stampeo ou depuis votre navigateur. C'est vous qui ajoutez les tampons — pas le client — ce qui évite toute fraude."
         },
         {
           "question": "Comment fonctionne l'accès anticipé ?",
-          "answer": "Après votre inscription, nous examinons les candidatures par petits groupes. Vous recevrez un email lorsque votre compte sera activé. Cela nous permet d'assurer un accompagnement de qualité pour chaque partenaire."
+          "answer": "Après votre inscription, on vous contacte directement pour faire connaissance et mettre en place votre programme ensemble. On s'occupe de la configuration de votre carte, de l'installation de l'app scanner, et on reste disponible pour vous accompagner."
         },
         {
           "question": "Est-ce que ça marche avec Google Wallet ?",
@@ -175,22 +178,22 @@
         },
         {
           "question": "Un commerce peut-il avoir plusieurs cartes de fidélité ?",
-          "answer": "Avec le plan Growth, oui. Vous pouvez créer plusieurs modèles de carte — par exemple une carte \"café\" et une carte \"brunch du dimanche\" — chacune avec ses propres récompenses. Sur le plan Starter, vous avez un modèle actif à la fois, ce qui suffit pour la plupart des commerces."
+          "answer": "Cette fonctionnalité sera disponible avec le plan Pro (en cours de développement). Vous pourrez créer plusieurs modèles de carte actifs en même temps — par exemple une carte \"café\" et une carte \"brunch du dimanche\" — chacune avec ses propres récompenses. Sur les plans Starter et Growth, vous avez un modèle actif à la fois, ce qui suffit pour la plupart des commerces."
         },
         {
           "question": "Peut-on envoyer des campagnes promotionnelles ?",
-          "answer": "Avec le plan Growth, vous pourrez envoyer des notifications promotionnelles à tous vos clients ou à des segments spécifiques (par exemple, les clients qui ne sont pas venus depuis 30 jours). Cette fonctionnalité est en cours de développement et sera disponible dans les prochains mois. En attendant, les notifications automatiques (tampon, jalon, récompense) sont actives sur tous les plans."
+          "answer": "Avec le plan Growth, vous pourrez envoyer des notifications promotionnelles à tous vos clients (jusqu'à 2-3 campagnes par mois). Avec le plan Pro, vous aurez des campagnes illimitées et la segmentation client (par exemple, cibler les clients qui ne sont pas venus depuis 30 jours). Ces fonctionnalités sont en cours de développement. En attendant, les notifications automatiques (tampon, jalon, récompense) sont actives sur tous les plans."
         }
       ],
       "stillQuestions": "Encore des questions ?",
       "stillQuestionsDesc": "Nous sommes là pour vous aider à développer votre commerce et à fidéliser vos clients.",
-      "startFreeTrial": "Demander l'accès anticipé",
+      "startFreeTrial": "Commencer gratuitement",
       "contactSupport": "Nous contacter"
     },
     "finalCta": {
       "title": "Prêt à transformer vos visiteurs en <accent>habitués ?</accent>",
-      "cta": "Devenir Partenaire Fondateur",
-      "subtitle": "Accès anticipé · 3 mois offerts · 14,99 €/mois à vie"
+      "cta": "Commencer gratuitement",
+      "subtitle": "{freeMonths} mois offerts · À partir de {price} €/mois à vie"
     },
     "comparisonTable": {
       "title": "Pourquoi le wallet ?",
@@ -206,7 +209,7 @@
           "values": [
             "~50–100 € (+ tampon)",
             "50-200 €/mois",
-            "À partir de 14,99 €/mois"
+            "À partir de {starterPrice} €/mois"
           ],
           "icons": [
             "minus",

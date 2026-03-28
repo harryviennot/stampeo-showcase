@@ -1,13 +1,10 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
-import { ArrowRightIcon } from "../icons";
-import { Gift, Lightning } from "@phosphor-icons/react";
+import { ArrowRightIcon, Gift, Lightning } from "../icons";
 import type { StampIconType } from "@/components/onboarding/StampIconPicker";
 
 const sectorThemes: {
@@ -24,8 +21,8 @@ const sectorThemes: {
   { bg: "#1A2332", accent: "#60A5FA", icon: "#ffffff", stamps: 10, stampIcon: "star", orgName: "Le Comptoir Bleu" },
 ];
 
-export function SectorCards() {
-  const t = useTranslations("landing.sectorCards");
+export async function SectorCards() {
+  const t = await getTranslations("landing.sectorCards");
 
   const sectors = t.raw("sectors") as Array<{
     name: string;
@@ -55,9 +52,11 @@ export function SectorCards() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {sectors.map((sector, index) => {
+            // Show only first 2 on mobile to reduce scroll length
+            const mobileHidden = index >= 2 ? "hidden md:block" : "";
             const theme = sectorThemes[index];
             return (
-              <ScrollReveal key={index} delay={index * 100}>
+              <ScrollReveal key={index} delay={index * 100} className={mobileHidden}>
                 <div className="bg-white blog-card-3d rounded-2xl p-6 flex flex-col gap-5">
                   {/* Mini wallet card */}
                   <div className="flex items-start gap-5">

@@ -1,7 +1,4 @@
-"use client";
-
 import { ReactNode } from "react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 type RevealVariant = "default" | "left" | "right" | "scale" | "blur" | "stagger";
 
@@ -23,22 +20,24 @@ const variantClasses: Record<RevealVariant, string> = {
   stagger: "scroll-reveal-stagger",
 };
 
+/**
+ * Server component that renders a div with scroll-reveal CSS classes.
+ * Animation is powered by the ScrollRevealInit inline script (single IntersectionObserver).
+ * No React hydration needed — zero JS per instance.
+ */
 export function ScrollReveal({
   children,
   variant = "default",
   className = "",
   delay = 0,
-  threshold = 0.1,
   id,
 }: ScrollRevealProps) {
-  const { ref, isRevealed } = useScrollReveal({ threshold });
-
   return (
     <div
-      ref={ref}
+      data-sr
       id={id}
-      className={`${variantClasses[variant]} ${isRevealed ? "revealed" : ""} ${className}`}
-      style={{ transitionDelay: delay ? `${delay}ms` : undefined }}
+      className={`${variantClasses[variant]} ${className}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
     </div>

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { interpolatePricing } from "@/lib/pricing";
 
 export function PriceReveal() {
   const t = useTranslations("features.programme-fondateur.custom.price");
@@ -13,7 +14,7 @@ export function PriceReveal() {
         {/* Original price with animated strikethrough */}
         <div className="relative inline-block mb-6">
           <span className="text-3xl sm:text-4xl font-bold text-[var(--muted-foreground)]/50">
-            {t("original")}
+            {interpolatePricing(t.raw("original"))}
           </span>
           <span
             className="absolute left-0 top-1/2 h-0.5 bg-red-500 transition-all duration-500 ease-out"
@@ -31,7 +32,7 @@ export function PriceReveal() {
           }}
         >
           <p className="text-5xl sm:text-7xl font-black text-[var(--accent)] mb-2">
-            {t("founding")}
+            {interpolatePricing(t.raw("founding"))}
           </p>
         </div>
 

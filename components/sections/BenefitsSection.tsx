@@ -64,15 +64,15 @@ export function BenefitsSection() {
             return (
               <div
                 key={`${activeTab}-${index}`}
-                className="group relative flex flex-col gap-6 p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2"
+                className="group relative flex flex-col gap-4 md:gap-6 p-5 md:p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                  <Icon className="w-7 h-7" />
+                <div className="flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-xl md:rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+                  <Icon className="w-5 h-5 md:w-7 md:h-7" />
                 </div>
 
-                <div className="flex flex-col gap-3">
-                  <h3 className="text-2xl font-bold leading-tight">{benefit.title}</h3>
-                  <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
+                <div className="flex flex-col gap-2 md:gap-3">
+                  <h3 className="text-lg md:text-2xl font-bold leading-tight">{benefit.title}</h3>
+                  <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>

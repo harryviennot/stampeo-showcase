@@ -1,14 +1,12 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { DocumentIcon, DevicePhoneMobileIcon, EyeSlashIcon } from "../icons";
 import { PhoneMockup } from "../features/notifications-push/PhoneMockup";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 
-export function ProblemSection() {
-  const t = useTranslations("landing.problem");
+export async function ProblemSection() {
+  const t = await getTranslations("landing.problem");
 
   return (
     <section id="features" className="relative py-24 lg:py-32 bg-[var(--blog-bg)]">
