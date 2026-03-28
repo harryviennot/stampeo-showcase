@@ -57,6 +57,9 @@ export function PricingSection() {
           <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
+          <p className="text-sm font-semibold text-[var(--accent)] mt-4">
+            {t("spotsLeft", { count: PRICING.spotsLeft })}
+          </p>
         </ScrollReveal>
 
         {/* 3 Pricing Cards — lg breakpoint to avoid squeeze on tablets */}
