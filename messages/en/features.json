@@ -211,7 +211,7 @@
           "subtitle": "Add your employees and manage access based on your plan.",
           "pay": {
             "title": "Starter Plan",
-            "price": "€14.99/mo",
+            "price": "€{starterPrice}/mo",
             "members": "3 members",
             "features": [
               "3 employee accounts included",
@@ -222,7 +222,7 @@
           },
           "pro": {
             "title": "Growth Plan",
-            "price": "€29.99/mo",
+            "price": "€{growthPrice}/mo",
             "members": "Unlimited",
             "features": [
               "Unlimited team members",
@@ -595,7 +595,7 @@
     "programme-fondateur": {
       "hero": {
         "title": "You're not just a customer. You're <accent>building the product</accent> with us.",
-        "navTitle": "Founding Program — {freeMonths} months free, €{growthFoundingPrice}/month for life",
+        "navTitle": "Founding Program — Preferential rate for life",
         "subtitle": "We're looking for 50 French business owners ready to test, critique, and shape the best digital loyalty tool. In exchange, conditions we'll never offer again.",
         "badge": "Founding Program",
         "secondaryCta": "{freeMonths} months free · €{growthFoundingPrice}/month for life"
@@ -627,6 +627,7 @@
       },
       "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
       "custom": {
+        "seeAllPlans": "See all plans",
         "benefits": {
           "title": "Concrete benefits",
           "items": [
@@ -750,11 +751,11 @@
             },
             {
               "question": "What happens after the 3 free months?",
-              "answer": "You automatically switch to €14.99/month. We notify you 2 weeks before. If you don't want to continue, cancel in one click — no fees."
+              "answer": "You automatically switch to €{growthFoundingPrice}/month. We notify you 2 weeks before. If you don't want to continue, cancel in one click — no fees."
             },
             {
               "question": "Do I keep the founding rate if you raise prices?",
-              "answer": "Yes. €14.99/month for life means for life. Even if the Growth plan goes to €49.99 in 3 years, your rate doesn't change. It's contractual."
+              "answer": "Yes. €{growthFoundingPrice}/month for life means for life. Even if the Growth plan goes to €49.99 in 3 years, your rate doesn't change. It's contractual."
             },
             {
               "question": "Can I change my mind and cancel?",

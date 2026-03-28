@@ -41,7 +41,7 @@
         "Membres d'équipe illimités",
         "Messages de notification personnalisés",
         {
-          "text": "2–3 campagnes promo/mois",
+          "text": "3 campagnes promo/mois",
           "tooltip": "Envoyez des notifications promotionnelles à tous vos clients. Annoncez vos nouveautés, happy hours ou offres saisonnières — directement dans leur wallet."
         },
         {
@@ -108,7 +108,7 @@
         "Tampons ou points (au choix)",
         "Membres d'équipe illimités",
         "Messages de notification personnalisés",
-        "2–3 campagnes promo/mois",
+        "3 campagnes promo/mois",
         "Tendances et analytiques"
       ]
     },
@@ -188,7 +188,7 @@
         },
         "promoCampaigns": {
           "label": "Campagnes promotionnelles",
-          "growth": "2–3/mois",
+          "growth": "3/mois",
           "pro": "Illimitées"
         },
         "segmentation": {
@@ -242,11 +242,7 @@
           "question": "Y a-t-il des frais par client ?",
           "answer": "Non. Chaque plan inclut des clients et des scans illimités. Votre tarif reste le même que vous ayez 10 clients ou 10 000."
         },
-        {
-          "question": "Quels moyens de paiement acceptez-vous ?",
-          "answer": "Nous acceptons toutes les cartes bancaires principales (Visa, Mastercard, Amex) ainsi que le prélèvement SEPA pour les entreprises européennes."
-        },
-        {
+{
           "question": "Quand le plan Pro sera-t-il disponible ?",
           "answer": "Le plan Pro est actuellement en développement. Nous construisons le support multi-établissement, le geofencing et la segmentation avancée. Inscrivez-vous à la liste d'attente pour être notifié de son lancement."
         },

@@ -17,6 +17,7 @@ import {
 } from "../../icons";
 import { RelatedFeatures } from "../RelatedFeatures";
 import { FeatureCTA } from "../FeatureCTA";
+import { interpolatePricing } from "@/lib/pricing";
 import type { ComponentType } from "react";
 
 const benefitIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -32,20 +33,29 @@ export function FounderProgramPage() {
   const t = useTranslations("features");
   const c = useTranslations("features.programme-fondateur.custom");
 
-  const benefits = c.raw("benefits.items") as Array<{
+  const rawBenefits = c.raw("benefits.items") as Array<{
     title: string;
     description: string;
     icon: string;
   }>;
+  const benefits = rawBenefits.map((b) => ({
+    ...b,
+    title: interpolatePricing(b.title),
+    description: interpolatePricing(b.description),
+  }));
 
   const worksNow = c.raw("transparency.worksNow.items") as string[];
   const comingSoon = c.raw("transparency.comingSoon.items") as string[];
   const expectFromYou = c.raw("transparency.expectFromYou.items") as string[];
 
-  const faqItems = c.raw("faq.items") as Array<{
+  const rawFaqItems = c.raw("faq.items") as Array<{
     question: string;
     answer: string;
   }>;
+  const faqItems = rawFaqItems.map((faq) => ({
+    ...faq,
+    answer: interpolatePricing(faq.answer),
+  }));
 
   const related = t.raw("programme-fondateur.related") as string[];
 
@@ -90,7 +100,14 @@ export function FounderProgramPage() {
                 </span>
               </Link>
               <p className="text-sm font-medium text-[var(--muted-foreground)]">
-                {t("programme-fondateur.hero.secondaryCta")}
+                {interpolatePricing(t.raw("programme-fondateur.hero.secondaryCta"))}
+                {" · "}
+                <Link
+                  href="/#pricing"
+                  className="underline underline-offset-2 hover:text-[var(--accent)] transition-colors"
+                >
+                  {c("seeAllPlans")}
+                </Link>
               </p>
             </div>
           </ScrollReveal>
@@ -259,7 +276,7 @@ export function FounderProgramPage() {
       {/* Final CTA */}
       <FeatureCTA
         title={c("finalCta.title")}
-        subtitle={c("finalCta.subtitle")}
+        subtitle={interpolatePricing(c.raw("finalCta.subtitle"))}
         urgencyText={c("finalCta.urgency")}
       />
 

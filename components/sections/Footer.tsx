@@ -142,6 +142,9 @@ export function Footer() {
                 <Link href="/contact" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("help")}
                 </Link>
+                <Link href="/pricing" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  {t("pricing")}
+                </Link>
                 <Link href="/#features" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("howItWorks")}
                 </Link>

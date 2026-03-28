@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/supabase/auth-provider";
 import { getThemeColor } from "@/lib/theme";
 import { detectBusinessLocale } from "@/lib/locale-detect";
 import { CheckIcon } from "@/components/icons";
+import { PRICING } from "@/lib/pricing";
 
 interface FoundingPartnerStepProps {
   store: OnboardingStore;
@@ -112,19 +113,19 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         <div className="bg-[var(--foreground)] text-[var(--background)] rounded-2xl p-6">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-[var(--background)]">
-              Pro
+              Growth
             </h3>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-sm line-through text-[var(--background)]/50">
-                &euro;29.99
+                &euro;{PRICING.growth.price}
               </span>
               <span className="text-sm text-[var(--accent)] font-semibold">
-                3 months free
+                {PRICING.freeMonths} months free
               </span>
             </div>
             <div className="mt-1">
               <span className="text-3xl font-bold text-[var(--background)]">
-                &euro;14.99
+                &euro;{PRICING.growth.foundingPrice}
               </span>
               <span className="text-sm text-[var(--background)]/70">
                 /month for life

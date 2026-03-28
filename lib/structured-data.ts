@@ -1,3 +1,5 @@
+import { PRICING } from "./pricing";
+
 const BASE_URL = "https://stampeo.app";
 
 export function organizationJsonLd() {
@@ -53,7 +55,7 @@ export function softwareApplicationJsonLd() {
       {
         "@type": "Offer",
         name: "Starter",
-        price: "14.99",
+        price: String(PRICING.starter.price),
         priceCurrency: "EUR",
         description:
           "1 card template, unlimited customers & scans, up to 3 team members, push notifications.",
@@ -61,7 +63,7 @@ export function softwareApplicationJsonLd() {
       {
         "@type": "Offer",
         name: "Growth",
-        price: "29.99",
+        price: String(PRICING.growth.price),
         priceCurrency: "EUR",
         description:
           "Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",

@@ -41,7 +41,7 @@
         "Unlimited team members",
         "Custom notification messages",
         {
-          "text": "2–3 promo campaigns/month",
+          "text": "3 promo campaigns/month",
           "tooltip": "Send promotional notifications to all your customers. Announce new products, happy hours, or seasonal offers — directly in their wallet."
         },
         {
@@ -108,7 +108,7 @@
         "Stamps or points (choose one)",
         "Unlimited team members",
         "Custom notification messages",
-        "2–3 promo campaigns/month",
+        "3 promo campaigns/month",
         "Trends & analytics"
       ]
     },
@@ -188,7 +188,7 @@
         },
         "promoCampaigns": {
           "label": "Promotional campaigns",
-          "growth": "2–3/month",
+          "growth": "3/month",
           "pro": "Unlimited"
         },
         "segmentation": {
@@ -242,11 +242,7 @@
           "question": "Are there per-customer charges?",
           "answer": "No. Every plan includes unlimited customers and unlimited scans. Your price stays the same whether you have 10 customers or 10,000."
         },
-        {
-          "question": "What payment methods do you accept?",
-          "answer": "We accept all major credit and debit cards (Visa, Mastercard, Amex) as well as SEPA direct debit for European businesses."
-        },
-        {
+{
           "question": "When will the Pro plan be available?",
           "answer": "The Pro plan is currently in development. We're building multi-location support, geofencing, and advanced segmentation. Join the waitlist to be notified when it launches."
         },

@@ -211,7 +211,7 @@
           "subtitle": "Ajoutez vos employés et gérez les accès selon votre plan.",
           "pay": {
             "title": "Plan Starter",
-            "price": "14,99 €/mois",
+            "price": "{starterPrice} €/mois",
             "members": "3 membres",
             "features": [
               "3 comptes employé inclus",
@@ -222,7 +222,7 @@
           },
           "pro": {
             "title": "Plan Growth",
-            "price": "29,99 €/mois",
+            "price": "{growthPrice} €/mois",
             "members": "Illimité",
             "features": [
               "Membres d'équipe illimités",
@@ -595,7 +595,7 @@
     "programme-fondateur": {
       "hero": {
         "title": "Vous n'êtes pas juste un client. Vous <accent>construisez le produit</accent> avec nous.",
-        "navTitle": "Programme Fondateur — {freeMonths} mois gratuits, {growthFoundingPrice} €/mois à vie",
+        "navTitle": "Programme Fondateur — Tarif préférentiel à vie",
         "subtitle": "Stampeo est un produit jeune. On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais.",
         "badge": "Programme Fondateur",
         "secondaryCta": "{freeMonths} mois gratuits · {growthFoundingPrice} €/mois à vie"
@@ -627,6 +627,7 @@
       },
       "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
       "custom": {
+        "seeAllPlans": "Voir tous les plans",
         "benefits": {
           "title": "Les avantages concrets",
           "items": [
