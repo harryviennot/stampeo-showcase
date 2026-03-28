@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { createClient } from "@supabase/supabase-js";
+import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 
-// Standalone client, independent from the auth provider's singleton.
-// This avoids the auth provider's nukeSupabaseAuthStorage interfering
-// with the session established by verifyOtp.
 function createStandaloneClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,10 +18,13 @@ function createStandaloneClient() {
 
 export default function ResetPasswordPage() {
   const t = useTranslations("auth.resetPassword");
+  const tErrors = useTranslations("auth.errors");
   const searchParams = useSearchParams();
   const { signIn } = useAuth();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -31,10 +32,33 @@ export default function ResetPasswordPage() {
   const [ready, setReady] = useState(!hasTokenHash);
   const verified = useRef(false);
 
-  // Non-singleton client — session lives in memory, unaffected by auth provider
   const supabaseRef = useRef(createStandaloneClient());
 
-  // Verify the token hash to establish a session (no PKCE needed, works cross-browser)
+  const passwordChecks = useMemo(() => ({
+    lowercase: /[a-z]/.test(newPassword),
+    uppercase: /[A-Z]/.test(newPassword),
+    number: /[0-9]/.test(newPassword),
+    symbol: /[^a-zA-Z0-9]/.test(newPassword),
+    minLength: newPassword.length >= 6,
+  }), [newPassword]);
+
+  const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
+  const passwordsMatch = newPassword === confirmPassword;
+
+  const translateError = useCallback((message: string) => {
+    const msg = message.toLowerCase();
+    if (msg.includes("rate") || msg.includes("too many") || msg.includes("429")) {
+      return tErrors("tooManyRequests");
+    }
+    if (msg.includes("network") || msg.includes("fetch")) {
+      return tErrors("networkError");
+    }
+    if (msg.includes("expired") || msg.includes("invalid") || msg.includes("otp")) {
+      return t("linkExpired");
+    }
+    return t("updateFailed");
+  }, [tErrors, t]);
+
   useEffect(() => {
     if (verified.current || !hasTokenHash) return;
     verified.current = true;
@@ -44,23 +68,22 @@ export default function ResetPasswordPage() {
       .verifyOtp({ token_hash: tokenHash, type: "recovery" })
       .then(({ error }) => {
         if (error) {
-          setError(error.message);
+          setError(translateError(error.message));
         }
         setReady(true);
       });
-  }, [searchParams, hasTokenHash]);
+  }, [searchParams, hasTokenHash, translateError]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       setError(null);
 
-      if (newPassword.length < 8) {
-        setError(t("passwordTooShort"));
+      if (!isPasswordStrong) {
         return;
       }
 
-      if (newPassword !== confirmPassword) {
+      if (!passwordsMatch) {
         setError(t("passwordMismatch"));
         return;
       }
@@ -72,12 +95,11 @@ export default function ResetPasswordPage() {
       });
 
       if (error) {
-        setError(error.message);
+        setError(translateError(error.message));
         setLoading(false);
         return;
       }
 
-      // Auto-login via the auth provider (sets SSR cookies) then redirect
       const email = data.user?.email;
       if (email) {
         const { error: signInError } = await signIn(email, newPassword);
@@ -88,12 +110,19 @@ export default function ResetPasswordPage() {
         }
       }
 
-      // Fallback: show success with sign-in link
       setSuccess(true);
       setLoading(false);
     },
-    [newPassword, confirmPassword, t, signIn]
+    [newPassword, isPasswordStrong, passwordsMatch, t, signIn, translateError]
   );
+
+  const checkLabels = [
+    ["lowercase", t("lowercase")],
+    ["uppercase", t("uppercase")],
+    ["number", t("number")],
+    ["symbol", t("symbol")],
+    ["minLength", t("minLength")],
+  ] as const;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
@@ -144,6 +173,7 @@ export default function ResetPasswordPage() {
                 </div>
               )}
 
+              {/* New password */}
               <div className="space-y-2">
                 <label
                   htmlFor="newPassword"
@@ -151,18 +181,45 @@ export default function ResetPasswordPage() {
                 >
                   {t("newPassword")}
                 </label>
-                <input
-                  id="newPassword"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                  placeholder={t("newPasswordPlaceholder")}
-                />
+                <div className="relative">
+                  <input
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                    placeholder={t("newPasswordPlaceholder")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((s) => !s)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+                {newPassword.length > 0 && (
+                  <ul className="grid grid-cols-2 gap-x-4 gap-y-0.5 mt-1">
+                    {checkLabels.map(([key, label]) => (
+                      <li
+                        key={key}
+                        className={`flex items-center gap-1.5 text-xs transition-colors ${
+                          passwordChecks[key]
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-[var(--muted-foreground)]"
+                        }`}
+                      >
+                        <Check size={12} weight={passwordChecks[key] ? "bold" : "regular"} />
+                        {label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
+              {/* Confirm password */}
               <div className="space-y-2">
                 <label
                   htmlFor="confirmPassword"
@@ -170,21 +227,33 @@ export default function ResetPasswordPage() {
                 >
                   {t("confirmPassword")}
                 </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                  placeholder={t("confirmPasswordPlaceholder")}
-                />
+                <div className="relative">
+                  <input
+                    id="confirmPassword"
+                    type={showConfirm ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+                    placeholder={t("confirmPasswordPlaceholder")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm((s) => !s)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showConfirm ? <EyeSlash size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+                {confirmPassword.length > 0 && !passwordsMatch && (
+                  <p className="text-xs text-red-500">{t("passwordMismatch")}</p>
+                )}
               </div>
 
               <button
                 type="submit"
-                disabled={loading || !newPassword || !confirmPassword}
+                disabled={loading || !isPasswordStrong || !passwordsMatch || !confirmPassword}
                 className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? t("submitting") : t("submit")}

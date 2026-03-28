@@ -20,6 +20,24 @@ export default function LoginPage() {
   const [resetSent, setResetSent] = useState(false);
   const { signIn, verifyOtp, resendOtp, resetPasswordForEmail } = useAuth();
   const tForgot = useTranslations("auth.forgotPassword");
+  const tErrors = useTranslations("auth.errors");
+
+  const translateError = useCallback((message: string) => {
+    const msg = message.toLowerCase();
+    if (msg.includes("invalid") && (msg.includes("credentials") || msg.includes("password") || msg.includes("login"))) {
+      return tErrors("invalidCredentials");
+    }
+    if (msg.includes("rate") || msg.includes("too many") || msg.includes("429")) {
+      return tErrors("tooManyRequests");
+    }
+    if (msg.includes("user not found") || msg.includes("no user")) {
+      return tErrors("userNotFound");
+    }
+    if (msg.includes("network") || msg.includes("fetch")) {
+      return tErrors("networkError");
+    }
+    return tErrors("generic");
+  }, [tErrors]);
 
   // Resend cooldown timer
   useEffect(() => {
@@ -53,7 +71,7 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
-      setError(error.message);
+      setError(translateError(error.message));
       setLoading(false);
       return;
     }
@@ -110,7 +128,7 @@ export default function LoginPage() {
     const { error } = await resetPasswordForEmail(email);
 
     if (error) {
-      setError(error.message);
+      setError(translateError(error.message));
       setLoading(false);
       return;
     }
