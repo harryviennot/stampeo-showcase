@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
-import { createBusiness, BusinessCreatePayload } from "@/lib/onboarding";
+import { createBusiness, getUserProfile, BusinessCreatePayload } from "@/lib/onboarding";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { getThemeColor } from "@/lib/theme";
 import { detectBusinessLocale } from "@/lib/locale-detect";
@@ -32,6 +32,28 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   const [loadingTier, setLoadingTier] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Reseller state
+  const [isReseller, setIsReseller] = useState(false);
+  const [resellerDiscount, setResellerDiscount] = useState<number | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  // Fetch user profile to check reseller status
+  useEffect(() => {
+    if (!session?.access_token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setProfileLoading(false);
+      return;
+    }
+
+    getUserProfile(session.access_token).then(({ data: profile }) => {
+      if (profile?.is_reseller && profile.reseller_discount_percent) {
+        setIsReseller(true);
+        setResellerDiscount(profile.reseller_discount_percent);
+      }
+      setProfileLoading(false);
+    });
+  }, [session?.access_token]);
+
   const handleSelectPlan = useCallback(async (tier: Tier) => {
     if (tier === "pro") return;
 
@@ -57,7 +79,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         name: data.businessName,
         url_slug: data.urlSlug,
         subscription_tier: tier,
-        is_founding_partner: true,
+        is_founding_partner: !isReseller,
         settings: {
           category: data.category || undefined,
           description: data.description || undefined,
@@ -94,21 +116,40 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
       setLoading(false);
       setLoadingTier(null);
     }
-  }, [data, updateData, onNext, session, businessLocale]);
+  }, [data, updateData, onNext, session, businessLocale, isReseller]);
+
+  /** Compute the discounted price for a tier */
+  function getDiscountedPrice(regularPrice: number, discountPercent: number): number {
+    return Math.round(regularPrice * (1 - discountPercent / 100));
+  }
+
+  if (profileLoading) {
+    return (
+      <div className="w-full max-w-5xl mx-auto flex items-center justify-center py-16">
+        <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="text-center mb-8">
         {/* Badge */}
-        <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
-          {t("limitedSpots")}
-        </div>
+        {isReseller ? (
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
+            {t("resellerBadge", { discount: resellerDiscount! })}
+          </div>
+        ) : (
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
+            {t("limitedSpots")}
+          </div>
+        )}
 
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          {t("title")}
+          {isReseller ? t("resellerTitle") : t("title")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2 max-w-lg mx-auto">
-          {t("subtitle")}
+          {isReseller ? t("resellerSubtitle") : t("subtitle")}
         </p>
       </div>
 
@@ -125,7 +166,19 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
           const isGrowth = tier === "growth";
           const tierPricing = PRICING[tier];
           const features = tp.raw(`${tier}.features`) as (string | { text: string })[];
-          const foundingPrice = "foundingPrice" in tierPricing ? tierPricing.foundingPrice : null;
+
+          // Compute the display price based on reseller vs founding partner
+          const regularPrice = tierPricing.price;
+          let discountedPrice: number | null = null;
+          let priceLabel: string | null = null;
+
+          if (isReseller && resellerDiscount && !isPro) {
+            discountedPrice = getDiscountedPrice(regularPrice, resellerDiscount);
+            priceLabel = tp("perMonth");
+          } else if (!isReseller && "foundingPrice" in tierPricing) {
+            discountedPrice = tierPricing.foundingPrice;
+            priceLabel = tp("forLife");
+          }
 
           return (
             <div
@@ -164,24 +217,30 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
                 </p>
 
                 <div className="mt-3">
-                  {foundingPrice ? (
+                  {discountedPrice !== null && priceLabel ? (
                     <>
                       <div className="flex items-baseline gap-2">
                         <span className="text-sm line-through text-[var(--muted-foreground)]">
-                          &euro;{tierPricing.price}
+                          &euro;{regularPrice}
                         </span>
-                        <span className="text-xs text-[var(--accent)] font-semibold">
-                          {tp("freeMonths")}
-                        </span>
+                        {isReseller ? (
+                          <span className="text-xs text-[var(--accent)] font-semibold">
+                            -{resellerDiscount}%
+                          </span>
+                        ) : (
+                          <span className="text-xs text-[var(--accent)] font-semibold">
+                            {tp("freeMonths")}
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-extrabold">&euro;{foundingPrice}</span>
-                        <span className="text-sm text-[var(--muted-foreground)]">{tp("forLife")}</span>
+                        <span className="text-3xl font-extrabold">&euro;{discountedPrice}</span>
+                        <span className="text-sm text-[var(--muted-foreground)]">{priceLabel}</span>
                       </div>
                     </>
                   ) : (
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold text-[var(--muted-foreground)]">&euro;{tierPricing.price}</span>
+                      <span className="text-3xl font-extrabold text-[var(--muted-foreground)]">&euro;{regularPrice}</span>
                       <span className="text-sm text-[var(--muted-foreground)]">{tp("perMonth")}</span>
                     </div>
                   )}
@@ -190,7 +249,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
 
               {/* Features */}
               <div className="mb-5 flex-1">
-                <p className={`text-[10px] font-extrabold uppercase tracking-widest mb-2 ${isPro ? "text-[var(--muted-foreground)]" : "text-[var(--muted-foreground)]"}`}>
+                <p className="text-[10px] font-extrabold uppercase tracking-widest mb-2 text-[var(--muted-foreground)]">
                   {tp(`${tier}.featuresLabel`)}
                 </p>
                 <ul className="space-y-1.5">

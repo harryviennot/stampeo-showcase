@@ -108,6 +108,9 @@
     "foundingPartner": {
       "title": "Become a Founding Partner",
       "subtitle": "Help us build a product you'll love — and lock in pricing for life",
+      "resellerTitle": "Choose your plan",
+      "resellerSubtitle": "Your partner discount is applied automatically to all plans",
+      "resellerBadge": "Partner — {discount}% off",
       "valueProps": ["Growth features included", "3 months free", "Then €20/month for life", "Direct feedback channel with our team"],
       "cta": "Get started",
       "settingUp": "Setting up your space...",
