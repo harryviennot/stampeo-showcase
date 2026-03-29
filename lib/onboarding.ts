@@ -11,7 +11,8 @@ if (!API_URL) {
 export interface BusinessCreatePayload {
   name: string;
   url_slug: string;
-  subscription_tier: "pro";
+  subscription_tier: "starter" | "growth" | "pro";
+  is_founding_partner?: boolean;
   settings: {
     category?: string;
     description?: string;

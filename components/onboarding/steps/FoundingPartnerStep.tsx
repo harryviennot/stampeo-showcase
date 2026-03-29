@@ -50,7 +50,8 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
       const payload: BusinessCreatePayload = {
         name: data.businessName,
         url_slug: data.urlSlug,
-        subscription_tier: "pro",
+        subscription_tier: "growth",
+        is_founding_partner: true,
         settings: {
           category: data.category || undefined,
           description: data.description || undefined,
