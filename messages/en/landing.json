@@ -307,7 +307,7 @@
           "quote": "Marc orders his long black every morning. With Stampeo, he earns his 10th coffee automatically — and you know he's your best customer.",
           "reward": "10 coffees bought = 1 free",
           "advantage": "Scanning takes 1 second, no slowdown at the counter",
-          "link": "/blog/carte-fidelite-cafe",
+          "link": "/blog/digital-loyalty-card-small-business",
           "linkLabel": "Read the café guide"
         },
         {
@@ -315,7 +315,7 @@
           "quote": "Sophie picks up her baguette every morning. Her paper card? Lost in her bag since last week. With the wallet, she always has it.",
           "reward": "8 purchases = 1 free pastry",
           "advantage": "No card to pull out, the phone is enough",
-          "link": "/blog/carte-fidelite-boulangerie",
+          "link": "/blog/digital-stamp-card",
           "linkLabel": "Read the bakery guide"
         },
         {
@@ -323,7 +323,7 @@
           "quote": "Claire comes every month for her color. With Stampeo, it's automatic and Claire gets a free treatment after 6 visits.",
           "reward": "6 appointments = 1 free treatment",
           "advantage": "Notification when she passes near the salon",
-          "link": "/blog/programme-fidelite-salon-coiffure",
+          "link": "/blog/loyalty-card-without-app",
           "linkLabel": "Read the salon guide"
         },
         {
@@ -331,7 +331,7 @@
           "quote": "Thomas has lunch at your place twice a week. He'd love to be rewarded, but he won't download an app for it. With the wallet card, it's simple.",
           "reward": "€1 spent = 1 point, free dessert at 100 points",
           "advantage": "Promotional campaigns to fill quiet days",
-          "link": "/blog/carte-fidelite-restaurant",
+          "link": "/blog/paper-vs-digital-loyalty-card",
           "linkLabel": "Read the restaurant guide"
         }
       ]

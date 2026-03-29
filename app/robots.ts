@@ -1,48 +1,57 @@
 import type { MetadataRoute } from "next";
 
+const DISALLOW_PATHS = [
+  "/api/",
+  "/auth/",
+  "/onboarding/",
+  "/login/",
+  "/*opengraph-image*",
+  "/favicon.ico",
+];
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       // AI search engine bots — explicitly allowed for GEO visibility
       {
         userAgent: "GPTBot",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: "ChatGPT-User",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: "PerplexityBot",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: "ClaudeBot",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: "anthropic-ai",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
       {
         userAgent: "Bingbot",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: DISALLOW_PATHS,
       },
     ],
     sitemap: "https://stampeo.app/sitemap.xml",
