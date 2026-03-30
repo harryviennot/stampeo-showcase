@@ -129,6 +129,7 @@
       "subtitle": "See exactly what's included in each plan.",
       "categories": {
         "loyalty": "Loyalty Program",
+        "programs": "Programs",
         "cardDesign": "Card Design",
         "locations": "Locations",
         "notifications": "Notifications",
@@ -186,8 +187,8 @@
           "growth": "Custom text",
           "pro": "Custom text"
         },
-        "promoCampaigns": {
-          "label": "Promotional campaigns",
+        "broadcastNotifications": {
+          "label": "Broadcast notifications",
           "growth": "3/month",
           "pro": "Unlimited"
         },
@@ -197,8 +198,14 @@
         "scheduledSends": {
           "label": "Scheduled sends"
         },
-        "scannerAccounts": {
-          "label": "Scanner accounts",
+        "multiplePrograms": {
+          "label": "Multiple loyalty programs"
+        },
+        "promotionalEvents": {
+          "label": "Promotional events"
+        },
+        "teamMembers": {
+          "label": "Team members",
           "starter": "1 (owner)",
           "growth": "Unlimited",
           "pro": "Unlimited"
@@ -209,11 +216,8 @@
         "basicStats": {
           "label": "Basic stats"
         },
-        "trends": {
-          "label": "Trends & peak hours"
-        },
         "advancedAnalytics": {
-          "label": "Advanced analytics & retention"
+          "label": "Advanced analytics"
         },
         "offlineScanning": {
           "label": "Offline scanning"

@@ -129,6 +129,7 @@
       "subtitle": "Voyez exactement ce qui est inclus dans chaque plan.",
       "categories": {
         "loyalty": "Programme de fidélité",
+        "programs": "Programmes",
         "cardDesign": "Design de carte",
         "locations": "Établissements",
         "notifications": "Notifications",
@@ -186,8 +187,8 @@
           "growth": "Texte personnalisé",
           "pro": "Texte personnalisé"
         },
-        "promoCampaigns": {
-          "label": "Campagnes promotionnelles",
+        "broadcastNotifications": {
+          "label": "Notifications broadcast",
           "growth": "3/mois",
           "pro": "Illimitées"
         },
@@ -197,8 +198,14 @@
         "scheduledSends": {
           "label": "Envois programmés"
         },
-        "scannerAccounts": {
-          "label": "Comptes scanner",
+        "multiplePrograms": {
+          "label": "Programmes de fidélité multiples"
+        },
+        "promotionalEvents": {
+          "label": "Événements promotionnels"
+        },
+        "teamMembers": {
+          "label": "Membres de l'équipe",
           "starter": "1 (propriétaire)",
           "growth": "Illimités",
           "pro": "Illimités"
@@ -209,11 +216,8 @@
         "basicStats": {
           "label": "Statistiques de base"
         },
-        "trends": {
-          "label": "Tendances et heures de pointe"
-        },
         "advancedAnalytics": {
-          "label": "Analytiques avancées et rétention"
+          "label": "Analytiques avancées"
         },
         "offlineScanning": {
           "label": "Scan hors-ligne"
