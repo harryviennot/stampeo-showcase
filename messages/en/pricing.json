@@ -206,7 +206,7 @@
         },
         "teamMembers": {
           "label": "Team members",
-          "starter": "1 (owner)",
+          "starter": "2 (owner + 1)",
           "growth": "Unlimited",
           "pro": "Unlimited"
         },
