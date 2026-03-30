@@ -22,7 +22,7 @@
       "features": [
         "1 modèle de carte actif",
         "Clients et scans illimités",
-        "1 scanner (propriétaire)",
+        "2 membres d'équipe (propriétaire + 1)",
         {
           "text": "Notifications push automatiques",
           "tooltip": "Vos clients reçoivent une notification sur leur écran de verrouillage à chaque tampon, jalon atteint ou récompense débloquée. Fonctionne via Apple Wallet et Google Wallet — aucune app nécessaire."
@@ -94,7 +94,7 @@
       "features": [
         "1 modèle de carte actif",
         "Clients et scans illimités",
-        "1 scanner (propriétaire)",
+        "2 membres d'équipe (propriétaire + 1)",
         "Notifications push automatiques",
         "Tableau de bord et statistiques",
         "Support par email"
