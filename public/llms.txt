@@ -21,7 +21,7 @@ Stampeo is a SaaS platform that helps local businesses create and manage digital
 
 ## Pricing
 
-- **Starter**: €14.99/month — 1 card template, unlimited customers & scans, up to 3 team members, push notifications
+- **Starter**: €14.99/month — 1 card template, unlimited customers & scans, 2 team members, push notifications
 - **Growth**: €29.99/month — Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns
 
 ## Languages

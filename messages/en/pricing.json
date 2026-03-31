@@ -22,7 +22,7 @@
       "features": [
         "1 active card template",
         "Unlimited customers & scans",
-        "1 scanner (business owner)",
+        "2 team members (owner + 1)",
         {
           "text": "Automatic push notifications",
           "tooltip": "Customers get a lock screen notification every time they earn a stamp, reach a milestone, or unlock a reward. Works via Apple Wallet and Google Wallet — no app needed."
@@ -94,7 +94,7 @@
       "features": [
         "1 active card template",
         "Unlimited customers & scans",
-        "1 scanner (business owner)",
+        "2 team members (owner + 1)",
         "Automatic push notifications",
         "Basic dashboard & stats",
         "Email support"
@@ -129,6 +129,7 @@
       "subtitle": "See exactly what's included in each plan.",
       "categories": {
         "loyalty": "Loyalty Program",
+        "programs": "Programs",
         "cardDesign": "Card Design",
         "locations": "Locations",
         "notifications": "Notifications",
@@ -186,8 +187,8 @@
           "growth": "Custom text",
           "pro": "Custom text"
         },
-        "promoCampaigns": {
-          "label": "Promotional campaigns",
+        "broadcastNotifications": {
+          "label": "Broadcast notifications",
           "growth": "3/month",
           "pro": "Unlimited"
         },
@@ -197,9 +198,15 @@
         "scheduledSends": {
           "label": "Scheduled sends"
         },
-        "scannerAccounts": {
-          "label": "Scanner accounts",
-          "starter": "1 (owner)",
+        "multiplePrograms": {
+          "label": "Multiple loyalty programs"
+        },
+        "promotionalEvents": {
+          "label": "Promotional events"
+        },
+        "teamMembers": {
+          "label": "Team members",
+          "starter": "2 (owner + 1)",
           "growth": "Unlimited",
           "pro": "Unlimited"
         },
@@ -209,11 +216,8 @@
         "basicStats": {
           "label": "Basic stats"
         },
-        "trends": {
-          "label": "Trends & peak hours"
-        },
         "advancedAnalytics": {
-          "label": "Advanced analytics & retention"
+          "label": "Advanced analytics"
         },
         "offlineScanning": {
           "label": "Offline scanning"
