@@ -22,7 +22,7 @@
       "features": [
         "1 modèle de carte actif",
         "Clients et scans illimités",
-        "1 scanner (propriétaire)",
+        "2 membres d'équipe (propriétaire + 1)",
         {
           "text": "Notifications push automatiques",
           "tooltip": "Vos clients reçoivent une notification sur leur écran de verrouillage à chaque tampon, jalon atteint ou récompense débloquée. Fonctionne via Apple Wallet et Google Wallet — aucune app nécessaire."
@@ -94,7 +94,7 @@
       "features": [
         "1 modèle de carte actif",
         "Clients et scans illimités",
-        "1 scanner (propriétaire)",
+        "2 membres d'équipe (propriétaire + 1)",
         "Notifications push automatiques",
         "Tableau de bord et statistiques",
         "Support par email"
@@ -129,6 +129,7 @@
       "subtitle": "Voyez exactement ce qui est inclus dans chaque plan.",
       "categories": {
         "loyalty": "Programme de fidélité",
+        "programs": "Programmes",
         "cardDesign": "Design de carte",
         "locations": "Établissements",
         "notifications": "Notifications",
@@ -186,8 +187,8 @@
           "growth": "Texte personnalisé",
           "pro": "Texte personnalisé"
         },
-        "promoCampaigns": {
-          "label": "Campagnes promotionnelles",
+        "broadcastNotifications": {
+          "label": "Notifications broadcast",
           "growth": "3/mois",
           "pro": "Illimitées"
         },
@@ -197,9 +198,15 @@
         "scheduledSends": {
           "label": "Envois programmés"
         },
-        "scannerAccounts": {
-          "label": "Comptes scanner",
-          "starter": "1 (propriétaire)",
+        "multiplePrograms": {
+          "label": "Programmes de fidélité multiples"
+        },
+        "promotionalEvents": {
+          "label": "Événements promotionnels"
+        },
+        "teamMembers": {
+          "label": "Membres de l'équipe",
+          "starter": "2 (propriétaire + 1)",
           "growth": "Illimités",
           "pro": "Illimités"
         },
@@ -209,11 +216,8 @@
         "basicStats": {
           "label": "Statistiques de base"
         },
-        "trends": {
-          "label": "Tendances et heures de pointe"
-        },
         "advancedAnalytics": {
-          "label": "Analytiques avancées et rétention"
+          "label": "Analytiques avancées"
         },
         "offlineScanning": {
           "label": "Scan hors-ligne"
