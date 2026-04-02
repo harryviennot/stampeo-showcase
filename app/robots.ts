@@ -6,7 +6,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/auth/", "/onboarding/", "/login/"],
+        disallow: [
+          "/api/",
+          "/auth/",
+          "/onboarding/",
+          "/login/",
+          "/*/opengraph-image",
+          "/opengraph-image",
+        ],
       },
       // AI search engine bots — explicitly allowed for GEO visibility
       {
