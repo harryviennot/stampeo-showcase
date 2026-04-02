@@ -11,7 +11,8 @@ if (!API_URL) {
 export interface BusinessCreatePayload {
   name: string;
   url_slug: string;
-  subscription_tier: "pro";
+  subscription_tier: "starter" | "growth" | "pro";
+  is_founding_partner?: boolean;
   settings: {
     category?: string;
     description?: string;
@@ -145,6 +146,46 @@ export async function getUserBusinesses(
     return {
       data: [],
       error: err instanceof Error ? err.message : "Failed to fetch businesses",
+    };
+  }
+}
+
+// ============================================
+// User Profile API
+// ============================================
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  name: string;
+  is_reseller: boolean;
+  reseller_discount_percent: number | null;
+}
+
+/**
+ * Get the current user's profile from the backend.
+ * Used during onboarding to check reseller status and discount.
+ */
+export async function getUserProfile(
+  accessToken: string
+): Promise<{ data: UserProfile | null; error: string | null }> {
+  try {
+    const response = await fetch(`${API_URL}/profile/me`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      return { data: null, error: `Failed to fetch profile (${response.status})` };
+    }
+
+    const data = await response.json();
+    return { data, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Failed to fetch profile",
     };
   }
 }

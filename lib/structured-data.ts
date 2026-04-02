@@ -58,7 +58,7 @@ export function softwareApplicationJsonLd() {
         price: String(PRICING.starter.price),
         priceCurrency: "EUR",
         description:
-          "1 card template, unlimited customers & scans, up to 3 team members, push notifications.",
+          "1 card template, unlimited customers & scans, 2 team members, push notifications.",
       },
       {
         "@type": "Offer",
