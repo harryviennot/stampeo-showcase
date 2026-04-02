@@ -77,13 +77,18 @@ export function OnboardingWizard() {
       const { data: businesses } = await getUserBusinesses(session.access_token);
 
       if (businesses.length > 0) {
-        // User already has a business - redirect to app
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
-        window.location.href = appUrl;
-        return;
+        // User has existing businesses, but if they have onboarding data in the store
+        // they are actively creating a new business — let them continue
+        const hasOnboardingData = !!store.data.businessName;
+        if (!hasOnboardingData) {
+          // No onboarding in progress — redirect to app
+          const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+          window.location.href = appUrl;
+          return;
+        }
       }
 
-      // User is authenticated but has no business - they need to complete onboarding
+      // User is authenticated but needs to complete onboarding
       // If they're on Step 4 (create account), skip to Step 5
       if (store.currentStep === 4) {
         store.goToStep(5);
