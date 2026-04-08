@@ -7,6 +7,7 @@ import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { checkSlugAvailability } from "@/lib/onboarding";
 import { CheckIcon, XMarkIcon } from "@/components/icons";
 import { SubstepDots } from "../SubstepDots";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 
 interface BusinessInfoStepProps {
   store: OnboardingStore;
@@ -283,13 +284,10 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
                 >
                   {t("phone")} <span className="text-[var(--muted-foreground)] font-normal text-xs">(optional)</span>
                 </label>
-                <input
+                <PhoneInput
                   id="phone"
-                  type="tel"
                   value={data.phone}
-                  onChange={(e) => updateData({ phone: e.target.value })}
-                  className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
-                  placeholder={t("phonePlaceholder")}
+                  onChange={(phone) => updateData({ phone })}
                 />
               </div>
 

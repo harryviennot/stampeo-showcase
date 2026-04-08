@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { CustomerCreatePublic } from "@/lib/acquisition";
+import { PhoneInput } from "@/components/ui/PhoneInput";
+import { isValidPhone, detectDefaultCountry } from "@/lib/phone-utils";
+import type { CountryCode } from "libphonenumber-js";
 
 type FieldCollectionMode = "off" | "required" | "optional";
 
@@ -44,20 +47,16 @@ export function AcquisitionForm({
   const emailRequired = emailMode === "required";
   const phoneRequired = phoneMode === "required";
 
+  const locale = useLocale();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneCountry] = useState<CountryCode>(() => detectDefaultCountry(locale));
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
-  };
-
-  const validatePhone = (phone: string) => {
-    // Basic phone validation - allows various formats
-    const re = /^[+]?[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/;
-    return phone.length >= 6 && re.test(phone);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -78,7 +77,7 @@ export function AcquisitionForm({
 
     if (phoneRequired && !phone.trim()) {
       newErrors.phone = t("phoneRequired");
-    } else if (showPhone && phone.trim() && !validatePhone(phone)) {
+    } else if (showPhone && phone.trim() && !isValidPhone(phone, phoneCountry)) {
       newErrors.phone = t("phoneInvalid");
     }
 
@@ -204,22 +203,16 @@ export function AcquisitionForm({
           >
             {t("phone")} {!phoneRequired && <span className="text-[var(--muted-foreground)] font-normal">{t("optional")}</span>}
           </label>
-          <input
-            type="tel"
+          <PhoneInput
             id="phone"
             value={phone}
-            onChange={(e) => {
-              setPhone(e.target.value);
+            onChange={(val) => {
+              setPhone(val);
               if (errors.phone) setErrors({ ...errors, phone: "" });
             }}
-            placeholder={t("phonePlaceholder")}
-            className={`
-              w-full px-4 py-3 rounded-xl border bg-white
-              text-[var(--primary)] placeholder:text-[var(--muted-foreground)]
-              focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent
-              transition-all
-              ${errors.phone ? "border-red-500" : "border-[var(--border)]"}
-            `}
+            defaultCountry={phoneCountry}
+            error={!!errors.phone}
+            required={phoneRequired}
           />
           {errors.phone && (
             <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
