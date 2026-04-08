@@ -103,6 +103,17 @@ function FeaturesDropdown() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      {/* Always in DOM for search engine crawlers */}
+      <nav className="sr-only">
+        {FEATURE_ITEMS.map(({ key, slug }) => (
+          <Link
+            key={slug}
+            href={`/features/${slug}` as "/features/design-de-carte"}
+          >
+            {t(`featuresItems.${key}.label`)}
+          </Link>
+        ))}
+      </nav>
       <button
         className={`flex items-center gap-1 text-sm font-semibold transition-colors ${isFeatureActive
           ? "text-[var(--accent)]"
