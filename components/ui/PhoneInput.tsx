@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { useLocale } from "next-intl";
 import type { CountryCode } from "libphonenumber-js";
 import { getCountryCallingCode } from "libphonenumber-js";
@@ -50,10 +51,25 @@ export function PhoneInput({
   });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Position the dropdown above the wrapper, rendered in a portal
+  const updateDropdownPosition = useCallback(() => {
+    if (!wrapperRef.current) return;
+    const rect = wrapperRef.current.getBoundingClientRect();
+    setDropdownStyle({
+      position: "fixed",
+      bottom: window.innerHeight - rect.top + 4,
+      left: rect.left,
+      width: rect.width,
+      zIndex: 9999,
+    });
+  }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -74,12 +90,21 @@ export function PhoneInput({
     }
   }, [dropdownOpen]);
 
-  // Focus search when dropdown opens
+  // Position + focus when dropdown opens; reposition on scroll/resize
   useEffect(() => {
-    if (dropdownOpen && searchRef.current) {
-      searchRef.current.focus();
+    if (dropdownOpen) {
+      updateDropdownPosition();
+      searchRef.current?.focus();
+
+      const onScrollOrResize = () => updateDropdownPosition();
+      window.addEventListener("scroll", onScrollOrResize, true);
+      window.addEventListener("resize", onScrollOrResize);
+      return () => {
+        window.removeEventListener("scroll", onScrollOrResize, true);
+        window.removeEventListener("resize", onScrollOrResize);
+      };
     }
-  }, [dropdownOpen]);
+  }, [dropdownOpen, updateDropdownPosition]);
 
   const filteredCountries = useMemo(() => {
     if (!search) return countries;
@@ -98,7 +123,6 @@ export function PhoneInput({
       const formatted = formatAsYouType(raw, country);
       setNationalInput(formatted);
 
-      // Try to parse as E.164
       const e164 = formatToE164(raw, country);
       onChange(e164 || raw);
     },
@@ -111,14 +135,12 @@ export function PhoneInput({
       setDropdownOpen(false);
       setSearch("");
 
-      // Re-parse existing input with new country
       if (nationalInput) {
         const e164 = formatToE164(nationalInput, entry.code);
         onChange(e164 || nationalInput);
         setNationalInput(formatAsYouType(nationalInput, entry.code));
       }
 
-      // Focus the phone input after selection
       inputRef.current?.focus();
     },
     [nationalInput, onChange]
@@ -127,8 +149,89 @@ export function PhoneInput({
   const selectedCountry = countries.find((c) => c.code === country);
   const exampleNumber = getExamplePhoneNumber(country);
 
+  const dropdown = dropdownOpen ? (
+    <div
+      ref={dropdownRef}
+      style={dropdownStyle}
+      className="
+        bg-white dark:bg-gray-900
+        border border-[var(--border)] rounded-xl
+        shadow-lg shadow-black/10
+        overflow-hidden
+      "
+    >
+      {/* Search */}
+      <div className="p-2 border-b border-[var(--border)]">
+        <input
+          ref={searchRef}
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={locale === "fr" ? "Rechercher un pays..." : "Search countries..."}
+          className="
+            w-full px-3 py-2 rounded-lg
+            bg-gray-50 dark:bg-gray-800
+            text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]
+            border border-[var(--border)]
+            outline-none focus:ring-1 focus:ring-[var(--accent)]/50
+          "
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setDropdownOpen(false);
+              setSearch("");
+            }
+          }}
+        />
+      </div>
+
+      {/* Country list */}
+      <div className="max-h-56 overflow-y-auto overscroll-contain">
+        {filteredCountries.map((entry, i) => {
+          const isPriorityEnd =
+            !search &&
+            i > 0 &&
+            i < countries.length &&
+            countries[i - 1] !== undefined &&
+            isPriorityCountry(countries[i - 1].code) &&
+            !isPriorityCountry(entry.code);
+
+          return (
+            <div key={entry.code}>
+              {isPriorityEnd && (
+                <div className="border-t border-[var(--border)] my-1" />
+              )}
+              <button
+                type="button"
+                onClick={() => handleCountrySelect(entry)}
+                className={`
+                  w-full flex items-center gap-3 px-3 py-2.5 text-left text-sm
+                  hover:bg-gray-50 dark:hover:bg-gray-800
+                  transition-colors duration-100
+                  ${entry.code === country ? "bg-[var(--accent)]/5 font-medium" : ""}
+                `}
+              >
+                <span className="text-lg leading-none">{entry.flag}</span>
+                <span className="flex-1 text-[var(--foreground)] truncate">
+                  {entry.name}
+                </span>
+                <span className="text-[var(--muted-foreground)] shrink-0">
+                  {entry.dialCode}
+                </span>
+              </button>
+            </div>
+          );
+        })}
+        {filteredCountries.length === 0 && (
+          <div className="px-3 py-4 text-sm text-center text-[var(--muted-foreground)]">
+            {locale === "fr" ? "Aucun pays trouvé" : "No countries found"}
+          </div>
+        )}
+      </div>
+    </div>
+  ) : null;
+
   return (
-    <div className={`relative ${className || ""}`}>
+    <div ref={wrapperRef} className={className || ""}>
       <div
         className={`
           flex items-stretch rounded-xl border overflow-hidden
@@ -187,88 +290,8 @@ export function PhoneInput({
         />
       </div>
 
-      {/* Country dropdown */}
-      {dropdownOpen && (
-        <div
-          ref={dropdownRef}
-          className="
-            absolute z-50 left-0 mt-1 w-full
-            bg-white dark:bg-gray-900
-            border border-[var(--border)] rounded-xl
-            shadow-lg shadow-black/10
-            overflow-hidden
-          "
-        >
-          {/* Search */}
-          <div className="p-2 border-b border-[var(--border)]">
-            <input
-              ref={searchRef}
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={locale === "fr" ? "Rechercher un pays..." : "Search countries..."}
-              className="
-                w-full px-3 py-2 rounded-lg
-                bg-gray-50 dark:bg-gray-800
-                text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]
-                border border-[var(--border)]
-                outline-none focus:ring-1 focus:ring-[var(--accent)]/50
-              "
-              onKeyDown={(e) => {
-                if (e.key === "Escape") {
-                  setDropdownOpen(false);
-                  setSearch("");
-                }
-              }}
-            />
-          </div>
-
-          {/* Country list */}
-          <div className="max-h-56 overflow-y-auto overscroll-contain">
-            {filteredCountries.map((entry, i) => {
-              // Show separator after priority countries
-              const isPriorityEnd =
-                !search &&
-                i > 0 &&
-                i < countries.length &&
-                countries[i - 1] !== undefined &&
-                isPriorityCountry(countries[i - 1].code) &&
-                !isPriorityCountry(entry.code);
-
-              return (
-                <div key={entry.code}>
-                  {isPriorityEnd && (
-                    <div className="border-t border-[var(--border)] my-1" />
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => handleCountrySelect(entry)}
-                    className={`
-                      w-full flex items-center gap-3 px-3 py-2.5 text-left text-sm
-                      hover:bg-gray-50 dark:hover:bg-gray-800
-                      transition-colors duration-100
-                      ${entry.code === country ? "bg-[var(--accent)]/5 font-medium" : ""}
-                    `}
-                  >
-                    <span className="text-lg leading-none">{entry.flag}</span>
-                    <span className="flex-1 text-[var(--foreground)] truncate">
-                      {entry.name}
-                    </span>
-                    <span className="text-[var(--muted-foreground)] shrink-0">
-                      {entry.dialCode}
-                    </span>
-                  </button>
-                </div>
-              );
-            })}
-            {filteredCountries.length === 0 && (
-              <div className="px-3 py-4 text-sm text-center text-[var(--muted-foreground)]">
-                {locale === "fr" ? "Aucun pays trouvé" : "No countries found"}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* Render dropdown in a portal to escape overflow:hidden parents */}
+      {typeof document !== "undefined" && createPortal(dropdown, document.body)}
     </div>
   );
 }
