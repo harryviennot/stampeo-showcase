@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { FEATURE_ITEMS } from "@/lib/features";
+import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
@@ -69,6 +70,7 @@ function DesktopAuthButtons({
 function FeaturesDropdown() {
   const t = useTranslations("common.nav");
   const pathname = usePathname();
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -105,14 +107,17 @@ function FeaturesDropdown() {
     >
       {/* Always in DOM for search engine crawlers */}
       <nav className="sr-only">
-        {FEATURE_ITEMS.map(({ key, slug }) => (
-          <Link
-            key={slug}
-            href={`/features/${slug}` as "/features/design-de-carte"}
-          >
-            {t(`featuresItems.${key}.label`)}
-          </Link>
-        ))}
+        {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
+          const slug = getLocalizedSlug(canonicalSlug, locale);
+          return (
+            <Link
+              key={canonicalSlug}
+              href={`/features/${slug}` as "/features/design-de-carte"}
+            >
+              {t(`featuresItems.${key}.label`)}
+            </Link>
+          );
+        })}
       </nav>
       <button
         className={`flex items-center gap-1 text-sm font-semibold transition-colors ${isFeatureActive
@@ -142,9 +147,11 @@ function FeaturesDropdown() {
               className="w-[520px] bg-white rounded-2xl shadow-xl border border-[var(--accent)]/10 p-4 grid grid-cols-2 gap-1"
               role="menu"
             >
-              {FEATURE_ITEMS.map(({ key, slug, Icon }) => (
+              {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
+                const slug = getLocalizedSlug(canonicalSlug, locale);
+                return (
                 <Link
-                  key={slug}
+                  key={canonicalSlug}
                   href={`/features/${slug}` as "/features/design-de-carte"}
                   className="group flex items-start gap-3 p-3 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
                   onClick={() => setOpen(false)}
@@ -161,8 +168,8 @@ function FeaturesDropdown() {
                       {t(`featuresItems.${key}.description`)}
                     </div>
                   </div>
-                </Link>
-              ))}
+                </Link>);
+              })}
             </div>
           </motion.div>
         )}
@@ -177,6 +184,7 @@ function MobileFeaturesAccordion({
   onNavigate: () => void;
 }) {
   const t = useTranslations("common.nav");
+  const locale = useLocale();
   const [open, setOpen] = useState(false);
 
   return (
@@ -201,9 +209,11 @@ function MobileFeaturesAccordion({
             className="overflow-hidden"
           >
             <div className="pl-4 pb-2 space-y-0.5">
-              {FEATURE_ITEMS.map(({ key, slug, Icon }) => (
+              {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
+                const slug = getLocalizedSlug(canonicalSlug, locale);
+                return (
                 <Link
-                  key={slug}
+                  key={canonicalSlug}
                   href={`/features/${slug}` as "/features/design-de-carte"}
                   className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
                   onClick={onNavigate}
@@ -212,8 +222,8 @@ function MobileFeaturesAccordion({
                   <span className="text-sm font-medium text-[var(--foreground)]">
                     {t(`featuresItems.${key}.label`)}
                   </span>
-                </Link>
-              ))}
+                </Link>);
+              })}
             </div>
           </motion.div>
         )}
