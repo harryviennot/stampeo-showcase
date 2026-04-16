@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { FEATURE_ITEMS } from "@/lib/features";
+import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { NewsletterForm } from "../ui/NewsletterForm";
 
 export async function Footer() {
@@ -76,15 +77,17 @@ export async function Footer() {
             <div className="flex flex-col gap-4">
               <p className="text-white text-sm font-bold">{t("featuresTitle")}</p>
               <nav className="flex flex-col gap-3">
-                {FEATURE_ITEMS.map(({ key, slug }) => (
+                {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
+                  const slug = getLocalizedSlug(canonicalSlug, locale);
+                  return (
                   <Link
-                    key={slug}
+                    key={canonicalSlug}
                     href={`/features/${slug}` as "/features/design-de-carte"}
                     className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium"
                   >
                     {tNav(`featuresItems.${key}.label`)}
-                  </Link>
-                ))}
+                  </Link>);
+                })}
               </nav>
             </div>
 

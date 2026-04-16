@@ -5,6 +5,9 @@ const DISALLOW_PATHS = [
   "/auth/",
   "/onboarding/",
   "/login/",
+  "/en/onboarding/",
+  "/en/login/",
+  "/en/auth/",
   "/*opengraph-image*",
   "/favicon.ico",
 ];
