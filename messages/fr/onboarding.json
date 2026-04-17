@@ -94,7 +94,7 @@
       "submitting": "Un instant...",
       "accountExistsWrongPassword": "Un compte avec cet email existe déjà. Vérifiez votre mot de passe.",
       "verifyTitle": "Vérifiez votre email",
-      "verifySubtitle": "Nous avons envoyé un code à 6 chiffres à {email}",
+      "verifySubtitle": "Nous avons envoyé un code à 6 chiffres à <strong>{email}</strong>. Si vous ne le voyez pas après une minute, vérifiez vos spams.",
       "verifyCode": "Code de vérification",
       "verifyCodePlaceholder": "000000",
       "verifyButton": "Vérifier",
@@ -129,7 +129,7 @@
     "applicationSubmitted": {
       "title": "Votre carte est prête !",
       "subtitle": "Nous examinons les candidatures par petits groupes",
-      "waitingMessage": "Vous recevrez un email lorsque votre compte sera activé.",
+      "waitingMessage": "Vous recevrez un email d'activation — cela peut prendre quelques minutes et finit parfois dans les spams.",
       "goToDashboard": "Aller au tableau de bord",
       "spaceReady": "Votre espace est configuré",
       "cardDesigned": "Votre carte de fidélité est créée",

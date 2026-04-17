@@ -236,7 +236,14 @@ export function CreateAccountStep({
             {t("verifyTitle")}
           </h1>
           <p className="text-[var(--muted-foreground)] mt-2">
-            {t("verifySubtitle", { email: data.email })}
+            {t.rich("verifySubtitle", {
+              email: data.email,
+              strong: (chunks) => (
+                <strong className="font-semibold text-[var(--foreground)]">
+                  {chunks}
+                </strong>
+              ),
+            })}
           </p>
         </div>
 

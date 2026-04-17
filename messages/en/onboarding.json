@@ -129,7 +129,7 @@
     "applicationSubmitted": {
       "title": "Your card is ready!",
       "subtitle": "We're reviewing applications in small batches",
-      "waitingMessage": "You'll receive an email when your account is activated.",
+      "waitingMessage": "You'll receive an activation email — it can take a few minutes, and sometimes lands in spam.",
       "goToDashboard": "Go to dashboard",
       "spaceReady": "Your business space is set up",
       "cardDesigned": "Your loyalty card is designed",
