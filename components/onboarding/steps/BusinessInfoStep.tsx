@@ -54,9 +54,9 @@ const substepVariants = {
 export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
   const t = useTranslations("onboarding.businessInfo");
   const tc = useTranslations("common.buttons");
-  const { data, updateBusinessName, updateSlug, updateData, isSlugAvailable, slugErrorReason, isSlugChecking, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking, validatedSlug, markSlugValidated } = store;
+  const { data, updateBusinessName, updateSlug, updateData, isSlugAvailable, slugErrorReason, isSlugChecking, setIsSlugAvailable, setSlugErrorReason, setIsSlugChecking, validatedSlug, markSlugValidated, step1Substep, setStep1Substep } = store;
   const [debouncedSlug, setDebouncedSlug] = useState(data.urlSlug);
-  const [substep, setSubstep] = useState<1 | 2>(1);
+  const substep = step1Substep;
   const [direction, setDirection] = useState(0);
 
   // Debounce slug checking
@@ -111,7 +111,7 @@ export function BusinessInfoStep({ store, onNext }: BusinessInfoStepProps) {
 
   const goToSubstep = (target: 1 | 2) => {
     setDirection(target > substep ? 1 : -1);
-    setSubstep(target);
+    setStep1Substep(target);
   };
 
   const handleContinue = useCallback(
