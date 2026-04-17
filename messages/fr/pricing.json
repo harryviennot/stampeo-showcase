@@ -187,13 +187,22 @@
           "growth": "Texte personnalisé",
           "pro": "Texte personnalisé"
         },
+        "milestoneLimit": {
+          "label": "Jalons personnalisés",
+          "starter": "—",
+          "growth": "3/programme",
+          "pro": "Illimités"
+        },
         "broadcastNotifications": {
           "label": "Notifications broadcast",
           "growth": "3/mois",
           "pro": "Illimitées"
         },
         "segmentation": {
-          "label": "Segmentation client"
+          "label": "Segmentation client",
+          "starter": "—",
+          "growth": "Basique (par date)",
+          "pro": "Avancée (tampons, inactivité, récompenses)"
         },
         "scheduledSends": {
           "label": "Envois programmés"

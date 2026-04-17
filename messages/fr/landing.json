@@ -182,7 +182,7 @@
         },
         {
           "question": "Peut-on envoyer des campagnes promotionnelles ?",
-          "answer": "Avec le plan Growth, vous pourrez envoyer des notifications promotionnelles à tous vos clients (jusqu'à 2-3 campagnes par mois). Avec le plan Pro, vous aurez des campagnes illimitées et la segmentation client (par exemple, cibler les clients qui ne sont pas venus depuis 30 jours). Ces fonctionnalités sont en cours de développement. En attendant, les notifications automatiques (tampon, jalon, récompense) sont actives sur tous les plans."
+          "answer": "Oui — les campagnes promotionnelles sont disponibles. Le plan Growth inclut 3 campagnes par mois en envoi immédiat, avec segmentation par date (par exemple les clients inscrits dans les 30 derniers jours). Le plan Pro débloque les campagnes illimitées, la programmation avec fuseau horaire, et la segmentation avancée (par nombre de tampons, récompenses utilisées ou inactivité). Les notifications automatiques (tampon, jalon, récompense) restent actives sur tous les plans."
         }
       ],
       "stillQuestions": "Encore des questions ?",
@@ -338,13 +338,18 @@
     },
     "featureGrid": {
       "title": "Tout ce qu'il faut pour fidéliser",
-      "subtitle": "Six fonctionnalités pensées pour les commerces indépendants. Pas de superflu.",
+      "subtitle": "Sept fonctionnalités pensées pour les commerces indépendants. Pas de superflu.",
       "learnMore": "En savoir plus",
       "features": [
         {
           "title": "Notifications push",
           "description": "Vos clients lisent enfin vos messages. 85 % de taux d'ouverture.",
           "link": "/features/notifications-push"
+        },
+        {
+          "title": "Campagnes promotionnelles",
+          "description": "Touchez tous vos clients — sans la facture SMS, 85 % d'ouverture.",
+          "link": "/features/campagnes-promotionnelles"
         },
         {
           "title": "Géolocalisation",

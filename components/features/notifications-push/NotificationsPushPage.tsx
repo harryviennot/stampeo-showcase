@@ -9,6 +9,7 @@ import {
   SparklesIcon,
   ChartIcon,
   ClockIcon,
+  MegaphoneIcon,
 } from "@/components/icons";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
@@ -185,6 +186,49 @@ export function NotificationsPushPage() {
               );
             })}
           </div>
+        </Container>
+      </section>
+
+      {/* ============ 5b. Beyond automatic notifications → cross-link to broadcasts ============ */}
+      <section className="py-20 sm:py-28">
+        <Container>
+          <ScrollReveal>
+            <Link
+              href={"/features/campagnes-promotionnelles" as "/features/notifications-push"}
+              className="group relative block overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--accent)]/10 via-white to-[var(--stamp-sage)]/10 border border-[var(--accent)]/20 p-8 sm:p-12 transition-all hover:shadow-xl"
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-[auto,1fr,auto] gap-8 items-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/30">
+                  <MegaphoneIcon className="w-8 h-8" />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <span className="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-wide">
+                    {tp("beyondAuto.badge")}
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+                    {tp("beyondAuto.title")}
+                  </h2>
+                  <p className="text-[var(--muted-foreground)] leading-relaxed">
+                    {tp("beyondAuto.description")}
+                  </p>
+                  <ul className="flex flex-col gap-2 mt-2">
+                    {(tp.raw("beyondAuto.bullets") as string[]).map((b, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-[var(--foreground)]">
+                        <span className="mt-0.5 text-[var(--accent)]">→</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-white font-bold shadow-lg shadow-[var(--accent)]/25 transition-transform group-hover:translate-x-1 whitespace-nowrap">
+                  {tp("beyondAuto.cta")}
+                  <span aria-hidden>→</span>
+                </span>
+              </div>
+            </Link>
+          </ScrollReveal>
         </Container>
       </section>
 

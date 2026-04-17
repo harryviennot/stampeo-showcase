@@ -293,8 +293,8 @@
             "description": "Our system identifies the event type: new stamp, milestone reached, or reward unlocked."
           },
           {
-            "title": "The notification is sent via APNs",
-            "description": "Apple Push Notification Service delivers the update directly to the customer's wallet. No third-party app required."
+            "title": "The notification is delivered",
+            "description": "Apple Wallet passes refresh via a silent APNs push; Google Wallet uses its Add Message API. Both platforms deliver directly to the customer's wallet — no third-party app required."
           },
           {
             "title": "The customer sees the notification",
@@ -337,14 +337,14 @@
             "badge": "Growth"
           },
           {
-            "title": "Targeted campaigns",
-            "description": "Send group notifications to your customers: flash promotions, special events, loyalty reminders for inactive customers.",
-            "badge": "Coming soon"
+            "title": "Promotional broadcasts",
+            "description": "Reach every customer with a single message — flash promos, happy hours, new menu launches. 3 per month on Growth, unlimited on Pro.",
+            "badge": "Growth / Pro"
           },
           {
-            "title": "Smart segmentation",
-            "description": "Target your messages based on visit frequency, stamp count, or last visit date.",
-            "badge": "Coming soon"
+            "title": "Customer segmentation",
+            "description": "Target broadcasts by stamp count, last visit date, redemption status, or recent inactivity — so each campaign reaches the right customers.",
+            "badge": "Pro"
           }
         ]
       },
@@ -376,11 +376,22 @@
           "icon": "gift"
         }
       ],
+      "beyondAuto": {
+        "badge": "Next step",
+        "title": "Want to reach every customer at once?",
+        "description": "Automatic notifications fire on stamp events. For proactive outreach — happy hours, flash promos, seasonal offers — send a promotional broadcast. One message, every wallet, 30 seconds to compose.",
+        "bullets": [
+          "Apple Wallet and Google Wallet delivery in parallel",
+          "Bilingual messages (EN + FR) — customers see their device locale",
+          "Segmentation, scheduling, and per-provider delivery tracking"
+        ],
+        "cta": "Explore promotional campaigns"
+      },
       "cta": {
         "title": "Messages your customers actually read",
         "subtitle": "Join the founding program and start communicating with your customers through their wallet."
       },
-      "related": ["scanner-mobile", "analytiques", "programme-fondateur"]
+      "related": ["campagnes-promotionnelles", "scanner-mobile", "analytiques", "programme-fondateur"]
     },
     "analytiques": {
       "hero": {
@@ -414,7 +425,7 @@
         "title": "Stop guessing. Start knowing.",
         "subtitle": "The dashboard is included in all plans. Advanced analytics are available on the Growth plan."
       },
-      "related": ["notifications-push", "scanner-mobile", "programme-fondateur"],
+      "related": ["campagnes-promotionnelles", "notifications-push", "programme-fondateur"],
       "custom": {
         "blindSpotCards": {
           "questions": [
@@ -590,7 +601,227 @@
         "title": "Be present at the right moment",
         "subtitle": "Geofencing is included in the Growth plan. Join the founding program to benefit from it now."
       },
-      "related": ["notifications-push", "analytiques", "design-de-carte"]
+      "related": ["campagnes-promotionnelles", "notifications-push", "analytiques"]
+    },
+    "campagnes-promotionnelles": {
+      "heroBadge": "Promotional Campaigns",
+      "hero": {
+        "title": "Reach every customer. Without the SMS bill.",
+        "navTitle": "Promotional Campaigns — Wallet push to every customer",
+        "subtitle": "Send promotional notifications straight to your customers' Apple Wallet and Google Wallet. ~85% open rate. No per-message fee. Segmentation and scheduling included.",
+        "pillGrowth": "Growth",
+        "pillPro": "Pro"
+      },
+      "statBand": {
+        "title": "The math speaks for itself",
+        "subtitle": "Average performance across wallet, SMS and email — pulled from public industry data.",
+        "stats": [
+          {
+            "value": "~85%",
+            "label": "Wallet open rate",
+            "caption": "vs ~20% for email and ~35% CTR for SMS"
+          },
+          {
+            "value": "€0",
+            "label": "Per message",
+            "caption": "Flat plan fee — not €0.04–0.10 per SMS"
+          },
+          {
+            "value": "+78%",
+            "label": "Revenue uplift",
+            "caption": "Reported by walletized loyalty card holders"
+          }
+        ]
+      },
+      "whyNotSms": {
+        "title": "SMS, email, wallet — what actually lands",
+        "subtitle": "The open rate and the delivery cost are not the same story. Here is how the three channels stack up for a small business sending promotional offers.",
+        "columns": ["", "SMS", "Email", "Wallet (Stampeo)"],
+        "rows": [
+          {
+            "label": "Typical open rate",
+            "values": ["~35% CTR", "~20%", "~85%"]
+          },
+          {
+            "label": "Cost per message (France)",
+            "values": ["€0.04 – €0.10", "Low, variable", "€0 (included in plan)"]
+          },
+          {
+            "label": "Scheduling + timezone",
+            "values": ["Extra fee", "Depending on provider", "Included (Pro)"]
+          },
+          {
+            "label": "Segmentation",
+            "values": ["Manual list upload", "Tag-based, limited", "Stamps, redemptions, inactivity"]
+          },
+          {
+            "label": "Bilingual delivery",
+            "values": ["One message for all", "Two separate sends", "One send, locale-aware"]
+          },
+          {
+            "label": "Consent collection",
+            "values": ["Double opt-in required", "Double opt-in required", "Handled at pass install"]
+          },
+          {
+            "label": "Spam / carrier filtering",
+            "values": ["iOS 26 \"Unknown sender\" folder", "Gmail Promotions tab", "Lock-screen banner, no inbox"]
+          }
+        ],
+        "caption": "Sources: Twilio France pricing, PushPass 2026 SMS vs push report, Yotpo mobile wallet guide."
+      },
+      "howItWorks": {
+        "badge": "How it works",
+        "title": "From idea to every wallet in under a minute",
+        "subtitle": "",
+        "steps": [
+          {
+            "title": "Write your message",
+            "description": "Compose your EN and FR copy in the dashboard — one message, two locales. Each customer sees their device language."
+          },
+          {
+            "title": "Segment or broadcast to all",
+            "description": "Growth targets by enrollment date. Pro adds filters by stamp count, last redemption, and recent inactivity — so each campaign lands with the customers it's designed for."
+          },
+          {
+            "title": "Send now or schedule",
+            "description": "Growth sends immediately. Pro picks a local date and time — we convert to UTC and fire at the right moment, respecting your business timezone."
+          },
+          {
+            "title": "Wallets refresh in parallel",
+            "description": "Apple Wallet passes refresh via silent APNs; Google Wallet gets an Add Message call. The notification appears on the lock screen within seconds."
+          }
+        ]
+      },
+      "capabilities": {
+        "title": "What you can do with a broadcast",
+        "subtitle": "Everything you need to run real marketing campaigns — without an extra tool.",
+        "items": [
+          {
+            "title": "Segmentation",
+            "description": "Reach only customers who matter for this campaign: new signups, inactive for 30 days, redeemed a reward last week, or collected at least 5 stamps.",
+            "badge": "Basic on Growth · Advanced on Pro"
+          },
+          {
+            "title": "Scheduling with timezone",
+            "description": "Pick the local send time — Thursday 5pm, not an arbitrary UTC moment. Perfect for happy hours, lunch-break promos, or weekend openings.",
+            "badge": "Pro"
+          },
+          {
+            "title": "Bilingual delivery",
+            "description": "Write in English and French once. Each customer sees their device locale automatically — no duplicate campaigns, no locale guessing.",
+            "badge": "Growth / Pro"
+          },
+          {
+            "title": "Delivery transparency",
+            "description": "See exactly how many messages reached Apple Wallet, Google Wallet, got throttled by quota, or skipped because the wallet was uninstalled. Honest reporting, not inflated rates.",
+            "badge": "Growth / Pro"
+          }
+        ]
+      },
+      "delivery": {
+        "title": "Delivery you can actually verify",
+        "subtitle": "Every broadcast shows a per-provider breakdown — so you know where your message landed, not just that it was sent.",
+        "metrics": [
+          { "label": "Apple delivered", "value": 412, "tint": "apple" },
+          { "label": "Google delivered", "value": 268, "tint": "google" },
+          { "label": "Google throttled", "value": 14, "tint": "muted" },
+          { "label": "Wallet uninstalled", "value": 22, "tint": "muted" }
+        ],
+        "note": "Google Wallet enforces a 3-messages-per-24h quota per pass. We surface throttles instead of pretending the message was delivered."
+      },
+      "useCases": {
+        "title": "Real campaigns, real businesses",
+        "subtitle": "A few ways our partners actually use wallet broadcasts.",
+        "items": [
+          {
+            "emoji": "☕",
+            "title": "Café — Happy hour",
+            "description": "\"Every coffee €2 between 4pm and 6pm today.\" Sent to all cardholders at 3:30pm. A third walk in before closing."
+          },
+          {
+            "emoji": "🍽️",
+            "title": "Restaurant — Fill a slow night",
+            "description": "\"Tuesday is -20% on the tasting menu.\" Scheduled every Monday evening. Turns the deadest night of the week into the second-busiest."
+          },
+          {
+            "emoji": "💇",
+            "title": "Salon — Seasonal push",
+            "description": "\"Back-to-school blowout: €5 off any cut this week.\" Targeted to customers who haven't visited in 45 days."
+          },
+          {
+            "emoji": "🥐",
+            "title": "Bakery — New product launch",
+            "description": "\"Our new sourdough is live today — first 30 buyers get a free pastry.\" Broadcast to everyone with a loyalty card."
+          }
+        ]
+      },
+      "tierMatrix": {
+        "title": "What's included in each plan",
+        "subtitle": "Wallet broadcasts start on the Growth plan.",
+        "columns": ["", "Starter", "Growth", "Pro"],
+        "rows": [
+          { "label": "Send broadcasts", "values": ["—", "Included", "Included"] },
+          { "label": "Monthly cap", "values": ["—", "3 / month", "Unlimited"] },
+          { "label": "Scheduling", "values": ["—", "Immediate send", "Any time + timezone"] },
+          { "label": "Segmentation", "values": ["—", "By enrollment date", "Stamps, redemptions, inactivity"] },
+          { "label": "Translations (EN / FR)", "values": ["—", "Included", "Included"] },
+          { "label": "Per-provider delivery report", "values": ["—", "Included", "Included"] }
+        ]
+      },
+      "faq": {
+        "title": "Questions we hear a lot",
+        "subtitle": "Straightforward answers about wallet marketing for small businesses.",
+        "items": [
+          {
+            "question": "How much do wallet promotional campaigns cost?",
+            "answer": "Nothing extra. Broadcasts are included in the Growth plan (3 per month) and the Pro plan (unlimited). There is no per-message fee, unlike SMS where each send costs €0.04 to €0.10 in France. A single SMS campaign to 500 customers can easily cost €30–€50."
+          },
+          {
+            "question": "Do customers need to install an app?",
+            "answer": "No. Customers install a standard Apple Wallet or Google Wallet pass — the loyalty card itself. Wallet notifications are a native feature of both platforms, already present on every modern iPhone and Android phone. No store download, no account, no permission prompts beyond adding the pass."
+          },
+          {
+            "question": "How does wallet marketing compare to SMS?",
+            "answer": "Wallet notifications appear on the lock screen like an SMS, but they are free to send, reach around 85% open rate, and won't land in the iOS 26 \"Unknown sender\" filter. You also get built-in segmentation — by stamps earned, redemptions, or recent inactivity — which SMS platforms usually charge extra for."
+          },
+          {
+            "question": "Can I schedule campaigns in advance?",
+            "answer": "Yes, on the Pro plan. Pick a local date and time — we convert to UTC and fire at the right moment, respecting your business timezone. The Growth plan sends campaigns immediately when you hit \"Send\", which fits most flash-promo use cases."
+          },
+          {
+            "question": "Can I target specific customers?",
+            "answer": "Yes. On Growth you can filter by enrollment date (new signups vs longtime customers). On Pro you get advanced segmentation by stamp count, last redemption, and last-visit inactivity window — so each campaign reaches only the customers it's designed for."
+          },
+          {
+            "question": "Is this GDPR compliant?",
+            "answer": "Yes. Consent is collected when the customer installs the pass, and they can disable wallet notifications at any time from their device settings. No personal data is sent inside the notification payload itself. We never sell or share customer data."
+          },
+          {
+            "question": "Does it work with both Apple Wallet and Google Wallet?",
+            "answer": "Yes. Every broadcast fires in parallel to both platforms: Apple Wallet via a silent APNs push plus pass back-field refresh, Google Wallet via the official Add Message API. Your customers see the notification whether they use an iPhone or an Android."
+          },
+          {
+            "question": "What happens if I reach the Growth monthly cap?",
+            "answer": "You can either wait for the next month, or upgrade to Pro for unlimited broadcasts plus scheduling and advanced segmentation. Automatic notifications (stamp, milestone, reward) keep firing regardless — the cap only applies to manual promotional campaigns."
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Marketing that respects the customer",
+        "subtitle": "Wallet broadcasts are designed to feel like a loyalty perk, not an ad.",
+        "points": [
+          "Consent is collected at pass install — customers can disable wallet notifications any time.",
+          "No personal data in the notification payload — your message content only.",
+          "One clean banner per broadcast, not a generic \"Pass was changed\" notice.",
+          "GDPR compliant. No advertising tracking, no data sold or shared."
+        ],
+        "gdprLabel": "GDPR"
+      },
+      "cta": {
+        "title": "Your next campaign, in your customers' pocket",
+        "subtitle": "Join the founding program and send your first wallet broadcast this week."
+      },
+      "related": ["notifications-push", "analytiques", "geolocalisation"]
     },
     "programme-fondateur": {
       "hero": {
@@ -671,6 +902,8 @@
             "items": [
               "Apple Wallet and Google Wallet card generation",
               "QR code scanning with real-time push notifications",
+              "Promotional broadcasts to all customers (Growth / Pro)",
+              "Customer segmentation for broadcasts (Pro)",
               "Dashboard with customer list and basic statistics",
               "Offline mode for the scanner",
               "Card editor with real-time preview"
@@ -679,7 +912,6 @@
           "comingSoon": {
             "title": "Coming soon",
             "items": [
-              "Promotional campaigns and segmentation",
               "Advanced analytics (trends, peak hours)",
               "AI-assisted card creation",
               "Scheduled and seasonal designs",

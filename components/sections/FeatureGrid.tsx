@@ -2,12 +2,13 @@ import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
-import { BellIcon, MapPinIcon, CameraIcon, ChartIcon, PaletteIcon, StarIcon } from "../icons";
+import { BellIcon, MapPinIcon, CameraIcon, ChartIcon, PaletteIcon, StarIcon, MegaphoneIcon } from "../icons";
 import { ArrowRightIcon } from "../icons";
 import { ComponentType } from "react";
 
 const featureIcons: ComponentType<{ className?: string }>[] = [
   BellIcon,
+  MegaphoneIcon,
   MapPinIcon,
   CameraIcon,
   ChartIcon,

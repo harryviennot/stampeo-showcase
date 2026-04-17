@@ -30,11 +30,17 @@ export {
   Star as StarIcon,
   WifiSlash as WifiOffIcon,
   Broadcast as SignalIcon,
+  Megaphone as MegaphoneIcon,
   Info as InfoIcon,
   Gift,
   Lightning,
   TrendUp,
   TrendDown,
+  PaperPlaneTilt as PaperPlaneIcon,
+  CalendarCheck as CalendarCheckIcon,
+  Target as TargetIcon,
+  Translate as TranslateIcon,
+  ChartPieSlice as ChartPieSliceIcon,
 } from "@phosphor-icons/react";
 
 interface IconProps {

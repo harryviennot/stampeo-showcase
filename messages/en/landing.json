@@ -182,7 +182,7 @@
         },
         {
           "question": "Can I send promotional campaigns?",
-          "answer": "With the Growth plan, you'll be able to send promotional notifications to all your customers (up to 2-3 campaigns per month). With the Pro plan, you'll get unlimited campaigns and customer segmentation (e.g., targeting customers who haven't visited in 30 days). These features are under development. In the meantime, automatic notifications (stamp, milestone, reward) are active on all plans."
+          "answer": "Yes — promotional broadcasts are live. The Growth plan includes 3 broadcasts per month with immediate send and date-based segmentation (e.g. customers enrolled in the last 30 days). The Pro plan unlocks unlimited broadcasts, scheduling with timezone support, and advanced segmentation (by stamp count, redemptions, or inactivity). Automatic notifications (stamp, milestone, reward) remain active on all plans."
         }
       ],
       "stillQuestions": "Still have questions?",
@@ -338,13 +338,18 @@
     },
     "featureGrid": {
       "title": "Everything you need to build loyalty",
-      "subtitle": "Six features designed for independent businesses. No bloat.",
+      "subtitle": "Seven features designed for independent businesses. No bloat.",
       "learnMore": "Learn more",
       "features": [
         {
           "title": "Push notifications",
           "description": "Your customers finally read your messages. 85% open rate.",
           "link": "/features/push-notifications"
+        },
+        {
+          "title": "Promotional campaigns",
+          "description": "Reach every customer — no SMS bill, 85% open rate.",
+          "link": "/features/promotional-campaigns"
         },
         {
           "title": "Geolocation",
