@@ -103,7 +103,9 @@
       "resendIn": "Renvoyer dans {seconds}s",
       "codeSent": "Nouveau code envoyé !",
       "changeEmail": "Utiliser un autre email",
-      "invalidCode": "Code de vérification invalide, veuillez réessayer"
+      "invalidCode": "Code de vérification invalide, veuillez réessayer",
+      "emailTypoSuggestion": "Vouliez-vous dire {suggestion} ?",
+      "emailTypoApply": "Utiliser {suggestion}"
     },
     "foundingPartner": {
       "title": "Devenez Partenaire Fondateur",
@@ -114,7 +116,15 @@
       "valueProps": ["Fonctionnalités Growth incluses", "3 mois offerts", "Puis 20 €/mois à vie", "Canal de feedback direct avec notre équipe"],
       "cta": "Commencer",
       "settingUp": "Préparation de votre espace...",
-      "limitedSpots": "Places limitées en accès anticipé en France"
+      "limitedSpots": "Places limitées en accès anticipé en France",
+      "slugTakenTitle": "Cette URL est déjà prise",
+      "slugTakenBody": "Choisissez-en une autre pour continuer — pas besoin de recommencer.",
+      "slugTakenPlaceholder": "mon-cafe",
+      "slugTakenRetry": "Réessayer avec cette URL",
+      "slugTakenCancel": "Annuler",
+      "retryTitle": "Un problème est survenu",
+      "retryBody": "Impossible de créer votre espace. Réessayez dans un instant.",
+      "retryButton": "Réessayer"
     },
     "applicationSubmitted": {
       "title": "Votre carte est prête !",

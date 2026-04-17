@@ -8,6 +8,7 @@ import {
   useCallback,
   useRef,
 } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "./client";
 import type { User, Session, AuthError } from "@supabase/supabase-js";
 
@@ -82,9 +83,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         nukeSupabaseAuthStorage();
         setSession(null);
         setUser(null);
+        Sentry.setUser(null);
       } else {
         setSession(session);
         setUser(session?.user ?? null);
+        if (session?.user) {
+          Sentry.setUser({ id: session.user.id, email: session.user.email });
+        } else {
+          Sentry.setUser(null);
+        }
       }
       setLoading(false);
     });
@@ -115,6 +122,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        Sentry.setUser({ id: session.user.id, email: session.user.email });
+      } else {
+        Sentry.setUser(null);
+      }
       setLoading(false);
     });
 

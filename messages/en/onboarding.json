@@ -94,7 +94,7 @@
       "submitting": "Please wait...",
       "accountExistsWrongPassword": "An account with this email already exists. Please check your password.",
       "verifyTitle": "Check your email",
-      "verifySubtitle": "We sent a 6-digit code to {email}",
+      "verifySubtitle": "We sent a 6-digit code to <strong>{email}</strong>. If it doesn't appear within a minute, check your spam folder.",
       "verifyCode": "Verification code",
       "verifyCodePlaceholder": "000000",
       "verifyButton": "Verify",
@@ -103,7 +103,9 @@
       "resendIn": "Resend in {seconds}s",
       "codeSent": "New code sent!",
       "changeEmail": "Use a different email",
-      "invalidCode": "Invalid verification code, please try again"
+      "invalidCode": "Invalid verification code, please try again",
+      "emailTypoSuggestion": "Did you mean {suggestion}?",
+      "emailTypoApply": "Use {suggestion}"
     },
     "foundingPartner": {
       "title": "Become a Founding Partner",
@@ -114,7 +116,15 @@
       "valueProps": ["Growth features included", "3 months free", "Then €20/month for life", "Direct feedback channel with our team"],
       "cta": "Get started",
       "settingUp": "Setting up your space...",
-      "limitedSpots": "Limited early access spots available in France"
+      "limitedSpots": "Limited early access spots available in France",
+      "slugTakenTitle": "That URL is already taken",
+      "slugTakenBody": "Pick a different one to continue — no need to restart.",
+      "slugTakenPlaceholder": "my-coffee-shop",
+      "slugTakenRetry": "Retry with this URL",
+      "slugTakenCancel": "Cancel",
+      "retryTitle": "Something went wrong",
+      "retryBody": "We couldn't set up your space. Try again in a moment.",
+      "retryButton": "Try again"
     },
     "applicationSubmitted": {
       "title": "Your card is ready!",

@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { suggestCorrectedEmail } from "@/lib/email-typo-check";
 
 interface CreateAccountStepProps {
   store: OnboardingStore;
@@ -20,8 +21,9 @@ export function CreateAccountStep({
   const t = useTranslations("onboarding.createAccount");
   const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
-  const { signUp, signIn, verifyOtp, resendOtp } = useAuth();
+  const { session, signUp, signIn, verifyOtp, resendOtp } = useAuth();
   const locale = useLocale();
+  const autoAdvancedRef = useRef(false);
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -61,6 +63,28 @@ export function CreateAccountStep({
       setTimeout(() => otpInputRef.current?.focus(), 100);
     }
   }, [phase]);
+
+  // If a session already exists when this step mounts (user returned to the
+  // wizard after confirming email on another device / tab, or landed here
+  // with an existing login), skip the form and advance to the next step.
+  useEffect(() => {
+    if (autoAdvancedRef.current) return;
+    if (!session) return;
+    if (phase !== "form") return;
+    autoAdvancedRef.current = true;
+    onNext();
+  }, [session, phase, onNext]);
+
+  const typoSuggestion = useMemo(
+    () => suggestCorrectedEmail(data.email),
+    [data.email]
+  );
+
+  const applyTypoSuggestion = useCallback(() => {
+    if (typoSuggestion) {
+      updateData({ email: typoSuggestion });
+    }
+  }, [typoSuggestion, updateData]);
 
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -332,6 +356,18 @@ export function CreateAccountStep({
             className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             placeholder={t("emailPlaceholder")}
           />
+          {typoSuggestion && (
+            <p className="text-xs text-[var(--muted-foreground)]">
+              {t("emailTypoSuggestion", { suggestion: typoSuggestion })}{" "}
+              <button
+                type="button"
+                onClick={applyTypoSuggestion}
+                className="text-[var(--accent)] hover:underline font-medium"
+              >
+                {t("emailTypoApply", { suggestion: typoSuggestion })}
+              </button>
+            </p>
+          )}
         </div>
 
         {/* Password */}
