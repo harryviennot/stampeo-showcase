@@ -20,7 +20,7 @@ export function CreateAccountStep({
 }: CreateAccountStepProps) {
   const t = useTranslations("onboarding.createAccount");
   const tc = useTranslations("common.buttons");
-  const { data, updateData } = store;
+  const { data, updateData, createAccountPhase, setCreateAccountPhase } = store;
   const { session, signUp, signIn, verifyOtp, resendOtp } = useAuth();
   const locale = useLocale();
   const autoAdvancedRef = useRef(false);
@@ -29,7 +29,8 @@ export function CreateAccountStep({
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [phase, setPhase] = useState<"form" | "verify">("form");
+  const phase = createAccountPhase;
+  const setPhase = setCreateAccountPhase;
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
@@ -173,7 +174,7 @@ export function CreateAccountStep({
         setLoading(false);
       }
     },
-    [isFormValid, data.email, data.ownerName, password, signUp, signIn, resendOtp, onNext, locale, t]
+    [isFormValid, data.email, data.ownerName, password, signUp, signIn, resendOtp, onNext, locale, t, setPhase]
   );
 
   const handleVerifySubmit = useCallback(
@@ -220,7 +221,7 @@ export function CreateAccountStep({
     setOtpCode("");
     setError(null);
     setCodeSentMessage(false);
-  }, []);
+  }, [setPhase]);
 
   // OTP input handler — only allow digits
   const handleOtpChange = useCallback((value: string) => {

@@ -73,6 +73,8 @@ interface StoredState {
   data: OnboardingData;
   currentStep: number;
   completedSteps: number[];
+  step1Substep?: 1 | 2;
+  createAccountPhase?: "form" | "verify";
   timestamp: number;
 }
 
@@ -90,6 +92,9 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   const [isInitialized, setIsInitialized] = useState(false);
   // Cache the validated slug so we don't re-check it
   const [validatedSlug, setValidatedSlug] = useState<string | null>(null);
+  // Sub-step state persisted so locale switches don't reset within a step
+  const [step1Substep, setStep1Substep] = useState<1 | 2>(1);
+  const [createAccountPhase, setCreateAccountPhase] = useState<"form" | "verify">("form");
 
   // Load from storage on mount - prioritize sessionStorage for current session
   useEffect(() => {
@@ -109,6 +114,8 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
         setData({ ...initialData, ...parsed.data });
         setCurrentStep(parsed.currentStep);
         setCompletedSteps(parsed.completedSteps || []);
+        if (parsed.step1Substep) setStep1Substep(parsed.step1Substep);
+        if (parsed.createAccountPhase) setCreateAccountPhase(parsed.createAccountPhase);
         if (parsed.data.urlSlug) {
           setValidatedSlug(parsed.data.urlSlug);
           setIsSlugAvailable(true);
@@ -131,6 +138,8 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
             setData({ ...initialData, ...parsed.data });
             setCurrentStep(parsed.currentStep);
             setCompletedSteps(parsed.completedSteps || []);
+            if (parsed.step1Substep) setStep1Substep(parsed.step1Substep);
+            if (parsed.createAccountPhase) setCreateAccountPhase(parsed.createAccountPhase);
             if (parsed.data.urlSlug) {
               setValidatedSlug(parsed.data.urlSlug);
               setIsSlugAvailable(true);
@@ -155,10 +164,12 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
       data,
       currentStep,
       completedSteps,
+      step1Substep,
+      createAccountPhase,
       timestamp: Date.now(),
     };
     sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(state));
-  }, [data, currentStep, completedSteps, isInitialized]);
+  }, [data, currentStep, completedSteps, step1Substep, createAccountPhase, isInitialized]);
 
   // Also save to localStorage when authenticated (for cross-session persistence)
   useEffect(() => {
@@ -168,10 +179,20 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
       data,
       currentStep,
       completedSteps,
+      step1Substep,
+      createAccountPhase,
       timestamp: Date.now(),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [data, currentStep, completedSteps, isInitialized, isAuthenticated]);
+  }, [data, currentStep, completedSteps, step1Substep, createAccountPhase, isInitialized, isAuthenticated]);
+
+  // Reset sub-step state when leaving a step. This keeps "back then forward"
+  // behaving as before (lands on the first sub-step) while preserving sub-step
+  // across locale switches (which don't change currentStep).
+  const resetSubstepsFor = useCallback((newStep: number) => {
+    if (newStep !== 1) setStep1Substep(1);
+    if (newStep !== 4) setCreateAccountPhase("form");
+  }, []);
 
   const updateData = useCallback((updates: Partial<OnboardingData>) => {
     setData((prev) => ({ ...prev, ...updates }));
@@ -205,18 +226,27 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   }, [data.urlSlug]);
 
   const nextStep = useCallback(() => {
-    setCurrentStep((prev) => Math.min(prev + 1, 6));
-  }, []);
+    setCurrentStep((prev) => {
+      const next = Math.min(prev + 1, 6);
+      resetSubstepsFor(next);
+      return next;
+    });
+  }, [resetSubstepsFor]);
 
   const prevStep = useCallback(() => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
-  }, []);
+    setCurrentStep((prev) => {
+      const next = Math.max(prev - 1, 1);
+      resetSubstepsFor(next);
+      return next;
+    });
+  }, [resetSubstepsFor]);
 
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= 6) {
       setCurrentStep(step);
+      resetSubstepsFor(step);
     }
-  }, []);
+  }, [resetSubstepsFor]);
 
   const markStepCompleted = useCallback((step: number) => {
     setCompletedSteps((prev) => {
@@ -250,9 +280,13 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
     isSlugChecking,
     isInitialized,
     validatedSlug,
+    step1Substep,
+    createAccountPhase,
     setIsSlugAvailable,
     setSlugErrorReason,
     setIsSlugChecking,
+    setStep1Substep,
+    setCreateAccountPhase,
     updateData,
     updateBusinessName,
     updateSlug,
