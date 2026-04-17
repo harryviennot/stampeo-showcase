@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import slugify from "slugify";
 
 export interface CardDesign {
   backgroundColor: string;
@@ -75,13 +76,8 @@ interface StoredState {
   timestamp: number;
 }
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+function toSlug(text: string): string {
+  return slugify(text, { lower: true, strict: true, trim: true });
 }
 
 export function useOnboardingStore(isAuthenticated = false, authLoading = true) {
@@ -182,7 +178,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   }, []);
 
   const updateBusinessName = useCallback((name: string) => {
-    const slug = slugify(name);
+    const slug = toSlug(name);
     setData((prev) => ({
       ...prev,
       businessName: name,
@@ -193,13 +189,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   }, []);
 
   const updateSlug = useCallback((slug: string) => {
-    // Convert spaces to dashes immediately, allow dashes
-    const cleanSlug = slug
-      .toLowerCase()
-      .replace(/\s+/g, "-")           // Spaces → dashes
-      .replace(/[^a-z0-9-]/g, "")     // Only allow lowercase, numbers, dashes
-      .replace(/-+/g, "-")            // Collapse multiple dashes
-      .replace(/^-/, "");             // No leading dash
+    const cleanSlug = toSlug(slug).replace(/^-/, "");
 
     setData((prev) => ({ ...prev, urlSlug: cleanSlug }));
     // Only reset availability if slug changed from the validated one
