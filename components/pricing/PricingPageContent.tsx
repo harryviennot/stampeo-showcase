@@ -5,112 +5,44 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PRICING } from "@/lib/pricing";
+import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
+import { FoundingCountdown } from "@/components/pricing/FoundingCountdown";
+import { PricingTierCard, type Discount } from "@/components/pricing/PricingTierCard";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 
 function PricingCard({
   tier,
   price,
+  discount,
   highlighted,
   comingSoon,
 }: {
   tier: "starter" | "growth" | "pro";
   price: number;
+  discount?: Discount;
   highlighted?: boolean;
   comingSoon?: boolean;
 }) {
   const t = useTranslations("pricingPage");
-  const features = t.raw(`${tier}.features`) as string[];
 
   return (
-    <div
-      className={`relative flex flex-col rounded-3xl p-8 lg:p-10 transition-all duration-300 ${
-        comingSoon
-          ? "border border-[var(--border)] bg-[var(--cream)] opacity-60"
-          : highlighted
-            ? "border-[3px] border-[var(--accent)] bg-[var(--cream)] shadow-2xl lg:scale-[1.03] z-10"
-            : "border border-[var(--border)] bg-[var(--cream)] shadow-sm hover:shadow-xl"
-      }`}
-    >
-      {highlighted && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-          <div className="bg-[var(--accent)] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
-            {t("popular")}
-          </div>
-        </div>
-      )}
-
-      {comingSoon && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-          <span className="text-xs font-bold px-4 py-1.5 rounded-full bg-[var(--muted)] text-[var(--muted-foreground)] whitespace-nowrap">
-            {t("comingSoon")}
-          </span>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-4 mb-8">
-        <h3
-          className={`text-2xl font-bold ${comingSoon ? "text-[var(--muted-foreground)]" : ""}`}
-        >
-          {t(`${tier}.name`)}
-        </h3>
-        <p className="text-sm text-[var(--muted-foreground)] font-medium">
-          {t(`${tier}.tagline`)}
-        </p>
-        <div className="flex items-baseline gap-1">
-          <span
-            className={`text-5xl font-black tracking-tight ${comingSoon ? "text-[var(--muted-foreground)]" : ""}`}
-          >
-            &euro;{price}
-          </span>
-          <span className="text-[var(--muted-foreground)] text-lg font-bold">
-            {t("perMonth")}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-3 flex-1 mb-8">
-        {features.map((feature, i) => (
-          <div key={i} className="flex items-start gap-3 text-[15px] font-medium">
-            <span
-              className={`text-lg mt-0.5 ${comingSoon ? "text-[var(--muted-foreground)]" : "text-[var(--accent)]"}`}
-            >
-              &#10003;
-            </span>
-            <span className={comingSoon ? "text-[var(--muted-foreground)]" : ""}>
-              {feature}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-auto">
-        {comingSoon ? (
-          <div className="w-full flex items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--border)] text-[var(--muted-foreground)] text-base font-extrabold cursor-not-allowed">
-            {t("ctaComingSoon")}
-          </div>
-        ) : highlighted ? (
-          <Link
-            href="/onboarding"
-            className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
-          >
-            {t("cta")}
-          </Link>
-        ) : (
-          <Link
-            href="/onboarding"
-            className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
-          >
-            {t("cta")}
-          </Link>
-        )}
-        {!comingSoon && (
-          <p className="text-xs text-center text-[var(--muted-foreground)] mt-2">
-            {t("ctaSubtext")}
-          </p>
-        )}
-      </div>
-    </div>
+    <PricingTierCard
+      name={t(`${tier}.name`)}
+      tagline={t(`${tier}.tagline`)}
+      features={t.raw(`${tier}.features`) as string[]}
+      price={price}
+      discount={discount}
+      perMonthLabel={t("perMonth")}
+      forLifeLabel={t("forLife")}
+      cta={t("cta")}
+      ctaHref="/onboarding"
+      ctaSubtext={t("ctaSubtext")}
+      highlighted={highlighted}
+      popularLabel={t("popular")}
+      comingSoon={comingSoon}
+      comingSoonLabel={t("comingSoon")}
+      ctaComingSoonLabel={t("ctaComingSoon")}
+    />
   );
 }
 
@@ -351,12 +283,14 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ() {
+function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
   const t = useTranslations("pricingPage");
-  const faqs = t.raw("faq.items") as Array<{
+  const allFaqs = t.raw("faq.items") as Array<{
     question: string;
     answer: string;
+    foundingOnly?: boolean;
   }>;
+  const faqs = foundingOpen ? allFaqs : allFaqs.filter((f) => !f.foundingOnly);
 
   return (
     <div className="mt-24 lg:mt-32">
@@ -399,6 +333,7 @@ function PricingFAQ() {
 export function PricingPageContent() {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
+  const foundingOpen = isFoundingProgramOpen();
   const foundingHref =
     locale === "en" ? "/founding-partner" : "/programme-fondateur";
 
@@ -417,18 +352,23 @@ export function PricingPageContent() {
         </p>
 
         {/* Founding partner callout */}
-        <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
-          <span className="text-sm font-semibold text-[var(--accent)]">
-            {t("foundingCallout")}
-          </span>
-          <Link
-            href={foundingHref}
-            className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
-          >
-            {t("foundingLink")}
-            <ArrowRight className="w-3.5 h-3.5" weight="bold" />
-          </Link>
-        </div>
+        {foundingOpen && (
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <FoundingCountdown variant="badge" />
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
+              <span className="text-sm font-semibold text-[var(--accent)]">
+                {t("foundingCallout")}
+              </span>
+              <Link
+                href={foundingHref}
+                className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
+              >
+                {t("foundingLink")}
+                <ArrowRight className="w-3.5 h-3.5" weight="bold" />
+              </Link>
+            </div>
+          </div>
+        )}
       </ScrollReveal>
 
       {/* Pricing Cards */}
@@ -436,8 +376,21 @@ export function PricingPageContent() {
         delay={200}
         className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-12"
       >
-        <PricingCard tier="starter" price={PRICING.starter.price} />
-        <PricingCard tier="growth" price={PRICING.growth.price} highlighted />
+        <PricingCard
+          tier="starter"
+          price={PRICING.starter.price}
+          discount={
+            foundingOpen ? { targetPrice: PRICING.starter.foundingPrice } : undefined
+          }
+        />
+        <PricingCard
+          tier="growth"
+          price={PRICING.growth.price}
+          discount={
+            foundingOpen ? { targetPrice: PRICING.growth.foundingPrice } : undefined
+          }
+          highlighted
+        />
         <PricingCard tier="pro" price={PRICING.pro.price} comingSoon />
       </ScrollReveal>
 
@@ -445,7 +398,7 @@ export function PricingPageContent() {
       <FeatureComparisonTable />
 
       {/* FAQ */}
-      <PricingFAQ />
+      <PricingFAQ foundingOpen={foundingOpen} />
 
       {/* Bottom CTA */}
       <ScrollReveal

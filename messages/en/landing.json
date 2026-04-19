@@ -193,7 +193,7 @@
     "finalCta": {
       "title": "Ready to turn visitors into <accent>regulars?</accent>",
       "cta": "Start Free",
-      "subtitle": "{freeMonths} months free · From €{price}/month for life"
+      "subtitle": "30-day free trial · From €{price}/month for life"
     },
     "comparisonTable": {
       "title": "Why wallet?",

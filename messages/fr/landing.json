@@ -193,7 +193,7 @@
     "finalCta": {
       "title": "Prêt à transformer vos visiteurs en <accent>habitués ?</accent>",
       "cta": "Commencer gratuitement",
-      "subtitle": "{freeMonths} mois offerts · À partir de {price} €/mois à vie"
+      "subtitle": "Essai gratuit de 30 jours · À partir de {price} €/mois à vie"
     },
     "comparisonTable": {
       "title": "Pourquoi le wallet ?",

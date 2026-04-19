@@ -26,7 +26,7 @@ export async function FinalCTASection() {
           </Link>
 
           <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
-            {t("subtitle", { freeMonths: PRICING.freeMonths, price: PRICING.starter.foundingPrice })}
+            {t("subtitle", { price: PRICING.starter.foundingPrice })}
           </p>
         </div>
       </ScrollReveal>

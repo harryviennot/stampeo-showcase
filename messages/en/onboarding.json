@@ -110,6 +110,8 @@
     "foundingPartner": {
       "title": "Become a Founding Partner",
       "subtitle": "Help us build a product you'll love — and lock in pricing for life",
+      "standardTitle": "Choose your plan",
+      "standardSubtitle": "30-day free trial on every plan. Cancel anytime — no card required.",
       "resellerTitle": "Choose your plan",
       "resellerSubtitle": "Your partner discount is applied automatically to all plans",
       "resellerBadge": "Partner — {discount}% off",
@@ -127,9 +129,9 @@
       "retryButton": "Try again"
     },
     "applicationSubmitted": {
-      "title": "Your card is ready!",
-      "subtitle": "We're reviewing applications in small batches",
-      "waitingMessage": "You'll receive an activation email — it can take a few minutes, and sometimes lands in spam.",
+      "title": "Welcome aboard!",
+      "subtitle": "Your dashboard is ready — taking you there now.",
+      "redirecting": "If nothing happens in a few seconds, click below.",
       "goToDashboard": "Go to dashboard",
       "spaceReady": "Your business space is set up",
       "cardDesigned": "Your loyalty card is designed",
