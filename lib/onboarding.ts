@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { createClient } from "./supabase/client";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -66,6 +67,20 @@ export async function checkSlugAvailability(
   }
 }
 
+export type CreateBusinessErrorCode =
+  | "slug_taken"
+  | "unauthenticated"
+  | "validation"
+  | "server"
+  | "network";
+
+export interface CreateBusinessError {
+  code: CreateBusinessErrorCode;
+  message: string;
+  field?: string;
+  status?: number;
+}
+
 /**
  * Create a new business with the authenticated user as owner
  * @param payload - Business creation data
@@ -74,7 +89,7 @@ export async function checkSlugAvailability(
 export async function createBusiness(
   payload: BusinessCreatePayload,
   accessToken?: string
-): Promise<{ data: BusinessResponse | null; error: string | null }> {
+): Promise<{ data: BusinessResponse | null; error: CreateBusinessError | null }> {
   try {
     let token = accessToken;
 
@@ -88,7 +103,10 @@ export async function createBusiness(
     }
 
     if (!token) {
-      return { data: null, error: "Not authenticated" };
+      return {
+        data: null,
+        error: { code: "unauthenticated", message: "Not authenticated" },
+      };
     }
 
     const response = await fetch(`${API_URL}/businesses`, {
@@ -102,22 +120,63 @@ export async function createBusiness(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      // FastAPI detail can be a string or an array of validation errors
-      let errorMessage = `Failed to create business (${response.status})`;
-      if (typeof errorData.detail === "string") {
-        errorMessage = errorData.detail;
-      } else if (Array.isArray(errorData.detail) && errorData.detail.length > 0) {
-        errorMessage = errorData.detail[0]?.msg || errorMessage;
+      const detail = errorData?.detail;
+
+      let error: CreateBusinessError;
+
+      if (detail && typeof detail === "object" && !Array.isArray(detail) && typeof detail.code === "string") {
+        error = {
+          code: detail.code as CreateBusinessErrorCode,
+          message: detail.message || `Failed to create business (${response.status})`,
+          field: detail.field,
+          status: response.status,
+        };
+      } else if (typeof detail === "string") {
+        error = {
+          code: response.status >= 500 ? "server" : "validation",
+          message: detail,
+          status: response.status,
+        };
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        error = {
+          code: "validation",
+          message: detail[0]?.msg || `Failed to create business (${response.status})`,
+          status: response.status,
+        };
+      } else {
+        error = {
+          code: response.status >= 500 ? "server" : "validation",
+          message: `Failed to create business (${response.status})`,
+          status: response.status,
+        };
       }
-      return { data: null, error: errorMessage };
+
+      Sentry.captureMessage(`createBusiness failed: ${response.status}`, {
+        level: response.status >= 500 ? "error" : "warning",
+        extra: {
+          status: response.status,
+          body: errorData,
+          payload_slug: payload.url_slug,
+          payload_tier: payload.subscription_tier,
+          error_code: error.code,
+        },
+      });
+      return { data: null, error };
     }
 
     const data = await response.json();
     return { data, error: null };
   } catch (err) {
+    Sentry.captureException(err, {
+      tags: { op: "createBusiness" },
+      extra: { payload_slug: payload.url_slug },
+    });
     return {
       data: null,
-      error: err instanceof Error ? err.message : "Failed to create business",
+      error: {
+        code: "network",
+        message: err instanceof Error ? err.message : "Failed to create business",
+      },
     };
   }
 }
