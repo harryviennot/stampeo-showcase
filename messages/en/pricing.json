@@ -187,13 +187,22 @@
           "growth": "Custom text",
           "pro": "Custom text"
         },
+        "milestoneLimit": {
+          "label": "Custom stamp-count milestones",
+          "starter": "—",
+          "growth": "3/program",
+          "pro": "Unlimited"
+        },
         "broadcastNotifications": {
           "label": "Broadcast notifications",
           "growth": "3/month",
           "pro": "Unlimited"
         },
         "segmentation": {
-          "label": "Customer segmentation"
+          "label": "Customer segmentation",
+          "starter": "—",
+          "growth": "Basic (date-based)",
+          "pro": "Advanced (stamps, inactivity, redemptions)"
         },
         "scheduledSends": {
           "label": "Scheduled sends"

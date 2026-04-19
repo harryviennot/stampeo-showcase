@@ -14,6 +14,7 @@ import {
   MapPinIcon,
   StarIcon,
   SparklesIcon,
+  MegaphoneIcon,
 } from "../icons";
 import type { ComponentType } from "react";
 
@@ -23,7 +24,8 @@ type FeatureSlug =
   | "notifications-push"
   | "analytiques"
   | "geolocalisation"
-  | "programme-fondateur";
+  | "programme-fondateur"
+  | "campagnes-promotionnelles";
 
 const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>> = {
   "design-de-carte": PaletteIcon,
@@ -32,6 +34,7 @@ const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>
   "analytiques": ChartIcon,
   "geolocalisation": MapPinIcon,
   "programme-fondateur": StarIcon,
+  "campagnes-promotionnelles": MegaphoneIcon,
 };
 
 interface RelatedFeaturesProps {

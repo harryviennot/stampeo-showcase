@@ -22,6 +22,10 @@
           "label": "Notifications push",
           "description": "Engagez vos clients sur leur écran de verrouillage"
         },
+        "campagnesPromotionnelles": {
+          "label": "Campagnes promotionnelles",
+          "description": "Atteignez tous vos clients, sans la facture SMS"
+        },
         "analytiques": {
           "label": "Analytiques",
           "description": "Comprenez vos clients avec des données concrètes"
@@ -53,7 +57,8 @@
       "next": "Suivant",
       "skip": "Passer",
       "tryAgain": "Réessayer",
-      "goBack": "Retour"
+      "goBack": "Retour",
+      "startFree": "Commencer gratuitement"
     },
     "wallet": {
       "appleWallet": "Apple Wallet",

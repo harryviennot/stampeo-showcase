@@ -8,6 +8,7 @@ import { NotificationsPushPage } from "@/components/features/notifications-push/
 import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
 import { ScannerMobilePage } from "@/components/features/scanner-mobile/ScannerMobilePage";
 import { GeofencingPage } from "@/components/features/geolocalisation/GeofencingPage";
+import { BroadcastsPage } from "@/components/features/broadcasts/BroadcastsPage";
 import {
   type FeatureSlug,
   generateFeatureStaticParams,
@@ -22,6 +23,7 @@ const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {
   "notifications-push": NotificationsPushPage,
   analytiques: AnalyticsPageContent,
   geolocalisation: GeofencingPage,
+  "campagnes-promotionnelles": BroadcastsPage,
 };
 
 export function generateStaticParams() {

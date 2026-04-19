@@ -31,7 +31,11 @@
         "title": "Votre carte, prête en 5 minutes",
         "subtitle": "On la crée pour vous, ou vous la créez vous-même. Dans tous les cas, elle sera professionnelle."
       },
-      "related": ["scanner-mobile", "notifications-push", "programme-fondateur"],
+      "related": [
+        "scanner-mobile",
+        "notifications-push",
+        "programme-fondateur"
+      ],
       "custom": {
         "colorDemo": {
           "hint": "Cliquez pour changer de thème — votre carte, vos couleurs",
@@ -39,10 +43,22 @@
           "rewardValue": "8ᵉ offert",
           "memberLabel": "Membre",
           "themes": [
-            { "name": "Stampeo", "orgName": "Mon Café" },
-            { "name": "Crème", "orgName": "Boulangerie Marie" },
-            { "name": "Nuit", "orgName": "Le Comptoir Bleu" },
-            { "name": "Rose", "orgName": "Fleur de Thé" }
+            {
+              "name": "Stampeo",
+              "orgName": "Mon Café"
+            },
+            {
+              "name": "Crème",
+              "orgName": "Boulangerie Marie"
+            },
+            {
+              "name": "Nuit",
+              "orgName": "Le Comptoir Bleu"
+            },
+            {
+              "name": "Rose",
+              "orgName": "Fleur de Thé"
+            }
           ]
         },
         "methods": {
@@ -139,7 +155,11 @@
         "title": "Tamponnez en une seconde",
         "subtitle": "Application gratuite sur iOS et Android. Scanner web disponible sur tous les appareils."
       },
-      "related": ["notifications-push", "design-de-carte", "analytiques"],
+      "related": [
+        "notifications-push",
+        "design-de-carte",
+        "analytiques"
+      ],
       "custom": {
         "heroBadge": "Scanner Mobile",
         "scanDemo": {
@@ -259,12 +279,12 @@
     "notifications-push": {
       "heroBadge": "Notifications Wallet",
       "hero": {
-        "title": "Vos clients lisent vos messages. Enfin.",
-        "subtitle": "Les emails finissent en spam. Les SMS coûtent cher. Les notifications wallet apparaissent directement sur l'écran de verrouillage — et 85 % sont lues."
+        "title": "Chaque scan atterrit sur l'écran de verrouillage de vos clients.",
+        "subtitle": "Chaque tampon, chaque jalon, chaque récompense déclenche une notification wallet. Votre client voit toujours ce qui vient de se passer et à quelle distance se trouve sa prochaine récompense."
       },
       "problem": {
-        "title": "Le problème avec les canaux classiques",
-        "description": "Vous avez des choses à dire à vos clients. Sauf qu'ils ne vous entendent pas. Les emails finissent en spam (~20 % de lecture), les SMS sont intrusifs et coûteux (~45 %), les apps push exigent une installation (~30 %). Les notifications wallet atteignent ~85 % de taux de lecture."
+        "title": "Un tampon sans confirmation est un tampon oublié",
+        "description": "Avec une carte papier, le client hoche la tête, range la carte et passe à autre chose. Rien ne confirme le passage, rien ne lui rappelle qu'il est à mi-chemin de sa récompense. Une notification wallet transforme chaque visite en relance silencieuse : visible, instantanée, impossible à manquer."
       },
       "demo": {
         "lockScreenDate": "Lundi 17 février",
@@ -273,7 +293,7 @@
         "timeAgo": "maintenant"
       },
       "channels": {
-        "statement": "Vos messages ne sont pas lus. Le problème n'est pas le contenu — c'est le canal. Comparez les taux de lecture moyens par canal de communication.",
+        "statement": "Chaque mise à jour de fidélité doit atteindre votre client. Voici ce que chaque canal délivre réellement, et pourquoi le wallet s'impose pour les confirmations de tampon, les rappels de jalon, et les alertes de récompense.",
         "email": "Email",
         "sms": "SMS",
         "appPush": "App Push",
@@ -293,8 +313,8 @@
             "description": "Notre système identifie le type d'événement : nouveau tampon, jalon atteint, ou récompense débloquée."
           },
           {
-            "title": "La notification est envoyée via APNs",
-            "description": "Apple Push Notification Service délivre la mise à jour directement au wallet du client. Aucune app tierce requise."
+            "title": "La notification est délivrée",
+            "description": "Les passes Apple Wallet se rafraîchissent via une notification silencieuse APNs ; Google Wallet utilise son API Add Message. Les deux plateformes livrent directement dans le wallet du client — aucune app tierce requise."
           },
           {
             "title": "Le client voit la notification",
@@ -329,22 +349,24 @@
       },
       "advanced": {
         "title": "Allez plus loin",
-        "subtitle": "Des fonctionnalités avancées pour maximiser l'impact de vos notifications.",
+        "subtitle": "Quelques plus qui rendent chaque mise à jour automatique plus utile, et la porte ouverte aux campagnes quand vous voulez parler à tout le monde.",
         "features": [
           {
             "title": "Messages personnalisés",
-            "description": "Personnalisez le texte de vos notifications avec le prénom du client, le nombre de tampons restants, et le nom de la récompense.",
+            "description": "Affichez le prénom du client, le nombre de tampons restants, et le nom de la récompense. Chaque notification a l'air écrite pour lui.",
             "badge": "Growth"
           },
           {
-            "title": "Campagnes ciblées",
-            "description": "Envoyez des notifications groupées à vos clients : promotions flash, événements spéciaux, rappel de fidélité pour les clients inactifs.",
-            "badge": "Bientôt"
+            "title": "Jalons personnalisés",
+            "description": "Déclenchez un message au tampon exact qui compte. « À mi-chemin ! » au tampon 5, « Plus qu'un ! » au tampon 9. 3 jalons par programme en Growth, illimités en Pro.",
+            "badge": "Growth / Pro"
           },
           {
-            "title": "Segmentation intelligente",
-            "description": "Ciblez vos messages selon la fréquence de visite, le nombre de tampons, ou la date de dernière visite.",
-            "badge": "Bientôt"
+            "title": "Campagnes & segmentation",
+            "description": "Adressez-vous à tous vos clients en un seul message, ou ciblez par nombre de tampons, inactivité et récompenses récentes. Parfait pour les promos flash et les lancements de nouveautés.",
+            "badge": "Growth / Pro",
+            "href": "/features/campagnes-promotionnelles",
+            "cta": "Découvrir les campagnes"
           }
         ]
       },
@@ -377,10 +399,15 @@
         }
       ],
       "cta": {
-        "title": "Des messages que vos clients lisent vraiment",
-        "subtitle": "Rejoignez le programme fondateur et commencez à communiquer avec vos clients via leur wallet."
+        "title": "Chaque client informé, automatiquement",
+        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Rejoignez le programme fondateur et récompensez chaque visite dès le premier jour."
       },
-      "related": ["scanner-mobile", "analytiques", "programme-fondateur"]
+      "related": [
+        "campagnes-promotionnelles",
+        "scanner-mobile",
+        "analytiques",
+        "programme-fondateur"
+      ]
     },
     "analytiques": {
       "hero": {
@@ -414,7 +441,11 @@
         "title": "Arrêtez de deviner. Commencez à savoir.",
         "subtitle": "Le tableau de bord est inclus dans tous les plans. Les analytiques avancées sont disponibles sur le plan Growth."
       },
-      "related": ["notifications-push", "scanner-mobile", "programme-fondateur"],
+      "related": [
+        "campagnes-promotionnelles",
+        "notifications-push",
+        "programme-fondateur"
+      ],
       "custom": {
         "blindSpotCards": {
           "questions": [
@@ -453,15 +484,67 @@
           "description": "Le plan Growth ajoute une couche d'analyse qui vous aide à prendre des décisions."
         },
         "proCharts": {
-          "lineChart": { "label": "Scans / semaine", "trend": "+23%" },
-          "heatmap": { "label": "Heures de pointe", "days": ["L", "M", "M", "J", "V", "S", "D"] },
-          "donut": { "label": "Rétention 30j", "value": "72%" },
-          "segments": { "label": "Segments clients", "categories": ["Nouveaux", "Occasionnels", "Réguliers", "VIP"] },
-          "churn": { "label": "Clients à risque", "value": "23", "subtitle": "inactifs depuis 30j+" },
-          "bestDays": { "label": "Jours les plus actifs", "days": ["L", "M", "M", "J", "V", "S", "D"] },
-          "timeToReward": { "label": "Temps moyen carte complète", "value": "18", "unit": "jours" },
-          "completionRate": { "label": "Taux de complétion", "value": "64", "subtitle": "complètent leur carte" },
-          "returnRate": { "label": "Retour après récompense", "value": "78", "subtitle": "entament une 2e carte" }
+          "lineChart": {
+            "label": "Scans / semaine",
+            "trend": "+23%"
+          },
+          "heatmap": {
+            "label": "Heures de pointe",
+            "days": [
+              "L",
+              "M",
+              "M",
+              "J",
+              "V",
+              "S",
+              "D"
+            ]
+          },
+          "donut": {
+            "label": "Rétention 30j",
+            "value": "72%"
+          },
+          "segments": {
+            "label": "Segments clients",
+            "categories": [
+              "Nouveaux",
+              "Occasionnels",
+              "Réguliers",
+              "VIP"
+            ]
+          },
+          "churn": {
+            "label": "Clients à risque",
+            "value": "23",
+            "subtitle": "inactifs depuis 30j+"
+          },
+          "bestDays": {
+            "label": "Jours les plus actifs",
+            "days": [
+              "L",
+              "M",
+              "M",
+              "J",
+              "V",
+              "S",
+              "D"
+            ]
+          },
+          "timeToReward": {
+            "label": "Temps moyen carte complète",
+            "value": "18",
+            "unit": "jours"
+          },
+          "completionRate": {
+            "label": "Taux de complétion",
+            "value": "64",
+            "subtitle": "complètent leur carte"
+          },
+          "returnRate": {
+            "label": "Retour après récompense",
+            "value": "78",
+            "subtitle": "entament une 2e carte"
+          }
         }
       }
     },
@@ -590,7 +673,270 @@
         "title": "Soyez présent au bon moment",
         "subtitle": "Le géofencing est inclus dans le plan Growth. Rejoignez le programme fondateur pour en bénéficier dès maintenant."
       },
-      "related": ["notifications-push", "analytiques", "design-de-carte"]
+      "related": [
+        "campagnes-promotionnelles",
+        "notifications-push",
+        "analytiques"
+      ]
+    },
+    "campagnes-promotionnelles": {
+      "hero": {
+        "title": "Atteignez tous vos clients. Sans la facture SMS.",
+        "navTitle": "Campagnes promotionnelles — Notifications wallet à tous vos clients",
+        "subtitle": "Envoyez des notifications promotionnelles directement dans Apple Wallet et Google Wallet. ~85 % de taux d'ouverture. Zéro coût par message. Segmentation et programmation incluses.",
+        "pillGrowth": "Growth",
+        "pillPro": "Pro"
+      },
+      "statBand": {
+        "title": "Les chiffres parlent d'eux-mêmes",
+        "subtitle": "Performance moyenne constatée sur wallet, SMS et email, à partir de données publiques du marché.",
+        "stats": [
+          {
+            "value": "~85 %",
+            "label": "Taux d'ouverture wallet",
+            "caption": "contre ~20 % en email et ~35 % de CTR en SMS"
+          },
+          {
+            "value": "0 €",
+            "label": "Par message",
+            "caption": "Forfait fixe, pas 0,04 à 0,10 € par SMS"
+          },
+          {
+            "value": "+78 %",
+            "label": "De chiffre d'affaires",
+            "caption": "Hausse observée par les commerces utilisant des cartes wallet"
+          }
+        ]
+      },
+      "whyNotSms": {
+        "title": "SMS, email, wallet : <br></br>qu'est-ce qui arrive vraiment",
+        "subtitle": "Le taux d'ouverture et le coût de livraison ne racontent pas la même histoire. Voici comment les trois canaux se comparent pour un commerce qui envoie des promos.",
+        "columns": [
+          "",
+          "SMS",
+          "Email",
+          "Wallet (Stampeo)"
+        ],
+        "rows": [
+          {
+            "label": "Taux d'ouverture type",
+            "values": [
+              "~35 % CTR",
+              "~20 %",
+              "~85 %"
+            ]
+          },
+          {
+            "label": "Coût par message (France)",
+            "values": [
+              "0,04 – 0,10 €",
+              "Faible, variable",
+              "0 € (inclus dans le forfait)"
+            ]
+          },
+          {
+            "label": "Programmation + fuseau horaire",
+            "values": [
+              "Option payante",
+              "Selon la plateforme",
+              "Inclus (Pro)"
+            ]
+          },
+          {
+            "label": "Segmentation",
+            "values": [
+              "Import manuel de listes",
+              "Par tags, limitée",
+              "Tampons, récompenses, inactivité"
+            ]
+          },
+          {
+            "label": "Livraison bilingue",
+            "values": [
+              "Un message pour tous",
+              "Deux envois séparés",
+              "Un seul envoi, local-aware"
+            ]
+          },
+          {
+            "label": "Collecte du consentement",
+            "values": [
+              "Double opt-in requis",
+              "Double opt-in requis",
+              "Gérée à l'installation du pass"
+            ]
+          },
+          {
+            "label": "Filtrage spam / opérateur",
+            "values": [
+              "Dossier « Expéditeur inconnu » iOS 26",
+              "Onglet Promotions Gmail",
+              "Bannière lock-screen, pas d'inbox"
+            ]
+          }
+        ],
+        "caption": "Sources : tarifs Twilio France, rapport PushPass 2026 SMS vs push, guide Yotpo mobile wallet."
+      },
+      "howItWorks": {
+        "badge": "Comment ça marche",
+        "title": "De l'idée à tous les wallets <br></br>en moins d'une minute",
+        "subtitle": "",
+        "steps": [
+          {
+            "title": "Rédigez votre message",
+            "description": "Composez votre texte en FR et EN dans le tableau de bord. Un message, deux langues. Chaque client voit la langue réglée sur son téléphone."
+          },
+          {
+            "title": "Segmentez ou diffusez à tous",
+            "description": "Growth cible par date d'inscription. Pro ajoute des filtres par nombre de tampons, dernière récompense utilisée et inactivité récente, pour que chaque campagne atteigne les bons clients."
+          },
+          {
+            "title": "Envoyez ou programmez",
+            "description": "Growth envoie tout de suite. Pro vous laisse choisir la date et l'heure locales, et l'envoi part pile au bon moment, selon les horaires de votre commerce."
+          },
+          {
+            "title": "Les wallets se rafraîchissent en parallèle",
+            "description": "Apple Wallet et Google Wallet se rafraîchissent en parallèle. La notification apparaît sur l'écran de verrouillage en quelques secondes, sur chaque téléphone."
+          }
+        ]
+      },
+      "capabilities": {
+        "title": "Ce que vous pouvez faire <br></br>avec une campagne",
+        "subtitle": "Tout ce qu'il faut pour piloter de vraies campagnes marketing, sans outil supplémentaire.",
+        "items": [
+          {
+            "title": "Segmentation",
+            "description": "Ne ciblez que les clients pertinents : nouveaux inscrits, inactifs depuis 30 jours, récompense utilisée la semaine dernière, ou au moins 5 tampons collectés.",
+            "badge": "Basique en Growth · Avancée en Pro"
+          },
+          {
+            "title": "Programmation d'envoi",
+            "description": "Choisissez l'heure locale d'envoi : jeudi 17 h, samedi midi, ou tout autre moment qui colle à votre commerce. Parfait pour les happy hours, les promos de la pause déj, ou les ouvertures du week-end.",
+            "badge": "Pro"
+          },
+          {
+            "title": "Livraison bilingue",
+            "description": "Rédigez en français et en anglais une seule fois. Chaque client voit la langue réglée sur son appareil. Pas de doubles campagnes, pas de devinette.",
+            "badge": "Growth / Pro"
+          },
+          {
+            "title": "Transparence de livraison",
+            "description": "Voyez combien de messages sont arrivés sur Apple Wallet, sur Google Wallet, ont été limités par le quota, ou ignorés parce que le wallet a été désinstallé. Des stats honnêtes, pas gonflées.",
+            "badge": "Growth / Pro"
+          }
+        ]
+      },
+      "delivery": {
+        "title": "Une livraison que vous pouvez vérifier",
+        "subtitle": "Chaque campagne affiche un détail par plateforme, pour savoir où votre message est arrivé, pas juste qu'il est parti.",
+        "metrics": [
+          {
+            "label": "Apple livrés",
+            "value": 412,
+            "tint": "apple"
+          },
+          {
+            "label": "Google livrés",
+            "value": 268,
+            "tint": "google"
+          },
+          {
+            "label": "Google limités (quota)",
+            "value": 14,
+            "tint": "muted"
+          },
+          {
+            "label": "Wallet désinstallé",
+            "value": 22,
+            "tint": "muted"
+          }
+        ],
+        "note": "Vous voyez le nombre exact de clients touchés, sans cacher les cas où nous n'avons pas pu joindre. Stats honnêtes, rien de gonflé."
+      },
+      "useCases": {
+        "title": "Des campagnes réelles, des commerces réels",
+        "subtitle": "Quelques façons dont nos partenaires utilisent vraiment les campagnes wallet.",
+        "items": [
+          {
+            "emoji": "☕",
+            "title": "Café : Happy hour",
+            "description": "« Café à 2 € aujourd'hui entre 16 h et 18 h. » Envoyé à tous les détenteurs de carte à 15 h 30. Un tiers passe avant la fermeture."
+          },
+          {
+            "emoji": "🍽️",
+            "title": "Restaurant : Remplir une soirée creuse",
+            "description": "« Mardi, -20 % sur le menu dégustation. » Programmé chaque lundi soir. Transforme la soirée la plus calme de la semaine en la deuxième plus active."
+          },
+          {
+            "emoji": "💇",
+            "title": "Salon : Opération saisonnière",
+            "description": "« Rentrée : 5 € de remise sur toutes les coupes cette semaine. » Ciblé sur les clients qui n'ont pas visité depuis 45 jours."
+          },
+          {
+            "emoji": "🥐",
+            "title": "Boulangerie : Lancement de nouveauté",
+            "description": "« Notre nouveau pain au levain est là. Une viennoiserie offerte aux 30 premiers. » Diffusé à tous les porteurs de carte."
+          }
+        ]
+      },
+      "faq": {
+        "title": "Les questions qu'on nous pose",
+        "subtitle": "Réponses simples sur le marketing wallet pour les commerces.",
+        "items": [
+          {
+            "question": "Combien coûtent les campagnes promotionnelles wallet ?",
+            "answer": "Rien de plus. Les campagnes sont incluses dans le plan Growth (3 par mois) et le plan Pro (illimitées). Il n'y a pas de coût par message, contrairement au SMS qui coûte entre 0,04 et 0,10 € par envoi en France. Une seule campagne SMS à 500 clients peut facilement coûter 30 à 50 €."
+          },
+          {
+            "question": "Les clients doivent-ils installer une app ?",
+            "answer": "Non. Les clients installent un pass Apple Wallet ou Google Wallet standard, c'est-à-dire la carte de fidélité elle-même. Les notifications wallet sont une fonctionnalité native des deux plateformes, déjà présente sur tous les iPhone et Android modernes. Aucun téléchargement sur le store, aucun compte, aucune permission à accorder au-delà de l'ajout du pass."
+          },
+          {
+            "question": "Comment se compare le marketing wallet au SMS ?",
+            "answer": "Les notifications wallet apparaissent sur l'écran de verrouillage comme un SMS, mais sont gratuites à envoyer, atteignent ~85 % de taux d'ouverture, et ne tombent pas dans le filtre iOS 26 « Expéditeur inconnu ». Vous disposez aussi d'une segmentation intégrée (par tampons gagnés, récompenses utilisées, ou inactivité récente) que les plateformes SMS facturent généralement en option."
+          },
+          {
+            "question": "Puis-je programmer mes campagnes à l'avance ?",
+            "answer": "Oui, avec le plan Pro. Choisissez la date et l'heure locales, et l'envoi part pile au bon moment, selon les horaires de votre commerce. Le plan Growth envoie immédiatement au moment où vous cliquez sur « Envoyer », ce qui convient à la plupart des promos flash."
+          },
+          {
+            "question": "Puis-je cibler des clients spécifiques ?",
+            "answer": "Oui. En Growth, vous pouvez filtrer par date d'inscription (nouveaux clients vs. clients historiques). En Pro, vous avez une segmentation avancée par nombre de tampons, dernière récompense utilisée, et fenêtre d'inactivité, pour que chaque campagne ne touche que les clients pour qui elle est pensée."
+          },
+          {
+            "question": "Est-ce conforme au RGPD ?",
+            "answer": "Oui. Le consentement est recueilli à l'installation du pass, et le client peut désactiver les notifications wallet à tout moment depuis les réglages de son appareil. Nous ne vendons ni ne partageons les données clients avec des tiers, et le client peut retirer le pass de son wallet quand il le souhaite."
+          },
+          {
+            "question": "Est-ce que ça fonctionne avec Apple Wallet ET Google Wallet ?",
+            "answer": "Oui. Chaque campagne part vers Apple Wallet et Google Wallet en parallèle. Vos clients voient la notification qu'ils soient sur iPhone ou sur Android."
+          },
+          {
+            "question": "Que se passe-t-il si j'atteins la limite mensuelle du plan Growth ?",
+            "answer": "Soit vous attendez le mois suivant, soit vous passez au plan Pro pour des campagnes illimitées plus la programmation et la segmentation avancée. Les notifications automatiques (tampon, jalon, récompense) continuent quoi qu'il arrive, puisque la limite ne concerne que les campagnes promotionnelles manuelles."
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Un marketing qui respecte le client",
+        "subtitle": "Les campagnes wallet sont conçues pour ressembler à un avantage fidélité, pas à une pub.",
+        "points": [
+          "Consentement recueilli à l'installation du pass. Chaque client peut désactiver les notifications quand il le souhaite.",
+          "Le client reste propriétaire de ses données. Il peut retirer le pass en un tap, et les notifications s'arrêtent immédiatement.",
+          "Une bannière claire par campagne, pas un générique « Le pass a changé ».",
+          "Conforme au RGPD. Aucun tracking publicitaire, aucune donnée vendue ou partagée."
+        ],
+        "gdprLabel": "RGPD"
+      },
+      "cta": {
+        "title": "Votre prochaine campagne, dans la poche de vos clients",
+        "subtitle": "Rejoignez le programme fondateur et envoyez votre première campagne wallet cette semaine."
+      },
+      "related": [
+        "notifications-push",
+        "analytiques",
+        "geolocalisation"
+      ]
     },
     "programme-fondateur": {
       "hero": {
@@ -625,7 +971,11 @@
         "title": "Rejoignez les premiers",
         "subtitle": "Places limitées. {freeMonths} mois gratuits. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth."
       },
-      "related": ["notifications-push", "scanner-mobile", "design-de-carte"],
+      "related": [
+        "notifications-push",
+        "scanner-mobile",
+        "design-de-carte"
+      ],
       "custom": {
         "seeAllPlans": "Voir tous les plans",
         "benefits": {
@@ -671,6 +1021,8 @@
             "items": [
               "Génération de cartes Apple Wallet et Google Wallet",
               "Scan QR code avec notification push en temps réel",
+              "Campagnes promotionnelles à tous vos clients (Growth / Pro)",
+              "Segmentation client pour les campagnes (Pro)",
               "Tableau de bord avec liste de clients et statistiques",
               "Mode hors ligne pour le scanner",
               "Éditeur de carte avec aperçu en temps réel"
@@ -679,7 +1031,6 @@
           "comingSoon": {
             "title": "Ce qui arrive bientôt",
             "items": [
-              "Campagnes promotionnelles et segmentation",
               "Analytiques avancées (tendances, heures de pointe)",
               "Création de carte assistée par IA",
               "Designs programmés et saisonniers",

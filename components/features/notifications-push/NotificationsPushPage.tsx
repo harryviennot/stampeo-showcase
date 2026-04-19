@@ -7,8 +7,9 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   BellIcon,
   SparklesIcon,
-  ChartIcon,
-  ClockIcon,
+  TargetIcon,
+  MegaphoneIcon,
+  ArrowRightIcon,
 } from "@/components/icons";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
@@ -18,7 +19,7 @@ import { ChannelComparisonBars } from "./ChannelComparisonBars";
 import { NotificationSequenceDemo } from "./NotificationSequenceDemo";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 
-const advancedIcons = [SparklesIcon, ChartIcon, ClockIcon];
+const advancedIcons = [SparklesIcon, TargetIcon, MegaphoneIcon];
 
 export function NotificationsPushPage() {
   const t = useTranslations("features");
@@ -28,6 +29,8 @@ export function NotificationsPushPage() {
     title: string;
     description: string;
     badge?: string;
+    href?: string;
+    cta?: string;
   }[];
 
   const related = tp.raw("related") as string[];
@@ -163,24 +166,46 @@ export function NotificationsPushPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {advancedFeatures.map((feature, index) => {
               const Icon = advancedIcons[index] || SparklesIcon;
+              const isLinked = Boolean(feature.href);
+              const cardClass = `group relative flex flex-col h-full p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 ${
+                isLinked ? "hover:-translate-y-2 cursor-pointer" : "hover:-translate-y-2"
+              }`;
+              const body = (
+                <>
+                  {feature.badge && (
+                    <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold">
+                      {feature.badge}
+                    </span>
+                  )}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[var(--foreground)] mb-3 group-hover:text-[var(--accent)] transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[var(--muted-foreground)] leading-relaxed">
+                    {feature.description}
+                  </p>
+                  {isLinked && feature.cta && (
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] mt-5 pt-5 border-t border-[var(--border)] group-hover:gap-2 transition-all">
+                      {feature.cta}
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </span>
+                  )}
+                </>
+              );
               return (
                 <ScrollReveal key={index} delay={index * 100}>
-                  <div className="relative p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2 h-full">
-                    {feature.badge && (
-                      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold">
-                        {feature.badge}
-                      </span>
-                    )}
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-[var(--muted-foreground)] leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
+                  {isLinked ? (
+                    <Link
+                      href={feature.href as "/features/notifications-push"}
+                      className={cardClass}
+                    >
+                      {body}
+                    </Link>
+                  ) : (
+                    <div className={cardClass}>{body}</div>
+                  )}
                 </ScrollReveal>
               );
             })}

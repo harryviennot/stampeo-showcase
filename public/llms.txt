@@ -8,6 +8,7 @@ Stampeo is a SaaS platform that helps local businesses create and manage digital
 
 - Homepage: https://stampeo.app
 - Features: https://stampeo.app/features/card-design
+- Promotional campaigns: https://stampeo.app/en/features/promotional-campaigns
 - Blog: https://stampeo.app/blog
 - Contact: https://stampeo.app/contact
 - About: https://stampeo.app/about
@@ -17,7 +18,7 @@ Stampeo is a SaaS platform that helps local businesses create and manage digital
 - **What it does**: Creates digital stamp cards (loyalty cards) that live in Apple Wallet and Google Wallet
 - **Target audience**: Local businesses — bakeries, cafés, restaurants, hair salons, beauty institutes
 - **How it works**: Business creates a card design → customers scan a QR code to add it to their wallet → employees scan the customer's pass to add stamps → after N stamps, the customer earns a reward
-- **Key features**: Card design editor, mobile QR scanner, push notifications (85% read rate), analytics dashboard, geofencing
+- **Key features**: Card design editor, mobile QR scanner, push notifications (85% read rate), promotional broadcasts (SMS alternative), analytics dashboard, geofencing
 
 ## Pricing
 
