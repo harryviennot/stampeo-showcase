@@ -14,7 +14,7 @@ import { useAuth } from "@/lib/supabase/auth-provider";
 import { getThemeColor } from "@/lib/theme";
 import { detectBusinessLocale } from "@/lib/locale-detect";
 import { CheckIcon, XMarkIcon } from "@/components/icons";
-import { PRICING } from "@/lib/pricing";
+import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
 
 interface FoundingPartnerStepProps {
   store: OnboardingStore;
@@ -51,6 +51,10 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   const [isReseller, setIsReseller] = useState(false);
   const [resellerDiscount, setResellerDiscount] = useState<number | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
+
+  // Founding program is closing — check on mount. Backend re-checks on submit
+  // so a clock-skewed client can't sneak past the deadline.
+  const foundingOpen = useMemo(() => isFoundingProgramOpen(), []);
 
   // Fetch user profile to check reseller status
   useEffect(() => {
@@ -93,7 +97,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
           name: data.businessName,
           url_slug: slugOverride ?? data.urlSlug,
           subscription_tier: tier,
-          is_founding_partner: !isReseller,
+          is_founding_partner: !isReseller && foundingOpen,
           settings: {
             category: data.category || undefined,
             description: data.description || undefined,
@@ -142,7 +146,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         setLoadingTier(null);
       }
     },
-    [data, updateData, onNext, session, businessLocale, isReseller]
+    [data, updateData, onNext, session, businessLocale, isReseller, foundingOpen]
   );
 
   const handleSelectPlan = useCallback(
@@ -222,22 +226,30 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="text-center mb-8">
-        {/* Badge */}
+        {/* Badge — hidden once founding program closes (and we're not a reseller) */}
         {isReseller ? (
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
             {t("resellerBadge", { discount: resellerDiscount! })}
           </div>
-        ) : (
+        ) : foundingOpen ? (
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
             {t("limitedSpots")}
           </div>
-        )}
+        ) : null}
 
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          {isReseller ? t("resellerTitle") : t("title")}
+          {isReseller
+            ? t("resellerTitle")
+            : foundingOpen
+              ? t("title")
+              : t("standardTitle")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2 max-w-lg mx-auto">
-          {isReseller ? t("resellerSubtitle") : t("subtitle")}
+          {isReseller
+            ? t("resellerSubtitle")
+            : foundingOpen
+              ? t("subtitle")
+              : t("standardSubtitle")}
         </p>
       </div>
 
@@ -364,7 +376,7 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
           if (isReseller && resellerDiscount && !isPro) {
             discountedPrice = getDiscountedPrice(regularPrice, resellerDiscount);
             priceLabel = tp("perMonth");
-          } else if (!isReseller && "foundingPrice" in tierPricing) {
+          } else if (!isReseller && foundingOpen && "foundingPrice" in tierPricing) {
             discountedPrice = tierPricing.foundingPrice;
             priceLabel = tp("forLife");
           }

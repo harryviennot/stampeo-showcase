@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PRICING } from "@/lib/pricing";
+import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 
 function PricingCard({
@@ -351,12 +351,14 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ() {
+function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
   const t = useTranslations("pricingPage");
-  const faqs = t.raw("faq.items") as Array<{
+  const allFaqs = t.raw("faq.items") as Array<{
     question: string;
     answer: string;
+    foundingOnly?: boolean;
   }>;
+  const faqs = foundingOpen ? allFaqs : allFaqs.filter((f) => !f.foundingOnly);
 
   return (
     <div className="mt-24 lg:mt-32">
@@ -399,6 +401,7 @@ function PricingFAQ() {
 export function PricingPageContent() {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
+  const foundingOpen = isFoundingProgramOpen();
   const foundingHref =
     locale === "en" ? "/founding-partner" : "/programme-fondateur";
 
@@ -417,18 +420,20 @@ export function PricingPageContent() {
         </p>
 
         {/* Founding partner callout */}
-        <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
-          <span className="text-sm font-semibold text-[var(--accent)]">
-            {t("foundingCallout")}
-          </span>
-          <Link
-            href={foundingHref}
-            className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
-          >
-            {t("foundingLink")}
-            <ArrowRight className="w-3.5 h-3.5" weight="bold" />
-          </Link>
-        </div>
+        {foundingOpen && (
+          <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
+            <span className="text-sm font-semibold text-[var(--accent)]">
+              {t("foundingCallout")}
+            </span>
+            <Link
+              href={foundingHref}
+              className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
+            >
+              {t("foundingLink")}
+              <ArrowRight className="w-3.5 h-3.5" weight="bold" />
+            </Link>
+          </div>
+        )}
       </ScrollReveal>
 
       {/* Pricing Cards */}
@@ -445,7 +450,7 @@ export function PricingPageContent() {
       <FeatureComparisonTable />
 
       {/* FAQ */}
-      <PricingFAQ />
+      <PricingFAQ foundingOpen={foundingOpen} />
 
       {/* Bottom CTA */}
       <ScrollReveal

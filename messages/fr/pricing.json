@@ -3,13 +3,14 @@
     "badge": "Plans & Tarifs",
     "title": "Des tarifs simples et transparents",
     "subtitle": "Les partenaires fondateurs bénéficient de -50% — à vie.",
+    "subtitleStandard": "Clients, scans et appareils illimités sur chaque plan.",
     "foundingPartner": "FONDATEUR",
     "popular": "LE PLUS POPULAIRE",
     "comingSoon": "BIENTÔT",
     "perMonth": "/mois",
     "forLife": "/mois à vie",
     "freeMonths": "3 mois offerts",
-    "spotsLeft": "{count} places restantes",
+    "deadlineNotice": "Tarif fondateur jusqu'au {date} — dernière chance.",
     "cta": "Commencer gratuitement",
     "ctaComingSoon": "Bientôt disponible",
     "ctaSubtext": "Sans carte bancaire · Annulez quand vous voulez",
@@ -245,7 +246,7 @@
       "items": [
         {
           "question": "Y a-t-il un essai gratuit ?",
-          "answer": "Oui ! Chaque plan commence avec 3 mois gratuits dans le cadre de notre Programme Fondateur. Aucune carte bancaire requise pour démarrer."
+          "answer": "Oui ! Chaque plan inclut un essai gratuit de 30 jours. Aucune carte bancaire requise pour démarrer."
         },
         {
           "question": "Puis-je changer de plan plus tard ?",
@@ -255,7 +256,7 @@
           "question": "Y a-t-il des frais par client ?",
           "answer": "Non. Chaque plan inclut des clients et des scans illimités. Votre tarif reste le même que vous ayez 10 clients ou 10 000."
         },
-{
+        {
           "question": "Quand le plan Pro sera-t-il disponible ?",
           "answer": "Le plan Pro est actuellement en développement. Nous construisons le support multi-établissement, le geofencing et la segmentation avancée. Inscrivez-vous à la liste d'attente pour être notifié de son lancement."
         },
@@ -265,7 +266,8 @@
         },
         {
           "question": "Qu'est-ce que le Programme Fondateur ?",
-          "answer": "Notre Programme Fondateur offre aux premiers utilisateurs -50% sur leur plan — verrouillé à vie. Vous bénéficiez aussi de 3 mois entièrement gratuits pour tester la plateforme. Les places sont limitées."
+          "answer": "Notre Programme Fondateur offre aux premiers utilisateurs -50% sur leur plan — verrouillé à vie. Les places sont limitées et le programme ferme bientôt.",
+          "foundingOnly": true
         }
       ]
     },
