@@ -1,9 +1,10 @@
 import { Link } from "@/i18n/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InfoIcon } from "@/components/icons";
-import { PRICING, FOUNDING_PROGRAM_END_DATE, isFoundingProgramOpen } from "@/lib/pricing";
+import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
+import { FoundingCountdown } from "@/components/pricing/FoundingCountdown";
 
 type FeatureItem = string | { text: string; tooltip: string };
 
@@ -39,12 +40,7 @@ function FeatureListItem({ feature }: { feature: FeatureItem }) {
 
 export async function PricingSection() {
   const t = await getTranslations("pricing");
-  const locale = await getLocale();
   const foundingOpen = isFoundingProgramOpen();
-  const deadlineFormatted = FOUNDING_PROGRAM_END_DATE.toLocaleDateString(locale, {
-    day: "numeric",
-    month: "long",
-  });
 
   const starterFeatures = t.raw("starter.features") as FeatureItem[];
   const growthFeatures = t.raw("growth.features") as FeatureItem[];
@@ -62,9 +58,9 @@ export async function PricingSection() {
             {foundingOpen ? t("subtitle") : t("subtitleStandard")}
           </p>
           {foundingOpen && (
-            <p className="text-sm font-semibold text-[var(--accent)] mt-4">
-              {t("deadlineNotice", { date: deadlineFormatted })}
-            </p>
+            <div className="mt-5 flex justify-center">
+              <FoundingCountdown variant="badge" />
+            </div>
           )}
         </ScrollReveal>
 
@@ -80,10 +76,7 @@ export async function PricingSection() {
               </p>
               {foundingOpen ? (
                 <div className="flex flex-col gap-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.starter.price}</span>
-                    <span className="text-sm font-semibold text-[var(--accent)]">{t("freeMonths")}</span>
-                  </div>
+                  <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.starter.price}</span>
                   <div className="flex items-baseline gap-1">
                     <span className="text-5xl font-black tracking-tight">&euro;{PRICING.starter.foundingPrice}</span>
                     <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>
@@ -137,10 +130,7 @@ export async function PricingSection() {
               </p>
               {foundingOpen ? (
                 <div className="flex flex-col gap-1">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.growth.price}</span>
-                    <span className="text-sm font-semibold text-[var(--accent)]">{t("freeMonths")}</span>
-                  </div>
+                  <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">&euro;{PRICING.growth.price}</span>
                   <div className="flex items-baseline gap-1">
                     <span className="text-5xl font-black tracking-tight">&euro;{PRICING.growth.foundingPrice}</span>
                     <span className="text-[var(--muted-foreground)] text-lg font-bold">{t("forLife")}</span>

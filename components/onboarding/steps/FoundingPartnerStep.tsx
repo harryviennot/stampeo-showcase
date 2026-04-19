@@ -424,13 +424,9 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
                         <span className="text-sm line-through text-[var(--muted-foreground)]">
                           &euro;{regularPrice}
                         </span>
-                        {isReseller ? (
+                        {isReseller && (
                           <span className="text-xs text-[var(--accent)] font-semibold">
                             -{resellerDiscount}%
-                          </span>
-                        ) : (
-                          <span className="text-xs text-[var(--accent)] font-semibold">
-                            {tp("freeMonths")}
                           </span>
                         )}
                       </div>

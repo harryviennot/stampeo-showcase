@@ -11,6 +11,10 @@
     "forLife": "/mois à vie",
     "freeMonths": "3 mois offerts",
     "deadlineNotice": "Tarif fondateur jusqu'au {date} — dernière chance.",
+    "countdown": {
+      "daysHours": "Tarif fondateur — fin dans {days}j {hours}h",
+      "hoursMinutes": "Tarif fondateur — fin dans {hours}h {minutes}m"
+    },
     "cta": "Commencer gratuitement",
     "ctaComingSoon": "Bientôt disponible",
     "ctaSubtext": "Sans carte bancaire · Annulez quand vous voulez",

@@ -11,6 +11,10 @@
     "forLife": "/month for life",
     "freeMonths": "3 months free",
     "deadlineNotice": "Founding pricing closes {date} — last chance.",
+    "countdown": {
+      "daysHours": "Founding pricing closes in {days}d {hours}h",
+      "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
+    },
     "cta": "Start Free",
     "ctaComingSoon": "Coming soon",
     "ctaSubtext": "No credit card required · Cancel anytime",

@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
+import { FoundingCountdown } from "@/components/pricing/FoundingCountdown";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 
 function PricingCard({
@@ -421,17 +422,20 @@ export function PricingPageContent() {
 
         {/* Founding partner callout */}
         {foundingOpen && (
-          <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
-            <span className="text-sm font-semibold text-[var(--accent)]">
-              {t("foundingCallout")}
-            </span>
-            <Link
-              href={foundingHref}
-              className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
-            >
-              {t("foundingLink")}
-              <ArrowRight className="w-3.5 h-3.5" weight="bold" />
-            </Link>
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <FoundingCountdown variant="badge" />
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
+              <span className="text-sm font-semibold text-[var(--accent)]">
+                {t("foundingCallout")}
+              </span>
+              <Link
+                href={foundingHref}
+                className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
+              >
+                {t("foundingLink")}
+                <ArrowRight className="w-3.5 h-3.5" weight="bold" />
+              </Link>
+            </div>
           </div>
         )}
       </ScrollReveal>
