@@ -14,6 +14,9 @@ export const FEATURES = {
   geolocalisation: {
     icon: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
   },
+  "campagnes-promotionnelles": {
+    icon: "M3 11v2c0 1.1.9 2 2 2h1l3 4h2V5H9L6 9H5c-1.1 0-2 .9-2 2zm13.5 1c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z",
+  },
 } as const;
 
 export type FeatureSlug = keyof typeof FEATURES;
@@ -25,6 +28,7 @@ const FR_TO_EN: Record<FeatureSlug, string> = {
   "notifications-push": "push-notifications",
   analytiques: "analytics",
   geolocalisation: "geolocation",
+  "campagnes-promotionnelles": "promotional-campaigns",
 };
 
 /** EN slug → FR slug */
