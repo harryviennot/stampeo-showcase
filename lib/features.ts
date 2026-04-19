@@ -4,6 +4,7 @@ import {
   BellIcon,
   ChartIcon,
   MapPinIcon,
+  MegaphoneIcon,
 } from "@/components/icons";
 import type { FeatureSlug } from "@/lib/feature-slugs";
 
@@ -12,11 +13,12 @@ export const FEATURE_ITEMS: ReadonlyArray<{
   canonicalSlug: FeatureSlug;
   Icon: typeof PaletteIcon;
 }> = [
-  { key: "designDeCarte", canonicalSlug: "design-de-carte", Icon: PaletteIcon },
-  { key: "scannerMobile", canonicalSlug: "scanner-mobile", Icon: CameraIcon },
   { key: "notificationsPush", canonicalSlug: "notifications-push", Icon: BellIcon },
-  { key: "analytiques", canonicalSlug: "analytiques", Icon: ChartIcon },
+  { key: "campagnesPromotionnelles", canonicalSlug: "campagnes-promotionnelles", Icon: MegaphoneIcon },
   { key: "geolocalisation", canonicalSlug: "geolocalisation", Icon: MapPinIcon },
+  { key: "scannerMobile", canonicalSlug: "scanner-mobile", Icon: CameraIcon },
+  { key: "analytiques", canonicalSlug: "analytiques", Icon: ChartIcon },
+  { key: "designDeCarte", canonicalSlug: "design-de-carte", Icon: PaletteIcon },
 ];
 
 export {

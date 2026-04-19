@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { FAQList } from "../ui/FAQList";
 import { Link } from "@/i18n/navigation";
 import { interpolatePricing } from "@/lib/pricing";
 
@@ -25,28 +26,8 @@ export async function FAQSection() {
         </ScrollReveal>
 
         {/* Accordion List */}
-        <ScrollReveal delay={200} className="flex flex-col gap-5">
-          {faqs.map((faq, index) => (
-            <details
-              key={index}
-              className="group flex flex-col rounded-xl bg-white blog-card-3d px-6 py-4"
-              open={index === 0 || index === 1}
-            >
-              <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
-                <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
-                  {faq.question}
-                </p>
-                <div className="text-[var(--muted-foreground)] transition-transform duration-300 group-open:rotate-180 group-open:text-[var(--accent)]">
-                  <span className="text-xl font-bold">↓</span>
-                </div>
-              </summary>
-              <div className="pt-2 pb-4">
-                <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            </details>
-          ))}
+        <ScrollReveal delay={200}>
+          <FAQList items={faqs} defaultOpenCount={2} />
         </ScrollReveal>
 
         {/* CTA Section inside FAQ */}

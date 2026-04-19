@@ -338,7 +338,7 @@
     },
     "featureGrid": {
       "title": "Everything you need to build loyalty",
-      "subtitle": "Seven features designed for independent businesses. No bloat.",
+      "subtitle": "Six features designed for independent businesses. No bloat.",
       "learnMore": "Learn more",
       "features": [
         {
@@ -370,11 +370,6 @@
           "title": "Card design",
           "description": "Your colors, your logo, ready in 5 minutes.",
           "link": "/features/card-design"
-        },
-        {
-          "title": "Founding program",
-          "description": "3 months free. Price locked for life.",
-          "link": "/founding-partner"
         }
       ]
     },

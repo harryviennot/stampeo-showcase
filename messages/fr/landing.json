@@ -338,7 +338,7 @@
     },
     "featureGrid": {
       "title": "Tout ce qu'il faut pour fidéliser",
-      "subtitle": "Sept fonctionnalités pensées pour les commerces indépendants. Pas de superflu.",
+      "subtitle": "Six fonctionnalités pensées pour les commerces indépendants. Pas de superflu.",
       "learnMore": "En savoir plus",
       "features": [
         {
@@ -348,7 +348,7 @@
         },
         {
           "title": "Campagnes promotionnelles",
-          "description": "Touchez tous vos clients — sans la facture SMS, 85 % d'ouverture.",
+          "description": "Atteignez tous vos clients, sans la facture SMS. 85 % d'ouverture.",
           "link": "/features/campagnes-promotionnelles"
         },
         {
@@ -370,11 +370,6 @@
           "title": "Design de carte",
           "description": "Vos couleurs, votre logo, prêt en 5 minutes.",
           "link": "/features/design-de-carte"
-        },
-        {
-          "title": "Programme fondateur",
-          "description": "3 mois offerts. Tarif bloqué à vie.",
-          "link": "/programme-fondateur"
         }
       ]
     },

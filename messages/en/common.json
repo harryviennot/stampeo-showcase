@@ -22,6 +22,10 @@
           "label": "Push Notifications",
           "description": "Engage customers on their lock screen"
         },
+        "campagnesPromotionnelles": {
+          "label": "Promotional Campaigns",
+          "description": "Reach every customer — no SMS bill"
+        },
         "analytiques": {
           "label": "Analytics",
           "description": "Understand your customers with real data"
@@ -53,7 +57,8 @@
       "next": "Next",
       "skip": "Skip",
       "tryAgain": "Try Again",
-      "goBack": "Go back"
+      "goBack": "Go back",
+      "startFree": "Start Free"
     },
     "wallet": {
       "appleWallet": "Apple Wallet",

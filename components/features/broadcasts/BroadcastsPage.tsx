@@ -4,16 +4,14 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { FAQList } from "@/components/ui/FAQList";
 import {
-  MegaphoneIcon,
   AppleIcon,
   GoogleIcon,
   TargetIcon,
   ClockIcon,
   TranslateIcon,
   ChartPieSliceIcon,
-  CheckIcon,
-  X,
 } from "@/components/icons";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
@@ -50,8 +48,9 @@ function WalletBadge({ kind }: { kind: "apple" | "google" }) {
 }
 
 export function BroadcastsPage() {
-  const t = useTranslations("features");
+  const tb = useTranslations("common.buttons");
   const tp = useTranslations("features.campagnes-promotionnelles");
+  const startFree = tb("startFree");
 
   const stats = tp.raw("statBand.stats") as {
     value: string;
@@ -83,12 +82,6 @@ export function BroadcastsPage() {
     description: string;
   }[];
 
-  const tierColumns = tp.raw("tierMatrix.columns") as string[];
-  const tierRows = tp.raw("tierMatrix.rows") as {
-    label: string;
-    values: string[];
-  }[];
-
   const faqItems = tp.raw("faq.items") as {
     question: string;
     answer: string;
@@ -112,18 +105,11 @@ export function BroadcastsPage() {
         <Container className="relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollReveal>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--accent)]/10 shadow-sm mb-6">
-                <MegaphoneIcon className="w-4 h-4 text-[var(--accent)]" />
-                <span className="text-sm font-bold tracking-wide">
-                  {tp("heroBadge")}
-                </span>
-              </div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] leading-[1.1] mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] leading-[1.1] mb-6 text-balance">
                 {tp("hero.title")}
               </h1>
 
-              <p className="text-lg lg:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-2xl mx-auto mb-10">
+              <p className="text-lg lg:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-2xl mx-auto mb-10 text-balance">
                 {tp("hero.subtitle")}
               </p>
 
@@ -141,7 +127,7 @@ export function BroadcastsPage() {
                   href="/onboarding"
                   className="group inline-flex items-center gap-2 bg-[var(--accent)] text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-[var(--accent)]/25 hover:scale-105 transition-all"
                 >
-                  <span>{t("ctaButton")}</span>
+                  <span>{startFree}</span>
                   <span className="transition-transform group-hover:translate-x-1">→</span>
                 </Link>
               </div>
@@ -159,10 +145,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-24 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
               {tp("statBand.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lg text-[var(--muted-foreground)] text-balance">
               {tp("statBand.subtitle")}
             </p>
           </ScrollReveal>
@@ -192,9 +178,11 @@ export function BroadcastsPage() {
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
-              {tp("whyNotSms.title")}
+              {tp.rich("whyNotSms.title", {
+                br: () => <br className="hidden sm:block" />,
+              })}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lg text-[var(--muted-foreground)] text-balance">
               {tp("whyNotSms.subtitle")}
             </p>
           </ScrollReveal>
@@ -268,9 +256,11 @@ export function BroadcastsPage() {
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
-              {tp("capabilities.title")}
+              {tp.rich("capabilities.title", {
+                br: () => <br className="hidden sm:block" />,
+              })}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lg text-[var(--muted-foreground)] text-balance">
               {tp("capabilities.subtitle")}
             </p>
           </ScrollReveal>
@@ -307,10 +297,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
               {tp("delivery.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lg text-[var(--muted-foreground)] text-balance">
               {tp("delivery.subtitle")}
             </p>
           </ScrollReveal>
@@ -375,10 +365,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
               {tp("useCases.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lg text-[var(--muted-foreground)] text-balance">
               {tp("useCases.subtitle")}
             </p>
           </ScrollReveal>
@@ -403,81 +393,7 @@ export function BroadcastsPage() {
         </Container>
       </section>
 
-      {/* ============ 8. Tier matrix ============ */}
-      <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
-        <Container>
-          <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
-              {tp("tierMatrix.title")}
-            </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
-              {tp("tierMatrix.subtitle")}
-            </p>
-          </ScrollReveal>
-
-          <ScrollReveal delay={100}>
-            <div className="bg-white rounded-2xl blog-card-3d overflow-hidden max-w-5xl mx-auto">
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-left">
-                  <thead>
-                    <tr className="border-b border-[var(--border)] bg-[var(--blog-bg)]">
-                      {tierColumns.map((col, i) => (
-                        <th
-                          key={i}
-                          className={`p-5 text-sm font-bold ${
-                            i === 2 ? "text-[var(--accent)]" : "text-[var(--foreground)]"
-                          }`}
-                        >
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tierRows.map((row, rowIdx) => (
-                      <tr
-                        key={rowIdx}
-                        className="border-t border-[var(--border)]/50"
-                      >
-                        <td className="p-5 text-sm font-semibold text-[var(--foreground)] w-[32%]">
-                          {row.label}
-                        </td>
-                        {row.values.map((value, cellIdx) => {
-                          const isDash = value === "—";
-                          const isGrowth = cellIdx === 1;
-                          return (
-                            <td
-                              key={cellIdx}
-                              className={`p-5 text-sm ${
-                                isDash
-                                  ? "text-[var(--muted-foreground)]"
-                                  : isGrowth
-                                    ? "text-[var(--foreground)] font-semibold bg-[var(--accent)]/[0.04]"
-                                    : "text-[var(--foreground)] font-medium"
-                              }`}
-                            >
-                              <span className="inline-flex items-center gap-2">
-                                {isDash ? (
-                                  <X className="w-4 h-4 text-[var(--border)]" weight="bold" />
-                                ) : (
-                                  <CheckIcon className="w-4 h-4 text-[var(--stamp-sage)]" />
-                                )}
-                                {value}
-                              </span>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </ScrollReveal>
-        </Container>
-      </section>
-
-      {/* ============ 9. Privacy ============ */}
+      {/* ============ 8. Privacy ============ */}
       <FeaturePrivacy
         title={tp("privacy.title")}
         subtitle={tp("privacy.subtitle")}
@@ -485,42 +401,30 @@ export function BroadcastsPage() {
         gdprLabel={tp("privacy.gdprLabel")}
       />
 
-      {/* ============ 10. FAQ ============ */}
+      {/* ============ 9. FAQ ============ */}
       <section className="py-20 sm:py-28">
-        <Container className="max-w-3xl">
+        <div className="max-w-[840px] mx-auto px-6">
           <ScrollReveal className="mb-12 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
               {tp("faq.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lg text-[var(--muted-foreground)] text-balance">
               {tp("faq.subtitle")}
             </p>
           </ScrollReveal>
 
-          <div className="flex flex-col gap-4">
-            {faqItems.map((item, index) => (
-              <ScrollReveal key={index} delay={index * 50}>
-                <details className="group bg-white rounded-2xl blog-card-3d p-6 open:ring-1 open:ring-[var(--accent)]/20">
-                  <summary className="cursor-pointer list-none flex items-center justify-between gap-4">
-                    <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)]">
-                      {item.question}
-                    </h3>
-                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[var(--muted)] flex items-center justify-center text-[var(--muted-foreground)] group-open:rotate-45 transition-transform font-bold">
-                      +
-                    </span>
-                  </summary>
-                  <p className="mt-4 text-[var(--muted-foreground)] leading-relaxed">
-                    {item.answer}
-                  </p>
-                </details>
-              </ScrollReveal>
-            ))}
-          </div>
-        </Container>
+          <ScrollReveal delay={200}>
+            <FAQList items={faqItems} defaultOpenCount={1} />
+          </ScrollReveal>
+        </div>
       </section>
 
-      {/* ============ 11. CTA ============ */}
-      <FeatureCTA title={tp("cta.title")} subtitle={tp("cta.subtitle")} />
+      {/* ============ 10. CTA ============ */}
+      <FeatureCTA
+        title={tp("cta.title")}
+        subtitle={tp("cta.subtitle")}
+        buttonText={startFree}
+      />
 
       <RelatedFeatures related={related} />
     </>

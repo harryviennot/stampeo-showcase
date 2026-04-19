@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { Link } from "@/i18n/navigation";
-import { BellIcon, MapPinIcon, CameraIcon, ChartIcon, PaletteIcon, StarIcon, MegaphoneIcon } from "../icons";
+import { BellIcon, MapPinIcon, CameraIcon, ChartIcon, PaletteIcon, MegaphoneIcon } from "../icons";
 import { ArrowRightIcon } from "../icons";
 import { ComponentType } from "react";
 
@@ -13,7 +13,6 @@ const featureIcons: ComponentType<{ className?: string }>[] = [
   CameraIcon,
   ChartIcon,
   PaletteIcon,
-  StarIcon,
 ];
 
 export async function FeatureGrid() {

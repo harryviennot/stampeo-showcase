@@ -7,9 +7,9 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   BellIcon,
   SparklesIcon,
-  ChartIcon,
-  ClockIcon,
+  TargetIcon,
   MegaphoneIcon,
+  ArrowRightIcon,
 } from "@/components/icons";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
@@ -19,7 +19,7 @@ import { ChannelComparisonBars } from "./ChannelComparisonBars";
 import { NotificationSequenceDemo } from "./NotificationSequenceDemo";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 
-const advancedIcons = [SparklesIcon, ChartIcon, ClockIcon];
+const advancedIcons = [SparklesIcon, TargetIcon, MegaphoneIcon];
 
 export function NotificationsPushPage() {
   const t = useTranslations("features");
@@ -29,6 +29,8 @@ export function NotificationsPushPage() {
     title: string;
     description: string;
     badge?: string;
+    href?: string;
+    cta?: string;
   }[];
 
   const related = tp.raw("related") as string[];
@@ -164,71 +166,50 @@ export function NotificationsPushPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {advancedFeatures.map((feature, index) => {
               const Icon = advancedIcons[index] || SparklesIcon;
+              const isLinked = Boolean(feature.href);
+              const cardClass = `group relative flex flex-col h-full p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 ${
+                isLinked ? "hover:-translate-y-2 cursor-pointer" : "hover:-translate-y-2"
+              }`;
+              const body = (
+                <>
+                  {feature.badge && (
+                    <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold">
+                      {feature.badge}
+                    </span>
+                  )}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[var(--foreground)] mb-3 group-hover:text-[var(--accent)] transition-colors">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[var(--muted-foreground)] leading-relaxed">
+                    {feature.description}
+                  </p>
+                  {isLinked && feature.cta && (
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] mt-5 pt-5 border-t border-[var(--border)] group-hover:gap-2 transition-all">
+                      {feature.cta}
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </span>
+                  )}
+                </>
+              );
               return (
                 <ScrollReveal key={index} delay={index * 100}>
-                  <div className="relative p-8 bg-white rounded-2xl blog-card-3d transition-transform duration-300 hover:-translate-y-2 h-full">
-                    {feature.badge && (
-                      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold">
-                        {feature.badge}
-                      </span>
-                    )}
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-[var(--muted-foreground)] leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
+                  {isLinked ? (
+                    <Link
+                      href={feature.href as "/features/notifications-push"}
+                      className={cardClass}
+                    >
+                      {body}
+                    </Link>
+                  ) : (
+                    <div className={cardClass}>{body}</div>
+                  )}
                 </ScrollReveal>
               );
             })}
           </div>
-        </Container>
-      </section>
-
-      {/* ============ 5b. Beyond automatic notifications → cross-link to broadcasts ============ */}
-      <section className="py-20 sm:py-28">
-        <Container>
-          <ScrollReveal>
-            <Link
-              href={"/features/campagnes-promotionnelles" as "/features/notifications-push"}
-              className="group relative block overflow-hidden rounded-3xl bg-gradient-to-br from-[var(--accent)]/10 via-white to-[var(--stamp-sage)]/10 border border-[var(--accent)]/20 p-8 sm:p-12 transition-all hover:shadow-xl"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-[auto,1fr,auto] gap-8 items-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/30">
-                  <MegaphoneIcon className="w-8 h-8" />
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  <span className="inline-flex items-center gap-2 self-start px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-wide">
-                    {tp("beyondAuto.badge")}
-                  </span>
-                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
-                    {tp("beyondAuto.title")}
-                  </h2>
-                  <p className="text-[var(--muted-foreground)] leading-relaxed">
-                    {tp("beyondAuto.description")}
-                  </p>
-                  <ul className="flex flex-col gap-2 mt-2">
-                    {(tp.raw("beyondAuto.bullets") as string[]).map((b, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-[var(--foreground)]">
-                        <span className="mt-0.5 text-[var(--accent)]">→</span>
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <span className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-white font-bold shadow-lg shadow-[var(--accent)]/25 transition-transform group-hover:translate-x-1 whitespace-nowrap">
-                  {tp("beyondAuto.cta")}
-                  <span aria-hidden>→</span>
-                </span>
-              </div>
-            </Link>
-          </ScrollReveal>
         </Container>
       </section>
 
