@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import posthog from "posthog-js";
 import { useOnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import {
@@ -21,6 +22,14 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 
 const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
 
+const STEP_NAMES: Record<number, string> = {
+  1: "business_info",
+  2: "business_type",
+  3: "card_design",
+  4: "account",
+  5: "plan",
+};
+
 export function OnboardingWizard() {
   const t = useTranslations("onboarding.steps");
   const { session, loading: authLoading } = useAuth();
@@ -32,6 +41,24 @@ export function OnboardingWizard() {
   const [vanishingStampIndex, setVanishingStampIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState(0);
   const [prevStep, setPrevStep] = useState(1);
+  const hasTrackedStart = useRef(false);
+
+  useEffect(() => {
+    if (hasTrackedStart.current) return;
+    if (!store.isInitialized || authLoading || checkingBusinesses || !authChecked) return;
+    hasTrackedStart.current = true;
+    posthog.capture("onboarding_wizard_started", {
+      resumed_at_step: store.currentStep,
+      is_authenticated: isAuthenticated,
+    });
+  }, [
+    store.isInitialized,
+    store.currentStep,
+    authLoading,
+    checkingBusinesses,
+    authChecked,
+    isAuthenticated,
+  ]);
 
   // Clear session storage only when actually leaving the site (tab close / external navigation)
   // Do NOT clear on component unmount — locale changes cause unmount/remount
@@ -210,6 +237,12 @@ export function OnboardingWizard() {
   const handleStepComplete = useCallback((nextStep: number) => {
     const currentStep = store.currentStep;
 
+    posthog.capture("onboarding_step_completed", {
+      step: currentStep,
+      step_name: STEP_NAMES[currentStep] ?? `step_${currentStep}`,
+      is_authenticated: isAuthenticated,
+    });
+
     // Mark current step as completed (triggers stamp animation)
     store.markStepCompleted(currentStep);
 
@@ -251,6 +284,12 @@ export function OnboardingWizard() {
   const handleStep5Next = useCallback(() => {
     const currentStep = store.currentStep;
 
+    posthog.capture("onboarding_step_completed", {
+      step: currentStep,
+      step_name: STEP_NAMES[currentStep] ?? `step_${currentStep}`,
+      is_authenticated: isAuthenticated,
+    });
+
     // Transition to step 6 immediately (don't mark step 5 as completed yet)
     setPrevStep(currentStep);
     setDirection(1);
@@ -262,7 +301,7 @@ export function OnboardingWizard() {
       setAnimatingStampIndex(5); // 6th stamp (reward) is index 5
       setTimeout(() => setAnimatingStampIndex(null), 50);
     }, 600);
-  }, [store]);
+  }, [store, isAuthenticated]);
 
   // Handle going back with vanishing stamp animation
   const handleGoBack = useCallback(() => {

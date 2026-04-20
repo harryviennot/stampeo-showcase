@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import posthog from "posthog-js";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import {
   createBusiness,
@@ -132,6 +133,13 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
         } else {
           updateData({ businessId: business.id });
         }
+
+        posthog.capture("onboarding_wizard_completed", {
+          business_id: business.id,
+          tier,
+          is_founding_partner: !isReseller && foundingOpen,
+          is_reseller: isReseller,
+        });
 
         setLoading(false);
         setLoadingTier(null);
