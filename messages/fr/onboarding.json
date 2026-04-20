@@ -110,6 +110,8 @@
     "foundingPartner": {
       "title": "Devenez Partenaire Fondateur",
       "subtitle": "Aidez-nous à construire un produit que vous adorerez — et bloquez votre tarif à vie",
+      "standardTitle": "Choisissez votre plan",
+      "standardSubtitle": "30 jours d'essai gratuit sur tous les plans. Annulez quand vous voulez — sans carte bancaire.",
       "resellerTitle": "Choisissez votre plan",
       "resellerSubtitle": "Votre remise partenaire est appliquée automatiquement sur tous les plans",
       "resellerBadge": "Partenaire — {discount}% de remise",
@@ -127,9 +129,9 @@
       "retryButton": "Réessayer"
     },
     "applicationSubmitted": {
-      "title": "Votre carte est prête !",
-      "subtitle": "Nous examinons les candidatures par petits groupes",
-      "waitingMessage": "Vous recevrez un email d'activation — cela peut prendre quelques minutes et finit parfois dans les spams.",
+      "title": "Bienvenue à bord !",
+      "subtitle": "Votre tableau de bord est prêt — on vous y emmène.",
+      "redirecting": "Si rien ne se passe d'ici quelques secondes, cliquez ci-dessous.",
       "goToDashboard": "Aller au tableau de bord",
       "spaceReady": "Votre espace est configuré",
       "cardDesigned": "Votre carte de fidélité est créée",

@@ -3,13 +3,18 @@
     "badge": "Plans & Pricing",
     "title": "Simple, transparent pricing",
     "subtitle": "Founding partners get 50% off — locked for life.",
+    "subtitleStandard": "Unlimited customers, scans, and devices on every plan.",
     "foundingPartner": "FOUNDING PARTNER",
     "popular": "MOST POPULAR",
     "comingSoon": "COMING SOON",
     "perMonth": "/month",
     "forLife": "/month for life",
     "freeMonths": "3 months free",
-    "spotsLeft": "{count} spots left",
+    "deadlineNotice": "Founding pricing closes {date} — last chance.",
+    "countdown": {
+      "daysHours": "Founding pricing closes in {days}d {hours}h",
+      "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
+    },
     "cta": "Start Free",
     "ctaComingSoon": "Coming soon",
     "ctaSubtext": "No credit card required · Cancel anytime",
@@ -85,6 +90,7 @@
     "popular": "MOST POPULAR",
     "comingSoon": "COMING SOON",
     "perMonth": "/mo",
+    "forLife": "/mo for life",
     "cta": "Get started",
     "ctaComingSoon": "Coming soon",
     "ctaSubtext": "No credit card required",
@@ -245,7 +251,7 @@
       "items": [
         {
           "question": "Is there a free trial?",
-          "answer": "Yes! Every plan starts with 3 months free as part of our Founding Partner program. No credit card required to get started."
+          "answer": "Yes! Every plan includes a 30-day free trial. No credit card required to get started."
         },
         {
           "question": "Can I switch plans later?",
@@ -255,7 +261,7 @@
           "question": "Are there per-customer charges?",
           "answer": "No. Every plan includes unlimited customers and unlimited scans. Your price stays the same whether you have 10 customers or 10,000."
         },
-{
+        {
           "question": "When will the Pro plan be available?",
           "answer": "The Pro plan is currently in development. We're building multi-location support, geofencing, and advanced segmentation. Join the waitlist to be notified when it launches."
         },
@@ -265,7 +271,8 @@
         },
         {
           "question": "What is the Founding Partner program?",
-          "answer": "Our Founding Partner program gives early adopters 50% off their plan — locked for life. You also get 3 months completely free to test the platform. Spots are limited."
+          "answer": "Our Founding Partner program gives early adopters 50% off their plan — locked for life. Spots are limited and the program closes soon.",
+          "foundingOnly": true
         }
       ]
     },
