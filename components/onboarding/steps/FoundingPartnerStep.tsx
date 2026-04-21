@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import posthog from "posthog-js";
+import { Link } from "@/i18n/navigation";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import {
   createBusiness,
@@ -495,6 +496,21 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
           );
         })}
       </div>
+
+      <p className="text-xs text-center text-[var(--muted-foreground)] max-w-2xl mx-auto mb-6">
+        {t.rich("legalNotice", {
+          terms: (chunks) => (
+            <Link href="/terms" className="underline hover:text-[var(--foreground)]">
+              {chunks}
+            </Link>
+          ),
+          privacy: (chunks) => (
+            <Link href="/privacy" className="underline hover:text-[var(--foreground)]">
+              {chunks}
+            </Link>
+          ),
+        })}
+      </p>
 
       {/* Back button - hidden if business already created */}
       {!data.businessId && (

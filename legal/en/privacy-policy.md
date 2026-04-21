@@ -1,12 +1,12 @@
-# Privacy Policy — stampeo
+# Privacy Policy: Stampeo
 
 **Last updated: April 21, 2026**
 
 ## 1. Introduction
 
-This privacy policy describes how stampeo (hereinafter "we", "our", or "the Platform"), operated by Harry Viennot, sole proprietor registered in France under SIRET **currently being obtained**, collects, uses, stores, and protects personal data in connection with its digital loyalty card service.
+This privacy policy describes how Stampeo (hereinafter "we", "our", or "the Platform"), operated by Harry Viennot, sole proprietor registered in France under SIRET **currently being obtained**, collects, uses, stores, and protects personal data in connection with its digital loyalty card service.
 
-We are committed to complying with the General Data Protection Regulation (GDPR — EU Regulation 2016/679) and the French Data Protection Act (Loi Informatique et Libertés).
+We are committed to complying with the General Data Protection Regulation (GDPR, EU Regulation 2016/679) and the French Data Protection Act (Loi Informatique et Libertés).
 
 This policy applies to all users of the Platform, whether they are business owners, employees, or end customers holding a loyalty card.
 
@@ -14,11 +14,11 @@ This policy applies to all users of the Platform, whether they are business owne
 
 ### 2.1 Business Users (owners and employees)
 
-stampeo acts as the **data controller** for business account data (registration, authentication, billing).
+Stampeo acts as the **data controller** for business account data (registration, authentication, billing).
 
 ### 2.2 End Customers (loyalty card holders)
 
-The business using stampeo is the **data controller** for its own customers' data. stampeo acts as a **data processor**: we process end customer data solely on behalf of the business and in accordance with its instructions.
+The business using Stampeo is the **data controller** for its own customers' data. Stampeo acts as a **data processor**: we process end customer data solely on behalf of the business and in accordance with its instructions.
 
 Each business chooses what information to collect from its customers (anonymous, email only, first name + email, or custom fields). By default, email and first name are enabled.
 
@@ -34,7 +34,7 @@ Each business chooses what information to collect from its customers (anonymous,
 | Business name | Service personalization | Performance of contract | Yes |
 | Business website | Verification and personalization | Legitimate interest | No |
 | Phone number | Contact and support | Legitimate interest | No |
-| Source of discovery (including free-text "other" field) | Internal statistics (how you heard about stampeo) | Legitimate interest | No |
+| Source of discovery (including free-text "other" field) | Internal statistics (how you heard about Stampeo) | Legitimate interest | No |
 | Payment information | Billing via Stripe | Performance of contract | Yes |
 | Logo and brand assets | Service operation | Performance of contract | Yes |
 | Preferred language (locale) | Interface localization and transactional emails | Legitimate interest | No |
@@ -69,7 +69,7 @@ For all users, we may collect:
 
 - Pass type (Apple Wallet or Google Wallet)
 - Device token for pass updates
-- Anonymized usage data via PostHog (no cookies, no persistent identifier — see §5)
+- Usage data sent to PostHog for our internal product analytics: event name, timestamp, page viewed, visitor IP, and (after a Business account is created) the associated business identifier. No cookies are set and no identifier is persisted to browser storage (see §5)
 - Error-monitoring context sent to Sentry on exceptions: user identifier, business identifier, request path, and stack trace (no raw email, no password, no payment data)
 
 ## 4. Third-Party Services
@@ -83,16 +83,16 @@ We use the following sub-processors:
 | Stripe | Payment processing | EU (possible US transfers under Data Privacy Framework) |
 | Resend | Transactional emails | Ireland (EU) |
 | Apple (APNs) | Apple Wallet pass updates | United States (Data Privacy Framework) |
-| Google (Pay API) | Google Wallet pass updates | United States (Data Privacy Framework) |
+| Google (Wallet API) | Google Wallet pass updates | United States (Data Privacy Framework) |
 | PostHog | Website analytics (cookieless) | EU |
 | Sentry | Error monitoring | Germany (EU) |
-| Redis (self-hosted, via Taskiq) | Job queue and short-lived cache for pass assets and notification delivery | France (EU) — same infrastructure as our VPS |
+| Redis (self-hosted, via Taskiq) | Job queue and short-lived cache for pass assets and notification delivery | France (EU), same infrastructure as our VPS |
 
 ### Resellers (when applicable)
 
-stampeo operates an optional reseller program. When a business chooses to be managed by a reseller partner, that reseller is granted full dashboard access to the business they manage — including end-customer data — so they can operate the loyalty program on the business's behalf.
+Stampeo operates an optional reseller program. When a business chooses to be managed by a reseller partner, that reseller is granted full dashboard access to the business they manage (including end-customer data) so they can operate the loyalty program on the business's behalf.
 
-In GDPR terms this creates a controller-to-processor-to-sub-processor chain: the managed business remains the data controller for its own end-customer data, stampeo acts as the processor, and the reseller acts as a further sub-processor, authorized only for the scope agreed with that business. Reseller arrangements require a signed partnership agreement with the data-handling terms described in the Terms of Service (§9.1). stampeo may revoke reseller access in case of breach or misuse.
+In GDPR terms this creates a controller-to-processor-to-sub-processor chain: the managed business remains the data controller for its own end-customer data, Stampeo acts as the processor, and the reseller acts as a further sub-processor, authorized only for the scope agreed with that business. Reseller arrangements require a signed partnership agreement with the data-handling terms described in the Terms of Service (§9.1). Stampeo may revoke reseller access in case of breach or misuse.
 
 A business that is not managed by a reseller is not exposed to any reseller access.
 
@@ -102,7 +102,9 @@ Some of our sub-processors (Stripe, Apple, Google) may transfer data to the Unit
 
 ## 5. Cookies
 
-stampeo uses PostHog (hosted in the EU) for website analytics. PostHog is configured without persistent identifiers: **no tracking cookies are set and no identifier is persisted to browser storage**. Events are scoped to the current browser session and are not re-associated across visits. No personal data is collected for analytics purposes. This configuration does not require a cookie consent banner in accordance with the ePrivacy Directive and CNIL guidelines.
+Stampeo uses PostHog (hosted in the EU) for internal product analytics and audience measurement. PostHog is configured so that **no tracking cookies are set** and **no identifier is persisted to browser storage** (cookie, localStorage, or equivalent). Events are scoped to the current browser session and are not re-associated across visits. The visitor's IP address is transmitted to the PostHog server for technical logging and event deduplication, but it is not combined with a persistent identifier, is not used for profiling or advertising, and is not shared with third parties. Hosting is entirely within the European Union.
+
+Under these conditions, Stampeo's audience measurement falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines, and therefore does not require a cookie consent banner.
 
 Strictly necessary cookies may be used for authentication and session management on the business dashboard. These cookies do not require consent.
 
@@ -114,7 +116,7 @@ We use collected data to:
 - Generate and update wallet passes
 - Send loyalty notifications (stamps, rewards)
 - Manage accounts, subscriptions, and billing
-- Send transactional and operational emails (account confirmation, pass recovery, trial and billing notifications — see Terms of Service §5.5)
+- Send transactional and operational emails (account confirmation, pass recovery, trial and billing notifications; see Terms of Service §5.5)
 - Produce anonymized statistics for businesses
 - Produce aggregate, internal product analytics to understand how the Platform is used across all businesses, detect abuse, and prioritize improvements
 - Improve the Platform
@@ -136,14 +138,14 @@ Sent automatically in response to customer activity: stamp received, milestone r
 
 Businesses on the Growth and Pro tiers can send broadcast messages to their cardholders (for example: a seasonal offer, a new menu item, a special event). Growth has a monthly quota; Pro is unlimited. The Starter tier cannot send broadcasts.
 
-- **Legal basis:** the business's legitimate interest in marketing to its existing customers (GDPR Art. 6(1)(f)), combined with the "soft opt-in" permitted by the ePrivacy Directive (Art. 13(2)) and French LCEN Art. L34-5. This exemption from prior explicit consent applies because (a) the customer's contact happened in the course of a service — installing the business's loyalty pass, (b) the message concerns similar products or services from the same business, and (c) a simple, free opt-out is available with every message (see 7.3).
-- **Scope — strictly first-party.** A business may use broadcasts only to reach **its own** cardholders about **its own** products, services, or offers. Broadcasts may not be used for third-party advertising, cross-business promotion, data sharing, or content unrelated to the business's own offering. These restrictions are written into the Terms of Service §8 and breach of them is grounds for suspension. They are what keeps the soft opt-in exemption intact.
+- **Legal basis:** the business's legitimate interest in marketing to its existing customers (GDPR Art. 6(1)(f)), combined with the "soft opt-in" permitted by the ePrivacy Directive (Art. 13(2)) and French LCEN Art. L34-5. This exemption from prior explicit consent applies because (a) the customer's contact happened in the course of a service (installing the business's loyalty pass), (b) the message concerns similar products or services from the same business, and (c) a simple, free opt-out is available with every message (see 7.3).
+- **Scope, strictly first-party.** A business may use broadcasts only to reach **its own** cardholders about **its own** products, services, or offers. Broadcasts may not be used for third-party advertising, cross-business promotion, data sharing, or content unrelated to the business's own offering. These restrictions are written into the Terms of Service §8 and breach of them is grounds for suspension. They are what keeps the soft opt-in exemption intact.
 
 ### 7.3 Opting Out
 
 Each pass exposes a per-pass notification toggle in Apple Wallet and Google Wallet. Turning it off is the single, industry-standard opt-out and is legally sufficient for both transactional and promotional messages on that pass. This is the same control used by every major wallet-based loyalty program.
 
-Because the wallet OS exposes a single toggle per pass, disabling notifications disables **both** transactional and promotional messages for that pass. This is a limitation of the wallet medium, not a choice by stampeo. A customer who wishes to stop only promotional messages can either: ask the business to exclude them from future broadcasts (businesses are required by the Terms of Service to honor such requests), or remove the pass from their wallet.
+Because the wallet OS exposes a single toggle per pass, disabling notifications disables **both** transactional and promotional messages for that pass. This is a limitation of the wallet medium, not a choice by Stampeo. A customer who wishes to stop only promotional messages can either: ask the business to exclude them from future broadcasts (businesses are required by the Terms of Service to honor such requests), or remove the pass from their wallet.
 
 ### 7.4 Business Obligations
 
@@ -171,18 +173,18 @@ When a customer removes their pass from their wallet:
 
 - Their identifying data (email, first name, phone number) is **anonymized** upon request
 - Their visit history is retained in anonymized form for the business's statistics
-- Customers can request complete data deletion by contacting the relevant business or stampeo directly
+- Customers can request complete data deletion by contacting the relevant business or Stampeo directly
 
 ## 10. User Rights
 
 Under the GDPR, you have the following rights:
 
-- **Access** — obtain a copy of your personal data
-- **Rectification** — correct inaccurate data
-- **Erasure** — request deletion of your data
-- **Restriction** — restrict processing of your data
-- **Portability** — receive your data in a structured format
-- **Objection** — object to processing of your data
+- **Access**: obtain a copy of your personal data
+- **Rectification**: correct inaccurate data
+- **Erasure**: request deletion of your data
+- **Restriction**: restrict processing of your data
+- **Portability**: receive your data in a structured format
+- **Objection**: object to processing of your data
 
 **Business users and employees:** contact us at contact@stampeo.app.
 
@@ -201,7 +203,7 @@ We implement technical and organizational measures to protect your data:
 - Hosting within the EU (Supabase Ireland, OVH France)
 - Per-business Apple Pass signing certificates, encrypted at rest with AES-256-GCM
 
-In the event of a personal-data breach, stampeo will notify the CNIL within 72 hours of discovery and the affected controllers (or, where applicable, data subjects) as required by GDPR Articles 33–34.
+In the event of a personal-data breach, Stampeo will notify the CNIL within 72 hours of discovery and the affected controllers (or, where applicable, data subjects) as required by GDPR Articles 33–34.
 
 ## 12. Minors
 
@@ -214,6 +216,6 @@ We may update this privacy policy. In case of substantial changes, Business user
 ## 14. Contact
 
 - **Email:** contact@stampeo.app
-- **Data Controller:** Harry Viennot, stampeo
+- **Data Controller:** Harry Viennot, Stampeo
 - **SIRET:** **currently being obtained**
 - **Address:** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France

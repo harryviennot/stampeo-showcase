@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { CustomerCreatePublic } from "@/lib/acquisition";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 import { isValidPhone, detectDefaultCountry } from "@/lib/phone-utils";
@@ -25,11 +26,13 @@ function normalizeFieldMode(value: FieldCollectionMode | boolean | undefined, fa
 
 interface AcquisitionFormProps {
   dataCollection?: DataCollectionSettings;
+  businessName: string;
   onSubmit: (data: CustomerCreatePublic) => void;
 }
 
 export function AcquisitionForm({
   dataCollection,
+  businessName,
   onSubmit,
 }: AcquisitionFormProps) {
   const t = useTranslations("acquisition.form");
@@ -121,7 +124,13 @@ export function AcquisitionForm({
         </button>
         <p className="text-xs text-center text-[var(--muted-foreground)]">
           {ta.rich("privacyNote", {
+            businessName,
             bold: (chunks) => <span className="font-medium">{chunks}</span>,
+            privacy: (chunks) => (
+              <Link href="/privacy" className="underline hover:text-[var(--foreground)]">
+                {chunks}
+              </Link>
+            ),
           })}
         </p>
       </div>
@@ -229,7 +238,13 @@ export function AcquisitionForm({
 
       <p className="text-xs text-center text-[var(--muted-foreground)]">
         {ta.rich("privacyNote", {
+          businessName,
           bold: (chunks) => <span className="font-medium">{chunks}</span>,
+          privacy: (chunks) => (
+            <Link href="/privacy" className="underline hover:text-[var(--foreground)]">
+              {chunks}
+            </Link>
+          ),
         })}
       </p>
     </form>

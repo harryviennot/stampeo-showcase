@@ -3,7 +3,7 @@
     "getCard": "Get your loyalty card",
     "defaultDescription": "Join our loyalty program and start earning rewards!",
     "getMyCard": "Get my card",
-    "privacyNote": "Your information is only shared with <bold>this business</bold> for their loyalty program.",
+    "privacyNote": "Your information is collected by <bold>{businessName}</bold> for its loyalty program. Stampeo acts as a technical processor. <privacy>Learn more</privacy>.",
     "form": {
       "name": "Your name",
       "namePlaceholder": "Enter your name",

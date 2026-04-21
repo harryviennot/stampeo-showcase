@@ -203,6 +203,7 @@ function FormCard({
       </p>
       <AcquisitionForm
         dataCollection={business.settings?.customer_data_collection}
+        businessName={business.name}
         onSubmit={onSubmit}
       />
     </div>

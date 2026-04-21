@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
+import { Link } from "@/i18n/navigation";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
@@ -443,6 +444,21 @@ export function CreateAccountStep({
             {loading ? t("submitting") : t("continue")}
           </button>
         </div>
+
+        <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
+          {t.rich("legalNotice", {
+            terms: (chunks) => (
+              <Link href="/terms" className="underline hover:text-[var(--foreground)]">
+                {chunks}
+              </Link>
+            ),
+            privacy: (chunks) => (
+              <Link href="/privacy" className="underline hover:text-[var(--foreground)]">
+                {chunks}
+              </Link>
+            ),
+          })}
+        </p>
       </form>
     </div>
   );
