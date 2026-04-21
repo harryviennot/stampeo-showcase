@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { CTAButton } from "@/components/ui/CTAButton";
 import {
   BellIcon,
   SparklesIcon,
@@ -22,7 +23,7 @@ import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 const advancedIcons = [SparklesIcon, TargetIcon, MegaphoneIcon];
 
 export function NotificationsPushPage() {
-  const t = useTranslations("features");
+  const tb = useTranslations("common.buttons");
   const tp = useTranslations("features.notifications-push");
 
   const advancedFeatures = tp.raw("advanced.features") as {
@@ -66,15 +67,7 @@ export function NotificationsPushPage() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <Link
-                  href="/onboarding"
-                  className="group flex items-center gap-2 bg-[var(--accent)] text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-[var(--accent)]/25 hover:scale-105 transition-all"
-                >
-                  <span>{t("ctaButton")}</span>
-                  <span className="transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
+                <CTAButton label={tb("startFree")} />
               </div>
 
               {/* Wallet badges */}

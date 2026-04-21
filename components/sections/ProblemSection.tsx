@@ -1,12 +1,13 @@
-import { getTranslations } from "next-intl/server";
+import Image from "next/image";
+import { getLocale, getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { DocumentIcon, DevicePhoneMobileIcon, EyeSlashIcon } from "../icons";
-import { PhoneMockup } from "../features/notifications-push/PhoneMockup";
-import { WalletCard } from "../card/WalletCard";
-import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 
 export async function ProblemSection() {
   const t = await getTranslations("landing.problem");
+  const locale = await getLocale();
+  const cardImage =
+    locale === "en" ? "/CardExampleEN.png" : "/CardExampleFR.png";
 
   return (
     <section id="features" className="relative py-24 lg:py-32 bg-[var(--blog-bg)]">
@@ -85,28 +86,14 @@ export async function ProblemSection() {
 
           {/* Phone Illustration */}
           <div className="mt-16 flex justify-center">
-            <PhoneMockup width={260}>
-              <div className="flex-1 flex items-center justify-center p-3">
-                <ScaledCardWrapper baseWidth={280} targetWidth={230}>
-                  <WalletCard
-                    design={{
-                      organization_name: "Stampeo",
-                      total_stamps: 8,
-                      background_color: "#1c1c1e",
-                      stamp_filled_color: "#f97316",
-                      label_color: "#fff",
-                      logo_url: "data:image/svg+xml,%3Csvg fill='none' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath clip-rule='evenodd' d='M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z' fill='%23f97316' fill-rule='evenodd'/%3E%3C/svg%3E",
-                      secondary_fields: [
-                        { key: "reward", label: "Reward", value: "Free coffee" }
-                      ],
-                    }}
-                    stamps={4}
-                    showQR={true}
-                    interactive3D={false}
-                  />
-                </ScaledCardWrapper>
-              </div>
-            </PhoneMockup>
+            <Image
+              src={cardImage}
+              alt="Stampeo loyalty card in Apple Wallet"
+              width={280}
+              height={564}
+              priority
+              className="drop-shadow-2xl"
+            />
           </div>
         </ScrollReveal>
       </div>

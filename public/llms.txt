@@ -1,29 +1,182 @@
 # Stampeo
 
-> Digital loyalty cards for Apple Wallet and Google Wallet. No app to download, no card to lose.
+> Digital loyalty cards for Apple Wallet and Google Wallet. No app to download, no card to lose. Built for local businesses — bakeries, cafés, restaurants, hair salons, beauty institutes.
 
-Stampeo is a SaaS platform that helps local businesses create and manage digital loyalty cards. Customers add their loyalty card to Apple Wallet or Google Wallet — no app download required. Employees scan QR codes to add stamps, and passes auto-update via push notifications.
+Stampeo is a SaaS platform that helps local businesses create and manage digital loyalty cards. Customers add their card to Apple Wallet or Google Wallet — no app download, no signup, no password. Employees scan QR codes to add stamps, and passes update live via push notifications delivered through the wallet.
 
-## Key Pages
+## Positioning
 
-- Homepage: https://stampeo.app
-- Features: https://stampeo.app/features/card-design
-- Promotional campaigns: https://stampeo.app/en/features/promotional-campaigns
-- Blog: https://stampeo.app/blog
-- Contact: https://stampeo.app/contact
-- About: https://stampeo.app/about
+- **Who it's for**: independent businesses that want a modern loyalty program without asking customers to download an app.
+- **Problem it solves**: paper cards get lost or forgotten (~45% of paper-card holders don't present them); dedicated loyalty apps fail — 95% of users abandon a new app within a month.
+- **How it's different**: the card lives in Apple Wallet / Google Wallet, which are already installed on every modern smartphone. Retention on wallet passes is above 90%. No app build, no app store, no account creation.
+- **Languages**: French (default) and English.
+
+## Key pages
+
+### Core — French (default)
+- [Homepage](https://stampeo.app): product overview and call to action.
+- [Pricing](https://stampeo.app/pricing): Starter and Growth tiers, founding-partner offer.
+- [About](https://stampeo.app/about): team, mission, story.
+- [Contact](https://stampeo.app/contact): email, social, contact form.
+- [Founding partner program](https://stampeo.app/programme-fondateur): lifetime founding-partner offer (closes 2026-05-19).
+- [Terms of service](https://stampeo.app/terms)
+- [Privacy policy](https://stampeo.app/privacy)
+
+### Core — English
+- [Homepage](https://stampeo.app/en)
+- [Pricing](https://stampeo.app/en/pricing)
+- [About](https://stampeo.app/en/about)
+- [Contact](https://stampeo.app/en/contact)
+- [Founding partner program](https://stampeo.app/en/founding-partner)
+- [Terms of service](https://stampeo.app/en/terms)
+- [Privacy policy](https://stampeo.app/en/privacy)
+
+### Features — French
+- [Design de carte](https://stampeo.app/features/design-de-carte): card design editor — colors, logo, stamp count, reward messaging.
+- [Scanner mobile](https://stampeo.app/features/scanner-mobile): employee QR scanner app (iOS + Android) for adding stamps at the counter.
+- [Notifications push](https://stampeo.app/features/notifications-push): wallet push notifications triggered at every stamp, reward, or customer return.
+- [Analytiques](https://stampeo.app/features/analytiques): customer insights — retention, visit frequency, top customers.
+- [Géolocalisation](https://stampeo.app/features/geolocalisation): surface the loyalty card on the lock screen when the customer is near the shop.
+- [Campagnes promotionnelles](https://stampeo.app/features/campagnes-promotionnelles): targeted broadcasts — the SMS alternative with ~85% read-through.
+
+### Features — English
+- [Card design](https://stampeo.app/en/features/card-design)
+- [Mobile scanner](https://stampeo.app/en/features/mobile-scanner)
+- [Push notifications](https://stampeo.app/en/features/push-notifications)
+- [Analytics](https://stampeo.app/en/features/analytics)
+- [Geolocation](https://stampeo.app/en/features/geolocation)
+- [Promotional campaigns](https://stampeo.app/en/features/promotional-campaigns)
+
+### Blog — English
+- [Blog index](https://stampeo.app/en/blog)
+- [Apple Wallet Loyalty Card: Guide for Your Business](https://stampeo.app/en/blog/apple-wallet-loyalty-card)
+- [Digital Loyalty Card for Small Business](https://stampeo.app/en/blog/digital-loyalty-card-small-business)
+- [Digital Stamp Card: How It Works and Why It Beats Paper](https://stampeo.app/en/blog/digital-stamp-card)
+- [Loyalty Card Without an App](https://stampeo.app/en/blog/loyalty-card-without-app)
+- [Paper vs Digital Loyalty Cards: An Honest Comparison](https://stampeo.app/en/blog/paper-vs-digital-loyalty-card)
+
+### Blog — French
+- [Index du blog](https://stampeo.app/blog)
+- [Apple Wallet carte de fidélité : guide commerce](https://stampeo.app/blog/apple-wallet-carte-fidelite)
+- [Carte de fidélité pour boulangerie](https://stampeo.app/blog/carte-fidelite-boulangerie)
+- [Carte de fidélité café](https://stampeo.app/blog/carte-fidelite-cafe)
+- [Carte de fidélité dématérialisée](https://stampeo.app/blog/carte-fidelite-dematerialisee)
+- [Carte de fidélité papier vs digitale](https://stampeo.app/blog/carte-fidelite-papier-vs-digitale)
+- [Carte de fidélité restaurant](https://stampeo.app/blog/carte-fidelite-restaurant)
+- [Carte de fidélité sans application](https://stampeo.app/blog/carte-fidelite-sans-application)
+- [Carte de fidélité sans téléchargement](https://stampeo.app/blog/carte-fidelite-sans-telechargement)
+- [Programme de fidélité institut de beauté et onglerie](https://stampeo.app/blog/fidelite-institut-beaute)
+- [Google Wallet carte fidélité](https://stampeo.app/blog/google-wallet-carte-fidelite)
+- [Guide complet carte de fidélité digitale](https://stampeo.app/blog/guide-carte-fidelite-digitale)
+- [Programme de fidélité salon de coiffure](https://stampeo.app/blog/programme-fidelite-salon-coiffure)
 
 ## Product
 
-- **What it does**: Creates digital stamp cards (loyalty cards) that live in Apple Wallet and Google Wallet
-- **Target audience**: Local businesses — bakeries, cafés, restaurants, hair salons, beauty institutes
-- **How it works**: Business creates a card design → customers scan a QR code to add it to their wallet → employees scan the customer's pass to add stamps → after N stamps, the customer earns a reward
-- **Key features**: Card design editor, mobile QR scanner, push notifications (85% read rate), promotional broadcasts (SMS alternative), analytics dashboard, geofencing
+### How it works
+1. Business signs up and designs a card in the dashboard (colors, logo, stamp count, reward).
+2. The business prints or displays a QR code at the counter.
+3. Customers scan the QR code — the card is added to Apple Wallet / Google Wallet in about ten seconds. No app download, no account, no password.
+4. Employees use the Stampeo scanner app (iOS / Android) to scan the customer's pass and add a stamp.
+5. The pass updates live via push notification ("+1 stamp", "reward earned"). Customers see the updated card on their lock screen.
+6. After N stamps, the customer earns a reward, claimed at the counter on their next visit.
+
+### Loyalty mechanics
+- **Stamps** (classic stamp card) or **points** (spend-based) — choose one per program on Growth and above.
+- **Milestone rewards**: trigger a reward at arbitrary stamp counts (e.g. welcome bonus at 1, surprise gift at 5, main reward at 10). 3 custom milestones per program on Growth, unlimited on Pro.
+- **Automatic notifications** on every stamp, milestone, and reward unlock — delivered through Apple Wallet / Google Wallet push, no app required.
+- **Geofencing notifications** (Pro): surface the card on the lock screen when the customer is near the shop.
+
+### Promotional campaigns (broadcasts) — Growth / Pro
+Promotional campaigns are one-off push notifications sent straight to customers' Apple Wallet and Google Wallet — the marketing-channel alternative to SMS and email.
+
+- **Reach**: broadcast to all loyalty-card holders, or segment.
+- **Open rate**: ~85% (lock-screen banner), vs ~20% for email and ~35% click-through for SMS.
+- **Cost**: included in the plan — €0 per message. No SMS carrier fees (€0.04–€0.10 per SMS in France).
+- **Quotas**: Growth = 3 campaigns / month. Pro = unlimited.
+- **Segmentation**:
+  - Growth: basic (enrollment date).
+  - Pro: advanced — by stamp count, last redemption, inactivity window, recent signups.
+- **Scheduling** (Pro): pick a local send time with timezone awareness — Thursday 5pm, Saturday noon, etc. Growth sends immediately.
+- **Bilingual delivery**: write EN and FR copy once; each customer receives the language their device is set to. Single send, not two.
+- **Delivery transparency**: per-campaign breakdown showing Apple-delivered vs Google-delivered vs throttled vs uninstalled. No inflated rates.
+- **Consent**: handled at pass install — no double opt-in flow like SMS / email.
+- **Use cases**: flash promos, new-product launches, happy hours, seasonal offers, weekend openings, "first 30 buyers get a free pastry" style drops.
+- **Page**: [/en/features/promotional-campaigns](https://stampeo.app/en/features/promotional-campaigns) (EN) · [/features/campagnes-promotionnelles](https://stampeo.app/features/campagnes-promotionnelles) (FR).
+
+### Analytics — all plans; advanced on Growth / Pro
+The dashboard answers the questions paper cards can't: who comes back, how often, what works.
+
+**Starter (basic dashboard — every plan)**:
+- Total registered customers.
+- Scans this week / this month.
+- Rewards claimed.
+- Instant customer search by name or email with full visit history.
+- Live activity feed (stamps, rewards, signups in real time).
+
+**Growth (trends & retention layer)**:
+- Scans per week with trend (e.g. "+23% WoW").
+- Peak-hours heatmap (day × hour of the week) to spot slow periods and staffing needs.
+- 30-day retention rate.
+- Customer segments (New / Occasional / Regular / VIP).
+- At-risk customers (inactive 30+ days) — surface before they churn.
+- Most-active days of the week.
+- Average time to complete a card, completion rate, post-reward return rate (did they start a second card).
+
+**Pro (everything in Growth, plus)**:
+- Per-location analytics (multi-location accounts).
+- Employee scan tracking.
+- Advanced segmentation (same filters that drive broadcast targeting).
+
+- **Page**: [/en/features/analytics](https://stampeo.app/en/features/analytics) (EN) · [/features/analytiques](https://stampeo.app/features/analytiques) (FR).
+
+### Integrations & platforms
+- **Apple Wallet** (iOS, via signed .pkpass files and Apple Push Notification service).
+- **Google Wallet** (Android).
+- **Scanner app**: Expo / React Native, runs on any iPhone or Android device. Supports offline scanning.
+- **Business dashboard**: web app, works on desktop and mobile.
+
+### Team & multi-location
+- Starter: 2 team members (owner + 1), single location, 1 active card template.
+- Growth: unlimited team members, single location, 1 active card template (unlimited saved templates).
+- Pro: unlimited team members, multi-location with per-location analytics, multiple active card templates.
+
+### Compliance
+- GDPR-compliant (data hosted in the EU, minimal customer data collected — typically just a phone number or email, never required).
+- Customers can be anonymous: a loyalty card can work with nothing more than a device token.
 
 ## Pricing
 
-- **Starter**: €14.99/month — 1 card template, unlimited customers & scans, 2 team members, push notifications
-- **Growth**: €29.99/month — Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns
+Three tiers. Unlimited customers and unlimited scans on every plan. 30-day free trial, no credit card required.
+
+- **Starter — €20 / month** (founding partner: €10 / month for life): 1 active card template, unlimited customers & scans, 2 team members (owner + 1), automatic push notifications (predefined text), basic dashboard & stats, email support.
+- **Growth — €40 / month** (founding partner: €20 / month for life): everything in Starter, plus stamps or points (choose one), unlimited team members, custom notification messages, 3 broadcast campaigns per month, 3 custom milestones per program, basic segmentation (date-based), trends & analytics.
+- **Pro — €60 / month** (coming soon): everything in Growth, plus multiple active card templates, multi-location with per-location analytics, geofencing notifications, unlimited broadcast campaigns, advanced segmentation (by stamps, inactivity, redemptions), unlimited custom milestones, advanced analytics & retention, priority email support.
+
+### Founding partner program (closes 2026-05-19)
+Early customers can lock in 50% off Starter or Growth — for life. Details on [/programme-fondateur](https://stampeo.app/programme-fondateur) (FR) or [/founding-partner](https://stampeo.app/en/founding-partner) (EN). After 2026-05-19 the program closes — existing founding partners are grandfathered indefinitely.
+
+## FAQ (condensed)
+
+- **Is there a free trial?** Yes — 30-day free trial on every plan, no credit card required.
+- **Can I switch plans?** Yes, at any time. Upgrades take effect immediately; downgrades at the end of the billing cycle.
+- **Are there per-customer charges?** No. Every plan includes unlimited customers and unlimited scans.
+- **Do customers need to download an app?** No. Apple Wallet and Google Wallet are pre-installed on every modern smartphone. Customers scan a QR code and the card is saved in about ten seconds.
+- **What if a customer loses their phone?** Stamps are stored on the server, not only on the device. The customer restores the card on their new phone and keeps their progress.
+- **Can customers cheat by adding their own stamps?** No. Only the business's scanner app can write stamps to a pass. Customers can't modify their own card.
+- **Does it work offline?** Yes. The scanner app supports offline stamping, and installed passes stay accessible without a network connection.
+- **Does it work on Android?** Yes, via Google Wallet. Stampeo auto-detects the device and serves the right format from a single QR code.
+- **Stamps or points?** Either. Starter is stamps-only; Growth lets you pick stamps or points per program; Pro supports both and multiple programs in parallel.
+- **How is this different from paper cards?** Paper cards get lost or forgotten; digital wallet passes stay on the phone, update live, and give the business real customer data (visit frequency, retention, top customers).
+- **How is this different from a dedicated loyalty app?** Dedicated apps fail — 95% of users abandon a new app within a month. Wallet passes don't require a download, so adoption and retention are much higher.
+
+## Machine-readable versions
+
+Every page on stampeo.app supports markdown content negotiation.
+
+- Send `Accept: text/markdown` to any eligible page URL to receive a markdown representation instead of HTML.
+- Response headers include `Content-Type: text/markdown; charset=utf-8`, `Vary: accept` (to prevent cache poisoning), and `x-markdown-tokens: <estimated token count>`.
+- Default browser requests (`Accept: text/html`) still return the full HTML page.
+- AI content preferences are declared in [robots.txt](https://stampeo.app/robots.txt) via `Content-Signal: ai-train=yes, search=yes, ai-input=yes`.
 
 ## Languages
 
@@ -33,6 +186,6 @@ Stampeo is a SaaS platform that helps local businesses create and manage digital
 ## Contact
 
 - Email: contact@stampeo.app
-- X/Twitter: https://x.com/stampeo_app
+- X / Twitter: https://x.com/stampeo_app
 - LinkedIn: https://linkedin.com/company/stampeo
 - Instagram: https://instagram.com/stampeo.app

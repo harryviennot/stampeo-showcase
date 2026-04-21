@@ -6,7 +6,6 @@ const BASE_URL = "https://stampeo.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const locales = ["fr", "en"];
-  const now = new Date().toISOString();
 
   const staticPages = [
     { path: "", priority: 1.0, changeFrequency: "weekly" as const },
@@ -26,7 +25,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       locale === "fr" ? `${BASE_URL}/blog` : `${BASE_URL}/${locale}/blog`;
     entries.push({
       url,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8,
       alternates: {
@@ -50,7 +48,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
       entries.push({
         url,
-        lastModified: now,
         changeFrequency: page.changeFrequency,
         priority: page.priority,
         alternates: {
@@ -76,7 +73,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
       entries.push({
         url,
-        lastModified: now,
         changeFrequency: "monthly",
         priority: 0.7,
         alternates: {

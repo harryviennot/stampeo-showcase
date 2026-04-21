@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { CTAButton } from "../ui/CTAButton";
 import { AppleIcon, GoogleIcon } from "../icons";
 import dynamic from "next/dynamic";
 
@@ -8,6 +8,7 @@ const HeroDemo = dynamic(() => import("./HeroDemo").then((m) => m.HeroDemo));
 
 export async function HeroSection() {
   const t = await getTranslations("landing.hero");
+  const tb = await getTranslations("common.buttons");
 
   return (
     <section className="relative min-h-screen flex flex-col pt-8 sm:pt-0">
@@ -28,13 +29,7 @@ export async function HeroSection() {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <Link
-                href="/onboarding"
-                className="group flex items-center gap-2 bg-[var(--accent)] text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-[var(--accent)]/25 hover:scale-105 transition-all"
-              >
-                <span>{t("cta")}</span>
-                <span className="transition-transform group-hover:translate-x-1">→</span>
-              </Link>
+              <CTAButton label={tb("startFree")} />
             </div>
 
             {/* Wallet badges */}

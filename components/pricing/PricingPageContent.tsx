@@ -3,6 +3,7 @@
 import { Fragment, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { CTAButton } from "@/components/ui/CTAButton";
 import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
@@ -413,18 +414,18 @@ export function PricingPageContent() {
           {t("cta2.subtitle")}
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link
-            href="/onboarding"
-            className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-full font-bold transition-all"
-          >
-            {t("cta2.button")}
-          </Link>
-          <Link
+          <CTAButton
+            label={t("cta2.button")}
+            size="md"
+            showArrow={false}
+          />
+          <CTAButton
+            label={t("cta2.contact")}
             href="/contact"
-            className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full font-bold transition-all border border-white/10"
-          >
-            {t("cta2.contact")}
-          </Link>
+            size="md"
+            variant="secondary"
+            showArrow={false}
+          />
         </div>
       </ScrollReveal>
     </div>
