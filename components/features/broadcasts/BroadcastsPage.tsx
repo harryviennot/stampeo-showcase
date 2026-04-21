@@ -1,9 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { CTAButton } from "@/components/ui/CTAButton";
 import { FAQList } from "@/components/ui/FAQList";
 import {
   AppleIcon,
@@ -123,13 +123,7 @@ export function BroadcastsPage() {
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <Link
-                  href="/onboarding"
-                  className="group inline-flex items-center gap-2 bg-[var(--accent)] text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-[var(--accent)]/25 hover:scale-105 transition-all"
-                >
-                  <span>{startFree}</span>
-                  <span className="transition-transform group-hover:translate-x-1">→</span>
-                </Link>
+                <CTAButton label={startFree} />
               </div>
 
               <div className="flex items-center justify-center gap-3 pt-8">

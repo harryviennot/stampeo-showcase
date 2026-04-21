@@ -1,10 +1,11 @@
-import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { CTAButton } from "../ui/CTAButton";
 import { PRICING } from "@/lib/pricing";
 
 export async function FinalCTASection() {
   const t = await getTranslations("landing.finalCta");
+  const tb = await getTranslations("common.buttons");
 
   return (
     <section className="relative stamp-pattern flex flex-col items-center justify-center px-6 py-24 md:py-32 lg:py-48 text-center overflow-hidden">
@@ -17,13 +18,7 @@ export async function FinalCTASection() {
         </h2>
 
         <div className="flex flex-col items-center gap-6">
-          <Link
-            href="/onboarding"
-            className="group flex min-w-[280px] md:min-w-[340px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-16 md:h-20 px-10 bg-[var(--accent)] text-white text-lg md:text-xl font-extrabold leading-normal tracking-wide shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
-          >
-            <span>{t("cta")}</span>
-            <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
+          <CTAButton label={tb("startFree")} size="xl" />
 
           <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
             {t("subtitle", { price: PRICING.starter.foundingPrice })}
