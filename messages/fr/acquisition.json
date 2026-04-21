@@ -3,7 +3,7 @@
     "getCard": "Obtenez votre carte de fidélité",
     "defaultDescription": "Rejoignez notre programme de fidélité et commencez à cumuler des récompenses !",
     "getMyCard": "Obtenir ma carte",
-    "privacyNote": "Vos informations sont uniquement partagées avec <bold>ce commerce</bold> pour son programme de fidélité.",
+    "privacyNote": "Vos informations sont collectées par <bold>{businessName}</bold> pour son programme de fidélité. Stampeo agit en tant que sous-traitant technique. <privacy>En savoir plus</privacy>.",
     "form": {
       "name": "Votre nom",
       "namePlaceholder": "Entrez votre nom",

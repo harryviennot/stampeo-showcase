@@ -105,7 +105,8 @@
       "changeEmail": "Utiliser un autre email",
       "invalidCode": "Code de vérification invalide, veuillez réessayer",
       "emailTypoSuggestion": "Vouliez-vous dire {suggestion} ?",
-      "emailTypoApply": "Utiliser {suggestion}"
+      "emailTypoApply": "Utiliser {suggestion}",
+      "legalNotice": "En créant votre compte, vous acceptez nos <terms>Conditions d'utilisation</terms> et reconnaissez notre <privacy>Politique de confidentialité</privacy>."
     },
     "foundingPartner": {
       "title": "Devenez Partenaire Fondateur",
@@ -126,7 +127,8 @@
       "slugTakenCancel": "Annuler",
       "retryTitle": "Un problème est survenu",
       "retryBody": "Impossible de créer votre espace. Réessayez dans un instant.",
-      "retryButton": "Réessayer"
+      "retryButton": "Réessayer",
+      "legalNotice": "En confirmant votre abonnement, vous acceptez nos <terms>Conditions d'utilisation</terms> et reconnaissez notre <privacy>Politique de confidentialité</privacy>."
     },
     "applicationSubmitted": {
       "title": "Bienvenue à bord !",
