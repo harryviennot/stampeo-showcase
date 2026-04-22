@@ -1,9 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { CTAButton } from "@/components/ui/CTAButton";
 import { BlindSpotCards } from "./BlindSpotCards";
 import { DashboardSection } from "./DashboardSection";
 import { LiveActivityFeed } from "./LiveActivityFeed";
@@ -13,6 +13,7 @@ import { FeatureCTA } from "@/components/features/FeatureCTA";
 
 export function AnalyticsPageContent() {
   const t = useTranslations("features");
+  const tb = useTranslations("common.buttons");
 
   const hero = {
     title: t("analytiques.hero.title"),
@@ -42,12 +43,8 @@ export function AnalyticsPageContent() {
             <p className="text-lg sm:text-xl text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-2xl mx-auto">
               {hero.subtitle}
             </p>
-            <Link
-              href="/onboarding"
-              className="inline-flex items-center justify-center h-14 px-8 bg-[var(--accent)] text-white text-base font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all active:scale-95"
-            >
-              {t("ctaButton")}
-            </Link>
+            <CTAButton label={tb("startFree")} />
+
           </ScrollReveal>
         </Container>
       </section>

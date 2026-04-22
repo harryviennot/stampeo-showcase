@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/navigation";
+import { CTAButton } from "@/components/ui/CTAButton";
 
 export function CallToAction({
   title,
@@ -14,12 +14,7 @@ export function CallToAction({
       <p className="text-lg font-bold mb-4 text-[var(--near-black)]">
         <span className="blog-highlight">{title}</span>
       </p>
-      <Link
-        href={href}
-        className="inline-flex items-center justify-center h-11 px-6 bg-[var(--accent)] text-white text-sm font-bold rounded-full hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all"
-      >
-        {buttonText} →
-      </Link>
+      <CTAButton label={buttonText} href={href} size="sm" />
     </div>
   );
 }

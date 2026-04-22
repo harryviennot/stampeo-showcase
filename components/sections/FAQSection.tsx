@@ -1,11 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { FAQList } from "../ui/FAQList";
-import { Link } from "@/i18n/navigation";
+import { CTAButton } from "../ui/CTAButton";
 import { interpolatePricing } from "@/lib/pricing";
 
 export async function FAQSection() {
   const t = await getTranslations("landing.faq");
+  const tb = await getTranslations("common.buttons");
   const rawFaqs = t.raw("items") as Array<{ question: string; answer: string }>;
   const faqs = rawFaqs.map((faq) => ({
     question: faq.question,
@@ -38,18 +39,14 @@ export async function FAQSection() {
             {t("stillQuestionsDesc")}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/onboarding"
-              className="bg-[var(--accent)] hover:brightness-110 text-white px-8 py-3 rounded-full font-bold transition-all"
-            >
-              {t("startFreeTrial")}
-            </Link>
-            <Link
+            <CTAButton label={tb("startFree")} size="md" showArrow={false} />
+            <CTAButton
+              label={t("contactSupport")}
               href="/contact"
-              className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full font-bold transition-all border border-white/10"
-            >
-              {t("contactSupport")}
-            </Link>
+              size="md"
+              variant="secondary"
+              showArrow={false}
+            />
           </div>
         </ScrollReveal>
       </div>

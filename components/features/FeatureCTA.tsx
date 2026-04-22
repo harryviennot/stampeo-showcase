@@ -1,7 +1,7 @@
-import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { CTAButton } from "@/components/ui/CTAButton";
 
 interface FeatureCTAProps {
   title: string;
@@ -18,8 +18,8 @@ export function FeatureCTA({
   urgencyText,
   className,
 }: FeatureCTAProps) {
-  const t = useTranslations("features");
-  const label = buttonText ?? t("ctaButton");
+  const tb = useTranslations("common.buttons");
+  const label = buttonText ?? tb("startFree");
 
   return (
     <section className={`py-16 sm:py-24 ${className ?? ""}`}>
@@ -86,15 +86,10 @@ export function FeatureCTA({
                   {subtitle}
                 </p>
 
-                <Link
-                  href="/onboarding"
-                  className="feature-cta-button group inline-flex items-center gap-2 bg-[var(--accent)] text-white px-10 py-4 rounded-full font-bold text-lg shadow-lg shadow-[var(--accent)]/25 transition-all"
-                >
-                  <span>{label}</span>
-                  <span className="transition-transform group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
+                <CTAButton
+                  label={label}
+                  className="feature-cta-button"
+                />
 
                 {urgencyText && (
                   <p className="mt-6 text-sm text-gray-500 font-medium">
