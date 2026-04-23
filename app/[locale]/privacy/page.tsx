@@ -1,4 +1,4 @@
-import { getLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 import { getLegalContent } from "@/lib/legal";
@@ -22,8 +22,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function PrivacyPage() {
-  const locale = await getLocale();
+export default async function PrivacyPage({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const legal = getLegalContent("privacy", locale);
   if (!legal) notFound();
 

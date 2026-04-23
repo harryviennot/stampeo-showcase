@@ -2,6 +2,17 @@ import { NextRequest } from "next/server";
 import { htmlToMarkdown } from "@/lib/markdown/convert";
 import { isMarkdownEligible } from "@/lib/markdown/eligibility";
 
+export const runtime = "nodejs";
+
+function resolveOrigin(request: NextRequest): string {
+  const hostHeader = request.headers.get("host");
+  if (hostHeader) {
+    const protocol = hostHeader.startsWith("localhost") ? "http" : "https";
+    return `${protocol}://${hostHeader}`;
+  }
+  return request.nextUrl.origin;
+}
+
 export async function GET(request: NextRequest): Promise<Response> {
   const path = request.nextUrl.pathname;
 
@@ -9,7 +20,11 @@ export async function GET(request: NextRequest): Promise<Response> {
     return new Response("Not found", { status: 404 });
   }
 
-  const target = `${request.nextUrl.origin}${path}${request.nextUrl.search}`;
+  const origin = resolveOrigin(request);
+  const target = `${origin}${path}${request.nextUrl.search}`;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
 
   let html: string;
   try {
@@ -17,14 +32,24 @@ export async function GET(request: NextRequest): Promise<Response> {
       headers: {
         "x-internal-markdown": "1",
         accept: "text/html",
+        "user-agent": "stampeo-markdown-proxy",
       },
+      signal: controller.signal,
+      cache: "no-store",
     });
     if (!res.ok) {
-      return new Response(`Upstream ${res.status}`, { status: res.status });
+      return new Response(`Upstream ${res.status} for ${target}`, {
+        status: res.status,
+      });
     }
     html = await res.text();
-  } catch {
-    return new Response("Upstream fetch failed", { status: 502 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return new Response(`Upstream fetch failed: ${message} (target=${target})`, {
+      status: 502,
+    });
+  } finally {
+    clearTimeout(timeout);
   }
 
   const { markdown, tokens } = htmlToMarkdown(html);

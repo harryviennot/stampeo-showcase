@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
@@ -20,7 +20,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function AboutPage() {
+export default async function AboutPage({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("about");
   const values = t.raw("values.items") as Array<{
     title: string;
