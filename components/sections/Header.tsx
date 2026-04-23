@@ -105,20 +105,6 @@ function FeaturesDropdown() {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Always in DOM for search engine crawlers */}
-      <nav className="sr-only">
-        {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
-          const slug = getLocalizedSlug(canonicalSlug, locale);
-          return (
-            <Link
-              key={canonicalSlug}
-              href={`/features/${slug}` as "/features/design-de-carte"}
-            >
-              {t(`featuresItems.${key}.label`)}
-            </Link>
-          );
-        })}
-      </nav>
       <button
         className={`flex items-center gap-1 text-sm font-semibold transition-colors ${isFeatureActive
           ? "text-[var(--accent)]"
@@ -323,8 +309,30 @@ export function Header() {
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 
+  const seoPrefix = locale === "fr" ? "" : `/${locale}`;
+  const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
+  const seoLinks = [
+    { href: `${seoPrefix}/`, label: "Home" },
+    { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
+    { href: `${seoPrefix}/blog`, label: "Blog" },
+    { href: `${seoPrefix}/contact`, label: "Contact" },
+    { href: `${seoPrefix}/about`, label: "About" },
+    ...FEATURE_ITEMS.map(({ canonicalSlug }) => ({
+      href: `${seoPrefix}/features/${getLocalizedSlug(canonicalSlug, locale)}`,
+      label: canonicalSlug,
+    })),
+  ];
+
   return (
     <>
+      {/* Plain <a> duplicate of the nav — guarantees link signal in raw HTML
+          regardless of hover state, viewport, or client hydration timing */}
+      <nav className="sr-only" aria-hidden="true">
+        {seoLinks.map((l) => (
+          <a key={l.href} href={l.href} tabIndex={-1}>{l.label}</a>
+        ))}
+      </nav>
       <header className="fixed top-0 left-0 right-0 z-50">
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
         <div

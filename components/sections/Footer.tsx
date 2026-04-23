@@ -10,6 +10,21 @@ export async function Footer() {
   const tNav = await getTranslations("common.nav");
   const locale = await getLocale();
 
+  const seoPrefix = locale === "fr" ? "" : `/${locale}`;
+  const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
+  const seoLinks = [
+    { href: `${seoPrefix}/`, label: "Home" },
+    { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
+    { href: `${seoPrefix}/blog`, label: "Blog" },
+    { href: `${seoPrefix}/contact`, label: "Contact" },
+    { href: `${seoPrefix}/about`, label: "About" },
+    ...FEATURE_ITEMS.map(({ canonicalSlug }) => ({
+      href: `${seoPrefix}/features/${getLocalizedSlug(canonicalSlug, locale)}`,
+      label: canonicalSlug,
+    })),
+  ];
+
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 lg:px-12 pt-20 pb-12">
@@ -169,6 +184,12 @@ export async function Footer() {
           </div>
         </div>
       </div>
+      {/* Plain <a> duplicate of nav links — redundant SSR signal for crawlers */}
+      <nav className="sr-only" aria-hidden="true">
+        {seoLinks.map((l) => (
+          <a key={l.href} href={l.href} tabIndex={-1}>{l.label}</a>
+        ))}
+      </nav>
     </footer>
   );
 }
