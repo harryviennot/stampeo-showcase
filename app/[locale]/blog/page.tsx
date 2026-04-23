@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
@@ -30,12 +30,16 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPage() {
-  const locale = await getLocale();
-
+export default async function BlogPage({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
   if (locale !== "fr" && locale !== "en") {
     redirect("/blog");
   }
+  setRequestLocale(locale);
   const t = await getTranslations("blog");
   const posts = getAllPosts(locale);
 

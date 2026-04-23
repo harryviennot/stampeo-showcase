@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProblemSection } from "@/components/sections/ProblemSection";
@@ -27,7 +27,13 @@ import {
   faqPageJsonLd,
 } from "@/lib/structured-data";
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("landing.faq");
   const faqItems = t.raw("items") as Array<{
     question: string;

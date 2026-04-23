@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { PricingPageContent } from "@/components/pricing/PricingPageContent";
@@ -24,7 +24,13 @@ export async function generateMetadata({
   };
 }
 
-export default function PricingPage() {
+export default async function PricingPage({
+  params,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+}>) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   return (
     <div className="min-h-screen bg-[var(--background)]">
       <Header />
