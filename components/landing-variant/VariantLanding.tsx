@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
-import { SectorCards } from "@/components/sections/SectorCards";
+import { VariantSectorCards } from "./VariantSectorCards";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { Footer } from "@/components/sections/Footer";
@@ -41,7 +41,7 @@ export async function VariantLanding({ locale }: Readonly<{ locale: string }>) {
         <div data-landing-section="benefits"><VariantBenefits /></div>
         <div data-landing-section="differentiator"><VariantDifferentiator /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
-        <div data-landing-section="sectors"><SectorCards /></div>
+        <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="testimonials"><VariantTestimonials /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
         <div data-landing-section="pricing"><PricingSection /></div>

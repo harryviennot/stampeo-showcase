@@ -23,6 +23,8 @@ import {
   ForkKnife,
   ShoppingBag,
   Percent,
+  BreadIcon,
+  TeaBagIcon
 } from "@phosphor-icons/react";
 import type { ComponentType, SVGProps } from "react";
 
@@ -48,7 +50,10 @@ export type StampIconType =
   | "scissors"
   | "food"
   | "shopping"
-  | "percent";
+  | "percent"
+  | "bread"
+  | "tea";
+
 
 type PhosphorIcon = ComponentType<SVGProps<SVGSVGElement> & { weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone" }>;
 
@@ -79,6 +84,8 @@ const stampIcons: { id: StampIconType; label: string; Icon: PhosphorIcon }[] = [
   { id: "music", label: "Music", Icon: MusicNote },
   { id: "paw", label: "Paw", Icon: PawPrint },
   { id: "scissors", label: "Scissors", Icon: Scissors },
+  { id: "bread", label: "Bread", Icon: BreadIcon },
+  { id: "tea", label: "Tea", Icon: TeaBagIcon },
 ];
 
 export function StampIconPicker({ value, onChange, accentColor = "#f97316" }: StampIconPickerProps) {
@@ -134,6 +141,8 @@ const iconMap: Record<StampIconType, PhosphorIcon> = {
   food: ForkKnife,
   shopping: ShoppingBag,
   percent: Percent,
+  bread: BreadIcon,
+  tea: TeaBagIcon,
 };
 
 export function StampIconSvg({ icon, className = "w-4 h-4", color }: StampIconSvgProps) {

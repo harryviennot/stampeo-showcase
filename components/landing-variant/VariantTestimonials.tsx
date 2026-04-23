@@ -41,8 +41,8 @@ export async function VariantTestimonials() {
               className="flex flex-col gap-5 p-7 md:p-8 bg-white rounded-2xl blog-card-3d"
             >
               <div className="flex gap-1 text-[var(--accent)]">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <StarIcon key={i} weight="fill" className="w-4 h-4" />
+                {["s1", "s2", "s3", "s4", "s5"].map((k) => (
+                  <StarIcon key={k} weight="fill" className="w-4 h-4" />
                 ))}
               </div>
               <blockquote className="text-[var(--foreground)] text-base md:text-lg leading-relaxed font-medium">
@@ -57,7 +57,7 @@ export async function VariantTestimonials() {
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-bold text-[var(--foreground)] truncate">
-                    {item.name} — {item.role}
+                    {item.name}, {item.role}
                   </span>
                   <span className="text-xs text-[var(--muted-foreground)] truncate">
                     {item.business}, {item.city}

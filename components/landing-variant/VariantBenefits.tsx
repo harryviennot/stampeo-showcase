@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { UserGroupIcon, SparklesIcon, BellIcon } from "../icons";
+import { UserGroupIcon, ChartPieSliceIcon, BellIcon } from "../icons";
 
-const icons = [UserGroupIcon, SparklesIcon, BellIcon];
+const icons = [UserGroupIcon, ChartPieSliceIcon, BellIcon];
 
 export async function VariantBenefits() {
   const t = await getTranslations("variant.benefits");
