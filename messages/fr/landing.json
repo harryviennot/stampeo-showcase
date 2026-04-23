@@ -397,12 +397,12 @@
       "subtitle": "Votre carte de fidélité Apple Wallet et Google Wallet, prête en 3 minutes. Sans appli pour vos clients, sans changer de caisse.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "1 mois gratuit · Sans CB · Support en français"
+      "reassurance": "1 mois gratuit · Sans CB · Sans engagement"
     },
     "trustStrip": {
       "madeInFrance": "Made in France",
       "rgpd": "RGPD · Données hébergées en Europe",
-      "supportFr": "Support en français, par des humains"
+      "phone": "06 49 37 04 70"
     },
     "benefits": {
       "title": "Trois raisons de passer au wallet.",
@@ -467,7 +467,7 @@
         }
       ],
       "stillQuestions": "Une question qui n'est pas là ?",
-      "stillQuestionsDesc": "Notre équipe française répond en moins de 24h.",
+      "stillQuestionsDesc": "On vous répond sous 24h — ou par téléphone au 06 49 37 04 70.",
       "contactSupport": "Nous contacter"
     },
     "finalCta": {
@@ -475,7 +475,7 @@
       "subtitle": "3 minutes pour créer votre carte. 1 mois pour la tester. 0 € pour commencer.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "Sans CB · Sans engagement · Support en français"
+      "reassurance": "Sans CB · Sans engagement · Une question ? 06 49 37 04 70"
     }
   }
 }
