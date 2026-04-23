@@ -1,10 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { trackLandingViewed, trackLandingSectionViewed } from "@/lib/analytics";
+import {
+  trackLandingViewed,
+  trackLandingSectionViewed,
+  registerLandingVariant,
+  unregisterLandingVariant,
+} from "@/lib/analytics";
 
-export function LandingTracker({ locale }: Readonly<{ locale: string }>) {
+export function LandingTracker({
+  locale,
+  variant,
+}: Readonly<{ locale: string; variant: string }>) {
   useEffect(() => {
+    registerLandingVariant(variant);
     trackLandingViewed({ locale });
 
     const sections = document.querySelectorAll<HTMLElement>(
@@ -16,7 +25,7 @@ export function LandingTracker({ locale }: Readonly<{ locale: string }>) {
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
-          const name = entry.target.getAttribute("data-landing-section");
+          const name = (entry.target as HTMLElement).dataset.landingSection;
           if (!name || seen.has(name)) continue;
           seen.add(name);
           trackLandingSectionViewed({ locale, section: name });
@@ -26,8 +35,11 @@ export function LandingTracker({ locale }: Readonly<{ locale: string }>) {
     );
 
     sections.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [locale]);
+    return () => {
+      observer.disconnect();
+      unregisterLandingVariant();
+    };
+  }, [locale, variant]);
 
   return null;
 }

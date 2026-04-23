@@ -390,5 +390,92 @@
       "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients.",
       "sources": "Sources : Observatoire de la Fidélité · Bain & Company · LSA Conso"
     }
+  },
+  "variant": {
+    "hero": {
+      "title": "Faites revenir <accent>vos habitués.</accent>",
+      "subtitle": "Votre carte de fidélité Apple Wallet et Google Wallet, prête en 3 minutes. Sans appli pour vos clients, sans changer de caisse.",
+      "primaryCta": "Créer ma carte",
+      "secondaryCta": "Réserver une démo",
+      "reassurance": "1 mois gratuit · Sans CB · Support en français"
+    },
+    "trustStrip": {
+      "madeInFrance": "Made in France",
+      "rgpd": "RGPD · Données hébergées en Europe",
+      "supportFr": "Support en français, par des humains"
+    },
+    "benefits": {
+      "title": "Trois raisons de passer au wallet.",
+      "subtitle": "Pas une appli de plus. Pas un outil de plus. Juste la carte de fidélité, là où vos clients regardent déjà.",
+      "items": [
+        {
+          "title": "Faites revenir vos habitués",
+          "description": "Des clients fidèles, dans leur Apple Wallet. Visibles, récompensés, automatiquement. Chaque tampon renforce l'habitude de revenir."
+        },
+        {
+          "title": "Zéro friction pour vos clients",
+          "description": "Un scan, et leur carte est ajoutée. Aucune appli à télécharger, aucun mot de passe à retenir. Ça marche dès la première visite."
+        },
+        {
+          "title": "Des messages qui arrivent vraiment",
+          "description": "Vos offres arrivent directement sur le téléphone de vos clients, comme un SMS — sans la facture SMS. Lues 5 à 10× plus que les emails."
+        }
+      ]
+    },
+    "howItWorks": {
+      "badge": "En 3 étapes",
+      "title": "Prêt en 3 minutes.",
+      "subtitle": "De l'inscription au premier tampon, sans démo ni intégration caisse.",
+      "steps": [
+        {
+          "title": "Créez votre carte",
+          "description": "Logo, couleurs, récompenses. Depuis votre tableau de bord, en 3 minutes."
+        },
+        {
+          "title": "Vos clients la scannent",
+          "description": "Un QR code affiché au comptoir. Leur carte est ajoutée à Apple Wallet ou Google Wallet en un geste."
+        },
+        {
+          "title": "Ils reviennent, vous voyez tout",
+          "description": "Chaque tampon, chaque visite, chaque client. Directement dans votre espace, en temps réel."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Les questions qu'on nous pose.",
+      "subtitle": "Les réponses directes, sans jargon.",
+      "items": [
+        {
+          "question": "Combien ça coûte ?",
+          "answer": "Le plan Starter est à {starterPrice} €/mois (tarif fondateur : {starterFoundingPrice} €/mois à vie). Pas de frais de mise en service, pas d'engagement. Vous commencez gratuitement pendant 1 mois, sans carte bancaire."
+        },
+        {
+          "question": "Dois-je changer ma caisse ?",
+          "answer": "Non. Stampeo fonctionne avec n'importe quelle caisse, ou sans caisse du tout. Vous scannez depuis notre appli gratuite ou directement depuis un navigateur. Zéro intégration requise."
+        },
+        {
+          "question": "Mes clients doivent-ils télécharger quelque chose ?",
+          "answer": "Non. Apple Wallet et Google Wallet sont déjà installés sur tous les smartphones récents. Vos clients scannent votre QR code, et leur carte s'ajoute en un geste. C'est tout."
+        },
+        {
+          "question": "Que se passe-t-il après le premier mois ?",
+          "answer": "Vous choisissez de continuer ou non. Aucun prélèvement automatique tant que vous n'avez pas ajouté de CB. Si vous continuez en tant que partenaire fondateur, vous bloquez votre tarif à vie."
+        },
+        {
+          "question": "Mes données sont-elles en sécurité ?",
+          "answer": "Oui. Stampeo est conforme RGPD, nos serveurs sont en Europe, et nous ne revendons jamais vos données clients. Elles sont à vous — vous les exportez quand vous voulez."
+        }
+      ],
+      "stillQuestions": "Une question qui n'est pas là ?",
+      "stillQuestionsDesc": "Notre équipe française répond en moins de 24h.",
+      "contactSupport": "Nous contacter"
+    },
+    "finalCta": {
+      "title": "Lancez votre fidélité <accent>cette semaine.</accent>",
+      "subtitle": "3 minutes pour créer votre carte. 1 mois pour la tester. 0 € pour commencer.",
+      "primaryCta": "Créer ma carte",
+      "secondaryCta": "Réserver une démo",
+      "reassurance": "Sans CB · Sans engagement · Support en français"
+    }
   }
 }
