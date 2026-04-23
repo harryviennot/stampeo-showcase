@@ -404,6 +404,56 @@
       "rgpd": "RGPD · Données hébergées en Europe",
       "phone": "06 49 37 04 70"
     },
+    "differentiator": {
+      "title": "Tout ce que Stampeo n'oblige pas.",
+      "subtitle": "Parce qu'aucun outil de fidélité ne devrait vous coûter un terminal, une app pour vos clients, ou trois semaines de mise en service.",
+      "items": [
+        {
+          "title": "Sans appli pour vos clients",
+          "description": "Apple Wallet et Google Wallet sont déjà dans leur téléphone. Un scan, leur carte est ajoutée. Aucune installation, aucun compte à créer."
+        },
+        {
+          "title": "Sans changer de caisse",
+          "description": "Stampeo fonctionne avec votre système actuel, ou sans système du tout. Scanner mobile ou navigateur — à vous de choisir."
+        },
+        {
+          "title": "Sans frais de mise en service",
+          "description": "0 € pour démarrer. Votre carte est prête en 3 minutes, pas en 3 semaines. Aucune démo obligatoire."
+        },
+        {
+          "title": "Sans engagement",
+          "description": "Un mois gratuit, sans CB. Vous partez quand vous voulez. Vos données restent à vous, exportables en un clic."
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "Ils ont lancé leur fidélité avec Stampeo.",
+      "subtitle": "Des commerçants indépendants qui font revenir leurs habitués, sans se compliquer la vie.",
+      "placeholderNote": "Exemples — à remplacer par de vrais témoignages.",
+      "items": [
+        {
+          "quote": "Avant, je notais les tampons sur un carnet à côté de la caisse. Je perdais des habitués sans m'en rendre compte. Depuis Stampeo, je vois qui revient et qui décroche — et mes clients reviennent parce que leur carte est toujours sur leur téléphone, pas au fond d'un tiroir.",
+          "name": "Sophie M.",
+          "role": "Boulangère",
+          "business": "Boulangerie du Centre",
+          "city": "Nantes"
+        },
+        {
+          "quote": "En 3 minutes j'avais ma carte. Pas de démo commerciale, pas de frais cachés. Mes clients l'ajoutent à leur Wallet en un scan, et ils reçoivent leurs récompenses sans que j'aie à les relancer par SMS.",
+          "name": "Marc D.",
+          "role": "Restaurateur",
+          "business": "Le Bistrot des Halles",
+          "city": "Lyon"
+        },
+        {
+          "quote": "Mes clientes viennent une fois par mois pour leur coupe. Avec les notifications wallet, elles pensent à leur prochain rendez-vous sans que je fasse de relance. Ma fréquence de visite a augmenté dès le deuxième mois.",
+          "name": "Claire T.",
+          "role": "Coiffeuse",
+          "business": "Salon des Batignolles",
+          "city": "Paris"
+        }
+      ]
+    },
     "benefits": {
       "title": "Trois raisons de passer au wallet.",
       "subtitle": "Pas une appli de plus. Pas un outil de plus. Juste la carte de fidélité, là où vos clients regardent déjà.",
@@ -464,6 +514,14 @@
         {
           "question": "Mes données sont-elles en sécurité ?",
           "answer": "Oui. Stampeo est conforme RGPD, nos serveurs sont en Europe, et nous ne revendons jamais vos données clients. Elles sont à vous — vous les exportez quand vous voulez."
+        },
+        {
+          "question": "Combien de clients puis-je inscrire ?",
+          "answer": "Les plans Starter, Growth et Pro se distinguent par les fonctionnalités (notifications, campagnes, analytique avancée), pas par le volume. Consultez la page tarifs pour le détail par plan."
+        },
+        {
+          "question": "Puis-je modifier le design de ma carte après ?",
+          "answer": "Oui. Vous pouvez modifier le logo, les couleurs, le nombre de tampons et les récompenses à tout moment depuis votre tableau de bord. Les cartes déjà installées chez vos clients se mettent à jour automatiquement — sans qu'ils aient à retélécharger quoi que ce soit."
         }
       ],
       "stillQuestions": "Une question qui n'est pas là ?",
