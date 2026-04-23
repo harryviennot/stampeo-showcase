@@ -1,4 +1,8 @@
+"use client";
+
 import { Link } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
+import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
 
 type Size = "sm" | "md" | "lg" | "xl";
 type Variant = "primary" | "secondary";
@@ -11,6 +15,8 @@ interface CTAButtonProps {
   className?: string;
   id?: string;
   showArrow?: boolean;
+  /** When set, fires `landing_cta_clicked` with this location on click. */
+  trackAs?: CTALocation;
 }
 
 const sizeStyles: Record<Size, string> = {
@@ -35,14 +41,21 @@ export function CTAButton({
   className = "",
   id,
   showArrow = true,
+  trackAs,
 }: CTAButtonProps) {
+  const locale = useLocale();
   const base =
     "group inline-flex items-center gap-2 rounded-full font-bold transition-all";
+
+  const handleClick = trackAs
+    ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href })
+    : undefined;
 
   return (
     <Link
       id={id}
       href={href}
+      onClick={handleClick}
       className={`${base} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
     >
       <span>{label}</span>

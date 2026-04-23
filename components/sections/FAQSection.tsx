@@ -39,7 +39,7 @@ export async function FAQSection() {
             {t("stillQuestionsDesc")}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <CTAButton label={tb("startFree")} size="md" showArrow={false} />
+            <CTAButton label={tb("startFree")} size="md" showArrow={false} trackAs="faq" />
             <CTAButton
               label={t("contactSupport")}
               href="/contact"

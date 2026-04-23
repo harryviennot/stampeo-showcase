@@ -29,7 +29,7 @@ export async function HeroSection() {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <CTAButton label={tb("startFree")} />
+              <CTAButton label={tb("startFree")} trackAs="hero" />
             </div>
 
             {/* Wallet badges */}

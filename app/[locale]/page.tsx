@@ -19,6 +19,7 @@ import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { Footer } from "@/components/sections/Footer";
+import { LandingTracker } from "@/components/analytics/LandingTracker";
 import { JsonLd } from "@/components/JsonLd";
 import {
   organizationJsonLd,
@@ -46,21 +47,22 @@ export default async function Home({
       <JsonLd data={webSiteJsonLd()} />
       <JsonLd data={softwareApplicationJsonLd()} />
       <JsonLd data={faqPageJsonLd(faqItems)} />
+      <LandingTracker locale={locale} />
       <Header />
       <main className="relative">
-        <HeroSection />
-        <ProblemSection />
-        <HowItWorks />
-        <BenefitsSection />
-        <ComparisonTable />
-        <DashboardPreview />
-        <SectorCards />
-        <FeatureGrid />
+        <div data-landing-section="hero"><HeroSection /></div>
+        <div data-landing-section="problem"><ProblemSection /></div>
+        <div data-landing-section="how_it_works"><HowItWorks /></div>
+        <div data-landing-section="benefits"><BenefitsSection /></div>
+        <div data-landing-section="comparison"><ComparisonTable /></div>
+        <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
+        <div data-landing-section="sectors"><SectorCards /></div>
+        <div data-landing-section="feature_grid"><FeatureGrid /></div>
         {/* Removed: FoundingPartnerSection — founding offer now in PricingSection */}
         {/* Removed: ROICalculator — available on /programme-fondateur page */}
-        <PricingSection />
-        <FAQSection />
-        <FinalCTASection />
+        <div data-landing-section="pricing"><PricingSection /></div>
+        <div data-landing-section="faq"><FAQSection /></div>
+        <div data-landing-section="final_cta"><FinalCTASection /></div>
       </main>
       <Footer />
     </div>
