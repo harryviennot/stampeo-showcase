@@ -4,19 +4,23 @@ import { CTAButton } from "../ui/CTAButton";
 import { AppleIcon, GoogleIcon } from "../icons";
 import dynamic from "next/dynamic";
 
-const HeroDemo = dynamic(() => import("./HeroDemo").then((m) => m.HeroDemo));
+const HeroDemo = dynamic(() => import("../sections/HeroDemo").then((m) => m.HeroDemo));
 
-export async function HeroSection() {
-  const t = await getTranslations("landing.hero");
-  const tb = await getTranslations("common.buttons");
+export async function VariantHero() {
+  const t = await getTranslations("variant.hero");
 
   return (
     <section className="relative min-h-screen flex flex-col pt-8 sm:pt-0">
       <main className="relative z-10 flex-1 flex items-center px-6 lg:px-10 py-12 lg:py-24">
-        <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          {/* Left Column: Static content — server-rendered, zero JS */}
+        <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-16 lg:gap-20 items-center">
           <ScrollReveal className="flex flex-col gap-8">
             <div>
+              {/* Manual weekly update — bump the number in messages/fr/landing.json → variant.hero.momentum each Monday. */}
+              <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-6">
+                {t.rich("momentum", {
+                  accent: (chunks) => <span className="font-bold">{chunks}</span>,
+                })}
+              </span>
               <h1 className="text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
                 {t.rich("title", {
                   accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
@@ -28,12 +32,15 @@ export async function HeroSection() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-4">
-              <CTAButton label={tb("startFree")} trackAs="hero" />
+            <div className="flex flex-wrap gap-4 items-center">
+              <CTAButton label={t("primaryCta")} trackAs="hero" />
             </div>
 
-            {/* Wallet badges */}
-            <div className="flex items-center gap-4 pt-4">
+            <p className="text-sm text-[var(--muted-foreground)] font-medium">
+              {t("reassurance")}
+            </p>
+
+            <div className="flex items-center gap-4 pt-2">
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black text-white text-sm font-medium">
                 <AppleIcon className="w-5 h-5" />
                 <span>Apple Wallet</span>
@@ -45,7 +52,6 @@ export async function HeroSection() {
             </div>
           </ScrollReveal>
 
-          {/* Right Column: Interactive demo — lazy-loaded client component */}
           <ScrollReveal delay={200} className="flex flex-col items-center">
             <HeroDemo />
           </ScrollReveal>

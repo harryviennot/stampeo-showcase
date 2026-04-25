@@ -45,6 +45,7 @@ export async function PricingSection() {
             cta={t("cta")}
             ctaHref="/onboarding"
             ctaSubtext={t("ctaSubtext")}
+            trackAs="pricing_starter"
           />
 
           <PricingTierCard
@@ -61,6 +62,7 @@ export async function PricingSection() {
             ctaSubtext={t("ctaSubtext")}
             highlighted
             popularLabel={t("popular")}
+            trackAs="pricing_growth"
           />
 
           <PricingTierCard

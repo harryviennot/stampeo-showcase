@@ -41,6 +41,7 @@ export {
   Target as TargetIcon,
   Translate as TranslateIcon,
   ChartPieSlice as ChartPieSliceIcon,
+  Phone as PhoneIcon,
 } from "@phosphor-icons/react";
 
 interface IconProps {

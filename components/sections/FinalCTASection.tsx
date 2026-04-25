@@ -18,7 +18,7 @@ export async function FinalCTASection() {
         </h2>
 
         <div className="flex flex-col items-center gap-6">
-          <CTAButton label={tb("startFree")} size="xl" />
+          <CTAButton label={tb("startFree")} size="xl" trackAs="final_cta" />
 
           <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
             {t("subtitle", { price: PRICING.starter.foundingPrice })}

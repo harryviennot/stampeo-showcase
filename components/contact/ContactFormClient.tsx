@@ -2,7 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+
+import { PhoneIcon, EnvelopeIcon, QuestionIcon, MapPinIcon } from "@phosphor-icons/react";
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -12,11 +16,11 @@ function SocialLink({
   href,
   label,
   children,
-}: {
+}: Readonly<{
   href: string;
   label: string;
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <Link
       href={href}
@@ -28,33 +32,167 @@ function SocialLink({
   );
 }
 
-function MailIcon() {
+
+
+function StandardForm({
+  status,
+  onSubmit,
+  onReset,
+}: Readonly<{
+  status: FormStatus;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onReset: () => void;
+}>) {
+  const t = useTranslations("contact");
+  const inputClass =
+    "w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20";
+
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <p className="text-lg font-semibold mb-2">{t("form.success")}</p>
+        <button onClick={onReset} className="mt-4 text-sm text-[var(--accent)] hover:underline">
+          {t("form.send")}
+        </button>
+      </div>
+    );
+  }
+
+  const disabled = status === "sending";
   return (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-    </svg>
+    <form className="space-y-5" onSubmit={onSubmit}>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("form.name")}</label>
+        <input type="text" name="name" autoComplete="name" placeholder={t("form.namePlaceholder")}
+          className={inputClass} required disabled={disabled} />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("form.email")}</label>
+        <input type="email" name="email" autoComplete="email" placeholder={t("form.emailPlaceholder")}
+          className={inputClass} required disabled={disabled} />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("form.subject")}</label>
+        <input type="text" name="subject" placeholder={t("form.subjectPlaceholder")}
+          className={inputClass} required disabled={disabled} />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("form.message")}</label>
+        <textarea name="message" rows={5} placeholder={t("form.messagePlaceholder")}
+          className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+          required disabled={disabled} />
+      </div>
+      {status === "error" && <p className="text-sm text-red-600">{t("form.error")}</p>}
+      <button type="submit" disabled={disabled}
+        className="w-full h-12 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+        {disabled ? t("form.sending") : t("form.send")}
+      </button>
+    </form>
   );
 }
 
-function SupportIcon() {
-  return (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-    </svg>
-  );
-}
+function DemoForm({
+  status,
+  onSubmit,
+  onReset,
+}: Readonly<{
+  status: FormStatus;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onReset: () => void;
+}>) {
+  const t = useTranslations("contact.demo.form");
+  const inputClass =
+    "w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20";
 
-function LocationIcon() {
+  const typeKeys = [
+    "cafe", "restaurant", "boulangerie", "retail",
+    "salon", "fitness", "services", "other",
+  ] as const;
+
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
+          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <p className="text-lg font-semibold mb-2">{t("success")}</p>
+        <button onClick={onReset} className="mt-4 text-sm text-[var(--accent)] hover:underline">
+          {t("send")}
+        </button>
+      </div>
+    );
+  }
+
+  const disabled = status === "sending";
   return (
-    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-    </svg>
+    <form className="space-y-5" onSubmit={onSubmit}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label className="block text-sm font-semibold mb-1.5">{t("name")}</label>
+          <input type="text" name="name" autoComplete="name" placeholder={t("namePlaceholder")}
+            className={inputClass} required disabled={disabled} />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold mb-1.5">{t("email")}</label>
+          <input type="email" name="email" autoComplete="email" placeholder={t("emailPlaceholder")}
+            className={inputClass} required disabled={disabled} />
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("phone")}</label>
+        <input type="tel" name="phone" autoComplete="tel" placeholder={t("phonePlaceholder")}
+          className={inputClass} disabled={disabled} />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label className="block text-sm font-semibold mb-1.5">{t("business")}</label>
+          <input type="text" name="business" placeholder={t("businessPlaceholder")}
+            className={inputClass} required disabled={disabled} />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold mb-1.5">{t("businessType")}</label>
+          <select name="businessType" required disabled={disabled}
+            defaultValue=""
+            className={inputClass}>
+            <option value="" disabled>{t("businessTypePlaceholder")}</option>
+            {typeKeys.map((k) => (
+              <option key={k} value={k}>{t(`businessTypeOptions.${k}`)}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("availability")}</label>
+        <textarea name="availability" rows={3} placeholder={t("availabilityPlaceholder")}
+          className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+          required disabled={disabled} />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold mb-1.5">{t("message")}</label>
+        <textarea name="message" rows={3} placeholder={t("messagePlaceholder")}
+          className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+          disabled={disabled} />
+      </div>
+      {status === "error" && <p className="text-sm text-red-600">{t("error")}</p>}
+      <button type="submit" disabled={disabled}
+        className="w-full h-12 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+        {disabled ? t("sending") : t("send")}
+      </button>
+    </form>
   );
 }
 
 export function ContactPageClient() {
   const t = useTranslations("contact");
+  const searchParams = useSearchParams();
+  const isDemo = searchParams.get("type") === "demo";
   const [status, setStatus] = useState<FormStatus>("idle");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -63,12 +201,35 @@ export function ContactPageClient() {
     setStatus("sending");
 
     const formData = new FormData(form);
-    const body = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      subject: formData.get("subject") as string,
-      message: formData.get("message") as string,
-    };
+
+    let body: Record<string, string>;
+    if (isDemo) {
+      const phone = (formData.get("phone") as string) || "";
+      const availability = formData.get("availability") as string;
+      const userMessage = (formData.get("message") as string) || "";
+      const business = formData.get("business") as string;
+      const businessType = formData.get("businessType") as string;
+
+      const combinedMessage = [
+        `Disponibilités : ${availability}`,
+        phone ? `Téléphone : ${phone}` : null,
+        userMessage ? `\nMessage :\n${userMessage}` : null,
+      ].filter(Boolean).join("\n");
+
+      body = {
+        name: formData.get("name") as string,
+        email: formData.get("email") as string,
+        subject: `Demande de démo : ${business} (${businessType})`,
+        message: combinedMessage,
+      };
+    } else {
+      body = {
+        name: formData.get("name") as string,
+        email: formData.get("email") as string,
+        subject: formData.get("subject") as string,
+        message: formData.get("message") as string,
+      };
+    }
 
     try {
       const res = await fetch(`${API_URL}/public/contact`, {
@@ -86,121 +247,44 @@ export function ContactPageClient() {
     }
   }
 
+  const reset = () => setStatus("idle");
+  const heroT = isDemo ? "demo.hero" : "hero";
+
   return (
     <main className="pt-32 pb-20">
       <div className="max-w-5xl mx-auto px-6">
-        {/* Hero */}
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-4">
-            {t("hero.badge")}
+            {t(`${heroT}.badge`)}
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            {t("hero.headline")}
+            {t(`${heroT}.headline`)}
           </h1>
           <p className="text-lg text-[var(--muted-foreground)]">
-            {t("hero.description")}
+            {t(`${heroT}.description`)}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Contact Form */}
           <div className="bg-[var(--cream)] rounded-2xl p-8 md:p-10 border border-white/50">
-            {status === "success" ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <p className="text-lg font-semibold mb-2">{t("form.success")}</p>
-                <button
-                  onClick={() => setStatus("idle")}
-                  className="mt-4 text-sm text-[var(--accent)] hover:underline"
-                >
-                  {t("form.send")}
-                </button>
-              </div>
+            {isDemo ? (
+              <DemoForm status={status} onSubmit={handleSubmit} onReset={reset} />
             ) : (
-              <form className="space-y-5" onSubmit={handleSubmit}>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.name")}
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    autoComplete="name"
-                    placeholder={t("form.namePlaceholder")}
-                    className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                    disabled={status === "sending"}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.email")}
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    autoComplete="email"
-                    placeholder={t("form.emailPlaceholder")}
-                    className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                    disabled={status === "sending"}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.subject")}
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    placeholder={t("form.subjectPlaceholder")}
-                    className="w-full h-11 px-4 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                    disabled={status === "sending"}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-1.5">
-                    {t("form.message")}
-                  </label>
-                  <textarea
-                    name="message"
-                    rows={5}
-                    placeholder={t("form.messagePlaceholder")}
-                    className="w-full px-4 py-3 rounded-xl border border-[var(--accent)]/10 bg-white/50 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
-                    required
-                    disabled={status === "sending"}
-                  />
-                </div>
-                {status === "error" && (
-                  <p className="text-sm text-red-600">{t("form.error")}</p>
-                )}
-                <button
-                  type="submit"
-                  disabled={status === "sending"}
-                  className="w-full h-12 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {status === "sending" ? t("form.sending") : t("form.send")}
-                </button>
-              </form>
+              <StandardForm status={status} onSubmit={handleSubmit} onReset={reset} />
             )}
           </div>
 
-          {/* Contact Info */}
           <div className="bg-[var(--cream)] rounded-2xl p-8 md:p-10 border border-white/50 space-y-8 h-fit">
             <h2 className="text-xl font-bold">{t("info.title")}</h2>
 
             <div className="space-y-6">
-              {(["email", "support", "location"] as const).map((key) => (
+              {(["email", "support", "phone", "location"] as const).map((key) => (
                 <div key={key} className="flex gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                    {key === "email" && <MailIcon />}
-                    {key === "support" && <SupportIcon />}
-                    {key === "location" && <LocationIcon />}
+                    {key === "email" && <EnvelopeIcon size={24} />}
+                    {key === "support" && <QuestionIcon size={24} />}
+                    {key === "phone" && <PhoneIcon size={24} />}
+                    {key === "location" && <MapPinIcon size={24} />}
                   </div>
                   <div>
                     <h3 className="font-semibold">{t(`info.${key}.title`)}</h3>
@@ -215,7 +299,6 @@ export function ContactPageClient() {
               ))}
             </div>
 
-            {/* Social Links */}
             <div>
               <h3 className="font-semibold mb-2">{t("social.title")}</h3>
               <p className="text-sm text-[var(--muted-foreground)] mb-4">

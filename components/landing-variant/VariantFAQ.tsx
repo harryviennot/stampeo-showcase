@@ -4,9 +4,8 @@ import { FAQList } from "../ui/FAQList";
 import { CTAButton } from "../ui/CTAButton";
 import { interpolatePricing } from "@/lib/pricing";
 
-export async function FAQSection() {
-  const t = await getTranslations("landing.faq");
-  const tb = await getTranslations("common.buttons");
+export async function VariantFAQ() {
+  const t = await getTranslations("variant.faq");
   const rawFaqs = t.raw("items") as Array<{ question: string; answer: string }>;
   const faqs = rawFaqs.map((faq) => ({
     question: faq.question,
@@ -16,7 +15,6 @@ export async function FAQSection() {
   return (
     <section id="faq" className="relative py-24 lg:py-32 overflow-hidden">
       <div className="max-w-[840px] mx-auto px-6 relative z-10">
-        {/* Section Header */}
         <ScrollReveal className="mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
             {t("title")}
@@ -26,20 +24,20 @@ export async function FAQSection() {
           </p>
         </ScrollReveal>
 
-        {/* Accordion List */}
         <ScrollReveal delay={200}>
           <FAQList items={faqs} defaultOpenCount={2} />
         </ScrollReveal>
 
-        {/* CTA Section inside FAQ */}
-        <ScrollReveal delay={400} className="mt-20 p-10 bg-[var(--foreground)] rounded-xl text-center relative overflow-hidden">
+        <ScrollReveal
+          delay={400}
+          className="mt-20 p-10 bg-[var(--foreground)] rounded-xl text-center relative overflow-hidden"
+        >
           <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)]" />
           <h3 className="text-white text-3xl font-bold mb-4">{t("stillQuestions")}</h3>
           <p className="text-gray-400 mb-8 max-w-lg mx-auto">
             {t("stillQuestionsDesc")}
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <CTAButton label={tb("startFree")} size="md" showArrow={false} trackAs="faq" />
+          <div className="flex justify-center">
             <CTAButton
               label={t("contactSupport")}
               href="/contact"
