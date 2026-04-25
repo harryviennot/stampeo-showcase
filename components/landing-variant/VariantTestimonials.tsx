@@ -57,10 +57,10 @@ export async function VariantTestimonials() {
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-bold text-[var(--foreground)] truncate">
-                    {item.name}, {item.role}
+                    {item.name}
                   </span>
                   <span className="text-xs text-[var(--muted-foreground)] truncate">
-                    {item.business}, {item.city}
+                    {item.role}, {item.city}
                   </span>
                 </div>
               </figcaption>

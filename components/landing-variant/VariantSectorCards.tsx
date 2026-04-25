@@ -23,7 +23,7 @@ type Theme = {
 };
 
 // Order matches FR sectors[] in messages/fr/landing.json:
-// [0] Café · [1] Boulangerie · [2] Salon de coiffure · [3] Restaurant
+// [0] Café · [1] Restaurant · [2] Salon de coiffure · [3] Boulangerie
 const themes: Theme[] = [
   // [0] Café — moody, specialty coffee bar
   {
@@ -41,20 +41,20 @@ const themes: Theme[] = [
       { key: "reward", label: "RÉCOMPENSE", value: "Café offert au 10ème" },
     ],
   },
-  // [1] Boulangerie — rustic artisan bakery
+  // [1] Restaurant — modern, slightly upscale bistro
   {
-    cardBg: "#F2E3C6",
-    cardText: "#2F2419",
-    cardMuted: "rgba(47,36,25,0.6)",
-    accentPill: "rgba(180,83,9,0.18)",
-    walletBg: "#E7D3A8",
-    walletAccent: "#B45309",
-    walletIcon: "#FFFDF7",
-    walletStamps: 7,
-    walletStampIcon: "bread",
-    walletOrgName: "Le Four d’Antan",
+    cardBg: "#111827",
+    cardText: "#F9FAFB",
+    cardMuted: "rgba(249,250,251,0.6)",
+    accentPill: "rgba(192,132,252,0.18)",
+    walletBg: "#1F2937",
+    walletAccent: "#C084FC",
+    walletIcon: "#FFFFFF",
+    walletStamps: 10,
+    walletStampIcon: "food",
+    walletOrgName: "L’Atelier 17",
     walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Pain au chocolat au 7ème" },
+      { key: "reward", label: "RÉCOMPENSE", value: "Dessert offert au 10ème" },
     ],
   },
   // [2] Salon de coiffure — TODO: theme below was authored as a tea-house
@@ -77,20 +77,20 @@ const themes: Theme[] = [
       { key: "reward", label: "RÉCOMPENSE", value: "-20% au 6ème achat" },
     ],
   },
-  // [3] Restaurant — modern, slightly upscale bistro
+  // [3] Boulangerie — rustic artisan bakery
   {
-    cardBg: "#111827",
-    cardText: "#F9FAFB",
-    cardMuted: "rgba(249,250,251,0.6)",
-    accentPill: "rgba(192,132,252,0.18)",
-    walletBg: "#1F2937",
-    walletAccent: "#C084FC",
-    walletIcon: "#FFFFFF",
-    walletStamps: 12,
-    walletStampIcon: "food",
-    walletOrgName: "L’Atelier 17",
+    cardBg: "#F2E3C6",
+    cardText: "#2F2419",
+    cardMuted: "rgba(47,36,25,0.6)",
+    accentPill: "rgba(180,83,9,0.18)",
+    walletBg: "#E7D3A8",
+    walletAccent: "#B45309",
+    walletIcon: "#FFFDF7",
+    walletStamps: 7,
+    walletStampIcon: "bread",
+    walletOrgName: "Le Four d’Antan",
     walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Dessert offert au 12ème" },
+      { key: "reward", label: "RÉCOMPENSE", value: "Pain au chocolat au 7ème" },
     ],
   },
 ];

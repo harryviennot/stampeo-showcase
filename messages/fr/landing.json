@@ -313,7 +313,7 @@
         {
           "name": "Restaurant",
           "quote": "Thomas déjeune chez vous deux fois par semaine. Il adorerait être récompensé, mais il ne va pas télécharger une app pour ça. Avec la carte wallet, c'est simple.",
-          "reward": "1 € dépensé = 1 point, dessert offert à 100 points",
+          "reward": "10 repas = 1 dessert offert",
           "advantage": "Campagnes promotionnelles pour remplir les jours creux",
           "link": "/blog/carte-fidelite-restaurant",
           "linkLabel": "Lire le guide pour les restaurants"
@@ -432,25 +432,25 @@
       "placeholderNote": "Exemples à remplacer par de vrais témoignages.",
       "items": [
         {
-          "quote": "Avant, je notais les tampons sur un carnet à côté de la caisse. Je perdais des habitués sans m'en rendre compte. Depuis Stampeo, je vois qui revient et qui décroche. Et mes clients reviennent parce que leur carte est toujours sur leur téléphone, pas au fond d'un tiroir.",
-          "name": "Sophie M.",
+          "quote": "Au début j'étais sceptique. Mes clientes ont entre 35 et 75 ans, je me disais qu'elles n'allaient pas s'embêter avec ça. Au final, ce sont elles qui me demandent à quel tampon elles en sont. Et moi, je vois enfin qui sont mes vraies habituées.",
+          "name": "Aurélie L",
           "role": "Boulangère",
-          "business": "Boulangerie du Centre",
+          "business": "L'Épi Doré",
           "city": "Nantes"
         },
         {
-          "quote": "En 3 minutes j'avais ma carte. Pas de démo commerciale, pas de frais cachés. Mes clients l'ajoutent à leur Wallet en un scan, et ils reçoivent leurs récompenses sans que j'aie à les relancer par SMS.",
-          "name": "Marc D.",
+          "quote": "J'avais déjà testé deux solutions de fidélité, à chaque fois il fallait changer ma caisse ou passer une heure en démo commerciale. Avec Stampeo j'avais ma carte le soir même, et le lendemain mes clients du midi l'ajoutaient à leur téléphone au comptoir.",
+          "name": "Karim B",
           "role": "Restaurateur",
-          "business": "Le Bistrot des Halles",
-          "city": "Lyon"
+          "business": "Le Bistrot du 11",
+          "city": "Paris"
         },
         {
-          "quote": "Mes clientes viennent une fois par mois pour leur coupe. Avec les notifications wallet, elles pensent à leur prochain rendez-vous sans que je fasse de relance. Ma fréquence de visite a augmenté dès le deuxième mois.",
-          "name": "Claire T.",
+          "quote": "Ce qui m'a convaincue, c'est de pouvoir prévenir toutes mes clientes d'un créneau libre sans payer 0,15 € par SMS. La semaine dernière j'ai annoncé une annulation pour le jeudi, j'ai rempli le créneau en deux heures.",
+          "name": "Margaux P",
           "role": "Coiffeuse",
-          "business": "Salon des Batignolles",
-          "city": "Paris"
+          "business": "Studio Mireille",
+          "city": "Bordeaux"
         }
       ]
     },
