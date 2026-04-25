@@ -27,11 +27,6 @@ export async function VariantTestimonials() {
           <p className="text-[var(--muted-foreground)] text-lg max-w-2xl">
             {t("subtitle")}
           </p>
-          {process.env.NODE_ENV === "development" && (
-            <p className="text-xs italic text-amber-600 mt-1">
-              ⚠️ {t("placeholderNote")}
-            </p>
-          )}
         </ScrollReveal>
 
         <ScrollReveal delay={200} className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">

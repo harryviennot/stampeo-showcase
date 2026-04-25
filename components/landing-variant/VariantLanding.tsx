@@ -33,7 +33,7 @@ export async function VariantLanding({ locale }: Readonly<{ locale: string }>) {
       <JsonLd data={webSiteJsonLd()} />
       <JsonLd data={softwareApplicationJsonLd()} />
       <JsonLd data={faqPageJsonLd(faqItems)} />
-      <LandingTracker locale={locale} variant="fidelatoo" />
+      <LandingTracker locale={locale} variant="wallet" />
       <Header />
       <main className="relative">
         <div data-landing-section="hero"><VariantHero /></div>
