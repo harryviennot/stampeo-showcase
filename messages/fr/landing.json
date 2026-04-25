@@ -393,8 +393,8 @@
   },
   "variant": {
     "hero": {
-      "title": "Faites revenir <accent>vos habitués.</accent>",
-      "subtitle": "Votre carte de fidélité Apple Wallet et Google Wallet, prête en 3 minutes. Sans appli pour vos clients, sans changer de caisse.",
+      "title": "Lancez votre programme de fidélité <accent>en 3 minutes.</accent>",
+      "subtitle": "Une carte de fidélité que vos clients ajoutent à Apple Wallet ou Google Wallet en un scan. Aucune appli à télécharger.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans CB · Sans engagement"
@@ -414,11 +414,11 @@
         },
         {
           "title": "Sans changer de caisse",
-          "description": "Stampeo fonctionne avec votre système actuel, ou sans système du tout. Scanner mobile ou navigateur, à vous de choisir."
+          "description": "Vous ajoutez les tampons depuis l'application Stampeo (gratuite), ou directement dans votre navigateur web. Aucune intégration avec votre caisse, aucun matériel à acheter."
         },
         {
           "title": "Sans frais de mise en service",
-          "description": "0 € pour démarrer. Votre carte est prête en 3 minutes, pas en 3 semaines. Aucune démo obligatoire."
+          "description": "Pas de frais de mise en route. Vous créez votre carte vous-même, en quelques minutes, depuis votre tableau de bord."
         },
         {
           "title": "Sans engagement",
@@ -459,16 +459,16 @@
       "subtitle": "Pas une appli de plus. Pas un outil de plus. Juste la carte de fidélité, là où vos clients regardent déjà.",
       "items": [
         {
-          "title": "Faites revenir vos habitués",
-          "description": "Des clients fidèles, dans leur Apple Wallet. Visibles, récompensés, automatiquement. Chaque tampon renforce l'habitude de revenir."
+          "title": "Une carte qui ne se perd plus",
+          "description": "Plus de carnet papier, plus de tampons à coller. La carte vit dans Apple Wallet ou Google Wallet, où vos clients la retrouvent à chaque visite."
         },
         {
           "title": "Des clients que vous connaissez vraiment",
           "description": "Fréquence, dernière visite, progression vers la récompense. Votre tableau de bord vous dit qui revient souvent, et qui commence à s'éloigner."
         },
         {
-          "title": "Des messages qui arrivent vraiment",
-          "description": "Vos offres arrivent directement sur le téléphone de vos clients, comme un SMS, sans la facture SMS. Lues 5 à 10× plus que les emails."
+          "title": "Envoyez vos promos directement sur leur téléphone",
+          "description": "Annoncez une promotion, un nouveau menu, une heure creuse à remplir. Vos messages arrivent comme un SMS, sans la facture SMS, et sont lus 5 à 10× plus que les emails."
         }
       ]
     },

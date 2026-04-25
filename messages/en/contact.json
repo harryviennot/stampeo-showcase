@@ -32,6 +32,11 @@
         "value": "support@stampeo.app",
         "description": "For technical help"
       },
+      "phone": {
+        "title": "Phone",
+        "value": "+33 6 49 37 04 70",
+        "description": "For general inquiries"
+      },
       "location": {
         "title": "Location",
         "value": "Paris, France",

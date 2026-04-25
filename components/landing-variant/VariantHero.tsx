@@ -12,7 +12,7 @@ export async function VariantHero() {
   return (
     <section className="relative min-h-screen flex flex-col pt-8 sm:pt-0">
       <main className="relative z-10 flex-1 flex items-center px-6 lg:px-10 py-12 lg:py-24">
-        <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-16 lg:gap-20 items-center">
           <ScrollReveal className="flex flex-col gap-8">
             <div>
               <h1 className="text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6">
