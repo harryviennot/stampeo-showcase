@@ -57,24 +57,20 @@ const themes: Theme[] = [
       { key: "reward", label: "RÉCOMPENSE", value: "Dessert offert au 10ème" },
     ],
   },
-  // [2] Salon de coiffure — TODO: theme below was authored as a tea-house
-  // ("Maison Verveine" + leaf icon). Mismatched with the FR sector copy
-  // (Salon de coiffure). Either swap to a salon-friendly wallet design
-  // (scissors icon, salon-style name) or rename the JSON sector to
-  // "Salon de thé" / something matching the visual intent.
+  // [2] Salon de coiffure — soft, warm boutique-salon palette
   {
-    cardBg: "#EEF3EC",
-    cardText: "#243326",
-    cardMuted: "rgba(36,51,38,0.6)",
-    accentPill: "rgba(134,154,120,0.2)",
-    walletBg: "#DDE6DA",
-    walletAccent: "#869A78",
+    cardBg: "#F5ECE4",
+    cardText: "#2A1F1A",
+    cardMuted: "rgba(42,31,26,0.6)",
+    accentPill: "rgba(193,108,80,0.18)",
+    walletBg: "#EADBD0",
+    walletAccent: "#C16C50",
     walletIcon: "#FFFFFF",
     walletStamps: 6,
-    walletStampIcon: "leaf",
-    walletOrgName: "Maison Verveine",
+    walletStampIcon: "scissors",
+    walletOrgName: "Studio Mireille",
     walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "-20% au 6ème achat" },
+      { key: "reward", label: "RÉCOMPENSE", value: "Soin offert à la 6ème visite" },
     ],
   },
   // [3] Boulangerie — rustic artisan bakery

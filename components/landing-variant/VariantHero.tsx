@@ -28,13 +28,6 @@ export async function VariantHero() {
 
             <div className="flex flex-wrap gap-4 items-center">
               <CTAButton label={t("primaryCta")} trackAs="hero" />
-              <CTAButton
-                label={t("secondaryCta")}
-                href="/contact?type=demo"
-                variant="outline"
-                showArrow={false}
-                trackAs="hero_demo"
-              />
             </div>
 
             <p className="text-sm text-[var(--muted-foreground)] font-medium">

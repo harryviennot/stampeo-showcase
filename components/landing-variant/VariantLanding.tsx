@@ -42,7 +42,9 @@ export async function VariantLanding({ locale }: Readonly<{ locale: string }>) {
         <div data-landing-section="differentiator"><VariantDifferentiator /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
         <div data-landing-section="sectors"><VariantSectorCards /></div>
-        <div data-landing-section="testimonials"><VariantTestimonials /></div>
+        {/* Hidden until we have real merchant testimonials with name + business + city + photo.
+            Copy lives in messages/{locale}/landing.json → variant.testimonials. Re-enable once replaced. */}
+        {false && <div data-landing-section="testimonials"><VariantTestimonials /></div>}
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
         <div data-landing-section="pricing"><PricingSection /></div>
         <div data-landing-section="faq"><VariantFAQ /></div>
