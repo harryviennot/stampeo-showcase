@@ -170,10 +170,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithOAuth = useCallback(
     async (provider: OAuthProvider, returnTo?: string) => {
-      const callbackUrl = new URL(
-        "/auth/callback",
-        globalThis.location.origin
-      );
+      // Pin redirect to the configured showcase URL so OAuth lands on the
+      // cookie-domain-compatible host (e.g. nip.io) even if the current
+      // tab somehow resolved to localhost.
+      const baseUrl =
+        process.env.NEXT_PUBLIC_SHOWCASE_URL || globalThis.location.origin;
+      const callbackUrl = new URL("/auth/callback", baseUrl);
       if (returnTo) callbackUrl.searchParams.set("next", returnTo);
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
