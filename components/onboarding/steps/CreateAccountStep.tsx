@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
+import { OAuthButtons, OAuthDivider } from "@/components/auth/OAuthButtons";
 
 interface CreateAccountStepProps {
   store: OnboardingStore;
@@ -341,7 +342,16 @@ export function CreateAccountStep({
         </p>
       </div>
 
-      <form onSubmit={handleFormSubmit} className="space-y-5">
+      <div className="space-y-5">
+        <OAuthButtons
+          returnTo={`/${locale}/onboarding`}
+          disabled={loading}
+          onError={(message) => setError(message)}
+        />
+        <OAuthDivider />
+      </div>
+
+      <form onSubmit={handleFormSubmit} className="space-y-5 mt-5">
         {error && (
           <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
             {error}

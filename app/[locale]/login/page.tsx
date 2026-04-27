@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { OAuthButtons, OAuthDivider } from "@/components/auth/OAuthButtons";
 
 export default function LoginPage() {
   const t = useTranslations("auth.login");
@@ -303,6 +304,11 @@ export default function LoginPage() {
           </>
         ) : (
           <>
+            <OAuthButtons
+              disabled={loading}
+              onError={(message) => setError(message)}
+            />
+            <OAuthDivider />
             <form onSubmit={handleLoginSubmit} className="space-y-5">
               {error && (
                 <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
