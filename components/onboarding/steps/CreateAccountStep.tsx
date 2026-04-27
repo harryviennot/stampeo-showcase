@@ -69,14 +69,26 @@ export function CreateAccountStep({
 
   // If a session already exists when this step mounts (user returned to the
   // wizard after confirming email on another device / tab, or landed here
-  // with an existing login), skip the form and advance to the next step.
+  // with an existing login — including post-OAuth redirect), skip the form
+  // and advance to the next step. When OAuth provided a name in user_metadata,
+  // overwrite the wizard's ownerName so business.settings.owner_name matches
+  // public.users.name (which the auth trigger already populated from OAuth).
   useEffect(() => {
     if (autoAdvancedRef.current) return;
     if (!session) return;
     if (phase !== "form") return;
     autoAdvancedRef.current = true;
+
+    const meta = session.user?.user_metadata as
+      | { full_name?: string; name?: string }
+      | undefined;
+    const oauthName = meta?.full_name || meta?.name;
+    if (oauthName && oauthName.trim() && oauthName !== data.ownerName) {
+      updateData({ ownerName: oauthName });
+    }
+
     onNext();
-  }, [session, phase, onNext]);
+  }, [session, phase, onNext, data.ownerName, updateData]);
 
   const typoSuggestion = useMemo(
     () => suggestCorrectedEmail(data.email),
