@@ -6,9 +6,34 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next");
 
+  // Surface OAuth provider errors that arrive before code exchange
+  // (e.g. ?error=access_denied&error_description=...).
+  const providerError = requestUrl.searchParams.get("error");
+  if (providerError) {
+    const description = requestUrl.searchParams.get("error_description") || providerError;
+    console.error("[auth/callback] provider error:", providerError, description);
+    return NextResponse.redirect(
+      new URL(
+        `/login?auth_error=${encodeURIComponent(description)}`,
+        requestUrl.origin
+      )
+    );
+  }
+
   if (code) {
     const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      console.error("[auth/callback] exchangeCodeForSession failed:", error);
+      return NextResponse.redirect(
+        new URL(
+          `/login?auth_error=${encodeURIComponent(error.message)}`,
+          requestUrl.origin
+        )
+      );
+    }
+  } else {
+    console.warn("[auth/callback] no code param in callback URL");
   }
 
   if (next && next.startsWith("/") && !next.startsWith("//")) {
