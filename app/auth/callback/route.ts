@@ -36,10 +36,25 @@ export async function GET(request: Request) {
     console.warn("[auth/callback] no code param in callback URL");
   }
 
-  if (next && next.startsWith("/") && !next.startsWith("//")) {
-    return NextResponse.redirect(new URL(next, requestUrl.origin));
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+
+  if (next) {
+    // Relative path: redirect within showcase
+    if (next.startsWith("/") && !next.startsWith("//")) {
+      return NextResponse.redirect(new URL(next, requestUrl.origin));
+    }
+    // Absolute URL targeting the configured app host (e.g. invite-link
+    // round-trips that started on app.stampeo.app)
+    try {
+      const target = new URL(next);
+      const allowedHost = new URL(appUrl).host;
+      if (target.host === allowedHost) {
+        return NextResponse.redirect(target.toString());
+      }
+    } catch {
+      // not a valid URL — fall through to default
+    }
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
   return NextResponse.redirect(appUrl);
 }
