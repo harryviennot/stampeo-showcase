@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
@@ -9,6 +9,20 @@ import { useAuth } from "@/lib/supabase/auth-provider";
 import { OAuthButtons, OAuthDivider } from "@/components/auth/OAuthButtons";
 
 export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+          <div className="animate-spin h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full" />
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const t = useTranslations("auth.login");
   const searchParams = useSearchParams();
   const initialEmail = searchParams.get("email") ?? "";
