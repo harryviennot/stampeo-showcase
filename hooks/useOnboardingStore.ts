@@ -74,7 +74,7 @@ interface StoredState {
   currentStep: number;
   completedSteps: number[];
   step1Substep?: 1 | 2;
-  createAccountPhase?: "form" | "verify";
+  createAccountPhase?: "choose" | "form" | "verify";
   timestamp: number;
 }
 
@@ -94,7 +94,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   const [validatedSlug, setValidatedSlug] = useState<string | null>(null);
   // Sub-step state persisted so locale switches don't reset within a step
   const [step1Substep, setStep1Substep] = useState<1 | 2>(1);
-  const [createAccountPhase, setCreateAccountPhase] = useState<"form" | "verify">("form");
+  const [createAccountPhase, setCreateAccountPhase] = useState<"choose" | "form" | "verify">("choose");
 
   // Load from storage on mount - prioritize sessionStorage for current session
   useEffect(() => {
@@ -191,7 +191,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   // across locale switches (which don't change currentStep).
   const resetSubstepsFor = useCallback((newStep: number) => {
     if (newStep !== 1) setStep1Substep(1);
-    if (newStep !== 4) setCreateAccountPhase("form");
+    if (newStep !== 4) setCreateAccountPhase("choose");
   }, []);
 
   const updateData = useCallback((updates: Partial<OnboardingData>) => {
