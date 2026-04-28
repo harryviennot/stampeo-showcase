@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { CaretRightIcon, EnvelopeSimpleIcon } from "@phosphor-icons/react";
 import { useAuth, type OAuthProvider } from "@/lib/supabase/auth-provider";
 import { AppleLogo, GoogleLogo } from "./OAuthButtons";
+import { useLastLogin } from "@/lib/use-last-login";
 
 interface AuthMethodChooserProps {
   /** Translation namespace that contains continueGoogle / continueApple / continueEmail keys. */
@@ -24,6 +25,7 @@ export function AuthMethodChooser({
   const tOAuth = useTranslations("auth.oauth");
   const { signInWithOAuth } = useAuth();
   const [pending, setPending] = useState<OAuthProvider | null>(null);
+  const lastUsed = useLastLogin()?.method ?? null;
 
   const handleOAuth = async (provider: OAuthProvider) => {
     setPending(provider);
@@ -34,6 +36,8 @@ export function AuthMethodChooser({
     }
   };
 
+  const lastUsedLabel = tOAuth("lastUsed");
+
   return (
     <div className="space-y-3">
       <MethodButton
@@ -42,6 +46,7 @@ export function AuthMethodChooser({
         loading={pending === "google"}
         loadingLabel={tOAuth("connecting")}
         icon={<GoogleLogo size={20} />}
+        lastUsedLabel={lastUsed === "google" ? lastUsedLabel : undefined}
       >
         {t("continueGoogle")}
       </MethodButton>
@@ -51,6 +56,7 @@ export function AuthMethodChooser({
         loading={pending === "apple"}
         loadingLabel={tOAuth("connecting")}
         icon={<AppleLogo size={20} />}
+        lastUsedLabel={lastUsed === "apple" ? lastUsedLabel : undefined}
       >
         {t("continueApple")}
       </MethodButton>
@@ -58,6 +64,7 @@ export function AuthMethodChooser({
         onClick={onChooseEmail}
         disabled={pending !== null}
         icon={<EnvelopeSimpleIcon size={20} />}
+        lastUsedLabel={lastUsed === "email" ? lastUsedLabel : undefined}
       >
         {t("continueEmail")}
       </MethodButton>
@@ -72,6 +79,7 @@ interface MethodButtonProps {
   loadingLabel?: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  lastUsedLabel?: string;
 }
 
 function MethodButton({
@@ -81,6 +89,7 @@ function MethodButton({
   loadingLabel,
   icon,
   children,
+  lastUsedLabel,
 }: MethodButtonProps) {
   return (
     <button
@@ -93,6 +102,11 @@ function MethodButton({
       <span className="font-medium text-sm flex-1 text-[var(--foreground)]">
         {loading && loadingLabel ? loadingLabel : children}
       </span>
+      {lastUsedLabel && (
+        <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20">
+          {lastUsedLabel}
+        </span>
+      )}
       <CaretRightIcon
         size={16}
         className="text-[var(--muted-foreground)]"

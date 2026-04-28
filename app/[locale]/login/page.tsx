@@ -8,6 +8,7 @@ import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
+import { writeLastLogin } from "@/lib/last-login";
 
 export default function LoginPage() {
   return (
@@ -121,6 +122,7 @@ function LoginContent() {
       return;
     }
 
+    writeLastLogin("email", email);
     // Redirect to business app (or honored ?redirect=) after successful login
     globalThis.location.href = resolvePostLoginUrl();
   };
@@ -142,6 +144,7 @@ function LoginContent() {
         return;
       }
 
+      writeLastLogin("email", email);
       // Verified — redirect to app (or honored ?redirect=)
       globalThis.location.href = resolvePostLoginUrl();
     },
