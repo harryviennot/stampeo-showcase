@@ -384,7 +384,15 @@ function LoginContent() {
           </>
         ) : (
           <>
-            <div className="text-center">
+            <div className="relative text-center">
+              <button
+                type="button"
+                onClick={() => { setPhase("choose"); setError(null); }}
+                aria-label={t("chooseDifferentMethod")}
+                className="absolute left-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 rounded-full text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+              >
+                <ArrowLeftIcon size={18} />
+              </button>
               <h1 className="text-2xl font-bold text-[var(--foreground)]">
                 {t("emailTitle")}
               </h1>
@@ -447,23 +455,12 @@ function LoginContent() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !email || !password}
                 className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? t("signingIn") : t("signIn")}
               </button>
             </form>
-
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => { setPhase("choose"); setError(null); }}
-                className="inline-flex items-center gap-1 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-              >
-                <ArrowLeftIcon size={14} />
-                {t("chooseDifferentMethod")}
-              </button>
-            </div>
 
             <p className="text-center text-sm text-[var(--muted-foreground)]">
               {t("noAccount")}{" "}

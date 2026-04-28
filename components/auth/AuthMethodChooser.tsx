@@ -87,7 +87,7 @@ function MethodButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full flex items-center gap-3 px-5 h-14 rounded-full border border-[var(--card-border)] bg-[var(--card-bg)] hover:bg-[var(--muted)] transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full flex items-center gap-3 px-5 h-14 rounded-full border border-[var(--border)] bg-[var(--card-bg)] hover:bg-[var(--muted)] transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <span className="flex items-center justify-center w-7 h-7">{icon}</span>
       <span className="font-medium text-sm flex-1 text-[var(--foreground)]">

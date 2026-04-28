@@ -401,7 +401,18 @@ export function CreateAccountStep({
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
+      <div className="relative text-center mb-8">
+        <button
+          type="button"
+          onClick={() => {
+            setPhase("choose");
+            setError(null);
+          }}
+          aria-label={t("chooseDifferentMethod")}
+          className="absolute left-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 rounded-full text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+        >
+          <ArrowLeft size={18} />
+        </button>
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
           {t("emailTitle")}
         </h1>
@@ -503,21 +514,6 @@ export function CreateAccountStep({
         >
           {loading ? t("submitting") : t("continue")}
         </button>
-
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={() => {
-              setPhase("choose");
-              setError(null);
-            }}
-            disabled={loading}
-            className="inline-flex items-center gap-1 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors disabled:opacity-50"
-          >
-            <ArrowLeft size={14} />
-            {t("chooseDifferentMethod")}
-          </button>
-        </div>
 
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
           {t.rich("legalNotice", {
