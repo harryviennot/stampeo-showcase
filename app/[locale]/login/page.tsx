@@ -3,10 +3,11 @@
 import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
-import { OAuthButtons, OAuthDivider } from "@/components/auth/OAuthButtons";
+import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
 
 export default function LoginPage() {
   return (
@@ -31,7 +32,12 @@ function LoginContent() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [phase, setPhase] = useState<"login" | "verify" | "forgot">("login");
+  // If we arrive with ?email= pre-filled (e.g. from an invite "switch
+  // account" flow), skip the method chooser and land directly on the email
+  // form — the user already chose this path.
+  const [phase, setPhase] = useState<"choose" | "login" | "verify" | "forgot">(
+    initialEmail ? "login" : "choose"
+  );
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
@@ -203,6 +209,7 @@ function LoginContent() {
                 <div className="p-4 rounded-2xl bg-green-50 text-green-600 text-sm border border-green-100 dark:bg-green-950/50 dark:border-green-900/50 dark:text-green-400">
                   <p className="font-medium">{tForgot("emailSent")}</p>
                   <p className="mt-1">{tForgot("emailSentDescription", { email })}</p>
+                  <p className="mt-2 text-xs opacity-80">{tForgot("checkSpam")}</p>
                 </div>
                 <button
                   type="button"
@@ -338,8 +345,53 @@ function LoginContent() {
               </div>
             </form>
           </>
+        ) : phase === "choose" ? (
+          <>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">
+                {t("title")}
+              </h1>
+              <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+                {t("subtitle")}
+              </p>
+            </div>
+
+            {error && (
+              <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
+                {error}
+              </div>
+            )}
+
+            <AuthMethodChooser
+              namespace="auth.login"
+              returnTo={redirectParam ?? undefined}
+              onChooseEmail={() => {
+                setPhase("login");
+                setError(null);
+              }}
+              onError={(message) => setError(message)}
+            />
+
+            <p className="text-center text-sm text-[var(--muted-foreground)]">
+              {t("noAccount")}{" "}
+              <Link
+                href="/onboarding"
+                className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
+              >
+                {t("getStarted")}
+              </Link>
+            </p>
+          </>
         ) : (
           <>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">
+                {t("emailTitle")}
+              </h1>
+              <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+                {t("emailSubtitle")}
+              </p>
+            </div>
 
             <form onSubmit={handleLoginSubmit} className="space-y-5">
               {error && (
@@ -391,12 +443,6 @@ function LoginContent() {
                     {t("forgotPassword")}
                   </button>
                 </div>
-                <OAuthDivider />
-                <OAuthButtons
-                  disabled={loading}
-                  onError={(message) => setError(message)}
-                  returnTo={redirectParam ?? undefined}
-                />
               </div>
 
               <button
@@ -407,6 +453,17 @@ function LoginContent() {
                 {loading ? t("signingIn") : t("signIn")}
               </button>
             </form>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => { setPhase("choose"); setError(null); }}
+                className="inline-flex items-center gap-1 text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+              >
+                <ArrowLeftIcon size={14} />
+                {t("chooseDifferentMethod")}
+              </button>
+            </div>
 
             <p className="text-center text-sm text-[var(--muted-foreground)]">
               {t("noAccount")}{" "}
