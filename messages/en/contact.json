@@ -32,6 +32,11 @@
         "value": "support@stampeo.app",
         "description": "For technical help"
       },
+      "phone": {
+        "title": "Phone",
+        "value": "+33 6 49 37 04 70",
+        "description": "For general inquiries"
+      },
       "location": {
         "title": "Location",
         "value": "Paris, France",
@@ -41,6 +46,43 @@
     "social": {
       "title": "Follow us",
       "description": "Stay up to date with the latest from Stampeo."
+    },
+    "demo": {
+      "hero": {
+        "badge": "Stampeo Demo",
+        "headline": "Book your 20-minute demo.",
+        "description": "Tell us when works for you, we'll call back at a time that fits. Tailored to your business, not a generic pitch."
+      },
+      "form": {
+        "name": "Your name",
+        "namePlaceholder": "John Doe",
+        "email": "Email address",
+        "emailPlaceholder": "john@example.com",
+        "phone": "Phone (for the callback)",
+        "phonePlaceholder": "+33 6 12 34 56 78",
+        "business": "Business name",
+        "businessPlaceholder": "Corner Cafe",
+        "businessType": "Business type",
+        "businessTypePlaceholder": "Choose your sector",
+        "businessTypeOptions": {
+          "cafe": "Cafe",
+          "restaurant": "Restaurant",
+          "boulangerie": "Bakery / Pastry",
+          "retail": "Retail / Shop",
+          "salon": "Salon (hair, beauty, etc.)",
+          "fitness": "Fitness / Sports",
+          "services": "Services",
+          "other": "Other"
+        },
+        "availability": "Your availability",
+        "availabilityPlaceholder": "e.g. Tuesday afternoon, Thursday morning, or \"any time this week\".",
+        "message": "Anything else (optional)",
+        "messagePlaceholder": "Tell us about your business, what you hope to get from Stampeo...",
+        "send": "Book my demo",
+        "sending": "Sending...",
+        "success": "Thanks! We'll call you at one of the times you gave us.",
+        "error": "Something went wrong. Please try again or call us at +33 6 49 37 04 70."
+      }
     }
   }
 }

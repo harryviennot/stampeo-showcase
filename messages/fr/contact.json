@@ -32,6 +32,11 @@
         "value": "support@stampeo.app",
         "description": "Pour l'aide technique"
       },
+      "phone": {
+        "title": "Téléphone",
+        "value": "+33 6 49 37 04 70",
+        "description": "Pour les demandes générales"
+      },
       "location": {
         "title": "Localisation",
         "value": "Paris, France",
@@ -41,6 +46,43 @@
     "social": {
       "title": "Suivez-nous",
       "description": "Restez informé des dernières nouvelles de Stampeo."
+    },
+    "demo": {
+      "hero": {
+        "badge": "Démo Stampeo",
+        "headline": "Réservez votre démo de 20 minutes.",
+        "description": "Laissez-nous vos créneaux, on vous rappelle au moment qui vous arrange. Démo adaptée à votre activité, pas une présentation générique."
+      },
+      "form": {
+        "name": "Votre nom",
+        "namePlaceholder": "Jean Dupont",
+        "email": "Adresse e-mail",
+        "emailPlaceholder": "jean@exemple.fr",
+        "phone": "Téléphone (pour le rappel)",
+        "phonePlaceholder": "06 12 34 56 78",
+        "business": "Nom de votre commerce",
+        "businessPlaceholder": "Café de la Place",
+        "businessType": "Type d'activité",
+        "businessTypePlaceholder": "Choisissez votre secteur",
+        "businessTypeOptions": {
+          "cafe": "Café",
+          "restaurant": "Restaurant",
+          "boulangerie": "Boulangerie / Pâtisserie",
+          "retail": "Commerce / Boutique",
+          "salon": "Salon (coiffure, beauté, etc.)",
+          "fitness": "Fitness / Sport",
+          "services": "Services",
+          "other": "Autre"
+        },
+        "availability": "Vos disponibilités",
+        "availabilityPlaceholder": "Ex : mardi après-midi, jeudi matin, ou \"à tout moment cette semaine\".",
+        "message": "Autre chose à nous dire (optionnel)",
+        "messagePlaceholder": "Parlez-nous de votre activité, ce que vous attendez de Stampeo...",
+        "send": "Réserver ma démo",
+        "sending": "Envoi en cours...",
+        "success": "Merci ! On vous rappelle au plus vite sur les créneaux que vous nous avez indiqués.",
+        "error": "Une erreur est survenue. Veuillez réessayer ou nous appeler au 06 49 37 04 70."
+      }
     }
   }
 }

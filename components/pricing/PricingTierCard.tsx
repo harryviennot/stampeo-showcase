@@ -1,6 +1,10 @@
+"use client";
+
 import { Link } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InfoIcon } from "@/components/icons";
+import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
 
 export type FeatureItem = string | { text: string; tooltip: string };
 
@@ -40,6 +44,8 @@ type PricingTierCardProps = {
   comingSoonLabel?: string;
   ctaComingSoonLabel?: string;
   currencySymbol?: string;
+  /** When set, fires `landing_cta_clicked` with this location on CTA click. */
+  trackAs?: CTALocation;
 };
 
 function FeatureListItem({ feature, muted }: { feature: FeatureItem; muted?: boolean }) {
@@ -97,10 +103,16 @@ export function PricingTierCard({
   comingSoon,
   comingSoonLabel,
   ctaComingSoonLabel,
-  currencySymbol = "\u20AC",
+  currencySymbol = "€",
+  trackAs,
 }: PricingTierCardProps) {
+  const locale = useLocale();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
   const showDiscount = discounted !== undefined && discounted < price;
+
+  const handleCtaClick = trackAs
+    ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref })
+    : undefined;
 
   const containerClass = comingSoon
     ? "border border-[var(--border)] bg-[var(--cream)] opacity-60"
@@ -186,6 +198,7 @@ export function PricingTierCard({
         ) : highlighted ? (
           <Link
             href={ctaHref}
+            onClick={handleCtaClick}
             className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
           >
             <span>{cta}</span>
@@ -193,6 +206,7 @@ export function PricingTierCard({
         ) : (
           <Link
             href={ctaHref}
+            onClick={handleCtaClick}
             className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
           >
             <span>{cta}</span>

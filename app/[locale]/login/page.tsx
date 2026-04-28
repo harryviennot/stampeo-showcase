@@ -1,18 +1,44 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
+import { writeLastLogin } from "@/lib/last-login";
 
 export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+          <div className="animate-spin h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full" />
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const t = useTranslations("auth.login");
-  const [email, setEmail] = useState("");
+  const searchParams = useSearchParams();
+  const initialEmail = searchParams.get("email") ?? "";
+  const redirectParam = searchParams.get("redirect");
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [phase, setPhase] = useState<"login" | "verify" | "forgot">("login");
+  // If we arrive with ?email= pre-filled (e.g. from an invite "switch
+  // account" flow), skip the method chooser and land directly on the email
+  // form — the user already chose this path.
+  const [phase, setPhase] = useState<"choose" | "login" | "verify" | "forgot">(
+    initialEmail ? "login" : "choose"
+  );
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
@@ -53,6 +79,26 @@ export default function LoginPage() {
     }
   }, [phase]);
 
+  // Resolve where to send the user after a successful sign-in. We honor the
+  // `redirect` query param when it points to the configured app host, so
+  // flows like the team-invite "switch account" link can return the user to
+  // the exact invite URL after authenticating.
+  const resolvePostLoginUrl = useCallback(() => {
+    const fallback =
+      process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+    if (!redirectParam) return fallback;
+    try {
+      const target = new URL(redirectParam);
+      const allowedHost = new URL(fallback).host;
+      if (target.host === allowedHost) {
+        return target.toString();
+      }
+    } catch {
+      // not a valid absolute URL — ignore
+    }
+    return fallback;
+  }, [redirectParam]);
+
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -76,9 +122,9 @@ export default function LoginPage() {
       return;
     }
 
-    // Redirect to business app after successful login
-    globalThis.location.href =
-      process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+    writeLastLogin("email", email);
+    // Redirect to business app (or honored ?redirect=) after successful login
+    globalThis.location.href = resolvePostLoginUrl();
   };
 
   const handleVerifySubmit = useCallback(
@@ -98,11 +144,11 @@ export default function LoginPage() {
         return;
       }
 
-      // Verified — redirect to app
-      globalThis.location.href =
-        process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+      writeLastLogin("email", email);
+      // Verified — redirect to app (or honored ?redirect=)
+      globalThis.location.href = resolvePostLoginUrl();
     },
-    [email, otpCode, verifyOtp, t]
+    [email, otpCode, verifyOtp, t, resolvePostLoginUrl]
   );
 
   const handleResend = useCallback(async () => {
@@ -166,6 +212,7 @@ export default function LoginPage() {
                 <div className="p-4 rounded-2xl bg-green-50 text-green-600 text-sm border border-green-100 dark:bg-green-950/50 dark:border-green-900/50 dark:text-green-400">
                   <p className="font-medium">{tForgot("emailSent")}</p>
                   <p className="mt-1">{tForgot("emailSentDescription", { email })}</p>
+                  <p className="mt-2 text-xs opacity-80">{tForgot("checkSpam")}</p>
                 </div>
                 <button
                   type="button"
@@ -301,8 +348,62 @@ export default function LoginPage() {
               </div>
             </form>
           </>
+        ) : phase === "choose" ? (
+          <>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">
+                {t("title")}
+              </h1>
+              <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+                {t("subtitle")}
+              </p>
+            </div>
+
+            {error && (
+              <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
+                {error}
+              </div>
+            )}
+
+            <AuthMethodChooser
+              namespace="auth.login"
+              returnTo={redirectParam ?? undefined}
+              onChooseEmail={() => {
+                setPhase("login");
+                setError(null);
+              }}
+              onError={(message) => setError(message)}
+            />
+
+            <p className="text-center text-sm text-[var(--muted-foreground)]">
+              {t("noAccount")}{" "}
+              <Link
+                href="/onboarding"
+                className="text-amber-600 hover:text-amber-700 font-medium transition-colors"
+              >
+                {t("getStarted")}
+              </Link>
+            </p>
+          </>
         ) : (
           <>
+            <div className="relative text-center">
+              <button
+                type="button"
+                onClick={() => { setPhase("choose"); setError(null); }}
+                aria-label={t("chooseDifferentMethod")}
+                className="absolute left-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 rounded-full text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+              >
+                <ArrowLeftIcon size={18} />
+              </button>
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">
+                {t("emailTitle")}
+              </h1>
+              <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+                {t("emailSubtitle")}
+              </p>
+            </div>
+
             <form onSubmit={handleLoginSubmit} className="space-y-5">
               {error && (
                 <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
@@ -357,7 +458,7 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !email || !password}
                 className="w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? t("signingIn") : t("signIn")}

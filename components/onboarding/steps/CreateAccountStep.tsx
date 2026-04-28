@@ -2,11 +2,12 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
+import { ArrowLeft, Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
+import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
 
 interface CreateAccountStepProps {
   store: OnboardingStore;
@@ -68,14 +69,26 @@ export function CreateAccountStep({
 
   // If a session already exists when this step mounts (user returned to the
   // wizard after confirming email on another device / tab, or landed here
-  // with an existing login), skip the form and advance to the next step.
+  // with an existing login — including post-OAuth redirect), skip the form
+  // and advance to the next step. When OAuth provided a name in user_metadata,
+  // overwrite the wizard's ownerName so business.settings.owner_name matches
+  // public.users.name (which the auth trigger already populated from OAuth).
   useEffect(() => {
     if (autoAdvancedRef.current) return;
     if (!session) return;
-    if (phase !== "form") return;
+    if (phase === "verify") return;
     autoAdvancedRef.current = true;
+
+    const meta = session.user?.user_metadata as
+      | { full_name?: string; name?: string }
+      | undefined;
+    const oauthName = meta?.full_name || meta?.name;
+    if (oauthName && oauthName.trim() && oauthName !== data.ownerName) {
+      updateData({ ownerName: oauthName });
+    }
+
     onNext();
-  }, [session, phase, onNext]);
+  }, [session, phase, onNext, data.ownerName, updateData]);
 
   const typoSuggestion = useMemo(
     () => suggestCorrectedEmail(data.email),
@@ -330,14 +343,81 @@ export function CreateAccountStep({
     );
   }
 
+  if (phase === "choose") {
+    return (
+      <div className="w-full max-w-md mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
+            {t("chooseTitle")}
+          </h1>
+          <p className="text-[var(--muted-foreground)] mt-2">
+            {t("chooseSubtitle")}
+          </p>
+        </div>
+
+        {error && (
+          <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400 mb-5">
+            {error}
+          </div>
+        )}
+
+        <AuthMethodChooser
+          namespace="onboarding.createAccount"
+          returnTo={`/${locale}/onboarding`}
+          onChooseEmail={() => {
+            setPhase("form");
+            setError(null);
+          }}
+          onError={(message) => setError(message)}
+        />
+
+        <div className="flex pt-5">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200"
+          >
+            {tc("back")}
+          </button>
+        </div>
+
+        <p className="text-xs text-center text-[var(--muted-foreground)] mt-5">
+          {t.rich("legalNotice", {
+            terms: (chunks) => (
+              <Link href="/terms" className="underline hover:text-[var(--foreground)]">
+                {chunks}
+              </Link>
+            ),
+            privacy: (chunks) => (
+              <Link href="/privacy" className="underline hover:text-[var(--foreground)]">
+                {chunks}
+              </Link>
+            ),
+          })}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="text-center mb-8">
+      <div className="relative text-center mb-8">
+        <button
+          type="button"
+          onClick={() => {
+            setPhase("choose");
+            setError(null);
+          }}
+          aria-label={t("chooseDifferentMethod")}
+          className="absolute left-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 rounded-full text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
+        >
+          <ArrowLeft size={18} />
+        </button>
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          {t("title")}
+          {t("emailTitle")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">
-          {t("subtitle")}
+          {t("emailSubtitle")}
         </p>
       </div>
 
@@ -426,24 +506,14 @@ export function CreateAccountStep({
           )}
         </div>
 
-        {/* Navigation buttons */}
-        <div className="flex gap-3 pt-2">
-          <button
-            type="button"
-            onClick={onBack}
-            disabled={loading}
-            className="flex-1 py-3.5 px-4 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50"
-          >
-            {tc("back")}
-          </button>
-          <button
-            type="submit"
-            disabled={!isFormValid || loading}
-            className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            {loading ? t("submitting") : t("continue")}
-          </button>
-        </div>
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={!isFormValid || loading}
+          className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        >
+          {loading ? t("submitting") : t("continue")}
+        </button>
 
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
           {t.rich("legalNotice", {
