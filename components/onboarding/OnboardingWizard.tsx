@@ -459,6 +459,10 @@ export function OnboardingWizard() {
   // For step 5 (plan selection), use full-width layout
   const isFullWidthStep = store.currentStep === 5;
 
+  // On mobile, only show the card preview when the user is editing the design.
+  // Other steps don't need it taking up half the viewport above the form.
+  const hidesPreviewOnMobile = store.currentStep !== 3;
+
   // Detect if entering from step 5 for slide-in animation
   const isEnteringFromStep5 = prevStep === 5 && store.currentStep === 6;
 
@@ -468,10 +472,10 @@ export function OnboardingWizard() {
     : store.currentStep - 1;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4">
+    <div className="w-full max-w-6xl mx-auto px-2 sm:px-4">
       {/* LayoutGroup enables layout animations across components */}
       <LayoutGroup>
-        <div className={`grid grid-cols-1 gap-8 lg:gap-12 items-center min-h-[70vh] ${isFullWidthStep ? "" : "lg:grid-cols-2"}`}>
+        <div className={`grid grid-cols-1 gap-8 lg:gap-12 items-center min-h-0 lg:min-h-[70vh] ${isFullWidthStep ? "" : "lg:grid-cols-2"}`}>
           {/* Card Panel - animated in/out for full-width steps */}
           <AnimatePresence>
             {!isFullWidthStep && (
@@ -480,7 +484,7 @@ export function OnboardingWizard() {
                 initial={isEnteringFromStep5 ? { x: "100%", opacity: 0 } : { opacity: 0, scale: 0.9 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="flex items-center justify-center"
+                className={`${hidesPreviewOnMobile ? "hidden lg:flex" : "flex"} items-center justify-center`}
                 style={{
                   order: cardPosition === "left" ? 0 : 1,
                 }}
@@ -499,21 +503,6 @@ export function OnboardingWizard() {
                     vanishingStampIndex={vanishingStampIndex}
                     design={store.data.cardDesign}
                   />
-
-                  {/* Step indicator */}
-                  <div className="mt-6 flex justify-center gap-2 lg:hidden">
-                    {[1, 2, 3, 4, 5, 6].map((step) => (
-                      <div
-                        key={step}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
-                          ? "bg-[var(--accent)]"
-                          : step === store.currentStep
-                            ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
-                            : "bg-[var(--muted)]"
-                          }`}
-                      />
-                    ))}
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -532,6 +521,21 @@ export function OnboardingWizard() {
               duration: 0.5
             }}
           >
+            {/* Mobile step indicator — visible whether or not the card preview is shown */}
+            <div className="mb-4 flex justify-center gap-2 lg:hidden">
+              {[1, 2, 3, 4, 5, 6].map((step) => (
+                <div
+                  key={step}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
+                    ? "bg-[var(--accent)]"
+                    : step === store.currentStep
+                      ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
+                      : "bg-[var(--muted)]"
+                    }`}
+                />
+              ))}
+            </div>
+
             {isSpecialTransition ? (
               // SPECIAL TRANSITION (2↔3): New form animates in, old form disappears instantly
               <AnimatePresence mode="wait">
@@ -547,7 +551,7 @@ export function OnboardingWizard() {
                   {renderStepLabels()}
                   <motion.div
                     layout
-                    className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden"
+                    className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-5 sm:p-8 shadow-sm overflow-hidden"
                     transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
                   >
                     {renderStep()}
