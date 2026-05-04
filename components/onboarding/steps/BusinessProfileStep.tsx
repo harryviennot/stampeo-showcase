@@ -13,7 +13,7 @@ interface BusinessProfileStepProps {
   onNext: () => void;
 }
 
-type Substep = 1 | 2 | 3 | 4;
+type Substep = 1 | 2 | 3 | 4 | 5;
 
 const categories = [
   { id: "cafe", icon: "☕" },
@@ -137,14 +137,16 @@ export function BusinessProfileStep({ store, onNext }: BusinessProfileStepProps)
     data.urlSlug.length >= 3 &&
     isSlugAvailable === true;
   const isCategoryValid = data.category !== null;
-  const isSizeValid = data.teamSize !== null && data.locations !== null;
+  const isTeamSizeValid = data.teamSize !== null;
+  const isLocationsValid = data.locations !== null;
   const isGoalValid = data.primaryGoal !== null;
 
   const isCurrentSubstepValid =
     (substep === 1 && isIdentityValid) ||
     (substep === 2 && isCategoryValid) ||
-    (substep === 3 && isSizeValid) ||
-    (substep === 4 && isGoalValid);
+    (substep === 3 && isTeamSizeValid) ||
+    (substep === 4 && isLocationsValid) ||
+    (substep === 5 && isGoalValid);
 
   const goToSubstep = useCallback(
     (target: Substep) => {
@@ -158,7 +160,7 @@ export function BusinessProfileStep({ store, onNext }: BusinessProfileStepProps)
     (e?: React.FormEvent) => {
       if (e) e.preventDefault();
       if (!isCurrentSubstepValid) return;
-      if (substep < 4) {
+      if (substep < 5) {
         goToSubstep((substep + 1) as Substep);
       } else {
         onNext();
@@ -177,8 +179,10 @@ export function BusinessProfileStep({ store, onNext }: BusinessProfileStepProps)
       : substep === 2
         ? t("subtitleCategory")
         : substep === 3
-          ? t("subtitleSize")
-          : t("subtitleGoal");
+          ? t("subtitleTeamSize")
+          : substep === 4
+            ? t("subtitleLocations")
+            : t("subtitleGoal");
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -189,7 +193,7 @@ export function BusinessProfileStep({ store, onNext }: BusinessProfileStepProps)
         <p className="text-[var(--muted-foreground)] mt-2">{subtitle}</p>
       </div>
 
-      <SubstepDots current={substep} total={4} />
+      <SubstepDots current={substep} total={5} />
 
       <motion.div layout transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}>
         <AnimatePresence mode="wait" initial={false} custom={direction}>
@@ -337,73 +341,73 @@ export function BusinessProfileStep({ store, onNext }: BusinessProfileStepProps)
 
             {substep === 3 && (
               <div className="space-y-6">
-                <div className="space-y-3">
-                  <p className="text-sm font-medium text-[var(--foreground)]">{t("teamSizeLabel")}</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    {teamSizes.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => updateData({ teamSize: option.id })}
-                        className={`flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                <div className="grid grid-cols-2 gap-3">
+                  {teamSizes.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => updateData({ teamSize: option.id })}
+                      className={`flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                        data.teamSize === option.id
+                          ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
+                          : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
+                      }`}
+                    >
+                      <span className="text-2xl" role="img" aria-hidden>
+                        {option.icon}
+                      </span>
+                      <span
+                        className={`text-sm font-medium ${
                           data.teamSize === option.id
-                            ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
-                            : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
+                            ? "text-[var(--foreground)]"
+                            : "text-[var(--foreground)]/80"
                         }`}
                       >
-                        <span className="text-2xl" role="img" aria-hidden>
-                          {option.icon}
-                        </span>
-                        <span
-                          className={`text-sm font-medium ${
-                            data.teamSize === option.id
-                              ? "text-[var(--foreground)]"
-                              : "text-[var(--foreground)]/80"
-                          }`}
-                        >
-                          {t(`teamSize.${option.id}`)}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
+                        {t(`teamSize.${option.id}`)}
+                      </span>
+                    </button>
+                  ))}
                 </div>
 
-                <div className="space-y-3">
-                  <p className="text-sm font-medium text-[var(--foreground)]">{t("locationsLabel")}</p>
-                  <div className="grid grid-cols-3 gap-3">
-                    {locationOptions.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => updateData({ locations: option.id })}
-                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 text-center transition-all duration-200 ${
-                          data.locations === option.id
-                            ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
-                            : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
-                        }`}
-                      >
-                        <span className="text-2xl" role="img" aria-hidden>
-                          {option.icon}
-                        </span>
-                        <span
-                          className={`text-sm font-medium ${
-                            data.locations === option.id
-                              ? "text-[var(--foreground)]"
-                              : "text-[var(--foreground)]/80"
-                          }`}
-                        >
-                          {t(`locations.${option.id}`)}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <NavButtons onBack={handleBack} onNext={handleContinue} disabled={!isSizeValid} backLabel={tc("back")} nextLabel={tc("continue")} />
+                <NavButtons onBack={handleBack} onNext={handleContinue} disabled={!isTeamSizeValid} backLabel={tc("back")} nextLabel={tc("continue")} />
               </div>
             )}
 
             {substep === 4 && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-3 gap-3">
+                  {locationOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => updateData({ locations: option.id })}
+                      className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 text-center transition-all duration-200 ${
+                        data.locations === option.id
+                          ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
+                          : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50 hover:bg-[var(--accent)]/5"
+                      }`}
+                    >
+                      <span className="text-2xl" role="img" aria-hidden>
+                        {option.icon}
+                      </span>
+                      <span
+                        className={`text-sm font-medium ${
+                          data.locations === option.id
+                            ? "text-[var(--foreground)]"
+                            : "text-[var(--foreground)]/80"
+                        }`}
+                      >
+                        {t(`locations.${option.id}`)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                <NavButtons onBack={handleBack} onNext={handleContinue} disabled={!isLocationsValid} backLabel={tc("back")} nextLabel={tc("continue")} />
+              </div>
+            )}
+
+            {substep === 5 && (
               <div className="space-y-6">
                 <div className="space-y-3">
                   {goals.map((goal) => (

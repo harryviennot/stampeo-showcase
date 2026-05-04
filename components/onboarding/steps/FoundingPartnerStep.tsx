@@ -21,16 +21,14 @@ import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
 interface FoundingPartnerStepProps {
   store: OnboardingStore;
   onNext: () => void;
-  onBack: () => void;
 }
 
 const TIERS = ["starter", "growth", "pro"] as const;
 type Tier = (typeof TIERS)[number];
 
-export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<FoundingPartnerStepProps>) {
+export function FoundingPartnerStep({ store, onNext }: Readonly<FoundingPartnerStepProps>) {
   const t = useTranslations("onboarding.foundingPartner");
   const tp = useTranslations("pricing");
-  const tc = useTranslations("common.buttons");
   const { data, updateData } = store;
   const { session } = useAuth();
   const locale = useLocale();
@@ -54,8 +52,9 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   const [resellerDiscount, setResellerDiscount] = useState<number | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
-  // Founding program is closing — check on mount. Backend re-checks on submit
-  // so a clock-skewed client can't sneak past the deadline.
+  // Founding pricing still applies (discount + lifetime lock); we just don't
+  // surface the "founding partner" framing in the wizard's copy any more.
+  // Backend re-checks on submit so a clock-skewed client can't sneak past the deadline.
   const foundingOpen = useMemo(() => isFoundingProgramOpen(), []);
 
   // Fetch user profile to check reseller status
@@ -235,30 +234,19 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="text-center mb-8">
-        {/* Badge — hidden once founding program closes (and we're not a reseller) */}
-        {isReseller ? (
+        {/* Reseller-only badge. Founding-partner badge has been retired from the wizard
+            even though the underlying pricing still applies. */}
+        {isReseller && (
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
             {t("resellerBadge", { discount: resellerDiscount! })}
           </div>
-        ) : foundingOpen ? (
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold uppercase tracking-wide mb-4">
-            {t("limitedSpots")}
-          </div>
-        ) : null}
+        )}
 
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
-          {isReseller
-            ? t("resellerTitle")
-            : foundingOpen
-              ? t("title")
-              : t("standardTitle")}
+          {isReseller ? t("resellerTitle") : t("standardTitle")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2 max-w-lg mx-auto">
-          {isReseller
-            ? t("resellerSubtitle")
-            : foundingOpen
-              ? t("subtitle")
-              : t("standardSubtitle")}
+          {isReseller ? t("resellerSubtitle") : t("standardSubtitle")}
         </p>
       </div>
 
@@ -511,20 +499,6 @@ export function FoundingPartnerStep({ store, onNext, onBack }: Readonly<Founding
           ),
         })}
       </p>
-
-      {/* Back button - hidden if business already created */}
-      {!data.businessId && (
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={onBack}
-            disabled={loading}
-            className="py-2 px-6 text-[var(--muted-foreground)] hover:text-[var(--foreground)] font-medium transition-colors disabled:opacity-50"
-          >
-            {tc("goBack")}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

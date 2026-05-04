@@ -77,6 +77,15 @@ export function OnboardingWizard() {
   // Card position: left for the identity step (1), right for design step onwards (2+)
   const cardPosition = store.currentStep < 2 ? "left" : "right";
 
+  // When the wizard moves to a new step, snap the viewport back to the top.
+  // Without this, going from a tall step (e.g. card design with preview) to a
+  // short step leaves the user scrolled past the new content, sometimes with
+  // the form hidden behind the fixed Stampeo header.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [store.currentStep]);
+
   // Track if user has visited the design step (now step 2) to persist colors
   const hasVisitedDesignStep = store.completedSteps.includes(1) || store.currentStep >= 2;
 
@@ -371,7 +380,7 @@ export function OnboardingWizard() {
           />
         );
       case 5:
-        return <FoundingPartnerStep store={store} onNext={handleStep5Next} onBack={handleGoBack} />;
+        return <FoundingPartnerStep store={store} onNext={handleStep5Next} />;
       case 6:
         return <ApplicationSubmittedStep store={store} />;
       default:

@@ -88,7 +88,7 @@ interface StoredState {
   data: OnboardingData;
   currentStep: number;
   completedSteps: number[];
-  step1Substep?: 1 | 2 | 3 | 4;
+  step1Substep?: 1 | 2 | 3 | 4 | 5;
   createAccountPhase?: "choose" | "form" | "verify";
   timestamp: number;
 }
@@ -108,7 +108,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   // Cache the validated slug so we don't re-check it
   const [validatedSlug, setValidatedSlug] = useState<string | null>(null);
   // Sub-step state persisted so locale switches don't reset within a step
-  const [step1Substep, setStep1Substep] = useState<1 | 2 | 3 | 4>(1);
+  const [step1Substep, setStep1Substep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [createAccountPhase, setCreateAccountPhase] = useState<"choose" | "form" | "verify">("choose");
 
   // Load from storage on mount - prioritize sessionStorage for current session
