@@ -12,23 +12,33 @@ export interface CardDesign {
   rewardIcon: string;             // Final stamp (reward) icon: 'gift' | 'trophy' | 'star' | 'crown' | etc.
 }
 
+export type TeamSize = "solo" | "2-5" | "6-20" | "20+";
+export type LocationCount = "1" | "2-5" | "6+";
+export type PrimaryGoal = "acquire" | "retain" | "both";
+
 export interface OnboardingData {
-  // Step 1 - Substep 1
+  // Step 1.1 — identity
   businessName: string;
   urlSlug: string;
+  // Step 1.2 — category
+  category: string | null;
+  description: string;
+  // Step 1.3 — size (NEW)
+  teamSize: TeamSize | null;
+  locations: LocationCount | null;
+  // Step 1.4 — primary goal (NEW)
+  primaryGoal: PrimaryGoal | null;
+  // Step 2 — card design
+  cardDesign: CardDesign;
+  // Step 3 — about you
   ownerName: string;
   website: string;
   phone: string;
-  // Step 1 - Substep 2
+  // Step 4 — account
+  email: string;
+  // Step 6 — done (HDYHAU now collected on the success screen)
   heardFrom: string | null;
   heardFromOther: string;
-  // Step 2
-  category: string | null;
-  description: string;
-  // Step 3 - Card customization (optional)
-  cardDesign: CardDesign;
-  // Step 4
-  email: string;
   // Track created business to prevent re-creation
   businessId: string | null;
 }
@@ -41,8 +51,10 @@ export interface OnboardingState {
   isSlugChecking: boolean;
 }
 
-const STORAGE_KEY = "stampeo_onboarding";
-const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
+// v2: bumped after STA-135 restructure (step renumbering + new fields).
+// Mid-flow users on the old shape get reset rather than landing on a missing step.
+const STORAGE_KEY = "stampeo_onboarding_v2";
+const SESSION_STORAGE_KEY = "stampeo_onboarding_session_v2";
 const STORAGE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 const defaultCardDesign: CardDesign = {
@@ -57,15 +69,18 @@ const defaultCardDesign: CardDesign = {
 const initialData: OnboardingData = {
   businessName: "",
   urlSlug: "",
+  category: null,
+  description: "",
+  teamSize: null,
+  locations: null,
+  primaryGoal: null,
+  cardDesign: defaultCardDesign,
   ownerName: "",
   website: "",
   phone: "",
+  email: "",
   heardFrom: null,
   heardFromOther: "",
-  category: null,
-  description: "",
-  cardDesign: defaultCardDesign,
-  email: "",
   businessId: null,
 };
 
@@ -73,7 +88,7 @@ interface StoredState {
   data: OnboardingData;
   currentStep: number;
   completedSteps: number[];
-  step1Substep?: 1 | 2;
+  step1Substep?: 1 | 2 | 3 | 4 | 5;
   createAccountPhase?: "choose" | "form" | "verify";
   timestamp: number;
 }
@@ -93,7 +108,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
   // Cache the validated slug so we don't re-check it
   const [validatedSlug, setValidatedSlug] = useState<string | null>(null);
   // Sub-step state persisted so locale switches don't reset within a step
-  const [step1Substep, setStep1Substep] = useState<1 | 2>(1);
+  const [step1Substep, setStep1Substep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [createAccountPhase, setCreateAccountPhase] = useState<"choose" | "form" | "verify">("choose");
 
   // Load from storage on mount - prioritize sessionStorage for current session
@@ -271,6 +286,14 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
     setIsSlugAvailable(null);
   }, []);
 
+  /** Wipe persisted storage WITHOUT resetting React state. Use this on the redirect
+   *  path so the success step doesn't flash back to step 1 before the browser
+   *  navigates away. Safe because the page is about to unload. */
+  const clearStorageOnly = useCallback(() => {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
+
   return {
     currentStep,
     completedSteps,
@@ -297,6 +320,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
     prevStep,
     goToStep,
     clearStore,
+    clearStorageOnly,
   };
 }
 

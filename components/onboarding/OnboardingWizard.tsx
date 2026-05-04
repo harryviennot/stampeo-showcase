@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import posthog from "posthog-js";
-import { useOnboardingStore } from "@/hooks/useOnboardingStore";
+import { useOnboardingStore, type OnboardingData } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import {
   getUserBusinesses,
@@ -12,22 +12,23 @@ import {
 } from "@/lib/onboarding";
 import { applyTheme, resetTheme, getThemeColor } from "@/lib/theme";
 import { OnboardingCardPreview } from "./OnboardingCardPreview";
-import { BusinessInfoStep } from "./steps/BusinessInfoStep";
-import { BusinessTypeStep } from "./steps/BusinessTypeStep";
+import { BusinessProfileStep } from "./steps/BusinessProfileStep";
 import { CardPreviewStep } from "./steps/CardPreviewStep";
+import { AboutYouStep } from "./steps/AboutYouStep";
 import { CreateAccountStep } from "./steps/CreateAccountStep";
 import { FoundingPartnerStep } from "./steps/FoundingPartnerStep";
 import { ApplicationSubmittedStep } from "./steps/ApplicationSubmittedStep";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 
-const SESSION_STORAGE_KEY = "stampeo_onboarding_session";
+const SESSION_STORAGE_KEY = "stampeo_onboarding_session_v2";
 
 const STEP_NAMES: Record<number, string> = {
-  1: "business_info",
-  2: "business_type",
-  3: "card_design",
+  1: "business_profile",
+  2: "card_design",
+  3: "about_you",
   4: "account",
   5: "plan",
+  6: "heard_from",
 };
 
 export function OnboardingWizard() {
@@ -74,11 +75,20 @@ export function OnboardingWizard() {
     };
   }, []);
 
-  // Card position: left for steps 1-2, right for steps 3+
-  const cardPosition = store.currentStep < 3 ? "left" : "right";
+  // Card position: left for the identity step (1), right for design step onwards (2+)
+  const cardPosition = store.currentStep < 2 ? "left" : "right";
 
-  // Track if user has visited step 3 (design step) to persist colors
-  const hasVisitedDesignStep = store.completedSteps.includes(2) || store.currentStep >= 3;
+  // When the wizard moves to a new step, snap the viewport back to the top.
+  // Without this, going from a tall step (e.g. card design with preview) to a
+  // short step leaves the user scrolled past the new content, sometimes with
+  // the form hidden behind the fixed Stampeo header.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [store.currentStep]);
+
+  // Track if user has visited the design step (now step 2) to persist colors
+  const hasVisitedDesignStep = store.completedSteps.includes(1) || store.currentStep >= 2;
 
   // Update page accent color to match their business color (once they've reached design step)
   useEffect(() => {
@@ -92,7 +102,7 @@ export function OnboardingWizard() {
     return () => {
       resetTheme();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.data.cardDesign?.backgroundColor, store.data.cardDesign?.accentColor, hasVisitedDesignStep]);
 
   // Check if authenticated user already has a business (completed onboarding)
@@ -104,11 +114,14 @@ export function OnboardingWizard() {
       const { data: businesses } = await getUserBusinesses(session.access_token);
 
       if (businesses.length > 0) {
-        // User has existing businesses, but if they have onboarding data in the store
-        // they are actively creating a new business — let them continue
+        // User has existing businesses. If their wizard store already has a
+        // businessId (they just finished onboarding and somehow ended up back
+        // here) OR they have no in-progress data, send them straight to the app.
+        // Only let them stay if they have partial onboarding data without a
+        // created business yet (they're actively creating a new one).
         const hasOnboardingData = !!store.data.businessName;
-        if (!hasOnboardingData) {
-          // No onboarding in progress — redirect to app
+        const hasCompletedBusiness = !!store.data.businessId;
+        if (!hasOnboardingData || hasCompletedBusiness) {
           const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
           window.location.href = appUrl;
           return;
@@ -151,6 +164,9 @@ export function OnboardingWizard() {
           phone: store.data.phone || undefined,
           heard_from: store.data.heardFrom || undefined,
           heard_from_other: store.data.heardFromOther || undefined,
+          team_size: store.data.teamSize || undefined,
+          locations: store.data.locations || undefined,
+          primary_goal: store.data.primaryGoal || undefined,
           card_design: store.data.cardDesign ? {
             background_color: store.data.cardDesign.backgroundColor,
             accent_color: store.data.cardDesign.accentColor,
@@ -182,6 +198,9 @@ export function OnboardingWizard() {
     store.data.phone,
     store.data.heardFrom,
     store.data.heardFromOther,
+    store.data.teamSize,
+    store.data.locations,
+    store.data.primaryGoal,
     store.data.cardDesign,
     store.currentStep,
     store.completedSteps,
@@ -207,6 +226,9 @@ export function OnboardingWizard() {
           phone: serverProgress.phone || "",
           heardFrom: serverProgress.heard_from || null,
           heardFromOther: serverProgress.heard_from_other || "",
+          teamSize: (serverProgress.team_size as OnboardingData["teamSize"]) || null,
+          locations: (serverProgress.locations as OnboardingData["locations"]) || null,
+          primaryGoal: (serverProgress.primary_goal as OnboardingData["primaryGoal"]) || null,
           cardDesign: serverProgress.card_design ? {
             backgroundColor: serverProgress.card_design.background_color,
             accentColor: serverProgress.card_design.accent_color,
@@ -230,7 +252,7 @@ export function OnboardingWizard() {
     };
 
     fetchFromBackend();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.access_token, authLoading, authChecked]);
 
   // Handle step completion with animation
@@ -336,10 +358,10 @@ export function OnboardingWizard() {
   const renderStep = () => {
     switch (store.currentStep) {
       case 1:
-        return <BusinessInfoStep store={store} onNext={handleStep1Next} />;
+        return <BusinessProfileStep store={store} onNext={handleStep1Next} />;
       case 2:
         return (
-          <BusinessTypeStep
+          <CardPreviewStep
             store={store}
             onNext={handleStep2Next}
             onBack={handleGoBack}
@@ -347,7 +369,7 @@ export function OnboardingWizard() {
         );
       case 3:
         return (
-          <CardPreviewStep
+          <AboutYouStep
             store={store}
             onNext={handleStep3Next}
             onBack={handleGoBack}
@@ -362,11 +384,11 @@ export function OnboardingWizard() {
           />
         );
       case 5:
-        return <FoundingPartnerStep store={store} onNext={handleStep5Next} onBack={handleGoBack} />;
+        return <FoundingPartnerStep store={store} onNext={handleStep5Next} />;
       case 6:
         return <ApplicationSubmittedStep store={store} />;
       default:
-        return <BusinessInfoStep store={store} onNext={handleStep1Next} />;
+        return <BusinessProfileStep store={store} onNext={handleStep1Next} />;
     }
   };
 
@@ -414,20 +436,21 @@ export function OnboardingWizard() {
     }
   };
 
-  // Determine if this is a special transition (2↔3) that needs full card animation
+  // Determine if this is a special transition (1↔2) that needs full card animation —
+  // the card swaps from the left side (identity step) to the right (design step).
   const isSpecialTransition =
-    (prevStep === 2 && store.currentStep === 3) ||
-    (prevStep === 3 && store.currentStep === 2);
+    (prevStep === 1 && store.currentStep === 2) ||
+    (prevStep === 2 && store.currentStep === 1);
 
   // Step labels component - extracted to avoid duplication
   const renderStepLabels = () => (
     <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
       {[
         { step: 1, label: t("business") },
-        { step: 2, label: t("type") },
-        { step: 3, label: t("design") },
+        { step: 2, label: t("design") },
+        { step: 3, label: t("you") },
         { step: 4, label: t("account") },
-        { step: 5, label: t("partner") },
+        { step: 5, label: t("plan") },
         { step: 6, label: t("done") },
       ].map(({ step, label }) => (
         <button
@@ -459,6 +482,10 @@ export function OnboardingWizard() {
   // For step 5 (plan selection), use full-width layout
   const isFullWidthStep = store.currentStep === 5;
 
+  // On mobile, only show the card preview when the user is editing the design (step 2).
+  // Other steps don't need it taking up half the viewport above the form.
+  const hidesPreviewOnMobile = store.currentStep !== 2;
+
   // Detect if entering from step 5 for slide-in animation
   const isEnteringFromStep5 = prevStep === 5 && store.currentStep === 6;
 
@@ -468,10 +495,10 @@ export function OnboardingWizard() {
     : store.currentStep - 1;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4">
+    <div className="w-full max-w-6xl mx-auto px-1 sm:px-4">
       {/* LayoutGroup enables layout animations across components */}
       <LayoutGroup>
-        <div className={`grid grid-cols-1 gap-8 lg:gap-12 items-center min-h-[70vh] ${isFullWidthStep ? "" : "lg:grid-cols-2"}`}>
+        <div className={`grid grid-cols-1 gap-8 lg:gap-12 items-center min-h-0 lg:min-h-[70vh] ${isFullWidthStep ? "" : "lg:grid-cols-2"}`}>
           {/* Card Panel - animated in/out for full-width steps */}
           <AnimatePresence>
             {!isFullWidthStep && (
@@ -480,10 +507,7 @@ export function OnboardingWizard() {
                 initial={isEnteringFromStep5 ? { x: "100%", opacity: 0 } : { opacity: 0, scale: 0.9 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="flex items-center justify-center"
-                style={{
-                  order: cardPosition === "left" ? 0 : 1,
-                }}
+                className={`${hidesPreviewOnMobile ? "hidden lg:flex" : "flex"} items-center justify-center order-first ${cardPosition === "left" ? "lg:order-first" : "lg:order-last"}`}
                 transition={{
                   type: "tween",
                   ease: "easeInOut",
@@ -499,21 +523,6 @@ export function OnboardingWizard() {
                     vanishingStampIndex={vanishingStampIndex}
                     design={store.data.cardDesign}
                   />
-
-                  {/* Step indicator */}
-                  <div className="mt-6 flex justify-center gap-2 lg:hidden">
-                    {[1, 2, 3, 4, 5, 6].map((step) => (
-                      <div
-                        key={step}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
-                          ? "bg-[var(--accent)]"
-                          : step === store.currentStep
-                            ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
-                            : "bg-[var(--muted)]"
-                          }`}
-                      />
-                    ))}
-                  </div>
                 </div>
               </motion.div>
             )}
@@ -522,16 +531,28 @@ export function OnboardingWizard() {
           {/* Form Panel */}
           <motion.div
             layout="position"
-            className="flex flex-col justify-center relative"
-            style={{
-              order: cardPosition === "left" ? 1 : 0,
-            }}
+            className={`flex flex-col justify-center relative order-last ${cardPosition === "left" ? "lg:order-last" : "lg:order-first"}`}
             transition={{
               type: "tween",
               ease: "easeInOut",
               duration: 0.5
             }}
           >
+            {/* Mobile step indicator — visible whether or not the card preview is shown */}
+            <div className="mb-4 flex justify-center gap-2 lg:hidden">
+              {[1, 2, 3, 4, 5, 6].map((step) => (
+                <div
+                  key={step}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
+                    ? "bg-[var(--accent)]"
+                    : step === store.currentStep
+                      ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
+                      : "bg-[var(--muted)]"
+                    }`}
+                />
+              ))}
+            </div>
+
             {isSpecialTransition ? (
               // SPECIAL TRANSITION (2↔3): New form animates in, old form disappears instantly
               <AnimatePresence mode="wait">
@@ -547,7 +568,7 @@ export function OnboardingWizard() {
                   {renderStepLabels()}
                   <motion.div
                     layout
-                    className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden"
+                    className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-4 sm:p-8 shadow-sm overflow-hidden"
                     transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
                   >
                     {renderStep()}
@@ -560,7 +581,7 @@ export function OnboardingWizard() {
                 {renderStepLabels()}
                 <motion.div
                   layout
-                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden"
+                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-4 sm:p-8 shadow-sm overflow-hidden"
                   transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
                 >
                   {renderStep()}

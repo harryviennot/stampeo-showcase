@@ -1,102 +1,151 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
+import posthog from "posthog-js";
+import { motion, AnimatePresence } from "framer-motion";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
+import { useAuth } from "@/lib/supabase/auth-provider";
+import { saveOnboardingProgress, deleteOnboardingProgress } from "@/lib/onboarding";
 
 interface ApplicationSubmittedStepProps {
   store: OnboardingStore;
 }
 
-const REDIRECT_DELAY_MS = 1500;
+const heardFromOptions = [
+  { id: "google", icon: "🔍" },
+  { id: "instagram", icon: "📸" },
+  { id: "tiktok", icon: "🎵" },
+  { id: "youtube", icon: "🎥" },
+  { id: "linkedin", icon: "💼" },
+  { id: "article", icon: "📰" },
+  { id: "friend", icon: "🗣️" },
+  { id: "business", icon: "🏪" },
+  { id: "ai", icon: "🤖" },
+  { id: "other", icon: "✨" },
+];
 
 export function ApplicationSubmittedStep({ store }: ApplicationSubmittedStepProps) {
   const t = useTranslations("onboarding.applicationSubmitted");
-  const { data } = store;
-  const redirected = useRef(false);
+  const { data, updateData } = store;
+  const { session } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
 
-  const goToDashboard = useCallback(() => {
-    if (redirected.current) return;
-    redirected.current = true;
-    store.clearStore();
+  const isValid =
+    !!data.heardFrom &&
+    (data.heardFrom !== "other" || data.heardFromOther.trim().length > 0);
+
+  const handleContinue = useCallback(async () => {
+    if (!isValid || submitting) return;
+    setSubmitting(true);
+
+    posthog.capture("onboarding_step_completed", {
+      step: 6,
+      step_name: "heard_from",
+      heard_from: data.heardFrom,
+      is_authenticated: !!session?.access_token,
+    });
+
+    if (session?.access_token) {
+      // Save the HDYHAU answer to the in-flight row first, then ask the
+      // backend to migrate it to business_onboarding_info and delete the row.
+      // After this round-trip the user has no onboarding_progress row, so the
+      // admin funnel chart stops double-counting them.
+      await saveOnboardingProgress(
+        {
+          business_name: data.businessName,
+          url_slug: data.urlSlug,
+          heard_from: data.heardFrom || undefined,
+          heard_from_other: data.heardFromOther || undefined,
+          current_step: 6,
+          completed_steps: store.completedSteps,
+        },
+        session.access_token
+      ).catch(() => {});
+
+      await deleteOnboardingProgress(session.access_token).catch(() => {});
+    }
+
+    // Storage-only clear avoids the visible flash of step 1 before the
+    // browser navigates away. Persisted state on this device is gone, but
+    // React state stays as-is until unload.
+    store.clearStorageOnly();
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
     window.location.href = appUrl;
-  }, [store]);
-
-  useEffect(() => {
-    const timer = setTimeout(goToDashboard, REDIRECT_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, [goToDashboard]);
-
-  const initials = data.businessName
-    ? data.businessName
-        .trim()
-        .split(/\s+/)
-        .slice(0, 2)
-        .map((w) => w[0])
-        .join("")
-        .toUpperCase()
-    : "YB";
+  }, [isValid, submitting, session, data, store]);
 
   return (
-    <div className="w-full max-w-md mx-auto text-center py-4">
-      <div className="mb-6">
+    <div className="w-full max-w-md mx-auto">
+      <div className="text-center mb-6">
         <div
-          className="w-20 h-20 mx-auto rounded-full flex items-center justify-center"
+          className="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center"
           style={{ backgroundColor: "var(--accent)" }}
         >
-          <svg
-            className="w-10 h-10 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
+          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
+          {t("title")}
+        </h1>
+        <p className="text-[var(--muted-foreground)] mt-2">{t("heardFromSubtitle")}</p>
       </div>
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] mb-3">
-        {t("title")}
-      </h1>
-
-      <p className="text-[var(--muted-foreground)] text-lg mb-2">
-        {t("subtitle")}
-      </p>
-      <p className="text-[var(--muted-foreground)] text-sm mb-6">
-        {t("redirecting")}
-      </p>
-
-      <div className="bg-[var(--muted)]/30 rounded-2xl p-5 mb-8 text-left">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ backgroundColor: "var(--accent)" }}
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        {heardFromOptions.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            onClick={() => updateData({ heardFrom: option.id })}
+            className={`flex items-center gap-2 p-3 rounded-xl border-2 text-left transition-all duration-200 ${
+              data.heardFrom === option.id
+                ? "border-[var(--accent)] bg-[var(--accent)]/10 ring-2 ring-[var(--accent)]/20"
+                : "border-[var(--border)] bg-white/50 dark:bg-white/5 hover:border-[var(--accent)]/50"
+            }`}
           >
-            <span className="text-white font-bold text-sm">{initials}</span>
-          </div>
-          <div>
-            <h3 className="font-semibold text-[var(--foreground)]">
-              {data.businessName || "Your Business"}
-            </h3>
-            <p className="text-sm text-[var(--muted-foreground)]">
-              stampeo.app/{data.urlSlug || "your-business"}
-            </p>
-          </div>
-        </div>
+            <span className="text-xl flex-shrink-0" role="img" aria-hidden>
+              {option.icon}
+            </span>
+            <span className="text-xs font-medium text-[var(--foreground)]/85">
+              {t(`heardFromOptions.${option.id}`)}
+            </span>
+          </button>
+        ))}
       </div>
+
+      <AnimatePresence>
+        {data.heardFrom === "other" && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <div className="space-y-2 pb-4">
+              <label htmlFor="heardFromOther" className="block text-xs font-medium text-[var(--foreground)]">
+                {t("heardFromOtherLabel")}
+              </label>
+              <textarea
+                id="heardFromOther"
+                value={data.heardFromOther}
+                onChange={(e) => updateData({ heardFromOther: e.target.value })}
+                rows={2}
+                className="w-full px-3 py-2 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] resize-none text-sm"
+                placeholder={t("heardFromOtherPlaceholder")}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <button
         type="button"
-        onClick={goToDashboard}
-        className="w-full py-4 px-6 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 text-lg"
+        onClick={handleContinue}
+        disabled={!isValid || submitting}
+        className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
-        {t("goToDashboard")}
+        {submitting ? t("settingUpDashboard") : t("goToDashboard")}
       </button>
     </div>
   );

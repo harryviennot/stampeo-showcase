@@ -30,7 +30,7 @@ export default async function OnboardingLayout({
         <Link href="/" className="inline-block group">
           <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
             <StampeoLogo />
-            <span className="text-2xl font-bold gradient-text">
+            <span className="text-2xl font-bold gradient-text md:block hidden">
               Stampeo
             </span>
           </div>
@@ -38,7 +38,7 @@ export default async function OnboardingLayout({
       </header>
 
       {/* Main content */}
-      <main className="pt-20 pb-12 px-4">{children}</main>
+      <main className="pt-16 pb-8 px-4 sm:pt-20 sm:pb-12 sm:px-2">{children}</main>
     </div>
   );
 }
