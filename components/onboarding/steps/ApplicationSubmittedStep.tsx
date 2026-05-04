@@ -6,7 +6,7 @@ import posthog from "posthog-js";
 import { motion, AnimatePresence } from "framer-motion";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
-import { saveOnboardingProgress } from "@/lib/onboarding";
+import { saveOnboardingProgress, deleteOnboardingProgress } from "@/lib/onboarding";
 
 interface ApplicationSubmittedStepProps {
   store: OnboardingStore;
@@ -47,6 +47,10 @@ export function ApplicationSubmittedStep({ store }: ApplicationSubmittedStepProp
     });
 
     if (session?.access_token) {
+      // Save the HDYHAU answer to the in-flight row first, then ask the
+      // backend to migrate it to business_onboarding_info and delete the row.
+      // After this round-trip the user has no onboarding_progress row, so the
+      // admin funnel chart stops double-counting them.
       await saveOnboardingProgress(
         {
           business_name: data.businessName,
@@ -58,6 +62,8 @@ export function ApplicationSubmittedStep({ store }: ApplicationSubmittedStepProp
         },
         session.access_token
       ).catch(() => {});
+
+      await deleteOnboardingProgress(session.access_token).catch(() => {});
     }
 
     // Storage-only clear avoids the visible flash of step 1 before the

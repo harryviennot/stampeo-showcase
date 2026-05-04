@@ -111,6 +111,9 @@ export function FoundingPartnerStep({ store, onNext }: Readonly<FoundingPartnerS
           phone: data.phone || undefined,
           heard_from: data.heardFrom || undefined,
           heard_from_other: data.heardFromOther || undefined,
+          team_size: data.teamSize || undefined,
+          locations: data.locations || undefined,
+          primary_goal: data.primaryGoal || undefined,
           primary_locale: businessLocale,
         };
 
