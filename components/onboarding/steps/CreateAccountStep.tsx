@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { ArrowLeft, Eye, EyeSlash, Check } from "@phosphor-icons/react";
+import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
@@ -401,18 +401,7 @@ export function CreateAccountStep({
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="relative text-center mb-8">
-        <button
-          type="button"
-          onClick={() => {
-            setPhase("choose");
-            setError(null);
-          }}
-          aria-label={t("chooseDifferentMethod")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 inline-flex items-center justify-center h-9 w-9 rounded-full text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
-        >
-          <ArrowLeft size={18} />
-        </button>
+      <div className="text-center mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
           {t("emailTitle")}
         </h1>
@@ -506,14 +495,27 @@ export function CreateAccountStep({
           )}
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={!isFormValid || loading}
-          className="w-full py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-        >
-          {loading ? t("submitting") : t("continue")}
-        </button>
+        {/* Submit row — back button matches the layout used on other wizard steps */}
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              setPhase("choose");
+              setError(null);
+            }}
+            disabled={loading}
+            className="py-3.5 px-6 border border-[var(--border)] text-[var(--foreground)] font-semibold rounded-full hover:bg-[var(--muted)] focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50"
+          >
+            {tc("back")}
+          </button>
+          <button
+            type="submit"
+            disabled={!isFormValid || loading}
+            className="flex-1 py-3.5 px-4 bg-[var(--accent)] text-white font-semibold rounded-full hover:bg-[var(--accent-hover)] hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            {loading ? t("submitting") : t("continue")}
+          </button>
+        </div>
 
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
           {t.rich("legalNotice", {

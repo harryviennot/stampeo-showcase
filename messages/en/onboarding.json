@@ -2,45 +2,25 @@
   "onboarding": {
     "steps": {
       "business": "Business",
-      "type": "Type",
       "design": "Design",
+      "you": "You",
       "account": "Account",
-      "partner": "Partner",
+      "plan": "Plan",
       "done": "Done"
     },
-    "businessInfo": {
-      "title": "Let's set up your business",
-      "subtitle": "Tell us about your business to get started",
-      "subtitleDiscovery": "One last thing — how did you find us?",
+    "businessProfile": {
+      "title": "Tell us about your business",
+      "subtitleIdentity": "What's your business called?",
+      "subtitleCategory": "What type of business is it?",
+      "subtitleTeamSize": "How big is your team?",
+      "subtitleLocations": "How many locations do you have?",
+      "subtitleGoal": "What's your main goal?",
       "businessName": "Business name",
       "businessNamePlaceholder": "e.g. Cafe Aroma",
       "uniqueUrl": "Your unique URL",
       "urlPlaceholder": "cafe-aroma",
       "slugMinLength": "Must be at least 3 characters",
       "slugAvailable": "This URL is available!",
-      "ownerName": "Your name",
-      "ownerNamePlaceholder": "John Doe",
-      "website": "Website",
-      "websitePlaceholder": "https://mybusiness.com",
-      "phone": "Phone number",
-      "phonePlaceholder": "+33 6 12 34 56 78",
-      "heardFrom": "How did you hear about us?",
-      "heardFromOptions": {
-        "google": "Google / Internet search",
-        "instagram": "Instagram",
-        "tiktok": "TikTok",
-        "linkedin": "LinkedIn",
-        "article": "Article / Blog",
-        "friend": "Friend / Colleague",
-        "business": "A Stampeo business",
-        "other": "Other"
-      },
-      "heardFromOtherLabel": "Please tell us more",
-      "heardFromOtherPlaceholder": "How did you hear about us?"
-    },
-    "businessType": {
-      "title": "What type of business?",
-      "subtitle": "This helps us tailor your loyalty card",
       "categories": {
         "cafe": "Cafe / Coffee Shop",
         "restaurant": "Restaurant",
@@ -52,7 +32,44 @@
         "other": "Other"
       },
       "otherLabel": "Please let us know what type of business you are",
-      "otherPlaceholder": "e.g. Pet grooming, Car wash, Tattoo studio..."
+      "otherPlaceholder": "e.g. Pet grooming, Car wash, Tattoo studio...",
+      "teamSizeLabel": "How many people on your team?",
+      "teamSize": {
+        "solo": "Just me",
+        "2-5": "2 to 5",
+        "6-20": "6 to 20",
+        "20+": "More than 20"
+      },
+      "locationsLabel": "How many locations?",
+      "locations": {
+        "1": "1",
+        "2-5": "2 to 5",
+        "6+": "6 or more"
+      },
+      "goals": {
+        "acquire": {
+          "label": "Attract new customers",
+          "description": "Get the word out and bring new people through the door."
+        },
+        "retain": {
+          "label": "Keep existing customers coming back",
+          "description": "Reward loyalty and grow repeat visits."
+        },
+        "both": {
+          "label": "Both",
+          "description": "Acquire and retain at the same time."
+        }
+      }
+    },
+    "aboutYou": {
+      "title": "Tell us about you",
+      "subtitle": "A few details to personalise your space.",
+      "ownerName": "Your name",
+      "ownerNamePlaceholder": "John Doe",
+      "website": "Website",
+      "websitePlaceholder": "https://mybusiness.com",
+      "phone": "Phone number",
+      "optional": "(optional)"
     },
     "cardPreview": {
       "title": "Customize your card",
@@ -86,7 +103,7 @@
       "continueEmail": "Continue with email",
       "chooseDifferentMethod": "Choose another method",
       "emailTitle": "Create your account with email",
-      "emailSubtitle": "Pick an email and password",
+      "emailSubtitle": "Your email and a strong password.",
       "email": "Email",
       "emailPlaceholder": "you@example.com",
       "password": "Password",
@@ -120,7 +137,7 @@
       "title": "Become a Founding Partner",
       "subtitle": "Help us build a product you'll love — and lock in pricing for life",
       "standardTitle": "Choose your plan",
-      "standardSubtitle": "30-day free trial on every plan. Cancel anytime — no card required.",
+      "standardSubtitle": "No credit card needed to get started. 30-day free trial, cancel anytime.",
       "resellerTitle": "Choose your plan",
       "resellerSubtitle": "Your partner discount is applied automatically to all plans",
       "resellerBadge": "Partner — {discount}% off",
@@ -139,13 +156,24 @@
       "legalNotice": "By confirming your subscription, you agree to our <terms>Terms of Service</terms> and acknowledge our <privacy>Privacy Policy</privacy>."
     },
     "applicationSubmitted": {
-      "title": "Welcome aboard!",
-      "subtitle": "Your dashboard is ready — taking you there now.",
-      "redirecting": "If nothing happens in a few seconds, click below.",
-      "goToDashboard": "Go to dashboard",
-      "spaceReady": "Your business space is set up",
-      "cardDesigned": "Your loyalty card is designed",
-      "pendingReview": "Application pending review"
+      "title": "How did you find us?",
+      "heardFromSubtitle": "One last question before we set up your dashboard.",
+      "goToDashboard": "Go to my dashboard",
+      "settingUpDashboard": "Setting up your space...",
+      "heardFromOptions": {
+        "google": "Google / Search",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "youtube": "YouTube",
+        "linkedin": "LinkedIn",
+        "article": "Article / Blog",
+        "friend": "Friend / Colleague",
+        "business": "A Stampeo business",
+        "ai": "ChatGPT / AI",
+        "other": "Other"
+      },
+      "heardFromOtherLabel": "Please tell us more",
+      "heardFromOtherPlaceholder": "How did you hear about us?"
     }
   }
 }
