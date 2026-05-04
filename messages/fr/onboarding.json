@@ -2,45 +2,24 @@
   "onboarding": {
     "steps": {
       "business": "Commerce",
-      "type": "Type",
       "design": "Design",
+      "you": "Vous",
       "account": "Compte",
-      "partner": "Partenaire",
+      "plan": "Plan",
       "done": "Terminé"
     },
-    "businessInfo": {
-      "title": "Configurons votre commerce",
-      "subtitle": "Dites-nous en plus sur votre activité pour commencer",
-      "subtitleDiscovery": "Dernière chose — comment nous avez-vous trouvé ?",
+    "businessProfile": {
+      "title": "Parlons de votre commerce",
+      "subtitleIdentity": "Comment s'appelle votre commerce ?",
+      "subtitleCategory": "Quel type de commerce ?",
+      "subtitleSize": "Quelle est la taille de votre équipe ?",
+      "subtitleGoal": "Quel est votre objectif principal ?",
       "businessName": "Nom du commerce",
       "businessNamePlaceholder": "ex. Café Arôme",
       "uniqueUrl": "Votre URL unique",
       "urlPlaceholder": "cafe-arome",
       "slugMinLength": "Minimum 3 caractères",
       "slugAvailable": "Cette URL est disponible !",
-      "ownerName": "Votre nom",
-      "ownerNamePlaceholder": "Jean Dupont",
-      "website": "Site web",
-      "websitePlaceholder": "https://moncommerce.fr",
-      "phone": "Numéro de téléphone",
-      "phonePlaceholder": "+33 6 12 34 56 78",
-      "heardFrom": "Comment avez-vous entendu parler de nous ?",
-      "heardFromOptions": {
-        "google": "Google / Recherche internet",
-        "instagram": "Instagram",
-        "tiktok": "TikTok",
-        "linkedin": "LinkedIn",
-        "article": "Un article / Blog",
-        "friend": "Ami / Collègue",
-        "business": "Un commerce Stampeo",
-        "other": "Autre"
-      },
-      "heardFromOtherLabel": "Précisez",
-      "heardFromOtherPlaceholder": "Comment avez-vous entendu parler de nous ?"
-    },
-    "businessType": {
-      "title": "Quel type de commerce ?",
-      "subtitle": "Cela nous aide à personnaliser votre carte de fidélité",
       "categories": {
         "cafe": "Café / Coffee Shop",
         "restaurant": "Restaurant",
@@ -52,7 +31,44 @@
         "other": "Autre"
       },
       "otherLabel": "Précisez votre type d'activité",
-      "otherPlaceholder": "ex. Toilettage, Lavage auto, Tatoueur..."
+      "otherPlaceholder": "ex. Toilettage, Lavage auto, Tatoueur...",
+      "teamSizeLabel": "Combien êtes-vous dans l'équipe ?",
+      "teamSize": {
+        "solo": "Juste moi",
+        "2-5": "2 à 5",
+        "6-20": "6 à 20",
+        "20+": "Plus de 20"
+      },
+      "locationsLabel": "Combien d'établissements ?",
+      "locations": {
+        "1": "1",
+        "2-5": "2 à 5",
+        "6+": "6 et plus"
+      },
+      "goals": {
+        "acquire": {
+          "label": "Attirer de nouveaux clients",
+          "description": "Vous voulez faire connaître votre commerce et faire venir du monde."
+        },
+        "retain": {
+          "label": "Fidéliser mes clients existants",
+          "description": "Vous voulez que vos clients reviennent plus souvent."
+        },
+        "both": {
+          "label": "Les deux",
+          "description": "Acquérir et fidéliser à la fois."
+        }
+      }
+    },
+    "aboutYou": {
+      "title": "Parlez-nous de vous",
+      "subtitle": "Quelques infos pour personnaliser votre espace.",
+      "ownerName": "Votre nom",
+      "ownerNamePlaceholder": "Jean Dupont",
+      "website": "Site web",
+      "websitePlaceholder": "https://moncommerce.fr",
+      "phone": "Numéro de téléphone",
+      "optional": "(optionnel)"
     },
     "cardPreview": {
       "title": "Personnalisez votre carte",
@@ -140,12 +156,27 @@
     },
     "applicationSubmitted": {
       "title": "Bienvenue à bord !",
-      "subtitle": "Votre tableau de bord est prêt — on vous y emmène.",
+      "subtitle": "Votre tableau de bord est prêt.",
       "redirecting": "Si rien ne se passe d'ici quelques secondes, cliquez ci-dessous.",
       "goToDashboard": "Aller au tableau de bord",
+      "goToDashboardCountdown": "Aller au tableau de bord ({seconds}s)",
       "spaceReady": "Votre espace est configuré",
       "cardDesigned": "Votre carte de fidélité est créée",
-      "pendingReview": "Candidature en cours d'examen"
+      "pendingReview": "Candidature en cours d'examen",
+      "heardFromTitle": "Comment nous avez-vous découverts ?",
+      "heardFromSubtitle": "Une dernière question avant que vous filiez.",
+      "heardFromOptions": {
+        "google": "Google / Recherche internet",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "linkedin": "LinkedIn",
+        "article": "Un article / Blog",
+        "friend": "Ami / Collègue",
+        "business": "Un commerce Stampeo",
+        "other": "Autre"
+      },
+      "heardFromOtherLabel": "Précisez",
+      "heardFromOtherPlaceholder": "Comment avez-vous entendu parler de nous ?"
     }
   }
 }

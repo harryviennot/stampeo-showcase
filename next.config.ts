@@ -15,8 +15,8 @@ const DISCOVERY_LINKS = [
 const nextConfig: NextConfig = {
   output: "standalone",
   allowedDevOrigins: [
-    "stampeo.192.168.1.25.nip.io",
-    "192.168.1.25",
+    "stampeo.172.16.1.181.nip.io",
+    "172.16.1.181",
   ],
   async headers() {
     return [

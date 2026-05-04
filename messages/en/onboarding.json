@@ -2,45 +2,24 @@
   "onboarding": {
     "steps": {
       "business": "Business",
-      "type": "Type",
       "design": "Design",
+      "you": "You",
       "account": "Account",
-      "partner": "Partner",
+      "plan": "Plan",
       "done": "Done"
     },
-    "businessInfo": {
-      "title": "Let's set up your business",
-      "subtitle": "Tell us about your business to get started",
-      "subtitleDiscovery": "One last thing — how did you find us?",
+    "businessProfile": {
+      "title": "Tell us about your business",
+      "subtitleIdentity": "What's your business called?",
+      "subtitleCategory": "What type of business is it?",
+      "subtitleSize": "How big is your team?",
+      "subtitleGoal": "What's your main goal?",
       "businessName": "Business name",
       "businessNamePlaceholder": "e.g. Cafe Aroma",
       "uniqueUrl": "Your unique URL",
       "urlPlaceholder": "cafe-aroma",
       "slugMinLength": "Must be at least 3 characters",
       "slugAvailable": "This URL is available!",
-      "ownerName": "Your name",
-      "ownerNamePlaceholder": "John Doe",
-      "website": "Website",
-      "websitePlaceholder": "https://mybusiness.com",
-      "phone": "Phone number",
-      "phonePlaceholder": "+33 6 12 34 56 78",
-      "heardFrom": "How did you hear about us?",
-      "heardFromOptions": {
-        "google": "Google / Internet search",
-        "instagram": "Instagram",
-        "tiktok": "TikTok",
-        "linkedin": "LinkedIn",
-        "article": "Article / Blog",
-        "friend": "Friend / Colleague",
-        "business": "A Stampeo business",
-        "other": "Other"
-      },
-      "heardFromOtherLabel": "Please tell us more",
-      "heardFromOtherPlaceholder": "How did you hear about us?"
-    },
-    "businessType": {
-      "title": "What type of business?",
-      "subtitle": "This helps us tailor your loyalty card",
       "categories": {
         "cafe": "Cafe / Coffee Shop",
         "restaurant": "Restaurant",
@@ -52,7 +31,44 @@
         "other": "Other"
       },
       "otherLabel": "Please let us know what type of business you are",
-      "otherPlaceholder": "e.g. Pet grooming, Car wash, Tattoo studio..."
+      "otherPlaceholder": "e.g. Pet grooming, Car wash, Tattoo studio...",
+      "teamSizeLabel": "How many people on your team?",
+      "teamSize": {
+        "solo": "Just me",
+        "2-5": "2 to 5",
+        "6-20": "6 to 20",
+        "20+": "More than 20"
+      },
+      "locationsLabel": "How many locations?",
+      "locations": {
+        "1": "1",
+        "2-5": "2 to 5",
+        "6+": "6 or more"
+      },
+      "goals": {
+        "acquire": {
+          "label": "Attract new customers",
+          "description": "Get the word out and bring new people through the door."
+        },
+        "retain": {
+          "label": "Keep existing customers coming back",
+          "description": "Reward loyalty and grow repeat visits."
+        },
+        "both": {
+          "label": "Both",
+          "description": "Acquire and retain at the same time."
+        }
+      }
+    },
+    "aboutYou": {
+      "title": "Tell us about you",
+      "subtitle": "A few details to personalise your space.",
+      "ownerName": "Your name",
+      "ownerNamePlaceholder": "John Doe",
+      "website": "Website",
+      "websitePlaceholder": "https://mybusiness.com",
+      "phone": "Phone number",
+      "optional": "(optional)"
     },
     "cardPreview": {
       "title": "Customize your card",
@@ -140,12 +156,27 @@
     },
     "applicationSubmitted": {
       "title": "Welcome aboard!",
-      "subtitle": "Your dashboard is ready — taking you there now.",
+      "subtitle": "Your dashboard is ready.",
       "redirecting": "If nothing happens in a few seconds, click below.",
       "goToDashboard": "Go to dashboard",
+      "goToDashboardCountdown": "Go to dashboard ({seconds}s)",
       "spaceReady": "Your business space is set up",
       "cardDesigned": "Your loyalty card is designed",
-      "pendingReview": "Application pending review"
+      "pendingReview": "Application pending review",
+      "heardFromTitle": "How did you find us?",
+      "heardFromSubtitle": "One last question before you go.",
+      "heardFromOptions": {
+        "google": "Google / Internet search",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "linkedin": "LinkedIn",
+        "article": "Article / Blog",
+        "friend": "Friend / Colleague",
+        "business": "A Stampeo business",
+        "other": "Other"
+      },
+      "heardFromOtherLabel": "Please tell us more",
+      "heardFromOtherPlaceholder": "How did you hear about us?"
     }
   }
 }

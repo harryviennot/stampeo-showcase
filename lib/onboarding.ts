@@ -20,6 +20,9 @@ export interface BusinessCreatePayload {
     owner_name?: string;
     accentColor?: string;
     backgroundColor?: string;
+    team_size?: string;
+    locations?: string;
+    primary_goal?: string;
   };
   logo_url?: string;
   website?: string;
@@ -264,6 +267,9 @@ export interface OnboardingProgressPayload {
   phone?: string;
   heard_from?: string;
   heard_from_other?: string;
+  team_size?: string;
+  locations?: string;
+  primary_goal?: string;
   card_design?: {
     background_color: string;
     accent_color: string;
@@ -289,6 +295,9 @@ export interface OnboardingProgressResponse {
   phone?: string;
   heard_from?: string;
   heard_from_other?: string;
+  team_size?: string;
+  locations?: string;
+  primary_goal?: string;
   card_design?: {
     background_color: string;
     accent_color: string;
