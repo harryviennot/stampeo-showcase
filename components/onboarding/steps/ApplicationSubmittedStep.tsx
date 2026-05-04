@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
+import posthog from "posthog-js";
 import { motion, AnimatePresence } from "framer-motion";
 import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
@@ -38,6 +39,13 @@ export function ApplicationSubmittedStep({ store }: ApplicationSubmittedStepProp
     if (!isValid || submitting) return;
     setSubmitting(true);
 
+    posthog.capture("onboarding_step_completed", {
+      step: 6,
+      step_name: "heard_from",
+      heard_from: data.heardFrom,
+      is_authenticated: !!session?.access_token,
+    });
+
     if (session?.access_token) {
       await saveOnboardingProgress(
         {
@@ -52,7 +60,10 @@ export function ApplicationSubmittedStep({ store }: ApplicationSubmittedStepProp
       ).catch(() => {});
     }
 
-    store.clearStore();
+    // Storage-only clear avoids the visible flash of step 1 before the
+    // browser navigates away. Persisted state on this device is gone, but
+    // React state stays as-is until unload.
+    store.clearStorageOnly();
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
     window.location.href = appUrl;
   }, [isValid, submitting, session, data, store]);

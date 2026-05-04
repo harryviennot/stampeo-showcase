@@ -28,6 +28,7 @@ const STEP_NAMES: Record<number, string> = {
   3: "about_you",
   4: "account",
   5: "plan",
+  6: "heard_from",
 };
 
 export function OnboardingWizard() {
@@ -113,11 +114,14 @@ export function OnboardingWizard() {
       const { data: businesses } = await getUserBusinesses(session.access_token);
 
       if (businesses.length > 0) {
-        // User has existing businesses, but if they have onboarding data in the store
-        // they are actively creating a new business — let them continue
+        // User has existing businesses. If their wizard store already has a
+        // businessId (they just finished onboarding and somehow ended up back
+        // here) OR they have no in-progress data, send them straight to the app.
+        // Only let them stay if they have partial onboarding data without a
+        // created business yet (they're actively creating a new one).
         const hasOnboardingData = !!store.data.businessName;
-        if (!hasOnboardingData) {
-          // No onboarding in progress — redirect to app
+        const hasCompletedBusiness = !!store.data.businessId;
+        if (!hasOnboardingData || hasCompletedBusiness) {
           const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
           window.location.href = appUrl;
           return;

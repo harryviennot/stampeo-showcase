@@ -286,6 +286,14 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
     setIsSlugAvailable(null);
   }, []);
 
+  /** Wipe persisted storage WITHOUT resetting React state. Use this on the redirect
+   *  path so the success step doesn't flash back to step 1 before the browser
+   *  navigates away. Safe because the page is about to unload. */
+  const clearStorageOnly = useCallback(() => {
+    sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
+
   return {
     currentStep,
     completedSteps,
@@ -312,6 +320,7 @@ export function useOnboardingStore(isAuthenticated = false, authLoading = true) 
     prevStep,
     goToStep,
     clearStore,
+    clearStorageOnly,
   };
 }
 
