@@ -1,0 +1,28 @@
+{
+  "email_preferences": {
+    "title": "Préférences d'emails",
+    "headline": "Choisissez ce que vous voulez recevoir.",
+    "description": "Activez ou désactivez chaque type d'email Stampeo. Les emails essentiels (factures, confirmation, sécurité) sont toujours envoyés.",
+    "loading": "Chargement de vos préférences…",
+    "error_invalid_token": "Ce lien n'est plus valide. Connectez-vous à votre tableau de bord pour gérer vos préférences.",
+    "error_generic": "Une erreur est survenue. Réessayez ou contactez-nous.",
+    "categories": {
+      "reengagement": {
+        "label": "Rappels d'activation",
+        "description": "Nudges 24h et 7 jours pour finir la configuration de votre programme."
+      },
+      "marketing": {
+        "label": "Nouveautés et conseils",
+        "description": "Astuces, bonnes pratiques et nouveautés produit."
+      },
+      "product_updates": {
+        "label": "Annonces produit",
+        "description": "Évolutions importantes du service que vous utilisez."
+      }
+    },
+    "transactional_note": "Les emails transactionnels (reçus, mots de passe, OTP, alertes de paiement) ne peuvent pas être désactivés.",
+    "save": "Enregistrer mes préférences",
+    "saving": "Enregistrement…",
+    "saved": "Préférences enregistrées."
+  }
+}
