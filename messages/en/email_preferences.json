@@ -1,0 +1,28 @@
+{
+  "email_preferences": {
+    "title": "Email preferences",
+    "headline": "Choose what you want to receive.",
+    "description": "Turn each Stampeo email category on or off. Essential emails (invoices, confirmations, security) are always sent.",
+    "loading": "Loading your preferences…",
+    "error_invalid_token": "This link is no longer valid. Sign in to your dashboard to manage your preferences.",
+    "error_generic": "Something went wrong. Try again or contact us.",
+    "categories": {
+      "reengagement": {
+        "label": "Activation reminders",
+        "description": "24-hour and 7-day nudges to help you finish setting up your program."
+      },
+      "marketing": {
+        "label": "Tips and updates",
+        "description": "Tips, best practices, and product news."
+      },
+      "product_updates": {
+        "label": "Product announcements",
+        "description": "Important changes to the service you use."
+      }
+    },
+    "transactional_note": "Transactional emails (receipts, password resets, OTPs, payment alerts) cannot be turned off.",
+    "save": "Save my preferences",
+    "saving": "Saving…",
+    "saved": "Preferences saved."
+  }
+}
