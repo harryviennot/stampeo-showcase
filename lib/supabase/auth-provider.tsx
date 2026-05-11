@@ -22,7 +22,8 @@ interface AuthContextType {
     email: string,
     password: string,
     name: string,
-    locale?: string
+    locale?: string,
+    phone?: string
   ) => Promise<{ data: { user: User | null } | null; error: AuthError | null }>;
   signIn: (
     email: string,
@@ -143,12 +144,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase.auth]);
 
   const signUp = useCallback(
-    async (email: string, password: string, name: string, locale?: string) => {
+    async (email: string, password: string, name: string, locale?: string, phone?: string) => {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          data: { name, locale: locale || "fr" },
+          data: { name, locale: locale || "fr", ...(phone ? { phone } : {}) },
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
