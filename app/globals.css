@@ -566,6 +566,40 @@ html {
   }
 }
 
+/* Anchor support — leave room below the fixed header when navigating
+   to a section, and flash the destination heading so deep links from
+   transactional emails are unmistakable. */
+.legal-prose h2,
+.legal-prose h3 {
+  scroll-margin-top: 6rem;
+}
+
+@keyframes legalSectionFlash {
+  0% {
+    background-color: rgba(249, 115, 22, 0.22);
+  }
+  70% {
+    background-color: rgba(249, 115, 22, 0.18);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.legal-prose h2:target,
+.legal-prose h3:target {
+  animation: legalSectionFlash 3s ease-out;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legal-prose h2:target,
+  .legal-prose h3:target {
+    animation: none;
+    background-color: rgba(249, 115, 22, 0.16);
+  }
+}
+
 .legal-prose > :first-child {
   margin-top: 0;
   padding-top: 0;
