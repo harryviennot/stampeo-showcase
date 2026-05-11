@@ -297,10 +297,6 @@ Stampeo se réserve le droit de modifier les présentes CGU. Toute modification 
 
 La poursuite de l'utilisation de la Plateforme après l'entrée en vigueur des modifications vaut acceptation des nouvelles CGU.
 
-**Historique des modifications**
-
-- **11 mai 2026** — Ajout du §8.6 « Accès support par le personnel Stampeo » et du §8.7 « Droit d'audit ». Renumérotation des sous-sections ultérieures du §8. Ajout au §9.1 d'une autorisation opérationnelle couvrant l'accès support en lecture seule. Voir §2.3 de la Politique de Confidentialité pour la disclosure correspondante.
-
 ## 15. Dispositions diverses
 
 - Si une clause des présentes CGU est jugée nulle ou inapplicable, les autres clauses restent en vigueur.

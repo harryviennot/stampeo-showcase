@@ -289,10 +289,6 @@ Stampeo reserves the right to modify these Terms. Any substantial modification w
 
 Continued use of the Platform after the effective date of modifications constitutes acceptance of the updated Terms.
 
-**Changelog**
-
-- **May 11, 2026** — Addition of §8.6 "Support Access by Stampeo Personnel" and §8.7 "Audit Right". Renumbering of subsequent §8 subsections. Addition of operational authorization in §9.1 covering read-only support access. See Privacy Policy §2.3 for the corresponding disclosure.
-
 ## 15. Miscellaneous
 
 - If any clause of these Terms is found to be void or unenforceable, the remaining clauses shall remain in effect.
