@@ -1,6 +1,6 @@
 # Conditions Générales d'Utilisation : Stampeo
 
-**Dernière mise à jour : 21 avril 2026**
+**Dernière mise à jour : 11 mai 2026**
 
 ## 1. Objet
 
@@ -181,7 +181,17 @@ L'Utilisateur Business peut, sur demande écrite motivée et avec un préavis ra
 
 À l'issue du contrat, et au choix de l'Utilisateur Business, Stampeo restitue ou supprime les données des Clients Finaux dans les délais prévus au §6.3, sauf obligation légale de conservation (notamment fiscale).
 
-### 8.6 Obligations de l'Utilisateur Business
+### 8.6 Accès support par le personnel Stampeo
+
+L'Utilisateur Business autorise Stampeo à accorder à son personnel autorisé un accès support en lecture seule à son tableau de bord, dans le contexte de tout rôle d'utilisateur (propriétaire, administrateur ou scanner) ou en se faisant passer pour un utilisateur nommé spécifique, à seule fin de support technique ou commercial, de diagnostic, d'instruction d'un usage abusif, ou de respect d'une obligation légale. Chaque session est limitée dans le temps (60 minutes maximum), auditée (identité du membre du personnel, utilisateur et rôle visés, motif déclaré, horodatages, adresse IP, et pages consultées), et déclenche une notification email au propriétaire de l'entreprise au démarrage de la session.
+
+Cet accès support est réalisé par le personnel propre de Stampeo et ne constitue **pas** une délégation à un sous-traitant ultérieur ; la liste des sous-traitants ultérieurs prévue au §8.2 / Politique de Confidentialité §4 demeure inchangée. Les conditions et garanties détaillées figurent au §2.3 de la Politique de Confidentialité.
+
+### 8.7 Droit d'audit
+
+L'Utilisateur Business peut, par demande écrite adressée à contact@stampeo.app, obtenir un export des entrées du journal d'audit relatives aux accès support (§8.6) concernant son compte. Stampeo communique cet export dans un délai de trente (30) jours à compter de la demande. La première demande de chaque année civile est traitée à titre gracieux.
+
+### 8.8 Obligations de l'Utilisateur Business
 
 L'Utilisateur Business s'engage à :
 
@@ -192,7 +202,7 @@ L'Utilisateur Business s'engage à :
 - Respecter les droits de ses Clients Finaux (articles 15 à 22 du RGPD), y compris lorsqu'une demande est reçue par un autre canal que la Plateforme (oral, email, en personne), en excluant le Client Final concerné des prochains broadcasts ou en révoquant son Pass le cas échéant
 - Ne pas utiliser la Plateforme pour envoyer des communications non sollicitées en violation de la réglementation applicable
 
-### 8.7 Restrictions d'usage des notifications de broadcast
+### 8.9 Restrictions d'usage des notifications de broadcast
 
 Les notifications promotionnelles de broadcast (§7.2 de la Politique de Confidentialité) s'appuient sur une base légale de « soft opt-in » réservée à la prospection de première partie. Pour préserver cette base légale et ne pas exposer l'Utilisateur Business à un défaut de consentement, l'Utilisateur Business s'engage à ne **pas** utiliser les broadcasts pour :
 
@@ -203,7 +213,7 @@ Les notifications promotionnelles de broadcast (§7.2 de la Politique de Confide
 
 Le non-respect de ces restrictions constitue une violation substantielle des présentes CGU et peut entraîner la suspension ou la résiliation du compte au titre du §6.2.
 
-### 8.8 Isolation des données
+### 8.10 Isolation des données
 
 Les données des Clients Finaux sont strictement isolées par entreprise. Stampeo n'effectue aucun croisement de données entre les différentes entreprises utilisatrices. Les données d'un même Client Final chez deux entreprises distinctes restent strictement séparées.
 
@@ -216,6 +226,7 @@ Les données des Clients Finaux sont strictement isolées par entreprise. Stampe
 - Ne pas tenter de contourner les limitations techniques de son tier d'abonnement
 - Être responsable de la confidentialité de ses identifiants de connexion
 - Garantir que les contenus qu'il publie via la Plateforme ne portent pas atteinte aux droits de tiers
+- Autoriser Stampeo à intervenir pour son compte durant une session d'accès support, strictement dans le périmètre de lecture seule décrit au §8.6, aux fins de diagnostic d'une anomalie signalée par l'Utilisateur Business ou détectée par Stampeo. Cette autorisation est opérationnelle et n'affecte en rien la qualité de responsable de traitement de l'Utilisateur Business à l'égard des données de ses Clients Finaux.
 
 #### Arrangements avec un Revendeur
 
@@ -285,6 +296,10 @@ Email : cm2c@cm2c.net
 Stampeo se réserve le droit de modifier les présentes CGU. Toute modification substantielle sera notifiée par email au moins 30 jours avant son entrée en vigueur.
 
 La poursuite de l'utilisation de la Plateforme après l'entrée en vigueur des modifications vaut acceptation des nouvelles CGU.
+
+**Historique des modifications**
+
+- **11 mai 2026** — Ajout du §8.6 « Accès support par le personnel Stampeo » et du §8.7 « Droit d'audit ». Renumérotation des sous-sections ultérieures du §8. Ajout au §9.1 d'une autorisation opérationnelle couvrant l'accès support en lecture seule. Voir §2.3 de la Politique de Confidentialité pour la disclosure correspondante.
 
 ## 15. Dispositions diverses
 

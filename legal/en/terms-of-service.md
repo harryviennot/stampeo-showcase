@@ -1,6 +1,6 @@
 # Terms of Service: Stampeo
 
-**Last updated: April 21, 2026**
+**Last updated: May 11, 2026**
 
 ## 1. Purpose
 
@@ -176,7 +176,17 @@ On termination of the Subscription, Stampeo will delete all End Customer data as
 
 Stampeo will make available, on reasonable request, information necessary to demonstrate compliance with this section, and will permit reasonable audits proportionate to a SaaS arrangement (typically a written questionnaire plus, where justified, an onsite visit at the Business User's cost, subject to confidentiality).
 
-### 8.6 Business User Obligations
+### 8.6 Support Access by Stampeo Personnel
+
+The Business User authorizes Stampeo to grant authorized personnel read-only support access to the Business User's dashboard, in the context of any business user role (owner, administrator, or scanner) or as a specific named user, for the sole purpose of technical or commercial support, debugging, abuse investigation, or compliance with a legal obligation. Each session is time-limited (maximum 60 minutes), audited (personnel identity, target user and role, stated reason, timestamps, IP address, and pages viewed), and triggers an email notification to the business owner at session start.
+
+This support access is provided by Stampeo's own personnel and is **not** a sub-processing arrangement; the sub-processor list at §8.2 / Privacy Policy §4 is unchanged. The detailed conditions and safeguards are described in Privacy Policy §2.3.
+
+### 8.7 Audit Right
+
+The Business User may, by written request to contact@stampeo.app, obtain an export of the audit-log entries pertaining to support access (§8.6) to their account. Stampeo will deliver the export within thirty (30) days of the request. The first such request per calendar year is provided free of charge.
+
+### 8.8 Business User Obligations
 
 Business Users agree to:
 
@@ -186,7 +196,7 @@ Business Users agree to:
 - Respect End Customer rights under GDPR Articles 15–22 and honor opt-out requests received through any channel (verbal, email, messaging, or otherwise), by excluding the End Customer from future broadcasts or revoking their pass where appropriate
 - Not use the Platform to send unsolicited communications in violation of applicable regulations
 
-### 8.7 Restrictions on Broadcast Use
+### 8.9 Restrictions on Broadcast Use
 
 The promotional broadcast feature relies on the "soft opt-in" exemption of the ePrivacy Directive (Art. 13(2)) and French LCEN Art. L34-5, which applies only where a business markets its own similar products or services to its own existing customers. To keep this legal basis intact and to protect End Customers, Business Users must not use the broadcast feature to:
 
@@ -197,7 +207,7 @@ The promotional broadcast feature relies on the "soft opt-in" exemption of the e
 
 Breach of this section is grounds for immediate suspension under §6.2, without refund.
 
-### 8.8 Data Isolation
+### 8.10 Data Isolation
 
 End Customer data is strictly isolated per business. Stampeo performs no cross-business data matching.
 
@@ -210,6 +220,7 @@ End Customer data is strictly isolated per business. Stampeo performs no cross-b
 - Not attempt to circumvent technical limitations of their subscription tier
 - Be responsible for the confidentiality of their login credentials
 - Ensure that content published via the Platform does not infringe third-party rights
+- Authorize Stampeo to act on their behalf during a support access session, strictly within the read-only scope described in §8.6, for the purpose of diagnosing issues the Business User has reported or that Stampeo has detected. This authorization is operational only and does not affect the Business User's status as data controller for its End Customer data.
 
 #### Reseller arrangements
 
@@ -277,6 +288,10 @@ Email: cm2c@cm2c.net
 Stampeo reserves the right to modify these Terms. Any substantial modification will be notified by email at least 30 days before taking effect.
 
 Continued use of the Platform after the effective date of modifications constitutes acceptance of the updated Terms.
+
+**Changelog**
+
+- **May 11, 2026** — Addition of §8.6 "Support Access by Stampeo Personnel" and §8.7 "Audit Right". Renumbering of subsequent §8 subsections. Addition of operational authorization in §9.1 covering read-only support access. See Privacy Policy §2.3 for the corresponding disclosure.
 
 ## 15. Miscellaneous
 
