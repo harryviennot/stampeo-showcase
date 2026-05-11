@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 21 avril 2026**
+**Dernière mise à jour : 11 mai 2026**
 
 ## 1. Introduction
 
@@ -22,6 +22,18 @@ L'entreprise utilisant Stampeo est le **responsable de traitement** des données
 
 Chaque entreprise choisit les informations qu'elle collecte auprès de ses clients (anonyme, email seul, prénom + email, ou champs personnalisés). Par défaut, l'email et le prénom sont activés.
 
+### 2.3 Accès support par le personnel Stampeo
+
+Des membres autorisés du personnel Stampeo peuvent, de manière strictement encadrée, accéder au tableau de bord d'un utilisateur Business à seule fin de fournir un support technique ou commercial, de diagnostiquer une anomalie signalée ou de répondre à une obligation légale. Cet accès :
+
+- est **en lecture seule** — aucune donnée ne peut être modifiée, créée ou supprimée pendant la session ;
+- peut être accordé dans le contexte de n'importe quel rôle d'utilisateur (propriétaire, administrateur ou scanner), et peut viser un rôle générique ou un utilisateur nommé spécifique, afin de reproduire fidèlement les anomalies propres à un rôle ;
+- déclenche une **notification automatique par email au propriétaire de l'entreprise** au démarrage de la session, indépendamment du rôle ou de l'utilisateur ciblé ;
+- est limité à une durée maximale de **60 minutes**, à l'issue desquelles la session expire automatiquement ;
+- est consigné à des fins d'audit : identité du membre du personnel, entreprise concernée, utilisateur et rôle visés, motif déclaré, horodatages de début et de fin, adresse IP du membre du personnel, et pages consultées durant la session.
+
+Base légale : intérêt légitime (intérêt de l'exploitant à fournir un support et à assurer la sécurité de la plateforme), mis en balance avec les intérêts de l'utilisateur Business par les garanties décrites ci-dessus (lecture seule, durée limitée, audité, notifié). Les journaux d'accès support sont conservés pendant 24 mois (voir §8).
+
 ## 3. Données collectées
 
 ### 3.1 Utilisateurs Business
@@ -38,6 +50,7 @@ Chaque entreprise choisit les informations qu'elle collecte auprès de ses clien
 | Informations de paiement | Facturation via Stripe | Exécution du contrat | Oui |
 | Logo et visuels de marque | Fonctionnement du service | Exécution du contrat | Oui |
 | Langue préférée (locale) | Localisation de l'interface et des emails transactionnels | Intérêt légitime | Non |
+| Journaux d'accès support (sessions, horodatages, pages consultées, IP du personnel) | Traçabilité d'audit des sessions support prévues au §2.3 | Intérêt légitime | Oui (opérationnel) |
 
 Le site web, le numéro de téléphone et la réponse « comment vous avez connu Stampeo » sont collectés à l'inscription et stockés dans une table interne accessible uniquement à l'administration, utilisée pour le support, les relances et l'analyse de l'onboarding. Ces informations ne sont pas exposées aux autres utilisateurs de la Plateforme.
 
@@ -164,6 +177,9 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Dernier message de notification wallet | Seul le dernier message est conservé par client (écrasé à chaque notification), sans historique |
 | Statistiques de livraison des broadcasts (agrégées) | 24 mois |
 | Journalisation des échecs de webhooks Stripe (débogage interne) | 90 jours |
+| Journaux d'accès support (sessions et entrées d'audit associées, voir §2.3) | 24 mois, puis suppression |
+
+La durée de conservation de 24 mois pour les journaux d'accès support est définie pour permettre l'instruction d'un éventuel incident de sécurité tout en restant proportionnée à sa finalité, conformément aux recommandations de la CNIL en matière de journalisation des accès.
 
 Après suppression d'un compte Business, toutes les données associées (y compris celles de ses clients) sont supprimées dans un délai de 60 jours.
 
@@ -191,6 +207,10 @@ Conformément au RGPD, vous disposez des droits suivants :
 **Clients finaux :** contactez en priorité l'entreprise gérant votre carte. Vous pouvez aussi nous écrire à contact@stampeo.app.
 
 Nous répondons dans un délai de 30 jours. En cas de litige, vous pouvez saisir la CNIL : www.cnil.fr.
+
+### 10.1 Droit d'opposition à l'accès support
+
+Les utilisateurs Business peuvent, par demande écrite adressée à contact@stampeo.app, demander qu'aucun accès support (§2.3) ne soit ouvert sur leur compte en dehors d'un ticket de support qu'ils ont eux-mêmes ouvert. Cette possibilité est offerte à titre de courtoisie contractuelle et ne s'applique pas aux cas où un tel accès est requis par la loi, par une décision judiciaire, ou par un incident de sécurité imminent affectant la Plateforme.
 
 ## 11. Sécurité
 
