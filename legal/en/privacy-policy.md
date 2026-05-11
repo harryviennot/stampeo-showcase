@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: April 21, 2026**
+**Last updated: May 11, 2026**
 
 ## 1. Introduction
 
@@ -22,6 +22,18 @@ The business using Stampeo is the **data controller** for its own customers' dat
 
 Each business chooses what information to collect from its customers (anonymous, email only, first name + email, or custom fields). By default, email and first name are enabled.
 
+### 2.3 Support access by Stampeo personnel
+
+Authorized Stampeo personnel may, on a strictly limited basis, access a Business User's dashboard for the sole purpose of providing technical or commercial support, debugging a reported issue, or fulfilling a legal obligation. Such access:
+
+- is **read-only** — no data can be modified, created or deleted during the session;
+- may be granted in the context of any business user role (owner, administrator, or scanner), and may be scoped to either a chosen role or a specific named user, in order to faithfully reproduce role-specific issues;
+- triggers an automatic email notification to the **business owner** at session start, regardless of which role or user was targeted;
+- is limited to a maximum duration of **60 minutes**, after which the session expires automatically;
+- is logged for audit: the personnel member's identity, the business concerned, the target user and role, the stated reason, start and end timestamps, the personnel member's IP address, and the pages viewed during the session.
+
+Legal basis: legitimate interest (the operator's interest in providing support and ensuring platform security), balanced against the Business User's interests by the safeguards described above (read-only, time-limited, audited, notified). Support access logs are retained for 24 months (see §8).
+
 ## 3. Data Collected
 
 ### 3.1 Business Users
@@ -38,6 +50,7 @@ Each business chooses what information to collect from its customers (anonymous,
 | Payment information | Billing via Stripe | Performance of contract | Yes |
 | Logo and brand assets | Service operation | Performance of contract | Yes |
 | Preferred language (locale) | Interface localization and transactional emails | Legitimate interest | No |
+| Support access logs (sessions, timestamps, pages viewed, IP of personnel) | Audit trail for support sessions per §2.3 | Legitimate interest | Yes (operational) |
 
 The website, phone number, and "how you heard about us" fields are collected at signup and stored in an admin-only internal table used for support, outreach, and onboarding analytics. They are not shown to other users of the Platform.
 
@@ -164,6 +177,9 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Latest wallet notification text | Only the latest message is retained per customer (overwritten on each notification); no history |
 | Broadcast delivery metrics (aggregate) | 24 months |
 | Stripe webhook failure records (internal debugging) | 90 days |
+| Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
+
+The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
 
 After a Business account is deleted, all associated data (including end customer data) is deleted within 60 days.
 
@@ -189,6 +205,10 @@ Under the GDPR, you have the following rights:
 **Business users and employees:** contact us at contact@stampeo.app.
 
 **End customers:** contact the business managing your loyalty card first. You may also reach us at contact@stampeo.app.
+
+### 10.1 Right to object to support access
+
+Business Users may, by written request to contact@stampeo.app, ask that no support access (§2.3) be granted to their account outside of an explicit support ticket they have opened. This option is offered as a contractual courtesy and does not affect cases where access is required by law, by a court order, or by an imminent security incident on the Platform.
 
 We respond to all requests within 30 days. If you have a complaint, you may file it with the CNIL (French data protection authority): www.cnil.fr.
 
