@@ -172,11 +172,22 @@ export function OnboardingWizard() {
     setStep(1);
   }, []);
 
-  const handleAuthCompleted = useCallback(() => {
+  const handleAuthCompleted = useCallback(async () => {
     completeStep(2);
+    // Email signup writes phone to public.users via the auth trigger (raw E.164).
+    // PUT /profile/me with the same phone so the validator normalizes it to
+    // the canonical dashed format. OAuth completion handles its own sync above.
+    if (data.phone) {
+      const supabase = createClient();
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (token) {
+        await updateUserProfile({ phone: data.phone }, token);
+      }
+    }
     clearDraft();
     redirectToApp();
-  }, [completeStep]);
+  }, [completeStep, data.phone]);
 
   const stepDots = useMemo(() => [1, 2] as const, []);
 
