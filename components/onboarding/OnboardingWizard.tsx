@@ -1,596 +1,249 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import posthog from "posthog-js";
-import { useOnboardingStore, type OnboardingData } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { createClient } from "@/lib/supabase/client";
+import { updateUserProfile } from "@/lib/onboarding";
+import { UserInfoStep } from "./steps/UserInfoStep";
 import {
-  getUserBusinesses,
-  saveOnboardingProgress,
-  getOnboardingProgress,
-} from "@/lib/onboarding";
-import { applyTheme, resetTheme, getThemeColor } from "@/lib/theme";
-import { OnboardingCardPreview } from "./OnboardingCardPreview";
-import { BusinessProfileStep } from "./steps/BusinessProfileStep";
-import { CardPreviewStep } from "./steps/CardPreviewStep";
-import { AboutYouStep } from "./steps/AboutYouStep";
-import { CreateAccountStep } from "./steps/CreateAccountStep";
-import { FoundingPartnerStep } from "./steps/FoundingPartnerStep";
-import { ApplicationSubmittedStep } from "./steps/ApplicationSubmittedStep";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+  AuthenticationStep,
+  type AuthPhase,
+} from "./steps/AuthenticationStep";
 
-const SESSION_STORAGE_KEY = "stampeo_onboarding_session_v2";
+const OAUTH_STASH_KEY = "stampeo_onboarding_oauth_pending_v1";
+const DRAFT_STORAGE_KEY = "stampeo_onboarding_draft_v1";
 
 const STEP_NAMES: Record<number, string> = {
-  1: "business_profile",
-  2: "card_design",
-  3: "about_you",
-  4: "account",
-  5: "plan",
-  6: "heard_from",
+  1: "user_info",
+  2: "authentication",
 };
+
+interface DraftData {
+  name: string;
+  phone: string;
+}
+
+interface OAuthStash {
+  name?: string;
+  phone?: string;
+}
+
+function loadDraft(): DraftData {
+  if (typeof window === "undefined") return { name: "", phone: "" };
+  try {
+    const raw = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+    if (!raw) return { name: "", phone: "" };
+    const parsed = JSON.parse(raw) as Partial<DraftData>;
+    return { name: parsed.name ?? "", phone: parsed.phone ?? "" };
+  } catch {
+    return { name: "", phone: "" };
+  }
+}
+
+function saveDraft(data: DraftData) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // ignore quota
+  }
+}
+
+function clearDraft() {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+    sessionStorage.removeItem(OAUTH_STASH_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+function readOAuthStash(): OAuthStash | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(OAUTH_STASH_KEY);
+    return raw ? (JSON.parse(raw) as OAuthStash) : null;
+  } catch {
+    return null;
+  }
+}
+
+function redirectToApp() {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
+  window.location.href = appUrl;
+}
 
 export function OnboardingWizard() {
   const t = useTranslations("onboarding.steps");
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { session, loading: authLoading } = useAuth();
-  const isAuthenticated = !!session?.access_token;
-  const store = useOnboardingStore(isAuthenticated, authLoading);
-  const [checkingBusinesses, setCheckingBusinesses] = useState(false);
-  const [authChecked, setAuthChecked] = useState(false);
-  const [animatingStampIndex, setAnimatingStampIndex] = useState<number | null>(null);
-  const [vanishingStampIndex, setVanishingStampIndex] = useState<number | null>(null);
-  const [direction, setDirection] = useState(0);
-  const [prevStep, setPrevStep] = useState(1);
-  const hasTrackedStart = useRef(false);
+  const justAuthed = searchParams.get("just_authed") === "oauth";
+
+  const [step, setStep] = useState<1 | 2>(1);
+  const [authPhase, setAuthPhase] = useState<AuthPhase>("choose");
+  const [data, setData] = useState<DraftData>(() => loadDraft());
+  const [email, setEmail] = useState("");
+
+  const startedRef = useRef(false);
+  const oauthHandledRef = useRef(false);
 
   useEffect(() => {
-    if (hasTrackedStart.current) return;
-    if (!store.isInitialized || authLoading || checkingBusinesses || !authChecked) return;
-    hasTrackedStart.current = true;
+    saveDraft(data);
+  }, [data]);
+
+  // Already-signed-in users (no oauth flag) bypass the wizard.
+  useEffect(() => {
+    if (justAuthed) return;
+    if (authLoading) return;
+    if (session?.access_token) {
+      clearDraft();
+      redirectToApp();
+    }
+  }, [justAuthed, authLoading, session]);
+
+  // OAuth round-trip completion: sync stashed step-1 fields, then redirect.
+  useEffect(() => {
+    if (!justAuthed) return;
+    if (authLoading) return;
+    if (oauthHandledRef.current) return;
+
+    if (!session?.access_token) {
+      // Edge case: came back with the flag but no session (cookies wiped,
+      // provider rejection, etc). Drop the flag so the wizard renders normally.
+      oauthHandledRef.current = true;
+      router.replace("/onboarding");
+      return;
+    }
+
+    oauthHandledRef.current = true;
+    (async () => {
+      const stash = readOAuthStash();
+      const supabase = createClient();
+      const meta: Record<string, unknown> = {};
+      if (stash?.name && stash.name.trim()) meta.name = stash.name.trim();
+      if (stash?.phone && stash.phone.trim()) meta.phone = stash.phone.trim();
+
+      if (Object.keys(meta).length > 0) {
+        await supabase.auth.updateUser({ data: meta });
+        if (stash?.phone && stash.phone.trim()) {
+          await updateUserProfile(
+            { phone: stash.phone.trim() },
+            session.access_token
+          );
+        }
+      }
+
+      clearDraft();
+      redirectToApp();
+    })();
+  }, [justAuthed, authLoading, session, router]);
+
+  useEffect(() => {
+    if (startedRef.current) return;
+    if (authLoading || justAuthed) return;
+    startedRef.current = true;
     posthog.capture("onboarding_wizard_started", {
-      resumed_at_step: store.currentStep,
-      is_authenticated: isAuthenticated,
+      is_authenticated: !!session?.access_token,
     });
-  }, [
-    store.isInitialized,
-    store.currentStep,
-    authLoading,
-    checkingBusinesses,
-    authChecked,
-    isAuthenticated,
-  ]);
+  }, [authLoading, justAuthed, session]);
 
-  // Clear session storage only when actually leaving the site (tab close / external navigation)
-  // Do NOT clear on component unmount — locale changes cause unmount/remount
-  useEffect(() => {
-    const clearSessionStorage = () => {
-      sessionStorage.removeItem(SESSION_STORAGE_KEY);
-    };
+  const completeStep = useCallback(
+    (currentStep: 1 | 2) => {
+      posthog.capture("onboarding_step_completed", {
+        step: currentStep,
+        step_name: STEP_NAMES[currentStep] ?? `step_${currentStep}`,
+      });
+    },
+    []
+  );
 
-    window.addEventListener("beforeunload", clearSessionStorage);
+  const handleStep1Next = useCallback(() => {
+    completeStep(1);
+    setStep(2);
+    setAuthPhase("choose");
+  }, [completeStep]);
 
-    return () => {
-      window.removeEventListener("beforeunload", clearSessionStorage);
-    };
+  const handleBackToStep1 = useCallback(() => {
+    setStep(1);
   }, []);
 
-  // Card position: left for the identity step (1), right for design step onwards (2+)
-  const cardPosition = store.currentStep < 2 ? "left" : "right";
+  const handleAuthCompleted = useCallback(() => {
+    completeStep(2);
+    clearDraft();
+    redirectToApp();
+  }, [completeStep]);
 
-  // When the wizard moves to a new step, snap the viewport back to the top.
-  // Without this, going from a tall step (e.g. card design with preview) to a
-  // short step leaves the user scrolled past the new content, sometimes with
-  // the form hidden behind the fixed Stampeo header.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [store.currentStep]);
+  const stepDots = useMemo(() => [1, 2] as const, []);
 
-  // Track if user has visited the design step (now step 2) to persist colors
-  const hasVisitedDesignStep = store.completedSteps.includes(1) || store.currentStep >= 2;
-
-  // Update page accent color to match their business color (once they've reached design step)
-  useEffect(() => {
-    const { backgroundColor, accentColor } = store.data.cardDesign || {};
-    if (backgroundColor && accentColor && hasVisitedDesignStep) {
-      const themeColor = getThemeColor(accentColor, backgroundColor);
-      applyTheme(themeColor);
-    }
-
-    // Cleanup: reset to default when leaving onboarding
-    return () => {
-      resetTheme();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store.data.cardDesign?.backgroundColor, store.data.cardDesign?.accentColor, hasVisitedDesignStep]);
-
-  // Check if authenticated user already has a business (completed onboarding)
-  useEffect(() => {
-    async function checkUserBusinesses() {
-      if (!session?.access_token || authChecked) return;
-
-      setCheckingBusinesses(true);
-      const { data: businesses } = await getUserBusinesses(session.access_token);
-
-      if (businesses.length > 0) {
-        // User has existing businesses. If their wizard store already has a
-        // businessId (they just finished onboarding and somehow ended up back
-        // here) OR they have no in-progress data, send them straight to the app.
-        // Only let them stay if they have partial onboarding data without a
-        // created business yet (they're actively creating a new one).
-        const hasOnboardingData = !!store.data.businessName;
-        const hasCompletedBusiness = !!store.data.businessId;
-        if (!hasOnboardingData || hasCompletedBusiness) {
-          const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
-          window.location.href = appUrl;
-          return;
-        }
-      }
-
-      // User is authenticated but needs to complete onboarding
-      // If they're on Step 4 (create account), skip to Step 5
-      if (store.currentStep === 4) {
-        store.goToStep(5);
-      }
-
-      setCheckingBusinesses(false);
-      setAuthChecked(true);
-    }
-
-    if (!authLoading && session) {
-      checkUserBusinesses();
-    } else if (!authLoading && !session) {
-      setAuthChecked(true);
-    }
-  }, [session, authLoading, authChecked, store]);
-
-  // Sync progress to backend when authenticated and data changes
-  useEffect(() => {
-    if (!session?.access_token || !store.isInitialized) return;
-    // Only save if we have meaningful data (at least business name)
-    if (!store.data.businessName) return;
-
-    const saveToBackend = async () => {
-      await saveOnboardingProgress(
-        {
-          business_name: store.data.businessName,
-          url_slug: store.data.urlSlug,
-          owner_name: store.data.ownerName || undefined,
-          category: store.data.category || undefined,
-          description: store.data.description || undefined,
-          email: store.data.email || undefined,
-          website: store.data.website || undefined,
-          phone: store.data.phone || undefined,
-          heard_from: store.data.heardFrom || undefined,
-          heard_from_other: store.data.heardFromOther || undefined,
-          team_size: store.data.teamSize || undefined,
-          locations: store.data.locations || undefined,
-          primary_goal: store.data.primaryGoal || undefined,
-          card_design: store.data.cardDesign ? {
-            background_color: store.data.cardDesign.backgroundColor,
-            accent_color: store.data.cardDesign.accentColor,
-            icon_color: store.data.cardDesign.iconColor || undefined,
-            logo_url: store.data.cardDesign.logoUrl || undefined,
-            stamp_icon: store.data.cardDesign.stampIcon || undefined,
-            reward_icon: store.data.cardDesign.rewardIcon || undefined,
-          } : undefined,
-          current_step: store.currentStep,
-          completed_steps: store.completedSteps,
-        },
-        session.access_token
-      );
-    };
-
-    // Debounce the save to avoid too many API calls
-    const timeoutId = setTimeout(saveToBackend, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [
-    session?.access_token,
-    store.isInitialized,
-    store.data.businessName,
-    store.data.urlSlug,
-    store.data.ownerName,
-    store.data.category,
-    store.data.description,
-    store.data.email,
-    store.data.website,
-    store.data.phone,
-    store.data.heardFrom,
-    store.data.heardFromOther,
-    store.data.teamSize,
-    store.data.locations,
-    store.data.primaryGoal,
-    store.data.cardDesign,
-    store.currentStep,
-    store.completedSteps,
-  ]);
-
-  // On initial load, fetch progress from backend if authenticated
-  useEffect(() => {
-    if (!session?.access_token || authLoading || !authChecked) return;
-
-    const fetchFromBackend = async () => {
-      const { data: serverProgress } = await getOnboardingProgress(session.access_token);
-
-      // Only restore from server if we have server data and local data is empty/default
-      if (serverProgress && !store.data.businessName) {
-        store.updateData({
-          businessName: serverProgress.business_name,
-          urlSlug: serverProgress.url_slug,
-          ownerName: serverProgress.owner_name || "",
-          category: serverProgress.category || null,
-          description: serverProgress.description || "",
-          email: serverProgress.email || "",
-          website: serverProgress.website || "",
-          phone: serverProgress.phone || "",
-          heardFrom: serverProgress.heard_from || null,
-          heardFromOther: serverProgress.heard_from_other || "",
-          teamSize: (serverProgress.team_size as OnboardingData["teamSize"]) || null,
-          locations: (serverProgress.locations as OnboardingData["locations"]) || null,
-          primaryGoal: (serverProgress.primary_goal as OnboardingData["primaryGoal"]) || null,
-          cardDesign: serverProgress.card_design ? {
-            backgroundColor: serverProgress.card_design.background_color,
-            accentColor: serverProgress.card_design.accent_color,
-            iconColor: serverProgress.card_design.icon_color || serverProgress.card_design.accent_color,
-            logoUrl: serverProgress.card_design.logo_url || null,
-            stampIcon: serverProgress.card_design.stamp_icon || 'checkmark',
-            rewardIcon: serverProgress.card_design.reward_icon || 'gift',
-          } : store.data.cardDesign,
-        });
-
-        // Restore step progress
-        if (serverProgress.current_step > store.currentStep) {
-          store.goToStep(serverProgress.current_step);
-        }
-        serverProgress.completed_steps.forEach((step) => {
-          if (!store.completedSteps.includes(step)) {
-            store.markStepCompleted(step);
-          }
-        });
-      }
-    };
-
-    fetchFromBackend();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.access_token, authLoading, authChecked]);
-
-  // Handle step completion with animation
-  const handleStepComplete = useCallback((nextStep: number) => {
-    const currentStep = store.currentStep;
-
-    posthog.capture("onboarding_step_completed", {
-      step: currentStep,
-      step_name: STEP_NAMES[currentStep] ?? `step_${currentStep}`,
-      is_authenticated: isAuthenticated,
-    });
-
-    // Mark current step as completed (triggers stamp animation)
-    store.markStepCompleted(currentStep);
-
-    // Animate the stamp (0-indexed, so step 1 = index 0)
-    setAnimatingStampIndex(currentStep - 1);
-
-    // Wait for animation, then advance
-    setTimeout(() => {
-      setAnimatingStampIndex(null);
-
-      // Skip step 4 if already authenticated
-      if (nextStep === 4 && isAuthenticated) {
-        store.goToStep(5);
-      } else {
-        setPrevStep(currentStep); // Update previous step for animation logic
-        setDirection(nextStep > currentStep ? 1 : -1);
-        store.goToStep(nextStep);
-      }
-    }, 50);
-  }, [store, isAuthenticated]);
-
-  // Custom next step handlers for each step
-  const handleStep1Next = useCallback(() => {
-    handleStepComplete(2);
-  }, [handleStepComplete]);
-
-  const handleStep2Next = useCallback(() => {
-    handleStepComplete(3);
-  }, [handleStepComplete]);
-
-  const handleStep3Next = useCallback(() => {
-    handleStepComplete(4);
-  }, [handleStepComplete]);
-
-  const handleStep4Next = useCallback(() => {
-    handleStepComplete(5);
-  }, [handleStepComplete]);
-
-  const handleStep5Next = useCallback(() => {
-    const currentStep = store.currentStep;
-
-    posthog.capture("onboarding_step_completed", {
-      step: currentStep,
-      step_name: STEP_NAMES[currentStep] ?? `step_${currentStep}`,
-      is_authenticated: isAuthenticated,
-    });
-
-    // Transition to step 6 immediately (don't mark step 5 as completed yet)
-    setPrevStep(currentStep);
-    setDirection(1);
-    store.goToStep(6);
-
-    // After card slides in, mark step completed and animate the reward stamp
-    setTimeout(() => {
-      store.markStepCompleted(currentStep);
-      setAnimatingStampIndex(5); // 6th stamp (reward) is index 5
-      setTimeout(() => setAnimatingStampIndex(null), 50);
-    }, 600);
-  }, [store, isAuthenticated]);
-
-  // Handle going back with vanishing stamp animation
-  const handleGoBack = useCallback(() => {
-    const currentStep = store.currentStep;
-
-    // Animate the stamp vanishing (the stamp for the previous step, 0-indexed)
-    // When on step 2, going back means stamp at index 0 (step 1) should vanish
-    const stampToVanish = currentStep - 2; // -2 because: current step - 1 (to get prev step) - 1 (for 0-index)
-
-    if (stampToVanish >= 0) {
-      setVanishingStampIndex(stampToVanish);
-    }
-
-    // Wait for animation, then go back
-    setTimeout(() => {
-      setVanishingStampIndex(null);
-      setPrevStep(currentStep);
-      setDirection(-1);
-      store.prevStep();
-    }, 300);
-  }, [store]);
-
-  // Don't render until we've loaded from localStorage and checked auth
-  if (!store.isInitialized || authLoading || checkingBusinesses || !authChecked) {
+  if (justAuthed) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+      <div className="flex flex-col items-center justify-center gap-3 min-h-[40vh]">
+        <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm text-[var(--muted-foreground)]">
+          {t("settingUp")}
+        </p>
+      </div>
+    );
+  }
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[40vh]">
         <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
-  const renderStep = () => {
-    switch (store.currentStep) {
-      case 1:
-        return <BusinessProfileStep store={store} onNext={handleStep1Next} />;
-      case 2:
-        return (
-          <CardPreviewStep
-            store={store}
-            onNext={handleStep2Next}
-            onBack={handleGoBack}
-          />
-        );
-      case 3:
-        return (
-          <AboutYouStep
-            store={store}
-            onNext={handleStep3Next}
-            onBack={handleGoBack}
-          />
-        );
-      case 4:
-        return (
-          <CreateAccountStep
-            store={store}
-            onNext={handleStep4Next}
-            onBack={handleGoBack}
-          />
-        );
-      case 5:
-        return <FoundingPartnerStep store={store} onNext={handleStep5Next} />;
-      case 6:
-        return <ApplicationSubmittedStep store={store} />;
-      default:
-        return <BusinessProfileStep store={store} onNext={handleStep1Next} />;
-    }
-  };
-
-  // Variants for step transitions (full card animation - used for special 2↔3 transitions)
-  const stepVariants = {
-    enter: (custom: { direction: number; isSpecial: boolean }) => {
-      // Standard transition
-
-      if (custom.isSpecial) {
-        // Step 2 -> 3 (Enter Form 3 from Left)
-        if (custom.direction > 0) {
-          // Use % in string if needed, but here simple number might be safer or string "-100%"
-          return { x: "-100%", opacity: 0, scale: 0.7, zIndex: 10, width: "100%" };
-        }
-        // Step 3 -> 2 (Enter Form 2 from Right)
-        return { x: "100%", opacity: 0, scale: 0.7, zIndex: 10, width: "100%" };
-      }
-
-      return {
-        x: custom.direction > 0 ? 50 : -50,
-        opacity: 0,
-        scale: 0.98,
-        zIndex: 10,
-        width: "100%"
-      };
-    },
-    center: {
-      zIndex: 10,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      width: "100%", // Explicit width to match exit state
-      transition: {
-        type: "tween" as const,
-        ease: "easeInOut" as const,
-        duration: 0.5
-      }
-    },
-    exit: () => {
-      // Instant exit - form just disappears, no animation
-      return {
-        opacity: 0,
-        transition: { duration: 0 }
-      };
-    }
-  };
-
-  // Determine if this is a special transition (1↔2) that needs full card animation —
-  // the card swaps from the left side (identity step) to the right (design step).
-  const isSpecialTransition =
-    (prevStep === 1 && store.currentStep === 2) ||
-    (prevStep === 2 && store.currentStep === 1);
-
-  // Step labels component - extracted to avoid duplication
-  const renderStepLabels = () => (
-    <div className="hidden lg:flex justify-center gap-8 mb-6 text-sm">
-      {[
-        { step: 1, label: t("business") },
-        { step: 2, label: t("design") },
-        { step: 3, label: t("you") },
-        { step: 4, label: t("account") },
-        { step: 5, label: t("plan") },
-        { step: 6, label: t("done") },
-      ].map(({ step, label }) => (
-        <button
-          key={step}
-          type="button"
-          onClick={() => {
-            // Prevent going back to earlier steps once business is created
-            if (store.data.businessId && step < 5) return;
-            if (store.completedSteps.includes(step) && step !== store.currentStep) {
-              setPrevStep(store.currentStep);
-              setDirection(step > store.currentStep ? 1 : -1);
-              store.goToStep(step);
-            }
-          }}
-          disabled={!store.completedSteps.includes(step) || (step === 4 && isAuthenticated) || (!!store.data.businessId && step < 6)}
-          className={`transition-colors duration-200 ${step === store.currentStep
-            ? "text-[var(--accent)] font-medium"
-            : store.completedSteps.includes(step)
-              ? "text-[var(--accent)] hover:underline cursor-pointer"
-              : "text-[var(--muted-foreground)] cursor-default"
-            }`}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
-
-  // For step 5 (plan selection), use full-width layout
-  const isFullWidthStep = store.currentStep === 5;
-
-  // On mobile, only show the card preview when the user is editing the design (step 2).
-  // Other steps don't need it taking up half the viewport above the form.
-  const hidesPreviewOnMobile = store.currentStep !== 2;
-
-  // Detect if entering from step 5 for slide-in animation
-  const isEnteringFromStep5 = prevStep === 5 && store.currentStep === 6;
-
-  // Calculate filled stamps count - on step 6, show 5 initially then 6 after step 5 is marked complete
-  const filledStampsCount = store.currentStep === 6
-    ? (store.completedSteps.includes(5) ? 6 : 5)
-    : store.currentStep - 1;
+  // If a logged-in user landed here (the redirect effect above will run, but
+  // render nothing while it does to avoid flashing the wizard).
+  if (session?.access_token) {
+    return null;
+  }
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-1 sm:px-4">
-      {/* LayoutGroup enables layout animations across components */}
-      <LayoutGroup>
-        <div className={`grid grid-cols-1 gap-8 lg:gap-12 items-center min-h-0 lg:min-h-[70vh] ${isFullWidthStep ? "" : "lg:grid-cols-2"}`}>
-          {/* Card Panel - animated in/out for full-width steps */}
-          <AnimatePresence>
-            {!isFullWidthStep && (
-              <motion.div
-                layout="position"
-                initial={isEnteringFromStep5 ? { x: "100%", opacity: 0 } : { opacity: 0, scale: 0.9 }}
-                animate={{ x: 0, opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className={`${hidesPreviewOnMobile ? "hidden lg:flex" : "flex"} items-center justify-center order-first ${cardPosition === "left" ? "lg:order-first" : "lg:order-last"}`}
-                transition={{
-                  type: "tween",
-                  ease: "easeInOut",
-                  duration: 0.4
-                }}
-              >
-                <div className="w-full max-w-[360px]">
-                  <OnboardingCardPreview
-                    businessName={store.data.businessName}
-                    category={store.data.category}
-                    completedSteps={filledStampsCount}
-                    animatingStampIndex={animatingStampIndex}
-                    vanishingStampIndex={vanishingStampIndex}
-                    design={store.data.cardDesign}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+    <div className="w-full max-w-md mx-auto px-4">
+      <div className="mb-6 flex justify-center gap-2">
+        {stepDots.map((dot) => (
+          <div
+            key={dot}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              dot === step
+                ? "w-6 bg-[var(--accent)]"
+                : dot < step
+                  ? "w-2 bg-[var(--accent)]"
+                  : "w-2 bg-[var(--muted)]"
+            }`}
+          />
+        ))}
+      </div>
 
-          {/* Form Panel */}
-          <motion.div
-            layout="position"
-            className={`flex flex-col justify-center relative order-last ${cardPosition === "left" ? "lg:order-last" : "lg:order-first"}`}
-            transition={{
-              type: "tween",
-              ease: "easeInOut",
-              duration: 0.5
-            }}
-          >
-            {/* Mobile step indicator — visible whether or not the card preview is shown */}
-            <div className="mb-4 flex justify-center gap-2 lg:hidden">
-              {[1, 2, 3, 4, 5, 6].map((step) => (
-                <div
-                  key={step}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${store.completedSteps.includes(step)
-                    ? "bg-[var(--accent)]"
-                    : step === store.currentStep
-                      ? "bg-[var(--accent)] ring-2 ring-[var(--accent)]/30"
-                      : "bg-[var(--muted)]"
-                    }`}
-                />
-              ))}
-            </div>
-
-            {isSpecialTransition ? (
-              // SPECIAL TRANSITION (2↔3): New form animates in, old form disappears instantly
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={store.currentStep}
-                  custom={{ direction, isSpecial: true }}
-                  variants={stepVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="w-full"
-                >
-                  {renderStepLabels()}
-                  <motion.div
-                    layout
-                    className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-4 sm:p-8 shadow-sm overflow-hidden"
-                    transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
-                  >
-                    {renderStep()}
-                  </motion.div>
-                </motion.div>
-              </AnimatePresence>
-            ) : (
-              // NON-SPECIAL TRANSITION: Static card, no animation - instant content swap
-              <>
-                {renderStepLabels()}
-                <motion.div
-                  layout
-                  className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-4 sm:p-8 shadow-sm overflow-hidden"
-                  transition={{ type: "tween", ease: "easeInOut", duration: 0.3 }}
-                >
-                  {renderStep()}
-                </motion.div>
-              </>
-            )}
-          </motion.div>
-        </div>
-      </LayoutGroup>
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-4 sm:p-8 shadow-sm">
+        {step === 1 && (
+          <UserInfoStep
+            value={data}
+            onChange={(patch) => setData((d) => ({ ...d, ...patch }))}
+            onNext={handleStep1Next}
+          />
+        )}
+        {step === 2 && (
+          <AuthenticationStep
+            name={data.name}
+            phone={data.phone}
+            email={email}
+            onEmailChange={setEmail}
+            phase={authPhase}
+            onPhaseChange={setAuthPhase}
+            onBack={handleBackToStep1}
+            onCompleted={handleAuthCompleted}
+            oauthStashKey={OAUTH_STASH_KEY}
+          />
+        )}
+      </div>
     </div>
   );
 }

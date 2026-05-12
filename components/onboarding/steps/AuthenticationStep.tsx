@@ -4,102 +4,101 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
-import { OnboardingStore } from "@/hooks/useOnboardingStore";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
 import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
 
-interface CreateAccountStepProps {
-  store: OnboardingStore;
-  onNext: () => void;
+export type AuthPhase = "choose" | "form" | "verify";
+
+interface AuthenticationStepProps {
+  name: string;
+  phone: string;
+  email: string;
+  onEmailChange: (email: string) => void;
+  phase: AuthPhase;
+  onPhaseChange: (phase: AuthPhase) => void;
   onBack: () => void;
+  onCompleted: () => void;
+  /** sessionStorage key where {name, phone} is stashed before OAuth redirect. */
+  oauthStashKey: string;
 }
 
-export function CreateAccountStep({
-  store,
-  onNext,
+export function AuthenticationStep({
+  name,
+  phone,
+  email,
+  onEmailChange,
+  phase,
+  onPhaseChange,
   onBack,
-}: CreateAccountStepProps) {
+  onCompleted,
+  oauthStashKey,
+}: AuthenticationStepProps) {
   const t = useTranslations("onboarding.createAccount");
+  const tAuth = useTranslations("onboarding.authentication");
   const tc = useTranslations("common.buttons");
-  const { data, updateData, createAccountPhase, setCreateAccountPhase } = store;
-  const { session, signUp, signIn, verifyOtp, resendOtp } = useAuth();
+  const { signUp, signIn, verifyOtp, resendOtp } = useAuth();
   const locale = useLocale();
-  const autoAdvancedRef = useRef(false);
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const phase = createAccountPhase;
-  const setPhase = setCreateAccountPhase;
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
   const otpInputRef = useRef<HTMLInputElement>(null);
 
-  const passwordChecks = useMemo(() => ({
-    lowercase: /[a-z]/.test(password),
-    uppercase: /[A-Z]/.test(password),
-    number: /[0-9]/.test(password),
-    symbol: /[^a-zA-Z0-9]/.test(password),
-    minLength: password.length >= 6,
-  }), [password]);
+  const passwordChecks = useMemo(
+    () => ({
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password),
+      symbol: /[^a-zA-Z0-9]/.test(password),
+      minLength: password.length >= 6,
+    }),
+    [password]
+  );
 
   const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
-
   const isFormValid =
-    data.email.includes("@") && data.email.includes(".") && isPasswordStrong;
-
+    email.includes("@") && email.includes(".") && isPasswordStrong;
   const isOtpValid = otpCode.length === 6;
 
-  // Resend cooldown timer
   useEffect(() => {
     if (resendCooldown <= 0) return;
     const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
     return () => clearTimeout(timer);
   }, [resendCooldown]);
 
-  // Auto-focus OTP input when entering verify phase
   useEffect(() => {
     if (phase === "verify") {
       setTimeout(() => otpInputRef.current?.focus(), 100);
     }
   }, [phase]);
 
-  // If a session already exists when this step mounts (user returned to the
-  // wizard after confirming email on another device / tab, or landed here
-  // with an existing login — including post-OAuth redirect), skip the form
-  // and advance to the next step. When OAuth provided a name in user_metadata,
-  // overwrite the wizard's ownerName so business.settings.owner_name matches
-  // public.users.name (which the auth trigger already populated from OAuth).
-  useEffect(() => {
-    if (autoAdvancedRef.current) return;
-    if (!session) return;
-    if (phase === "verify") return;
-    autoAdvancedRef.current = true;
-
-    const meta = session.user?.user_metadata as
-      | { full_name?: string; name?: string }
-      | undefined;
-    const oauthName = meta?.full_name || meta?.name;
-    if (oauthName && oauthName.trim() && oauthName !== data.ownerName) {
-      updateData({ ownerName: oauthName });
-    }
-
-    onNext();
-  }, [session, phase, onNext, data.ownerName, updateData]);
-
   const typoSuggestion = useMemo(
-    () => suggestCorrectedEmail(data.email),
-    [data.email]
+    () => suggestCorrectedEmail(email),
+    [email]
   );
 
   const applyTypoSuggestion = useCallback(() => {
     if (typoSuggestion) {
-      updateData({ email: typoSuggestion });
+      onEmailChange(typoSuggestion);
     }
-  }, [typoSuggestion, updateData]);
+  }, [typoSuggestion, onEmailChange]);
+
+  const stashForOAuth = useCallback(() => {
+    if (typeof window === "undefined") return;
+    try {
+      sessionStorage.setItem(
+        oauthStashKey,
+        JSON.stringify({ name, phone })
+      );
+    } catch {
+      // sessionStorage may be unavailable (private mode, quota); proceed anyway.
+    }
+  }, [name, phone, oauthStashKey]);
 
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -110,32 +109,30 @@ export function CreateAccountStep({
       setLoading(true);
 
       try {
-        // 1. Try signup first
         const { data: signUpData, error: signUpError } = await signUp(
-          data.email,
+          email,
           password,
-          data.ownerName,
-          locale
+          name,
+          locale,
+          phone || undefined
         );
 
         if (!signUpError) {
-          // Supabase returns user with empty identities[] when email already exists
-          // (email enumeration protection with enable_confirmations)
-          const isExistingUser = !signUpData?.user || signUpData.user.identities?.length === 0;
+          const isExistingUser =
+            !signUpData?.user || signUpData.user.identities?.length === 0;
           if (isExistingUser) {
-            // User already exists — try sign-in
-            const { error: signInError } = await signIn(data.email, password);
+            const { error: signInError } = await signIn(email, password);
 
             if (!signInError) {
-              onNext();
+              onCompleted();
               return;
             }
 
             const signInMsg = signInError.message.toLowerCase();
             if (signInMsg.includes("email not confirmed")) {
-              await resendOtp(data.email);
+              await resendOtp(email);
               setResendCooldown(60);
-              setPhase("verify");
+              onPhaseChange("verify");
               setLoading(false);
               return;
             }
@@ -145,32 +142,30 @@ export function CreateAccountStep({
             return;
           }
 
-          // New user created — move to OTP verification
           setResendCooldown(60);
-          setPhase("verify");
+          onPhaseChange("verify");
           setLoading(false);
           return;
         }
 
-        // 2. If already registered (explicit error), silently try sign-in
         const errorMsg = signUpError.message.toLowerCase();
         if (
           errorMsg.includes("already registered") ||
           errorMsg.includes("already exists") ||
           errorMsg.includes("user already")
         ) {
-          const { error: signInError } = await signIn(data.email, password);
+          const { error: signInError } = await signIn(email, password);
 
           if (!signInError) {
-            onNext();
+            onCompleted();
             return;
           }
 
           const signInMsg = signInError.message.toLowerCase();
           if (signInMsg.includes("email not confirmed")) {
-            await resendOtp(data.email);
+            await resendOtp(email);
             setResendCooldown(60);
-            setPhase("verify");
+            onPhaseChange("verify");
             setLoading(false);
             return;
           }
@@ -180,7 +175,6 @@ export function CreateAccountStep({
           return;
         }
 
-        // Other signup error
         setError(signUpError.message);
         setLoading(false);
       } catch (err) {
@@ -188,7 +182,20 @@ export function CreateAccountStep({
         setLoading(false);
       }
     },
-    [isFormValid, data.email, data.ownerName, password, signUp, signIn, resendOtp, onNext, locale, t, setPhase]
+    [
+      isFormValid,
+      email,
+      name,
+      password,
+      phone,
+      locale,
+      signUp,
+      signIn,
+      resendOtp,
+      onCompleted,
+      onPhaseChange,
+      t,
+    ]
   );
 
   const handleVerifySubmit = useCallback(
@@ -200,7 +207,7 @@ export function CreateAccountStep({
       setLoading(true);
 
       try {
-        const { error: verifyError } = await verifyOtp(data.email, otpCode);
+        const { error: verifyError } = await verifyOtp(email, otpCode);
 
         if (verifyError) {
           setError(t("invalidCode"));
@@ -209,35 +216,33 @@ export function CreateAccountStep({
           return;
         }
 
-        // Verification successful — session is now established
-        onNext();
+        onCompleted();
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         setLoading(false);
       }
     },
-    [isOtpValid, data.email, otpCode, verifyOtp, onNext, t]
+    [isOtpValid, email, otpCode, verifyOtp, onCompleted, t]
   );
 
   const handleResend = useCallback(async () => {
     if (resendCooldown > 0) return;
 
-    const { error } = await resendOtp(data.email);
+    const { error } = await resendOtp(email);
     if (!error) {
       setResendCooldown(60);
       setCodeSentMessage(true);
       setTimeout(() => setCodeSentMessage(false), 3000);
     }
-  }, [resendCooldown, resendOtp, data.email]);
+  }, [resendCooldown, resendOtp, email]);
 
   const handleChangeEmail = useCallback(() => {
-    setPhase("form");
+    onPhaseChange("form");
     setOtpCode("");
     setError(null);
     setCodeSentMessage(false);
-  }, [setPhase]);
+  }, [onPhaseChange]);
 
-  // OTP input handler — only allow digits
   const handleOtpChange = useCallback((value: string) => {
     const digits = value.replace(/\D/g, "").slice(0, 6);
     setOtpCode(digits);
@@ -252,7 +257,7 @@ export function CreateAccountStep({
           </h1>
           <p className="text-[var(--muted-foreground)] mt-2">
             {t.rich("verifySubtitle", {
-              email: data.email,
+              email,
               strong: (chunks) => (
                 <strong className="font-semibold text-[var(--foreground)]">
                   {chunks}
@@ -363,11 +368,12 @@ export function CreateAccountStep({
 
         <AuthMethodChooser
           namespace="onboarding.createAccount"
-          returnTo={`/${locale}/onboarding`}
+          returnTo={`/${locale}/onboarding?just_authed=oauth`}
           onChooseEmail={() => {
-            setPhase("form");
+            onPhaseChange("form");
             setError(null);
           }}
+          onBeforeOAuth={stashForOAuth}
           onError={(message) => setError(message)}
         />
 
@@ -417,7 +423,6 @@ export function CreateAccountStep({
           </div>
         )}
 
-        {/* Email */}
         <div className="space-y-2">
           <label
             htmlFor="email"
@@ -428,8 +433,8 @@ export function CreateAccountStep({
           <input
             id="email"
             type="email"
-            value={data.email}
-            onChange={(e) => updateData({ email: e.target.value })}
+            value={email}
+            onChange={(e) => onEmailChange(e.target.value)}
             required
             className="w-full px-4 py-3.5 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             placeholder={t("emailPlaceholder")}
@@ -448,14 +453,21 @@ export function CreateAccountStep({
           )}
         </div>
 
-        {/* Password */}
         <div className="space-y-2">
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-[var(--foreground)]"
-          >
-            {t("password")}
-          </label>
+          <div className="flex items-baseline justify-between">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-[var(--foreground)]"
+            >
+              {t("password")}
+            </label>
+            <Link
+              href="/reset-password"
+              className="text-xs text-[var(--accent)] hover:underline"
+            >
+              {tAuth("forgotPassword")}
+            </Link>
+          </div>
           <div className="relative">
             <input
               id="password"
@@ -495,12 +507,11 @@ export function CreateAccountStep({
           )}
         </div>
 
-        {/* Submit row — back button matches the layout used on other wizard steps */}
         <div className="flex gap-3">
           <button
             type="button"
             onClick={() => {
-              setPhase("choose");
+              onPhaseChange("choose");
               setError(null);
             }}
             disabled={loading}

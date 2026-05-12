@@ -13,6 +13,9 @@ interface AuthMethodChooserProps {
   returnTo?: string;
   onChooseEmail: () => void;
   onError?: (message: string) => void;
+  /** Fires synchronously before the OAuth redirect — use it to stash data the
+   * callback page needs (e.g. step-1 fields the provider won't return). */
+  onBeforeOAuth?: (provider: OAuthProvider) => void;
 }
 
 export function AuthMethodChooser({
@@ -20,6 +23,7 @@ export function AuthMethodChooser({
   returnTo,
   onChooseEmail,
   onError,
+  onBeforeOAuth,
 }: AuthMethodChooserProps) {
   const t = useTranslations(namespace);
   const tOAuth = useTranslations("auth.oauth");
@@ -29,6 +33,7 @@ export function AuthMethodChooser({
 
   const handleOAuth = async (provider: OAuthProvider) => {
     setPending(provider);
+    onBeforeOAuth?.(provider);
     const { error } = await signInWithOAuth(provider, returnTo);
     if (error) {
       onError?.(tOAuth("error"));

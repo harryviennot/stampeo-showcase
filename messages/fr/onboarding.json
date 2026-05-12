@@ -1,12 +1,26 @@
 {
   "onboarding": {
     "steps": {
-      "business": "Commerce",
-      "design": "Design",
-      "you": "Vous",
-      "account": "Compte",
-      "plan": "Plan",
-      "done": "Terminé"
+      "user_info": "À propos de vous",
+      "authentication": "Compte",
+      "settingUp": "Configuration de votre compte…"
+    },
+    "userInfo": {
+      "title": "Apprenons à vous connaître",
+      "subtitle": "Quelques informations pour configurer votre compte.",
+      "name": "Votre nom",
+      "namePlaceholder": "Prénom et nom",
+      "phone": "Téléphone",
+      "phoneHelp": "Uniquement pour les soucis urgents de compte.",
+      "optional": "(optionnel)",
+      "nameRequired": "Indiquez votre nom.",
+      "phoneInvalid": "Ce numéro ne semble pas correct.",
+      "continue": "Continuer",
+      "loginPrompt": "Déjà un compte ?",
+      "loginCta": "Se connecter"
+    },
+    "authentication": {
+      "forgotPassword": "Mot de passe oublié ?"
     },
     "businessProfile": {
       "title": "Parlons de votre commerce",

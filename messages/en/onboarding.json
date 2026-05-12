@@ -1,12 +1,26 @@
 {
   "onboarding": {
     "steps": {
-      "business": "Business",
-      "design": "Design",
-      "you": "You",
-      "account": "Account",
-      "plan": "Plan",
-      "done": "Done"
+      "user_info": "About you",
+      "authentication": "Account",
+      "settingUp": "Setting up your account…"
+    },
+    "userInfo": {
+      "title": "Let's get to know you",
+      "subtitle": "Just a couple of details to set up your account.",
+      "name": "Your name",
+      "namePlaceholder": "First & last name",
+      "phone": "Phone number",
+      "phoneHelp": "We'll only use it for urgent account issues.",
+      "optional": "(optional)",
+      "nameRequired": "Tell us your name.",
+      "phoneInvalid": "That phone number doesn't look right.",
+      "continue": "Continue",
+      "loginPrompt": "Already have an account?",
+      "loginCta": "Sign in"
+    },
+    "authentication": {
+      "forgotPassword": "Forgot password?"
     },
     "businessProfile": {
       "title": "Tell us about your business",
