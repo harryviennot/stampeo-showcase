@@ -70,6 +70,7 @@
     "yaml": ">=2.8.3",
     "dompurify": ">=3.4.0",
     "postcss": "^8.5.10",
-    "fast-uri": ">=3.1.2"
+    "fast-uri": ">=3.1.2",
+    "protobufjs": "^7.5.8"
   }
 }
