@@ -24,7 +24,7 @@
     "gray-matter": "^4.0.3",
     "libphonenumber-js": "^1.12.42",
     "lucide-react": "^0.563.0",
-    "next": "^16.2.4",
+    "next": "^16.2.6",
     "next-intl": "^4.9.2",
     "next-mdx-remote": "^6.0.0",
     "posthog-js": "^1.372.1",
@@ -70,6 +70,7 @@
     "yaml": ">=2.8.3",
     "dompurify": ">=3.4.0",
     "postcss": "^8.5.10",
-    "fast-uri": ">=3.1.2"
+    "fast-uri": ">=3.1.2",
+    "protobufjs": "^7.5.8"
   }
 }
