@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run scripts/dev.ts",
+    "publicdev": "PUBLIC_DEV=1 bun run scripts/dev.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -45,6 +46,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/turndown": "^5.0.6",
+    "dotenv": "^17.4.2",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.1.5",
     "file-entry-cache": "^11.1.2",
