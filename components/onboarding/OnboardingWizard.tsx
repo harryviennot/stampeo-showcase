@@ -217,7 +217,7 @@ export function OnboardingWizard() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto px-4">
+    <div className="w-full max-w-md mx-auto px-0 sm:px-4">
       <div className="mb-6 flex justify-center gap-2">
         {stepDots.map((dot) => (
           <div

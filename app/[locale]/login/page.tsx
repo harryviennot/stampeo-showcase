@@ -184,7 +184,7 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-3 sm:px-0">
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
         <Link href="/" className="inline-block group">
           <div className="flex items-center gap-2 transition-transform group-hover:scale-105">

@@ -38,7 +38,7 @@ export default async function OnboardingLayout({
       </header>
 
       {/* Main content */}
-      <main className="pt-16 pb-8 px-4 sm:pt-20 sm:pb-12 sm:px-2">{children}</main>
+      <main className="pt-16 pb-8 px-3 sm:pt-20 sm:pb-12 sm:px-2">{children}</main>
     </div>
   );
 }
