@@ -195,7 +195,7 @@ function LoginContent() {
           </div>
         </Link>
       </header>
-      <div className="w-full max-w-md p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm">
+      <div className="w-full max-w-md p-4 sm:p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm">
         {phase === "forgot" ? (
           <>
             <div className="text-center">

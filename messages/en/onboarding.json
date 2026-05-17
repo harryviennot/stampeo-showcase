@@ -134,7 +134,6 @@
       },
       "continue": "Continue",
       "submitting": "Please wait...",
-      "accountExistsWrongPassword": "An account with this email already exists. Please check your password.",
       "verifyTitle": "Check your email",
       "verifySubtitle": "We sent a 6-digit code to <strong>{email}</strong>. If it doesn't appear within a minute, check your spam folder.",
       "verifyCode": "Verification code",

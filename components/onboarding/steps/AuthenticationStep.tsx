@@ -10,6 +10,12 @@ import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
 
 export type AuthPhase = "choose" | "form" | "verify";
 
+/** "signup" = verify the signup-confirmation OTP for a brand-new account.
+ *  "signin" = verify the magic-link OTP we sent to log in an EXISTING account
+ *  (wrong password, OAuth-only, unconfirmed email — all routed here so we
+ *  never block the user with an error). */
+type VerifyMode = "signup" | "signin";
+
 interface AuthenticationStepProps {
   name: string;
   phone: string;
@@ -18,7 +24,7 @@ interface AuthenticationStepProps {
   phase: AuthPhase;
   onPhaseChange: (phase: AuthPhase) => void;
   onBack: () => void;
-  onCompleted: () => void;
+  onCompleted: (opts?: { isExistingUser?: boolean }) => void;
   /** sessionStorage key where {name, phone} is stashed before OAuth redirect. */
   oauthStashKey: string;
 }
@@ -37,7 +43,7 @@ export function AuthenticationStep({
   const t = useTranslations("onboarding.createAccount");
   const tAuth = useTranslations("onboarding.authentication");
   const tc = useTranslations("common.buttons");
-  const { signUp, signIn, verifyOtp, resendOtp } = useAuth();
+  const { signUp, signIn, verifyOtp, resendOtp, signInWithOtp } = useAuth();
   const locale = useLocale();
 
   const [password, setPassword] = useState("");
@@ -47,6 +53,7 @@ export function AuthenticationStep({
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
+  const [verifyMode, setVerifyMode] = useState<VerifyMode>("signup");
   const otpInputRef = useRef<HTMLInputElement>(null);
 
   const passwordChecks = useMemo(
@@ -100,6 +107,26 @@ export function AuthenticationStep({
     }
   }, [name, phone, oauthStashKey]);
 
+  // Route an existing user through OTP verification when we can't sign them in
+  // with the password they typed (wrong password, OAuth-only account, etc.).
+  // Sends a sign-in OTP and switches to the verify phase — they'll land in the
+  // dashboard after entering the code. We never surface an "account exists"
+  // error: registering an existing email always resolves to a logged-in state.
+  const routeExistingUserToOtp = useCallback(async () => {
+    setVerifyMode("signin");
+    const { error: otpError } = await signInWithOtp(email);
+    if (otpError) {
+      // signInWithOtp can fail for unconfirmed emails (`shouldCreateUser:false`
+      // requires a confirmed user on some Supabase configs). Fall back to the
+      // signup-confirmation OTP, which works for unconfirmed accounts.
+      setVerifyMode("signup");
+      await resendOtp(email);
+    }
+    setResendCooldown(60);
+    onPhaseChange("verify");
+    setLoading(false);
+  }, [email, signInWithOtp, resendOtp, onPhaseChange]);
+
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -117,65 +144,40 @@ export function AuthenticationStep({
           phone || undefined
         );
 
-        if (!signUpError) {
-          const isExistingUser =
-            !signUpData?.user || signUpData.user.identities?.length === 0;
-          if (isExistingUser) {
-            const { error: signInError } = await signIn(email, password);
+        // Existing account — Supabase signals this two ways: signUp returns
+        // an "already registered" error, or it succeeds with an empty
+        // identities array (the secure "don't leak whether the email exists"
+        // path). Treat both identically: try the password, fall back to OTP.
+        const errorMsg = signUpError?.message.toLowerCase() ?? "";
+        const isExistingFromError =
+          !!signUpError &&
+          (errorMsg.includes("already registered") ||
+            errorMsg.includes("already exists") ||
+            errorMsg.includes("user already"));
+        const isExistingFromIdentities =
+          !signUpError &&
+          (!signUpData?.user || signUpData.user.identities?.length === 0);
 
-            if (!signInError) {
-              onCompleted();
-              return;
-            }
-
-            const signInMsg = signInError.message.toLowerCase();
-            if (signInMsg.includes("email not confirmed")) {
-              await resendOtp(email);
-              setResendCooldown(60);
-              onPhaseChange("verify");
-              setLoading(false);
-              return;
-            }
-
-            setError(t("accountExistsWrongPassword"));
-            setLoading(false);
-            return;
-          }
-
-          setResendCooldown(60);
-          onPhaseChange("verify");
-          setLoading(false);
-          return;
-        }
-
-        const errorMsg = signUpError.message.toLowerCase();
-        if (
-          errorMsg.includes("already registered") ||
-          errorMsg.includes("already exists") ||
-          errorMsg.includes("user already")
-        ) {
+        if (isExistingFromError || isExistingFromIdentities) {
           const { error: signInError } = await signIn(email, password);
-
           if (!signInError) {
-            onCompleted();
+            onCompleted({ isExistingUser: true });
             return;
           }
+          await routeExistingUserToOtp();
+          return;
+        }
 
-          const signInMsg = signInError.message.toLowerCase();
-          if (signInMsg.includes("email not confirmed")) {
-            await resendOtp(email);
-            setResendCooldown(60);
-            onPhaseChange("verify");
-            setLoading(false);
-            return;
-          }
-
-          setError(t("accountExistsWrongPassword"));
+        if (signUpError) {
+          setError(signUpError.message);
           setLoading(false);
           return;
         }
 
-        setError(signUpError.message);
+        // Fresh signup — go to the confirmation OTP.
+        setVerifyMode("signup");
+        setResendCooldown(60);
+        onPhaseChange("verify");
         setLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -191,10 +193,9 @@ export function AuthenticationStep({
       locale,
       signUp,
       signIn,
-      resendOtp,
       onCompleted,
       onPhaseChange,
-      t,
+      routeExistingUserToOtp,
     ]
   );
 
@@ -207,7 +208,8 @@ export function AuthenticationStep({
       setLoading(true);
 
       try {
-        const { error: verifyError } = await verifyOtp(email, otpCode);
+        const otpType = verifyMode === "signin" ? "email" : "signup";
+        const { error: verifyError } = await verifyOtp(email, otpCode, otpType);
 
         if (verifyError) {
           setError(t("invalidCode"));
@@ -216,25 +218,28 @@ export function AuthenticationStep({
           return;
         }
 
-        onCompleted();
+        onCompleted({ isExistingUser: verifyMode === "signin" });
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         setLoading(false);
       }
     },
-    [isOtpValid, email, otpCode, verifyOtp, onCompleted, t]
+    [isOtpValid, email, otpCode, verifyOtp, verifyMode, onCompleted, t]
   );
 
   const handleResend = useCallback(async () => {
     if (resendCooldown > 0) return;
 
-    const { error } = await resendOtp(email);
+    const { error } =
+      verifyMode === "signin"
+        ? await signInWithOtp(email)
+        : await resendOtp(email);
     if (!error) {
       setResendCooldown(60);
       setCodeSentMessage(true);
       setTimeout(() => setCodeSentMessage(false), 3000);
     }
-  }, [resendCooldown, resendOtp, email]);
+  }, [resendCooldown, resendOtp, signInWithOtp, verifyMode, email]);
 
   const handleChangeEmail = useCallback(() => {
     onPhaseChange("form");

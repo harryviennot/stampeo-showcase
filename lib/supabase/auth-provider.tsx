@@ -36,9 +36,15 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   verifyOtp: (
     email: string,
-    token: string
+    token: string,
+    type?: "signup" | "email"
   ) => Promise<{ error: AuthError | null }>;
   resendOtp: (email: string) => Promise<{ error: AuthError | null }>;
+  /** Sends an OTP for an EXISTING user so we can sign them in without their
+   * password (wrong password, OAuth-only account, unconfirmed email, etc.).
+   * Pair with verifyOtp(..., "email"). `shouldCreateUser:false` keeps it
+   * sign-in-only — we already know the account exists. */
+  signInWithOtp: (email: string) => Promise<{ error: AuthError | null }>;
   resetPasswordForEmail: (email: string) => Promise<{ error: AuthError | null }>;
   updatePassword: (password: string) => Promise<{ error: AuthError | null }>;
 }
@@ -188,11 +194,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const verifyOtp = useCallback(
-    async (email: string, token: string) => {
+    async (email: string, token: string, type: "signup" | "email" = "signup") => {
       const { error } = await supabase.auth.verifyOtp({
         email,
         token,
-        type: "signup",
+        type,
       });
       return { error };
     },
@@ -204,6 +210,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.resend({
         type: "signup",
         email,
+      });
+      return { error };
+    },
+    [supabase.auth]
+  );
+
+  const signInWithOtp = useCallback(
+    async (email: string) => {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { shouldCreateUser: false },
       });
       return { error };
     },
@@ -237,7 +254,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, session, loading, signUp, signIn, signInWithOAuth, signOut, verifyOtp, resendOtp, resetPasswordForEmail, updatePassword }}
+      value={{ user, session, loading, signUp, signIn, signInWithOAuth, signOut, verifyOtp, resendOtp, signInWithOtp, resetPasswordForEmail, updatePassword }}
     >
       {children}
     </AuthContext.Provider>
