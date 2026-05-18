@@ -92,7 +92,7 @@ Promotional campaigns are one-off push notifications sent straight to customers'
 - **Reach**: broadcast to all loyalty-card holders, or segment.
 - **Open rate**: ~85% (lock-screen banner), vs ~20% for email and ~35% click-through for SMS.
 - **Cost**: included in the plan — €0 per message. No SMS carrier fees (€0.04–€0.10 per SMS in France).
-- **Quotas**: Growth = 3 campaigns / month. Pro = unlimited.
+- **Quotas**: Growth = 8 campaigns / month. Pro = unlimited.
 - **Segmentation**:
   - Growth: basic (enrollment date).
   - Pro: advanced — by stamp count, last redemption, inactivity window, recent signups.
@@ -149,7 +149,7 @@ The dashboard answers the questions paper cards can't: who comes back, how often
 Three tiers. Unlimited customers and unlimited scans on every plan. 30-day free trial, no credit card required.
 
 - **Starter — €20 / month** (founding partner: €10 / month for life): 1 active card template, unlimited customers & scans, 2 team members (owner + 1), automatic push notifications (predefined text), basic dashboard & stats, email support.
-- **Growth — €40 / month** (founding partner: €20 / month for life): everything in Starter, plus stamps or points (choose one), unlimited team members, custom notification messages, 3 broadcast campaigns per month, 3 custom milestones per program, basic segmentation (date-based), trends & analytics.
+- **Growth — €40 / month** (founding partner: €20 / month for life): everything in Starter, plus stamps or points (choose one), unlimited team members, custom notification messages, 8 broadcast campaigns per month, 3 custom milestones per program, basic segmentation (date-based), trends & analytics.
 - **Pro — €60 / month** (coming soon): everything in Growth, plus multiple active card templates, multi-location with per-location analytics, geofencing notifications, unlimited broadcast campaigns, advanced segmentation (by stamps, inactivity, redemptions), unlimited custom milestones, advanced analytics & retention, priority email support.
 
 ### Founding partner program (closes 2026-05-19)
