@@ -1,12 +1,26 @@
 {
   "onboarding": {
     "steps": {
-      "business": "Commerce",
-      "design": "Design",
-      "you": "Vous",
-      "account": "Compte",
-      "plan": "Plan",
-      "done": "Terminé"
+      "user_info": "À propos de vous",
+      "authentication": "Compte",
+      "settingUp": "Configuration de votre compte…"
+    },
+    "userInfo": {
+      "title": "Apprenons à vous connaître",
+      "subtitle": "Quelques informations pour configurer votre compte.",
+      "name": "Votre nom",
+      "namePlaceholder": "Prénom et nom",
+      "phone": "Téléphone",
+      "phoneHelp": "Uniquement pour les soucis urgents de compte.",
+      "optional": "(optionnel)",
+      "nameRequired": "Indiquez votre nom.",
+      "phoneInvalid": "Ce numéro ne semble pas correct.",
+      "continue": "Continuer",
+      "loginPrompt": "Déjà un compte ?",
+      "loginCta": "Se connecter"
+    },
+    "authentication": {
+      "forgotPassword": "Mot de passe oublié ?"
     },
     "businessProfile": {
       "title": "Parlons de votre commerce",
@@ -101,6 +115,9 @@
       "continueGoogle": "Continuer avec Google",
       "continueApple": "Continuer avec Apple",
       "continueEmail": "Continuer avec un email",
+      "continueGoogleShort": "Google",
+      "continueAppleShort": "Apple",
+      "continueEmailShort": "Email",
       "chooseDifferentMethod": "Choisir une autre méthode",
       "emailTitle": "Créez votre compte avec un email",
       "emailSubtitle": "Votre email et un mot de passe sécurisé.",
@@ -117,7 +134,6 @@
       },
       "continue": "Continuer",
       "submitting": "Un instant...",
-      "accountExistsWrongPassword": "Un compte avec cet email existe déjà. Vérifiez votre mot de passe.",
       "verifyTitle": "Vérifiez votre email",
       "verifySubtitle": "Nous avons envoyé un code à 6 chiffres à <strong>{email}</strong>. Si vous ne le voyez pas après une minute, vérifiez vos spams.",
       "verifyCode": "Code de vérification",

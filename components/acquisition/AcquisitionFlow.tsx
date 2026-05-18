@@ -104,7 +104,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
       <div className="max-w-4xl mx-auto px-4 py-8 flex-1 flex flex-col justify-center">
         <div className="grid gap-8 md:grid-cols-2 md:items-center">
           {/* Card Preview */}
-          <div className="order-1 md:order-2">
+          <div className="order-2">
             <div className="w-full max-w-[380px] mx-auto">
               <ScaledCardWrapper baseWidth={280} targetWidth={380}>
                 <WalletCard
@@ -134,7 +134,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
           </div>
 
           {/* Form / Success / Email Sent */}
-          <div className="order-2 md:order-1 min-h-[320px] flex flex-col justify-center">
+          <div className="order-1 min-h-[320px] flex flex-col justify-center">
             {cardDesign ? (
               <>
                 {flowState === "form" && (

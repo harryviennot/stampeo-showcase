@@ -46,7 +46,7 @@
         "Unlimited team members",
         "Custom notification messages",
         {
-          "text": "3 promo campaigns/month",
+          "text": "8 promo campaigns/month",
           "tooltip": "Send promotional notifications to all your customers. Announce new products, happy hours, or seasonal offers — directly in their wallet."
         },
         {
@@ -114,7 +114,7 @@
         "Stamps or points (choose one)",
         "Unlimited team members",
         "Custom notification messages",
-        "3 promo campaigns/month",
+        "8 promo campaigns/month",
         "Trends & analytics"
       ]
     },
@@ -201,7 +201,7 @@
         },
         "broadcastNotifications": {
           "label": "Broadcast notifications",
-          "growth": "3/month",
+          "growth": "8/month",
           "pro": "Unlimited"
         },
         "segmentation": {

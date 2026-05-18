@@ -1,215 +1,9 @@
-import * as Sentry from "@sentry/nextjs";
-import { createClient } from "./supabase/client";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 if (!API_URL) {
   throw new Error("NEXT_PUBLIC_API_URL is not defined");
 } else {
   console.log(`[API] API_BASE_URL: ${API_URL}`);
-}
-
-export interface BusinessCreatePayload {
-  name: string;
-  url_slug: string;
-  subscription_tier: "starter" | "growth" | "pro";
-  is_founding_partner?: boolean;
-  settings: {
-    category?: string;
-    description?: string;
-    owner_name?: string;
-    accentColor?: string;
-    backgroundColor?: string;
-  };
-  logo_url?: string;
-  website?: string;
-  phone?: string;
-  heard_from?: string;
-  heard_from_other?: string;
-  team_size?: string;
-  locations?: string;
-  primary_goal?: string;
-  primary_locale?: string;
-}
-
-export interface BusinessResponse {
-  id: string;
-  name: string;
-  url_slug: string;
-  subscription_tier: string;
-  settings: Record<string, unknown>;
-  logo_url?: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface SlugAvailabilityResponse {
-  available: boolean;
-  reason?: string;
-}
-
-/**
- * Check if a URL slug is available
- * @returns object with available boolean and optional reason
- */
-export async function checkSlugAvailability(
-  slug: string
-): Promise<SlugAvailabilityResponse> {
-  if (!slug || slug.length < 3) {
-    return { available: false, reason: "Slug must be at least 3 characters" };
-  }
-
-  try {
-    const response = await fetch(`${API_URL}/businesses/slug/${slug}/available`);
-    if (!response.ok) {
-      return { available: false, reason: "Failed to check availability" };
-    }
-    return await response.json();
-  } catch {
-    return { available: false, reason: "Failed to check availability" };
-  }
-}
-
-export type CreateBusinessErrorCode =
-  | "slug_taken"
-  | "unauthenticated"
-  | "validation"
-  | "server"
-  | "network";
-
-export interface CreateBusinessError {
-  code: CreateBusinessErrorCode;
-  message: string;
-  field?: string;
-  status?: number;
-}
-
-/**
- * Create a new business with the authenticated user as owner
- * @param payload - Business creation data
- * @param accessToken - Optional access token (if not provided, will try to get from Supabase)
- */
-export async function createBusiness(
-  payload: BusinessCreatePayload,
-  accessToken?: string
-): Promise<{ data: BusinessResponse | null; error: CreateBusinessError | null }> {
-  try {
-    let token = accessToken;
-
-    // If no token provided, try to get from Supabase
-    if (!token) {
-      const supabase = createClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      token = session?.access_token;
-    }
-
-    if (!token) {
-      return {
-        data: null,
-        error: { code: "unauthenticated", message: "Not authenticated" },
-      };
-    }
-
-    const response = await fetch(`${API_URL}/businesses`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      const detail = errorData?.detail;
-
-      let error: CreateBusinessError;
-
-      if (detail && typeof detail === "object" && !Array.isArray(detail) && typeof detail.code === "string") {
-        error = {
-          code: detail.code as CreateBusinessErrorCode,
-          message: detail.message || `Failed to create business (${response.status})`,
-          field: detail.field,
-          status: response.status,
-        };
-      } else if (typeof detail === "string") {
-        error = {
-          code: response.status >= 500 ? "server" : "validation",
-          message: detail,
-          status: response.status,
-        };
-      } else if (Array.isArray(detail) && detail.length > 0) {
-        error = {
-          code: "validation",
-          message: detail[0]?.msg || `Failed to create business (${response.status})`,
-          status: response.status,
-        };
-      } else {
-        error = {
-          code: response.status >= 500 ? "server" : "validation",
-          message: `Failed to create business (${response.status})`,
-          status: response.status,
-        };
-      }
-
-      Sentry.captureMessage(`createBusiness failed: ${response.status}`, {
-        level: response.status >= 500 ? "error" : "warning",
-        extra: {
-          status: response.status,
-          body: errorData,
-          payload_slug: payload.url_slug,
-          payload_tier: payload.subscription_tier,
-          error_code: error.code,
-        },
-      });
-      return { data: null, error };
-    }
-
-    const data = await response.json();
-    return { data, error: null };
-  } catch (err) {
-    Sentry.captureException(err, {
-      tags: { op: "createBusiness" },
-      extra: { payload_slug: payload.url_slug },
-    });
-    return {
-      data: null,
-      error: {
-        code: "network",
-        message: err instanceof Error ? err.message : "Failed to create business",
-      },
-    };
-  }
-}
-
-/**
- * Get all businesses for the authenticated user
- * Used to check if user has completed onboarding (has at least one business)
- */
-export async function getUserBusinesses(
-  accessToken: string
-): Promise<{ data: BusinessResponse[]; error: string | null }> {
-  try {
-    const response = await fetch(`${API_URL}/businesses`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      return { data: [], error: `Failed to fetch businesses (${response.status})` };
-    }
-
-    const data = await response.json();
-    return { data, error: null };
-  } catch (err) {
-    return {
-      data: [],
-      error: err instanceof Error ? err.message : "Failed to fetch businesses",
-    };
-  }
 }
 
 // ============================================
@@ -220,14 +14,11 @@ export interface UserProfile {
   id: string;
   email: string;
   name: string;
+  phone?: string | null;
   is_reseller: boolean;
   reseller_discount_percent: number | null;
 }
 
-/**
- * Get the current user's profile from the backend.
- * Used during onboarding to check reseller status and discount.
- */
 export async function getUserProfile(
   accessToken: string
 ): Promise<{ data: UserProfile | null; error: string | null }> {
@@ -252,77 +43,24 @@ export async function getUserProfile(
   }
 }
 
-// ============================================
-// Onboarding Progress API
-// ============================================
-
-export interface OnboardingProgressPayload {
-  business_name: string;
-  url_slug: string;
-  owner_name?: string;
-  category?: string;
-  description?: string;
-  email?: string;
-  website?: string;
+export interface UserProfileUpdate {
+  name?: string;
   phone?: string;
-  heard_from?: string;
-  heard_from_other?: string;
-  team_size?: string;
-  locations?: string;
-  primary_goal?: string;
-  card_design?: {
-    background_color: string;
-    accent_color: string;
-    icon_color?: string;
-    logo_url?: string;
-    stamp_icon?: string;
-    reward_icon?: string;
-  };
-  current_step: number;
-  completed_steps: number[];
-}
-
-export interface OnboardingProgressResponse {
-  id: string;
-  user_id: string;
-  business_name: string;
-  url_slug: string;
-  owner_name?: string;
-  category?: string;
-  description?: string;
-  email?: string;
-  website?: string;
-  phone?: string;
-  heard_from?: string;
-  heard_from_other?: string;
-  team_size?: string;
-  locations?: string;
-  primary_goal?: string;
-  card_design?: {
-    background_color: string;
-    accent_color: string;
-    icon_color?: string;
-    logo_url?: string;
-    stamp_icon?: string;
-    reward_icon?: string;
-  };
-  current_step: number;
-  completed_steps: number[];
-  created_at: string;
-  updated_at: string;
+  locale?: "fr" | "en";
 }
 
 /**
- * Save onboarding progress to the backend
- * Allows users to resume onboarding on another device
+ * Update the current user's profile. Used post-OAuth to write step-1 fields
+ * (phone, optionally name) into public.users — the auth.users INSERT trigger
+ * only fires once at user creation and can't capture data collected later.
  */
-export async function saveOnboardingProgress(
-  payload: OnboardingProgressPayload,
+export async function updateUserProfile(
+  payload: UserProfileUpdate,
   accessToken: string
-): Promise<{ data: OnboardingProgressResponse | null; error: string | null }> {
+): Promise<{ data: UserProfile | null; error: string | null }> {
   try {
-    const response = await fetch(`${API_URL}/onboarding/progress`, {
-      method: "POST",
+    const response = await fetch(`${API_URL}/profile/me`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
@@ -331,12 +69,7 @@ export async function saveOnboardingProgress(
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      let errorMessage = `Failed to save progress (${response.status})`;
-      if (typeof errorData.detail === "string") {
-        errorMessage = errorData.detail;
-      }
-      return { data: null, error: errorMessage };
+      return { data: null, error: `Failed to update profile (${response.status})` };
     }
 
     const data = await response.json();
@@ -344,119 +77,7 @@ export async function saveOnboardingProgress(
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : "Failed to save progress",
+      error: err instanceof Error ? err.message : "Failed to update profile",
     };
-  }
-}
-
-/**
- * Get onboarding progress from the backend
- * Used when a user returns to continue onboarding
- */
-export async function getOnboardingProgress(
-  accessToken: string
-): Promise<{ data: OnboardingProgressResponse | null; error: string | null }> {
-  try {
-    const response = await fetch(`${API_URL}/onboarding/progress`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        return { data: null, error: null }; // No progress saved yet
-      }
-      return { data: null, error: `Failed to fetch progress (${response.status})` };
-    }
-
-    const data = await response.json();
-    return { data, error: null };
-  } catch (err) {
-    return {
-      data: null,
-      error: err instanceof Error ? err.message : "Failed to fetch progress",
-    };
-  }
-}
-
-/**
- * Delete onboarding progress after completion
- */
-export async function deleteOnboardingProgress(
-  accessToken: string
-): Promise<{ success: boolean; error: string | null }> {
-  try {
-    const response = await fetch(`${API_URL}/onboarding/progress`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      return { success: false, error: `Failed to delete progress (${response.status})` };
-    }
-
-    return { success: true, error: null };
-  } catch (err) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Failed to delete progress",
-    };
-  }
-}
-
-// ============================================
-// Logo Upload API
-// ============================================
-
-/**
- * Upload a logo image during onboarding
- * @param file - The PNG file to upload
- * @param accessToken - The user's access token
- * @returns The URL of the uploaded logo
- */
-export async function uploadOnboardingLogo(
-  file: File,
-  accessToken: string
-): Promise<string> {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const response = await fetch(`${API_URL}/onboarding/progress/upload/logo`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Failed to upload logo (${response.status})`);
-  }
-
-  const data = await response.json();
-  return data.url;
-}
-
-/**
- * Delete the user's onboarding logo
- * @param accessToken - The user's access token
- */
-export async function deleteOnboardingLogo(
-  accessToken: string
-): Promise<void> {
-  const response = await fetch(`${API_URL}/onboarding/progress/upload/logo`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `Failed to delete logo (${response.status})`);
   }
 }

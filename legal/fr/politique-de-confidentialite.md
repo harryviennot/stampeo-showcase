@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-La présente politique de confidentialité décrit comment Stampeo (ci-après « nous », « notre » ou « la Plateforme »), opéré par Harry Viennot, auto-entrepreneur immatriculé en France sous le numéro SIRET **en cours d'obtention**, collecte, utilise, stocke et protège les données personnelles dans le cadre de son service de cartes de fidélité numériques.
+La présente politique de confidentialité décrit comment Stampeo (ci-après « nous », « notre » ou « la Plateforme »), opéré par Harry Viennot, auto-entrepreneur immatriculé en France sous le numéro SIRET **10477625700016**, collecte, utilise, stocke et protège les données personnelles dans le cadre de son service de cartes de fidélité numériques.
 
 Nous nous engageons à respecter le Règlement Général sur la Protection des Données (RGPD, Règlement UE 2016/679) ainsi que la loi française Informatique et Libertés.
 
@@ -237,5 +237,5 @@ Nous pouvons mettre à jour cette politique. En cas de modifications substantiel
 
 - **Email :** contact@stampeo.app
 - **Responsable :** Harry Viennot, Stampeo
-- **SIRET :** en cours d'obtention
+- **SIRET :** 10477625700016
 - **Adresse :** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France

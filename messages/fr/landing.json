@@ -182,7 +182,7 @@
         },
         {
           "question": "Peut-on envoyer des campagnes promotionnelles ?",
-          "answer": "Oui, les campagnes promotionnelles sont disponibles. Le plan Growth inclut 3 campagnes par mois en envoi immédiat, avec segmentation par date (par exemple les clients inscrits dans les 30 derniers jours). Le plan Pro débloque les campagnes illimitées, la programmation avec fuseau horaire, et la segmentation avancée (par nombre de tampons, récompenses utilisées ou inactivité). Les notifications automatiques (tampon, jalon, récompense) restent actives sur tous les plans."
+          "answer": "Oui, les campagnes promotionnelles sont disponibles. Le plan Growth inclut 8 campagnes par mois en envoi immédiat, avec segmentation par date (par exemple les clients inscrits dans les 30 derniers jours). Le plan Pro débloque les campagnes illimitées, la programmation avec fuseau horaire, et la segmentation avancée (par nombre de tampons, récompenses utilisées ou inactivité). Les notifications automatiques (tampon, jalon, récompense) restent actives sur tous les plans."
         }
       ],
       "stillQuestions": "Encore des questions ?",
@@ -398,7 +398,7 @@
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans CB · Sans engagement",
-      "momentum": "<accent>+16</accent> commerçants nous ont rejoints cette semaine"
+      "momentum": "<accent>+21</accent> commerçants nous ont rejoints cette semaine"
     },
     "trustStrip": {
       "madeInFrance": "Made in France",

@@ -46,7 +46,7 @@
         "Membres d'équipe illimités",
         "Messages de notification personnalisés",
         {
-          "text": "3 campagnes promo/mois",
+          "text": "8 campagnes promo/mois",
           "tooltip": "Envoyez des notifications promotionnelles à tous vos clients. Annoncez vos nouveautés, happy hours ou offres saisonnières — directement dans leur wallet."
         },
         {
@@ -114,7 +114,7 @@
         "Tampons ou points (au choix)",
         "Membres d'équipe illimités",
         "Messages de notification personnalisés",
-        "3 campagnes promo/mois",
+        "8 campagnes promo/mois",
         "Tendances et analytiques"
       ]
     },
@@ -201,7 +201,7 @@
         },
         "broadcastNotifications": {
           "label": "Notifications broadcast",
-          "growth": "3/mois",
+          "growth": "8/mois",
           "pro": "Illimitées"
         },
         "segmentation": {
