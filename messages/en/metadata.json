@@ -15,27 +15,27 @@
     },
     "features": {
       "design-de-carte": {
-        "title": "Loyalty Card Design",
-        "description": "Create your digital loyalty card in 5 minutes. Customize colors, logo and design, or let us handle it."
+        "title": "Create Your Loyalty Card — We Design It for You in 24 Hours",
+        "description": "Send us your logo. We build your wallet-ready loyalty card in 24–48h — colours, stamps, branding. Or use the self-service editor. No design skills needed."
       },
       "scanner-mobile": {
-        "title": "Mobile Scanner",
-        "description": "Stamp your customers in one second with your phone. Dedicated app or web scanner, with offline mode."
+        "title": "Mobile Scanner — Stamp Customers in 0.8 Seconds, Even Offline",
+        "description": "Dedicated app with haptic confirmation (0.8s) or in-browser web scanner. Offline mode for markets, basements and festivals — auto-syncs when back online."
       },
       "notifications-push": {
-        "title": "Push Notifications",
-        "description": "Engage your customers directly on their lock screen. 85% read rate via wallet notifications."
+        "title": "Wallet Push Notifications — Every Stamp, Every Lock Screen",
+        "description": "Stamp added, reward unlocked, milestone reached: every event sends an automatic notification to your customer's wallet. No extra app, no SMS cost."
       },
       "analytiques": {
-        "title": "Analytics Dashboard",
-        "description": "Know your regulars with real data. Trends, peak hours, visit frequency and retention."
+        "title": "Loyalty Analytics — See Who's Coming Back and Who's Drifting",
+        "description": "Real-time dashboard: daily scans, active customers, rewards claimed. Growth tier adds trends, peak hours, 30-day retention and at-risk customer alerts."
       },
       "geolocalisation": {
-        "title": "Geolocation & Geofencing",
-        "description": "Remind your customers you exist when they pass nearby. Native Apple Wallet geofencing, GDPR compliant."
+        "title": "Loyalty Geofencing — On Their Lock Screen When They Walk Past",
+        "description": "When a customer walks near your shop, their loyalty card appears on their lock screen. No app, no Bluetooth. Zero location data collected on your end."
       },
       "campagnes-promotionnelles": {
-        "title": "Wallet Promotional Campaigns — SMS Alternative for Small Business | Stampeo",
+        "title": "Wallet Promotional Campaigns — SMS Alternative for Small Business",
         "description": "Send promotional push notifications to your customers' Apple Wallet and Google Wallet. No SMS costs, ~85% open rate, segmentation and scheduling included. 3 free/month on Growth, unlimited on Pro."
       },
       "programme-fondateur": {
