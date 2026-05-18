@@ -15,27 +15,27 @@
     },
     "features": {
       "design-de-carte": {
-        "title": "Design de carte de fidélité",
-        "description": "Créez votre carte de fidélité digitale en 5 minutes. Personnalisez couleurs, logo et design, ou laissez-nous faire."
+        "title": "Votre carte fidélité aux couleurs de votre enseigne",
+        "description": "Envoyez votre logo, on crée votre carte en 24-48h — couleurs, tampons, fond, mise en page. Résultat professionnel garanti, sans compétences graphiques requises."
       },
       "scanner-mobile": {
-        "title": "Scanner mobile",
-        "description": "Tamponnez vos clients en une seconde avec votre téléphone. Application dédiée ou scanner web, avec mode hors ligne."
+        "title": "Scanner mobile — tamponnez en 0,8 seconde, même sans connexion",
+        "description": "Appli dédiée (retour haptique, 0,8 s) ou scanner web sans installation. Mode hors ligne pour les marchés, festivals et caves — synchro auto au retour du réseau."
       },
       "notifications-push": {
-        "title": "Notifications push",
-        "description": "Engagez vos clients directement sur leur écran de verrouillage. 85 % de taux de lecture via les notifications wallet."
+        "title": "Un tampon posé, une notification dans leur wallet — automatique",
+        "description": "Tampon, récompense, palier : chaque événement envoie une notification dans le wallet de votre client. Automatique, sans app supplémentaire, sans SMS."
       },
       "analytiques": {
-        "title": "Analytiques et tableau de bord",
-        "description": "Connaissez vos habitués avec des données concrètes. Tendances, heures de pointe, fréquence de visite et rétention."
+        "title": "Analytiques fidélité — savoir qui revient et qui décroche",
+        "description": "Tableau de bord en temps réel : clients, scans, récompenses distribuées. Plan Growth : tendances hebdo, heatmap des heures de pointe, rétention 30 jours et alertes clients à risque."
       },
       "geolocalisation": {
-        "title": "Géolocalisation et géofencing",
-        "description": "Rappelez à vos clients que vous existez quand ils passent à proximité. Géofencing natif Apple Wallet, conforme RGPD."
+        "title": "Votre carte s'affiche sur leur téléphone quand ils passent",
+        "description": "Quand un client passe à proximité, sa carte apparaît sur son écran de verrouillage. Sans app, sans Bluetooth. Zéro donnée de localisation collectée."
       },
       "campagnes-promotionnelles": {
-        "title": "Campagnes promotionnelles wallet — Alternative aux SMS | Stampeo",
+        "title": "Campagnes promotionnelles wallet — Alternative aux SMS",
         "description": "Envoyez des notifications promo dans Apple Wallet et Google Wallet. ~85 % de taux d'ouverture, pas de coût par message, segmentation et programmation incluses. 3 offertes/mois sur Growth, illimitées sur Pro."
       },
       "programme-fondateur": {
