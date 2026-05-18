@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-This privacy policy describes how Stampeo (hereinafter "we", "our", or "the Platform"), operated by Harry Viennot, sole proprietor registered in France under SIRET **currently being obtained**, collects, uses, stores, and protects personal data in connection with its digital loyalty card service.
+This privacy policy describes how Stampeo (hereinafter "we", "our", or "the Platform"), operated by Harry Viennot, sole proprietor registered in France under SIRET **10477625700016**, collects, uses, stores, and protects personal data in connection with its digital loyalty card service.
 
 We are committed to complying with the General Data Protection Regulation (GDPR, EU Regulation 2016/679) and the French Data Protection Act (Loi Informatique et Libertés).
 
@@ -237,5 +237,5 @@ We may update this privacy policy. In case of substantial changes, Business user
 
 - **Email:** contact@stampeo.app
 - **Data Controller:** Harry Viennot, Stampeo
-- **SIRET:** **currently being obtained**
+- **SIRET:** **10477625700016**
 - **Address:** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France

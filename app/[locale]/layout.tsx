@@ -39,6 +39,9 @@ export async function generateMetadata({
     },
     description: t("description"),
     keywords: t("keywords").split(", "),
+    formatDetection: {
+      telephone: false,
+    },
     openGraph: {
       title: t("title"),
       description: t("description"),

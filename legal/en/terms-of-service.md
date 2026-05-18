@@ -6,7 +6,7 @@
 
 These Terms of Service (hereinafter "Terms") govern access to and use of the Stampeo platform (hereinafter "the Platform"), a digital loyalty card service for Apple Wallet and Google Wallet.
 
-The Platform is operated by Harry Viennot, sole proprietor registered in France under SIRET **currently being obtained**, hereinafter "Stampeo", "we", or "our".
+The Platform is operated by Harry Viennot, sole proprietor registered in France under SIRET **10477625700016**, hereinafter "Stampeo", "we", or "our".
 
 By using the Platform, you agree to these Terms in their entirety.
 
@@ -298,6 +298,6 @@ Continued use of the Platform after the effective date of modifications constitu
 ## 16. Contact and Legal Notice
 
 - **Email:** support@stampeo.app
-- **Publisher:** Harry Viennot, sole proprietor, SIRET **currently being obtained**
+- **Publisher:** Harry Viennot, sole proprietor, SIRET **10477625700016**
 - **Address:** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France
 - **Hosting:** Supabase (Ireland, EU) and OVH (France)

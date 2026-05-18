@@ -6,7 +6,7 @@
 
 Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») régissent l'accès et l'utilisation de la plateforme Stampeo (ci-après « la Plateforme »), un service de cartes de fidélité numériques pour Apple Wallet et Google Wallet.
 
-La Plateforme est éditée par Harry Viennot, auto-entrepreneur immatriculé en France sous le numéro SIRET **en cours d'obtention**, ci-après « Stampeo », « nous » ou « notre ».
+La Plateforme est éditée par Harry Viennot, auto-entrepreneur immatriculé en France sous le numéro SIRET **10477625700016**, ci-après « Stampeo », « nous » ou « notre ».
 
 En utilisant la Plateforme, vous acceptez les présentes CGU dans leur intégralité.
 
@@ -306,6 +306,6 @@ La poursuite de l'utilisation de la Plateforme après l'entrée en vigueur des m
 ## 16. Contact et mentions légales
 
 - **Email :** support@stampeo.app
-- **Éditeur :** Harry Viennot, auto-entrepreneur, SIRET **en cours d'obtention**
+- **Éditeur :** Harry Viennot, auto-entrepreneur, SIRET **10477625700016**
 - **Adresse :** 20 rue Marcel Paul, Bat. D Apt. 133-B, 94800 Villejuif, France
 - **Hébergement :** Supabase (Irlande, UE) et OVH (France)
