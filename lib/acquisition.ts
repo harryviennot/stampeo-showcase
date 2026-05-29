@@ -140,18 +140,27 @@ export async function getActiveCardDesign(
  *
  * If the customer already exists (by email), returns status "exists_email_sent"
  * and sends them their pass via email for security.
+ *
+ * `locationSlug` comes from a per-store enrollment URL (`/{biz_slug}/l/{location_slug}`)
+ * and tags where the customer signed up. The backend resolves it for Pro businesses and
+ * silently ignores unknown/typo'd slugs (falls back to parent-org attribution).
  */
 export async function createPublicCustomer(
   businessId: string,
-  data: CustomerCreatePublic
+  data: CustomerCreatePublic,
+  locationSlug?: string | null
 ): Promise<{ data: CustomerPublicResponse | null; error: string | null }> {
   try {
+    // `location_slug` is URL-derived (per-store enrollment link), not form input.
+    // Only include it when present so plain `/{slug}` enrollment sends an unchanged body.
+    const body = locationSlug ? { ...data, location_slug: locationSlug } : data;
+
     const response = await fetch(`${API_URL}/public/customers/${businessId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
