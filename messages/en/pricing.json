@@ -6,7 +6,6 @@
     "subtitleStandard": "Unlimited customers, scans, and devices on every plan.",
     "foundingPartner": "FOUNDING PARTNER",
     "popular": "MOST POPULAR",
-    "comingSoon": "COMING SOON",
     "perMonth": "/month",
     "forLife": "/month for life",
     "freeMonths": "3 months free",
@@ -16,7 +15,6 @@
       "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
     },
     "cta": "Start Free",
-    "ctaComingSoon": "Coming soon",
     "ctaSubtext": "No credit card required · Cancel anytime",
     "starter": {
       "name": "Starter",
@@ -88,11 +86,9 @@
     "foundingCallout": "Founding partners get 50% off — locked for life.",
     "foundingLink": "Learn more about the Founding Program",
     "popular": "MOST POPULAR",
-    "comingSoon": "COMING SOON",
     "perMonth": "/mo",
     "forLife": "/mo for life",
     "cta": "Get started",
-    "ctaComingSoon": "Coming soon",
     "ctaSubtext": "No credit card required",
     "starter": {
       "name": "Starter",
@@ -123,7 +119,6 @@
       "tagline": "Multi-location, segmentation, and advanced tools",
       "features": [
         "Everything in Growth, plus:",
-        "Multiple active card templates",
         "Multi-location support",
         "Geofencing notifications",
         "Unlimited campaigns + segmentation",
@@ -133,9 +128,9 @@
     "comparison": {
       "title": "Compare all features",
       "subtitle": "See exactly what's included in each plan.",
+      "soon": "Soon",
       "categories": {
         "loyalty": "Loyalty Program",
-        "programs": "Programs",
         "cardDesign": "Card Design",
         "locations": "Locations",
         "notifications": "Notifications",
@@ -151,12 +146,6 @@
         "unlimitedScans": {
           "label": "Unlimited scans"
         },
-        "activeTemplates": {
-          "label": "Active card templates",
-          "starter": "1",
-          "growth": "1",
-          "pro": "Multiple"
-        },
         "savedTemplates": {
           "label": "Saved templates",
           "starter": "1",
@@ -167,7 +156,7 @@
           "label": "Loyalty type",
           "starter": "Stamps only",
           "growth": "Stamps or Points",
-          "pro": "Both + Multiple"
+          "pro": "Stamps or Points"
         },
         "fullCustomisation": {
           "label": "Full card customisation"
@@ -195,7 +184,6 @@
         },
         "milestoneLimit": {
           "label": "Custom stamp-count milestones",
-          "starter": "—",
           "growth": "3/program",
           "pro": "Unlimited"
         },
@@ -208,16 +196,10 @@
           "label": "Customer segmentation",
           "starter": "—",
           "growth": "Basic (date-based)",
-          "pro": "Advanced (stamps, inactivity, redemptions)"
+          "pro": "Advanced (stamps, inactivity, redemptions, location)"
         },
         "scheduledSends": {
           "label": "Scheduled sends"
-        },
-        "multiplePrograms": {
-          "label": "Multiple loyalty programs"
-        },
-        "promotionalEvents": {
-          "label": "Promotional events"
         },
         "teamMembers": {
           "label": "Team members",
@@ -260,10 +242,6 @@
         {
           "question": "Are there per-customer charges?",
           "answer": "No. Every plan includes unlimited customers and unlimited scans. Your price stays the same whether you have 10 customers or 10,000."
-        },
-        {
-          "question": "When will the Pro plan be available?",
-          "answer": "The Pro plan is currently in development. We're building multi-location support, geofencing, and advanced segmentation. Join the waitlist to be notified when it launches."
         },
         {
           "question": "Can I cancel anytime?",

@@ -16,13 +16,11 @@ function PricingCard({
   price,
   discount,
   highlighted,
-  comingSoon,
 }: {
   tier: "starter" | "growth" | "pro";
   price: number;
   discount?: Discount;
   highlighted?: boolean;
-  comingSoon?: boolean;
 }) {
   const t = useTranslations("pricingPage");
 
@@ -40,40 +38,26 @@ function PricingCard({
       ctaSubtext={t("ctaSubtext")}
       highlighted={highlighted}
       popularLabel={t("popular")}
-      comingSoon={comingSoon}
-      comingSoonLabel={t("comingSoon")}
-      ctaComingSoonLabel={t("ctaComingSoon")}
     />
   );
 }
 
-function CellValue({
-  type,
-  text,
-  muted,
-}: {
-  type: CellType;
-  text?: string;
-  muted?: boolean;
-}) {
+function CellValue({ type, text }: { type: CellType; text?: string }) {
+  const t = useTranslations("pricingPage");
   if (type === "check") {
-    return (
-      <Check
-        className={`w-5 h-5 ${muted ? "text-[var(--muted-foreground)]" : "text-green-500"}`}
-        weight="bold"
-      />
-    );
+    return <Check className="w-5 h-5 text-green-500" weight="bold" />;
   }
   if (type === "cross") {
     return <X className="w-5 h-5 text-[var(--border)]" weight="bold" />;
   }
-  return (
-    <span
-      className={`text-sm font-medium ${muted ? "text-[var(--muted-foreground)]" : ""}`}
-    >
-      {text}
-    </span>
-  );
+  if (type === "soon") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-[var(--muted)] px-2 py-0.5 text-[11px] font-semibold text-[var(--muted-foreground)] whitespace-nowrap">
+        {t("comparison.soon")}
+      </span>
+    );
+  }
+  return <span className="text-sm font-medium">{text}</span>;
 }
 
 const TIERS = ["starter", "growth", "pro"] as const;
@@ -125,10 +109,8 @@ function FeatureComparisonTable() {
                     &euro;{PRICING.growth.price}{t("perMonth")}
                   </div>
                 </th>
-                <th className="p-6 text-center w-[22%] opacity-50">
-                  <div className="text-sm font-bold text-[var(--muted-foreground)]">
-                    {t("pro.name")}
-                  </div>
+                <th className="p-6 text-center w-[22%]">
+                  <div className="text-sm font-bold">{t("pro.name")}</div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
                     &euro;{PRICING.pro.price}{t("perMonth")}
                   </div>
@@ -177,13 +159,9 @@ function FeatureComparisonTable() {
                             />
                           </span>
                         </td>
-                        <td className="px-6 py-2.5 text-center opacity-50">
+                        <td className="px-6 py-2.5 text-center">
                           <span className="inline-flex justify-center">
-                            <CellValue
-                              type={row.pro}
-                              text={rowData.pro}
-                              muted
-                            />
+                            <CellValue type={row.pro} text={rowData.pro} />
                           </span>
                         </td>
                       </tr>
@@ -228,12 +206,11 @@ function FeatureComparisonTable() {
                       mobileTier === tier
                         ? "bg-[var(--accent)]/5 text-[var(--accent)]"
                         : "hover:bg-[var(--cream)]"
-                    } ${tier === "pro" ? "opacity-50" : ""}`}
+                    }`}
                   >
                     <span>{t(`${tier}.name`)}</span>
                     <span className="text-xs text-[var(--muted-foreground)]">
                       &euro;{TIER_PRICES[tier]}{t("perMonth")}
-                      {tier === "pro" && ` · ${t("comingSoon")}`}
                     </span>
                   </button>
                 ))}
@@ -260,17 +237,13 @@ function FeatureComparisonTable() {
                       key={row.key}
                       className={`flex items-center justify-between px-5 py-2.5 border-t border-[var(--border)]/50 ${
                         rowIdx % 2 === 0 ? "bg-[var(--muted)]/30" : ""
-                      } ${mobileTier === "pro" ? "opacity-50" : ""}`}
+                      }`}
                     >
                       <span className="text-[13px] font-medium text-[var(--muted-foreground)]">
                         {rowData.label}
                       </span>
                       <span className="text-[13px] font-medium shrink-0 ml-4">
-                        <CellValue
-                          type={cellType}
-                          text={cellText}
-                          muted={mobileTier === "pro"}
-                        />
+                        <CellValue type={cellType} text={cellText} />
                       </span>
                     </div>
                   );
@@ -392,7 +365,7 @@ export function PricingPageContent() {
           }
           highlighted
         />
-        <PricingCard tier="pro" price={PRICING.pro.price} comingSoon />
+        <PricingCard tier="pro" price={PRICING.pro.price} />
       </ScrollReveal>
 
       {/* Feature Comparison Table */}

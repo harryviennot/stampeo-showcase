@@ -6,7 +6,7 @@
  * In the future, this can be fetched from GET /config/features at build time.
  */
 
-export type CellType = "check" | "cross" | "text";
+export type CellType = "check" | "cross" | "text" | "soon";
 
 export interface FeatureRow {
   key: string;
@@ -26,23 +26,15 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     rows: [
       { key: "unlimitedCustomers", starter: "check", growth: "check", pro: "check" },
       { key: "unlimitedScans", starter: "check", growth: "check", pro: "check" },
-      { key: "activeTemplates", starter: "text", growth: "text", pro: "text" },
       { key: "savedTemplates", starter: "text", growth: "text", pro: "text" },
       { key: "loyaltyType", starter: "text", growth: "text", pro: "text" },
-    ],
-  },
-  {
-    key: "programs",
-    rows: [
-      { key: "multiplePrograms", starter: "cross", growth: "cross", pro: "check" },
-      { key: "promotionalEvents", starter: "cross", growth: "check", pro: "check" },
     ],
   },
   {
     key: "cardDesign",
     rows: [
       { key: "fullCustomisation", starter: "check", growth: "check", pro: "check" },
-      { key: "scheduledChanges", starter: "cross", growth: "cross", pro: "check" },
+      { key: "scheduledChanges", starter: "cross", growth: "cross", pro: "soon" },
     ],
   },
   {
@@ -50,14 +42,14 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     rows: [
       { key: "locations", starter: "text", growth: "text", pro: "text" },
       { key: "locationAnalytics", starter: "cross", growth: "cross", pro: "check" },
-      { key: "geofencing", starter: "cross", growth: "cross", pro: "check" },
+      { key: "geofencing", starter: "cross", growth: "soon", pro: "soon" },
     ],
   },
   {
     key: "notifications",
     rows: [
       { key: "stampMilestoneReward", starter: "text", growth: "text", pro: "text" },
-      { key: "milestoneLimit", starter: "text", growth: "text", pro: "text" },
+      { key: "milestoneLimit", starter: "cross", growth: "text", pro: "text" },
       { key: "broadcastNotifications", starter: "cross", growth: "text", pro: "text" },
       { key: "segmentation", starter: "cross", growth: "text", pro: "text" },
       { key: "scheduledSends", starter: "cross", growth: "cross", pro: "check" },
@@ -80,7 +72,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
   {
     key: "mobileApp",
     rows: [
-      { key: "offlineScanning", starter: "check", growth: "check", pro: "check" },
+      { key: "offlineScanning", starter: "soon", growth: "soon", pro: "soon" },
     ],
   },
   {
