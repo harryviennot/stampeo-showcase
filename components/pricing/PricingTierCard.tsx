@@ -40,9 +40,6 @@ type PricingTierCardProps = {
   ctaSubtext?: string;
   highlighted?: boolean;
   popularLabel?: string;
-  comingSoon?: boolean;
-  comingSoonLabel?: string;
-  ctaComingSoonLabel?: string;
   currencySymbol?: string;
   /** When set, fires `landing_cta_clicked` with this location on CTA click. */
   trackAs?: CTALocation;
@@ -100,9 +97,6 @@ export function PricingTierCard({
   ctaSubtext,
   highlighted,
   popularLabel,
-  comingSoon,
-  comingSoonLabel,
-  ctaComingSoonLabel,
   currencySymbol = "€",
   trackAs,
 }: PricingTierCardProps) {
@@ -114,11 +108,9 @@ export function PricingTierCard({
     ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref })
     : undefined;
 
-  const containerClass = comingSoon
-    ? "border border-[var(--border)] bg-[var(--cream)] opacity-60"
-    : highlighted
-      ? "border-[3px] border-[var(--accent)] bg-[var(--cream)] shadow-2xl lg:scale-[1.03] z-10"
-      : "border border-[var(--border)] bg-[var(--cream)] shadow-sm hover:shadow-xl";
+  const containerClass = highlighted
+    ? "border-[3px] border-[var(--accent)] bg-[var(--cream)] shadow-2xl lg:scale-[1.03] z-10"
+    : "border border-[var(--border)] bg-[var(--cream)] shadow-sm hover:shadow-xl";
 
   return (
     <div
@@ -132,18 +124,8 @@ export function PricingTierCard({
         </div>
       )}
 
-      {comingSoon && comingSoonLabel && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-          <span className="text-xs font-bold px-4 py-1.5 rounded-full bg-[var(--muted)] text-[var(--muted-foreground)] whitespace-nowrap">
-            {comingSoonLabel}
-          </span>
-        </div>
-      )}
-
       <div className="flex flex-col gap-4 mb-8">
-        <h3 className={`text-2xl font-bold ${comingSoon ? "text-[var(--muted-foreground)]" : ""}`}>
-          {name}
-        </h3>
+        <h3 className="text-2xl font-bold">{name}</h3>
         <p className="text-sm text-[var(--muted-foreground)] font-medium">{tagline}</p>
 
         {showDiscount ? (
@@ -164,9 +146,7 @@ export function PricingTierCard({
           </div>
         ) : (
           <div className="flex items-baseline gap-1">
-            <span
-              className={`text-5xl font-black tracking-tight ${comingSoon ? "text-[var(--muted-foreground)]" : ""}`}
-            >
+            <span className="text-5xl font-black tracking-tight">
               {currencySymbol}
               {price}
             </span>
@@ -183,19 +163,15 @@ export function PricingTierCard({
             {featuresLabel}
           </p>
         )}
-        <ul className={`flex flex-col gap-4 ${comingSoon ? "text-[var(--muted-foreground)]" : ""}`}>
+        <ul className="flex flex-col gap-4">
           {features.map((feature, i) => (
-            <FeatureListItem key={i} feature={feature} muted={comingSoon} />
+            <FeatureListItem key={i} feature={feature} />
           ))}
         </ul>
       </div>
 
       <div className="flex flex-col gap-2 mt-auto">
-        {comingSoon ? (
-          <div className="w-full flex items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--border)] text-[var(--muted-foreground)] text-base font-extrabold cursor-not-allowed">
-            <span>{ctaComingSoonLabel ?? cta}</span>
-          </div>
-        ) : highlighted ? (
+        {highlighted ? (
           <Link
             href={ctaHref}
             onClick={handleCtaClick}
@@ -212,7 +188,7 @@ export function PricingTierCard({
             <span>{cta}</span>
           </Link>
         )}
-        {!comingSoon && ctaSubtext && (
+        {ctaSubtext && (
           <p className="text-xs text-center text-[var(--muted-foreground)]">{ctaSubtext}</p>
         )}
       </div>

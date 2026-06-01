@@ -74,9 +74,8 @@ export async function PricingSection() {
             perMonthLabel={t("perMonth")}
             cta={t("cta")}
             ctaHref="/onboarding"
-            comingSoon
-            comingSoonLabel={t("comingSoon")}
-            ctaComingSoonLabel={t("ctaComingSoon")}
+            ctaSubtext={t("ctaSubtext")}
+            trackAs="pricing_pro"
           />
         </ScrollReveal>
       </div>

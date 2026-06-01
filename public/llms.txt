@@ -150,7 +150,7 @@ Three tiers. Unlimited customers and unlimited scans on every plan. 30-day free 
 
 - **Starter — €20 / month** (founding partner: €10 / month for life): 1 active card template, unlimited customers & scans, 2 team members (owner + 1), automatic push notifications (predefined text), basic dashboard & stats, email support.
 - **Growth — €40 / month** (founding partner: €20 / month for life): everything in Starter, plus stamps or points (choose one), unlimited team members, custom notification messages, 8 broadcast campaigns per month, 3 custom milestones per program, basic segmentation (date-based), trends & analytics.
-- **Pro — €60 / month** (coming soon): everything in Growth, plus multiple active card templates, multi-location with per-location analytics, geofencing notifications, unlimited broadcast campaigns, advanced segmentation (by stamps, inactivity, redemptions), unlimited custom milestones, advanced analytics & retention, priority email support.
+- **Pro — €60 / month**: everything in Growth, plus multiple active card templates, multi-location with per-location analytics, geofencing notifications, unlimited broadcast campaigns, advanced segmentation (by stamps, inactivity, redemptions), unlimited custom milestones, advanced analytics & retention, priority email support.
 
 ### Founding partner program (closes 2026-05-19)
 Early customers can lock in 50% off Starter or Growth — for life. Details on [/programme-fondateur](https://stampeo.app/programme-fondateur) (FR) or [/founding-partner](https://stampeo.app/en/founding-partner) (EN). After 2026-05-19 the program closes — existing founding partners are grandfathered indefinitely.

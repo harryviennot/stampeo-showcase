@@ -6,7 +6,7 @@ import {
 } from "@/components/acquisition/AcquisitionPageView";
 
 interface PageProps {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{ slug: string; locale: string; locationSlug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return buildAcquisitionMetadata(slug);
 }
 
-export default async function AcquisitionPage({ params }: PageProps) {
-  const { slug } = await params;
-  return <AcquisitionPageView slug={slug} />;
+export default async function LocationAcquisitionPage({ params }: PageProps) {
+  const { slug, locationSlug } = await params;
+  return <AcquisitionPageView slug={slug} locationSlug={locationSlug} />;
 }

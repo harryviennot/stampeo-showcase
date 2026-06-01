@@ -15,7 +15,7 @@ export const PRICING = {
   },
   pro: {
     price: 60,
-    // No founding price — Pro is "coming soon"
+    // No founding price — Pro is full-price only.
   },
   /** Founding partner discount percentage */
   foundingDiscount: 50,
