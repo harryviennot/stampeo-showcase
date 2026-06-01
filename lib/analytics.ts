@@ -5,6 +5,7 @@ export type CTALocation =
   | "hero_demo"
   | "pricing_starter"
   | "pricing_growth"
+  | "pricing_pro"
   | "faq"
   | "final_cta"
   | "final_cta_demo";

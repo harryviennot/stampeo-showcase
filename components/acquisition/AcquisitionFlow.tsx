@@ -20,9 +20,11 @@ type FlowState = "form" | "submitting" | "success" | "email_sent" | "error";
 interface AcquisitionFlowProps {
   business: BusinessPublicResponse;
   cardDesign: CardDesignPublicResponse | null;
+  /** From a per-store enrollment URL (`/{slug}/l/{locationSlug}`); tags where the customer signed up. */
+  locationSlug?: string | null;
 }
 
-export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) {
+export function AcquisitionFlow({ business, cardDesign, locationSlug }: AcquisitionFlowProps) {
   const t = useTranslations("acquisition");
   const [flowState, setFlowState] = useState<FlowState>("form");
   const [customerResponse, setCustomerResponse] = useState<CustomerPublicResponse | null>(null);
@@ -41,7 +43,7 @@ export function AcquisitionFlow({ business, cardDesign }: AcquisitionFlowProps) 
     setFlowState("submitting");
     setErrorMessage(null);
 
-    const { data: response, error } = await createPublicCustomer(business.id, data);
+    const { data: response, error } = await createPublicCustomer(business.id, data, locationSlug);
 
     if (error || !response) {
       setErrorMessage(error || "Something went wrong. Please try again.");

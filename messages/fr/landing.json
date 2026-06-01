@@ -178,7 +178,7 @@
         },
         {
           "question": "Un commerce peut-il avoir plusieurs cartes de fidélité ?",
-          "answer": "Cette fonctionnalité sera disponible avec le plan Pro (en cours de développement). Vous pourrez créer plusieurs modèles de carte actifs en même temps (par exemple une carte \"café\" et une carte \"brunch du dimanche\"), chacune avec ses propres récompenses. Sur les plans Starter et Growth, vous avez un modèle actif à la fois, ce qui suffit pour la plupart des commerces."
+          "answer": "Chaque commerce gère un seul programme de fidélité à la fois. Sur Growth et Pro, vous pouvez enregistrer plusieurs styles de carte et changer celui qui est actif, mais vos clients cumulent toujours leurs tampons sur une seule carte. Les récompenses restent simples, pour vous comme pour eux."
         },
         {
           "question": "Peut-on envoyer des campagnes promotionnelles ?",

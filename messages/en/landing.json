@@ -178,7 +178,7 @@
         },
         {
           "question": "Can a business have multiple loyalty cards?",
-          "answer": "This feature will be available with the Pro plan (currently in development). You'll be able to create multiple active card templates simultaneously — for example a \"coffee\" card and a \"Sunday brunch\" card — each with its own rewards. On the Starter and Growth plans, you have one active template at a time, which is enough for most businesses."
+          "answer": "Each business runs one active loyalty program at a time. On Growth and Pro you can save several card styles and switch which one is live, but your customers always collect stamps on a single card. That keeps rewards simple for you and for them."
         },
         {
           "question": "Can I send promotional campaigns?",
