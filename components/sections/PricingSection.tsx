@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
-import { FoundingCountdown } from "@/components/pricing/FoundingCountdown";
 import { PricingTierCard, type FeatureItem } from "@/components/pricing/PricingTierCard";
 
 export async function PricingSection() {
@@ -22,11 +21,6 @@ export async function PricingSection() {
           <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
             {foundingOpen ? t("subtitle") : t("subtitleStandard")}
           </p>
-          {foundingOpen && (
-            <div className="mt-5 flex justify-center">
-              <FoundingCountdown variant="badge" />
-            </div>
-          )}
         </ScrollReveal>
 
         <ScrollReveal
@@ -78,6 +72,14 @@ export async function PricingSection() {
             trackAs="pricing_pro"
           />
         </ScrollReveal>
+
+        {foundingOpen && (
+          <ScrollReveal delay={300} className="mt-8 text-center">
+            <p className="text-[var(--muted-foreground)] text-sm font-medium max-w-2xl mx-auto">
+              {t("foundingReassurance")}
+            </p>
+          </ScrollReveal>
+        )}
       </div>
     </section>
   );
