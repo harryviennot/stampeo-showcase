@@ -497,7 +497,7 @@
       "items": [
         {
           "question": "Combien ça coûte ?",
-          "answer": "Le plan Starter est à {starterPrice} €/mois (tarif fondateur : {starterFoundingPrice} €/mois à vie). Pas de frais de mise en service, pas d'engagement. Vous commencez gratuitement pendant 1 mois, sans carte bancaire."
+          "answer": "Le plan Starter est à {starterPrice} €/mois (tarif fondateur : {starterFoundingPrice} €/mois à vie). Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Votre carte bancaire est demandée pour démarrer l'essai, sans aucun débit avant la fin du mois."
         },
         {
           "question": "Dois-je changer ma caisse ?",

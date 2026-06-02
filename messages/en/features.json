@@ -953,7 +953,7 @@
       "sections": [
         {
           "title": "{freeMonths} months completely free",
-          "description": "No credit card at signup. No catch. Test Stampeo for {freeMonths} months without paying anything. If it doesn't work for you, leave with no fees.",
+          "description": "We ask for a card at signup, but there's no charge during the trial. No catch. Test Stampeo for {freeMonths} months without paying anything. If it doesn't work for you, leave with no fees.",
           "icon": "calendar"
         },
         {
@@ -983,7 +983,7 @@
           "items": [
             {
               "title": "{freeMonths} months completely free",
-              "description": "No credit card at signup. No catch. Test for {freeMonths} months without paying anything. If it doesn't work for you, leave — no fees.",
+              "description": "We ask for a card at signup, but there's no charge during the trial. No catch. Test for {freeMonths} months without paying anything. If it doesn't work for you, leave with no fees.",
               "icon": "calendar"
             },
             {

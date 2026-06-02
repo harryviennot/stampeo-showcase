@@ -953,7 +953,7 @@
       "sections": [
         {
           "title": "{freeMonths} mois entièrement gratuits",
-          "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez Stampeo pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
+          "description": "Carte bancaire demandée à l'inscription, aucun débit pendant l'essai. Pas de piège. Vous testez Stampeo pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
           "icon": "calendar"
         },
         {
@@ -983,7 +983,7 @@
           "items": [
             {
               "title": "{freeMonths} mois entièrement gratuits",
-              "description": "Pas de carte bancaire à l'inscription. Pas de piège. Vous testez pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez — sans frais.",
+              "description": "Carte bancaire demandée à l'inscription, aucun débit pendant l'essai. Pas de piège. Vous testez pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
               "icon": "calendar"
             },
             {

@@ -15,7 +15,7 @@
       "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
     },
     "cta": "Start Free",
-    "ctaSubtext": "No credit card required · Cancel anytime",
+    "ctaSubtext": "30-day free trial · Cancel anytime",
     "starter": {
       "name": "Starter",
       "tagline": "Everything you need to launch your loyalty program",
@@ -89,7 +89,7 @@
     "perMonth": "/mo",
     "forLife": "/mo for life",
     "cta": "Get started",
-    "ctaSubtext": "No credit card required",
+    "ctaSubtext": "30-day free trial",
     "starter": {
       "name": "Starter",
       "tagline": "For solo operators and single-location businesses",
@@ -233,7 +233,7 @@
       "items": [
         {
           "question": "Is there a free trial?",
-          "answer": "Yes! Every plan includes a 30-day free trial. No credit card required to get started."
+          "answer": "Yes! Every plan includes a 30-day free trial. We ask for a card to start the trial, but you're not charged until the 30 days are up. Cancel anytime."
         },
         {
           "question": "Can I switch plans later?",

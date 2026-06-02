@@ -36,7 +36,7 @@ type PricingTierCardProps = {
   forLifeLabel?: string;
   cta: string;
   ctaHref: string;
-  /** Small line below the CTA — "No credit card required · Cancel anytime" */
+  /** Small line below the CTA — "30-day free trial · Cancel anytime" */
   ctaSubtext?: string;
   highlighted?: boolean;
   popularLabel?: string;
