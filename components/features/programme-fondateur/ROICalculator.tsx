@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { ScrollReveal } from "../../ui/ScrollReveal";
 import { PRICING } from "@/lib/pricing";
 
@@ -18,6 +18,12 @@ interface ROICalculatorProps {
 
 export function ROICalculator({ namespace = "features.programme-fondateur.custom.roi" }: ROICalculatorProps) {
   const t = useTranslations(namespace);
+  const locale = useLocale();
+  const isFr = locale === "fr";
+  // French: decimal comma + a space before the euro sign. English: keep compact.
+  const fmtDecimal = (n: number) =>
+    n % 1 === 0 ? String(n) : isFr ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
+  const euro = (n: number) => (isFr ? `${n} €` : `${n}€`);
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
   const [mode, setMode] = useState<Mode>("prudent");
@@ -26,7 +32,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
   const percentDisplay = Math.round(percent * 100);
   const extraClientsPerDay = clients * percent;
   const extraRevenue = Math.round(extraClientsPerDay * basket * 30);
-  const stampeoCost = PRICING.starter.foundingPrice;
+  const stampeoCost = PRICING.growth.foundingPrice;
   const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (
@@ -104,7 +110,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                     {t("basketLabel")}
                   </label>
                   <span className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
-                    {basket}€
+                    {euro(basket)}
                   </span>
                 </div>
                 <input
@@ -118,8 +124,8 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                   className="roi-slider w-full"
                 />
                 <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
-                  <span>3€</span>
-                  <span>50€</span>
+                  <span>{euro(3)}</span>
+                  <span>{euro(50)}</span>
                 </div>
               </div>
             </div>
@@ -134,16 +140,12 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                   {t("breakdownClients", {
                     clients,
                     percent: percentDisplay,
-                    extra: extraClientsPerDay % 1 === 0
-                      ? extraClientsPerDay
-                      : extraClientsPerDay.toFixed(1),
+                    extra: fmtDecimal(extraClientsPerDay),
                   })}
                 </p>
                 <p>
                   {t("breakdownRevenue", {
-                    extra: extraClientsPerDay % 1 === 0
-                      ? extraClientsPerDay
-                      : extraClientsPerDay.toFixed(1),
+                    extra: fmtDecimal(extraClientsPerDay),
                     basket,
                     total: extraRevenue,
                   })}
@@ -159,7 +161,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                 </p>
                 <div className="mt-auto">
                   <p className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums transition-all duration-300">
-                    {extraRevenue}€
+                    {euro(extraRevenue)}
                   </p>
                   <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
@@ -173,7 +175,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
                 </p>
                 <div className="mt-auto">
                   <p className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums">
-                    {stampeoCost}€
+                    {euro(stampeoCost)}
                   </p>
                   <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}

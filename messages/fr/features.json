@@ -940,36 +940,36 @@
     },
     "programme-fondateur": {
       "hero": {
-        "title": "Vous n'êtes pas juste un client. Vous <accent>construisez le produit</accent> avec nous.",
-        "navTitle": "Programme Fondateur — Tarif préférentiel à vie",
-        "subtitle": "Stampeo est un produit jeune. On cherche 50 commerçants français prêts à tester, critiquer, et façonner le meilleur outil de fidélisation digitale. En échange, des conditions qu'on ne proposera plus jamais.",
-        "badge": "Programme Fondateur",
-        "secondaryCta": "{freeMonths} mois gratuits · {growthFoundingPrice} €/mois à vie"
+        "title": "Tout Stampeo, dès aujourd'hui. Et <accent>20 €/mois bloqués à vie</accent>.",
+        "navTitle": "Offre de lancement : tarif bloqué à vie",
+        "subtitle": "Stampeo tourne déjà tous les jours chez des dizaines de commerces. Les premiers à nous rejoindre gardent le tarif de lancement, pour toujours.",
+        "badge": "Offre de lancement",
+        "secondaryCta": "1 mois gratuit, puis {growthFoundingPrice} €/mois à vie"
       },
       "problem": {
         "title": "On joue cartes sur table",
-        "description": "Stampeo est un produit jeune. On ne va pas prétendre qu'on a 10 000 utilisateurs. On cherche des partenaires prêts à nous accompagner dans la construction d'un outil qui colle vraiment à vos besoins."
+        "description": "On préfère être clairs. Voici exactement où en est Stampeo aujourd'hui."
       },
       "sections": [
         {
-          "title": "{freeMonths} mois entièrement gratuits",
-          "description": "Carte bancaire demandée à l'inscription, aucun débit pendant l'essai. Pas de piège. Vous testez Stampeo pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
+          "title": "1 mois gratuit, sans piège",
+          "description": "Carte bancaire demandée à l'inscription, aucun débit pendant l'essai. Vous testez en conditions réelles. Si Stampeo ne vous convient pas, vous partez sans rien payer.",
           "icon": "calendar"
         },
         {
           "title": "{growthFoundingPrice} €/mois à vie",
-          "description": "Après la période gratuite, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
+          "description": "Après l'essai, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours, même quand le prix augmentera pour les nouveaux commerces.",
           "icon": "tag"
         },
         {
           "title": "Toutes les fonctionnalités Growth",
-          "description": "Pas de plan basique pour les fondateurs. Plusieurs modèles de carte, équipe illimitée, analytiques avancées, géolocalisation, et canal direct avec notre équipe.",
+          "description": "Plusieurs styles de carte, tampons ou points au choix, membres d'équipe illimités, messages de notification personnalisés, et diffusions à tous vos clients.",
           "icon": "crown"
         }
       ],
       "cta": {
-        "title": "Rejoignez les premiers",
-        "subtitle": "Places limitées. {freeMonths} mois gratuits. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth."
+        "title": "Rejoignez les premiers commerces",
+        "subtitle": "1 mois gratuit. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth, disponibles aujourd'hui."
       },
       "related": [
         "notifications-push",
@@ -979,85 +979,83 @@
       "custom": {
         "seeAllPlans": "Voir tous les plans",
         "benefits": {
-          "title": "Les avantages concrets",
+          "title": "Ce que vous obtenez",
           "items": [
             {
-              "title": "{freeMonths} mois entièrement gratuits",
-              "description": "Carte bancaire demandée à l'inscription, aucun débit pendant l'essai. Pas de piège. Vous testez pendant {freeMonths} mois sans rien payer. Si ça ne vous convient pas, vous partez sans frais.",
+              "title": "1 mois gratuit, sans piège",
+              "description": "Carte bancaire demandée à l'inscription, aucun débit pendant l'essai. Vous testez en conditions réelles. Si Stampeo ne vous convient pas, vous partez sans rien payer.",
               "icon": "calendar"
             },
             {
               "title": "{growthFoundingPrice} €/mois à vie",
-              "description": "Après la période gratuite, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours. Même quand le prix augmentera pour les nouveaux clients.",
+              "description": "Après l'essai, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours, même quand le prix augmentera pour les nouveaux commerces.",
               "icon": "tag"
             },
             {
               "title": "Toutes les fonctionnalités Growth",
-              "description": "Plusieurs modèles de carte, membres d'équipe illimités, analytiques avancées, géolocalisation, et canal direct avec notre équipe.",
+              "description": "Plusieurs styles de carte, tampons ou points au choix, membres d'équipe illimités, messages de notification personnalisés, et diffusions à tous vos clients.",
               "icon": "crown"
             },
             {
-              "title": "Canal direct avec l'équipe",
-              "description": "Pas de chatbot. Pas de ticket #47832. Un canal direct avec les gens qui construisent Stampeo. Un bug ? Une idée ? On s'en occupe.",
+              "title": "Un canal direct avec l'équipe",
+              "description": "Pas de robot, pas de ticket numéro 47832. Vous parlez directement aux personnes qui construisent Stampeo. Un souci, une idée : on s'en occupe.",
               "icon": "signal"
             },
             {
-              "title": "Votre carte designée par nos soins",
-              "description": "Envoyez-nous votre logo et vos couleurs. On crée votre carte de fidélité digitale — professionnelle, aux normes Apple et Google Wallet. Inclus.",
+              "title": "Votre carte créée par nos soins",
+              "description": "Envoyez-nous votre logo et vos couleurs. On crée votre carte de fidélité, propre et conforme à Apple Wallet et Google Wallet, le porte-cartes intégré au téléphone de vos clients. Inclus.",
               "icon": "palette"
             },
             {
-              "title": "Priorité sur tout",
-              "description": "Nouvelles fonctionnalités en avant-première. Support prioritaire. Vous passez en tête de file, toujours.",
+              "title": "La priorité, sur tout",
+              "description": "Nouvelles fonctionnalités en avant-première, support prioritaire. En tant que premier commerce, vous passez devant.",
               "icon": "sparkles"
             }
           ]
         },
         "transparency": {
           "title": "On joue cartes sur table",
-          "description": "Stampeo est un produit jeune. On ne va pas prétendre qu'on a 10 000 utilisateurs. Voici où on en est :",
+          "description": "On préfère être clairs. Voici exactement où en est Stampeo aujourd'hui.",
           "worksNow": {
-            "title": "Ce qui marche déjà",
+            "title": "Ce qui fonctionne, aujourd'hui",
             "items": [
-              "Génération de cartes Apple Wallet et Google Wallet",
-              "Scan QR code avec notification push en temps réel",
-              "Campagnes promotionnelles à tous vos clients (Growth / Pro)",
-              "Segmentation client pour les campagnes (Pro)",
+              "Cartes Apple Wallet et Google Wallet",
+              "Scan du QR code avec notification en temps réel",
+              "Diffusions à tous vos clients (Growth et Pro)",
+              "Segmentation des clients pour vos diffusions (Pro)",
               "Tableau de bord avec liste de clients et statistiques",
-              "Mode hors ligne pour le scanner",
               "Éditeur de carte avec aperçu en temps réel"
             ]
           },
           "comingSoon": {
-            "title": "Ce qui arrive bientôt",
+            "title": "Ce qu'on construit ensuite",
             "items": [
-              "Analytiques avancées (tendances, heures de pointe)",
+              "Mode hors ligne pour le scanner",
+              "Géolocalisation pour Apple Wallet et Google Wallet",
               "Création de carte assistée par IA",
-              "Designs programmés et saisonniers",
-              "Géolocalisation (Apple Wallet)"
+              "Styles de carte programmés et saisonniers"
             ]
           },
           "expectFromYou": {
-            "title": "Ce qu'on attend de vous",
+            "title": "Ce qu'on vous demande",
             "items": [
               "Utiliser Stampeo au quotidien dans votre commerce",
-              "Nous dire ce qui marche et ce qui ne marche pas",
-              "Suggérer des améliorations",
-              "Être patient quand quelque chose ne fonctionne pas encore parfaitement"
+              "Nous dire ce qui marche et ce qui vous ferait gagner du temps",
+              "Partager vos idées d'amélioration"
             ]
           },
-          "disclaimer": "Si vous cherchez un produit fini et rodé, attendez quelques mois. Si vous voulez participer à la création d'un outil qui colle vraiment à vos besoins — on est faits pour s'entendre."
+          "closing": "Stampeo est prêt à tourner dans votre commerce dès aujourd'hui. En rejoignant maintenant, vous bloquez le meilleur tarif et vous pesez sur ce qu'on construit ensuite."
         },
         "roi": {
           "title": "Est-ce que ça vaut le coup ?",
-          "subtitle": "Faites vos propres calculs.",
+          "subtitle": "Faites le calcul.",
           "modePrudent": "Prudent",
           "modeOptimiste": "Optimiste",
           "clientsLabel": "Clients par jour",
           "basketLabel": "Panier moyen",
-          "assumption": "Hypothèse : un programme de fidélité génère ~{percent}% de visites supplémentaires",
-          "breakdownClients": "{clients} clients/jour × {percent}% = ~{extra} clients en plus par jour",
-          "breakdownRevenue": "{extra} clients × {basket}€ × 30 jours = {total}€/mois de revenus en plus",
+          "assumption": "Hypothèse : un programme de fidélité génère environ {percent} % de visites en plus",
+          "breakdownClients": "{clients} clients/jour × {percent} % = environ {extra} clients en plus par jour",
+          "breakdownRevenue": "{extra} clients × {basket} € × 30 jours = {total} €/mois",
           "extraRevenue": "Revenus en plus",
           "perMonth": "/mois",
           "stampeoCost": "Stampeo",
@@ -1072,24 +1070,24 @@
         },
         "timeline": {
           "badge": "Comment ça marche",
-          "title": "4 étapes pour devenir partenaire fondateur",
+          "title": "4 étapes pour démarrer",
           "subtitle": "",
           "steps": [
             {
-              "title": "Remplissez le formulaire",
-              "description": "2 minutes, c'est tout"
+              "title": "Créez votre compte",
+              "description": "Configurez votre programme en 2 minutes."
             },
             {
-              "title": "On examine votre candidature",
-              "description": "Réponse sous 48h"
+              "title": "Personnalisez votre carte",
+              "description": "Faites-la vous-même, ou écrivez-nous avec votre logo et vos couleurs : on la crée pour vous."
             },
             {
-              "title": "On configure votre compte",
-              "description": "Carte + app + QR code"
+              "title": "Affichez votre QR code",
+              "description": "Au comptoir. Vos clients ajoutent leur carte en un scan."
             },
             {
-              "title": "Vous lancez votre programme",
-              "description": "Premier client dès le jour 1"
+              "title": "Lancez votre programme",
+              "description": "Premier tampon dès le premier jour."
             }
           ]
         },
@@ -1097,32 +1095,36 @@
           "title": "Questions fréquentes",
           "items": [
             {
-              "question": "Combien de places sont disponibles ?",
-              "answer": "On accepte les partenaires fondateurs par vagues de 10-15 commerces. Le tarif fondateur ({growthFoundingPrice} €/mois à vie) ne sera plus proposé après la clôture du programme."
+              "question": "Le produit est-il complet et utilisable tout de suite ?",
+              "answer": "Oui. Stampeo tourne déjà tous les jours chez des dizaines de commerces : cartes Apple Wallet et Google Wallet, scan, notifications, diffusions et statistiques sont en place. Vous pouvez lancer votre programme aujourd'hui."
             },
             {
-              "question": "Que se passe-t-il après les 3 mois gratuits ?",
-              "answer": "Vous passez automatiquement à {growthFoundingPrice} €/mois. On vous prévient 2 semaines avant. Si vous ne souhaitez pas continuer, vous annulez en un clic — sans frais."
+              "question": "Combien de temps l'offre de lancement reste-t-elle ouverte ?",
+              "answer": "Le tarif de lancement ({growthFoundingPrice} €/mois à vie) reste ouvert pendant la phase de lancement, puis le prix augmentera pour les nouveaux commerces. Une fois entré, votre tarif est bloqué à vie."
             },
             {
-              "question": "Est-ce que je garde le tarif fondateur si vous augmentez les prix ?",
-              "answer": "Oui. {growthFoundingPrice} €/mois à vie signifie à vie. Même si le plan Growth passe à 49,99 € dans 3 ans, votre tarif ne change pas. C'est contractuel."
+              "question": "Que se passe-t-il après le mois gratuit ?",
+              "answer": "Vous passez à {growthFoundingPrice} €/mois. On vous prévient deux fois : une semaine avant, puis 3 jours avant. Si vous ne voulez pas continuer, vous annulez en un clic, sans frais."
             },
             {
-              "question": "Puis-je changer d'avis et annuler ?",
-              "answer": "À tout moment. Pas de période d'engagement après les 3 mois gratuits. Si vous annulez, vous perdez l'accès mais vos clients gardent leurs cartes."
+              "question": "Est-ce que je garde mon tarif si vous augmentez les prix ?",
+              "answer": "Oui. {growthFoundingPrice} €/mois à vie veut dire à vie. Même si le plan Growth passe à 49,99 € dans trois ans, votre tarif ne bouge pas. C'est contractuel."
+            },
+            {
+              "question": "Puis-je annuler ?",
+              "answer": "À tout moment après le mois gratuit. Aucun engagement. Si vous annulez, vous perdez l'accès, mais vos clients gardent leurs cartes."
             }
           ]
         },
         "finalCta": {
-          "title": "Rejoignez les premiers",
-          "subtitle": "Places limitées. {freeMonths} mois gratuits. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth.",
-          "urgency": "Prochaine vague d'acceptation : mars 2026"
+          "title": "Rejoignez les premiers commerces",
+          "subtitle": "1 mois gratuit. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth, disponibles aujourd'hui.",
+          "urgency": "Le tarif de lancement augmentera pour les nouveaux commerces. Bloquez le vôtre maintenant."
         }
       }
     },
     "relatedTitle": "Découvrez aussi",
     "discoverLink": "Découvrir",
-    "ctaButton": "Devenir Partenaire Fondateur"
+    "ctaButton": "Commencer gratuitement"
   }
 }

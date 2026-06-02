@@ -221,10 +221,14 @@ export function FounderProgramPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm text-[var(--muted-foreground)] italic">
-                {c("transparency.disclaimer")}
-              </p>
             </div>
+          </ScrollReveal>
+
+          {/* Closing line — positive, product-is-ready framing */}
+          <ScrollReveal delay={400} className="max-w-4xl mx-auto mt-8">
+            <p className="text-center text-base font-medium text-[var(--muted-foreground)] leading-relaxed">
+              {c("transparency.closing")}
+            </p>
           </ScrollReveal>
         </Container>
       </section>
