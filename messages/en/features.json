@@ -940,36 +940,36 @@
     },
     "programme-fondateur": {
       "hero": {
-        "title": "You're not just a customer. You're <accent>building the product</accent> with us.",
-        "navTitle": "Founding Program — Preferential rate for life",
-        "subtitle": "We're looking for 50 French business owners ready to test, critique, and shape the best digital loyalty tool. In exchange, conditions we'll never offer again.",
-        "badge": "Founding Program",
-        "secondaryCta": "{freeMonths} months free · €{growthFoundingPrice}/month for life"
+        "title": "All of Stampeo, today. And <accent>€20/month locked for life</accent>.",
+        "navTitle": "Launch offer: rate locked for life",
+        "subtitle": "Stampeo already runs every day in dozens of businesses. The first to join keep the launch rate, for good.",
+        "badge": "Launch offer",
+        "secondaryCta": "1 month free, then €{growthFoundingPrice}/month for life"
       },
       "problem": {
         "title": "Let's be transparent",
-        "description": "Stampeo is a young product. We're not going to pretend we have 10,000 users. We're looking for partners ready to join us in building a tool that truly fits your needs."
+        "description": "We'd rather be clear. Here's exactly where Stampeo stands today."
       },
       "sections": [
         {
-          "title": "{freeMonths} months completely free",
-          "description": "We ask for a card at signup, but there's no charge during the trial. No catch. Test Stampeo for {freeMonths} months without paying anything. If it doesn't work for you, leave with no fees.",
+          "title": "1 month free, no catch",
+          "description": "We ask for a card at signup, but there's no charge during the trial. You test it in real conditions. If Stampeo isn't for you, you leave without paying a thing.",
           "icon": "calendar"
         },
         {
           "title": "€{growthFoundingPrice}/month for life",
-          "description": "After the free period, your rate is locked at €{growthFoundingPrice}/month. Forever. Even when the price increases for new customers.",
+          "description": "After the trial, your rate is locked at €{growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
           "icon": "tag"
         },
         {
-          "title": "All Growth features included",
-          "description": "No basic plan for founders. Multiple card templates, unlimited team members, advanced analytics, geolocation, and a direct channel with our team.",
+          "title": "All Growth features",
+          "description": "Multiple card styles, stamps or points (your choice), unlimited team members, custom notification messages, and broadcasts to all your customers.",
           "icon": "crown"
         }
       ],
       "cta": {
-        "title": "Join the first ones",
-        "subtitle": "Limited spots. {freeMonths} months free. €{growthFoundingPrice}/month for life. All Growth features."
+        "title": "Join the first businesses",
+        "subtitle": "1 month free. €{growthFoundingPrice}/month for life. All Growth features, available today."
       },
       "related": [
         "notifications-push",
@@ -979,85 +979,83 @@
       "custom": {
         "seeAllPlans": "See all plans",
         "benefits": {
-          "title": "Concrete benefits",
+          "title": "What you get",
           "items": [
             {
-              "title": "{freeMonths} months completely free",
-              "description": "We ask for a card at signup, but there's no charge during the trial. No catch. Test for {freeMonths} months without paying anything. If it doesn't work for you, leave with no fees.",
+              "title": "1 month free, no catch",
+              "description": "We ask for a card at signup, but there's no charge during the trial. You test it in real conditions. If Stampeo isn't for you, you leave without paying a thing.",
               "icon": "calendar"
             },
             {
               "title": "€{growthFoundingPrice}/month for life",
-              "description": "After the free period, your rate is locked at €{growthFoundingPrice}/month. Forever. Even when the price increases for new customers.",
+              "description": "After the trial, your rate is locked at €{growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
               "icon": "tag"
             },
             {
-              "title": "All Growth features included",
-              "description": "Multiple card templates, unlimited team members, advanced analytics, geolocation, and a direct channel with our team.",
+              "title": "All Growth features",
+              "description": "Multiple card styles, stamps or points (your choice), unlimited team members, custom notification messages, and broadcasts to all your customers.",
               "icon": "crown"
             },
             {
-              "title": "Direct channel with the team",
-              "description": "No chatbot. No ticket #47832. A direct channel with the people building Stampeo. A bug? An idea? We handle it.",
+              "title": "A direct channel with the team",
+              "description": "No bot, no ticket number 47832. You talk straight to the people building Stampeo. A problem, an idea: we handle it.",
               "icon": "signal"
             },
             {
-              "title": "Your card designed by us",
-              "description": "Send us your logo and colors. We create your digital loyalty card — professional, Apple and Google Wallet compliant. Included.",
+              "title": "Your card created by us",
+              "description": "Send us your logo and colors. We create your loyalty card, clean and compliant with Apple Wallet and Google Wallet, the card holder built into your customers' phones. Included.",
               "icon": "palette"
             },
             {
               "title": "Priority on everything",
-              "description": "New features first. Priority support. You're always at the front of the line.",
+              "description": "New features first, priority support. As an early business, you go to the front.",
               "icon": "sparkles"
             }
           ]
         },
         "transparency": {
           "title": "Let's be transparent",
-          "description": "Stampeo is a young product. We're not going to pretend we have 10,000 users. Here's where we stand:",
+          "description": "We'd rather be clear. Here's exactly where Stampeo stands today.",
           "worksNow": {
-            "title": "What already works",
+            "title": "What works, today",
             "items": [
-              "Apple Wallet and Google Wallet card generation",
-              "QR code scanning with real-time push notifications",
-              "Promotional broadcasts to all customers (Growth / Pro)",
-              "Customer segmentation for broadcasts (Pro)",
-              "Dashboard with customer list and basic statistics",
-              "Offline mode for the scanner",
+              "Apple Wallet and Google Wallet cards",
+              "QR code scanning with real-time notifications",
+              "Broadcasts to all your customers (Growth and Pro)",
+              "Customer segmentation for your broadcasts (Pro)",
+              "Dashboard with customer list and statistics",
               "Card editor with real-time preview"
             ]
           },
           "comingSoon": {
-            "title": "Coming soon",
+            "title": "What we're building next",
             "items": [
-              "Advanced analytics (trends, peak hours)",
+              "Offline mode for the scanner",
+              "Geolocation for Apple Wallet and Google Wallet",
               "AI-assisted card creation",
-              "Scheduled and seasonal designs",
-              "Geolocation (Apple Wallet)"
+              "Scheduled and seasonal card styles"
             ]
           },
           "expectFromYou": {
-            "title": "What we expect from you",
+            "title": "What we ask of you",
             "items": [
               "Use Stampeo daily in your business",
-              "Tell us what works and what doesn't",
-              "Suggest improvements",
-              "Be patient when something doesn't work perfectly yet"
+              "Tell us what works and what would save you time",
+              "Share your ideas for improvement"
             ]
           },
-          "disclaimer": "If you're looking for a finished, polished product, wait a few months. If you want to help create a tool that truly fits your needs — we're a perfect match."
+          "closing": "Stampeo is ready to run in your business today. By joining now, you lock in the best rate and you shape what we build next."
         },
         "roi": {
           "title": "Is it worth it?",
-          "subtitle": "Do the math yourself.",
+          "subtitle": "Run the numbers.",
           "modePrudent": "Conservative",
           "modeOptimiste": "Optimistic",
           "clientsLabel": "Customers per day",
           "basketLabel": "Average basket",
-          "assumption": "Assumption: a loyalty program generates ~{percent}% additional visits",
-          "breakdownClients": "{clients} clients/day × {percent}% = ~{extra} extra clients per day",
-          "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month in extra revenue",
+          "assumption": "Assumption: a loyalty program generates about {percent}% more visits",
+          "breakdownClients": "{clients} clients/day × {percent}% = about {extra} extra clients per day",
+          "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month",
           "extraRevenue": "Extra revenue",
           "perMonth": "/month",
           "stampeoCost": "Stampeo",
@@ -1072,24 +1070,24 @@
         },
         "timeline": {
           "badge": "How it works",
-          "title": "4 steps to become a founding partner",
+          "title": "4 steps to get started",
           "subtitle": "",
           "steps": [
             {
-              "title": "Fill out the application",
-              "description": "2 minutes, that's it"
+              "title": "Create your account",
+              "description": "Set up your program in 2 minutes."
             },
             {
-              "title": "We review your application",
-              "description": "Response within 48h"
+              "title": "Customize your card",
+              "description": "Do it yourself, or email us your logo and colors and we'll create it for you."
             },
             {
-              "title": "We set up your account",
-              "description": "Card + app + QR code"
+              "title": "Display your QR code",
+              "description": "On the counter. Customers add their card in one scan."
             },
             {
-              "title": "You launch your program",
-              "description": "First customer on day 1"
+              "title": "Launch your program",
+              "description": "First stamp on day one."
             }
           ]
         },
@@ -1097,32 +1095,36 @@
           "title": "Frequently asked questions",
           "items": [
             {
-              "question": "How many spots are available?",
-              "answer": "We accept founding partners in waves of 10-15 businesses. The founding rate (€{growthFoundingPrice}/month for life) won't be offered after the program closes."
+              "question": "Is the product complete and usable right away?",
+              "answer": "Yes. Stampeo already runs every day in dozens of businesses: Apple Wallet and Google Wallet cards, scanning, notifications, broadcasts, and statistics are all in place. You can launch your program today."
             },
             {
-              "question": "What happens after the 3 free months?",
-              "answer": "You automatically switch to €{growthFoundingPrice}/month. We notify you 2 weeks before. If you don't want to continue, cancel in one click — no fees."
+              "question": "How long does the launch offer stay open?",
+              "answer": "The launch rate (€{growthFoundingPrice}/month for life) stays open during the launch phase, then the price goes up for new businesses. Once you're in, your rate is locked for life."
             },
             {
-              "question": "Do I keep the founding rate if you raise prices?",
-              "answer": "Yes. €{growthFoundingPrice}/month for life means for life. Even if the Growth plan goes to €49.99 in 3 years, your rate doesn't change. It's contractual."
+              "question": "What happens after the free month?",
+              "answer": "You move to €{growthFoundingPrice}/month. We notify you twice: a week before, then 3 days before. If you don't want to continue, cancel in one click, no fees."
             },
             {
-              "question": "Can I change my mind and cancel?",
-              "answer": "Anytime. No commitment period after the 3 free months. If you cancel, you lose access but your customers keep their cards."
+              "question": "Do I keep my rate if you raise prices?",
+              "answer": "Yes. €{growthFoundingPrice}/month for life means for life. Even if the Growth plan goes to €49.99 in three years, your rate doesn't move. It's contractual."
+            },
+            {
+              "question": "Can I cancel?",
+              "answer": "Anytime after the free month. No commitment. If you cancel, you lose access, but your customers keep their cards."
             }
           ]
         },
         "finalCta": {
-          "title": "Join the first ones",
-          "subtitle": "Limited spots. {freeMonths} months free. €{growthFoundingPrice}/month for life. All Growth features.",
-          "urgency": "Next acceptance wave: March 2026"
+          "title": "Join the first businesses",
+          "subtitle": "1 month free. €{growthFoundingPrice}/month for life. All Growth features, available today.",
+          "urgency": "The launch rate goes up for new businesses. Lock yours in now."
         }
       }
     },
     "relatedTitle": "Discover more",
     "discoverLink": "Discover",
-    "ctaButton": "Become a Founding Partner"
+    "ctaButton": "Start Free"
   }
 }

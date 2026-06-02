@@ -2,8 +2,9 @@
   "pricing": {
     "badge": "Plans & Pricing",
     "title": "Simple, transparent pricing",
-    "subtitle": "Founding partners get 50% off — locked for life.",
+    "subtitle": "Founding partners get 50% off Starter and Growth, for life.",
     "subtitleStandard": "Unlimited customers, scans, and devices on every plan.",
+    "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
     "foundingPartner": "FOUNDING PARTNER",
     "popular": "MOST POPULAR",
     "perMonth": "/month",
@@ -82,7 +83,8 @@
       "title": "Choose the right plan for your business",
       "subtitle": "No hidden fees. No per-customer charges. Unlimited customers on every plan."
     },
-    "foundingCallout": "Founding partners get 50% off — locked for life.",
+    "foundingCallout": "Founding partners get 50% off Starter and Growth, for life.",
+    "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
     "foundingLink": "Learn more about the Founding Program",
     "popular": "MOST POPULAR",
     "perMonth": "/mo",

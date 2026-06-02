@@ -39,10 +39,10 @@
       "contact": "Contact"
     },
     "promoBanner": {
-      "item1": "On vient de lancer — découvrez le <bold>Programme Fondateur</bold>",
-      "item2": "Les fondateurs bénéficient de <bold>-50% à vie</bold>",
-      "item3": "Aidez-nous à construire Stampeo — <bold>devenez fondateur</bold>",
-      "item4": "Accès prioritaire + <bold>-50% à vie</bold> — tant qu'il reste des places",
+      "item1": "Offre de lancement : <bold>20 €/mois à vie</bold>",
+      "item2": "Membres fondateurs : <bold>-50 % à vie</bold>",
+      "item3": "Tout Stampeo, <bold>dès aujourd'hui</bold>",
+      "item4": "Bloquez votre <bold>tarif de lancement</bold>",
       "dismiss": "Fermer"
     },
     "auth": {

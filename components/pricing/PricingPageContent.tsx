@@ -7,7 +7,6 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
-import { FoundingCountdown } from "@/components/pricing/FoundingCountdown";
 import { PricingTierCard, type Discount } from "@/components/pricing/PricingTierCard";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 
@@ -328,7 +327,6 @@ export function PricingPageContent() {
         {/* Founding partner callout */}
         {foundingOpen && (
           <div className="mt-6 flex flex-col items-center gap-3">
-            <FoundingCountdown variant="badge" />
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
               <span className="text-sm font-semibold text-[var(--accent)]">
                 {t("foundingCallout")}
@@ -367,6 +365,14 @@ export function PricingPageContent() {
         />
         <PricingCard tier="pro" price={PRICING.pro.price} />
       </ScrollReveal>
+
+      {foundingOpen && (
+        <ScrollReveal delay={300} className="mt-8 text-center">
+          <p className="text-[var(--muted-foreground)] text-sm font-medium max-w-2xl mx-auto">
+            {t("foundingReassurance")}
+          </p>
+        </ScrollReveal>
+      )}
 
       {/* Feature Comparison Table */}
       <FeatureComparisonTable />
