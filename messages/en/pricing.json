@@ -59,7 +59,6 @@
       "price": "60",
       "featuresLabel": "Everything in Growth, plus:",
       "features": [
-        "Multiple active card templates",
         {
           "text": "Multi-location support",
           "tooltip": "Add multiple business addresses. Each location can scan and stamp independently. Track analytics per location."
@@ -89,7 +88,7 @@
     "perMonth": "/mo",
     "forLife": "/mo for life",
     "cta": "Get started",
-    "ctaSubtext": "30-day free trial",
+    "ctaSubtext": "30-day free trial · Cancel anytime",
     "starter": {
       "name": "Starter",
       "tagline": "For solo operators and single-location businesses",

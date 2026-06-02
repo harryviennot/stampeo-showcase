@@ -59,7 +59,6 @@
       "price": "60",
       "featuresLabel": "Tout le plan Growth, plus :",
       "features": [
-        "Plusieurs modèles de carte actifs",
         {
           "text": "Support multi-établissement",
           "tooltip": "Ajoutez plusieurs adresses. Chaque établissement peut scanner et tamponner indépendamment. Analytiques par établissement."
@@ -89,7 +88,7 @@
     "perMonth": "/mois",
     "forLife": "/mois à vie",
     "cta": "Commencer",
-    "ctaSubtext": "Essai gratuit de 30 jours",
+    "ctaSubtext": "Essai gratuit de 30 jours · Annulez quand vous voulez",
     "starter": {
       "name": "Starter",
       "tagline": "Pour les indépendants et commerces mono-établissement",
