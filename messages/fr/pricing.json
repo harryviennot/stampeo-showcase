@@ -15,7 +15,7 @@
       "hoursMinutes": "Tarif fondateur — fin dans {hours}h {minutes}m"
     },
     "cta": "Commencer gratuitement",
-    "ctaSubtext": "Essai gratuit de 30 jours · Annulez quand vous voulez",
+    "ctaSubtext": "Essai gratuit de 30 jours · Sans engagement",
     "starter": {
       "name": "Starter",
       "tagline": "Tout ce qu'il faut pour lancer votre programme de fidélité",
@@ -88,7 +88,7 @@
     "perMonth": "/mois",
     "forLife": "/mois à vie",
     "cta": "Commencer",
-    "ctaSubtext": "Essai gratuit de 30 jours · Annulez quand vous voulez",
+    "ctaSubtext": "Essai gratuit de 30 jours · Sans engagement",
     "starter": {
       "name": "Starter",
       "tagline": "Pour les indépendants et commerces mono-établissement",
@@ -232,7 +232,7 @@
       "items": [
         {
           "question": "Y a-t-il un essai gratuit ?",
-          "answer": "Oui ! Chaque plan inclut un essai gratuit de 30 jours. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des 30 jours. Annulez quand vous voulez."
+          "answer": "Oui ! Chaque plan inclut un essai gratuit de 30 jours. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des 30 jours. Sans engagement."
         },
         {
           "question": "Puis-je changer de plan plus tard ?",
