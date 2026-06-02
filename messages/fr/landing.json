@@ -397,7 +397,7 @@
       "subtitle": "Une carte de fidélité que vos clients ajoutent à Apple Wallet ou Google Wallet en un scan. Aucune appli à télécharger.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "1 mois gratuit · Sans CB · Sans engagement",
+      "reassurance": "1 mois gratuit · Sans engagement",
       "momentum": "<accent>+21</accent> commerçants nous ont rejoints cette semaine"
     },
     "trustStrip": {
@@ -423,7 +423,7 @@
         },
         {
           "title": "Sans engagement",
-          "description": "Un mois gratuit, sans CB. Vous partez quand vous voulez. Vos données restent à vous, exportables en un clic."
+          "description": "Un mois gratuit, sans engagement. Vous partez quand vous voulez. Vos données restent à vous, exportables en un clic."
         }
       ]
     },
@@ -497,7 +497,7 @@
       "items": [
         {
           "question": "Combien ça coûte ?",
-          "answer": "Le plan Starter est à {starterPrice} €/mois (tarif fondateur : {starterFoundingPrice} €/mois à vie). Pas de frais de mise en service, pas d'engagement. Vous commencez gratuitement pendant 1 mois, sans carte bancaire."
+          "answer": "Le plan Starter est à {starterPrice} €/mois (tarif fondateur : {starterFoundingPrice} €/mois à vie). Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Votre carte bancaire est demandée pour démarrer l'essai, sans aucun débit avant la fin du mois."
         },
         {
           "question": "Dois-je changer ma caisse ?",
@@ -509,7 +509,7 @@
         },
         {
           "question": "Que se passe-t-il après le premier mois ?",
-          "answer": "Vous choisissez de continuer ou non. Aucun prélèvement automatique tant que vous n'avez pas ajouté de CB. Si vous continuez en tant que partenaire fondateur, vous bloquez votre tarif à vie."
+          "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des 30 jours. Si vous continuez en tant que partenaire fondateur, vous bloquez votre tarif à vie."
         },
         {
           "question": "Mes données sont-elles en sécurité ?",
@@ -533,7 +533,7 @@
       "subtitle": "3 minutes pour créer votre carte. 1 mois pour la tester. 0 € pour commencer.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "Sans CB · Sans engagement · Une question ? 06 49 37 04 70"
+      "reassurance": "1 mois gratuit · Sans engagement · Une question ? 06 49 37 04 70"
     }
   }
 }
