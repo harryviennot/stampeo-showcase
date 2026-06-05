@@ -7,7 +7,6 @@ const DISALLOW_PATHS = [
   "/en/login/",
   "/en/auth/",
   "/*opengraph-image*",
-  "/favicon.ico",
 ];
 
 const USER_AGENTS = [
