@@ -37,6 +37,10 @@
       "title": "Coming soon!",
       "description": "This loyalty program isn't quite ready yet. Check back soon — great rewards are on the way!"
     },
+    "notOpen": {
+      "title": "Not open yet",
+      "description": "This business is still setting up its loyalty program. Check back soon to get your card."
+    },
     "poweredBy": "Powered by"
   }
 }
