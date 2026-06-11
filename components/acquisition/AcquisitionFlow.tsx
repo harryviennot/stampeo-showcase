@@ -16,7 +16,7 @@ import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { renderPreviewFields } from "@/lib/template-variables";
 
-type FlowState = "form" | "submitting" | "success" | "email_sent" | "error";
+type FlowState = "form" | "submitting" | "success" | "email_sent" | "error" | "not_open";
 
 interface AcquisitionFlowProps {
   business: BusinessPublicResponse;
@@ -60,7 +60,14 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
     setFlowState("submitting");
     setErrorMessage(null);
 
-    const { data: response, error } = await createPublicCustomer(business.id, data, locationSlug);
+    const { data: response, error, code } = await createPublicCustomer(business.id, data, locationSlug);
+
+    if (code === "CHECKOUT_REQUIRED") {
+      // The business hasn't finished setting up its subscription, so it isn't
+      // accepting signups yet. Retrying won't help — show a calm closed state.
+      setFlowState("not_open");
+      return;
+    }
 
     if (error || !response) {
       setErrorMessage(error || "Something went wrong. Please try again.");
@@ -188,6 +195,8 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                 {flowState === "error" && (
                   <ErrorCard message={errorMessage} onRetry={handleRetry} />
                 )}
+
+                {flowState === "not_open" && <NotOpenCard />}
               </>
             ) : (
               <NotReadyCard />
@@ -341,6 +350,35 @@ function NotReadyCard() {
       </h2>
       <p className="text-[var(--muted-foreground)]">
         {t("notReady.description")}
+      </p>
+    </div>
+  );
+}
+
+function NotOpenCard() {
+  const t = useTranslations("acquisition");
+  return (
+    <div className="paper-card rounded-2xl p-6 text-center">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
+        <svg
+          className="w-8 h-8 text-amber-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
+      <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
+        {t("notOpen.title")}
+      </h2>
+      <p className="text-[var(--muted-foreground)]">
+        {t("notOpen.description")}
       </p>
     </div>
   );
