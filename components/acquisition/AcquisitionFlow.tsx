@@ -14,6 +14,7 @@ import { AcquisitionForm } from "./AcquisitionForm";
 import { WalletButtons } from "./WalletButtons";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
+import { renderPreviewFields } from "@/lib/template-variables";
 
 type FlowState = "form" | "submitting" | "success" | "email_sent" | "error" | "not_open";
 
@@ -38,6 +39,22 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
   const backgroundColor =
     business.settings?.backgroundColor ||
     (cardDesign?.background_color || "#1c1c1e");
+
+  // Preview state: a brand-new card starts at the program's head-start
+  // stamps; without a prestamp we show a few demo stamps so the strip
+  // doesn't look empty. Field {{variables}} render with the same numbers
+  // (and real program data) so the preview is coherent.
+  const previewStamps =
+    cardDesign?.initial_stamps && cardDesign.initial_stamps > 0
+      ? cardDesign.initial_stamps
+      : 3;
+  const previewContext = {
+    stampCount: previewStamps,
+    totalStamps: cardDesign?.total_stamps ?? 10,
+    rewardName: cardDesign?.reward_name,
+    businessName: business.name,
+    sampleFirstName: t("previewSampleName"),
+  };
 
   const handleSubmit = async (data: CustomerCreatePublic) => {
     setFlowState("submitting");
@@ -127,6 +144,17 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     custom_filled_stamp_url: cardDesign.custom_filled_stamp_url ?? undefined,
                     custom_empty_stamp_url: cardDesign.custom_empty_stamp_url ?? undefined,
                     strip_background_url: cardDesign.strip_background_url ?? undefined,
+                    // Substitute {{variables}} with real program data + a
+                    // sample cardholder so the preview never shows raw
+                    // placeholder syntax.
+                    secondary_fields: renderPreviewFields(
+                      cardDesign.secondary_fields,
+                      previewContext
+                    ),
+                    auxiliary_fields: renderPreviewFields(
+                      cardDesign.auxiliary_fields,
+                      previewContext
+                    ),
                   } : {
                     organization_name: business.name,
                     background_color: "#1c1c1e",
@@ -134,7 +162,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     total_stamps: 10,
                   }}
                   organizationName={business.name}
-                  stamps={3}
+                  stamps={previewStamps}
                   showQR={true}
                   interactive3D={true}
                 />
