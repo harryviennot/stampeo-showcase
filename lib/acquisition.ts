@@ -50,6 +50,9 @@ export interface CardDesignPublicResponse {
   stamp_filled_color: string;
   stamp_empty_color: string;
   stamp_border_color: string;
+  // Program-derived context for rendering {{variables}} in the preview.
+  reward_name?: string | null;
+  initial_stamps?: number;
   stamp_icon?: string | null;
   reward_icon?: string | null;
   icon_color?: string | null;
