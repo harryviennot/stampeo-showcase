@@ -16,6 +16,7 @@ import {
   customIconBoxSize,
   resolveStampIconUrl,
   CUSTOM_GRID_VPAD_SCALE,
+  OVERLAP_MAX_COUNT,
   STAGGERED_MAX_COUNT,
 } from "@/lib/card-utils";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
@@ -78,13 +79,16 @@ export function StampGrid({
   customConfig,
 }: StampGridProps) {
   const useCustom = !!customConfig && customConfig.icons.length > 0;
-  // Mirror of the backend fallback: band arrangements only for 2..16 stamps
+  // Mirror of the backend fallback: staggered carries 2..16 stamps,
+  // overlap up to 24 (it gains a third depth level past 16)
+  const wantedArrangement = useCustom ? customConfig.arrangement : "straight";
+  const bandMax =
+    wantedArrangement === "overlap" ? OVERLAP_MAX_COUNT : STAGGERED_MAX_COUNT;
   const arrangement: "straight" | "staggered" | "overlap" =
-    useCustom &&
-    (customConfig.arrangement === "staggered" || customConfig.arrangement === "overlap") &&
+    (wantedArrangement === "staggered" || wantedArrangement === "overlap") &&
     totalStamps >= 2 &&
-    totalStamps <= STAGGERED_MAX_COUNT
-      ? customConfig.arrangement
+    totalStamps <= bandMax
+      ? wantedArrangement
       : "straight";
 
   // Calculate layout using the same algorithm as the backend

@@ -142,12 +142,17 @@ export interface StampLayout {
 export const CUSTOM_ICON_SCALE = 1.15;
 /** 'staggered': front-row vertical drop, fraction of icon size. */
 export const STAGGER_Y_OFFSET = 0.25;
-/** 'overlap': x advance between consecutive icons, fraction of icon size. */
-export const OVERLAP_X_PITCH = 0.72;
-/** 'overlap': front-row vertical drop, fraction of icon size. */
+/** 'overlap': per-level vertical drop, fraction of icon size. */
 export const OVERLAP_Y_OFFSET = 0.45;
-/** 17+ stamps fall back to the straight grid. */
+/** 'overlap' sizes icons from the strip HEIGHT first and squeezes the x
+ *  advance to fit the count, clamped to [MIN, MAX] of the icon size; only
+ *  when the squeeze hits MIN does the icon shrink below full height. */
+export const OVERLAP_MIN_PITCH = 0.4;
+export const OVERLAP_MAX_PITCH = 0.72;
+/** Band depth levels mirror the grid's rows: 2 levels up to 16 stamps,
+ *  3 levels for 17-24 ('overlap' only — 'staggered' falls back to the grid). */
 export const STAGGERED_MAX_COUNT = 16;
+export const OVERLAP_MAX_COUNT = 24;
 /** Custom icons in the straight grid reserve only half the circle grid's
  *  vertical padding: no border ring to protect, so rows sit closer and
  *  icons use more of the strip height. */
@@ -228,14 +233,13 @@ export function calculateStampLayout(
 }
 
 /**
- * Staggered (zigzag) layouts for custom stamp icons. Mirrors
+ * Staggered/overlap layouts for custom stamp icons. Mirrors
  * calculate_staggered_layout in backend strip_generator.py: icons run left
- * to right in fill order, alternating raised (back, row 0) and lowered
- * (front, row 1) positions. 'staggered' (overlap=false) keeps minPadding
- * between icons with a subtle drop; 'overlap' (overlap=true) advances by
- * only OVERLAP_X_PITCH of the icon size with a deep drop so the front row
- * overlaps the back one. Front icons must render ABOVE back icons (zIndex
- * by row).
+ * to right in fill order, cycling 2 (or 3 for 17-24 stamps in overlap
+ * mode) vertical depth levels. 'staggered' keeps minPadding between icons
+ * with a subtle drop; 'overlap' sizes icons from the strip HEIGHT first
+ * and squeezes the x advance to fit, clamped to the pitch floor. Deeper
+ * levels must render ABOVE shallower ones (zIndex by row).
  */
 export function calculateStaggeredStampLayout(
   totalStamps: number,
@@ -245,7 +249,10 @@ export function calculateStaggeredStampLayout(
   minPadding: number = 8,
   overlap: boolean = false
 ): StampLayout {
-  const count = Math.min(Math.max(totalStamps, 0), STAGGERED_MAX_COUNT);
+  const count = Math.min(
+    Math.max(totalStamps, 0),
+    overlap ? OVERLAP_MAX_COUNT : STAGGERED_MAX_COUNT
+  );
   if (count <= 0) {
     return {
       positions: [],
@@ -257,43 +264,67 @@ export function calculateStaggeredStampLayout(
     };
   }
 
+  const levels = overlap && count > STAGGERED_MAX_COUNT ? 3 : count > 1 ? 2 : 1;
   const yOffset = overlap ? OVERLAP_Y_OFFSET : STAGGER_Y_OFFSET;
+  // Total band height = size * (1 + (levels-1) * yOffset)
+  const heightFactor = 1 + (levels - 1) * yOffset;
+
   const availableWidth = containerWidth - 2 * sidePadding;
-  const sizeByWidth = overlap
-    ? availableWidth / (1 + (count - 1) * OVERLAP_X_PITCH)
-    : (availableWidth - (count - 1) * minPadding) / count;
-  const sizeByHeight = containerHeight / (1 + yOffset);
-  const size = Math.min(sizeByWidth, sizeByHeight);
+  const sizeByHeight = containerHeight / heightFactor;
+
+  let size: number;
+  let xAdvance: number;
+  if (overlap) {
+    // Height-first: keep the full-height size as long as the x advance
+    // needed to span the count stays above the visibility floor.
+    size = sizeByHeight;
+    if (count > 1) {
+      const advanceFit = (availableWidth - size) / (count - 1);
+      if (advanceFit < size * OVERLAP_MIN_PITCH) {
+        size = availableWidth / (1 + (count - 1) * OVERLAP_MIN_PITCH);
+        xAdvance = size * OVERLAP_MIN_PITCH;
+      } else {
+        xAdvance = Math.min(advanceFit, size * OVERLAP_MAX_PITCH);
+      }
+    } else {
+      size = Math.min(size, availableWidth);
+      xAdvance = 0;
+    }
+  } else {
+    // No overlap: width allots a full slot + gap per icon.
+    const sizeByWidth = (availableWidth - (count - 1) * minPadding) / count;
+    size = Math.min(sizeByWidth, sizeByHeight);
+    xAdvance = size + minPadding;
+  }
   const radius = size / 2;
-  const xAdvance = overlap ? size * OVERLAP_X_PITCH : size + minPadding;
 
   const bandWidth = size + (count - 1) * xAdvance;
   const startX = (containerWidth - bandWidth) / 2 + radius;
-  const bandHeight = size * (1 + yOffset);
+  const bandHeight = size * heightFactor;
   const bandTop = (containerHeight - bandHeight) / 2;
-  const yBack = bandTop + radius;
-  const yFront = bandTop + size * yOffset + radius;
 
   const positions: StampPosition[] = [];
   for (let i = 0; i < count; i++) {
-    const isBack = i % 2 === 0;
+    const level = i % levels;
     positions.push({
       centerX: startX + i * xAdvance,
-      centerY: isBack ? yBack : yFront,
+      centerY: bandTop + size * yOffset * level + radius,
       radius,
-      row: isBack ? 0 : 1,
-      indexInRow: Math.floor(i / 2),
+      row: level,
+      indexInRow: Math.floor(i / levels),
       globalIndex: i,
     });
   }
 
-  const back = positions.filter((p) => p.row === 0).length;
+  const distribution = Array.from({ length: levels }, (_, level) =>
+    positions.filter((p) => p.row === level).length
+  );
   return {
     positions,
     diameter: size,
     radius,
-    rows: count > 1 ? 2 : 1,
-    distribution: count > 1 ? [back, count - back] : [back],
+    rows: levels,
+    distribution,
     verticalPadding: bandTop,
   };
 }
