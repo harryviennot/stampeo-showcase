@@ -146,9 +146,13 @@ export function StampGrid({
                 height: customBox,
                 left: pos.centerX - customBox / 2,
                 top: pos.centerY - customBox / 2,
-                // Staggered: front row (row 1) overlaps the back row,
-                // matching the backend compositing order.
+                // Deeper band levels overlap shallower ones, matching the
+                // backend compositing order.
                 zIndex: pos.row + 1,
+                // Empty slots fade by the design's empty_opacity — CSS
+                // opacity is the same alpha multiply the strip generator
+                // applies at composite time.
+                opacity: isFilled ? 1 : (customConfig.empty_opacity ?? 100) / 100,
               }}
             />
           );

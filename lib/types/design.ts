@@ -33,6 +33,9 @@ export interface CustomStampConfig {
   empty_icon?: ProcessedIconAsset | null;
   empty_mode: CustomStampEmptyMode;
   arrangement: CustomStampArrangement;
+  /** Opacity (percent, 10-100) applied to empty slots at render time.
+   *  100 = solid grey like the FLTR reference. */
+  empty_opacity?: number;
 }
 
 export type StampIconMode = "preset" | "custom";
