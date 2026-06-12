@@ -3,7 +3,7 @@
     "design-de-carte": {
       "hero": {
         "title": "Made yours, down to the last stamp",
-        "subtitle": "Colors, logo, stamp icons: build a card that actually looks like you, in minutes. Or let us create it for you."
+        "subtitle": "Colors, logo, your own stamp icons: build a card that actually looks like you, in minutes. Or let us create it for you."
       },
       "problem": {
         "title": "Creating a pro card shouldn't be a project",
@@ -23,7 +23,7 @@
         },
         {
           "title": "Self-service editor",
-          "description": "For those who like full control: logo, colors, stamp icons, background image, reward text. Every change is instantly visible in a realistic wallet preview.",
+          "description": "For those who like full control: logo, colors, your own stamp icons, background image, reward text. Every change is instantly visible in a realistic wallet preview.",
           "icon": "palette"
         }
       ],
@@ -53,6 +53,15 @@
           "rewardsLabel": "Rewards",
           "rewardsValue": "{count, plural, one {# ready} other {# ready}}",
           "hint": "Everything updates live.",
+          "modePreset": "Icon library",
+          "modeCustom": "Your own icons",
+          "customIconLabel": "Your icon",
+          "arrangementLabel": "Layout",
+          "arrangements": {
+            "straight": "In a row",
+            "staggered": "Staggered",
+            "overlap": "Overlapping"
+          },
           "themes": [
             { "name": "Stampeo", "orgName": "My Café" },
             { "name": "Cream", "orgName": "Marie's Bakery" },
@@ -63,12 +72,27 @@
         "iconLibrary": {
           "title": "An icon for every trade",
           "description": "Dozens of ready-to-use stamp icons: café, restaurant, salon, florist, pet shop. One that fits your business, guaranteed.",
-          "trades": ["Café", "Restaurant", "Salon", "Florist", "Pet shop"],
-          "comingSoon": {
-            "badge": "Coming soon",
-            "title": "Your own icons",
-            "description": "Soon, import your own icons: stamp, empty stamp, reward. And create multiple stamp types within a single program."
-          }
+          "trades": ["Café", "Restaurant", "Salon", "Florist", "Pet shop"]
+        },
+        "customIcons": {
+          "badge": "New",
+          "title": "Or use your own icons",
+          "description": "Import your croissant, your logo, your mascot. We remove the background for you and turn it into a stamp. You choose how empty stamps look and how they sit on the card.",
+          "bullets": [
+            "Background removed automatically when you import.",
+            "Three empty-stamp styles: greyscale, outline, or your own.",
+            "Three layouts: in a row, staggered, or overlapping."
+          ],
+          "gallery": {
+            "title": "Real cards, real icons",
+            "examples": [
+              { "orgName": "Maison Levain", "reward": "10th croissant free", "caption": "Overlapping croissants" },
+              { "orgName": "Café Margot", "reward": "Free coffee", "caption": "Staggered, outlined empties" },
+              { "orgName": "Donut Days", "reward": "6th donut free", "caption": "In a row, faded empties" },
+              { "orgName": "Fleurs & Co", "reward": "A bouquet on us", "caption": "A gift on the last stamp" }
+            ]
+          },
+          "attribution": "Demo icons from Twemoji (CC-BY 4.0)."
         },
         "livingCard": {
           "title": "A card that knows your customers",
@@ -118,11 +142,11 @@
           },
           "editor": {
             "title": "Self-service editor",
-            "description": "For those who like full control. Logo, colors, stamp icons, background image — customize every detail.",
+            "description": "For those who like full control. Logo, colors, your own stamp icons, background image: customize every detail.",
             "badge": null,
             "steps": [
               "Choose your colors and import your logo",
-              "Select your stamp icons",
+              "Pick from our icons or import your own",
               "Customize the reward text",
               "Preview and publish"
             ]

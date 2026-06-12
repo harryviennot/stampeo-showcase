@@ -3,11 +3,13 @@
 import { useTranslations } from "next-intl";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
+import { customConfigFor } from "@/lib/custom-stamp-presets";
 import type { CardDesign } from "@/lib/types/design";
 
 /**
- * Compact, non-interactive hero card. The full interactive designer lives in
- * its own section lower on the page so the hero stays tight.
+ * Compact, non-interactive hero card. Leads with the custom-icon feature
+ * (overlapping coffee stamps) so the headline capability is visible above the
+ * fold. The full interactive designer lives in its own section lower down.
  */
 export function CardHeroPreview() {
   const t = useTranslations("features.design-de-carte.custom.playground");
@@ -18,9 +20,13 @@ export function CardHeroPreview() {
     background_color: "#1c1c1e",
     stamp_filled_color: "#f97316",
     icon_color: "#ffffff",
-    stamp_icon: "coffee",
-    reward_icon: "gift",
-    total_stamps: 8,
+    total_stamps: 10,
+    stamp_icon_mode: "custom",
+    custom_stamp_config: customConfigFor(["coffee"], {
+      arrangement: "overlap",
+      empty_mode: "greyscale",
+      empty_opacity: 100,
+    }),
     secondary_fields: [
       { key: "member", label: t("memberLabel"), value: t("memberName") },
       { key: "reward", label: t("rewardLabel"), value: t("rewardValue") },
@@ -30,7 +36,7 @@ export function CardHeroPreview() {
   return (
     <div className="w-full max-w-[300px] mx-auto lg:ml-auto lg:mr-0">
       <ScaledCardWrapper baseWidth={300}>
-        <WalletCard design={design} stamps={5} showQR={false} interactive3D />
+        <WalletCard design={design} stamps={6} showQR={false} interactive3D />
       </ScaledCardWrapper>
     </div>
   );

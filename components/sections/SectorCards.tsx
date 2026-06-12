@@ -6,6 +6,8 @@ import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { ArrowRightIcon, Gift, Lightning } from "../icons";
 import type { StampIconType } from "@/components/onboarding/StampIconPicker";
+import { customConfigFor } from "@/lib/custom-stamp-presets";
+import type { CustomStampConfig } from "@/lib/types/design";
 
 const sectorThemes: {
   bg: string;
@@ -14,9 +16,16 @@ const sectorThemes: {
   stamps: number;
   stampIcon: StampIconType;
   orgName: string;
+  customConfig?: CustomStampConfig;
 }[] = [
-  { bg: "#1c1c1e", accent: "#f97316", icon: "#ffffff", stamps: 10, stampIcon: "coffee", orgName: "Mon Café" },
-  { bg: "#F5E6D3", accent: "#8B4513", icon: "#ffffff", stamps: 8, stampIcon: "heart", orgName: "Boulangerie Marie" },
+  {
+    bg: "#1c1c1e", accent: "#f97316", icon: "#ffffff", stamps: 10, stampIcon: "coffee", orgName: "Mon Café",
+    customConfig: customConfigFor(["coffee"], { arrangement: "staggered", empty_opacity: 100 }),
+  },
+  {
+    bg: "#3B2A1E", accent: "#C9842B", icon: "#ffffff", stamps: 12, stampIcon: "bread", orgName: "Boulangerie Marie",
+    customConfig: customConfigFor(["croissant"], { arrangement: "overlap", empty_opacity: 100 }),
+  },
   { bg: "#F8E8F0", accent: "#D4688E", icon: "#ffffff", stamps: 6, stampIcon: "flower", orgName: "Fleur de Thé" },
   { bg: "#1A2332", accent: "#60A5FA", icon: "#ffffff", stamps: 10, stampIcon: "star", orgName: "Le Comptoir Bleu" },
 ];
@@ -70,6 +79,12 @@ export async function SectorCards() {
                             stamp_icon: theme.stampIcon,
                             total_stamps: theme.stamps,
                             organization_name: theme.orgName,
+                            ...(theme.customConfig
+                              ? {
+                                  stamp_icon_mode: "custom" as const,
+                                  custom_stamp_config: theme.customConfig,
+                                }
+                              : {}),
                           }}
                           stamps={Math.floor(theme.stamps * 0.6)}
                           showQR={false}

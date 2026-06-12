@@ -12,7 +12,12 @@ import {
   StampIconSvg,
   type StampIconType,
 } from "@/components/onboarding/StampIconPicker";
-import type { CardDesign } from "@/lib/types/design";
+import {
+  customConfigFor,
+  PLAYGROUND_CUSTOM_ICONS,
+  type PlaygroundCustomIcon,
+} from "@/lib/custom-stamp-presets";
+import type { CardDesign, CustomStampArrangement } from "@/lib/types/design";
 
 interface ColorTheme {
   bg: string;
@@ -52,8 +57,17 @@ export function CardDesignPlayground() {
   const t = useTranslations("features.design-de-carte.custom.playground");
   const themes = t.raw("themes") as Array<{ name: string; orgName: string }>;
 
+  const arrangements = t.raw("arrangements") as Record<
+    CustomStampArrangement,
+    string
+  >;
+
+  const [iconMode, setIconMode] = useState<"preset" | "custom">("preset");
   const [themeIndex, setThemeIndex] = useState(0);
   const [iconId, setIconId] = useState<StampIconType>("coffee");
+  const [customIcon, setCustomIcon] = useState<PlaygroundCustomIcon>("coffee");
+  const [arrangement, setArrangement] =
+    useState<CustomStampArrangement>("staggered");
   const [showName, setShowName] = useState(true);
   const [rewards, setRewards] = useState(1);
 
@@ -89,10 +103,19 @@ export function CardDesignPlayground() {
     background_color: theme.bg,
     stamp_filled_color: theme.accent,
     icon_color: theme.icon,
-    stamp_icon: iconId,
     reward_icon: "gift",
-    total_stamps: 8,
+    total_stamps: iconMode === "custom" ? 10 : 8,
     secondary_fields: secondaryFields,
+    ...(iconMode === "custom"
+      ? {
+          stamp_icon_mode: "custom" as const,
+          custom_stamp_config: customConfigFor([customIcon], {
+            arrangement,
+            empty_mode: "greyscale",
+            empty_opacity: 60,
+          }),
+        }
+      : { stamp_icon: iconId }),
   };
 
   return (
@@ -129,6 +152,16 @@ export function CardDesignPlayground() {
           {/* Controls */}
           <ScrollReveal variant="left">
             <div className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-5 shadow-sm">
+              {/* Icon source: preset library or your own icons */}
+              <Segmented
+                options={[
+                  { value: "preset", label: t("modePreset") },
+                  { value: "custom", label: t("modeCustom") },
+                ]}
+                value={iconMode}
+                onChange={setIconMode}
+              />
+
               {/* Theme */}
               <div className="space-y-2.5">
                 <ControlLabel>{t("themeLabel")}</ControlLabel>
@@ -158,33 +191,83 @@ export function CardDesignPlayground() {
                 </div>
               </div>
 
-              {/* Stamp icon */}
-              <div className="space-y-2.5">
-                <ControlLabel>{t("iconLabel")}</ControlLabel>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-2">
-                  {PLAYGROUND_ICONS.map((id) => {
-                    const active = iconId === id;
-                    return (
-                      <button
-                        key={id}
-                        onClick={() => setIconId(id)}
-                        className="w-[38px] h-[38px] flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 mx-auto"
-                        style={{
-                          backgroundColor: active ? theme.accent : "var(--muted)",
-                        }}
-                        aria-label={id}
-                        aria-pressed={active}
-                      >
-                        <StampIconSvg
-                          icon={id}
-                          className="w-[18px] h-[18px]"
-                          color={active ? "#ffffff" : "var(--muted-foreground)"}
-                        />
-                      </button>
-                    );
-                  })}
+              {/* Stamp icon — preset library */}
+              {iconMode === "preset" && (
+                <div className="space-y-2.5">
+                  <ControlLabel>{t("iconLabel")}</ControlLabel>
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-2">
+                    {PLAYGROUND_ICONS.map((id) => {
+                      const active = iconId === id;
+                      return (
+                        <button
+                          key={id}
+                          onClick={() => setIconId(id)}
+                          className="w-[38px] h-[38px] flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 mx-auto"
+                          style={{
+                            backgroundColor: active ? theme.accent : "var(--muted)",
+                          }}
+                          aria-label={id}
+                          aria-pressed={active}
+                        >
+                          <StampIconSvg
+                            icon={id}
+                            className="w-[18px] h-[18px]"
+                            color={active ? "#ffffff" : "var(--muted-foreground)"}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Stamp icon — your own (pick one of our demo PNGs, no upload) */}
+              {iconMode === "custom" && (
+                <>
+                  <div className="space-y-2.5">
+                    <ControlLabel>{t("customIconLabel")}</ControlLabel>
+                    <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
+                      {PLAYGROUND_CUSTOM_ICONS.map((name) => {
+                        const active = customIcon === name;
+                        return (
+                          <button
+                            key={name}
+                            onClick={() => setCustomIcon(name)}
+                            className="w-11 h-11 flex items-center justify-center rounded-xl bg-white transition-transform duration-200 hover:scale-105 mx-auto"
+                            style={{
+                              boxShadow: active
+                                ? `0 0 0 2px white, 0 0 0 4px ${theme.accent}`
+                                : "inset 0 0 0 1px var(--border)",
+                            }}
+                            aria-label={name}
+                            aria-pressed={active}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={`/custom-icons/${name}.png`}
+                              alt=""
+                              className="w-7 h-7 object-contain"
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <ControlLabel>{t("arrangementLabel")}</ControlLabel>
+                    <Segmented
+                      options={[
+                        { value: "straight", label: arrangements.straight },
+                        { value: "staggered", label: arrangements.staggered },
+                        { value: "overlap", label: arrangements.overlap },
+                      ]}
+                      value={arrangement}
+                      onChange={setArrangement}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Personalization */}
               <div className="flex flex-wrap items-center gap-2.5 pt-1">
@@ -233,6 +316,45 @@ function ControlLabel({ children }: { children: React.ReactNode }) {
     <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
       {children}
     </span>
+  );
+}
+
+interface SegmentedProps<T extends string> {
+  options: { value: T; label: string }[];
+  value: T;
+  onChange: (next: T) => void;
+}
+
+function Segmented<T extends string>({
+  options,
+  value,
+  onChange,
+}: SegmentedProps<T>) {
+  return (
+    <div className="inline-flex w-full rounded-xl bg-[var(--muted)] p-1">
+      {options.map((opt) => {
+        const active = opt.value === value;
+        return (
+          <button
+            key={opt.value}
+            onClick={() => onChange(opt.value)}
+            className="flex-1 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors"
+            style={
+              active
+                ? {
+                    backgroundColor: "white",
+                    color: "var(--foreground)",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                  }
+                : { color: "var(--muted-foreground)" }
+            }
+            aria-pressed={active}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

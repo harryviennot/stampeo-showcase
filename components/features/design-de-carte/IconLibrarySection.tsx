@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
-import { Sparkle } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
@@ -90,28 +89,6 @@ export function IconLibrarySection() {
                 {label}
               </span>
             ))}
-          </div>
-        </ScrollReveal>
-
-        {/* Custom stamp art — coming soon */}
-        <ScrollReveal className="max-w-2xl mx-auto mt-12" delay={150}>
-          <div className="relative rounded-3xl border border-[var(--accent)]/15 bg-white p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-5">
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-[var(--accent)]/10">
-              <Sparkle className="w-6 h-6" weight="fill" style={{ color: "var(--accent)" }} />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-lg sm:text-xl font-bold text-[var(--foreground)]">
-                  {t("comingSoon.title")}
-                </h3>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--accent)]/10 text-[var(--accent)]">
-                  {t("comingSoon.badge")}
-                </span>
-              </div>
-              <p className="text-[var(--muted-foreground)] leading-relaxed">
-                {t("comingSoon.description")}
-              </p>
-            </div>
           </div>
         </ScrollReveal>
       </Container>

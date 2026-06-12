@@ -6,6 +6,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { CardHeroPreview } from "./CardHeroPreview";
 import { CardDesignPlayground } from "./CardDesignPlayground";
+import { CustomIconsSection } from "./CustomIconsSection";
 import { IconLibrarySection } from "./IconLibrarySection";
 import { LivingCardSection } from "./LivingCardSection";
 import { AnnotatedWalletCard } from "./AnnotatedWalletCard";
@@ -80,7 +81,10 @@ export function CardDesignPageContent() {
       {/* Interactive card designer */}
       <CardDesignPlayground />
 
-      {/* Icon library + custom stamp art */}
+      {/* Headline capability: your own stamp icons + example gallery */}
+      <CustomIconsSection />
+
+      {/* Preset icon catalog breadth */}
       <IconLibrarySection />
 
       {/* Personalization: customer name, variables, stacked rewards */}
