@@ -20,7 +20,7 @@ export interface ProcessedIconAsset {
 }
 
 export type CustomStampEmptyMode = "greyscale" | "outline" | "custom";
-export type CustomStampArrangement = "straight" | "staggered";
+export type CustomStampArrangement = "straight" | "staggered" | "overlap";
 
 /**
  * Custom stamp icon configuration (mirrors backend CustomStampConfig).
