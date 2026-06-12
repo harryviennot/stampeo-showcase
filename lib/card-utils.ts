@@ -1,4 +1,4 @@
-import { CardDesign } from "@/lib/types/design";
+import { CardDesign, CustomStampConfig } from "@/lib/types/design";
 
 // ============================================================================
 // Color Utilities
@@ -127,7 +127,36 @@ export interface StampLayout {
   radius: number;
   rows: number;
   distribution: number[];
+  /** Gap between rows and edges (straight) / band top offset (staggered).
+   *  Used by the custom-icon box clamp. */
+  verticalPadding: number;
 }
+
+// ============================================================================
+// Custom stamp icon constants — MIRRORED from backend strip_generator.py and
+// the web repo's card-utils.ts. Change them together or the preview drifts
+// from the generated strips.
+// ============================================================================
+
+/** Custom icons render slightly larger than the circle they replace. */
+export const CUSTOM_ICON_SCALE = 1.15;
+/** 'staggered': front-row vertical drop, fraction of icon size. */
+export const STAGGER_Y_OFFSET = 0.25;
+/** 'overlap': per-level vertical drop, fraction of icon size. */
+export const OVERLAP_Y_OFFSET = 0.45;
+/** 'overlap' sizes icons from the strip HEIGHT first and squeezes the x
+ *  advance to fit the count, clamped to [MIN, MAX] of the icon size; only
+ *  when the squeeze hits MIN does the icon shrink below full height. */
+export const OVERLAP_MIN_PITCH = 0.4;
+export const OVERLAP_MAX_PITCH = 0.72;
+/** Band depth levels mirror the grid's rows: 2 levels up to 16 stamps,
+ *  3 levels for 17-24 ('overlap' only — 'staggered' falls back to the grid). */
+export const STAGGERED_MAX_COUNT = 16;
+export const OVERLAP_MAX_COUNT = 24;
+/** Custom icons in the straight grid reserve only half the circle grid's
+ *  vertical padding: no border ring to protect, so rows sit closer and
+ *  icons use more of the strip height. */
+export const CUSTOM_GRID_VPAD_SCALE = 0.5;
 
 /**
  * Calculate stamp positions within a container
@@ -138,7 +167,8 @@ export function calculateStampLayout(
   containerWidth: number,
   containerHeight: number,
   minPadding: number = 8,
-  sidePadding: number = 11 // 32/3 ≈ 10.67, rounded up
+  sidePadding: number = 11, // 32/3 ≈ 10.67, rounded up
+  verticalPaddingScale: number = 1
 ): StampLayout {
   const distribution = getRowDistribution(totalStamps);
   const rows = distribution.length;
@@ -150,9 +180,10 @@ export function calculateStampLayout(
   const maxDiameterByWidth =
     (availableWidth - (maxInRow - 1) * minPadding) / maxInRow;
 
-  // Height constraint: min padding between rows and edges
+  // Height constraint: min padding between rows and edges.
+  // verticalPaddingScale < 1 lets custom icons pack rows closer.
   const maxDiameterByHeight =
-    (containerHeight - (rows + 1) * minPadding) / rows;
+    (containerHeight - (rows + 1) * minPadding * verticalPaddingScale) / rows;
 
   const diameter = Math.min(maxDiameterByWidth, maxDiameterByHeight);
   const radius = diameter / 2;
@@ -197,7 +228,153 @@ export function calculateStampLayout(
     radius,
     rows,
     distribution,
+    verticalPadding,
   };
+}
+
+/**
+ * Staggered/overlap layouts for custom stamp icons. Mirrors
+ * calculate_staggered_layout in backend strip_generator.py: icons run left
+ * to right in fill order, cycling 2 (or 3 for 17-24 stamps in overlap
+ * mode) vertical depth levels. 'staggered' keeps minPadding between icons
+ * with a subtle drop; 'overlap' sizes icons from the strip HEIGHT first
+ * and squeezes the x advance to fit, clamped to the pitch floor. Deeper
+ * levels must render ABOVE shallower ones (zIndex by row).
+ */
+export function calculateStaggeredStampLayout(
+  totalStamps: number,
+  containerWidth: number,
+  containerHeight: number,
+  sidePadding: number = 11,
+  minPadding: number = 8,
+  overlap: boolean = false
+): StampLayout {
+  const count = Math.min(
+    Math.max(totalStamps, 0),
+    overlap ? OVERLAP_MAX_COUNT : STAGGERED_MAX_COUNT
+  );
+  if (count <= 0) {
+    return {
+      positions: [],
+      diameter: 0,
+      radius: 0,
+      rows: 0,
+      distribution: [],
+      verticalPadding: 0,
+    };
+  }
+
+  const levels = overlap && count > STAGGERED_MAX_COUNT ? 3 : count > 1 ? 2 : 1;
+  const yOffset = overlap ? OVERLAP_Y_OFFSET : STAGGER_Y_OFFSET;
+  // Total band height = size * (1 + (levels-1) * yOffset)
+  const heightFactor = 1 + (levels - 1) * yOffset;
+
+  const availableWidth = containerWidth - 2 * sidePadding;
+  const sizeByHeight = containerHeight / heightFactor;
+
+  let size: number;
+  let xAdvance: number;
+  if (overlap) {
+    // Height-first: keep the full-height size as long as the x advance
+    // needed to span the count stays above the visibility floor.
+    size = sizeByHeight;
+    if (count > 1) {
+      const advanceFit = (availableWidth - size) / (count - 1);
+      if (advanceFit < size * OVERLAP_MIN_PITCH) {
+        size = availableWidth / (1 + (count - 1) * OVERLAP_MIN_PITCH);
+        xAdvance = size * OVERLAP_MIN_PITCH;
+      } else {
+        xAdvance = Math.min(advanceFit, size * OVERLAP_MAX_PITCH);
+      }
+    } else {
+      size = Math.min(size, availableWidth);
+      xAdvance = 0;
+    }
+  } else {
+    // No overlap: width allots a full slot + gap per icon.
+    const sizeByWidth = (availableWidth - (count - 1) * minPadding) / count;
+    size = Math.min(sizeByWidth, sizeByHeight);
+    xAdvance = size + minPadding;
+  }
+  const radius = size / 2;
+
+  const bandWidth = size + (count - 1) * xAdvance;
+  const startX = (containerWidth - bandWidth) / 2 + radius;
+  const bandHeight = size * heightFactor;
+  const bandTop = (containerHeight - bandHeight) / 2;
+
+  const positions: StampPosition[] = [];
+  for (let i = 0; i < count; i++) {
+    const level = i % levels;
+    positions.push({
+      centerX: startX + i * xAdvance,
+      centerY: bandTop + size * yOffset * level + radius,
+      radius,
+      row: level,
+      indexInRow: Math.floor(i / levels),
+      globalIndex: i,
+    });
+  }
+
+  const distribution = Array.from({ length: levels }, (_, level) =>
+    positions.filter((p) => p.row === level).length
+  );
+  return {
+    positions,
+    diameter: size,
+    radius,
+    rows: levels,
+    distribution,
+    verticalPadding: bandTop,
+  };
+}
+
+/**
+ * Box size for a custom icon in a cell. Mirrors _paste_slot_icon in
+ * backend strip_generator.py: 'overlap' boxes ARE the solved size
+ * (overlapping is the point); straight/staggered boxes grow by
+ * CUSTOM_ICON_SCALE but never eat more than 60% of the smaller gutter.
+ */
+export function customIconBoxSize(
+  layout: StampLayout,
+  minPadding: number,
+  arrangement: "straight" | "staggered" | "overlap"
+): number {
+  if (arrangement === "overlap") return layout.diameter;
+  const allowedExtra = Math.min(minPadding, layout.verticalPadding) * 0.6;
+  return Math.min(layout.diameter * CUSTOM_ICON_SCALE, layout.diameter + allowedExtra);
+}
+
+/**
+ * Which image URL a slot renders in custom mode. Mirrors
+ * _custom_icon_for_slot in backend strip_generator.py: slot i uses
+ * icons[i % n], the last slot uses reward_icon when set; empty slots show
+ * their own slot's greyscale/outline variant or the shared empty icon.
+ */
+export function resolveStampIconUrl(
+  config: CustomStampConfig,
+  slotIndex: number,
+  totalStamps: number,
+  filled: boolean
+): string | null {
+  const isLast = slotIndex === totalStamps - 1;
+  const iconSet =
+    isLast && config.reward_icon
+      ? config.reward_icon
+      : config.icons.length > 0
+        ? config.icons[slotIndex % config.icons.length]
+        : null;
+  if (!iconSet) return null;
+
+  if (filled) return iconSet.processed_url;
+
+  if (config.empty_mode === "custom" && config.empty_icon) {
+    return config.empty_icon.processed_url;
+  }
+  if (config.empty_mode === "outline") {
+    return iconSet.outline_url || iconSet.processed_url;
+  }
+  return iconSet.greyscale_url || iconSet.processed_url;
 }
 
 // ============================================================================

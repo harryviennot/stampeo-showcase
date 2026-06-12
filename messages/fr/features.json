@@ -2,8 +2,8 @@
   "features": {
     "design-de-carte": {
       "hero": {
-        "title": "Votre carte. Vos couleurs. En 5 minutes.",
-        "subtitle": "Pas besoin d'être designer. Importez votre logo, choisissez vos couleurs, et votre carte est prête. Ou mieux : on la crée pour vous."
+        "title": "À votre image, jusqu'au moindre tampon",
+        "subtitle": "Couleurs, logo, vos propres icônes de tampon : composez en quelques minutes une carte qui vous ressemble vraiment. Ou laissez-nous la créer pour vous."
       },
       "problem": {
         "title": "Créer une carte pro ne devrait pas être un projet",
@@ -23,7 +23,7 @@
         },
         {
           "title": "L'éditeur en libre-service",
-          "description": "Pour ceux qui aiment tout contrôler : logo, couleurs, icônes de tampon, image de fond, texte de récompense. Chaque modification est visible immédiatement dans un aperçu réaliste de wallet.",
+          "description": "Pour ceux qui aiment tout contrôler : logo, couleurs, vos propres icônes de tampon, image de fond, texte de récompense. Chaque modification est visible immédiatement dans un aperçu réaliste de wallet.",
           "icon": "palette"
         }
       ],
@@ -37,29 +37,83 @@
         "programme-fondateur"
       ],
       "custom": {
-        "colorDemo": {
-          "hint": "Cliquez pour changer de thème — votre carte, vos couleurs",
+        "playground": {
+          "sectionTitle": "Composez votre carte",
+          "sectionSubtitle": "Couleurs, icône de tampon, prénom du client : modifiez l'aperçu et voyez le résultat tout de suite.",
+          "themeLabel": "Thème",
+          "iconLabel": "Icône",
+          "nameToggle": "Prénom",
+          "rewardsToggle": "Récompenses",
+          "rewardsDecrease": "Retirer une récompense",
+          "rewardsIncrease": "Ajouter une récompense",
+          "memberLabel": "Membre",
+          "memberName": "Sophie",
           "rewardLabel": "Récompense",
           "rewardValue": "8ᵉ offert",
-          "memberLabel": "Membre",
+          "rewardsLabel": "Récompenses",
+          "rewardsValue": "{count, plural, one {# prête} other {# prêtes}}",
+          "hint": "Tout se met à jour en direct.",
+          "modePreset": "Bibliothèque d'icônes",
+          "modeCustom": "Vos propres icônes",
+          "customIconLabel": "Votre icône",
+          "arrangementLabel": "Disposition",
+          "arrangements": {
+            "straight": "Alignés",
+            "staggered": "En quinconce",
+            "overlap": "Superposés"
+          },
           "themes": [
-            {
-              "name": "Stampeo",
-              "orgName": "Mon Café"
-            },
-            {
-              "name": "Crème",
-              "orgName": "Boulangerie Marie"
-            },
-            {
-              "name": "Nuit",
-              "orgName": "Le Comptoir Bleu"
-            },
-            {
-              "name": "Rose",
-              "orgName": "Fleur de Thé"
-            }
+            { "name": "Stampeo", "orgName": "Mon Café" },
+            { "name": "Crème", "orgName": "Boulangerie Marie" },
+            { "name": "Nuit", "orgName": "Le Comptoir Bleu" },
+            { "name": "Rose", "orgName": "Fleur de Thé" }
           ]
+        },
+        "iconLibrary": {
+          "title": "Une icône pour chaque métier",
+          "description": "Des dizaines d'icônes de tampon prêtes à l'emploi : café, restaurant, salon, fleuriste, animalerie. Une qui colle à votre activité, à coup sûr.",
+          "trades": ["Café", "Restaurant", "Salon", "Fleuriste", "Animalerie"]
+        },
+        "customIcons": {
+          "badge": "Nouveau",
+          "title": "Ou utilisez vos propres icônes",
+          "description": "Importez votre croissant, votre logo, votre mascotte. On détoure le fond pour vous et on en fait un tampon. Vous choisissez l'allure des tampons vides et leur disposition sur la carte.",
+          "bullets": [
+            "Fond détouré automatiquement à l'import.",
+            "Trois styles de tampon vide : niveaux de gris, contour, ou le vôtre.",
+            "Trois dispositions : alignés, en quinconce, ou superposés."
+          ],
+          "gallery": {
+            "title": "De vraies cartes, de vraies icônes",
+            "examples": [
+              { "orgName": "Maison Levain", "reward": "Le 10e croissant offert", "caption": "Croissants superposés" },
+              { "orgName": "Café Margot", "reward": "Café offert", "caption": "En quinconce, vides en contour" },
+              { "orgName": "Donut Days", "reward": "Le 6e donut offert", "caption": "Alignés, vides estompés" },
+              { "orgName": "Fleurs & Co", "reward": "Un bouquet offert", "caption": "Un cadeau sur le dernier tampon" }
+            ]
+          },
+          "attribution": "Icônes de démonstration : Twemoji (CC-BY 4.0)."
+        },
+        "livingCard": {
+          "title": "Une carte qui connaît vos clients",
+          "description": "Chaque carte s'adapte à la personne qui la présente. Sans rien configurer à la main.",
+          "lead": "Vous remplissez votre carte une fois. Ensuite, elle affiche les bonnes informations pour chaque client, automatiquement.",
+          "benefits": [
+            "Elle salue chaque client par son prénom.",
+            "Elle montre toujours où il en est, et ce qu'il lui reste avant sa récompense.",
+            "Elle compte les récompenses qu'il a déjà gagnées et qui l'attendent."
+          ],
+          "stacking": {
+            "title": "Vos clients ne perdent jamais leur progression",
+            "description": "Objectif atteint ? La récompense est mise de côté et un nouveau cycle commence aussitôt. Les récompenses s'empilent, rien ne se perd."
+          },
+          "card": {
+            "orgName": "Café Margot",
+            "memberLabel": "Membre",
+            "memberName": "Sophie",
+            "rewardsLabel": "Récompenses",
+            "rewardsValue": "2 prêtes"
+          }
         },
         "methods": {
           "sectionTitle": "Choisissez votre méthode",
@@ -88,11 +142,11 @@
           },
           "editor": {
             "title": "L'éditeur en libre-service",
-            "description": "Pour ceux qui aiment tout contrôler. Logo, couleurs, icônes de tampon, image de fond — personnalisez chaque détail.",
+            "description": "Pour ceux qui aiment tout contrôler. Logo, couleurs, vos propres icônes de tampon, image de fond : personnalisez chaque détail.",
             "badge": null,
             "steps": [
               "Choisissez vos couleurs et importez votre logo",
-              "Sélectionnez vos icônes de tampon",
+              "Choisissez nos icônes ou importez les vôtres",
               "Personnalisez le texte de récompense",
               "Prévisualisez et publiez"
             ]
