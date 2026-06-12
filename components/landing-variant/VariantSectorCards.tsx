@@ -6,8 +6,7 @@ import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { ArrowRightIcon } from "../icons";
 import type { StampIconType } from "@/components/onboarding/StampIconPicker";
-import type { CustomStampConfig, PassField } from "@/lib/types/design";
-import { customConfigFor } from "@/lib/custom-stamp-presets";
+import type { PassField } from "@/lib/types/design";
 
 type Theme = {
   cardBg: string;
@@ -21,7 +20,6 @@ type Theme = {
   walletStampIcon: StampIconType;
   walletOrgName: string;
   walletSecondaryFields: PassField[];
-  walletCustomConfig?: CustomStampConfig;
 };
 
 // Order matches FR sectors[] in messages/fr/landing.json:
@@ -42,10 +40,6 @@ const themes: Theme[] = [
     walletSecondaryFields: [
       { key: "reward", label: "RÉCOMPENSE", value: "Café offert au 10ème" },
     ],
-    walletCustomConfig: customConfigFor(["coffee"], {
-      arrangement: "staggered",
-      empty_opacity: 100,
-    }),
   },
   // [1] Restaurant — modern, slightly upscale bistro
   {
@@ -88,16 +82,12 @@ const themes: Theme[] = [
     walletBg: "#E7D3A8",
     walletAccent: "#B45309",
     walletIcon: "#FFFDF7",
-    walletStamps: 12,
+    walletStamps: 7,
     walletStampIcon: "bread",
     walletOrgName: "Le Four d’Antan",
     walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Croissant offert au 12ème" },
+      { key: "reward", label: "RÉCOMPENSE", value: "Pain au chocolat au 7ème" },
     ],
-    walletCustomConfig: customConfigFor(["croissant"], {
-      arrangement: "overlap",
-      empty_opacity: 100,
-    }),
   },
 ];
 
@@ -161,12 +151,6 @@ export async function VariantSectorCards() {
                             total_stamps: theme.walletStamps,
                             organization_name: theme.walletOrgName,
                             secondary_fields: theme.walletSecondaryFields,
-                            ...(theme.walletCustomConfig
-                              ? {
-                                  stamp_icon_mode: "custom" as const,
-                                  custom_stamp_config: theme.walletCustomConfig,
-                                }
-                              : {}),
                           }}
                           stamps={Math.floor(theme.walletStamps * 0.6)}
                           showQR={false}
