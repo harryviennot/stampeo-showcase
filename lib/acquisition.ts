@@ -50,6 +50,9 @@ export interface CardDesignPublicResponse {
   stamp_filled_color: string;
   stamp_empty_color: string;
   stamp_border_color: string;
+  // Program-derived context for rendering {{variables}} in the preview.
+  reward_name?: string | null;
+  initial_stamps?: number;
   stamp_icon?: string | null;
   reward_icon?: string | null;
   icon_color?: string | null;
@@ -149,7 +152,7 @@ export async function createPublicCustomer(
   businessId: string,
   data: CustomerCreatePublic,
   locationSlug?: string | null
-): Promise<{ data: CustomerPublicResponse | null; error: string | null }> {
+): Promise<{ data: CustomerPublicResponse | null; error: string | null; code?: string }> {
   try {
     // `location_slug` is URL-derived (per-store enrollment link), not form input.
     // Only include it when present so plain `/{slug}` enrollment sends an unchanged body.
@@ -166,14 +169,21 @@ export async function createPublicCustomer(
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       let errorMessage = `Failed to register (${response.status})`;
+      let code: string | undefined;
 
       if (typeof errorData.detail === "string") {
         errorMessage = errorData.detail;
       } else if (Array.isArray(errorData.detail) && errorData.detail.length > 0) {
         errorMessage = errorData.detail[0]?.msg || errorMessage;
+      } else if (errorData.detail && typeof errorData.detail === "object") {
+        // Standardized structured error, e.g. the card-upfront checkout gate
+        // ({ code: "CHECKOUT_REQUIRED", ... }) — surface the code so the flow
+        // can show a friendly "not open yet" state instead of a retry error.
+        code = errorData.detail.code as string | undefined;
+        errorMessage = (errorData.detail.message as string) || errorMessage;
       }
 
-      return { data: null, error: errorMessage };
+      return { data: null, error: errorMessage, code };
     }
 
     const responseData = await response.json();

@@ -14,8 +14,9 @@ import { AcquisitionForm } from "./AcquisitionForm";
 import { WalletButtons } from "./WalletButtons";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
+import { renderPreviewFields } from "@/lib/template-variables";
 
-type FlowState = "form" | "submitting" | "success" | "email_sent" | "error";
+type FlowState = "form" | "submitting" | "success" | "email_sent" | "error" | "not_open";
 
 interface AcquisitionFlowProps {
   business: BusinessPublicResponse;
@@ -39,11 +40,34 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
     business.settings?.backgroundColor ||
     (cardDesign?.background_color || "#1c1c1e");
 
+  // Preview state: a brand-new card starts at the program's head-start
+  // stamps; without a prestamp we show a few demo stamps so the strip
+  // doesn't look empty. Field {{variables}} render with the same numbers
+  // (and real program data) so the preview is coherent.
+  const previewStamps =
+    cardDesign?.initial_stamps && cardDesign.initial_stamps > 0
+      ? cardDesign.initial_stamps
+      : 3;
+  const previewContext = {
+    stampCount: previewStamps,
+    totalStamps: cardDesign?.total_stamps ?? 10,
+    rewardName: cardDesign?.reward_name,
+    businessName: business.name,
+    sampleFirstName: t("previewSampleName"),
+  };
+
   const handleSubmit = async (data: CustomerCreatePublic) => {
     setFlowState("submitting");
     setErrorMessage(null);
 
-    const { data: response, error } = await createPublicCustomer(business.id, data, locationSlug);
+    const { data: response, error, code } = await createPublicCustomer(business.id, data, locationSlug);
+
+    if (code === "CHECKOUT_REQUIRED") {
+      // The business hasn't finished setting up its subscription, so it isn't
+      // accepting signups yet. Retrying won't help — show a calm closed state.
+      setFlowState("not_open");
+      return;
+    }
 
     if (error || !response) {
       setErrorMessage(error || "Something went wrong. Please try again.");
@@ -120,6 +144,17 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     custom_filled_stamp_url: cardDesign.custom_filled_stamp_url ?? undefined,
                     custom_empty_stamp_url: cardDesign.custom_empty_stamp_url ?? undefined,
                     strip_background_url: cardDesign.strip_background_url ?? undefined,
+                    // Substitute {{variables}} with real program data + a
+                    // sample cardholder so the preview never shows raw
+                    // placeholder syntax.
+                    secondary_fields: renderPreviewFields(
+                      cardDesign.secondary_fields,
+                      previewContext
+                    ),
+                    auxiliary_fields: renderPreviewFields(
+                      cardDesign.auxiliary_fields,
+                      previewContext
+                    ),
                   } : {
                     organization_name: business.name,
                     background_color: "#1c1c1e",
@@ -127,7 +162,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     total_stamps: 10,
                   }}
                   organizationName={business.name}
-                  stamps={3}
+                  stamps={previewStamps}
                   showQR={true}
                   interactive3D={true}
                 />
@@ -160,6 +195,8 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                 {flowState === "error" && (
                   <ErrorCard message={errorMessage} onRetry={handleRetry} />
                 )}
+
+                {flowState === "not_open" && <NotOpenCard />}
               </>
             ) : (
               <NotReadyCard />
@@ -313,6 +350,35 @@ function NotReadyCard() {
       </h2>
       <p className="text-[var(--muted-foreground)]">
         {t("notReady.description")}
+      </p>
+    </div>
+  );
+}
+
+function NotOpenCard() {
+  const t = useTranslations("acquisition");
+  return (
+    <div className="paper-card rounded-2xl p-6 text-center">
+      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
+        <svg
+          className="w-8 h-8 text-amber-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
+      <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
+        {t("notOpen.title")}
+      </h2>
+      <p className="text-[var(--muted-foreground)]">
+        {t("notOpen.description")}
       </p>
     </div>
   );
