@@ -4,6 +4,39 @@ export interface PassField {
   value: string;
 }
 
+/**
+ * A merchant-uploaded icon with its server-derived variants (mirrors the
+ * backend ProcessedIconAsset and the web repo's design types). The preview
+ * renders these URLs verbatim, which guarantees parity with the generated
+ * strip images.
+ */
+export interface ProcessedIconAsset {
+  id: string;
+  original_url: string;
+  processed_url: string;
+  greyscale_url: string;
+  outline_url: string;
+  bg_removed: boolean;
+}
+
+export type CustomStampEmptyMode = "greyscale" | "outline" | "custom";
+export type CustomStampArrangement = "straight" | "staggered";
+
+/**
+ * Custom stamp icon configuration (mirrors backend CustomStampConfig).
+ * `icons` is the ordered rotation list: stamp slot i renders icons[i % n];
+ * the last slot uses reward_icon when set.
+ */
+export interface CustomStampConfig {
+  icons: ProcessedIconAsset[];
+  reward_icon?: ProcessedIconAsset | null;
+  empty_icon?: ProcessedIconAsset | null;
+  empty_mode: CustomStampEmptyMode;
+  arrangement: CustomStampArrangement;
+}
+
+export type StampIconMode = "preset" | "custom";
+
 export interface CardDesign {
   id: string;
   name: string;
@@ -27,6 +60,10 @@ export interface CardDesign {
   stamp_icon?: string;
   reward_icon?: string;
   icon_color?: string;
+
+  // Custom stamp icons (STA-216)
+  stamp_icon_mode?: StampIconMode;
+  custom_stamp_config?: CustomStampConfig | null;
 
   // Asset URLs
   logo_url?: string;

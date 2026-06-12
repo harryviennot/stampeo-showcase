@@ -4,8 +4,10 @@ import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CTAButton } from "@/components/ui/CTAButton";
-import { CardColorDemo } from "./CardColorDemo";
-import { CreationMethodsSection } from "./CreationMethodsSection";
+import { CardHeroPreview } from "./CardHeroPreview";
+import { CardDesignPlayground } from "./CardDesignPlayground";
+import { IconLibrarySection } from "./IconLibrarySection";
+import { LivingCardSection } from "./LivingCardSection";
 import { AnnotatedWalletCard } from "./AnnotatedWalletCard";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
@@ -53,9 +55,9 @@ export function CardDesignPageContent() {
 
             </ScrollReveal>
 
-            {/* Right: interactive card color demo */}
+            {/* Right: compact card preview */}
             <ScrollReveal delay={150}>
-              <CardColorDemo />
+              <CardHeroPreview />
             </ScrollReveal>
           </div>
         </Container>
@@ -75,8 +77,16 @@ export function CardDesignPageContent() {
         </Container>
       </section>
 
-      {/* 3 Creation Methods */}
-      <CreationMethodsSection />
+      {/* Interactive card designer */}
+      <CardDesignPlayground />
+
+      {/* Icon library + custom stamp art */}
+      <IconLibrarySection />
+
+      {/* Personalization: customer name, variables, stacked rewards */}
+      <LivingCardSection />
+
+      {/* Creation methods hidden for now — component kept for later re-enable. */}
 
       {/* Annotated Card Anatomy */}
       <AnnotatedWalletCard />

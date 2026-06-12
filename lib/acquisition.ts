@@ -3,6 +3,8 @@
  * These endpoints are public (no authentication required).
  */
 
+import type { CustomStampConfig, StampIconMode } from "@/lib/types/design";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 if (!API_URL) {
@@ -56,6 +58,8 @@ export interface CardDesignPublicResponse {
   stamp_icon?: string | null;
   reward_icon?: string | null;
   icon_color?: string | null;
+  stamp_icon_mode?: StampIconMode;
+  custom_stamp_config?: CustomStampConfig | null;
   logo_url?: string | null;
   custom_filled_stamp_url?: string | null;
   custom_empty_stamp_url?: string | null;

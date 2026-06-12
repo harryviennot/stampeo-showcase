@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
@@ -26,8 +26,6 @@ const ANNOTATIONS: Annotation[] = [
 ];
 
 function DesktopAnnotations({ labels }: { labels: string[] }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
   const isMounted = useSyncExternalStore(
     () => () => { },
     () => true,
@@ -44,7 +42,7 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
   const CARD_RIGHT_EDGE = 72; // % — a few px gap after the card
 
   return (
-    <div ref={ref} className="hidden lg:block absolute inset-0 pointer-events-none">
+    <div className="hidden lg:block absolute inset-0 pointer-events-none">
       {ANNOTATIONS.map((ann, i) => {
         const isLeft = ann.side === "left";
 
@@ -67,7 +65,8 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
                 }
             }
             initial={{ opacity: 0, x: isLeft ? -15 : 15 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.3 + i * 0.12 }}
           >
             <div className="flex items-center gap-2">

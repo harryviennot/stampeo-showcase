@@ -2,8 +2,8 @@
   "features": {
     "design-de-carte": {
       "hero": {
-        "title": "Your card. Your colors. In 5 minutes.",
-        "subtitle": "No design skills needed. Import your logo, choose your colors, and your card is ready. Or better: we create it for you."
+        "title": "Made yours, down to the last stamp",
+        "subtitle": "Colors, logo, stamp icons: build a card that actually looks like you, in minutes. Or let us create it for you."
       },
       "problem": {
         "title": "Creating a pro card shouldn't be a project",
@@ -37,29 +37,59 @@
         "programme-fondateur"
       ],
       "custom": {
-        "colorDemo": {
-          "hint": "Click to switch themes — your card, your colors",
+        "playground": {
+          "sectionTitle": "Design it your way",
+          "sectionSubtitle": "Colors, stamp icon, customer's name: change the preview and see the result right away.",
+          "themeLabel": "Theme",
+          "iconLabel": "Icon",
+          "nameToggle": "First name",
+          "rewardsToggle": "Rewards",
+          "rewardsDecrease": "Remove a reward",
+          "rewardsIncrease": "Add a reward",
+          "memberLabel": "Member",
+          "memberName": "Sophie",
           "rewardLabel": "Reward",
           "rewardValue": "8th free",
-          "memberLabel": "Member",
+          "rewardsLabel": "Rewards",
+          "rewardsValue": "{count, plural, one {# ready} other {# ready}}",
+          "hint": "Everything updates live.",
           "themes": [
-            {
-              "name": "Stampeo",
-              "orgName": "My Café"
-            },
-            {
-              "name": "Cream",
-              "orgName": "Marie's Bakery"
-            },
-            {
-              "name": "Night",
-              "orgName": "The Blue Counter"
-            },
-            {
-              "name": "Rose",
-              "orgName": "Tea Blossom"
-            }
+            { "name": "Stampeo", "orgName": "My Café" },
+            { "name": "Cream", "orgName": "Marie's Bakery" },
+            { "name": "Night", "orgName": "The Blue Counter" },
+            { "name": "Rose", "orgName": "Tea Blossom" }
           ]
+        },
+        "iconLibrary": {
+          "title": "An icon for every trade",
+          "description": "Dozens of ready-to-use stamp icons: café, restaurant, salon, florist, pet shop. One that fits your business, guaranteed.",
+          "trades": ["Café", "Restaurant", "Salon", "Florist", "Pet shop"],
+          "comingSoon": {
+            "badge": "Coming soon",
+            "title": "Your own icons",
+            "description": "Soon, import your own icons: stamp, empty stamp, reward. And create multiple stamp types within a single program."
+          }
+        },
+        "livingCard": {
+          "title": "A card that knows your customers",
+          "description": "Every card adapts to the person showing it. Without setting anything up by hand.",
+          "lead": "You fill in your card once. After that, it shows the right information for each customer, automatically.",
+          "benefits": [
+            "It greets each customer by their first name.",
+            "It always shows where they stand, and what's left before their reward.",
+            "It counts the rewards they've already earned and that are waiting for them."
+          ],
+          "stacking": {
+            "title": "Your customers never lose their progress",
+            "description": "Goal reached? The reward is set aside and a fresh cycle starts right away. Rewards stack up, nothing gets lost."
+          },
+          "card": {
+            "orgName": "Margot's Café",
+            "memberLabel": "Member",
+            "memberName": "Sophie",
+            "rewardsLabel": "Rewards",
+            "rewardsValue": "2 ready"
+          }
         },
         "methods": {
           "sectionTitle": "Choose your method",

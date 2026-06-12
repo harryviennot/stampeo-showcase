@@ -1,4 +1,4 @@
-import { CardDesign } from "@/lib/types/design";
+import { CardDesign, CustomStampConfig } from "@/lib/types/design";
 
 // ============================================================================
 // Color Utilities
@@ -127,7 +127,25 @@ export interface StampLayout {
   radius: number;
   rows: number;
   distribution: number[];
+  /** Gap between rows and edges (straight) / band top offset (staggered).
+   *  Used by the custom-icon box clamp. */
+  verticalPadding: number;
 }
+
+// ============================================================================
+// Custom stamp icon constants — MIRRORED from backend strip_generator.py and
+// the web repo's card-utils.ts. Change them together or the preview drifts
+// from the generated strips.
+// ============================================================================
+
+/** Custom icons render slightly larger than the circle they replace. */
+export const CUSTOM_ICON_SCALE = 1.15;
+/** Staggered: x advance between consecutive icons, fraction of icon size. */
+export const STAGGER_X_PITCH = 0.72;
+/** Staggered: front-row vertical drop, fraction of icon size. */
+export const STAGGER_Y_OFFSET = 0.3;
+/** 17+ stamps fall back to the straight grid. */
+export const STAGGERED_MAX_COUNT = 16;
 
 /**
  * Calculate stamp positions within a container
@@ -197,7 +215,118 @@ export function calculateStampLayout(
     radius,
     rows,
     distribution,
+    verticalPadding,
   };
+}
+
+/**
+ * Staggered (zigzag) layout for custom stamp icons. Mirrors
+ * calculate_staggered_layout in backend strip_generator.py: icons run left
+ * to right in fill order, alternating raised (back, row 0) and lowered
+ * (front, row 1) positions, overlapping horizontally by STAGGER_X_PITCH.
+ * Front icons must render ABOVE back icons (zIndex by row).
+ */
+export function calculateStaggeredStampLayout(
+  totalStamps: number,
+  containerWidth: number,
+  containerHeight: number,
+  sidePadding: number = 11
+): StampLayout {
+  const count = Math.min(Math.max(totalStamps, 0), STAGGERED_MAX_COUNT);
+  if (count <= 0) {
+    return {
+      positions: [],
+      diameter: 0,
+      radius: 0,
+      rows: 0,
+      distribution: [],
+      verticalPadding: 0,
+    };
+  }
+
+  const availableWidth = containerWidth - 2 * sidePadding;
+  const sizeByWidth = availableWidth / (1 + (count - 1) * STAGGER_X_PITCH);
+  const sizeByHeight = containerHeight / (1 + STAGGER_Y_OFFSET);
+  const size = Math.min(sizeByWidth, sizeByHeight);
+  const radius = size / 2;
+
+  const bandWidth = size * (1 + (count - 1) * STAGGER_X_PITCH);
+  const startX = (containerWidth - bandWidth) / 2 + radius;
+  const bandHeight = size * (1 + STAGGER_Y_OFFSET);
+  const bandTop = (containerHeight - bandHeight) / 2;
+  const yBack = bandTop + radius;
+  const yFront = bandTop + size * STAGGER_Y_OFFSET + radius;
+
+  const positions: StampPosition[] = [];
+  for (let i = 0; i < count; i++) {
+    const isBack = i % 2 === 0;
+    positions.push({
+      centerX: startX + i * size * STAGGER_X_PITCH,
+      centerY: isBack ? yBack : yFront,
+      radius,
+      row: isBack ? 0 : 1,
+      indexInRow: Math.floor(i / 2),
+      globalIndex: i,
+    });
+  }
+
+  const back = positions.filter((p) => p.row === 0).length;
+  return {
+    positions,
+    diameter: size,
+    radius,
+    rows: count > 1 ? 2 : 1,
+    distribution: count > 1 ? [back, count - back] : [back],
+    verticalPadding: bandTop,
+  };
+}
+
+/**
+ * Box size for a custom icon in a cell. Mirrors _paste_slot_icon in
+ * backend strip_generator.py: staggered boxes ARE the solved size (overlap
+ * is intentional); straight boxes grow by CUSTOM_ICON_SCALE but never eat
+ * more than 60% of the smaller gutter.
+ */
+export function customIconBoxSize(
+  layout: StampLayout,
+  minPadding: number,
+  arrangement: "straight" | "staggered"
+): number {
+  if (arrangement === "staggered") return layout.diameter;
+  const allowedExtra = Math.min(minPadding, layout.verticalPadding) * 0.6;
+  return Math.min(layout.diameter * CUSTOM_ICON_SCALE, layout.diameter + allowedExtra);
+}
+
+/**
+ * Which image URL a slot renders in custom mode. Mirrors
+ * _custom_icon_for_slot in backend strip_generator.py: slot i uses
+ * icons[i % n], the last slot uses reward_icon when set; empty slots show
+ * their own slot's greyscale/outline variant or the shared empty icon.
+ */
+export function resolveStampIconUrl(
+  config: CustomStampConfig,
+  slotIndex: number,
+  totalStamps: number,
+  filled: boolean
+): string | null {
+  const isLast = slotIndex === totalStamps - 1;
+  const iconSet =
+    isLast && config.reward_icon
+      ? config.reward_icon
+      : config.icons.length > 0
+        ? config.icons[slotIndex % config.icons.length]
+        : null;
+  if (!iconSet) return null;
+
+  if (filled) return iconSet.processed_url;
+
+  if (config.empty_mode === "custom" && config.empty_icon) {
+    return config.empty_icon.processed_url;
+  }
+  if (config.empty_mode === "outline") {
+    return iconSet.outline_url || iconSet.processed_url;
+  }
+  return iconSet.greyscale_url || iconSet.processed_url;
 }
 
 // ============================================================================
