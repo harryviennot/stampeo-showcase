@@ -3,11 +3,12 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
-import { Sparkle, ArrowUp, Bug, CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { Sparkle, ArrowUp, Bug } from "@phosphor-icons/react/dist/ssr";
 
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
+import { ChangelogAccordion } from "@/components/ui/ChangelogAccordion";
 import {
   type ChangelogArea,
   type ChangelogCategory,
@@ -19,7 +20,7 @@ import {
   getPublicChangelog,
   resolve,
 } from "@/lib/changelog";
-import { areaDotHex } from "@/lib/changelog-areas";
+import { areaChipClass, areaDotHex } from "@/lib/changelog-areas";
 
 // Render on demand: the page fetches the changelog live (no ISR cache) so a
 // newly published release shows immediately and an empty response is never
@@ -96,14 +97,10 @@ function AreaChip({
 }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--foreground)]/10 bg-[var(--foreground)]/[0.04] font-medium text-[var(--foreground)]/75 ${
-        size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"
-      }`}
+      className={`inline-flex shrink-0 items-center rounded-md border font-semibold ${areaChipClass(
+        area.color
+      )} ${size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"}`}
     >
-      <span
-        className="h-1.5 w-1.5 rounded-full"
-        style={{ backgroundColor: areaDotHex(area.color) }}
-      />
       {areaLabel(area, locale)}
     </span>
   );
@@ -125,7 +122,7 @@ function ItemRow({
   const teamOnly = (item.affects ?? []).includes("scanner") &&
     !(item.affects ?? []).includes("owner");
   return (
-    <li className="flex flex-col gap-1.5 py-2.5 sm:flex-row sm:items-baseline sm:gap-3">
+    <li className="flex flex-col items-start gap-1.5 py-2.5 sm:flex-row sm:items-baseline sm:gap-3">
       {area && <AreaChip area={area} locale={locale} size="sm" />}
       <div className="min-w-0">
         <span className="text-[15px] font-medium text-[var(--foreground)]">
@@ -192,20 +189,13 @@ function CategoryGroup({
   }
 
   return (
-    <details className="group border-t border-[var(--foreground)]/[0.08] pt-4">
-      <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--foreground)]/55 transition-colors hover:text-[var(--foreground)]/75 [&::-webkit-details-marker]:hidden">
-        <Icon weight="bold" className="h-4 w-4 text-[var(--foreground)]/45" />
-        <span>{t(`categories.${cat}`)}</span>
-        <span className="font-semibold text-[var(--foreground)]/35">
-          {list.length}
-        </span>
-        <CaretDown
-          weight="bold"
-          className="ml-auto h-3.5 w-3.5 text-[var(--foreground)]/45 transition-transform duration-300 group-open:rotate-180"
-        />
-      </summary>
+    <ChangelogAccordion
+      label={t(`categories.${cat}`)}
+      count={list.length}
+      icon={<Icon weight="bold" className="h-4 w-4 text-[var(--foreground)]/45" />}
+    >
       {itemList}
-    </details>
+    </ChangelogAccordion>
   );
 }
 
@@ -246,17 +236,22 @@ function ReleaseEntry({
   })).filter((g) => g.list.length > 0);
 
   return (
-    <article className="relative grid grid-cols-1 gap-x-10 pb-12 sm:pb-16 md:grid-cols-[150px_minmax(0,1fr)]">
+    <article className="relative grid grid-cols-1 gap-x-10 md:grid-cols-[150px_minmax(0,1fr)]">
       {/* Desktop: sticky date rail — date only, no version code */}
       <div className="hidden md:block">
-        <time className="sticky top-28 block text-sm font-semibold text-[var(--foreground)]/55">
+        <time
+          dateTime={release.published_at ?? undefined}
+          className="sticky top-28 block text-sm font-semibold text-[var(--foreground)]/55"
+        >
           {date}
         </time>
       </div>
 
-      {/* Content column keeps the connecting timeline spine + accent dot */}
+      {/* Content column carries the connecting timeline spine + accent dot. The
+          bottom padding lives here (not on the article) so the border-l runs
+          unbroken into the next entry. */}
       <div
-        className={`relative border-l pl-7 sm:pl-10 ${
+        className={`relative border-l pb-12 pl-7 sm:pb-16 sm:pl-10 ${
           isLast ? "border-l-transparent" : "border-[var(--foreground)]/12"
         }`}
       >
@@ -266,7 +261,10 @@ function ReleaseEntry({
         />
 
         {/* Mobile: inline date (the rail is hidden < md) */}
-        <time className="block text-sm font-semibold text-[var(--foreground)]/55 md:hidden">
+        <time
+          dateTime={release.published_at ?? undefined}
+          className="block text-sm font-semibold text-[var(--foreground)]/55 md:hidden"
+        >
           {date}
         </time>
 
@@ -285,13 +283,15 @@ function ReleaseEntry({
         )}
 
         {release.image_url && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={release.image_url}
-            alt={title || "Changelog"}
-            loading="lazy"
-            className="mt-5 max-h-[360px] w-full rounded-2xl border border-[var(--foreground)]/10 object-cover shadow-sm md:max-h-[440px]"
-          />
+          <div className="mt-5 overflow-hidden rounded-xl border border-[var(--foreground)]/10 bg-[var(--foreground)]/[0.03]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={release.image_url}
+              alt={title || "Changelog"}
+              loading="lazy"
+              className="aspect-video w-full object-cover"
+            />
+          </div>
         )}
 
         {body && <ArticleBody source={body} />}
@@ -348,8 +348,38 @@ export default async function ChangelogPage({
 
   const base = locale === "fr" ? "/changelog" : `/${locale}/changelog`;
 
+  // SEO: CollectionPage + ItemList of releases so search engines understand the
+  // page as a dated list of product updates (rich-result eligible).
+  const siteUrl = "https://stampeo.app";
+  const canonicalUrl = `${siteUrl}${locale === "fr" ? "" : `/${locale}`}/changelog`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: t("meta.title"),
+    description: t("meta.description"),
+    url: canonicalUrl,
+    inLanguage: locale,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: displayReleases.slice(0, 20).map((r, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "TechArticle",
+          headline: resolve(r.title_fr, r.title_en, locale) || t("title"),
+          ...(r.published_at ? { datePublished: r.published_at } : {}),
+          url: canonicalUrl,
+        },
+      })),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[var(--paper)]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       <main className="pt-32 pb-24">
         <Container className="max-w-4xl">
