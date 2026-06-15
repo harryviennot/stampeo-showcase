@@ -20,7 +20,7 @@ import {
   getPublicChangelog,
   resolve,
 } from "@/lib/changelog";
-import { areaChipClass, areaDotHex } from "@/lib/changelog-areas";
+import { areaDotHex } from "@/lib/changelog-areas";
 
 // Render on demand: the page fetches the changelog live (no ISR cache) so a
 // newly published release shows immediately and an empty response is never
@@ -97,10 +97,14 @@ function AreaChip({
 }) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-md border font-semibold ${areaChipClass(
-        area.color
-      )} ${size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"}`}
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--foreground)]/10 bg-[var(--foreground)]/[0.04] font-medium text-[var(--foreground)]/75 ${
+        size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs"
+      }`}
     >
+      <span
+        className="h-1.5 w-1.5 rounded-full"
+        style={{ backgroundColor: areaDotHex(area.color) }}
+      />
       {areaLabel(area, locale)}
     </span>
   );
