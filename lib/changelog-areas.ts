@@ -19,3 +19,22 @@ export const AREA_CHIP_CLASSES: Record<string, string> = {
 export function areaChipClass(color: string | undefined | null): string {
   return (color && AREA_CHIP_CLASSES[color]) || AREA_CHIP_CLASSES.slate;
 }
+
+// Linear-style: a neutral pill with a small colored dot (the palette key's hex).
+// Keep keys identical across surfaces.
+export const AREA_DOT_HEX: Record<string, string> = {
+  indigo: "#6366f1",
+  blue: "#3b82f6",
+  pink: "#ec4899",
+  slate: "#64748b",
+  orange: "#f97316",
+  amber: "#f59e0b",
+  purple: "#a855f7",
+  green: "#22c55e",
+  teal: "#14b8a6",
+  red: "#ef4444",
+};
+
+export function areaDotHex(color: string | undefined | null): string {
+  return (color && AREA_DOT_HEX[color]) || AREA_DOT_HEX.slate;
+}
