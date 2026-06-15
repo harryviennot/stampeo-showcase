@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
-import { Sparkle, ArrowUp, Bug } from "@phosphor-icons/react/dist/ssr";
+import { Sparkle, ArrowUp, Bug, CaretDown } from "@phosphor-icons/react/dist/ssr";
 
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
@@ -146,20 +146,86 @@ function ItemRow({
   );
 }
 
+/** One category block. "New Features" stays open and prominent; Improvements
+ *  and Fixes collapse into a native <details> accordion (server-friendly — no
+ *  client JS), collapsed by default, Linear-style. */
+function CategoryGroup({
+  cat,
+  list,
+  areaBySlug,
+  locale,
+  t,
+}: {
+  cat: ChangelogCategory;
+  list: ChangelogItem[];
+  areaBySlug: Map<string, ChangelogArea>;
+  locale: string;
+  t: Awaited<ReturnType<typeof getTranslations>>;
+}) {
+  const Icon = CATEGORY_ICON[cat];
+  const itemList = (
+    <ul className="mt-1 divide-y divide-[var(--foreground)]/[0.06]">
+      {list.map((item) => (
+        <ItemRow
+          key={item.id}
+          item={item}
+          area={item.area ? areaBySlug.get(item.area) : undefined}
+          locale={locale}
+          forTeamLabel={t("forTeam")}
+        />
+      ))}
+    </ul>
+  );
+
+  if (cat === "feature") {
+    return (
+      <div>
+        <div className="flex items-center gap-2">
+          <Icon weight="bold" className="h-4 w-4 text-[var(--foreground)]/45" />
+          <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--foreground)]/55">
+            {t(`categories.${cat}`)}
+          </h3>
+        </div>
+        {itemList}
+      </div>
+    );
+  }
+
+  return (
+    <details className="group border-t border-[var(--foreground)]/[0.08] pt-4">
+      <summary className="flex cursor-pointer list-none items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-[var(--foreground)]/55 transition-colors hover:text-[var(--foreground)]/75 [&::-webkit-details-marker]:hidden">
+        <Icon weight="bold" className="h-4 w-4 text-[var(--foreground)]/45" />
+        <span>{t(`categories.${cat}`)}</span>
+        <span className="font-semibold text-[var(--foreground)]/35">
+          {list.length}
+        </span>
+        <CaretDown
+          weight="bold"
+          className="ml-auto h-3.5 w-3.5 text-[var(--foreground)]/45 transition-transform duration-300 group-open:rotate-180"
+        />
+      </summary>
+      {itemList}
+    </details>
+  );
+}
+
 function ReleaseEntry({
   release,
   areaBySlug,
   locale,
   t,
+  isLast,
 }: {
   release: ChangelogRelease;
   areaBySlug: Map<string, ChangelogArea>;
   locale: string;
   t: Awaited<ReturnType<typeof getTranslations>>;
+  isLast: boolean;
 }) {
   const items = release.changelog_items;
   const title = resolve(release.title_fr, release.title_en, locale);
   const body = resolve(release.body_fr, release.body_en, locale);
+  const date = formatReleaseDate(release.published_at, locale);
 
   // Distinct area chips for the entry header (union of its items' areas).
   const distinctAreas: ChangelogArea[] = [];
@@ -180,82 +246,71 @@ function ReleaseEntry({
   })).filter((g) => g.list.length > 0);
 
   return (
-    <article className="relative border-l border-[var(--foreground)]/12 pb-12 pl-7 last:border-l-transparent sm:pb-16 sm:pl-12">
-      {/* Timeline dot, centered on the connecting line */}
-      <span
-        aria-hidden
-        className="absolute left-0 top-[6px] h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-[var(--accent)] ring-4 ring-[var(--paper)]"
-      />
-
-      {/* Date + version */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-        <time className="text-sm font-semibold text-[var(--foreground)]/55">
-          {formatReleaseDate(release.published_at, locale)}
+    <article className="relative grid grid-cols-1 gap-x-10 pb-12 sm:pb-16 md:grid-cols-[150px_minmax(0,1fr)]">
+      {/* Desktop: sticky date rail — date only, no version code */}
+      <div className="hidden md:block">
+        <time className="sticky top-28 block text-sm font-semibold text-[var(--foreground)]/55">
+          {date}
         </time>
-        {release.version && (
-          <span className="inline-flex items-center rounded-md bg-[var(--accent)]/10 px-2 py-0.5 font-mono text-xs font-semibold text-[var(--accent)]">
-            v{release.version}
-          </span>
-        )}
       </div>
 
-      {distinctAreas.length > 0 && (
-        <div className="mt-2.5 flex flex-wrap gap-1.5">
-          {distinctAreas.map((a) => (
-            <AreaChip key={a.slug} area={a} locale={locale} />
-          ))}
-        </div>
-      )}
-
-      {title && (
-        <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-[28px]">
-          {title}
-        </h2>
-      )}
-
-      {release.image_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={release.image_url}
-          alt={title || "Changelog"}
-          loading="lazy"
-          className="mt-5 w-full rounded-2xl border border-[var(--foreground)]/10 object-cover shadow-sm"
+      {/* Content column keeps the connecting timeline spine + accent dot */}
+      <div
+        className={`relative border-l pl-7 sm:pl-10 ${
+          isLast ? "border-l-transparent" : "border-[var(--foreground)]/12"
+        }`}
+      >
+        <span
+          aria-hidden
+          className="absolute left-0 top-[7px] h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-[var(--accent)] ring-4 ring-[var(--paper)]"
         />
-      )}
 
-      {body && <ArticleBody source={body} />}
+        {/* Mobile: inline date (the rail is hidden < md) */}
+        <time className="block text-sm font-semibold text-[var(--foreground)]/55 md:hidden">
+          {date}
+        </time>
 
-      {byCategory.length > 0 && (
-        <div className="mt-6 space-y-5">
-          {byCategory.map(({ cat, list }) => {
-            const Icon = CATEGORY_ICON[cat];
-            return (
-              <div key={cat}>
-                <div className="flex items-center gap-2">
-                  <Icon
-                    weight="bold"
-                    className="h-4 w-4 text-[var(--foreground)]/45"
-                  />
-                  <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--foreground)]/55">
-                    {t(`categories.${cat}`)}
-                  </h3>
-                </div>
-                <ul className="mt-1 divide-y divide-[var(--foreground)]/[0.06]">
-                  {list.map((item) => (
-                    <ItemRow
-                      key={item.id}
-                      item={item}
-                      area={item.area ? areaBySlug.get(item.area) : undefined}
-                      locale={locale}
-                      forTeamLabel={t("forTeam")}
-                    />
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
-        </div>
-      )}
+        {distinctAreas.length > 0 && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5 md:mt-0">
+            {distinctAreas.map((a) => (
+              <AreaChip key={a.slug} area={a} locale={locale} />
+            ))}
+          </div>
+        )}
+
+        {title && (
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-[28px]">
+            {title}
+          </h2>
+        )}
+
+        {release.image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={release.image_url}
+            alt={title || "Changelog"}
+            loading="lazy"
+            className="mt-5 max-h-[360px] w-full rounded-2xl border border-[var(--foreground)]/10 object-cover shadow-sm md:max-h-[440px]"
+          />
+        )}
+
+        {body && <ArticleBody source={body} />}
+
+        {byCategory.length > 0 && (
+          <div className="mt-6 space-y-5">
+            {byCategory.map(({ cat, list }) => (
+              <CategoryGroup
+                key={cat}
+                cat={cat}
+                list={list}
+                areaBySlug={areaBySlug}
+                locale={locale}
+                t={t}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </article>
   );
 }
@@ -297,7 +352,7 @@ export default async function ChangelogPage({
     <div className="min-h-screen bg-[var(--paper)]">
       <Header />
       <main className="pt-32 pb-24">
-        <Container className="max-w-3xl">
+        <Container className="max-w-4xl">
           {/* Hero */}
           <div className="mb-10 text-center sm:mb-14">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
@@ -353,14 +408,15 @@ export default async function ChangelogPage({
               {t("empty")}
             </p>
           ) : (
-            <div className="pl-1">
-              {displayReleases.map((release) => (
+            <div>
+              {displayReleases.map((release, i) => (
                 <ReleaseEntry
                   key={release.id}
                   release={release}
                   areaBySlug={areaBySlug}
                   locale={locale}
                   t={t}
+                  isLast={i === displayReleases.length - 1}
                 />
               ))}
             </div>
