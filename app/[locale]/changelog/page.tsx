@@ -56,9 +56,20 @@ export async function generateMetadata({
   };
 }
 
-/** Article body: trusted (superadmin-authored) Markdown. Falls back to plain
- *  text if MDX compilation ever chokes on stray syntax. */
-async function ArticleBody({ source }: { source: string }) {
+/** Trusted (superadmin-authored) Markdown — used for both the release article
+ *  body and per-item details (bold, links, lists, embedded images, inline HTML
+ *  like <u>). Falls back to plain text if MDX compilation chokes on stray
+ *  syntax. `className` styles the prose; `fallbackClassName` the plain-text
+ *  fallback (so a compact item body and a full article body can share it). */
+async function MarkdownBody({
+  source,
+  className = "prose prose-sm sm:prose-base mt-3 max-w-none text-[var(--foreground)]/75 prose-headings:text-[var(--foreground)] prose-a:text-[var(--accent)]",
+  fallbackClassName = "mt-3 whitespace-pre-wrap text-[15px] leading-relaxed text-[var(--foreground)]/75",
+}: {
+  source: string;
+  className?: string;
+  fallbackClassName?: string;
+}) {
   if (!source.trim()) return null;
   let content: React.ReactNode = null;
   let failed = false;
@@ -72,17 +83,9 @@ async function ArticleBody({ source }: { source: string }) {
     failed = true;
   }
   if (failed) {
-    return (
-      <p className="mt-3 whitespace-pre-wrap text-[15px] leading-relaxed text-[var(--foreground)]/75">
-        {source}
-      </p>
-    );
+    return <p className={fallbackClassName}>{source}</p>;
   }
-  return (
-    <div className="prose prose-sm sm:prose-base mt-3 max-w-none text-[var(--foreground)]/75 prose-headings:text-[var(--foreground)] prose-a:text-[var(--accent)]">
-      {content}
-    </div>
-  );
+  return <div className={className}>{content}</div>;
 }
 
 /** Linear-style area tag: a neutral pill with a small colored dot. */
@@ -138,9 +141,11 @@ function ItemRow({
           </span>
         )}
         {body && (
-          <p className="mt-0.5 text-[14px] leading-relaxed text-[var(--foreground)]/65">
-            {body}
-          </p>
+          <MarkdownBody
+            source={body}
+            className="prose prose-sm mt-0.5 max-w-none text-[14px] leading-relaxed text-[var(--foreground)]/65 prose-p:my-1 prose-headings:text-[var(--foreground)] prose-a:text-[var(--accent)]"
+            fallbackClassName="mt-0.5 text-[14px] leading-relaxed text-[var(--foreground)]/65"
+          />
         )}
       </div>
     </li>
@@ -298,7 +303,7 @@ function ReleaseEntry({
           </div>
         )}
 
-        {body && <ArticleBody source={body} />}
+        {body && <MarkdownBody source={body} />}
 
         {byCategory.length > 0 && (
           <div className="mt-6 space-y-5">
