@@ -224,6 +224,7 @@ function ReleaseEntry({
   const items = release.changelog_items;
   const title = resolve(release.title_fr, release.title_en, locale);
   const body = resolve(release.body_fr, release.body_en, locale);
+  const heroSrc = resolve(release.image_url_fr, release.image_url_en, locale);
   const date = formatReleaseDate(release.published_at, locale);
 
   // Distinct area chips for the entry header (union of its items' areas).
@@ -291,11 +292,11 @@ function ReleaseEntry({
           </h2>
         )}
 
-        {release.image_url && (
+        {heroSrc && (
           <div className="mt-5 overflow-hidden rounded-xl border border-[var(--foreground)]/10 bg-[var(--foreground)]/[0.03]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={release.image_url}
+              src={heroSrc}
               alt={title || "Changelog"}
               loading="lazy"
               className="aspect-video w-full object-cover"

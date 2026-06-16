@@ -38,7 +38,8 @@ export interface ChangelogRelease {
   title_en: string | null;
   body_fr: string | null;
   body_en: string | null;
-  image_url: string | null;
+  image_url_fr: string | null;
+  image_url_en: string | null;
   published_at: string | null;
   changelog_items: ChangelogItem[];
 }

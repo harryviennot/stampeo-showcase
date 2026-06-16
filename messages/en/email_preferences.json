@@ -7,20 +7,24 @@
     "error_invalid_token": "This link is no longer valid. Sign in to your dashboard to manage your preferences.",
     "error_generic": "Something went wrong. Try again or contact us.",
     "categories": {
-      "reengagement": {
-        "label": "Activation reminders",
-        "description": "24-hour and 7-day nudges to help you finish setting up your program."
-      },
-      "marketing": {
-        "label": "Tips and updates",
-        "description": "Tips, best practices, and product news."
+      "digest": {
+        "label": "Performance reports",
+        "description": "Your weekly or monthly recap, plus the big moments in your program."
       },
       "product_updates": {
-        "label": "Product announcements",
-        "description": "Important changes to the service you use."
+        "label": "Product updates",
+        "description": "Important Stampeo changes and features on the way."
+      },
+      "marketing": {
+        "label": "Tips and best practices",
+        "description": "Ideas and best practices to get the most from your loyalty program."
+      },
+      "reengagement": {
+        "label": "Activation reminders",
+        "description": "Reminders to finish setup, or to restart your program after a break."
       }
     },
-    "transactional_note": "Transactional emails (receipts, password resets, OTPs, payment alerts) cannot be turned off.",
+    "transactional_note": "Essential emails (receipts, password resets, payment alerts, warnings about your cards) cannot be turned off.",
     "save": "Save my preferences",
     "saving": "Saving…",
     "saved": "Preferences saved."
