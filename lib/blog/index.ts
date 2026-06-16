@@ -1,10 +1,24 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import yaml from "js-yaml";
 import readingTime from "reading-time";
 import type { BlogPost, BlogPostMeta } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content/blog");
+
+// gray-matter ships a js-yaml 3 engine that calls the removed `yaml.safeLoad`.
+// Provide a js-yaml 4 engine so frontmatter parsing works on the patched version.
+const matterOptions = {
+  engines: {
+    yaml: {
+      parse: (input: string) => yaml.load(input) as object,
+      stringify: () => {
+        throw new Error("YAML stringify is not supported for blog frontmatter");
+      },
+    },
+  },
+};
 
 export function getPostBySlug(
   slug: string,
@@ -15,7 +29,7 @@ export function getPostBySlug(
   if (!fs.existsSync(filePath)) return null;
 
   const source = fs.readFileSync(filePath, "utf-8");
-  const { data, content } = matter(source);
+  const { data, content } = matter(source, matterOptions);
   const stats = readingTime(content);
 
   return {
@@ -47,7 +61,7 @@ export function getAllPosts(locale: string): BlogPostMeta[] {
   const posts = files.map((file) => {
     const slug = file.replace(/\.mdx$/, "");
     const source = fs.readFileSync(path.join(dir, file), "utf-8");
-    const { data, content } = matter(source);
+    const { data, content } = matter(source, matterOptions);
     const stats = readingTime(content);
 
     return {

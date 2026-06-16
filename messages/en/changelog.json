@@ -1,0 +1,19 @@
+{
+  "changelog": {
+    "meta": {
+      "title": "Changelog",
+      "description": "Everything we've shipped on Stampeo, week after week: new features, improvements, and fixes."
+    },
+    "eyebrow": "Changelog",
+    "title": "What's new in Stampeo",
+    "subtitle": "Everything we've shipped for you, week after week.",
+    "filterAll": "All",
+    "categories": {
+      "feature": "New Features",
+      "improvement": "Improvements",
+      "fix": "Fixes"
+    },
+    "forTeam": "For your team",
+    "empty": "The first updates are on their way."
+  }
+}

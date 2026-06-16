@@ -6,17 +6,18 @@ import { useSearchParams } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-type Category = "reengagement" | "marketing" | "product_updates";
-const CATEGORIES: Category[] = ["reengagement", "marketing", "product_updates"];
+type Category = "digest" | "product_updates" | "marketing" | "reengagement";
+const CATEGORIES: Category[] = ["digest", "product_updates", "marketing", "reengagement"];
 
 type Preferences = Record<`${Category}_opt_out`, boolean>;
 
 type Status = "loading" | "ready" | "saving" | "saved" | "error_token" | "error_generic";
 
 const EMPTY_PREFS: Preferences = {
-  reengagement_opt_out: false,
-  marketing_opt_out: false,
+  digest_opt_out: false,
   product_updates_opt_out: false,
+  marketing_opt_out: false,
+  reengagement_opt_out: false,
 };
 
 export function EmailPreferencesClient() {
@@ -44,9 +45,10 @@ export function EmailPreferencesClient() {
         }
         const data = await res.json();
         setPrefs({
-          reengagement_opt_out: !!data.reengagement_opt_out,
-          marketing_opt_out: !!data.marketing_opt_out,
+          digest_opt_out: !!data.digest_opt_out,
           product_updates_opt_out: !!data.product_updates_opt_out,
+          marketing_opt_out: !!data.marketing_opt_out,
+          reengagement_opt_out: !!data.reengagement_opt_out,
         });
         setStatus("ready");
       })
