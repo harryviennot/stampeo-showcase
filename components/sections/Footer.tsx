@@ -4,11 +4,13 @@ import { StampeoLogo } from "../logo";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { NewsletterForm } from "../ui/NewsletterForm";
+import { getPlatformVersion } from "@/lib/changelog";
 
 export async function Footer() {
   const t = await getTranslations("common.footer");
   const tNav = await getTranslations("common.nav");
   const locale = await getLocale();
+  const { platform: platformVersion } = await getPlatformVersion();
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
   const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
@@ -115,6 +117,9 @@ export async function Footer() {
                     {t("blog")}
                   </Link>
                 )}
+                <Link href="/changelog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  {t("changelog")}
+                </Link>
                 <Link href="/contact" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("help")}
                 </Link>
@@ -162,6 +167,14 @@ export async function Footer() {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[#a1a1aa] text-xs font-normal">
             {t("allRightsReserved", { year: new Date().getFullYear() })}
+            {platformVersion && (
+              <a
+                href={`${locale === "fr" ? "" : `/${locale}`}/changelog`}
+                className="ml-2 text-[#a1a1aa]/70 hover:text-[var(--accent)] transition-colors"
+              >
+                v{platformVersion}
+              </a>
+            )}
           </p>
           <div className="flex items-center gap-3">
             {/* Made in France badge */}

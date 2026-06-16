@@ -7,20 +7,24 @@
     "error_invalid_token": "Ce lien n'est plus valide. Connectez-vous à votre tableau de bord pour gérer vos préférences.",
     "error_generic": "Une erreur est survenue. Réessayez ou contactez-nous.",
     "categories": {
-      "reengagement": {
-        "label": "Rappels d'activation",
-        "description": "Nudges 24h et 7 jours pour finir la configuration de votre programme."
-      },
-      "marketing": {
-        "label": "Nouveautés et conseils",
-        "description": "Astuces, bonnes pratiques et nouveautés produit."
+      "digest": {
+        "label": "Rapports de performance",
+        "description": "Votre bilan hebdomadaire ou mensuel, et les moments forts de votre programme."
       },
       "product_updates": {
-        "label": "Annonces produit",
-        "description": "Évolutions importantes du service que vous utilisez."
+        "label": "Nouveautés produit",
+        "description": "Les évolutions importantes de Stampeo et les fonctionnalités qui arrivent."
+      },
+      "marketing": {
+        "label": "Conseils et astuces",
+        "description": "Bonnes pratiques et idées pour tirer le meilleur de votre programme de fidélité."
+      },
+      "reengagement": {
+        "label": "Rappels d'activation",
+        "description": "Des rappels pour finir la configuration, ou relancer votre programme après une pause."
       }
     },
-    "transactional_note": "Les emails transactionnels (reçus, mots de passe, OTP, alertes de paiement) ne peuvent pas être désactivés.",
+    "transactional_note": "Les emails essentiels (reçus, mots de passe, alertes de paiement, avertissements sur vos cartes) ne peuvent pas être désactivés.",
     "save": "Enregistrer mes préférences",
     "saving": "Enregistrement…",
     "saved": "Préférences enregistrées."
