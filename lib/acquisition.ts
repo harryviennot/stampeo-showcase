@@ -14,6 +14,30 @@ if (!API_URL) {
 }
 
 // ============================================
+// Caching
+// ============================================
+
+/**
+ * Public acquisition pages are identical for every visitor and only change when
+ * a merchant edits their business or card design. Without caching, each page view
+ * triggers two sequential backend round-trips (~470-640ms of serialized DB work)
+ * on the hot enrollment path. We cache these GET responses in Next's Data Cache so
+ * the route still renders per request (cheap — it's almost entirely a client
+ * component) but reads the business + design from cache instead of the backend.
+ *
+ * Tags let us purge a single business on demand (revalidateTag) once the dashboard
+ * wires a webhook on design activation / business update — until then, content is
+ * at most `ACQUISITION_REVALIDATE_SECONDS` stale.
+ */
+export const ACQUISITION_REVALIDATE_SECONDS = 300;
+
+/** Cache tag for a business's public record, keyed by slug. */
+export const businessSlugTag = (slug: string) => `business-slug:${slug}`;
+
+/** Cache tag for a business's active card design, keyed by business id. */
+export const businessDesignTag = (businessId: string) => `business-design:${businessId}`;
+
+// ============================================
 // Types
 // ============================================
 
@@ -95,7 +119,12 @@ export async function getBusinessBySlug(
   slug: string
 ): Promise<{ data: BusinessPublicResponse | null; error: string | null }> {
   try {
-    const response = await fetch(`${API_URL}/businesses/slug/${slug}`);
+    const response = await fetch(`${API_URL}/businesses/slug/${slug}`, {
+      next: {
+        revalidate: ACQUISITION_REVALIDATE_SECONDS,
+        tags: [businessSlugTag(slug)],
+      },
+    });
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -122,7 +151,12 @@ export async function getActiveCardDesign(
   businessId: string
 ): Promise<{ data: CardDesignPublicResponse | null; error: string | null }> {
   try {
-    const response = await fetch(`${API_URL}/designs/${businessId}/active`);
+    const response = await fetch(`${API_URL}/designs/${businessId}/active`, {
+      next: {
+        revalidate: ACQUISITION_REVALIDATE_SECONDS,
+        tags: [businessDesignTag(businessId)],
+      },
+    });
 
     if (!response.ok) {
       if (response.status === 404) {
