@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { CheckIcon, ClockIcon, ArrowsClockwiseIcon } from "@/components/icons";
 import { PhoneMockup } from "./PhoneMockup";
 
 type DemoState =
@@ -176,28 +177,13 @@ export function OfflineToggleDemo() {
                     damping: 18,
                   }}
                 >
-                  <motion.svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <motion.path
-                      d="M5 13l4 4L19 7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.4, delay: 0.15 }}
-                    />
-                  </motion.svg>
+                  <CheckIcon className="w-10 h-10 text-white" weight="bold" />
                 </motion.div>
                 <p className="text-[13px] font-bold text-gray-900">
-                  Tampon ajouté
+                  {t("stampedTitle")}
                 </p>
                 <p className="text-[11px] text-gray-500 mt-0.5">
-                  Synchronisé instantanément
+                  {t("stampedSub")}
                 </p>
               </motion.div>
             )}
@@ -222,25 +208,13 @@ export function OfflineToggleDemo() {
                     damping: 18,
                   }}
                 >
-                  <svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                  <ClockIcon className="w-10 h-10 text-white" />
                 </motion.div>
                 <p className="text-[13px] font-bold text-amber-700">
                   {t("pending")}
                 </p>
                 <p className="text-[11px] text-gray-500 mt-0.5">
-                  1 tampon en file d&apos;attente
+                  {t("pendingSub")}
                 </p>
               </motion.div>
             )}
@@ -265,12 +239,7 @@ export function OfflineToggleDemo() {
                     damping: 18,
                   }}
                 >
-                  <motion.svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
+                  <motion.div
                     animate={{ rotate: 360 }}
                     transition={{
                       duration: 1.2,
@@ -278,12 +247,8 @@ export function OfflineToggleDemo() {
                       ease: "linear",
                     }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </motion.svg>
+                    <ArrowsClockwiseIcon className="w-10 h-10 text-white" />
+                  </motion.div>
                 </motion.div>
                 <p className="text-[13px] font-bold text-blue-600">
                   {t("syncing")}
@@ -294,7 +259,7 @@ export function OfflineToggleDemo() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  Connexion rétablie
+                  {t("syncingSub")}
                 </motion.p>
               </motion.div>
             )}
@@ -319,28 +284,13 @@ export function OfflineToggleDemo() {
                     damping: 18,
                   }}
                 >
-                  <motion.svg
-                    className="w-10 h-10 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <motion.path
-                      d="M5 13l4 4L19 7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </motion.svg>
+                  <CheckIcon className="w-10 h-10 text-white" weight="bold" />
                 </motion.div>
                 <p className="text-[13px] font-bold text-green-600">
                   {t("synced")}
                 </p>
                 <p className="text-[11px] text-gray-500 mt-0.5">
-                  Aucun tampon perdu
+                  {t("syncedSub")}
                 </p>
               </motion.div>
             )}
@@ -400,7 +350,7 @@ export function OfflineToggleDemo() {
         <div className="px-5 pb-5">
           {isOffline ? (
             <p className="text-xs text-gray-500 text-center font-medium">
-              Mode hors ligne activé
+              {t("offlineHint")}
             </p>
           ) : (
             <motion.p
@@ -414,7 +364,7 @@ export function OfflineToggleDemo() {
               >
                 ↑
               </motion.span>
-              Appuyez sur le toggle pour simuler
+              {t("toggleHint")}
             </motion.p>
           )}
         </div>

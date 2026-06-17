@@ -216,11 +216,22 @@
       ],
       "custom": {
         "heroBadge": "Scanner Mobile",
+        "heroPlatforms": "Gratuit · iOS, Android et navigateur",
+        "webScannerLink": "Pas d'installation ? Utilisez le scanner web",
+        "appStoreAlt": "Télécharger Stampeo sur l'App Store",
+        "googlePlayAlt": "Télécharger Stampeo sur Google Play",
+        "getApp": {
+          "badge": "Appli gratuite",
+          "title": "L'appli scanner Stampeo",
+          "subtitle": "Gratuite pour toute votre équipe. Téléchargez-la sur l'App Store ou Google Play, ou scannez le code pour l'installer sur votre téléphone.",
+          "qrCaption": "Scannez pour installer"
+        },
         "scanDemo": {
           "customerName": "Marc D.",
           "stampCount": "5/10 tampons",
-          "toast": "Tampon ajouté ✓",
-          "timer": "0.8s"
+          "toast": "Tampon ajouté",
+          "timer": "0.8s",
+          "hint": "Pointez vers le QR code du client"
         },
         "howItWorks": {
           "title": "Deux façons de scanner",
@@ -260,7 +271,14 @@
           "offline_label": "Hors ligne",
           "pending": "En attente de sync",
           "synced": "Synchronisé",
-          "syncing": "Synchronisation..."
+          "syncing": "Synchronisation...",
+          "stampedTitle": "Tampon ajouté",
+          "stampedSub": "Synchronisé instantanément",
+          "pendingSub": "1 tampon en file d'attente",
+          "syncingSub": "Connexion rétablie",
+          "syncedSub": "Aucun tampon perdu",
+          "offlineHint": "Mode hors ligne activé",
+          "toggleHint": "Appuyez sur le bouton pour tester"
         },
         "employee": {
           "title": "Pensé pour vos employés",

@@ -216,11 +216,22 @@
       ],
       "custom": {
         "heroBadge": "Mobile Scanner",
+        "heroPlatforms": "Free · iOS, Android and browser",
+        "webScannerLink": "No install? Use the web scanner",
+        "appStoreAlt": "Download Stampeo on the App Store",
+        "googlePlayAlt": "Get Stampeo on Google Play",
+        "getApp": {
+          "badge": "Free app",
+          "title": "Get the Stampeo scanner",
+          "subtitle": "Free for your whole team. Download it from the App Store or Google Play, or scan the code to install it on your phone.",
+          "qrCaption": "Scan to install"
+        },
         "scanDemo": {
           "customerName": "Marc D.",
           "stampCount": "5/10 stamps",
-          "toast": "Stamp added ✓",
-          "timer": "0.8s"
+          "toast": "Stamp added",
+          "timer": "0.8s",
+          "hint": "Point at the customer's QR code"
         },
         "howItWorks": {
           "title": "Two ways to scan",
@@ -260,7 +271,14 @@
           "offline_label": "Offline",
           "pending": "Pending sync",
           "synced": "Synced",
-          "syncing": "Syncing..."
+          "syncing": "Syncing...",
+          "stampedTitle": "Stamp added",
+          "stampedSub": "Synced instantly",
+          "pendingSub": "1 stamp queued",
+          "syncingSub": "Connection restored",
+          "syncedSub": "No stamp lost",
+          "offlineHint": "Offline mode on",
+          "toggleHint": "Tap the switch to try it"
         },
         "employee": {
           "title": "Built for your employees",
