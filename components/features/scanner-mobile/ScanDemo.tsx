@@ -103,10 +103,10 @@ export function ScanDemo() {
           >
             {/* Corner brackets — thicker, more visible */}
             {[
-              "top-0 left-0 border-t-[3px] border-l-[3px] rounded-tl-xl",
-              "top-0 right-0 border-t-[3px] border-r-[3px] rounded-tr-xl",
-              "bottom-0 left-0 border-b-[3px] border-l-[3px] rounded-bl-xl",
-              "bottom-0 right-0 border-b-[3px] border-r-[3px] rounded-br-xl",
+              "top-0 left-0 border-t-[3px] border-l-[3px]",
+              "top-0 right-0 border-t-[3px] border-r-[3px]",
+              "bottom-0 left-0 border-b-[3px] border-l-[3px]",
+              "bottom-0 right-0 border-b-[3px] border-r-[3px]",
             ].map((pos, i) => (
               <motion.div
                 key={i}

@@ -62,12 +62,9 @@ export function ScannerMobilePage() {
               className="order-2 flex flex-col gap-7 lg:order-1"
             >
               <div>
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--accent)]/10 bg-white px-4 py-1.5 shadow-sm">
-                  <CameraIcon className="h-4 w-4 text-[var(--accent)]" />
-                  <span className="text-sm font-bold tracking-wide">
-                    {tc("heroBadge")}
-                  </span>
-                </div>
+                <span className="mb-6 inline-block rounded-full bg-[var(--accent)]/10 px-4 py-1.5 text-sm font-semibold text-[var(--accent)]">
+                  {tc("heroBadge")}
+                </span>
 
                 <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
                   {ts("hero.title")}
