@@ -33,8 +33,8 @@ export default function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match all pathnames except for
-    // - /api, /auth, /_next, /_vercel
+    // - /api, /auth, /go (non-localized route handlers), /_next, /_vercel
     // - files with extensions (e.g. favicon.ico)
-    "/((?!api|auth|_next|_vercel|.*\\..*).*)",
+    "/((?!api|auth|go|_next|_vercel|.*\\..*).*)",
   ],
 };

@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { CheckIcon, ClockIcon } from "@/components/icons";
 import { PhoneMockup } from "./PhoneMockup";
 
 type Phase = "scanning" | "success" | "result" | "idle";
@@ -102,10 +103,10 @@ export function ScanDemo() {
           >
             {/* Corner brackets — thicker, more visible */}
             {[
-              "top-0 left-0 border-t-[3px] border-l-[3px] rounded-tl-xl",
-              "top-0 right-0 border-t-[3px] border-r-[3px] rounded-tr-xl",
-              "bottom-0 left-0 border-b-[3px] border-l-[3px] rounded-bl-xl",
-              "bottom-0 right-0 border-b-[3px] border-r-[3px] rounded-br-xl",
+              "top-0 left-0 border-t-[3px] border-l-[3px]",
+              "top-0 right-0 border-t-[3px] border-r-[3px]",
+              "bottom-0 left-0 border-b-[3px] border-l-[3px]",
+              "bottom-0 right-0 border-b-[3px] border-r-[3px]",
             ].map((pos, i) => (
               <motion.div
                 key={i}
@@ -204,22 +205,7 @@ export function ScanDemo() {
                       damping: 15,
                     }}
                   >
-                    <motion.svg
-                      className="w-7 h-7 text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                    >
-                      <motion.path
-                        d="M5 13l4 4L19 7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
-                      />
-                    </motion.svg>
+                    <CheckIcon className="w-7 h-7 text-white" weight="bold" />
                   </motion.div>
                 </motion.div>
               )}
@@ -251,19 +237,7 @@ export function ScanDemo() {
                     </p>
                   </div>
                   <div className="flex items-center gap-1 text-[11px] text-gray-400 font-mono bg-gray-100 px-2 py-0.5 rounded-md">
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 6v6h4.5"
-                      />
-                    </svg>
+                    <ClockIcon className="w-3 h-3" />
                     {t("timer")}
                   </div>
                 </div>
@@ -291,19 +265,7 @@ export function ScanDemo() {
                       }
                     >
                       {i < 5 && (
-                        <svg
-                          className="w-2.5 h-2.5 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <CheckIcon className="w-2.5 h-2.5 text-white" weight="bold" />
                       )}
                     </motion.div>
                   ))}
@@ -316,19 +278,7 @@ export function ScanDemo() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35 }}
                 >
-                  <svg
-                    className="w-3.5 h-3.5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
+                  <CheckIcon className="w-3.5 h-3.5" weight="bold" />
                   {t("toast")}
                 </motion.div>
               </div>
@@ -346,7 +296,7 @@ export function ScanDemo() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                Placez le QR code dans le cadre
+                {t("hint")}
               </motion.p>
             ) : (
               <motion.p
