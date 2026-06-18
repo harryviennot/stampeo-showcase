@@ -69,7 +69,7 @@ export function FloatingLanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
   const [onDark, setOnDark] = useState(false);
 
   const detectBackground = useCallback(() => {
@@ -102,25 +102,34 @@ export function FloatingLanguageSwitcher() {
   // Hide on individual blog posts (different slugs per language)
   if (/^\/blog\/.+/.test(pathname)) return null;
 
-  const nextLocale = locale === "fr" ? "en" : "fr";
-  const label = locale === "fr" ? "EN" : "FR";
-
-  function handleSwitch() {
-    router.replace(pathname, { locale: nextLocale });
-  }
-
   return (
-    <button
+    <div
       ref={buttonRef}
-      onClick={handleSwitch}
-      className={`hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center px-3.5 py-2 text-xs font-bold rounded-full backdrop-blur-md border shadow-lg hover:shadow-xl hover:scale-105 transition-all ${
+      className={`hidden md:flex fixed bottom-6 right-6 z-50 items-center gap-0.5 p-0.5 rounded-full backdrop-blur-md border shadow-lg transition-all ${
         onDark
-          ? "bg-white/15 border-white/20 text-white hover:bg-white/25"
-          : "bg-white/80 border-[var(--accent)]/10 text-[var(--foreground)] hover:bg-white"
+          ? "bg-white/15 border-white/20"
+          : "bg-white/80 border-[var(--accent)]/10"
       }`}
-      aria-label={`Switch to ${routing.locales.find((l) => l === nextLocale)}`}
     >
-      {label}
-    </button>
+      {routing.locales.map((l) => (
+        <button
+          key={l}
+          onClick={() => router.replace(pathname, { locale: l })}
+          aria-current={l === locale}
+          aria-label={`Switch to ${l.toUpperCase()}`}
+          className={`px-2.5 py-1 text-xs font-bold rounded-full transition-all ${
+            l === locale
+              ? onDark
+                ? "bg-white/25 text-white"
+                : "bg-[var(--accent)] text-white"
+              : onDark
+                ? "text-white/70 hover:bg-white/15"
+                : "text-[var(--foreground)] hover:bg-black/5"
+          }`}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
   );
 }

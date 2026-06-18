@@ -6,8 +6,9 @@ import { DocumentIcon, DevicePhoneMobileIcon, EyeSlashIcon } from "../icons";
 export async function ProblemSection() {
   const t = await getTranslations("landing.problem");
   const locale = await getLocale();
+  // Spanish reuses the EN card example asset (no es-specific art yet).
   const cardImage =
-    locale === "en" ? "/CardExampleEN.png" : "/CardExampleFR.png";
+    locale === "fr" ? "/CardExampleFR.png" : "/CardExampleEN.png";
 
   return (
     <section id="features" className="relative py-24 lg:py-32 bg-[var(--blog-bg)]">

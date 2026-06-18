@@ -23,7 +23,7 @@ import {
 import { compileBlogMDX } from "@/lib/blog/mdx";
 
 export async function generateStaticParams() {
-  const blogLocales = ["fr", "en"] as const;
+  const blogLocales = ["fr", "en", "es"] as const;
   return blogLocales.flatMap((locale) =>
     getAllSlugs(locale).map((slug) => ({ locale, slug }))
   );
@@ -35,7 +35,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  if (locale !== "fr" && locale !== "en") return {};
+  if (locale !== "fr" && locale !== "en" && locale !== "es") return {};
 
   const post = getPostBySlug(slug, locale);
   if (!post) return {};
@@ -67,7 +67,7 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const locale = await getLocale();
 
-  if (locale !== "fr" && locale !== "en") {
+  if (locale !== "fr" && locale !== "en" && locale !== "es") {
     redirect(`/blog/${slug}`);
   }
 

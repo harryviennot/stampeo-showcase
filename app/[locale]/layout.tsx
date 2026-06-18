@@ -47,7 +47,7 @@ export async function generateMetadata({
       description: t("description"),
       type: "website",
       siteName: "Stampeo",
-      locale: locale === "fr" ? "fr_FR" : "en_US",
+      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
     },
     twitter: {
       card: "summary_large_image",
@@ -65,6 +65,7 @@ export async function generateMetadata({
         "x-default": "/",
         fr: "/",
         en: "/en",
+        es: "/es",
       },
     },
   };

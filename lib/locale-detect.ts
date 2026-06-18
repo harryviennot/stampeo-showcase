@@ -16,18 +16,39 @@ const FRENCH_TIMEZONES = new Set([
   "America/Port-au-Prince",
 ]);
 
+// Map IANA timezones to Spanish-speaking countries/regions. Base `es` covers
+// all of them (Spain + Latin America); the wallet/OS does the es-XX → es fallback.
+const SPANISH_TIMEZONES = new Set([
+  // Spain & islands
+  "Europe/Madrid", "Atlantic/Canary", "Africa/Ceuta",
+  // Mexico
+  "America/Mexico_City", "America/Tijuana", "America/Monterrey",
+  "America/Merida", "America/Cancun", "America/Chihuahua",
+  // Central America & Caribbean
+  "America/Guatemala", "America/El_Salvador", "America/Tegucigalpa",
+  "America/Managua", "America/Costa_Rica", "America/Panama",
+  "America/Havana", "America/Santo_Domingo",
+  // South America
+  "America/Bogota", "America/Lima", "America/Caracas", "America/Guayaquil",
+  "America/La_Paz", "America/Santiago", "America/Asuncion",
+  "America/Montevideo", "America/Argentina/Buenos_Aires",
+]);
+
 /**
  * Detect the business locale based on the user's timezone.
  * Falls back to the provided locale if timezone detection fails.
  */
-export function detectBusinessLocale(fallbackLocale: string): "fr" | "en" {
+export function detectBusinessLocale(fallbackLocale: string): "fr" | "en" | "es" {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (tz && FRENCH_TIMEZONES.has(tz)) return "fr";
     // Check Canadian French timezone specifically
     if (tz?.startsWith("America/Montreal")) return "fr";
+    if (tz && SPANISH_TIMEZONES.has(tz)) return "es";
   } catch {
     // Intl not available — fall back
   }
-  return fallbackLocale === "fr" ? "fr" : "en";
+  if (fallbackLocale === "fr") return "fr";
+  if (fallbackLocale === "es") return "es";
+  return "en";
 }

@@ -15,6 +15,7 @@ export interface ChangelogArea {
   slug: string;
   label_fr: string;
   label_en: string;
+  label_es: string | null;
   color: string;
   sort_order: number;
 }
@@ -26,8 +27,10 @@ export interface ChangelogItem {
   affects: string[];
   title_fr: string;
   title_en: string | null;
+  title_es: string | null;
   body_fr: string | null;
   body_en: string | null;
+  body_es: string | null;
   sort_order: number;
 }
 
@@ -36,10 +39,13 @@ export interface ChangelogRelease {
   version: string | null;
   title_fr: string | null;
   title_en: string | null;
+  title_es: string | null;
   body_fr: string | null;
   body_en: string | null;
+  body_es: string | null;
   image_url_fr: string | null;
   image_url_en: string | null;
+  image_url_es: string | null;
   published_at: string | null;
   changelog_items: ChangelogItem[];
 }
@@ -49,18 +55,22 @@ export interface ChangelogResponse {
   areas: ChangelogArea[];
 }
 
-/** Resolve a bilingual pair to the viewer's locale (EN falls back to FR). */
+/** Resolve a localized triple to the viewer's locale (ES → EN → FR fallback). */
 export function resolve(
   fr: string | null | undefined,
   en: string | null | undefined,
+  es: string | null | undefined,
   locale: string
 ): string {
+  if (locale === "es") return (es && es.trim()) || (en && en.trim()) || fr || "";
   if (locale === "en") return (en && en.trim()) || fr || "";
   return fr || "";
 }
 
 export function areaLabel(area: ChangelogArea, locale: string): string {
-  return locale === "en" ? area.label_en : area.label_fr;
+  if (locale === "es") return area.label_es || area.label_en || area.label_fr;
+  if (locale === "en") return area.label_en || area.label_fr;
+  return area.label_fr;
 }
 
 export async function getPublicChangelog(area?: string): Promise<ChangelogResponse> {
@@ -104,11 +114,14 @@ export async function getPlatformVersion(): Promise<PlatformVersion> {
 export function formatReleaseDate(iso: string | null, locale: string): string {
   if (!iso) return "";
   try {
-    return new Date(iso).toLocaleDateString(locale === "fr" ? "fr-FR" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return new Date(iso).toLocaleDateString(
+      locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }
+    );
   } catch {
     return "";
   }

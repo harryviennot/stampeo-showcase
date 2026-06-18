@@ -167,7 +167,13 @@ export function PhoneInput({
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={locale === "fr" ? "Rechercher un pays..." : "Search countries..."}
+          placeholder={
+            locale === "fr"
+              ? "Rechercher un pays..."
+              : locale === "es"
+                ? "Buscar un país..."
+                : "Search countries..."
+          }
           className="
             w-full px-3 py-2 rounded-lg
             bg-gray-50 dark:bg-gray-800
@@ -223,7 +229,11 @@ export function PhoneInput({
         })}
         {filteredCountries.length === 0 && (
           <div className="px-3 py-4 text-sm text-center text-[var(--muted-foreground)]">
-            {locale === "fr" ? "Aucun pays trouvé" : "No countries found"}
+            {locale === "fr"
+              ? "Aucun pays trouvé"
+              : locale === "es"
+                ? "No se encontró ningún país"
+                : "No countries found"}
           </div>
         )}
       </div>

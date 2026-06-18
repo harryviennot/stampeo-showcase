@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
 import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
+import { routing } from "@/i18n/routing";
 
 const BASE_URL = "https://stampeo.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const locales = ["fr", "en"];
+  const locales = routing.locales; // ["fr", "en", "es"]
 
   const staticPages = [
     { path: "", priority: 1.0, changeFrequency: "weekly" as const },
@@ -20,44 +21,50 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // Blog index — both languages with alternates
-  for (const locale of ["fr", "en"]) {
+  // Blog index — every locale with alternates
+  const blogLanguages = {
+    "x-default": `${BASE_URL}/blog`,
+    fr: `${BASE_URL}/blog`,
+    en: `${BASE_URL}/en/blog`,
+    es: `${BASE_URL}/es/blog`,
+  };
+  for (const locale of locales) {
     const url =
       locale === "fr" ? `${BASE_URL}/blog` : `${BASE_URL}/${locale}/blog`;
     entries.push({
       url,
       changeFrequency: "weekly",
       priority: 0.8,
-      alternates: {
-        languages: {
-          "x-default": `${BASE_URL}/blog`,
-          fr: `${BASE_URL}/blog`,
-          en: `${BASE_URL}/en/blog`,
-        },
-      },
+      alternates: { languages: blogLanguages },
     });
   }
 
   // Static pages with i18n alternates
   for (const page of staticPages) {
+    // Founding-partner pages are FR/EN only (program sunset, no Spanish page).
+    const isFounding = page.enPath !== undefined;
     const enPath = page.enPath || page.path;
+
+    const languages: Record<string, string> = {
+      "x-default": `${BASE_URL}${page.path}`,
+      fr: `${BASE_URL}${page.path}`,
+      en: `${BASE_URL}/en${enPath}`,
+    };
+    if (!isFounding) languages.es = `${BASE_URL}/es${page.path}`;
+
     for (const locale of locales) {
+      if (locale === "es" && isFounding) continue;
+      const localizedPath = locale === "en" ? enPath : page.path;
       const url =
         locale === "fr"
           ? `${BASE_URL}${page.path}`
-          : `${BASE_URL}/${locale}${enPath}`;
+          : `${BASE_URL}/${locale}${localizedPath}`;
 
       entries.push({
         url,
         changeFrequency: page.changeFrequency,
         priority: page.priority,
-        alternates: {
-          languages: {
-            "x-default": `${BASE_URL}${page.path}`,
-            fr: `${BASE_URL}${page.path}`,
-            en: `${BASE_URL}/en${enPath}`,
-          },
-        },
+        alternates: { languages },
       });
     }
   }
@@ -65,48 +72,43 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Feature pages with i18n alternates (locale-specific slugs)
   for (const frSlug of FEATURE_SLUGS) {
     const enSlug = getLocalizedSlug(frSlug, "en");
+    const esSlug = getLocalizedSlug(frSlug, "es");
+
+    const languages = {
+      "x-default": `${BASE_URL}/features/${frSlug}`,
+      fr: `${BASE_URL}/features/${frSlug}`,
+      en: `${BASE_URL}/en/features/${enSlug}`,
+      es: `${BASE_URL}/es/features/${esSlug}`,
+    };
 
     for (const locale of locales) {
+      const slug =
+        locale === "en" ? enSlug : locale === "es" ? esSlug : frSlug;
       const url =
         locale === "fr"
           ? `${BASE_URL}/features/${frSlug}`
-          : `${BASE_URL}/${locale}/features/${enSlug}`;
+          : `${BASE_URL}/${locale}/features/${slug}`;
 
       entries.push({
         url,
         changeFrequency: "monthly",
         priority: 0.7,
-        alternates: {
-          languages: {
-            "x-default": `${BASE_URL}/features/${frSlug}`,
-            fr: `${BASE_URL}/features/${frSlug}`,
-            en: `${BASE_URL}/en/features/${enSlug}`,
-          },
-        },
+        alternates: { languages },
       });
     }
   }
 
-  // Blog posts — French
-  const frPosts = getAllPosts("fr");
-  for (const post of frPosts) {
-    entries.push({
-      url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.updatedAt || post.publishedAt,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    });
-  }
-
-  // Blog posts — English
-  const enPosts = getAllPosts("en");
-  for (const post of enPosts) {
-    entries.push({
-      url: `${BASE_URL}/en/blog/${post.slug}`,
-      lastModified: post.updatedAt || post.publishedAt,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    });
+  // Blog posts — each locale has its own slugs
+  for (const locale of locales) {
+    const prefix = locale === "fr" ? "" : `/${locale}`;
+    for (const post of getAllPosts(locale)) {
+      entries.push({
+        url: `${BASE_URL}${prefix}/blog/${post.slug}`,
+        lastModified: post.updatedAt || post.publishedAt,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      });
+    }
   }
 
   return entries;

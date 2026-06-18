@@ -1,0 +1,265 @@
+{
+  "pricing": {
+    "badge": "Planes y precios",
+    "title": "Precios simples y transparentes",
+    "subtitle": "Los socios fundadores tienen un 50 % de descuento en Starter y Growth, de por vida.",
+    "subtitleStandard": "Clientes, escaneos y dispositivos ilimitados en todos los planes.",
+    "foundingReassurance": "Tu precio fundador queda garantizado para siempre. Aunque suban los precios, o canceles y vuelvas más tarde, conservas este precio.",
+    "foundingPartner": "FUNDADOR",
+    "popular": "EL MÁS POPULAR",
+    "perMonth": "/mes",
+    "forLife": "/mes de por vida",
+    "freeMonths": "3 meses gratis",
+    "deadlineNotice": "Precio fundador hasta el {date}, última oportunidad.",
+    "countdown": {
+      "daysHours": "Precio fundador: termina en {days}d {hours}h",
+      "hoursMinutes": "Precio fundador: termina en {hours}h {minutes}m"
+    },
+    "cta": "Empezar gratis",
+    "ctaSubtext": "Prueba gratis de 30 días · Cancela cuando quieras",
+    "starter": {
+      "name": "Starter",
+      "tagline": "Todo lo necesario para lanzar tu programa de fidelidad",
+      "price": "20",
+      "foundingPrice": "10",
+      "featuresLabel": "Todo incluido:",
+      "features": [
+        "1 estilo de tarjeta activo",
+        "Clientes y escaneos ilimitados",
+        "2 miembros del equipo (propietario + 1)",
+        {
+          "text": "Notificaciones automáticas",
+          "tooltip": "Tus clientes reciben una notificación en su pantalla de bloqueo cada vez que consiguen un sello, alcanzan un hito o desbloquean una recompensa. Funciona con Apple Wallet y Google Wallet, sin ninguna aplicación."
+        },
+        "Panel y estadísticas básicas"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "Para comercios listos para hacer crecer su relación con los clientes",
+      "price": "40",
+      "foundingPrice": "20",
+      "featuresLabel": "Todo el plan Starter, y además:",
+      "features": [
+        "Sellos o puntos (elige uno)",
+        "Miembros del equipo ilimitados",
+        "Mensajes de notificación personalizados",
+        {
+          "text": "8 difusiones promocionales al mes",
+          "tooltip": "Envía notificaciones promocionales a todos tus clientes. Anuncia novedades, happy hours u ofertas de temporada, directamente en su Apple Wallet o Google Wallet."
+        },
+        {
+          "text": "Tendencias y estadísticas",
+          "tooltip": "Consulta la frecuencia de visita, las horas punta, las tasas de retención y las tendencias de tus clientes. Identifica a tus mejores clientes y a los que corren el riesgo de marcharse."
+        }
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Multiestablecimiento, segmentación y herramientas avanzadas",
+      "price": "60",
+      "featuresLabel": "Todo el plan Growth, y además:",
+      "features": [
+        {
+          "text": "Soporte multiestablecimiento",
+          "tooltip": "Añade varias direcciones. Cada establecimiento puede escanear y sellar de forma independiente. Estadísticas por establecimiento."
+        },
+        {
+          "text": "Notificaciones por geolocalización",
+          "tooltip": "Tus clientes reciben una notificación cuando pasan cerca de tu comercio: «¡Solo 2 sellos para un café gratis!» Disponible en Apple Wallet."
+        },
+        "Difusiones ilimitadas + segmentación",
+        "Estadísticas avanzadas y retención"
+      ]
+    }
+  },
+  "pricingPage": {
+    "meta": {
+      "title": "Precios: compara los planes | Stampeo",
+      "description": "Compara los planes y funciones de Stampeo. Del autónomo al multiestablecimiento, encuentra el plan adecuado para tu programa de fidelidad."
+    },
+    "hero": {
+      "badge": "Planes y precios",
+      "title": "Elige el plan adecuado para tu comercio",
+      "subtitle": "Sin costes ocultos. Sin cargos por cliente. Clientes ilimitados en todos los planes."
+    },
+    "foundingCallout": "Los socios fundadores tienen un 50 % de descuento en Starter y Growth, de por vida.",
+    "foundingReassurance": "Tu precio fundador queda garantizado para siempre. Aunque suban los precios, o canceles y vuelvas más tarde, conservas este precio.",
+    "foundingLink": "Más información sobre el Programa Fundador",
+    "popular": "EL MÁS POPULAR",
+    "perMonth": "/mes",
+    "forLife": "/mes de por vida",
+    "cta": "Empezar",
+    "ctaSubtext": "Prueba gratis de 30 días · Cancela cuando quieras",
+    "starter": {
+      "name": "Starter",
+      "tagline": "Para autónomos y comercios de un solo establecimiento",
+      "features": [
+        "1 estilo de tarjeta activo",
+        "Clientes y escaneos ilimitados",
+        "2 miembros del equipo (propietario + 1)",
+        "Notificaciones automáticas",
+        "Panel y estadísticas básicas",
+        "Soporte por correo electrónico"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "Para comercios con un equipo y necesidad de fidelizar a sus clientes",
+      "features": [
+        "Todo el plan Starter, y además:",
+        "Sellos o puntos (elige uno)",
+        "Miembros del equipo ilimitados",
+        "Mensajes de notificación personalizados",
+        "8 difusiones promocionales al mes",
+        "Tendencias y estadísticas"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Multiestablecimiento, segmentación y herramientas avanzadas",
+      "features": [
+        "Todo el plan Growth, y además:",
+        "Soporte multiestablecimiento",
+        "Notificaciones por geolocalización",
+        "Difusiones ilimitadas + segmentación",
+        "Estadísticas avanzadas y retención"
+      ]
+    },
+    "comparison": {
+      "title": "Compara todas las funciones",
+      "subtitle": "Mira exactamente lo que incluye cada plan.",
+      "soon": "Pronto",
+      "categories": {
+        "loyalty": "Programa de fidelidad",
+        "cardDesign": "Estilo de tarjeta",
+        "locations": "Establecimientos",
+        "notifications": "Notificaciones",
+        "team": "Equipo",
+        "analytics": "Estadísticas",
+        "mobileApp": "Aplicación móvil",
+        "support": "Soporte"
+      },
+      "rows": {
+        "unlimitedCustomers": {
+          "label": "Clientes ilimitados"
+        },
+        "unlimitedScans": {
+          "label": "Escaneos ilimitados"
+        },
+        "savedTemplates": {
+          "label": "Estilos de tarjeta guardados",
+          "starter": "1",
+          "growth": "Ilimitados",
+          "pro": "Ilimitados"
+        },
+        "loyaltyType": {
+          "label": "Tipo de fidelidad",
+          "starter": "Solo sellos",
+          "growth": "Sellos o puntos",
+          "pro": "Sellos o puntos"
+        },
+        "fullCustomisation": {
+          "label": "Personalización completa de la tarjeta"
+        },
+        "scheduledChanges": {
+          "label": "Cambios de tarjeta programados"
+        },
+        "locations": {
+          "label": "Establecimientos",
+          "starter": "1",
+          "growth": "1",
+          "pro": "Varios"
+        },
+        "locationAnalytics": {
+          "label": "Estadísticas por establecimiento"
+        },
+        "geofencing": {
+          "label": "Notificaciones por geolocalización"
+        },
+        "stampMilestoneReward": {
+          "label": "Notificaciones de sello/hito/recompensa",
+          "starter": "Predefinidas",
+          "growth": "Texto personalizado",
+          "pro": "Texto personalizado"
+        },
+        "milestoneLimit": {
+          "label": "Hitos personalizados por número de sellos",
+          "growth": "3 por programa",
+          "pro": "Ilimitados"
+        },
+        "broadcastNotifications": {
+          "label": "Notificaciones de difusión",
+          "growth": "8 al mes",
+          "pro": "Ilimitadas"
+        },
+        "segmentation": {
+          "label": "Segmentación de clientes",
+          "starter": "—",
+          "growth": "Básica (por fecha)",
+          "pro": "Avanzada (sellos, inactividad, recompensas, establecimiento)"
+        },
+        "scheduledSends": {
+          "label": "Envíos programados"
+        },
+        "teamMembers": {
+          "label": "Miembros del equipo",
+          "starter": "2 (propietario + 1)",
+          "growth": "Ilimitados",
+          "pro": "Ilimitados"
+        },
+        "employeeTracking": {
+          "label": "Seguimiento de escaneos por empleado"
+        },
+        "basicStats": {
+          "label": "Estadísticas básicas"
+        },
+        "advancedAnalytics": {
+          "label": "Estadísticas avanzadas"
+        },
+        "offlineScanning": {
+          "label": "Escaneo sin conexión"
+        },
+        "supportLevel": {
+          "label": "Soporte",
+          "starter": "Correo electrónico",
+          "growth": "Correo electrónico",
+          "pro": "Correo prioritario"
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "Todo lo que necesitas saber sobre nuestros precios.",
+      "items": [
+        {
+          "question": "¿Hay una prueba gratuita?",
+          "answer": "¡Sí! Todos los planes incluyen una prueba gratis de 30 días. Te pedimos una tarjeta bancaria para empezar la prueba, pero no se hace ningún cargo hasta que terminan los 30 días. Cancela cuando quieras."
+        },
+        {
+          "question": "¿Puedo cambiar de plan más adelante?",
+          "answer": "Por supuesto. Puedes subir o bajar de plan en cualquier momento. Al subir de plan, accedes de inmediato a las nuevas funciones. Al bajar de plan, el cambio se aplica al final de tu ciclo de facturación actual."
+        },
+        {
+          "question": "¿Hay cargos por cliente?",
+          "answer": "No. Todos los planes incluyen clientes y escaneos ilimitados. Tu precio se mantiene igual tanto si tienes 10 clientes como si tienes 10 000."
+        },
+        {
+          "question": "¿Puedo cancelar cuando quiera?",
+          "answer": "Sí. No hay contratos ni gastos de cancelación. Cancela cuando quieras y conservarás el acceso hasta el final de tu periodo de facturación actual."
+        },
+        {
+          "question": "¿Qué es el Programa Fundador?",
+          "answer": "Nuestro Programa Fundador ofrece a los primeros usuarios un 50 % de descuento en su plan, garantizado de por vida. Las plazas son limitadas y el programa cierra pronto.",
+          "foundingOnly": true
+        }
+      ]
+    },
+    "cta2": {
+      "title": "¿Listo para empezar?",
+      "subtitle": "Únete a los comercios que fidelizan a sus clientes con Stampeo.",
+      "button": "Empezar la prueba gratis",
+      "contact": "Contáctanos"
+    }
+  }
+}
