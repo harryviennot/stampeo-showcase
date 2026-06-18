@@ -116,12 +116,12 @@ export function FloatingLanguageSwitcher() {
           "rounded-full backdrop-blur-md border shadow-lg transition-colors",
           onDark ? "bg-white/15 border-white/20" : "bg-white/80 border-[var(--accent)]/10"
         )}
-        activeTileClassName={onDark ? "bg-white/25 text-white" : "bg-[var(--accent)] text-white"}
-        inactiveTileClassName={
+        tileClassName={
           onDark
-            ? "text-white/70 hover:bg-white/15"
+            ? "text-white/80 hover:bg-white/15"
             : "text-[var(--foreground)] hover:bg-black/5"
         }
+        selectedTileClassName="bg-[var(--accent)] text-white"
       />
     </div>
   );

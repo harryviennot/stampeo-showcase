@@ -21,8 +21,8 @@ export function LanguageSwitcher() {
       options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
       onSelect={(l) => router.replace(pathname, { locale: l })}
       surfaceClassName="rounded-lg border border-[var(--border)] bg-[var(--cream)]"
-      activeTileClassName="bg-[var(--accent)] text-white"
-      inactiveTileClassName="text-[var(--foreground)] hover:bg-[var(--muted)]"
+      tileClassName="text-[var(--foreground)] hover:bg-[var(--muted)]"
+      selectedTileClassName="bg-[var(--accent)] text-white"
     />
   );
 }
