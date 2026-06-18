@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { LanguagePicker } from "@/components/ui/LanguagePicker";
+import { cn } from "@/lib/utils";
 
 function isColorDark(color: string): boolean | null {
   if (!color || color === "transparent" || color === "rgba(0, 0, 0, 0)")
@@ -103,33 +105,24 @@ export function FloatingLanguageSwitcher() {
   if (/^\/blog\/.+/.test(pathname)) return null;
 
   return (
-    <div
-      ref={buttonRef}
-      className={`hidden md:flex fixed bottom-6 right-6 z-50 items-center gap-0.5 p-0.5 rounded-full backdrop-blur-md border shadow-lg transition-all ${
-        onDark
-          ? "bg-white/15 border-white/20"
-          : "bg-white/80 border-[var(--accent)]/10"
-      }`}
-    >
-      {routing.locales.map((l) => (
-        <button
-          key={l}
-          onClick={() => router.replace(pathname, { locale: l })}
-          aria-current={l === locale}
-          aria-label={`Switch to ${l.toUpperCase()}`}
-          className={`px-2.5 py-1 text-xs font-bold rounded-full transition-all ${
-            l === locale
-              ? onDark
-                ? "bg-white/25 text-white"
-                : "bg-[var(--accent)] text-white"
-              : onDark
-                ? "text-white/70 hover:bg-white/15"
-                : "text-[var(--foreground)] hover:bg-black/5"
-          }`}
-        >
-          {l.toUpperCase()}
-        </button>
-      ))}
+    <div ref={buttonRef} className="hidden md:block fixed bottom-6 right-6 z-50">
+      <LanguagePicker
+        direction="up"
+        trigger="hover"
+        value={locale}
+        options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
+        onSelect={(l) => router.replace(pathname, { locale: l })}
+        surfaceClassName={cn(
+          "rounded-full backdrop-blur-md border shadow-lg transition-colors",
+          onDark ? "bg-white/15 border-white/20" : "bg-white/80 border-[var(--accent)]/10"
+        )}
+        activeTileClassName={onDark ? "bg-white/25 text-white" : "bg-[var(--accent)] text-white"}
+        inactiveTileClassName={
+          onDark
+            ? "text-white/70 hover:bg-white/15"
+            : "text-[var(--foreground)] hover:bg-black/5"
+        }
+      />
     </div>
   );
 }

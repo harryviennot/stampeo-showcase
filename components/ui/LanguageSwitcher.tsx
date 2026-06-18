@@ -3,6 +3,7 @@
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { LanguagePicker } from "@/components/ui/LanguagePicker";
 
 export function LanguageSwitcher() {
   const locale = useLocale();
@@ -13,22 +14,15 @@ export function LanguageSwitcher() {
   if (/^\/blog\/.+/.test(pathname)) return null;
 
   return (
-    <div className="flex items-center gap-0.5 rounded-lg border border-[var(--border)] p-0.5">
-      {routing.locales.map((l) => (
-        <button
-          key={l}
-          onClick={() => router.replace(pathname, { locale: l })}
-          aria-current={l === locale}
-          aria-label={`Switch to ${l.toUpperCase()}`}
-          className={`px-2.5 py-1 text-xs font-bold rounded-md transition-colors ${
-            l === locale
-              ? "bg-[var(--accent)] text-white"
-              : "text-[var(--foreground)] hover:bg-[var(--muted)]"
-          }`}
-        >
-          {l.toUpperCase()}
-        </button>
-      ))}
-    </div>
+    <LanguagePicker
+      direction="right"
+      trigger="click"
+      value={locale}
+      options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
+      onSelect={(l) => router.replace(pathname, { locale: l })}
+      surfaceClassName="rounded-lg border border-[var(--border)] bg-[var(--cream)]"
+      activeTileClassName="bg-[var(--accent)] text-white"
+      inactiveTileClassName="text-[var(--foreground)] hover:bg-[var(--muted)]"
+    />
   );
 }
