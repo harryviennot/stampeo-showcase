@@ -3,6 +3,7 @@
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { LanguagePicker } from "@/components/ui/LanguagePicker";
 
 export function LanguageSwitcher() {
   const locale = useLocale();
@@ -12,20 +13,16 @@ export function LanguageSwitcher() {
   // Hide language switcher on individual blog posts (different slugs per language)
   if (/^\/blog\/.+/.test(pathname)) return null;
 
-  const nextLocale = locale === "fr" ? "en" : "fr";
-  const label = locale === "fr" ? "EN" : "FR";
-
-  function handleSwitch() {
-    router.replace(pathname, { locale: nextLocale });
-  }
-
   return (
-    <button
-      onClick={handleSwitch}
-      className="px-3 py-1.5 text-xs font-bold rounded-lg border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors"
-      aria-label={`Switch to ${routing.locales.find((l) => l === nextLocale)}`}
-    >
-      {label}
-    </button>
+    <LanguagePicker
+      direction="right"
+      trigger="click"
+      value={locale}
+      options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
+      onSelect={(l) => router.replace(pathname, { locale: l })}
+      surfaceClassName="rounded-lg border border-[var(--border)] bg-[var(--cream)]"
+      tileClassName="text-[var(--foreground)] hover:bg-[var(--muted)]"
+      selectedTileClassName="bg-[var(--accent)] text-white"
+    />
   );
 }

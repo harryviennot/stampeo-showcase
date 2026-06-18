@@ -1,0 +1,32 @@
+{
+  "email_preferences": {
+    "title": "Preferencias de correo",
+    "headline": "Elige lo que quieres recibir.",
+    "description": "Activa o desactiva cada tipo de correo de Stampeo. Los correos esenciales (facturas, confirmaciones, seguridad) siempre se envían.",
+    "loading": "Cargando tus preferencias…",
+    "error_invalid_token": "Este enlace ya no es válido. Inicia sesión en tu panel para gestionar tus preferencias.",
+    "error_generic": "Algo ha salido mal. Vuelve a intentarlo o contáctanos.",
+    "categories": {
+      "digest": {
+        "label": "Informes de rendimiento",
+        "description": "Tu resumen semanal o mensual, y los grandes momentos de tu programa."
+      },
+      "product_updates": {
+        "label": "Novedades del producto",
+        "description": "Los cambios importantes de Stampeo y las funciones que están en camino."
+      },
+      "marketing": {
+        "label": "Consejos y buenas prácticas",
+        "description": "Ideas y buenas prácticas para sacar el máximo partido a tu programa de fidelidad."
+      },
+      "reengagement": {
+        "label": "Recordatorios de activación",
+        "description": "Recordatorios para terminar la configuración, o para retomar tu programa tras una pausa."
+      }
+    },
+    "transactional_note": "Los correos esenciales (recibos, restablecimiento de contraseña, avisos de pago, advertencias sobre tus tarjetas) no se pueden desactivar.",
+    "save": "Guardar mis preferencias",
+    "saving": "Guardando…",
+    "saved": "Preferencias guardadas."
+  }
+}

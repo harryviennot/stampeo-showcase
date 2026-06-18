@@ -1,0 +1,166 @@
+---
+title: "Cómo crear una tarjeta de fidelidad digital sin una app"
+description: "Cómo crear una tarjeta de fidelidad que vive en Apple Wallet o Google Wallet, sin app que desarrollar y sin programar. Guía paso a paso para pequeños comercios."
+publishedAt: "2026-06-05"
+updatedAt: "2026-06-07"
+author: "Harry de Stampeo"
+category: "Guías"
+tags: ["cómo crear una tarjeta de fidelidad digital", "tarjeta de fidelidad digital", "tarjeta de fidelidad sin app", "pequeño comercio", "tarjeta de sellos"]
+primaryKeyword: "cómo crear una tarjeta de fidelidad digital"
+secondaryKeywords: ["tarjeta de fidelidad digital sin app", "crear tarjeta de fidelidad apple wallet", "hacer una tarjeta de fidelidad digital", "configurar tarjeta de sellos digital"]
+translationSlug: "carte-fidelite-dematerialisee"
+faqs:
+  - question: "¿Necesito desarrollar una app o contratar a un programador?"
+    answer: "No. Es el mayor mito sobre las tarjetas de fidelidad digitales. Con una plataforma que vive en el wallet no desarrollas software: configuras una tarjeta que se añade a Apple Wallet o Google Wallet, que ya están en el teléfono de tus clientes. Sin programador, sin app, sin código."
+  - question: "¿Necesito una cuenta de desarrollador de Apple o algún equipo especial?"
+    answer: "No. La plataforma se encarga de toda la parte técnica: los certificados, los formatos de tarjeta, la integración con el wallet. Tú solo necesitas una forma de diseñar tu tarjeta (el editor de la plataforma) y un teléfono o tableta para que tu equipo escanee a los clientes. Eso es todo. Sin cuenta de desarrollador, sin material adicional."
+  - question: "¿Cuánto se tarda en crear una tarjeta de fidelidad digital?"
+    answer: "La tarjeta en sí se diseña en minutos: logo, colores, recompensa y listo. De forma realista, pasar de \"no tengo programa de fidelidad\" a \"clientes escaneando en caja\" lleva una tarde, más un breve repaso con tu equipo. No hay que esperar a que aprueben una app ni a que llegue ningún equipo."
+  - question: "¿Es gratis empezar y cuánto cuesta?"
+    answer: "La mayoría de plataformas dejan probar antes de pagar. Stampeo ofrece a cada comercio nuevo un mes gratis sin necesidad de tarjeta, y nuestro programa fundador permite a los comercios fundadores quedarse con un 50 % de descuento de por vida en Starter o Growth. Más allá de eso, calcula entre 20 y 60 € al mes por un plan completo, sin comisiones por cliente ni por sello en Stampeo."
+  - question: "¿Pueden los clientes añadirse sus propios sellos?"
+    answer: "No, y es a propósito. Los sellos los añade tu equipo escaneando la tarjeta del cliente, el cliente no puede hacerlo por su cuenta. Es la protección contra el fraude que las tarjetas de papel nunca tuvieron. Piénsalo como una persona en caja marcando una tarjeta de sellos, salvo que esta no se puede perder ni copiar."
+---
+
+## No necesitas desarrollar una app para crear una tarjeta de fidelidad digital
+
+En algún momento, "tarjeta de fidelidad digital" empezó a sonar a proyecto de software. Desarrollar una app. Contratar a un programador. Pelearse con la App Store. Esperar tres meses y gastar un dinero que no tienes. No es de extrañar que tantos comercios independientes sigan reimprimiendo papel.
+
+Aquí va la buena noticia: ya no funciona así.
+
+Puedes crear una tarjeta de fidelidad digital en una tarde, sin app que desarrollar, sin código y sin cuenta de desarrollador de Apple, y tenerla en el wallet del teléfono de tus clientes antes del fin de semana. Esta guía recorre exactamente cómo crear una tarjeta de fidelidad digital para tu comercio: las pocas cosas que conviene decidir antes de empezar, la configuración real paso a paso, cómo conseguir que los clientes se den de alta y los errores que hunden la mayoría de los primeros intentos.
+
+<InfoBox type="info" title="Lo que necesitas para crear tu tarjeta">
+- Una plataforma de fidelidad que vive en el wallet (la que hace el trabajo pesado)
+- Tu logo y un par de colores de marca
+- Un teléfono o tableta para que tu equipo escanee y selle a los clientes
+- Más o menos una hora, café incluido
+</InfoBox>
+
+No hacen falta conocimientos técnicos. Si sabes crear un perfil de Instagram, sabes hacer esto.
+
+## Qué estás creando en realidad (y qué no)
+
+Aclaremos primero el mayor malentendido, porque es el que frena a la gente antes de empezar.
+
+Cuando creas una tarjeta de fidelidad digital a la manera moderna, **no estás desarrollando software**. No encargas una app. Estás configurando una *tarjeta de wallet*: el mismo tipo de tarjeta digital que ya guarda las tarjetas de embarque, las entradas de conciertos y las tarjetas bancarias de tus clientes en Apple Wallet y Google Wallet.
+
+Esos wallets ya están en el teléfono de tus clientes. Vienen instalados. No hay nada que descargar. Tu cliente escanea un QR, pulsa "Añadir al wallet" y tu tarjeta de fidelidad se coloca en el mismo sitio donde guarda todo lo importante. Se actualiza sola cada vez que gana un sello.
+
+¿Y por qué importa tanto? Porque la alternativa, una app de fidelidad dedicada que tus clientes tienen que descargar, fracasa por una razón muy simple: la gente no la descarga.
+
+<StatBox value="~3 %" label="de los usuarios sigue usando una app nueva 30 días después de descargarla (Pushwoosh 2025)" />
+
+Las descargas de apps llevan cinco años seguidos cayendo, según Appfigures. Y una vez instalada una app, solo alrededor del 3 % de la gente sigue usándola un mes después (Pushwoosh). Ahora imagina pedirle a alguien que se descargue una app solo para juntar sellos en la cafetería a la que va dos veces por semana. Sonreirá, dirá "quizá luego" y no lo hará jamás. Un estudio de CodeBroker concluyó que el 70 % de los consumidores quiere fidelidad en el teléfono sin tener que iniciar sesión en ninguna app.
+
+Ese es todo el argumento para ir directo al wallet en lugar de a una app. Y es también la decisión más importante que vas a tomar, así que la tratamos a fondo en nuestra guía sobre montar una [tarjeta de fidelidad sin app](/es/blog/tarjeta-fidelidad-sin-app). Acierta en esto y el resto es papeleo.
+
+## Antes de crear nada: 4 decisiones rápidas
+
+Todo esto lo puedes cambiar más adelante. Pero cerrarlo ahora evita que rediseñes tu programa a las dos semanas, algo que molesta a los clientes que ya empezaron a juntar sellos.
+
+**1. ¿Sellos o puntos?**
+
+Para la mayoría de comercios independientes, ganan los sellos. Compra nueve cafés, el décimo es gratis. Tus clientes ya lo entienden: no hay cálculos mentales, ni la duda de "¿400 puntos es mucho?". Los puntos tienen sentido si manejas precios muy variados (un restaurante con una carta amplia, por ejemplo), pero son más difíciles de explicar y de gestionar. Si dudas, empieza con una tarjeta de sellos. Puedes leer más sobre el formato en nuestro análisis de la [tarjeta de sellos digital](/es/blog/tarjeta-sellos-digital).
+
+**2. ¿Cuántos sellos y cuál es la recompensa?**
+
+Entre ocho y diez sellos es el punto justo para la mayoría de comercios. Los suficientes para que un cliente habitual pueda completarla, lo bastante generosos para que el impacto en tu margen sea asumible. Y la recompensa debe poder explicarse de una sola vez: "un café gratis", "un 20 % de descuento en tu próximo corte". Si necesitas una frase con excepciones dentro, simplifícala.
+
+Aquí hay además un truco psicológico interesante. En un estudio ya clásico, Nunes y Drèze dieron a clientes de un túnel de lavado o bien una tarjeta en blanco de 8 sellos, o bien una tarjeta de 10 sellos con 2 ya marcados. En ambos casos hacían falta las mismas ocho compras.
+
+<StatBox value="34 % frente a 19 %" label="tarjetas completadas con sellos previos frente a en blanco, con el mismo esfuerzo requerido (Nunes y Drèze 2006)" />
+
+Las tarjetas con sellos previos se completaron casi el doble de veces. La gente se motiva mucho más por terminar algo que ya empezó que por arrancar de cero. Así que si eliges una tarjeta de 10 sellos, plantéate empezar a todo el mundo con 2.
+
+**3. ¿Qué información quieres recoger?**
+
+Puedes dejar que los clientes se unan de forma anónima: solo instalan la tarjeta, sin datos. O puedes pedir un correo, que te permite recuperar su tarjeta si pierden el teléfono y escribirles más adelante. Solo el correo es la opción sensata para la mayoría. No pidas más de lo que necesitas: cada campo extra es un motivo más para abandonar en caja.
+
+**4. ¿Quién añade el sello?**
+
+Esta no es del todo opcional, pero conviene entenderla. Tu *equipo* añade el sello escaneando la tarjeta del cliente, el cliente no puede sellarse a sí mismo. Es deliberado. Es la protección contra el fraude que las tarjetas de papel nunca tuvieron, donde cualquiera con una perforadora de la papelería podía "ganarse" un café gratis en casa.
+
+## Cómo crear una tarjeta de fidelidad digital, paso a paso
+
+Bien. Decisiones tomadas. Esta es la configuración real.
+
+**Paso 1: elige una plataforma que viva en el wallet.**
+
+Aquí está la bifurcación del camino. Elige una plataforma que ponga la tarjeta directamente en Apple Wallet y Google Wallet, y *no* una que obligue a los clientes a descargar una app aparte. (Acabamos de dedicar una sección entera al porqué; aquí es donde da sus frutos.) La mayoría de plataformas pensadas para comercios independientes, Stampeo incluida, viven en el wallet y no necesitan app, ni integración con el TPV, ni equipo especial. Si primero quieres una visión más amplia del terreno, nuestra [guía completa de la tarjeta de fidelidad digital para pequeños comercios](/es/blog/tarjeta-fidelidad-digital-pequeno-comercio) compara con honestidad los principales enfoques.
+
+**Paso 2: diseña la tarjeta.**
+
+Añade tu logo, elige tus colores, escoge un icono de sello. Las buenas plataformas te muestran una vista previa en directo de la tarjeta sobre un wallet realista mientras avanzas, para que veas exactamente qué llega al teléfono del cliente antes de que nadie escanee nada. Esta es la parte divertida, y es donde aparece la personalidad de tu comercio. Mantenlo limpio: un logo, un color y un contador de sellos claro es más que suficiente.
+
+**Paso 3: define tu regla de recompensa.**
+
+Introduce el umbral y la recompensa que cerraste antes. Ocho sellos, un dulce gratis. Lo que hayas elegido. Dos minutos.
+
+**Paso 4: genera tu QR y tu enlace de alta.**
+
+La plataforma te entrega un QR único y un enlace web para tu comercio. Ese QR *es* tu programa de fidelidad: allá donde vaya, los clientes pueden unirse. Imprímelo, ponlo en un soporte sobre la mesa, mete el enlace en tu biografía de Instagram.
+
+**Paso 5: pruébalo primero en tu propio teléfono.**
+
+Antes de decírselo a un solo cliente, escanea tu propio QR, añade la tarjeta a tu propio wallet y pídele a alguien de tu equipo que te selle. Mira cómo se actualiza la tarjeta. Gánate una recompensa de prueba. Este ensayo de cinco minutos detecta cualquier detalle incómodo antes de que lo vea un cliente que paga, y le muestra a tu equipo exactamente cómo se siente la experiencia del cliente.
+
+**Paso 6: ponlo en marcha en caja.**
+
+Coloca el QR donde la gente paga, repasa con tu equipo la frase de una línea (siguiente sección) y empieza a ofrecerlo. Ya está. Has creado una tarjeta de fidelidad digital. Si en tu comercio entran muchos clientes con iPhone, vale la pena echar un vistazo a nuestra [guía de la tarjeta de fidelidad en Apple Wallet](/es/blog/apple-wallet-tarjeta-fidelidad) para los pequeños detalles propios de la plataforma, pero la configuración básica de arriba es la misma en Apple y en Android.
+
+## Conseguir que los clientes la añadan de verdad
+
+Una tarjeta de fidelidad que nadie conoce no es un programa de fidelidad. Es un QR acumulando polvo. Así que esta última parte importa más que el diseño.
+
+**Tu equipo es el canal.** El mayor motor de altas es una frase espontánea en el momento de pagar: *"¿Tienes nuestra tarjeta de fidelidad? Es gratis, son diez segundos, solo escanea ese código y la tienes en el teléfono."* Sin discurso, sin presión. Pide a tu equipo que la mencione a cada cliente durante las dos primeras semanas, hasta que se convierta en un reflejo.
+
+**Pon el QR donde ya están las miradas.** En caja, a la altura de los ojos (no escondido detrás del datáfono), en soportes sobre la mesa, en los tiques, en el escaparate para quien pasa por delante, en tus biografías de redes. Cuanto más fácil sea verlo, más gente lo escanea sin que se lo pidan.
+
+Y no te agobies con los números de la primera semana. La adopción inicial suele ser moderada y crece de forma constante a medida que el equipo coge soltura y los clientes habituales se ven unos a otros haciéndolo.
+
+## Errores que evitar al crear tu primera tarjeta de fidelidad
+
+La mayoría de los programas de fidelidad no fracasan porque la idea sea mala. Fracasan en la configuración. Esto es lo que conviene esquivar.
+
+- **Elegir una plataforma basada en app.** Lo hemos repetido, pero es el arrepentimiento número uno. Si los clientes tienen que descargar una app, la mayoría no lo hará. Siempre en el wallet.
+- **Complicar demasiado las reglas.** "Doble sello los martes, pero no en comida, y la recompensa caduca en 60 días." Nadie se va a enganchar a eso. Una regla, una recompensa, a ser posible sin caducidad.
+- **Una recompensa demasiado pequeña.** Un 10 % de descuento sobre un café de 3 € son 30 céntimos. No vale la pena juntar sellos por eso. La recompensa tiene que sentirse como algo de verdad: una bebida gratis, un tratamiento gratis. Imagina qué te haría volver a ti.
+- **Saltarte la prueba.** Lanzar sin escanear antes tu propia tarjeta es la forma de descubrir una errata delante de un cliente. Haz siempre el ensayo (paso 5).
+- **Lanzar en silencio.** Montarlo y no decir nada es el asesino silencioso. La tarjeta no se promociona sola: tu equipo tiene que mencionarla, en voz alta, durante las primeras semanas.
+
+<CallToAction title="Crea tu tarjeta de fidelidad digital con Stampeo" buttonText="Empezar gratis" href="/es/onboarding" />
+
+Creamos Stampeo justo para esto: comercios independientes que quieren una tarjeta de fidelidad de verdad sin el lío de desarrollar una app. Ahora mismo tenemos en marcha un programa fundador: trabajamos codo con codo con un grupo reducido de comercios, un mes gratis y después un 50 % de descuento de por vida en Starter o Growth. Tú das forma al producto, nosotros recibimos opiniones honestas. Si estás harto de las tarjetas de papel, vale la pena echarle un ojo.
+
+## Preguntas frecuentes
+
+<FAQItem question="¿Necesito desarrollar una app o contratar a un programador?">
+No. Es el mayor mito sobre las tarjetas de fidelidad digitales. Con una plataforma que vive en el wallet no estás desarrollando software: configuras una tarjeta que se añade a Apple Wallet o Google Wallet, que ya están en el teléfono de tus clientes. Sin programador, sin app, sin código.
+</FAQItem>
+
+<FAQItem question="¿Necesito una cuenta de desarrollador de Apple o algún equipo especial?">
+No. La plataforma se encarga de toda la parte técnica: los certificados, los formatos de tarjeta, la integración con el wallet. Tú solo necesitas una forma de diseñar tu tarjeta (el editor de la plataforma) y un teléfono o tableta para que tu equipo escanee a los clientes. Eso es todo. Sin cuenta de desarrollador, sin material adicional.
+</FAQItem>
+
+<FAQItem question="¿Cuánto se tarda en crear una tarjeta de fidelidad digital?">
+La tarjeta en sí se diseña en minutos: logo, colores, recompensa y listo. De forma realista, pasar de "no tengo programa de fidelidad" a "clientes escaneando en caja" lleva una tarde, más un breve repaso con tu equipo. No hay que esperar a que aprueben una app ni a que llegue ningún equipo.
+</FAQItem>
+
+<FAQItem question="¿Es gratis empezar y cuánto cuesta?">
+La mayoría de plataformas dejan probar antes de pagar. Stampeo ofrece a cada comercio nuevo un mes gratis sin necesidad de tarjeta, y nuestro programa fundador permite a los comercios fundadores quedarse con un 50 % de descuento de por vida en Starter o Growth. Más allá de eso, calcula entre 20 y 60 € al mes por un plan completo, sin comisiones por cliente ni por sello en Stampeo.
+</FAQItem>
+
+<FAQItem question="¿Pueden los clientes añadirse sus propios sellos?">
+No, y es a propósito. Los sellos los añade tu equipo escaneando la tarjeta del cliente, el cliente no puede hacerlo por su cuenta. Es la protección contra el fraude que las tarjetas de papel nunca tuvieron. Piénsalo como una persona en caja marcando una tarjeta de sellos, salvo que esta no se puede perder ni copiar.
+</FAQItem>
+
+## Empieza con una sola tarjeta
+
+Esta es la versión honesta. No existe el umbral de sellos perfecto, ni la recompensa mágica, ni el lanzamiento impecable. Los comercios que ganan con esto no son los que tienen la configuración más pulida: son los que de verdad crearon una tarjeta de fidelidad digital y luego la mencionaron a sus clientes, día tras día, hasta que cuajó.
+
+Así que no le des demasiadas vueltas. Elige sellos. Escoge una recompensa que estarías encantado de dar a un cliente habitual. Diseña algo sencillo, genera tu QR, pruébalo en tu propio teléfono y ponlo sobre el mostrador. Todo lo demás lo puedes ajustar más adelante, cuando veas a qué responden tus clientes.
+
+La parte difícil nunca fue la tecnología. Es simplemente decidirte a empezar.
+
+*Los resultados varían según el comercio. Stampeo te da las herramientas para llevar un programa de fidelidad digital; la participación de tus clientes depende de tu oferta y de cómo la promociones.*

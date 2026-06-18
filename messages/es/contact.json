@@ -1,0 +1,88 @@
+{
+  "contact": {
+    "title": "Contáctanos",
+    "hero": {
+      "badge": "Contacto",
+      "headline": "Nos encantaría saber de ti.",
+      "description": "¿Tienes una pregunta, un comentario o simplemente quieres saludar? Estamos aquí para ayudarte."
+    },
+    "form": {
+      "name": "Tu nombre",
+      "namePlaceholder": "Juan Pérez",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "juan@ejemplo.com",
+      "subject": "Asunto",
+      "subjectPlaceholder": "¿En qué podemos ayudarte?",
+      "message": "Mensaje",
+      "messagePlaceholder": "Cuéntanos más...",
+      "send": "Enviar mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado! Te responderemos pronto.",
+      "error": "Algo ha salido mal. Inténtalo de nuevo o escríbenos directamente."
+    },
+    "info": {
+      "title": "Otras formas de contactarnos",
+      "email": {
+        "title": "Correo",
+        "value": "contact@stampeo.app",
+        "description": "Para consultas generales"
+      },
+      "support": {
+        "title": "Soporte",
+        "value": "support@stampeo.app",
+        "description": "Para ayuda técnica"
+      },
+      "phone": {
+        "title": "Teléfono",
+        "value": "+33 6 49 37 04 70",
+        "description": "Para consultas generales"
+      },
+      "location": {
+        "title": "Ubicación",
+        "value": "París, Francia",
+        "description": "Donde estamos"
+      }
+    },
+    "social": {
+      "title": "Síguenos",
+      "description": "Mantente al día de las últimas novedades de Stampeo."
+    },
+    "demo": {
+      "hero": {
+        "badge": "Demo de Stampeo",
+        "headline": "Reserva tu demo de 20 minutos.",
+        "description": "Dinos cuándo te viene bien y te llamamos en el momento que mejor te encaje. Una demo adaptada a tu negocio, no una presentación genérica."
+      },
+      "form": {
+        "name": "Tu nombre",
+        "namePlaceholder": "Juan Pérez",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "juan@ejemplo.com",
+        "phone": "Teléfono (para la llamada)",
+        "phonePlaceholder": "+34 612 34 56 78",
+        "business": "Nombre de tu comercio",
+        "businessPlaceholder": "Café de la Plaza",
+        "businessType": "Tipo de actividad",
+        "businessTypePlaceholder": "Elige tu sector",
+        "businessTypeOptions": {
+          "cafe": "Cafetería",
+          "restaurant": "Restaurante",
+          "boulangerie": "Panadería / Pastelería",
+          "retail": "Comercio / Tienda",
+          "salon": "Salón (peluquería, belleza, etc.)",
+          "fitness": "Fitness / Deporte",
+          "services": "Servicios",
+          "other": "Otro"
+        },
+        "availability": "Tu disponibilidad",
+        "availabilityPlaceholder": "Ej.: martes por la tarde, jueves por la mañana, o \"cualquier momento esta semana\".",
+        "message": "Algo más que quieras contarnos (opcional)",
+        "messagePlaceholder": "Cuéntanos sobre tu actividad, qué esperas de Stampeo...",
+        "send": "Reservar mi demo",
+        "sending": "Enviando...",
+        "success": "¡Gracias! Te llamamos lo antes posible en los horarios que nos has indicado.",
+        "error": "Algo ha salido mal. Inténtalo de nuevo o llámanos al +33 6 49 37 04 70."
+      }
+    }
+  }
+}

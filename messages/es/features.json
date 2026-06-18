@@ -1,0 +1,1202 @@
+{
+  "features": {
+    "design-de-carte": {
+      "hero": {
+        "title": "A tu imagen, hasta el último sello",
+        "subtitle": "Colores, logo, tus propios iconos de sello: monta en unos minutos una tarjeta que de verdad te representa. O deja que nosotros la creemos por ti."
+      },
+      "problem": {
+        "title": "Crear una tarjeta profesional no debería ser un proyecto",
+        "description": "¿Alguna vez has intentado crear un diseño en Canva? ¿O peor aún, configurar un programa con 47 opciones de personalización? Tienes un comercio que llevar, no una agencia que dirigir. El resultado: o dedicas 2 horas a improvisar algo mediocre, o directamente no lo haces."
+      },
+      "sections": [
+        {
+          "title": "La creamos por ti",
+          "description": "Es nuestra opción preferida. Nos envías tus elementos y nosotros nos encargamos del resto. Nuestro equipo crea tu tarjeta digital respetando tu identidad visual. Resultado profesional garantizado, cero esfuerzo por tu parte.",
+          "icon": "sparkles"
+        },
+        {
+          "title": "Creación asistida por IA",
+          "description": "Haz una foto de tu tarjeta de cartón actual. Nuestra IA extrae tu logo, tus colores, tu estructura de recompensa y el nombre de tu comercio. En unos segundos tienes una tarjeta digital ya rellenada.",
+          "icon": "cpu",
+          "badge": "Pronto"
+        },
+        {
+          "title": "El editor autoservicio",
+          "description": "Para quienes prefieren controlarlo todo: logo, colores, tus propios iconos de sello, imagen de fondo, texto de recompensa. Cada cambio se ve al instante en una vista previa realista en el teléfono.",
+          "icon": "palette"
+        }
+      ],
+      "cta": {
+        "title": "Tu tarjeta, lista en 5 minutos",
+        "subtitle": "La creamos por ti, o la creas tú. En cualquier caso, será profesional."
+      },
+      "related": [
+        "scanner-mobile",
+        "notifications-push",
+        "programme-fondateur"
+      ],
+      "custom": {
+        "playground": {
+          "sectionTitle": "Monta tu tarjeta",
+          "sectionSubtitle": "Colores, icono de sello, nombre del cliente: cambia la vista previa y ve el resultado al momento.",
+          "themeLabel": "Tema",
+          "iconLabel": "Icono",
+          "nameToggle": "Nombre",
+          "rewardsToggle": "Recompensas",
+          "rewardsDecrease": "Quitar una recompensa",
+          "rewardsIncrease": "Añadir una recompensa",
+          "memberLabel": "Miembro",
+          "memberName": "Sophie",
+          "rewardLabel": "Recompensa",
+          "rewardValue": "8º gratis",
+          "rewardsLabel": "Recompensas",
+          "rewardsValue": "{count, plural, one {# lista} other {# listas}}",
+          "hint": "Todo se actualiza en directo.",
+          "modePreset": "Biblioteca de iconos",
+          "modeCustom": "Tus propios iconos",
+          "customIconLabel": "Tu icono",
+          "arrangementLabel": "Disposición",
+          "arrangements": {
+            "straight": "Alineados",
+            "staggered": "Al tresbolillo",
+            "overlap": "Superpuestos"
+          },
+          "themes": [
+            { "name": "Stampeo", "orgName": "Mi Cafetería" },
+            { "name": "Crema", "orgName": "Panadería Marie" },
+            { "name": "Noche", "orgName": "El Mostrador Azul" },
+            { "name": "Rosa", "orgName": "Flor de Té" }
+          ]
+        },
+        "iconLibrary": {
+          "title": "Un icono para cada oficio",
+          "description": "Decenas de iconos de sello listos para usar: cafetería, restaurante, peluquería, floristería, tienda de mascotas. Uno que encaja con tu actividad, seguro.",
+          "trades": ["Cafetería", "Restaurante", "Peluquería", "Floristería", "Tienda de mascotas"]
+        },
+        "customIcons": {
+          "badge": "Nuevo",
+          "title": "O usa tus propios iconos",
+          "description": "Sube tu croissant, tu logo, tu mascota. Recortamos el fondo por ti y lo convertimos en un sello. Tú eliges el aspecto de los sellos vacíos y su disposición en la tarjeta.",
+          "bullets": [
+            "Fondo recortado automáticamente al subirlo.",
+            "Tres estilos de sello vacío: escala de grises, contorno, o el tuyo.",
+            "Tres disposiciones: alineados, al tresbolillo, o superpuestos."
+          ],
+          "gallery": {
+            "title": "Tarjetas reales, iconos reales",
+            "examples": [
+              { "orgName": "Maison Levain", "reward": "El 10º croissant gratis", "caption": "Croissants superpuestos" },
+              { "orgName": "Café Margot", "reward": "Café gratis", "caption": "Al tresbolillo, vacíos en contorno" },
+              { "orgName": "Donut Days", "reward": "El 6º donut gratis", "caption": "Alineados, vacíos atenuados" },
+              { "orgName": "Fleurs & Co", "reward": "Un ramo de regalo", "caption": "Un regalo en el último sello" }
+            ]
+          },
+          "attribution": "Iconos de demostración: Twemoji (CC-BY 4.0)."
+        },
+        "livingCard": {
+          "title": "Una tarjeta que conoce a tus clientes",
+          "description": "Cada tarjeta se adapta a la persona que la enseña. Sin configurar nada a mano.",
+          "lead": "Rellenas tu tarjeta una vez. Después, muestra la información correcta para cada cliente, de forma automática.",
+          "benefits": [
+            "Saluda a cada cliente por su nombre.",
+            "Muestra siempre por dónde va y lo que le falta para su recompensa.",
+            "Cuenta las recompensas que ya ha ganado y que le esperan."
+          ],
+          "stacking": {
+            "title": "Tus clientes nunca pierden su progreso",
+            "description": "¿Objetivo alcanzado? La recompensa se aparta y empieza enseguida un nuevo ciclo. Las recompensas se acumulan, no se pierde nada."
+          },
+          "card": {
+            "orgName": "Café Margot",
+            "memberLabel": "Miembro",
+            "memberName": "Sophie",
+            "rewardsLabel": "Recompensas",
+            "rewardsValue": "2 listas"
+          }
+        },
+        "methods": {
+          "sectionTitle": "Elige tu método",
+          "sectionSubtitle": "3 formas de crear tu tarjeta. De la más sencilla a la más creativa.",
+          "handoff": {
+            "title": "La creamos por ti",
+            "description": "Es nuestra opción preferida y lo que nos diferencia. Nos envías tus elementos y nosotros nos encargamos de todo.",
+            "badge": "Recomendado",
+            "steps": [
+              "Sube tu logo o un enlace a tu web",
+              "Nuestro equipo crea tu tarjeta en 24-48 h",
+              "Revisas o pides ajustes",
+              "Tu tarjeta se publica"
+            ]
+          },
+          "ai": {
+            "title": "Creación asistida por IA",
+            "description": "Haz una foto de tu tarjeta de cartón actual. Nuestra IA extrae tu logo, tus colores y tu estructura de recompensa.",
+            "badge": "Pronto",
+            "steps": [
+              "Fotografía tu tarjeta de cartón",
+              "La IA extrae logo, colores y texto",
+              "Ajusta el resultado si hace falta",
+              "Publica en un clic"
+            ]
+          },
+          "editor": {
+            "title": "El editor autoservicio",
+            "description": "Para quienes prefieren controlarlo todo. Logo, colores, tus propios iconos de sello, imagen de fondo: personaliza cada detalle.",
+            "badge": null,
+            "steps": [
+              "Elige tus colores y sube tu logo",
+              "Elige nuestros iconos o sube los tuyos",
+              "Personaliza el texto de recompensa",
+              "Previsualiza y publica"
+            ]
+          }
+        },
+        "anatomy": {
+          "title": "Anatomía de una tarjeta Stampeo",
+          "description": "Cada elemento está pensado para ser legible, profesional y conforme a los requisitos de Apple Wallet y Google Wallet.",
+          "labels": [
+            "Logo",
+            "Nombre del comercio",
+            "Banda de sellos",
+            "Campos a tu elección",
+            "Recompensa",
+            "Código QR del cliente"
+          ],
+          "mobileLabels": [
+            "Logo",
+            "Nombre",
+            "Sellos",
+            "Campos",
+            "Recompensa",
+            "Código QR"
+          ],
+          "card": {
+            "orgName": "Mi Cafetería de Madrid",
+            "rewardLabel": "Recompensa",
+            "rewardValue": "Café gratis"
+          }
+        }
+      }
+    },
+    "scanner-mobile": {
+      "hero": {
+        "title": "Un escaneo. Un sello. Eso es todo.",
+        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en un segundo."
+      },
+      "problem": {
+        "title": "Sellar debería ser invisible",
+        "description": "El cliente paga, tú buscas el sello, la tarjeta está en el fondo del bolso, la cola crece. Con un sello físico, el acto de fidelizar ralentiza tu servicio. Y todo lo que ralentiza el servicio acaba por desaparecer. Sellar debería ser tan rápido como un pago sin contacto."
+      },
+      "sections": [
+        {
+          "title": "La aplicación dedicada",
+          "description": "La app de Stampeo es ligera y dedicada al escaneo. Abre la app, apunta la cámara al código QR del cliente y se añade un sello, con vibración de confirmación. Tiempo total: 1 segundo.",
+          "icon": "smartphone"
+        },
+        {
+          "title": "El escáner web",
+          "description": "¿No quieres instalar una app? Escanea directamente desde el navegador de tu teléfono o tablet. Ideal para comercios que usan una tablet compartida en el mostrador.",
+          "icon": "globe"
+        },
+        {
+          "title": "Modo sin conexión",
+          "description": "Funciona incluso sin internet. Los escaneos se guardan en el dispositivo y se sincronizan automáticamente cuando vuelve la conexión. No se pierde ningún sello.",
+          "icon": "wifi-off"
+        }
+      ],
+      "cta": {
+        "title": "Sella en un segundo",
+        "subtitle": "Aplicación gratuita en iOS y Android. Escáner web disponible en todos los dispositivos."
+      },
+      "related": [
+        "notifications-push",
+        "design-de-carte",
+        "analytiques"
+      ],
+      "custom": {
+        "heroBadge": "Escáner móvil",
+        "heroPlatforms": "Gratis · iOS, Android y navegador",
+        "webScannerLink": "¿Sin instalación? Usa el escáner web",
+        "appStoreAlt": "Descargar Stampeo en la App Store",
+        "googlePlayAlt": "Descargar Stampeo en Google Play",
+        "getApp": {
+          "badge": "App gratuita",
+          "title": "La app de escaneo Stampeo",
+          "subtitle": "Gratuita para todo tu equipo. Descárgala en la App Store o en Google Play, o escanea el código para instalarla en tu teléfono.",
+          "qrCaption": "Escanea para instalar"
+        },
+        "scanDemo": {
+          "customerName": "Marc D.",
+          "stampCount": "5/10 sellos",
+          "toast": "Sello añadido",
+          "timer": "0,8 s",
+          "hint": "Apunta al código QR del cliente"
+        },
+        "howItWorks": {
+          "title": "Dos formas de escanear",
+          "subtitle": "Aplicación dedicada o escáner web: elige lo que mejor te venga.",
+          "app": {
+            "title": "La aplicación dedicada",
+            "badge": "Recomendado",
+            "steps": [
+              "Descarga la app de Stampeo (iOS / Android)",
+              "Inicia sesión con tu cuenta",
+              "Apunta la cámara al código QR del cliente",
+              "Vibración: sello añadido en 0,8 s"
+            ]
+          },
+          "web": {
+            "title": "El escáner web",
+            "badge": null,
+            "steps": [
+              "Abre tu panel en el navegador",
+              "Haz clic en «Escanear» en el menú",
+              "Permite el acceso a la cámara",
+              "Escanea el código QR: sello añadido"
+            ]
+          }
+        },
+        "offline": {
+          "title": "Funciona incluso sin Wi-Fi",
+          "subtitle": "Mercado al aire libre, sótano, festival: el escaneo funciona en cualquier sitio, aunque no haya conexión.",
+          "situations": [
+            "Mercado al aire libre sin Wi-Fi",
+            "Sótano o bodega",
+            "Festival o evento temporal",
+            "Zona rural con red inestable",
+            "Corte de internet temporal"
+          ],
+          "online": "Conectado",
+          "offline_label": "Sin conexión",
+          "pending": "Pendiente de sincronizar",
+          "synced": "Sincronizado",
+          "syncing": "Sincronizando...",
+          "stampedTitle": "Sello añadido",
+          "stampedSub": "Sincronizado al instante",
+          "pendingSub": "1 sello en cola",
+          "syncingSub": "Conexión restablecida",
+          "syncedSub": "Ningún sello perdido",
+          "offlineHint": "Modo sin conexión activado",
+          "toggleHint": "Pulsa el interruptor para probarlo"
+        },
+        "employee": {
+          "title": "Pensado para tus empleados",
+          "subtitle": "Tus empleados no son técnicos. La interfaz es tan sencilla que no hace falta ninguna formación.",
+          "features": [
+            {
+              "title": "Cero formación",
+              "description": "Abrir la app, escanear, listo. Tus empleados la usan desde el primer día."
+            },
+            {
+              "title": "Respuesta táctil",
+              "description": "Vibración y sonido de confirmación. Tu empleado sabe que el sello se ha añadido sin mirar la pantalla."
+            },
+            {
+              "title": "Historial de escaneos",
+              "description": "Cada escaneo queda fechado con el identificador del empleado. Trazabilidad completa."
+            }
+          ]
+        },
+        "team": {
+          "title": "Todo tu equipo puede escanear",
+          "subtitle": "Añade a tus empleados y gestiona los accesos según tu plan.",
+          "pay": {
+            "title": "Plan Starter",
+            "price": "{starterPrice} €/mes",
+            "members": "3 miembros",
+            "features": [
+              "3 cuentas de empleado incluidas",
+              "Aplicación dedicada + escáner web",
+              "Modo sin conexión",
+              "Historial de escaneos"
+            ]
+          },
+          "pro": {
+            "title": "Plan Growth",
+            "price": "{growthPrice} €/mes",
+            "members": "Ilimitado",
+            "features": [
+              "Miembros de equipo ilimitados",
+              "Roles y permisos",
+              "Estadísticas por empleado",
+              "Todo el plan Starter incluido"
+            ]
+          }
+        },
+        "security": {
+          "title": "Seguridad y fiabilidad",
+          "subtitle": "Cada escaneo es seguro, trazable e infalsificable.",
+          "features": [
+            {
+              "title": "Códigos QR únicos",
+              "description": "Cada cliente tiene un UUID único codificado en su código QR. Imposible de duplicar o falsificar."
+            },
+            {
+              "title": "Marca de tiempo en el servidor",
+              "description": "Cada sello queda fechado en el servidor con el identificador del empleado y la ubicación."
+            },
+            {
+              "title": "Antifraude",
+              "description": "Detección de escaneos duplicados, límite de frecuencia y alertas automáticas ante actividad sospechosa."
+            },
+            {
+              "title": "Cifrado de extremo a extremo",
+              "description": "Los datos de escaneo viajan por HTTPS. No se guarda ninguna información sensible en el dispositivo."
+            }
+          ]
+        }
+      }
+    },
+    "notifications-push": {
+      "heroBadge": "Avisos en Apple Wallet y Google Wallet",
+      "hero": {
+        "title": "Cada escaneo aterriza en la pantalla de bloqueo de tus clientes.",
+        "subtitle": "Cada sello, cada hito y cada recompensa lanza un aviso en el teléfono. Tu cliente ve siempre lo que acaba de pasar y a qué distancia está de su próxima recompensa."
+      },
+      "problem": {
+        "title": "Un sello sin confirmación es un sello olvidado",
+        "description": "Con una tarjeta de papel, el cliente asiente, guarda la tarjeta y sigue con lo suyo. Nada confirma la visita, nada le recuerda que va por la mitad hacia su recompensa. Un aviso en el teléfono convierte cada visita en un recordatorio silencioso: visible, instantáneo e imposible de pasar por alto."
+      },
+      "demo": {
+        "lockScreenDate": "Lunes 17 de febrero",
+        "notificationTitle": "¡Nuevo sello!",
+        "notificationBody": "Solo te faltan 4 sellos para tu café gratis. ¡Sigue así!",
+        "timeAgo": "ahora"
+      },
+      "channels": {
+        "statement": "Cada novedad de fidelidad tiene que llegar a tu cliente. Esto es lo que cada canal entrega de verdad, y por qué el teléfono es el lugar idóneo para las confirmaciones de sello, los recordatorios de hito y los avisos de recompensa.",
+        "email": "Email",
+        "sms": "SMS",
+        "appPush": "Aviso de app",
+        "wallet": "Aviso en la tarjeta"
+      },
+      "howItWorks": {
+        "badge": "Cómo funciona",
+        "title": "De la acción al mensaje, en automático",
+        "subtitle": "",
+        "steps": [
+          {
+            "title": "El cliente recibe su sello",
+            "description": "Escaneas el código QR del cliente. Su sello se añade al instante a su tarjeta en el teléfono."
+          },
+          {
+            "title": "Nuestro servidor detecta el evento",
+            "description": "Nuestro sistema identifica el tipo de evento: nuevo sello, hito alcanzado, o recompensa desbloqueada."
+          },
+          {
+            "title": "El aviso se entrega",
+            "description": "Las tarjetas de Apple Wallet se actualizan mediante un aviso silencioso de APNs; Google Wallet usa su API Add Message. Las dos plataformas entregan directamente en el teléfono del cliente, sin ninguna app de terceros."
+          },
+          {
+            "title": "El cliente ve el aviso",
+            "description": "El aviso aparece en la pantalla de bloqueo. El cliente abre su tarjeta actualizada con un solo toque."
+          }
+        ]
+      },
+      "notificationTypes": {
+        "title": "Tres momentos, tres mensajes",
+        "subtitle": "Cada interacción genera el aviso adecuado en el momento adecuado.",
+        "stamp": {
+          "title": "Aviso de sello",
+          "description": "Se envía con cada escaneo. El cliente sabe al instante que su visita ha quedado registrada. Su tarjeta se actualiza en tiempo real.",
+          "notifTitle": "¡Nuevo sello!",
+          "notifBody": "Solo te faltan 4 sellos para tu café gratis. ¡Sigue así!",
+          "timeAgo": "ahora"
+        },
+        "milestone": {
+          "title": "Aviso de hito",
+          "description": "Se envía cuando el cliente se acerca a su recompensa. Genera ilusión y motiva el regreso.",
+          "notifTitle": "¡Ya casi!",
+          "notifBody": "Solo te falta un sello para tu café gratis. ¡Te esperamos!",
+          "timeAgo": "ahora"
+        },
+        "reward": {
+          "title": "Aviso de recompensa",
+          "description": "El momento de máxima satisfacción. La tarjeta muestra con claridad que la recompensa está disponible.",
+          "notifTitle": "¡Recompensa desbloqueada! 🎉",
+          "notifBody": "¡Enhorabuena! Tu café gratis está listo. Enseña tu tarjeta para disfrutarlo.",
+          "timeAgo": "ahora"
+        }
+      },
+      "advanced": {
+        "title": "Ve más allá",
+        "subtitle": "Algunos extras que hacen más útil cada actualización automática, y la puerta abierta a las difusiones cuando quieras hablar con todo el mundo a la vez.",
+        "features": [
+          {
+            "title": "Mensajes personalizados",
+            "description": "Muestra el nombre del cliente, los sellos que le quedan y el nombre de la recompensa. Cada aviso parece escrito para esa persona.",
+            "badge": "Growth"
+          },
+          {
+            "title": "Hitos personalizados",
+            "description": "Lanza un mensaje en el sello exacto que cuenta. «¡A mitad de camino!» en el sello 5, «¡Solo uno más!» en el sello 9. 3 hitos por programa en Growth, ilimitados en Pro.",
+            "badge": "Growth / Pro"
+          },
+          {
+            "title": "Difusiones y segmentación",
+            "description": "Dirígete a todos tus clientes con una sola difusión, o segmenta por número de sellos, inactividad y recompensas recientes. Perfecto para promociones rápidas y lanzamientos de novedades.",
+            "badge": "Growth / Pro",
+            "href": "/features/campagnes-promotionnelles",
+            "cta": "Descubrir las difusiones"
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Privacidad respetada",
+        "subtitle": "Los datos de tus clientes están a salvo. No hacemos ninguna concesión con la privacidad.",
+        "points": [
+          "No se comparte ningún dato personal con terceros.",
+          "Los avisos pasan por Apple Push Notification Service, un canal seguro y cifrado.",
+          "El cliente puede desactivar los avisos en cualquier momento desde sus ajustes.",
+          "Conforme al RGPD. Sin seguimiento publicitario."
+        ],
+        "gdprLabel": "RGPD"
+      },
+      "sections": [
+        {
+          "title": "Aviso de sello",
+          "description": "«¡Has ganado un sello! Solo te faltan 7 para tu recompensa.» Se envía con cada escaneo, y el cliente sabe al instante que su visita ha quedado registrada.",
+          "icon": "stamp"
+        },
+        {
+          "title": "Aviso de hito",
+          "description": "«¡Solo 2 sellos más! Tu café gratis ya casi está aquí.» Se envía cuando el cliente se acerca a la recompensa. Genera ilusión y motiva el regreso.",
+          "icon": "target"
+        },
+        {
+          "title": "Aviso de recompensa",
+          "description": "«¡Enhorabuena! Has desbloqueado tu recompensa.» El momento de máxima satisfacción. La tarjeta muestra con claridad «RECOMPENSA LISTA».",
+          "icon": "gift"
+        }
+      ],
+      "cta": {
+        "title": "Cada cliente al día, en automático",
+        "subtitle": "Los avisos transaccionales están incluidos en todos los planes. Únete al programa fundador y recompensa cada visita desde el primer día."
+      },
+      "related": [
+        "campagnes-promotionnelles",
+        "scanner-mobile",
+        "analytiques",
+        "programme-fondateur"
+      ]
+    },
+    "analytiques": {
+      "hero": {
+        "title": "Conoce a tus habituales. No solo de vista.",
+        "subtitle": "Con una tarjeta de cartón no sabes nada de tus clientes. Con Stampeo ves quién vuelve, con qué frecuencia y qué funciona."
+      },
+      "problem": {
+        "title": "Lo que hoy no sabes",
+        "description": "Con tarjetas de cartón, gestionas tu fidelización a ciegas. Ningún dato, ninguna visibilidad, ninguna forma de mejorar lo que no puedes medir."
+      },
+      "sections": [
+        {
+          "title": "Panel esencial",
+          "description": "Total de clientes, escaneos de esta semana, recompensas canjeadas. Busca a un cliente por nombre o email y recupera su historial al instante.",
+          "icon": "layout-dashboard"
+        },
+        {
+          "title": "Tendencias y horas punta",
+          "description": "Visualiza tus métricas día a día. Descubre cuándo vienen tus clientes e identifica las horas flojas para optimizar tu actividad.",
+          "icon": "trending-up",
+          "badge": "Growth"
+        },
+        {
+          "title": "Frecuencia y retención",
+          "description": "Entiende el ritmo de tus clientes: diario, semanal, mensual. Sigue tu tasa de retención e identifica a los clientes en riesgo.",
+          "icon": "users",
+          "badge": "Growth"
+        }
+      ],
+      "cta": {
+        "title": "Deja de adivinar. Empieza a saber.",
+        "subtitle": "El panel está incluido en todos los planes. Las estadísticas avanzadas están disponibles en el plan Growth."
+      },
+      "related": [
+        "campagnes-promotionnelles",
+        "notifications-push",
+        "programme-fondateur"
+      ],
+      "custom": {
+        "blindSpotCards": {
+          "questions": [
+            "Cuántos clientes habituales",
+            "Con qué frecuencia vuelven",
+            "Quién ha dejado de venir",
+            "Qué día es el más tranquilo",
+            "Cuántas recompensas este mes",
+            "Si tu programa funciona"
+          ],
+          "noAnswer": "???"
+        },
+        "dashboard": {
+          "badge": "Plan Starter",
+          "title": "Lo esencial para empezar",
+          "description": "El plan Starter incluye un panel sencillo y claro que responde a las preguntas fundamentales.",
+          "features": [
+            "Total de clientes registrados",
+            "Escaneos de esta semana y de este mes",
+            "Recompensas canjeadas",
+            "Búsqueda de clientes al instante"
+          ]
+        },
+        "activityFeed": {
+          "title": "Actividad en directo",
+          "sectionTitle": "Tu comercio, en tiempo real",
+          "sectionDescription": "Cada sello, cada recompensa, cada alta: sigue la actividad de tu programa de fidelidad en directo.",
+          "stampAction": "ha conseguido un sello",
+          "rewardAction": "ha canjeado su recompensa",
+          "newCustomerAction": "acaba de registrarse",
+          "timeAgo": "hace {seconds}s"
+        },
+        "proAnalytics": {
+          "badge": "Plan Growth",
+          "title": "Entiende las tendencias, no solo los números",
+          "description": "El plan Growth añade una capa de análisis que te ayuda a tomar decisiones."
+        },
+        "proCharts": {
+          "lineChart": {
+            "label": "Escaneos / semana",
+            "trend": "+23%"
+          },
+          "heatmap": {
+            "label": "Horas punta",
+            "days": [
+              "L",
+              "M",
+              "X",
+              "J",
+              "V",
+              "S",
+              "D"
+            ]
+          },
+          "donut": {
+            "label": "Retención a 30 d",
+            "value": "72%"
+          },
+          "segments": {
+            "label": "Segmentos de clientes",
+            "categories": [
+              "Nuevos",
+              "Ocasionales",
+              "Habituales",
+              "VIP"
+            ]
+          },
+          "churn": {
+            "label": "Clientes en riesgo",
+            "value": "23",
+            "subtitle": "inactivos 30 d+"
+          },
+          "bestDays": {
+            "label": "Días más activos",
+            "days": [
+              "L",
+              "M",
+              "X",
+              "J",
+              "V",
+              "S",
+              "D"
+            ]
+          },
+          "timeToReward": {
+            "label": "Tiempo medio para completar la tarjeta",
+            "value": "18",
+            "unit": "días"
+          },
+          "completionRate": {
+            "label": "Tasa de finalización",
+            "value": "64",
+            "subtitle": "completan su tarjeta"
+          },
+          "returnRate": {
+            "label": "Regreso tras la recompensa",
+            "value": "78",
+            "subtitle": "empiezan una 2ª tarjeta"
+          }
+        }
+      }
+    },
+    "geolocalisation": {
+      "heroBadge": "Growth",
+      "hero": {
+        "title": "Recuérdales que existes. En el momento justo.",
+        "subtitle": "Cuando tu cliente pasa cerca de tu comercio, su teléfono le recuerda que tiene una tarjeta de fidelidad contigo. Sin que tú hagas nada."
+      },
+      "problem": {
+        "title": "Tu cliente fiel se olvida de ti. No es culpa suya.",
+        "description": "Marc pasa por delante de tu cafetería cada mañana. Pero esta mañana va con prisa. No piensa en su tarjeta de fidelidad con 8 sellos de 10. Va al Starbucks de enfrente, por costumbre. El problema no es la competencia. Es el olvido."
+      },
+      "problemNarrative": "¿Y si su teléfono pudiera hacerlo por ti?",
+      "demo": {
+        "lockScreenDate": "Lunes 17 de febrero",
+        "radiusLabel": "~300 m",
+        "notificationTitle": "Café Le Comptoir cerca",
+        "notificationBody": "¿Te apetece algo? Estás a 3 sellos de un café gratis ☕",
+        "timeAgo": "ahora"
+      },
+      "howItWorks": {
+        "badge": "Cómo funciona",
+        "title": "De tu local a la pantalla de bloqueo, sin esfuerzo",
+        "subtitle": "Apple Wallet se encarga de todo: sin app, sin Bluetooth, sin configuración.",
+        "steps": [
+          {
+            "title": "Indicas tu dirección",
+            "description": "En tu panel de Stampeo, añade la dirección de tu comercio. Puedes añadir varias si tienes varios establecimientos."
+          },
+          {
+            "title": "La dirección se codifica en la tarjeta",
+            "description": "Cada tarjeta generada contiene tus coordenadas GPS. Apple Wallet sabe dónde activar el recordatorio."
+          },
+          {
+            "title": "El cliente pasa cerca",
+            "description": "Apple Wallet detecta la proximidad en el propio dispositivo del cliente. No se envía ningún dato a nuestros servidores."
+          },
+          {
+            "title": "Su tarjeta aparece en la pantalla de bloqueo",
+            "description": "El cliente ve aparecer su tarjeta de fidelidad de forma automática. Un recordatorio visual discreto pero eficaz."
+          }
+        ],
+        "customerNarrative": {
+          "title": "Lo que ve el cliente",
+          "description": "Marc pasa por delante de tu cafetería. Su iPhone muestra automáticamente su tarjeta de fidelidad en la pantalla de bloqueo. Se acuerda de que está a 2 sellos de un café gratis. Entra."
+        }
+      },
+      "scenarios": {
+        "title": "3 comercios, 3 historias",
+        "subtitle": "La geolocalización se adapta a todo tipo de comercios.",
+        "items": [
+          {
+            "name": "Sophie",
+            "business": "Café Le Comptoir",
+            "initial": "S",
+            "quote": "Desde la geolocalización, mis habituales vuelven más a menudo. Me dicen 'vi mi tarjeta al pasar, me recordó mi café'.",
+            "description": "Cafetería de barrio, 7/10 sellos"
+          },
+          {
+            "name": "Léa",
+            "business": "Salon Belle & Zen",
+            "initial": "L",
+            "quote": "Mis clientas pasan por delante del salón sin pensar en ello. Ahora su teléfono les recuerda que tienen un tratamiento por canjear.",
+            "description": "Salón de belleza, 5/8 sellos"
+          },
+          {
+            "name": "Thomas",
+            "business": "Bistrot du Port",
+            "initial": "T",
+            "quote": "Estamos en el camino al trabajo de mucha gente. El recordatorio marca la diferencia entre 'ya pasaré' y 'voy ahora'.",
+            "description": "Restaurante, 3/6 sellos"
+          }
+        ]
+      },
+      "technical": {
+        "title": "Tecnología nativa, cero fricción",
+        "items": [
+          {
+            "title": "Geolocalización nativa de Apple Wallet",
+            "description": "Sin app que instalar. La detección de proximidad la gestiona nativamente iOS mediante los datos GPS codificados en la tarjeta.",
+            "icon": "map-pin"
+          },
+          {
+            "title": "Multiestablecimiento",
+            "description": "Añade hasta 10 direcciones por tarjeta. Cada punto de venta activa el recordatorio automáticamente.",
+            "icon": "building",
+            "badge": "Growth"
+          },
+          {
+            "title": "Actualización en tiempo real",
+            "description": "¿Cambias de dirección o añades un nuevo punto de venta? La tarjeta se actualiza automáticamente en todos los dispositivos.",
+            "icon": "refresh"
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Privacidad respetada",
+        "subtitle": "Los datos de ubicación de tus clientes no se recogen ni se guardan nunca.",
+        "points": [
+          "Stampeo no recoge ningún dato de ubicación de tus clientes.",
+          "La detección de proximidad la gestiona Apple Wallet en el propio dispositivo.",
+          "El cliente puede desactivar la vista contextual en cualquier momento desde sus ajustes.",
+          "Conforme al RGPD. Sin seguimiento, sin datos compartidos con terceros."
+        ],
+        "gdprLabel": "RGPD"
+      },
+      "sections": [
+        {
+          "title": "Geolocalización nativa de Apple Wallet",
+          "description": "Indicas la dirección de tu comercio. Stampeo la codifica en cada tarjeta. Cuando el cliente está cerca, su tarjeta aparece en la pantalla de bloqueo. Sin avisos intrusivos, solo un recordatorio visual.",
+          "icon": "map-pin"
+        },
+        {
+          "title": "Multiestablecimiento",
+          "description": "¿Varias direcciones? Cada dirección se codifica en la tarjeta. Se le recuerda al cliente cerca de cada uno de tus establecimientos.",
+          "icon": "building"
+        },
+        {
+          "title": "Privacidad protegida",
+          "description": "Stampeo no localiza a nadie. Es Apple Wallet quien gestiona la detección en el dispositivo. No se recoge ni se guarda ningún dato de ubicación. Conforme al RGPD.",
+          "icon": "shield"
+        }
+      ],
+      "cta": {
+        "title": "Está presente en el momento justo",
+        "subtitle": "La geolocalización está incluida en el plan Growth. Únete al programa fundador para aprovecharla ya."
+      },
+      "related": [
+        "campagnes-promotionnelles",
+        "notifications-push",
+        "analytiques"
+      ]
+    },
+    "campagnes-promotionnelles": {
+      "hero": {
+        "title": "Llega a todos tus clientes. Sin la factura de los SMS.",
+        "navTitle": "Difusiones promocionales: avisos en Apple Wallet y Google Wallet a todos tus clientes",
+        "subtitle": "Envía avisos promocionales directamente a Apple Wallet y Google Wallet. ~85 % de tasa de apertura. Cero coste por mensaje. Segmentación y programación incluidas.",
+        "pillGrowth": "Growth",
+        "pillPro": "Pro"
+      },
+      "statBand": {
+        "title": "Los números hablan por sí solos",
+        "subtitle": "Rendimiento medio observado en la tarjeta, los SMS y el email, a partir de datos públicos del sector.",
+        "stats": [
+          {
+            "value": "~85 %",
+            "label": "Tasa de apertura en la tarjeta",
+            "caption": "frente a ~20 % en email y ~35 % de CTR en SMS"
+          },
+          {
+            "value": "0 €",
+            "label": "Por mensaje",
+            "caption": "Cuota fija del plan, no 0,04 a 0,10 € por SMS"
+          },
+          {
+            "value": "+78 %",
+            "label": "De facturación",
+            "caption": "Subida observada por los comercios que usan tarjetas en Apple Wallet y Google Wallet"
+          }
+        ]
+      },
+      "whyNotSms": {
+        "title": "SMS, email, tarjeta: <br></br>qué llega de verdad",
+        "subtitle": "La tasa de apertura y el coste de entrega no cuentan la misma historia. Así se comparan los tres canales para un comercio que envía promociones.",
+        "columns": [
+          "",
+          "SMS",
+          "Email",
+          "Tarjeta (Stampeo)"
+        ],
+        "rows": [
+          {
+            "label": "Tasa de apertura típica",
+            "values": [
+              "~35 % CTR",
+              "~20 %",
+              "~85 %"
+            ]
+          },
+          {
+            "label": "Coste por mensaje (España)",
+            "values": [
+              "0,04 – 0,10 €",
+              "Bajo, variable",
+              "0 € (incluido en el plan)"
+            ]
+          },
+          {
+            "label": "Programación + zona horaria",
+            "values": [
+              "Opción de pago",
+              "Según la plataforma",
+              "Incluido (Pro)"
+            ]
+          },
+          {
+            "label": "Segmentación",
+            "values": [
+              "Importación manual de listas",
+              "Por etiquetas, limitada",
+              "Sellos, recompensas, inactividad"
+            ]
+          },
+          {
+            "label": "Entrega bilingüe",
+            "values": [
+              "Un mensaje para todos",
+              "Dos envíos separados",
+              "Un solo envío, según el idioma"
+            ]
+          },
+          {
+            "label": "Recogida del consentimiento",
+            "values": [
+              "Doble confirmación obligatoria",
+              "Doble confirmación obligatoria",
+              "Gestionada al instalar la tarjeta"
+            ]
+          },
+          {
+            "label": "Filtro de spam / operador",
+            "values": [
+              "Carpeta «Remitente desconocido» en iOS 26",
+              "Pestaña Promociones de Gmail",
+              "Aviso en pantalla de bloqueo, sin bandeja"
+            ]
+          }
+        ],
+        "caption": "Fuentes: tarifas de Twilio España, informe PushPass 2026 SMS vs aviso, guía de Yotpo sobre la tarjeta en el teléfono."
+      },
+      "howItWorks": {
+        "badge": "Cómo funciona",
+        "title": "De la idea a todos los teléfonos <br></br>en menos de un minuto",
+        "subtitle": "",
+        "steps": [
+          {
+            "title": "Redacta tu mensaje",
+            "description": "Escribe tu texto en ES e EN en el panel. Un mensaje, dos idiomas. Cada cliente ve el idioma configurado en su teléfono."
+          },
+          {
+            "title": "Segmenta o difunde a todos",
+            "description": "Growth segmenta por fecha de alta. Pro añade filtros por número de sellos, última recompensa canjeada e inactividad reciente, para que cada difusión llegue a los clientes adecuados."
+          },
+          {
+            "title": "Envía o programa",
+            "description": "Growth envía al momento. Pro te deja elegir la fecha y la hora locales, y el envío sale justo en el momento adecuado, según el horario de tu comercio."
+          },
+          {
+            "title": "Los teléfonos se actualizan en paralelo",
+            "description": "Apple Wallet y Google Wallet se actualizan en paralelo. El aviso aparece en la pantalla de bloqueo en unos segundos, en cada teléfono."
+          }
+        ]
+      },
+      "capabilities": {
+        "title": "Lo que puedes hacer <br></br>con una difusión",
+        "subtitle": "Todo lo que necesitas para llevar difusiones de verdad, sin ninguna herramienta extra.",
+        "items": [
+          {
+            "title": "Segmentación",
+            "description": "Dirígete solo a los clientes que importan: nuevos registrados, inactivos desde hace 30 días, recompensa canjeada la semana pasada, o al menos 5 sellos reunidos.",
+            "badge": "Básica en Growth · Avanzada en Pro"
+          },
+          {
+            "title": "Programación de envío",
+            "description": "Elige la hora local de envío: jueves a las 17 h, sábado al mediodía, o cualquier otro momento que encaje con tu comercio. Perfecto para las happy hours, las promociones de la hora de comer, o las aperturas del fin de semana.",
+            "badge": "Pro"
+          },
+          {
+            "title": "Entrega bilingüe",
+            "description": "Escribe en español y en inglés una sola vez. Cada cliente ve el idioma configurado en su dispositivo. Sin difusiones duplicadas, sin conjeturas.",
+            "badge": "Growth / Pro"
+          },
+          {
+            "title": "Transparencia de entrega",
+            "description": "Mira cuántos mensajes han llegado a Apple Wallet, a Google Wallet, se han frenado por el límite, o se han descartado porque se desinstaló la tarjeta. Estadísticas honestas, sin inflar.",
+            "badge": "Growth / Pro"
+          }
+        ]
+      },
+      "delivery": {
+        "title": "Una entrega que puedes comprobar de verdad",
+        "subtitle": "Cada difusión muestra un detalle por plataforma, para que sepas dónde ha llegado tu mensaje, no solo que ha salido.",
+        "metrics": [
+          {
+            "label": "Apple entregados",
+            "value": 412,
+            "tint": "apple"
+          },
+          {
+            "label": "Google entregados",
+            "value": 268,
+            "tint": "google"
+          },
+          {
+            "label": "Google frenados (límite)",
+            "value": 14,
+            "tint": "muted"
+          },
+          {
+            "label": "Tarjeta desinstalada",
+            "value": 22,
+            "tint": "muted"
+          }
+        ],
+        "note": "Ves el número exacto de clientes alcanzados, sin ocultar los casos en los que no hemos podido llegar. Estadísticas honestas, nada inflado."
+      },
+      "useCases": {
+        "title": "Difusiones reales, comercios reales",
+        "subtitle": "Algunas formas en que nuestros socios usan de verdad las difusiones a la tarjeta.",
+        "items": [
+          {
+            "emoji": "☕",
+            "title": "Cafetería: Happy hour",
+            "description": "«Café a 2 € hoy entre las 16 h y las 18 h.» Enviado a todos los que tienen tarjeta a las 15:30. Un tercio entra antes del cierre."
+          },
+          {
+            "emoji": "🍽️",
+            "title": "Restaurante: Llenar una noche floja",
+            "description": "«El martes, -20 % en el menú degustación.» Programado cada lunes por la noche. Convierte la noche más tranquila de la semana en la segunda más concurrida."
+          },
+          {
+            "emoji": "💇",
+            "title": "Peluquería: Promoción de temporada",
+            "description": "«Vuelta al cole: 5 € de descuento en todos los cortes esta semana.» Dirigido a los clientes que no han venido en 45 días."
+          },
+          {
+            "emoji": "🥐",
+            "title": "Panadería: Lanzamiento de novedad",
+            "description": "«Nuestro nuevo pan de masa madre ya está aquí. Un dulce gratis para los 30 primeros.» Difundido a todos los que tienen tarjeta."
+          }
+        ]
+      },
+      "faq": {
+        "title": "Las preguntas que más nos hacen",
+        "subtitle": "Respuestas sencillas sobre las difusiones a la tarjeta para comercios.",
+        "items": [
+          {
+            "question": "¿Cuánto cuestan las difusiones promocionales a la tarjeta?",
+            "answer": "Nada más. Las difusiones están incluidas en el plan Growth (8 al mes) y en el plan Pro (ilimitadas). No hay coste por mensaje, a diferencia del SMS, que cuesta entre 0,04 y 0,10 € por envío en España. Una sola difusión por SMS a 500 clientes puede costar fácilmente entre 30 y 50 €."
+          },
+          {
+            "question": "¿Los clientes tienen que instalar una app?",
+            "answer": "No. Los clientes instalan una tarjeta estándar de Apple Wallet o Google Wallet, que es la propia tarjeta de fidelidad. Los avisos son una función nativa de las dos plataformas, ya presente en todos los iPhone y Android modernos. Sin descarga en la tienda, sin cuenta, sin más permisos que el de añadir la tarjeta."
+          },
+          {
+            "question": "¿Cómo se compara con el SMS?",
+            "answer": "Los avisos en la tarjeta aparecen en la pantalla de bloqueo como un SMS, pero son gratis de enviar, alcanzan ~85 % de tasa de apertura, y no caen en el filtro «Remitente desconocido» de iOS 26. Además tienes una segmentación integrada (por sellos ganados, recompensas canjeadas, o inactividad reciente) que las plataformas de SMS suelen cobrar aparte."
+          },
+          {
+            "question": "¿Puedo programar mis difusiones con antelación?",
+            "answer": "Sí, con el plan Pro. Elige la fecha y la hora locales, y el envío sale justo en el momento adecuado, según el horario de tu comercio. El plan Growth envía al instante en el momento en que pulsas «Enviar», lo que encaja con la mayoría de las promociones rápidas."
+          },
+          {
+            "question": "¿Puedo dirigirme a clientes concretos?",
+            "answer": "Sí. En Growth puedes filtrar por fecha de alta (clientes nuevos frente a clientes de siempre). En Pro tienes una segmentación avanzada por número de sellos, última recompensa canjeada y ventana de inactividad, para que cada difusión llegue solo a los clientes para los que está pensada."
+          },
+          {
+            "question": "¿Cumple con el RGPD?",
+            "answer": "Sí. El consentimiento se recoge al instalar la tarjeta, y el cliente puede desactivar los avisos en cualquier momento desde los ajustes de su dispositivo. Nunca vendemos ni compartimos los datos de los clientes con terceros, y el cliente puede quitar la tarjeta de su teléfono cuando quiera."
+          },
+          {
+            "question": "¿Funciona con Apple Wallet y con Google Wallet?",
+            "answer": "Sí. Cada difusión sale hacia Apple Wallet y Google Wallet en paralelo. Tus clientes ven el aviso tanto si usan un iPhone como un Android."
+          },
+          {
+            "question": "¿Qué pasa si alcanzo el límite mensual del plan Growth?",
+            "answer": "Puedes esperar al mes siguiente, o pasar al plan Pro para tener difusiones ilimitadas, además de programación y segmentación avanzada. Los avisos automáticos (sello, hito, recompensa) siguen funcionando pase lo que pase, ya que el límite solo afecta a las difusiones promocionales manuales."
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Una manera de comunicar que respeta al cliente",
+        "subtitle": "Las difusiones a la tarjeta están pensadas para sentirse como una ventaja de fidelidad, no como un anuncio.",
+        "points": [
+          "El consentimiento se recoge al instalar la tarjeta. Cada cliente puede desactivar los avisos cuando quiera.",
+          "El cliente sigue siendo dueño de sus datos. Puede quitar la tarjeta con un toque, y los avisos se detienen al instante.",
+          "Un aviso claro por difusión, no un genérico «La tarjeta ha cambiado».",
+          "Conforme al RGPD. Sin seguimiento publicitario, sin datos vendidos ni compartidos."
+        ],
+        "gdprLabel": "RGPD"
+      },
+      "cta": {
+        "title": "Tu próxima difusión, en el bolsillo de tus clientes",
+        "subtitle": "Únete al programa fundador y envía tu primera difusión a la tarjeta esta semana."
+      },
+      "related": [
+        "notifications-push",
+        "analytiques",
+        "geolocalisation"
+      ]
+    },
+    "programme-fondateur": {
+      "hero": {
+        "title": "Todo Stampeo, desde hoy. Y <accent>20 €/mes bloqueados de por vida</accent>.",
+        "navTitle": "Oferta de lanzamiento: tarifa bloqueada de por vida",
+        "subtitle": "Stampeo ya funciona cada día en decenas de comercios. Los primeros en unirse conservan la tarifa de lanzamiento, para siempre.",
+        "badge": "Oferta de lanzamiento",
+        "secondaryCta": "1 mes gratis, luego {growthFoundingPrice} €/mes de por vida"
+      },
+      "problem": {
+        "title": "Te lo contamos sin rodeos",
+        "description": "Preferimos ser claros. Esto es exactamente dónde está Stampeo hoy."
+      },
+      "sections": [
+        {
+          "title": "1 mes gratis, sin trampa",
+          "description": "Te pedimos una tarjeta al registrarte, pero no hay ningún cobro durante la prueba. Lo pruebas en condiciones reales. Si Stampeo no es para ti, te vas sin pagar nada.",
+          "icon": "calendar"
+        },
+        {
+          "title": "{growthFoundingPrice} €/mes de por vida",
+          "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice} €/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
+          "icon": "tag"
+        },
+        {
+          "title": "Todas las funciones Growth",
+          "description": "Varios estilos de tarjeta, sellos o puntos (a tu elección), miembros de equipo ilimitados, mensajes de aviso personalizados, y difusiones a todos tus clientes.",
+          "icon": "crown"
+        }
+      ],
+      "cta": {
+        "title": "Únete a los primeros comercios",
+        "subtitle": "1 mes gratis. {growthFoundingPrice} €/mes de por vida. Todas las funciones Growth, disponibles hoy."
+      },
+      "related": [
+        "notifications-push",
+        "scanner-mobile",
+        "design-de-carte"
+      ],
+      "custom": {
+        "seeAllPlans": "Ver todos los planes",
+        "benefits": {
+          "title": "Lo que consigues",
+          "items": [
+            {
+              "title": "1 mes gratis, sin trampa",
+              "description": "Te pedimos una tarjeta al registrarte, pero no hay ningún cobro durante la prueba. Lo pruebas en condiciones reales. Si Stampeo no es para ti, te vas sin pagar nada.",
+              "icon": "calendar"
+            },
+            {
+              "title": "{growthFoundingPrice} €/mes de por vida",
+              "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice} €/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
+              "icon": "tag"
+            },
+            {
+              "title": "Todas las funciones Growth",
+              "description": "Varios estilos de tarjeta, sellos o puntos (a tu elección), miembros de equipo ilimitados, mensajes de aviso personalizados, y difusiones a todos tus clientes.",
+              "icon": "crown"
+            },
+            {
+              "title": "Un canal directo con el equipo",
+              "description": "Sin robots, sin ticket número 47832. Hablas directamente con las personas que construyen Stampeo. ¿Un problema, una idea? Nos ocupamos.",
+              "icon": "signal"
+            },
+            {
+              "title": "Tu tarjeta creada por nosotros",
+              "description": "Envíanos tu logo y tus colores. Creamos tu tarjeta de fidelidad, limpia y conforme a Apple Wallet y Google Wallet, el porta tarjetas integrado en el teléfono de tus clientes. Incluido.",
+              "icon": "palette"
+            },
+            {
+              "title": "Prioridad en todo",
+              "description": "Nuevas funciones en primicia, soporte prioritario. Como comercio pionero, pasas el primero.",
+              "icon": "sparkles"
+            }
+          ]
+        },
+        "transparency": {
+          "title": "Te lo contamos sin rodeos",
+          "description": "Preferimos ser claros. Esto es exactamente dónde está Stampeo hoy.",
+          "worksNow": {
+            "title": "Lo que funciona, hoy",
+            "items": [
+              "Tarjetas de Apple Wallet y Google Wallet",
+              "Escaneo del código QR con aviso en tiempo real",
+              "Difusiones a todos tus clientes (Growth y Pro)",
+              "Segmentación de clientes para tus difusiones (Pro)",
+              "Panel con lista de clientes y estadísticas",
+              "Editor de tarjeta con vista previa en tiempo real"
+            ]
+          },
+          "comingSoon": {
+            "title": "Lo que construimos a continuación",
+            "items": [
+              "Modo sin conexión para el escáner",
+              "Geolocalización para Apple Wallet y Google Wallet",
+              "Creación de tarjeta asistida por IA",
+              "Estilos de tarjeta programados y de temporada"
+            ]
+          },
+          "expectFromYou": {
+            "title": "Lo que te pedimos",
+            "items": [
+              "Usar Stampeo a diario en tu comercio",
+              "Decirnos qué funciona y qué te ahorraría tiempo",
+              "Compartir tus ideas de mejora"
+            ]
+          },
+          "closing": "Stampeo está listo para funcionar en tu comercio desde hoy. Al unirte ahora, bloqueas la mejor tarifa e influyes en lo que construimos a continuación."
+        },
+        "roi": {
+          "title": "¿Merece la pena?",
+          "subtitle": "Haz el cálculo.",
+          "modePrudent": "Prudente",
+          "modeOptimiste": "Optimista",
+          "clientsLabel": "Clientes al día",
+          "basketLabel": "Ticket medio",
+          "assumption": "Hipótesis: un programa de fidelidad genera alrededor de un {percent} % más de visitas",
+          "breakdownClients": "{clients} clientes/día × {percent} % = unos {extra} clientes más al día",
+          "breakdownRevenue": "{extra} clientes × {basket} € × 30 días = {total} €/mes",
+          "extraRevenue": "Ingresos extra",
+          "perMonth": "/mes",
+          "stampeoCost": "Stampeo",
+          "roiLabel": "Se amortiza",
+          "disclaimer": "Estimación orientativa basada en estudios del sector. Los resultados reales dependen de tu actividad y de la adopción del programa por parte de tus clientes.",
+          "sources": "Fuentes: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
+        },
+        "price": {
+          "original": "{growthPrice} €/mes",
+          "founding": "{growthFoundingPrice} €/mes",
+          "forLife": "de por vida"
+        },
+        "timeline": {
+          "badge": "Cómo funciona",
+          "title": "4 pasos para empezar",
+          "subtitle": "",
+          "steps": [
+            {
+              "title": "Crea tu cuenta",
+              "description": "Configura tu programa en 2 minutos."
+            },
+            {
+              "title": "Personaliza tu tarjeta",
+              "description": "Hazla tú, o escríbenos con tu logo y tus colores: la creamos por ti."
+            },
+            {
+              "title": "Muestra tu código QR",
+              "description": "En el mostrador. Tus clientes añaden su tarjeta con un escaneo."
+            },
+            {
+              "title": "Lanza tu programa",
+              "description": "Primer sello desde el primer día."
+            }
+          ]
+        },
+        "faq": {
+          "title": "Preguntas frecuentes",
+          "items": [
+            {
+              "question": "¿El producto está completo y se puede usar ya?",
+              "answer": "Sí. Stampeo ya funciona cada día en decenas de comercios: tarjetas de Apple Wallet y Google Wallet, escaneo, avisos, difusiones y estadísticas están en marcha. Puedes lanzar tu programa hoy mismo."
+            },
+            {
+              "question": "¿Cuánto tiempo sigue abierta la oferta de lanzamiento?",
+              "answer": "La tarifa de lanzamiento ({growthFoundingPrice} €/mes de por vida) sigue abierta durante la fase de lanzamiento, y luego el precio sube para los nuevos comercios. Una vez dentro, tu tarifa queda bloqueada de por vida."
+            },
+            {
+              "question": "¿Qué pasa después del mes gratis?",
+              "answer": "Pasas a {growthFoundingPrice} €/mes. Te avisamos dos veces: una semana antes, y luego 3 días antes. Si no quieres continuar, cancelas en un clic, sin gastos."
+            },
+            {
+              "question": "¿Mantengo mi tarifa si subís los precios?",
+              "answer": "Sí. {growthFoundingPrice} €/mes de por vida significa de por vida. Aunque el plan Growth pase a 49,99 € dentro de tres años, tu tarifa no se mueve. Es contractual."
+            },
+            {
+              "question": "¿Puedo cancelar?",
+              "answer": "En cualquier momento tras el mes gratis. Sin compromiso. Si cancelas, pierdes el acceso, pero tus clientes conservan sus tarjetas."
+            }
+          ]
+        },
+        "finalCta": {
+          "title": "Únete a los primeros comercios",
+          "subtitle": "1 mes gratis. {growthFoundingPrice} €/mes de por vida. Todas las funciones Growth, disponibles hoy.",
+          "urgency": "La tarifa de lanzamiento subirá para los nuevos comercios. Bloquea la tuya ahora."
+        }
+      }
+    },
+    "relatedTitle": "Descubre también",
+    "discoverLink": "Descubrir",
+    "ctaButton": "Empezar gratis"
+  }
+}

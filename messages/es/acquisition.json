@@ -1,0 +1,47 @@
+{
+  "acquisition": {
+    "getCard": "Consigue tu tarjeta de fidelidad",
+    "defaultDescription": "¡Únete a nuestro programa de fidelidad y empieza a ganar recompensas!",
+    "getMyCard": "Conseguir mi tarjeta",
+    "privacyNote": "<bold>{businessName}</bold> recoge tus datos para su programa de fidelidad. Stampeo actúa como encargado técnico del tratamiento. <privacy>Más información</privacy>.",
+    "form": {
+      "name": "Tu nombre",
+      "namePlaceholder": "Escribe tu nombre",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "phone": "Número de teléfono",
+      "phonePlaceholder": "+34 612 34 56 78",
+      "optional": "(opcional)",
+      "emailOptionalHint": "Si añades tu correo, podrás recuperar tu tarjeta si alguna vez se borra.",
+      "nameRequired": "El nombre es obligatorio",
+      "emailRequired": "El correo es obligatorio",
+      "emailInvalid": "Introduce un correo válido",
+      "phoneRequired": "El número de teléfono es obligatorio",
+      "phoneInvalid": "Introduce un número válido",
+      "emailOrPhoneRequired": "Hace falta un correo o un teléfono"
+    },
+    "loading": "Creando tu tarjeta...",
+    "success": {
+      "title": "¡Tu tarjeta está lista!",
+      "description": "Añade tu tarjeta de fidelidad de {businessName} a tu teléfono y empieza a coleccionar sellos."
+    },
+    "emailSent": {
+      "title": "Revisa tu correo",
+      "defaultMessage": "Hemos enviado tu tarjeta de fidelidad a tu correo electrónico."
+    },
+    "error": {
+      "title": "Algo ha salido mal",
+      "defaultMessage": "No hemos podido crear tu tarjeta. Vuelve a intentarlo."
+    },
+    "notReady": {
+      "title": "¡Disponible pronto!",
+      "description": "Este programa de fidelidad todavía no está activo. Vuelve pronto, ¡te esperan buenas recompensas!"
+    },
+    "notOpen": {
+      "title": "Todavía no está abierto",
+      "description": "Este comercio aún está terminando de configurar su programa de fidelidad. Vuelve pronto para conseguir tu tarjeta."
+    },
+    "poweredBy": "Con la tecnología de",
+    "previewSampleName": "Lucía"
+  }
+}

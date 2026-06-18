@@ -19,6 +19,7 @@ export async function generateMetadata({
         "x-default": "/pricing",
         fr: "/pricing",
         en: "/en/pricing",
+        es: "/es/pricing",
       },
     },
   };

@@ -1,0 +1,18 @@
+{
+  "blog": {
+    "title": "Blog",
+    "metaTitle": "Guía de fidelización digital para comercios",
+    "description": "Consejos, guías y novedades sobre los programas de fidelidad digitales para los comercios de barrio.",
+    "featured": "Destacado",
+    "allPosts": "Todos los artículos",
+    "readMore": "Leer más",
+    "readingTime": "{time} de lectura",
+    "share": "Compartir este artículo",
+    "relatedPosts": "Artículos relacionados",
+    "backToBlog": "Volver al blog",
+    "noPostsYet": "Todavía no hay artículos. ¡Vuelve pronto!",
+    "tags": "Etiquetas",
+    "allTags": "Todas",
+    "tableOfContents": "En esta página"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "notFound": {
+      "title": "Comercio no encontrado",
+      "description": "No hemos encontrado el comercio que buscas. Puede que el enlace sea incorrecto o que el comercio se haya eliminado.",
+      "backToStampeo": "Ir a Stampeo"
+    }
+  }
+}

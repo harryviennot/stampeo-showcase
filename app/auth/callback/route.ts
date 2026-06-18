@@ -120,7 +120,8 @@ export async function GET(request: Request) {
     .map((c) => c.trim())
     .find((c) => c.startsWith("NEXT_LOCALE="))
     ?.split("=")[1];
-  const locale = localeCookie === "en" ? "en" : "fr";
+  const locale =
+    localeCookie === "en" ? "en" : localeCookie === "es" ? "es" : "fr";
   return buildResponse(
     new URL(`/${locale}/onboarding?just_authed=oauth`, baseUrl)
   );

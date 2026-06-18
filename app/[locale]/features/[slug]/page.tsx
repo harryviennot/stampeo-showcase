@@ -57,6 +57,7 @@ export async function generateMetadata({
 
   const frSlug = canonical;
   const enSlug = getLocalizedSlug(canonical, "en");
+  const esSlug = getLocalizedSlug(canonical, "es");
 
   return {
     title,
@@ -67,6 +68,7 @@ export async function generateMetadata({
         "x-default": `/features/${frSlug}`,
         fr: `/features/${frSlug}`,
         en: `/en/features/${enSlug}`,
+        es: `/es/features/${esSlug}`,
       },
     },
     openGraph: {

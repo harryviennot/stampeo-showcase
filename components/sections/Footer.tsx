@@ -112,7 +112,7 @@ export async function Footer() {
             <div className="flex flex-col gap-4">
               <p className="text-white text-sm font-bold">{t("resources")}</p>
               <nav className="flex flex-col gap-3">
-                {(locale === "fr" || locale === "en") && (
+                {(locale === "fr" || locale === "en" || locale === "es") && (
                   <Link href="/blog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                     {t("blog")}
                   </Link>

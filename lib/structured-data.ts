@@ -20,7 +20,7 @@ export function organizationJsonLd() {
       "@type": "ContactPoint",
       email: "contact@stampeo.app",
       contactType: "customer support",
-      availableLanguage: ["French", "English"],
+      availableLanguage: ["French", "English", "Spanish"],
     },
   };
 }
@@ -31,7 +31,7 @@ export function webSiteJsonLd() {
     "@type": "WebSite",
     name: "Stampeo",
     url: BASE_URL,
-    inLanguage: ["fr", "en"],
+    inLanguage: ["fr", "en", "es"],
     potentialAction: {
       "@type": "SearchAction",
       target: `${BASE_URL}/blog?q={search_term_string}`,

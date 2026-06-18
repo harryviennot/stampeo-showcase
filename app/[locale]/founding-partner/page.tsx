@@ -13,8 +13,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
 
-  // Only EN uses this route; FR should use /programme-fondateur
-  if (locale === "fr") return {};
+  // Only EN uses this route; FR uses /programme-fondateur, ES has no founding page
+  if (locale !== "en") return {};
 
   const t = await getTranslations({ locale, namespace: "metadata.features" });
 
