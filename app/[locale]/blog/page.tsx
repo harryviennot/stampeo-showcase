@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (locale !== "fr" && locale !== "en") return {};
+  if (locale !== "fr" && locale !== "en" && locale !== "es") return {};
   const t = await getTranslations({ locale, namespace: "blog" });
   return {
     title: t("metaTitle"),
@@ -25,6 +25,7 @@ export async function generateMetadata({
         "x-default": "/blog",
         fr: "/blog",
         en: "/en/blog",
+        es: "/es/blog",
       },
     },
   };
@@ -36,7 +37,7 @@ export default async function BlogPage({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-  if (locale !== "fr" && locale !== "en") {
+  if (locale !== "fr" && locale !== "en" && locale !== "es") {
     redirect("/blog");
   }
   setRequestLocale(locale);

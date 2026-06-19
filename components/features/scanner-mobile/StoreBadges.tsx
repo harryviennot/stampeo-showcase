@@ -29,8 +29,8 @@ export function StoreBadges({ size = "md", className = "" }: StoreBadgesProps) {
   const locale = useLocale();
   const t = useTranslations("features.scanner-mobile.custom");
 
-  const appleSrc = locale === "fr" ? "/AppStoreFR.svg" : "/AppStore.svg";
-  const googleSrc = locale === "fr" ? "/GooglePlayFR.svg" : "/GooglePlay.svg";
+  const appleSrc = locale === "fr" ? "/AppStoreFR.svg" : locale === "es" ? "/AppStoreES.svg" : "/AppStore.svg";
+  const googleSrc = locale === "fr" ? "/GooglePlayFR.svg" : locale === "es" ? "/GooglePlayES.svg" : "/GooglePlay.svg";
   const h = heights[size];
 
   return (

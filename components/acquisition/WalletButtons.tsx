@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface WalletButtonsProps {
   passUrl: string;
@@ -10,13 +10,17 @@ interface WalletButtonsProps {
 
 export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) {
   const t = useTranslations("common.wallet");
-  console.log("googleWalletUrl", googleWalletUrl);
+  const locale = useLocale();
+  const appleSrc =
+    locale === "fr" ? "/AppleWalletFR.svg" : locale === "es" ? "/AppleWalletES.svg" : "/AppleWallet.svg";
+  const googleSrc =
+    locale === "fr" ? "/GoogleWalletFR.svg" : locale === "es" ? "/GoogleWalletES.svg" : "/GoogleWallet.svg";
   return (
     <div className="flex flex-row items-center justify-center gap-3">
       {/* Apple Wallet Button */}
       <a href={passUrl} className="block hover:opacity-90 transition-opacity">
         <Image
-          src="/AppleWallet.svg"
+          src={appleSrc}
           alt={t("addToAppleWallet")}
           width={200}
           height={50}
@@ -33,7 +37,7 @@ export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) 
           className="block hover:opacity-90 transition-opacity"
         >
           <Image
-            src="/GoogleWallet.svg"
+            src={googleSrc}
             alt={t("addToGoogleWallet")}
             width={200}
             height={50}
@@ -43,7 +47,7 @@ export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) 
       ) : (
         <div className="relative">
           <Image
-            src="/GoogleWallet.svg"
+            src={googleSrc}
             alt={t("addToGoogleWallet")}
             width={200}
             height={50}

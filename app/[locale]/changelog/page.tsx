@@ -46,7 +46,7 @@ export async function generateMetadata({
     description: t("meta.description"),
     alternates: {
       canonical,
-      languages: { fr: "/changelog", en: "/en/changelog" },
+      languages: { fr: "/changelog", en: "/en/changelog", es: "/es/changelog" },
     },
     openGraph: {
       title: t("meta.title"),
@@ -124,8 +124,8 @@ function ItemRow({
   locale: string;
   forTeamLabel: string;
 }) {
-  const title = resolve(item.title_fr, item.title_en, locale);
-  const body = resolve(item.body_fr, item.body_en, locale);
+  const title = resolve(item.title_fr, item.title_en, item.title_es, locale);
+  const body = resolve(item.body_fr, item.body_en, item.body_es, locale);
   const teamOnly = (item.affects ?? []).includes("scanner") &&
     !(item.affects ?? []).includes("owner");
   return (
@@ -222,9 +222,14 @@ function ReleaseEntry({
   isLast: boolean;
 }) {
   const items = release.changelog_items;
-  const title = resolve(release.title_fr, release.title_en, locale);
-  const body = resolve(release.body_fr, release.body_en, locale);
-  const heroSrc = resolve(release.image_url_fr, release.image_url_en, locale);
+  const title = resolve(release.title_fr, release.title_en, release.title_es, locale);
+  const body = resolve(release.body_fr, release.body_en, release.body_es, locale);
+  const heroSrc = resolve(
+    release.image_url_fr,
+    release.image_url_en,
+    release.image_url_es,
+    locale
+  );
   const date = formatReleaseDate(release.published_at, locale);
 
   // Distinct area chips for the entry header (union of its items' areas).
@@ -376,7 +381,7 @@ export default async function ChangelogPage({
         position: i + 1,
         item: {
           "@type": "TechArticle",
-          headline: resolve(r.title_fr, r.title_en, locale) || t("title"),
+          headline: resolve(r.title_fr, r.title_en, r.title_es, locale) || t("title"),
           ...(r.published_at ? { datePublished: r.published_at } : {}),
           url: canonicalUrl,
         },

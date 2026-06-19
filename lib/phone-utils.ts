@@ -66,6 +66,25 @@ const COUNTRY_NAMES_FR: Partial<Record<CountryCode, string>> = {
   HT: "Haïti", MC: "Monaco", LB: "Liban", CD: "RD Congo",
 };
 
+const COUNTRY_NAMES_ES: Partial<Record<CountryCode, string>> = {
+  FR: "Francia", US: "Estados Unidos", GB: "Reino Unido", DE: "Alemania",
+  ES: "España", IT: "Italia", PT: "Portugal", BE: "Bélgica", CH: "Suiza",
+  CA: "Canadá", NL: "Países Bajos", AT: "Austria", IE: "Irlanda", LU: "Luxemburgo",
+  AU: "Australia", NZ: "Nueva Zelanda", JP: "Japón", KR: "Corea del Sur",
+  CN: "China", IN: "India", BR: "Brasil", MX: "México", AR: "Argentina",
+  SE: "Suecia", NO: "Noruega", DK: "Dinamarca", FI: "Finlandia", PL: "Polonia",
+  CZ: "Chequia", RO: "Rumanía", HU: "Hungría", GR: "Grecia",
+  TR: "Turquía", RU: "Rusia", UA: "Ucrania", IL: "Israel", AE: "EAU",
+  SA: "Arabia Saudí", MA: "Marruecos", TN: "Túnez", DZ: "Argelia",
+  SN: "Senegal", CI: "Costa de Marfil", CM: "Camerún", MG: "Madagascar",
+  MU: "Mauricio", RE: "Reunión", GP: "Guadalupe", MQ: "Martinica",
+  GF: "Guayana Francesa", NC: "Nueva Caledonia", PF: "Polinesia Francesa",
+  ZA: "Sudáfrica", NG: "Nigeria", GH: "Ghana", KE: "Kenia",
+  TH: "Tailandia", VN: "Vietnam", PH: "Filipinas", SG: "Singapur",
+  MY: "Malasia", ID: "Indonesia", CO: "Colombia", CL: "Chile", PE: "Perú",
+  HT: "Haití", MC: "Mónaco", LB: "Líbano", CD: "RD Congo",
+};
+
 /** Priority countries shown at the top of the dropdown */
 const PRIORITY_COUNTRIES: CountryCode[] = [
   "FR", "BE", "CH", "CA", "US", "GB", "DE", "ES", "IT", "PT", "NL",
@@ -78,7 +97,12 @@ let cachedList: CountryEntry[] | null = null;
 export function getCountryList(locale: string = "en"): CountryEntry[] {
   if (cachedList) return cachedList;
 
-  const names = locale === "fr" ? COUNTRY_NAMES_FR : COUNTRY_NAMES_EN;
+  const names =
+    locale === "fr"
+      ? COUNTRY_NAMES_FR
+      : locale === "es"
+        ? COUNTRY_NAMES_ES
+        : COUNTRY_NAMES_EN;
   const allCountries = getCountries();
 
   const entries: CountryEntry[] = allCountries

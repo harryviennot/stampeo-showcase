@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { LanguagePicker } from "@/components/ui/LanguagePicker";
+import { cn } from "@/lib/utils";
 
 function isColorDark(color: string): boolean | null {
   if (!color || color === "transparent" || color === "rgba(0, 0, 0, 0)")
@@ -69,7 +71,7 @@ export function FloatingLanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLDivElement>(null);
   const [onDark, setOnDark] = useState(false);
 
   const detectBackground = useCallback(() => {
@@ -102,25 +104,25 @@ export function FloatingLanguageSwitcher() {
   // Hide on individual blog posts (different slugs per language)
   if (/^\/blog\/.+/.test(pathname)) return null;
 
-  const nextLocale = locale === "fr" ? "en" : "fr";
-  const label = locale === "fr" ? "EN" : "FR";
-
-  function handleSwitch() {
-    router.replace(pathname, { locale: nextLocale });
-  }
-
   return (
-    <button
-      ref={buttonRef}
-      onClick={handleSwitch}
-      className={`hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center px-3.5 py-2 text-xs font-bold rounded-full backdrop-blur-md border shadow-lg hover:shadow-xl hover:scale-105 transition-all ${
-        onDark
-          ? "bg-white/15 border-white/20 text-white hover:bg-white/25"
-          : "bg-white/80 border-[var(--accent)]/10 text-[var(--foreground)] hover:bg-white"
-      }`}
-      aria-label={`Switch to ${routing.locales.find((l) => l === nextLocale)}`}
-    >
-      {label}
-    </button>
+    <div ref={buttonRef} className="hidden md:block fixed bottom-6 right-6 z-50">
+      <LanguagePicker
+        direction="up"
+        trigger="hover"
+        value={locale}
+        options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
+        onSelect={(l) => router.replace(pathname, { locale: l })}
+        surfaceClassName={cn(
+          "rounded-full backdrop-blur-md border shadow-lg transition-colors",
+          onDark ? "bg-white/15 border-white/20" : "bg-white/80 border-[var(--accent)]/10"
+        )}
+        tileClassName={
+          onDark
+            ? "text-white/80 hover:bg-white/15"
+            : "text-[var(--foreground)] hover:bg-black/5"
+        }
+        selectedTileClassName="bg-[var(--accent)] text-white"
+      />
+    </div>
   );
 }

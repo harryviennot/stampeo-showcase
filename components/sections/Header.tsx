@@ -272,7 +272,7 @@ export function Header() {
   const navItems = [
     { label: t("common.nav.foundingProgram"), href: locale === "en" ? "/founding-partner" : "/programme-fondateur" },
     { label: t("common.nav.pricing"), href: "/pricing" },
-    ...(locale === "fr" || locale === "en"
+    ...(locale === "fr" || locale === "en" || locale === "es"
       ? [{ label: t("common.nav.blog"), href: "/blog" }]
       : []),
     { label: t("common.nav.contact"), href: "/contact" },

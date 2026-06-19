@@ -43,7 +43,7 @@ export function isFoundingProgramOpen(now: Date = new Date()): boolean {
 
 /** Format a price for display (e.g. 10 → "10", 14.99 → "14.99") */
 export function formatPrice(price: number, locale?: string): string {
-  if (locale === "fr") {
+  if (locale === "fr" || locale === "es") {
     return price % 1 === 0 ? `${price}` : price.toFixed(2).replace(".", ",");
   }
   return price % 1 === 0 ? `${price}` : price.toFixed(2);

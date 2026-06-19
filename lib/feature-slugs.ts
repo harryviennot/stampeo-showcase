@@ -31,20 +31,38 @@ const FR_TO_EN: Record<FeatureSlug, string> = {
   "campagnes-promotionnelles": "promotional-campaigns",
 };
 
+/** FR slug → ES slug */
+const FR_TO_ES: Record<FeatureSlug, string> = {
+  "design-de-carte": "estilo-de-tarjeta",
+  "scanner-mobile": "escaner-movil",
+  "notifications-push": "notificaciones-push",
+  analytiques: "estadisticas",
+  geolocalisation: "geolocalizacion",
+  "campagnes-promotionnelles": "difusiones-promocionales",
+};
+
 /** EN slug → FR slug */
 const EN_TO_FR: Record<string, FeatureSlug> = Object.fromEntries(
   Object.entries(FR_TO_EN).map(([fr, en]) => [en, fr as FeatureSlug])
 ) as Record<string, FeatureSlug>;
 
+/** ES slug → FR slug */
+const ES_TO_FR: Record<string, FeatureSlug> = Object.fromEntries(
+  Object.entries(FR_TO_ES).map(([fr, es]) => [es, fr as FeatureSlug])
+) as Record<string, FeatureSlug>;
+
 /** Get the locale-appropriate slug for a feature */
 export function getLocalizedSlug(frSlug: FeatureSlug, locale: string): string {
-  return locale === "en" ? FR_TO_EN[frSlug] : frSlug;
+  if (locale === "en") return FR_TO_EN[frSlug];
+  if (locale === "es") return FR_TO_ES[frSlug];
+  return frSlug;
 }
 
 /** Resolve any slug (FR or EN) to its canonical FR slug, or null if invalid */
 export function resolveToCanonicalSlug(slug: string): FeatureSlug | null {
   if (slug in FEATURES) return slug as FeatureSlug;
   if (slug in EN_TO_FR) return EN_TO_FR[slug];
+  if (slug in ES_TO_FR) return ES_TO_FR[slug];
   return null;
 }
 
@@ -69,5 +87,6 @@ export function generateFeatureStaticParams() {
   // Generate both FR and EN slugs so all URLs are statically available
   const frSlugs = FEATURE_SLUGS.map((slug) => ({ slug }));
   const enSlugs = FEATURE_SLUGS.map((slug) => ({ slug: FR_TO_EN[slug] }));
-  return [...frSlugs, ...enSlugs];
+  const esSlugs = FEATURE_SLUGS.map((slug) => ({ slug: FR_TO_ES[slug] }));
+  return [...frSlugs, ...enSlugs, ...esSlugs];
 }

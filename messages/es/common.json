@@ -1,0 +1,106 @@
+{
+  "common": {
+    "stamps": "Sellos",
+    "reward": "Recompensa",
+    "rewarded": "¡Tienes derecho a 30 días gratis!",
+    "rewardText": "¡30 días gratis con 8 sellos!",
+    "nav": {
+      "features": "Funciones",
+      "pricing": "Precios",
+      "faq": "Preguntas frecuentes",
+      "blog": "Blog",
+      "featuresItems": {
+        "designDeCarte": {
+          "label": "Estilo de tarjeta",
+          "description": "Personaliza tu tarjeta en 5 minutos"
+        },
+        "scannerMobile": {
+          "label": "Escáner móvil",
+          "description": "Escanea en un segundo desde tu teléfono"
+        },
+        "notificationsPush": {
+          "label": "Notificaciones",
+          "description": "Conecta con tus clientes en su pantalla de bloqueo"
+        },
+        "campagnesPromotionnelles": {
+          "label": "Difusiones promocionales",
+          "description": "Llega a todos tus clientes, sin la factura de SMS"
+        },
+        "analytiques": {
+          "label": "Estadísticas",
+          "description": "Conoce a tus clientes con datos reales"
+        },
+        "geolocalisation": {
+          "label": "Geolocalización",
+          "description": "Recuérdales que existes en el momento justo"
+        }
+      },
+      "foundingProgram": "Programa fundador",
+      "contact": "Contacto"
+    },
+    "promoBanner": {
+      "item1": "Oferta de lanzamiento: <bold>20 €/mes de por vida</bold>",
+      "item2": "Miembros fundadores: <bold>-50 % de por vida</bold>",
+      "item3": "Todo Stampeo, <bold>hoy mismo</bold>",
+      "item4": "Asegura tu <bold>precio de lanzamiento</bold>",
+      "dismiss": "Cerrar"
+    },
+    "auth": {
+      "signOut": "Cerrar sesión",
+      "dashboard": "Panel",
+      "logIn": "Iniciar sesión",
+      "getStarted": "Empezar  →"
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "skip": "Omitir",
+      "tryAgain": "Reintentar",
+      "goBack": "Atrás",
+      "startFree": "Empezar gratis"
+    },
+    "wallet": {
+      "appleWallet": "Apple Wallet",
+      "googleWallet": "Google Wallet",
+      "addToAppleWallet": "Añadir a Apple Wallet",
+      "addToGoogleWallet": "Añadir a Google Wallet",
+      "soon": "Pronto"
+    },
+    "footer": {
+      "brand": "Stampeo",
+      "description": "Tarjetas de fidelidad digitales para comercios modernos. Impulsa tu crecimiento con experiencias sencillas y atractivas.",
+      "product": "Producto",
+      "featuresTitle": "Funciones",
+      "features": "Funciones",
+      "resources": "Recursos",
+      "pricing": "Precios",
+      "howItWorks": "Cómo funciona",
+      "help": "Centro de ayuda",
+      "blog": "Blog",
+      "changelog": "Novedades",
+      "company": "Empresa",
+      "about": "Nosotros",
+      "contact": "Contacto",
+      "legal": "Aviso legal",
+      "privacyPolicy": "Política de privacidad",
+      "termsOfService": "Condiciones de uso",
+      "allRightsReserved": "© {year} Stampeo. Todos los derechos reservados.",
+      "builtForLocal": "Hecho para comercios de barrio",
+      "madeInFrance": "Hecho en Francia",
+      "gdprCompliant": "Conforme al RGPD",
+      "cta": {
+        "title": "¿Listo para empezar?",
+        "subtitle": "Únete a los comercios que fidelizan a sus clientes con Stampeo.",
+        "button": "Empezar gratis"
+      },
+      "newsletter": {
+        "title": "Mantente al día",
+        "placeholder": "Tu correo",
+        "button": "Suscribirme",
+        "disclaimer": "Sin spam. Cancela cuando quieras.",
+        "success": "¡Gracias! Ya estás suscrito."
+      }
+    }
+  }
+}
