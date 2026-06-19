@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import posthog from "posthog-js";
 
@@ -11,11 +11,16 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 export default function WalletSelectPage() {
   const t = useTranslations("auth.walletSelect");
   const tw = useTranslations("common.wallet");
+  const locale = useLocale();
   const params = useParams();
   const token = params.token as string;
 
   const appleUrl = `${API_URL}/demo/pass/${token}?wallet=apple`;
   const googleUrl = `${API_URL}/demo/pass/${token}?wallet=google`;
+  const appleSrc =
+    locale === "fr" ? "/AppleWalletFR.svg" : locale === "es" ? "/AppleWalletES.svg" : "/AppleWallet.svg";
+  const googleSrc =
+    locale === "fr" ? "/GoogleWalletFR.svg" : locale === "es" ? "/GoogleWalletES.svg" : "/GoogleWallet.svg";
 
   return (
     <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
@@ -46,7 +51,7 @@ export default function WalletSelectPage() {
               className="block hover:opacity-90 transition-opacity"
             >
               <Image
-                src="/AppleWallet.svg"
+                src={appleSrc}
                 alt={tw("addToAppleWallet")}
                 width={280}
                 height={56}
@@ -61,7 +66,7 @@ export default function WalletSelectPage() {
               className="block hover:opacity-90 transition-opacity"
             >
               <Image
-                src="/GoogleWallet.svg"
+                src={googleSrc}
                 alt={tw("addToGoogleWallet")}
                 width={280}
                 height={56}
