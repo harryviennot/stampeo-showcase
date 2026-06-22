@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 11 mai 2026**
+**Dernière mise à jour : 22 juin 2026**
 
 ## 1. Introduction
 
@@ -84,6 +84,7 @@ Pour tous les utilisateurs, nous pouvons collecter :
 - Jeton d'appareil (device token) pour les mises à jour du pass
 - Données d'utilisation envoyées à PostHog pour nos statistiques internes : nom de l'événement, horodatage, page consultée, adresse IP du visiteur et, une fois le compte Business créé, l'identifiant de l'entreprise concernée. Aucun cookie n'est déposé et aucun identifiant n'est conservé dans le stockage du navigateur (voir §5)
 - Contexte de supervision des erreurs envoyé à Sentry en cas d'exception : identifiant utilisateur, identifiant d'entreprise, chemin de la requête et pile d'exécution (pas d'adresse email, pas de mot de passe, pas de données de paiement)
+- Pour les emails que nous adressons aux utilisateurs Business, les événements d'engagement enregistrés par notre prestataire d'envoi (Resend) : remise, ouverture, clic (y compris le lien cliqué), rejet (bounce) et signalement comme spam, rattachés à l'identifiant de l'entreprise et de l'utilisateur destinataire. Ils servent uniquement à mesurer et améliorer nos propres communications et à maintenir la qualité de nos listes, jamais à des fins publicitaires
 
 ## 4. Services tiers
 
@@ -132,9 +133,20 @@ Nous utilisons les données collectées pour :
 - Envoyer des emails transactionnels et opérationnels (confirmation de compte, récupération de pass, notifications liées à l'essai et à la facturation ; voir CGU §5.5)
 - Produire des statistiques anonymisées pour les entreprises
 - Produire des statistiques internes agrégées sur l'utilisation de la Plateforme à travers l'ensemble des entreprises, détecter les abus et prioriser les améliorations
+- Adresser aux utilisateurs Business un nombre limité d'emails de cycle de vie et marketing, sous réserve de l'opposition décrite au §6.1
 - Améliorer la Plateforme
 
 Nous **ne vendons jamais** de données personnelles. Nous n'effectuons **aucun suivi inter-entreprises** : les données d'un client dans une entreprise sont totalement isolées de celles dans une autre.
+
+### 6.1 Emails de cycle de vie et marketing adressés aux utilisateurs Business
+
+Outre les emails transactionnels et opérationnels listés ci-dessus, nous adressons aux utilisateurs Business un nombre limité d'emails de cycle de vie et marketing : conseils de prise en main et d'activation, relances lorsqu'un compte est créé mais pas encore utilisé, un récapitulatif d'activité périodique, des annonces de nouveautés produit, et des messages de reconquête après résiliation.
+
+- **Base légale** : notre intérêt légitime à aider les utilisateurs Business à tirer parti de la Plateforme et à promouvoir les fonctionnalités d'un service qu'ils utilisent déjà (article 6.1.f du RGPD), en nous appuyant pour la prospection sur le « soft opt-in » entre professionnels prévu par la directive ePrivacy et l'article L34-5 de la LCEN.
+- **Opposition** : chacun de ces emails comporte un lien de désinscription en un clic ainsi qu'un lien vers une page de préférences permettant à l'utilisateur Business de se désinscrire indépendamment par catégorie — réengagement, marketing et nouveautés produit. Les emails transactionnels et opérationnels décrits au §5.6 des CGU sont exclus de cette opposition car ils sont nécessaires à l'administration du compte.
+- Pour mesurer et améliorer ces communications, nous enregistrons les événements d'engagement décrits au §3.4.
+
+Cela ne concerne que les emails que Stampeo adresse à ses propres utilisateurs Business. C'est distinct des notifications wallet qu'une entreprise envoie à ses clients finaux, traitées au §7.
 
 ## 7. Notifications
 
@@ -176,6 +188,7 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Jetons d'enregistrement push (device tokens) | Supprimés lorsque le client retire le pass de son wallet, ou lorsque le service push du wallet signale le jeton comme invalide de manière permanente |
 | Dernier message de notification wallet | Seul le dernier message est conservé par client (écrasé à chaque notification), sans historique |
 | Statistiques de livraison des broadcasts (agrégées) | 24 mois |
+| Journaux d'envoi et d'engagement des emails adressés aux utilisateurs Business (remise, ouverture, clic, rejet, signalement spam) | 24 mois |
 | Journalisation des échecs de webhooks Stripe (débogage interne) | 90 jours |
 | Journaux d'accès support (sessions et entrées d'audit associées, voir §2.3) | 24 mois, puis suppression |
 
