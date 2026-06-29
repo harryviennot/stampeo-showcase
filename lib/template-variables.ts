@@ -24,6 +24,10 @@ export interface PreviewContext {
   businessName?: string | null;
   /** Sample cardholder first name shown on the preview. */
   sampleFirstName?: string;
+  /** Points-program preview values (only set for points cards). */
+  pointsBalance?: number;
+  pointsToNext?: number;
+  nextRewardName?: string | null;
 }
 
 function buildValues(ctx: PreviewContext): Record<string, string> {
@@ -35,6 +39,9 @@ function buildValues(ctx: PreviewContext): Record<string, string> {
     reward_name: ctx.rewardName ?? "",
     business_name: ctx.businessName ?? "",
     customer_first_name: ctx.sampleFirstName ?? "Jane",
+    points_balance: String(ctx.pointsBalance ?? 0),
+    points_to_next: String(ctx.pointsToNext ?? 0),
+    next_reward_name: ctx.nextRewardName ?? ctx.rewardName ?? "",
   };
 }
 

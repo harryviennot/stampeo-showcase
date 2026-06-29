@@ -49,7 +49,7 @@
       "signOut": "Sign out",
       "dashboard": "Dashboard",
       "logIn": "Log in",
-      "getStarted": "Get started\u00a0\u00a0→"
+      "getStarted": "Get started  →"
     },
     "buttons": {
       "continue": "Continue",
@@ -101,6 +101,13 @@
         "disclaimer": "No spam. Unsubscribe anytime.",
         "success": "Thanks! You're subscribed."
       }
+    },
+    "points": "Points",
+    "pointsStrip": {
+      "objective": "Objective",
+      "nextWord": "Next",
+      "points": "{points} pts",
+      "complete": "Card completed"
     }
   }
 }

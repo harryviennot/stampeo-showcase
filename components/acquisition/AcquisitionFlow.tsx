@@ -44,16 +44,30 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
   // stamps; without a prestamp we show a few demo stamps so the strip
   // doesn't look empty. Field {{variables}} render with the same numbers
   // (and real program data) so the preview is coherent.
+  const isPoints = cardDesign?.card_type === "points";
   const previewStamps =
     cardDesign?.initial_stamps && cardDesign.initial_stamps > 0
       ? cardDesign.initial_stamps
       : 3;
+
+  // Points preview: pick a believable balance partway to the first reward so
+  // every strip style (big number, ring, track) shows visible progress.
+  const sortedRewards = [...(cardDesign?.points_rewards ?? [])].sort(
+    (a, b) => a.threshold - b.threshold
+  );
+  const previewBalance =
+    sortedRewards.length > 0 ? Math.round(sortedRewards[0].threshold * 0.6) : 0;
+  const nextReward = sortedRewards.find((r) => r.threshold > previewBalance) ?? null;
+
   const previewContext = {
     stampCount: previewStamps,
     totalStamps: cardDesign?.total_stamps ?? 10,
     rewardName: cardDesign?.reward_name,
     businessName: business.name,
     sampleFirstName: t("previewSampleName"),
+    pointsBalance: previewBalance,
+    pointsToNext: nextReward ? Math.max(0, nextReward.threshold - previewBalance) : 0,
+    nextRewardName: nextReward?.name,
   };
 
   const handleSubmit = async (data: CustomerCreatePublic) => {
@@ -144,6 +158,13 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     custom_filled_stamp_url: cardDesign.custom_filled_stamp_url ?? undefined,
                     custom_empty_stamp_url: cardDesign.custom_empty_stamp_url ?? undefined,
                     strip_background_url: cardDesign.strip_background_url ?? undefined,
+                    // Points card design — drives the points strip + branch.
+                    card_type: cardDesign.card_type ?? undefined,
+                    points_strip_style: cardDesign.points_strip_style ?? undefined,
+                    progress_accent_color: cardDesign.progress_accent_color ?? undefined,
+                    points_reward_icons: cardDesign.points_reward_icons,
+                    strip_background_color: cardDesign.strip_background_color ?? undefined,
+                    strip_background_opacity: cardDesign.strip_background_opacity,
                     // Substitute {{variables}} with real program data + a
                     // sample cardholder so the preview never shows raw
                     // placeholder syntax.
@@ -163,6 +184,8 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                   }}
                   organizationName={business.name}
                   stamps={previewStamps}
+                  pointsBalance={isPoints ? previewBalance : undefined}
+                  pointsRewards={isPoints ? sortedRewards : undefined}
                   showQR={true}
                   interactive3D={true}
                 />

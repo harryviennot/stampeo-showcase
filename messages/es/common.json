@@ -101,6 +101,13 @@
         "disclaimer": "Sin spam. Cancela cuando quieras.",
         "success": "¡Gracias! Ya estás suscrito."
       }
+    },
+    "points": "Puntos",
+    "pointsStrip": {
+      "objective": "Objetivo",
+      "nextWord": "Siguiente",
+      "points": "{points} pts",
+      "complete": "Tarjeta completada"
     }
   }
 }

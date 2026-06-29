@@ -47,14 +47,29 @@ interface AcquisitionPageViewProps {
 
 export async function AcquisitionPageView({ slug, locationSlug }: AcquisitionPageViewProps) {
   // Fetch business by slug (server-side)
-  const { data: business, error: businessError } = await getBusinessBySlug(slug);
+  // eslint-disable-next-line prefer-const
+  let { data: business, error: businessError } = await getBusinessBySlug(slug);
 
   if (!business || businessError) {
     notFound();
   }
 
   // Fetch active card design for preview
-  const { data: cardDesign } = await getActiveCardDesign(business.id);
+  let { data: cardDesign } = await getActiveCardDesign(business.id);
+
+  // A cached null active-design is almost always a stale "still in setup"
+  // snapshot: the showcase Data Cache holds the response for ~5 minutes with
+  // no activation webhook, so a freshly-onboarded business would otherwise
+  // show "program not active yet" (and a logo-less card) right after going
+  // live. Re-read both records uncached so the page self-heals immediately.
+  if (!cardDesign) {
+    const freshDesign = await getActiveCardDesign(business.id, { fresh: true });
+    if (freshDesign.data) {
+      cardDesign = freshDesign.data;
+      const freshBiz = await getBusinessBySlug(slug, { fresh: true });
+      if (freshBiz.data) business = freshBiz.data;
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[var(--cream)]">

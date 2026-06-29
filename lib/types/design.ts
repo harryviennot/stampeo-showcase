@@ -40,6 +40,25 @@ export interface CustomStampConfig {
 
 export type StampIconMode = "preset" | "custom";
 
+export type CardType = "stamp" | "points";
+
+/** The three points strip layouts the backend renders (migration 123). */
+export type PointsStripStyle = "big_point" | "circle_progress" | "progress_icons";
+
+export interface PointsRewardIcon {
+  type: "preset" | "custom";
+  ref: string;
+}
+
+export type PointsRewardIcons = Record<string, PointsRewardIcon>;
+
+/** A points reward tier — the ladder the points strip renders against. */
+export interface RewardTier {
+  id: string;
+  name: string;
+  threshold: number;
+}
+
 export interface CardDesign {
   id: string;
   name: string;
@@ -68,11 +87,22 @@ export interface CardDesign {
   stamp_icon_mode?: StampIconMode;
   custom_stamp_config?: CustomStampConfig | null;
 
+  // Points card design (migration 123). Only meaningful when card_type === 'points'.
+  card_type?: CardType;
+  points_strip_style?: PointsStripStyle;
+  progress_accent_color?: string;
+  points_reward_icons?: PointsRewardIcons;
+  /** Reward ladder — populated by the public active-design route. */
+  points_rewards?: RewardTier[];
+
   // Asset URLs
   logo_url?: string;
   custom_filled_stamp_url?: string;
   custom_empty_stamp_url?: string;
   strip_background_url?: string;
+  /** Solid strip canvas color when no strip image is uploaded. */
+  strip_background_color?: string;
+  strip_background_opacity?: number;
 
   // Pass fields
   secondary_fields: PassField[];

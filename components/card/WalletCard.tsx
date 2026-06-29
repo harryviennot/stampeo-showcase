@@ -3,14 +3,16 @@
 import React, { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
-import { CardDesign, CustomStampConfig } from "@/lib/types/design";
+import { CardDesign, CustomStampConfig, RewardTier } from "@/lib/types/design";
 import {
   StampIconSvg,
   StampIconType,
 } from "@/components/onboarding/StampIconPicker";
+import { PointsStrip } from "@/components/card/PointsStrip";
 import {
   computeCardColors,
   getInitials,
+  rgbToHex,
   calculateStampLayout,
   calculateStaggeredStampLayout,
   customIconBoxSize,
@@ -45,6 +47,10 @@ export interface WalletCardProps {
   interactive3D?: boolean;
   /** Additional class names */
   className?: string;
+  /** Points balance to preview (only used when design.card_type === 'points'). */
+  pointsBalance?: number;
+  /** Points reward ladder (only used when design.card_type === 'points'). */
+  pointsRewards?: RewardTier[];
 }
 
 // ============================================================================
@@ -482,6 +488,8 @@ export function WalletCard({
   showSecondaryFields = true,
   interactive3D = false,
   className = "",
+  pointsBalance,
+  pointsRewards,
 }: WalletCardProps) {
   const { cardRef, rotate, glare, handleMouseMove, handleMouseLeave } =
     use3DEffect(interactive3D);
@@ -491,6 +499,13 @@ export function WalletCard({
   const initials = getInitials(displayName);
   const totalStamps = design.total_stamps ?? 10;
   const colors = computeCardColors(design);
+  const isPoints = design.card_type === "points";
+  const pointsAccent = design.progress_accent_color
+    ? rgbToHex(design.progress_accent_color)
+    : colors.accentHex;
+  const stripBgHex = design.strip_background_color
+    ? rgbToHex(design.strip_background_color)
+    : colors.bgHex;
 
   const stampIcon = (design.stamp_icon || "checkmark") as StampIconType;
   const customConfig =
@@ -581,43 +596,74 @@ export function WalletCard({
                   className="text-[8px] font-bold uppercase tracking-wider transition-colors duration-300"
                   style={{ color: colors.mutedTextColor }}
                 >
-                  {t("stamps")}
+                  {isPoints ? t("points") : t("stamps")}
                 </div>
                 <div
                   className="text-md font-medium flex items-baseline gap-1 justify-end transition-colors duration-300 leading-tight"
                   style={{ color: colors.textColor }}
                 >
-                  {stamps} / {totalStamps}
+                  {isPoints ? (pointsBalance ?? 0) : `${stamps} / ${totalStamps}`}
                 </div>
               </div>
             </div>
 
-            {/* Stamps Grid */}
-            <div className="relative flex items-start justify-center py-2">
-              {/* Strip background layer */}
-              {design.strip_background_url && (
-                <div
-                  className="absolute inset-0 rounded-lg overflow-hidden"
-                  style={{ zIndex: 0 }}
-                >
-                  <Image
-                    src={design.strip_background_url}
-                    alt=""
-                    fill
-                    className="object-cover opacity-40"
-                    unoptimized
+            {/* Strip area: points render a full-width strip band, stamps keep
+                the centered grid. */}
+            {isPoints ? (
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ backgroundColor: stripBgHex }}
+              >
+                {design.strip_background_url && (
+                  <div className="absolute inset-0" style={{ zIndex: 0 }}>
+                    <Image
+                      src={design.strip_background_url}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      style={{ opacity: (design.strip_background_opacity ?? 40) / 100 }}
+                      unoptimized
+                    />
+                  </div>
+                )}
+                <div className="relative" style={{ zIndex: 1 }}>
+                  <PointsStrip
+                    style={design.points_strip_style ?? "big_point"}
+                    balance={pointsBalance ?? 0}
+                    rewards={pointsRewards ?? []}
+                    rewardIcons={design.points_reward_icons}
+                    accentColor={pointsAccent}
+                    backgroundColor={stripBgHex}
                   />
                 </div>
-              )}
-              <StampGridContainer
-                totalStamps={totalStamps}
-                filledCount={stamps}
-                colors={colors}
-                stampIcon={stampIcon}
-                rewardIcon={rewardIcon}
-                customConfig={customConfig}
-              />
-            </div>
+              </div>
+            ) : (
+              <div className="relative flex items-start justify-center py-2">
+                {/* Strip background layer */}
+                {design.strip_background_url && (
+                  <div
+                    className="absolute inset-0 rounded-lg overflow-hidden"
+                    style={{ zIndex: 0 }}
+                  >
+                    <Image
+                      src={design.strip_background_url}
+                      alt=""
+                      fill
+                      className="object-cover opacity-40"
+                      unoptimized
+                    />
+                  </div>
+                )}
+                <StampGridContainer
+                  totalStamps={totalStamps}
+                  filledCount={stamps}
+                  colors={colors}
+                  stampIcon={stampIcon}
+                  rewardIcon={rewardIcon}
+                  customConfig={customConfig}
+                />
+              </div>
+            )}
 
             {/* Secondary Fields - horizontal row like real Apple Wallet */}
             {showSecondaryFields && secondaryFields.length > 0 && (
