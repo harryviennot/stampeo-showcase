@@ -55,6 +55,9 @@ export async function SectorCards() {
             // Show only first 2 on mobile to reduce scroll length
             const mobileHidden = index >= 2 ? "hidden md:block" : "";
             const theme = sectorThemes[index];
+            // Legacy control page ships 4 sample themes; skip any extra sectors
+            // added for the variant (e.g. the 5th points persona).
+            if (!theme) return null;
             return (
               <ScrollReveal key={index} delay={index * 100} className={mobileHidden}>
                 <div className="bg-white blog-card-3d rounded-2xl p-6 flex flex-col gap-5">

@@ -1,0 +1,153 @@
+{
+  "loyalty": {
+    "hero": {
+      "badge": "Programmes de fidélité",
+      "title": "Le bon programme de fidélité <accent>pour votre façon de vendre.</accent>",
+      "subtitle": "Stampeo propose deux types de programme sur une seule carte : les tampons pour les visites, les points pour ce que vos clients dépensent. Voici comment chacun fonctionne, et comment choisir."
+    },
+    "engines": {
+      "heading": "Deux façons de récompenser, une seule carte",
+      "subheading": "Même carte, même mise en place. La seule question : qu'est-ce que vous comptez ?",
+      "labelHow": "Comment ça marche",
+      "labelBestFor": "Idéal pour",
+      "stamps": {
+        "name": "Tampons",
+        "tagline": "Une carte à tamponner, en version numérique.",
+        "how": "Chaque visite ajoute un tampon. La carte se remplit, la récompense tombe. Un geste au comptoir, aucun montant à saisir.",
+        "bestFor": "Idéal pour des achats répétés à prix fixe : cafés, viennoiseries, brushings, lavages auto."
+      },
+      "points": {
+        "name": "Points",
+        "tagline": "Un solde qui suit la dépense.",
+        "how": "Vos équipes saisissent le montant dépensé, et le client gagne des points en conséquence. Il les échange contre les récompenses que vous définissez, jusqu'à douze.",
+        "bestFor": "Idéal quand le panier varie : restaurants, boutiques, épiceries, commerces spécialisés."
+      }
+    },
+    "comparison": {
+      "title": "Tampons et points, côte à côte",
+      "subtitle": "Aucun n'est meilleur. Ils conviennent simplement à des commerces différents.",
+      "stampsLabel": "Tampons",
+      "pointsLabel": "Points",
+      "rows": [
+        { "criteria": "Le mieux quand", "stamps": "Chaque achat coûte à peu près pareil", "points": "L'addition change d'une visite à l'autre" },
+        { "criteria": "Comment ça se remplit", "stamps": "Un tampon par visite, un geste", "points": "Les points suivent le montant dépensé" },
+        { "criteria": "La récompense", "stamps": "Un cadeau après N tampons", "points": "Un menu de récompenses, en points (jusqu'à 12)" },
+        { "criteria": "L'impression", "stamps": "Un cadeau qu'on vise", "points": "La liberté de choisir" },
+        { "criteria": "Sur la carte", "stamps": "Une grille de tampons", "points": "Un solde et une progression" },
+        { "criteria": "Disponible sur", "stamps": "Tous les plans", "points": "Tous les plans" }
+      ]
+    },
+    "picker": {
+      "title": "Lequel est fait pour vous ?",
+      "subtitle": "Trois questions rapides. Aucun e-mail demandé.",
+      "progress": "Question {current} sur {total}",
+      "questions": [
+        {
+          "question": "Vos prix changent-ils beaucoup d'un achat à l'autre ?",
+          "options": [
+            { "label": "Non, la plupart des achats coûtent à peu près pareil" },
+            { "label": "Oui, le panier varie beaucoup" }
+          ]
+        },
+        {
+          "question": "Comment reviennent vos meilleurs clients ?",
+          "options": [
+            { "label": "Souvent, pour de petits achats" },
+            { "label": "De temps en temps, pour des montants plus élevés" }
+          ]
+        },
+        {
+          "question": "Quelle récompense plairait le plus à vos clients ?",
+          "options": [
+            { "label": "Un cadeau après quelques visites" },
+            { "label": "Leur choix parmi plusieurs récompenses" },
+            { "label": "Je ne sais pas encore" }
+          ]
+        }
+      ],
+      "resultHeading": "Notre suggestion",
+      "results": {
+        "stamps": {
+          "title": "Optez pour les tampons",
+          "body": "Vos visites sont régulières et à prix proche : la carte à tamponner est le choix le plus clair et le plus motivant."
+        },
+        "points": {
+          "title": "Optez pour les points",
+          "body": "Vos paniers varient : récompenser ce que le client dépense vraiment est plus juste et fait revenir les plus gros paniers."
+        },
+        "either": {
+          "title": "Les deux peuvent convenir",
+          "body": "Vous êtes pile entre les deux. Les tampons sont le plus simple pour démarrer ; les points se mettent en place tout aussi vite si vous préférez récompenser la dépense."
+        }
+      },
+      "restart": "Recommencer",
+      "cta": "Créer ma carte"
+    },
+    "gallery": {
+      "title": "Choisissez un style, à vos couleurs",
+      "subtitle": "Votre logo, vos couleurs. Grille de tampons ou bandeau de points, le tout dans Apple Wallet et Google Wallet.",
+      "designerCta": "Essayer l'éditeur de carte",
+      "designerHref": "/features/design-de-carte",
+      "prev": "Style précédent",
+      "next": "Style suivant",
+      "stamps": [
+        "Grille classique avec votre propre icône",
+        "Clair ou foncé, la couleur que vous voulez",
+        "Six, huit, dix tampons, à vous de voir"
+      ],
+      "points": [
+        "Un grand solde bien lisible",
+        "Un anneau qui se remplit vers la prochaine récompense",
+        "Une ligne avec un repère par récompense"
+      ]
+    },
+    "businessMap": {
+      "title": "Ce que choisissent la plupart des commerces",
+      "subtitle": "Un point de départ, pas une règle.",
+      "stampsLabel": "Tampons",
+      "pointsLabel": "Points",
+      "items": {
+        "cafe": { "label": "Cafés", "rationale": "La même boisson, presque tous les jours" },
+        "bakery": { "label": "Boulangeries", "rationale": "Des achats petits et fréquents" },
+        "salon": { "label": "Coiffure & beauté", "rationale": "Récompense à la visite" },
+        "carwash": { "label": "Lavages auto", "rationale": "Un service, répété" },
+        "restaurant": { "label": "Restaurants", "rationale": "L'addition change à chaque fois" },
+        "retail": { "label": "Boutiques", "rationale": "Des paniers très variables" },
+        "grocery": { "label": "Épiceries & primeurs", "rationale": "Récompense la dépense totale" },
+        "wine": { "label": "Cavistes & spécialistes", "rationale": "Des tickets élevés et irréguliers" }
+      }
+    },
+    "faq": {
+      "title": "Tampons et points, vos questions",
+      "subtitle": "Ce qu'on nous demande le plus avant de choisir un programme.",
+      "items": [
+        {
+          "question": "Quelle différence entre tampons et points ?",
+          "answer": "Les tampons comptent les visites : un geste ajoute un tampon, et une carte pleine donne une récompense. Les points comptent la dépense : vos équipes saisissent le montant, le client gagne des points, et il les échange contre les récompenses que vous fixez. Les tampons conviennent aux visites répétées à prix fixe ; les points, aux paniers qui varient."
+        },
+        {
+          "question": "Lequel choisir ?",
+          "answer": "Si vos prix se ressemblent et que les clients reviennent souvent, les tampons sont le plus clair. Si le panier varie ou que les tickets sont élevés, les points récompensent ce que le client dépense vraiment. Un doute ? Essayez le sélecteur ci-dessus."
+        },
+        {
+          "question": "Les points coûtent-ils plus cher que les tampons ?",
+          "answer": "Non. Les deux programmes sont sur tous les plans, y compris Starter. La carte, les mises à jour et le menu de récompenses coûtent la même chose."
+        },
+        {
+          "question": "Comment les clients gagnent-ils des points ?",
+          "answer": "Vos équipes saisissent le montant dépensé au moment du scan, et le client gagne des points en conséquence, par exemple un point par euro. Vous fixez les récompenses et leur prix en points, jusqu'à douze."
+        },
+        {
+          "question": "Mes clients doivent-ils installer une application ?",
+          "answer": "Non. La carte vit dans Apple Wallet ou Google Wallet, déjà présents sur leur téléphone. Ils scannent votre QR code une fois et la carte s'ajoute, tampons ou points."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Prêt à récompenser vos habitués ?",
+      "subtitle": "Créez votre carte en quelques minutes, tampons ou points. Un mois gratuit, sans engagement.",
+      "button": "Créer ma carte"
+    },
+    "switchReassurance": "Un doute ? Commencez par l'un, changez quand vous voulez : vos clients gardent la même carte."
+  }
+}

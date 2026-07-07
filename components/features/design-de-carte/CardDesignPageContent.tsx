@@ -92,7 +92,8 @@ export function CardDesignPageContent() {
 
       {/* Creation methods hidden for now — component kept for later re-enable. */}
 
-      {/* Annotated Card Anatomy */}
+      {/* Annotated Card Anatomy (stamps/points toggle; points styles live in
+          the playground above) */}
       <AnnotatedWalletCard />
 
       {/* CTA */}

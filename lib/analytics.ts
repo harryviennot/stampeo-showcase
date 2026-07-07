@@ -8,7 +8,8 @@ export type CTALocation =
   | "pricing_pro"
   | "faq"
   | "final_cta"
-  | "final_cta_demo";
+  | "final_cta_demo"
+  | "loyalty_picker";
 
 type BaseProps = {
   locale: string;

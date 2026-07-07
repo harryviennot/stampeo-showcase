@@ -39,7 +39,17 @@
       "custom": {
         "playground": {
           "sectionTitle": "Composez votre carte",
-          "sectionSubtitle": "Couleurs, icône de tampon, prénom du client : modifiez l'aperçu et voyez le résultat tout de suite.",
+          "sectionSubtitle": "Tampons ou points, couleurs, icônes, prénom du client : modifiez l'aperçu et voyez le résultat tout de suite.",
+          "programLabel": "Type de programme",
+          "stripLabel": "Style des points",
+          "stripStyles": {
+            "big_point": "Grand solde",
+            "circle_progress": "Anneau",
+            "progress_icons": "Parcours"
+          },
+          "balanceLabel": "Solde de points",
+          "pointsRewardValue": "Dessert offert",
+          "shuffle": "Surprenez-moi",
           "themeLabel": "Thème",
           "iconLabel": "Icône",
           "nameToggle": "Prénom",
@@ -175,6 +185,27 @@
             "orgName": "Mon Café Parisien",
             "rewardLabel": "Récompense",
             "rewardValue": "Café offert"
+          },
+          "pointsLabels": [
+            "Logo",
+            "Solde de points",
+            "Bande de points",
+            "Champs de votre choix",
+            "Récompense",
+            "QR code client"
+          ],
+          "pointsMobileLabels": [
+            "Logo",
+            "Solde",
+            "Points",
+            "Champs",
+            "Récompense",
+            "QR code"
+          ],
+          "pointsCard": {
+            "orgName": "Bistro du Marché",
+            "rewardLabel": "Récompense",
+            "rewardValue": "Dessert offert"
           }
         }
       }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
 import { ChevronDownIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
@@ -269,7 +270,9 @@ export function Header() {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const navItems = [
+    { label: t("common.nav.loyaltyPrograms"), href: loyaltySlug },
     { label: t("common.nav.foundingProgram"), href: locale === "en" ? "/founding-partner" : "/programme-fondateur" },
     { label: t("common.nav.pricing"), href: "/pricing" },
     ...(locale === "fr" || locale === "en" || locale === "es"
@@ -314,6 +317,7 @@ export function Header() {
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: loyaltyPath(locale), label: "Loyalty programs" },
     { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
     { href: `${seoPrefix}/blog`, label: "Blog" },
     { href: `${seoPrefix}/contact`, label: "Contact" },

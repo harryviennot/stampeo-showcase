@@ -1,13 +1,14 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { Segmented } from "@/components/ui/Segmented";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
-import type { CardDesign } from "@/lib/types/design";
+import type { CardDesign, RewardTier } from "@/lib/types/design";
 
 interface Annotation {
   label: string;
@@ -172,29 +173,59 @@ function MobileLegend({ labels }: { labels: string[] }) {
   );
 }
 
+// Ladder for the points anatomy card: balance 120 puts the next objective at
+// 150 with a further tier after it, so the strip shows every element at once.
+const ANATOMY_POINTS_REWARDS: RewardTier[] = [
+  { id: "r1", name: "a", threshold: 60 },
+  { id: "r2", name: "b", threshold: 150 },
+  { id: "r3", name: "c", threshold: 300 },
+];
+
 export function AnnotatedWalletCard() {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
-  const labels = t.raw("labels") as string[];
-  const mobileLabels = t.raw("mobileLabels") as string[];
+  const tc = useTranslations("common");
+  const [mode, setMode] = useState<"stamps" | "points">("stamps");
+  const isPoints = mode === "points";
 
-  const cardDesign: Partial<CardDesign> = {
-    organization_name: t("card.orgName"),
-    background_color: "#2C1810",
-    stamp_filled_color: "#D4A574",
-    icon_color: "#ffffff",
-    stamp_icon: "coffee",
-    reward_icon: "gift",
-    total_stamps: 8,
-    secondary_fields: [
-      { key: "reward", label: t("card.rewardLabel"), value: t("card.rewardValue") },
-      { key: "points", label: "Points", value: "5/8" },
-    ],
-  };
+  const labels = t.raw(isPoints ? "pointsLabels" : "labels") as string[];
+  const mobileLabels = t.raw(
+    isPoints ? "pointsMobileLabels" : "mobileLabels"
+  ) as string[];
+
+  const cardDesign: Partial<CardDesign> = isPoints
+    ? {
+        organization_name: t("pointsCard.orgName"),
+        card_type: "points",
+        points_strip_style: "big_point",
+        background_color: "#2C1810",
+        progress_accent_color: "#D4A574",
+        icon_color: "#ffffff",
+        secondary_fields: [
+          {
+            key: "reward",
+            label: t("pointsCard.rewardLabel"),
+            value: t("pointsCard.rewardValue"),
+          },
+        ],
+      }
+    : {
+        organization_name: t("card.orgName"),
+        background_color: "#2C1810",
+        stamp_filled_color: "#D4A574",
+        icon_color: "#ffffff",
+        stamp_icon: "coffee",
+        reward_icon: "gift",
+        total_stamps: 8,
+        secondary_fields: [
+          { key: "reward", label: t("card.rewardLabel"), value: t("card.rewardValue") },
+          { key: "points", label: "Points", value: "5/8" },
+        ],
+      };
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
       <Container>
-        <ScrollReveal className="max-w-3xl mx-auto text-center mb-12">
+        <ScrollReveal className="max-w-3xl mx-auto text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
             {t("title")}
           </h2>
@@ -204,26 +235,44 @@ export function AnnotatedWalletCard() {
         </ScrollReveal>
 
         <ScrollReveal className="max-w-3xl mx-auto">
-          <div className="relative">
-            {/* The card */}
-            <div className="relative z-10 mx-auto max-w-[300px]">
-              <MobileAnnotations />
-              <ScaledCardWrapper baseWidth={300}>
-                <WalletCard
-                  design={cardDesign}
-                  stamps={5}
-                  showQR={true}
-                  interactive3D={true}
-                />
-              </ScaledCardWrapper>
-            </div>
-
-            {/* Desktop floating labels */}
-            <DesktopAnnotations labels={labels} />
+          {/* Same anatomy, both programs: the toggle swaps the card and its labels */}
+          <div className="max-w-[260px] mx-auto mb-10">
+            <Segmented
+              ariaLabel={t("title")}
+              options={[
+                { value: "stamps", label: tc("stamps") },
+                { value: "points", label: tc("points") },
+              ]}
+              value={mode}
+              onChange={setMode}
+            />
           </div>
 
-          {/* Mobile legend */}
-          <MobileLegend labels={mobileLabels} />
+          {/* Keyed on mode so the label fly-ins replay when the card swaps */}
+          <div key={mode}>
+            <div className="relative">
+              {/* The card */}
+              <div className="relative z-10 mx-auto max-w-[300px]">
+                <MobileAnnotations />
+                <ScaledCardWrapper baseWidth={300}>
+                  <WalletCard
+                    design={cardDesign}
+                    stamps={isPoints ? undefined : 5}
+                    pointsBalance={isPoints ? 120 : undefined}
+                    pointsRewards={isPoints ? ANATOMY_POINTS_REWARDS : undefined}
+                    showQR={true}
+                    interactive3D={true}
+                  />
+                </ScaledCardWrapper>
+              </div>
+
+              {/* Desktop floating labels */}
+              <DesktopAnnotations labels={labels} />
+            </div>
+
+            {/* Mobile legend */}
+            <MobileLegend labels={mobileLabels} />
+          </div>
         </ScrollReveal>
       </Container>
     </section>

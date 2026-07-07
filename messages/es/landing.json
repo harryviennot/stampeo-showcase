@@ -17,6 +17,11 @@
         "demoCallout": "¡Pruébalo! Escanea con tu teléfono",
         "mobileAddWallet": "Pruébalo, añádela a tu Wallet",
         "mobileHint": "La tarjeta se añadirá a la cartera de tu teléfono"
+      },
+      "demoToggleLabel": "Tipo de tarjeta",
+      "pointsDemo": {
+        "caption": "Las tarjetas de puntos funcionan igual. Sin aplicación que descargar.",
+        "rewardValue": "Postre gratis con 120 pts"
       }
     },
     "problem": {
@@ -300,21 +305,24 @@
     },
     "sectorCards": {
       "title": "Stampeo se adapta <mbr></mbr><br></br>a tu comercio",
-      "subtitle": "Vendas cafés, barras de pan o cortes de pelo, <br></br>el principio es el mismo: recompensa la fidelidad.",
+      "subtitle": "Las cafeterías y peluquerías recompensan las visitas con sellos. <br></br>Los restaurantes y las tiendas recompensan el gasto con puntos.",
+      "carousel": { "prev": "Sector anterior", "next": "Sector siguiente" },
       "sectors": [
         {
           "name": "Cafetería",
           "quote": "Marc pide su café solo cada mañana desde hace dos años. Con Stampeo gana su 10º café automáticamente. Y tú sabes que es tu mejor cliente.",
           "reward": "10 cafés comprados = 1 gratis",
           "advantage": "El escaneo dura 1 segundo, sin atascar el mostrador",
+          "field": { "label": "Miembro", "value": "Marc" },
           "link": "/blog/tarjeta-fidelidad-cafeteria",
           "linkLabel": "Leer la guía para cafeterías"
         },
         {
           "name": "Restaurante",
-          "quote": "Thomas come en tu local dos veces por semana. Le encantaría tener recompensas, pero no va a descargar una aplicación para eso. Con la tarjeta en la cartera, es sencillo.",
-          "reward": "10 comidas = 1 postre gratis",
-          "advantage": "Difusiones promocionales para llenar los días flojos",
+          "quote": "Thomas come en tu local dos veces por semana, pero su cuenta cambia cada vez. Los puntos recompensan lo que gasta de verdad, no solo que haya venido.",
+          "reward": "1 € gastado = 1 punto, postre gratis a 150 pts",
+          "advantage": "Una cena de 40 € suma más que un café de 6 €",
+          "field": { "label": "Próxima recompensa", "value": "Postre gratis" },
           "link": "/blog/tarjeta-fidelidad-restaurante",
           "linkLabel": "Leer la guía para restaurantes"
         },
@@ -323,6 +331,7 @@
           "quote": "Claire viene cada mes para su color. Con Stampeo es automático y Claire recibe un tratamiento gratis a las 6 visitas.",
           "reward": "6 servicios = 1 tratamiento gratis",
           "advantage": "Aviso cuando pasa cerca de la peluquería",
+          "field": { "label": "Recompensas", "value": "2 listas" },
           "link": "/blog/programa-fidelidad-peluqueria",
           "linkLabel": "Leer la guía para peluquerías"
         },
@@ -331,8 +340,18 @@
           "quote": "Sophie pasa a por su barra de pan cada mañana. ¿Su tarjeta de cartón? Perdida en el bolso desde la semana pasada. Con la cartera, siempre la tiene.",
           "reward": "8 compras = 1 bollo gratis",
           "advantage": "Sin tarjeta que sacar, basta con el teléfono",
+          "field": { "label": "Recompensa", "value": "1 bollo gratis" },
           "link": "/blog/tarjeta-fidelidad-panaderia",
           "linkLabel": "Leer la guía para panaderías"
+        },
+        {
+          "name": "Tienda",
+          "quote": "Léa compra en tu tienda cada temporada, y su cesta nunca es la misma. Acumula puntos por lo que gasta y vuelve para canjearlos.",
+          "reward": "1 € gastado = 1 punto, 10 € de regalo a 200 pts",
+          "advantage": "Ideal cuando cada cesta tiene un importe distinto",
+          "field": { "label": "Miembro", "value": "Léa" },
+          "link": "/programa-de-fidelizacion",
+          "linkLabel": "Comparar sellos y puntos"
         }
       ]
     },
@@ -393,17 +412,17 @@
   },
   "variant": {
     "hero": {
-      "title": "Lanza tu programa de fidelidad <accent>en 3 minutos.</accent>",
-      "subtitle": "Una tarjeta de fidelidad que tus clientes añaden a Apple Wallet o Google Wallet con un escaneo. Sin aplicación que descargar.",
+      "title": "La tarjeta de fidelidad que <accent>encaja con tu comercio.</accent>",
+      "subtitle": "Sellos para las visitas, puntos para lo que gastan. Tu tarjeta vive en Apple Wallet y Google Wallet, lista en unos minutos. Sin aplicación que descargar.",
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "1 mes gratis · Sin compromiso",
       "momentum": "<accent>+36</accent> comercios se han unido esta semana"
     },
     "trustStrip": {
+      "flag": "🇪🇺",
       "madeInFrance": "Hecho en Europa",
-      "rgpd": "RGPD · Datos alojados en Europa",
-      "phone": "06 49 37 04 70"
+      "rgpd": "RGPD · Datos alojados en Europa"
     },
     "differentiator": {
       "title": "Por qué los comercios eligen Stampeo.",
@@ -455,7 +474,7 @@
       ]
     },
     "benefits": {
-      "title": "Tres motivos para pasar a la cartera.",
+      "title": "Tres motivos para pasar a lo digital.",
       "subtitle": "Ni una aplicación más. Ni una herramienta más. Solo la tarjeta de fidelidad, donde tus clientes ya miran.",
       "items": [
         {
@@ -525,7 +544,7 @@
         }
       ],
       "stillQuestions": "¿Tu pregunta no está aquí?",
-      "stillQuestionsDesc": "Te respondemos en menos de 24 h, o por teléfono en el 06 49 37 04 70.",
+      "stillQuestionsDesc": "Te respondemos en menos de 24 h.",
       "contactSupport": "Contáctanos"
     },
     "finalCta": {
@@ -533,7 +552,7 @@
       "subtitle": "3 minutos para crear tu tarjeta. 1 mes para probarla. 0 € para empezar.",
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
-      "reassurance": "1 mes gratis · Sin compromiso · ¿Una pregunta? 06 49 37 04 70"
+      "reassurance": "1 mes gratis · Sin compromiso"
     }
   }
 }

@@ -17,6 +17,11 @@
         "demoCallout": "Try it out! Scan with your phone",
         "mobileAddWallet": "Try it — add to your Wallet",
         "mobileHint": "The pass will be added to your phone wallet"
+      },
+      "demoToggleLabel": "Card type",
+      "pointsDemo": {
+        "caption": "Points cards work the same way. No app to download.",
+        "rewardValue": "Free dessert at 120 pts"
       }
     },
     "problem": {
@@ -300,39 +305,53 @@
     },
     "sectorCards": {
       "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
-      "subtitle": "Whether you sell coffees, baguettes, or haircuts, <br></br>the principle is the same: reward loyalty.",
+      "subtitle": "Cafés and salons reward visits with stamps. Restaurants and shops reward spending with points. <br></br>One card, one wallet.",
+      "carousel": { "prev": "Previous sector", "next": "Next sector" },
       "sectors": [
         {
           "name": "Café",
-          "quote": "Marc orders his long black every morning. With Stampeo, he earns his 10th coffee automatically — and you know he's your best customer.",
+          "quote": "Marc orders his long black every morning. With Stampeo, he earns his 10th coffee automatically, and you know he's your best customer.",
           "reward": "10 coffees bought = 1 free",
           "advantage": "Scanning takes 1 second, no slowdown at the counter",
+          "field": { "label": "Member", "value": "Marc" },
           "link": "/blog/digital-loyalty-card-small-business",
           "linkLabel": "Read the café guide"
         },
         {
-          "name": "Bakery",
-          "quote": "Sophie picks up her baguette every morning. Her paper card? Lost in her bag since last week. With the wallet, she always has it.",
-          "reward": "8 purchases = 1 free pastry",
-          "advantage": "No card to pull out, the phone is enough",
-          "link": "/blog/digital-stamp-card",
-          "linkLabel": "Read the bakery guide"
+          "name": "Restaurant",
+          "quote": "Thomas has lunch at your place twice a week, but his bill changes every time. Points reward what he actually spends, not just that he showed up.",
+          "reward": "€1 spent = 1 point, free dessert at 150 pts",
+          "advantage": "A €40 dinner earns more than a €6 coffee",
+          "field": { "label": "Next reward", "value": "Free dessert" },
+          "link": "/blog/paper-vs-digital-loyalty-card",
+          "linkLabel": "Read the restaurant guide"
         },
         {
           "name": "Hair salon",
           "quote": "Claire comes every month for her color. With Stampeo, it's automatic and Claire gets a free treatment after 6 visits.",
           "reward": "6 appointments = 1 free treatment",
           "advantage": "Notification when she passes near the salon",
+          "field": { "label": "Rewards", "value": "2 ready" },
           "link": "/blog/loyalty-card-without-app",
           "linkLabel": "Read the salon guide"
         },
         {
-          "name": "Restaurant",
-          "quote": "Thomas has lunch at your place twice a week. He'd love to be rewarded, but he won't download an app for it. With the wallet card, it's simple.",
-          "reward": "€1 spent = 1 point, free dessert at 100 points",
-          "advantage": "Promotional campaigns to fill quiet days",
-          "link": "/blog/paper-vs-digital-loyalty-card",
-          "linkLabel": "Read the restaurant guide"
+          "name": "Bakery",
+          "quote": "Sophie picks up her baguette every morning. Her paper card? Lost in her bag since last week. With the wallet, she always has it.",
+          "reward": "8 purchases = 1 free pastry",
+          "advantage": "No card to pull out, the phone is enough",
+          "field": { "label": "Reward", "value": "Free pastry" },
+          "link": "/blog/digital-stamp-card",
+          "linkLabel": "Read the bakery guide"
+        },
+        {
+          "name": "Boutique",
+          "quote": "Léa shops with you each season and her basket is never the same. She collects points on what she spends, then comes back to redeem them.",
+          "reward": "€1 spent = 1 point, €10 off at 200 pts",
+          "advantage": "Perfect when every basket is a different size",
+          "field": { "label": "Member", "value": "Léa" },
+          "link": "/loyalty-programs",
+          "linkLabel": "Compare stamps and points"
         }
       ]
     },
@@ -389,6 +408,151 @@
       "roiLabel": "Pays for itself",
       "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program.",
       "sources": "Sources: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
+    }
+  },
+  "variant": {
+    "hero": {
+      "title": "The loyalty card that <accent>fits how you sell.</accent>",
+      "subtitle": "Stamps for repeat visits, points for what they spend. Your card lives in Apple Wallet and Google Wallet, ready in minutes. No app to download.",
+      "primaryCta": "Create my card",
+      "secondaryCta": "Book a demo",
+      "reassurance": "1 month free · No commitment",
+      "momentum": "<accent>+36</accent> businesses joined us this week"
+    },
+    "trustStrip": {
+      "flag": "🇪🇺",
+      "madeInFrance": "Made in Europe",
+      "rgpd": "GDPR compliant · Data hosted in Europe"
+    },
+    "differentiator": {
+      "title": "Why businesses choose Stampeo.",
+      "subtitle": "Four fewer headaches than the other loyalty tools.",
+      "items": [
+        {
+          "title": "No app for your customers",
+          "description": "Apple Wallet and Google Wallet are already on their phone. One scan and their card is added. Nothing to install, no account to create."
+        },
+        {
+          "title": "No new point of sale",
+          "description": "You add stamps from the free Stampeo app, or straight from your web browser. No integration with your till, no hardware to buy."
+        },
+        {
+          "title": "No setup fee",
+          "description": "No onboarding cost. You build your card yourself, in a few minutes, from your dashboard."
+        },
+        {
+          "title": "No commitment",
+          "description": "One month free, no strings attached. Leave whenever you like. Your data stays yours, exportable in one click."
+        }
+      ]
+    },
+    "testimonials": {
+      "title": "They launched their loyalty with Stampeo.",
+      "subtitle": "Independent businesses bringing their regulars back, without overcomplicating things.",
+      "items": [
+        {
+          "quote": "I was skeptical at first. My clients are between 35 and 75, I figured they wouldn't bother with this. Turns out they're the ones asking me how many stamps they have left. And I finally see who my real regulars are.",
+          "name": "Aurélie L",
+          "role": "Baker",
+          "business": "L'Épi Doré",
+          "city": "Nantes"
+        },
+        {
+          "quote": "I'd already tried two loyalty tools, each time I had to change my till or sit through an hour-long sales demo. With Stampeo I had my card the same evening, and the next day my lunch crowd was adding it to their phone at the counter.",
+          "name": "Karim B",
+          "role": "Restaurant owner",
+          "business": "Le Bistrot du 11",
+          "city": "Paris"
+        },
+        {
+          "quote": "What sold me was being able to tell all my clients about an open slot without paying €0.15 per text. Last week I announced a Thursday cancellation and filled the slot in two hours.",
+          "name": "Margaux P",
+          "role": "Hairdresser",
+          "business": "Studio Mireille",
+          "city": "Bordeaux"
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Three reasons to go digital.",
+      "subtitle": "Not one more app. Not one more tool. Just the loyalty card, right where your customers already look.",
+      "items": [
+        {
+          "title": "A card that never gets lost",
+          "description": "No more paper punch cards, no more stamps to stick on. The card lives in Apple Wallet or Google Wallet, where your customers find it on every visit."
+        },
+        {
+          "title": "Customers you actually know",
+          "description": "Frequency, last visit, progress toward the reward. Your dashboard tells you who comes back often, and who is starting to drift away."
+        },
+        {
+          "title": "Send your promos straight to their phone",
+          "description": "Announce a promotion, a new menu, a quiet hour to fill. Your messages arrive like a text, without the text-message bill, and get read 5 to 10× more than email."
+        }
+      ]
+    },
+    "howItWorks": {
+      "badge": "In 3 steps",
+      "title": "Ready in 3 minutes.",
+      "subtitle": "From sign-up to first stamp, with no demo and no till integration.",
+      "steps": [
+        {
+          "title": "Build your card",
+          "description": "Logo, colors, rewards. From your dashboard, in 3 minutes."
+        },
+        {
+          "title": "Your customers scan it",
+          "description": "A QR code on the counter. Their card is added to Apple Wallet or Google Wallet in one move."
+        },
+        {
+          "title": "They come back, you see it all",
+          "description": "Every stamp, every visit, every customer. Right in your space, in real time."
+        }
+      ]
+    },
+    "faq": {
+      "title": "The questions we get asked.",
+      "subtitle": "Straight answers, no jargon.",
+      "items": [
+        {
+          "question": "How much does it cost?",
+          "answer": "The Starter plan is €{starterPrice}/month (founding rate: €{starterFoundingPrice}/month for life). No setup fee, no commitment. You start with 1 month free. We ask for your card to begin the trial, with no charge before the month is up."
+        },
+        {
+          "question": "Do I need to change my till?",
+          "answer": "No. Stampeo works with any till, or with no till at all. You scan from our free app or straight from a browser. Zero integration required."
+        },
+        {
+          "question": "Do my customers have to download anything?",
+          "answer": "No. Apple Wallet and Google Wallet are already installed on every recent smartphone. Your customers scan your QR code and their card is added in one move. That's it."
+        },
+        {
+          "question": "What happens after the first month?",
+          "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the 30 days are up. If you continue as a founding partner, you lock in your rate for life."
+        },
+        {
+          "question": "Is my data safe?",
+          "answer": "Yes. Stampeo is GDPR compliant, our servers are in Europe, and we never resell your customer data. It's yours, and you export it whenever you want."
+        },
+        {
+          "question": "How many customers can I enroll?",
+          "answer": "The Starter, Growth and Pro plans differ by features (notifications, broadcasts, advanced analytics), not by volume. See the pricing page for the details of each plan."
+        },
+        {
+          "question": "Can I change my card later?",
+          "answer": "Yes. You can change the logo, colors, number of stamps and rewards at any time from your dashboard. Cards already installed on your customers' phones update automatically, with nothing to re-download."
+        }
+      ],
+      "stillQuestions": "A question that isn't here?",
+      "stillQuestionsDesc": "We reply within 24 hours.",
+      "contactSupport": "Contact us"
+    },
+    "finalCta": {
+      "title": "Launch your loyalty <accent>this week.</accent>",
+      "subtitle": "3 minutes to build your card. 1 month to test it. €0 to start.",
+      "primaryCta": "Create my card",
+      "secondaryCta": "Book a demo",
+      "reassurance": "1 month free · No commitment"
     }
   }
 }

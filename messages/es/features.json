@@ -39,7 +39,17 @@
       "custom": {
         "playground": {
           "sectionTitle": "Monta tu tarjeta",
-          "sectionSubtitle": "Colores, icono de sello, nombre del cliente: cambia la vista previa y ve el resultado al momento.",
+          "sectionSubtitle": "Sellos o puntos, colores, iconos, nombre del cliente: cambia la vista previa y ve el resultado al momento.",
+          "programLabel": "Tipo de programa",
+          "stripLabel": "Estilo de puntos",
+          "stripStyles": {
+            "big_point": "Saldo grande",
+            "circle_progress": "Anillo",
+            "progress_icons": "Recorrido"
+          },
+          "balanceLabel": "Saldo de puntos",
+          "pointsRewardValue": "Postre gratis",
+          "shuffle": "Sorpréndeme",
           "themeLabel": "Tema",
           "iconLabel": "Icono",
           "nameToggle": "Nombre",
@@ -175,6 +185,27 @@
             "orgName": "Mi Cafetería de Madrid",
             "rewardLabel": "Recompensa",
             "rewardValue": "Café gratis"
+          },
+          "pointsLabels": [
+            "Logo",
+            "Saldo de puntos",
+            "Banda de puntos",
+            "Campos a tu elección",
+            "Recompensa",
+            "Código QR del cliente"
+          ],
+          "pointsMobileLabels": [
+            "Logo",
+            "Saldo",
+            "Puntos",
+            "Campos",
+            "Recompensa",
+            "Código QR"
+          ],
+          "pointsCard": {
+            "orgName": "Bistró del Mercado",
+            "rewardLabel": "Recompensa",
+            "rewardValue": "Postre gratis"
           }
         }
       }

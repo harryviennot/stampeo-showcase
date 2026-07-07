@@ -15,7 +15,7 @@ export async function VariantHero() {
         <div className="w-full max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-16 lg:gap-20 items-center">
           <ScrollReveal className="flex flex-col gap-8">
             <div>
-              {/* Manual weekly update — bump the number in messages/fr/landing.json → variant.hero.momentum each Monday. */}
+              {/* Manual weekly update — bump the number in messages/{fr,en,es}/landing.json → variant.hero.momentum each Monday (keep the three locales in sync). */}
               <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-6">
                 {t.rich("momentum", {
                   accent: (chunks) => <span className="font-bold">{chunks}</span>,

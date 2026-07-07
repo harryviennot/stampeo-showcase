@@ -1,21 +1,19 @@
 "use client";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
 
 /**
- * Dev-only floating toggle between the live FR landing (variant) and the
+ * Dev-only floating toggle between the live landing (variant) and the
  * legacy control via the `?variant=control` escape hatch.
- * Rendered only when NODE_ENV=development AND locale=fr.
+ * Rendered only when NODE_ENV=development (all locales, since the variant is
+ * now the default homepage for fr/en/es).
  */
 export function VariantDevToggle() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const locale = useLocale();
 
   if (process.env.NODE_ENV !== "development") return null;
-  if (locale !== "fr") return null;
 
   const isControl = searchParams.get("variant") === "control";
 

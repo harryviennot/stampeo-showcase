@@ -7,7 +7,7 @@
       },
       "problem": {
         "title": "Creating a pro card shouldn't be a project",
-        "description": "Ever tried to create a visual on Canva? Or worse, configure software with 47 customization options? You have a business to run — not a design agency. The result: either you spend 2 hours cobbling something mediocre together, or you don't do it at all."
+        "description": "Ever tried to create a visual on Canva? Or worse, configure software with 47 customization options? You have a business to run, not a design agency. The result: either you spend 2 hours cobbling something mediocre together, or you don't do it at all."
       },
       "sections": [
         {
@@ -39,7 +39,17 @@
       "custom": {
         "playground": {
           "sectionTitle": "Design it your way",
-          "sectionSubtitle": "Colors, stamp icon, customer's name: change the preview and see the result right away.",
+          "sectionSubtitle": "Stamps or points, colors, icons, the customer's name: change the preview and see the result right away.",
+          "programLabel": "Program type",
+          "stripLabel": "Points style",
+          "stripStyles": {
+            "big_point": "Big balance",
+            "circle_progress": "Ring",
+            "progress_icons": "Track"
+          },
+          "balanceLabel": "Points balance",
+          "pointsRewardValue": "Free dessert",
+          "shuffle": "Surprise me",
           "themeLabel": "Theme",
           "iconLabel": "Icon",
           "nameToggle": "First name",
@@ -175,6 +185,27 @@
             "orgName": "My Parisian Café",
             "rewardLabel": "Reward",
             "rewardValue": "Free coffee"
+          },
+          "pointsLabels": [
+            "Logo",
+            "Points balance",
+            "Points strip",
+            "Custom fields",
+            "Reward",
+            "Customer QR code"
+          ],
+          "pointsMobileLabels": [
+            "Logo",
+            "Balance",
+            "Points",
+            "Fields",
+            "Reward",
+            "QR code"
+          ],
+          "pointsCard": {
+            "orgName": "The Corner Bistro",
+            "rewardLabel": "Reward",
+            "rewardValue": "Free dessert"
           }
         }
       }

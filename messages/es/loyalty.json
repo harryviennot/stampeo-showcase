@@ -1,0 +1,153 @@
+{
+  "loyalty": {
+    "hero": {
+      "badge": "Programas de fidelidad",
+      "title": "El programa de fidelidad ideal <accent>para tu forma de vender.</accent>",
+      "subtitle": "Stampeo ofrece dos tipos de programa en una sola tarjeta: sellos para las visitas, puntos para lo que gastan tus clientes. Así funciona cada uno, y cómo elegir."
+    },
+    "engines": {
+      "heading": "Dos formas de recompensar, una sola tarjeta",
+      "subheading": "La misma tarjeta, la misma puesta en marcha. La única duda: ¿qué cuentas?",
+      "labelHow": "Cómo funciona",
+      "labelBestFor": "Ideal para",
+      "stamps": {
+        "name": "Sellos",
+        "tagline": "Una tarjeta de sellos, en versión digital.",
+        "how": "Cada visita suma un sello. La tarjeta se llena y llega la recompensa. Un gesto en el mostrador, sin importe que teclear.",
+        "bestFor": "Ideal para compras repetidas a precio fijo: cafés, bollería, peinados, lavados de coche."
+      },
+      "points": {
+        "name": "Puntos",
+        "tagline": "Un saldo que sigue el gasto.",
+        "how": "Tu equipo introduce el importe gastado y el cliente gana puntos por ello. Los canjea por las recompensas que tú defines, hasta doce.",
+        "bestFor": "Ideal cuando la cesta varía: restaurantes, tiendas, ultramarinos, comercios especializados."
+      }
+    },
+    "comparison": {
+      "title": "Sellos y puntos, uno al lado del otro",
+      "subtitle": "Ninguno es mejor. Simplemente encajan con comercios distintos.",
+      "stampsLabel": "Sellos",
+      "pointsLabel": "Puntos",
+      "rows": [
+        { "criteria": "Mejor cuando", "stamps": "Cada compra cuesta más o menos igual", "points": "La cuenta cambia de una visita a otra" },
+        { "criteria": "Cómo se llena", "stamps": "Un sello por visita, un gesto", "points": "Los puntos siguen el importe gastado" },
+        { "criteria": "La recompensa", "stamps": "Un regalo tras N sellos", "points": "Un menú de recompensas, en puntos (hasta 12)" },
+        { "criteria": "Sensación", "stamps": "Un regalo que persigues", "points": "La libertad de elegir" },
+        { "criteria": "En la tarjeta", "stamps": "Una cuadrícula de sellos", "points": "Un saldo y su progreso" },
+        { "criteria": "Disponible en", "stamps": "Todos los planes", "points": "Todos los planes" }
+      ]
+    },
+    "picker": {
+      "title": "¿Cuál encaja contigo?",
+      "subtitle": "Tres preguntas rápidas. Sin pedir correo.",
+      "progress": "Pregunta {current} de {total}",
+      "questions": [
+        {
+          "question": "¿Tus precios cambian mucho de una compra a otra?",
+          "options": [
+            { "label": "No, casi todas las compras cuestan lo mismo" },
+            { "label": "Sí, la cesta varía bastante" }
+          ]
+        },
+        {
+          "question": "¿Cómo vuelven tus mejores clientes?",
+          "options": [
+            { "label": "A menudo, para compras pequeñas" },
+            { "label": "De vez en cuando, para importes mayores" }
+          ]
+        },
+        {
+          "question": "¿Qué recompensa gustaría más a tus clientes?",
+          "options": [
+            { "label": "Un regalo tras unas visitas" },
+            { "label": "Elegir entre varias recompensas" },
+            { "label": "Aún no lo sé" }
+          ]
+        }
+      ],
+      "resultHeading": "Nuestra sugerencia",
+      "results": {
+        "stamps": {
+          "title": "Elige los sellos",
+          "body": "Tus visitas son constantes y de precio parecido: la tarjeta de sellos es la opción más clara y motivadora."
+        },
+        "points": {
+          "title": "Elige los puntos",
+          "body": "Tus cestas varían: recompensar lo que el cliente gasta de verdad es más justo y hace volver a los que más gastan."
+        },
+        "either": {
+          "title": "Cualquiera puede servir",
+          "body": "Estás justo en medio. Los sellos son lo más sencillo para empezar; los puntos se configuran igual de rápido si prefieres recompensar el gasto."
+        }
+      },
+      "restart": "Empezar de nuevo",
+      "cta": "Crear mi tarjeta"
+    },
+    "gallery": {
+      "title": "Elige un estilo, a tu gusto",
+      "subtitle": "Tu logo, tus colores. Cuadrícula de sellos o banda de puntos, todo dentro de Apple Wallet y Google Wallet.",
+      "designerCta": "Probar el editor de tarjetas",
+      "designerHref": "/features/estilo-de-tarjeta",
+      "prev": "Estilo anterior",
+      "next": "Estilo siguiente",
+      "stamps": [
+        "Cuadrícula clásica con tu propio icono",
+        "Claro u oscuro, el color que quieras",
+        "Seis, ocho, diez sellos, tú decides"
+      ],
+      "points": [
+        "Un saldo grande y legible",
+        "Un anillo que se llena hacia la próxima recompensa",
+        "Una línea con una marca por recompensa"
+      ]
+    },
+    "businessMap": {
+      "title": "Lo que eligen la mayoría de comercios",
+      "subtitle": "Un punto de partida, no una regla.",
+      "stampsLabel": "Sellos",
+      "pointsLabel": "Puntos",
+      "items": {
+        "cafe": { "label": "Cafeterías", "rationale": "La misma bebida, casi cada día" },
+        "bakery": { "label": "Panaderías", "rationale": "Compras pequeñas y frecuentes" },
+        "salon": { "label": "Peluquería & belleza", "rationale": "Recompensa por visita" },
+        "carwash": { "label": "Lavado de coches", "rationale": "Un servicio, repetido" },
+        "restaurant": { "label": "Restaurantes", "rationale": "La cuenta cambia cada vez" },
+        "retail": { "label": "Tiendas", "rationale": "Cestas muy variables" },
+        "grocery": { "label": "Ultramarinos & fruterías", "rationale": "Recompensa el gasto total" },
+        "wine": { "label": "Vinotecas & especializados", "rationale": "Tickets altos e irregulares" }
+      }
+    },
+    "faq": {
+      "title": "Sellos y puntos, tus dudas",
+      "subtitle": "Lo que más nos preguntan antes de elegir un programa.",
+      "items": [
+        {
+          "question": "¿Qué diferencia hay entre sellos y puntos?",
+          "answer": "Los sellos cuentan visitas: un gesto añade un sello y una tarjeta llena da una recompensa. Los puntos cuentan el gasto: tu equipo introduce el importe, el cliente gana puntos y los canjea por las recompensas que tú fijas. Los sellos encajan con visitas repetidas a precio fijo; los puntos, con cestas que varían."
+        },
+        {
+          "question": "¿Cuál debería elegir?",
+          "answer": "Si tus precios se parecen y la gente vuelve a menudo, los sellos son lo más claro. Si la cesta varía o los tickets son altos, los puntos recompensan lo que el cliente gasta de verdad. ¿Dudas? Prueba el selector de arriba."
+        },
+        {
+          "question": "¿Los puntos cuestan más que los sellos?",
+          "answer": "No. Los dos programas están en todos los planes, incluido Starter. La tarjeta, las actualizaciones y el menú de recompensas cuestan lo mismo."
+        },
+        {
+          "question": "¿Cómo ganan puntos los clientes?",
+          "answer": "Tu equipo introduce el importe gastado al escanear y el cliente gana puntos por ello, por ejemplo un punto por euro. Tú fijas las recompensas y su precio en puntos, hasta doce."
+        },
+        {
+          "question": "¿Mis clientes necesitan una aplicación?",
+          "answer": "No. La tarjeta vive en Apple Wallet o Google Wallet, ya presentes en su teléfono. Escanean tu código QR una vez y la tarjeta se añade, tanto con sellos como con puntos."
+        }
+      ]
+    },
+    "cta": {
+      "title": "¿Listo para recompensar a tus habituales?",
+      "subtitle": "Crea tu tarjeta en minutos, con sellos o con puntos. Un mes gratis, sin compromiso.",
+      "button": "Crear mi tarjeta"
+    },
+    "switchReassurance": "¿Dudas? Empieza con uno y cambia cuando quieras: tus clientes conservan la misma tarjeta."
+  }
+}
