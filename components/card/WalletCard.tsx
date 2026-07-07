@@ -543,26 +543,16 @@ export function WalletCard({
       >
         {/* Card Content Layer */}
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden transition-all duration-300 p-2"
+          className="absolute inset-0 rounded-2xl overflow-hidden transition-all duration-300"
           style={{
-            background: `linear-gradient(135deg, ${colors.bgGradientFrom}, ${colors.bgGradientTo})`,
+            backgroundColor: colors.bgHex,
           }}
         >
-          {/* Subtle gradient overlay */}
-          <div
-            className="absolute inset-0 transition-opacity duration-300"
-            style={{
-              background: colors.isLightBg
-                ? "linear-gradient(to bottom right, rgba(255,255,255,0.4), transparent, rgba(0,0,0,0.05))"
-                : "linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent, rgba(0,0,0,0.2))",
-            }}
-          />
-
           {/* Content Layout */}
           <div className="relative h-full px-0 py-0 flex flex-col z-10">
             {/* Header: Logo + Business Name */}
             <div className="flex justify-between items-center px-2.5 py-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
                 {design.logo_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -591,7 +581,7 @@ export function WalletCard({
                   </div>
                 )}
               </div>
-              <div className="text-right items-center">
+              <div className="text-right items-center flex-shrink-0 pl-2">
                 <div
                   className="text-[8px] font-bold uppercase tracking-wider transition-colors duration-300"
                   style={{ color: colors.mutedTextColor }}
@@ -621,7 +611,13 @@ export function WalletCard({
                       alt=""
                       fill
                       className="object-cover"
-                      style={{ opacity: (design.strip_background_opacity ?? 40) / 100 }}
+                      style={{
+                        // image_only shows the raw image edge-to-edge (no dimming).
+                        opacity:
+                          design.points_strip_style === "image_only"
+                            ? 1
+                            : (design.strip_background_opacity ?? 40) / 100,
+                      }}
                       unoptimized
                     />
                   </div>
@@ -649,7 +645,8 @@ export function WalletCard({
                       src={design.strip_background_url}
                       alt=""
                       fill
-                      className="object-cover opacity-40"
+                      className="object-cover"
+                      style={{ opacity: (design.strip_background_opacity ?? 40) / 100 }}
                       unoptimized
                     />
                   </div>

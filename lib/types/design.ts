@@ -42,8 +42,9 @@ export type StampIconMode = "preset" | "custom";
 
 export type CardType = "stamp" | "points";
 
-/** The three points strip layouts the backend renders (migration 123). */
-export type PointsStripStyle = "big_point" | "circle_progress" | "progress_icons";
+/** The points strip layouts the backend renders (migrations 123, 135).
+ *  "image_only" shows just the uploaded strip image with no points overlay. */
+export type PointsStripStyle = "big_point" | "circle_progress" | "progress_icons" | "image_only";
 
 export interface PointsRewardIcon {
   type: "preset" | "custom";
