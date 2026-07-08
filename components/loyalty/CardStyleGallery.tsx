@@ -111,7 +111,7 @@ export async function CardStyleGallery() {
           slideClassName="w-[250px] sm:w-[290px]"
           prevLabel={t("prev")}
           nextLabel={t("next")}
-          autoPlayMs={4000}
+          autoPlayMs={6000}
           clones={5}
           falloffSlides={2.2}
         />

@@ -15,7 +15,7 @@ export async function LoyaltyProgramsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative pt-16 pb-14 sm:pt-24 sm:pb-20 overflow-hidden">
+      <section className="relative pt-24 pb-14 sm:pb-20 overflow-hidden">
         {/* Soft dual-program glow: stamps orange left, points violet right */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-[8%] w-64 h-64 rounded-full bg-[var(--accent)]/6 blur-3xl" />

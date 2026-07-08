@@ -53,6 +53,10 @@ const CENTER_DEADZONE = 0.06;
 // How long a programmatic smooth scroll is assumed to last: scroll events
 // inside this window don't reset the autoplay countdown.
 const PROGRAMMATIC_MS = 900;
+// Auto-advance glides ~1.25x slower than the browser's native smooth scroll
+// (which manual arrows/dots/swipes keep), so the ambient motion feels calm
+// while direct interaction stays snappy.
+const AUTO_GLIDE_MS = 700;
 
 /**
  * Center-focused, infinitely looping carousel. Native scroll-snap does the
@@ -95,10 +99,20 @@ export function CenterCarousel({
   const inViewRef = useRef(false);
   const autoplayTimer = useRef<number | null>(null);
   const programmaticUntilRef = useRef(0);
+  const glideRaf = useRef(0);
+  const glidingRef = useRef(false);
   const [active, setActive] = useState(0);
 
-  const markProgrammatic = useCallback(() => {
-    programmaticUntilRef.current = Date.now() + PROGRAMMATIC_MS;
+  const markProgrammatic = useCallback((ms: number = PROGRAMMATIC_MS) => {
+    programmaticUntilRef.current = Date.now() + ms;
+  }, []);
+
+  const cancelGlide = useCallback(() => {
+    if (!glidingRef.current) return;
+    cancelAnimationFrame(glideRaf.current);
+    glidingRef.current = false;
+    const track = trackRef.current;
+    if (track) track.style.scrollSnapType = "";
   }, []);
 
   const scrollToDom = useCallback((domIndex: number, behavior: ScrollBehavior) => {
@@ -155,11 +169,11 @@ export function CenterCarousel({
   }, []);
 
   /** If we've come fully to rest on a clone, teleport to its real twin. Never
-      fires mid-gesture (drag guard) or mid-momentum (the scroll position must
-      sit exactly on the clone's snap point) — jumping any earlier makes the
-      loop seam visible. */
+      fires mid-gesture (drag guard), mid-glide, or mid-momentum (the scroll
+      position must sit exactly on the clone's snap point) — jumping any
+      earlier makes the loop seam visible. */
   const jumpIfSettledOnClone = useCallback(() => {
-    if (!looping || draggingRef.current) return;
+    if (!looping || draggingRef.current || glidingRef.current) return;
     const track = trackRef.current;
     if (!track) return;
     const i = nearestDomRef.current;
@@ -183,17 +197,53 @@ export function CenterCarousel({
 
   const step = useCallback(
     (dir: 1 | -1) => {
+      cancelGlide();
       markProgrammatic();
       scrollToDom(nearestDomRef.current + dir, "smooth");
     },
-    [scrollToDom, markProgrammatic]
+    [scrollToDom, markProgrammatic, cancelGlide]
+  );
+
+  /** Autoplay's slower cousin of step(): animates scrollLeft ourselves with an
+      ease-in-out over AUTO_GLIDE_MS (native smooth scroll has a fixed,
+      browser-chosen speed). Snap is suspended for the glide and restored on
+      landing — the end position is exactly the snap point, so nothing shifts. */
+  const glide = useCallback(
+    (dir: 1 | -1) => {
+      const track = trackRef.current;
+      const el = slideRefs.current[nearestDomRef.current + dir];
+      if (!track || !el) return;
+      const from = track.scrollLeft;
+      const to = el.offsetLeft + el.offsetWidth / 2 - track.clientWidth / 2;
+      if (Math.abs(to - from) < 1) return;
+      markProgrammatic(AUTO_GLIDE_MS + 300);
+      glidingRef.current = true;
+      track.style.scrollSnapType = "none";
+      const start = performance.now();
+      const easeInOutCubic = (p: number) =>
+        p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - start) / AUTO_GLIDE_MS);
+        track.scrollLeft = from + (to - from) * easeInOutCubic(p);
+        if (p < 1) {
+          glideRaf.current = requestAnimationFrame(tick);
+        } else {
+          glidingRef.current = false;
+          track.style.scrollSnapType = "";
+          armSettle();
+        }
+      };
+      cancelAnimationFrame(glideRaf.current);
+      glideRaf.current = requestAnimationFrame(tick);
+    },
+    [markProgrammatic, armSettle]
   );
 
   // ---- Autoplay: a resettable countdown, not a fixed interval. -------------
-  const stepRef = useRef(step);
+  const glideStepRef = useRef(glide);
   useEffect(() => {
-    stepRef.current = step;
-  }, [step]);
+    glideStepRef.current = glide;
+  }, [glide]);
 
   const autoplayEnabled = autoPlayMs > 0 && looping;
 
@@ -209,7 +259,7 @@ export function CenterCarousel({
         autoplayTimer.current = window.setTimeout(tick, 1000);
         return;
       }
-      stepRef.current(1);
+      glideStepRef.current(1);
       autoplayTimer.current = window.setTimeout(tick, autoPlayMs);
     };
     autoplayTimer.current = window.setTimeout(tick, autoPlayMs);
@@ -260,6 +310,7 @@ export function CenterCarousel({
     if (hasScrollEnd) track.addEventListener("scrollend", onScrollEnd);
     return () => {
       cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(glideRaf.current);
       window.removeEventListener("resize", onResize);
       if (hasScrollEnd) track.removeEventListener("scrollend", onScrollEnd);
     };
@@ -280,6 +331,8 @@ export function CenterCarousel({
         onScroll={onScroll}
         onPointerDown={() => {
           draggingRef.current = true;
+          // Grabbing the track mid-glide hands control back instantly.
+          cancelGlide();
         }}
         onPointerUp={() => {
           draggingRef.current = false;
@@ -309,6 +362,7 @@ export function CenterCarousel({
                 if (domIndex !== nearestDomRef.current) {
                   e.preventDefault();
                   e.stopPropagation();
+                  cancelGlide();
                   markProgrammatic();
                   scrollToDom(domIndex, "smooth");
                   scheduleAutoplay();
@@ -352,6 +406,7 @@ export function CenterCarousel({
                 key={item.key}
                 type="button"
                 onClick={() => {
+                  cancelGlide();
                   markProgrammatic();
                   scrollToDom(index + c, "smooth");
                   scheduleAutoplay();

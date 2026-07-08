@@ -191,7 +191,7 @@ export function SectorCarousel({
       trackClassName="px-5 md:px-0"
       prevLabel={controls.prev}
       nextLabel={controls.next}
-      autoPlayMs={4000}
+      autoPlayMs={6000}
     />
   );
 }

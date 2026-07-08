@@ -23,7 +23,7 @@ export async function BusinessTypeMap() {
             const accent = isPoints ? "#8b5cf6" : "#f97316";
             return (
               <ScrollReveal key={key} delay={i * 40} className="h-full">
-                <div className="h-full rounded-2xl border border-[var(--border)] bg-white p-5 flex flex-col gap-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div className="h-full rounded-2xl border border-[var(--border)] bg-white p-5 flex flex-col gap-2 transition-all duration-300">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="font-bold text-[var(--foreground)] leading-tight">
                       {t(`items.${key}.label`)}
