@@ -91,15 +91,45 @@
       "prev": "Estilo anterior",
       "next": "Estilo siguiente",
       "stamps": [
-        "Tu propio icono, apilándose al sellar",
-        "Una cuadrícula clásica, con tu logo arriba",
-        "Tus iconos, ligeramente escalonados"
+        "Iconos personalizados, en filas escalonadas",
+        "Iconos personalizados, apilándose al sellar",
+        "Iconos vivos en tarjeta clara",
+        "Una cuadrícula clásica con tu logo",
+        "Iconos claros sobre fondo intenso",
+        "Una cuadrícula ordenada",
+        "Doce iconos que se apilan",
+        "Color vivo, iconos divertidos"
       ],
       "points": [
         "Un saldo grande y legible",
         "Tu propia foto como banda",
-        "Un anillo que se llena hacia la recompensa"
-      ]
+        "Una marca por recompensa",
+        "Un anillo que se llena hacia la recompensa",
+        "Monocromo y editorial",
+        "Hitos en tarjeta clara",
+        "Un anillo dorado sobre fondo intenso"
+      ],
+      "cardFields": {
+        "stamps": [
+          { "main": [ { "label": "Titular", "value": "Théo" }, { "label": "Recompensa", "value": "Lavado gratis" } ], "aux": [ { "label": "Miembro desde", "value": "2024" } ] },
+          { "main": [ { "label": "Titular", "value": "Camille" }, { "label": "Recompensa", "value": "Café gratis" } ] },
+          { "main": [ { "label": "Titular", "value": "Inès" }, { "label": "Recompensa", "value": "Smoothie gratis" } ], "aux": [ { "label": "Favorito", "value": "Green Machine" } ] },
+          { "main": [ { "label": "Recompensa", "value": "Corte gratis" }, { "label": "Titular", "value": "Julien" } ] },
+          { "main": [ { "label": "Mascota", "value": "Max" }, { "label": "Recompensa", "value": "Baño gratis" } ], "aux": [ { "label": "Miembro desde", "value": "2025" } ] },
+          { "main": [ { "label": "Titular", "value": "Louise" }, { "label": "Recompensa", "value": "Ramo gratis" } ] },
+          { "main": [ { "label": "Titular", "value": "Nina" }, { "label": "Recompensa", "value": "Bola gratis" } ], "aux": [ { "label": "Favorito", "value": "Stracciatella" } ] },
+          { "main": [ { "label": "Titular", "value": "Mei" }, { "label": "Recompensa", "value": "Bubble tea gratis" } ] }
+        ],
+        "points": [
+          { "main": [ { "label": "Titular", "value": "Elias" }, { "label": "Próxima recompensa", "value": "-10 €" } ], "aux": [ { "label": "Miembro desde", "value": "2023" } ] },
+          { "main": [ { "label": "Próximo hito", "value": "100 pts" }, { "label": "Próxima recompensa", "value": "-25 %" } ] },
+          { "main": [ { "label": "Titular", "value": "Sacha" }, { "label": "Próxima recompensa", "value": "Clase gratis" } ], "aux": [ { "label": "Visitas", "value": "18" } ] },
+          { "main": [ { "label": "Titular", "value": "Chloé" }, { "label": "Próxima recompensa", "value": "Manicura gratis" } ] },
+          { "main": [ { "label": "Titular", "value": "Anna" }, { "label": "Próxima recompensa", "value": "-10 %" } ] },
+          { "main": [ { "label": "Próximo hito", "value": "240 pts" }, { "label": "Próxima recompensa", "value": "-20 €" } ], "aux": [ { "label": "Miembro desde", "value": "2024" } ] },
+          { "main": [ { "label": "Titular", "value": "Hugo" }, { "label": "Próxima recompensa", "value": "Copa gratis" } ], "aux": [ { "label": "Visitas", "value": "12" } ] }
+        ]
+      }
     },
     "businessMap": {
       "title": "Lo que eligen la mayoría de comercios",

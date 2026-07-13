@@ -91,15 +91,45 @@
       "prev": "Previous style",
       "next": "Next style",
       "stamps": [
-        "Your own icon, stacked as they fill",
-        "A classic grid, your logo on top",
-        "Custom icons, gently staggered"
+        "Custom icons in staggered rows",
+        "Custom icons, stacked as they fill",
+        "Bright custom icons on a light card",
+        "A classic grid with your logo",
+        "Light icons on a deep color",
+        "A tidy straight grid",
+        "A dozen icons that pile up",
+        "Bold color, playful icons"
       ],
       "points": [
         "A big running balance",
         "Your own photo as the strip",
-        "A ring that fills toward the reward"
-      ]
+        "A marker for each reward",
+        "A ring that fills toward the reward",
+        "Monochrome and editorial",
+        "Milestones on a light card",
+        "A gold ring on deep tones"
+      ],
+      "cardFields": {
+        "stamps": [
+          { "main": [ { "label": "Cardholder", "value": "Théo" }, { "label": "Reward", "value": "Free wash" } ], "aux": [ { "label": "Member since", "value": "2024" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Camille" }, { "label": "Reward", "value": "Free coffee" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Inès" }, { "label": "Reward", "value": "Free smoothie" } ], "aux": [ { "label": "Favorite", "value": "Green Machine" } ] },
+          { "main": [ { "label": "Reward", "value": "Free cut" }, { "label": "Cardholder", "value": "Julien" } ] },
+          { "main": [ { "label": "Pet", "value": "Max" }, { "label": "Reward", "value": "Free bath" } ], "aux": [ { "label": "Member since", "value": "2025" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Louise" }, { "label": "Reward", "value": "Free bouquet" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Nina" }, { "label": "Reward", "value": "Free scoop" } ], "aux": [ { "label": "Favorite", "value": "Stracciatella" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Mei" }, { "label": "Reward", "value": "Free bubble tea" } ] }
+        ],
+        "points": [
+          { "main": [ { "label": "Cardholder", "value": "Elias" }, { "label": "Next reward", "value": "€10 off" } ], "aux": [ { "label": "Member since", "value": "2023" } ] },
+          { "main": [ { "label": "Next milestone", "value": "100 pts" }, { "label": "Next reward", "value": "25% off" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Sacha" }, { "label": "Next reward", "value": "Free class" } ], "aux": [ { "label": "Visits", "value": "18" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Chloé" }, { "label": "Next reward", "value": "Free manicure" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Anna" }, { "label": "Next reward", "value": "10% off" } ] },
+          { "main": [ { "label": "Next milestone", "value": "240 pts" }, { "label": "Next reward", "value": "€20 off" } ], "aux": [ { "label": "Member since", "value": "2024" } ] },
+          { "main": [ { "label": "Cardholder", "value": "Hugo" }, { "label": "Next reward", "value": "Free glass" } ], "aux": [ { "label": "Visits", "value": "12" } ] }
+        ]
+      }
     },
     "businessMap": {
       "title": "What most businesses go with",

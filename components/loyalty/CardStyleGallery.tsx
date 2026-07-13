@@ -41,6 +41,24 @@ export async function CardStyleGallery() {
   const stampCaptions = t.raw("stamps") as string[];
   const pointCaptions = t.raw("points") as string[];
 
+  // Per-card fields (localized), zipped by index like the captions. `main`
+  // fills the secondary-field row, `aux` the smaller auxiliary row — so the
+  // gallery shows the real variable options an owner can put on a card.
+  type Field = { label: string; value: string };
+  type CardFieldSet = { main?: Field[]; aux?: Field[] };
+  const cardFields = t.raw("cardFields") as {
+    stamps: CardFieldSet[];
+    points: CardFieldSet[];
+  };
+  const withFields = (
+    design: (typeof STAMP_SAMPLES)[number]["design"],
+    set: CardFieldSet | undefined
+  ) => ({
+    ...design,
+    secondary_fields: (set?.main ?? []).map((f, k) => ({ key: `m${k}`, ...f })),
+    auxiliary_fields: (set?.aux ?? []).map((f, k) => ({ key: `a${k}`, ...f })),
+  });
+
   // Interleave stamp and points samples so a swipe alternates between the two
   // program types instead of grouping them.
   const items: CarouselItem[] = [];
@@ -58,7 +76,11 @@ export async function CardStyleGallery() {
             caption={stampCaptions[i] ?? ""}
           >
             <ScaledCardWrapper baseWidth={280}>
-              <WalletCard design={s.design} stamps={s.stamps} showQR={false} />
+              <WalletCard
+                design={withFields(s.design, cardFields?.stamps?.[i])}
+                stamps={s.stamps}
+                showQR={false}
+              />
             </ScaledCardWrapper>
           </GallerySlide>
         ),
@@ -77,7 +99,7 @@ export async function CardStyleGallery() {
           >
             <ScaledCardWrapper baseWidth={280}>
               <WalletCard
-                design={p.design}
+                design={withFields(p.design, cardFields?.points?.[i])}
                 pointsBalance={p.pointsBalance}
                 pointsRewards={p.pointsRewards}
                 showQR={false}

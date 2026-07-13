@@ -526,6 +526,7 @@ export function WalletCard({
   const rewardIcon = (design.reward_icon || "gift") as StampIconType;
 
   const secondaryFields = design.secondary_fields || [];
+  const auxiliaryFields = design.auxiliary_fields || [];
 
   const cardStyle = interactive3D
     ? {
@@ -681,6 +682,29 @@ export function WalletCard({
                 fields={secondaryFields.slice(0, 4)}
                 colors={colors}
               />
+            )}
+
+            {/* Auxiliary Fields - a second, smaller row beneath the secondary
+                fields, exactly like Apple Wallet's auxiliary row. */}
+            {showSecondaryFields && auxiliaryFields.length > 0 && (
+              <div className="px-2.5 pb-1 flex items-start gap-4">
+                {auxiliaryFields.slice(0, 4).map((field, i) => (
+                  <div key={field.key || i} className="min-w-0">
+                    <div
+                      className="text-[7px] font-bold uppercase tracking-wider truncate transition-colors duration-300"
+                      style={{ color: colors.mutedTextColor }}
+                    >
+                      {field.label}
+                    </div>
+                    <div
+                      className="text-[10px] font-medium truncate transition-colors duration-300"
+                      style={{ color: colors.textColor }}
+                    >
+                      {field.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
 
             {/* QR Code */}

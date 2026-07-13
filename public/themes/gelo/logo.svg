@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="169 -2 369 270" fill="none">
+  <g transform="translate(350,10)">
+    <circle cx="0" cy="26" r="24" fill="#E86FA4"/>
+    <polygon points="-21,44 21,44 0,92" fill="#D9A05B"/>
+    <line x1="-12" y1="54" x2="8" y2="74" stroke="#B97F3C" stroke-width="3"/>
+    <line x1="12" y1="54" x2="-8" y2="74" stroke="#B97F3C" stroke-width="3"/>
+  </g>
+  <text x="354" y="204" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="100" font-weight="800" letter-spacing="8" fill="#E86FA4">GELO</text>
+  <text x="354" y="250" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="8" fill="#2E7D6B">GELATO ARTIGIANALE</text>
+</svg>
