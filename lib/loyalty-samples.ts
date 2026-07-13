@@ -42,7 +42,9 @@ function themedIcon(id: string, base: string, ext = "svg"): ProcessedIconAsset {
 }
 
 export const STAMP_SAMPLES: StampSample[] = [
-  // Lustre — car wash. Custom water-drop icons in staggered rows on deep navy.
+  // Lustre — car wash. Six big water drops in a staggered band on deep navy.
+  // NOTE: staggered only reads well with LARGE icons — use it for 6 stamps or
+  // fewer; above that, go straight or overlap.
   {
     id: "lustre",
     design: {
@@ -51,7 +53,7 @@ export const STAMP_SAMPLES: StampSample[] = [
       background_color: "#0B1B2B",
       stamp_filled_color: "#3B9EFF",
       icon_color: "#FFFFFF",
-      total_stamps: 8,
+      total_stamps: 6,
       stamp_icon_mode: "custom",
       custom_stamp_config: {
         icons: [themedIcon("drop", "/themes/lustre/drop")],
@@ -62,7 +64,7 @@ export const STAMP_SAMPLES: StampSample[] = [
         empty_opacity: 60,
       },
     },
-    stamps: 5,
+    stamps: 4,
   },
   // Aurevo — café. The brand's own to-go cup, stacked (overlap) as it fills.
   {
@@ -186,7 +188,8 @@ export const STAMP_SAMPLES: StampSample[] = [
     },
     stamps: 7,
   },
-  // OBA — bubble tea. Cream boba cups staggered on deep violet.
+  // OBA — bubble tea. Cream boba cups in a straight grid on deep violet
+  // (8 stamps is past the staggered sweet spot — see Lustre).
   {
     id: "oba",
     design: {
@@ -202,7 +205,7 @@ export const STAMP_SAMPLES: StampSample[] = [
         reward_icon: null,
         empty_icon: null,
         empty_mode: "greyscale",
-        arrangement: "staggered",
+        arrangement: "straight",
         empty_opacity: 70,
       },
     },
