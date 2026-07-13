@@ -305,53 +305,56 @@
     },
     "sectorCards": {
       "title": "Stampeo s'adapte <mbr></mbr><br></br>à votre commerce",
-      "subtitle": "Les cafés et salons récompensent les visites avec des tampons. <br></br>Les restaurants et boutiques récompensent la dépense avec des points.",
+      "subtitle": "Un barbier ou un café récompense les visites avec des tampons. <br></br>Un restaurant ou un salon récompense la dépense avec des points.",
       "carousel": { "prev": "Secteur précédent", "next": "Secteur suivant" },
       "sectors": [
         {
+          "name": "Barbier",
+          "quote": "Julien passe toutes les trois semaines pour son dégradé. Avec Stampeo, c'est automatique, et sa sixième coupe est offerte.",
+          "reward": "6 coupes = 1 offerte",
+          "advantage": "Une notification quand il passe devant la boutique",
+          "fields": [
+            { "label": "Récompense", "value": "Coupe offerte" },
+            { "label": "Titulaire", "value": "Julien" }
+          ],
+          "link": "/blog/programme-fidelite-salon-coiffure",
+          "linkLabel": "Lire le guide pour les barbiers"
+        },
+        {
           "name": "Café",
-          "quote": "Marc commande son allongé tous les matins depuis deux ans. Avec Stampeo, il gagne son 10e café automatiquement. Et vous, vous savez qu'il est votre meilleur client.",
-          "reward": "10 cafés achetés = 1 offert",
-          "advantage": "Le scan prend 1 seconde, aucun ralentissement au comptoir",
-          "field": { "label": "Membre", "value": "Marc" },
+          "quote": "Camille attrape son cappuccino en allant travailler. Huit tasses et la neuvième est offerte, et elle ne perd jamais son compte.",
+          "reward": "8 cafés = 1 offert",
+          "advantage": "Le scan prend une seconde, aucune file au comptoir",
+          "fields": [
+            { "label": "Titulaire", "value": "Camille" },
+            { "label": "Récompense", "value": "Café offert" }
+          ],
           "link": "/blog/carte-fidelite-cafe",
           "linkLabel": "Lire le guide pour les cafés"
         },
         {
           "name": "Restaurant",
-          "quote": "Thomas déjeune chez vous deux fois par semaine, mais son addition change à chaque fois. Les points récompensent ce qu'il dépense vraiment, pas seulement sa présence.",
-          "reward": "1 € dépensé = 1 point, dessert offert à 150 pts",
-          "advantage": "Un dîner à 40 € rapporte plus qu'un café à 6 €",
-          "field": { "label": "Prochaine récompense", "value": "Dessert offert" },
+          "quote": "Thomas dîne chez vous presque chaque semaine, mais l'addition n'est jamais la même. Les points récompensent ce qu'il dépense vraiment, pas seulement sa présence.",
+          "reward": "1 € dépensé = 1 point, -25 % à 100 pts",
+          "advantage": "Un dîner à 40 € rapporte plus qu'un déjeuner sur le pouce",
+          "fields": [
+            { "label": "Prochain palier", "value": "100 points" },
+            { "label": "Prochaine récompense", "value": "-25 %" }
+          ],
           "link": "/blog/carte-fidelite-restaurant",
           "linkLabel": "Lire le guide pour les restaurants"
         },
         {
-          "name": "Salon de coiffure",
-          "quote": "Claire vient tous les mois pour sa couleur. Avec Stampeo, c'est automatique et Claire reçoit un soin offert au bout de 6 visites.",
-          "reward": "6 prestations = 1 soin offert",
-          "advantage": "Notification quand elle passe près du salon",
-          "field": { "label": "Récompenses", "value": "2 en réserve" },
+          "name": "Salon de beauté",
+          "quote": "Chloé vient pour une manucure une semaine, une pose complète la suivante. Les points récompensent ce qu'elle dépense, chaque visite la rapproche de sa récompense.",
+          "reward": "1 € dépensé = 1 point, manucure offerte à 80 pts",
+          "advantage": "Les prestations les plus chères rapportent plus vite",
+          "fields": [
+            { "label": "Titulaire", "value": "Chloé" },
+            { "label": "Prochaine récompense", "value": "Manucure offerte" }
+          ],
           "link": "/blog/programme-fidelite-salon-coiffure",
           "linkLabel": "Lire le guide pour les salons"
-        },
-        {
-          "name": "Boulangerie",
-          "quote": "Sophie passe chercher sa baguette chaque matin. Sa carte en carton ? Perdue dans son sac depuis la semaine dernière. Avec le wallet, elle l'a toujours.",
-          "reward": "8 achats = 1 viennoiserie offerte",
-          "advantage": "Pas de carte à sortir, le téléphone suffit",
-          "field": { "label": "Récompense", "value": "1 viennoiserie" },
-          "link": "/blog/carte-fidelite-boulangerie",
-          "linkLabel": "Lire le guide pour les boulangeries"
-        },
-        {
-          "name": "Boutique",
-          "quote": "Léa fait ses achats chez vous à chaque saison, et son panier n'est jamais le même. Elle cumule des points sur ce qu'elle dépense, puis revient les échanger.",
-          "reward": "1 € dépensé = 1 point, 10 € offerts à 200 pts",
-          "advantage": "Parfait quand chaque panier a un montant différent",
-          "field": { "label": "Membre", "value": "Léa" },
-          "link": "/programme-fidelite",
-          "linkLabel": "Comparer tampons et points"
         }
       ]
     },

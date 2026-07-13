@@ -305,55 +305,59 @@
     },
     "sectorCards": {
       "title": "Stampeo se adapta <mbr></mbr><br></br>a tu comercio",
-      "subtitle": "Las cafeterías y peluquerías recompensan las visitas con sellos. <br></br>Los restaurantes y las tiendas recompensan el gasto con puntos.",
+      "subtitle": "Una barbería o una cafetería recompensa las visitas con sellos. <br></br>Un restaurante o un salón recompensa el gasto con puntos.",
       "carousel": { "prev": "Sector anterior", "next": "Sector siguiente" },
       "sectors": [
         {
+          "name": "Barbería",
+          "quote": "Julien viene cada tres semanas para su degradado. Con Stampeo es automático, y su sexto corte va por nuestra cuenta.",
+          "reward": "6 cortes = 1 gratis",
+          "advantage": "Un aviso cuando pasa por delante de la barbería",
+          "fields": [
+            { "label": "Recompensa", "value": "Corte gratis" },
+            { "label": "Titular", "value": "Julien" }
+          ],
+          "link": "/blog/programa-fidelidad-peluqueria",
+          "linkLabel": "Leer la guía para barberías"
+        },
+        {
           "name": "Cafetería",
-          "quote": "Marc pide su café solo cada mañana desde hace dos años. Con Stampeo gana su 10º café automáticamente. Y tú sabes que es tu mejor cliente.",
-          "reward": "10 cafés comprados = 1 gratis",
-          "advantage": "El escaneo dura 1 segundo, sin atascar el mostrador",
-          "field": { "label": "Miembro", "value": "Marc" },
+          "quote": "Camille coge su café con leche de camino al trabajo. Ocho tazas y la novena va por nuestra cuenta, y nunca pierde la cuenta.",
+          "reward": "8 cafés = 1 gratis",
+          "advantage": "El escaneo dura un segundo, sin cola en el mostrador",
+          "fields": [
+            { "label": "Titular", "value": "Camille" },
+            { "label": "Recompensa", "value": "Café gratis" }
+          ],
           "link": "/blog/tarjeta-fidelidad-cafeteria",
           "linkLabel": "Leer la guía para cafeterías"
         },
         {
           "name": "Restaurante",
-          "quote": "Thomas come en tu local dos veces por semana, pero su cuenta cambia cada vez. Los puntos recompensan lo que gasta de verdad, no solo que haya venido.",
-          "reward": "1 € gastado = 1 punto, postre gratis a 150 pts",
-          "advantage": "Una cena de 40 € suma más que un café de 6 €",
-          "field": { "label": "Próxima recompensa", "value": "Postre gratis" },
+          "quote": "Thomas cena en tu local casi cada semana, pero la cuenta nunca es igual. Los puntos recompensan lo que gasta de verdad, no solo que haya venido.",
+          "reward": "1 € gastado = 1 punto, -25 % a 100 pts",
+          "advantage": "Una cena de 40 € suma más que un almuerzo rápido",
+          "fields": [
+            { "label": "Próximo hito", "value": "100 puntos" },
+            { "label": "Próxima recompensa", "value": "-25 %" }
+          ],
           "link": "/blog/tarjeta-fidelidad-restaurante",
           "linkLabel": "Leer la guía para restaurantes"
         },
         {
-          "name": "Peluquería",
-          "quote": "Claire viene cada mes para su color. Con Stampeo es automático y Claire recibe un tratamiento gratis a las 6 visitas.",
-          "reward": "6 servicios = 1 tratamiento gratis",
-          "advantage": "Aviso cuando pasa cerca de la peluquería",
-          "field": { "label": "Recompensas", "value": "2 listas" },
+          "name": "Salón de belleza",
+          "quote": "Chloé viene para una manicura una semana, y un conjunto completo la siguiente. Los puntos recompensan lo que gasta, así que cada visita la acerca a su recompensa.",
+          "reward": "1 € gastado = 1 punto, manicura gratis a 80 pts",
+          "advantage": "Los servicios más caros suman más rápido",
+          "fields": [
+            { "label": "Titular", "value": "Chloé" },
+            { "label": "Próxima recompensa", "value": "Manicura gratis" }
+          ],
           "link": "/blog/programa-fidelidad-peluqueria",
-          "linkLabel": "Leer la guía para peluquerías"
-        },
-        {
-          "name": "Panadería",
-          "quote": "Sophie pasa a por su barra de pan cada mañana. ¿Su tarjeta de cartón? Perdida en el bolso desde la semana pasada. Con la cartera, siempre la tiene.",
-          "reward": "8 compras = 1 bollo gratis",
-          "advantage": "Sin tarjeta que sacar, basta con el teléfono",
-          "field": { "label": "Recompensa", "value": "1 bollo gratis" },
-          "link": "/blog/tarjeta-fidelidad-panaderia",
-          "linkLabel": "Leer la guía para panaderías"
-        },
-        {
-          "name": "Tienda",
-          "quote": "Léa compra en tu tienda cada temporada, y su cesta nunca es la misma. Acumula puntos por lo que gasta y vuelve para canjearlos.",
-          "reward": "1 € gastado = 1 punto, 10 € de regalo a 200 pts",
-          "advantage": "Ideal cuando cada cesta tiene un importe distinto",
-          "field": { "label": "Miembro", "value": "Léa" },
-          "link": "/programa-de-fidelizacion",
-          "linkLabel": "Comparar sellos y puntos"
+          "linkLabel": "Leer la guía para salones"
         }
       ]
+
     },
     "featureGrid": {
       "title": "Todo lo que necesitas para fidelizar",

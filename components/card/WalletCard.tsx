@@ -204,32 +204,45 @@ function SecondaryFieldsRow({ fields, colors }: SecondaryFieldsRowProps) {
   const [fontSize, setFontSize] = useState(14); // Start with text-sm equivalent
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
     const container = containerRef.current;
-    const checkOverflow = () => {
-      // Reset to max size first
-      setFontSize(14);
+    if (!container) return;
 
-      // Use requestAnimationFrame to ensure DOM has updated
-      requestAnimationFrame(() => {
-        if (!container) return;
-        const containerWidth = container.offsetWidth;
-        const contentWidth = container.scrollWidth;
+    // The available WIDTH is what decides whether text overflows. Shrinking the
+    // font only changes the row's HEIGHT (and scrollWidth) — so if we let the
+    // observer react to those, resetting to 14px then re-shrinking would loop
+    // forever, and two long fields visibly jitter left↔right. Guard on width so
+    // font-induced size changes are ignored and the fit converges once.
+    let lastWidth = -1;
+    let raf = 0;
 
+    const fit = () => {
+      cancelAnimationFrame(raf);
+      setFontSize(14); // measure at full size first
+      raf = requestAnimationFrame(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const containerWidth = el.offsetWidth;
+        const contentWidth = el.scrollWidth;
         if (contentWidth > containerWidth) {
-          // Calculate scale factor needed
           const scale = containerWidth / contentWidth;
-          const newSize = Math.max(10, Math.floor(14 * scale));
-          setFontSize(newSize);
+          setFontSize(Math.max(10, Math.floor(14 * scale)));
         }
       });
     };
 
-    checkOverflow();
-    const resizeObserver = new ResizeObserver(checkOverflow);
+    fit();
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const width = Math.round(entries[0].contentRect.width);
+      if (width === lastWidth) return;
+      lastWidth = width;
+      fit();
+    });
     resizeObserver.observe(container);
-    return () => resizeObserver.disconnect();
+    return () => {
+      cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+    };
   }, [fields]);
 
   const fieldCount = fields.length;

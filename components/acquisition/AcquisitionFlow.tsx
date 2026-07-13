@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { QRCodeSVG } from "qrcode.react";
 
 import {
   BusinessPublicResponse,
@@ -12,9 +13,10 @@ import {
 } from "@/lib/acquisition";
 import { AcquisitionForm } from "./AcquisitionForm";
 import { WalletButtons } from "./WalletButtons";
+import { useDevicePlatform, type DevicePlatform } from "@/hooks/useDevicePlatform";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
-import { renderPreviewFields } from "@/lib/template-variables";
+import { renderPreviewFields, pickSampleName } from "@/lib/template-variables";
 
 type FlowState = "form" | "submitting" | "success" | "email_sent" | "error" | "not_open";
 
@@ -27,9 +29,13 @@ interface AcquisitionFlowProps {
 
 export function AcquisitionFlow({ business, cardDesign, locationSlug }: AcquisitionFlowProps) {
   const t = useTranslations("acquisition");
+  const locale = useLocale();
+  const platform = useDevicePlatform();
   const [flowState, setFlowState] = useState<FlowState>("form");
   const [customerResponse, setCustomerResponse] = useState<CustomerPublicResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Remembered so the success screen can say "we emailed it to <address>".
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   // Get accent color from business settings or card design
   const accentColor =
@@ -59,22 +65,35 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
     sortedRewards.length > 0 ? Math.round(sortedRewards[0].threshold * 0.6) : 0;
   const nextReward = sortedRewards.find((r) => r.threshold > previewBalance) ?? null;
 
+  // A believable cardholder name, stable per business (seeded by id) so the
+  // preview never shows a raw {{customer_first_name}} placeholder.
+  const sampleFirstName = pickSampleName(locale, business.id);
+
   const previewContext = {
     stampCount: previewStamps,
     totalStamps: cardDesign?.total_stamps ?? 10,
     rewardName: cardDesign?.reward_name,
     businessName: business.name,
-    sampleFirstName: t("previewSampleName"),
+    sampleFirstName,
     pointsBalance: previewBalance,
     pointsToNext: nextReward ? Math.max(0, nextReward.threshold - previewBalance) : 0,
     nextRewardName: nextReward?.name,
+    nextRewardPoints: nextReward?.threshold,
+    lastRewardName: sortedRewards[0]?.name ?? cardDesign?.reward_name,
   };
 
   const handleSubmit = async (data: CustomerCreatePublic) => {
     setFlowState("submitting");
     setErrorMessage(null);
+    setSubmittedEmail(data.email ?? null);
 
-    const { data: response, error, code } = await createPublicCustomer(business.id, data, locationSlug);
+    // On desktop the visitor can't add the card to a phone wallet from here, so
+    // ask the backend to also email it (it only sends when an email was given).
+    const { data: response, error, code } = await createPublicCustomer(
+      business.id,
+      { ...data, send_email: platform === "desktop" },
+      locationSlug
+    );
 
     if (code === "CHECKOUT_REQUIRED") {
       // The business hasn't finished setting up its subscription, so it isn't
@@ -208,6 +227,8 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     businessName={business.name}
                     passUrl={customerResponse.pass_url}
                     googleWalletUrl={customerResponse.google_wallet_url}
+                    platform={platform}
+                    emailedTo={customerResponse.emailed ? submittedEmail : null}
                   />
                 )}
 
@@ -286,12 +307,55 @@ function SuccessCard({
   businessName,
   passUrl,
   googleWalletUrl,
+  platform,
+  emailedTo,
 }: {
   businessName: string;
   passUrl: string;
   googleWalletUrl?: string;
+  platform: DevicePlatform;
+  /** Set when the backend emailed the card (desktop + email given). */
+  emailedTo?: string | null;
 }) {
   const t = useTranslations("acquisition");
+  const autoTriggered = useRef(false);
+  // On a phone we hand off to the OS wallet automatically. `revealButtons`
+  // stays false until that hand-off fires, so the visitor sees a calm loading
+  // state instead of Apple/Google buttons they're not meant to touch.
+  const [revealButtons, setRevealButtons] = useState(false);
+
+  const isDesktop = platform === "desktop";
+  // Which wallet URL (if any) we'll auto-open for this device.
+  const autoAddUrl =
+    platform === "ios"
+      ? passUrl
+      : platform === "android"
+        ? googleWalletUrl ?? null
+        : null;
+
+  // The card is ready, so on a phone we kick off the native "Add to Wallet"
+  // flow automatically. Navigating to the Apple .pkpass URL makes iOS present
+  // its native "Add to Apple Wallet" sheet over the page; the Android save URL
+  // opens Google Wallet. Once we've handed off we reveal the manual buttons, so
+  // a visitor who dismisses the sheet (or whose device blocked the hand-off)
+  // isn't stranded. Desktop can't add to a phone wallet, so it shows a QR /
+  // email instead and never auto-navigates.
+  useEffect(() => {
+    if (!autoAddUrl || autoTriggered.current) return;
+    // Set the guard INSIDE the timeout, not before scheduling it: React
+    // StrictMode (Next dev) mounts effects twice, and a ref flipped before the
+    // timer would make the second mount bail without ever navigating.
+    const timer = setTimeout(() => {
+      autoTriggered.current = true;
+      window.location.href = autoAddUrl;
+      setRevealButtons(true);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [autoAddUrl]);
+
+  // A phone that we're about to (or just did) auto-open the wallet for.
+  const showAutoAddLoading = !!autoAddUrl && !revealButtons;
+
   return (
     <div className="paper-card rounded-2xl p-6 text-center">
       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center stamp-fill-animation">
@@ -312,10 +376,44 @@ function SuccessCard({
       <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
         {t("success.title")}
       </h2>
-      <p className="text-[var(--muted-foreground)] mb-6">
-        {t("success.description", { businessName })}
-      </p>
-      <WalletButtons passUrl={passUrl} googleWalletUrl={googleWalletUrl} />
+
+      {showAutoAddLoading ? (
+        <div className="mt-4 flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-full border-4 border-[var(--accent)] border-t-transparent animate-spin" />
+          <p className="text-[var(--muted-foreground)]">{t("success.autoAdding")}</p>
+        </div>
+      ) : isDesktop ? (
+        <>
+          <p className="text-[var(--muted-foreground)] mb-6">
+            {t("success.desktopDescription")}
+          </p>
+          <div className="flex flex-col items-center gap-4">
+            {emailedTo && (
+              <p className="text-sm text-[var(--muted-foreground)]">
+                {t("success.emailedNote", { email: emailedTo })}
+              </p>
+            )}
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-white p-3 rounded-xl border border-[var(--border)]">
+                <QRCodeSVG value={passUrl} size={148} />
+              </div>
+              <p className="text-sm font-medium text-[var(--primary)]">
+                {t("success.scanTitle")}
+              </p>
+              <p className="text-xs text-[var(--muted-foreground)] max-w-[240px]">
+                {t("success.scanHint")}
+              </p>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="text-[var(--muted-foreground)] mb-6">
+            {revealButtons ? t("success.fallbackHint") : t("success.description", { businessName })}
+          </p>
+          <WalletButtons passUrl={passUrl} googleWalletUrl={googleWalletUrl} />
+        </>
+      )}
     </div>
   );
 }

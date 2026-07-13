@@ -305,53 +305,56 @@
     },
     "sectorCards": {
       "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
-      "subtitle": "Cafés and salons reward visits with stamps. Restaurants and shops reward spending with points. <br></br>One card, one wallet.",
+      "subtitle": "A barbershop or café rewards visits with stamps. <br></br>A restaurant or salon rewards spending with points.",
       "carousel": { "prev": "Previous sector", "next": "Next sector" },
       "sectors": [
         {
+          "name": "Barbershop",
+          "quote": "Julien comes in every three weeks for his fade. With Stampeo it's automatic, and his sixth cut is on the house.",
+          "reward": "6 cuts = 1 free",
+          "advantage": "A notification when he walks past the shop",
+          "fields": [
+            { "label": "Reward", "value": "Free cut" },
+            { "label": "Cardholder", "value": "Julien" }
+          ],
+          "link": "/blog/loyalty-card-without-app",
+          "linkLabel": "Read the barbershop guide"
+        },
+        {
           "name": "Café",
-          "quote": "Marc orders his long black every morning. With Stampeo, he earns his 10th coffee automatically, and you know he's your best customer.",
-          "reward": "10 coffees bought = 1 free",
-          "advantage": "Scanning takes 1 second, no slowdown at the counter",
-          "field": { "label": "Member", "value": "Marc" },
+          "quote": "Camille grabs a flat white on her way to work. Eight cups and the ninth is on us, and she never loses her place.",
+          "reward": "8 coffees = 1 free",
+          "advantage": "The scan takes a second, no line at the counter",
+          "fields": [
+            { "label": "Cardholder", "value": "Camille" },
+            { "label": "Reward", "value": "Free coffee" }
+          ],
           "link": "/blog/digital-loyalty-card-small-business",
           "linkLabel": "Read the café guide"
         },
         {
           "name": "Restaurant",
-          "quote": "Thomas has lunch at your place twice a week, but his bill changes every time. Points reward what he actually spends, not just that he showed up.",
-          "reward": "€1 spent = 1 point, free dessert at 150 pts",
-          "advantage": "A €40 dinner earns more than a €6 coffee",
-          "field": { "label": "Next reward", "value": "Free dessert" },
+          "quote": "Thomas has dinner with you most weeks, but the bill is never the same. Points reward what he actually spends, not just that he showed up.",
+          "reward": "€1 spent = 1 point, 25% off at 100 pts",
+          "advantage": "A €40 dinner earns more than a quick lunch",
+          "fields": [
+            { "label": "Next milestone", "value": "100 points" },
+            { "label": "Next reward", "value": "25% off" }
+          ],
           "link": "/blog/paper-vs-digital-loyalty-card",
           "linkLabel": "Read the restaurant guide"
         },
         {
-          "name": "Hair salon",
-          "quote": "Claire comes every month for her color. With Stampeo, it's automatic and Claire gets a free treatment after 6 visits.",
-          "reward": "6 appointments = 1 free treatment",
-          "advantage": "Notification when she passes near the salon",
-          "field": { "label": "Rewards", "value": "2 ready" },
+          "name": "Beauty salon",
+          "quote": "Chloé comes in for a manicure one week, a full set the next. Points reward what she spends, so every visit moves her closer to a treat.",
+          "reward": "€1 spent = 1 point, free manicure at 80 pts",
+          "advantage": "Higher-value services earn faster",
+          "fields": [
+            { "label": "Cardholder", "value": "Chloé" },
+            { "label": "Next reward", "value": "Free manicure" }
+          ],
           "link": "/blog/loyalty-card-without-app",
           "linkLabel": "Read the salon guide"
-        },
-        {
-          "name": "Bakery",
-          "quote": "Sophie picks up her baguette every morning. Her paper card? Lost in her bag since last week. With the wallet, she always has it.",
-          "reward": "8 purchases = 1 free pastry",
-          "advantage": "No card to pull out, the phone is enough",
-          "field": { "label": "Reward", "value": "Free pastry" },
-          "link": "/blog/digital-stamp-card",
-          "linkLabel": "Read the bakery guide"
-        },
-        {
-          "name": "Boutique",
-          "quote": "Léa shops with you each season and her basket is never the same. She collects points on what she spends, then comes back to redeem them.",
-          "reward": "€1 spent = 1 point, €10 off at 200 pts",
-          "advantage": "Perfect when every basket is a different size",
-          "field": { "label": "Member", "value": "Léa" },
-          "link": "/loyalty-programs",
-          "linkLabel": "Compare stamps and points"
         }
       ]
     },

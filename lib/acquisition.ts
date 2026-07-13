@@ -113,6 +113,9 @@ export interface CustomerCreatePublic {
   name?: string;
   email?: string;
   phone?: string;
+  /** Ask the backend to also email the card (used on desktop, where the visitor
+   *  can't add it to a phone wallet from here). Only sends when an email is given. */
+  send_email?: boolean;
 }
 
 export interface CustomerPublicResponse {
@@ -121,6 +124,8 @@ export interface CustomerPublicResponse {
   pass_url?: string;
   google_wallet_url?: string;
   message: string;
+  /** True when the backend emailed the card as part of this signup. */
+  emailed?: boolean;
 }
 
 // ============================================
