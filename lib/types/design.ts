@@ -38,7 +38,9 @@ export interface CustomStampConfig {
   empty_opacity?: number;
 }
 
-export type StampIconMode = "preset" | "custom";
+/** How the stamp strip renders (migration 138): preset icons, custom uploaded
+ *  icons, or "image_only" — just the uploaded strip image, no stamps drawn. */
+export type StampIconMode = "preset" | "custom" | "image_only";
 
 export type CardType = "stamp" | "points";
 
