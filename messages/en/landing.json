@@ -19,9 +19,20 @@
         "mobileHint": "The pass will be added to your phone wallet"
       },
       "demoToggleLabel": "Card type",
-      "pointsDemo": {
-        "caption": "Points cards work the same way. No app to download.",
-        "rewardValue": "Free dessert at 120 pts"
+      "points": {
+        "complete": "You've collected every reward!",
+        "ready": "Your pass is ready! Try adding points.",
+        "claimReward": "Start Free →",
+        "scanButton": "Add 20 points",
+        "watchPhone": "Watch your phone - the pass updates in real-time!",
+        "scanQR": "<bold>Scan the QR code</bold> with your iPhone to try the points demo",
+        "addToWallet": "Add the pass to your Apple Wallet...",
+        "demoCallout": "Try it out! Scan with your phone",
+        "mobileAddWallet": "Try it, add to your Wallet",
+        "mobileHint": "The pass will be added to your phone wallet",
+        "rewardMid": "-50% off your 1st month",
+        "rewardTop": "1 month free",
+        "rewardAllUnlocked": "Everything unlocked!"
       }
     },
     "problem": {

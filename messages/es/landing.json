@@ -19,9 +19,20 @@
         "mobileHint": "La tarjeta se añadirá a la cartera de tu teléfono"
       },
       "demoToggleLabel": "Tipo de tarjeta",
-      "pointsDemo": {
-        "caption": "Las tarjetas de puntos funcionan igual. Sin aplicación que descargar.",
-        "rewardValue": "Postre gratis con 120 pts"
+      "points": {
+        "complete": "¡Has conseguido todas las recompensas!",
+        "ready": "¡Tu tarjeta está lista! Prueba a añadir puntos.",
+        "claimReward": "Empezar gratis →",
+        "scanButton": "Añadir 20 puntos",
+        "watchPhone": "Mira tu teléfono: la tarjeta se actualiza en tiempo real.",
+        "scanQR": "<bold>Escanea el código QR</bold> con tu iPhone para probar la demo de puntos",
+        "addToWallet": "Añade la tarjeta a tu Apple Wallet...",
+        "demoCallout": "¡Pruébalo! Escanea con tu teléfono",
+        "mobileAddWallet": "Pruébalo, añádela a tu Wallet",
+        "mobileHint": "La tarjeta se añadirá a la cartera de tu teléfono",
+        "rewardMid": "-50 % en tu 1er mes",
+        "rewardTop": "1 mes gratis",
+        "rewardAllUnlocked": "¡Todo desbloqueado!"
       }
     },
     "problem": {

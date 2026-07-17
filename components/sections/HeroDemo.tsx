@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { WalletCard } from "../card/WalletCard";
@@ -9,8 +9,7 @@ import { Segmented } from "../ui/Segmented";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
-import type { RewardTier } from "@/lib/types/design";
-import { useRef } from "react";
+import type { RewardTier, PointsRewardIcons } from "@/lib/types/design";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -18,13 +17,16 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const STAMPEO_LOGO =
   "data:image/svg+xml,%3Csvg fill='none' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath clip-rule='evenodd' d='M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z' fill='%23f97316' fill-rule='evenodd'/%3E%3C/svg%3E";
 
-// Points demo reward ladder (visual only). PointsStrip renders thresholds, not
-// names, so the names are never shown — kept short for clarity.
-const POINTS_SAMPLE_REWARDS: RewardTier[] = [
-  { id: "r1", name: "coffee", threshold: 50 },
-  { id: "r2", name: "dessert", threshold: 120 },
-  { id: "r3", name: "meal", threshold: 250 },
-];
+// Points demo ladder: mid reward at 60, top reward at 120 (matches the backend
+// demo). PointsStrip renders thresholds + icons (percent for the mid reward,
+// crown for the top), not names, so the names are only used off-card.
+const POINTS_MID = 60;
+const POINTS_TOP = 120;
+const POINTS_STEP = 20;
+const POINTS_REWARD_ICONS: PointsRewardIcons = {
+  r_mid: { type: "preset", ref: "percent" },
+  r_top: { type: "preset", ref: "crown" },
+};
 
 function StampButton({
   onClick,
@@ -81,12 +83,67 @@ function StampButton({
   );
 }
 
+function PointsScanButton({
+  onClick,
+  points,
+  isDisabled,
+  t,
+}: {
+  onClick: () => void;
+  points: number;
+  isDisabled: boolean;
+  t: ReturnType<typeof useTranslations<"landing.hero">>;
+}) {
+  const isComplete = points >= POINTS_TOP;
+
+  return (
+    <div className="relative mt-6 max-w-[380px] mx-auto animate-in slide-in-from-bottom-4 fade-in duration-500">
+      <div className="bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/10">
+        <div className="text-center mb-4">
+          <p className="text-sm font-bold text-[var(--muted-foreground)]">
+            {isComplete ? t("points.complete") : t("points.ready")}
+          </p>
+        </div>
+
+        {isComplete ? (
+          <Link
+            href="/onboarding"
+            className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
+          >
+            {t("points.claimReward")}
+          </Link>
+        ) : (
+          <button
+            onClick={onClick}
+            disabled={isDisabled}
+            className={`
+              w-full py-4 rounded-full font-bold text-lg transition-all
+              ${isDisabled
+                ? "bg-gray-200 text-gray-400 cursor-wait"
+                : "bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
+              }
+            `}
+          >
+            {t("points.scanButton")}
+          </button>
+        )}
+
+        <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
+          {t("points.watchPhone")}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function MobileWalletButton({
   sessionToken,
   t,
+  prefix,
 }: {
   sessionToken: string | null;
   t: ReturnType<typeof useTranslations<"landing.hero">>;
+  prefix: "stamp" | "points";
 }) {
   if (!sessionToken) return null;
 
@@ -99,10 +156,10 @@ function MobileWalletButton({
           href={passUrl}
           className="block w-full py-4 px-4 rounded-full font-bold text-sm sm:text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
         >
-          {t("stamp.mobileAddWallet")}
+          {t(`${prefix}.mobileAddWallet`)}
         </a>
         <p className="text-xs text-center text-[var(--muted-foreground)] mt-3">
-          {t("stamp.mobileHint")}
+          {t(`${prefix}.mobileHint`)}
         </p>
         <div className="flex items-center justify-center gap-3 mt-3">
           <div className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)]">
@@ -122,16 +179,18 @@ function MobileWalletButton({
 function DemoStatusHint({
   status,
   t,
+  prefix,
 }: {
   status: string;
   t: ReturnType<typeof useTranslations<"landing.hero">>;
+  prefix: "stamp" | "points";
 }) {
   if (status === "pending") {
     return (
       <div className="relative mt-6 max-w-[380px] mx-auto">
         <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
           <p className="text-sm text-[var(--muted-foreground)]">
-            {t.rich("stamp.scanQR", {
+            {t.rich(`${prefix}.scanQR`, {
               bold: (chunks) => <span className="font-semibold">{chunks}</span>,
             })}
           </p>
@@ -146,7 +205,7 @@ function DemoStatusHint({
         <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
           <p className="text-sm text-[var(--muted-foreground)]">
             <span className="inline-block animate-pulse mr-2">⏳</span>
-            {t("stamp.addToWallet")}
+            {t(`${prefix}.addToWallet`)}
           </p>
         </div>
       </div>
@@ -183,59 +242,99 @@ function useOfflineStampAnimation(isOffline: boolean, totalStamps: number) {
   return animatedStamps;
 }
 
-// Visual-only points count-up: eases a balance from 0 to `target` whenever the
-// points side of the toggle is active. No backend, no downloadable pass.
-// setState happens only inside the rAF callback (never synchronously in the
-// effect body), and the hook reports 0 while inactive so re-toggling restarts.
-function usePointsCountUp(active: boolean, target: number) {
-  const [value, setValue] = useState(0);
+// Offline fallback for the points card: steps 0 -> 120 in +20 increments so the
+// hero still animates if the demo backend is unreachable. Mirrors the stamp
+// offline animation.
+function useOfflinePointsAnimation(isOffline: boolean) {
+  const [animatedPoints, setAnimatedPoints] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!active) return;
-    let raf = 0;
-    let start = 0;
-    const duration = 1100;
-    const tick = (ts: number) => {
-      if (!start) start = ts;
-      const p = Math.min(1, (ts - start) / duration);
-      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
-      setValue(Math.round(target * eased));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [active, target]);
+    if (!isOffline) return;
 
-  return active ? value : 0;
+    const startDelay = setTimeout(() => {
+      let current = 0;
+      timerRef.current = setInterval(() => {
+        current += POINTS_STEP;
+        setAnimatedPoints(current);
+        if (current >= POINTS_TOP) {
+          if (timerRef.current) clearInterval(timerRef.current);
+        }
+      }, 550);
+    }, 800);
+
+    return () => {
+      clearTimeout(startDelay);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isOffline]);
+
+  return animatedPoints;
 }
 
 export function HeroDemo() {
-  const { qrUrl, status, stamps, isLoading, isStamping, addStamp, sessionToken } = useDemoSession();
+  const stamp = useDemoSession();
   const t = useTranslations("landing.hero");
   const tCommon = useTranslations("common");
   const isMobilePhone = useIsMobilePhone();
 
-  // Which engine the visitor is previewing. "stamps" keeps the real,
-  // downloadable demo (unchanged); "points" is a local visual preview.
+  // Which engine the visitor is previewing. "stamps" is the eager, real demo;
+  // "points" lazy-inits its own real session the first time it's selected, so
+  // stamp-only visitors never create a points session.
   const [mode, setMode] = useState<"stamps" | "points">("stamps");
+  const [pointsActivated, setPointsActivated] = useState(false);
 
+  // Latch the points session on first selection (kept alive afterwards) so
+  // stamp-only visitors never create a points session.
+  const handleModeChange = (value: "stamps" | "points") => {
+    setMode(value);
+    if (value === "points") setPointsActivated(true);
+  };
+
+  const points = useDemoSession({ cardType: "points", enabled: pointsActivated });
+
+  // Stamp offline fallback (unchanged)
   const [qrTimedOut, setQrTimedOut] = useState(false);
   useEffect(() => {
-    if (!isLoading && !isStamping) return;
+    if (!stamp.isLoading && !stamp.isStamping) return;
     const timer = setTimeout(() => setQrTimedOut(true), 3000);
     return () => clearTimeout(timer);
-  }, [isLoading, isStamping]);
+  }, [stamp.isLoading, stamp.isStamping]);
 
-  const isOffline = !isLoading && status === "error";
-  const showFakeDemo = isOffline || (qrTimedOut && !qrUrl);
+  const isOffline = !stamp.isLoading && stamp.status === "error";
+  const showFakeDemo = isOffline || (qrTimedOut && !stamp.qrUrl);
   const offlineStamps = useOfflineStampAnimation(showFakeDemo, 8);
-  const displayStamps = showFakeDemo ? offlineStamps : stamps;
+  const displayStamps = showFakeDemo ? offlineStamps : stamp.stamps;
 
-  const pointsBalance = usePointsCountUp(mode === "points", 80);
+  // Points offline fallback (only after the points session is activated)
+  const [pointsQrTimedOut, setPointsQrTimedOut] = useState(false);
+  useEffect(() => {
+    if (!pointsActivated) return;
+    if (!points.isLoading && !points.isStamping) return;
+    const timer = setTimeout(() => setPointsQrTimedOut(true), 3000);
+    return () => clearTimeout(timer);
+  }, [pointsActivated, points.isLoading, points.isStamping]);
+
+  const pointsOffline = pointsActivated && !points.isLoading && points.status === "error";
+  const showFakePoints = pointsOffline || (pointsActivated && pointsQrTimedOut && !points.qrUrl);
+  const offlinePoints = useOfflinePointsAnimation(showFakePoints);
+  const displayPoints = showFakePoints ? offlinePoints : points.points;
+
+  const pointsRewards: RewardTier[] = [
+    { id: "r_mid", name: t("points.rewardMid"), threshold: POINTS_MID },
+    { id: "r_top", name: t("points.rewardTop"), threshold: POINTS_TOP },
+  ];
+  const pointsRewardValue =
+    displayPoints >= POINTS_TOP
+      ? t("points.rewardAllUnlocked")
+      : displayPoints >= POINTS_MID
+        ? t("points.rewardTop")
+        : t("points.rewardMid");
 
   return (
     <>
-      {/* Engine toggle: stamps (real interactive demo) vs points (visual preview) */}
+      {/* Engine toggle: stamps (real interactive demo) vs points (real demo,
+          lazy-initialized on first selection) */}
       <div className="w-full max-w-[380px] mb-5">
         <Segmented
           ariaLabel={t("demoToggleLabel")}
@@ -244,15 +343,15 @@ export function HeroDemo() {
             { value: "points", label: tCommon("points") },
           ]}
           value={mode}
-          onChange={setMode}
+          onChange={handleModeChange}
         />
       </div>
 
       {/* Both branches stay mounted, stacked in one grid cell: the wrapper
           keeps the height of the tallest branch, so toggling never resizes
-          the hero (no flash or jiggle on mobile) and the live stamp demo
-          session is never torn down. The inactive branch crossfades out;
-          visibility flips at the end of the fade so it can't be tapped. */}
+          the hero (no flash or jiggle on mobile) and neither live session is
+          torn down. The inactive branch crossfades out; visibility flips at the
+          end of the fade so it can't be tapped. */}
       <div className="grid w-full justify-items-center">
         <div
           className={`col-start-1 row-start-1 w-full flex flex-col items-center transition-[opacity,visibility,transform] duration-300 ease-out ${
@@ -263,7 +362,7 @@ export function HeroDemo() {
           aria-hidden={mode !== "stamps"}
         >
           {/* Desktop demo hint */}
-          {!isMobilePhone && !showFakeDemo && status !== "pass_installed" && status !== "pass_downloaded" && (
+          {!isMobilePhone && !showFakeDemo && stamp.status !== "pass_installed" && stamp.status !== "pass_downloaded" && (
             <p className="text-base font-bold text-[var(--foreground)] mb-4 text-center">
               {t("stamp.demoCallout")}
               <svg className="inline-block w-5 h-5 text-[var(--accent)] animate-bounce ml-1.5 -mb-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
@@ -288,8 +387,8 @@ export function HeroDemo() {
                 }}
                 stamps={displayStamps}
                 showQR={!isMobilePhone}
-                qrUrl={qrUrl}
-                isQRLoading={!qrTimedOut && (isLoading || isStamping)}
+                qrUrl={stamp.qrUrl}
+                isQRLoading={!qrTimedOut && (stamp.isLoading || stamp.isStamping)}
                 interactive3D={true}
               />
             </ScaledCardWrapper>
@@ -297,18 +396,18 @@ export function HeroDemo() {
 
           {/* Demo controls */}
           {isMobilePhone ? (
-            status === "pass_installed" ? (
-              <StampButton onClick={addStamp} stamps={stamps} isDisabled={isStamping} t={t} />
-            ) : status === "pass_downloaded" ? (
-              <DemoStatusHint status={status} t={t} />
+            stamp.status === "pass_installed" ? (
+              <StampButton onClick={stamp.addStamp} stamps={stamp.stamps} isDisabled={stamp.isStamping} t={t} />
+            ) : stamp.status === "pass_downloaded" ? (
+              <DemoStatusHint status={stamp.status} t={t} prefix="stamp" />
             ) : (
-              <MobileWalletButton sessionToken={sessionToken} t={t} />
+              <MobileWalletButton sessionToken={stamp.sessionToken} t={t} prefix="stamp" />
             )
           ) : (
-            status === "pass_installed" ? (
-              <StampButton onClick={addStamp} stamps={stamps} isDisabled={isStamping} t={t} />
+            stamp.status === "pass_installed" ? (
+              <StampButton onClick={stamp.addStamp} stamps={stamp.stamps} isDisabled={stamp.isStamping} t={t} />
             ) : (
-              <DemoStatusHint status={status} t={t} />
+              <DemoStatusHint status={stamp.status} t={t} prefix="stamp" />
             )
           )}
         </div>
@@ -321,36 +420,58 @@ export function HeroDemo() {
           }`}
           aria-hidden={mode !== "points"}
         >
+          {/* Desktop demo hint */}
+          {!isMobilePhone && !showFakePoints && points.status !== "pass_installed" && points.status !== "pass_downloaded" && (
+            <p className="text-base font-bold text-[var(--foreground)] mb-4 text-center">
+              {t("points.demoCallout")}
+              <svg className="inline-block w-5 h-5 text-[var(--accent)] animate-bounce ml-1.5 -mb-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+              </svg>
+            </p>
+          )}
+
           <div className="w-full max-w-[380px]">
             <ScaledCardWrapper baseWidth={280} targetWidth={380}>
               <WalletCard
                 design={{
                   organization_name: "Stampeo",
                   card_type: "points",
-                  points_strip_style: "big_point",
+                  points_strip_style: "progress_icons",
                   background_color: "#1c1c1e",
                   progress_accent_color: "#f97316",
                   label_color: "#fff",
                   logo_url: STAMPEO_LOGO,
+                  points_reward_icons: POINTS_REWARD_ICONS,
                   secondary_fields: [
-                    { key: "reward", label: tCommon("reward"), value: t("pointsDemo.rewardValue") },
+                    { key: "reward", label: tCommon("reward"), value: pointsRewardValue },
                   ],
                 }}
-                pointsBalance={pointsBalance}
-                pointsRewards={POINTS_SAMPLE_REWARDS}
-                showQR={false}
+                pointsBalance={displayPoints}
+                pointsRewards={pointsRewards}
+                showQR={!isMobilePhone}
+                qrUrl={points.qrUrl}
+                isQRLoading={!pointsQrTimedOut && (points.isLoading || points.isStamping)}
                 interactive3D={true}
               />
             </ScaledCardWrapper>
           </div>
 
-          <div className="relative mt-6 w-full max-w-[380px] mx-auto">
-            <div className="bg-white/80 backdrop-blur rounded-xl p-4 border border-[var(--accent)]/10 text-center">
-              <p className="text-sm text-[var(--muted-foreground)]">
-                {t("pointsDemo.caption")}
-              </p>
-            </div>
-          </div>
+          {/* Demo controls (mirror the stamp branch) */}
+          {isMobilePhone ? (
+            points.status === "pass_installed" ? (
+              <PointsScanButton onClick={points.scan} points={points.points} isDisabled={points.isStamping} t={t} />
+            ) : points.status === "pass_downloaded" ? (
+              <DemoStatusHint status={points.status} t={t} prefix="points" />
+            ) : (
+              <MobileWalletButton sessionToken={points.sessionToken} t={t} prefix="points" />
+            )
+          ) : (
+            points.status === "pass_installed" ? (
+              <PointsScanButton onClick={points.scan} points={points.points} isDisabled={points.isStamping} t={t} />
+            ) : (
+              <DemoStatusHint status={points.status} t={t} prefix="points" />
+            )
+          )}
         </div>
       </div>
     </>
