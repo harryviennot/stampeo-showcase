@@ -431,7 +431,13 @@
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans engagement",
-      "momentum": "<accent>+36</accent> commerçants nous ont rejoints cette semaine"
+      "momentum": "<accent>+36</accent> commerçants nous ont rejoints cette semaine",
+      "tryDemoCta": "Essayer la démo"
+    },
+    "tryIt": {
+      "eyebrow": "Démo en direct, sans inscription",
+      "title": "Voyez-la sur votre téléphone",
+      "subtitle": "Scannez le code, ajoutez une vraie carte sur votre téléphone, et recevez un vrai tampon. Tampons ou points, exactement ce que vivront vos clients."
     },
     "trustStrip": {
       "flag": "🇫🇷",

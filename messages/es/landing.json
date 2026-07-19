@@ -432,7 +432,13 @@
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "1 mes gratis · Sin compromiso",
-      "momentum": "<accent>+36</accent> comercios se han unido esta semana"
+      "momentum": "<accent>+36</accent> comercios se han unido esta semana",
+      "tryDemoCta": "Prueba la demo"
+    },
+    "tryIt": {
+      "eyebrow": "Demo en directo, sin registro",
+      "title": "Míralo en tu propio teléfono",
+      "subtitle": "Escanea el código, añade una tarjeta real a tu teléfono y consíguete un sello. Sellos o puntos, tal y como lo vivirán tus clientes."
     },
     "trustStrip": {
       "flag": "🇪🇺",

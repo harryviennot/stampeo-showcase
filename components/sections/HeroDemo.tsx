@@ -10,12 +10,9 @@ import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
 import type { RewardTier, PointsRewardIcons } from "@/lib/types/design";
+import { STAMPEO_LOGO } from "@/lib/stampeo-card";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-// The Stampeo star, inlined so both the stamp and points demo cards share one logo.
-const STAMPEO_LOGO =
-  "data:image/svg+xml,%3Csvg fill='none' viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath clip-rule='evenodd' d='M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z' fill='%23f97316' fill-rule='evenodd'/%3E%3C/svg%3E";
 
 // Points demo ladder: mid reward at 60, top reward at 120 (matches the backend
 // demo). PointsStrip renders thresholds + icons (percent for the mid reward,

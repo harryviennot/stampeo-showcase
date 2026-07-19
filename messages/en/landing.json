@@ -431,7 +431,13 @@
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
       "reassurance": "1 month free · No commitment",
-      "momentum": "<accent>+36</accent> businesses joined us this week"
+      "momentum": "<accent>+36</accent> businesses joined us this week",
+      "tryDemoCta": "Try the live demo"
+    },
+    "tryIt": {
+      "eyebrow": "Live demo, no signup",
+      "title": "See it on your own phone",
+      "subtitle": "Scan the code, add a real card to your phone, and stamp it yourself. Stamps or points, exactly how your customers will feel it."
     },
     "trustStrip": {
       "flag": "🇪🇺",
@@ -465,25 +471,48 @@
       "subtitle": "Independent businesses bringing their regulars back, without overcomplicating things.",
       "items": [
         {
-          "quote": "I was skeptical at first. My clients are between 35 and 75, I figured they wouldn't bother with this. Turns out they're the ones asking me how many stamps they have left. And I finally see who my real regulars are.",
-          "name": "Aurélie L",
+          "quote": "I was sceptical at first. Most of my regulars are in their 50s and 60s, I assumed they wouldn't bother. Now they're the ones telling me how many stamps they have left, and I can finally see who my real regulars are.",
+          "name": "Sophie H",
           "role": "Baker",
-          "business": "L'Épi Doré",
-          "city": "Nantes"
+          "business": "The Proving Loaf",
+          "city": "Manchester"
         },
         {
-          "quote": "I'd already tried two loyalty tools, each time I had to change my till or sit through an hour-long sales demo. With Stampeo I had my card the same evening, and the next day my lunch crowd was adding it to their phone at the counter.",
-          "name": "Karim B",
-          "role": "Restaurant owner",
-          "business": "Le Bistrot du 11",
-          "city": "Paris"
+          "quote": "I'd tried two loyalty apps before, each time I had to swap my till or sit through an hour-long pitch. With Stampeo I had my card the same evening, and the next day my lunch crowd were adding it to their phones at the counter.",
+          "name": "Tom R",
+          "role": "Café owner",
+          "business": "No. 9 Kitchen",
+          "city": "Bristol"
         },
         {
-          "quote": "What sold me was being able to tell all my clients about an open slot without paying €0.15 per text. Last week I announced a Thursday cancellation and filled the slot in two hours.",
-          "name": "Margaux P",
+          "quote": "What won me over was telling my clients about a free slot without paying 12p a text. Last week I posted a Thursday cancellation and had it filled in two hours.",
+          "name": "Priya N",
           "role": "Hairdresser",
-          "business": "Studio Mireille",
-          "city": "Bordeaux"
+          "business": "Fox & Comb",
+          "city": "London"
+        }
+      ],
+      "itemsUs": [
+        {
+          "quote": "I figured my older regulars wouldn't touch it. Turns out they're the ones asking how many stamps they've got left, and I can finally tell who my real regulars are versus the walk-ins.",
+          "name": "Marcus T",
+          "role": "Coffee shop owner",
+          "business": "Grackle Coffee",
+          "city": "Austin"
+        },
+        {
+          "quote": "I'd tried two loyalty apps before, and each one meant a new POS or an hour-long demo. With Stampeo I had my card that same night, and by lunch the next day people were adding it to their phones right at the register.",
+          "name": "Elena R",
+          "role": "Restaurant owner",
+          "business": "Rincón 8",
+          "city": "San Diego"
+        },
+        {
+          "quote": "The thing that sold me was filling an open slot without paying for a mass text. I posted a Thursday cancellation and had it booked in a couple of hours, for nothing.",
+          "name": "Dana W",
+          "role": "Salon owner",
+          "business": "Wildflower Studio",
+          "city": "Portland"
         }
       ]
     },
