@@ -3,11 +3,12 @@ import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { SectorCarousel, type SectorTheme } from "./SectorCarousel";
 
-// Real, hand-designed cards for three sample businesses — logos, colors and
+// Real, hand-designed cards for five sample businesses — logos, colors and
 // strip artwork all match how the owner would actually set them up. Order MUST
 // match sectors[] in every messages/{locale}/landing.json:
 // [0] Barbershop (stamps) · [1] Café (stamps, custom cup icons) ·
-// [2] Restaurant (points) · [3] Beauty salon (points).
+// [2] Restaurant (points) · [3] Beauty salon (points) ·
+// [4] Bookstore (points, big balance).
 // The card fields (reward, cardholder name, next milestone…) come from the
 // sector's `fields` in landing.json so they stay localized.
 const themes: SectorTheme[] = [
@@ -113,6 +114,30 @@ const themes: SectorTheme[] = [
       { id: "r3", name: "", threshold: 300 },
     ],
     stripBgColor: "#FFFFFF",
+  },
+  // [4] Marginalia — independent bookstore on points, the big-balance strip in
+  // gold on forest green (varying baskets, so points count what's spent).
+  // Framed in deep pine so the green card still reads against it.
+  {
+    engine: "points",
+    cardBg: "#0B2217",
+    cardText: "#F3E9D6",
+    cardMuted: "rgba(243,233,214,0.62)",
+    accent: "#E4C67A",
+    accentPill: "rgba(228,198,122,0.16)",
+    walletBg: "#14432E",
+    walletAccent: "#E4C67A",
+    walletIcon: "#FFFFFF",
+    walletText: "#F3E9D6",
+    walletLabel: "#E4C67A",
+    walletLogoUrl: "/themes/marginalia/logo.svg",
+    pointsStripStyle: "big_point",
+    pointsBalance: 240,
+    pointsRewards: [
+      { id: "r1", name: "", threshold: 150 },
+      { id: "r2", name: "", threshold: 300 },
+      { id: "r3", name: "", threshold: 600 },
+    ],
   },
 ];
 

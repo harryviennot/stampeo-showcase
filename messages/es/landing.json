@@ -366,6 +366,18 @@
           ],
           "link": "/blog/programa-fidelidad-peluqueria",
           "linkLabel": "Leer la guía para salones"
+        },
+        {
+          "name": "Librería",
+          "quote": "Elias se lleva un libro de bolsillo una semana y una pila de novelas la siguiente. Los puntos cuentan lo que gasta: las cestas grandes acercan su recompensa más rápido.",
+          "reward": "1 € gastado = 1 punto, -10 € a 150 pts",
+          "advantage": "Las cestas grandes suman más rápido",
+          "fields": [
+            { "label": "Titular", "value": "Elias" },
+            { "label": "Próxima recompensa", "value": "-10 €" }
+          ],
+          "link": "/programa-de-fidelizacion",
+          "linkLabel": "Comparar sellos y puntos"
         }
       ]
 

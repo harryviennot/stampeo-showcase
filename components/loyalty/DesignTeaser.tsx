@@ -38,7 +38,7 @@ export async function DesignTeaser() {
             className="mt-12 flex items-center justify-center"
             aria-hidden="true"
           >
-            <div className="w-[190px] sm:w-[230px] -mr-10 sm:-mr-12 -rotate-6 translate-y-3 opacity-90">
+            <div className="w-[135px] sm:w-[230px] -mr-12 -rotate-6 translate-y-3 opacity-90">
               <ScaledCardWrapper baseWidth={230}>
                 <WalletCard
                   design={ring.design}
@@ -48,12 +48,12 @@ export async function DesignTeaser() {
                 />
               </ScaledCardWrapper>
             </div>
-            <div className="w-[210px] sm:w-[250px] relative z-10">
+            <div className="w-[180px] sm:w-[250px] relative z-10">
               <ScaledCardWrapper baseWidth={250}>
                 <WalletCard design={stamp.design} stamps={stamp.stamps} showQR={false} />
               </ScaledCardWrapper>
             </div>
-            <div className="w-[190px] sm:w-[230px] -ml-10 sm:-ml-12 rotate-6 translate-y-3 opacity-90">
+            <div className="w-[135px] sm:w-[230px] -ml-12 rotate-6 translate-y-3 opacity-90">
               <ScaledCardWrapper baseWidth={230}>
                 <WalletCard
                   design={points.design}

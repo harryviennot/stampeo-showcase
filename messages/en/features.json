@@ -83,13 +83,6 @@
           ]
         }
       },
-      "logoThemes": {
-        "title": "Start from your logo",
-        "description": "Import your logo and the editor pulls out its colors, then suggests full card themes built on them. Pick a logo below to see what it generates.",
-        "brandLabel": "Logo",
-        "paletteLabel": "Suggested palettes",
-        "hint": "In the editor, every color picker also offers swatches taken from your logo."
-      },
       "parity": {
         "title": "One card, ready for every pocket",
         "wallets": {
@@ -172,14 +165,7 @@
         },
         "iconLibrary": {
           "title": "An icon for every trade",
-          "description": "Ready-to-use stamp icons for every trade: café, restaurant, salon, florist, pet shop. One that fits your business, guaranteed.",
-          "stats": {
-            "icons": "98 icons",
-            "categories": "8 categories",
-            "search": "Search by name"
-          },
-          "more": "+62",
-          "trades": ["Café", "Restaurant", "Salon", "Florist", "Pet shop"]
+          "description": "98 ready-to-use stamp icons across 8 categories, searchable by name in the editor. Café, salon, retail: one fits your business, guaranteed."
         },
         "customIcons": {
           "badge": "New",
@@ -192,15 +178,13 @@
             "A different icon for each stamp if you like, and a special one for the reward."
           ],
           "gallery": {
-            "title": "Real cards, real icons",
             "examples": [
-              { "orgName": "Maison Levain", "reward": "10th croissant free", "caption": "Overlapping croissants" },
-              { "orgName": "Café Margot", "reward": "Free coffee", "caption": "Staggered, outlined empties" },
-              { "orgName": "Donut Days", "reward": "6th donut free", "caption": "In a row, faded empties" },
-              { "orgName": "Fleurs & Co", "reward": "A bouquet on us", "caption": "A gift on the last stamp" }
+              "Six water drops, staggered",
+              "Citrus wedges that overlap as they fill",
+              "A dozen cones piling up",
+              "Boba cups in a tidy grid"
             ]
-          },
-          "attribution": "Demo icons from Twemoji (CC-BY 4.0)."
+          }
         },
         "livingCard": {
           "title": "A card that knows your customers",

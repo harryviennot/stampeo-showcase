@@ -83,6 +83,33 @@
       "restart": "Recommencer",
       "cta": "Créer ma carte"
     },
+    "options": {
+      "title": "Les réglages qui font un bon programme",
+      "subtitle": "Tampons ou points, ce n'est que le début. Vous retrouverez ces réglages à la création ; voici les quatre qui comptent, avec notre conseil pour chacun.",
+      "tipLabel": "Notre conseil :",
+      "items": [
+        {
+          "name": "Des cartes pré-tamponnées",
+          "description": "Distribuez des cartes avec un ou deux tampons déjà remplis, offerts.",
+          "tip": "L'élan compte. Un client termine bien plus souvent une carte déjà entamée qu'une carte à zéro."
+        },
+        {
+          "name": "Des récompenses qui s'accumulent",
+          "description": "Carte pleine ? La récompense est mise de côté et un nouveau cycle démarre aussitôt. Vous choisissez combien peuvent attendre.",
+          "tip": "Autorisez-en au moins deux : personne ne doit s'arrêter parce qu'une récompense l'attend déjà."
+        },
+        {
+          "name": "Le rythme des récompenses",
+          "description": "Vous fixez le nombre de tampons, ou le prix en points de chaque récompense, jusqu'à douze récompenses côté points.",
+          "tip": "Rendez la première récompense facile à atteindre. Une victoire rapide transforme une visite en habitude."
+        },
+        {
+          "name": "Changer d'avis plus tard",
+          "description": "Passez des tampons aux points quand vous voulez. Vos clients gardent la même carte et leur progression.",
+          "tip": "Commencez simple. La plupart des commerces lancent l'option évidente et ajustent avec de vraies données."
+        }
+      ]
+    },
     "designTeaser": {
       "title": "Quel que soit votre choix, la carte reste la vôtre",
       "subtitle": "Votre logo, vos couleurs, vos propres icônes de tampon : une fois le programme choisi, l'éditeur de carte s'occupe du style.",

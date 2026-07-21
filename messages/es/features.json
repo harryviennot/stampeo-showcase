@@ -83,13 +83,6 @@
           ]
         }
       },
-      "logoThemes": {
-        "title": "Empieza por tu logo",
-        "description": "Sube tu logo: el editor extrae sus colores y te propone temas completos construidos sobre ellos. Elige un logo abajo para ver qué genera.",
-        "brandLabel": "Logo",
-        "paletteLabel": "Paletas propuestas",
-        "hint": "En el editor, cada selector de color ofrece también tonos sacados de tu logo."
-      },
       "parity": {
         "title": "Una tarjeta, lista para todos los bolsillos",
         "wallets": {
@@ -172,14 +165,7 @@
         },
         "iconLibrary": {
           "title": "Un icono para cada oficio",
-          "description": "Iconos de sello listos para usar para cada oficio: cafetería, restaurante, peluquería, floristería, tienda de mascotas. Uno que encaja con tu actividad, seguro.",
-          "stats": {
-            "icons": "98 iconos",
-            "categories": "8 categorías",
-            "search": "Búsqueda por nombre"
-          },
-          "more": "+62",
-          "trades": ["Cafetería", "Restaurante", "Peluquería", "Floristería", "Tienda de mascotas"]
+          "description": "98 iconos de sello listos para usar, en 8 categorías, con búsqueda por nombre en el editor. Cafetería, salón, tienda: hay uno que encaja con tu comercio."
         },
         "customIcons": {
           "badge": "Nuevo",
@@ -192,15 +178,13 @@
             "Un icono distinto por sello si quieres, y uno especial para la recompensa."
           ],
           "gallery": {
-            "title": "Tarjetas reales, iconos reales",
             "examples": [
-              { "orgName": "Maison Levain", "reward": "El 10º croissant gratis", "caption": "Croissants superpuestos" },
-              { "orgName": "Café Margot", "reward": "Café gratis", "caption": "Al tresbolillo, vacíos en contorno" },
-              { "orgName": "Donut Days", "reward": "El 6º donut gratis", "caption": "Alineados, vacíos atenuados" },
-              { "orgName": "Fleurs & Co", "reward": "Un ramo de regalo", "caption": "Un regalo en el último sello" }
+              "Seis gotas de agua al tresbolillo",
+              "Gajos de cítricos que se superponen",
+              "Doce cucuruchos que se apilan",
+              "Bubble teas bien alineados"
             ]
-          },
-          "attribution": "Iconos de demostración: Twemoji (CC-BY 4.0)."
+          }
         },
         "livingCard": {
           "title": "Una tarjeta que conoce a tus clientes",

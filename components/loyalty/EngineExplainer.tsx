@@ -68,7 +68,9 @@ export async function EngineExplainer() {
   }>;
 
   return (
-    <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)]">
+    // overflow-x-clip: the left/right reveal variants translate off-canvas
+    // before entering the viewport and would widen the page on phones.
+    <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)] overflow-x-clip">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-14">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">

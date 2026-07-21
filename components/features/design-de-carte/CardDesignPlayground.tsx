@@ -28,15 +28,18 @@ interface ColorTheme {
   bg: string;
   accent: string;
   icon: string;
+  /** Brand-bank wordmark whose colors read on this theme's background. */
+  logoUrl: string;
 }
 
-/** Colour-only themes. Names + business names come from i18n so they stay
- *  localized; the playground swaps all three card colours at once. */
+/** Colour themes; names come from i18n so they stay localized. Each theme
+ *  carries a brand-bank logo picked for legibility on its background, so the
+ *  preview card never looks like a blank template. */
 const THEMES: ColorTheme[] = [
-  { bg: "#1c1c1e", accent: "#f97316", icon: "#ffffff" },
-  { bg: "#F5E6D3", accent: "#8B4513", icon: "#ffffff" },
-  { bg: "#1A2332", accent: "#60A5FA", icon: "#ffffff" },
-  { bg: "#F8E8F0", accent: "#D4688E", icon: "#ffffff" },
+  { bg: "#1c1c1e", accent: "#f97316", icon: "#ffffff", logoUrl: "/themes/forme/logo.svg" },
+  { bg: "#F5E6D3", accent: "#8B4513", icon: "#ffffff", logoUrl: "/themes/pulp/logo.svg" },
+  { bg: "#1A2332", accent: "#60A5FA", icon: "#ffffff", logoUrl: "/themes/lustre/logo.svg" },
+  { bg: "#F8E8F0", accent: "#D4688E", icon: "#ffffff", logoUrl: "/themes/salon/logo.png" },
 ];
 
 /** Trade-representative subset surfaced in the playground. The full catalog
@@ -90,7 +93,9 @@ export function CardDesignPlayground() {
   const [iconMode, setIconMode] = useState<"preset" | "custom">("preset");
   const [themeIndex, setThemeIndex] = useState(0);
   const [iconId, setIconId] = useState<StampIconType>("coffee");
-  const [customIcon, setCustomIcon] = useState<PlaygroundCustomIcon>("coffee");
+  const [customIcon, setCustomIcon] = useState<PlaygroundCustomIcon>(
+    PLAYGROUND_CUSTOM_ICONS[0]
+  );
   const [arrangement, setArrangement] =
     useState<CustomStampArrangement>("staggered");
   const [showName, setShowName] = useState(true);
@@ -101,7 +106,6 @@ export function CardDesignPlayground() {
 
   const isPoints = program === "points";
   const theme = THEMES[themeIndex];
-  const themeT = themes[themeIndex];
   const totalStamps = iconMode === "custom" ? 10 : 8;
   const shownStamps = Math.min(stamps, totalStamps);
   // A filled card (or a maxed balance) gives the preview a small spring pulse.
@@ -159,7 +163,8 @@ export function CardDesignPlayground() {
 
   const design: Partial<CardDesign> = isPoints
     ? {
-        organization_name: themeT.orgName,
+        organization_name: "",
+        logo_url: theme.logoUrl,
         card_type: "points",
         points_strip_style: stripStyle,
         background_color: theme.bg,
@@ -168,7 +173,8 @@ export function CardDesignPlayground() {
         secondary_fields: secondaryFields,
       }
     : {
-        organization_name: themeT.orgName,
+        organization_name: "",
+        logo_url: theme.logoUrl,
         background_color: theme.bg,
         stamp_filled_color: theme.accent,
         icon_color: theme.icon,
@@ -178,7 +184,7 @@ export function CardDesignPlayground() {
         ...(iconMode === "custom"
           ? {
               stamp_icon_mode: "custom" as const,
-              custom_stamp_config: customConfigFor([customIcon], {
+              custom_stamp_config: customConfigFor(customIcon, {
                 arrangement,
                 empty_mode: "greyscale",
                 empty_opacity: 60,
@@ -199,7 +205,7 @@ export function CardDesignPlayground() {
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* Live card preview */}
           <ScrollReveal variant="right" className="flex justify-center">
             <motion.div
@@ -223,7 +229,7 @@ export function CardDesignPlayground() {
 
           {/* Controls */}
           <ScrollReveal variant="left">
-            <div className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-5 shadow-sm">
+            <div className="w-full max-w-xl rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-4 shadow-sm">
               {/* Program type: the same card runs stamps or points */}
               <div className="space-y-2.5">
                 <ControlLabel>{t("programLabel")}</ControlLabel>
@@ -350,24 +356,24 @@ export function CardDesignPlayground() {
                   <div className="space-y-2.5">
                     <ControlLabel>{t("customIconLabel")}</ControlLabel>
                     <div className="grid grid-cols-[repeat(auto-fill,minmax(44px,1fr))] gap-2">
-                      {PLAYGROUND_CUSTOM_ICONS.map((name) => {
-                        const active = customIcon === name;
+                      {PLAYGROUND_CUSTOM_ICONS.map((icon) => {
+                        const active = customIcon.id === icon.id;
                         return (
                           <button
-                            key={name}
-                            onClick={() => setCustomIcon(name)}
-                            className="w-11 h-11 flex items-center justify-center rounded-xl bg-white transition-transform duration-200 hover:scale-105 mx-auto"
+                            key={icon.id}
+                            onClick={() => setCustomIcon(icon)}
+                            className="w-11 h-11 flex items-center justify-center rounded-xl bg-[var(--muted)] transition-transform duration-200 hover:scale-105 mx-auto"
                             style={{
                               boxShadow: active
                                 ? `0 0 0 2px white, 0 0 0 4px ${theme.accent}`
                                 : "inset 0 0 0 1px var(--border)",
                             }}
-                            aria-label={name}
+                            aria-label={icon.id}
                             aria-pressed={active}
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                              src={`/custom-icons/${name}.png`}
+                              src={`${icon.base}.${icon.ext}`}
                               alt=""
                               className="w-7 h-7 object-contain"
                             />

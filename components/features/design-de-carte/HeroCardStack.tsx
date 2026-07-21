@@ -1,20 +1,31 @@
-import { CardHeroPreview } from "./CardHeroPreview";
+import { getTranslations } from "next-intl/server";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { STAMP_SAMPLES, POINTS_SAMPLES } from "@/lib/loyalty-samples";
 
 /**
- * Hero visual: the interactive CardHeroPreview front and center, with two
- * branded sample cards peeking out behind it on large screens. Hints at the
- * style gallery further down without adding any assets or client code.
+ * Hero visual built entirely from the hand-designed brand bank: the Aurevo
+ * café card (real imported cup icons) front and center, with two points cards
+ * peeking out behind it on large screens.
  */
-export function HeroCardStack() {
-  const left = POINTS_SAMPLES.find((p) => p.id === "marginalia") ?? POINTS_SAMPLES[0];
-  const right = STAMP_SAMPLES.find((s) => s.id === "pulp") ?? STAMP_SAMPLES[0];
+export async function HeroCardStack() {
+  const tp = await getTranslations("features.design-de-carte.custom.playground");
+
+  const center = STAMP_SAMPLES.find((s) => s.id === "aurevo") ?? STAMP_SAMPLES[0];
+  const left = POINTS_SAMPLES.find((p) => p.id === "salon") ?? POINTS_SAMPLES[0];
+  const right = POINTS_SAMPLES.find((p) => p.id === "marginalia") ?? POINTS_SAMPLES[0];
+
+  const centerDesign = {
+    ...center.design,
+    secondary_fields: [
+      { key: "member", label: tp("memberLabel"), value: tp("memberName") },
+      { key: "reward", label: tp("rewardLabel"), value: tp("rewardValue") },
+    ],
+  };
 
   return (
-    // Same width/alignment box as CardHeroPreview so the peeking cards are
-    // positioned against the hero card itself, not the grid column.
+    // Fixed-width box so the peeking cards are positioned against the hero
+    // card itself, not the grid column.
     <div className="relative w-full max-w-[300px] mx-auto lg:ml-auto lg:mr-6">
       {/* Peeking cards: decoration only, desktop only to avoid mobile clutter */}
       <div
@@ -35,12 +46,24 @@ export function HeroCardStack() {
         aria-hidden="true"
       >
         <ScaledCardWrapper baseWidth={220}>
-          <WalletCard design={right.design} stamps={right.stamps} showQR={false} />
+          <WalletCard
+            design={right.design}
+            pointsBalance={right.pointsBalance}
+            pointsRewards={right.pointsRewards}
+            showQR={false}
+          />
         </ScaledCardWrapper>
       </div>
 
       <div className="relative z-10">
-        <CardHeroPreview />
+        <ScaledCardWrapper baseWidth={300}>
+          <WalletCard
+            design={centerDesign}
+            stamps={center.stamps}
+            showQR={false}
+            interactive3D
+          />
+        </ScaledCardWrapper>
       </div>
     </div>
   );

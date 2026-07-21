@@ -366,6 +366,18 @@
           ],
           "link": "/blog/programme-fidelite-salon-coiffure",
           "linkLabel": "Lire le guide pour les salons"
+        },
+        {
+          "name": "Librairie",
+          "quote": "Elias repart avec un poche une semaine, une pile de romans la suivante. Les points comptent ce qu'il dépense : les gros paniers rapprochent sa récompense, plus vite.",
+          "reward": "1 € dépensé = 1 point, -10 € à 150 pts",
+          "advantage": "Les gros paniers rapportent plus vite",
+          "fields": [
+            { "label": "Titulaire", "value": "Elias" },
+            { "label": "Prochaine récompense", "value": "-10 €" }
+          ],
+          "link": "/programme-fidelite",
+          "linkLabel": "Comparer tampons et points"
         }
       ]
     },

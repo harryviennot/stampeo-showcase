@@ -83,13 +83,6 @@
           ]
         }
       },
-      "logoThemes": {
-        "title": "Partez de votre logo",
-        "description": "Importez votre logo : l'éditeur en extrait les couleurs et vous propose des thèmes complets construits dessus. Choisissez un logo ci-dessous pour voir ce qu'il génère.",
-        "brandLabel": "Logo",
-        "paletteLabel": "Palettes proposées",
-        "hint": "Dans l'éditeur, chaque sélecteur de couleur propose aussi des teintes tirées de votre logo."
-      },
       "parity": {
         "title": "Une carte, prête pour toutes les poches",
         "wallets": {
@@ -172,14 +165,7 @@
         },
         "iconLibrary": {
           "title": "Une icône pour chaque métier",
-          "description": "Des icônes de tampon prêtes à l'emploi pour chaque métier : café, restaurant, salon, fleuriste, animalerie. Une qui colle à votre activité, à coup sûr.",
-          "stats": {
-            "icons": "98 icônes",
-            "categories": "8 catégories",
-            "search": "Recherche par nom"
-          },
-          "more": "+62",
-          "trades": ["Café", "Restaurant", "Salon", "Fleuriste", "Animalerie"]
+          "description": "98 icônes de tampon prêtes à l'emploi, en 8 catégories, avec recherche par nom dans l'éditeur. Café, salon, boutique : il y en a une qui colle à votre activité."
         },
         "customIcons": {
           "badge": "Nouveau",
@@ -192,15 +178,13 @@
             "Une icône différente par tampon si vous voulez, et une spéciale pour la récompense."
           ],
           "gallery": {
-            "title": "De vraies cartes, de vraies icônes",
             "examples": [
-              { "orgName": "Maison Levain", "reward": "Le 10e croissant offert", "caption": "Croissants superposés" },
-              { "orgName": "Café Margot", "reward": "Café offert", "caption": "En quinconce, vides en contour" },
-              { "orgName": "Donut Days", "reward": "Le 6e donut offert", "caption": "Alignés, vides estompés" },
-              { "orgName": "Fleurs & Co", "reward": "Un bouquet offert", "caption": "Un cadeau sur le dernier tampon" }
+              "Six gouttes d'eau en quinconce",
+              "Des quartiers d'agrumes qui se superposent",
+              "Douze cornets qui s'empilent",
+              "Des bubble teas bien alignés"
             ]
-          },
-          "attribution": "Icônes de démonstration : Twemoji (CC-BY 4.0)."
+          }
         },
         "livingCard": {
           "title": "Une carte qui connaît vos clients",

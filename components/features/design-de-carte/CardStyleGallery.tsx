@@ -58,25 +58,45 @@ export async function CardStyleGallery() {
     auxiliary_fields: (set?.aux ?? []).map((f, k) => ({ key: `a${k}`, ...f })),
   });
 
-  // Interleave stamp and points samples so a swipe alternates between the two
-  // program types instead of grouping them.
+  // Hand-tuned display order: alternate light and dark card backgrounds (and
+  // mostly stamp/points) so the carousel never shows a same-tone cluster.
+  // Entries reference the source arrays by index, so the i18n captions and
+  // cardFields stay zipped to STAMP_SAMPLES / POINTS_SAMPLES order.
+  const DISPLAY_ORDER: Array<{ kind: "stamp" | "points"; index: number }> = [
+    { kind: "stamp", index: 2 }, // pulp — light
+    { kind: "points", index: 0 }, // marginalia — dark
+    { kind: "points", index: 3 }, // salon — light
+    { kind: "stamp", index: 0 }, // lustre — dark
+    { kind: "stamp", index: 3 }, // barber — light
+    { kind: "points", index: 2 }, // forme — dark
+    { kind: "points", index: 1 }, // restaurant — light
+    { kind: "stamp", index: 1 }, // aurevo — dark
+    { kind: "stamp", index: 5 }, // tige — light
+    { kind: "points", index: 6 }, // ravin — dark
+    { kind: "points", index: 5 }, // pace — light
+    { kind: "stamp", index: 7 }, // oba — dark
+    { kind: "stamp", index: 6 }, // gelo — light
+    { kind: "points", index: 4 }, // ode — light
+    { kind: "stamp", index: 4 }, // patoune — dark (wraps to pulp: light)
+  ];
+
   const items: CarouselItem[] = [];
-  const count = Math.max(STAMP_SAMPLES.length, POINTS_SAMPLES.length);
-  for (let i = 0; i < count; i++) {
-    const s = STAMP_SAMPLES[i];
-    if (s) {
+  for (const { kind, index } of DISPLAY_ORDER) {
+    if (kind === "stamp") {
+      const s = STAMP_SAMPLES[index];
+      if (!s) continue;
       items.push({
         key: s.id,
-        label: stampCaptions[i] ?? s.id,
+        label: stampCaptions[index] ?? s.id,
         node: (
           <GallerySlide
             badge={tc("stamps")}
             accent="#f97316"
-            caption={stampCaptions[i] ?? ""}
+            caption={stampCaptions[index] ?? ""}
           >
             <ScaledCardWrapper baseWidth={280}>
               <WalletCard
-                design={withFields(s.design, cardFields?.stamps?.[i])}
+                design={withFields(s.design, cardFields?.stamps?.[index])}
                 stamps={s.stamps}
                 showQR={false}
               />
@@ -84,21 +104,21 @@ export async function CardStyleGallery() {
           </GallerySlide>
         ),
       });
-    }
-    const p = POINTS_SAMPLES[i];
-    if (p) {
+    } else {
+      const p = POINTS_SAMPLES[index];
+      if (!p) continue;
       items.push({
         key: p.id,
-        label: pointCaptions[i] ?? p.id,
+        label: pointCaptions[index] ?? p.id,
         node: (
           <GallerySlide
             badge={tc("points")}
             accent="#8b5cf6"
-            caption={pointCaptions[i] ?? ""}
+            caption={pointCaptions[index] ?? ""}
           >
             <ScaledCardWrapper baseWidth={280}>
               <WalletCard
-                design={withFields(p.design, cardFields?.points?.[i])}
+                design={withFields(p.design, cardFields?.points?.[index])}
                 pointsBalance={p.pointsBalance}
                 pointsRewards={p.pointsRewards}
                 showQR={false}

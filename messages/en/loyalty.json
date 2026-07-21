@@ -83,6 +83,33 @@
       "restart": "Start over",
       "cta": "Create my card"
     },
+    "options": {
+      "title": "The settings that make a program work",
+      "subtitle": "Stamps or points is just the start. You'll meet these dials during setup; here are the four that matter, with our advice for each.",
+      "tipLabel": "Our tip:",
+      "items": [
+        {
+          "name": "Start cards pre-stamped",
+          "description": "Hand out cards with the first stamp or two already filled, on the house.",
+          "tip": "A head start works. Customers finish a card they've already begun far more often than one at zero."
+        },
+        {
+          "name": "Let rewards stack",
+          "description": "A full card banks its reward and a fresh cycle starts right away. You choose how many rewards a customer can hold.",
+          "tip": "Allow at least two, so nobody stalls because a reward is already waiting."
+        },
+        {
+          "name": "Set the rhythm",
+          "description": "You pick the number of stamps, or the point price of each reward, with up to twelve rewards on points.",
+          "tip": "Make the first reward easy to reach. A quick win turns a first visit into a habit."
+        },
+        {
+          "name": "Change your mind later",
+          "description": "Switch between stamps and points whenever you want. Your customers keep the same card and their progress.",
+          "tip": "Start simple. Most businesses launch the obvious choice and adjust once real numbers come in."
+        }
+      ]
+    },
     "designTeaser": {
       "title": "Whichever you pick, make it yours",
       "subtitle": "Your logo, your colors, your own stamp icons. Once the program is chosen, the card designer handles the look.",

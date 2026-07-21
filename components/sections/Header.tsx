@@ -356,8 +356,10 @@ export function Header() {
               </div>
             </Link>
 
-            {/* Desktop navigation — centered via flex */}
-            <div className="hidden lg:flex items-center gap-6 xl:gap-9">
+            {/* Desktop navigation — full row only from xl: below that the FR/ES
+                labels overflow into the logo and auth buttons, so the burger
+                menu stays on through lg. */}
+            <div className="hidden xl:flex items-center gap-6 2xl:gap-9">
               <FeaturesDropdown />
               {navItems.map((item) => (
                 <Link
@@ -374,7 +376,7 @@ export function Header() {
             </div>
 
             {/* Desktop auth */}
-            <div className="hidden lg:flex items-center gap-3 shrink-0">
+            <div className="hidden xl:flex items-center gap-3 shrink-0">
               <DesktopAuthButtons
                 loading={loading}
                 user={user}
@@ -385,7 +387,7 @@ export function Header() {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              className="xl:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -410,7 +412,7 @@ export function Header() {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="lg:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
+                className="xl:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
               >
                 <div className="px-6 py-4">
                   <div className="flex flex-col gap-1">

@@ -366,6 +366,18 @@
           ],
           "link": "/blog/loyalty-card-without-app",
           "linkLabel": "Read the salon guide"
+        },
+        {
+          "name": "Bookstore",
+          "quote": "Elias grabs a paperback one visit and a stack of novels the next. Points count what he spends, so the big hauls bring his reward closer, faster.",
+          "reward": "€1 spent = 1 point, €10 off at 150 pts",
+          "advantage": "Big baskets earn faster",
+          "fields": [
+            { "label": "Cardholder", "value": "Elias" },
+            { "label": "Next reward", "value": "€10 off" }
+          ],
+          "link": "/loyalty-programs",
+          "linkLabel": "Compare stamps and points"
         }
       ]
     },

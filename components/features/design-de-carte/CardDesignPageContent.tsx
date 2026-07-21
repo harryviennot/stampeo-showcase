@@ -10,7 +10,6 @@ import { CardDesignPlayground } from "./CardDesignPlayground";
 import { CardStyleGallery } from "./CardStyleGallery";
 import { CustomIconsSection } from "./CustomIconsSection";
 import { IconLibrarySection } from "./IconLibrarySection";
-import { LogoThemesSection } from "./LogoThemesSection";
 import { LivingCardSection } from "./LivingCardSection";
 import { AnnotatedWalletCard } from "./AnnotatedWalletCard";
 import { WalletParitySection } from "./WalletParitySection";
@@ -72,20 +71,14 @@ export async function CardDesignPageContent() {
         </Container>
       </section>
 
-      {/* Interactive card designer */}
-      <CardDesignPlayground />
-
       {/* Full style gallery: every sample brand, stamps and points interleaved */}
       <CardStyleGallery />
-
-      {/* Headline capability: your own stamp icons + example gallery */}
-      <CustomIconsSection />
 
       {/* Preset icon catalog breadth */}
       <IconLibrarySection />
 
-      {/* Auto-generated themes from the merchant's logo */}
-      <LogoThemesSection />
+      {/* "Or use your own icons" — reads as the follow-up to the library above */}
+      <CustomIconsSection />
 
       {/* Personalization: customer name, variables, stacked rewards */}
       <LivingCardSection />
@@ -93,11 +86,14 @@ export async function CardDesignPageContent() {
       {/* Creation methods hidden for now — component kept for later re-enable. */}
 
       {/* Annotated Card Anatomy (stamps/points toggle; points styles live in
-          the playground above) */}
+          the playground below) */}
       <AnnotatedWalletCard />
 
       {/* Both wallets + multiple saved styles */}
       <WalletParitySection />
+
+      {/* Interactive card designer: the hands-on close, right before the FAQ */}
+      <CardDesignPlayground />
 
       {/* FAQ */}
       <section className="py-16 sm:py-24 bg-[var(--blog-bg-alt)]">

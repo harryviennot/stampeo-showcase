@@ -83,6 +83,33 @@
       "restart": "Empezar de nuevo",
       "cta": "Crear mi tarjeta"
     },
+    "options": {
+      "title": "Los ajustes que hacen un buen programa",
+      "subtitle": "Sellos o puntos es solo el principio. Verás estos ajustes al crear tu programa; estos son los cuatro que importan, con nuestro consejo para cada uno.",
+      "tipLabel": "Nuestro consejo:",
+      "items": [
+        {
+          "name": "Tarjetas con sellos de regalo",
+          "description": "Entrega tarjetas con uno o dos sellos ya puestos, invita la casa.",
+          "tip": "El impulso cuenta. Un cliente termina mucho más a menudo una tarjeta ya empezada que una a cero."
+        },
+        {
+          "name": "Recompensas que se acumulan",
+          "description": "¿Tarjeta llena? La recompensa se guarda y un ciclo nuevo empieza al momento. Tú decides cuántas pueden esperar.",
+          "tip": "Permite al menos dos: que nadie se frene porque ya le espera una recompensa."
+        },
+        {
+          "name": "El ritmo de las recompensas",
+          "description": "Tú fijas el número de sellos, o el precio en puntos de cada recompensa, hasta doce recompensas con puntos.",
+          "tip": "Haz que la primera recompensa esté cerca. Una victoria rápida convierte una visita en un hábito."
+        },
+        {
+          "name": "Cambiar de idea más adelante",
+          "description": "Pasa de sellos a puntos cuando quieras. Tus clientes conservan la misma tarjeta y su progreso.",
+          "tip": "Empieza simple. La mayoría lanza la opción evidente y ajusta con datos reales."
+        }
+      ]
+    },
     "designTeaser": {
       "title": "Elijas lo que elijas, la tarjeta es tuya",
       "subtitle": "Tu logo, tus colores, tus propios iconos de sello: una vez elegido el programa, el editor de tarjetas se encarga del estilo.",
