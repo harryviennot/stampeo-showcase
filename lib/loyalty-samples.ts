@@ -192,7 +192,7 @@ export const STAMP_SAMPLES: StampSample[] = [
   // },
   
  
-  // Gelo — gelato. A dozen cones piling up (overlap) on pale mint.
+  // Gelo — gelato. Eight cones piling up (overlap) on pale mint.
   {
     id: "gelo",
     design: {
