@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="127 4 454 210" fill="none">
-  <text x="353" y="118" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="102" font-weight="900" font-style="italic" letter-spacing="6" fill="#16130F">PACE</text>
-  <polygon points="258,138 468,138 458,152 248,152" fill="#FF5A1F"/>
-  <text x="354" y="196" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="9" fill="#FF5A1F">SNEAKERS · STREETWEAR</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-246 -111 356 147" fill="none">
+  <!-- the E is three speed lines -->
+  <text x="-4" y="0" text-anchor="end" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="100" font-weight="900" font-style="italic" letter-spacing="2" fill="#16130F"
+    textLength="228" lengthAdjust="spacingAndGlyphs">PAC</text>
+  <g fill="#FF5A1F">
+    <polygon points="26,-72 96,-72 92,-56 22,-56"/>
+    <polygon points="20,-44 74,-44 70,-28 16,-28"/>
+    <polygon points="14,-16 84,-16 80,0 10,0"/>
+  </g>
 </svg>

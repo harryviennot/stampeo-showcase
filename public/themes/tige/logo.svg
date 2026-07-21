@@ -1,11 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="234 -4 232 252" fill="none">
-  <g transform="translate(350,8)">
-    <ellipse cx="0" cy="22" rx="11" ry="20" fill="#E27D9C"/>
-    <ellipse cx="-12" cy="26" rx="9" ry="17" transform="rotate(-16 -12 26)" fill="#D96A8D"/>
-    <ellipse cx="12" cy="26" rx="9" ry="17" transform="rotate(16 12 26)" fill="#D96A8D"/>
-    <rect x="-2" y="42" width="4" height="34" fill="#5E8B57"/>
-    <path d="M0 68 C -12 64 -18 54 -16 44 C -4 48 2 58 0 68 Z" fill="#5E8B57"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-154 -133 320 230" fill="none">
+  <!-- a single stem grows from under the word, bends over it, blooms top-right -->
+  <path d="M -140 62 C -120 10 -40 -80 118 -78" stroke="#5E8B57" stroke-width="5" stroke-linecap="round"/>
+  <path d="M -66 -32 C -58 -56 -38 -64 -22 -62 C -26 -44 -44 -30 -66 -32 Z" fill="#5E8B57"/>
+  <g transform="translate(121,-81) rotate(20)">
+    <ellipse cx="0" cy="-16" rx="9" ry="17" fill="#E27D9C"/>
+    <ellipse cx="-10" cy="-13" rx="7.5" ry="14" transform="rotate(-16 -10 -13)" fill="#D96A8D"/>
+    <ellipse cx="10" cy="-13" rx="7.5" ry="14" transform="rotate(16 10 -13)" fill="#D96A8D"/>
   </g>
-  <text x="350" y="182" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="104" fill="#2F4A32">Tige</text>
-  <text x="355" y="230" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="600" letter-spacing="10" fill="#6E8B5E">FLEURISTE</text>
+  <text x="0" y="60" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+    font-style="italic" font-size="104" fill="#2F4A32"
+    textLength="176" lengthAdjust="spacingAndGlyphs">Tige</text>
 </svg>

@@ -1,6 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="91 0 437 228" fill="none">
-  <path d="M310 16 C310 16 282 52 282 72 a28 28 0 1 0 56 0 C338 52 310 16 310 16 Z" fill="#FFFFFF"/>
-  <path d="M296 70 a15 15 0 0 1 13 -14" fill="none" stroke="#3B9EFF" stroke-width="5" stroke-linecap="round" opacity="0.65"/>
-  <text x="310" y="170" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="78" font-weight="700" letter-spacing="16" fill="#FFFFFF">LUSTRE</text>
-  <text x="314" y="208" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="500" letter-spacing="7" fill="#FFFFFF" opacity="0.7">CAR WASH · DETAILING</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -18 534 156" fill="none">
+  <defs>
+    <linearGradient id="lustre-sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#9CCBFF"/>
+    </linearGradient>
+  </defs>
+  <!-- swirl ring around the drop: open circle, gap at top-right -->
+  <g transform="translate(58,60)">
+    <circle r="46" stroke="#3B9EFF" stroke-width="7" stroke-linecap="round"
+      stroke-dasharray="216 73" transform="rotate(-35)"/>
+    <path d="M0 -28 C0 -28 -21 -1 -21 12 a21 21 0 1 0 42 0 C21 -1 0 -28 0 -28 Z" fill="#FFFFFF"/>
+    <path d="M-11 11 a11 11 0 0 1 9 -11" stroke="#0B1B2B" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+  </g>
+  <text x="132" y="88" font-family="'Helvetica Neue', Arial, sans-serif" font-size="80"
+    font-weight="700" letter-spacing="8" fill="url(#lustre-sheen)"
+    textLength="368" lengthAdjust="spacingAndGlyphs">LUSTRE</text>
 </svg>

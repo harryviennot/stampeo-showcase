@@ -1,12 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="87 11 365 224" fill="none">
-  <g transform="translate(270,48)">
-    <circle cx="0" cy="0" r="22" fill="#E8590C"/>
-    <circle cx="0" cy="0" r="17" fill="#FFD9A6"/>
-    <g stroke="#E8590C" stroke-width="2.2" stroke-linecap="round">
-      <line x1="0" y1="0" x2="0" y2="-17"/><line x1="0" y1="0" x2="12" y2="-12"/><line x1="0" y1="0" x2="17" y2="0"/><line x1="0" y1="0" x2="12" y2="12"/><line x1="0" y1="0" x2="0" y2="17"/><line x1="0" y1="0" x2="-12" y2="12"/><line x1="0" y1="0" x2="-17" y2="0"/><line x1="0" y1="0" x2="-12" y2="-12"/>
-    </g>
-    <circle cx="0" cy="0" r="2.8" fill="#E8590C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-169 -147 338 253" fill="none">
+  <!-- fruit-sticker badge -->
+  <ellipse cx="0" cy="0" rx="155" ry="92" fill="#E8590C"/>
+  <ellipse cx="0" cy="0" rx="141" ry="79" stroke="#FBF7EF" stroke-width="3.5"
+    stroke-dasharray="2 11" stroke-linecap="round"/>
+  <!-- leaf popping off the top edge -->
+  <g transform="translate(52,-96) rotate(28)">
+    <path d="M0 0 C 22 -6 34 -24 32 -42 C 12 -38 -2 -22 0 0 Z" fill="#2F8F4E"/>
+    <path d="M2 -4 C 12 -16 20 -26 28 -36" stroke="#FBF7EF" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
   </g>
-  <text x="270" y="178" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="104" font-weight="800" letter-spacing="-2" fill="#E8590C">Pulp</text>
-  <text x="270" y="216" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17" font-weight="600" letter-spacing="8" fill="#2F8F4E">COLD-PRESSED JUICE</text>
+  <text x="0" y="16" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="86" font-weight="800" letter-spacing="-2" fill="#FBF7EF"
+    textLength="196" lengthAdjust="spacingAndGlyphs">pulp</text>
 </svg>

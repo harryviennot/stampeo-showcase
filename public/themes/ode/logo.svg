@@ -1,4 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="179 6 371 190" fill="none">
-  <text x="365" y="128" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="118" letter-spacing="30" fill="#141414">ODE</text>
-  <text x="354" y="178" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="19" font-weight="500" letter-spacing="8" fill="#8A8378">PRÊT-À-PORTER</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-142 -122 248 162" fill="none">
+  <!-- editorial monogram: overlapping serif letters, outline / solid / outline -->
+  <text x="-128" y="0" font-family="Georgia, 'Times New Roman', serif" font-size="118"
+    fill="none" stroke="#141414" stroke-width="2.5"
+    textLength="86" lengthAdjust="spacingAndGlyphs">O</text>
+  <text x="-58" y="0" font-family="Georgia, 'Times New Roman', serif" font-size="118"
+    fill="#141414" textLength="88" lengthAdjust="spacingAndGlyphs">D</text>
+  <text x="16" y="0" font-family="Georgia, 'Times New Roman', serif" font-size="118"
+    fill="none" stroke="#141414" stroke-width="2.5"
+    textLength="76" lengthAdjust="spacingAndGlyphs">E</text>
 </svg>

@@ -130,66 +130,7 @@ export const STAMP_SAMPLES: StampSample[] = [
     },
     stamps: 6,
   },
-  // Patoune — pet grooming. Preset paw stamps: cream circles, teal paw, on
-  // deep teal.
-  {
-    id: "patoune",
-    design: {
-      organization_name: "",
-      logo_url: "/themes/patoune/logo.svg",
-      background_color: "#0F766E",
-      stamp_filled_color: "#FFF7ED",
-      icon_color: "#0F766E",
-      stamp_icon: "paw",
-      total_stamps: 10,
-    },
-    stamps: 6,
-  },
-  // Tige — florist. Tulips in a tidy straight grid on soft sage.
-  {
-    id: "tige",
-    design: {
-      organization_name: "",
-      logo_url: "/themes/tige/logo.svg",
-      background_color: "#EEF2E6",
-      stamp_filled_color: "#5E8B57",
-      icon_color: "#FFFFFF",
-      total_stamps: 8,
-      stamp_icon_mode: "custom",
-      custom_stamp_config: {
-        icons: [themedIcon("tulip", "/themes/tige/tulip")],
-        reward_icon: null,
-        empty_icon: null,
-        empty_mode: "greyscale",
-        arrangement: "straight",
-        empty_opacity: 45,
-      },
-    },
-    stamps: 5,
-  },
-  // Gelo — gelato. A dozen cones piling up (overlap) on pale mint.
-  {
-    id: "gelo",
-    design: {
-      organization_name: "",
-      logo_url: "/themes/gelo/logo.svg",
-      background_color: "#DFF7EC",
-      stamp_filled_color: "#E86FA4",
-      icon_color: "#FFFFFF",
-      total_stamps: 12,
-      stamp_icon_mode: "custom",
-      custom_stamp_config: {
-        icons: [themedIcon("cone", "/themes/gelo/cone")],
-        reward_icon: null,
-        empty_icon: null,
-        empty_mode: "greyscale",
-        arrangement: "overlap",
-        empty_opacity: 60,
-      },
-    },
-    stamps: 7,
-  },
-  // OBA — bubble tea. Cream boba cups in a straight grid on deep violet
+   // OBA — bubble tea. Cream boba cups in a straight grid on deep violet
   // (8 stamps is past the staggered sweet spot — see Lustre).
   {
     id: "oba",
@@ -211,6 +152,67 @@ export const STAMP_SAMPLES: StampSample[] = [
       },
     },
     stamps: 5,
+  },
+  // Patoune — pet grooming. Preset paw stamps: cream circles, teal paw, on
+  // deep teal.
+  {
+    id: "patoune",
+    design: {
+      organization_name: "",
+      logo_url: "/themes/patoune/logo.svg",
+      background_color: "#0F766E",
+      stamp_filled_color: "#FFF7ED",
+      icon_color: "#0F766E",
+      stamp_icon: "paw",
+      total_stamps: 10,
+    },
+    stamps: 6,
+  },
+  // Tige — florist. Tulips in a tidy straight grid on soft sage.
+  // {
+  //   id: "tige",
+  //   design: {
+  //     organization_name: "",
+  //     logo_url: "/themes/tige/logo.svg",
+  //     background_color: "#EEF2E6",
+  //     stamp_filled_color: "#5E8B57",
+  //     icon_color: "#FFFFFF",
+  //     total_stamps: 8,
+  //     stamp_icon_mode: "custom",
+  //     custom_stamp_config: {
+  //       icons: [themedIcon("tulip", "/themes/tige/tulip")],
+  //       reward_icon: null,
+  //       empty_icon: null,
+  //       empty_mode: "greyscale",
+  //       arrangement: "straight",
+  //       empty_opacity: 45,
+  //     },
+  //   },
+  //   stamps: 5,
+  // },
+  
+ 
+  // Gelo — gelato. A dozen cones piling up (overlap) on pale mint.
+  {
+    id: "gelo",
+    design: {
+      organization_name: "",
+      logo_url: "/themes/gelo/logo.svg",
+      background_color: "#DFF7EC",
+      stamp_filled_color: "#E86FA4",
+      icon_color: "#FFFFFF",
+      total_stamps: 8,
+      stamp_icon_mode: "custom",
+      custom_stamp_config: {
+        icons: [themedIcon("cone", "/themes/gelo/cone", "png")],
+        reward_icon: null,
+        empty_icon: null,
+        empty_mode: "greyscale",
+        arrangement: "overlap",
+        empty_opacity: 60,
+      },
+    },
+    stamps: 7,
   },
 ];
 
