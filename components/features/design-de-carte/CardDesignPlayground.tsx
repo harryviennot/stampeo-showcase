@@ -188,7 +188,7 @@ export function CardDesignPlayground() {
       };
 
   return (
-    <section className="py-16 sm:py-24">
+    <section id="playground" className="py-16 sm:py-24 scroll-mt-24">
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">

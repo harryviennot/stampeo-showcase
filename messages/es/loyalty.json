@@ -83,53 +83,10 @@
       "restart": "Empezar de nuevo",
       "cta": "Crear mi tarjeta"
     },
-    "gallery": {
-      "title": "Elige un estilo, a tu gusto",
-      "subtitle": "Tu logo, tus colores. Cuadrícula de sellos o banda de puntos, todo dentro de Apple Wallet y Google Wallet.",
-      "designerCta": "Probar el editor de tarjetas",
-      "designerHref": "/features/estilo-de-tarjeta",
-      "prev": "Estilo anterior",
-      "next": "Estilo siguiente",
-      "stamps": [
-        "Iconos personalizados, en filas escalonadas",
-        "Iconos personalizados, apilándose al sellar",
-        "Iconos vivos en tarjeta clara",
-        "Una cuadrícula clásica con tu logo",
-        "Iconos claros sobre fondo intenso",
-        "Una cuadrícula ordenada",
-        "Doce iconos que se apilan",
-        "Color vivo, iconos divertidos"
-      ],
-      "points": [
-        "Un saldo grande y legible",
-        "Tu propia foto como banda",
-        "Una marca por recompensa",
-        "Un anillo que se llena hacia la recompensa",
-        "Monocromo y editorial",
-        "Hitos en tarjeta clara",
-        "Un anillo dorado sobre fondo intenso"
-      ],
-      "cardFields": {
-        "stamps": [
-          { "main": [ { "label": "Titular", "value": "Théo" }, { "label": "Recompensa", "value": "Lavado gratis" } ], "aux": [ { "label": "Miembro desde", "value": "2024" } ] },
-          { "main": [ { "label": "Titular", "value": "Camille" }, { "label": "Recompensa", "value": "Café gratis" } ] },
-          { "main": [ { "label": "Titular", "value": "Inès" }, { "label": "Recompensa", "value": "Smoothie gratis" } ], "aux": [ { "label": "Favorito", "value": "Green Machine" } ] },
-          { "main": [ { "label": "Recompensa", "value": "Corte gratis" }, { "label": "Titular", "value": "Julien" } ] },
-          { "main": [ { "label": "Mascota", "value": "Max" }, { "label": "Recompensa", "value": "Baño gratis" } ], "aux": [ { "label": "Miembro desde", "value": "2025" } ] },
-          { "main": [ { "label": "Titular", "value": "Louise" }, { "label": "Recompensa", "value": "Ramo gratis" } ] },
-          { "main": [ { "label": "Titular", "value": "Nina" }, { "label": "Recompensa", "value": "Bola gratis" } ], "aux": [ { "label": "Favorito", "value": "Stracciatella" } ] },
-          { "main": [ { "label": "Titular", "value": "Mei" }, { "label": "Recompensa", "value": "Bubble tea gratis" } ] }
-        ],
-        "points": [
-          { "main": [ { "label": "Titular", "value": "Elias" }, { "label": "Próxima recompensa", "value": "-10 €" } ], "aux": [ { "label": "Miembro desde", "value": "2023" } ] },
-          { "main": [ { "label": "Próximo hito", "value": "100 pts" }, { "label": "Próxima recompensa", "value": "-25 %" } ] },
-          { "main": [ { "label": "Titular", "value": "Sacha" }, { "label": "Próxima recompensa", "value": "Clase gratis" } ], "aux": [ { "label": "Visitas", "value": "18" } ] },
-          { "main": [ { "label": "Titular", "value": "Chloé" }, { "label": "Próxima recompensa", "value": "Manicura gratis" } ] },
-          { "main": [ { "label": "Titular", "value": "Anna" }, { "label": "Próxima recompensa", "value": "-10 %" } ] },
-          { "main": [ { "label": "Próximo hito", "value": "240 pts" }, { "label": "Próxima recompensa", "value": "-20 €" } ], "aux": [ { "label": "Miembro desde", "value": "2024" } ] },
-          { "main": [ { "label": "Titular", "value": "Hugo" }, { "label": "Próxima recompensa", "value": "Copa gratis" } ], "aux": [ { "label": "Visitas", "value": "12" } ] }
-        ]
-      }
+    "designTeaser": {
+      "title": "Elijas lo que elijas, la tarjeta es tuya",
+      "subtitle": "Tu logo, tus colores, tus propios iconos de sello: una vez elegido el programa, el editor de tarjetas se encarga del estilo.",
+      "cta": "Descubrir el editor de tarjetas"
     },
     "businessMap": {
       "title": "Lo que eligen la mayoría de comercios",
@@ -177,7 +134,6 @@
       "title": "¿Listo para recompensar a tus habituales?",
       "subtitle": "Crea tu tarjeta en minutos, con sellos o con puntos. Un mes gratis, sin compromiso.",
       "button": "Crear mi tarjeta"
-    },
-    "switchReassurance": "¿Dudas? Empieza con uno y cambia cuando quieras: tus clientes conservan la misma tarjeta."
+    }
   }
 }

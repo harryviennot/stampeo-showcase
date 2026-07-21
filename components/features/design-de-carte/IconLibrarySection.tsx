@@ -26,6 +26,7 @@ const TRADE_ICONS: StampIconType[] = ["coffee", "food", "scissors", "flower", "p
 export function IconLibrarySection() {
   const t = useTranslations("features.design-de-carte.custom.iconLibrary");
   const trades = t.raw("trades") as string[];
+  const stats = [t("stats.icons"), t("stats.categories"), t("stats.search")];
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
@@ -37,6 +38,17 @@ export function IconLibrarySection() {
           <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
             {t("description")}
           </p>
+          {/* True editor numbers: 98 icons, 8 categories, name search */}
+          <div className="mt-6 flex flex-wrap justify-center gap-2.5">
+            {stats.map((stat) => (
+              <span
+                key={stat}
+                className="rounded-full bg-[var(--accent)]/10 px-3.5 py-1.5 text-sm font-semibold text-[var(--accent)]"
+              >
+                {stat}
+              </span>
+            ))}
+          </div>
         </ScrollReveal>
 
         {/* Catalog */}
@@ -65,6 +77,17 @@ export function IconLibrarySection() {
                 />
               </motion.div>
             ))}
+            {/* The catalog goes beyond this curation */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, scale: 0.6 },
+                show: { opacity: 1, scale: 1 },
+              }}
+              transition={{ type: "spring", stiffness: 320, damping: 20 }}
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center bg-[var(--accent)] text-white text-xs font-bold shadow-sm"
+            >
+              {t("more")}
+            </motion.div>
           </motion.div>
         </ScrollReveal>
 

@@ -1,11 +1,10 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { Container } from "../ui/Container";
-import { ScrollReveal } from "../ui/ScrollReveal";
-import { CenterCarousel, type CarouselItem } from "../ui/CenterCarousel";
-import { ArrowRightIcon } from "../icons";
-import { WalletCard } from "../card/WalletCard";
-import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
+import { Container } from "@/components/ui/Container";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { CenterCarousel, type CarouselItem } from "@/components/ui/CenterCarousel";
+import { CTAButton } from "@/components/ui/CTAButton";
+import { WalletCard } from "@/components/card/WalletCard";
+import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { STAMP_SAMPLES, POINTS_SAMPLES } from "@/lib/loyalty-samples";
 
 function GallerySlide({
@@ -36,7 +35,7 @@ function GallerySlide({
 }
 
 export async function CardStyleGallery() {
-  const t = await getTranslations("loyalty.gallery");
+  const t = await getTranslations("features.design-de-carte.gallery");
   const tc = await getTranslations("common");
   const stampCaptions = t.raw("stamps") as string[];
   const pointCaptions = t.raw("points") as string[];
@@ -140,14 +139,9 @@ export async function CardStyleGallery() {
       </ScrollReveal>
 
       <Container>
-        <ScrollReveal delay={160} className="mt-10 text-center">
-          <Link
-            href={t("designerHref") as "/features/design-de-carte"}
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white px-6 py-3 font-bold text-[var(--foreground)] shadow-sm transition-all hover:border-[var(--accent)] hover:text-[var(--accent)] hover:shadow-md"
-          >
-            {t("designerCta")}
-            <ArrowRightIcon className="w-4 h-4" />
-          </Link>
+        <ScrollReveal delay={160} className="mt-10 flex flex-col items-center gap-4 text-center">
+          <p className="text-[var(--muted-foreground)]">{t("ctaLead")}</p>
+          <CTAButton label={tc("buttons.startFree")} size="md" />
         </ScrollReveal>
       </Container>
     </section>

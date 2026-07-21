@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useRouter as useLocaleRouter } from "@/i18n/navigation";
 
@@ -26,7 +27,17 @@ const TARGETS: Target[] = [
   { key: "control", label: "control", href: "/?variant=control" },
 ];
 
+/** useSearchParams() must sit under a Suspense boundary or static prerender
+ *  of the landing pages bails out and the build fails. */
 export function VariantDevToggle() {
+  return (
+    <Suspense fallback={null}>
+      <VariantDevToggleInner />
+    </Suspense>
+  );
+}
+
+function VariantDevToggleInner() {
   const router = useRouter();
   const localeRouter = useLocaleRouter();
   const pathname = usePathname();

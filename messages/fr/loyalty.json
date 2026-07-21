@@ -83,53 +83,10 @@
       "restart": "Recommencer",
       "cta": "Créer ma carte"
     },
-    "gallery": {
-      "title": "Choisissez un style, à vos couleurs",
-      "subtitle": "Votre logo, vos couleurs. Grille de tampons ou bandeau de points, le tout dans Apple Wallet et Google Wallet.",
-      "designerCta": "Essayer l'éditeur de carte",
-      "designerHref": "/features/design-de-carte",
-      "prev": "Style précédent",
-      "next": "Style suivant",
-      "stamps": [
-        "Icônes personnalisées, en rangs décalés",
-        "Icônes personnalisées, empilées à mesure",
-        "Icônes vives sur carte claire",
-        "Une grille classique avec votre logo",
-        "Icônes claires sur fond profond",
-        "Une grille bien rangée",
-        "Douze icônes qui s'empilent",
-        "Couleur franche, icônes ludiques"
-      ],
-      "points": [
-        "Un grand solde bien lisible",
-        "Votre photo en bandeau",
-        "Un repère par récompense",
-        "Un anneau qui se remplit vers la récompense",
-        "Monochrome et éditorial",
-        "Des paliers sur carte claire",
-        "Un anneau doré sur fond profond"
-      ],
-      "cardFields": {
-        "stamps": [
-          { "main": [ { "label": "Titulaire", "value": "Théo" }, { "label": "Récompense", "value": "Lavage offert" } ], "aux": [ { "label": "Membre depuis", "value": "2024" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Camille" }, { "label": "Récompense", "value": "Café offert" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Inès" }, { "label": "Récompense", "value": "Smoothie offert" } ], "aux": [ { "label": "Préféré", "value": "Green Machine" } ] },
-          { "main": [ { "label": "Récompense", "value": "Coupe offerte" }, { "label": "Titulaire", "value": "Julien" } ] },
-          { "main": [ { "label": "Compagnon", "value": "Max" }, { "label": "Récompense", "value": "Bain offert" } ], "aux": [ { "label": "Membre depuis", "value": "2025" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Louise" }, { "label": "Récompense", "value": "Bouquet offert" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Nina" }, { "label": "Récompense", "value": "Boule offerte" } ], "aux": [ { "label": "Préféré", "value": "Stracciatella" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Mei" }, { "label": "Récompense", "value": "Bubble tea offert" } ] }
-        ],
-        "points": [
-          { "main": [ { "label": "Titulaire", "value": "Elias" }, { "label": "Prochaine récompense", "value": "-10 €" } ], "aux": [ { "label": "Membre depuis", "value": "2023" } ] },
-          { "main": [ { "label": "Prochain palier", "value": "100 pts" }, { "label": "Prochaine récompense", "value": "-25 %" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Sacha" }, { "label": "Prochaine récompense", "value": "Cours offert" } ], "aux": [ { "label": "Visites", "value": "18" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Chloé" }, { "label": "Prochaine récompense", "value": "Manucure offerte" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Anna" }, { "label": "Prochaine récompense", "value": "-10 %" } ] },
-          { "main": [ { "label": "Prochain palier", "value": "240 pts" }, { "label": "Prochaine récompense", "value": "-20 €" } ], "aux": [ { "label": "Membre depuis", "value": "2024" } ] },
-          { "main": [ { "label": "Titulaire", "value": "Hugo" }, { "label": "Prochaine récompense", "value": "Verre offert" } ], "aux": [ { "label": "Visites", "value": "12" } ] }
-        ]
-      }
+    "designTeaser": {
+      "title": "Quel que soit votre choix, la carte reste la vôtre",
+      "subtitle": "Votre logo, vos couleurs, vos propres icônes de tampon : une fois le programme choisi, l'éditeur de carte s'occupe du style.",
+      "cta": "Découvrir l'éditeur de carte"
     },
     "businessMap": {
       "title": "Ce que choisissent la plupart des commerces",
@@ -177,7 +134,6 @@
       "title": "Prêt à récompenser vos habitués ?",
       "subtitle": "Créez votre carte en quelques minutes, tampons ou points. Un mois gratuit, sans engagement.",
       "button": "Créer ma carte"
-    },
-    "switchReassurance": "Un doute ? Commencez par l'un, changez quand vous voulez : vos clients gardent la même carte."
+    }
   }
 }

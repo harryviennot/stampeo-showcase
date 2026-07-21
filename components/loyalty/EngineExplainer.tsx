@@ -56,7 +56,10 @@ function EngineCard({
 
 export async function EngineExplainer() {
   const t = await getTranslations("loyalty");
-  const stamp = STAMP_SAMPLES[0];
+  // Aurevo (café) is the most relatable "stamps" example — coffee loyalty is the
+  // canonical stamp card. Select by id so the gallery order (and its
+  // index-zipped captions) stays untouched.
+  const stamp = STAMP_SAMPLES.find((s) => s.id === "aurevo") ?? STAMP_SAMPLES[0];
   const points = POINTS_SAMPLES[0];
   const rows = t.raw("comparison.rows") as Array<{
     criteria: string;

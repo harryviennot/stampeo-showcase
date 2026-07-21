@@ -7,7 +7,7 @@
       },
       "problem": {
         "title": "Créer une carte pro ne devrait pas être un projet",
-        "description": "Vous avez déjà essayé de créer un visuel sur Canva ? Ou pire, de configurer un logiciel avec 47 options de personnalisation ? Vous avez un commerce à gérer — pas une agence de design à diriger. Le résultat : soit vous passez 2 heures à bricoler quelque chose de moyen, soit vous ne le faites pas du tout."
+        "description": "Vous avez déjà essayé de créer un visuel sur Canva ? Ou pire, de configurer un logiciel avec 47 options de personnalisation ? Vous avez un commerce à gérer, pas une agence de design à diriger. Le résultat : soit vous passez 2 heures à bricoler quelque chose de moyen, soit vous ne le faites pas du tout."
       },
       "sections": [
         {
@@ -36,6 +36,97 @@
         "notifications-push",
         "programme-fondateur"
       ],
+      "gallery": {
+        "title": "Quinze commerces, quinze styles",
+        "subtitle": "Chaque carte ici a été composée avec cet éditeur : grille de tampons ou bandeau de points, icônes personnalisées, le logo bien en évidence.",
+        "ctaLead": "La vôtre peut être la prochaine.",
+        "prev": "Style précédent",
+        "next": "Style suivant",
+        "stamps": [
+          "Icônes personnalisées, en rangs décalés",
+          "Icônes personnalisées, empilées à mesure",
+          "Icônes vives sur carte claire",
+          "Une grille classique avec votre logo",
+          "Icônes claires sur fond profond",
+          "Une grille bien rangée",
+          "Douze icônes qui s'empilent",
+          "Couleur franche, icônes ludiques"
+        ],
+        "points": [
+          "Un grand solde bien lisible",
+          "Votre photo en bandeau",
+          "Un repère par récompense",
+          "Un anneau qui se remplit vers la récompense",
+          "Monochrome et éditorial",
+          "Des paliers sur carte claire",
+          "Un anneau doré sur fond profond"
+        ],
+        "cardFields": {
+          "stamps": [
+            { "main": [ { "label": "Titulaire", "value": "Théo" }, { "label": "Récompense", "value": "Lavage offert" } ], "aux": [ { "label": "Membre depuis", "value": "2024" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Camille" }, { "label": "Récompense", "value": "Café offert" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Inès" }, { "label": "Récompense", "value": "Smoothie offert" } ], "aux": [ { "label": "Préféré", "value": "Green Machine" } ] },
+            { "main": [ { "label": "Récompense", "value": "Coupe offerte" }, { "label": "Titulaire", "value": "Julien" } ] },
+            { "main": [ { "label": "Compagnon", "value": "Max" }, { "label": "Récompense", "value": "Bain offert" } ], "aux": [ { "label": "Membre depuis", "value": "2025" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Louise" }, { "label": "Récompense", "value": "Bouquet offert" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Nina" }, { "label": "Récompense", "value": "Boule offerte" } ], "aux": [ { "label": "Préféré", "value": "Stracciatella" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Mei" }, { "label": "Récompense", "value": "Bubble tea offert" } ] }
+          ],
+          "points": [
+            { "main": [ { "label": "Titulaire", "value": "Elias" }, { "label": "Prochaine récompense", "value": "-10 €" } ], "aux": [ { "label": "Membre depuis", "value": "2023" } ] },
+            { "main": [ { "label": "Prochain palier", "value": "100 pts" }, { "label": "Prochaine récompense", "value": "-25 %" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Sacha" }, { "label": "Prochaine récompense", "value": "Cours offert" } ], "aux": [ { "label": "Visites", "value": "18" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Chloé" }, { "label": "Prochaine récompense", "value": "Manucure offerte" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Anna" }, { "label": "Prochaine récompense", "value": "-10 %" } ] },
+            { "main": [ { "label": "Prochain palier", "value": "240 pts" }, { "label": "Prochaine récompense", "value": "-20 €" } ], "aux": [ { "label": "Membre depuis", "value": "2024" } ] },
+            { "main": [ { "label": "Titulaire", "value": "Hugo" }, { "label": "Prochaine récompense", "value": "Verre offert" } ], "aux": [ { "label": "Visites", "value": "12" } ] }
+          ]
+        }
+      },
+      "logoThemes": {
+        "title": "Partez de votre logo",
+        "description": "Importez votre logo : l'éditeur en extrait les couleurs et vous propose des thèmes complets construits dessus. Choisissez un logo ci-dessous pour voir ce qu'il génère.",
+        "brandLabel": "Logo",
+        "paletteLabel": "Palettes proposées",
+        "hint": "Dans l'éditeur, chaque sélecteur de couleur propose aussi des teintes tirées de votre logo."
+      },
+      "parity": {
+        "title": "Une carte, prête pour toutes les poches",
+        "wallets": {
+          "title": "Apple Wallet et Google Wallet",
+          "description": "La même carte fonctionne dans les deux, et l'éditeur affiche un aperçu de chacun pendant que vous composez. Rien à faire en double, rien à maintenir."
+        },
+        "styles": {
+          "title": "Changez de style quand vous voulez",
+          "description": "Modifiez votre style de carte à tout moment : les cartes déjà dans les téléphones de vos clients se mettent à jour automatiquement. Avec Growth, gardez plusieurs styles enregistrés et activez celui de votre choix en un clic."
+        }
+      },
+      "faq": {
+        "title": "Le style de carte, en questions",
+        "subtitle": "Ce qu'on nous demande avant de créer une carte.",
+        "items": [
+          {
+            "question": "Puis-je utiliser mes propres icônes de tampon ?",
+            "answer": "Oui. Importez n'importe quelle image (votre croissant, votre mascotte, votre logo) : le fond est détouré automatiquement et elle devient un tampon. Vous pouvez même utiliser une icône différente par tampon, jusqu'à douze."
+          },
+          {
+            "question": "Et si je n'ai ni logo ni couleurs ?",
+            "answer": "La bibliothèque compte 98 icônes prêtes à l'emploi, et l'éditeur propose une palette complète. Choisissez une icône, vos couleurs, et l'aperçu montre le résultat tout de suite."
+          },
+          {
+            "question": "La carte fonctionne-t-elle sur iPhone et Android ?",
+            "answer": "Oui. La même carte vit dans Apple Wallet et dans Google Wallet, et l'éditeur affiche un aperçu des deux pendant que vous composez. Vos clients scannent un seul QR code, quel que soit leur téléphone."
+          },
+          {
+            "question": "Puis-je changer le style plus tard ?",
+            "answer": "Quand vous voulez. Modifiez votre style de carte : les cartes déjà dans les téléphones de vos clients se mettent à jour automatiquement. Avec Growth, gardez plusieurs styles et changez le style actif."
+          },
+          {
+            "question": "Vous pouvez créer la carte pour moi ?",
+            "answer": "Oui. Envoyez-nous votre logo et vos couleurs, et on compose votre carte pour vous. La plupart des cartes sont prêtes sous 48 heures."
+          }
+        ]
+      },
       "custom": {
         "playground": {
           "sectionTitle": "Composez votre carte",
@@ -81,7 +172,13 @@
         },
         "iconLibrary": {
           "title": "Une icône pour chaque métier",
-          "description": "Des dizaines d'icônes de tampon prêtes à l'emploi : café, restaurant, salon, fleuriste, animalerie. Une qui colle à votre activité, à coup sûr.",
+          "description": "Des icônes de tampon prêtes à l'emploi pour chaque métier : café, restaurant, salon, fleuriste, animalerie. Une qui colle à votre activité, à coup sûr.",
+          "stats": {
+            "icons": "98 icônes",
+            "categories": "8 catégories",
+            "search": "Recherche par nom"
+          },
+          "more": "+62",
           "trades": ["Café", "Restaurant", "Salon", "Fleuriste", "Animalerie"]
         },
         "customIcons": {
@@ -91,7 +188,8 @@
           "bullets": [
             "Fond détouré automatiquement à l'import.",
             "Trois styles de tampon vide : niveaux de gris, contour, ou le vôtre.",
-            "Trois dispositions : alignés, en quinconce, ou superposés."
+            "Trois dispositions : alignés, en quinconce, ou superposés.",
+            "Une icône différente par tampon si vous voulez, et une spéciale pour la récompense."
           ],
           "gallery": {
             "title": "De vraies cartes, de vraies icônes",

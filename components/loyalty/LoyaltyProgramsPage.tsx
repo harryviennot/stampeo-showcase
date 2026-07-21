@@ -5,7 +5,7 @@ import { FAQList } from "../ui/FAQList";
 import { FeatureCTA } from "../features/FeatureCTA";
 import { EngineExplainer } from "./EngineExplainer";
 import { EnginePicker } from "./EnginePicker";
-import { CardStyleGallery } from "./CardStyleGallery";
+import { DesignTeaser } from "./DesignTeaser";
 import { BusinessTypeMap } from "./BusinessTypeMap";
 
 export async function LoyaltyProgramsPage() {
@@ -40,7 +40,7 @@ export async function LoyaltyProgramsPage() {
 
       <EngineExplainer />
       <EnginePicker />
-      <CardStyleGallery />
+      <DesignTeaser />
       <BusinessTypeMap />
 
       {/* FAQ */}

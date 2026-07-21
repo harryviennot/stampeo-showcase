@@ -1,8 +1,9 @@
 /**
- * Sample card designs for the loyalty-programs card-style gallery ("Pick a
- * style, make it yours"). Rendered through <WalletCard>, so every value stays
- * within backend limits (only the known points strip styles; ascending reward
- * ladders). Captions come from i18n (loyalty.gallery.*) zipped by index.
+ * Sample card designs for the card-design page's style gallery (and reused by
+ * the loyalty page's explainer/picker/teaser). Rendered through <WalletCard>,
+ * so every value stays within backend limits (only the known points strip
+ * styles; ascending reward ladders). Gallery captions come from i18n
+ * (features.design-de-carte.gallery.*) zipped by index.
  *
  * Every card is a real, hand-designed fictional brand — original SVG wordmark
  * logos and custom stamp icons served from public/themes/ — so the gallery
