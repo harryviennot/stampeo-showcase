@@ -5,6 +5,7 @@ import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
+import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
 
 export async function Footer() {
   const t = await getTranslations("common.footer");
@@ -14,9 +15,11 @@ export async function Footer() {
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
   const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
+  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: loyaltyPath(locale), label: "Loyalty programs" },
     { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
     { href: `${seoPrefix}/blog`, label: "Blog" },
     { href: `${seoPrefix}/contact`, label: "Contact" },
@@ -125,6 +128,9 @@ export async function Footer() {
                 </Link>
                 <Link href="/pricing" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("pricing")}
+                </Link>
+                <Link href={loyaltySlug} className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  {tNav("loyaltyPrograms")}
                 </Link>
                 <Link href="/#features" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("howItWorks")}

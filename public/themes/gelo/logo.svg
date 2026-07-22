@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-240 -108 330 174" fill="none">
+  <!-- GEL + the O is a scoop of gelato on a mini cone -->
+  <text x="-8" y="0" text-anchor="end" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="96" font-weight="800" letter-spacing="4" fill="#E86FA4"
+    textLength="218" lengthAdjust="spacingAndGlyphs">GEL</text>
+  <g transform="translate(42,0)">
+    <polygon points="-24,-8 24,-8 0,52" fill="#D9A05B"/>
+    <line x1="-12" y1="2" x2="8" y2="24" stroke="#B97F3C" stroke-width="3" stroke-linecap="round"/>
+    <line x1="12" y1="2" x2="-8" y2="24" stroke="#B97F3C" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-32" r="34" fill="#E86FA4"/>
+    <!-- melty drips over the cone rim -->
+    <circle cx="-19" cy="-3" r="7.5" fill="#E86FA4"/>
+    <circle cx="0" cy="1" r="8.5" fill="#E86FA4"/>
+    <circle cx="17" cy="-4" r="6.5" fill="#E86FA4"/>
+    <path d="M-24 -44 a 26 26 0 0 1 14 -12" stroke="#F5A8C8" stroke-width="6" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>

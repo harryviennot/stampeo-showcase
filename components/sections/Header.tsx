@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
 import { ChevronDownIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
@@ -269,7 +270,9 @@ export function Header() {
     return pathname === href || pathname.startsWith(href + "/");
   };
 
+  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const navItems = [
+    { label: t("common.nav.loyaltyPrograms"), href: loyaltySlug },
     { label: t("common.nav.foundingProgram"), href: locale === "en" ? "/founding-partner" : "/programme-fondateur" },
     { label: t("common.nav.pricing"), href: "/pricing" },
     ...(locale === "fr" || locale === "en" || locale === "es"
@@ -314,6 +317,7 @@ export function Header() {
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: loyaltyPath(locale), label: "Loyalty programs" },
     { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
     { href: `${seoPrefix}/blog`, label: "Blog" },
     { href: `${seoPrefix}/contact`, label: "Contact" },
@@ -352,8 +356,10 @@ export function Header() {
               </div>
             </Link>
 
-            {/* Desktop navigation — centered via flex */}
-            <div className="hidden lg:flex items-center gap-6 xl:gap-9">
+            {/* Desktop navigation — full row only from xl: below that the FR/ES
+                labels overflow into the logo and auth buttons, so the burger
+                menu stays on through lg. */}
+            <div className="hidden xl:flex items-center gap-6 2xl:gap-9">
               <FeaturesDropdown />
               {navItems.map((item) => (
                 <Link
@@ -370,7 +376,7 @@ export function Header() {
             </div>
 
             {/* Desktop auth */}
-            <div className="hidden lg:flex items-center gap-3 shrink-0">
+            <div className="hidden xl:flex items-center gap-3 shrink-0">
               <DesktopAuthButtons
                 loading={loading}
                 user={user}
@@ -381,7 +387,7 @@ export function Header() {
 
             {/* Mobile menu button */}
             <button
-              className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              className="xl:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -406,7 +412,7 @@ export function Header() {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="lg:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
+                className="xl:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
               >
                 <div className="px-6 py-4">
                   <div className="flex flex-col gap-1">

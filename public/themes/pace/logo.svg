@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-246 -111 356 147" fill="none">
+  <!-- the E is three speed lines -->
+  <text x="-4" y="0" text-anchor="end" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="100" font-weight="900" font-style="italic" letter-spacing="2" fill="#16130F"
+    textLength="228" lengthAdjust="spacingAndGlyphs">PAC</text>
+  <g fill="#FF5A1F">
+    <polygon points="26,-72 96,-72 92,-56 22,-56"/>
+    <polygon points="20,-44 74,-44 70,-28 16,-28"/>
+    <polygon points="14,-16 84,-16 80,0 10,0"/>
+  </g>
+</svg>

@@ -38,7 +38,29 @@ export interface CustomStampConfig {
   empty_opacity?: number;
 }
 
-export type StampIconMode = "preset" | "custom";
+/** How the stamp strip renders (migration 138): preset icons, custom uploaded
+ *  icons, or "image_only" — just the uploaded strip image, no stamps drawn. */
+export type StampIconMode = "preset" | "custom" | "image_only";
+
+export type CardType = "stamp" | "points";
+
+/** The points strip layouts the backend renders (migrations 123, 135).
+ *  "image_only" shows just the uploaded strip image with no points overlay. */
+export type PointsStripStyle = "big_point" | "circle_progress" | "progress_icons" | "image_only";
+
+export interface PointsRewardIcon {
+  type: "preset" | "custom";
+  ref: string;
+}
+
+export type PointsRewardIcons = Record<string, PointsRewardIcon>;
+
+/** A points reward tier — the ladder the points strip renders against. */
+export interface RewardTier {
+  id: string;
+  name: string;
+  threshold: number;
+}
 
 export interface CardDesign {
   id: string;
@@ -68,11 +90,22 @@ export interface CardDesign {
   stamp_icon_mode?: StampIconMode;
   custom_stamp_config?: CustomStampConfig | null;
 
+  // Points card design (migration 123). Only meaningful when card_type === 'points'.
+  card_type?: CardType;
+  points_strip_style?: PointsStripStyle;
+  progress_accent_color?: string;
+  points_reward_icons?: PointsRewardIcons;
+  /** Reward ladder — populated by the public active-design route. */
+  points_rewards?: RewardTier[];
+
   // Asset URLs
   logo_url?: string;
   custom_filled_stamp_url?: string;
   custom_empty_stamp_url?: string;
   strip_background_url?: string;
+  /** Solid strip canvas color when no strip image is uploaded. */
+  strip_background_color?: string;
+  strip_background_opacity?: number;
 
   // Pass fields
   secondary_fields: PassField[];

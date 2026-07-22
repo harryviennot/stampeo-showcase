@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-212 -100 406 144" fill="none">
+  <!-- the V is a wine glass -->
+  <text x="-48" y="0" text-anchor="end" font-family="Georgia, 'Times New Roman', serif"
+    font-size="94" letter-spacing="8" fill="#F3E3C8"
+    textLength="150" lengthAdjust="spacingAndGlyphs">RA</text>
+  <g stroke="#D9A441" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M -32 -66 L 0 -2 L 32 -66"/>
+    <line x1="0" y1="-2" x2="0" y2="30"/>
+    <line x1="-17" y1="30" x2="17" y2="30"/>
+  </g>
+  <path d="M -18 -38 L 0 -2 L 18 -38 Z" fill="#D9A441" opacity="0.9"/>
+  <text x="48" y="0" font-family="Georgia, 'Times New Roman', serif"
+    font-size="94" letter-spacing="8" fill="#F3E3C8"
+    textLength="132" lengthAdjust="spacingAndGlyphs">IN</text>
+</svg>

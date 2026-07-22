@@ -8,15 +8,25 @@ const BASE_URL = "https://stampeo.app";
 export default function sitemap(): MetadataRoute.Sitemap {
   const locales = routing.locales; // ["fr", "en", "es"]
 
-  const staticPages = [
-    { path: "", priority: 1.0, changeFrequency: "weekly" as const },
-    { path: "/pricing", priority: 0.9, changeFrequency: "monthly" as const },
-    { path: "/changelog", priority: 0.6, changeFrequency: "weekly" as const },
-    { path: "/about", priority: 0.7, changeFrequency: "monthly" as const },
-    { path: "/contact", priority: 0.6, changeFrequency: "monthly" as const },
-    { path: "/programme-fondateur", enPath: "/founding-partner", priority: 0.8, changeFrequency: "monthly" as const },
-    { path: "/privacy", priority: 0.3, changeFrequency: "yearly" as const },
-    { path: "/terms", priority: 0.3, changeFrequency: "yearly" as const },
+  type ChangeFreq = "weekly" | "monthly" | "yearly";
+  const staticPages: Array<{
+    path: string;
+    enPath?: string;
+    esPath?: string;
+    /** True for pages that have no Spanish version (e.g. founding partner). */
+    noEs?: boolean;
+    priority: number;
+    changeFrequency: ChangeFreq;
+  }> = [
+    { path: "", priority: 1.0, changeFrequency: "weekly" },
+    { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/programme-fidelite", enPath: "/loyalty-programs", esPath: "/programa-de-fidelizacion", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/changelog", priority: 0.6, changeFrequency: "weekly" },
+    { path: "/about", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
+    { path: "/programme-fondateur", enPath: "/founding-partner", noEs: true, priority: 0.8, changeFrequency: "monthly" },
+    { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
+    { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
   ];
 
   const entries: MetadataRoute.Sitemap = [];
@@ -39,22 +49,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  // Static pages with i18n alternates
+  // Static pages with i18n alternates (locale-specific slugs where they differ)
   for (const page of staticPages) {
-    // Founding-partner pages are FR/EN only (program sunset, no Spanish page).
-    const isFounding = page.enPath !== undefined;
-    const enPath = page.enPath || page.path;
+    const enPath = page.enPath ?? page.path;
+    const esPath = page.esPath ?? page.path;
 
     const languages: Record<string, string> = {
       "x-default": `${BASE_URL}${page.path}`,
       fr: `${BASE_URL}${page.path}`,
       en: `${BASE_URL}/en${enPath}`,
     };
-    if (!isFounding) languages.es = `${BASE_URL}/es${page.path}`;
+    if (!page.noEs) languages.es = `${BASE_URL}/es${esPath}`;
 
     for (const locale of locales) {
-      if (locale === "es" && isFounding) continue;
-      const localizedPath = locale === "en" ? enPath : page.path;
+      if (locale === "es" && page.noEs) continue;
+      const localizedPath =
+        locale === "en" ? enPath : locale === "es" ? esPath : page.path;
       const url =
         locale === "fr"
           ? `${BASE_URL}${page.path}`

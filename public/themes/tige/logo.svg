@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-154 -133 320 230" fill="none">
+  <!-- a single stem grows from under the word, bends over it, blooms top-right -->
+  <path d="M -140 62 C -120 10 -40 -80 118 -78" stroke="#5E8B57" stroke-width="5" stroke-linecap="round"/>
+  <path d="M -66 -32 C -58 -56 -38 -64 -22 -62 C -26 -44 -44 -30 -66 -32 Z" fill="#5E8B57"/>
+  <g transform="translate(121,-81) rotate(20)">
+    <ellipse cx="0" cy="-16" rx="9" ry="17" fill="#E27D9C"/>
+    <ellipse cx="-10" cy="-13" rx="7.5" ry="14" transform="rotate(-16 -10 -13)" fill="#D96A8D"/>
+    <ellipse cx="10" cy="-13" rx="7.5" ry="14" transform="rotate(16 10 -13)" fill="#D96A8D"/>
+  </g>
+  <text x="0" y="60" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+    font-style="italic" font-size="104" fill="#2F4A32"
+    textLength="176" lengthAdjust="spacingAndGlyphs">Tige</text>
+</svg>

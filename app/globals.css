@@ -120,10 +120,23 @@
 
 body {
   font-family: var(--font-geist-sans), "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+  /* Decorative transforms (scroll-reveal translateX, rotated card fans) must
+     never widen the page on small screens. clip, unlike hidden, adds no
+     scroll container so position: sticky keeps working. */
+  overflow-x: clip;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Icon-library marquee: pure CSS so it runs on the compositor (no JS
+   animation frames, no hydration delay). The track holds its list twice;
+   one list-width (-50%) loops seamlessly. */
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* Paper-textured card style */

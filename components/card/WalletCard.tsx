@@ -3,14 +3,16 @@
 import React, { useRef, useState, useCallback, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
-import { CardDesign, CustomStampConfig } from "@/lib/types/design";
+import { CardDesign, CustomStampConfig, RewardTier } from "@/lib/types/design";
 import {
   StampIconSvg,
   StampIconType,
 } from "@/components/onboarding/StampIconPicker";
+import { PointsStrip } from "@/components/card/PointsStrip";
 import {
   computeCardColors,
   getInitials,
+  rgbToHex,
   calculateStampLayout,
   calculateStaggeredStampLayout,
   customIconBoxSize,
@@ -45,6 +47,10 @@ export interface WalletCardProps {
   interactive3D?: boolean;
   /** Additional class names */
   className?: string;
+  /** Points balance to preview (only used when design.card_type === 'points'). */
+  pointsBalance?: number;
+  /** Points reward ladder (only used when design.card_type === 'points'). */
+  pointsRewards?: RewardTier[];
 }
 
 // ============================================================================
@@ -198,32 +204,45 @@ function SecondaryFieldsRow({ fields, colors }: SecondaryFieldsRowProps) {
   const [fontSize, setFontSize] = useState(14); // Start with text-sm equivalent
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
     const container = containerRef.current;
-    const checkOverflow = () => {
-      // Reset to max size first
-      setFontSize(14);
+    if (!container) return;
 
-      // Use requestAnimationFrame to ensure DOM has updated
-      requestAnimationFrame(() => {
-        if (!container) return;
-        const containerWidth = container.offsetWidth;
-        const contentWidth = container.scrollWidth;
+    // The available WIDTH is what decides whether text overflows. Shrinking the
+    // font only changes the row's HEIGHT (and scrollWidth) — so if we let the
+    // observer react to those, resetting to 14px then re-shrinking would loop
+    // forever, and two long fields visibly jitter left↔right. Guard on width so
+    // font-induced size changes are ignored and the fit converges once.
+    let lastWidth = -1;
+    let raf = 0;
 
+    const fit = () => {
+      cancelAnimationFrame(raf);
+      setFontSize(14); // measure at full size first
+      raf = requestAnimationFrame(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const containerWidth = el.offsetWidth;
+        const contentWidth = el.scrollWidth;
         if (contentWidth > containerWidth) {
-          // Calculate scale factor needed
           const scale = containerWidth / contentWidth;
-          const newSize = Math.max(10, Math.floor(14 * scale));
-          setFontSize(newSize);
+          setFontSize(Math.max(10, Math.floor(14 * scale)));
         }
       });
     };
 
-    checkOverflow();
-    const resizeObserver = new ResizeObserver(checkOverflow);
+    fit();
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const width = Math.round(entries[0].contentRect.width);
+      if (width === lastWidth) return;
+      lastWidth = width;
+      fit();
+    });
     resizeObserver.observe(container);
-    return () => resizeObserver.disconnect();
+    return () => {
+      cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+    };
   }, [fields]);
 
   const fieldCount = fields.length;
@@ -482,6 +501,8 @@ export function WalletCard({
   showSecondaryFields = true,
   interactive3D = false,
   className = "",
+  pointsBalance,
+  pointsRewards,
 }: WalletCardProps) {
   const { cardRef, rotate, glare, handleMouseMove, handleMouseLeave } =
     use3DEffect(interactive3D);
@@ -491,6 +512,13 @@ export function WalletCard({
   const initials = getInitials(displayName);
   const totalStamps = design.total_stamps ?? 10;
   const colors = computeCardColors(design);
+  const isPoints = design.card_type === "points";
+  const pointsAccent = design.progress_accent_color
+    ? rgbToHex(design.progress_accent_color)
+    : colors.accentHex;
+  const stripBgHex = design.strip_background_color
+    ? rgbToHex(design.strip_background_color)
+    : colors.bgHex;
 
   const stampIcon = (design.stamp_icon || "checkmark") as StampIconType;
   const customConfig =
@@ -498,6 +526,7 @@ export function WalletCard({
   const rewardIcon = (design.reward_icon || "gift") as StampIconType;
 
   const secondaryFields = design.secondary_fields || [];
+  const auxiliaryFields = design.auxiliary_fields || [];
 
   const cardStyle = interactive3D
     ? {
@@ -528,26 +557,16 @@ export function WalletCard({
       >
         {/* Card Content Layer */}
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden transition-all duration-300 p-2"
+          className="absolute inset-0 rounded-2xl overflow-hidden transition-all duration-300"
           style={{
-            background: `linear-gradient(135deg, ${colors.bgGradientFrom}, ${colors.bgGradientTo})`,
+            backgroundColor: colors.bgHex,
           }}
         >
-          {/* Subtle gradient overlay */}
-          <div
-            className="absolute inset-0 transition-opacity duration-300"
-            style={{
-              background: colors.isLightBg
-                ? "linear-gradient(to bottom right, rgba(255,255,255,0.4), transparent, rgba(0,0,0,0.05))"
-                : "linear-gradient(to bottom right, rgba(255,255,255,0.1), transparent, rgba(0,0,0,0.2))",
-            }}
-          />
-
           {/* Content Layout */}
           <div className="relative h-full px-0 py-0 flex flex-col z-10">
             {/* Header: Logo + Business Name */}
             <div className="flex justify-between items-center px-2.5 py-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
                 {design.logo_url ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
@@ -576,48 +595,111 @@ export function WalletCard({
                   </div>
                 )}
               </div>
-              <div className="text-right items-center">
+              <div className="text-right items-center flex-shrink-0 pl-2">
                 <div
                   className="text-[8px] font-bold uppercase tracking-wider transition-colors duration-300"
                   style={{ color: colors.mutedTextColor }}
                 >
-                  {t("stamps")}
+                  {isPoints ? t("points") : t("stamps")}
                 </div>
                 <div
                   className="text-md font-medium flex items-baseline gap-1 justify-end transition-colors duration-300 leading-tight"
                   style={{ color: colors.textColor }}
                 >
-                  {stamps} / {totalStamps}
+                  {isPoints ? (pointsBalance ?? 0) : `${stamps} / ${totalStamps}`}
                 </div>
               </div>
             </div>
 
-            {/* Stamps Grid */}
-            <div className="relative flex items-start justify-center py-2">
-              {/* Strip background layer */}
-              {design.strip_background_url && (
-                <div
-                  className="absolute inset-0 rounded-lg overflow-hidden"
-                  style={{ zIndex: 0 }}
-                >
-                  <Image
-                    src={design.strip_background_url}
-                    alt=""
-                    fill
-                    className="object-cover opacity-40"
-                    unoptimized
+            {/* Strip area: points render a full-width strip band, stamps keep
+                the centered grid. */}
+            {isPoints ? (
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ backgroundColor: stripBgHex }}
+              >
+                {design.strip_background_url && (
+                  <div className="absolute inset-0" style={{ zIndex: 0 }}>
+                    <Image
+                      src={design.strip_background_url}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      style={{
+                        // image_only shows the raw image edge-to-edge (no dimming).
+                        opacity:
+                          design.points_strip_style === "image_only"
+                            ? 1
+                            : (design.strip_background_opacity ?? 40) / 100,
+                      }}
+                      unoptimized
+                    />
+                  </div>
+                )}
+                <div className="relative" style={{ zIndex: 1 }}>
+                  <PointsStrip
+                    style={design.points_strip_style ?? "big_point"}
+                    balance={pointsBalance ?? 0}
+                    rewards={pointsRewards ?? []}
+                    rewardIcons={design.points_reward_icons}
+                    accentColor={pointsAccent}
+                    backgroundColor={stripBgHex}
                   />
                 </div>
-              )}
-              <StampGridContainer
-                totalStamps={totalStamps}
-                filledCount={stamps}
-                colors={colors}
-                stampIcon={stampIcon}
-                rewardIcon={rewardIcon}
-                customConfig={customConfig}
-              />
-            </div>
+              </div>
+            ) : design.stamp_icon_mode === "image_only" ? (
+              /* image_only: the strip IS the uploaded image (or the bare
+                 canvas color) — full-width band, no stamps drawn. */
+              <div
+                className="relative w-full overflow-hidden"
+                style={{ backgroundColor: stripBgHex }}
+              >
+                {design.strip_background_url && (
+                  <div className="absolute inset-0" style={{ zIndex: 0 }}>
+                    <Image
+                      src={design.strip_background_url}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      style={{ opacity: 1 }}
+                      unoptimized
+                    />
+                  </div>
+                )}
+                {/* Spacer keeps the strip's height without drawing stamps. */}
+                <div className="w-full" style={{ aspectRatio: `${STRIP_ASPECT_RATIO}` }} />
+              </div>
+            ) : (
+              <div
+                className="relative flex items-start justify-center py-2"
+                style={{ backgroundColor: stripBgHex }}
+              >
+                {/* Strip background layer */}
+                {design.strip_background_url && (
+                  <div
+                    className="absolute inset-0 rounded-lg overflow-hidden"
+                    style={{ zIndex: 0 }}
+                  >
+                    <Image
+                      src={design.strip_background_url}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      style={{ opacity: (design.strip_background_opacity ?? 40) / 100 }}
+                      unoptimized
+                    />
+                  </div>
+                )}
+                <StampGridContainer
+                  totalStamps={totalStamps}
+                  filledCount={stamps}
+                  colors={colors}
+                  stampIcon={stampIcon}
+                  rewardIcon={rewardIcon}
+                  customConfig={customConfig}
+                />
+              </div>
+            )}
 
             {/* Secondary Fields - horizontal row like real Apple Wallet */}
             {showSecondaryFields && secondaryFields.length > 0 && (
@@ -625,6 +707,29 @@ export function WalletCard({
                 fields={secondaryFields.slice(0, 4)}
                 colors={colors}
               />
+            )}
+
+            {/* Auxiliary Fields - a second, smaller row beneath the secondary
+                fields, exactly like Apple Wallet's auxiliary row. */}
+            {showSecondaryFields && auxiliaryFields.length > 0 && (
+              <div className="px-2.5 pb-1 flex items-start gap-4">
+                {auxiliaryFields.slice(0, 4).map((field, i) => (
+                  <div key={field.key || i} className="min-w-0">
+                    <div
+                      className="text-[7px] font-bold uppercase tracking-wider truncate transition-colors duration-300"
+                      style={{ color: colors.mutedTextColor }}
+                    >
+                      {field.label}
+                    </div>
+                    <div
+                      className="text-[10px] font-medium truncate transition-colors duration-300"
+                      style={{ color: colors.textColor }}
+                    >
+                      {field.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
 
             {/* QR Code */}

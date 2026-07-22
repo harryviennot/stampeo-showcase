@@ -6,27 +6,25 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
-import { CUSTOM_EXAMPLES } from "@/lib/custom-stamp-presets";
-import type { CardDesign } from "@/lib/types/design";
+import { STAMP_SAMPLES } from "@/lib/loyalty-samples";
 
-interface GalleryExample {
-  orgName: string;
-  reward: string;
-  caption: string;
-}
+/** Brand-bank cards whose stamps are merchant-style custom icons, each
+ *  demonstrating a different arrangement / empty-stamp treatment. */
+const EXAMPLE_IDS = ["lustre", "pulp", "gelo", "oba"];
 
 /**
  * The headline section for STA-216: a gallery of finished cards built from
- * merchant-style icons, each demonstrating a different arrangement and
- * empty-stamp style. Cards are live-rendered WalletCards so they match exactly
- * what the editor and the generated strips produce.
+ * merchant-style icons. Cards come from the hand-designed brand bank
+ * (lib/loyalty-samples), so they match the style gallery above and what the
+ * editor's generated strips actually produce.
  */
 export function CustomIconsSection() {
   const t = useTranslations("features.design-de-carte.custom.customIcons");
-  const tp = useTranslations("features.design-de-carte.custom.playground");
   const bullets = t.raw("bullets") as string[];
-  const examples = t.raw("gallery.examples") as GalleryExample[];
-  const rewardLabel = tp("rewardLabel");
+  const captions = t.raw("gallery.examples") as string[];
+  const examples = EXAMPLE_IDS.map((id) =>
+    STAMP_SAMPLES.find((s) => s.id === id)
+  ).filter((s) => s !== undefined);
 
   return (
     <section className="py-16 sm:py-24 relative overflow-hidden">
@@ -64,44 +62,19 @@ export function CustomIconsSection() {
 
         {/* Example gallery — the proof of the claim */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-5xl mx-auto">
-          {examples.map((example, index) => {
-            const preset = CUSTOM_EXAMPLES[index];
-            if (!preset) return null;
-
-            const design: Partial<CardDesign> = {
-              organization_name: example.orgName,
-              background_color: preset.bg,
-              stamp_filled_color: preset.accent,
-              total_stamps: preset.totalStamps,
-              stamp_icon_mode: "custom",
-              custom_stamp_config: preset.config,
-              secondary_fields: [
-                { key: "reward", label: rewardLabel, value: example.reward },
-              ],
-            };
-
-            return (
-              <ScrollReveal
-                key={example.orgName}
-                delay={index * 80}
-                className="flex flex-col"
-              >
-                <div className="rounded-2xl bg-white border border-[var(--accent)]/10 p-3 sm:p-4 shadow-sm">
-                  <ScaledCardWrapper baseWidth={280}>
-                    <WalletCard design={design} stamps={preset.filled} showQR={false} />
-                  </ScaledCardWrapper>
-                </div>
-                <p className="mt-3 text-center text-xs sm:text-sm text-[var(--muted-foreground)]">
-                  {example.caption}
-                </p>
-              </ScrollReveal>
-            );
-          })}
+          {examples.map((sample, index) => (
+            <ScrollReveal key={sample.id} delay={index * 80} className="flex flex-col">
+              <div className="rounded-2xl bg-white border border-[var(--accent)]/10 p-3 sm:p-4 shadow-sm">
+                <ScaledCardWrapper baseWidth={280}>
+                  <WalletCard design={sample.design} stamps={sample.stamps} showQR={false} />
+                </ScaledCardWrapper>
+              </div>
+              <p className="mt-3 text-center text-xs sm:text-sm text-[var(--muted-foreground)]">
+                {captions[index] ?? ""}
+              </p>
+            </ScrollReveal>
+          ))}
         </div>
-
-        <p className="mt-10 text-center text-xs text-[var(--muted-foreground)]/70">
-          {t("attribution")}
-        </p>
       </Container>
     </section>
   );

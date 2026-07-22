@@ -3,7 +3,14 @@
  * These endpoints are public (no authentication required).
  */
 
-import type { CustomStampConfig, StampIconMode } from "@/lib/types/design";
+import type {
+  CardType,
+  CustomStampConfig,
+  PointsRewardIcons,
+  PointsStripStyle,
+  RewardTier,
+  StampIconMode,
+} from "@/lib/types/design";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -84,10 +91,19 @@ export interface CardDesignPublicResponse {
   icon_color?: string | null;
   stamp_icon_mode?: StampIconMode;
   custom_stamp_config?: CustomStampConfig | null;
+  // Points-program design (migration 123). card_type drives which card the
+  // preview renders; the rest configure the points strip.
+  card_type?: CardType;
+  points_strip_style?: PointsStripStyle;
+  progress_accent_color?: string | null;
+  points_reward_icons?: PointsRewardIcons;
+  points_rewards?: RewardTier[];
   logo_url?: string | null;
   custom_filled_stamp_url?: string | null;
   custom_empty_stamp_url?: string | null;
   strip_background_url?: string | null;
+  strip_background_color?: string | null;
+  strip_background_opacity?: number;
   secondary_fields: { key: string; label: string; value: string }[];
   auxiliary_fields: { key: string; label: string; value: string }[];
   back_fields: { key: string; label: string; value: string }[];
@@ -97,6 +113,9 @@ export interface CustomerCreatePublic {
   name?: string;
   email?: string;
   phone?: string;
+  /** Ask the backend to also email the card (used on desktop, where the visitor
+   *  can't add it to a phone wallet from here). Only sends when an email is given. */
+  send_email?: boolean;
 }
 
 export interface CustomerPublicResponse {
@@ -105,6 +124,8 @@ export interface CustomerPublicResponse {
   pass_url?: string;
   google_wallet_url?: string;
   message: string;
+  /** True when the backend emailed the card as part of this signup. */
+  emailed?: boolean;
 }
 
 // ============================================
@@ -116,14 +137,20 @@ export interface CustomerPublicResponse {
  * This is a public endpoint - no authentication required.
  */
 export async function getBusinessBySlug(
-  slug: string
+  slug: string,
+  opts?: { fresh?: boolean }
 ): Promise<{ data: BusinessPublicResponse | null; error: string | null }> {
   try {
+    // `fresh` bypasses the Data Cache — used to self-heal a stale "still in
+    // setup" snapshot (see getActiveCardDesign / AcquisitionPageView).
     const response = await fetch(`${API_URL}/businesses/slug/${slug}`, {
-      next: {
-        revalidate: ACQUISITION_REVALIDATE_SECONDS,
-        tags: [businessSlugTag(slug)],
-      },
+      cache: opts?.fresh ? "no-store" : undefined,
+      next: opts?.fresh
+        ? undefined
+        : {
+            revalidate: ACQUISITION_REVALIDATE_SECONDS,
+            tags: [businessSlugTag(slug)],
+          },
     });
 
     if (!response.ok) {
@@ -148,14 +175,22 @@ export async function getBusinessBySlug(
  * This is a public endpoint - no authentication required.
  */
 export async function getActiveCardDesign(
-  businessId: string
+  businessId: string,
+  opts?: { fresh?: boolean }
 ): Promise<{ data: CardDesignPublicResponse | null; error: string | null }> {
   try {
+    // A cached null/inactive design is almost always a stale snapshot taken
+    // while the business was still setting up (the Data Cache holds it for
+    // ACQUISITION_REVALIDATE_SECONDS with no activation webhook). `fresh`
+    // re-reads uncached so the page recovers the moment the design goes live.
     const response = await fetch(`${API_URL}/designs/${businessId}/active`, {
-      next: {
-        revalidate: ACQUISITION_REVALIDATE_SECONDS,
-        tags: [businessDesignTag(businessId)],
-      },
+      cache: opts?.fresh ? "no-store" : undefined,
+      next: opts?.fresh
+        ? undefined
+        : {
+            revalidate: ACQUISITION_REVALIDATE_SECONDS,
+            tags: [businessDesignTag(businessId)],
+          },
     });
 
     if (!response.ok) {

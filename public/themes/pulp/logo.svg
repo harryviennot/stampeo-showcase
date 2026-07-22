@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-169 -147 338 253" fill="none">
+  <!-- fruit-sticker badge -->
+  <ellipse cx="0" cy="0" rx="155" ry="92" fill="#E8590C"/>
+  <ellipse cx="0" cy="0" rx="141" ry="79" stroke="#FBF7EF" stroke-width="3.5"
+    stroke-dasharray="2 11" stroke-linecap="round"/>
+  <!-- leaf popping off the top edge -->
+  <g transform="translate(52,-96) rotate(28)">
+    <path d="M0 0 C 22 -6 34 -24 32 -42 C 12 -38 -2 -22 0 0 Z" fill="#2F8F4E"/>
+    <path d="M2 -4 C 12 -16 20 -26 28 -36" stroke="#FBF7EF" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <text x="0" y="16" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="86" font-weight="800" letter-spacing="-2" fill="#FBF7EF"
+    textLength="196" lengthAdjust="spacingAndGlyphs">pulp</text>
+</svg>

@@ -17,6 +17,22 @@
         "demoCallout": "Essayez ! Scannez avec votre téléphone",
         "mobileAddWallet": "Essayez, ajoutez à votre Wallet",
         "mobileHint": "La carte sera ajoutée à votre wallet téléphone"
+      },
+      "demoToggleLabel": "Type de carte",
+      "points": {
+        "complete": "Vous avez décroché toutes les récompenses !",
+        "ready": "Votre carte est prête ! Essayez d'ajouter des points.",
+        "claimReward": "Commencer gratuitement →",
+        "scanButton": "Ajouter 20 points",
+        "watchPhone": "Regardez votre téléphone – la carte se met à jour en temps réel !",
+        "scanQR": "<bold>Scannez le QR code</bold> avec votre iPhone pour tester la démo points",
+        "addToWallet": "Ajoutez la carte à votre Apple Wallet...",
+        "demoCallout": "Essayez ! Scannez avec votre téléphone",
+        "mobileAddWallet": "Essayez, ajoutez à votre Wallet",
+        "mobileHint": "La carte sera ajoutée à votre wallet téléphone",
+        "rewardMid": "-50 % sur le 1er mois",
+        "rewardTop": "1 mois offert",
+        "rewardAllUnlocked": "Tout est débloqué !"
       }
     },
     "problem": {
@@ -300,39 +316,68 @@
     },
     "sectorCards": {
       "title": "Stampeo s'adapte <mbr></mbr><br></br>à votre commerce",
-      "subtitle": "Que vous vendiez des cafés, des baguettes ou des coupes de cheveux, <br></br>le principe est le même : récompensez la fidélité.",
+      "subtitle": "Un barbier ou un café récompense les visites avec des tampons. <br></br>Un restaurant ou un salon récompense la dépense avec des points.",
+      "carousel": { "prev": "Secteur précédent", "next": "Secteur suivant" },
       "sectors": [
         {
+          "name": "Barbier",
+          "quote": "Julien passe toutes les trois semaines pour son dégradé. Avec Stampeo, c'est automatique, et sa sixième coupe est offerte.",
+          "reward": "6 coupes = 1 offerte",
+          "advantage": "Une notification quand il passe devant la boutique",
+          "fields": [
+            { "label": "Récompense", "value": "Coupe offerte" },
+            { "label": "Titulaire", "value": "Julien" }
+          ],
+          "link": "/blog/programme-fidelite-salon-coiffure",
+          "linkLabel": "Lire le guide pour les barbiers"
+        },
+        {
           "name": "Café",
-          "quote": "Marc commande son allongé tous les matins depuis deux ans. Avec Stampeo, il gagne son 10e café automatiquement. Et vous, vous savez qu'il est votre meilleur client.",
-          "reward": "10 cafés achetés = 1 offert",
-          "advantage": "Le scan prend 1 seconde, aucun ralentissement au comptoir",
+          "quote": "Camille attrape son cappuccino en allant travailler. Huit tasses et la neuvième est offerte, et elle ne perd jamais son compte.",
+          "reward": "8 cafés = 1 offert",
+          "advantage": "Le scan prend une seconde, aucune file au comptoir",
+          "fields": [
+            { "label": "Titulaire", "value": "Camille" },
+            { "label": "Récompense", "value": "Café offert" }
+          ],
           "link": "/blog/carte-fidelite-cafe",
           "linkLabel": "Lire le guide pour les cafés"
         },
         {
           "name": "Restaurant",
-          "quote": "Thomas déjeune chez vous deux fois par semaine. Il adorerait être récompensé, mais il ne va pas télécharger une app pour ça. Avec la carte wallet, c'est simple.",
-          "reward": "10 repas = 1 dessert offert",
-          "advantage": "Campagnes promotionnelles pour remplir les jours creux",
+          "quote": "Thomas dîne chez vous presque chaque semaine, mais l'addition n'est jamais la même. Les points récompensent ce qu'il dépense vraiment, pas seulement sa présence.",
+          "reward": "1 € dépensé = 1 point, -25 % à 100 pts",
+          "advantage": "Un dîner à 40 € rapporte plus qu'un déjeuner sur le pouce",
+          "fields": [
+            { "label": "Prochain palier", "value": "100 points" },
+            { "label": "Prochaine récompense", "value": "-25 %" }
+          ],
           "link": "/blog/carte-fidelite-restaurant",
           "linkLabel": "Lire le guide pour les restaurants"
         },
         {
-          "name": "Salon de coiffure",
-          "quote": "Claire vient tous les mois pour sa couleur. Avec Stampeo, c'est automatique et Claire reçoit un soin offert au bout de 6 visites.",
-          "reward": "6 prestations = 1 soin offert",
-          "advantage": "Notification quand elle passe près du salon",
+          "name": "Salon de beauté",
+          "quote": "Chloé vient pour une manucure une semaine, une pose complète la suivante. Les points récompensent ce qu'elle dépense, chaque visite la rapproche de sa récompense.",
+          "reward": "1 € dépensé = 1 point, manucure offerte à 80 pts",
+          "advantage": "Les prestations les plus chères rapportent plus vite",
+          "fields": [
+            { "label": "Titulaire", "value": "Chloé" },
+            { "label": "Prochaine récompense", "value": "Manucure offerte" }
+          ],
           "link": "/blog/programme-fidelite-salon-coiffure",
           "linkLabel": "Lire le guide pour les salons"
         },
         {
-          "name": "Boulangerie",
-          "quote": "Sophie passe chercher sa baguette chaque matin. Sa carte en carton ? Perdue dans son sac depuis la semaine dernière. Avec le wallet, elle l'a toujours.",
-          "reward": "8 achats = 1 viennoiserie offerte",
-          "advantage": "Pas de carte à sortir, le téléphone suffit",
-          "link": "/blog/carte-fidelite-boulangerie",
-          "linkLabel": "Lire le guide pour les boulangeries"
+          "name": "Librairie",
+          "quote": "Elias repart avec un poche une semaine, une pile de romans la suivante. Les points comptent ce qu'il dépense : les gros paniers rapprochent sa récompense, plus vite.",
+          "reward": "1 € dépensé = 1 point, -10 € à 150 pts",
+          "advantage": "Les gros paniers rapportent plus vite",
+          "fields": [
+            { "label": "Titulaire", "value": "Elias" },
+            { "label": "Prochaine récompense", "value": "-10 €" }
+          ],
+          "link": "/programme-fidelite",
+          "linkLabel": "Comparer tampons et points"
         }
       ]
     },
@@ -393,14 +438,21 @@
   },
   "variant": {
     "hero": {
-      "title": "Lancez votre programme de fidélité <accent>en 3 minutes.</accent>",
-      "subtitle": "Une carte de fidélité que vos clients ajoutent à Apple Wallet ou Google Wallet en un scan. Aucune appli à télécharger.",
+      "title": "La carte de fidélité qui <accent>colle à votre commerce.</accent>",
+      "subtitle": "Des tampons pour les visites, des points pour le montant dépensé. Votre carte vit dans Apple Wallet et Google Wallet, prête en quelques minutes. Aucune appli à télécharger.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans engagement",
-      "momentum": "<accent>+36</accent> commerçants nous ont rejoints cette semaine"
+      "momentum": "<accent>+36</accent> commerçants nous ont rejoints cette semaine",
+      "tryDemoCta": "Essayer la démo"
+    },
+    "tryIt": {
+      "eyebrow": "Démo en direct, sans inscription",
+      "title": "Voyez-la sur votre téléphone",
+      "subtitle": "Scannez le code, ajoutez une vraie carte sur votre téléphone, et recevez un vrai tampon. Tampons ou points, exactement ce que vivront vos clients."
     },
     "trustStrip": {
+      "flag": "🇫🇷",
       "madeInFrance": "Made in France",
       "rgpd": "RGPD · Données hébergées en Europe",
       "phone": "06 49 37 04 70"
@@ -455,7 +507,7 @@
       ]
     },
     "benefits": {
-      "title": "Trois raisons de passer au wallet.",
+      "title": "Trois raisons de passer au numérique.",
       "subtitle": "Pas une appli de plus. Pas un outil de plus. Juste la carte de fidélité, là où vos clients regardent déjà.",
       "items": [
         {

@@ -1,15 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { StarIcon } from "../icons";
+import { MARKETS, type Market } from "@/lib/markets";
 
 /**
- * Testimonials are placeholders. Replace with real merchant quotes
- * (full name + business + city + photo + concrete before/after)
- * in messages/fr/landing.json → variant.testimonials.items.
+ * Testimonials are placeholders (fabricated but realistic) — swap for real
+ * merchant quotes as they come in, in messages/{locale}/landing.json →
+ * variant.testimonials. The US pilot shows a US-flavoured set (`itemsUs`);
+ * every other surface shows `items`.
  */
-export async function VariantTestimonials() {
+export async function VariantTestimonials({ market = "int" }: { market?: Market }) {
   const t = await getTranslations("variant.testimonials");
-  const items = t.raw("items") as Array<{
+  const key = MARKETS[market].testimonials === "us" ? "itemsUs" : "items";
+  const items = t.raw(key) as Array<{
     quote: string;
     name: string;
     role: string;

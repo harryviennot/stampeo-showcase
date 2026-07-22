@@ -7,7 +7,7 @@
       },
       "problem": {
         "title": "Creating a pro card shouldn't be a project",
-        "description": "Ever tried to create a visual on Canva? Or worse, configure software with 47 customization options? You have a business to run — not a design agency. The result: either you spend 2 hours cobbling something mediocre together, or you don't do it at all."
+        "description": "Ever tried to create a visual on Canva? Or worse, configure software with 47 customization options? You have a business to run, not a design agency. The result: either you spend 2 hours cobbling something mediocre together, or you don't do it at all."
       },
       "sections": [
         {
@@ -36,10 +36,104 @@
         "notifications-push",
         "programme-fondateur"
       ],
+      "gallery": {
+        "title": "Fifteen shops, fifteen styles",
+        "subtitle": "Every card here was built with this designer: stamp grids or points strips, custom icons, the logo front and center.",
+        "ctaLead": "Your card could be next.",
+        "prev": "Previous style",
+        "next": "Next style",
+        "stamps": [
+          "Custom icons in staggered rows",
+          "Custom icons, stacked as they fill",
+          "Bright custom icons on a light card",
+          "A classic grid with your logo",
+          "Light icons on a deep color",
+          "A tidy straight grid",
+          "A dozen icons that pile up",
+          "Bold color, playful icons"
+        ],
+        "points": [
+          "A big running balance",
+          "Your own photo as the strip",
+          "A marker for each reward",
+          "A ring that fills toward the reward",
+          "Monochrome and editorial",
+          "Milestones on a light card",
+          "A gold ring on deep tones"
+        ],
+        "cardFields": {
+          "stamps": [
+            { "main": [ { "label": "Cardholder", "value": "Théo" }, { "label": "Reward", "value": "Free wash" } ], "aux": [ { "label": "Member since", "value": "2024" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Camille" }, { "label": "Reward", "value": "Free coffee" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Inès" }, { "label": "Reward", "value": "Free smoothie" } ], "aux": [ { "label": "Favorite", "value": "Green Machine" } ] },
+            { "main": [ { "label": "Reward", "value": "Free cut" }, { "label": "Cardholder", "value": "Julien" } ] },
+            { "main": [ { "label": "Pet", "value": "Max" }, { "label": "Reward", "value": "Free bath" } ], "aux": [ { "label": "Member since", "value": "2025" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Louise" }, { "label": "Reward", "value": "Free bouquet" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Nina" }, { "label": "Reward", "value": "Free scoop" } ], "aux": [ { "label": "Favorite", "value": "Stracciatella" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Mei" }, { "label": "Reward", "value": "Free bubble tea" } ] }
+          ],
+          "points": [
+            { "main": [ { "label": "Cardholder", "value": "Elias" }, { "label": "Next reward", "value": "€10 off" } ], "aux": [ { "label": "Member since", "value": "2023" } ] },
+            { "main": [ { "label": "Next milestone", "value": "100 pts" }, { "label": "Next reward", "value": "25% off" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Sacha" }, { "label": "Next reward", "value": "Free class" } ], "aux": [ { "label": "Visits", "value": "18" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Chloé" }, { "label": "Next reward", "value": "Free manicure" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Anna" }, { "label": "Next reward", "value": "10% off" } ] },
+            { "main": [ { "label": "Next milestone", "value": "240 pts" }, { "label": "Next reward", "value": "€20 off" } ], "aux": [ { "label": "Member since", "value": "2024" } ] },
+            { "main": [ { "label": "Cardholder", "value": "Hugo" }, { "label": "Next reward", "value": "Free glass" } ], "aux": [ { "label": "Visits", "value": "12" } ] }
+          ]
+        }
+      },
+      "parity": {
+        "title": "One card, ready for every pocket",
+        "wallets": {
+          "title": "Apple Wallet and Google Wallet",
+          "description": "The same card works in both wallets, and the editor previews each one live while you design. Nothing to build twice, nothing to maintain."
+        },
+        "styles": {
+          "title": "Change styles whenever you like",
+          "description": "Edit your card style anytime: cards already in your customers' wallets update automatically. On Growth, keep several saved styles and switch the active one in a click."
+        }
+      },
+      "faq": {
+        "title": "Card styles, answered",
+        "subtitle": "What owners ask before creating their card.",
+        "items": [
+          {
+            "question": "Can I use my own stamp icons?",
+            "answer": "Yes. Import any image (your croissant, your mascot, your logo): the background is removed automatically and it becomes a stamp. You can even use a different icon for each stamp, up to twelve."
+          },
+          {
+            "question": "What if I don't have a logo or brand colors?",
+            "answer": "The library has 98 ready-made icons, and the editor comes with a full color palette. Pick an icon, choose your colors, and the preview shows the result right away."
+          },
+          {
+            "question": "Does the card work on iPhone and Android?",
+            "answer": "Yes. The same card lives in Apple Wallet and Google Wallet, and the editor previews both while you build. Your customers scan one QR code, whatever their phone."
+          },
+          {
+            "question": "Can I change the style later?",
+            "answer": "Anytime. Edit your card style and the cards already in your customers' wallets update automatically. On Growth, you can keep several styles and switch the active one."
+          },
+          {
+            "question": "Can you create the card for me?",
+            "answer": "Yes. Send us your logo and your colors, and we design the card for you. Most cards are ready within 48 hours."
+          }
+        ]
+      },
       "custom": {
         "playground": {
           "sectionTitle": "Design it your way",
-          "sectionSubtitle": "Colors, stamp icon, customer's name: change the preview and see the result right away.",
+          "sectionSubtitle": "Stamps or points, colors, icons, the customer's name: change the preview and see the result right away.",
+          "programLabel": "Program type",
+          "stripLabel": "Points style",
+          "stripStyles": {
+            "big_point": "Big balance",
+            "circle_progress": "Ring",
+            "progress_icons": "Track"
+          },
+          "balanceLabel": "Points balance",
+          "pointsRewardValue": "Free dessert",
+          "shuffle": "Surprise me",
           "themeLabel": "Theme",
           "iconLabel": "Icon",
           "nameToggle": "First name",
@@ -71,8 +165,7 @@
         },
         "iconLibrary": {
           "title": "An icon for every trade",
-          "description": "Dozens of ready-to-use stamp icons: café, restaurant, salon, florist, pet shop. One that fits your business, guaranteed.",
-          "trades": ["Café", "Restaurant", "Salon", "Florist", "Pet shop"]
+          "description": "98 ready-to-use stamp icons across 8 categories, searchable by name in the editor. Café, salon, retail: one fits your business, guaranteed."
         },
         "customIcons": {
           "badge": "New",
@@ -81,18 +174,17 @@
           "bullets": [
             "Background removed automatically when you import.",
             "Three empty-stamp styles: greyscale, outline, or your own.",
-            "Three layouts: in a row, staggered, or overlapping."
+            "Three layouts: in a row, staggered, or overlapping.",
+            "A different icon for each stamp if you like, and a special one for the reward."
           ],
           "gallery": {
-            "title": "Real cards, real icons",
             "examples": [
-              { "orgName": "Maison Levain", "reward": "10th croissant free", "caption": "Overlapping croissants" },
-              { "orgName": "Café Margot", "reward": "Free coffee", "caption": "Staggered, outlined empties" },
-              { "orgName": "Donut Days", "reward": "6th donut free", "caption": "In a row, faded empties" },
-              { "orgName": "Fleurs & Co", "reward": "A bouquet on us", "caption": "A gift on the last stamp" }
+              "Six water drops, staggered",
+              "Citrus wedges that overlap as they fill",
+              "Eight cones piling up",
+              "Boba cups in a tidy grid"
             ]
-          },
-          "attribution": "Demo icons from Twemoji (CC-BY 4.0)."
+          }
         },
         "livingCard": {
           "title": "A card that knows your customers",
@@ -175,6 +267,27 @@
             "orgName": "My Parisian Café",
             "rewardLabel": "Reward",
             "rewardValue": "Free coffee"
+          },
+          "pointsLabels": [
+            "Logo",
+            "Points balance",
+            "Points strip",
+            "Custom fields",
+            "Reward",
+            "Customer QR code"
+          ],
+          "pointsMobileLabels": [
+            "Logo",
+            "Balance",
+            "Points",
+            "Fields",
+            "Reward",
+            "QR code"
+          ],
+          "pointsCard": {
+            "orgName": "The Corner Bistro",
+            "rewardLabel": "Reward",
+            "rewardValue": "Free dessert"
           }
         }
       }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-237 -124 493 179" fill="none">
+  <!-- a reader's pencil note: italic word, footnote star, wavy annotation -->
+  <text x="-220" y="0" font-family="Georgia, 'Times New Roman', serif" font-style="italic"
+    font-size="92" fill="#F3E9D6" textLength="420" lengthAdjust="spacingAndGlyphs">Marginalia</text>
+  <text x="212" y="-52" font-family="Georgia, 'Times New Roman', serif" font-size="64" fill="#E4C67A">*</text>
+  <path d="M -212 34 q 17 14 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0 t 34 0"
+    stroke="#E4C67A" stroke-width="5" stroke-linecap="round" fill="none"/>
+</svg>
