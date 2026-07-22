@@ -1,6 +1,6 @@
 # Conditions Générales d'Utilisation : Stampeo
 
-**Dernière mise à jour : 22 juin 2026**
+**Dernière mise à jour : 22 juillet 2026**
 
 ## 1. Objet
 
@@ -41,7 +41,7 @@ Stampeo fournit aux entreprises une plateforme permettant de :
 
 - Créer et personnaliser des cartes de fidélité numériques
 - Distribuer ces cartes via Apple Wallet et Google Wallet
-- Scanner les cartes des clients pour attribuer des tampons ou des points
+- Scanner les cartes des clients pour attribuer des tampons ou des points (un programme à points enregistre le montant de la transaction utilisé pour calculer les points attribués)
 - Suivre l'activité de leur programme de fidélité
 - Envoyer des notifications aux détenteurs de cartes
 
@@ -130,8 +130,9 @@ En cas de résiliation pour violation, Stampeo se réserve le droit de suspendre
 Après résiliation :
 
 - L'accès au tableau de bord est désactivé
-- Les données sont conservées pendant 60 jours, permettant une éventuelle réactivation
-- Passé ce délai, toutes les données sont supprimées, y compris les données des Clients Finaux
+- Les données sont conservées afin de permettre une réactivation pendant une durée maximale de 12 mois d'inactivité. Réactiver le compte (se reconnecter ou se réabonner) à tout moment conserve le compte et ses données
+- Avant toute suppression, Stampeo envoie deux e-mails d'avertissement, 30 jours et 14 jours à l'avance
+- Après 12 mois d'inactivité sans réactivation, le compte est supprimé : les données personnelles de l'Utilisateur Business sont supprimées et les données personnelles des Clients Finaux sont anonymisées de manière irréversible (des statistiques anonymisées peuvent être conservées). Les données de facturation sont conservées pendant 10 ans, comme l'exige la loi
 - Les Pass déjà installés dans les wallets des clients restent présents mais ne sont plus mis à jour
 
 ## 7. Propriété intellectuelle
@@ -183,7 +184,7 @@ Stampeo assiste l'Utilisateur Business, dans la mesure du possible et à un nive
 
 L'Utilisateur Business peut, sur demande écrite motivée et avec un préavis raisonnable, auditer la conformité de Stampeo à ses obligations de sous-traitant, directement ou via un auditeur tiers indépendant, sous réserve de confidentialité et de limites raisonnables de fréquence et de portée.
 
-À l'issue du contrat, et au choix de l'Utilisateur Business, Stampeo restitue ou supprime les données des Clients Finaux dans les délais prévus au §6.3, sauf obligation légale de conservation (notamment fiscale).
+À l'issue du contrat, comme décrit au §6.3, Stampeo anonymise de manière irréversible les données à caractère personnel des Clients Finaux (en ne conservant que des statistiques anonymisées), sauf si la suppression ou une conservation plus longue est requise par la loi (notamment fiscale).
 
 ### 8.6 Accès support par le personnel Stampeo
 
