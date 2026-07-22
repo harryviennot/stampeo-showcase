@@ -34,7 +34,7 @@ export const PRICING = {
  * Existing founding partners are grandfathered server-side via the DB flag.
  */
 export const FOUNDING_PROGRAM_END_DATE = new Date(
-  Date.UTC(2026, 6, 21, 23, 59, 59) // month is 0-indexed → 6 = July
+  Date.UTC(2026, 7, 31, 23, 59, 59) // month is 0-indexed → 7 = August
 );
 
 export function isFoundingProgramOpen(now: Date = new Date()): boolean {
