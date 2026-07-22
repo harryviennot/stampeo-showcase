@@ -23,6 +23,7 @@
     "dompurify": "^3.4.10",
     "framer-motion": "^12.38.0",
     "gray-matter": "^4.0.3",
+    "html-to-image": "^1.11.13",
     "js-yaml": "^4.2.0",
     "libphonenumber-js": "^1.12.42",
     "lucide-react": "^0.563.0",
