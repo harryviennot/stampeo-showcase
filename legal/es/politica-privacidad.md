@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 11 de mayo de 2026**
+**Última actualización: 22 de junio de 2026**
 
 ## 1. Introducción
 
@@ -84,6 +84,7 @@ Para todos los usuarios, podemos recoger:
 - Token de dispositivo (device token) para las actualizaciones de la tarjeta
 - Datos de uso enviados a PostHog para nuestras estadísticas internas: nombre del evento, marca de tiempo, página consultada, dirección IP del visitante y, una vez creada la cuenta Business, el identificador del comercio correspondiente. No se deposita ninguna cookie ni se conserva ningún identificador en el almacenamiento del navegador (véase el §5)
 - Contexto de supervisión de errores enviado a Sentry en caso de excepción: identificador de usuario, identificador de comercio, ruta de la solicitud y traza de ejecución (sin dirección de correo electrónico, sin contraseña, sin datos de pago)
+- Para los correos que enviamos a los usuarios Business, los eventos de interacción registrados por nuestro proveedor de envío (Resend): entrega, apertura, clic (incluido el enlace en el que se hace clic), rebote (bounce) y marca como spam, vinculados al identificador del comercio y del usuario destinatario. Se utilizan únicamente para medir y mejorar nuestras propias comunicaciones y mantener la calidad de nuestras listas, nunca con fines publicitarios
 
 ## 4. Servicios de terceros
 
@@ -132,9 +133,20 @@ Utilizamos los datos recogidos para:
 - Enviar correos transaccionales y operativos (confirmación de cuenta, recuperación de tarjeta, notificaciones relacionadas con la prueba y la facturación; véanse los Términos del servicio §5.5)
 - Producir estadísticas anonimizadas para los comercios
 - Producir estadísticas internas agregadas sobre el uso de la Plataforma en el conjunto de los comercios, detectar abusos y priorizar las mejoras
+- Enviar a los usuarios Business un número limitado de correos de ciclo de vida y marketing, sujetos a la oposición descrita en el §6.1
 - Mejorar la Plataforma
 
 **Nunca vendemos** datos personales. No realizamos **ningún seguimiento entre comercios**: los datos de un cliente en un comercio están totalmente aislados de los que tenga en otro.
+
+### 6.1 Correos de ciclo de vida y marketing dirigidos a los usuarios Business
+
+Además de los correos transaccionales y operativos enumerados anteriormente, enviamos a los usuarios Business un número limitado de correos de ciclo de vida y marketing: orientación de incorporación y activación, recordatorios cuando una cuenta se crea pero aún no se utiliza, un resumen de actividad periódico, anuncios de novedades de producto y mensajes de recuperación tras la cancelación.
+
+- **Base jurídica**: nuestro interés legítimo en ayudar a los usuarios Business a sacar partido de la Plataforma y en promocionar las funcionalidades de un servicio que ya utilizan (artículo 6.1.f del RGPD), apoyándonos para la prospección en el «soft opt-in» entre profesionales previsto por la Directiva ePrivacy y el artículo L34-5 de la ley francesa LCEN.
+- **Oposición**: cada uno de estos correos incluye un enlace de baja en un clic y un enlace a una página de preferencias que permite al usuario Business darse de baja de forma independiente por categoría: reenganche, marketing y novedades de producto. Los correos transaccionales y operativos descritos en el §5.6 de los Términos del servicio quedan excluidos de esta oposición porque son necesarios para administrar la cuenta.
+- Para medir y mejorar estas comunicaciones, registramos los eventos de interacción descritos en el §3.4.
+
+Esto se refiere únicamente a los correos que Stampeo envía a sus propios usuarios Business. Es distinto de las notificaciones del wallet que un comercio envía a sus clientes finales, tratadas en el §7.
 
 ## 7. Notificaciones
 
@@ -176,6 +188,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Tokens de registro push (device tokens) | Se eliminan cuando el cliente retira la tarjeta de su wallet, o cuando el servicio push del wallet señala el token como inválido de forma permanente |
 | Último mensaje de notificación del wallet | Solo se conserva el último mensaje por cliente (se sobrescribe en cada notificación), sin historial |
 | Estadísticas de entrega de las difusiones (agregadas) | 24 meses |
+| Registros de envío e interacción de los correos dirigidos a los usuarios Business (entrega, apertura, clic, rebote, marca como spam) | 24 meses |
 | Registro de fallos de los webhooks de Stripe (depuración interna) | 90 días |
 | Registros de acceso de soporte (sesiones y entradas de auditoría asociadas, véase el §2.3) | 24 meses, después se eliminan |
 

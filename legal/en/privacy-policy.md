@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: May 11, 2026**
+**Last updated: June 22, 2026**
 
 ## 1. Introduction
 
@@ -84,6 +84,7 @@ For all users, we may collect:
 - Device token for pass updates
 - Usage data sent to PostHog for our internal product analytics: event name, timestamp, page viewed, visitor IP, and (after a Business account is created) the associated business identifier. No cookies are set and no identifier is persisted to browser storage (see §5)
 - Error-monitoring context sent to Sentry on exceptions: user identifier, business identifier, request path, and stack trace (no raw email, no password, no payment data)
+- For emails we send to Business Users, engagement events recorded by our email provider (Resend): delivery, open, click (including which link was clicked), bounce, and spam-complaint signals, linked to the recipient's business and user identifier. These are used only to measure and improve our own communications and to maintain list hygiene, never for advertising
 
 ## 4. Third-Party Services
 
@@ -132,9 +133,20 @@ We use collected data to:
 - Send transactional and operational emails (account confirmation, pass recovery, trial and billing notifications; see Terms of Service §5.5)
 - Produce anonymized statistics for businesses
 - Produce aggregate, internal product analytics to understand how the Platform is used across all businesses, detect abuse, and prioritize improvements
+- Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
 - Improve the Platform
 
 We **never sell** personal data. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
+
+### 6.1 Marketing and lifecycle emails to Business Users
+
+Beyond the transactional and operational emails listed above, we send Business Users a limited number of lifecycle and marketing emails: onboarding and activation guidance, re-engagement reminders when an account is created but not yet used, a periodic activity digest, product-update announcements, and win-back messages after cancellation.
+
+- **Legal basis:** our legitimate interest in helping Business Users get value from the Platform and in promoting features of a service they already use (GDPR Art. 6(1)(f)), relying for prospecting on the business-to-business "soft opt-in" permitted by the ePrivacy Directive and French LCEN Art. L34-5.
+- **Opt-out:** every such email carries a one-click unsubscribe link and a link to a preferences page where Business Users can opt out independently by category — re-engagement, marketing, and product updates. The transactional and operational emails described in Terms of Service §5.6 are excluded from this opt-out because they are required to administer the account.
+- To measure and improve these communications we record the engagement events described in §3.4.
+
+This applies only to emails Stampeo sends to its own Business Users. It is separate from the wallet notifications a business sends to its End Customers, which are covered in §7.
 
 ## 7. Notifications
 
@@ -176,6 +188,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Push registration tokens | Deleted when the customer removes the pass from their wallet, or when the wallet push service reports the token as permanently invalid |
 | Latest wallet notification text | Only the latest message is retained per customer (overwritten on each notification); no history |
 | Broadcast delivery metrics (aggregate) | 24 months |
+| Email send and engagement logs for Business User communications (delivery, open, click, bounce, complaint) | 24 months |
 | Stripe webhook failure records (internal debugging) | 90 days |
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
 

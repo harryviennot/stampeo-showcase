@@ -1,6 +1,6 @@
 # Terms of Service: Stampeo
 
-**Last updated: May 11, 2026**
+**Last updated: June 22, 2026**
 
 ## 1. Purpose
 
@@ -69,7 +69,7 @@ Prices are all-inclusive. VAT not applicable, Article 293B of the French Tax Cod
 
 ### 5.3 Founding Partner Program
 
-Until May 19, 2026, new Business Users who subscribe before the program closes may join Stampeo's Founding Partner program. The Founding Partner program provides:
+Until July 21, 2026, new Business Users who subscribe before the program closes may join Stampeo's Founding Partner program. The Founding Partner program provides:
 
 - A period of free service at the beginning of the subscription, as displayed in the Stripe checkout
 - A discounted price that remains in effect **for the lifetime of the Business User's uninterrupted active subscription**
@@ -98,6 +98,10 @@ In addition to the notices above, Stampeo sends the following operational emails
 - Account status changes (e.g. awaiting confirmation, suspension for non-payment)
 
 These emails are transactional and are required for the proper administration of the Subscription.
+
+### 5.7 Marketing and lifecycle communications
+
+Separately from the operational emails in §5.6, Stampeo may send Business Users lifecycle and marketing emails (activation and onboarding guidance, re-engagement reminders, a periodic activity digest, product updates, and win-back messages). Unlike operational emails, these are optional: each one includes a one-click unsubscribe link and a link to a preferences page where you can opt out by category (re-engagement, marketing, product updates) at any time. Opting out of these does not affect the operational emails in §5.6, which remain necessary to administer your Subscription. See Privacy Policy §6.1 for the legal basis.
 
 ## 6. Cancellation
 

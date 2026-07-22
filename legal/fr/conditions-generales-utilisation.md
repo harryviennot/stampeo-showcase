@@ -1,6 +1,6 @@
 # Conditions Générales d'Utilisation : Stampeo
 
-**Dernière mise à jour : 11 mai 2026**
+**Dernière mise à jour : 22 juin 2026**
 
 ## 1. Objet
 
@@ -71,7 +71,7 @@ Les prix sont indiqués toutes taxes comprises. TVA non applicable, article 293B
 
 ### 5.3 Programme Partenaire Fondateur
 
-Jusqu'au 19 mai 2026, les nouveaux Utilisateurs Business qui souscrivent avant la clôture du programme peuvent rejoindre le programme Partenaire Fondateur de Stampeo. Celui-ci offre :
+Jusqu'au 21 juillet 2026, les nouveaux Utilisateurs Business qui souscrivent avant la clôture du programme peuvent rejoindre le programme Partenaire Fondateur de Stampeo. Celui-ci offre :
 
 - Une période de service gratuite en début d'abonnement, telle qu'affichée dans le paiement Stripe
 - Un tarif remisé qui reste en vigueur **pour toute la durée de l'abonnement actif ininterrompu** de l'Utilisateur Business
@@ -100,6 +100,10 @@ Outre les notifications précitées, Stampeo envoie les emails opérationnels su
 - Changements de statut du compte (par exemple : en attente de confirmation, suspension pour non-paiement)
 
 Ces emails sont transactionnels et nécessaires à la bonne administration de l'Abonnement.
+
+### 5.7 Communications de cycle de vie et marketing
+
+Indépendamment des emails opérationnels du §5.6, Stampeo peut adresser aux Utilisateurs Business des emails de cycle de vie et marketing (conseils de prise en main et d'activation, relances, récapitulatif d'activité périodique, nouveautés produit, et messages de reconquête). Contrairement aux emails opérationnels, ceux-ci sont facultatifs : chacun comporte un lien de désinscription en un clic et un lien vers une page de préférences permettant de se désinscrire à tout moment, par catégorie (réengagement, marketing, nouveautés produit). S'en désinscrire n'affecte pas les emails opérationnels du §5.6, qui restent nécessaires à l'administration de l'Abonnement. La base légale figure au §6.1 de la Politique de Confidentialité.
 
 ## 6. Résiliation
 

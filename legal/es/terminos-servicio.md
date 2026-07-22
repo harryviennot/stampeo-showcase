@@ -1,6 +1,6 @@
 # Términos del servicio: Stampeo
 
-**Última actualización: 11 de mayo de 2026**
+**Última actualización: 22 de junio de 2026**
 
 ## 1. Objeto
 
@@ -71,7 +71,7 @@ Los precios se indican con todos los impuestos incluidos. IVA no aplicable, art�
 
 ### 5.3 Programa Socio Fundador
 
-Hasta el 19 de mayo de 2026, los nuevos Usuarios Business que se suscriban antes del cierre del programa pueden unirse al programa Socio Fundador de Stampeo. Este ofrece:
+Hasta el 21 de julio de 2026, los nuevos Usuarios Business que se suscriban antes del cierre del programa pueden unirse al programa Socio Fundador de Stampeo. Este ofrece:
 
 - Un periodo de servicio gratuito al inicio de la suscripción, tal como se muestra en el pago de Stripe
 - Una tarifa con descuento que se mantiene vigente **durante toda la duración de la suscripción activa ininterrumpida** del Usuario Business
@@ -100,6 +100,10 @@ Además de las notificaciones antes mencionadas, Stampeo envía los siguientes c
 - Cambios de estado de la cuenta (por ejemplo: pendiente de confirmación, suspensión por impago)
 
 Estos correos son transaccionales y necesarios para la correcta administración de la Suscripción.
+
+### 5.7 Comunicaciones de ciclo de vida y marketing
+
+Con independencia de los correos operativos del §5.6, Stampeo puede enviar a los Usuarios Business correos de ciclo de vida y marketing (orientación de incorporación y activación, recordatorios, resumen de actividad periódico, novedades de producto y mensajes de recuperación). A diferencia de los correos operativos, estos son opcionales: cada uno incluye un enlace de baja en un clic y un enlace a una página de preferencias que permite darse de baja en cualquier momento, por categoría (reenganche, marketing, novedades de producto). Darse de baja de estos no afecta a los correos operativos del §5.6, que siguen siendo necesarios para administrar la Suscripción. La base jurídica figura en el §6.1 de la Política de privacidad.
 
 ## 6. Cancelación
 
