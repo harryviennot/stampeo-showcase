@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 22 juin 2026**
+**Dernière mise à jour : 22 juillet 2026**
 
 ## 1. Introduction
 
@@ -60,6 +60,10 @@ Le site web, le numéro de téléphone et la réponse « comment vous avez connu
 |--------|----------|-------------|
 | Adresse email | Invitation et authentification | Exécution du contrat |
 | Nom et prénom | Identification | Exécution du contrat |
+| Statistiques d'activité (nombre de scans enregistrés, date de dernière activité) | Statistiques d'activité de l'équipe présentées au propriétaire de l'entreprise | Intérêt légitime |
+| Attribution par scan (quel employé a enregistré chaque scan) | Piste d'audit de fidélité et statistiques de l'entreprise | Intérêt légitime |
+
+Ces statistiques d'activité sont visibles par le propriétaire de l'entreprise afin de lui donner une vue de l'activité de son équipe. Stampeo ne les utilise pas à ses propres fins.
 
 ### 3.3 Clients finaux
 
@@ -73,6 +77,7 @@ Les données collectées dépendent entièrement de la configuration choisie par
 | Numéro de téléphone | Optionnel (désactivable) | Communication |
 | Historique de visites | Automatique | Suivi de fidélité et statistiques |
 | Tampons/points accumulés | Automatique | Programme de fidélité |
+| Montant d'achat / valeur de la transaction | Automatique (programmes à points uniquement) | Calcul des points et statistiques de l'entreprise |
 
 Il est possible de configurer la Plateforme en mode entièrement anonyme (aucune donnée personnelle collectée, uniquement un identifiant de carte).
 
@@ -154,7 +159,7 @@ Lorsqu'un client ajoute un pass à son wallet, ce pass peut recevoir des notific
 
 ### 7.1 Notifications transactionnelles
 
-Envoyées automatiquement en réaction à l'activité du client : tampon reçu, jalon atteint, récompense obtenue, récompense utilisée.
+Envoyées automatiquement en réaction à l'activité du client : tampon reçu, points gagnés, jalon atteint, récompense obtenue, récompense utilisée.
 
 - **Base légale** : exécution du service de fidélité (article 6.1.b du RGPD), pour le compte de l'entreprise responsable de traitement.
 - **Contenu** : strictement lié à l'activité de la propre carte de fidélité du client.
@@ -181,8 +186,8 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Donnée | Durée de conservation |
 |--------|----------------------|
 | Compte Business actif | Durée de l'abonnement |
-| Compte Business après annulation | 60 jours, puis suppression |
-| Données des clients finaux | Durée de l'activité de l'entreprise sur la Plateforme |
+| Compte Business après annulation | Jusqu'à 12 mois d'inactivité, puis suppression des données personnelles. Deux e-mails d'avertissement sont envoyés (30 et 14 jours avant), et le compte est conservé si le propriétaire se reconnecte ou se réabonne |
+| Données des clients finaux | Conservées tant que l'entreprise est active ; anonymisées de manière irréversible lors de la suppression du compte Business (des statistiques anonymisées peuvent être conservées) |
 | Données de facturation | 10 ans (obligation légale française) |
 | Logs techniques | 12 mois maximum |
 | Jetons d'enregistrement push (device tokens) | Supprimés lorsque le client retire le pass de son wallet, ou lorsque le service push du wallet signale le jeton comme invalide de manière permanente |
@@ -194,7 +199,7 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 
 La durée de conservation de 24 mois pour les journaux d'accès support est définie pour permettre l'instruction d'un éventuel incident de sécurité tout en restant proportionnée à sa finalité, conformément aux recommandations de la CNIL en matière de journalisation des accès.
 
-Après suppression d'un compte Business, toutes les données associées (y compris celles de ses clients) sont supprimées dans un délai de 60 jours.
+Lorsqu'un compte Business devient inactif, nous conservons ses données pendant une durée maximale de 12 mois afin d'en permettre la réactivation, en envoyant deux e-mails d'avertissement avant toute suppression définitive. Lors de la suppression, les données personnelles du compte Business sont supprimées et les données personnelles des Clients Finaux sont anonymisées de manière irréversible ; des statistiques anonymisées peuvent être conservées. Les données de facturation sont conservées pendant 10 ans, comme l'exige la loi.
 
 ## 9. Suppression d'un pass par un client final
 

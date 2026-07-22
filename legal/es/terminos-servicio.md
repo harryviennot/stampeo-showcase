@@ -1,6 +1,6 @@
 # Términos del servicio: Stampeo
 
-**Última actualización: 22 de junio de 2026**
+**Última actualización: 22 de julio de 2026**
 
 ## 1. Objeto
 
@@ -41,7 +41,7 @@ Stampeo proporciona a los comercios una plataforma que permite:
 
 - Crear y personalizar tarjetas de fidelidad digitales
 - Distribuir estas tarjetas a través de Apple Wallet y Google Wallet
-- Escanear las tarjetas de los clientes para asignar sellos o puntos
+- Escanear las tarjetas de los clientes para asignar sellos o puntos (un programa de puntos registra el importe de la transacción usado para calcular los puntos otorgados)
 - Hacer seguimiento de la actividad de su programa de fidelidad
 - Enviar notificaciones a los titulares de tarjetas
 
@@ -130,8 +130,9 @@ En caso de cancelación por incumplimiento, Stampeo se reserva el derecho de sus
 Tras la cancelación:
 
 - Se desactiva el acceso al panel
-- Los datos se conservan durante 60 días, lo que permite una posible reactivación
-- Transcurrido ese plazo, todos los datos se eliminan, incluidos los datos de los clientes finales
+- Los datos se conservan para permitir la reactivación durante un máximo de 12 meses de inactividad. Reactivar la cuenta (volver a iniciar sesión o volver a suscribirse) en cualquier momento conserva la cuenta y sus datos
+- Antes de cualquier eliminación, Stampeo envía dos correos de aviso, 30 días y 14 días antes
+- Tras 12 meses de inactividad sin reactivación, la cuenta se elimina: los datos personales del Usuario Business se eliminan y los datos personales de los clientes finales se anonimizan de forma irreversible (pueden conservarse estadísticas anonimizadas). Los datos de facturación se conservan durante 10 años, como exige la ley
 - Las Tarjetas ya instaladas en los wallets de los clientes permanecen presentes, pero dejan de actualizarse
 
 ## 7. Propiedad intelectual
@@ -183,7 +184,7 @@ Stampeo asiste al Usuario Business, en la medida de lo posible y a un nivel razo
 
 El Usuario Business puede, mediante solicitud escrita motivada y con un preaviso razonable, auditar el cumplimiento por parte de Stampeo de sus obligaciones como encargado del tratamiento, directamente o a través de un auditor tercero independiente, con sujeción a la confidencialidad y a límites razonables de frecuencia y de alcance.
 
-Al finalizar el contrato, y a elección del Usuario Business, Stampeo devuelve o elimina los datos de los clientes finales en los plazos previstos en el §6.3, salvo obligación legal de conservación (en particular fiscal).
+Al finalizar el contrato, tal como se describe en el §6.3, Stampeo anonimiza de forma irreversible los datos personales de los clientes finales (conservando únicamente estadísticas anonimizadas), salvo que la ley exija la supresión o una conservación más prolongada (en particular fiscal).
 
 ### 8.6 Acceso de soporte por parte del personal de Stampeo
 

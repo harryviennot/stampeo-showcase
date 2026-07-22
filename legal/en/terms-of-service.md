@@ -1,6 +1,6 @@
 # Terms of Service: Stampeo
 
-**Last updated: June 22, 2026**
+**Last updated: July 22, 2026**
 
 ## 1. Purpose
 
@@ -41,7 +41,7 @@ Stampeo provides businesses with a platform to:
 
 - Create and customize digital loyalty cards
 - Distribute cards via Apple Wallet and Google Wallet
-- Scan customer cards to award stamps or points
+- Scan customer cards to award stamps or points (a points program records the transaction value used to calculate the points awarded)
 - Track loyalty program activity
 - Send notifications to cardholders
 
@@ -127,8 +127,9 @@ In case of termination for violation, Stampeo reserves the right to suspend acce
 After cancellation:
 
 - Dashboard access is deactivated
-- Data is retained for 60 days, allowing possible reactivation
-- After this period, all data is deleted, including End Customer data
+- Data is retained to allow reactivation for up to 12 months of inactivity. Reactivating (logging back in or resubscribing) at any point keeps the account and its data
+- Before any deletion, Stampeo sends two email warnings, 30 days and 14 days beforehand
+- After 12 months of inactivity without reactivation, the account is deleted: Business User personal data is removed and End Customer personal data is irreversibly anonymized (anonymized statistics may be retained). Billing records are kept for 10 years as required by law
 - Passes already installed in customer wallets remain present but are no longer updated
 
 ## 7. Intellectual Property
@@ -152,7 +153,7 @@ This section functions as the Data Processing Addendum between the Business User
 The Business User is the data controller for its End Customers' personal data and determines what information is collected and for what purpose. Stampeo acts as a data processor and processes End Customer personal data only:
 
 - on documented instructions from the Business User (including the configuration of the loyalty program, the content of broadcasts, and any settings the Business User toggles in the dashboard);
-- for the duration of the Subscription and the 60-day post-cancellation retention window described in §6.3;
+- for the duration of the Subscription and the post-cancellation retention window described in §6.3;
 - for the sole purpose of providing the Platform as described in §4.
 
 Stampeo will not use End Customer data for its own purposes, nor combine it with data from other businesses.
@@ -176,7 +177,7 @@ Stampeo will assist the Business User, at its reasonable request and cost, with:
 - responding to End Customer rights requests (access, rectification, erasure, restriction, portability, objection) under GDPR Articles 15–22, including by providing the export and deletion procedures described in the Privacy Policy;
 - responding to supervisory authority enquiries and data-protection impact assessments under Articles 35–36.
 
-On termination of the Subscription, Stampeo will delete all End Customer data as described in §6.3, unless retention is required by law.
+On termination of the Subscription, Stampeo will, as described in §6.3, irreversibly anonymize End Customer personal data (retaining only anonymized statistics), unless deletion or longer retention is required by law.
 
 Stampeo will make available, on reasonable request, information necessary to demonstrate compliance with this section, and will permit reasonable audits proportionate to a SaaS arrangement (typically a written questionnaire plus, where justified, an onsite visit at the Business User's cost, subject to confidentiality).
 

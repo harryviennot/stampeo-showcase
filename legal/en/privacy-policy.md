@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: June 22, 2026**
+**Last updated: July 22, 2026**
 
 ## 1. Introduction
 
@@ -60,6 +60,10 @@ The website, phone number, and "how you heard about us" fields are collected at 
 |------|---------|-------------|
 | Email address | Invitation and authentication | Performance of contract |
 | Full name | Identification | Performance of contract |
+| Activity metrics (number of scans recorded, last-active timestamp) | Team-activity statistics shown to the business owner | Legitimate interest |
+| Per-scan attribution (which employee recorded each scan) | Loyalty audit trail and business analytics | Legitimate interest |
+
+These activity metrics are visible to the business owner to give a view of team activity. Stampeo does not use them for its own purposes.
 
 ### 3.3 End Customers
 
@@ -73,6 +77,7 @@ Data collected depends entirely on the configuration chosen by the business. All
 | Phone number | Optional (can be disabled) | Communication |
 | Visit history | Automatic | Loyalty tracking and statistics |
 | Stamps/points balance | Automatic | Loyalty program |
+| Purchase amount / transaction value | Automatic (points programs only) | Points accrual and business analytics |
 
 It is possible to configure the Platform in fully anonymous mode (no personal data collected, only a card identifier).
 
@@ -154,7 +159,7 @@ When a customer adds a pass to their wallet, the pass can receive notifications 
 
 ### 7.1 Transactional Notifications
 
-Sent automatically in response to customer activity: stamp received, milestone reached, reward earned, reward redeemed.
+Sent automatically in response to customer activity: stamp received, points earned, milestone reached, reward earned, reward redeemed.
 
 - **Legal basis:** performance of the loyalty service (GDPR Art. 6(1)(b)), on behalf of the business as data controller.
 - **Content:** strictly related to the customer's own loyalty card activity.
@@ -181,8 +186,8 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Data | Retention Period |
 |------|-----------------|
 | Active Business account | Duration of subscription |
-| Business account after cancellation | 60 days, then deleted |
-| End customer data | Duration of business's activity on the Platform |
+| Business account after cancellation | Up to 12 months of inactivity, then personal data is deleted. Two email warnings are sent (30 and 14 days before), and the account is kept if the owner logs back in or resubscribes |
+| End customer data | Kept while the business is active; irreversibly anonymized when the business account is deleted (anonymized statistics may be retained) |
 | Billing data | 10 years (French legal requirement) |
 | Technical logs | 12 months maximum |
 | Push registration tokens | Deleted when the customer removes the pass from their wallet, or when the wallet push service reports the token as permanently invalid |
@@ -194,7 +199,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
 
-After a Business account is deleted, all associated data (including end customer data) is deleted within 60 days.
+When a Business account becomes inactive, we retain its data for up to 12 months to allow reactivation, sending two email warnings before permanent deletion. On deletion, Business-account personal data is deleted and End Customer personal data is irreversibly anonymized; anonymized statistics may be retained. Billing records are kept for 10 years as required by law.
 
 ## 9. Pass Deletion by End Customers
 
