@@ -36,10 +36,104 @@
         "notifications-push",
         "programme-fondateur"
       ],
+      "gallery": {
+        "title": "Quince comercios, quince estilos",
+        "subtitle": "Cada tarjeta de aquí se ha creado con este editor: cuadrícula de sellos o banda de puntos, iconos personalizados, el logo bien visible.",
+        "ctaLead": "La tuya puede ser la siguiente.",
+        "prev": "Estilo anterior",
+        "next": "Estilo siguiente",
+        "stamps": [
+          "Iconos personalizados, en filas escalonadas",
+          "Iconos personalizados, apilándose al sellar",
+          "Iconos vivos en tarjeta clara",
+          "Una cuadrícula clásica con tu logo",
+          "Iconos claros sobre fondo intenso",
+          "Una cuadrícula ordenada",
+          "Doce iconos que se apilan",
+          "Color vivo, iconos divertidos"
+        ],
+        "points": [
+          "Un saldo grande y legible",
+          "Tu propia foto como banda",
+          "Una marca por recompensa",
+          "Un anillo que se llena hacia la recompensa",
+          "Monocromo y editorial",
+          "Hitos en tarjeta clara",
+          "Un anillo dorado sobre fondo intenso"
+        ],
+        "cardFields": {
+          "stamps": [
+            { "main": [ { "label": "Titular", "value": "Théo" }, { "label": "Recompensa", "value": "Lavado gratis" } ], "aux": [ { "label": "Miembro desde", "value": "2024" } ] },
+            { "main": [ { "label": "Titular", "value": "Camille" }, { "label": "Recompensa", "value": "Café gratis" } ] },
+            { "main": [ { "label": "Titular", "value": "Inès" }, { "label": "Recompensa", "value": "Smoothie gratis" } ], "aux": [ { "label": "Favorito", "value": "Green Machine" } ] },
+            { "main": [ { "label": "Recompensa", "value": "Corte gratis" }, { "label": "Titular", "value": "Julien" } ] },
+            { "main": [ { "label": "Mascota", "value": "Max" }, { "label": "Recompensa", "value": "Baño gratis" } ], "aux": [ { "label": "Miembro desde", "value": "2025" } ] },
+            { "main": [ { "label": "Titular", "value": "Louise" }, { "label": "Recompensa", "value": "Ramo gratis" } ] },
+            { "main": [ { "label": "Titular", "value": "Nina" }, { "label": "Recompensa", "value": "Bola gratis" } ], "aux": [ { "label": "Favorito", "value": "Stracciatella" } ] },
+            { "main": [ { "label": "Titular", "value": "Mei" }, { "label": "Recompensa", "value": "Bubble tea gratis" } ] }
+          ],
+          "points": [
+            { "main": [ { "label": "Titular", "value": "Elias" }, { "label": "Próxima recompensa", "value": "-10 €" } ], "aux": [ { "label": "Miembro desde", "value": "2023" } ] },
+            { "main": [ { "label": "Próximo hito", "value": "100 pts" }, { "label": "Próxima recompensa", "value": "-25 %" } ] },
+            { "main": [ { "label": "Titular", "value": "Sacha" }, { "label": "Próxima recompensa", "value": "Clase gratis" } ], "aux": [ { "label": "Visitas", "value": "18" } ] },
+            { "main": [ { "label": "Titular", "value": "Chloé" }, { "label": "Próxima recompensa", "value": "Manicura gratis" } ] },
+            { "main": [ { "label": "Titular", "value": "Anna" }, { "label": "Próxima recompensa", "value": "-10 %" } ] },
+            { "main": [ { "label": "Próximo hito", "value": "240 pts" }, { "label": "Próxima recompensa", "value": "-20 €" } ], "aux": [ { "label": "Miembro desde", "value": "2024" } ] },
+            { "main": [ { "label": "Titular", "value": "Hugo" }, { "label": "Próxima recompensa", "value": "Copa gratis" } ], "aux": [ { "label": "Visitas", "value": "12" } ] }
+          ]
+        }
+      },
+      "parity": {
+        "title": "Una tarjeta, lista para todos los bolsillos",
+        "wallets": {
+          "title": "Apple Wallet y Google Wallet",
+          "description": "La misma tarjeta funciona en los dos, y el editor muestra una vista previa de cada uno mientras la compones. Nada por duplicado, nada que mantener."
+        },
+        "styles": {
+          "title": "Cambia de estilo cuando quieras",
+          "description": "Modifica tu estilo de tarjeta en cualquier momento: las tarjetas que ya están en los teléfonos de tus clientes se actualizan automáticamente. Con Growth, guarda varios estilos y activa el que prefieras con un clic."
+        }
+      },
+      "faq": {
+        "title": "El estilo de tarjeta, resuelto",
+        "subtitle": "Lo que más nos preguntan antes de crear una tarjeta.",
+        "items": [
+          {
+            "question": "¿Puedo usar mis propios iconos de sello?",
+            "answer": "Sí. Sube cualquier imagen (tu croissant, tu mascota, tu logo): el fondo se recorta automáticamente y se convierte en un sello. Puedes incluso usar un icono distinto por sello, hasta doce."
+          },
+          {
+            "question": "¿Y si no tengo logo ni colores?",
+            "answer": "La biblioteca tiene 98 iconos listos para usar, y el editor incluye una paleta completa. Elige un icono, tus colores, y la vista previa muestra el resultado al momento."
+          },
+          {
+            "question": "¿La tarjeta funciona en iPhone y Android?",
+            "answer": "Sí. La misma tarjeta vive en Apple Wallet y en Google Wallet, y el editor muestra una vista previa de los dos mientras la compones. Tus clientes escanean un solo código QR, sea cual sea su teléfono."
+          },
+          {
+            "question": "¿Puedo cambiar el estilo más adelante?",
+            "answer": "Cuando quieras. Modifica tu estilo de tarjeta y las tarjetas que ya están en los teléfonos de tus clientes se actualizan automáticamente. Con Growth, guarda varios estilos y cambia el activo."
+          },
+          {
+            "question": "¿Pueden crear la tarjeta por mí?",
+            "answer": "Sí. Envíanos tu logo y tus colores y componemos la tarjeta por ti. La mayoría están listas en 48 horas."
+          }
+        ]
+      },
       "custom": {
         "playground": {
           "sectionTitle": "Monta tu tarjeta",
-          "sectionSubtitle": "Colores, icono de sello, nombre del cliente: cambia la vista previa y ve el resultado al momento.",
+          "sectionSubtitle": "Sellos o puntos, colores, iconos, nombre del cliente: cambia la vista previa y ve el resultado al momento.",
+          "programLabel": "Tipo de programa",
+          "stripLabel": "Estilo de puntos",
+          "stripStyles": {
+            "big_point": "Saldo grande",
+            "circle_progress": "Anillo",
+            "progress_icons": "Recorrido"
+          },
+          "balanceLabel": "Saldo de puntos",
+          "pointsRewardValue": "Postre gratis",
+          "shuffle": "Sorpréndeme",
           "themeLabel": "Tema",
           "iconLabel": "Icono",
           "nameToggle": "Nombre",
@@ -71,8 +165,7 @@
         },
         "iconLibrary": {
           "title": "Un icono para cada oficio",
-          "description": "Decenas de iconos de sello listos para usar: cafetería, restaurante, peluquería, floristería, tienda de mascotas. Uno que encaja con tu actividad, seguro.",
-          "trades": ["Cafetería", "Restaurante", "Peluquería", "Floristería", "Tienda de mascotas"]
+          "description": "98 iconos de sello listos para usar, en 8 categorías, con búsqueda por nombre en el editor. Cafetería, salón, tienda: hay uno que encaja con tu comercio."
         },
         "customIcons": {
           "badge": "Nuevo",
@@ -81,18 +174,17 @@
           "bullets": [
             "Fondo recortado automáticamente al subirlo.",
             "Tres estilos de sello vacío: escala de grises, contorno, o el tuyo.",
-            "Tres disposiciones: alineados, al tresbolillo, o superpuestos."
+            "Tres disposiciones: alineados, al tresbolillo, o superpuestos.",
+            "Un icono distinto por sello si quieres, y uno especial para la recompensa."
           ],
           "gallery": {
-            "title": "Tarjetas reales, iconos reales",
             "examples": [
-              { "orgName": "Maison Levain", "reward": "El 10º croissant gratis", "caption": "Croissants superpuestos" },
-              { "orgName": "Café Margot", "reward": "Café gratis", "caption": "Al tresbolillo, vacíos en contorno" },
-              { "orgName": "Donut Days", "reward": "El 6º donut gratis", "caption": "Alineados, vacíos atenuados" },
-              { "orgName": "Fleurs & Co", "reward": "Un ramo de regalo", "caption": "Un regalo en el último sello" }
+              "Seis gotas de agua al tresbolillo",
+              "Gajos de cítricos que se superponen",
+              "Ocho cucuruchos que se apilan",
+              "Bubble teas bien alineados"
             ]
-          },
-          "attribution": "Iconos de demostración: Twemoji (CC-BY 4.0)."
+          }
         },
         "livingCard": {
           "title": "Una tarjeta que conoce a tus clientes",
@@ -175,6 +267,27 @@
             "orgName": "Mi Cafetería de Madrid",
             "rewardLabel": "Recompensa",
             "rewardValue": "Café gratis"
+          },
+          "pointsLabels": [
+            "Logo",
+            "Saldo de puntos",
+            "Banda de puntos",
+            "Campos a tu elección",
+            "Recompensa",
+            "Código QR del cliente"
+          ],
+          "pointsMobileLabels": [
+            "Logo",
+            "Saldo",
+            "Puntos",
+            "Campos",
+            "Recompensa",
+            "Código QR"
+          ],
+          "pointsCard": {
+            "orgName": "Bistró del Mercado",
+            "rewardLabel": "Recompensa",
+            "rewardValue": "Postre gratis"
           }
         }
       }

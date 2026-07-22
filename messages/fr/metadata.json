@@ -1,5 +1,10 @@
 {
   "metadata": {
+    "loyaltyPrograms": {
+      "title": "Tampons ou points : quel programme de fidélité pour votre commerce",
+      "description": "Comparez la carte à tampons et le programme à points pour Apple Wallet et Google Wallet. Trouvez en une minute le programme de fidélité fait pour votre commerce, café, restaurant ou salon.",
+      "keywords": "programme de fidélité, tampons ou points, carte de fidélité digitale, carte de fidélité Apple Wallet, points de fidélité, carte à tampons, carte de fidélité sans application"
+    },
     "home": {
       "title": "Stampeo - Des cartes de fidélité que vos clients gardent vraiment",
       "description": "Cartes de fidélité digitales pour Apple Wallet et Google Wallet. Aucune appli à télécharger, aucune carte à perdre. Créez votre carte en minutes.",
@@ -16,7 +21,7 @@
     "features": {
       "design-de-carte": {
         "title": "Votre carte de fidélité, à votre image jusqu'aux icônes",
-        "description": "Couleurs, logo et vos propres icônes de tampon, détourées automatiquement. Composez votre carte en quelques minutes, ou envoyez votre logo et on la crée en 24-48h."
+        "description": "Votre logo, vos couleurs, vos propres icônes de tampon détourées automatiquement, ou 98 icônes prêtes à l'emploi. Composez votre carte en quelques minutes, ou envoyez votre logo et on la crée en 24-48h."
       },
       "scanner-mobile": {
         "title": "Scanner mobile — tamponnez en 0,8 seconde, même sans connexion",

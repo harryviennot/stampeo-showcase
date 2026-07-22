@@ -41,11 +41,12 @@ export default async function Home({
   const { variant } = await searchParams;
   setRequestLocale(locale);
 
-  // FR DEFAULT (since 2026-04-25 cutover): VariantLanding is the live FR page.
+  // ALL LOCALES DEFAULT (fr/en/es): VariantLanding is the live homepage.
   // Escape hatch: `/?variant=control` renders the legacy control page (kept for
   // before/after comparison + emergency rollback without redeploying).
-  // EN always renders the legacy control, regardless of variant param.
-  if (locale === "fr" && variant !== "control") {
+  // NOTE: the control sections below are legacy — retire once the variant is
+  // validated in prod across all three locales.
+  if (variant !== "control") {
     return <VariantLanding locale={locale} />;
   }
 

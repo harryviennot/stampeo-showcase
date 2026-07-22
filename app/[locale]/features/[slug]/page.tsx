@@ -3,6 +3,8 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { AnalyticsPageContent } from "@/components/features/analytics/AnalyticsPageContent";
 import { NotificationsPushPage } from "@/components/features/notifications-push/NotificationsPushPage";
 import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
@@ -94,8 +96,20 @@ export default async function FeaturePage({ params }: PageProps) {
 
   const FeatureContent = FEATURE_COMPONENTS[canonical];
 
+  const t = await getTranslations({ locale, namespace: "metadata.features" });
+  const homeUrl = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+
   return (
     <div className="min-h-screen bg-[var(--background)]">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Stampeo", url: homeUrl },
+          {
+            name: t(`${canonical}.title`),
+            url: featureUrl(getLocalizedSlug(canonical, locale), locale),
+          },
+        ])}
+      />
       <Header />
       <main className="relative">
         <FeatureContent />

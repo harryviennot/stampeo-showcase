@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-174 -100 406 133" fill="none">
+  <!-- the O is a pilates ring -->
+  <text x="-104" y="0" text-anchor="end" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="88" font-weight="800" letter-spacing="12" fill="#FFFFFF"
+    textLength="56" lengthAdjust="spacingAndGlyphs">F</text>
+  <circle cx="-58" cy="-31" r="33" stroke="#C6F24E" stroke-width="11"/>
+  <text x="-12" y="0" font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="88" font-weight="800" letter-spacing="12" fill="#FFFFFF"
+    textLength="230" lengthAdjust="spacingAndGlyphs">RME</text>
+</svg>

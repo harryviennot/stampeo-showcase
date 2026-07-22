@@ -16,6 +16,8 @@ export {
   Clock as ClockIcon,
   UsersThree as UserGroupIcon,
   CaretDown as ChevronDownIcon,
+  CaretLeft as CaretLeftIcon,
+  CaretRight as CaretRightIcon,
   ArrowRight as ArrowRightIcon,
   Sparkle as SparklesIcon,
   ShieldCheck as ShieldCheckIcon,

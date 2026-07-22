@@ -23,7 +23,13 @@
     "loading": "Creating your card...",
     "success": {
       "title": "Your card is ready!",
-      "description": "Add your {businessName} loyalty card to your wallet and start collecting stamps."
+      "description": "Add your {businessName} loyalty card to your wallet and start collecting stamps.",
+      "desktopDescription": "Add it to your phone in seconds.",
+      "emailedNote": "We also emailed your card to {email}.",
+      "scanTitle": "Scan with your phone",
+      "scanHint": "Point your phone camera at the code to add your card.",
+      "autoAdding": "Adding your card to your wallet…",
+      "fallbackHint": "Add it manually:"
     },
     "emailSent": {
       "title": "Check your email",

@@ -1,0 +1,166 @@
+{
+  "loyalty": {
+    "hero": {
+      "badge": "Loyalty programs",
+      "title": "The right loyalty program <accent>for how you actually sell.</accent>",
+      "subtitle": "Stampeo runs two program types from one wallet card: stamps for repeat visits, points for what customers spend. Here's how each works, and how to choose."
+    },
+    "engines": {
+      "heading": "Two ways to reward, one card",
+      "subheading": "Same wallet card, same setup. The only choice is what you count.",
+      "labelHow": "How it works",
+      "labelBestFor": "Best for",
+      "stamps": {
+        "name": "Stamps",
+        "tagline": "A digital punch card.",
+        "how": "Every visit adds one stamp. Fill the card, earn the reward. One tap at the counter, no price to enter.",
+        "bestFor": "Best for fixed-price, repeat purchases: coffees, pastries, blow-dries, car washes."
+      },
+      "points": {
+        "name": "Points",
+        "tagline": "A spend-based balance.",
+        "how": "Staff enter the amount spent and the customer earns points for it. They spend those points on a menu of rewards you set, up to twelve.",
+        "bestFor": "Best for baskets that vary: restaurants, retail, grocery, specialty shops."
+      }
+    },
+    "comparison": {
+      "title": "Stamps and points, side by side",
+      "subtitle": "Neither is better. They simply fit different businesses.",
+      "stampsLabel": "Stamps",
+      "pointsLabel": "Points",
+      "rows": [
+        { "criteria": "Best when", "stamps": "Every purchase costs about the same", "points": "The ticket changes from one visit to the next" },
+        { "criteria": "How it fills", "stamps": "One stamp per visit, one tap", "points": "Points scale with the amount spent" },
+        { "criteria": "The reward", "stamps": "A free item after N stamps", "points": "A menu of rewards, priced in points (up to 12)" },
+        { "criteria": "Feels like", "stamps": "A gift you're working toward", "points": "The freedom to choose" },
+        { "criteria": "On the card", "stamps": "A grid of stamps", "points": "A running balance and progress" },
+        { "criteria": "Available on", "stamps": "Every plan", "points": "Every plan" }
+      ]
+    },
+    "picker": {
+      "title": "Which one fits you?",
+      "subtitle": "Three quick questions. No email required.",
+      "progress": "Question {current} of {total}",
+      "questions": [
+        {
+          "question": "Do your prices change much from one purchase to the next?",
+          "options": [
+            { "label": "No, most purchases cost about the same" },
+            { "label": "Yes, the basket varies a lot" }
+          ]
+        },
+        {
+          "question": "How do your best customers come back?",
+          "options": [
+            { "label": "Often, for small purchases" },
+            { "label": "Now and then, for bigger ones" }
+          ]
+        },
+        {
+          "question": "Which reward would your customers love most?",
+          "options": [
+            { "label": "A free item after a few visits" },
+            { "label": "Their pick from several rewards" },
+            { "label": "Not sure yet" }
+          ]
+        }
+      ],
+      "resultHeading": "Our suggestion",
+      "results": {
+        "stamps": {
+          "title": "Go with stamps",
+          "body": "Your visits look steady and similar in price, so a punch card is the clearest, most motivating choice."
+        },
+        "points": {
+          "title": "Go with points",
+          "body": "Your baskets vary, so rewarding what customers actually spend feels fairer and keeps bigger spenders coming back."
+        },
+        "either": {
+          "title": "Either could work",
+          "body": "You're right in the middle. Stamps are the simplest way to start; points are just as quick to set up if you'd rather reward spending."
+        }
+      },
+      "restart": "Start over",
+      "cta": "Create my card"
+    },
+    "options": {
+      "title": "The settings that make a program work",
+      "subtitle": "Stamps or points is just the start. You'll meet these dials during setup; here are the four that matter, with our advice for each.",
+      "tipLabel": "Our tip:",
+      "items": [
+        {
+          "name": "Start cards pre-stamped",
+          "description": "Hand out cards with the first stamp or two already filled, on the house.",
+          "tip": "A head start works. Customers finish a card they've already begun far more often than one at zero."
+        },
+        {
+          "name": "Let rewards stack",
+          "description": "A full card banks its reward and a fresh cycle starts right away. You choose how many rewards a customer can hold.",
+          "tip": "Allow at least two, so nobody stalls because a reward is already waiting."
+        },
+        {
+          "name": "Set the rhythm",
+          "description": "You pick the number of stamps, or the point price of each reward, with up to twelve rewards on points.",
+          "tip": "Make the first reward easy to reach. A quick win turns a first visit into a habit."
+        },
+        {
+          "name": "Change your mind later",
+          "description": "Switch between stamps and points whenever you want. Your customers keep the same card and their progress.",
+          "tip": "Start simple. Most businesses launch the obvious choice and adjust once real numbers come in."
+        }
+      ]
+    },
+    "designTeaser": {
+      "title": "Whichever you pick, make it yours",
+      "subtitle": "Your logo, your colors, your own stamp icons. Once the program is chosen, the card designer handles the look.",
+      "cta": "Explore the card designer"
+    },
+    "businessMap": {
+      "title": "What most businesses go with",
+      "subtitle": "A starting point, not a rule.",
+      "stampsLabel": "Stamps",
+      "pointsLabel": "Points",
+      "items": {
+        "cafe": { "label": "Cafés & coffee shops", "rationale": "Same drink, most days" },
+        "bakery": { "label": "Bakeries", "rationale": "Small, frequent purchases" },
+        "salon": { "label": "Hair & beauty", "rationale": "Rewarded per visit" },
+        "carwash": { "label": "Car washes", "rationale": "One service, repeated" },
+        "restaurant": { "label": "Restaurants", "rationale": "Bills change every time" },
+        "retail": { "label": "Retail & boutiques", "rationale": "Baskets vary widely" },
+        "grocery": { "label": "Grocery & food shops", "rationale": "Reward total spend" },
+        "wine": { "label": "Wine & specialty shops", "rationale": "Higher, uneven tickets" }
+      }
+    },
+    "faq": {
+      "title": "Stamps and points, answered",
+      "subtitle": "The questions we hear most before choosing a program.",
+      "items": [
+        {
+          "question": "What's the difference between stamps and points?",
+          "answer": "Stamps count visits: one tap adds a stamp, and a full card earns a reward. Points count spending: staff enter the amount, the customer earns points, and they spend those points on rewards you set. Stamps suit fixed-price repeat visits; points suit baskets that vary."
+        },
+        {
+          "question": "Which one should I choose?",
+          "answer": "If your prices are similar and people come back often, stamps are the clearest. If baskets vary or tickets run higher, points reward what customers actually spend. Not sure? Try the picker above."
+        },
+        {
+          "question": "Is points more expensive than stamps?",
+          "answer": "No. Both programs are on every plan, Starter included. The card, the wallet updates, and the reward menu cost the same either way."
+        },
+        {
+          "question": "How do customers earn points?",
+          "answer": "Your staff enter the amount spent when they scan, and the customer earns points for it, for example one point per euro. You set the rewards and their point price, up to twelve."
+        },
+        {
+          "question": "Do my customers need an app?",
+          "answer": "No. The card lives in Apple Wallet or Google Wallet, already on their phone. They scan your QR code once and it's added, stamps or points alike."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to reward your regulars?",
+      "subtitle": "Build your card in minutes, stamps or points. One month free, no commitment.",
+      "button": "Create my card"
+    }
+  }
+}

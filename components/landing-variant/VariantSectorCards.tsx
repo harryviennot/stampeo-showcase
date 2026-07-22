@@ -1,107 +1,164 @@
 import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { Link } from "@/i18n/navigation";
-import { WalletCard } from "../card/WalletCard";
-import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
-import { ArrowRightIcon } from "../icons";
-import type { StampIconType } from "@/components/onboarding/StampIconPicker";
-import type { PassField } from "@/lib/types/design";
+import { SectorCarousel, type SectorTheme } from "./SectorCarousel";
 
-type Theme = {
-  cardBg: string;
-  cardText: string;
-  cardMuted: string;
-  accentPill: string;
-  walletBg: string;
-  walletAccent: string;
-  walletIcon: string;
-  walletStamps: number;
-  walletStampIcon: StampIconType;
-  walletOrgName: string;
-  walletSecondaryFields: PassField[];
-};
-
-// Order matches FR sectors[] in messages/fr/landing.json:
-// [0] Café · [1] Restaurant · [2] Salon de coiffure · [3] Boulangerie
-const themes: Theme[] = [
-  // [0] Café — moody, specialty coffee bar
+// Real, hand-designed cards for five sample businesses — logos, colors and
+// strip artwork all match how the owner would actually set them up. Order MUST
+// match sectors[] in every messages/{locale}/landing.json:
+// [0] Barbershop (stamps) · [1] Café (stamps, custom cup icons) ·
+// [2] Restaurant (points) · [3] Beauty salon (points) ·
+// [4] Bookstore (points, big balance).
+// The card fields (reward, cardholder name, next milestone…) come from the
+// sector's `fields` in landing.json so they stay localized.
+const themes: SectorTheme[] = [
+  // [0] Les Garçons Barbiers — classic barbershop. Crisp white card, near-black
+  // scissor stamps, a gift on the final reward slot. Framed in warm charcoal
+  // and brass so the white card pops.
   {
-    cardBg: "#12100E",
-    cardText: "#F5F5F4",
-    cardMuted: "rgba(245,245,244,0.6)",
-    accentPill: "rgba(217,119,6,0.22)",
-    walletBg: "#1F1B18",
-    walletAccent: "#D97706",
-    walletIcon: "#FFF7ED",
-    walletStamps: 9,
-    walletStampIcon: "coffee",
-    walletOrgName: "Atelier Nocturne",
-    walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Café offert au 10ème" },
-    ],
-  },
-  // [1] Restaurant — modern, slightly upscale bistro
-  {
-    cardBg: "#111827",
-    cardText: "#F9FAFB",
-    cardMuted: "rgba(249,250,251,0.6)",
-    accentPill: "rgba(192,132,252,0.18)",
-    walletBg: "#1F2937",
-    walletAccent: "#C084FC",
+    engine: "stamp",
+    cardBg: "#14110E",
+    cardText: "#F4EFE9",
+    cardMuted: "rgba(244,239,233,0.6)",
+    accent: "#C9A15B",
+    accentPill: "rgba(201,161,91,0.16)",
+    walletBg: "#FFFFFF",
+    walletAccent: "#040404",
     walletIcon: "#FFFFFF",
-    walletStamps: 10,
-    walletStampIcon: "food",
-    walletOrgName: "L’Atelier 17",
-    walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Dessert offert au 10ème" },
-    ],
-  },
-  // [2] Salon de coiffure — soft, warm boutique-salon palette
-  {
-    cardBg: "#F5ECE4",
-    cardText: "#2A1F1A",
-    cardMuted: "rgba(42,31,26,0.6)",
-    accentPill: "rgba(193,108,80,0.18)",
-    walletBg: "#EADBD0",
-    walletAccent: "#C16C50",
-    walletIcon: "#FFFFFF",
+    walletText: "#343434",
+    walletLabel: "#040404",
+    walletLogoUrl: "/themes/barber/logo.avif",
     walletStamps: 6,
+    walletFilled: 6, // reward slot filled → the gift shows
     walletStampIcon: "scissors",
-    walletOrgName: "Studio Mireille",
-    walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Soin offert à la 6ème visite" },
-    ],
+    walletRewardIcon: "gift",
   },
-  // [3] Boulangerie — rustic artisan bakery
+  // [1] Aurevo — specialty café on stamps, using the brand's own to-go cup as a
+  // custom uploaded icon. Coffee-brown card with the white wordmark; 8 cups
+  // staggered across two rows, empty slots in greyscale. Framed in oat cream
+  // and caramel to match the brown card.
   {
-    cardBg: "#F2E3C6",
-    cardText: "#2F2419",
-    cardMuted: "rgba(47,36,25,0.6)",
-    accentPill: "rgba(180,83,9,0.18)",
-    walletBg: "#E7D3A8",
-    walletAccent: "#B45309",
-    walletIcon: "#FFFDF7",
-    walletStamps: 7,
-    walletStampIcon: "bread",
-    walletOrgName: "Le Four d’Antan",
-    walletSecondaryFields: [
-      { key: "reward", label: "RÉCOMPENSE", value: "Pain au chocolat au 7ème" },
+    engine: "stamp",
+    cardBg: "#F4ECE0",
+    cardText: "#2A2018",
+    cardMuted: "rgba(42,32,24,0.62)",
+    accent: "#A9743E",
+    accentPill: "rgba(169,116,62,0.16)",
+    walletBg: "#4b2e2b",
+    walletAccent: "#3A2416",
+    walletIcon: "#FFFFFF",
+    walletLogoUrl: "/themes/cafe/logo.png",
+    walletStamps: 8,
+    customStampConfig: {
+      icons: [
+        {
+          id: "aurevo-cup",
+          original_url: "/themes/cafe/cup.png",
+          processed_url: "/themes/cafe/cup.png",
+          greyscale_url: "/themes/cafe/cup-grey.png",
+          outline_url: "/themes/cafe/cup-grey.png",
+          bg_removed: true,
+        },
+      ],
+      reward_icon: null,
+      empty_icon: null,
+      empty_mode: "greyscale",
+      arrangement: "overlap",
+      empty_opacity: 80,
+    },
+  },
+  // [2] Xeniká — Greek restaurant on points. White card, blue wordmark + blue
+  // fields, and a full-bleed food photo as the strip (image_only, no overlay).
+  // Framed in deep Aegean blue.
+  {
+    engine: "points",
+    cardBg: "#0A2C4D",
+    cardText: "#EAF3FB",
+    cardMuted: "rgba(234,243,251,0.62)",
+    accent: "#4BA3E0",
+    accentPill: "rgba(75,163,224,0.18)",
+    walletBg: "#FFFFFF",
+    walletAccent: "#0C64A4",
+    walletIcon: "#FFFFFF",
+    walletText: "#0C64A4",
+    walletLabel: "#0C64A4",
+    walletLogoUrl: "/themes/restaurant/logo.png",
+    pointsStripStyle: "image_only",
+    pointsBalance: 75,
+    pointsRewards: [{ id: "r1", name: "", threshold: 100 }],
+    stripBgColor: "#FFFFFF",
+    stripImageUrl: "/themes/restaurant/strip.jpg",
+    stripImageOpacity: 100,
+  },
+  // [3] Vanity — beauty/nail salon on points. Soft blush card carries the
+  // cerise wordmark; a white strip holds a circle-progress ring in the brand
+  // magenta. Framed in deep berry so the blush card reads.
+  {
+    engine: "points",
+    cardBg: "#2B0A1E",
+    cardText: "#F9E9F1",
+    cardMuted: "rgba(249,233,241,0.62)",
+    accent: "#F08BB2",
+    accentPill: "rgba(240,139,178,0.16)",
+    walletBg: "#FADCE7",
+    walletAccent: "#D6006E",
+    walletIcon: "#FFFFFF",
+    walletText: "#8A1150",
+    walletLabel: "#B24A7B",
+    walletLogoUrl: "/themes/salon/logo.png",
+    pointsStripStyle: "circle_progress",
+    pointsBalance: 65,
+    pointsRewards: [
+      { id: "r1", name: "", threshold: 80 },
+      { id: "r2", name: "", threshold: 150 },
+      { id: "r3", name: "", threshold: 300 },
+    ],
+    stripBgColor: "#FFFFFF",
+  },
+  // [4] Marginalia — independent bookstore on points, the big-balance strip in
+  // gold on forest green (varying baskets, so points count what's spent).
+  // Framed in deep pine so the green card still reads against it.
+  {
+    engine: "points",
+    cardBg: "#0B2217",
+    cardText: "#F3E9D6",
+    cardMuted: "rgba(243,233,214,0.62)",
+    accent: "#E4C67A",
+    accentPill: "rgba(228,198,122,0.16)",
+    walletBg: "#14432E",
+    walletAccent: "#E4C67A",
+    walletIcon: "#FFFFFF",
+    walletText: "#F3E9D6",
+    walletLabel: "#E4C67A",
+    walletLogoUrl: "/themes/marginalia/logo.svg",
+    pointsStripStyle: "big_point",
+    pointsBalance: 240,
+    pointsRewards: [
+      { id: "r1", name: "", threshold: 150 },
+      { id: "r2", name: "", threshold: 300 },
+      { id: "r3", name: "", threshold: 600 },
     ],
   },
 ];
 
 export async function VariantSectorCards() {
   const t = await getTranslations("landing.sectorCards");
+  const tc = await getTranslations("common");
 
   const sectors = t.raw("sectors") as Array<{
     name: string;
     quote: string;
     reward: string;
     advantage: string;
+    fields?: Array<{ label: string; value: string }>;
     link: string;
     linkLabel: string;
   }>;
+
+  const slides = sectors.flatMap((sector, index) => {
+    const theme = themes[index];
+    return theme ? [{ ...sector, theme }] : [];
+  });
 
   return (
     <section className="py-20 sm:py-28 lg:py-32 relative">
@@ -119,76 +176,16 @@ export async function VariantSectorCards() {
             })}
           </p>
         </ScrollReveal>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-          {sectors.map((sector, index) => {
-            const theme = themes[index];
-            return (
-              <ScrollReveal key={sector.name} delay={index * 80}>
-                <Link
-                  href={sector.link as "/blog/carte-fidelite-cafe"}
-                  className="group relative flex flex-col h-full rounded-3xl overflow-hidden transition-transform duration-300 hover:-translate-y-1.5"
-                  style={{ backgroundColor: theme.cardBg, color: theme.cardText }}
-                >
-                  <div
-                    className="flex items-center justify-center pt-6 pb-4 px-3 lg:pt-8 lg:pb-6 lg:px-4"
-                    style={{
-                      background:
-                        `radial-gradient(circle at 50% 0%, ${theme.walletBg} 0%, transparent 70%)`,
-                    }}
-                  >
-                    <div
-                      className="transition-transform duration-500 group-hover:-rotate-3 group-hover:scale-105"
-                      style={{ transform: "rotate(-4deg)" }}
-                    >
-                      <ScaledCardWrapper targetWidth={140}>
-                        <WalletCard
-                          design={{
-                            background_color: theme.walletBg,
-                            stamp_filled_color: theme.walletAccent,
-                            icon_color: theme.walletIcon,
-                            stamp_icon: theme.walletStampIcon,
-                            total_stamps: theme.walletStamps,
-                            organization_name: theme.walletOrgName,
-                            secondary_fields: theme.walletSecondaryFields,
-                          }}
-                          stamps={Math.floor(theme.walletStamps * 0.6)}
-                          showQR={false}
-                        />
-                      </ScaledCardWrapper>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2.5 px-5 pb-5 pt-2 flex-1 lg:gap-3 lg:px-6 lg:pb-6">
-                    <h3 className="text-2xl font-extrabold tracking-tight">
-                      {sector.name}
-                    </h3>
-                    <span
-                      className="inline-flex self-start items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
-                      style={{ backgroundColor: theme.accentPill, color: theme.cardText }}
-                    >
-                      {sector.reward}
-                    </span>
-                    <p
-                      className="text-sm leading-relaxed italic line-clamp-4"
-                      style={{ color: theme.cardMuted }}
-                    >
-                      « {sector.quote} »
-                    </p>
-                    <span
-                      className="inline-flex items-center gap-1.5 text-sm font-bold mt-auto group-hover:gap-2.5 transition-all"
-                      style={{ color: theme.cardText }}
-                    >
-                      {sector.linkLabel}
-                      <ArrowRightIcon className="w-4 h-4" />
-                    </span>
-                  </div>
-                </Link>
-              </ScrollReveal>
-            );
-          })}
-        </div>
       </Container>
+
+      {/* Carousel sits outside the Container: edge-to-edge, side slides peek in */}
+      <ScrollReveal delay={150}>
+        <SectorCarousel
+          slides={slides}
+          engineLabels={{ stamp: tc("stamps"), points: tc("points") }}
+          controls={{ prev: t("carousel.prev"), next: t("carousel.next") }}
+        />
+      </ScrollReveal>
     </section>
   );
 }

@@ -13,6 +13,7 @@ import {
   faqPageJsonLd,
 } from "@/lib/structured-data";
 import { VariantHero } from "./VariantHero";
+import { VariantTryIt } from "./VariantTryIt";
 import { VariantTrustStrip } from "./VariantTrustStrip";
 import { VariantBenefits } from "./VariantBenefits";
 import { VariantDifferentiator } from "./VariantDifferentiator";
@@ -21,8 +22,12 @@ import { VariantTestimonials } from "./VariantTestimonials";
 import { VariantFAQ } from "./VariantFAQ";
 import { VariantFinalCTA } from "./VariantFinalCTA";
 import { VariantDevToggle } from "./VariantDevToggle";
+import { MARKETS, type Market } from "@/lib/markets";
 
-export async function VariantLanding({ locale }: Readonly<{ locale: string }>) {
+export async function VariantLanding({
+  locale,
+  market = "int",
+}: Readonly<{ locale: string; market?: Market }>) {
   setRequestLocale(locale);
   const t = await getTranslations("variant.faq");
   const faqItems = t.raw("items") as Array<{ question: string; answer: string }>;
@@ -37,14 +42,16 @@ export async function VariantLanding({ locale }: Readonly<{ locale: string }>) {
       <Header />
       <main className="relative">
         <div data-landing-section="hero"><VariantHero /></div>
-        <div data-landing-section="trust_strip"><VariantTrustStrip /></div>
+        {/* "Made in Europe · GDPR" trust strip — hidden outside Europe (US). */}
+        {MARKETS[market].europeTrust && (
+          <div data-landing-section="trust_strip"><VariantTrustStrip /></div>
+        )}
         <div data-landing-section="benefits"><VariantBenefits /></div>
         <div data-landing-section="differentiator"><VariantDifferentiator /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
+        <div data-landing-section="try_it"><VariantTryIt /></div>
         <div data-landing-section="sectors"><VariantSectorCards /></div>
-        {/* Hidden until we have real merchant testimonials with name + business + city + photo.
-            Copy lives in messages/{locale}/landing.json → variant.testimonials. Re-enable once replaced. */}
-        {false && <div data-landing-section="testimonials"><VariantTestimonials /></div>}
+        <div data-landing-section="testimonials"><VariantTestimonials market={market} /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
         <div data-landing-section="pricing"><PricingSection /></div>
         <div data-landing-section="faq"><VariantFAQ /></div>

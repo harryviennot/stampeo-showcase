@@ -23,7 +23,13 @@
     "loading": "Création de votre carte...",
     "success": {
       "title": "Votre carte est prête !",
-      "description": "Ajoutez votre carte de fidélité {businessName} à votre wallet et commencez à collecter des tampons."
+      "description": "Ajoutez votre carte de fidélité {businessName} à votre wallet et commencez à collecter des tampons.",
+      "desktopDescription": "Ajoutez-la sur votre téléphone en quelques secondes.",
+      "emailedNote": "Nous l'avons aussi envoyée à {email}.",
+      "scanTitle": "Scannez avec votre téléphone",
+      "scanHint": "Pointez l'appareil photo de votre téléphone vers le code pour ajouter votre carte.",
+      "autoAdding": "Ajout de votre carte en cours…",
+      "fallbackHint": "Ajoutez-la manuellement :"
     },
     "emailSent": {
       "title": "Vérifiez vos emails",

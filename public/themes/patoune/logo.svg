@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-146 -91 291 201" fill="none">
+  <defs>
+    <path id="patoune-arc" d="M -158 34 Q 0 -74 158 34"/>
+  </defs>
+  <!-- brand name arched like a collar-tag engraving -->
+  <text font-family="'Helvetica Neue', Arial, sans-serif" font-size="58" font-weight="800" fill="#FFF7ED">
+    <textPath href="#patoune-arc" startOffset="50%" text-anchor="middle">patoune</textPath>
+  </text>
+  <!-- paw tucked under the arch -->
+  <g transform="translate(0,62)" fill="#FFF7ED">
+    <ellipse cx="-27" cy="-6" rx="8.5" ry="12" transform="rotate(-20 -27 -6)"/>
+    <ellipse cx="0" cy="-12" rx="8.5" ry="12"/>
+    <ellipse cx="27" cy="-6" rx="8.5" ry="12" transform="rotate(20 27 -6)"/>
+    <path d="M0 34 C -20 34 -26 17 -14 8 C -7 3 7 3 14 8 C 26 17 20 34 0 34 Z"/>
+  </g>
+  <!-- little sparkles: freshly groomed -->
+  <g fill="#FFF7ED" opacity="0.85">
+    <path d="M-120 62 l3.5 8 8 3.5 -8 3.5 -3.5 8 -3.5 -8 -8 -3.5 8 -3.5 Z"/>
+    <path d="M116 66 l2.8 6.4 6.4 2.8 -6.4 2.8 -2.8 6.4 -2.8 -6.4 -6.4 -2.8 6.4 -2.8 Z"/>
+  </g>
+</svg>

@@ -23,7 +23,13 @@
     "loading": "Creando tu tarjeta...",
     "success": {
       "title": "¡Tu tarjeta está lista!",
-      "description": "Añade tu tarjeta de fidelidad de {businessName} a tu teléfono y empieza a coleccionar sellos."
+      "description": "Añade tu tarjeta de fidelidad de {businessName} a tu teléfono y empieza a coleccionar sellos.",
+      "desktopDescription": "Añádela a tu teléfono en segundos.",
+      "emailedNote": "También la hemos enviado a {email}.",
+      "scanTitle": "Escanea con tu teléfono",
+      "scanHint": "Apunta la cámara de tu teléfono al código para añadir tu tarjeta.",
+      "autoAdding": "Añadiendo tu tarjeta…",
+      "fallbackHint": "Añádela manualmente:"
     },
     "emailSent": {
       "title": "Revisa tu correo",

@@ -4,18 +4,32 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import posthog from 'posthog-js';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-const STORAGE_KEY = 'stampeo_demo_session';
 const MAX_SSE_RETRIES = 3;
 const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
 
 export type DemoStatus = 'loading' | 'pending' | 'pass_downloaded' | 'pass_installed' | 'error';
+export type DemoCardType = 'stamp' | 'points';
+
+// Stamp cards fill 0..8 (+1 per scan); points cards fill 0..120 (+20 per scan).
+const POINTS_MAX = 120;
 
 interface DemoSession {
   session_id: string;
   session_token: string;
   status: string;
   stamps: number;
+  points?: number;
+  card_type?: string;
   expires_at?: string;
+}
+
+interface UseDemoSessionOptions {
+  /** Which demo engine this session drives. Defaults to 'stamp' so existing
+   *  callers (and the deployed stamp frontend) are unaffected. */
+  cardType?: DemoCardType;
+  /** When false, no session is created (nothing hits the backend). Used to
+   *  lazy-init the points session only once the visitor selects Points. */
+  enabled?: boolean;
 }
 
 interface UseDemoSessionReturn {
@@ -23,17 +37,24 @@ interface UseDemoSessionReturn {
   qrUrl: string | null;
   /** Current session status */
   status: DemoStatus;
-  /** Current stamp count */
+  /** Current stamp count (stamp cards) */
   stamps: number;
+  /** Current points balance (points cards) */
+  points: number;
+  /** The engine this session drives */
+  cardType: DemoCardType;
   /** Session token (for debugging) */
   sessionToken: string | null;
   /** Whether the hook is loading initial state */
   isLoading: boolean;
-  /** Whether a stamp request is in progress */
+  /** Whether a scan request is in progress */
   isStamping: boolean;
   /** Error message if any */
   error: string | null;
-  /** Add a stamp (only works when status === 'pass_installed') */
+  /** Add one scan (only works when status === 'pass_installed'). +1 stamp or
+   *  +20 points depending on cardType. */
+  scan: () => Promise<void>;
+  /** Alias of scan (kept for the stamp branch). */
   addStamp: () => Promise<void>;
   /** Reset session and start fresh */
   reset: () => void;
@@ -45,10 +66,16 @@ function isExpired(expiresAt: string | undefined): boolean {
   return expDate < new Date();
 }
 
-export function useDemoSession(): UseDemoSessionReturn {
+export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSessionReturn {
+  const { cardType = 'stamp', enabled = true } = options;
+  // Separate storage per engine so the two hero sessions never collide. The
+  // stamp key is unchanged, so existing saved stamp sessions still resume.
+  const STORAGE_KEY = cardType === 'points' ? 'stampeo_demo_session_points' : 'stampeo_demo_session';
+
   const [session, setSession] = useState<DemoSession | null>(null);
   const [status, setStatus] = useState<DemoStatus>('loading');
   const [stamps, setStamps] = useState(0);
+  const [points, setPoints] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isStamping, setIsStamping] = useState(false);
@@ -67,6 +94,9 @@ export function useDemoSession(): UseDemoSessionReturn {
   // Inactivity tracking
   const lastStatusChangeRef = useRef(Date.now());
   const statusRef = useRef<DemoStatus>('loading');
+
+  // Guards a single lazy init (so flipping `enabled` true can't double-create).
+  const initedRef = useRef(false);
 
   // Stop all connections and timers
   const stopAllConnections = useCallback(() => {
@@ -99,11 +129,13 @@ export function useDemoSession(): UseDemoSessionReturn {
     }
   }, []);
 
-  // Create new session
+  // Create new session (typed by cardType)
   const createSession = useCallback(async (): Promise<DemoSession | null> => {
     try {
       const response = await fetch(`${API_URL}/demo/sessions`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ card_type: cardType }),
       });
       if (!response.ok) {
         throw new Error('Failed to create session');
@@ -114,7 +146,7 @@ export function useDemoSession(): UseDemoSessionReturn {
       setError(err instanceof Error ? err.message : 'Failed to create session');
       return null;
     }
-  }, []);
+  }, [cardType]);
 
   // Start SSE connection for real-time updates
   const startSSE = useCallback((token: string) => {
@@ -138,12 +170,15 @@ export function useDemoSession(): UseDemoSessionReturn {
             step: newStatus,
             previous_step: statusRef.current,
             stamps: data.stamps,
+            points: data.points,
+            card_type: cardType,
           });
           statusRef.current = newStatus;
         }
 
         setStatus(newStatus);
         setStamps(data.stamps);
+        if (typeof data.points === 'number') setPoints(data.points);
 
         // SSE is working — reset retry counter
         sseRetryCountRef.current = 0;
@@ -177,7 +212,7 @@ export function useDemoSession(): UseDemoSessionReturn {
       }
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cardType]);
 
   // Fallback polling
   startPollingRef.current = (token: string) => {
@@ -217,6 +252,7 @@ export function useDemoSession(): UseDemoSessionReturn {
 
       setStatus(newStatus);
       setStamps(session.stamps);
+      if (typeof session.points === 'number') setPoints(session.points);
     };
 
     // Poll every 5 seconds (SSE preferred but falls back to polling through proxies)
@@ -241,6 +277,7 @@ export function useDemoSession(): UseDemoSessionReturn {
         setStatus(existingSession.status as DemoStatus);
         statusRef.current = existingSession.status as DemoStatus;
         setStamps(existingSession.stamps);
+        setPoints(existingSession.points ?? 0);
         setIsLoading(false);
         activeTokenRef.current = savedToken;
         lastStatusChangeRef.current = Date.now();
@@ -260,19 +297,28 @@ export function useDemoSession(): UseDemoSessionReturn {
       setStatus(newSession.status as DemoStatus);
       statusRef.current = newSession.status as DemoStatus;
       setStamps(newSession.stamps);
+      setPoints(newSession.points ?? 0);
       activeTokenRef.current = newSession.session_token;
       lastStatusChangeRef.current = Date.now();
       startSSE(newSession.session_token);
-      posthog.capture('demo_started', { session_token: newSession.session_token });
+      posthog.capture('demo_started', { session_token: newSession.session_token, card_type: cardType });
     } else {
       setStatus('error');
     }
 
     setIsLoading(false);
-  }, [fetchSession, createSession, startSSE]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchSession, createSession, startSSE, cardType]);
 
-  // Add stamp
-  const addStamp = useCallback(async () => {
+  // Single-shot lazy init guard
+  const maybeInit = useCallback(() => {
+    if (initedRef.current) return;
+    initedRef.current = true;
+    initSession();
+  }, [initSession]);
+
+  // Add scan (+1 stamp or +20 points)
+  const scan = useCallback(async () => {
     if (!session || status !== 'pass_installed') return;
 
     setIsStamping(true);
@@ -282,22 +328,32 @@ export function useDemoSession(): UseDemoSessionReturn {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add stamp');
+        throw new Error('Failed to add scan');
       }
 
       const data = await response.json();
-      setStamps(data.stamps);
-      posthog.capture('demo_stamp_added', {
-        stamp_number: data.stamps,
-        is_complete: data.stamps >= 8,
-      });
+      if (typeof data.stamps === 'number') setStamps(data.stamps);
+      if (typeof data.points === 'number') setPoints(data.points);
+
+      if (cardType === 'points') {
+        posthog.capture('demo_points_added', {
+          points: data.points,
+          is_complete: (data.points ?? 0) >= POINTS_MAX,
+          card_type: 'points',
+        });
+      } else {
+        posthog.capture('demo_stamp_added', {
+          stamp_number: data.stamps,
+          is_complete: (data.stamps ?? 0) >= 8,
+        });
+      }
     } catch (err) {
-      console.error('Error adding stamp:', err);
-      setError(err instanceof Error ? err.message : 'Failed to add stamp');
+      console.error('Error adding scan:', err);
+      setError(err instanceof Error ? err.message : 'Failed to add scan');
     } finally {
       setIsStamping(false);
     }
-  }, [session, status]);
+  }, [session, status, cardType]);
 
   // Reset session
   const reset = useCallback(() => {
@@ -309,17 +365,20 @@ export function useDemoSession(): UseDemoSessionReturn {
     setStatus('loading');
     statusRef.current = 'loading';
     setStamps(0);
+    setPoints(0);
     setError(null);
     activeTokenRef.current = null;
     sseRetryCountRef.current = 0;
+    initedRef.current = true;
 
     // Create new session
     initSession();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initSession, stopAllConnections]);
 
   // Initialize on mount + visibility handling
   useEffect(() => {
-    initSession();
+    if (enabled) maybeInit();
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -345,6 +404,11 @@ export function useDemoSession(): UseDemoSessionReturn {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Lazy-enable: create the session the first time `enabled` flips true.
+  useEffect(() => {
+    if (enabled) maybeInit();
+  }, [enabled, maybeInit]);
+
   // Build QR URL
   const qrUrl = session ? `${API_URL}/demo/pass/${session.session_token}` : null;
 
@@ -352,11 +416,14 @@ export function useDemoSession(): UseDemoSessionReturn {
     qrUrl,
     status,
     stamps,
+    points,
+    cardType,
     sessionToken: session?.session_token ?? null,
     isLoading,
     isStamping,
     error,
-    addStamp,
+    scan,
+    addStamp: scan,
     reset,
   };
 }
