@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 22 de junio de 2026**
+**Última actualización: 22 de julio de 2026**
 
 ## 1. Introducción
 
@@ -60,6 +60,10 @@ El sitio web, el número de teléfono y la respuesta «cómo conociste Stampeo»
 |--------|----------|-------------|
 | Correo electrónico | Invitación y autenticación | Ejecución del contrato |
 | Nombre y apellidos | Identificación | Ejecución del contrato |
+| Estadísticas de actividad (número de escaneos registrados, fecha de última actividad) | Estadísticas de actividad del equipo mostradas al propietario del comercio | Interés legítimo |
+| Atribución por escaneo (qué empleado registró cada escaneo) | Traza de auditoría de fidelidad y estadísticas del comercio | Interés legítimo |
+
+Estas estadísticas de actividad son visibles para el propietario del comercio con el fin de ofrecerle una visión de la actividad de su equipo. Stampeo no las utiliza con fines propios.
 
 ### 3.3 Clientes finales
 
@@ -73,6 +77,7 @@ Los datos recogidos dependen por completo de la configuración elegida por el co
 | Número de teléfono | Opcional (desactivable) | Comunicación |
 | Historial de visitas | Automático | Seguimiento de fidelidad y estadísticas |
 | Sellos/puntos acumulados | Automático | Programa de fidelidad |
+| Importe de compra / valor de la transacción | Automático (solo programas de puntos) | Cálculo de puntos y estadísticas del comercio |
 
 Es posible configurar la Plataforma en modo totalmente anónimo (sin recogida de ningún dato personal, únicamente un identificador de tarjeta).
 
@@ -154,7 +159,7 @@ Cuando un cliente añade una tarjeta a su wallet, dicha tarjeta puede recibir no
 
 ### 7.1 Notificaciones transaccionales
 
-Se envían automáticamente en respuesta a la actividad del cliente: sello recibido, hito alcanzado, recompensa obtenida, recompensa canjeada.
+Se envían automáticamente en respuesta a la actividad del cliente: sello recibido, puntos ganados, hito alcanzado, recompensa obtenida, recompensa canjeada.
 
 - **Base jurídica**: ejecución del servicio de fidelidad (artículo 6.1.b del RGPD), por cuenta del comercio responsable del tratamiento.
 - **Contenido**: estrictamente relacionado con la actividad de la propia tarjeta de fidelidad del cliente.
@@ -181,8 +186,8 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Dato | Plazo de conservación |
 |--------|----------------------|
 | Cuenta Business activa | Duración de la suscripción |
-| Cuenta Business tras la cancelación | 60 días, después se elimina |
-| Datos de los clientes finales | Duración de la actividad del comercio en la Plataforma |
+| Cuenta Business tras la cancelación | Hasta 12 meses de inactividad, después se eliminan los datos personales. Se envían dos correos de aviso (30 y 14 días antes), y la cuenta se conserva si el propietario vuelve a iniciar sesión o se vuelve a suscribir |
+| Datos de los clientes finales | Se conservan mientras el comercio esté activo; se anonimizan de forma irreversible cuando se elimina la cuenta Business (pueden conservarse estadísticas anonimizadas) |
 | Datos de facturación | 10 años (obligación legal francesa) |
 | Registros técnicos | 12 meses como máximo |
 | Tokens de registro push (device tokens) | Se eliminan cuando el cliente retira la tarjeta de su wallet, o cuando el servicio push del wallet señala el token como inválido de forma permanente |
@@ -194,7 +199,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 
 El plazo de conservación de 24 meses para los registros de acceso de soporte se establece para permitir la investigación de un posible incidente de seguridad, manteniéndose a la vez proporcionado a su finalidad, conforme a las recomendaciones de la CNIL en materia de registro de accesos.
 
-Tras la eliminación de una cuenta Business, todos los datos asociados (incluidos los de sus clientes) se eliminan en un plazo de 60 días.
+Cuando una cuenta Business queda inactiva, conservamos sus datos durante un máximo de 12 meses para permitir la reactivación, enviando dos correos de aviso antes de la eliminación definitiva. En el momento de la eliminación, los datos personales de la cuenta Business se eliminan y los datos personales de los clientes finales se anonimizan de forma irreversible; pueden conservarse estadísticas anonimizadas. Los datos de facturación se conservan durante 10 años, como exige la ley.
 
 ## 9. Eliminación de una tarjeta por un cliente final
 

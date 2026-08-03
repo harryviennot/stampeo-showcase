@@ -15,7 +15,21 @@ export interface PassFieldLike {
   key: string;
   label: string;
   value: string;
+  /** Copy shown instead of `value` once every reward tier is cleared. See
+   *  resolve_field_value in the backend field_renderer. */
+  value_completed?: string | null;
 }
+
+/** Variables that only mean something while a next reward exists. */
+const NEXT_REWARD_PATTERN =
+  /\{\{(?:next_reward_name|next_reward_points|points_to_next)\}\}/;
+
+/** Mirrors the backend `points_all_rewards_ready` system string. */
+const POINTS_ALL_REWARDS_READY: Record<string, string> = {
+  fr: "Carte complétée",
+  en: "Card completed",
+  es: "Tarjeta completada",
+};
 
 export interface PreviewContext {
   stampCount: number;
@@ -34,6 +48,13 @@ export interface PreviewContext {
   lastRewardName?: string | null;
   /** Sample store location for the (Pro-only) {{store_location}} placeholder. */
   storeLocation?: string;
+  /** True when the preview balance has cleared every reward tier, so
+   *  next-reward fields swap to their completed copy. The enrollment preview
+   *  seeds a balance below the first reward, so this is never set there; it
+   *  exists to keep this renderer in step with web/ and the backend. */
+  pointsLadderCleared?: boolean;
+  /** Business locale, for the default completed copy. */
+  locale?: string;
 }
 
 /**
@@ -103,9 +124,18 @@ export function renderPreviewFields(
 ): PassFieldLike[] {
   if (!fields?.length) return [];
   const values = buildValues(ctx);
+  const completedDefault =
+    POINTS_ALL_REWARDS_READY[ctx.locale ?? "fr"] ?? POINTS_ALL_REWARDS_READY.fr;
   const rendered: PassFieldLike[] = [];
   for (const f of fields) {
-    const value = renderText(f.value ?? "", values).trim();
+    const raw = f.value ?? "";
+    // Every tier cleared: swap the whole line rather than blanking the variable
+    // inside it, which would leave a sentence trailing off mid-air.
+    const source =
+      ctx.pointsLadderCleared && NEXT_REWARD_PATTERN.test(raw)
+        ? (f.value_completed ?? completedDefault)
+        : raw;
+    const value = renderText(source, values).trim();
     if (!value) continue;
     rendered.push({
       key: f.key,
