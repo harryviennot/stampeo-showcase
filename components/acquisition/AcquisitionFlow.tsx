@@ -80,6 +80,8 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
     nextRewardName: nextReward?.name,
     nextRewardPoints: nextReward?.threshold,
     lastRewardName: sortedRewards[0]?.name ?? cardDesign?.reward_name,
+    pointsLadderCleared: sortedRewards.length > 0 && !nextReward,
+    locale,
   };
 
   const handleSubmit = async (data: CustomerCreatePublic) => {
