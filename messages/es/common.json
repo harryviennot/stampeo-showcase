@@ -37,7 +37,14 @@
       },
       "foundingProgram": "Programa fundador",
       "loyaltyPrograms": "Programas de fidelidad",
-      "contact": "Contacto"
+      "contact": "Contacto",
+      "product": "Producto",
+      "loyalty": "Fidelidad",
+      "resources": "Recursos",
+      "changelog": "Novedades",
+      "about": "Nosotros",
+      "productBlurb": "Todo lo que hace la tarjeta",
+      "resourcesBlurb": "Guías, novedades y contacto"
     },
     "promoBanner": {
       "item1": "Oferta de lanzamiento: <bold>20 €/mes de por vida</bold>",

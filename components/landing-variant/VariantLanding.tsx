@@ -4,6 +4,7 @@ import { VariantSectorCards } from "./VariantSectorCards";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { Footer } from "@/components/sections/Footer";
+import { Container } from "@/components/ui/Container";
 import { LandingTracker } from "@/components/analytics/LandingTracker";
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -35,7 +36,7 @@ export async function VariantLanding({
   const faqItems = t.raw("items") as Array<{ question: string; answer: string }>;
 
   return (
-    <div className="min-h-screen bg-[var(--background)] overflow-x-hidden relative">
+    <div className="paper-grain min-h-screen bg-[var(--cream)] overflow-x-hidden relative">
       <JsonLd data={organizationJsonLd()} />
       <JsonLd data={webSiteJsonLd()} />
       <JsonLd data={softwareApplicationJsonLd()} />
@@ -52,6 +53,9 @@ export async function VariantLanding({
         <div data-landing-section="differentiator"><VariantDifferentiator /></div>
         <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
+        {/* Tear line: the pitch is above, the thing you can actually touch is
+            below. The one place on the page it earns its keep. */}
+        <Container><div className="perforation" aria-hidden /></Container>
         <div data-landing-section="try_it"><VariantTryIt /></div>
         <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="metrics"><VariantMetricStrip /></div>

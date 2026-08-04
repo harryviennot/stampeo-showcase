@@ -37,7 +37,14 @@
       },
       "foundingProgram": "Programme fondateur",
       "loyaltyPrograms": "Programmes de fidélité",
-      "contact": "Contact"
+      "contact": "Contact",
+      "product": "Produit",
+      "loyalty": "Fidélité",
+      "resources": "Ressources",
+      "changelog": "Nouveautés",
+      "about": "À propos",
+      "productBlurb": "Tout ce que la carte sait faire",
+      "resourcesBlurb": "Guides, nouveautés et contact"
     },
     "promoBanner": {
       "item1": "Offre de lancement : <bold>20 €/mois à vie</bold>",

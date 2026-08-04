@@ -37,7 +37,14 @@
       },
       "foundingProgram": "Founding Program",
       "loyaltyPrograms": "Loyalty programs",
-      "contact": "Contact"
+      "contact": "Contact",
+      "product": "Product",
+      "loyalty": "Loyalty",
+      "resources": "Resources",
+      "changelog": "What's new",
+      "about": "About",
+      "productBlurb": "Everything the card can do",
+      "resourcesBlurb": "Guides, updates and contact"
     },
     "promoBanner": {
       "item1": "Launch offer: <bold>€20/month for life</bold>",

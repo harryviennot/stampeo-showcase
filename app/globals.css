@@ -546,6 +546,28 @@ body {
   background: linear-gradient(to top, var(--highlight-yellow) 40%, transparent 40%);
 }
 
+/* Paper grain. A single inline SVG turbulence tile, tinted almost to nothing
+   and multiplied over the cream. You should never catch it looking — it just
+   stops large flat areas reading as a blank browser window. It sits behind
+   content and ignores pointer events. */
+/* Painted straight onto the element as a background layer, not a pseudo
+   element. An overlay would need a stacking context, and forcing
+   position/z-index onto the children breaks the fixed header. The tile is
+   transparent, so whatever background-color the element carries shows
+   through. */
+.paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Perforation. The tear line on a paper loyalty card, used to separate one
+   part of the page from the next. Two thin rules with a row of punched holes
+   between them, drawn in the page background so it reads as a cut. */
+.perforation {
+  border-top: 1.5px dashed var(--near-black);
+  opacity: 0.2;
+}
+
 /* The house card: a drawn ink border with the block sitting slightly proud of
    the page, like a stamped card on a counter. This is the brand's most
    recognisable surface, so it belongs on things that are genuinely cards, not
