@@ -40,6 +40,7 @@
     "picker": {
       "title": "Lequel est fait pour vous ?",
       "subtitle": "Trois questions rapides. Aucun e-mail demandé.",
+      "annotation": "30 secondes, promis",
       "progress": "Question {current} sur {total}",
       "questions": [
         {
@@ -113,7 +114,8 @@
     "designTeaser": {
       "title": "Quel que soit votre choix, la carte reste la vôtre",
       "subtitle": "Votre logo, vos couleurs, vos propres icônes de tampon : une fois le programme choisi, l'éditeur de carte s'occupe du style.",
-      "cta": "Découvrir l'éditeur de carte"
+      "cta": "Découvrir l'éditeur de carte",
+      "annotation": "chacune faite en 3 minutes"
     },
     "businessMap": {
       "title": "Ce que choisissent la plupart des commerces",

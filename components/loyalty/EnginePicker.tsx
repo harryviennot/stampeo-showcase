@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "../ui/Container";
 import { CTAButton } from "../ui/CTAButton";
+import { ScrollReveal } from "../ui/ScrollReveal";
+import { InkArrow, InkNote } from "../ui/InkAnnotation";
 import { CheckIcon } from "../icons";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
@@ -78,12 +80,20 @@ export function EnginePicker() {
   return (
     <section id="picker" className="py-20 sm:py-28">
       <Container className="max-w-2xl">
-        <div className="text-center mb-12">
+        <div className="text-center mb-6">
           <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
           <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
         </div>
+
+        {/* Margin note inviting the reader to actually play with the quiz. */}
+        <ScrollReveal className="flex justify-end pr-6 sm:pr-12 mb-1">
+          <div className="flex flex-col items-start">
+            <InkNote rotate={2}>{t("annotation")}</InkNote>
+            <InkArrow variant="downLeft" className="w-8 mt-0.5 ml-1" delay={0.4} />
+          </div>
+        </ScrollReveal>
 
         <motion.div
           layout

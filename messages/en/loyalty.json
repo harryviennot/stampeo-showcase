@@ -40,6 +40,7 @@
     "picker": {
       "title": "Which one fits you?",
       "subtitle": "Three quick questions. No email required.",
+      "annotation": "30 seconds, promise",
       "progress": "Question {current} of {total}",
       "questions": [
         {
@@ -113,7 +114,8 @@
     "designTeaser": {
       "title": "Whichever you pick, make it yours",
       "subtitle": "Your logo, your colors, your own stamp icons. Once the program is chosen, the card designer handles the look.",
-      "cta": "Explore the card designer"
+      "cta": "Explore the card designer",
+      "annotation": "each one made in 3 minutes"
     },
     "businessMap": {
       "title": "What most businesses go with",
