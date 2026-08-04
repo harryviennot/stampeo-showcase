@@ -1,20 +1,41 @@
-import { getTranslations } from "next-intl/server";
+"use client";
+
+import { useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
-import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
+import {
+  formatPrice,
+  isFoundingProgramOpen,
+  yearlyCardView,
+  type BillingInterval,
+  type TierId,
+} from "@/lib/pricing";
 import { PricingTierCard, type FeatureItem } from "@/components/pricing/PricingTierCard";
+import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
 
-export async function PricingSection() {
-  const t = await getTranslations("pricing");
+const TIERS = [
+  { id: "starter" as const, trackAs: "pricing_starter" as const },
+  { id: "growth" as const, trackAs: "pricing_growth" as const, highlighted: true },
+  { id: "pro" as const, trackAs: "pricing_pro" as const },
+];
+
+/**
+ * Landing-page pricing block. Client-side because of the cadence switcher —
+ * the card itself was already a client component, so the boundary only moves
+ * up by one level.
+ */
+export function PricingSection() {
+  const t = useTranslations("pricing");
+  const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
-
-  const starterFeatures = t.raw("starter.features") as FeatureItem[];
-  const growthFeatures = t.raw("growth.features") as FeatureItem[];
-  const proFeatures = t.raw("pro.features") as FeatureItem[];
+  // Monthly is the default: it is the price most people compare on, and the
+  // yearly saving is advertised on the toggle itself.
+  const [interval, setInterval] = useState<BillingInterval>("month");
 
   return (
     <section id="pricing" className="relative py-24 lg:py-32">
       <div className="max-w-[1200px] mx-auto px-6">
-        <ScrollReveal className="text-center mb-16">
+        <ScrollReveal className="text-center mb-10">
           <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
             {t("title")}
           </h2>
@@ -23,54 +44,46 @@ export async function PricingSection() {
           </p>
         </ScrollReveal>
 
+        <ScrollReveal delay={150} className="mb-10">
+          <BillingIntervalToggle value={interval} onChange={setInterval} />
+        </ScrollReveal>
+
         <ScrollReveal
           delay={200}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto"
         >
-          <PricingTierCard
-            name={t("starter.name")}
-            tagline={t("starter.tagline")}
-            features={starterFeatures}
-            featuresLabel={t("starter.featuresLabel")}
-            price={PRICING.starter.price}
-            discount={foundingOpen ? { targetPrice: PRICING.starter.foundingPrice } : undefined}
-            perMonthLabel={t("perMonth")}
-            forLifeLabel={t("forLife")}
-            cta={t("cta")}
-            ctaHref="/onboarding"
-            ctaSubtext={t("ctaSubtext")}
-            trackAs="pricing_starter"
-          />
-
-          <PricingTierCard
-            name={t("growth.name")}
-            tagline={t("growth.tagline")}
-            features={growthFeatures}
-            featuresLabel={t("growth.featuresLabel")}
-            price={PRICING.growth.price}
-            discount={foundingOpen ? { targetPrice: PRICING.growth.foundingPrice } : undefined}
-            perMonthLabel={t("perMonth")}
-            forLifeLabel={t("forLife")}
-            cta={t("cta")}
-            ctaHref="/onboarding"
-            ctaSubtext={t("ctaSubtext")}
-            highlighted
-            popularLabel={t("popular")}
-            trackAs="pricing_growth"
-          />
-
-          <PricingTierCard
-            name={t("pro.name")}
-            tagline={t("pro.tagline")}
-            features={proFeatures}
-            featuresLabel={t("pro.featuresLabel")}
-            price={PRICING.pro.price}
-            perMonthLabel={t("perMonth")}
-            cta={t("cta")}
-            ctaHref="/onboarding"
-            ctaSubtext={t("ctaSubtext")}
-            trackAs="pricing_pro"
-          />
+          {TIERS.map(({ id, trackAs, highlighted }) => {
+            const view = yearlyCardView(id as TierId, interval, foundingOpen);
+            return (
+              <PricingTierCard
+                key={id}
+                name={t(`${id}.name`)}
+                tagline={t(`${id}.tagline`)}
+                features={t.raw(`${id}.features`) as FeatureItem[]}
+                featuresLabel={t(`${id}.featuresLabel`)}
+                price={view.price}
+                discount={view.discount}
+                // Both cadences quote a per-month figure so they compare
+                // directly; the yearly total sits in the sub-label.
+                perMonthLabel={t("perMonth")}
+                forLifeLabel={view.isYearly ? t("perMonth") : t("forLife")}
+                subLabel={
+                  view.isYearly
+                    ? t("billedYearlyTotal", {
+                        price: formatPrice(view.yearlyTotal, locale),
+                        saving: formatPrice(view.yearlySaving, locale),
+                      })
+                    : t("billedMonthly")
+                }
+                cta={t("cta")}
+                ctaHref="/onboarding"
+                ctaSubtext={t("ctaSubtext")}
+                highlighted={highlighted}
+                popularLabel={highlighted ? t("popular") : undefined}
+                trackAs={trackAs}
+              />
+            );
+          })}
         </ScrollReveal>
 
         {foundingOpen && (

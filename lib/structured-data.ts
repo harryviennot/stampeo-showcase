@@ -68,6 +68,24 @@ export function softwareApplicationJsonLd() {
         description:
           "Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
       },
+      // Annual plans, priced for a full year (2 months cheaper than paying
+      // monthly). Listed separately so search results can surface either cadence.
+      {
+        "@type": "Offer",
+        name: "Starter (annual)",
+        price: String(PRICING.starter.yearlyPrice),
+        priceCurrency: "EUR",
+        description:
+          "Starter billed yearly: 1 card template, unlimited customers & scans, 2 team members, push notifications.",
+      },
+      {
+        "@type": "Offer",
+        name: "Growth (annual)",
+        price: String(PRICING.growth.yearlyPrice),
+        priceCurrency: "EUR",
+        description:
+          "Growth billed yearly: multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
+      },
     ],
     description:
       "Digital loyalty card platform for local businesses. Create Apple Wallet and Google Wallet passes in minutes.",

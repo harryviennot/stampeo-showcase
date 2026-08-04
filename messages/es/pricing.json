@@ -6,8 +6,9 @@
     "subtitleStandard": "Clientes, escaneos y dispositivos ilimitados en todos los planes.",
     "foundingReassurance": "Tu precio fundador queda garantizado para siempre. Aunque suban los precios, o canceles y vuelvas más tarde, conservas este precio.",
     "foundingPartner": "FUNDADOR",
-    "popular": "EL MÁS POPULAR",
+    "popular": "Más popular",
     "perMonth": "/mes",
+    "billedYearlyTotal": "Facturado €{price} al año, ahorras €{saving}",
     "forLife": "/mes de por vida",
     "freeMonths": "3 meses gratis",
     "deadlineNotice": "Precio fundador hasta el {date}, última oportunidad.",
@@ -15,61 +16,46 @@
       "daysHours": "Precio fundador: termina en {days}d {hours}h",
       "hoursMinutes": "Precio fundador: termina en {hours}h {minutes}m"
     },
-    "cta": "Empezar gratis",
-    "ctaSubtext": "Prueba gratis de 30 días · Cancela cuando quieras",
+    "cta": "Empezar",
+    "ctaSubtext": "Prueba gratuita de 30 días · Sin compromiso",
     "starter": {
       "name": "Starter",
-      "tagline": "Todo lo necesario para lanzar tu programa de fidelidad",
-      "price": "20",
-      "foundingPrice": "10",
+      "tagline": "Para autónomos y comercios de un solo local",
       "featuresLabel": "Todo incluido:",
       "features": [
-        "1 estilo de tarjeta activo",
         "Clientes y escaneos ilimitados",
+        "Tarjetas de sellos o de puntos, totalmente personalizables",
+        "Notificaciones automáticas de sello y recompensa",
+        "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
-        {
-          "text": "Notificaciones automáticas",
-          "tooltip": "Tus clientes reciben una notificación en su pantalla de bloqueo cada vez que consiguen un sello, alcanzan un hito o desbloquean una recompensa. Funciona con Apple Wallet y Google Wallet, sin ninguna aplicación."
-        },
-        "Panel y estadísticas básicas"
+        "Lista de clientes, estadísticas y búsqueda",
+        "Asistencia por correo"
       ]
     },
     "growth": {
       "name": "Growth",
-      "tagline": "Para comercios listos para hacer crecer su relación con los clientes",
-      "price": "40",
-      "foundingPrice": "20",
+      "tagline": "Para comercios que quieren que sus clientes vuelvan",
       "featuresLabel": "Todo el plan Starter, y además:",
       "features": [
-        "Sellos o puntos (elige uno)",
+        "8 difusiones al mes a todos tus clientes",
+        "Tus propios mensajes de sello y recompensa",
+        "Estilos de tarjeta guardados ilimitados",
+        "Horas punta y tendencias semanales",
         "Miembros del equipo ilimitados",
-        "Mensajes de notificación personalizados",
-        {
-          "text": "8 difusiones promocionales al mes",
-          "tooltip": "Envía notificaciones promocionales a todos tus clientes. Anuncia novedades, happy hours u ofertas de temporada, directamente en su Apple Wallet o Google Wallet."
-        },
-        {
-          "text": "Tendencias y estadísticas",
-          "tooltip": "Consulta la frecuencia de visita, las horas punta, las tasas de retención y las tendencias de tus clientes. Identifica a tus mejores clientes y a los que corren el riesgo de marcharse."
-        }
+        "Quién ha escaneado cada tarjeta en tu equipo"
       ]
     },
     "pro": {
       "name": "Pro",
-      "tagline": "Multiestablecimiento, segmentación y herramientas avanzadas",
-      "price": "60",
+      "tagline": "Para comercios con varios locales que planifican con antelación",
       "featuresLabel": "Todo el plan Growth, y además:",
       "features": [
-        {
-          "text": "Soporte multiestablecimiento",
-          "tooltip": "Añade varias direcciones. Cada establecimiento puede escanear y sellar de forma independiente. Estadísticas por establecimiento."
-        },
-        {
-          "text": "Notificaciones por geolocalización",
-          "tooltip": "Tus clientes reciben una notificación cuando pasan cerca de tu comercio: «¡Solo 2 sellos para un café gratis!» Disponible en Apple Wallet."
-        },
-        "Difusiones ilimitadas + segmentación",
-        "Estadísticas avanzadas y retención"
+        "Varios locales, con estadísticas de cada uno",
+        "Difusiones ilimitadas, con segmentación de clientes",
+        "Programa tus difusiones y tus estilos de tarjeta con antelación",
+        "Notificaciones cuando tus clientes están cerca (Apple Wallet)",
+        "Estadísticas de retención, frecuencia y recompensas",
+        "Asistencia prioritaria"
       ]
     },
     "roi": {
@@ -88,7 +74,8 @@
       "roiLabel": "Se amortiza",
       "disclaimer": "Estimación orientativa basada en estudios del sector. Los resultados reales dependen de tu actividad y de la adopción del programa por parte de tus clientes.",
       "sources": "Fuentes: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
-    }
+    },
+    "billedMonthly": "Facturación mensual"
   },
   "pricingPage": {
     "meta": {
@@ -103,45 +90,55 @@
     "foundingCallout": "Los socios fundadores tienen un 50 % de descuento en Starter y Growth, de por vida.",
     "foundingReassurance": "Tu precio fundador queda garantizado para siempre. Aunque suban los precios, o canceles y vuelvas más tarde, conservas este precio.",
     "foundingLink": "Más información sobre el Programa Fundador",
-    "popular": "EL MÁS POPULAR",
+    "popular": "Más popular",
     "perMonth": "/mes",
+    "billedYearlyTotal": "Facturado €{price} al año, ahorras €{saving}",
+    "intervalMonthly": "Mensual",
+    "intervalYearly": "Anual",
+    "yearlyBadge": "20% menos",
+    "comparisonMonthlyNote": "Precios mostrados al mes. La facturación anual descuenta un 20% en todos los planes.",
     "forLife": "/mes de por vida",
     "cta": "Empezar",
-    "ctaSubtext": "Prueba gratis de 30 días · Cancela cuando quieras",
+    "ctaSubtext": "Prueba gratuita de 30 días · Sin compromiso",
     "starter": {
       "name": "Starter",
-      "tagline": "Para autónomos y comercios de un solo establecimiento",
+      "tagline": "Para autónomos y comercios de un solo local",
       "features": [
-        "1 estilo de tarjeta activo",
         "Clientes y escaneos ilimitados",
+        "Tarjetas de sellos o de puntos, totalmente personalizables",
+        "Notificaciones automáticas de sello y recompensa",
+        "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
-        "Notificaciones automáticas",
-        "Panel y estadísticas básicas",
-        "Soporte por correo electrónico"
-      ]
+        "Lista de clientes, estadísticas y búsqueda",
+        "Asistencia por correo"
+      ],
+      "featuresLabel": "Todo incluido:"
     },
     "growth": {
       "name": "Growth",
-      "tagline": "Para comercios con un equipo y necesidad de fidelizar a sus clientes",
+      "tagline": "Para comercios que quieren que sus clientes vuelvan",
       "features": [
-        "Todo el plan Starter, y además:",
-        "Sellos o puntos (elige uno)",
+        "8 difusiones al mes a todos tus clientes",
+        "Tus propios mensajes de sello y recompensa",
+        "Estilos de tarjeta guardados ilimitados",
+        "Horas punta y tendencias semanales",
         "Miembros del equipo ilimitados",
-        "Mensajes de notificación personalizados",
-        "8 difusiones promocionales al mes",
-        "Tendencias y estadísticas"
-      ]
+        "Quién ha escaneado cada tarjeta en tu equipo"
+      ],
+      "featuresLabel": "Todo el plan Starter, y además:"
     },
     "pro": {
       "name": "Pro",
-      "tagline": "Multiestablecimiento, segmentación y herramientas avanzadas",
+      "tagline": "Para comercios con varios locales que planifican con antelación",
       "features": [
-        "Todo el plan Growth, y además:",
-        "Soporte multiestablecimiento",
-        "Notificaciones por geolocalización",
-        "Difusiones ilimitadas + segmentación",
-        "Estadísticas avanzadas y retención"
-      ]
+        "Varios locales, con estadísticas de cada uno",
+        "Difusiones ilimitadas, con segmentación de clientes",
+        "Programa tus difusiones y tus estilos de tarjeta con antelación",
+        "Notificaciones cuando tus clientes están cerca (Apple Wallet)",
+        "Estadísticas de retención, frecuencia y recompensas",
+        "Asistencia prioritaria"
+      ],
+      "featuresLabel": "Todo el plan Growth, y además:"
     },
     "comparison": {
       "title": "Compara todas las funciones",
@@ -258,6 +255,10 @@
           "answer": "Por supuesto. Puedes subir o bajar de plan en cualquier momento. Al subir de plan, accedes de inmediato a las nuevas funciones. Al bajar de plan, el cambio se aplica al final de tu ciclo de facturación actual."
         },
         {
+          "question": "¿Puedo pagar al año?",
+          "answer": "Sí, y te descuenta un 20% en todos los planes: 192 € al año en Starter, es decir 16 € al mes en lugar de 20 €. Puedes cambiar de mensual a anual cuando quieras y tu año empieza ese mismo día. Volver al mensual surte efecto cuando termina el año ya pagado, así que nunca pierdes tiempo que ya has abonado."
+        },
+        {
           "question": "¿Hay cargos por cliente?",
           "answer": "No. Todos los planes incluyen clientes y escaneos ilimitados. Tu precio se mantiene igual tanto si tienes 10 clientes como si tienes 10 000."
         },
@@ -277,6 +278,7 @@
       "subtitle": "Únete a los comercios que fidelizan a sus clientes con Stampeo.",
       "button": "Empezar la prueba gratis",
       "contact": "Contáctanos"
-    }
+    },
+    "billedMonthly": "Facturación mensual"
   }
 }

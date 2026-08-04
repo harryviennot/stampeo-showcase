@@ -6,8 +6,9 @@
     "subtitleStandard": "Clients, scans et appareils illimités sur chaque plan.",
     "foundingReassurance": "Votre tarif fondateur est garanti à vie. Même si nos prix augmentent, ou si vous résiliez puis revenez plus tard, vous gardez ce tarif.",
     "foundingPartner": "FONDATEUR",
-    "popular": "LE PLUS POPULAIRE",
+    "popular": "Le plus populaire",
     "perMonth": "/mois",
+    "billedYearlyTotal": "Facturé €{price} par an, vous économisez €{saving}",
     "forLife": "/mois à vie",
     "freeMonths": "3 mois offerts",
     "deadlineNotice": "Tarif fondateur jusqu'au {date} — dernière chance.",
@@ -15,61 +16,46 @@
       "daysHours": "Tarif fondateur — fin dans {days}j {hours}h",
       "hoursMinutes": "Tarif fondateur — fin dans {hours}h {minutes}m"
     },
-    "cta": "Commencer gratuitement",
+    "cta": "Commencer",
     "ctaSubtext": "Essai gratuit de 30 jours · Sans engagement",
     "starter": {
       "name": "Starter",
-      "tagline": "Tout ce qu'il faut pour lancer votre programme de fidélité",
-      "price": "20",
-      "foundingPrice": "10",
-      "featuresLabel": "Tout inclus :",
+      "tagline": "Pour les indépendants et les commerces mono-établissement",
+      "featuresLabel": "Tout est inclus :",
       "features": [
-        "1 modèle de carte actif",
         "Clients et scans illimités",
+        "Cartes à tampons ou à points, entièrement personnalisables",
+        "Notifications automatiques de tampon et de récompense",
+        "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
-        {
-          "text": "Notifications push automatiques",
-          "tooltip": "Vos clients reçoivent une notification sur leur écran de verrouillage à chaque tampon, jalon atteint ou récompense débloquée. Fonctionne via Apple Wallet et Google Wallet — aucune app nécessaire."
-        },
-        "Tableau de bord et statistiques de base"
+        "Liste clients, statistiques et recherche",
+        "Assistance par e-mail"
       ]
     },
     "growth": {
       "name": "Growth",
-      "tagline": "Pour les commerces prêts à développer leur relation client",
-      "price": "40",
-      "foundingPrice": "20",
+      "tagline": "Pour les commerces qui veulent faire revenir leurs clients",
       "featuresLabel": "Tout le plan Starter, plus :",
       "features": [
-        "Tampons ou points (au choix)",
+        "8 diffusions par mois à tous vos clients",
+        "Vos propres messages de tampon et de récompense",
+        "Styles de carte enregistrés illimités",
+        "Heures de pointe et tendances hebdomadaires",
         "Membres d'équipe illimités",
-        "Messages de notification personnalisés",
-        {
-          "text": "8 campagnes promo/mois",
-          "tooltip": "Envoyez des notifications promotionnelles à tous vos clients. Annoncez vos nouveautés, happy hours ou offres saisonnières — directement dans leur wallet."
-        },
-        {
-          "text": "Tendances et analytiques",
-          "tooltip": "Visualisez la fréquence de visite, les heures de pointe, les taux de rétention et les tendances clients. Identifiez vos meilleurs clients et ceux à risque de départ."
-        }
+        "Voir qui a scanné quoi dans votre équipe"
       ]
     },
     "pro": {
       "name": "Pro",
-      "tagline": "Multi-établissement, segmentation et outils avancés",
-      "price": "60",
+      "tagline": "Pour les commerces multi-établissements qui planifient à l'avance",
       "featuresLabel": "Tout le plan Growth, plus :",
       "features": [
-        {
-          "text": "Support multi-établissement",
-          "tooltip": "Ajoutez plusieurs adresses. Chaque établissement peut scanner et tamponner indépendamment. Analytiques par établissement."
-        },
-        {
-          "text": "Notifications de géolocalisation",
-          "tooltip": "Vos clients reçoivent une notification quand ils passent près de votre commerce — « Plus que 2 tampons pour un café offert ! » Disponible sur Apple Wallet."
-        },
-        "Campagnes illimitées + segmentation",
-        "Analytiques avancées et rétention"
+        "Plusieurs établissements, avec les statistiques de chacun",
+        "Diffusions illimitées, avec segmentation clients",
+        "Programmez vos diffusions et vos styles de carte à l'avance",
+        "Notifications quand vos clients sont à proximité (Apple Wallet)",
+        "Statistiques de rétention, de fréquence et de récompenses",
+        "Assistance prioritaire"
       ]
     },
     "roi": {
@@ -88,7 +74,8 @@
       "roiLabel": "Se rembourse",
       "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients.",
       "sources": "Sources : Observatoire de la Fidélité · Bain & Company · LSA Conso"
-    }
+    },
+    "billedMonthly": "Facturé mensuellement"
   },
   "pricingPage": {
     "meta": {
@@ -103,45 +90,55 @@
     "foundingCallout": "Les partenaires fondateurs bénéficient de 50 % de réduction sur Starter et Growth, à vie.",
     "foundingReassurance": "Votre tarif fondateur est garanti à vie. Même si nos prix augmentent, ou si vous résiliez puis revenez plus tard, vous gardez ce tarif.",
     "foundingLink": "En savoir plus sur le Programme Fondateur",
-    "popular": "LE PLUS POPULAIRE",
+    "popular": "Le plus populaire",
     "perMonth": "/mois",
+    "billedYearlyTotal": "Facturé €{price} par an, vous économisez €{saving}",
+    "intervalMonthly": "Mensuel",
+    "intervalYearly": "Annuel",
+    "yearlyBadge": "20% offerts",
+    "comparisonMonthlyNote": "Prix affichés au mois. La facturation annuelle enlève 20 % sur chaque plan.",
     "forLife": "/mois à vie",
     "cta": "Commencer",
     "ctaSubtext": "Essai gratuit de 30 jours · Sans engagement",
     "starter": {
       "name": "Starter",
-      "tagline": "Pour les indépendants et commerces mono-établissement",
+      "tagline": "Pour les indépendants et les commerces mono-établissement",
       "features": [
-        "1 modèle de carte actif",
         "Clients et scans illimités",
+        "Cartes à tampons ou à points, entièrement personnalisables",
+        "Notifications automatiques de tampon et de récompense",
+        "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
-        "Notifications push automatiques",
-        "Tableau de bord et statistiques",
-        "Support par email"
-      ]
+        "Liste clients, statistiques et recherche",
+        "Assistance par e-mail"
+      ],
+      "featuresLabel": "Tout est inclus :"
     },
     "growth": {
       "name": "Growth",
-      "tagline": "Pour les commerces avec une équipe et un besoin d'engagement client",
+      "tagline": "Pour les commerces qui veulent faire revenir leurs clients",
       "features": [
-        "Tout le plan Starter, plus :",
-        "Tampons ou points (au choix)",
+        "8 diffusions par mois à tous vos clients",
+        "Vos propres messages de tampon et de récompense",
+        "Styles de carte enregistrés illimités",
+        "Heures de pointe et tendances hebdomadaires",
         "Membres d'équipe illimités",
-        "Messages de notification personnalisés",
-        "8 campagnes promo/mois",
-        "Tendances et analytiques"
-      ]
+        "Voir qui a scanné quoi dans votre équipe"
+      ],
+      "featuresLabel": "Tout le plan Starter, plus :"
     },
     "pro": {
       "name": "Pro",
-      "tagline": "Multi-établissement, segmentation et outils avancés",
+      "tagline": "Pour les commerces multi-établissements qui planifient à l'avance",
       "features": [
-        "Tout le plan Growth, plus :",
-        "Support multi-établissement",
-        "Notifications de géolocalisation",
-        "Campagnes illimitées + segmentation",
-        "Analytiques avancées et rétention"
-      ]
+        "Plusieurs établissements, avec les statistiques de chacun",
+        "Diffusions illimitées, avec segmentation clients",
+        "Programmez vos diffusions et vos styles de carte à l'avance",
+        "Notifications quand vos clients sont à proximité (Apple Wallet)",
+        "Statistiques de rétention, de fréquence et de récompenses",
+        "Assistance prioritaire"
+      ],
+      "featuresLabel": "Tout le plan Growth, plus :"
     },
     "comparison": {
       "title": "Comparer toutes les fonctionnalités",
@@ -258,6 +255,10 @@
           "answer": "Bien sûr. Vous pouvez passer à un plan supérieur ou inférieur à tout moment. Lors d'un upgrade, vous accédez immédiatement aux nouvelles fonctionnalités. Lors d'un downgrade, le changement prend effet à la fin de votre cycle de facturation."
         },
         {
+          "question": "Puis-je payer à l'année ?",
+          "answer": "Oui, et cela enlève 20 % sur chaque plan : 192 € par an pour Starter, soit 16 € par mois au lieu de 20 €. Vous pouvez passer du mensuel à l'annuel quand vous voulez, votre année démarre ce jour-là. Le retour au mensuel prend effet à la fin de l'année déjà payée, vous ne perdez jamais du temps déjà réglé."
+        },
+        {
           "question": "Y a-t-il des frais par client ?",
           "answer": "Non. Chaque plan inclut des clients et des scans illimités. Votre tarif reste le même que vous ayez 10 clients ou 10 000."
         },
@@ -277,6 +278,7 @@
       "subtitle": "Rejoignez les commerces qui fidélisent leurs clients avec Stampeo.",
       "button": "Commencer l'essai gratuit",
       "contact": "Nous contacter"
-    }
+    },
+    "billedMonthly": "Facturé mensuellement"
   }
 }

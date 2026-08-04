@@ -6,33 +6,53 @@ import { Link } from "@/i18n/navigation";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
-import { PricingTierCard, type Discount } from "@/components/pricing/PricingTierCard";
+import {
+  formatPrice,
+  isFoundingProgramOpen,
+  tierPrice,
+  yearlyCardView,
+  type BillingInterval,
+} from "@/lib/pricing";
+import { PricingTierCard } from "@/components/pricing/PricingTierCard";
+import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
 import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 
 function PricingCard({
   tier,
-  price,
-  discount,
   highlighted,
+  interval,
+  foundingOpen,
 }: {
   tier: "starter" | "growth" | "pro";
-  price: number;
-  discount?: Discount;
   highlighted?: boolean;
+  interval: BillingInterval;
+  foundingOpen: boolean;
 }) {
   const t = useTranslations("pricingPage");
+  const locale = useLocale();
+  const view = yearlyCardView(tier, interval, foundingOpen);
 
   return (
     <PricingTierCard
       name={t(`${tier}.name`)}
       tagline={t(`${tier}.tagline`)}
       features={t.raw(`${tier}.features`) as string[]}
-      price={price}
-      discount={discount}
+      price={view.price}
+      discount={view.discount}
+      // Both cadences quote a per-MONTH figure so the two are directly
+      // comparable; the yearly total moves to the sub-label below.
       perMonthLabel={t("perMonth")}
-      forLifeLabel={t("forLife")}
+      forLifeLabel={view.isYearly ? t("perMonth") : t("forLife")}
+      subLabel={
+        view.isYearly
+          ? t("billedYearlyTotal", {
+              price: formatPrice(view.yearlyTotal, locale),
+              saving: formatPrice(view.yearlySaving, locale),
+            })
+          : t("billedMonthly")
+      }
+      featuresLabel={t(`${tier}.featuresLabel`)}
       cta={t("cta")}
       ctaHref="/onboarding"
       ctaSubtext={t("ctaSubtext")}
@@ -63,12 +83,11 @@ function CellValue({ type, text }: { type: CellType; text?: string }) {
 const TIERS = ["starter", "growth", "pro"] as const;
 type Tier = (typeof TIERS)[number];
 
-const TIER_PRICES: Record<Tier, number> = {
-  starter: PRICING.starter.price,
-  growth: PRICING.growth.price,
-  pro: PRICING.pro.price,
-};
-
+/**
+ * The comparison table always quotes MONTHLY prices, whatever the cards above
+ * are showing: it is a feature reference, and mixing cadences mid-page makes
+ * the columns unreadable. The label below says so.
+ */
 function FeatureComparisonTable() {
   const t = useTranslations("pricingPage");
   const [mobileTier, setMobileTier] = useState<Tier>("growth");
@@ -86,6 +105,9 @@ function FeatureComparisonTable() {
         <p className="text-[var(--muted-foreground)] text-lg mt-4 max-w-2xl mx-auto">
           {t("comparison.subtitle")}
         </p>
+        <p className="text-[var(--muted-foreground)] text-sm mt-2 max-w-2xl mx-auto">
+          {t("comparisonMonthlyNote")}
+        </p>
       </ScrollReveal>
 
       {/* Desktop Table */}
@@ -98,7 +120,7 @@ function FeatureComparisonTable() {
                 <th className="p-6 text-center w-[22%]">
                   <div className="text-sm font-bold">{t("starter.name")}</div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
-                    &euro;{PRICING.starter.price}{t("perMonth")}
+                    &euro;{tierPrice("starter", "month")}{t("perMonth")}
                   </div>
                 </th>
                 <th className="p-6 text-center w-[22%] bg-[var(--accent)]/5">
@@ -106,13 +128,13 @@ function FeatureComparisonTable() {
                     {t("growth.name")}
                   </div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
-                    &euro;{PRICING.growth.price}{t("perMonth")}
+                    &euro;{tierPrice("growth", "month")}{t("perMonth")}
                   </div>
                 </th>
                 <th className="p-6 text-center w-[22%]">
                   <div className="text-sm font-bold">{t("pro.name")}</div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
-                    &euro;{PRICING.pro.price}{t("perMonth")}
+                    &euro;{tierPrice("pro", "month")}{t("perMonth")}
                   </div>
                 </th>
               </tr>
@@ -185,7 +207,7 @@ function FeatureComparisonTable() {
               className="w-full flex items-center justify-between px-5 py-3.5 bg-white rounded-xl border border-[var(--border)] text-sm font-bold shadow-sm"
             >
               <span className={mobileTier === "growth" ? "text-[var(--accent)]" : ""}>
-                {t(`${mobileTier}.name`)} — &euro;{TIER_PRICES[mobileTier]}{t("perMonth")}
+                {t(`${mobileTier}.name`)} &middot; &euro;{tierPrice(mobileTier, "month")}{t("perMonth")}
               </span>
               <CaretDown
                 className={`w-4 h-4 text-[var(--muted-foreground)] transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
@@ -210,7 +232,7 @@ function FeatureComparisonTable() {
                   >
                     <span>{t(`${tier}.name`)}</span>
                     <span className="text-xs text-[var(--muted-foreground)]">
-                      &euro;{TIER_PRICES[tier]}{t("perMonth")}
+                      &euro;{tierPrice(tier, "month")}{t("perMonth")}
                     </span>
                   </button>
                 ))}
@@ -308,6 +330,9 @@ export function PricingPageContent() {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
+  // Monthly is the default: it is the price most people compare on, and the
+  // yearly saving is advertised on the toggle itself.
+  const [interval, setInterval] = useState<BillingInterval>("month");
   const foundingHref =
     locale === "en" ? "/founding-partner" : "/programme-fondateur";
 
@@ -344,27 +369,24 @@ export function PricingPageContent() {
         )}
       </ScrollReveal>
 
+      {/* Billing cycle switcher */}
+      <ScrollReveal delay={150} className="mt-12">
+        <BillingIntervalToggle value={interval} onChange={setInterval} />
+      </ScrollReveal>
+
       {/* Pricing Cards */}
       <ScrollReveal
         delay={200}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-12"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-8"
       >
-        <PricingCard
-          tier="starter"
-          price={PRICING.starter.price}
-          discount={
-            foundingOpen ? { targetPrice: PRICING.starter.foundingPrice } : undefined
-          }
-        />
+        <PricingCard tier="starter" interval={interval} foundingOpen={foundingOpen} />
         <PricingCard
           tier="growth"
-          price={PRICING.growth.price}
-          discount={
-            foundingOpen ? { targetPrice: PRICING.growth.foundingPrice } : undefined
-          }
+          interval={interval}
+          foundingOpen={foundingOpen}
           highlighted
         />
-        <PricingCard tier="pro" price={PRICING.pro.price} />
+        <PricingCard tier="pro" interval={interval} foundingOpen={foundingOpen} />
       </ScrollReveal>
 
       {foundingOpen && (

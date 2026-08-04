@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
+import { formatPrice } from "@/lib/pricing";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InfoIcon } from "@/components/icons";
 import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
@@ -34,6 +35,8 @@ type PricingTierCardProps = {
   perMonthLabel: string;
   /** Suffix used next to the discounted price (e.g. "/month for life"). Falls back to perMonthLabel. */
   forLifeLabel?: string;
+  /** Line under the price, e.g. "Billed €192 per year". */
+  subLabel?: string;
   cta: string;
   ctaHref: string;
   /** Small line below the CTA — "30-day free trial · Cancel anytime" */
@@ -92,6 +95,7 @@ export function PricingTierCard({
   discount,
   perMonthLabel,
   forLifeLabel,
+  subLabel,
   cta,
   ctaHref,
   ctaSubtext,
@@ -132,12 +136,12 @@ export function PricingTierCard({
           <div className="flex flex-col gap-1">
             <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">
               {currencySymbol}
-              {price}
+              {formatPrice(price, locale)}
             </span>
             <div className="flex items-baseline gap-1">
               <span className="text-5xl font-black tracking-tight">
                 {currencySymbol}
-                {discounted}
+                {formatPrice(discounted, locale)}
               </span>
               <span className="text-[var(--muted-foreground)] text-lg font-bold">
                 {forLifeLabel ?? perMonthLabel}
@@ -148,12 +152,18 @@ export function PricingTierCard({
           <div className="flex items-baseline gap-1">
             <span className="text-5xl font-black tracking-tight">
               {currencySymbol}
-              {price}
+              {formatPrice(price, locale)}
             </span>
             <span className="text-[var(--muted-foreground)] text-lg font-bold">
               {perMonthLabel}
             </span>
           </div>
+        )}
+
+        {subLabel && (
+          <p className="text-sm text-[var(--muted-foreground)] font-medium -mt-2">
+            {subLabel}
+          </p>
         )}
       </div>
 
