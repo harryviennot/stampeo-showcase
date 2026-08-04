@@ -33,13 +33,13 @@ export function PricingSection() {
   const [interval, setInterval] = useState<BillingInterval>("month");
 
   return (
-    <section id="pricing" className="relative py-24 lg:py-32">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section id="pricing" className="relative py-16 lg:py-24">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
         <ScrollReveal className="text-center mb-10">
-          <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
+          <h2 className="text-h2 mb-6">
             {t("title")}
           </h2>
-          <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
+          <p className="text-lead text-[var(--muted-foreground)] max-w-2xl mx-auto">
             {foundingOpen ? t("subtitle") : t("subtitleStandard")}
           </p>
         </ScrollReveal>

@@ -17,16 +17,16 @@ export async function VariantHowItWorks() {
   );
 
   return (
-    <section id="how-it-works" className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg-alt)]">
+    <section id="how-it-works" className="py-16 lg:py-24 relative bg-[var(--blog-bg-alt)]">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
             {t("badge")}
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-6 text-lg text-[var(--muted-foreground)]">
+          <p className="mt-6 text-lead text-[var(--muted-foreground)]">
             {t("subtitle")}
           </p>
         </ScrollReveal>

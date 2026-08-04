@@ -345,12 +345,12 @@ export function Header() {
             : "bg-transparent border-transparent"
             }`}
         >
-          <nav className="relative flex items-center justify-between px-4 lg:px-10 lg:py-5 py-3 max-w-[1400px] mx-auto">
+          <nav className="relative flex items-center justify-between px-4 sm:px-6 lg:py-5 py-3 max-w-[1200px] mx-auto">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
                 <StampeoLogo />
-                <span className="text-2xl font-bold gradient-text">
+                <span className="text-2xl font-bold text-[var(--foreground)]">
                   Stampeo
                 </span>
               </div>

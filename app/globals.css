@@ -118,6 +118,40 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/* Type scale. One ladder for the whole site — every heading and lead paragraph
+   uses these, never a raw text-4xl/font-black combination. Sizes are fluid
+   between a 390px phone and a 1280px desktop, so there is no jump at a
+   breakpoint. Weight and tracking travel with the token: `text-h2` alone is a
+   complete section title, and adding font-extrabold on top is a bug. */
+@theme {
+  /* 34px @390 → 60px @1280. Hero headline only, one per page. */
+  --text-display: clamp(2.125rem, 1.4133rem + 2.9231vw, 3.75rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 800;
+
+  /* 32px → 48px. Page titles (pricing, features, blog, about). */
+  --text-h1: clamp(2rem, 1.5618rem + 1.7989vw, 3rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h1--font-weight: 700;
+
+  /* 26px → 38px. Section titles. */
+  --text-h2: clamp(1.625rem, 1.2963rem + 1.3492vw, 2.375rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--font-weight: 700;
+
+  /* 18px → 20px. Card and sub-section titles. */
+  --text-h3: clamp(1.125rem, 1.0908rem + 0.1404vw, 1.25rem);
+  --text-h3--line-height: 1.35;
+  --text-h3--font-weight: 600;
+
+  /* 16px → 17px. The paragraph under a heading. Body copy stays text-base. */
+  --text-lead: clamp(1rem, 0.9829rem + 0.0702vw, 1.0625rem);
+  --text-lead--line-height: 1.6;
+}
+
 body {
   font-family: var(--font-geist-sans), "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
   /* Decorative transforms (scroll-reveal translateX, rotated card fans) must
@@ -358,6 +392,29 @@ html {
 .scroll-reveal-scale.revealed {
   opacity: 1;
   transform: scale(1);
+}
+
+/* Readers who ask for less motion get the finished state immediately — the
+   reveal is decoration, so it must never be the thing that makes content
+   appear. Same for the stamp/checkmark celebrations. */
+@media (prefers-reduced-motion: reduce) {
+
+  .scroll-reveal,
+  .scroll-reveal-stagger>*,
+  .scroll-reveal-left,
+  .scroll-reveal-right,
+  .scroll-reveal-scale {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms !important;
+  }
+
+  .stamp-fill-animation,
+  .stamp-poof-animation,
+  .checkmark-fade-in {
+    animation: none;
+  }
 }
 
 /* Material Symbols */

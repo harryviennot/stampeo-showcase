@@ -30,30 +30,29 @@ export async function DashboardPreview() {
   const t = await getTranslations("landing.dashboard");
 
   return (
-    <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg-alt)]">
+    <section className="py-16 lg:py-24 relative bg-[var(--blog-bg-alt)]">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
           {/* Content */}
           <ScrollReveal variant="left">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
+            <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
               {t("badge")}
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+            </p>
+            <h2 className="text-h2 text-[var(--foreground)]">
               {t("title")}
             </h2>
-            <p className="mt-6 text-lg text-[var(--muted-foreground)] leading-relaxed">
+            <p className="mt-6 text-lead text-[var(--muted-foreground)] leading-relaxed">
               {t("subtitle")}
             </p>
 
             <div className="mt-10 space-y-4">
               {(t.raw("features") as string[]).map((item, index) => (
-                <div key={index} className="flex items-center gap-4">
-                  <div className="w-6 h-6 bg-[#22c55e] rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="w-3.5 h-3.5 text-white" weight="bold" />
-                  </div>
-                  <span className="text-[var(--foreground)] font-medium">
-                    {item}
-                  </span>
+                <div key={index} className="flex items-center gap-3">
+                  <Check
+                    className="w-5 h-5 shrink-0 text-[var(--muted-foreground)]"
+                    weight="bold"
+                  />
+                  <span className="text-[var(--foreground)]">{item}</span>
                 </div>
               ))}
             </div>
@@ -61,7 +60,7 @@ export async function DashboardPreview() {
 
           {/* Dashboard mockup */}
           <ScrollReveal variant="right" delay={150} className="relative">
-            <div className="bg-white blog-card-3d rounded-3xl overflow-hidden">
+            <div className="bg-white border border-[var(--border)] shadow-sm rounded-3xl overflow-hidden">
               {/* Browser chrome */}
               <div className="relative flex items-center px-5 py-3.5 bg-[var(--muted)] border-b border-[var(--border)]">
                 <div className="flex gap-2 absolute left-5">

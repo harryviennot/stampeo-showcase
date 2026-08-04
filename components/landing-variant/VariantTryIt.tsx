@@ -14,18 +14,18 @@ export async function VariantTryIt() {
   const t = await getTranslations("variant.tryIt");
 
   return (
-    <section id="try-it" className="relative py-24 lg:py-32 scroll-mt-24">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section id="try-it" className="relative py-16 lg:py-24 scroll-mt-24">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Text on the left */}
           <ScrollReveal className="flex flex-col gap-4">
             <span className="inline-block self-start px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold">
               {t("eyebrow")}
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
+            <h2 className="text-h2">
               {t("title")}
             </h2>
-            <p className="text-[var(--muted-foreground)] text-lg max-w-xl">
+            <p className="text-lead text-[var(--muted-foreground)] max-w-xl">
               {t("subtitle")}
             </p>
           </ScrollReveal>

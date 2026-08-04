@@ -25,7 +25,7 @@ function SampleCard({ engine }: { engine: Exclude<Engine, "either"> }) {
     const s = STAMP_SAMPLES[0];
     return (
       <div className="w-[200px]">
-        <ScaledCardWrapper baseWidth={280} targetWidth={200}>
+        <ScaledCardWrapper size="sm">
           <WalletCard design={s.design} stamps={s.stamps} showQR={false} interactive3D />
         </ScaledCardWrapper>
       </div>
@@ -34,7 +34,7 @@ function SampleCard({ engine }: { engine: Exclude<Engine, "either"> }) {
   const p = POINTS_SAMPLES[0];
   return (
     <div className="w-[200px]">
-      <ScaledCardWrapper baseWidth={280} targetWidth={200}>
+      <ScaledCardWrapper size="sm">
         <WalletCard
           design={p.design}
           pointsBalance={p.pointsBalance}

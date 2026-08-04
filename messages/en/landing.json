@@ -35,60 +35,6 @@
         "rewardAllUnlocked": "Everything unlocked!"
       }
     },
-    "problem": {
-      "statement": "Paper cards get lost. <muted>Loyalty apps don't get downloaded. There's a better way.</muted>",
-      "lostTitle": "Lost in drawers",
-      "lostDesc": "Paper cards get crumpled, forgotten in pockets, or thrown away. Your loyalty program becomes invisible.",
-      "fatigueTitle": "App fatigue",
-      "fatigueDesc": "Customers won't download another app just for stamps. The friction kills engagement before it starts.",
-      "zeroVisibilityTitle": "Zero visibility on your customers",
-      "zeroVisibilityDesc": "With a paper card, you don't know who comes back, how often, or when a customer stops visiting. You're flying blind.",
-      "solution": "Stampeo puts your loyalty card <br></br>where customers already look:",
-      "solutionHighlight": "Their phone wallet.",
-      "notification": "You earned a stamp!"
-    },
-    "benefits": {
-      "title": "Works for everyone",
-      "subtitle": "A seamless experience designed for modern shoppers <br></br>and growing <mbr></mbr>businesses.",
-      "tabCustomers": "For Your Customers",
-      "tabBusiness": "For Your Business",
-      "customers": [
-        {
-          "title": "Always with them",
-          "description": "Lives in Apple Wallet or Google Wallet. No app to download, no login to remember."
-        },
-        {
-          "title": "Works everywhere",
-          "description": "No internet needed to show their card. Reliable at busy markets, basements, anywhere."
-        },
-        {
-          "title": "Instant feedback",
-          "description": "A notification pops up the moment they earn a stamp. Satisfying and impossible to miss."
-        },
-        {
-          "title": "Clear rewards",
-          "description": "Your customers see exactly where they stand. No more \"I lost my card at stamp 7\". Progress is always visible."
-        }
-      ],
-      "business": [
-        {
-          "title": "Ready in minutes",
-          "description": "Upload your logo, pick your colors, see your card instantly. No design skills needed."
-        },
-        {
-          "title": "See what's working",
-          "description": "Know who's coming back, how often, and when. Simple insights, no spreadsheets."
-        },
-        {
-          "title": "Scan your way",
-          "description": "Use our free app or scan from any browser. No special equipment, no POS integration."
-        },
-        {
-          "title": "Notifications that land",
-          "description": "85% open rate on wallet notifications vs 20% for email. Your messages get read, not ignored."
-        }
-      ]
-    },
     "howItWorks": {
       "badge": "How it works",
       "title": "The magic moment <mbr></mbr><br></br>in 5 steps.",
@@ -136,169 +82,13 @@
       "visitedToday": "Visited today",
       "almost": "Almost!"
     },
-    "socialProof": {
-      "trustedBy": "Trusted by businesses worldwide",
-      "joinCount": "Join 200+ independent businesses already using Stampeo",
-      "stats": {
-        "businesses": "Businesses",
-        "cardsIssued": "Cards issued",
-        "rating": "Rating"
-      }
-    },
-    "faq": {
-      "title": "Frequently asked questions",
-      "subtitle": "Everything you need to know about setting up your digital loyalty program.",
-      "items": [
-        {
-          "question": "How do I create my loyalty card?",
-          "answer": "Your card is created automatically during setup. Just upload your logo and pick your colors — you'll see a preview instantly. Customize anything you like, then publish when you're happy with it."
-        },
-        {
-          "question": "Do my customers need to download an app?",
-          "answer": "No, Stampeo works directly through the web browser or can be added to digital wallets like Apple Wallet or Google Pay. Zero friction for your customers."
-        },
-        {
-          "question": "What equipment do I need?",
-          "answer": "Any device with an internet connection. You can scan from our free app or directly from your browser — your choice."
-        },
-        {
-          "question": "How do customers get stamped?",
-          "answer": "Your customers show their digital card (in Apple Wallet or Google Wallet) and you scan it with the Stampeo app or from your browser. Only you add stamps — not the customer — which prevents any fraud."
-        },
-        {
-          "question": "How does early access work?",
-          "answer": "After signing up, we get in touch directly to get to know you and set up your program together. We handle your card configuration, scanner app setup, and stay available to support you along the way."
-        },
-        {
-          "question": "Does it work with Google Wallet?",
-          "answer": "Yes. Stampeo generates cards compatible with both Apple Wallet and Google Wallet. The vast majority of smartphones (iPhone and Android) are covered. Features are identical on both platforms, except for location-based notifications which are currently only available on Apple Wallet."
-        },
-        {
-          "question": "Can a business have multiple loyalty cards?",
-          "answer": "Each business runs one active loyalty program at a time. On Growth and Pro you can save several card styles and switch which one is live, but your customers always collect stamps on a single card. That keeps rewards simple for you and for them."
-        },
-        {
-          "question": "Can I send promotional campaigns?",
-          "answer": "Yes — promotional broadcasts are live. The Growth plan includes 8 broadcasts per month with immediate send and date-based segmentation (e.g. customers enrolled in the last 30 days). The Pro plan unlocks unlimited broadcasts, scheduling with timezone support, and advanced segmentation (by stamp count, redemptions, or inactivity). Automatic notifications (stamp, milestone, reward) remain active on all plans."
-        }
-      ],
-      "stillQuestions": "Still have questions?",
-      "stillQuestionsDesc": "We're here to help you grow your business and build lasting customer relationships.",
-      "startFreeTrial": "Start Free",
-      "contactSupport": "Contact Us"
-    },
-    "finalCta": {
-      "title": "Ready to turn visitors into <accent>regulars?</accent>",
-      "cta": "Start Free",
-      "subtitle": "30-day free trial · From €{price}/month"
-    },
-    "comparisonTable": {
-      "title": "Why wallet?",
-      "subtitle": "Compare loyalty solutions <mbr></mbr>for independent businesses.",
-      "columns": [
-        "Paper card (for 500 cards)",
-        "Mobile app",
-        "Stampeo (Wallet)"
-      ],
-      "rows": [
-        {
-          "criteria": "Startup cost",
-          "values": [
-            "~€50–100 (+ stamp)",
-            "€50–200/month",
-            "From €{starterPrice}/month"
-          ],
-          "icons": [
-            "minus",
-            "x",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Customer adoption",
-          "values": [
-            "Average — they have to remember",
-            "Low — nobody downloads",
-            "High — already on their phone"
-          ],
-          "icons": [
-            "minus",
-            "x",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Push notifications",
-          "values": [
-            "Impossible",
-            "Yes (if the app is installed)",
-            "Yes, directly in the wallet"
-          ],
-          "icons": [
-            "x",
-            "minus",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Works offline",
-          "values": [
-            "Yes",
-            "Depends",
-            "Yes, always"
-          ],
-          "icons": [
-            "check",
-            "minus",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Fraud risk",
-          "values": [
-            "High (generic stamp)",
-            "Low",
-            "None (unique encrypted QR)"
-          ],
-          "icons": [
-            "x",
-            "check",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Customer data",
-          "values": [
-            "None",
-            "Yes, but few people install",
-            "Yes, from the first scan"
-          ],
-          "icons": [
-            "x",
-            "minus",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Setup time",
-          "values": [
-            "~1 hour (design + printing)",
-            "2–4 weeks",
-            "5 minutes"
-          ],
-          "icons": [
-            "minus",
-            "x",
-            "check"
-          ]
-        }
-      ],
-      "footnote": "Wallet cards combine the best of both worlds: the simplicity of paper and the power of digital\u00A0— without the downsides of either."
-    },
     "sectorCards": {
       "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
       "subtitle": "A barbershop or café rewards visits with stamps. <br></br>A restaurant or salon rewards spending with points.",
-      "carousel": { "prev": "Previous sector", "next": "Next sector" },
+      "carousel": {
+        "prev": "Previous sector",
+        "next": "Next sector"
+      },
       "sectors": [
         {
           "name": "Barbershop",
@@ -306,8 +96,14 @@
           "reward": "6 cuts = 1 free",
           "advantage": "A notification when he walks past the shop",
           "fields": [
-            { "label": "Reward", "value": "Free cut" },
-            { "label": "Cardholder", "value": "Julien" }
+            {
+              "label": "Reward",
+              "value": "Free cut"
+            },
+            {
+              "label": "Cardholder",
+              "value": "Julien"
+            }
           ],
           "link": "/blog/loyalty-card-without-app",
           "linkLabel": "Read the barbershop guide"
@@ -318,8 +114,14 @@
           "reward": "8 coffees = 1 free",
           "advantage": "The scan takes a second, no line at the counter",
           "fields": [
-            { "label": "Cardholder", "value": "Camille" },
-            { "label": "Reward", "value": "Free coffee" }
+            {
+              "label": "Cardholder",
+              "value": "Camille"
+            },
+            {
+              "label": "Reward",
+              "value": "Free coffee"
+            }
           ],
           "link": "/blog/digital-loyalty-card-small-business",
           "linkLabel": "Read the café guide"
@@ -330,8 +132,14 @@
           "reward": "€1 spent = 1 point, 25% off at 100 pts",
           "advantage": "A €40 dinner earns more than a quick lunch",
           "fields": [
-            { "label": "Next milestone", "value": "100 points" },
-            { "label": "Next reward", "value": "25% off" }
+            {
+              "label": "Next milestone",
+              "value": "100 points"
+            },
+            {
+              "label": "Next reward",
+              "value": "25% off"
+            }
           ],
           "link": "/blog/paper-vs-digital-loyalty-card",
           "linkLabel": "Read the restaurant guide"
@@ -342,8 +150,14 @@
           "reward": "€1 spent = 1 point, free manicure at 80 pts",
           "advantage": "Higher-value services earn faster",
           "fields": [
-            { "label": "Cardholder", "value": "Chloé" },
-            { "label": "Next reward", "value": "Free manicure" }
+            {
+              "label": "Cardholder",
+              "value": "Chloé"
+            },
+            {
+              "label": "Next reward",
+              "value": "Free manicure"
+            }
           ],
           "link": "/blog/loyalty-card-without-app",
           "linkLabel": "Read the salon guide"
@@ -354,8 +168,14 @@
           "reward": "€1 spent = 1 point, €10 off at 150 pts",
           "advantage": "Big baskets earn faster",
           "fields": [
-            { "label": "Cardholder", "value": "Elias" },
-            { "label": "Next reward", "value": "€10 off" }
+            {
+              "label": "Cardholder",
+              "value": "Elias"
+            },
+            {
+              "label": "Next reward",
+              "value": "€10 off"
+            }
           ],
           "link": "/loyalty-programs",
           "linkLabel": "Compare stamps and points"
@@ -398,23 +218,6 @@
           "link": "/features/card-design"
         }
       ]
-    },
-    "roi": {
-      "title": "What loyalty actually brings in",
-      "subtitle": "Adjust the sliders to match your business.",
-      "modePrudent": "Conservative",
-      "modeOptimiste": "Optimistic",
-      "clientsLabel": "Customers per day",
-      "basketLabel": "Average basket",
-      "assumption": "Assumption: a loyalty program generates ~{percent}% additional visits",
-      "breakdownClients": "{clients} clients/day × {percent}% = ~{extra} extra clients per day",
-      "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month in extra revenue",
-      "extraRevenue": "Extra revenue",
-      "perMonth": "/month",
-      "stampeoCost": "Stampeo",
-      "roiLabel": "Pays for itself",
-      "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program.",
-      "sources": "Sources: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
     }
   },
   "variant": {
@@ -424,13 +227,34 @@
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
       "reassurance": "1 month free · No commitment",
-      "momentum": "<accent>+36</accent> businesses joined us this week",
       "tryDemoCta": "Try the live demo"
     },
     "tryIt": {
       "eyebrow": "Live demo, no signup",
       "title": "See it on your own phone",
       "subtitle": "Scan the code, add a real card to your phone, and stamp it yourself. Stamps or points, exactly how your customers will feel it."
+    },
+    "metrics": {
+      "title": "Where Stampeo stands today",
+      "subtitle": "Numbers we update by hand, so they stay true.",
+      "items": [
+        {
+          "value": "—",
+          "label": "active businesses"
+        },
+        {
+          "value": "—",
+          "label": "cards created"
+        },
+        {
+          "value": "—",
+          "label": "stamps scanned"
+        },
+        {
+          "value": "—",
+          "label": "average rating"
+        }
+      ]
     },
     "trustStrip": {
       "flag": "🇪🇺",
@@ -456,56 +280,6 @@
         {
           "title": "No commitment",
           "description": "One month free, no strings attached. Leave whenever you like. Your data stays yours, exportable in one click."
-        }
-      ]
-    },
-    "testimonials": {
-      "title": "They launched their loyalty with Stampeo.",
-      "subtitle": "Independent businesses bringing their regulars back, without overcomplicating things.",
-      "items": [
-        {
-          "quote": "Half my regulars are well into their 70s so I was sure they'd never touch it. Now Maureen tells me she's two off a free loaf before I've even got the till open. No idea how she keeps count better than I do.",
-          "name": "Sophie H",
-          "role": "Baker",
-          "business": "The Proving Loaf",
-          "city": "Manchester"
-        },
-        {
-          "quote": "Set it up in the gap between breakfast and lunch. Didn't have to change my till, which honestly is the only reason I gave it a go.",
-          "name": "Tom R",
-          "role": "Café owner",
-          "business": "No. 9 Kitchen",
-          "city": "Bristol"
-        },
-        {
-          "quote": "Had a Thursday cancellation, sent it out, someone booked it within the hour. I'd normally just lose the slot. Not really touched the points side yet but that one thing's already earned its keep.",
-          "name": "Priya N",
-          "role": "Hairdresser",
-          "business": "Fox & Comb",
-          "city": "London"
-        }
-      ],
-      "itemsUs": [
-        {
-          "quote": "Figured my older regulars wouldn't bother with it. Now there's a guy in every morning for a cortado who tells me he's one stamp out before I've even rung him up. Did not see that coming.",
-          "name": "Marcus T",
-          "role": "Coffee shop owner",
-          "business": "Grackle Coffee",
-          "city": "Austin"
-        },
-        {
-          "quote": "Got it going between the lunch and dinner shifts. Never touched my POS, which is the only reason I even tried it.",
-          "name": "Elena R",
-          "role": "Restaurant owner",
-          "business": "Rincón 8",
-          "city": "San Diego"
-        },
-        {
-          "quote": "Had a same-day cancellation, posted it, booked it in maybe two hours. Used to just text everyone and hope. Haven't really messed with the points stuff yet, but that alone was worth it.",
-          "name": "Dana W",
-          "role": "Salon owner",
-          "business": "Wildflower Studio",
-          "city": "Portland"
         }
       ]
     },

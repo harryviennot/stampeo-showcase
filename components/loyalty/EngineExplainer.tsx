@@ -92,7 +92,7 @@ export async function EngineExplainer() {
               accent="#f97316"
               labels={{ how: t("engines.labelHow"), bestFor: t("engines.labelBestFor") }}
             >
-              <ScaledCardWrapper baseWidth={280} targetWidth={240}>
+              <ScaledCardWrapper size="md">
                 <WalletCard design={stamp.design} stamps={stamp.stamps} showQR={false} interactive3D />
               </ScaledCardWrapper>
             </EngineCard>
@@ -106,7 +106,7 @@ export async function EngineExplainer() {
               accent="#8b5cf6"
               labels={{ how: t("engines.labelHow"), bestFor: t("engines.labelBestFor") }}
             >
-              <ScaledCardWrapper baseWidth={280} targetWidth={240}>
+              <ScaledCardWrapper size="md">
                 <WalletCard
                   design={points.design}
                   pointsBalance={points.pointsBalance}

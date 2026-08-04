@@ -35,60 +35,6 @@
         "rewardAllUnlocked": "¡Todo desbloqueado!"
       }
     },
-    "problem": {
-      "statement": "Las tarjetas de papel se pierden. <muted>Las aplicaciones de fidelidad nunca se descargan. Hay una forma mejor.</muted>",
-      "lostTitle": "Perdidas en un cajón",
-      "lostDesc": "Las tarjetas de papel se arrugan, se olvidan en los bolsillos o acaban en la basura. Tu programa de fidelidad se vuelve invisible.",
-      "fatigueTitle": "Cansancio de aplicaciones",
-      "fatigueDesc": "Tus clientes no van a descargar otra aplicación más solo para los sellos. Esa fricción mata el interés antes de que empiece.",
-      "zeroVisibilityTitle": "Cero visibilidad sobre tus clientes",
-      "zeroVisibilityDesc": "Con una tarjeta de cartón no sabes quién vuelve, con qué frecuencia, ni cuándo un cliente deja de venir. Vas a ciegas.",
-      "solution": "Stampeo pone tu tarjeta de fidelidad <br></br>donde tus clientes ya miran:",
-      "solutionHighlight": "La cartera de su teléfono.",
-      "notification": "¡Has ganado un sello!"
-    },
-    "benefits": {
-      "title": "Funciona para todos",
-      "subtitle": "Una experiencia fluida pensada para los clientes de hoy <br></br>y los comercios <mbr></mbr>que crecen.",
-      "tabCustomers": "Para tus clientes",
-      "tabBusiness": "Para tu comercio",
-      "customers": [
-        {
-          "title": "Siempre con ellos",
-          "description": "Vive en Apple Wallet o Google Wallet. Sin aplicación que descargar, sin contraseña que recordar."
-        },
-        {
-          "title": "Funciona en todas partes",
-          "description": "No necesita internet para mostrar su tarjeta. Fiable en mercados con mucha gente, en sótanos, donde sea."
-        },
-        {
-          "title": "Respuesta al instante",
-          "description": "Aparece una notificación en cuanto ganan un sello. Satisfactorio e imposible de no ver."
-        },
-        {
-          "title": "Recompensas claras",
-          "description": "Tus clientes ven exactamente dónde están. Se acabó el \"perdí mi tarjeta en el sello 7\". El progreso siempre está a la vista."
-        }
-      ],
-      "business": [
-        {
-          "title": "Lista en unos minutos",
-          "description": "Sube tu logo, elige tus colores y ve tu tarjeta al instante. No hace falta saber de diseño."
-        },
-        {
-          "title": "Ve qué funciona",
-          "description": "Sabe quién vuelve, con qué frecuencia y cuándo. Datos sencillos, sin hojas de cálculo."
-        },
-        {
-          "title": "Escanea a tu manera",
-          "description": "Usa nuestra aplicación gratuita o escanea desde cualquier navegador. Sin equipo especial, sin integrar la caja."
-        },
-        {
-          "title": "Notificaciones que llegan",
-          "description": "85 % de lectura en las notificaciones de la cartera, frente al 20 % del correo. Tus mensajes se leen, no se ignoran."
-        }
-      ]
-    },
     "howItWorks": {
       "badge": "Cómo funciona",
       "title": "El momento mágico <mbr></mbr><br></br>en 5 pasos.",
@@ -136,169 +82,13 @@
       "visitedToday": "Visita hoy",
       "almost": "¡Ya casi!"
     },
-    "socialProof": {
-      "trustedBy": "Comercios de toda España ya confían en nosotros",
-      "joinCount": "Únete a los más de 200 comercios independientes que ya usan Stampeo",
-      "stats": {
-        "businesses": "Comercios",
-        "cardsIssued": "Tarjetas en circulación",
-        "rating": "Valoración"
-      }
-    },
-    "faq": {
-      "title": "Preguntas frecuentes",
-      "subtitle": "Todo lo que necesitas saber para lanzar tu programa de fidelidad digital.",
-      "items": [
-        {
-          "question": "¿Cómo creo mi tarjeta de fidelidad?",
-          "answer": "Tu tarjeta se crea automáticamente durante la configuración. Solo sube tu logo y elige tus colores: verás una vista previa al instante. Personaliza lo que quieras y publícala cuando estés a gusto con ella."
-        },
-        {
-          "question": "¿Mis clientes tienen que descargar una aplicación?",
-          "answer": "No, Stampeo funciona directamente desde el navegador web o puede añadirse a carteras digitales como Apple Wallet o Google Pay. Cero fricción para tus clientes."
-        },
-        {
-          "question": "¿Qué equipo necesito?",
-          "answer": "Cualquier dispositivo con conexión a internet. Puedes escanear desde nuestra aplicación gratuita o directamente desde tu navegador: tú eliges."
-        },
-        {
-          "question": "¿Cómo reciben los sellos los clientes?",
-          "answer": "Tus clientes muestran su tarjeta digital (en Apple Wallet o Google Wallet) y tú la escaneas con la aplicación Stampeo o desde tu navegador. Solo tú añades los sellos, no el cliente, lo que evita cualquier fraude."
-        },
-        {
-          "question": "¿Cómo funciona el acceso anticipado?",
-          "answer": "Después de registrarte, te contactamos directamente para conocerte y montar tu programa juntos. Nos ocupamos de configurar tu tarjeta, instalar la aplicación de escaneo y seguimos a tu lado para acompañarte por el camino."
-        },
-        {
-          "question": "¿Funciona con Google Wallet?",
-          "answer": "Sí. Stampeo genera tarjetas compatibles con Apple Wallet y Google Wallet. La gran mayoría de los teléfonos (iPhone y Android) quedan cubiertos. Las funciones son idénticas en ambas plataformas, salvo las notificaciones por ubicación, que de momento solo están disponibles en Apple Wallet."
-        },
-        {
-          "question": "¿Puede un comercio tener varias tarjetas de fidelidad?",
-          "answer": "Cada comercio gestiona un solo programa de fidelidad a la vez. En Growth y Pro puedes guardar varios estilos de tarjeta y cambiar cuál está activo, pero tus clientes siempre acumulan sus sellos en una única tarjeta. Así las recompensas son sencillas, para ti y para ellos."
-        },
-        {
-          "question": "¿Puedo enviar campañas promocionales?",
-          "answer": "Sí, las difusiones promocionales ya están disponibles. El plan Growth incluye 8 difusiones al mes con envío inmediato y segmentación por fecha (por ejemplo, los clientes registrados en los últimos 30 días). El plan Pro desbloquea las difusiones ilimitadas, la programación con franja horaria y la segmentación avanzada (por número de sellos, canjes o inactividad). Las notificaciones automáticas (sello, hito, recompensa) siguen activas en todos los planes."
-        }
-      ],
-      "stillQuestions": "¿Aún tienes preguntas?",
-      "stillQuestionsDesc": "Estamos aquí para ayudarte a hacer crecer tu comercio y a fidelizar a tus clientes.",
-      "startFreeTrial": "Empezar gratis",
-      "contactSupport": "Contáctanos"
-    },
-    "finalCta": {
-      "title": "¿Listo para convertir a tus visitantes en <accent>habituales?</accent>",
-      "cta": "Empezar gratis",
-      "subtitle": "Prueba gratis de 30 días · Desde {price} €/mes"
-    },
-    "comparisonTable": {
-      "title": "¿Por qué la cartera?",
-      "subtitle": "Compara las soluciones de fidelidad <mbr></mbr>para un comercio independiente.",
-      "columns": [
-        "Tarjeta de papel (para 500 tarjetas)",
-        "Aplicación móvil",
-        "Stampeo (Wallet)"
-      ],
-      "rows": [
-        {
-          "criteria": "Coste inicial",
-          "values": [
-            "~50-100 € (+ sello)",
-            "50-200 €/mes",
-            "Desde {starterPrice} €/mes"
-          ],
-          "icons": [
-            "minus",
-            "x",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Adopción por el cliente",
-          "values": [
-            "Media (hay que acordarse)",
-            "Baja (nadie la descarga)",
-            "Alta (ya está en el teléfono)"
-          ],
-          "icons": [
-            "minus",
-            "x",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Notificaciones",
-          "values": [
-            "Imposible",
-            "Sí (si la aplicación está instalada)",
-            "Sí, directamente en la cartera"
-          ],
-          "icons": [
-            "x",
-            "minus",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Funciona sin conexión",
-          "values": [
-            "Sí",
-            "Depende",
-            "Sí, siempre"
-          ],
-          "icons": [
-            "check",
-            "minus",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Riesgo de fraude",
-          "values": [
-            "Alto (sello genérico)",
-            "Bajo",
-            "Ninguno (QR único y cifrado)"
-          ],
-          "icons": [
-            "x",
-            "check",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Datos de clientes",
-          "values": [
-            "Ninguno",
-            "Sí, pero poca gente la instala",
-            "Sí, desde el primer escaneo"
-          ],
-          "icons": [
-            "x",
-            "minus",
-            "check"
-          ]
-        },
-        {
-          "criteria": "Tiempo de puesta en marcha",
-          "values": [
-            "~1 hora (maqueta + impresión)",
-            "2-4 semanas",
-            "5 minutos"
-          ],
-          "icons": [
-            "minus",
-            "x",
-            "check"
-          ]
-        }
-      ],
-      "footnote": "Las tarjetas en la cartera combinan lo mejor de los dos mundos: la sencillez del cartón y la potencia de lo digital, sin los inconvenientes de ninguno."
-    },
     "sectorCards": {
       "title": "Stampeo se adapta <mbr></mbr><br></br>a tu comercio",
       "subtitle": "Una barbería o una cafetería recompensa las visitas con sellos. <br></br>Un restaurante o un salón recompensa el gasto con puntos.",
-      "carousel": { "prev": "Sector anterior", "next": "Sector siguiente" },
+      "carousel": {
+        "prev": "Sector anterior",
+        "next": "Sector siguiente"
+      },
       "sectors": [
         {
           "name": "Barbería",
@@ -306,8 +96,14 @@
           "reward": "6 cortes = 1 gratis",
           "advantage": "Un aviso cuando pasa por delante de la barbería",
           "fields": [
-            { "label": "Recompensa", "value": "Corte gratis" },
-            { "label": "Titular", "value": "Julien" }
+            {
+              "label": "Recompensa",
+              "value": "Corte gratis"
+            },
+            {
+              "label": "Titular",
+              "value": "Julien"
+            }
           ],
           "link": "/blog/programa-fidelidad-peluqueria",
           "linkLabel": "Leer la guía para barberías"
@@ -318,8 +114,14 @@
           "reward": "8 cafés = 1 gratis",
           "advantage": "El escaneo dura un segundo, sin cola en el mostrador",
           "fields": [
-            { "label": "Titular", "value": "Camille" },
-            { "label": "Recompensa", "value": "Café gratis" }
+            {
+              "label": "Titular",
+              "value": "Camille"
+            },
+            {
+              "label": "Recompensa",
+              "value": "Café gratis"
+            }
           ],
           "link": "/blog/tarjeta-fidelidad-cafeteria",
           "linkLabel": "Leer la guía para cafeterías"
@@ -330,8 +132,14 @@
           "reward": "1 € gastado = 1 punto, -25 % a 100 pts",
           "advantage": "Una cena de 40 € suma más que un almuerzo rápido",
           "fields": [
-            { "label": "Próximo hito", "value": "100 puntos" },
-            { "label": "Próxima recompensa", "value": "-25 %" }
+            {
+              "label": "Próximo hito",
+              "value": "100 puntos"
+            },
+            {
+              "label": "Próxima recompensa",
+              "value": "-25 %"
+            }
           ],
           "link": "/blog/tarjeta-fidelidad-restaurante",
           "linkLabel": "Leer la guía para restaurantes"
@@ -342,8 +150,14 @@
           "reward": "1 € gastado = 1 punto, manicura gratis a 80 pts",
           "advantage": "Los servicios más caros suman más rápido",
           "fields": [
-            { "label": "Titular", "value": "Chloé" },
-            { "label": "Próxima recompensa", "value": "Manicura gratis" }
+            {
+              "label": "Titular",
+              "value": "Chloé"
+            },
+            {
+              "label": "Próxima recompensa",
+              "value": "Manicura gratis"
+            }
           ],
           "link": "/blog/programa-fidelidad-peluqueria",
           "linkLabel": "Leer la guía para salones"
@@ -354,14 +168,19 @@
           "reward": "1 € gastado = 1 punto, -10 € a 150 pts",
           "advantage": "Las cestas grandes suman más rápido",
           "fields": [
-            { "label": "Titular", "value": "Elias" },
-            { "label": "Próxima recompensa", "value": "-10 €" }
+            {
+              "label": "Titular",
+              "value": "Elias"
+            },
+            {
+              "label": "Próxima recompensa",
+              "value": "-10 €"
+            }
           ],
           "link": "/programa-de-fidelizacion",
           "linkLabel": "Comparar sellos y puntos"
         }
       ]
-
     },
     "featureGrid": {
       "title": "Todo lo que necesitas para fidelizar",
@@ -399,23 +218,6 @@
           "link": "/features/estilo-de-tarjeta"
         }
       ]
-    },
-    "roi": {
-      "title": "Lo que la fidelidad de verdad aporta",
-      "subtitle": "Ajusta los controles según tu actividad.",
-      "modePrudent": "Prudente",
-      "modeOptimiste": "Optimista",
-      "clientsLabel": "Clientes al día",
-      "basketLabel": "Ticket medio",
-      "assumption": "Hipótesis: un programa de fidelidad genera ~{percent}% de visitas adicionales",
-      "breakdownClients": "{clients} clientes/día × {percent}% = ~{extra} clientes más al día",
-      "breakdownRevenue": "{extra} clientes × {basket}€ × 30 días = {total}€/mes de ingresos extra",
-      "extraRevenue": "Ingresos extra",
-      "perMonth": "/mes",
-      "stampeoCost": "Stampeo",
-      "roiLabel": "Se amortiza",
-      "disclaimer": "Estimación orientativa basada en estudios del sector. Los resultados reales dependen de tu actividad y de la adopción del programa por tus clientes.",
-      "sources": "Fuentes: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
     }
   },
   "variant": {
@@ -425,13 +227,34 @@
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "1 mes gratis · Sin compromiso",
-      "momentum": "<accent>+36</accent> comercios se han unido esta semana",
       "tryDemoCta": "Prueba la demo"
     },
     "tryIt": {
       "eyebrow": "Demo en directo, sin registro",
       "title": "Míralo en tu propio teléfono",
       "subtitle": "Escanea el código, añade una tarjeta real a tu teléfono y consíguete un sello. Sellos o puntos, tal y como lo vivirán tus clientes."
+    },
+    "metrics": {
+      "title": "Dónde está Stampeo hoy",
+      "subtitle": "Cifras que actualizamos a mano, para que sigan siendo ciertas.",
+      "items": [
+        {
+          "value": "—",
+          "label": "comercios activos"
+        },
+        {
+          "value": "—",
+          "label": "tarjetas creadas"
+        },
+        {
+          "value": "—",
+          "label": "sellos escaneados"
+        },
+        {
+          "value": "—",
+          "label": "valoración media"
+        }
+      ]
     },
     "trustStrip": {
       "flag": "🇪🇺",
@@ -457,33 +280,6 @@
         {
           "title": "Sin compromiso",
           "description": "Un mes gratis, sin compromiso. Te vas cuando quieras. Tus datos son tuyos y los exportas con un clic."
-        }
-      ]
-    },
-    "testimonials": {
-      "title": "Lanzaron su fidelidad con Stampeo.",
-      "subtitle": "Comercios independientes que hacen volver a sus habituales, sin complicarse la vida.",
-      "items": [
-        {
-          "quote": "Al principio era escéptica. Mis clientas tienen entre 35 y 75 años, pensaba que no se iban a molestar con esto. Al final son ellas las que me preguntan por qué sello van. Y yo por fin veo quiénes son mis verdaderas habituales.",
-          "name": "Aurélie L",
-          "role": "Panadera",
-          "business": "L'Épi Doré",
-          "city": "Nantes"
-        },
-        {
-          "quote": "Ya había probado dos soluciones de fidelidad, cada vez había que cambiar la caja o pasar una hora de demo comercial. Con Stampeo tenía mi tarjeta esa misma tarde, y al día siguiente mis clientes del mediodía la añadían a su teléfono en el mostrador.",
-          "name": "Karim B",
-          "role": "Restaurador",
-          "business": "Le Bistrot du 11",
-          "city": "París"
-        },
-        {
-          "quote": "Lo que me convenció fue poder avisar a todas mis clientas de un hueco libre sin pagar 0,15 € por SMS. La semana pasada anuncié una cancelación para el jueves y llené el hueco en dos horas.",
-          "name": "Margaux P",
-          "role": "Peluquera",
-          "business": "Studio Mireille",
-          "city": "Burdeos"
         }
       ]
     },

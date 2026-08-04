@@ -52,7 +52,7 @@ function StampButton({
         {isComplete ? (
           <Link
             href="/onboarding"
-            className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
+            className="block w-full py-3.5 rounded-full font-semibold text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
           >
             {t("stamp.claimFree")}
           </Link>
@@ -61,7 +61,7 @@ function StampButton({
             onClick={onClick}
             disabled={isDisabled}
             className={`
-              w-full py-4 rounded-full font-bold text-lg transition-all
+              w-full py-3.5 rounded-full font-semibold text-base transition-all
               ${isDisabled
                 ? "bg-gray-200 text-gray-400 cursor-wait"
                 : "bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
@@ -105,7 +105,7 @@ function PointsScanButton({
         {isComplete ? (
           <Link
             href="/onboarding"
-            className="block w-full py-4 rounded-full font-bold text-lg transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
+            className="block w-full py-3.5 rounded-full font-semibold text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
           >
             {t("points.claimReward")}
           </Link>
@@ -114,7 +114,7 @@ function PointsScanButton({
             onClick={onClick}
             disabled={isDisabled}
             className={`
-              w-full py-4 rounded-full font-bold text-lg transition-all
+              w-full py-3.5 rounded-full font-semibold text-base transition-all
               ${isDisabled
                 ? "bg-gray-200 text-gray-400 cursor-wait"
                 : "bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
@@ -369,7 +369,7 @@ export function HeroDemo() {
           )}
 
           <div className="w-full max-w-[380px]">
-            <ScaledCardWrapper baseWidth={280} targetWidth={380}>
+            <ScaledCardWrapper size="lg">
               <WalletCard
                 design={{
                   organization_name: "Stampeo",
@@ -428,7 +428,7 @@ export function HeroDemo() {
           )}
 
           <div className="w-full max-w-[380px]">
-            <ScaledCardWrapper baseWidth={280} targetWidth={380}>
+            <ScaledCardWrapper size="lg">
               <WalletCard
                 design={{
                   organization_name: "Stampeo",

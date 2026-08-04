@@ -18,7 +18,8 @@ import { VariantTrustStrip } from "./VariantTrustStrip";
 import { VariantBenefits } from "./VariantBenefits";
 import { VariantDifferentiator } from "./VariantDifferentiator";
 import { VariantHowItWorks } from "./VariantHowItWorks";
-import { VariantTestimonials } from "./VariantTestimonials";
+import { VariantMetricStrip } from "./VariantMetricStrip";
+import { DashboardPreview } from "@/components/sections/DashboardPreview";
 import { VariantFAQ } from "./VariantFAQ";
 import { VariantFinalCTA } from "./VariantFinalCTA";
 import { VariantDevToggle } from "./VariantDevToggle";
@@ -48,10 +49,11 @@ export async function VariantLanding({
         )}
         <div data-landing-section="benefits"><VariantBenefits /></div>
         <div data-landing-section="differentiator"><VariantDifferentiator /></div>
+        <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
         <div data-landing-section="try_it"><VariantTryIt /></div>
         <div data-landing-section="sectors"><VariantSectorCards /></div>
-        <div data-landing-section="testimonials"><VariantTestimonials market={market} /></div>
+        <div data-landing-section="metrics"><VariantMetricStrip /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
         <div data-landing-section="pricing"><PricingSection /></div>
         <div data-landing-section="faq"><VariantFAQ /></div>
