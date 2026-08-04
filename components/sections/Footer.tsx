@@ -14,13 +14,11 @@ export async function Footer() {
   const { platform: platformVersion } = await getPlatformVersion();
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
-  const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
-    { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
     { href: `${seoPrefix}/blog`, label: "Blog" },
     { href: `${seoPrefix}/contact`, label: "Contact" },
     { href: `${seoPrefix}/about`, label: "About" },

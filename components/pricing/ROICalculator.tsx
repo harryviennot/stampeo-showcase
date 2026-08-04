@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { ScrollReveal } from "../../ui/ScrollReveal";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRICING } from "@/lib/pricing";
 
 type Mode = "prudent" | "optimiste";
@@ -14,9 +14,18 @@ const PERCENTAGES: Record<Mode, number> = {
 
 interface ROICalculatorProps {
   namespace?: string;
+  /**
+   * Monthly Stampeo cost the ROI is measured against. Defaults to the public
+   * Growth price. Was hardcoded to the founding price until that program
+   * closed — never point this at a rate a new visitor cannot actually get.
+   */
+  monthlyCost?: number;
 }
 
-export function ROICalculator({ namespace = "features.programme-fondateur.custom.roi" }: ROICalculatorProps) {
+export function ROICalculator({
+  namespace = "pricing.roi",
+  monthlyCost = PRICING.growth.price,
+}: ROICalculatorProps) {
   const t = useTranslations(namespace);
   const locale = useLocale();
   const isFr = locale === "fr";
@@ -32,7 +41,7 @@ export function ROICalculator({ namespace = "features.programme-fondateur.custom
   const percentDisplay = Math.round(percent * 100);
   const extraClientsPerDay = clients * percent;
   const extraRevenue = Math.round(extraClientsPerDay * basket * 30);
-  const stampeoCost = PRICING.growth.foundingPrice;
+  const stampeoCost = monthlyCost;
   const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (

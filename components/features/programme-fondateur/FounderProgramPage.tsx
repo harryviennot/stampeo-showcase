@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Container } from "../../ui/Container";
 import { ScrollReveal } from "../../ui/ScrollReveal";
-import { ROICalculator } from "./ROICalculator";
+import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { PriceReveal } from "./PriceReveal";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import {

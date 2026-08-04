@@ -8,6 +8,7 @@ import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PRICING, isFoundingProgramOpen } from "@/lib/pricing";
 import { PricingTierCard, type Discount } from "@/components/pricing/PricingTierCard";
+import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 
 function PricingCard({
@@ -376,6 +377,10 @@ export function PricingPageContent() {
 
       {/* Feature Comparison Table */}
       <FeatureComparisonTable />
+
+      {/* "Is it worth it?" simulator — rehomed here when the founding page
+          retired. Measured against the public Growth price. */}
+      <ROICalculator />
 
       {/* FAQ */}
       <PricingFAQ foundingOpen={foundingOpen} />

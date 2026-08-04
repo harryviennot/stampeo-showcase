@@ -89,21 +89,6 @@
         }
       ]
     },
-    "foundingPartner": {
-      "badge": "Programme Partenaire Fondateur",
-      "title": "Aidez-nous à construire un produit <br></br>que vous adorerez",
-      "subtitle": "Nous cherchons 50 commerçants français prêts à tester Stampeo en avant-première. En échange de vos retours, vous bénéficiez <br></br>du meilleur tarif, à vie. Places limitées.",
-      "valueProps": [
-        "Façonnez le produit avec vos retours directs",
-        "Canal direct avec notre équipe (pas un chatbot, un humain)",
-        "{freeMonths} mois offerts, puis {starterFoundingPrice} €/mois à vie (au lieu de {starterPrice} €)",
-        "Toutes les fonctionnalités Growth incluses dès le premier jour",
-        "Places limitées, nous acceptons les candidatures par vagues",
-        "Votre première carte de fidélité designée par notre équipe, gratuitement"
-      ],
-      "cta": "Commencer gratuitement",
-      "urgency": "9 places restantes · disponibilité limitée"
-    },
     "howItWorks": {
       "badge": "Comment ça marche",
       "title": "Le moment magique <mbr></mbr><br></br>en 5 étapes.",
@@ -153,9 +138,9 @@
     },
     "socialProof": {
       "trustedBy": "Des commerces français nous font déjà confiance",
-      "joinCount": "Rejoignez les 50+ partenaires fondateurs qui utilisent déjà Stampeo",
+      "joinCount": "Rejoignez les 50+ commerces qui utilisent déjà Stampeo",
       "stats": {
-        "businesses": "partenaires fondateurs",
+        "businesses": "commerces",
         "cardsIssued": "cartes en circulation",
         "rating": "note de satisfaction"
       }
@@ -164,10 +149,6 @@
       "title": "Questions fréquentes",
       "subtitle": "Tout ce que vous devez savoir pour lancer votre programme de fidélité digital.",
       "items": [
-        {
-          "question": "Qu'est-ce que le programme partenaire fondateur ?",
-          "answer": "En tant que partenaire fondateur, vous bénéficiez d'un accès anticipé à Stampeo avec toutes les fonctionnalités Growth. Vous contribuez à façonner le produit avec vos retours directs. Après {freeMonths} mois offerts, vous bloquez votre tarif à {growthFoundingPrice} €/mois à vie (au lieu de {growthPrice} €)."
-        },
         {
           "question": "Comment créer ma carte de fidélité ?",
           "answer": "Votre carte est créée automatiquement lors de la configuration. Importez simplement votre logo et choisissez vos couleurs, vous verrez un aperçu instantanément. Personnalisez ce que vous voulez, puis publiez quand vous êtes satisfait."
@@ -209,7 +190,7 @@
     "finalCta": {
       "title": "Prêt à transformer vos visiteurs en <accent>habitués ?</accent>",
       "cta": "Commencer gratuitement",
-      "subtitle": "Essai gratuit de 30 jours · À partir de {price} €/mois à vie"
+      "subtitle": "Essai gratuit de 30 jours · À partir de {price} €/mois"
     },
     "comparisonTable": {
       "title": "Pourquoi le wallet ?",
@@ -549,7 +530,7 @@
       "items": [
         {
           "question": "Combien ça coûte ?",
-          "answer": "Le plan Starter est à {starterPrice} €/mois (tarif fondateur : {starterFoundingPrice} €/mois à vie). Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Votre carte bancaire est demandée pour démarrer l'essai, sans aucun débit avant la fin du mois."
+          "answer": "Le plan Starter est à {starterPrice} €/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Votre carte bancaire est demandée pour démarrer l'essai, sans aucun débit avant la fin du mois."
         },
         {
           "question": "Dois-je changer ma caisse ?",
@@ -561,7 +542,7 @@
         },
         {
           "question": "Que se passe-t-il après le premier mois ?",
-          "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des 30 jours. Si vous continuez en tant que partenaire fondateur, vous bloquez votre tarif à vie."
+          "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des 30 jours. Vous pouvez résilier à tout moment avant cette date."
         },
         {
           "question": "Mes données sont-elles en sécurité ?",

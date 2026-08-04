@@ -24,22 +24,33 @@ export const PRICING = {
 } as const;
 
 /**
- * Founding partner program closes at this instant (UTC). Mirrors the backend
- * constant in `app/core/stripe_config.py`. After this moment:
+ * Founding partner program CLOSED at this instant (UTC). Mirrors the backend
+ * constant in `app/core/stripe_config.py` and `web/src/lib/pricing.ts` — keep
+ * all three in sync. Since this moment:
  *   - new signups no longer get founding pricing
- *   - the FoundingPartnerStep loses its badge + strikethrough price
+ *   - the pricing page hides founding badges and strikethroughs
  *   - /founding-partner + /programme-fondateur 307 to /pricing
- *   - the pricing page hides founding badges
  *
- * Existing founding partners are grandfathered server-side via the DB flag.
+ * Existing founding partners are grandfathered server-side via the DB flag,
+ * with no expiry.
  */
 export const FOUNDING_PROGRAM_END_DATE = new Date(
-  Date.UTC(2026, 7, 31, 23, 59, 59) // month is 0-indexed → 7 = August
+  Date.UTC(2026, 7, 4) // month is 0-indexed → 7 = August. 2026-08-04T00:00:00Z
 );
 
 export function isFoundingProgramOpen(now: Date = new Date()): boolean {
   return now < FOUNDING_PROGRAM_END_DATE;
 }
+
+/**
+ * Sitewide promo banner (`components/sections/PromoBanner.tsx`) master switch.
+ *
+ * Off since the founding program closed. The component and its
+ * `common.promoBanner.*` copy are kept for the next promo — but that copy is
+ * founding-specific ("50% off for life"), so REWRITE IT before flipping this
+ * back on.
+ */
+export const PROMO_BANNER_ENABLED = false;
 
 /** Format a price for display (e.g. 10 → "10", 14.99 → "14.99") */
 export function formatPrice(price: number, locale?: string): string {

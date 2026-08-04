@@ -13,6 +13,7 @@ import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
+import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
 
 function DesktopAuthButtons({
   loading,
@@ -273,7 +274,6 @@ export function Header() {
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const navItems = [
     { label: t("common.nav.loyaltyPrograms"), href: loyaltySlug },
-    { label: t("common.nav.foundingProgram"), href: locale === "en" ? "/founding-partner" : "/programme-fondateur" },
     { label: t("common.nav.pricing"), href: "/pricing" },
     ...(locale === "fr" || locale === "en" || locale === "es"
       ? [{ label: t("common.nav.blog"), href: "/blog" }]
@@ -305,7 +305,9 @@ export function Header() {
   );
 
   const [bannerDismissed, setBannerDismissed] = useState(false);
-  const bannerVisible = bannerShouldShow && !bannerDismissed;
+  // PROMO_BANNER_ENABLED is off since the founding program closed. The spacer
+  // below reads the same flag, so the header offset collapses with it.
+  const bannerVisible = PROMO_BANNER_ENABLED && bannerShouldShow && !bannerDismissed;
 
   const dismissBanner = useCallback(() => {
     setBannerDismissed(true);
@@ -313,12 +315,10 @@ export function Header() {
   }, []);
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
-  const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
-    { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
     { href: `${seoPrefix}/blog`, label: "Blog" },
     { href: `${seoPrefix}/contact`, label: "Contact" },
     { href: `${seoPrefix}/about`, label: "About" },

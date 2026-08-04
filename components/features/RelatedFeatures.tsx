@@ -12,7 +12,6 @@ import {
   BellIcon,
   ChartIcon,
   MapPinIcon,
-  StarIcon,
   SparklesIcon,
   MegaphoneIcon,
 } from "../icons";
@@ -24,7 +23,6 @@ type FeatureSlug =
   | "notifications-push"
   | "analytiques"
   | "geolocalisation"
-  | "programme-fondateur"
   | "campagnes-promotionnelles";
 
 const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>> = {
@@ -33,7 +31,6 @@ const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>
   "notifications-push": BellIcon,
   "analytiques": ChartIcon,
   "geolocalisation": MapPinIcon,
-  "programme-fondateur": StarIcon,
   "campagnes-promotionnelles": MegaphoneIcon,
 };
 
@@ -47,9 +44,6 @@ export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProp
   const locale = useLocale();
 
   function getRelatedHref(relSlug: string): string {
-    if (relSlug === "programme-fondateur") {
-      return locale === "en" ? "/founding-partner" : "/programme-fondateur";
-    }
     const canonical = resolveToCanonicalSlug(relSlug);
     if (canonical) {
       return `/features/${getLocalizedSlug(canonical, locale)}`;

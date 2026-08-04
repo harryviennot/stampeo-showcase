@@ -21,7 +21,7 @@ export async function FinalCTASection() {
           <CTAButton label={tb("startFree")} size="xl" trackAs="final_cta" />
 
           <p className="text-[var(--muted-foreground)] text-sm md:text-base font-medium">
-            {t("subtitle", { price: PRICING.starter.foundingPrice })}
+            {t("subtitle", { price: PRICING.starter.price })}
           </p>
         </div>
       </ScrollReveal>

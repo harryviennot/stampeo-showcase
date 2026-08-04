@@ -33,8 +33,7 @@
       },
       "related": [
         "scanner-mobile",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "gallery": {
         "title": "Quinze commerces, quinze styles",
@@ -585,13 +584,12 @@
       ],
       "cta": {
         "title": "Chaque client informé, automatiquement",
-        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Rejoignez le programme fondateur et récompensez chaque visite dès le premier jour."
+        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Commencez votre mois gratuit et récompensez chaque visite dès le premier jour."
       },
       "related": [
         "campagnes-promotionnelles",
         "scanner-mobile",
-        "analytiques",
-        "programme-fondateur"
+        "analytiques"
       ]
     },
     "analytiques": {
@@ -628,8 +626,7 @@
       },
       "related": [
         "campagnes-promotionnelles",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "custom": {
         "blindSpotCards": {
@@ -856,7 +853,7 @@
       ],
       "cta": {
         "title": "Soyez présent au bon moment",
-        "subtitle": "Le géofencing est inclus dans le plan Growth. Rejoignez le programme fondateur pour en bénéficier dès maintenant."
+        "subtitle": "Le géofencing est inclus dans le plan Growth. Commencez votre mois gratuit pour en profiter dès maintenant."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1115,7 +1112,7 @@
       },
       "cta": {
         "title": "Votre prochaine campagne, dans la poche de vos clients",
-        "subtitle": "Rejoignez le programme fondateur et envoyez votre première campagne wallet cette semaine."
+        "subtitle": "Commencez votre mois gratuit et envoyez votre première diffusion cette semaine."
       },
       "related": [
         "notifications-push",
@@ -1230,23 +1227,6 @@
             ]
           },
           "closing": "Stampeo est prêt à tourner dans votre commerce dès aujourd'hui. En rejoignant maintenant, vous bloquez le meilleur tarif et vous pesez sur ce qu'on construit ensuite."
-        },
-        "roi": {
-          "title": "Est-ce que ça vaut le coup ?",
-          "subtitle": "Faites le calcul.",
-          "modePrudent": "Prudent",
-          "modeOptimiste": "Optimiste",
-          "clientsLabel": "Clients par jour",
-          "basketLabel": "Panier moyen",
-          "assumption": "Hypothèse : un programme de fidélité génère environ {percent} % de visites en plus",
-          "breakdownClients": "{clients} clients/jour × {percent} % = environ {extra} clients en plus par jour",
-          "breakdownRevenue": "{extra} clients × {basket} € × 30 jours = {total} €/mois",
-          "extraRevenue": "Revenus en plus",
-          "perMonth": "/mois",
-          "stampeoCost": "Stampeo",
-          "roiLabel": "Se rembourse",
-          "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients.",
-          "sources": "Sources : Observatoire de la Fidélité · Bain & Company · LSA Conso"
         },
         "price": {
           "original": "{growthPrice} €/mois",

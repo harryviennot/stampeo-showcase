@@ -33,8 +33,7 @@
       },
       "related": [
         "scanner-mobile",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "gallery": {
         "title": "Fifteen shops, fifteen styles",
@@ -585,13 +584,12 @@
       ],
       "cta": {
         "title": "Keep every customer in the loop, automatically",
-        "subtitle": "Transactional notifications are active on every plan. Join the founding program and start rewarding visits from day one."
+        "subtitle": "Transactional notifications are active on every plan. Start your free month and reward visits from day one."
       },
       "related": [
         "campagnes-promotionnelles",
         "scanner-mobile",
-        "analytiques",
-        "programme-fondateur"
+        "analytiques"
       ]
     },
     "analytiques": {
@@ -628,8 +626,7 @@
       },
       "related": [
         "campagnes-promotionnelles",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "custom": {
         "blindSpotCards": {
@@ -856,7 +853,7 @@
       ],
       "cta": {
         "title": "Be present at the right moment",
-        "subtitle": "Geofencing is included in the Growth plan. Join the founding program to benefit from it now."
+        "subtitle": "Geofencing is included in the Growth plan. Start your free month to try it now."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1115,7 +1112,7 @@
       },
       "cta": {
         "title": "Your next campaign, in your customers' pocket",
-        "subtitle": "Join the founding program and send your first wallet broadcast this week."
+        "subtitle": "Start your free month and send your first wallet broadcast this week."
       },
       "related": [
         "notifications-push",
@@ -1230,23 +1227,6 @@
             ]
           },
           "closing": "Stampeo is ready to run in your business today. By joining now, you lock in the best rate and you shape what we build next."
-        },
-        "roi": {
-          "title": "Is it worth it?",
-          "subtitle": "Run the numbers.",
-          "modePrudent": "Conservative",
-          "modeOptimiste": "Optimistic",
-          "clientsLabel": "Customers per day",
-          "basketLabel": "Average basket",
-          "assumption": "Assumption: a loyalty program generates about {percent}% more visits",
-          "breakdownClients": "{clients} clients/day × {percent}% = about {extra} extra clients per day",
-          "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month",
-          "extraRevenue": "Extra revenue",
-          "perMonth": "/month",
-          "stampeoCost": "Stampeo",
-          "roiLabel": "Pays for itself",
-          "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program.",
-          "sources": "Sources: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
         },
         "price": {
           "original": "€{growthPrice}/month",

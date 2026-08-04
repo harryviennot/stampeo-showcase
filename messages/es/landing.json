@@ -89,21 +89,6 @@
         }
       ]
     },
-    "foundingPartner": {
-      "badge": "Programa Socio Fundador",
-      "title": "Ayúdanos a construir un producto <br></br>que vas a adorar",
-      "subtitle": "Únete como socio fundador y bloquea el mejor precio de por vida <br></br>mientras ayudas a dar forma a la plataforma.",
-      "valueProps": [
-        "Da forma al producto con tus comentarios directos",
-        "Canal directo con nuestro equipo (no un chatbot, una persona)",
-        "{freeMonths} meses gratis y luego {starterFoundingPrice} €/mes de por vida (en lugar de {starterPrice} €)",
-        "Todas las funciones de Growth incluidas desde el primer día",
-        "Plazas limitadas, aceptamos solicitudes por tandas",
-        "Tu primera tarjeta de fidelidad creada por nuestro equipo, gratis"
-      ],
-      "cta": "Empezar gratis",
-      "urgency": "Quedan 9 plazas · disponibilidad limitada"
-    },
     "howItWorks": {
       "badge": "Cómo funciona",
       "title": "El momento mágico <mbr></mbr><br></br>en 5 pasos.",
@@ -165,10 +150,6 @@
       "subtitle": "Todo lo que necesitas saber para lanzar tu programa de fidelidad digital.",
       "items": [
         {
-          "question": "¿Qué es el programa de socio fundador?",
-          "answer": "Como socio fundador, consigues acceso anticipado a Stampeo con todas las funciones de Growth. Ayudas a dar forma al producto con tus comentarios directos. Tras {freeMonths} meses gratis, bloqueas tu precio en {growthFoundingPrice} €/mes de por vida (normalmente {growthPrice} €)."
-        },
-        {
           "question": "¿Cómo creo mi tarjeta de fidelidad?",
           "answer": "Tu tarjeta se crea automáticamente durante la configuración. Solo sube tu logo y elige tus colores: verás una vista previa al instante. Personaliza lo que quieras y publícala cuando estés a gusto con ella."
         },
@@ -209,7 +190,7 @@
     "finalCta": {
       "title": "¿Listo para convertir a tus visitantes en <accent>habituales?</accent>",
       "cta": "Empezar gratis",
-      "subtitle": "Prueba gratis de 30 días · Desde {price} €/mes de por vida"
+      "subtitle": "Prueba gratis de 30 días · Desde {price} €/mes"
     },
     "comparisonTable": {
       "title": "¿Por qué la cartera?",
@@ -549,7 +530,7 @@
       "items": [
         {
           "question": "¿Cuánto cuesta?",
-          "answer": "El plan Starter cuesta {starterPrice} €/mes (precio fundador: {starterFoundingPrice} €/mes de por vida). Sin gastos de alta, sin compromiso. Empiezas con 1 mes gratis. Te pedimos la tarjeta para iniciar la prueba, sin ningún cargo antes de que acabe el mes."
+          "answer": "El plan Starter cuesta {starterPrice} €/mes. Sin gastos de alta, sin compromiso. Empiezas con 1 mes gratis. Te pedimos la tarjeta para iniciar la prueba, sin ningún cargo antes de que acabe el mes."
         },
         {
           "question": "¿Tengo que cambiar de caja?",
@@ -561,7 +542,7 @@
         },
         {
           "question": "¿Qué pasa después del primer mes?",
-          "answer": "Eliges si sigues o no. Te pedimos la tarjeta para iniciar la prueba, pero no hay ningún cargo antes de que terminen los 30 días. Si continúas como socio fundador, bloqueas tu precio de por vida."
+          "answer": "Eliges si sigues o no. Te pedimos la tarjeta para iniciar la prueba, pero no hay ningún cargo antes de que terminen los 30 días. Puedes cancelar en cualquier momento antes de esa fecha."
         },
         {
           "question": "¿Mis datos están seguros?",

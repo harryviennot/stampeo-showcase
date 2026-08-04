@@ -12,9 +12,6 @@ import { ComparisonTable } from "@/components/sections/ComparisonTable";
 import { DashboardPreview } from "@/components/sections/DashboardPreview";
 import { SectorCards } from "@/components/sections/SectorCards";
 import { FeatureGrid } from "@/components/sections/FeatureGrid";
-// Removed from landing page — founding offer now embedded in PricingSection
-// import { FoundingPartnerSection } from "@/components/sections/FoundingPartnerSection";
-// import { ROICalculator } from "@/components/features/programme-fondateur/ROICalculator";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
@@ -73,8 +70,7 @@ export default async function Home({
         <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
         <div data-landing-section="sectors"><SectorCards /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
-        {/* Removed: FoundingPartnerSection — founding offer now in PricingSection */}
-        {/* Removed: ROICalculator — available on /programme-fondateur page */}
+        {/* ROICalculator lives on /pricing since the founding page retired. */}
         <div data-landing-section="pricing"><PricingSection /></div>
         <div data-landing-section="faq"><FAQSection /></div>
         <div data-landing-section="final_cta"><FinalCTASection /></div>

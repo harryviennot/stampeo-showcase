@@ -71,6 +71,23 @@
         "Unlimited campaigns + segmentation",
         "Advanced analytics & retention"
       ]
+    },
+    "roi": {
+      "title": "Is it worth it?",
+      "subtitle": "Run the numbers.",
+      "modePrudent": "Conservative",
+      "modeOptimiste": "Optimistic",
+      "clientsLabel": "Customers per day",
+      "basketLabel": "Average basket",
+      "assumption": "Assumption: a loyalty program generates about {percent}% more visits",
+      "breakdownClients": "{clients} clients/day × {percent}% = about {extra} extra clients per day",
+      "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month",
+      "extraRevenue": "Extra revenue",
+      "perMonth": "/month",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Pays for itself",
+      "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program.",
+      "sources": "Sources: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
     }
   },
   "pricingPage": {

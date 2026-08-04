@@ -149,28 +149,6 @@
       "emailTypoApply": "Usar {suggestion}",
       "legalNotice": "Al crear tu cuenta, aceptas nuestras <terms>Condiciones de uso</terms> y reconoces nuestra <privacy>Política de privacidad</privacy>."
     },
-    "foundingPartner": {
-      "title": "Conviértete en Socio Fundador",
-      "subtitle": "Ayúdanos a construir un producto que te encante y bloquea tu precio de por vida",
-      "standardTitle": "Elige tu plan",
-      "standardSubtitle": "30 días de prueba gratis. Sin cargo hoy, cancela cuando quieras.",
-      "resellerTitle": "Elige tu plan",
-      "resellerSubtitle": "Tu descuento de socio se aplica automáticamente en todos los planes",
-      "resellerBadge": "Socio: {discount}% de descuento",
-      "valueProps": ["Funciones Growth incluidas", "3 meses gratis", "Después 20 €/mes de por vida", "Canal directo de comentarios con nuestro equipo"],
-      "cta": "Empezar",
-      "settingUp": "Preparando tu espacio...",
-      "limitedSpots": "Plazas limitadas de acceso anticipado en España",
-      "slugTakenTitle": "Esta URL ya está ocupada",
-      "slugTakenBody": "Elige otra para continuar, no hace falta empezar de nuevo.",
-      "slugTakenPlaceholder": "mi-cafe",
-      "slugTakenRetry": "Reintentar con esta URL",
-      "slugTakenCancel": "Cancelar",
-      "retryTitle": "Algo ha salido mal",
-      "retryBody": "No hemos podido preparar tu espacio. Inténtalo de nuevo en un momento.",
-      "retryButton": "Reintentar",
-      "legalNotice": "Al confirmar tu suscripción, aceptas nuestras <terms>Condiciones de uso</terms> y reconoces nuestra <privacy>Política de privacidad</privacy>."
-    },
     "applicationSubmitted": {
       "title": "¿Cómo nos has conocido?",
       "heardFromSubtitle": "Una última pregunta antes de preparar tu panel.",

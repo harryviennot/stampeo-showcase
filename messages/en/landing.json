@@ -89,21 +89,6 @@
         }
       ]
     },
-    "foundingPartner": {
-      "badge": "Founding Partner Program",
-      "title": "Help us build a product <br></br>you'll love",
-      "subtitle": "Join as a founding partner and lock in lifetime pricing <br></br>while helping shape the platform.",
-      "valueProps": [
-        "Shape the product with direct feedback",
-        "Direct channel with our team (not a chatbot, a human)",
-        "{freeMonths} months free, then €{starterFoundingPrice}/month for life (instead of €{starterPrice})",
-        "All Growth features included from day one",
-        "Limited spots — we accept applications in waves",
-        "Your first loyalty card designed by our team, for free"
-      ],
-      "cta": "Start Free",
-      "urgency": "9 spots left — limited availability"
-    },
     "howItWorks": {
       "badge": "How it works",
       "title": "The magic moment <mbr></mbr><br></br>in 5 steps.",
@@ -165,10 +150,6 @@
       "subtitle": "Everything you need to know about setting up your digital loyalty program.",
       "items": [
         {
-          "question": "What is the founding partner program?",
-          "answer": "As a founding partner, you get early access to Stampeo with all Growth features. You'll help shape the product with direct feedback. After {freeMonths} free months, you lock in €{growthFoundingPrice}/month for life (normally €{growthPrice})."
-        },
-        {
           "question": "How do I create my loyalty card?",
           "answer": "Your card is created automatically during setup. Just upload your logo and pick your colors — you'll see a preview instantly. Customize anything you like, then publish when you're happy with it."
         },
@@ -209,7 +190,7 @@
     "finalCta": {
       "title": "Ready to turn visitors into <accent>regulars?</accent>",
       "cta": "Start Free",
-      "subtitle": "30-day free trial · From €{price}/month for life"
+      "subtitle": "30-day free trial · From €{price}/month"
     },
     "comparisonTable": {
       "title": "Why wallet?",
@@ -571,7 +552,7 @@
       "items": [
         {
           "question": "How much does it cost?",
-          "answer": "The Starter plan is €{starterPrice}/month (founding rate: €{starterFoundingPrice}/month for life). No setup fee, no commitment. You start with 1 month free. We ask for your card to begin the trial, with no charge before the month is up."
+          "answer": "The Starter plan is €{starterPrice}/month. No setup fee, no commitment. You start with 1 month free. We ask for your card to begin the trial, with no charge before the month is up."
         },
         {
           "question": "Do I need to change my till?",
@@ -583,7 +564,7 @@
         },
         {
           "question": "What happens after the first month?",
-          "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the 30 days are up. If you continue as a founding partner, you lock in your rate for life."
+          "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the 30 days are up. You can cancel any time before then."
         },
         {
           "question": "Is my data safe?",

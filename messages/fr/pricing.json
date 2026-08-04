@@ -71,6 +71,23 @@
         "Campagnes illimitées + segmentation",
         "Analytiques avancées et rétention"
       ]
+    },
+    "roi": {
+      "title": "Est-ce que ça vaut le coup ?",
+      "subtitle": "Faites le calcul.",
+      "modePrudent": "Prudent",
+      "modeOptimiste": "Optimiste",
+      "clientsLabel": "Clients par jour",
+      "basketLabel": "Panier moyen",
+      "assumption": "Hypothèse : un programme de fidélité génère environ {percent} % de visites en plus",
+      "breakdownClients": "{clients} clients/jour × {percent} % = environ {extra} clients en plus par jour",
+      "breakdownRevenue": "{extra} clients × {basket} € × 30 jours = {total} €/mois",
+      "extraRevenue": "Revenus en plus",
+      "perMonth": "/mois",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Se rembourse",
+      "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients.",
+      "sources": "Sources : Observatoire de la Fidélité · Bain & Company · LSA Conso"
     }
   },
   "pricingPage": {

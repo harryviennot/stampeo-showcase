@@ -71,6 +71,23 @@
         "Difusiones ilimitadas + segmentación",
         "Estadísticas avanzadas y retención"
       ]
+    },
+    "roi": {
+      "title": "¿Merece la pena?",
+      "subtitle": "Haz el cálculo.",
+      "modePrudent": "Prudente",
+      "modeOptimiste": "Optimista",
+      "clientsLabel": "Clientes al día",
+      "basketLabel": "Ticket medio",
+      "assumption": "Hipótesis: un programa de fidelidad genera alrededor de un {percent} % más de visitas",
+      "breakdownClients": "{clients} clientes/día × {percent} % = unos {extra} clientes más al día",
+      "breakdownRevenue": "{extra} clientes × {basket} € × 30 días = {total} €/mes",
+      "extraRevenue": "Ingresos extra",
+      "perMonth": "/mes",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Se amortiza",
+      "disclaimer": "Estimación orientativa basada en estudios del sector. Los resultados reales dependen de tu actividad y de la adopción del programa por parte de tus clientes.",
+      "sources": "Fuentes: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
     }
   },
   "pricingPage": {
