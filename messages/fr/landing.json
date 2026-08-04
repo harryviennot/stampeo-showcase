@@ -80,7 +80,8 @@
       "recentCustomers": "Clients récents",
       "progress": "Progression",
       "visitedToday": "Visite aujourd'hui",
-      "almost": "Presque !"
+      "almost": "Presque !",
+      "annotation": "Sophie revient demain"
     },
     "sectorCards": {
       "title": "Stampeo s'adapte <mbr></mbr><br></br>à votre commerce",
@@ -227,12 +228,14 @@
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans engagement",
-      "tryDemoCta": "Essayer la démo"
+      "tryDemoCta": "Essayer la démo",
+      "annotation": "Un scan, un tampon"
     },
     "tryIt": {
       "eyebrow": "Démo en direct, sans inscription",
       "title": "Voyez-la sur votre téléphone",
-      "subtitle": "Scannez le code, ajoutez une vraie carte sur votre téléphone, et recevez un vrai tampon. Tampons ou points, exactement ce que vivront vos clients."
+      "subtitle": "Scannez le code, ajoutez une vraie carte sur votre téléphone, et recevez un vrai tampon. Tampons ou points, exactement ce que vivront vos clients.",
+      "annotation": "une vraie carte, pas une vidéo"
     },
     "metrics": {
       "title": "Où en est Stampeo aujourd’hui",

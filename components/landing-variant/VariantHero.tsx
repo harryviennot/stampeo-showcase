@@ -2,6 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CTAButton } from "../ui/CTAButton";
 import { Container } from "../ui/Container";
+import { InkArrow, InkNote } from "../ui/InkAnnotation";
 import { HeroWalletCard } from "./HeroWalletCard";
 
 /** Apple and Google publish these badges per language; use their art, not ours. */
@@ -57,11 +58,19 @@ export async function VariantHero() {
           </ScrollReveal>
 
           <ScrollReveal delay={200} className="flex flex-col items-center gap-6">
-            <HeroWalletCard
-              organizationName="Stampeo"
-              rewardLabel={tCommon("reward")}
-              rewardText={tCommon("rewardText")}
-            />
+            <div className="relative">
+              <HeroWalletCard
+                organizationName="Stampeo"
+                rewardLabel={tCommon("reward")}
+                rewardText={tCommon("rewardText")}
+              />
+              {/* Margin note pointing at the card while its stamps fill in.
+                  Hidden on mobile: the hero is tight there already. */}
+              <div className="hidden md:flex absolute -top-9 -right-6 lg:-right-14 flex-col items-start">
+                <InkNote rotate={3}>{t("annotation")}</InkNote>
+                <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
+              </div>
+            </div>
             {/* The real interactive demo lives further down; this jumps to it. */}
             <a
               href="#try-it"

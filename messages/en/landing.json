@@ -80,7 +80,8 @@
       "recentCustomers": "Recent customers",
       "progress": "Progress",
       "visitedToday": "Visited today",
-      "almost": "Almost!"
+      "almost": "Almost!",
+      "annotation": "Sophie's coming back tomorrow"
     },
     "sectorCards": {
       "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
@@ -227,12 +228,14 @@
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
       "reassurance": "1 month free · No commitment",
-      "tryDemoCta": "Try the live demo"
+      "tryDemoCta": "Try the live demo",
+      "annotation": "One scan, one stamp"
     },
     "tryIt": {
       "eyebrow": "Live demo, no signup",
       "title": "See it on your own phone",
-      "subtitle": "Scan the code, add a real card to your phone, and stamp it yourself. Stamps or points, exactly how your customers will feel it."
+      "subtitle": "Scan the code, add a real card to your phone, and stamp it yourself. Stamps or points, exactly how your customers will feel it.",
+      "annotation": "a real card, not a video"
     },
     "metrics": {
       "title": "Where Stampeo stands today",

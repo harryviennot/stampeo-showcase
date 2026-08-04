@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { InkArrow, InkNote } from "../ui/InkAnnotation";
 import { Check, TrendUp, TrendDown } from "../icons";
 
 const AVATAR_COLORS = ["#8b5cf6", "#f59e0b", "#ec4899", "#3b82f6"];
@@ -169,6 +170,13 @@ export async function DashboardPreview() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Margin note naming a customer who is visible in the mock, so
+                the reader's eye goes looking for her 7/8 row. */}
+            <div className="absolute -bottom-12 left-6 sm:left-10 flex items-end gap-1.5">
+              <InkNote rotate={-3}>{t("annotation")}</InkNote>
+              <InkArrow variant="upRight" className="w-8 -mb-1" delay={0.5} />
             </div>
           </ScrollReveal>
         </div>

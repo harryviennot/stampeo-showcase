@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import dynamic from "next/dynamic";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { InkArrow, InkNote } from "../ui/InkAnnotation";
 
 const HeroDemo = dynamic(() => import("../sections/HeroDemo").then((m) => m.HeroDemo));
 
@@ -28,6 +29,14 @@ export async function VariantTryIt() {
             <p className="text-lead text-[var(--muted-foreground)] max-w-xl">
               {t("subtitle")}
             </p>
+
+            {/* Margin note pointing at the demo: right on desktop, down at
+                the stacked card on mobile. */}
+            <div className="flex items-end gap-3 mt-1">
+              <InkNote rotate={-2}>{t("annotation")}</InkNote>
+              <InkArrow variant="right" className="hidden lg:block w-14 mb-1" delay={0.5} />
+              <InkArrow variant="down" className="lg:hidden w-7" delay={0.5} />
+            </div>
           </ScrollReveal>
 
           {/* Interactive card on the right */}

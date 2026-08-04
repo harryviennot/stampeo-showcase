@@ -80,7 +80,8 @@
       "recentCustomers": "Clientes recientes",
       "progress": "Progreso",
       "visitedToday": "Visita hoy",
-      "almost": "¡Ya casi!"
+      "almost": "¡Ya casi!",
+      "annotation": "Sophie vuelve mañana"
     },
     "sectorCards": {
       "title": "Stampeo se adapta <mbr></mbr><br></br>a tu comercio",
@@ -227,12 +228,14 @@
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "1 mes gratis · Sin compromiso",
-      "tryDemoCta": "Prueba la demo"
+      "tryDemoCta": "Prueba la demo",
+      "annotation": "Un escaneo, un sello"
     },
     "tryIt": {
       "eyebrow": "Demo en directo, sin registro",
       "title": "Míralo en tu propio teléfono",
-      "subtitle": "Escanea el código, añade una tarjeta real a tu teléfono y consíguete un sello. Sellos o puntos, tal y como lo vivirán tus clientes."
+      "subtitle": "Escanea el código, añade una tarjeta real a tu teléfono y consíguete un sello. Sellos o puntos, tal y como lo vivirán tus clientes.",
+      "annotation": "una tarjeta real, no un vídeo"
     },
     "metrics": {
       "title": "Dónde está Stampeo hoy",
