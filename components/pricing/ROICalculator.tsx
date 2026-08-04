@@ -45,13 +45,13 @@ export function ROICalculator({
   const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (
-    <section className="py-12 sm:py-24 lg:py-32">
+    <section className="py-16 lg:py-24">
       <div className="max-w-[840px] mx-auto px-4 sm:px-6">
         <ScrollReveal className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-[var(--muted-foreground)]">
+          <p className="mt-3 sm:mt-4 text-lead text-[var(--muted-foreground)]">
             {t("subtitle")}
           </p>
 
@@ -83,7 +83,7 @@ export function ROICalculator({
         </ScrollReveal>
 
         <ScrollReveal delay={200}>
-          <div className="bg-white rounded-2xl blog-card-3d p-5 sm:p-8 md:p-10">
+          <div className="bg-white rounded-2xl border border-[var(--border)] shadow-sm p-5 sm:p-8 md:p-10">
             {/* Sliders */}
             <div className="space-y-6 sm:space-y-8 mb-6 sm:mb-10">
               {/* Clients per day */}

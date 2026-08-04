@@ -83,13 +83,10 @@
       "description": "Compara los planes y funciones de Stampeo. Del autónomo al multiestablecimiento, encuentra el plan adecuado para tu programa de fidelidad."
     },
     "hero": {
-      "badge": "Planes y precios",
       "title": "Elige el plan adecuado para tu comercio",
       "subtitle": "Sin costes ocultos. Sin cargos por cliente. Clientes ilimitados en todos los planes."
     },
-    "foundingCallout": "Los socios fundadores tienen un 50 % de descuento en Starter y Growth, de por vida.",
     "foundingReassurance": "Tu precio fundador queda garantizado para siempre. Aunque suban los precios, o canceles y vuelvas más tarde, conservas este precio.",
-    "foundingLink": "Más información sobre el Programa Fundador",
     "popular": "Más popular",
     "perMonth": "/mes",
     "billedYearlyTotal": "Facturado €{price} al año, ahorras €{saving}",

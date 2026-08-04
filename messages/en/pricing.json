@@ -83,13 +83,10 @@
       "description": "Compare Stampeo plans and features. From solo operators to multi-location businesses — find the right plan for your loyalty program."
     },
     "hero": {
-      "badge": "Plans & Pricing",
       "title": "Choose the right plan for your business",
       "subtitle": "No hidden fees. No per-customer charges. Unlimited customers on every plan."
     },
-    "foundingCallout": "Founding partners get 50% off Starter and Growth, for life.",
     "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
-    "foundingLink": "Learn more about the Founding Program",
     "popular": "Most popular",
     "perMonth": "/mo",
     "billedYearlyTotal": "Billed €{price} a year, saving €{saving}",

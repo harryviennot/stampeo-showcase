@@ -83,13 +83,10 @@
       "description": "Comparez les plans et fonctionnalités Stampeo. De l'auto-entrepreneur au multi-établissement — trouvez le plan adapté à votre programme de fidélité."
     },
     "hero": {
-      "badge": "Plans & Tarifs",
       "title": "Choisissez le plan adapté à votre commerce",
       "subtitle": "Pas de frais cachés. Pas de facturation par client. Clients illimités sur chaque plan."
     },
-    "foundingCallout": "Les partenaires fondateurs bénéficient de 50 % de réduction sur Starter et Growth, à vie.",
     "foundingReassurance": "Votre tarif fondateur est garanti à vie. Même si nos prix augmentent, ou si vous résiliez puis revenez plus tard, vous gardez ce tarif.",
-    "foundingLink": "En savoir plus sur le Programme Fondateur",
     "popular": "Le plus populaire",
     "perMonth": "/mois",
     "billedYearlyTotal": "Facturé €{price} par an, vous économisez €{saving}",

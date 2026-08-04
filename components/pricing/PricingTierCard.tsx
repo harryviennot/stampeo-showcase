@@ -46,16 +46,16 @@ type PricingTierCardProps = {
   currencySymbol?: string;
   /** When set, fires `landing_cta_clicked` with this location on CTA click. */
   trackAs?: CTALocation;
+  /** Lets the page control stacking order (recommended tier first on mobile). */
+  className?: string;
 };
 
-function FeatureListItem({ feature, muted }: { feature: FeatureItem; muted?: boolean }) {
-  const checkClass = muted
-    ? "text-[var(--muted-foreground)] text-lg"
-    : "text-[var(--accent)] text-lg";
+function FeatureListItem({ feature }: { feature: FeatureItem }) {
+  const checkClass = "text-[var(--muted-foreground)] text-base";
 
   if (typeof feature === "string") {
     return (
-      <li className="flex items-start gap-3 text-[15px] font-medium">
+      <li className="flex items-start gap-3 text-[15px]">
         <span className={checkClass}>&#10003;</span>
         <span>{feature}</span>
       </li>
@@ -63,7 +63,7 @@ function FeatureListItem({ feature, muted }: { feature: FeatureItem; muted?: boo
   }
 
   return (
-    <li className="flex items-start gap-3 text-[15px] font-medium">
+    <li className="flex items-start gap-3 text-[15px]">
       <span className={checkClass}>&#10003;</span>
       <span className="flex items-center gap-1.5">
         {feature.text}
@@ -103,6 +103,7 @@ export function PricingTierCard({
   popularLabel,
   currencySymbol = "€",
   trackAs,
+  className = "",
 }: PricingTierCardProps) {
   const locale = useLocale();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
@@ -113,12 +114,12 @@ export function PricingTierCard({
     : undefined;
 
   const containerClass = highlighted
-    ? "border-[3px] border-[var(--accent)] bg-[var(--cream)] shadow-2xl lg:scale-[1.03] z-10"
+    ? "border-2 border-[var(--accent)] bg-[var(--cream)] shadow-xl z-10"
     : "border border-[var(--border)] bg-[var(--cream)] shadow-sm hover:shadow-xl";
 
   return (
     <div
-      className={`relative flex flex-col rounded-3xl p-8 lg:p-10 transition-all duration-300 ${containerClass}`}
+      className={`relative flex flex-col rounded-3xl p-7 lg:p-8 transition-all duration-300 ${containerClass} ${className}`}
     >
       {highlighted && popularLabel && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -128,33 +129,33 @@ export function PricingTierCard({
         </div>
       )}
 
-      <div className="flex flex-col gap-4 mb-8">
-        <h3 className="text-2xl font-bold">{name}</h3>
+      <div className="flex flex-col gap-3 mb-7">
+        <h3 className="text-h3">{name}</h3>
         <p className="text-sm text-[var(--muted-foreground)] font-medium">{tagline}</p>
 
         {showDiscount ? (
           <div className="flex flex-col gap-1">
-            <span className="text-xl font-bold text-[var(--muted-foreground)] line-through">
+            <span className="text-base font-semibold text-[var(--muted-foreground)] line-through">
               {currencySymbol}
               {formatPrice(price, locale)}
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="text-5xl font-black tracking-tight">
+              <span className="text-4xl font-bold tracking-tight">
                 {currencySymbol}
                 {formatPrice(discounted, locale)}
               </span>
-              <span className="text-[var(--muted-foreground)] text-lg font-bold">
+              <span className="text-[var(--muted-foreground)] text-base font-semibold">
                 {forLifeLabel ?? perMonthLabel}
               </span>
             </div>
           </div>
         ) : (
           <div className="flex items-baseline gap-1">
-            <span className="text-5xl font-black tracking-tight">
+            <span className="text-4xl font-bold tracking-tight">
               {currencySymbol}
               {formatPrice(price, locale)}
             </span>
-            <span className="text-[var(--muted-foreground)] text-lg font-bold">
+            <span className="text-[var(--muted-foreground)] text-base font-semibold">
               {perMonthLabel}
             </span>
           </div>
@@ -167,13 +168,13 @@ export function PricingTierCard({
         )}
       </div>
 
-      <div className="flex flex-col gap-4 flex-1 mb-8">
+      <div className="flex flex-col gap-4 flex-1 mb-7">
         {featuresLabel && (
-          <p className="text-xs font-extrabold text-[var(--muted-foreground)] uppercase tracking-widest">
+          <p className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-widest">
             {featuresLabel}
           </p>
         )}
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-3">
           {features.map((feature, i) => (
             <FeatureListItem key={i} feature={feature} />
           ))}
@@ -185,7 +186,7 @@ export function PricingTierCard({
           <Link
             href={ctaHref}
             onClick={handleCtaClick}
-            className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 bg-[var(--accent)] text-white text-base font-extrabold shadow-lg shadow-[var(--accent)]/30 transition-all hover:scale-[1.02] active:scale-95"
+            className="w-full flex cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-[var(--accent)] text-white text-[15px] font-semibold shadow-md shadow-[var(--accent)]/20 transition-all hover:brightness-105"
           >
             <span>{cta}</span>
           </Link>
@@ -193,7 +194,7 @@ export function PricingTierCard({
           <Link
             href={ctaHref}
             onClick={handleCtaClick}
-            className="w-full flex cursor-pointer items-center justify-center rounded-full h-14 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-base font-extrabold transition-all hover:bg-[var(--foreground)] hover:text-white"
+            className="w-full flex cursor-pointer items-center justify-center rounded-full h-12 px-6 border-2 border-[var(--foreground)] text-[var(--foreground)] text-[15px] font-semibold transition-all hover:bg-[var(--foreground)] hover:text-white"
           >
             <span>{cta}</span>
           </Link>

@@ -2,9 +2,8 @@
 
 import { Fragment, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { CTAButton } from "@/components/ui/CTAButton";
-import { Check, X, ArrowRight, CaretDown } from "@phosphor-icons/react";
+import { Check, X, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   formatPrice,
@@ -23,11 +22,13 @@ function PricingCard({
   highlighted,
   interval,
   foundingOpen,
+  className,
 }: {
   tier: "starter" | "growth" | "pro";
   highlighted?: boolean;
   interval: BillingInterval;
   foundingOpen: boolean;
+  className?: string;
 }) {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
@@ -58,6 +59,7 @@ function PricingCard({
       ctaSubtext={t("ctaSubtext")}
       highlighted={highlighted}
       popularLabel={t("popular")}
+      className={className}
     />
   );
 }
@@ -92,17 +94,28 @@ function FeatureComparisonTable() {
   const t = useTranslations("pricingPage");
   const [mobileTier, setMobileTier] = useState<Tier>("growth");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  // Every category starts closed. The full table is 20 rows and was more than
+  // half the page; people who want the detail open the part they care about.
+  const [openCategories, setOpenCategories] = useState<ReadonlySet<string>>(
+    () => new Set()
+  );
+
+  const toggleCategory = (key: string) =>
+    setOpenCategories((current) => {
+      const next = new Set(current);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
 
   // Build a flat row index for alternating colors (skip category headers)
   let globalRowIndex = 0;
 
   return (
-    <div className="mt-24 lg:mt-32">
+    <div className="mt-16 lg:mt-24">
       <ScrollReveal className="text-center mb-12">
-        <h2 className="text-3xl lg:text-5xl font-extrabold tracking-tight">
-          {t("comparison.title")}
-        </h2>
-        <p className="text-[var(--muted-foreground)] text-lg mt-4 max-w-2xl mx-auto">
+        <h2 className="text-h2">{t("comparison.title")}</h2>
+        <p className="text-lead text-[var(--muted-foreground)] mt-4 max-w-2xl mx-auto">
           {t("comparison.subtitle")}
         </p>
         <p className="text-[var(--muted-foreground)] text-sm mt-2 max-w-2xl mx-auto">
@@ -112,7 +125,7 @@ function FeatureComparisonTable() {
 
       {/* Desktop Table */}
       <ScrollReveal delay={200} className="hidden md:block">
-        <div className="bg-white blog-card-3d rounded-3xl overflow-hidden hover:!transform-none hover:!shadow-[0_3px_0_var(--near-black)]">
+        <div className="bg-white border border-[var(--border)] shadow-sm rounded-3xl overflow-hidden">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b border-[var(--border)]">
@@ -142,15 +155,25 @@ function FeatureComparisonTable() {
             <tbody>
               {FEATURE_CATEGORIES.map((category) => (
                 <Fragment key={category.key}>
-                  <tr>
-                    <td
-                      colSpan={4}
-                      className="px-6 pt-8 pb-2 text-sm font-bold text-[var(--foreground)]"
-                    >
-                      {t(`comparison.categories.${category.key}`)}
+                  <tr className="border-t border-[var(--border)]/50">
+                    <td colSpan={4} className="p-0">
+                      <button
+                        type="button"
+                        onClick={() => toggleCategory(category.key)}
+                        aria-expanded={openCategories.has(category.key)}
+                        className="flex w-full items-center justify-between px-6 py-4 text-sm font-bold text-[var(--foreground)] hover:bg-[var(--cream)]/50 transition-colors"
+                      >
+                        {t(`comparison.categories.${category.key}`)}
+                        <CaretDown
+                          className={`w-4 h-4 text-[var(--muted-foreground)] transition-transform duration-200 ${
+                            openCategories.has(category.key) ? "rotate-180" : ""
+                          }`}
+                          weight="bold"
+                        />
+                      </button>
                     </td>
                   </tr>
-                  {category.rows.map((row) => {
+                  {openCategories.has(category.key) && category.rows.map((row) => {
                     const rowData = t.raw(
                       `comparison.rows.${row.key}`
                     ) as Record<string, string>;
@@ -240,13 +263,20 @@ function FeatureComparisonTable() {
             )}
           </div>
 
-          {/* Single-tier feature list */}
-          <div className="bg-white blog-card-3d rounded-2xl overflow-hidden hover:!transform-none hover:!shadow-[0_3px_0_var(--near-black)]">
+          {/* Single-tier feature list, one collapsed group per category */}
+          <div className="bg-white border border-[var(--border)] shadow-sm rounded-2xl overflow-hidden">
             {FEATURE_CATEGORIES.map((category) => (
-              <div key={category.key}>
-                <div className="px-5 pt-5 pb-1.5 text-xs font-bold text-[var(--foreground)]">
+              <details
+                key={category.key}
+                className="group border-t border-[var(--border)]/50 first:border-t-0"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-sm font-bold text-[var(--foreground)]">
                   {t(`comparison.categories.${category.key}`)}
-                </div>
+                  <CaretDown
+                    className="w-4 h-4 text-[var(--muted-foreground)] transition-transform duration-200 group-open:rotate-180"
+                    weight="bold"
+                  />
+                </summary>
                 {category.rows.map((row, rowIdx) => {
                   const rowData = t.raw(
                     `comparison.rows.${row.key}`
@@ -270,7 +300,7 @@ function FeatureComparisonTable() {
                     </div>
                   );
                 })}
-              </div>
+              </details>
             ))}
           </div>
         </ScrollReveal>
@@ -289,12 +319,10 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
   const faqs = foundingOpen ? allFaqs : allFaqs.filter((f) => !f.foundingOnly);
 
   return (
-    <div className="mt-24 lg:mt-32">
+    <div className="mt-16 lg:mt-24 max-w-[840px] mx-auto">
       <ScrollReveal className="mb-12">
-        <h2 className="text-3xl lg:text-5xl font-extrabold tracking-tight">
-          {t("faq.title")}
-        </h2>
-        <p className="mt-4 text-[var(--muted-foreground)] text-lg font-medium">
+        <h2 className="text-h2">{t("faq.title")}</h2>
+        <p className="mt-4 text-lead text-[var(--muted-foreground)]">
           {t("faq.subtitle")}
         </p>
       </ScrollReveal>
@@ -303,11 +331,10 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
         {faqs.map((faq, index) => (
           <details
             key={index}
-            className="group flex flex-col rounded-xl bg-white blog-card-3d px-6 py-4"
-            open={index === 0}
+            className="group flex flex-col rounded-xl bg-white border border-[var(--border)] shadow-sm px-6 py-4"
           >
             <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
-              <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
+              <p className="text-base font-semibold leading-normal group-hover:text-[var(--accent)] transition-colors">
                 {faq.question}
               </p>
               <div className="text-[var(--muted-foreground)] transition-transform duration-300 group-open:rotate-180 group-open:text-[var(--accent)]">
@@ -315,7 +342,7 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
               </div>
             </summary>
             <div className="pt-2 pb-4">
-              <p className="text-[var(--muted-foreground)] text-base font-medium leading-relaxed">
+              <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                 {faq.answer}
               </p>
             </div>
@@ -328,65 +355,51 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
 
 export function PricingPageContent() {
   const t = useTranslations("pricingPage");
-  const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
-  // Monthly is the default: it is the price most people compare on, and the
-  // yearly saving is advertised on the toggle itself.
-  const [interval, setInterval] = useState<BillingInterval>("month");
-  const foundingHref =
-    locale === "en" ? "/founding-partner" : "/programme-fondateur";
+  // Yearly is the default: it is the price we want anchored, and the monthly
+  // equivalent it shows (with the yearly total spelled out underneath) is what
+  // every comparable pricing page leads with.
+  const [interval, setInterval] = useState<BillingInterval>("year");
 
   return (
-    <div className="max-w-[1200px] mx-auto px-6">
-      {/* Hero */}
-      <ScrollReveal className="text-center pt-32 lg:pt-40 pb-4">
-        <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-6">
-          {t("hero.badge")}
-        </span>
-        <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
-          {t("hero.title")}
-        </h1>
-        <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      {/* Hero: title, toggle, price. Nothing between them. */}
+      <ScrollReveal className="text-center pt-28 lg:pt-32">
+        <h1 className="text-h1 mb-4">{t("hero.title")}</h1>
+        <p className="text-lead text-[var(--muted-foreground)] max-w-2xl mx-auto">
           {t("hero.subtitle")}
         </p>
-
-        {/* Founding partner callout */}
-        {foundingOpen && (
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)]/5 border border-[var(--accent)]/20">
-              <span className="text-sm font-semibold text-[var(--accent)]">
-                {t("foundingCallout")}
-              </span>
-              <Link
-                href={foundingHref}
-                className="text-sm font-bold text-[var(--accent)] underline underline-offset-2 hover:no-underline inline-flex items-center gap-1"
-              >
-                {t("foundingLink")}
-                <ArrowRight className="w-3.5 h-3.5" weight="bold" />
-              </Link>
-            </div>
-          </div>
-        )}
       </ScrollReveal>
 
       {/* Billing cycle switcher */}
-      <ScrollReveal delay={150} className="mt-12">
+      <ScrollReveal delay={150} className="mt-8">
         <BillingIntervalToggle value={interval} onChange={setInterval} />
       </ScrollReveal>
 
-      {/* Pricing Cards */}
+      {/* Pricing Cards. Growth leads on mobile, where cards stack. */}
       <ScrollReveal
         delay={200}
         className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-8"
       >
-        <PricingCard tier="starter" interval={interval} foundingOpen={foundingOpen} />
         <PricingCard
           tier="growth"
           interval={interval}
           foundingOpen={foundingOpen}
           highlighted
+          className="order-first lg:order-2"
         />
-        <PricingCard tier="pro" interval={interval} foundingOpen={foundingOpen} />
+        <PricingCard
+          tier="starter"
+          interval={interval}
+          foundingOpen={foundingOpen}
+          className="lg:order-1"
+        />
+        <PricingCard
+          tier="pro"
+          interval={interval}
+          foundingOpen={foundingOpen}
+          className="lg:order-3"
+        />
       </ScrollReveal>
 
       {foundingOpen && (
@@ -410,16 +423,14 @@ export function PricingPageContent() {
       {/* Bottom CTA */}
       <ScrollReveal
         delay={200}
-        className="mt-24 mb-20 p-10 lg:p-16 bg-[var(--foreground)] rounded-2xl text-center relative overflow-hidden"
+        className="mt-16 lg:mt-24 mb-20 p-10 lg:p-14 bg-[var(--foreground)] rounded-2xl text-center relative overflow-hidden"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-[var(--accent)]" />
-        <h2 className="text-white text-3xl lg:text-4xl font-bold mb-4">
-          {t("cta2.title")}
-        </h2>
+        <h2 className="text-white text-h2 mb-4">{t("cta2.title")}</h2>
         <p className="text-gray-400 mb-8 max-w-lg mx-auto">
           {t("cta2.subtitle")}
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <CTAButton
             label={t("cta2.button")}
             size="md"
