@@ -364,6 +364,9 @@
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans engagement · Une question ? 06 49 37 04 70"
+    },
+    "changelog": {
+      "whatsNew": "Voir les nouveautés de Stampeo"
     }
   }
 }

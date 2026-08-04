@@ -6,12 +6,23 @@ import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
 import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
+import {
+  APP_STORE_URL,
+  PLAY_STORE_URL,
+} from "../features/scanner-mobile/StoreBadges";
 
 export async function Footer() {
   const t = await getTranslations("common.footer");
   const tNav = await getTranslations("common.nav");
   const locale = await getLocale();
   const { platform: platformVersion } = await getPlatformVersion();
+
+  const storeBadges =
+    locale === "fr"
+      ? { apple: "/AppStoreFR.svg", google: "/GooglePlayFR.svg" }
+      : locale === "es"
+        ? { apple: "/AppStoreES.svg", google: "/GooglePlayES.svg" }
+        : { apple: "/AppStore.svg", google: "/GooglePlay.svg" };
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
@@ -41,7 +52,7 @@ export async function Footer() {
               </span>
               <span className="text-2xl font-bold tracking-tight text-white">Stampeo</span>
             </Link>
-            <p className="text-[#a1a1aa] text-sm leading-relaxed">
+            <p className="text-white/60 text-sm leading-relaxed">
               {t("description")}
             </p>
 
@@ -51,13 +62,35 @@ export async function Footer() {
               <NewsletterForm />
             </div>
 
+            {/* Scanner app, where staff add the stamps */}
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={storeBadges.apple} alt="App Store" className="h-9 w-auto" />
+              </a>
+              <a
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={storeBadges.google} alt="Google Play" className="h-9 w-auto" />
+              </a>
+            </div>
+
             {/* Social Icons */}
             <div className="flex gap-3 mt-2">
               <a
                 href="https://x.com/stampeo_app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[#a1a1aa]"
+                className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-white/60"
                 aria-label="X (Twitter)"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -68,7 +101,7 @@ export async function Footer() {
                 href="https://linkedin.com/company/stampeo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[#a1a1aa]"
+                className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-white/60"
                 aria-label="LinkedIn"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -79,7 +112,7 @@ export async function Footer() {
                 href="https://instagram.com/stampeo.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-[#a1a1aa]"
+                className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[var(--accent)]/20 hover:text-[var(--accent)] transition-all text-white/60"
                 aria-label="Instagram"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -101,7 +134,7 @@ export async function Footer() {
                   <Link
                     key={canonicalSlug}
                     href={`/features/${slug}` as "/features/design-de-carte"}
-                    className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium"
+                    className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
                   >
                     {tNav(`featuresItems.${key}.label`)}
                   </Link>);
@@ -114,41 +147,47 @@ export async function Footer() {
               <p className="text-white text-sm font-bold">{t("resources")}</p>
               <nav className="flex flex-col gap-3">
                 {(locale === "fr" || locale === "en" || locale === "es") && (
-                  <Link href="/blog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  <Link href="/blog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                     {t("blog")}
                   </Link>
                 )}
-                <Link href="/changelog" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("changelog")}
                 </Link>
-                <Link href="/contact" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("help")}
-                </Link>
-                <Link href="/pricing" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/pricing" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("pricing")}
                 </Link>
-                <Link href={loyaltySlug} className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {tNav("loyaltyPrograms")}
                 </Link>
-                <Link href="/#features" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/#features" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("howItWorks")}
                 </Link>
-                <Link href="/#faq" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/#faq" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   FAQ
                 </Link>
               </nav>
             </div>
 
-            {/* Company */}
+            {/* Company — where you reach a human */}
             <div className="flex flex-col gap-4">
               <p className="text-white text-sm font-bold">{t("company")}</p>
               <nav className="flex flex-col gap-3">
-                <Link href="/about" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/about" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("about")}
                 </Link>
-                <Link href="/contact" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("contact")}
                 </Link>
+                <Link href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  {t("help")}
+                </Link>
+                <a
+                  href="tel:+33649370470"
+                  className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
+                >
+                  06 49 37 04 70
+                </a>
               </nav>
             </div>
 
@@ -156,10 +195,10 @@ export async function Footer() {
             <div className="flex flex-col gap-4">
               <p className="text-white text-sm font-bold">{t("legal")}</p>
               <nav className="flex flex-col gap-3">
-                <Link href="/privacy" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/privacy" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("privacyPolicy")}
                 </Link>
-                <Link href="/terms" className="text-[#a1a1aa] hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href="/terms" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("termsOfService")}
                 </Link>
               </nav>
@@ -169,12 +208,12 @@ export async function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[#a1a1aa] text-xs font-normal">
+          <p className="text-white/60 text-xs font-normal">
             {t("allRightsReserved", { year: new Date().getFullYear() })}
             {platformVersion && (
               <a
                 href={`${locale === "fr" ? "" : `/${locale}`}/changelog`}
-                className="ml-2 text-[#a1a1aa]/70 hover:text-[var(--accent)] transition-colors"
+                className="ml-2 text-white/40 hover:text-[var(--accent)] transition-colors"
               >
                 v{platformVersion}
               </a>
@@ -182,7 +221,7 @@ export async function Footer() {
           </p>
           <div className="flex items-center gap-3">
             {/* Made in France badge */}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#a1a1aa]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/60">
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
                 <rect x="0" y="4" width="8" height="16" fill="#002395" rx="1" />
                 <rect x="8" y="4" width="8" height="16" fill="#FFFFFF" />
@@ -191,7 +230,7 @@ export async function Footer() {
               {t("madeInFrance")}
             </span>
             {/* GDPR badge */}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#a1a1aa]">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-white/60">
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
@@ -201,10 +240,12 @@ export async function Footer() {
           </div>
         </div>
       </div>
-      {/* Plain <a> duplicate of nav links — redundant SSR signal for crawlers */}
-      <nav className="sr-only" aria-hidden="true">
+      {/* Plain <a> duplicate of nav links — redundant SSR signal for crawlers.
+          Visually hidden but reachable: aria-hidden on focusable links hides
+          them from screen readers while they still exist in the tab order. */}
+      <nav className="sr-only" aria-label={t("sitemapLabel")}>
         {seoLinks.map((l) => (
-          <a key={l.href} href={l.href} tabIndex={-1}>{l.label}</a>
+          <a key={l.href} href={l.href}>{l.label}</a>
         ))}
       </nav>
     </footer>

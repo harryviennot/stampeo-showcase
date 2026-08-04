@@ -363,6 +363,9 @@
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "1 mes gratis · Sin compromiso"
+    },
+    "changelog": {
+      "whatsNew": "Mira las novedades de Stampeo"
     }
   }
 }

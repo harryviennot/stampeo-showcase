@@ -363,6 +363,9 @@
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
       "reassurance": "1 month free · No commitment"
+    },
+    "changelog": {
+      "whatsNew": "See what is new in Stampeo"
     }
   }
 }

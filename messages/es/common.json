@@ -101,7 +101,8 @@
         "button": "Suscribirme",
         "disclaimer": "Sin spam. Cancela cuando quieras.",
         "success": "¡Gracias! Ya estás suscrito."
-      }
+      },
+      "sitemapLabel": "Mapa del sitio"
     },
     "points": "Puntos",
     "pointsStrip": {

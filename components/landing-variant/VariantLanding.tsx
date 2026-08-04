@@ -19,6 +19,7 @@ import { VariantBenefits } from "./VariantBenefits";
 import { VariantDifferentiator } from "./VariantDifferentiator";
 import { VariantHowItWorks } from "./VariantHowItWorks";
 import { VariantMetricStrip } from "./VariantMetricStrip";
+import { VariantChangelogTeaser } from "./VariantChangelogTeaser";
 import { DashboardPreview } from "@/components/sections/DashboardPreview";
 import { VariantFAQ } from "./VariantFAQ";
 import { VariantFinalCTA } from "./VariantFinalCTA";
@@ -57,6 +58,7 @@ export async function VariantLanding({
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
         <div data-landing-section="pricing"><PricingSection /></div>
         <div data-landing-section="faq"><VariantFAQ /></div>
+        <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
         <div data-landing-section="final_cta"><VariantFinalCTA /></div>
       </main>
       <Footer />

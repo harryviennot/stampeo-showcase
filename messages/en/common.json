@@ -101,7 +101,8 @@
         "button": "Subscribe",
         "disclaimer": "No spam. Unsubscribe anytime.",
         "success": "Thanks! You're subscribed."
-      }
+      },
+      "sitemapLabel": "Sitemap"
     },
     "points": "Points",
     "pointsStrip": {

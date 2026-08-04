@@ -101,7 +101,8 @@
         "button": "S'inscrire",
         "disclaimer": "Pas de spam. Désabonnement en un clic.",
         "success": "Merci ! Vous êtes inscrit."
-      }
+      },
+      "sitemapLabel": "Plan du site"
     },
     "points": "Points",
     "pointsStrip": {
