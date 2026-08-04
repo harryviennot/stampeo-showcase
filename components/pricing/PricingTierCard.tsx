@@ -113,9 +113,11 @@ export function PricingTierCard({
     ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref })
     : undefined;
 
+  // The recommended tier is drawn in the accent ink; the others in black. Both
+  // sit proud of the page like the rest of the site's cards.
   const containerClass = highlighted
-    ? "border-2 border-[var(--accent)] bg-[var(--cream)] shadow-xl z-10"
-    : "border border-[var(--border)] bg-[var(--cream)] shadow-sm hover:shadow-xl";
+    ? "card-stamp bg-[var(--cream)] border-[var(--accent)] shadow-[0_3px_0_var(--accent)] z-10"
+    : "card-stamp bg-[var(--cream)]";
 
   return (
     <div

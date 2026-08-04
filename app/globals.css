@@ -124,22 +124,24 @@
    breakpoint. Weight and tracking travel with the token: `text-h2` alone is a
    complete section title, and adding font-extrabold on top is a bug. */
 @theme {
-  /* 34px @390 → 60px @1280. Hero headline only, one per page. */
-  --text-display: clamp(2.125rem, 1.4133rem + 2.9231vw, 3.75rem);
+  /* 40px @390 → 68px @1280. The loud moment: the hero headline and the closing
+     call to action, once each per page. Everything else stays calm so these
+     two land. */
+  --text-display: clamp(2.5rem, 1.7213rem + 3.1963vw, 4.25rem);
   --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.02em;
+  --text-display--letter-spacing: -0.025em;
   --text-display--font-weight: 800;
 
-  /* 32px → 48px. Page titles (pricing, features, blog, about). */
-  --text-h1: clamp(2rem, 1.5618rem + 1.7989vw, 3rem);
+  /* 34px → 52px. Page titles (pricing, features, blog, about). */
+  --text-h1: clamp(2.125rem, 1.6247rem + 2.0537vw, 3.25rem);
   --text-h1--line-height: 1.1;
-  --text-h1--letter-spacing: -0.015em;
+  --text-h1--letter-spacing: -0.02em;
   --text-h1--font-weight: 700;
 
-  /* 26px → 38px. Section titles. */
-  --text-h2: clamp(1.625rem, 1.2963rem + 1.3492vw, 2.375rem);
+  /* 28px → 40px. Section titles. */
+  --text-h2: clamp(1.75rem, 1.4213rem + 1.3492vw, 2.5rem);
   --text-h2--line-height: 1.15;
-  --text-h2--letter-spacing: -0.01em;
+  --text-h2--letter-spacing: -0.015em;
   --text-h2--font-weight: 700;
 
   /* 18px → 20px. Card and sub-section titles. */
@@ -160,9 +162,11 @@ body {
   overflow-x: clip;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* No global smooth scrolling. Landing on /#faq from another page would start
+   at the top and animate the whole way down, firing every scroll-reveal in
+   between and stealing the scroll until it arrived. Anchors now land where
+   they should immediately; `scroll-mt-*` on the targets keeps them clear of
+   the fixed header. */
 
 /* Icon-library marquee: pure CSS so it runs on the compositor (no JS
    animation frames, no hydration delay). The track holds its list twice;
@@ -540,6 +544,35 @@ html {
 
 .blog-highlight {
   background: linear-gradient(to top, var(--highlight-yellow) 40%, transparent 40%);
+}
+
+/* The house card: a drawn ink border with the block sitting slightly proud of
+   the page, like a stamped card on a counter. This is the brand's most
+   recognisable surface, so it belongs on things that are genuinely cards, not
+   on every container. A page where everything is outlined reads as busy and
+   the signature stops meaning anything. */
+.card-stamp {
+  box-shadow: 0 3px 0 var(--near-black);
+  border: 1.5px solid var(--near-black);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Only for cards you can click, or that reward a hover. */
+.card-stamp-lift:hover {
+  transform: translate(4px, -4px);
+  box-shadow: 0 8px 0 var(--near-black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .card-stamp,
+  .card-stamp-lift {
+    transition: none;
+  }
+
+  .card-stamp-lift:hover {
+    transform: none;
+  }
 }
 
 .blog-card-3d {

@@ -42,7 +42,7 @@ export function PricingSection() {
 
   return (
     <section id="pricing" className="relative py-16 lg:py-24">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-10">
           <h2 className="text-h2 mb-6">
             {t("title")}

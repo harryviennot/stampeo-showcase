@@ -15,7 +15,7 @@ export async function VariantTryIt() {
 
   return (
     <section id="try-it" className="relative py-16 lg:py-24 scroll-mt-24">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Text on the left */}
           <ScrollReveal className="flex flex-col gap-4">

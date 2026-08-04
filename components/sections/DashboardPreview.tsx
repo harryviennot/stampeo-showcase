@@ -60,7 +60,7 @@ export async function DashboardPreview() {
 
           {/* Dashboard mockup */}
           <ScrollReveal variant="right" delay={150} className="relative">
-            <div className="bg-white border border-[var(--border)] shadow-sm rounded-3xl overflow-hidden">
+            <div className="bg-white card-stamp rounded-3xl overflow-hidden">
               {/* Browser chrome */}
               <div className="relative flex items-center px-5 py-3.5 bg-[var(--muted)] border-b border-[var(--border)]">
                 <div className="flex gap-2 absolute left-5">

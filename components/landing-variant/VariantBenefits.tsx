@@ -10,7 +10,7 @@ export async function VariantBenefits() {
 
   return (
     <section className="relative py-16 lg:py-24">
-      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6">
+      <div className="relative z-10 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="flex flex-col items-center text-center mb-12 gap-4">
           <h2 className="text-h2 max-w-3xl">
             {t("title")}
@@ -26,7 +26,7 @@ export async function VariantBenefits() {
             return (
               <div
                 key={item.title}
-                className="group relative flex flex-col gap-5 p-7 md:p-9 bg-white rounded-2xl border border-[var(--border)] shadow-sm transition-transform duration-300 hover:-translate-y-2"
+                className="group relative flex flex-col gap-5 p-7 md:p-9 bg-white rounded-2xl card-stamp card-stamp-lift"
               >
                 <div className="flex h-12 w-12 md:h-14 md:w-14 items-center justify-center rounded-xl md:rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
                   <Icon className="w-6 h-6 md:w-7 md:h-7" />

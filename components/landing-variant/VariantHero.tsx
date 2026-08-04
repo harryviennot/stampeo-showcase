@@ -22,7 +22,9 @@ export async function VariantHero() {
   const badges = walletBadges(locale);
 
   return (
-    <section className="relative py-16 lg:py-24">
+    /* The header is fixed, so the hero needs to clear it by more than a normal
+       section's top padding or the headline sits right under the nav. */
+    <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-center">
           <ScrollReveal className="flex flex-col gap-8">

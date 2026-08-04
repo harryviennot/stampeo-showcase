@@ -8,7 +8,7 @@ export async function VariantDifferentiator() {
 
   return (
     <section className="relative py-16 lg:py-24 bg-[var(--blog-bg-alt)]">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="flex flex-col items-center text-center mb-12 gap-4">
           <h2 className="text-h2 max-w-3xl">
             {t("title")}
@@ -22,7 +22,7 @@ export async function VariantDifferentiator() {
           {items.map((item) => (
             <div
               key={item.title}
-              className="flex items-start gap-4 md:gap-5 p-6 md:p-8 bg-white rounded-2xl border border-[var(--border)] shadow-sm"
+              className="flex items-start gap-4 md:gap-5 p-6 md:p-8 bg-white rounded-2xl card-stamp"
             >
               <div className="flex shrink-0 h-11 w-11 md:h-12 md:w-12 items-center justify-center rounded-full bg-[var(--accent)]/10 text-[var(--accent)]">
                 <CheckIcon weight="bold" className="w-5 h-5 md:w-6 md:h-6" />

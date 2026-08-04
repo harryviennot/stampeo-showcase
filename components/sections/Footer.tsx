@@ -41,7 +41,7 @@ export async function Footer() {
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">
-      <div className="relative z-10 max-w-[1200px] mx-auto px-6 lg:px-12 pt-20 pb-12">
+      <div className="relative z-10 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
         {/* Footer Grid — brand full-width on mobile, 5-col on desktop */}
         <div className="flex flex-col lg:flex-row gap-14 lg:gap-10 mb-16">
           {/* Brand column */}

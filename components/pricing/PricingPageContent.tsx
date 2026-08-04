@@ -362,7 +362,7 @@ export function PricingPageContent() {
   const [interval, setInterval] = useState<BillingInterval>("year");
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+    <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
       {/* Hero: title, toggle, price. Nothing between them. */}
       <ScrollReveal className="text-center pt-28 lg:pt-32">
         <h1 className="text-h1 mb-4">{t("hero.title")}</h1>

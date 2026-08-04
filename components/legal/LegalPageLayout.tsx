@@ -16,7 +16,7 @@ export function LegalPageLayout({
     <div className="min-h-screen bg-[var(--blog-bg)]">
       <Header />
       <main className="pt-32 pb-20">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
           <header className="mb-12">
             <h1 className="text-h1 text-[var(--near-black)] mb-3">
               {title}

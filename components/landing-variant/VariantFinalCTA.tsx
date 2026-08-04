@@ -8,7 +8,7 @@ export async function VariantFinalCTA() {
   return (
     <section className="relative stamp-pattern flex flex-col items-center justify-center px-4 sm:px-6 py-16 lg:py-24 text-center overflow-hidden">
       <ScrollReveal className="relative z-10 max-w-[840px] mx-auto flex flex-col items-center gap-6">
-        <h2 className="text-h2">
+        <h2 className="text-display">
           {t.rich("title", {
             accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
           })}
