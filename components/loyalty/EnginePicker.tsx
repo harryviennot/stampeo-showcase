@@ -79,10 +79,10 @@ export function EnginePicker() {
     <section id="picker" className="py-20 sm:py-28">
       <Container className="max-w-2xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">{t("subtitle")}</p>
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
         </div>
 
         <motion.div
@@ -175,7 +175,7 @@ export function EnginePicker() {
                     <p className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">
                       {t("resultHeading")}
                     </p>
-                    <h3 className="text-2xl font-extrabold text-[var(--foreground)] mb-3">
+                    <h3 className="text-h3 text-[var(--foreground)] mb-3">
                       {t(`results.${rec.engine}.title`)}
                     </h3>
                     <p className="text-[var(--muted-foreground)] leading-relaxed max-w-md mx-auto">

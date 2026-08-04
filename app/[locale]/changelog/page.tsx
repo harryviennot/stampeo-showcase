@@ -292,7 +292,7 @@ function ReleaseEntry({
         )}
 
         {title && (
-          <h2 className="mt-3 text-2xl font-bold tracking-tight text-[var(--foreground)] sm:text-[28px]">
+          <h2 className="mt-3 text-h2 text-[var(--foreground)]">
             {title}
           </h2>
         )}
@@ -403,7 +403,7 @@ export default async function ChangelogPage({
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--accent)]">
               {t("eyebrow")}
             </p>
-            <h1 className="mt-3 text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl">
+            <h1 className="mt-3 text-h1 text-[var(--foreground)]">
               {t("title")}
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-lg text-[var(--foreground)]/70">

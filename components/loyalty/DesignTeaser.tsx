@@ -26,10 +26,10 @@ export async function DesignTeaser() {
     <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)] overflow-hidden">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">{t("subtitle")}</p>
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
         </ScrollReveal>
 
         {/* Fan of sample cards, pure decoration for the link below */}

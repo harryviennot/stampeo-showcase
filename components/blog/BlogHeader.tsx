@@ -16,10 +16,10 @@ export function BlogHeader({ post }: { post: BlogPostMeta }) {
           {post.readingTime}
         </span>
       </div>
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 leading-[1.1] text-[var(--near-black)]">
+      <h1 className="text-h1 mb-4 leading-[1.1] text-[var(--near-black)]">
         {post.title}
       </h1>
-      <p className="text-lg md:text-xl text-[var(--muted-foreground)] mb-6 leading-relaxed">
+      <p className="text-lead text-[var(--muted-foreground)] mb-6 leading-relaxed">
         {post.description}
       </p>
       <div className="flex items-center gap-3 text-sm text-[var(--muted-foreground)]">

@@ -15,7 +15,7 @@ export async function WalletParitySection() {
     <section className="py-16 sm:py-24">
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
         </ScrollReveal>

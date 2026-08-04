@@ -44,10 +44,10 @@ export default async function AboutPage({
             <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-4">
               {t("hero.badge")}
             </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+            <h1 className="text-h1 mb-4">
               {t("hero.headline")}
             </h1>
-            <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
               {t("hero.description")}
             </p>
           </div>

@@ -55,7 +55,7 @@ export function GeofencingPage() {
                   </span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] leading-[1.1] mb-6">
+                <h1 className="text-h1 text-[var(--foreground)] leading-[1.1] mb-6">
                   {tp("hero.title")}
                 </h1>
 
@@ -103,10 +103,10 @@ export function GeofencingPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-6">
+            <h2 className="text-h2 text-[var(--foreground)] mb-6">
               {tp("problem.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] leading-relaxed mb-8">
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-8">
               {tp("problem.description")}
             </p>
             <p className="text-xl sm:text-2xl font-semibold text-[var(--accent)] italic">
@@ -162,7 +162,7 @@ export function GeofencingPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)]">
+            <h2 className="text-h2 text-[var(--foreground)]">
               {tp("technical.title")}
             </h2>
           </ScrollReveal>
@@ -181,7 +181,7 @@ export function GeofencingPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">
+                    <h3 className="text-h3 text-[var(--foreground)] mb-3">
                       {item.title}
                     </h3>
                     <p className="text-[var(--muted-foreground)] leading-relaxed">

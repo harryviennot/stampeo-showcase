@@ -66,7 +66,7 @@ export function ScannerMobilePage() {
                   {tc("heroBadge")}
                 </span>
 
-                <h1 className="mb-6 text-4xl font-extrabold leading-[1.1] tracking-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
+                <h1 className="mb-6 text-h1 text-[var(--foreground)]">
                   {ts("hero.title")}
                 </h1>
 
@@ -136,10 +136,10 @@ export function ScannerMobilePage() {
       <section id="two-ways" className="scroll-mt-24 py-20 sm:py-28">
         <Container>
           <ScrollReveal className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-5xl">
+            <h2 className="mb-4 text-h2 text-[var(--foreground)]">
               {tc("howItWorks.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lead text-[var(--muted-foreground)]">
               {tc("howItWorks.subtitle")}
             </p>
           </ScrollReveal>
@@ -211,7 +211,7 @@ export function ScannerMobilePage() {
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
                 <WifiOffIcon className="h-7 w-7" />
               </div>
-              <h2 className="mb-4 text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">
+              <h2 className="mb-4 text-h2 text-[var(--foreground)]">
                 {tc("offline.title")}
               </h2>
               <p className="mb-8 text-lg leading-relaxed text-[var(--muted-foreground)]">
@@ -243,10 +243,10 @@ export function ScannerMobilePage() {
       <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="mx-auto mb-16 max-w-2xl text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">
+            <h2 className="mb-4 text-h2 text-[var(--foreground)]">
               {tc("employee.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)]">
+            <p className="text-lead text-[var(--muted-foreground)]">
               {tc("employee.subtitle")}
             </p>
           </ScrollReveal>
@@ -283,7 +283,7 @@ export function ScannerMobilePage() {
               <ShieldCheckIcon className="h-4 w-4" />
               <span>{tc("security.title")}</span>
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">
+            <h2 className="text-h2 text-[var(--foreground)]">
               {tc("security.subtitle")}
             </h2>
           </ScrollReveal>
