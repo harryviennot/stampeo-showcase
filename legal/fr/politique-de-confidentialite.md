@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 22 juillet 2026**
+**Dernière mise à jour : 5 août 2026**
 
 ## 1. Introduction
 
@@ -26,7 +26,7 @@ Chaque entreprise choisit les informations qu'elle collecte auprès de ses clien
 
 Des membres autorisés du personnel Stampeo peuvent, de manière strictement encadrée, accéder au tableau de bord d'un utilisateur Business à seule fin de fournir un support technique ou commercial, de diagnostiquer une anomalie signalée ou de répondre à une obligation légale. Cet accès :
 
-- est **en lecture seule** — aucune donnée ne peut être modifiée, créée ou supprimée pendant la session ;
+- est **en lecture seule** : aucune donnée ne peut être modifiée, créée ou supprimée pendant la session ;
 - peut être accordé dans le contexte de n'importe quel rôle d'utilisateur (propriétaire, administrateur ou scanner), et peut viser un rôle générique ou un utilisateur nommé spécifique, afin de reproduire fidèlement les anomalies propres à un rôle ;
 - déclenche une **notification automatique par email au propriétaire de l'entreprise** au démarrage de la session, indépendamment du rôle ou de l'utilisateur ciblé ;
 - est limité à une durée maximale de **60 minutes**, à l'issue desquelles la session expire automatiquement ;
@@ -135,7 +135,7 @@ Nous utilisons les données collectées pour :
 - Générer et mettre à jour les pass wallet
 - Envoyer des notifications de fidélité (tampons, récompenses)
 - Gérer les comptes, les abonnements et la facturation
-- Envoyer des emails transactionnels et opérationnels (confirmation de compte, récupération de pass, notifications liées à l'essai et à la facturation ; voir CGU §5.5)
+- Envoyer des emails transactionnels et opérationnels (confirmation de compte, récupération de pass, notifications liées à l'essai, confirmations de changement de plan, rappel envoyé avant chaque renouvellement annuel, et autres notifications de facturation ; voir CGU §5.7)
 - Produire des statistiques anonymisées pour les entreprises
 - Produire des statistiques internes agrégées sur l'utilisation de la Plateforme à travers l'ensemble des entreprises, détecter les abus et prioriser les améliorations
 - Adresser aux utilisateurs Business un nombre limité d'emails de cycle de vie et marketing, sous réserve de l'opposition décrite au §6.1
@@ -148,7 +148,7 @@ Nous **ne vendons jamais** de données personnelles. Nous n'effectuons **aucun s
 Outre les emails transactionnels et opérationnels listés ci-dessus, nous adressons aux utilisateurs Business un nombre limité d'emails de cycle de vie et marketing : conseils de prise en main et d'activation, relances lorsqu'un compte est créé mais pas encore utilisé, un récapitulatif d'activité périodique, des annonces de nouveautés produit, et des messages de reconquête après résiliation.
 
 - **Base légale** : notre intérêt légitime à aider les utilisateurs Business à tirer parti de la Plateforme et à promouvoir les fonctionnalités d'un service qu'ils utilisent déjà (article 6.1.f du RGPD), en nous appuyant pour la prospection sur le « soft opt-in » entre professionnels prévu par la directive ePrivacy et l'article L34-5 de la LCEN.
-- **Opposition** : chacun de ces emails comporte un lien de désinscription en un clic ainsi qu'un lien vers une page de préférences permettant à l'utilisateur Business de se désinscrire indépendamment par catégorie — réengagement, marketing et nouveautés produit. Les emails transactionnels et opérationnels décrits au §5.6 des CGU sont exclus de cette opposition car ils sont nécessaires à l'administration du compte.
+- **Opposition** : chacun de ces emails comporte un lien de désinscription en un clic ainsi qu'un lien vers une page de préférences permettant à l'utilisateur Business de se désinscrire indépendamment par catégorie : réengagement, marketing et nouveautés produit. Les emails transactionnels et opérationnels décrits au §5.7 des CGU sont exclus de cette opposition car ils sont nécessaires à l'administration du compte.
 - Pour mesurer et améliorer ces communications, nous enregistrons les événements d'engagement décrits au §3.4.
 
 Cela ne concerne que les emails que Stampeo adresse à ses propres utilisateurs Business. C'est distinct des notifications wallet qu'une entreprise envoie à ses clients finaux, traitées au §7.

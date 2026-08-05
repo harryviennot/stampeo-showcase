@@ -79,7 +79,7 @@ export function FeatureCTA({
               </div>
 
               <div className="relative z-10">
-                <h2 className="text-white text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
+                <h2 className="text-white text-h2 mb-4">
                   {title}
                 </h2>
                 <p className="text-gray-400 mb-10 max-w-lg mx-auto text-lg leading-relaxed">

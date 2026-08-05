@@ -42,10 +42,10 @@ export function DashboardSection() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-bold mb-6">
               {t("badge")}
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4">
               {t("title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] leading-relaxed mb-8">
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-8">
               {t("description")}
             </p>
             <div className="space-y-4">

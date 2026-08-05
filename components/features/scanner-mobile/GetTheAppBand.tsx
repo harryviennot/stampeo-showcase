@@ -89,7 +89,7 @@ export function GetTheAppBand() {
                     <DevicePhoneMobileIcon className="h-4 w-4" />
                     {t("badge")}
                   </div>
-                  <h2 className="mb-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl">
+                  <h2 className="mb-4 text-h2 text-white">
                     {t("title")}
                   </h2>
                   <p className="mb-8 max-w-md text-lg leading-relaxed text-gray-400">

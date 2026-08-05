@@ -12,7 +12,7 @@ export async function VariantTrustStrip() {
 
   return (
     <section className="relative py-10 border-y border-[var(--border)] bg-[var(--cream)]/40">
-      <div className="max-w-[1100px] mx-auto px-6">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-[var(--muted-foreground)]">
             <div className="flex items-center gap-2.5 text-sm font-semibold">

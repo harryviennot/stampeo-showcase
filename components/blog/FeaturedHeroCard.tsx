@@ -22,7 +22,7 @@ export function FeaturedHeroCard({ post }: { post: BlogPostMeta }) {
         <span className="self-start px-3 py-1 rounded-full bg-[var(--accent)] text-white text-xs font-semibold">
           {post.category}
         </span>
-        <h3 className="text-2xl md:text-3xl font-bold leading-tight group-hover:text-[var(--accent)] transition-colors">
+        <h3 className="text-h3 group-hover:text-[var(--accent)] transition-colors">
           {post.title}
         </h3>
         <p className="text-[var(--muted-foreground)] leading-relaxed line-clamp-3">

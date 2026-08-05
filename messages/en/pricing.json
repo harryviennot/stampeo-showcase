@@ -6,72 +6,77 @@
     "subtitleStandard": "Unlimited customers, scans, and devices on every plan.",
     "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
     "foundingPartner": "FOUNDING PARTNER",
-    "popular": "MOST POPULAR",
+    "popular": "Most popular",
     "perMonth": "/month",
+    "billedYearlyTotal": "Billed €{price} a year, saving €{saving}",
     "forLife": "/month for life",
     "freeMonths": "3 months free",
     "deadlineNotice": "Founding pricing closes {date} — last chance.",
+    "annotation": "we'd start here",
     "countdown": {
       "daysHours": "Founding pricing closes in {days}d {hours}h",
       "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
     },
-    "cta": "Start Free",
+    "cta": "Get started",
     "ctaSubtext": "30-day free trial · Cancel anytime",
     "starter": {
       "name": "Starter",
-      "tagline": "Everything you need to launch your loyalty program",
-      "price": "20",
-      "foundingPrice": "10",
+      "tagline": "For solo operators and single-location businesses",
       "featuresLabel": "Everything included:",
       "features": [
-        "1 active card template",
-        "Unlimited customers & scans",
+        "Unlimited customers and scans",
+        "Stamp or points cards, fully customisable",
+        "Automatic stamp and reward notifications",
+        "1 active card style",
         "2 team members (owner + 1)",
-        {
-          "text": "Automatic push notifications",
-          "tooltip": "Customers get a lock screen notification every time they earn a stamp, reach a milestone, or unlock a reward. Works via Apple Wallet and Google Wallet — no app needed."
-        },
-        "Basic dashboard & stats"
+        "Customer list, stats and lookup",
+        "Email support"
       ]
     },
     "growth": {
       "name": "Growth",
-      "tagline": "For businesses ready to scale their customer relationships",
-      "price": "40",
-      "foundingPrice": "20",
+      "tagline": "For businesses that want customers coming back",
       "featuresLabel": "Everything in Starter, plus:",
       "features": [
-        "Stamps or points (choose one)",
+        "8 broadcasts a month to all your customers",
+        "Write your own stamp and reward messages",
+        "Unlimited saved card styles",
+        "Peak hours and weekly trends",
         "Unlimited team members",
-        "Custom notification messages",
-        {
-          "text": "8 promo campaigns/month",
-          "tooltip": "Send promotional notifications to all your customers. Announce new products, happy hours, or seasonal offers — directly in their wallet."
-        },
-        {
-          "text": "Trends & analytics",
-          "tooltip": "See visit frequency, peak hours, retention rates, and customer trends. Identify your best customers and spot those at risk of leaving."
-        }
+        "See which team member made each scan"
       ]
     },
     "pro": {
       "name": "Pro",
-      "tagline": "Multi-location, segmentation, and advanced tools",
-      "price": "60",
+      "tagline": "For multi-location businesses that plan ahead",
       "featuresLabel": "Everything in Growth, plus:",
       "features": [
-        {
-          "text": "Multi-location support",
-          "tooltip": "Add multiple business addresses. Each location can scan and stamp independently. Track analytics per location."
-        },
-        {
-          "text": "Geofencing notifications",
-          "tooltip": "Customers get notified when they're near your location — 'You're 2 stamps away from a free coffee!' Available on Apple Wallet."
-        },
-        "Unlimited campaigns + segmentation",
-        "Advanced analytics & retention"
+        "Multiple locations, with stats for each",
+        "Unlimited broadcasts, with customer segmentation",
+        "Schedule broadcasts and card styles in advance",
+        "Notifications when customers are nearby (Apple Wallet)",
+        "Retention, frequency and redemption stats",
+        "Priority support"
       ]
-    }
+    },
+    "roi": {
+      "title": "Is it worth it?",
+      "subtitle": "Run the numbers.",
+      "modePrudent": "Conservative",
+      "modeOptimiste": "Optimistic",
+      "clientsLabel": "Customers per day",
+      "basketLabel": "Average basket",
+      "assumption": "Assumption: a loyalty program generates about {percent}% more visits",
+      "breakdownClients": "{clients} clients/day × {percent}% = about {extra} extra clients per day",
+      "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month",
+      "extraRevenue": "Extra revenue",
+      "perMonth": "/month",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Pays for itself",
+      "disclaimer": "Indicative estimate based on industry studies. Actual results depend on your business and how your customers adopt the program.",
+      "sources": "Sources: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
+    },
+    "billedMonthly": "Billed monthly"
   },
   "pricingPage": {
     "meta": {
@@ -79,15 +84,18 @@
       "description": "Compare Stampeo plans and features. From solo operators to multi-location businesses — find the right plan for your loyalty program."
     },
     "hero": {
-      "badge": "Plans & Pricing",
       "title": "Choose the right plan for your business",
       "subtitle": "No hidden fees. No per-customer charges. Unlimited customers on every plan."
     },
-    "foundingCallout": "Founding partners get 50% off Starter and Growth, for life.",
     "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
-    "foundingLink": "Learn more about the Founding Program",
-    "popular": "MOST POPULAR",
+    "popular": "Most popular",
     "perMonth": "/mo",
+    "billedYearlyTotal": "Billed €{price} a year, saving €{saving}",
+    "intervalMonthly": "Monthly",
+    "intervalYearly": "Yearly",
+    "yearlyBadge": "Save 20%",
+    "annotation": "we'd start here",
+    "comparisonMonthlyNote": "Prices shown monthly. Yearly billing takes 20% off every plan.",
     "forLife": "/mo for life",
     "cta": "Get started",
     "ctaSubtext": "30-day free trial · Cancel anytime",
@@ -95,36 +103,41 @@
       "name": "Starter",
       "tagline": "For solo operators and single-location businesses",
       "features": [
-        "1 active card template",
-        "Unlimited customers & scans",
+        "Unlimited customers and scans",
+        "Stamp or points cards, fully customisable",
+        "Automatic stamp and reward notifications",
+        "1 active card style",
         "2 team members (owner + 1)",
-        "Automatic push notifications",
-        "Basic dashboard & stats",
+        "Customer list, stats and lookup",
         "Email support"
-      ]
+      ],
+      "featuresLabel": "Everything included:"
     },
     "growth": {
       "name": "Growth",
-      "tagline": "For businesses with a team and a need to engage customers",
+      "tagline": "For businesses that want customers coming back",
       "features": [
-        "Everything in Starter, plus:",
-        "Stamps or points (choose one)",
+        "8 broadcasts a month to all your customers",
+        "Write your own stamp and reward messages",
+        "Unlimited saved card styles",
+        "Peak hours and weekly trends",
         "Unlimited team members",
-        "Custom notification messages",
-        "8 promo campaigns/month",
-        "Trends & analytics"
-      ]
+        "See which team member made each scan"
+      ],
+      "featuresLabel": "Everything in Starter, plus:"
     },
     "pro": {
       "name": "Pro",
-      "tagline": "Multi-location, segmentation, and advanced tools",
+      "tagline": "For multi-location businesses that plan ahead",
       "features": [
-        "Everything in Growth, plus:",
-        "Multi-location support",
-        "Geofencing notifications",
-        "Unlimited campaigns + segmentation",
-        "Advanced analytics & retention"
-      ]
+        "Multiple locations, with stats for each",
+        "Unlimited broadcasts, with customer segmentation",
+        "Schedule broadcasts and card styles in advance",
+        "Notifications when customers are nearby (Apple Wallet)",
+        "Retention, frequency and redemption stats",
+        "Priority support"
+      ],
+      "featuresLabel": "Everything in Growth, plus:"
     },
     "comparison": {
       "title": "Compare all features",
@@ -241,6 +254,10 @@
           "answer": "Absolutely. You can upgrade or downgrade at any time. When you upgrade, you get immediate access to the new features. When you downgrade, the change takes effect at the end of your current billing cycle."
         },
         {
+          "question": "Can I pay yearly?",
+          "answer": "Yes, and it takes 20% off every plan: €192 a year for Starter, which works out at €16 a month instead of €20. You can switch from monthly to yearly at any time and your year starts that day. Switching back to monthly takes effect when your paid year ends, so you never lose time you've paid for."
+        },
+        {
           "question": "Are there per-customer charges?",
           "answer": "No. Every plan includes unlimited customers and unlimited scans. Your price stays the same whether you have 10 customers or 10,000."
         },
@@ -260,6 +277,7 @@
       "subtitle": "Join the businesses building customer loyalty with Stampeo.",
       "button": "Start free trial",
       "contact": "Contact us"
-    }
+    },
+    "billedMonthly": "Billed monthly"
   }
 }

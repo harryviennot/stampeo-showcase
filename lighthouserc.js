@@ -7,7 +7,7 @@ module.exports = {
       startServerReadyTimeout: 30000,
       url: [
         'http://localhost:3000/',
-        'http://localhost:3000/programme-fondateur',
+        'http://localhost:3000/pricing',
         'http://localhost:3000/blog',
         'http://localhost:3000/features/analytiques',
       ],

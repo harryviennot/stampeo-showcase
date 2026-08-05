@@ -13,6 +13,7 @@ import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
+import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
 
 function DesktopAuthButtons({
   loading,
@@ -68,14 +69,29 @@ function DesktopAuthButtons({
   );
 }
 
-function FeaturesDropdown() {
-  const t = useTranslations("common.nav");
-  const pathname = usePathname();
-  const locale = useLocale();
+export interface NavMenuItem {
+  href: string;
+  label: string;
+  description?: string;
+}
+
+/**
+ * A nav menu that is a list of words, not a wall of icons. The label carries
+ * the meaning; the description is a quiet second line for the ones that need
+ * it. Opens on hover with a short fade and an 8px rise, the same motion the
+ * rest of the chrome uses.
+ */
+function NavDropdown({
+  label,
+  items,
+  active,
+}: {
+  label: string;
+  items: NavMenuItem[];
+  active: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const isFeatureActive = pathname.startsWith("/features/");
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -107,15 +123,15 @@ function FeaturesDropdown() {
       onMouseLeave={handleMouseLeave}
     >
       <button
-        className={`flex items-center gap-1 text-sm font-semibold transition-colors ${isFeatureActive
-          ? "text-[var(--accent)]"
-          : "text-[var(--foreground)] hover:text-[var(--accent)]"
-          }`}
+        className={`flex items-center gap-1 py-2 text-sm font-semibold transition-colors whitespace-nowrap ${
+          active
+            ? "text-[var(--accent)]"
+            : "text-[var(--foreground)] hover:text-[var(--accent)]"
+        }`}
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        aria-haspopup="true"
       >
-        {t("features")}
+        {label}
         <ChevronDownIcon
           className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
@@ -128,35 +144,30 @@ function FeaturesDropdown() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50"
+            className="absolute top-full left-0 pt-3 z-50"
           >
             <div
-              className="w-[520px] bg-white rounded-2xl shadow-xl border border-[var(--accent)]/10 p-4 grid grid-cols-2 gap-1"
+              className="w-[264px] bg-white rounded-2xl card-stamp p-2"
               role="menu"
             >
-              {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-                const slug = getLocalizedSlug(canonicalSlug, locale);
-                return (
+              {items.map((item) => (
                 <Link
-                  key={canonicalSlug}
-                  href={`/features/${slug}` as "/features/design-de-carte"}
-                  className="group flex items-start gap-3 p-3 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
+                  key={item.href}
+                  href={item.href as "/features/design-de-carte"}
+                  className="block rounded-xl px-3 py-2.5 hover:bg-[var(--cream)] transition-colors"
                   onClick={() => setOpen(false)}
                   role="menuitem"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] group-hover:scale-110 transition-transform">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-[var(--foreground)] group-hover:text-[var(--accent)] transition-colors">
-                      {t(`featuresItems.${key}.label`)}
-                    </div>
-                    <div className="text-xs text-[var(--muted-foreground)] mt-0.5 leading-snug">
-                      {t(`featuresItems.${key}.description`)}
-                    </div>
-                  </div>
-                </Link>);
-              })}
+                  <span className="block text-sm font-semibold text-[var(--foreground)]">
+                    {item.label}
+                  </span>
+                  {item.description && (
+                    <span className="block text-xs text-[var(--muted-foreground)] mt-0.5 leading-snug">
+                      {item.description}
+                    </span>
+                  )}
+                </Link>
+              ))}
             </div>
           </motion.div>
         )}
@@ -181,7 +192,7 @@ function MobileFeaturesAccordion({
         onClick={() => setOpen(!open)}
         aria-expanded={open}
       >
-        {t("features")}
+        {t("product")}
         <ChevronDownIcon
           className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
@@ -271,14 +282,25 @@ export function Header() {
   };
 
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
+
+  /* Four short words. The old nav needed "Programmes de fidélité" to fit,
+     which is why the whole bar collapsed to a burger below 1280px and
+     laptops never saw it. */
+  const productItems: NavMenuItem[] = FEATURE_ITEMS.map(({ key, canonicalSlug }) => ({
+    href: `/features/${getLocalizedSlug(canonicalSlug, locale)}`,
+    label: t(`common.nav.featuresItems.${key}.label`),
+  }));
+
+  const resourceItems: NavMenuItem[] = [
+    { href: "/blog", label: t("common.nav.blog") },
+    { href: "/changelog", label: t("common.nav.changelog") },
+    { href: "/about", label: t("common.nav.about") },
+    { href: "/contact", label: t("common.nav.contact") },
+  ];
+
   const navItems = [
-    { label: t("common.nav.loyaltyPrograms"), href: loyaltySlug },
-    { label: t("common.nav.foundingProgram"), href: locale === "en" ? "/founding-partner" : "/programme-fondateur" },
+    { label: t("common.nav.loyalty"), href: loyaltySlug },
     { label: t("common.nav.pricing"), href: "/pricing" },
-    ...(locale === "fr" || locale === "en" || locale === "es"
-      ? [{ label: t("common.nav.blog"), href: "/blog" }]
-      : []),
-    { label: t("common.nav.contact"), href: "/contact" },
   ];
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
@@ -305,7 +327,9 @@ export function Header() {
   );
 
   const [bannerDismissed, setBannerDismissed] = useState(false);
-  const bannerVisible = bannerShouldShow && !bannerDismissed;
+  // PROMO_BANNER_ENABLED is off since the founding program closed. The spacer
+  // below reads the same flag, so the header offset collapses with it.
+  const bannerVisible = PROMO_BANNER_ENABLED && bannerShouldShow && !bannerDismissed;
 
   const dismissBanner = useCallback(() => {
     setBannerDismissed(true);
@@ -313,12 +337,10 @@ export function Header() {
   }, []);
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
-  const seoFoundingSlug = locale === "en" ? "founding-partner" : "programme-fondateur";
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
-    { href: `${seoPrefix}/${seoFoundingSlug}`, label: "Founding" },
     { href: `${seoPrefix}/blog`, label: "Blog" },
     { href: `${seoPrefix}/contact`, label: "Contact" },
     { href: `${seoPrefix}/about`, label: "About" },
@@ -345,12 +367,12 @@ export function Header() {
             : "bg-transparent border-transparent"
             }`}
         >
-          <nav className="relative flex items-center justify-between px-4 lg:px-10 lg:py-5 py-3 max-w-[1400px] mx-auto">
+          <nav className="relative flex items-center justify-between px-4 sm:px-6 lg:px-8 lg:py-5 py-3 max-w-[1360px] mx-auto">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 shrink-0">
               <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
                 <StampeoLogo />
-                <span className="text-2xl font-bold gradient-text">
+                <span className="text-2xl font-bold text-[var(--foreground)]">
                   Stampeo
                 </span>
               </div>
@@ -358,9 +380,16 @@ export function Header() {
 
             {/* Desktop navigation — full row only from xl: below that the FR/ES
                 labels overflow into the logo and auth buttons, so the burger
-                menu stays on through lg. */}
-            <div className="hidden xl:flex items-center gap-6 2xl:gap-9">
-              <FeaturesDropdown />
+                menu stays on through lg.
+                Absolutely centered rather than a flex child: the auth buttons
+                are wider than the logo, so justify-between would push the links
+                left of the page centre. */}
+            <div className="hidden lg:flex items-center gap-6 xl:gap-8 lg:absolute lg:inset-y-0 lg:left-1/2 lg:-translate-x-1/2">
+              <NavDropdown
+                label={t("common.nav.product")}
+                items={productItems}
+                active={pathname.startsWith("/features/")}
+              />
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -373,10 +402,15 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+              <NavDropdown
+                label={t("common.nav.resources")}
+                items={resourceItems}
+                active={resourceItems.some((r) => isActive(r.href))}
+              />
             </div>
 
             {/* Desktop auth */}
-            <div className="hidden xl:flex items-center gap-3 shrink-0">
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
               <DesktopAuthButtons
                 loading={loading}
                 user={user}
@@ -387,7 +421,7 @@ export function Header() {
 
             {/* Mobile menu button */}
             <button
-              className="xl:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+              className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -412,7 +446,7 @@ export function Header() {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="xl:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
+                className="lg:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
               >
                 <div className="px-6 py-4">
                   <div className="flex flex-col gap-1">
@@ -421,6 +455,21 @@ export function Header() {
                       <Link
                         key={item.href}
                         href={item.href}
+                        className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
+                          ? "text-[var(--accent)] bg-[var(--accent)]/5"
+                          : "text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5"
+                          }`}
+                        onClick={closeMobileMenu}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                    {/* Resources are a dropdown on desktop; on a phone they
+                        read better as plain rows than as a second accordion. */}
+                    {resourceItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href as "/blog"}
                         className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
                           ? "text-[var(--accent)] bg-[var(--accent)]/5"
                           : "text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5"

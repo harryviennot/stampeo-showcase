@@ -553,10 +553,10 @@ export function ProChartCards() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-sm font-bold mb-6">
             {t("proAnalytics.badge")}
           </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+          <h2 className="text-h2 text-[var(--foreground)] mb-4">
             {t("proAnalytics.title")}
           </h2>
-          <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
+          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
             {t("proAnalytics.description")}
           </p>
         </ScrollReveal>

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { CTAButton } from "@/components/ui/CTAButton";
 import {
   MapPinIcon,
@@ -55,7 +56,7 @@ export function GeofencingPage() {
                   </span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] leading-[1.1] mb-6">
+                <h1 className="text-h1 text-[var(--foreground)] leading-[1.1] mb-6">
                   {tp("hero.title")}
                 </h1>
 
@@ -93,7 +94,14 @@ export function GeofencingPage() {
               delay={200}
               className="flex justify-center order-1 lg:order-2"
             >
-              <GeofencingHeroAnimation />
+              <div className="relative">
+                <GeofencingHeroAnimation />
+                {/* Margin note: no extra setup, the reminder ships in the card. */}
+                <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">
+                  <InkNote rotate={3}>{tp("hero.annotation")}</InkNote>
+                  <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
+                </div>
+              </div>
             </ScrollReveal>
           </div>
         </Container>
@@ -103,10 +111,10 @@ export function GeofencingPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-6">
+            <h2 className="text-h2 text-[var(--foreground)] mb-6">
               {tp("problem.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] leading-relaxed mb-8">
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-8">
               {tp("problem.description")}
             </p>
             <p className="text-xl sm:text-2xl font-semibold text-[var(--accent)] italic">
@@ -162,7 +170,7 @@ export function GeofencingPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)]">
+            <h2 className="text-h2 text-[var(--foreground)]">
               {tp("technical.title")}
             </h2>
           </ScrollReveal>
@@ -181,7 +189,7 @@ export function GeofencingPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">
+                    <h3 className="text-h3 text-[var(--foreground)] mb-3">
                       {item.title}
                     </h3>
                     <p className="text-[var(--muted-foreground)] leading-relaxed">

@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "../ui/Container";
 import { CTAButton } from "../ui/CTAButton";
+import { ScrollReveal } from "../ui/ScrollReveal";
+import { InkArrow, InkNote } from "../ui/InkAnnotation";
 import { CheckIcon } from "../icons";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
@@ -25,7 +27,7 @@ function SampleCard({ engine }: { engine: Exclude<Engine, "either"> }) {
     const s = STAMP_SAMPLES[0];
     return (
       <div className="w-[200px]">
-        <ScaledCardWrapper baseWidth={280} targetWidth={200}>
+        <ScaledCardWrapper size="sm">
           <WalletCard design={s.design} stamps={s.stamps} showQR={false} interactive3D />
         </ScaledCardWrapper>
       </div>
@@ -34,7 +36,7 @@ function SampleCard({ engine }: { engine: Exclude<Engine, "either"> }) {
   const p = POINTS_SAMPLES[0];
   return (
     <div className="w-[200px]">
-      <ScaledCardWrapper baseWidth={280} targetWidth={200}>
+      <ScaledCardWrapper size="sm">
         <WalletCard
           design={p.design}
           pointsBalance={p.pointsBalance}
@@ -78,12 +80,20 @@ export function EnginePicker() {
   return (
     <section id="picker" className="py-20 sm:py-28">
       <Container className="max-w-2xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+        <div className="text-center mb-6">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">{t("subtitle")}</p>
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
         </div>
+
+        {/* Margin note inviting the reader to actually play with the quiz. */}
+        <ScrollReveal className="flex justify-end pr-6 sm:pr-12 mb-1">
+          <div className="flex flex-col items-start">
+            <InkNote rotate={2}>{t("annotation")}</InkNote>
+            <InkArrow variant="downLeft" className="w-8 mt-0.5 ml-1" delay={0.4} />
+          </div>
+        </ScrollReveal>
 
         <motion.div
           layout
@@ -175,7 +185,7 @@ export function EnginePicker() {
                     <p className="text-xs font-bold uppercase tracking-wider text-[var(--muted-foreground)] mb-2">
                       {t("resultHeading")}
                     </p>
-                    <h3 className="text-2xl font-extrabold text-[var(--foreground)] mb-3">
+                    <h3 className="text-h3 text-[var(--foreground)] mb-3">
                       {t(`results.${rec.engine}.title`)}
                     </h3>
                     <p className="text-[var(--muted-foreground)] leading-relaxed max-w-md mx-auto">

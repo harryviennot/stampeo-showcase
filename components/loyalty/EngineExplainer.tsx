@@ -73,10 +73,10 @@ export async function EngineExplainer() {
     <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)] overflow-x-clip">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-14">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("engines.heading")}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">
             {t("engines.subheading")}
           </p>
         </ScrollReveal>
@@ -92,7 +92,7 @@ export async function EngineExplainer() {
               accent="#f97316"
               labels={{ how: t("engines.labelHow"), bestFor: t("engines.labelBestFor") }}
             >
-              <ScaledCardWrapper baseWidth={280} targetWidth={240}>
+              <ScaledCardWrapper size="md">
                 <WalletCard design={stamp.design} stamps={stamp.stamps} showQR={false} interactive3D />
               </ScaledCardWrapper>
             </EngineCard>
@@ -106,7 +106,7 @@ export async function EngineExplainer() {
               accent="#8b5cf6"
               labels={{ how: t("engines.labelHow"), bestFor: t("engines.labelBestFor") }}
             >
-              <ScaledCardWrapper baseWidth={280} targetWidth={240}>
+              <ScaledCardWrapper size="md">
                 <WalletCard
                   design={points.design}
                   pointsBalance={points.pointsBalance}
@@ -120,7 +120,7 @@ export async function EngineExplainer() {
         </div>
 
         <ScrollReveal variant="scale" className="mt-20 max-w-3xl mx-auto">
-          <h3 className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          <h3 className="text-center text-h2 tracking-tight text-[var(--foreground)]">
             {t("comparison.title")}
           </h3>
           <p className="text-center text-[var(--muted-foreground)] mt-2 mb-8">

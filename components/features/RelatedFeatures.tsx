@@ -12,7 +12,6 @@ import {
   BellIcon,
   ChartIcon,
   MapPinIcon,
-  StarIcon,
   SparklesIcon,
   MegaphoneIcon,
 } from "../icons";
@@ -24,7 +23,6 @@ type FeatureSlug =
   | "notifications-push"
   | "analytiques"
   | "geolocalisation"
-  | "programme-fondateur"
   | "campagnes-promotionnelles";
 
 const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>> = {
@@ -33,7 +31,6 @@ const featureNavIcons: Record<FeatureSlug, ComponentType<{ className?: string }>
   "notifications-push": BellIcon,
   "analytiques": ChartIcon,
   "geolocalisation": MapPinIcon,
-  "programme-fondateur": StarIcon,
   "campagnes-promotionnelles": MegaphoneIcon,
 };
 
@@ -47,9 +44,6 @@ export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProp
   const locale = useLocale();
 
   function getRelatedHref(relSlug: string): string {
-    if (relSlug === "programme-fondateur") {
-      return locale === "en" ? "/founding-partner" : "/programme-fondateur";
-    }
     const canonical = resolveToCanonicalSlug(relSlug);
     if (canonical) {
       return `/features/${getLocalizedSlug(canonical, locale)}`;
@@ -61,7 +55,7 @@ export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProp
     <section className={`py-16 sm:py-24 ${className}`}>
       <Container>
         <ScrollReveal className="mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 tracking-tight text-[var(--foreground)]">
             {t("relatedTitle")}
           </h2>
         </ScrollReveal>

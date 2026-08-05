@@ -24,7 +24,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/changelog", priority: 0.6, changeFrequency: "weekly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/contact", priority: 0.6, changeFrequency: "monthly" },
-    { path: "/programme-fondateur", enPath: "/founding-partner", noEs: true, priority: 0.8, changeFrequency: "monthly" },
+    // /programme-fondateur + /founding-partner are gone from the sitemap: the
+    // founding program closed and both routes now 307 to /pricing.
     { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
     { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
   ];

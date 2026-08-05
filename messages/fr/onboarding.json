@@ -149,28 +149,6 @@
       "emailTypoApply": "Utiliser {suggestion}",
       "legalNotice": "En créant votre compte, vous acceptez nos <terms>Conditions d'utilisation</terms> et reconnaissez notre <privacy>Politique de confidentialité</privacy>."
     },
-    "foundingPartner": {
-      "title": "Devenez Partenaire Fondateur",
-      "subtitle": "Aidez-nous à construire un produit que vous adorerez — et bloquez votre tarif à vie",
-      "standardTitle": "Choisissez votre plan",
-      "standardSubtitle": "30 jours d'essai gratuit. Aucun débit aujourd'hui, sans engagement.",
-      "resellerTitle": "Choisissez votre plan",
-      "resellerSubtitle": "Votre remise partenaire est appliquée automatiquement sur tous les plans",
-      "resellerBadge": "Partenaire — {discount}% de remise",
-      "valueProps": ["Fonctionnalités Growth incluses", "3 mois offerts", "Puis 20 €/mois à vie", "Canal de feedback direct avec notre équipe"],
-      "cta": "Commencer",
-      "settingUp": "Préparation de votre espace...",
-      "limitedSpots": "Places limitées en accès anticipé en France",
-      "slugTakenTitle": "Cette URL est déjà prise",
-      "slugTakenBody": "Choisissez-en une autre pour continuer — pas besoin de recommencer.",
-      "slugTakenPlaceholder": "mon-cafe",
-      "slugTakenRetry": "Réessayer avec cette URL",
-      "slugTakenCancel": "Annuler",
-      "retryTitle": "Un problème est survenu",
-      "retryBody": "Impossible de créer votre espace. Réessayez dans un instant.",
-      "retryButton": "Réessayer",
-      "legalNotice": "En confirmant votre abonnement, vous acceptez nos <terms>Conditions d'utilisation</terms> et reconnaissez notre <privacy>Politique de confidentialité</privacy>."
-    },
     "applicationSubmitted": {
       "title": "Comment nous avez-vous découverts ?",
       "heardFromSubtitle": "Une dernière question avant d'accéder à votre tableau de bord.",

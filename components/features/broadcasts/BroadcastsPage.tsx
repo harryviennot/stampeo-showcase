@@ -105,7 +105,7 @@ export function BroadcastsPage() {
         <Container className="relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollReveal>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] leading-[1.1] mb-6 text-balance">
+              <h1 className="text-h1 text-[var(--foreground)] leading-[1.1] mb-6 text-balance">
                 {tp("hero.title")}
               </h1>
 
@@ -139,10 +139,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-24 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4 text-balance">
               {tp("statBand.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] text-balance">
+            <p className="text-lead text-[var(--muted-foreground)] text-balance">
               {tp("statBand.subtitle")}
             </p>
           </ScrollReveal>
@@ -171,12 +171,12 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4">
               {tp.rich("whyNotSms.title", {
                 br: () => <br className="hidden sm:block" />,
               })}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] text-balance">
+            <p className="text-lead text-[var(--muted-foreground)] text-balance">
               {tp("whyNotSms.subtitle")}
             </p>
           </ScrollReveal>
@@ -249,12 +249,12 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4">
               {tp.rich("capabilities.title", {
                 br: () => <br className="hidden sm:block" />,
               })}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] text-balance">
+            <p className="text-lead text-[var(--muted-foreground)] text-balance">
               {tp("capabilities.subtitle")}
             </p>
           </ScrollReveal>
@@ -273,7 +273,7 @@ export function BroadcastsPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-5">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-xl font-bold text-[var(--foreground)] mb-3">
+                    <h3 className="text-h3 text-[var(--foreground)] mb-3">
                       {item.title}
                     </h3>
                     <p className="text-[var(--muted-foreground)] leading-relaxed">
@@ -291,10 +291,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4 text-balance">
               {tp("delivery.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] text-balance">
+            <p className="text-lead text-[var(--muted-foreground)] text-balance">
               {tp("delivery.subtitle")}
             </p>
           </ScrollReveal>
@@ -340,7 +340,7 @@ export function BroadcastsPage() {
                         {metric.label}
                       </span>
                     </div>
-                    <div className="text-2xl font-extrabold text-[var(--foreground)] tracking-tight">
+                    <div className="text-h3 text-[var(--foreground)] tracking-tight">
                       {metric.value.toLocaleString()}
                     </div>
                   </div>
@@ -359,10 +359,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4 text-balance">
               {tp("useCases.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] text-balance">
+            <p className="text-lead text-[var(--muted-foreground)] text-balance">
               {tp("useCases.subtitle")}
             </p>
           </ScrollReveal>
@@ -399,10 +399,10 @@ export function BroadcastsPage() {
       <section className="py-20 sm:py-28">
         <div className="max-w-[840px] mx-auto px-6">
           <ScrollReveal className="mb-12 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4 text-balance">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4 text-balance">
               {tp("faq.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] text-balance">
+            <p className="text-lead text-[var(--muted-foreground)] text-balance">
               {tp("faq.subtitle")}
             </p>
           </ScrollReveal>
