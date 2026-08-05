@@ -223,11 +223,10 @@
   },
   "variant": {
     "hero": {
-      "title": "La tarjeta de fidelidad que <accent>encaja con tu comercio.</accent>",
-      "subtitle": "Sellos para las visitas, puntos para lo que gastan. Tu tarjeta vive en Apple Wallet y Google Wallet, lista en unos minutos. Sin aplicación que descargar.",
+      "title": "La fidelidad, <accent>en su teléfono.</accent>",
+      "subtitle": "Sellos para las visitas, puntos para lo que gastan. Tu tarjeta vive en Apple Wallet y Google Wallet, lista en unos minutos. Tus clientes no descargan ninguna aplicación.",
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
-      "reassurance": "1 mes gratis · Sin compromiso",
       "tryDemoCta": "Prueba la demo",
       "annotation": "Un escaneo, un sello"
     },

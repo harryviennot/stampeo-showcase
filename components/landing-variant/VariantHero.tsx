@@ -2,8 +2,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CTAButton } from "../ui/CTAButton";
 import { Container } from "../ui/Container";
-import { InkArrow, InkNote } from "../ui/InkAnnotation";
-import { HeroWalletCard } from "./HeroWalletCard";
+import { FanParallax } from "./FanParallax";
+import { HeroCardFan } from "./HeroCardFan";
 
 /** Apple and Google publish these badges per language; use their art, not ours. */
 function walletBadges(locale: string) {
@@ -18,59 +18,36 @@ function walletBadges(locale: string) {
 
 export async function VariantHero() {
   const t = await getTranslations("variant.hero");
-  const tCommon = await getTranslations("common");
   const locale = await getLocale();
   const badges = walletBadges(locale);
 
   return (
     /* The header is fixed, so the hero needs to clear it by more than a normal
-       section's top padding or the headline sits right under the nav. */
-    <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24">
-      <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 lg:gap-16 items-center">
-          <ScrollReveal className="flex flex-col gap-8">
-            <div>
-              <h1 className="text-display mb-5">
-                {t.rich("title", {
-                  accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
-                })}
-              </h1>
+       section's top padding or the arch sits right under the nav. */
+    <section className="relative pt-24 lg:pt-28 pb-16 lg:pb-24">
+      <FanParallax>
+        <HeroCardFan />
+      </FanParallax>
 
-              <p className="text-lead text-[var(--muted-foreground)] max-w-xl">
-                {t("subtitle")}
-              </p>
-            </div>
+      {/* The copy rises into the arch so the lower cards flank the headline.
+          Its wrapper spans the full width, so it has to stay transparent to
+          the pointer or it would eat hover on the cards behind it. */}
+      <Container className="relative z-10 pointer-events-none -mt-10 lg:-mt-14 xl:-mt-24">
+        <ScrollReveal className="pointer-events-auto mx-auto max-w-2xl text-center flex flex-col items-center gap-7">
+          <div>
+            <h1 className="text-display mb-5">
+              {t.rich("title", {
+                accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
+              })}
+            </h1>
 
-            <div className="flex flex-wrap gap-4 items-center">
-              <CTAButton label={t("primaryCta")} trackAs="hero" />
-            </div>
-
-            <p className="text-sm text-[var(--muted-foreground)] font-medium">
-              {t("reassurance")}
+            <p className="text-lead text-[var(--muted-foreground)]">
+              {t("subtitle")}
             </p>
+          </div>
 
-            <div className="flex items-center gap-3 pt-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={badges.apple} alt="Apple Wallet" className="h-10 w-auto" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={badges.google} alt="Google Wallet" className="h-10 w-auto" />
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={200} className="flex flex-col items-center gap-6">
-            <div className="relative">
-              <HeroWalletCard
-                organizationName="Stampeo"
-                rewardLabel={tCommon("reward")}
-                rewardText={tCommon("rewardText")}
-              />
-              {/* Margin note pointing at the card while its stamps fill in.
-                  Hidden on mobile: the hero is tight there already. */}
-              <div className="hidden md:flex absolute -top-9 -right-6 lg:-right-14 flex-col items-start">
-                <InkNote rotate={3}>{t("annotation")}</InkNote>
-                <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
-              </div>
-            </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-4 items-center justify-center">
+            <CTAButton label={t("primaryCta")} trackAs="hero" />
             {/* The real interactive demo lives further down; this jumps to it. */}
             <a
               href="#try-it"
@@ -88,8 +65,15 @@ export async function VariantHero() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
               </svg>
             </a>
-          </ScrollReveal>
-        </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={badges.apple} alt="Apple Wallet" className="h-10 w-auto" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={badges.google} alt="Google Wallet" className="h-10 w-auto" />
+          </div>
+        </ScrollReveal>
       </Container>
     </section>
   );

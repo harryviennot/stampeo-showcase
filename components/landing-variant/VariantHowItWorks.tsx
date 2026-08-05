@@ -4,7 +4,9 @@ import { ScrollReveal } from "../ui/ScrollReveal";
 import { NumberStamp } from "../stamps/StampIcons";
 import { DoodleCard, DoodlePhoneScan, DoodleChart } from "../ui/InkDoodles";
 
-const stepColors = ["#f97316", "#ec4899", "#8b5cf6"];
+// One ink for all three steps. The previous orange/pink/violet trio implied a
+// meaning the steps do not have, and none of those hues are in the palette.
+const stepColors = ["var(--accent)", "var(--accent)", "var(--accent)"];
 
 /* One hand-sketched doodle per step; it draws itself in as the step reveals. */
 const stepDoodles = [DoodleCard, DoodlePhoneScan, DoodleChart];

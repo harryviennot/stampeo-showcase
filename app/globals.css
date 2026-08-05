@@ -649,6 +649,120 @@ body {
   }
 }
 
+/* ===== Hero card fan =====
+
+   The arch of sample cards behind the hero copy. Geometry comes in as custom
+   properties from lib/hero-fan.ts (Tailwind can't generate classes composed
+   from data), and each slot is three nested elements so the three animations
+   never write the same transform:
+
+     .fan-slot  position + scroll parallax   (no transition — driven by a var)
+     .fan-deal  the deal-in from the deck    (transition + per-card delay)
+     .fan-tilt  the resting lean             (static)
+
+   The cards are scenery, not controls: there is no hover state. Lifting one
+   invited a click that goes nowhere, and the movement competed with the
+   headline sitting in front of the arch. */
+
+/* Registered so it does NOT inherit. Custom properties inherit by default, so
+   setting the scroll position on an ancestor invalidated the computed style of
+   every node inside the fan (~200 of them) on every frame of the scroll — 170ms
+   of style recalc against 1ms of layout, which is what made the hero jitter.
+   Declared non-inheriting and written straight onto the seven slots, the
+   invalidation stops at the slot that actually uses it. */
+@property --fan-scroll {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.fan-slot {
+  --fan-x: var(--fan-x-sm);
+  --fan-y: var(--fan-y-sm);
+  --fan-r: var(--fan-r-sm);
+  --fan-w: var(--fan-w-sm);
+
+  position: absolute;
+  left: calc(var(--fan-x) * 1%);
+  /* Both axes are a share of the strip's width, which is what keeps the arc a
+     circle at every viewport. `top` in % would resolve against the strip's
+     height, so the drop is measured in cqw against the strip instead (it
+     declares container-type: inline-size). */
+  top: calc(var(--fan-y) * 1cqw);
+  width: var(--fan-w);
+  z-index: var(--fan-z, 1);
+  transform: translateX(-50%)
+    translate(calc(var(--fan-scroll, 0) * var(--fan-dx, 0px)),
+              calc(var(--fan-scroll, 0) * var(--fan-dy, 0px)))
+    rotate(calc(var(--fan-scroll, 0) * var(--fan-dr, 0deg)));
+}
+
+/* 40rem/64rem are Tailwind's sm:/lg:, which the slot visibility classes use.
+   The two must agree, or a card would resize at one width and appear at
+   another. */
+@media (min-width: 40rem) {
+  .fan-slot {
+    --fan-x: var(--fan-x-md);
+    --fan-y: var(--fan-y-md);
+    --fan-r: var(--fan-r-md);
+    --fan-w: var(--fan-w-md);
+  }
+}
+
+@media (min-width: 64rem) {
+  .fan-slot {
+    --fan-x: var(--fan-x-lg);
+    --fan-y: var(--fan-y-lg);
+    --fan-r: var(--fan-r-lg);
+    --fan-w: var(--fan-w-lg);
+  }
+}
+
+/* Cards start stacked at the middle of the strip, square to the page, then
+   deal outward. The rotation here is the negative of the resting lean the
+   .fan-tilt child already carries, so the card flies upright and lands at its
+   angle. Overshoot in the easing gives it the flick of a dealt card. */
+.fan-deal {
+  opacity: 0;
+  transform: translate(calc((50 - var(--fan-x)) * 1vw), calc(var(--fan-y) * -1cqw))
+    rotate(calc(var(--fan-r) * -1deg)) scale(0.92);
+  transition:
+    transform 0.7s cubic-bezier(0.3, 1.4, 0.4, 1) var(--fan-delay, 0s),
+    opacity 0.45s ease-out var(--fan-delay, 0s);
+}
+
+.revealed .fan-deal {
+  opacity: 1;
+  transform: none;
+}
+
+/* WalletCard's own shadow (0 10px 40px / 12%) was tuned for a card sitting
+   alone on a page. It read here only while the arch overlapped, because each
+   card cast onto the one behind it; once the cards were spaced out, that much
+   diffusion over cream is invisible, and most invisible under the dark apex
+   card, which then looks pasted flat onto the page. drop-shadow rather than
+   box-shadow so it follows the card's rounded corners, and one value for all
+   seven so no card looks more important than the business on it. */
+.fan-tilt {
+  transform: rotate(calc(var(--fan-r) * 1deg));
+  filter: drop-shadow(0 6px 12px rgb(25 18 16 / 0.08))
+    drop-shadow(0 1px 2px rgb(25 18 16 / 0.06));
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .fan-deal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Parallax is skipped in JS too; this covers the vars if they were ever set. */
+  .fan-slot {
+    transform: translateX(-50%);
+  }
+}
+
 .blog-card-3d {
   box-shadow: 0 3px 0 var(--near-black);
   border: 1.5px solid var(--near-black);

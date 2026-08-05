@@ -223,11 +223,10 @@
   },
   "variant": {
     "hero": {
-      "title": "La carte de fidélité qui <accent>colle à votre commerce.</accent>",
-      "subtitle": "Des tampons pour les visites, des points pour le montant dépensé. Votre carte vit dans Apple Wallet et Google Wallet, prête en quelques minutes. Aucune appli à télécharger.",
+      "title": "La fidélité, <accent>dans leur téléphone.</accent>",
+      "subtitle": "Des tampons pour les visites, des points pour le montant dépensé. Votre carte vit dans Apple Wallet et Google Wallet, prête en quelques minutes. Aucune application à télécharger pour vos clients.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "1 mois gratuit · Sans engagement",
       "tryDemoCta": "Essayer la démo",
       "annotation": "Un scan, un tampon"
     },

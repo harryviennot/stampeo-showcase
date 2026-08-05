@@ -223,11 +223,10 @@
   },
   "variant": {
     "hero": {
-      "title": "The loyalty card that <accent>fits how you sell.</accent>",
-      "subtitle": "Stamps for repeat visits, points for what they spend. Your card lives in Apple Wallet and Google Wallet, ready in minutes. No app to download.",
+      "title": "Loyalty, <accent>in the phone they already carry.</accent>",
+      "subtitle": "Stamps for repeat visits, points for what they spend. Your card lives in Apple Wallet and Google Wallet, ready in minutes. No app for your customers to download.",
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
-      "reassurance": "1 month free · No commitment",
       "tryDemoCta": "Try the live demo",
       "annotation": "One scan, one stamp"
     },
