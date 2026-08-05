@@ -1,6 +1,6 @@
 # Términos del servicio: Stampeo
 
-**Última actualización: 22 de julio de 2026**
+**Última actualización: 5 de agosto de 2026**
 
 ## 1. Objeto
 
@@ -19,7 +19,7 @@ Al utilizar la Plataforma, aceptas los presentes Términos en su totalidad.
 - **Tarjeta**: la tarjeta de fidelidad digital instalada en Apple Wallet o Google Wallet.
 - **Suscripción**: el plan de pago que da acceso a las funcionalidades de la Plataforma.
 - **Revendedor**: un tercero autorizado por escrito por Stampeo para gestionar programas de fidelidad por cuenta de uno o varios Usuarios Business.
-- **Socio Fundador**: un Usuario Business que se ha suscrito durante la ventana del programa Socio Fundador (véase el §5.3).
+- **Socio Fundador**: un Usuario Business que se ha suscrito durante la ventana del programa Socio Fundador, antes de su cierre (véase el §5.3).
 
 ## 3. Acceso a la Plataforma
 
@@ -51,67 +51,96 @@ El servicio incluye el diseño de la primera tarjeta de fidelidad por nuestra pa
 
 ### 5.1 Prueba gratuita
 
-Cada nuevo Usuario Business dispone de una prueba gratuita, sin compromiso y sin necesidad de tarjeta bancaria. La prueba da acceso al conjunto de las funcionalidades del plan suscrito. La duración estándar de la prueba es de **30 días**. Los Socios Fundadores (véase el §5.3) disponen de una prueba ampliada de **90 días**.
+Cada nuevo Usuario Business dispone de una **prueba gratuita de 30 días**, sin compromiso. La prueba da acceso al conjunto de las funcionalidades del plan suscrito.
 
-Al finalizar la prueba, el Usuario Business dispone de un **periodo de tolerancia de 3 días** durante el cual el panel sigue siendo plenamente funcional, con el fin de suscribir una Suscripción sin interrupción del servicio. Transcurrido ese plazo sin suscripción, el acceso pasa a **modo de solo lectura**: las operaciones de escritura (creación de clientes, adición de sellos, modificación del diseño) quedan bloqueadas, pero los datos siguen siendo accesibles y se conservan. Las Tarjetas ya distribuidas permanecen en los wallets de los clientes, pero dejan de actualizarse.
+Se solicita una tarjeta bancaria al registrarse para iniciar la prueba. No se cobra ningún importe antes de que la prueba termine: al cumplirse los 30 días, la Suscripción se inicia automáticamente a la tarifa del plan y de la periodicidad elegidos, salvo cancelación desde el panel antes de esa fecha.
+
+Cuando una cuenta no tiene ningún método de pago registrado, el Usuario Business dispone de un **periodo de tolerancia de 3 días** tras la expiración de la prueba, durante el cual el panel sigue siendo plenamente funcional, con el fin de suscribirse sin interrupción del servicio. Transcurrido ese plazo sin suscripción, el acceso pasa a **modo de solo lectura**: las operaciones de escritura (creación de clientes, adición de sellos, modificación del estilo de tarjeta) quedan bloqueadas, pero los datos siguen siendo accesibles y se conservan. Las Tarjetas ya distribuidas permanecen instaladas en Apple Wallet o Google Wallet, pero dejan de actualizarse.
 
 Una suscripción posterior restablece de forma inmediata el acceso completo.
 
 ### 5.2 Planes de suscripción
 
-Stampeo ofrece tres planes de suscripción. Los precios públicos vigentes se muestran en la página de tarifas y en el pago de Stripe en el momento de la suscripción, que son los que dan fe; la tabla siguiente resume los planes vigentes en la fecha de los presentes Términos.
+Stampeo ofrece tres planes de suscripción, cada uno disponible con **facturación mensual o anual**. La facturación anual se cobra de una sola vez por un periodo de doce meses, a una tarifa efectiva inferior a la de doce mensualidades del mismo plan.
+
+Los precios públicos vigentes para ambas periodicidades se muestran en la página de tarifas y en el pago de Stripe en el momento de la suscripción, que son los que dan fe; la tabla siguiente resume los planes vigentes en la fecha de los presentes Términos.
 
 | Plan | Características principales |
 |------|------------------------------|
-| Starter | Un estilo de tarjeta de fidelidad activo, una ubicación, equipo reducido de escáneres, clientes y escaneos ilimitados |
-| Growth | Un estilo de tarjeta de fidelidad activo, una ubicación, equipo de escáneres ampliado, campañas promocionales (cuota mensual), analítica básica (tendencias y horas punta) |
-| Pro | Todo lo incluido en Growth, con varios estilos de tarjeta activos, multiubicación, analítica avanzada (retención, frecuencia de los clientes, canje, por ubicación) y difusiones ilimitadas |
+| Starter | Un estilo de tarjeta de fidelidad activo, un establecimiento, equipo reducido de empleados, clientes y escaneos ilimitados |
+| Growth | Un estilo de tarjeta de fidelidad activo, un establecimiento, equipo de empleados ampliado, difusiones promocionales (cuota mensual), estadísticas básicas (tendencias y horas punta) |
+| Pro | Todo lo incluido en Growth, con varios estilos de tarjeta activos, multiestablecimiento, estadísticas avanzadas (retención, frecuencia de los clientes, canje de recompensas, por establecimiento) y difusiones ilimitadas |
 
 Los precios se indican con todos los impuestos incluidos. IVA no aplicable, artículo 293B del Código General Tributario francés.
 
-### 5.3 Programa Socio Fundador
+### 5.3 Programa Socio Fundador (cerrado)
 
-Hasta el 21 de julio de 2026, los nuevos Usuarios Business que se suscriban antes del cierre del programa pueden unirse al programa Socio Fundador de Stampeo. Este ofrece:
+El programa Socio Fundador está **cerrado a nuevas suscripciones desde el 5 de agosto de 2026**. Ningún nuevo Usuario Business puede unirse a él. Esta sección permanece en los presentes Términos porque Stampeo sigue respetando el programa para los Usuarios Business que se unieron mientras estuvo abierto.
 
-- Un periodo de servicio gratuito al inicio de la suscripción, tal como se muestra en el pago de Stripe
-- Una tarifa con descuento que se mantiene vigente **durante toda la duración de la suscripción activa ininterrumpida** del Usuario Business
+Para esos Usuarios Business:
+
+- La tarifa con descuento se mantiene vigente **durante toda la duración de la suscripción activa ininterrumpida**, en los planes Starter y Growth. El plan Pro se factura a la tarifa pública, también para los Socios Fundadores.
+- El descuento se aplica tanto a la facturación mensual como a la anual, y se conserva al cambiar de plan o de periodicidad dentro de los planes indicados, en las condiciones del §5.5.
+- Los Socios Fundadores están exentos de los aumentos de precio público mientras la suscripción permanezca activa sin interrupción (véase el §5.6).
 
 La ventaja de Socio Fundador está vinculada a la continuidad de la suscripción. Si un Socio Fundador cancela su suscripción o deja que esta expire y, posteriormente, vuelve a suscribirse, lo hará a la tarifa pública entonces vigente; la ventaja de Socio Fundador no se reanuda.
 
-La condición de Socio Fundador se determina en el momento de la suscripción inicial y otorga una exención de los aumentos de precio público mientras la suscripción permanezca activa sin interrupción (véase el §5.5).
-
 ### 5.4 Pago
 
-El pago se realiza mensualmente mediante tarjeta bancaria a través de nuestro proveedor de pagos Stripe. La Suscripción se renueva automáticamente cada mes en la fecha de aniversario de la suscripción. Los cambios de plan (subida o bajada) surten efecto según las reglas que se muestran en el panel en el momento del cambio.
+El pago se realiza mediante tarjeta bancaria a través de nuestro proveedor de pagos Stripe.
 
-### 5.5 Modificaciones de las tarifas
+En el momento de suscribirse, el Usuario Business elige una **periodicidad de facturación**: mensual o anual. La Suscripción se renueva automáticamente al final de cada periodo, en la fecha de aniversario de la suscripción, a la tarifa entonces aplicable al plan y a la periodicidad vigentes.
+
+Antes de cada renovación **anual**, Stampeo envía un recordatorio por correo electrónico con unos 30 días de antelación, indicando la fecha de la renovación y el importe que se cobrará. Su finalidad es dejar tiempo para cancelar la Suscripción, o para pasar a facturación mensual, antes de que la renovación surta efecto. No se envía un recordatorio equivalente para las renovaciones mensuales.
+
+El plan y la periodicidad de facturación pueden modificarse en cualquier momento, en las condiciones previstas en el §5.5.
+
+### 5.5 Cambio de plan
+
+El Usuario Business puede cambiar de plan o de periodicidad de facturación en cualquier momento desde su panel. Las reglas siguientes se aplican de forma idéntica a las suscripciones mensuales y anuales. En todos los casos, el panel muestra el importe exacto y la fecha de efecto antes de confirmar el cambio.
+
+**El paso a un plan superior** surte efecto de inmediato. La diferencia de precio correspondiente al tiempo restante del periodo en curso se calcula a prorrata y se cobra en ese momento. Las funcionalidades del nuevo plan quedan disponibles sin demora.
+
+**El paso a un plan inferior** no surte efecto de inmediato. El Usuario Business conserva su plan actual, y todas sus funcionalidades, hasta el final del periodo ya abonado. La tarifa inferior se aplica a partir de la siguiente renovación. No se cobra ni se reembolsa ningún importe en el momento de la solicitud.
+
+**El paso de la facturación mensual a la anual** surte efecto de inmediato. La tarifa anual se cobra ese mismo día, descontando un abono calculado a prorrata de la parte no utilizada del mes en curso, y un nuevo periodo de doce meses comienza en esa fecha.
+
+**El paso de la facturación anual a la mensual** surte efecto al final del periodo de doce meses ya abonado. El acceso al plan en curso se mantiene hasta esa fecha, la facturación mensual comienza a partir de ella y no se realiza ningún reembolso por el tiempo restante.
+
+Un cambio programado para una fecha posterior puede cancelarse, o sustituirse por otro cambio, en cualquier momento antes de que surta efecto, desde el panel. Un cambio programado no da derecho a ningún reembolso ni abono antes de su fecha de efecto.
+
+### 5.6 Modificaciones de las tarifas
 
 Stampeo se reserva el derecho de modificar sus tarifas. Toda modificación se notificará por correo electrónico con al menos 30 días de antelación a su entrada en vigor. El Usuario Business que no acepte la modificación puede cancelar su Suscripción antes de la fecha de efecto.
 
 Como se indica en el §5.3, los Socios Fundadores están exentos de los aumentos de precio público durante toda la duración de su suscripción activa ininterrumpida.
 
-### 5.6 Comunicaciones relacionadas con la prueba y la facturación
+### 5.7 Comunicaciones relacionadas con la prueba y la facturación
 
 Además de las notificaciones antes mencionadas, Stampeo envía los siguientes correos operativos, que forman parte integrante del servicio y no pueden desactivarse mientras la cuenta esté activa:
 
 - Avisos de expiración de la prueba (catorce, siete y dos días antes del fin de la prueba)
 - Confirmación y cancelación de la suscripción
+- Confirmación de cambio de plan, incluida la confirmación de un cambio programado para una fecha posterior
+- El recordatorio de renovación anual descrito en el §5.4, enviado unos 30 días antes de cada vencimiento anual
 - Recibos de pago y avisos de fallo de pago
 - Cambios de estado de la cuenta (por ejemplo: pendiente de confirmación, suspensión por impago)
 
 Estos correos son transaccionales y necesarios para la correcta administración de la Suscripción.
 
-### 5.7 Comunicaciones de ciclo de vida y marketing
+### 5.8 Comunicaciones de ciclo de vida y marketing
 
-Con independencia de los correos operativos del §5.6, Stampeo puede enviar a los Usuarios Business correos de ciclo de vida y marketing (orientación de incorporación y activación, recordatorios, resumen de actividad periódico, novedades de producto y mensajes de recuperación). A diferencia de los correos operativos, estos son opcionales: cada uno incluye un enlace de baja en un clic y un enlace a una página de preferencias que permite darse de baja en cualquier momento, por categoría (reenganche, marketing, novedades de producto). Darse de baja de estos no afecta a los correos operativos del §5.6, que siguen siendo necesarios para administrar la Suscripción. La base jurídica figura en el §6.1 de la Política de privacidad.
+Con independencia de los correos operativos del §5.7, Stampeo puede enviar a los Usuarios Business correos de ciclo de vida y marketing (orientación de incorporación y activación, recordatorios, resumen de actividad periódico, novedades de producto y mensajes de recuperación). A diferencia de los correos operativos, estos son opcionales: cada uno incluye un enlace de baja en un clic y un enlace a una página de preferencias que permite darse de baja en cualquier momento, por categoría (reenganche, marketing, novedades de producto). Darse de baja de estos no afecta a los correos operativos del §5.7, que siguen siendo necesarios para administrar la Suscripción. La base jurídica figura en el §6.1 de la Política de privacidad.
 
 ## 6. Cancelación
 
 ### 6.1 Por parte del Usuario Business
 
-El Usuario Business puede cancelar su Suscripción en cualquier momento desde su panel. La cancelación surte efecto al final del periodo de facturación en curso. El acceso al servicio se mantiene hasta esa fecha.
+El Usuario Business puede cancelar su Suscripción en cualquier momento desde su panel. La cancelación surte efecto al final del periodo de facturación en curso: el final del mes en curso en un plan mensual, y el final del periodo de doce meses ya abonado en un plan anual. El acceso al servicio se mantiene hasta esa fecha.
 
 No se realiza ningún reembolso prorrateado por el periodo restante.
+
+El Usuario Business con una suscripción anual que desee reducir su compromiso sin perder el acceso puede pasar a facturación mensual en lugar de cancelar, en las condiciones del §5.5. Ese cambio surte efecto igualmente al final del periodo de doce meses ya abonado.
 
 ### 6.2 Por parte de Stampeo
 
@@ -280,7 +309,7 @@ De conformidad con el artículo L221-28 del Código de Consumo francés, el dere
 
 Al suscribir una Suscripción y comenzar a utilizar la Plataforma, el Usuario Business reconoce y acepta la pérdida de su derecho de desistimiento.
 
-No obstante, la prueba gratuita de 30 días sin tarjeta bancaria permite probar el servicio sin compromiso.
+No obstante, la prueba gratuita de 30 días permite probar el servicio sin coste ni compromiso: la tarjeta bancaria solicitada al registrarse no se cobra antes del fin de la prueba, y la Suscripción puede cancelarse en cualquier momento antes de esa fecha.
 
 ## 13. Legislación aplicable y litigios
 

@@ -33,8 +33,7 @@
       },
       "related": [
         "scanner-mobile",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "gallery": {
         "title": "Quince comercios, quince estilos",
@@ -295,7 +294,8 @@
     "scanner-mobile": {
       "hero": {
         "title": "Un escaneo. Un sello. Eso es todo.",
-        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en un segundo."
+        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en un segundo.",
+      "annotation": "la aplicación de tu equipo"
       },
       "problem": {
         "title": "Sellar debería ser invisible",
@@ -465,7 +465,8 @@
       "heroBadge": "Avisos en Apple Wallet y Google Wallet",
       "hero": {
         "title": "Cada escaneo aterriza en la pantalla de bloqueo de tus clientes.",
-        "subtitle": "Cada sello, cada hito y cada recompensa lanza un aviso en el teléfono. Tu cliente ve siempre lo que acaba de pasar y a qué distancia está de su próxima recompensa."
+        "subtitle": "Cada sello, cada hito y cada recompensa lanza un aviso en el teléfono. Tu cliente ve siempre lo que acaba de pasar y a qué distancia está de su próxima recompensa.",
+      "annotation": "sin número de teléfono"
       },
       "problem": {
         "title": "Un sello sin confirmación es un sello olvidado",
@@ -585,13 +586,12 @@
       ],
       "cta": {
         "title": "Cada cliente al día, en automático",
-        "subtitle": "Los avisos transaccionales están incluidos en todos los planes. Únete al programa fundador y recompensa cada visita desde el primer día."
+        "subtitle": "Los avisos transaccionales están incluidos en todos los planes. Empieza tu mes gratis y recompensa cada visita desde el primer día."
       },
       "related": [
         "campagnes-promotionnelles",
         "scanner-mobile",
-        "analytiques",
-        "programme-fondateur"
+        "analytiques"
       ]
     },
     "analytiques": {
@@ -628,8 +628,7 @@
       },
       "related": [
         "campagnes-promotionnelles",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "custom": {
         "blindSpotCards": {
@@ -737,7 +736,8 @@
       "heroBadge": "Growth",
       "hero": {
         "title": "Recuérdales que existes. En el momento justo.",
-        "subtitle": "Cuando tu cliente pasa cerca de tu comercio, su teléfono le recuerda que tiene una tarjeta de fidelidad contigo. Sin que tú hagas nada."
+        "subtitle": "Cuando tu cliente pasa cerca de tu comercio, su teléfono le recuerda que tiene una tarjeta de fidelidad contigo. Sin que tú hagas nada.",
+      "annotation": "incluido en la tarjeta"
       },
       "problem": {
         "title": "Tu cliente fiel se olvida de ti. No es culpa suya.",
@@ -856,7 +856,7 @@
       ],
       "cta": {
         "title": "Está presente en el momento justo",
-        "subtitle": "La geolocalización está incluida en el plan Growth. Únete al programa fundador para aprovecharla ya."
+        "subtitle": "La geolocalización está incluida en el plan Growth. Empieza tu mes gratis para aprovecharla ya."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1115,7 +1115,7 @@
       },
       "cta": {
         "title": "Tu próxima difusión, en el bolsillo de tus clientes",
-        "subtitle": "Únete al programa fundador y envía tu primera difusión a la tarjeta esta semana."
+        "subtitle": "Empieza tu mes gratis y envía tu primera difusión a la tarjeta esta semana."
       },
       "related": [
         "notifications-push",
@@ -1230,23 +1230,6 @@
             ]
           },
           "closing": "Stampeo está listo para funcionar en tu comercio desde hoy. Al unirte ahora, bloqueas la mejor tarifa e influyes en lo que construimos a continuación."
-        },
-        "roi": {
-          "title": "¿Merece la pena?",
-          "subtitle": "Haz el cálculo.",
-          "modePrudent": "Prudente",
-          "modeOptimiste": "Optimista",
-          "clientsLabel": "Clientes al día",
-          "basketLabel": "Ticket medio",
-          "assumption": "Hipótesis: un programa de fidelidad genera alrededor de un {percent} % más de visitas",
-          "breakdownClients": "{clients} clientes/día × {percent} % = unos {extra} clientes más al día",
-          "breakdownRevenue": "{extra} clientes × {basket} € × 30 días = {total} €/mes",
-          "extraRevenue": "Ingresos extra",
-          "perMonth": "/mes",
-          "stampeoCost": "Stampeo",
-          "roiLabel": "Se amortiza",
-          "disclaimer": "Estimación orientativa basada en estudios del sector. Los resultados reales dependen de tu actividad y de la adopción del programa por parte de tus clientes.",
-          "sources": "Fuentes: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
         },
         "price": {
           "original": "{growthPrice} €/mes",

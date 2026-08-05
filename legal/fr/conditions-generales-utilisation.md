@@ -1,6 +1,6 @@
 # Conditions Générales d'Utilisation : Stampeo
 
-**Dernière mise à jour : 22 juillet 2026**
+**Dernière mise à jour : 5 août 2026**
 
 ## 1. Objet
 
@@ -19,7 +19,7 @@ En utilisant la Plateforme, vous acceptez les présentes CGU dans leur intégral
 - **Pass** : la carte de fidélité numérique installée dans Apple Wallet ou Google Wallet.
 - **Abonnement** : la souscription payante donnant accès aux fonctionnalités de la Plateforme.
 - **Revendeur** : un tiers autorisé par écrit par Stampeo à gérer des programmes de fidélité pour le compte d'un ou plusieurs Utilisateurs Business.
-- **Partenaire Fondateur** : un Utilisateur Business ayant souscrit pendant la fenêtre du programme Partenaire Fondateur (voir §5.3).
+- **Partenaire Fondateur** : un Utilisateur Business ayant souscrit pendant la fenêtre du programme Partenaire Fondateur, avant sa clôture (voir §5.3).
 
 ## 3. Accès à la Plateforme
 
@@ -51,67 +51,96 @@ Le service comprend la conception de la première carte de fidélité par nos so
 
 ### 5.1 Essai gratuit
 
-Chaque nouvel Utilisateur Business bénéficie d'un essai gratuit, sans engagement et sans carte bancaire requise. L'essai donne accès à l'ensemble des fonctionnalités du tier souscrit. La durée standard de l'essai est de **30 jours**. Les Partenaires Fondateurs (voir §5.3) bénéficient d'un essai prolongé de **90 jours**.
+Chaque nouvel Utilisateur Business bénéficie d'un **essai gratuit de 30 jours**, sans engagement. L'essai donne accès à l'ensemble des fonctionnalités du plan souscrit.
 
-À l'issue de l'essai, l'Utilisateur Business dispose d'une **période de tolérance de 3 jours** pendant laquelle le tableau de bord reste pleinement fonctionnel, afin de souscrire un Abonnement sans interruption du service. Passé ce délai sans souscription, l'accès bascule en **mode lecture seule** : les opérations d'écriture (création de clients, ajout de tampons, modification du design) sont bloquées, mais les données restent accessibles et conservées. Les Pass déjà distribués restent dans les wallets des clients mais ne sont plus mis à jour.
+Une carte bancaire est demandée à l'inscription pour démarrer l'essai. Aucun montant n'est débité avant la fin de l'essai : au terme des 30 jours, l'Abonnement démarre automatiquement au tarif du plan et de la périodicité choisis, sauf résiliation depuis le tableau de bord avant cette date.
+
+Lorsqu'un compte ne dispose d'aucun moyen de paiement enregistré, l'Utilisateur Business dispose d'une **période de tolérance de 3 jours** après l'expiration de l'essai, pendant laquelle le tableau de bord reste pleinement fonctionnel, afin de souscrire un Abonnement sans interruption du service. Passé ce délai sans souscription, l'accès bascule en **mode lecture seule** : les opérations d'écriture (création de clients, ajout de tampons, modification du style de carte) sont bloquées, mais les données restent accessibles et conservées. Les Pass déjà distribués restent installés dans Apple Wallet ou Google Wallet mais ne sont plus mis à jour.
 
 Une souscription ultérieure restaure instantanément l'accès complet.
 
-### 5.2 Tiers d'abonnement
+### 5.2 Plans d'abonnement
 
-Stampeo propose trois tiers d'abonnement. Les prix publics en vigueur sont affichés sur la page de tarification et dans le paiement Stripe au moment de la souscription, qui font foi ; le tableau ci-dessous résume les tiers en vigueur à la date des présentes CGU.
+Stampeo propose trois plans d'abonnement, chacun disponible avec une **facturation mensuelle ou annuelle**. La facturation annuelle est prélevée en une fois pour une période de douze mois, à un tarif effectif inférieur à celui de douze mensualités du même plan.
 
-| Tier | Caractéristiques principales |
+Les prix publics en vigueur pour les deux périodicités sont affichés sur la page de tarification et dans le paiement Stripe au moment de la souscription, qui font foi ; le tableau ci-dessous résume les plans en vigueur à la date des présentes CGU.
+
+| Plan | Caractéristiques principales |
 |------|------------------------------|
-| Starter | Un modèle de carte de fidélité actif, une localisation, petite équipe de scanners, clients et scans illimités |
-| Growth | Un modèle de carte de fidélité actif, une localisation, équipe de scanners élargie, campagnes promotionnelles (quota mensuel), analytics de base (tendances et heures de pointe) |
-| Pro | Tout ce qui est inclus dans Growth, avec modèles de carte actifs multiples, multi-localisation, analytics avancés (rétention, fréquence des clients, redemption, par localisation) et broadcasts illimités |
+| Starter | Un modèle de carte de fidélité actif, un établissement, petite équipe d'employés, clients et scans illimités |
+| Growth | Un modèle de carte de fidélité actif, un établissement, équipe d'employés élargie, diffusions promotionnelles (quota mensuel), statistiques de base (tendances et heures de pointe) |
+| Pro | Tout ce qui est inclus dans Growth, avec plusieurs modèles de carte actifs, multi-établissement, statistiques avancées (rétention, fréquence des clients, récompenses utilisées, par établissement) et diffusions illimitées |
 
 Les prix sont indiqués toutes taxes comprises. TVA non applicable, article 293B du CGI.
 
-### 5.3 Programme Partenaire Fondateur
+### 5.3 Programme Partenaire Fondateur (clôturé)
 
-Jusqu'au 21 juillet 2026, les nouveaux Utilisateurs Business qui souscrivent avant la clôture du programme peuvent rejoindre le programme Partenaire Fondateur de Stampeo. Celui-ci offre :
+Le programme Partenaire Fondateur est **clôturé aux nouvelles souscriptions depuis le 5 août 2026**. Aucun nouvel Utilisateur Business ne peut y adhérer. Cette section demeure dans les présentes CGU parce que Stampeo continue d'honorer le programme pour les Utilisateurs Business qui l'ont rejoint pendant qu'il était ouvert.
 
-- Une période de service gratuite en début d'abonnement, telle qu'affichée dans le paiement Stripe
-- Un tarif remisé qui reste en vigueur **pour toute la durée de l'abonnement actif ininterrompu** de l'Utilisateur Business
+Pour ces Utilisateurs Business :
+
+- Le tarif remisé reste en vigueur **pour toute la durée de l'abonnement actif ininterrompu**, sur les plans Starter et Growth. Le plan Pro est facturé au tarif public, y compris pour les Partenaires Fondateurs.
+- La remise s'applique aussi bien à la facturation mensuelle qu'annuelle, et est conservée lors d'un changement de plan ou de périodicité au sein des plans ci-dessus, dans les conditions du §5.5.
+- Les Partenaires Fondateurs sont exemptés des augmentations de prix public tant que l'abonnement demeure actif sans interruption (voir §5.6).
 
 L'avantage Partenaire Fondateur est lié à la continuité de l'abonnement. Si un Partenaire Fondateur résilie son abonnement ou laisse celui-ci expirer, puis re-souscrit ultérieurement, il le fera au tarif public alors en vigueur ; l'avantage Partenaire Fondateur ne reprend pas.
 
-Le statut de Partenaire Fondateur est déterminé au moment de la souscription initiale et confère une exemption des augmentations de prix public tant que l'abonnement demeure actif sans interruption (voir §5.5).
-
 ### 5.4 Paiement
 
-Le paiement est effectué mensuellement par carte bancaire via notre prestataire de paiement Stripe. L'Abonnement est renouvelé automatiquement chaque mois à la date anniversaire de la souscription. Les changements de tier (upgrade ou downgrade) prennent effet selon les règles affichées dans le tableau de bord au moment du changement.
+Le paiement est effectué par carte bancaire via notre prestataire de paiement Stripe.
 
-### 5.5 Modifications tarifaires
+À la souscription, l'Utilisateur Business choisit une **périodicité de facturation** : mensuelle ou annuelle. L'Abonnement est renouvelé automatiquement à la fin de chaque période, à la date anniversaire de la souscription, au tarif alors applicable au plan et à la périodicité en vigueur.
+
+Avant chaque renouvellement **annuel**, Stampeo envoie un rappel par email environ 30 jours à l'avance, indiquant la date du renouvellement et le montant qui sera prélevé. Ce rappel a pour objet de laisser le temps de résilier l'Abonnement, ou de basculer en facturation mensuelle, avant que le renouvellement ne prenne effet. Aucun rappel équivalent n'est envoyé pour les renouvellements mensuels.
+
+Le plan et la périodicité de facturation peuvent être modifiés à tout moment, dans les conditions prévues au §5.5.
+
+### 5.5 Changement de plan
+
+L'Utilisateur Business peut changer de plan ou de périodicité de facturation à tout moment depuis son tableau de bord. Les règles ci-dessous s'appliquent de manière identique aux abonnements mensuels et annuels. Dans tous les cas, le tableau de bord affiche le montant exact et la date d'effet avant la confirmation du changement.
+
+**Le passage à un plan supérieur** prend effet immédiatement. La différence de prix pour la durée restante de la période en cours est calculée au prorata et prélevée à ce moment. Les fonctionnalités du nouveau plan sont disponibles sans délai.
+
+**Le passage à un plan inférieur** ne prend pas effet immédiatement. L'Utilisateur Business conserve son plan actuel, et l'ensemble de ses fonctionnalités, jusqu'à la fin de la période déjà réglée. Le tarif inférieur s'applique à compter du renouvellement suivant. Aucun montant n'est prélevé ni remboursé au moment de la demande.
+
+**Le passage de la facturation mensuelle à la facturation annuelle** prend effet immédiatement. Le tarif annuel est prélevé le jour même, déduction faite d'un avoir calculé au prorata de la partie non utilisée du mois en cours, et une nouvelle période de douze mois démarre à cette date.
+
+**Le passage de la facturation annuelle à la facturation mensuelle** prend effet à la fin de la période de douze mois déjà réglée. L'accès au plan en cours est maintenu jusqu'à cette date, la facturation mensuelle démarre à compter de celle-ci, et aucun remboursement n'est effectué pour la durée restante.
+
+Un changement programmé à une date ultérieure peut être annulé, ou remplacé par un autre changement, à tout moment avant sa prise d'effet, depuis le tableau de bord. Un changement programmé n'ouvre droit à aucun remboursement ni avoir avant sa date d'effet.
+
+### 5.6 Modifications tarifaires
 
 Stampeo se réserve le droit de modifier ses tarifs. Toute modification sera notifiée par email au moins 30 jours avant son entrée en vigueur. L'Utilisateur Business qui n'accepte pas la modification peut résilier son Abonnement avant la date d'effet.
 
 Comme indiqué au §5.3, les Partenaires Fondateurs sont exemptés des augmentations de prix public pour toute la durée de leur abonnement actif ininterrompu.
 
-### 5.6 Communications liées à l'essai et à la facturation
+### 5.7 Communications liées à l'essai et à la facturation
 
 Outre les notifications précitées, Stampeo envoie les emails opérationnels suivants, qui font partie intégrante du service et ne peuvent être désactivés tant que le compte est actif :
 
 - Rappels d'expiration d'essai (quatorze, sept et deux jours avant la fin de l'essai)
 - Confirmation et annulation d'abonnement
+- Confirmation de changement de plan, y compris la confirmation d'un changement programmé à une date ultérieure
+- Le rappel de renouvellement annuel décrit au §5.4, envoyé environ 30 jours avant chaque échéance annuelle
 - Reçus de paiement et avis d'échec de paiement
 - Changements de statut du compte (par exemple : en attente de confirmation, suspension pour non-paiement)
 
 Ces emails sont transactionnels et nécessaires à la bonne administration de l'Abonnement.
 
-### 5.7 Communications de cycle de vie et marketing
+### 5.8 Communications de cycle de vie et marketing
 
-Indépendamment des emails opérationnels du §5.6, Stampeo peut adresser aux Utilisateurs Business des emails de cycle de vie et marketing (conseils de prise en main et d'activation, relances, récapitulatif d'activité périodique, nouveautés produit, et messages de reconquête). Contrairement aux emails opérationnels, ceux-ci sont facultatifs : chacun comporte un lien de désinscription en un clic et un lien vers une page de préférences permettant de se désinscrire à tout moment, par catégorie (réengagement, marketing, nouveautés produit). S'en désinscrire n'affecte pas les emails opérationnels du §5.6, qui restent nécessaires à l'administration de l'Abonnement. La base légale figure au §6.1 de la Politique de Confidentialité.
+Indépendamment des emails opérationnels du §5.7, Stampeo peut adresser aux Utilisateurs Business des emails de cycle de vie et marketing (conseils de prise en main et d'activation, relances, récapitulatif d'activité périodique, nouveautés produit, et messages de reconquête). Contrairement aux emails opérationnels, ceux-ci sont facultatifs : chacun comporte un lien de désinscription en un clic et un lien vers une page de préférences permettant de se désinscrire à tout moment, par catégorie (réengagement, marketing, nouveautés produit). S'en désinscrire n'affecte pas les emails opérationnels du §5.7, qui restent nécessaires à l'administration de l'Abonnement. La base légale figure au §6.1 de la Politique de Confidentialité.
 
 ## 6. Résiliation
 
 ### 6.1 Par l'Utilisateur Business
 
-L'Utilisateur Business peut résilier son Abonnement à tout moment depuis son tableau de bord. La résiliation prend effet à la fin de la période de facturation en cours. L'accès au service est maintenu jusqu'à cette date.
+L'Utilisateur Business peut résilier son Abonnement à tout moment depuis son tableau de bord. La résiliation prend effet à la fin de la période de facturation en cours : la fin du mois en cours pour un abonnement mensuel, et la fin de la période de douze mois déjà réglée pour un abonnement annuel. L'accès au service est maintenu jusqu'à cette date.
 
 Aucun remboursement au prorata n'est effectué pour la période restante.
+
+L'Utilisateur Business titulaire d'un abonnement annuel qui souhaite réduire son engagement sans perdre l'accès peut basculer en facturation mensuelle plutôt que de résilier, dans les conditions du §5.5. Cette bascule prend elle aussi effet à la fin de la période de douze mois déjà réglée.
 
 ### 6.2 Par Stampeo
 
@@ -280,7 +309,7 @@ Conformément à l'article L221-28 du Code de la consommation, le droit de rétr
 
 En souscrivant un Abonnement et en commençant à utiliser la Plateforme, l'Utilisateur Business reconnaît et accepte la perte de son droit de rétractation.
 
-Toutefois, l'essai gratuit de 30 jours sans carte bancaire permet de tester le service sans engagement.
+Toutefois, l'essai gratuit de 30 jours permet de tester le service sans frais ni engagement : la carte bancaire demandée à l'inscription n'est pas débitée avant la fin de l'essai, et l'Abonnement peut être résilié à tout moment avant cette date.
 
 ## 13. Droit applicable et litiges
 

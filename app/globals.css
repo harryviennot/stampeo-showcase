@@ -118,6 +118,42 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/* Type scale. One ladder for the whole site — every heading and lead paragraph
+   uses these, never a raw text-4xl/font-black combination. Sizes are fluid
+   between a 390px phone and a 1280px desktop, so there is no jump at a
+   breakpoint. Weight and tracking travel with the token: `text-h2` alone is a
+   complete section title, and adding font-extrabold on top is a bug. */
+@theme {
+  /* 40px @390 → 68px @1280. The loud moment: the hero headline and the closing
+     call to action, once each per page. Everything else stays calm so these
+     two land. */
+  --text-display: clamp(2.5rem, 1.7213rem + 3.1963vw, 4.25rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.025em;
+  --text-display--font-weight: 800;
+
+  /* 34px → 52px. Page titles (pricing, features, blog, about). */
+  --text-h1: clamp(2.125rem, 1.6247rem + 2.0537vw, 3.25rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h1--font-weight: 700;
+
+  /* 28px → 40px. Section titles. */
+  --text-h2: clamp(1.75rem, 1.4213rem + 1.3492vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h2--font-weight: 700;
+
+  /* 18px → 20px. Card and sub-section titles. */
+  --text-h3: clamp(1.125rem, 1.0908rem + 0.1404vw, 1.25rem);
+  --text-h3--line-height: 1.35;
+  --text-h3--font-weight: 600;
+
+  /* 16px → 17px. The paragraph under a heading. Body copy stays text-base. */
+  --text-lead: clamp(1rem, 0.9829rem + 0.0702vw, 1.0625rem);
+  --text-lead--line-height: 1.6;
+}
+
 body {
   font-family: var(--font-geist-sans), "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
   /* Decorative transforms (scroll-reveal translateX, rotated card fans) must
@@ -126,9 +162,11 @@ body {
   overflow-x: clip;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* No global smooth scrolling. Landing on /#faq from another page would start
+   at the top and animate the whole way down, firing every scroll-reveal in
+   between and stealing the scroll until it arrived. Anchors now land where
+   they should immediately; `scroll-mt-*` on the targets keeps them clear of
+   the fixed header. */
 
 /* Icon-library marquee: pure CSS so it runs on the compositor (no JS
    animation frames, no hydration delay). The track holds its list twice;
@@ -360,6 +398,29 @@ html {
   transform: scale(1);
 }
 
+/* Readers who ask for less motion get the finished state immediately — the
+   reveal is decoration, so it must never be the thing that makes content
+   appear. Same for the stamp/checkmark celebrations. */
+@media (prefers-reduced-motion: reduce) {
+
+  .scroll-reveal,
+  .scroll-reveal-stagger>*,
+  .scroll-reveal-left,
+  .scroll-reveal-right,
+  .scroll-reveal-scale {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms !important;
+  }
+
+  .stamp-fill-animation,
+  .stamp-poof-animation,
+  .checkmark-fade-in {
+    animation: none;
+  }
+}
+
 /* Material Symbols */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -483,6 +544,238 @@ html {
 
 .blog-highlight {
   background: linear-gradient(to top, var(--highlight-yellow) 40%, transparent 40%);
+}
+
+/* Paper grain. A single inline SVG turbulence tile, tinted almost to nothing
+   and multiplied over the cream. You should never catch it looking — it just
+   stops large flat areas reading as a blank browser window. It sits behind
+   content and ignores pointer events. */
+/* Painted straight onto the element as a background layer, not a pseudo
+   element. An overlay would need a stacking context, and forcing
+   position/z-index onto the children breaks the fixed header. The tile is
+   transparent, so whatever background-color the element carries shows
+   through. */
+.paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Perforation. The tear line on a paper loyalty card, used to separate one
+   part of the page from the next. Two thin rules with a row of punched holes
+   between them, drawn in the page background so it reads as a cut. */
+.perforation {
+  border-top: 1.5px dashed var(--near-black);
+  opacity: 0.2;
+}
+
+/* The house card: a drawn ink border with the block sitting slightly proud of
+   the page, like a stamped card on a counter. This is the brand's most
+   recognisable surface, so it belongs on things that are genuinely cards, not
+   on every container. A page where everything is outlined reads as busy and
+   the signature stops meaning anything. */
+.card-stamp {
+  box-shadow: 0 3px 0 var(--near-black);
+  border: 1.5px solid var(--near-black);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Only for cards you can click, or that reward a hover. */
+.card-stamp-lift:hover {
+  transform: translate(4px, -4px);
+  box-shadow: 0 8px 0 var(--near-black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .card-stamp,
+  .card-stamp-lift {
+    transition: none;
+  }
+
+  .card-stamp-lift:hover {
+    transform: none;
+  }
+}
+
+/* Ink annotations. Handwritten margin notes and hand-drawn arrows scribbled
+   over the page, as if someone went through a printout with a pen. Budget:
+   at most one per section, or none of them read as a human touch. */
+
+/* Caveat renders noticeably smaller than Geist at the same font-size, hence
+   the large default. */
+.ink-note {
+  font-family: var(--font-annotation), cursive;
+  font-size: 1.375rem;
+  line-height: 1.1;
+  font-weight: 600;
+  color: var(--near-black);
+}
+
+/* Handwritten figures. Same ink as .ink-note, sized for a number that has to
+   carry a section on its own. Caveat runs small and light for its point size,
+   so this needs both a larger value and more weight than the Geist heading it
+   replaces. No tabular-nums: handwriting does not line up in columns, and
+   pretending otherwise is what makes a script face look fake. */
+.ink-figure {
+  font-family: var(--font-annotation), cursive;
+  /* 28px @390 → 68px @1440, so three figures still sit in one row on a phone
+     rather than stacking and adding ~600px to a page that is already long. */
+  font-size: clamp(1.75rem, 0.821rem + 3.81vw, 4.25rem);
+  line-height: 1;
+  font-weight: 700;
+  color: var(--near-black);
+}
+
+/* Strokes carry pathLength=1 so a single dash covers the whole path; sliding
+   the offset to 0 sketches the stroke in. Triggered by the same .revealed
+   class ScrollRevealInit already toggles — no extra observer. --ink-delay
+   staggers the strokes of one drawing so it draws like a hand would. */
+.ink-draw :is(path, circle, line) {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.6s ease var(--ink-delay, 0s);
+}
+
+.revealed .ink-draw :is(path, circle, line) {
+  stroke-dashoffset: 0;
+}
+
+/* Filled shapes (the one accent element each doodle gets) fade in after
+   their outline finishes drawing. */
+.ink-draw .ink-fill {
+  fill-opacity: 0;
+  transition: fill-opacity 0.4s ease calc(var(--ink-delay, 0s) + 0.4s);
+}
+
+.revealed .ink-draw .ink-fill {
+  fill-opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .ink-draw :is(path, circle, line) {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .ink-draw .ink-fill {
+    fill-opacity: 1;
+    transition: none;
+  }
+}
+
+/* ===== Hero card fan =====
+
+   The arch of sample cards behind the hero copy. Geometry comes in as custom
+   properties from lib/hero-fan.ts (Tailwind can't generate classes composed
+   from data), and each slot is three nested elements so the three animations
+   never write the same transform:
+
+     .fan-slot  position + scroll parallax   (no transition — driven by a var)
+     .fan-deal  the deal-in from the deck    (transition + per-card delay)
+     .fan-tilt  the resting lean             (static)
+
+   The cards are scenery, not controls: there is no hover state. Lifting one
+   invited a click that goes nowhere, and the movement competed with the
+   headline sitting in front of the arch. */
+
+/* Registered so it does NOT inherit. Custom properties inherit by default, so
+   setting the scroll position on an ancestor invalidated the computed style of
+   every node inside the fan (~200 of them) on every frame of the scroll — 170ms
+   of style recalc against 1ms of layout, which is what made the hero jitter.
+   Declared non-inheriting and written straight onto the seven slots, the
+   invalidation stops at the slot that actually uses it. */
+@property --fan-scroll {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.fan-slot {
+  --fan-x: var(--fan-x-sm);
+  --fan-y: var(--fan-y-sm);
+  --fan-r: var(--fan-r-sm);
+  --fan-w: var(--fan-w-sm);
+
+  position: absolute;
+  left: calc(var(--fan-x) * 1%);
+  /* Both axes are a share of the strip's width, which is what keeps the arc a
+     circle at every viewport. `top` in % would resolve against the strip's
+     height, so the drop is measured in cqw against the strip instead (it
+     declares container-type: inline-size). */
+  top: calc(var(--fan-y) * 1cqw);
+  width: var(--fan-w);
+  z-index: var(--fan-z, 1);
+  transform: translateX(-50%)
+    translate(calc(var(--fan-scroll, 0) * var(--fan-dx, 0px)),
+              calc(var(--fan-scroll, 0) * var(--fan-dy, 0px)))
+    rotate(calc(var(--fan-scroll, 0) * var(--fan-dr, 0deg)));
+}
+
+/* 40rem/64rem are Tailwind's sm:/lg:, which the slot visibility classes use.
+   The two must agree, or a card would resize at one width and appear at
+   another. */
+@media (min-width: 40rem) {
+  .fan-slot {
+    --fan-x: var(--fan-x-md);
+    --fan-y: var(--fan-y-md);
+    --fan-r: var(--fan-r-md);
+    --fan-w: var(--fan-w-md);
+  }
+}
+
+@media (min-width: 64rem) {
+  .fan-slot {
+    --fan-x: var(--fan-x-lg);
+    --fan-y: var(--fan-y-lg);
+    --fan-r: var(--fan-r-lg);
+    --fan-w: var(--fan-w-lg);
+  }
+}
+
+/* Cards start stacked at the middle of the strip, square to the page, then
+   deal outward. The rotation here is the negative of the resting lean the
+   .fan-tilt child already carries, so the card flies upright and lands at its
+   angle. Overshoot in the easing gives it the flick of a dealt card. */
+.fan-deal {
+  opacity: 0;
+  transform: translate(calc((50 - var(--fan-x)) * 1vw), calc(var(--fan-y) * -1cqw))
+    rotate(calc(var(--fan-r) * -1deg)) scale(0.92);
+  transition:
+    transform 0.7s cubic-bezier(0.3, 1.4, 0.4, 1) var(--fan-delay, 0s),
+    opacity 0.45s ease-out var(--fan-delay, 0s);
+}
+
+.revealed .fan-deal {
+  opacity: 1;
+  transform: none;
+}
+
+/* WalletCard's own shadow (0 10px 40px / 12%) was tuned for a card sitting
+   alone on a page. It read here only while the arch overlapped, because each
+   card cast onto the one behind it; once the cards were spaced out, that much
+   diffusion over cream is invisible, and most invisible under the dark apex
+   card, which then looks pasted flat onto the page. drop-shadow rather than
+   box-shadow so it follows the card's rounded corners, and one value for all
+   seven so no card looks more important than the business on it. */
+.fan-tilt {
+  transform: rotate(calc(var(--fan-r) * 1deg));
+  filter: drop-shadow(0 6px 12px rgb(25 18 16 / 0.08))
+    drop-shadow(0 1px 2px rgb(25 18 16 / 0.06));
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .fan-deal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Parallax is skipped in JS too; this covers the vars if they were ever set. */
+  .fan-slot {
+    transform: translateX(-50%);
+  }
 }
 
 .blog-card-3d {

@@ -149,28 +149,6 @@
       "emailTypoApply": "Use {suggestion}",
       "legalNotice": "By creating your account, you agree to our <terms>Terms of Service</terms> and acknowledge our <privacy>Privacy Policy</privacy>."
     },
-    "foundingPartner": {
-      "title": "Become a Founding Partner",
-      "subtitle": "Help us build a product you'll love — and lock in pricing for life",
-      "standardTitle": "Choose your plan",
-      "standardSubtitle": "30-day free trial. No charge today, cancel anytime.",
-      "resellerTitle": "Choose your plan",
-      "resellerSubtitle": "Your partner discount is applied automatically to all plans",
-      "resellerBadge": "Partner — {discount}% off",
-      "valueProps": ["Growth features included", "3 months free", "Then €20/month for life", "Direct feedback channel with our team"],
-      "cta": "Get started",
-      "settingUp": "Setting up your space...",
-      "limitedSpots": "Limited early access spots available in France",
-      "slugTakenTitle": "That URL is already taken",
-      "slugTakenBody": "Pick a different one to continue — no need to restart.",
-      "slugTakenPlaceholder": "my-coffee-shop",
-      "slugTakenRetry": "Retry with this URL",
-      "slugTakenCancel": "Cancel",
-      "retryTitle": "Something went wrong",
-      "retryBody": "We couldn't set up your space. Try again in a moment.",
-      "retryButton": "Try again",
-      "legalNotice": "By confirming your subscription, you agree to our <terms>Terms of Service</terms> and acknowledge our <privacy>Privacy Policy</privacy>."
-    },
     "applicationSubmitted": {
       "title": "How did you find us?",
       "heardFromSubtitle": "One last question before we set up your dashboard.",

@@ -48,7 +48,7 @@ export function NotificationSequenceDemo() {
           <div className="relative z-10 flex flex-col h-full">
             {/* Mini wallet card */}
             <div className="px-3">
-              <ScaledCardWrapper baseWidth={280} targetWidth={240}>
+              <ScaledCardWrapper size="md">
                 <WalletCard
                   design={{
                     organization_name: "Mon Café",

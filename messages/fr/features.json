@@ -33,8 +33,7 @@
       },
       "related": [
         "scanner-mobile",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "gallery": {
         "title": "Quinze commerces, quinze styles",
@@ -295,7 +294,8 @@
     "scanner-mobile": {
       "hero": {
         "title": "Un scan. Un tampon. C'est tout.",
-        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en une seconde."
+        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en une seconde.",
+      "annotation": "l'appli de votre équipe"
       },
       "problem": {
         "title": "Tamponner devrait être invisible",
@@ -465,7 +465,8 @@
       "heroBadge": "Notifications Wallet",
       "hero": {
         "title": "Chaque scan atterrit sur l'écran de verrouillage de vos clients.",
-        "subtitle": "Chaque tampon, chaque jalon, chaque récompense déclenche une notification wallet. Votre client voit toujours ce qui vient de se passer et à quelle distance se trouve sa prochaine récompense."
+        "subtitle": "Chaque tampon, chaque jalon, chaque récompense déclenche une notification wallet. Votre client voit toujours ce qui vient de se passer et à quelle distance se trouve sa prochaine récompense.",
+      "annotation": "sans numéro de téléphone"
       },
       "problem": {
         "title": "Un tampon sans confirmation est un tampon oublié",
@@ -585,13 +586,12 @@
       ],
       "cta": {
         "title": "Chaque client informé, automatiquement",
-        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Rejoignez le programme fondateur et récompensez chaque visite dès le premier jour."
+        "subtitle": "Les notifications transactionnelles sont incluses dans tous les plans. Commencez votre mois gratuit et récompensez chaque visite dès le premier jour."
       },
       "related": [
         "campagnes-promotionnelles",
         "scanner-mobile",
-        "analytiques",
-        "programme-fondateur"
+        "analytiques"
       ]
     },
     "analytiques": {
@@ -628,8 +628,7 @@
       },
       "related": [
         "campagnes-promotionnelles",
-        "notifications-push",
-        "programme-fondateur"
+        "notifications-push"
       ],
       "custom": {
         "blindSpotCards": {
@@ -737,7 +736,8 @@
       "heroBadge": "Growth",
       "hero": {
         "title": "Rappelez-leur que vous existez. Au bon moment.",
-        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien."
+        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien.",
+      "annotation": "déjà inclus dans la carte"
       },
       "problem": {
         "title": "Votre client fidèle vous oublie. Ce n'est pas de sa faute.",
@@ -856,7 +856,7 @@
       ],
       "cta": {
         "title": "Soyez présent au bon moment",
-        "subtitle": "Le géofencing est inclus dans le plan Growth. Rejoignez le programme fondateur pour en bénéficier dès maintenant."
+        "subtitle": "Le géofencing est inclus dans le plan Growth. Commencez votre mois gratuit pour en profiter dès maintenant."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1115,7 +1115,7 @@
       },
       "cta": {
         "title": "Votre prochaine campagne, dans la poche de vos clients",
-        "subtitle": "Rejoignez le programme fondateur et envoyez votre première campagne wallet cette semaine."
+        "subtitle": "Commencez votre mois gratuit et envoyez votre première diffusion cette semaine."
       },
       "related": [
         "notifications-push",
@@ -1230,23 +1230,6 @@
             ]
           },
           "closing": "Stampeo est prêt à tourner dans votre commerce dès aujourd'hui. En rejoignant maintenant, vous bloquez le meilleur tarif et vous pesez sur ce qu'on construit ensuite."
-        },
-        "roi": {
-          "title": "Est-ce que ça vaut le coup ?",
-          "subtitle": "Faites le calcul.",
-          "modePrudent": "Prudent",
-          "modeOptimiste": "Optimiste",
-          "clientsLabel": "Clients par jour",
-          "basketLabel": "Panier moyen",
-          "assumption": "Hypothèse : un programme de fidélité génère environ {percent} % de visites en plus",
-          "breakdownClients": "{clients} clients/jour × {percent} % = environ {extra} clients en plus par jour",
-          "breakdownRevenue": "{extra} clients × {basket} € × 30 jours = {total} €/mois",
-          "extraRevenue": "Revenus en plus",
-          "perMonth": "/mois",
-          "stampeoCost": "Stampeo",
-          "roiLabel": "Se rembourse",
-          "disclaimer": "Estimation indicative basée sur des études sectorielles. Les résultats réels dépendent de votre activité et de l'adoption du programme par vos clients.",
-          "sources": "Sources : Observatoire de la Fidélité · Bain & Company · LSA Conso"
         },
         "price": {
           "original": "{growthPrice} €/mois",

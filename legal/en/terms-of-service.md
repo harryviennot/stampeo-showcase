@@ -1,6 +1,6 @@
 # Terms of Service: Stampeo
 
-**Last updated: July 22, 2026**
+**Last updated: August 5, 2026**
 
 ## 1. Purpose
 
@@ -19,7 +19,7 @@ By using the Platform, you agree to these Terms in their entirety.
 - **Pass**: the digital loyalty card installed in Apple Wallet or Google Wallet.
 - **Subscription**: the paid plan providing access to Platform features.
 - **Reseller**: a third party authorized in writing by Stampeo to manage loyalty programs on behalf of one or more Business Users.
-- **Founding Partner**: a Business User who subscribed during the Founding Partner program window (see §5.3).
+- **Founding Partner**: a Business User who subscribed during the Founding Partner program window, before the program closed (see §5.3).
 
 ## 3. Access to the Platform
 
@@ -49,15 +49,19 @@ Stampeo provides businesses with a platform to:
 
 ### 5.1 Free Trial
 
-Each new Business User receives a free trial, with no commitment and no credit card required. The trial provides access to all features of the selected tier. The standard trial duration is **30 days**. Founding Partners (see §5.3) receive an extended trial of **90 days**.
+Each new Business User receives a **30-day free trial** with no commitment. The trial provides access to all features of the selected tier.
 
-At the end of the trial, the Business User has a **3-day grace period** during which the dashboard remains fully functional, allowing subscription without service interruption. After the grace period, if no subscription has been set up, access switches to **read-only mode**: write operations (customer creation, stamp addition, design changes) are blocked, but data remains accessible and is preserved. Passes already installed in customer wallets remain present but are no longer updated.
+A payment card is requested at signup in order to start the trial. No amount is charged before the trial ends: at the end of the 30 days, the Subscription starts automatically at the price of the selected tier and cadence, unless it has been cancelled beforehand from the dashboard.
+
+Where an account has no payment method on file, the Business User has a **3-day grace period** after trial expiry during which the dashboard remains fully functional, allowing subscription without service interruption. After the grace period, if no subscription has been set up, access switches to **read-only mode**: write operations (customer creation, stamp addition, design changes) are blocked, but data remains accessible and is preserved. Passes already installed in customer wallets remain present but are no longer updated.
 
 Subscribing later instantly restores full access.
 
 ### 5.2 Subscription Tiers
 
-Stampeo offers three subscription tiers. Current public pricing is shown on the pricing page and in the Stripe checkout at the moment of purchase, which is the authoritative source; the table below summarizes the tiers in effect at the date of these Terms.
+Stampeo offers three subscription tiers, each available with **monthly or yearly billing**. Yearly billing is charged once for a twelve-month period, at a lower effective rate than twelve monthly payments of the same tier.
+
+Current public pricing for both cadences is shown on the pricing page and in the Stripe checkout at the moment of purchase, which is the authoritative source; the table below summarizes the tiers in effect at the date of these Terms.
 
 | Tier | Key Features |
 |------|-------------|
@@ -67,49 +71,74 @@ Stampeo offers three subscription tiers. Current public pricing is shown on the 
 
 Prices are all-inclusive. VAT not applicable, Article 293B of the French Tax Code.
 
-### 5.3 Founding Partner Program
+### 5.3 Founding Partner Program (closed)
 
-Until July 21, 2026, new Business Users who subscribe before the program closes may join Stampeo's Founding Partner program. The Founding Partner program provides:
+The Founding Partner program **closed to new sign-ups on August 5, 2026**. No new Business User can join it. This section remains in these Terms because Stampeo continues to honour the program for the Business Users who joined while it was open.
 
-- A period of free service at the beginning of the subscription, as displayed in the Stripe checkout
-- A discounted price that remains in effect **for the lifetime of the Business User's uninterrupted active subscription**
+For those Business Users:
+
+- The discounted price remains in effect **for the lifetime of the Business User's uninterrupted active subscription**, on the Starter and Growth tiers. The Pro tier is charged at the public price, including for Founding Partners.
+- The discount applies to both monthly and yearly billing, and is preserved through a change of tier or billing cadence within the tiers above, under the conditions of §5.5.
+- Founding Partners are exempt from future public-price increases for as long as the subscription remains continuously active (see §5.6).
 
 The Founding Partner benefit is tied to continuity of subscription. If a Founding Partner cancels or allows their subscription to lapse, and subsequently re-subscribes, they will do so at the public price then in effect; the Founding Partner benefit does not resume.
 
-Founding Partner status is determined at the time of the original subscription and is exempt from future public-price increases for as long as the subscription remains continuously active (see §5.4).
-
 ### 5.4 Payment
 
-Payment is made monthly by credit card via our payment processor Stripe. Subscriptions are automatically renewed each month on the anniversary date. Tier changes (upgrades or downgrades) take effect according to the rules shown in the dashboard at the moment of change.
+Payment is made by credit card via our payment processor Stripe.
 
-### 5.5 Price Changes
+At subscription, the Business User chooses a **billing cadence**: monthly or yearly. The Subscription renews automatically at the end of each period, on the anniversary of the subscription date, at the price then applicable to the tier and cadence in effect.
+
+Before each **yearly** renewal, Stampeo sends a reminder by email approximately 30 days in advance, stating the renewal date and the amount that will be charged. This is intended to leave time to cancel the Subscription, or to switch to monthly billing, before the renewal takes effect. No equivalent reminder is sent for monthly renewals.
+
+The tier and the billing cadence may be changed at any time, under the conditions set out in §5.5.
+
+### 5.5 Changing Your Plan
+
+A Business User may change tier or billing cadence at any time from their dashboard. The rules below apply identically to monthly and yearly subscriptions. In every case, the dashboard displays the exact amount and the effective date before the change is confirmed.
+
+**Moving to a higher tier** takes effect immediately. The price difference for the remainder of the current period is calculated pro rata and charged at that moment. The features of the new tier are available straight away.
+
+**Moving to a lower tier** does not take effect immediately. The Business User keeps their current tier, and all of its features, until the end of the period already paid for. The lower price applies from the next renewal onwards. Nothing is charged and nothing is refunded at the moment of the request.
+
+**Switching from monthly to yearly billing** takes effect immediately. The yearly price is charged that day, less a pro rata credit for the unused part of the current month, and a new twelve-month period starts on that date.
+
+**Switching from yearly to monthly billing** takes effect at the end of the twelve-month period already paid for. Access to the current tier is maintained until that date, monthly billing begins from it, and no refund is issued for the remaining time.
+
+A change scheduled for a later date may be cancelled, or replaced by a different change, at any time before it takes effect, from the dashboard. A scheduled change gives rise to no refund and no credit before its effective date.
+
+### 5.6 Price Changes
 
 Stampeo reserves the right to change its prices. Any change will be notified by email at least 30 days before taking effect. Business Users who do not accept the change may cancel their Subscription before the effective date.
 
 As stated in §5.3, Founding Partners are exempt from public-price increases for the lifetime of their uninterrupted active subscription.
 
-### 5.6 Trial and Billing Communications
+### 5.7 Trial and Billing Communications
 
 In addition to the notices above, Stampeo sends the following operational emails, which are part of the service and are not subject to opt-out while an account is active:
 
 - Trial expiry warnings (fourteen, seven, and two days before trial end)
 - Subscription confirmation and cancellation notices
+- Plan-change confirmations, including confirmation of a change scheduled to take effect at a later date
+- The annual renewal notice described in §5.4, sent approximately 30 days before each yearly renewal
 - Payment receipts and payment failure notices
 - Account status changes (e.g. awaiting confirmation, suspension for non-payment)
 
 These emails are transactional and are required for the proper administration of the Subscription.
 
-### 5.7 Marketing and lifecycle communications
+### 5.8 Marketing and lifecycle communications
 
-Separately from the operational emails in §5.6, Stampeo may send Business Users lifecycle and marketing emails (activation and onboarding guidance, re-engagement reminders, a periodic activity digest, product updates, and win-back messages). Unlike operational emails, these are optional: each one includes a one-click unsubscribe link and a link to a preferences page where you can opt out by category (re-engagement, marketing, product updates) at any time. Opting out of these does not affect the operational emails in §5.6, which remain necessary to administer your Subscription. See Privacy Policy §6.1 for the legal basis.
+Separately from the operational emails in §5.7, Stampeo may send Business Users lifecycle and marketing emails (activation and onboarding guidance, re-engagement reminders, a periodic activity digest, product updates, and win-back messages). Unlike operational emails, these are optional: each one includes a one-click unsubscribe link and a link to a preferences page where you can opt out by category (re-engagement, marketing, product updates) at any time. Opting out of these does not affect the operational emails in §5.7, which remain necessary to administer your Subscription. See Privacy Policy §6.1 for the legal basis.
 
 ## 6. Cancellation
 
 ### 6.1 By the Business User
 
-Business Users may cancel their Subscription at any time from their dashboard. Cancellation takes effect at the end of the current billing period. Access to the service is maintained until that date.
+Business Users may cancel their Subscription at any time from their dashboard. Cancellation takes effect at the end of the current billing period: the end of the current month on a monthly plan, and the end of the twelve-month period already paid for on a yearly plan. Access to the service is maintained until that date.
 
 No pro-rata refunds are provided for the remaining period.
+
+A Business User on a yearly plan who wishes to reduce their commitment without losing access may switch to monthly billing instead of cancelling, under §5.5. That switch also takes effect at the end of the twelve-month period already paid for.
 
 ### 6.2 By Stampeo
 
@@ -272,7 +301,7 @@ In accordance with Article L221-28 of the French Consumer Code, the right of wit
 
 By subscribing and beginning to use the Platform, the Business User acknowledges and accepts the loss of their right of withdrawal.
 
-However, the 30-day free trial without credit card allows testing the service with no commitment.
+However, the 30-day free trial allows the service to be tested with no charge and no commitment: the card requested at signup is not debited before the end of the trial, and the Subscription may be cancelled at any time before that date.
 
 ## 13. Governing Law and Disputes
 

@@ -40,10 +40,10 @@ export async function CardDesignPageContent() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: text */}
             <ScrollReveal>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] mb-6">
+              <h1 className="text-h1 text-[var(--foreground)] mb-6">
                 {t("design-de-carte.hero.title")}
               </h1>
-              <p className="text-lg sm:text-xl text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-xl">
+              <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-xl">
                 {t("design-de-carte.hero.subtitle")}
               </p>
               <CTAButton label={tb("startFree")} />
@@ -61,10 +61,10 @@ export async function CardDesignPageContent() {
       <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
         <Container>
           <ScrollReveal className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-6">
+            <h2 className="text-h2 text-[var(--foreground)] mb-6">
               {t("design-de-carte.problem.title")}
             </h2>
-            <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
               {t("design-de-carte.problem.description")}
             </p>
           </ScrollReveal>
@@ -99,10 +99,10 @@ export async function CardDesignPageContent() {
       <section className="py-16 sm:py-24 bg-[var(--blog-bg-alt)]">
         <Container className="max-w-3xl">
           <ScrollReveal className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)]">
+            <h2 className="text-h2 text-[var(--foreground)]">
               {t("design-de-carte.faq.title")}
             </h2>
-            <p className="mt-5 text-lg text-[var(--muted-foreground)]">
+            <p className="mt-5 text-lead text-[var(--muted-foreground)]">
               {t("design-de-carte.faq.subtitle")}
             </p>
           </ScrollReveal>

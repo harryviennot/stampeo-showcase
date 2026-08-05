@@ -3,6 +3,7 @@
     "notFound": {
       "title": "Commerce introuvable",
       "description": "Nous n'avons pas trouvé le commerce que vous cherchez. Le lien est peut-être incorrect ou le commerce a été supprimé.",
+      "annotation": "aucun tampon ici",
       "backToStampeo": "Aller sur Stampeo"
     }
   }

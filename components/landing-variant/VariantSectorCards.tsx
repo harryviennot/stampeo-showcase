@@ -161,16 +161,16 @@ export async function VariantSectorCards() {
   });
 
   return (
-    <section className="py-20 sm:py-28 lg:py-32 relative">
+    <section className="py-16 lg:py-24 relative">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-14">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t.rich("title", {
               br: () => <br className="hidden md:block" />,
               mbr: () => <br className="md:hidden" />,
             })}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">
             {t.rich("subtitle", {
               br: () => <br className="hidden md:block" />,
             })}

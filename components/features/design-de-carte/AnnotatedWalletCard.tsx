@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { InkNote } from "@/components/ui/InkAnnotation";
 import { Segmented } from "@/components/ui/Segmented";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
@@ -25,6 +26,25 @@ const ANNOTATIONS: Annotation[] = [
   { label: "reward", cardX: 15, cardY: 50, side: "left" },
   { label: "qrCode", cardX: 85, cardY: 76, side: "right" },
 ];
+
+/* Hand-drawn connector stroke between a label and the card, in place of the
+   old gradient hairline. Flipped for right-side labels so both sides lean
+   toward the card. */
+function InkConnector({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 40 12"
+      fill="none"
+      stroke="var(--near-black)"
+      strokeWidth={2}
+      strokeLinecap="round"
+      className={`ink-draw w-9 flex-shrink-0 ${flip ? "-scale-x-100" : ""}`}
+      aria-hidden
+    >
+      <path d="M2 7 C14 2 26 10 38 6" pathLength={1} />
+    </svg>
+  );
+}
 
 function DesktopAnnotations({ labels }: { labels: string[] }) {
   const isMounted = useSyncExternalStore(
@@ -70,35 +90,12 @@ function DesktopAnnotations({ labels }: { labels: string[] }) {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.3 + i * 0.12 }}
           >
-            <div className="flex items-center gap-2">
-              {!isLeft && (
-                <div
-                  className="h-px flex-shrink-0"
-                  style={{
-                    width: 30,
-                    background: "linear-gradient(to right, var(--accent), transparent)",
-                  }}
-                />
-              )}
-              <span
-                className="whitespace-nowrap px-3 py-1.5 rounded-lg text-xs font-bold"
-                style={{
-                  background: "var(--accent)",
-                  color: "#fff",
-                  boxShadow: "0 2px 8px rgba(249, 115, 22, 0.3)",
-                }}
-              >
+            <div className="flex items-center gap-1.5">
+              {!isLeft && <InkConnector flip />}
+              <InkNote rotate={i % 2 ? 2 : -2} className="whitespace-nowrap">
                 {labels[i]}
-              </span>
-              {isLeft && (
-                <div
-                  className="h-px flex-shrink-0"
-                  style={{
-                    width: 30,
-                    background: "linear-gradient(to left, var(--accent), transparent)",
-                  }}
-                />
-              )}
+              </InkNote>
+              {isLeft && <InkConnector />}
             </div>
           </motion.div>
         );
@@ -226,10 +223,10 @@ export function AnnotatedWalletCard() {
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+          <h2 className="text-h2 text-[var(--foreground)] mb-4">
             {t("title")}
           </h2>
-          <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
+          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
             {t("description")}
           </p>
         </ScrollReveal>

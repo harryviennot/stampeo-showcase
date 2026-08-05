@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 22 de julio de 2026**
+**Última actualización: 5 de agosto de 2026**
 
 ## 1. Introducción
 
@@ -135,7 +135,7 @@ Utilizamos los datos recogidos para:
 - Generar y actualizar las tarjetas del wallet
 - Enviar notificaciones de fidelidad (sellos, recompensas)
 - Gestionar las cuentas, las suscripciones y la facturación
-- Enviar correos transaccionales y operativos (confirmación de cuenta, recuperación de tarjeta, notificaciones relacionadas con la prueba y la facturación; véanse los Términos del servicio §5.5)
+- Enviar correos transaccionales y operativos (confirmación de cuenta, recuperación de tarjeta, notificaciones relacionadas con la prueba, confirmaciones de cambio de plan, el recordatorio enviado antes de cada renovación anual y otras notificaciones de facturación; véanse los Términos del servicio §5.7)
 - Producir estadísticas anonimizadas para los comercios
 - Producir estadísticas internas agregadas sobre el uso de la Plataforma en el conjunto de los comercios, detectar abusos y priorizar las mejoras
 - Enviar a los usuarios Business un número limitado de correos de ciclo de vida y marketing, sujetos a la oposición descrita en el §6.1
@@ -148,7 +148,7 @@ Utilizamos los datos recogidos para:
 Además de los correos transaccionales y operativos enumerados anteriormente, enviamos a los usuarios Business un número limitado de correos de ciclo de vida y marketing: orientación de incorporación y activación, recordatorios cuando una cuenta se crea pero aún no se utiliza, un resumen de actividad periódico, anuncios de novedades de producto y mensajes de recuperación tras la cancelación.
 
 - **Base jurídica**: nuestro interés legítimo en ayudar a los usuarios Business a sacar partido de la Plataforma y en promocionar las funcionalidades de un servicio que ya utilizan (artículo 6.1.f del RGPD), apoyándonos para la prospección en el «soft opt-in» entre profesionales previsto por la Directiva ePrivacy y el artículo L34-5 de la ley francesa LCEN.
-- **Oposición**: cada uno de estos correos incluye un enlace de baja en un clic y un enlace a una página de preferencias que permite al usuario Business darse de baja de forma independiente por categoría: reenganche, marketing y novedades de producto. Los correos transaccionales y operativos descritos en el §5.6 de los Términos del servicio quedan excluidos de esta oposición porque son necesarios para administrar la cuenta.
+- **Oposición**: cada uno de estos correos incluye un enlace de baja en un clic y un enlace a una página de preferencias que permite al usuario Business darse de baja de forma independiente por categoría: reenganche, marketing y novedades de producto. Los correos transaccionales y operativos descritos en el §5.7 de los Términos del servicio quedan excluidos de esta oposición porque son necesarios para administrar la cuenta.
 - Para medir y mejorar estas comunicaciones, registramos los eventos de interacción descritos en el §3.4.
 
 Esto se refiere únicamente a los correos que Stampeo envía a sus propios usuarios Business. Es distinto de las notificaciones del wallet que un comercio envía a sus clientes finales, tratadas en el §7.

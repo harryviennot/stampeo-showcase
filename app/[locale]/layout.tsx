@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Caveat, Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
@@ -17,6 +17,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+/* Handwriting face for ink annotations only (.ink-note), never for UI text.
+   latin-ext covers œ and the Spanish accents. */
+const caveat = Caveat({
+  variable: "--font-annotation",
+  subsets: ["latin", "latin-ext"],
 });
 
 export function generateStaticParams() {
@@ -89,7 +96,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} antialiased`}
       >
         <ScrollRevealInit />
         <NextIntlClientProvider>
