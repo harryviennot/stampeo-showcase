@@ -4,7 +4,7 @@
  * URL (which Google, crawling from the US, would only ever see one side of).
  *
  * A pilot renders the same VariantLanding as /en, with a `market` that overrides
- * the country-specific bits (currency wording, testimonials). The clean URLs
+ * the country-specific bits (currency wording, trust strip). The clean URLs
  * (/uk, /us) are served by a middleware rewrite to the English route so they
  * keep lang=en and never 307 to /en/uk for English visitors.
  *
@@ -23,8 +23,6 @@ export interface MarketConfig {
   ogLocale: string;
   /** Currency shown in market-tuned copy. Pricing localization is a follow-up. */
   currency: { symbol: string; code: string };
-  /** Which testimonials set VariantTestimonials should show. */
-  testimonials: "base" | "us";
   /** Whether to show the "Made in Europe · GDPR" trust strip. Off outside
    *  Europe (e.g. US), where it isn't a selling point. */
   europeTrust: boolean;
@@ -38,7 +36,6 @@ export const MARKETS: Record<Market, MarketConfig> = {
     path: "/en",
     ogLocale: "en_US",
     currency: { symbol: "€", code: "EUR" },
-    testimonials: "base",
     europeTrust: true,
     label: "int",
   },
@@ -47,7 +44,6 @@ export const MARKETS: Record<Market, MarketConfig> = {
     path: "/uk",
     ogLocale: "en_GB",
     currency: { symbol: "£", code: "GBP" },
-    testimonials: "base",
     europeTrust: true,
     label: "uk",
   },
@@ -56,7 +52,6 @@ export const MARKETS: Record<Market, MarketConfig> = {
     path: "/us",
     ogLocale: "en_US",
     currency: { symbol: "$", code: "USD" },
-    testimonials: "us",
     europeTrust: false,
     label: "us",
   },

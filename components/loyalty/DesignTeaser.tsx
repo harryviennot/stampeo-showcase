@@ -2,6 +2,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
+import { InkArrow, InkNote } from "../ui/InkAnnotation";
 import { ArrowRightIcon } from "../icons";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
@@ -26,42 +27,49 @@ export async function DesignTeaser() {
     <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)] overflow-hidden">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">{t("subtitle")}</p>
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
         </ScrollReveal>
 
         {/* Fan of sample cards, pure decoration for the link below */}
         <ScrollReveal delay={120}>
-          <div
-            className="mt-12 flex items-center justify-center"
-            aria-hidden="true"
-          >
-            <div className="w-[135px] sm:w-[230px] -mr-12 -rotate-6 translate-y-3 opacity-90">
-              <ScaledCardWrapper baseWidth={230}>
-                <WalletCard
-                  design={ring.design}
-                  pointsBalance={ring.pointsBalance}
-                  pointsRewards={ring.pointsRewards}
-                  showQR={false}
-                />
-              </ScaledCardWrapper>
+          <div className="relative mt-12">
+            {/* Margin note over the fan, tying back to the 3-minute promise. */}
+            <div className="hidden sm:flex absolute -top-6 right-[6%] lg:right-[22%] flex-col items-start z-20">
+              <InkNote rotate={3}>{t("annotation")}</InkNote>
+              <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.4} />
             </div>
-            <div className="w-[180px] sm:w-[250px] relative z-10">
-              <ScaledCardWrapper baseWidth={250}>
-                <WalletCard design={stamp.design} stamps={stamp.stamps} showQR={false} />
-              </ScaledCardWrapper>
-            </div>
-            <div className="w-[135px] sm:w-[230px] -ml-12 rotate-6 translate-y-3 opacity-90">
-              <ScaledCardWrapper baseWidth={230}>
-                <WalletCard
-                  design={points.design}
-                  pointsBalance={points.pointsBalance}
-                  pointsRewards={points.pointsRewards}
-                  showQR={false}
-                />
-              </ScaledCardWrapper>
+            <div
+              className="flex items-center justify-center"
+              aria-hidden="true"
+            >
+              <div className="w-[135px] sm:w-[230px] -mr-12 -rotate-6 translate-y-3 opacity-90">
+                <ScaledCardWrapper baseWidth={230}>
+                  <WalletCard
+                    design={ring.design}
+                    pointsBalance={ring.pointsBalance}
+                    pointsRewards={ring.pointsRewards}
+                    showQR={false}
+                  />
+                </ScaledCardWrapper>
+              </div>
+              <div className="w-[180px] sm:w-[250px] relative z-10">
+                <ScaledCardWrapper baseWidth={250}>
+                  <WalletCard design={stamp.design} stamps={stamp.stamps} showQR={false} />
+                </ScaledCardWrapper>
+              </div>
+              <div className="w-[135px] sm:w-[230px] -ml-12 rotate-6 translate-y-3 opacity-90">
+                <ScaledCardWrapper baseWidth={230}>
+                  <WalletCard
+                    design={points.design}
+                    pointsBalance={points.pointsBalance}
+                    pointsRewards={points.pointsRewards}
+                    showQR={false}
+                  />
+                </ScaledCardWrapper>
+              </div>
             </div>
           </div>
         </ScrollReveal>

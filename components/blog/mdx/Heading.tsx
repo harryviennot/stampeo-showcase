@@ -1,8 +1,8 @@
 import type { ComponentPropsWithoutRef } from "react";
 
 const styles: Record<number, string> = {
-  2: "text-[1.875rem] md:text-[2.25rem] lg:text-[3rem] font-extrabold text-[var(--near-black)] tracking-tight leading-[1.1] mt-12 mb-2 [&>a]:text-inherit [&>a]:no-underline",
-  3: "text-[1.5rem] md:text-[1.875rem] lg:text-[2.25rem] font-extrabold text-[var(--near-black)] tracking-tight leading-[1.1] mt-8 mb-1.5 [&>a]:text-inherit [&>a]:no-underline",
+  2: "text-h2 text-[var(--near-black)] mt-12 mb-2 [&>a]:text-inherit [&>a]:no-underline",
+  3: "text-h3 text-[var(--near-black)] mt-8 mb-1.5 [&>a]:text-inherit [&>a]:no-underline",
 };
 
 export function Heading({

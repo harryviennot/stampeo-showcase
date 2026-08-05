@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: July 22, 2026**
+**Last updated: August 5, 2026**
 
 ## 1. Introduction
 
@@ -26,7 +26,7 @@ Each business chooses what information to collect from its customers (anonymous,
 
 Authorized Stampeo personnel may, on a strictly limited basis, access a Business User's dashboard for the sole purpose of providing technical or commercial support, debugging a reported issue, or fulfilling a legal obligation. Such access:
 
-- is **read-only** — no data can be modified, created or deleted during the session;
+- is **read-only**: no data can be modified, created or deleted during the session;
 - may be granted in the context of any business user role (owner, administrator, or scanner), and may be scoped to either a chosen role or a specific named user, in order to faithfully reproduce role-specific issues;
 - triggers an automatic email notification to the **business owner** at session start, regardless of which role or user was targeted;
 - is limited to a maximum duration of **60 minutes**, after which the session expires automatically;
@@ -135,7 +135,7 @@ We use collected data to:
 - Generate and update wallet passes
 - Send loyalty notifications (stamps, rewards)
 - Manage accounts, subscriptions, and billing
-- Send transactional and operational emails (account confirmation, pass recovery, trial and billing notifications; see Terms of Service §5.5)
+- Send transactional and operational emails (account confirmation, pass recovery, trial notifications, plan-change confirmations, the notice sent before each yearly subscription renewal, and other billing notifications; see Terms of Service §5.7)
 - Produce anonymized statistics for businesses
 - Produce aggregate, internal product analytics to understand how the Platform is used across all businesses, detect abuse, and prioritize improvements
 - Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
@@ -148,7 +148,7 @@ We **never sell** personal data. We perform **no cross-business tracking**: a cu
 Beyond the transactional and operational emails listed above, we send Business Users a limited number of lifecycle and marketing emails: onboarding and activation guidance, re-engagement reminders when an account is created but not yet used, a periodic activity digest, product-update announcements, and win-back messages after cancellation.
 
 - **Legal basis:** our legitimate interest in helping Business Users get value from the Platform and in promoting features of a service they already use (GDPR Art. 6(1)(f)), relying for prospecting on the business-to-business "soft opt-in" permitted by the ePrivacy Directive and French LCEN Art. L34-5.
-- **Opt-out:** every such email carries a one-click unsubscribe link and a link to a preferences page where Business Users can opt out independently by category — re-engagement, marketing, and product updates. The transactional and operational emails described in Terms of Service §5.6 are excluded from this opt-out because they are required to administer the account.
+- **Opt-out:** every such email carries a one-click unsubscribe link and a link to a preferences page where Business Users can opt out independently by category: re-engagement, marketing, and product updates. The transactional and operational emails described in Terms of Service §5.7 are excluded from this opt-out because they are required to administer the account.
 - To measure and improve these communications we record the engagement events described in §3.4.
 
 This applies only to emails Stampeo sends to its own Business Users. It is separate from the wallet notifications a business sends to its End Customers, which are covered in §7.

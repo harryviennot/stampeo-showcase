@@ -109,7 +109,7 @@ export function EmailPreferencesClient() {
           <p className="text-xs font-bold uppercase tracking-[2px] text-[var(--accent)] mb-3">
             {t("title")}
           </p>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-4">
+          <h1 className="text-h2 tracking-tight leading-tight mb-4">
             {t("headline")}
           </h1>
           <p className="text-base text-[var(--muted-foreground)] leading-relaxed">

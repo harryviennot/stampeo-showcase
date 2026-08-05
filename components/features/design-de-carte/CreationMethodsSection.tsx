@@ -588,10 +588,10 @@ export function CreationMethodsSection() {
     <section className="py-16 sm:py-24">
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+          <h2 className="text-h2 text-[var(--foreground)] mb-4">
             {t("sectionTitle")}
           </h2>
-          <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
+          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
             {t("sectionSubtitle")}
           </p>
         </ScrollReveal>

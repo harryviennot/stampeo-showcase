@@ -27,12 +27,12 @@ export async function LoyaltyProgramsPage() {
             <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-6">
               {t("hero.badge")}
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight text-[var(--foreground)]">
+            <h1 className="text-h1 text-[var(--foreground)]">
               {t.rich("hero.title", {
                 accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
               })}
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-2xl mx-auto">
+            <p className="mt-6 text-lead text-[var(--muted-foreground)] leading-relaxed max-w-2xl mx-auto">
               {t("hero.subtitle")}
             </p>
           </ScrollReveal>
@@ -49,10 +49,10 @@ export async function LoyaltyProgramsPage() {
       <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)]">
         <Container className="max-w-3xl">
           <ScrollReveal className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+            <h2 className="text-h2 text-[var(--foreground)]">
               {t("faq.title")}
             </h2>
-            <p className="mt-5 text-lg text-[var(--muted-foreground)]">{t("faq.subtitle")}</p>
+            <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("faq.subtitle")}</p>
           </ScrollReveal>
           <ScrollReveal delay={120}>
             <FAQList items={faqItems} defaultOpenCount={2} />

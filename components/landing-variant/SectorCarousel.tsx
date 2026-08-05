@@ -159,7 +159,7 @@ function SlideCard({
         >
           {isPoints ? engineLabels.points : engineLabels.stamp}
         </span>
-        <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+        <h3 className="text-h3">
           {slide.name}
         </h3>
         <span

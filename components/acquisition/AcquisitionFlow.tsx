@@ -167,7 +167,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
           {/* Card Preview */}
           <div className="order-2">
             <div className="w-full max-w-[380px] mx-auto">
-              <ScaledCardWrapper baseWidth={280} targetWidth={380}>
+              <ScaledCardWrapper size="lg">
                 <WalletCard
                   design={cardDesign ? {
                     ...cardDesign,

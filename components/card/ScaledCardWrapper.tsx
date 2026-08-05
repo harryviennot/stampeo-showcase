@@ -2,11 +2,22 @@
 
 import { useRef, useEffect, useState, ReactNode } from 'react';
 
+/** The three sizes a wallet card is allowed to render at, in px. */
+const SIZE_WIDTHS = { sm: 200, md: 280, lg: 340 } as const;
+
+type CardSize = keyof typeof SIZE_WIDTHS;
+
 interface ScaledCardWrapperProps {
   children: ReactNode;
+  /**
+   * Renders the card at one of three fixed widths. Prefer this over
+   * targetWidth: the card is the site's hero object and it used to appear at
+   * nine different sizes, which read as inconsistent zoom.
+   */
+  size?: CardSize;
   /** Width at which content is laid out (before scaling) */
   baseWidth?: number;
-  /** Target visual width - if provided, scales content from baseWidth to targetWidth */
+  /** Escape hatch for a bespoke visual width. Ignored when `size` is set. */
   targetWidth?: number;
   aspectRatio?: number;
   minScale?: number;
@@ -14,11 +25,13 @@ interface ScaledCardWrapperProps {
 
 export function ScaledCardWrapper({
   children,
+  size,
   baseWidth = 280,
-  targetWidth,
+  targetWidth: targetWidthProp,
   aspectRatio = 1.282,
   minScale = 0.6,
 }: ScaledCardWrapperProps) {
+  const targetWidth = size ? SIZE_WIDTHS[size] : targetWidthProp;
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const baseHeight = baseWidth * aspectRatio;

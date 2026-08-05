@@ -37,10 +37,10 @@ export function AnalyticsPageContent() {
         </div>
         <Container className="relative z-10">
           <ScrollReveal className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--foreground)] mb-6">
+            <h1 className="text-h1 text-[var(--foreground)] mb-6">
               {hero.title}
             </h1>
-            <p className="text-lg sm:text-xl text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-2xl mx-auto">
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-2xl mx-auto">
               {hero.subtitle}
             </p>
             <CTAButton label={tb("startFree")} />

@@ -42,7 +42,8 @@
     "cta": {
       "title": "Prêt à nous rejoindre ?",
       "description": "Lancez votre programme de fidélité digital dès aujourd'hui.",
-      "button": "Commencer gratuitement"
+      "button": "Commencer gratuitement",
+      "annotation": "et on répond au téléphone"
     }
   }
 }

@@ -11,10 +11,10 @@ export async function BusinessTypeMap() {
     <section className="py-20 sm:py-28">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-14">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-5 text-lg text-[var(--muted-foreground)]">{t("subtitle")}</p>
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">

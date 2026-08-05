@@ -74,30 +74,59 @@ export function FloatingLanguageSwitcher() {
   const buttonRef = useRef<HTMLDivElement>(null);
   const [onDark, setOnDark] = useState(false);
 
+  /**
+   * What is behind the button decides whether it draws light or dark. Finding
+   * that out is expensive — a hit test plus a walk up the ancestor chain
+   * reading computed backgrounds — so it is kept off the scroll path:
+   *
+   *   `elementsFromPoint` returns the whole stack under the point, so the
+   *   button can be skipped by filtering rather than by hiding it. Toggling
+   *   `visibility` mid-measurement wrote style and then immediately forced
+   *   layout again to read it back, twice per scroll event.
+   *
+   *   One detection per frame at most, and only once the page has actually
+   *   moved a few pixels. The background under a fixed button cannot change
+   *   without scrolling, so the intermediate events have nothing to tell us.
+   */
   const detectBackground = useCallback(() => {
     const btn = buttonRef.current;
     if (!btn) return;
     const rect = btn.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    btn.style.visibility = "hidden";
-    const behind = document.elementFromPoint(cx, cy);
-    btn.style.visibility = "";
-    if (behind) {
-      setOnDark(isBackgroundDark(behind));
-    } else {
-    }
+    const stack = document.elementsFromPoint(
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2
+    );
+    const behind = stack.find((el) => !btn.contains(el));
+    if (behind) setOnDark(isBackgroundDark(behind));
   }, []);
 
   useEffect(() => {
+    let frame = 0;
+    let lastY = Number.NaN;
+
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        lastY = window.scrollY;
+        detectBackground();
+      });
+    };
+
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - lastY) < 8) return;
+      schedule();
+    };
+
     // Delay initial detection to ensure layout is painted
     const timer = setTimeout(detectBackground, 100);
-    window.addEventListener("scroll", detectBackground, { passive: true });
-    window.addEventListener("resize", detectBackground, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
     return () => {
       clearTimeout(timer);
-      window.removeEventListener("scroll", detectBackground);
-      window.removeEventListener("resize", detectBackground);
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", schedule);
     };
   }, [detectBackground]);
 

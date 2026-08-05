@@ -55,7 +55,7 @@ export function RelatedFeatures({ related, className = "" }: RelatedFeaturesProp
     <section className={`py-16 sm:py-24 ${className}`}>
       <Container>
         <ScrollReveal className="mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 tracking-tight text-[var(--foreground)]">
             {t("relatedTitle")}
           </h2>
         </ScrollReveal>

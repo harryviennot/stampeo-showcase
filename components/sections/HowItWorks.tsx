@@ -48,14 +48,14 @@ export function HowItWorks({
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] text-sm font-medium mb-6">
             {t("badge")}
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t.rich("title", {
               br: () => <br className="hidden md:block" />,
               mbr: () => <br className="md:hidden" />,
             })}
           </h2>
           {t.raw("subtitle") && (
-            <p className="mt-6 text-lg text-[var(--muted-foreground)]">
+            <p className="mt-6 text-lead text-[var(--muted-foreground)]">
               {t.rich("subtitle", {
                 mbr: () => <br className="md:hidden" />,
               })}

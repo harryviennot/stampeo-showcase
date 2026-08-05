@@ -294,7 +294,8 @@
     "scanner-mobile": {
       "hero": {
         "title": "Un scan. Un tampon. C'est tout.",
-        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en une seconde."
+        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en une seconde.",
+      "annotation": "l'appli de votre équipe"
       },
       "problem": {
         "title": "Tamponner devrait être invisible",
@@ -464,7 +465,8 @@
       "heroBadge": "Notifications Wallet",
       "hero": {
         "title": "Chaque scan atterrit sur l'écran de verrouillage de vos clients.",
-        "subtitle": "Chaque tampon, chaque jalon, chaque récompense déclenche une notification wallet. Votre client voit toujours ce qui vient de se passer et à quelle distance se trouve sa prochaine récompense."
+        "subtitle": "Chaque tampon, chaque jalon, chaque récompense déclenche une notification wallet. Votre client voit toujours ce qui vient de se passer et à quelle distance se trouve sa prochaine récompense.",
+      "annotation": "sans numéro de téléphone"
       },
       "problem": {
         "title": "Un tampon sans confirmation est un tampon oublié",
@@ -734,7 +736,8 @@
       "heroBadge": "Growth",
       "hero": {
         "title": "Rappelez-leur que vous existez. Au bon moment.",
-        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien."
+        "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien.",
+      "annotation": "déjà inclus dans la carte"
       },
       "problem": {
         "title": "Votre client fidèle vous oublie. Ce n'est pas de sa faute.",

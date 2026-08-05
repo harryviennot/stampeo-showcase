@@ -257,7 +257,7 @@ export function AuthenticationStep({
     return (
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
+          <h1 className="text-h2 text-[var(--foreground)]">
             {t("verifyTitle")}
           </h1>
           <p className="text-[var(--muted-foreground)] mt-2">
@@ -357,7 +357,7 @@ export function AuthenticationStep({
     return (
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
+          <h1 className="text-h2 text-[var(--foreground)]">
             {t("chooseTitle")}
           </h1>
           <p className="text-[var(--muted-foreground)] mt-2">
@@ -413,7 +413,7 @@ export function AuthenticationStep({
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
+        <h1 className="text-h2 text-[var(--foreground)]">
           {t("emailTitle")}
         </h1>
         <p className="text-[var(--muted-foreground)] mt-2">

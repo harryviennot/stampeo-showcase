@@ -294,7 +294,8 @@
     "scanner-mobile": {
       "hero": {
         "title": "Un escaneo. Un sello. Eso es todo.",
-        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en un segundo."
+        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en un segundo.",
+      "annotation": "la aplicación de tu equipo"
       },
       "problem": {
         "title": "Sellar debería ser invisible",
@@ -464,7 +465,8 @@
       "heroBadge": "Avisos en Apple Wallet y Google Wallet",
       "hero": {
         "title": "Cada escaneo aterriza en la pantalla de bloqueo de tus clientes.",
-        "subtitle": "Cada sello, cada hito y cada recompensa lanza un aviso en el teléfono. Tu cliente ve siempre lo que acaba de pasar y a qué distancia está de su próxima recompensa."
+        "subtitle": "Cada sello, cada hito y cada recompensa lanza un aviso en el teléfono. Tu cliente ve siempre lo que acaba de pasar y a qué distancia está de su próxima recompensa.",
+      "annotation": "sin número de teléfono"
       },
       "problem": {
         "title": "Un sello sin confirmación es un sello olvidado",
@@ -734,7 +736,8 @@
       "heroBadge": "Growth",
       "hero": {
         "title": "Recuérdales que existes. En el momento justo.",
-        "subtitle": "Cuando tu cliente pasa cerca de tu comercio, su teléfono le recuerda que tiene una tarjeta de fidelidad contigo. Sin que tú hagas nada."
+        "subtitle": "Cuando tu cliente pasa cerca de tu comercio, su teléfono le recuerda que tiene una tarjeta de fidelidad contigo. Sin que tú hagas nada.",
+      "annotation": "incluido en la tarjeta"
       },
       "problem": {
         "title": "Tu cliente fiel se olvida de ti. No es culpa suya.",

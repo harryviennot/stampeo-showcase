@@ -12,6 +12,7 @@
     "forLife": "/mes de por vida",
     "freeMonths": "3 meses gratis",
     "deadlineNotice": "Precio fundador hasta el {date}, última oportunidad.",
+    "annotation": "empezaríamos aquí",
     "countdown": {
       "daysHours": "Precio fundador: termina en {days}d {hours}h",
       "hoursMinutes": "Precio fundador: termina en {hours}h {minutes}m"
@@ -83,19 +84,17 @@
       "description": "Compara los planes y funciones de Stampeo. Del autónomo al multiestablecimiento, encuentra el plan adecuado para tu programa de fidelidad."
     },
     "hero": {
-      "badge": "Planes y precios",
       "title": "Elige el plan adecuado para tu comercio",
       "subtitle": "Sin costes ocultos. Sin cargos por cliente. Clientes ilimitados en todos los planes."
     },
-    "foundingCallout": "Los socios fundadores tienen un 50 % de descuento en Starter y Growth, de por vida.",
     "foundingReassurance": "Tu precio fundador queda garantizado para siempre. Aunque suban los precios, o canceles y vuelvas más tarde, conservas este precio.",
-    "foundingLink": "Más información sobre el Programa Fundador",
     "popular": "Más popular",
     "perMonth": "/mes",
     "billedYearlyTotal": "Facturado €{price} al año, ahorras €{saving}",
     "intervalMonthly": "Mensual",
     "intervalYearly": "Anual",
     "yearlyBadge": "20% menos",
+    "annotation": "empezaríamos aquí",
     "comparisonMonthlyNote": "Precios mostrados al mes. La facturación anual descuenta un 20% en todos los planes.",
     "forLife": "/mes de por vida",
     "cta": "Empezar",

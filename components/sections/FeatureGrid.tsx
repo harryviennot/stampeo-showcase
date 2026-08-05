@@ -25,13 +25,13 @@ export async function FeatureGrid() {
   }>;
 
   return (
-    <section className="py-20 sm:py-28 lg:py-36 relative bg-[var(--blog-bg)]">
+    <section className="py-16 lg:py-24 relative bg-[var(--blog-bg)]">
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+          <h2 className="text-h2 text-[var(--foreground)]">
             {t("title")}
           </h2>
-          <p className="mt-6 text-lg text-[var(--muted-foreground)]">
+          <p className="mt-6 text-lead text-[var(--muted-foreground)]">
             {t("subtitle")}
           </p>
         </ScrollReveal>
@@ -43,12 +43,12 @@ export async function FeatureGrid() {
               <ScrollReveal key={index} delay={index * 100} className="flex">
                 <Link
                   href={feature.link as "/features/notifications-push"}
-                  className="group flex flex-col w-full bg-white blog-card-3d rounded-xl md:rounded-2xl p-4 md:p-6 transition-transform duration-300 hover:-translate-y-1"
+                  className="group flex flex-col w-full bg-white card-stamp card-stamp-lift rounded-xl md:rounded-2xl p-4 md:p-6 transition-transform duration-300 hover:-translate-y-1"
                 >
                   <div className="flex h-9 w-9 md:h-12 md:w-12 items-center justify-center rounded-lg md:rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-3 md:mb-4 transition-transform duration-300 group-hover:scale-110">
                     <Icon className="w-4 h-4 md:w-6 md:h-6" />
                   </div>
-                  <h3 className="text-sm md:text-lg font-bold text-[var(--foreground)] mb-1 md:mb-2">
+                  <h3 className="text-h3 text-[var(--foreground)] mb-1 md:mb-2">
                     {feature.title}
                   </h3>
                   <p className="text-xs md:text-sm text-[var(--muted-foreground)] leading-relaxed hidden md:block">

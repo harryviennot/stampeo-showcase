@@ -12,6 +12,7 @@
     "forLife": "/month for life",
     "freeMonths": "3 months free",
     "deadlineNotice": "Founding pricing closes {date} — last chance.",
+    "annotation": "we'd start here",
     "countdown": {
       "daysHours": "Founding pricing closes in {days}d {hours}h",
       "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
@@ -83,19 +84,17 @@
       "description": "Compare Stampeo plans and features. From solo operators to multi-location businesses — find the right plan for your loyalty program."
     },
     "hero": {
-      "badge": "Plans & Pricing",
       "title": "Choose the right plan for your business",
       "subtitle": "No hidden fees. No per-customer charges. Unlimited customers on every plan."
     },
-    "foundingCallout": "Founding partners get 50% off Starter and Growth, for life.",
     "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
-    "foundingLink": "Learn more about the Founding Program",
     "popular": "Most popular",
     "perMonth": "/mo",
     "billedYearlyTotal": "Billed €{price} a year, saving €{saving}",
     "intervalMonthly": "Monthly",
     "intervalYearly": "Yearly",
     "yearlyBadge": "Save 20%",
+    "annotation": "we'd start here",
     "comparisonMonthlyNote": "Prices shown monthly. Yearly billing takes 20% off every plan.",
     "forLife": "/mo for life",
     "cta": "Get started",

@@ -8,8 +8,8 @@ import {
   type CTALocation,
 } from "@/lib/analytics";
 
-type Size = "sm" | "md" | "lg" | "xl";
-type Variant = "primary" | "secondary" | "outline";
+type Size = "sm" | "md" | "lg";
+type Variant = "primary" | "secondary" | "outline" | "link";
 
 type CTAButtonProps = Readonly<{
   label: string;
@@ -24,20 +24,23 @@ type CTAButtonProps = Readonly<{
   trackAs?: CTALocation;
 }>;
 
+// Heights, not padding, so buttons of different sizes still line up in a row.
 const sizeStyles: Record<Size, string> = {
-  sm: "h-11 px-6 text-sm",
-  md: "px-8 py-3 text-base",
-  lg: "px-8 py-4 text-lg",
-  xl: "h-16 md:h-20 px-10 text-lg md:text-xl min-w-[280px] md:min-w-[340px] justify-center",
+  sm: "h-10 px-5 text-sm",
+  md: "h-12 px-6 text-[15px]",
+  lg: "h-[52px] px-7 text-base",
 };
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-[var(--accent)] text-white shadow-xl shadow-[var(--accent)]/25 hover:scale-105 hover:brightness-110",
+    "bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20 hover:brightness-105",
   secondary:
     "bg-white/10 text-white border border-white/10 hover:bg-white/20",
   outline:
     "bg-transparent text-[var(--foreground)] border-2 border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white",
+  // For a secondary action next to a primary button: reads as a link, still
+  // reports its click like the others.
+  link: "bg-transparent text-[var(--foreground)] underline-offset-4 hover:underline",
 };
 
 export function CTAButton({
@@ -52,7 +55,7 @@ export function CTAButton({
 }: CTAButtonProps) {
   const locale = useLocale();
   const base =
-    "group inline-flex items-center gap-2 rounded-full font-bold transition-all";
+    "group inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all";
 
   const handleClick = trackAs
     ? () => {

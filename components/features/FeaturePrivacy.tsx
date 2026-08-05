@@ -29,7 +29,7 @@ export function FeaturePrivacy({
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)]">
                     <ShieldCheckIcon className="w-6 h-6" />
                   </div>
-                  <h2 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
+                  <h2 className="text-h2 text-[var(--foreground)]">
                     {title}
                   </h2>
                 </div>

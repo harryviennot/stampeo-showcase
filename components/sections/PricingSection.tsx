@@ -19,6 +19,14 @@ const TIERS = [
   { id: "pro" as const, trackAs: "pricing_pro" as const },
 ];
 
+/** Stacked on mobile, the recommended tier comes first; desktop keeps the
+ *  cheap-to-expensive reading order. Written out so Tailwind sees the classes. */
+const STACK_ORDER: Record<TierId, string> = {
+  starter: "order-2 lg:order-none",
+  growth: "order-1 lg:order-none",
+  pro: "order-3 lg:order-none",
+};
+
 /**
  * Landing-page pricing block. Client-side because of the cadence switcher —
  * the card itself was already a client component, so the boundary only moves
@@ -28,23 +36,25 @@ export function PricingSection() {
   const t = useTranslations("pricing");
   const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
-  // Monthly is the default: it is the price most people compare on, and the
-  // yearly saving is advertised on the toggle itself.
-  const [interval, setInterval] = useState<BillingInterval>("month");
+  // Yearly is the default here too, so the price on the homepage matches the
+  // one on /pricing.
+  const [interval, setInterval] = useState<BillingInterval>("year");
 
   return (
-    <section id="pricing" className="relative py-24 lg:py-32">
-      <div className="max-w-[1200px] mx-auto px-6">
+    <section id="pricing" className="relative py-16 lg:py-24">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-10">
-          <h2 className="text-4xl lg:text-6xl font-extrabold tracking-tight mb-6">
+          <h2 className="text-h2 mb-6">
             {t("title")}
           </h2>
-          <p className="text-[var(--muted-foreground)] text-lg lg:text-xl font-medium max-w-2xl mx-auto">
+          <p className="text-lead text-[var(--muted-foreground)] max-w-2xl mx-auto">
             {foundingOpen ? t("subtitle") : t("subtitleStandard")}
           </p>
         </ScrollReveal>
 
-        <ScrollReveal delay={150} className="mb-10">
+        {/* lg:mb-14: the margin note above the recommended card needs the
+            extra headroom or it collides with this toggle. */}
+        <ScrollReveal delay={150} className="mb-10 lg:mb-14">
           <BillingIntervalToggle value={interval} onChange={setInterval} />
         </ScrollReveal>
 
@@ -57,6 +67,8 @@ export function PricingSection() {
             return (
               <PricingTierCard
                 key={id}
+                // Recommended tier leads once the cards stack on mobile.
+                className={STACK_ORDER[id]}
                 name={t(`${id}.name`)}
                 tagline={t(`${id}.tagline`)}
                 features={t.raw(`${id}.features`) as FeatureItem[]}
@@ -80,6 +92,7 @@ export function PricingSection() {
                 ctaSubtext={t("ctaSubtext")}
                 highlighted={highlighted}
                 popularLabel={highlighted ? t("popular") : undefined}
+                annotationLabel={highlighted ? t("annotation") : undefined}
                 trackAs={trackAs}
               />
             );

@@ -37,10 +37,10 @@ export function BlindSpotCards() {
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--foreground)] mb-4">
+          <h2 className="text-h2 text-[var(--foreground)] mb-4">
             {t("problem.title")}
           </h2>
-          <p className="text-lg text-[var(--muted-foreground)] leading-relaxed">
+          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
             {t("problem.description")}
           </p>
         </ScrollReveal>

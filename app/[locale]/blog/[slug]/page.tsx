@@ -107,7 +107,7 @@ export default async function BlogPostPage({
       )}
       <Header />
       <main className="pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back link */}
           <Link
             href="/blog"

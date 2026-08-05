@@ -5,12 +5,11 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useRouter as useLocaleRouter } from "@/i18n/navigation";
 
 /**
- * Dev-only floating switcher for the landing variants + country pilots, so we
- * can flip between them in one click. Rendered only when NODE_ENV=development.
+ * Dev-only floating switcher for the country pilots, so we can flip between
+ * them in one click. Rendered only when NODE_ENV=development.
  *
  *   int (fr)  →  /            int (en)  →  /en
  *   uk        →  /uk          us        →  /us
- *   control   →  /?variant=control  (legacy landing)
  *
  * The homepage locale is resolved from the NEXT_LOCALE cookie, so "int · fr" /
  * "int · en" go through next-intl's router (it sets that cookie); otherwise an
@@ -24,31 +23,21 @@ const TARGETS: Target[] = [
   { key: "int-en", label: "int · en", locale: "en" },
   { key: "uk", label: "uk", href: "/uk" },
   { key: "us", label: "us", href: "/us" },
-  { key: "control", label: "control", href: "/?variant=control" },
 ];
 
-/** useSearchParams() must sit under a Suspense boundary or static prerender
- *  of the landing pages bails out and the build fails. */
 export function VariantDevToggle() {
-  return (
-    <Suspense fallback={null}>
-      <VariantDevToggleInner />
-    </Suspense>
-  );
+  return <VariantDevToggleInner />;
 }
 
 function VariantDevToggleInner() {
   const router = useRouter();
   const localeRouter = useLocaleRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   if (process.env.NODE_ENV !== "development") return null;
 
-  const isControl = searchParams.get("variant") === "control";
-  const current = isControl
-    ? "control"
-    : pathname === "/uk" || pathname.endsWith("/uk")
+  const current =
+    pathname === "/uk" || pathname.endsWith("/uk")
       ? "uk"
       : pathname === "/us" || pathname.endsWith("/us")
         ? "us"

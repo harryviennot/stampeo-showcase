@@ -257,10 +257,10 @@ export function ContactPageClient() {
           <span className="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-sm font-semibold mb-4">
             {t(`${heroT}.badge`)}
           </span>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
+          <h1 className="text-h1 mb-4">
             {t(`${heroT}.headline`)}
           </h1>
-          <p className="text-lg text-[var(--muted-foreground)]">
+          <p className="text-lead text-[var(--muted-foreground)]">
             {t(`${heroT}.description`)}
           </p>
         </div>
