@@ -238,23 +238,18 @@
     },
     "metrics": {
       "title": "Où en est Stampeo aujourd’hui",
-      "subtitle": "Des chiffres qu’on met à jour à la main, pour qu’ils restent justes.",
       "items": [
         {
-          "value": "—",
+          "value": "+100",
           "label": "commerces actifs"
         },
         {
-          "value": "—",
-          "label": "cartes créées"
+          "value": "+4 900",
+          "label": "scans effectués"
         },
         {
-          "value": "—",
-          "label": "tampons scannés"
-        },
-        {
-          "value": "—",
-          "label": "note moyenne"
+          "value": "21",
+          "label": "pays"
         }
       ]
     },

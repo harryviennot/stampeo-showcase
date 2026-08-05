@@ -238,23 +238,18 @@
     },
     "metrics": {
       "title": "Dónde está Stampeo hoy",
-      "subtitle": "Cifras que actualizamos a mano, para que sigan siendo ciertas.",
       "items": [
         {
-          "value": "—",
+          "value": "+100",
           "label": "comercios activos"
         },
         {
-          "value": "—",
-          "label": "tarjetas creadas"
+          "value": "+4.900",
+          "label": "scans realizados"
         },
         {
-          "value": "—",
-          "label": "sellos escaneados"
-        },
-        {
-          "value": "—",
-          "label": "valoración media"
+          "value": "21",
+          "label": "países"
         }
       ]
     },

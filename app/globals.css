@@ -611,6 +611,21 @@ body {
   color: var(--near-black);
 }
 
+/* Handwritten figures. Same ink as .ink-note, sized for a number that has to
+   carry a section on its own. Caveat runs small and light for its point size,
+   so this needs both a larger value and more weight than the Geist heading it
+   replaces. No tabular-nums: handwriting does not line up in columns, and
+   pretending otherwise is what makes a script face look fake. */
+.ink-figure {
+  font-family: var(--font-annotation), cursive;
+  /* 28px @390 → 68px @1440, so three figures still sit in one row on a phone
+     rather than stacking and adding ~600px to a page that is already long. */
+  font-size: clamp(1.75rem, 0.821rem + 3.81vw, 4.25rem);
+  line-height: 1;
+  font-weight: 700;
+  color: var(--near-black);
+}
+
 /* Strokes carry pathLength=1 so a single dash covers the whole path; sliding
    the offset to 0 sketches the stroke in. Triggered by the same .revealed
    class ScrollRevealInit already toggles — no extra observer. --ink-delay

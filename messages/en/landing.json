@@ -238,23 +238,18 @@
     },
     "metrics": {
       "title": "Where Stampeo stands today",
-      "subtitle": "Numbers we update by hand, so they stay true.",
       "items": [
         {
-          "value": "—",
+          "value": "100+",
           "label": "active businesses"
         },
         {
-          "value": "—",
-          "label": "cards created"
+          "value": "4,900+",
+          "label": "scans performed"
         },
         {
-          "value": "—",
-          "label": "stamps scanned"
-        },
-        {
-          "value": "—",
-          "label": "average rating"
+          "value": "21",
+          "label": "countries"
         }
       ]
     },
