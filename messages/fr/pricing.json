@@ -12,6 +12,7 @@
     "forLife": "/mois à vie",
     "freeMonths": "3 mois offerts",
     "deadlineNotice": "Tarif fondateur jusqu'au {date} — dernière chance.",
+    "annotation": "on commencerait ici",
     "countdown": {
       "daysHours": "Tarif fondateur — fin dans {days}j {hours}h",
       "hoursMinutes": "Tarif fondateur — fin dans {hours}h {minutes}m"
@@ -93,6 +94,7 @@
     "intervalMonthly": "Mensuel",
     "intervalYearly": "Annuel",
     "yearlyBadge": "20% offerts",
+    "annotation": "on commencerait ici",
     "comparisonMonthlyNote": "Prix affichés au mois. La facturation annuelle enlève 20 % sur chaque plan.",
     "forLife": "/mois à vie",
     "cta": "Commencer",

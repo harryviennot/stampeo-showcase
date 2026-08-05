@@ -12,6 +12,7 @@
     "forLife": "/month for life",
     "freeMonths": "3 months free",
     "deadlineNotice": "Founding pricing closes {date} — last chance.",
+    "annotation": "we'd start here",
     "countdown": {
       "daysHours": "Founding pricing closes in {days}d {hours}h",
       "hoursMinutes": "Founding pricing closes in {hours}h {minutes}m"
@@ -93,6 +94,7 @@
     "intervalMonthly": "Monthly",
     "intervalYearly": "Yearly",
     "yearlyBadge": "Save 20%",
+    "annotation": "we'd start here",
     "comparisonMonthlyNote": "Prices shown monthly. Yearly billing takes 20% off every plan.",
     "forLife": "/mo for life",
     "cta": "Get started",

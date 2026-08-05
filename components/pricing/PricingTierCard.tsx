@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { formatPrice } from "@/lib/pricing";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { InfoIcon } from "@/components/icons";
 import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
 
@@ -43,6 +44,8 @@ type PricingTierCardProps = {
   ctaSubtext?: string;
   highlighted?: boolean;
   popularLabel?: string;
+  /** Handwritten margin note above the highlighted card ("we'd start here"). */
+  annotationLabel?: string;
   currencySymbol?: string;
   /** When set, fires `landing_cta_clicked` with this location on CTA click. */
   trackAs?: CTALocation;
@@ -101,6 +104,7 @@ export function PricingTierCard({
   ctaSubtext,
   highlighted,
   popularLabel,
+  annotationLabel,
   currencySymbol = "€",
   trackAs,
   className = "",
@@ -125,9 +129,18 @@ export function PricingTierCard({
     >
       {highlighted && popularLabel && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-          <div className="bg-[var(--accent)] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+          <div className="bg-[var(--accent)] text-[var(--near-black)] text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
             {popularLabel}
           </div>
+        </div>
+      )}
+
+      {/* Margin note above the recommended card. Desktop only: stacked mobile
+          cards leave it no margin to live in. */}
+      {highlighted && annotationLabel && (
+        <div className="hidden lg:flex absolute -top-12 right-0 flex-col items-start pointer-events-none">
+          <InkNote rotate={3}>{annotationLabel}</InkNote>
+          <InkArrow variant="downLeft" className="w-7 mt-0.5 ml-1" delay={0.4} />
         </div>
       )}
 
@@ -188,7 +201,7 @@ export function PricingTierCard({
           <Link
             href={ctaHref}
             onClick={handleCtaClick}
-            className="w-full flex cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-[var(--accent)] text-white text-[15px] font-semibold shadow-md shadow-[var(--accent)]/20 transition-all hover:brightness-105"
+            className="w-full flex cursor-pointer items-center justify-center rounded-full h-12 px-6 bg-[var(--accent)] text-[var(--near-black)] text-[15px] font-semibold shadow-md shadow-[var(--accent)]/20 transition-all hover:brightness-105"
           >
             <span>{cta}</span>
           </Link>

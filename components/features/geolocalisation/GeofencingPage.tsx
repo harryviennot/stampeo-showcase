@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { CTAButton } from "@/components/ui/CTAButton";
 import {
   MapPinIcon,
@@ -93,7 +94,14 @@ export function GeofencingPage() {
               delay={200}
               className="flex justify-center order-1 lg:order-2"
             >
-              <GeofencingHeroAnimation />
+              <div className="relative">
+                <GeofencingHeroAnimation />
+                {/* Margin note: no extra setup, the reminder ships in the card. */}
+                <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">
+                  <InkNote rotate={3}>{tp("hero.annotation")}</InkNote>
+                  <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
+                </div>
+              </div>
             </ScrollReveal>
           </div>
         </Container>

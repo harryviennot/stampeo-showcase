@@ -12,6 +12,7 @@
     "forLife": "/mes de por vida",
     "freeMonths": "3 meses gratis",
     "deadlineNotice": "Precio fundador hasta el {date}, última oportunidad.",
+    "annotation": "empezaríamos aquí",
     "countdown": {
       "daysHours": "Precio fundador: termina en {days}d {hours}h",
       "hoursMinutes": "Precio fundador: termina en {hours}h {minutes}m"
@@ -93,6 +94,7 @@
     "intervalMonthly": "Mensual",
     "intervalYearly": "Anual",
     "yearlyBadge": "20% menos",
+    "annotation": "empezaríamos aquí",
     "comparisonMonthlyNote": "Precios mostrados al mes. La facturación anual descuenta un 20% en todos los planes.",
     "forLife": "/mes de por vida",
     "cta": "Empezar",

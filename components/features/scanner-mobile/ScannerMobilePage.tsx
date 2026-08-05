@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { CTAButton } from "@/components/ui/CTAButton";
 import {
   CameraIcon,
@@ -106,7 +107,15 @@ export function ScannerMobilePage() {
               delay={200}
               className="order-1 flex justify-center lg:order-2"
             >
-              <ScanDemo />
+              <div className="relative">
+                <ScanDemo />
+                {/* Margin note labelling this phone as the team's side of the
+                    product; the wallet card everywhere else is the customer's. */}
+                <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">
+                  <InkNote rotate={3}>{ts("hero.annotation")}</InkNote>
+                  <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
+                </div>
+              </div>
             </ScrollReveal>
           </div>
         </Container>

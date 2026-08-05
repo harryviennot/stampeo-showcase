@@ -294,7 +294,8 @@
     "scanner-mobile": {
       "hero": {
         "title": "One scan. One stamp. That's it.",
-        "subtitle": "No POS system. No special hardware. Your phone is all you need to stamp your customers in one second."
+        "subtitle": "No POS system. No special hardware. Your phone is all you need to stamp your customers in one second.",
+      "annotation": "your team's app"
       },
       "problem": {
         "title": "Stamping should be invisible",
@@ -464,7 +465,8 @@
       "heroBadge": "Wallet Notifications",
       "hero": {
         "title": "Every scan lands on your customer's lock screen.",
-        "subtitle": "Each stamp, milestone, and reward triggers a wallet notification. Your customer always sees what just happened and how close they are to the next reward."
+        "subtitle": "Each stamp, milestone, and reward triggers a wallet notification. Your customer always sees what just happened and how close they are to the next reward.",
+      "annotation": "no phone number needed"
       },
       "problem": {
         "title": "A stamp without a confirmation is a stamp forgotten",
@@ -734,7 +736,8 @@
       "heroBadge": "Growth",
       "hero": {
         "title": "Remind them you exist. At the right moment.",
-        "subtitle": "When your customer passes near your business, their phone reminds them they have a loyalty card with you. Without you doing anything."
+        "subtitle": "When your customer passes near your business, their phone reminds them they have a loyalty card with you. Without you doing anything.",
+      "annotation": "built into the card"
       },
       "problem": {
         "title": "Your loyal customer forgets you. It's not their fault.",

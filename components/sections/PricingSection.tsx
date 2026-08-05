@@ -52,7 +52,9 @@ export function PricingSection() {
           </p>
         </ScrollReveal>
 
-        <ScrollReveal delay={150} className="mb-10">
+        {/* lg:mb-14: the margin note above the recommended card needs the
+            extra headroom or it collides with this toggle. */}
+        <ScrollReveal delay={150} className="mb-10 lg:mb-14">
           <BillingIntervalToggle value={interval} onChange={setInterval} />
         </ScrollReveal>
 
@@ -90,6 +92,7 @@ export function PricingSection() {
                 ctaSubtext={t("ctaSubtext")}
                 highlighted={highlighted}
                 popularLabel={highlighted ? t("popular") : undefined}
+                annotationLabel={highlighted ? t("annotation") : undefined}
                 trackAs={trackAs}
               />
             );

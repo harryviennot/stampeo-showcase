@@ -3,6 +3,7 @@
     "notFound": {
       "title": "Comercio no encontrado",
       "description": "No hemos encontrado el comercio que buscas. Puede que el enlace sea incorrecto o que el comercio se haya eliminado.",
+      "annotation": "aquí no hay sellos",
       "backToStampeo": "Ir a Stampeo"
     }
   }

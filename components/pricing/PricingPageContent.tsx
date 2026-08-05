@@ -59,6 +59,7 @@ function PricingCard({
       ctaSubtext={t("ctaSubtext")}
       highlighted={highlighted}
       popularLabel={t("popular")}
+      annotationLabel={t("annotation")}
       className={className}
     />
   );
@@ -379,7 +380,7 @@ export function PricingPageContent() {
       {/* Pricing Cards. Growth leads on mobile, where cards stack. */}
       <ScrollReveal
         delay={200}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-8"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-8 lg:mt-14"
       >
         <PricingCard
           tier="growth"

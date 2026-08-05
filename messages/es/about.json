@@ -42,7 +42,8 @@
     "cta": {
       "title": "¿Te animas a unirte?",
       "description": "Lanza hoy mismo tu programa de fidelidad digital.",
-      "button": "Empezar gratis"
+      "button": "Empezar gratis",
+      "annotation": "y sí contestamos el teléfono"
     }
   }
 }
