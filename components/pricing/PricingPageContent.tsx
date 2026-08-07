@@ -22,13 +22,11 @@ function PricingCard({
   highlighted,
   interval,
   foundingOpen,
-  className,
 }: {
   tier: "starter" | "growth" | "pro";
   highlighted?: boolean;
   interval: BillingInterval;
   foundingOpen: boolean;
-  className?: string;
 }) {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
@@ -60,7 +58,6 @@ function PricingCard({
       highlighted={highlighted}
       popularLabel={t("popular")}
       annotationLabel={t("annotation")}
-      className={className}
     />
   );
 }
@@ -377,29 +374,27 @@ export function PricingPageContent() {
         <BillingIntervalToggle value={interval} onChange={setInterval} />
       </ScrollReveal>
 
-      {/* Pricing Cards. Growth leads on mobile, where cards stack. */}
+      {/* Pricing Cards. Cheap-to-expensive at every width — the stacked mobile
+          order matches the desktop one. */}
       <ScrollReveal
         delay={200}
         className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto mt-8 lg:mt-14"
       >
         <PricingCard
+          tier="starter"
+          interval={interval}
+          foundingOpen={foundingOpen}
+        />
+        <PricingCard
           tier="growth"
           interval={interval}
           foundingOpen={foundingOpen}
           highlighted
-          className="order-first lg:order-2"
-        />
-        <PricingCard
-          tier="starter"
-          interval={interval}
-          foundingOpen={foundingOpen}
-          className="lg:order-1"
         />
         <PricingCard
           tier="pro"
           interval={interval}
           foundingOpen={foundingOpen}
-          className="lg:order-3"
         />
       </ScrollReveal>
 

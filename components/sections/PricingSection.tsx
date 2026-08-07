@@ -19,14 +19,6 @@ const TIERS = [
   { id: "pro" as const, trackAs: "pricing_pro" as const },
 ];
 
-/** Stacked on mobile, the recommended tier comes first; desktop keeps the
- *  cheap-to-expensive reading order. Written out so Tailwind sees the classes. */
-const STACK_ORDER: Record<TierId, string> = {
-  starter: "order-2 lg:order-none",
-  growth: "order-1 lg:order-none",
-  pro: "order-3 lg:order-none",
-};
-
 /**
  * Landing-page pricing block. Client-side because of the cadence switcher —
  * the card itself was already a client component, so the boundary only moves
@@ -67,8 +59,8 @@ export function PricingSection() {
             return (
               <PricingTierCard
                 key={id}
-                // Recommended tier leads once the cards stack on mobile.
-                className={STACK_ORDER[id]}
+                // Cheap-to-expensive at every width: the stacked mobile order
+                // matches the desktop one.
                 name={t(`${id}.name`)}
                 tagline={t(`${id}.tagline`)}
                 features={t.raw(`${id}.features`) as FeatureItem[]}
