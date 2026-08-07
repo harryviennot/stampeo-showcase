@@ -112,6 +112,7 @@ export function PricingTierCard({
   const locale = useLocale();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
   const showDiscount = discounted !== undefined && discounted < price;
+  const annotated = Boolean(highlighted && annotationLabel);
 
   const handleCtaClick = trackAs
     ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref })
@@ -123,9 +124,13 @@ export function PricingTierCard({
     ? "card-stamp bg-[var(--cream)] border-[var(--accent)] shadow-[0_3px_0_var(--accent)] z-10"
     : "card-stamp bg-[var(--cream)]";
 
+  // Stacked on mobile the note has no margin to sit in, so the card buys it
+  // some: the grid gap alone is not tall enough for the note plus its arrow.
+  const headroomClass = annotated ? "mt-12 lg:mt-0" : "";
+
   return (
     <div
-      className={`relative flex flex-col rounded-3xl p-7 lg:p-8 transition-all duration-300 ${containerClass} ${className}`}
+      className={`relative flex flex-col rounded-3xl p-7 lg:p-8 transition-all duration-300 ${containerClass} ${headroomClass} ${className}`}
     >
       {highlighted && popularLabel && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -135,10 +140,11 @@ export function PricingTierCard({
         </div>
       )}
 
-      {/* Margin note above the recommended card. Desktop only: stacked mobile
-          cards leave it no margin to live in. */}
-      {highlighted && annotationLabel && (
-        <div className="hidden lg:flex absolute -top-12 right-0 flex-col items-start pointer-events-none">
+      {/* Margin note above the recommended card. On mobile it hangs in the
+          headroom bought above, clear of the "most popular" badge, which sits
+          centred and lower. */}
+      {annotated && (
+        <div className="absolute -top-14 lg:-top-12 right-0 flex flex-col items-start pointer-events-none">
           <InkNote rotate={3}>{annotationLabel}</InkNote>
           <InkArrow variant="downLeft" className="w-7 mt-0.5 ml-1" delay={0.4} />
         </div>
