@@ -288,6 +288,7 @@ function FormCard({
       </p>
       <AcquisitionForm
         dataCollection={business.settings?.customer_data_collection}
+        primaryLocale={business.primary_locale}
         businessName={business.name}
         onSubmit={onSubmit}
       />

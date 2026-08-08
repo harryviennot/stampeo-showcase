@@ -18,7 +18,16 @@
       "emailInvalid": "Please enter a valid email",
       "phoneRequired": "Phone number is required",
       "phoneInvalid": "Please enter a valid phone number",
-      "emailOrPhoneRequired": "Email or phone is required"
+      "emailOrPhoneRequired": "Email or phone is required",
+      "birthday": "Birthday",
+      "birthdayDay": "Day",
+      "birthdayMonth": "Month",
+      "birthdayHint": "Day and month only. We never ask for the year.",
+      "birthdayIncomplete": "Pick both a day and a month",
+      "fieldRequired": "This one is required",
+      "numberInvalid": "Enter a number",
+      "numberOutOfRange": "That number is outside the accepted range",
+      "choosePlaceholder": "Choose one"
     },
     "loading": "Creating your card...",
     "success": {

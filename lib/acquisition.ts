@@ -53,6 +53,9 @@ export interface BusinessPublicResponse {
   name: string;
   url_slug: string;
   subscription_tier: string;
+  /** The language the merchant authors their own wording in. Everything else
+   *  is either translated by them or falls back to our localized defaults. */
+  primary_locale?: "fr" | "en" | "es";
   logo_url?: string | null;
   settings: {
     category?: string;
@@ -63,6 +66,13 @@ export interface BusinessPublicResponse {
       collect_name: "off" | "required" | "optional" | boolean;
       collect_email: "off" | "required" | "optional" | boolean;
       collect_phone: "off" | "required" | "optional" | boolean;
+      /** Absent on every business predating the feature: treat as "off". */
+      collect_birthday?: "off" | "required" | "optional" | boolean;
+      /** Merchant wording overrides for the built-in fields. Blank means
+       *  "keep the translated default". */
+      predefined?: Partial<Record<PredefinedFieldKey, FieldWording>>;
+      /** Fields the business defined itself. Always required at sign-up. */
+      custom_fields?: CustomFieldDefinition[];
     };
   };
   created_at: string;
@@ -113,9 +123,60 @@ export interface CustomerCreatePublic {
   name?: string;
   email?: string;
   phone?: string;
+  /** Birthday, day + month only. Sent together or not at all. */
+  birth_day?: number;
+  birth_month?: number;
+  /** Answers to the fields the business defined itself, keyed by variable name. */
+  custom_fields?: Record<string, string>;
   /** Ask the backend to also email the card (used on desktop, where the visitor
    *  can't add it to a phone wallet from here). Only sends when an email is given. */
   send_email?: boolean;
+}
+
+export type CustomFieldType = "text" | "number" | "choice";
+export type PredefinedFieldKey = "name" | "email" | "phone" | "birthday";
+
+/** Merchant wording for one field in ONE language. */
+export interface FieldWordingText {
+  label?: string;
+  placeholder?: string;
+  helper_text?: string;
+  /** `choice` only: canonical option value → display text in this language. */
+  option_labels?: Record<string, string>;
+}
+
+/**
+ * Wording plus its translations. Top-level values are the business's PRIMARY
+ * locale; `translations[locale]` overrides them per language.
+ *
+ * The two field kinds fall back differently. A built-in field with no
+ * translation shows OUR localized default, so a Spanish visitor reads Spanish
+ * rather than the merchant's French. A custom field has no default to reach
+ * for, so it keeps the primary-locale text.
+ */
+export interface FieldWording extends FieldWordingText {
+  translations?: Partial<Record<"en" | "fr" | "es", FieldWordingText>>;
+}
+
+/**
+ * A field the business added to its own sign-up form. `key` is the
+ * `{{variable}}` name it renders under on the card; `helper_text` is the
+ * customer-facing reason it's being asked, and is mandatory.
+ */
+export interface CustomFieldDefinition extends FieldWording {
+  key: string;
+  label: string;
+  helper_text: string;
+  type: CustomFieldType;
+  /** Absent means "required" (fields created before modes existed). "off"
+   *  fields aren't on the form at all. */
+  mode?: "off" | "optional" | "required";
+  /** Canonical option values, in the primary locale. These are what get
+   *  submitted and stored; `option_labels` only changes what is displayed. */
+  options?: string[];
+  max_length?: number | null;
+  min?: number | null;
+  max?: number | null;
 }
 
 export interface CustomerPublicResponse {

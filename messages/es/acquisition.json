@@ -18,7 +18,16 @@
       "emailInvalid": "Introduce un correo válido",
       "phoneRequired": "El número de teléfono es obligatorio",
       "phoneInvalid": "Introduce un número válido",
-      "emailOrPhoneRequired": "Hace falta un correo o un teléfono"
+      "emailOrPhoneRequired": "Hace falta un correo o un teléfono",
+      "birthday": "Cumpleaños",
+      "birthdayDay": "Día",
+      "birthdayMonth": "Mes",
+      "birthdayHint": "Solo el día y el mes. Nunca pedimos el año.",
+      "birthdayIncomplete": "Elige un día y un mes",
+      "fieldRequired": "Este campo es obligatorio",
+      "numberInvalid": "Introduce un número",
+      "numberOutOfRange": "Ese número está fuera del rango aceptado",
+      "choosePlaceholder": "Elige una opción"
     },
     "loading": "Creando tu tarjeta...",
     "success": {
