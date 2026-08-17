@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/lib/acquisition";
 import { PhoneInput } from "@/components/ui/PhoneInput";
 import { isValidPhone, detectDefaultCountry } from "@/lib/phone-utils";
+import { isValidBirthday, type SubmissionFieldError } from "@/lib/signup-validation";
 import type { CountryCode } from "libphonenumber-js";
 
 type FieldCollectionMode = "off" | "required" | "optional";
@@ -81,6 +82,9 @@ interface AcquisitionFormProps {
   /** The language the merchant authored their wording in. */
   primaryLocale?: string;
   onSubmit: (data: CustomerCreatePublic) => void;
+  /** A rejection the server pinned to one field, so it shows on that input
+   *  rather than throwing the visitor back to a blank form. */
+  serverFieldError?: SubmissionFieldError | null;
 }
 
 export function AcquisitionForm({
@@ -88,6 +92,7 @@ export function AcquisitionForm({
   businessName,
   primaryLocale = "fr",
   onSubmit,
+  serverFieldError = null,
 }: AcquisitionFormProps) {
   const t = useTranslations("acquisition.form");
   const ta = useTranslations("acquisition");
@@ -135,6 +140,54 @@ export function AcquisitionForm({
   const [customValues, setCustomValues] = useState<Record<string, string>>({});
   const [phoneCountry] = useState<CountryCode>(() => detectDefaultCountry(locale));
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // Set whenever new errors land, cleared once we've moved focus to the first
+  // one, so re-renders don't keep yanking the page around.
+  const [focusErrors, setFocusErrors] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  /** Server-side rejections localized per field, with the backend's reason
+   *  slug picking the sentence. */
+  const serverErrorText = (reason: string) => {
+    switch (reason) {
+      case "required":
+        return t("fieldRequired");
+      case "not_an_option":
+        return t("optionInvalid");
+      case "not_a_number":
+        return t("numberInvalid");
+      case "below_min":
+      case "above_max":
+        return t("numberOutOfRange");
+      case "too_long":
+        return t("valueTooLong");
+      case "incomplete":
+        return t("birthdayIncomplete");
+      case "invalid":
+        return t("birthdayInvalid");
+      default:
+        return t("fieldRejected");
+    }
+  };
+
+  useEffect(() => {
+    if (!serverFieldError) return;
+    setErrors((prev) => ({
+      ...prev,
+      [serverFieldError.field]: serverErrorText(serverFieldError.reason),
+    }));
+    setFocusErrors(true);
+    // serverErrorText closes over `t`, which is stable for a given locale.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverFieldError]);
+
+  useEffect(() => {
+    if (!focusErrors) return;
+    setFocusErrors(false);
+    const first = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+    if (!first) return;
+    first.scrollIntoView({ behavior: "smooth", block: "center" });
+    first.focus({ preventScroll: true });
+  }, [focusErrors]);
 
   const months = useMemo(() => {
     const formatter = new Intl.DateTimeFormat(locale, { month: "long", timeZone: "UTC" });
@@ -182,6 +235,9 @@ export function AcquisitionForm({
       const hasBoth = !!birthDay && !!birthMonth;
       if ((birthdayRequired && !hasBoth) || (hasOne && !hasBoth)) {
         newErrors.birthday = t("birthdayIncomplete");
+      } else if (hasBoth && !isValidBirthday(Number(birthDay), Number(birthMonth))) {
+        // Every month offers 1-31, so "31 February" has to be caught here.
+        newErrors.birthday = t("birthdayInvalid");
       }
     }
 
@@ -220,6 +276,9 @@ export function AcquisitionForm({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      // On a long form the first bad field can be well above the fold, and a
+      // button that "does nothing" reads as broken.
+      setFocusErrors(true);
       return;
     }
 
@@ -279,7 +338,9 @@ export function AcquisitionForm({
   );
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    // noValidate: the browser's own bubbles fire before handleSubmit and
+    // speak the BROWSER's language, not the visitor's chosen one.
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-4">
       {showName && (
         <div>
           <label
@@ -297,6 +358,7 @@ export function AcquisitionForm({
               if (errors.name) setErrors({ ...errors, name: "" });
             }}
             placeholder={placeholderFor("name", t("namePlaceholder"))}
+            aria-invalid={!!errors.name}
             className={`${INPUT_CLASS} ${errors.name ? "border-red-500" : "border-[var(--border)]"}`}
           />
           {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
@@ -323,6 +385,7 @@ export function AcquisitionForm({
               if (errors.email) setErrors({ ...errors, email: "" });
             }}
             placeholder={placeholderFor("email", t("emailPlaceholder"))}
+            aria-invalid={!!errors.email}
             className={`${INPUT_CLASS} ${errors.email ? "border-red-500" : "border-[var(--border)]"}`}
           />
           {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
@@ -375,6 +438,7 @@ export function AcquisitionForm({
                 setBirthDay(e.target.value);
                 if (errors.birthday) setErrors({ ...errors, birthday: "" });
               }}
+              aria-invalid={!!errors.birthday}
               className={`${INPUT_CLASS} flex-1 ${errors.birthday ? "border-red-500" : "border-[var(--border)]"}`}
             >
               <option value="">{t("birthdayDay")}</option>
@@ -391,6 +455,7 @@ export function AcquisitionForm({
                 setBirthMonth(e.target.value);
                 if (errors.birthday) setErrors({ ...errors, birthday: "" });
               }}
+              aria-invalid={!!errors.birthday}
               className={`${INPUT_CLASS} flex-[1.5] ${errors.birthday ? "border-red-500" : "border-[var(--border)]"}`}
             >
               <option value="">{t("birthdayMonth")}</option>
@@ -431,6 +496,7 @@ export function AcquisitionForm({
                 id={`custom-${field.key}`}
                 value={value}
                 onChange={(e) => setCustom(field.key, e.target.value)}
+                aria-invalid={!!error}
                 className={`${INPUT_CLASS} ${borderClass}`}
               >
                 <option value="">
@@ -456,6 +522,7 @@ export function AcquisitionForm({
                 value={value}
                 onChange={(e) => setCustom(field.key, e.target.value)}
                 placeholder={text.placeholder || field.placeholder}
+                aria-invalid={!!error}
                 className={`${INPUT_CLASS} ${borderClass}`}
               />
             )}

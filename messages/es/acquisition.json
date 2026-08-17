@@ -27,7 +27,11 @@
       "fieldRequired": "Este campo es obligatorio",
       "numberInvalid": "Introduce un número",
       "numberOutOfRange": "Ese número está fuera del rango aceptado",
-      "choosePlaceholder": "Elige una opción"
+      "choosePlaceholder": "Elige una opción",
+      "birthdayInvalid": "Esta fecha no existe. Revisa el día y el mes.",
+      "optionInvalid": "Elige una de las opciones de la lista.",
+      "valueTooLong": "Esta respuesta es demasiado larga. Acórtala.",
+      "fieldRejected": "No hemos podido aceptar esta respuesta. Revísala e inténtalo otra vez."
     },
     "loading": "Creando tu tarjeta...",
     "success": {

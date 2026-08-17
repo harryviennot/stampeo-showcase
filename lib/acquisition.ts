@@ -3,6 +3,7 @@
  * These endpoints are public (no authentication required).
  */
 
+import { mapSubmissionError, type SubmissionFieldError } from "@/lib/signup-validation";
 import type {
   CardType,
   CustomStampConfig,
@@ -286,7 +287,12 @@ export async function createPublicCustomer(
   businessId: string,
   data: CustomerCreatePublic,
   locationSlug?: string | null
-): Promise<{ data: CustomerPublicResponse | null; error: string | null; code?: string }> {
+): Promise<{
+  data: CustomerPublicResponse | null;
+  error: string | null;
+  code?: string;
+  fieldError?: SubmissionFieldError | null;
+}> {
   try {
     // `location_slug` is URL-derived (per-store enrollment link), not form input.
     // Only include it when present so plain `/{slug}` enrollment sends an unchanged body.
@@ -304,6 +310,7 @@ export async function createPublicCustomer(
       const errorData = await response.json().catch(() => ({}));
       let errorMessage = `Failed to register (${response.status})`;
       let code: string | undefined;
+      let fieldError: SubmissionFieldError | null = null;
 
       if (typeof errorData.detail === "string") {
         errorMessage = errorData.detail;
@@ -315,9 +322,12 @@ export async function createPublicCustomer(
         // can show a friendly "not open yet" state instead of a retry error.
         code = errorData.detail.code as string | undefined;
         errorMessage = (errorData.detail.message as string) || errorMessage;
+        // A per-field rejection ({ field, reason }) belongs on the input, not
+        // in a full-page error that would throw away everything typed.
+        fieldError = mapSubmissionError(errorData.detail);
       }
 
-      return { data: null, error: errorMessage, code };
+      return { data: null, error: errorMessage, code, fieldError };
     }
 
     const responseData = await response.json();

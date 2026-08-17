@@ -27,7 +27,11 @@
       "fieldRequired": "Ce champ est obligatoire",
       "numberInvalid": "Entrez un nombre",
       "numberOutOfRange": "Ce nombre est en dehors des valeurs acceptées",
-      "choosePlaceholder": "Faites votre choix"
+      "choosePlaceholder": "Faites votre choix",
+      "birthdayInvalid": "Cette date n'existe pas. Vérifiez le jour et le mois.",
+      "optionInvalid": "Choisissez une des options de la liste.",
+      "valueTooLong": "Cette réponse est trop longue. Raccourcissez-la.",
+      "fieldRejected": "On n'a pas pu accepter cette réponse. Vérifiez-la et réessayez."
     },
     "loading": "Création de votre carte...",
     "success": {

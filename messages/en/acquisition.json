@@ -27,7 +27,11 @@
       "fieldRequired": "This one is required",
       "numberInvalid": "Enter a number",
       "numberOutOfRange": "That number is outside the accepted range",
-      "choosePlaceholder": "Choose one"
+      "choosePlaceholder": "Choose one",
+      "birthdayInvalid": "That date doesn't exist. Check the day and the month.",
+      "optionInvalid": "Pick one of the options in the list.",
+      "valueTooLong": "That answer is too long. Try a shorter one.",
+      "fieldRejected": "We couldn't accept this answer. Check it and try again."
     },
     "loading": "Creating your card...",
     "success": {
