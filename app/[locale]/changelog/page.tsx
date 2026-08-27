@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -9,6 +8,7 @@ import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
 import { ChangelogAccordion } from "@/components/ui/ChangelogAccordion";
+import { ChangelogFilterChips } from "@/components/ui/ChangelogFilterChips";
 import {
   type ChangelogArea,
   type ChangelogCategory,
@@ -16,6 +16,7 @@ import {
   type ChangelogRelease,
   CATEGORY_ORDER,
   areaLabel,
+  filterReleasesByArea,
   formatReleaseDate,
   getPublicChangelog,
   resolve,
@@ -350,16 +351,8 @@ export default async function ChangelogPage({
   }
   const filterAreas = areas.filter((a) => usedSlugs.has(a.slug));
 
-  const displayReleases: ChangelogRelease[] = activeArea
-    ? releases
-        .map((r) => ({
-          ...r,
-          changelog_items: r.changelog_items.filter(
-            (i) => i.area === activeArea
-          ),
-        }))
-        .filter((r) => r.changelog_items.length > 0)
-    : releases;
+  const displayReleases: ChangelogRelease[] =
+    filterReleasesByArea(releases, activeArea);
 
   const base = locale === "fr" ? "/changelog" : `/${locale}/changelog`;
 
@@ -411,40 +404,19 @@ export default async function ChangelogPage({
             </p>
           </div>
 
-          {/* Filter chips */}
+          {/* Filter chips — buttons, not links: ?area= URLs must not be
+              discoverable by crawlers (see ChangelogFilterChips) */}
           {filterAreas.length > 0 && (
-            <div className="mb-12 flex flex-wrap justify-center gap-2">
-              <Link
-                href={base}
-                className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
-                  !activeArea
-                    ? "border-[var(--foreground)] bg-[var(--foreground)] text-[var(--paper)]"
-                    : "border-[var(--foreground)]/15 text-[var(--foreground)]/70 hover:border-[var(--foreground)]/30"
-                }`}
-              >
-                {t("filterAll")}
-              </Link>
-              {filterAreas.map((a) => {
-                const isActive = a.slug === activeArea;
-                return (
-                  <Link
-                    key={a.slug}
-                    href={`${base}?area=${a.slug}`}
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
-                      isActive
-                        ? "border-[var(--foreground)]/30 bg-[var(--foreground)]/[0.06] text-[var(--foreground)]"
-                        : "border-[var(--foreground)]/15 text-[var(--foreground)]/70 hover:border-[var(--foreground)]/30"
-                    }`}
-                  >
-                    <span
-                      className="h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: areaDotHex(a.color) }}
-                    />
-                    {areaLabel(a, locale)}
-                  </Link>
-                );
-              })}
-            </div>
+            <ChangelogFilterChips
+              base={base}
+              allLabel={t("filterAll")}
+              activeArea={activeArea}
+              areas={filterAreas.map((a) => ({
+                slug: a.slug,
+                label: areaLabel(a, locale),
+                dotHex: areaDotHex(a.color),
+              }))}
+            />
           )}
 
           {/* Timeline */}
