@@ -17,6 +17,7 @@ import { useDevicePlatform, type DevicePlatform } from "@/hooks/useDevicePlatfor
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { renderPreviewFields, pickSampleName } from "@/lib/template-variables";
+import { previewPointsBalance, previewStampCount } from "@/lib/signup-preview";
 import type { SubmissionFieldError } from "@/lib/signup-validation";
 
 type FlowState = "form" | "submitting" | "success" | "email_sent" | "error" | "not_open";
@@ -50,23 +51,18 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
     business.settings?.backgroundColor ||
     (cardDesign?.background_color || "#1c1c1e");
 
-  // Preview state: a brand-new card starts at the program's head-start
-  // stamps; without a prestamp we show a few demo stamps so the strip
-  // doesn't look empty. Field {{variables}} render with the same numbers
-  // (and real program data) so the preview is coherent.
+  // Preview state: a brand-new card starts at the program's head start
+  // (stamps or points — that IS what the customer gets at signup); without
+  // one we show a believable demo value so the strip doesn't look empty.
+  // Field {{variables}} render with the same numbers (and real program
+  // data) so the preview is coherent.
   const isPoints = cardDesign?.card_type === "points";
-  const previewStamps =
-    cardDesign?.initial_stamps && cardDesign.initial_stamps > 0
-      ? cardDesign.initial_stamps
-      : 3;
+  const previewStamps = previewStampCount(cardDesign?.initial_stamps);
 
-  // Points preview: pick a believable balance partway to the first reward so
-  // every strip style (big number, ring, track) shows visible progress.
   const sortedRewards = [...(cardDesign?.points_rewards ?? [])].sort(
     (a, b) => a.threshold - b.threshold
   );
-  const previewBalance =
-    sortedRewards.length > 0 ? Math.round(sortedRewards[0].threshold * 0.6) : 0;
+  const previewBalance = previewPointsBalance(cardDesign?.initial_points, sortedRewards);
   const nextReward = sortedRewards.find((r) => r.threshold > previewBalance) ?? null;
 
   // A believable cardholder name, stable per business (seeded by id) so the
