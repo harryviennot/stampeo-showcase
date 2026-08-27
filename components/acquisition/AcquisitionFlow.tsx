@@ -17,7 +17,6 @@ import { useDevicePlatform, type DevicePlatform } from "@/hooks/useDevicePlatfor
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { renderPreviewFields, pickSampleName } from "@/lib/template-variables";
-import type { SubmissionFieldError } from "@/lib/signup-validation";
 
 type FlowState = "form" | "submitting" | "success" | "email_sent" | "error" | "not_open";
 
@@ -35,9 +34,6 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
   const [flowState, setFlowState] = useState<FlowState>("form");
   const [customerResponse, setCustomerResponse] = useState<CustomerPublicResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  // A rejection the backend pinned to one input, handed back to the form so it
-  // highlights that field instead of replacing the page with an error card.
-  const [serverFieldError, setServerFieldError] = useState<SubmissionFieldError | null>(null);
   // Remembered so the success screen can say "we emailed it to <address>".
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
@@ -95,7 +91,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
 
     // On desktop the visitor can't add the card to a phone wallet from here, so
     // ask the backend to also email it (it only sends when an email was given).
-    const { data: response, error, code, fieldError } = await createPublicCustomer(
+    const { data: response, error, code } = await createPublicCustomer(
       business.id,
       { ...data, send_email: platform === "desktop" },
       locationSlug
@@ -105,14 +101,6 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
       // The business hasn't finished setting up its subscription, so it isn't
       // accepting signups yet. Retrying won't help — show a calm closed state.
       setFlowState("not_open");
-      return;
-    }
-
-    if (fieldError) {
-      // One input is wrong, not the whole attempt: keep the form (and
-      // everything typed into it) mounted and point at the offending field.
-      setServerFieldError(fieldError);
-      setFlowState("form");
       return;
     }
 
@@ -231,11 +219,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
             {cardDesign ? (
               <>
                 {flowState === "form" && (
-                  <FormCard
-                    business={business}
-                    onSubmit={handleSubmit}
-                    serverFieldError={serverFieldError}
-                  />
+                  <FormCard business={business} onSubmit={handleSubmit} />
                 )}
 
                 {flowState === "submitting" && <LoadingCard />}
@@ -288,11 +272,9 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
 function FormCard({
   business,
   onSubmit,
-  serverFieldError,
 }: {
   business: BusinessPublicResponse;
   onSubmit: (data: CustomerCreatePublic) => void;
-  serverFieldError?: SubmissionFieldError | null;
 }) {
   const t = useTranslations("acquisition");
   return (
@@ -306,10 +288,8 @@ function FormCard({
       </p>
       <AcquisitionForm
         dataCollection={business.settings?.customer_data_collection}
-        primaryLocale={business.primary_locale}
         businessName={business.name}
         onSubmit={onSubmit}
-        serverFieldError={serverFieldError}
       />
     </div>
   );

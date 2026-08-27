@@ -168,12 +168,9 @@
         },
         "loyaltyType": {
           "label": "Loyalty type",
-          "starter": "Stamps or Points",
+          "starter": "Stamps only",
           "growth": "Stamps or Points",
           "pro": "Stamps or Points"
-        },
-        "earningCaps": {
-          "label": "Per-customer earning limits"
         },
         "fullCustomisation": {
           "label": "Full card customisation"

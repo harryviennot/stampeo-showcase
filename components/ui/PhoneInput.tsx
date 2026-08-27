@@ -290,7 +290,6 @@ export function PhoneInput({
           onChange={handleInputChange}
           placeholder={placeholder || exampleNumber}
           required={required}
-          aria-invalid={!!error}
           className="
             flex-1 px-4 py-3.5
             bg-transparent outline-none

@@ -75,15 +75,9 @@ Data collected depends entirely on the configuration chosen by the business. All
 | Email address | Default (can be disabled) | Pass recovery, communication |
 | First name / Last name | Default (can be disabled) | Personalization |
 | Phone number | Optional (can be disabled) | Communication |
-| Birthday (day and month) | Optional (can be disabled) | Birthday rewards and personalization |
-| Fields defined by the business | Optional (defined by the business) | Set by the business, stated on the sign-up form |
 | Visit history | Automatic | Loyalty tracking and statistics |
 | Stamps/points balance | Automatic | Loyalty program |
 | Purchase amount / transaction value | Automatic (points programs only) | Points accrual and business analytics |
-
-The birthday is collected as a **day and month only**. No year is stored, so we hold neither a date of birth nor an age.
-
-Businesses on the Growth and Pro plans may add their own fields to their sign-up form (for example a preference or a size). For each such field the business sets the question and a short line explaining why it is being asked, which is displayed to the customer above the "Get my card" button. The business alone decides what to ask and acts as data controller for those answers; Stampeo stores them as processor on the business's instructions, and applies to them the same retention, anonymization, and deletion rules as every other end-customer field. Businesses are contractually prohibited from using these fields to collect payment or identity-document data, or data falling under Article 9 GDPR (health, religious or philosophical beliefs, racial or ethnic origin, political opinions, trade-union membership, sexual orientation, biometric or genetic data). Deleting a field from the sign-up form also erases every answer already stored for it.
 
 It is possible to configure the Platform in fully anonymous mode (no personal data collected, only a card identifier).
 

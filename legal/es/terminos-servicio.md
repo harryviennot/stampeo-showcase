@@ -235,7 +235,6 @@ El Usuario Business se compromete a:
 - Informar a sus clientes finales, en el momento de la entrega de una Tarjeta, de que el Usuario Business puede dirigirles notificaciones a través de dicha Tarjeta (transaccionales y, en su caso, promocionales)
 - Respetar los derechos de sus clientes finales (artículos 15 a 22 del RGPD), incluso cuando una solicitud se reciba por un canal distinto de la Plataforma (verbal, correo electrónico, en persona), excluyendo al cliente final afectado de las próximas difusiones o revocando su Tarjeta en su caso
 - No utilizar la Plataforma para enviar comunicaciones no solicitadas en infracción de la normativa aplicable
-- Cuando el Usuario Profesional añada sus propios campos al formulario de alta, pedir únicamente datos para los que tenga una base legal y un uso real, indicar en el formulario el motivo de cada campo, y no usar nunca esos campos para recoger datos bancarios, documentos de identidad o datos incluidos en el artículo 9 del RGPD (salud, convicciones religiosas o filosóficas, origen racial o étnico, opiniones políticas, afiliación sindical, orientación sexual, datos biométricos o genéticos)
 
 ### 8.9 Restricciones de uso de las notificaciones de difusión
 

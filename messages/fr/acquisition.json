@@ -18,20 +18,7 @@
       "emailInvalid": "Veuillez saisir un email valide",
       "phoneRequired": "Le numéro de téléphone est requis",
       "phoneInvalid": "Veuillez saisir un numéro valide",
-      "emailOrPhoneRequired": "Un email ou un téléphone est requis",
-      "birthday": "Anniversaire",
-      "birthdayDay": "Jour",
-      "birthdayMonth": "Mois",
-      "birthdayHint": "Le jour et le mois seulement. On ne demande jamais l'année.",
-      "birthdayIncomplete": "Choisissez un jour et un mois",
-      "fieldRequired": "Ce champ est obligatoire",
-      "numberInvalid": "Entrez un nombre",
-      "numberOutOfRange": "Ce nombre est en dehors des valeurs acceptées",
-      "choosePlaceholder": "Faites votre choix",
-      "birthdayInvalid": "Cette date n'existe pas. Vérifiez le jour et le mois.",
-      "optionInvalid": "Choisissez une des options de la liste.",
-      "valueTooLong": "Cette réponse est trop longue. Raccourcissez-la.",
-      "fieldRejected": "On n'a pas pu accepter cette réponse. Vérifiez-la et réessayez."
+      "emailOrPhoneRequired": "Un email ou un téléphone est requis"
     },
     "loading": "Création de votre carte...",
     "success": {

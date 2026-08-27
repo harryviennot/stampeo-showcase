@@ -72,20 +72,14 @@ Los datos recogidos dependen por completo de la configuración elegida por el co
 | Dato | Recogida | Finalidad |
 |--------|----------|----------|
 | Identificador único de tarjeta | Siempre | Funcionamiento del servicio |
-| Dirección de correo electrónico | Por defecto (desactivable) | Recuperación del pase, comunicación |
-| Nombre / Apellidos | Por defecto (desactivable) | Personalización |
+| Correo electrónico | Predeterminado (desactivable) | Recuperación de la tarjeta, comunicación |
+| Nombre / Apellidos | Predeterminado (desactivable) | Personalización |
 | Número de teléfono | Opcional (desactivable) | Comunicación |
-| Cumpleaños (día y mes) | Opcional (desactivable) | Regalos de cumpleaños y personalización |
-| Campos definidos por el comercio | Opcional (definido por el comercio) | Fijada por el comercio, indicada en el formulario de alta |
-| Historial de visitas | Automática | Seguimiento de fidelidad y estadísticas |
-| Sellos/puntos acumulados | Automática | Programa de fidelidad |
-| Importe de compra / valor de la transacción | Automática (solo programas de puntos) | Cálculo de puntos y estadísticas del comercio |
+| Historial de visitas | Automático | Seguimiento de fidelidad y estadísticas |
+| Sellos/puntos acumulados | Automático | Programa de fidelidad |
+| Importe de compra / valor de la transacción | Automático (solo programas de puntos) | Cálculo de puntos y estadísticas del comercio |
 
-El cumpleaños se recoge **solo con el día y el mes**. No se guarda ningún año, por lo que no conservamos ni fecha de nacimiento ni edad.
-
-Los comercios con los planes Crecimiento y Pro pueden añadir sus propios campos al formulario de alta (por ejemplo una preferencia o una talla). Para cada uno de esos campos, el comercio define la pregunta y una línea breve que explica por qué la hace, que se muestra al cliente encima del botón de alta. El comercio decide por sí solo qué pregunta y actúa como responsable del tratamiento de esas respuestas; Stampeo las aloja como encargado del tratamiento, siguiendo las instrucciones del comercio, y les aplica las mismas reglas de conservación, anonimización y supresión que a cualquier otro campo de cliente final. Los comercios tienen contractualmente prohibido usar estos campos para recoger datos bancarios, documentos de identidad o datos incluidos en el artículo 9 del RGPD (salud, convicciones religiosas o filosóficas, origen racial o étnico, opiniones políticas, afiliación sindical, orientación sexual, datos biométricos o genéticos). Eliminar un campo del formulario borra también todas las respuestas ya registradas para ese campo.
-
-Es posible configurar la Plataforma en modo totalmente anónimo (ningún dato personal recogido, únicamente un identificador de tarjeta).
+Es posible configurar la Plataforma en modo totalmente anónimo (sin recogida de ningún dato personal, únicamente un identificador de tarjeta).
 
 ### 3.4 Datos técnicos
 

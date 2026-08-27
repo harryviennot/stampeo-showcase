@@ -18,20 +18,7 @@
       "emailInvalid": "Please enter a valid email",
       "phoneRequired": "Phone number is required",
       "phoneInvalid": "Please enter a valid phone number",
-      "emailOrPhoneRequired": "Email or phone is required",
-      "birthday": "Birthday",
-      "birthdayDay": "Day",
-      "birthdayMonth": "Month",
-      "birthdayHint": "Day and month only. We never ask for the year.",
-      "birthdayIncomplete": "Pick both a day and a month",
-      "fieldRequired": "This one is required",
-      "numberInvalid": "Enter a number",
-      "numberOutOfRange": "That number is outside the accepted range",
-      "choosePlaceholder": "Choose one",
-      "birthdayInvalid": "That date doesn't exist. Check the day and the month.",
-      "optionInvalid": "Pick one of the options in the list.",
-      "valueTooLong": "That answer is too long. Try a shorter one.",
-      "fieldRejected": "We couldn't accept this answer. Check it and try again."
+      "emailOrPhoneRequired": "Email or phone is required"
     },
     "loading": "Creating your card...",
     "success": {

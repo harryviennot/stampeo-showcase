@@ -229,7 +229,6 @@ Business Users agree to:
 - Have a valid legal basis for each processing purpose
 - Respect End Customer rights under GDPR Articles 15–22 and honor opt-out requests received through any channel (verbal, email, messaging, or otherwise), by excluding the End Customer from future broadcasts or revoking their pass where appropriate
 - Not use the Platform to send unsolicited communications in violation of applicable regulations
-- Where the Business User adds its own fields to the sign-up form, ask only for data it has a lawful basis to collect and a genuine use for, state on the form why each field is being asked, and never use those fields to collect payment or identity-document data, or data falling under GDPR Article 9 (health, religious or philosophical beliefs, racial or ethnic origin, political opinions, trade-union membership, sexual orientation, biometric or genetic data)
 
 ### 8.9 Restrictions on Broadcast Use
 
