@@ -168,9 +168,12 @@
         },
         "loyaltyType": {
           "label": "Tipo de fidelidad",
-          "starter": "Solo sellos",
+          "starter": "Sellos o puntos",
           "growth": "Sellos o puntos",
           "pro": "Sellos o puntos"
+        },
+        "earningCaps": {
+          "label": "Límites por cliente"
         },
         "fullCustomisation": {
           "label": "Personalización completa de la tarjeta"
