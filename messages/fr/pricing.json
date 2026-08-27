@@ -168,9 +168,12 @@
         },
         "loyaltyType": {
           "label": "Type de fidélité",
-          "starter": "Tampons uniquement",
+          "starter": "Tampons ou Points",
           "growth": "Tampons ou Points",
           "pro": "Tampons ou Points"
+        },
+        "earningCaps": {
+          "label": "Limites par client"
         },
         "fullCustomisation": {
           "label": "Personnalisation complète de la carte"

@@ -28,6 +28,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
       { key: "unlimitedScans", starter: "check", growth: "check", pro: "check" },
       { key: "savedTemplates", starter: "text", growth: "text", pro: "text" },
       { key: "loyaltyType", starter: "text", growth: "text", pro: "text" },
+      { key: "earningCaps", starter: "cross", growth: "check", pro: "check" },
     ],
   },
   {

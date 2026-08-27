@@ -235,6 +235,7 @@ L'Utilisateur Business s'engage à :
 - Informer ses Clients Finaux, au moment de la remise d'un Pass, que l'Utilisateur Business peut leur adresser des notifications via ce Pass (transactionnelles et, le cas échéant, promotionnelles)
 - Respecter les droits de ses Clients Finaux (articles 15 à 22 du RGPD), y compris lorsqu'une demande est reçue par un autre canal que la Plateforme (oral, email, en personne), en excluant le Client Final concerné des prochains broadcasts ou en révoquant son Pass le cas échéant
 - Ne pas utiliser la Plateforme pour envoyer des communications non sollicitées en violation de la réglementation applicable
+- Lorsque l'Utilisateur Professionnel ajoute ses propres champs au formulaire d'inscription, ne demander que des données pour lesquelles il dispose d'une base légale et d'un usage réel, indiquer sur le formulaire la raison de chaque champ, et ne jamais utiliser ces champs pour collecter des données bancaires, des documents d'identité, ou des données relevant de l'article 9 du RGPD (santé, convictions religieuses ou philosophiques, origine raciale ou ethnique, opinions politiques, appartenance syndicale, orientation sexuelle, données biométriques ou génétiques)
 
 ### 8.9 Restrictions d'usage des notifications de broadcast
 

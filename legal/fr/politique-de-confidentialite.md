@@ -75,9 +75,15 @@ Les données collectées dépendent entièrement de la configuration choisie par
 | Adresse email | Par défaut (désactivable) | Récupération du pass, communication |
 | Prénom / Nom | Par défaut (désactivable) | Personnalisation |
 | Numéro de téléphone | Optionnel (désactivable) | Communication |
+| Anniversaire (jour et mois) | Optionnel (désactivable) | Cadeaux d'anniversaire et personnalisation |
+| Champs définis par l'entreprise | Optionnel (défini par l'entreprise) | Fixée par l'entreprise, indiquée sur le formulaire d'inscription |
 | Historique de visites | Automatique | Suivi de fidélité et statistiques |
 | Tampons/points accumulés | Automatique | Programme de fidélité |
 | Montant d'achat / valeur de la transaction | Automatique (programmes à points uniquement) | Calcul des points et statistiques de l'entreprise |
+
+L'anniversaire est collecté **au jour et au mois uniquement**. Aucune année n'est conservée : nous ne détenons donc ni date de naissance, ni âge.
+
+Les entreprises abonnées aux offres Croissance et Pro peuvent ajouter leurs propres champs à leur formulaire d'inscription (par exemple une préférence ou une taille). Pour chacun de ces champs, l'entreprise définit la question ainsi qu'une courte ligne expliquant pourquoi elle est posée, affichée au client au-dessus du bouton d'inscription. L'entreprise décide seule de ce qu'elle demande et agit en tant que responsable de traitement pour ces réponses ; Stampeo les héberge en tant que sous-traitant, sur instruction de l'entreprise, et leur applique les mêmes règles de conservation, d'anonymisation et de suppression qu'à tout autre champ client. Il est contractuellement interdit aux entreprises d'utiliser ces champs pour collecter des données bancaires, des documents d'identité, ou des données relevant de l'article 9 du RGPD (santé, convictions religieuses ou philosophiques, origine raciale ou ethnique, opinions politiques, appartenance syndicale, orientation sexuelle, données biométriques ou génétiques). La suppression d'un champ du formulaire efface également toutes les réponses déjà enregistrées pour ce champ.
 
 Il est possible de configurer la Plateforme en mode entièrement anonyme (aucune donnée personnelle collectée, uniquement un identifiant de carte).
 
