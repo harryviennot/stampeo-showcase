@@ -39,6 +39,7 @@
       "featuresLabel": "Tout le plan Starter, plus :",
       "features": [
         "8 diffusions par mois à tous vos clients",
+        "Des points en plus sur les paniers au-dessus du montant que vous fixez",
         "Vos propres messages de tampon et de récompense",
         "Styles de carte enregistrés illimités",
         "Heures de pointe et tendances hebdomadaires",
@@ -53,6 +54,7 @@
       "features": [
         "Plusieurs établissements, avec les statistiques de chacun",
         "Diffusions illimitées, avec segmentation clients",
+        "Plusieurs paliers de panier, chacun avec son bonus",
         "Programmez vos diffusions et vos styles de carte à l'avance",
         "Notifications quand vos clients sont à proximité (Apple Wallet)",
         "Statistiques de rétention, de fréquence et de récompenses",
@@ -118,6 +120,7 @@
       "tagline": "Pour les commerces qui veulent faire revenir leurs clients",
       "features": [
         "8 diffusions par mois à tous vos clients",
+        "Des points en plus sur les paniers au-dessus du montant que vous fixez",
         "Vos propres messages de tampon et de récompense",
         "Styles de carte enregistrés illimités",
         "Heures de pointe et tendances hebdomadaires",
@@ -132,6 +135,7 @@
       "features": [
         "Plusieurs établissements, avec les statistiques de chacun",
         "Diffusions illimitées, avec segmentation clients",
+        "Plusieurs paliers de panier, chacun avec son bonus",
         "Programmez vos diffusions et vos styles de carte à l'avance",
         "Notifications quand vos clients sont à proximité (Apple Wallet)",
         "Statistiques de rétention, de fréquence et de récompenses",
@@ -174,6 +178,11 @@
         },
         "earningCaps": {
           "label": "Limites par client"
+        },
+        "basketBoost": {
+          "label": "Bonus gros panier",
+          "growth": "1 palier",
+          "pro": "Illimités"
         },
         "fullCustomisation": {
           "label": "Personnalisation complète de la carte"

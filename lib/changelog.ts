@@ -126,3 +126,19 @@ export function formatReleaseDate(iso: string | null, locale: string): string {
     return "";
   }
 }
+
+/** Narrow releases to items of one area (dropping releases left empty), or
+ *  return them as-is when no area is selected. Pure — used by the changelog
+ *  page for the ?area= filter. */
+export function filterReleasesByArea(
+  releases: ChangelogRelease[],
+  area: string | undefined
+): ChangelogRelease[] {
+  if (!area) return releases;
+  return releases
+    .map((r) => ({
+      ...r,
+      changelog_items: r.changelog_items.filter((i) => i.area === area),
+    }))
+    .filter((r) => r.changelog_items.length > 0);
+}

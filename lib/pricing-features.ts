@@ -29,6 +29,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
       { key: "savedTemplates", starter: "text", growth: "text", pro: "text" },
       { key: "loyaltyType", starter: "text", growth: "text", pro: "text" },
       { key: "earningCaps", starter: "cross", growth: "check", pro: "check" },
+      { key: "basketBoost", starter: "cross", growth: "text", pro: "text" },
     ],
   },
   {
