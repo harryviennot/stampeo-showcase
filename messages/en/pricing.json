@@ -39,6 +39,7 @@
       "featuresLabel": "Everything in Starter, plus:",
       "features": [
         "8 broadcasts a month to all your customers",
+        "Extra points on baskets above the amount you set",
         "Write your own stamp and reward messages",
         "Unlimited saved card styles",
         "Peak hours and weekly trends",
@@ -53,6 +54,7 @@
       "features": [
         "Multiple locations, with stats for each",
         "Unlimited broadcasts, with customer segmentation",
+        "Several basket levels, each with its own boost",
         "Schedule broadcasts and card styles in advance",
         "Notifications when customers are nearby (Apple Wallet)",
         "Retention, frequency and redemption stats",
@@ -118,6 +120,7 @@
       "tagline": "For businesses that want customers coming back",
       "features": [
         "8 broadcasts a month to all your customers",
+        "Extra points on baskets above the amount you set",
         "Write your own stamp and reward messages",
         "Unlimited saved card styles",
         "Peak hours and weekly trends",
@@ -132,6 +135,7 @@
       "features": [
         "Multiple locations, with stats for each",
         "Unlimited broadcasts, with customer segmentation",
+        "Several basket levels, each with its own boost",
         "Schedule broadcasts and card styles in advance",
         "Notifications when customers are nearby (Apple Wallet)",
         "Retention, frequency and redemption stats",
@@ -174,6 +178,11 @@
         },
         "earningCaps": {
           "label": "Per-customer earning limits"
+        },
+        "basketBoost": {
+          "label": "Basket boosters",
+          "growth": "1 level",
+          "pro": "Unlimited"
         },
         "fullCustomisation": {
           "label": "Full card customisation"

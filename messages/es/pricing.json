@@ -39,6 +39,7 @@
       "featuresLabel": "Todo el plan Starter, y además:",
       "features": [
         "8 difusiones al mes a todos tus clientes",
+        "Puntos extra en compras por encima del importe que fijes",
         "Tus propios mensajes de sello y recompensa",
         "Estilos de tarjeta guardados ilimitados",
         "Horas punta y tendencias semanales",
@@ -53,6 +54,7 @@
       "features": [
         "Varios locales, con estadísticas de cada uno",
         "Difusiones ilimitadas, con segmentación de clientes",
+        "Varios niveles de compra, cada uno con su bonus",
         "Programa tus difusiones y tus estilos de tarjeta con antelación",
         "Notificaciones cuando tus clientes están cerca (Apple Wallet)",
         "Estadísticas de retención, frecuencia y recompensas",
@@ -118,6 +120,7 @@
       "tagline": "Para comercios que quieren que sus clientes vuelvan",
       "features": [
         "8 difusiones al mes a todos tus clientes",
+        "Puntos extra en compras por encima del importe que fijes",
         "Tus propios mensajes de sello y recompensa",
         "Estilos de tarjeta guardados ilimitados",
         "Horas punta y tendencias semanales",
@@ -132,6 +135,7 @@
       "features": [
         "Varios locales, con estadísticas de cada uno",
         "Difusiones ilimitadas, con segmentación de clientes",
+        "Varios niveles de compra, cada uno con su bonus",
         "Programa tus difusiones y tus estilos de tarjeta con antelación",
         "Notificaciones cuando tus clientes están cerca (Apple Wallet)",
         "Estadísticas de retención, frecuencia y recompensas",
@@ -174,6 +178,11 @@
         },
         "earningCaps": {
           "label": "Límites por cliente"
+        },
+        "basketBoost": {
+          "label": "Bonus por compra grande",
+          "growth": "1 nivel",
+          "pro": "Ilimitados"
         },
         "fullCustomisation": {
           "label": "Personalización completa de la tarjeta"

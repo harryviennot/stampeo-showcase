@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM oven/bun:1 AS base
+FROM oven/bun:1.3.5 AS base
 WORKDIR /app
 
 # Install dependencies
@@ -9,7 +9,11 @@ COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
 # Build the application
-FROM base AS builder
+# Node, not Bun: `next build` fails under the Bun runtime, which cannot load
+# Next 16's turbopack CommonJS runtime chunks.
+# Debian-based to match the glibc node_modules produced by the deps stage.
+FROM node:22-bookworm-slim AS builder
+WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -33,7 +37,7 @@ ENV NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY
 ENV NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN bun run build
+RUN ./node_modules/.bin/next build
 
 # Production image
 FROM node:22-alpine AS runner
