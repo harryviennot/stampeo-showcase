@@ -1,0 +1,18 @@
+{
+  "blog": {
+    "title": "Blog",
+    "metaTitle": "Cyfrowa lojalność: poradnik dla lokalnych firm",
+    "description": "Porady, poradniki i nowości o cyfrowych programach lojalnościowych dla lokalnych firm.",
+    "featured": "Wyróżnione",
+    "allPosts": "Wszystkie artykuły",
+    "readMore": "Czytaj dalej",
+    "readingTime": "{time} czytania",
+    "share": "Udostępnij ten artykuł",
+    "relatedPosts": "Podobne artykuły",
+    "backToBlog": "Powrót do bloga",
+    "noPostsYet": "Jeszcze nie ma tu artykułów. Zajrzyj wkrótce!",
+    "tags": "Tagi",
+    "allTags": "Wszystkie",
+    "tableOfContents": "Spis treści"
+  }
+}

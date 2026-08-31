@@ -1,13 +1,4 @@
-const DISALLOW_PATHS = [
-  "/api/",
-  "/auth/",
-  "/onboarding/",
-  "/login/",
-  "/en/onboarding/",
-  "/en/login/",
-  "/en/auth/",
-  "/*opengraph-image*",
-];
+import { DISALLOW_PATHS } from "@/lib/robots";
 
 const USER_AGENTS = [
   "*",

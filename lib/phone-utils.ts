@@ -27,7 +27,7 @@ function countryToFlag(code: string): string {
     .join("");
 }
 
-/** Country names in English and French */
+/** Country names, one map per locale we serve */
 const COUNTRY_NAMES_EN: Partial<Record<CountryCode, string>> = {
   FR: "France", US: "United States", GB: "United Kingdom", DE: "Germany",
   ES: "Spain", IT: "Italy", PT: "Portugal", BE: "Belgium", CH: "Switzerland",
@@ -85,24 +85,48 @@ const COUNTRY_NAMES_ES: Partial<Record<CountryCode, string>> = {
   HT: "Haití", MC: "Mónaco", LB: "Líbano", CD: "RD Congo",
 };
 
+const COUNTRY_NAMES_PL: Partial<Record<CountryCode, string>> = {
+  FR: "Francja", US: "Stany Zjednoczone", GB: "Wielka Brytania", DE: "Niemcy",
+  ES: "Hiszpania", IT: "Włochy", PT: "Portugalia", BE: "Belgia", CH: "Szwajcaria",
+  CA: "Kanada", NL: "Holandia", AT: "Austria", IE: "Irlandia", LU: "Luksemburg",
+  AU: "Australia", NZ: "Nowa Zelandia", JP: "Japonia", KR: "Korea Południowa",
+  CN: "Chiny", IN: "Indie", BR: "Brazylia", MX: "Meksyk", AR: "Argentyna",
+  SE: "Szwecja", NO: "Norwegia", DK: "Dania", FI: "Finlandia", PL: "Polska",
+  CZ: "Czechy", RO: "Rumunia", HU: "Węgry", GR: "Grecja",
+  TR: "Turcja", RU: "Rosja", UA: "Ukraina", IL: "Izrael", AE: "ZEA",
+  SA: "Arabia Saudyjska", MA: "Maroko", TN: "Tunezja", DZ: "Algieria",
+  SN: "Senegal", CI: "Wybrzeże Kości Słoniowej", CM: "Kamerun", MG: "Madagaskar",
+  MU: "Mauritius", RE: "Reunion", GP: "Gwadelupa", MQ: "Martynika",
+  GF: "Gujana Francuska", NC: "Nowa Kaledonia", PF: "Polinezja Francuska",
+  ZA: "RPA", NG: "Nigeria", GH: "Ghana", KE: "Kenia",
+  TH: "Tajlandia", VN: "Wietnam", PH: "Filipiny", SG: "Singapur",
+  MY: "Malezja", ID: "Indonezja", CO: "Kolumbia", CL: "Chile", PE: "Peru",
+  HT: "Haiti", MC: "Monako", LB: "Liban", CD: "DR Konga",
+};
+
+const COUNTRY_NAMES: Record<string, Partial<Record<CountryCode, string>>> = {
+  en: COUNTRY_NAMES_EN,
+  fr: COUNTRY_NAMES_FR,
+  es: COUNTRY_NAMES_ES,
+  pl: COUNTRY_NAMES_PL,
+};
+
 /** Priority countries shown at the top of the dropdown */
 const PRIORITY_COUNTRIES: CountryCode[] = [
-  "FR", "BE", "CH", "CA", "US", "GB", "DE", "ES", "IT", "PT", "NL",
+  "FR", "BE", "CH", "CA", "US", "GB", "DE", "ES", "IT", "PT", "NL", "PL",
   "MA", "TN", "DZ", "SN", "CI", "CM",
 ];
 
-let cachedList: CountryEntry[] | null = null;
+// Keyed by locale: the list is sorted by localized name, so one shared cache
+// would hand the second locale the first one's names.
+const cachedLists = new Map<string, CountryEntry[]>();
 
 /** Get the full list of countries with dial codes and flags */
 export function getCountryList(locale: string = "en"): CountryEntry[] {
-  if (cachedList) return cachedList;
+  const cached = cachedLists.get(locale);
+  if (cached) return cached;
 
-  const names =
-    locale === "fr"
-      ? COUNTRY_NAMES_FR
-      : locale === "es"
-        ? COUNTRY_NAMES_ES
-        : COUNTRY_NAMES_EN;
+  const names = COUNTRY_NAMES[locale] ?? COUNTRY_NAMES_EN;
   const allCountries = getCountries();
 
   const entries: CountryEntry[] = allCountries
@@ -120,8 +144,9 @@ export function getCountryList(locale: string = "en"): CountryEntry[] {
     .filter(Boolean) as CountryEntry[];
   const rest = entries.filter((e) => !PRIORITY_COUNTRIES.includes(e.code));
 
-  cachedList = [...priority, ...rest];
-  return cachedList;
+  const list = [...priority, ...rest];
+  cachedLists.set(locale, list);
+  return list;
 }
 
 /** Map of timezone → country code for auto-detection */
@@ -178,6 +203,7 @@ export function detectDefaultCountry(locale: string): CountryCode {
   // Fallback: map locale to most common country
   const localeMap: Record<string, CountryCode> = {
     fr: "FR", en: "US", de: "DE", es: "ES", it: "IT", pt: "PT", nl: "NL",
+    pl: "PL",
   };
   return localeMap[locale] || "FR";
 }

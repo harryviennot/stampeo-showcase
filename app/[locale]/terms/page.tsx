@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 import { getLegalContent } from "@/lib/legal";
 import { compileLegalMDX } from "@/lib/legal/mdx";
+import { localeAlternates, localePath } from "@/lib/hreflang";
 
 export async function generateMetadata({
   params,
@@ -16,8 +17,8 @@ export async function generateMetadata({
   return {
     title: legal.title,
     alternates: {
-      canonical: locale === "fr" ? "/terms" : `/${locale}/terms`,
-      languages: { "x-default": "/terms", fr: "/terms", en: "/en/terms", es: "/es/terms" },
+      canonical: localePath(locale, "/terms"),
+      languages: localeAlternates("/terms"),
     },
   };
 }

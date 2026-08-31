@@ -16,6 +16,7 @@ export interface ChangelogArea {
   label_fr: string;
   label_en: string;
   label_es: string | null;
+  label_pl: string | null;
   color: string;
   sort_order: number;
 }
@@ -28,9 +29,11 @@ export interface ChangelogItem {
   title_fr: string;
   title_en: string | null;
   title_es: string | null;
+  title_pl: string | null;
   body_fr: string | null;
   body_en: string | null;
   body_es: string | null;
+  body_pl: string | null;
   sort_order: number;
 }
 
@@ -40,12 +43,15 @@ export interface ChangelogRelease {
   title_fr: string | null;
   title_en: string | null;
   title_es: string | null;
+  title_pl: string | null;
   body_fr: string | null;
   body_en: string | null;
   body_es: string | null;
+  body_pl: string | null;
   image_url_fr: string | null;
   image_url_en: string | null;
   image_url_es: string | null;
+  image_url_pl: string | null;
   published_at: string | null;
   changelog_items: ChangelogItem[];
 }
@@ -55,19 +61,22 @@ export interface ChangelogResponse {
   areas: ChangelogArea[];
 }
 
-/** Resolve a localized triple to the viewer's locale (ES → EN → FR fallback). */
+/** Resolve a localized field set to the viewer's locale (locale → EN → FR). */
 export function resolve(
   fr: string | null | undefined,
   en: string | null | undefined,
   es: string | null | undefined,
+  pl: string | null | undefined,
   locale: string
 ): string {
+  if (locale === "pl") return (pl && pl.trim()) || (en && en.trim()) || fr || "";
   if (locale === "es") return (es && es.trim()) || (en && en.trim()) || fr || "";
   if (locale === "en") return (en && en.trim()) || fr || "";
   return fr || "";
 }
 
 export function areaLabel(area: ChangelogArea, locale: string): string {
+  if (locale === "pl") return area.label_pl || area.label_en || area.label_fr;
   if (locale === "es") return area.label_es || area.label_en || area.label_fr;
   if (locale === "en") return area.label_en || area.label_fr;
   return area.label_fr;
@@ -110,12 +119,20 @@ export async function getPlatformVersion(): Promise<PlatformVersion> {
   }
 }
 
+/** Intl tags for date formatting — a bare locale code isn't always enough. */
+const DATE_LOCALES: Record<string, string> = {
+  fr: "fr-FR",
+  en: "en-US",
+  es: "es-ES",
+  pl: "pl-PL",
+};
+
 /** Date formatted in the viewer's locale, e.g. "11 juin 2026" / "June 11, 2026". */
 export function formatReleaseDate(iso: string | null, locale: string): string {
   if (!iso) return "";
   try {
     return new Date(iso).toLocaleDateString(
-      locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-US",
+      DATE_LOCALES[locale] ?? "en-US",
       {
         year: "numeric",
         month: "long",

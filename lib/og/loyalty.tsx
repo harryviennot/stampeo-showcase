@@ -10,7 +10,7 @@ import {
   truncate,
 } from "@/lib/og/shared";
 
-/** Shared OpenGraph image for the three localized loyalty-programs routes. */
+/** Shared OpenGraph image for the localized loyalty-programs routes. */
 export async function loyaltyOgImage(locale: string) {
   const t = await getTranslations({ locale, namespace: "metadata.loyaltyPrograms" });
   const fonts = await loadFonts();

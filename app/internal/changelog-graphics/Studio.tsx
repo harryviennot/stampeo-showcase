@@ -18,7 +18,7 @@ const STAGE_W = 1280;
 const STAGE_H = 720;
 const EXPORT_PIXEL_RATIO = 1.5;
 
-const LOCALES = ["en", "fr", "es"] as const;
+const LOCALES = ["en", "fr", "es", "pl"] as const;
 type Locale = (typeof LOCALES)[number];
 
 export function Studio({

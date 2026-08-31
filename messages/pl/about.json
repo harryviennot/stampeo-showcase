@@ -1,0 +1,49 @@
+{
+  "about": {
+    "title": "O Stampeo",
+    "hero": {
+      "badge": "Nasza historia",
+      "headline": "Każda lokalna firma zasługuje na stałych klientów.",
+      "description": "Stampeo powstało z prostej obserwacji: papierowe karty lojalnościowe giną, a aplikacji lojalnościowych nikt nie pobiera. Zbudowaliśmy most: cyfrowe karty lojalnościowe, które są tam, gdzie twoi klienci i tak już są, w telefonie."
+    },
+    "mission": {
+      "title": "Nasza misja",
+      "description": "Sprawić, żeby budowanie lojalności było proste dla lokalnych firm. Bez drogiego sprzętu, bez skomplikowanych programów, bez przeszkód dla klienta. Po prostu prosta i ładna cyfrowa karta lojalnościowa, która działa."
+    },
+    "values": {
+      "title": "W co wierzymy",
+      "items": [
+        {
+          "title": "Najpierw prostota",
+          "description": "Jeśli konfiguracja zajmuje więcej niż 5 minut, to znaczy, że coś zrobiliśmy źle. Każda nowa funkcja przechodzi u nas test prostoty."
+        },
+        {
+          "title": "Zrobione dla lokalnych firm",
+          "description": "Obsługujemy piekarnię na rogu, kawiarnię w centrum, salon fryzjerski obok. Nasze funkcje są pomyślane dla firm, które znają swoich klientów po imieniu."
+        },
+        {
+          "title": "Zero przeszkód dla klienta",
+          "description": "Twoi klienci nie powinni pobierać aplikacji ani zakładać konta. Jeden skan, jedno naciśnięcie i karta ląduje w ich telefonie."
+        },
+        {
+          "title": "Uczciwe ceny",
+          "description": "Bierzemy tyle, ile jest uczciwe, i mówimy to wprost. Bez ukrytych opłat, bez prowizji od transakcji, bez niespodzianek."
+        }
+      ]
+    },
+    "story": {
+      "title": "Jak to się zaczęło",
+      "paragraphs": [
+        "W każdej kawiarni, piekarni i lokalnym sklepie widzieliśmy ten sam problem: papierowe karty na pieczątki, które giną, niszczą się albo zostają w domu. A „rozwiązania”, które były na rynku, przeładowane aplikacje, których nikt nie pobiera, wcale nie były lepsze.",
+        "Więc zapytaliśmy: a gdyby karta lojalnościowa siedziała w jedynej rzeczy, którą każdy nosi przy sobie? W telefonie. Bez aplikacji, bez logowania, bez przeszkód. Skan, jedno naciśnięcie, gotowe.",
+        "To właśnie Stampeo. Platforma lojalnościowa zbudowana od zera pod Apple Wallet i Google Wallet, pomyślana o lokalnych firmach, które chcą nagradzać stałych klientów bez komplikacji."
+      ]
+    },
+    "cta": {
+      "title": "Dołączasz do nas?",
+      "description": "Uruchom swój cyfrowy program lojalnościowy jeszcze dziś.",
+      "button": "Zacznij za darmo",
+      "annotation": "i tak, odbieramy telefon"
+    }
+  }
+}

@@ -21,10 +21,11 @@ import {
   getRelatedPosts,
 } from "@/lib/blog";
 import { compileBlogMDX } from "@/lib/blog/mdx";
+import { BLOG_LOCALES, hasBlog } from "@/lib/blog/locales";
+import { localePath } from "@/lib/hreflang";
 
 export async function generateStaticParams() {
-  const blogLocales = ["fr", "en", "es"] as const;
-  return blogLocales.flatMap((locale) =>
+  return BLOG_LOCALES.flatMap((locale) =>
     getAllSlugs(locale).map((slug) => ({ locale, slug }))
   );
 }
@@ -35,7 +36,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  if (locale !== "fr" && locale !== "en" && locale !== "es") return {};
+  if (!hasBlog(locale)) return {};
 
   const post = getPostBySlug(slug, locale);
   if (!post) return {};
@@ -53,8 +54,7 @@ export async function generateMetadata({
       tags: post.tags,
     },
     alternates: {
-      canonical:
-        locale === "fr" ? `/blog/${slug}` : `/${locale}/blog/${slug}`,
+      canonical: localePath(locale, `/blog/${slug}`),
     },
   };
 }
@@ -67,8 +67,10 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const locale = await getLocale();
 
-  if (locale !== "fr" && locale !== "en" && locale !== "es") {
-    redirect(`/blog/${slug}`);
+  // No articles in this locale, so no post to show. Send the visitor to their
+  // own home page rather than to a French article.
+  if (!hasBlog(locale)) {
+    redirect(localePath(locale, "/"));
   }
 
   const t = await getTranslations("blog");

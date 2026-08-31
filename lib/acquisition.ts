@@ -3,6 +3,7 @@
  * These endpoints are public (no authentication required).
  */
 
+import type { Locale } from "@/i18n/routing";
 import { mapSubmissionError, type SubmissionFieldError } from "@/lib/signup-validation";
 import type {
   CardType,
@@ -56,7 +57,7 @@ export interface BusinessPublicResponse {
   subscription_tier: string;
   /** The language the merchant authors their own wording in. Everything else
    *  is either translated by them or falls back to our localized defaults. */
-  primary_locale?: "fr" | "en" | "es";
+  primary_locale?: Locale;
   logo_url?: string | null;
   settings: {
     category?: string;
@@ -157,7 +158,7 @@ export interface FieldWordingText {
  * for, so it keeps the primary-locale text.
  */
 export interface FieldWording extends FieldWordingText {
-  translations?: Partial<Record<"en" | "fr" | "es", FieldWordingText>>;
+  translations?: Partial<Record<Locale, FieldWordingText>>;
 }
 
 /**
@@ -290,7 +291,13 @@ export async function createPublicCustomer(
   locationSlug?: string | null
 ): Promise<{
   data: CustomerPublicResponse | null;
-  error: string | null;
+  /**
+   * Diagnostic only — NEVER render this. It carries raw backend/network text,
+   * which is always English, so showing it to an end customer enrolling with a
+   * French, Spanish or Polish merchant leaks an English string into their flow.
+   * Log it; show the localized `acquisition.error.defaultMessage` instead.
+   */
+  errorDetail: string | null;
   code?: string;
   fieldError?: SubmissionFieldError | null;
 }> {
@@ -309,34 +316,34 @@ export async function createPublicCustomer(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      let errorMessage = `Failed to register (${response.status})`;
+      let errorDetail = `Failed to register (${response.status})`;
       let code: string | undefined;
       let fieldError: SubmissionFieldError | null = null;
 
       if (typeof errorData.detail === "string") {
-        errorMessage = errorData.detail;
+        errorDetail = errorData.detail;
       } else if (Array.isArray(errorData.detail) && errorData.detail.length > 0) {
-        errorMessage = errorData.detail[0]?.msg || errorMessage;
+        errorDetail = errorData.detail[0]?.msg || errorDetail;
       } else if (errorData.detail && typeof errorData.detail === "object") {
         // Standardized structured error, e.g. the card-upfront checkout gate
         // ({ code: "CHECKOUT_REQUIRED", ... }) — surface the code so the flow
         // can show a friendly "not open yet" state instead of a retry error.
         code = errorData.detail.code as string | undefined;
-        errorMessage = (errorData.detail.message as string) || errorMessage;
+        errorDetail = (errorData.detail.message as string) || errorDetail;
         // A per-field rejection ({ field, reason }) belongs on the input, not
         // in a full-page error that would throw away everything typed.
         fieldError = mapSubmissionError(errorData.detail);
       }
 
-      return { data: null, error: errorMessage, code, fieldError };
+      return { data: null, errorDetail, code, fieldError };
     }
 
     const responseData = await response.json();
-    return { data: responseData, error: null };
+    return { data: responseData, errorDetail: null };
   } catch (err) {
     return {
       data: null,
-      error: err instanceof Error ? err.message : "Failed to register",
+      errorDetail: err instanceof Error ? err.message : "Failed to register",
     };
   }
 }

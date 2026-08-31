@@ -34,21 +34,29 @@ const SPANISH_TIMEZONES = new Set([
   "America/Montevideo", "America/Argentina/Buenos_Aires",
 ]);
 
+// Poland only. Polish is spoken as a market language in one timezone, so this
+// stays a single entry rather than a set of regional variants.
+const POLISH_TIMEZONES = new Set(["Europe/Warsaw"]);
+
 /**
  * Detect the business locale based on the user's timezone.
  * Falls back to the provided locale if timezone detection fails.
  */
-export function detectBusinessLocale(fallbackLocale: string): "fr" | "en" | "es" {
+export function detectBusinessLocale(
+  fallbackLocale: string
+): "fr" | "en" | "es" | "pl" {
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (tz && FRENCH_TIMEZONES.has(tz)) return "fr";
     // Check Canadian French timezone specifically
     if (tz?.startsWith("America/Montreal")) return "fr";
     if (tz && SPANISH_TIMEZONES.has(tz)) return "es";
+    if (tz && POLISH_TIMEZONES.has(tz)) return "pl";
   } catch {
     // Intl not available — fall back
   }
   if (fallbackLocale === "fr") return "fr";
   if (fallbackLocale === "es") return "es";
+  if (fallbackLocale === "pl") return "pl";
   return "en";
 }

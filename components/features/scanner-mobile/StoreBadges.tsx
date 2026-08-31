@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { storeBadges } from "@/lib/store-badges";
 
 // Live store listings for the Stampeo scanner app. Canonical, region-free forms
 // so each store opens in the visitor's local market + language. Kept in sync with
@@ -22,15 +23,14 @@ interface StoreBadgesProps {
 }
 
 /**
- * Clickable App Store + Google Play badges, locale-aware (French art on `fr`).
+ * Clickable App Store + Google Play badges, locale-aware (see `lib/store-badges`).
  * Uses a plain <img> so we don't have to enable SVG handling in next/image.
  */
 export function StoreBadges({ size = "md", className = "" }: StoreBadgesProps) {
   const locale = useLocale();
   const t = useTranslations("features.scanner-mobile.custom");
 
-  const appleSrc = locale === "fr" ? "/AppStoreFR.svg" : locale === "es" ? "/AppStoreES.svg" : "/AppStore.svg";
-  const googleSrc = locale === "fr" ? "/GooglePlayFR.svg" : locale === "es" ? "/GooglePlayES.svg" : "/GooglePlay.svg";
+  const { apple: appleSrc, google: googleSrc } = storeBadges(locale);
   const h = heights[size];
 
   return (

@@ -69,4 +69,5 @@ export const PILOT_HREFLANG: Record<string, string> = {
   "en-GB": "/uk",
   "en-US": "/us",
   es: "/es",
+  pl: "/pl",
 };

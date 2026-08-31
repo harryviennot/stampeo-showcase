@@ -1,0 +1,88 @@
+{
+  "contact": {
+    "title": "Napisz do nas",
+    "hero": {
+      "badge": "Kontakt",
+      "headline": "Chętnie cię wysłuchamy.",
+      "description": "Masz pytanie, uwagę albo chcesz się po prostu przywitać? Jesteśmy tu, żeby pomóc."
+    },
+    "form": {
+      "name": "Twoje imię i nazwisko",
+      "namePlaceholder": "Jan Kowalski",
+      "email": "Adres e-mail",
+      "emailPlaceholder": "jan@przyklad.pl",
+      "subject": "Temat",
+      "subjectPlaceholder": "W czym możemy pomóc?",
+      "message": "Wiadomość",
+      "messagePlaceholder": "Napisz nam coś więcej...",
+      "send": "Wyślij wiadomość",
+      "sending": "Wysyłanie...",
+      "success": "Wiadomość wysłana! Odpowiemy szybko.",
+      "error": "Coś poszło nie tak. Spróbuj ponownie albo napisz do nas bezpośrednio."
+    },
+    "info": {
+      "title": "Inne sposoby kontaktu",
+      "email": {
+        "title": "E-mail",
+        "value": "contact@stampeo.app",
+        "description": "Pytania ogólne"
+      },
+      "support": {
+        "title": "Wsparcie",
+        "value": "support@stampeo.app",
+        "description": "Pomoc techniczna"
+      },
+      "phone": {
+        "title": "Telefon",
+        "value": "+33 6 49 37 04 70",
+        "description": "Pytania ogólne"
+      },
+      "location": {
+        "title": "Siedziba",
+        "value": "Paryż, Francja",
+        "description": "Tu nas znajdziesz"
+      }
+    },
+    "social": {
+      "title": "Obserwuj nas",
+      "description": "Bądź na bieżąco z nowościami Stampeo."
+    },
+    "demo": {
+      "hero": {
+        "badge": "Demo Stampeo",
+        "headline": "Zarezerwuj demo na 20 minut.",
+        "description": "Napisz, kiedy ci pasuje, a oddzwonimy w dogodnym momencie. Demo pod twoją firmę, nie ogólna prezentacja."
+      },
+      "form": {
+        "name": "Twoje imię i nazwisko",
+        "namePlaceholder": "Jan Kowalski",
+        "email": "Adres e-mail",
+        "emailPlaceholder": "jan@przyklad.pl",
+        "phone": "Telefon (do oddzwonienia)",
+        "phonePlaceholder": "+48 601 234 567",
+        "business": "Nazwa firmy",
+        "businessPlaceholder": "Kawiarnia pod Lipą",
+        "businessType": "Rodzaj działalności",
+        "businessTypePlaceholder": "Wybierz swoją branżę",
+        "businessTypeOptions": {
+          "cafe": "Kawiarnia",
+          "restaurant": "Restauracja",
+          "boulangerie": "Piekarnia / Cukiernia",
+          "retail": "Handel / Sklep",
+          "salon": "Salon (fryzjerski, kosmetyczny itp.)",
+          "fitness": "Fitness / Sport",
+          "services": "Usługi",
+          "other": "Inne"
+        },
+        "availability": "Kiedy ci pasuje",
+        "availabilityPlaceholder": "Np. wtorek po południu, czwartek rano albo „kiedykolwiek w tym tygodniu”.",
+        "message": "Coś jeszcze (opcjonalnie)",
+        "messagePlaceholder": "Opowiedz o swojej firmie i o tym, czego oczekujesz od Stampeo...",
+        "send": "Zarezerwuj demo",
+        "sending": "Wysyłanie...",
+        "success": "Dziękujemy! Oddzwonimy w jednym z podanych terminów.",
+        "error": "Coś poszło nie tak. Spróbuj ponownie albo zadzwoń pod +33 6 49 37 04 70."
+      }
+    }
+  }
+}

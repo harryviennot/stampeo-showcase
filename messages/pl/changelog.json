@@ -1,0 +1,19 @@
+{
+  "changelog": {
+    "meta": {
+      "title": "Nowości",
+      "description": "Wszystko, co zmieniliśmy w Stampeo, tydzień po tygodniu: nowe funkcje, ulepszenia i poprawki."
+    },
+    "eyebrow": "Historia zmian",
+    "title": "Nowości w Stampeo",
+    "subtitle": "Co dodaliśmy dla ciebie, tydzień po tygodniu.",
+    "filterAll": "Wszystko",
+    "categories": {
+      "feature": "Nowe funkcje",
+      "improvement": "Ulepszenia",
+      "fix": "Poprawki"
+    },
+    "forTeam": "Dla twojego zespołu",
+    "empty": "Pierwsze nowości są już w drodze."
+  }
+}
