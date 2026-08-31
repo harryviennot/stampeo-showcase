@@ -130,9 +130,12 @@ export function isFoundingProgramOpen(now: Date = new Date()): boolean {
  */
 export const PROMO_BANNER_ENABLED = false;
 
+/** Locales that write the decimal separator as a comma (10,99 not 10.99). */
+const COMMA_DECIMAL_LOCALES = new Set(["fr", "es", "pl"]);
+
 /** Format a price for display (e.g. 10 → "10", 14.99 → "14.99") */
 export function formatPrice(price: number, locale?: string): string {
-  if (locale === "fr" || locale === "es") {
+  if (locale && COMMA_DECIMAL_LOCALES.has(locale)) {
     return price % 1 === 0 ? `${price}` : price.toFixed(2).replace(".", ",");
   }
   return price % 1 === 0 ? `${price}` : price.toFixed(2);

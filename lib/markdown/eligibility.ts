@@ -1,13 +1,17 @@
+import { routing } from "@/i18n/routing";
+
+/** Paths that never serve Markdown, in every locale prefix we ship. */
+const PRIVATE_PATHS = ["/api", "/auth", "/onboarding", "/login"];
+
 const EXCLUDED_PREFIXES = [
-  "/api",
-  "/auth",
-  "/onboarding",
-  "/login",
+  ...PRIVATE_PATHS,
   "/_next",
   "/_vercel",
-  "/en/onboarding",
-  "/en/login",
-  "/en/auth",
+  ...routing.locales
+    .filter((locale) => locale !== routing.defaultLocale)
+    .flatMap((locale) =>
+      PRIVATE_PATHS.map((path) => `/${locale}${path}`)
+    ),
 ];
 
 export function isMarkdownEligible(pathname: string): boolean {

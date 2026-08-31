@@ -35,7 +35,6 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
   const platform = useDevicePlatform();
   const [flowState, setFlowState] = useState<FlowState>("form");
   const [customerResponse, setCustomerResponse] = useState<CustomerPublicResponse | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // A rejection the backend pinned to one input, handed back to the form so it
   // highlights that field instead of replacing the page with an error card.
   const [serverFieldError, setServerFieldError] = useState<SubmissionFieldError | null>(null);
@@ -86,12 +85,11 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
 
   const handleSubmit = async (data: CustomerCreatePublic) => {
     setFlowState("submitting");
-    setErrorMessage(null);
     setSubmittedEmail(data.email ?? null);
 
     // On desktop the visitor can't add the card to a phone wallet from here, so
     // ask the backend to also email it (it only sends when an email was given).
-    const { data: response, error, code, fieldError } = await createPublicCustomer(
+    const { data: response, errorDetail, code, fieldError } = await createPublicCustomer(
       business.id,
       { ...data, send_email: platform === "desktop" },
       locationSlug
@@ -112,8 +110,12 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
       return;
     }
 
-    if (error || !response) {
-      setErrorMessage(error || "Something went wrong. Please try again.");
+    if (errorDetail || !response) {
+      // `errorDetail` is raw backend/network text and always English. Showing it
+      // would put an English string in front of a customer enrolling with a
+      // French, Spanish or Polish merchant, so it is logged, never rendered:
+      // the card falls back to the localized `acquisition.error.defaultMessage`.
+      console.error("[acquisition] enrollment failed:", errorDetail);
       setFlowState("error");
       return;
     }
@@ -129,7 +131,6 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
 
   const handleRetry = () => {
     setFlowState("form");
-    setErrorMessage(null);
   };
 
   return (
@@ -251,7 +252,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                 )}
 
                 {flowState === "error" && (
-                  <ErrorCard message={errorMessage} onRetry={handleRetry} />
+                  <ErrorCard onRetry={handleRetry} />
                 )}
 
                 {flowState === "not_open" && <NotOpenCard />}
@@ -524,10 +525,8 @@ function NotOpenCard() {
 }
 
 function ErrorCard({
-  message,
   onRetry,
 }: {
-  message: string | null;
   onRetry: () => void;
 }) {
   const t = useTranslations("acquisition");
@@ -553,7 +552,7 @@ function ErrorCard({
         {t("error.title")}
       </h2>
       <p className="text-[var(--muted-foreground)] mb-6">
-        {message || t("error.defaultMessage")}
+        {t("error.defaultMessage")}
       </p>
       <button
         onClick={onRetry}

@@ -4,6 +4,7 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { localeAlternates, localePath } from "@/lib/hreflang";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import { ScrollRevealInit } from "@/components/ui/ScrollRevealInit";
@@ -11,12 +12,12 @@ import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 /* Handwriting face for ink annotations only (.ink-note), never for UI text.
@@ -29,6 +30,14 @@ const caveat = Caveat({
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+/** OpenGraph wants a language_TERRITORY tag, so each locale names a region. */
+const OG_LOCALES: Record<string, string> = {
+  fr: "fr_FR",
+  en: "en_US",
+  es: "es_ES",
+  pl: "pl_PL",
+};
 
 export async function generateMetadata({
   params,
@@ -54,7 +63,7 @@ export async function generateMetadata({
       description: t("description"),
       type: "website",
       siteName: "Stampeo",
-      locale: locale === "fr" ? "fr_FR" : locale === "es" ? "es_ES" : "en_US",
+      locale: OG_LOCALES[locale] ?? OG_LOCALES.en,
     },
     twitter: {
       card: "summary_large_image",
@@ -67,13 +76,8 @@ export async function generateMetadata({
       },
     },
     alternates: {
-      canonical: locale === "fr" ? "/" : `/${locale}`,
-      languages: {
-        "x-default": "/",
-        fr: "/",
-        en: "/en",
-        es: "/es",
-      },
+      canonical: localePath(locale, "/"),
+      languages: localeAlternates("/"),
     },
   };
 }

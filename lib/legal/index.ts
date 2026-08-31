@@ -8,11 +8,13 @@ const FILE_MAP: Record<LegalPageType, Record<string, string>> = {
     en: "privacy-policy.md",
     fr: "politique-de-confidentialite.md",
     es: "politica-privacidad.md",
+    pl: "polityka-prywatnosci.md",
   },
   terms: {
     en: "terms-of-service.md",
     fr: "conditions-generales-utilisation.md",
     es: "terminos-servicio.md",
+    pl: "regulamin.md",
   },
 };
 

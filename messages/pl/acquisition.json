@@ -1,0 +1,66 @@
+{
+  "acquisition": {
+    "getCard": "Odbierz swoją kartę lojalnościową",
+    "defaultDescription": "Dołącz do naszego programu lojalnościowego i zbieraj nagrody!",
+    "getMyCard": "Odbieram kartę",
+    "privacyNote": "Twoje dane zbiera <bold>{businessName}</bold> na potrzeby swojego programu lojalnościowego. Stampeo jest tylko technicznym podmiotem przetwarzającym. <privacy>Dowiedz się więcej</privacy>.",
+    "form": {
+      "name": "Twoje imię",
+      "namePlaceholder": "Wpisz swoje imię",
+      "email": "Adres e-mail",
+      "emailPlaceholder": "ty@przyklad.pl",
+      "phone": "Numer telefonu",
+      "phonePlaceholder": "+48 601 234 567",
+      "optional": "(opcjonalne)",
+      "emailOptionalHint": "Z adresem e-mail odzyskasz kartę, gdyby kiedyś zniknęła z telefonu.",
+      "nameRequired": "Imię jest wymagane",
+      "emailRequired": "E-mail jest wymagany",
+      "emailInvalid": "Wpisz poprawny adres e-mail",
+      "phoneRequired": "Numer telefonu jest wymagany",
+      "phoneInvalid": "Wpisz poprawny numer telefonu",
+      "emailOrPhoneRequired": "Podaj e-mail albo numer telefonu",
+      "birthday": "Urodziny",
+      "birthdayDay": "Dzień",
+      "birthdayMonth": "Miesiąc",
+      "birthdayHint": "Tylko dzień i miesiąc. O rok nigdy nie pytamy.",
+      "birthdayIncomplete": "Wybierz dzień i miesiąc",
+      "fieldRequired": "To pole jest wymagane",
+      "numberInvalid": "Wpisz liczbę",
+      "numberOutOfRange": "Ta liczba jest poza dozwolonym zakresem",
+      "choosePlaceholder": "Wybierz opcję",
+      "birthdayInvalid": "Taka data nie istnieje. Sprawdź dzień i miesiąc.",
+      "optionInvalid": "Wybierz jedną z opcji z listy.",
+      "valueTooLong": "Ta odpowiedź jest za długa. Skróć ją.",
+      "fieldRejected": "Nie udało się przyjąć tej odpowiedzi. Sprawdź ją i spróbuj ponownie."
+    },
+    "loading": "Tworzymy twoją kartę...",
+    "success": {
+      "title": "Twoja karta jest gotowa!",
+      "description": "Dodaj kartę lojalnościową {businessName} do portfela w telefonie i zacznij zbierać pieczątki.",
+      "desktopDescription": "Dodasz ją do telefonu w kilka sekund.",
+      "emailedNote": "Wysłaliśmy ją też na adres {email}.",
+      "scanTitle": "Zeskanuj telefonem",
+      "scanHint": "Skieruj aparat telefonu na kod, żeby dodać kartę.",
+      "autoAdding": "Dodajemy twoją kartę do portfela…",
+      "fallbackHint": "Dodaj ją ręcznie:"
+    },
+    "emailSent": {
+      "title": "Sprawdź swoją skrzynkę",
+      "defaultMessage": "Wysłaliśmy twoją kartę lojalnościową na twój adres e-mail."
+    },
+    "error": {
+      "title": "Coś poszło nie tak",
+      "defaultMessage": "Nie udało się utworzyć karty. Spróbuj ponownie."
+    },
+    "notReady": {
+      "title": "Już wkrótce!",
+      "description": "Ten program lojalnościowy jeszcze nie wystartował. Zajrzyj tu za jakiś czas, czekają dobre nagrody!"
+    },
+    "notOpen": {
+      "title": "Program jeszcze nie ruszył",
+      "description": "Ta firma dopiero przygotowuje swój program lojalnościowy. Zajrzyj tu za jakiś czas po swoją kartę."
+    },
+    "poweredBy": "Obsługiwane przez",
+    "previewSampleName": "Zofia"
+  }
+}

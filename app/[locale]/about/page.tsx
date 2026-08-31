@@ -4,6 +4,7 @@ import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
+import { localeAlternates, localePath } from "@/lib/hreflang";
 
 export async function generateMetadata({
   params,
@@ -16,8 +17,8 @@ export async function generateMetadata({
     title: t("title"),
     description: t("hero.description"),
     alternates: {
-      canonical: locale === "fr" ? "/about" : `/${locale}/about`,
-      languages: { "x-default": "/about", fr: "/about", en: "/en/about", es: "/es/about" },
+      canonical: localePath(locale, "/about"),
+      languages: localeAlternates("/about"),
     },
   };
 }

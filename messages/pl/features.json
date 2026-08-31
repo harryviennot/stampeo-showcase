@@ -1,0 +1,1523 @@
+{
+  "features": {
+    "design-de-carte": {
+      "hero": {
+        "title": "Karta w twoich barwach, aż po ostatnią pieczątkę",
+        "subtitle": "Kolory, logo, własne ikony pieczątek: w kilka minut złożysz kartę, która naprawdę wygląda jak twoja firma. Albo zrobimy ją za ciebie."
+      },
+      "problem": {
+        "title": "Porządna karta nie powinna być osobnym projektem",
+        "description": "Grafika w Canvie? A może program z 47 opcjami personalizacji? Prowadzisz firmę, a nie agencję reklamową. Kończy się zwykle tak: albo dwie godziny sklejania czegoś przeciętnego, albo karty w ogóle nie ma."
+      },
+      "sections": [
+        {
+          "title": "Zrobimy ją za ciebie",
+          "description": "To nasze ulubione rozwiązanie. Przysyłasz swoje materiały, a resztą zajmujemy się my. Nasz zespół tworzy kartę cyfrową zgodnie z twoją identyfikacją wizualną. Profesjonalny efekt gwarantowany, zero pracy po twojej stronie.",
+          "icon": "sparkles"
+        },
+        {
+          "title": "Tworzenie z pomocą AI",
+          "description": "Zrób zdjęcie swojej papierowej karty. Nasza AI odczyta logo, kolory, układ nagród i nazwę firmy. W kilka sekund masz gotową kartę cyfrową z wypełnionymi danymi.",
+          "icon": "cpu",
+          "badge": "Wkrótce"
+        },
+        {
+          "title": "Samodzielny edytor",
+          "description": "Dla tych, którzy chcą kontrolować wszystko: logo, kolory, własne ikony pieczątek, tło, tekst nagrody. Każdą zmianę widać od razu w realistycznym podglądzie karty w telefonie.",
+          "icon": "palette"
+        }
+      ],
+      "cta": {
+        "title": "Twoja karta gotowa w 5 minut",
+        "subtitle": "Zrobimy ją za ciebie albo złożysz ją po swojemu. Tak czy inaczej, będzie wyglądać profesjonalnie."
+      },
+      "related": [
+        "scanner-mobile",
+        "notifications-push"
+      ],
+      "gallery": {
+        "title": "Piętnaście firm, piętnaście wzorów",
+        "subtitle": "Każda karta tutaj powstała w tym edytorze: siatka pieczątek albo pasek punktów, własne ikony, logo na pierwszym planie.",
+        "ctaLead": "Twoja może być następna.",
+        "prev": "Poprzedni wzór",
+        "next": "Następny wzór",
+        "stamps": [
+          "Własne ikony ułożone naprzemiennie",
+          "Własne ikony, które nakładają się z każdą pieczątką",
+          "Żywe ikony na jasnej karcie",
+          "Klasyczna siatka z twoim logo",
+          "Jasne ikony na głębokim tle",
+          "Równa, uporządkowana siatka",
+          "Dwanaście ikon, które się piętrzą",
+          "Mocny kolor, wesołe ikony"
+        ],
+        "points": [
+          "Duży, czytelny stan punktów",
+          "Twoje zdjęcie jako pasek",
+          "Znacznik przy każdej nagrodzie",
+          "Pierścień, który wypełnia się do nagrody",
+          "Monochromatycznie i elegancko",
+          "Progi nagród na jasnej karcie",
+          "Złoty pierścień na ciemnym tle"
+        ],
+        "cardFields": {
+          "stamps": [
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Antoni"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowe mycie"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "W programie od",
+                  "value": "2024"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Zofia"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowa kawa"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Maja"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowe smoothie"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "Ulubione",
+                  "value": "Green Machine"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowe strzyżenie"
+                },
+                {
+                  "label": "Imię",
+                  "value": "Szymon"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Pupil",
+                  "value": "Max"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowa kąpiel"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "W programie od",
+                  "value": "2025"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Julia"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowy bukiet"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Lena"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowa gałka"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "Ulubione",
+                  "value": "Stracciatella"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Mei"
+                },
+                {
+                  "label": "Nagroda",
+                  "value": "Darmowe bubble tea"
+                }
+              ]
+            }
+          ],
+          "points": [
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Filip"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "-10 €"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "W programie od",
+                  "value": "2023"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Następny próg",
+                  "value": "100 pkt"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "-25%"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Jakub"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "Darmowe zajęcia"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "Wizyty",
+                  "value": "18"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Ola"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "Darmowy manicure"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Anna"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "-10%"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Następny próg",
+                  "value": "240 pkt"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "-20 €"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "W programie od",
+                  "value": "2024"
+                }
+              ]
+            },
+            {
+              "main": [
+                {
+                  "label": "Imię",
+                  "value": "Marcin"
+                },
+                {
+                  "label": "Następna nagroda",
+                  "value": "Darmowy kieliszek"
+                }
+              ],
+              "aux": [
+                {
+                  "label": "Wizyty",
+                  "value": "12"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "parity": {
+        "title": "Jedna karta, do każdej kieszeni",
+        "wallets": {
+          "title": "Apple Wallet i Google Wallet",
+          "description": "Ta sama karta działa w jednym i w drugim, a edytor pokazuje podgląd obu, kiedy ją składasz. Nic w dwóch wersjach, nic do utrzymywania."
+        },
+        "styles": {
+          "title": "Zmieniaj wzór karty, kiedy chcesz",
+          "description": "Wzór karty możesz zmienić w każdej chwili: karty, które klienci mają już w telefonach, aktualizują się same. W planie Growth trzymasz kilka zapisanych wzorów i przełączasz aktywny jednym kliknięciem."
+        }
+      },
+      "faq": {
+        "title": "Wzór karty: pytania i odpowiedzi",
+        "subtitle": "Najczęstsze pytania, zanim powstanie pierwsza karta.",
+        "items": [
+          {
+            "question": "Czy mogę użyć własnych ikon pieczątek?",
+            "answer": "Tak. Wgraj dowolny obrazek (croissant, maskotkę, logo): tło usuwamy automatycznie i robi się z niego pieczątka. Możesz nawet dać inną ikonę do każdej pieczątki, aż do dwunastu."
+          },
+          {
+            "question": "A jeśli nie mam logo ani firmowych kolorów?",
+            "answer": "W bibliotece czeka 98 gotowych ikon, a edytor ma pełną paletę kolorów. Wybierz ikonę, ustaw kolory, a podgląd od razu pokaże efekt."
+          },
+          {
+            "question": "Czy karta działa na iPhonie i Androidzie?",
+            "answer": "Tak. Ta sama karta mieszka w Apple Wallet i w Google Wallet, a edytor pokazuje podgląd obu, kiedy ją składasz. Klienci skanują jeden kod QR, niezależnie od telefonu."
+          },
+          {
+            "question": "Czy mogę później zmienić wzór karty?",
+            "answer": "Kiedy tylko chcesz. Zmieniasz wzór karty, a karty, które klienci mają już w telefonach, aktualizują się same. W planie Growth trzymasz kilka wzorów i przełączasz aktywny."
+          },
+          {
+            "question": "Czy zrobicie kartę za mnie?",
+            "answer": "Tak. Wyślij nam logo i swoje kolory, a my zaprojektujemy kartę. Większość kart jest gotowa w ciągu 48 godzin."
+          }
+        ]
+      },
+      "custom": {
+        "playground": {
+          "sectionTitle": "Złóż swoją kartę",
+          "sectionSubtitle": "Pieczątki albo punkty, kolory, ikony, imię klienta: zmieniaj podgląd i od razu widzisz efekt.",
+          "programLabel": "Rodzaj programu",
+          "stripLabel": "Wygląd punktów",
+          "stripStyles": {
+            "big_point": "Duży stan",
+            "circle_progress": "Pierścień",
+            "progress_icons": "Ścieżka"
+          },
+          "balanceLabel": "Stan punktów",
+          "pointsRewardValue": "Darmowy deser",
+          "shuffle": "Zaskocz mnie",
+          "themeLabel": "Kolorystyka",
+          "iconLabel": "Ikona",
+          "nameToggle": "Imię",
+          "rewardsToggle": "Nagrody",
+          "rewardsDecrease": "Usuń nagrodę",
+          "rewardsIncrease": "Dodaj nagrodę",
+          "memberLabel": "Imię",
+          "memberName": "Zofia",
+          "rewardLabel": "Nagroda",
+          "rewardValue": "Co 8. gratis",
+          "rewardsLabel": "Nagrody",
+          "rewardsValue": "{count, plural, one {# gotowa} few {# gotowe} many {# gotowych} other {# gotowych}}",
+          "hint": "Wszystko zmienia się na żywo.",
+          "modePreset": "Biblioteka ikon",
+          "modeCustom": "Własne ikony",
+          "customIconLabel": "Twoja ikona",
+          "arrangementLabel": "Układ",
+          "arrangements": {
+            "straight": "W rzędzie",
+            "staggered": "Naprzemiennie",
+            "overlap": "Nakładane"
+          },
+          "themes": [
+            {
+              "name": "Stampeo",
+              "orgName": "Moja Kawiarnia"
+            },
+            {
+              "name": "Krem",
+              "orgName": "Piekarnia Marii"
+            },
+            {
+              "name": "Noc",
+              "orgName": "Kawiarnia Błękit"
+            },
+            {
+              "name": "Róż",
+              "orgName": "Kwiat Herbaty"
+            }
+          ]
+        },
+        "iconLibrary": {
+          "title": "Ikona do każdego fachu",
+          "description": "98 gotowych ikon pieczątek w 8 kategoriach, z wyszukiwaniem po nazwie w edytorze. Kawiarnia, salon, sklep: na pewno znajdzie się pasująca."
+        },
+        "customIcons": {
+          "badge": "Nowość",
+          "title": "Albo wgraj własne ikony",
+          "description": "Wgraj swojego croissanta, logo, maskotkę. Usuwamy tło za ciebie i robimy z tego pieczątkę. Ty decydujesz, jak wyglądają puste pieczątki i jak układają się na karcie.",
+          "bullets": [
+            "Tło usuwane automatycznie przy wgrywaniu.",
+            "Trzy warianty pustej pieczątki: odcienie szarości, kontur albo twój własny.",
+            "Trzy układy: w rzędzie, naprzemiennie albo nakładane.",
+            "Inna ikona do każdej pieczątki, jeśli chcesz, i osobna na nagrodę."
+          ],
+          "gallery": {
+            "examples": [
+              "Sześć kropli wody, naprzemiennie",
+              "Cząstki cytrusów, które nakładają się z każdą pieczątką",
+              "Osiem rożków, które się piętrzą",
+              "Kubki bubble tea w równej siatce"
+            ]
+          }
+        },
+        "livingCard": {
+          "title": "Karta, która zna twoich klientów",
+          "description": "Każda karta dostosowuje się do osoby, która ją pokazuje. Bez ustawiania czegokolwiek ręcznie.",
+          "lead": "Kartę wypełniasz raz. Potem sama pokazuje właściwe informacje każdemu klientowi, automatycznie.",
+          "benefits": [
+            "Wita każdego klienta po imieniu.",
+            "Zawsze pokazuje, na jakim etapie jest i ile brakuje do nagrody.",
+            "Liczy zdobyte nagrody, które wciąż czekają na odbiór."
+          ],
+          "stacking": {
+            "title": "Twoi klienci nigdy nie tracą postępów",
+            "description": "Cel osiągnięty? Nagroda trafia na bok, a nowy cykl rusza od razu. Nagrody się sumują, nic nie przepada."
+          },
+          "card": {
+            "orgName": "Kawiarnia Margot",
+            "memberLabel": "Imię",
+            "memberName": "Zofia",
+            "rewardsLabel": "Nagrody",
+            "rewardsValue": "2 gotowe"
+          }
+        },
+        "methods": {
+          "sectionTitle": "Wybierz sposób",
+          "sectionSubtitle": "3 sposoby na stworzenie karty. Od najprostszego do najbardziej twórczego.",
+          "handoff": {
+            "title": "Zrobimy ją za ciebie",
+            "description": "To nasze ulubione rozwiązanie i to, co nas wyróżnia. Przysyłasz swoje materiały, a my zajmujemy się resztą.",
+            "badge": "Polecane",
+            "steps": [
+              "Wgraj logo albo link do swojej strony",
+              "Nasz zespół tworzy kartę w 24-48 godzin",
+              "Sprawdzasz efekt albo prosisz o poprawki",
+              "Karta trafia do klientów"
+            ]
+          },
+          "ai": {
+            "title": "Tworzenie z pomocą AI",
+            "description": "Zrób zdjęcie swojej papierowej karty. Nasza AI odczyta logo, kolory i układ nagród.",
+            "badge": "Wkrótce",
+            "steps": [
+              "Zrób zdjęcie papierowej karty",
+              "AI odczytuje logo, kolory i teksty",
+              "Poprawiasz, jeśli trzeba",
+              "Publikujesz jednym kliknięciem"
+            ]
+          },
+          "editor": {
+            "title": "Samodzielny edytor",
+            "description": "Dla tych, którzy chcą kontrolować każdy szczegół. Logo, kolory, własne ikony pieczątek, tło: wszystko ustawiasz po swojemu.",
+            "badge": null,
+            "steps": [
+              "Wybierz kolory i wgraj logo",
+              "Wybierz ikony z biblioteki albo wgraj własne",
+              "Dopisz własny tekst nagrody",
+              "Sprawdź podgląd i publikuj"
+            ]
+          }
+        },
+        "anatomy": {
+          "title": "Anatomia karty Stampeo",
+          "description": "Każdy element jest pomyślany tak, żeby był czytelny, profesjonalny i zgodny z wymaganiami Apple Wallet i Google Wallet.",
+          "labels": [
+            "Logo",
+            "Nazwa firmy",
+            "Pasek pieczątek",
+            "Pola do wyboru",
+            "Nagroda",
+            "Kod QR klienta"
+          ],
+          "mobileLabels": [
+            "Logo",
+            "Nazwa",
+            "Pieczątki",
+            "Pola",
+            "Nagroda",
+            "Kod QR"
+          ],
+          "card": {
+            "orgName": "Moja Kawiarnia w Warszawie",
+            "rewardLabel": "Nagroda",
+            "rewardValue": "Darmowa kawa"
+          },
+          "pointsLabels": [
+            "Logo",
+            "Stan punktów",
+            "Pasek punktów",
+            "Pola do wyboru",
+            "Nagroda",
+            "Kod QR klienta"
+          ],
+          "pointsMobileLabels": [
+            "Logo",
+            "Stan",
+            "Punkty",
+            "Pola",
+            "Nagroda",
+            "Kod QR"
+          ],
+          "pointsCard": {
+            "orgName": "Bistro na Rynku",
+            "rewardLabel": "Nagroda",
+            "rewardValue": "Darmowy deser"
+          }
+        }
+      }
+    },
+    "scanner-mobile": {
+      "hero": {
+        "title": "Jeden skan. Jedna pieczątka. Tyle.",
+        "subtitle": "Żadnego systemu kasowego. Żadnego dodatkowego sprzętu. Wystarczy twój telefon, żeby przybić klientowi pieczątkę w sekundę.",
+        "annotation": "aplikacja twojego zespołu"
+      },
+      "problem": {
+        "title": "Przybijanie pieczątki powinno być niewidoczne",
+        "description": "Klient płaci, ty szukasz pieczątki, karta leży na dnie torebki, a kolejka rośnie. Przy papierowej karcie samo nagradzanie stałych klientów spowalnia obsługę. A wszystko, co spowalnia obsługę, prędzej czy później znika. Pieczątka ma zajmować tyle, co płatność zbliżeniowa."
+      },
+      "sections": [
+        {
+          "title": "Osobna aplikacja",
+          "description": "Aplikacja Stampeo jest lekka i służy tylko do skanowania. Otwierasz ją, kierujesz aparat na kod QR klienta i pieczątka jest dodana, z wibracją potwierdzenia. Cały czas: 1 sekunda.",
+          "icon": "smartphone"
+        },
+        {
+          "title": "Skaner w przeglądarce",
+          "description": "Nie chcesz nic instalować? Skanuj prosto z przeglądarki w telefonie albo na tablecie. Idealne dla firm, które trzymają na ladzie jeden wspólny tablet.",
+          "icon": "globe"
+        },
+        {
+          "title": "Tryb bez połączenia",
+          "description": "Działa nawet bez internetu. Skany zapisują się na urządzeniu i same się synchronizują, gdy tylko wróci zasięg. Żadna pieczątka nie przepada.",
+          "icon": "wifi-off"
+        }
+      ],
+      "cta": {
+        "title": "Pieczątka w sekundę",
+        "subtitle": "Aplikacja za darmo na iOS i Androida. Skaner w przeglądarce działa na każdym urządzeniu."
+      },
+      "related": [
+        "notifications-push",
+        "design-de-carte",
+        "analytiques"
+      ],
+      "custom": {
+        "heroBadge": "Skaner mobilny",
+        "heroPlatforms": "Za darmo · iOS, Android i przeglądarka",
+        "webScannerLink": "Bez instalacji? Użyj skanera w przeglądarce",
+        "appStoreAlt": "Pobierz Stampeo z App Store",
+        "googlePlayAlt": "Pobierz Stampeo z Google Play",
+        "getApp": {
+          "badge": "Darmowa aplikacja",
+          "title": "Aplikacja Stampeo do skanowania",
+          "subtitle": "Za darmo dla całego zespołu. Pobierz ją z App Store albo Google Play, albo zeskanuj kod, żeby zainstalować ją na telefonie.",
+          "qrCaption": "Zeskanuj, żeby zainstalować"
+        },
+        "scanDemo": {
+          "customerName": "Marek D.",
+          "stampCount": "5/10 pieczątek",
+          "toast": "Pieczątka dodana",
+          "timer": "0,8 s",
+          "hint": "Skieruj aparat na kod QR klienta"
+        },
+        "howItWorks": {
+          "title": "Dwa sposoby na skanowanie",
+          "subtitle": "Osobna aplikacja albo skaner w przeglądarce: wybierz to, co ci pasuje.",
+          "app": {
+            "title": "Osobna aplikacja",
+            "badge": "Polecane",
+            "steps": [
+              "Pobierz aplikację Stampeo (iOS / Android)",
+              "Zaloguj się na swoje konto",
+              "Skieruj aparat na kod QR klienta",
+              "Wibracja: pieczątka dodana w 0,8 s"
+            ]
+          },
+          "web": {
+            "title": "Skaner w przeglądarce",
+            "badge": null,
+            "steps": [
+              "Otwórz panel w przeglądarce",
+              "Kliknij „Skanuj” w menu",
+              "Zezwól na dostęp do aparatu",
+              "Zeskanuj kod QR: pieczątka dodana"
+            ]
+          }
+        },
+        "offline": {
+          "title": "Działa nawet bez Wi-Fi",
+          "subtitle": "Targ pod gołym niebem, piwnica, festyn: skanowanie działa wszędzie, także bez zasięgu.",
+          "situations": [
+            "Targ pod gołym niebem bez Wi-Fi",
+            "Piwnica albo sala pod ziemią",
+            "Festyn albo impreza plenerowa",
+            "Wieś ze słabym zasięgiem",
+            "Chwilowa awaria internetu"
+          ],
+          "online": "Połączono",
+          "offline_label": "Bez połączenia",
+          "pending": "Czeka na synchronizację",
+          "synced": "Zsynchronizowano",
+          "syncing": "Synchronizacja...",
+          "stampedTitle": "Pieczątka dodana",
+          "stampedSub": "Zsynchronizowano od razu",
+          "pendingSub": "1 pieczątka w kolejce",
+          "syncingSub": "Zasięg wrócił",
+          "syncedSub": "Żadna pieczątka nie przepadła",
+          "offlineHint": "Tryb bez połączenia włączony",
+          "toggleHint": "Naciśnij przełącznik, żeby sprawdzić"
+        },
+        "employee": {
+          "title": "Zrobione z myślą o twoich pracownikach",
+          "subtitle": "Twoi pracownicy nie są informatykami. Obsługa jest tak prosta, że nie trzeba żadnego szkolenia.",
+          "features": [
+            {
+              "title": "Zero szkolenia",
+              "description": "Otwierasz aplikację, skanujesz, gotowe. Pracownicy korzystają z niej od pierwszego dnia."
+            },
+            {
+              "title": "Wibracja potwierdzenia",
+              "description": "Wibracja i dźwięk potwierdzenia. Pracownik wie, że pieczątka doszła, nawet nie patrząc na ekran."
+            },
+            {
+              "title": "Historia skanów",
+              "description": "Każdy skan zapisuje się z dokładną godziną i z pracownikiem, który go zrobił. Pełna przejrzystość."
+            }
+          ]
+        },
+        "team": {
+          "title": "Skanować może cały zespół",
+          "subtitle": "Dodaj pracowników i ustaw dostęp zgodnie ze swoim planem.",
+          "pay": {
+            "title": "Plan Starter",
+            "price": "{starterPrice} €/mies.",
+            "members": "3 osoby",
+            "features": [
+              "3 konta pracownicze w cenie",
+              "Osobna aplikacja i skaner w przeglądarce",
+              "Tryb bez połączenia",
+              "Historia skanów"
+            ]
+          },
+          "pro": {
+            "title": "Plan Growth",
+            "price": "{growthPrice} €/mies.",
+            "members": "Bez limitu",
+            "features": [
+              "Nieograniczona liczba osób w zespole",
+              "Role i uprawnienia",
+              "Statystyki dla każdego pracownika",
+              "Wszystko z planu Starter"
+            ]
+          }
+        },
+        "security": {
+          "title": "Bezpieczeństwo i niezawodność",
+          "subtitle": "Każdy skan jest bezpieczny, do sprawdzenia i nie do podrobienia.",
+          "features": [
+            {
+              "title": "Niepowtarzalne kody QR",
+              "description": "Każdy klient ma w swoim kodzie QR własny, niepowtarzalny identyfikator. Nie da się go skopiować ani podrobić."
+            },
+            {
+              "title": "Znacznik czasu na serwerze",
+              "description": "Każda pieczątka dostaje na serwerze datę, godzinę, pracownika i lokal."
+            },
+            {
+              "title": "Ochrona przed nadużyciami",
+              "description": "Wykrywanie podwójnych skanów, limit częstotliwości i automatyczne powiadomienia przy podejrzanej aktywności."
+            },
+            {
+              "title": "Szyfrowanie od końca do końca",
+              "description": "Dane ze skanów idą przez HTTPS. Na urządzeniu nie zostaje żadna wrażliwa informacja."
+            }
+          ]
+        }
+      }
+    },
+    "notifications-push": {
+      "heroBadge": "Powiadomienia na karcie",
+      "hero": {
+        "title": "Każdy skan ląduje na ekranie blokady twojego klienta.",
+        "subtitle": "Każda pieczątka, każdy próg i każda nagroda uruchamiają powiadomienie na karcie. Klient zawsze widzi, co się właśnie stało i ile mu brakuje do następnej nagrody.",
+        "annotation": "bez numeru telefonu"
+      },
+      "problem": {
+        "title": "Pieczątka bez potwierdzenia to pieczątka zapomniana",
+        "description": "Przy papierowej karcie klient kiwa głową, chowa ją do kieszeni i idzie dalej. Nic nie potwierdza wizyty, nic nie przypomina, że jest w połowie drogi do nagrody. Powiadomienie na karcie zamienia każdą wizytę w cichą przypominajkę: widoczną, natychmiastową, nie do przeoczenia."
+      },
+      "demo": {
+        "lockScreenDate": "Poniedziałek, 17 lutego",
+        "notificationTitle": "Nowa pieczątka!",
+        "notificationBody": "Jeszcze 4 pieczątki do darmowej kawy. Tak trzymaj!",
+        "timeAgo": "teraz"
+      },
+      "channels": {
+        "statement": "Każda nowość w twoim programie musi dotrzeć do klienta. Oto, ile naprawdę dowozi każdy kanał i dlaczego karta w telefonie jest właściwym miejscem na potwierdzenia pieczątek, przypomnienia o progach i informacje o nagrodach.",
+        "email": "E-mail",
+        "sms": "SMS",
+        "appPush": "Powiadomienie z aplikacji",
+        "wallet": "Powiadomienie na karcie"
+      },
+      "howItWorks": {
+        "badge": "Jak to działa",
+        "title": "Od zdarzenia do wiadomości, automatycznie",
+        "subtitle": "",
+        "steps": [
+          {
+            "title": "Klient dostaje pieczątkę",
+            "description": "Skanujesz kod QR klienta. Pieczątka od razu dochodzi na jego kartę w telefonie."
+          },
+          {
+            "title": "Nasz serwer rozpoznaje zdarzenie",
+            "description": "System rozpoznaje, co się stało: nowa pieczątka, osiągnięty próg albo odblokowana nagroda."
+          },
+          {
+            "title": "Powiadomienie zostaje dostarczone",
+            "description": "Karty Apple Wallet odświeżają się cichym powiadomieniem APNs, a Google Wallet korzysta ze swojego Add Message API. Obie platformy dostarczają wiadomość prosto na kartę klienta, bez żadnej dodatkowej aplikacji."
+          },
+          {
+            "title": "Klient widzi powiadomienie",
+            "description": "Powiadomienie pojawia się na ekranie blokady. Jednym naciśnięciem klient otwiera zaktualizowaną kartę."
+          }
+        ]
+      },
+      "notificationTypes": {
+        "title": "Trzy momenty, trzy wiadomości",
+        "subtitle": "Każde zdarzenie uruchamia właściwe powiadomienie we właściwym momencie.",
+        "stamp": {
+          "title": "Powiadomienie o pieczątce",
+          "description": "Wychodzi przy każdym skanie. Klient od razu wie, że wizyta została zapisana. Karta aktualizuje się w czasie rzeczywistym.",
+          "notifTitle": "Nowa pieczątka!",
+          "notifBody": "Jeszcze 4 pieczątki do darmowej kawy. Tak trzymaj!",
+          "timeAgo": "teraz"
+        },
+        "milestone": {
+          "title": "Powiadomienie o progu",
+          "description": "Wychodzi, gdy klient zbliża się do nagrody. Buduje napięcie i sprowadza go z powrotem.",
+          "notifTitle": "Już prawie!",
+          "notifBody": "Jeszcze jedna pieczątka do darmowej kawy. Czekamy na ciebie!",
+          "timeAgo": "teraz"
+        },
+        "reward": {
+          "title": "Powiadomienie o nagrodzie",
+          "description": "Moment największej satysfakcji. Na karcie wyraźnie widać, że nagroda czeka.",
+          "notifTitle": "Nagroda odblokowana! 🎉",
+          "notifBody": "Gratulacje! Twoja darmowa kawa czeka. Pokaż kartę, żeby ją odebrać.",
+          "timeAgo": "teraz"
+        }
+      },
+      "advanced": {
+        "title": "Idź dalej",
+        "subtitle": "Kilka dodatków, dzięki którym każda automatyczna wiadomość robi więcej, plus otwarte drzwi do rozsyłek, gdy chcesz odezwać się do wszystkich naraz.",
+        "features": [
+          {
+            "title": "Wiadomości skrojone pod klienta",
+            "description": "Pokaż imię klienta, liczbę brakujących pieczątek i nazwę nagrody. Każde powiadomienie wygląda, jakby powstało dla tej jednej osoby.",
+            "badge": "Growth"
+          },
+          {
+            "title": "Własne progi",
+            "description": "Wyślij wiadomość dokładnie przy tej pieczątce, która się liczy. „Półmetek!” przy piątej, „Jeszcze jedna!” przy dziewiątej. 3 progi na program w planie Growth, bez limitu w Pro.",
+            "badge": "Growth / Pro"
+          },
+          {
+            "title": "Rozsyłki i segmentacja",
+            "description": "Odezwij się do wszystkich klientów jedną rozsyłką albo wybierz ich po liczbie pieczątek, braku wizyt i ostatnio odebranych nagrodach. Idealne na szybkie promocje i nowości w ofercie.",
+            "badge": "Growth / Pro",
+            "href": "/features/rozsylki-promocyjne",
+            "cta": "Zobacz rozsyłki"
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Szanujemy prywatność",
+        "subtitle": "Dane twoich klientów są bezpieczne. Na prywatności nie idziemy na skróty.",
+        "points": [
+          "Żadne dane osobowe nie trafiają do firm trzecich.",
+          "Powiadomienia idą przez Apple Push Notification Service, bezpieczny i szyfrowany kanał.",
+          "Klient może wyłączyć powiadomienia na karcie w każdej chwili w ustawieniach telefonu.",
+          "Zgodność z RODO. Żadnego śledzenia reklamowego."
+        ],
+        "gdprLabel": "RODO"
+      },
+      "sections": [
+        {
+          "title": "Powiadomienie o pieczątce",
+          "description": "„Masz nową pieczątkę! Jeszcze 7 do nagrody.” Wychodzi przy każdym skanie, więc klient od razu wie, że wizyta została zapisana.",
+          "icon": "stamp"
+        },
+        {
+          "title": "Powiadomienie o progu",
+          "description": "„Jeszcze 2 pieczątki! Twoja darmowa kawa jest już blisko.” Wychodzi, gdy klient zbliża się do nagrody. Buduje napięcie i sprowadza go z powrotem.",
+          "icon": "target"
+        },
+        {
+          "title": "Powiadomienie o nagrodzie",
+          "description": "„Gratulacje! Nagroda odblokowana.” Moment największej satysfakcji. Na karcie widnieje wyraźny napis „NAGRODA GOTOWA”.",
+          "icon": "gift"
+        }
+      ],
+      "cta": {
+        "title": "Każdy klient na bieżąco, automatycznie",
+        "subtitle": "Automatyczne powiadomienia są w każdym planie. Zacznij darmowy miesiąc i nagradzaj wizyty od pierwszego dnia."
+      },
+      "related": [
+        "campagnes-promotionnelles",
+        "scanner-mobile",
+        "analytiques"
+      ]
+    },
+    "analytiques": {
+      "hero": {
+        "title": "Poznaj swoich stałych klientów. Nie tylko z widzenia.",
+        "subtitle": "Przy papierowej karcie nie wiesz o klientach nic. W Stampeo widzisz, kto wraca, jak często i co naprawdę działa."
+      },
+      "problem": {
+        "title": "Czego dziś nie wiesz",
+        "description": "Przy papierowych kartach prowadzisz swój program po omacku. Żadnych danych, żadnego wglądu, żadnej szansy na poprawienie czegoś, czego nie mierzysz."
+      },
+      "sections": [
+        {
+          "title": "Panel z podstawami",
+          "description": "Liczba klientów, skany w tym tygodniu, odebrane nagrody. Wpisz nazwisko albo e-mail i od razu masz całą historię klienta.",
+          "icon": "layout-dashboard"
+        },
+        {
+          "title": "Trendy i godziny szczytu",
+          "description": "Zobacz swoje liczby dzień po dniu. Sprawdź, kiedy klienci przychodzą, i wyłap godziny, w których jest pusto.",
+          "icon": "trending-up",
+          "badge": "Growth"
+        },
+        {
+          "title": "Częstotliwość i powroty",
+          "description": "Poznaj rytm swoich klientów: codziennie, co tydzień, co miesiąc. Śledź, ilu wraca, i wyłap tych, którzy zaczynają znikać.",
+          "icon": "users",
+          "badge": "Growth"
+        }
+      ],
+      "cta": {
+        "title": "Przestań zgadywać. Zacznij wiedzieć.",
+        "subtitle": "Panel jest w każdym planie. Rozbudowane statystyki są w planie Growth."
+      },
+      "related": [
+        "campagnes-promotionnelles",
+        "notifications-push"
+      ],
+      "custom": {
+        "blindSpotCards": {
+          "questions": [
+            "Ilu masz stałych klientów",
+            "Jak często wracają",
+            "Kto przestał przychodzić",
+            "Który dzień jest najspokojniejszy",
+            "Ile nagród w tym miesiącu",
+            "Czy twój program w ogóle działa"
+          ],
+          "noAnswer": "???"
+        },
+        "dashboard": {
+          "badge": "Plan Starter",
+          "title": "To, co najpotrzebniejsze na start",
+          "description": "Plan Starter daje prosty i czytelny panel, który odpowiada na podstawowe pytania.",
+          "features": [
+            "Liczba zapisanych klientów",
+            "Skany w tym tygodniu i w tym miesiącu",
+            "Odebrane nagrody",
+            "Natychmiastowe wyszukiwanie klienta"
+          ]
+        },
+        "activityFeed": {
+          "title": "Na żywo",
+          "sectionTitle": "Twoja firma w czasie rzeczywistym",
+          "sectionDescription": "Każda pieczątka, każda nagroda, każdy nowy zapis: śledź swój program lojalnościowy na żywo.",
+          "stampAction": "zdobywa pieczątkę",
+          "rewardAction": "odbiera nagrodę",
+          "newCustomerAction": "właśnie dołącza",
+          "timeAgo": "{seconds}s temu"
+        },
+        "proAnalytics": {
+          "badge": "Plan Growth",
+          "title": "Zrozum trendy, nie tylko liczby",
+          "description": "Plan Growth dokłada warstwę analizy, która pomaga podejmować decyzje."
+        },
+        "proCharts": {
+          "lineChart": {
+            "label": "Skany / tydzień",
+            "trend": "+23%"
+          },
+          "heatmap": {
+            "label": "Godziny szczytu",
+            "days": [
+              "Pn",
+              "Wt",
+              "Śr",
+              "Cz",
+              "Pt",
+              "So",
+              "Nd"
+            ]
+          },
+          "donut": {
+            "label": "Powroty w 30 dni",
+            "value": "72%"
+          },
+          "segments": {
+            "label": "Grupy klientów",
+            "categories": [
+              "Nowi",
+              "Okazjonalni",
+              "Stali",
+              "VIP"
+            ]
+          },
+          "churn": {
+            "label": "Zagrożeni odejściem",
+            "value": "23",
+            "subtitle": "bez wizyty od 30 dni"
+          },
+          "bestDays": {
+            "label": "Najbardziej ruchliwe dni",
+            "days": [
+              "Pn",
+              "Wt",
+              "Śr",
+              "Cz",
+              "Pt",
+              "So",
+              "Nd"
+            ]
+          },
+          "timeToReward": {
+            "label": "Średni czas do pełnej karty",
+            "value": "18",
+            "unit": "dni"
+          },
+          "completionRate": {
+            "label": "Ukończone karty",
+            "value": "64",
+            "subtitle": "kończy swoją kartę"
+          },
+          "returnRate": {
+            "label": "Powrót po nagrodzie",
+            "value": "78",
+            "subtitle": "zaczyna drugą kartę"
+          }
+        }
+      }
+    },
+    "geolocalisation": {
+      "heroBadge": "Growth",
+      "hero": {
+        "title": "Przypomnij im, że istniejesz. W dobrym momencie.",
+        "subtitle": "Gdy klient przechodzi obok twojego lokalu, telefon sam przypomina mu, że ma u ciebie kartę lojalnościową. Bez żadnego ruchu z twojej strony.",
+        "annotation": "już w karcie"
+      },
+      "problem": {
+        "title": "Twój stały klient o tobie zapomina. To nie jego wina.",
+        "description": "Marek codziennie rano przechodzi obok twojej kawiarni. Ale dziś się spieszy. Nie myśli o karcie lojalnościowej z 8 pieczątkami na 10. Z przyzwyczajenia wchodzi do Starbucksa naprzeciwko. Problemem nie jest konkurencja. Problemem jest zapominanie."
+      },
+      "problemNarrative": "A gdyby jego telefon zrobił to za ciebie?",
+      "demo": {
+        "lockScreenDate": "Poniedziałek, 17 lutego",
+        "radiusLabel": "~300 m",
+        "notificationTitle": "Kawiarnia Na Rogu w pobliżu",
+        "notificationBody": "Napijesz się czegoś? Do darmowej kawy zostały 3 pieczątki ☕",
+        "timeAgo": "teraz"
+      },
+      "howItWorks": {
+        "badge": "Jak to działa",
+        "title": "Z lokalu na ekran blokady, bez wysiłku",
+        "subtitle": "Apple Wallet robi wszystko sam: bez aplikacji, bez Bluetootha, bez ustawiania czegokolwiek.",
+        "steps": [
+          {
+            "title": "Wpisujesz swój adres",
+            "description": "W panelu Stampeo dodaj adres swojej firmy. Jeśli masz kilka lokali, możesz dodać każdy z nich."
+          },
+          {
+            "title": "Adres trafia do karty",
+            "description": "Każda wygenerowana karta zawiera twoje współrzędne GPS. Apple Wallet wie, gdzie uruchomić przypomnienie."
+          },
+          {
+            "title": "Klient przechodzi obok",
+            "description": "Apple Wallet wykrywa bliskość na samym telefonie klienta. Do naszych serwerów nie idą żadne dane."
+          },
+          {
+            "title": "Karta pojawia się na ekranie blokady",
+            "description": "Klient widzi, jak jego karta lojalnościowa sama wychodzi na ekran. Dyskretne przypomnienie, które robi robotę."
+          }
+        ],
+        "customerNarrative": {
+          "title": "Co widzi klient",
+          "description": "Marek przechodzi obok twojej kawiarni. iPhone sam pokazuje mu kartę lojalnościową na ekranie blokady. Przypomina sobie, że do darmowej kawy zostały mu 2 pieczątki. Wchodzi."
+        }
+      },
+      "scenarios": {
+        "title": "3 firmy, 3 historie",
+        "subtitle": "Geolokalizacja sprawdza się w każdej branży.",
+        "items": [
+          {
+            "name": "Zofia",
+            "business": "Kawiarnia Na Rogu",
+            "initial": "Z",
+            "quote": "Od czasu geolokalizacji stali klienci wracają częściej. Mówią mi: „karta mignęła mi przy przejściu i od razu przypomniała mi się kawa”.",
+            "description": "Kawiarnia osiedlowa, 7/10 pieczątek"
+          },
+          {
+            "name": "Maja",
+            "business": "Studio Urody Zen",
+            "initial": "M",
+            "quote": "Moje klientki przechodzą obok salonu i w ogóle o nim nie myślą. Teraz telefon sam im przypomina, że mają u mnie zabieg do odebrania.",
+            "description": "Salon kosmetyczny, 5/8 pieczątek"
+          },
+          {
+            "name": "Szymon",
+            "business": "Bistro Przystań",
+            "initial": "S",
+            "quote": "Jesteśmy po drodze do pracy dla mnóstwa osób. To przypomnienie decyduje, czy ktoś mówi „wpadnę kiedyś”, czy „idę teraz”.",
+            "description": "Restauracja, 3/6 pieczątek"
+          }
+        ]
+      },
+      "technical": {
+        "title": "Technologia wbudowana w telefon, zero zachodu",
+        "items": [
+          {
+            "title": "Geolokalizacja wbudowana w Apple Wallet",
+            "description": "Nic nie trzeba instalować. Bliskość wykrywa sam iOS, na podstawie współrzędnych GPS zapisanych w karcie.",
+            "icon": "map-pin"
+          },
+          {
+            "title": "Kilka lokali",
+            "description": "Dodaj do 10 adresów na jednej karcie. Każdy lokal sam uruchamia przypomnienie.",
+            "icon": "building",
+            "badge": "Growth"
+          },
+          {
+            "title": "Aktualizacja w czasie rzeczywistym",
+            "description": "Zmieniasz adres albo otwierasz nowy lokal? Karta aktualizuje się sama na wszystkich telefonach.",
+            "icon": "refresh"
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Szanujemy prywatność",
+        "subtitle": "Danych o położeniu twoich klientów nikt nie zbiera ani nie przechowuje.",
+        "points": [
+          "Stampeo nie zbiera żadnych danych o położeniu twoich klientów.",
+          "Bliskość wykrywa Apple Wallet lokalnie, na samym urządzeniu.",
+          "Klient może wyłączyć podpowiedzi na ekranie blokady w każdej chwili w ustawieniach.",
+          "Zgodność z RODO. Żadnego śledzenia, żadnych danych przekazywanych firmom trzecim."
+        ],
+        "gdprLabel": "RODO"
+      },
+      "sections": [
+        {
+          "title": "Geolokalizacja wbudowana w Apple Wallet",
+          "description": "Wpisujesz adres swojej firmy. Stampeo zapisuje go w każdej karcie. Gdy klient jest w pobliżu, jego karta pojawia się na ekranie blokady. Bez nachalnego powiadomienia, po prostu przypomnienie.",
+          "icon": "map-pin"
+        },
+        {
+          "title": "Kilka lokali",
+          "description": "Masz kilka adresów? Każdy trafia do karty. Klient dostaje przypomnienie przy każdym twoim lokalu.",
+          "icon": "building"
+        },
+        {
+          "title": "Prywatność chroniona",
+          "description": "Stampeo nikogo nie namierza. Bliskość wykrywa Apple Wallet, lokalnie na telefonie. Żadne dane o położeniu nie są zbierane ani przechowywane. Zgodność z RODO.",
+          "icon": "shield"
+        }
+      ],
+      "cta": {
+        "title": "Bądź na miejscu w dobrym momencie",
+        "subtitle": "Geolokalizacja jest w planie Growth. Zacznij darmowy miesiąc i sprawdź ją od razu."
+      },
+      "related": [
+        "campagnes-promotionnelles",
+        "notifications-push",
+        "analytiques"
+      ]
+    },
+    "campagnes-promotionnelles": {
+      "hero": {
+        "title": "Dotrzyj do każdego klienta. Bez rachunku za SMS-y.",
+        "navTitle": "Rozsyłki promocyjne: powiadomienia na karcie do wszystkich klientów",
+        "subtitle": "Wysyłaj promocje prosto na kartę w Apple Wallet i Google Wallet. Około 85% otwarć. Zero opłat za wiadomość. Segmentacja i planowanie rozsyłek w cenie planu.",
+        "pillGrowth": "Growth",
+        "pillPro": "Pro"
+      },
+      "statBand": {
+        "title": "Liczby mówią same za siebie",
+        "subtitle": "Średnie wyniki karty w telefonie, SMS-ów i e-maili, na podstawie publicznych danych rynkowych.",
+        "stats": [
+          {
+            "value": "~85%",
+            "label": "Otwarć powiadomień na karcie",
+            "caption": "wobec ~20% w e-mailu i ~35% CTR w SMS-ie"
+          },
+          {
+            "value": "0 €",
+            "label": "Za wiadomość",
+            "caption": "Stała opłata za plan, a nie 0,04 do 0,10 € za SMS"
+          },
+          {
+            "value": "+78%",
+            "label": "Wzrost obrotów",
+            "caption": "Tyle notują firmy z kartą lojalnościową w telefonie"
+          }
+        ]
+      },
+      "whyNotSms": {
+        "title": "SMS, e-mail, karta w telefonie:<br></br>co naprawdę dociera",
+        "subtitle": "Otwieralność i koszt dotarcia to dwie różne historie. Tak wypadają trzy kanały u małej firmy, która wysyła promocje.",
+        "columns": [
+          "",
+          "SMS",
+          "E-mail",
+          "Karta (Stampeo)"
+        ],
+        "rows": [
+          {
+            "label": "Typowa otwieralność",
+            "values": [
+              "~35% CTR",
+              "~20%",
+              "~85%"
+            ]
+          },
+          {
+            "label": "Koszt jednej wiadomości (Francja)",
+            "values": [
+              "0,04 – 0,10 €",
+              "Niski, zmienny",
+              "0 € (w cenie planu)"
+            ]
+          },
+          {
+            "label": "Planowanie rozsyłki + strefa czasowa",
+            "values": [
+              "Opcja płatna",
+              "Zależnie od dostawcy",
+              "W cenie (Pro)"
+            ]
+          },
+          {
+            "label": "Segmentacja",
+            "values": [
+              "Ręczny import list",
+              "Po etykietach, ograniczona",
+              "Pieczątki, nagrody, brak wizyt"
+            ]
+          },
+          {
+            "label": "Dwa języki naraz",
+            "values": [
+              "Jedna wiadomość dla wszystkich",
+              "Dwie osobne rozsyłki",
+              "Jedna rozsyłka, język z telefonu"
+            ]
+          },
+          {
+            "label": "Zbieranie zgody",
+            "values": [
+              "Wymagana podwójna zgoda",
+              "Wymagana podwójna zgoda",
+              "Zbierana przy dodaniu karty"
+            ]
+          },
+          {
+            "label": "Filtry antyspamowe i operatora",
+            "values": [
+              "Folder „Nieznany nadawca” w iOS 26",
+              "Zakładka Oferty w Gmailu",
+              "Baner na ekranie blokady, bez skrzynki"
+            ]
+          }
+        ],
+        "caption": "Źródła: cennik Twilio Francja, raport PushPass 2026 SMS kontra powiadomienia, poradnik Yotpo o karcie w telefonie."
+      },
+      "howItWorks": {
+        "badge": "Jak to działa",
+        "title": "Od pomysłu do wszystkich telefonów<br></br>w niecałą minutę",
+        "subtitle": "",
+        "steps": [
+          {
+            "title": "Napisz wiadomość",
+            "description": "Ułóż treść po polsku i po angielsku w panelu. Jedna wiadomość, dwa języki. Każdy klient zobaczy tę, którą ma ustawioną w telefonie."
+          },
+          {
+            "title": "Wybierz grupę albo wyślij do wszystkich",
+            "description": "Growth celuje po dacie zapisu. Pro dokłada filtry po liczbie pieczątek, ostatniej odebranej nagrodzie i braku wizyt, żeby każda rozsyłka trafiała do właściwych osób."
+          },
+          {
+            "title": "Wyślij od razu albo zaplanuj",
+            "description": "Growth wysyła natychmiast. Pro pozwala wybrać lokalną datę i godzinę, więc wiadomość wychodzi dokładnie wtedy, kiedy pasuje do godzin otwarcia."
+          },
+          {
+            "title": "Karty odświeżają się równolegle",
+            "description": "Apple Wallet i Google Wallet odświeżają się równolegle. Powiadomienie pojawia się na ekranie blokady w kilka sekund, na każdym telefonie."
+          }
+        ]
+      },
+      "capabilities": {
+        "title": "Co potrafi <br></br>jedna rozsyłka",
+        "subtitle": "Wszystko, czego trzeba do prawdziwych działań marketingowych, bez dokładania kolejnego narzędzia.",
+        "items": [
+          {
+            "title": "Segmentacja",
+            "description": "Docieraj tylko do tych, którzy liczą się w tej akcji: nowo zapisani, bez wizyty od 30 dni, nagroda odebrana w zeszłym tygodniu albo co najmniej 5 pieczątek na koncie.",
+            "badge": "Podstawowa w Growth · Zaawansowana w Pro"
+          },
+          {
+            "title": "Planowanie w czasie",
+            "description": "Wybierz lokalną godzinę wysłania: czwartek 17:00, sobota w południe albo dowolny moment, który pasuje do twojej firmy. Idealne na happy hour, promocję w porze obiadowej albo weekendowe otwarcie.",
+            "badge": "Pro"
+          },
+          {
+            "title": "Dwa języki naraz",
+            "description": "Napisz raz po polsku i po angielsku. Każdy klient zobaczy język ustawiony w swoim telefonie. Bez dublowania rozsyłek, bez zgadywania.",
+            "badge": "Growth / Pro"
+          },
+          {
+            "title": "Przejrzysta dostarczalność",
+            "description": "Zobacz dokładnie, ile wiadomości dotarło do Apple Wallet, ile do Google Wallet, ile przyciął limit, a ile przepadło, bo karta zniknęła z telefonu. Uczciwe liczby, nienapompowane.",
+            "badge": "Growth / Pro"
+          }
+        ]
+      },
+      "delivery": {
+        "title": "Dostarczenie, które da się sprawdzić",
+        "subtitle": "Każda rozsyłka pokazuje rozbicie na platformy, więc wiesz, gdzie wiadomość dotarła, a nie tylko że wyszła.",
+        "metrics": [
+          {
+            "label": "Dostarczone Apple",
+            "value": 412,
+            "tint": "apple"
+          },
+          {
+            "label": "Dostarczone Google",
+            "value": 268,
+            "tint": "google"
+          },
+          {
+            "label": "Google wstrzymane (limit)",
+            "value": 14,
+            "tint": "muted"
+          },
+          {
+            "label": "Karta usunięta",
+            "value": 22,
+            "tint": "muted"
+          }
+        ],
+        "note": "Widzisz dokładną liczbę klientów, do których dotarliśmy, i nie chowamy przypadków, w których się nie udało. Uczciwe liczby, nic napompowanego."
+      },
+      "useCases": {
+        "title": "Prawdziwe rozsyłki, prawdziwe firmy",
+        "subtitle": "Kilka sposobów, w jakie firmy na Stampeo naprawdę korzystają z rozsyłek na kartę.",
+        "items": [
+          {
+            "emoji": "☕",
+            "title": "Kawiarnia: happy hour",
+            "description": "„Dziś każda kawa za 2 € między 16:00 a 18:00.” Wysłane o 15:30 do wszystkich, którzy mają kartę. Jedna trzecia wpada przed zamknięciem."
+          },
+          {
+            "emoji": "🍽️",
+            "title": "Restauracja: zapełnić pusty wieczór",
+            "description": "„We wtorek -20% na menu degustacyjne.” Zaplanowane na każdy poniedziałek wieczorem. Najspokojniejszy wieczór tygodnia staje się drugim najbardziej ruchliwym."
+          },
+          {
+            "emoji": "💇",
+            "title": "Salon: promocja sezonowa",
+            "description": "„Powrót do szkoły: 5 € taniej na każde strzyżenie w tym tygodniu.” Wysłane do klientów, którzy nie byli od 45 dni."
+          },
+          {
+            "emoji": "🥐",
+            "title": "Piekarnia: nowość na półce",
+            "description": "„Nasz nowy chleb na zakwasie jest już w sprzedaży. Pierwsze 30 osób dostaje drożdżówkę za darmo.” Rozesłane do wszystkich z kartą lojalnościową."
+          }
+        ]
+      },
+      "faq": {
+        "title": "Pytania, które słyszymy najczęściej",
+        "subtitle": "Proste odpowiedzi o rozsyłkach na kartę dla małych firm.",
+        "items": [
+          {
+            "question": "Ile kosztują rozsyłki promocyjne na kartę?",
+            "answer": "Nic ponad plan. Rozsyłki są w cenie planu Growth (8 w miesiącu) i planu Pro (bez limitu). Nie ma opłaty za wiadomość, inaczej niż przy SMS-ach, gdzie jeden SMS kosztuje we Francji od 0,04 do 0,10 €. Jedna akcja SMS do 500 klientów potrafi kosztować od 30 do 50 €."
+          },
+          {
+            "question": "Czy klienci muszą instalować aplikację?",
+            "answer": "Nie. Klient dodaje zwykłą kartę Apple Wallet albo Google Wallet, czyli samą kartę lojalnościową. Powiadomienia to natywna funkcja obu platform, obecna na każdym nowszym iPhonie i telefonie z Androidem. Bez pobierania ze sklepu, bez zakładania konta, bez dodatkowych zgód poza samym dodaniem karty."
+          },
+          {
+            "question": "Jak to wypada przy SMS-ie?",
+            "answer": "Powiadomienie z karty pojawia się na ekranie blokady tak samo jak SMS, ale nic nie kosztuje, ma około 85% otwarć i nie wpada do filtra „Nieznany nadawca” w iOS 26. Do tego masz segmentację od razu w środku (po zebranych pieczątkach, odebranych nagrodach albo braku wizyt), za którą platformy SMS zwykle każą dopłacać."
+          },
+          {
+            "question": "Czy mogę zaplanować rozsyłkę z wyprzedzeniem?",
+            "answer": "Tak, w planie Pro. Wybierz lokalną datę i godzinę, a wiadomość wyjdzie dokładnie wtedy, kiedy pasuje do godzin otwarcia. Plan Growth wysyła od razu po naciśnięciu „Wyślij”, co wystarcza przy większości szybkich promocji."
+          },
+          {
+            "question": "Czy mogę wybrać konkretnych klientów?",
+            "answer": "Tak. W Growth filtrujesz po dacie zapisu (nowi kontra stali klienci). W Pro dochodzi zaawansowana segmentacja po liczbie pieczątek, ostatniej odebranej nagrodzie i okresie bez wizyt, żeby każda rozsyłka trafiała tylko do tych, dla których jest pomyślana."
+          },
+          {
+            "question": "Czy to jest zgodne z RODO?",
+            "answer": "Tak. Zgodę zbieramy w momencie dodania karty do telefonu, a klient może wyłączyć powiadomienia w każdej chwili w ustawieniach urządzenia. Nie sprzedajemy ani nie udostępniamy danych klientów firmom trzecim, a klient może usunąć kartę z telefonu, kiedy zechce."
+          },
+          {
+            "question": "Czy działa i z Apple Wallet, i z Google Wallet?",
+            "answer": "Tak. Każda rozsyłka idzie do Apple Wallet i Google Wallet równolegle. Klienci zobaczą powiadomienie i na iPhonie, i na Androidzie."
+          },
+          {
+            "question": "Co się stanie, gdy wyczerpię miesięczny limit w Growth?",
+            "answer": "Możesz poczekać do następnego miesiąca albo przejść na Pro, gdzie rozsyłki są bez limitu, a do tego dochodzi planowanie i zaawansowana segmentacja. Powiadomienia automatyczne (pieczątka, kolejny próg, nagroda) idą dalej niezależnie od tego, bo limit dotyczy tylko ręcznych rozsyłek promocyjnych."
+          }
+        ]
+      },
+      "privacy": {
+        "title": "Marketing, który szanuje klienta",
+        "subtitle": "Rozsyłka na kartę ma być odebrana jak przywilej stałego klienta, nie jak reklama.",
+        "points": [
+          "Zgodę zbieramy przy dodaniu karty. Każdy klient może wyłączyć powiadomienia, kiedy zechce.",
+          "Dane należą do klienta. Kartę usuwa jednym naciśnięciem, a powiadomienia od razu milkną.",
+          "Jeden czytelny baner na rozsyłkę, a nie ogólnikowe „Karta została zmieniona”.",
+          "Zgodność z RODO. Żadnego śledzenia reklamowego, żadnych danych na sprzedaż."
+        ],
+        "gdprLabel": "RODO"
+      },
+      "cta": {
+        "title": "Twoja następna promocja, w kieszeni klientów",
+        "subtitle": "Zacznij darmowy miesiąc i wyślij pierwszą rozsyłkę jeszcze w tym tygodniu."
+      },
+      "related": [
+        "notifications-push",
+        "analytiques",
+        "geolocalisation"
+      ]
+    },
+    "programme-fondateur": {
+      "hero": {
+        "title": "Całe Stampeo, już dziś. I <accent>20 €/mies. na zawsze</accent>.",
+        "navTitle": "Oferta na start: cena zablokowana na zawsze",
+        "subtitle": "Stampeo działa już codziennie w dziesiątkach firm. Kto dołączy jako pierwszy, zatrzymuje cenę startową na zawsze.",
+        "badge": "Oferta na start",
+        "secondaryCta": "1 miesiąc za darmo, potem {growthFoundingPrice} €/mies. na zawsze"
+      },
+      "problem": {
+        "title": "Gramy w otwarte karty",
+        "description": "Wolimy powiedzieć wprost. Oto dokładnie, w jakim miejscu jest dziś Stampeo."
+      },
+      "sections": [
+        {
+          "title": "1 miesiąc za darmo, bez haczyka",
+          "description": "Przy zapisie prosimy o kartę płatniczą, ale w czasie próby nie pobieramy ani grosza. Testujesz w prawdziwych warunkach. Jeśli Stampeo nie pasuje, odchodzisz, nie płacąc nic.",
+          "icon": "calendar"
+        },
+        {
+          "title": "{growthFoundingPrice} €/mies. na zawsze",
+          "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice} €/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
+          "icon": "tag"
+        },
+        {
+          "title": "Wszystkie funkcje Growth",
+          "description": "Kilka wzorów karty, pieczątki albo punkty (do wyboru), nieograniczona liczba osób w zespole, własne treści powiadomień i rozsyłki do wszystkich klientów.",
+          "icon": "crown"
+        }
+      ],
+      "cta": {
+        "title": "Dołącz do pierwszych firm",
+        "subtitle": "1 miesiąc za darmo. {growthFoundingPrice} €/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś."
+      },
+      "related": [
+        "notifications-push",
+        "scanner-mobile",
+        "design-de-carte"
+      ],
+      "custom": {
+        "seeAllPlans": "Zobacz wszystkie plany",
+        "benefits": {
+          "title": "Co dostajesz",
+          "items": [
+            {
+              "title": "1 miesiąc za darmo, bez haczyka",
+              "description": "Przy zapisie prosimy o kartę płatniczą, ale w czasie próby nie pobieramy ani grosza. Testujesz w prawdziwych warunkach. Jeśli Stampeo nie pasuje, odchodzisz, nie płacąc nic.",
+              "icon": "calendar"
+            },
+            {
+              "title": "{growthFoundingPrice} €/mies. na zawsze",
+              "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice} €/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
+              "icon": "tag"
+            },
+            {
+              "title": "Wszystkie funkcje Growth",
+              "description": "Kilka wzorów karty, pieczątki albo punkty (do wyboru), nieograniczona liczba osób w zespole, własne treści powiadomień i rozsyłki do wszystkich klientów.",
+              "icon": "crown"
+            },
+            {
+              "title": "Bezpośredni kontakt z zespołem",
+              "description": "Żadnego bota, żadnego zgłoszenia numer 47832. Rozmawiasz wprost z ludźmi, którzy budują Stampeo. Problem albo pomysł: zajmujemy się tym.",
+              "icon": "signal"
+            },
+            {
+              "title": "Karta przygotowana przez nas",
+              "description": "Wyślij nam logo i kolory. Przygotujemy twoją kartę lojalnościową, czystą i zgodną z Apple Wallet i Google Wallet, czyli z portfelem wbudowanym w telefon klienta. W cenie.",
+              "icon": "palette"
+            },
+            {
+              "title": "Pierwszeństwo we wszystkim",
+              "description": "Nowe funkcje przed innymi, wsparcie w pierwszej kolejności. Jako jedna z pierwszych firm wchodzisz bez kolejki.",
+              "icon": "sparkles"
+            }
+          ]
+        },
+        "transparency": {
+          "title": "Gramy w otwarte karty",
+          "description": "Wolimy powiedzieć wprost. Oto dokładnie, w jakim miejscu jest dziś Stampeo.",
+          "worksNow": {
+            "title": "Co działa już dziś",
+            "items": [
+              "Karty w Apple Wallet i Google Wallet",
+              "Skanowanie kodu QR z powiadomieniem w czasie rzeczywistym",
+              "Rozsyłki do wszystkich klientów (Growth i Pro)",
+              "Segmentacja klientów w rozsyłkach (Pro)",
+              "Panel z listą klientów i statystykami",
+              "Edytor karty z podglądem na żywo"
+            ]
+          },
+          "comingSoon": {
+            "title": "Co budujemy dalej",
+            "items": [
+              "Tryb bez połączenia w skanerze",
+              "Geolokalizacja dla Apple Wallet i Google Wallet",
+              "Tworzenie karty z pomocą sztucznej inteligencji",
+              "Zaplanowane i sezonowe wzory karty"
+            ]
+          },
+          "expectFromYou": {
+            "title": "O co prosimy",
+            "items": [
+              "Używaj Stampeo na co dzień w swojej firmie",
+              "Mów nam, co działa i co oszczędziłoby ci czas",
+              "Dziel się pomysłami na ulepszenia"
+            ]
+          },
+          "closing": "Stampeo jest gotowe, żeby ruszyć w twojej firmie już dziś. Dołączając teraz, blokujesz najlepszą cenę i masz wpływ na to, co zbudujemy dalej."
+        },
+        "price": {
+          "original": "{growthPrice} €/mies.",
+          "founding": "{growthFoundingPrice} €/mies.",
+          "forLife": "na zawsze"
+        },
+        "timeline": {
+          "badge": "Jak to działa",
+          "title": "4 kroki do startu",
+          "subtitle": "",
+          "steps": [
+            {
+              "title": "Załóż konto",
+              "description": "Ustaw swój program w 2 minuty."
+            },
+            {
+              "title": "Dopasuj kartę",
+              "description": "Zrób ją samodzielnie albo napisz do nas, przyślij logo i kolory: zrobimy ją za ciebie."
+            },
+            {
+              "title": "Wystaw kod QR",
+              "description": "Na ladzie. Klient dodaje swoją kartę jednym skanem."
+            },
+            {
+              "title": "Uruchom program",
+              "description": "Pierwsza pieczątka już pierwszego dnia."
+            }
+          ]
+        },
+        "faq": {
+          "title": "Najczęstsze pytania",
+          "items": [
+            {
+              "question": "Czy produkt jest gotowy i można go używać od razu?",
+              "answer": "Tak. Stampeo działa już codziennie w dziesiątkach firm: karty Apple Wallet i Google Wallet, skanowanie, powiadomienia, rozsyłki i statystyki są na miejscu. Swój program możesz uruchomić dzisiaj."
+            },
+            {
+              "question": "Jak długo trwa oferta na start?",
+              "answer": "Cena startowa ({growthFoundingPrice} €/mies. na zawsze) obowiązuje przez fazę startową, potem cena dla nowych firm pójdzie w górę. Kto już jest w środku, ma swoją cenę zablokowaną na zawsze."
+            },
+            {
+              "question": "Co się dzieje po darmowym miesiącu?",
+              "answer": "Przechodzisz na {growthFoundingPrice} €/mies. Uprzedzamy dwa razy: tydzień wcześniej, a potem 3 dni wcześniej. Jeśli nie chcesz kontynuować, rezygnujesz jednym kliknięciem, bez opłat."
+            },
+            {
+              "question": "Czy zachowam swoją cenę, jeśli podniesiecie ceny?",
+              "answer": "Tak. {growthFoundingPrice} €/mies. na zawsze znaczy na zawsze. Nawet jeśli plan Growth za trzy lata będzie kosztował 49,99 €, twoja cena się nie ruszy. Mamy to w umowie."
+            },
+            {
+              "question": "Czy mogę zrezygnować?",
+              "answer": "W każdej chwili po darmowym miesiącu. Bez zobowiązań. Po rezygnacji tracisz dostęp, ale twoi klienci zachowują swoje karty."
+            }
+          ]
+        },
+        "finalCta": {
+          "title": "Dołącz do pierwszych firm",
+          "subtitle": "1 miesiąc za darmo. {growthFoundingPrice} €/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś.",
+          "urgency": "Cena startowa dla nowych firm pójdzie w górę. Zablokuj swoją teraz."
+        }
+      }
+    },
+    "relatedTitle": "Warto poznać",
+    "discoverLink": "Zobacz",
+    "ctaButton": "Zacznij za darmo"
+  }
+}

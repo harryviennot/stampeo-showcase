@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "loyaltyPrograms": {
+      "title": "Pieczątki czy punkty: jaki program lojalnościowy",
+      "description": "Porównaj kartę na pieczątki i program punktowy w Apple Wallet i Google Wallet. Sprawdź w minutę, co pasuje do kawiarni, restauracji czy salonu.",
+      "keywords": "program lojalnościowy, pieczątki czy punkty, cyfrowa karta lojalnościowa, karta na pieczątki, program punktowy, karta lojalnościowa Apple Wallet, karta lojalnościowa bez aplikacji"
+    },
+    "home": {
+      "title": "Stampeo - karty lojalnościowe, które klienci zatrzymują",
+      "description": "Cyfrowe karty lojalnościowe do Apple Wallet i Google Wallet. Bez aplikacji do pobrania, bez plastiku do zgubienia. Twoja karta gotowa w kilka minut.",
+      "keywords": "karty lojalnościowe, cyfrowa karta lojalnościowa, Apple Wallet, Google Wallet, nagrody dla klientów, karta na pieczątki, program lojalnościowy dla kawiarni"
+    },
+    "onboarding": {
+      "title": "Zacznij za darmo",
+      "description": "Stwórz swoją cyfrową kartę lojalnościową w kilka minut"
+    },
+    "contact": {
+      "title": "Kontakt",
+      "description": "Skontaktuj się z zespołem Stampeo. Masz pytanie o cyfrowe karty lojalnościowe? Jesteśmy tu, żeby pomóc."
+    },
+    "features": {
+      "design-de-carte": {
+        "title": "Karta lojalnościowa w twoich kolorach i z twoim logo",
+        "description": "Twoje logo, twoje kolory, własne ikony pieczątek (tło usuwamy sami) albo 98 gotowych. Złóż kartę w kilka minut albo przyślij logo, zrobimy ją w 24-48 h."
+      },
+      "scanner-mobile": {
+        "title": "Skaner w telefonie: pieczątka w 0,8 s, bez internetu też",
+        "description": "Osobna aplikacja z wibracją potwierdzenia (0,8 s) albo skaner w przeglądarce. Tryb bez internetu na targi, piwnice i festiwale, sam się zsynchronizuje."
+      },
+      "notifications-push": {
+        "title": "Powiadomienie na ekranie klienta po każdej pieczątce",
+        "description": "Pieczątka, nagroda, kolejny próg: każde zdarzenie wysyła powiadomienie na kartę klienta. Automatycznie, bez dodatkowej aplikacji i bez kosztów SMS."
+      },
+      "analytiques": {
+        "title": "Dane o lojalności: kto wraca, a kto przestaje wracać",
+        "description": "Panel na żywo: skany z dziś, aktywni klienci, odebrane nagrody. Plan Growth dodaje trendy, godziny szczytu, powroty w 30 dni i ostrzeżenia o odpływie."
+      },
+      "geolocalisation": {
+        "title": "Karta na ekranie telefonu, gdy klient przechodzi obok",
+        "description": "Gdy klient jest blisko twojego lokalu, jego karta pojawia się na ekranie blokady. Bez aplikacji, bez Bluetootha. Nie zbierasz danych o lokalizacji."
+      },
+      "campagnes-promotionnelles": {
+        "title": "Rozsyłki promocyjne w portfelu: tańsze niż SMS-y",
+        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet. Bez kosztu za wiadomość, około 85% otwarć, z segmentacją i planowaniem. 3 w miesiącu na Growth."
+      },
+      "programme-fondateur": {
+        "title": "Oferta na start",
+        "description": "1 miesiąc za darmo, potem 20 €/mies. na zawsze. Wszystkie funkcje planu Growth, dostępne od dziś."
+      }
+    },
+    "acquisition": {
+      "notFound": "Nie znaleziono firmy | Stampeo",
+      "notFoundDesc": "Nie udało się znaleźć tej firmy.",
+      "title": "Odbierz kartę lojalnościową {businessName} | Stampeo",
+      "cardTitle": "Karta lojalnościowa {businessName}",
+      "defaultDesc": "Dołącz do programu lojalnościowego {businessName} i zbieraj nagrody przy każdej wizycie."
+    }
+  }
+}

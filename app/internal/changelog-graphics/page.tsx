@@ -9,6 +9,8 @@ import enCommon from "@/messages/en/common.json";
 import enFeatures from "@/messages/en/features.json";
 import esCommon from "@/messages/es/common.json";
 import esFeatures from "@/messages/es/features.json";
+import plCommon from "@/messages/pl/common.json";
+import plFeatures from "@/messages/pl/features.json";
 
 // The cast matches how the app loads these same files: i18n/request.ts pulls
 // them through untyped dynamic imports. AbstractIntlMessages doesn't model
@@ -17,6 +19,7 @@ const MESSAGES_BY_LOCALE = {
   en: { ...enCommon, ...enFeatures },
   fr: { ...frCommon, ...frFeatures },
   es: { ...esCommon, ...esFeatures },
+  pl: { ...plCommon, ...plFeatures },
 } as unknown as MessagesByLocale;
 
 export default function ChangelogGraphicsPage() {

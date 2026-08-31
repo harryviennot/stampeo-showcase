@@ -1,0 +1,173 @@
+{
+  "onboarding": {
+    "steps": {
+      "user_info": "O tobie",
+      "authentication": "Konto",
+      "settingUp": "Przygotowujemy twoje konto…"
+    },
+    "userInfo": {
+      "title": "Poznajmy się",
+      "subtitle": "Kilka informacji, żeby przygotować twoje konto.",
+      "name": "Twoje imię i nazwisko",
+      "namePlaceholder": "Imię i nazwisko",
+      "phone": "Telefon",
+      "phoneHelp": "Dzwonimy tylko w pilnych sprawach dotyczących konta.",
+      "optional": "(opcjonalnie)",
+      "nameRequired": "Podaj swoje imię i nazwisko.",
+      "phoneInvalid": "Ten numer telefonu wygląda na niepoprawny.",
+      "continue": "Dalej",
+      "loginPrompt": "Masz już konto?",
+      "loginCta": "Zaloguj się"
+    },
+    "authentication": {
+      "forgotPassword": "Nie pamiętasz hasła?"
+    },
+    "businessProfile": {
+      "title": "Opowiedz o swojej firmie",
+      "subtitleIdentity": "Jak nazywa się twoja firma?",
+      "subtitleCategory": "Jaki to rodzaj firmy?",
+      "subtitleTeamSize": "Ile osób liczy twój zespół?",
+      "subtitleLocations": "Ile masz lokali?",
+      "subtitleGoal": "Jaki jest twój główny cel?",
+      "businessName": "Nazwa firmy",
+      "businessNamePlaceholder": "np. Kawiarnia Aroma",
+      "uniqueUrl": "Twój unikalny adres",
+      "urlPlaceholder": "kawiarnia-aroma",
+      "slugMinLength": "Minimum 3 znaki",
+      "slugAvailable": "Ten adres jest wolny!",
+      "categories": {
+        "cafe": "Kawiarnia",
+        "restaurant": "Restauracja",
+        "bakery": "Piekarnia / Cukiernia",
+        "retail": "Sklep detaliczny",
+        "salon": "Salon fryzjerski / Spa",
+        "fitness": "Siłownia / Fitness",
+        "services": "Usługi",
+        "other": "Inne"
+      },
+      "otherLabel": "Napisz, czym się zajmujesz",
+      "otherPlaceholder": "np. Salon dla psów, Myjnia samochodowa, Studio tatuażu...",
+      "teamSizeLabel": "Ile osób pracuje w twoim zespole?",
+      "teamSize": {
+        "solo": "Tylko ja",
+        "2-5": "2 do 5",
+        "6-20": "6 do 20",
+        "20+": "Ponad 20"
+      },
+      "locationsLabel": "Ile lokali?",
+      "locations": {
+        "1": "1",
+        "2-5": "2 do 5",
+        "6+": "6 lub więcej"
+      },
+      "goals": {
+        "acquire": {
+          "label": "Przyciągnąć nowych klientów",
+          "description": "Chcesz, żeby o twojej firmie zrobiło się głośno i żeby przychodziły nowe osoby."
+        },
+        "retain": {
+          "label": "Zatrzymać obecnych klientów",
+          "description": "Chcesz, żeby klienci wracali częściej."
+        },
+        "both": {
+          "label": "Jedno i drugie",
+          "description": "Przyciągać nowych i zatrzymywać obecnych naraz."
+        }
+      }
+    },
+    "aboutYou": {
+      "title": "Opowiedz o sobie",
+      "subtitle": "Kilka informacji, żeby dopasować twój panel.",
+      "ownerName": "Twoje imię i nazwisko",
+      "ownerNamePlaceholder": "Jan Kowalski",
+      "website": "Strona internetowa",
+      "websitePlaceholder": "https://mojafirma.pl",
+      "phone": "Numer telefonu",
+      "optional": "(opcjonalnie)"
+    },
+    "cardPreview": {
+      "title": "Dopasuj swoją kartę",
+      "subtitleAssets": "Wgraj logo i wybierz ikonę pieczątki",
+      "subtitleColors": "Wybierz kolory pasujące do twojej marki",
+      "editLater": "Wzór karty zawsze zmienisz później w panelu",
+      "cardBackground": "Tło karty",
+      "accentColor": "Kolor akcentu",
+      "iconColor": "Kolor ikon",
+      "businessLogo": "Logo firmy",
+      "logoOptional": "(opcjonalnie)",
+      "logoDesc": "Wgraj logo, żeby zastąpiło inicjały na karcie. Format PNG, maks. 2 MB.",
+      "stampIcon": "Ikona pieczątki",
+      "stampIconTooltip": "W panelu możesz poprosić o własną ikonę!",
+      "rewardIcon": "Ikona nagrody",
+      "rewardIconTooltip": "Ikona na ostatniej pieczątce",
+      "defaultInitials": "TF",
+      "defaultBusiness": "Twoja firma",
+      "progress": "Postęp",
+      "completeSetup": "Dokończ konfigurację",
+      "unlockCard": "aby odblokować swoją kartę",
+      "loyaltyCard": "Karta lojalnościowa"
+    },
+    "createAccount": {
+      "title": "Załóż swoje konto",
+      "subtitle": "Ostatni krok! Ustaw dane do logowania",
+      "chooseTitle": "Jak chcesz założyć konto?",
+      "chooseSubtitle": "Wybierz sposób, który najbardziej ci pasuje",
+      "continueGoogle": "Kontynuuj z Google",
+      "continueApple": "Kontynuuj z Apple",
+      "continueEmail": "Kontynuuj z e-mailem",
+      "continueGoogleShort": "Google",
+      "continueAppleShort": "Apple",
+      "continueEmailShort": "E-mail",
+      "chooseDifferentMethod": "Wybierz inny sposób",
+      "emailTitle": "Załóż konto na e-mail",
+      "emailSubtitle": "Twój e-mail i mocne hasło.",
+      "email": "E-mail",
+      "emailPlaceholder": "ty@przyklad.pl",
+      "password": "Hasło",
+      "passwordPlaceholder": "Ustaw mocne hasło",
+      "passwordRequirements": {
+        "lowercase": "Mała litera (a-z)",
+        "uppercase": "Wielka litera (A-Z)",
+        "number": "Cyfra (0-9)",
+        "symbol": "Symbol (!@#$...)",
+        "minLength": "Co najmniej 6 znaków"
+      },
+      "continue": "Dalej",
+      "submitting": "Chwileczkę...",
+      "verifyTitle": "Sprawdź swoją skrzynkę",
+      "verifySubtitle": "Wysłaliśmy 6-cyfrowy kod na adres <strong>{email}</strong>. Jeśli nie pojawi się w ciągu minuty, zajrzyj do spamu.",
+      "verifyCode": "Kod weryfikacyjny",
+      "verifyCodePlaceholder": "000000",
+      "verifyButton": "Zweryfikuj",
+      "verifying": "Weryfikujemy...",
+      "resendCode": "Wyślij kod ponownie",
+      "resendIn": "Ponowne wysłanie za {seconds}s",
+      "codeSent": "Nowy kod wysłany!",
+      "changeEmail": "Użyj innego adresu e-mail",
+      "invalidCode": "Nieprawidłowy kod weryfikacyjny, spróbuj ponownie",
+      "emailTypoSuggestion": "Chodziło ci o {suggestion}?",
+      "emailTypoApply": "Użyj {suggestion}",
+      "legalNotice": "Zakładając konto, akceptujesz nasz <terms>Regulamin</terms> i potwierdzasz zapoznanie się z <privacy>Polityką prywatności</privacy>."
+    },
+    "applicationSubmitted": {
+      "title": "Skąd nas znasz?",
+      "heardFromSubtitle": "Ostatnie pytanie, zanim przygotujemy twój panel.",
+      "goToDashboard": "Przejdź do panelu",
+      "settingUpDashboard": "Przygotowujemy twoje miejsce...",
+      "heardFromOptions": {
+        "google": "Google / Wyszukiwarka",
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "youtube": "YouTube",
+        "linkedin": "LinkedIn",
+        "article": "Artykuł / Blog",
+        "friend": "Znajomy / Współpracownik",
+        "business": "Firma korzystająca ze Stampeo",
+        "ai": "ChatGPT / AI",
+        "other": "Inne"
+      },
+      "heardFromOtherLabel": "Napisz więcej",
+      "heardFromOtherPlaceholder": "Skąd wiesz o Stampeo?"
+    }
+  }
+}

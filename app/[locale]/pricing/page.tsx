@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { PricingPageContent } from "@/components/pricing/PricingPageContent";
+import { localeAlternates, localePath } from "@/lib/hreflang";
 
 export async function generateMetadata({
   params,
@@ -14,13 +15,8 @@ export async function generateMetadata({
     title: t("title"),
     description: t("description"),
     alternates: {
-      canonical: locale === "fr" ? "/pricing" : `/${locale}/pricing`,
-      languages: {
-        "x-default": "/pricing",
-        fr: "/pricing",
-        en: "/en/pricing",
-        es: "/es/pricing",
-      },
+      canonical: localePath(locale, "/pricing"),
+      languages: localeAlternates("/pricing"),
     },
   };
 }

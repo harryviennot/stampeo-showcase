@@ -1,0 +1,122 @@
+{
+  "common": {
+    "stamps": "Pieczątki",
+    "reward": "Nagroda",
+    "rewarded": "Masz 30 dni za darmo!",
+    "rewardText": "30 dni za darmo przy 8 pieczątkach!",
+    "nav": {
+      "features": "Funkcje",
+      "pricing": "Cennik",
+      "faq": "Najczęstsze pytania",
+      "blog": "Blog",
+      "featuresItems": {
+        "designDeCarte": {
+          "label": "Wzór karty",
+          "description": "Twoje kolory i logo w 5 minut"
+        },
+        "scannerMobile": {
+          "label": "Skaner mobilny",
+          "description": "Jeden skan z telefonu, jedna sekunda"
+        },
+        "notificationsPush": {
+          "label": "Powiadomienia",
+          "description": "Wracasz do klientów na ekranie blokady"
+        },
+        "campagnesPromotionnelles": {
+          "label": "Rozsyłki promocyjne",
+          "description": "Docierasz do wszystkich klientów, bez rachunku za SMS-y"
+        },
+        "analytiques": {
+          "label": "Statystyki",
+          "description": "Poznaj klientów na podstawie prawdziwych danych"
+        },
+        "geolocalisation": {
+          "label": "Geolokalizacja",
+          "description": "Przypomnij o sobie w odpowiednim momencie"
+        }
+      },
+      "foundingProgram": "Program założycielski",
+      "loyaltyPrograms": "Programy lojalnościowe",
+      "contact": "Kontakt",
+      "product": "Produkt",
+      "loyalty": "Lojalność",
+      "resources": "Materiały",
+      "changelog": "Nowości",
+      "about": "O nas",
+      "productBlurb": "Wszystko, co potrafi karta",
+      "resourcesBlurb": "Poradniki, nowości i kontakt"
+    },
+    "promoBanner": {
+      "item1": "Oferta startowa: <bold>20 €/miesiąc na zawsze</bold>",
+      "item2": "Członkowie założyciele: <bold>-50% na zawsze</bold>",
+      "item3": "Całe Stampeo, <bold>już dziś</bold>",
+      "item4": "Zgarnij swoją <bold>cenę startową</bold>",
+      "dismiss": "Zamknij"
+    },
+    "auth": {
+      "signOut": "Wyloguj się",
+      "dashboard": "Panel",
+      "logIn": "Zaloguj się",
+      "getStarted": "Zaczynamy  →"
+    },
+    "buttons": {
+      "continue": "Kontynuuj",
+      "back": "Wstecz",
+      "next": "Dalej",
+      "skip": "Pomiń",
+      "tryAgain": "Spróbuj ponownie",
+      "goBack": "Wróć",
+      "startFree": "Zacznij za darmo"
+    },
+    "wallet": {
+      "appleWallet": "Apple Wallet",
+      "googleWallet": "Google Wallet",
+      "addToAppleWallet": "Dodaj do Apple Wallet",
+      "addToGoogleWallet": "Dodaj do Google Wallet",
+      "soon": "Wkrótce"
+    },
+    "footer": {
+      "brand": "Stampeo",
+      "description": "Cyfrowe karty lojalnościowe dla nowoczesnych firm. Rozwijaj się dzięki prostym nagrodom, po które klienci wracają.",
+      "product": "Produkt",
+      "featuresTitle": "Funkcje",
+      "features": "Funkcje",
+      "resources": "Materiały",
+      "pricing": "Cennik",
+      "howItWorks": "Jak to działa",
+      "help": "Centrum pomocy",
+      "blog": "Blog",
+      "changelog": "Nowości",
+      "company": "Firma",
+      "about": "O nas",
+      "contact": "Kontakt",
+      "legal": "Informacje prawne",
+      "privacyPolicy": "Polityka prywatności",
+      "termsOfService": "Regulamin",
+      "allRightsReserved": "© {year} Stampeo. Wszelkie prawa zastrzeżone.",
+      "builtForLocal": "Stworzone dla lokalnych firm",
+      "madeInFrance": "Zrobione we Francji",
+      "gdprCompliant": "Zgodne z RODO",
+      "cta": {
+        "title": "Zaczynamy?",
+        "subtitle": "Dołącz do firm, które budują lojalność klientów ze Stampeo.",
+        "button": "Zacznij za darmo"
+      },
+      "newsletter": {
+        "title": "Bądź na bieżąco",
+        "placeholder": "Twój e-mail",
+        "button": "Zapisz się",
+        "disclaimer": "Bez spamu. Wypisujesz się jednym kliknięciem.",
+        "success": "Dziękujemy! Adres zapisany."
+      },
+      "sitemapLabel": "Mapa strony"
+    },
+    "points": "Punkty",
+    "pointsStrip": {
+      "objective": "Cel",
+      "nextWord": "Następna",
+      "points": "{points} pkt",
+      "complete": "Karta ukończona"
+    }
+  }
+}
