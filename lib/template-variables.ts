@@ -29,6 +29,7 @@ const POINTS_ALL_REWARDS_READY: Record<string, string> = {
   fr: "Carte complétée",
   en: "Card completed",
   es: "Tarjeta completada",
+  pl: "Karta ukończona",
 };
 
 export interface PreviewContext {
@@ -93,6 +94,7 @@ const SAMPLE_FIRST_NAMES: Record<string, string[]> = {
   en: ["Sarah", "James", "Emma", "Liam", "Olivia", "Noah", "Ava", "Ethan"],
   fr: ["Jeanne", "Louis", "Emma", "Hugo", "Camille", "Léa", "Nathan", "Chloé"],
   es: ["Lucía", "Mateo", "Sofía", "Diego", "Valentina", "Hugo", "Martina", "Pablo"],
+  pl: ["Zofia", "Jakub", "Julia", "Antoni", "Maja", "Szymon", "Lena", "Filip"],
 };
 
 /** Deterministic FNV-style hash so a given seed always maps to the same name. */

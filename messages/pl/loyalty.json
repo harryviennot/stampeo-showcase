@@ -1,0 +1,168 @@
+{
+  "loyalty": {
+    "hero": {
+      "badge": "Programy lojalnościowe",
+      "title": "Program lojalnościowy dopasowany <accent>do tego, jak naprawdę sprzedajesz.</accent>",
+      "subtitle": "Stampeo prowadzi dwa rodzaje programu na jednej karcie: pieczątki za wizyty, punkty za to, ile klienci wydają. Oto jak działa każdy z nich i jak wybrać."
+    },
+    "engines": {
+      "heading": "Dwa sposoby nagradzania, jedna karta",
+      "subheading": "Ta sama karta, to samo przygotowanie. Jedyne pytanie: co liczysz?",
+      "labelHow": "Jak to działa",
+      "labelBestFor": "Idealne dla",
+      "stamps": {
+        "name": "Pieczątki",
+        "tagline": "Karta na pieczątki, tylko cyfrowa.",
+        "how": "Każda wizyta to jedna pieczątka. Karta się zapełnia, nagroda czeka. Jeden ruch przy kasie, żadnych kwot do wpisywania.",
+        "bestFor": "Idealne przy powtarzalnych zakupach w stałej cenie: kawa, drożdżówki, modelowanie włosów, myjnia samochodowa."
+      },
+      "points": {
+        "name": "Punkty",
+        "tagline": "Saldo, które rośnie razem z wydatkami.",
+        "how": "Obsługa wpisuje wydaną kwotę, a klient dostaje za nią punkty. Wymienia je na nagrody, które ustawiasz, nawet dwanaście do wyboru.",
+        "bestFor": "Idealne, gdy koszyk bywa różny: restauracje, sklepy, spożywczaki, sklepy specjalistyczne."
+      }
+    },
+    "comparison": {
+      "title": "Pieczątki i punkty obok siebie",
+      "subtitle": "Żaden nie jest lepszy. Po prostu pasują do innych firm.",
+      "stampsLabel": "Pieczątki",
+      "pointsLabel": "Punkty",
+      "rows": [
+        { "criteria": "Najlepsze, gdy", "stamps": "Każdy zakup kosztuje mniej więcej tyle samo", "points": "Rachunek zmienia się z wizyty na wizytę" },
+        { "criteria": "Jak się zapełnia", "stamps": "Jedna pieczątka za wizytę, jeden ruch", "points": "Punkty rosną razem z wydaną kwotą" },
+        { "criteria": "Nagroda", "stamps": "Coś gratis po N pieczątkach", "points": "Lista nagród wycenionych w punktach (do 12)" },
+        { "criteria": "Wrażenie", "stamps": "Prezent, do którego się zmierza", "points": "Swoboda wyboru" },
+        { "criteria": "Na karcie", "stamps": "Siatka pieczątek", "points": "Saldo i postęp" },
+        { "criteria": "Dostępne w", "stamps": "Każdym planie", "points": "Każdym planie" }
+      ]
+    },
+    "picker": {
+      "title": "Co pasuje do twojej firmy?",
+      "subtitle": "Trzy szybkie pytania. Bez podawania e-maila.",
+      "annotation": "30 sekund, obiecujemy",
+      "progress": "Pytanie {current} z {total}",
+      "questions": [
+        {
+          "question": "Czy twoje ceny mocno się różnią z zakupu na zakup?",
+          "options": [
+            { "label": "Nie, większość zakupów kosztuje podobnie" },
+            { "label": "Tak, koszyk bardzo się waha" }
+          ]
+        },
+        {
+          "question": "Jak wracają twoi najlepsi klienci?",
+          "options": [
+            { "label": "Często, po drobne zakupy" },
+            { "label": "Od czasu do czasu, za większe kwoty" }
+          ]
+        },
+        {
+          "question": "Która nagroda spodobałaby się klientom najbardziej?",
+          "options": [
+            { "label": "Coś gratis po kilku wizytach" },
+            { "label": "Wybór spośród kilku nagród" },
+            { "label": "Jeszcze nie wiem" }
+          ]
+        }
+      ],
+      "resultHeading": "Nasza podpowiedź",
+      "results": {
+        "stamps": {
+          "title": "Postaw na pieczątki",
+          "body": "Wizyty są regularne i podobne cenowo, więc karta na pieczątki będzie najczytelniejsza i najbardziej motywująca."
+        },
+        "points": {
+          "title": "Postaw na punkty",
+          "body": "Koszyki się różnią, więc nagradzanie tego, ile klient naprawdę wydaje, jest uczciwsze i sprowadza z powrotem tych największych."
+        },
+        "either": {
+          "title": "Sprawdzi się jedno i drugie",
+          "body": "Jesteś dokładnie pośrodku. Pieczątki są najprostszym startem, a punkty ustawisz równie szybko, jeśli wolisz nagradzać wydatki."
+        }
+      },
+      "restart": "Zacznij od nowa",
+      "cta": "Stwórz moją kartę"
+    },
+    "options": {
+      "title": "Ustawienia, które robią dobry program",
+      "subtitle": "Pieczątki albo punkty to dopiero początek. Te ustawienia spotkasz przy tworzeniu programu; oto cztery najważniejsze, każde z naszą radą.",
+      "tipLabel": "Nasza rada:",
+      "items": [
+        {
+          "name": "Karty z pieczątkami na start",
+          "description": "Rozdawaj karty z jedną albo dwiema pieczątkami już przybitymi, na koszt firmy.",
+          "tip": "Rozpęd działa. Kartę już zaczętą klienci kończą dużo częściej niż tę od zera."
+        },
+        {
+          "name": "Nagrody, które się kumulują",
+          "description": "Pełna karta odkłada nagrodę na bok i od razu rusza nowy cykl. Ty decydujesz, ile nagród może czekać.",
+          "tip": "Pozwól na co najmniej dwie, żeby nikt nie utknął tylko dlatego, że jedna nagroda już czeka."
+        },
+        {
+          "name": "Twoje tempo nagród",
+          "description": "Ustalasz liczbę pieczątek albo cenę każdej nagrody w punktach, a przy punktach nawet dwanaście nagród.",
+          "tip": "Pierwsza nagroda niech będzie blisko. Szybka wygrana zamienia jedną wizytę w nawyk."
+        },
+        {
+          "name": "Zmiana zdania w każdej chwili",
+          "description": "Przejdź z pieczątek na punkty, kiedy chcesz. Klienci zachowują tę samą kartę i swój postęp.",
+          "tip": "Zacznij prosto. Większość firm startuje z oczywistym wyborem i dostraja go, gdy pojawiają się prawdziwe liczby."
+        }
+      ]
+    },
+    "designTeaser": {
+      "title": "Cokolwiek wybierzesz, karta zostaje twoja",
+      "subtitle": "Twoje logo, twoje kolory, twoje własne ikony pieczątek. Program już wybrany, a wyglądem karty zajmie się edytor.",
+      "cta": "Zobacz edytor kart",
+      "annotation": "każda zrobiona w 3 minuty"
+    },
+    "businessMap": {
+      "title": "Co wybiera większość firm",
+      "subtitle": "Punkt wyjścia, nie reguła.",
+      "stampsLabel": "Pieczątki",
+      "pointsLabel": "Punkty",
+      "items": {
+        "cafe": { "label": "Kawiarnie", "rationale": "Ten sam napój, prawie codziennie" },
+        "bakery": { "label": "Piekarnie i cukiernie", "rationale": "Drobne, częste zakupy" },
+        "salon": { "label": "Fryzjer i uroda", "rationale": "Nagroda za wizytę" },
+        "carwash": { "label": "Myjnie samochodowe", "rationale": "Jedna usługa, powtarzana" },
+        "restaurant": { "label": "Restauracje", "rationale": "Rachunek za każdym razem inny" },
+        "retail": { "label": "Sklepy i butiki", "rationale": "Bardzo różne koszyki" },
+        "grocery": { "label": "Sklepy spożywcze i warzywniaki", "rationale": "Nagroda za łączne wydatki" },
+        "wine": { "label": "Winiarnie i sklepy specjalistyczne", "rationale": "Wyższe, nierówne rachunki" }
+      }
+    },
+    "faq": {
+      "title": "Pieczątki i punkty, najczęstsze pytania",
+      "subtitle": "O to pytają nas najczęściej przed wyborem programu.",
+      "items": [
+        {
+          "question": "Czym różnią się pieczątki od punktów?",
+          "answer": "Pieczątki liczą wizyty: jeden ruch dodaje pieczątkę, a pełna karta daje nagrodę. Punkty liczą wydatki: obsługa wpisuje kwotę, klient dostaje punkty i wymienia je na nagrody, które ustawiasz. Pieczątki pasują do powtarzalnych wizyt w stałej cenie, punkty do koszyków, które się różnią."
+        },
+        {
+          "question": "Który program wybrać?",
+          "answer": "Jeśli ceny są podobne, a ludzie wracają często, pieczątki będą najczytelniejsze. Jeśli koszyk się waha albo rachunki są wyższe, punkty nagradzają to, ile klient naprawdę wydaje. Wątpliwości? Wypróbuj test powyżej."
+        },
+        {
+          "question": "Czy punkty kosztują więcej niż pieczątki?",
+          "answer": "Nie. Oba programy są w każdym planie, także w planie Starter. Karta, aktualizacje w telefonie i lista nagród kosztują tyle samo."
+        },
+        {
+          "question": "Jak klienci zdobywają punkty?",
+          "answer": "Twoja obsługa przy skanowaniu wpisuje wydaną kwotę, a klient dostaje za nią punkty, na przykład jeden punkt za każdą wydaną złotówkę. Ty ustalasz nagrody i ich cenę w punktach, nawet dwanaście."
+        },
+        {
+          "question": "Czy moi klienci muszą instalować aplikację?",
+          "answer": "Nie. Karta mieszka w Apple Wallet albo Google Wallet, czyli w portfelu, który jest już w ich telefonie. Skanują twój kod QR raz i karta się dodaje, tak samo przy pieczątkach, jak i przy punktach."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Czas nagrodzić stałych klientów?",
+      "subtitle": "Stwórz kartę w kilka minut, na pieczątki albo na punkty. Miesiąc za darmo, bez zobowiązań.",
+      "button": "Stwórz moją kartę"
+    }
+  }
+}

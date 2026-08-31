@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { walletBadges } from "@/lib/store-badges";
 import posthog from "posthog-js";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -17,10 +18,7 @@ export default function WalletSelectPage() {
 
   const appleUrl = `${API_URL}/demo/pass/${token}?wallet=apple`;
   const googleUrl = `${API_URL}/demo/pass/${token}?wallet=google`;
-  const appleSrc =
-    locale === "fr" ? "/AppleWalletFR.svg" : locale === "es" ? "/AppleWalletES.svg" : "/AppleWallet.svg";
-  const googleSrc =
-    locale === "fr" ? "/GoogleWalletFR.svg" : locale === "es" ? "/GoogleWalletES.svg" : "/GoogleWallet.svg";
+  const { apple: appleSrc, google: googleSrc } = walletBadges(locale);
 
   return (
     <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">

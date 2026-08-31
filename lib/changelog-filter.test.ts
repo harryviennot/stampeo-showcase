@@ -14,9 +14,11 @@ function item(id: string, area: string | null): ChangelogItem {
     title_fr: `Titre ${id}`,
     title_en: null,
     title_es: null,
+    title_pl: null,
     body_fr: null,
     body_en: null,
     body_es: null,
+    body_pl: null,
     sort_order: 0,
   };
 }
@@ -28,12 +30,15 @@ function release(id: string, items: ChangelogItem[]): ChangelogRelease {
     title_fr: `Version ${id}`,
     title_en: null,
     title_es: null,
+    title_pl: null,
     body_fr: null,
     body_en: null,
     body_es: null,
+    body_pl: null,
     image_url_fr: null,
     image_url_en: null,
     image_url_es: null,
+    image_url_pl: null,
     published_at: "2026-08-01T00:00:00Z",
     changelog_items: items,
   };

@@ -1,7 +1,7 @@
 import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
-  locales: ["fr", "en", "es"],
+  locales: ["fr", "en", "es", "pl"],
   defaultLocale: "fr",
   localePrefix: "as-needed",
   // Next-intl's auto-generated Link header uses the same pathname across
@@ -10,3 +10,6 @@ export const routing = defineRouting({
   // on the correct `<link rel="alternate">` tags from each page's metadata.
   alternateLinks: false,
 });
+
+/** The locales this site serves. Derived from `routing` so it never drifts. */
+export type Locale = (typeof routing.locales)[number];

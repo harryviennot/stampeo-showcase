@@ -3,9 +3,11 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
+import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
 import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
+import { storeBadges } from "@/lib/store-badges";
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
@@ -17,12 +19,7 @@ export async function Footer() {
   const locale = await getLocale();
   const { platform: platformVersion } = await getPlatformVersion();
 
-  const storeBadges =
-    locale === "fr"
-      ? { apple: "/AppStoreFR.svg", google: "/GooglePlayFR.svg" }
-      : locale === "es"
-        ? { apple: "/AppStoreES.svg", google: "/GooglePlayES.svg" }
-        : { apple: "/AppStore.svg", google: "/GooglePlay.svg" };
+  const badges = storeBadges(locale);
 
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
@@ -30,7 +27,7 @@ export async function Footer() {
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
-    { href: `${seoPrefix}/blog`, label: "Blog" },
+    ...(hasBlog(locale) ? [{ href: `${seoPrefix}/blog`, label: "Blog" }] : []),
     { href: `${seoPrefix}/contact`, label: "Contact" },
     { href: `${seoPrefix}/about`, label: "About" },
     ...FEATURE_ITEMS.map(({ canonicalSlug }) => ({
@@ -71,7 +68,7 @@ export async function Footer() {
                 className="inline-block"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={storeBadges.apple} alt="App Store" className="h-9 w-auto" />
+                <img src={badges.apple} alt="App Store" className="h-9 w-auto" />
               </a>
               <a
                 href={PLAY_STORE_URL}
@@ -80,7 +77,7 @@ export async function Footer() {
                 className="inline-block"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={storeBadges.google} alt="Google Play" className="h-9 w-auto" />
+                <img src={badges.google} alt="Google Play" className="h-9 w-auto" />
               </a>
             </div>
 
@@ -146,7 +143,7 @@ export async function Footer() {
             <div className="flex flex-col gap-4">
               <p className="text-white text-sm font-bold">{t("resources")}</p>
               <nav className="flex flex-col gap-3">
-                {(locale === "fr" || locale === "en" || locale === "es") && (
+                {hasBlog(locale) && (
                   <Link href="/blog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                     {t("blog")}
                   </Link>

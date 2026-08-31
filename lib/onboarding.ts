@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/routing";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 if (!API_URL) {
@@ -46,7 +48,7 @@ export async function getUserProfile(
 export interface UserProfileUpdate {
   name?: string;
   phone?: string;
-  locale?: "fr" | "en";
+  locale?: Locale;
 }
 
 /**

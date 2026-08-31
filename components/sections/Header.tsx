@@ -10,6 +10,7 @@ import { StampeoLogo } from "../logo";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
+import { hasBlog } from "@/lib/blog/locales";
 import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
@@ -291,8 +292,10 @@ export function Header() {
     label: t(`common.nav.featuresItems.${key}.label`),
   }));
 
+  // The blog only exists in the locales that have articles — a link to it from
+  // a Polish page would just bounce the reader back home.
   const resourceItems: NavMenuItem[] = [
-    { href: "/blog", label: t("common.nav.blog") },
+    ...(hasBlog(locale) ? [{ href: "/blog", label: t("common.nav.blog") }] : []),
     { href: "/changelog", label: t("common.nav.changelog") },
     { href: "/about", label: t("common.nav.about") },
     { href: "/contact", label: t("common.nav.contact") },
@@ -341,7 +344,7 @@ export function Header() {
     { href: `${seoPrefix}/`, label: "Home" },
     { href: `${seoPrefix}/pricing`, label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
-    { href: `${seoPrefix}/blog`, label: "Blog" },
+    ...(hasBlog(locale) ? [{ href: `${seoPrefix}/blog`, label: "Blog" }] : []),
     { href: `${seoPrefix}/contact`, label: "Contact" },
     { href: `${seoPrefix}/about`, label: "About" },
     ...FEATURE_ITEMS.map(({ canonicalSlug }) => ({

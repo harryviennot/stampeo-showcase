@@ -1,0 +1,295 @@
+{
+  "pricing": {
+    "badge": "Plany i ceny",
+    "title": "Proste, przejrzyste ceny",
+    "subtitle": "Założyciele mają 50% taniej na plan Starter i Growth, na zawsze.",
+    "subtitleStandard": "Klienci, skany i urządzenia bez limitu w każdym planie.",
+    "foundingReassurance": "Twoja cena założycielska zostaje z tobą na zawsze. Nawet jeśli ceny wzrosną, albo zrezygnujesz i wrócisz później, płacisz dokładnie tyle samo.",
+    "foundingPartner": "ZAŁOŻYCIEL",
+    "popular": "Najczęściej wybierany",
+    "perMonth": "/mies.",
+    "billedYearlyTotal": "Płatność {price} € rocznie, oszczędzasz {saving} €",
+    "forLife": "/mies. na zawsze",
+    "freeMonths": "3 miesiące za darmo",
+    "deadlineNotice": "Cena założycielska tylko do {date}, ostatnia szansa.",
+    "annotation": "tu byśmy zaczęli",
+    "countdown": {
+      "daysHours": "Cena założycielska: koniec za {days, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} {hours} godz.",
+      "hoursMinutes": "Cena założycielska: koniec za {hours} godz. {minutes} min"
+    },
+    "cta": "Zaczynamy",
+    "ctaSubtext": "30 dni za darmo · Rezygnujesz kiedy chcesz",
+    "starter": {
+      "name": "Starter",
+      "tagline": "Dla jednoosobowych firm i pojedynczych lokali",
+      "featuresLabel": "Wszystko w cenie:",
+      "features": [
+        "Klienci i skany bez limitu",
+        "Karty na pieczątki lub na punkty, w pełni personalizowane",
+        "Automatyczne powiadomienia o pieczątce i nagrodzie",
+        "1 aktywny wzór karty",
+        "2 osoby w zespole (właściciel + 1)",
+        "Lista klientów, statystyki i wyszukiwanie",
+        "Wsparcie przez e-mail"
+      ]
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "Dla firm, które chcą, żeby klienci wracali",
+      "featuresLabel": "Wszystko z planu Starter, a do tego:",
+      "features": [
+        "8 rozsyłek miesięcznie do wszystkich klientów",
+        "Dodatkowe punkty za zakupy powyżej kwoty, którą ustawisz",
+        "Własne treści powiadomień o pieczątce i nagrodzie",
+        "Zapisane wzory karty bez limitu",
+        "Godziny szczytu i trendy tygodniowe",
+        "Osoby w zespole bez limitu",
+        "Widzisz, kto z zespołu zrobił każdy skan"
+      ]
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Dla firm z wieloma lokalami, które planują z wyprzedzeniem",
+      "featuresLabel": "Wszystko z planu Growth, a do tego:",
+      "features": [
+        "Wiele lokali, ze statystykami dla każdego",
+        "Rozsyłki bez limitu, z segmentacją klientów",
+        "Kilka progów kwotowych, każdy z własną premią punktową",
+        "Zaplanuj rozsyłki i wzory karty z wyprzedzeniem",
+        "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet)",
+        "Statystyki powrotów, częstotliwości i odebranych nagród",
+        "Wsparcie priorytetowe"
+      ]
+    },
+    "roi": {
+      "title": "Czy to się opłaca?",
+      "subtitle": "Zrób rachunek.",
+      "modePrudent": "Ostrożnie",
+      "modeOptimiste": "Optymistycznie",
+      "clientsLabel": "Klienci dziennie",
+      "basketLabel": "Średni rachunek",
+      "assumption": "Założenie: program lojalnościowy daje około {percent}% wizyt więcej",
+      "breakdownClients": "{clients} klientów dziennie × {percent}% = około {extra} klientów więcej dziennie",
+      "breakdownRevenue": "{extra} klientów × {basket} € × 30 dni = {total} €/mies.",
+      "extraRevenue": "Dodatkowy przychód",
+      "perMonth": "/mies.",
+      "stampeoCost": "Stampeo",
+      "roiLabel": "Zwraca się",
+      "disclaimer": "Szacunek orientacyjny na podstawie badań branżowych. Rzeczywiste wyniki zależą od twojej firmy i od tego, jak klienci przyjmą program.",
+      "sources": "Źródła: Bain & Company · Harvard Business Review · Bond Brand Loyalty Report"
+    },
+    "billedMonthly": "Płatność miesięczna"
+  },
+  "pricingPage": {
+    "meta": {
+      "title": "Cennik: porównaj plany | Stampeo",
+      "description": "Porównaj plany i funkcje Stampeo. Od jednoosobowej firmy po sieć lokali, znajdziesz plan dopasowany do swojego programu lojalnościowego."
+    },
+    "hero": {
+      "title": "Wybierz plan dopasowany do swojej firmy",
+      "subtitle": "Bez ukrytych opłat. Bez opłat za każdego klienta. Klienci bez limitu w każdym planie."
+    },
+    "foundingReassurance": "Twoja cena założycielska zostaje z tobą na zawsze. Nawet jeśli ceny wzrosną, albo zrezygnujesz i wrócisz później, płacisz dokładnie tyle samo.",
+    "popular": "Najczęściej wybierany",
+    "perMonth": "/mies.",
+    "billedYearlyTotal": "Płatność {price} € rocznie, oszczędzasz {saving} €",
+    "intervalMonthly": "Miesięcznie",
+    "intervalYearly": "Rocznie",
+    "yearlyBadge": "20% taniej",
+    "annotation": "tu byśmy zaczęli",
+    "comparisonMonthlyNote": "Ceny podane za miesiąc. Płatność roczna zdejmuje 20% z każdego planu.",
+    "forLife": "/mies. na zawsze",
+    "cta": "Zaczynamy",
+    "ctaSubtext": "30 dni za darmo · Rezygnujesz kiedy chcesz",
+    "starter": {
+      "name": "Starter",
+      "tagline": "Dla jednoosobowych firm i pojedynczych lokali",
+      "features": [
+        "Klienci i skany bez limitu",
+        "Karty na pieczątki lub na punkty, w pełni personalizowane",
+        "Automatyczne powiadomienia o pieczątce i nagrodzie",
+        "1 aktywny wzór karty",
+        "2 osoby w zespole (właściciel + 1)",
+        "Lista klientów, statystyki i wyszukiwanie",
+        "Wsparcie przez e-mail"
+      ],
+      "featuresLabel": "Wszystko w cenie:"
+    },
+    "growth": {
+      "name": "Growth",
+      "tagline": "Dla firm, które chcą, żeby klienci wracali",
+      "features": [
+        "8 rozsyłek miesięcznie do wszystkich klientów",
+        "Dodatkowe punkty za zakupy powyżej kwoty, którą ustawisz",
+        "Własne treści powiadomień o pieczątce i nagrodzie",
+        "Zapisane wzory karty bez limitu",
+        "Godziny szczytu i trendy tygodniowe",
+        "Osoby w zespole bez limitu",
+        "Widzisz, kto z zespołu zrobił każdy skan"
+      ],
+      "featuresLabel": "Wszystko z planu Starter, a do tego:"
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Dla firm z wieloma lokalami, które planują z wyprzedzeniem",
+      "features": [
+        "Wiele lokali, ze statystykami dla każdego",
+        "Rozsyłki bez limitu, z segmentacją klientów",
+        "Kilka progów kwotowych, każdy z własną premią punktową",
+        "Zaplanuj rozsyłki i wzory karty z wyprzedzeniem",
+        "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet)",
+        "Statystyki powrotów, częstotliwości i odebranych nagród",
+        "Wsparcie priorytetowe"
+      ],
+      "featuresLabel": "Wszystko z planu Growth, a do tego:"
+    },
+    "comparison": {
+      "title": "Porównaj wszystkie funkcje",
+      "subtitle": "Zobacz dokładnie, co zawiera każdy plan.",
+      "soon": "Wkrótce",
+      "categories": {
+        "loyalty": "Program lojalnościowy",
+        "cardDesign": "Wzór karty",
+        "locations": "Lokale",
+        "notifications": "Powiadomienia",
+        "team": "Zespół",
+        "analytics": "Statystyki",
+        "mobileApp": "Aplikacja mobilna",
+        "support": "Wsparcie"
+      },
+      "rows": {
+        "unlimitedCustomers": {
+          "label": "Klienci bez limitu"
+        },
+        "unlimitedScans": {
+          "label": "Skany bez limitu"
+        },
+        "savedTemplates": {
+          "label": "Zapisane wzory karty",
+          "starter": "1",
+          "growth": "Bez limitu",
+          "pro": "Bez limitu"
+        },
+        "loyaltyType": {
+          "label": "Rodzaj programu",
+          "starter": "Pieczątki lub punkty",
+          "growth": "Pieczątki lub punkty",
+          "pro": "Pieczątki lub punkty"
+        },
+        "earningCaps": {
+          "label": "Limity zbierania na klienta"
+        },
+        "basketBoost": {
+          "label": "Premia za większe zakupy",
+          "growth": "1 próg",
+          "pro": "Bez limitu"
+        },
+        "fullCustomisation": {
+          "label": "Pełna personalizacja karty"
+        },
+        "scheduledChanges": {
+          "label": "Zaplanowane zmiany karty"
+        },
+        "locations": {
+          "label": "Lokale",
+          "starter": "1",
+          "growth": "1",
+          "pro": "Wiele"
+        },
+        "locationAnalytics": {
+          "label": "Statystyki dla każdego lokalu"
+        },
+        "geofencing": {
+          "label": "Powiadomienia, gdy klient jest w pobliżu"
+        },
+        "stampMilestoneReward": {
+          "label": "Powiadomienia o pieczątce, progu i nagrodzie",
+          "starter": "Gotowe treści",
+          "growth": "Własna treść",
+          "pro": "Własna treść"
+        },
+        "milestoneLimit": {
+          "label": "Własne progi liczby pieczątek",
+          "growth": "3 na program",
+          "pro": "Bez limitu"
+        },
+        "broadcastNotifications": {
+          "label": "Rozsyłki do klientów",
+          "growth": "8 miesięcznie",
+          "pro": "Bez limitu"
+        },
+        "segmentation": {
+          "label": "Segmentacja klientów",
+          "starter": "—",
+          "growth": "Podstawowa (po dacie)",
+          "pro": "Zaawansowana (pieczątki, brak wizyt, odebrane nagrody, lokal)"
+        },
+        "scheduledSends": {
+          "label": "Planowanie rozsyłek"
+        },
+        "teamMembers": {
+          "label": "Osoby w zespole",
+          "starter": "2 (właściciel + 1)",
+          "growth": "Bez limitu",
+          "pro": "Bez limitu"
+        },
+        "employeeTracking": {
+          "label": "Skany przypisane do pracownika"
+        },
+        "basicStats": {
+          "label": "Statystyki podstawowe"
+        },
+        "advancedAnalytics": {
+          "label": "Statystyki zaawansowane"
+        },
+        "offlineScanning": {
+          "label": "Skanowanie bez internetu"
+        },
+        "supportLevel": {
+          "label": "Wsparcie",
+          "starter": "E-mail",
+          "growth": "E-mail",
+          "pro": "E-mail priorytetowy"
+        }
+      }
+    },
+    "faq": {
+      "title": "Najczęstsze pytania",
+      "subtitle": "Wszystko, co warto wiedzieć o naszych cenach.",
+      "items": [
+        {
+          "question": "Czy jest darmowy okres próbny?",
+          "answer": "Tak. Każdy plan zawiera 30 dni za darmo. Do startu prosimy o kartę płatniczą, ale nic nie pobieramy, dopóki te 30 dni się nie skończy. Rezygnujesz kiedy chcesz."
+        },
+        {
+          "question": "Czy mogę później zmienić plan?",
+          "answer": "Oczywiście. Na wyższy lub niższy plan przechodzisz w każdej chwili. Przy przejściu na wyższy plan nowe funkcje masz od razu. Przy przejściu na niższy zmiana wchodzi w życie na koniec bieżącego okresu rozliczeniowego."
+        },
+        {
+          "question": "Czy mogę płacić raz w roku?",
+          "answer": "Tak, i to zdejmuje 20% z każdego planu: 192 € rocznie za plan Starter, czyli 16 € miesięcznie zamiast 20 €. Z płatności miesięcznej na roczną przechodzisz kiedy chcesz, a rok liczy się od tego dnia. Powrót na miesięczną wchodzi w życie po zakończeniu opłaconego roku, więc nie tracisz ani dnia, za który już zapłacono."
+        },
+        {
+          "question": "Czy są opłaty za każdego klienta?",
+          "answer": "Nie. Każdy plan zawiera klientów i skany bez limitu. Cena jest ta sama przy 10 klientach i przy 10 000."
+        },
+        {
+          "question": "Czy mogę zrezygnować w każdej chwili?",
+          "answer": "Tak. Nie ma umów ani opłat za rezygnację. Rezygnujesz kiedy chcesz i zachowujesz dostęp do końca opłaconego okresu rozliczeniowego."
+        },
+        {
+          "question": "Czym jest Program Założycielski?",
+          "answer": "Program Założycielski daje pierwszym firmom 50% zniżki na plan, na zawsze. Miejsc jest niewiele i program wkrótce się zamyka.",
+          "foundingOnly": true
+        }
+      ]
+    },
+    "cta2": {
+      "title": "Wszystko gotowe do startu?",
+      "subtitle": "Dołącz do firm, które budują lojalność klientów ze Stampeo.",
+      "button": "Zacznij za darmo",
+      "contact": "Napisz do nas"
+    },
+    "billedMonthly": "Płatność miesięczna"
+  }
+}

@@ -18,6 +18,8 @@ import {
   isCorrectSlugForLocale,
   getLocalizedSlug,
 } from "@/lib/feature-slugs";
+import { localeAlternates } from "@/lib/hreflang";
+import { routing } from "@/i18n/routing";
 
 const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {
   "design-de-carte": CardDesignPageContent,
@@ -57,21 +59,18 @@ export async function generateMetadata({
   const title = t(`${canonical}.title`);
   const description = t(`${canonical}.description`);
 
-  const frSlug = canonical;
-  const enSlug = getLocalizedSlug(canonical, "en");
-  const esSlug = getLocalizedSlug(canonical, "es");
+  const localizedPaths = Object.fromEntries(
+    routing.locales.map((l) => [l, `/features/${getLocalizedSlug(canonical, l)}`])
+  );
 
   return {
     title,
     description,
     alternates: {
       canonical: featureUrl(getLocalizedSlug(canonical, locale), locale),
-      languages: {
-        "x-default": `/features/${frSlug}`,
-        fr: `/features/${frSlug}`,
-        en: `/en/features/${enSlug}`,
-        es: `/es/features/${esSlug}`,
-      },
+      languages: localeAlternates(`/features/${canonical}`, {
+        overrides: localizedPaths,
+      }),
     },
     openGraph: {
       title,

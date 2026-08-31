@@ -4,17 +4,7 @@ import { CTAButton } from "../ui/CTAButton";
 import { Container } from "../ui/Container";
 import { FanParallax } from "./FanParallax";
 import { HeroCardFan } from "./HeroCardFan";
-
-/** Apple and Google publish these badges per language; use their art, not ours. */
-function walletBadges(locale: string) {
-  if (locale === "fr") {
-    return { apple: "/AppleWalletFR.svg", google: "/GoogleWalletFR.svg" };
-  }
-  if (locale === "es") {
-    return { apple: "/AppleWalletES.svg", google: "/GoogleWalletES.svg" };
-  }
-  return { apple: "/AppleWallet.svg", google: "/GoogleWallet.svg" };
-}
+import { walletBadges } from "@/lib/store-badges";
 
 export async function VariantHero() {
   const t = await getTranslations("variant.hero");

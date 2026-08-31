@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import {
   CustomerCreatePublic,
   CustomFieldDefinition,
@@ -57,7 +58,7 @@ function resolveWording(
   const isPrimary = locale === primaryLocale;
   const translated = isPrimary
     ? undefined
-    : wording.translations?.[locale as "en" | "fr" | "es"];
+    : wording.translations?.[locale as Locale];
 
   const pick = (attr: "label" | "placeholder" | "helper_text") => {
     const localized = translated?.[attr]?.trim();

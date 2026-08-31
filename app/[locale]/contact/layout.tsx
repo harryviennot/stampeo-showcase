@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { localeAlternates, localePath } from "@/lib/hreflang";
 
 export async function generateMetadata({
   params,
@@ -18,13 +19,8 @@ export async function generateMetadata({
       description: t("description"),
     },
     alternates: {
-      canonical: locale === "fr" ? `${baseUrl}/contact` : `${baseUrl}/${locale}/contact`,
-      languages: {
-        "x-default": `${baseUrl}/contact`,
-        fr: `${baseUrl}/contact`,
-        en: `${baseUrl}/en/contact`,
-        es: `${baseUrl}/es/contact`,
-      },
+      canonical: `${baseUrl}${localePath(locale, "/contact")}`,
+      languages: localeAlternates("/contact", { baseUrl }),
     },
   };
 }

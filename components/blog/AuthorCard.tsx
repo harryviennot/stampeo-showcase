@@ -1,6 +1,8 @@
 const AUTHOR_BIO: Record<string, string> = {
   fr: "Fondateur de Stampeo — fidélisation digitale pour les commerces de proximité.",
   en: "Founder of Stampeo — digital loyalty for local businesses.",
+  es: "Fundador de Stampeo, fidelización digital para comercios locales.",
+  pl: "Założyciel Stampeo, cyfrowa lojalność dla lokalnych firm.",
 };
 
 export function AuthorCard({

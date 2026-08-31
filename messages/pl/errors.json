@@ -1,0 +1,10 @@
+{
+  "errors": {
+    "notFound": {
+      "title": "Nie znaleziono firmy",
+      "description": "Nie znaleźliśmy firmy, której szukasz. Link może być błędny albo firma została usunięta.",
+      "annotation": "tu nie ma pieczątek",
+      "backToStampeo": "Przejdź do Stampeo"
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 import {
   buildLastLoginCookie,
   type LastLoginMethod,
@@ -120,8 +122,9 @@ export async function GET(request: Request) {
     .map((c) => c.trim())
     .find((c) => c.startsWith("NEXT_LOCALE="))
     ?.split("=")[1];
-  const locale =
-    localeCookie === "en" ? "en" : localeCookie === "es" ? "es" : "fr";
+  const locale = hasLocale(routing.locales, localeCookie)
+    ? localeCookie
+    : routing.defaultLocale;
   return buildResponse(
     new URL(`/${locale}/onboarding?just_authed=oauth`, baseUrl)
   );

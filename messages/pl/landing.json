@@ -1,0 +1,368 @@
+{
+  "landing": {
+    "hero": {
+      "badge": "Wczesny dostęp · Polska",
+      "title": "Karty lojalnościowe, które klienci <accent>naprawdę zatrzymują.</accent>",
+      "subtitle": "Cyfrowe karty prosto w Apple Wallet i Google Wallet. Wgraj logo, wybierz kolory, a karta jest gotowa w kilka minut. Twoi klienci nie instalują żadnej aplikacji.",
+      "cta": "Zacznij za darmo",
+      "secondaryCta": "Zobacz, jak to działa",
+      "stamp": {
+        "complete": "Wczesny dostęp odblokowany!",
+        "ready": "Karta gotowa! Spróbuj dodać pieczątkę.",
+        "claimFree": "Zacznij za darmo →",
+        "addStamp": "Dodaj pieczątkę",
+        "watchPhone": "Spójrz na telefon, karta odświeża się na żywo!",
+        "scanQR": "<bold>Zeskanuj kod QR</bold> iPhonem, żeby sprawdzić demo",
+        "addToWallet": "Dodaj kartę do Apple Wallet...",
+        "demoCallout": "Wypróbuj! Zeskanuj telefonem",
+        "mobileAddWallet": "Wypróbuj, dodaj do Wallet",
+        "mobileHint": "Karta trafi do portfela w twoim telefonie"
+      },
+      "demoToggleLabel": "Rodzaj karty",
+      "points": {
+        "complete": "Wszystkie nagrody zebrane!",
+        "ready": "Karta gotowa! Spróbuj dodać punkty.",
+        "claimReward": "Zacznij za darmo →",
+        "scanButton": "Dodaj 20 punktów",
+        "watchPhone": "Spójrz na telefon, karta odświeża się na żywo!",
+        "scanQR": "<bold>Zeskanuj kod QR</bold> iPhonem, żeby sprawdzić demo punktów",
+        "addToWallet": "Dodaj kartę do Apple Wallet...",
+        "demoCallout": "Wypróbuj! Zeskanuj telefonem",
+        "mobileAddWallet": "Wypróbuj, dodaj do Wallet",
+        "mobileHint": "Karta trafi do portfela w twoim telefonie",
+        "rewardMid": "-50% na pierwszy miesiąc",
+        "rewardTop": "1 miesiąc za darmo",
+        "rewardAllUnlocked": "Wszystko odblokowane!"
+      }
+    },
+    "howItWorks": {
+      "badge": "Jak to działa",
+      "title": "Magiczny moment <mbr></mbr><br></br>w 5 krokach.",
+      "subtitle": "Od pierwszego skanu do stałego klienta <mbr></mbr>w kilka sekund",
+      "steps": [
+        {
+          "title": "Klient skanuje kod QR",
+          "description": "Postaw kod QR na ladzie albo umieść go na paragonach. Klienci skanują go aparatem w telefonie."
+        },
+        {
+          "title": "Pobiera kartę do portfela",
+          "description": "Jedno naciśnięcie i twoja karta lojalnościowa trafia do Apple Wallet albo Google Wallet. Nic do instalowania, żadnego konta do zakładania."
+        },
+        {
+          "title": "Pokazuje kartę obsłudze",
+          "description": "Przy kolejnej wizycie klient otwiera portfel i pokazuje kartę. Zawsze ma ją przy sobie, zawsze gotową."
+        },
+        {
+          "title": "Obsługa skanuje, pieczątka dodana",
+          "description": "Skanujesz kod QR klienta aplikacją Stampeo. Pieczątka dodana od razu. Proste dla wszystkich."
+        },
+        {
+          "title": "Klient dostaje powiadomienie",
+          "description": "Karta odświeża się na żywo, a na telefon przychodzi powiadomienie. Klient widzi postęp i czuje, że nagroda jest coraz bliżej."
+        }
+      ]
+    },
+    "dashboard": {
+      "badge": "Panel z danymi",
+      "title": "Poznaj swoich stałych klientów.",
+      "subtitle": "Panel pokazuje, kto do ciebie wraca, jak często i kto jest już blisko nagrody. Zobacz, kim są twoi najlepsi klienci. Sprawdź, co działa. Podejmuj lepsze decyzje.",
+      "features": [
+        "Częstotliwość i rytm wizyt",
+        "Nagrody odebrane i oczekujące",
+        "Rozpoznaj najwierniejszych klientów",
+        "Eksportuj dane, kiedy chcesz"
+      ],
+      "stats": {
+        "totalCustomers": "Wszyscy klienci",
+        "visitsThisWeek": "Wizyty w tym tygodniu",
+        "rewardsClaimed": "Odebrane nagrody"
+      },
+      "recentCustomers": "Ostatni klienci",
+      "progress": "Postęp",
+      "visitedToday": "Wizyta dzisiaj",
+      "almost": "Już prawie!",
+      "annotation": "Sophie wraca jutro"
+    },
+    "sectorCards": {
+      "title": "Stampeo dopasuje się <mbr></mbr><br></br>do twojej firmy",
+      "subtitle": "Barber albo kawiarnia nagradza wizyty pieczątkami. <br></br>Restauracja albo salon nagradza wydatki punktami.",
+      "carousel": {
+        "prev": "Poprzednia branża",
+        "next": "Następna branża"
+      },
+      "sectors": [
+        {
+          "name": "Barber",
+          "quote": "Jakub wpada co trzy tygodnie na to samo cieniowanie. Ze Stampeo liczy się samo, a szóste strzyżenie jest za darmo.",
+          "reward": "6 strzyżeń = 1 za darmo",
+          "advantage": "Powiadomienie, kiedy przechodzi obok salonu",
+          "fields": [
+            {
+              "label": "Nagroda",
+              "value": "Strzyżenie za darmo"
+            },
+            {
+              "label": "Imię",
+              "value": "Jakub"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
+        },
+        {
+          "name": "Kawiarnia",
+          "quote": "Maja bierze kawę z mlekiem w drodze do pracy. Osiem kubków, a dziewiąty za darmo, i nigdy nie gubi rachuby.",
+          "reward": "8 kaw = 1 za darmo",
+          "advantage": "Skan trwa sekundę, żadnej kolejki przy ladzie",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Maja"
+            },
+            {
+              "label": "Nagroda",
+              "value": "Kawa za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
+        },
+        {
+          "name": "Restauracja",
+          "quote": "Tomasz je u ciebie prawie co tydzień, ale rachunek nigdy nie jest taki sam. Punkty nagradzają to, ile naprawdę wydaje, a nie samą obecność.",
+          "reward": "1 € wydane = 1 punkt, -25% przy 100 pkt",
+          "advantage": "Kolacja za 40 € daje więcej niż szybki lunch",
+          "fields": [
+            {
+              "label": "Następny próg",
+              "value": "100 punktów"
+            },
+            {
+              "label": "Następna nagroda",
+              "value": "-25%"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Punkty: jak to działa"
+        },
+        {
+          "name": "Salon piękności",
+          "quote": "Lena przychodzi w jednym tygodniu na manicure, w kolejnym na pełną stylizację. Punkty nagradzają to, ile wydaje, więc każda wizyta przybliża ją do nagrody.",
+          "reward": "1 € wydane = 1 punkt, manicure za darmo przy 80 pkt",
+          "advantage": "Droższe zabiegi zbierają punkty szybciej",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Lena"
+            },
+            {
+              "label": "Następna nagroda",
+              "value": "Manicure za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Punkty: jak to działa"
+        },
+        {
+          "name": "Księgarnia",
+          "quote": "Filip wychodzi raz z jedną książką w miękkiej oprawie, a następnym razem ze stosem powieści. Punkty liczą to, ile wydaje: duże zakupy szybciej przybliżają nagrodę.",
+          "reward": "1 € wydane = 1 punkt, -10 € przy 150 pkt",
+          "advantage": "Duże koszyki zbierają punkty szybciej",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Filip"
+            },
+            {
+              "label": "Następna nagroda",
+              "value": "-10 €"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Porównaj pieczątki i punkty"
+        }
+      ]
+    },
+    "featureGrid": {
+      "title": "Wszystko, czego trzeba, żeby klienci wracali",
+      "subtitle": "Sześć funkcji zrobionych dla niezależnych firm. Bez zbędnych dodatków.",
+      "learnMore": "Dowiedz się więcej",
+      "features": [
+        {
+          "title": "Powiadomienia",
+          "description": "Wiadomość przy każdej pieczątce, każdej nagrodzie, każdym powrocie.",
+          "link": "/features/powiadomienia"
+        },
+        {
+          "title": "Rozsyłki promocyjne",
+          "description": "Dotrzyj do wszystkich klientów, bez rachunku za SMS-y. 85% otwarć.",
+          "link": "/features/rozsylki-promocyjne"
+        },
+        {
+          "title": "Geolokalizacja",
+          "description": "Przypomnij o sobie, kiedy przechodzą obok.",
+          "link": "/features/geolokalizacja"
+        },
+        {
+          "title": "Skaner mobilny",
+          "description": "Jeden skan, jedna pieczątka. Nawet bez internetu.",
+          "link": "/features/skaner-mobilny"
+        },
+        {
+          "title": "Statystyki",
+          "description": "Poznaj stałych klientów. Nie tylko z widzenia.",
+          "link": "/features/statystyki"
+        },
+        {
+          "title": "Wzór karty",
+          "description": "Twoje kolory, twoje logo, gotowe w 5 minut.",
+          "link": "/features/wzor-karty"
+        }
+      ]
+    }
+  },
+  "variant": {
+    "hero": {
+      "title": "Lojalność <accent>w telefonie, który już mają.</accent>",
+      "subtitle": "Pieczątki za wizyty, punkty za wydane pieniądze. Twoja karta mieszka w Apple Wallet i Google Wallet, gotowa w kilka minut. Twoi klienci nie instalują żadnej aplikacji.",
+      "primaryCta": "Stwórz moją kartę",
+      "secondaryCta": "Umów demo",
+      "tryDemoCta": "Wypróbuj demo na żywo",
+      "annotation": "Jeden skan, jedna pieczątka"
+    },
+    "tryIt": {
+      "eyebrow": "Demo na żywo, bez rejestracji",
+      "title": "Zobacz to na własnym telefonie",
+      "subtitle": "Zeskanuj kod, dodaj prawdziwą kartę do telefonu i przybij sobie pieczątkę. Pieczątki albo punkty, dokładnie tak, jak poczują to twoi klienci.",
+      "annotation": "prawdziwa karta, nie film"
+    },
+    "metrics": {
+      "title": "Gdzie dziś jest Stampeo",
+      "items": [
+        {
+          "value": "+100",
+          "label": "aktywnych firm"
+        },
+        {
+          "value": "+4 900",
+          "label": "wykonanych skanów"
+        },
+        {
+          "value": "21",
+          "label": "krajów"
+        }
+      ]
+    },
+    "trustStrip": {
+      "flag": "🇪🇺",
+      "madeInFrance": "Tworzone w Europie",
+      "rgpd": "Zgodne z RODO · Dane przechowywane w Europie"
+    },
+    "differentiator": {
+      "title": "Dlaczego firmy wybierają Stampeo.",
+      "subtitle": "Cztery zmartwienia mniej niż przy innych narzędziach lojalnościowych.",
+      "items": [
+        {
+          "title": "Bez aplikacji dla klientów",
+          "description": "Apple Wallet i Google Wallet są już w ich telefonie. Jeden skan i karta jest dodana. Nic do instalowania, żadnego konta do zakładania."
+        },
+        {
+          "title": "Bez zmiany kasy",
+          "description": "Pieczątki dodajesz z bezpłatnej aplikacji Stampeo albo prosto z przeglądarki. Żadnej integracji z kasą, żadnego sprzętu do kupienia."
+        },
+        {
+          "title": "Bez opłaty wstępnej",
+          "description": "Zero kosztów wdrożenia. Kartę tworzysz samodzielnie, w kilka minut, w swoim panelu."
+        },
+        {
+          "title": "Bez zobowiązań",
+          "description": "Miesiąc za darmo, bez haczyków. Odchodzisz, kiedy chcesz. Dane zostają twoje, eksportujesz je jednym kliknięciem."
+        }
+      ]
+    },
+    "benefits": {
+      "title": "Trzy powody, żeby przejść na kartę cyfrową.",
+      "subtitle": "Nie kolejna aplikacja. Nie kolejne narzędzie. Po prostu karta lojalnościowa tam, gdzie klienci i tak zaglądają.",
+      "items": [
+        {
+          "title": "Karta, która się nie gubi",
+          "description": "Koniec z papierowymi karnetami i pieczątkami do przybijania. Karta mieszka w Apple Wallet albo Google Wallet, gdzie klienci znajdują ją przy każdej wizycie."
+        },
+        {
+          "title": "Klienci, których naprawdę znasz",
+          "description": "Częstotliwość, ostatnia wizyta, postęp do nagrody. Panel mówi ci, kto wraca często, a kto zaczyna się oddalać."
+        },
+        {
+          "title": "Wyślij promocje prosto na ich telefon",
+          "description": "Ogłoś promocję, nowe menu, pustą godzinę do zapełnienia. Twoje wiadomości docierają jak SMS, tylko bez rachunku za SMS-y, i są czytane 5 do 10× częściej niż e-maile."
+        }
+      ]
+    },
+    "howItWorks": {
+      "badge": "W 3 krokach",
+      "title": "Gotowe w 3 minuty.",
+      "subtitle": "Od rejestracji do pierwszej pieczątki, bez prezentacji i bez integracji z kasą.",
+      "steps": [
+        {
+          "title": "Stwórz kartę",
+          "description": "Logo, kolory, nagrody. W swoim panelu, w 3 minuty."
+        },
+        {
+          "title": "Klienci ją skanują",
+          "description": "Kod QR na ladzie. Karta trafia do Apple Wallet albo Google Wallet jednym ruchem."
+        },
+        {
+          "title": "Wracają, a ty widzisz wszystko",
+          "description": "Każda pieczątka, każda wizyta, każdy klient. Od razu w twoim panelu, na żywo."
+        }
+      ]
+    },
+    "faq": {
+      "title": "Pytania, które dostajemy najczęściej.",
+      "subtitle": "Konkretne odpowiedzi, bez żargonu.",
+      "items": [
+        {
+          "question": "Ile to kosztuje?",
+          "answer": "Plan Starter kosztuje {starterPrice} €/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od 1 miesiąca za darmo. Prosimy o kartę płatniczą, żeby uruchomić okres próbny, ale nic nie pobieramy przed końcem tego miesiąca."
+        },
+        {
+          "question": "Czy muszę zmieniać kasę?",
+          "answer": "Nie. Stampeo działa z każdą kasą albo zupełnie bez kasy. Skanujesz z naszej bezpłatnej aplikacji albo prosto z przeglądarki. Zero integracji."
+        },
+        {
+          "question": "Czy moi klienci muszą coś pobierać?",
+          "answer": "Nie. Apple Wallet i Google Wallet są już zainstalowane w każdym nowszym smartfonie. Klient skanuje twój kod QR i karta dodaje się jednym ruchem. To wszystko."
+        },
+        {
+          "question": "Co się dzieje po pierwszym miesiącu?",
+          "answer": "Decydujesz, czy zostajesz. Prosimy o kartę płatniczą na start okresu próbnego, ale przed upływem 30 dni nie pobieramy nic. Możesz zrezygnować w każdej chwili przed tą datą."
+        },
+        {
+          "question": "Czy moje dane są bezpieczne?",
+          "answer": "Tak. Stampeo działa zgodnie z RODO, nasze serwery stoją w Europie, a danych twoich klientów nigdy nie odsprzedajemy. Są twoje i eksportujesz je, kiedy chcesz."
+        },
+        {
+          "question": "Ilu klientów mogę zapisać?",
+          "answer": "Plany Starter, Growth i Pro różnią się funkcjami (powiadomienia, rozsyłki, rozbudowane statystyki), a nie liczbą klientów. Szczegóły każdego planu znajdziesz na stronie z cennikiem."
+        },
+        {
+          "question": "Czy mogę później zmienić wzór karty?",
+          "answer": "Tak. Logo, kolory, liczbę pieczątek i nagrody zmieniasz w każdej chwili w swoim panelu. Karty, które klienci mają już w telefonie, odświeżają się automatycznie, bez pobierania czegokolwiek na nowo."
+        }
+      ],
+      "stillQuestions": "Nie ma tu twojego pytania?",
+      "stillQuestionsDesc": "Odpowiadamy w ciągu 24 godzin.",
+      "contactSupport": "Napisz do nas"
+    },
+    "finalCta": {
+      "title": "Uruchom swój program lojalnościowy <accent>w tym tygodniu.</accent>",
+      "subtitle": "3 minuty na stworzenie karty. 1 miesiąc na testy. 0 € na start.",
+      "primaryCta": "Stwórz moją kartę",
+      "secondaryCta": "Umów demo",
+      "reassurance": "1 miesiąc za darmo · Bez zobowiązań"
+    },
+    "changelog": {
+      "whatsNew": "Zobacz nowości w Stampeo"
+    }
+  }
+}

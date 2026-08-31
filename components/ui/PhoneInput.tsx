@@ -172,7 +172,9 @@ export function PhoneInput({
               ? "Rechercher un pays..."
               : locale === "es"
                 ? "Buscar un país..."
-                : "Search countries..."
+                : locale === "pl"
+                  ? "Szukaj kraju..."
+                  : "Search countries..."
           }
           className="
             w-full px-3 py-2 rounded-lg
@@ -233,7 +235,9 @@ export function PhoneInput({
               ? "Aucun pays trouvé"
               : locale === "es"
                 ? "No se encontró ningún país"
-                : "No countries found"}
+                : locale === "pl"
+                  ? "Nie znaleziono kraju"
+                  : "No countries found"}
           </div>
         )}
       </div>

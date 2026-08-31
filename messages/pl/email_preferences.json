@@ -1,0 +1,32 @@
+{
+  "email_preferences": {
+    "title": "Ustawienia e-maili",
+    "headline": "Wybierz, co chcesz dostawać.",
+    "description": "Włącz albo wyłącz każdy rodzaj e-maili od Stampeo. E-maile niezbędne (rachunki, potwierdzenia, bezpieczeństwo) wysyłamy zawsze.",
+    "loading": "Wczytujemy twoje ustawienia…",
+    "error_invalid_token": "Ten link nie jest już ważny. Zaloguj się do panelu, żeby zmienić ustawienia.",
+    "error_generic": "Coś poszło nie tak. Spróbuj ponownie albo napisz do nas.",
+    "categories": {
+      "digest": {
+        "label": "Raporty wyników",
+        "description": "Twoje podsumowanie tygodniowe lub miesięczne i najważniejsze momenty programu."
+      },
+      "product_updates": {
+        "label": "Nowości w produkcie",
+        "description": "Ważne zmiany w Stampeo i funkcje, które są już w drodze."
+      },
+      "marketing": {
+        "label": "Porady i dobre praktyki",
+        "description": "Pomysły i dobre praktyki, żeby wycisnąć z programu lojalnościowego jak najwięcej."
+      },
+      "reengagement": {
+        "label": "Przypomnienia o aktywacji",
+        "description": "Przypomnienia, żeby dokończyć konfigurację albo wrócić do programu po przerwie."
+      }
+    },
+    "transactional_note": "E-maile niezbędne (rachunki, reset hasła, alerty o płatnościach, ostrzeżenia dotyczące twoich kart) wysyłamy zawsze.",
+    "save": "Zapisz ustawienia",
+    "saving": "Zapisywanie…",
+    "saved": "Ustawienia zapisane."
+  }
+}

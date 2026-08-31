@@ -1,3 +1,4 @@
+import { routing } from "@/i18n/routing";
 import { PRICING } from "./pricing";
 
 const BASE_URL = "https://stampeo.app";
@@ -20,7 +21,7 @@ export function organizationJsonLd() {
       "@type": "ContactPoint",
       email: "contact@stampeo.app",
       contactType: "customer support",
-      availableLanguage: ["French", "English", "Spanish"],
+      availableLanguage: ["French", "English", "Spanish", "Polish"],
     },
   };
 }
@@ -31,7 +32,7 @@ export function webSiteJsonLd() {
     "@type": "WebSite",
     name: "Stampeo",
     url: BASE_URL,
-    inLanguage: ["fr", "en", "es"],
+    inLanguage: [...routing.locales],
     potentialAction: {
       "@type": "SearchAction",
       target: `${BASE_URL}/blog?q={search_term_string}`,

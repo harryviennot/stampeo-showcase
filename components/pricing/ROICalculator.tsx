@@ -28,11 +28,11 @@ export function ROICalculator({
 }: ROICalculatorProps) {
   const t = useTranslations(namespace);
   const locale = useLocale();
-  const isFr = locale === "fr";
-  // French: decimal comma + a space before the euro sign. English: keep compact.
+  // FR, ES and PL: decimal comma + a space before the euro sign. English: keep compact.
+  const isComma = locale === "fr" || locale === "es" || locale === "pl";
   const fmtDecimal = (n: number) =>
-    n % 1 === 0 ? String(n) : isFr ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
-  const euro = (n: number) => (isFr ? `${n} €` : `${n}€`);
+    n % 1 === 0 ? String(n) : isComma ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
+  const euro = (n: number) => (isComma ? `${n} €` : `${n}€`);
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
   const [mode, setMode] = useState<Mode>("prudent");

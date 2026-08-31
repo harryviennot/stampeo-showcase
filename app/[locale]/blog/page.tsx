@@ -7,6 +7,8 @@ import { FeaturedHeroCard } from "@/components/blog/FeaturedHeroCard";
 import { JsonLd } from "@/components/JsonLd";
 import { collectionPageJsonLd } from "@/lib/structured-data";
 import { getAllPosts } from "@/lib/blog";
+import { BLOG_LOCALES, hasBlog } from "@/lib/blog/locales";
+import { localeAlternates, localePath } from "@/lib/hreflang";
 
 export async function generateMetadata({
   params,
@@ -14,19 +16,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (locale !== "fr" && locale !== "en" && locale !== "es") return {};
+  if (!hasBlog(locale)) return {};
   const t = await getTranslations({ locale, namespace: "blog" });
   return {
     title: t("metaTitle"),
     description: t("description"),
     alternates: {
-      canonical: locale === "fr" ? "/blog" : `/${locale}/blog`,
-      languages: {
-        "x-default": "/blog",
-        fr: "/blog",
-        en: "/en/blog",
-        es: "/es/blog",
-      },
+      canonical: localePath(locale, "/blog"),
+      languages: localeAlternates("/blog", { locales: BLOG_LOCALES }),
     },
   };
 }
@@ -37,8 +34,10 @@ export default async function BlogPage({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-  if (locale !== "fr" && locale !== "en" && locale !== "es") {
-    redirect("/blog");
+  // A locale with no articles has no blog. Send the visitor to their own home
+  // page, never to the French blog they can't read.
+  if (!hasBlog(locale)) {
+    redirect(localePath(locale, "/"));
   }
   setRequestLocale(locale);
   const t = await getTranslations("blog");

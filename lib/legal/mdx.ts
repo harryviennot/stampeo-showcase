@@ -16,16 +16,23 @@ import { mdxComponents } from "@/components/blog/mdx";
  *
  * When a heading is renamed in any *.md file, refresh the matching key.
  */
-const STABLE_LEGAL_IDS: Record<string, string> = {
+export const STABLE_LEGAL_IDS: Record<string, string> = {
   // Privacy §2.3 — Support access by Stampeo personnel
   "23-support-access-by-stampeo-personnel": "support-access",
   "23-accès-support-par-le-personnel-stampeo": "support-access",
+  "23-acceso-de-soporte-por-parte-del-personal-de-stampeo": "support-access",
+  "23-dostęp-serwisowy-personelu-stampeo": "support-access",
   // Terms §8.6 — Support Access by Stampeo Personnel (DPA section)
   "86-support-access-by-stampeo-personnel": "data-processing-support-access",
   "86-accès-support-par-le-personnel-stampeo": "data-processing-support-access",
+  "86-dostęp-personelu-stampeo-w-ramach-wsparcia": "data-processing-support-access",
+  "86-acceso-de-soporte-por-parte-del-personal-de-stampeo":
+    "data-processing-support-access",
   // Privacy §10.1 — Right to object to support access
   "101-right-to-object-to-support-access": "object-to-support-access",
   "101-droit-dopposition-à-laccès-support": "object-to-support-access",
+  "101-derecho-de-oposición-al-acceso-de-soporte": "object-to-support-access",
+  "101-prawo-sprzeciwu-wobec-dostępu-serwisowego": "object-to-support-access",
 };
 
 function rehypeStableLegalIds() {

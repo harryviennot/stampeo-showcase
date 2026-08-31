@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
+import { walletBadges } from "@/lib/store-badges";
 
 interface WalletButtonsProps {
   passUrl: string;
@@ -11,10 +12,7 @@ interface WalletButtonsProps {
 export function WalletButtons({ passUrl, googleWalletUrl }: WalletButtonsProps) {
   const t = useTranslations("common.wallet");
   const locale = useLocale();
-  const appleSrc =
-    locale === "fr" ? "/AppleWalletFR.svg" : locale === "es" ? "/AppleWalletES.svg" : "/AppleWallet.svg";
-  const googleSrc =
-    locale === "fr" ? "/GoogleWalletFR.svg" : locale === "es" ? "/GoogleWalletES.svg" : "/GoogleWallet.svg";
+  const { apple: appleSrc, google: googleSrc } = walletBadges(locale);
   return (
     <div className="flex flex-row items-center justify-center gap-3">
       {/* Apple Wallet Button */}
