@@ -6,10 +6,10 @@
  * site-wide default is French, which meant a Polish customer in a Polish shop
  * got a French page whenever their browser did not hand us a language we serve.
  *
- * The rule here: an explicit choice wins, then the phone's own preference, and
- * when neither says anything usable we show the shop's own language rather than
- * the site default. A shop's customers speak the shop's language far more often
- * than they speak French.
+ * The rule here: an explicit choice wins, then the language the phone is
+ * actually set to, and when neither says anything usable we show the shop's own
+ * language rather than the site default. A shop's customers speak the shop's
+ * language far more often than they speak French.
  *
  * Everything in this file is pure and synchronous; the middleware owns the one
  * network call (looking up the shop's language) and only makes it when the
@@ -26,25 +26,33 @@ export function isSupportedLocale(value: unknown): value is Locale {
 }
 
 /**
- * The best supported language in an `Accept-Language` header, or `null`.
+ * The language the visitor's device is set to, or `null` if we do not serve it.
+ *
+ * Only the visitor's TOP-ranked language counts. Everything below it is the
+ * browser's own fallback chain, not a statement by the person holding the phone:
+ * Chrome appends `en` to almost every header it sends, so scanning down the list
+ * would hand English to every device whose real language we do not serve. That
+ * is how a Polish shop ended up reading English.
  *
  * Ranked by q-value rather than by position, because the header is a preference
  * list and not an ordered one: `en;q=0.5,pl;q=0.9` means Polish. Region is
  * dropped (`pl-PL` -> `pl`) since we ship one catalog per language. `null` means
- * "this visitor told us nothing we can use" — not "this visitor wants English".
+ * "nothing here we can use" — the caller falls back to the shop's own language,
+ * which beats guessing English at someone.
  */
-export function matchAcceptLanguage(
+export function deviceLanguage(
   header: string | null | undefined
 ): Locale | null {
   if (!header) return null;
 
-  const ranked: { locale: Locale; q: number; order: number }[] = [];
+  let bestTag: string | null = null;
+  let bestQ = 0;
 
-  header.split(",").forEach((part, order) => {
+  for (const part of header.split(",")) {
     const [rawTag, ...params] = part.trim().split(";");
     const tag = rawTag.trim().toLowerCase();
     // `*` is "anything", which is the same as no preference for our purposes.
-    if (!tag || tag === "*") return;
+    if (!tag || tag === "*") continue;
 
     let q = 1;
     for (const param of params) {
@@ -55,20 +63,20 @@ export function matchAcceptLanguage(
       // promote it to the top by defaulting to 1.
       q = Number.isFinite(parsed) ? parsed : -1;
     }
-    if (q <= 0) return;
+    if (q <= 0) continue;
 
-    const base = tag.split("-")[0];
-    if (!isSupportedLocale(base)) return;
+    // Strictly greater, so a tie keeps header order — what a client means by
+    // listing two languages at the same q.
+    if (q > bestQ) {
+      bestQ = q;
+      bestTag = tag;
+    }
+  }
 
-    ranked.push({ locale: base, q, order });
-  });
+  if (!bestTag) return null;
 
-  if (ranked.length === 0) return null;
-
-  // Ties keep header order, which is what a client means by listing two
-  // languages at the same q.
-  ranked.sort((a, b) => b.q - a.q || a.order - b.order);
-  return ranked[0].locale;
+  const base = bestTag.split("-")[0];
+  return isSupportedLocale(base) ? base : null;
 }
 
 /**
@@ -159,8 +167,8 @@ export function resolveAcquisitionLocale({
     return { locale: cookieLocale, source: "cookie" };
   }
 
-  const fromHeader = matchAcceptLanguage(acceptLanguage);
-  if (fromHeader) return { locale: fromHeader, source: "header" };
+  const fromDevice = deviceLanguage(acceptLanguage);
+  if (fromDevice) return { locale: fromDevice, source: "header" };
 
   if (isSupportedLocale(businessLocale)) {
     return { locale: businessLocale, source: "business" };

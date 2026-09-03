@@ -6,7 +6,7 @@ import { isMarkdownEligible } from "./lib/markdown/eligibility";
 import {
   acquisitionSlug,
   isSupportedLocale,
-  matchAcceptLanguage,
+  deviceLanguage,
   resolveAcquisitionLocale,
 } from "./lib/locale-negotiation";
 
@@ -77,7 +77,7 @@ async function acquisitionResponse(request: NextRequest, slug: string) {
   // The shop lookup is a network call in front of the enrollment page, so it
   // only happens once the visitor's own signals have come up empty.
   const needsBusinessLocale =
-    !isSupportedLocale(cookieLocale) && !matchAcceptLanguage(acceptLanguage);
+    !isSupportedLocale(cookieLocale) && !deviceLanguage(acceptLanguage);
   const businessLocale = needsBusinessLocale
     ? await getBusinessLocale(slug)
     : null;

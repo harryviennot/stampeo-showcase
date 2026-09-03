@@ -15,69 +15,80 @@ import { routing } from "../i18n/routing";
 import {
   RESERVED_TOP_SEGMENTS,
   acquisitionSlug,
-  matchAcceptLanguage,
+  deviceLanguage,
   resolveAcquisitionLocale,
 } from "./locale-negotiation";
 
-describe("matchAcceptLanguage", () => {
+describe("deviceLanguage", () => {
   test("matches a region-qualified tag to its base language", () => {
-    expect(matchAcceptLanguage("pl-PL")).toBe("pl");
-    expect(matchAcceptLanguage("fr-CA")).toBe("fr");
-    expect(matchAcceptLanguage("es-419")).toBe("es");
-    expect(matchAcceptLanguage("en-GB")).toBe("en");
+    expect(deviceLanguage("pl-PL")).toBe("pl");
+    expect(deviceLanguage("fr-CA")).toBe("fr");
+    expect(deviceLanguage("es-419")).toBe("es");
+    expect(deviceLanguage("en-GB")).toBe("en");
   });
 
   test("reads a real phone's header, not just the first tag", () => {
     // What an Android phone set to Polish actually sends. `pl` wins on q, even
     // though `en` appears twice further down the list.
-    expect(matchAcceptLanguage("pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7")).toBe("pl");
+    expect(deviceLanguage("pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7")).toBe("pl");
   });
 
   test("ranks by q, not by position", () => {
-    expect(matchAcceptLanguage("en;q=0.5,pl;q=0.9")).toBe("pl");
-    expect(matchAcceptLanguage("de;q=0.9,fr;q=0.8,en;q=0.7")).toBe("fr");
+    expect(deviceLanguage("en;q=0.5,pl;q=0.9")).toBe("pl");
+    expect(deviceLanguage("es;q=0.7,pl;q=0.9")).toBe("pl");
   });
 
   test("treats a missing q as 1", () => {
-    expect(matchAcceptLanguage("pl,en;q=0.9")).toBe("pl");
-    expect(matchAcceptLanguage("en;q=0.9,pl")).toBe("pl");
+    expect(deviceLanguage("pl,en;q=0.9")).toBe("pl");
+    expect(deviceLanguage("en;q=0.9,pl")).toBe("pl");
   });
 
-  test("skips languages we do not serve", () => {
-    // A Ukrainian speaker in Poland: `uk` outranks everything but we do not
-    // serve it, so the next supported language down the list wins.
-    expect(matchAcceptLanguage("uk-UA,uk;q=0.9,en;q=0.8")).toBe("en");
+  test("only the top-ranked language counts", () => {
+    // Chrome appends `en` to almost every header it sends, so a supported
+    // language further down the list is the browser's fallback chain and not
+    // the reader's choice. Reading it as a choice is what put English in front
+    // of people whose phones were set to something else entirely.
+    expect(deviceLanguage("uk-UA,uk;q=0.9,en;q=0.8")).toBeNull();
+    expect(deviceLanguage("de-DE,de;q=0.9,en;q=0.8")).toBeNull();
+    expect(deviceLanguage("cs-CZ,cs;q=0.9,fr;q=0.8")).toBeNull();
+  });
+
+  test("honours a device genuinely set to a language we serve", () => {
+    expect(deviceLanguage("en-US,en;q=0.9,pl;q=0.8")).toBe("en");
+    expect(deviceLanguage("pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7")).toBe("pl");
+    expect(deviceLanguage("fr-FR,fr;q=0.9,en;q=0.8")).toBe("fr");
   });
 
   test("returns null when nothing in the header is supported", () => {
-    expect(matchAcceptLanguage("de-DE,de;q=0.9")).toBeNull();
-    expect(matchAcceptLanguage("cs,sk;q=0.9")).toBeNull();
+    expect(deviceLanguage("de-DE,de;q=0.9")).toBeNull();
+    expect(deviceLanguage("cs,sk;q=0.9")).toBeNull();
   });
 
   test("returns null for a header that carries no preference", () => {
     // An in-app WebView (Instagram, Messenger, some QR scanners) can send any
     // of these. None of them is a signal, so none of them may beat the shop.
-    expect(matchAcceptLanguage(null)).toBeNull();
-    expect(matchAcceptLanguage(undefined)).toBeNull();
-    expect(matchAcceptLanguage("")).toBeNull();
-    expect(matchAcceptLanguage("   ")).toBeNull();
-    expect(matchAcceptLanguage("*")).toBeNull();
+    expect(deviceLanguage(null)).toBeNull();
+    expect(deviceLanguage(undefined)).toBeNull();
+    expect(deviceLanguage("")).toBeNull();
+    expect(deviceLanguage("   ")).toBeNull();
+    expect(deviceLanguage("*")).toBeNull();
   });
 
   test("ignores q=0, which means 'not this one'", () => {
-    expect(matchAcceptLanguage("fr;q=0")).toBeNull();
-    expect(matchAcceptLanguage("fr;q=0,pl;q=0.5")).toBe("pl");
+    expect(deviceLanguage("fr;q=0")).toBeNull();
+    expect(deviceLanguage("fr;q=0,pl;q=0.5")).toBe("pl");
   });
 
   test("survives a malformed header instead of throwing", () => {
-    expect(matchAcceptLanguage("pl;q=abc,en;q=0.9")).toBe("en");
-    expect(matchAcceptLanguage(",,;;,")).toBeNull();
-    expect(matchAcceptLanguage("pl;;q=0.9")).toBe("pl");
+    // A malformed q drops that entry, so `en` becomes the top-ranked one.
+    expect(deviceLanguage("pl;q=abc,en;q=0.9")).toBe("en");
+    expect(deviceLanguage(",,;;,")).toBeNull();
+    expect(deviceLanguage("pl;;q=0.9")).toBe("pl");
   });
 
   test("is case-insensitive", () => {
-    expect(matchAcceptLanguage("PL-pl")).toBe("pl");
-    expect(matchAcceptLanguage("EN-US;Q=0.9")).toBe("en");
+    expect(deviceLanguage("PL-pl")).toBe("pl");
+    expect(deviceLanguage("EN-US;Q=0.9")).toBe("en");
   });
 });
 
@@ -172,6 +183,16 @@ describe("resolveAcquisitionLocale", () => {
       resolveAcquisitionLocale({
         cookieLocale: null,
         acceptLanguage: "de-DE,de;q=0.9",
+        businessLocale: "pl",
+      })
+    ).toEqual({ locale: "pl", source: "business" });
+
+    // A German phone in a Polish bakery. The trailing `en;q=0.8` is Chrome's,
+    // not the reader's, so the bakery's own language wins over it.
+    expect(
+      resolveAcquisitionLocale({
+        cookieLocale: null,
+        acceptLanguage: "de-DE,de;q=0.9,en;q=0.8",
         businessLocale: "pl",
       })
     ).toEqual({ locale: "pl", source: "business" });
