@@ -240,15 +240,15 @@
       "title": "Où en est Stampeo aujourd’hui",
       "items": [
         {
-          "value": "+100",
+          "value": "+120",
           "label": "commerces actifs"
         },
         {
-          "value": "+4 900",
+          "value": "+9 400",
           "label": "scans effectués"
         },
         {
-          "value": "21",
+          "value": "24",
           "label": "pays"
         }
       ]

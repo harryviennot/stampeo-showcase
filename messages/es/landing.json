@@ -240,15 +240,15 @@
       "title": "Dónde está Stampeo hoy",
       "items": [
         {
-          "value": "+100",
+          "value": "+120",
           "label": "comercios activos"
         },
         {
-          "value": "+4.900",
+          "value": "+9.400",
           "label": "scans realizados"
         },
         {
-          "value": "21",
+          "value": "24",
           "label": "países"
         }
       ]
