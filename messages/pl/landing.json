@@ -240,15 +240,15 @@
       "title": "Gdzie dziś jest Stampeo",
       "items": [
         {
-          "value": "+100",
+          "value": "+120",
           "label": "aktywnych firm"
         },
         {
-          "value": "+4 900",
+          "value": "+9 400",
           "label": "wykonanych skanów"
         },
         {
-          "value": "21",
+          "value": "24",
           "label": "krajów"
         }
       ]
