@@ -19,6 +19,23 @@ const nextConfig: NextConfig = {
     "192.168.20.93",
     "showcase.dev.stampeo.app",
   ],
+  async rewrites() {
+    // The two app-association files must live at fixed .well-known paths, but
+    // a folder starting with a dot is not routable in the app directory, and
+    // the AASA file has no extension so a static host would serve it with the
+    // wrong content type. Route handlers do both correctly.
+    return [
+      {
+        source: "/.well-known/apple-app-site-association",
+        destination: "/api/well-known/aasa",
+      },
+      {
+        source: "/.well-known/assetlinks.json",
+        destination: "/api/well-known/assetlinks",
+      },
+    ];
+  },
+
   async headers() {
     return [
       {
