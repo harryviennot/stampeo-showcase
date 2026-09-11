@@ -44,7 +44,8 @@
         "Styles de carte enregistrés illimités",
         "Heures de pointe et tendances hebdomadaires",
         "Membres d'équipe illimités",
-        "Voir qui a scanné quoi dans votre équipe"
+        "Voir qui a scanné quoi dans votre équipe",
+        "Offrez un cadeau et fixez sa date d'expiration"
       ]
     },
     "pro": {
@@ -125,7 +126,8 @@
         "Styles de carte enregistrés illimités",
         "Heures de pointe et tendances hebdomadaires",
         "Membres d'équipe illimités",
-        "Voir qui a scanné quoi dans votre équipe"
+        "Voir qui a scanné quoi dans votre équipe",
+        "Offrez un cadeau et fixez sa date d'expiration"
       ],
       "featuresLabel": "Tout le plan Starter, plus :"
     },
@@ -183,6 +185,9 @@
           "label": "Bonus gros panier",
           "growth": "1 palier",
           "pro": "Illimités"
+        },
+        "rewardExpiry": {
+          "label": "Dates d'expiration des récompenses"
         },
         "fullCustomisation": {
           "label": "Personnalisation complète de la carte"

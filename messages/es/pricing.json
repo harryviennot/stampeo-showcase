@@ -44,7 +44,8 @@
         "Estilos de tarjeta guardados ilimitados",
         "Horas punta y tendencias semanales",
         "Miembros del equipo ilimitados",
-        "Quién ha escaneado cada tarjeta en tu equipo"
+        "Quién ha escaneado cada tarjeta en tu equipo",
+        "Regala un producto y fija cuándo caduca"
       ]
     },
     "pro": {
@@ -125,7 +126,8 @@
         "Estilos de tarjeta guardados ilimitados",
         "Horas punta y tendencias semanales",
         "Miembros del equipo ilimitados",
-        "Quién ha escaneado cada tarjeta en tu equipo"
+        "Quién ha escaneado cada tarjeta en tu equipo",
+        "Regala un producto y fija cuándo caduca"
       ],
       "featuresLabel": "Todo el plan Starter, y además:"
     },
@@ -183,6 +185,9 @@
           "label": "Bonus por compra grande",
           "growth": "1 nivel",
           "pro": "Ilimitados"
+        },
+        "rewardExpiry": {
+          "label": "Fechas de caducidad de recompensas"
         },
         "fullCustomisation": {
           "label": "Personalización completa de la tarjeta"
