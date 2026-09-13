@@ -8,6 +8,7 @@ import type { CountryCode } from "libphonenumber-js";
 import { getCountryCallingCode } from "libphonenumber-js";
 import {
   getCountryList,
+  countryFromE164,
   formatToE164,
   formatAsYouType,
   getExamplePhoneNumber,
@@ -41,7 +42,15 @@ export function PhoneInput({
   // identical on both sides of hydration (see use-detected-country).
   const detected = useDetectedCountry(locale);
   const [picked, setPicked] = useState<CountryCode | null>(null);
-  const country = picked ?? defaultCountry ?? detected;
+  // A value that is already a full international number answers the country
+  // question itself, and gives the same answer on the server and in the
+  // browser. Detection cannot: it settles one render AFTER hydration, while
+  // `nationalInput` below is split off the value exactly once, at first
+  // render. A resumed sign-up carrying +32... on an `fr` page therefore showed
+  // the Belgian dial code beside digits still split for France, and editing it
+  // submitted a different number than the one that had been saved.
+  const fromValue = countryFromE164(value);
+  const country = picked ?? fromValue ?? defaultCountry ?? detected;
   const countries = useMemo(() => getCountryList(locale), [locale]);
 
   const [nationalInput, setNationalInput] = useState(() => {

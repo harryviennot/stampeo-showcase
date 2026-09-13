@@ -238,6 +238,34 @@ export function detectDefaultCountry(locale: string): CountryCode {
 }
 
 /** Format a phone number to E.164 (e.g., "+33612345678"). Returns null if invalid. */
+/**
+ * The country a saved number already belongs to, or null.
+ *
+ * A phone field has three possible country sources and only one of them is
+ * stable across hydration. `detectBrowserCountry` reads signals that do not
+ * exist on the server, so it deliberately settles one render late — which is
+ * correct for an EMPTY field and wrong for a pre-filled one: the national part
+ * is split off the value using whatever country was current at first render,
+ * and it is not recomputed when detection lands. A resumed sign-up carrying
+ * +32... on an `fr` page showed the Belgian flag beside a number still split
+ * for France, and editing it submitted a different number than the one saved.
+ *
+ * A full international value answers the question itself, identically on both
+ * sides of hydration. When it does, it wins.
+ *
+ * Never throws: this runs during render, and a malformed stored value must
+ * degrade to "no opinion", not take the form down.
+ */
+export function countryFromE164(value: string | null | undefined): CountryCode | null {
+  if (!value || !value.trim().startsWith("+")) return null;
+  try {
+    return parsePhoneNumber(value.trim())?.country ?? null;
+  } catch {
+    return null;
+  }
+}
+
+
 export function formatToE164(phone: string, country: CountryCode): string | null {
   try {
     const parsed = parsePhoneNumber(phone, country);
