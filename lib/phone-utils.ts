@@ -178,37 +178,94 @@ const TZ_TO_COUNTRY: Record<string, CountryCode> = {
   "Europe/Monaco": "MC", "Asia/Beirut": "LB", "Africa/Kinshasa": "CD",
 };
 
+/** Locale to its most common country. The page language is the only signal
+ *  that exists on BOTH sides of hydration, so this is what SSR may use. */
+const LOCALE_TO_COUNTRY: Record<string, CountryCode> = {
+  fr: "FR", en: "US", de: "DE", es: "ES", it: "IT", pt: "PT", nl: "NL",
+  pl: "PL",
+};
+
+/**
+ * The country implied by the page's own language. Deterministic: same answer
+ * on the server, during hydration, and in the browser.
+ *
+ * This is the SSR-safe half of country detection, split out from
+ * `detectBrowserCountry` because mixing the two in one render was a live
+ * hydration mismatch: the server had no `window`, so it rendered the US flag
+ * for an `en` page while the client's Europe/Paris timezone rendered the
+ * French one, and React threw away the whole form subtree to re-render it.
+ */
+export function localeCountry(locale: string): CountryCode {
+  return LOCALE_TO_COUNTRY[locale] || "FR";
+}
+
+/**
+ * The country the BROWSER implies: timezone first, then `navigator.language`.
+ *
+ * Returns null off the browser (and when neither signal resolves), so callers
+ * can fall back to `localeCountry`. Never call this during a render that the
+ * server also performs — read it after mount, e.g. through
+ * `useSyncExternalStore`'s client snapshot.
+ */
+export function detectBrowserCountry(): CountryCode | null {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz && TZ_TO_COUNTRY[tz]) return TZ_TO_COUNTRY[tz];
+  } catch {}
+
+  try {
+    const lang = navigator.language;
+    if (lang.includes("-")) {
+      const region = lang.split("-")[1].toUpperCase() as CountryCode;
+      if (getCountries().includes(region)) return region;
+    }
+  } catch {}
+
+  return null;
+}
+
 /**
  * Detect the default country from the browser environment.
  * Uses timezone first, then navigator.language, falls back to locale.
+ *
+ * NOT safe to call during a server-rendered render pass — see
+ * `detectBrowserCountry`. Kept for callers that only ever run in the browser.
  */
 export function detectDefaultCountry(locale: string): CountryCode {
-  if (typeof window !== "undefined") {
-    // Try timezone
-    try {
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (tz && TZ_TO_COUNTRY[tz]) return TZ_TO_COUNTRY[tz];
-    } catch {}
-
-    // Try navigator.language (e.g., "fr-FR" → "FR", "en-GB" → "GB")
-    try {
-      const lang = navigator.language;
-      if (lang.includes("-")) {
-        const region = lang.split("-")[1].toUpperCase() as CountryCode;
-        if (getCountries().includes(region)) return region;
-      }
-    } catch {}
-  }
-
-  // Fallback: map locale to most common country
-  const localeMap: Record<string, CountryCode> = {
-    fr: "FR", en: "US", de: "DE", es: "ES", it: "IT", pt: "PT", nl: "NL",
-    pl: "PL",
-  };
-  return localeMap[locale] || "FR";
+  return detectBrowserCountry() ?? localeCountry(locale);
 }
 
 /** Format a phone number to E.164 (e.g., "+33612345678"). Returns null if invalid. */
+/**
+ * The country a saved number already belongs to, or null.
+ *
+ * A phone field has three possible country sources and only one of them is
+ * stable across hydration. `detectBrowserCountry` reads signals that do not
+ * exist on the server, so it deliberately settles one render late — which is
+ * correct for an EMPTY field and wrong for a pre-filled one: the national part
+ * is split off the value using whatever country was current at first render,
+ * and it is not recomputed when detection lands. A resumed sign-up carrying
+ * +32... on an `fr` page showed the Belgian flag beside a number still split
+ * for France, and editing it submitted a different number than the one saved.
+ *
+ * A full international value answers the question itself, identically on both
+ * sides of hydration. When it does, it wins.
+ *
+ * Never throws: this runs during render, and a malformed stored value must
+ * degrade to "no opinion", not take the form down.
+ */
+export function countryFromE164(value: string | null | undefined): CountryCode | null {
+  if (!value || !value.trim().startsWith("+")) return null;
+  try {
+    return parsePhoneNumber(value.trim())?.country ?? null;
+  } catch {
+    return null;
+  }
+}
+
+
 export function formatToE164(phone: string, country: CountryCode): string | null {
   try {
     const parsed = parsePhoneNumber(phone, country);

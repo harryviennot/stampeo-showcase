@@ -232,6 +232,8 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                     business={business}
                     onSubmit={handleSubmit}
                     serverFieldError={serverFieldError}
+                    signupItems={cardDesign.signup_items ?? []}
+                    accentColor={accentColor}
                   />
                 )}
 
@@ -286,21 +288,56 @@ function FormCard({
   business,
   onSubmit,
   serverFieldError,
+  signupItems = [],
+  accentColor,
 }: {
   business: BusinessPublicResponse;
   onSubmit: (data: CustomerCreatePublic) => void;
   serverFieldError?: SubmissionFieldError | null;
+  /** Free items handed over on sign-up, if the merchant configured any. */
+  signupItems?: string[];
+  accentColor?: string;
 }) {
   const t = useTranslations("acquisition");
+  const locale = useLocale();
+  // "Free cake and a tote bag" — joined the way the visitor's language joins
+  // a list, not with a hardcoded comma.
+  const itemList =
+    signupItems.length > 0
+      ? new Intl.ListFormat(locale, { style: "long", type: "conjunction" }).format(
+          signupItems
+        )
+      : null;
   return (
     <div className="paper-card rounded-2xl p-6">
       <h2 className="text-xl font-semibold text-[var(--primary)] mb-2">
         {t("getCard")}
       </h2>
-      <p className="text-[var(--muted-foreground)] mb-6">
+      <p className="text-[var(--muted-foreground)] mb-4">
         {business.settings?.description ||
           t("defaultDescription")}
       </p>
+      {/* The welcome is the strongest reason on the page to finish this form,
+          and it used to go unmentioned: the visitor only found out about the
+          free cake after the card was already in their wallet. */}
+      {itemList && (
+        <div
+          className="flex items-start gap-2.5 rounded-xl px-3.5 py-3 mb-6"
+          style={{
+            backgroundColor: `color-mix(in srgb, ${accentColor ?? "#f97316"} 10%, transparent)`,
+          }}
+        >
+          <GiftIcon className="mt-0.5 shrink-0" color={accentColor ?? "#f97316"} />
+          <div className="min-w-0">
+            <p className="text-[13px] font-semibold text-[var(--primary)] leading-tight">
+              {t("welcome.title")}
+            </p>
+            <p className="text-[13px] text-[var(--muted-foreground)] mt-0.5 break-words">
+              {itemList}
+            </p>
+          </div>
+        </div>
+      )}
       <AcquisitionForm
         dataCollection={business.settings?.customer_data_collection}
         primaryLocale={business.primary_locale}
@@ -309,6 +346,28 @@ function FormCard({
         serverFieldError={serverFieldError}
       />
     </div>
+  );
+}
+
+/** Inline so the acquisition bundle stays free of an icon dependency. */
+function GiftIcon({ className, color }: { className?: string; color: string }) {
+  return (
+    <svg
+      className={className}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="8" width="18" height="4" rx="1" />
+      <path d="M12 8v13M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8" />
+      <path d="M12 8H7.5a2.5 2.5 0 1 1 0-5C11 3 12 8 12 8zM12 8h4.5a2.5 2.5 0 1 0 0-5C13 3 12 8 12 8z" />
+    </svg>
   );
 }
 

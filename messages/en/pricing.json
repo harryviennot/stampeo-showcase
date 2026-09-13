@@ -44,7 +44,8 @@
         "Unlimited saved card styles",
         "Peak hours and weekly trends",
         "Unlimited team members",
-        "See which team member made each scan"
+        "See which team member made each scan",
+        "Gift a free item and set when it expires"
       ]
     },
     "pro": {
@@ -125,7 +126,8 @@
         "Unlimited saved card styles",
         "Peak hours and weekly trends",
         "Unlimited team members",
-        "See which team member made each scan"
+        "See which team member made each scan",
+        "Gift a free item and set when it expires"
       ],
       "featuresLabel": "Everything in Starter, plus:"
     },
@@ -183,6 +185,9 @@
           "label": "Basket boosters",
           "growth": "1 level",
           "pro": "Unlimited"
+        },
+        "rewardExpiry": {
+          "label": "Reward expiry dates"
         },
         "fullCustomisation": {
           "label": "Full card customisation"
