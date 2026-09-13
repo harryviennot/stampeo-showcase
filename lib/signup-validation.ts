@@ -47,3 +47,41 @@ export function mapSubmissionError(detail: unknown): SubmissionFieldError | null
     reason: typeof record.reason === "string" ? record.reason : "invalid",
   };
 }
+
+/**
+ * Pull the offending field out of a FastAPI **validation** error.
+ *
+ * A 422 answers with `detail` as an ARRAY of `{loc, msg, type}`, which is a
+ * different shape from the route's own `{field, reason}` rejections above.
+ * Without this the array fell through to the generic branch and a mistyped
+ * email blew the whole page away to "Something went wrong" with a Try Again
+ * that emptied every field the visitor had filled in.
+ *
+ * `loc` is path-like (`["body", "email"]`, `["body", "custom_fields", "size"]`),
+ * so the last non-"body" segment is the input to point at, and it is already
+ * the key the form stores its errors under.
+ *
+ * The `msg` is deliberately ignored: it is Pydantic's English, and this form is
+ * shown to end customers of French, Spanish and Polish merchants.
+ */
+export function mapValidationError(detail: unknown): SubmissionFieldError | null {
+  if (!Array.isArray(detail)) return null;
+  for (const entry of detail) {
+    if (!entry || typeof entry !== 'object') continue;
+    const loc = (entry as { loc?: unknown }).loc;
+    if (!Array.isArray(loc)) continue;
+    const field = [...loc]
+      .reverse()
+      .find((part): part is string => typeof part === 'string' && part !== 'body');
+    if (!field) continue;
+    return { field, reason: validationReason(field) };
+  }
+  return null;
+}
+
+/** The two fields with wording better than "we could not accept this". */
+function validationReason(field: string): string {
+  if (field === 'email') return 'invalid_email';
+  if (field === 'phone') return 'invalid_phone';
+  return 'rejected';
+}

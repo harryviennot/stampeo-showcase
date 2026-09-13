@@ -12,9 +12,9 @@ import {
   PredefinedFieldKey,
 } from "@/lib/acquisition";
 import { PhoneInput } from "@/components/ui/PhoneInput";
-import { isValidPhone, detectDefaultCountry } from "@/lib/phone-utils";
+import { isValidPhone } from "@/lib/phone-utils";
 import { isValidBirthday, type SubmissionFieldError } from "@/lib/signup-validation";
-import type { CountryCode } from "libphonenumber-js";
+import { useDetectedCountry } from "@/hooks/use-detected-country";
 
 type FieldCollectionMode = "off" | "required" | "optional";
 
@@ -139,7 +139,11 @@ export function AcquisitionForm({
   const [birthDay, setBirthDay] = useState("");
   const [birthMonth, setBirthMonth] = useState("");
   const [customValues, setCustomValues] = useState<Record<string, string>>({});
-  const [phoneCountry] = useState<CountryCode>(() => detectDefaultCountry(locale));
+  // SSR-safe: same value on the server and during hydration, corrected to the
+  // browser's own country a render later. Detecting inline made the phone
+  // field's flag differ between the HTML and the first client render, and
+  // React discarded the whole form subtree to reconcile it.
+  const phoneCountry = useDetectedCountry(locale);
   const [errors, setErrors] = useState<Record<string, string>>({});
   // Set whenever new errors land, cleared once we've moved focus to the first
   // one, so re-renders don't keep yanking the page around.
@@ -165,6 +169,12 @@ export function AcquisitionForm({
         return t("birthdayIncomplete");
       case "invalid":
         return t("birthdayInvalid");
+      // FastAPI validation (422). Only these two fields have wording better
+      // than the generic rejection; anything else falls through to it.
+      case "invalid_email":
+        return t("emailInvalid");
+      case "invalid_phone":
+        return t("phoneInvalid");
       default:
         return t("fieldRejected");
     }

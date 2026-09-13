@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { useLocale } from "next-intl";
+import { useDetectedCountry } from "@/hooks/use-detected-country";
 import type { CountryCode } from "libphonenumber-js";
 import { getCountryCallingCode } from "libphonenumber-js";
 import {
   getCountryList,
-  detectDefaultCountry,
   formatToE164,
   formatAsYouType,
   getExamplePhoneNumber,
@@ -36,9 +36,12 @@ export function PhoneInput({
   id,
 }: PhoneInputProps) {
   const locale = useLocale();
-  const [country, setCountry] = useState<CountryCode>(
-    defaultCountry || detectDefaultCountry(locale)
-  );
+  // Three sources, in order: what the visitor picked in the dropdown, what the
+  // caller asked for, then detection. Detection goes through the hook so it is
+  // identical on both sides of hydration (see use-detected-country).
+  const detected = useDetectedCountry(locale);
+  const [picked, setPicked] = useState<CountryCode | null>(null);
+  const country = picked ?? defaultCountry ?? detected;
   const countries = useMemo(() => getCountryList(locale), [locale]);
 
   const [nationalInput, setNationalInput] = useState(() => {
@@ -131,7 +134,7 @@ export function PhoneInput({
 
   const handleCountrySelect = useCallback(
     (entry: CountryEntry) => {
-      setCountry(entry.code);
+      setPicked(entry.code);
       setDropdownOpen(false);
       setSearch("");
 
