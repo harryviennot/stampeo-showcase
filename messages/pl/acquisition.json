@@ -61,6 +61,9 @@
       "description": "Ta firma dopiero przygotowuje swój program lojalnościowy. Zajrzyj tu za jakiś czas po swoją kartę."
     },
     "poweredBy": "Obsługiwane przez",
-    "previewSampleName": "Zofia"
+    "previewSampleName": "Zofia",
+    "welcome": {
+      "title": "Twoje od razu po zapisaniu się"
+    }
   }
 }

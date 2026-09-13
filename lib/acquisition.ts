@@ -4,7 +4,11 @@
  */
 
 import type { Locale } from "@/i18n/routing";
-import { mapSubmissionError, type SubmissionFieldError } from "@/lib/signup-validation";
+import {
+  mapSubmissionError,
+  mapValidationError,
+  type SubmissionFieldError,
+} from "@/lib/signup-validation";
 import type {
   CardType,
   CustomStampConfig,
@@ -99,6 +103,8 @@ export interface CardDesignPublicResponse {
   reward_name?: string | null;
   initial_stamps?: number;
   initial_points?: number;
+  /** Free items a new customer is handed on sign-up, names only (STA-264). */
+  signup_items?: string[];
   stamp_icon?: string | null;
   reward_icon?: string | null;
   icon_color?: string | null;
@@ -324,6 +330,10 @@ export async function createPublicCustomer(
         errorDetail = errorData.detail;
       } else if (Array.isArray(errorData.detail) && errorData.detail.length > 0) {
         errorDetail = errorData.detail[0]?.msg || errorDetail;
+        // A 422 is one bad input, not a failed attempt: point at the field and
+        // keep the form. Falling through to the generic error replaced the page
+        // with "Something went wrong" and emptied everything already typed.
+        fieldError = mapValidationError(errorData.detail);
       } else if (errorData.detail && typeof errorData.detail === "object") {
         // Standardized structured error, e.g. the card-upfront checkout gate
         // ({ code: "CHECKOUT_REQUIRED", ... }) — surface the code so the flow

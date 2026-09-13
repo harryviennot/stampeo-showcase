@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { isValidBirthday, mapSubmissionError } from "./signup-validation";
+import {
+  isValidBirthday,
+  mapSubmissionError,
+  mapValidationError,
+} from "./signup-validation";
 
 describe("isValidBirthday", () => {
   test.each([
@@ -59,5 +63,48 @@ describe("mapSubmissionError", () => {
       field: "email",
       reason: "brand_new",
     });
+  });
+});
+
+describe("mapValidationError", () => {
+  test("points at the field a 422 names", () => {
+    const detail = [
+      {
+        type: "value_error",
+        loc: ["body", "email"],
+        msg: "value is not a valid email address",
+        input: "nope",
+      },
+    ];
+    expect(mapValidationError(detail)).toEqual({
+      field: "email",
+      reason: "invalid_email",
+    });
+  });
+
+  test("reaches into a nested loc, which is already the form's error key", () => {
+    expect(
+      mapValidationError([{ loc: ["body", "custom_fields", "size"], msg: "bad" }])
+    ).toEqual({ field: "size", reason: "rejected" });
+  });
+
+  test("phone gets its own wording too", () => {
+    expect(mapValidationError([{ loc: ["body", "phone"], msg: "bad" }])).toEqual({
+      field: "phone",
+      reason: "invalid_phone",
+    });
+  });
+
+  test("skips entries it cannot place rather than guessing", () => {
+    expect(mapValidationError([{ msg: "no loc here" }])).toBeNull();
+    expect(mapValidationError([{ loc: ["body"] }])).toBeNull();
+    expect(mapValidationError([])).toBeNull();
+  });
+
+  test("ignores shapes that are not a validation array", () => {
+    // The route's own rejections are objects and belong to mapSubmissionError.
+    expect(mapValidationError({ field: "email", reason: "required" })).toBeNull();
+    expect(mapValidationError("Something went wrong")).toBeNull();
+    expect(mapValidationError(null)).toBeNull();
   });
 });

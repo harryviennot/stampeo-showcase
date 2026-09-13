@@ -44,7 +44,8 @@
         "Zapisane wzory karty bez limitu",
         "Godziny szczytu i trendy tygodniowe",
         "Osoby w zespole bez limitu",
-        "Widzisz, kto z zespołu zrobił każdy skan"
+        "Widzisz, kto z zespołu zrobił każdy skan",
+        "Podaruj prezent i ustaw, kiedy wygasa"
       ]
     },
     "pro": {
@@ -125,7 +126,8 @@
         "Zapisane wzory karty bez limitu",
         "Godziny szczytu i trendy tygodniowe",
         "Osoby w zespole bez limitu",
-        "Widzisz, kto z zespołu zrobił każdy skan"
+        "Widzisz, kto z zespołu zrobił każdy skan",
+        "Podaruj prezent i ustaw, kiedy wygasa"
       ],
       "featuresLabel": "Wszystko z planu Starter, a do tego:"
     },
@@ -183,6 +185,9 @@
           "label": "Premia za większe zakupy",
           "growth": "1 próg",
           "pro": "Bez limitu"
+        },
+        "rewardExpiry": {
+          "label": "Daty wygaśnięcia nagród"
         },
         "fullCustomisation": {
           "label": "Pełna personalizacja karty"

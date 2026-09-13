@@ -30,6 +30,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
       { key: "loyaltyType", starter: "text", growth: "text", pro: "text" },
       { key: "earningCaps", starter: "cross", growth: "check", pro: "check" },
       { key: "basketBoost", starter: "cross", growth: "text", pro: "text" },
+      { key: "rewardExpiry", starter: "cross", growth: "check", pro: "check" },
     ],
   },
   {
