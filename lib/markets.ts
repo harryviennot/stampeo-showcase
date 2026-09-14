@@ -54,7 +54,14 @@ export const MARKETS: Record<Market, MarketConfig> = {
     hreflang: "en-GB",
     path: "/uk",
     ogLocale: "en_GB",
-    currency: { symbol: "£", code: "GBP" },
+    // EUR, not GBP. This field must state what the market is ACTUALLY billed
+    // in, never what we intend to bill it in one day. It said "GBP" while no
+    // GBP Price existed, so /uk requested a currency the catalog could not
+    // price and was silently downgraded to euros — and the aspiration then
+    // caused a second bug, offering a UK visitor a "see UK pricing" link that
+    // changes no number. Change this in the same commit as the GBP ladder,
+    // following docs/billing/ADDING_A_CURRENCY.md, and not before.
+    currency: { symbol: "€", code: "EUR" },
     europeTrust: true,
     label: "uk",
     trialDays: 30,

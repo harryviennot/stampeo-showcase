@@ -13,6 +13,8 @@ import {
 } from "@/lib/pricing";
 import { PricingTierCard, type FeatureItem } from "@/components/pricing/PricingTierCard";
 import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
+import { MarketSuggestion } from "@/components/market/MarketSuggestion";
+import type { Market } from "@/lib/markets";
 
 const TIERS = [
   { id: "starter" as const, trackAs: "pricing_starter" as const },
@@ -28,7 +30,8 @@ const TIERS = [
 export function PricingSection({
   pricing,
   trialDays,
-}: Readonly<{ pricing: Pricing; trialDays: number }>) {
+  market = "int",
+}: Readonly<{ pricing: Pricing; trialDays: number; market?: Market }>) {
   const t = useTranslations("pricing");
   const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
@@ -39,6 +42,11 @@ export function PricingSection({
   return (
     <section id="pricing" className="relative py-16 lg:py-24">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 flex justify-center">
+          {/* Above the ladder, not below it: the point is to be seen BEFORE the
+              number is read, not to explain it afterwards. */}
+          <MarketSuggestion market={market} />
+        </div>
         <ScrollReveal className="text-center mb-10">
           <h2 className="text-h2 mb-6">
             {t("title")}

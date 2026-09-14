@@ -27,7 +27,11 @@ export async function MarketPricingPage({
     <div className="min-h-screen bg-[var(--background)]">
       <Header market={market} />
       <main>
-        <PricingPageContent pricing={pricing} trialDays={MARKETS[market].trialDays} />
+        <PricingPageContent
+          pricing={pricing}
+          trialDays={MARKETS[market].trialDays}
+          market={market}
+        />
       </main>
       <Footer market={market} />
     </div>

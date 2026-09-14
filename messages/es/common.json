@@ -117,6 +117,15 @@
       "nextWord": "Siguiente",
       "points": "{points} pts",
       "complete": "Tarjeta completada"
+    },
+    "marketSuggestion": {
+      "prompt": "Precios mostrados en euros.",
+      "cta": "Ver precios de {country}",
+      "dismiss": "Cerrar",
+      "country": {
+        "us": "EE. UU.",
+        "uk": "Reino Unido"
+      }
     }
   }
 }

@@ -77,7 +77,9 @@ export async function VariantLanding({
         <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="metrics"><VariantMetricStrip /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
-        <div data-landing-section="pricing"><PricingSection pricing={pricing} trialDays={trialDays} /></div>
+        <div data-landing-section="pricing">
+          <PricingSection pricing={pricing} trialDays={trialDays} market={market} />
+        </div>
         <div data-landing-section="faq"><VariantFAQ faqs={faqItems} /></div>
         <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
         <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} trialDays={trialDays} /></div>

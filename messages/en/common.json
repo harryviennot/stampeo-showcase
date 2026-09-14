@@ -117,6 +117,15 @@
       "nextWord": "Next",
       "points": "{points} pts",
       "complete": "Card completed"
+    },
+    "marketSuggestion": {
+      "prompt": "Prices shown in euros.",
+      "cta": "See {country} pricing",
+      "dismiss": "Dismiss",
+      "country": {
+        "us": "US",
+        "uk": "UK"
+      }
     }
   }
 }

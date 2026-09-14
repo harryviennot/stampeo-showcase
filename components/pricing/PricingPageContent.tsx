@@ -18,6 +18,8 @@ import { PricingTierCard } from "@/components/pricing/PricingTierCard";
 import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
 import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
+import { MarketSuggestion } from "@/components/market/MarketSuggestion";
+import type { Market } from "@/lib/markets";
 
 function PricingCard({
   tier,
@@ -371,7 +373,8 @@ function PricingFAQ({
 export function PricingPageContent({
   pricing,
   trialDays,
-}: Readonly<{ pricing: Pricing; trialDays: number }>) {
+  market = "int",
+}: Readonly<{ pricing: Pricing; trialDays: number; market?: Market }>) {
   const t = useTranslations("pricingPage");
   const foundingOpen = isFoundingProgramOpen();
   // Yearly is the default: it is the price we want anchored, and the monthly
@@ -388,6 +391,12 @@ export function PricingPageContent({
           {t("hero.subtitle")}
         </p>
       </ScrollReveal>
+
+      {/* Above the ladder, not below it: the point is to be seen BEFORE the
+          number is read, not to explain it afterwards. */}
+      <div className="mt-6 flex justify-center">
+        <MarketSuggestion market={market} />
+      </div>
 
       {/* Billing cycle switcher */}
       <ScrollReveal delay={150} className="mt-8">
