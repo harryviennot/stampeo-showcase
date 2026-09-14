@@ -26,6 +26,8 @@ import { VariantFAQ } from "./VariantFAQ";
 import { VariantFinalCTA } from "./VariantFinalCTA";
 import { VariantDevToggle } from "./VariantDevToggle";
 import { MARKETS, type Market } from "@/lib/markets";
+import { getPlanCatalog } from "@/lib/plan-catalog";
+import { interpolatePricing } from "@/lib/pricing";
 
 export async function VariantLanding({
   locale,
@@ -33,13 +35,24 @@ export async function VariantLanding({
 }: Readonly<{ locale: string; market?: Market }>) {
   setRequestLocale(locale);
   const t = await getTranslations("variant.faq");
-  const faqItems = t.raw("items") as Array<{ question: string; answer: string }>;
+  // Fetched once here and passed down: the market fixes the currency at render
+  // time, so the page stays fully cacheable and every block on it quotes the
+  // same ladder.
+  const pricing = await getPlanCatalog(MARKETS[market].currency.code.toLowerCase());
+  const faqItems = (t.raw("items") as Array<{ question: string; answer: string }>).map(
+    // Interpolate BEFORE the JSON-LD is built. Passing the raw strings through
+    // shipped the literal token "{starterPrice}" to Google.
+    (faq) => ({
+      question: faq.question,
+      answer: interpolatePricing(faq.answer, pricing, locale),
+    }),
+  );
 
   return (
     <div className="paper-grain min-h-screen bg-[var(--cream)] overflow-x-hidden relative">
       <JsonLd data={organizationJsonLd()} />
       <JsonLd data={webSiteJsonLd()} />
-      <JsonLd data={softwareApplicationJsonLd()} />
+      <JsonLd data={softwareApplicationJsonLd(pricing)} />
       <JsonLd data={faqPageJsonLd(faqItems)} />
       <LandingTracker locale={locale} variant="wallet" />
       <Header />
@@ -60,10 +73,10 @@ export async function VariantLanding({
         <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="metrics"><VariantMetricStrip /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
-        <div data-landing-section="pricing"><PricingSection /></div>
-        <div data-landing-section="faq"><VariantFAQ /></div>
+        <div data-landing-section="pricing"><PricingSection pricing={pricing} /></div>
+        <div data-landing-section="faq"><VariantFAQ faqs={faqItems} /></div>
         <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
-        <div data-landing-section="final_cta"><VariantFinalCTA /></div>
+        <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} /></div>
       </main>
       <Footer />
       <VariantDevToggle />

@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import {
-  formatPrice,
+  formatMoney,
   isFoundingProgramOpen,
   yearlyCardView,
   type BillingInterval,
+  type Pricing,
   type TierId,
 } from "@/lib/pricing";
 import { PricingTierCard, type FeatureItem } from "@/components/pricing/PricingTierCard";
@@ -24,7 +25,7 @@ const TIERS = [
  * the card itself was already a client component, so the boundary only moves
  * up by one level.
  */
-export function PricingSection() {
+export function PricingSection({ pricing }: Readonly<{ pricing: Pricing }>) {
   const t = useTranslations("pricing");
   const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
@@ -55,12 +56,13 @@ export function PricingSection() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch max-w-md lg:max-w-none mx-auto"
         >
           {TIERS.map(({ id, trackAs, highlighted }) => {
-            const view = yearlyCardView(id as TierId, interval, foundingOpen);
+            const view = yearlyCardView(pricing, id as TierId, interval, foundingOpen);
             return (
               <PricingTierCard
                 key={id}
                 // Cheap-to-expensive at every width: the stacked mobile order
                 // matches the desktop one.
+                currency={pricing.currency}
                 name={t(`${id}.name`)}
                 tagline={t(`${id}.tagline`)}
                 features={t.raw(`${id}.features`) as FeatureItem[]}
@@ -74,8 +76,8 @@ export function PricingSection() {
                 subLabel={
                   view.isYearly
                     ? t("billedYearlyTotal", {
-                        price: formatPrice(view.yearlyTotal, locale),
-                        saving: formatPrice(view.yearlySaving, locale),
+                        price: formatMoney(view.yearlyTotal, pricing.currency, locale),
+                        saving: formatMoney(view.yearlySaving, pricing.currency, locale),
                       })
                     : t("billedMonthly")
                 }

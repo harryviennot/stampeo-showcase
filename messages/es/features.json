@@ -416,7 +416,7 @@
           "subtitle": "Añade a tus empleados y gestiona los accesos según tu plan.",
           "pay": {
             "title": "Plan Starter",
-            "price": "{starterPrice} €/mes",
+            "price": "{starterPrice}/mes",
             "members": "3 miembros",
             "features": [
               "3 cuentas de empleado incluidas",
@@ -427,7 +427,7 @@
           },
           "pro": {
             "title": "Plan Growth",
-            "price": "{growthPrice} €/mes",
+            "price": "{growthPrice}/mes",
             "members": "Ilimitado",
             "features": [
               "Miembros de equipo ilimitados",
@@ -1129,7 +1129,7 @@
         "navTitle": "Oferta de lanzamiento: tarifa bloqueada de por vida",
         "subtitle": "Stampeo ya funciona cada día en decenas de comercios. Los primeros en unirse conservan la tarifa de lanzamiento, para siempre.",
         "badge": "Oferta de lanzamiento",
-        "secondaryCta": "1 mes gratis, luego {growthFoundingPrice} €/mes de por vida"
+        "secondaryCta": "1 mes gratis, luego {growthFoundingPrice}/mes de por vida"
       },
       "problem": {
         "title": "Te lo contamos sin rodeos",
@@ -1142,8 +1142,8 @@
           "icon": "calendar"
         },
         {
-          "title": "{growthFoundingPrice} €/mes de por vida",
-          "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice} €/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
+          "title": "{growthFoundingPrice}/mes de por vida",
+          "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice}/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
           "icon": "tag"
         },
         {
@@ -1154,7 +1154,7 @@
       ],
       "cta": {
         "title": "Únete a los primeros comercios",
-        "subtitle": "1 mes gratis. {growthFoundingPrice} €/mes de por vida. Todas las funciones Growth, disponibles hoy."
+        "subtitle": "1 mes gratis. {growthFoundingPrice}/mes de por vida. Todas las funciones Growth, disponibles hoy."
       },
       "related": [
         "notifications-push",
@@ -1172,8 +1172,8 @@
               "icon": "calendar"
             },
             {
-              "title": "{growthFoundingPrice} €/mes de por vida",
-              "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice} €/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
+              "title": "{growthFoundingPrice}/mes de por vida",
+              "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice}/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
               "icon": "tag"
             },
             {
@@ -1232,8 +1232,8 @@
           "closing": "Stampeo está listo para funcionar en tu comercio desde hoy. Al unirte ahora, bloqueas la mejor tarifa e influyes en lo que construimos a continuación."
         },
         "price": {
-          "original": "{growthPrice} €/mes",
-          "founding": "{growthFoundingPrice} €/mes",
+          "original": "{growthPrice}/mes",
+          "founding": "{growthFoundingPrice}/mes",
           "forLife": "de por vida"
         },
         "timeline": {
@@ -1268,15 +1268,15 @@
             },
             {
               "question": "¿Cuánto tiempo sigue abierta la oferta de lanzamiento?",
-              "answer": "La tarifa de lanzamiento ({growthFoundingPrice} €/mes de por vida) sigue abierta durante la fase de lanzamiento, y luego el precio sube para los nuevos comercios. Una vez dentro, tu tarifa queda bloqueada de por vida."
+              "answer": "La tarifa de lanzamiento ({growthFoundingPrice}/mes de por vida) sigue abierta durante la fase de lanzamiento, y luego el precio sube para los nuevos comercios. Una vez dentro, tu tarifa queda bloqueada de por vida."
             },
             {
               "question": "¿Qué pasa después del mes gratis?",
-              "answer": "Pasas a {growthFoundingPrice} €/mes. Te avisamos dos veces: una semana antes, y luego 3 días antes. Si no quieres continuar, cancelas en un clic, sin gastos."
+              "answer": "Pasas a {growthFoundingPrice}/mes. Te avisamos dos veces: una semana antes, y luego 3 días antes. Si no quieres continuar, cancelas en un clic, sin gastos."
             },
             {
               "question": "¿Mantengo mi tarifa si subís los precios?",
-              "answer": "Sí. {growthFoundingPrice} €/mes de por vida significa de por vida. Aunque el plan Growth pase a 49,99 € dentro de tres años, tu tarifa no se mueve. Es contractual."
+              "answer": "Sí. {growthFoundingPrice}/mes de por vida significa de por vida. Aunque el plan Growth pase a 49,99 € dentro de tres años, tu tarifa no se mueve. Es contractual."
             },
             {
               "question": "¿Puedo cancelar?",
@@ -1286,7 +1286,7 @@
         },
         "finalCta": {
           "title": "Únete a los primeros comercios",
-          "subtitle": "1 mes gratis. {growthFoundingPrice} €/mes de por vida. Todas las funciones Growth, disponibles hoy.",
+          "subtitle": "1 mes gratis. {growthFoundingPrice}/mes de por vida. Todas las funciones Growth, disponibles hoy.",
           "urgency": "La tarifa de lanzamiento subirá para los nuevos comercios. Bloquea la tuya ahora."
         }
       }
