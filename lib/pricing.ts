@@ -1,25 +1,78 @@
 /**
- * Centralized pricing configuration.
- * Change prices here and they propagate to all pages
- * (pricing section, FAQ, terms, comparison table, etc.)
+ * Pricing shapes, formatting, and the founding-era constants.
+ *
+ * Public list prices are NOT here any more. They live in Stripe and arrive via
+ * `lib/plan-catalog.ts`, so a reprice is a dashboard action rather than a
+ * deploy. What stays below is the baked fallback for when the backend is
+ * unreachable, plus the founding prices — those are frozen history, not live
+ * config: the programme closed on 2026-08-04 and its rates can never change.
  */
 
-export const PRICING = {
+export type BillingInterval = "month" | "year";
+export type TierId = "starter" | "growth" | "pro";
+
+/** A full ladder for one currency, in major units. */
+export type Pricing = {
+  currency: string;
+  tiers: Record<TierId, Record<BillingInterval, number>>;
+};
+
+/**
+ * Last-resort ladder, used only when the backend cannot be reached.
+ *
+ * It WILL go stale — that is the trade. A pricing page showing last release's
+ * price beats one showing nothing, and the window is one revalidate cycle.
+ */
+export const FALLBACK_PRICING: Record<string, Pricing> = {
+  eur: {
+    currency: "eur",
+    tiers: {
+      starter: { month: 20, year: 192 },
+      growth: { month: 40, year: 384 },
+      pro: { month: 60, year: 576 },
+    },
+  },
+  usd: {
+    currency: "usd",
+    tiers: {
+      starter: { month: 39, year: 372 },
+      growth: { month: 79, year: 756 },
+      pro: { month: 119, year: 1140 },
+    },
+  },
+};
+
+/** Currency glyphs. Placement is decided per locale in `formatMoney`. */
+const CURRENCY_SYMBOLS: Record<string, string> = { eur: "€", usd: "$" };
+
+export function currencySymbol(currency: string): string {
+  return CURRENCY_SYMBOLS[currency] ?? currency.toUpperCase();
+}
+
+/**
+ * Money, written the way a locale writes it.
+ *
+ * English leads with the symbol; French, Spanish and Polish trail it behind a
+ * non-breaking space. The NBSP matters: a plain space lets the amount and its
+ * symbol wrap onto separate lines. Mirrors backend/app/core/money.py.
+ */
+export function formatMoney(amount: number, currency: string, locale?: string): string {
+  const symbol = currencySymbol(currency);
+  const value = formatPrice(amount, locale);
+  return locale === "en" || !locale ? `${symbol}${value}` : `${value}\u00a0${symbol}`;
+}
+
+/** Founding-partner rates. Frozen: the programme closed 2026-08-04. */
+export const FOUNDING_PRICING = {
   starter: {
-    price: 20,
-    yearlyPrice: 192,
     foundingPrice: 10,
     foundingYearlyPrice: 96,
   },
   growth: {
-    price: 40,
-    yearlyPrice: 384,
     foundingPrice: 20,
     foundingYearlyPrice: 192,
   },
   pro: {
-    price: 60,
-    yearlyPrice: 576,
     // No founding price — Pro is full-price only, on both cadences.
   },
   /** Founding partner discount percentage */
@@ -35,12 +88,11 @@ export const PRICING = {
   yearlyDiscountPercent: 20,
 } as const;
 
-export type BillingInterval = "month" | "year";
-export type TierId = "starter" | "growth" | "pro";
-
-/** Public list price for a tier on a given cadence. */
-export function tierPrice(tier: TierId, interval: BillingInterval): number {
-  return interval === "year" ? PRICING[tier].yearlyPrice : PRICING[tier].price;
+/** Public list price for a tier on a given cadence, from the live ladder. */
+export function tierPrice(
+  pricing: Pricing, tier: TierId, interval: BillingInterval,
+): number {
+  return pricing.tiers[tier][interval];
 }
 
 /** What a yearly plan works out to per month, rounded to cents. */
@@ -57,7 +109,7 @@ export type PricingCardView = {
   discount?: { targetPrice: number };
   /** What the customer is actually charged once a year. */
   yearlyTotal: number;
-  /** Euros saved over a year versus paying monthly. */
+  /** Saved over a year versus paying monthly, in major units. */
   yearlySaving: number;
 };
 
@@ -68,20 +120,28 @@ export type PricingCardView = {
  * reader can see at a glance that yearly is cheaper: "€20 → €16" lands,
  * "€20 → €192" reads as ten times more expensive until you do the division.
  * The real yearly charge is stated immediately below the price, never hidden.
+ *
+ * `pricing` carries the live public ladder; founding rates come from the frozen
+ * table, and only apply while the programme is open (it is not).
  */
 export function yearlyCardView(
+  pricing: Pricing,
   tier: TierId,
   interval: BillingInterval,
   foundingOpen: boolean,
 ): PricingCardView {
-  const cfg = PRICING[tier];
-  const founding = foundingOpen ? (cfg as { foundingPrice?: number }).foundingPrice : undefined;
-  const foundingYearly = foundingOpen
-    ? (cfg as { foundingYearlyPrice?: number }).foundingYearlyPrice
-    : undefined;
+  const cfg = FOUNDING_PRICING[tier] as {
+    foundingPrice?: number;
+    foundingYearlyPrice?: number;
+  };
+  const listMonthly = pricing.tiers[tier].month;
+  const listYearly = pricing.tiers[tier].year;
 
-  const monthlyRate = founding ?? cfg.price;
-  const yearlyTotal = foundingYearly ?? cfg.yearlyPrice;
+  const founding = foundingOpen ? cfg.foundingPrice : undefined;
+  const foundingYearly = foundingOpen ? cfg.foundingYearlyPrice : undefined;
+
+  const monthlyRate = founding ?? listMonthly;
+  const yearlyTotal = foundingYearly ?? listYearly;
   const yearlySaving = monthlyRate * 12 - yearlyTotal;
 
   if (interval === "year") {
@@ -94,7 +154,7 @@ export function yearlyCardView(
   }
   return {
     isYearly: false,
-    price: cfg.price,
+    price: listMonthly,
     discount: founding ? { targetPrice: founding } : undefined,
     yearlyTotal,
     yearlySaving,
@@ -143,18 +203,31 @@ export function formatPrice(price: number, locale?: string): string {
 
 /**
  * Replace pricing placeholders in raw translation strings.
- * Use this for strings from t.raw() that contain {starterPrice}, {growthPrice}, etc.
+ *
+ * For strings from `t.raw()` that contain {starterPrice}, {growthPrice}, etc.
+ * Substitutes a *formatted* amount, symbol included, so the translations do not
+ * have to hardcode a currency glyph — which is what stopped them from ever being
+ * repriced into another currency.
  */
-export function interpolatePricing(text: string): string {
+export function interpolatePricing(
+  text: string, pricing: Pricing, locale?: string,
+): string {
+  const money = (amount: number) => formatMoney(amount, pricing.currency, locale);
   return text
-    .replaceAll("{starterPrice}", String(PRICING.starter.price))
-    .replaceAll("{starterFoundingPrice}", String(PRICING.starter.foundingPrice))
-    .replaceAll("{growthPrice}", String(PRICING.growth.price))
-    .replaceAll("{growthFoundingPrice}", String(PRICING.growth.foundingPrice))
-    .replaceAll("{proPrice}", String(PRICING.pro.price))
-    .replaceAll("{starterYearlyPrice}", String(PRICING.starter.yearlyPrice))
-    .replaceAll("{growthYearlyPrice}", String(PRICING.growth.yearlyPrice))
-    .replaceAll("{proYearlyPrice}", String(PRICING.pro.yearlyPrice))
-    .replaceAll("{yearlyDiscount}", String(PRICING.yearlyDiscountPercent))
-    .replaceAll("{freeMonths}", String(PRICING.freeMonths));
+    .replaceAll("{starterPrice}", money(pricing.tiers.starter.month))
+    .replaceAll("{growthPrice}", money(pricing.tiers.growth.month))
+    .replaceAll("{proPrice}", money(pricing.tiers.pro.month))
+    .replaceAll("{starterYearlyPrice}", money(pricing.tiers.starter.year))
+    .replaceAll("{growthYearlyPrice}", money(pricing.tiers.growth.year))
+    .replaceAll("{proYearlyPrice}", money(pricing.tiers.pro.year))
+    // What a yearly plan works out to per month — the figure the "save 20%"
+    // FAQ answer compares against the monthly rate.
+    .replaceAll("{starterYearlyMonthly}", money(monthlyEquivalent(pricing.tiers.starter.year)))
+    .replaceAll("{growthYearlyMonthly}", money(monthlyEquivalent(pricing.tiers.growth.year)))
+    .replaceAll("{proYearlyMonthly}", money(monthlyEquivalent(pricing.tiers.pro.year)))
+    // Founding rates are frozen history and always euros.
+    .replaceAll("{starterFoundingPrice}", formatMoney(FOUNDING_PRICING.starter.foundingPrice, "eur", locale))
+    .replaceAll("{growthFoundingPrice}", formatMoney(FOUNDING_PRICING.growth.foundingPrice, "eur", locale))
+    .replaceAll("{yearlyDiscount}", String(FOUNDING_PRICING.yearlyDiscountPercent))
+    .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths));
 }

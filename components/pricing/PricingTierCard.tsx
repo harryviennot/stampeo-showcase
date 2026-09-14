@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
-import { formatPrice } from "@/lib/pricing";
+import { formatMoney } from "@/lib/pricing";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { InfoIcon } from "@/components/icons";
@@ -46,7 +46,12 @@ type PricingTierCardProps = {
   popularLabel?: string;
   /** Handwritten margin note above the highlighted card ("we'd start here"). */
   annotationLabel?: string;
-  currencySymbol?: string;
+  /**
+   * ISO currency code for the amounts. Required on purpose: this used to
+   * default to a euro sign that no caller ever overrode, so the /us page
+   * rendered dollar prices with a euro glyph.
+   */
+  currency: string;
   /** When set, fires `landing_cta_clicked` with this location on CTA click. */
   trackAs?: CTALocation;
   /** Lets the page control stacking order (recommended tier first on mobile). */
@@ -105,7 +110,7 @@ export function PricingTierCard({
   highlighted,
   popularLabel,
   annotationLabel,
-  currencySymbol = "€",
+  currency,
   trackAs,
   className = "",
 }: PricingTierCardProps) {
@@ -157,13 +162,11 @@ export function PricingTierCard({
         {showDiscount ? (
           <div className="flex flex-col gap-1">
             <span className="text-base font-semibold text-[var(--muted-foreground)] line-through">
-              {currencySymbol}
-              {formatPrice(price, locale)}
+              {formatMoney(price, currency, locale)}
             </span>
             <div className="flex items-baseline gap-1">
               <span className="text-4xl font-bold tracking-tight">
-                {currencySymbol}
-                {formatPrice(discounted, locale)}
+                {formatMoney(discounted, currency, locale)}
               </span>
               <span className="text-[var(--muted-foreground)] text-base font-semibold">
                 {forLifeLabel ?? perMonthLabel}
@@ -173,8 +176,7 @@ export function PricingTierCard({
         ) : (
           <div className="flex items-baseline gap-1">
             <span className="text-4xl font-bold tracking-tight">
-              {currencySymbol}
-              {formatPrice(price, locale)}
+              {formatMoney(price, currency, locale)}
             </span>
             <span className="text-[var(--muted-foreground)] text-base font-semibold">
               {perMonthLabel}

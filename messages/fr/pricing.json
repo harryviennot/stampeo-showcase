@@ -8,7 +8,7 @@
     "foundingPartner": "FONDATEUR",
     "popular": "Le plus populaire",
     "perMonth": "/mois",
-    "billedYearlyTotal": "Facturé €{price} par an, vous économisez €{saving}",
+    "billedYearlyTotal": "Facturé {price} par an, vous économisez {saving}",
     "forLife": "/mois à vie",
     "freeMonths": "3 mois offerts",
     "deadlineNotice": "Tarif fondateur jusqu'au {date} — dernière chance.",
@@ -71,7 +71,7 @@
       "basketLabel": "Panier moyen",
       "assumption": "Hypothèse : un programme de fidélité génère environ {percent} % de visites en plus",
       "breakdownClients": "{clients} clients/jour × {percent} % = environ {extra} clients en plus par jour",
-      "breakdownRevenue": "{extra} clients × {basket} € × 30 jours = {total} €/mois",
+      "breakdownRevenue": "{extra} clients × {basket} × 30 jours = {total}/mois",
       "extraRevenue": "Revenus en plus",
       "perMonth": "/mois",
       "stampeoCost": "Stampeo",
@@ -93,7 +93,7 @@
     "foundingReassurance": "Votre tarif fondateur est garanti à vie. Même si nos prix augmentent, ou si vous résiliez puis revenez plus tard, vous gardez ce tarif.",
     "popular": "Le plus populaire",
     "perMonth": "/mois",
-    "billedYearlyTotal": "Facturé €{price} par an, vous économisez €{saving}",
+    "billedYearlyTotal": "Facturé {price} par an, vous économisez {saving}",
     "intervalMonthly": "Mensuel",
     "intervalYearly": "Annuel",
     "yearlyBadge": "20% offerts",
@@ -272,7 +272,7 @@
         },
         {
           "question": "Puis-je payer à l'année ?",
-          "answer": "Oui, et cela enlève 20 % sur chaque plan : 192 € par an pour Starter, soit 16 € par mois au lieu de 20 €. Vous pouvez passer du mensuel à l'annuel quand vous voulez, votre année démarre ce jour-là. Le retour au mensuel prend effet à la fin de l'année déjà payée, vous ne perdez jamais du temps déjà réglé."
+          "answer": "Oui, et cela enlève 20 % sur chaque plan : {starterYearlyPrice} par an pour Starter, soit {starterYearlyMonthly} par mois au lieu de {starterPrice}."
         },
         {
           "question": "Y a-t-il des frais par client ?",

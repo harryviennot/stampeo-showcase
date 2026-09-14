@@ -2,15 +2,16 @@ import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { FAQList } from "../ui/FAQList";
 import { CTAButton } from "../ui/CTAButton";
-import { interpolatePricing } from "@/lib/pricing";
 
-export async function VariantFAQ() {
+/**
+ * `faqs` arrive already interpolated, from VariantLanding. That is deliberate:
+ * the same array feeds `faqPageJsonLd`, and interpolating in two places once
+ * meant the structured data shipped the raw "{starterPrice}" token to Google.
+ */
+export async function VariantFAQ({
+  faqs,
+}: Readonly<{ faqs: Array<{ question: string; answer: string }> }>) {
   const t = await getTranslations("variant.faq");
-  const rawFaqs = t.raw("items") as Array<{ question: string; answer: string }>;
-  const faqs = rawFaqs.map((faq) => ({
-    question: faq.question,
-    answer: interpolatePricing(faq.answer),
-  }));
 
   return (
     <section id="faq" className="relative py-16 lg:py-24 overflow-hidden">

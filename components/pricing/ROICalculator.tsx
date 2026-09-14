@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PRICING } from "@/lib/pricing";
+import { formatMoney, type Pricing } from "@/lib/pricing";
 
 type Mode = "prudent" | "optimiste";
 
@@ -20,11 +20,14 @@ interface ROICalculatorProps {
    * closed — never point this at a rate a new visitor cannot actually get.
    */
   monthlyCost?: number;
+  /** The live ladder, so the calculator quotes the same price as the cards. */
+  pricing: Pricing;
 }
 
 export function ROICalculator({
   namespace = "pricing.roi",
-  monthlyCost = PRICING.growth.price,
+  monthlyCost,
+  pricing,
 }: ROICalculatorProps) {
   const t = useTranslations(namespace);
   const locale = useLocale();
@@ -32,7 +35,9 @@ export function ROICalculator({
   const isComma = locale === "fr" || locale === "es" || locale === "pl";
   const fmtDecimal = (n: number) =>
     n % 1 === 0 ? String(n) : isComma ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
-  const euro = (n: number) => (isComma ? `${n} €` : `${n}€`);
+  // Placement and glyph both follow the currency+locale pair, not the locale
+  // alone: "40€" is right for a French euro price and wrong for a US dollar one.
+  const euro = (n: number) => formatMoney(n, pricing.currency, locale);
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
   const [mode, setMode] = useState<Mode>("prudent");
@@ -41,7 +46,7 @@ export function ROICalculator({
   const percentDisplay = Math.round(percent * 100);
   const extraClientsPerDay = clients * percent;
   const extraRevenue = Math.round(extraClientsPerDay * basket * 30);
-  const stampeoCost = monthlyCost;
+  const stampeoCost = monthlyCost ?? pricing.tiers.growth.month;
   const multiplier = Math.round(extraRevenue / stampeoCost);
 
   return (
@@ -155,8 +160,8 @@ export function ROICalculator({
                 <p>
                   {t("breakdownRevenue", {
                     extra: fmtDecimal(extraClientsPerDay),
-                    basket,
-                    total: extraRevenue,
+                    basket: euro(basket),
+                    total: euro(extraRevenue),
                   })}
                 </p>
               </div>
