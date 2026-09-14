@@ -13,6 +13,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { MARKETS, marketPath, marketLink, isPilotPath } from "./markets";
+import { formatMoney } from "./pricing";
 
 describe("marketPath", () => {
   test("keeps a US visitor inside the US market", () => {
@@ -86,5 +87,33 @@ describe("marketLink", () => {
         expect(marketLink(market, prefix, "/pricing")).not.toMatch(/\/(us|uk)\/(en|es|pl)\//);
       }
     }
+  });
+});
+
+describe("formatMoney groups thousands and narrows the symbol", () => {
+  // QA saw "Billed $1140 a year" and "$9000/month" on /us. The whole yearly
+  // ladder is four figures, so an ungrouped amount is the normal case.
+  test("four-figure amounts are grouped", () => {
+    expect(formatMoney(1140, "usd", "en")).toBe("$1,140");
+    expect(formatMoney(1140, "eur", "fr")).toMatch(/1\s?140/);
+  });
+
+  test("a foreign currency is a symbol, not a name", () => {
+    expect(formatMoney(49, "usd", "fr")).not.toContain("$US");
+    expect(formatMoney(49, "usd", "pl")).not.toContain("USD");
+  });
+
+  test("placement still follows the locale", () => {
+    expect(formatMoney(49, "usd", "en").startsWith("$")).toBe(true);
+    expect(formatMoney(49, "eur", "fr").trim().endsWith("€")).toBe(true);
+  });
+
+  test("whole amounts show no decimals", () => {
+    expect(formatMoney(49, "usd", "en")).toBe("$49");
+  });
+
+  test("an unknown currency does not blank the price", () => {
+    expect(() => formatMoney(49, "zzz", "en")).not.toThrow();
+    expect(formatMoney(49, "zzz", "en")).toContain("49");
   });
 });

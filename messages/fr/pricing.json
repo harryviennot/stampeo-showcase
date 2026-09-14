@@ -264,7 +264,7 @@
       "items": [
         {
           "question": "Y a-t-il un essai gratuit ?",
-          "answer": "Oui ! Chaque plan inclut un essai gratuit de 30 jours. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des {trialDays} jours. Sans engagement."
+          "answer": "Oui ! Chaque plan inclut un essai gratuit de {trialDays} jours. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des {trialDays} jours. Sans engagement."
         },
         {
           "question": "Puis-je changer de plan plus tard ?",

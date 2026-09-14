@@ -56,27 +56,33 @@ const OFFER_DESCRIPTIONS = {
 } as const;
 
 export function softwareApplicationJsonLd(pricing: Pricing) {
+  // No Offer block when the amounts are a fallback. A human seeing a stale
+  // price is survivable; Google indexing EUR amounts against /us is not, and
+  // the baked ladder is EUR-only so that is exactly what a fallback would
+  // publish. An Organization/WebSite entry with no offers is valid structured
+  // data; a wrong price is not.
+  const offers = pricing.isFallback
+    ? undefined
+    : (["starter", "growth", "pro"] as const).flatMap((tier) =>
+        (["month", "year"] as const).map((interval) => ({
+          "@type": "Offer",
+          name: interval === "year" ? `${OFFER_NAMES[tier]} (annual)` : OFFER_NAMES[tier],
+          price: String(pricing.tiers[tier][interval]),
+          priceCurrency: pricing.currency.toUpperCase(),
+          description:
+            interval === "year"
+              ? `${OFFER_NAMES[tier]} billed yearly: ${OFFER_DESCRIPTIONS[tier]}`
+              : OFFER_DESCRIPTIONS[tier],
+        })),
+      );
+
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "Stampeo",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
-    // Machine-read by Google, and rendered on every market including /us — so
-    // the currency has to follow the ladder, not a hardcoded "EUR". Pro is
-    // listed too; it was missing entirely before.
-    offers: (["starter", "growth", "pro"] as const).flatMap((tier) =>
-      (["month", "year"] as const).map((interval) => ({
-        "@type": "Offer",
-        name: interval === "year" ? `${OFFER_NAMES[tier]} (annual)` : OFFER_NAMES[tier],
-        price: String(pricing.tiers[tier][interval]),
-        priceCurrency: pricing.currency.toUpperCase(),
-        description:
-          interval === "year"
-            ? `${OFFER_NAMES[tier]} billed yearly: ${OFFER_DESCRIPTIONS[tier]}`
-            : OFFER_DESCRIPTIONS[tier],
-      })),
-    ),
+    ...(offers ? { offers } : {}),
     description:
       "Digital loyalty card platform for local businesses. Create Apple Wallet and Google Wallet passes in minutes.",
   };
