@@ -18,12 +18,19 @@ import { join } from "node:path";
  */
 
 const MESSAGES = join(import.meta.dir, "..", "messages");
-const PRICED_FILES = ["pricing.json"];
+const PRICED_FILES = ["pricing.json", "landing.json"];
 const GLYPHS = /[€$£]|zł|&euro;|&#8364;/;
+
+/**
+ * Demo content is exempt: the sector cards illustrate a merchant's own reward
+ * ("1 EUR spent = 1 point"), which is their currency, not ours. Everything else
+ * in these files is a price we charge.
+ */
+const EXEMPT = /^landing\.sectorCards\./;
 
 function walk(value: unknown, path: string, out: Array<[string, string]>) {
   if (typeof value === "string") {
-    if (GLYPHS.test(value)) out.push([path, value]);
+    if (GLYPHS.test(value) && !EXEMPT.test(path)) out.push([path, value]);
   } else if (Array.isArray(value)) {
     value.forEach((v, i) => walk(v, `${path}[${i}]`, out));
   } else if (value && typeof value === "object") {

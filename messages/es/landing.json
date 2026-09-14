@@ -323,7 +323,7 @@
       "items": [
         {
           "question": "¿Cuánto cuesta?",
-          "answer": "El plan Starter cuesta {starterPrice} €/mes. Sin gastos de alta, sin compromiso. Empiezas con 1 mes gratis. Te pedimos la tarjeta para iniciar la prueba, sin ningún cargo antes de que acabe el mes."
+          "answer": "El plan Starter cuesta {starterPrice}/mes. Sin gastos de alta, sin compromiso. Empiezas con 1 mes gratis. Te pedimos la tarjeta para empezar la prueba, sin ningún cobro antes de que acabe el mes."
         },
         {
           "question": "¿Tengo que cambiar de caja?",
@@ -356,7 +356,7 @@
     },
     "finalCta": {
       "title": "Lanza tu fidelidad <accent>esta semana.</accent>",
-      "subtitle": "3 minutos para crear tu tarjeta. 1 mes para probarla. 0 € para empezar.",
+      "subtitle": "3 minutos para crear tu tarjeta. 1 mes para probarla. {zero} para empezar.",
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "1 mes gratis · Sin compromiso"

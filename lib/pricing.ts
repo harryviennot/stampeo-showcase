@@ -228,6 +228,8 @@ export function interpolatePricing(
     // Founding rates are frozen history and always euros.
     .replaceAll("{starterFoundingPrice}", formatMoney(FOUNDING_PRICING.starter.foundingPrice, "eur", locale))
     .replaceAll("{growthFoundingPrice}", formatMoney(FOUNDING_PRICING.growth.foundingPrice, "eur", locale))
+    // "0 to start" is a price claim and has to follow the market's currency.
+    .replaceAll("{zero}", money(0))
     .replaceAll("{yearlyDiscount}", String(FOUNDING_PRICING.yearlyDiscountPercent))
     .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths));
 }

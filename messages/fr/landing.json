@@ -324,7 +324,7 @@
       "items": [
         {
           "question": "Combien ça coûte ?",
-          "answer": "Le plan Starter est à {starterPrice} €/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Votre carte bancaire est demandée pour démarrer l'essai, sans aucun débit avant la fin du mois."
+          "answer": "Le plan Starter est à {starterPrice}/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Nous demandons votre carte pour démarrer l'essai, sans prélèvement avant la fin du mois."
         },
         {
           "question": "Dois-je changer ma caisse ?",
@@ -357,7 +357,7 @@
     },
     "finalCta": {
       "title": "Lancez votre fidélité <accent>cette semaine.</accent>",
-      "subtitle": "3 minutes pour créer votre carte. 1 mois pour la tester. 0 € pour commencer.",
+      "subtitle": "3 minutes pour créer votre carte. 1 mois pour la tester. {zero} pour commencer.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "1 mois gratuit · Sans engagement · Une question ? 06 49 37 04 70"

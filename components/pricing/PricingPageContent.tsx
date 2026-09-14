@@ -7,6 +7,7 @@ import { Check, X, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
   formatMoney,
+  interpolatePricing,
   isFoundingProgramOpen,
   tierPrice,
   yearlyCardView,
@@ -312,8 +313,15 @@ function FeatureComparisonTable({ pricing }: { pricing: Pricing }) {
   );
 }
 
-function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
+function PricingFAQ({
+  foundingOpen,
+  pricing,
+}: {
+  foundingOpen: boolean;
+  pricing: Pricing;
+}) {
   const t = useTranslations("pricingPage");
+  const locale = useLocale();
   const allFaqs = t.raw("faq.items") as Array<{
     question: string;
     answer: string;
@@ -346,7 +354,7 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
             </summary>
             <div className="pt-2 pb-4">
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                {faq.answer}
+                {interpolatePricing(faq.answer, pricing, locale)}
               </p>
             </div>
           </details>
@@ -422,7 +430,7 @@ export function PricingPageContent({ pricing }: Readonly<{ pricing: Pricing }>) 
       <ROICalculator pricing={pricing} />
 
       {/* FAQ */}
-      <PricingFAQ foundingOpen={foundingOpen} />
+      <PricingFAQ foundingOpen={foundingOpen} pricing={pricing} />
 
       {/* Bottom CTA */}
       <ScrollReveal

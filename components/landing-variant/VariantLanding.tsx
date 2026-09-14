@@ -76,7 +76,7 @@ export async function VariantLanding({
         <div data-landing-section="pricing"><PricingSection pricing={pricing} /></div>
         <div data-landing-section="faq"><VariantFAQ faqs={faqItems} /></div>
         <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
-        <div data-landing-section="final_cta"><VariantFinalCTA /></div>
+        <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} /></div>
       </main>
       <Footer />
       <VariantDevToggle />

@@ -323,7 +323,7 @@
       "items": [
         {
           "question": "How much does it cost?",
-          "answer": "The Starter plan is €{starterPrice}/month. No setup fee, no commitment. You start with 1 month free. We ask for your card to begin the trial, with no charge before the month is up."
+          "answer": "The Starter plan is {starterPrice}/month. No setup fee, no commitment. You start with 1 month free. We ask for your card to begin the trial, with no charge before the month is up."
         },
         {
           "question": "Do I need to change my till?",
@@ -356,7 +356,7 @@
     },
     "finalCta": {
       "title": "Launch your loyalty <accent>this week.</accent>",
-      "subtitle": "3 minutes to build your card. 1 month to test it. €0 to start.",
+      "subtitle": "3 minutes to build your card. 1 month to test it. {zero} to start.",
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
       "reassurance": "1 month free · No commitment"

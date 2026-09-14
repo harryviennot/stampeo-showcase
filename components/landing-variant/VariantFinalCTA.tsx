@@ -1,8 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CTAButton } from "../ui/CTAButton";
+import { interpolatePricing, type Pricing } from "@/lib/pricing";
 
-export async function VariantFinalCTA() {
+export async function VariantFinalCTA({
+  pricing,
+  locale,
+}: Readonly<{ pricing: Pricing; locale: string }>) {
   const t = await getTranslations("variant.finalCta");
 
   return (
@@ -15,7 +19,8 @@ export async function VariantFinalCTA() {
         </h2>
 
         <p className="text-lead text-[var(--muted-foreground)] max-w-2xl">
-          {t("subtitle")}
+          {/* t.raw: the pricing tokens are ours, not ICU's. */}
+          {interpolatePricing(t.raw("subtitle"), pricing, locale)}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
