@@ -15,6 +15,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
+import { marketLink, marketPath, type Market } from "@/lib/markets";
 
 function DesktopAuthButtons({
   loading,
@@ -231,7 +232,7 @@ function MobileFeaturesAccordion({
   );
 }
 
-export function Header() {
+export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, loading, signOut } = useAuth();
@@ -301,9 +302,12 @@ export function Header() {
     { href: "/contact", label: t("common.nav.contact") },
   ];
 
+  // A market is a set of routes, not one landing page. /us quotes dollars, so a
+  // bare "/pricing" here walks a US visitor straight onto the euro ladder — a
+  // price checkout will not honour.
   const navItems = [
     { label: t("common.nav.loyalty"), href: loyaltySlug },
-    { label: t("common.nav.pricing"), href: "/pricing" },
+    { label: t("common.nav.pricing"), href: marketPath(market, "/pricing") },
   ];
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
@@ -342,7 +346,7 @@ export function Header() {
   const seoPrefix = locale === "fr" ? "" : `/${locale}`;
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
-    { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: marketLink(market, seoPrefix, "/pricing"), label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
     ...(hasBlog(locale) ? [{ href: `${seoPrefix}/blog`, label: "Blog" }] : []),
     { href: `${seoPrefix}/contact`, label: "Contact" },

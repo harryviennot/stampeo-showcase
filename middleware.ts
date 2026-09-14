@@ -9,6 +9,7 @@ import {
   deviceLanguage,
   resolveAcquisitionLocale,
 } from "./lib/locale-negotiation";
+import { isPilotPath } from "./lib/markets";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -19,9 +20,13 @@ const getBusinessLocale = createBusinessLocaleLookup({
 // Country pilots served at clean, locale-free URLs. They must NOT go through
 // next-intl's locale detection, which would 307 an English visitor from /uk to
 // /en/uk. We rewrite them to the English route internally so the URL stays /uk
-// (lang=en, no redirect). Exact-match only, so business slugs like /usual-cafe
-// are unaffected.
-const PILOT_PATHS = new Set(["/uk", "/us"]);
+// (lang=en, no redirect).
+//
+// `isPilotPath` matches the pilot root OR anything beneath it. It used to be an
+// exact-match Set, which kept business slugs like /usual-cafe safe but also
+// meant /us/pricing was never rewritten: it fell through to locale detection and
+// 404'd as /en/us/pricing, stranding US visitors on the euro pricing page. The
+// prefix check requires a following slash, so /usual-cafe is still unaffected.
 
 export default async function middleware(request: NextRequest) {
   // 301 redirect www → non-www
@@ -31,7 +36,7 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  if (PILOT_PATHS.has(request.nextUrl.pathname)) {
+  if (isPilotPath(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = `/en${request.nextUrl.pathname}`;
     return NextResponse.rewrite(url);

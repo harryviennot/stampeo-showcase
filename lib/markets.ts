@@ -71,3 +71,50 @@ export const PILOT_HREFLANG: Record<string, string> = {
   es: "/es",
   pl: "/pl",
 };
+
+/**
+ * A path inside a market.
+ *
+ * A market is a set of routes, not a single landing page. /us quotes dollars,
+ * so every link a US visitor can follow has to stay inside /us — otherwise the
+ * shared nav walks them onto the international pricing page and quotes euros,
+ * which is a price checkout will not honour.
+ *
+ * `int` is deliberately bare: next-intl owns locale prefixing there, and
+ * hardcoding /en would break the default-locale URLs.
+ */
+export function marketPath(market: Market, path: string): string {
+  const base = market === "int" ? "" : MARKETS[market].path;
+  if (path === "/") return base || "/";
+  return `${base}${path}`;
+}
+
+/**
+ * Is this URL inside a country pilot?
+ *
+ * Prefix-aware on purpose, and carefully. The original check was an exact-match
+ * Set so that a business slug like /usual-cafe could not be mistaken for /us —
+ * but that also meant /us/pricing was never rewritten, fell through to locale
+ * detection, and 404'd as /en/us/pricing. Matching the pilot root OR the pilot
+ * followed by a slash keeps both properties.
+ */
+export function isPilotPath(pathname: string): boolean {
+  return (Object.keys(MARKETS) as Market[]).some((market) => {
+    if (market === "int") return false;
+    const root = MARKETS[market].path;
+    return pathname === root || pathname.startsWith(`${root}/`);
+  });
+}
+
+/**
+ * An in-market link that also has to work for the locale-prefixed international
+ * site.
+ *
+ * The two prefixing schemes are mutually exclusive and combining them produces
+ * nonsense: pilots are served at locale-free URLs (/us/pricing), so applying the
+ * next-intl prefix as well yields /us/en/pricing, which routes nowhere. `int`
+ * keeps the locale prefix; every pilot ignores it.
+ */
+export function marketLink(market: Market, seoPrefix: string, path: string): string {
+  return market === "int" ? `${seoPrefix}${path}` : marketPath(market, path);
+}

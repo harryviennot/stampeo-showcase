@@ -55,7 +55,7 @@ export async function VariantLanding({
       <JsonLd data={softwareApplicationJsonLd(pricing)} />
       <JsonLd data={faqPageJsonLd(faqItems)} />
       <LandingTracker locale={locale} variant="wallet" />
-      <Header />
+      <Header market={market} />
       <main className="relative">
         <div data-landing-section="hero"><VariantHero /></div>
         {/* "Made in Europe · GDPR" trust strip — hidden outside Europe (US). */}
@@ -78,7 +78,7 @@ export async function VariantLanding({
         <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
         <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} /></div>
       </main>
-      <Footer />
+      <Footer market={market} />
       <VariantDevToggle />
     </div>
   );
