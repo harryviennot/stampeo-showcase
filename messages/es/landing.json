@@ -334,7 +334,7 @@
           "answer": "No. Apple Wallet y Google Wallet ya vienen instalados en todos los teléfonos recientes. Tus clientes escanean tu código QR y su tarjeta se añade con un gesto. Eso es todo."
         },
         {
-          "question": "¿Qué pasa después del primer mes?",
+          "question": "¿Qué pasa cuando termina la prueba gratuita?",
           "answer": "Eliges si sigues o no. Te pedimos la tarjeta para iniciar la prueba, pero no hay ningún cargo antes de que terminen los {trialDays} días. Puedes cancelar en cualquier momento antes de esa fecha."
         },
         {

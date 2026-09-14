@@ -334,7 +334,7 @@
           "answer": "Nie. Apple Wallet i Google Wallet są już zainstalowane w każdym nowszym smartfonie. Klient skanuje twój kod QR i karta dodaje się jednym ruchem. To wszystko."
         },
         {
-          "question": "Co się dzieje po pierwszym miesiącu?",
+          "question": "Co się dzieje po zakończeniu okresu próbnego?",
           "answer": "Decydujesz, czy zostajesz. Prosimy o kartę płatniczą na start okresu próbnego, ale przed upływem {trialDays} dni nie pobieramy nic. Możesz zrezygnować w każdej chwili przed tą datą."
         },
         {

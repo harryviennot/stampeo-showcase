@@ -335,7 +335,7 @@
           "answer": "Non. Apple Wallet et Google Wallet sont déjà installés sur tous les smartphones récents. Vos clients scannent votre QR code, et leur carte s'ajoute en un geste. C'est tout."
         },
         {
-          "question": "Que se passe-t-il après le premier mois ?",
+          "question": "Que se passe-t-il à la fin de l'essai gratuit ?",
           "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des {trialDays} jours. Vous pouvez résilier à tout moment avant cette date."
         },
         {

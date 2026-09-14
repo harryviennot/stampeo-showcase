@@ -334,7 +334,7 @@
           "answer": "No. Apple Wallet and Google Wallet are already installed on every recent smartphone. Your customers scan your QR code and their card is added in one move. That's it."
         },
         {
-          "question": "What happens after the first month?",
+          "question": "What happens when the free trial ends?",
           "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the {trialDays} days are up. You can cancel any time before then."
         },
         {
