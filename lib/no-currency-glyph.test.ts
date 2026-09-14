@@ -18,7 +18,7 @@ import { join } from "node:path";
  */
 
 const MESSAGES = join(import.meta.dir, "..", "messages");
-const PRICED_FILES = ["pricing.json", "landing.json"];
+const PRICED_FILES = ["pricing.json", "landing.json", "features.json"];
 const GLYPHS = /[€$£]|zł|&euro;|&#8364;/;
 
 /**
@@ -26,7 +26,15 @@ const GLYPHS = /[€$£]|zł|&euro;|&#8364;/;
  * ("1 EUR spent = 1 point"), which is their currency, not ours. Everything else
  * in these files is a price we charge.
  */
-const EXEMPT = /^landing\.sectorCards\./;
+const EXEMPT = new RegExp(
+  [
+    // Sector cards illustrate a merchant's own reward, in their currency.
+    "^landing\\.sectorCards\\.",
+    // features.json is mostly product copy: an SMS cost comparison, sample
+    // rewards, a demo card. Only the price tokens had to be de-glyphed.
+    "^features\\.(?!.*\\{(?:starter|growth|pro)\\w*Price\\})",
+  ].join("|"),
+);
 
 function walk(value: unknown, path: string, out: Array<[string, string]>) {
   if (typeof value === "string") {

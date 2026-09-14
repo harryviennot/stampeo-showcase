@@ -641,7 +641,7 @@
           "subtitle": "Dodaj pracowników i ustaw dostęp zgodnie ze swoim planem.",
           "pay": {
             "title": "Plan Starter",
-            "price": "{starterPrice} €/mies.",
+            "price": "{starterPrice}/mies.",
             "members": "3 osoby",
             "features": [
               "3 konta pracownicze w cenie",
@@ -652,7 +652,7 @@
           },
           "pro": {
             "title": "Plan Growth",
-            "price": "{growthPrice} €/mies.",
+            "price": "{growthPrice}/mies.",
             "members": "Bez limitu",
             "features": [
               "Nieograniczona liczba osób w zespole",
@@ -1354,7 +1354,7 @@
         "navTitle": "Oferta na start: cena zablokowana na zawsze",
         "subtitle": "Stampeo działa już codziennie w dziesiątkach firm. Kto dołączy jako pierwszy, zatrzymuje cenę startową na zawsze.",
         "badge": "Oferta na start",
-        "secondaryCta": "1 miesiąc za darmo, potem {growthFoundingPrice} €/mies. na zawsze"
+        "secondaryCta": "1 miesiąc za darmo, potem {growthFoundingPrice}/mies. na zawsze"
       },
       "problem": {
         "title": "Gramy w otwarte karty",
@@ -1367,8 +1367,8 @@
           "icon": "calendar"
         },
         {
-          "title": "{growthFoundingPrice} €/mies. na zawsze",
-          "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice} €/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
+          "title": "{growthFoundingPrice}/mies. na zawsze",
+          "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice}/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
           "icon": "tag"
         },
         {
@@ -1379,7 +1379,7 @@
       ],
       "cta": {
         "title": "Dołącz do pierwszych firm",
-        "subtitle": "1 miesiąc za darmo. {growthFoundingPrice} €/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś."
+        "subtitle": "1 miesiąc za darmo. {growthFoundingPrice}/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś."
       },
       "related": [
         "notifications-push",
@@ -1397,8 +1397,8 @@
               "icon": "calendar"
             },
             {
-              "title": "{growthFoundingPrice} €/mies. na zawsze",
-              "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice} €/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
+              "title": "{growthFoundingPrice}/mies. na zawsze",
+              "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice}/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
               "icon": "tag"
             },
             {
@@ -1457,8 +1457,8 @@
           "closing": "Stampeo jest gotowe, żeby ruszyć w twojej firmie już dziś. Dołączając teraz, blokujesz najlepszą cenę i masz wpływ na to, co zbudujemy dalej."
         },
         "price": {
-          "original": "{growthPrice} €/mies.",
-          "founding": "{growthFoundingPrice} €/mies.",
+          "original": "{growthPrice}/mies.",
+          "founding": "{growthFoundingPrice}/mies.",
           "forLife": "na zawsze"
         },
         "timeline": {
@@ -1493,15 +1493,15 @@
             },
             {
               "question": "Jak długo trwa oferta na start?",
-              "answer": "Cena startowa ({growthFoundingPrice} €/mies. na zawsze) obowiązuje przez fazę startową, potem cena dla nowych firm pójdzie w górę. Kto już jest w środku, ma swoją cenę zablokowaną na zawsze."
+              "answer": "Cena startowa ({growthFoundingPrice}/mies. na zawsze) obowiązuje przez fazę startową, potem cena dla nowych firm pójdzie w górę. Kto już jest w środku, ma swoją cenę zablokowaną na zawsze."
             },
             {
               "question": "Co się dzieje po darmowym miesiącu?",
-              "answer": "Przechodzisz na {growthFoundingPrice} €/mies. Uprzedzamy dwa razy: tydzień wcześniej, a potem 3 dni wcześniej. Jeśli nie chcesz kontynuować, rezygnujesz jednym kliknięciem, bez opłat."
+              "answer": "Przechodzisz na {growthFoundingPrice}/mies. Uprzedzamy dwa razy: tydzień wcześniej, a potem 3 dni wcześniej. Jeśli nie chcesz kontynuować, rezygnujesz jednym kliknięciem, bez opłat."
             },
             {
               "question": "Czy zachowam swoją cenę, jeśli podniesiecie ceny?",
-              "answer": "Tak. {growthFoundingPrice} €/mies. na zawsze znaczy na zawsze. Nawet jeśli plan Growth za trzy lata będzie kosztował 49,99 €, twoja cena się nie ruszy. Mamy to w umowie."
+              "answer": "Tak. {growthFoundingPrice}/mies. na zawsze znaczy na zawsze. Nawet jeśli plan Growth za trzy lata będzie kosztował 49,99 €, twoja cena się nie ruszy. Mamy to w umowie."
             },
             {
               "question": "Czy mogę zrezygnować?",
@@ -1511,7 +1511,7 @@
         },
         "finalCta": {
           "title": "Dołącz do pierwszych firm",
-          "subtitle": "1 miesiąc za darmo. {growthFoundingPrice} €/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś.",
+          "subtitle": "1 miesiąc za darmo. {growthFoundingPrice}/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś.",
           "urgency": "Cena startowa dla nowych firm pójdzie w górę. Zablokuj swoją teraz."
         }
       }

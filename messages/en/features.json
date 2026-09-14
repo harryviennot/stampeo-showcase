@@ -416,7 +416,7 @@
           "subtitle": "Add your employees and manage access based on your plan.",
           "pay": {
             "title": "Starter Plan",
-            "price": "€{starterPrice}/mo",
+            "price": "{starterPrice}/mo",
             "members": "3 members",
             "features": [
               "3 employee accounts included",
@@ -427,7 +427,7 @@
           },
           "pro": {
             "title": "Growth Plan",
-            "price": "€{growthPrice}/mo",
+            "price": "{growthPrice}/mo",
             "members": "Unlimited",
             "features": [
               "Unlimited team members",
@@ -1129,7 +1129,7 @@
         "navTitle": "Launch offer: rate locked for life",
         "subtitle": "Stampeo already runs every day in dozens of businesses. The first to join keep the launch rate, for good.",
         "badge": "Launch offer",
-        "secondaryCta": "1 month free, then €{growthFoundingPrice}/month for life"
+        "secondaryCta": "1 month free, then {growthFoundingPrice}/month for life"
       },
       "problem": {
         "title": "Let's be transparent",
@@ -1142,8 +1142,8 @@
           "icon": "calendar"
         },
         {
-          "title": "€{growthFoundingPrice}/month for life",
-          "description": "After the trial, your rate is locked at €{growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
+          "title": "{growthFoundingPrice}/month for life",
+          "description": "After the trial, your rate is locked at {growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
           "icon": "tag"
         },
         {
@@ -1154,7 +1154,7 @@
       ],
       "cta": {
         "title": "Join the first businesses",
-        "subtitle": "1 month free. €{growthFoundingPrice}/month for life. All Growth features, available today."
+        "subtitle": "1 month free. {growthFoundingPrice}/month for life. All Growth features, available today."
       },
       "related": [
         "notifications-push",
@@ -1172,8 +1172,8 @@
               "icon": "calendar"
             },
             {
-              "title": "€{growthFoundingPrice}/month for life",
-              "description": "After the trial, your rate is locked at €{growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
+              "title": "{growthFoundingPrice}/month for life",
+              "description": "After the trial, your rate is locked at {growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
               "icon": "tag"
             },
             {
@@ -1232,8 +1232,8 @@
           "closing": "Stampeo is ready to run in your business today. By joining now, you lock in the best rate and you shape what we build next."
         },
         "price": {
-          "original": "€{growthPrice}/month",
-          "founding": "€{growthFoundingPrice}/month",
+          "original": "{growthPrice}/month",
+          "founding": "{growthFoundingPrice}/month",
           "forLife": "for life"
         },
         "timeline": {
@@ -1268,15 +1268,15 @@
             },
             {
               "question": "How long does the launch offer stay open?",
-              "answer": "The launch rate (€{growthFoundingPrice}/month for life) stays open during the launch phase, then the price goes up for new businesses. Once you're in, your rate is locked for life."
+              "answer": "The launch rate ({growthFoundingPrice}/month for life) stays open during the launch phase, then the price goes up for new businesses. Once you're in, your rate is locked for life."
             },
             {
               "question": "What happens after the free month?",
-              "answer": "You move to €{growthFoundingPrice}/month. We notify you twice: a week before, then 3 days before. If you don't want to continue, cancel in one click, no fees."
+              "answer": "You move to {growthFoundingPrice}/month. We notify you twice: a week before, then 3 days before. If you don't want to continue, cancel in one click, no fees."
             },
             {
               "question": "Do I keep my rate if you raise prices?",
-              "answer": "Yes. €{growthFoundingPrice}/month for life means for life. Even if the Growth plan goes to €49.99 in three years, your rate doesn't move. It's contractual."
+              "answer": "Yes. {growthFoundingPrice}/month for life means for life. Even if the Growth plan goes to €49.99 in three years, your rate doesn't move. It's contractual."
             },
             {
               "question": "Can I cancel?",
@@ -1286,7 +1286,7 @@
         },
         "finalCta": {
           "title": "Join the first businesses",
-          "subtitle": "1 month free. €{growthFoundingPrice}/month for life. All Growth features, available today.",
+          "subtitle": "1 month free. {growthFoundingPrice}/month for life. All Growth features, available today.",
           "urgency": "The launch rate goes up for new businesses. Lock yours in now."
         }
       }

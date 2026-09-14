@@ -45,6 +45,10 @@ export async function getPlanCatalog(currency: string): Promise<Pricing> {
   try {
     const res = await fetch(`${base}/public/plans?currency=${encodeURIComponent(currency)}`, {
       next: { revalidate: REVALIDATE_SECONDS },
+      // Fail fast into the baked ladder. Without this, a backend that is slow
+      // rather than down stalls the whole server render behind undici's default
+      // timeout, for a fallback that is already sitting right here.
+      signal: AbortSignal.timeout(2500),
     });
     if (!res.ok) return fallback;
 

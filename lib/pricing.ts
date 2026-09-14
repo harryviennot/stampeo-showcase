@@ -22,6 +22,13 @@ export type Pricing = {
  *
  * It WILL go stale — that is the trade. A pricing page showing last release's
  * price beats one showing nothing, and the window is one revalidate cycle.
+ *
+ * CRITICAL: this must only ever contain currencies Stripe can actually bill.
+ * Quoting a currency checkout cannot charge is worse than quoting a stale price,
+ * because the visitor is shown one number and debited another. USD lands here in
+ * the same change that adds USD `currency_options` to the Stripe Prices (B1) —
+ * not before. Until then a request for USD falls back to euros, which is what
+ * the backend would have answered anyway.
  */
 export const FALLBACK_PRICING: Record<string, Pricing> = {
   eur: {
@@ -30,14 +37,6 @@ export const FALLBACK_PRICING: Record<string, Pricing> = {
       starter: { month: 20, year: 192 },
       growth: { month: 40, year: 384 },
       pro: { month: 60, year: 576 },
-    },
-  },
-  usd: {
-    currency: "usd",
-    tiers: {
-      starter: { month: 39, year: 372 },
-      growth: { month: 79, year: 756 },
-      pro: { month: 119, year: 1140 },
     },
   },
 };
