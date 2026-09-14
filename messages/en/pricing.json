@@ -8,7 +8,7 @@
     "foundingPartner": "FOUNDING PARTNER",
     "popular": "Most popular",
     "perMonth": "/month",
-    "billedYearlyTotal": "Billed €{price} a year, saving €{saving}",
+    "billedYearlyTotal": "Billed {price} a year, saving {saving}",
     "forLife": "/month for life",
     "freeMonths": "3 months free",
     "deadlineNotice": "Founding pricing closes {date} — last chance.",
@@ -71,7 +71,7 @@
       "basketLabel": "Average basket",
       "assumption": "Assumption: a loyalty program generates about {percent}% more visits",
       "breakdownClients": "{clients} clients/day × {percent}% = about {extra} extra clients per day",
-      "breakdownRevenue": "{extra} clients × €{basket} × 30 days = €{total}/month",
+      "breakdownRevenue": "{extra} clients × {basket} × 30 days = {total}/month",
       "extraRevenue": "Extra revenue",
       "perMonth": "/month",
       "stampeoCost": "Stampeo",
@@ -93,7 +93,7 @@
     "foundingReassurance": "Your founding rate is locked for good. Even if prices rise, or you cancel and come back later, you keep this price.",
     "popular": "Most popular",
     "perMonth": "/mo",
-    "billedYearlyTotal": "Billed €{price} a year, saving €{saving}",
+    "billedYearlyTotal": "Billed {price} a year, saving {saving}",
     "intervalMonthly": "Monthly",
     "intervalYearly": "Yearly",
     "yearlyBadge": "Save 20%",
@@ -272,7 +272,7 @@
         },
         {
           "question": "Can I pay yearly?",
-          "answer": "Yes, and it takes 20% off every plan: €192 a year for Starter, which works out at €16 a month instead of €20. You can switch from monthly to yearly at any time and your year starts that day. Switching back to monthly takes effect when your paid year ends, so you never lose time you've paid for."
+          "answer": "Yes, and it takes 20% off every plan: {starterYearlyPrice} a year for Starter, which works out at {starterYearlyMonthly} a month instead of {starterPrice}."
         },
         {
           "question": "Are there per-customer charges?",

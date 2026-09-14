@@ -17,7 +17,12 @@ import {
 } from "../../icons";
 import { RelatedFeatures } from "../RelatedFeatures";
 import { FeatureCTA } from "../FeatureCTA";
-import { interpolatePricing } from "@/lib/pricing";
+import { interpolatePricing, FALLBACK_PRICING } from "@/lib/pricing";
+
+// The founding programme closed on 2026-08-04. Its page quotes frozen
+// history — the rate that was offered and the euro list price it was
+// measured against — so it deliberately does not read the live ladder.
+const FROZEN_FOUNDING_PRICING = FALLBACK_PRICING.eur;
 import type { ComponentType } from "react";
 
 const benefitIconMap: Record<string, ComponentType<{ className?: string }>> = {
@@ -40,8 +45,8 @@ export function FounderProgramPage() {
   }>;
   const benefits = rawBenefits.map((b) => ({
     ...b,
-    title: interpolatePricing(b.title),
-    description: interpolatePricing(b.description),
+    title: interpolatePricing(b.title, FROZEN_FOUNDING_PRICING),
+    description: interpolatePricing(b.description, FROZEN_FOUNDING_PRICING),
   }));
 
   const worksNow = c.raw("transparency.worksNow.items") as string[];
@@ -54,7 +59,7 @@ export function FounderProgramPage() {
   }>;
   const faqItems = rawFaqItems.map((faq) => ({
     ...faq,
-    answer: interpolatePricing(faq.answer),
+    answer: interpolatePricing(faq.answer, FROZEN_FOUNDING_PRICING),
   }));
 
   const related = t.raw("programme-fondateur.related") as string[];
@@ -100,7 +105,7 @@ export function FounderProgramPage() {
                 </span>
               </Link>
               <p className="text-sm font-medium text-[var(--muted-foreground)]">
-                {interpolatePricing(t.raw("programme-fondateur.hero.secondaryCta"))}
+                {interpolatePricing(t.raw("programme-fondateur.hero.secondaryCta"), FROZEN_FOUNDING_PRICING)}
                 {" · "}
                 <Link
                   href="/#pricing"
@@ -234,7 +239,7 @@ export function FounderProgramPage() {
       </section>
 
       {/* ROI Calculator */}
-      <ROICalculator />
+      <ROICalculator pricing={FROZEN_FOUNDING_PRICING} />
 
       {/* Price Reveal */}
       <PriceReveal />
@@ -280,7 +285,7 @@ export function FounderProgramPage() {
       {/* Final CTA */}
       <FeatureCTA
         title={c("finalCta.title")}
-        subtitle={interpolatePricing(c.raw("finalCta.subtitle"))}
+        subtitle={interpolatePricing(c.raw("finalCta.subtitle"), FROZEN_FOUNDING_PRICING)}
         urgencyText={c("finalCta.urgency")}
       />
 

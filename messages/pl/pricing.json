@@ -8,7 +8,7 @@
     "foundingPartner": "ZAŁOŻYCIEL",
     "popular": "Najczęściej wybierany",
     "perMonth": "/mies.",
-    "billedYearlyTotal": "Płatność {price} € rocznie, oszczędzasz {saving} €",
+    "billedYearlyTotal": "Płatność {price} rocznie, oszczędzasz {saving}",
     "forLife": "/mies. na zawsze",
     "freeMonths": "3 miesiące za darmo",
     "deadlineNotice": "Cena założycielska tylko do {date}, ostatnia szansa.",
@@ -71,7 +71,7 @@
       "basketLabel": "Średni rachunek",
       "assumption": "Założenie: program lojalnościowy daje około {percent}% wizyt więcej",
       "breakdownClients": "{clients} klientów dziennie × {percent}% = około {extra} klientów więcej dziennie",
-      "breakdownRevenue": "{extra} klientów × {basket} € × 30 dni = {total} €/mies.",
+      "breakdownRevenue": "{extra} klientów × {basket} × 30 dni = {total}/mies.",
       "extraRevenue": "Dodatkowy przychód",
       "perMonth": "/mies.",
       "stampeoCost": "Stampeo",
@@ -93,7 +93,7 @@
     "foundingReassurance": "Twoja cena założycielska zostaje z tobą na zawsze. Nawet jeśli ceny wzrosną, albo zrezygnujesz i wrócisz później, płacisz dokładnie tyle samo.",
     "popular": "Najczęściej wybierany",
     "perMonth": "/mies.",
-    "billedYearlyTotal": "Płatność {price} € rocznie, oszczędzasz {saving} €",
+    "billedYearlyTotal": "Płatność {price} rocznie, oszczędzasz {saving}",
     "intervalMonthly": "Miesięcznie",
     "intervalYearly": "Rocznie",
     "yearlyBadge": "20% taniej",
@@ -272,7 +272,7 @@
         },
         {
           "question": "Czy mogę płacić raz w roku?",
-          "answer": "Tak, i to zdejmuje 20% z każdego planu: 192 € rocznie za plan Starter, czyli 16 € miesięcznie zamiast 20 €. Z płatności miesięcznej na roczną przechodzisz kiedy chcesz, a rok liczy się od tego dnia. Powrót na miesięczną wchodzi w życie po zakończeniu opłaconego roku, więc nie tracisz ani dnia, za który już zapłacono."
+          "answer": "Tak, i to zdejmuje 20% z każdego planu: {starterYearlyPrice} rocznie za plan Starter, czyli {starterYearlyMonthly} miesięcznie zamiast {starterPrice}."
         },
         {
           "question": "Czy są opłaty za każdego klienta?",

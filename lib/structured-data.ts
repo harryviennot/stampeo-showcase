@@ -1,5 +1,5 @@
 import { routing } from "@/i18n/routing";
-import { PRICING } from "./pricing";
+import { type Pricing } from "./pricing";
 
 const BASE_URL = "https://stampeo.app";
 
@@ -45,49 +45,38 @@ export function webSiteJsonLd() {
   };
 }
 
-export function softwareApplicationJsonLd() {
+const OFFER_NAMES = { starter: "Starter", growth: "Growth", pro: "Pro" } as const;
+
+const OFFER_DESCRIPTIONS = {
+  starter:
+    "1 card template, unlimited customers & scans, 2 team members, push notifications.",
+  growth:
+    "Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
+  pro: "Everything in Growth, plus multi-location analytics and priority support.",
+} as const;
+
+export function softwareApplicationJsonLd(pricing: Pricing) {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "Stampeo",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
-    offers: [
-      {
+    // Machine-read by Google, and rendered on every market including /us — so
+    // the currency has to follow the ladder, not a hardcoded "EUR". Pro is
+    // listed too; it was missing entirely before.
+    offers: (["starter", "growth", "pro"] as const).flatMap((tier) =>
+      (["month", "year"] as const).map((interval) => ({
         "@type": "Offer",
-        name: "Starter",
-        price: String(PRICING.starter.price),
-        priceCurrency: "EUR",
+        name: interval === "year" ? `${OFFER_NAMES[tier]} (annual)` : OFFER_NAMES[tier],
+        price: String(pricing.tiers[tier][interval]),
+        priceCurrency: pricing.currency.toUpperCase(),
         description:
-          "1 card template, unlimited customers & scans, 2 team members, push notifications.",
-      },
-      {
-        "@type": "Offer",
-        name: "Growth",
-        price: String(PRICING.growth.price),
-        priceCurrency: "EUR",
-        description:
-          "Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
-      },
-      // Annual plans, priced for a full year (2 months cheaper than paying
-      // monthly). Listed separately so search results can surface either cadence.
-      {
-        "@type": "Offer",
-        name: "Starter (annual)",
-        price: String(PRICING.starter.yearlyPrice),
-        priceCurrency: "EUR",
-        description:
-          "Starter billed yearly: 1 card template, unlimited customers & scans, 2 team members, push notifications.",
-      },
-      {
-        "@type": "Offer",
-        name: "Growth (annual)",
-        price: String(PRICING.growth.yearlyPrice),
-        priceCurrency: "EUR",
-        description:
-          "Growth billed yearly: multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
-      },
-    ],
+          interval === "year"
+            ? `${OFFER_NAMES[tier]} billed yearly: ${OFFER_DESCRIPTIONS[tier]}`
+            : OFFER_DESCRIPTIONS[tier],
+      })),
+    ),
     description:
       "Digital loyalty card platform for local businesses. Create Apple Wallet and Google Wallet passes in minutes.",
   };

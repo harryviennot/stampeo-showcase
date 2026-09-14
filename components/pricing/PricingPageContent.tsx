@@ -6,11 +6,13 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { Check, X, CaretDown } from "@phosphor-icons/react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import {
-  formatPrice,
+  formatMoney,
+  interpolatePricing,
   isFoundingProgramOpen,
   tierPrice,
   yearlyCardView,
   type BillingInterval,
+  type Pricing,
 } from "@/lib/pricing";
 import { PricingTierCard } from "@/components/pricing/PricingTierCard";
 import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
@@ -22,18 +24,21 @@ function PricingCard({
   highlighted,
   interval,
   foundingOpen,
+  pricing,
 }: {
   tier: "starter" | "growth" | "pro";
   highlighted?: boolean;
   interval: BillingInterval;
   foundingOpen: boolean;
+  pricing: Pricing;
 }) {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
-  const view = yearlyCardView(tier, interval, foundingOpen);
+  const view = yearlyCardView(pricing, tier, interval, foundingOpen);
 
   return (
     <PricingTierCard
+      currency={pricing.currency}
       name={t(`${tier}.name`)}
       tagline={t(`${tier}.tagline`)}
       features={t.raw(`${tier}.features`) as string[]}
@@ -46,8 +51,8 @@ function PricingCard({
       subLabel={
         view.isYearly
           ? t("billedYearlyTotal", {
-              price: formatPrice(view.yearlyTotal, locale),
-              saving: formatPrice(view.yearlySaving, locale),
+              price: formatMoney(view.yearlyTotal, pricing.currency, locale),
+              saving: formatMoney(view.yearlySaving, pricing.currency, locale),
             })
           : t("billedMonthly")
       }
@@ -88,8 +93,9 @@ type Tier = (typeof TIERS)[number];
  * are showing: it is a feature reference, and mixing cadences mid-page makes
  * the columns unreadable. The label below says so.
  */
-function FeatureComparisonTable() {
+function FeatureComparisonTable({ pricing }: { pricing: Pricing }) {
   const t = useTranslations("pricingPage");
+  const locale = useLocale();
   const [mobileTier, setMobileTier] = useState<Tier>("growth");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // Every category starts closed. The full table is 20 rows and was more than
@@ -131,7 +137,7 @@ function FeatureComparisonTable() {
                 <th className="p-6 text-center w-[22%]">
                   <div className="text-sm font-bold">{t("starter.name")}</div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
-                    &euro;{tierPrice("starter", "month")}{t("perMonth")}
+                    {formatMoney(tierPrice(pricing, "starter", "month"), pricing.currency, locale)}{t("perMonth")}
                   </div>
                 </th>
                 <th className="p-6 text-center w-[22%] bg-[var(--accent)]/5">
@@ -139,13 +145,13 @@ function FeatureComparisonTable() {
                     {t("growth.name")}
                   </div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
-                    &euro;{tierPrice("growth", "month")}{t("perMonth")}
+                    {formatMoney(tierPrice(pricing, "growth", "month"), pricing.currency, locale)}{t("perMonth")}
                   </div>
                 </th>
                 <th className="p-6 text-center w-[22%]">
                   <div className="text-sm font-bold">{t("pro.name")}</div>
                   <div className="text-[var(--muted-foreground)] text-xs mt-1">
-                    &euro;{tierPrice("pro", "month")}{t("perMonth")}
+                    {formatMoney(tierPrice(pricing, "pro", "month"), pricing.currency, locale)}{t("perMonth")}
                   </div>
                 </th>
               </tr>
@@ -228,7 +234,7 @@ function FeatureComparisonTable() {
               className="w-full flex items-center justify-between px-5 py-3.5 bg-white rounded-xl border border-[var(--border)] text-sm font-bold shadow-sm"
             >
               <span className={mobileTier === "growth" ? "text-[var(--accent)]" : ""}>
-                {t(`${mobileTier}.name`)} &middot; &euro;{tierPrice(mobileTier, "month")}{t("perMonth")}
+                {t(`${mobileTier}.name`)} &middot; {formatMoney(tierPrice(pricing, mobileTier, "month"), pricing.currency, locale)}{t("perMonth")}
               </span>
               <CaretDown
                 className={`w-4 h-4 text-[var(--muted-foreground)] transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
@@ -253,7 +259,7 @@ function FeatureComparisonTable() {
                   >
                     <span>{t(`${tier}.name`)}</span>
                     <span className="text-xs text-[var(--muted-foreground)]">
-                      &euro;{tierPrice(tier, "month")}{t("perMonth")}
+                      {formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)}{t("perMonth")}
                     </span>
                   </button>
                 ))}
@@ -307,8 +313,15 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
+function PricingFAQ({
+  foundingOpen,
+  pricing,
+}: {
+  foundingOpen: boolean;
+  pricing: Pricing;
+}) {
   const t = useTranslations("pricingPage");
+  const locale = useLocale();
   const allFaqs = t.raw("faq.items") as Array<{
     question: string;
     answer: string;
@@ -341,7 +354,7 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
             </summary>
             <div className="pt-2 pb-4">
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                {faq.answer}
+                {interpolatePricing(faq.answer, pricing, locale)}
               </p>
             </div>
           </details>
@@ -351,7 +364,7 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
   );
 }
 
-export function PricingPageContent() {
+export function PricingPageContent({ pricing }: Readonly<{ pricing: Pricing }>) {
   const t = useTranslations("pricingPage");
   const foundingOpen = isFoundingProgramOpen();
   // Yearly is the default: it is the price we want anchored, and the monthly
@@ -384,17 +397,20 @@ export function PricingPageContent() {
           tier="starter"
           interval={interval}
           foundingOpen={foundingOpen}
+        pricing={pricing}
         />
         <PricingCard
           tier="growth"
           interval={interval}
           foundingOpen={foundingOpen}
           highlighted
+        pricing={pricing}
         />
         <PricingCard
           tier="pro"
           interval={interval}
           foundingOpen={foundingOpen}
+        pricing={pricing}
         />
       </ScrollReveal>
 
@@ -407,14 +423,14 @@ export function PricingPageContent() {
       )}
 
       {/* Feature Comparison Table */}
-      <FeatureComparisonTable />
+      <FeatureComparisonTable pricing={pricing} />
 
       {/* "Is it worth it?" simulator — rehomed here when the founding page
           retired. Measured against the public Growth price. */}
-      <ROICalculator />
+      <ROICalculator pricing={pricing} />
 
       {/* FAQ */}
-      <PricingFAQ foundingOpen={foundingOpen} />
+      <PricingFAQ foundingOpen={foundingOpen} pricing={pricing} />
 
       {/* Bottom CTA */}
       <ScrollReveal

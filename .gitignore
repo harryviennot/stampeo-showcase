@@ -46,3 +46,6 @@ next-env.d.ts
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync
+
+# Agent scratch: worktrees and local skill state are not project files.
+.claude/

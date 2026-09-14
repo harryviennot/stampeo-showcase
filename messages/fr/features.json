@@ -416,7 +416,7 @@
           "subtitle": "Ajoutez vos employés et gérez les accès selon votre plan.",
           "pay": {
             "title": "Plan Starter",
-            "price": "{starterPrice} €/mois",
+            "price": "{starterPrice}/mois",
             "members": "3 membres",
             "features": [
               "3 comptes employé inclus",
@@ -427,7 +427,7 @@
           },
           "pro": {
             "title": "Plan Growth",
-            "price": "{growthPrice} €/mois",
+            "price": "{growthPrice}/mois",
             "members": "Illimité",
             "features": [
               "Membres d'équipe illimités",
@@ -1129,7 +1129,7 @@
         "navTitle": "Offre de lancement : tarif bloqué à vie",
         "subtitle": "Stampeo tourne déjà tous les jours chez des dizaines de commerces. Les premiers à nous rejoindre gardent le tarif de lancement, pour toujours.",
         "badge": "Offre de lancement",
-        "secondaryCta": "1 mois gratuit, puis {growthFoundingPrice} €/mois à vie"
+        "secondaryCta": "1 mois gratuit, puis {growthFoundingPrice}/mois à vie"
       },
       "problem": {
         "title": "On joue cartes sur table",
@@ -1142,8 +1142,8 @@
           "icon": "calendar"
         },
         {
-          "title": "{growthFoundingPrice} €/mois à vie",
-          "description": "Après l'essai, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours, même quand le prix augmentera pour les nouveaux commerces.",
+          "title": "{growthFoundingPrice}/mois à vie",
+          "description": "Après l'essai, votre tarif est bloqué à {growthFoundingPrice}/mois. Pour toujours, même quand le prix augmentera pour les nouveaux commerces.",
           "icon": "tag"
         },
         {
@@ -1154,7 +1154,7 @@
       ],
       "cta": {
         "title": "Rejoignez les premiers commerces",
-        "subtitle": "1 mois gratuit. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth, disponibles aujourd'hui."
+        "subtitle": "1 mois gratuit. {growthFoundingPrice}/mois à vie. Toutes les fonctionnalités Growth, disponibles aujourd'hui."
       },
       "related": [
         "notifications-push",
@@ -1172,8 +1172,8 @@
               "icon": "calendar"
             },
             {
-              "title": "{growthFoundingPrice} €/mois à vie",
-              "description": "Après l'essai, votre tarif est bloqué à {growthFoundingPrice} €/mois. Pour toujours, même quand le prix augmentera pour les nouveaux commerces.",
+              "title": "{growthFoundingPrice}/mois à vie",
+              "description": "Après l'essai, votre tarif est bloqué à {growthFoundingPrice}/mois. Pour toujours, même quand le prix augmentera pour les nouveaux commerces.",
               "icon": "tag"
             },
             {
@@ -1232,8 +1232,8 @@
           "closing": "Stampeo est prêt à tourner dans votre commerce dès aujourd'hui. En rejoignant maintenant, vous bloquez le meilleur tarif et vous pesez sur ce qu'on construit ensuite."
         },
         "price": {
-          "original": "{growthPrice} €/mois",
-          "founding": "{growthFoundingPrice} €/mois",
+          "original": "{growthPrice}/mois",
+          "founding": "{growthFoundingPrice}/mois",
           "forLife": "à vie"
         },
         "timeline": {
@@ -1268,15 +1268,15 @@
             },
             {
               "question": "Combien de temps l'offre de lancement reste-t-elle ouverte ?",
-              "answer": "Le tarif de lancement ({growthFoundingPrice} €/mois à vie) reste ouvert pendant la phase de lancement, puis le prix augmentera pour les nouveaux commerces. Une fois entré, votre tarif est bloqué à vie."
+              "answer": "Le tarif de lancement ({growthFoundingPrice}/mois à vie) reste ouvert pendant la phase de lancement, puis le prix augmentera pour les nouveaux commerces. Une fois entré, votre tarif est bloqué à vie."
             },
             {
               "question": "Que se passe-t-il après le mois gratuit ?",
-              "answer": "Vous passez à {growthFoundingPrice} €/mois. On vous prévient deux fois : une semaine avant, puis 3 jours avant. Si vous ne voulez pas continuer, vous annulez en un clic, sans frais."
+              "answer": "Vous passez à {growthFoundingPrice}/mois. On vous prévient deux fois : une semaine avant, puis 3 jours avant. Si vous ne voulez pas continuer, vous annulez en un clic, sans frais."
             },
             {
               "question": "Est-ce que je garde mon tarif si vous augmentez les prix ?",
-              "answer": "Oui. {growthFoundingPrice} €/mois à vie veut dire à vie. Même si le plan Growth passe à 49,99 € dans trois ans, votre tarif ne bouge pas. C'est contractuel."
+              "answer": "Oui. {growthFoundingPrice}/mois à vie veut dire à vie. Même si le plan Growth passe à 49,99 € dans trois ans, votre tarif ne bouge pas. C'est contractuel."
             },
             {
               "question": "Puis-je annuler ?",
@@ -1286,7 +1286,7 @@
         },
         "finalCta": {
           "title": "Rejoignez les premiers commerces",
-          "subtitle": "1 mois gratuit. {growthFoundingPrice} €/mois à vie. Toutes les fonctionnalités Growth, disponibles aujourd'hui.",
+          "subtitle": "1 mois gratuit. {growthFoundingPrice}/mois à vie. Toutes les fonctionnalités Growth, disponibles aujourd'hui.",
           "urgency": "Le tarif de lancement augmentera pour les nouveaux commerces. Bloquez le vôtre maintenant."
         }
       }

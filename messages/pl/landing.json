@@ -323,7 +323,7 @@
       "items": [
         {
           "question": "Ile to kosztuje?",
-          "answer": "Plan Starter kosztuje {starterPrice} €/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od 1 miesiąca za darmo. Prosimy o kartę płatniczą, żeby uruchomić okres próbny, ale nic nie pobieramy przed końcem tego miesiąca."
+          "answer": "Plan Starter kosztuje {starterPrice}/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od 1 miesiąca za darmo. Prosimy o kartę, żeby rozpocząć okres próbny, ale nic nie pobieramy przed końcem miesiąca."
         },
         {
           "question": "Czy muszę zmieniać kasę?",
@@ -356,7 +356,7 @@
     },
     "finalCta": {
       "title": "Uruchom swój program lojalnościowy <accent>w tym tygodniu.</accent>",
-      "subtitle": "3 minuty na stworzenie karty. 1 miesiąc na testy. 0 € na start.",
+      "subtitle": "3 minuty na stworzenie karty. 1 miesiąc na testy. {zero} na start.",
       "primaryCta": "Stwórz moją kartę",
       "secondaryCta": "Umów demo",
       "reassurance": "1 miesiąc za darmo · Bez zobowiązań"
