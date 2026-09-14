@@ -18,7 +18,7 @@
       "hoursMinutes": "Precio fundador: termina en {hours}h {minutes}m"
     },
     "cta": "Empezar",
-    "ctaSubtext": "Prueba gratuita de 30 días · Sin compromiso",
+    "ctaSubtext": "Prueba gratuita de {trialDays} días · Sin compromiso",
     "starter": {
       "name": "Starter",
       "tagline": "Para autónomos y comercios de un solo local",
@@ -101,7 +101,7 @@
     "comparisonMonthlyNote": "Precios mostrados al mes. La facturación anual descuenta un 20% en todos los planes.",
     "forLife": "/mes de por vida",
     "cta": "Empezar",
-    "ctaSubtext": "Prueba gratuita de 30 días · Sin compromiso",
+    "ctaSubtext": "Prueba gratuita de {trialDays} días · Sin compromiso",
     "starter": {
       "name": "Starter",
       "tagline": "Para autónomos y comercios de un solo local",
@@ -264,7 +264,7 @@
       "items": [
         {
           "question": "¿Hay una prueba gratuita?",
-          "answer": "¡Sí! Todos los planes incluyen una prueba gratis de 30 días. Te pedimos una tarjeta bancaria para empezar la prueba, pero no se hace ningún cargo hasta que terminan los 30 días. Cancela cuando quieras."
+          "answer": "¡Sí! Todos los planes incluyen una prueba gratis de {trialDays} días. Te pedimos una tarjeta bancaria para empezar la prueba, pero no se hace ningún cargo hasta que terminan. Cancela cuando quieras."
         },
         {
           "question": "¿Puedo cambiar de plan más adelante?",

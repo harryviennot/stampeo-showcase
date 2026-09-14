@@ -25,7 +25,10 @@ const TIERS = [
  * the card itself was already a client component, so the boundary only moves
  * up by one level.
  */
-export function PricingSection({ pricing }: Readonly<{ pricing: Pricing }>) {
+export function PricingSection({
+  pricing,
+  trialDays,
+}: Readonly<{ pricing: Pricing; trialDays: number }>) {
   const t = useTranslations("pricing");
   const locale = useLocale();
   const foundingOpen = isFoundingProgramOpen();
@@ -83,7 +86,7 @@ export function PricingSection({ pricing }: Readonly<{ pricing: Pricing }>) {
                 }
                 cta={t("cta")}
                 ctaHref="/onboarding"
-                ctaSubtext={t("ctaSubtext")}
+                ctaSubtext={t("ctaSubtext", { trialDays })}
                 highlighted={highlighted}
                 popularLabel={highlighted ? t("popular") : undefined}
                 annotationLabel={highlighted ? t("annotation") : undefined}

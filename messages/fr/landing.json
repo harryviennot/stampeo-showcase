@@ -277,7 +277,7 @@
         },
         {
           "title": "Sans engagement",
-          "description": "Un mois gratuit, sans engagement. Vous partez quand vous voulez. Vos données restent à vous, exportables en un clic."
+          "description": "{trialDays} jours gratuits, sans engagement. Vous partez quand vous voulez. Vos données restent à vous, exportables en un clic."
         }
       ]
     },
@@ -324,7 +324,7 @@
       "items": [
         {
           "question": "Combien ça coûte ?",
-          "answer": "Le plan Starter est à {starterPrice}/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par 1 mois gratuit. Nous demandons votre carte pour démarrer l'essai, sans prélèvement avant la fin du mois."
+          "answer": "Le plan Starter est à {starterPrice}/mois. Pas de frais de mise en service, pas d'engagement. Vous commencez par {trialDays} jours gratuits. Nous demandons votre carte pour démarrer l'essai, sans prélèvement avant la fin de cette période."
         },
         {
           "question": "Dois-je changer ma caisse ?",
@@ -336,7 +336,7 @@
         },
         {
           "question": "Que se passe-t-il après le premier mois ?",
-          "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des 30 jours. Vous pouvez résilier à tout moment avant cette date."
+          "answer": "Vous choisissez de continuer ou non. Votre carte bancaire est demandée pour démarrer l'essai, mais aucun débit n'a lieu avant la fin des {trialDays} jours. Vous pouvez résilier à tout moment avant cette date."
         },
         {
           "question": "Mes données sont-elles en sécurité ?",
@@ -357,10 +357,10 @@
     },
     "finalCta": {
       "title": "Lancez votre fidélité <accent>cette semaine.</accent>",
-      "subtitle": "3 minutes pour créer votre carte. 1 mois pour la tester. {zero} pour commencer.",
+      "subtitle": "3 minutes pour créer votre carte. {trialDays} jours pour la tester. {zero} pour commencer.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
-      "reassurance": "1 mois gratuit · Sans engagement · Une question ? 06 49 37 04 70"
+      "reassurance": "{trialDays} jours gratuits · Sans engagement · Une question ? 06 49 37 04 70"
     },
     "changelog": {
       "whatsNew": "Voir les nouveautés de Stampeo"

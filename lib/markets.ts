@@ -28,6 +28,16 @@ export interface MarketConfig {
   europeTrust: boolean;
   /** Short label for the dev switcher. */
   label: string;
+  /**
+   * Free-trial length in days for this market, mirroring
+   * `backend/app/core/pricing_region.TRIAL_DAYS_BY_COUNTRY`.
+   *
+   * It lives here because it is a PROMISE made in copy, and QA found /us
+   * offering "30-day free trial" one click before Stripe granted 14. A number
+   * written into eight strings across four locales cannot track a backend
+   * constant; a number read from one place can.
+   */
+  trialDays: number;
 }
 
 export const MARKETS: Record<Market, MarketConfig> = {
@@ -38,6 +48,7 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "€", code: "EUR" },
     europeTrust: true,
     label: "int",
+    trialDays: 30,
   },
   uk: {
     hreflang: "en-GB",
@@ -46,6 +57,7 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "£", code: "GBP" },
     europeTrust: true,
     label: "uk",
+    trialDays: 30,
   },
   us: {
     hreflang: "en-US",
@@ -54,6 +66,7 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "$", code: "USD" },
     europeTrust: false,
     label: "us",
+    trialDays: 14,
   },
 };
 

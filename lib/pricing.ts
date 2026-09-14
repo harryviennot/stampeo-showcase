@@ -208,8 +208,10 @@ export function formatPrice(price: number, locale?: string): string {
  * have to hardcode a currency glyph — which is what stopped them from ever being
  * repriced into another currency.
  */
+import { MARKETS } from "./markets";
+
 export function interpolatePricing(
-  text: string, pricing: Pricing, locale?: string,
+  text: string, pricing: Pricing, locale?: string, trialDays?: number,
 ): string {
   const money = (amount: number) => formatMoney(amount, pricing.currency, locale);
   return text
@@ -230,5 +232,9 @@ export function interpolatePricing(
     // "0 to start" is a price claim and has to follow the market's currency.
     .replaceAll("{zero}", money(0))
     .replaceAll("{yearlyDiscount}", String(FOUNDING_PRICING.yearlyDiscountPercent))
-    .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths));
+    .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths))
+    // The trial length is a PROMISE, and it differs by market: the US gets 14
+    // days where everywhere else gets 30. Hardcoding it in copy is how /us came
+    // to offer 30 days one click before Stripe granted 14.
+    .replaceAll("{trialDays}", String(trialDays ?? MARKETS.int.trialDays));
 }

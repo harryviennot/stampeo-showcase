@@ -4,9 +4,10 @@ import { CTAButton } from "../ui/CTAButton";
 import { interpolatePricing, type Pricing } from "@/lib/pricing";
 
 export async function VariantFinalCTA({
+  trialDays,
   pricing,
   locale,
-}: Readonly<{ pricing: Pricing; locale: string }>) {
+}: Readonly<{ pricing: Pricing; locale: string; trialDays: number }>) {
   const t = await getTranslations("variant.finalCta");
 
   return (
@@ -20,7 +21,7 @@ export async function VariantFinalCTA({
 
         <p className="text-lead text-[var(--muted-foreground)] max-w-2xl">
           {/* t.raw: the pricing tokens are ours, not ICU's. */}
-          {interpolatePricing(t.raw("subtitle"), pricing, locale)}
+          {interpolatePricing(t.raw("subtitle"), pricing, locale, trialDays)}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
@@ -36,7 +37,7 @@ export async function VariantFinalCTA({
         </div>
 
         <p className="text-sm text-[var(--muted-foreground)] font-medium">
-          {t("reassurance")}
+          {t("reassurance", { trialDays })}
         </p>
       </ScrollReveal>
     </section>
