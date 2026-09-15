@@ -1,6 +1,6 @@
 # Conditions Générales d'Utilisation : Stampeo
 
-**Dernière mise à jour : 5 août 2026**
+**Dernière mise à jour : 14 septembre 2026**
 
 ## 1. Objet
 
@@ -51,9 +51,9 @@ Le service comprend la conception de la première carte de fidélité par nos so
 
 ### 5.1 Essai gratuit
 
-Chaque nouvel Utilisateur Business bénéficie d'un **essai gratuit de 30 jours**, sans engagement. L'essai donne accès à l'ensemble des fonctionnalités du plan souscrit.
+Tout nouveau compte peut bénéficier d'un **essai gratuit**, sans engagement. Sa durée est indiquée à l'inscription, dans le paiement Stripe et dans le tableau de bord, et peut varier selon le marché ou l'offre. L'essai donne accès à l'ensemble des fonctionnalités du plan souscrit.
 
-Une carte bancaire est demandée à l'inscription pour démarrer l'essai. Aucun montant n'est débité avant la fin de l'essai : au terme des 30 jours, l'Abonnement démarre automatiquement au tarif du plan et de la périodicité choisis, sauf résiliation depuis le tableau de bord avant cette date.
+Une carte bancaire est demandée à l'inscription pour démarrer l'essai. Aucun montant n'est débité avant la fin de l'essai : à son terme, l'Abonnement démarre automatiquement au tarif du plan et de la périodicité choisis, sauf résiliation depuis le tableau de bord avant cette date.
 
 Lorsqu'un compte ne dispose d'aucun moyen de paiement enregistré, l'Utilisateur Business dispose d'une **période de tolérance de 3 jours** après l'expiration de l'essai, pendant laquelle le tableau de bord reste pleinement fonctionnel, afin de souscrire un Abonnement sans interruption du service. Passé ce délai sans souscription, l'accès bascule en **mode lecture seule** : les opérations d'écriture (création de clients, ajout de tampons, modification du style de carte) sont bloquées, mais les données restent accessibles et conservées. Les Pass déjà distribués restent installés dans Apple Wallet ou Google Wallet mais ne sont plus mis à jour.
 
@@ -63,7 +63,7 @@ Une souscription ultérieure restaure instantanément l'accès complet.
 
 Stampeo propose trois plans d'abonnement, chacun disponible avec une **facturation mensuelle ou annuelle**. La facturation annuelle est prélevée en une fois pour une période de douze mois, à un tarif effectif inférieur à celui de douze mensualités du même plan.
 
-Les prix publics en vigueur pour les deux périodicités sont affichés sur la page de tarification et dans le paiement Stripe au moment de la souscription, qui font foi ; le tableau ci-dessous résume les plans en vigueur à la date des présentes CGU.
+Le montant de l'Abonnement, la devise de facturation et, le cas échéant, la durée de l'essai gratuit sont ceux affichés sur la page de tarification et dans le paiement Stripe au moment de la souscription, et font partie intégrante du contrat. Ces éléments affichés font foi ; le tableau ci-dessous résume les plans en vigueur à la date des présentes CGU et n'en décrit que les fonctionnalités.
 
 | Plan | Caractéristiques principales |
 |------|------------------------------|
@@ -119,7 +119,7 @@ Comme indiqué au §5.3, les Partenaires Fondateurs sont exemptés des augmentat
 
 Outre les notifications précitées, Stampeo envoie les emails opérationnels suivants, qui font partie intégrante du service et ne peuvent être désactivés tant que le compte est actif :
 
-- Rappels d'expiration d'essai (quatorze, sept et deux jours avant la fin de l'essai)
+- Rappels d'expiration d'essai, envoyés selon un calendrier proportionné à la durée de l'essai
 - Confirmation et annulation d'abonnement
 - Confirmation de changement de plan, y compris la confirmation d'un changement programmé à une date ultérieure
 - Le rappel de renouvellement annuel décrit au §5.4, envoyé environ 30 jours avant chaque échéance annuelle
@@ -310,7 +310,7 @@ Conformément à l'article L221-28 du Code de la consommation, le droit de rétr
 
 En souscrivant un Abonnement et en commençant à utiliser la Plateforme, l'Utilisateur Business reconnaît et accepte la perte de son droit de rétractation.
 
-Toutefois, l'essai gratuit de 30 jours permet de tester le service sans frais ni engagement : la carte bancaire demandée à l'inscription n'est pas débitée avant la fin de l'essai, et l'Abonnement peut être résilié à tout moment avant cette date.
+Toutefois, l'essai gratuit permet de tester le service sans frais ni engagement : la carte bancaire demandée à l'inscription n'est pas débitée avant la fin de l'essai, et l'Abonnement peut être résilié à tout moment avant cette date.
 
 ## 13. Droit applicable et litiges
 

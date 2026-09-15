@@ -276,7 +276,7 @@
         },
         {
           "title": "Bez zobowiązań",
-          "description": "Miesiąc za darmo, bez haczyków. Odchodzisz, kiedy chcesz. Dane zostają twoje, eksportujesz je jednym kliknięciem."
+          "description": "{trialDays} dni za darmo, bez haczyków. Odchodzisz, kiedy chcesz. Dane zostają twoje, eksportujesz je jednym kliknięciem."
         }
       ]
     },
@@ -323,7 +323,7 @@
       "items": [
         {
           "question": "Ile to kosztuje?",
-          "answer": "Plan Starter kosztuje {starterPrice}/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od 1 miesiąca za darmo. Prosimy o kartę, żeby rozpocząć okres próbny, ale nic nie pobieramy przed końcem miesiąca."
+          "answer": "Plan Starter kosztuje {starterPrice}/miesiąc. Bez opłaty wstępnej, bez zobowiązań. Zaczynasz od {trialDays} dni za darmo. Prosimy o kartę, żeby rozpocząć okres próbny, ale nic nie pobieramy przed końcem miesiąca."
         },
         {
           "question": "Czy muszę zmieniać kasę?",
@@ -334,8 +334,8 @@
           "answer": "Nie. Apple Wallet i Google Wallet są już zainstalowane w każdym nowszym smartfonie. Klient skanuje twój kod QR i karta dodaje się jednym ruchem. To wszystko."
         },
         {
-          "question": "Co się dzieje po pierwszym miesiącu?",
-          "answer": "Decydujesz, czy zostajesz. Prosimy o kartę płatniczą na start okresu próbnego, ale przed upływem 30 dni nie pobieramy nic. Możesz zrezygnować w każdej chwili przed tą datą."
+          "question": "Co się dzieje po zakończeniu okresu próbnego?",
+          "answer": "Decydujesz, czy zostajesz. Prosimy o kartę płatniczą na start okresu próbnego, ale przed upływem {trialDays} dni nie pobieramy nic. Możesz zrezygnować w każdej chwili przed tą datą."
         },
         {
           "question": "Czy moje dane są bezpieczne?",
@@ -356,10 +356,10 @@
     },
     "finalCta": {
       "title": "Uruchom swój program lojalnościowy <accent>w tym tygodniu.</accent>",
-      "subtitle": "3 minuty na stworzenie karty. 1 miesiąc na testy. {zero} na start.",
+      "subtitle": "3 minuty na stworzenie karty. {trialDays} dni na testy. {zero} na start.",
       "primaryCta": "Stwórz moją kartę",
       "secondaryCta": "Umów demo",
-      "reassurance": "1 miesiąc za darmo · Bez zobowiązań"
+      "reassurance": "{trialDays} dni za darmo · Bez zobowiązań"
     },
     "changelog": {
       "whatsNew": "Zobacz nowości w Stampeo"

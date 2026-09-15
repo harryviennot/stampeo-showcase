@@ -18,7 +18,7 @@
       "hoursMinutes": "Cena założycielska: koniec za {hours} godz. {minutes} min"
     },
     "cta": "Zaczynamy",
-    "ctaSubtext": "30 dni za darmo · Rezygnujesz kiedy chcesz",
+    "ctaSubtext": "{trialDays} dni za darmo · Rezygnujesz kiedy chcesz",
     "starter": {
       "name": "Starter",
       "tagline": "Dla jednoosobowych firm i pojedynczych lokali",
@@ -101,7 +101,7 @@
     "comparisonMonthlyNote": "Ceny podane za miesiąc. Płatność roczna zdejmuje 20% z każdego planu.",
     "forLife": "/mies. na zawsze",
     "cta": "Zaczynamy",
-    "ctaSubtext": "30 dni za darmo · Rezygnujesz kiedy chcesz",
+    "ctaSubtext": "{trialDays} dni za darmo · Rezygnujesz kiedy chcesz",
     "starter": {
       "name": "Starter",
       "tagline": "Dla jednoosobowych firm i pojedynczych lokali",
@@ -264,7 +264,7 @@
       "items": [
         {
           "question": "Czy jest darmowy okres próbny?",
-          "answer": "Tak. Każdy plan zawiera 30 dni za darmo. Do startu prosimy o kartę płatniczą, ale nic nie pobieramy, dopóki te 30 dni się nie skończy. Rezygnujesz kiedy chcesz."
+          "answer": "Tak. Każdy plan zawiera {trialDays} dni za darmo. Do startu prosimy o kartę płatniczą, ale nic nie pobieramy, dopóki ten okres się nie skończy. Rezygnujesz kiedy chcesz."
         },
         {
           "question": "Czy mogę później zmienić plan?",

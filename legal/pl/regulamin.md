@@ -1,6 +1,6 @@
 # Regulamin serwisu: Stampeo
 
-**Ostatnia aktualizacja: 5 sierpnia 2026**
+**Ostatnia aktualizacja: 14 września 2026**
 
 ## 1. Przedmiot
 
@@ -49,9 +49,9 @@ Stampeo udostępnia firmom platformę, która pozwala:
 
 ### 5.1 Bezpłatny okres próbny
 
-Każdy nowy Użytkownik Business otrzymuje **30-dniowy bezpłatny okres próbny** bez zobowiązań. Okres próbny daje dostęp do wszystkich funkcji wybranego planu.
+Nowe konto może otrzymać **bezpłatny okres próbny** bez zobowiązań. Jego długość jest podana przy rejestracji, w płatności Stripe i w panelu, i może się różnić w zależności od rynku lub oferty. Okres próbny daje dostęp do wszystkich funkcji wybranego planu.
 
-Przy rejestracji wymagane jest podanie karty płatniczej, aby rozpocząć okres próbny. Przed jego zakończeniem nie jest pobierana żadna kwota: po upływie 30 dni Subskrypcja rozpoczyna się automatycznie w cenie wybranego planu i cyklu rozliczeniowego, chyba że zostanie wcześniej anulowana w panelu.
+Przy rejestracji wymagane jest podanie karty płatniczej, aby rozpocząć okres próbny. Przed jego zakończeniem nie jest pobierana żadna kwota: po jego upływie Subskrypcja rozpoczyna się automatycznie w cenie wybranego planu i cyklu rozliczeniowego, chyba że zostanie wcześniej anulowana w panelu.
 
 Jeżeli do konta nie przypisano metody płatności, Użytkownik Business ma **3-dniowy okres tolerancji** po wygaśnięciu okresu próbnego, w czasie którego panel pozostaje w pełni funkcjonalny, co pozwala wykupić Subskrypcję bez przerwy w usłudze. Po upływie okresu tolerancji, jeżeli Subskrypcja nie została wykupiona, dostęp przechodzi w **tryb tylko do odczytu**: operacje zapisu (tworzenie klientów, dodawanie pieczątek, zmiany wzoru karty) są zablokowane, ale dane pozostają dostępne i są zachowane. Karty zainstalowane już w portfelach klientów pozostają na miejscu, ale nie są dłużej aktualizowane.
 
@@ -61,7 +61,7 @@ Późniejsze wykupienie Subskrypcji natychmiast przywraca pełny dostęp.
 
 Stampeo oferuje trzy plany subskrypcji, każdy dostępny w **rozliczeniu miesięcznym lub rocznym**. Rozliczenie roczne jest pobierane jednorazowo za okres dwunastu miesięcy, po niższej stawce efektywnej niż dwanaście płatności miesięcznych w tym samym planie.
 
-Aktualne ceny publiczne dla obu cykli rozliczeniowych są podane na stronie z cennikiem oraz w płatności Stripe w momencie zakupu i to one są wiążące; poniższa tabela podsumowuje plany obowiązujące w dniu wydania Regulaminu.
+Kwota Subskrypcji, waluta rozliczeniowa oraz ewentualny bezpłatny okres próbny są takie, jakie zostały wyświetlone na stronie z cennikiem i w płatności Stripe w momencie zakupu, i stanowią część umowy. Wyświetlone wówczas warunki są wiążące; poniższa tabela podsumowuje plany obowiązujące w dniu wydania Regulaminu i opisuje wyłącznie ich funkcje.
 
 | Plan | Najważniejsze funkcje |
 |------|-----------------------|
@@ -117,7 +117,7 @@ Zgodnie z §5.3 Partnerzy Założycielscy są zwolnieni z podwyżek cen publiczn
 
 Poza powiadomieniami wskazanymi powyżej Stampeo wysyła następujące e-maile operacyjne, które są częścią usługi i nie podlegają rezygnacji, dopóki konto jest aktywne:
 
-- Ostrzeżenia o kończącym się okresie próbnym (czternaście, siedem i dwa dni przed jego końcem)
+- Ostrzeżenia o kończącym się okresie próbnym, wysyłane według harmonogramu proporcjonalnego do jego długości
 - Potwierdzenia wykupienia i anulowania Subskrypcji
 - Potwierdzenia zmiany planu, w tym potwierdzenie zmiany zaplanowanej na późniejszą datę
 - Przypomnienie o odnowieniu rocznym opisane w §5.4, wysyłane około 30 dni przed każdym odnowieniem rocznym
@@ -302,7 +302,7 @@ Zgodnie z art. L221-28 francuskiego Kodeksu konsumenckiego prawo odstąpienia ni
 
 Wykupując Subskrypcję i rozpoczynając korzystanie z Platformy, Użytkownik Business przyjmuje do wiadomości i akceptuje utratę prawa odstąpienia.
 
-30-dniowy bezpłatny okres próbny pozwala jednak przetestować usługę bez opłat i bez zobowiązań: karta płatnicza podana przy rejestracji nie jest obciążana przed końcem okresu próbnego, a Subskrypcję można anulować w każdej chwili przed tą datą.
+Bezpłatny okres próbny pozwala jednak przetestować usługę bez opłat i bez zobowiązań: karta płatnicza podana przy rejestracji nie jest obciążana przed końcem okresu próbnego, a Subskrypcję można anulować w każdej chwili przed tą datą.
 
 ## 13. Prawo właściwe i spory
 

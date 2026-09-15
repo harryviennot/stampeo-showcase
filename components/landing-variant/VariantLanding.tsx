@@ -39,12 +39,16 @@ export async function VariantLanding({
   // time, so the page stays fully cacheable and every block on it quotes the
   // same ladder.
   const pricing = await getPlanCatalog(MARKETS[market].currency.code.toLowerCase());
+  // The trial length is a promise, and it differs by market. Read from the
+  // market rather than written into copy, which is how /us came to offer 30
+  // days one click before Stripe granted 14.
+  const trialDays = MARKETS[market].trialDays;
   const faqItems = (t.raw("items") as Array<{ question: string; answer: string }>).map(
     // Interpolate BEFORE the JSON-LD is built. Passing the raw strings through
     // shipped the literal token "{starterPrice}" to Google.
     (faq) => ({
       question: faq.question,
-      answer: interpolatePricing(faq.answer, pricing, locale),
+      answer: interpolatePricing(faq.answer, pricing, locale, trialDays),
     }),
   );
 
@@ -55,7 +59,7 @@ export async function VariantLanding({
       <JsonLd data={softwareApplicationJsonLd(pricing)} />
       <JsonLd data={faqPageJsonLd(faqItems)} />
       <LandingTracker locale={locale} variant="wallet" />
-      <Header />
+      <Header market={market} />
       <main className="relative">
         <div data-landing-section="hero"><VariantHero /></div>
         {/* "Made in Europe · GDPR" trust strip — hidden outside Europe (US). */}
@@ -63,7 +67,7 @@ export async function VariantLanding({
           <div data-landing-section="trust_strip"><VariantTrustStrip /></div>
         )}
         <div data-landing-section="benefits"><VariantBenefits /></div>
-        <div data-landing-section="differentiator"><VariantDifferentiator /></div>
+        <div data-landing-section="differentiator"><VariantDifferentiator trialDays={trialDays} /></div>
         <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
         {/* Tear line: the pitch is above, the thing you can actually touch is
@@ -73,12 +77,14 @@ export async function VariantLanding({
         <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="metrics"><VariantMetricStrip /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
-        <div data-landing-section="pricing"><PricingSection pricing={pricing} /></div>
+        <div data-landing-section="pricing">
+          <PricingSection pricing={pricing} trialDays={trialDays} market={market} />
+        </div>
         <div data-landing-section="faq"><VariantFAQ faqs={faqItems} /></div>
         <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
-        <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} /></div>
+        <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} trialDays={trialDays} /></div>
       </main>
-      <Footer />
+      <Footer market={market} />
       <VariantDevToggle />
     </div>
   );

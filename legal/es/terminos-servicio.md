@@ -1,6 +1,6 @@
 # Términos del servicio: Stampeo
 
-**Última actualización: 5 de agosto de 2026**
+**Última actualización: 14 de septiembre de 2026**
 
 ## 1. Objeto
 
@@ -51,9 +51,9 @@ El servicio incluye el diseño de la primera tarjeta de fidelidad por nuestra pa
 
 ### 5.1 Prueba gratuita
 
-Cada nuevo Usuario Business dispone de una **prueba gratuita de 30 días**, sin compromiso. La prueba da acceso al conjunto de las funcionalidades del plan suscrito.
+Toda cuenta nueva puede disponer de una **prueba gratuita**, sin compromiso. Su duración se indica al registrarse, en el pago de Stripe y en el panel, y puede variar según el mercado o la oferta. La prueba da acceso al conjunto de las funcionalidades del plan suscrito.
 
-Se solicita una tarjeta bancaria al registrarse para iniciar la prueba. No se cobra ningún importe antes de que la prueba termine: al cumplirse los 30 días, la Suscripción se inicia automáticamente a la tarifa del plan y de la periodicidad elegidos, salvo cancelación desde el panel antes de esa fecha.
+Se solicita una tarjeta bancaria al registrarse para iniciar la prueba. No se cobra ningún importe antes de que la prueba termine: al finalizar, la Suscripción se inicia automáticamente a la tarifa del plan y de la periodicidad elegidos, salvo cancelación desde el panel antes de esa fecha.
 
 Cuando una cuenta no tiene ningún método de pago registrado, el Usuario Business dispone de un **periodo de tolerancia de 3 días** tras la expiración de la prueba, durante el cual el panel sigue siendo plenamente funcional, con el fin de suscribirse sin interrupción del servicio. Transcurrido ese plazo sin suscripción, el acceso pasa a **modo de solo lectura**: las operaciones de escritura (creación de clientes, adición de sellos, modificación del estilo de tarjeta) quedan bloqueadas, pero los datos siguen siendo accesibles y se conservan. Las Tarjetas ya distribuidas permanecen instaladas en Apple Wallet o Google Wallet, pero dejan de actualizarse.
 
@@ -63,7 +63,7 @@ Una suscripción posterior restablece de forma inmediata el acceso completo.
 
 Stampeo ofrece tres planes de suscripción, cada uno disponible con **facturación mensual o anual**. La facturación anual se cobra de una sola vez por un periodo de doce meses, a una tarifa efectiva inferior a la de doce mensualidades del mismo plan.
 
-Los precios públicos vigentes para ambas periodicidades se muestran en la página de tarifas y en el pago de Stripe en el momento de la suscripción, que son los que dan fe; la tabla siguiente resume los planes vigentes en la fecha de los presentes Términos.
+El importe de la Suscripción, la moneda de facturación y, en su caso, la duración de la prueba gratuita son los que se muestran en la página de tarifas y en el pago de Stripe en el momento de suscribirse, y forman parte del contrato. Esos elementos mostrados son los que dan fe; la tabla siguiente resume los planes vigentes en la fecha de los presentes Términos y solo describe sus funcionalidades.
 
 | Plan | Características principales |
 |------|------------------------------|
@@ -119,7 +119,7 @@ Como se indica en el §5.3, los Socios Fundadores están exentos de los aumentos
 
 Además de las notificaciones antes mencionadas, Stampeo envía los siguientes correos operativos, que forman parte integrante del servicio y no pueden desactivarse mientras la cuenta esté activa:
 
-- Avisos de expiración de la prueba (catorce, siete y dos días antes del fin de la prueba)
+- Avisos de expiración de la prueba, enviados según un calendario proporcionado a la duración de la prueba
 - Confirmación y cancelación de la suscripción
 - Confirmación de cambio de plan, incluida la confirmación de un cambio programado para una fecha posterior
 - El recordatorio de renovación anual descrito en el §5.4, enviado unos 30 días antes de cada vencimiento anual
@@ -310,7 +310,7 @@ De conformidad con el artículo L221-28 del Código de Consumo francés, el dere
 
 Al suscribir una Suscripción y comenzar a utilizar la Plataforma, el Usuario Business reconoce y acepta la pérdida de su derecho de desistimiento.
 
-No obstante, la prueba gratuita de 30 días permite probar el servicio sin coste ni compromiso: la tarjeta bancaria solicitada al registrarse no se cobra antes del fin de la prueba, y la Suscripción puede cancelarse en cualquier momento antes de esa fecha.
+No obstante, la prueba gratuita permite probar el servicio sin coste ni compromiso: la tarjeta bancaria solicitada al registrarse no se cobra antes del fin de la prueba, y la Suscripción puede cancelarse en cualquier momento antes de esa fecha.
 
 ## 13. Legislación aplicable y litigios
 

@@ -15,6 +15,16 @@ export type TierId = "starter" | "growth" | "pro";
 export type Pricing = {
   currency: string;
   tiers: Record<TierId, Record<BillingInterval, number>>;
+  /**
+   * True when these amounts came from the baked ladder rather than the backend.
+   *
+   * Humans can be shown a stale price — nobody can check out while the backend
+   * is unreachable either. Machines cannot: the baked ladder is EUR-only, so on
+   * a market that bills in another currency a fallback render would emit
+   * JSON-LD Offers in the wrong currency for Google to index. Callers that
+   * assert a price to a machine check this first.
+   */
+  isFallback?: boolean;
 };
 
 /**
@@ -56,9 +66,28 @@ export function currencySymbol(currency: string): string {
  * symbol wrap onto separate lines. Mirrors backend/app/core/money.py.
  */
 export function formatMoney(amount: number, currency: string, locale?: string): string {
-  const symbol = currencySymbol(currency);
-  const value = formatPrice(amount, locale);
-  return locale === "en" || !locale ? `${symbol}${value}` : `${value}\u00a0${symbol}`;
+  // Intl owns the whole string: it places the symbol by currency AND locale
+  // together ("$49", "49 $", "49 €") and groups thousands, which the hand-built
+  // version did not — QA saw "Billed $1140 a year" and "$9000/month" on /us,
+  // and the whole yearly ladder is four figures. `narrowSymbol` keeps a foreign
+  // currency as a symbol rather than naming it ("49 $" in French, not "49 $US").
+  const code = (currency || "eur").trim().toUpperCase();
+  const whole = Number.isInteger(amount);
+  try {
+    return new Intl.NumberFormat(locale || "en", {
+      style: "currency",
+      currency: /^[A-Z]{3}$/.test(code) ? code : "EUR",
+      currencyDisplay: "narrowSymbol",
+      minimumFractionDigits: whole ? 0 : 2,
+      maximumFractionDigits: whole ? 0 : 2,
+    }).format(amount);
+  } catch {
+    // Intl throws RangeError on an unknown currency; a blank price is worse
+    // than a euro one.
+    const symbol = currencySymbol(currency);
+    const value = formatPrice(amount, locale);
+    return locale === "en" || !locale ? `${symbol}${value}` : `${value}\u00a0${symbol}`;
+  }
 }
 
 /** Founding-partner rates. Frozen: the programme closed 2026-08-04. */
@@ -208,8 +237,10 @@ export function formatPrice(price: number, locale?: string): string {
  * have to hardcode a currency glyph — which is what stopped them from ever being
  * repriced into another currency.
  */
+import { MARKETS } from "./markets";
+
 export function interpolatePricing(
-  text: string, pricing: Pricing, locale?: string,
+  text: string, pricing: Pricing, locale?: string, trialDays?: number,
 ): string {
   const money = (amount: number) => formatMoney(amount, pricing.currency, locale);
   return text
@@ -230,5 +261,9 @@ export function interpolatePricing(
     // "0 to start" is a price claim and has to follow the market's currency.
     .replaceAll("{zero}", money(0))
     .replaceAll("{yearlyDiscount}", String(FOUNDING_PRICING.yearlyDiscountPercent))
-    .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths));
+    .replaceAll("{freeMonths}", String(FOUNDING_PRICING.freeMonths))
+    // The trial length is a PROMISE, and it differs by market: the US gets 14
+    // days where everywhere else gets 30. Hardcoding it in copy is how /us came
+    // to offer 30 days one click before Stripe granted 14.
+    .replaceAll("{trialDays}", String(trialDays ?? MARKETS.int.trialDays));
 }

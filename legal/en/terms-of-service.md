@@ -1,6 +1,6 @@
 # Terms of Service: Stampeo
 
-**Last updated: August 5, 2026**
+**Last updated: September 14, 2026**
 
 ## 1. Purpose
 
@@ -49,9 +49,9 @@ Stampeo provides businesses with a platform to:
 
 ### 5.1 Free Trial
 
-Each new Business User receives a **30-day free trial** with no commitment. The trial provides access to all features of the selected tier.
+New accounts may be granted a **free trial** with no commitment. Its duration is shown at signup, in the Stripe checkout and in the dashboard, and may differ by market or offer. The trial provides access to all features of the selected tier.
 
-A payment card is requested at signup in order to start the trial. No amount is charged before the trial ends: at the end of the 30 days, the Subscription starts automatically at the price of the selected tier and cadence, unless it has been cancelled beforehand from the dashboard.
+A payment card is requested at signup in order to start the trial. No amount is charged before the trial ends: at the end of the trial, the Subscription starts automatically at the price of the selected tier and cadence, unless it has been cancelled beforehand from the dashboard.
 
 Where an account has no payment method on file, the Business User has a **3-day grace period** after trial expiry during which the dashboard remains fully functional, allowing subscription without service interruption. After the grace period, if no subscription has been set up, access switches to **read-only mode**: write operations (customer creation, stamp addition, design changes) are blocked, but data remains accessible and is preserved. Passes already installed in customer wallets remain present but are no longer updated.
 
@@ -61,7 +61,7 @@ Subscribing later instantly restores full access.
 
 Stampeo offers three subscription tiers, each available with **monthly or yearly billing**. Yearly billing is charged once for a twelve-month period, at a lower effective rate than twelve monthly payments of the same tier.
 
-Current public pricing for both cadences is shown on the pricing page and in the Stripe checkout at the moment of purchase, which is the authoritative source; the table below summarizes the tiers in effect at the date of these Terms.
+Subscription fees, the billing currency, and any applicable free trial period are those displayed on the pricing page and in the Stripe checkout at the moment of subscribing, and form part of this agreement. Those displayed terms are the authoritative source; the table below summarizes the tiers in effect at the date of these Terms and lists features only.
 
 | Tier | Key Features |
 |------|-------------|
@@ -117,7 +117,7 @@ As stated in §5.3, Founding Partners are exempt from public-price increases for
 
 In addition to the notices above, Stampeo sends the following operational emails, which are part of the service and are not subject to opt-out while an account is active:
 
-- Trial expiry warnings (fourteen, seven, and two days before trial end)
+- Trial expiry warnings, sent on a schedule proportionate to the length of the trial
 - Subscription confirmation and cancellation notices
 - Plan-change confirmations, including confirmation of a change scheduled to take effect at a later date
 - The annual renewal notice described in §5.4, sent approximately 30 days before each yearly renewal
@@ -302,7 +302,7 @@ In accordance with Article L221-28 of the French Consumer Code, the right of wit
 
 By subscribing and beginning to use the Platform, the Business User acknowledges and accepts the loss of their right of withdrawal.
 
-However, the 30-day free trial allows the service to be tested with no charge and no commitment: the card requested at signup is not debited before the end of the trial, and the Subscription may be cancelled at any time before that date.
+However, the free trial allows the service to be tested with no charge and no commitment: the card requested at signup is not debited before the end of the trial, and the Subscription may be cancelled at any time before that date.
 
 ## 13. Governing Law and Disputes
 

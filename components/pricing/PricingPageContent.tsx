@@ -18,6 +18,8 @@ import { PricingTierCard } from "@/components/pricing/PricingTierCard";
 import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
 import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
+import { MarketSuggestion } from "@/components/market/MarketSuggestion";
+import type { Market } from "@/lib/markets";
 
 function PricingCard({
   tier,
@@ -25,12 +27,14 @@ function PricingCard({
   interval,
   foundingOpen,
   pricing,
+  trialDays,
 }: {
   tier: "starter" | "growth" | "pro";
   highlighted?: boolean;
   interval: BillingInterval;
   foundingOpen: boolean;
   pricing: Pricing;
+  trialDays: number;
 }) {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
@@ -59,7 +63,7 @@ function PricingCard({
       featuresLabel={t(`${tier}.featuresLabel`)}
       cta={t("cta")}
       ctaHref="/onboarding"
-      ctaSubtext={t("ctaSubtext")}
+      ctaSubtext={t("ctaSubtext", { trialDays })}
       highlighted={highlighted}
       popularLabel={t("popular")}
       annotationLabel={t("annotation")}
@@ -314,9 +318,11 @@ function FeatureComparisonTable({ pricing }: { pricing: Pricing }) {
 }
 
 function PricingFAQ({
+  trialDays,
   foundingOpen,
   pricing,
 }: {
+  trialDays: number;
   foundingOpen: boolean;
   pricing: Pricing;
 }) {
@@ -354,7 +360,7 @@ function PricingFAQ({
             </summary>
             <div className="pt-2 pb-4">
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                {interpolatePricing(faq.answer, pricing, locale)}
+                {interpolatePricing(faq.answer, pricing, locale, trialDays)}
               </p>
             </div>
           </details>
@@ -364,7 +370,11 @@ function PricingFAQ({
   );
 }
 
-export function PricingPageContent({ pricing }: Readonly<{ pricing: Pricing }>) {
+export function PricingPageContent({
+  pricing,
+  trialDays,
+  market = "int",
+}: Readonly<{ pricing: Pricing; trialDays: number; market?: Market }>) {
   const t = useTranslations("pricingPage");
   const foundingOpen = isFoundingProgramOpen();
   // Yearly is the default: it is the price we want anchored, and the monthly
@@ -382,6 +392,12 @@ export function PricingPageContent({ pricing }: Readonly<{ pricing: Pricing }>) 
         </p>
       </ScrollReveal>
 
+      {/* Above the ladder, not below it: the point is to be seen BEFORE the
+          number is read, not to explain it afterwards. */}
+      <div className="mt-6 flex justify-center">
+        <MarketSuggestion market={market} />
+      </div>
+
       {/* Billing cycle switcher */}
       <ScrollReveal delay={150} className="mt-8">
         <BillingIntervalToggle value={interval} onChange={setInterval} />
@@ -397,20 +413,23 @@ export function PricingPageContent({ pricing }: Readonly<{ pricing: Pricing }>) 
           tier="starter"
           interval={interval}
           foundingOpen={foundingOpen}
-        pricing={pricing}
+          pricing={pricing}
+          trialDays={trialDays}
         />
         <PricingCard
           tier="growth"
           interval={interval}
           foundingOpen={foundingOpen}
           highlighted
-        pricing={pricing}
+          pricing={pricing}
+          trialDays={trialDays}
         />
         <PricingCard
           tier="pro"
           interval={interval}
           foundingOpen={foundingOpen}
-        pricing={pricing}
+          pricing={pricing}
+          trialDays={trialDays}
         />
       </ScrollReveal>
 
@@ -430,7 +449,7 @@ export function PricingPageContent({ pricing }: Readonly<{ pricing: Pricing }>) 
       <ROICalculator pricing={pricing} />
 
       {/* FAQ */}
-      <PricingFAQ foundingOpen={foundingOpen} pricing={pricing} />
+      <PricingFAQ foundingOpen={foundingOpen} pricing={pricing} trialDays={trialDays} />
 
       {/* Bottom CTA */}
       <ScrollReveal

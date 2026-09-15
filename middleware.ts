@@ -9,6 +9,13 @@ import {
   deviceLanguage,
   resolveAcquisitionLocale,
 } from "./lib/locale-negotiation";
+import {
+  MARKET_COOKIE,
+  MARKET_COOKIE_MAX_AGE,
+  cookieDomainForHost,
+  isPilotPath,
+  marketFromPath,
+} from "./lib/markets";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -19,9 +26,13 @@ const getBusinessLocale = createBusinessLocaleLookup({
 // Country pilots served at clean, locale-free URLs. They must NOT go through
 // next-intl's locale detection, which would 307 an English visitor from /uk to
 // /en/uk. We rewrite them to the English route internally so the URL stays /uk
-// (lang=en, no redirect). Exact-match only, so business slugs like /usual-cafe
-// are unaffected.
-const PILOT_PATHS = new Set(["/uk", "/us"]);
+// (lang=en, no redirect).
+//
+// `isPilotPath` matches the pilot root OR anything beneath it. It used to be an
+// exact-match Set, which kept business slugs like /usual-cafe safe but also
+// meant /us/pricing was never rewritten: it fell through to locale detection and
+// 404'd as /en/us/pricing, stranding US visitors on the euro pricing page. The
+// prefix check requires a following slash, so /usual-cafe is still unaffected.
 
 export default async function middleware(request: NextRequest) {
   // 301 redirect www → non-www
@@ -31,10 +42,29 @@ export default async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  if (PILOT_PATHS.has(request.nextUrl.pathname)) {
+  if (isPilotPath(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = `/en${request.nextUrl.pathname}`;
-    return NextResponse.rewrite(url);
+    const response = NextResponse.rewrite(url);
+
+    // Remember which market this visitor chose, so the dashboard can prefill
+    // the country field with it instead of guessing from a timezone table that
+    // falls back to `en -> GB`. A HINT, not a price: the backend never reads
+    // this, and the owner can change the field. See lib/markets.ts.
+    //
+    // Not httpOnly: it only ever prefills a form, and the dashboard reads it in
+    // the browser. Lax so it survives following a CTA across the two hosts.
+    const market = marketFromPath(request.nextUrl.pathname);
+    if (market) {
+      response.cookies.set(MARKET_COOKIE, market, {
+        domain: cookieDomainForHost(request.headers.get("host")),
+        path: "/",
+        maxAge: MARKET_COOKIE_MAX_AGE,
+        sameSite: "lax",
+        secure: request.nextUrl.protocol === "https:",
+      });
+    }
+    return response;
   }
 
   // Accept: text/markdown content negotiation — rewrite to markdown proxy
