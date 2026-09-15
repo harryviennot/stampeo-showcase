@@ -39,7 +39,16 @@ function isCompleteLadder(data: PlansResponse): boolean {
  */
 export async function getPlanCatalog(currency: string): Promise<Pricing> {
   const base = process.env.NEXT_PUBLIC_API_URL;
-  const fallback = FALLBACK_PRICING[currency] ?? FALLBACK_PRICING.eur;
+  // `isFallback` matters most when the requested currency is one the baked
+  // ladder does not carry: the page then renders EUR amounts on a market that
+  // bills in something else. Humans see a stale price, which is survivable
+  // (nobody can check out while the backend is down either) — but JSON-LD is
+  // machine-read and Google would index the wrong currency against /us, so
+  // callers omit the Offer block rather than assert a price we are unsure of.
+  const fallback = {
+    ...(FALLBACK_PRICING[currency] ?? FALLBACK_PRICING.eur),
+    isFallback: true as const,
+  };
   if (!base) return fallback;
 
   try {
@@ -65,7 +74,7 @@ export async function getPlanCatalog(currency: string): Promise<Pricing> {
         year: data.tiers[tier].year.amount / 100,
       };
     }
-    return { currency: data.currency || currency, tiers };
+    return { currency: data.currency || currency, tiers, isFallback: false };
   } catch {
     return fallback;
   }

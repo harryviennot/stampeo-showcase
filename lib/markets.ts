@@ -28,6 +28,16 @@ export interface MarketConfig {
   europeTrust: boolean;
   /** Short label for the dev switcher. */
   label: string;
+  /**
+   * Free-trial length in days for this market, mirroring
+   * `backend/app/core/pricing_region.TRIAL_DAYS_BY_COUNTRY`.
+   *
+   * It lives here because it is a PROMISE made in copy, and QA found /us
+   * offering "30-day free trial" one click before Stripe granted 14. A number
+   * written into eight strings across four locales cannot track a backend
+   * constant; a number read from one place can.
+   */
+  trialDays: number;
 }
 
 export const MARKETS: Record<Market, MarketConfig> = {
@@ -38,14 +48,23 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "€", code: "EUR" },
     europeTrust: true,
     label: "int",
+    trialDays: 30,
   },
   uk: {
     hreflang: "en-GB",
     path: "/uk",
     ogLocale: "en_GB",
-    currency: { symbol: "£", code: "GBP" },
+    // EUR, not GBP. This field must state what the market is ACTUALLY billed
+    // in, never what we intend to bill it in one day. It said "GBP" while no
+    // GBP Price existed, so /uk requested a currency the catalog could not
+    // price and was silently downgraded to euros — and the aspiration then
+    // caused a second bug, offering a UK visitor a "see UK pricing" link that
+    // changes no number. Change this in the same commit as the GBP ladder,
+    // following docs/billing/ADDING_A_CURRENCY.md, and not before.
+    currency: { symbol: "€", code: "EUR" },
     europeTrust: true,
     label: "uk",
+    trialDays: 30,
   },
   us: {
     hreflang: "en-US",
@@ -54,6 +73,7 @@ export const MARKETS: Record<Market, MarketConfig> = {
     currency: { symbol: "$", code: "USD" },
     europeTrust: false,
     label: "us",
+    trialDays: 14,
   },
 };
 
@@ -71,3 +91,111 @@ export const PILOT_HREFLANG: Record<string, string> = {
   es: "/es",
   pl: "/pl",
 };
+
+/**
+ * A path inside a market.
+ *
+ * A market is a set of routes, not a single landing page. /us quotes dollars,
+ * so every link a US visitor can follow has to stay inside /us — otherwise the
+ * shared nav walks them onto the international pricing page and quotes euros,
+ * which is a price checkout will not honour.
+ *
+ * `int` is deliberately bare: next-intl owns locale prefixing there, and
+ * hardcoding /en would break the default-locale URLs.
+ */
+export function marketPath(market: Market, path: string): string {
+  const base = market === "int" ? "" : MARKETS[market].path;
+  if (path === "/") return base || "/";
+  return `${base}${path}`;
+}
+
+/**
+ * Is this URL inside a country pilot?
+ *
+ * Prefix-aware on purpose, and carefully. The original check was an exact-match
+ * Set so that a business slug like /usual-cafe could not be mistaken for /us —
+ * but that also meant /us/pricing was never rewritten, fell through to locale
+ * detection, and 404'd as /en/us/pricing. Matching the pilot root OR the pilot
+ * followed by a slash keeps both properties.
+ */
+export function isPilotPath(pathname: string): boolean {
+  return (Object.keys(MARKETS) as Market[]).some((market) => {
+    if (market === "int") return false;
+    const root = MARKETS[market].path;
+    return pathname === root || pathname.startsWith(`${root}/`);
+  });
+}
+
+/**
+ * An in-market link that also has to work for the locale-prefixed international
+ * site.
+ *
+ * The two prefixing schemes are mutually exclusive and combining them produces
+ * nonsense: pilots are served at locale-free URLs (/us/pricing), so applying the
+ * next-intl prefix as well yields /us/en/pricing, which routes nowhere. `int`
+ * keeps the locale prefix; every pilot ignores it.
+ */
+export function marketLink(market: Market, seoPrefix: string, path: string): string {
+  return market === "int" ? `${seoPrefix}${path}` : marketPath(market, path);
+}
+
+/**
+ * Where a visitor's chosen market is remembered between the showcase and the
+ * dashboard.
+ *
+ * **A hint, never a price.** `/us` quotes $49 and a 14-day trial, its CTA opens
+ * `/onboarding` on another host, and the country field there is defaulted by a
+ * 12-entry timezone table that falls back to `en -> GB`. GB has no USD ladder,
+ * so a US visitor could be quoted $49 and then check out at EUR 20. Someone who
+ * deliberately opened `/us` has told us more than that heuristic can guess.
+ *
+ * What it must not do is decide the price. The backend never reads it: billing
+ * currency comes from the postal address, then the country dropdown, both typed
+ * by the owner. A cookie records which page someone clicked, which is weaker
+ * evidence than either and trivially forged. All this does is prefill a field
+ * the owner can change.
+ *
+ * Deliberately NOT `NEXT_LOCALE`. Locale, market and billing currency are three
+ * axes this codebase keeps apart on purpose (see the header of the backend's
+ * `app/core/pricing_region.py`): Polish is a locale that quotes euros, and `/uk`
+ * is English and is not GBP. Carrying a market on the locale cookie is that
+ * exact conflation.
+ */
+export const MARKET_COOKIE = "stampeo_market";
+
+/** A month. Long enough to survive a think-it-over, short enough to expire. */
+export const MARKET_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+
+/**
+ * The pilot market this path belongs to, or null for the international site.
+ *
+ * `int` is never returned: it implies no country, and stamping it would erase a
+ * real market the moment a US visitor clicked through to the homepage.
+ */
+export function marketFromPath(pathname: string): Market | null {
+  for (const market of Object.keys(MARKETS) as Market[]) {
+    if (market === "int") continue;
+    const root = MARKETS[market].path;
+    if (pathname === root || pathname.startsWith(`${root}/`)) return market;
+  }
+  return null;
+}
+
+/**
+ * The `Domain` the cookie needs so the dashboard can read it.
+ *
+ * The app is always a subdomain of the showcase — `stampeo.app` /
+ * `app.stampeo.app` in production, `dev.stampeo.app` / `app.dev.stampeo.app` on
+ * dev — so the showcase's own host with a leading dot covers both without an
+ * environment switch.
+ *
+ * Returns undefined for single-label hosts and IPs: browsers reject a `Domain`
+ * attribute there and drop the cookie silently, which would make local dev look
+ * like a code bug.
+ */
+export function cookieDomainForHost(host: string | null | undefined): string | undefined {
+  const bare = (host ?? "").split(":")[0].trim().toLowerCase();
+  if (!bare || !bare.includes(".")) return undefined;
+  if (/^[\d.]+$/.test(bare)) return undefined;
+  return `.${bare}`;
+}

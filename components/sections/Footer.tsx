@@ -12,8 +12,9 @@ import {
   APP_STORE_URL,
   PLAY_STORE_URL,
 } from "../features/scanner-mobile/StoreBadges";
+import { marketLink, marketPath, type Market } from "@/lib/markets";
 
-export async function Footer() {
+export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
   const t = await getTranslations("common.footer");
   const tNav = await getTranslations("common.nav");
   const locale = await getLocale();
@@ -25,7 +26,7 @@ export async function Footer() {
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = [
     { href: `${seoPrefix}/`, label: "Home" },
-    { href: `${seoPrefix}/pricing`, label: "Pricing" },
+    { href: marketLink(market, seoPrefix, "/pricing"), label: "Pricing" },
     { href: loyaltyPath(locale), label: "Loyalty programs" },
     ...(hasBlog(locale) ? [{ href: `${seoPrefix}/blog`, label: "Blog" }] : []),
     { href: `${seoPrefix}/contact`, label: "Contact" },
@@ -151,7 +152,7 @@ export async function Footer() {
                 <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("changelog")}
                 </Link>
-                <Link href="/pricing" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <Link href={marketPath(market, "/pricing") as "/pricing"} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("pricing")}
                 </Link>
                 <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">

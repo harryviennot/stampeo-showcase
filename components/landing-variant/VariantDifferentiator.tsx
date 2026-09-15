@@ -2,9 +2,18 @@ import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CheckIcon } from "../icons";
 
-export async function VariantDifferentiator() {
+export async function VariantDifferentiator({
+  trialDays,
+}: Readonly<{ trialDays: number }>) {
   const t = await getTranslations("variant.differentiator");
-  const items = t.raw("items") as Array<{ title: string; description: string }>;
+  // t.raw skips ICU interpolation, so the trial length has to be substituted
+  // here. Leaving it unsubstituted rendered a literal "{trialDays}" on /us.
+  const items = (t.raw("items") as Array<{ title: string; description: string }>).map(
+    (item) => ({
+      ...item,
+      description: item.description.replaceAll("{trialDays}", String(trialDays)),
+    }),
+  );
 
   return (
     <section className="relative py-16 lg:py-24 bg-[var(--blog-bg-alt)]">
