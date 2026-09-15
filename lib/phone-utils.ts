@@ -153,6 +153,14 @@ export function getCountryList(locale: string = "en"): CountryEntry[] {
 const TZ_TO_COUNTRY: Record<string, CountryCode> = {
   "Europe/Paris": "FR", "Europe/London": "GB", "America/New_York": "US",
   "America/Chicago": "US", "America/Denver": "US", "America/Los_Angeles": "US",
+  // The four above are Eastern/Central/Mountain/Pacific and cover most of the
+  // country, but a browser reports the IANA zone the OS is set to, not the
+  // canonical one for the region -- Arizona says America/Phoenix, Michigan says
+  // America/Detroit. Missing them costs a US visitor the "see US pricing" offer
+  // and leaves them reading EUR 20 for a plan they would be charged $49 for.
+  "America/Phoenix": "US", "America/Anchorage": "US", "America/Detroit": "US",
+  "America/Indiana/Indianapolis": "US", "America/Boise": "US",
+  "America/Juneau": "US", "Pacific/Honolulu": "US",
   "America/Toronto": "CA", "America/Montreal": "CA", "America/Vancouver": "CA",
   "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT",
   "Europe/Lisbon": "PT", "Europe/Brussels": "BE", "Europe/Zurich": "CH",
@@ -207,12 +215,29 @@ export function localeCountry(locale: string): CountryCode {
  * server also performs — read it after mount, e.g. through
  * `useSyncExternalStore`'s client snapshot.
  */
+/**
+ * The country an IANA timezone belongs to, or null when it is not one we map.
+ *
+ * Pure and exported so the table can be tested without stubbing
+ * `Intl.DateTimeFormat`, which is the only reason the US gaps went unnoticed.
+ * Null rather than a guess: null is what lets `navigator.language` have its
+ * turn, whereas a wrong country offers a visitor the wrong market confidently.
+ */
+export function countryForTimezone(
+  timezone: string | null | undefined,
+): CountryCode | null {
+  if (!timezone) return null;
+  return TZ_TO_COUNTRY[timezone] ?? null;
+}
+
 export function detectBrowserCountry(): CountryCode | null {
   if (typeof window === "undefined") return null;
 
   try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (tz && TZ_TO_COUNTRY[tz]) return TZ_TO_COUNTRY[tz];
+    const fromZone = countryForTimezone(
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    );
+    if (fromZone) return fromZone;
   } catch {}
 
   try {

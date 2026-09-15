@@ -8,8 +8,10 @@ import { MARKETS, PILOT_HREFLANG } from "@/lib/markets";
  * /en/us). Distinct URL so it can rank independently of the generic English
  * homepage via hreflang en-US.
  *
- * NOINDEX while we validate the copy — flip `robots.index` to true and wire
- * PILOT_HREFLANG into the homepage `alternates` to go live.
+ * Indexability comes from `MARKETS.<market>.indexable`, which also decides
+ * whether the homepage advertises this URL via hreflang. Both are the same
+ * decision: an indexed page missing from the homepage cluster is an
+ * unreciprocated annotation, which Google ignores.
  */
 const M = MARKETS.us;
 
@@ -18,7 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t("title"),
     description: t("description"),
-    robots: { index: false, follow: true },
+    // One flag, shared with PILOT_HREFLANG: a page Google may index is a page
+    // the homepage advertises, and the two must not drift. See lib/markets.ts.
+    robots: { index: M.indexable, follow: true },
     alternates: { canonical: M.path, languages: PILOT_HREFLANG },
     openGraph: { locale: M.ogLocale },
   };

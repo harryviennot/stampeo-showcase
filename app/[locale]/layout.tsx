@@ -4,11 +4,12 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { localeAlternates, localePath } from "@/lib/hreflang";
+import { localePath } from "@/lib/hreflang";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import { ScrollRevealInit } from "@/components/ui/ScrollRevealInit";
 import "../globals.css";
+import { PILOT_HREFLANG } from "@/lib/markets";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,7 +78,14 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: localePath(locale, "/"),
-      languages: localeAlternates("/"),
+      // PILOT_HREFLANG, not localeAlternates: the homepage has to advertise the
+      // live country pilots back. hreflang must be RECIPROCAL — /us declares
+      // `en-US -> /us`, and if the homepage does not declare it in return Google
+      // drops the annotation and crawls /us and /en as two competing English
+      // pages. That duplicate split is the exact thing a distinct pilot URL
+      // exists to avoid, so indexing /us without this would be worse than
+      // leaving it noindex.
+      languages: PILOT_HREFLANG,
     },
   };
 }

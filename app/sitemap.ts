@@ -5,6 +5,7 @@ import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { localeAlternates, localePath } from "@/lib/hreflang";
 import { routing } from "@/i18n/routing";
+import { PILOT_HREFLANG, indexablePilotPaths } from "@/lib/markets";
 
 const BASE_URL = "https://stampeo.app";
 
@@ -35,6 +36,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const entries: MetadataRoute.Sitemap = [];
+
+  // Absolute form of the homepage cluster, for the pilot entries below.
+  const pilotLanguages = Object.fromEntries(
+    Object.entries(PILOT_HREFLANG).map(([code, path]) => [
+      code,
+      `${BASE_URL}${path}`,
+    ]),
+  );
 
   // Blog index — only the locales that actually have articles
   const blogLanguages = localeAlternates("/blog", {
@@ -92,6 +101,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
         alternates: { languages },
       });
     }
+  }
+
+  // Country pilots. The loops above iterate LOCALES, and a pilot is a MARKET
+  // (/us is English served at a locale-free URL), so these never appear there.
+  // Only the indexable ones: listing a noindex pilot asks Google to crawl a
+  // page we told it not to index.
+  for (const path of indexablePilotPaths()) {
+    entries.push({
+      url: `${BASE_URL}${path}`,
+      changeFrequency: "monthly",
+      priority: path.endsWith("/pricing") ? 0.9 : 1.0,
+      alternates: { languages: pilotLanguages },
+    });
   }
 
   // Blog posts — each locale has its own slugs
