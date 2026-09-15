@@ -72,3 +72,27 @@ introduced, and it is recorded here rather than silently absorbed.
 13. **Component key-prefix rewrites are untested.** The largest non-US
     regression surface in the diff. Mitigated by manual verification of all five
     markets against the running dev server (see runbook), not by a test.
+
+---
+
+## Resolution (2026-09-15, same session)
+
+| # | Finding | Resolution |
+|---|---|---|
+| 1 | Array members not orphan-checked (24 of 31 keys) | **Fixed.** Rule is now "some element of the base array carries the same field". Verified by planting `faq.items[0].anwser` and watching it fail, then reverting. |
+| 2 | Orphan check read `landing.json` only | **Fixed.** Reads every namespace; keys are namespaced ids, and a cross-namespace shadow is an orphan. |
+| 3 | English never ICU-validated | **Fixed.** Market-scoped en strings are parsed. |
+| 4 | No override/base placeholder parity | **Fixed.** Two guards: rich-text tags must match the base exactly, and an override may not use an argument no shared string uses. |
+| 5 | `zł` anchor left `{price} zł` passing | **Fixed.** Anchor accepts a digit or `}`; both shapes added to the self-test. |
+| 6 | "No credit card required" unguarded | **Fixed.** Guarded in all four locales, anchored to the payment sense. Writing it immediately caught a false positive on "sin tarjetas que perder", the product's own true tagline, which is now pinned as must-not-flag. |
+| 7 | `WORDED_TRIAL` too narrow, `FOUNDING_SUBTREE` unanchored | **Fixed.** Regex covers `30-day free trial`, `free for 30 days`, `30 days for free`, `first month is free`; the founding exemption matches a path segment, not any key containing "founding". |
+| 8 | Hero DOM restructured for every market | **Fixed.** Wrapper is conditional. Verified by fetching all six markets: the wrapper and the reassurance line appear on `/us` only, zero times on `/`, `/en`, `/es`, `/pl`, `/uk`. |
+| 9 | fr/es/pl demo copy changed vs plan | **Plan corrected, code kept.** The change is forced by token parity and the rendered number is unchanged (still 30). Recorded in plan.md under Edge cases. |
+| 10 | fr/es/pl metadata descriptions rewritten | **Plan corrected, code kept.** AC9 requires the glyph gone and a `{token}` would ship literally into a search snippet. Recorded in plan.md under Non-goals. |
+| 11 | `marketRobots` tests near-tautological | **Not fixed, accepted.** Both sides derive from one field by design. The gap they appear to cover is page-level and needs a render harness this repo does not have. Covered manually by runbook SE-01/SE-02. |
+| 12 | `marketCopy` wrapper thinly tested | **Partially accepted.** Full coverage needs a next-intl double. Covered manually by runbook MK-01/MK-02. |
+| 13 | Component key-prefix rewrites untested | **Accepted, mitigated.** All six markets were rendered and diffed against the pre-change output; runbook MK-02 exists specifically for this and is marked load-bearing. |
+
+Open gaps blocking the issue: **none.** Findings 11 to 13 are accepted limits
+of a repo with no component test harness, recorded here and carried into the
+runbook's "Known state" section rather than waived silently.

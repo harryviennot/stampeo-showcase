@@ -63,6 +63,13 @@ still promise "a free month".
 - A replacement US trust strip.
 - The closed founding-partner copy at `messages/en/features.json:1132-1289`
   (stale because the programme ended 2026-08-04, a different problem).
+  NARROWED DURING IMPLEMENTATION: the founding subtree's four `metadata.json`
+  descriptions had to be touched after all, because AC9 brings `metadata.json`
+  into the currency-glyph guard and they quoted "€20/month for life". A
+  `{token}` was not an option: metadata never passes through
+  `interpolatePricing`, so it would have shipped the literal token into a
+  search snippet. The price was removed; the founding *pages* remain untouched
+  and out of scope.
 - US sales tax. `/v1/tax/registrations` is empty so tax is $0 regardless.
 - `/uk`. It stays noindex and on EUR; the mechanism is built to accept a `uk`
   override later but none is written.
@@ -85,10 +92,36 @@ still promise "a free month".
   unsubstituted renders literally. `VariantDifferentiator` already carries a
   comment about exactly this having happened on `/us`.
 - **fr/es/pl "1 mois gratuit"**: correct, those markets genuinely get 30 days.
-  Deliberately unchanged.
+  Deliberately unchanged **as rendered output**. CORRECTED DURING
+  IMPLEMENTATION: their *source* had to change anyway. Once the English
+  `rewarded` / `rewardText` / `rewardTop` take a `{trialDays}` argument, the
+  catalog's own token-parity test requires every locale to take it too, so
+  fr/es/pl now interpolate a number instead of hardcoding one. They still render
+  30. The plan did not anticipate this cascade; it is recorded here rather than
+  left as unexplained drift. (Polish takes the four-arm plural, per the
+  copywriting rules.)
 - **`PromoBanner` is gated off** by `PROMO_BANNER_ENABLED`, so its "30 days
   free" strings are not live today. Fixed anyway: the gate is a runtime flag and
   the string is wrong whenever it flips.
+
+## Corrections made after the coverage audit
+
+- **AC4 was satisfied only in appearance.** The first orphan guard proved "the
+  base array exists" for anything inside an array, so `faq.items[0].anwser`
+  passed and 24 of the subtree's 31 keys were unchecked. Rewritten to require
+  the same field on some element of the base array, and pinned with a planted
+  typo.
+- **A rule the plan stated and gave no AC:** "no credit card required must
+  never appear" is now enforced by a catalog guard in all four locales, and had
+  to be anchored to the *payment* sense, since "no card to lose" is the
+  product's own true tagline about the loyalty card.
+- **AC2 was violated by the first implementation.** The hero CTA wrapper was
+  applied to every market to make room for a line only `/us` shows. The wrapper
+  is now conditional.
+- `messages/en/loyalty.json` swaps "no commitment" for "cancel anytime" on a
+  page served in every market. That applies a US wording decision globally; it
+  is honest everywhere and reads no worse, and is noted here as a deliberate
+  small widening rather than an oversight.
 
 ## Acceptance criteria
 
