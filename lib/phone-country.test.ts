@@ -1,6 +1,11 @@
 import { describe, expect, test } from "bun:test";
 
-import { countryFromE164, detectBrowserCountry, localeCountry } from "./phone-utils";
+import {
+  countryForTimezone,
+  countryFromE164,
+  detectBrowserCountry,
+  localeCountry,
+} from "./phone-utils";
 
 describe("localeCountry", () => {
   test("is deterministic per locale, which is what makes it SSR-safe", () => {
@@ -65,5 +70,49 @@ describe("countryFromE164", () => {
     const src = countryFromE164.toString();
     expect(src).not.toContain("navigator");
     expect(src).not.toContain("window");
+  });
+});
+
+/**
+ * A visitor the timezone table misses sees euro prices with no offer to switch
+ * — `MarketSuggestion` only fires when `detectBrowserCountry` returns a country.
+ * Four zones covered the coasts and left Arizona, Alaska, Hawaii, Michigan and
+ * Indiana to fall through to `navigator.language`, which is a bare "en" often
+ * enough to matter now that /us quotes different money.
+ *
+ * Exported as a pure function so the table can be tested without stubbing
+ * `Intl.DateTimeFormat`.
+ */
+describe("countryForTimezone", () => {
+  test("covers the US zones a browser actually reports", () => {
+    for (const tz of [
+      "America/New_York",
+      "America/Chicago",
+      "America/Denver",
+      "America/Los_Angeles",
+      "America/Phoenix",
+      "America/Anchorage",
+      "America/Detroit",
+      "America/Indiana/Indianapolis",
+      "America/Boise",
+      "America/Juneau",
+      "Pacific/Honolulu",
+    ]) {
+      expect(countryForTimezone(tz)).toBe("US");
+    }
+  });
+
+  test("still resolves the European zones it always did", () => {
+    expect(countryForTimezone("Europe/Paris")).toBe("FR");
+    expect(countryForTimezone("Europe/London")).toBe("GB");
+  });
+
+  test("an unmapped or absent zone yields null, never a guess", () => {
+    // Null is what lets `navigator.language` have its turn. A wrong country
+    // here would offer a US visitor the wrong market with confidence.
+    expect(countryForTimezone("Antarctica/Troll")).toBeNull();
+    expect(countryForTimezone("")).toBeNull();
+    expect(countryForTimezone(null)).toBeNull();
+    expect(countryForTimezone(undefined)).toBeNull();
   });
 });
