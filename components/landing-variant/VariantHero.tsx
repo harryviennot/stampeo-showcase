@@ -27,6 +27,33 @@ export async function VariantHero({
   // in a market where the trial is table stakes.
   const hasReassurance = copy.has("hero.reassurance");
 
+  // Hoisted, and the wrapper below is conditional, so a market WITHOUT a
+  // reassurance line renders exactly the markup it rendered before this
+  // existed. Wrapping unconditionally changed spacing on /, /en, /es, /pl and
+  // /uk to make room for a line they do not show.
+  const ctaRow = (
+    <div className="flex flex-wrap gap-x-6 gap-y-4 items-center justify-center">
+      <CTAButton label={copy.t("hero.primaryCta")} trackAs="hero" />
+      {/* The real interactive demo lives further down; this jumps to it. */}
+      <a
+        href="#try-it"
+        className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] underline-offset-4 hover:underline"
+      >
+        {copy.t("hero.tryDemoCta")}
+        <svg
+          className="w-4 h-4 group-hover:translate-y-0.5 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2.5}
+          stroke="currentColor"
+          aria-hidden
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+        </svg>
+      </a>
+    </div>
+  );
+
   return (
     /* The header is fixed, so the hero needs to clear it by more than a normal
        section's top padding or the arch sits right under the nav. */
@@ -54,34 +81,17 @@ export async function VariantHero({
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex flex-wrap gap-x-6 gap-y-4 items-center justify-center">
-              <CTAButton label={copy.t("hero.primaryCta")} trackAs="hero" />
-              {/* The real interactive demo lives further down; this jumps to it. */}
-              <a
-                href="#try-it"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] underline-offset-4 hover:underline"
-              >
-                {copy.t("hero.tryDemoCta")}
-                <svg
-                  className="w-4 h-4 group-hover:translate-y-0.5 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2.5}
-                  stroke="currentColor"
-                  aria-hidden
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-                </svg>
-              </a>
-            </div>
-
-            {hasReassurance && (
+          {hasReassurance ? (
+            <div className="flex flex-col items-center gap-3">
+              {ctaRow}
               <p className="text-sm font-medium text-[var(--muted-foreground)]">
                 {copy.t("hero.reassurance", { trialDays })}
               </p>
-            )}
-          </div>
+            </div>
+          ) : (
+            ctaRow
+          )}
+
 
           <div className="flex items-center justify-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}

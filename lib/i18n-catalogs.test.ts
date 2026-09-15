@@ -414,11 +414,26 @@ describe('the gendered-past guard itself', () => {
  * exemption.
  */
 describe('market-scoped copy', () => {
-  const landing = load(SOURCE_LOCALE, 'landing.json');
-  const landingKeys = Object.keys(landing);
-  const scoped = landingKeys.filter((key) => MARKET_SCOPED.test(key));
+  // Every namespace, not just landing.json: MARKET_SCOPED exempts a market
+  // subtree wherever it appears, so the orphan check has to look everywhere it
+  // could appear. Reading one file meant a `variant.us.*` subtree in
+  // pricing.json would have escaped parity AND this check at the same time.
+  const source: Catalog = {};
+  for (const namespace of NAMESPACES) {
+    for (const [key, value] of Object.entries(load(SOURCE_LOCALE, namespace))) {
+      source[`${namespace}::${key}`] = value;
+    }
+  }
+  const sourceEntries = Object.entries(source);
+  const scoped = sourceEntries
+    .map(([id]) => id)
+    .filter((id) => MARKET_SCOPED.test(id.split('::')[1]));
 
-  const baseKeyOf = (key: string) => key.replace(/^variant\.(us|uk)\./, 'variant.');
+  /** `landing.json::variant.us.hero.title` -> `landing.json::variant.hero.title` */
+  const baseIdOf = (id: string) => {
+    const [namespace, key] = id.split('::');
+    return `${namespace}::${key.replace(/^variant\.(us|uk)\./, 'variant.')}`;
+  };
 
   /**
    * Market copy a market ADDS rather than overrides.
@@ -437,69 +452,162 @@ describe('market-scoped copy', () => {
     // table stakes in Europe and saying it above the fold buys nothing, whereas
     // in the US the trial is the strongest thing we can say there. Gated by
     // `copy.has("hero.reassurance")` in VariantHero.
-    'variant.us.hero.reassurance',
+    'landing.json::variant.us.hero.reassurance',
   ]);
+
+  /**
+   * Does this override actually shadow something?
+   *
+   * Exact match is the normal answer. Arrays are the exception, deliberately:
+   * an override REPLACES a base array rather than merging into it by index,
+   * because the two lists answer different objections and are different lengths
+   * (the US FAQ has eight entries where the shared one has seven). Index-merging
+   * them is how you ship a half-European FAQ.
+   *
+   * But "the base array exists" is far too weak on its own, and was the first
+   * version of this test: it let `faq.items[0].anwser` pass, which is exactly
+   * the silent-fallback failure the whole test exists to catch, across 24 of the
+   * 31 keys in the subtree. So for an indexed key the rule is that some element
+   * of the base array must carry the SAME FIELD: any index, same shape.
+   */
+  const isOrphan = (baseId: string, ids: ReadonlySet<string>): boolean => {
+    if (ids.has(baseId)) return false;
+    const indexed = /^(.*?)\[\d+\](.*)$/.exec(baseId);
+    if (!indexed) return true; // not an array member: no excuse
+    const [, arrayRoot, fieldSuffix] = indexed;
+    const sameShape = new RegExp(
+      `^${arrayRoot.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}` +
+        `\\[\\d+\\]${fieldSuffix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
+    );
+    for (const id of ids) if (sameShape.test(id)) return false;
+    return true;
+  };
 
   test('every market-scoped key shadows a base key', () => {
     // The failure this exists for: `variant.us.hero.subtitel` shadows nothing,
     // so the resolver falls back to the base key and /us quietly ships the
     // European line. Nothing renders wrong, nothing throws, and the override
     // you thought you wrote is not on the page. Only a test catches that.
-    //
-    // Arrays are the exception, and deliberately so. An override REPLACES a
-    // base array rather than merging into it by index, because the two lists
-    // answer different objections and are different lengths: the US FAQ has
-    // eight entries where the shared one has seven. Index-merging them is how
-    // you ship a half-European FAQ. So for an indexed key the rule is that the
-    // base ARRAY must exist, not the base index.
+    const ids = new Set(Object.keys(source));
     const orphans = scoped
-      .filter((key) => {
-        if (MARKET_ONLY_KEYS.has(key)) return false;
-        const base = baseKeyOf(key);
-        if (base in landing) return false;
-        const arrayRoot = base.replace(/\[\d+\].*$/, '');
-        if (arrayRoot === base) return true; // not an indexed key: no excuse
-        return !landingKeys.some((k) => k.startsWith(`${arrayRoot}[`));
-      })
+      .filter((id) => !MARKET_ONLY_KEYS.has(id) && isOrphan(baseIdOf(id), ids))
       .map(
-        (key) =>
-          `messages/en/landing.json "${key}" overrides nothing: ` +
-          `"${baseKeyOf(key)}" does not exist, so this string will never render`,
+        (id) =>
+          `messages/en/${id.replace('::', ' "')}" overrides nothing: ` +
+          `"${baseIdOf(id).split('::')[1]}" does not exist, so this string ` +
+          `will never render`,
       );
     expect(orphans).toEqual([]);
   });
 
-  test('a typo in an override is an orphan, array or not', () => {
-    // Guards the guard, since the array exception above is the loose part.
-    const present = new Set(landingKeys);
-    const isOrphan = (base: string) => {
-      if (present.has(base)) return false;
-      const arrayRoot = base.replace(/\[\d+\].*$/, '');
-      if (arrayRoot === base) return true;
-      return !landingKeys.some((k) => k.startsWith(`${arrayRoot}[`));
-    };
-    expect(isOrphan('variant.hero.subtitel')).toBe(true);
-    expect(isOrphan('variant.faqq.items[0].question')).toBe(true);
-    expect(isOrphan('variant.hero.subtitle')).toBe(false);
+  test('a typo in an override is an orphan, at any depth', () => {
+    // Guards the guard. The array rule is the loose part, so it is pinned from
+    // both sides: a misspelled FIELD inside an array element must still fail.
+    const ids = new Set([
+      'landing.json::variant.hero.subtitle',
+      'landing.json::variant.faq.items[0].question',
+      'landing.json::variant.faq.items[0].answer',
+    ]);
+    // Straightforward typo, no array involved.
+    expect(isOrphan('landing.json::variant.hero.subtitel', ids)).toBe(true);
+    expect(isOrphan('landing.json::variant.hero.subtitle', ids)).toBe(false);
+    // The regression this test was rewritten for: a misspelled field inside an
+    // array element used to pass because the base ARRAY existed.
+    expect(isOrphan('landing.json::variant.faq.items[0].anwser', ids)).toBe(true);
+    expect(isOrphan('landing.json::variant.faq.items[0].titel', ids)).toBe(true);
     // An index past the end of the base array is allowed: that is the whole
-    // point of replacing rather than merging.
-    expect(isOrphan('variant.faq.items[99].question')).toBe(false);
+    // point of replacing an array rather than merging into it.
+    expect(isOrphan('landing.json::variant.faq.items[99].answer', ids)).toBe(false);
+    // A misspelled array is still an orphan.
+    expect(isOrphan('landing.json::variant.faqq.items[0].answer', ids)).toBe(true);
+    // A namespace is part of the identity: the same key in another file is not
+    // a shadow.
+    expect(isOrphan('pricing.json::variant.hero.subtitle', ids)).toBe(true);
   });
 
-  test('every declared market-only key actually exists', () => {
-    // A ratchet that still lists a key nobody writes any more is a licence
-    // somebody will reuse by accident.
-    for (const key of MARKET_ONLY_KEYS) {
-      expect(scoped).toContain(key);
+  test('every market-scoped message is valid ICU', () => {
+    // The `every message is valid ICU` test above runs over OTHER_LOCALES, so
+    // an en-only string is never parsed by anything. Every string this feature
+    // adds is en-only: a stray brace would have reached /us unchecked.
+    const broken: string[] = [];
+    for (const id of scoped) {
+      try {
+        parse(source[id]);
+      } catch (error) {
+        broken.push(`messages/en/${id.replace('::', ' "')}" is not valid ICU: ${(error as Error).message}`);
+      }
     }
+    expect(broken).toEqual([]);
+  });
+
+  test('an override uses exactly the rich-text tags its base uses', () => {
+    // A tag is a render function the component passes in. `<accent>` present in
+    // the base and missing from the override silently drops the styling; present
+    // in the override and missing from the base throws, because nothing supplies
+    // it. Neither is visible without rendering the page.
+    const drift: string[] = [];
+    for (const id of scoped) {
+      const baseId = baseIdOf(id);
+      if (!(baseId in source)) continue; // additive keys have no base to match
+      let expected: Set<string>, actual: Set<string>;
+      try {
+        expected = new Set([...tokens(source[baseId])].filter((t) => t.startsWith('tag:')));
+        actual = new Set([...tokens(source[id])].filter((t) => t.startsWith('tag:')));
+      } catch {
+        continue; // reported by the ICU test above
+      }
+      const missing = [...expected].filter((t) => !actual.has(t));
+      const extra = [...actual].filter((t) => !expected.has(t));
+      if (missing.length || extra.length) {
+        drift.push(
+          `messages/en/${id.replace('::', ' "')}": missing [${missing.join(', ')}] ` +
+            `unexpected [${extra.join(', ')}]`,
+        );
+      }
+    }
+    expect(drift).toEqual([]);
+  });
+
+  test('an override introduces no placeholder nothing supplies', () => {
+    // `{trailDays}` renders as the literal text "{trailDays}" on /us and nowhere
+    // else, which is the bug VariantDifferentiator already carries a comment
+    // about. An override may only use arguments the shared copy already uses
+    // somewhere, because those are the ones the page machinery actually passes.
+    const supplied = new Set<string>();
+    for (const [id, value] of sourceEntries) {
+      if (MARKET_SCOPED.test(id.split('::')[1])) continue;
+      try {
+        for (const token of tokens(value)) if (token.startsWith('arg:')) supplied.add(token);
+      } catch {
+        continue;
+      }
+    }
+    const unknown: string[] = [];
+    for (const id of scoped) {
+      try {
+        for (const token of tokens(source[id])) {
+          if (token.startsWith('arg:') && !supplied.has(token)) {
+            unknown.push(`messages/en/${id.replace('::', ' "')}" uses ${token}, which no shared string uses, so nothing passes it`);
+          }
+        }
+      } catch {
+        continue;
+      }
+    }
+    expect(unknown).toEqual([]);
   });
 
   test('the exemption is only ever used for market subtrees', () => {
     // Guards the guard: MARKET_SCOPED must not be widened into a way to skip
     // translating ordinary copy.
-    for (const key of scoped) {
-      expect(key).toMatch(/^variant\.(us|uk)\./);
+    for (const id of scoped) {
+      expect(id.split('::')[1]).toMatch(MARKET_SCOPED);
     }
+    // The negative half, which the first version lacked: ordinary copy must NOT
+    // be exemptible. Without this the regex could be widened to `^variant\.`
+    // and every test above would still pass.
+    expect(MARKET_SCOPED.test('variant.hero.title')).toBe(false);
+    expect(MARKET_SCOPED.test('variant.faq.items[0].answer')).toBe(false);
   });
 });
 
@@ -517,14 +625,15 @@ describe('market-scoped copy', () => {
  * Scoped to English: fr/es/pl genuinely get 30 days, so "1 mois gratuit" is
  * true there and stays.
  */
-const WORDED_TRIAL = /\b(?:free month|month free|one month free|\d+\s*(?:days?|jours?)\s*free|free\s+\d+\s*days?)\b/i;
+const WORDED_TRIAL =
+  /\b(?:free month|month free|one month free|\d+[\s-]*(?:days?|jours?)[\s-]*(?:free|trial)|free\s+(?:for\s+)?\d+[\s-]*days?|\d+[\s-]*days?\s+for\s+free|first\s+month\s+is\s+free)\b/i;
 
 /**
  * The founding-partner pages are exempt for a different reason: that programme
  * closed on 2026-08-04, so the whole subtree is stale and is being removed
  * under its own issue rather than half-corrected here.
  */
-const FOUNDING_SUBTREE = /programme-fondateur|founding/i;
+const FOUNDING_SUBTREE = /(?:^|\.)(?:programme-fondateur|founding-partner)(?:\.|$)/i;
 
 describe('English copy never writes a trial length in words', () => {
   test.each(NAMESPACES)('%s', (namespace) => {
@@ -556,6 +665,89 @@ describe('English copy never writes a trial length in words', () => {
       '1 month free, no catch',
     ]) {
       expect(WORDED_TRIAL.test(shipped)).toBe(true);
+    }
+  });
+});
+
+/**
+ * The one claim on this site that would be flatly untrue.
+ *
+ * `requires_card_upfront` (backend migration 86) attaches a payment method
+ * before the dashboard opens, so every new signup gives us a card to start the
+ * trial. "No credit card required" is the single most tempting line in SaaS
+ * hero copy and we are not entitled to it. "Cancel anytime" is the honest
+ * reassurance and is what /us says.
+ *
+ * Checked in every locale, because the temptation translates.
+ */
+/**
+ * "Card" on this site means two different things, and only one of them is a
+ * promise we cannot keep.
+ *
+ * The LOYALTY card is the product: "no card to lose", "sin tarjetas que
+ * perder" are true and are good copy. The PAYMENT card is the one
+ * `requires_card_upfront` (backend migration 86) collects before the dashboard
+ * opens, so "no credit card required" would be flatly false. It is the single
+ * most tempting line in SaaS hero copy and we are not entitled to it.
+ *
+ * So every branch below is anchored to the payment sense: an English "no card"
+ * only counts when it is "required"/"needed", and the other locales must name
+ * the card type. Getting this wrong in the loose direction would flag the
+ * product's own tagline, which is how the first version of this guard failed.
+ */
+const NO_CARD_CLAIM = new RegExp(
+  [
+    // EN: "required"/"needed" is what makes it the payment sense.
+    String.raw`no\s+(?:credit\s+|debit\s+|payment\s+)?card\s+(?:required|needed)`,
+    String.raw`no\s+payment\s+(?:details|method)\s+(?:required|needed)`,
+    // FR / ES / PL: the card type has to be named.
+    String.raw`sans\s+carte\s+(?:bancaire|de\s+cr\u00e9dit|de\s+paiement)`,
+    String.raw`sin\s+tarjeta\s+(?:de\s+cr\u00e9dito|bancaria|de\s+pago)`,
+    String.raw`bez\s+karty\s+(?:kredytowej|p\u0142atniczej)`,
+  ].join('|'),
+  'i',
+);
+
+describe('the site never promises a trial without a card', () => {
+  test.each(LOCALES)('%s', (locale) => {
+    const offenders: string[] = [];
+    for (const namespace of NAMESPACES) {
+      for (const [key, value] of Object.entries(load(locale, namespace))) {
+        if (!NO_CARD_CLAIM.test(value)) continue;
+        offenders.push(
+          `messages/${locale}/${namespace} "${key}" promises a trial with no ` +
+            `card, which requires_card_upfront makes false: ${value.slice(0, 80)}`,
+        );
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  test('the guard catches the phrasings worth catching', () => {
+    for (const claim of [
+      'Start free. No credit card required.',
+      'No card needed',
+      'No payment details required',
+      'Essai gratuit, sans carte bancaire',
+      'Prueba gratis, sin tarjeta de cr\u00e9dito',
+      'Wypr\u00f3buj bez karty kredytowej',
+    ]) {
+      expect(NO_CARD_CLAIM.test(claim)).toBe(true);
+    }
+  });
+
+  test('it does not flag copy about the LOYALTY card', () => {
+    // The trap this guard fell into first: these are the product's own
+    // taglines, they are true, and they are shipping today.
+    for (const honest of [
+      'No app to download, no card to lose.',
+      'Sin aplicaci\u00f3n que descargar, sin tarjetas que perder.',
+      'Aucune appli \u00e0 t\u00e9l\u00e9charger, aucune carte \u00e0 perdre.',
+      'Bez aplikacji do pobrania, bez plastiku do zgubienia.',
+      '{trialDays} days free \u00b7 Cancel anytime',
+      'We ask for your card to start the trial.',
+    ]) {
+      expect(NO_CARD_CLAIM.test(honest)).toBe(false);
     }
   });
 });

@@ -32,8 +32,12 @@ const PRICED_FILES = ["pricing.json", "landing.json", "features.json", "metadata
  * amount with a space ("29 zł"), so requiring a preceding digit keeps the
  * guard useful without flagging prose. A symbol-first "zł 29" would slip
  * through, which is not a form Polish uses.
+ *
+ * `}` counts as well as a digit, because "{starterPrice} zł/mies." is the exact
+ * shape this file exists to reject: the glyph baked, only the number
+ * interpolated. A digit-only anchor let it through.
  */
-const GLYPHS = /[€$£]|\d\s*zł|&euro;|&#8364;/;
+const GLYPHS = /[€$£]|[\d}]\s*zł|&euro;|&#8364;/;
 
 /**
  * Demo content is exempt: the sector cards illustrate a merchant's own reward
@@ -91,6 +95,9 @@ describe("the glyph pattern itself", () => {
     "£30 per month",
     "29 zł",
     "29zł",
+    // Glyph baked, number interpolated: the shape this file exists to reject.
+    "{starterPrice} zł/mies.",
+    "Rozliczane {starterYearlyPrice} zł rocznie",
     "&euro;20",
   ])("flags %p", (text) => {
     expect(GLYPHS.test(text)).toBe(true);
