@@ -179,3 +179,15 @@ still promise "a free month".
 Probably none. This is public marketing copy, not dashboard behaviour: no new
 setting, no tier gating, no error message a business owner meets inside the
 product. Revisited against the real diff at Phase 6.
+
+## Verification status (2026-09-15)
+
+| Check | Result |
+|---|---|
+| `bun test lib` | **455 pass, 0 fail** (19 files; 10 new tests this issue) |
+| `bun run type-check` | **clean** |
+| `bun run lint` | **1494 problems (57 errors, 1437 warnings)**, byte-identical to `dev`'s count. Every error is in the generated `ds-bundle/`, `.design-sync/` and `.ds-sync/` trees. This diff adds none. |
+| `bun run build` | **SKIPPED, by Harry's explicit call (2026-09-15).** A showcase dev server was running on :3001 and `next build` writes to the same `.next` it is serving from, so building would have taken the dev server down. Not a judgement that the build is unnecessary: it is the one item of the post-feature checklist not executed, and it should be run before this branch merges. `type-check` passing makes a compile failure unlikely but does not rule out a build-time failure (RSC boundaries, `dynamic()` resolution). |
+| Manual render check | All six markets fetched from the running dev server. `/us` shows the new copy, the 14-day reassurance and `index, follow` on both pages; `/`, `/en`, `/es`, `/pl`, `/uk` show the base copy with the reassurance wrapper absent (0 occurrences, vs 1 on `/us`). |
+
+Phase 5 (manual QA against `docs/qa/us-market-landing.md`) has **not** been run.
