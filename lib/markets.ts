@@ -138,3 +138,64 @@ export function isPilotPath(pathname: string): boolean {
 export function marketLink(market: Market, seoPrefix: string, path: string): string {
   return market === "int" ? `${seoPrefix}${path}` : marketPath(market, path);
 }
+
+/**
+ * Where a visitor's chosen market is remembered between the showcase and the
+ * dashboard.
+ *
+ * **A hint, never a price.** `/us` quotes $49 and a 14-day trial, its CTA opens
+ * `/onboarding` on another host, and the country field there is defaulted by a
+ * 12-entry timezone table that falls back to `en -> GB`. GB has no USD ladder,
+ * so a US visitor could be quoted $49 and then check out at EUR 20. Someone who
+ * deliberately opened `/us` has told us more than that heuristic can guess.
+ *
+ * What it must not do is decide the price. The backend never reads it: billing
+ * currency comes from the postal address, then the country dropdown, both typed
+ * by the owner. A cookie records which page someone clicked, which is weaker
+ * evidence than either and trivially forged. All this does is prefill a field
+ * the owner can change.
+ *
+ * Deliberately NOT `NEXT_LOCALE`. Locale, market and billing currency are three
+ * axes this codebase keeps apart on purpose (see the header of the backend's
+ * `app/core/pricing_region.py`): Polish is a locale that quotes euros, and `/uk`
+ * is English and is not GBP. Carrying a market on the locale cookie is that
+ * exact conflation.
+ */
+export const MARKET_COOKIE = "stampeo_market";
+
+/** A month. Long enough to survive a think-it-over, short enough to expire. */
+export const MARKET_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+
+/**
+ * The pilot market this path belongs to, or null for the international site.
+ *
+ * `int` is never returned: it implies no country, and stamping it would erase a
+ * real market the moment a US visitor clicked through to the homepage.
+ */
+export function marketFromPath(pathname: string): Market | null {
+  for (const market of Object.keys(MARKETS) as Market[]) {
+    if (market === "int") continue;
+    const root = MARKETS[market].path;
+    if (pathname === root || pathname.startsWith(`${root}/`)) return market;
+  }
+  return null;
+}
+
+/**
+ * The `Domain` the cookie needs so the dashboard can read it.
+ *
+ * The app is always a subdomain of the showcase — `stampeo.app` /
+ * `app.stampeo.app` in production, `dev.stampeo.app` / `app.dev.stampeo.app` on
+ * dev — so the showcase's own host with a leading dot covers both without an
+ * environment switch.
+ *
+ * Returns undefined for single-label hosts and IPs: browsers reject a `Domain`
+ * attribute there and drop the cookie silently, which would make local dev look
+ * like a code bug.
+ */
+export function cookieDomainForHost(host: string | null | undefined): string | undefined {
+  const bare = (host ?? "").split(":")[0].trim().toLowerCase();
+  if (!bare || !bare.includes(".")) return undefined;
+  if (/^[\d.]+$/.test(bare)) return undefined;
+  return `.${bare}`;
+}
