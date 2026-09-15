@@ -132,7 +132,7 @@
   --text-display--letter-spacing: -0.025em;
   --text-display--font-weight: 800;
 
-  /* 40px @390 → 56px @1280. The hero headline only.
+  /* 40px @390 → 60px @1280. The hero headline only.
      Deliberately smaller than --text-display, which the closing CTA still uses.
      The hero has more to fit above the fold than any other block: a headline, a
      lead paragraph, two calls to action, a reassurance line and the two wallet
@@ -140,8 +140,14 @@
      more than about six words ran to three lines on a laptop and pushed the
      badges below the fold, which loses the one visual that says "this lives in
      the phone you already carry". The closing CTA has none of that competition,
-     so it keeps the louder size. */
-  --text-hero: clamp(2.5rem, 1.9436rem + 2.2831vw, 3.5rem);
+     so it keeps the louder size.
+
+     The 60px cap is the dial. The constraint is two lines inside the 768px
+     copy column: the longest balanced line is "Turn first-time customers", 25
+     characters, which at this weight and tracking needs roughly 0.475em each.
+     Raise the cap and watch for a third line at 1280px and up before anything
+     else. */
+  --text-hero: clamp(2.5rem, 1.7785rem + 2.9623vw, 3.75rem);
   --text-hero--line-height: 1.07;
   --text-hero--letter-spacing: -0.025em;
   --text-hero--font-weight: 800;
