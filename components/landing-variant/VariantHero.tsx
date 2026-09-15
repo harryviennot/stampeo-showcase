@@ -66,9 +66,9 @@ export async function VariantHero({
           Its wrapper spans the full width, so it has to stay transparent to
           the pointer or it would eat hover on the cards behind it. */}
       <Container className="relative z-10 pointer-events-none -mt-10 lg:-mt-14 xl:-mt-24">
-        <ScrollReveal className="pointer-events-auto mx-auto max-w-2xl text-center flex flex-col items-center gap-7">
+        <ScrollReveal className="pointer-events-auto mx-auto max-w-3xl text-center flex flex-col items-center gap-7">
           <div>
-            <h1 className="text-display mb-5">
+            <h1 className="text-hero text-balance mb-4">
               {copy.rich("hero.title", {
                 accent: (chunks: ReactNode) => (
                   <span className="text-[var(--accent)]">{chunks}</span>
@@ -76,7 +76,7 @@ export async function VariantHero({
               })}
             </h1>
 
-            <p className="text-lead text-[var(--muted-foreground)]">
+            <p className="text-lead text-[var(--muted-foreground)] mx-auto max-w-2xl">
               {copy.t("hero.subtitle")}
             </p>
           </div>
