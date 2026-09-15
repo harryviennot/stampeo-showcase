@@ -31,7 +31,7 @@
         "mobileAddWallet": "Pruébalo, añádela a tu Wallet",
         "mobileHint": "La tarjeta se añadirá a la cartera de tu teléfono",
         "rewardMid": "-50 % en tu 1er mes",
-        "rewardTop": "1 mes gratis",
+        "rewardTop": "{trialDays} días gratis",
         "rewardAllUnlocked": "¡Todo desbloqueado!"
       }
     },

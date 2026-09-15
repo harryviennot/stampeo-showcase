@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Stamps",
     "reward": "Reward",
-    "rewarded": "You're eligible for 30 days free!",
-    "rewardText": "30 days free with 8 stamps!",
+    "rewarded": "You're eligible for {trialDays} days free!",
+    "rewardText": "{trialDays} days free with 8 stamps!",
     "nav": {
       "features": "Features",
       "pricing": "Pricing",

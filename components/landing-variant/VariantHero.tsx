@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CTAButton } from "../ui/CTAButton";
@@ -5,11 +6,26 @@ import { Container } from "../ui/Container";
 import { FanParallax } from "./FanParallax";
 import { HeroCardFan } from "./HeroCardFan";
 import { walletBadges } from "@/lib/store-badges";
+import { marketCopy } from "@/lib/market-copy";
+import { type Market } from "@/lib/markets";
 
-export async function VariantHero() {
-  const t = await getTranslations("variant.hero");
+export async function VariantHero({
+  market = "int",
+  trialDays,
+}: Readonly<{ market?: Market; trialDays: number }>) {
+  // Namespaced at `variant`, not `variant.hero`, because the market override
+  // lives at `variant.us.hero.*` and the resolver needs to see both.
+  const t = await getTranslations("variant");
+  const copy = marketCopy(t, market);
   const locale = await getLocale();
   const badges = walletBadges(locale);
+
+  // The trial is the strongest thing we can say above the fold, and it was not
+  // said at all: the hero never mentioned it, so the number only appeared four
+  // screens down. It is market-scoped rather than global because the honest
+  // reassurance differs by country, and because 30 days is not a differentiator
+  // in a market where the trial is table stakes.
+  const hasReassurance = copy.has("hero.reassurance");
 
   return (
     /* The header is fixed, so the hero needs to clear it by more than a normal
@@ -26,35 +42,45 @@ export async function VariantHero() {
         <ScrollReveal className="pointer-events-auto mx-auto max-w-2xl text-center flex flex-col items-center gap-7">
           <div>
             <h1 className="text-display mb-5">
-              {t.rich("title", {
-                accent: (chunks) => <span className="text-[var(--accent)]">{chunks}</span>,
+              {copy.rich("hero.title", {
+                accent: (chunks: ReactNode) => (
+                  <span className="text-[var(--accent)]">{chunks}</span>
+                ),
               })}
             </h1>
 
             <p className="text-lead text-[var(--muted-foreground)]">
-              {t("subtitle")}
+              {copy.t("hero.subtitle")}
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-x-6 gap-y-4 items-center justify-center">
-            <CTAButton label={t("primaryCta")} trackAs="hero" />
-            {/* The real interactive demo lives further down; this jumps to it. */}
-            <a
-              href="#try-it"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] underline-offset-4 hover:underline"
-            >
-              {t("tryDemoCta")}
-              <svg
-                className="w-4 h-4 group-hover:translate-y-0.5 transition-transform"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                aria-hidden
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-wrap gap-x-6 gap-y-4 items-center justify-center">
+              <CTAButton label={copy.t("hero.primaryCta")} trackAs="hero" />
+              {/* The real interactive demo lives further down; this jumps to it. */}
+              <a
+                href="#try-it"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--foreground)] underline-offset-4 hover:underline"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
-              </svg>
-            </a>
+                {copy.t("hero.tryDemoCta")}
+                <svg
+                  className="w-4 h-4 group-hover:translate-y-0.5 transition-transform"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                  stroke="currentColor"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                </svg>
+              </a>
+            </div>
+
+            {hasReassurance && (
+              <p className="text-sm font-medium text-[var(--muted-foreground)]">
+                {copy.t("hero.reassurance", { trialDays })}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center justify-center gap-3">

@@ -586,7 +586,7 @@
       ],
       "cta": {
         "title": "Keep every customer in the loop, automatically",
-        "subtitle": "Transactional notifications are active on every plan. Start your free month and reward visits from day one."
+        "subtitle": "Transactional notifications are active on every plan. Start your free trial and reward visits from day one."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -856,7 +856,7 @@
       ],
       "cta": {
         "title": "Be present at the right moment",
-        "subtitle": "Geofencing is included in the Growth plan. Start your free month to try it now."
+        "subtitle": "Geofencing is included in the Growth plan. Start your free trial to try it now."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1115,7 +1115,7 @@
       },
       "cta": {
         "title": "Your next campaign, in your customers' pocket",
-        "subtitle": "Start your free month and send your first wallet broadcast this week."
+        "subtitle": "Start your free trial and send your first wallet broadcast this week."
       },
       "related": [
         "notifications-push",

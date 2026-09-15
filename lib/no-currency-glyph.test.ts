@@ -23,7 +23,17 @@ const MESSAGES = join(import.meta.dir, "..", "messages");
 // "1 month free, then EUR20/month for life" survived into the US launch: a
 // snippet outlives the page by weeks.
 const PRICED_FILES = ["pricing.json", "landing.json", "features.json", "metadata.json"];
-const GLYPHS = /[€$£]|zł|&euro;|&#8364;/;
+/**
+ * `zł` is anchored to a digit; every other glyph is not.
+ *
+ * A bare /zł/ fires inside ordinary Polish words: "członków" contains it, so
+ * does "zły". That is the same trap the Polish gendered-past guard hit with
+ * "właśnie" in lib/i18n-catalogs.test.ts. Polish writes currency AFTER the
+ * amount with a space ("29 zł"), so requiring a preceding digit keeps the
+ * guard useful without flagging prose. A symbol-first "zł 29" would slip
+ * through, which is not a form Polish uses.
+ */
+const GLYPHS = /[€$£]|\d\s*zł|&euro;|&#8364;/;
 
 /**
  * Demo content is exempt: the sector cards illustrate a merchant's own reward
@@ -72,4 +82,27 @@ describe("plan-price translations carry no currency glyph", () => {
       });
     }
   }
+});
+
+describe("the glyph pattern itself", () => {
+  test.each([
+    "Billed €39 a year",
+    "$49/month",
+    "£30 per month",
+    "29 zł",
+    "29zł",
+    "&euro;20",
+  ])("flags %p", (text) => {
+    expect(GLYPHS.test(text)).toBe(true);
+  });
+
+  test.each([
+    // The trap: ordinary Polish words containing the letters z-ł.
+    "Program członków założycieli Stampeo",
+    "zły wybór",
+    "Złoty program",
+    "{starterPrice}/month",
+  ])("does not flag %p", (text) => {
+    expect(GLYPHS.test(text)).toBe(false);
+  });
 });

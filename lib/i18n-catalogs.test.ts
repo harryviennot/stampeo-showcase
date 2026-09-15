@@ -415,25 +415,83 @@ describe('the gendered-past guard itself', () => {
  */
 describe('market-scoped copy', () => {
   const landing = load(SOURCE_LOCALE, 'landing.json');
-  const scoped = Object.keys(landing).filter((key) => MARKET_SCOPED.test(key));
+  const landingKeys = Object.keys(landing);
+  const scoped = landingKeys.filter((key) => MARKET_SCOPED.test(key));
+
+  const baseKeyOf = (key: string) => key.replace(/^variant\.(us|uk)\./, 'variant.');
+
+  /**
+   * Market copy a market ADDS rather than overrides.
+   *
+   * Almost every market-scoped key restates a line that already exists, so
+   * "shadows nothing" is normally a typo. These are the deliberate exceptions:
+   * a string one market says and the others do not say at all. Each needs a
+   * reason, and the component reading it must gate on `copy.has(...)` so the
+   * markets without it render nothing rather than a blank line.
+   *
+   * This list is a ratchet like LEGACY_EM_DASH above: it may shrink freely, and
+   * it may only grow with a reason written down.
+   */
+  const MARKET_ONLY_KEYS: ReadonlySet<string> = new Set([
+    // The hero reassurance line. /en deliberately has no equivalent: 30 days is
+    // table stakes in Europe and saying it above the fold buys nothing, whereas
+    // in the US the trial is the strongest thing we can say there. Gated by
+    // `copy.has("hero.reassurance")` in VariantHero.
+    'variant.us.hero.reassurance',
+  ]);
 
   test('every market-scoped key shadows a base key', () => {
     // The failure this exists for: `variant.us.hero.subtitel` shadows nothing,
     // so the resolver falls back to the base key and /us quietly ships the
     // European line. Nothing renders wrong, nothing throws, and the override
     // you thought you wrote is not on the page. Only a test catches that.
+    //
+    // Arrays are the exception, and deliberately so. An override REPLACES a
+    // base array rather than merging into it by index, because the two lists
+    // answer different objections and are different lengths: the US FAQ has
+    // eight entries where the shared one has seven. Index-merging them is how
+    // you ship a half-European FAQ. So for an indexed key the rule is that the
+    // base ARRAY must exist, not the base index.
     const orphans = scoped
       .filter((key) => {
-        const base = key.replace(/^variant\.(us|uk)\./, 'variant.');
-        return !(base in landing);
+        if (MARKET_ONLY_KEYS.has(key)) return false;
+        const base = baseKeyOf(key);
+        if (base in landing) return false;
+        const arrayRoot = base.replace(/\[\d+\].*$/, '');
+        if (arrayRoot === base) return true; // not an indexed key: no excuse
+        return !landingKeys.some((k) => k.startsWith(`${arrayRoot}[`));
       })
       .map(
         (key) =>
           `messages/en/landing.json "${key}" overrides nothing: ` +
-          `"${key.replace(/^variant\.(us|uk)\./, 'variant.')}" does not exist, ` +
-          `so this string will never render`,
+          `"${baseKeyOf(key)}" does not exist, so this string will never render`,
       );
     expect(orphans).toEqual([]);
+  });
+
+  test('a typo in an override is an orphan, array or not', () => {
+    // Guards the guard, since the array exception above is the loose part.
+    const present = new Set(landingKeys);
+    const isOrphan = (base: string) => {
+      if (present.has(base)) return false;
+      const arrayRoot = base.replace(/\[\d+\].*$/, '');
+      if (arrayRoot === base) return true;
+      return !landingKeys.some((k) => k.startsWith(`${arrayRoot}[`));
+    };
+    expect(isOrphan('variant.hero.subtitel')).toBe(true);
+    expect(isOrphan('variant.faqq.items[0].question')).toBe(true);
+    expect(isOrphan('variant.hero.subtitle')).toBe(false);
+    // An index past the end of the base array is allowed: that is the whole
+    // point of replacing rather than merging.
+    expect(isOrphan('variant.faq.items[99].question')).toBe(false);
+  });
+
+  test('every declared market-only key actually exists', () => {
+    // A ratchet that still lists a key nobody writes any more is a licence
+    // somebody will reuse by accident.
+    for (const key of MARKET_ONLY_KEYS) {
+      expect(scoped).toContain(key);
+    }
   });
 
   test('the exemption is only ever used for market subtrees', () => {

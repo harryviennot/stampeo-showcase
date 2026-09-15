@@ -269,7 +269,7 @@ function useOfflinePointsAnimation(isOffline: boolean) {
   return animatedPoints;
 }
 
-export function HeroDemo() {
+export function HeroDemo({ trialDays }: Readonly<{ trialDays: number }>) {
   const stamp = useDemoSession();
   const t = useTranslations("landing.hero");
   const tCommon = useTranslations("common");
@@ -319,13 +319,13 @@ export function HeroDemo() {
 
   const pointsRewards: RewardTier[] = [
     { id: "r_mid", name: t("points.rewardMid"), threshold: POINTS_MID },
-    { id: "r_top", name: t("points.rewardTop"), threshold: POINTS_TOP },
+    { id: "r_top", name: t("points.rewardTop", { trialDays }), threshold: POINTS_TOP },
   ];
   const pointsRewardValue =
     displayPoints >= POINTS_TOP
       ? t("points.rewardAllUnlocked")
       : displayPoints >= POINTS_MID
-        ? t("points.rewardTop")
+        ? t("points.rewardTop", { trialDays })
         : t("points.rewardMid");
 
   return (
@@ -379,7 +379,10 @@ export function HeroDemo() {
                   label_color: "#fff",
                   logo_url: STAMPEO_LOGO,
                   secondary_fields: [
-                    { key: "reward", label: tCommon("reward"), value: displayStamps === 8 ? tCommon("rewarded") : tCommon("rewardText") }
+                    { key: "reward", label: tCommon("reward"), value:
+                        displayStamps === 8
+                          ? tCommon("rewarded", { trialDays })
+                          : tCommon("rewardText", { trialDays }) }
                   ],
                 }}
                 stamps={displayStamps}
