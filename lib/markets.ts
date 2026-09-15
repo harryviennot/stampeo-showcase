@@ -8,8 +8,12 @@
  * (/uk, /us) are served by a middleware rewrite to the English route so they
  * keep lang=en and never 307 to /en/uk for English visitors.
  *
- * NOTE: pilots ship NOINDEX until the copy is signed off. Flipping live = set
- * `index: true` in the pilot pages + wire PILOT_HREFLANG into the homepage.
+ * A pilot goes live by setting `indexable: true` on its market. That one flag
+ * drives both the page's `robots` and its presence in PILOT_HREFLANG, because
+ * they are the same decision and were previously two edits in two files with the
+ * instructions living in a third. Indexing a page without advertising it in the
+ * homepage cluster produces an unreciprocated hreflang, which Google ignores —
+ * so /us would compete with /en as a duplicate rather than being its US variant.
  */
 
 export type Market = "int" | "uk" | "us";
@@ -38,6 +42,16 @@ export interface MarketConfig {
    * constant; a number read from one place can.
    */
   trialDays: number;
+  /**
+   * May Google index this pilot, and may the homepage advertise it?
+   *
+   * One flag for both: see the note above. A market must not be indexable while
+   * its `currency` is not what it actually bills — /uk declared GBP with no GBP
+   * Price for weeks, and indexing that would have ranked a "UK" page quoting
+   * euros. Flip it in the same change as the Price, per
+   * backend/docs/billing/ADDING_A_CURRENCY.md.
+   */
+  indexable: boolean;
 }
 
 export const MARKETS: Record<Market, MarketConfig> = {
@@ -49,6 +63,9 @@ export const MARKETS: Record<Market, MarketConfig> = {
     europeTrust: true,
     label: "int",
     trialDays: 30,
+    // Not a pilot: /en is the homepage, indexed through the normal locale
+    // cluster rather than this one.
+    indexable: false,
   },
   uk: {
     hreflang: "en-GB",
@@ -65,6 +82,9 @@ export const MARKETS: Record<Market, MarketConfig> = {
     europeTrust: true,
     label: "uk",
     trialDays: 30,
+    // Stays noindex while the line above says EUR. Indexing a "UK" page that
+    // quotes euros ranks a promise we would not honour.
+    indexable: false,
   },
   us: {
     hreflang: "en-US",
@@ -74,22 +94,35 @@ export const MARKETS: Record<Market, MarketConfig> = {
     europeTrust: false,
     label: "us",
     trialDays: 14,
+    // LIVE since 2026-09-15. All six public Prices carry currency_options.usd,
+    // `currency_is_priceable('usd')` is true, and /us/pricing renders
+    // $49 / $79 / $119 — so the page Google crawls quotes what a US business is
+    // actually charged. It was noindex until that was true, for exactly this
+    // reason: an indexed snippet outlives the page by weeks.
+    indexable: true,
   },
 };
 
 /**
- * The full hreflang cluster for the homepage, kept in one place so going live
- * with the pilots is a single edit (drop this into the homepage `alternates`).
- * Not wired into the indexed homepage yet — pilots are noindex during testing.
+ * The hreflang cluster for the homepage: the plain locales, plus every pilot
+ * that is actually indexable.
+ *
+ * DERIVED, not hand-written. The hand-written version listed `en-GB -> /uk`
+ * while /uk was noindex — telling Google "the British version is here" and
+ * pointing it at a page marked noindex, an annotation it cannot honour. Reading
+ * `indexable` means the cluster and the pages' `robots` cannot disagree.
  */
 export const PILOT_HREFLANG: Record<string, string> = {
   "x-default": "/en",
   fr: "/",
   en: "/en",
-  "en-GB": "/uk",
-  "en-US": "/us",
   es: "/es",
   pl: "/pl",
+  ...Object.fromEntries(
+    (Object.keys(MARKETS) as Market[])
+      .filter((market) => market !== "int" && MARKETS[market].indexable)
+      .map((market) => [MARKETS[market].hreflang, MARKETS[market].path]),
+  ),
 };
 
 /**
@@ -198,4 +231,22 @@ export function cookieDomainForHost(host: string | null | undefined): string | u
   if (!bare || !bare.includes(".")) return undefined;
   if (/^[\d.]+$/.test(bare)) return undefined;
   return `.${bare}`;
+}
+
+/**
+ * Every pilot URL that belongs in the sitemap.
+ *
+ * A market that Google may index should also be listed, or it is discoverable
+ * only through the homepage's hreflang annotation — which works, but leaves the
+ * page's existence dependent on Google following one link. The sitemap iterates
+ * LOCALES, and a pilot is not a locale, so these would never appear there
+ * otherwise.
+ *
+ * Reads the same `indexable` flag as the pages' `robots` and PILOT_HREFLANG, so
+ * a market cannot end up listed in one place and hidden in another.
+ */
+export function indexablePilotPaths(): string[] {
+  return (Object.keys(MARKETS) as Market[])
+    .filter((market) => market !== "int" && MARKETS[market].indexable)
+    .flatMap((market) => [MARKETS[market].path, `${MARKETS[market].path}/pricing`]);
 }

@@ -3,6 +3,9 @@ import { describe, expect, test } from "bun:test";
 import {
   MARKET_COOKIE,
   MARKETS,
+  PILOT_HREFLANG,
+  indexablePilotPaths,
+  type Market,
   cookieDomainForHost,
   isPilotPath,
   marketFromPath,
@@ -96,5 +99,88 @@ describe("MARKET_COOKIE", () => {
     // locale and still quotes euros; /uk is English and is not GBP. Carrying a
     // market on NEXT_LOCALE is exactly that conflation.
     expect(MARKET_COOKIE).not.toBe("NEXT_LOCALE");
+  });
+});
+
+/**
+ * Indexing a pilot and advertising it via hreflang are the same decision, so
+ * they read the same flag. They were two edits in two files before, and the
+ * comment telling you to do both lived in a third.
+ */
+describe("indexable markets", () => {
+  test("/us is live: dollars on the page, so Google may have it", () => {
+    expect(MARKETS.us.indexable).toBe(true);
+  });
+
+  test("/uk is not: it declares EUR because no GBP ladder exists", () => {
+    // Indexing it would rank a "UK" page that quotes euros. It goes live in the
+    // same change as a GBP Price, per docs/billing/ADDING_A_CURRENCY.md.
+    expect(MARKETS.uk.indexable).toBe(false);
+  });
+
+  test("the international homepage is not a pilot", () => {
+    expect(MARKETS.int.indexable).toBe(false);
+  });
+});
+
+describe("PILOT_HREFLANG", () => {
+  test("advertises exactly the indexable pilots, and no others", () => {
+    // The cluster used to be hand-written and contained `en-GB -> /uk` while
+    // /uk was noindex. Telling Google "the British version is here" and
+    // pointing it at a page marked noindex is an annotation it cannot honour.
+    const advertised = Object.entries(PILOT_HREFLANG)
+      .filter(([, path]) => path === "/us" || path === "/uk")
+      .map(([code]) => code);
+
+    expect(advertised).toEqual(["en-US"]);
+  });
+
+  test("every pilot path in the cluster belongs to an indexable market", () => {
+    for (const [, path] of Object.entries(PILOT_HREFLANG)) {
+      const market = (Object.keys(MARKETS) as Market[]).find(
+        (m) => m !== "int" && MARKETS[m].path === path
+      );
+      if (market) expect(MARKETS[market].indexable).toBe(true);
+    }
+  });
+
+  test("every indexable pilot appears in the cluster", () => {
+    // The other direction. An indexable page missing from the homepage cluster
+    // is an unreciprocated hreflang, which Google ignores outright — so /us
+    // would compete with /en as a duplicate instead of being its US variant.
+    for (const market of Object.keys(MARKETS) as Market[]) {
+      if (market === "int" || !MARKETS[market].indexable) continue;
+      expect(Object.values(PILOT_HREFLANG)).toContain(MARKETS[market].path);
+      expect(PILOT_HREFLANG[MARKETS[market].hreflang]).toBe(MARKETS[market].path);
+    }
+  });
+
+  test("still carries the plain locales and an x-default", () => {
+    expect(PILOT_HREFLANG["x-default"]).toBe("/en");
+    expect(PILOT_HREFLANG.fr).toBe("/");
+    expect(PILOT_HREFLANG.en).toBe("/en");
+    expect(PILOT_HREFLANG.es).toBe("/es");
+    expect(PILOT_HREFLANG.pl).toBe("/pl");
+  });
+});
+
+describe("indexablePilotPaths", () => {
+  test("lists the landing page and the pricing page of each live pilot", () => {
+    // Both are indexable and both quote money, so both belong in the sitemap.
+    // /us/pricing is the one that actually renders $49 / $79 / $119.
+    expect(indexablePilotPaths()).toEqual(["/us", "/us/pricing"]);
+  });
+
+  test("a noindex pilot contributes nothing", () => {
+    // Listing /uk while it is noindex asks Google to crawl a page we told it
+    // not to index, and it quotes euros under a UK flag.
+    expect(indexablePilotPaths()).not.toContain("/uk");
+    expect(indexablePilotPaths()).not.toContain("/uk/pricing");
+  });
+
+  test("the international homepage is not a pilot path", () => {
+    // /en is already in the sitemap through the normal locale loop; emitting it
+    // twice would be a duplicate entry.
+    expect(indexablePilotPaths()).not.toContain("/en");
   });
 });
