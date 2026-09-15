@@ -40,6 +40,23 @@ const OTHER_LOCALES = LOCALES.filter((l) => l !== SOURCE_LOCALE);
  * Every entry needs a reason. This list may shrink; it must not grow without
  * one, because an extra key is usually a rename that only landed in one file.
  */
+/**
+ * Keys `en` carries that the other locales are NOT expected to have.
+ *
+ * A market is not a locale. `/us` is served from the English catalog with a
+ * `market` that overrides the country-specific strings, so `variant.us.*` has
+ * no French, Spanish or Polish counterpart and never will: translating copy
+ * written for an American reader into Polish would produce a string no page
+ * can render. See the header of `lib/markets.ts` for why locale, market and
+ * billing currency are three separate axes.
+ *
+ * This is the ONLY escape from the completeness rule, and it is narrow on
+ * purpose: it matches a market subtree under `variant`, nothing else. The
+ * companion test below proves every key it exempts actually shadows a real
+ * base key, so a typo cannot hide here.
+ */
+const MARKET_SCOPED = /^variant\.(us|uk)\./;
+
 const EXTRA_KEY_ALLOWLIST: Record<string, readonly string[]> = {
   // Deliberate. The French trust strip shows a phone number because French
   // visitors call; the English and Spanish strips do not offer one, so the key
@@ -211,6 +228,7 @@ describe.each(NAMESPACES)('%s', (namespace) => {
 
     test('has no missing keys (next-intl renders the raw key path instead)', () => {
       const missing = sourceKeys
+        .filter((key) => !MARKET_SCOPED.test(key))
         .filter((key) => !(key in target))
         .map((key) => `messages/${locale}/${namespace} is missing "${key}"`);
       expect(missing).toEqual([]);
@@ -384,5 +402,102 @@ describe('the gendered-past guard itself', () => {
     'Zapisano',
   ])('does not flag %p', (text) => {
     expect(GENDERED_PAST.test(text)).toBe(false);
+  });
+});
+
+// ───────────────────────── market-scoped copy ─────────────────────────
+
+/**
+ * `variant.us.*` is English written for an American reader, resolved over the
+ * base `variant.*` keys by `lib/market-copy.ts`. The parity guard above lets
+ * these keys skip the other locales; these two tests are the price of that
+ * exemption.
+ */
+describe('market-scoped copy', () => {
+  const landing = load(SOURCE_LOCALE, 'landing.json');
+  const scoped = Object.keys(landing).filter((key) => MARKET_SCOPED.test(key));
+
+  test('every market-scoped key shadows a base key', () => {
+    // The failure this exists for: `variant.us.hero.subtitel` shadows nothing,
+    // so the resolver falls back to the base key and /us quietly ships the
+    // European line. Nothing renders wrong, nothing throws, and the override
+    // you thought you wrote is not on the page. Only a test catches that.
+    const orphans = scoped
+      .filter((key) => {
+        const base = key.replace(/^variant\.(us|uk)\./, 'variant.');
+        return !(base in landing);
+      })
+      .map(
+        (key) =>
+          `messages/en/landing.json "${key}" overrides nothing: ` +
+          `"${key.replace(/^variant\.(us|uk)\./, 'variant.')}" does not exist, ` +
+          `so this string will never render`,
+      );
+    expect(orphans).toEqual([]);
+  });
+
+  test('the exemption is only ever used for market subtrees', () => {
+    // Guards the guard: MARKET_SCOPED must not be widened into a way to skip
+    // translating ordinary copy.
+    for (const key of scoped) {
+      expect(key).toMatch(/^variant\.(us|uk)\./);
+    }
+  });
+});
+
+// ───────────────────────── trial-length claims ─────────────────────────
+
+/**
+ * A trial length written into words cannot follow the market.
+ *
+ * `/us` grants 14 days (`TRIAL_DAYS_BY_COUNTRY` in the backend's
+ * `app/core/pricing_region.py`, mirrored by `MARKETS.us.trialDays`). Every
+ * English page reachable from the /us nav that says "your free month" is
+ * telling an American visitor something Stripe will not honour. The supported
+ * form is the `{trialDays}` placeholder, which reads the market.
+ *
+ * Scoped to English: fr/es/pl genuinely get 30 days, so "1 mois gratuit" is
+ * true there and stays.
+ */
+const WORDED_TRIAL = /\b(?:free month|month free|one month free|\d+\s*(?:days?|jours?)\s*free|free\s+\d+\s*days?)\b/i;
+
+/**
+ * The founding-partner pages are exempt for a different reason: that programme
+ * closed on 2026-08-04, so the whole subtree is stale and is being removed
+ * under its own issue rather than half-corrected here.
+ */
+const FOUNDING_SUBTREE = /programme-fondateur|founding/i;
+
+describe('English copy never writes a trial length in words', () => {
+  test.each(NAMESPACES)('%s', (namespace) => {
+    const offenders: string[] = [];
+    for (const [key, value] of Object.entries(load(SOURCE_LOCALE, namespace))) {
+      if (FOUNDING_SUBTREE.test(key)) continue;
+      if (!WORDED_TRIAL.test(value)) continue;
+      offenders.push(
+        `messages/en/${namespace} "${key}" states a trial length in words, ` +
+          `which cannot follow the market (/us gets 14 days, not 30). ` +
+          `Use the {trialDays} placeholder: ${value.slice(0, 80)}`,
+      );
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  test('the guard accepts the parameterised form', () => {
+    // Otherwise the fix for the above would trip it too.
+    expect(WORDED_TRIAL.test('{trialDays} days free · Cancel anytime')).toBe(false);
+    expect(WORDED_TRIAL.test('Start your free trial')).toBe(false);
+  });
+
+  test('the guard catches every shape that shipped', () => {
+    for (const shipped of [
+      'Start your free month and reward visits from day one.',
+      'One month free, no commitment.',
+      "You're eligible for 30 days free!",
+      '30 days free with 8 stamps!',
+      '1 month free, no catch',
+    ]) {
+      expect(WORDED_TRIAL.test(shipped)).toBe(true);
+    }
   });
 });

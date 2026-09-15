@@ -18,7 +18,11 @@ import { join } from "node:path";
  */
 
 const MESSAGES = join(import.meta.dir, "..", "messages");
-const PRICED_FILES = ["pricing.json", "landing.json", "features.json"];
+// metadata.json quotes plan prices in page descriptions, which are what Google
+// prints in a search result. It was outside this guard, which is exactly how
+// "1 month free, then EUR20/month for life" survived into the US launch: a
+// snippet outlives the page by weeks.
+const PRICED_FILES = ["pricing.json", "landing.json", "features.json", "metadata.json"];
 const GLYPHS = /[€$£]|zł|&euro;|&#8364;/;
 
 /**
