@@ -46,3 +46,23 @@ lighthouse, audit) before and after.
 | **P2 — the GPC promise did not match behaviour.** §5 said, in four languages and without qualification, that a Global Privacy Control signal is treated as a refusal and that we do not ask. In fact an existing stored grant outranks GPC, and an opt-in visitor is still shown the banner. | Fixed in all four locales. The section now states the no-record condition, that the US sees no notice while Europe is still offered the banner so it can opt in deliberately, and that a choice the visitor makes themselves takes precedence over the signal. |
 
 Nothing was disputed or deferred.
+
+## Second Greptile pass on PR #128
+
+One finding, non-blocking, valid, fixed.
+
+**The test's fake cookie jar never stored anything.** `installBrowser()`
+recorded assignments into a `writes` array but left `document.cookie`
+unchanged, so every write looked to the module like a write that had failed.
+Two consequences: the storage-failure fallback engaged during tests meant to
+exercise the happy path, and `clearSessionFallback()` did the exact opposite of
+its name, leaving a denied record behind for any later test that read an empty
+jar. Nothing was failing, but the tests had a hidden ordering dependency and
+the helper made the leak look impossible.
+
+Fixed by making the fake faithful: the jar parses, stores, and treats
+`Max-Age=0` as deletion the way a browser does. The round-trip test no longer
+hand-feeds the jar, the deletion test now asserts the cookies are actually gone
+rather than merely written at, and the cleanup helper asserts that it worked.
+Re-checked by mutation: removing the fallback from `readConsentRecord` still
+reds exactly the two storage-failure tests.

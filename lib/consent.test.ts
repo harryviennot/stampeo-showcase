@@ -354,16 +354,44 @@ interface FakeBrowser {
   setJar: (value: string) => void;
 }
 
+/**
+ * A cookie jar that actually stores, because a write-only fake lies.
+ *
+ * The first version of this helper only recorded assignments and never updated
+ * `document.cookie`, so every write looked to the module like a write that had
+ * failed. That made the storage-failure fallback engage in tests that were
+ * meant to exercise the happy path, and made the cleanup helper below do the
+ * exact opposite of its name.
+ */
+function parseJar(cookie: string): Map<string, string> {
+  const jar = new Map<string, string>();
+  for (const entry of cookie.split(";")) {
+    const trimmed = entry.trim();
+    if (!trimmed) continue;
+    const split = trimmed.indexOf("=");
+    if (split === -1) continue;
+    jar.set(trimmed.slice(0, split), trimmed.slice(split + 1));
+  }
+  return jar;
+}
+
 function installBrowser(options: { cookie?: string; gpc?: boolean } = {}): FakeBrowser {
   const writes: string[] = [];
-  let jar = options.cookie ?? "";
+  let jar = parseJar(options.cookie ?? "");
 
   const document = {
     get cookie() {
-      return jar;
+      return [...jar].map(([name, value]) => `${name}=${value}`).join("; ");
     },
     set cookie(value: string) {
       writes.push(value);
+      const [pair, ...attributes] = value.split(";");
+      const split = pair.indexOf("=");
+      const name = pair.slice(0, split).trim();
+      // A real browser removes the cookie rather than storing the expiry, and
+      // `clearCookiesFor` depends on that being what deletion looks like.
+      if (attributes.some((a) => a.trim().toLowerCase() === "max-age=0")) jar.delete(name);
+      else jar.set(name, pair.slice(split + 1));
     },
   };
 
@@ -377,7 +405,7 @@ function installBrowser(options: { cookie?: string; gpc?: boolean } = {}): FakeB
     Object.defineProperty(globalThis, name, { value, configurable: true, writable: true });
   }
 
-  return { writes, setJar: (value: string) => (jar = value) };
+  return { writes, setJar: (value: string) => (jar = parseJar(value)) };
 }
 
 function uninstallBrowser() {
@@ -447,8 +475,8 @@ describe("writeConsentRecord", () => {
     // the number is this and not "a year like every other cookie we set".
     expect(cookie).toContain(`Max-Age=${60 * 60 * 24 * 182}`);
 
-    // Round-trips through the reader, which is what the next page load does.
-    browser.setJar(`NEXT_LOCALE=fr; ${cookie.split(";")[0]}`);
+    // Round-trips through the reader without the test hand-feeding the jar,
+    // which is what the next page load actually does.
     expect(readConsentRecord()).toEqual(record);
   });
 
@@ -486,13 +514,23 @@ describe("writeConsentRecord", () => {
   /**
    * Leaves the module's in-memory fallback empty again.
    *
-   * It only survives a FAILED write, so a successful one clears it. Without
-   * this, a refusal recorded by the tests below would leak into any later test
-   * that expects an empty jar to mean "never answered".
+   * The fallback only survives a FAILED write, so this performs a successful
+   * one against a jar that really stores. Without it, a refusal recorded by the
+   * storage-failure tests would leak into any later test that expects an empty
+   * jar to mean "never answered", and those tests would pass or fail depending
+   * on the order they ran in.
+   *
+   * It asserts that it worked rather than assuming it: a cleanup helper that
+   * quietly does nothing is worse than no cleanup helper, because it makes the
+   * leak look impossible.
    */
   function clearSessionFallback() {
     installBrowser();
     writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    uninstallBrowser();
+
+    installBrowser();
+    expect(readConsentRecord()).toBeNull();
     uninstallBrowser();
   }
 
@@ -594,6 +632,10 @@ describe("clearCookiesFor", () => {
 
     const cleared = new Set(browser.writes.map((w) => w.split("=")[0]));
     expect(cleared).toEqual(new Set(["_fbp", "_ttp"]));
+    // And they are actually gone from the jar, not merely written at.
+    expect(document.cookie).not.toContain("_fbp=");
+    expect(document.cookie).not.toContain("_ttp=");
+    expect(document.cookie).toContain("_ga=");
     // Every write must actually expire the cookie. A Max-Age we forgot would
     // look like a successful revocation and change nothing.
     for (const write of browser.writes) expect(write).toContain("Max-Age=0");
