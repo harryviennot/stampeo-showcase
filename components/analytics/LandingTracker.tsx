@@ -16,6 +16,13 @@ export function LandingTracker({
     registerLandingVariant(variant);
     trackLandingViewed({ locale });
 
+    // Publish the variant on <body> for consumers mounted in the LAYOUT, which
+    // cannot receive it as a prop — `AttributionCapture` (STA-323) reads it so
+    // ad spend can be attributed to the landing it actually bought. PostHog
+    // gets it as a super-property above; this is the same fact, reachable from
+    // outside the page tree.
+    document.body.dataset.landingVariant = variant;
+
     const sections = document.querySelectorAll<HTMLElement>(
       "[data-landing-section]"
     );
@@ -38,6 +45,7 @@ export function LandingTracker({
     return () => {
       observer.disconnect();
       unregisterLandingVariant();
+      delete document.body.dataset.landingVariant;
     };
   }, [locale, variant]);
 

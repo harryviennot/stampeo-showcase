@@ -81,10 +81,21 @@ export type ConsentSurface = "none" | "banner" | "notice";
  * `_ga_*` has to be a prefix: GA4 writes one `_ga_<MEASUREMENT_ID>` cookie per
  * property, and a literal list would leave the real session cookie in place
  * while reporting the visitor as opted out.
+ *
+ * `stampeo_attribution` (STA-323) is the one entry we set ourselves, and it is
+ * here for the same reason the rest are: it holds the ad platforms' click ids
+ * and the GA client id, so it is a tracker by content even though it is
+ * first-party by origin. Revoking has to delete the carrier, or the identifiers
+ * would still cross to app.stampeo.app and be stored against a business after
+ * the refusal. It is listed under BOTH categories because it can hold fields
+ * bought by either, and a record half-authorised is not authorised.
+ *
+ * What must never appear here is CONSENT_COOKIE itself — clearing that would
+ * erase the very refusal being acted on.
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
-  analytics: ["_ga", "_ga_*", "_gid"],
-  marketing: ["_fbp", "_fbc", "_ttp"],
+  analytics: ["_ga", "_ga_*", "_gid", "stampeo_attribution"],
+  marketing: ["_fbp", "_fbc", "_ttp", "stampeo_attribution"],
 };
 
 /**

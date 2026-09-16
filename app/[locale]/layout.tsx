@@ -7,6 +7,9 @@ import { routing } from "@/i18n/routing";
 import { localePath } from "@/lib/hreflang";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
+import { AttributionCapture } from "@/components/analytics/AttributionCapture";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ScrollRevealInit } from "@/components/ui/ScrollRevealInit";
 import "../globals.css";
@@ -120,6 +123,12 @@ export default async function RootLayout({
                 intl provider because its copy is localized. It decides for
                 itself whether this route and this visitor need it. */}
             <ConsentBanner />
+            {/* Renders nothing. Decides for itself whether this visitor and
+                this route allow the pixel, and re-decides on every
+                navigation. */}
+            <MetaPixel />
+            <GoogleAnalytics />
+            <AttributionCapture />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

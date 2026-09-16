@@ -1,155 +1,262 @@
-# Plan: TikTok pixel on showcase (inert until consent exists)
+# Plan: TikTok pixel on showcase, consent-gated
 
 ISSUE: STA-320 (https://linear.app/stampeo/issue/STA-320/install-tiktok-pixel-on-showcase)
-BRANCH: feat/sta-320-tiktok-pixel
+BRANCH: `harryviennot2/sta-320-install-tiktok-pixel-on-showcase`
 REPOS: showcase
 MIGRATION: no
+BASE: `harryviennot2/sta-319-install-meta-pixel-on-showcase`, NOT the epic branch.
+STA-319 edits `CTAButton.tsx` and `PricingTierCard.tsx`, which this issue edits
+again at the same lines. Basing on the epic guarantees a conflict in the one
+file where a bad merge is sitewide.
 STATUS: DRAFT
 
-> **AMENDED 2026-09-16, after STA-317 shipped first.** This plan was written
-> expecting to land before the consent banner and therefore to define its own
-> consent stub. It no longer does. `showcase/lib/consent.ts` now exists and owns
-> the whole contract; this issue only consumes it. The read seam is
-> `hasAnalyticsConsent()` / `hasMarketingConsent()` (both deny on the server and
-> whenever anything is unknown), live changes arrive as the
-> `CONSENT_CHANGED_EVENT` (`"stampeo:consent"`) `CustomEvent` on `window` whose
-> `detail` is `{ analytics, marketing }`, and `isTrackablePath()` in
-> `showcase/lib/consent-routes.ts` is the single allowlist saying where a tag
-> may fire. Delete this issue's stub decisions and its deny-by-construction
-> acceptance criterion: that guarantee is now `lib/consent.test.ts`'s job, and
-> keeping a hard-coded `false` here would mean the tag never fires at all.
-> See `docs/features/STA-317/plan.md`.
+> **REWRITTEN 2026-09-16, after STA-317 merged (PR #128) and STA-319 landed.**
+> The first draft built this pixel *inert*, defining its own consent stub,
+> because no banner existed. That premise is gone twice over: `lib/consent.ts`
+> owns the contract, and STA-319 has already built the loader shape this issue
+> was told to follow. The old deny-by-construction decisions, the `holdConsent`
+> defence-in-depth layer, and old AC1/AC6 are dropped.
+>
+> Two corrections from the first draft, both load-bearing:
+> - **`CompleteRegistration` is not reachable.** The account really is created
+>   on showcase in `OnboardingWizard`, but `/onboarding` is in
+>   `PRIVATE_SEGMENTS`, so the pixel never loads there. Signup CTAs map to the
+>   click, as STA-319 decided.
+> - **Pricing CTAs no longer map to `InitiateCheckout`.** There is no checkout
+>   on showcase, so the label would promise Stripe-correlated data we cannot
+>   deliver, and it would split a group Meta keeps whole.
 
 ## Problem
 
-TikTok ad campaigns for Stampeo have no pixel on the marketing site, so there
-is no conversion signal to optimize against and no retargeting audience. The
-issue is blocked by STA-317 (cookie consent banner), which is still in
-Backlog: under GDPR/CNIL the pixel may not fire before explicit opt-in, and
-showcase today has no consent mechanism at all — PostHog is deliberately
-cookieless (`instrumentation-client.ts`, `persistence: "memory"`) precisely so
-no banner was needed.
+STA-271 wants TikTok ad campaigns pointed at showcase, which needs a pixel to
+attribute conversions. Nothing on the site sends TikTok anything today.
 
-The user's call (2026-09-16) is to build STA-320 alone and ship it **inert**:
-the full pixel integration lands now behind a consent gate that denies until
-STA-317 replaces it, so no tag fires in production until the banner exists.
+The two blockers from the first draft are both resolved. STA-317 shipped the
+gate: a consent record, a banner and a US notice, the route allowlist, and the
+read seams `hasMarketingConsent()` / `useConsent()`. The privacy policy already
+lists TikTok and its `_ttp` cookie (§5.3), and §5.1 already promises no request
+reaches TikTok before acceptance. And the pixel now exists in Ads Manager:
+ID `DALA1OBC77UDHLL44GCG`, first-party cookies ON.
+
+This is the **third and last** of the three tag installs, so unlike STA-319 it
+invents nothing — it is the sample that makes a shared abstraction honest.
+
+## UX decisions
+
+No UI surface. The component renders `null`; the only visible artefact on the
+site is STA-317's banner, which already shipped. `ux-designer` not invoked.
 
 ## Decisions
 
-- Ship inert, not ungated: the consent reader is a stub that returns `denied`,
-  so the composed gate is `false` for every input in production today. The
-  legal posture is unchanged by this PR.
-- STA-320 defines neither: STA-317 shipped the contract and the storage. This
-  issue calls `hasMarketingConsent()` and subscribes to `CONSENT_CHANGED_EVENT`.
-  (Superseded: a `readMarketingConsent()` seam with a `TODO(STA-317)` body.)
-- The pixel ID comes from `NEXT_PUBLIC_TIKTOK_PIXEL_ID` and the tag stays inert
-  when unset — the same shape as the existing PostHog and Sentry guards. The
-  real ID is unavailable until STA-271 grants Ads Manager access.
-- Page eligibility is an **allowlist**, and it already exists:
-  `isTrackablePath()` in `lib/consent-routes.ts`, built by STA-317 for exactly
-  this reason and covered by a drift guard that fails when a new route folder is
-  added without classifying it. Do not write a second one. (The reasoning is
-  unchanged and now lives in that file: any unknown segment under a locale is a
-  business slug, and `lib/robots.ts` documents the same `/authentic-cafe` versus
-  `/auth` collision.)
-- All decision logic lives in pure functions under `lib/` so `bun test lib`
-  covers it; the React component is a thin mount with no branching of its own.
-- Conversion events map to TikTok standard events, not custom ones, so the
-  campaign objective can target them directly.
+### The gate — mirrored from STA-319, deliberately
+
+- **Four conditions, all required, in one pure function.**
+  `shouldLoadTikTokPixel({ pixelId, marketing, ready, trackable })`, the same
+  shape and the same argument names as `shouldLoadMetaPixel`. Divergence here
+  would be gratuitous: two gates that differ in wording but not in meaning are
+  two gates to audit.
+- **`shouldSendTikTokEvent({ loaded, trackable })`** for the per-event check,
+  for the same reason STA-319 has one: the script stays resident across a
+  client-side navigation onto a page it may not report on.
+- **No `<Script src>` in JSX.** Injected imperatively from inside the gated
+  branch. A static tag renders before any gate runs.
+- **Nothing loaded-then-suppressed.** `lib/consent.ts` states it outright:
+  TikTok has no cookieless mode. Not loading the script is the only way not to
+  contact `analytics.tiktok.com`.
+- **Revocation relies on STA-317's reload.** No teardown here.
+
+### What is NOT mirrored, and why
+
+- **TikTok's consent-mode calls (`holdConsent` / `grantConsent`) are not used.**
+  The first draft planned them as defence in depth. They are dead weight under
+  this architecture: the script is only injected once consent is already
+  granted, so a hold that is immediately granted gates nothing. They also
+  require a **Cookie Consent Mode** toggle in Events Manager to do anything at
+  all, which makes them a layer whose activation lives outside the repo and
+  cannot be asserted by a test. A guarantee that silently depends on a
+  dashboard setting is worse than no guarantee, because it reads like one.
+- **Enhanced data postback should be OFF** (an Events Manager setting, not
+  code). It collects page content, clicks, button interactions and time spent
+  automatically. It is TikTok's analogue of the automatic advanced matching
+  STA-319 refused, and broader. The route allowlist keeps it off `/onboarding`
+  where email and phone are typed — but that is one table entry deep, and
+  enhanced postback is what turns an allowlist slip from a leaked page view
+  into leaked form interactions. It is also undeclared: the policy's tracker
+  table names cookies, and this is not a cookie.
+  **Recorded as a decision the code cannot enforce — the runbook must read the
+  toggle's real state rather than assume it.**
+
+### Events
+
+- **`ttq.page()` fires from the loader after `ttq.load()`**, never at parse time.
+- **Client-side navigation needs an explicit `ttq.page()`**, and a navigation
+  onto a non-trackable path must fire nothing.
+- **Conversion events map purely.** `tiktokEventForCTA({ ctaLocation, href })`
+  returns a TikTok standard event or `null`. Unknown locations return `null`.
+  The CTA groupings are **imported from one shared source with STA-319's**, not
+  re-declared: two copies of `SIGNUP_CTAS` drifting apart is how a pricing CTA
+  ends up reported to one vendor and not the other.
+- **Signup CTAs → `ClickButton`.** TikTok's vocabulary has no `Lead`. The
+  honest options are `ClickButton` (what literally happened) or `SubmitForm`
+  (TikTok's lead-gen analogue, but no form is submitted). Taking the accurate
+  one. *(Open question at the gate — see below.)*
+- **Demo/contact CTAs → `Contact`**, matching STA-319's split.
+- **Standard events only, never custom ones.** TikTok's own docs are
+  inconsistent about names (`Purchase` vs `CompletePayment` in different
+  places), so the exact strings get confirmed against **Events Manager → Event
+  Builder** for this account before the tests are written, not taken from a
+  doc page.
+
+### Structure
+
+- **Decision logic in `lib/tiktok-pixel.ts`, component thin.** `bun test lib`
+  is the runner; anything with a branch lives in `lib/`.
+- **Now is the moment to extract the shared loader — but not in this issue.**
+  STA-319 deferred the abstraction until three real shapes existed. After this
+  lands they do. Extracting it *here* would mean refactoring two shipped
+  pixels behind a third one's tests. Raising it as a follow-up instead.
 
 ## Non-goals
 
-- **The consent banner itself** — that is STA-317's entire scope (accept/refuse
-  parity, persistence, revisit link, EN/FR/ES copy, policy page updates). If
-  meeting an AC here requires building banner UI, stop: scope has escaped.
-- GA4 (STA-318) and the Meta pixel (STA-319), and any shared multi-tag consent
-  manager abstraction. One tag, one seam; generalize when the second lands.
-- **Checkout-complete conversion.** Checkout runs on `web/` (app.stampeo.app),
-  a different app and origin the showcase pixel cannot observe. Showcase can
-  only see checkout *intent* (a pricing CTA click). A true `Purchase` event
-  needs the pixel on `web/` plus a TikTok Events API call from the Stripe
-  webhook — a separate issue I will raise rather than fake here.
-- Firing on the acquisition pages (`/[locale]/[slug]`, `/[locale]/[slug]/l/…`)
-  or `/join` — those visitors are our customers' customers, not ad prospects.
-- Server-side deduplication / Events API, advanced matching, and any PII
-  hashing. Browser pixel only.
-- Verification with TikTok Pixel Helper (issue checkbox 3) — impossible while
-  the tag is inert and the ID is unset. Deferred to the STA-317 follow-up and
-  recorded as such in the runbook.
+- **The consent layer.** STA-317 shipped it. No consent code, storage, banner
+  or policy edit in this diff.
+- **The `checkout` conversion event** (issue checkbox 3). No checkout on
+  showcase; it is in `web/` behind auth. Same cross-subdomain analysis as
+  STA-319's — a real `CompletePayment` is a TikTok Events API call from the
+  backend at Stripe webhook time. Backend issue, not this one.
+- **`CompleteRegistration`.** Unreachable: `/onboarding` is private.
+- **Events API / server-side deduplication**, advanced matching, PII hashing.
+- **Anything in `web/`.**
+- GA4 (STA-318). Same gate, separate issue.
+- **The shared multi-vendor loader refactor.** Follow-up, see above.
+- **Verification with TikTok Pixel Helper** is now possible and IS in scope —
+  unlike the first draft, the tag fires for real. It happens at Phase 6.
 
 ## Edge cases considered
 
-- Consent granted but `NEXT_PUBLIC_TIKTOK_PIXEL_ID` unset → no load. Prevents a
-  broken `ttq` bootstrap on any environment without the ID (all of them today).
-- Pixel ID set but consent denied/unknown → no load. Unknown is treated as
-  denied; there is no implicit consent.
-- Consent granted mid-session (post-STA-317) → the component reacts and loads
-  once; a second grant must not double-init. Guarded by an init flag.
-- Consent withdrawn mid-session → out of scope for STA-320 beyond not loading
-  on the next mount. Full teardown/cookie-clearing is STA-317's job, noted
-  deliberately unhandled.
-- Business slug that collides with a marketing route name (a café slugged
-  `pricing`) → the allowlist would track it. Accepted: slugs are validated
-  elsewhere and the blast radius is one page view, versus the denylist
-  alternative which leaks every business page.
-- SSR / no `window` → every reader returns the denying default rather than
-  throwing.
-- Locale prefixes: the allowlist must match `/pricing`, `/fr/pricing` and the
-  localized route names (`/programme-fidelite`, `/programa-de-fidelizacion`,
-  `/program-lojalnosciowy`) — a locale-stripping normalizer, not raw matching.
+- `NEXT_PUBLIC_TIKTOK_PIXEL_ID` unset: no load, no network, no console noise.
+- Consent granted, pixel ID unset: no load, no crash.
+- Pixel ID set, consent refused: no load. The case the design exists for.
+- `ready === false` (SSR, first paint): no load, even for a visitor who
+  accepted last visit. Acting earlier races regime detection.
+- Landing directly on a business slug (`/some-cafe`): never initialises.
+- Navigating trackable → non-trackable after load: script stays resident, no
+  further `ttq` call.
+- Consent granted live without reload: `useConsent()` subscription loads it in
+  the same page view.
+- Consent revoked: STA-317 reloads. No teardown here.
+- Double init (strict mode, remount, consent event storm): idempotent flag.
+- `trackTikTokEvent()` before init: silently drops. **No queue-and-replay** —
+  replaying pre-consent events would leak exactly what consent prevented.
+- SSR: every entry point `typeof window` guarded, importable from a server
+  component.
+- US opt-out regime: a US visitor with no stored record and no GPC is tracked
+  without clicking. STA-317's deliberate design, inherited, and pinned by an AC
+  so a change to it fails loudly here too.
+- Ad blockers blocking `analytics.tiktok.com`: out of scope, no fallback.
 
 ## Acceptance criteria
 
-- AC1: Given consent `granted` and a pixel ID set, when the gate is evaluated
-  for a marketing path, then it returns `true`.
-- AC2: Given consent `denied` or `unknown`, when the gate is evaluated with a
-  valid pixel ID and a marketing path, then it returns `false` — and NOT
-  `true` on the grounds that the ID is present.
-- AC3: Given consent `granted` and no pixel ID (undefined or empty), when the
-  gate is evaluated, then it returns `false`.
-- AC4: Given consent `granted` and a pixel ID set, when the path is an
-  acquisition page (`/some-cafe`, `/fr/some-cafe`, `/fr/some-cafe/l/centre`),
-  then the gate returns `false`.
-- AC5: Given consent `granted` and a pixel ID set, when the path is any
-  allowlisted marketing route under any of the four locales — including the
-  localized loyalty-program route names — then the gate returns `true`.
-- AC6: *(Dropped by the amendment above. The tag is no longer shipped inert:
-  STA-317 exists, so granted consent must actually load it. The deny-by-default
-  guarantee is pinned by `lib/consent.test.ts`.)*
-- AC7: Given a showcase conversion moment, when it is mapped to a TikTok
-  event, then `signup_cta_clicked` → `ClickButton`, `pricing_cta_clicked` →
-  `InitiateCheckout`, `registration_completed` → `CompleteRegistration`, and
-  NOT a custom event name.
-- AC8: Given the pixel has already initialized in this session, when the load
-  path runs again, then `ttq.load` is not called a second time.
-- AC9: Given no consent, when the site is browsed, then no request to
-  `analytics.tiktok.com` is issued and no TikTok cookie (`_ttp`) is set.
-  (Runbook case; asserted manually at Phase 5, not unit-testable.)
+- **AC1**: Given a pixel ID, `ready`, a trackable path and `marketing = false`,
+  then `shouldLoadTikTokPixel()` is `false` — and NOT `true` on the strength of
+  the pixel ID alone.
+- **AC2**: Given no pixel ID and `marketing = true`, then `false`. A whitespace
+  ID (`" "`) counts as no pixel ID.
+- **AC3**: Given a pixel ID, `marketing = true`, `ready` and a trackable path,
+  then `true`. (The gate is a real gate.)
+- **AC4**: Given `ready = false` with every other condition satisfied, then
+  `false`.
+- **AC5**: Given a pixel ID, `marketing = true`, `ready`, and a **non**-trackable
+  path (a business slug, `/onboarding`, `/login`), then `false`.
+- **AC6**: Given the pixel was never initialised, when `trackTikTokEvent()` is
+  called, then it returns without throwing and performs no network call — NOT
+  a `ReferenceError: ttq is not defined`.
+- **AC7**: Given a CTA click, when `tiktokEventForCTA()` maps it, then a
+  signup-bound CTA yields `"ClickButton"`, a contact/demo-bound CTA yields
+  `"Contact"`, and an unmapped location yields `null`.
+- **AC8**: Given the CTA groupings, when both pixels map the same
+  `cta_location`, then they agree on which funnel it belongs to — asserted
+  against the shared source, so a new CTA cannot reach one vendor only.
+- **AC9**: Given a visitor who has not consented, then no request reaches
+  `analytics.tiktok.com` and no `_ttp`, `ttcsid` or `ttclid` cookie exists — on
+  any route, in any locale. (Manual, Phase 6.)
+- **AC10**: Given a server component imports the pixel module, then
+  `bun run build` succeeds with no `document is not defined`.
+- **AC11**: Given the existing PostHog and Meta CTA events, when TikTok call
+  sites are added, then both still fire with unchanged props, and NOT a
+  duplicated or renamed event.
+- **AC12**: Given a visitor who accepts in the banner, then the pixel loads in
+  that same page view without a reload.
+- **AC13**: Given the pixel is loaded, when the visitor navigates client-side
+  to another trackable path, then exactly one additional `ttq.page()` is sent;
+  to a non-trackable path, **no** event is sent.
+- **AC14**: Given a US visitor with no stored record and no GPC, then the pixel
+  loads without any click. (Encodes STA-317's opt-out regime.)
+- **AC15**: Given the pixel has already initialised, when the load path runs
+  again, then `ttq.load` is not called a second time.
 
 ## Touched areas and risks
 
-- **Legal posture** is the headline risk. The whole value of this PR is that it
-  changes nothing observable until STA-317. AC6 exists to pin that.
-- `app/[locale]/layout.tsx` — the mount point wraps every locale route,
-  including acquisition pages. The allowlist is what keeps it off them; getting
-  that predicate wrong is the one way this leaks.
-- `components/ui/CTAButton.tsx` and `components/pricing/PricingTierCard.tsx`
-  already fire PostHog events. TikTok calls go alongside, never replacing —
-  PostHog remains the product-analytics source of truth and must keep working
-  with consent denied (it is cookieless and consent-independent).
-- `components/onboarding/OnboardingWizard.tsx` is where the account is actually
-  created before the redirect to app.stampeo.app; `CompleteRegistration` hangs
-  off the existing completion path. Touching that flow risks the funnel, so the
-  change is additive and guarded.
-- i18n: no new user-facing copy in this issue, so no catalog parity risk. (The
-  banner copy is STA-317's.)
-- `bun test lib` only tests `lib/`, so anything I put in a component is
-  untested by construction — the reason the logic is pure and lives in `lib/`.
+- **`components/ui/CTAButton.tsx`** — now carries PostHog *and* Meta *and*
+  TikTok. Three vendors in one click handler, used sitewide. The highest-risk
+  file in the diff; AC11 is its tripwire.
+- **`components/pricing/PricingTierCard.tsx`** — same, and it calls
+  `trackLandingCTAClicked` directly rather than through `CTAButton`.
+- **The CTA groupings** — extracting `SIGNUP_CTAS` / `CONTACT_CTAS` out of
+  `lib/meta-pixel.ts` into a shared module touches shipped STA-319 code. It is
+  a pure move with no behaviour change, and AC8 pins the result, but it means
+  this diff can break Meta. Worth calling out because "TikTok issue breaks the
+  Meta pixel" is not where anyone would look.
+- **`lib/consent.ts` / `lib/consent-routes.ts`** — consumed, never modified.
+  The drift guard in `consent-routes.test.ts` now protects this pixel too.
+- **`app/[locale]/layout.tsx`** — mount point, shared by every locale and the
+  `us` / `uk` market routes.
+- **Consent posture** — regressions here are legal exposure, not bugs.
+  AC1/AC5/AC9/AC14 are the tripwires.
+- **Events Manager settings are outside the repo.** Enhanced data postback and
+  Cookie Consent Mode are dashboard toggles no test can assert. The runbook
+  records their observed state.
+
+## Cross-subdomain attribution (affects follow-on issues, not this diff)
+
+**The funnel is not attributed past showcase today, and this diff does not
+change that.** Worth stating plainly because the cookie-scope argument suggests
+otherwise: showcase is the apex `stampeo.app`, the app is `app.stampeo.app`,
+same registrable domain, so a first-party cookie scoped to `.stampeo.app` is
+readable on both — STA-317 already scopes the consent cookie that way via
+`NEXT_PUBLIC_COOKIE_DOMAIN` (`consentCookieAttributes`). Real groundwork, and
+not sufficient. Three things break the chain, each on its own:
+
+1. **Nothing on `app.stampeo.app` reports to TikTok.** `web/` has no pixel, no
+   `ttq`, no consent code. A shared cookie attributes nothing with no tag to
+   read it.
+2. **`ttclid` is dropped at the handoff.** It arrives as a URL parameter on the
+   landing URL; `redirectToApp()` in `OnboardingWizard.tsx` navigates to a bare
+   `appUrl` with no query string. Nothing in showcase captures `ttclid`,
+   `fbclid` or `utm_*` at all today.
+3. **`/onboarding` is in `PRIVATE_SEGMENTS`.** The last event TikTok sees is
+   the CTA click.
+
+Also unverified: which domain TikTok's SDK sets `_ttp` on. Meta's `_fbp` uses
+the registrable domain; do not assume TikTok matches. Confirm in devtools.
+
+Three consequences, all outside this diff:
+
+1. **Click-ID capture** — persist `ttclid` / `fbclid` / `utm_*` against the
+   business at signup. Showcase + backend issue.
+2. **The `web/` pixel install is its own issue**, and inherits this gate — so
+   `lib/consent.ts` must be reachable from `web/`, or it gets implemented twice
+   and drifts.
+3. **`CompletePayment` should be a server event** — TikTok Events API from the
+   Stripe webhook, where the authoritative amount and currency already are, and
+   which survives ad blockers and a tab closed on the Stripe return.
 
 ## Docs impact (preliminary)
 
-Probably none for the help center: nothing user-visible changes while the tag
-is inert, no new setting, no copy, no tier gating. The privacy/cookie policy
-does need to list TikTok as a tracker — but that is explicitly STA-317's
-checklist item and lands with the banner, not here. Revisit at Phase 6 against
-the real diff.
+Likely none. STA-317 already lists TikTok and `_ttp` in privacy policy §5.3 and
+already promises in §5.1 that no request reaches TikTok before acceptance —
+both already true of this implementation. No new setting, no copy change, no
+tier gating. **Unless enhanced data postback stays ON**, in which case §5.3
+understates what is collected and the policy needs an edit — which is a reason
+to turn it off, not a reason to edit the policy. Re-answered against the real
+diff at Phase 7.

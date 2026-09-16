@@ -6,7 +6,10 @@ import { formatMoney } from "@/lib/pricing";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { InfoIcon } from "@/components/icons";
+import { usePathname } from "next/navigation";
 import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
+import { isTrackablePath } from "@/lib/consent-routes";
+import { metaEventForCTA, trackMetaEvent } from "@/lib/meta-pixel";
 
 export type FeatureItem = string | { text: string; tooltip: string };
 
@@ -115,12 +118,29 @@ export function PricingTierCard({
   className = "",
 }: PricingTierCardProps) {
   const locale = useLocale();
+  const pathname = usePathname();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
   const showDiscount = discounted !== undefined && discounted < price;
   const annotated = Boolean(highlighted && annotationLabel);
 
+  // Wired separately from `CTAButton` because this card renders its own link.
+  // Pricing clicks are the highest-intent signal on the site, so leaving them
+  // out would mean campaigns optimising against the weaker events.
   const handleCtaClick = trackAs
-    ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref })
+    ? () => {
+        trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref });
+
+        const metaEvent = metaEventForCTA({
+          ctaLocation: trackAs,
+          href: ctaHref,
+        });
+        if (metaEvent) {
+          trackMetaEvent({
+            event: metaEvent,
+            trackable: isTrackablePath(pathname),
+          });
+        }
+      }
     : undefined;
 
   // The recommended tier is drawn in the accent ink; the others in black. Both
