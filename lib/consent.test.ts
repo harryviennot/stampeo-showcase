@@ -287,14 +287,19 @@ describe("cookieNamesToClear", () => {
     "_fbp",
     "_fbc",
     "_ttp",
+    // STA-323. First-party by origin, tracker by content: it carries the ad
+    // platforms' click ids and the GA client id, so revoking must delete it.
+    "stampeo_attribution",
   ];
 
   test("revoking marketing clears the marketing cookies only", () => {
     expect(cookieNamesToClear(["marketing"], present).sort()).toEqual([
       "_fbc",
       "_fbp",
+      // STA-323: the attribution carrier holds click ids, so marketing owns it too.
       "_ttp",
-    ]);
+      "stampeo_attribution",
+    ].sort());
   });
 
   test("revoking analytics expands the per-property GA prefix", () => {
@@ -305,7 +310,9 @@ describe("cookieNamesToClear", () => {
       "_ga",
       "_ga_ABC123",
       "_gid",
-    ]);
+      // STA-323: it can also hold the GA client id, so analytics owns it too.
+      "stampeo_attribution",
+    ].sort());
   });
 
   test("never clears our own cookies", () => {
@@ -625,13 +632,13 @@ describe("consentCookieAttributes: the two fields that decide where the cookie w
 describe("clearCookiesFor", () => {
   test("issues an expiry for each matching cookie, across every plausible scope", () => {
     const browser = installBrowser({
-      cookie: `NEXT_LOCALE=fr; ${CONSENT_COOKIE}=x; _fbp=abc; _ttp=def; _ga=ghi`,
+      cookie: `NEXT_LOCALE=fr; ${CONSENT_COOKIE}=x; _fbp=abc; _ttp=def; _ga=ghi; stampeo_attribution=jkl`,
     });
 
     clearCookiesFor(["marketing"]);
 
     const cleared = new Set(browser.writes.map((w) => w.split("=")[0]));
-    expect(cleared).toEqual(new Set(["_fbp", "_ttp"]));
+    expect(cleared).toEqual(new Set(["_fbp", "_ttp", "stampeo_attribution"]));
     // And they are actually gone from the jar, not merely written at.
     expect(document.cookie).not.toContain("_fbp=");
     expect(document.cookie).not.toContain("_ttp=");
@@ -757,5 +764,43 @@ describe("CONSENT_VERSION", () => {
     // edit here and not a side effect.
     expect(CONSENT_VERSION).toBe(1);
     expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A1");
+  });
+});
+
+/**
+ * The attribution carrier (STA-323).
+ *
+ * `stampeo_attribution` holds the ad platforms' click ids and the GA client id
+ * and travels to app.stampeo.app, where it becomes a database row. If revoking
+ * does not delete it, the identifiers still cross and are still stored after
+ * the refusal — a revocation that looks effective and is not.
+ *
+ * It is listed under BOTH categories because it can hold fields bought by
+ * either, and a record half-authorised is not authorised.
+ */
+describe("the attribution carrier is revocable (STA-323)", () => {
+  const jar = ["_ga", "_fbp", "stampeo_attribution", CONSENT_COOKIE];
+
+  test("revoking analytics alone clears it", () => {
+    expect(cookieNamesToClear(["analytics"], jar)).toContain("stampeo_attribution");
+  });
+
+  test("revoking marketing alone clears it", () => {
+    expect(cookieNamesToClear(["marketing"], jar)).toContain("stampeo_attribution");
+  });
+
+  test("revoking everything clears it exactly once", () => {
+    // It appears in both category lists; the result must be de-duplicated or
+    // the caller writes the same expiry twice.
+    const cleared = cookieNamesToClear(["analytics", "marketing"], jar);
+    expect(cleared.filter((n) => n === "stampeo_attribution")).toHaveLength(1);
+  });
+
+  test("the consent cookie itself is never cleared", () => {
+    // Clearing it would erase the very refusal being acted on, and the visitor
+    // would be asked again on the next page as though they had never answered.
+    expect(cookieNamesToClear(["analytics", "marketing"], jar)).not.toContain(
+      CONSENT_COOKIE
+    );
   });
 });

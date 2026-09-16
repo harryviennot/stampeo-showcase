@@ -251,38 +251,130 @@ describe("the cookie round-trip", () => {
   test("a record from an older version is discarded", () => {
     // Same reasoning as the consent cookie: a stored shape from before a field
     // changed meaning is not evidence of anything.
-    const stale = encodeURIComponent(
-      JSON.stringify({ v: ATTRIBUTION_VERSION + 1, vendor: "google" })
+    //
+    // Built by serializing a VALID record and editing one field, so the only
+    // reason it can be null is the version. The first cut of this test
+    // hand-rolled a two-key object that was null for three other reasons, and
+    // so could not tell the version check from its absence.
+    const valid = JSON.parse(
+      decodeURIComponent(
+        serializeAttributionCookie(buildAttributionRecord(ARRIVAL) as AttributionRecord)
+      )
     );
-    expect(parseAttributionCookie(stale)).toBeNull();
+    expect(parseAttributionCookie(encodeURIComponent(JSON.stringify(valid)))).not.toBeNull();
+
+    for (const v of [ATTRIBUTION_VERSION + 1, ATTRIBUTION_VERSION - 1, "1", null]) {
+      expect(
+        parseAttributionCookie(encodeURIComponent(JSON.stringify({ ...valid, v }))),
+        `version ${JSON.stringify(v)} should be discarded`
+      ).toBeNull();
+    }
   });
 
   test("a forged vendor is rejected", () => {
     // The cookie crosses to app.stampeo.app and is editable in devtools. An
     // unknown vendor must not reach the database's CHECK constraint and turn
     // into a 500 during signup.
-    const forged = encodeURIComponent(
-      JSON.stringify({
-        v: ATTRIBUTION_VERSION,
-        vendor: "'; DROP TABLE businesses; --",
-        cc: "marketing",
-        cv: 1,
-        cr: "opt-in",
-      })
+    //
+    // `vn` is the serialized key -- the first cut of this test wrote `vendor`,
+    // which the parser never reads, so it returned null for an unrelated
+    // missing field and would have passed with the allowlist deleted.
+    const valid = JSON.parse(
+      decodeURIComponent(
+        serializeAttributionCookie(buildAttributionRecord(ARRIVAL) as AttributionRecord)
+      )
     );
-    expect(parseAttributionCookie(forged)).toBeNull();
+    for (const vn of ["'; DROP TABLE businesses; --", "doubleclick", "", null, 1]) {
+      expect(
+        parseAttributionCookie(encodeURIComponent(JSON.stringify({ ...valid, vn }))),
+        `vendor ${JSON.stringify(vn)} should be rejected`
+      ).toBeNull();
+    }
   });
 
   test("a forged consent category is rejected", () => {
-    const forged = encodeURIComponent(
-      JSON.stringify({
-        v: ATTRIBUTION_VERSION,
-        vendor: "google",
-        cc: "everything",
-        cv: 1,
-        cr: "opt-in",
-      })
+    const valid = JSON.parse(
+      decodeURIComponent(
+        serializeAttributionCookie(buildAttributionRecord(ARRIVAL) as AttributionRecord)
+      )
     );
-    expect(parseAttributionCookie(forged)).toBeNull();
+    for (const cc of ["everything", "", null, "analytics ", 1]) {
+      expect(
+        parseAttributionCookie(encodeURIComponent(JSON.stringify({ ...valid, cc }))),
+        `category ${JSON.stringify(cc)} should be rejected`
+      ).toBeNull();
+    }
+  });
+
+  test("each rejection is caused by the field it names", () => {
+    // The guard against this whole class of defect: prove the baseline parses,
+    // so any null below is attributable to the single edited field.
+    const valid = JSON.parse(
+      decodeURIComponent(
+        serializeAttributionCookie(buildAttributionRecord(ARRIVAL) as AttributionRecord)
+      )
+    );
+    expect(parseAttributionCookie(encodeURIComponent(JSON.stringify(valid)))).not.toBeNull();
+    expect(
+      parseAttributionCookie(encodeURIComponent(JSON.stringify({ ...valid, lp: null })))
+    ).toBeNull();
+  });
+});
+
+describe("the cookie cannot be made huge", () => {
+  /**
+   * The cookie rides on EVERY request to both `stampeo.app` and
+   * `app.stampeo.app`, alongside the chunked Supabase auth cookies, for 182
+   * days. A crafted landing link — `?gclid=x&utm_campaign=<4KB>` — could plant
+   * one big enough to push the victim over the request-header ceiling and give
+   * them persistent 400/431 on the dashboard until they cleared it by hand.
+   *
+   * The 512-char field cap existed only server-side, AFTER the cookie had
+   * already been set, so it protected the row and not the visitor.
+   */
+  const HUGE = "x".repeat(4000);
+
+  test("an oversized campaign is truncated, not stored whole", () => {
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: `?gclid=abc123&utm_campaign=${HUGE}`,
+    }) as AttributionRecord;
+    expect(record).not.toBeNull();
+    expect(record.utmCampaign!.length).toBeLessThanOrEqual(128);
+  });
+
+  test("the serialized cookie stays within a sane budget", () => {
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: `?gclid=${HUGE}&utm_campaign=${HUGE}&utm_source=${HUGE}&utm_term=${HUGE}&utm_content=${HUGE}&utm_medium=${HUGE}`,
+      landingVariant: HUGE,
+      referrer: `https://${"y".repeat(200)}.example.com/`,
+    }) as AttributionRecord;
+    expect(serializeAttributionCookie(record).length).toBeLessThanOrEqual(2048);
+  });
+
+  test("a real-length click id is never truncated", () => {
+    // fbclid runs past 100 characters. Truncating one produces an identifier
+    // that still looks like data and attributes to nothing — strictly worse
+    // than not capturing it, so the ids get their own, larger budget.
+    const realistic = `IwAR${"3".repeat(150)}`;
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: `?fbclid=${realistic}`,
+      consent: { analytics: false, marketing: true },
+    }) as AttributionRecord;
+    expect(record.clickId).toBe(realistic);
+    expect(record.vendor).toBe("meta");
+  });
+
+  test("the attribution survives truncation rather than being dropped", () => {
+    // A long campaign name is a reason to shorten it, never a reason to lose
+    // the click that paid for the visit.
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: `?gclid=abc123&utm_campaign=${HUGE}`,
+    }) as AttributionRecord;
+    expect(record.clickId).toBe("abc123");
+    expect(record.vendor).toBe("google");
   });
 });

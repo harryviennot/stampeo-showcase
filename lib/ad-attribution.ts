@@ -83,18 +83,58 @@ export interface AttributionRecord extends UtmFields {
   capturedAt: number;
 }
 
-/** Empty string is not a value: `?gclid=` is what a broken ad template emits. */
-function param(search: URLSearchParams, name: string): string | null {
+/**
+ * Cap on any single captured field.
+ *
+ * Matches `_MAX_FIELD` in the backend's `ad_attribution.py`, but has to exist
+ * HERE too: the server-side cap protects the database row, and by the time it
+ * runs the cookie is already on the visitor's device.
+ */
+const MAX_FIELD = 128;
+
+/**
+ * A more generous cap for the two fields the whole feature exists to carry.
+ *
+ * A real `fbclid` runs past 100 characters and a `gclid` past 90, so the soft
+ * cap above would corrupt them into un-attributable garbage — worse than
+ * dropping them, because a truncated identifier still looks like data.
+ */
+const MAX_ID_FIELD = 512;
+
+/**
+ * Ceiling on the whole serialized cookie.
+ *
+ * It rides on every request to both subdomains for 182 days, alongside the
+ * chunked Supabase auth cookies. A crafted landing link could otherwise plant
+ * a ~4KB cookie and push the visitor over the request-header limit, giving
+ * them persistent 400/431 on the dashboard until they cleared it by hand.
+ */
+const MAX_COOKIE_BYTES = 2048;
+
+/**
+ * Empty string is not a value (`?gclid=` is what a broken ad template emits),
+ * and no single value may exceed `MAX_FIELD`.
+ *
+ * Truncating rather than rejecting is deliberate: a long campaign name is a
+ * reason to shorten it, never a reason to lose the click that paid for the
+ * visit.
+ */
+function param(
+  search: URLSearchParams,
+  name: string,
+  max: number = MAX_FIELD
+): string | null {
   const value = search.get(name);
-  return value && value.trim() !== "" ? value : null;
+  if (!value || value.trim() === "") return null;
+  return value.slice(0, max);
 }
 
 export function readClickIds(search: string): ClickIds {
   const params = new URLSearchParams(search);
   return {
-    gclid: param(params, "gclid"),
-    fbclid: param(params, "fbclid"),
-    ttclid: param(params, "ttclid"),
+    gclid: param(params, "gclid", MAX_ID_FIELD),
+    fbclid: param(params, "fbclid", MAX_ID_FIELD),
+    ttclid: param(params, "ttclid", MAX_ID_FIELD),
   };
 }
 
@@ -186,11 +226,11 @@ export function buildAttributionRecord(input: {
   return {
     v: ATTRIBUTION_VERSION,
     vendor: clickId ? vendorForClickIds(ids) : "direct",
-    browserId,
+    browserId: browserId?.slice(0, MAX_ID_FIELD) ?? null,
     clickId,
     ...readUtm(input.search),
-    landingPath: input.landingPath,
-    landingVariant: input.landingVariant,
+    landingPath: input.landingPath.slice(0, MAX_FIELD),
+    landingVariant: input.landingVariant?.slice(0, MAX_FIELD) ?? null,
     referrerHost: referrerHost(input.referrer, input.selfHost ?? "stampeo.app"),
     // The category that PERMITTED the row. A click id is the marketing-gated
     // field, so its presence is what makes this a marketing record.
@@ -364,6 +404,13 @@ export function writeAttributionRecord(record: AttributionRecord): void {
   if (readAttributionRecord()) return;
 
   const attrs = attributionCookieAttributes(record);
+  if (attrs.value.length > MAX_COOKIE_BYTES) {
+    // Belt and braces: every field is already capped, so reaching this means a
+    // new field was added without one. Dropping the write is the safe failure —
+    // losing attribution costs a dashboard row, while a header-breaking cookie
+    // costs the visitor access to the dashboard itself.
+    return;
+  }
   let cookie = `${attrs.name}=${attrs.value}; Max-Age=${attrs.maxAge}; Path=${attrs.path}; SameSite=Lax`;
   if (attrs.domain) cookie += `; Domain=${attrs.domain}`;
   if (attrs.secure) cookie += "; Secure";
