@@ -153,8 +153,18 @@ differentiator and final CTA already use.
   a reassurance line reading "14 days free · Cancel anytime", and the number
   comes from `MARKETS.us.trialDays`, NOT a literal in the copy.
 - **AC2**: Given market `int`, `uk`, or any locale other than the US pilot, when
-  the landing page renders, then no hero reassurance line appears and the
-  rendered output is unchanged from before this issue.
+  the landing page renders, then no hero reassurance line appears, no US copy
+  appears, and no empty wrapper or extra gap is left where they would have been.
+  REVISED 2026-09-16: this originally said the rendered output must be
+  "unchanged", which stopped being the intent once the hero was resized. The
+  *copy* layer is market-scoped; the hero *type scale* is deliberately global,
+  because the headline overran the fold in every language, not only in English.
+  Greptile flagged the discrepancy on PR #126 and was right that the code and
+  this criterion disagreed; the criterion was the stale half.
+- **AC2b**: Given any market at 1440x900, when the landing page renders, then
+  the hero headline sets on two lines and both wallet badges sit above the fold.
+  Measured 2026-09-16: `/` 829px, `/en` 803px, `/es` 803px, `/pl` 803px,
+  `/us` 861px, all inside 900px, all two lines at 64px.
 - **AC3**: Given a `variant.us.<key>` override exists, when market is `us`, then
   the override is rendered; when market is `int`, then the base key is rendered.
 - **AC4**: Given a `variant.us.<key>` that shadows no base key, when the catalog

@@ -225,8 +225,8 @@ First run of this runbook. `/us` went live as an indexable market on
 prices.
 
 A comparison table against Square, Loopy and Stamp Me was built for `/us` and
-then removed before QA. Cases CM-01 to CM-04 covered it and have been retired;
-the ids are not reused.
+then removed before QA. Cases CM-01 to CM-04 covered it and are **retired**:
+they are not in this runbook and their ids are not reused.
 
 Not covered by any case, and deliberately so:
 - **Page-level rendering is not unit-tested anywhere in `showcase/`** (there is
@@ -234,89 +234,3 @@ Not covered by any case, and deliberately so:
   only thing standing between a mistyped translation key and a raw key path on
   a live page. Treat them as load-bearing, not as a formality.
 - `/uk` copy. It has no overrides and is expected to read exactly like `/en`.
-
-
-## Known state before you start
-
-Nothing is currently known-broken in this area.
-
-First run of this runbook. `/us` went live as an indexable market on
-2026-09-15 (STA-275); this pass is the first to check its copy rather than its
-prices.
-
-A comparison table against Square, Loopy and Stamp Me was built for `/us` and
-then removed before QA. Cases CM-01 to CM-04 covered it and have been retired;
-the ids are not reused.
-
-Not covered by any case, and deliberately so:
-- **Page-level rendering is not unit-tested anywhere in `showcase/`** (there is
-  no component test harness, only `lib/*.test.ts`). MK-01 through MK-04 are the
-  only thing standing between a mistyped translation key and a raw key path on
-  a live page. Treat them as load-bearing, not as a formality.
-- `/uk` copy. It has no overrides and is expected to read exactly like `/en`.
-
----
-
-## CM: the comparison table
-
-### CM-01 It appears on /us, and only there — BLOCKER
-
-WHY: The cells name Square, Loopy and Stamp Me. A claim verified for the US
-market is not a claim we have checked anywhere else, and printing it under a
-French or Polish URL is comparative advertising in a market we never researched.
-
-1. Open `/us` and scroll past the feature grid.
-2. Repeat on `/`, `/en`, `/es`, `/pl`, `/uk`.
-
-EXPECT:
-- `/us`: a table headed "How we compare." with columns Stampeo, Square Loyalty,
-  Loopy Loyalty, Stamp Me.
-- Everywhere else: **no table, and no empty band or double gap** where it would
-  have been. View source and confirm `data-landing-section="comparison"` is
-  absent entirely, not present-but-empty.
-
-### CM-02 Our own price tracks the live ladder — CORE
-DEPENDS: CM-01
-
-WHY: Competitor cells are literal by design; ours is not. If the Stampeo cell
-ever hardcodes a number it will drift from checkout, which is the whole failure
-STA-268 existed to end.
-
-1. On `/us`, read the "Starting price" row.
-
-EXPECT: the Stampeo cell reads **$49/month**, matching the Starter price on
-`/us/pricing`. NOT a literal `{starterPrice}`, NOT a euro figure, and NOT a
-number that differs from the pricing page.
-
-### CM-03 The claims are the verified ones — CORE
-DEPENDS: CM-01
-
-WHY: Each row exists because of one checked fact. A cell flipped by a careless
-edit is a false public statement about another company.
-
-EXPECT, reading across:
-- Google Wallet: Stampeo ✓, **Square a dash**, Loopy ✓, Stamp Me ✓.
-- App for your customers: None / None / None / **Required** (Stamp Me).
-- Stamp cards: Stampeo ✓, **Square a dash**.
-- Points programs: **Loopy and Stamp Me a dash**.
-- Keeps the POS you have: **Square a dash**.
-- Stampeo is the only column with no dash anywhere.
-- A verification date line sits under the table.
-
-### CM-04 On a phone it is a column picker, not a scroll — EDGE
-DEPENDS: CM-01
-
-WHY: 90% of dashboard traffic is on a phone, and a four-column table cannot fit
-390px. The first build used a horizontally scrolling box, which hid two of the
-four columns off-screen with nothing to say so: most of the argument, clipped
-away. The mobile half shows one competitor at a time instead.
-
-1. Open `/us` at a 390px viewport and scroll to the table.
-2. Open the picker and switch to Loopy Loyalty, then Stamp Me.
-
-EXPECT:
-- A picker reading "Stampeo vs Square Loyalty", then Stampeo and the chosen
-  competitor side by side on every row.
-- Switching swaps **both** the cells and the explanatory notes. A note about
-  Stamp Me must NOT be visible while Square is selected.
-- The **page body does not scroll sideways** and nothing overflows the viewport.
