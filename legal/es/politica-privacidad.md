@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 5 de agosto de 2026**
+**Última actualización: 16 de septiembre de 2026**
 
 ## 1. Introducción
 
@@ -127,9 +127,40 @@ Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google) pueden tr
 
 ## 5. Cookies
 
+### 5.1 Tu elección
+
+Las cookies de medición y de publicidad solo se cargan después de que las aceptes. Mientras no lo hagas, sus scripts ni siquiera se colocan en la página: ninguna petición llega a Google, Meta o TikTok, y no se crea ninguna de sus cookies. Rechazarlas, por tanto, no deja nada que borrar.
+
+Rechazar cuesta un clic, en el mismo banner y con la misma visibilidad que aceptar, y el sitio funciona igual en ambos casos. Guardamos tu elección durante seis meses, pasados los cuales te la volvemos a pedir. Puedes cambiarla cuando quieras desde **Preferencias de cookies**, al final de cada página. Retirar un consentimiento borra las cookies afectadas y recarga la página para que los scripts dejen de ejecutarse.
+
+Si tu navegador envía una señal Global Privacy Control, la tratamos como un rechazo y no te preguntamos nada.
+
+Los visitantes situados en Estados Unidos reciben un trato distinto, porque las leyes estatales aplicables exigen información y una opción de rechazo, no un consentimiento previo. Allí las cookies de medición y de publicidad se cargan desde la llegada, un aviso lo indica, y **Preferencias de cookies** permite desactivarlas en cualquier momento.
+
+### 5.2 Cookies presentes elijas lo que elijas
+
+Son estrictamente necesarias y no están sujetas a consentimiento.
+
+| Cookie | Finalidad | Duración |
+|---|---|---|
+| `NEXT_LOCALE` | Recuerda el idioma en el que consultas el sitio. | 1 año |
+| `stampeo_market` | Recuerda el país cuyas páginas has abierto, para rellenar un campo más adelante. | 30 días |
+| `stampeo_consent` | Registra la elección que has hecho sobre las cookies del 5.3. | 6 meses |
+| Cookies de sesión de Supabase | Te mantiene con la sesión iniciada en el panel. | Sesión |
+
+### 5.3 Cookies sujetas a tu consentimiento
+
+| Finalidad | Destinatario | Cookies |
+|---|---|---|
+| Medición de audiencia | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
+| Medición publicitaria | Meta | `_fbp`, `_fbc` |
+| Medición publicitaria | TikTok | `_ttp` |
+
+### 5.4 Medición de audiencia sin cookies
+
 Stampeo utiliza PostHog (alojado en la UE) para sus estadísticas internas de medición de audiencia. PostHog está configurado de modo que **no deposita ninguna cookie de seguimiento** y **no conserva ningún identificador en el almacenamiento del navegador** (cookie, localStorage o equivalente). Los eventos se limitan a la sesión de navegación en curso y no se correlacionan de una visita a otra. La dirección IP del visitante se transmite al servidor de PostHog para el registro técnico y la eliminación de eventos duplicados, pero no se asocia a ningún identificador persistente, no se utiliza con fines de elaboración de perfiles ni de publicidad, y no se comparte con terceros. El alojamiento se realiza dentro de la Unión Europea.
 
-En estas condiciones, la medición de audiencia de Stampeo se acoge a la exención de consentimiento prevista por la Directiva sobre la privacidad electrónica (ePrivacy) y por las directrices de la CNIL para la medición de audiencia estrictamente necesaria para el buen funcionamiento del servicio, y no requiere ningún banner de consentimiento.
+Como no se almacena nada en tu dispositivo, esta medición se acoge a la exención de consentimiento prevista por la Directiva sobre la privacidad electrónica (ePrivacy) y por las directrices de la CNIL para la medición de audiencia estrictamente necesaria. Funciona por tanto tanto si aceptas como si rechazas las cookies del 5.3, y un rechazo no nos deja sin medición del propio sitio.
 
 Pueden utilizarse cookies estrictamente necesarias para la autenticación y la gestión de la sesión en el panel. Estas cookies no requieren consentimiento.
 

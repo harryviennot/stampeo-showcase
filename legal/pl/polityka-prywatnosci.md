@@ -1,6 +1,6 @@
 # Polityka prywatności: Stampeo
 
-**Ostatnia aktualizacja: 5 sierpnia 2026**
+**Ostatnia aktualizacja: 16 września 2026**
 
 ## 1. Wprowadzenie
 
@@ -127,9 +127,40 @@ Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą prz
 
 ## 5. Pliki cookie
 
+### 5.1 Twój wybór
+
+Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakceptujesz. Do tego czasu ich skrypty w ogóle nie trafiają na stronę: żadne zapytanie nie dociera do Google, Meta ani TikToka i nie powstaje żaden z ich plików cookie. Odmowa nie zostawia więc niczego do usunięcia.
+
+Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na sześć miesięcy, po czym pytamy ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** na dole każdej strony. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
+
+Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, traktujemy go jak odmowę i o nic nie pytamy.
+
+Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a **Ustawienia plików cookie** pozwalają je wyłączyć w dowolnym momencie.
+
+### 5.2 Pliki cookie obecne niezależnie od wyboru
+
+Są ściśle niezbędne i nie podlegają zgodzie.
+
+| Plik cookie | Cel | Czas przechowywania |
+|---|---|---|
+| `NEXT_LOCALE` | Zapamiętuje język, w którym czytasz stronę. | 1 rok |
+| `stampeo_market` | Zapamiętuje kraj, którego strony otworzono, żeby później wypełnić pole. | 30 dni |
+| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3. | 6 miesięcy |
+| Pliki cookie sesji Supabase | Utrzymuje zalogowanie w panelu firmowym. | Sesja |
+
+### 5.3 Pliki cookie wymagające twojej zgody
+
+| Cel | Odbiorca | Pliki cookie |
+|---|---|---|
+| Pomiar ruchu | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
+| Pomiar skuteczności reklam | Meta | `_fbp`, `_fbc` |
+| Pomiar skuteczności reklam | TikTok | `_ttp` |
+
+### 5.4 Pomiar ruchu bez plików cookie
+
 Stampeo korzysta z PostHog (hostowanego w UE) do wewnętrznych statystyk produktowych i pomiaru ruchu. PostHog jest skonfigurowany tak, że **nie zapisuje żadnych plików cookie służących do śledzenia** i **nie przechowuje żadnego identyfikatora w pamięci przeglądarki** (cookie, localStorage lub odpowiednik). Zdarzenia są ograniczone do bieżącej sesji przeglądarki i nie są łączone pomiędzy wizytami. Adres IP odwiedzającego jest przekazywany na serwer PostHog na potrzeby rejestrowania technicznego i usuwania duplikatów zdarzeń, ale nie jest łączony z trwałym identyfikatorem, nie służy do profilowania ani do reklamy i nie jest udostępniany podmiotom trzecim. Hosting odbywa się w całości na terenie Unii Europejskiej.
 
-W tych warunkach pomiar ruchu prowadzony przez Stampeo mieści się w zwolnieniu z obowiązku zgody, przewidzianym dla ściśle niezbędnego pomiaru ruchu w dyrektywie o prywatności i łączności elektronicznej (ePrivacy) oraz w wytycznych CNIL, i nie wymaga baneru zgody na pliki cookie.
+Ponieważ nic nie jest zapisywane na twoim urządzeniu, pomiar ten mieści się w zwolnieniu z obowiązku zgody, przewidzianym dla ściśle niezbędnego pomiaru ruchu w dyrektywie o prywatności i łączności elektronicznej (ePrivacy) oraz w wytycznych CNIL. Działa więc niezależnie od tego, czy akceptujesz, czy odrzucasz pliki cookie z punktu 5.3, a odmowa nie pozbawia nas pomiaru samej strony.
 
 Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane pliki cookie ściśle niezbędne. Takie pliki cookie nie wymagają zgody.
 
