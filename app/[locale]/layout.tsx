@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import { localePath } from "@/lib/hreflang";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
+import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ScrollRevealInit } from "@/components/ui/ScrollRevealInit";
 import "../globals.css";
 import { PILOT_HREFLANG } from "@/lib/markets";
@@ -115,6 +116,10 @@ export default async function RootLayout({
           <AuthProvider>
             {children}
             <FloatingLanguageSwitcher />
+            {/* Last in the tree so it paints over the page, and inside the
+                intl provider because its copy is localized. It decides for
+                itself whether this route and this visitor need it. */}
+            <ConsentBanner />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

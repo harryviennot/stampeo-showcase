@@ -109,7 +109,8 @@
         "disclaimer": "Pas de spam. Désabonnement en un clic.",
         "success": "Merci ! Vous êtes inscrit."
       },
-      "sitemapLabel": "Plan du site"
+      "sitemapLabel": "Plan du site",
+      "cookiePreferences": "Préférences cookies"
     },
     "points": "Points",
     "pointsStrip": {
@@ -125,6 +126,41 @@
       "country": {
         "us": "États-Unis",
         "uk": "Royaume-Uni"
+      }
+    },
+    "cookies": {
+      "banner": {
+        "title": "Vos choix de cookies",
+        "body": "On n'active les cookies de mesure et de publicité que si vous les acceptez. Refuser ne change rien au fonctionnement du site.",
+        "learnMore": "Voir le détail",
+        "accept": "Tout accepter",
+        "refuse": "Tout refuser",
+        "customise": "Choisir par finalité"
+      },
+      "notice": {
+        "title": "Vos choix de confidentialité",
+        "body": "On utilise des cookies de mesure et de publicité pour évaluer nos annonces.",
+        "choices": "Vos choix de confidentialité",
+        "dismiss": "J'ai compris"
+      },
+      "prefs": {
+        "title": "Choisir par finalité",
+        "intro": "Vous activez ou désactivez chaque finalité. Votre choix est conservé six mois et reste modifiable depuis le pied de page.",
+        "necessary": {
+          "title": "Strictement nécessaires",
+          "always": "Toujours actifs",
+          "body": "Votre langue, votre pays et ce choix lui-même. Rien ici ne vous identifie ni ne sort de Stampeo."
+        },
+        "analytics": {
+          "title": "Mesure d'audience",
+          "body": "Google Analytics, pour voir quelles pages nous amènent de nouveaux commerces."
+        },
+        "marketing": {
+          "title": "Publicité",
+          "body": "Meta et TikTok, pour savoir laquelle de nos annonces a vraiment servi."
+        },
+        "save": "Enregistrer mon choix",
+        "cancel": "Annuler"
       }
     }
   }
