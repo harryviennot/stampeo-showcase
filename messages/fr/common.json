@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Tampons",
     "reward": "Récompense",
-    "rewarded": "Vous avez droit à 30 jours gratuits !",
-    "rewardText": "30 jours gratuit à 8 tampons !",
+    "rewarded": "Vous avez droit à {trialDays} jours gratuits !",
+    "rewardText": "{trialDays} jours gratuits à 8 tampons !",
     "nav": {
       "features": "Fonctionnalités",
       "pricing": "Tarifs",

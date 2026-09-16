@@ -11,7 +11,7 @@ const HeroDemo = dynamic(() => import("../sections/HeroDemo").then((m) => m.Hero
  * hero's "Try the live demo" button anchors here (#try-it). `scroll-mt` offsets
  * the sticky header so the heading isn't hidden under it after the jump.
  */
-export async function VariantTryIt() {
+export async function VariantTryIt({ trialDays }: Readonly<{ trialDays: number }>) {
   const t = await getTranslations("variant.tryIt");
 
   return (
@@ -41,7 +41,7 @@ export async function VariantTryIt() {
 
           {/* Interactive card on the right */}
           <ScrollReveal delay={150} className="flex flex-col items-center">
-            <HeroDemo />
+            <HeroDemo trialDays={trialDays} />
           </ScrollReveal>
         </div>
       </div>

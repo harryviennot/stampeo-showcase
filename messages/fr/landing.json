@@ -31,7 +31,7 @@
         "mobileAddWallet": "Essayez, ajoutez à votre Wallet",
         "mobileHint": "La carte sera ajoutée à votre wallet téléphone",
         "rewardMid": "-50 % sur le 1er mois",
-        "rewardTop": "1 mois offert",
+        "rewardTop": "{trialDays} jours gratuits",
         "rewardAllUnlocked": "Tout est débloqué !"
       }
     },
@@ -244,11 +244,11 @@
           "label": "commerces actifs"
         },
         {
-          "value": "+9 400",
-          "label": "scans effectués"
+          "value": "+12 500",
+          "label": "tampons distribués"
         },
         {
-          "value": "24",
+          "value": "22",
           "label": "pays"
         }
       ]

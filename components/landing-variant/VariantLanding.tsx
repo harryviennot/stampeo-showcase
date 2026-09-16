@@ -28,13 +28,16 @@ import { VariantDevToggle } from "./VariantDevToggle";
 import { MARKETS, type Market } from "@/lib/markets";
 import { getPlanCatalog } from "@/lib/plan-catalog";
 import { interpolatePricing } from "@/lib/pricing";
+import { marketCopy } from "@/lib/market-copy";
 
 export async function VariantLanding({
   locale,
   market = "int",
 }: Readonly<{ locale: string; market?: Market }>) {
   setRequestLocale(locale);
-  const t = await getTranslations("variant.faq");
+  // Namespaced at `variant` so the market override at `variant.us.*` is
+  // reachable from the same translator as the base copy.
+  const t = await getTranslations("variant");
   // Fetched once here and passed down: the market fixes the currency at render
   // time, so the page stays fully cacheable and every block on it quotes the
   // same ladder.
@@ -43,7 +46,11 @@ export async function VariantLanding({
   // market rather than written into copy, which is how /us came to offer 30
   // days one click before Stripe granted 14.
   const trialDays = MARKETS[market].trialDays;
-  const faqItems = (t.raw("items") as Array<{ question: string; answer: string }>).map(
+  const copy = marketCopy(t, market);
+  // The US FAQ replaces the array wholesale rather than merging by index: the
+  // two lists are different lengths and answer different objections, and
+  // index-merging them is how you ship a half-European FAQ.
+  const faqItems = (copy.raw("faq.items") as Array<{ question: string; answer: string }>).map(
     // Interpolate BEFORE the JSON-LD is built. Passing the raw strings through
     // shipped the literal token "{starterPrice}" to Google.
     (faq) => ({
@@ -61,19 +68,19 @@ export async function VariantLanding({
       <LandingTracker locale={locale} variant="wallet" />
       <Header market={market} />
       <main className="relative">
-        <div data-landing-section="hero"><VariantHero /></div>
+        <div data-landing-section="hero"><VariantHero market={market} trialDays={trialDays} /></div>
         {/* "Made in Europe · GDPR" trust strip — hidden outside Europe (US). */}
         {MARKETS[market].europeTrust && (
           <div data-landing-section="trust_strip"><VariantTrustStrip /></div>
         )}
         <div data-landing-section="benefits"><VariantBenefits /></div>
-        <div data-landing-section="differentiator"><VariantDifferentiator trialDays={trialDays} /></div>
+        <div data-landing-section="differentiator"><VariantDifferentiator trialDays={trialDays} market={market} /></div>
         <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
         <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
         {/* Tear line: the pitch is above, the thing you can actually touch is
             below. The one place on the page it earns its keep. */}
         <Container><div className="perforation" aria-hidden /></Container>
-        <div data-landing-section="try_it"><VariantTryIt /></div>
+        <div data-landing-section="try_it"><VariantTryIt trialDays={trialDays} /></div>
         <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="metrics"><VariantMetricStrip /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
@@ -82,7 +89,7 @@ export async function VariantLanding({
         </div>
         <div data-landing-section="faq"><VariantFAQ faqs={faqItems} /></div>
         <div data-landing-section="changelog"><VariantChangelogTeaser /></div>
-        <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} trialDays={trialDays} /></div>
+        <div data-landing-section="final_cta"><VariantFinalCTA pricing={pricing} locale={locale} trialDays={trialDays} market={market} /></div>
       </main>
       <Footer market={market} />
       <VariantDevToggle />
