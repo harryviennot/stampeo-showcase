@@ -133,7 +133,7 @@ Las cookies de medición y de publicidad solo se cargan después de que las acep
 
 Rechazar cuesta un clic, en el mismo banner y con la misma visibilidad que aceptar, y el sitio funciona igual en ambos casos. Guardamos tu elección durante seis meses, pasados los cuales te la volvemos a pedir. Puedes cambiarla cuando quieras desde **Preferencias de cookies**, al final de cada página. Retirar un consentimiento borra las cookies afectadas y recarga la página para que los scripts dejen de ejecutarse.
 
-Si tu navegador envía una señal Global Privacy Control, la tratamos como un rechazo y no te preguntamos nada.
+Si tu navegador envía una señal Global Privacy Control y aún no has hecho ninguna elección aquí, la tratamos como un rechazo y no se carga nada. En Estados Unidos no te mostramos entonces ningún aviso, porque ya has respondido. En Europa el banner se sigue ofreciendo, para que puedas aceptar deliberadamente si así lo quieres. Tu propia elección siempre prevalece sobre la señal.
 
 Los visitantes situados en Estados Unidos reciben un trato distinto, porque las leyes estatales aplicables exigen información y una opción de rechazo, no un consentimiento previo. Allí las cookies de medición y de publicidad se cargan desde la llegada, un aviso lo indica, y **Preferencias de cookies** permite desactivarlas en cualquier momento.
 

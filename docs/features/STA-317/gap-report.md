@@ -31,3 +31,18 @@ STATUS NOW: all gaps closed or accepted with a reason, below.
 ## Waivers
 
 None requested.
+
+---
+
+# Review round: Greptile on PR #128
+
+Three findings, all valid, all fixed. CI was green (test, lint-and-build,
+lighthouse, audit) before and after.
+
+| Finding | Resolution |
+|---|---|
+| **P1 — consent lost when storage fails.** The `catch` around the cookie write kept no in-memory record, so with storage blocked (Safari private mode) the reader re-read an unchanged jar: clicking Refuse left the banner up, and in the opt-out regime a refusal resolved straight back to granted. The comment claimed "the choice still holds for this session in memory" and no such thing existed. | Fixed. `writeConsentRecord` now verifies the write by reading the jar back and keeps an in-memory `sessionRecord` **only when it did not stick** — which also catches the silent failures a `try/catch` never sees, such as a `Secure` cookie dropped over plain http. It is a fallback, not a cache: a readable cookie always outranks it, so a choice made in another tab still wins, and a successful write clears it. Four tests, mutation-checked. |
+| **P2 — the footer preferences button did nothing on `/email-preferences`.** That route is in `PRIVATE_SEGMENTS` but renders the `Footer`, so gating the dialog on `isTrackablePath` made a visible control dead on click. | Fixed, and it corrects an overreach from the coverage-audit round. `trackable` now gates **solicitation only**. Asking is what must not happen on a business's QR enrollment page; reopening an existing choice must work wherever it can be reached, because withdrawal has to be as easy as consent. The footer is the real gate, and acquisition pages render no footer. A test reads the route folders off disk and pins that `/email-preferences` carries a footer while being untrackable. |
+| **P2 — the GPC promise did not match behaviour.** §5 said, in four languages and without qualification, that a Global Privacy Control signal is treated as a refusal and that we do not ask. In fact an existing stored grant outranks GPC, and an opt-in visitor is still shown the banner. | Fixed in all four locales. The section now states the no-record condition, that the US sees no notice while Europe is still offered the banner so it can opt in deliberately, and that a choice the visitor makes themselves takes precedence over the signal. |
+
+Nothing was disputed or deferred.

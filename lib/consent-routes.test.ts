@@ -16,7 +16,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "../i18n/routing";
 import {
@@ -157,6 +157,34 @@ describe("segment tables", () => {
     );
 
     expect(unclassified).toEqual([]);
+  });
+
+  test("a private route that carries the footer is still known to be private", () => {
+    // `isTrackablePath` gates SOLICITATION only. `/email-preferences` is
+    // private — no tag may fire there — yet it renders the `Footer`, and the
+    // footer carries the Cookie preferences button. Gating the preferences
+    // DIALOG on this predicate therefore made that button dead on click.
+    //
+    // Pinned here so the relationship is on the record: if this route ever
+    // becomes trackable, or another footer-bearing route joins the private
+    // table, whoever changes it meets the reason the dialog is ungated.
+    const footerRoutes = readdirSync(join(import.meta.dir, "..", "app", "[locale]"), {
+      withFileTypes: true,
+    })
+      .filter((entry) => entry.isDirectory())
+      .filter((entry) =>
+        readdirSync(join(import.meta.dir, "..", "app", "[locale]", entry.name)).some((file) =>
+          file.endsWith(".tsx") &&
+          readFileSync(
+            join(import.meta.dir, "..", "app", "[locale]", entry.name, file),
+            "utf-8",
+          ).includes("<Footer"),
+        ),
+      )
+      .map((entry) => entry.name);
+
+    expect(footerRoutes).toContain("email-preferences");
+    expect(isTrackablePath("/email-preferences")).toBe(false);
   });
 
   test("every named segment still exists as a route folder", () => {

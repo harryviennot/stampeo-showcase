@@ -332,10 +332,25 @@ function presentCookieNames(): string[] {
     .filter(Boolean);
 }
 
+/**
+ * The choice made in this page's lifetime, held in case the cookie write was
+ * refused.
+ *
+ * Safari's private mode and "block all cookies" both make `document.cookie`
+ * a no-op or a throw. Without this, clicking Refuse would appear to do
+ * nothing: the write fails, the reader re-reads an unchanged jar, and the
+ * banner stays up. In the opt-out regime it is worse than cosmetic, because a
+ * refusal that cannot be stored resolves straight back to granted.
+ *
+ * A fallback, never a cache. The cookie is the source of truth whenever it is
+ * readable, so a choice made in another tab still wins here.
+ */
+let sessionRecord: ConsentRecord | null = null;
+
 /** The stored choice, or null. */
 export function readConsentRecord(): ConsentRecord | null {
   if (typeof document === "undefined") return null;
-  return consentRecordFromCookieHeader(document.cookie);
+  return consentRecordFromCookieHeader(document.cookie) ?? sessionRecord;
 }
 
 /**
@@ -364,10 +379,16 @@ export function writeConsentRecord(
     try {
       document.cookie = cookie;
     } catch {
-      // A browser refusing storage (Safari private mode, storage blocked) must
-      // not break the page. The choice still holds for this session in memory;
-      // it simply will not survive a reload, and they get asked again.
+      // Blocked storage throws here. It can also fail without throwing, which
+      // is why the check below reads the jar back rather than trusting this.
     }
+
+    // Did it stick? A browser can refuse the write silently (private mode), or
+    // drop it for an attribute it dislikes (`Secure` over plain http). Keeping
+    // the record in memory only when it did NOT stick means the cookie stays
+    // the source of truth, and the fallback clears itself the moment a write
+    // succeeds rather than shadowing a later choice made in another tab.
+    sessionRecord = consentRecordFromCookieHeader(document.cookie) ? null : record;
   }
 
   return record;

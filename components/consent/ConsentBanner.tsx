@@ -44,21 +44,27 @@ export function ConsentBanner() {
   const consent = useConsent();
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  // Acquisition pages (`/[locale]/[slug]`) are a business's own QR enrollment
-  // page: no tag fires there, so nothing may ask for consent there either.
-  // This gates the DIALOG and its listener, not just the banner. Gating only
-  // the banner would still let a stray `stampeo:consent-open` write a consent
-  // record from a page that has nothing to consent to. Those pages render no
-  // footer, so no reachable control is lost.
+  // `trackable` gates SOLICITATION, never MANAGEMENT.
+  //
+  // Asking is what must not happen on a business's own QR enrollment page
+  // (`/[locale]/[slug]`): no tag fires there, so nothing may interrupt one of
+  // OUR customer's customers to ask them about it.
+  //
+  // Reopening an existing choice is the opposite case and must work wherever
+  // it can be reached, because consent has to be as easy to withdraw as it was
+  // to give. `/email-preferences` is private, renders the `Footer`, and
+  // therefore shows the Cookie preferences button: gating the dialog on
+  // `trackable` too made that button dead on click. The footer is the real
+  // gate here, and acquisition pages render no footer at all.
   const trackable = isTrackablePath(pathname);
 
   // The footer entry, and anything else that wants to reopen the choice.
+  // Deliberately NOT gated: see above.
   useEffect(() => {
-    if (!trackable) return;
     const open = () => setPrefsOpen(true);
     window.addEventListener(CONSENT_OPEN_EVENT, open);
     return () => window.removeEventListener(CONSENT_OPEN_EVENT, open);
-  }, [trackable]);
+  }, []);
 
   const commit = useCallback(
     (next: ConsentState) => {
@@ -193,9 +199,8 @@ export function ConsentBanner() {
         </section>
       )}
 
-      {/* Mounted only where consent is meaningful, for the reason above. */}
       <ConsentPreferences
-        open={trackable && prefsOpen}
+        open={prefsOpen}
         initial={{ analytics: consent.analytics, marketing: consent.marketing }}
         onClose={() => setPrefsOpen(false)}
         onSave={commit}

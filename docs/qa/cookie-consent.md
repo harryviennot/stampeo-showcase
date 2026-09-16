@@ -192,6 +192,9 @@ EXPECT:
 - Paris: the banner **is** still shown (they may still choose to opt in), and
   until they do, nothing is set.
 - In both: `_ga*`, `_fbp`, `_ttp` absent.
+- Then R6 (a stored grant) with GPC still on, and reload: the stored choice
+  wins and the categories read as granted. An explicit click outranks the
+  signal, and §5 of the privacy policy says so.
 
 ---
 
@@ -274,6 +277,42 @@ live only in a banner that is gone the moment someone answers.
 EXPECT:
 - The entry is present in the Legal column in all four locales, translated.
 - It opens the dialog every time.
+
+### PR-06 The footer entry works on the email preferences page — CORE
+DEPENDS: PR-05
+
+WHY: `/email-preferences` is a private route (no tag fires there) that
+nevertheless renders the footer, so it is the one page where "no tracking here"
+and "the withdrawal control is visible here" are both true. It shipped once with
+a button that did nothing when clicked.
+
+1. Open `/email-preferences` (any locale). Scroll to the footer.
+2. Click **Cookie preferences**.
+
+EXPECT:
+- The dialog opens.
+- Changing a switch and saving is recorded, same as anywhere else.
+- No banner and no notice on the page itself: managing a choice is allowed
+  here, being asked for one is not.
+
+### PR-07 A refusal survives a browser that blocks storage — CORE
+DEPENDS: CN-02
+
+WHY: With cookies blocked the write fails, and if nothing else remembers the
+click the banner never goes away. For a US visitor it is worse than cosmetic: a
+refusal that cannot be stored resolves back to granted.
+
+1. Safari > Settings > Privacy > **Block all cookies**. (Or any browser with
+   site data blocked for this origin.)
+2. Load `/`, click **Refuse all**.
+
+EXPECT:
+- The banner disappears and stays gone for the rest of the page session,
+  including after navigating to `/pricing`.
+- `document.cookie` shows no `stampeo_consent`: it genuinely could not be
+  written, and that is expected here.
+- Reloading asks again, which is correct. Nothing was stored, so nothing can
+  be remembered.
 
 ---
 

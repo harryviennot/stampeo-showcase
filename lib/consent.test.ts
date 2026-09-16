@@ -460,17 +460,17 @@ describe("writeConsentRecord", () => {
     expect(record.regime).toBe("opt-out");
   });
 
-  test("a browser that refuses storage does not break the click", () => {
-    // Safari private mode and "block all cookies" both throw on assignment.
-    // The choice then holds for the session only, which is the honest outcome;
-    // a thrown error inside the click handler would be a dead button.
+  /** A jar that accepts nothing, the way private mode behaves. */
+  function installUnwritableBrowser(mode: "throws" | "silent") {
     Object.defineProperty(globalThis, "document", {
       value: {
         get cookie() {
           return "";
         },
         set cookie(_value: string) {
-          throw new Error("storage refused");
+          if (mode === "throws") throw new Error("storage refused");
+          // "silent": accepted and dropped, which is what a browser does to a
+          // Secure cookie over plain http.
         },
       },
       configurable: true,
@@ -481,8 +481,67 @@ describe("writeConsentRecord", () => {
       configurable: true,
       writable: true,
     });
+  }
 
+  /**
+   * Leaves the module's in-memory fallback empty again.
+   *
+   * It only survives a FAILED write, so a successful one clears it. Without
+   * this, a refusal recorded by the tests below would leak into any later test
+   * that expects an empty jar to mean "never answered".
+   */
+  function clearSessionFallback() {
+    installBrowser();
+    writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    uninstallBrowser();
+  }
+
+  test("a browser that refuses storage does not break the click", () => {
+    // A thrown error inside the click handler would be a dead button.
+    installUnwritableBrowser("throws");
     expect(() => writeConsentRecord({ analytics: false, marketing: false }, "opt-in")).not.toThrow();
+    clearSessionFallback();
+  });
+
+  test("a refusal the browser will not store is still honoured on this page", () => {
+    // The bug this exists to stop: the write fails, the reader re-reads an
+    // unchanged jar, and the banner never goes away. Clicking Refuse looks
+    // broken, and under the opt-out regime it is worse than cosmetic, because
+    // a refusal that cannot be stored resolves straight back to granted.
+    installUnwritableBrowser("throws");
+
+    writeConsentRecord({ analytics: false, marketing: false }, "opt-out");
+
+    expect(readConsentRecord()).toMatchObject({ analytics: false, marketing: false });
+    expect(hasAnalyticsConsent()).toBe(false);
+    expect(hasMarketingConsent()).toBe(false);
+    clearSessionFallback();
+  });
+
+  test("a write that fails SILENTLY is caught too", () => {
+    // Not every refusal throws. A browser may accept the assignment and drop
+    // the cookie, so the write is verified by reading the jar back rather than
+    // by trusting that no exception was raised.
+    installUnwritableBrowser("silent");
+
+    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+
+    expect(readConsentRecord()).toMatchObject({ analytics: true, marketing: true });
+    clearSessionFallback();
+  });
+
+  test("a stored cookie always outranks the in-memory fallback", () => {
+    // The fallback must never shadow a choice made in another tab. It exists
+    // only while the cookie cannot be written, and clears as soon as one can.
+    installUnwritableBrowser("throws");
+    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    uninstallBrowser();
+
+    const browser = installBrowser();
+    browser.setJar(`${CONSENT_COOKIE}=${serializeConsentCookie(DENIED)}`);
+
+    expect(readConsentRecord()).toEqual(DENIED);
+    clearSessionFallback();
   });
 
   test("off the browser it records nothing and still returns the record", () => {

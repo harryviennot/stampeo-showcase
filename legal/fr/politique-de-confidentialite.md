@@ -133,7 +133,7 @@ Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptat
 
 Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé six mois, au terme desquels il vous est redemandé. Vous pouvez le modifier à tout moment via **Préférences cookies** en bas de chaque page. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
 
-Si votre navigateur émet un signal Global Privacy Control, nous le traitons comme un refus et ne vous demandons rien.
+Si votre navigateur émet un signal Global Privacy Control et que vous n'avez pas déjà fait de choix ici, nous le traitons comme un refus et rien n'est chargé. Aux États-Unis, aucun message ne vous est alors présenté, puisque vous avez déjà répondu. En Europe, le bandeau reste proposé, afin que vous puissiez accepter délibérément si vous le souhaitez. Un choix que vous faites vous-même prime toujours sur le signal.
 
 Les visiteurs situés aux États-Unis sont traités différemment, les lois des États applicables exigeant une information et une possibilité de refus plutôt qu'un consentement préalable. Les cookies de mesure et de publicité y sont chargés dès l'arrivée, un message l'indique, et **Préférences cookies** permet de les désactiver à tout moment.
 

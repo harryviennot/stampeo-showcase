@@ -133,7 +133,7 @@ Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakcep
 
 Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na sześć miesięcy, po czym pytamy ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** na dole każdej strony. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
 
-Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, traktujemy go jak odmowę i o nic nie pytamy.
+Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, a nie ma jeszcze zapisanego wyboru, traktujemy go jak odmowę i nic się nie wczytuje. W Stanach Zjednoczonych nie pokazujemy wtedy żadnego komunikatu, bo odpowiedź już jest. W Europie baner nadal się pojawia, żeby można było świadomie wyrazić zgodę. Własny wybór zawsze ma pierwszeństwo przed sygnałem.
 
 Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a **Ustawienia plików cookie** pozwalają je wyłączyć w dowolnym momencie.
 
