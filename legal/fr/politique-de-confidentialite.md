@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 5 août 2026**
+**Dernière mise à jour : 16 septembre 2026**
 
 ## 1. Introduction
 
@@ -127,9 +127,40 @@ Certains de nos sous-traitants (Stripe, Apple, Google) peuvent transférer des d
 
 ## 5. Cookies
 
+### 5.1 Votre choix
+
+Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google, Meta ou TikTok, et aucun de leurs cookies n'est créé. Refuser ne laisse donc rien derrière soi à supprimer.
+
+Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé six mois, au terme desquels il vous est redemandé. Vous pouvez le modifier à tout moment via **Préférences cookies** en bas de chaque page. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
+
+Si votre navigateur émet un signal Global Privacy Control et que vous n'avez pas déjà fait de choix ici, nous le traitons comme un refus et rien n'est chargé. Aux États-Unis, aucun message ne vous est alors présenté, puisque vous avez déjà répondu. En Europe, le bandeau reste proposé, afin que vous puissiez accepter délibérément si vous le souhaitez. Un choix que vous faites vous-même prime toujours sur le signal.
+
+Les visiteurs situés aux États-Unis sont traités différemment, les lois des États applicables exigeant une information et une possibilité de refus plutôt qu'un consentement préalable. Les cookies de mesure et de publicité y sont chargés dès l'arrivée, un message l'indique, et **Préférences cookies** permet de les désactiver à tout moment.
+
+### 5.2 Cookies présents quel que soit votre choix
+
+Ils sont strictement nécessaires et ne sont pas soumis au consentement.
+
+| Cookie | Finalité | Durée |
+|---|---|---|
+| `NEXT_LOCALE` | Retient la langue dans laquelle vous consultez le site. | 1 an |
+| `stampeo_market` | Retient le pays dont vous avez ouvert les pages, pour préremplir un champ plus tard. | 30 jours |
+| `stampeo_consent` | Enregistre le choix que vous avez fait sur les cookies du 5.3. | 6 mois |
+| Cookies de session Supabase | Vous maintient connecté au tableau de bord. | Session |
+
+### 5.3 Cookies soumis à votre consentement
+
+| Finalité | Destinataire | Cookies |
+|---|---|---|
+| Mesure d'audience | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
+| Mesure publicitaire | Meta | `_fbp`, `_fbc` |
+| Mesure publicitaire | TikTok | `_ttp` |
+
+### 5.4 Mesure d'audience sans cookie
+
 Stampeo utilise PostHog (hébergé dans l'UE) pour ses statistiques internes de mesure d'audience. PostHog est configuré de manière à ne **déposer aucun cookie de suivi** et à ne **conserver aucun identifiant dans le stockage du navigateur** (cookie, localStorage ou équivalent). Les événements sont limités à la session de navigation en cours et ne sont pas corrélés d'une visite à l'autre. L'adresse IP du visiteur est transmise au serveur PostHog pour la journalisation technique et la dédoublonnage des événements, mais elle n'est pas associée à un identifiant persistant, n'est pas utilisée à des fins de profilage ou de publicité, et n'est pas partagée avec des tiers. L'hébergement est réalisé dans l'Union européenne.
 
-Dans ces conditions, la mesure d'audience Stampeo relève de l'exemption de consentement prévue par la directive ePrivacy et les lignes directrices de la CNIL pour la mesure d'audience strictement nécessaire au bon fonctionnement du service, et ne nécessite pas de bannière de consentement.
+Rien n'étant stocké sur votre appareil, cette mesure relève de l'exemption de consentement prévue par la directive ePrivacy et les lignes directrices de la CNIL pour la mesure d'audience strictement nécessaire. Elle fonctionne donc que vous acceptiez ou refusiez les cookies du 5.3, et un refus ne nous prive pas de la mesure du site lui-même.
 
 Des cookies strictement nécessaires peuvent être utilisés pour l'authentification et la gestion de session sur le tableau de bord. Ces cookies ne requièrent pas de consentement.
 

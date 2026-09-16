@@ -33,6 +33,11 @@ export const STABLE_LEGAL_IDS: Record<string, string> = {
   "101-droit-dopposition-à-laccès-support": "object-to-support-access",
   "101-derecho-de-oposición-al-acceso-de-soporte": "object-to-support-access",
   "101-prawo-sprzeciwu-wobec-dostępu-serwisowego": "object-to-support-access",
+  // Privacy §5 — Cookies. The consent banner links here ("See the details"),
+  // and that link is rendered in four locales from one hardcoded href, so the
+  // anchor cannot be the locale-specific auto-slug.
+  "5-cookies": "cookies",
+  "5-pliki-cookie": "cookies",
 };
 
 function rehypeStableLegalIds() {

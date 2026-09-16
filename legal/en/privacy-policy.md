@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: August 5, 2026**
+**Last updated: September 16, 2026**
 
 ## 1. Introduction
 
@@ -127,9 +127,40 @@ Some of our sub-processors (Stripe, Apple, Google) may transfer data to the Unit
 
 ## 5. Cookies
 
+### 5.1 Your choice
+
+Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google, Meta or TikTok, and none of their cookies is created. Refusing therefore leaves nothing behind to delete.
+
+Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for six months, after which you are asked again. You can change it at any time through **Cookie preferences** at the bottom of every page. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
+
+If your browser sends a Global Privacy Control signal and you have not already made a choice here, we treat it as a refusal and nothing is loaded. In the United States we then show you no notice at all, since you have already answered. In Europe the banner is still offered, so that you can opt in deliberately if you want to. A choice you make yourself always takes precedence over the signal.
+
+Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, a notice says so, and **Cookie preferences** switches them off at any time.
+
+### 5.2 Cookies present whatever you choose
+
+These are strictly necessary and are not subject to consent.
+
+| Cookie | Purpose | Duration |
+|---|---|---|
+| `NEXT_LOCALE` | Remembers which language you are reading the site in. | 1 year |
+| `stampeo_market` | Remembers which country's pages you opened, to prefill a field later. | 30 days |
+| `stampeo_consent` | Records the choice you made about the cookies in 5.3. | 6 months |
+| Supabase session cookies | Keeps you signed in on the business dashboard. | Session |
+
+### 5.3 Cookies subject to your consent
+
+| Purpose | Recipient | Cookies |
+|---|---|---|
+| Audience measurement | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
+| Advertising measurement | Meta | `_fbp`, `_fbc` |
+| Advertising measurement | TikTok | `_ttp` |
+
+### 5.4 Audience measurement without cookies
+
 Stampeo uses PostHog (hosted in the EU) for internal product analytics and audience measurement. PostHog is configured so that **no tracking cookies are set** and **no identifier is persisted to browser storage** (cookie, localStorage, or equivalent). Events are scoped to the current browser session and are not re-associated across visits. The visitor's IP address is transmitted to the PostHog server for technical logging and event deduplication, but it is not combined with a persistent identifier, is not used for profiling or advertising, and is not shared with third parties. Hosting is entirely within the European Union.
 
-Under these conditions, Stampeo's audience measurement falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines, and therefore does not require a cookie consent banner.
+Because nothing is stored on your device, this measurement falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines. It therefore runs whether you accept or refuse the cookies in 5.3, and refusing them does not leave us blind to how the site itself performs.
 
 Strictly necessary cookies may be used for authentication and session management on the business dashboard. These cookies do not require consent.
 

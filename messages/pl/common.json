@@ -109,7 +109,8 @@
         "disclaimer": "Bez spamu. Wypisujesz się jednym kliknięciem.",
         "success": "Dziękujemy! Adres zapisany."
       },
-      "sitemapLabel": "Mapa strony"
+      "sitemapLabel": "Mapa strony",
+      "cookiePreferences": "Ustawienia plików cookie"
     },
     "points": "Punkty",
     "pointsStrip": {
@@ -125,6 +126,41 @@
       "country": {
         "us": "USA",
         "uk": "Wielkiej Brytanii"
+      }
+    },
+    "cookies": {
+      "banner": {
+        "title": "Twój wybór plików cookie",
+        "body": "Pliki cookie do statystyk i reklam włączamy tylko wtedy, gdy je zaakceptujesz. Odmowa niczego nie zmienia w działaniu strony.",
+        "learnMore": "Zobacz szczegóły",
+        "accept": "Zaakceptuj wszystkie",
+        "refuse": "Odrzuć wszystkie",
+        "customise": "Wybierz według celu"
+      },
+      "notice": {
+        "title": "Twoje ustawienia prywatności",
+        "body": "Używamy plików cookie do statystyk i reklam, żeby sprawdzać skuteczność naszych reklam.",
+        "choices": "Twoje ustawienia prywatności",
+        "dismiss": "Rozumiem"
+      },
+      "prefs": {
+        "title": "Wybierz według celu",
+        "intro": "Każdy cel włączasz lub wyłączasz osobno. Twój wybór zapisujemy na sześć miesięcy i możesz go zmienić w stopce strony.",
+        "necessary": {
+          "title": "Niezbędne",
+          "always": "Zawsze włączone",
+          "body": "Twój język, twój kraj i sam ten wybór. Nic z tego cię nie identyfikuje ani nie opuszcza Stampeo."
+        },
+        "analytics": {
+          "title": "Statystyki",
+          "body": "Google Analytics, żeby wiedzieć, które strony przyprowadzają nowe firmy."
+        },
+        "marketing": {
+          "title": "Reklama",
+          "body": "Meta i TikTok, żeby wiedzieć, która z naszych reklam naprawdę zadziałała."
+        },
+        "save": "Zapisz mój wybór",
+        "cancel": "Anuluj"
       }
     }
   }

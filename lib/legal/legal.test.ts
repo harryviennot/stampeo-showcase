@@ -40,6 +40,12 @@ const DEEP_LINKED = [
   { page: "privacy", section: "2.3", stableId: "support-access" },
   { page: "terms", section: "8.6", stableId: "data-processing-support-access" },
   { page: "privacy", section: "10.1", stableId: "object-to-support-access" },
+  // The consent banner's "See the details" link. One hardcoded
+  // `/privacy#cookies` href is rendered in four locales, and Polish titles the
+  // section "Pliki cookie", so without the mapping three of the four locales
+  // drop the reader at the top of a long policy. The trailing dot in "5." is
+  // load-bearing: the heading reads "## 5. Cookies".
+  { page: "privacy", section: "5.", stableId: "cookies" },
 ] as const;
 
 function headingFor(locale: string, page: "privacy" | "terms", section: string) {
@@ -69,6 +75,65 @@ describe("STABLE_LEGAL_IDS", () => {
           STABLE_LEGAL_IDS[slug],
           `${locale} ${page} §${section} slug "${slug}" is not mapped`
         ).toBe(stableId);
+      }
+    }
+  });
+});
+
+/**
+ * The cookie section of the privacy policy (STA-317).
+ *
+ * The banner made a sentence in every locale's §5 false: the policy used to
+ * state that Stampeo's analytics required no consent banner. That sentence
+ * cannot be allowed to come back, and it is exactly the kind of thing that
+ * does come back, because the legal text is edited as four separate Markdown
+ * files and a parallel copy of the tree exists under `.claude/worktrees/`.
+ */
+describe("privacy §5 cookies", () => {
+  /** The claim the consent banner contradicts, in each locale it was written in. */
+  const RETIRED_CLAIMS: Record<string, RegExp> = {
+    en: /does not require a cookie consent banner/i,
+    fr: /ne nécessite pas de bannière de consentement/i,
+    es: /no requiere ningún banner de consentimiento/i,
+    pl: /nie wymaga baneru zgody/i,
+  };
+
+  function privacySource(locale: string) {
+    const dir = path.join(process.cwd(), "legal", locale);
+    const file = fs
+      .readdirSync(dir)
+      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+    return fs.readFileSync(path.join(dir, file!), "utf-8");
+  }
+
+  it("no longer claims the site needs no consent banner, in any locale", () => {
+    for (const locale of routing.locales) {
+      expect(
+        privacySource(locale),
+        `${locale} still carries the pre-banner claim`
+      ).not.toMatch(RETIRED_CLAIMS[locale]);
+    }
+  });
+
+  it("names every recipient the banner offers, in every locale", () => {
+    // CNIL requires the purposes AND the recipients to be disclosed. The
+    // banner names Google, Meta and TikTok; if the policy does not, the two
+    // disagree and the disclosure is the one that loses.
+    for (const locale of routing.locales) {
+      const source = privacySource(locale);
+      for (const recipient of ["Google Analytics 4", "Meta", "TikTok"]) {
+        expect(source, `${locale} does not name ${recipient}`).toContain(recipient);
+      }
+    }
+  });
+
+  it("lists the cookies each recipient sets, in every locale", () => {
+    // These names are what a visitor checks in their own browser, and what the
+    // revocation path in `lib/consent.ts` deletes. The two lists must agree.
+    for (const locale of routing.locales) {
+      const source = privacySource(locale);
+      for (const cookie of ["_ga", "_gid", "_fbp", "_fbc", "_ttp", "stampeo_consent"]) {
+        expect(source, `${locale} does not list ${cookie}`).toContain(cookie);
       }
     }
   });
