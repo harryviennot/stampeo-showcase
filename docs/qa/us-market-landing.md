@@ -224,6 +224,30 @@ First run of this runbook. `/us` went live as an indexable market on
 2026-09-15 (STA-275); this pass is the first to check its copy rather than its
 prices.
 
+A comparison table against Square, Loopy and Stamp Me was built for `/us` and
+then removed before QA. Cases CM-01 to CM-04 covered it and have been retired;
+the ids are not reused.
+
+Not covered by any case, and deliberately so:
+- **Page-level rendering is not unit-tested anywhere in `showcase/`** (there is
+  no component test harness, only `lib/*.test.ts`). MK-01 through MK-04 are the
+  only thing standing between a mistyped translation key and a raw key path on
+  a live page. Treat them as load-bearing, not as a formality.
+- `/uk` copy. It has no overrides and is expected to read exactly like `/en`.
+
+
+## Known state before you start
+
+Nothing is currently known-broken in this area.
+
+First run of this runbook. `/us` went live as an indexable market on
+2026-09-15 (STA-275); this pass is the first to check its copy rather than its
+prices.
+
+A comparison table against Square, Loopy and Stamp Me was built for `/us` and
+then removed before QA. Cases CM-01 to CM-04 covered it and have been retired;
+the ids are not reused.
+
 Not covered by any case, and deliberately so:
 - **Page-level rendering is not unit-tested anywhere in `showcase/`** (there is
   no component test harness, only `lib/*.test.ts`). MK-01 through MK-04 are the

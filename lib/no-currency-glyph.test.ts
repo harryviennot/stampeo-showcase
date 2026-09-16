@@ -51,11 +51,6 @@ const EXEMPT = new RegExp(
     // features.json is mostly product copy: an SMS cost comparison, sample
     // rewards, a demo card. Only the price tokens had to be de-glyphed.
     "^features\\.(?!.*\\{(?:starter|growth|pro)\\w*Price\\})",
-    // Competitor cells in the US comparison table. These are other companies'
-    // prices: facts about them, in the currency they publish. Interpolating
-    // them would restate Square's price as ours. Our OWN cell in the same table
-    // is deliberately NOT exempt and carries {starterPrice}.
-    "^variant\\.us\\.comparison\\.rows\\[\\d+\\]\\.(?:values\\[\\d+\\]|note)$",
   ].join("|"),
 );
 
