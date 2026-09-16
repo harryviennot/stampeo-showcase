@@ -460,7 +460,8 @@
               "Yes",
               "Yes"
             ],
-            "note": "Square's loyalty pass is Apple Wallet only. Android customers give a phone number at the register."
+            "note": "Square's loyalty pass is Apple Wallet only. Android customers give a phone number at the register.",
+            "noteFor": "Square Loyalty"
           },
           {
             "label": "App for your customers",
@@ -470,7 +471,8 @@
               "None",
               "Required"
             ],
-            "note": "Stamp Me's first step is “Download App & Join”."
+            "note": "Stamp Me's first step is “Download App & Join”.",
+            "noteFor": "Stamp Me"
           },
           {
             "label": "Stamp cards",
@@ -489,7 +491,8 @@
               "No",
               "No"
             ],
-            "note": "Loopy runs stamp cards only. No points, no tiers."
+            "note": "Loopy runs stamp cards only. No points, no tiers.",
+            "noteFor": "Loopy Loyalty"
           },
           {
             "label": "Keeps the POS you have",
@@ -499,17 +502,29 @@
               "Yes",
               "Yes"
             ],
-            "note": "Square Loyalty runs inside Square. Change your register and the program goes with it."
+            "note": "Square Loyalty runs inside Square. Change your register and the program goes with it.",
+            "noteFor": "Square Loyalty"
           },
           {
-            "label": "Starting price",
+            "label": "Starts at",
             "us": "{starterPrice}/month",
             "values": [
-              "From $45/month, per location",
+              "$45/month, per location",
               "$25/month",
               "$49/month"
             ],
-            "note": "Square also needs Square Marketing from $15/month to send anything."
+            "note": "Square also needs Square Marketing from $15/month before it can send anything.",
+            "noteFor": "Square Loyalty"
+          },
+          {
+            "label": "Price for everything above",
+            "us": "{starterPrice}/month",
+            "values": [
+              "Not sold",
+              "Not sold",
+              "Not sold"
+            ],
+            "note": "This is the row that matters. A cheaper plan that stops at stamps is only cheaper until you want points, and no amount of money buys Google Wallet from Square, points from Loopy, or a no-app card from Stamp Me."
           }
         ]
       }

@@ -279,10 +279,20 @@ EXPECT, reading across:
 - Stampeo is the only column with no dash anywhere.
 - A verification date line sits under the table.
 
-### CM-04 It scrolls, it does not stretch the page — EDGE
+### CM-04 On a phone it is a column picker, not a scroll — EDGE
 DEPENDS: CM-01
 
-1. Open `/us` on a phone, or at a 390px viewport.
+WHY: 90% of dashboard traffic is on a phone, and a four-column table cannot fit
+390px. The first build used a horizontally scrolling box, which hid two of the
+four columns off-screen with nothing to say so: most of the argument, clipped
+away. The mobile half shows one competitor at a time instead.
 
-EXPECT: the table scrolls sideways inside its own box. The **page body does not
-scroll sideways** and nothing overflows the viewport.
+1. Open `/us` at a 390px viewport and scroll to the table.
+2. Open the picker and switch to Loopy Loyalty, then Stamp Me.
+
+EXPECT:
+- A picker reading "Stampeo vs Square Loyalty", then Stampeo and the chosen
+  competitor side by side on every row.
+- Switching swaps **both** the cells and the explanatory notes. A note about
+  Stamp Me must NOT be visible while Square is selected.
+- The **page body does not scroll sideways** and nothing overflows the viewport.

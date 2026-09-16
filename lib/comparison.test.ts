@@ -15,7 +15,7 @@ import { MARKETS, type Market } from "./markets";
  * verification date that has to be updated when the claims are rechecked.
  */
 
-type Row = { label: string; us: string; values: string[]; note?: string };
+type Row = { label: string; us: string; values: string[]; note?: string; noteFor?: string };
 type Comparison = {
   title: string;
   subtitle: string;
@@ -74,6 +74,31 @@ describe("comparison table shape", () => {
     expect(us!.columns).toEqual(["Square Loyalty", "Loopy Loyalty", "Stamp Me"]);
   });
 
+  test("a note that names a column names one that exists", () => {
+    // `noteFor` decides whether the note renders on mobile. A typo silently
+    // hides the sentence that substantiates the claim, on the 90% of traffic
+    // that is on a phone, and nothing else would catch it.
+    const wrong = us!.rows
+      .filter((r) => r.noteFor && !us!.columns.includes(r.noteFor))
+      .map((r) => `"${r.label}" points its note at "${r.noteFor}", which is not a column`);
+    expect(wrong).toEqual([]);
+  });
+
+  test("a note about one competitor says which", () => {
+    // Otherwise it shows under every comparison on mobile, including the ones
+    // it is not about.
+    // Notes use the brand as people say it ("Square", "Loopy"), not the full
+    // column heading, so match on the distinctive part. Case-sensitive, so
+    // "stamp cards" in prose is not read as Stamp Me.
+    const brand = (column: string) =>
+      new RegExp(`\\b${column === "Stamp Me" ? "Stamp Me" : column.split(" ")[0]}\\b`);
+    const unscoped = us!.rows
+      .filter((r) => r.note && !r.noteFor)
+      .filter((r) => us!.columns.filter((c) => brand(c).test(r.note!)).length === 1)
+      .map((r) => `"${r.label}" names one competitor in its note but has no noteFor`);
+    expect(unscoped).toEqual([]);
+  });
+
   test("it carries a verification date", () => {
     // The claims are about other companies and they change. A table without a
     // date is a table nobody knows to recheck.
@@ -84,12 +109,25 @@ describe("comparison table shape", () => {
     // If this fails, either a competitor caught up or we lost something. Both
     // are worth knowing before the page ships, and neither should be discovered
     // by a reader.
-    const isGap = (v: string) => /^(no|required)$/i.test(v.trim());
+    const isGap = (v: string) => /^(no|required|not sold)$/i.test(v.trim());
     expect(us!.rows.filter((r) => isGap(r.us))).toEqual([]);
     const competitorGaps = us!.columns.map((_, i) =>
       us!.rows.filter((r) => isGap(r.values[i])).length,
     );
     for (const gaps of competitorGaps) expect(gaps).toBeGreaterThan(0);
+  });
+
+  test("the price question is asked twice, and the second one is the argument", () => {
+    // A single entry-price row loses to anyone cheaper: Loopy at $25 ticks all
+    // but one box, so on that row alone the table argues for Loopy. The second
+    // row is the honest rebuttal — their cheaper plan does not become ours at
+    // any price, because the gap is capability, not tier.
+    const rows = us!.rows.map((r) => r.label.toLowerCase());
+    expect(rows).toContain("starts at");
+    expect(rows).toContain("price for everything above");
+    const everything = us!.rows.find((r) => r.label === "Price for everything above")!;
+    expect(everything.us).toContain("{starterPrice}");
+    for (const v of everything.values) expect(v).toMatch(/^not sold$/i);
   });
 
   test("the claims that justify the table are present", () => {

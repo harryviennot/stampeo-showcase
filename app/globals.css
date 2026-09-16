@@ -132,7 +132,7 @@
   --text-display--letter-spacing: -0.025em;
   --text-display--font-weight: 800;
 
-  /* 40px @390 → 60px @1280. The hero headline only.
+  /* 40px @390 → 64px @1280. The hero headline only.
      Deliberately smaller than --text-display, which the closing CTA still uses.
      The hero has more to fit above the fold than any other block: a headline, a
      lead paragraph, two calls to action, a reassurance line and the two wallet
@@ -142,12 +142,12 @@
      the phone you already carry". The closing CTA has none of that competition,
      so it keeps the louder size.
 
-     The 60px cap is the dial. The constraint is two lines inside the 768px
-     copy column: the longest balanced line is "Turn first-time customers", 25
-     characters, which at this weight and tracking needs roughly 0.475em each.
-     Raise the cap and watch for a third line at 1280px and up before anything
-     else. */
-  --text-hero: clamp(2.5rem, 1.7785rem + 2.9623vw, 3.75rem);
+     The cap is the dial, and the ceiling is measured rather than guessed. At
+     1440x900 with the US headline, 66px still sets two lines; 68px breaks to
+     three and pushes the wallet badges to 943px, below an 900px fold. 64px sits
+     two steps under that cliff, which is the margin a webfont fallback needs:
+     if Geist fails to load, the substitute's metrics decide the line count. */
+  --text-hero: clamp(2.5rem, 1.8427rem + 2.6966vw, 4rem);
   --text-hero--line-height: 1.07;
   --text-hero--letter-spacing: -0.025em;
   --text-hero--font-weight: 800;

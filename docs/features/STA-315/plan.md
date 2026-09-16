@@ -214,7 +214,7 @@ product. Revisited against the real diff at Phase 6.
 
 | Check | Result |
 |---|---|
-| `bun test lib` | **464 pass, 0 fail** (20 files; 18 new tests this issue, incl. `lib/comparison.test.ts`) |
+| `bun test lib` | **467 pass, 0 fail** (20 files; 21 new tests this issue, incl. `lib/comparison.test.ts`) |
 | `bun run type-check` | **clean** |
 | `bun run lint` | **1494 problems (57 errors, 1437 warnings)**, byte-identical to `dev`'s count. Every error is in the generated `ds-bundle/`, `.design-sync/` and `.ds-sync/` trees. This diff adds none. |
 | `bun run build` | **PASSES** (exit 0, re-run 2026-09-15 once the dev server was stopped). All `/us` and `/uk` routes prerender for every locale. Several pages log `Failed to build ... attempt 1 of 3 ... Retrying` and then succeed: those are the pages that fetch the plan catalog at build time, timing out at 60s against a slow backend and recovering on retry. No retry reached attempt 3, which is what would actually fail the build. Previously skipped because:  A showcase dev server was running on :3001 and `next build` writes to the same `.next` it is serving from, so building would have taken the dev server down. Not a judgement that the build is unnecessary: it is the one item of the post-feature checklist not executed, and it should be run before this branch merges. `type-check` passing makes a compile failure unlikely but does not rule out a build-time failure (RSC boundaries, `dynamic()` resolution). |
@@ -222,7 +222,13 @@ product. Revisited against the real diff at Phase 6.
 
 Phase 5 (manual QA against `docs/qa/us-market-landing.md`) has **not** been run.
 
-**Not visually verified:** the hero at 60px. Headless Chrome hangs on this
-machine and the Playwright MCP browser was held by another session, so the
-two-line claim rests on character arithmetic, not a screenshot. `--text-hero` in
-`app/globals.css` is the single dial; the comment there states the constraint.
+**Visually verified 2026-09-16** against `showcase.dev.stampeo.app` in Chrome at
+1440x900 and 390x844:
+- Hero headline is **64px, two lines**, and both wallet badges sit at 861px
+  inside a 900px fold. The ceiling was measured rather than guessed: 66px still
+  sets two lines, 68px breaks to three and pushes the badges to 943px. 64px is
+  two steps under that cliff, which is the margin a webfont fallback needs.
+- Comparison table: desktop table 1294px inside a 1440px viewport, nothing
+  clipped; at 390px the desktop table is hidden, the mobile column picker is
+  live, and **no element overflows the viewport** (`scrollWidth === 390`).
+  Switching the picker to Loopy swaps both the cells and the notes.
