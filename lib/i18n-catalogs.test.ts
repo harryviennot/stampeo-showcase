@@ -456,6 +456,20 @@ describe('market-scoped copy', () => {
   ]);
 
   /**
+   * Whole subtrees one market adds and the others do not have.
+   *
+   * A prefix rather than a key, because these are sections, not lines: listing
+   * the comparison table's forty-odd leaves individually would be a list nobody
+   * maintains, and the thing worth pinning is that the SECTION is deliberate.
+   * Shape is enforced separately, in lib/comparison.test.ts.
+   */
+  const MARKET_ONLY_SUBTREES: readonly string[] = [
+    // The US comparison table names three competitors. It exists for /us and
+    // must never render anywhere we have not verified those claims.
+    'landing.json::variant.us.comparison.',
+  ];
+
+  /**
    * Does this override actually shadow something?
    *
    * Exact match is the normal answer. Arrays are the exception, deliberately:
@@ -490,7 +504,12 @@ describe('market-scoped copy', () => {
     // you thought you wrote is not on the page. Only a test catches that.
     const ids = new Set(Object.keys(source));
     const orphans = scoped
-      .filter((id) => !MARKET_ONLY_KEYS.has(id) && isOrphan(baseIdOf(id), ids))
+      .filter(
+        (id) =>
+          !MARKET_ONLY_KEYS.has(id) &&
+          !MARKET_ONLY_SUBTREES.some((prefix) => id.startsWith(prefix)) &&
+          isOrphan(baseIdOf(id), ids),
+      )
       .map(
         (id) =>
           `messages/en/${id.replace('::', ' "')}" overrides nothing: ` +
@@ -595,6 +614,15 @@ describe('market-scoped copy', () => {
       }
     }
     expect(unknown).toEqual([]);
+  });
+
+  test('every declared market-only key and subtree actually exists', () => {
+    // A ratchet entry that matches nothing is a licence somebody widens by
+    // accident later.
+    for (const key of MARKET_ONLY_KEYS) expect(scoped).toContain(key);
+    for (const prefix of MARKET_ONLY_SUBTREES) {
+      expect(scoped.some((id) => id.startsWith(prefix))).toBe(true);
+    }
   });
 
   test('the exemption is only ever used for market subtrees', () => {

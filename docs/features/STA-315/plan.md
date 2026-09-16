@@ -123,6 +123,28 @@ still promise "a free month".
   is honest everywhere and reads no worse, and is noted here as a deliberate
   small widening rather than an oversight.
 
+## Added scope: the US comparison table (2026-09-16)
+
+Chosen by Harry from the competitor research. Only 1 of 9 US competitors puts a
+comparison table on their landing page, and it is the only mechanism that sets
+the price frame: without it $49 is read against Loopy's $25, with it against
+Square's $45 *per location*.
+
+**US-only, by construction.** The copy lives at `variant.us.comparison`, so the
+existing `marketCopy` resolver makes it appear on `/us` and nowhere else. No new
+market mechanism, and `/en` cannot accidentally inherit it.
+
+**Seven rows, every cell verified on the vendor's own live page.** Naming
+competitors is comparative advertising: in the US it is lawful when truthful and
+substantiated, and a stale cell becomes a false claim rather than an outdated
+one. So the data carries a verification date rendered on the page, and a test
+fails if a row is added without one.
+
+Deliberately **excluded**: a "can you export your customer list" row. Loopy's
+$95-tier export lock is verified, but Square's and Stamp Me's export terms are
+not, and shipping "Not stated" cells in a comparison invites them being read as
+"no". It goes in the FAQ later, where it can be stated about ourselves only.
+
 ## Acceptance criteria
 
 - **AC1**: Given market `us`, when the landing page renders, then the hero shows
@@ -151,6 +173,14 @@ still promise "a free month".
   allow `{trialDays}`-parameterised strings.
 - **AC9**: Given `messages/*/metadata.json`, when the currency-glyph guard runs,
   then it is in scope and no plan price carries a baked `€`/`$`/`zł` glyph.
+- **AC11**: Given market `us`, when the landing page renders, then a comparison
+  table appears naming Square Loyalty, Loopy Loyalty and Stamp Me, and Stampeo is
+  the only column with no gap in it.
+- **AC12**: Given any market other than `us`, when the landing page renders, then
+  no comparison table appears at all.
+- **AC13**: Given the comparison copy, when the tests run, then every row has a
+  value for Stampeo and for each named competitor (no silent blank cells), the
+  column count matches the row width, and a verification date is present.
 - **AC10**: Given market `us`, when the FAQ renders, then no answer claims data
   is hosted in Europe or leads with GDPR, and the FAQ JSON-LD contains the US
   answers rather than the base ones.
@@ -184,10 +214,15 @@ product. Revisited against the real diff at Phase 6.
 
 | Check | Result |
 |---|---|
-| `bun test lib` | **455 pass, 0 fail** (19 files; 10 new tests this issue) |
+| `bun test lib` | **464 pass, 0 fail** (20 files; 18 new tests this issue, incl. `lib/comparison.test.ts`) |
 | `bun run type-check` | **clean** |
 | `bun run lint` | **1494 problems (57 errors, 1437 warnings)**, byte-identical to `dev`'s count. Every error is in the generated `ds-bundle/`, `.design-sync/` and `.ds-sync/` trees. This diff adds none. |
 | `bun run build` | **PASSES** (exit 0, re-run 2026-09-15 once the dev server was stopped). All `/us` and `/uk` routes prerender for every locale. Several pages log `Failed to build ... attempt 1 of 3 ... Retrying` and then succeed: those are the pages that fetch the plan catalog at build time, timing out at 60s against a slow backend and recovering on retry. No retry reached attempt 3, which is what would actually fail the build. Previously skipped because:  A showcase dev server was running on :3001 and `next build` writes to the same `.next` it is serving from, so building would have taken the dev server down. Not a judgement that the build is unnecessary: it is the one item of the post-feature checklist not executed, and it should be run before this branch merges. `type-check` passing makes a compile failure unlikely but does not rule out a build-time failure (RSC boundaries, `dynamic()` resolution). |
 | Manual render check | All six markets fetched from the running dev server. `/us` shows the new copy, the 14-day reassurance and `index, follow` on both pages; `/`, `/en`, `/es`, `/pl`, `/uk` show the base copy with the reassurance wrapper absent (0 occurrences, vs 1 on `/us`). |
 
 Phase 5 (manual QA against `docs/qa/us-market-landing.md`) has **not** been run.
+
+**Not visually verified:** the hero at 60px. Headless Chrome hangs on this
+machine and the Playwright MCP browser was held by another session, so the
+two-line claim rests on character arithmetic, not a screenshot. `--text-hero` in
+`app/globals.css` is the single dial; the comment there states the constraint.

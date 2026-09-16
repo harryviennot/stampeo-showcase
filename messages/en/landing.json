@@ -431,6 +431,87 @@
             "answer": "Yes. Change the logo, colors, number of stamps and rewards anytime from your dashboard. Cards already in your customers' wallets update automatically, with nothing to re-download."
           }
         ]
+      },
+      "comparison": {
+        "title": "How we compare.",
+        "subtitle": "Checked on each company's own pricing and product pages.",
+        "verified": "Competitor details verified September 2026. They change theirs; we recheck ours.",
+        "us": "Stampeo",
+        "columns": [
+          "Square Loyalty",
+          "Loopy Loyalty",
+          "Stamp Me"
+        ],
+        "rows": [
+          {
+            "label": "Apple Wallet",
+            "us": "Yes",
+            "values": [
+              "Yes",
+              "Yes",
+              "Yes"
+            ]
+          },
+          {
+            "label": "Google Wallet",
+            "us": "Yes",
+            "values": [
+              "No",
+              "Yes",
+              "Yes"
+            ],
+            "note": "Square's loyalty pass is Apple Wallet only. Android customers give a phone number at the register."
+          },
+          {
+            "label": "App for your customers",
+            "us": "None",
+            "values": [
+              "None",
+              "None",
+              "Required"
+            ],
+            "note": "Stamp Me's first step is “Download App & Join”."
+          },
+          {
+            "label": "Stamp cards",
+            "us": "Yes",
+            "values": [
+              "No",
+              "Yes",
+              "Yes"
+            ]
+          },
+          {
+            "label": "Points programs",
+            "us": "Yes",
+            "values": [
+              "Yes",
+              "No",
+              "No"
+            ],
+            "note": "Loopy runs stamp cards only. No points, no tiers."
+          },
+          {
+            "label": "Keeps the POS you have",
+            "us": "Yes",
+            "values": [
+              "No",
+              "Yes",
+              "Yes"
+            ],
+            "note": "Square Loyalty runs inside Square. Change your register and the program goes with it."
+          },
+          {
+            "label": "Starting price",
+            "us": "{starterPrice}/month",
+            "values": [
+              "From $45/month, per location",
+              "$25/month",
+              "$49/month"
+            ],
+            "note": "Square also needs Square Marketing from $15/month to send anything."
+          }
+        ]
       }
     }
   }

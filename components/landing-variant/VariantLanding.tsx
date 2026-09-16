@@ -18,6 +18,7 @@ import { VariantTryIt } from "./VariantTryIt";
 import { VariantTrustStrip } from "./VariantTrustStrip";
 import { VariantBenefits } from "./VariantBenefits";
 import { VariantDifferentiator } from "./VariantDifferentiator";
+import { VariantComparison } from "./VariantComparison";
 import { VariantHowItWorks } from "./VariantHowItWorks";
 import { VariantMetricStrip } from "./VariantMetricStrip";
 import { VariantChangelogTeaser } from "./VariantChangelogTeaser";
@@ -84,6 +85,10 @@ export async function VariantLanding({
         <div data-landing-section="sectors"><VariantSectorCards /></div>
         <div data-landing-section="metrics"><VariantMetricStrip /></div>
         <div data-landing-section="feature_grid"><FeatureGrid /></div>
+        {/* Renders only where the market defines comparison copy, i.e. /us.
+            It names competitors, so it must not appear in a market whose
+            claims we have not checked. */}
+        <VariantComparison market={market} pricing={pricing} locale={locale} />
         <div data-landing-section="pricing">
           <PricingSection pricing={pricing} trialDays={trialDays} market={market} />
         </div>
