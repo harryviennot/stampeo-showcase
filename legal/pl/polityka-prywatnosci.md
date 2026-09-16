@@ -155,6 +155,7 @@ Są ściśle niezbędne i nie podlegają zgodzie.
 | Pomiar ruchu | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Pomiar skuteczności reklam | Meta | `_fbp`, `_fbc` |
 | Pomiar skuteczności reklam | TikTok | `_ttp` |
+| Atrybucja reklamowa | Stampeo, następnie Google | `stampeo_attribution` |
 
 ### 5.4 Pomiar ruchu bez plików cookie
 
@@ -163,6 +164,16 @@ Stampeo korzysta z PostHog (hostowanego w UE) do wewnętrznych statystyk produkt
 Ponieważ nic nie jest zapisywane na twoim urządzeniu, pomiar ten mieści się w zwolnieniu z obowiązku zgody, przewidzianym dla ściśle niezbędnego pomiaru ruchu w dyrektywie o prywatności i łączności elektronicznej (ePrivacy) oraz w wytycznych CNIL. Działa więc niezależnie od tego, czy akceptujesz, czy odrzucasz pliki cookie z punktu 5.3, a odmowa nie pozbawia nas pomiaru samej strony.
 
 Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane pliki cookie ściśle niezbędne. Takie pliki cookie nie wymagają zgody.
+
+### 5.5 Pomiar konwersji z naszych serwerów
+
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową — w przypadku Google jest to `gclid` — wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem Google Analytics opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie.
+
+Jeżeli następnie założysz konto firmowe, identyfikator ten zostaje zapisany przy Twoim koncie. Przekazujemy wtedy Google dwie informacje **z naszych serwerów**: że reklama doprowadziła do założenia konta oraz — jeżeli później wykupisz abonament — że opłacono pierwszą fakturę. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
+
+Przekazujemy wyłącznie identyfikator reklamowy, nazwę kampanii oraz — w przypadku płatności — jej kwotę i walutę. Nigdy nie przekazujemy adresu e-mail, imienia i nazwiska, numeru telefonu ani identyfikatora konta.
+
+Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych konwersji dla Twojego konta. Konwersji już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczy (zob. §8).
 
 ## 6. Wykorzystanie danych
 
@@ -233,6 +244,7 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Dzienniki wysyłki i interakcji e-maili kierowanych do użytkowników Business (dostarczenie, otwarcie, kliknięcie, odrzucenie, zgłoszenie spamu) | 24 miesiące |
 | Zapisy nieudanych webhooków Stripe (diagnostyka wewnętrzna) | 90 dni |
 | Dzienniki dostępu serwisowego (sesje podglądu i powiązane wpisy audytowe zgodnie z §2.3) | 24 miesiące, następnie usuwane |
+| Atrybucja reklamowa (identyfikator kliknięcia, kampania) | Usuwana wraz z kontem firmowym, którego dotyczy |
 
 Okres 24 miesięcy dla dzienników dostępu serwisowego został ustalony tak, aby umożliwić zbadanie incydentu bezpieczeństwa, pozostając jednocześnie proporcjonalnym do tego celu, zgodnie z wytycznymi CNIL dotyczącymi rejestrowania zdarzeń bezpieczeństwa.
 

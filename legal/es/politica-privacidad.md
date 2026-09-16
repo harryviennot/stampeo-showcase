@@ -155,6 +155,7 @@ Son estrictamente necesarias y no están sujetas a consentimiento.
 | Medición de audiencia | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Medición publicitaria | Meta | `_fbp`, `_fbc` |
 | Medición publicitaria | TikTok | `_ttp` |
+| Atribución publicitaria | Stampeo, después Google | `stampeo_attribution` |
 
 ### 5.4 Medición de audiencia sin cookies
 
@@ -163,6 +164,16 @@ Stampeo utiliza PostHog (alojado en la UE) para sus estadísticas internas de me
 Como no se almacena nada en tu dispositivo, esta medición se acoge a la exención de consentimiento prevista por la Directiva sobre la privacidad electrónica (ePrivacy) y por las directrices de la CNIL para la medición de audiencia estrictamente necesaria. Funciona por tanto tanto si aceptas como si rechazas las cookies del 5.3, y un rechazo no nos deja sin medición del propio sitio.
 
 Pueden utilizarse cookies estrictamente necesarias para la autenticación y la gestión de la sesión en el panel. Estas cookies no requieren consentimiento.
+
+### 5.5 Medición de conversiones desde nuestros servidores
+
+Si acepta las cookies del 5.3 y ha llegado al sitio desde un anuncio, conservamos el identificador que la plataforma publicitaria añadió al enlace que siguió —en el caso de Google, el `gclid`— junto con los parámetros de campaña presentes en la dirección y el identificador de Google Analytics descrito más arriba. Se guardan en una cookie `stampeo_attribution`, incluida en el 5.3, cuya única función es sobrevivir al paso de este sitio al panel de control, alojado en otro subdominio.
+
+Si después crea una cuenta profesional, ese identificador queda registrado con su cuenta. Comunicamos entonces dos cosas a Google **desde nuestros servidores**: que el anuncio dio lugar a la creación de una cuenta y, si más adelante se suscribe, que se ha pagado una primera factura. Al tratarse de un envío del lado del servidor, se produce después de lo que ocurre en su navegador y con independencia de ello.
+
+Lo que se transmite se limita al identificador publicitario, a la campaña y, en caso de pago, a su importe y su divisa. Nunca incluye su dirección de correo electrónico, su nombre, su número de teléfono ni el identificador de su cuenta.
+
+Retirar su consentimiento mediante **Preferencias de cookies** elimina la cookie `stampeo_attribution` junto con las demás y pone fin a cualquier nueva comunicación de conversiones para su cuenta. Las conversiones ya transmitidas no pueden retirarse. Estos datos se eliminan junto con la cuenta profesional a la que pertenecen (véase §8).
 
 ## 6. Uso de los datos
 
@@ -233,6 +244,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Registros de envío e interacción de los correos dirigidos a los usuarios Business (entrega, apertura, clic, rebote, marca como spam) | 24 meses |
 | Registro de fallos de los webhooks de Stripe (depuración interna) | 90 días |
 | Registros de acceso de soporte (sesiones y entradas de auditoría asociadas, véase el §2.3) | 24 meses, después se eliminan |
+| Atribución publicitaria (identificador de clic, campaña) | Se elimina junto con la cuenta Business a la que pertenece |
 
 El plazo de conservación de 24 meses para los registros de acceso de soporte se establece para permitir la investigación de un posible incidente de seguridad, manteniéndose a la vez proporcionado a su finalidad, conforme a las recomendaciones de la CNIL en materia de registro de accesos.
 

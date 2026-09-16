@@ -155,6 +155,7 @@ These are strictly necessary and are not subject to consent.
 | Audience measurement | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Advertising measurement | Meta | `_fbp`, `_fbc` |
 | Advertising measurement | TikTok | `_ttp` |
+| Advertising attribution | Stampeo, then Google | `stampeo_attribution` |
 
 ### 5.4 Audience measurement without cookies
 
@@ -163,6 +164,16 @@ Stampeo uses PostHog (hosted in the EU) for internal product analytics and audie
 Because nothing is stored on your device, this measurement falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines. It therefore runs whether you accept or refuse the cookies in 5.3, and refusing them does not leave us blind to how the site itself performs.
 
 Strictly necessary cookies may be used for authentication and session management on the business dashboard. These cookies do not require consent.
+
+### 5.5 Conversion measurement from our servers
+
+If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed — for Google, the `gclid` — together with the campaign parameters in the address and the Google Analytics identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain.
+
+If you go on to create a business account, that identifier is stored with your account. We then report two things to Google **from our servers**: that the advertisement led to an account being created and, if you later subscribe, that a first invoice was paid. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
+
+What we send is limited to the advertising identifier, the campaign, and for a payment its amount and currency. It never includes your email address, your name, your telephone number, or your account identifier.
+
+Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further conversion being reported for your account. Conversions already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
 
 ## 6. Use of Data
 
@@ -233,6 +244,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Email send and engagement logs for Business User communications (delivery, open, click, bounce, complaint) | 24 months |
 | Stripe webhook failure records (internal debugging) | 90 days |
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
+| Advertising attribution (click identifier, campaign) | Deleted with the Business account it belongs to |
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
 

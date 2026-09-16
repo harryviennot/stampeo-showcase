@@ -137,4 +137,38 @@ describe("privacy §5 cookies", () => {
       }
     }
   });
+
+  it("discloses the attribution cookie, in every locale (STA-323)", () => {
+    // `stampeo_attribution` is first-party by origin but a tracker by content:
+    // it holds the ad platforms' click ids and the GA client id, and it is
+    // deleted by the same revoke path as the rest (see COOKIE_PATTERNS in
+    // lib/consent.ts). A visitor inspecting their own jar finds it, so the
+    // policy has to account for it or the table is an incomplete disclosure.
+    for (const locale of routing.locales) {
+      expect(
+        privacySource(locale),
+        `${locale} does not disclose stampeo_attribution`
+      ).toContain("stampeo_attribution");
+    }
+  });
+
+  it("discloses server-side conversion reporting, in every locale (STA-323)", () => {
+    // The material change STA-323 makes to the disclosure: we now RETAIN the
+    // advertising identifier ourselves against the business account, and send
+    // a conversion from our servers when an invoice is paid — after, and
+    // independently of, anything happening in the browser. Section 5 as
+    // written only covered scripts running on the page.
+    const MARKER: Record<string, RegExp> = {
+      en: /from our servers|server-side/i,
+      fr: /depuis nos serveurs|côté serveur/i,
+      es: /desde nuestros servidores|del lado del servidor/i,
+      pl: /z naszych serwerów|po stronie serwera/i,
+    };
+    for (const locale of routing.locales) {
+      expect(
+        privacySource(locale),
+        `${locale} does not disclose server-side conversion reporting`
+      ).toMatch(MARKER[locale]);
+    }
+  });
 });

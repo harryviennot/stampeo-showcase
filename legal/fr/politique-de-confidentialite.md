@@ -155,6 +155,7 @@ Ils sont strictement nécessaires et ne sont pas soumis au consentement.
 | Mesure d'audience | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Mesure publicitaire | Meta | `_fbp`, `_fbc` |
 | Mesure publicitaire | TikTok | `_ttp` |
+| Attribution publicitaire | Stampeo, puis Google | `stampeo_attribution` |
 
 ### 5.4 Mesure d'audience sans cookie
 
@@ -163,6 +164,16 @@ Stampeo utilise PostHog (hébergé dans l'UE) pour ses statistiques internes de 
 Rien n'étant stocké sur votre appareil, cette mesure relève de l'exemption de consentement prévue par la directive ePrivacy et les lignes directrices de la CNIL pour la mesure d'audience strictement nécessaire. Elle fonctionne donc que vous acceptiez ou refusiez les cookies du 5.3, et un refus ne nous prive pas de la mesure du site lui-même.
 
 Des cookies strictement nécessaires peuvent être utilisés pour l'authentification et la gestion de session sur le tableau de bord. Ces cookies ne requièrent pas de consentement.
+
+### 5.5 Mesure des conversions depuis nos serveurs
+
+Si vous acceptez les cookies du 5.3 et que vous êtes arrivé sur le site depuis une publicité, nous conservons l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi — pour Google, le `gclid` — ainsi que les paramètres de campagne présents dans l'adresse et l'identifiant Google Analytics décrit ci-dessus. Ils sont placés dans un cookie `stampeo_attribution`, listé au 5.3, dont la seule fonction est de subsister lors du passage de ce site au tableau de bord, hébergé sur un autre sous-domaine.
+
+Si vous créez ensuite un compte professionnel, cet identifiant est enregistré avec votre compte. Nous signalons alors deux choses à Google **depuis nos serveurs** : que la publicité a donné lieu à une création de compte et, si vous vous abonnez par la suite, qu'une première facture a été réglée. S'agissant d'un envoi côté serveur, il intervient après ce qui se passe dans votre navigateur, et indépendamment de celui-ci.
+
+Ce qui est transmis se limite à l'identifiant publicitaire, à la campagne et, pour un paiement, à son montant et à sa devise. N'y figurent jamais votre adresse email, votre nom, votre numéro de téléphone ni l'identifiant de votre compte.
+
+Retirer votre consentement via **Préférences cookies** supprime le cookie `stampeo_attribution` avec les autres et met fin à tout nouveau signalement de conversion pour votre compte. Les conversions déjà transmises ne peuvent pas être rappelées. Ces données sont supprimées en même temps que le compte professionnel auquel elles se rattachent (voir §8).
 
 ## 6. Utilisation des données
 
@@ -233,6 +244,7 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Journaux d'envoi et d'engagement des emails adressés aux utilisateurs Business (remise, ouverture, clic, rejet, signalement spam) | 24 mois |
 | Journalisation des échecs de webhooks Stripe (débogage interne) | 90 jours |
 | Journaux d'accès support (sessions et entrées d'audit associées, voir §2.3) | 24 mois, puis suppression |
+| Attribution publicitaire (identifiant de clic, campagne) | Supprimée avec le compte Business auquel elle se rattache |
 
 La durée de conservation de 24 mois pour les journaux d'accès support est définie pour permettre l'instruction d'un éventuel incident de sécurité tout en restant proportionnée à sa finalité, conformément aux recommandations de la CNIL en matière de journalisation des accès.
 
