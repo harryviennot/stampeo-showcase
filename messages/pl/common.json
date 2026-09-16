@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Pieczątki",
     "reward": "Nagroda",
-    "rewarded": "Masz 30 dni za darmo!",
-    "rewardText": "30 dni za darmo przy 8 pieczątkach!",
+    "rewarded": "Masz {trialDays, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} za darmo!",
+    "rewardText": "{trialDays, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} za darmo przy 8 pieczątkach!",
     "nav": {
       "features": "Funkcje",
       "pricing": "Cennik",

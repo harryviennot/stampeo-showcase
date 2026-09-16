@@ -31,7 +31,7 @@
         "mobileAddWallet": "Wypróbuj, dodaj do Wallet",
         "mobileHint": "Karta trafi do portfela w twoim telefonie",
         "rewardMid": "-50% na pierwszy miesiąc",
-        "rewardTop": "1 miesiąc za darmo",
+        "rewardTop": "{trialDays, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} za darmo",
         "rewardAllUnlocked": "Wszystko odblokowane!"
       }
     },
@@ -244,12 +244,12 @@
           "label": "aktywnych firm"
         },
         {
-          "value": "+9 400",
-          "label": "wykonanych skanów"
+          "value": "+12 500",
+          "label": "wydanych pieczątek"
         },
         {
-          "value": "24",
-          "label": "krajów"
+          "value": "22",
+          "label": "kraje"
         }
       ]
     },

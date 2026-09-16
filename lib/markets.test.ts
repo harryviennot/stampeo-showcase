@@ -9,6 +9,7 @@ import {
   cookieDomainForHost,
   isPilotPath,
   marketFromPath,
+  marketRobots,
 } from "./markets";
 
 /**
@@ -182,5 +183,48 @@ describe("indexablePilotPaths", () => {
     // /en is already in the sitemap through the normal locale loop; emitting it
     // twice would be a duplicate entry.
     expect(indexablePilotPaths()).not.toContain("/en");
+  });
+});
+
+/**
+ * Every page in a market reads the same `indexable` flag.
+ *
+ * `/us/pricing` hardcoded `index: false` while `MARKETS.us.indexable` was
+ * flipped to true and `indexablePilotPaths()` was already emitting it into the
+ * sitemap. The sitemap therefore invited Google to a page marked noindex: the
+ * landing page ranked, its pricing page could not, and the one comment saying
+ * the two should track each other sat in the file that was not updated.
+ *
+ * The fix is that neither page decides for itself. This is the same "one flag,
+ * derived everywhere" rule that PILOT_HREFLANG and indexablePilotPaths already
+ * follow.
+ */
+describe("marketRobots", () => {
+  test("a live pilot is indexable and followable", () => {
+    expect(marketRobots("us")).toEqual({ index: true, follow: true });
+  });
+
+  test("a pilot that is not live is noindex but still followable", () => {
+    // follow stays true: we want the links crawled even while the page is held
+    // back, so its eventual go-live is not starting from zero discovery.
+    expect(marketRobots("uk")).toEqual({ index: false, follow: true });
+  });
+
+  test("it agrees with the flag for every market, in both directions", () => {
+    for (const market of Object.keys(MARKETS) as Market[]) {
+      expect(marketRobots(market).index).toBe(MARKETS[market].indexable);
+    }
+  });
+
+  test("everything in the sitemap is a page we let Google index", () => {
+    // The two halves of the original bug, stated as one property: if a path is
+    // advertised, the market it belongs to must be indexable.
+    for (const path of indexablePilotPaths()) {
+      const market = (Object.keys(MARKETS) as Market[]).find(
+        (m) => m !== "int" && (path === MARKETS[m].path || path.startsWith(`${MARKETS[m].path}/`)),
+      );
+      expect(market).toBeDefined();
+      expect(marketRobots(market as Market).index).toBe(true);
+    }
   });
 });

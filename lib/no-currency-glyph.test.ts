@@ -18,8 +18,26 @@ import { join } from "node:path";
  */
 
 const MESSAGES = join(import.meta.dir, "..", "messages");
-const PRICED_FILES = ["pricing.json", "landing.json", "features.json"];
-const GLYPHS = /[€$£]|zł|&euro;|&#8364;/;
+// metadata.json quotes plan prices in page descriptions, which are what Google
+// prints in a search result. It was outside this guard, which is exactly how
+// "1 month free, then EUR20/month for life" survived into the US launch: a
+// snippet outlives the page by weeks.
+const PRICED_FILES = ["pricing.json", "landing.json", "features.json", "metadata.json"];
+/**
+ * `zł` is anchored to a digit; every other glyph is not.
+ *
+ * A bare /zł/ fires inside ordinary Polish words: "członków" contains it, so
+ * does "zły". That is the same trap the Polish gendered-past guard hit with
+ * "właśnie" in lib/i18n-catalogs.test.ts. Polish writes currency AFTER the
+ * amount with a space ("29 zł"), so requiring a preceding digit keeps the
+ * guard useful without flagging prose. A symbol-first "zł 29" would slip
+ * through, which is not a form Polish uses.
+ *
+ * `}` counts as well as a digit, because "{starterPrice} zł/mies." is the exact
+ * shape this file exists to reject: the glyph baked, only the number
+ * interpolated. A digit-only anchor let it through.
+ */
+const GLYPHS = /[€$£]|[\d}]\s*zł|&euro;|&#8364;/;
 
 /**
  * Demo content is exempt: the sector cards illustrate a merchant's own reward
@@ -68,4 +86,30 @@ describe("plan-price translations carry no currency glyph", () => {
       });
     }
   }
+});
+
+describe("the glyph pattern itself", () => {
+  test.each([
+    "Billed €39 a year",
+    "$49/month",
+    "£30 per month",
+    "29 zł",
+    "29zł",
+    // Glyph baked, number interpolated: the shape this file exists to reject.
+    "{starterPrice} zł/mies.",
+    "Rozliczane {starterYearlyPrice} zł rocznie",
+    "&euro;20",
+  ])("flags %p", (text) => {
+    expect(GLYPHS.test(text)).toBe(true);
+  });
+
+  test.each([
+    // The trap: ordinary Polish words containing the letters z-ł.
+    "Program członków założycieli Stampeo",
+    "zły wybór",
+    "Złoty program",
+    "{starterPrice}/month",
+  ])("does not flag %p", (text) => {
+    expect(GLYPHS.test(text)).toBe(false);
+  });
 });

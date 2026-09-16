@@ -31,7 +31,7 @@
         "mobileAddWallet": "Try it, add to your Wallet",
         "mobileHint": "The pass will be added to your phone wallet",
         "rewardMid": "-50% off your 1st month",
-        "rewardTop": "1 month free",
+        "rewardTop": "{trialDays} days free",
         "rewardAllUnlocked": "Everything unlocked!"
       }
     },
@@ -244,11 +244,11 @@
           "label": "active businesses"
         },
         {
-          "value": "9,400+",
-          "label": "scans performed"
+          "value": "12,500+",
+          "label": "stamps issued"
         },
         {
-          "value": "24",
+          "value": "22",
           "label": "countries"
         }
       ]
@@ -363,6 +363,75 @@
     },
     "changelog": {
       "whatsNew": "See what is new in Stampeo"
+    },
+    "us": {
+      "hero": {
+        "title": "Turn first‑time customers into <accent>regulars.</accent>",
+        "subtitle": "Stamps for repeat visits, points for what they spend. Your card lives in Apple Wallet and Google Wallet, so there's no app for your customers to download and no new POS to learn.",
+        "primaryCta": "Start my free trial",
+        "reassurance": "{trialDays} days free · Cancel anytime"
+      },
+      "differentiator": {
+        "subtitle": "Four things you won't have to deal with.",
+        "items": [
+          {
+            "title": "No app for your customers",
+            "description": "Apple Wallet and Google Wallet are already on their phone. One scan and their card is added. Nothing to install, no account to create."
+          },
+          {
+            "title": "Works with the POS you already have",
+            "description": "You add stamps from the free Stampeo app, or straight from your web browser. No POS integration, no hardware to buy, and nothing changes at your register."
+          },
+          {
+            "title": "No setup fee",
+            "description": "Nothing to pay to get started. You build your card yourself, in a few minutes, from your dashboard."
+          },
+          {
+            "title": "No contract",
+            "description": "{trialDays} days free, then month to month. Cancel anytime in one click, and your data stays yours, exportable whenever you want."
+          }
+        ]
+      },
+      "finalCta": {
+        "primaryCta": "Start my free trial",
+        "reassurance": "{trialDays} days free · Cancel anytime"
+      },
+      "faq": {
+        "items": [
+          {
+            "question": "How much does it cost?",
+            "answer": "The Starter plan is {starterPrice}/month. No setup fee and no contract. You start with {trialDays} days free. We ask for your card to start the trial, and nothing is charged before the {trialDays} days are up."
+          },
+          {
+            "question": "Do I need to switch my POS?",
+            "answer": "No. Stampeo works alongside any POS, or with no POS at all. You scan from our free app or straight from a browser. There's no integration to build and nothing changes at your register."
+          },
+          {
+            "question": "Do my customers have to download anything?",
+            "answer": "No. Apple Wallet and Google Wallet are already on every recent iPhone and Android phone. Your customers scan your QR code and their card is added in one move. That's it."
+          },
+          {
+            "question": "What happens when the free trial ends?",
+            "answer": "You choose whether to continue. We ask for your card to start the trial, but nothing is charged before the {trialDays} days are up, and you can cancel anytime before then."
+          },
+          {
+            "question": "Is there a contract?",
+            "answer": "No. Stampeo is month to month. Cancel anytime from your dashboard and you're not billed again. Your customers keep the cards already in their wallet."
+          },
+          {
+            "question": "Who owns my customer data?",
+            "answer": "You do. We never sell it and we never share it with other businesses. Export your full customer list to a spreadsheet whenever you want, and delete it just as easily."
+          },
+          {
+            "question": "How many customers can I enroll?",
+            "answer": "Starter, Growth and Pro differ by features (notifications, broadcasts, advanced analytics), not by how many customers you have. See the pricing page for what each plan includes."
+          },
+          {
+            "question": "Can I change my card later?",
+            "answer": "Yes. Change the logo, colors, number of stamps and rewards anytime from your dashboard. Cards already in your customers' wallets update automatically, with nothing to re-download."
+          }
+        ]
+      }
     }
   }
 }

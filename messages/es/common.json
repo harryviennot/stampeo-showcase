@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Sellos",
     "reward": "Recompensa",
-    "rewarded": "¡Tienes derecho a 30 días gratis!",
-    "rewardText": "¡30 días gratis con 8 sellos!",
+    "rewarded": "¡Tienes {trialDays} días gratis!",
+    "rewardText": "¡{trialDays} días gratis con 8 sellos!",
     "nav": {
       "features": "Funciones",
       "pricing": "Precios",

@@ -1,14 +1,18 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CheckIcon } from "../icons";
+import { marketCopy } from "@/lib/market-copy";
+import { type Market } from "@/lib/markets";
 
 export async function VariantDifferentiator({
   trialDays,
-}: Readonly<{ trialDays: number }>) {
-  const t = await getTranslations("variant.differentiator");
+  market = "int",
+}: Readonly<{ trialDays: number; market?: Market }>) {
+  const t = await getTranslations("variant");
+  const copy = marketCopy(t, market);
   // t.raw skips ICU interpolation, so the trial length has to be substituted
   // here. Leaving it unsubstituted rendered a literal "{trialDays}" on /us.
-  const items = (t.raw("items") as Array<{ title: string; description: string }>).map(
+  const items = (copy.raw("differentiator.items") as Array<{ title: string; description: string }>).map(
     (item) => ({
       ...item,
       description: item.description.replaceAll("{trialDays}", String(trialDays)),
@@ -20,10 +24,10 @@ export async function VariantDifferentiator({
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="flex flex-col items-center text-center mb-12 gap-4">
           <h2 className="text-h2 max-w-3xl">
-            {t("title")}
+            {copy.t("differentiator.title")}
           </h2>
           <p className="text-lead text-[var(--muted-foreground)] max-w-2xl">
-            {t("subtitle")}
+            {copy.t("differentiator.subtitle")}
           </p>
         </ScrollReveal>
 

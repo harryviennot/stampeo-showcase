@@ -126,6 +126,23 @@ export const PILOT_HREFLANG: Record<string, string> = {
 };
 
 /**
+ * The `robots` directive for any page inside a market.
+ *
+ * Neither the landing page nor the pricing page decides this for itself.
+ * `/us/pricing` hardcoded `index: false` while `indexable` was flipped to true
+ * and `indexablePilotPaths()` was already listing it in the sitemap, so the
+ * sitemap invited Google to a page marked noindex. The comment saying the two
+ * should track each other was in the file that did not get updated, which is
+ * the argument for deriving it instead of writing it down twice.
+ *
+ * `follow` stays true even when noindex: a held-back pilot should still have
+ * its links crawled, so going live does not start from zero discovery.
+ */
+export function marketRobots(market: Market): { index: boolean; follow: boolean } {
+  return { index: MARKETS[market].indexable, follow: true };
+}
+
+/**
  * A path inside a market.
  *
  * A market is a set of routes, not a single landing page. /us quotes dollars,
