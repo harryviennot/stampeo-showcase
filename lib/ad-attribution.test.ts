@@ -28,7 +28,9 @@
 
 import { describe, expect, test } from "bun:test";
 import {
+  ATTRIBUTION_COOKIE,
   ATTRIBUTION_VERSION,
+  attributionCookieAttributes,
   buildAttributionRecord,
   parseAttributionCookie,
   readClickIds,
@@ -36,6 +38,7 @@ import {
   referrerHost,
   serializeAttributionCookie,
   vendorForClickIds,
+  writeAttributionRecord,
   type AttributionRecord,
 } from "./ad-attribution";
 
@@ -376,5 +379,157 @@ describe("the cookie cannot be made huge", () => {
     }) as AttributionRecord;
     expect(record.clickId).toBe("abc123");
     expect(record.vendor).toBe("google");
+  });
+});
+
+/* =========================================================================
+ * AC1 — the CARRIER, not the content.
+ *
+ * Added 2026-09-20, closing the gap-report's first row: `writeAttributionRecord`
+ * and `attributionCookieAttributes` were imported by NO test. Everything above
+ * pins what goes IN the cookie; nothing pinned the cookie itself.
+ *
+ * The `Domain` attribute is the single point the whole cross-domain design
+ * rests on. Drop it and the cookie becomes host-only on the marketing site,
+ * `web/` on app.stampeo.app can never read it, and the funnel dies silently --
+ * no error, no row, just attribution that reads "direct" forever.
+ * ====================================================================== */
+
+describe("the attribution cookie as a carrier", () => {
+  const record = (search: string, capturedAt = 1_700_000_000): AttributionRecord => {
+    const built = buildAttributionRecord({
+      search,
+      gaClientId: "GA1.1.1234567890.1700000000",
+      landingPath: "/us/pricing",
+      landingVariant: "b",
+      referrer: "https://www.google.com/",
+      consent: { analytics: true, marketing: true },
+      consentVersion: 2,
+      consentRegime: "opt-in",
+      consentAt: 1_700_000_000,
+      capturedAt,
+    });
+    expect(built).not.toBeNull();
+    return built as AttributionRecord;
+  };
+
+  /** A jar that actually stores — a write-only fake makes every write look failed. */
+  function installJar(): { writes: string[]; restore: () => void } {
+    const previous = Object.getOwnPropertyDescriptor(globalThis, "document");
+    const writes: string[] = [];
+    const jar = new Map<string, string>();
+    Object.defineProperty(globalThis, "document", {
+      configurable: true,
+      value: {
+        get cookie() {
+          return [...jar].map(([n, v]) => `${n}=${v}`).join("; ");
+        },
+        set cookie(value: string) {
+          writes.push(value);
+          const pair = value.split(";")[0].trim();
+          const split = pair.indexOf("=");
+          if (split !== -1) jar.set(pair.slice(0, split), pair.slice(split + 1));
+        },
+      },
+    });
+    return {
+      writes,
+      restore: () => {
+        if (previous) Object.defineProperty(globalThis, "document", previous);
+        else delete (globalThis as Record<string, unknown>).document;
+      },
+    };
+  }
+
+  const withCookieDomain = <T,>(domain: string | undefined, run: () => T): T => {
+    const previous = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+    if (domain === undefined) delete process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+    else process.env.NEXT_PUBLIC_COOKIE_DOMAIN = domain;
+    try {
+      return run();
+    } finally {
+      if (previous === undefined) delete process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+      else process.env.NEXT_PUBLIC_COOKIE_DOMAIN = previous;
+    }
+  };
+
+  test("the cookie is scoped to the shared parent domain", () => {
+    const attrs = withCookieDomain(".stampeo.app", () =>
+      attributionCookieAttributes(record("?gclid=abc123")),
+    );
+
+    expect(attrs.domain).toBe(".stampeo.app");
+    expect(attrs.name).toBe(ATTRIBUTION_COOKIE);
+    expect(attrs.path).toBe("/");
+    // Lax, not Strict: the visitor arrives by following a link from an ad.
+    expect(attrs.sameSite).toBe("lax");
+  });
+
+  test("an unset cookie domain leaves the attribute off rather than guessing", () => {
+    // Local dev has no shared parent. `Domain=undefined` would be a malformed
+    // attribute; omitting it gives a host-only cookie, correct for localhost.
+    const attrs = withCookieDomain(undefined, () =>
+      attributionCookieAttributes(record("?gclid=abc123")),
+    );
+
+    expect(attrs.domain).toBeUndefined();
+  });
+
+  test("the written cookie carries Domain, Path, Max-Age and SameSite", () => {
+    const jar = installJar();
+    try {
+      withCookieDomain(".stampeo.app", () => writeAttributionRecord(record("?gclid=abc123")));
+
+      expect(jar.writes.length).toBe(1);
+      const cookie = jar.writes[0];
+      expect(cookie).toContain(`${ATTRIBUTION_COOKIE}=`);
+      expect(cookie).toContain("; Domain=.stampeo.app");
+      expect(cookie).toContain("; Path=/");
+      expect(cookie).toContain("; SameSite=Lax");
+      // Six months, so a signup weeks after the click still carries the ad.
+      expect(cookie).toContain(`; Max-Age=${60 * 60 * 24 * 182}`);
+    } finally {
+      jar.restore();
+    }
+  });
+
+  test("first touch wins — a later visit does not overwrite the ad click", () => {
+    const jar = installJar();
+    try {
+      withCookieDomain(".stampeo.app", () => {
+        writeAttributionRecord(record("?gclid=abc123"));
+        // The organic return visit, a day later. Must not erase the gclid.
+        writeAttributionRecord(record("", 1_700_086_400));
+      });
+
+      expect(jar.writes.length).toBe(1);
+      expect(jar.writes[0]).toContain("abc123");
+    } finally {
+      jar.restore();
+    }
+  });
+
+  test("a blocked cookie jar costs attribution, never the pageview", () => {
+    const previous = Object.getOwnPropertyDescriptor(globalThis, "document");
+    Object.defineProperty(globalThis, "document", {
+      configurable: true,
+      value: {
+        get cookie() {
+          return "";
+        },
+        set cookie(_value: string) {
+          throw new Error("storage blocked");
+        },
+      },
+    });
+
+    try {
+      expect(() =>
+        withCookieDomain(".stampeo.app", () => writeAttributionRecord(record("?gclid=abc123"))),
+      ).not.toThrow();
+    } finally {
+      if (previous) Object.defineProperty(globalThis, "document", previous);
+      else delete (globalThis as Record<string, unknown>).document;
+    }
   });
 });

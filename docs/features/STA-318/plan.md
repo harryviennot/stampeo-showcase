@@ -157,6 +157,26 @@ questions".
 - **AC13**: A page view is never recorded for a path `isTrackablePath()` rejects,
   asserted directly against the predicate so the two tables cannot drift.
 
+<!-- AC14-AC17 added 2026-09-20, folding back drift the Phase 3 coverage audit
+     found between this plan and the shipped code. See gap-report.md. -->
+
+- **AC14**: Given consent is granted, when a *demo* CTA is clicked (`hero_demo`,
+  `final_cta_demo`) or any CTA pointing at `/contact`, then a
+  `contact_cta_click` event is recorded instead of `sign_up_cta_click` — a
+  different funnel, tracked separately, mirroring the PostHog split.
+- **AC15**: Every member of the `CTALocation` union maps to exactly one GA4
+  event, asserted against the union **read from `lib/analytics.ts` at runtime**
+  rather than copied into the test. (A type-level guard cannot serve here:
+  `tsconfig.json` excludes test files from the compile.)
+- **AC16**: Given the operator appends `?debug_mode=1`, when the tag loads, then
+  the `config` call carries `debug_mode: true` so the session appears in
+  GA4 DebugView — the instruction `ga4-setup.md` gives.
+- **AC17**: A GA4 event carries `landing_variant` whenever the landing A/B
+  variant is live, and omits the key entirely when it is not. Resolves the
+  risk recorded below: PostHog carries the variant as a super-property and GA4
+  has no equivalent, so the two tools would otherwise disagree about which
+  variant earned a signup. A throw from `gtag` never escapes the click handler.
+
 ## Touched areas and risks
 
 - **`CTAButton.tsx`** renders on every landing surface. A throw in its click

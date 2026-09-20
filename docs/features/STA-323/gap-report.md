@@ -106,3 +106,47 @@ untouched — which is the AC11/AC14 gap, not a weakening.
 ## Waivers
 
 None.
+
+---
+
+# Addendum — 2026-09-20: remaining gaps closed
+
+The AC table above is the audit as written on 2026-09-16. Rather than trust it,
+every row it left open was **re-checked by mutation** against the code as it
+stands today: the guard was deleted, the suite re-run, and the row only marked
+closed once the suite went red.
+
+| AC | Was | Now | Evidence |
+|---|---|---|---|
+| AC1 carrier | `attributionCookieAttributes` / `writeAttributionRecord` imported by no test | **closed** | `describe("the attribution cookie as a carrier")` in `lib/ad-attribution.test.ts`. Mutations CAUGHT: Domain attribute dropped · Domain omitted from the Set-Cookie string · first-touch-wins removed · SameSite tightened to Strict · Max-Age cut to an hour · blocked-storage guard removed. |
+| AC8 idempotency | rested on an untested assumption that supabase-py raises on PK conflict | **closed, assumption verified** | The assumption is correct, checked against the installed library rather than reasoned about: `postgrest.SyncQueryRequestBuilder.execute` raises `APIError` on any non-2xx, and PostgREST answers a PK conflict with 409. `TestClaimIsTheIdempotencyGuarantee` pins it. Mutations CAUGHT: `_claim` returns True on conflict · claim row no longer in-flight · claim result ignored. |
+| AC11 cookie clearing | `consent.test.ts` untouched; deleting the `COOKIE_PATTERNS` entry broke nothing | **closed (fixed earlier)** | Mutation CAUGHT: `stampeo_attribution` dropped from both categories. |
+| AC14 deletion | `test_account_deletion.py` asserted only the three original tables | **closed (fixed earlier)** | Mutations CAUGHT: either table dropped from `_CONTENT_TABLES`. |
+
+Writing the AC8 tests exposed a second defect in the process: `_FakeQuery` had
+no `insert` method, so `.insert(...)` raised `AttributeError` and `_claim`'s
+bare `except Exception` swallowed it. The first version of the test therefore
+"passed" the conflict case for entirely the wrong reason. `insert()` was added
+to the shared stub; no existing assertion was weakened.
+
+## Still open, deliberately
+
+- **Untested #3, the synchronous `httpx.post`** inline in `POST /businesses`
+  and in the Stripe handler. Not a new defect: `handle_invoice_paid` already
+  makes a synchronous `resend.Emails.send()` call, so this adds a second
+  blocking call to a handler that was already blocking. Timeout reduced 5s → 2s
+  rather than rebuilding the call path. Worth a follow-up issue, not a blocker.
+- **AC4/AC5/AC6/AC13 route-level behaviour** — `(d)` in the table above,
+  genuinely untestable at the unit layer. Covered by runbook cases AT-01→AT-10
+  in `docs/qa/cookie-consent.md`, which have not yet been executed.
+
+## Verification at close
+
+- backend `pytest tests/` — **2467 passed**
+- showcase `bun test lib` — **657 passed**
+- web `bun test src` — **1091 passed**
+- showcase + web `bun run type-check` — clean; `bun run build` — both succeed
+- dev DB: `business_ad_attribution` and `business_ad_conversion` both report
+  `rowsecurity = true` with **0 policies** — the intended backend-only posture,
+  closing the security review's HIGH finding on dev. **Prod still pending**, via
+  PR to `main` only.

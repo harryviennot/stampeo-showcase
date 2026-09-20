@@ -276,7 +276,38 @@ export function trackGaEvent(input: {
   if (!shouldSendGaEvent({ loaded: isGaLoaded(), trackable: input.trackable })) {
     return;
   }
-  window.gtag?.("event", input.event, input.params ?? {});
+
+  // Guarded because every call site is a click handler: a throw here -- an ad
+  // blocker that replaced `gtag` with something hostile, a CSP violation --
+  // would otherwise propagate out of the handler and cost the visitor the
+  // navigation. Losing the measurement is the acceptable failure; losing the
+  // signup is not.
+  try {
+    window.gtag?.("event", input.event, {
+      ...(input.params ?? {}),
+      ...landingVariantParam(),
+    });
+  } catch {
+    // Deliberately silent: there is no second reporting channel to complain
+    // through, and a console error on every click is its own bug report.
+  }
+}
+
+/**
+ * The live landing A/B variant, as `{ landing_variant }` or nothing at all.
+ *
+ * PostHog carries the variant as a super-property attached to every event;
+ * GA4 has no equivalent, so it has to ride on each event or the two tools
+ * disagree about which variant earned a signup. `LandingTracker` publishes it
+ * on `<body>` for exactly this.
+ *
+ * Absent stays absent. Defaulting to the control would credit it for every
+ * conversion that began somewhere other than the landing page.
+ */
+function landingVariantParam(): Record<string, string> {
+  if (typeof document === "undefined") return {};
+  const variant = document.body?.dataset?.landingVariant;
+  return variant ? { landing_variant: variant } : {};
 }
 
 /**
