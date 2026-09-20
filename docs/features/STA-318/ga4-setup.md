@@ -226,6 +226,60 @@ at build, they are not read at runtime. That means three edits, not one:
 
 ---
 
+## F2. The Measurement Protocol API secret (STA-323)
+
+The server-side conversion sender needs a **second** credential, separate from
+the measurement id. Unlike the measurement id, **this one is a real secret**:
+anyone holding it can inject arbitrary events into the property.
+
+**Where to create it:**
+
+**Admin → Data collection and modification → Data streams →** click the
+`Showcase` stream **→ Measurement Protocol API secrets → Create**. Name it for
+where it will be used (`backend-prod`), and copy the value.
+
+Notes:
+
+- Create a **separate secret per environment** (`backend-dev`, `backend-prod`).
+  They can be revoked independently, so a leaked dev secret does not mean
+  rotating the one production depends on.
+- It can be revoked and recreated from the same screen at any time. The sender
+  no-ops when it is unset or wrong, so a rotation degrades to "no conversions"
+  rather than to errors.
+- Do **not** put it in `.env.example`, the Dockerfile, or any `NEXT_PUBLIC_*`
+  variable. It must never reach the browser bundle.
+
+### Where each value goes
+
+| Value | Secret? | Goes where | Read by |
+|---|---|---|---|
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` = `G-ZFZ6JLPFXN` | No — ships in the bundle | `.env.example`, `Dockerfile` (ARG line 41 + ENV line 52), and the **prod build args** | showcase, at build time |
+| `GA4_MEASUREMENT_ID` = `G-ZFZ6JLPFXN` | No | **Doppler** | backend, at runtime |
+| `GA4_API_SECRET` | **YES** | **Doppler only** | backend, at runtime |
+
+**Set the Doppler keys in UPPERCASE.** `pydantic-settings` is case-insensitive
+by default, so the lowercase Python attributes `settings.ga4_measurement_id` and
+`settings.ga4_api_secret` read the environment variables `GA4_MEASUREMENT_ID`
+and `GA4_API_SECRET`. Lowercase is the attribute convention, uppercase the
+env-var one; every field in `app/core/config.py` works this way
+(`supabase_url` ← `SUPABASE_URL`).
+
+The backend pair is read through `Settings`, never `os.getenv` — see
+`backend/CLAUDE.md`. Both must be present or `send_conversion` no-ops, which is
+the intended dormant state until you are ready.
+
+**CI needs nothing.** `showcase/.github/workflows/ci.yml` builds with
+placeholder values for every `NEXT_PUBLIC_*`, and the loader no-ops on an
+absent or malformed id (plan AC1), so an unset value cannot fail the build.
+
+**The prod build args are the one thing not in this repo.** CI only ever builds
+with placeholders, so passing the real measurement id is a change wherever the
+production image is actually built. Until that happens the tag is dormant in
+production no matter what is set in Doppler — the measurement id reaches the
+browser through the *build*, not through the runtime environment.
+
+---
+
 ## G. Verification in DebugView
 
 **Admin → DebugView**, or the left nav under Admin.
@@ -289,8 +343,9 @@ Not part of this issue — recorded so it is not rediscovered:
 
 ## Checklist
 
-- [ ] Property created under the same Google login that owns Search Console
+- [x] Property created under the same Google login that owns Search Console
       and the Wallet/OAuth cloud project; time zone France, currency EUR
+      (implied — the data stream below could not exist otherwise)
 - [x] A **second Administrator** added on the GA account:
       `jack@lexa-agence.com` (16 September 2026)
 - [x] Web data stream created for `https://stampeo.app`
@@ -304,7 +359,11 @@ Not part of this issue — recorded so it is not rediscovered:
 - [x] D5 — email/query redaction on; `email`, `token`, `code`, and `phone` stripped
 - [x] D6 — ad personalization disabled for EEA/UK and separately listed EU territories
 - [ ] E — reporting identity set to Device-based
-- [ ] F — `NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.example`, Dockerfile ARG *and*
-      ENV, and the prod build args
+- [x] F — `NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.example` and the Dockerfile
+      (ARG line 41 *and* ENV line 52). **Prod build args still to do** — the
+      tag stays dormant until the deploy passes it.
+- [ ] F2 — Measurement Protocol API secret created (`backend-prod`), stored in
+      Doppler as **`GA4_API_SECRET`**; **`GA4_MEASUREMENT_ID`** set there too
+- [ ] F2 — prod build args pass `NEXT_PUBLIC_GA_MEASUREMENT_ID`
 - [ ] G — DebugView verified, including the negative check on `/onboarding`
 - [ ] G — `sign_up_cta_click` marked as a key event

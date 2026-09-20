@@ -757,13 +757,34 @@ describe("the read seam the pixel issues consume", () => {
 });
 
 describe("CONSENT_VERSION", () => {
-  test("is 1, the wire format written into the cookie", () => {
+  test("is 2, the wire format written into the cookie", () => {
     // Every other test uses the constant, so a bump would pass them all while
     // silently invalidating every visitor's stored choice. Bumping it IS the
-    // mechanism for re-consenting a new vendor, so it should be a deliberate
-    // edit here and not a side effect.
-    expect(CONSENT_VERSION).toBe(1);
-    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A1");
+    // mechanism for re-consenting a new vendor or a new processing purpose, so
+    // it must be a deliberate edit here and not a side effect.
+    //
+    // 1 -> 2 (STA-323): privacy policy §5.5 added first-party retention of the
+    // advertising identifier and server-side conversion reporting. Same three
+    // recipients, materially different processing.
+    //
+    // TWO OTHER PLACES MOVE WITH THIS, and nothing automated catches them
+    // because they live in another repo and another language:
+    //   - `CONSENT_VERSION` in backend/app/services/ad_attribution.py, which
+    //     rejects an attribution row whose stored choice names a different
+    //     version;
+    //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
+    //     shared cookie to notice a withdrawal.
+    expect(CONSENT_VERSION).toBe(2);
+    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A2");
+  });
+
+  test("a choice stored under the previous version is no longer honoured", () => {
+    // The point of the bump: everyone is asked again rather than a new
+    // processing purpose inheriting a choice made about a narrower one.
+    const old = encodeURIComponent(
+      JSON.stringify({ v: 1, a: 1, m: 1, t: 1_700_000_000, r: "opt-in" })
+    );
+    expect(parseConsentCookie(old)).toBeNull();
   });
 });
 

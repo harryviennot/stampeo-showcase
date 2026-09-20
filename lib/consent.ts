@@ -25,13 +25,27 @@ import { countryForTimezone } from "./timezone-country";
 export const CONSENT_COOKIE = "stampeo_consent";
 
 /**
- * Bump when a category or a vendor changes.
+ * Bump when a category, a vendor, or the PROCESSING the policy describes
+ * changes.
  *
  * A stored choice from an older version is treated as no choice at all, so the
  * visitor is asked again rather than a new tracker quietly inheriting consent
  * that was given for a different list of recipients.
+ *
+ * ── Version history ─────────────────────────────────────────────────
+ * 1 — STA-317. The banner itself: GA4, Meta and TikTok, browser-side only.
+ * 2 — STA-323. Privacy policy §5.5. The recipients did not change, but two
+ *     things about the processing did, and both are material enough that a
+ *     choice made against the old text is not informed consent to the new one:
+ *     we now RETAIN the advertising identifier ourselves against the business
+ *     account, and we report conversions SERVER-SIDE, after and independently
+ *     of anything in the browser.
+ *
+ * `CONSENT_VERSION` in `backend/app/services/ad_attribution.py` mirrors this
+ * and must move with it: the backend rejects an attribution row whose stored
+ * choice was made against a different version.
  */
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
 
 /**
  * Six months. CNIL's ceiling for how long a choice may stand.

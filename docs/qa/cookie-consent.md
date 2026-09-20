@@ -801,6 +801,40 @@ EXPECT:
 - No `purchase` row appeared at `checkout.session.completed` — a started trial
   is not revenue.
 
+### AT-08b Revoking stops conversions server-side — BLOCKER
+DEPENDS: AT-05, PR-04
+
+WHY: The gap the security review found. Revoking deletes the cookies in the
+browser, but the attribution ROW lives in our database and was still being used
+to report a conversion at `invoice.paid` — potentially weeks after the owner
+withdrew. Deleting cookies looked like an effective revocation and was not.
+
+1. From AT-05 (a business exists with an attribution row), confirm
+   `select revoked_at from business_ad_attribution where business_id = '<id>'`
+   returns NULL.
+2. On the **marketing site**, open **Cookie preferences** from the footer, turn
+   **both** categories off, and save.
+3. Go to the **dashboard** at `app.stampeo.app` and open any page, signed in as
+   the **owner** of that business.
+4. Query `business_ad_attribution` again.
+
+EXPECT:
+- `revoked_at` is now set for every row of that business.
+- Network tab on the dashboard shows one
+  `POST /businesses/<id>/ad-attribution/revoke` returning 200.
+- Now trigger `invoice.paid` for that business: `business_ad_conversion` gains
+  a `purchase` row with `status = 'skipped_no_consent'` and **no request leaves
+  for google-analytics.com**.
+
+NEGATIVE CHECKS, both of which must hold:
+- Repeat step 3 a second time. `revoked_at` **does not change** — the first
+  withdrawal's timestamp is the evidence and must not move.
+- With NO consent cookie at all (delete `stampeo_consent`, reload the
+  dashboard), **no** revoke request is sent. An empty jar is not a refusal, and
+  treating it as one would stop reporting for businesses that never asked.
+- Signed in as an **admin or scanner** rather than the owner, no revoke request
+  is sent at all.
+
 ### AT-09 No API secret sends nothing and breaks nothing — CORE
 
 WHY: The state of CI and every local checkout until the secret is provisioned.

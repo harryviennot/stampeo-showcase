@@ -22,7 +22,7 @@ implemented · (d) untestable at this layer, deferred to manual QA.
 | AC9 checkout.session.completed sends nothing | (b) | Correct by omission; absence never asserted. Defeated in practice by the AC7 defect. |
 | AC10 forged cookie rejected | (a) partly / **(c) partly** | `consent_version` is only `isinstance(int)` — never compared to the live `CONSENT_VERSION`. The plan's "a `consent_at` in the future is rejected" was never implemented. |
 | AC11 revoke deletes the carrier | (b) | `consent.test.ts` was NOT updated. Its fixtures omit the cookie and its assertions are exact, so deleting the new `COOKIE_PATTERNS` entry breaks no test. |
-| AC12 revoked row skipped | **(c) trigger** / (a) predicate | **Nothing anywhere writes `revoked_at`.** `skipped_no_consent` is an unreachable status. |
+| AC12 revoked row skipped | (a) — closed after review | Trigger built: `revoke_attribution` + owner-scoped endpoint + `AdAttributionRevoker`. Covered by `TestRevokeAttribution` and `web/src/lib/consent-state.test.ts`. |
 | AC13 no API secret → nothing sent | (b) + (d) | No test sets or clears the setting. |
 | AC14 deletion removes rows | (b) + (d) | `test_account_deletion.py` still asserts only the three original tables. Removing either new table breaks no test — the exact "silent skip" the plan names as the risk. |
 

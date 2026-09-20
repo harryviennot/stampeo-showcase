@@ -157,6 +157,10 @@ missing from it is silently skipped.
 - **Consent revoked after the row exists**: `revoked_at` is set and the sender
   skips it. Already-sent conversions cannot be recalled — documented, not
   pretended otherwise.
+  **Built after the security review**, authenticated from the dashboard rather
+  than via a public endpoint keyed on a click id. See `security-report.md` →
+  "How revocation works", including the known limit: propagation happens on the
+  owner's next dashboard visit.
 - **Forged or hand-edited attribution cookie**: validated server-side. Unknown
   vendor, bad consent version or a `consent_at` in the future is rejected and
   the row is not written. The cookie is not authentication and grants nothing
@@ -210,6 +214,10 @@ missing from it is silently skipped.
   deleted by the existing revoke path, alongside `_ga` and `_fbp`.
 - **AC12**: Given a stored row whose consent was revoked, when a conversion
   would be sent, then it is skipped and recorded as `skipped_no_consent`.
+  **MET** — `revoke_attribution` writes the column,
+  `POST /businesses/{id}/ad-attribution/revoke` is the owner-scoped trigger, and
+  `AdAttributionRevoker` calls it when the shared consent cookie records a
+  refusal of both categories.
 - **AC13**: Given no `ga4_api_secret` is configured, then nothing is sent, the
   business is created normally and the webhook still returns 200.
 - **AC14**: Deleting a business removes its attribution and conversion rows.

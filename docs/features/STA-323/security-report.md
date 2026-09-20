@@ -37,18 +37,34 @@ backend-only; no client reads them.
    `(business_id, vendor, 'purchase')` slot — the real first payment is then
    silently dropped. Independently found by the coverage audit. **Fixed.**
 2. **Blocking HTTP on the event loop.** `stripe_webhook` is `async def` and
-   calls handlers directly, so a synchronous `httpx.post` with a 5s timeout
-   blocks the whole uvicorn process per event. A slow third party plus a
-   renewal-day burst serialises 5s stalls across every API request.
-   **Fixed** — sends moved off the request and webhook paths.
+   calls handlers directly, so a synchronous `httpx.post` blocks the whole
+   uvicorn process per event.
+
+   **Partially fixed, and the severity is lower than reported.** Verified
+   against the code: `handle_invoice_paid` ALREADY makes a synchronous network
+   call on this exact path — `_send_subscription_email` → `resend.Emails.send()`
+   — so blocking I/O in this handler is pre-existing architecture, not
+   something STA-323 introduces. This diff adds a second such call rather than
+   the first.
+
+   Done: the timeout is cut from 5s to 2s, so the added exposure is bounded and
+   smaller than the email call already there. Not done: making the webhook path
+   non-blocking, which means moving the email send too and is a change to
+   billing infrastructure well outside this issue. Recorded as a known
+   property, not as fixed.
 3. **API secret in the URL query string.** GA4 requires `api_secret` as a query
    parameter, and Sentry's httpx instrumentation records `http.query` on spans
    at the configured trace sample rate, exporting a live Doppler credential to a
-   third-party error store. **Fixed** — scrubbed before send.
-4. **`revoked_at` is never written.** The withdrawal branch is dead code: a
-   visitor who revokes after signing up still has their `gclid` transmitted
-   weeks later at `invoice.paid`. The migration comment and plan AC12 both
-   assert otherwise. **Fixed** — revocation now reaches the server.
+   third-party error store. **Fixed** — `_scrub_ga4_secret` is registered as
+   both `before_send` and `before_send_transaction` in `app/main.py`, and the
+   URL is built inline rather than passed as structured params. Covered by
+   `tests/test_sentry_secret_scrub.py`, including that the public measurement
+   id survives so the span stays useful.
+4. **`revoked_at` was never written.** The withdrawal branch was dead code: a
+   visitor who revoked after signing up still had their `gclid` transmitted
+   weeks later at `invoice.paid`, and `skipped_no_consent` was an unreachable
+   status. **Fixed** — see "How revocation works" below.
+
 5. **No rate limit on `POST /businesses`.** An authenticated account can loop
    "create business with forged cookie" and emit one GA4 `sign_up` per
    iteration with chosen campaign attribution — conversion-feedback poisoning.
@@ -70,6 +86,51 @@ backend-only; no client reads them.
    future is accepted, `consent_version` is never compared to the live version,
    and `isinstance(True, int)` is True so `cv: true` passes validation and then
    fails the integer column write. **Fixed.**
+
+## How revocation works (finding 4, shipped)
+
+Option 2 of the three considered: **authenticated, from the dashboard.**
+
+1. The owner withdraws consent on the marketing site. Showcase's existing
+   revoke path deletes `stampeo_attribution` along with `_ga` and `_fbp`, and
+   rewrites `stampeo_consent` to record the refusal.
+2. `stampeo_consent` is scoped to `.stampeo.app`, so the dashboard can read it.
+   `web/src/lib/consent-state.ts` answers one question — "has this person
+   refused *both* categories?" — and nothing else.
+3. `AdAttributionRevoker`, mounted in the dashboard layout beside
+   `AchievementRecorder`, notices and calls
+   `POST /businesses/{id}/ad-attribution/revoke`.
+4. `require_owner_access` scopes it to one business the caller owns.
+   `revoke_attribution` stamps `revoked_at` on rows where it is still null.
+
+**Why not the public endpoint.** Option 1 would have accepted a click id from
+an anonymous visitor and acted on whatever row matched — new public surface
+taking an attacker-supplied identifier, for a feature that does not need any.
+
+**Why flag and not delete.** The row is the only record that the capture was
+lawful: who consented, under which regime, against which version of the text.
+Deleting it would leave already-sent conversions with nothing justifying them.
+Nothing further is ever transmitted from a flagged row.
+
+**Deliberate design points, each pinned by a test:**
+
+- Absence of a choice is NOT a withdrawal. An empty jar means the banner was
+  never seen or cookies were cleared — treating that as a refusal would stop
+  reporting for businesses that never asked.
+- Refusing only one category is not a withdrawal: a row is permitted by
+  analytics OR marketing, so while either stands there is a lawful basis.
+- Re-revoking never moves an existing timestamp forward. The first withdrawal
+  is the one that matters; overwriting it would destroy the evidence of when it
+  happened.
+- Owner-only on both sides: the client skips the call for non-owners rather
+  than earning a guaranteed 403.
+
+**Known limit, stated plainly.** Propagation happens when the owner next opens
+the dashboard. Someone who revokes and never returns is not covered, and if
+their invoice is paid in between, that conversion has already gone. Closing
+that needs a deliberate control in the dashboard rather than a cookie echo —
+worth doing if attribution ever becomes visible to owners, and tracked as such
+rather than pretended away.
 
 ## Accepted, not fixed
 
