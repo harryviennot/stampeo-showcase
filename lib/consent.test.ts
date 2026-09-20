@@ -343,7 +343,11 @@ describe("cookieNamesToClear", () => {
 import { afterEach } from "bun:test";
 import {
   CONSENT_CHANGED_EVENT,
+  CONSENT_COOKIE,
   CONSENT_OPEN_EVENT,
+  CONSENT_VERSION,
+  ensureSubjectId,
+  readSubjectId,
   clearCookiesFor,
   detectConsentRegime,
   detectGpc,
@@ -823,5 +827,95 @@ describe("the attribution carrier is revocable (STA-323)", () => {
     expect(cookieNamesToClear(["analytics", "marketing"], jar)).not.toContain(
       CONSENT_COOKIE
     );
+  });
+});
+
+/* =========================================================================
+ * STA-324 — the subject id that chains one person's decisions.
+ *
+ * The id is meaningless by design: a random v4 UUID, never derived from
+ * anything about the visitor. It exists only so a ledger row can be joined to
+ * the next decision by the same person.
+ *
+ * The load-bearing case is the VERSION BUMP. `parseConsentCookie` returns null
+ * for a record written against an older `CONSENT_VERSION` -- correctly, because
+ * an old choice is not a current one. But the subject id is not a choice, and
+ * losing it on every bump would break the chain exactly when it matters most:
+ * proving the same person was re-asked and answered again.
+ * ====================================================================== */
+
+describe("the consent subject id", () => {
+  const UUID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
+
+  test("a written record carries a subject id", () => {
+    installBrowser();
+    writeConsentRecord({ analytics: true, marketing: false }, "opt-in");
+
+    const stored = readSubjectId(document.cookie);
+    expect(stored).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+  });
+
+  test("a second decision keeps the same subject id", () => {
+    // Two decisions by one person have to be joinable, or the ledger cannot
+    // show that a refusal replaced an acceptance.
+    installBrowser();
+    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    const first = readSubjectId(document.cookie);
+
+    writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    const second = readSubjectId(document.cookie);
+
+    expect(first).not.toBeNull();
+    expect(second).toBe(first as string);
+  });
+
+  test("the id survives a CONSENT_VERSION bump", () => {
+    // THE case. The stored choice is v1 and must be treated as no choice at
+    // all -- but the person is the same person, and the new row has to chain
+    // to their old one.
+    const stale = encodeURIComponent(
+      JSON.stringify({ v: CONSENT_VERSION - 1, a: 1, m: 1, t: 1, r: "opt-in", s: UUID }),
+    );
+    installBrowser({ cookie: `${CONSENT_COOKIE}=${stale}` });
+
+    // The choice is correctly discarded...
+    expect(readConsentRecord()).toBeNull();
+    // ...and the identity is correctly kept.
+    expect(readSubjectId(document.cookie)).toBe(UUID);
+  });
+
+  test("a forged subject id is replaced, never stored", () => {
+    // AC9. The id is ours to mint. Anything that is not a UUID is not one.
+    for (const forged of ["", "not-a-uuid", "../../etc/passwd", "1; DROP TABLE"]) {
+      const cookie = encodeURIComponent(
+        JSON.stringify({ v: CONSENT_VERSION, a: 1, m: 1, t: 1, r: "opt-in", s: forged }),
+      );
+      installBrowser({ cookie: `${CONSENT_COOKIE}=${cookie}` });
+      expect(readSubjectId(document.cookie)).toBeNull();
+    }
+  });
+
+  test("no cookie means no id rather than a thrown error", () => {
+    installBrowser();
+    expect(readSubjectId(document.cookie)).toBeNull();
+  });
+
+  test("minting is only reached when there is nothing to reuse", () => {
+    installBrowser({ cookie: `${CONSENT_COOKIE}=${encodeURIComponent(
+      JSON.stringify({ v: CONSENT_VERSION, a: 1, m: 1, t: 1, r: "opt-in", s: UUID }),
+    )}` });
+
+    expect(ensureSubjectId()).toBe(UUID);
+  });
+
+  test("two fresh visitors do not share an id", () => {
+    installBrowser();
+    const a = ensureSubjectId();
+    installBrowser();
+    const b = ensureSubjectId();
+
+    expect(a).not.toBe(b);
   });
 });
