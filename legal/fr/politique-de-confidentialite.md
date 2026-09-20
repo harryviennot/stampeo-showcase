@@ -175,6 +175,20 @@ Ce qui est transmis se limite à l'identifiant publicitaire, à la campagne et, 
 
 Retirer votre consentement via **Préférences cookies** supprime le cookie `stampeo_attribution` avec les autres et met fin à tout nouveau signalement de conversion pour votre compte. Les conversions déjà transmises ne peuvent pas être rappelées. Ces données sont supprimées en même temps que le compte professionnel auquel elles se rattachent (voir §8).
 
+### 5.6 Conservation de vos choix en matière de cookies
+
+Lorsque vous acceptez ou refusez les cookies — sur la bannière, sur le bandeau affiché aux visiteurs situés aux États-Unis, ou plus tard via **Préférences cookies** — nous conservons une trace de cette décision sur nos serveurs. Le RGPD nous impose d'être en mesure de démontrer que le consentement a bien été donné (article 7.1), et un choix conservé uniquement dans votre navigateur ne démontre rien : il réside sur votre appareil, vous pouvez le modifier, et votre décision suivante l'écrase.
+
+Chaque enregistrement contient la décision elle-même et rien qui vous concerne : les catégories que vous avez acceptées ou refusées, la version du texte qui vous a été présentée, le régime applicable (opt-in ou opt-out), le support sur lequel vous avez répondu, et deux horodatages — celui indiqué par votre appareil et celui de la réception par notre serveur.
+
+Pour relier entre elles les décisions d'un même visiteur, nous plaçons un identifiant aléatoire dans le cookie `stampeo_consent` mentionné en 5.3. Il est généré sur votre appareil, n'est déduit ni de votre adresse IP, ni d'une empreinte de navigateur, ni de quoi que ce soit d'autre vous concernant, et n'a aucune signification en dehors de cet enregistrement. Si vous créez ensuite un compte professionnel, nous rattachons vos décisions antérieures à ce compte afin de pouvoir établir quels choix vous avez faits ; les décisions elles-mêmes ne sont jamais modifiées.
+
+Les refus sont enregistrés exactement comme les acceptations. Un registre ne conservant que les personnes ayant accepté donnerait une image fausse de la réalité et n'aurait aucune valeur probante.
+
+**Nous conservons ces enregistrements pendant 3 ans à compter de la fin du consentement qu'ils décrivent** — c'est-à-dire à partir du moment où il est remplacé par une décision plus récente ou retiré — conformément aux recommandations de la CNIL sur la preuve du consentement. Ils sont supprimés à l'issue de ce délai.
+
+**Ces enregistrements constituent la seule exception à la suppression sur la Plateforme.** Si vous demandez l'effacement de vos données, nous opposerons un refus pour ces seuls enregistrements, sur le fondement de l'article 17.3 b) et e) du RGPD : conservation nécessaire au respect d'une obligation légale et à la constatation, l'exercice ou la défense de droits en justice. Supprimer la preuve de votre consentement reviendrait à détruire notre seule justification pour des traitements déjà réalisés, y compris ceux que vous aviez demandés. Pour la même raison, ils ne sont pas supprimés à la clôture d'un compte professionnel : le lien vers le compte est retiré et l'enregistrement subsiste, décrivant une décision et non plus une personne identifiable. Tous les autres droits prévus au §10 — accès, rectification, limitation, portabilité et opposition — s'y appliquent normalement.
+
 ## 6. Utilisation des données
 
 Nous utilisons les données collectées pour :
@@ -245,6 +259,7 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Journalisation des échecs de webhooks Stripe (débogage interne) | 90 jours |
 | Journaux d'accès support (sessions et entrées d'audit associées, voir §2.3) | 24 mois, puis suppression |
 | Attribution publicitaire (identifiant de clic, campagne) | Supprimée avec le compte Business auquel elle se rattache |
+| Enregistrements de consentement — preuve de vos choix en matière de cookies (§5.6) | 3 ans à compter de la fin du consentement (remplacement ou retrait). **Non** supprimés avec le compte Business : le lien vers le compte est retiré et l'enregistrement est conservé, au titre de l'article 17.3 b) et e) du RGPD |
 
 La durée de conservation de 24 mois pour les journaux d'accès support est définie pour permettre l'instruction d'un éventuel incident de sécurité tout en restant proportionnée à sa finalité, conformément aux recommandations de la CNIL en matière de journalisation des accès.
 
@@ -264,7 +279,7 @@ Conformément au RGPD, vous disposez des droits suivants :
 
 - **Accès** : obtenir une copie de vos données personnelles
 - **Rectification** : corriger des données inexactes
-- **Effacement** : demander la suppression de vos données
+- **Effacement** : demander la suppression de vos données (sous réserve de l'exception documentée au §5.6 concernant les enregistrements de consentement)
 - **Limitation** : restreindre le traitement
 - **Portabilité** : recevoir vos données dans un format structuré
 - **Opposition** : vous opposer au traitement

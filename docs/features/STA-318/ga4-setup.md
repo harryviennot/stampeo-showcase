@@ -327,6 +327,15 @@ Not part of this issue — recorded so it is not rediscovered:
   why, and for the recommendation to capture both `gclid` and GA4 `client_id`
   when that work starts.
 
+### Console audit — 20 September 2026
+
+- Google Ads: **no account linked yet**.
+- Search Console: **no property linked yet**.
+- The web stream still reports **no normal production data received**. DebugView
+  showed one `page_view` and three `sign_up` debug events during the audit, so
+  Measurement Protocol/test traffic can reach the property; this does not prove
+  that the production Showcase build is sending browser events.
+
 ---
 
 ## I. GDPR / CNIL notes
@@ -358,12 +367,15 @@ Not part of this issue — recorded so it is not rediscovered:
 - [x] D4 — Google signals left OFF
 - [x] D5 — email/query redaction on; `email`, `token`, `code`, and `phone` stripped
 - [x] D6 — ad personalization disabled for EEA/UK and separately listed EU territories
-- [ ] E — reporting identity set to Device-based
+- [x] E — reporting identity set to Device-based
 - [x] F — `NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.example` and the Dockerfile
       (ARG line 41 *and* ENV line 52). **Prod build args still to do** — the
       tag stays dormant until the deploy passes it.
-- [ ] F2 — Measurement Protocol API secret created (`backend-prod`), stored in
-      Doppler as **`GA4_API_SECRET`**; **`GA4_MEASUREMENT_ID`** set there too
+- [x] F2 — Measurement Protocol API secrets created for `backend-dev` and
+      `backend-prod`
+- [ ] F2 — `GA4_API_SECRET` and `GA4_MEASUREMENT_ID` verified in Doppler for
+      each backend environment
 - [ ] F2 — prod build args pass `NEXT_PUBLIC_GA_MEASUREMENT_ID`
-- [ ] G — DebugView verified, including the negative check on `/onboarding`
+- [ ] G — DebugView received test traffic on 20 September 2026; the browser
+      flow and negative check on `/onboarding` still need verification
 - [ ] G — `sign_up_cta_click` marked as a key event

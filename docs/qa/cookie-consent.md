@@ -860,6 +860,222 @@ EXPECT:
 
 ---
 
+## CL: the consent ledger (STA-324)
+
+The server-side proof of each decision. Everything in this area has the same
+inversion at its heart: the cookie is what APPLIES a choice, the ledger is what
+PROVES it, and the ledger must never be allowed to cost the visitor the choice.
+
+### CL-01 Accepting writes exactly one row — BLOCKER
+DEPENDS: CC-01
+
+WHY: Art. 7(1) makes demonstrating consent our burden. If this row is missing,
+the banner is decoration.
+
+1. Recipe R2 (clear the consent cookie), reload `/en`.
+2. Click **Accept all**.
+3. Query: `select * from consent_records order by recorded_at desc limit 1;`
+
+EXPECT:
+- Exactly ONE new row.
+- `analytics` and `marketing` both true, `regime` `opt-in`, `surface` `banner`,
+  `version` matching `CONSENT_VERSION` in `lib/consent.ts`.
+- `decided_at` and `recorded_at` are BOTH present and are different values —
+  they are two different facts, not a duplicated one.
+- `user_id` and `business_id` are NULL: the visitor has no account yet.
+- `subject_id` equals the `s` field inside the `stampeo_consent` cookie.
+
+### CL-02 Refusing writes a row too — BLOCKER
+DEPENDS: CL-01
+
+WHY: A ledger holding only acceptances misrepresents the population and is
+worthless as evidence. This is also the case most likely to be quietly dropped,
+because refusing is the path where nothing else visibly happens.
+
+1. Recipe R2, reload, click **Refuse all**.
+2. Query the newest row.
+
+EXPECT:
+- A row exists, with `analytics` and `marketing` both FALSE.
+- No tag loads (re-check GA-02): the ledger records the refusal and the refusal
+  is still honoured.
+
+### CL-03 A second decision appends, never overwrites — BLOCKER
+DEPENDS: CL-01
+
+WHY: Append-only is the whole claim. A ledger that can be edited is not
+evidence, and "changed their mind" must remain provable in both directions.
+
+1. Accept (CL-01), note the row id and `subject_id`.
+2. Open **Cookie preferences**, turn both categories off, Save.
+3. Query all rows for that `subject_id`, oldest first.
+
+EXPECT:
+- TWO rows, not one.
+- The first row is byte-for-byte unchanged — same id, same booleans, same
+  timestamps.
+- The second has `surface` `preferences`.
+- Both carry the same `subject_id`.
+
+### CL-04 The chain survives a consent-version bump — CORE
+DEPENDS: CL-03
+
+WHY: The version bump is exactly when the chain matters most — everyone is
+re-asked at once, and proving "the same person answered again" is the point.
+`parseConsentCookie` discards a stale CHOICE; it must not discard the IDENTITY.
+
+1. Accept, and note `subject_id`.
+2. In devtools, edit the `stampeo_consent` cookie: change `v` to `1`, leave `s`.
+3. Reload. The banner returns (the stale choice was correctly discarded).
+4. Accept again. Query rows for the ORIGINAL `subject_id`.
+
+EXPECT:
+- The new row carries the SAME `subject_id` as step 1.
+- Two rows chained to one subject, not two orphans.
+
+### CL-05 The ledger being down never costs the visitor — BLOCKER
+DEPENDS: CL-01
+
+WHY: The banner is a compliance surface. A regression that blocks a click is
+far worse than a missing row, and this is the failure this design accepts
+deliberately.
+
+1. `docker compose stop backend`.
+2. Recipe R2, reload, click **Accept all**.
+
+EXPECT:
+- The banner closes normally.
+- The `stampeo_consent` cookie IS written.
+- The tags load (GA-03 still passes).
+- NO error is shown to the visitor, and no error toast appears.
+- The console may show a failed request. That is acceptable and expected.
+3. `docker compose start backend`. No row exists for that decision; the next
+   decision records normally.
+
+### CL-06 A revocation still reaches the ledger — BLOCKER
+DEPENDS: CL-03
+
+WHY: Revoking RELOADS the page, which cancels an in-flight `fetch`. The report
+is sent with `sendBeacon` specifically so the most important decision to be
+able to prove is not the one that gets lost.
+
+1. Accept (tags load).
+2. Open **Cookie preferences**, turn both off, Save. The page reloads.
+3. Query the newest row.
+
+EXPECT:
+- A row with both categories false and `surface` `preferences` EXISTS, despite
+  the reload.
+
+### CL-07 The US notice records its own surface — CORE
+DEPENDS: CL-01
+
+WHY: A US visitor's consent is implied by the opt-out regime and never clicked.
+An audit has to tell that apart from an EU visitor who actively accepted.
+
+1. Recipe R5 (US visitor: opt-out regime).
+2. Dismiss the notice.
+
+EXPECT:
+- A row with `surface` `notice` and `regime` `opt-out`.
+
+### CL-08 A forged payload writes nothing — BLOCKER
+
+WHY: The endpoint is public and unauthenticated. Its whole defence is that
+everything is allowlisted before it reaches a column.
+
+1. `curl -i -X POST $API/public/consent -H 'Content-Type: text/plain' -d '{"subject_id":"../../etc/passwd","version":2,"analytics":1,"marketing":true,"regime":"opt-in","surface":"popup","user_id":"<a real user uuid>"}'`
+2. `curl -i -X POST $API/public/consent -H 'Content-Type: text/plain' -d 'not json'`
+
+EXPECT:
+- BOTH return **204**, not 4xx. A malformed payload must be indistinguishable
+  from a good one — there is nothing to learn by probing this.
+- NEITHER writes a row (`surface: popup` is not allowlisted; `analytics: 1` is
+  an int, not a bool).
+- In particular, no row anywhere carries the `user_id` that was supplied.
+
+### CL-09 A forged subject id is replaced, not trusted — CORE
+DEPENDS: CL-08
+
+WHY: The id is ours to mint. Trusting a supplied one would let a forger write
+rows under an id of their choosing.
+
+1. POST a payload that is valid EXCEPT `"subject_id": "not-a-uuid"`.
+
+EXPECT:
+- 204, and a row IS written — the decision is real and worth keeping.
+- Its `subject_id` is a fresh v4 UUID, NOT the supplied string.
+
+### CL-10 The rate limit holds — CORE
+
+WHY: A ledger that can be inflated for free is a storage-amplification vector.
+
+1. POST 40 valid decisions in under a minute from one IP.
+
+EXPECT:
+- The first 30 return 204; the remainder return **429**.
+- The 429s write no rows: `select count(*)` increases by 30, not 40.
+
+### CL-11 Signing up links the earlier anonymous rows — CORE
+DEPENDS: CL-01, AT-05
+
+WHY: This is what turns "somebody consented" into "this account holder
+consented".
+
+1. Accept on the landing page (CL-01). Note `subject_id`.
+2. Complete signup and create a business (AT-05).
+3. Query rows for that `subject_id`.
+
+EXPECT:
+- The existing rows now carry `user_id` and `business_id`.
+- The COUNT is unchanged — linking is not a decision and must not append a row.
+- `analytics`, `marketing`, `regime`, `surface`, `version` and both timestamps
+  are all exactly as before.
+
+### CL-12 Deleting a business keeps the proof — BLOCKER
+DEPENDS: CL-11, AT-10
+
+WHY: The inversion of every other business-scoped table, and the one place
+this platform deliberately refuses erasure. If this behaves like AT-10, the
+Art. 17(3) position in Privacy Policy §5.6 is a promise the schema breaks.
+
+1. Delete the business from CL-11.
+2. Query `consent_records` for that `subject_id`, and `business_ad_attribution`
+   for that business id.
+
+EXPECT:
+- The consent rows STILL EXIST, with `business_id` now NULL.
+- The attribution rows are GONE (they cascade — that is correct and is the
+  contrast that makes this case meaningful).
+
+### CL-13 Retention prunes the superseded, never the current — CORE
+DEPENDS: CL-03
+
+WHY: The clock runs from when a consent ENDED, not when it was recorded. A
+plain age filter would delete the decision still in force for anyone who has
+not revisited in three years — the one record that still matters.
+
+1. Seed four subjects: (A) decided 5y ago then again 4y ago; (B) decided 5y ago
+   and never again; (C) decided 5y ago then again last week; (D) decided two
+   days ago and never again.
+2. `select prune_consent_records(now() - interval '3 years');`
+
+EXPECT:
+- Returns 3.
+- A: BOTH rows gone — the first was superseded long ago, and the second is
+  itself now an orphan older than the window.
+- B: gone. A singleton this old cannot still be in force: the
+  `stampeo_consent` cookie carrying it has a six-month Max-Age, so it expired
+  four and a half years ago. This is also the shape a flood of forged
+  `subject_id`s produces, and before migration 176 it was unprunable forever.
+- C: BOTH rows remain — the supersession was last week, so the clock has
+  barely started.
+- D: remains. The case that matters most: an ordinary live visitor's only
+  decision must never be pruned, and it is the one the orphan rule could most
+  easily take by accident.
+
+---
+
 ## LY: layout
 
 ### LY-01 The phone layout is usable — CORE

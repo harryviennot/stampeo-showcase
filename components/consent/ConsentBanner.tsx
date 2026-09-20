@@ -17,6 +17,10 @@ import {
   type ConsentCategory,
   type ConsentState,
 } from "@/lib/consent";
+import {
+  recordConsentDecision,
+  type ConsentLedgerSurface,
+} from "@/lib/consent-ledger";
 import { ConsentPreferences } from "./ConsentPreferences";
 
 const ALL_ON: ConsentState = { analytics: true, marketing: true };
@@ -67,7 +71,7 @@ export function ConsentBanner() {
   }, []);
 
   const commit = useCallback(
-    (next: ConsentState) => {
+    (next: ConsentState, surface: ConsentLedgerSurface) => {
       // Read what was live BEFORE writing, so we can tell a revocation from a
       // first-time refusal. Only a revocation has cookies to clean up.
       const before = currentConsent();
@@ -75,9 +79,16 @@ export function ConsentBanner() {
         (category) => before[category] && !next[category],
       );
 
-      writeConsentRecord(next, consent.regime);
+      const record = writeConsentRecord(next, consent.regime);
       emitConsentChange(next);
       setPrefsOpen(false);
+
+      // Prove the decision server-side (STA-324). Deliberately AFTER the
+      // cookie and the event: the choice is already in force by now, so this
+      // can only add evidence and can never cost the visitor their click. It
+      // uses `sendBeacon`, which is what lets it survive the reload below —
+      // a revocation is the decision it matters most to be able to prove.
+      recordConsentDecision({ record, surface });
 
       if (revoked.length > 0) {
         clearCookiesFor(revoked);
@@ -162,10 +173,10 @@ export function ConsentBanner() {
             {/* Identical class strings. Not a near-match: a Refuse button that
                 is smaller, greyer or lighter than Accept is exactly the dark
                 pattern the equal-prominence rule names. */}
-            <button type="button" onClick={() => commit(ALL_OFF)} className={equalButton}>
+            <button type="button" onClick={() => commit(ALL_OFF, "banner")} className={equalButton}>
               {t("banner.refuse")}
             </button>
-            <button type="button" onClick={() => commit(ALL_ON)} className={equalButton}>
+            <button type="button" onClick={() => commit(ALL_ON, "banner")} className={equalButton}>
               {t("banner.accept")}
             </button>
           </div>
@@ -190,7 +201,7 @@ export function ConsentBanner() {
                 leave us with no evidence of what they were told. */}
             <button
               type="button"
-              onClick={() => commit({ analytics: true, marketing: true })}
+              onClick={() => commit({ analytics: true, marketing: true }, "notice")}
               className="font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
             >
               {t("notice.dismiss")}
@@ -203,7 +214,7 @@ export function ConsentBanner() {
         open={prefsOpen}
         initial={{ analytics: consent.analytics, marketing: consent.marketing }}
         onClose={() => setPrefsOpen(false)}
-        onSave={commit}
+        onSave={(next) => commit(next, "preferences")}
       />
     </>
   );

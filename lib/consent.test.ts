@@ -886,6 +886,26 @@ describe("the consent subject id", () => {
     expect(readSubjectId(document.cookie)).toBe(UUID);
   });
 
+  test("a well-formed but non-v4 uuid is rejected", () => {
+    // Separate from the case below, and the separation is the whole point:
+    // every value there fails the regex on overall SHAPE, so the version
+    // nibble and the variant class are never exercised. A v1 uuid matches the
+    // shape perfectly and embeds a MAC address and a timestamp — exactly the
+    // identifier this field promises not to carry. Deleting those two
+    // constraints from `validSubjectId` makes only this test fail.
+    for (const wrongVersion of [
+      "2c1b0c3e-9a3a-11ee-b9d1-0242ac120002", // v1
+      "3f2504e0-4f89-31d3-9a0c-0305e82c3301", // v3
+      "3f2504e0-4f89-41d3-1a0c-0305e82c3301", // v4 digits, bad variant
+    ]) {
+      const cookie = encodeURIComponent(
+        JSON.stringify({ v: CONSENT_VERSION, a: 1, m: 1, t: 1, r: "opt-in", s: wrongVersion }),
+      );
+      installBrowser({ cookie: `${CONSENT_COOKIE}=${cookie}` });
+      expect(readSubjectId(document.cookie)).toBeNull();
+    }
+  });
+
   test("a forged subject id is replaced, never stored", () => {
     // AC9. The id is ours to mint. Anything that is not a UUID is not one.
     for (const forged of ["", "not-a-uuid", "../../etc/passwd", "1; DROP TABLE"]) {

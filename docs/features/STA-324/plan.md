@@ -2,9 +2,13 @@
 
 ISSUE: STA-324 (https://linear.app/stampeo/issue/STA-324/consent-ledger-server-side-proof-of-every-consent-decision)
 SIBLING: STA-325 (owner-facing privacy controls) — separate, see Non-goals
-REPOS: **showcase** (record the decision) + **backend** (store it)
-MIGRATION: yes — `174_consent_records.sql`
-STATUS: DRAFT
+REPOS: **showcase** (record the decision) + **backend** (store it) + **web**
+(forward the subject id at signup — AC10's linking happens where the business is
+created, which is the dashboard, not the marketing site)
+MIGRATION: yes — `174_consent_records.sql`, plus `175_consent_records_retention.sql`
+(the prune function) and `176_consent_records_prune_floor.sql` (the orphan floor,
+added after the security review)
+STATUS: IMPLEMENTED — see gap-report.md and security-report.md
 
 ## Problem
 
@@ -90,6 +94,13 @@ CREATE INDEX IF NOT EXISTS idx_consent_records_subject
 ALTER TABLE consent_records ENABLE ROW LEVEL SECURITY;
 ```
 
+<!-- The schema below is as planned. Two things changed in delivery, both
+     recorded in gap-report.md: retention needed its own function (175/176)
+     because "3 years after the consent ENDS" is a correlated rule that
+     PostgREST cannot express, and `_prune_consent_records` in
+     `app/services/retention_cleanup.py` calls it from the existing daily
+     sweep rather than a new worker. -->
+
 **RLS with zero policies**, exactly as migration 173 does — backend-only, and
 the STA-323 review is a fresh reminder of what a missing `ENABLE ROW LEVEL
 SECURITY` costs on a table holding personal data.
@@ -150,7 +161,40 @@ the migration so nobody "fixes" it later.
   `business_id` NULL, and NOT deleted — the opposite of every other
   business-scoped table.
 - **AC12**: No application code path issues an UPDATE or DELETE against
-  `consent_records` except the retention job.
+  `consent_records` except the retention job, **and the two link-only updates
+  named below**.
+
+  <!-- Corrected 2026-09-20. As first written this AC contradicted AC10: the
+       plan demanded append-only in absolute terms while also requiring that
+       anonymous rows be joined to an account at signup, which is an UPDATE.
+       The coverage audit caught the contradiction. The resolution is a
+       column-scoped carve-out rather than a weakening: both permitted updates
+       write ONLY `user_id`/`business_id` and can never touch the decision. -->
+
+  Permitted writers, each pinned by a test:
+  - `consent_ledger.record_decision` — the insert. Append-only by definition.
+  - `consent_ledger.link_subject_to_account` — fills `user_id`/`business_id`
+    where they were NULL, at signup.
+  - `account_deletion.purge_business_data` — clears those same two columns at
+    erasure. Necessary because the `ON DELETE SET NULL` cascade **never fires**:
+    the purge anonymises the business and scrubs the user *in place* rather
+    than deleting either row, so without an explicit unlink the identifiers
+    would survive erasure and remain joinable to ten years of billing records.
+  - `prune_consent_records()` in migrations 175/176 — the only DELETE.
+
+  `TestAppendOnlyIsEnforcedRepoWide` walks the source tree and fails if any
+  other module touches the table.
+
+- **AC13** (added 2026-09-20, from the security review): the public endpoint
+  refuses a body larger than 4 KB on `Content-Length` alone, before reading it,
+  and no parser error can escape as a non-204 — including `RecursionError`,
+  which is not a `ValueError` and previously produced a 500 from deeply nested
+  input.
+- **AC14** (added 2026-09-20, from the security review): a decision whose
+  `subject_id` was forged produces a row under a fresh id and therefore has no
+  successor. Such orphans must still be prunable, or an unauthenticated caller
+  can grow the table without bound. Migration 176 prunes singletons past the
+  window; a RECENT singleton — an ordinary live visitor — is never pruned.
 
 ## Touched areas and risks
 

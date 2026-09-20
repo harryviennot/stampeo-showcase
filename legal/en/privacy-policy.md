@@ -175,6 +175,20 @@ What we send is limited to the advertising identifier, the campaign, and for a p
 
 Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further conversion being reported for your account. Conversions already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
 
+### 5.6 Record of your cookie choices
+
+When you accept or refuse cookies — on the banner, in the notice shown to visitors in the United States, or later through **Cookie preferences** — we keep a record of that decision on our servers. The GDPR requires us to be able to demonstrate that consent was given (Article 7(1)), and a choice stored only in your browser cannot demonstrate anything: it lives on your device, you can change it, and your next decision overwrites it.
+
+Each record contains the decision itself and nothing about you: which categories you accepted or refused, the version of the cookie text you were shown, whether you were under the opt-in or opt-out regime, which surface you answered on, and two timestamps — the time your own device reported, and the time our server received it.
+
+To link the decisions of one visitor together, we set a random identifier in the `stampeo_consent` cookie listed in 5.3. It is generated on your device, it is not derived from your IP address, your browser fingerprint or anything else about you, and it means nothing outside this record. If you later create a business account, we attach your earlier decisions to that account so we can show which choices you made; the decisions themselves are never altered.
+
+Refusals are recorded in exactly the same way as acceptances. A record showing only the people who agreed would misrepresent what actually happened, and would be of no use as proof.
+
+**We keep these records for 3 years after the consent they describe comes to an end** — that is, from the moment it is replaced by a newer decision or withdrawn — in line with CNIL guidance on proof of consent. After that they are deleted.
+
+**These records are the one exception to deletion on this platform.** If you ask us to erase your data, we will refuse for these records specifically, relying on Article 17(3)(b) and (e) of the GDPR: retention necessary to comply with a legal obligation, and for the establishment or defence of legal claims. Deleting the proof that you consented would destroy our only defence for processing that had already taken place, including processing you had asked for. For the same reason they are not deleted when a business account is closed; the account link is removed and the record remains, describing a decision and no longer an identifiable person. Every other right in §10 — access, rectification, restriction, portability and objection — applies to them normally.
+
 ## 6. Use of Data
 
 We use collected data to:
@@ -245,6 +259,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Stripe webhook failure records (internal debugging) | 90 days |
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
 | Advertising attribution (click identifier, campaign) | Deleted with the Business account it belongs to |
+| Consent records — proof of your cookie choices (§5.6) | 3 years after the consent ends (replaced or withdrawn). **Not** deleted with the Business account: the account link is removed and the record is kept, under GDPR Art. 17(3)(b) and (e) |
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
 
@@ -264,7 +279,7 @@ Under the GDPR, you have the following rights:
 
 - **Access**: obtain a copy of your personal data
 - **Rectification**: correct inaccurate data
-- **Erasure**: request deletion of your data
+- **Erasure**: request deletion of your data (with one documented exception for the consent records described in §5.6)
 - **Restriction**: restrict processing of your data
 - **Portability**: receive your data in a structured format
 - **Objection**: object to processing of your data

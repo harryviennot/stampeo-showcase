@@ -175,6 +175,20 @@ Przekazujemy wyłącznie identyfikator reklamowy, nazwę kampanii oraz — w prz
 
 Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych konwersji dla Twojego konta. Konwersji już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczy (zob. §8).
 
+### 5.6 Zapis Twoich decyzji dotyczących plików cookie
+
+Gdy akceptujesz lub odrzucasz pliki cookie — na banerze, w komunikacie wyświetlanym odwiedzającym ze Stanów Zjednoczonych albo później przez **Preferencje cookie** — zachowujemy zapis tej decyzji na naszych serwerach. RODO wymaga od nas wykazania, że zgoda została udzielona (art. 7 ust. 1), a decyzja przechowywana wyłącznie w Twojej przeglądarce niczego nie dowodzi: znajduje się na Twoim urządzeniu, możesz ją zmienić, a kolejna decyzja ją nadpisuje.
+
+Każdy zapis zawiera samą decyzję i nic, co dotyczyłoby Twojej osoby: które kategorie zaakceptowano lub odrzucono, wersję przedstawionego tekstu, obowiązujący reżim (opt-in albo opt-out), miejsce udzielenia odpowiedzi oraz dwa znaczniki czasu — wskazany przez Twoje urządzenie i zarejestrowany przez nasz serwer.
+
+Aby powiązać ze sobą decyzje tego samego odwiedzającego, umieszczamy losowy identyfikator w pliku cookie `stampeo_consent` wskazanym w 5.3. Jest generowany na Twoim urządzeniu, nie wywodzi się z Twojego adresu IP, odcisku przeglądarki ani żadnej innej informacji o Tobie i nie ma znaczenia poza tym zapisem. Jeżeli następnie założysz konto firmowe, powiążemy Twoje wcześniejsze decyzje z tym kontem, aby móc wykazać, jakich wyborów dokonałeś; same decyzje nigdy nie są zmieniane.
+
+Odmowy zapisujemy dokładnie tak samo jak zgody. Rejestr obejmujący wyłącznie osoby, które wyraziły zgodę, dawałby fałszywy obraz i nie miałby wartości dowodowej.
+
+**Zapisy te przechowujemy przez 3 lata od zakończenia zgody, której dotyczą** — czyli od chwili zastąpienia jej nowszą decyzją albo jej wycofania — zgodnie z wytycznymi CNIL dotyczącymi dowodu zgody. Po tym okresie są usuwane.
+
+**Zapisy te stanowią jedyny wyjątek od usuwania danych na Platformie.** Jeżeli zażądasz usunięcia swoich danych, odmówimy wyłącznie w zakresie tych zapisów, na podstawie art. 17 ust. 3 lit. b) i e) RODO: przechowywanie niezbędne do wypełnienia obowiązku prawnego oraz do ustalenia, dochodzenia lub obrony roszczeń. Usunięcie dowodu Twojej zgody zniszczyłoby jedyne uzasadnienie przetwarzania już dokonanego, w tym takiego, o które sam prosiłeś. Z tego samego powodu nie są usuwane przy zamknięciu konta firmowego: powiązanie z kontem zostaje usunięte, a zapis pozostaje, opisując decyzję, a nie osobę możliwą do zidentyfikowania. Wszystkie pozostałe prawa z §10 — dostęp, sprostowanie, ograniczenie, przenoszenie i sprzeciw — stosuje się do nich normalnie.
+
 ## 6. Wykorzystanie danych
 
 Zebrane dane wykorzystujemy, aby:
@@ -245,6 +259,7 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Zapisy nieudanych webhooków Stripe (diagnostyka wewnętrzna) | 90 dni |
 | Dzienniki dostępu serwisowego (sesje podglądu i powiązane wpisy audytowe zgodnie z §2.3) | 24 miesiące, następnie usuwane |
 | Atrybucja reklamowa (identyfikator kliknięcia, kampania) | Usuwana wraz z kontem firmowym, którego dotyczy |
+| Zapisy zgody — dowód Twoich decyzji dotyczących cookie (§5.6) | 3 lata od zakończenia zgody (zastąpienie lub wycofanie). **Nie** są usuwane wraz z kontem firmowym: powiązanie z kontem zostaje usunięte, a zapis zachowany, na podstawie art. 17 ust. 3 lit. b) i e) RODO |
 
 Okres 24 miesięcy dla dzienników dostępu serwisowego został ustalony tak, aby umożliwić zbadanie incydentu bezpieczeństwa, pozostając jednocześnie proporcjonalnym do tego celu, zgodnie z wytycznymi CNIL dotyczącymi rejestrowania zdarzeń bezpieczeństwa.
 
@@ -264,7 +279,7 @@ Zgodnie z RODO użytkownikowi przysługują następujące prawa:
 
 - **Dostęp**: uzyskanie kopii swoich danych osobowych
 - **Sprostowanie**: poprawienie nieprawidłowych danych
-- **Usunięcie**: żądanie usunięcia swoich danych
+- **Usunięcie**: żądanie usunięcia swoich danych (z jednym udokumentowanym wyjątkiem dotyczącym zapisów zgody, o których mowa w §5.6)
 - **Ograniczenie**: ograniczenie przetwarzania swoich danych
 - **Przenoszenie**: otrzymanie swoich danych w ustrukturyzowanym formacie
 - **Sprzeciw**: wniesienie sprzeciwu wobec przetwarzania swoich danych

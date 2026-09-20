@@ -175,6 +175,20 @@ Lo que se transmite se limita al identificador publicitario, a la campaña y, en
 
 Retirar su consentimiento mediante **Preferencias de cookies** elimina la cookie `stampeo_attribution` junto con las demás y pone fin a cualquier nueva comunicación de conversiones para su cuenta. Las conversiones ya transmitidas no pueden retirarse. Estos datos se eliminan junto con la cuenta profesional a la que pertenecen (véase §8).
 
+### 5.6 Registro de tus decisiones sobre cookies
+
+Cuando aceptas o rechazas las cookies —en el banner, en el aviso mostrado a los visitantes situados en Estados Unidos, o más tarde mediante **Preferencias de cookies**— conservamos constancia de esa decisión en nuestros servidores. El RGPD nos obliga a poder demostrar que el consentimiento se prestó (artículo 7.1), y una decisión guardada únicamente en tu navegador no demuestra nada: reside en tu dispositivo, puedes modificarla y tu siguiente decisión la sobrescribe.
+
+Cada registro contiene la decisión en sí y nada relativo a tu persona: qué categorías aceptaste o rechazaste, la versión del texto que se te mostró, si te correspondía el régimen de opt-in o de opt-out, en qué superficie respondiste y dos marcas de tiempo: la que indicó tu propio dispositivo y la de recepción en nuestro servidor.
+
+Para vincular entre sí las decisiones de un mismo visitante, colocamos un identificador aleatorio en la cookie `stampeo_consent` indicada en 5.3. Se genera en tu dispositivo, no se deriva de tu dirección IP, ni de una huella del navegador, ni de ningún otro dato sobre ti, y carece de significado fuera de este registro. Si posteriormente creas una cuenta de empresa, asociamos tus decisiones anteriores a esa cuenta para poder acreditar qué elegiste; las decisiones en sí nunca se modifican.
+
+Los rechazos se registran exactamente igual que las aceptaciones. Un registro que recogiera solo a quienes aceptaron ofrecería una imagen falsa de lo ocurrido y carecería de valor probatorio.
+
+**Conservamos estos registros durante 3 años desde que finaliza el consentimiento que describen** —es decir, desde que se sustituye por una decisión posterior o se retira—, conforme a las orientaciones de la CNIL sobre la prueba del consentimiento. Transcurrido ese plazo se eliminan.
+
+**Estos registros son la única excepción a la supresión en la Plataforma.** Si solicitas la supresión de tus datos, la denegaremos únicamente respecto de estos registros, al amparo del artículo 17.3 b) y e) del RGPD: conservación necesaria para el cumplimiento de una obligación legal y para la formulación, el ejercicio o la defensa de reclamaciones. Eliminar la prueba de tu consentimiento destruiría la única justificación de tratamientos ya realizados, incluidos los que tú mismo habías solicitado. Por la misma razón no se eliminan al cerrarse una cuenta de empresa: se retira el vínculo con la cuenta y el registro permanece, describiendo una decisión y ya no a una persona identificable. Todos los demás derechos del §10 —acceso, rectificación, limitación, portabilidad y oposición— se les aplican con normalidad.
+
 ## 6. Uso de los datos
 
 Utilizamos los datos recogidos para:
@@ -245,6 +259,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Registro de fallos de los webhooks de Stripe (depuración interna) | 90 días |
 | Registros de acceso de soporte (sesiones y entradas de auditoría asociadas, véase el §2.3) | 24 meses, después se eliminan |
 | Atribución publicitaria (identificador de clic, campaña) | Se elimina junto con la cuenta Business a la que pertenece |
+| Registros de consentimiento — prueba de tus decisiones sobre cookies (§5.6) | 3 años desde que finaliza el consentimiento (sustitución o retirada). **No** se eliminan con la cuenta Business: se retira el vínculo con la cuenta y el registro se conserva, al amparo del art. 17.3 b) y e) del RGPD |
 
 El plazo de conservación de 24 meses para los registros de acceso de soporte se establece para permitir la investigación de un posible incidente de seguridad, manteniéndose a la vez proporcionado a su finalidad, conforme a las recomendaciones de la CNIL en materia de registro de accesos.
 
@@ -264,7 +279,7 @@ De conformidad con el RGPD, dispones de los siguientes derechos:
 
 - **Acceso**: obtener una copia de tus datos personales
 - **Rectificación**: corregir datos inexactos
-- **Supresión**: solicitar la eliminación de tus datos
+- **Supresión**: solicitar la eliminación de tus datos (con una única excepción documentada, relativa a los registros de consentimiento del §5.6)
 - **Limitación**: restringir el tratamiento
 - **Portabilidad**: recibir tus datos en un formato estructurado
 - **Oposición**: oponerte al tratamiento
