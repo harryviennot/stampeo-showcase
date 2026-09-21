@@ -3,6 +3,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 import {
+  consentSnapshotKey,
   currentConsent,
   detectConsentRegime,
   detectGpc,
@@ -53,13 +54,20 @@ let cachedKey = "";
 /**
  * Same identity-stability problem on the client, solved by only building a new
  * object when something actually changed.
+ *
+ * "Changed" is decided by `consentSnapshotKey`, which covers every field the
+ * snapshot exposes (`v`, `at`, `subjectId` included, not just the booleans) —
+ * a re-decision that keeps the same answers must still serve the fresh record,
+ * or consumers stamp the older `consentAt` as evidence. The key is a pure
+ * function of the cookie's parsed fields, so it holds still across renders
+ * until the cookie itself changes and cannot loop the store.
  */
 function clientSnapshot(): ConsentSnapshot {
   const record = readConsentRecord();
   const regime = detectConsentRegime();
   const gpc = detectGpc();
   const state = resolveConsent({ record, regime, gpc });
-  const key = `${record ? `${record.analytics}${record.marketing}` : "none"}|${regime}|${gpc}`;
+  const key = consentSnapshotKey({ record, regime, gpc });
 
   if (key !== cachedKey) {
     cachedKey = key;

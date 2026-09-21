@@ -25,13 +25,27 @@ import { countryForTimezone } from "./timezone-country";
 export const CONSENT_COOKIE = "stampeo_consent";
 
 /**
- * Bump when a category or a vendor changes.
+ * Bump when a category, a vendor, or the PROCESSING the policy describes
+ * changes.
  *
  * A stored choice from an older version is treated as no choice at all, so the
  * visitor is asked again rather than a new tracker quietly inheriting consent
  * that was given for a different list of recipients.
+ *
+ * ── Version history ─────────────────────────────────────────────────
+ * 1 — STA-317. The banner itself: GA4, Meta and TikTok, browser-side only.
+ * 2 — STA-323. Privacy policy §5.5. The recipients did not change, but two
+ *     things about the processing did, and both are material enough that a
+ *     choice made against the old text is not informed consent to the new one:
+ *     we now RETAIN the advertising identifier ourselves against the business
+ *     account, and we report conversions SERVER-SIDE, after and independently
+ *     of anything in the browser.
+ *
+ * `CONSENT_VERSION` in `backend/app/services/ad_attribution.py` mirrors this
+ * and must move with it: the backend rejects an attribution row whose stored
+ * choice was made against a different version.
  */
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
 
 /**
  * Six months. CNIL's ceiling for how long a choice may stand.
@@ -69,6 +83,11 @@ export interface ConsentRecord extends ConsentState {
   at: number;
   /** Which regime was in force when they chose. Evidence, not a decision. */
   regime: ConsentRegime;
+  /**
+   * A random v4 UUID chaining this person's decisions (STA-324). Optional
+   * because a record read from an older cookie predates it.
+   */
+  subjectId?: string;
 }
 
 /** What the visitor is currently being shown, if anything. */
@@ -81,10 +100,21 @@ export type ConsentSurface = "none" | "banner" | "notice";
  * `_ga_*` has to be a prefix: GA4 writes one `_ga_<MEASUREMENT_ID>` cookie per
  * property, and a literal list would leave the real session cookie in place
  * while reporting the visitor as opted out.
+ *
+ * `stampeo_attribution` (STA-323) is the one entry we set ourselves, and it is
+ * here for the same reason the rest are: it holds the ad platforms' click ids
+ * and the GA client id, so it is a tracker by content even though it is
+ * first-party by origin. Revoking has to delete the carrier, or the identifiers
+ * would still cross to app.stampeo.app and be stored against a business after
+ * the refusal. It is listed under BOTH categories because it can hold fields
+ * bought by either, and a record half-authorised is not authorised.
+ *
+ * What must never appear here is CONSENT_COOKIE itself — clearing that would
+ * erase the very refusal being acted on.
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
-  analytics: ["_ga", "_ga_*", "_gid"],
-  marketing: ["_fbp", "_fbc", "_ttp"],
+  analytics: ["_ga", "_ga_*", "_gid", "stampeo_attribution"],
+  marketing: ["_fbp", "_fbc", "_ttp", "stampeo_attribution"],
 };
 
 /**
@@ -126,6 +156,37 @@ export function resolveConsent(input: {
   return { analytics: false, marketing: false };
 }
 
+/**
+ * A stable identity for `useConsent`'s snapshot cache.
+ *
+ * `useSyncExternalStore` compares snapshots by identity, so the hook rebuilds
+ * its snapshot object only when this key changes — meaning the key must cover
+ * EVERY field the snapshot exposes, not just the two booleans. It once keyed
+ * on `analytics`/`marketing` alone, so a re-decision that kept the same
+ * answers served the stale record object and `AttributionCapture` stamped the
+ * older `consentAt` as its evidence.
+ *
+ * Equally, the key must be a pure function of the underlying facts: a value
+ * that varies per call (a Date, an object identity) would rebuild the snapshot
+ * every render, which under `useSyncExternalStore` is an infinite loop.
+ */
+export function consentSnapshotKey(input: {
+  record: ConsentRecord | null;
+  regime: ConsentRegime;
+  gpc: boolean;
+}): string {
+  const record = input.record
+    ? [
+        input.record.v,
+        input.record.analytics ? 1 : 0,
+        input.record.marketing ? 1 : 0,
+        input.record.at,
+        input.record.subjectId ?? "",
+      ].join(".")
+    : "none";
+  return `${record}|${input.regime}|${input.gpc}`;
+}
+
 /** Which consent surface, if any, this visitor should see. */
 export function consentSurface(input: {
   record: ConsentRecord | null;
@@ -150,8 +211,85 @@ export function serializeConsentCookie(record: ConsentRecord): string {
       m: record.marketing ? 1 : 0,
       t: record.at,
       r: record.regime,
+      ...(record.subjectId ? { s: record.subjectId } : {}),
     }),
   );
+}
+
+/**
+ * A v4 UUID, or null. Never anything else.
+ *
+ * The id is ours to mint, so a value we did not write is not an id -- it is
+ * something a visitor typed into their own cookie jar. Replacing it costs one
+ * broken chain; trusting it would let a forger write rows under an id of their
+ * choosing, or smuggle a non-UUID into a `uuid` column.
+ */
+function validSubjectId(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  )
+    ? value
+    : null;
+}
+
+/**
+ * The subject id carried by a cookie jar, REGARDLESS of consent version.
+ *
+ * Deliberately not part of `parseConsentCookie`, which returns null for a
+ * record written against an older `CONSENT_VERSION` -- correctly, because an
+ * old choice is not a current one. The subject id is not a choice. Discarding
+ * it on a version bump would break the chain at the exact moment it matters
+ * most: showing that the same person was re-asked and answered again.
+ */
+export function readSubjectId(cookieHeader: string | null | undefined): string | null {
+  if (!cookieHeader) return null;
+  for (const part of cookieHeader.split(";")) {
+    const entry = part.trim();
+    if (!entry.startsWith(`${CONSENT_COOKIE}=`)) continue;
+    try {
+      const parsed: unknown = JSON.parse(
+        decodeURIComponent(entry.slice(CONSENT_COOKIE.length + 1)),
+      );
+      if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+        return null;
+      }
+      return validSubjectId((parsed as Record<string, unknown>).s);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+/**
+ * The visitor's subject id, minting one if there is nothing to reuse.
+ *
+ * Random and meaningless on purpose: never derived from an IP, a fingerprint
+ * or anything else about the person. It exists only to join one person's
+ * decisions to each other.
+ */
+export function ensureSubjectId(): string {
+  const existing =
+    typeof document === "undefined" ? null : readSubjectId(document.cookie);
+  if (existing) return existing;
+  return mintSubjectId();
+}
+
+function mintSubjectId(): string {
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj && typeof cryptoObj.randomUUID === "function") {
+    return cryptoObj.randomUUID();
+  }
+  // Older Safari has `getRandomValues` but not `randomUUID`. Build a v4 by
+  // hand rather than falling back to Math.random, which is not a source of
+  // identifiers.
+  const bytes = new Uint8Array(16);
+  cryptoObj.getRandomValues(bytes);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
 /** `1` or `0` and nothing else. Anything we did not write is not consent. */
@@ -198,6 +336,7 @@ export function parseConsentCookie(
     marketing,
     at: typeof record.t === "number" ? record.t : 0,
     regime: record.r === "opt-out" ? "opt-out" : "opt-in",
+    ...(validSubjectId(record.s) ? { subjectId: record.s as string } : {}),
   };
 }
 
@@ -369,6 +508,9 @@ export function writeConsentRecord(
     marketing: state.marketing,
     at: Math.floor(Date.now() / 1000),
     regime,
+    // Reused across decisions AND across version bumps, so the ledger can show
+    // that one person answered twice rather than two people answering once.
+    subjectId: ensureSubjectId(),
   };
 
   if (typeof document !== "undefined") {

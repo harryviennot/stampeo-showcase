@@ -137,4 +137,185 @@ describe("privacy §5 cookies", () => {
       }
     }
   });
+
+  it("discloses the attribution cookie, in every locale (STA-323)", () => {
+    // `stampeo_attribution` is first-party by origin but a tracker by content:
+    // it holds the ad platforms' click ids and the GA client id, and it is
+    // deleted by the same revoke path as the rest (see COOKIE_PATTERNS in
+    // lib/consent.ts). A visitor inspecting their own jar finds it, so the
+    // policy has to account for it or the table is an incomplete disclosure.
+    for (const locale of routing.locales) {
+      expect(
+        privacySource(locale),
+        `${locale} does not disclose stampeo_attribution`
+      ).toContain("stampeo_attribution");
+    }
+  });
+
+  it("discloses server-side conversion reporting, in every locale (STA-323)", () => {
+    // The material change STA-323 makes to the disclosure: we now RETAIN the
+    // advertising identifier ourselves against the business account, and send
+    // a conversion from our servers when an invoice is paid — after, and
+    // independently of, anything happening in the browser. Section 5 as
+    // written only covered scripts running on the page.
+    const MARKER: Record<string, RegExp> = {
+      en: /from our servers|server-side/i,
+      fr: /depuis nos serveurs|côté serveur/i,
+      es: /desde nuestros servidores|del lado del servidor/i,
+      pl: /z naszych serwerów|po stronie serwera/i,
+    };
+    for (const locale of routing.locales) {
+      expect(
+        privacySource(locale),
+        `${locale} does not disclose server-side conversion reporting`
+      ).toMatch(MARKER[locale]);
+    }
+  });
+});
+
+describe("privacy §5.6 consent records (STA-324)", () => {
+  /**
+   * The ledger records a decision server-side, keyed by an identifier we set,
+   * and — uniquely on this platform — REFUSES an erasure request. None of that
+   * is lawful undisclosed, and the erasure exception in particular must be
+   * stated outright rather than inferred from a retention table.
+   */
+  function privacySource(locale: string) {
+    const dir = path.join(process.cwd(), "legal", locale);
+    const file = fs
+      .readdirSync(dir)
+      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+    return fs.readFileSync(path.join(dir, file!), "utf-8");
+  }
+
+  /**
+   * Just §5.6, and nothing else.
+   *
+   * Scoping matters more than it looks: `stampeo_consent` and the word
+   * "consent" both appear in §5.3's cookie table, so a document-wide search
+   * for either passes whether or not §5.6 says anything at all. Mutation
+   * testing caught three assertions doing exactly that.
+   */
+  function section56(locale: string) {
+    const source = privacySource(locale);
+    const start = source.search(/^#+\s+5\.6\s/m);
+    if (start === -1) return "";
+    // Start AFTER the heading line: slicing at `start + 1` would leave the
+    // heading itself matching the "next heading" search below, which silently
+    // returns an empty string and makes every assertion on it vacuous.
+    const afterHeading = source.indexOf("\n", start);
+    if (afterHeading === -1) return "";
+    const rest = source.slice(afterHeading);
+    const end = rest.search(/^#+\s+\d/m);
+    return end === -1 ? rest : rest.slice(0, end);
+  }
+
+  /** Just the retention table in §8, which is a different table from §5.3's. */
+  function retentionTable(locale: string) {
+    const source = privacySource(locale);
+    const start = source.search(/^##\s+8\./m);
+    if (start === -1) return [];
+    const rest = source.slice(start);
+    const end = rest.search(/^##\s+9\./m);
+    return (end === -1 ? rest : rest.slice(0, end))
+      .split("\n")
+      .filter((line) => line.trim().startsWith("|"));
+  }
+
+  it("has a 5.6 section in every locale", () => {
+    for (const locale of routing.locales) {
+      expect(privacySource(locale), `${locale} has no §5.6`).toMatch(/^#+\s+5\.6\s/m);
+    }
+  });
+
+  it("discloses the identifier we set, in every locale", () => {
+    // Setting an identifier is processing. A policy that describes the record
+    // but not the key to it has not disclosed the thing that makes it personal
+    // data in the first place.
+    for (const locale of routing.locales) {
+      expect(section56(locale), `${locale} §5.6 does not name the cookie`).toContain(
+        "stampeo_consent",
+      );
+    }
+  });
+
+  it("states the three-year retention, in every locale", () => {
+    for (const locale of routing.locales) {
+      expect(section56(locale), `${locale} §5.6 omits the 3-year retention`).toMatch(
+        /\b3 (years|ans|años|lata)\b/i,
+      );
+    }
+  });
+
+  it("states the erasure exception and its legal basis, in every locale", () => {
+    // The ONE place this platform refuses a deletion request. Art. 17(3) is
+    // what makes that lawful, so the article is cited rather than alluded to.
+    //
+    // Per-locale patterns, because the citation convention differs and a
+    // regex loose enough to span all four would match almost any number: EN
+    // writes "17(3)", FR and ES "17.3", PL "17 ust. 3".
+    const ARTICLE_17_3: Record<string, RegExp> = {
+      en: /Article 17\(3\)/i,
+      fr: /article 17\.3/i,
+      es: /artículo 17\.3/i,
+      pl: /art\.\s*17\s*ust\.\s*3/i,
+    };
+
+    for (const locale of routing.locales) {
+      expect(privacySource(locale), `${locale} omits Art. 17(3)`).toMatch(
+        ARTICLE_17_3[locale],
+      );
+    }
+  });
+
+  it("carries a retention-table row for consent records, in every locale", () => {
+    for (const locale of routing.locales) {
+      // Must be the §8 RETENTION table and must point back at §5.6, so a row
+      // about some other kind of consent cannot stand in for this one.
+      expect(
+        retentionTable(locale).some((row) => /5\.6/.test(row)),
+        `${locale} retention table has no consent-records row citing §5.6`,
+      ).toBe(true);
+    }
+  });
+
+  it("does not claim consent records are deleted with the account", () => {
+    // They are the one thing that survives it, and a policy saying otherwise
+    // would be a promise the schema deliberately breaks.
+    for (const locale of routing.locales) {
+      expect(section56(locale), `${locale} §5.6 contradicts the schema`).not.toMatch(
+        /deleted (together )?with (the|your) (business )?account/i,
+      );
+    }
+  });
+});
+
+describe("privacy §5.2 — the consent cookie's own contents", () => {
+  /**
+   * The cookie table is where a reader looks to find out what a cookie HOLDS.
+   * `stampeo_consent` gained a random identifier in STA-324, and describing it
+   * only in §5.6 leaves the table saying something narrower than the truth
+   * about a cookie we set ourselves.
+   */
+  function privacySource(locale: string) {
+    const dir = path.join(process.cwd(), "legal", locale);
+    const file = fs
+      .readdirSync(dir)
+      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+    return fs.readFileSync(path.join(dir, file!), "utf-8");
+  }
+
+  it("the table row mentions the identifier and points at 5.6, in every locale", () => {
+    for (const locale of routing.locales) {
+      const row = privacySource(locale)
+        .split("\n")
+        .find((line) => line.includes("`stampeo_consent`") && line.trim().startsWith("|"));
+
+      expect(row, `${locale} has no stampeo_consent table row`).toBeDefined();
+      expect(row, `${locale} row does not mention the identifier`).toMatch(
+        /identifier|identifiant|identificador|identyfikator/i,
+      );
+      expect(row, `${locale} row does not cross-reference 5.6`).toContain("5.6");
+    }
+  });
 });

@@ -6,7 +6,11 @@ import { formatMoney } from "@/lib/pricing";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { InfoIcon } from "@/components/icons";
+import { usePathname } from "next/navigation";
 import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
+import { isTrackablePath } from "@/lib/consent-routes";
+import { gaEventForCTA, trackGaEvent } from "@/lib/google-analytics";
+import { metaEventForCTA, trackMetaEvent } from "@/lib/meta-pixel";
 
 export type FeatureItem = string | { text: string; tooltip: string };
 
@@ -115,12 +119,44 @@ export function PricingTierCard({
   className = "",
 }: PricingTierCardProps) {
   const locale = useLocale();
+  const pathname = usePathname();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
   const showDiscount = discounted !== undefined && discounted < price;
   const annotated = Boolean(highlighted && annotationLabel);
 
+  // Wired separately from `CTAButton` because this card renders its own link.
+  // Pricing clicks are the highest-intent signal on the site, so leaving them
+  // out would mean campaigns optimising against the weaker events.
   const handleCtaClick = trackAs
-    ? () => trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref })
+    ? () => {
+        trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref });
+
+        // Alongside PostHog, never instead of it — the same two vendor sends
+        // `CTAButton` makes, argument for argument. A no-op unless the tag
+        // actually loaded, so no consent check here.
+        const trackable = isTrackablePath(pathname);
+
+        const metaEvent = metaEventForCTA({
+          ctaLocation: trackAs,
+          href: ctaHref,
+        });
+        if (metaEvent) {
+          trackMetaEvent({ event: metaEvent, trackable });
+        }
+
+        // GA4 takes the same click under the analytics category. It carries
+        // the CTA context as parameters because, unlike Meta, GA4 reports on
+        // custom dimensions rather than on the event name alone (QA GA-05:
+        // `sign_up_cta_click` with `cta_location` naming the tier).
+        const gaEvent = gaEventForCTA({ ctaLocation: trackAs, href: ctaHref });
+        if (gaEvent) {
+          trackGaEvent({
+            event: gaEvent,
+            trackable,
+            params: { cta_location: trackAs, locale, href: ctaHref },
+          });
+        }
+      }
     : undefined;
 
   // The recommended tier is drawn in the accent ink; the others in black. Both

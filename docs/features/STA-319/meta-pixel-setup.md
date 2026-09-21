@@ -172,15 +172,21 @@ hard-coded, so it can differ per environment.
 Variable name: `NEXT_PUBLIC_META_PIXEL_ID`
 
 `NEXT_PUBLIC_*` vars here are **build-time**, baked into the bundle by Next at
-build. That means three edits, not one:
+build. Two tracked places, plus your local file:
 
-1. **`.env.example`** — document it, commented out, alongside the PostHog block.
-2. **`Dockerfile`** — add the matching `ARG` (near line 21) *and* `ENV` (near
-   line 30) pair. Adding only one of the two silently produces an empty value.
-3. **Production build args** — wherever the real deploy passes build args. CI
+1. **`Dockerfile`** — the matching `ARG` *and* `ENV` pair. Adding only one of
+   the two silently produces an empty value. Done in STA-319, with the
+   explanatory comment, because this is the only tracked file that documents
+   the variable.
+2. **Production build args** — wherever the real deploy passes build args. CI
    (`.github/workflows/ci.yml`) needs **nothing**: it uses placeholders for
-   PostHog, and our loader no-ops cleanly when the var is unset (plan AC3), so
-   an absent value can't fail the build.
+   PostHog, and the loader no-ops cleanly when the var is unset (plan AC3), so
+   an absent value cannot fail the build.
+3. **Your own `.env.local`** for local testing.
+
+> `.env.example` is **gitignored** (`.env*` in `.gitignore`) and untracked, so
+> documenting the variable there reaches nobody else. That is why the
+> explanation lives in the Dockerfile instead.
 
 **Leave it unset in production until STA-317 ships.** With the dormant design
 setting it early is harmless — the consent gate still denies, and that's plan

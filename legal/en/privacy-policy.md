@@ -145,7 +145,7 @@ These are strictly necessary and are not subject to consent.
 |---|---|---|
 | `NEXT_LOCALE` | Remembers which language you are reading the site in. | 1 year |
 | `stampeo_market` | Remembers which country's pages you opened, to prefill a field later. | 30 days |
-| `stampeo_consent` | Records the choice you made about the cookies in 5.3. | 6 months |
+| `stampeo_consent` | Records the choice you made about the cookies in 5.3, and a random identifier that links your successive choices together (see 5.6). | 6 months |
 | Supabase session cookies | Keeps you signed in on the business dashboard. | Session |
 
 ### 5.3 Cookies subject to your consent
@@ -155,6 +155,7 @@ These are strictly necessary and are not subject to consent.
 | Audience measurement | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Advertising measurement | Meta | `_fbp`, `_fbc` |
 | Advertising measurement | TikTok | `_ttp` |
+| Advertising attribution | Stampeo, then Google or Meta | `stampeo_attribution` |
 
 ### 5.4 Audience measurement without cookies
 
@@ -163,6 +164,30 @@ Stampeo uses PostHog (hosted in the EU) for internal product analytics and audie
 Because nothing is stored on your device, this measurement falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines. It therefore runs whether you accept or refuse the cookies in 5.3, and refusing them does not leave us blind to how the site itself performs.
 
 Strictly necessary cookies may be used for authentication and session management on the business dashboard. These cookies do not require consent.
+
+### 5.5 Conversion measurement from our servers
+
+If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed — for Google the `gclid`, for Meta the `fbclid` — together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain.
+
+If you go on to create a business account, that identifier is stored with your account. We then report two things to that platform **from our servers**: that the advertisement led to an account being created and, if you later subscribe, that a first invoice was paid. Each platform receives only its own identifier: a Google click is never reported to Meta, and a Meta click is never reported to Google. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
+
+What we send is limited to the advertising identifier, the campaign, and for a payment its amount and currency. It never includes your email address, your name, your telephone number, or your account identifier.
+
+Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further conversion being reported for your account. Conversions already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
+
+### 5.6 Record of your cookie choices
+
+When you accept or refuse cookies — on the banner, in the notice shown to visitors in the United States, or later through **Cookie preferences** — we keep a record of that decision on our servers. The GDPR requires us to be able to demonstrate that consent was given (Article 7(1)), and a choice stored only in your browser cannot demonstrate anything: it lives on your device, you can change it, and your next decision overwrites it.
+
+Each record contains the decision itself and nothing about you: which categories you accepted or refused, the version of the cookie text you were shown, whether you were under the opt-in or opt-out regime, which surface you answered on, and two timestamps — the time your own device reported, and the time our server received it.
+
+To link the decisions of one visitor together, we set a random identifier in the `stampeo_consent` cookie listed in 5.3. It is generated on your device, it is not derived from your IP address, your browser fingerprint or anything else about you, and it means nothing outside this record. If you later create a business account, we attach your earlier decisions to that account so we can show which choices you made; the decisions themselves are never altered.
+
+Refusals are recorded in exactly the same way as acceptances. A record showing only the people who agreed would misrepresent what actually happened, and would be of no use as proof.
+
+**We keep these records for 3 years after the consent they describe comes to an end** — that is, from the moment it is replaced by a newer decision or withdrawn — in line with CNIL guidance on proof of consent. After that they are deleted.
+
+**These records are the one exception to deletion on this platform.** If you ask us to erase your data, we will refuse for these records specifically, relying on Article 17(3)(b) and (e) of the GDPR: retention necessary to comply with a legal obligation, and for the establishment or defence of legal claims. Deleting the proof that you consented would destroy our only defence for processing that had already taken place, including processing you had asked for. For the same reason they are not deleted when a business account is closed; the account link is removed and the record remains, describing a decision and no longer an identifiable person. Every other right in §10 — access, rectification, restriction, portability and objection — applies to them normally.
 
 ## 6. Use of Data
 
@@ -233,6 +258,8 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Email send and engagement logs for Business User communications (delivery, open, click, bounce, complaint) | 24 months |
 | Stripe webhook failure records (internal debugging) | 90 days |
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
+| Advertising attribution (click identifier, campaign) | Deleted with the Business account it belongs to |
+| Consent records — proof of your cookie choices (§5.6) | 3 years after the consent ends (replaced or withdrawn). **Not** deleted with the Business account: the account link is removed and the record is kept, under GDPR Art. 17(3)(b) and (e) |
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
 
@@ -252,7 +279,7 @@ Under the GDPR, you have the following rights:
 
 - **Access**: obtain a copy of your personal data
 - **Rectification**: correct inaccurate data
-- **Erasure**: request deletion of your data
+- **Erasure**: request deletion of your data (with one documented exception for the consent records described in §5.6)
 - **Restriction**: restrict processing of your data
 - **Portability**: receive your data in a structured format
 - **Objection**: object to processing of your data

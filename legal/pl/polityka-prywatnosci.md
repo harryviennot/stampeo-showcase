@@ -145,7 +145,7 @@ Są ściśle niezbędne i nie podlegają zgodzie.
 |---|---|---|
 | `NEXT_LOCALE` | Zapamiętuje język, w którym czytasz stronę. | 1 rok |
 | `stampeo_market` | Zapamiętuje kraj, którego strony otworzono, żeby później wypełnić pole. | 30 dni |
-| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3. | 6 miesięcy |
+| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3 oraz losowy identyfikator łączący kolejne decyzje (zob. 5.6). | 6 miesięcy |
 | Pliki cookie sesji Supabase | Utrzymuje zalogowanie w panelu firmowym. | Sesja |
 
 ### 5.3 Pliki cookie wymagające twojej zgody
@@ -155,6 +155,7 @@ Są ściśle niezbędne i nie podlegają zgodzie.
 | Pomiar ruchu | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Pomiar skuteczności reklam | Meta | `_fbp`, `_fbc` |
 | Pomiar skuteczności reklam | TikTok | `_ttp` |
+| Atrybucja reklamowa | Stampeo, następnie Google lub Meta | `stampeo_attribution` |
 
 ### 5.4 Pomiar ruchu bez plików cookie
 
@@ -163,6 +164,30 @@ Stampeo korzysta z PostHog (hostowanego w UE) do wewnętrznych statystyk produkt
 Ponieważ nic nie jest zapisywane na twoim urządzeniu, pomiar ten mieści się w zwolnieniu z obowiązku zgody, przewidzianym dla ściśle niezbędnego pomiaru ruchu w dyrektywie o prywatności i łączności elektronicznej (ePrivacy) oraz w wytycznych CNIL. Działa więc niezależnie od tego, czy akceptujesz, czy odrzucasz pliki cookie z punktu 5.3, a odmowa nie pozbawia nas pomiaru samej strony.
 
 Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane pliki cookie ściśle niezbędne. Takie pliki cookie nie wymagają zgody.
+
+### 5.5 Pomiar konwersji z naszych serwerów
+
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową — w przypadku Google jest to `gclid`, w przypadku Meta `fbclid` — wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie.
+
+Jeżeli następnie założysz konto firmowe, identyfikator ten zostaje zapisany przy Twoim koncie. Przekazujemy wtedy tej platformie dwie informacje **z naszych serwerów**: że reklama doprowadziła do założenia konta oraz — jeżeli później wykupisz abonament — że opłacono pierwszą fakturę. Każda platforma otrzymuje wyłącznie własny identyfikator: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
+
+Przekazujemy wyłącznie identyfikator reklamowy, nazwę kampanii oraz — w przypadku płatności — jej kwotę i walutę. Nigdy nie przekazujemy adresu e-mail, imienia i nazwiska, numeru telefonu ani identyfikatora konta.
+
+Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych konwersji dla Twojego konta. Konwersji już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczy (zob. §8).
+
+### 5.6 Zapis Twoich decyzji dotyczących plików cookie
+
+Gdy akceptujesz lub odrzucasz pliki cookie — na banerze, w komunikacie wyświetlanym odwiedzającym ze Stanów Zjednoczonych albo później przez **Preferencje cookie** — zachowujemy zapis tej decyzji na naszych serwerach. RODO wymaga od nas wykazania, że zgoda została udzielona (art. 7 ust. 1), a decyzja przechowywana wyłącznie w Twojej przeglądarce niczego nie dowodzi: znajduje się na Twoim urządzeniu, możesz ją zmienić, a kolejna decyzja ją nadpisuje.
+
+Każdy zapis zawiera samą decyzję i nic, co dotyczyłoby Twojej osoby: które kategorie zaakceptowano lub odrzucono, wersję przedstawionego tekstu, obowiązujący reżim (opt-in albo opt-out), miejsce udzielenia odpowiedzi oraz dwa znaczniki czasu — wskazany przez Twoje urządzenie i zarejestrowany przez nasz serwer.
+
+Aby powiązać ze sobą decyzje tego samego odwiedzającego, umieszczamy losowy identyfikator w pliku cookie `stampeo_consent` wskazanym w 5.3. Jest generowany na Twoim urządzeniu, nie wywodzi się z Twojego adresu IP, odcisku przeglądarki ani żadnej innej informacji o Tobie i nie ma znaczenia poza tym zapisem. Jeżeli następnie założysz konto firmowe, powiążemy Twoje wcześniejsze decyzje z tym kontem, aby móc wykazać, jakich wyborów dokonałeś; same decyzje nigdy nie są zmieniane.
+
+Odmowy zapisujemy dokładnie tak samo jak zgody. Rejestr obejmujący wyłącznie osoby, które wyraziły zgodę, dawałby fałszywy obraz i nie miałby wartości dowodowej.
+
+**Zapisy te przechowujemy przez 3 lata od zakończenia zgody, której dotyczą** — czyli od chwili zastąpienia jej nowszą decyzją albo jej wycofania — zgodnie z wytycznymi CNIL dotyczącymi dowodu zgody. Po tym okresie są usuwane.
+
+**Zapisy te stanowią jedyny wyjątek od usuwania danych na Platformie.** Jeżeli zażądasz usunięcia swoich danych, odmówimy wyłącznie w zakresie tych zapisów, na podstawie art. 17 ust. 3 lit. b) i e) RODO: przechowywanie niezbędne do wypełnienia obowiązku prawnego oraz do ustalenia, dochodzenia lub obrony roszczeń. Usunięcie dowodu Twojej zgody zniszczyłoby jedyne uzasadnienie przetwarzania już dokonanego, w tym takiego, o które sam prosiłeś. Z tego samego powodu nie są usuwane przy zamknięciu konta firmowego: powiązanie z kontem zostaje usunięte, a zapis pozostaje, opisując decyzję, a nie osobę możliwą do zidentyfikowania. Wszystkie pozostałe prawa z §10 — dostęp, sprostowanie, ograniczenie, przenoszenie i sprzeciw — stosuje się do nich normalnie.
 
 ## 6. Wykorzystanie danych
 
@@ -233,6 +258,8 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Dzienniki wysyłki i interakcji e-maili kierowanych do użytkowników Business (dostarczenie, otwarcie, kliknięcie, odrzucenie, zgłoszenie spamu) | 24 miesiące |
 | Zapisy nieudanych webhooków Stripe (diagnostyka wewnętrzna) | 90 dni |
 | Dzienniki dostępu serwisowego (sesje podglądu i powiązane wpisy audytowe zgodnie z §2.3) | 24 miesiące, następnie usuwane |
+| Atrybucja reklamowa (identyfikator kliknięcia, kampania) | Usuwana wraz z kontem firmowym, którego dotyczy |
+| Zapisy zgody — dowód Twoich decyzji dotyczących cookie (§5.6) | 3 lata od zakończenia zgody (zastąpienie lub wycofanie). **Nie** są usuwane wraz z kontem firmowym: powiązanie z kontem zostaje usunięte, a zapis zachowany, na podstawie art. 17 ust. 3 lit. b) i e) RODO |
 
 Okres 24 miesięcy dla dzienników dostępu serwisowego został ustalony tak, aby umożliwić zbadanie incydentu bezpieczeństwa, pozostając jednocześnie proporcjonalnym do tego celu, zgodnie z wytycznymi CNIL dotyczącymi rejestrowania zdarzeń bezpieczeństwa.
 
@@ -252,7 +279,7 @@ Zgodnie z RODO użytkownikowi przysługują następujące prawa:
 
 - **Dostęp**: uzyskanie kopii swoich danych osobowych
 - **Sprostowanie**: poprawienie nieprawidłowych danych
-- **Usunięcie**: żądanie usunięcia swoich danych
+- **Usunięcie**: żądanie usunięcia swoich danych (z jednym udokumentowanym wyjątkiem dotyczącym zapisów zgody, o których mowa w §5.6)
 - **Ograniczenie**: ograniczenie przetwarzania swoich danych
 - **Przenoszenie**: otrzymanie swoich danych w ustrukturyzowanym formacie
 - **Sprzeciw**: wniesienie sprzeciwu wobec przetwarzania swoich danych

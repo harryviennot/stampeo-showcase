@@ -25,6 +25,7 @@ import {
   consentCookieAttributes,
   consentRecordFromCookieHeader,
   consentRegimeForCountry,
+  consentSnapshotKey,
   consentSurface,
   cookieNamesToClear,
   parseConsentCookie,
@@ -287,14 +288,19 @@ describe("cookieNamesToClear", () => {
     "_fbp",
     "_fbc",
     "_ttp",
+    // STA-323. First-party by origin, tracker by content: it carries the ad
+    // platforms' click ids and the GA client id, so revoking must delete it.
+    "stampeo_attribution",
   ];
 
   test("revoking marketing clears the marketing cookies only", () => {
     expect(cookieNamesToClear(["marketing"], present).sort()).toEqual([
       "_fbc",
       "_fbp",
+      // STA-323: the attribution carrier holds click ids, so marketing owns it too.
       "_ttp",
-    ]);
+      "stampeo_attribution",
+    ].sort());
   });
 
   test("revoking analytics expands the per-property GA prefix", () => {
@@ -305,7 +311,9 @@ describe("cookieNamesToClear", () => {
       "_ga",
       "_ga_ABC123",
       "_gid",
-    ]);
+      // STA-323: it can also hold the GA client id, so analytics owns it too.
+      "stampeo_attribution",
+    ].sort());
   });
 
   test("never clears our own cookies", () => {
@@ -336,7 +344,11 @@ describe("cookieNamesToClear", () => {
 import { afterEach } from "bun:test";
 import {
   CONSENT_CHANGED_EVENT,
+  CONSENT_COOKIE,
   CONSENT_OPEN_EVENT,
+  CONSENT_VERSION,
+  ensureSubjectId,
+  readSubjectId,
   clearCookiesFor,
   detectConsentRegime,
   detectGpc,
@@ -625,13 +637,13 @@ describe("consentCookieAttributes: the two fields that decide where the cookie w
 describe("clearCookiesFor", () => {
   test("issues an expiry for each matching cookie, across every plausible scope", () => {
     const browser = installBrowser({
-      cookie: `NEXT_LOCALE=fr; ${CONSENT_COOKIE}=x; _fbp=abc; _ttp=def; _ga=ghi`,
+      cookie: `NEXT_LOCALE=fr; ${CONSENT_COOKIE}=x; _fbp=abc; _ttp=def; _ga=ghi; stampeo_attribution=jkl`,
     });
 
     clearCookiesFor(["marketing"]);
 
     const cleared = new Set(browser.writes.map((w) => w.split("=")[0]));
-    expect(cleared).toEqual(new Set(["_fbp", "_ttp"]));
+    expect(cleared).toEqual(new Set(["_fbp", "_ttp", "stampeo_attribution"]));
     // And they are actually gone from the jar, not merely written at.
     expect(document.cookie).not.toContain("_fbp=");
     expect(document.cookie).not.toContain("_ttp=");
@@ -749,13 +761,243 @@ describe("the read seam the pixel issues consume", () => {
   });
 });
 
+describe("consentSnapshotKey", () => {
+  /**
+   * The identity `useConsent`'s snapshot cache lives on. Two rules, pulling in
+   * opposite directions, and both load-bearing:
+   *
+   * - The key must CHANGE whenever the stored record meaningfully changes —
+   *   the review found it built from the two booleans alone, so a re-decision
+   *   keeping the same answers served the STALE record object, and
+   *   `AttributionCapture` stamped the older `consentAt` as evidence.
+   * - The key must NOT change otherwise: `useSyncExternalStore` compares
+   *   snapshots by identity, and a key that varies per call is a render loop.
+   */
+  const INPUT = { record: GRANTED, regime: "opt-in" as const, gpc: false };
+
+  test("the same facts produce the same key — snapshot stability", () => {
+    expect(consentSnapshotKey(INPUT)).toBe(
+      consentSnapshotKey({ ...INPUT, record: { ...GRANTED } }),
+    );
+  });
+
+  test("a re-decision with the same booleans still changes the key", () => {
+    // Same answers, clicked again later: `at` moved, and the fresher record
+    // must be served or its timestamp is lost as evidence.
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({ ...INPUT, record: { ...GRANTED, at: GRANTED.at + 60 } }),
+    );
+  });
+
+  test("a version bump changes the key", () => {
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({ ...INPUT, record: { ...GRANTED, v: CONSENT_VERSION + 1 } }),
+    );
+  });
+
+  test("a subject id appearing changes the key", () => {
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({
+        ...INPUT,
+        record: { ...GRANTED, subjectId: "0f1e2d3c-4b5a-4978-89ab-cdef01234567" },
+      }),
+    );
+  });
+
+  test("the booleans still change the key", () => {
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({ ...INPUT, record: DENIED }),
+    );
+  });
+
+  test("no record, regime and gpc are all part of the identity", () => {
+    const none = consentSnapshotKey({ record: null, regime: "opt-in", gpc: false });
+    expect(none).not.toBe(consentSnapshotKey(INPUT));
+    expect(none).not.toBe(
+      consentSnapshotKey({ record: null, regime: "opt-out", gpc: false }),
+    );
+    expect(none).not.toBe(
+      consentSnapshotKey({ record: null, regime: "opt-in", gpc: true }),
+    );
+  });
+});
+
 describe("CONSENT_VERSION", () => {
-  test("is 1, the wire format written into the cookie", () => {
+  test("is 2, the wire format written into the cookie", () => {
     // Every other test uses the constant, so a bump would pass them all while
     // silently invalidating every visitor's stored choice. Bumping it IS the
-    // mechanism for re-consenting a new vendor, so it should be a deliberate
-    // edit here and not a side effect.
-    expect(CONSENT_VERSION).toBe(1);
-    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A1");
+    // mechanism for re-consenting a new vendor or a new processing purpose, so
+    // it must be a deliberate edit here and not a side effect.
+    //
+    // 1 -> 2 (STA-323): privacy policy §5.5 added first-party retention of the
+    // advertising identifier and server-side conversion reporting. Same three
+    // recipients, materially different processing.
+    //
+    // TWO OTHER PLACES MOVE WITH THIS, and nothing automated catches them
+    // because they live in another repo and another language:
+    //   - `CONSENT_VERSION` in backend/app/services/ad_attribution.py, which
+    //     rejects an attribution row whose stored choice names a different
+    //     version;
+    //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
+    //     shared cookie to notice a withdrawal.
+    expect(CONSENT_VERSION).toBe(2);
+    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A2");
+  });
+
+  test("a choice stored under the previous version is no longer honoured", () => {
+    // The point of the bump: everyone is asked again rather than a new
+    // processing purpose inheriting a choice made about a narrower one.
+    const old = encodeURIComponent(
+      JSON.stringify({ v: 1, a: 1, m: 1, t: 1_700_000_000, r: "opt-in" })
+    );
+    expect(parseConsentCookie(old)).toBeNull();
+  });
+});
+
+/**
+ * The attribution carrier (STA-323).
+ *
+ * `stampeo_attribution` holds the ad platforms' click ids and the GA client id
+ * and travels to app.stampeo.app, where it becomes a database row. If revoking
+ * does not delete it, the identifiers still cross and are still stored after
+ * the refusal — a revocation that looks effective and is not.
+ *
+ * It is listed under BOTH categories because it can hold fields bought by
+ * either, and a record half-authorised is not authorised.
+ */
+describe("the attribution carrier is revocable (STA-323)", () => {
+  const jar = ["_ga", "_fbp", "stampeo_attribution", CONSENT_COOKIE];
+
+  test("revoking analytics alone clears it", () => {
+    expect(cookieNamesToClear(["analytics"], jar)).toContain("stampeo_attribution");
+  });
+
+  test("revoking marketing alone clears it", () => {
+    expect(cookieNamesToClear(["marketing"], jar)).toContain("stampeo_attribution");
+  });
+
+  test("revoking everything clears it exactly once", () => {
+    // It appears in both category lists; the result must be de-duplicated or
+    // the caller writes the same expiry twice.
+    const cleared = cookieNamesToClear(["analytics", "marketing"], jar);
+    expect(cleared.filter((n) => n === "stampeo_attribution")).toHaveLength(1);
+  });
+
+  test("the consent cookie itself is never cleared", () => {
+    // Clearing it would erase the very refusal being acted on, and the visitor
+    // would be asked again on the next page as though they had never answered.
+    expect(cookieNamesToClear(["analytics", "marketing"], jar)).not.toContain(
+      CONSENT_COOKIE
+    );
+  });
+});
+
+/* =========================================================================
+ * STA-324 — the subject id that chains one person's decisions.
+ *
+ * The id is meaningless by design: a random v4 UUID, never derived from
+ * anything about the visitor. It exists only so a ledger row can be joined to
+ * the next decision by the same person.
+ *
+ * The load-bearing case is the VERSION BUMP. `parseConsentCookie` returns null
+ * for a record written against an older `CONSENT_VERSION` -- correctly, because
+ * an old choice is not a current one. But the subject id is not a choice, and
+ * losing it on every bump would break the chain exactly when it matters most:
+ * proving the same person was re-asked and answered again.
+ * ====================================================================== */
+
+describe("the consent subject id", () => {
+  const UUID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
+
+  test("a written record carries a subject id", () => {
+    installBrowser();
+    writeConsentRecord({ analytics: true, marketing: false }, "opt-in");
+
+    const stored = readSubjectId(document.cookie);
+    expect(stored).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
+  });
+
+  test("a second decision keeps the same subject id", () => {
+    // Two decisions by one person have to be joinable, or the ledger cannot
+    // show that a refusal replaced an acceptance.
+    installBrowser();
+    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    const first = readSubjectId(document.cookie);
+
+    writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    const second = readSubjectId(document.cookie);
+
+    expect(first).not.toBeNull();
+    expect(second).toBe(first as string);
+  });
+
+  test("the id survives a CONSENT_VERSION bump", () => {
+    // THE case. The stored choice is v1 and must be treated as no choice at
+    // all -- but the person is the same person, and the new row has to chain
+    // to their old one.
+    const stale = encodeURIComponent(
+      JSON.stringify({ v: CONSENT_VERSION - 1, a: 1, m: 1, t: 1, r: "opt-in", s: UUID }),
+    );
+    installBrowser({ cookie: `${CONSENT_COOKIE}=${stale}` });
+
+    // The choice is correctly discarded...
+    expect(readConsentRecord()).toBeNull();
+    // ...and the identity is correctly kept.
+    expect(readSubjectId(document.cookie)).toBe(UUID);
+  });
+
+  test("a well-formed but non-v4 uuid is rejected", () => {
+    // Separate from the case below, and the separation is the whole point:
+    // every value there fails the regex on overall SHAPE, so the version
+    // nibble and the variant class are never exercised. A v1 uuid matches the
+    // shape perfectly and embeds a MAC address and a timestamp — exactly the
+    // identifier this field promises not to carry. Deleting those two
+    // constraints from `validSubjectId` makes only this test fail.
+    for (const wrongVersion of [
+      "2c1b0c3e-9a3a-11ee-b9d1-0242ac120002", // v1
+      "3f2504e0-4f89-31d3-9a0c-0305e82c3301", // v3
+      "3f2504e0-4f89-41d3-1a0c-0305e82c3301", // v4 digits, bad variant
+    ]) {
+      const cookie = encodeURIComponent(
+        JSON.stringify({ v: CONSENT_VERSION, a: 1, m: 1, t: 1, r: "opt-in", s: wrongVersion }),
+      );
+      installBrowser({ cookie: `${CONSENT_COOKIE}=${cookie}` });
+      expect(readSubjectId(document.cookie)).toBeNull();
+    }
+  });
+
+  test("a forged subject id is replaced, never stored", () => {
+    // AC9. The id is ours to mint. Anything that is not a UUID is not one.
+    for (const forged of ["", "not-a-uuid", "../../etc/passwd", "1; DROP TABLE"]) {
+      const cookie = encodeURIComponent(
+        JSON.stringify({ v: CONSENT_VERSION, a: 1, m: 1, t: 1, r: "opt-in", s: forged }),
+      );
+      installBrowser({ cookie: `${CONSENT_COOKIE}=${cookie}` });
+      expect(readSubjectId(document.cookie)).toBeNull();
+    }
+  });
+
+  test("no cookie means no id rather than a thrown error", () => {
+    installBrowser();
+    expect(readSubjectId(document.cookie)).toBeNull();
+  });
+
+  test("minting is only reached when there is nothing to reuse", () => {
+    installBrowser({ cookie: `${CONSENT_COOKIE}=${encodeURIComponent(
+      JSON.stringify({ v: CONSENT_VERSION, a: 1, m: 1, t: 1, r: "opt-in", s: UUID }),
+    )}` });
+
+    expect(ensureSubjectId()).toBe(UUID);
+  });
+
+  test("two fresh visitors do not share an id", () => {
+    installBrowser();
+    const a = ensureSubjectId();
+    installBrowser();
+    const b = ensureSubjectId();
+
+    expect(a).not.toBe(b);
   });
 });
