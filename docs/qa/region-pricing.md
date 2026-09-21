@@ -99,10 +99,18 @@ RP-08's visual flash/CLS observation or AN-01..AN-03's analytics tooling.
   environmentally — stale `NEXT_PUBLIC_API_URL` in `.env.local`, product guard
   correct; env fixed and Offers re-verified (EUR on `/`, USD on `/us`); re-run
   RP-09 against the deployed environment before release. ED-01 was AMBIGUOUS
-  from a stale case premise, now rewritten (redirect + `/llms.txt`). **Still
-  unexecuted:** RP-02..RP-04, RP-07, RP-08 in a real spoofed browser, and
-  AN-01..AN-03 (need GA DebugView + Meta Pixel Helper — a browser with
-  extensions and property access; CDP cannot substitute).
+  from a stale case premise, now rewritten (redirect + `/llms.txt`).
+- **Run of 2026-09-21 (R4 harness, 48/48):** the automated timezone matrix
+  covered the RP-01..RP-07 ground across all ten routes — New York → $/14
+  everywhere, Paris and Tokyo → €/30 everywhere (US pages included),
+  undetectable → page-market fallback — plus annual ladders, the monthly
+  toggle, 390px mobile pricing, and no unresolved skeletons. Verified twice
+  (author run + independent re-run), both 48/0.
+- **Still open before release:** RP-08's *visual* half (wrong-currency flash /
+  CLS needs human observation under CPU throttle — R4 only proves the settled
+  DOM), AN-01..AN-03 (GA DebugView + Meta Pixel Helper — extensions and
+  property access; CDP cannot substitute), ED-02 (backend-down, local only),
+  and one RP-09 re-run against the deployed environment.
 - **This runbook was written at plan time (2026-09-21).** Run it only against a
   build of `feat/sta-330-region-detected-pricing` (or later). On pre-STA-330
   `dev`, RP-01..RP-08 fail by design — that is the bug being fixed, not a
