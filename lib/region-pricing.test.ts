@@ -8,6 +8,15 @@ import {
 } from "./region-pricing";
 import { FALLBACK_PRICING, interpolatePricing, type Pricing } from "./pricing";
 
+import enLanding from "../messages/en/landing.json";
+import frLanding from "../messages/fr/landing.json";
+import esLanding from "../messages/es/landing.json";
+import plLanding from "../messages/pl/landing.json";
+import enPricing from "../messages/en/pricing.json";
+import frPricing from "../messages/fr/pricing.json";
+import esPricing from "../messages/es/pricing.json";
+import plPricing from "../messages/pl/pricing.json";
+
 /**
  * STA-330: displayed pricing follows the visitor's detected region, not the
  * page's market. The resolver here is the display-side mirror of the backend's
@@ -115,6 +124,14 @@ describe("resolveRegionLadder", () => {
     expect(resolveRegionLadder({ eur, usd }, "eur", "usd")).toBe(eur);
   });
 
+  test("a fallback ladder in the MATCHING currency is shown — staleness is survivable, wrong currency is not", () => {
+    // The guard keys on currency, never on isFallback: during a backend outage
+    // the baked USD ladder must still reach a detected-US visitor (runbook
+    // ED-02). A refactor that rejects any isFallback ladder regresses that.
+    const bakedUsd: Pricing = { ...usd, isFallback: true };
+    expect(resolveRegionLadder({ eur, usd: bakedUsd }, "usd", "eur")).toBe(bakedUsd);
+  });
+
   test("unpriceable → page default: a ladder that fell back to another currency is not shown", () => {
     // The old FALLBACK_PRICING had no usd entry, so a backend outage served the
     // EUR ladder under a usd request. Showing that to a detected-US visitor is
@@ -133,10 +150,58 @@ describe("resolveRegionLadder", () => {
   });
 });
 
+describe("FAQ catalog strings interpolate clean", () => {
+  // AC5's automatable half: VariantLanding feeds the raw `variant.faq.items`
+  // answers straight through `interpolatePricing` into FAQ JSON-LD, and once
+  // shipped the literal "{starterPrice}" to Google. Every real catalog string
+  // must come out brace-free in BOTH ladders — a new token added to the copy
+  // without a replacer (or vice versa) fails here, not in a crawler.
+  type FaqItem = { question: string; answer: string };
+  const faqSources: Array<[string, FaqItem[]]> = [
+    ["en variant", (enLanding as { variant: { faq: { items: FaqItem[] } } }).variant.faq.items],
+    ["fr variant", (frLanding as { variant: { faq: { items: FaqItem[] } } }).variant.faq.items],
+    ["es variant", (esLanding as { variant: { faq: { items: FaqItem[] } } }).variant.faq.items],
+    ["pl variant", (plLanding as { variant: { faq: { items: FaqItem[] } } }).variant.faq.items],
+    [
+      "en variant.us",
+      (enLanding as { variant: { us: { faq: { items: FaqItem[] } } } }).variant.us.faq.items,
+    ],
+    ["en pricingPage", (enPricing as { pricingPage: { faq: { items: FaqItem[] } } }).pricingPage.faq.items],
+    ["fr pricingPage", (frPricing as { pricingPage: { faq: { items: FaqItem[] } } }).pricingPage.faq.items],
+    ["es pricingPage", (esPricing as { pricingPage: { faq: { items: FaqItem[] } } }).pricingPage.faq.items],
+    ["pl pricingPage", (plPricing as { pricingPage: { faq: { items: FaqItem[] } } }).pricingPage.faq.items],
+  ];
+
+  for (const [source, items] of faqSources) {
+    test(`${source}: every answer interpolates with no leftover braces, eur and usd`, () => {
+      expect(items.length).toBeGreaterThan(0);
+      for (const ladder of [FALLBACK_PRICING.eur, FALLBACK_PRICING.usd]) {
+        for (const item of items) {
+          const out = interpolatePricing(item.answer, ladder, "en", 30);
+          expect(out).not.toContain("{");
+          expect(out).not.toContain("}");
+        }
+      }
+    });
+  }
+});
+
 describe("FALLBACK_PRICING.usd", () => {
   test("exists — USD currency_options went live 2026-09-15, the baked ladder must carry it", () => {
     expect(FALLBACK_PRICING.usd).toBeDefined();
     expect(FALLBACK_PRICING.usd.currency).toBe("usd");
+  });
+
+  test("carries the captured Stripe USD ladder, amount for amount", () => {
+    // Captured from GET /public/plans?currency=usd on dev, 2026-09-21. Shape
+    // checks alone let a transposed amount through, and "shown one number,
+    // debited another" is the worst case the baked ladder exists to prevent.
+    // A deliberate Stripe reprice updates BOTH the constant and this test.
+    expect(FALLBACK_PRICING.usd.tiers).toEqual({
+      starter: { month: 49, year: 468 },
+      growth: { month: 79, year: 756 },
+      pro: { month: 119, year: 1140 },
+    });
   });
 
   test("mirrors the eur ladder's shape with positive whole-major-unit amounts", () => {

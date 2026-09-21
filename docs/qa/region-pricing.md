@@ -79,6 +79,14 @@ localStorage incl. the MarketSuggestion dismissal). Then hard reload.
 - **Trial-day expectations:** US region = 14, everything else = 30.
 - **A dismissed MarketSuggestion banner persists in localStorage** — use R2 if a
   case expects the banner and it does not appear.
+- **Untested until the next promo:** `PricingTierCard`'s held state suppresses
+  the strikethrough discount pair (both numbers would be chips). No discount is
+  active today (founding program closed 2026-08-04), so no case exercises it.
+  When a promo next activates a discount, add a case: held card shows a single
+  chip, resolved card shows the strikethrough pair in the region's currency.
+- **HeroDemo and ROICalculator hold with "…" instead of chips** (their figures
+  live inside strings that cannot hold an element — sanctioned by the plan's
+  2026-09-21 amendment). A one-frame ellipsis there is expected, not a failure.
 
 ---
 

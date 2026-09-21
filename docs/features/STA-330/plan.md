@@ -175,3 +175,21 @@ display).
   visitor; cross-link the new `docs/qa/region-pricing.md` runbook.
 - Help-center: pricing pages are pre-signup marketing; likely no business-owner
   doc change — re-answer at Phase 7 with the real diff.
+
+---
+
+## Amendment (2026-09-21, post coverage audit)
+
+- **Ellipsis idiom sanctioned for string-interpolated slots.** Two held-state
+  surfaces cannot hold a React element: HeroDemo's reward lines feed WalletCard
+  string fields, and ROICalculator's figures interpolate into ICU sentences.
+  Both render the ellipsis character "…" instead of a TextSkeleton chip while
+  the region is unresolved — same no-wrong-currency guarantee, different glyph.
+  AC4's "skeleton chips" reads as "chips, or the ellipsis where an element
+  cannot go".
+- **PricingTierCard's `loading` also suppresses the discount pair** (both
+  numbers would be chips). Inert while no discount is active (founding program
+  closed 2026-08-04); recorded in the runbook for the next promo.
+- Coverage gaps 1-3 from gap-report.md closed with lib tests in the same
+  branch (fallback-in-matching-currency, exact baked USD amounts, real catalog
+  FAQ strings interpolate brace-free in both ladders).
