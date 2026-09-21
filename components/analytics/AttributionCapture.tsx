@@ -8,7 +8,10 @@ import { isTrackablePath } from "@/lib/consent-routes";
 import {
   buildAttributionRecord,
   readAttributionRecord,
+  readClickIds,
+  readFbp,
   readGaClientId,
+  vendorForClickIds,
   writeAttributionRecord,
 } from "@/lib/ad-attribution";
 
@@ -24,14 +27,15 @@ import {
  */
 
 /**
- * How long to wait for GA4 to write `_ga` before giving up on the client id.
+ * How long to wait for a tag to write its browser-id cookie — `_ga` for GA4,
+ * `_fbp` for Meta — before giving up on it.
  *
- * The tag is injected in a sibling effect and the cookie appears a tick after
- * gtag.js executes, so a single synchronous read on mount would almost always
- * miss it. Capture is FIRST-TOUCH-WINS, so writing early would permanently
- * store a record with no client id and no way to repair it — hence polling
- * rather than a single attempt. The ceiling is short because a visitor who
- * bounces in two seconds is not a conversion we are going to report anyway.
+ * The tags are injected in sibling effects and their cookies appear a tick
+ * after the vendor script executes, so a single synchronous read on mount would
+ * almost always miss them. Capture is FIRST-TOUCH-WINS, so writing early would
+ * permanently store a record with no browser id and no way to repair it — hence
+ * polling rather than a single attempt. The ceiling is short because a visitor
+ * who bounces in two seconds is not a conversion we are going to report anyway.
  */
 const GA_WAIT_MS = 3000;
 const GA_POLL_MS = 250;
@@ -54,15 +58,25 @@ export function AttributionCapture() {
     let cancelled = false;
     const startedAt = Date.now();
 
+    // Which platform this arrival will be attributed to, decided before the
+    // wait so we only ever block on the cookie this row actually needs.
+    // `_fbp` matters for a meta row and nothing else; a google arrival that
+    // also carries an fbclid is a google row (gclid wins in
+    // `vendorForClickIds`) and must not be delayed waiting for Meta.
+    const clickIds = readClickIds(window.location.search);
+    const wantsFbp = marketing && vendorForClickIds(clickIds) === "meta";
+
     const attempt = () => {
       if (cancelled) return;
 
       const gaClientId = readGaClientId(document.cookie);
-      // Wait for the GA cookie only while it could still arrive: if analytics
-      // was refused, gtag never loads and there is nothing to wait for.
-      const stillWaiting =
-        analytics && gaClientId === null && Date.now() - startedAt < GA_WAIT_MS;
-      if (stillWaiting) {
+      const fbp = readFbp(document.cookie);
+      const withinWindow = Date.now() - startedAt < GA_WAIT_MS;
+      // Wait for a cookie only while it could still arrive: a tag that was
+      // never permitted never loads, so there is nothing to wait for.
+      const awaitingGa = analytics && gaClientId === null;
+      const awaitingFbp = wantsFbp && fbp === null;
+      if ((awaitingGa || awaitingFbp) && withinWindow) {
         window.setTimeout(attempt, GA_POLL_MS);
         return;
       }
@@ -70,6 +84,7 @@ export function AttributionCapture() {
       const captured = buildAttributionRecord({
         search: window.location.search,
         gaClientId,
+        fbp,
         landingPath: pathname,
         // The live A/B variant, so ad spend can be read against the landing
         // it actually bought. PostHog carries this as a super-property; here

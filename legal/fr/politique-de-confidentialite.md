@@ -155,7 +155,7 @@ Ils sont strictement nécessaires et ne sont pas soumis au consentement.
 | Mesure d'audience | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Mesure publicitaire | Meta | `_fbp`, `_fbc` |
 | Mesure publicitaire | TikTok | `_ttp` |
-| Attribution publicitaire | Stampeo, puis Google | `stampeo_attribution` |
+| Attribution publicitaire | Stampeo, puis Google ou Meta | `stampeo_attribution` |
 
 ### 5.4 Mesure d'audience sans cookie
 
@@ -167,9 +167,9 @@ Des cookies strictement nécessaires peuvent être utilisés pour l'authentifica
 
 ### 5.5 Mesure des conversions depuis nos serveurs
 
-Si vous acceptez les cookies du 5.3 et que vous êtes arrivé sur le site depuis une publicité, nous conservons l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi — pour Google, le `gclid` — ainsi que les paramètres de campagne présents dans l'adresse et l'identifiant Google Analytics décrit ci-dessus. Ils sont placés dans un cookie `stampeo_attribution`, listé au 5.3, dont la seule fonction est de subsister lors du passage de ce site au tableau de bord, hébergé sur un autre sous-domaine.
+Si vous acceptez les cookies du 5.3 et que vous êtes arrivé sur le site depuis une publicité, nous conservons l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi — pour Google, le `gclid` ; pour Meta, le `fbclid` — ainsi que les paramètres de campagne présents dans l'adresse et l'identifiant de navigateur propre à cette plateforme décrit ci-dessus. Ils sont placés dans un cookie `stampeo_attribution`, listé au 5.3, dont la seule fonction est de subsister lors du passage de ce site au tableau de bord, hébergé sur un autre sous-domaine.
 
-Si vous créez ensuite un compte professionnel, cet identifiant est enregistré avec votre compte. Nous signalons alors deux choses à Google **depuis nos serveurs** : que la publicité a donné lieu à une création de compte et, si vous vous abonnez par la suite, qu'une première facture a été réglée. S'agissant d'un envoi côté serveur, il intervient après ce qui se passe dans votre navigateur, et indépendamment de celui-ci.
+Si vous créez ensuite un compte professionnel, cet identifiant est enregistré avec votre compte. Nous signalons alors deux choses à cette plateforme **depuis nos serveurs** : que la publicité a donné lieu à une création de compte et, si vous vous abonnez par la suite, qu'une première facture a été réglée. Chaque plateforme ne reçoit que son propre identifiant : un clic Google n'est jamais signalé à Meta, ni un clic Meta à Google. S'agissant d'un envoi côté serveur, il intervient après ce qui se passe dans votre navigateur, et indépendamment de celui-ci.
 
 Ce qui est transmis se limite à l'identifiant publicitaire, à la campagne et, pour un paiement, à son montant et à sa devise. N'y figurent jamais votre adresse email, votre nom, votre numéro de téléphone ni l'identifiant de votre compte.
 

@@ -34,6 +34,7 @@ import {
   buildAttributionRecord,
   parseAttributionCookie,
   readClickIds,
+  readFbp,
   readUtm,
   referrerHost,
   serializeAttributionCookie,
@@ -49,6 +50,7 @@ const NEITHER = { analytics: false, marketing: false };
 const ARRIVAL = {
   search: "?gclid=abc123&utm_source=google&utm_medium=cpc&utm_campaign=launch",
   gaClientId: "GA1.1.1234567890.1700000000",
+  fbp: "fb.1.1700000000.987654321",
   landingPath: "/pricing",
   landingVariant: "b",
   referrer: "https://www.google.com/search?q=loyalty",
@@ -531,5 +533,112 @@ describe("the attribution cookie as a carrier", () => {
       if (previous) Object.defineProperty(globalThis, "document", previous);
       else delete (globalThis as Record<string, unknown>).document;
     }
+  });
+});
+
+describe("readFbp — Meta's browser id", () => {
+  test("it is read whole, unlike the GA cookie", () => {
+    // `_fbp` is already in Meta's wire format (`fb.<subdomain>.<ms>.<random>`),
+    // so unlike `_ga` there is nothing to slice out of it.
+    expect(readFbp("_fbp=fb.1.1700000000.987654321")).toBe(
+      "fb.1.1700000000.987654321"
+    );
+  });
+
+  test("it is found among other cookies", () => {
+    expect(
+      readFbp("NEXT_LOCALE=fr; _fbp=fb.1.1700000000.987654321; _ga=GA1.1.5.6")
+    ).toBe("fb.1.1700000000.987654321");
+  });
+
+  test("a lookalike cookie name is not ours", () => {
+    // Same rule as the consent cookie: matching on a prefix would let
+    // `x_fbp` on the domain supply an identifier.
+    expect(readFbp("x_fbp=fb.1.1.2")).toBeNull();
+  });
+
+  test("absent or empty is null, never a throw", () => {
+    expect(readFbp(null)).toBeNull();
+    expect(readFbp("")).toBeNull();
+    expect(readFbp("_fbp=")).toBeNull();
+  });
+});
+
+describe("buildAttributionRecord — the browser id belongs to its own vendor", () => {
+  test("a Meta row carries _fbp, not the Google client id", () => {
+    // Migration 172 says browser_id is "the GA4 client id / _fbp / _ttp". It
+    // was hard-coded to the GA client id for every vendor, so a meta row went
+    // to the backend holding a GOOGLE identifier — useless to Meta, and the
+    // field it would have been matched on.
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: "?fbclid=fb-click-xyz",
+    }) as AttributionRecord;
+
+    expect(record.vendor).toBe("meta");
+    expect(record.browserId).toBe("fb.1.1700000000.987654321");
+    expect(record.browserId).not.toBe(ARRIVAL.gaClientId);
+  });
+
+  test("a Google row still carries the Google client id", () => {
+    // The working path, pinned. Google's behaviour must not move.
+    const record = buildAttributionRecord(ARRIVAL) as AttributionRecord;
+    expect(record.vendor).toBe("google");
+    expect(record.browserId).toBe("GA1.1.1234567890.1700000000");
+  });
+
+  test("a direct row still carries the Google client id", () => {
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: "",
+    }) as AttributionRecord;
+    expect(record.vendor).toBe("direct");
+    expect(record.browserId).toBe("GA1.1.1234567890.1700000000");
+  });
+
+  test("_fbp is NOT captured without marketing consent", () => {
+    // The tripwire. `_fbp` is in COOKIE_PATTERNS.marketing, not .analytics, so
+    // reusing the analytics gate for it would store a marketing identifier on
+    // analytics consent. A stale `_fbp` can outlive a revocation, because
+    // clearing third-party cookies is best-effort.
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: "?fbclid=fb-click-xyz",
+      consent: { analytics: true, marketing: false },
+    });
+
+    // No click id survives either, so this is a direct row at most.
+    expect(record?.browserId).not.toBe("fb.1.1700000000.987654321");
+    expect(record?.vendor).not.toBe("meta");
+  });
+
+  test("a Meta row survives analytics being refused", () => {
+    // Marketing accepted, analytics refused: there is no GA client id at all,
+    // and the meta row must still be complete.
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: "?fbclid=fb-click-xyz",
+      gaClientId: null,
+      consent: { analytics: false, marketing: true },
+    }) as AttributionRecord;
+
+    expect(record.vendor).toBe("meta");
+    expect(record.clickId).toBe("fb-click-xyz");
+    expect(record.browserId).toBe("fb.1.1700000000.987654321");
+    expect(record.consentCategory).toBe("marketing");
+  });
+
+  test("a Meta row with no _fbp yet is still worth storing", () => {
+    // The pixel may not have written the cookie before capture ran. The click
+    // id alone is enough for the Conversions API.
+    const record = buildAttributionRecord({
+      ...ARRIVAL,
+      search: "?fbclid=fb-click-xyz",
+      fbp: null,
+    }) as AttributionRecord;
+
+    expect(record.vendor).toBe("meta");
+    expect(record.clickId).toBe("fb-click-xyz");
+    expect(record.browserId).toBeNull();
   });
 });

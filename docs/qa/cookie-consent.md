@@ -1076,6 +1076,132 @@ EXPECT:
 
 ---
 
+## MC: Meta conversions, click to payment (STA-322)
+
+MP proves the pixel fires in the browser. This section proves the funnel
+CONTINUES after the visitor leaves showcase — signup and payment happen on
+`app.stampeo.app` and are reported from our servers, not from a tag.
+
+The case that matters most is MC-05, the negative one. Until STA-322 the sender
+had no vendor branch and posted every row to the GA4 Measurement Protocol, so a
+Meta click id arrived at Google labelled `gclid`. It was recorded `sent`, so
+nothing surfaced it.
+
+### Setup for this section
+
+| Need | Value |
+|---|---|
+| Backend env | `META_PIXEL_ID`, `META_CAPI_ACCESS_TOKEN`, **and `META_TEST_EVENT_CODE`** |
+| Meta Test Events | Events Manager → dataset → **Test Events**, left open throughout |
+| GA4 DebugView | Admin → DebugView, open in another tab for MC-05 |
+
+**`META_TEST_EVENT_CODE` is mandatory here, not optional.** One access token
+serves every environment, so without the code a dev signup writes into real
+campaign reporting. The sender refuses to send at all when it is missing outside
+production — so if the Test Events tab stays empty, check this first: the
+backend log carries `meta CAPI suppressed outside production`.
+
+### MC-01 A Meta click is captured with its own identifiers — BLOCKER
+DEPENDS: MP-01
+
+WHY: Everything downstream reads this cookie. A wrong value here cannot be
+repaired later: capture is first-touch-wins.
+
+1. R1, R5. Land on `/pricing?fbclid=qa-test-001`, accept marketing.
+2. Read `stampeo_attribution` (Application → Cookies) and decode it.
+
+EXPECT:
+- `vn` is `meta`, `ci` is `qa-test-001`.
+- `bi` starts with `fb.1.` — Meta's `_fbp`, **not** a `GA1.1.…` value. A Google
+  client id here is the bug this case exists for.
+- Cookie domain is `.stampeo.app`, so the dashboard can read it.
+
+### MC-02 Signup reports CompleteRegistration — BLOCKER
+DEPENDS: MC-01
+
+1. Follow the CTA to the dashboard and complete signup with a fresh email.
+2. Watch the **Test Events** tab.
+
+EXPECT:
+- A `CompleteRegistration` event arrives within a few seconds.
+- It carries `fbc` (starting `fb.1.`) and `fbp`.
+- It carries **no** email, phone, or business name. Advanced matching is off by
+  design; any contact detail here is a blocker.
+- `business_ad_conversion` has one row: vendor `meta`, event `sign_up`, status
+  `sent`.
+
+### MC-03 A paid invoice reports Purchase with the real money — CORE
+DEPENDS: MC-02
+
+1. Subscribe with a Stripe test card and let `invoice.paid` fire.
+
+EXPECT:
+- `Purchase` in Test Events, `value` and `currency` matching the invoice
+  exactly — not 0, not the list price if a discount applied.
+- A second row in `business_ad_conversion`, event `purchase`.
+- Replay the webhook from the Stripe CLI: **no second** `Purchase`. The primary
+  key is the guard.
+
+### MC-04 The whole funnel joins up — CORE
+DEPENDS: MC-03
+
+WHY: This is the question the epic exists to answer: can we see one human from
+ad click to payment, and therefore compute CAC and ROAS?
+
+EXPECT, for one test journey: a `PageView` and a `Lead` in the pixel (MP), then
+`CompleteRegistration` and `Purchase` in Test Events, all joined to the same
+`fbc`.
+
+### MC-05 A Meta click never reaches Google — BLOCKER
+DEPENDS: MC-01
+
+WHY: The regression. A Meta identifier arriving at GA4 pollutes Google's
+attribution with a conversion it can never join, and discloses a Meta id to a
+recipient the privacy policy does not name for it.
+
+1. With GA4 **DebugView** open, run MC-01 through MC-03 using
+   `?fbclid=qa-test-001` and no `gclid`.
+
+EXPECT:
+- **No** GA4 conversion carrying `qa-test-001`, in any parameter.
+- No `sign_up` or `purchase` event in DebugView for this journey at all: the row
+  is vendor `meta`, and GA4 is not its sender.
+- If you see one, stop — that is the defect returning.
+
+### MC-06 A Google click still works exactly as before — BLOCKER
+DEPENDS: MC-05
+
+WHY: The fix touches the payload builder Google's live path shares.
+
+1. Fresh journey with `?gclid=qa-test-002` and no `fbclid`.
+
+EXPECT:
+- GA4 DebugView shows `sign_up`, then `purchase` with the right value.
+- **No** Meta event in Test Events for this journey.
+
+### MC-07 Revoking between signup and payment stops the Purchase — CORE
+DEPENDS: MC-02
+
+1. After signup but before paying, revoke marketing via **Cookie preferences**.
+2. Complete the payment.
+
+EXPECT:
+- No `Purchase` in Test Events.
+- `business_ad_conversion` row for `purchase` has status `skipped_no_consent`.
+- The `CompleteRegistration` already sent is **not** recalled — correct, and
+  what §5.5 of the privacy policy says.
+
+### MC-08 Marketing refused means no attribution at all — CORE
+
+1. R1, R5. Land on `/pricing?fbclid=qa-test-003` and **Refuse all**.
+
+EXPECT:
+- `stampeo_attribution` either absent, or present with `vn: direct` and no `ci`.
+- No `_fbp` cookie.
+- Signing up produces **no** Meta event and no `meta` row.
+
+---
+
 ## LY: layout
 
 ### LY-01 The phone layout is usable — CORE

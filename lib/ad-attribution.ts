@@ -203,6 +203,8 @@ export function referrerHost(
 export function buildAttributionRecord(input: {
   search: string;
   gaClientId: string | null;
+  /** Meta's `_fbp`. Marketing-gated, unlike the GA client id. */
+  fbp?: string | null;
   landingPath: string;
   landingVariant: string | null;
   referrer: string | null;
@@ -218,14 +220,29 @@ export function buildAttributionRecord(input: {
   // A click id may only be read with marketing consent, so a visitor who
   // refused it has no paid source as far as this record is concerned.
   const clickId = input.consent.marketing ? clickIdFor(ids) : null;
-  const browserId = input.consent.analytics ? input.gaClientId : null;
+  const vendor = clickId ? vendorForClickIds(ids) : "direct";
+
+  // The browser id belongs to whichever platform this row is for, and each
+  // platform's cookie sits in a different consent category:
+  //
+  //   `_ga` / `_gid` -> analytics      (COOKIE_PATTERNS.analytics)
+  //   `_fbp`         -> marketing      (COOKIE_PATTERNS.marketing)
+  //
+  // So the gate is per-vendor, not one gate reused. Reading `_fbp` under the
+  // analytics gate would store a marketing identifier on analytics consent —
+  // and `_fbp` can outlive a revocation, because clearing a third-party cookie
+  // is best-effort, so the check cannot lean on the cookie's absence.
+  const browserId =
+    vendor === "meta"
+      ? (input.consent.marketing ? (input.fbp ?? null) : null)
+      : (input.consent.analytics ? input.gaClientId : null);
 
   // Neither category bought anything present. Nothing to store.
   if (!clickId && !input.consent.analytics) return null;
 
   return {
     v: ATTRIBUTION_VERSION,
-    vendor: clickId ? vendorForClickIds(ids) : "direct",
+    vendor,
     browserId: browserId?.slice(0, MAX_ID_FIELD) ?? null,
     clickId,
     ...readUtm(input.search),
@@ -361,6 +378,29 @@ export function readGaClientId(cookieHeader: string | null | undefined): string 
     const bits = value.split(".");
     if (bits.length < 4) return null;
     return `${bits[0]}.${bits[1]}.${bits[2]}.${bits[3]}`;
+  }
+  return null;
+}
+
+/**
+ * Meta's browser id, out of the `_fbp` cookie.
+ *
+ * Unlike `_ga` there is nothing to extract: `_fbp` is already in the wire
+ * format the Conversions API wants (`fb.<subdomain>.<ms>.<random>`), so it is
+ * forwarded whole.
+ *
+ * The cookie exists only once the Meta pixel has loaded, which requires
+ * marketing consent and a trackable route — the same condition we want anyway.
+ */
+export function readFbp(cookieHeader: string | null | undefined): string | null {
+  if (!cookieHeader) return null;
+  for (const part of cookieHeader.split(";")) {
+    const entry = part.trim();
+    // Whole-name match: a prefix match would let `x_fbp` on the domain supply
+    // an identifier, the same rule the consent cookie reader follows.
+    if (!entry.startsWith("_fbp=")) continue;
+    const value = entry.slice(5).trim();
+    return value || null;
   }
   return null;
 }

@@ -155,7 +155,7 @@ Są ściśle niezbędne i nie podlegają zgodzie.
 | Pomiar ruchu | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Pomiar skuteczności reklam | Meta | `_fbp`, `_fbc` |
 | Pomiar skuteczności reklam | TikTok | `_ttp` |
-| Atrybucja reklamowa | Stampeo, następnie Google | `stampeo_attribution` |
+| Atrybucja reklamowa | Stampeo, następnie Google lub Meta | `stampeo_attribution` |
 
 ### 5.4 Pomiar ruchu bez plików cookie
 
@@ -167,9 +167,9 @@ Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane 
 
 ### 5.5 Pomiar konwersji z naszych serwerów
 
-Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową — w przypadku Google jest to `gclid` — wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem Google Analytics opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie.
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową — w przypadku Google jest to `gclid`, w przypadku Meta `fbclid` — wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie.
 
-Jeżeli następnie założysz konto firmowe, identyfikator ten zostaje zapisany przy Twoim koncie. Przekazujemy wtedy Google dwie informacje **z naszych serwerów**: że reklama doprowadziła do założenia konta oraz — jeżeli później wykupisz abonament — że opłacono pierwszą fakturę. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
+Jeżeli następnie założysz konto firmowe, identyfikator ten zostaje zapisany przy Twoim koncie. Przekazujemy wtedy tej platformie dwie informacje **z naszych serwerów**: że reklama doprowadziła do założenia konta oraz — jeżeli później wykupisz abonament — że opłacono pierwszą fakturę. Każda platforma otrzymuje wyłącznie własny identyfikator: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
 
 Przekazujemy wyłącznie identyfikator reklamowy, nazwę kampanii oraz — w przypadku płatności — jej kwotę i walutę. Nigdy nie przekazujemy adresu e-mail, imienia i nazwiska, numeru telefonu ani identyfikatora konta.
 

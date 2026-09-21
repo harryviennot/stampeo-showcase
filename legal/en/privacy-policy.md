@@ -155,7 +155,7 @@ These are strictly necessary and are not subject to consent.
 | Audience measurement | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Advertising measurement | Meta | `_fbp`, `_fbc` |
 | Advertising measurement | TikTok | `_ttp` |
-| Advertising attribution | Stampeo, then Google | `stampeo_attribution` |
+| Advertising attribution | Stampeo, then Google or Meta | `stampeo_attribution` |
 
 ### 5.4 Audience measurement without cookies
 
@@ -167,9 +167,9 @@ Strictly necessary cookies may be used for authentication and session management
 
 ### 5.5 Conversion measurement from our servers
 
-If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed — for Google, the `gclid` — together with the campaign parameters in the address and the Google Analytics identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain.
+If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed — for Google the `gclid`, for Meta the `fbclid` — together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain.
 
-If you go on to create a business account, that identifier is stored with your account. We then report two things to Google **from our servers**: that the advertisement led to an account being created and, if you later subscribe, that a first invoice was paid. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
+If you go on to create a business account, that identifier is stored with your account. We then report two things to that platform **from our servers**: that the advertisement led to an account being created and, if you later subscribe, that a first invoice was paid. Each platform receives only its own identifier: a Google click is never reported to Meta, and a Meta click is never reported to Google. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
 
 What we send is limited to the advertising identifier, the campaign, and for a payment its amount and currency. It never includes your email address, your name, your telephone number, or your account identifier.
 
