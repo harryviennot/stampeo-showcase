@@ -25,6 +25,7 @@ import {
   consentCookieAttributes,
   consentRecordFromCookieHeader,
   consentRegimeForCountry,
+  consentSnapshotKey,
   consentSurface,
   cookieNamesToClear,
   parseConsentCookie,
@@ -757,6 +758,67 @@ describe("the read seam the pixel issues consume", () => {
       gpc: true,
     });
     expect(hasAnalyticsConsent()).toBe(true);
+  });
+});
+
+describe("consentSnapshotKey", () => {
+  /**
+   * The identity `useConsent`'s snapshot cache lives on. Two rules, pulling in
+   * opposite directions, and both load-bearing:
+   *
+   * - The key must CHANGE whenever the stored record meaningfully changes —
+   *   the review found it built from the two booleans alone, so a re-decision
+   *   keeping the same answers served the STALE record object, and
+   *   `AttributionCapture` stamped the older `consentAt` as evidence.
+   * - The key must NOT change otherwise: `useSyncExternalStore` compares
+   *   snapshots by identity, and a key that varies per call is a render loop.
+   */
+  const INPUT = { record: GRANTED, regime: "opt-in" as const, gpc: false };
+
+  test("the same facts produce the same key — snapshot stability", () => {
+    expect(consentSnapshotKey(INPUT)).toBe(
+      consentSnapshotKey({ ...INPUT, record: { ...GRANTED } }),
+    );
+  });
+
+  test("a re-decision with the same booleans still changes the key", () => {
+    // Same answers, clicked again later: `at` moved, and the fresher record
+    // must be served or its timestamp is lost as evidence.
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({ ...INPUT, record: { ...GRANTED, at: GRANTED.at + 60 } }),
+    );
+  });
+
+  test("a version bump changes the key", () => {
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({ ...INPUT, record: { ...GRANTED, v: CONSENT_VERSION + 1 } }),
+    );
+  });
+
+  test("a subject id appearing changes the key", () => {
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({
+        ...INPUT,
+        record: { ...GRANTED, subjectId: "0f1e2d3c-4b5a-4978-89ab-cdef01234567" },
+      }),
+    );
+  });
+
+  test("the booleans still change the key", () => {
+    expect(consentSnapshotKey(INPUT)).not.toBe(
+      consentSnapshotKey({ ...INPUT, record: DENIED }),
+    );
+  });
+
+  test("no record, regime and gpc are all part of the identity", () => {
+    const none = consentSnapshotKey({ record: null, regime: "opt-in", gpc: false });
+    expect(none).not.toBe(consentSnapshotKey(INPUT));
+    expect(none).not.toBe(
+      consentSnapshotKey({ record: null, regime: "opt-out", gpc: false }),
+    );
+    expect(none).not.toBe(
+      consentSnapshotKey({ record: null, regime: "opt-in", gpc: true }),
+    );
   });
 });
 

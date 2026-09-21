@@ -156,6 +156,37 @@ export function resolveConsent(input: {
   return { analytics: false, marketing: false };
 }
 
+/**
+ * A stable identity for `useConsent`'s snapshot cache.
+ *
+ * `useSyncExternalStore` compares snapshots by identity, so the hook rebuilds
+ * its snapshot object only when this key changes — meaning the key must cover
+ * EVERY field the snapshot exposes, not just the two booleans. It once keyed
+ * on `analytics`/`marketing` alone, so a re-decision that kept the same
+ * answers served the stale record object and `AttributionCapture` stamped the
+ * older `consentAt` as its evidence.
+ *
+ * Equally, the key must be a pure function of the underlying facts: a value
+ * that varies per call (a Date, an object identity) would rebuild the snapshot
+ * every render, which under `useSyncExternalStore` is an infinite loop.
+ */
+export function consentSnapshotKey(input: {
+  record: ConsentRecord | null;
+  regime: ConsentRegime;
+  gpc: boolean;
+}): string {
+  const record = input.record
+    ? [
+        input.record.v,
+        input.record.analytics ? 1 : 0,
+        input.record.marketing ? 1 : 0,
+        input.record.at,
+        input.record.subjectId ?? "",
+      ].join(".")
+    : "none";
+  return `${record}|${input.regime}|${input.gpc}`;
+}
+
 /** Which consent surface, if any, this visitor should see. */
 export function consentSurface(input: {
   record: ConsentRecord | null;

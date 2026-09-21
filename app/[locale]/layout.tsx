@@ -128,6 +128,9 @@ export default async function RootLayout({
                 navigation. */}
             <MetaPixel />
             <GoogleAnalytics />
+            {/* Must stay AFTER {children}: its landing-context snapshot reads
+                body.dataset.landingVariant, which LandingTracker (inside the
+                page subtree) stamps in an effect that has to fire first. */}
             <AttributionCapture />
           </AuthProvider>
         </NextIntlClientProvider>

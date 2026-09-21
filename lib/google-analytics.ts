@@ -27,6 +27,12 @@
  * `shouldSendPageView` exists to decide without double-counting.
  */
 
+import {
+  CONTACT_CTAS,
+  isContactHref,
+  isKnownCTALocation,
+} from "./cta-taxonomy";
+
 /**
  * The events this site sends.
  *
@@ -40,23 +46,6 @@
 export type GaEvent = "page_view" | "sign_up_cta_click" | "contact_cta_click";
 
 const GA_SCRIPT_ORIGIN = "https://www.googletagmanager.com/gtag/js";
-
-/**
- * CTAs that mean "I want to start using this". They leave showcase for the
- * app, so the event names the click, never the account.
- */
-const SIGNUP_CTAS: ReadonlySet<string> = new Set([
-  "hero",
-  "pricing_starter",
-  "pricing_growth",
-  "pricing_pro",
-  "faq",
-  "final_cta",
-  "loyalty_picker",
-]);
-
-/** CTAs that mean "talk to a human". A different funnel, tracked separately. */
-const CONTACT_CTAS: ReadonlySet<string> = new Set(["hero_demo", "final_cta_demo"]);
 
 /**
  * The configured measurement id, or null.
@@ -150,20 +139,35 @@ export function shouldSendGaEvent(input: {
  *   consent change re-runs the same effect on the same path; either inflates
  *   every funnel.
  *
- * `lastPath === null` means the tag has just been configured, and `config`
- * sends the first `page_view` itself — so the first navigation after load is
- * deliberately silent here.
+ * `alreadyLoaded` — was the script resident BEFORE this effect run — is what
+ * tells the two null-`lastPath` states apart, and both are real:
+ *
+ * - `alreadyLoaded: false` is the run that injects the tag. `config` sends the
+ *   first `page_view` itself, so this run is deliberately silent here.
+ * - `alreadyLoaded: true` with a null `lastPath` is a REMOUNT: the locale
+ *   switcher's `router.replace(pathname, { locale })` replaces the `[locale]`
+ *   tree, resetting the component's ref while the script (module state) stays
+ *   resident. The post-switch path never got a page_view — config fired for
+ *   the pre-switch one — so this run must send. Treating it as the config
+ *   seed used to wedge the session: no page_view ever again.
+ *
+ * `lastPath` is the last path the caller SAW, not the last one it sent for.
+ * The caller updates it on every navigation — untrackable ones included — so
+ * /pricing → /onboarding (silent) → /pricing counts the return (QA GA-02)
+ * while a same-path re-render still dedupes.
  */
 export function shouldSendPageView(input: {
   loaded: boolean;
   trackable: boolean;
+  alreadyLoaded: boolean;
   lastPath: string | null;
   nextPath: string;
 }): boolean {
   if (!shouldSendGaEvent({ loaded: input.loaded, trackable: input.trackable })) {
     return false;
   }
-  if (input.lastPath === null) return false;
+  if (!input.alreadyLoaded) return false;
+  if (input.lastPath === null) return true;
   return input.lastPath !== input.nextPath;
 }
 
@@ -179,17 +183,12 @@ export function gaEventForCTA(input: {
   ctaLocation: string;
   href: string;
 }): GaEvent | null {
-  const known =
-    SIGNUP_CTAS.has(input.ctaLocation) || CONTACT_CTAS.has(input.ctaLocation);
-  if (!known) return null;
+  if (!isKnownCTALocation(input.ctaLocation)) return null;
 
   // The destination wins when it disagrees with the location name, mirroring
-  // how `CTAButton` already picks its PostHog event. Locale-prefixed hrefs are
-  // matched too: `Link` from @/i18n/navigation prefixes at render time, and a
-  // call site passing a resolved href must not silently downgrade.
-  if (/^\/(?:[a-z]{2}\/)?contact(?:\/|$|\?|#)/.test(input.href)) {
-    return "contact_cta_click";
-  }
+  // how `CTAButton` already picks its PostHog event. `isContactHref` matches
+  // locale-prefixed hrefs too — see `lib/cta-taxonomy.ts`.
+  if (isContactHref(input.href)) return "contact_cta_click";
   if (CONTACT_CTAS.has(input.ctaLocation)) return "contact_cta_click";
   return "sign_up_cta_click";
 }

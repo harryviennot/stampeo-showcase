@@ -356,6 +356,46 @@ export function parseAttributionCookie(
   };
 }
 
+/**
+ * Everything about the arrival that must be read from the LANDING page and
+ * nowhere else. `AttributionCapture` snapshots it once per page load.
+ */
+export interface LandingContext {
+  /** `location.search` as it was on landing — the click ids and UTMs. */
+  search: string;
+  /** The landing pathname. */
+  path: string;
+  /** `document.referrer`, which a client-side navigation would overwrite. */
+  referrer: string;
+  /** The landing A/B variant published on `<body>`, gone after navigation. */
+  variant: string | null;
+  /** `location.hostname`, for the self-referrer check. */
+  selfHost: string;
+}
+
+let landingContext: LandingContext | null = null;
+
+/**
+ * The landing context of this page load, read EXACTLY ONCE.
+ *
+ * The first call runs `read` and keeps the answer for the lifetime of the
+ * document; every later call returns that snapshot and never invokes its
+ * reader. Module state on purpose: it survives React remounts and strict
+ * mode's double effects within one document, and resets on a hard navigation —
+ * which is also when the browser's own `location`/`referrer` reset.
+ *
+ * This exists because capture WAITS (it polls for the tags' browser-id
+ * cookies) and consent can arrive pages later. By either point,
+ * `location.search` and `document.referrer` describe the current page, not the
+ * one the ad bought — and first-touch-wins makes a record built from those
+ * unrepairable for 182 days. The snapshot is memory-only: nothing is stored
+ * anywhere until consent lets `buildAttributionRecord` say so.
+ */
+export function captureLandingContext(read: () => LandingContext): LandingContext {
+  if (landingContext === null) landingContext = read();
+  return landingContext;
+}
+
 /* -------------------------------------------------------------------------
  * Browser side. Everything below is a no-op off the browser.
  * ---------------------------------------------------------------------- */

@@ -223,7 +223,25 @@ describe("shouldSendGaEvent", () => {
 });
 
 describe("shouldSendPageView", () => {
-  const RESIDENT = { loaded: true, trackable: true, lastPath: "/pricing" };
+  /**
+   * `lastPath` is the last path the component SAW — updated on every
+   * navigation, trackable or not — and `alreadyLoaded` says whether the script
+   * was resident BEFORE the effect run being decided. Both exist because of
+   * two silent failure modes found in review:
+   *
+   * - The locale switcher (`router.replace(pathname, { locale })`) REMOUNTS
+   *   the `[locale]` tree, so the ref resets to null while the module-state
+   *   `initialised` stays true. The old "null means config just fired" rule
+   *   then wedged the state machine: no page_view for the rest of the session.
+   * - Tracking the last SENT path instead of the last SEEN one suppressed the
+   *   page_view on /pricing → /onboarding → /pricing (QA case GA-02).
+   */
+  const RESIDENT = {
+    loaded: true,
+    trackable: true,
+    alreadyLoaded: true,
+    lastPath: "/pricing",
+  };
 
   test("a client-side navigation to a new path sends one", () => {
     // gtag only fires page_view at load. Without this every campaign landing
@@ -241,10 +259,40 @@ describe("shouldSendPageView", () => {
 
   test("the first page view after load is left to gtag", () => {
     // `initGa` configures the tag, which sends the initial page_view itself.
-    // Sending one here as well is the duplicate that plan AC8 forbids.
+    // Sending one here as well is the duplicate that plan AC8 forbids. The
+    // marker is `alreadyLoaded: false` — the effect run that injects the
+    // script — NOT a null lastPath, which a remount also produces.
     expect(
-      shouldSendPageView({ ...RESIDENT, lastPath: null, nextPath: "/pricing" })
+      shouldSendPageView({
+        ...RESIDENT,
+        alreadyLoaded: false,
+        lastPath: null,
+        nextPath: "/pricing",
+      })
     ).toBe(false);
+  });
+
+  test("a remount with the script already resident sends for the current path", () => {
+    // The locale switch: accept on /fr, switch to /en. The switch remounts the
+    // component (ref → null) while `initialised` stays true, and the
+    // post-switch path never got a page_view — config only fired for the
+    // pre-switch one. This case is what un-wedges the session.
+    expect(
+      shouldSendPageView({
+        ...RESIDENT,
+        alreadyLoaded: true,
+        lastPath: null,
+        nextPath: "/en",
+      })
+    ).toBe(true);
+  });
+
+  test("after the remount recovery, navigation counts once per new path", () => {
+    // The full scenario: accept on /fr (config sends it), switch to /en
+    // (remount recovery sends it, ref seeded), then navigate. Every NEW path
+    // gets exactly one; a re-render on the same path gets none.
+    expect(shouldSendPageView({ ...RESIDENT, lastPath: "/en", nextPath: "/en/pricing" })).toBe(true);
+    expect(shouldSendPageView({ ...RESIDENT, lastPath: "/en/pricing", nextPath: "/en/pricing" })).toBe(false);
   });
 
   test("navigating onto a private route sends nothing", () => {
@@ -256,16 +304,32 @@ describe("shouldSendPageView", () => {
   });
 
   test("returning to a trackable route after a private one sends one", () => {
-    // The private path was never recorded, so coming back is a real
-    // navigation and not a duplicate.
+    // QA case GA-02's last step: /pricing → /onboarding (silent) → /pricing.
+    // The ref tracks the last SEEN path, so by the return it holds
+    // "/onboarding" and the /pricing arrival is a real navigation again.
     expect(
       shouldSendPageView({
         loaded: true,
         trackable: true,
-        lastPath: "/pricing",
-        nextPath: "/features",
+        alreadyLoaded: true,
+        lastPath: "/onboarding",
+        nextPath: "/pricing",
       })
     ).toBe(true);
+  });
+
+  test("a same-path re-render is still deduped", () => {
+    // The counterpart that keeps the fix honest: seeing the same path twice in
+    // a row (strict mode, a consent change) must stay silent.
+    expect(
+      shouldSendPageView({
+        loaded: true,
+        trackable: true,
+        alreadyLoaded: true,
+        lastPath: "/pricing",
+        nextPath: "/pricing",
+      })
+    ).toBe(false);
   });
 
   test("an unloaded tag sends nothing whatever the path", () => {
@@ -273,6 +337,7 @@ describe("shouldSendPageView", () => {
       shouldSendPageView({
         loaded: false,
         trackable: true,
+        alreadyLoaded: false,
         lastPath: "/pricing",
         nextPath: "/about",
       })
@@ -316,6 +381,15 @@ describe("gaEventForCTA", () => {
     // `Link` from @/i18n/navigation prefixes at render time, so a call site
     // passing a resolved href must not silently downgrade.
     expect(gaEventForCTA({ ctaLocation: "hero", href: "/es/contact" })).toBe(
+      "contact_cta_click"
+    );
+  });
+
+  test("a market+locale contact href is still a contact", () => {
+    // Defensive: no /en/us/* route exists today, but a second two-letter
+    // segment must not silently downgrade the event the day one does. The
+    // strip repeats — see `isContactHref` in `lib/cta-taxonomy.ts`.
+    expect(gaEventForCTA({ ctaLocation: "hero", href: "/en/us/contact" })).toBe(
       "contact_cta_click"
     );
   });

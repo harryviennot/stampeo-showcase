@@ -26,13 +26,18 @@
  * file assumes that answer and tests what is done with it.
  */
 
-import { describe, expect, test } from "bun:test";
+import { afterAll, describe, expect, test } from "bun:test";
 import { resolveConsent } from "./consent";
 import {
+  META_PIXEL_SCRIPT_SRC,
+  initMetaPixel,
+  isMetaPixelLoaded,
   metaEventForCTA,
   readMetaPixelId,
   shouldLoadMetaPixel,
   shouldSendMetaEvent,
+  shouldSendMetaPageView,
+  trackMetaEvent,
 } from "./meta-pixel";
 
 /** Every condition satisfied. Each test below breaks exactly one. */
@@ -64,6 +69,27 @@ describe("readMetaPixelId", () => {
 
   test("surrounding whitespace is trimmed", () => {
     expect(readMetaPixelId(" 1088158323750710 ")).toBe("1088158323750710");
+  });
+
+  test("a GA4 measurement id is rejected", () => {
+    // Two tags, two env vars, adjacent lines in .env.example — the mirror of
+    // `readMeasurementId` rejecting a numeric Meta id. `fbq('init', 'G-…')`
+    // would be a live tag pointed at nothing, which looks exactly like
+    // working tracking.
+    expect(readMetaPixelId("G-ZFZ6JLPFXN")).toBeNull();
+  });
+
+  test("anything non-numeric is rejected", () => {
+    expect(readMetaPixelId("pixel-123")).toBeNull();
+    expect(readMetaPixelId("108815832375071O")).toBeNull(); // letter O, not zero
+    expect(readMetaPixelId("https://business.facebook.com/…/1088158323750710")).toBeNull();
+  });
+
+  test("an implausible length is rejected", () => {
+    // Real pixel ids run 15-16 digits today; 5-20 leaves headroom without
+    // accepting a stray "1" or a pasted concatenation.
+    expect(readMetaPixelId("1234")).toBeNull();
+    expect(readMetaPixelId("1".repeat(21))).toBeNull();
   });
 });
 
@@ -176,6 +202,84 @@ describe("shouldSendMetaEvent", () => {
   });
 });
 
+describe("shouldSendMetaPageView", () => {
+  /**
+   * The deliberate mirror of `shouldSendPageView` in `lib/google-analytics.ts`
+   * — same inputs, same rules, tested here so the Meta component keeps zero
+   * untested branches. `lastPath` is the last path the component SAW (updated
+   * on every navigation, untrackable ones included) and `alreadyLoaded` is
+   * whether the script was resident before the effect run being decided.
+   */
+  const RESIDENT = {
+    loaded: true,
+    trackable: true,
+    alreadyLoaded: true,
+    lastPath: "/pricing",
+  };
+
+  test("a client-side navigation to a new path sends one", () => {
+    expect(shouldSendMetaPageView({ ...RESIDENT, nextPath: "/about" })).toBe(true);
+  });
+
+  test("a same-path re-render does not send", () => {
+    // Strict mode, or a consent change re-running the effect on one path.
+    expect(shouldSendMetaPageView({ ...RESIDENT, nextPath: "/pricing" })).toBe(false);
+  });
+
+  test("the init run is silent — init fires its own PageView", () => {
+    expect(
+      shouldSendMetaPageView({
+        ...RESIDENT,
+        alreadyLoaded: false,
+        lastPath: null,
+        nextPath: "/pricing",
+      }),
+    ).toBe(false);
+  });
+
+  test("a remount with the pixel already resident sends for the current path", () => {
+    // The locale switch remounts the [locale] tree: ref null, module state
+    // still initialised. The post-switch path never got a PageView.
+    expect(
+      shouldSendMetaPageView({
+        ...RESIDENT,
+        lastPath: null,
+        nextPath: "/en",
+      }),
+    ).toBe(true);
+  });
+
+  test("returning to a trackable path after a private detour sends one", () => {
+    // /pricing → /onboarding (silent, but SEEN) → /pricing. The QA GA-02
+    // shape, which Meta shares: tracking the last SENT path instead of the
+    // last seen one suppressed the return forever.
+    expect(
+      shouldSendMetaPageView({
+        ...RESIDENT,
+        lastPath: "/onboarding",
+        nextPath: "/pricing",
+      }),
+    ).toBe(true);
+  });
+
+  test("a non-trackable path never sends", () => {
+    expect(
+      shouldSendMetaPageView({ ...RESIDENT, trackable: false, nextPath: "/onboarding" }),
+    ).toBe(false);
+  });
+
+  test("an unloaded pixel never sends", () => {
+    expect(
+      shouldSendMetaPageView({
+        ...RESIDENT,
+        loaded: false,
+        alreadyLoaded: false,
+        nextPath: "/about",
+      }),
+    ).toBe(false);
+  });
+});
+
 describe("metaEventForCTA", () => {
   test("signup-bound CTAs are Leads", () => {
     // AC6. Lead, not CompleteRegistration: the click leaves showcase for the
@@ -225,6 +329,15 @@ describe("metaEventForCTA", () => {
     );
   });
 
+  test("a market+locale contact href is still a Contact", () => {
+    // Defensive: no /en/us/* route exists today, but a second two-letter
+    // segment must not silently downgrade a Contact to a Lead the day one
+    // does. The strip repeats — see `isContactHref` in `lib/cta-taxonomy.ts`.
+    expect(metaEventForCTA({ ctaLocation: "hero", href: "/en/us/contact" })).toBe(
+      "Contact",
+    );
+  });
+
   test("an unmapped CTA location is silent", () => {
     // AC6's negative half. A CTA added later sends nothing until someone maps
     // it: a missing event is a gap in a dashboard, a wrong one is a campaign
@@ -237,5 +350,112 @@ describe("metaEventForCTA", () => {
     // The location allowlist is checked BEFORE the href, so an unknown CTA
     // cannot smuggle itself in by its destination.
     expect(metaEventForCTA({ ctaLocation: "footer_demo", href: "/contact" })).toBeNull();
+  });
+});
+
+describe("the browser side, in load order", () => {
+  /**
+   * `initialised` is MODULE state — it models "has this page injected the
+   * pixel", a fact about the page and not about any caller. So these tests are
+   * a SEQUENCE, not a set: each runs against the state the previous left
+   * behind, exactly as a real page does. The shape mirrors the GA suite in
+   * `lib/google-analytics.test.ts`.
+   */
+  type FakeEl = { async?: boolean; src?: string };
+
+  const appended: FakeEl[] = [];
+
+  function installBrowser(): Record<string, unknown> {
+    appended.length = 0;
+    const fakeWindow: Record<string, unknown> = {};
+    (globalThis as Record<string, unknown>).document = {
+      createElement: (): FakeEl => ({}),
+      head: {
+        appendChild: (el: FakeEl) => {
+          appended.push(el);
+        },
+      },
+    };
+    (globalThis as Record<string, unknown>).window = fakeWindow;
+    return fakeWindow;
+  }
+
+  /** Records every fbq call so a NON-call can be asserted. */
+  function spyFbq(win: Record<string, unknown>): unknown[][] {
+    const calls: unknown[][] = [];
+    win.fbq = (...args: unknown[]) => {
+      calls.push(args);
+    };
+    return calls;
+  }
+
+  afterAll(() => {
+    delete (globalThis as Record<string, unknown>).document;
+    delete (globalThis as Record<string, unknown>).window;
+  });
+
+  test("before the pixel loads, an event sends nothing", () => {
+    // fbq EXISTS here — an extension's shim, or a stub still downloading. The
+    // event must still drop, because what gates it is our own `initialised`.
+    const win = installBrowser();
+    const calls = spyFbq(win);
+
+    expect(isMetaPixelLoaded()).toBe(false);
+    trackMetaEvent({ event: "Lead", trackable: true });
+
+    expect(calls).toEqual([]);
+  });
+
+  test("a hostile pre-existing fbq cannot break the init effect", () => {
+    // The extension-shim case at load time: `initMetaPixel` reuses a
+    // pre-existing `window.fbq`, so its init/PageView calls run through it. A
+    // throw there would propagate out of the loader effect and take the page
+    // tree down with it.
+    const win = installBrowser();
+    win.fbq = () => {
+      throw new Error("blocked by extension");
+    };
+
+    expect(() => initMetaPixel("1088158323750710")).not.toThrow();
+    // The script element was still injected before the throwing calls.
+    expect(appended.length).toBe(1);
+    expect(appended[0].src).toBe(META_PIXEL_SCRIPT_SRC);
+    expect(isMetaPixelLoaded()).toBe(true);
+  });
+
+  test("a second init injects nothing — strict mode mounts effects twice", () => {
+    initMetaPixel("1088158323750710");
+    expect(appended.length).toBe(1);
+  });
+
+  test("once loaded, an event on a marketing page sends", () => {
+    const win = installBrowser();
+    const calls = spyFbq(win);
+
+    trackMetaEvent({ event: "Lead", trackable: true });
+
+    expect(calls).toEqual([["track", "Lead", undefined]]);
+  });
+
+  test("the same event on a private page sends nothing, pixel loaded or not", () => {
+    const win = installBrowser();
+    const calls = spyFbq(win);
+
+    trackMetaEvent({ event: "Lead", trackable: false });
+
+    expect(calls).toEqual([]);
+  });
+
+  test("a throw from fbq cannot break the click", () => {
+    // The same hardening `trackGaEvent` carries, for the same reason: every
+    // call site is a click handler, and in `CTAButton` the Meta call runs
+    // BEFORE the GA one — an unguarded throw here would cost the GA event AND
+    // the navigation. Losing the measurement is the acceptable failure.
+    const win = installBrowser();
+    win.fbq = () => {
+      throw new Error("blocked by extension");
+    };
+
+    expect(() => trackMetaEvent({ event: "Lead", trackable: true })).not.toThrow();
   });
 });

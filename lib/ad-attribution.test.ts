@@ -32,6 +32,7 @@ import {
   ATTRIBUTION_VERSION,
   attributionCookieAttributes,
   buildAttributionRecord,
+  captureLandingContext,
   parseAttributionCookie,
   readClickIds,
   readFbp,
@@ -41,6 +42,7 @@ import {
   vendorForClickIds,
   writeAttributionRecord,
   type AttributionRecord,
+  type LandingContext,
 } from "./ad-attribution";
 
 const BOTH = { analytics: true, marketing: true };
@@ -533,6 +535,62 @@ describe("the attribution cookie as a carrier", () => {
       if (previous) Object.defineProperty(globalThis, "document", previous);
       else delete (globalThis as Record<string, unknown>).document;
     }
+  });
+});
+
+describe("captureLandingContext — the landing snapshot", () => {
+  /**
+   * The snapshot store is MODULE state on purpose — it models "what page did
+   * this document lifetime begin on", which is a fact about the page load and
+   * not about any React component instance. So, like the browser-side GA
+   * suite, these tests are a SEQUENCE: the first call decides what every later
+   * call sees, exactly as a real page load does.
+   *
+   * The defect this closes (STA-323 review): the capture effect polled up to
+   * 3s for `_ga`/`_fbp`, and a navigation mid-poll cancelled the write. The
+   * re-run effect then read the POST-navigation `location.search` (empty) and
+   * pathname, and — first-touch-wins — permanently stored a `direct` record
+   * with the wrong landing path, blocking the real one for 182 days. The
+   * snapshot is taken synchronously on the first effect run, so the eventual
+   * write always describes the true landing, however late consent arrives.
+   */
+  const LANDING: LandingContext = {
+    search: "?gclid=abc123&utm_source=google",
+    path: "/pricing",
+    referrer: "https://www.google.com/",
+    variant: "b",
+    selfHost: "stampeo.app",
+  };
+
+  test("the first call snapshots what its reader sees", () => {
+    expect(captureLandingContext(() => ({ ...LANDING }))).toEqual(LANDING);
+  });
+
+  test("a later call returns the snapshot, not the current page", () => {
+    // The post-navigation effect run: location now says /blog with no query.
+    // The reader must not even be invoked — the snapshot is the answer.
+    let read = 0;
+    const later = captureLandingContext(() => {
+      read += 1;
+      return {
+        search: "",
+        path: "/blog",
+        referrer: "",
+        variant: null,
+        selfHost: "stampeo.app",
+      };
+    });
+
+    expect(read).toBe(0);
+    expect(later).toEqual(LANDING);
+  });
+
+  test("the snapshot is identity-stable across calls", () => {
+    // Strict mode runs the capture effect twice; both runs must be looking at
+    // the same object, not two structurally equal ones.
+    expect(captureLandingContext(() => ({ ...LANDING }))).toBe(
+      captureLandingContext(() => ({ ...LANDING })),
+    );
   });
 });
 

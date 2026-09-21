@@ -60,10 +60,10 @@ login, it is the wrong runbook.
 | R2 | Become European: set the OS timezone to Paris (macOS: System Settings > General > Date & Time > uncheck Set automatically > Europe/Paris), then **fully quit and reopen the browser**. A tab open across the change keeps the old zone. |
 | R3 | Become American: same as R2 with `America/New_York`. |
 | R4 | Corrupt the choice: in the console, `document.cookie = "stampeo_consent=%7Bnope; path=/"`, then reload. |
-| R5 | Unload the pixel: a hard **page reload** (not a client-side navigation). `fbq` lives in the page's JS and cannot be removed once injected, so any case that must start with "pixel not loaded" begins here. Confirm with `typeof window.fbq === "undefined"` in the console. |
 | R5 | Turn on Global Privacy Control: use Brave (Settings > Shields > "Tell sites not to sell my data"), or DuckDuckGo's browser. Chrome has no built-in GPC. Verify with `navigator.globalPrivacyControl` in the console before running the case. |
-| R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:1,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in"})) + '; path=/'`, then reload. |
-| R7 | Unload the GA4 tag: a hard **page reload** (not a client-side navigation). `gtag` lives in the page's JS and cannot be removed once injected, so any GA case that must start with "tag not loaded" begins here. Confirm with `typeof window.gtag === "undefined"` in the console. The GA counterpart of the pixel-unload recipe. |
+| R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:2,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in",s:crypto.randomUUID()})) + '; path=/'`, then reload. `v` must equal `CONSENT_VERSION` in `lib/consent.ts` (2 since STA-323 — a `v:1` cookie is treated as never answered) and `s` is the subject id the real banner would mint (STA-324). |
+| R7 | Unload the GA4 tag: a hard **page reload** (not a client-side navigation). `gtag` lives in the page's JS and cannot be removed once injected, so any GA case that must start with "tag not loaded" begins here. Confirm with `typeof window.gtag === "undefined"` in the console. The GA counterpart of the pixel-unload recipe (R9). |
+| R9 | Unload the pixel: a hard **page reload** (not a client-side navigation). `fbq` lives in the page's JS and cannot be removed once injected, so any case that must start with "pixel not loaded" begins here. Confirm with `typeof window.fbq === "undefined"` in the console. (Numbered past R8, which the AT section defines below; this row shipped as a second "R5" and was renumbered.) |
 
 ---
 
@@ -366,7 +366,7 @@ DEPENDS: CN-01
 WHY: The positive path. A gate that never opens would pass every negative case
 in this runbook and ship a pixel that has never fired.
 
-1. R2, then R1, then R5. Open `/pricing`.
+1. R2, then R1, then R9. Open `/pricing`.
 2. Confirm `typeof window.fbq === "undefined"` and the Network tab is empty.
 3. Click **Accept all**.
 
@@ -394,7 +394,7 @@ EXPECT:
 - **NO** new `facebook.com/tr` request. Not a PageView, not anything.
 - `window.fbq` is still defined — that is correct and not a failure. The script
   cannot be unloaded; what matters is that nothing more is sent.
-- Now R5 (hard reload) on the business slug directly. Still no
+- Now R9 (hard reload) on the business slug directly. Still no
   `connect.facebook.net` request at all, and no banner.
 
 ### MP-03 Client-side navigation counts pages once each — CORE
@@ -432,7 +432,7 @@ DEPENDS: RG-02
 WHY: Intended, and the case most likely to be misfiled as a bug. As of 2026 no
 US state law requires prior consent, so the US is notice-and-opt-out.
 
-1. R3 (become American), R1, R5. Open `/us`.
+1. R3 (become American), R1, R9. Open `/us`.
 
 EXPECT:
 - The **notice** appears, not the banner.
@@ -462,7 +462,7 @@ WHY: The state of CI and of every local checkout. The build must not depend on
 the variable existing, and an empty string must not become a live tag.
 
 1. Unset `NEXT_PUBLIC_META_PIXEL_ID` (or set it to empty), restart the dev
-   server. R1, R5.
+   server. R1, R9.
 2. Open `/pricing` and click **Accept all**.
 
 EXPECT:
@@ -581,7 +581,7 @@ EXPECT:
 - The **notice** appears, not the banner.
 - `googletagmanager.com` is requested and `_ga` is set, with **no click**.
 - This is CORRECT. Do not file it as a consent failure.
-- Then enable GPC (the R5 row for Global Privacy Control — note two rows share that id) and repeat: NOTHING loads, and no notice appears.
+- Then enable GPC (R5) and repeat: NOTHING loads, and no notice appears.
 
 ### GA-07 Revoking stops the tag — CORE
 DEPENDS: GA-01, PR-04
@@ -867,12 +867,12 @@ inversion at its heart: the cookie is what APPLIES a choice, the ledger is what
 PROVES it, and the ledger must never be allowed to cost the visitor the choice.
 
 ### CL-01 Accepting writes exactly one row — BLOCKER
-DEPENDS: CC-01
+DEPENDS: CN-01
 
 WHY: Art. 7(1) makes demonstrating consent our burden. If this row is missing,
 the banner is decoration.
 
-1. Recipe R2 (clear the consent cookie), reload `/en`.
+1. Recipe R1 (clear the consent cookie), reload `/en`.
 2. Click **Accept all**.
 3. Query: `select * from consent_records order by recorded_at desc limit 1;`
 
@@ -892,7 +892,7 @@ WHY: A ledger holding only acceptances misrepresents the population and is
 worthless as evidence. This is also the case most likely to be quietly dropped,
 because refusing is the path where nothing else visibly happens.
 
-1. Recipe R2, reload, click **Refuse all**.
+1. Recipe R1, reload, click **Refuse all**.
 2. Query the newest row.
 
 EXPECT:
@@ -941,7 +941,7 @@ far worse than a missing row, and this is the failure this design accepts
 deliberately.
 
 1. `docker compose stop backend`.
-2. Recipe R2, reload, click **Accept all**.
+2. Recipe R1, reload, click **Accept all**.
 
 EXPECT:
 - The banner closes normally.
@@ -973,7 +973,7 @@ DEPENDS: CL-01
 WHY: A US visitor's consent is implied by the opt-out regime and never clicked.
 An audit has to tell that apart from an EU visitor who actively accepted.
 
-1. Recipe R5 (US visitor: opt-out regime).
+1. Recipes R3 then R1 (US visitor: opt-out regime, no stored choice).
 2. Dismiss the notice.
 
 EXPECT:
@@ -1107,7 +1107,7 @@ DEPENDS: MP-01
 WHY: Everything downstream reads this cookie. A wrong value here cannot be
 repaired later: capture is first-touch-wins.
 
-1. R1, R5. Land on `/pricing?fbclid=qa-test-001`, accept marketing.
+1. R1, R9. Land on `/pricing?fbclid=qa-test-001`, accept marketing.
 2. Read `stampeo_attribution` (Application → Cookies) and decode it.
 
 EXPECT:
@@ -1193,7 +1193,7 @@ EXPECT:
 
 ### MC-08 Marketing refused means no attribution at all — CORE
 
-1. R1, R5. Land on `/pricing?fbclid=qa-test-003` and **Refuse all**.
+1. R1, R9. Land on `/pricing?fbclid=qa-test-003` and **Refuse all**.
 
 EXPECT:
 - `stampeo_attribution` either absent, or present with `vn: direct` and no `ci`.

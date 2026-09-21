@@ -7,6 +7,7 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   buildAttributionRecord,
+  captureLandingContext,
   readAttributionRecord,
   readClickIds,
   readFbp,
@@ -45,12 +46,37 @@ export function AttributionCapture() {
   const { analytics, marketing, regime, record, ready } = useConsent();
 
   useEffect(() => {
+    // Snapshot the attribution-relevant inputs EXACTLY ONCE per page load,
+    // synchronously, before any gate or wait below. This effect re-runs on
+    // every navigation and consent change, and by then `location.search`,
+    // `document.referrer` and the `<body>` variant describe the CURRENT page,
+    // not the one the ad bought — a mid-poll navigation used to cancel the
+    // write and let the re-run store a `direct` record with the wrong landing
+    // path, unrepairable for 182 days under first-touch-wins. The snapshot
+    // lives in module state (see `captureLandingContext`), so remounts and
+    // strict mode keep the first reading; it is memory-only, and nothing is
+    // written down until the consent gates below allow it.
+    const landing = captureLandingContext(() => ({
+      search: window.location.search,
+      path: pathname,
+      referrer: document.referrer,
+      // The live A/B variant, so ad spend can be read against the landing it
+      // actually bought. PostHog carries this as a super-property; here it has
+      // to be explicit — and it is only on `<body>` while the landing page is
+      // mounted, which is exactly when this first run happens.
+      variant: document.body.dataset.landingVariant ?? null,
+      selfHost: window.location.hostname,
+    }));
+
     if (!ready) return;
     // Nothing either category permits, so there is nothing to wait for.
     if (!analytics && !marketing) return;
-    // Never on a business enrollment page or a private route: those visitors
-    // are our customers' customers, not ad prospects.
-    if (!isTrackablePath(pathname)) return;
+    // Never for a landing on a business enrollment page or a private route:
+    // those visitors are our customers' customers, not ad prospects. Checked
+    // against the SNAPSHOT, because the record describes the landing — a
+    // consent granted later on some other page changes nothing about where
+    // this visit began.
+    if (!isTrackablePath(landing.path)) return;
     // First touch wins. A later organic pageview must not erase the ad click
     // that actually brought someone here.
     if (readAttributionRecord()) return;
@@ -63,12 +89,17 @@ export function AttributionCapture() {
     // `_fbp` matters for a meta row and nothing else; a google arrival that
     // also carries an fbclid is a google row (gclid wins in
     // `vendorForClickIds`) and must not be delayed waiting for Meta.
-    const clickIds = readClickIds(window.location.search);
+    const clickIds = readClickIds(landing.search);
     const wantsFbp = marketing && vendorForClickIds(clickIds) === "meta";
 
     const attempt = () => {
       if (cancelled) return;
 
+      // The poll exists ONLY to backfill the browser ids, which the tags
+      // write a beat after injection. Everything else comes from the landing
+      // snapshot, so a navigation mid-poll can no longer swap the landing
+      // page for the current one — the re-run effect resumes with the same
+      // snapshot and finishes the capture.
       const gaClientId = readGaClientId(document.cookie);
       const fbp = readFbp(document.cookie);
       const withinWindow = Date.now() - startedAt < GA_WAIT_MS;
@@ -82,19 +113,19 @@ export function AttributionCapture() {
       }
 
       const captured = buildAttributionRecord({
-        search: window.location.search,
+        search: landing.search,
         gaClientId,
         fbp,
-        landingPath: pathname,
-        // The live A/B variant, so ad spend can be read against the landing
-        // it actually bought. PostHog carries this as a super-property; here
-        // it has to be explicit.
-        landingVariant: document.body.dataset.landingVariant ?? null,
-        referrer: document.referrer,
-        selfHost: window.location.hostname,
+        landingPath: landing.path,
+        landingVariant: landing.variant,
+        referrer: landing.referrer,
+        selfHost: landing.selfHost,
         consent: { analytics, marketing },
         // The stored choice is the evidence. A US opt-out visitor has no
-        // record, and the regime is then what justifies the capture.
+        // record, and the regime is then what justifies the capture — the
+        // backend special-cases that shape and ACCEPTS a row with
+        // `cr: "opt-out"`, `cv: 0`, `ca: 0` (see `ad_attribution.py`), so
+        // the `?? 0` fallbacks here are part of the contract, not a shrug.
         consentVersion: record?.v ?? 0,
         consentRegime: regime,
         consentAt: record?.at ?? 0,

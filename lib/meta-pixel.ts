@@ -22,6 +22,12 @@
  * suppress.
  */
 
+import {
+  CONTACT_CTAS,
+  isContactHref,
+  isKnownCTALocation,
+} from "./cta-taxonomy";
+
 /**
  * The events this site sends. Meta STANDARD events, not custom ones, so a
  * campaign objective can target them directly and Aggregated Event Measurement
@@ -33,32 +39,23 @@ export const META_PIXEL_SCRIPT_SRC =
   "https://connect.facebook.net/en_US/fbevents.js";
 
 /**
- * CTAs that mean "I want to start using this". They leave showcase for the
- * app, so `Lead` is the honest event: we see the intent, never the account.
- */
-const SIGNUP_CTAS: ReadonlySet<string> = new Set([
-  "hero",
-  "pricing_starter",
-  "pricing_growth",
-  "pricing_pro",
-  "faq",
-  "final_cta",
-  "loyalty_picker",
-]);
-
-/** CTAs that mean "talk to a human". A different funnel, tracked separately. */
-const CONTACT_CTAS: ReadonlySet<string> = new Set(["hero_demo", "final_cta_demo"]);
-
-/**
  * The configured pixel id, or null.
  *
  * Pure so it can be tested; `metaPixelIdFromEnv` does the actual env read.
  * Whitespace collapses to null because a Docker build arg set to `""` is the
  * realistic typo, and `fbq('init', ' ')` is a live tag pointed at nothing.
+ *
+ * The numeric shape is REQUIRED rather than cosmetic, the mirror of
+ * `readMeasurementId` demanding `G-…`: a pixel id is a decimal number, and the
+ * realistic mistake is the GA measurement id pasted into the adjacent env var.
+ * `fbq('init', 'G-…')` would load a real script initialised against nothing,
+ * which looks exactly like working tracking. 5-20 digits leaves headroom over
+ * today's 15-16 without accepting a stray character.
  */
 export function readMetaPixelId(raw: string | null | undefined): string | null {
   const trimmed = (raw ?? "").trim();
-  return trimmed === "" ? null : trimmed;
+  if (!/^[0-9]{5,20}$/.test(trimmed)) return null;
+  return trimmed;
 }
 
 /**
@@ -111,6 +108,37 @@ export function shouldSendMetaEvent(input: {
 }
 
 /**
+ * Should a `PageView` be sent for this navigation?
+ *
+ * The deliberate mirror of `shouldSendPageView` in `lib/google-analytics.ts` —
+ * see its comment for the full reasoning. The two facts that matter:
+ *
+ * - `alreadyLoaded` (was the script resident BEFORE this effect run) is what
+ *   tells the init run — where `fbq('init')`'s own PageView must not be
+ *   doubled — apart from a REMOUNT with a null `lastPath`, which is the locale
+ *   switcher replacing the `[locale]` tree while the pixel stays resident.
+ *   The remounted path never got a PageView, so that case sends.
+ * - `lastPath` is the last path the caller SAW, not the last one sent for:
+ *   updated on every navigation including untrackable ones, so a detour
+ *   through /onboarding does not suppress the PageView on the return, while a
+ *   same-path re-render still dedupes.
+ */
+export function shouldSendMetaPageView(input: {
+  loaded: boolean;
+  trackable: boolean;
+  alreadyLoaded: boolean;
+  lastPath: string | null;
+  nextPath: string;
+}): boolean {
+  if (!shouldSendMetaEvent({ loaded: input.loaded, trackable: input.trackable })) {
+    return false;
+  }
+  if (!input.alreadyLoaded) return false;
+  if (input.lastPath === null) return true;
+  return input.lastPath !== input.nextPath;
+}
+
+/**
  * The Meta event for a landing CTA click, or null to send nothing.
  *
  * The location allowlist is checked BEFORE the destination, so a CTA nobody
@@ -122,15 +150,12 @@ export function metaEventForCTA(input: {
   ctaLocation: string;
   href: string;
 }): MetaStandardEvent | null {
-  const known =
-    SIGNUP_CTAS.has(input.ctaLocation) || CONTACT_CTAS.has(input.ctaLocation);
-  if (!known) return null;
+  if (!isKnownCTALocation(input.ctaLocation)) return null;
 
   // The destination wins when it disagrees with the location name, mirroring
-  // how `CTAButton` already picks its PostHog event. Locale-prefixed hrefs are
-  // matched too: `Link` from @/i18n/navigation prefixes at render time, and a
-  // call site passing a resolved href must not silently downgrade to Lead.
-  if (/^\/(?:[a-z]{2}\/)?contact(?:\/|$|\?|#)/.test(input.href)) return "Contact";
+  // how `CTAButton` already picks its PostHog event. `isContactHref` matches
+  // locale-prefixed hrefs too — see `lib/cta-taxonomy.ts`.
+  if (isContactHref(input.href)) return "Contact";
   if (CONTACT_CTAS.has(input.ctaLocation)) return "Contact";
   return "Lead";
 }
@@ -194,8 +219,17 @@ export function initMetaPixel(pixelId: string): void {
   script.src = META_PIXEL_SCRIPT_SRC;
   document.head.appendChild(script);
 
-  window.fbq?.("init", pixelId);
-  window.fbq?.("track", "PageView");
+  // Guarded for the same reason as `trackMetaEvent` below: when `window.fbq`
+  // pre-existed (an extension's shim rather than our stub), these calls run
+  // through code we do not own, and a throw here would propagate out of the
+  // loader effect and take the page tree down with it.
+  try {
+    window.fbq?.("init", pixelId);
+    window.fbq?.("track", "PageView");
+  } catch {
+    // Deliberately silent — the convention `trackGaEvent` set: there is no
+    // second reporting channel to complain through.
+  }
 }
 
 /**
@@ -217,5 +251,18 @@ export function trackMetaEvent(input: {
   ) {
     return;
   }
-  window.fbq?.("track", input.event, input.params);
+
+  // Guarded because every call site is a click handler, mirroring
+  // `trackGaEvent` exactly: a throw here — an ad blocker that replaced `fbq`
+  // with something hostile, a CSP violation — would otherwise propagate out of
+  // the handler and cost the visitor the navigation. In `CTAButton` this call
+  // runs BEFORE the GA one, so an unguarded throw would cost every GA CTA
+  // event too. Losing the measurement is the acceptable failure; losing the
+  // signup is not.
+  try {
+    window.fbq?.("track", input.event, input.params);
+  } catch {
+    // Deliberately silent: there is no second reporting channel to complain
+    // through, and a console error on every click is its own bug report.
+  }
 }
