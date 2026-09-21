@@ -22,12 +22,20 @@ interface ROICalculatorProps {
   monthlyCost?: number;
   /** The live ladder, so the calculator quotes the same price as the cards. */
   pricing: Pricing;
+  /**
+   * STA-330: false while the visitor's region is still unresolved, in which
+   * case every money figure renders as "…" rather than in a currency that may
+   * be wrong for this visitor. Defaults to true — the founder page passes a
+   * frozen EUR ladder that is never region-dependent.
+   */
+  ready?: boolean;
 }
 
 export function ROICalculator({
   namespace = "pricing.roi",
   monthlyCost,
   pricing,
+  ready = true,
 }: ROICalculatorProps) {
   const t = useTranslations(namespace);
   const locale = useLocale();
@@ -37,7 +45,9 @@ export function ROICalculator({
     n % 1 === 0 ? String(n) : isComma ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
   // Placement and glyph both follow the currency+locale pair, not the locale
   // alone: "40€" is right for a French euro price and wrong for a US dollar one.
-  const euro = (n: number) => formatMoney(n, pricing.currency, locale);
+  // Some of these figures are interpolated into ICU sentences, so the held
+  // state is an ellipsis rather than a skeleton element.
+  const euro = (n: number) => (ready ? formatMoney(n, pricing.currency, locale) : "…");
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
   const [mode, setMode] = useState<Mode>("prudent");

@@ -8,12 +8,12 @@ import {
   isFoundingProgramOpen,
   yearlyCardView,
   type BillingInterval,
-  type Pricing,
   type TierId,
 } from "@/lib/pricing";
 import { PricingTierCard, type FeatureItem } from "@/components/pricing/PricingTierCard";
 import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggle";
 import { MarketSuggestion } from "@/components/market/MarketSuggestion";
+import { usePricingRegion } from "@/hooks/use-pricing-region";
 import type { Market } from "@/lib/markets";
 
 const TIERS = [
@@ -25,15 +25,15 @@ const TIERS = [
 /**
  * Landing-page pricing block. Client-side because of the cadence switcher —
  * the card itself was already a client component, so the boundary only moves
- * up by one level.
+ * up by one level. The ladder and trial length come from the region provider
+ * (STA-330): the visitor's detected region decides them, not the page.
  */
 export function PricingSection({
-  pricing,
-  trialDays,
   market = "int",
-}: Readonly<{ pricing: Pricing; trialDays: number; market?: Market }>) {
+}: Readonly<{ market?: Market }>) {
   const t = useTranslations("pricing");
   const locale = useLocale();
+  const { pricing, trialDays, ready } = usePricingRegion();
   const foundingOpen = isFoundingProgramOpen();
   // Yearly is the default here too, so the price on the homepage matches the
   // one on /pricing.
@@ -73,6 +73,7 @@ export function PricingSection({
                 key={id}
                 // Cheap-to-expensive at every width: the stacked mobile order
                 // matches the desktop one.
+                loading={!ready}
                 currency={pricing.currency}
                 name={t(`${id}.name`)}
                 tagline={t(`${id}.tagline`)}

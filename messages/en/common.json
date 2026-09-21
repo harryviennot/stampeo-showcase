@@ -120,7 +120,7 @@
       "complete": "Card completed"
     },
     "marketSuggestion": {
-      "prompt": "Prices shown in euros.",
+      "prompt": "We have a page for businesses in your region.",
       "cta": "See {country} pricing",
       "dismiss": "Dismiss",
       "country": {

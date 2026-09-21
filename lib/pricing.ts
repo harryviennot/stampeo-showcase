@@ -35,10 +35,9 @@ export type Pricing = {
  *
  * CRITICAL: this must only ever contain currencies Stripe can actually bill.
  * Quoting a currency checkout cannot charge is worse than quoting a stale price,
- * because the visitor is shown one number and debited another. USD lands here in
- * the same change that adds USD `currency_options` to the Stripe Prices (B1) —
- * not before. Until then a request for USD falls back to euros, which is what
- * the backend would have answered anyway.
+ * because the visitor is shown one number and debited another. USD qualified on
+ * 2026-09-15, when the Stripe Prices gained `currency_options.usd`; its amounts
+ * below are that ladder, captured from `GET /public/plans?currency=usd`.
  */
 export const FALLBACK_PRICING: Record<string, Pricing> = {
   eur: {
@@ -47,6 +46,14 @@ export const FALLBACK_PRICING: Record<string, Pricing> = {
       starter: { month: 20, year: 192 },
       growth: { month: 40, year: 384 },
       pro: { month: 60, year: 576 },
+    },
+  },
+  usd: {
+    currency: "usd",
+    tiers: {
+      starter: { month: 49, year: 468 },
+      growth: { month: 79, year: 756 },
+      pro: { month: 119, year: 1140 },
     },
   },
 };

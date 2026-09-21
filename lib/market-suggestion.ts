@@ -3,20 +3,22 @@ import { MARKETS, type Market } from "./markets";
 /**
  * The market page a visitor probably wants, when it is not the one they are on.
  *
- * The problem this solves is a price they were never going to be charged. The
- * euro pages quote EUR 20; a US business is billed $49. Until `/us` is indexed,
- * hreflang protects nobody and EVERY US visitor lands on a euro page — then
- * discovers the real number at the last step of a thirty-step wizard, having
- * spent twenty minutes building a card. Sunk cost makes people angry, not
- * compliant.
+ * The problem this solved was a price they were never going to be charged: the
+ * euro pages quoted EUR 20 while a US business is billed $49. Since STA-330 the
+ * NUMBERS follow the visitor's detected region on every page (the
+ * RegionPricingProvider swaps the ladder client-side), so the banner no longer
+ * guards the price — what `/us` still has that `/` does not is its copy: the
+ * US-specific pitch, FAQ and reassurance lines. The banner remains the offer
+ * of that page, and the market keys stay the SEO story (each URL asserts one
+ * currency to crawlers).
  *
- * The fix is a link, not a redirect. Google prefers an offer to switch over an
+ * Still a link, never a redirect. Google prefers an offer to switch over an
  * IP-based redirect, a link costs a visitor one click if the guess is wrong,
  * and it keeps every page cacheable and identical for crawler and human alike.
  *
- * Suggests only when the CURRENCY differs. A UK visitor on `/` is already being
- * quoted the currency they will be billed in, so sending them to `/uk` would be
- * churn for no benefit.
+ * Suggests only when the market's currency differs from the page's. A UK
+ * visitor on `/` is on a page whose market already matches their currency, so
+ * sending them to `/uk` would be churn for no benefit.
  */
 export function suggestedMarket(
   detectedCountry: string | null | undefined,

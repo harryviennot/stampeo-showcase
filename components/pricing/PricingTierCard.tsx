@@ -5,6 +5,7 @@ import { useLocale } from "next-intl";
 import { formatMoney } from "@/lib/pricing";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
+import { TextSkeleton } from "@/components/ui/TextSkeleton";
 import { InfoIcon } from "@/components/icons";
 import { usePathname } from "next/navigation";
 import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
@@ -60,6 +61,14 @@ type PricingTierCardProps = {
   trackAs?: CTALocation;
   /** Lets the page control stacking order (recommended tier first on mobile). */
   className?: string;
+  /**
+   * STA-330: true while the visitor's region is unresolved. The price, the
+   * sub-label and the trial subtext render as inline skeleton chips — sized to
+   * their text, so the card's height never changes — because the amounts passed
+   * in were computed from the page default and may be the wrong currency for
+   * this visitor. Everything region-independent renders normally.
+   */
+  loading?: boolean;
 };
 
 function FeatureListItem({ feature }: { feature: FeatureItem }) {
@@ -117,11 +126,13 @@ export function PricingTierCard({
   currency,
   trackAs,
   className = "",
+  loading = false,
 }: PricingTierCardProps) {
   const locale = useLocale();
   const pathname = usePathname();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
-  const showDiscount = discounted !== undefined && discounted < price;
+  // A held card never shows a struck-through pair: both numbers would be chips.
+  const showDiscount = !loading && discounted !== undefined && discounted < price;
   const annotated = Boolean(highlighted && annotationLabel);
 
   // Wired separately from `CTAButton` because this card renders its own link.
@@ -212,7 +223,7 @@ export function PricingTierCard({
         ) : (
           <div className="flex items-baseline gap-1">
             <span className="text-4xl font-bold tracking-tight">
-              {formatMoney(price, currency, locale)}
+              {loading ? <TextSkeleton ch={4} /> : formatMoney(price, currency, locale)}
             </span>
             <span className="text-[var(--muted-foreground)] text-base font-semibold">
               {perMonthLabel}
@@ -222,7 +233,7 @@ export function PricingTierCard({
 
         {subLabel && (
           <p className="text-sm text-[var(--muted-foreground)] font-medium -mt-2">
-            {subLabel}
+            {loading ? <TextSkeleton ch={18} /> : subLabel}
           </p>
         )}
       </div>
@@ -259,7 +270,9 @@ export function PricingTierCard({
           </Link>
         )}
         {ctaSubtext && (
-          <p className="text-xs text-center text-[var(--muted-foreground)]">{ctaSubtext}</p>
+          <p className="text-xs text-center text-[var(--muted-foreground)]">
+            {loading ? <TextSkeleton ch={14} /> : ctaSubtext}
+          </p>
         )}
       </div>
     </div>

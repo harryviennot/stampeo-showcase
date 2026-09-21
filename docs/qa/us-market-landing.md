@@ -21,6 +21,14 @@ market's copy; it does not edit anyone else's. `/`, `/en`, `/es`, `/pl` and
 `/uk` are the control group, and a difference there is a regression even when
 the new wording reads better.
 
+> **Amended 2026-09-21 (STA-330):** prices and trial-day NUMBERS now follow the
+> visitor's DETECTED region on every page, not the URL — `/us` shows € + 30 to
+> a France-detected browser, `/fr` shows $ + 14 to a US-detected one. Any case
+> below that asserts a currency glyph or a day count is region-dependent: run
+> it with the matching timezone spoof (see `docs/qa/region-pricing.md`, recipe
+> R1), or its EXPECT is wrong by design, not failed. The COPY assertions (which
+> sentences appear on which page) are untouched — copy stays per-market.
+
 ---
 
 ## SETUP: Before you start

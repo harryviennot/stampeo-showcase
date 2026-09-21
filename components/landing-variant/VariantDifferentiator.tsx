@@ -3,21 +3,20 @@ import { ScrollReveal } from "../ui/ScrollReveal";
 import { CheckIcon } from "../icons";
 import { marketCopy } from "@/lib/market-copy";
 import { type Market } from "@/lib/markets";
+import { RegionText } from "@/components/market/RegionText";
 
 export async function VariantDifferentiator({
-  trialDays,
   market = "int",
-}: Readonly<{ trialDays: number; market?: Market }>) {
+}: Readonly<{ market?: Market }>) {
   const t = await getTranslations("variant");
   const copy = marketCopy(t, market);
-  // t.raw skips ICU interpolation, so the trial length has to be substituted
-  // here. Leaving it unsubstituted rendered a literal "{trialDays}" on /us.
-  const items = (copy.raw("differentiator.items") as Array<{ title: string; description: string }>).map(
-    (item) => ({
-      ...item,
-      description: item.description.replaceAll("{trialDays}", String(trialDays)),
-    }),
-  );
+  // Raw strings, substituted in the client leaf: the trial length follows the
+  // visitor's detected region (STA-330). RegionText resolves {trialDays} —
+  // leaving a token unresolved once rendered a literal "{trialDays}" on /us.
+  const items = copy.raw("differentiator.items") as Array<{
+    title: string;
+    description: string;
+  }>;
 
   return (
     <section className="relative py-16 lg:py-24 bg-[var(--blog-bg-alt)]">
@@ -45,7 +44,7 @@ export async function VariantDifferentiator({
                   {item.title}
                 </h3>
                 <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                  {item.description}
+                  <RegionText raw={item.description} />
                 </p>
               </div>
             </div>

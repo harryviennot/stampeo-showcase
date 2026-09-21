@@ -1,9 +1,11 @@
 import { setRequestLocale } from "next-intl/server";
 import { getPlanCatalog } from "@/lib/plan-catalog";
 import { MARKETS, type Market } from "@/lib/markets";
+import type { RegionCurrency } from "@/lib/region-pricing";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { PricingPageContent } from "@/components/pricing/PricingPageContent";
+import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
 
 /**
  * The pricing page for one market.
@@ -14,26 +16,33 @@ import { PricingPageContent } from "@/components/pricing/PricingPageContent";
  * pricing route hardcoded MARKETS.int, so a single click on "Pricing" showed a
  * US visitor euros. Adding a market now means adding a route that passes its
  * name here, not copying a page.
+ *
+ * Since STA-330 the market no longer fixes what a visitor sees either: both
+ * ladders are fetched at render time (the page stays fully cacheable) and the
+ * RegionPricingProvider resolves the browser's detected region after hydration.
+ * The market currency remains the default for an undetectable visitor.
  */
 export async function MarketPricingPage({
   locale,
   market = "int",
 }: Readonly<{ locale: string; market?: Market }>) {
   setRequestLocale(locale);
-  // Fixed at render time, like VariantLanding, so the page stays fully cacheable
-  // and every block on it quotes the same ladder.
-  const pricing = await getPlanCatalog(MARKETS[market].currency.code.toLowerCase());
+  const marketCurrency: RegionCurrency =
+    MARKETS[market].currency.code.toLowerCase() === "usd" ? "usd" : "eur";
+  const [eur, usd] = await Promise.all([getPlanCatalog("eur"), getPlanCatalog("usd")]);
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      <Header market={market} />
-      <main>
-        <PricingPageContent
-          pricing={pricing}
-          trialDays={MARKETS[market].trialDays}
-          market={market}
-        />
-      </main>
-      <Footer market={market} />
+      <RegionPricingProvider
+        ladders={{ eur, usd }}
+        defaultCurrency={marketCurrency}
+        defaultTrialDays={MARKETS[market].trialDays}
+      >
+        <Header market={market} />
+        <main>
+          <PricingPageContent market={market} />
+        </main>
+        <Footer market={market} />
+      </RegionPricingProvider>
     </div>
   );
 }
