@@ -120,7 +120,7 @@
       "complete": "Tarjeta completada"
     },
     "marketSuggestion": {
-      "prompt": "Precios mostrados en euros.",
+      "prompt": "Tenemos una página para los comercios de tu región.",
       "cta": "Ver precios de {country}",
       "dismiss": "Cerrar",
       "country": {

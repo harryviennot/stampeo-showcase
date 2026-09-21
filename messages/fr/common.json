@@ -120,7 +120,7 @@
       "complete": "Carte complétée"
     },
     "marketSuggestion": {
-      "prompt": "Tarifs affichés en euros.",
+      "prompt": "On a une page pour les commerces de votre région.",
       "cta": "Voir les tarifs {country}",
       "dismiss": "Fermer",
       "country": {

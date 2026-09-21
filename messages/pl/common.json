@@ -120,7 +120,7 @@
       "complete": "Karta ukończona"
     },
     "marketSuggestion": {
-      "prompt": "Ceny podane w euro.",
+      "prompt": "Mamy stronę dla firm z twojego regionu.",
       "cta": "Zobacz ceny dla {country}",
       "dismiss": "Zamknij",
       "country": {
