@@ -71,6 +71,26 @@ localStorage incl. the MarketSuggestion dismissal). Then hard reload.
 `curl -s https://showcase.dev.stampeo.app/<path> | grep -o 'application/ld+json.\{0,2000\}'`
 — or save the page and read the `<script type="application/ld+json">` blocks.
 
+**R4: Automated timezone matrix** (core region-pricing verification)
+
+From `showcase/`, run:
+
+```bash
+bun scripts/qa-region-pricing-cdp.mjs
+```
+
+The script launches a fresh isolated Chrome profile and applies Chrome's real
+DevTools `Emulation.setTimezoneOverride` before navigation. It checks all ten
+landing/pricing routes with `America/New_York`, `Europe/Paris`, `Asia/Tokyo`,
+and the undetectable fallback (`Etc/UTC` + regionless `en`). It fails on a
+wrong currency, wrong trial length, missing ladder amount, or unresolved price
+skeleton, and also exercises monthly and 390px mobile pricing on the cross-
+market pricing page. A passing run currently reports `48` checks and `0`
+failures.
+
+R4 proves the hydrated browser behavior and route matrix. It does not replace
+RP-08's visual flash/CLS observation or AN-01..AN-03's analytics tooling.
+
 ### Known state before you start
 
 - **Run of 2026-09-21 at `fd8c880` (post-implementation):** PASSED: RP-05, RP-06
