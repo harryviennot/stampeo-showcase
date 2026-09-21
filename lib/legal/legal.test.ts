@@ -289,3 +289,33 @@ describe("privacy §5.6 consent records (STA-324)", () => {
     }
   });
 });
+
+describe("privacy §5.2 — the consent cookie's own contents", () => {
+  /**
+   * The cookie table is where a reader looks to find out what a cookie HOLDS.
+   * `stampeo_consent` gained a random identifier in STA-324, and describing it
+   * only in §5.6 leaves the table saying something narrower than the truth
+   * about a cookie we set ourselves.
+   */
+  function privacySource(locale: string) {
+    const dir = path.join(process.cwd(), "legal", locale);
+    const file = fs
+      .readdirSync(dir)
+      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+    return fs.readFileSync(path.join(dir, file!), "utf-8");
+  }
+
+  it("the table row mentions the identifier and points at 5.6, in every locale", () => {
+    for (const locale of routing.locales) {
+      const row = privacySource(locale)
+        .split("\n")
+        .find((line) => line.includes("`stampeo_consent`") && line.trim().startsWith("|"));
+
+      expect(row, `${locale} has no stampeo_consent table row`).toBeDefined();
+      expect(row, `${locale} row does not mention the identifier`).toMatch(
+        /identifier|identifiant|identificador|identyfikator/i,
+      );
+      expect(row, `${locale} row does not cross-reference 5.6`).toContain("5.6");
+    }
+  });
+});

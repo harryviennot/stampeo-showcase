@@ -145,7 +145,7 @@ These are strictly necessary and are not subject to consent.
 |---|---|---|
 | `NEXT_LOCALE` | Remembers which language you are reading the site in. | 1 year |
 | `stampeo_market` | Remembers which country's pages you opened, to prefill a field later. | 30 days |
-| `stampeo_consent` | Records the choice you made about the cookies in 5.3. | 6 months |
+| `stampeo_consent` | Records the choice you made about the cookies in 5.3, and a random identifier that links your successive choices together (see 5.6). | 6 months |
 | Supabase session cookies | Keeps you signed in on the business dashboard. | Session |
 
 ### 5.3 Cookies subject to your consent

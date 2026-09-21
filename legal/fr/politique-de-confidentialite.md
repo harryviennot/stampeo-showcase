@@ -145,7 +145,7 @@ Ils sont strictement nécessaires et ne sont pas soumis au consentement.
 |---|---|---|
 | `NEXT_LOCALE` | Retient la langue dans laquelle vous consultez le site. | 1 an |
 | `stampeo_market` | Retient le pays dont vous avez ouvert les pages, pour préremplir un champ plus tard. | 30 jours |
-| `stampeo_consent` | Enregistre le choix que vous avez fait sur les cookies du 5.3. | 6 mois |
+| `stampeo_consent` | Enregistre le choix que vous avez fait sur les cookies du 5.3, ainsi qu'un identifiant aléatoire reliant vos choix successifs (voir 5.6). | 6 mois |
 | Cookies de session Supabase | Vous maintient connecté au tableau de bord. | Session |
 
 ### 5.3 Cookies soumis à votre consentement

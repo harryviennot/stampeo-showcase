@@ -145,7 +145,7 @@ Są ściśle niezbędne i nie podlegają zgodzie.
 |---|---|---|
 | `NEXT_LOCALE` | Zapamiętuje język, w którym czytasz stronę. | 1 rok |
 | `stampeo_market` | Zapamiętuje kraj, którego strony otworzono, żeby później wypełnić pole. | 30 dni |
-| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3. | 6 miesięcy |
+| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3 oraz losowy identyfikator łączący kolejne decyzje (zob. 5.6). | 6 miesięcy |
 | Pliki cookie sesji Supabase | Utrzymuje zalogowanie w panelu firmowym. | Sesja |
 
 ### 5.3 Pliki cookie wymagające twojej zgody

@@ -145,7 +145,7 @@ Son estrictamente necesarias y no están sujetas a consentimiento.
 |---|---|---|
 | `NEXT_LOCALE` | Recuerda el idioma en el que consultas el sitio. | 1 año |
 | `stampeo_market` | Recuerda el país cuyas páginas has abierto, para rellenar un campo más adelante. | 30 días |
-| `stampeo_consent` | Registra la elección que has hecho sobre las cookies del 5.3. | 6 meses |
+| `stampeo_consent` | Registra la elección que has hecho sobre las cookies del 5.3 y un identificador aleatorio que enlaza tus decisiones sucesivas (véase 5.6). | 6 meses |
 | Cookies de sesión de Supabase | Te mantiene con la sesión iniciada en el panel. | Sesión |
 
 ### 5.3 Cookies sujetas a tu consentimiento
