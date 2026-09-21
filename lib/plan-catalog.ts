@@ -6,8 +6,10 @@
  * backend/docs/billing/ADDING_A_CURRENCY.md. Repricing is a Stripe dashboard
  * action; nothing here needs to change and nothing needs to deploy.
  *
- * Server-only: it is fetched in a server component and passed down as a prop,
- * so the currency is fixed at render time and the page stays fully cacheable.
+ * Server-only: fetched in a server component, so the page stays fully
+ * cacheable. Since STA-330 the page shells fetch BOTH ladders (eur + usd) and
+ * the RegionPricingProvider picks one client-side for the visitor's detected
+ * region; the market's own currency remains what JSON-LD asserts per URL.
  */
 
 import { FALLBACK_PRICING, type Pricing, type TierId } from "./pricing";

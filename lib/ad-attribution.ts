@@ -1,0 +1,502 @@
+import type { ConsentRegime, ConsentState } from "./consent";
+
+/**
+ * Ad attribution capture (STA-323).
+ *
+ * The funnel this exists to close runs:
+ *
+ *   ad click → landing (tags live) → CTA → /onboarding (no tag) →
+ *   app.stampeo.app → business created → Stripe checkout → invoice paid
+ *
+ * Showcase can only see the first hop. The BUSINESS is created in `web/`
+ * (`IdentityStep.tsx`), on another subdomain, so what is captured here has to
+ * physically travel there — which is why the carrier is a cookie scoped to
+ * `.stampeo.app` and not `sessionStorage`. `lib/consent.ts` and
+ * `lib/last-login.ts` already share a cookie the same way.
+ *
+ * CONSENT GATES CAPTURE, NOT ONLY SENDING. A click id is an advertising
+ * identifier, so writing one down is already processing. With neither category
+ * granted nothing is written at all — which also means a refusal leaves nothing
+ * to delete, matching how the tags themselves behave.
+ *
+ * THE TWO CATEGORIES BUY DIFFERENT FIELDS. `marketing` permits the platforms'
+ * click ids; `analytics` permits the GA4 client id. A visitor who granted one
+ * does not thereby grant the other, and the record names which category
+ * permitted it so the backend can prove the basis without a lookup it cannot
+ * make across domains.
+ *
+ * THIS COOKIE IS NOT AUTHENTICATION. It is readable and editable in devtools by
+ * anyone, and it crosses a subdomain boundary. Parsing is therefore total —
+ * malformed, forged or stale input is null, never a throw — and the backend
+ * validates everything again. The worst a forged cookie can achieve is a wrong
+ * attribution row on the forger's own business.
+ */
+
+export const ATTRIBUTION_COOKIE = "stampeo_attribution";
+
+/** Bump when a field changes meaning. A stored record from another version is discarded. */
+export const ATTRIBUTION_VERSION = 1;
+
+/** Six months, matching the consent choice that authorises it. */
+const SIX_MONTHS_SECONDS = 60 * 60 * 24 * 182;
+
+export type AdVendor = "google" | "meta" | "tiktok" | "direct";
+
+const VENDORS: ReadonlySet<string> = new Set([
+  "google",
+  "meta",
+  "tiktok",
+  "direct",
+]);
+
+export interface ClickIds {
+  gclid: string | null;
+  fbclid: string | null;
+  ttclid: string | null;
+}
+
+export interface UtmFields {
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  utmContent: string | null;
+  utmTerm: string | null;
+}
+
+export interface AttributionRecord extends UtmFields {
+  v: number;
+  vendor: AdVendor;
+  /** GA4 client id, from the `_ga` cookie. Analytics category. */
+  browserId: string | null;
+  /** gclid / fbclid / ttclid. Marketing category. */
+  clickId: string | null;
+  landingPath: string;
+  landingVariant: string | null;
+  referrerHost: string | null;
+  /** Which category permitted this record to exist. */
+  consentCategory: "analytics" | "marketing";
+  consentVersion: number;
+  consentRegime: ConsentRegime;
+  /** Unix seconds. Evidence of when consent was given. */
+  consentAt: number;
+  /** Unix seconds. Lets the sender drop a click id older than the ad window. */
+  capturedAt: number;
+}
+
+/**
+ * Cap on any single captured field.
+ *
+ * Matches `_MAX_FIELD` in the backend's `ad_attribution.py`, but has to exist
+ * HERE too: the server-side cap protects the database row, and by the time it
+ * runs the cookie is already on the visitor's device.
+ */
+const MAX_FIELD = 128;
+
+/**
+ * A more generous cap for the two fields the whole feature exists to carry.
+ *
+ * A real `fbclid` runs past 100 characters and a `gclid` past 90, so the soft
+ * cap above would corrupt them into un-attributable garbage — worse than
+ * dropping them, because a truncated identifier still looks like data.
+ */
+const MAX_ID_FIELD = 512;
+
+/**
+ * Ceiling on the whole serialized cookie.
+ *
+ * It rides on every request to both subdomains for 182 days, alongside the
+ * chunked Supabase auth cookies. A crafted landing link could otherwise plant
+ * a ~4KB cookie and push the visitor over the request-header limit, giving
+ * them persistent 400/431 on the dashboard until they cleared it by hand.
+ */
+const MAX_COOKIE_BYTES = 2048;
+
+/**
+ * Empty string is not a value (`?gclid=` is what a broken ad template emits),
+ * and no single value may exceed `MAX_FIELD`.
+ *
+ * Truncating rather than rejecting is deliberate: a long campaign name is a
+ * reason to shorten it, never a reason to lose the click that paid for the
+ * visit.
+ */
+function param(
+  search: URLSearchParams,
+  name: string,
+  max: number = MAX_FIELD
+): string | null {
+  const value = search.get(name);
+  if (!value || value.trim() === "") return null;
+  return value.slice(0, max);
+}
+
+export function readClickIds(search: string): ClickIds {
+  const params = new URLSearchParams(search);
+  return {
+    gclid: param(params, "gclid", MAX_ID_FIELD),
+    fbclid: param(params, "fbclid", MAX_ID_FIELD),
+    ttclid: param(params, "ttclid", MAX_ID_FIELD),
+  };
+}
+
+export function readUtm(search: string): UtmFields {
+  const params = new URLSearchParams(search);
+  return {
+    utmSource: param(params, "utm_source"),
+    utmMedium: param(params, "utm_medium"),
+    utmCampaign: param(params, "utm_campaign"),
+    utmContent: param(params, "utm_content"),
+    utmTerm: param(params, "utm_term"),
+  };
+}
+
+/**
+ * Which platform an arrival belongs to.
+ *
+ * The order is FIXED rather than "whichever parameter came first", because the
+ * schema stores one row per vendor and a visitor can arrive carrying two
+ * platforms' parameters. A reproducible winner is worth more than a clever one.
+ */
+export function vendorForClickIds(ids: ClickIds): AdVendor {
+  if (ids.gclid) return "google";
+  if (ids.fbclid) return "meta";
+  if (ids.ttclid) return "tiktok";
+  return "direct";
+}
+
+/** The click id matching the vendor `vendorForClickIds` chose. */
+function clickIdFor(ids: ClickIds): string | null {
+  return ids.gclid ?? ids.fbclid ?? ids.ttclid;
+}
+
+/**
+ * The host that sent this visitor, or null.
+ *
+ * Our own host is not a referrer: recording it would make every second page
+ * look like a referral from ourselves and drown the real sources.
+ */
+export function referrerHost(
+  referrer: string | null | undefined,
+  selfHost: string
+): string | null {
+  if (!referrer) return null;
+  let host: string;
+  try {
+    host = new URL(referrer).hostname;
+  } catch {
+    return null;
+  }
+  if (!host) return null;
+  const self = selfHost.replace(/^www\./, "");
+  if (host === self || host.endsWith(`.${self}`)) return null;
+  return host;
+}
+
+/**
+ * What may be captured from this arrival, or null to capture nothing.
+ *
+ * The two categories are read independently, and the record is refused when
+ * neither of them buys a field that is actually present — a visitor who
+ * granted only `marketing` and arrived organically has nothing this function
+ * is permitted to write down, and a row stored on a basis nobody granted is
+ * worse than a missing row.
+ */
+export function buildAttributionRecord(input: {
+  search: string;
+  gaClientId: string | null;
+  /** Meta's `_fbp`. Marketing-gated, unlike the GA client id. */
+  fbp?: string | null;
+  landingPath: string;
+  landingVariant: string | null;
+  referrer: string | null;
+  selfHost?: string;
+  consent: ConsentState;
+  consentVersion: number;
+  consentRegime: ConsentRegime;
+  consentAt: number;
+  capturedAt: number;
+}): AttributionRecord | null {
+  const ids = readClickIds(input.search);
+
+  // A click id may only be read with marketing consent, so a visitor who
+  // refused it has no paid source as far as this record is concerned.
+  const clickId = input.consent.marketing ? clickIdFor(ids) : null;
+  const vendor = clickId ? vendorForClickIds(ids) : "direct";
+
+  // The browser id belongs to whichever platform this row is for, and each
+  // platform's cookie sits in a different consent category:
+  //
+  //   `_ga` / `_gid` -> analytics      (COOKIE_PATTERNS.analytics)
+  //   `_fbp`         -> marketing      (COOKIE_PATTERNS.marketing)
+  //
+  // So the gate is per-vendor, not one gate reused. Reading `_fbp` under the
+  // analytics gate would store a marketing identifier on analytics consent —
+  // and `_fbp` can outlive a revocation, because clearing a third-party cookie
+  // is best-effort, so the check cannot lean on the cookie's absence.
+  const browserId =
+    vendor === "meta"
+      ? (input.consent.marketing ? (input.fbp ?? null) : null)
+      : (input.consent.analytics ? input.gaClientId : null);
+
+  // Neither category bought anything present. Nothing to store.
+  if (!clickId && !input.consent.analytics) return null;
+
+  return {
+    v: ATTRIBUTION_VERSION,
+    vendor,
+    browserId: browserId?.slice(0, MAX_ID_FIELD) ?? null,
+    clickId,
+    ...readUtm(input.search),
+    landingPath: input.landingPath.slice(0, MAX_FIELD),
+    landingVariant: input.landingVariant?.slice(0, MAX_FIELD) ?? null,
+    referrerHost: referrerHost(input.referrer, input.selfHost ?? "stampeo.app"),
+    // The category that PERMITTED the row. A click id is the marketing-gated
+    // field, so its presence is what makes this a marketing record.
+    consentCategory: clickId ? "marketing" : "analytics",
+    consentVersion: input.consentVersion,
+    consentRegime: input.consentRegime,
+    consentAt: input.consentAt,
+    capturedAt: input.capturedAt,
+  };
+}
+
+/**
+ * The cookie VALUE for a record.
+ *
+ * Keys are short because this rides on every request to both subdomains and
+ * competes with the auth cookies for the 4KB header budget.
+ */
+export function serializeAttributionCookie(record: AttributionRecord): string {
+  return encodeURIComponent(
+    JSON.stringify({
+      v: record.v,
+      vn: record.vendor,
+      bi: record.browserId,
+      ci: record.clickId,
+      us: record.utmSource,
+      um: record.utmMedium,
+      uc: record.utmCampaign,
+      uo: record.utmContent,
+      ut: record.utmTerm,
+      lp: record.landingPath,
+      lv: record.landingVariant,
+      rh: record.referrerHost,
+      cc: record.consentCategory,
+      cv: record.consentVersion,
+      cr: record.consentRegime,
+      ca: record.consentAt,
+      at: record.capturedAt,
+    })
+  );
+}
+
+function text(value: unknown): string | null {
+  return typeof value === "string" && value !== "" ? value : null;
+}
+
+function count(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+/**
+ * A stored record, or null.
+ *
+ * Null for anything malformed, truncated, forged or written by another
+ * version. Never throws: this value is attacker-controlled, and a corrupt
+ * cookie has to degrade into "no attribution" rather than into a failed signup.
+ *
+ * The vendor and consent category are checked against their allowed sets HERE
+ * as well as in the backend, so a forged value cannot reach the database's
+ * CHECK constraint and surface as a 500 in the middle of business creation.
+ */
+export function parseAttributionCookie(
+  raw: string | null | undefined
+): AttributionRecord | null {
+  if (!raw || !raw.trim()) return null;
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(decodeURIComponent(raw));
+  } catch {
+    return null;
+  }
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    return null;
+  }
+
+  const r = parsed as Record<string, unknown>;
+  if (r.v !== ATTRIBUTION_VERSION) return null;
+
+  const vendor = typeof r.vn === "string" ? r.vn : "";
+  if (!VENDORS.has(vendor)) return null;
+
+  const category = r.cc === "analytics" || r.cc === "marketing" ? r.cc : null;
+  if (category === null) return null;
+
+  const landingPath = text(r.lp);
+  if (landingPath === null) return null;
+
+  return {
+    v: ATTRIBUTION_VERSION,
+    vendor: vendor as AdVendor,
+    browserId: text(r.bi),
+    clickId: text(r.ci),
+    utmSource: text(r.us),
+    utmMedium: text(r.um),
+    utmCampaign: text(r.uc),
+    utmContent: text(r.uo),
+    utmTerm: text(r.ut),
+    landingPath,
+    landingVariant: text(r.lv),
+    referrerHost: text(r.rh),
+    consentCategory: category,
+    consentVersion: count(r.cv),
+    consentRegime: r.cr === "opt-out" ? "opt-out" : "opt-in",
+    consentAt: count(r.ca),
+    capturedAt: count(r.at),
+  };
+}
+
+/**
+ * Everything about the arrival that must be read from the LANDING page and
+ * nowhere else. `AttributionCapture` snapshots it once per page load.
+ */
+export interface LandingContext {
+  /** `location.search` as it was on landing — the click ids and UTMs. */
+  search: string;
+  /** The landing pathname. */
+  path: string;
+  /** `document.referrer`, which a client-side navigation would overwrite. */
+  referrer: string;
+  /** The landing A/B variant published on `<body>`, gone after navigation. */
+  variant: string | null;
+  /** `location.hostname`, for the self-referrer check. */
+  selfHost: string;
+}
+
+let landingContext: LandingContext | null = null;
+
+/**
+ * The landing context of this page load, read EXACTLY ONCE.
+ *
+ * The first call runs `read` and keeps the answer for the lifetime of the
+ * document; every later call returns that snapshot and never invokes its
+ * reader. Module state on purpose: it survives React remounts and strict
+ * mode's double effects within one document, and resets on a hard navigation —
+ * which is also when the browser's own `location`/`referrer` reset.
+ *
+ * This exists because capture WAITS (it polls for the tags' browser-id
+ * cookies) and consent can arrive pages later. By either point,
+ * `location.search` and `document.referrer` describe the current page, not the
+ * one the ad bought — and first-touch-wins makes a record built from those
+ * unrepairable for 182 days. The snapshot is memory-only: nothing is stored
+ * anywhere until consent lets `buildAttributionRecord` say so.
+ */
+export function captureLandingContext(read: () => LandingContext): LandingContext {
+  if (landingContext === null) landingContext = read();
+  return landingContext;
+}
+
+/* -------------------------------------------------------------------------
+ * Browser side. Everything below is a no-op off the browser.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The GA4 client id, read out of the `_ga` cookie.
+ *
+ * Format is `GA1.1.<client_id>`, and the client id itself is the last two
+ * dot-separated parts (`1234567890.1700000000`). Google does not expose it any
+ * other way synchronously — `gtag('get', …)` is a callback — and the cookie
+ * only exists once the tag has loaded, which is exactly the condition we want
+ * to require anyway.
+ */
+export function readGaClientId(cookieHeader: string | null | undefined): string | null {
+  if (!cookieHeader) return null;
+  for (const part of cookieHeader.split(";")) {
+    const entry = part.trim();
+    if (!entry.startsWith("_ga=")) continue;
+    const value = entry.slice(4);
+    const bits = value.split(".");
+    if (bits.length < 4) return null;
+    return `${bits[0]}.${bits[1]}.${bits[2]}.${bits[3]}`;
+  }
+  return null;
+}
+
+/**
+ * Meta's browser id, out of the `_fbp` cookie.
+ *
+ * Unlike `_ga` there is nothing to extract: `_fbp` is already in the wire
+ * format the Conversions API wants (`fb.<subdomain>.<ms>.<random>`), so it is
+ * forwarded whole.
+ *
+ * The cookie exists only once the Meta pixel has loaded, which requires
+ * marketing consent and a trackable route — the same condition we want anyway.
+ */
+export function readFbp(cookieHeader: string | null | undefined): string | null {
+  if (!cookieHeader) return null;
+  for (const part of cookieHeader.split(";")) {
+    const entry = part.trim();
+    // Whole-name match: a prefix match would let `x_fbp` on the domain supply
+    // an identifier, the same rule the consent cookie reader follows.
+    if (!entry.startsWith("_fbp=")) continue;
+    const value = entry.slice(5).trim();
+    return value || null;
+  }
+  return null;
+}
+
+/** Everything needed to write the record down, mirroring `consentCookieAttributes`. */
+export function attributionCookieAttributes(record: AttributionRecord) {
+  return {
+    name: ATTRIBUTION_COOKIE,
+    value: serializeAttributionCookie(record),
+    maxAge: SIX_MONTHS_SECONDS,
+    path: "/",
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    // The whole point: `web/` on app.stampeo.app has to read this.
+    domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined,
+  };
+}
+
+/** The record currently stored, or null. */
+export function readAttributionRecord(): AttributionRecord | null {
+  if (typeof document === "undefined") return null;
+  for (const part of document.cookie.split(";")) {
+    const entry = part.trim();
+    if (!entry.startsWith(`${ATTRIBUTION_COOKIE}=`)) continue;
+    return parseAttributionCookie(entry.slice(ATTRIBUTION_COOKIE.length + 1));
+  }
+  return null;
+}
+
+/**
+ * Write the record down.
+ *
+ * FIRST TOUCH WINS on the client: an existing record is not overwritten by a
+ * later organic pageview, or the ad click that actually brought someone here
+ * would be erased by their next visit. Last-touch resolution between two
+ * genuine ad clicks is the backend's job, where `captured_at` can be compared
+ * across vendors.
+ */
+export function writeAttributionRecord(record: AttributionRecord): void {
+  if (typeof document === "undefined") return;
+  if (readAttributionRecord()) return;
+
+  const attrs = attributionCookieAttributes(record);
+  if (attrs.value.length > MAX_COOKIE_BYTES) {
+    // Belt and braces: every field is already capped, so reaching this means a
+    // new field was added without one. Dropping the write is the safe failure —
+    // losing attribution costs a dashboard row, while a header-breaking cookie
+    // costs the visitor access to the dashboard itself.
+    return;
+  }
+  let cookie = `${attrs.name}=${attrs.value}; Max-Age=${attrs.maxAge}; Path=${attrs.path}; SameSite=Lax`;
+  if (attrs.domain) cookie += `; Domain=${attrs.domain}`;
+  if (attrs.secure) cookie += "; Secure";
+  try {
+    document.cookie = cookie;
+  } catch {
+    // Blocked storage. Losing attribution is not a reason to fail a pageview.
+  }
+}

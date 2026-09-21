@@ -26,6 +26,19 @@ ARG NEXT_PUBLIC_SHOWCASE_URL
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_POSTHOG_KEY
 ARG NEXT_PUBLIC_POSTHOG_HOST
+# Meta pixel (STA-319). Not a secret — it ships in the client bundle. Leave
+# UNSET to disable the pixel entirely: the loader no-ops and never contacts
+# connect.facebook.net. Setting it is NOT sufficient to make the tag fire; the
+# visitor's marketing consent (lib/consent.ts) and a trackable route
+# (lib/consent-routes.ts) are also required. Production value: 1088158323750710
+# Documented here rather than in .env.example, which is gitignored.
+ARG NEXT_PUBLIC_META_PIXEL_ID
+# GA4 measurement id (STA-318). Not a secret — it ships in the client bundle.
+# Leave UNSET to disable Google Analytics entirely: the loader no-ops and never
+# contacts googletagmanager.com. Setting it is NOT sufficient to make the tag
+# fire; the visitor's ANALYTICS consent (lib/consent.ts) and a trackable route
+# (lib/consent-routes.ts) are also required. Production value: G-ZFZ6JLPFXN
+ARG NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -35,6 +48,8 @@ ENV NEXT_PUBLIC_SHOWCASE_URL=$NEXT_PUBLIC_SHOWCASE_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_POSTHOG_KEY=$NEXT_PUBLIC_POSTHOG_KEY
 ENV NEXT_PUBLIC_POSTHOG_HOST=$NEXT_PUBLIC_POSTHOG_HOST
+ENV NEXT_PUBLIC_META_PIXEL_ID=$NEXT_PUBLIC_META_PIXEL_ID
+ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN ./node_modules/.bin/next build

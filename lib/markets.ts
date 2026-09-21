@@ -203,7 +203,9 @@ export function marketLink(market: Market, seoPrefix: string, path: string): str
  * currency comes from the postal address, then the country dropdown, both typed
  * by the owner. A cookie records which page someone clicked, which is weaker
  * evidence than either and trivially forged. All this does is prefill a field
- * the owner can change.
+ * the owner can change. (The showcase's DISPLAYED prices follow the visitor's
+ * detected region since STA-330 — `lib/region-pricing.ts` — but that is
+ * display-only and reads the browser directly, never this cookie.)
  *
  * Deliberately NOT `NEXT_LOCALE`. Locale, market and billing currency are three
  * axes this codebase keeps apart on purpose (see the header of the backend's

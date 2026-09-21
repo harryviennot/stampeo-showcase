@@ -1,0 +1,103 @@
+"use client";
+
+import { createContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
+
+import { detectBrowserCountry } from "@/lib/phone-utils";
+import {
+  regionBilling,
+  resolveRegionLadder,
+  type RegionCurrency,
+} from "@/lib/region-pricing";
+import type { Pricing } from "@/lib/pricing";
+
+export interface RegionPricingValue {
+  /** The ladder the visitor's detected region should see. */
+  pricing: Pricing;
+  trialDays: number;
+  /**
+   * False during the server render and the hydration pass. Price surfaces
+   * render skeleton chips until this is true — never the page default, which
+   * may be the wrong currency for this visitor (the flash STA-330 forbids).
+   */
+  ready: boolean;
+}
+
+export const RegionPricingContext = createContext<RegionPricingValue | null>(null);
+
+/** No-op: the browser's country does not change while the page is open. */
+const subscribe = () => () => {};
+
+/** Server-snapshot sentinel — never a real detection result. */
+const SSR = "\u0000ssr";
+
+/**
+ * Detected once and cached at module scope: the answer cannot change while the
+ * page is open, `useSyncExternalStore` needs an identity-stable snapshot (a
+ * primitive — see the loop warning in hooks/use-consent.ts), and re-running
+ * `Intl.DateTimeFormat()` on every consumer render is waste.
+ */
+let cachedCountry: string | null | undefined;
+function clientCountry(): string {
+  if (cachedCountry === undefined) cachedCountry = detectBrowserCountry() ?? null;
+  return cachedCountry ?? "";
+}
+
+/**
+ * STA-330: hands every price surface the ladder and trial length for the
+ * visitor's DETECTED region, whatever page they are on.
+ *
+ * Mounted inside VariantLanding / MarketPricingPage only — never around the
+ * layout's tracker siblings (GoogleAnalytics, MetaPixel, AttributionCapture,
+ * ConsentBanner): remounting those double-fires page_view, and delaying the
+ * LandingTracker subtree freezes `variant: null` into the 182-day attribution
+ * cookie. This provider changes no tree shape: the server and hydration passes
+ * both render skeleton chips inside stable spans, then only text flips.
+ *
+ * Detection is display-only. It reuses `detectBrowserCountry()` as-is and must
+ * never feed the consent-regime path (`lib/consent.ts`), which derives a
+ * visitor's legal opt-in/opt-out status from the same timezone table.
+ */
+export function RegionPricingProvider({
+  ladders,
+  defaultCurrency,
+  defaultTrialDays,
+  children,
+}: Readonly<{
+  /** Both ladders, fetched server-side so the page stays ISR-cacheable. */
+  ladders: Record<RegionCurrency, Pricing>;
+  /** The page's market currency — what an undetectable visitor sees. */
+  defaultCurrency: RegionCurrency;
+  defaultTrialDays: number;
+  children: ReactNode;
+}>) {
+  const country = useSyncExternalStore(subscribe, clientCountry, () => SSR);
+
+  const value = useMemo<RegionPricingValue>(() => {
+    if (country === SSR) {
+      return {
+        pricing: ladders[defaultCurrency],
+        trialDays: defaultTrialDays,
+        ready: false,
+      };
+    }
+    const region = regionBilling(country);
+    if (!region) {
+      return {
+        pricing: ladders[defaultCurrency],
+        trialDays: defaultTrialDays,
+        ready: true,
+      };
+    }
+    return {
+      pricing: resolveRegionLadder(ladders, region.currency, defaultCurrency),
+      trialDays: region.trialDays,
+      ready: true,
+    };
+  }, [country, ladders, defaultCurrency, defaultTrialDays]);
+
+  return (
+    <RegionPricingContext.Provider value={value}>
+      {children}
+    </RegionPricingContext.Provider>
+  );
+}

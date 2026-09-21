@@ -9,6 +9,7 @@ import { Segmented } from "../ui/Segmented";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
+import { usePricingRegion } from "@/hooks/use-pricing-region";
 import type { RewardTier, PointsRewardIcons } from "@/lib/types/design";
 import { STAMPEO_LOGO } from "@/lib/stampeo-card";
 
@@ -269,11 +270,17 @@ function useOfflinePointsAnimation(isOffline: boolean) {
   return animatedPoints;
 }
 
-export function HeroDemo({ trialDays }: Readonly<{ trialDays: number }>) {
+export function HeroDemo() {
   const stamp = useDemoSession();
   const t = useTranslations("landing.hero");
   const tCommon = useTranslations("common");
   const isMobilePhone = useIsMobilePhone();
+  // STA-330: the demo card's reward lines quote the trial length, which
+  // follows the visitor's detected region. The lines are plain strings fed
+  // into WalletCard fields, so the held state is an ellipsis where the day
+  // count goes — resolved at hydration, before the demo is interactive.
+  const region = usePricingRegion();
+  const trialDays: number | string = region.ready ? region.trialDays : "…";
 
   // Which engine the visitor is previewing. "stamps" is the eager, real demo;
   // "points" lazy-inits its own real session the first time it's selected, so

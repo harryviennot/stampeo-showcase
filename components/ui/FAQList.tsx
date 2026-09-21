@@ -1,5 +1,9 @@
+import type { ReactNode } from "react";
+
 interface FAQListProps {
-  items: Array<{ question: string; answer: string }>;
+  /** `answer` may be a ReactNode: the landing FAQ resolves pricing tokens
+   *  per-visitor via RegionText (STA-330). Plain strings render as before. */
+  items: Array<{ question: string; answer: ReactNode }>;
   /** Number of items open by default (from index 0). */
   defaultOpenCount?: number;
 }

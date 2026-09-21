@@ -109,7 +109,8 @@
         "disclaimer": "No spam. Unsubscribe anytime.",
         "success": "Thanks! You're subscribed."
       },
-      "sitemapLabel": "Sitemap"
+      "sitemapLabel": "Sitemap",
+      "cookiePreferences": "Cookie preferences"
     },
     "points": "Points",
     "pointsStrip": {
@@ -119,12 +120,47 @@
       "complete": "Card completed"
     },
     "marketSuggestion": {
-      "prompt": "Prices shown in euros.",
+      "prompt": "We have a page for businesses in your region.",
       "cta": "See {country} pricing",
       "dismiss": "Dismiss",
       "country": {
         "us": "US",
         "uk": "UK"
+      }
+    },
+    "cookies": {
+      "banner": {
+        "title": "Your cookie choices",
+        "body": "We load measurement and advertising cookies only if you accept them. Refusing changes nothing about how the site works.",
+        "learnMore": "See the details",
+        "accept": "Accept all",
+        "refuse": "Refuse all",
+        "customise": "Choose by purpose"
+      },
+      "notice": {
+        "title": "Your privacy choices",
+        "body": "We use measurement and advertising cookies to see how our ads perform.",
+        "choices": "Your privacy choices",
+        "dismiss": "Got it"
+      },
+      "prefs": {
+        "title": "Choose by purpose",
+        "intro": "Turn each purpose on or off. We keep your choice for six months, and you can change it any time from the footer.",
+        "necessary": {
+          "title": "Strictly necessary",
+          "always": "Always on",
+          "body": "Your language, your country, and this choice itself. Nothing here identifies you or leaves Stampeo."
+        },
+        "analytics": {
+          "title": "Audience measurement",
+          "body": "Google Analytics, to see which pages bring us new businesses."
+        },
+        "marketing": {
+          "title": "Advertising",
+          "body": "Meta and TikTok, to know which of our ads actually led somewhere."
+        },
+        "save": "Save my choice",
+        "cancel": "Cancel"
       }
     }
   }

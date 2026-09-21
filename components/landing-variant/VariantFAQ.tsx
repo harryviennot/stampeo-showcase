@@ -1,16 +1,19 @@
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { FAQList } from "../ui/FAQList";
 import { CTAButton } from "../ui/CTAButton";
 
 /**
- * `faqs` arrive already interpolated, from VariantLanding. That is deliberate:
- * the same array feeds `faqPageJsonLd`, and interpolating in two places once
- * meant the structured data shipped the raw "{starterPrice}" token to Google.
+ * `faqs` arrive resolved from VariantLanding — since STA-330 as ReactNode
+ * answers whose pricing tokens follow the visitor's region (RegionText).
+ * The JSON-LD copy of this list is built separately there, interpolated with
+ * the MARKET ladder: interpolating in two places once meant the structured
+ * data shipped the raw "{starterPrice}" token to Google.
  */
 export async function VariantFAQ({
   faqs,
-}: Readonly<{ faqs: Array<{ question: string; answer: string }> }>) {
+}: Readonly<{ faqs: Array<{ question: string; answer: ReactNode }> }>) {
   const t = await getTranslations("variant.faq");
 
   return (

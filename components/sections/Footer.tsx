@@ -13,6 +13,7 @@ import {
   PLAY_STORE_URL,
 } from "../features/scanner-mobile/StoreBadges";
 import { marketLink, marketPath, type Market } from "@/lib/markets";
+import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
   const t = await getTranslations("common.footer");
@@ -199,6 +200,10 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                 <Link href="/terms" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("termsOfService")}
                 </Link>
+                {/* Not a Link: it reopens the consent choice in place. Consent
+                    has to be as easy to withdraw as it was to give, so it
+                    needs a home that outlives the banner. */}
+                <CookiePreferencesButton />
               </nav>
             </div>
           </div>
