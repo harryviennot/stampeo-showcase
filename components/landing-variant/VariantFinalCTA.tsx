@@ -2,16 +2,13 @@ import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { CTAButton } from "../ui/CTAButton";
-import { interpolatePricing, type Pricing } from "@/lib/pricing";
 import { marketCopy } from "@/lib/market-copy";
 import { type Market } from "@/lib/markets";
+import { RegionText } from "@/components/market/RegionText";
 
 export async function VariantFinalCTA({
-  trialDays,
-  pricing,
-  locale,
   market = "int",
-}: Readonly<{ pricing: Pricing; locale: string; trialDays: number; market?: Market }>) {
+}: Readonly<{ market?: Market }>) {
   const t = await getTranslations("variant");
   const copy = marketCopy(t, market);
 
@@ -27,8 +24,9 @@ export async function VariantFinalCTA({
         </h2>
 
         <p className="text-lead text-[var(--muted-foreground)] max-w-2xl">
-          {/* t.raw: the pricing tokens are ours, not ICU's. */}
-          {interpolatePricing(copy.raw("finalCta.subtitle") as string, pricing, locale, trialDays)}
+          {/* t.raw: the pricing tokens are ours, not ICU's. The client leaf
+              resolves them to the visitor's region (STA-330). */}
+          <RegionText raw={copy.raw("finalCta.subtitle") as string} />
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
@@ -44,7 +42,7 @@ export async function VariantFinalCTA({
         </div>
 
         <p className="text-sm text-[var(--muted-foreground)] font-medium">
-          {copy.t("finalCta.reassurance", { trialDays })}
+          <RegionText raw={copy.raw("finalCta.reassurance") as string} />
         </p>
       </ScrollReveal>
     </section>

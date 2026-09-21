@@ -8,11 +8,11 @@ import { HeroCardFan } from "./HeroCardFan";
 import { walletBadges } from "@/lib/store-badges";
 import { marketCopy } from "@/lib/market-copy";
 import { type Market } from "@/lib/markets";
+import { RegionText } from "@/components/market/RegionText";
 
 export async function VariantHero({
   market = "int",
-  trialDays,
-}: Readonly<{ market?: Market; trialDays: number }>) {
+}: Readonly<{ market?: Market }>) {
   // Namespaced at `variant`, not `variant.hero`, because the market override
   // lives at `variant.us.hero.*` and the resolver needs to see both.
   const t = await getTranslations("variant");
@@ -85,7 +85,9 @@ export async function VariantHero({
             <div className="flex flex-col items-center gap-3">
               {ctaRow}
               <p className="text-sm font-medium text-[var(--muted-foreground)]">
-                {copy.t("hero.reassurance", { trialDays })}
+                {/* Raw + client leaf: the day count follows the visitor's
+                    detected region (STA-330), not the page's market. */}
+                <RegionText raw={copy.raw("hero.reassurance") as string} />
               </p>
             </div>
           ) : (

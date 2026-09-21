@@ -394,3 +394,17 @@ Application → Cookies, and Network filtered to `googletagmanager|facebook|tikt
 Then Phase 3 (`coverage-auditor`; no auth/billing/webhook/migration paths, so
 no `security-reviewer`), Phase 4 (`docs/qa/cookie-consent.md`, a new area),
 Phase 5 manual QA, Phase 6 docs decision + the three plan amendments above.
+
+---
+
+## Amendment (2026-09-21, STA-330)
+
+D3's "no geo-varying content" premise is now scoped, not reversed: SERVER-rendered
+and indexed content still never varies by visitor (pages stay static, JSON-LD
+asserts each URL's market currency), but the VISIBLE prices and trial-day numbers
+now resolve client-side to the visitor's detected region after hydration
+(`lib/region-pricing.ts` + `RegionPricingProvider`, STA-330). That path uses
+`detectBrowserCountry()` — WITH the `navigator.language` fallback D3 rejects —
+which is fine there because it is display-only; the consent regime keeps its
+stricter timezone-only detection and the two paths share only the read-only
+timezone table. See `docs/qa/region-pricing.md`.
