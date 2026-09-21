@@ -24,7 +24,7 @@ pages — no login is required anywhere in this book.
 
 | Surface | URL / Command | Notes |
 |---|---|---|
-| Showcase (dev) | `https://showcase.dev.stampeo.app` | ISR pages cache 300s: after a deploy, force-refresh or expect up to 5 min staleness |
+| Showcase (dev) | `https://showcase.dev.stampeo.app` | **Tunnels to the LOCAL dev server.** Its catalog source is `showcase/.env.local` `NEXT_PUBLIC_API_URL` — check that FIRST when JSON-LD Offers are missing (RP-09 once failed on a stale LAN IP there: fallback ladder → Offers correctly suppressed). ISR pages cache 300s on a production build. |
 | Showcase (local) | `http://localhost:3001` | needed only for RP-15 (backend-down); never run `bun run build` while this dev server runs |
 | Raw HTML check | `curl -s <url>` | for JSON-LD assertions — curl sees the server render, no JS |
 | Pages under test | `/`, `/fr`, `/en`, `/es`, `/pl`, `/pricing`, `/us`, `/us/pricing`, `/uk`, `/programme-fondateur`, `/llms.txt` | `/fr` is the default locale and lives at `/` |
@@ -53,6 +53,13 @@ coordinates — detection is timezone-first):
 After changing the override, **hard reload** (Cmd+Shift+R) — detection runs at
 hydration. Keep DevTools open for the whole case or the override drops.
 
+Agent alternative (no Sensors panel): a Playwright/CDP session can spoof the
+timezone with `Emulation.setTimezoneOverride({ timezoneId: "America/New_York" })`
+on a FRESH page (a second override on the same target errors with "already in
+effect"), then reload. Caveat: `Emulation.setLocaleOverride` normalizes a
+regionless locale (e.g. plain "en" comes back "en-GB"), so the Unknown spoof's
+language half is NOT reproducible this way — RP-07 needs a real browser profile.
+
 **R2: Clean visitor** (between cases that assert first-visit behavior)
 
 DevTools → Application → Storage → "Clear site data" (clears cookies incl.
@@ -66,10 +73,20 @@ localStorage incl. the MarketSuggestion dismissal). Then hard reload.
 
 ### Known state before you start
 
-- **This runbook was written at plan time (2026-09-21), before implementation.**
-  Run it only against a build of `feat/sta-330-region-detected-pricing` (or
-  later). On current `dev`, RP-01..RP-08 will fail by design — that is the bug
-  being fixed, not a finding.
+- **Run of 2026-09-21 at `fd8c880` (post-implementation):** PASSED: RP-05, RP-06
+  (real Paris browser), plus RP-01, RP-05 and the GB-on-/us rule re-verified via
+  CDP timezone override; RP-10's banner observed with the new copy. RP-09 FAILED
+  environmentally — stale `NEXT_PUBLIC_API_URL` in `.env.local`, product guard
+  correct; env fixed and Offers re-verified (EUR on `/`, USD on `/us`); re-run
+  RP-09 against the deployed environment before release. ED-01 was AMBIGUOUS
+  from a stale case premise, now rewritten (redirect + `/llms.txt`). **Still
+  unexecuted:** RP-02..RP-04, RP-07, RP-08 in a real spoofed browser, and
+  AN-01..AN-03 (need GA DebugView + Meta Pixel Helper — a browser with
+  extensions and property access; CDP cannot substitute).
+- **This runbook was written at plan time (2026-09-21).** Run it only against a
+  build of `feat/sta-330-region-detected-pricing` (or later). On pre-STA-330
+  `dev`, RP-01..RP-08 fail by design — that is the bug being fixed, not a
+  finding.
 - **Price surfaces to check in every currency case** (the list "all price
   surfaces" refers to): landing → hero reassurance line, differentiator items,
   try-it demo label, pricing cards (big price, billed-yearly sub-label, CTA
@@ -250,15 +267,19 @@ Meta Pixel Helper extension and access to GA4 DebugView on the dev property.
 
 ## EDGE: Frozen surfaces & failure modes
 
-### ED-01: Founder program stays frozen EUR [EDGE]
+### ED-01: Frozen founding surfaces stay EUR [EDGE]
+
+*(Amended 2026-09-21 after an AMBIGUOUS run: the founder page has redirected
+since the program closed on 2026-08-04 — `lib/pricing.ts`
+`FOUNDING_PROGRAM_END_DATE` — so the reachable frozen surface is `/llms.txt`.)*
 
 | Field | Content |
 |---|---|
-| WHY | Founding prices are frozen history, always EUR by design; region detection must not reach them. |
+| WHY | Founding prices are frozen history, always EUR by design; region detection must not reach them, and the retired route must stay retired. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. R1 (US spoof). 2. Open `/programme-fondateur` (and its price reveal). 3. `curl -s /llms.txt` and search for "€". |
-| EXPECT | Founder page amounts remain `€` even for the US-spoofed browser; `/llms.txt` prose still quotes EUR. You do NOT see `$` on either surface. |
+| STEPS | 1. R1 (US spoof). 2. `curl -I /programme-fondateur`. 3. `curl -s /llms.txt` and read the pricing prose. |
+| EXPECT | `/programme-fondateur` answers 307 to the pricing page (no founder page renders). `/llms.txt` prose quotes EUR only. You do NOT see `$` in `/llms.txt` and do NOT see a rendered founder price reveal. |
 | RESET | None. |
 
 ### ED-02: Backend down → baked USD ladder, not EUR [EDGE — local only]
