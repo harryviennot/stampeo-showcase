@@ -106,8 +106,8 @@
               "value": "Julien"
             }
           ],
-          "link": "/blog/programa-fidelidad-peluqueria",
-          "linkLabel": "Leer la guía para barberías"
+          "link": "/blog/mejor-app-fidelizacion-comercios",
+          "linkLabel": "Comparar las opciones"
         },
         {
           "name": "Cafetería",
@@ -124,8 +124,8 @@
               "value": "Café gratis"
             }
           ],
-          "link": "/blog/tarjeta-fidelidad-cafeteria",
-          "linkLabel": "Leer la guía para cafeterías"
+          "link": "/blog/como-crear-tarjeta-fidelidad-digital",
+          "linkLabel": "Crear tu tarjeta paso a paso"
         },
         {
           "name": "Restaurante",
@@ -142,8 +142,8 @@
               "value": "-25 %"
             }
           ],
-          "link": "/blog/tarjeta-fidelidad-restaurante",
-          "linkLabel": "Leer la guía para restaurantes"
+          "link": "/blog/tarjeta-fidelidad-digital-pequeno-comercio",
+          "linkLabel": "Leer la guía completa"
         },
         {
           "name": "Salón de belleza",
@@ -160,8 +160,8 @@
               "value": "Manicura gratis"
             }
           ],
-          "link": "/blog/programa-fidelidad-peluqueria",
-          "linkLabel": "Leer la guía para salones"
+          "link": "/blog/tarjeta-fidelidad-sin-app",
+          "linkLabel": "Ver cómo funciona sin app"
         },
         {
           "name": "Librería",
@@ -191,7 +191,7 @@
         {
           "title": "Notificaciones",
           "description": "Lanza un mensaje en cada sello, cada recompensa, cada visita.",
-          "link": "/features/notificaciones"
+          "link": "/features/notificaciones-push"
         },
         {
           "title": "Difusiones promocionales",
