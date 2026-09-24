@@ -33,7 +33,51 @@ import {
  *
  * Pure by design (no `fs`): the test walks the filesystem and feeds the results
  * in, the same split `consent-routes.ts` uses.
+ *
+ * What this does NOT cover, so the next person does not mistake green for safe:
+ *
+ * - **Components.** `Header.tsx` and `Footer.tsx` use BOTH conventions in one
+ *   file, and build their raw-anchor hrefs by string concatenation, so no parser
+ *   can check them. A footer regression would hit every page on the site, far
+ *   worse than the 16 blog posts. Covered by IL-09 in
+ *   `docs/qa/seo-internal-links.md`, against rendered HTML, which is the only
+ *   place those hrefs exist.
+ * - **Path depth below the first segment.** `/pricing/plans` resolves here and
+ *   404s in the app: only the first segment is matched against the route tree.
+ * - **Link shapes.** Only `<CallToAction href="…">` (the one MDX component that
+ *   takes an href) and markdown `[](/…)`. Not `href={expr}`, not raw `<a>` in
+ *   JSX, not reference-style or relative markdown links.
+ * - **Catalog keys.** Only `link` and `href`. The allowlist is load-bearing: it
+ *   is what keeps `"perMonth": "/mes"` in `pricing.json` out of the walk.
+ * - **Backend-authored copy.** Changelog bodies arrive from the API and cannot
+ *   be checked from this repo at all.
  */
+
+/**
+ * Routes served outside the `[locale]` tree. `middleware.ts` excludes them from
+ * the matcher, so they take no locale prefix: `/go/app` is right and
+ * `/es/go/app` does not exist. Listed here so a link to one resolves instead of
+ * false-alarming as `unknown-route`.
+ */
+const NON_LOCALE_SEGMENTS: ReadonlySet<string> = new Set([
+  "api",
+  "auth",
+  "go",
+  "internal",
+  "join",
+]);
+
+/**
+ * Real routes that always answer with a redirect, so linking to one costs a hop
+ * even though it never 404s. The founding program closed on 2026-08-04 and both
+ * its routes send visitors to /pricing; `app/sitemap.ts` drops them for the same
+ * reason. This is group (E)'s defect class — a valid URL that is still the wrong
+ * thing to link to — so the guard has to know about it by name.
+ */
+const REDIRECTING_SEGMENTS: ReadonlySet<string> = new Set([
+  "founding-partner",
+  "programme-fondateur",
+]);
 
 export type LinkKind = "localized-link" | "raw-anchor";
 
@@ -46,6 +90,8 @@ export type LinkProblem =
   | "missing-post"
   /** A real slug, but another locale's -> the route 308s before arriving. */
   | "wrong-locale-slug"
+  /** A real route that always answers with a redirect -> a wasted hop. */
+  | "always-redirects"
   /** Resolves to no route at all. */
   | "unknown-route";
 
@@ -151,6 +197,13 @@ function classifyLocaleFreePath(
         };
   }
 
+  if (REDIRECTING_SEGMENTS.has(head)) {
+    return {
+      problem: "always-redirects",
+      detail: `"/${head}" always redirects (the founding program closed); link to its destination instead`,
+    };
+  }
+
   if (MARKETING_SEGMENTS.has(head) || PRIVATE_SEGMENTS.has(head)) return null;
 
   return {
@@ -174,6 +227,19 @@ export function classifyLink(
 ): LinkVerdict {
   const path = normalizePath(href);
   const prefix = leadingLocale(path);
+
+  // Outside the locale tree, so the locale rules below do not apply in either
+  // direction: these take no prefix, from a localized Link or a raw <a> alike.
+  const head = path.split("/")[1];
+  if (NON_LOCALE_SEGMENTS.has(head)) return { ok: true, resolved: path };
+  if (prefix && NON_LOCALE_SEGMENTS.has(path.split("/")[2])) {
+    return {
+      ok: false,
+      problem: "unknown-route",
+      resolved: path,
+      detail: `"/${path.split("/")[2]}" is served outside the [locale] tree; drop the "/${prefix}" prefix`,
+    };
+  }
 
   if (kind === "localized-link") {
     if (prefix) {
@@ -260,10 +326,13 @@ export function extractCtaHrefs(source: string): FoundLink[] {
  */
 export function extractMarkdownLinks(source: string): FoundLink[] {
   const found: FoundLink[] = [];
-  const link = /\]\((\/[^)\s]*)\)/g;
+  // `![alt](/x.png)` shares this shape and is not a link. content/docs/ is full
+  // of them, so the exclusion matters the moment another surface is walked.
+  const link = /(!?)\[[^\]]*\]\((\/[^)\s]*)\)/g;
   let match: RegExpExecArray | null;
   while ((match = link.exec(source)) !== null) {
-    found.push({ href: match[1], line: lineOf(source, match.index) });
+    if (match[1] === "!") continue;
+    found.push({ href: match[2], line: lineOf(source, match.index) });
   }
   return found;
 }

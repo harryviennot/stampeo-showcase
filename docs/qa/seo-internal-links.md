@@ -63,6 +63,11 @@ cookie, or the filesystem. Recorded explicitly so nobody invents a reset.
   were requested and returned 200, so MDX compilation is covered. What is NOT
   covered is anything that only differs under `output: "standalone"`. Run IL-06
   on the next branch that builds.
+- **The guard's own blind spots are written into its header comment**
+  (`lib/internal-links.ts`). Read them before concluding a green suite means a
+  clean site: components, path depth below the first segment, `href={expr}`,
+  reference-style markdown links and backend-authored changelog copy are all
+  outside its reach. IL-09 exists because of the first of those.
 - **A 404 here is not always a bug.** Three Spanish URLs are deliberately 404
   until STA-359 publishes them: `programa-fidelidad-peluqueria`,
   `tarjeta-fidelidad-cafeteria`, `tarjeta-fidelidad-restaurante`. IL-07 asserts
@@ -174,6 +179,32 @@ output before touching a browser; it names the file and line.
 | STEPS | 1. Open `http://localhost:3001/pl`. 2. Click through all five sector cards. |
 | EXPECT | Every card lands on `/pl/program-lojalnosciowy` with a 200. You do NOT see `/pl/blog` in any URL, and you do NOT see a redirect to the Polish home page. |
 | RESET | None. |
+
+### IL-09: Header and footer links, on a rendered page [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | The one surface no test can reach. `Header.tsx` and `Footer.tsx` use BOTH link conventions in the same file (localized `Link` for the visible nav, raw `<a>` with a hand-built `seoPrefix` for the sr-only SEO block) and build the raw hrefs by string concatenation, so there is no literal for a parser to read. A regression here appears on EVERY page, a far larger blast radius than the 16 blog posts that opened this area. |
+| DEPENDS | IL-01 |
+| ACCOUNT | None. |
+| STEPS | 1. For each of `/`, `/en`, `/es`, `/pl`: open the page. 2. View source (not the inspector: the sr-only SEO links matter and are easier to read in source). 3. Search the source for `/en/en/`, `/es/es/`, `/pl/pl/`, `/fr/`. 4. Click through the footer's feature links and the language switcher. |
+| EXPECT | No doubled locale appears in any href, and no href begins `/fr/` (French is the unprefixed default, so `/fr/…` would 307). Footer feature links land directly on that locale's feature page. You do NOT see a redirect on any footer link, and you do NOT see a French slug under `/es/` or `/pl/`. |
+| RESET | None. |
+
+<details>
+<summary>One-liner for the whole check</summary>
+
+```bash
+for u in / /en /es /pl; do
+  curl -s "http://localhost:3001$u" \
+    | grep -oE 'href="/(en|es|pl|fr)/(en|es|pl|fr)/[^"]*"' | sort -u
+done
+# Any output at all is a failure. Silence is a pass.
+```
+
+Run the loop, but still click a few links: the loop proves no doubled prefix,
+it does not prove the links go anywhere sensible.
+</details>
 
 ---
 

@@ -88,7 +88,7 @@ describe("classifyLink — route resolution", () => {
     expect(es).toMatchObject({ problem: "missing-post" });
     // The message has to name where it DOES exist, or the next person reads
     // "404" and writes a redirect instead of the missing article.
-    expect(!es.ok && es.detail).toContain("en");
+    expect(!es.ok && es.detail).toContain("exists in: en");
   });
 
   test("a feature slug from another locale is a redirect, not a 404", () => {
@@ -106,6 +106,29 @@ describe("classifyLink — route resolution", () => {
     expect(
       classifyLink("/features/notificaciones", "es", "localized-link", BLOG)
     ).toMatchObject({ problem: "unknown-route" });
+  });
+
+  test("a route that always redirects is not a valid link target", () => {
+    // The founding program closed, so /programme-fondateur resolves but sends
+    // everyone to /pricing. Group (E)'s defect class: a valid URL that is still
+    // the wrong thing to link to, and one no click-through would flag.
+    expect(
+      classifyLink("/programme-fondateur", "fr", "localized-link", BLOG)
+    ).toMatchObject({ problem: "always-redirects" });
+    expect(
+      classifyLink("/founding-partner", "en", "localized-link", BLOG)
+    ).toMatchObject({ problem: "always-redirects" });
+  });
+
+  test("routes outside the [locale] tree take no prefix, in either direction", () => {
+    // middleware.ts excludes these from the matcher, so /go/app is right and
+    // /es/go/app does not exist. Without this the guard cries wolf on a correct
+    // link, which is how a guard gets switched off.
+    expect(classifyLink("/go/app", "es", "localized-link", BLOG).ok).toBe(true);
+    expect(classifyLink("/join/ABC123", "fr", "raw-anchor", BLOG).ok).toBe(true);
+    expect(classifyLink("/es/go/app", "es", "raw-anchor", BLOG)).toMatchObject({
+      problem: "unknown-route",
+    });
   });
 
   test("the loyalty page is four sibling routes, one per locale", () => {
@@ -154,8 +177,11 @@ describe("extractors", () => {
     ]);
   });
 
-  test("markdown links are found and external ones ignored", () => {
-    const source = "see [a](/es/pricing) and [b](https://example.com) and [c](#anchor)";
+  test("markdown links are found; external links and images are not", () => {
+    // `![alt](/x.png)` shares the shape and is not a link. content/docs/ is full
+    // of them, so this matters the moment another surface joins the walk.
+    const source =
+      "see [a](/es/pricing) and [b](https://example.com) and [c](#anchor) and ![d](/img/e.png)";
     expect(extractMarkdownLinks(source)).toEqual([{ href: "/es/pricing", line: 1 }]);
   });
 
@@ -179,58 +205,93 @@ interface Broken {
   detail: string;
 }
 
+/**
+ * A walk records what it CHECKED as well as what it found wrong.
+ *
+ * `expect(broken).toEqual([])` on its own is green when the extractor returns
+ * nothing — rename `CallToAction`, move `content/blog/`, add a locale without
+ * listing it, change the catalog key convention, and the suite passes over zero
+ * coverage. That is the exact failure this whole file exists to prevent, so
+ * every walk below asserts its own reach: which locales contributed, and how
+ * many links were seen.
+ */
+interface Walk {
+  broken: Broken[];
+  /** Links checked, per locale. A locale that contributes 0 is drift. */
+  checked: Record<string, number>;
+}
+
+const newWalk = (locales: readonly string[]): Walk => ({
+  broken: [],
+  checked: Object.fromEntries(locales.map((l) => [l, 0])),
+});
+
 function check(
   href: string,
   locale: string,
   kind: "localized-link" | "raw-anchor",
   where: string,
-  into: Broken[]
+  walk: Walk
 ) {
+  walk.checked[locale] = (walk.checked[locale] ?? 0) + 1;
   const v = classifyLink(href, locale, kind, BLOG);
-  if (!v.ok) into.push({ where, href, problem: v.problem, detail: v.detail });
+  if (!v.ok) walk.broken.push({ where, href, problem: v.problem, detail: v.detail });
+}
+
+/** Every locale in scope contributed at least one link, and none was broken. */
+function expectWalked(walk: Walk) {
+  expect(walk.broken).toEqual([]);
+  for (const [locale, count] of Object.entries(walk.checked)) {
+    // Named in the message so a zero says WHICH surface stopped being read.
+    expect({ locale, count: count > 0 }).toEqual({ locale, count: true });
+  }
 }
 
 describe("every authored link resolves", () => {
   test("blog CallToAction buttons (localized Link — must be locale-free)", () => {
-    const broken: Broken[] = [];
+    const walk = newWalk(BLOG_LOCALES);
     for (const locale of BLOG_LOCALES) {
       const dir = join(ROOT, "content", "blog", locale);
       for (const file of readdirSync(dir).filter((f) => f.endsWith(".mdx"))) {
         const source = readFileSync(join(dir, file), "utf-8");
         for (const { href, line } of extractCtaHrefs(source)) {
-          check(href, locale, "localized-link", `content/blog/${locale}/${file}:${line}`, broken);
+          check(href, locale, "localized-link", `content/blog/${locale}/${file}:${line}`, walk);
         }
       }
     }
-    expect(broken).toEqual([]);
+    expectWalked(walk);
+    // Every post carries a CTA, so the count cannot fall below the post count
+    // without a post losing its call to action or the extractor going blind.
+    const posts = BLOG_LOCALES.reduce((n, l) => n + (BLOG[l]?.length ?? 0), 0);
+    expect(Object.values(walk.checked).reduce((a, b) => a + b, 0)).toBeGreaterThanOrEqual(posts);
   });
 
   test("blog prose links (raw <a> — must be locale-prefixed)", () => {
-    const broken: Broken[] = [];
+    const walk = newWalk(BLOG_LOCALES);
     for (const locale of BLOG_LOCALES) {
       const dir = join(ROOT, "content", "blog", locale);
       for (const file of readdirSync(dir).filter((f) => f.endsWith(".mdx"))) {
         const source = readFileSync(join(dir, file), "utf-8");
         for (const { href, line } of extractMarkdownLinks(source)) {
-          check(href, locale, "raw-anchor", `content/blog/${locale}/${file}:${line}`, broken);
+          check(href, locale, "raw-anchor", `content/blog/${locale}/${file}:${line}`, walk);
         }
       }
     }
-    expect(broken).toEqual([]);
+    expectWalked(walk);
   });
 
   test("message catalogs (localized Link — must be locale-free)", () => {
-    const broken: Broken[] = [];
+    const walk = newWalk(routing.locales);
     for (const locale of routing.locales) {
       const dir = join(ROOT, "messages", locale);
       for (const file of readdirSync(dir).filter((f) => f.endsWith(".json"))) {
         const catalog = JSON.parse(readFileSync(join(dir, file), "utf-8"));
         for (const { href, at } of extractCatalogLinks(catalog)) {
-          check(href, locale, "localized-link", `messages/${locale}/${file} @ ${at}`, broken);
+          check(href, locale, "localized-link", `messages/${locale}/${file} @ ${at}`, walk);
         }
       }
     }
-    expect(broken).toEqual([]);
+    expectWalked(walk);
   });
 
   test("a locale with no blog links to no articles", () => {
