@@ -1,0 +1,157 @@
+---
+title: "Carte de fidélité à points sur Apple et Google Wallet"
+description: "Créer une carte de fidélité à points dans Apple et Google Wallet : affichage du solde, étapes de configuration, distribution et erreurs à éviter au lancement."
+publishedAt: "2026-09-24"
+author: "Harry de Stampeo"
+category: "Guides"
+tags: ["carte de fidélité digitale", "points de fidélité", "apple wallet", "google wallet", "commerce indépendant"]
+faqs:
+  - question: "Que voit mon client sur sa carte quand je lui crédite des points ?"
+    answer: "Son solde change en quelques secondes, sans qu'il ait à ouvrir son téléphone, et une bannière apparaît sur son écran verrouillé avec le message que vous avez rédigé. Vous pouvez aussi placer vos propres jalons — à 100 points, à 250 — qui déclenchent leur propre notification. Tout passe par la carte elle-même : ni SMS, ni e-mail."
+  - question: "Grand chiffre ou anneau de progression : comment choisir ?"
+    answer: "Regardez la forme de votre programme. Si vous avez un menu de trois à cinq récompenses à des paliers espacés, prenez le grand chiffre : il n'y a pas d'objectif unique vers lequel progresser. Si une récompense d'entrée structure tout le programme, l'anneau ou la piste de récompenses est plus motivant, parce qu'il montre ce qui reste à parcourir. L'affichage se change à tout moment, et toutes les cartes déjà installées suivent."
+  - question: "Mon client change de téléphone : que devient son solde de points ?"
+    answer: "Il est conservé, dans tous les cas. S'il a donné son e-mail à l'inscription, il retourne sur votre page, saisit son e-mail et récupère sa carte lui-même avec son solde intact. Si sa carte était anonyme, il n'y a pas de récupération en libre-service : il vous le signale, et vous lui renvoyez sa carte par e-mail depuis sa fiche client dans le tableau de bord."
+  - question: "Puis-je plafonner le nombre de points qu'un client accumule ?"
+    answer: "Oui, c'est une option. Par défaut les points s'accumulent sans limite ; vous pouvez activer un solde maximum au-delà duquel le cumul s'arrête. Utile si vous ne voulez pas qu'un très bon client constitue une réserve de points que vous devrez honorer d'un coup, mais à manier avec précaution : un plafond atteint, c'est un client qui n'a plus de raison d'avancer."
+  - question: "Faut-il demander l'e-mail du client pour une carte à points ?"
+    answer: "C'est le réglage recommandé, en un seul champ. Sans e-mail, votre client ne peut pas récupérer sa carte seul et vous ne pourrez jamais lui envoyer de campagne promotionnelle. Avec, vous gardez les deux portes ouvertes. Le champ peut rester facultatif : le client le voit sur le formulaire et obtient quand même sa carte s'il ne le remplit pas."
+---
+
+Vous avez tranché : ce seront [les points plutôt que les tampons](/blog/points-ou-tampons). Le barème est posé, les récompenses sont choisies, vous savez ce que le programme doit vous coûter.
+
+Reste la question que personne ne traite vraiment. À quoi ressemble une carte de fidélité à points une fois qu'elle est dans le wallet du téléphone de votre client ? Où s'affiche le solde ? Qu'est-ce qui change pour un client sur Android plutôt que sur iPhone ? Et concrètement, par quoi on commence ?
+
+Les guides français sur le sujet parlent tous de tampons. La dizaine de cases à cocher, la viennoiserie offerte. Dès qu'on cherche comment fonctionne un solde de points dans Apple Wallet ou Google Wallet côté commerçant, il n'y a plus rien — ou alors des tutoriels destinés aux clients qui veulent ranger leur carte de supermarché.
+
+Voilà donc le guide de mise en place : ce que la carte devient dans le téléphone, comment décider de l'affichage du solde, les étapes de configuration, et les trois erreurs qui ne se voient qu'une fois le programme en service.
+
+## Ce qu'une carte à points devient dans un wallet
+
+Un wallet — Apple Wallet sur iPhone, Google Wallet sur Android — est une application déjà installée sur le téléphone. Votre client n'en télécharge aucune autre. Il scanne votre QR code, ajoute votre carte, et elle se range à côté de sa carte d'embarquement et de son billet de train.
+
+Ce qui distingue cette carte d'une image : elle est vivante. Le solde de points n'est pas imprimé dessus, c'est un champ que votre tableau de bord met à jour à distance. Vous créditez cinquante points en caisse, la carte dans la poche de votre client affiche cinquante points de plus quelques secondes après. Sans qu'il ouvre quoi que ce soit.
+
+Et il le sait, parce que la mise à jour déclenche une bannière sur son écran verrouillé. « Vous avez gagné 24 points. Solde : 186. » C'est la mécanique complète, et c'est ce qui rend le format intéressant pour un commerce : le rappel est gratuit, il arrive au bon moment, et il n'atterrit ni dans les spams ni dans un fil d'actualité.
+
+Si le principe même de la carte dans le wallet est encore flou, notre [guide de la carte de fidélité wallet](/blog/carte-fidelite-wallet) reprend tout depuis le début, tampons compris.
+
+## Une carte, deux wallets : ce qui change vraiment
+
+Première chose à évacuer, parce que c'est la question qui revient le plus : non, vous ne créez pas deux cartes.
+
+Vous en concevez une. Votre client scanne le QR code, la page d'installation détecte son téléphone et lui propose le bouton correspondant — « Ajouter à Apple Wallet » ou « Enregistrer dans Google Wallet ». Le même QR code au comptoir sert tout le monde.
+
+Ce n'est pas une commodité, c'est une nécessité arithmétique. En France, 66 % des smartphones tournent sous Android et 34 % sous iOS (StatCounter 2026). Choisir un seul wallet, c'est renoncer à un client sur trois dans le meilleur des cas, à deux sur trois dans le pire.
+
+<StatBox value="66 %" label="des smartphones en France tournent sous Android, contre 34 % sous iOS (StatCounter 2026)" />
+
+Le format n'est d'ailleurs plus confidentiel — la [carte de fidélité digitale](/blog/guide-carte-fidelite-digitale) s'est largement installée : on compte 37,8 millions de cartes wallet actives dans le pays (Captain Wallet 2025).
+
+Reste la différence entre les deux plateformes, et elle est plus petite qu'on ne le raconte. Le solde s'affiche des deux côtés, la carte se met à jour à distance des deux côtés, et le client reçoit sa notification sur l'écran verrouillé quel que soit son téléphone. L'idée que Google Wallet ne notifierait pas est une vieille croyance qui traîne encore dans les comparatifs, y compris récents. Les vraies différences sont techniques et marginales : Apple accepte en plus les balises Bluetooth pour les notifications de proximité, là où Google s'en tient au GPS.
+
+Pour un programme à points, l'expérience est la même des deux côtés. Vraiment la même.
+
+## Le solde de points : choisir comment il s'affiche
+
+Voilà la décision que les guides sautent, et c'est pourtant celle qui se voit tous les jours.
+
+Une carte à tampons n'a pas ce problème — dix cases, on en remplit une. Un solde de points, lui, peut se montrer de plusieurs façons, et toutes ne disent pas la même chose au client. Chez Stampeo, quatre affichages sont disponibles : un grand chiffre, un anneau de progression, une piste de récompenses (une icône par palier), ou votre propre visuel.
+
+Ce n'est pas qu'une question de goût. Il y a une mécanique bien documentée derrière, et elle est contre-intuitive.
+
+Minjung Koo et Ayelet Fishbach ont publié en 2012 dans le *Journal of Consumer Research* une série d'expériences sur ce qu'ils appellent l'hypothèse de la petite aire. Résumé : on se motive davantage quand on regarde la plus petite des deux portions — le chemin parcouru ou le chemin restant. Au début d'un objectif, afficher les 20 % accomplis motive plus que les 80 % restants. À l'approche du but, c'est l'inverse : les 20 % restants pèsent plus lourd que les 80 % accomplis.
+
+Traduit sur une carte de fidélité :
+
+**Le grand chiffre** montre uniquement le chemin parcouru. Il se lit d'un coup d'œil, il ne ment pas, et il fonctionne très bien quand vous avez un menu de récompenses à plusieurs paliers — dans ce cas il n'y a pas de « reste à parcourir » unique, donc rien à afficher d'autre.
+
+**L'anneau de progression** et **la piste de récompenses** montrent les deux, et surtout ce qui manque. Ils sont plus efficaces quand un palier domine le programme, typiquement une première récompense que tout le monde vise.
+
+**Votre propre visuel** sert un objectif différent : la carte devient un objet de marque. À réserver aux commerces dont l'identité visuelle fait partie de l'offre.
+
+<Highlight>Le grand chiffre montre ce qui est acquis. L'anneau montre ce qui manque.</Highlight>
+
+Ce sont des expériences de laboratoire, pas une promesse sur votre commerce — mais le mécanisme est robuste et il ne coûte rien d'en tenir compte. La règle pratique, si vous ne voulez pas y passer la soirée : menu de récompenses bien étalé, prenez le grand chiffre. Un palier d'entrée qui structure tout le programme, prenez l'anneau. Vous pouvez changer d'avis plus tard, l'affichage se modifie depuis l'[éditeur de carte](/features/design-de-carte) et toutes les cartes déjà installées se mettent à jour.
+
+Les quatre, côte à côte, sur de vraies cartes :
+
+<PointsCardStyles items={[
+  { style: "big_point", label: "Grand chiffre", caption: "Un menu à plusieurs paliers espacés. Lisible, sans objectif unique à représenter." },
+  { style: "circle_progress", label: "Anneau de progression", caption: "Une récompense d'entrée qui structure le reste. Montre le chemin restant." },
+  { style: "progress_icons", label: "Piste de récompenses", caption: "Deux ou trois paliers rapprochés, quand le client doit voir la suite du parcours." },
+  { style: "image_only", label: "Votre visuel", caption: "Quand la carte doit d'abord faire exister votre marque dans le téléphone." }
+]} />
+
+## Créer votre carte de fidélité à points, étape par étape
+
+L'ordre qui fonctionne, dans les grandes lignes :
+
+1. **Choisissez le type de programme.** Chez Stampeo, les points sont disponibles à partir du plan Growth (40 euros par mois) ; le plan Pro (60 euros) permet en plus de faire tourner tampons et points en même temps, ce qui est rarement une bonne idée dans un commerce de proximité.
+2. **Fixez le barème.** Combien de points rapporte un euro dépensé. Un euro pour un point dans la quasi-totalité des cas — le [guide du programme de fidélité à points](/blog/programme-fidelite-a-points) détaille comment le calibrer sans y laisser votre marge.
+3. **Construisez le menu de récompenses.** Chaque récompense a un nom et un prix en points. Le client puise dedans dans l'ordre qu'il veut, dès que son solde le permet. Trois à cinq paliers suffisent.
+4. **Décidez du plafond.** Par défaut, les points s'accumulent sans limite. Vous pouvez activer un solde maximum si vous préférez que personne ne constitue un magot de deux mille points.
+5. **Dessinez la carte.** Couleurs, logo, visuel de fond, et l'affichage du solde vu plus haut. L'aperçu montre le rendu réel dans le wallet pendant que vous travaillez, avec vos propres valeurs.
+6. **Testez-la sur vous.** Le parcours de démarrage vous fait ajouter votre propre carte de test dans votre Apple Wallet ou votre Google Wallet, et la faire scanner pour de vrai. Faites-le avant d'ouvrir aux clients. C'est là qu'on repère qu'un libellé est illisible ou qu'un palier est mal placé.
+
+Comptez moins d'une demi-heure pour l'ensemble, le temps de réfléchir aux récompenses compris. Le mois d'essai est gratuit et sans carte bancaire, ce qui laisse le temps de valider un barème en conditions réelles avant de payer.
+
+### Et si vous avez déjà une carte à tampons
+
+Vous n'êtes pas coincé, et c'est important de le savoir avant de se lancer. La bascule des tampons vers les points est guidée : vous définissez la règle qui convertit les soldes existants, et vos clients **gardent la carte déjà installée dans leur téléphone**. Rien à retélécharger, aucune progression perdue. Et pas de message gênant à faire passer au comptoir.
+
+## Mettre la carte dans le téléphone de vos clients
+
+Une carte que personne n'installe ne sert à rien, et c'est le point où beaucoup de programmes s'arrêtent. On observe presque toujours le même décrochage : la carte est belle, le barème est juste, et elle reste dans le tableau de bord.
+
+Votre commerce dispose d'une adresse et d'un QR code uniques. Tout ce qui affiche ce QR code amène un client sur la page d'installation. Le comptoir, évidemment — une affichette imprimable avec votre QR code est générée pour vous, il n'y a qu'à l'imprimer et la poser près de la caisse. Mais aussi votre compte Instagram, votre signature d'e-mail, votre fiche Google, le bas de vos additions.
+
+Sur place, l'ajout prend une dizaine de secondes : le client scanne avec l'appareil photo, arrive sur une page à vos couleurs qui lui montre la carte qu'il s'apprête à ajouter, et il valide.
+
+Ensuite, à chaque passage, c'est votre équipe qui scanne — jamais le client. Il ouvre sa carte dans son wallet, vous la scannez avec l'[application scanner](/features/scanner-mobile), un pavé numérique s'affiche, vous saisissez le montant dépensé. Les points calculés apparaissent avant que vous validiez, donc une erreur de frappe se voit tout de suite. Pour une récompense, l'application affiche le menu complet avec les prix et ce qui manque au client.
+
+Deux précisions qui comptent. Le scanner fonctionne sans connexion internet : les scans sont enregistrés localement et se synchronisent au retour du réseau — utile sur un marché ou dans une cave voûtée. Et il n'y a pas d'intégration avec votre caisse : le montant se saisit à la main. C'est le compromis assumé du format. Sa contrepartie : aucun matériel à changer et rien à faire valider par votre prestataire de caisse.
+
+## Trois erreurs qu'on ne voit qu'une fois la carte en service
+
+Celles-ci ne se repèrent pas dans le tableau de bord. Elles se repèrent trois semaines plus tard, quand les chiffres n'ont pas bougé.
+
+**Ne rien demander à l'inscription.** La tentation est réelle : moins de champs, plus d'inscriptions. Mais une carte anonyme, c'est un client qui ne peut pas récupérer sa carte tout seul s'il change de téléphone, et à qui vous ne pourrez jamais envoyer une campagne. L'e-mail seul, en un champ, est le bon compromis — et il peut rester facultatif.
+
+**Un affichage qui ne correspond pas au programme.** Un anneau de progression sur un menu de cinq récompenses ne veut rien dire : progression vers quoi ? À l'inverse, un grand chiffre nu sur un programme à palier unique prive le client de l'information qui le motive le plus, celle du chemin restant. Relisez la section plus haut avant de trancher.
+
+**Laisser le QR code au comptoir et s'arrêter là.** Les clients qui l'ont vu sont ceux qui étaient déjà là. La carte se distribue partout où votre commerce existe déjà — réseaux sociaux, e-mails, fiche Google. C'est gratuit et c'est ce qui fait la différence entre trente cartes installées et trois cents.
+
+## Par où commencer
+
+Une carte de fidélité à points dans un wallet, c'est deux décisions et une configuration. Les deux décisions — le barème et le menu de récompenses — méritent qu'on y réfléchisse, parce qu'elles engagent votre marge. La configuration, elle, se fait en une demi-heure et se corrige à tout moment.
+
+Ne cherchez pas le programme parfait avant de lancer. Sortez une première version, ajoutez votre propre carte de test dans votre téléphone, faites-la scanner par un collègue, et regardez ce qui se passe. Vos clients vous diront très vite si la première récompense est trop loin — et dans ce cas, vous la déplacez sans rien réimprimer.
+
+<CallToAction
+  title="Votre carte à points, dans Apple et Google Wallet"
+  buttonText="Commencer maintenant"
+  href="/onboarding"
+/>
+
+## Questions fréquentes
+
+<FAQItem question="Que voit mon client sur sa carte quand je lui crédite des points ?">
+Son solde change en quelques secondes, sans qu'il ait à ouvrir son téléphone, et une bannière apparaît sur son écran verrouillé avec le message que vous avez rédigé. Vous pouvez aussi placer vos propres jalons — à 100 points, à 250 — qui déclenchent leur propre notification. Tout passe par la carte elle-même : ni SMS, ni e-mail.
+</FAQItem>
+
+<FAQItem question="Grand chiffre ou anneau de progression : comment choisir ?">
+Regardez la forme de votre programme. Si vous avez un menu de trois à cinq récompenses à des paliers espacés, prenez le grand chiffre : il n'y a pas d'objectif unique vers lequel progresser. Si une récompense d'entrée structure tout le programme, l'anneau ou la piste de récompenses est plus motivant, parce qu'il montre ce qui reste à parcourir. L'affichage se change à tout moment, et toutes les cartes déjà installées suivent.
+</FAQItem>
+
+<FAQItem question="Mon client change de téléphone : que devient son solde de points ?">
+Il est conservé, dans tous les cas. S'il a donné son e-mail à l'inscription, il retourne sur votre page, saisit son e-mail et récupère sa carte lui-même avec son solde intact. Si sa carte était anonyme, il n'y a pas de récupération en libre-service : il vous le signale, et vous lui renvoyez sa carte par e-mail depuis sa fiche client dans le tableau de bord.
+</FAQItem>
+
+<FAQItem question="Puis-je plafonner le nombre de points qu'un client accumule ?">
+Oui, c'est une option. Par défaut les points s'accumulent sans limite ; vous pouvez activer un solde maximum au-delà duquel le cumul s'arrête. Utile si vous ne voulez pas qu'un très bon client constitue une réserve de points que vous devrez honorer d'un coup, mais à manier avec précaution : un plafond atteint, c'est un client qui n'a plus de raison d'avancer.
+</FAQItem>
+
+<FAQItem question="Faut-il demander l'e-mail du client pour une carte à points ?">
+C'est le réglage recommandé, en un seul champ. Sans e-mail, votre client ne peut pas récupérer sa carte seul et vous ne pourrez jamais lui envoyer de campagne promotionnelle. Avec, vous gardez les deux portes ouvertes. Le champ peut rester facultatif : le client le voit sur le formulaire et obtient quand même sa carte s'il ne le remplit pas.
+</FAQItem>

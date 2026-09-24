@@ -6,6 +6,7 @@ import { Highlight } from "./Highlight";
 import { StatBox } from "./StatBox";
 import { Heading } from "./Heading";
 import { FAQItem } from "./FAQItem";
+import { PointsCardStyles } from "./PointsCardStyles";
 
 export const mdxComponents: MDXComponents = {
   h2: (props) => Heading({ level: 2, ...props }),
@@ -16,4 +17,5 @@ export const mdxComponents: MDXComponents = {
   Highlight,
   StatBox,
   FAQItem,
+  PointsCardStyles,
 };
