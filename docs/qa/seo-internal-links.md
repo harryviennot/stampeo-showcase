@@ -184,26 +184,43 @@ output before touching a browser; it names the file and line.
 
 | Field | Content |
 |---|---|
-| WHY | The one surface no test can reach. `Header.tsx` and `Footer.tsx` use BOTH link conventions in the same file (localized `Link` for the visible nav, raw `<a>` with a hand-built `seoPrefix` for the sr-only SEO block) and build the raw hrefs by string concatenation, so there is no literal for a parser to read. A regression here appears on EVERY page, a far larger blast radius than the 16 blog posts that opened this area. |
+| WHY | This surface shipped a redirect on EVERY page of the site and no test saw it, because the hrefs were built from template strings inside two components. `buildSeoLinks` in `lib/seo-links.ts` is now a pure function and `lib/seo-links.test.ts` walks it, so most of this case is automated. What stays manual is the rendered form: the test checks what the function RETURNS, this checks what the page SHIPS. |
 | DEPENDS | IL-01 |
 | ACCOUNT | None. |
-| STEPS | 1. For each of `/`, `/en`, `/es`, `/pl`: open the page. 2. View source (not the inspector: the sr-only SEO links matter and are easier to read in source). 3. Search the source for `/en/en/`, `/es/es/`, `/pl/pl/`, `/fr/`. 4. Click through the footer's feature links and the language switcher. |
-| EXPECT | No doubled locale appears in any href, and no href begins `/fr/` (French is the unprefixed default, so `/fr/…` would 307). Footer feature links land directly on that locale's feature page. You do NOT see a redirect on any footer link, and you do NOT see a French slug under `/es/` or `/pl/`. |
+| STEPS | 1. Run the block below for all four locales. 2. Spot-click three footer links and the language switcher. |
+| EXPECT | Every sr-only href returns 200 with no `location` header. No doubled locale (`/en/en/`), no `/fr/` prefix (French is unprefixed), and **no trailing slash except the site root**. You do NOT see a 308, and you do NOT see the link count drop below 11 for any locale. |
 | RESET | None. |
 
+> **Check the status code, not just the shape.** The first run of this case
+> grepped only for doubled prefixes, found none, and reported the case clean
+> while `/en/` was 308ing to `/en` on every page. A link can be correctly
+> prefixed and still redirect. The half that matters is the response.
+
 <details>
-<summary>One-liner for the whole check</summary>
+<summary>The full check, both halves</summary>
 
 ```bash
-for u in / /en /es /pl; do
-  curl -s "http://localhost:3001$u" \
-    | grep -oE 'href="/(en|es|pl|fr)/(en|es|pl|fr)/[^"]*"' | sort -u
+B=http://localhost:3001
+bad=0
+for page in / /en /es /pl; do
+  curl -s "$B$page" \
+   | grep -oE '<a href="/[^"]*">(Home|Pricing|Loyalty programs|Blog|Contact|About|notifications-push|campagnes-promotionnelles|geolocalisation|scanner-mobile|analytiques|design-de-carte)</a>' \
+   | grep -oE 'href="[^"]*"' | cut -d'"' -f2 | sort -u > /tmp/hrefs.txt
+  n=0
+  while IFS= read -r h; do
+    [ -z "$h" ] && continue
+    n=$((n+1))
+    code=$(curl -s -o /dev/null -w '%{http_code}' "$B$h")
+    [ "$code" = 200 ] || { echo "FAIL $page -> $h [$code]"; bad=$((bad+1)); }
+  done < /tmp/hrefs.txt
+  printf '%-4s %2d links\n' "$page" "$n"
 done
-# Any output at all is a failure. Silence is a pass.
+echo "failures: $bad"
 ```
 
-Run the loop, but still click a few links: the loop proves no doubled prefix,
-it does not prove the links go anywhere sensible.
+Expect 12 links for `/`, `/en`, `/es`, 11 for `/pl` (no blog), and 0 failures.
+A count below that means the sr-only block stopped rendering, which the grep
+alone would report as a pass.
 </details>
 
 ---

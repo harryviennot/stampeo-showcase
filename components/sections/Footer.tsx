@@ -1,18 +1,19 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
+import { buildSeoLinks } from "@/lib/seo-links";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
-import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
+import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { storeBadges } from "@/lib/store-badges";
 import {
   APP_STORE_URL,
   PLAY_STORE_URL,
 } from "../features/scanner-mobile/StoreBadges";
-import { marketLink, marketPath, type Market } from "@/lib/markets";
+import { marketPath, type Market } from "@/lib/markets";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
@@ -23,20 +24,8 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
 
   const badges = storeBadges(locale);
 
-  const seoPrefix = locale === "fr" ? "" : `/${locale}`;
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
-  const seoLinks = [
-    { href: `${seoPrefix}/`, label: "Home" },
-    { href: marketLink(market, seoPrefix, "/pricing"), label: "Pricing" },
-    { href: loyaltyPath(locale), label: "Loyalty programs" },
-    ...(hasBlog(locale) ? [{ href: `${seoPrefix}/blog`, label: "Blog" }] : []),
-    { href: `${seoPrefix}/contact`, label: "Contact" },
-    { href: `${seoPrefix}/about`, label: "About" },
-    ...FEATURE_ITEMS.map(({ canonicalSlug }) => ({
-      href: `${seoPrefix}/features/${getLocalizedSlug(canonicalSlug, locale)}`,
-      label: canonicalSlug,
-    })),
-  ];
+  const seoLinks = buildSeoLinks(locale, market);
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">

@@ -1,4 +1,5 @@
 import { routing } from "@/i18n/routing";
+import { isPilotPath } from "@/lib/markets";
 import { BLOG_LOCALES } from "@/lib/blog/locales";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { MARKETING_SEGMENTS, PRIVATE_SEGMENTS } from "@/lib/consent-routes";
@@ -92,6 +93,8 @@ export type LinkProblem =
   | "wrong-locale-slug"
   /** A real route that always answers with a redirect -> a wasted hop. */
   | "always-redirects"
+  /** A trailing slash. Next redirects `/en/` to `/en` -> a wasted hop. */
+  | "trailing-slash"
   /** Resolves to no route at all. */
   | "unknown-route";
 
@@ -225,8 +228,26 @@ export function classifyLink(
   kind: LinkKind,
   blog: BlogInventory
 ): LinkVerdict {
+  const bare = href.split(/[?#]/)[0];
+  // Checked BEFORE normalising, because normalising removes the exact character
+  // that causes the redirect. `next.config.ts` sets no `trailingSlash`, so the
+  // default applies and `/en/` 308s to `/en`. This is how the header and footer
+  // shipped a redirect on every page of the site (STA-355 QA, blocker 2).
+  if (bare.length > 1 && bare.endsWith("/")) {
+    return {
+      ok: false,
+      problem: "trailing-slash",
+      resolved: bare.replace(/\/+$/, ""),
+      detail: `"${bare}" 308s to "${bare.replace(/\/+$/, "")}"; use the unslashed form`,
+    };
+  }
+
   const path = normalizePath(href);
   const prefix = leadingLocale(path);
+
+  // Country pilots are served at locale-free URLs by a middleware rewrite, so
+  // the prefix rules below do not apply to them in either direction.
+  if (isPilotPath(path)) return { ok: true, resolved: path };
 
   // Outside the locale tree, so the locale rules below do not apply in either
   // direction: these take no prefix, from a localized Link or a raw <a> alike.

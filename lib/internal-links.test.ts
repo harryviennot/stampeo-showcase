@@ -148,10 +148,35 @@ describe("classifyLink — route resolution", () => {
     expect(!v.ok && v.detail).toContain("enrollment");
   });
 
-  test("query strings and trailing slashes do not change the answer", () => {
-    expect(classifyLink("/pricing/", "en", "localized-link", BLOG).ok).toBe(true);
+  test("a query string or hash does not change the answer", () => {
     expect(classifyLink("/pricing?utm_source=x", "en", "localized-link", BLOG).ok).toBe(true);
     expect(classifyLink("/blog/nope#top", "en", "localized-link", BLOG).ok).toBe(false);
+  });
+
+  test("a trailing slash is a redirect, not a harmless variant", () => {
+    // This file previously asserted the OPPOSITE — that a trailing slash "does
+    // not change the answer" — and normalised it away before classifying. That
+    // is precisely why the guard could not see `/en/` in the header and footer,
+    // which 308'd to `/en` on every page of the site. Next sets no
+    // `trailingSlash` option, so the default applies and the slash redirects.
+    for (const kind of ["localized-link", "raw-anchor"] as const) {
+      expect(classifyLink("/pricing/", "fr", kind, BLOG)).toMatchObject({
+        problem: "trailing-slash",
+      });
+    }
+    expect(classifyLink("/en/", "en", "raw-anchor", BLOG)).toMatchObject({
+      problem: "trailing-slash",
+      resolved: "/en",
+    });
+    // The site root is the one legitimate trailing slash.
+    expect(classifyLink("/", "fr", "raw-anchor", BLOG).ok).toBe(true);
+  });
+
+  test("country pilots are locale-free URLs, not locale-prefixed ones", () => {
+    // /us and /uk are served by a middleware rewrite, so the prefix rules do
+    // not apply. The footer links here via marketLink().
+    expect(classifyLink("/us/pricing", "en", "raw-anchor", BLOG).ok).toBe(true);
+    expect(classifyLink("/uk", "en", "raw-anchor", BLOG).ok).toBe(true);
   });
 });
 
