@@ -57,12 +57,14 @@ cookie, or the filesystem. Recorded explicitly so nobody invents a reset.
     so the route called `notFound()`.
   - IL-04: the French feature slug was left in the Spanish catalog, so the page
     308'd before arriving.
-- **Verified on the dev server, NOT on a production build.** A `next build` was
-  not run for STA-355 because a showcase dev server was live and a build would
-  have clobbered its `.next`. Dev compiles routes on demand, and all 33 posts
-  were requested and returned 200, so MDX compilation is covered. What is NOT
-  covered is anything that only differs under `output: "standalone"`. Run IL-06
-  on the next branch that builds.
+- **IL-06 is CLOSED.** QA ran an isolated production build on 2026-09-25: it
+  passed and generated all 251 static pages. The case stays in the runbook for
+  future branches, but STA-355 no longer carries a build gap.
+- **IL-09 failed its first run and the failure was missed.** The check grepped
+  for doubled prefixes only, found none, and reported clean while `/en/` was
+  308ing to `/en` on every page of the site. The case now checks response
+  codes, and the recipe below does both halves. If you are re-running this
+  area, trust the status code, not the link shape.
 - **The guard's own blind spots are written into its header comment**
   (`lib/internal-links.ts`). Read them before concluding a green suite means a
   clean site: components, path depth below the first segment, `href={expr}`,
