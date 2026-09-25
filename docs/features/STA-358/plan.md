@@ -33,11 +33,10 @@ than assumed:
    `redirects` from `next.config` (2), **Proxy** (3), `beforeFiles` (4),
    filesystem (5). So a config redirect fires before next-intl's locale
    negotiation and produces one clean hop. The design depends on this.
-2. **`middleware.ts` is deprecated in Next 16**, renamed `proxy.ts`, with a
-   codemod (`npx @next/codemod@canary middleware-to-proxy .`). This repo still
-   uses the old name. **Out of scope here** — it is a rename touching every
-   routing path and deserves its own issue — but recorded so it is a decision
-   rather than an oversight.
+2. **`middleware.ts` is deprecated in Next 16**, renamed `proxy.ts`. This repo
+   still uses the old name. **In scope** (section 6): this issue already rewires
+   the routing pipeline and reasons in terms of "Proxy", so leaving the file
+   called `middleware.ts` would ship an incoherent codebase.
 
 ## Acceptance criteria
 
@@ -80,6 +79,12 @@ temporary.
 **AC8 — Private routes never enter the sitemap.**
 Given the generated sitemap, when each URL is checked, then none is a private
 segment, none is a redirect source, and each is self-canonical and indexable.
+
+**AC9 — The routing entry point uses the current file convention.**
+Given the repo, when the routing pipeline is inspected, then it is `proxy.ts`
+exporting `proxy`, no `middleware.ts` remains, and every behaviour the old file
+had still holds: the www 301, the `/us` + `/uk` pilot rewrites with the market
+cookie, `text/markdown` negotiation, and the acquisition-slug rewrite.
 
 ## Approach
 
@@ -125,6 +130,27 @@ fallback so both agree: test `!isFoundingProgramOpen()` first, and use
 Do not delete the route folders: `consent-routes.test.ts` asserts every
 `MARKETING_SEGMENTS` name still exists as a folder.
 
+### 6. Rename `middleware.ts` to `proxy.ts`
+Deprecated in Next 16. Two mechanical changes: the filename, and
+`export default async function middleware` -> `proxy`.
+
+**By hand, not with the codemod.** The published codemod is
+`npx @next/codemod@canary middleware-to-proxy .` — `canary` is a moving target,
+and running an unpinned canary transform across the repo to save a two-line edit
+is a worse trade than doing it deliberately. The matcher config is untouched.
+
+`next-intl/middleware` and `createMiddleware` stay exactly as they are: those are
+next-intl's API, not the Next file convention, and renaming them would break the
+import.
+
+Roughly fifteen files mention "middleware" in comments and prose (including
+`lib/consent-routes.ts`, `lib/markets.ts`, `lib/internal-links.ts` and
+`lib/seo-links.ts`). Those get updated too — a comment pointing at a file that no
+longer exists is how the next person loses an hour.
+
+This lands as its own commit, before the redirect table, so that if the rename
+regresses anything the bisect is one file wide.
+
 ## Tests, written first
 
 - `lib/legacy-redirects.test.ts` — AC4, AC5, AC6. Destinations are real routes;
@@ -132,6 +158,12 @@ Do not delete the route folders: `consent-routes.test.ts` asserts every
   keep-as-404 list is absent; slug sets disjoint.
 - `lib/sitemap.test.ts` — AC8. The first test `app/sitemap.ts` has ever had.
 - `lib/page-robots.test.ts` — AC2, AC3.
+- AC9 has no new unit test: the existing `lib/locale-negotiation.test.ts`,
+  `lib/market-paths.test.ts`, `lib/markets.test.ts` and `lib/business-locale.test.ts`
+  already cover the logic the file delegates to, and the rename does not touch
+  it. What the rename CAN break is whether Next picks the file up at all, which
+  no unit test can see — so it is verified by `curl` on a built server: a www
+  redirect, `/us/pricing`, and a business slug.
 
 Two things unit tests cannot prove, so they are runbook cases against a built
 server, not assertions: that `redirects` actually fires before Proxy (a unit test
@@ -146,3 +178,8 @@ cannot see the pipeline), and AC1/AC2/AC3, which are about rendered HTML.
   self-canonical assertion is the guard.
 - **21 explicit redirects is a hand-copied list.** Every destination gets
   asserted to be a real route, so a typo fails the suite rather than shipping.
+- **A silently-unregistered `proxy.ts` fails open, not loud.** If Next does not
+  pick the file up, every request simply skips it: no error, no failing unit
+  test, and pilot URLs and QR enrollment pages quietly break. This is the one
+  change in the issue that must be verified against a built server before it is
+  believed.
