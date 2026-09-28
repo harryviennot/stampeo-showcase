@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { LOYALTY_SLUGS, loyaltyPath } from "@/lib/loyalty-routes";
+import { buildSeoLinks } from "@/lib/seo-links";
+import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { ChevronDownIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
@@ -15,7 +16,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
-import { marketLink, marketPath, type Market } from "@/lib/markets";
+import { marketPath, type Market } from "@/lib/markets";
 
 function DesktopAuthButtons({
   loading,
@@ -343,19 +344,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 
-  const seoPrefix = locale === "fr" ? "" : `/${locale}`;
-  const seoLinks = [
-    { href: `${seoPrefix}/`, label: "Home" },
-    { href: marketLink(market, seoPrefix, "/pricing"), label: "Pricing" },
-    { href: loyaltyPath(locale), label: "Loyalty programs" },
-    ...(hasBlog(locale) ? [{ href: `${seoPrefix}/blog`, label: "Blog" }] : []),
-    { href: `${seoPrefix}/contact`, label: "Contact" },
-    { href: `${seoPrefix}/about`, label: "About" },
-    ...FEATURE_ITEMS.map(({ canonicalSlug }) => ({
-      href: `${seoPrefix}/features/${getLocalizedSlug(canonicalSlug, locale)}`,
-      label: canonicalSlug,
-    })),
-  ];
+  const seoLinks = buildSeoLinks(locale, market);
 
   return (
     <>
