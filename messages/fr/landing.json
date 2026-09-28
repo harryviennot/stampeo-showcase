@@ -301,12 +301,12 @@
     },
     "howItWorks": {
       "badge": "En 3 étapes",
-      "title": "Prêt en 10 minutes.",
+      "title": "Prêt dès aujourd'hui.",
       "subtitle": "De l'inscription au premier tampon, sans démo ni intégration caisse.",
       "steps": [
         {
           "title": "Créez votre carte",
-          "description": "Logo, couleurs, récompenses. Depuis votre tableau de bord, en 10 minutes."
+          "description": "Logo, couleurs, récompenses. Tout se règle depuis votre tableau de bord."
         },
         {
           "title": "Vos clients la scannent",
@@ -357,7 +357,7 @@
     },
     "finalCta": {
       "title": "Lancez votre fidélité <accent>cette semaine.</accent>",
-      "subtitle": "10 minutes pour créer votre carte. {trialDays} jours pour la tester. {zero} pour commencer.",
+      "subtitle": "Créez votre carte aujourd'hui. {trialDays} jours pour la tester. {zero} pour commencer.",
       "primaryCta": "Créer ma carte",
       "secondaryCta": "Réserver une démo",
       "reassurance": "{trialDays} jours gratuits · Sans engagement · Une question ? 06 49 37 04 70"

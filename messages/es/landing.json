@@ -300,12 +300,12 @@
     },
     "howItWorks": {
       "badge": "En 3 pasos",
-      "title": "Listo en 10 minutos.",
+      "title": "Listo hoy mismo.",
       "subtitle": "Del registro al primer sello, sin demo ni integrar la caja.",
       "steps": [
         {
           "title": "Crea tu tarjeta",
-          "description": "Logo, colores, recompensas. Desde tu panel, en 10 minutos."
+          "description": "Logo, colores, recompensas. Todo desde tu panel."
         },
         {
           "title": "Tus clientes la escanean",
@@ -356,7 +356,7 @@
     },
     "finalCta": {
       "title": "Lanza tu fidelidad <accent>esta semana.</accent>",
-      "subtitle": "10 minutos para crear tu tarjeta. {trialDays} días para probarla. {zero} para empezar.",
+      "subtitle": "Crea tu tarjeta hoy. {trialDays} días para probarla. {zero} para empezar.",
       "primaryCta": "Crear mi tarjeta",
       "secondaryCta": "Reservar una demo",
       "reassurance": "{trialDays} días gratis · Sin compromiso"
