@@ -300,12 +300,12 @@
     },
     "howItWorks": {
       "badge": "In 3 steps",
-      "title": "Ready in 3 minutes.",
+      "title": "Ready in 10 minutes.",
       "subtitle": "From sign-up to first stamp, with no demo and no till integration.",
       "steps": [
         {
           "title": "Build your card",
-          "description": "Logo, colors, rewards. From your dashboard, in 3 minutes."
+          "description": "Logo, colors, rewards. From your dashboard, in 10 minutes."
         },
         {
           "title": "Your customers scan it",
@@ -356,7 +356,7 @@
     },
     "finalCta": {
       "title": "Launch your loyalty <accent>this week.</accent>",
-      "subtitle": "3 minutes to build your card. {trialDays} days to test it. {zero} to start.",
+      "subtitle": "10 minutes to build your card. {trialDays} days to test it. {zero} to start.",
       "primaryCta": "Create my card",
       "secondaryCta": "Book a demo",
       "reassurance": "{trialDays} days free · No commitment"
