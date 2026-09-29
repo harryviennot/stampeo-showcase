@@ -36,7 +36,7 @@ export async function DesignTeaser() {
         {/* Fan of sample cards, pure decoration for the link below */}
         <ScrollReveal delay={120}>
           <div className="relative mt-12">
-            {/* Margin note over the fan, tying back to the 3-minute promise. */}
+            {/* Margin note over the fan, tying back to the time promise. */}
             <div className="hidden sm:flex absolute -top-6 right-[6%] lg:right-[22%] flex-col items-start z-20">
               <InkNote rotate={3}>{t("annotation")}</InkNote>
               <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.4} />
