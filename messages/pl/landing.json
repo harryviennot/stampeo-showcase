@@ -300,12 +300,12 @@
     },
     "howItWorks": {
       "badge": "W 3 krokach",
-      "title": "Gotowe w 3 minuty.",
+      "title": "Gotowe jeszcze dziś.",
       "subtitle": "Od rejestracji do pierwszej pieczątki, bez prezentacji i bez integracji z kasą.",
       "steps": [
         {
           "title": "Stwórz kartę",
-          "description": "Logo, kolory, nagrody. W swoim panelu, w 3 minuty."
+          "description": "Logo, kolory, nagrody. Wszystko ustawisz w swoim panelu."
         },
         {
           "title": "Klienci ją skanują",
@@ -356,7 +356,7 @@
     },
     "finalCta": {
       "title": "Uruchom swój program lojalnościowy <accent>w tym tygodniu.</accent>",
-      "subtitle": "3 minuty na stworzenie karty. {trialDays} dni na testy. {zero} na start.",
+      "subtitle": "Stwórz kartę jeszcze dziś. {trialDays} dni na testy. {zero} na start.",
       "primaryCta": "Stwórz moją kartę",
       "secondaryCta": "Umów demo",
       "reassurance": "{trialDays} dni za darmo · Bez zobowiązań"
