@@ -321,26 +321,149 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
     }
   });
 
-  it("names the hashing and the 45-day limit on IP and browser data, in every locale", () => {
-    // What a visitor consents to when they accept advertising cookies: their
-    // contact details leave as SHA-256 codes, and the IP address and browser
-    // characteristics are kept 45 days at most.
-    for (const locale of routing.locales) {
-      const text = section55(locale);
-      expect(text, `${locale} §5.5 does not name SHA-256`).toContain("SHA-256");
-      expect(text, `${locale} §5.5 omits the 45-day limit`).toContain("45");
+  /**
+   * What §5.5 must name, in the words each locale's text uses: the four
+   * reported steps, and every field Meta receives. Consent version 3 is valid
+   * only while the text describes what the backend sends.
+   */
+  const DISCLOSED: Record<string, { steps: string[]; fields: Record<string, string> }> = {
+    en: {
+      steps: [
+        "the account was created",
+        "you opened the payment page",
+        "your free trial started",
+        "a first invoice was paid",
+      ],
+      fields: {
+        email: "email address",
+        phone: "telephone number",
+        name: "first name, last name",
+        country: "country",
+        city: "city",
+        postcode: "postcode",
+        account: "identifier derived from your account",
+        ip: "IP address",
+        browser: "browser's technical characteristics",
+      },
+    },
+    fr: {
+      steps: [
+        "la création du compte",
+        "l'ouverture de la page de paiement",
+        "le début de votre essai gratuit",
+        "le règlement d'une première facture",
+      ],
+      fields: {
+        email: "adresse email",
+        phone: "numéro de téléphone",
+        name: "prénom et nom",
+        country: "pays",
+        city: "ville",
+        postcode: "code postal",
+        account: "identifiant dérivé de votre compte",
+        ip: "adresse IP",
+        browser: "caractéristiques techniques de votre navigateur",
+      },
+    },
+    es: {
+      steps: [
+        "que se creó la cuenta",
+        "que abriste la página de pago",
+        "que empezó tu prueba gratuita",
+        "que se pagó una primera factura",
+      ],
+      fields: {
+        email: "dirección de correo electrónico",
+        phone: "número de teléfono",
+        name: "nombre y apellidos",
+        country: "país",
+        city: "ciudad",
+        postcode: "código postal",
+        account: "identificador derivado de tu cuenta",
+        ip: "dirección IP",
+        browser: "características técnicas de tu navegador",
+      },
+    },
+    pl: {
+      steps: [
+        "założeniu konta",
+        "otwarciu strony płatności",
+        "rozpoczęciu bezpłatnego okresu próbnego",
+        "opłaceniu pierwszej faktury",
+      ],
+      fields: {
+        email: "adres e-mail",
+        phone: "numer telefonu",
+        name: "imię i nazwisko",
+        country: "kraj",
+        city: "miasto",
+        postcode: "kod pocztowy",
+        account: "identyfikator wyprowadzony z Twojego konta",
+        ip: "adres IP",
+        browser: "parametry techniczne Twojej przeglądarki",
+      },
+    },
+  };
+
+  /** "45 days" as each locale writes it, so a stray "45" cannot pass. */
+  const FORTY_FIVE_DAYS: Record<string, RegExp> = {
+    en: /\b45 days\b/,
+    fr: /\b45 jours\b/,
+    es: /\b45 días/,
+    pl: /\b45 dni\b/,
+  };
+
+  it.each(routing.locales)("§5.5 names the four reported steps (%s)", (locale) => {
+    const text = section55(locale).toLowerCase();
+    for (const step of DISCLOSED[locale].steps) {
+      expect(text, `${locale} §5.5 does not name "${step}"`).toContain(step.toLowerCase());
     }
   });
 
-  it("lists the IP and browser data in the retention table, in every locale", () => {
-    for (const locale of routing.locales) {
-      const rows = retentionTable(locale).filter((row) => /5\.5/.test(row));
-      expect(
-        rows.some((row) => /45/.test(row)),
-        `${locale} retention table has no 45-day row for §5.5`
-      ).toBe(true);
+  it.each(routing.locales)("§5.5 names every field Meta receives (%s)", (locale) => {
+    const text = section55(locale).toLowerCase();
+    for (const [field, words] of Object.entries(DISCLOSED[locale].fields)) {
+      expect(text, `${locale} §5.5 does not name the ${field} ("${words}")`).toContain(
+        words.toLowerCase(),
+      );
     }
   });
+
+  it.each(routing.locales)("§5.5 names the SHA-256 hashing and the 45-day limit (%s)", (locale) => {
+    // Contact details leave as SHA-256 codes; the IP address and browser
+    // characteristics are kept 45 days at most.
+    const text = section55(locale);
+    expect(text, `${locale} §5.5 does not name SHA-256`).toContain("SHA-256");
+    expect(text, `${locale} §5.5 omits the 45-day limit`).toMatch(FORTY_FIVE_DAYS[locale]);
+  });
+
+  it.each(routing.locales)("the retention table keeps §5.5's data 45 days (%s)", (locale) => {
+    const rows = retentionTable(locale).filter((row) => /5\.5/.test(row));
+    expect(
+      rows.some((row) => FORTY_FIVE_DAYS[locale].test(row)),
+      `${locale} retention table has no 45-day row for §5.5`
+    ).toBe(true);
+  });
+
+  it.each(routing.locales)(
+    "the Advertising toggle names Meta and the irreversible code (%s)",
+    (locale) => {
+      // The line a visitor reads when they decide on marketing cookies.
+      const IRREVERSIBLE_CODE: Record<string, RegExp> = {
+        en: /irreversible code/i,
+        fr: /code irréversible/i,
+        es: /código irreversible/i,
+        pl: /nieodwracaln\w* kod/i,
+      };
+      const catalog = JSON.parse(
+        fs.readFileSync(path.join(process.cwd(), "messages", locale, "common.json"), "utf-8"),
+      );
+      const body: string = catalog.common.cookies.prefs.marketing.body;
+
+      expect(body).toContain("Meta");
+      expect(body).toMatch(IRREVERSIBLE_CODE[locale]);
+    },
+  );
 
   it("names Meta among the United States transfers, in every locale", () => {
     const TRANSFERS: Record<string, RegExp> = {
