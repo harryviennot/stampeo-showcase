@@ -3,6 +3,7 @@
 import type { ComponentProps } from "react";
 import { Link } from "@/i18n/navigation";
 import type { CTALocation } from "@/lib/analytics";
+import { trackThen } from "@/lib/cta/events";
 import { useCtaTracking } from "@/hooks/use-cta-tracking";
 
 type TrackedLinkProps = ComponentProps<typeof Link> & {
@@ -18,14 +19,5 @@ type TrackedLinkProps = ComponentProps<typeof Link> & {
 export function TrackedLink({ trackAs, href, onClick, ...props }: TrackedLinkProps) {
   const track = useCtaTracking(trackAs, href);
 
-  return (
-    <Link
-      {...props}
-      href={href}
-      onClick={(event) => {
-        track();
-        onClick?.(event);
-      }}
-    />
-  );
+  return <Link {...props} href={href} onClick={trackThen(track, onClick)} />;
 }
