@@ -111,6 +111,13 @@ function section(locale: string, heading: RegExp, next: RegExp = /^#+\s+\d/m) {
   return end === -1 ? rest : rest.slice(0, end);
 }
 
+/** One locale's `common` message catalog, as the banner and the toggle render it. */
+function commonCatalog(locale: string) {
+  return JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), "messages", locale, "common.json"), "utf-8"),
+  ).common;
+}
+
 /** The rows of the retention table in §8, a different table from §5.3's. */
 function retentionTable(locale: string) {
   return section(locale, /^##\s+8\./m, /^##\s+9\./m)
@@ -302,8 +309,10 @@ describe("privacy §5.2 — the consent cookie's own contents", () => {
   });
 });
 
+/** §5.5, the server-side conversion reporting, up to §5.6. */
+const section55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
+
 describe("privacy §5.5 — what the advertising platforms receive", () => {
-  const section55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
 
   /** A promise that contact details are never sent, as each locale would word it. */
   const NO_CONTACT_DETAILS_PROMISE: Record<string, RegExp> = {
@@ -455,10 +464,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
         es: /código irreversible/i,
         pl: /nieodwracaln\w* kod/i,
       };
-      const catalog = JSON.parse(
-        fs.readFileSync(path.join(process.cwd(), "messages", locale, "common.json"), "utf-8"),
-      );
-      const body: string = catalog.common.cookies.prefs.marketing.body;
+      const body: string = commonCatalog(locale).cookies.prefs.marketing.body;
 
       expect(body).toContain("Meta");
       expect(body).toMatch(IRREVERSIBLE_CODE[locale]);
@@ -477,4 +483,109 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
       expect(text, `${locale} transfers paragraph does not name Meta`).toContain("Meta");
     }
   });
+});
+
+/**
+ * The statements the legal review of consent version 3 found missing: the
+ * legal basis and joint controllership for §5.5, Google Analytics 4 among the
+ * sub-processors, the California "sharing" disclosure next to "we never sell",
+ * the right to complain to a supervisory authority, and a first banner layer
+ * that names who hears about a sign-up.
+ */
+describe("privacy — the statements the legal review requires", () => {
+  const REQUIRED: Record<
+    string,
+    { legalBasis: RegExp[]; jointControllers: RegExp[]; complaint: RegExp[]; sharing: RegExp[] }
+  > = {
+    en: {
+      legalBasis: [/legal basis/i, /Art\. 6\(1\)\(a\)/],
+      jointControllers: [/Stampeo and Meta Platforms Ireland Limited are joint controllers/, /Art\. 26/],
+      complaint: [/lodge a complaint/i, /supervisory authority/i],
+      sharing: [/California/, /\bsharing\b/i],
+    },
+    fr: {
+      legalBasis: [/base légale/i, /article 6\.1\.a/i],
+      jointControllers: [/Stampeo et Meta Platforms Ireland Limited sont responsables conjoints/, /article 26/i],
+      complaint: [/introduire une réclamation/i, /autorité de contrôle/i],
+      sharing: [/Californie/, /\bpartage\b/i],
+    },
+    es: {
+      legalBasis: [/base jurídica/i, /artículo 6\.1\.a/i],
+      jointControllers: [/Stampeo y Meta Platforms Ireland Limited son corresponsables/, /artículo 26/i],
+      complaint: [/presentar una reclamación/i, /autoridad de control/i],
+      sharing: [/California/, /\bcompartir\b/i],
+    },
+    pl: {
+      legalBasis: [/podstawa prawna/i, /art\. 6 ust\. 1 lit\. a/i],
+      jointControllers: [/Stampeo i Meta Platforms Ireland Limited są współadministratorami/, /art\. 26/i],
+      complaint: [/wnieść skargę/i, /organu nadzorczego/i],
+      sharing: [/Kaliforni/, /udostępniani/i],
+    },
+  };
+
+  const expectAll = (text: string, patterns: RegExp[], what: string) => {
+    for (const pattern of patterns) expect(text, `${what}: no match for ${pattern}`).toMatch(pattern);
+  };
+
+  it.each(routing.locales)("§5.5 states its legal basis, consent (%s)", (locale) => {
+    expectAll(section55(locale), REQUIRED[locale].legalBasis, `${locale} §5.5 legal basis`);
+  });
+
+  it.each(routing.locales)(
+    "§5.5 names Meta Platforms Ireland Limited as joint controller (%s)",
+    (locale) => {
+      const text = section55(locale);
+      expectAll(text, REQUIRED[locale].jointControllers, `${locale} §5.5 joint controllers`);
+      // Art. 26(2): the essence of the arrangement, including who answers for
+      // Meta's own later processing, is made available to the reader.
+      expect(text).toContain("https://www.facebook.com/privacy/policy");
+    },
+  );
+
+  it.each(routing.locales)("§4 lists Google Analytics 4 as a sub-processor (%s)", (locale) => {
+    // §4's table only, up to "Resellers": §5.3 names GA4 too, as a cookie recipient.
+    const rows = section(locale, /^##\s+4\./m, /^#+\s/m)
+      .split("\n")
+      .filter((line) => line.trim().startsWith("|") && line.includes("Analytics 4"));
+    expect(rows, `${locale} §4 has no Google Analytics 4 row`).toHaveLength(1);
+    expect(rows[0]).toContain("Google Ireland Limited");
+    expect(rows[0]).toContain("Data Privacy Framework");
+  });
+
+  it.each(routing.locales)(
+    "§6 qualifies \"we never sell\" with the California sharing opt-out (%s)",
+    (locale) => {
+      // §6 only, up to 6.1, so the disclosure sits next to the promise it qualifies.
+      const text = section(locale, /^##\s+6\./m);
+      const common = commonCatalog(locale);
+      expectAll(text, REQUIRED[locale].sharing, `${locale} §6 US sharing`);
+      expect(text).toContain("Global Privacy Control");
+      // The opt-out names the controls a visitor can actually find on the page.
+      expect(text).toContain(common.cookies.notice.choices);
+      expect(text).toContain(common.footer.cookiePreferences);
+    },
+  );
+
+  it.each(routing.locales)(
+    "§10 states the right to complain to the CNIL or a local authority (%s)",
+    (locale) => {
+      // §10 itself, not 10.1, which is only about support access.
+      const text = section(locale, /^##\s+10\./m);
+      expectAll(text, REQUIRED[locale].complaint, `${locale} §10 complaint`);
+      expect(text).toContain("CNIL");
+      expect(text).toContain("www.cnil.fr");
+    },
+  );
+
+  it.each(routing.locales)(
+    "the banner and the US notice name Meta and Google (%s)",
+    (locale) => {
+      // The first layer a visitor reads before deciding.
+      const { banner, notice } = commonCatalog(locale).cookies;
+      for (const body of [banner.body, notice.body]) {
+        expect(body).toContain("Meta");
+        expect(body).toContain("Google");
+      }
+    },
+  );
 });
