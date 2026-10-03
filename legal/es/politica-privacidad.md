@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 16 de septiembre de 2026**
+**Última actualización: 3 de octubre de 2026**
 
 ## 1. Introducción
 
@@ -123,7 +123,7 @@ Un comercio que no sea gestionado por un revendedor no queda expuesto a ningún 
 
 ### Transferencias fuera de la UE
 
-Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google) pueden transferir datos a Estados Unidos. Estas transferencias se enmarcan en el EU-US Data Privacy Framework o en cláusulas contractuales tipo aprobadas por la Comisión Europea. Supabase, OVH, Resend, PostHog, Sentry y nuestro Redis autoalojado tratan los datos exclusivamente dentro de la UE.
+Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google) pueden transferir datos a Estados Unidos. Estas transferencias se enmarcan en el EU-US Data Privacy Framework o en cláusulas contractuales tipo aprobadas por la Comisión Europea. Supabase, OVH, Resend, PostHog, Sentry y nuestro Redis autoalojado tratan los datos exclusivamente dentro de la UE. Las plataformas publicitarias a las que comunicamos conversiones conforme al §5.5 (Google y Meta) pueden tratar esos datos en Estados Unidos, en el mismo marco.
 
 ## 5. Cookies
 
@@ -167,13 +167,22 @@ Pueden utilizarse cookies estrictamente necesarias para la autenticación y la g
 
 ### 5.5 Medición de conversiones desde nuestros servidores
 
-Si acepta las cookies del 5.3 y ha llegado al sitio desde un anuncio, conservamos el identificador que la plataforma publicitaria añadió al enlace que siguió —en el caso de Google, el `gclid`; en el de Meta, el `fbclid`— junto con los parámetros de campaña presentes en la dirección y el identificador de navegador propio de esa plataforma descrito más arriba. Se guardan en una cookie `stampeo_attribution`, incluida en el 5.3, cuya única función es sobrevivir al paso de este sitio al panel de control, alojado en otro subdominio.
+Si aceptas las cookies del 5.3 y has llegado al sitio desde un anuncio, conservamos el identificador que la plataforma publicitaria añadió al enlace que seguiste (en el caso de Google, el `gclid`; en el de Meta, el `fbclid`), junto con los parámetros de campaña presentes en la dirección y el identificador de navegador propio de esa plataforma descrito más arriba. Se guardan en una cookie `stampeo_attribution`, incluida en el 5.3, cuya única función es sobrevivir al paso de este sitio al panel de control, alojado en otro subdominio. Si más adelante vuelves desde otro anuncio, ese clic más reciente sustituye al anterior.
 
-Si después crea una cuenta profesional, ese identificador queda registrado con su cuenta. Comunicamos entonces dos cosas a esa plataforma **desde nuestros servidores**: que el anuncio dio lugar a la creación de una cuenta y, si más adelante se suscribe, que se ha pagado una primera factura. Cada plataforma recibe únicamente su propio identificador: un clic de Google nunca se comunica a Meta, ni un clic de Meta a Google. Al tratarse de un envío del lado del servidor, se produce después de lo que ocurre en su navegador y con independencia de ello.
+Si después creas una cuenta profesional, comunicamos hasta cuatro pasos **desde nuestros servidores**: que se creó la cuenta, que abriste la página de pago, que empezó tu prueba gratuita y que se pagó una primera factura. Al tratarse de un envío del lado del servidor, se produce después de lo que ocurre en tu navegador y con independencia de ello.
 
-Lo que se transmite se limita al identificador publicitario, a la campaña y, en caso de pago, a su importe y su divisa. Nunca incluye su dirección de correo electrónico, su nombre, su número de teléfono ni el identificador de su cuenta.
+En cada paso, la plataforma recibe sus propios identificadores cuando dispone de ellos (el identificador de clic y su identificador de navegador) y la campaña, además, en los tres últimos pasos, del precio del plan elegido o del importe pagado, y su divisa. Cada plataforma recibe únicamente sus propios identificadores: un clic de Google nunca se comunica a Meta, ni un clic de Meta a Google.
 
-Retirar su consentimiento mediante **Preferencias de cookies** elimina la cookie `stampeo_attribution` junto con las demás y pone fin a cualquier nueva comunicación de conversiones para su cuenta. Las conversiones ya transmitidas no pueden retirarse. Estos datos se eliminan junto con la cuenta profesional a la que pertenecen (véase §8).
+Meta recibe además:
+
+- tu dirección IP y las características técnicas de tu navegador (tipo, versión, sistema operativo), tal y como se registraron al crear tu cuenta, así como la dirección de nuestro panel de control. Conservamos estos dos datos 45 días como máximo y después los eliminamos;
+- tu dirección de correo electrónico, tu número de teléfono, tu nombre y apellidos, el país, la ciudad y el código postal de tu comercio, y un identificador derivado de tu cuenta, cada uno **convertido en hash** antes de salir de nuestros servidores, es decir, en un código irreversible generado con el algoritmo SHA-256. Meta compara estos códigos con los de sus propios usuarios para saber si tienes una cuenta de Facebook o Instagram, incluso si viste el anuncio en otro dispositivo, y utiliza el resultado para medir y mejorar cómo se muestran nuestros anuncios.
+
+Meta recibe estos pasos tanto si llegaste desde uno de sus anuncios como si no, siempre que hayas aceptado las cookies publicitarias del 5.3 (en Estados Unidos, mientras no las hayas desactivado). Google nunca recibe tus datos de contacto, tu dirección IP ni las características de tu navegador.
+
+Nunca enviamos tu contraseña, tus datos de pago ni nada relativo a tus clientes (las personas que tienen tus tarjetas de fidelidad).
+
+Retirar tu consentimiento mediante **Preferencias de cookies** elimina la cookie `stampeo_attribution` junto con las demás y pone fin a cualquier nueva comunicación para tu cuenta. Los pasos ya comunicados no pueden retirarse. Estos datos se eliminan junto con la cuenta profesional a la que pertenecen (véase §8).
 
 ### 5.6 Registro de tus decisiones sobre cookies
 
@@ -259,6 +268,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Registro de fallos de los webhooks de Stripe (depuración interna) | 90 días |
 | Registros de acceso de soporte (sesiones y entradas de auditoría asociadas, véase el §2.3) | 24 meses, después se eliminan |
 | Atribución publicitaria (identificador de clic, campaña) | Se elimina junto con la cuenta Business a la que pertenece |
+| Dirección IP y características del navegador utilizadas para la medición de conversiones (§5.5) | 45 días como máximo, después se eliminan |
 | Registros de consentimiento — prueba de tus decisiones sobre cookies (§5.6) | 3 años desde que finaliza el consentimiento (sustitución o retirada). **No** se eliminan con la cuenta Business: se retira el vínculo con la cuenta y el registro se conserva, al amparo del art. 17.3 b) y e) del RGPD |
 
 El plazo de conservación de 24 meses para los registros de acceso de soporte se establece para permitir la investigación de un posible incidente de seguridad, manteniéndose a la vez proporcionado a su finalidad, conforme a las recomendaciones de la CNIL en materia de registro de accesos.

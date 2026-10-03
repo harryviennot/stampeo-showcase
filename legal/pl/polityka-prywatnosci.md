@@ -1,6 +1,6 @@
 # Polityka prywatności: Stampeo
 
-**Ostatnia aktualizacja: 16 września 2026**
+**Ostatnia aktualizacja: 3 października 2026**
 
 ## 1. Wprowadzenie
 
@@ -123,7 +123,7 @@ Firma, która nie jest obsługiwana przez dystrybutora, nie jest narażona na ż
 
 ### Transfery poza UE
 
-Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE.
+Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5 (Google i Meta), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie.
 
 ## 5. Pliki cookie
 
@@ -167,13 +167,22 @@ Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane 
 
 ### 5.5 Pomiar konwersji z naszych serwerów
 
-Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową — w przypadku Google jest to `gclid`, w przypadku Meta `fbclid` — wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie.
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową (w przypadku Google jest to `gclid`, w przypadku Meta `fbclid`) wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie. Jeżeli później wrócisz z innej reklamy, nowsze kliknięcie zastępuje wcześniejsze.
 
-Jeżeli następnie założysz konto firmowe, identyfikator ten zostaje zapisany przy Twoim koncie. Przekazujemy wtedy tej platformie dwie informacje **z naszych serwerów**: że reklama doprowadziła do założenia konta oraz — jeżeli później wykupisz abonament — że opłacono pierwszą fakturę. Każda platforma otrzymuje wyłącznie własny identyfikator: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
+Jeżeli następnie założysz konto firmowe, przekazujemy **z naszych serwerów** informacje o maksymalnie czterech etapach: założeniu konta, otwarciu strony płatności, rozpoczęciu bezpłatnego okresu próbnego oraz opłaceniu pierwszej faktury. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
 
-Przekazujemy wyłącznie identyfikator reklamowy, nazwę kampanii oraz — w przypadku płatności — jej kwotę i walutę. Nigdy nie przekazujemy adresu e-mail, imienia i nazwiska, numeru telefonu ani identyfikatora konta.
+Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posiada (identyfikator kliknięcia i swój identyfikator przeglądarki), oraz nazwę kampanii, a przy trzech ostatnich etapach także cenę wybranego planu lub zapłaconą kwotę wraz z walutą. Każda platforma otrzymuje wyłącznie własne identyfikatory: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google.
 
-Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych konwersji dla Twojego konta. Konwersji już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczy (zob. §8).
+Meta otrzymuje ponadto:
+
+- Twój adres IP i parametry techniczne Twojej przeglądarki (typ, wersja, system operacyjny), zapisane w chwili zakładania konta, a także adres naszego panelu. Te dwie informacje przechowujemy najwyżej 45 dni, a następnie je usuwamy;
+- Twój adres e-mail, numer telefonu, imię i nazwisko, kraj, miasto i kod pocztowy Twojej firmy oraz identyfikator wyprowadzony z Twojego konta, każde z nich **zahaszowane**, czyli przed opuszczeniem naszych serwerów zamienione na nieodwracalny kod za pomocą algorytmu SHA-256. Meta porównuje te kody z kodami własnych użytkowników, żeby ustalić, czy masz konto na Facebooku lub Instagramie, także wtedy, gdy reklama została wyświetlona na innym urządzeniu, i wykorzystuje wynik do pomiaru i ulepszania sposobu wyświetlania naszych reklam.
+
+Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
+
+Nigdy nie przekazujemy Twojego hasła, danych płatniczych ani żadnych informacji o Twoich klientach (osobach, które mają Twoje karty lojalnościowe).
+
+Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych etapów dla Twojego konta. Etapów już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczą (zob. §8).
 
 ### 5.6 Zapis Twoich decyzji dotyczących plików cookie
 
@@ -259,6 +268,7 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Zapisy nieudanych webhooków Stripe (diagnostyka wewnętrzna) | 90 dni |
 | Dzienniki dostępu serwisowego (sesje podglądu i powiązane wpisy audytowe zgodnie z §2.3) | 24 miesiące, następnie usuwane |
 | Atrybucja reklamowa (identyfikator kliknięcia, kampania) | Usuwana wraz z kontem firmowym, którego dotyczy |
+| Adres IP i parametry przeglądarki używane do pomiaru konwersji (§5.5) | Najwyżej 45 dni, następnie usuwane |
 | Zapisy zgody — dowód Twoich decyzji dotyczących cookie (§5.6) | 3 lata od zakończenia zgody (zastąpienie lub wycofanie). **Nie** są usuwane wraz z kontem firmowym: powiązanie z kontem zostaje usunięte, a zapis zachowany, na podstawie art. 17 ust. 3 lit. b) i e) RODO |
 
 Okres 24 miesięcy dla dzienników dostępu serwisowego został ustalony tak, aby umożliwić zbadanie incydentu bezpieczeństwa, pozostając jednocześnie proporcjonalnym do tego celu, zgodnie z wytycznymi CNIL dotyczącymi rejestrowania zdarzeń bezpieczeństwa.
