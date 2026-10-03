@@ -109,6 +109,7 @@ We use the following sub-processors:
 | Resend | Transactional emails | Ireland (EU) |
 | Apple (APNs) | Apple Wallet pass updates | United States (Data Privacy Framework) |
 | Google (Wallet API) | Google Wallet pass updates | United States (Data Privacy Framework) |
+| Google (Analytics 4): Google Ireland Limited, with Google LLC | Audience measurement and conversion reporting, subject to your cookie choice (see 5.3 and 5.5) | EU (possible US transfers under Data Privacy Framework) |
 | PostHog | Website analytics (cookieless) | EU |
 | Sentry | Error monitoring | Germany (EU) |
 | Redis (self-hosted, via Taskiq) | Job queue and short-lived cache for pass assets and notification delivery | France (EU), same infrastructure as our VPS |
@@ -123,7 +124,7 @@ A business that is not managed by a reseller is not exposed to any reseller acce
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5 (Google and Meta) may process that data in the United States, under the same framework.
+Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google (Google Ireland Limited, with Google LLC in the United States) and Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States), may process that data in the United States, under the same framework.
 
 ## 5. Cookies
 
@@ -176,11 +177,15 @@ With each step, the platform receives its own identifiers when it has them (the 
 Meta also receives:
 
 - your IP address and your browser's technical characteristics (type, version, operating system), as recorded when you created your account, and the address of our dashboard. We keep these two items for 45 days at most, then delete them;
-- your email address, telephone number, first name, last name, the country, city and postcode of your business, and an identifier derived from your account, each **hashed** before it leaves our servers, that is turned into an irreversible code with the SHA-256 algorithm. Meta compares these codes with those of its own users to tell whether you have a Facebook or Instagram account, including when you saw the advertisement on another device, and uses the result to measure and improve how our advertisements are shown.
+- your email address, telephone number, first name, last name, the country, city and postcode of your business, and an identifier derived from your account, each **hashed** with the SHA-256 algorithm before it leaves our servers. Hashing turns each item into a code from which your details cannot be recovered. The code still identifies you to Meta, which makes the same code from the details of its own users, so it remains personal data. Meta compares these codes with those of its users to tell whether you have a Facebook or Instagram account, including when you saw the advertisement on another device, and uses the result to measure and improve how our advertisements are shown. Meta may also use this data under its own terms, for example to improve its advertising systems, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy).
 
 Meta receives these steps whether or not you came from one of its advertisements, as long as you accepted the advertising cookies in 5.3 (in the United States, as long as you have not switched them off). Google never receives your contact details, your IP address or your browser's characteristics.
 
 We never send your password, your payment details, or anything about your customers (the people who hold your loyalty cards).
+
+- **Recipients:** Google means Google Ireland Limited, with Google LLC in the United States. Meta means Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States.
+- **Legal basis:** your consent (GDPR Art. 6(1)(a)), given in the cookie banner or through **Cookie preferences**. In the United States, where prior consent is not required, we rely on notice and your right to opt out (see 5.1 and §6).
+- **Joint controllers with Meta:** Stampeo and Meta Platforms Ireland Limited are joint controllers (GDPR Art. 26) for collecting data through the Meta cookies in 5.3 and the reporting described here, and for transmitting it to Meta, under Meta's Controller Addendum. Meta alone is responsible for what it does with the data once received, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy). You can exercise your rights (§10) with either of us.
 
 Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further step being reported for your account. Steps already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
 
@@ -212,7 +217,9 @@ We use collected data to:
 - Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
 - Improve the Platform
 
-We **never sell** personal data. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
+We **never sell** personal data for money. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
+
+**In the United States:** sending data to Meta and the other advertising platforms named in 5.3, for our advertising, may count as "sharing" under California law. You can opt out at any time through **Your privacy choices** in the notice, through **Cookie preferences** at the bottom of every page, or with a Global Privacy Control signal, which we honor as described in 5.1.
 
 ### 6.1 Marketing and lifecycle emails to Business Users
 
@@ -298,11 +305,11 @@ Under the GDPR, you have the following rights:
 
 **End customers:** contact the business managing your loyalty card first. You may also reach us at contact@stampeo.app.
 
+We respond to all requests within 30 days. You also have the right to lodge a complaint with the CNIL, the French data protection authority (www.cnil.fr), or with the supervisory authority of the country where you live or work.
+
 ### 10.1 Right to object to support access
 
 Business Users may, by written request to contact@stampeo.app, ask that no support access (§2.3) be granted to their account outside of an explicit support ticket they have opened. This option is offered as a contractual courtesy and does not affect cases where access is required by law, by a court order, or by an imminent security incident on the Platform.
-
-We respond to all requests within 30 days. If you have a complaint, you may file it with the CNIL (French data protection authority): www.cnil.fr.
 
 ## 11. Security
 

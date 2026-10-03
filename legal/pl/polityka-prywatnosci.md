@@ -109,6 +109,7 @@ Korzystamy z następujących dalszych podmiotów przetwarzających:
 | Resend | E-maile transakcyjne | Irlandia (UE) |
 | Apple (APNs) | Aktualizacje kart Apple Wallet | Stany Zjednoczone (Data Privacy Framework) |
 | Google (Wallet API) | Aktualizacje kart Google Wallet | Stany Zjednoczone (Data Privacy Framework) |
+| Google (Analytics 4): Google Ireland Limited wraz z Google LLC | Pomiar ruchu i przekazywanie konwersji, zgodnie z Twoim wyborem dotyczącym plików cookie (zob. 5.3 i 5.5) | UE (możliwe transfery do USA w ramach Data Privacy Framework) |
 | PostHog | Statystyki strony (bez plików cookie) | UE |
 | Sentry | Monitorowanie błędów | Niemcy (UE) |
 | Redis (własny hosting, przez Taskiq) | Kolejka zadań i krótkotrwała pamięć podręczna dla materiałów graficznych kart oraz dostarczania powiadomień | Francja (UE), ta sama infrastruktura co nasz VPS |
@@ -123,7 +124,7 @@ Firma, która nie jest obsługiwana przez dystrybutora, nie jest narażona na ż
 
 ### Transfery poza UE
 
-Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5 (Google i Meta), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie.
+Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5, czyli Google (Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych) i Meta (Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie.
 
 ## 5. Pliki cookie
 
@@ -176,11 +177,15 @@ Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posia
 Meta otrzymuje ponadto:
 
 - Twój adres IP i parametry techniczne Twojej przeglądarki (typ, wersja, system operacyjny), zapisane w chwili zakładania konta, a także adres naszego panelu. Te dwie informacje przechowujemy najwyżej 45 dni, a następnie je usuwamy;
-- Twój adres e-mail, numer telefonu, imię i nazwisko, kraj, miasto i kod pocztowy Twojej firmy oraz identyfikator wyprowadzony z Twojego konta, każde z nich **zahaszowane**, czyli przed opuszczeniem naszych serwerów zamienione na nieodwracalny kod za pomocą algorytmu SHA-256. Meta porównuje te kody z kodami własnych użytkowników, żeby ustalić, czy masz konto na Facebooku lub Instagramie, także wtedy, gdy reklama została wyświetlona na innym urządzeniu, i wykorzystuje wynik do pomiaru i ulepszania sposobu wyświetlania naszych reklam.
+- Twój adres e-mail, numer telefonu, imię i nazwisko, kraj, miasto i kod pocztowy Twojej firmy oraz identyfikator wyprowadzony z Twojego konta, każde z nich **zahaszowane** algorytmem SHA-256 przed opuszczeniem naszych serwerów. Haszowanie zamienia każdą z tych informacji w kod, z którego nie da się odtworzyć Twoich danych. Mimo to kod pozwala Meta Cię rozpoznać, ponieważ Meta tworzy taki sam kod z danych swoich użytkowników. Dlatego nadal jest to dana osobowa. Meta porównuje te kody z kodami swoich użytkowników, żeby ustalić, czy masz konto na Facebooku lub Instagramie, także wtedy, gdy reklama została wyświetlona na innym urządzeniu, i wykorzystuje wynik do pomiaru i ulepszania sposobu wyświetlania naszych reklam. Meta może też wykorzystywać te dane na własnych warunkach, na przykład do ulepszania swoich systemów reklamowych, zgodnie z [polityką prywatności Meta](https://www.facebook.com/privacy/policy).
 
 Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
 
 Nigdy nie przekazujemy Twojego hasła, danych płatniczych ani żadnych informacji o Twoich klientach (osobach, które mają Twoje karty lojalnościowe).
+
+- **Odbiorcy:** Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych. Meta to Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych.
+- **Podstawa prawna:** Twoja zgoda (art. 6 ust. 1 lit. a RODO), wyrażona w banerze plików cookie lub w **Ustawieniach plików cookie**. W Stanach Zjednoczonych, gdzie uprzednia zgoda nie jest wymagana, opieramy się na poinformowaniu i prawie do sprzeciwu (zob. 5.1 i §6).
+- **Współadministratorzy z Meta:** Stampeo i Meta Platforms Ireland Limited są współadministratorami (art. 26 RODO) w zakresie zbierania danych za pomocą plików cookie Meta z punktu 5.3 i opisanego tu przekazywania etapów oraz przesyłania tych danych do Meta, na podstawie umowy Meta „Controller Addendum”. Za to, co Meta robi z danymi po ich otrzymaniu, odpowiada wyłącznie Meta (zob. [politykę prywatności Meta](https://www.facebook.com/privacy/policy)). Swoje prawa (§10) możesz wykonywać zarówno wobec Stampeo, jak i wobec Meta.
 
 Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych etapów dla Twojego konta. Etapów już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczą (zob. §8).
 
@@ -212,7 +217,9 @@ Zebrane dane wykorzystujemy, aby:
 - Wysyłać użytkownikom Business ograniczoną liczbę e-maili cyklu życia i marketingowych, z zastrzeżeniem sprzeciwu opisanego w §6.1
 - Ulepszać Platformę
 
-**Nigdy nie sprzedajemy** danych osobowych. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
+**Nigdy nie sprzedajemy** danych osobowych za pieniądze. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
+
+**W Stanach Zjednoczonych:** przekazywanie danych do Meta i innych platform reklamowych wymienionych w punkcie 5.3 na potrzeby naszych reklam może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w komunikacie, przez **Ustawienia plików cookie** na dole każdej strony albo sygnałem Global Privacy Control, który respektujemy zgodnie z opisem w punkcie 5.1.
 
 ### 6.1 E-maile cyklu życia i marketingowe do użytkowników Business
 
@@ -298,7 +305,7 @@ Zgodnie z RODO użytkownikowi przysługują następujące prawa:
 
 **Klienci końcowi:** prosimy najpierw o kontakt z firmą zarządzającą kartą lojalnościową. Można też napisać do nas pod adresem contact@stampeo.app.
 
-Na wszystkie wnioski odpowiadamy w ciągu 30 dni. W razie skargi można ją złożyć do CNIL (francuskiego organu ochrony danych): www.cnil.fr.
+Na wszystkie wnioski odpowiadamy w ciągu 30 dni. Masz też prawo wnieść skargę do CNIL, francuskiego organu ochrony danych (www.cnil.fr), albo do organu nadzorczego w kraju, w którym mieszkasz lub pracujesz (w Polsce jest to Prezes Urzędu Ochrony Danych Osobowych, uodo.gov.pl).
 
 ### 10.1 Prawo sprzeciwu wobec dostępu serwisowego
 
