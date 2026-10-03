@@ -9,7 +9,21 @@ export type CTALocation =
   | "faq"
   | "final_cta"
   | "final_cta_demo"
-  | "loyalty_picker";
+  | "loyalty_picker"
+  | "header"
+  | "header_mobile"
+  | "demo_stamps_claim"
+  | "demo_points_claim"
+  | "founder_program"
+  | "about"
+  | "feature_hero"
+  | "feature_cta"
+  | "card_style_gallery"
+  | "blog_cta"
+  | "pricing_final_cta"
+  | "pricing_contact"
+  | "faq_contact"
+  | "footer_contact";
 
 type BaseProps = {
   locale: string;

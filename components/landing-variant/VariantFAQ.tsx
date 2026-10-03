@@ -48,6 +48,7 @@ export async function VariantFAQ({
               size="md"
               variant="secondary"
               showArrow={false}
+              trackAs="faq_contact"
             />
           </div>
         </ScrollReveal>

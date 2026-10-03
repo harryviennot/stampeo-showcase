@@ -25,12 +25,26 @@ export const SIGNUP_CTAS: ReadonlySet<string> = new Set([
   "faq",
   "final_cta",
   "loyalty_picker",
+  "header",
+  "header_mobile",
+  "demo_stamps_claim",
+  "demo_points_claim",
+  "founder_program",
+  "about",
+  "feature_hero",
+  "feature_cta",
+  "card_style_gallery",
+  "blog_cta",
+  "pricing_final_cta",
 ]);
 
 /** CTAs that mean "talk to a human". A different funnel, tracked separately. */
 export const CONTACT_CTAS: ReadonlySet<string> = new Set([
   "hero_demo",
   "final_cta_demo",
+  "footer_contact",
+  "faq_contact",
+  "pricing_contact",
 ]);
 
 /** Has anyone deliberately mapped this CTA location? Unknown means silent. */

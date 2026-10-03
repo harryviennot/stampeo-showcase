@@ -153,7 +153,7 @@ export function metaEventForCTA(input: {
   if (!isKnownCTALocation(input.ctaLocation)) return null;
 
   // The destination wins when it disagrees with the location name, mirroring
-  // how `CTAButton` already picks its PostHog event. `isContactHref` matches
+  // how `ctaClickEvents` picks the PostHog event. `isContactHref` matches
   // locale-prefixed hrefs too — see `lib/cta-taxonomy.ts`.
   if (isContactHref(input.href)) return "Contact";
   if (CONTACT_CTAS.has(input.ctaLocation)) return "Contact";
@@ -280,8 +280,8 @@ export function trackMetaEvent(input: {
   // Guarded because every call site is a click handler, mirroring
   // `trackGaEvent` exactly: a throw here — an ad blocker that replaced `fbq`
   // with something hostile, a CSP violation — would otherwise propagate out of
-  // the handler and cost the visitor the navigation. In `CTAButton` this call
-  // runs BEFORE the GA one, so an unguarded throw would cost every GA CTA
+  // the handler and cost the visitor the navigation. In `useCtaTracking` this
+  // call runs BEFORE the GA one, so an unguarded throw would cost every GA CTA
   // event too. Losing the measurement is the acceptable failure; losing the
   // signup is not.
   try {

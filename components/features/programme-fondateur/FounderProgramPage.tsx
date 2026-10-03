@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Container } from "../../ui/Container";
+import { TrackedLink } from "../../ui/TrackedLink";
 import { ScrollReveal } from "../../ui/ScrollReveal";
 import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { PriceReveal } from "./PriceReveal";
@@ -95,7 +96,8 @@ export function FounderProgramPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
+              <TrackedLink
+                trackAs="founder_program"
                 href="/onboarding"
                 className="group flex items-center gap-2 bg-[var(--accent)] text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-[var(--accent)]/25 hover:scale-105 transition-all"
               >
@@ -103,7 +105,7 @@ export function FounderProgramPage() {
                 <span className="transition-transform group-hover:translate-x-1">
                   →
                 </span>
-              </Link>
+              </TrackedLink>
               <p className="text-sm font-medium text-[var(--muted-foreground)]">
                 {interpolatePricing(t.raw("programme-fondateur.hero.secondaryCta"), FROZEN_FOUNDING_PRICING)}
                 {" · "}

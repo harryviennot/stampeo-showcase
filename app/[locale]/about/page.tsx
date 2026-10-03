@@ -1,8 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { TrackedLink } from "@/components/ui/TrackedLink";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { localeAlternates, localePath } from "@/lib/hreflang";
 
@@ -111,12 +111,13 @@ export default async function AboutPage({
             <p className="text-[var(--muted-foreground)] mb-6">
               {t("cta.description")}
             </p>
-            <Link
+            <TrackedLink
+              trackAs="about"
               href="/onboarding"
               className="inline-flex items-center justify-center h-12 px-8 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all"
             >
               {t("cta.button")}
-            </Link>
+            </TrackedLink>
           </section>
         </div>
       </main>

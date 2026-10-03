@@ -15,6 +15,7 @@ import {
 } from "../features/scanner-mobile/StoreBadges";
 import { marketPath, type Market } from "@/lib/markets";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
+import { TrackedLink } from "../ui/TrackedLink";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
   const t = await getTranslations("common.footer");
@@ -164,12 +165,12 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                 <Link href="/about" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("about")}
                 </Link>
-                <Link href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("contact")}
-                </Link>
-                <Link href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                </TrackedLink>
+                <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("help")}
-                </Link>
+                </TrackedLink>
                 <a
                   href="tel:+33649370470"
                   className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"

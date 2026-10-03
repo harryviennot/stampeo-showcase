@@ -186,7 +186,7 @@ export function gaEventForCTA(input: {
   if (!isKnownCTALocation(input.ctaLocation)) return null;
 
   // The destination wins when it disagrees with the location name, mirroring
-  // how `CTAButton` already picks its PostHog event. `isContactHref` matches
+  // how `ctaClickEvents` picks the PostHog event. `isContactHref` matches
   // locale-prefixed hrefs too — see `lib/cta-taxonomy.ts`.
   if (isContactHref(input.href)) return "contact_cta_click";
   if (CONTACT_CTAS.has(input.ctaLocation)) return "contact_cta_click";

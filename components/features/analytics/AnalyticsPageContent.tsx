@@ -43,7 +43,7 @@ export function AnalyticsPageContent() {
             <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-2xl mx-auto">
               {hero.subtitle}
             </p>
-            <CTAButton label={tb("startFree")} />
+            <CTAButton label={tb("startFree")} trackAs="feature_hero" />
 
           </ScrollReveal>
         </Container>

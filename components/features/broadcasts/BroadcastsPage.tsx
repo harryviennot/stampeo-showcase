@@ -123,7 +123,7 @@ export function BroadcastsPage() {
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <CTAButton label={startFree} />
+                <CTAButton label={startFree} trackAs="feature_hero" />
               </div>
 
               <div className="flex items-center justify-center gap-3 pt-8">

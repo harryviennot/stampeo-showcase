@@ -161,7 +161,7 @@ export async function CardStyleGallery() {
       <Container>
         <ScrollReveal delay={160} className="mt-10 flex flex-col items-center gap-4 text-center">
           <p className="text-[var(--muted-foreground)]">{t("ctaLead")}</p>
-          <CTAButton label={tc("buttons.startFree")} size="md" />
+          <CTAButton label={tc("buttons.startFree")} size="md" trackAs="card_style_gallery" />
         </ScrollReveal>
       </Container>
     </section>

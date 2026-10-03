@@ -14,7 +14,7 @@ export function CallToAction({
       <p className="text-lg font-bold mb-4 text-[var(--near-black)]">
         <span className="blog-highlight">{title}</span>
       </p>
-      <CTAButton label={buttonText} href={href} size="sm" />
+      <CTAButton label={buttonText} href={href} size="sm" trackAs="blog_cta" />
     </div>
   );
 }
