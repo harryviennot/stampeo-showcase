@@ -61,11 +61,12 @@ login, it is the wrong runbook.
 | R3 | Become American: same as R2 with `America/New_York`. |
 | R4 | Corrupt the choice: in the console, `document.cookie = "stampeo_consent=%7Bnope; path=/"`, then reload. |
 | R5 | Turn on Global Privacy Control: use Brave (Settings > Shields > "Tell sites not to sell my data"), or DuckDuckGo's browser. Chrome has no built-in GPC. Verify with `navigator.globalPrivacyControl` in the console before running the case. |
-| R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:3,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in",s:crypto.randomUUID()})) + '; path=/'`, then reload. `v` must equal `CONSENT_VERSION` in `lib/consent.ts` (3 since the §5.5 rewrite; a `v:2` cookie is treated as never answered) and `s` is the subject id the real banner would mint (STA-324). |
+| R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:3,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in",s:crypto.randomUUID()})) + '; path=/'`, then reload. `v` must equal `CONSENT_VERSION` in `lib/consent.ts` (3 since the §5.5 rewrite; a `v:2` grant is asked again, a `v:2` refusal still stands, see R12) and `s` is the subject id the real banner would mint (STA-324). |
 | R7 | Unload the GA4 tag: a hard **page reload** (not a client-side navigation). `gtag` lives in the page's JS and cannot be removed once injected, so any GA case that must start with "tag not loaded" begins here. Confirm with `typeof window.gtag === "undefined"` in the console. The GA counterpart of the pixel-unload recipe (R9). |
 | R9 | Unload the pixel: a hard **page reload** (not a client-side navigation). `fbq` lives in the page's JS and cannot be removed once injected, so any case that must start with "pixel not loaded" begins here. Confirm with `typeof window.fbq === "undefined"` in the console. (Numbered past R8, which the AT section defines below; this row shipped as a second "R5" and was renumbered.) |
 | R10 | Forge a version-2 attribution cookie (the pre-branch consent text): console, `document.cookie = 'stampeo_attribution=' + encodeURIComponent(JSON.stringify({v:1,vn:"meta",bi:null,ci:"qa-legacy-v2",lp:"/pricing",cc:"marketing",cv:2,cr:"opt-in",ca:Math.floor(Date.now()/1000)-60,at:Math.floor(Date.now()/1000)-60})) + '; path=/; domain=.stampeo.app'` (use the local cookie domain off dev). Then sign up. An organic marketing page keeps this cookie; only a new paid click would replace it (AT-11). |
 | R11 | Age a test business past the 45-day context window: dev SQL `update businesses set created_at = now() - interval '46 days' where id = '<id>';`, then run the purge once: `docker exec fidelity-backend-1 python -c "from app.services.attribution.retention import purge_client_context; print(purge_client_context())"`. Put it back afterwards with the original `created_at`. |
+| R12 | Forge a choice made under the previous text (version 2): R1 first, then console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:2,a:A,m:M,t:Math.floor(Date.now()/1000)-86400,r:"REGIME",s:crypto.randomUUID()})) + '; path=/'` with `A`, `M` (`0` or `1`) and `REGIME` (`opt-in` or `opt-out`) as the case says, then reload. Check it took: `decodeURIComponent(document.cookie.match(/stampeo_consent=([^;]*)/)[1])` shows `"v":2`. |
 
 ### Known state before you start
 
@@ -77,9 +78,11 @@ login, it is the wrong runbook.
   by injecting the same settings into production with a Playwright init
   script (the run dropped to the two expected PageViews). Not yet verified on
   a deployed build. Targeted re-run: MP-08, then MP-03, MP-04, MP-01.
-- **Consent version is 3** in showcase, web and backend. Every consent cookie
-  written before this branch (`v:2`) is treated as never answered: expect the
-  banner again on your own browser before any case.
+- **Consent version is 3** in showcase, web and backend. A consent cookie
+  written before this branch (`v:2`) that granted anything is asked again (the
+  banner in the EU, the notice in the US); a `v:2` refusal still stands (CN-05,
+  RG-05, RG-06). If you had accepted on your own browser, expect the banner
+  again before any case.
 - **Migration 186** (four conversion events, `client_ip` /
   `client_user_agent` columns) is on dev only. The backend code on this branch
   must not run against a database without it.
@@ -163,6 +166,26 @@ EXPECT:
 - No error in the console.
 - The page renders normally.
 
+### CN-05 A refusal made under the previous text is still a refusal — BLOCKER
+DEPENDS: CN-02
+
+WHY: Version 3 widened what Meta receives. Someone who refused the narrower
+version-2 processing has refused the wider one too, so the bump must not ask
+them again or load anything. Only a version-2 grant is re-asked.
+
+1. R2 (Paris), delete any `stampeo_attribution` cookie, then R12 with `a:0`,
+   `m:0`, `r:"opt-in"`.
+2. Open `/`, then navigate to `/pricing`, then reload.
+
+EXPECT:
+- **No** banner, on the first load, the navigation or the reload.
+- Network: zero requests to `googletagmanager.com`, `connect.facebook.net`,
+  `analytics.tiktok.com`.
+- **No** `_ga`, `_ga_*`, `_gid`, `_fbp`, `_fbc`, `_ttp`, and no
+  `stampeo_attribution`.
+- `stampeo_consent` still decodes to `"v":2,"a":0,"m":0`: nothing rewrote it.
+- Footer > **Cookie preferences** opens with both switches off.
+
 ---
 
 ## RG: the right visitor gets the right regime
@@ -225,6 +248,52 @@ EXPECT:
 - Then R6 (a stored grant) with GPC still on, and reload: the stored choice
   wins and the categories read as granted. An explicit click outranks the
   signal, and §5 of the privacy policy says so.
+
+### RG-05 A US visitor who opted out under the previous text stays opted out — BLOCKER
+DEPENDS: RG-02
+
+WHY: A US opt-out is the one choice the notice regime exists to honour. If the
+version bump read the version-2 opt-out as no choice, the opt-out default would
+load the pixel and GA again and capture the visitor's ad click, behind a notice
+they already answered.
+
+1. R3 (New York), R9, delete any `stampeo_attribution` cookie, then R12 with
+   `a:0`, `m:0`, `r:"opt-out"`.
+2. Open `/us?fbclid=qa-rg05`, wait 5s, then reload.
+
+EXPECT:
+- **No** notice, on either load.
+- Network: zero requests to `connect.facebook.net` and `googletagmanager.com`;
+  `typeof window.fbq === "undefined"`.
+- **No** `_fbp`, `_ga`, and **no** `stampeo_attribution` cookie: the
+  `qa-rg05` click is not captured.
+- `stampeo_consent` still decodes to `"v":2,"a":0,"m":0,"r":"opt-out"`.
+
+### RG-06 A previous-text marketing refusal survives "Got it" — CORE
+DEPENDS: RG-05
+
+WHY: A version-2 `{a:1,m:0}` keeps marketing refused and asks about analytics
+again. In the US the notice reappears, and dismissing it records the state in
+force; recording the regime default instead would turn the old marketing
+refusal into a grant.
+
+1. With the GA measurement id and the Meta pixel id set (Setup): R3, R9,
+   delete any `stampeo_attribution` cookie, then R12 with `a:1`, `m:0`,
+   `r:"opt-out"`.
+2. Open `/us?fbclid=qa-rg06`. Wait 5s.
+3. Click **Got it**, then reload.
+
+EXPECT:
+- The **notice** shows on the first load.
+- `googletagmanager.com` is requested and `_ga` is set; `connect.facebook.net`
+  is **not** requested and there is no `_fbp`.
+- `stampeo_attribution` decodes with `"vn":"direct"`, `"ci":null`,
+  `"cc":"analytics"`, `"cv":3`, `"ca":0`, `"cr":"opt-out"`: no click id, and
+  the notice text in force with no consent moment.
+- After **Got it**, `stampeo_consent` decodes to `"v":3,"a":1,"m":0`, **not**
+  `"m":1`. After the reload the notice is gone and Meta still does not load.
+- Repeat with R2 (Paris) instead of R3: the **banner** shows, and nothing loads
+  until it is answered.
 
 ---
 
