@@ -1,9 +1,8 @@
 /**
- * The shared CTA taxonomy (extracted under STA-319 review, planned as STA-320).
+ * The shared CTA taxonomy that feeds both vendors' event mappers.
  *
- * One module now feeds both vendors' event mappers, so these tests own the
- * SET-MEMBERSHIP questions — `gaEventForCTA`/`metaEventForCTA` keep their own
- * mapping tests, but which locations exist is decided exactly once, here.
+ * These tests own the rules of the sets and the contact-page match. Which
+ * event each location sends is tabled once, in `events.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -15,41 +14,6 @@ import {
 } from "./taxonomy";
 
 describe("the CTA sets", () => {
-  test("the signup set names every link to /onboarding", () => {
-    for (const location of [
-      "hero",
-      "pricing_starter",
-      "pricing_growth",
-      "pricing_pro",
-      "faq",
-      "final_cta",
-      "loyalty_picker",
-      "header",
-      "header_mobile",
-      "demo_stamps_claim",
-      "demo_points_claim",
-      "founder_program",
-      "about",
-      "feature_hero",
-      "feature_cta",
-      "card_style_gallery",
-      "blog_cta",
-      "pricing_final_cta",
-    ]) {
-      expect(SIGNUP_CTAS.has(location)).toBe(true);
-    }
-  });
-
-  test("the contact set names every link to /contact", () => {
-    expect([...CONTACT_CTAS].sort()).toEqual([
-      "faq_contact",
-      "final_cta_demo",
-      "footer_contact",
-      "hero_demo",
-      "pricing_contact",
-    ]);
-  });
-
   test("the sets are disjoint", () => {
     // A location in both would make the event depend on evaluation order.
     for (const location of SIGNUP_CTAS) {

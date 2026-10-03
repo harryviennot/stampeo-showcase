@@ -281,50 +281,26 @@ describe("shouldSendMetaPageView", () => {
 });
 
 describe("metaEventForCTA", () => {
-  test("signup-bound CTAs are Leads", () => {
-    // AC6. Lead, not CompleteRegistration: the click leaves showcase for the
-    // app and we do not observe whether an account was created.
-    for (const ctaLocation of [
-      "hero",
-      "pricing_starter",
-      "pricing_growth",
-      "pricing_pro",
-      "faq",
-      "final_cta",
-      "loyalty_picker",
-      "header",
-      "header_mobile",
-      "demo_stamps_claim",
-      "demo_points_claim",
-      "founder_program",
-      "about",
-      "feature_hero",
-      "feature_cta",
-      "card_style_gallery",
-      "blog_cta",
-      "pricing_final_cta",
-    ]) {
-      expect(metaEventForCTA({ ctaLocation, href: "/onboarding" })).toBe("Lead");
-    }
-  });
+  // Which event each location sends is tabled once, in lib/cta/events.test.ts.
+  // These are the rules that table relies on.
 
-  test("contact-page CTAs are Contacts", () => {
+  test("a contact location is a Contact", () => {
     // Kept distinct from Lead: self-serve signup and a sales touch are
     // different funnels and campaigns optimise for them separately. AEM ranks
     // 8 events and this taxonomy uses 3, so the distinction is free.
-    for (const ctaLocation of [
-      "hero_demo",
-      "final_cta_demo",
-      "footer_contact",
-      "faq_contact",
-      "pricing_contact",
-    ]) {
-      expect(metaEventForCTA({ ctaLocation, href: "/contact" })).toBe("Contact");
-    }
+    expect(metaEventForCTA({ ctaLocation: "footer_contact", href: "/onboarding" })).toBe(
+      "Contact",
+    );
+  });
+
+  test("a signup location is a Lead", () => {
+    // Lead, not CompleteRegistration: the click leaves showcase for the app
+    // and we do not observe whether an account was created.
+    expect(metaEventForCTA({ ctaLocation: "hero", href: "/onboarding" })).toBe("Lead");
   });
 
   test("the destination decides when it disagrees with the location", () => {
-    // `ctaClickEvents` picks the PostHog event from the href rather than the
+    // `ctaClick` picks the PostHog event from the href rather than the
     // location name, so a mapped CTA repointed at /contact must follow.
     expect(metaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
       "Contact",

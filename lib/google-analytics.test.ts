@@ -35,6 +35,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
+import { CONTACT_CTAS } from "./cta/taxonomy";
 import {
   gaEventForCTA,
   gaScriptSrc,
@@ -346,49 +347,11 @@ describe("shouldSendPageView", () => {
 });
 
 describe("gaEventForCTA", () => {
-  test("signup-bound CTAs are sign_up_cta_click", () => {
-    for (const ctaLocation of [
-      "hero",
-      "pricing_starter",
-      "pricing_growth",
-      "pricing_pro",
-      "faq",
-      "final_cta",
-      "loyalty_picker",
-      "header",
-      "header_mobile",
-      "demo_stamps_claim",
-      "demo_points_claim",
-      "founder_program",
-      "about",
-      "feature_hero",
-      "feature_cta",
-      "card_style_gallery",
-      "blog_cta",
-      "pricing_final_cta",
-    ]) {
-      expect(gaEventForCTA({ ctaLocation, href: "/onboarding" })).toBe(
-        "sign_up_cta_click"
-      );
-    }
-  });
-
-  test("contact-page CTAs are contact_cta_click", () => {
-    for (const ctaLocation of [
-      "hero_demo",
-      "final_cta_demo",
-      "footer_contact",
-      "faq_contact",
-      "pricing_contact",
-    ]) {
-      expect(gaEventForCTA({ ctaLocation, href: "/contact" })).toBe(
-        "contact_cta_click"
-      );
-    }
-  });
+  // Which event each location sends is tabled once, in lib/cta/events.test.ts.
+  // These are the rules that table relies on.
 
   test("the destination decides when it disagrees with the location", () => {
-    // Mirrors how `ctaClickEvents` picks the PostHog event.
+    // Mirrors how `ctaClick` picks the PostHog event.
     expect(gaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
       "contact_cta_click"
     );
@@ -528,13 +491,7 @@ describe("the CTA tables cover the whole CTALocation union", () => {
         (location) => gaEventForCTA({ ctaLocation: location, href: "/onboarding" }) === event,
       );
 
-    expect(byEvent("contact_cta_click").sort()).toEqual([
-      "faq_contact",
-      "final_cta_demo",
-      "footer_contact",
-      "hero_demo",
-      "pricing_contact",
-    ]);
+    expect(byEvent("contact_cta_click").sort()).toEqual([...CONTACT_CTAS].sort());
     expect(byEvent("sign_up_cta_click")).toContain("hero");
     expect(byEvent("sign_up_cta_click")).toContain("pricing_growth");
   });
