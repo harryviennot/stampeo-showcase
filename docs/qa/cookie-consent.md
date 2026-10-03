@@ -1,6 +1,6 @@
-BRANCH: `harryviennot2/sta-317-implement-cookie-consent-banner-prerequisite-for-ga4-tiktok` (showcase)
-SCOPES: showcase
-ENVIRONMENT: **dev only.** No migration, no backend change, no Stripe write. Every case is an anonymous page view plus devtools. The production-shaped risk is legal, not operational: what this pass protects is that nothing is stored on a visitor's device before they agree.
+BRANCH: `feat/sta-373-ads-conversion-funnel` (showcase, web, backend)
+SCOPES: showcase, web, backend
+ENVIRONMENT: **dev only.** Migration 186 is applied on dev only. The MC section creates dev businesses and Stripe test-mode subscriptions and needs `META_TEST_EVENT_CODE` in the dev backend; everything else is anonymous page views plus devtools. The production-shaped risk is legal, not operational: what this pass protects is that nothing is stored on a visitor's device before they agree, and that Meta receives only what §5.5 describes.
 
 # Cookie consent test pass
 
@@ -64,6 +64,8 @@ login, it is the wrong runbook.
 | R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:3,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in",s:crypto.randomUUID()})) + '; path=/'`, then reload. `v` must equal `CONSENT_VERSION` in `lib/consent.ts` (3 since the §5.5 rewrite; a `v:2` cookie is treated as never answered) and `s` is the subject id the real banner would mint (STA-324). |
 | R7 | Unload the GA4 tag: a hard **page reload** (not a client-side navigation). `gtag` lives in the page's JS and cannot be removed once injected, so any GA case that must start with "tag not loaded" begins here. Confirm with `typeof window.gtag === "undefined"` in the console. The GA counterpart of the pixel-unload recipe (R9). |
 | R9 | Unload the pixel: a hard **page reload** (not a client-side navigation). `fbq` lives in the page's JS and cannot be removed once injected, so any case that must start with "pixel not loaded" begins here. Confirm with `typeof window.fbq === "undefined"` in the console. (Numbered past R8, which the AT section defines below; this row shipped as a second "R5" and was renumbered.) |
+| R10 | Forge a version-2 attribution cookie (the pre-branch consent text): console, `document.cookie = 'stampeo_attribution=' + encodeURIComponent(JSON.stringify({v:1,vn:"meta",bi:null,ci:"qa-legacy-v2",lp:"/pricing",cc:"marketing",cv:2,cr:"opt-in",ca:Math.floor(Date.now()/1000)-60,at:Math.floor(Date.now()/1000)-60})) + '; path=/; domain=.stampeo.app'` (use the local cookie domain off dev). Then sign up. An organic marketing page keeps this cookie; only a new paid click would replace it (AT-11). |
+| R11 | Age a test business past the 45-day context window: dev SQL `update businesses set created_at = now() - interval '46 days' where id = '<id>';`, then run the purge once: `docker exec fidelity-backend-1 python -c "from app.services.attribution.retention import purge_client_context; print(purge_client_context())"`. Put it back afterwards with the original `created_at`. |
 
 ### Known state before you start
 
@@ -75,6 +77,19 @@ login, it is the wrong runbook.
   by injecting the same settings into production with a Playwright init
   script (the run dropped to the two expected PageViews). Not yet verified on
   a deployed build. Targeted re-run: MP-08, then MP-03, MP-04, MP-01.
+- **Consent version is 3** in showcase, web and backend. Every consent cookie
+  written before this branch (`v:2`) is treated as never answered: expect the
+  banner again on your own browser before any case.
+- **Migration 186** (four conversion events, `client_ip` /
+  `client_user_agent` columns) is on dev only. The backend code on this branch
+  must not run against a database without it.
+- **Every MC case needs `META_TEST_EVENT_CODE`** in `backend/.env` (then
+  `docker compose up -d --force-recreate backend`). Without it dev refuses to
+  send to Meta and the Test Events tab stays empty.
+- **The dev backend must run this branch.** The `fidelity-backend-1` container
+  mounts the MAIN backend checkout's `app/`, so check out
+  `feat/sta-373-ads-conversion-funnel` there before the MC and AT cases (and
+  R11). Showcase and web likewise run from their main checkouts.
 
 ---
 
@@ -510,6 +525,27 @@ EXPECT:
 - Console on any page: `window.fbq.disablePushState === true` and
   `window.fbq.allowDuplicatePageViews === true`.
 
+### MP-09 Every signup and contact button sends its event — CORE
+DEPENDS: MP-05
+
+WHY: Ad platforms optimise on these clicks. Before this branch twenty-one of
+them (header, blog articles, feature pages, the /pricing plan cards) sent
+nothing at all, so the campaigns only saw a fraction of the intent.
+
+1. R3, R1, R9. Open `/en`. Network filter `facebook.com/tr`.
+2. Click, going back between each: header **Get started** (desktop width), the
+   same in the mobile menu (390px width), a feature page's hero button, the
+   bottom CTA of any blog article, a plan card on `/en/pricing`, the footer
+   **Contact** link.
+
+EXPECT:
+- Each signup button sends one `Lead`; the footer link sends one `Contact`.
+- PostHog shows `landing_cta_clicked` (or `landing_demo_cta_clicked` for the
+  contact link) with a `cta_location` that names the button (`header`,
+  `header_mobile`, `feature_hero`, `blog_cta`, `pricing_starter`…).
+- **NO** `Lead` from the **Log in** page's own "create an account" link: it is a
+  private route.
+
 ---
 
 ## GA: Google Analytics 4 (STA-318)
@@ -898,6 +934,25 @@ skipped rather than erroring.
 EXPECT:
 - No rows remain in either for that business id.
 
+### AT-11 A later ad click replaces an organic record, never the reverse — CORE
+DEPENDS: AT-01
+
+WHY: Retargeting ads reach people who already visited. If their first organic
+visit kept the cookie, every retargeted signup would be reported as organic and
+Meta would never see the campaign work.
+
+1. R1, R9. Open `/en` with no parameters, **Accept all**. Decode
+   `stampeo_attribution`: `vn` is `direct`.
+2. Open `/en?fbclid=qa-retarget-01`.
+3. Open `/en` again with no parameters.
+
+EXPECT:
+- After step 2: `vn` is `meta`, `ci` is `qa-retarget-01`.
+- After step 3: **unchanged** (`meta`, `qa-retarget-01`). An organic visit
+  never replaces a paid click.
+- Repeat step 2 with `?gclid=qa-retarget-02`: `vn` becomes `google`. The newest
+  paid click wins.
+
 ---
 
 ## CL: the consent ledger (STA-324)
@@ -1144,8 +1199,8 @@ backend log carries `meta CAPI suppressed outside production`.
 ### MC-01 A Meta click is captured with its own identifiers — BLOCKER
 DEPENDS: MP-01
 
-WHY: Everything downstream reads this cookie. A wrong value here cannot be
-repaired later: capture is first-touch-wins.
+WHY: Everything downstream reads this cookie, and only a newer paid click
+replaces it (AT-11), so a wrong value here survives organic return visits.
 
 1. R1, R9. Land on `/pricing?fbclid=qa-test-001`, accept marketing.
 2. Read `stampeo_attribution` (Application → Cookies) and decode it.
@@ -1164,9 +1219,12 @@ DEPENDS: MC-01
 
 EXPECT:
 - A `CompleteRegistration` event arrives within a few seconds.
-- It carries `fbc` (starting `fb.1.`) and `fbp`.
-- It carries **no** email, phone, or business name. Advanced matching is off by
-  design; any contact detail here is a blocker.
+- It carries `fbc` (starting `fb.1.`) and `fbp`, `client_user_agent`,
+  `client_ip_address` (your public IP, never a `10.`/`192.168.` address) and
+  `event_source_url`.
+- `em`, `ph`, `fn`, `ln`, `country` and `external_id` are each a 64-character
+  hex code. A **readable** email, phone number or name anywhere in the event is
+  a blocker.
 - `business_ad_conversion` has one row: vendor `meta`, event `sign_up`, status
   `sent`.
 
@@ -1189,8 +1247,8 @@ WHY: This is the question the epic exists to answer: can we see one human from
 ad click to payment, and therefore compute CAC and ROAS?
 
 EXPECT, for one test journey: a `PageView` and a `Lead` in the pixel (MP), then
-`CompleteRegistration` and `Purchase` in Test Events, all joined to the same
-`fbc`.
+`CompleteRegistration`, `InitiateCheckout`, `StartTrial` and `Purchase` in Test
+Events, all joined to the same `fbc`.
 
 ### MC-05 A Meta click never reaches Google — BLOCKER
 DEPENDS: MC-01
@@ -1239,6 +1297,95 @@ EXPECT:
 - `stampeo_attribution` either absent, or present with `vn: direct` and no `ci`.
 - No `_fbp` cookie.
 - Signing up produces **no** Meta event and no `meta` row.
+
+### MC-09 Opening checkout three times reports InitiateCheckout once — CORE
+DEPENDS: MC-02
+
+WHY: Owners go back and forth on the plan step. Each visit creates a new Stripe
+session; Meta must count one checkout, or the bidder learns that checkouts are
+three times cheaper than they are.
+
+1. From MC-02, reach the plan step, choose a plan, go to Stripe checkout, come
+   back. Repeat twice more, once with a different plan or interval.
+
+EXPECT:
+- **One** `InitiateCheckout` in Test Events, with `value` = the first plan's
+  price and its `currency`.
+- One `business_ad_conversion` row `begin_checkout`, `sent`.
+- **NO** second or third `InitiateCheckout`.
+
+### MC-10 Starting the trial reports StartTrial once — BLOCKER
+DEPENDS: MC-09
+
+WHY: This is the event campaigns should judge by: it lands within minutes of
+the click, inside Meta's 7-day window, unlike Purchase.
+
+1. Complete the Stripe checkout with test card `4242 4242 4242 4242`.
+2. Reload the welcome page twice. Replay `customer.subscription.created` from
+   the Stripe CLI.
+
+EXPECT:
+- **One** `StartTrial`, `value` = the amount the subscription will first
+  charge (after any coupon), `currency` = the subscription's currency.
+- `business_ad_conversion` row `start_trial`, `sent`.
+- **NO** second `StartTrial` after the reloads or the replay.
+
+### MC-11 A signup without a Meta click reaches Meta with hashed details only — CORE
+
+WHY: The cross-device case: a click on a phone, a signup on a laptop. Meta can
+only match it through the hashed contact details, so this path must work with
+no click id at all.
+
+1. R1, R9. Open `/en` with no parameters, **Accept all**. Sign up with a fresh
+   email.
+
+EXPECT:
+- `CompleteRegistration` in Test Events with `em`, `ph`, `external_id` (hex
+  codes), `client_user_agent`, and **no** `fbc`.
+- `business_ad_conversion` has a `meta` `sign_up` row, `sent`.
+- GA4 DebugView: the GA4 `sign_up` carries no email, phone, name, IP or user
+  agent.
+
+### MC-12 A version-2 cookie sends only the two old events, unchanged — CORE
+
+WHY: Someone who accepted the old wording agreed to less. Their signup must be
+reported exactly as before this branch, and nothing new.
+
+1. R1, R10, then sign up with a fresh email and complete a test checkout.
+
+EXPECT:
+- `CompleteRegistration` with `fbc`/`fbp` only: **no** `em`, `ph`,
+  `client_user_agent` or `client_ip_address`.
+- **NO** `InitiateCheckout` and **NO** `StartTrial`, and no
+  `begin_checkout` / `start_trial` rows at all (not even skipped ones).
+
+### MC-13 Refusing after signup stops Meta, even with no click — CORE
+DEPENDS: MC-11
+
+WHY: A refusal made after signup is recorded on the marketing site, not on the
+account; it must still stop every later report.
+
+1. From MC-11 (signed up, no checkout yet), open the marketing site in the same
+   browser, **Cookie preferences** → turn **Advertising** off → save.
+2. Back in the dashboard, open the plan step and go to checkout.
+
+EXPECT:
+- **NO** `InitiateCheckout` in Test Events.
+- The `CompleteRegistration` already sent is not recalled (correct, §5.5).
+
+### MC-14 The browser context is purged 45 days after the business was created — EDGE
+DEPENDS: MC-02
+
+WHY: §5.5 and the retention table promise IP address and browser
+characteristics are kept 45 days at most.
+
+1. Note the MC-02 business id. Confirm its `business_ad_attribution` row has
+   `client_ip` / `client_user_agent` set.
+2. R11 on that business.
+
+EXPECT:
+- Both columns are now `null`; every other column of the row is unchanged.
+- A business created today still has its values after the same purge run.
 
 ---
 
@@ -1296,4 +1443,25 @@ EXPECT:
 - It does **NOT** say anywhere that the site requires no cookie banner. That
   sentence was true before this release and is the specific thing that must not
   come back.
-- "Last updated" reads 16 September 2026 in all four.
+- "Last updated" reads 3 October 2026 in all four.
+
+### LG-02 §5.5 says what Meta now receives — BLOCKER
+DEPENDS: LG-01
+
+WHY: Consent version 3 is valid only if the text describes what the code sends.
+If §5.5 still promised "never your email", every hashed email sent would be
+processing nobody agreed to.
+
+1. Read §5.5 in `fr`, `en`, `es`, `pl`, and the **Advertising** line in the
+   cookie preferences dialog.
+
+EXPECT:
+- §5.5 names the four steps, the SHA-256 hashing of email, phone, name,
+  country, city, postcode and an account identifier, the IP address and browser
+  characteristics, the 45-day limit, and Meta receiving steps for signups that
+  did not come through a Meta ad.
+- It does **NOT** say that the email, name or phone are never sent.
+- The retention table (§8) has the 45-day row; §4's transfers paragraph names
+  Google and Meta.
+- The **Advertising** toggle text mentions contact details sent as an
+  irreversible code.
