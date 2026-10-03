@@ -31,6 +31,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { CONSENT_VERSION } from "./consent";
 import {
   ATTRIBUTION_COOKIE,
   ATTRIBUTION_VERSION,
@@ -63,7 +64,7 @@ const ARRIVAL = {
   landingVariant: "b",
   referrer: "https://www.google.com/search?q=loyalty",
   consent: BOTH,
-  consentVersion: 1,
+  consentVersion: CONSENT_VERSION,
   consentRegime: "opt-in" as const,
   consentAt: 1_700_000_000,
   capturedAt: 1_700_000_100,
@@ -227,7 +228,7 @@ describe("buildAttributionRecord — the consent gate", () => {
     // The backend proves the lawful basis from the cookie rather than from a
     // second lookup it cannot make on another domain.
     const record = buildAttributionRecord(ARRIVAL) as AttributionRecord;
-    expect(record.consentVersion).toBe(1);
+    expect(record.consentVersion).toBe(CONSENT_VERSION);
     expect(record.consentRegime).toBe("opt-in");
     expect(record.consentAt).toBe(1_700_000_000);
     expect(record.capturedAt).toBe(1_700_000_100);
@@ -434,18 +435,7 @@ describe("the cookie cannot be made huge", () => {
 
 describe("the attribution cookie as a carrier", () => {
   const record = (search: string, capturedAt = 1_700_000_000): AttributionRecord => {
-    const built = buildAttributionRecord({
-      search,
-      gaClientId: "GA1.1.1234567890.1700000000",
-      landingPath: "/us/pricing",
-      landingVariant: "b",
-      referrer: "https://www.google.com/",
-      consent: { analytics: true, marketing: true },
-      consentVersion: 2,
-      consentRegime: "opt-in",
-      consentAt: 1_700_000_000,
-      capturedAt,
-    });
+    const built = buildAttributionRecord({ ...ARRIVAL, search, capturedAt });
     expect(built).not.toBeNull();
     return built as AttributionRecord;
   };
@@ -530,33 +520,30 @@ describe("the attribution cookie as a carrier", () => {
     }
   });
 
-  test.each(["?gclid=abc123", "?fbclid=abc123", "?ttclid=abc123"])(
-    "a stored ad click (%s) survives an organic return visit",
-    (search) => {
-      const jar = installJar();
-      try {
-        withCookieDomain(".stampeo.app", () => {
-          writeAttributionRecord(record(search));
-          // The organic return visit, a day later. Must not erase the click.
-          writeAttributionRecord(record("", 1_700_086_400));
-        });
+  // Which arrival replaces which is tabled on `shouldReplaceAttribution`
+  // above; these two cases pin that the writer applies it.
 
-        expect(jar.writes.length).toBe(1);
-        expect(jar.writes[0]).toContain("abc123");
-      } finally {
-        jar.restore();
-      }
-    },
-  );
-
-  test.each([
-    ["direct", ""],
-    ["google", "?gclid=g-old"],
-  ])("a stored %s record is replaced by a newer Meta click", (_vendor, stored) => {
+  test("a stored ad click survives an organic return visit", () => {
     const jar = installJar();
     try {
       withCookieDomain(".stampeo.app", () => {
-        writeAttributionRecord(record(stored));
+        writeAttributionRecord(record("?gclid=abc123"));
+        // The organic return visit, a day later. Must not erase the click.
+        writeAttributionRecord(record("", 1_700_086_400));
+      });
+
+      expect(jar.writes.length).toBe(1);
+      expect(jar.writes[0]).toContain("abc123");
+    } finally {
+      jar.restore();
+    }
+  });
+
+  test("a stored direct record is replaced by a newer Meta click", () => {
+    const jar = installJar();
+    try {
+      withCookieDomain(".stampeo.app", () => {
+        writeAttributionRecord(record(""));
         writeAttributionRecord(record("?fbclid=f-new", 1_700_086_400));
         expect(readAttributionRecord()).toMatchObject({
           vendor: "meta",
@@ -578,15 +565,10 @@ describe("the attribution cookie as a carrier", () => {
       withCookieDomain(".stampeo.app", () => {
         writeAttributionRecord(record(""));
         const analyticsOnly = buildAttributionRecord({
+          ...ARRIVAL,
           search: "?fbclid=f-new",
-          gaClientId: "GA1.1.1234567890.1700000000",
-          landingPath: "/us/pricing",
-          landingVariant: "b",
           referrer: "https://www.facebook.com/",
           consent: { analytics: true, marketing: false },
-          consentVersion: 2,
-          consentRegime: "opt-in",
-          consentAt: 1_700_000_000,
           capturedAt: 1_700_086_400,
         }) as AttributionRecord;
         writeAttributionRecord(analyticsOnly);

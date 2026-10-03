@@ -839,17 +839,17 @@ describe("CONSENT_VERSION", () => {
     //
     // TWO OTHER PLACES MOVE WITH THIS, and nothing automated catches them
     // because they live in another repo and another language:
-    //   - `CONSENT_VERSION` in backend/app/services/ad_attribution.py, which
-    //     rejects an attribution row whose stored choice names a different
-    //     version;
+    //   - the backend's `CONSENT_VERSION`, which honours only the versions in
+    //     `ACCEPTED_CONSENT_VERSIONS` (backend
+    //     app/services/attribution/eligibility.py);
     //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
     //     shared cookie to notice a withdrawal.
     expect(CONSENT_VERSION).toBe(3);
     expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A3");
   });
 
-  test("a choice stored under the previous version is no longer honoured", () => {
-    // The point of the bump: everyone is asked again rather than a new
+  test("a grant stored under version 1 is no longer honoured", () => {
+    // The point of the bump: a grant is asked again rather than a new
     // processing purpose inheriting a choice made about a narrower one.
     const old = encodeURIComponent(
       JSON.stringify({ v: 1, a: 1, m: 1, t: 1_700_000_000, r: "opt-in" })
