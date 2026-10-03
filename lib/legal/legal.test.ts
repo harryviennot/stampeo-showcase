@@ -319,3 +319,75 @@ describe("privacy §5.2 — the consent cookie's own contents", () => {
     }
   });
 });
+
+describe("privacy §5.5 — what the advertising platforms receive", () => {
+  function privacySource(locale: string) {
+    const dir = path.join(process.cwd(), "legal", locale);
+    const file = fs
+      .readdirSync(dir)
+      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+    return fs.readFileSync(path.join(dir, file!), "utf-8");
+  }
+
+  function section(locale: string, heading: RegExp, next: RegExp) {
+    const source = privacySource(locale);
+    const start = source.search(heading);
+    const rest = source.slice(start);
+    const end = rest.slice(1).search(next);
+    return end === -1 ? rest : rest.slice(0, end + 1);
+  }
+
+  const section55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
+
+  /** The promise the hashed contact details break, in each locale it was made in. */
+  const RETIRED_PROMISE: Record<string, RegExp> = {
+    en: /never includes your email address/i,
+    fr: /N'y figurent jamais votre adresse email/i,
+    es: /Nunca incluye su dirección de correo electrónico/i,
+    pl: /Nigdy nie przekazujemy adresu e-mail/i,
+  };
+
+  it("no longer promises that contact details are never sent, in any locale", () => {
+    for (const locale of routing.locales) {
+      expect(section55(locale), `${locale} still promises no email`).not.toMatch(
+        RETIRED_PROMISE[locale]
+      );
+    }
+  });
+
+  it("names the hashing and the 45-day limit on IP and browser data, in every locale", () => {
+    // What a visitor consents to when they accept advertising cookies: their
+    // contact details leave as SHA-256 codes, and the IP address and browser
+    // characteristics are kept 45 days at most.
+    for (const locale of routing.locales) {
+      const text = section55(locale);
+      expect(text, `${locale} §5.5 does not name SHA-256`).toContain("SHA-256");
+      expect(text, `${locale} §5.5 omits the 45-day limit`).toContain("45");
+    }
+  });
+
+  it("lists the IP and browser data in the retention table, in every locale", () => {
+    for (const locale of routing.locales) {
+      const rows = privacySource(locale)
+        .split("\n")
+        .filter((line) => line.startsWith("|") && /5\.5/.test(line));
+      expect(
+        rows.some((row) => /45/.test(row)),
+        `${locale} retention table has no 45-day row for §5.5`
+      ).toBe(true);
+    }
+  });
+
+  it("names Meta among the United States transfers, in every locale", () => {
+    const TRANSFERS: Record<string, RegExp> = {
+      en: /^#+\s+Transfers Outside the EU/m,
+      fr: /^#+\s+Transferts/m,
+      es: /^#+\s+Transferencias/m,
+      pl: /^#+\s+Transfery poza UE/m,
+    };
+    for (const locale of routing.locales) {
+      const text = section(locale, TRANSFERS[locale], /^#+\s/m);
+      expect(text, `${locale} transfers paragraph does not name Meta`).toContain("Meta");
+    }
+  });
+});
