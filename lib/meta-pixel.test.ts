@@ -292,25 +292,39 @@ describe("metaEventForCTA", () => {
       "faq",
       "final_cta",
       "loyalty_picker",
+      "header",
+      "header_mobile",
+      "demo_stamps_claim",
+      "demo_points_claim",
+      "founder_program",
+      "about",
+      "feature_hero",
+      "feature_cta",
+      "card_style_gallery",
+      "blog_cta",
+      "pricing_final_cta",
     ]) {
       expect(metaEventForCTA({ ctaLocation, href: "/onboarding" })).toBe("Lead");
     }
   });
 
-  test("demo CTAs are Contacts", () => {
+  test("contact-page CTAs are Contacts", () => {
     // Kept distinct from Lead: self-serve signup and a sales touch are
     // different funnels and campaigns optimise for them separately. AEM ranks
     // 8 events and this taxonomy uses 3, so the distinction is free.
-    expect(metaEventForCTA({ ctaLocation: "hero_demo", href: "/contact" })).toBe(
-      "Contact",
-    );
-    expect(
-      metaEventForCTA({ ctaLocation: "final_cta_demo", href: "/contact" }),
-    ).toBe("Contact");
+    for (const ctaLocation of [
+      "hero_demo",
+      "final_cta_demo",
+      "footer_contact",
+      "faq_contact",
+      "pricing_contact",
+    ]) {
+      expect(metaEventForCTA({ ctaLocation, href: "/contact" })).toBe("Contact");
+    }
   });
 
   test("the destination decides when it disagrees with the location", () => {
-    // `CTAButton` already picks its PostHog event from the href rather than the
+    // `ctaClickEvents` picks the PostHog event from the href rather than the
     // location name, so a mapped CTA repointed at /contact must follow.
     expect(metaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
       "Contact",
@@ -448,7 +462,7 @@ describe("the browser side, in load order", () => {
 
   test("a throw from fbq cannot break the click", () => {
     // The same hardening `trackGaEvent` carries, for the same reason: every
-    // call site is a click handler, and in `CTAButton` the Meta call runs
+    // call site is a click handler, and in `useCtaTracking` the Meta call runs
     // BEFORE the GA one — an unguarded throw here would cost the GA event AND
     // the navigation. Losing the measurement is the acceptable failure.
     const win = installBrowser();

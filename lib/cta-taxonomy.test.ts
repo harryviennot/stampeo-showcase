@@ -15,7 +15,7 @@ import {
 } from "./cta-taxonomy";
 
 describe("the CTA sets", () => {
-  test("the signup set names every launch CTA", () => {
+  test("the signup set names every link to /onboarding", () => {
     for (const location of [
       "hero",
       "pricing_starter",
@@ -24,13 +24,30 @@ describe("the CTA sets", () => {
       "faq",
       "final_cta",
       "loyalty_picker",
+      "header",
+      "header_mobile",
+      "demo_stamps_claim",
+      "demo_points_claim",
+      "founder_program",
+      "about",
+      "feature_hero",
+      "feature_cta",
+      "card_style_gallery",
+      "blog_cta",
+      "pricing_final_cta",
     ]) {
       expect(SIGNUP_CTAS.has(location)).toBe(true);
     }
   });
 
-  test("the contact set names the two demo CTAs", () => {
-    expect([...CONTACT_CTAS].sort()).toEqual(["final_cta_demo", "hero_demo"]);
+  test("the contact set names every link to /contact", () => {
+    expect([...CONTACT_CTAS].sort()).toEqual([
+      "faq_contact",
+      "final_cta_demo",
+      "footer_contact",
+      "hero_demo",
+      "pricing_contact",
+    ]);
   });
 
   test("the sets are disjoint", () => {

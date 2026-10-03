@@ -355,6 +355,17 @@ describe("gaEventForCTA", () => {
       "faq",
       "final_cta",
       "loyalty_picker",
+      "header",
+      "header_mobile",
+      "demo_stamps_claim",
+      "demo_points_claim",
+      "founder_program",
+      "about",
+      "feature_hero",
+      "feature_cta",
+      "card_style_gallery",
+      "blog_cta",
+      "pricing_final_cta",
     ]) {
       expect(gaEventForCTA({ ctaLocation, href: "/onboarding" })).toBe(
         "sign_up_cta_click"
@@ -362,8 +373,14 @@ describe("gaEventForCTA", () => {
     }
   });
 
-  test("demo CTAs are contact_cta_click", () => {
-    for (const ctaLocation of ["hero_demo", "final_cta_demo"]) {
+  test("contact-page CTAs are contact_cta_click", () => {
+    for (const ctaLocation of [
+      "hero_demo",
+      "final_cta_demo",
+      "footer_contact",
+      "faq_contact",
+      "pricing_contact",
+    ]) {
       expect(gaEventForCTA({ ctaLocation, href: "/contact" })).toBe(
         "contact_cta_click"
       );
@@ -371,7 +388,7 @@ describe("gaEventForCTA", () => {
   });
 
   test("the destination decides when it disagrees with the location", () => {
-    // Mirrors how CTAButton already picks its PostHog event.
+    // Mirrors how `ctaClickEvents` picks the PostHog event.
     expect(gaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
       "contact_cta_click"
     );
@@ -503,7 +520,7 @@ describe("the CTA tables cover the whole CTALocation union", () => {
     expect(unmapped).toEqual([]);
   });
 
-  test("the demo CTAs are the ones that map to contact", () => {
+  test("the contact-page CTAs are the ones that map to contact", () => {
     // Pins the split, not just the coverage: a signup CTA quietly reclassified
     // as a contact would keep "every location maps" green.
     const byEvent = (event: string) =>
@@ -511,7 +528,13 @@ describe("the CTA tables cover the whole CTALocation union", () => {
         (location) => gaEventForCTA({ ctaLocation: location, href: "/onboarding" }) === event,
       );
 
-    expect(byEvent("contact_cta_click").sort()).toEqual(["final_cta_demo", "hero_demo"]);
+    expect(byEvent("contact_cta_click").sort()).toEqual([
+      "faq_contact",
+      "final_cta_demo",
+      "footer_contact",
+      "hero_demo",
+      "pricing_contact",
+    ]);
     expect(byEvent("sign_up_cta_click")).toContain("hero");
     expect(byEvent("sign_up_cta_click")).toContain("pricing_growth");
   });
