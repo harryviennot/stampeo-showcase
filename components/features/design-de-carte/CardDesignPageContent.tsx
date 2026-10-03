@@ -46,7 +46,7 @@ export async function CardDesignPageContent() {
               <p className="text-lead text-[var(--muted-foreground)] leading-relaxed mb-10 max-w-xl">
                 {t("design-de-carte.hero.subtitle")}
               </p>
-              <CTAButton label={tb("startFree")} />
+              <CTAButton label={tb("startFree")} trackAs="feature_hero" />
             </ScrollReveal>
 
             {/* Right: hero card with peeking sample styles */}

@@ -7,17 +7,20 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   buildAttributionRecord,
+  captureConsentEvidence,
   captureLandingContext,
   readAttributionRecord,
   readClickIds,
   readFbp,
   readGaClientId,
+  shouldCaptureArrival,
   vendorForClickIds,
   writeAttributionRecord,
 } from "@/lib/ad-attribution";
 
 /**
- * Records where this visitor came from, once, into a cookie `web/` can read.
+ * Records where this visitor came from into a cookie `web/` can read. A stored
+ * record is replaced only by a newer paid click (`shouldReplaceAttribution`).
  *
  * The business is created on app.stampeo.app, so this cookie is the only thing
  * that crosses the gap — see the header of `lib/ad-attribution.ts`. Every
@@ -33,10 +36,11 @@ import {
  *
  * The tags are injected in sibling effects and their cookies appear a tick
  * after the vendor script executes, so a single synchronous read on mount would
- * almost always miss them. Capture is FIRST-TOUCH-WINS, so writing early would
- * permanently store a record with no browser id and no way to repair it — hence
- * polling rather than a single attempt. The ceiling is short because a visitor
- * who bounces in two seconds is not a conversion we are going to report anyway.
+ * almost always miss them. Only a newer paid click replaces a stored record, so
+ * writing early would store a record with no browser id and no way to repair
+ * it — hence polling rather than a single attempt. The ceiling is short
+ * because a visitor who bounces in two seconds is not a conversion we are
+ * going to report anyway.
  */
 const GA_WAIT_MS = 3000;
 const GA_POLL_MS = 250;
@@ -50,12 +54,11 @@ export function AttributionCapture() {
     // synchronously, before any gate or wait below. This effect re-runs on
     // every navigation and consent change, and by then `location.search`,
     // `document.referrer` and the `<body>` variant describe the CURRENT page,
-    // not the one the ad bought — a mid-poll navigation used to cancel the
-    // write and let the re-run store a `direct` record with the wrong landing
-    // path, unrepairable for 182 days under first-touch-wins. The snapshot
-    // lives in module state (see `captureLandingContext`), so remounts and
-    // strict mode keep the first reading; it is memory-only, and nothing is
-    // written down until the consent gates below allow it.
+    // not the one the ad bought: a re-run after a mid-poll navigation would
+    // otherwise store a `direct` record with the wrong landing path. The
+    // snapshot lives in module state (see `captureLandingContext`), so
+    // remounts and strict mode keep the first reading; it is memory-only, and
+    // nothing is written down until the consent gates below allow it.
     const landing = captureLandingContext(() => ({
       search: window.location.search,
       path: pathname,
@@ -77,9 +80,26 @@ export function AttributionCapture() {
     // consent granted later on some other page changes nothing about where
     // this visit began.
     if (!isTrackablePath(landing.path)) return;
-    // First touch wins. A later organic pageview must not erase the ad click
-    // that actually brought someone here.
-    if (readAttributionRecord()) return;
+
+    const build = (gaClientId: string | null, fbp: string | null) =>
+      buildAttributionRecord({
+        search: landing.search,
+        gaClientId,
+        fbp,
+        landingPath: landing.path,
+        landingVariant: landing.variant,
+        referrer: landing.referrer,
+        selfHost: landing.selfHost,
+        consent: { analytics, marketing },
+        consentRegime: regime,
+        ...captureConsentEvidence(record),
+        capturedAt: Math.floor(Date.now() / 1000),
+      });
+
+    // A stored record stays unless this landing is a newer paid click. The
+    // browser ids the wait below collects cannot change that answer, so it is
+    // settled first: an organic landing over a stored record stops here.
+    if (!shouldCaptureArrival(readAttributionRecord(), build(null, null))) return;
 
     let cancelled = false;
     const startedAt = Date.now();
@@ -112,26 +132,7 @@ export function AttributionCapture() {
         return;
       }
 
-      const captured = buildAttributionRecord({
-        search: landing.search,
-        gaClientId,
-        fbp,
-        landingPath: landing.path,
-        landingVariant: landing.variant,
-        referrer: landing.referrer,
-        selfHost: landing.selfHost,
-        consent: { analytics, marketing },
-        // The stored choice is the evidence. A US opt-out visitor has no
-        // record, and the regime is then what justifies the capture — the
-        // backend special-cases that shape and ACCEPTS a row with
-        // `cr: "opt-out"`, `cv: 0`, `ca: 0` (see `ad_attribution.py`), so
-        // the `?? 0` fallbacks here are part of the contract, not a shrug.
-        consentVersion: record?.v ?? 0,
-        consentRegime: regime,
-        consentAt: record?.at ?? 0,
-        capturedAt: Math.floor(Date.now() / 1000),
-      });
-
+      const captured = build(gaClientId, fbp);
       if (captured) writeAttributionRecord(captured);
     };
 

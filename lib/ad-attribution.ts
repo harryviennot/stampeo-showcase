@@ -1,4 +1,9 @@
-import type { ConsentRegime, ConsentState } from "./consent";
+import {
+  CONSENT_VERSION,
+  type ConsentRecord,
+  type ConsentRegime,
+  type ConsentState,
+} from "./consent";
 
 /**
  * Ad attribution capture (STA-323).
@@ -260,6 +265,23 @@ export function buildAttributionRecord(input: {
 }
 
 /**
+ * The consent evidence a capture carries.
+ *
+ * A current choice is its own evidence. Without one, the visitor is under the
+ * US opt-out default: the evidence is the notice text in force
+ * (`CONSENT_VERSION`) and no consent moment (`0`), because nobody clicked.
+ */
+export function captureConsentEvidence(record: ConsentRecord | null): {
+  consentVersion: number;
+  consentAt: number;
+} {
+  if (record && record.v === CONSENT_VERSION) {
+    return { consentVersion: record.v, consentAt: record.at };
+  }
+  return { consentVersion: CONSENT_VERSION, consentAt: 0 };
+}
+
+/**
  * The cookie VALUE for a record.
  *
  * Keys are short because this rides on every request to both subdomains and
@@ -387,9 +409,10 @@ let landingContext: LandingContext | null = null;
  * This exists because capture WAITS (it polls for the tags' browser-id
  * cookies) and consent can arrive pages later. By either point,
  * `location.search` and `document.referrer` describe the current page, not the
- * one the ad bought — and first-touch-wins makes a record built from those
- * unrepairable for 182 days. The snapshot is memory-only: nothing is stored
- * anywhere until consent lets `buildAttributionRecord` say so.
+ * one the ad bought — and only a newer paid click replaces a stored record, so
+ * one built from those could stay wrong for 182 days. The snapshot is
+ * memory-only: nothing is stored anywhere until consent lets
+ * `buildAttributionRecord` say so.
  */
 export function captureLandingContext(read: () => LandingContext): LandingContext {
   if (landingContext === null) landingContext = read();
@@ -470,18 +493,52 @@ export function readAttributionRecord(): AttributionRecord | null {
   return null;
 }
 
+/** Did this record come from an ad click, i.e. was a platform's click id captured? */
+function isPaidClick(record: AttributionRecord): boolean {
+  return record.vendor !== "direct" && record.clickId !== null;
+}
+
 /**
- * Write the record down.
+ * Should `incoming` take the place of the stored record?
  *
- * FIRST TOUCH WINS on the client: an existing record is not overwritten by a
- * later organic pageview, or the ad click that actually brought someone here
- * would be erased by their next visit. Last-touch resolution between two
- * genuine ad clicks is the backend's job, where `captured_at` can be compared
- * across vendors.
+ * THE LATEST PAID CLICK WINS, the way the ad platforms attribute: a paid click
+ * replaces a `direct` record or an older paid one, so a visitor who comes back
+ * through a retargeting ad is credited to that ad. An organic visit never
+ * replaces anything, or it would erase the click that brought them here. The
+ * same click seen again (a reload, or capture re-running after a client-side
+ * navigation) is not a newer one.
+ *
+ * A click id only exists in a record built with marketing consent, so without
+ * it every arrival is organic here.
  */
+export function shouldReplaceAttribution(
+  existing: AttributionRecord | null,
+  incoming: AttributionRecord
+): boolean {
+  if (existing === null) return true;
+  if (!isPaidClick(incoming)) return false;
+  return existing.vendor !== incoming.vendor || existing.clickId !== incoming.clickId;
+}
+
+/**
+ * Is this arrival worth capturing at all, given what is already stored?
+ *
+ * Decided before `AttributionCapture` waits for the tags' browser ids, which
+ * cannot change the answer: with nothing stored, yes; otherwise only when the
+ * arrival (built without those ids) would replace the stored record.
+ */
+export function shouldCaptureArrival(
+  stored: AttributionRecord | null,
+  incoming: AttributionRecord | null
+): boolean {
+  if (stored === null) return true;
+  return incoming !== null && shouldReplaceAttribution(stored, incoming);
+}
+
+/** Write the record down, unless `shouldReplaceAttribution` keeps the stored one. */
 export function writeAttributionRecord(record: AttributionRecord): void {
   if (typeof document === "undefined") return;
-  if (readAttributionRecord()) return;
+  if (!shouldReplaceAttribution(readAttributionRecord(), record)) return;
 
   const attrs = attributionCookieAttributes(record);
   if (attrs.value.length > MAX_COOKIE_BYTES) {

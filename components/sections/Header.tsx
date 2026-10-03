@@ -9,6 +9,7 @@ import { ChevronDownIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { StampeoLogo } from "../logo";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
+import { TrackedLink } from "../ui/TrackedLink";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { hasBlog } from "@/lib/blog/locales";
@@ -62,12 +63,13 @@ function DesktopAuthButtons({
       >
         {t("common.auth.logIn")}
       </Link>
-      <Link
+      <TrackedLink
+        trackAs="header"
         href="/onboarding"
         className="flex items-center justify-center h-9 px-4 bg-[var(--accent)] text-white text-xs font-bold rounded-full hover:brightness-110 shadow-lg shadow-[var(--accent)]/20 transition-all active:scale-95"
       >
         {t("common.auth.getStarted")}
-      </Link>
+      </TrackedLink>
     </>
   );
 }
@@ -503,13 +505,14 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                           >
                             {t("common.auth.logIn")}
                           </Link>
-                          <Link
+                          <TrackedLink
+                            trackAs="header_mobile"
                             href="/onboarding"
                             className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
                             onClick={closeMobileMenu}
                           >
                             {t("common.auth.getStarted")}
-                          </Link>
+                          </TrackedLink>
                         </>
                       )}
                     </div>

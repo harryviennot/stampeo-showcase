@@ -1,16 +1,8 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
-import { usePathname } from "next/navigation";
-import {
-  trackLandingCTAClicked,
-  trackLandingDemoCTAClicked,
-  type CTALocation,
-} from "@/lib/analytics";
-import { isTrackablePath } from "@/lib/consent-routes";
-import { gaEventForCTA, trackGaEvent } from "@/lib/google-analytics";
-import { metaEventForCTA, trackMetaEvent } from "@/lib/meta-pixel";
+import type { CTALocation } from "@/lib/analytics";
+import { useCtaTracking } from "@/hooks/use-cta-tracking";
 
 type Size = "sm" | "md" | "lg";
 type Variant = "primary" | "secondary" | "outline" | "link";
@@ -23,9 +15,8 @@ type CTAButtonProps = Readonly<{
   className?: string;
   id?: string;
   showArrow?: boolean;
-  /** When set, fires a landing CTA event on click. Event name is auto-picked
-   *  based on href — `/contact*` → `landing_demo_cta_clicked`, else `landing_cta_clicked`. */
-  trackAs?: CTALocation;
+  /** Where the button sits; sent with the click to PostHog, GA4 and Meta. */
+  trackAs: CTALocation;
 }>;
 
 // Heights, not padding, so buttons of different sizes still line up in a row.
@@ -57,43 +48,9 @@ export function CTAButton({
   showArrow = true,
   trackAs,
 }: CTAButtonProps) {
-  const locale = useLocale();
-  const pathname = usePathname();
+  const handleClick = useCtaTracking(trackAs, href);
   const base =
     "group inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all";
-
-  const handleClick = trackAs
-    ? () => {
-        const props = { locale, cta_location: trackAs, href };
-        if (href.startsWith("/contact")) {
-          trackLandingDemoCTAClicked(props);
-        } else {
-          trackLandingCTAClicked(props);
-        }
-
-        // Alongside PostHog, never instead of it: the two serve different
-        // questions and the PostHog taxonomy already feeds live dashboards.
-        // A no-op unless the pixel actually loaded, so no consent check here.
-        const trackable = isTrackablePath(pathname);
-
-        const metaEvent = metaEventForCTA({ ctaLocation: trackAs, href });
-        if (metaEvent) {
-          trackMetaEvent({ event: metaEvent, trackable });
-        }
-
-        // GA4 takes the same click under the analytics category. It carries
-        // the CTA context as parameters because, unlike Meta, GA4 reports on
-        // custom dimensions rather than on the event name alone.
-        const gaEvent = gaEventForCTA({ ctaLocation: trackAs, href });
-        if (gaEvent) {
-          trackGaEvent({
-            event: gaEvent,
-            trackable,
-            params: { cta_location: trackAs, locale, href },
-          });
-        }
-      }
-    : undefined;
 
   return (
     <Link

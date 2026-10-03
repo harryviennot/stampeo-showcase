@@ -25,12 +25,28 @@ export const SIGNUP_CTAS: ReadonlySet<string> = new Set([
   "faq",
   "final_cta",
   "loyalty_picker",
+  "header",
+  "header_mobile",
+  "demo_stamps_claim",
+  "demo_points_claim",
+  "founder_program",
+  "about",
+  "feature_hero",
+  "feature_cta",
+  "card_style_gallery",
+  "blog_cta",
+  "blog_link",
+  "pricing_final_cta",
 ]);
 
 /** CTAs that mean "talk to a human". A different funnel, tracked separately. */
 export const CONTACT_CTAS: ReadonlySet<string> = new Set([
   "hero_demo",
   "final_cta_demo",
+  "footer_contact",
+  "faq_contact",
+  "pricing_contact",
+  "blog_contact",
 ]);
 
 /** Has anyone deliberately mapped this CTA location? Unknown means silent. */
@@ -49,4 +65,18 @@ export function isKnownCTALocation(location: string): boolean {
  */
 export function isContactHref(href: string): boolean {
   return /^\/(?:[a-z]{2}\/)*contact(?:\/|$|\?|#)/.test(href);
+}
+
+/** Does this href point at the signup or the contact page? Same prefix rule as `isContactHref`. */
+function isCtaHref(href: string): boolean {
+  return /^\/(?:[a-z]{2}\/)*(?:onboarding|contact)(?:[/?#]|$)/.test(href);
+}
+
+/**
+ * The location of a markdown link in a blog post, or null when it points
+ * anywhere but the signup or contact page.
+ */
+export function blogLinkLocation(href: string): "blog_link" | "blog_contact" | null {
+  if (isContactHref(href)) return "blog_contact";
+  return isCtaHref(href) ? "blog_link" : null;
 }

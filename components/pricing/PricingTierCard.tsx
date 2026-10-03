@@ -7,11 +7,8 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { TextSkeleton } from "@/components/ui/TextSkeleton";
 import { InfoIcon } from "@/components/icons";
-import { usePathname } from "next/navigation";
-import { trackLandingCTAClicked, type CTALocation } from "@/lib/analytics";
-import { isTrackablePath } from "@/lib/consent-routes";
-import { gaEventForCTA, trackGaEvent } from "@/lib/google-analytics";
-import { metaEventForCTA, trackMetaEvent } from "@/lib/meta-pixel";
+import type { CTALocation } from "@/lib/analytics";
+import { useCtaTracking } from "@/hooks/use-cta-tracking";
 
 export type FeatureItem = string | { text: string; tooltip: string };
 
@@ -57,8 +54,8 @@ type PricingTierCardProps = {
    * rendered dollar prices with a euro glyph.
    */
   currency: string;
-  /** When set, fires `landing_cta_clicked` with this location on CTA click. */
-  trackAs?: CTALocation;
+  /** Where the card sits; sent with the CTA click to PostHog, GA4 and Meta. */
+  trackAs: CTALocation;
   /** Lets the page control stacking order (recommended tier first on mobile). */
   className?: string;
   /**
@@ -129,46 +126,14 @@ export function PricingTierCard({
   loading = false,
 }: PricingTierCardProps) {
   const locale = useLocale();
-  const pathname = usePathname();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
   // A held card never shows a struck-through pair: both numbers would be chips.
   const showDiscount = !loading && discounted !== undefined && discounted < price;
   const annotated = Boolean(highlighted && annotationLabel);
 
-  // Wired separately from `CTAButton` because this card renders its own link.
-  // Pricing clicks are the highest-intent signal on the site, so leaving them
-  // out would mean campaigns optimising against the weaker events.
-  const handleCtaClick = trackAs
-    ? () => {
-        trackLandingCTAClicked({ locale, cta_location: trackAs, href: ctaHref });
-
-        // Alongside PostHog, never instead of it — the same two vendor sends
-        // `CTAButton` makes, argument for argument. A no-op unless the tag
-        // actually loaded, so no consent check here.
-        const trackable = isTrackablePath(pathname);
-
-        const metaEvent = metaEventForCTA({
-          ctaLocation: trackAs,
-          href: ctaHref,
-        });
-        if (metaEvent) {
-          trackMetaEvent({ event: metaEvent, trackable });
-        }
-
-        // GA4 takes the same click under the analytics category. It carries
-        // the CTA context as parameters because, unlike Meta, GA4 reports on
-        // custom dimensions rather than on the event name alone (QA GA-05:
-        // `sign_up_cta_click` with `cta_location` naming the tier).
-        const gaEvent = gaEventForCTA({ ctaLocation: trackAs, href: ctaHref });
-        if (gaEvent) {
-          trackGaEvent({
-            event: gaEvent,
-            trackable,
-            params: { cta_location: trackAs, locale, href: ctaHref },
-          });
-        }
-      }
-    : undefined;
+  // Pricing clicks are the highest-intent signal on the site, so the card's
+  // own link reports like every other CTA.
+  const handleCtaClick = useCtaTracking(trackAs, ctaHref);
 
   // The recommended tier is drawn in the accent ink; the others in black. Both
   // sit proud of the page like the rest of the site's cards.

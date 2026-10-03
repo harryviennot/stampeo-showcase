@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { Segmented } from "../ui/Segmented";
+import { TrackedLink } from "../ui/TrackedLink";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
@@ -51,12 +51,13 @@ function StampButton({
         </div>
 
         {isComplete ? (
-          <Link
+          <TrackedLink
+            trackAs="demo_stamps_claim"
             href="/onboarding"
             className="block w-full py-3.5 rounded-full font-semibold text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
           >
             {t("stamp.claimFree")}
-          </Link>
+          </TrackedLink>
         ) : (
           <button
             onClick={onClick}
@@ -104,12 +105,13 @@ function PointsScanButton({
         </div>
 
         {isComplete ? (
-          <Link
+          <TrackedLink
+            trackAs="demo_points_claim"
             href="/onboarding"
             className="block w-full py-3.5 rounded-full font-semibold text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98] animate-pulse"
           >
             {t("points.claimReward")}
-          </Link>
+          </TrackedLink>
         ) : (
           <button
             onClick={onClick}

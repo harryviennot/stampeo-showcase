@@ -58,8 +58,8 @@ export function MetaPixel() {
     }
 
     // Already resident, and the visitor navigated client-side — or the tree
-    // remounted under a resident script. Meta only fires PageView at init, so
-    // without this every session looks like one page.
+    // remounted under a resident script. Meta's own history listener is off
+    // (see `initMetaPixel`), so without this every session looks like one page.
     if (
       !shouldSendMetaPageView({
         loaded: isMetaPixelLoaded(),

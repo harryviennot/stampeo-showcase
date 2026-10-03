@@ -91,6 +91,7 @@ export function ScannerMobilePage() {
                   size="sm"
                   variant="outline"
                   showArrow={false}
+                  trackAs="feature_hero"
                 />
                 <a
                   href="#two-ways"
