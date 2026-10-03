@@ -520,6 +520,21 @@ export function shouldReplaceAttribution(
   return existing.vendor !== incoming.vendor || existing.clickId !== incoming.clickId;
 }
 
+/**
+ * Is this arrival worth capturing at all, given what is already stored?
+ *
+ * Decided before `AttributionCapture` waits for the tags' browser ids, which
+ * cannot change the answer: with nothing stored, yes; otherwise only when the
+ * arrival (built without those ids) would replace the stored record.
+ */
+export function shouldCaptureArrival(
+  stored: AttributionRecord | null,
+  incoming: AttributionRecord | null
+): boolean {
+  if (stored === null) return true;
+  return incoming !== null && shouldReplaceAttribution(stored, incoming);
+}
+
 /** Write the record down, unless `shouldReplaceAttribution` keeps the stored one. */
 export function writeAttributionRecord(record: AttributionRecord): void {
   if (typeof document === "undefined") return;

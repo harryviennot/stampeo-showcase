@@ -13,7 +13,7 @@ import {
   readClickIds,
   readFbp,
   readGaClientId,
-  shouldReplaceAttribution,
+  shouldCaptureArrival,
   vendorForClickIds,
   writeAttributionRecord,
 } from "@/lib/ad-attribution";
@@ -99,11 +99,7 @@ export function AttributionCapture() {
     // A stored record stays unless this landing is a newer paid click. The
     // browser ids the wait below collects cannot change that answer, so it is
     // settled first: an organic landing over a stored record stops here.
-    const stored = readAttributionRecord();
-    if (stored) {
-      const incoming = build(null, null);
-      if (!incoming || !shouldReplaceAttribution(stored, incoming)) return;
-    }
+    if (!shouldCaptureArrival(readAttributionRecord(), build(null, null))) return;
 
     let cancelled = false;
     const startedAt = Date.now();
