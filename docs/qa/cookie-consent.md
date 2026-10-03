@@ -65,6 +65,17 @@ login, it is the wrong runbook.
 | R7 | Unload the GA4 tag: a hard **page reload** (not a client-side navigation). `gtag` lives in the page's JS and cannot be removed once injected, so any GA case that must start with "tag not loaded" begins here. Confirm with `typeof window.gtag === "undefined"` in the console. The GA counterpart of the pixel-unload recipe (R9). |
 | R9 | Unload the pixel: a hard **page reload** (not a client-side navigation). `fbq` lives in the page's JS and cannot be removed once injected, so any case that must start with "pixel not loaded" begins here. Confirm with `typeof window.fbq === "undefined"` in the console. (Numbered past R8, which the AT section defines below; this row shipped as a second "R5" and was renumbered.) |
 
+### Known state before you start
+
+- **MP-08** — fixed, pending re-verification (STA-373). Root cause: Meta's
+  script reported client-side hops (PageView) and clicks
+  (`SubscribedButtonClick`) on its own, bypassing `isTrackablePath`; it was
+  found on production, where `/en/onboarding` and `/en/login` reached Meta.
+  Verified by unit tests on `feat/sta-373-ads-conversion-funnel`, and
+  by injecting the same settings into production with a Playwright init
+  script (the run dropped to the two expected PageViews). Not yet verified on
+  a deployed build. Targeted re-run: MP-08, then MP-03, MP-04, MP-01.
+
 ---
 
 ## CN: nothing is stored before a choice
@@ -400,8 +411,9 @@ EXPECT:
 ### MP-03 Client-side navigation counts pages once each — CORE
 DEPENDS: MP-01
 
-WHY: Meta only fires PageView at init, so without explicit handling every
-session looks like one page; with careless handling every render doubles it.
+WHY: Meta's own history listener is switched off (MP-08), so our code sends the
+PageView for each client-side navigation; without it every session looks like
+one page, and with careless handling every render doubles it.
 
 1. From MP-01, navigate client-side: `/pricing` → `/blog` → `/pricing`.
 
@@ -469,6 +481,34 @@ EXPECT:
 - The banner behaves normally and the choice is recorded.
 - **No** `connect.facebook.net` request, no `_fbp`, no console error.
 - Re-set the variable afterwards before running any other MP case.
+
+### MP-08 A client-side hop onto a private route sends Meta nothing — BLOCKER
+DEPENDS: MP-05
+
+WHY: The pixel cannot be unloaded, and Meta's script can report on its own: a
+PageView on every URL change and a button-click event, with page metadata, on
+every click. Our route gate only governs the calls our code makes, so both
+must be off from the moment the script loads, or a visitor's signup and login
+pages are reported.
+
+1. R3, R1, R9. Open `/en` (the pixel loads with no click, as in MP-05).
+   Network filter `facebook.com/tr`, and keep POST requests visible: Meta's
+   automatic events are POSTs.
+2. Click two buttons on the page that are not links (the Stamps / Points
+   toggle).
+3. Client-side through the header: **Loyalty programs**, then **Get started**
+   (`/en/onboarding`).
+4. On the onboarding form, click **Continue** with the fields empty.
+5. R9 on `/en`, then click the header **Log in** link (`/en/login`).
+
+EXPECT:
+- `PageView` for `/en` (twice: steps 1 and 5) and for `/en/loyalty-programs`.
+- A `Lead`, if any, is sent from `/en`, never from a private route.
+- **NO** request whose `dl` is `/en/onboarding` or `/en/login`: no PageView,
+  no `SubscribedButtonClick`, nothing.
+- **NO** `SubscribedButtonClick` anywhere, including on `/en`.
+- Console on any page: `window.fbq.disablePushState === true` and
+  `window.fbq.allowDuplicatePageViews === true`.
 
 ---
 
