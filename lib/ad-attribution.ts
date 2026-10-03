@@ -1,4 +1,9 @@
-import type { ConsentRegime, ConsentState } from "./consent";
+import {
+  CONSENT_VERSION,
+  type ConsentRecord,
+  type ConsentRegime,
+  type ConsentState,
+} from "./consent";
 
 /**
  * Ad attribution capture (STA-323).
@@ -257,6 +262,23 @@ export function buildAttributionRecord(input: {
     consentAt: input.consentAt,
     capturedAt: input.capturedAt,
   };
+}
+
+/**
+ * The consent evidence a capture carries.
+ *
+ * A current choice is its own evidence. Without one, the visitor is under the
+ * US opt-out default: the evidence is the notice text in force
+ * (`CONSENT_VERSION`) and no consent moment (`0`), because nobody clicked.
+ */
+export function captureConsentEvidence(record: ConsentRecord | null): {
+  consentVersion: number;
+  consentAt: number;
+} {
+  if (record && record.v === CONSENT_VERSION) {
+    return { consentVersion: record.v, consentAt: record.at };
+  }
+  return { consentVersion: CONSENT_VERSION, consentAt: 0 };
 }
 
 /**

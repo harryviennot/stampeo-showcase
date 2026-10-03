@@ -28,9 +28,10 @@ export const CONSENT_COOKIE = "stampeo_consent";
  * Bump when a category, a vendor, or the PROCESSING the policy describes
  * changes.
  *
- * A stored choice from an older version is treated as no choice at all, so the
- * visitor is asked again rather than a new tracker quietly inheriting consent
- * that was given for a different list of recipients.
+ * A grant stored under an older version is not carried over, so the visitor
+ * is asked again rather than a new tracker quietly inheriting consent that was
+ * given for a different list of recipients. A refusal stored under an older
+ * version still stands: see `resolveConsent`.
  *
  * ── Version history ─────────────────────────────────────────────────
  * 1 — STA-317. The banner itself: GA4, Meta and TikTok, browser-side only.
@@ -44,9 +45,9 @@ export const CONSENT_COOKIE = "stampeo_consent";
  *     address and browser characteristics, four reported steps instead of
  *     two, and those steps for signups that did not come through a Meta ad.
  *
- * `CONSENT_VERSION` in `backend/app/services/ad_attribution.py` mirrors this
- * and must move with it: the backend rejects an attribution row whose stored
- * choice was made against a different version.
+ * The backend's `CONSENT_VERSION` mirrors this and must move with it: the
+ * backend honours only the versions in `ACCEPTED_CONSENT_VERSIONS` (backend
+ * `app/services/attribution/eligibility.py`).
  */
 export const CONSENT_VERSION = 3;
 
@@ -91,6 +92,15 @@ export interface ConsentRecord extends ConsentState {
    * because a record read from an older cookie predates it.
    */
   subjectId?: string;
+}
+
+/**
+ * The choices of a record stored under an older `CONSENT_VERSION`. Only its
+ * refusals still decide anything (see `resolveConsent`).
+ */
+export interface PriorConsent extends ConsentState {
+  /** The older CONSENT_VERSION this choice was made against. */
+  v: number;
 }
 
 /** What the visitor is currently being shown, if anything. */
@@ -140,22 +150,38 @@ export function consentRegimeForCountry(
  *
  * The order is the whole design. An explicit choice wins over everything,
  * because someone who clicked a button said something more specific than any
- * signal. Only when there is no choice does GPC decide, and only then does the
- * regime's default apply.
+ * signal. Only when there is no current choice does GPC decide, and only then
+ * does the regime's default apply.
+ *
+ * A `prior` (older-version) record is not a current choice, but its refusals
+ * still stand: refusing the narrower processing an older text described is a
+ * refusal of today's too. Its grants are not carried, so a granted category
+ * falls to GPC and the regime default like no choice at all.
  */
 export function resolveConsent(input: {
   record: ConsentRecord | null;
+  prior: PriorConsent | null;
   regime: ConsentRegime;
   gpc: boolean;
 }): ConsentState {
   if (input.record) {
     return { analytics: input.record.analytics, marketing: input.record.marketing };
   }
+  const fallback = regimeDefault(input.regime, input.gpc);
+  const refused = (category: ConsentCategory) => input.prior?.[category] === false;
+  return {
+    analytics: fallback.analytics && !refused("analytics"),
+    marketing: fallback.marketing && !refused("marketing"),
+  };
+}
+
+/** What a visitor with no choice on record is taken to have agreed to. */
+function regimeDefault(regime: ConsentRegime, gpc: boolean): ConsentState {
   // Global Privacy Control. Twelve US states require honouring it
   // automatically, with no banner and no confirmation; in the EU it is a plain
   // objection signal and costs us nothing to respect.
-  if (input.gpc) return { analytics: false, marketing: false };
-  if (input.regime === "opt-out") return { analytics: true, marketing: true };
+  if (gpc) return { analytics: false, marketing: false };
+  if (regime === "opt-out") return { analytics: true, marketing: true };
   return { analytics: false, marketing: false };
 }
 
@@ -175,6 +201,7 @@ export function resolveConsent(input: {
  */
 export function consentSnapshotKey(input: {
   record: ConsentRecord | null;
+  prior: PriorConsent | null;
   regime: ConsentRegime;
   gpc: boolean;
 }): string {
@@ -187,18 +214,25 @@ export function consentSnapshotKey(input: {
         input.record.subjectId ?? "",
       ].join(".")
     : "none";
-  return `${record}|${input.regime}|${input.gpc}`;
+  const prior = input.prior
+    ? [input.prior.v, input.prior.analytics ? 1 : 0, input.prior.marketing ? 1 : 0].join(".")
+    : "none";
+  return `${record}|${prior}|${input.regime}|${input.gpc}`;
 }
 
 /** Which consent surface, if any, this visitor should see. */
 export function consentSurface(input: {
   record: ConsentRecord | null;
+  prior: PriorConsent | null;
   regime: ConsentRegime;
   gpc: boolean;
   trackable: boolean;
 }): ConsentSurface {
   if (!input.trackable) return "none";
   if (input.record) return "none";
+  // An older record that refused everything has nothing left to ask: both
+  // refusals still stand, so neither surface would change what is in force.
+  if (input.prior && !input.prior.analytics && !input.prior.marketing) return "none";
   // A GPC visitor in the US has already opted out, so the notice would be
   // telling them something that is not true of them.
   if (input.gpc && input.regime === "opt-out") return "none";
@@ -303,15 +337,12 @@ function choice(value: unknown): boolean | null {
 }
 
 /**
- * A stored choice, or null for "never answered".
+ * A stored choice of any version from 1 to CONSENT_VERSION, or null.
  *
- * Null for anything malformed, truncated, forged or written by an older
- * version. Never throws: a corrupt cookie has to degrade into asking again,
- * not into a blank page.
+ * Null for anything malformed, truncated or forged. Never throws: a corrupt
+ * cookie has to degrade into asking again, not into a blank page.
  */
-export function parseConsentCookie(
-  raw: string | null | undefined,
-): ConsentRecord | null {
+function parseStoredChoice(raw: string | null | undefined): ConsentRecord | null {
   if (!raw || !raw.trim()) return null;
 
   let parsed: unknown;
@@ -325,7 +356,10 @@ export function parseConsentCookie(
   }
 
   const record = parsed as Record<string, unknown>;
-  if (record.v !== CONSENT_VERSION) return null;
+  const v = record.v;
+  if (typeof v !== "number" || !Number.isInteger(v) || v < 1 || v > CONSENT_VERSION) {
+    return null;
+  }
 
   const analytics = choice(record.a);
   const marketing = choice(record.m);
@@ -334,7 +368,7 @@ export function parseConsentCookie(
   // `t` and `r` evidence the choice; they do not make it. Losing them is not a
   // reason to interrupt someone who already answered.
   return {
-    v: CONSENT_VERSION,
+    v,
     analytics,
     marketing,
     at: typeof record.t === "number" ? record.t : 0,
@@ -343,19 +377,50 @@ export function parseConsentCookie(
   };
 }
 
-/** The stored choice carried by a `Cookie:` header or `document.cookie`. */
-export function consentRecordFromCookieHeader(
-  header: string | null | undefined,
+/**
+ * A choice stored under the current version, or null for "no current choice".
+ *
+ * Null for an older version too: that record is read by `parsePriorConsent`.
+ */
+export function parseConsentCookie(
+  raw: string | null | undefined,
 ): ConsentRecord | null {
+  const stored = parseStoredChoice(raw);
+  return stored && stored.v === CONSENT_VERSION ? stored : null;
+}
+
+/** A choice stored under an older version, or null. */
+export function parsePriorConsent(raw: string | null | undefined): PriorConsent | null {
+  const stored = parseStoredChoice(raw);
+  if (!stored || stored.v === CONSENT_VERSION) return null;
+  return { v: stored.v, analytics: stored.analytics, marketing: stored.marketing };
+}
+
+/** The raw consent cookie value in a `Cookie:` header or `document.cookie`. */
+function consentCookieValue(header: string | null | undefined): string | null {
   if (!header) return null;
   for (const part of header.split(";")) {
     const entry = part.trim();
     // Match on the whole name: `x_stampeo_consent` is somebody else's cookie,
     // and reading it as ours would let any cookie on the domain grant consent.
     if (!entry.startsWith(`${CONSENT_COOKIE}=`)) continue;
-    return parseConsentCookie(entry.slice(CONSENT_COOKIE.length + 1));
+    return entry.slice(CONSENT_COOKIE.length + 1);
   }
   return null;
+}
+
+/** The current-version choice carried by a `Cookie:` header or `document.cookie`. */
+export function consentRecordFromCookieHeader(
+  header: string | null | undefined,
+): ConsentRecord | null {
+  return parseConsentCookie(consentCookieValue(header));
+}
+
+/** The older-version choice carried by a `Cookie:` header or `document.cookie`. */
+export function priorConsentFromCookieHeader(
+  header: string | null | undefined,
+): PriorConsent | null {
+  return parsePriorConsent(consentCookieValue(header));
 }
 
 export interface ConsentCookieAttributes {
@@ -489,10 +554,25 @@ function presentCookieNames(): string[] {
  */
 let sessionRecord: ConsentRecord | null = null;
 
-/** The stored choice, or null. */
+/** The stored current-version choice, or null. */
 export function readConsentRecord(): ConsentRecord | null {
   if (typeof document === "undefined") return null;
   return consentRecordFromCookieHeader(document.cookie) ?? sessionRecord;
+}
+
+/**
+ * Both readings of the cookie jar that `resolveConsent` and `consentSurface`
+ * take: the current choice, and an older-version one whose refusals stand.
+ */
+export function readStoredConsent(): {
+  record: ConsentRecord | null;
+  prior: PriorConsent | null;
+} {
+  if (typeof document === "undefined") return { record: null, prior: null };
+  return {
+    record: readConsentRecord(),
+    prior: priorConsentFromCookieHeader(document.cookie),
+  };
 }
 
 /**
@@ -597,7 +677,7 @@ export function subscribeToConsentChange(onChange: () => void): () => void {
 export function currentConsent(): ConsentState {
   if (typeof window === "undefined") return { analytics: false, marketing: false };
   return resolveConsent({
-    record: readConsentRecord(),
+    ...readStoredConsent(),
     regime: detectConsentRegime(),
     gpc: detectGpc(),
   });

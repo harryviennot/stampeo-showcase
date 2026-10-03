@@ -7,6 +7,7 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   buildAttributionRecord,
+  captureConsentEvidence,
   captureLandingContext,
   readAttributionRecord,
   readClickIds,
@@ -90,14 +91,8 @@ export function AttributionCapture() {
         referrer: landing.referrer,
         selfHost: landing.selfHost,
         consent: { analytics, marketing },
-        // The stored choice is the evidence. A US opt-out visitor has no
-        // record, and the regime is then what justifies the capture — the
-        // backend special-cases that shape and ACCEPTS a row with
-        // `cr: "opt-out"`, `cv: 0`, `ca: 0` (see `ad_attribution.py`), so
-        // the `?? 0` fallbacks here are part of the contract, not a shrug.
-        consentVersion: record?.v ?? 0,
         consentRegime: regime,
-        consentAt: record?.at ?? 0,
+        ...captureConsentEvidence(record),
         capturedAt: Math.floor(Date.now() / 1000),
       });
 
