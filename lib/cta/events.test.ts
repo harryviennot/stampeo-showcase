@@ -45,11 +45,14 @@ const LOCATIONS: Record<string, [href: string, sends: typeof SIGNUP]> = {
   card_style_gallery: ["/onboarding", SIGNUP],
   blog_cta: ["/onboarding", SIGNUP],
   pricing_final_cta: ["/onboarding", SIGNUP],
+  // A markdown link in a blog post keeps the locale it was written with.
+  blog_link: ["/en/onboarding", SIGNUP],
   hero_demo: ["/contact?type=demo", CONTACT],
   final_cta_demo: ["/contact?type=demo", CONTACT],
   footer_contact: ["/contact", CONTACT],
   faq_contact: ["/contact", CONTACT],
   pricing_contact: ["/contact", CONTACT],
+  blog_contact: ["/en/contact", CONTACT],
 };
 
 describe("every CTA location", () => {

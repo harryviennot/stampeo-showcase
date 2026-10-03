@@ -11,12 +11,20 @@
  * An element points there when:
  * - its `href` or `ctaHref` is a string literal for one of the two pages
  *   (locale prefix, query and hash allowed, so `/contact?type=demo` counts);
- * - it is a `<CTAButton>` or `<TrackedLink>`, whatever its href: CTAButton
- *   defaults to `/onboarding`, and both exist to be tracked CTAs.
+ * - it is a `<CTAButton>`, `<TrackedLink>` or `<TrackedAnchor>`, whatever its
+ *   href: CTAButton defaults to `/onboarding`, and all three exist to be
+ *   tracked CTAs.
  *
  * A dynamic `href={x}` on a plain `<Link>` is beyond a source scan. The
- * components that forward one (`CTAButton`, `TrackedLink`, `PricingTierCard`)
- * require `trackAs` in their props instead, which `tsc` enforces.
+ * components that forward one (`CTAButton`, `TrackedLink`, `TrackedAnchor`,
+ * `PricingTierCard`) require `trackAs` in their props instead, which `tsc`
+ * enforces.
+ *
+ * Blog posts are MDX under `content/`, which neither `tsc` nor ESLint reads,
+ * which is why this is a source scan rather than a lint rule. A markdown link
+ * there renders through the blog's `a` mapping, which tracks signup and
+ * contact links; a raw `<a>` or `<Link>` written as JSX bypasses that mapping,
+ * so the scan fails on one pointing at either page.
  *
  * Files under a private route segment (`PRIVATE_SEGMENTS`) are exempt: no ad
  * tag runs there.
@@ -29,9 +37,12 @@ import { PRIVATE_SEGMENTS } from "../consent-routes";
 
 const ROOT = join(import.meta.dir, "..", "..");
 const SCANNED_DIRS = ["components", "app"];
+const CONTENT_DIR = "content";
 
 const CTA_PATH = /^\/(?:[a-z]{2}\/)*(?:onboarding|contact)(?:[/?#]|$)/;
-const ALWAYS_CTA = new Set(["CTAButton", "TrackedLink"]);
+const ALWAYS_CTA = new Set(["CTAButton", "TrackedLink", "TrackedAnchor"]);
+/** JSX in MDX that renders as written, outside the components map. */
+const RAW_MDX_LINKS = new Set(["a", "Link"]);
 
 interface Tag {
   name: string;
@@ -110,6 +121,20 @@ function untrackedCtas(source: string, file = "source"): string[] {
     .map((tag) => `${file}:${tag.line} <${tag.name}>`);
 }
 
+/** `file:line <Tag>` for each raw JSX link in MDX that points at a CTA page. */
+function rawMdxCtas(source: string, file = "source"): string[] {
+  return openingTags(source)
+    .filter((tag) => RAW_MDX_LINKS.has(tag.name) && pointsAtCta(tag))
+    .map((tag) => `${file}:${tag.line} <${tag.name}>`);
+}
+
+/** MDX content files, relative to the repo root. */
+function mdxContentFiles(): string[] {
+  return readdirSync(join(ROOT, CONTENT_DIR), { recursive: true, encoding: "utf-8" })
+    .filter((path) => path.endsWith(".mdx"))
+    .map((path) => `${CONTENT_DIR}/${path}`);
+}
+
 /** Source files on marketing pages, relative to the repo root. */
 function marketingSourceFiles(): string[] {
   return SCANNED_DIRS.flatMap((dir) =>
@@ -159,5 +184,52 @@ describe("the CTA guard", () => {
     );
 
     expect(untracked).toEqual([]);
+  });
+});
+
+describe("the CTA guard on blog posts", () => {
+  test.each([
+    ["Read [the setup guide](/en/onboarding).", false],
+    ['<a href="/en/onboarding">Start</a>', true],
+    ['<a href="/contact">Talk to us</a>', true],
+    ['<Link href="/onboarding">Start</Link>', true],
+    ['<a href="/en/blog/digital-stamp-card">Guide</a>', false],
+    ['<CallToAction\n  title="Ready?"\n  buttonText="Start"\n  href="/onboarding"\n/>', false],
+  ])("%p bypasses the tracked mapping: %p", (source, untracked) => {
+    expect(rawMdxCtas(source).length > 0).toBe(untracked);
+  });
+
+  test("the scan reaches the blog posts", () => {
+    const files = mdxContentFiles();
+    expect(files).toContain("content/blog/fr/carte-fidelite-boulangerie.mdx");
+    expect(files.length).toBeGreaterThanOrEqual(20);
+  });
+
+  test("no blog post links to the signup or contact page outside the tracked mapping", () => {
+    const untracked = mdxContentFiles().flatMap((file) =>
+      rawMdxCtas(readFileSync(join(ROOT, file), "utf-8"), file),
+    );
+
+    expect(untracked).toEqual([]);
+  });
+
+  test("a markdown link renders through the tracked link for signup and contact pages", async () => {
+    const { mdxComponents } = await import("@/components/blog/mdx");
+    const { BlogLink } = await import("@/components/blog/mdx/BlogLink");
+    const { TrackedAnchor } = await import("@/components/ui/TrackedAnchor");
+
+    expect(mdxComponents.a).toBe(BlogLink);
+
+    const signup = BlogLink({ href: "/en/onboarding", children: "Start" });
+    expect(signup.type).toBe(TrackedAnchor);
+    expect(signup.props).toMatchObject({ href: "/en/onboarding", trackAs: "blog_link" });
+
+    const contact = BlogLink({ href: "/contact", children: "Talk to us" });
+    expect(contact.props).toMatchObject({ href: "/contact", trackAs: "blog_contact" });
+
+    // Every other link renders exactly as written.
+    const guide = BlogLink({ href: "/en/blog/digital-stamp-card", children: "Guide" });
+    expect(guide.type).toBe("a");
+    expect(guide.props).toEqual({ href: "/en/blog/digital-stamp-card", children: "Guide" });
   });
 });

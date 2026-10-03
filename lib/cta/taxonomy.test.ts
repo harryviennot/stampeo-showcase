@@ -9,6 +9,7 @@ import { describe, expect, test } from "bun:test";
 import {
   CONTACT_CTAS,
   SIGNUP_CTAS,
+  blogLinkLocation,
   isContactHref,
   isKnownCTALocation,
 } from "./taxonomy";
@@ -55,5 +56,24 @@ describe("isContactHref", () => {
     expect(isContactHref("/en/contacted")).toBe(false);
     expect(isContactHref("/onboarding")).toBe(false);
     expect(isContactHref("/abc/contact")).toBe(false);
+  });
+});
+
+describe("blogLinkLocation — a markdown link in a blog post", () => {
+  test.each([
+    ["/onboarding", "blog_link"],
+    ["/en/onboarding", "blog_link"],
+    ["/es/onboarding?plan=growth", "blog_link"],
+    ["/contact", "blog_contact"],
+    ["/en/contact#form", "blog_contact"],
+    ["/pl/contact?type=demo", "blog_contact"],
+    ["/en/blog/digital-stamp-card", null],
+    ["/pricing", null],
+    ["https://stampeo.app", null],
+    ["/contacts", null],
+    ["/onboarding-guide", null],
+    ["#how-it-works", null],
+  ])("%s is %p", (href, location) => {
+    expect(blogLinkLocation(href)).toBe(location);
   });
 });
