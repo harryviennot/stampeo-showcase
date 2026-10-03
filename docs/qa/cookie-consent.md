@@ -78,7 +78,11 @@ login, it is the wrong runbook.
   by injecting the same settings into production with a Playwright init
   script (the run dropped to the two expected PageViews). Not yet verified on
   a deployed build. Targeted re-run: MP-08, then MP-03, MP-04, MP-01.
-- **Consent version is 3** in showcase, web and backend. A consent cookie
+- **Consent version 3 and the new §5.5 are held until the legal review.** The
+  shipped code writes version 2 and reports only `CompleteRegistration` and
+  `Purchase`; the backend accepts version 3 but nothing sends it yet. MC-09 to
+  MC-14, LG-02 and the v3 notes below apply once the hold is reverted.
+- **Consent version is 3** in showcase, web and backend (after the hold). A consent cookie
   written before this branch (`v:2`) that granted anything is asked again (the
   banner in the EU, the notice in the US); a `v:2` refusal still stands (CN-05,
   RG-05, RG-06). If you had accepted on your own browser, expect the banner
