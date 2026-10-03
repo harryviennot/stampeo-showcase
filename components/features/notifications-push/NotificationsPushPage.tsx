@@ -68,7 +68,7 @@ export function NotificationsPushPage() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <CTAButton label={tb("startFree")} />
+                <CTAButton label={tb("startFree")} trackAs="feature_hero" />
               </div>
 
               {/* Wallet badges */}

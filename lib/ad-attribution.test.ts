@@ -22,11 +22,16 @@
  *    total: anything malformed, forged or from another version is null rather
  *    than a throw, and the backend validates again regardless.
  *
+ * 4. THE LATEST PAID CLICK WINS. A paid click replaces a `direct` record or an
+ *    older paid one, the way the ad platforms themselves attribute; an organic
+ *    visit never replaces anything.
+ *
  * `lib/consent.test.ts` owns what a visitor agreed to. This file assumes that
  * answer and tests what is captured under it.
  */
 
 import { describe, expect, test } from "bun:test";
+import { CONSENT_VERSION } from "./consent";
 import {
   ATTRIBUTION_COOKIE,
   ATTRIBUTION_VERSION,
@@ -34,11 +39,13 @@ import {
   buildAttributionRecord,
   captureLandingContext,
   parseAttributionCookie,
+  readAttributionRecord,
   readClickIds,
   readFbp,
   readUtm,
   referrerHost,
   serializeAttributionCookie,
+  shouldReplaceAttribution,
   vendorForClickIds,
   writeAttributionRecord,
   type AttributionRecord,
@@ -57,7 +64,7 @@ const ARRIVAL = {
   landingVariant: "b",
   referrer: "https://www.google.com/search?q=loyalty",
   consent: BOTH,
-  consentVersion: 1,
+  consentVersion: CONSENT_VERSION,
   consentRegime: "opt-in" as const,
   consentAt: 1_700_000_000,
   capturedAt: 1_700_000_100,
@@ -221,7 +228,7 @@ describe("buildAttributionRecord — the consent gate", () => {
     // The backend proves the lawful basis from the cookie rather than from a
     // second lookup it cannot make on another domain.
     const record = buildAttributionRecord(ARRIVAL) as AttributionRecord;
-    expect(record.consentVersion).toBe(1);
+    expect(record.consentVersion).toBe(CONSENT_VERSION);
     expect(record.consentRegime).toBe("opt-in");
     expect(record.consentAt).toBe(1_700_000_000);
     expect(record.capturedAt).toBe(1_700_000_100);
@@ -235,6 +242,33 @@ describe("buildAttributionRecord — the consent gate", () => {
       consentRegime: "opt-out",
     }) as AttributionRecord;
     expect(record.consentRegime).toBe("opt-out");
+  });
+});
+
+describe("shouldReplaceAttribution — the latest paid click wins", () => {
+  /** The record a landing with this query builds, under full consent. */
+  const landing = (search: string) =>
+    buildAttributionRecord({ ...ARRIVAL, search }) as AttributionRecord;
+
+  test.each([
+    ["nothing stored, a paid click: written", null, "?fbclid=f-new", true],
+    ["nothing stored, an organic visit: written", null, "", true],
+    ["a direct record, then a Meta click: replaced", "", "?fbclid=f-new", true],
+    ["a Google record, then a newer Meta click: replaced", "?gclid=g-old", "?fbclid=f-new", true],
+    ["a Meta record, then a newer Google click: replaced", "?fbclid=f-old", "?gclid=g-new", true],
+    ["a Meta record, then a newer Meta click: replaced", "?fbclid=f-old", "?fbclid=f-new", true],
+    ["a direct record, then a TikTok click: replaced", "", "?ttclid=t-new", true],
+    ["a Google record, then an organic visit: kept", "?gclid=g-old", "", false],
+    ["a Meta record, then an organic visit: kept", "?fbclid=f-old", "", false],
+    ["a TikTok record, then an organic visit: kept", "?ttclid=t-old", "", false],
+    ["a direct record, then another organic visit: kept", "", "?utm_source=newsletter", false],
+    // A reload, or the capture re-running after a client-side navigation:
+    // the same click is not a newer one.
+    ["a Meta record, then the same Meta click again: kept", "?fbclid=f-old", "?fbclid=f-old", false],
+  ])("%s", (_case, stored, arriving, replaced) => {
+    expect(
+      shouldReplaceAttribution(stored === null ? null : landing(stored), landing(arriving)),
+    ).toBe(replaced);
   });
 });
 
@@ -401,18 +435,7 @@ describe("the cookie cannot be made huge", () => {
 
 describe("the attribution cookie as a carrier", () => {
   const record = (search: string, capturedAt = 1_700_000_000): AttributionRecord => {
-    const built = buildAttributionRecord({
-      search,
-      gaClientId: "GA1.1.1234567890.1700000000",
-      landingPath: "/us/pricing",
-      landingVariant: "b",
-      referrer: "https://www.google.com/",
-      consent: { analytics: true, marketing: true },
-      consentVersion: 2,
-      consentRegime: "opt-in",
-      consentAt: 1_700_000_000,
-      capturedAt,
-    });
+    const built = buildAttributionRecord({ ...ARRIVAL, search, capturedAt });
     expect(built).not.toBeNull();
     return built as AttributionRecord;
   };
@@ -497,17 +520,65 @@ describe("the attribution cookie as a carrier", () => {
     }
   });
 
-  test("first touch wins — a later visit does not overwrite the ad click", () => {
+  // Which arrival replaces which is tabled on `shouldReplaceAttribution`
+  // above; these two cases pin that the writer applies it.
+
+  test("a stored ad click survives an organic return visit", () => {
     const jar = installJar();
     try {
       withCookieDomain(".stampeo.app", () => {
         writeAttributionRecord(record("?gclid=abc123"));
-        // The organic return visit, a day later. Must not erase the gclid.
+        // The organic return visit, a day later. Must not erase the click.
         writeAttributionRecord(record("", 1_700_086_400));
       });
 
       expect(jar.writes.length).toBe(1);
       expect(jar.writes[0]).toContain("abc123");
+    } finally {
+      jar.restore();
+    }
+  });
+
+  test("a stored direct record is replaced by a newer Meta click", () => {
+    const jar = installJar();
+    try {
+      withCookieDomain(".stampeo.app", () => {
+        writeAttributionRecord(record(""));
+        writeAttributionRecord(record("?fbclid=f-new", 1_700_086_400));
+        expect(readAttributionRecord()).toMatchObject({
+          vendor: "meta",
+          clickId: "f-new",
+          capturedAt: 1_700_086_400,
+        });
+      });
+      expect(jar.writes.length).toBe(2);
+    } finally {
+      jar.restore();
+    }
+  });
+
+  test("an fbclid without marketing consent replaces nothing", () => {
+    // The click id is not readable without marketing consent, so the arrival
+    // is direct and the stored record stays as it was.
+    const jar = installJar();
+    try {
+      withCookieDomain(".stampeo.app", () => {
+        writeAttributionRecord(record(""));
+        const analyticsOnly = buildAttributionRecord({
+          ...ARRIVAL,
+          search: "?fbclid=f-new",
+          referrer: "https://www.facebook.com/",
+          consent: { analytics: true, marketing: false },
+          capturedAt: 1_700_086_400,
+        }) as AttributionRecord;
+        writeAttributionRecord(analyticsOnly);
+        expect(readAttributionRecord()).toMatchObject({
+          vendor: "direct",
+          clickId: null,
+          capturedAt: 1_700_000_000,
+        });
+      });
+      expect(jar.writes.length).toBe(1);
     } finally {
       jar.restore();
     }

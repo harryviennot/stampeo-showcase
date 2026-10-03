@@ -1,38 +1,20 @@
 /**
- * The shared CTA taxonomy (extracted under STA-319 review, planned as STA-320).
+ * The shared CTA taxonomy that feeds both vendors' event mappers.
  *
- * One module now feeds both vendors' event mappers, so these tests own the
- * SET-MEMBERSHIP questions — `gaEventForCTA`/`metaEventForCTA` keep their own
- * mapping tests, but which locations exist is decided exactly once, here.
+ * These tests own the rules of the sets and the contact-page match. Which
+ * event each location sends is tabled once, in `events.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
 import {
   CONTACT_CTAS,
   SIGNUP_CTAS,
+  blogLinkLocation,
   isContactHref,
   isKnownCTALocation,
-} from "./cta-taxonomy";
+} from "./taxonomy";
 
 describe("the CTA sets", () => {
-  test("the signup set names every launch CTA", () => {
-    for (const location of [
-      "hero",
-      "pricing_starter",
-      "pricing_growth",
-      "pricing_pro",
-      "faq",
-      "final_cta",
-      "loyalty_picker",
-    ]) {
-      expect(SIGNUP_CTAS.has(location)).toBe(true);
-    }
-  });
-
-  test("the contact set names the two demo CTAs", () => {
-    expect([...CONTACT_CTAS].sort()).toEqual(["final_cta_demo", "hero_demo"]);
-  });
-
   test("the sets are disjoint", () => {
     // A location in both would make the event depend on evaluation order.
     for (const location of SIGNUP_CTAS) {
@@ -74,5 +56,24 @@ describe("isContactHref", () => {
     expect(isContactHref("/en/contacted")).toBe(false);
     expect(isContactHref("/onboarding")).toBe(false);
     expect(isContactHref("/abc/contact")).toBe(false);
+  });
+});
+
+describe("blogLinkLocation — a markdown link in a blog post", () => {
+  test.each([
+    ["/onboarding", "blog_link"],
+    ["/en/onboarding", "blog_link"],
+    ["/es/onboarding?plan=growth", "blog_link"],
+    ["/contact", "blog_contact"],
+    ["/en/contact#form", "blog_contact"],
+    ["/pl/contact?type=demo", "blog_contact"],
+    ["/en/blog/digital-stamp-card", null],
+    ["/pricing", null],
+    ["https://stampeo.app", null],
+    ["/contacts", null],
+    ["/onboarding-guide", null],
+    ["#how-it-works", null],
+  ])("%s is %p", (href, location) => {
+    expect(blogLinkLocation(href)).toBe(location);
   });
 });

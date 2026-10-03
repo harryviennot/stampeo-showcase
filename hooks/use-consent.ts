@@ -7,17 +7,20 @@ import {
   currentConsent,
   detectConsentRegime,
   detectGpc,
-  readConsentRecord,
+  readStoredConsent,
   resolveConsent,
   subscribeToConsentChange,
   type ConsentRecord,
   type ConsentRegime,
   type ConsentState,
+  type PriorConsent,
 } from "@/lib/consent";
 
 export interface ConsentSnapshot extends ConsentState {
-  /** The stored choice, or null if they have never answered. */
+  /** The stored current-version choice, or null if there is none. */
   record: ConsentRecord | null;
+  /** A choice stored under an older version, whose refusals still stand. */
+  prior: PriorConsent | null;
   regime: ConsentRegime;
   gpc: boolean;
   /**
@@ -43,6 +46,7 @@ const SERVER_SNAPSHOT: ConsentSnapshot = Object.freeze({
   analytics: false,
   marketing: false,
   record: null,
+  prior: null,
   regime: "opt-in" as const,
   gpc: false,
   ready: false,
@@ -63,15 +67,15 @@ let cachedKey = "";
  * until the cookie itself changes and cannot loop the store.
  */
 function clientSnapshot(): ConsentSnapshot {
-  const record = readConsentRecord();
+  const { record, prior } = readStoredConsent();
   const regime = detectConsentRegime();
   const gpc = detectGpc();
-  const state = resolveConsent({ record, regime, gpc });
-  const key = consentSnapshotKey({ record, regime, gpc });
+  const state = resolveConsent({ record, prior, regime, gpc });
+  const key = consentSnapshotKey({ record, prior, regime, gpc });
 
   if (key !== cachedKey) {
     cachedKey = key;
-    cached = { ...state, record, regime, gpc, ready: true };
+    cached = { ...state, record, prior, regime, gpc, ready: true };
   }
   return cached;
 }

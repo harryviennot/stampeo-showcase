@@ -35,6 +35,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
+import { CONTACT_CTAS } from "./cta/taxonomy";
 import {
   gaEventForCTA,
   gaScriptSrc,
@@ -346,32 +347,11 @@ describe("shouldSendPageView", () => {
 });
 
 describe("gaEventForCTA", () => {
-  test("signup-bound CTAs are sign_up_cta_click", () => {
-    for (const ctaLocation of [
-      "hero",
-      "pricing_starter",
-      "pricing_growth",
-      "pricing_pro",
-      "faq",
-      "final_cta",
-      "loyalty_picker",
-    ]) {
-      expect(gaEventForCTA({ ctaLocation, href: "/onboarding" })).toBe(
-        "sign_up_cta_click"
-      );
-    }
-  });
-
-  test("demo CTAs are contact_cta_click", () => {
-    for (const ctaLocation of ["hero_demo", "final_cta_demo"]) {
-      expect(gaEventForCTA({ ctaLocation, href: "/contact" })).toBe(
-        "contact_cta_click"
-      );
-    }
-  });
+  // Which event each location sends is tabled once, in lib/cta/events.test.ts.
+  // These are the rules that table relies on.
 
   test("the destination decides when it disagrees with the location", () => {
-    // Mirrors how CTAButton already picks its PostHog event.
+    // Mirrors how `ctaClick` picks the PostHog event.
     expect(gaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
       "contact_cta_click"
     );
@@ -388,7 +368,7 @@ describe("gaEventForCTA", () => {
   test("a market+locale contact href is still a contact", () => {
     // Defensive: no /en/us/* route exists today, but a second two-letter
     // segment must not silently downgrade the event the day one does. The
-    // strip repeats — see `isContactHref` in `lib/cta-taxonomy.ts`.
+    // strip repeats — see `isContactHref` in `lib/cta/taxonomy.ts`.
     expect(gaEventForCTA({ ctaLocation: "hero", href: "/en/us/contact" })).toBe(
       "contact_cta_click"
     );
@@ -503,7 +483,7 @@ describe("the CTA tables cover the whole CTALocation union", () => {
     expect(unmapped).toEqual([]);
   });
 
-  test("the demo CTAs are the ones that map to contact", () => {
+  test("the contact-page CTAs are the ones that map to contact", () => {
     // Pins the split, not just the coverage: a signup CTA quietly reclassified
     // as a contact would keep "every location maps" green.
     const byEvent = (event: string) =>
@@ -511,7 +491,7 @@ describe("the CTA tables cover the whole CTALocation union", () => {
         (location) => gaEventForCTA({ ctaLocation: location, href: "/onboarding" }) === event,
       );
 
-    expect(byEvent("contact_cta_click").sort()).toEqual(["final_cta_demo", "hero_demo"]);
+    expect(byEvent("contact_cta_click").sort()).toEqual([...CONTACT_CTAS].sort());
     expect(byEvent("sign_up_cta_click")).toContain("hero");
     expect(byEvent("sign_up_cta_click")).toContain("pricing_growth");
   });

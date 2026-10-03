@@ -68,6 +68,7 @@ function PricingCard({
       highlighted={highlighted}
       popularLabel={t("popular")}
       annotationLabel={t("annotation")}
+      trackAs={`pricing_${tier}`}
     />
   );
 }
@@ -451,6 +452,7 @@ export function PricingPageContent({
             label={t("cta2.button")}
             size="md"
             showArrow={false}
+            trackAs="pricing_final_cta"
           />
           <CTAButton
             label={t("cta2.contact")}
@@ -458,6 +460,7 @@ export function PricingPageContent({
             size="md"
             variant="secondary"
             showArrow={false}
+            trackAs="pricing_contact"
           />
         </div>
       </ScrollReveal>

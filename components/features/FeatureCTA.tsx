@@ -89,6 +89,7 @@ export function FeatureCTA({
                 <CTAButton
                   label={label}
                   className="feature-cta-button"
+                  trackAs="feature_cta"
                 />
 
                 {urgencyText && (

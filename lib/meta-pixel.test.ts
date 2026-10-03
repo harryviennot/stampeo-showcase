@@ -281,36 +281,26 @@ describe("shouldSendMetaPageView", () => {
 });
 
 describe("metaEventForCTA", () => {
-  test("signup-bound CTAs are Leads", () => {
-    // AC6. Lead, not CompleteRegistration: the click leaves showcase for the
-    // app and we do not observe whether an account was created.
-    for (const ctaLocation of [
-      "hero",
-      "pricing_starter",
-      "pricing_growth",
-      "pricing_pro",
-      "faq",
-      "final_cta",
-      "loyalty_picker",
-    ]) {
-      expect(metaEventForCTA({ ctaLocation, href: "/onboarding" })).toBe("Lead");
-    }
-  });
+  // Which event each location sends is tabled once, in lib/cta/events.test.ts.
+  // These are the rules that table relies on.
 
-  test("demo CTAs are Contacts", () => {
+  test("a contact location is a Contact", () => {
     // Kept distinct from Lead: self-serve signup and a sales touch are
     // different funnels and campaigns optimise for them separately. AEM ranks
     // 8 events and this taxonomy uses 3, so the distinction is free.
-    expect(metaEventForCTA({ ctaLocation: "hero_demo", href: "/contact" })).toBe(
+    expect(metaEventForCTA({ ctaLocation: "footer_contact", href: "/onboarding" })).toBe(
       "Contact",
     );
-    expect(
-      metaEventForCTA({ ctaLocation: "final_cta_demo", href: "/contact" }),
-    ).toBe("Contact");
+  });
+
+  test("a signup location is a Lead", () => {
+    // Lead, not CompleteRegistration: the click leaves showcase for the app
+    // and we do not observe whether an account was created.
+    expect(metaEventForCTA({ ctaLocation: "hero", href: "/onboarding" })).toBe("Lead");
   });
 
   test("the destination decides when it disagrees with the location", () => {
-    // `CTAButton` already picks its PostHog event from the href rather than the
+    // `ctaClick` picks the PostHog event from the href rather than the
     // location name, so a mapped CTA repointed at /contact must follow.
     expect(metaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
       "Contact",
@@ -332,7 +322,7 @@ describe("metaEventForCTA", () => {
   test("a market+locale contact href is still a Contact", () => {
     // Defensive: no /en/us/* route exists today, but a second two-letter
     // segment must not silently downgrade a Contact to a Lead the day one
-    // does. The strip repeats — see `isContactHref` in `lib/cta-taxonomy.ts`.
+    // does. The strip repeats — see `isContactHref` in `lib/cta/taxonomy.ts`.
     expect(metaEventForCTA({ ctaLocation: "hero", href: "/en/us/contact" })).toBe(
       "Contact",
     );
@@ -353,6 +343,50 @@ describe("metaEventForCTA", () => {
   });
 });
 
+/* -------------------------------------------------------------------------
+ * The browser side. `bun test lib` has no DOM, so each case installs the two
+ * globals the pixel touches.
+ * ---------------------------------------------------------------------- */
+
+type FakeEl = { async?: boolean; src?: string };
+type FbqLike = ((...args: unknown[]) => void) & Record<string, unknown>;
+
+/**
+ * A window, holding `fbq` when one already exists (our stub from an earlier
+ * load, or an extension's shim), and a document whose `<head>` hands each
+ * appended script, with the window at that moment, to `onAppend`.
+ */
+function installBrowser(
+  options: {
+    fbq?: unknown;
+    onAppend?: (el: FakeEl, win: Record<string, unknown>) => void;
+  } = {},
+): Record<string, unknown> {
+  const win: Record<string, unknown> = {};
+  if (options.fbq) win.fbq = options.fbq;
+  (globalThis as Record<string, unknown>).window = win;
+  (globalThis as Record<string, unknown>).document = {
+    createElement: (): FakeEl => ({}),
+    head: { appendChild: (el: FakeEl) => options.onAppend?.(el, win) },
+  };
+  return win;
+}
+
+/** An fbq that records every call, so a NON-call can be asserted. */
+function recordingFbq(): { fbq: (...args: unknown[]) => void; calls: unknown[][] } {
+  const calls: unknown[][] = [];
+  return { fbq: (...args: unknown[]) => void calls.push(args), calls };
+}
+
+const throwingFbq = () => {
+  throw new Error("blocked by extension");
+};
+
+afterAll(() => {
+  delete (globalThis as Record<string, unknown>).document;
+  delete (globalThis as Record<string, unknown>).window;
+});
+
 describe("the browser side, in load order", () => {
   /**
    * `initialised` is MODULE state — it models "has this page injected the
@@ -361,44 +395,14 @@ describe("the browser side, in load order", () => {
    * behind, exactly as a real page does. The shape mirrors the GA suite in
    * `lib/google-analytics.test.ts`.
    */
-  type FakeEl = { async?: boolean; src?: string };
-
   const appended: FakeEl[] = [];
-
-  function installBrowser(): Record<string, unknown> {
-    appended.length = 0;
-    const fakeWindow: Record<string, unknown> = {};
-    (globalThis as Record<string, unknown>).document = {
-      createElement: (): FakeEl => ({}),
-      head: {
-        appendChild: (el: FakeEl) => {
-          appended.push(el);
-        },
-      },
-    };
-    (globalThis as Record<string, unknown>).window = fakeWindow;
-    return fakeWindow;
-  }
-
-  /** Records every fbq call so a NON-call can be asserted. */
-  function spyFbq(win: Record<string, unknown>): unknown[][] {
-    const calls: unknown[][] = [];
-    win.fbq = (...args: unknown[]) => {
-      calls.push(args);
-    };
-    return calls;
-  }
-
-  afterAll(() => {
-    delete (globalThis as Record<string, unknown>).document;
-    delete (globalThis as Record<string, unknown>).window;
-  });
+  const recordAppends = (el: FakeEl) => void appended.push(el);
 
   test("before the pixel loads, an event sends nothing", () => {
     // fbq EXISTS here — an extension's shim, or a stub still downloading. The
     // event must still drop, because what gates it is our own `initialised`.
-    const win = installBrowser();
-    const calls = spyFbq(win);
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq, onAppend: recordAppends });
 
     expect(isMetaPixelLoaded()).toBe(false);
     trackMetaEvent({ event: "Lead", trackable: true });
@@ -411,10 +415,7 @@ describe("the browser side, in load order", () => {
     // pre-existing `window.fbq`, so its init/PageView calls run through it. A
     // throw there would propagate out of the loader effect and take the page
     // tree down with it.
-    const win = installBrowser();
-    win.fbq = () => {
-      throw new Error("blocked by extension");
-    };
+    installBrowser({ fbq: throwingFbq, onAppend: recordAppends });
 
     expect(() => initMetaPixel("1088158323750710")).not.toThrow();
     // The script element was still injected before the throwing calls.
@@ -429,8 +430,8 @@ describe("the browser side, in load order", () => {
   });
 
   test("once loaded, an event on a marketing page sends", () => {
-    const win = installBrowser();
-    const calls = spyFbq(win);
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq });
 
     trackMetaEvent({ event: "Lead", trackable: true });
 
@@ -438,8 +439,8 @@ describe("the browser side, in load order", () => {
   });
 
   test("the same event on a private page sends nothing, pixel loaded or not", () => {
-    const win = installBrowser();
-    const calls = spyFbq(win);
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq });
 
     trackMetaEvent({ event: "Lead", trackable: false });
 
@@ -448,14 +449,81 @@ describe("the browser side, in load order", () => {
 
   test("a throw from fbq cannot break the click", () => {
     // The same hardening `trackGaEvent` carries, for the same reason: every
-    // call site is a click handler, and in `CTAButton` the Meta call runs
+    // call site is a click handler, and in `useCtaTracking` the Meta call runs
     // BEFORE the GA one — an unguarded throw here would cost the GA event AND
     // the navigation. Losing the measurement is the acceptable failure.
-    const win = installBrowser();
-    win.fbq = () => {
-      throw new Error("blocked by extension");
-    };
+    installBrowser({ fbq: throwingFbq });
 
     expect(() => trackMetaEvent({ event: "Lead", trackable: true })).not.toThrow();
+  });
+});
+
+describe("Meta's own automatic reporting is off before the script can run", () => {
+  /**
+   * `fbevents.js` reports on its own unless told not to: a PageView on every
+   * History API change, and (autoConfig) button clicks with page metadata.
+   * Neither consults `isTrackablePath`, so once the script is resident a
+   * client-side hop to `/onboarding` or `/login` reaches Meta. Only the calls
+   * our gated code makes may leave the browser.
+   *
+   * Each case imports a FRESH module instance: `initialised` is per-page module
+   * state, and these cases are each a first page load.
+   */
+  const PIXEL = "1088158323750710";
+
+  /** The calls fbq received, whether queued by our stub or made on a shim. */
+  function callsOn(fbq: FbqLike, recorded: unknown[][]): unknown[][] {
+    return (fbq.queue as unknown[][] | undefined) ?? recorded;
+  }
+
+  test.each([
+    ["a first visit (our stub queues the calls)", false],
+    ["a browser where an extension already defined fbq", true],
+  ])("%s", async (_label, withShim) => {
+    const shim = recordingFbq();
+    const flagsAtInjection: Record<string, unknown>[] = [];
+    const win = installBrowser({
+      fbq: withShim ? shim.fbq : undefined,
+      // fbevents.js reads the flags when it installs its listeners, so they
+      // must already be set when the script is injected.
+      onAppend: (_el, w) => {
+        const fbq = w.fbq as FbqLike;
+        flagsAtInjection.push({
+          disablePushState: fbq.disablePushState,
+          allowDuplicatePageViews: fbq.allowDuplicatePageViews,
+        });
+      },
+    });
+
+    const pixel = await import(`./meta-pixel?first-load-${withShim}`);
+    pixel.initMetaPixel(PIXEL);
+
+    const fbq = win.fbq as FbqLike;
+    expect(flagsAtInjection).toEqual([
+      { disablePushState: true, allowDuplicatePageViews: true },
+    ]);
+    // `allowDuplicatePageViews` is what keeps our own client-side PageViews
+    // flowing once the history listener is off.
+    expect(fbq.disablePushState).toBe(true);
+    expect(fbq.allowDuplicatePageViews).toBe(true);
+    // autoConfig must be refused BEFORE init, or init has already armed it.
+    expect(callsOn(fbq, shim.calls)).toEqual([
+      ["set", "autoConfig", false, PIXEL],
+      ["init", PIXEL],
+      ["track", "PageView"],
+    ]);
+  });
+
+  test("a frozen fbq shim that refuses the flags gets no pixel at all", async () => {
+    // Loading without the flags would report private routes. Fail closed.
+    const appended: FakeEl[] = [];
+    installBrowser({
+      fbq: Object.freeze(() => {}),
+      onAppend: (el) => void appended.push(el),
+    });
+
+    const pixel = await import("./meta-pixel?frozen-shim");
+    expect(() => pixel.initMetaPixel("1088158323750710")).not.toThrow();
+    expect(appended).toEqual([]);
   });
 });

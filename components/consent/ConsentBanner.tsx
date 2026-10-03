@@ -104,6 +104,7 @@ export function ConsentBanner() {
   const surface = consent.ready
     ? consentSurface({
         record: consent.record,
+        prior: consent.prior,
         regime: consent.regime,
         gpc: consent.gpc,
         trackable,
@@ -194,14 +195,17 @@ export function ConsentBanner() {
             >
               {t("notice.choices")}
             </button>
-            {/* Dismissing RECORDS the opt-out regime's default rather than
-                hiding the notice in component state. Local state would bring
-                the notice back on the next navigation and on every reload,
-                which is nagging someone who already acknowledged it, and would
-                leave us with no evidence of what they were told. */}
+            {/* Dismissing RECORDS the state in force (the opt-out default, with
+                any refusal carried from an older version) rather than hiding
+                the notice in component state. Local state would bring the
+                notice back on the next navigation and on every reload, which
+                is nagging someone who already acknowledged it, and would leave
+                us with no evidence of what they were told. */}
             <button
               type="button"
-              onClick={() => commit({ analytics: true, marketing: true }, "notice")}
+              onClick={() =>
+                commit({ analytics: consent.analytics, marketing: consent.marketing }, "notice")
+              }
               className="font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
             >
               {t("notice.dismiss")}
