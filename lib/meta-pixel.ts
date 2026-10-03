@@ -170,6 +170,8 @@ type FbqFn = ((...args: unknown[]) => void) & {
   push?: unknown;
   loaded?: boolean;
   version?: string;
+  disablePushState?: boolean;
+  allowDuplicatePageViews?: boolean;
 };
 
 declare global {
@@ -195,6 +197,17 @@ export function isMetaPixelLoaded(): boolean {
  * The stub-and-queue bootstrap is Meta's own, retyped rather than reworded —
  * it exists so calls made before `fbevents.js` finishes downloading are
  * replayed instead of lost, and `fbevents.js` itself inspects `_fbq.push`.
+ *
+ * META'S OWN REPORTING IS SWITCHED OFF. Unprompted, `fbevents.js` sends a
+ * PageView on every History API change and, through `autoConfig`, button
+ * clicks with page metadata. Neither consults `isTrackablePath`, so once the
+ * script is resident they would report a client-side hop onto `/onboarding` or
+ * `/login`. With both off, only our gated calls reach Meta. The two flags are
+ * read when `fbevents.js` installs its listeners, so they are set before the
+ * script is injected; `allowDuplicatePageViews` is undocumented (read from
+ * `fbevents.js`) and is what lets our own client-side PageView through once
+ * the history listener is off. If the flags cannot be set, the script is not
+ * loaded at all.
  */
 export function initMetaPixel(pixelId: string): void {
   if (typeof window === "undefined" || typeof document === "undefined") return;
@@ -214,6 +227,16 @@ export function initMetaPixel(pixelId: string): void {
     if (!window._fbq) window._fbq = fbq;
   }
 
+  const fbq = window.fbq as FbqFn;
+  try {
+    fbq.disablePushState = true;
+    fbq.allowDuplicatePageViews = true;
+  } catch {
+    // A frozen shim we do not own. Loading without the flags would report
+    // private routes, so the pixel stays off.
+    return;
+  }
+
   const script = document.createElement("script");
   script.async = true;
   script.src = META_PIXEL_SCRIPT_SRC;
@@ -224,6 +247,8 @@ export function initMetaPixel(pixelId: string): void {
   // through code we do not own, and a throw here would propagate out of the
   // loader effect and take the page tree down with it.
   try {
+    // Before init, which would otherwise arm Meta's automatic events.
+    window.fbq?.("set", "autoConfig", false, pixelId);
     window.fbq?.("init", pixelId);
     window.fbq?.("track", "PageView");
   } catch {
