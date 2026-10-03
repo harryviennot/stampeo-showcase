@@ -80,6 +80,44 @@ describe("STABLE_LEGAL_IDS", () => {
   });
 });
 
+/** The privacy policy's Markdown source in one locale. */
+function privacySource(locale: string) {
+  const dir = path.join(process.cwd(), "legal", locale);
+  const file = fs
+    .readdirSync(dir)
+    .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+  return fs.readFileSync(path.join(dir, file!), "utf-8");
+}
+
+/**
+ * The body of the first privacy-policy section whose heading matches
+ * `heading`, up to the next heading matching `next` (by default the next
+ * numbered one).
+ *
+ * Scoping matters more than it looks: `stampeo_consent` and the word "consent"
+ * both appear in §5.3's cookie table, so a document-wide search passes whether
+ * or not the section under test says anything. Empty when the heading is
+ * missing, so an assertion on it fails rather than reading the wrong text.
+ */
+function section(locale: string, heading: RegExp, next: RegExp = /^#+\s+\d/m) {
+  const source = privacySource(locale);
+  const start = source.search(heading);
+  if (start === -1) return "";
+  // Start AFTER the heading line, or the heading itself would match `next`.
+  const afterHeading = source.indexOf("\n", start);
+  if (afterHeading === -1) return "";
+  const rest = source.slice(afterHeading);
+  const end = rest.search(next);
+  return end === -1 ? rest : rest.slice(0, end);
+}
+
+/** The rows of the retention table in §8, a different table from §5.3's. */
+function retentionTable(locale: string) {
+  return section(locale, /^##\s+8\./m, /^##\s+9\./m)
+    .split("\n")
+    .filter((line) => line.trim().startsWith("|"));
+}
+
 /**
  * The cookie section of the privacy policy (STA-317).
  *
@@ -97,14 +135,6 @@ describe("privacy §5 cookies", () => {
     es: /no requiere ningún banner de consentimiento/i,
     pl: /nie wymaga baneru zgody/i,
   };
-
-  function privacySource(locale: string) {
-    const dir = path.join(process.cwd(), "legal", locale);
-    const file = fs
-      .readdirSync(dir)
-      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
-    return fs.readFileSync(path.join(dir, file!), "utf-8");
-  }
 
   it("no longer claims the site needs no consent banner, in any locale", () => {
     for (const locale of routing.locales) {
@@ -180,47 +210,7 @@ describe("privacy §5.6 consent records (STA-324)", () => {
    * is lawful undisclosed, and the erasure exception in particular must be
    * stated outright rather than inferred from a retention table.
    */
-  function privacySource(locale: string) {
-    const dir = path.join(process.cwd(), "legal", locale);
-    const file = fs
-      .readdirSync(dir)
-      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
-    return fs.readFileSync(path.join(dir, file!), "utf-8");
-  }
-
-  /**
-   * Just §5.6, and nothing else.
-   *
-   * Scoping matters more than it looks: `stampeo_consent` and the word
-   * "consent" both appear in §5.3's cookie table, so a document-wide search
-   * for either passes whether or not §5.6 says anything at all. Mutation
-   * testing caught three assertions doing exactly that.
-   */
-  function section56(locale: string) {
-    const source = privacySource(locale);
-    const start = source.search(/^#+\s+5\.6\s/m);
-    if (start === -1) return "";
-    // Start AFTER the heading line: slicing at `start + 1` would leave the
-    // heading itself matching the "next heading" search below, which silently
-    // returns an empty string and makes every assertion on it vacuous.
-    const afterHeading = source.indexOf("\n", start);
-    if (afterHeading === -1) return "";
-    const rest = source.slice(afterHeading);
-    const end = rest.search(/^#+\s+\d/m);
-    return end === -1 ? rest : rest.slice(0, end);
-  }
-
-  /** Just the retention table in §8, which is a different table from §5.3's. */
-  function retentionTable(locale: string) {
-    const source = privacySource(locale);
-    const start = source.search(/^##\s+8\./m);
-    if (start === -1) return [];
-    const rest = source.slice(start);
-    const end = rest.search(/^##\s+9\./m);
-    return (end === -1 ? rest : rest.slice(0, end))
-      .split("\n")
-      .filter((line) => line.trim().startsWith("|"));
-  }
+  const section56 = (locale: string) => section(locale, /^#+\s+5\.6\s/m);
 
   it("has a 5.6 section in every locale", () => {
     for (const locale of routing.locales) {
@@ -297,14 +287,6 @@ describe("privacy §5.2 — the consent cookie's own contents", () => {
    * only in §5.6 leaves the table saying something narrower than the truth
    * about a cookie we set ourselves.
    */
-  function privacySource(locale: string) {
-    const dir = path.join(process.cwd(), "legal", locale);
-    const file = fs
-      .readdirSync(dir)
-      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
-    return fs.readFileSync(path.join(dir, file!), "utf-8");
-  }
-
   it("the table row mentions the identifier and points at 5.6, in every locale", () => {
     for (const locale of routing.locales) {
       const row = privacySource(locale)
@@ -321,37 +303,20 @@ describe("privacy §5.2 — the consent cookie's own contents", () => {
 });
 
 describe("privacy §5.5 — what the advertising platforms receive", () => {
-  function privacySource(locale: string) {
-    const dir = path.join(process.cwd(), "legal", locale);
-    const file = fs
-      .readdirSync(dir)
-      .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
-    return fs.readFileSync(path.join(dir, file!), "utf-8");
-  }
-
-  function section(locale: string, heading: RegExp, next: RegExp) {
-    const source = privacySource(locale);
-    const start = source.search(heading);
-    const rest = source.slice(start);
-    const bodyStart = rest.indexOf("\n") + 1;
-    const end = rest.slice(bodyStart).search(next);
-    return end === -1 ? rest : rest.slice(0, bodyStart + end);
-  }
-
   const section55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
 
-  /** The promise the hashed contact details break, in each locale it was made in. */
-  const RETIRED_PROMISE: Record<string, RegExp> = {
+  /** A promise that contact details are never sent, as each locale would word it. */
+  const NO_CONTACT_DETAILS_PROMISE: Record<string, RegExp> = {
     en: /never includes your email address/i,
     fr: /N'y figurent jamais votre adresse email/i,
     es: /Nunca incluye su dirección de correo electrónico/i,
     pl: /Nigdy nie przekazujemy adresu e-mail/i,
   };
 
-  it("no longer promises that contact details are never sent, in any locale", () => {
+  it("§5.5 does not promise that contact details are never sent, in any locale", () => {
     for (const locale of routing.locales) {
-      expect(section55(locale), `${locale} still promises no email`).not.toMatch(
-        RETIRED_PROMISE[locale]
+      expect(section55(locale), `${locale} promises no email`).not.toMatch(
+        NO_CONTACT_DETAILS_PROMISE[locale]
       );
     }
   });
@@ -369,9 +334,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
 
   it("lists the IP and browser data in the retention table, in every locale", () => {
     for (const locale of routing.locales) {
-      const rows = privacySource(locale)
-        .split("\n")
-        .filter((line) => line.startsWith("|") && /5\.5/.test(line));
+      const rows = retentionTable(locale).filter((row) => /5\.5/.test(row));
       expect(
         rows.some((row) => /45/.test(row)),
         `${locale} retention table has no 45-day row for §5.5`
