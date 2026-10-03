@@ -459,3 +459,96 @@ describe("the browser side, in load order", () => {
     expect(() => trackMetaEvent({ event: "Lead", trackable: true })).not.toThrow();
   });
 });
+
+describe("Meta's own automatic reporting is off before the script can run", () => {
+  /**
+   * `fbevents.js` reports on its own unless told not to: a PageView on every
+   * History API change, and (autoConfig) button clicks with page metadata.
+   * Neither consults `isTrackablePath`, so once the script is resident a
+   * client-side hop to `/onboarding` or `/login` reaches Meta. Only the calls
+   * our gated code makes may leave the browser.
+   *
+   * Each case imports a FRESH module instance: `initialised` is per-page module
+   * state, and these cases are each a first page load.
+   */
+  type FbqLike = ((...args: unknown[]) => void) & Record<string, unknown>;
+
+  const PIXEL = "1088158323750710";
+
+  afterAll(() => {
+    delete (globalThis as Record<string, unknown>).document;
+    delete (globalThis as Record<string, unknown>).window;
+  });
+
+  /** A browser whose script injection records the fbq flags at that moment. */
+  function installBrowser(preExisting: FbqLike | null) {
+    const win: Record<string, unknown> = {};
+    if (preExisting) win.fbq = preExisting;
+    const flagsAtInjection: Record<string, unknown>[] = [];
+    (globalThis as Record<string, unknown>).window = win;
+    (globalThis as Record<string, unknown>).document = {
+      createElement: () => ({}),
+      head: {
+        appendChild: () => {
+          const fbq = win.fbq as FbqLike;
+          flagsAtInjection.push({
+            disablePushState: fbq.disablePushState,
+            allowDuplicatePageViews: fbq.allowDuplicatePageViews,
+          });
+        },
+      },
+    };
+    return { win, flagsAtInjection };
+  }
+
+  /** The calls fbq received, whether queued by our stub or made on a shim. */
+  function callsOn(fbq: FbqLike, recorded: unknown[][]): unknown[][] {
+    return (fbq.queue as unknown[][] | undefined) ?? recorded;
+  }
+
+  test.each([
+    ["a first visit (our stub queues the calls)", false],
+    ["a browser where an extension already defined fbq", true],
+  ])("%s", async (_label, withShim) => {
+    const recorded: unknown[][] = [];
+    const shim = Object.assign((...args: unknown[]) => {
+      recorded.push(args);
+    }, {}) as FbqLike;
+    const { win, flagsAtInjection } = installBrowser(withShim ? shim : null);
+
+    const pixel = await import(`./meta-pixel?first-load-${withShim}`);
+    pixel.initMetaPixel(PIXEL);
+
+    const fbq = win.fbq as FbqLike;
+    // Already set when the script is injected: fbevents.js reads them when it
+    // installs its listeners.
+    expect(flagsAtInjection).toEqual([
+      { disablePushState: true, allowDuplicatePageViews: true },
+    ]);
+    // `allowDuplicatePageViews` is what keeps our own client-side PageViews
+    // flowing once the history listener is off.
+    expect(fbq.disablePushState).toBe(true);
+    expect(fbq.allowDuplicatePageViews).toBe(true);
+    // autoConfig must be refused BEFORE init, or init has already armed it.
+    expect(callsOn(fbq, recorded)).toEqual([
+      ["set", "autoConfig", false, PIXEL],
+      ["init", PIXEL],
+      ["track", "PageView"],
+    ]);
+  });
+
+  test("a frozen fbq shim that refuses the flags gets no pixel at all", async () => {
+    // Loading without the flags would report private routes. Fail closed.
+    const shim = Object.freeze(() => {});
+    const appended: unknown[] = [];
+    (globalThis as Record<string, unknown>).window = { fbq: shim };
+    (globalThis as Record<string, unknown>).document = {
+      createElement: () => ({}),
+      head: { appendChild: (el: unknown) => appended.push(el) },
+    };
+
+    const pixel = await import("./meta-pixel?frozen-shim");
+    expect(() => pixel.initMetaPixel("1088158323750710")).not.toThrow();
+    expect(appended).toEqual([]);
+  });
+});
