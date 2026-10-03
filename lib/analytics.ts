@@ -20,10 +20,12 @@ export type CTALocation =
   | "feature_cta"
   | "card_style_gallery"
   | "blog_cta"
+  | "blog_link"
   | "pricing_final_cta"
   | "pricing_contact"
   | "faq_contact"
-  | "footer_contact";
+  | "footer_contact"
+  | "blog_contact";
 
 type BaseProps = {
   locale: string;
