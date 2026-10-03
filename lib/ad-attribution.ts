@@ -387,9 +387,10 @@ let landingContext: LandingContext | null = null;
  * This exists because capture WAITS (it polls for the tags' browser-id
  * cookies) and consent can arrive pages later. By either point,
  * `location.search` and `document.referrer` describe the current page, not the
- * one the ad bought — and first-touch-wins makes a record built from those
- * unrepairable for 182 days. The snapshot is memory-only: nothing is stored
- * anywhere until consent lets `buildAttributionRecord` say so.
+ * one the ad bought — and only a newer paid click replaces a stored record, so
+ * one built from those could stay wrong for 182 days. The snapshot is
+ * memory-only: nothing is stored anywhere until consent lets
+ * `buildAttributionRecord` say so.
  */
 export function captureLandingContext(read: () => LandingContext): LandingContext {
   if (landingContext === null) landingContext = read();
@@ -470,18 +471,37 @@ export function readAttributionRecord(): AttributionRecord | null {
   return null;
 }
 
+/** Did this record come from an ad click, i.e. was a platform's click id captured? */
+function isPaidClick(record: AttributionRecord): boolean {
+  return record.vendor !== "direct" && record.clickId !== null;
+}
+
 /**
- * Write the record down.
+ * Should `incoming` take the place of the stored record?
  *
- * FIRST TOUCH WINS on the client: an existing record is not overwritten by a
- * later organic pageview, or the ad click that actually brought someone here
- * would be erased by their next visit. Last-touch resolution between two
- * genuine ad clicks is the backend's job, where `captured_at` can be compared
- * across vendors.
+ * THE LATEST PAID CLICK WINS, the way the ad platforms attribute: a paid click
+ * replaces a `direct` record or an older paid one, so a visitor who comes back
+ * through a retargeting ad is credited to that ad. An organic visit never
+ * replaces anything, or it would erase the click that brought them here. The
+ * same click seen again (a reload, or capture re-running after a client-side
+ * navigation) is not a newer one.
+ *
+ * A click id only exists in a record built with marketing consent, so without
+ * it every arrival is organic here.
  */
+export function shouldReplaceAttribution(
+  existing: AttributionRecord | null,
+  incoming: AttributionRecord
+): boolean {
+  if (existing === null) return true;
+  if (!isPaidClick(incoming)) return false;
+  return existing.vendor !== incoming.vendor || existing.clickId !== incoming.clickId;
+}
+
+/** Write the record down, unless `shouldReplaceAttribution` keeps the stored one. */
 export function writeAttributionRecord(record: AttributionRecord): void {
   if (typeof document === "undefined") return;
-  if (readAttributionRecord()) return;
+  if (!shouldReplaceAttribution(readAttributionRecord(), record)) return;
 
   const attrs = attributionCookieAttributes(record);
   if (attrs.value.length > MAX_COOKIE_BYTES) {
