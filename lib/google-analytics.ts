@@ -31,7 +31,7 @@ import {
   CONTACT_CTAS,
   isContactHref,
   isKnownCTALocation,
-} from "./cta-taxonomy";
+} from "./cta/taxonomy";
 
 /**
  * The events this site sends.
@@ -187,7 +187,7 @@ export function gaEventForCTA(input: {
 
   // The destination wins when it disagrees with the location name, mirroring
   // how `ctaClickEvents` picks the PostHog event. `isContactHref` matches
-  // locale-prefixed hrefs too — see `lib/cta-taxonomy.ts`.
+  // locale-prefixed hrefs too — see `lib/cta/taxonomy.ts`.
   if (isContactHref(input.href)) return "contact_cta_click";
   if (CONTACT_CTAS.has(input.ctaLocation)) return "contact_cta_click";
   return "sign_up_cta_click";

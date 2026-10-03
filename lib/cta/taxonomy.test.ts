@@ -12,7 +12,7 @@ import {
   SIGNUP_CTAS,
   isContactHref,
   isKnownCTALocation,
-} from "./cta-taxonomy";
+} from "./taxonomy";
 
 describe("the CTA sets", () => {
   test("the signup set names every link to /onboarding", () => {

@@ -8,7 +8,7 @@ import {
   type CTALocation,
 } from "@/lib/analytics";
 import { isTrackablePath } from "@/lib/consent-routes";
-import { ctaClickEvents } from "@/lib/cta-events";
+import { ctaClickEvents } from "@/lib/cta/events";
 import { trackGaEvent } from "@/lib/google-analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 

@@ -346,7 +346,7 @@ describe("metaEventForCTA", () => {
   test("a market+locale contact href is still a Contact", () => {
     // Defensive: no /en/us/* route exists today, but a second two-letter
     // segment must not silently downgrade a Contact to a Lead the day one
-    // does. The strip repeats — see `isContactHref` in `lib/cta-taxonomy.ts`.
+    // does. The strip repeats — see `isContactHref` in `lib/cta/taxonomy.ts`.
     expect(metaEventForCTA({ ctaLocation: "hero", href: "/en/us/contact" })).toBe(
       "Contact",
     );

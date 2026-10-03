@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { ctaClickEvents } from "./cta-events";
+import { ctaClickEvents } from "./events";
 
 const SIGNUP = {
   posthog: "landing_cta_clicked",

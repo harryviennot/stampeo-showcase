@@ -1,6 +1,6 @@
-import { isContactHref } from "./cta-taxonomy";
-import { gaEventForCTA, type GaEvent } from "./google-analytics";
-import { metaEventForCTA, type MetaStandardEvent } from "./meta-pixel";
+import { isContactHref } from "./taxonomy";
+import { gaEventForCTA, type GaEvent } from "../google-analytics";
+import { metaEventForCTA, type MetaStandardEvent } from "../meta-pixel";
 
 export interface CtaClickEvents {
   /** PostHog's product event, picked by destination. */

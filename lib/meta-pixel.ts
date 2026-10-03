@@ -26,7 +26,7 @@ import {
   CONTACT_CTAS,
   isContactHref,
   isKnownCTALocation,
-} from "./cta-taxonomy";
+} from "./cta/taxonomy";
 
 /**
  * The events this site sends. Meta STANDARD events, not custom ones, so a
@@ -154,7 +154,7 @@ export function metaEventForCTA(input: {
 
   // The destination wins when it disagrees with the location name, mirroring
   // how `ctaClickEvents` picks the PostHog event. `isContactHref` matches
-  // locale-prefixed hrefs too — see `lib/cta-taxonomy.ts`.
+  // locale-prefixed hrefs too — see `lib/cta/taxonomy.ts`.
   if (isContactHref(input.href)) return "Contact";
   if (CONTACT_CTAS.has(input.ctaLocation)) return "Contact";
   return "Lead";

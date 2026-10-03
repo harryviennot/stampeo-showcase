@@ -25,9 +25,9 @@
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { PRIVATE_SEGMENTS } from "./consent-routes";
+import { PRIVATE_SEGMENTS } from "../consent-routes";
 
-const ROOT = join(import.meta.dir, "..");
+const ROOT = join(import.meta.dir, "..", "..");
 const SCANNED_DIRS = ["components", "app"];
 
 const CTA_PATH = /^\/(?:[a-z]{2}\/)*(?:onboarding|contact)(?:[/?#]|$)/;
