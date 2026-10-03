@@ -333,8 +333,9 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
     const source = privacySource(locale);
     const start = source.search(heading);
     const rest = source.slice(start);
-    const end = rest.slice(1).search(next);
-    return end === -1 ? rest : rest.slice(0, end + 1);
+    const bodyStart = rest.indexOf("\n") + 1;
+    const end = rest.slice(bodyStart).search(next);
+    return end === -1 ? rest : rest.slice(0, bodyStart + end);
   }
 
   const section55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);

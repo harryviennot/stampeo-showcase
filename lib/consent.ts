@@ -40,12 +40,15 @@ export const CONSENT_COOKIE = "stampeo_consent";
  *     we now RETAIN the advertising identifier ourselves against the business
  *     account, and we report conversions SERVER-SIDE, after and independently
  *     of anything in the browser.
+ * 3 — Privacy policy §5.5. Meta also receives hashed contact details, the IP
+ *     address and browser characteristics, four reported steps instead of
+ *     two, and those steps for signups that did not come through a Meta ad.
  *
  * `CONSENT_VERSION` in `backend/app/services/ad_attribution.py` mirrors this
  * and must move with it: the backend rejects an attribution row whose stored
  * choice was made against a different version.
  */
-export const CONSENT_VERSION = 2;
+export const CONSENT_VERSION = 3;
 
 /**
  * Six months. CNIL's ceiling for how long a choice may stand.

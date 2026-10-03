@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: September 16, 2026**
+**Last updated: October 3, 2026**
 
 ## 1. Introduction
 
@@ -123,7 +123,7 @@ A business that is not managed by a reseller is not exposed to any reseller acce
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU.
+Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5 (Google and Meta) may process that data in the United States, under the same framework.
 
 ## 5. Cookies
 
@@ -167,13 +167,22 @@ Strictly necessary cookies may be used for authentication and session management
 
 ### 5.5 Conversion measurement from our servers
 
-If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed — for Google the `gclid`, for Meta the `fbclid` — together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain.
+If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed (for Google the `gclid`, for Meta the `fbclid`), together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain. If you later come back through another advertisement, the newer click replaces the earlier one.
 
-If you go on to create a business account, that identifier is stored with your account. We then report two things to that platform **from our servers**: that the advertisement led to an account being created and, if you later subscribe, that a first invoice was paid. Each platform receives only its own identifier: a Google click is never reported to Meta, and a Meta click is never reported to Google. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
+If you go on to create a business account, we report up to four steps **from our servers**: that the account was created, that you opened the payment page, that your free trial started, and that a first invoice was paid. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
 
-What we send is limited to the advertising identifier, the campaign, and for a payment its amount and currency. It never includes your email address, your name, your telephone number, or your account identifier.
+With each step, the platform receives its own identifiers when it has them (the click identifier and its browser identifier) and the campaign, plus, for the last three steps, the price of the plan you chose or the amount paid, and its currency. Each platform receives only its own identifiers: a Google click is never reported to Meta, and a Meta click is never reported to Google.
 
-Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further conversion being reported for your account. Conversions already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
+Meta also receives:
+
+- your IP address and your browser's technical characteristics (type, version, operating system), as recorded when you created your account, and the address of our dashboard. We keep these two items for 45 days at most, then delete them;
+- your email address, telephone number, first name, last name, the country, city and postcode of your business, and an identifier derived from your account, each **hashed** before it leaves our servers, that is turned into an irreversible code with the SHA-256 algorithm. Meta compares these codes with those of its own users to tell whether you have a Facebook or Instagram account, including when you saw the advertisement on another device, and uses the result to measure and improve how our advertisements are shown.
+
+Meta receives these steps whether or not you came from one of its advertisements, as long as you accepted the advertising cookies in 5.3 (in the United States, as long as you have not switched them off). Google never receives your contact details, your IP address or your browser's characteristics.
+
+We never send your password, your payment details, or anything about your customers (the people who hold your loyalty cards).
+
+Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further step being reported for your account. Steps already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
 
 ### 5.6 Record of your cookie choices
 
@@ -259,6 +268,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Stripe webhook failure records (internal debugging) | 90 days |
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
 | Advertising attribution (click identifier, campaign) | Deleted with the Business account it belongs to |
+| IP address and browser characteristics used for conversion reporting (§5.5) | 45 days at most, then deleted |
 | Consent records — proof of your cookie choices (§5.6) | 3 years after the consent ends (replaced or withdrawn). **Not** deleted with the Business account: the account link is removed and the record is kept, under GDPR Art. 17(3)(b) and (e) |
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
