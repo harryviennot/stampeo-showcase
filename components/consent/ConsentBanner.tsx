@@ -9,6 +9,7 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   CONSENT_OPEN_EVENT,
+  categoriesToClearOnLoad,
   clearCookiesFor,
   consentSurface,
   currentConsent,
@@ -69,6 +70,16 @@ export function ConsentBanner() {
     window.addEventListener(CONSENT_OPEN_EVENT, open);
     return () => window.removeEventListener(CONSENT_OPEN_EVENT, open);
   }, []);
+
+  // When GPC overrides a recorded US grant, the trackers that grant let in are
+  // removed on load. No reload: no tag loads under the override, so there is no
+  // running script to stop, and the consent cookie itself is never cleared.
+  const { ready, record, regime, gpc } = consent;
+  useEffect(() => {
+    if (!ready) return;
+    const categories = categoriesToClearOnLoad({ record, regime, gpc });
+    if (categories.length > 0) clearCookiesFor(categories);
+  }, [ready, record, regime, gpc]);
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {

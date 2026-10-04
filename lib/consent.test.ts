@@ -102,9 +102,10 @@ describe("resolveConsent", () => {
     }
   });
 
-  test("an explicit choice beats GPC", () => {
+  test("in the opt-in regime, an explicit choice beats GPC", () => {
     // Someone who was sent GPC by their browser and then deliberately clicked
-    // Accept has said the more specific thing. Order matters: record first.
+    // Accept has said the more specific thing. In the opt-out regime GPC wins
+    // instead: see `consent-gpc.test.ts`.
     expect(resolveConsent({ record: GRANTED, regime: "opt-in", gpc: true })).toEqual({
       analytics: true,
       marketing: true,

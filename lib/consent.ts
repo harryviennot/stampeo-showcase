@@ -151,10 +151,11 @@ export function consentRegimeForCountry(
 /**
  * What this visitor is taken to have agreed to.
  *
- * The order is the whole design. An explicit choice wins over everything,
- * because someone who clicked a button said something more specific than any
- * signal. Only when there is no current choice does GPC decide, and only then
- * does the regime's default apply.
+ * The order is the whole design. In the opt-out regime GPC wins over
+ * everything, a recorded choice included (see `gpcOverridesChoice`). Otherwise
+ * an explicit choice wins, because someone who clicked a button said something
+ * more specific than any signal. Only when there is no current choice does GPC
+ * decide in the opt-in regime, and only then does the regime's default apply.
  *
  * A `prior` (older-version) record is not a current choice, but its refusals
  * still stand: refusing the narrower processing an older text described is a
@@ -167,6 +168,9 @@ export function resolveConsent(input: {
   regime: ConsentRegime;
   gpc: boolean;
 }): ConsentState {
+  if (gpcOverridesChoice(input.regime, input.gpc)) {
+    return { analytics: false, marketing: false };
+  }
   if (input.record) {
     return { analytics: input.record.analytics, marketing: input.record.marketing };
   }
@@ -176,6 +180,36 @@ export function resolveConsent(input: {
     analytics: fallback.analytics && !refused("analytics"),
     marketing: fallback.marketing && !refused("marketing"),
   };
+}
+
+/**
+ * Does Global Privacy Control override even a recorded choice?
+ *
+ * Only in the opt-out regime: the CCPA regulations (§7025) require the signal
+ * to be processed as an opt-out even when it conflicts with an earlier setting,
+ * such as "Got it" on the US notice. In the opt-in regime an explicit choice
+ * still wins.
+ */
+function gpcOverridesChoice(regime: ConsentRegime, gpc: boolean): boolean {
+  return gpc && regime === "opt-out";
+}
+
+/**
+ * The categories whose trackers must be cleared when a page loads.
+ *
+ * Both, when GPC overrides a recorded grant: the trackers that grant let in may
+ * still be in the jar, `stampeo_attribution` included, and none of them may
+ * outlive the override or cross to the dashboard. Otherwise none.
+ */
+export function categoriesToClearOnLoad(input: {
+  record: ConsentRecord | null;
+  regime: ConsentRegime;
+  gpc: boolean;
+}): ConsentCategory[] {
+  const granted = input.record !== null && (input.record.analytics || input.record.marketing);
+  return granted && gpcOverridesChoice(input.regime, input.gpc)
+    ? ["analytics", "marketing"]
+    : [];
 }
 
 /** What a visitor with no choice on record is taken to have agreed to. */
