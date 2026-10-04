@@ -71,15 +71,15 @@ export function ConsentBanner() {
     return () => window.removeEventListener(CONSENT_OPEN_EVENT, open);
   }, []);
 
-  // When GPC overrides a recorded US grant, the trackers that grant let in are
+  // When GPC overrides in the US, trackers set before the signal was on are
   // removed on load. No reload: no tag loads under the override, so there is no
   // running script to stop, and the consent cookie itself is never cleared.
-  const { ready, record, regime, gpc } = consent;
+  const { ready, regime, gpc } = consent;
   useEffect(() => {
     if (!ready) return;
-    const categories = categoriesToClearOnLoad({ record, regime, gpc });
+    const categories = categoriesToClearOnLoad({ regime, gpc });
     if (categories.length > 0) clearCookiesFor(categories);
-  }, [ready, record, regime, gpc]);
+  }, [ready, regime, gpc]);
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {

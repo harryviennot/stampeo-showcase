@@ -77,7 +77,7 @@ describe("categoriesToClearOnLoad", () => {
     const jar = ["NEXT_LOCALE", CONSENT_COOKIE, "_ga", "_ga_ZFZ6JLPFXN", "_fbp", "stampeo_attribution"];
 
     const cleared = cookieNamesToClear(
-      categoriesToClearOnLoad({ record: GRANT, regime: "opt-out", gpc: true }),
+      categoriesToClearOnLoad({ regime: "opt-out", gpc: true }),
       jar,
     );
 
@@ -88,12 +88,14 @@ describe("categoriesToClearOnLoad", () => {
 
   const BOTH = ["analytics", "marketing"];
 
+  // The override does not depend on what is stored: a visitor who browsed
+  // under the US default before turning GPC on has trackers in the jar too,
+  // and an attribution cookie the backend would read as a grant.
   test.each([
-    ["a US analytics-only grant under GPC clears both", { ...GRANT, marketing: false }, "opt-out", true, BOTH],
-    ["a US refusal under GPC clears nothing", REFUSAL, "opt-out", true, []],
-    ["a US grant without GPC clears nothing", GRANT, "opt-out", false, []],
-    ["an EU grant under GPC clears nothing", GRANT, "opt-in", true, []],
-  ] as const)("%s", (_case, record, regime, gpc, categories) => {
-    expect(categoriesToClearOnLoad({ record, regime, gpc })).toEqual(categories);
+    ["a US visitor under GPC clears both", "opt-out", true, BOTH],
+    ["a US visitor without GPC clears nothing", "opt-out", false, []],
+    ["an EU visitor under GPC clears nothing", "opt-in", true, []],
+  ] as const)("%s", (_case, regime, gpc, categories) => {
+    expect(categoriesToClearOnLoad({ regime, gpc })).toEqual(categories);
   });
 });

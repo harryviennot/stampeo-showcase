@@ -46,6 +46,14 @@ describe("captureConsentEvidence", () => {
       { consentVersion: 2, consentAt: 1_759_400_000 },
     ],
     [
+      // Its grants are not carried, so the state in force is the US default,
+      // exactly as if the visitor had never chosen.
+      "a visitor whose older choice refused nothing carries the text in force and no moment",
+      null,
+      { ...OLDER, marketing: true },
+      { consentVersion: CONSENT_VERSION, consentAt: 0 },
+    ],
+    [
       // Nobody clicked: the version is the notice text shown, with no moment.
       "a US visitor under the notice default carries the text in force and no moment",
       null,

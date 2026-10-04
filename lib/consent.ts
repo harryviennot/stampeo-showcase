@@ -197,19 +197,16 @@ function gpcOverridesChoice(regime: ConsentRegime, gpc: boolean): boolean {
 /**
  * The categories whose trackers must be cleared when a page loads.
  *
- * Both, when GPC overrides a recorded grant: the trackers that grant let in may
- * still be in the jar, `stampeo_attribution` included, and none of them may
- * outlive the override or cross to the dashboard. Otherwise none.
+ * Both, whenever GPC overrides in the US: a recorded grant or the opt-out
+ * default may have let trackers into the jar before the signal was on,
+ * `stampeo_attribution` included, and none of them may outlive the override or
+ * cross to the dashboard. Otherwise none.
  */
 export function categoriesToClearOnLoad(input: {
-  record: ConsentRecord | null;
   regime: ConsentRegime;
   gpc: boolean;
 }): ConsentCategory[] {
-  const granted = input.record !== null && (input.record.analytics || input.record.marketing);
-  return granted && gpcOverridesChoice(input.regime, input.gpc)
-    ? ["analytics", "marketing"]
-    : [];
+  return gpcOverridesChoice(input.regime, input.gpc) ? ["analytics", "marketing"] : [];
 }
 
 /** What a visitor with no choice on record is taken to have agreed to. */
