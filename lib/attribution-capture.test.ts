@@ -5,38 +5,123 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { CONSENT_VERSION, type ConsentRecord } from "./consent";
+import {
+  CONSENT_COOKIE,
+  CONSENT_VERSION,
+  consentRecordFromCookieHeader,
+  priorConsentFromCookieHeader,
+  resolveConsent,
+  type ConsentRecord,
+  type PriorConsent,
+} from "./consent";
 import {
   buildAttributionRecord,
   captureConsentEvidence,
+  serializeAttributionCookie,
   shouldCaptureArrival,
   type AttributionRecord,
 } from "./ad-attribution";
 
 describe("captureConsentEvidence", () => {
-  test("a visitor who chose carries their own choice as evidence", () => {
-    const record: ConsentRecord = {
-      v: CONSENT_VERSION,
-      analytics: true,
-      marketing: true,
-      at: 1_759_000_000,
-      regime: "opt-in",
+  const CURRENT: ConsentRecord = {
+    v: CONSENT_VERSION,
+    analytics: true,
+    marketing: true,
+    at: 1_759_000_000,
+    regime: "opt-in",
+  };
+  const OLDER: PriorConsent = { v: 2, analytics: true, marketing: false, at: 1_759_400_000 };
+
+  test.each([
+    [
+      "a visitor who chose carries their own choice",
+      CURRENT,
+      null,
+      { consentVersion: CONSENT_VERSION, consentAt: 1_759_000_000 },
+    ],
+    [
+      "a visitor whose only choice is older carries that choice",
+      null,
+      OLDER,
+      { consentVersion: 2, consentAt: 1_759_400_000 },
+    ],
+    [
+      // Nobody clicked: the version is the notice text shown, with no moment.
+      "a US visitor under the notice default carries the text in force and no moment",
+      null,
+      null,
+      { consentVersion: CONSENT_VERSION, consentAt: 0 },
+    ],
+    ["an older choice with no moment is no evidence", null, { ...OLDER, at: 0 }, null],
+  ])("%s", (_case, record, prior, evidence) => {
+    expect(captureConsentEvidence(record, prior)).toEqual(evidence);
+  });
+});
+
+describe("a US visitor who refused advertising under version 2 and kept analytics", () => {
+  /**
+   * What an organic landing on /us writes into the attribution cookie, decoded,
+   * for a visitor carrying this consent cookie. `cookie` is null when nothing is
+   * captured, the way `AttributionCapture` stops on null evidence.
+   */
+  function organicLanding(choice: Record<string, unknown>) {
+    const header = `NEXT_LOCALE=en; ${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(choice))}`;
+    const record = consentRecordFromCookieHeader(header);
+    const prior = priorConsentFromCookieHeader(header);
+    const consent = resolveConsent({ record, prior, regime: "opt-out", gpc: false });
+    const evidence = captureConsentEvidence(record, prior);
+    const captured =
+      evidence &&
+      buildAttributionRecord({
+        search: "",
+        gaClientId: "GA1.1.1234567890.1700000000",
+        fbp: null,
+        landingPath: "/us",
+        landingVariant: null,
+        referrer: null,
+        consent,
+        consentRegime: "opt-out",
+        ...evidence,
+        capturedAt: 1_759_500_000,
+      });
+    return {
+      consent,
+      cookie: captured
+        ? JSON.parse(decodeURIComponent(serializeAttributionCookie(captured)))
+        : null,
     };
+  }
 
-    expect(captureConsentEvidence(record)).toEqual({
-      consentVersion: CONSENT_VERSION,
-      consentAt: 1_759_000_000,
+  test("an organic landing carries the version-2 choice, never the never-chose shape", () => {
+    // `cv:3, ca:0, cr:"opt-out"` is what the backend reads as the opt-out
+    // default, which grants advertising this visitor refused.
+    const { consent, cookie } = organicLanding({
+      v: 2,
+      a: 1,
+      m: 0,
+      t: 1_759_400_000,
+      r: "opt-out",
     });
+
+    expect(consent).toEqual({ analytics: true, marketing: false });
+    expect({ cv: cookie.cv, ca: cookie.ca, cr: cookie.cr, cc: cookie.cc }).toEqual({
+      cv: 2,
+      ca: 1_759_400_000,
+      cr: "opt-out",
+      cc: "analytics",
+    });
+    expect([cookie.cv, cookie.ca]).not.toEqual([CONSENT_VERSION, 0]);
   });
 
-  test("a US visitor under the notice default carries the text in force and no moment", () => {
-    // No click was made, so there is no consent time to record; the version is
-    // the notice text the visitor was shown.
-    expect(captureConsentEvidence(null)).toEqual({
-      consentVersion: CONSENT_VERSION,
-      consentAt: 0,
-    });
-  });
+  test.each([undefined, 0, -1, "1759400000"])(
+    "a version-2 cookie with moment %p captures nothing, and its refusal still stands",
+    (t) => {
+      const { consent, cookie } = organicLanding({ v: 2, a: 1, m: 0, t, r: "opt-out" });
+
+      expect(consent).toEqual({ analytics: true, marketing: false });
+      expect(cookie).toBeNull();
+    },
+  );
 });
 
 describe("shouldCaptureArrival — before waiting for the browser ids", () => {

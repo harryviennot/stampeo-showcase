@@ -96,11 +96,14 @@ export interface ConsentRecord extends ConsentState {
 
 /**
  * The choices of a record stored under an older `CONSENT_VERSION`. Only its
- * refusals still decide anything (see `resolveConsent`).
+ * refusals still decide anything (see `resolveConsent`); its version and moment
+ * are the evidence an attribution capture rests on (`captureConsentEvidence`).
  */
 export interface PriorConsent extends ConsentState {
   /** The older CONSENT_VERSION this choice was made against. */
   v: number;
+  /** Unix seconds, from the older cookie's `t`; 0 when it carried none. */
+  at: number;
 }
 
 /** What the visitor is currently being shown, if anything. */
@@ -215,7 +218,12 @@ export function consentSnapshotKey(input: {
       ].join(".")
     : "none";
   const prior = input.prior
-    ? [input.prior.v, input.prior.analytics ? 1 : 0, input.prior.marketing ? 1 : 0].join(".")
+    ? [
+        input.prior.v,
+        input.prior.analytics ? 1 : 0,
+        input.prior.marketing ? 1 : 0,
+        input.prior.at,
+      ].join(".")
     : "none";
   return `${record}|${prior}|${input.regime}|${input.gpc}`;
 }
@@ -389,11 +397,20 @@ export function parseConsentCookie(
   return stored && stored.v === CONSENT_VERSION ? stored : null;
 }
 
-/** A choice stored under an older version, or null. */
+/**
+ * A choice stored under an older version, or null.
+ *
+ * Returned even without a moment (`at` 0): its refusals still stand.
+ */
 export function parsePriorConsent(raw: string | null | undefined): PriorConsent | null {
   const stored = parseStoredChoice(raw);
   if (!stored || stored.v === CONSENT_VERSION) return null;
-  return { v: stored.v, analytics: stored.analytics, marketing: stored.marketing };
+  return {
+    v: stored.v,
+    analytics: stored.analytics,
+    marketing: stored.marketing,
+    at: stored.at,
+  };
 }
 
 /** The raw consent cookie value in a `Cookie:` header or `document.cookie`. */
