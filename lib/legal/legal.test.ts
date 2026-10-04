@@ -495,31 +495,46 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
 describe("privacy — the statements the legal review requires", () => {
   const REQUIRED: Record<
     string,
-    { legalBasis: RegExp[]; jointControllers: RegExp[]; complaint: RegExp[]; sharing: RegExp[] }
+    {
+      legalBasis: RegExp[];
+      jointControllers: RegExp[];
+      complaint: RegExp[];
+      sharing: RegExp[];
+      gpcOverUsChoice: RegExp[];
+      choiceAlwaysWins: RegExp;
+    }
   > = {
     en: {
       legalBasis: [/legal basis/i, /Art\. 6\(1\)\(a\)/],
       jointControllers: [/Stampeo and Meta Platforms Ireland Limited are joint controllers/, /Art\. 26/],
       complaint: [/lodge a complaint/i, /supervisory authority/i],
       sharing: [/California/, /\bsharing\b/i],
+      gpcOverUsChoice: [/In the United States this holds even over a choice you made earlier/],
+      choiceAlwaysWins: /always takes precedence over the signal/i,
     },
     fr: {
       legalBasis: [/base légale/i, /article 6\.1\.a/i],
       jointControllers: [/Stampeo et Meta Platforms Ireland Limited sont responsables conjoints/, /article 26/i],
       complaint: [/introduire une réclamation/i, /autorité de contrôle/i],
       sharing: [/Californie/, /\bpartage\b/i],
+      gpcOverUsChoice: [/Aux États-Unis, il prime même sur un choix/],
+      choiceAlwaysWins: /prime toujours sur le signal/i,
     },
     es: {
       legalBasis: [/base jurídica/i, /artículo 6\.1\.a/i],
       jointControllers: [/Stampeo y Meta Platforms Ireland Limited son corresponsables/, /artículo 26/i],
       complaint: [/presentar una reclamación/i, /autoridad de control/i],
       sharing: [/California/, /\bcompartir\b/i],
+      gpcOverUsChoice: [/En Estados Unidos prevalece incluso sobre una elección/],
+      choiceAlwaysWins: /siempre prevalece sobre la señal/i,
     },
     pl: {
       legalBasis: [/podstawa prawna/i, /art\. 6 ust\. 1 lit\. a/i],
       jointControllers: [/Stampeo i Meta Platforms Ireland Limited są współadministratorami/, /art\. 26/i],
       complaint: [/wnieść skargę/i, /organu nadzorczego/i],
       sharing: [/Kaliforni/, /udostępniani/i],
+      gpcOverUsChoice: [/W Stanach Zjednoczonych sygnał ma pierwszeństwo nawet przed wcześniej zapisanym wyborem/],
+      choiceAlwaysWins: /zawsze ma pierwszeństwo przed sygnałem/i,
     },
   };
 
@@ -563,6 +578,17 @@ describe("privacy — the statements the legal review requires", () => {
       // The opt-out names the controls a visitor can actually find on the page.
       expect(text).toContain(common.cookies.notice.choices);
       expect(text).toContain(common.footer.cookiePreferences);
+    },
+  );
+
+  it.each(routing.locales)(
+    "§5.1 says GPC wins over an earlier choice in the US, and never that a choice always wins (%s)",
+    (locale) => {
+      // The CCPA regulations process GPC as an opt-out even over an earlier
+      // setting, and the marketing site does: §6 points here for how it is honoured.
+      const text = section(locale, /^#+\s+5\.1\s/m);
+      expectAll(text, REQUIRED[locale].gpcOverUsChoice, `${locale} §5.1 GPC in the US`);
+      expect(text).not.toMatch(REQUIRED[locale].choiceAlwaysWins);
     },
   );
 

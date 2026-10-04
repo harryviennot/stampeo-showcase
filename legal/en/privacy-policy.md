@@ -134,7 +134,7 @@ Measurement and advertising cookies are loaded only after you accept them. Until
 
 Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for six months, after which you are asked again. You can change it at any time through **Cookie preferences** at the bottom of every page. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
 
-If your browser sends a Global Privacy Control signal and you have not already made a choice here, we treat it as a refusal and nothing is loaded. In the United States we then show you no notice at all, since you have already answered. In Europe the banner is still offered, so that you can opt in deliberately if you want to. A choice you make yourself always takes precedence over the signal.
+If your browser sends a Global Privacy Control signal, we treat it as a refusal and nothing is loaded. In the United States this holds even over a choice you made earlier here, and we show you no notice at all, since you have already answered. In Europe a choice you make yourself takes precedence over the signal: until you make one, the banner is still offered, so that you can opt in deliberately if you want to.
 
 Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, a notice says so, and **Cookie preferences** switches them off at any time.
 
