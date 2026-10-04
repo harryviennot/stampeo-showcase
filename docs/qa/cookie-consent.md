@@ -215,6 +215,8 @@ EXPECT:
   privacy choices", and "Got it".
 - No Refuse/Accept pair.
 - The footer still offers **Cookie preferences**.
+- Note: in Polish (`/pl`) the notice text is two sentences, not one line. That
+  is expected, not a layout failure.
 
 ### RG-03 Dismissing the US notice makes it stay dismissed — CORE
 DEPENDS: RG-02
@@ -245,9 +247,9 @@ EXPECT:
 - Paris: the banner **is** still shown (they may still choose to opt in), and
   until they do, nothing is set.
 - In both: `_ga*`, `_fbp`, `_ttp` absent.
-- Then R6 (a stored grant) with GPC still on, and reload: the stored choice
-  wins and the categories read as granted. An explicit click outranks the
-  signal, and §5 of the privacy policy says so.
+- Then, still in Paris, R6 (a stored grant) with GPC still on, and reload: the
+  stored choice wins and the categories read as granted. In the EU an explicit
+  click outranks the signal. In New York it does not: see RG-07.
 
 ### RG-05 A US visitor who opted out under the previous text stays opted out — BLOCKER
 DEPENDS: RG-02
@@ -288,12 +290,44 @@ EXPECT:
 - `googletagmanager.com` is requested and `_ga` is set; `connect.facebook.net`
   is **not** requested and there is no `_fbp`.
 - `stampeo_attribution` decodes with `"vn":"direct"`, `"ci":null`,
-  `"cc":"analytics"`, `"cv":3`, `"ca":0`, `"cr":"opt-out"`: no click id, and
-  the notice text in force with no consent moment.
+  `"cc":"analytics"`, `"cv":2`, `"ca"` equal to the `t` R12 wrote,
+  `"cr":"opt-out"`: no click id, and the version-2 choice the visitor's state
+  rests on (AT-12).
 - After **Got it**, `stampeo_consent` decodes to `"v":3,"a":1,"m":0`, **not**
   `"m":1`. After the reload the notice is gone and Meta still does not load.
 - Repeat with R2 (Paris) instead of R3: the **banner** shows, and nothing loads
   until it is answered.
+
+### RG-07 Global Privacy Control overrides an earlier "Got it" — CORE
+DEPENDS: RG-03, RG-04
+
+WHY: "Got it" records the opt-out default, everything on. The CCPA regulations
+(§7025) require GPC to be processed as an opt-out even when it conflicts with
+an earlier setting, so a US visitor who acknowledged the notice and later
+turned GPC on must stop being tracked, and the attribution cookie written
+before must not cross to the dashboard.
+
+1. R3, in the R5 browser with the signal **off**. R1, R7, R9, then open `/us`,
+   click **Got it**, and wait 5s. Confirm `_ga`, `_fbp` and
+   `stampeo_attribution` exist (if the browser blocks the tags itself, lower
+   its tracker blocking for the site first).
+   - If the browser cannot switch GPC off, forge the same state with GPC on
+     instead: console,
+     `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:3,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-out",s:crypto.randomUUID()})) + '; path=/'`,
+     then `document.cookie = '_ga=GA1.1.111.222; path=/'`,
+     `document.cookie = '_fbp=fb.1.1700000000.1; path=/'` and
+     `document.cookie = 'stampeo_attribution=' + encodeURIComponent(JSON.stringify({v:1,vn:"direct",bi:null,ci:null,lp:"/us",cc:"analytics",cv:3,cr:"opt-out",ca:0,at:Math.floor(Date.now()/1000)})) + '; path=/'`.
+2. Turn the signal on (R5) and confirm `navigator.globalPrivacyControl === true`.
+3. Reload once, wait 5s, then read the cookie jar.
+
+EXPECT:
+- No notice.
+- Network: zero requests to `googletagmanager.com` and `connect.facebook.net`;
+  `typeof window.fbq === "undefined"` and `typeof window.gtag === "undefined"`.
+- `_ga`, `_ga_*`, `_fbp` and `stampeo_attribution` are **gone**.
+- `stampeo_consent` is still there and still decodes to `"a":1,"m":1,"r":"opt-out"`:
+  the choice is kept, only overridden.
+- The page loaded once: one document request in Network, no reload loop.
 
 ---
 
@@ -1021,6 +1055,35 @@ EXPECT:
   never replaces a paid click.
 - Repeat step 2 with `?gclid=qa-retarget-02`: `vn` becomes `google`. The newest
   paid click wins.
+
+### AT-12 An older refusal is captured as itself, never as "never chose" — BLOCKER
+DEPENDS: RG-06
+
+WHY: A version-2 `{a:1,m:0}` resolves to analytics only. Stamped with the
+current version and no consent moment, its attribution cookie would be
+byte-for-byte a US visitor who never chose, which the backend reads as the
+opt-out default: an advertising grant this visitor refused. The row has to rest
+on the version-2 choice so the backend applies the version-2 rules.
+
+1. With the GA measurement id set (Setup): R3, R7, delete any
+   `stampeo_attribution` cookie, then R12 with `a:1`, `m:0`, `r:"opt-out"`.
+   Note the `t` it wrote:
+   `JSON.parse(decodeURIComponent(document.cookie.match(/stampeo_consent=([^;]*)/)[1])).t`.
+2. Open `/us` with no parameters. Do not touch the notice. Wait 5s, then decode
+   `stampeo_attribution`:
+   `decodeURIComponent(document.cookie.match(/stampeo_attribution=([^;]*)/)[1])`.
+3. Delete `stampeo_attribution`, then forge the same choice with no moment:
+   console,
+   `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:2,a:1,m:0,r:"opt-out",s:crypto.randomUUID()})) + '; path=/'`.
+   Reload, wait 5s.
+
+EXPECT:
+- After step 2: `"cv":2`, `"ca"` equal to the `t` from step 1,
+  `"cr":"opt-out"`, `"cc":"analytics"`. **Never** `"cv":3` with `"ca":0`.
+- After step 3: `googletagmanager.com` is requested (the analytics default
+  stands) but there is **no** `stampeo_attribution`: an older choice with no
+  moment is no evidence to rest a row on. No `_fbp` and no
+  `connect.facebook.net` request: the advertising refusal still stands.
 
 ---
 
