@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 16 de septiembre de 2026**
+**Última actualización: 3 de octubre de 2026**
 
 ## 1. Introducción
 
@@ -109,6 +109,7 @@ Recurrimos a los siguientes encargados del tratamiento:
 | Resend | Envío de correos transaccionales | Irlanda (UE) |
 | Apple (APNs) | Actualizaciones de tarjetas Apple Wallet | Estados Unidos (Data Privacy Framework) |
 | Google (Wallet API) | Actualizaciones de tarjetas Google Wallet | Estados Unidos (Data Privacy Framework) |
+| Google (Analytics 4): Google Ireland Limited, con Google LLC | Medición de audiencia y comunicación de conversiones, según tu elección sobre las cookies (véanse 5.3 y 5.5) | UE (posibles transferencias a EE. UU. bajo el Data Privacy Framework) |
 | PostHog | Estadísticas del sitio (sin cookies) | UE |
 | Sentry | Supervisión de errores | Alemania (UE) |
 | Redis (autoalojado, a través de Taskiq) | Cola de tareas y caché de corta duración para los elementos visuales de las tarjetas y la entrega de notificaciones | Francia (UE), misma infraestructura que nuestro VPS |
@@ -123,7 +124,7 @@ Un comercio que no sea gestionado por un revendedor no queda expuesto a ningún 
 
 ### Transferencias fuera de la UE
 
-Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google) pueden transferir datos a Estados Unidos. Estas transferencias se enmarcan en el EU-US Data Privacy Framework o en cláusulas contractuales tipo aprobadas por la Comisión Europea. Supabase, OVH, Resend, PostHog, Sentry y nuestro Redis autoalojado tratan los datos exclusivamente dentro de la UE.
+Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google) pueden transferir datos a Estados Unidos. Estas transferencias se enmarcan en el EU-US Data Privacy Framework o en cláusulas contractuales tipo aprobadas por la Comisión Europea. Supabase, OVH, Resend, PostHog, Sentry y nuestro Redis autoalojado tratan los datos exclusivamente dentro de la UE. Las plataformas publicitarias a las que comunicamos conversiones conforme al §5.5, Google (Google Ireland Limited, con Google LLC en Estados Unidos) y Meta (Meta Platforms Ireland Limited, con Meta Platforms, Inc. en Estados Unidos), pueden tratar esos datos en Estados Unidos, en el mismo marco.
 
 ## 5. Cookies
 
@@ -133,7 +134,7 @@ Las cookies de medición y de publicidad solo se cargan después de que las acep
 
 Rechazar cuesta un clic, en el mismo banner y con la misma visibilidad que aceptar, y el sitio funciona igual en ambos casos. Guardamos tu elección durante seis meses, pasados los cuales te la volvemos a pedir. Puedes cambiarla cuando quieras desde **Preferencias de cookies**, al final de cada página. Retirar un consentimiento borra las cookies afectadas y recarga la página para que los scripts dejen de ejecutarse.
 
-Si tu navegador envía una señal Global Privacy Control y aún no has hecho ninguna elección aquí, la tratamos como un rechazo y no se carga nada. En Estados Unidos no te mostramos entonces ningún aviso, porque ya has respondido. En Europa el banner se sigue ofreciendo, para que puedas aceptar deliberadamente si así lo quieres. Tu propia elección siempre prevalece sobre la señal.
+Si tu navegador envía una señal Global Privacy Control, la tratamos como un rechazo y no se carga nada. En Estados Unidos prevalece incluso sobre una elección que hayas hecho aquí antes, y no te mostramos ningún aviso, porque ya has respondido. En Europa tu propia elección prevalece sobre la señal: mientras no hayas elegido, el banner se sigue ofreciendo, para que puedas aceptar deliberadamente si así lo quieres.
 
 Los visitantes situados en Estados Unidos reciben un trato distinto, porque las leyes estatales aplicables exigen información y una opción de rechazo, no un consentimiento previo. Allí las cookies de medición y de publicidad se cargan desde la llegada, un aviso lo indica, y **Preferencias de cookies** permite desactivarlas en cualquier momento.
 
@@ -167,13 +168,26 @@ Pueden utilizarse cookies estrictamente necesarias para la autenticación y la g
 
 ### 5.5 Medición de conversiones desde nuestros servidores
 
-Si acepta las cookies del 5.3 y ha llegado al sitio desde un anuncio, conservamos el identificador que la plataforma publicitaria añadió al enlace que siguió —en el caso de Google, el `gclid`; en el de Meta, el `fbclid`— junto con los parámetros de campaña presentes en la dirección y el identificador de navegador propio de esa plataforma descrito más arriba. Se guardan en una cookie `stampeo_attribution`, incluida en el 5.3, cuya única función es sobrevivir al paso de este sitio al panel de control, alojado en otro subdominio.
+Si aceptas las cookies del 5.3 y has llegado al sitio desde un anuncio, conservamos el identificador que la plataforma publicitaria añadió al enlace que seguiste (en el caso de Google, el `gclid`; en el de Meta, el `fbclid`), junto con los parámetros de campaña presentes en la dirección y el identificador de navegador propio de esa plataforma descrito más arriba. Se guardan en una cookie `stampeo_attribution`, incluida en el 5.3, cuya única función es sobrevivir al paso de este sitio al panel de control, alojado en otro subdominio. Si más adelante vuelves desde otro anuncio, ese clic más reciente sustituye al anterior.
 
-Si después crea una cuenta profesional, ese identificador queda registrado con su cuenta. Comunicamos entonces dos cosas a esa plataforma **desde nuestros servidores**: que el anuncio dio lugar a la creación de una cuenta y, si más adelante se suscribe, que se ha pagado una primera factura. Cada plataforma recibe únicamente su propio identificador: un clic de Google nunca se comunica a Meta, ni un clic de Meta a Google. Al tratarse de un envío del lado del servidor, se produce después de lo que ocurre en su navegador y con independencia de ello.
+Si después creas una cuenta profesional, comunicamos hasta cuatro pasos **desde nuestros servidores**: que se creó la cuenta, que abriste la página de pago, que empezó tu prueba gratuita y que se pagó una primera factura. Al tratarse de un envío del lado del servidor, se produce después de lo que ocurre en tu navegador y con independencia de ello.
 
-Lo que se transmite se limita al identificador publicitario, a la campaña y, en caso de pago, a su importe y su divisa. Nunca incluye su dirección de correo electrónico, su nombre, su número de teléfono ni el identificador de su cuenta.
+En cada paso, la plataforma recibe sus propios identificadores cuando dispone de ellos (el identificador de clic y su identificador de navegador) y la campaña, además, en los tres últimos pasos, del precio del plan elegido o del importe pagado, y su divisa. Cada plataforma recibe únicamente sus propios identificadores: un clic de Google nunca se comunica a Meta, ni un clic de Meta a Google.
 
-Retirar su consentimiento mediante **Preferencias de cookies** elimina la cookie `stampeo_attribution` junto con las demás y pone fin a cualquier nueva comunicación de conversiones para su cuenta. Las conversiones ya transmitidas no pueden retirarse. Estos datos se eliminan junto con la cuenta profesional a la que pertenecen (véase §8).
+Meta recibe además:
+
+- tu dirección IP y las características técnicas de tu navegador (tipo, versión, sistema operativo), tal y como se registraron al crear tu cuenta, así como la dirección de nuestro panel de control. Conservamos estos dos datos 45 días como máximo y después los eliminamos;
+- tu dirección de correo electrónico, tu número de teléfono, tu nombre y apellidos, el país, la ciudad y el código postal de tu comercio, y un identificador derivado de tu cuenta, cada uno **convertido en hash** con el algoritmo SHA-256 antes de salir de nuestros servidores. El hash convierte cada uno en un código que no permite recuperar la información original. Aun así, ese código te identifica ante Meta, que genera el mismo código a partir de los datos de sus propios usuarios, por lo que sigue siendo un dato personal. Meta compara estos códigos con los de sus usuarios para saber si tienes una cuenta de Facebook o Instagram, incluso si viste el anuncio en otro dispositivo, y utiliza el resultado para medir y mejorar cómo se muestran nuestros anuncios. Meta también puede usar estos datos según sus propias condiciones, por ejemplo para mejorar sus sistemas publicitarios, como describe [la política de privacidad de Meta](https://www.facebook.com/privacy/policy).
+
+Meta recibe estos pasos tanto si llegaste desde uno de sus anuncios como si no, siempre que hayas aceptado las cookies publicitarias del 5.3 (en Estados Unidos, mientras no las hayas desactivado). Google nunca recibe tus datos de contacto, tu dirección IP ni las características de tu navegador.
+
+Nunca enviamos tu contraseña, tus datos de pago ni nada relativo a tus clientes (las personas que tienen tus tarjetas de fidelidad).
+
+- **Destinatarios**: Google es Google Ireland Limited, con Google LLC en Estados Unidos. Meta es Meta Platforms Ireland Limited, con Meta Platforms, Inc. en Estados Unidos.
+- **Base jurídica**: tu consentimiento (artículo 6.1.a del RGPD), prestado en el banner de cookies o mediante **Preferencias de cookies**. En Estados Unidos, donde no se exige un consentimiento previo, nos basamos en la información y en tu opción de rechazo (véanse 5.1 y §6).
+- **Corresponsables con Meta**: Stampeo y Meta Platforms Ireland Limited son corresponsables del tratamiento (artículo 26 del RGPD) de la recogida de datos mediante las cookies de Meta del 5.3 y las comunicaciones descritas aquí, y de su transmisión a Meta, conforme a la adenda «Controller Addendum» de Meta. Meta es la única responsable de lo que hace con los datos una vez recibidos, como describe [la política de privacidad de Meta](https://www.facebook.com/privacy/policy). Puedes ejercer tus derechos (§10) tanto ante Stampeo como ante Meta.
+
+Retirar tu consentimiento mediante **Preferencias de cookies** elimina la cookie `stampeo_attribution` junto con las demás y pone fin a cualquier nueva comunicación para tu cuenta. Los pasos ya comunicados no pueden retirarse. Estos datos se eliminan junto con la cuenta profesional a la que pertenecen (véase §8).
 
 ### 5.6 Registro de tus decisiones sobre cookies
 
@@ -181,13 +195,13 @@ Cuando aceptas o rechazas las cookies —en el banner, en el aviso mostrado a lo
 
 Cada registro contiene la decisión en sí y nada relativo a tu persona: qué categorías aceptaste o rechazaste, la versión del texto que se te mostró, si te correspondía el régimen de opt-in o de opt-out, en qué superficie respondiste y dos marcas de tiempo: la que indicó tu propio dispositivo y la de recepción en nuestro servidor.
 
-Para vincular entre sí las decisiones de un mismo visitante, colocamos un identificador aleatorio en la cookie `stampeo_consent` indicada en 5.3. Se genera en tu dispositivo, no se deriva de tu dirección IP, ni de una huella del navegador, ni de ningún otro dato sobre ti, y carece de significado fuera de este registro. Si posteriormente creas una cuenta de empresa, asociamos tus decisiones anteriores a esa cuenta para poder acreditar qué elegiste; las decisiones en sí nunca se modifican.
+Para vincular entre sí las decisiones de un mismo visitante, colocamos un identificador aleatorio en la cookie `stampeo_consent` indicada en 5.3. Se genera en tu dispositivo, no se deriva de tu dirección IP, ni de una huella del navegador, ni de ningún otro dato sobre ti, y carece de significado fuera de este registro. Si posteriormente creas una cuenta Business, asociamos tus decisiones anteriores a esa cuenta para poder acreditar qué elegiste; las decisiones en sí nunca se modifican.
 
 Los rechazos se registran exactamente igual que las aceptaciones. Un registro que recogiera solo a quienes aceptaron ofrecería una imagen falsa de lo ocurrido y carecería de valor probatorio.
 
 **Conservamos estos registros durante 3 años desde que finaliza el consentimiento que describen** —es decir, desde que se sustituye por una decisión posterior o se retira—, conforme a las orientaciones de la CNIL sobre la prueba del consentimiento. Transcurrido ese plazo se eliminan.
 
-**Estos registros son la única excepción a la supresión en la Plataforma.** Si solicitas la supresión de tus datos, la denegaremos únicamente respecto de estos registros, al amparo del artículo 17.3 b) y e) del RGPD: conservación necesaria para el cumplimiento de una obligación legal y para la formulación, el ejercicio o la defensa de reclamaciones. Eliminar la prueba de tu consentimiento destruiría la única justificación de tratamientos ya realizados, incluidos los que tú mismo habías solicitado. Por la misma razón no se eliminan al cerrarse una cuenta de empresa: se retira el vínculo con la cuenta y el registro permanece, describiendo una decisión y ya no a una persona identificable. Todos los demás derechos del §10 —acceso, rectificación, limitación, portabilidad y oposición— se les aplican con normalidad.
+**Estos registros son la única excepción a la supresión en la Plataforma.** Si solicitas la supresión de tus datos, la denegaremos únicamente respecto de estos registros, al amparo del artículo 17.3 b) y e) del RGPD: conservación necesaria para el cumplimiento de una obligación legal y para la formulación, el ejercicio o la defensa de reclamaciones. Eliminar la prueba de tu consentimiento destruiría la única justificación de tratamientos ya realizados, incluidos los que tú mismo habías solicitado. Por la misma razón no se eliminan al cerrarse una cuenta Business: se retira el vínculo con la cuenta y el registro permanece, describiendo una decisión y ya no a una persona identificable. Todos los demás derechos del §10 —acceso, rectificación, limitación, portabilidad y oposición— se les aplican con normalidad.
 
 ## 6. Uso de los datos
 
@@ -203,7 +217,9 @@ Utilizamos los datos recogidos para:
 - Enviar a los usuarios Business un número limitado de correos de ciclo de vida y marketing, sujetos a la oposición descrita en el §6.1
 - Mejorar la Plataforma
 
-**Nunca vendemos** datos personales. No realizamos **ningún seguimiento entre comercios**: los datos de un cliente en un comercio están totalmente aislados de los que tenga en otro.
+**Nunca vendemos** datos personales a cambio de dinero. No realizamos **ningún seguimiento entre comercios**: los datos de un cliente en un comercio están totalmente aislados de los que tenga en otro.
+
+**En Estados Unidos:** enviar datos a Meta y a las demás plataformas publicitarias citadas en el 5.3, para nuestra publicidad, puede considerarse «compartir» datos según la ley de California. Puedes oponerte en cualquier momento mediante **Tus opciones de privacidad** en el aviso, mediante **Preferencias de cookies** al final de cada página o con una señal Global Privacy Control, que respetamos como se describe en el 5.1.
 
 ### 6.1 Correos de ciclo de vida y marketing dirigidos a los usuarios Business
 
@@ -259,6 +275,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Registro de fallos de los webhooks de Stripe (depuración interna) | 90 días |
 | Registros de acceso de soporte (sesiones y entradas de auditoría asociadas, véase el §2.3) | 24 meses, después se eliminan |
 | Atribución publicitaria (identificador de clic, campaña) | Se elimina junto con la cuenta Business a la que pertenece |
+| Dirección IP y características del navegador utilizadas para la medición de conversiones (§5.5) | 45 días como máximo, después se eliminan |
 | Registros de consentimiento — prueba de tus decisiones sobre cookies (§5.6) | 3 años desde que finaliza el consentimiento (sustitución o retirada). **No** se eliminan con la cuenta Business: se retira el vínculo con la cuenta y el registro se conserva, al amparo del art. 17.3 b) y e) del RGPD |
 
 El plazo de conservación de 24 meses para los registros de acceso de soporte se establece para permitir la investigación de un posible incidente de seguridad, manteniéndose a la vez proporcionado a su finalidad, conforme a las recomendaciones de la CNIL en materia de registro de accesos.
@@ -288,7 +305,7 @@ De conformidad con el RGPD, dispones de los siguientes derechos:
 
 **Clientes finales:** ponte en contacto en primer lugar con el comercio que gestiona tu tarjeta. También puedes escribirnos a contact@stampeo.app.
 
-Respondemos en un plazo de 30 días. En caso de litigio, puedes dirigirte a la CNIL: www.cnil.fr.
+Respondemos en un plazo de 30 días. También tienes derecho a presentar una reclamación ante la CNIL, la autoridad francesa de protección de datos (www.cnil.fr), o ante la autoridad de control del país donde vives o trabajas (en España, la Agencia Española de Protección de Datos, www.aepd.es).
 
 ### 10.1 Derecho de oposición al acceso de soporte
 

@@ -3,6 +3,7 @@ import {
   type ConsentRecord,
   type ConsentRegime,
   type ConsentState,
+  type PriorConsent,
 } from "./consent";
 
 /**
@@ -265,18 +266,27 @@ export function buildAttributionRecord(input: {
 }
 
 /**
- * The consent evidence a capture carries.
+ * The consent evidence a capture carries, or null to capture nothing.
  *
- * A current choice is its own evidence. Without one, the visitor is under the
- * US opt-out default: the evidence is the notice text in force
- * (`CONSENT_VERSION`) and no consent moment (`0`), because nobody clicked.
+ * A current choice is its own evidence. Without one, an older-version choice
+ * that refused something is what the visitor's state rests on (its refusals
+ * still stand), so the row carries that version and moment; such a choice with
+ * no moment evidences nothing, and nothing is captured. Otherwise the visitor
+ * is under the US opt-out default, an older grant being no choice at all: the
+ * notice text in force (`CONSENT_VERSION`) and no consent moment (`0`),
+ * because nobody clicked.
  */
-export function captureConsentEvidence(record: ConsentRecord | null): {
-  consentVersion: number;
-  consentAt: number;
-} {
+export function captureConsentEvidence(
+  record: ConsentRecord | null,
+  prior: PriorConsent | null
+): { consentVersion: number; consentAt: number } | null {
   if (record && record.v === CONSENT_VERSION) {
     return { consentVersion: record.v, consentAt: record.at };
+  }
+  if (prior && (!prior.analytics || !prior.marketing)) {
+    return Number.isFinite(prior.at) && prior.at > 0
+      ? { consentVersion: prior.v, consentAt: prior.at }
+      : null;
   }
   return { consentVersion: CONSENT_VERSION, consentAt: 0 };
 }

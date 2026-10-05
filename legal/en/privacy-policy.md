@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: September 16, 2026**
+**Last updated: October 3, 2026**
 
 ## 1. Introduction
 
@@ -109,6 +109,7 @@ We use the following sub-processors:
 | Resend | Transactional emails | Ireland (EU) |
 | Apple (APNs) | Apple Wallet pass updates | United States (Data Privacy Framework) |
 | Google (Wallet API) | Google Wallet pass updates | United States (Data Privacy Framework) |
+| Google (Analytics 4): Google Ireland Limited, with Google LLC | Audience measurement and conversion reporting, subject to your cookie choice (see 5.3 and 5.5) | EU (possible US transfers under Data Privacy Framework) |
 | PostHog | Website analytics (cookieless) | EU |
 | Sentry | Error monitoring | Germany (EU) |
 | Redis (self-hosted, via Taskiq) | Job queue and short-lived cache for pass assets and notification delivery | France (EU), same infrastructure as our VPS |
@@ -123,7 +124,7 @@ A business that is not managed by a reseller is not exposed to any reseller acce
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU.
+Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google (Google Ireland Limited, with Google LLC in the United States) and Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States), may process that data in the United States, under the same framework.
 
 ## 5. Cookies
 
@@ -133,7 +134,7 @@ Measurement and advertising cookies are loaded only after you accept them. Until
 
 Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for six months, after which you are asked again. You can change it at any time through **Cookie preferences** at the bottom of every page. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
 
-If your browser sends a Global Privacy Control signal and you have not already made a choice here, we treat it as a refusal and nothing is loaded. In the United States we then show you no notice at all, since you have already answered. In Europe the banner is still offered, so that you can opt in deliberately if you want to. A choice you make yourself always takes precedence over the signal.
+If your browser sends a Global Privacy Control signal, we treat it as a refusal and nothing is loaded. In the United States this holds even over a choice you made earlier here, and we show you no notice at all, since you have already answered. In Europe a choice you make yourself takes precedence over the signal: until you make one, the banner is still offered, so that you can opt in deliberately if you want to.
 
 Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, a notice says so, and **Cookie preferences** switches them off at any time.
 
@@ -167,13 +168,26 @@ Strictly necessary cookies may be used for authentication and session management
 
 ### 5.5 Conversion measurement from our servers
 
-If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed — for Google the `gclid`, for Meta the `fbclid` — together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain.
+If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed (for Google the `gclid`, for Meta the `fbclid`), together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain. If you later come back through another advertisement, the newer click replaces the earlier one.
 
-If you go on to create a business account, that identifier is stored with your account. We then report two things to that platform **from our servers**: that the advertisement led to an account being created and, if you later subscribe, that a first invoice was paid. Each platform receives only its own identifier: a Google click is never reported to Meta, and a Meta click is never reported to Google. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
+If you go on to create a business account, we report up to four steps **from our servers**: that the account was created, that you opened the payment page, that your free trial started, and that a first invoice was paid. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
 
-What we send is limited to the advertising identifier, the campaign, and for a payment its amount and currency. It never includes your email address, your name, your telephone number, or your account identifier.
+With each step, the platform receives its own identifiers when it has them (the click identifier and its browser identifier) and the campaign, plus, for the last three steps, the price of the plan you chose or the amount paid, and its currency. Each platform receives only its own identifiers: a Google click is never reported to Meta, and a Meta click is never reported to Google.
 
-Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further conversion being reported for your account. Conversions already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
+Meta also receives:
+
+- your IP address and your browser's technical characteristics (type, version, operating system), as recorded when you created your account, and the address of our dashboard. We keep these two items for 45 days at most, then delete them;
+- your email address, telephone number, first name, last name, the country, city and postcode of your business, and an identifier derived from your account, each **hashed** with the SHA-256 algorithm before it leaves our servers. Hashing turns each item into a code from which your details cannot be recovered. The code still identifies you to Meta, which makes the same code from the details of its own users, so it remains personal data. Meta compares these codes with those of its users to tell whether you have a Facebook or Instagram account, including when you saw the advertisement on another device, and uses the result to measure and improve how our advertisements are shown. Meta may also use this data under its own terms, for example to improve its advertising systems, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy).
+
+Meta receives these steps whether or not you came from one of its advertisements, as long as you accepted the advertising cookies in 5.3 (in the United States, as long as you have not switched them off). Google never receives your contact details, your IP address or your browser's characteristics.
+
+We never send your password, your payment details, or anything about your customers (the people who hold your loyalty cards).
+
+- **Recipients:** Google means Google Ireland Limited, with Google LLC in the United States. Meta means Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States.
+- **Legal basis:** your consent (GDPR Art. 6(1)(a)), given in the cookie banner or through **Cookie preferences**. In the United States, where prior consent is not required, we rely on notice and your right to opt out (see 5.1 and §6).
+- **Joint controllers with Meta:** Stampeo and Meta Platforms Ireland Limited are joint controllers (GDPR Art. 26) for collecting data through the Meta cookies in 5.3 and the reporting described here, and for transmitting it to Meta, under Meta's Controller Addendum. Meta alone is responsible for what it does with the data once received, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy). You can exercise your rights (§10) with either of us.
+
+Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further step being reported for your account. Steps already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
 
 ### 5.6 Record of your cookie choices
 
@@ -203,7 +217,9 @@ We use collected data to:
 - Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
 - Improve the Platform
 
-We **never sell** personal data. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
+We **never sell** personal data for money. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
+
+**In the United States:** sending data to Meta and the other advertising platforms named in 5.3, for our advertising, may count as "sharing" under California law. You can opt out at any time through **Your privacy choices** in the notice, through **Cookie preferences** at the bottom of every page, or with a Global Privacy Control signal, which we honor as described in 5.1.
 
 ### 6.1 Marketing and lifecycle emails to Business Users
 
@@ -259,6 +275,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Stripe webhook failure records (internal debugging) | 90 days |
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
 | Advertising attribution (click identifier, campaign) | Deleted with the Business account it belongs to |
+| IP address and browser characteristics used for conversion reporting (§5.5) | 45 days at most, then deleted |
 | Consent records — proof of your cookie choices (§5.6) | 3 years after the consent ends (replaced or withdrawn). **Not** deleted with the Business account: the account link is removed and the record is kept, under GDPR Art. 17(3)(b) and (e) |
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
@@ -288,11 +305,11 @@ Under the GDPR, you have the following rights:
 
 **End customers:** contact the business managing your loyalty card first. You may also reach us at contact@stampeo.app.
 
+We respond to all requests within 30 days. You also have the right to lodge a complaint with the CNIL, the French data protection authority (www.cnil.fr), or with the supervisory authority of the country where you live or work.
+
 ### 10.1 Right to object to support access
 
 Business Users may, by written request to contact@stampeo.app, ask that no support access (§2.3) be granted to their account outside of an explicit support ticket they have opened. This option is offered as a contractual courtesy and does not affect cases where access is required by law, by a court order, or by an imminent security incident on the Platform.
-
-We respond to all requests within 30 days. If you have a complaint, you may file it with the CNIL (French data protection authority): www.cnil.fr.
 
 ## 11. Security
 

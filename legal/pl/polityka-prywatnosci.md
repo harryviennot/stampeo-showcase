@@ -1,6 +1,6 @@
 # Polityka prywatności: Stampeo
 
-**Ostatnia aktualizacja: 16 września 2026**
+**Ostatnia aktualizacja: 3 października 2026**
 
 ## 1. Wprowadzenie
 
@@ -109,6 +109,7 @@ Korzystamy z następujących dalszych podmiotów przetwarzających:
 | Resend | E-maile transakcyjne | Irlandia (UE) |
 | Apple (APNs) | Aktualizacje kart Apple Wallet | Stany Zjednoczone (Data Privacy Framework) |
 | Google (Wallet API) | Aktualizacje kart Google Wallet | Stany Zjednoczone (Data Privacy Framework) |
+| Google (Analytics 4): Google Ireland Limited wraz z Google LLC | Pomiar ruchu i przekazywanie konwersji, zgodnie z Twoim wyborem dotyczącym plików cookie (zob. 5.3 i 5.5) | UE (możliwe transfery do USA w ramach Data Privacy Framework) |
 | PostHog | Statystyki strony (bez plików cookie) | UE |
 | Sentry | Monitorowanie błędów | Niemcy (UE) |
 | Redis (własny hosting, przez Taskiq) | Kolejka zadań i krótkotrwała pamięć podręczna dla materiałów graficznych kart oraz dostarczania powiadomień | Francja (UE), ta sama infrastruktura co nasz VPS |
@@ -123,7 +124,7 @@ Firma, która nie jest obsługiwana przez dystrybutora, nie jest narażona na ż
 
 ### Transfery poza UE
 
-Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE.
+Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5, czyli Google (Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych) i Meta (Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie.
 
 ## 5. Pliki cookie
 
@@ -133,7 +134,7 @@ Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakcep
 
 Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na sześć miesięcy, po czym pytamy ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** na dole każdej strony. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
 
-Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, a nie ma jeszcze zapisanego wyboru, traktujemy go jak odmowę i nic się nie wczytuje. W Stanach Zjednoczonych nie pokazujemy wtedy żadnego komunikatu, bo odpowiedź już jest. W Europie baner nadal się pojawia, żeby można było świadomie wyrazić zgodę. Własny wybór zawsze ma pierwszeństwo przed sygnałem.
+Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, traktujemy go jak odmowę i nic się nie wczytuje. W Stanach Zjednoczonych sygnał ma pierwszeństwo nawet przed wcześniej zapisanym wyborem i nie pokazujemy wtedy żadnego komunikatu, bo odpowiedź już jest. W Europie własny wybór ma pierwszeństwo przed sygnałem: dopóki nie ma zapisanego wyboru, baner nadal się pojawia, żeby można było świadomie wyrazić zgodę.
 
 Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a **Ustawienia plików cookie** pozwalają je wyłączyć w dowolnym momencie.
 
@@ -167,27 +168,40 @@ Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane 
 
 ### 5.5 Pomiar konwersji z naszych serwerów
 
-Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową — w przypadku Google jest to `gclid`, w przypadku Meta `fbclid` — wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie.
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową (w przypadku Google jest to `gclid`, w przypadku Meta `fbclid`) wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie. Jeżeli później wrócisz z innej reklamy, nowsze kliknięcie zastępuje wcześniejsze.
 
-Jeżeli następnie założysz konto firmowe, identyfikator ten zostaje zapisany przy Twoim koncie. Przekazujemy wtedy tej platformie dwie informacje **z naszych serwerów**: że reklama doprowadziła do założenia konta oraz — jeżeli później wykupisz abonament — że opłacono pierwszą fakturę. Każda platforma otrzymuje wyłącznie własny identyfikator: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
+Jeżeli następnie założysz konto firmowe, przekazujemy **z naszych serwerów** informacje o maksymalnie czterech etapach: założeniu konta, otwarciu strony płatności, rozpoczęciu bezpłatnego okresu próbnego oraz opłaceniu pierwszej faktury. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
 
-Przekazujemy wyłącznie identyfikator reklamowy, nazwę kampanii oraz — w przypadku płatności — jej kwotę i walutę. Nigdy nie przekazujemy adresu e-mail, imienia i nazwiska, numeru telefonu ani identyfikatora konta.
+Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posiada (identyfikator kliknięcia i swój identyfikator przeglądarki), oraz nazwę kampanii, a przy trzech ostatnich etapach także cenę wybranego planu lub zapłaconą kwotę wraz z walutą. Każda platforma otrzymuje wyłącznie własne identyfikatory: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google.
 
-Wycofanie zgody w **Preferencjach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych konwersji dla Twojego konta. Konwersji już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczy (zob. §8).
+Meta otrzymuje ponadto:
+
+- Twój adres IP i parametry techniczne Twojej przeglądarki (typ, wersja, system operacyjny), zapisane w chwili zakładania konta, a także adres naszego panelu. Te dwie informacje przechowujemy najwyżej 45 dni, a następnie je usuwamy;
+- Twój adres e-mail, numer telefonu, imię i nazwisko, kraj, miasto i kod pocztowy Twojej firmy oraz identyfikator wyprowadzony z Twojego konta, każde z nich **zahaszowane** algorytmem SHA-256 przed opuszczeniem naszych serwerów. Haszowanie zamienia każdą z tych informacji w kod, z którego nie da się odtworzyć Twoich danych. Mimo to kod pozwala Meta Cię rozpoznać, ponieważ Meta tworzy taki sam kod z danych swoich użytkowników. Dlatego nadal jest to dana osobowa. Meta porównuje te kody z kodami swoich użytkowników, żeby ustalić, czy masz konto na Facebooku lub Instagramie, także wtedy, gdy reklama została wyświetlona na innym urządzeniu, i wykorzystuje wynik do pomiaru i ulepszania sposobu wyświetlania naszych reklam. Meta może też wykorzystywać te dane na własnych warunkach, na przykład do ulepszania swoich systemów reklamowych, zgodnie z [polityką prywatności Meta](https://www.facebook.com/privacy/policy).
+
+Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
+
+Nigdy nie przekazujemy Twojego hasła, danych płatniczych ani żadnych informacji o Twoich klientach (osobach, które mają Twoje karty lojalnościowe).
+
+- **Odbiorcy:** Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych. Meta to Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych.
+- **Podstawa prawna:** Twoja zgoda (art. 6 ust. 1 lit. a RODO), wyrażona w banerze plików cookie lub w **Ustawieniach plików cookie**. W Stanach Zjednoczonych, gdzie uprzednia zgoda nie jest wymagana, opieramy się na poinformowaniu i prawie do sprzeciwu (zob. 5.1 i §6).
+- **Współadministratorzy z Meta:** Stampeo i Meta Platforms Ireland Limited są współadministratorami (art. 26 RODO) w zakresie zbierania danych za pomocą plików cookie Meta z punktu 5.3 i opisanego tu przekazywania etapów oraz przesyłania tych danych do Meta, na podstawie umowy Meta „Controller Addendum”. Za to, co Meta robi z danymi po ich otrzymaniu, odpowiada wyłącznie Meta (zob. [politykę prywatności Meta](https://www.facebook.com/privacy/policy)). Swoje prawa (§10) możesz wykonywać zarówno wobec Stampeo, jak i wobec Meta.
+
+Wycofanie zgody w **Ustawieniach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych etapów dla Twojego konta. Etapów już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczą (zob. §8).
 
 ### 5.6 Zapis Twoich decyzji dotyczących plików cookie
 
-Gdy akceptujesz lub odrzucasz pliki cookie — na banerze, w komunikacie wyświetlanym odwiedzającym ze Stanów Zjednoczonych albo później przez **Preferencje cookie** — zachowujemy zapis tej decyzji na naszych serwerach. RODO wymaga od nas wykazania, że zgoda została udzielona (art. 7 ust. 1), a decyzja przechowywana wyłącznie w Twojej przeglądarce niczego nie dowodzi: znajduje się na Twoim urządzeniu, możesz ją zmienić, a kolejna decyzja ją nadpisuje.
+Gdy akceptujesz lub odrzucasz pliki cookie — na banerze, w komunikacie wyświetlanym odwiedzającym ze Stanów Zjednoczonych albo później przez **Ustawienia plików cookie** — zachowujemy zapis tej decyzji na naszych serwerach. RODO wymaga od nas wykazania, że zgoda została udzielona (art. 7 ust. 1), a decyzja przechowywana wyłącznie w Twojej przeglądarce niczego nie dowodzi: znajduje się na Twoim urządzeniu, możesz ją zmienić, a kolejna decyzja ją nadpisuje.
 
 Każdy zapis zawiera samą decyzję i nic, co dotyczyłoby Twojej osoby: które kategorie zaakceptowano lub odrzucono, wersję przedstawionego tekstu, obowiązujący reżim (opt-in albo opt-out), miejsce udzielenia odpowiedzi oraz dwa znaczniki czasu — wskazany przez Twoje urządzenie i zarejestrowany przez nasz serwer.
 
-Aby powiązać ze sobą decyzje tego samego odwiedzającego, umieszczamy losowy identyfikator w pliku cookie `stampeo_consent` wskazanym w 5.3. Jest generowany na Twoim urządzeniu, nie wywodzi się z Twojego adresu IP, odcisku przeglądarki ani żadnej innej informacji o Tobie i nie ma znaczenia poza tym zapisem. Jeżeli następnie założysz konto firmowe, powiążemy Twoje wcześniejsze decyzje z tym kontem, aby móc wykazać, jakich wyborów dokonałeś; same decyzje nigdy nie są zmieniane.
+Aby powiązać ze sobą decyzje tego samego odwiedzającego, umieszczamy losowy identyfikator w pliku cookie `stampeo_consent` wskazanym w 5.3. Jest generowany na Twoim urządzeniu, nie wywodzi się z Twojego adresu IP, odcisku przeglądarki ani żadnej innej informacji o Tobie i nie ma znaczenia poza tym zapisem. Jeżeli następnie założysz konto firmowe, powiążemy Twoje wcześniejsze decyzje z tym kontem, aby móc wykazać, jakie wybory zostały dokonane; same decyzje nigdy nie są zmieniane.
 
 Odmowy zapisujemy dokładnie tak samo jak zgody. Rejestr obejmujący wyłącznie osoby, które wyraziły zgodę, dawałby fałszywy obraz i nie miałby wartości dowodowej.
 
 **Zapisy te przechowujemy przez 3 lata od zakończenia zgody, której dotyczą** — czyli od chwili zastąpienia jej nowszą decyzją albo jej wycofania — zgodnie z wytycznymi CNIL dotyczącymi dowodu zgody. Po tym okresie są usuwane.
 
-**Zapisy te stanowią jedyny wyjątek od usuwania danych na Platformie.** Jeżeli zażądasz usunięcia swoich danych, odmówimy wyłącznie w zakresie tych zapisów, na podstawie art. 17 ust. 3 lit. b) i e) RODO: przechowywanie niezbędne do wypełnienia obowiązku prawnego oraz do ustalenia, dochodzenia lub obrony roszczeń. Usunięcie dowodu Twojej zgody zniszczyłoby jedyne uzasadnienie przetwarzania już dokonanego, w tym takiego, o które sam prosiłeś. Z tego samego powodu nie są usuwane przy zamknięciu konta firmowego: powiązanie z kontem zostaje usunięte, a zapis pozostaje, opisując decyzję, a nie osobę możliwą do zidentyfikowania. Wszystkie pozostałe prawa z §10 — dostęp, sprostowanie, ograniczenie, przenoszenie i sprzeciw — stosuje się do nich normalnie.
+**Zapisy te stanowią jedyny wyjątek od usuwania danych na Platformie.** Jeżeli zażądasz usunięcia swoich danych, odmówimy wyłącznie w zakresie tych zapisów, na podstawie art. 17 ust. 3 lit. b) i e) RODO: przechowywanie niezbędne do wypełnienia obowiązku prawnego oraz do ustalenia, dochodzenia lub obrony roszczeń. Usunięcie dowodu Twojej zgody zniszczyłoby jedyne uzasadnienie przetwarzania już dokonanego, w tym przetwarzania wykonanego na Twoją prośbę. Z tego samego powodu nie są usuwane przy zamknięciu konta firmowego: powiązanie z kontem zostaje usunięte, a zapis pozostaje, opisując decyzję, a nie osobę możliwą do zidentyfikowania. Wszystkie pozostałe prawa z §10 — dostęp, sprostowanie, ograniczenie, przenoszenie i sprzeciw — stosuje się do nich normalnie.
 
 ## 6. Wykorzystanie danych
 
@@ -203,7 +217,9 @@ Zebrane dane wykorzystujemy, aby:
 - Wysyłać użytkownikom Business ograniczoną liczbę e-maili cyklu życia i marketingowych, z zastrzeżeniem sprzeciwu opisanego w §6.1
 - Ulepszać Platformę
 
-**Nigdy nie sprzedajemy** danych osobowych. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
+**Nigdy nie sprzedajemy** danych osobowych za pieniądze. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
+
+**W Stanach Zjednoczonych:** przekazywanie danych do Meta i innych platform reklamowych wymienionych w punkcie 5.3 na potrzeby naszych reklam może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w komunikacie, przez **Ustawienia plików cookie** na dole każdej strony albo sygnałem Global Privacy Control, który respektujemy zgodnie z opisem w punkcie 5.1.
 
 ### 6.1 E-maile cyklu życia i marketingowe do użytkowników Business
 
@@ -259,6 +275,7 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Zapisy nieudanych webhooków Stripe (diagnostyka wewnętrzna) | 90 dni |
 | Dzienniki dostępu serwisowego (sesje podglądu i powiązane wpisy audytowe zgodnie z §2.3) | 24 miesiące, następnie usuwane |
 | Atrybucja reklamowa (identyfikator kliknięcia, kampania) | Usuwana wraz z kontem firmowym, którego dotyczy |
+| Adres IP i parametry przeglądarki używane do pomiaru konwersji (§5.5) | Najwyżej 45 dni, następnie usuwane |
 | Zapisy zgody — dowód Twoich decyzji dotyczących cookie (§5.6) | 3 lata od zakończenia zgody (zastąpienie lub wycofanie). **Nie** są usuwane wraz z kontem firmowym: powiązanie z kontem zostaje usunięte, a zapis zachowany, na podstawie art. 17 ust. 3 lit. b) i e) RODO |
 
 Okres 24 miesięcy dla dzienników dostępu serwisowego został ustalony tak, aby umożliwić zbadanie incydentu bezpieczeństwa, pozostając jednocześnie proporcjonalnym do tego celu, zgodnie z wytycznymi CNIL dotyczącymi rejestrowania zdarzeń bezpieczeństwa.
@@ -288,7 +305,7 @@ Zgodnie z RODO użytkownikowi przysługują następujące prawa:
 
 **Klienci końcowi:** prosimy najpierw o kontakt z firmą zarządzającą kartą lojalnościową. Można też napisać do nas pod adresem contact@stampeo.app.
 
-Na wszystkie wnioski odpowiadamy w ciągu 30 dni. W razie skargi można ją złożyć do CNIL (francuskiego organu ochrony danych): www.cnil.fr.
+Na wszystkie wnioski odpowiadamy w ciągu 30 dni. Masz też prawo wnieść skargę do CNIL, francuskiego organu ochrony danych (www.cnil.fr), albo do organu nadzorczego w kraju, w którym mieszkasz lub pracujesz (w Polsce jest to Prezes Urzędu Ochrony Danych Osobowych, uodo.gov.pl).
 
 ### 10.1 Prawo sprzeciwu wobec dostępu serwisowego
 

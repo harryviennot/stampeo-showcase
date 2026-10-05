@@ -131,7 +131,7 @@
     "cookies": {
       "banner": {
         "title": "Twój wybór plików cookie",
-        "body": "Pliki cookie do statystyk i reklam włączamy tylko wtedy, gdy je zaakceptujesz. Odmowa niczego nie zmienia w działaniu strony.",
+        "body": "Pliki cookie do statystyk i reklam włączamy tylko wtedy, gdy je zaakceptujesz, i dopiero wtedy informujemy Meta i Google, czy do rejestracji doprowadziła reklama. Odmowa niczego nie zmienia w działaniu strony.",
         "learnMore": "Zobacz szczegóły",
         "accept": "Zaakceptuj wszystkie",
         "refuse": "Odrzuć wszystkie",
@@ -139,7 +139,7 @@
       },
       "notice": {
         "title": "Twoje ustawienia prywatności",
-        "body": "Używamy plików cookie do statystyk i reklam, żeby sprawdzać skuteczność naszych reklam.",
+        "body": "Używamy plików cookie do statystyk i reklam, żeby sprawdzać skuteczność naszych reklam. Informujemy też Meta i Google, czy do rejestracji doprowadziła reklama.",
         "choices": "Twoje ustawienia prywatności",
         "dismiss": "Rozumiem"
       },
@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Reklama",
-          "body": "Meta i TikTok, żeby wiedzieć, która z naszych reklam naprawdę zadziałała."
+          "body": "Meta i TikTok, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać."
         },
         "save": "Zapisz mój wybór",
         "cancel": "Anuluj"

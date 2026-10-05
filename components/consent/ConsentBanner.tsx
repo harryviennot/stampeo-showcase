@@ -9,6 +9,7 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   CONSENT_OPEN_EVENT,
+  categoriesToClearOnLoad,
   clearCookiesFor,
   consentSurface,
   currentConsent,
@@ -69,6 +70,16 @@ export function ConsentBanner() {
     window.addEventListener(CONSENT_OPEN_EVENT, open);
     return () => window.removeEventListener(CONSENT_OPEN_EVENT, open);
   }, []);
+
+  // When GPC overrides in the US, trackers set before the signal was on are
+  // removed on load. No reload: no tag loads under the override, so there is no
+  // running script to stop, and the consent cookie itself is never cleared.
+  const { ready, regime, gpc } = consent;
+  useEffect(() => {
+    if (!ready) return;
+    const categories = categoriesToClearOnLoad({ regime, gpc });
+    if (categories.length > 0) clearCookiesFor(categories);
+  }, [ready, regime, gpc]);
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {

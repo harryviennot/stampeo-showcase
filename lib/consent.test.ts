@@ -102,9 +102,10 @@ describe("resolveConsent", () => {
     }
   });
 
-  test("an explicit choice beats GPC", () => {
+  test("in the opt-in regime, an explicit choice beats GPC", () => {
     // Someone who was sent GPC by their browser and then deliberately clicked
-    // Accept has said the more specific thing. Order matters: record first.
+    // Accept has said the more specific thing. In the opt-out regime GPC wins
+    // instead: see `consent-gpc.test.ts`.
     expect(resolveConsent({ record: GRANTED, regime: "opt-in", gpc: true })).toEqual({
       analytics: true,
       marketing: true,
@@ -823,7 +824,7 @@ describe("consentSnapshotKey", () => {
 });
 
 describe("CONSENT_VERSION", () => {
-  test("is 2, the wire format written into the cookie", () => {
+  test("is 3, the wire format written into the cookie", () => {
     // Every other test uses the constant, so a bump would pass them all while
     // silently invalidating every visitor's stored choice. Bumping it IS the
     // mechanism for re-consenting a new vendor or a new processing purpose, so
@@ -833,6 +834,10 @@ describe("CONSENT_VERSION", () => {
     // advertising identifier and server-side conversion reporting. Same three
     // recipients, materially different processing.
     //
+    // 2 -> 3: §5.5 adds hashed contact details, the IP address and browser
+    // characteristics sent to Meta, four reported steps instead of two, and
+    // reporting to Meta for signups that did not come through a Meta ad.
+    //
     // TWO OTHER PLACES MOVE WITH THIS, and nothing automated catches them
     // because they live in another repo and another language:
     //   - the backend's `CONSENT_VERSION`, which honours only the versions in
@@ -840,8 +845,8 @@ describe("CONSENT_VERSION", () => {
     //     app/services/attribution/eligibility.py);
     //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
     //     shared cookie to notice a withdrawal.
-    expect(CONSENT_VERSION).toBe(2);
-    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A2");
+    expect(CONSENT_VERSION).toBe(3);
+    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A3");
   });
 
   test("a grant stored under version 1 is no longer honoured", () => {
