@@ -180,6 +180,114 @@
           ],
           "link": "/program-lojalnosciowy",
           "linkLabel": "Porównaj pieczątki i punkty"
+        },
+        {
+          "name": "Piekarnia",
+          "quote": "Ola wpada po rogalika w drodze do pracy. Po dziewięciu wizytach widzi, że dziesiąty jest za darmo.",
+          "reward": "10 rogalików = 1 za darmo",
+          "advantage": "Twoje własne zdjęcia produktów jako pieczątki",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Ola"
+            },
+            {
+              "label": "Nagroda",
+              "value": "Rogalik za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
+        },
+        {
+          "name": "Studio rzęs",
+          "quote": "Kasia wraca co trzy tygodnie na uzupełnienie. Szóste jest za darmo, a telefon pokazuje jej, ile jeszcze brakuje.",
+          "reward": "6 uzupełnień = 1 za darmo",
+          "advantage": "Twoje logo, twoje kolory, twoja ikona pieczątki",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Kasia"
+            },
+            {
+              "label": "Nagroda",
+              "value": "Uzupełnienie za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
+        },
+        {
+          "name": "Sklep spożywczy",
+          "quote": "Ewa robi u ciebie zakupy co tydzień: raz pełny wózek, raz tylko chleb. Punkty liczą to, ile wydaje, więc duże zakupy liczą się bardziej.",
+          "reward": "-10% przy 200 pkt",
+          "advantage": "Pełny wózek daje więcej niż szybkie zakupy",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Ewa"
+            },
+            {
+              "label": "Następna nagroda",
+              "value": "-10%"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Punkty: jak to działa"
+        },
+        {
+          "name": "Food truck",
+          "quote": "Bartek znajduje food trucka, gdziekolwiek ten stanie. Karta jest w jego telefonie, więc każdy kawałek się liczy, na każdym rogu.",
+          "reward": "8 kawałków = 1 za darmo",
+          "advantage": "Bez papieru i sprzętu, wystarczy telefon",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Bartek"
+            },
+            {
+              "label": "Nagroda",
+              "value": "Kawałek za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
+        },
+        {
+          "name": "Spa",
+          "quote": "Ania co miesiąc umawia się na zabieg na twarz. Szósty jest za darmo, a każda pieczątka pojawia się na ekranie blokady.",
+          "reward": "6 zabiegów = 1 za darmo",
+          "advantage": "Powiadomienie przy każdej pieczątce",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Ania"
+            },
+            {
+              "label": "Nagroda",
+              "value": "Zabieg za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
+        },
+        {
+          "name": "Burgerownia",
+          "quote": "Michał co piątek po pracy wpada na burgera. Dziesiąty jest za darmo, a w telefonie widzi, jak się zbliża.",
+          "reward": "10 burgerów = 1 za darmo",
+          "advantage": "Bez integracji z kasą",
+          "fields": [
+            {
+              "label": "Imię",
+              "value": "Michał"
+            },
+            {
+              "label": "Nagroda",
+              "value": "Burger za darmo"
+            }
+          ],
+          "link": "/program-lojalnosciowy",
+          "linkLabel": "Pieczątki: jak to działa"
         }
       ]
     },
