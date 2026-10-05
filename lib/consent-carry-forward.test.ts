@@ -49,6 +49,7 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
   const record = consentRecordFromCookieHeader(header);
   const prior = priorConsentFromCookieHeader(header);
   const state = resolveConsent({ record, prior, regime, gpc });
+  const evidence = captureConsentEvidence(record, prior);
   return {
     state,
     surface: consentSurface({ record, prior, regime, gpc, trackable: true }),
@@ -65,7 +66,7 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
       trackable: true,
     }),
     // A Meta ad click landing on /us/pricing, with both tags' cookies present.
-    captured: buildAttributionRecord({
+    captured: evidence && buildAttributionRecord({
       search: "?fbclid=f-click&utm_source=facebook",
       gaClientId: "GA1.1.1234567890.1700000000",
       fbp: "fb.1.1700000000.987654321",
@@ -74,7 +75,7 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
       referrer: "https://www.facebook.com/",
       consent: state,
       consentRegime: regime,
-      ...captureConsentEvidence(record),
+      ...evidence,
       capturedAt: 1_759_100_000,
     }),
   };
@@ -121,13 +122,13 @@ describe("an older partial refusal keeps the refused category refused", () => {
     expect(page.gaLoads).toBe(true);
     expect(page.metaLoads).toBe(false);
     // No click id without marketing, so the capture is an analytics-only row
-    // carrying the notice text in force and no consent moment.
+    // resting on the older choice: its version and its moment.
     expect(page.captured).toMatchObject({
       vendor: "direct",
       clickId: null,
       consentCategory: "analytics",
-      consentVersion: CONSENT_VERSION,
-      consentAt: 0,
+      consentVersion: OLDER,
+      consentAt: 1_759_000_000,
       consentRegime: "opt-out",
     });
   });
@@ -178,6 +179,7 @@ describe("parsePriorConsent", () => {
       v: OLDER,
       analytics: true,
       marketing: false,
+      at: 1_759_000_000,
     });
   });
 
@@ -199,16 +201,15 @@ describe("parsePriorConsent", () => {
   });
 });
 
-test("an older record appearing changes the consent snapshot", () => {
-  // The banner reads `prior` from the snapshot, so the snapshot must be rebuilt
-  // when it appears.
+test("an older record appearing, or its moment changing, changes the consent snapshot", () => {
+  // The banner reads `prior` from the snapshot and the attribution capture
+  // carries `prior.at` as evidence, so the snapshot must be rebuilt for both.
   const base = { record: null, regime: "opt-out" as const, gpc: false };
-  expect(consentSnapshotKey({ ...base, prior: null })).not.toBe(
-    consentSnapshotKey({
-      ...base,
-      prior: { v: OLDER, analytics: false, marketing: false },
-    }),
+  const prior = { v: OLDER, analytics: false, marketing: false, at: 1_759_000_000 };
+  const keys = [null, prior, { ...prior, at: prior.at + 60 }].map((p) =>
+    consentSnapshotKey({ ...base, prior: p }),
   );
+  expect(new Set(keys).size).toBe(3);
 });
 
 describe("the browser read path", () => {

@@ -41,12 +41,15 @@ export const CONSENT_COOKIE = "stampeo_consent";
  *     we now RETAIN the advertising identifier ourselves against the business
  *     account, and we report conversions SERVER-SIDE, after and independently
  *     of anything in the browser.
+ * 3 — Privacy policy §5.5. Meta also receives hashed contact details, the IP
+ *     address and browser characteristics, four reported steps instead of
+ *     two, and those steps for signups that did not come through a Meta ad.
  *
  * The backend's `CONSENT_VERSION` mirrors this and must move with it: the
  * backend honours only the versions in `ACCEPTED_CONSENT_VERSIONS` (backend
  * `app/services/attribution/eligibility.py`).
  */
-export const CONSENT_VERSION = 2;
+export const CONSENT_VERSION = 3;
 
 /**
  * Six months. CNIL's ceiling for how long a choice may stand.
@@ -93,11 +96,14 @@ export interface ConsentRecord extends ConsentState {
 
 /**
  * The choices of a record stored under an older `CONSENT_VERSION`. Only its
- * refusals still decide anything (see `resolveConsent`).
+ * refusals still decide anything (see `resolveConsent`); its version and moment
+ * are the evidence an attribution capture rests on (`captureConsentEvidence`).
  */
 export interface PriorConsent extends ConsentState {
   /** The older CONSENT_VERSION this choice was made against. */
   v: number;
+  /** Unix seconds, from the older cookie's `t`; 0 when it carried none. */
+  at: number;
 }
 
 /** What the visitor is currently being shown, if anything. */
@@ -145,10 +151,11 @@ export function consentRegimeForCountry(
 /**
  * What this visitor is taken to have agreed to.
  *
- * The order is the whole design. An explicit choice wins over everything,
- * because someone who clicked a button said something more specific than any
- * signal. Only when there is no current choice does GPC decide, and only then
- * does the regime's default apply.
+ * The order is the whole design. In the opt-out regime GPC wins over
+ * everything, a recorded choice included (see `gpcOverridesChoice`). Otherwise
+ * an explicit choice wins, because someone who clicked a button said something
+ * more specific than any signal. Only when there is no current choice does GPC
+ * decide in the opt-in regime, and only then does the regime's default apply.
  *
  * A `prior` (older-version) record is not a current choice, but its refusals
  * still stand: refusing the narrower processing an older text described is a
@@ -161,6 +168,9 @@ export function resolveConsent(input: {
   regime: ConsentRegime;
   gpc: boolean;
 }): ConsentState {
+  if (gpcOverridesChoice(input.regime, input.gpc)) {
+    return { analytics: false, marketing: false };
+  }
   if (input.record) {
     return { analytics: input.record.analytics, marketing: input.record.marketing };
   }
@@ -170,6 +180,33 @@ export function resolveConsent(input: {
     analytics: fallback.analytics && !refused("analytics"),
     marketing: fallback.marketing && !refused("marketing"),
   };
+}
+
+/**
+ * Does Global Privacy Control override even a recorded choice?
+ *
+ * Only in the opt-out regime: the CCPA regulations (§7025) require the signal
+ * to be processed as an opt-out even when it conflicts with an earlier setting,
+ * such as "Got it" on the US notice. In the opt-in regime an explicit choice
+ * still wins.
+ */
+function gpcOverridesChoice(regime: ConsentRegime, gpc: boolean): boolean {
+  return gpc && regime === "opt-out";
+}
+
+/**
+ * The categories whose trackers must be cleared when a page loads.
+ *
+ * Both, whenever GPC overrides in the US: a recorded grant or the opt-out
+ * default may have let trackers into the jar before the signal was on,
+ * `stampeo_attribution` included, and none of them may outlive the override or
+ * cross to the dashboard. Otherwise none.
+ */
+export function categoriesToClearOnLoad(input: {
+  regime: ConsentRegime;
+  gpc: boolean;
+}): ConsentCategory[] {
+  return gpcOverridesChoice(input.regime, input.gpc) ? ["analytics", "marketing"] : [];
 }
 
 /** What a visitor with no choice on record is taken to have agreed to. */
@@ -212,7 +249,12 @@ export function consentSnapshotKey(input: {
       ].join(".")
     : "none";
   const prior = input.prior
-    ? [input.prior.v, input.prior.analytics ? 1 : 0, input.prior.marketing ? 1 : 0].join(".")
+    ? [
+        input.prior.v,
+        input.prior.analytics ? 1 : 0,
+        input.prior.marketing ? 1 : 0,
+        input.prior.at,
+      ].join(".")
     : "none";
   return `${record}|${prior}|${input.regime}|${input.gpc}`;
 }
@@ -386,11 +428,20 @@ export function parseConsentCookie(
   return stored && stored.v === CONSENT_VERSION ? stored : null;
 }
 
-/** A choice stored under an older version, or null. */
+/**
+ * A choice stored under an older version, or null.
+ *
+ * Returned even without a moment (`at` 0): its refusals still stand.
+ */
 export function parsePriorConsent(raw: string | null | undefined): PriorConsent | null {
   const stored = parseStoredChoice(raw);
   if (!stored || stored.v === CONSENT_VERSION) return null;
-  return { v: stored.v, analytics: stored.analytics, marketing: stored.marketing };
+  return {
+    v: stored.v,
+    analytics: stored.analytics,
+    marketing: stored.marketing,
+    at: stored.at,
+  };
 }
 
 /** The raw consent cookie value in a `Cookie:` header or `document.cookie`. */

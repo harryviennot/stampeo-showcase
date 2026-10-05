@@ -131,7 +131,7 @@
     "cookies": {
       "banner": {
         "title": "Tus opciones de cookies",
-        "body": "Solo activamos las cookies de medición y de publicidad si las aceptas. Rechazarlas no cambia nada del funcionamiento del sitio.",
+        "body": "Solo activamos las cookies de medición y de publicidad si las aceptas, y solo entonces indicamos a Meta y Google si te registras desde un anuncio. Rechazarlas no cambia nada del funcionamiento del sitio.",
         "learnMore": "Ver el detalle",
         "accept": "Aceptar todo",
         "refuse": "Rechazar todo",
@@ -139,7 +139,7 @@
       },
       "notice": {
         "title": "Tus opciones de privacidad",
-        "body": "Usamos cookies de medición y de publicidad para ver cómo funcionan nuestros anuncios.",
+        "body": "Usamos cookies de medición y de publicidad para ver cómo funcionan nuestros anuncios, e indicamos a Meta y Google si te registras desde uno de ellos.",
         "choices": "Tus opciones de privacidad",
         "dismiss": "Entendido"
       },
@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Publicidad",
-          "body": "Meta y TikTok, para saber cuál de nuestros anuncios ha servido de verdad."
+          "body": "Meta y TikTok, para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte."
         },
         "save": "Guardar mi elección",
         "cancel": "Cancelar"

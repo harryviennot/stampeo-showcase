@@ -47,7 +47,7 @@ const GA_POLL_MS = 250;
 
 export function AttributionCapture() {
   const pathname = usePathname();
-  const { analytics, marketing, regime, record, ready } = useConsent();
+  const { analytics, marketing, regime, record, prior, ready } = useConsent();
 
   useEffect(() => {
     // Snapshot the attribution-relevant inputs EXACTLY ONCE per page load,
@@ -80,6 +80,9 @@ export function AttributionCapture() {
     // consent granted later on some other page changes nothing about where
     // this visit began.
     if (!isTrackablePath(landing.path)) return;
+    // An older choice with no recorded moment is no evidence to rest a row on.
+    const evidence = captureConsentEvidence(record, prior);
+    if (evidence === null) return;
 
     const build = (gaClientId: string | null, fbp: string | null) =>
       buildAttributionRecord({
@@ -92,7 +95,7 @@ export function AttributionCapture() {
         selfHost: landing.selfHost,
         consent: { analytics, marketing },
         consentRegime: regime,
-        ...captureConsentEvidence(record),
+        ...evidence,
         capturedAt: Math.floor(Date.now() / 1000),
       });
 
@@ -140,7 +143,7 @@ export function AttributionCapture() {
     return () => {
       cancelled = true;
     };
-  }, [pathname, analytics, marketing, ready, regime, record]);
+  }, [pathname, analytics, marketing, ready, regime, record, prior]);
 
   return null;
 }
