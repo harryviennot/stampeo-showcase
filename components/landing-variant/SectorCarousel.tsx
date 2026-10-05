@@ -5,58 +5,12 @@ import { WalletCard } from "../card/WalletCard";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { CenterCarousel } from "../ui/CenterCarousel";
 import { ArrowRightIcon, CheckIcon } from "../icons";
-import type { StampIconType } from "@/components/onboarding/StampIconPicker";
-import type {
-  CustomStampConfig,
-  PointsStripStyle,
-  RewardTier,
-} from "@/lib/types/design";
+import {
+  sectorWalletDesign,
+  type SectorTheme,
+} from "@/lib/landing/sector-slides";
 
-export type SectorTheme = {
-  engine: "stamp" | "points";
-  // Outer "business-card" frame that holds the wallet card + story.
-  cardBg: string;
-  cardText: string;
-  cardMuted: string;
-  /** Reads on cardBg: engine label, checkmark, arrow. Distinct from the
-      wallet's own accent so a near-black wallet stamp never leaks onto a
-      dark frame. */
-  accent: string;
-  accentPill: string;
-  // Wallet card itself (a real, hand-designed card, not a random palette).
-  walletBg: string;
-  /** Stamp fill (stamp engine) / points progress accent (points engine). */
-  walletAccent: string;
-  walletIcon: string;
-  /** Value text (foreground_color). Falls back to auto contrast when unset. */
-  walletText?: string;
-  /** Label text (label_color): org name, field labels, STAMPS/POINTS. */
-  walletLabel?: string;
-  /** Wordmark logo shown in the card header; carries the brand, so we leave
-      the org-name text empty to avoid doubling it up. */
-  walletLogoUrl?: string;
-  walletOrgName?: string;
-  // stamp engine
-  walletStamps?: number;
-  /** Filled slots to preview. Defaults to ~60% so a fresh card reads as
-      "in progress"; set to walletStamps to show the reward slot filled. */
-  walletFilled?: number;
-  walletStampIcon?: StampIconType;
-  /** Icon on the final (reward) slot — e.g. a gift. */
-  walletRewardIcon?: StampIconType;
-  /** Custom uploaded icons (mutually exclusive with walletStampIcon). */
-  customStampConfig?: CustomStampConfig;
-  // points engine
-  pointsStripStyle?: PointsStripStyle;
-  pointsRewards?: RewardTier[];
-  pointsBalance?: number;
-  /** Solid strip canvas behind the strip image (strip_background_color). */
-  stripBgColor?: string;
-  /** Strip artwork/photo (strip_background_url). */
-  stripImageUrl?: string;
-  /** 0-100. Defaults to 40 (soft watermark); 100 makes the image the strip. */
-  stripImageOpacity?: number;
-};
+export type { SectorTheme };
 
 export type SectorSlide = {
   name: string;
@@ -80,11 +34,6 @@ function SlideCard({
 }) {
   const { theme } = slide;
   const isPoints = theme.engine === "points";
-  const secondaryFields = (slide.fields ?? []).map((f, i) => ({
-    key: `f${i}`,
-    label: f.label,
-    value: f.value,
-  }));
 
   return (
     <Link
@@ -101,41 +50,7 @@ function SlideCard({
           <div className="w-[240px] md:w-[290px]">
             <ScaledCardWrapper baseWidth={280}>
               <WalletCard
-                design={
-                  isPoints
-                    ? {
-                        card_type: "points",
-                        points_strip_style: theme.pointsStripStyle,
-                        background_color: theme.walletBg,
-                        foreground_color: theme.walletText,
-                        label_color: theme.walletLabel,
-                        progress_accent_color: theme.walletAccent,
-                        icon_color: theme.walletIcon,
-                        organization_name: theme.walletOrgName,
-                        logo_url: theme.walletLogoUrl,
-                        strip_background_color: theme.stripBgColor,
-                        strip_background_url: theme.stripImageUrl,
-                        strip_background_opacity: theme.stripImageOpacity,
-                        secondary_fields: secondaryFields,
-                      }
-                    : {
-                        background_color: theme.walletBg,
-                        foreground_color: theme.walletText,
-                        label_color: theme.walletLabel,
-                        stamp_filled_color: theme.walletAccent,
-                        icon_color: theme.walletIcon,
-                        stamp_icon: theme.walletStampIcon,
-                        reward_icon: theme.walletRewardIcon,
-                        stamp_icon_mode: theme.customStampConfig
-                          ? "custom"
-                          : "preset",
-                        custom_stamp_config: theme.customStampConfig,
-                        total_stamps: theme.walletStamps,
-                        organization_name: theme.walletOrgName,
-                        logo_url: theme.walletLogoUrl,
-                        secondary_fields: secondaryFields,
-                      }
-                }
+                design={sectorWalletDesign(theme, slide.fields ?? [])}
                 stamps={
                   isPoints
                     ? undefined

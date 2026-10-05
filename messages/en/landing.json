@@ -180,6 +180,114 @@
           ],
           "link": "/loyalty-programs",
           "linkLabel": "Compare stamps and points"
+        },
+        {
+          "name": "Bakery",
+          "quote": "Ava stops by for a croissant on her way to work. Nine visits in, she can see her tenth is on the house.",
+          "reward": "10 croissants = 1 free",
+          "advantage": "Your own product photos as stamps",
+          "fields": [
+            {
+              "label": "Cardholder",
+              "value": "Ava"
+            },
+            {
+              "label": "Reward",
+              "value": "Free croissant"
+            }
+          ],
+          "link": "/blog/digital-stamp-card",
+          "linkLabel": "Read the stamp card guide"
+        },
+        {
+          "name": "Lash studio",
+          "quote": "Maya comes back every three weeks for a fill. Her sixth is free, and her phone shows her how close she is.",
+          "reward": "6 fills = 1 free",
+          "advantage": "Your logo, your colors, your stamp icon",
+          "fields": [
+            {
+              "label": "Cardholder",
+              "value": "Maya"
+            },
+            {
+              "label": "Reward",
+              "value": "Free lash fill"
+            }
+          ],
+          "link": "/blog/digital-stamp-card",
+          "linkLabel": "Read the stamp card guide"
+        },
+        {
+          "name": "Grocery store",
+          "quote": "Rosa shops with you every week: a full cart one week, just bread the next. Points follow what she spends, so big weeks count more.",
+          "reward": "10% off at 200 points",
+          "advantage": "A full cart earns more than a quick stop",
+          "fields": [
+            {
+              "label": "Cardholder",
+              "value": "Rosa"
+            },
+            {
+              "label": "Next reward",
+              "value": "10% off"
+            }
+          ],
+          "link": "/loyalty-programs",
+          "linkLabel": "Compare stamps and points"
+        },
+        {
+          "name": "Food truck",
+          "quote": "Leo finds the truck wherever it parks. His card lives in his phone, so every slice counts, on every street corner.",
+          "reward": "8 slices = 1 free",
+          "advantage": "No paper, no hardware, just your phone",
+          "fields": [
+            {
+              "label": "Cardholder",
+              "value": "Leo"
+            },
+            {
+              "label": "Reward",
+              "value": "Free slice"
+            }
+          ],
+          "link": "/blog/digital-stamp-card",
+          "linkLabel": "Read the stamp card guide"
+        },
+        {
+          "name": "Spa",
+          "quote": "Elena books a facial every month. Her sixth one is on the house, and every stamp shows up on her lock screen.",
+          "reward": "6 facials = 1 free",
+          "advantage": "A notification with every stamp",
+          "fields": [
+            {
+              "label": "Cardholder",
+              "value": "Elena"
+            },
+            {
+              "label": "Reward",
+              "value": "Free facial"
+            }
+          ],
+          "link": "/blog/digital-stamp-card",
+          "linkLabel": "Read the stamp card guide"
+        },
+        {
+          "name": "Burger joint",
+          "quote": "Jordan grabs a burger every Friday after work. His tenth is on the house, and he watches it get closer on his phone.",
+          "reward": "10 burgers = 1 free",
+          "advantage": "No POS integration needed",
+          "fields": [
+            {
+              "label": "Cardholder",
+              "value": "Jordan"
+            },
+            {
+              "label": "Reward",
+              "value": "Free burger"
+            }
+          ],
+          "link": "/blog/digital-stamp-card",
+          "linkLabel": "Read the stamp card guide"
         }
       ]
     },
