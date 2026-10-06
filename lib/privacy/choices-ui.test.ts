@@ -103,6 +103,20 @@ describe("the preferences dialog by region", () => {
   });
 });
 
+describe("which intro the dialog opens with", () => {
+  test.each([
+    ["US", false, "off", "us.intro"],
+    ["US", true, "off", "us.introLocked"],
+    ["US", true, "service_provider", "us.intro"],
+    ["EEA_UK_CH", false, "off", "intro"],
+    ["EEA_UK_CH", true, "off", "intro"],
+    ["UNKNOWN", false, "off", "intro"],
+  ] as const)("%s, GPC %s, analytics under opt-out %s: %s", (key, gpc, setting, intro) => {
+    // The locked intro is for the dialog with nothing left to switch.
+    expect(preferencesView(matrixWith(setting).rows[key], gpc, matrixWith(setting)).intro).toBe(intro);
+  });
+});
+
 describe("what Global Privacy Control locks (AC2.6)", () => {
   test.each([
     // region, gpc, analytics setting -> locked, status row, only Close
@@ -284,6 +298,23 @@ describe.each(LOCALES)("the privacy copy in %s", (locale) => {
     expect(offenders).toEqual([]);
   });
 
+  test("the notice's own title is the footer's words too", () => {
+    expect(cookies["cookies.notice.title"]).toBe(read(locale, PRIVACY_CHOICES_KEY));
+  });
+
+  test("the US intro says where the link is: the footer, not every page", () => {
+    const FOOTER = { en: /footer/, fr: /pied de page/, es: /pie de página/, pl: /stopce/ };
+    const EVERY_PAGE = { en: /any page/, fr: /n'importe quelle page/, es: /cualquier página/, pl: /dowolnej strony/ };
+
+    expect(cookies["cookies.prefs.us.intro"]).toMatch(FOOTER[locale]);
+    expect(cookies["cookies.prefs.us.intro"]).not.toMatch(EVERY_PAGE[locale]);
+  });
+
+  test("the locked intro points back at the link and types no duration", () => {
+    expect(cookies["cookies.prefs.us.introLocked"]).toContain("{choices}");
+    expect(cookies["cookies.prefs.us.introLocked"]).not.toContain("{months");
+  });
+
   test("the footer link, the notice button and the US dialog title are one set of words (AC2.10)", () => {
     const label = read(locale, PRIVACY_CHOICES_KEY);
     expect(typeof label).toBe("string");
@@ -309,6 +340,19 @@ describe.each(LOCALES)("the privacy copy in %s", (locale) => {
     ];
     const missing = needed.filter((key) => typeof read(locale, key) !== "string" || read(locale, key) === "");
     expect(missing).toEqual([]);
+  });
+});
+
+describe("the two state labels are one pair", () => {
+  // Both read as the state of a setting, so they share a gender and a number.
+  test.each([
+    ["en", "Always on", "Off"],
+    ["fr", "Toujours activé", "Désactivé"],
+    ["es", "Siempre activado", "Desactivado"],
+    ["pl", "Zawsze włączone", "Wyłączone"],
+  ] as const)("%s", (locale, always, off) => {
+    expect(read(locale, "cookies.prefs.necessary.always")).toBe(always);
+    expect(read(locale, "cookies.prefs.lockedOff")).toBe(off);
   });
 });
 
