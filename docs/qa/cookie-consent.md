@@ -76,6 +76,11 @@ login, it is the wrong runbook.
   must not reach `main` before counsel signs off. LG-01 and LG-02 read that
   draft. The questions for counsel are in
   `docs/features/STA-377/legal-review.md`.
+- **GA-02 must be re-verified against the production GA4 stream** once the
+  Showcase stream's "Page changes based on browser history events" and "Form
+  interactions" are switched off (`docs/features/STA-318/ga4-setup.md`, D7).
+  Until then Google can report a client-side hop onto a private route that no
+  code of ours sends.
 - **MP-08** — fixed, pending re-verification (STA-373). Root cause: Meta's
   script reported client-side hops (PageView) and clicks
   (`SubscribedButtonClick`) on its own, bypassing `isTrackablePath`; it was

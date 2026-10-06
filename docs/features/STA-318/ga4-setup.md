@@ -81,8 +81,8 @@ cleanup, not a GA-specific decision.
 
 1. **Admin → Data collection and modification → Data streams → Add stream → Web**.
 2. Website URL: `https://stampeo.app`. Stream name: `Showcase`.
-3. **Enhanced measurement** — leave ON, with one edit (section D5). It gives
-   scroll, outbound click, and site search events with no code.
+3. **Enhanced measurement** — leave ON, with two edits (sections D5 and D7). It
+   gives scroll, outbound click, and site search events with no code.
 4. Create. The panel now shows the **Measurement ID**, format `G-XXXXXXXXXX`.
    **That is the deliverable.** Copy it.
 5. Google will offer installation instructions and a `gtag.js` snippet.
@@ -177,9 +177,9 @@ Showcase has routes that can legitimately carry a token in the URL
 (`/demo/wallet-select/[token]`, email preference links). Sending a token to
 Google in a `page_location` is a data leak that no consent banner covers.
 
-Also under Enhanced measurement: consider turning **off** "Form interactions",
-which fires on form submits across the site and is the noisiest source of
-accidental field capture.
+Also under Enhanced measurement, turn **off** "Form interactions" (D7): it
+fires on form submits across the site and is the noisiest source of accidental
+field capture.
 
 ### D6. Regional ad-personalization controls
 **Admin → Data collection and modification → Data collection → Advanced
@@ -187,6 +187,22 @@ settings for ad personalization** (naming varies).
 
 Disable ad personalization for the **EEA and UK**. Ad measurement still works;
 what is switched off is using EU visitors' behaviour to build ad audiences.
+
+### D7. Enhanced measurement: no history or form events
+**Data streams → Showcase → Enhanced measurement (gear) → Show advanced
+settings.**
+
+- Turn **off** "Page changes based on browser history events". With it on, gtag
+  reports a `page_view` for every History API change on its own, including a
+  client-side hop onto `/onboarding`, `/login` or a business's enrollment page,
+  which our route check never sees. Our loader sends every page view itself
+  (`shouldSendPageView`), so turning this off loses nothing.
+- Turn **off** "Form interactions".
+- Leave scroll, outbound clicks and site search on.
+
+This is a console setting, not code. After it changes, re-run QA case GA-02
+against the **production** stream: only the live stream proves that nothing is
+reported for `/onboarding` (`docs/qa/cookie-consent.md`).
 
 ### On IP addresses
 
@@ -367,6 +383,8 @@ Not part of this issue — recorded so it is not rediscovered:
 - [x] D4 — Google signals left OFF
 - [x] D5 — email/query redaction on; `email`, `token`, `code`, and `phone` stripped
 - [x] D6 — ad personalization disabled for EEA/UK and separately listed EU territories
+- [ ] D7 — "Page changes based on browser history events" and "Form interactions"
+      off on the Showcase stream; then re-verify GA-02 on the production stream
 - [x] E — reporting identity set to Device-based
 - [x] F — `NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.example` and the Dockerfile
       (ARG line 41 *and* ENV line 52). **Prod build args still to do** — the
