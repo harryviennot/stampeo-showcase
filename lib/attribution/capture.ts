@@ -1,4 +1,4 @@
-import type { ConsentState } from "../consent";
+import { currentConsent, type ConsentState } from "../consent";
 import { isTrackablePath } from "../consent-routes";
 import { serializeSetCookie, syncPrivacyCookies } from "../privacy/cookies";
 import {
@@ -230,9 +230,14 @@ export function readLiveIds(
  * them as a server response that browsers do not cap the way they cap a script
  * cookie. A cookie too big to be one is dropped: losing a source costs a
  * dashboard row, while a header-breaking cookie costs the dashboard itself.
+ *
+ * What the visitor allows is read again here, at the moment of writing: a plan
+ * made before a refusal (a poll still waiting for a tag's cookie) cannot write
+ * a carrier of the category refused since.
  */
 export function writeCapturePlan(plan: CapturePlan): void {
   if (typeof document === "undefined") return;
+  const allowed = currentConsent();
   const carriers: Record<string, unknown> = {};
 
   const put = <T extends object>(
@@ -254,9 +259,9 @@ export function writeCapturePlan(plan: CapturePlan): void {
     carriers[key] = decodeCarrier(value);
   };
 
-  put("src", SOURCE_COOKIE, plan.src, serializeSourceCarrier);
-  put("ga", GA_COOKIE, plan.ga, serializeGaCarrier);
-  put("ad", AD_COOKIE, plan.ad, serializeAdCarrier);
+  put("src", SOURCE_COOKIE, allowed.analytics || allowed.marketing ? plan.src : null, serializeSourceCarrier);
+  put("ga", GA_COOKIE, allowed.analytics ? plan.ga : null, serializeGaCarrier);
+  put("ad", AD_COOKIE, allowed.marketing ? plan.ad : null, serializeAdCarrier);
 
   if (Object.keys(carriers).length > 0) syncPrivacyCookies({ carriers });
 }

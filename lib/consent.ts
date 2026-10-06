@@ -675,6 +675,11 @@ export function clearCookiesFor(categories: readonly ConsentCategory[]): void {
   if (carriers.length > 0) syncPrivacyCookies({ clear: carriers });
 }
 
+/** Clear these categories' cookies, but only when one is in the jar: nothing is asked of the server for nothing. */
+export function clearPresentCookiesFor(categories: readonly ConsentCategory[]): void {
+  if (cookieNamesToClear(categories, presentCookieNames()).length > 0) clearCookiesFor(categories);
+}
+
 /** Announce a committed choice to anything listening (the pixel loaders). */
 export function emitConsentChange(state: ConsentState): void {
   if (typeof window === "undefined") return;

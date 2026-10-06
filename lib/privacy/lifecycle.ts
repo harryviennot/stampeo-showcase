@@ -1,11 +1,14 @@
 import { isTrackablePath } from "../consent-routes";
 import {
   consentCookieObject,
+  clearPresentCookiesFor,
   consentCookieValue,
   currentConsent,
   emitConsentChange,
   ensureSubjectId,
+  explicitRefusals,
   parseStoredChoice,
+  type ConsentCategory,
   type StoredChoice,
 } from "../consent";
 import { syncPrivacyCookies, type PrivacyCookiesBody } from "./cookies";
@@ -21,16 +24,20 @@ import { readSid, writeSidCookie } from "./subject";
  * `ready` turns true for the tag gates after it exists. A refusal in a sliding
  * row is re-issued by the server on each trackable load, and the subject is
  * refreshed the same way. Both happen at most once per document, and never on a
- * page where no tag may run.
+ * page where no tag may run. On every such page the cookies of any category the
+ * stored record explicitly refuses are cleared, so a carrier written by a request
+ * a refusal outran does not outlive it.
  */
 
 export interface PageLoadPlan {
   mintSid: boolean;
   syncSid: boolean;
   syncConsent: boolean;
+  /** The categories the stored record explicitly refuses, whose cookies must not be in the jar. */
+  clear: ConsentCategory[];
 }
 
-const NOTHING: PageLoadPlan = { mintSid: false, syncSid: false, syncConsent: false };
+const NOTHING: PageLoadPlan = { mintSid: false, syncSid: false, syncConsent: false, clear: [] };
 
 export function planPageLoad(input: {
   row: PolicyRow;
@@ -49,6 +56,7 @@ export function planPageLoad(input: {
     mintSid,
     syncSid: mintSid || (due && input.sid !== null),
     syncConsent: due && input.row.refusal_sliding && refused,
+    clear: explicitRefusals(input.stored),
   };
 }
 
@@ -74,6 +82,8 @@ export function runPageLifecycle(
     trackable: isTrackablePath(pathname),
     refreshedThisDocument: session.refreshed,
   });
+  // A carrier written by a request that was outrun by a refusal is removed here.
+  clearPresentCookiesFor(plan.clear);
   if (!plan.mintSid && !plan.syncSid && !plan.syncConsent) return;
 
   if (plan.mintSid) writeSidCookie(ensureSubjectId());

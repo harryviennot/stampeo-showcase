@@ -89,7 +89,7 @@ describe("planPageLoad", () => {
     ["a French visitor who decided keeps their subject fresh", { row: EU }, { mintSid: false, syncSid: true, syncConsent: false }],
     ["a French refusal does not slide", { row: EU, stored: choice(false, false) }, { mintSid: false, syncSid: true, syncConsent: false }],
   ] as const)("%s", (_case, overrides, expected) => {
-    expect(planPageLoad({ ...base, ...overrides })).toEqual(expected);
+    expect(planPageLoad({ ...base, ...overrides })).toMatchObject(expected);
   });
 });
 

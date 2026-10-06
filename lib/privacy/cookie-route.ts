@@ -55,11 +55,11 @@ export const CARRIER_PARSERS: ReadonlyMap<string, CarrierParser> = new Map([
 ]);
 
 /** The carriers a request may set, by the key it posts them under, and the categories each rests on. */
-const CARRIER_CATEGORIES: Readonly<Record<string, readonly ConsentCategory[]>> = {
-  src: ["analytics", "marketing"],
-  ga: ["analytics"],
-  ad: ["marketing"],
-};
+const CARRIER_CATEGORIES: ReadonlyMap<string, readonly ConsentCategory[]> = new Map([
+  ["src", ["analytics", "marketing"]],
+  ["ga", ["analytics"]],
+  ["ad", ["marketing"]],
+]);
 
 /**
  * Is a carrier still permitted by what the request's own consent cookie
@@ -68,7 +68,7 @@ const CARRIER_CATEGORIES: Readonly<Record<string, readonly ConsentCategory[]>> =
  * both refused takes it.
  */
 function carrierPermitted(key: string, refused: ReadonlySet<ConsentCategory>): boolean {
-  const categories = CARRIER_CATEGORIES[key] ?? [];
+  const categories = CARRIER_CATEGORIES.get(key) ?? [];
   return categories.some((category) => !refused.has(category));
 }
 
