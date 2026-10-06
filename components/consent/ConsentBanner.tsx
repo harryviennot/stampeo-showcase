@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -22,6 +22,9 @@ import {
   recordConsentDecision,
   type ConsentLedgerSurface,
 } from "@/lib/consent-ledger";
+import { PRIVACY_CHOICES_KEY, preferencesView } from "@/lib/privacy/choices-ui";
+import { rowByKey } from "@/lib/privacy/policy";
+import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
 import { ConsentPreferences } from "./ConsentPreferences";
 
 const ALL_ON: ConsentState = { analytics: true, marketing: true };
@@ -29,7 +32,7 @@ const ALL_OFF: ConsentState = { analytics: false, marketing: false };
 const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
 
 /**
- * Where a visitor accepts or refuses GA4, the Meta pixel and the TikTok pixel.
+ * Where a visitor accepts or refuses GA4 and the Meta pixel.
  *
  * Two surfaces, one gate — see `lib/consent.ts` for which visitor gets which
  * and why the split exists at all.
@@ -45,6 +48,7 @@ const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
  */
 export function ConsentBanner() {
   const t = useTranslations("common.cookies");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
   const consent = useConsent();
   const [prefsOpen, setPrefsOpen] = useState(false);
@@ -112,6 +116,16 @@ export function ConsentBanner() {
       }
     },
     [consent.regime, consent.row],
+  );
+
+  // The dialog's region version, from the row in force and whether GPC is on.
+  const view = useMemo(
+    () =>
+      preferencesView(
+        rowByKey(consent.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY],
+        consent.gpc,
+      ),
+    [consent.row, consent.gpc],
   );
 
   const surface = consent.ready
@@ -200,13 +214,15 @@ export function ConsentBanner() {
       {surface === "notice" && (
         <section role="region" aria-label={t("notice.title")} className={surfaceShell}>
           <p className="text-sm text-[var(--muted-foreground)]">{t("notice.body")}</p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          {/* The same words as the footer's US link, so what a visitor sees once
+              is what they find later. 44px tall on a phone, like "customise". */}
+          <div className="mt-1 flex flex-wrap items-center gap-x-5 text-sm sm:mt-3 sm:gap-y-2">
             <button
               type="button"
               onClick={() => setPrefsOpen(true)}
-              className="font-semibold text-[var(--accent)] underline underline-offset-2"
+              className="inline-flex h-11 items-center font-semibold text-[var(--accent)] underline underline-offset-2 sm:h-auto"
             >
-              {t("notice.choices")}
+              {tCommon(PRIVACY_CHOICES_KEY)}
             </button>
             {/* Dismissing RECORDS the state in force (the opt-out default, with
                 any refusal carried from an older version) rather than hiding
@@ -219,7 +235,7 @@ export function ConsentBanner() {
               onClick={() =>
                 commit({ analytics: consent.analytics, marketing: consent.marketing }, "notice")
               }
-              className="font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
+              className="inline-flex h-11 items-center font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] sm:h-auto"
             >
               {t("notice.dismiss")}
             </button>
@@ -230,6 +246,7 @@ export function ConsentBanner() {
       <ConsentPreferences
         open={prefsOpen}
         initial={{ analytics: consent.analytics, marketing: consent.marketing }}
+        view={view}
         onClose={() => setPrefsOpen(false)}
         onSave={(next) => commit(next, "preferences")}
       />

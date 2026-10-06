@@ -1,8 +1,10 @@
 "use client";
 
 // Re-export Phosphor icons with a consistent interface for the codebase.
-// Only AppleIcon and GoogleIcon are custom (brand icons not in Phosphor).
+// AppleIcon, GoogleIcon and PrivacyChoicesIcon are custom (marks not in Phosphor).
 // "use client" is required because @phosphor-icons/react calls createContext at module level.
+
+import { useState } from "react";
 
 export {
   Check as CheckIcon,
@@ -70,5 +72,26 @@ export function GoogleIcon({ className = "w-5 h-5" }: IconProps) {
       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
       <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
     </svg>
+  );
+}
+
+/**
+ * The California privacy-options mark. Official artwork, served unmodified from
+ * `public/icons/privacy-options.svg` with its own fixed colours, so it is an
+ * <img> and ignores `currentColor`. The text beside it is the accessible name.
+ * Renders nothing if the file cannot load, rather than a broken image.
+ */
+export function PrivacyChoicesIcon({ className = "h-3.5 w-auto" }: IconProps) {
+  const [missing, setMissing] = useState(false);
+  if (missing) return null;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- fixed-colour SVG; next/image would need SVG handling
+    <img
+      src="/icons/privacy-options.svg"
+      alt=""
+      aria-hidden="true"
+      className={className}
+      onError={() => setMissing(true)}
+    />
   );
 }

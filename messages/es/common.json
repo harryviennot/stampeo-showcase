@@ -110,6 +110,7 @@
         "success": "¡Gracias! Ya estás suscrito."
       },
       "sitemapLabel": "Mapa del sitio",
+      "privacyChoices": "Tus opciones de privacidad",
       "cookiePreferences": "Preferencias de cookies"
     },
     "points": "Puntos",
@@ -140,16 +141,15 @@
       "notice": {
         "title": "Tus opciones de privacidad",
         "body": "Usamos cookies de medición y de publicidad para ver cómo funcionan nuestros anuncios, e indicamos a Meta y Google si te registras desde uno de ellos.",
-        "choices": "Tus opciones de privacidad",
         "dismiss": "Entendido"
       },
       "prefs": {
         "title": "Elegir por finalidad",
-        "intro": "Activas o desactivas cada finalidad. Guardamos tu elección durante seis meses y puedes cambiarla cuando quieras desde el pie de página.",
+        "intro": "Activas o desactivas cada finalidad. Guardamos tu elección durante {months, plural, one {# mes} other {# meses}} y puedes cambiarla cuando quieras desde el pie de página.",
         "necessary": {
           "title": "Estrictamente necesarias",
           "always": "Siempre activas",
-          "body": "Tu idioma, tu país y esta misma elección. Nada de esto te identifica ni sale de Stampeo."
+          "body": "Tu idioma, tu país y esta misma elección. Un identificador aleatorio registra tus elecciones y puede vincularse a la cuenta que crees."
         },
         "analytics": {
           "title": "Medición de audiencia",
@@ -157,10 +157,28 @@
         },
         "marketing": {
           "title": "Publicidad",
-          "body": "Meta y TikTok, para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte."
+          "body": "Meta, para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte."
         },
         "save": "Guardar mi elección",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "lockedOff": "Desactivada",
+        "close": "Cerrar",
+        "us": {
+          "title": "Tus opciones de privacidad",
+          "intro": "Desactiva lo que no quieras que compartamos ni midamos. Una negativa se guarda durante {months, plural, one {# mes} other {# meses}} y se renueva en cada visita. Para cambiarla, vuelve a «{choices}» al final de cualquier página.",
+          "gpc": {
+            "statusAll": "La señal Global Privacy Control de tu navegador está activada y la respetamos: la publicidad y la medición de audiencia están desactivadas.",
+            "statusAdvertising": "La señal Global Privacy Control de tu navegador está activada y la respetamos: la publicidad está desactivada."
+          },
+          "marketing": {
+            "title": "Venta, uso compartido y publicidad dirigida",
+            "body": "Meta, para saber qué anuncios han llevado a un registro. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Si lo desactivas, no se envía nada a Meta."
+          },
+          "analytics": {
+            "title": "Medición de audiencia",
+            "body": "Google Analytics, para ver qué páginas nos traen nuevos comercios. Google trata estos datos solo por cuenta nuestra."
+          }
+        }
       }
     }
   }

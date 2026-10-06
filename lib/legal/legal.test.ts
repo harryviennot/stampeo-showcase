@@ -576,7 +576,7 @@ describe("privacy — the statements the legal review requires", () => {
       expectAll(text, REQUIRED[locale].sharing, `${locale} §6 US sharing`);
       expect(text).toContain("Global Privacy Control");
       // The opt-out names the controls a visitor can actually find on the page.
-      expect(text).toContain(common.cookies.notice.choices);
+      expect(text).toContain(common.footer.privacyChoices);
       expect(text).toContain(common.footer.cookiePreferences);
     },
   );

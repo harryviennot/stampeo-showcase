@@ -219,7 +219,7 @@ We use collected data to:
 
 We **never sell** personal data for money. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
 
-**In the United States:** sending data to Meta and the other advertising platforms named in 5.3, for our advertising, may count as "sharing" under California law. You can opt out at any time through **Your privacy choices** in the notice, through **Cookie preferences** at the bottom of every page, or with a Global Privacy Control signal, which we honor as described in 5.1.
+**In the United States:** sending data to Meta and the other advertising platforms named in 5.3, for our advertising, may count as "sharing" under California law. You can opt out at any time through **Your Privacy Choices** in the notice, through **Cookie preferences** at the bottom of every page, or with a Global Privacy Control signal, which we honor as described in 5.1.
 
 ### 6.1 Marketing and lifecycle emails to Business Users
 

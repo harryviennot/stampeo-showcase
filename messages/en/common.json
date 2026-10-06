@@ -110,6 +110,7 @@
         "success": "Thanks! You're subscribed."
       },
       "sitemapLabel": "Sitemap",
+      "privacyChoices": "Your Privacy Choices",
       "cookiePreferences": "Cookie preferences"
     },
     "points": "Points",
@@ -140,16 +141,15 @@
       "notice": {
         "title": "Your privacy choices",
         "body": "We use measurement and advertising cookies to see how our ads perform, and tell Meta and Google whether an ad led you to sign up.",
-        "choices": "Your privacy choices",
         "dismiss": "Got it"
       },
       "prefs": {
         "title": "Choose by purpose",
-        "intro": "Turn each purpose on or off. We keep your choice for six months, and you can change it any time from the footer.",
+        "intro": "Turn each purpose on or off. We keep your choice for {months, plural, one {# month} other {# months}}, and you can change it any time from the footer.",
         "necessary": {
           "title": "Strictly necessary",
           "always": "Always on",
-          "body": "Your language, your country, and this choice itself. Nothing here identifies you or leaves Stampeo."
+          "body": "Your language, your country, and this choice itself. A random identifier records your choices, and can be linked to the account you create."
         },
         "analytics": {
           "title": "Audience measurement",
@@ -157,10 +157,28 @@
         },
         "marketing": {
           "title": "Advertising",
-          "body": "Meta and TikTok, to know which of our ads actually led somewhere. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you."
+          "body": "Meta, to know which of our ads actually led somewhere. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you."
         },
         "save": "Save my choice",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "lockedOff": "Off",
+        "close": "Close",
+        "us": {
+          "title": "Your Privacy Choices",
+          "intro": "Turn off what you don't want us to share or measure. A refusal is kept for {months, plural, one {# month} other {# months}} and renews each time you visit. To change it, come back to “{choices}” at the bottom of any page.",
+          "gpc": {
+            "statusAll": "Your browser's Global Privacy Control signal is on, and we honor it: advertising and audience measurement are off.",
+            "statusAdvertising": "Your browser's Global Privacy Control signal is on, and we honor it: advertising is off."
+          },
+          "marketing": {
+            "title": "Sale, sharing and targeted advertising",
+            "body": "Meta, to know which of our ads led to a sign-up. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you. Turned off, nothing is sent to Meta."
+          },
+          "analytics": {
+            "title": "Audience measurement",
+            "body": "Google Analytics, to see which pages bring us new businesses. Google handles this data on our behalf only."
+          }
+        }
       }
     }
   }
