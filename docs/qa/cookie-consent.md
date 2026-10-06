@@ -141,7 +141,7 @@ domain.
 - **The MC cases and AT-05 to AT-10 were edited from
   `backend/docs/measurement/events.md` and `docs/features/STA-377/contracts.md`,
   not from the backend code, and have not been run.** If a table or column named
-  there differs on dev, report it as AMBIGUOUS. Where `meta_capi_outbox_enabled` is
+  there differs on dev, report it as AMBIGUOUS. Where `ad_conversion_outbox_enabled` is
   off, the inline sender reports at business time and the `ad_conversion_outbox`
   rows do not exist.
 - **Needs a human:** the Google or Apple half of SG-05 (the return is simulated
@@ -1699,7 +1699,7 @@ This section needs a **dev database** and the backend running, unlike every
 other section here. Instrument: the cookie jar, plus
 `docker exec fidelity-backend-1` psql-style queries against
 `account_ad_attribution`, `business_ad_attribution`, `ad_conversion_outbox`,
-`business_ad_refusal` and, with `meta_capi_outbox_enabled` off, the legacy
+`business_ad_refusal` and, with `ad_conversion_outbox_enabled` off, the legacy
 `business_ad_conversion`.
 
 Since STA-377 a visit is written down as three version-2 carriers, each under its
@@ -1828,7 +1828,7 @@ EXPECT:
   `region_row`, `EEA_UK_CH` under a Paris timezone).
 - The outbox holds one `(account, meta, sign_up)` row and one
   `(account, ga4, sign_up)` row, each subject to its own category. With
-  `meta_capi_outbox_enabled` off they wait, and drain when it is turned on.
+  `ad_conversion_outbox_enabled` off they wait, and drain when it is turned on.
 - NEGATIVE: no `CompleteRegistration` row or event anywhere, and no `sign_up` row
   or event for the business itself: creating a business never reports a sign-up,
   with the switch on or off.
@@ -1880,7 +1880,7 @@ fires again every renewal.
 1. From AT-05, complete Stripe checkout with a test card and let the first
    invoice pay.
 2. Query `select destination, event_name, status from ad_conversion_outbox where business_id = '<id>';`
-   (with `meta_capi_outbox_enabled` off, read `business_ad_conversion` instead).
+   (with `ad_conversion_outbox_enabled` off, read `business_ad_conversion` instead).
 3. In the Stripe dashboard, **resend** the `invoice.paid` event.
 4. Query again.
 
@@ -2511,7 +2511,7 @@ nothing surfaced it.
 
 **STA-377 changes what this section reads.** The sign-up is now reported by the
 server when the account is confirmed (SG), as `Lead`, and `CompleteRegistration`
-is sent by no code path. With `meta_capi_outbox_enabled` on, the queue is
+is sent by no code path. With `ad_conversion_outbox_enabled` on, the queue is
 `ad_conversion_outbox` (statuses `accepted` for Meta and `delivered` for GA4,
 `skipped_no_consent` for a refusal) and the worker sends within about a minute;
 with it off, the legacy `business_ad_conversion` rows and the inline sender apply
@@ -2558,7 +2558,7 @@ when the account is confirmed (`signup-recorded`), as `Lead`.
 
 1. Follow the CTA to the dashboard and complete signup with a fresh email (the
    SG-04 path, with `?fbclid=qa-test-001`).
-2. Watch the **Test Events** tab. With `meta_capi_outbox_enabled` on, allow up to two
+2. Watch the **Test Events** tab. With `ad_conversion_outbox_enabled` on, allow up to two
    minutes.
 
 EXPECT:
