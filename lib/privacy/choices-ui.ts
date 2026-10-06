@@ -25,6 +25,19 @@ export function choicesLabel(input: { surface: PolicySurface; ready: boolean }):
   return { key: statutory ? PRIVACY_CHOICES_KEY : COOKIE_PREFERENCES_KEY, icon: statutory };
 }
 
+/** The keys the notice's two controls read: the footer's statutory label, and its own dismiss. */
+export const NOTICE_KEYS = { choices: PRIVACY_CHOICES_KEY, dismiss: "cookies.notice.dismiss" } as const;
+
+/** A touch target on the banner, the notice and the dialog: `h-11` is 44px. */
+export const TAP_TARGET = "h-11";
+
+/** The dialog's action row stays at the bottom while the cards scroll, so Save is always in reach. */
+export const DIALOG_ACTION_ROW =
+  "sticky bottom-0 -mx-5 mt-4 flex gap-2 bg-[var(--paper)] px-5 pb-5 pt-2 before:pointer-events-none before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-linear-to-t before:from-[var(--paper)] before:to-transparent sm:-mx-6 sm:justify-end sm:px-6 sm:pb-6";
+
+/** A switch row spans its card: its padding plus the 24px track is 44px tall. */
+export const SWITCH_ROW = { padding: "pb-1 pt-4", track: "h-6" } as const;
+
 /** A label cut before its last word, so an icon can stay with that word when it wraps. */
 export function splitLastWord(label: string): { head: string; tail: string } {
   const cut = label.lastIndexOf(" ") + 1;

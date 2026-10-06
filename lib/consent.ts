@@ -206,6 +206,22 @@ export function categoriesToClearOnLoad(input: {
 }
 
 /**
+ * The categories whose cookies a new choice clears: those it revokes. Refusing
+ * the last category that was on takes the campaign-source carrier too, so a
+ * two-step withdrawal clears it with the second step.
+ */
+export function categoriesToClearOnChoice(
+  before: ConsentState,
+  next: ConsentState,
+): ConsentCategory[] {
+  const revoked = (["analytics", "marketing"] as const).filter(
+    (category) => before[category] && !next[category],
+  );
+  if (revoked.length === 0) return [];
+  return next.analytics || next.marketing ? revoked : ["analytics", "marketing"];
+}
+
+/**
  * A stable identity for `useConsent`'s snapshot cache.
  *
  * `useSyncExternalStore` compares snapshots by identity, so the hook rebuilds

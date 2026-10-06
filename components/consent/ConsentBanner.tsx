@@ -9,20 +9,25 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   CONSENT_OPEN_EVENT,
+  categoriesToClearOnChoice,
   categoriesToClearOnLoad,
   clearCookiesFor,
   consentSurface,
   currentConsent,
   emitConsentChange,
   writeConsentRecord,
-  type ConsentCategory,
   type ConsentState,
 } from "@/lib/consent";
 import {
   recordConsentDecision,
   type ConsentLedgerSurface,
 } from "@/lib/consent-ledger";
-import { PRIVACY_CHOICES_KEY, noticeAcknowledgement, preferencesView } from "@/lib/privacy/choices-ui";
+import {
+  NOTICE_KEYS,
+  TAP_TARGET,
+  noticeAcknowledgement,
+  preferencesView,
+} from "@/lib/privacy/choices-ui";
 import { rowByKey } from "@/lib/privacy/policy";
 import { watchConsentAcrossTabs } from "@/lib/privacy/stale-tags";
 import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
@@ -30,7 +35,6 @@ import { ConsentPreferences } from "./ConsentPreferences";
 
 const ALL_ON: ConsentState = { analytics: true, marketing: true };
 const ALL_OFF: ConsentState = { analytics: false, marketing: false };
-const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
 
 /**
  * Where a visitor accepts or refuses GA4 and the Meta pixel.
@@ -95,28 +99,22 @@ export function ConsentBanner() {
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {
-      // Read what was live BEFORE writing, so we can tell a revocation from a
-      // first-time refusal. Only a revocation has cookies to clean up.
-      const before = currentConsent();
-      const revoked = CATEGORIES.filter(
-        (category) => before[category] && !next[category],
-      );
+      // Read what was live BEFORE writing, so a revocation can be told from a
+      // first-time refusal: only a revocation has cookies to clean up.
+      const revoked = categoriesToClearOnChoice(currentConsent(), next);
 
       const record = writeConsentRecord(next, row);
       emitConsentChange(next);
       setPrefsOpen(false);
 
-      // Prove the decision server-side (STA-324). Deliberately AFTER the
-      // cookie and the event: the choice is already in force by now, so this
-      // can only add evidence and can never cost the visitor their click. It
-      // uses `sendBeacon`, which is what lets it survive the reload below —
-      // a revocation is the decision it matters most to be able to prove.
+      // Prove the decision server-side. Deliberately AFTER the cookie and the
+      // event: the choice is already in force, so this can only add evidence
+      // and never cost the visitor their click. It uses `sendBeacon`, which
+      // survives the reload below.
       recordConsentDecision({ record, surface });
 
       if (revoked.length > 0) {
-        // Refusing both takes the campaign-source carrier too, which is only
-        // cleared when both categories are given as refused.
-        clearCookiesFor(next.analytics || next.marketing ? revoked : CATEGORIES);
+        clearCookiesFor(revoked);
         // A running gtag or fbq cannot be unloaded. Deleting its cookies stops
         // it identifying anyone, but only a reload actually stops the script,
         // so the honest move is to reload rather than to claim it is gone.
@@ -155,7 +153,7 @@ export function ConsentBanner() {
   // 44px tall and equal width: the thumb target Apple and Android both ask
   // for, and neither button can be the easier one to hit.
   const equalButton =
-    "h-11 flex-1 rounded-full bg-[var(--foreground)] px-4 text-sm font-semibold text-white transition-all hover:brightness-110";
+    `${TAP_TARGET} flex-1 rounded-full bg-[var(--foreground)] px-4 text-sm font-semibold text-white transition-all hover:brightness-110`;
 
   return (
     <>
@@ -190,7 +188,7 @@ export function ConsentBanner() {
           <button
             type="button"
             onClick={() => setPrefsOpen(true)}
-            className="mt-3 inline-flex h-11 items-center text-sm font-semibold text-[var(--muted-foreground)] underline underline-offset-4 transition-colors hover:text-[var(--foreground)] sm:mt-4 sm:h-auto"
+            className={`mt-3 inline-flex ${TAP_TARGET} items-center text-sm font-semibold text-[var(--muted-foreground)] underline underline-offset-4 transition-colors hover:text-[var(--foreground)] sm:mt-4 sm:h-auto`}
           >
             {t("banner.customise")}
           </button>
@@ -221,9 +219,9 @@ export function ConsentBanner() {
             <button
               type="button"
               onClick={() => setPrefsOpen(true)}
-              className="inline-flex h-11 items-center font-semibold text-[var(--accent)] underline underline-offset-2 sm:h-auto"
+              className={`inline-flex ${TAP_TARGET} items-center font-semibold text-[var(--accent)] underline underline-offset-2 sm:h-auto`}
             >
-              {tCommon(PRIVACY_CHOICES_KEY)}
+              {tCommon(NOTICE_KEYS.choices)}
             </button>
             {/* Dismissing RECORDS the state in force (the opt-out default, with
                 any refusal carried from an older version) rather than hiding
@@ -234,9 +232,9 @@ export function ConsentBanner() {
             <button
               type="button"
               onClick={() => commit(noticeAcknowledgement(consent), "notice")}
-              className="inline-flex h-11 items-center font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] sm:h-auto"
+              className={`inline-flex ${TAP_TARGET} items-center font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] sm:h-auto`}
             >
-              {t("notice.dismiss")}
+              {tCommon(NOTICE_KEYS.dismiss)}
             </button>
           </div>
         </section>

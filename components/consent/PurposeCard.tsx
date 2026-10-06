@@ -1,5 +1,7 @@
 "use client";
 
+import { SWITCH_ROW } from "@/lib/privacy/choices-ui";
+
 /** What sits opposite a purpose's title: a switch, or a short fixed state. */
 export type PurposeControl =
   | { kind: "switch"; id: string; checked: boolean; onChange: (checked: boolean) => void }
@@ -24,7 +26,7 @@ export function PurposeCard({
         // out to the card's edges, cancelled by equal negative margins.
         <label
           htmlFor={control.id}
-          className="-mx-4 -mb-1 -mt-4 flex cursor-pointer items-center justify-between gap-4 px-4 pb-1 pt-4"
+          className={`-mx-4 -mb-1 -mt-4 flex cursor-pointer items-center justify-between gap-4 px-4 ${SWITCH_ROW.padding}`}
         >
           <span className="text-sm font-semibold">{title}</span>
           {/* A real checkbox, visually hidden, with the switch drawn by
@@ -36,7 +38,7 @@ export function PurposeCard({
               compiles to `~`, which reaches siblings and not their
               children. `sr-only peer` keeps the native keyboard and
               screen-reader behaviour instead of rebuilding it by hand. */}
-          <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
+          <span className={`relative inline-flex ${SWITCH_ROW.track} w-11 shrink-0 items-center`}>
             <input
               id={control.id}
               type="checkbox"

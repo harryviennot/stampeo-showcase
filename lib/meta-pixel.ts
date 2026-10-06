@@ -346,12 +346,12 @@ export function trackMetaEvent(input: {
   event: MetaEvent;
   trackable: boolean;
   params?: Record<string, unknown>;
-}): void {
+}): boolean {
   if (
     !shouldSendMetaEvent({ loaded: isMetaPixelLoaded(), trackable: input.trackable }) ||
     !hasMarketingConsent()
   ) {
-    return;
+    return false;
   }
 
   // Guarded because every call site is a click handler, mirroring
@@ -367,5 +367,27 @@ export function trackMetaEvent(input: {
   } catch {
     // Deliberately silent: there is no second reporting channel to complain
     // through, and a console error on every click is its own bug report.
+  }
+  return true;
+}
+
+/** The paths a ViewContent has been sent for in this page load. Module state, so a remounted component cannot send one twice. */
+const viewedContent = new Set<string>();
+
+/** Report that the visitor viewed this pricing or feature page, once per page per load. */
+export function reportViewContent(pathname: string, trackable: boolean): void {
+  const category = viewContentCategory(pathname);
+  if (
+    !shouldSendViewContent({
+      loaded: isMetaPixelLoaded(),
+      trackable,
+      category,
+      alreadySent: viewedContent.has(pathname),
+    })
+  ) {
+    return;
+  }
+  if (trackMetaEvent({ event: "ViewContent", trackable, params: { content_category: category } })) {
+    viewedContent.add(pathname);
   }
 }

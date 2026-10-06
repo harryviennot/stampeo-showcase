@@ -9,11 +9,10 @@ import {
   initMetaPixel,
   isMetaPixelLoaded,
   metaPixelIdFromEnv,
+  reportViewContent,
   shouldLoadMetaPixel,
   shouldSendMetaPageView,
-  shouldSendViewContent,
   trackMetaEvent,
-  viewContentCategory,
 } from "@/lib/meta-pixel";
 
 /**
@@ -39,9 +38,6 @@ export function MetaPixel() {
    * same shape as the GA sibling.
    */
   const lastPageView = useRef<string | null>(null);
-
-  /** The paths a ViewContent has been sent for in this page load: once each. */
-  const viewedContent = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const pixelId = metaPixelIdFromEnv();
@@ -79,22 +75,7 @@ export function MetaPixel() {
 
     // The pricing and feature pages also say which content was viewed, once
     // per page per load, on the init run as well as on later navigations.
-    const category = viewContentCategory(pathname);
-    if (
-      shouldSendViewContent({
-        loaded: isMetaPixelLoaded(),
-        trackable,
-        category,
-        alreadySent: viewedContent.current.has(pathname),
-      })
-    ) {
-      viewedContent.current.add(pathname);
-      trackMetaEvent({
-        event: "ViewContent",
-        trackable,
-        params: { content_category: category },
-      });
-    }
+    reportViewContent(pathname, trackable);
   }, [pathname, marketing, ready]);
 
   return null;

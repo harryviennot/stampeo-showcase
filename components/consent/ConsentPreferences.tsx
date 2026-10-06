@@ -6,7 +6,9 @@ import { useTranslations } from "next-intl";
 import { ShieldCheckIcon } from "@/components/icons";
 import type { ConsentState } from "@/lib/consent";
 import {
+  DIALOG_ACTION_ROW,
   PRIVACY_CHOICES_KEY,
+  TAP_TARGET,
   applyLocks,
   preferencesView,
   type PreferencesView,
@@ -75,7 +77,7 @@ export function ConsentPreferences({
     if (!open && dialog.open) dialog.close();
   }, [open]);
 
-  const actionBase = "h-11 rounded-full text-sm font-semibold transition-all";
+  const actionBase = `${TAP_TARGET} rounded-full text-sm font-semibold transition-all`;
   const primary = `${actionBase} bg-[var(--foreground)] text-white hover:brightness-110`;
 
   return (
@@ -144,9 +146,8 @@ export function ConsentPreferences({
         })}
       </div>
 
-      {/* Sticks to the bottom of the dialog. The gradient fades the cards
-          scrolling under it, and is invisible when everything fits. */}
-      <div className="sticky bottom-0 -mx-5 mt-4 flex gap-2 bg-[var(--paper)] px-5 pb-5 pt-2 before:pointer-events-none before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-linear-to-t before:from-[var(--paper)] before:to-transparent sm:-mx-6 sm:justify-end sm:px-6 sm:pb-6">
+      {/* The gradient fades the cards scrolling under the row, and is invisible when everything fits. */}
+      <div className={DIALOG_ACTION_ROW}>
         {view.onlyClose ? (
           <button type="button" onClick={onClose} className={`${primary} w-full px-6 sm:w-auto`}>
             {t("close")}
