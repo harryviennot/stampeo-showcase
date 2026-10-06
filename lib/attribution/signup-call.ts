@@ -1,6 +1,7 @@
 import { currentConsent } from "../consent";
 import { measurementIdFromEnv } from "../google-analytics";
-import { buildSignupBody } from "./signup-body";
+import { detectPolicyRow } from "../privacy/region";
+import { buildSignupBody, signupBasis } from "./signup-body";
 
 /**
  * Tell the backend a new account was just confirmed in the owner sign-up flow.
@@ -47,6 +48,7 @@ async function send(options: SignupCallOptions): Promise<void> {
     consent: currentConsent(),
     measurementId:
       options.measurementId === undefined ? measurementIdFromEnv() : options.measurementId,
+    basis: signupBasis(detectPolicyRow()),
   });
   await fetch(`${apiUrl}/account/signup-recorded`, {
     method: "POST",

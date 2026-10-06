@@ -1,4 +1,5 @@
-import { readSubjectId, type ConsentState } from "../consent";
+import { readSubjectId, type ConsentRegime, type ConsentState } from "../consent";
+import { POLICY_MATRIX, type PolicyRow } from "../privacy/policy-matrix";
 import { readSidCookie } from "../privacy/subject";
 import { parseAdCookie, serializeAdCarrier } from "./ad-ids";
 import { MAX_ID_FIELD, cookieValue, decodeCarrier } from "./codec";
@@ -19,12 +20,31 @@ import { parseSourceCookie, serializeSourceCarrier } from "./source";
  * subject always goes: it is strictly necessary, and it is how the backend ties
  * a refusal made on the marketing site to the account.
  *
+ * The basis (the regime, policy version and row the call is made under) ALWAYS
+ * goes, even when everything else is left out: it is what lets the backend
+ * record a US visitor's refusal under GPC when no carrier or ledger decision
+ * names a regime.
+ *
  * Nothing here asks whether the account is new. The backend decides that.
  */
+
+/** The regime in force at the moment of the call, as the backend's fallback basis. */
+export interface SignupBasis {
+  cr: ConsentRegime;
+  /** The policy matrix version. */
+  p: number;
+  /** The policy row key (`EEA_UK_CH`, `US`, `UNKNOWN`). */
+  g: string;
+}
+
+export function signupBasis(row: PolicyRow): SignupBasis {
+  return { cr: row.regime, p: POLICY_MATRIX.version, g: row.key };
+}
 
 export interface SignupBody {
   consent_subject_id?: string;
   ad_attribution_v2?: { src?: object; ga?: object; ad?: object };
+  basis: SignupBasis;
   live?: {
     ga?: string;
     ga_sessions?: Record<string, string>;
@@ -46,12 +66,11 @@ export function buildSignupBody(input: {
   cookieHeader: string | null | undefined;
   consent: ConsentState;
   measurementId: string | null;
+  basis: SignupBasis;
 }): SignupBody {
-  const { cookieHeader: header, consent, measurementId } = input;
-  const body: SignupBody = {};
+  const { cookieHeader: header, consent, measurementId, basis } = input;
 
   const subject = readSidCookie(header) ?? readSubjectId(header);
-  if (subject) body.consent_subject_id = subject;
 
   const carriers: NonNullable<SignupBody["ad_attribution_v2"]> = {};
   if (consent.analytics || consent.marketing) {
@@ -66,7 +85,6 @@ export function buildSignupBody(input: {
     const ad = parseAdCookie(cookieValue(header, "stampeo_ad"));
     if (ad) carriers.ad = asStored(serializeAdCarrier(ad));
   }
-  if (Object.keys(carriers).length > 0) body.ad_attribution_v2 = carriers;
 
   const live: NonNullable<SignupBody["live"]> = {};
   if (consent.analytics) {
@@ -82,7 +100,11 @@ export function buildSignupBody(input: {
     const fbc = liveValue(header, "_fbc");
     if (fbc) live.fbc = fbc;
   }
-  if (Object.keys(live).length > 0) body.live = live;
 
-  return body;
+  return {
+    ...(subject ? { consent_subject_id: subject } : {}),
+    ...(Object.keys(carriers).length > 0 ? { ad_attribution_v2: carriers } : {}),
+    basis,
+    ...(Object.keys(live).length > 0 ? { live } : {}),
+  };
 }

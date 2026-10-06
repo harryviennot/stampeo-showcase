@@ -21,7 +21,7 @@ import { join } from "node:path";
 import { computeAttributionChain, type ChainInputs } from "./__fixtures__/chain";
 
 const ATTRIBUTION_CHAIN_SHA256 =
-  "6d6c11cdcd0a7ed320f682bf3612d3e51591f0f2ba2603a023d1d3df039d7143";
+  "a5965071f36fe4046acdf365cc0b31d5d9de15c8bbbbfa263bc88d9e8d8cc8de";
 
 const FILE = join(import.meta.dir, "__fixtures__", "attribution-chain.v2.json");
 const TEXT = readFileSync(FILE, "utf8");
@@ -91,13 +91,15 @@ describe("what this repo makes of those inputs", () => {
     expect(carriers.ga).toMatchObject({ cid: "1234567890.1700000000", sn: 1 });
   });
 
-  test("builds a sign-up body of the subject, the carriers as stored, and the live identifiers", () => {
+  test("builds a sign-up body of the subject, the carriers as stored, the basis, and the live identifiers", () => {
     const { carriers, signup_request } = FIXTURE.expected_showcase;
 
     expect(signup_request.path).toBe("/account/signup-recorded");
     expect(signup_request.body).toEqual({
       consent_subject_id: FIXTURE.inputs.cookies.stampeo_sid,
       ad_attribution_v2: carriers,
+      // The US row, under its opt-out default: what the call was made under.
+      basis: { cr: "opt-out", p: 1, g: "US" },
       live: {
         ga: FIXTURE.inputs.cookies._ga,
         ga_sessions: { ZFZ6JLPFXN: FIXTURE.inputs.cookies._ga_ZFZ6JLPFXN },
