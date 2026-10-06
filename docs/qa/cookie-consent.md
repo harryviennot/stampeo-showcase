@@ -559,17 +559,23 @@ EXPECT:
   preferences**.
 - `typeof window.fbq === "undefined"` and `typeof window.gtag === "undefined"`:
   no request to `googletagmanager.com` or `connect.facebook.net`.
-- The three carriers are **byte-identical** to step 1: same `ca`, still
-  `"cr":"opt-out"`, `"g":"US"`. None was re-written with `"cr":"opt-in"` or
-  `"g":"EEA_UK_CH"`.
-- `stampeo_consent` is untouched: still `"a":1,"m":1,"r":"opt-out","g":"US"`.
-- R15: any POST to `/api/privacy/cookies` has a payload of at most
-  `{"sid":"ensure"}`: no `consent`, no `carriers`.
-- OBSERVE, do not fail: `_ga` and `_fbp` from the US visit are still in the jar.
-  The code clears trackers only on a revocation or on GPC, so a grant that stops
-  counting does not delete them. Record whether they remain, and whether they
-  are still there after **Refuse all** (the clear on choice compares against what
-  was live, which was already off). Report the observation; it is not asserted.
+- `_ga`, `_ga_*`, `_fbp`, `_fbc` and all three carriers are **gone**: every
+  trackable load clears the cookies of each category the resolved consent denies,
+  and a US grant does not count in Paris (`planPageLoad` in
+  `lib/privacy/lifecycle.ts`). NEGATIVE: no carrier was re-written with
+  `"cr":"opt-in"` or `"g":"EEA_UK_CH"`.
+- `stampeo_consent` is untouched: still `"a":1,"m":1,"r":"opt-out","g":"US"`
+  (back in New York the grant counts again).
+- R15: the POST to `/api/privacy/cookies` carries only `sid` and a `clear` list
+  of those names: no `consent`, no `carriers`.
+
+3. Click **Refuse all**. Put a stray `_fbp` back by hand (R18), click **Refuse all**
+   again from the footer dialog.
+
+EXPECT:
+- After each click the tracker and carrier cookies are gone and
+  `stampeo_consent` reads `"a":0,"m":0`: a refusal clears every refused category
+  whatever was live before (`categoriesToClearOnChoice`).
 
 ### RG-12 A web-restored refusal keeps marketing refused in the US — CORE
 DEPENDS: RG-02
@@ -717,12 +723,9 @@ nevertheless renders the footer, so it is the one page where "no tracking here"
 and "the withdrawal control is visible here" are both true. It shipped once with
 a button that did nothing when clicked.
 
-1. Open `/email-preferences` (any locale). Scroll to the footer. (Under a US
-   timezone, visit `/us` once first: the US label waits for the subject id, which
-   only a marketing page mints, so on a fresh US jar this private page still
-   reads **Cookie preferences**.)
-2. Click **Cookie preferences** (**Your Privacy Choices** under a US timezone,
-   R13, once the subject exists).
+1. Open `/email-preferences` (any locale) on a fresh jar (R17). Scroll to the footer.
+2. Click **Cookie preferences** (**Your Privacy Choices** with the icon under a US
+   timezone, R13, even on a fresh jar: the label follows the row, not the subject).
 
 EXPECT:
 - The dialog opens.
@@ -1128,9 +1131,8 @@ EXPECT:
 - It opens the dialog (the US version, or the EU version). Save works as
   anywhere else (a revocation reloads the page).
 - No banner or notice on the page itself, and no tag request.
-- NEGATIVE: on a fresh US jar with no subject yet, opened directly, the label may
-  still read **Cookie preferences**: the US label waits for the subject, which a
-  private page never mints. Record what you see; it is reported, not failed.
+- NEGATIVE: on a fresh US jar (R17) with no subject, opened directly, the label
+  still reads **Your Privacy Choices**: it follows the row, not the subject.
 
 ### PG-05 Every page where a tag can run offers the control — CORE
 DEPENDS: PR-10
