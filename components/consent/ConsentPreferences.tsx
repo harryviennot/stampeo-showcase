@@ -97,7 +97,7 @@ export function ConsentPreferences({
           <div className="flex items-start gap-3 rounded-xl bg-[var(--background-subtle)] p-4">
             <ShieldCheckIcon
               aria-hidden="true"
-              className="mt-0.5 h-5 w-5 shrink-0 text-[var(--foreground)]"
+              className="h-5 w-5 shrink-0 text-[var(--foreground)]"
             />
             <p className="text-sm">
               {t(view.gpcStatus === "all" ? "us.gpc.statusAll" : "us.gpc.statusAdvertising")}
@@ -141,7 +141,7 @@ export function ConsentPreferences({
 
       {/* Sticks to the bottom of the dialog. The gradient fades the cards
           scrolling under it, and is invisible when everything fits. */}
-      <div className="sticky bottom-0 -mx-5 mt-6 flex gap-2 bg-[var(--paper)] px-5 pb-5 pt-3 before:pointer-events-none before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-linear-to-t before:from-[var(--paper)] before:to-transparent sm:-mx-6 sm:justify-end sm:px-6 sm:pb-6">
+      <div className="sticky bottom-0 -mx-5 mt-4 flex gap-2 bg-[var(--paper)] px-5 pb-5 pt-2 before:pointer-events-none before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-linear-to-t before:from-[var(--paper)] before:to-transparent sm:-mx-6 sm:justify-end sm:px-6 sm:pb-6">
         {view.onlyClose ? (
           <button type="button" onClick={onClose} className={`${primary} w-full px-6 sm:w-auto`}>
             {t("close")}

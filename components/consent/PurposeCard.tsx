@@ -20,9 +20,11 @@ export function PurposeCard({
   return (
     <div className="rounded-xl border border-[var(--border)] p-4">
       {control.kind === "switch" ? (
+        // The whole top band of the card toggles, at least 44px tall: padding
+        // out to the card's edges, cancelled by equal negative margins.
         <label
           htmlFor={control.id}
-          className="flex cursor-pointer items-center justify-between gap-4"
+          className="-mx-4 -mb-1 -mt-4 flex cursor-pointer items-center justify-between gap-4 px-4 pb-1 pt-4"
         >
           <span className="text-sm font-semibold">{title}</span>
           {/* A real checkbox, visually hidden, with the switch drawn by

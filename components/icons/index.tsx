@@ -88,6 +88,9 @@ export function PrivacyChoicesIcon({ className = "h-3.5 w-auto" }: IconProps) {
     // eslint-disable-next-line @next/next/no-img-element -- fixed-colour SVG; next/image would need SVG handling
     <img
       src="/icons/privacy-options.svg"
+      // The artwork's 30x14 viewBox, so the space is held before the file loads.
+      width={30}
+      height={14}
       alt=""
       aria-hidden="true"
       className={className}
