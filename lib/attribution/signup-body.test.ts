@@ -21,7 +21,7 @@ import { serializeGaCarrier } from "./ga-ids";
 import { buildSignupBody, signupBasis } from "./signup-body";
 import { recordAccountSignup } from "./signup-call";
 import { serializeSourceCarrier } from "./source";
-import { EU, FBP, GA_CID, LANDED, UNKNOWN, US, plan, visitor, wireOf } from "./__fixtures__/visitors";
+import { EU, FBP, GA_CID, LANDED, UNKNOWN, US, chose, plan, visitor, wireOf } from "./__fixtures__/visitors";
 
 const GA_SESSION = "GS2.1.s1791244795$o1$g1$t1791244799$j0$l0$h0";
 const MEASUREMENT_ID = "G-ZFZ6JLPFXN";
@@ -37,8 +37,17 @@ const COOKIES = {
   _fbp: FBP,
 };
 
-const jar = (over: Record<string, string | null> = {}) =>
-  Object.entries({ ...COOKIES, ...over })
+/** What a European who accepted everything left in their jar: the same carriers, under their own choice. */
+const EU_WRITTEN = plan(visitor(EU, { record: chose(true, true, "opt-in") }));
+const EU_COOKIES = {
+  ...COOKIES,
+  stampeo_src: serializeSourceCarrier(EU_WRITTEN.src!),
+  stampeo_ga: serializeGaCarrier(EU_WRITTEN.ga!),
+  stampeo_ad: serializeAdCarrier(EU_WRITTEN.ad!),
+};
+
+const jar = (over: Record<string, string | null> = {}, base: Record<string, string> = COOKIES) =>
+  Object.entries({ ...base, ...over })
     .filter(([, value]) => value !== null)
     .map(([name, value]) => `${name}=${value}`)
     .join("; ");
@@ -132,11 +141,18 @@ describe("what leaves the page follows the current choice", () => {
     ],
     ["an EU visitor who accepted everything", ALL, ["src", "ga", "ad"], ["ga", "ga_sessions", "fbp"]],
   ])("%s", (_case, consent, carriers, live) => {
-    const sent = body(jar({ _fbc: "fb.1.1.2" }), consent);
+    const eu = signupBasis(EU);
+    const sent = body(jar({ _fbc: "fb.1.1.2" }, EU_COOKIES), consent, MEASUREMENT_ID, eu);
 
     expect(Object.keys(sent.ad_attribution_v2 ?? {}).sort()).toEqual([...carriers].sort());
     const expected = [...live, ...(consent.marketing ? ["fbc"] : [])];
     expect(Object.keys(sent.live ?? {}).sort()).toEqual(expected.sort());
+    // The carriers carry the European's own choice, and the call the European basis.
+    for (const carrier of Object.values(sent.ad_attribution_v2 ?? {})) {
+      expect(carrier).toMatchObject({ cr: "opt-in", g: "EEA_UK_CH", ca: EU_WRITTEN.src!.ca });
+    }
+    expect(sent.basis).toEqual({ cr: "opt-in", p: POLICY_MATRIX.version, g: "EEA_UK_CH" });
+    expect(sent.refused).toEqual((["analytics", "marketing"] as const).filter((c) => !consent[c]));
   });
 
   test.each([

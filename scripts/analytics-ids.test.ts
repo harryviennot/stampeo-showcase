@@ -10,7 +10,7 @@
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -209,5 +209,24 @@ describe("running it the way the Dockerfile does", () => {
 
   test.each([null, "build"])("an unknown mode %p is a usage error", (mode) => {
     expect(run(mode, VALID).status).toBe(2);
+  });
+});
+
+describe("the Dockerfile runs the guard (AC5.1)", () => {
+  const lines = readFileSync(join(import.meta.dir, "..", "Dockerfile"), "utf8").split("\n");
+  const at = (pattern: RegExp) => lines.findIndex((line) => pattern.test(line));
+
+  test("before and after the build, each unless the build opts out", () => {
+    const pre = at(/^RUN .*REQUIRE_ANALYTICS_IDS.*node scripts\/analytics-ids\.mjs pre/);
+    const build = at(/^RUN .*next build/);
+    const post = at(/^RUN .*REQUIRE_ANALYTICS_IDS.*node scripts\/analytics-ids\.mjs post/);
+
+    expect(pre).toBeGreaterThan(-1);
+    expect(build).toBeGreaterThan(pre);
+    expect(post).toBeGreaterThan(build);
+  });
+
+  test("and requires the ids unless the build argument says otherwise", () => {
+    expect(lines).toContain("ARG REQUIRE_ANALYTICS_IDS=1");
   });
 });

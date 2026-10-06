@@ -601,6 +601,64 @@ describe("the browser side, in load order", () => {
   });
 });
 
+describe("ViewContent is sent once per page for the life of the page load (AC6.3)", () => {
+  const PIXEL = "1088158323750710";
+  const viewContents = (calls: unknown[][]) => calls.filter((call) => call[1] === "ViewContent");
+
+  async function loadedPixel(tag: string, cookie?: string) {
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq, cookie });
+    const pixel = await import(`./meta-pixel?${tag}`);
+    pixel.initMetaPixel(PIXEL);
+    calls.length = 0;
+    return { pixel, calls };
+  }
+
+  test("a component that mounts again on the same page does not send it again", async () => {
+    const { pixel, calls } = await loadedPixel("view-content-remount");
+
+    pixel.reportViewContent("/pricing", true);
+    pixel.reportViewContent("/pricing", true);
+
+    expect(viewContents(calls)).toEqual([["track", "ViewContent", { content_category: "pricing" }]]);
+  });
+
+  test("each page sends its own, and coming back to one sends nothing more", async () => {
+    const { pixel, calls } = await loadedPixel("view-content-pages");
+
+    pixel.reportViewContent("/pricing", true);
+    pixel.reportViewContent("/features/card-design", true);
+    pixel.reportViewContent("/pricing", true);
+
+    expect(viewContents(calls).map((call) => (call[2] as { content_category: string }).content_category)).toEqual([
+      "pricing",
+      "features",
+    ]);
+  });
+
+  test("a page the visitor had not yet allowed it on is still due one once they do", async () => {
+    const { pixel, calls } = await loadedPixel("view-content-consent", REFUSED_COOKIE);
+
+    pixel.reportViewContent("/pricing", true);
+    expect(viewContents(calls)).toEqual([]);
+
+    (globalThis as unknown as { document: { cookie: string } }).document.cookie = GRANTED_COOKIE;
+    pixel.reportViewContent("/pricing", true);
+    expect(viewContents(calls)).toHaveLength(1);
+  });
+
+  test.each([
+    ["a page that is neither pricing nor a feature", "about", "/about", true],
+    ["a private route", "onboarding", "/onboarding", false],
+  ])("%s sends none", async (_case, tag, path, trackable) => {
+    const { pixel, calls } = await loadedPixel(`view-content-${tag}`);
+
+    pixel.reportViewContent(path, trackable);
+
+    expect(viewContents(calls)).toEqual([]);
+  });
+});
+
 describe("an event is sent only while the visitor still allows it", () => {
   const PIXEL = "1088158323750710";
 

@@ -18,7 +18,11 @@ import pl from "../../messages/pl/common.json";
 import { installFakeBrowser, SUBJECT, type FakeBrowser } from "./__fixtures__/fake-browser";
 import {
   COOKIE_PREFERENCES_KEY,
+  DIALOG_ACTION_ROW,
+  NOTICE_KEYS,
   PRIVACY_CHOICES_KEY,
+  SWITCH_ROW,
+  TAP_TARGET,
   applyLocks,
   choicesLabel,
   monthsFromDays,
@@ -134,6 +138,39 @@ describe("what Global Privacy Control locks (AC2.6)", () => {
       analytics: true,
       marketing: false,
     });
+  });
+});
+
+/** Tailwind's spacing scale at the default root: `h-11` is 2.75rem, which is 44px. */
+const px = (utility: string) => {
+  const match = /^(?:h|pt|pb)-(\d+(?:\.\d+)?)$/.exec(utility);
+  return match ? Number(match[1]) * 4 : 0;
+};
+const classesOf = (value: string) => value.split(/\s+/);
+
+describe("the action row and the touch targets (AC2.8, AC2.10)", () => {
+  test("the dialog's actions stay at the bottom of the dialog while the cards scroll", () => {
+    expect(classesOf(DIALOG_ACTION_ROW)).toEqual(expect.arrayContaining(["sticky", "bottom-0"]));
+  });
+
+  test.each([
+    ["a button on the banner, the notice and the dialog", TAP_TARGET],
+  ])("%s is 44px tall", (_what, target) => {
+    expect(classesOf(target).reduce((tallest, cls) => Math.max(tallest, px(cls)), 0)).toBeGreaterThanOrEqual(44);
+  });
+
+  test("a switch row is 44px tall: its padding plus its 24px track", () => {
+    const padding = classesOf(SWITCH_ROW.padding).reduce((sum, cls) => sum + px(cls), 0);
+
+    expect(padding + px(SWITCH_ROW.track)).toBeGreaterThanOrEqual(44);
+  });
+});
+
+describe("what the notice reads (AC2.10)", () => {
+  test.each(LOCALES)("its link is the footer's own words, and its dismiss exists, in %s", (locale) => {
+    expect(NOTICE_KEYS.choices).toBe(PRIVACY_CHOICES_KEY);
+    expect(read(locale, NOTICE_KEYS.choices)).toBe(read(locale, PRIVACY_CHOICES_KEY));
+    expect(typeof read(locale, NOTICE_KEYS.dismiss)).toBe("string");
   });
 });
 

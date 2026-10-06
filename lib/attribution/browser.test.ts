@@ -48,6 +48,19 @@ describe("writing the carriers", () => {
       ...over,
     });
 
+  test.each([
+    ["both tags configured", "G-ZFZ6JLPFXN", "1088158323750710", { ga: true, fbp: true }],
+    ["no GA property configured", null, "1088158323750710", { ga: false, fbp: true }],
+    ["no Meta pixel configured", "G-ZFZ6JLPFXN", null, { ga: true, fbp: false }],
+    ["neither tag configured", null, null, { ga: false, fbp: false }],
+  ])("a capture waits only for the tags this deployment runs: %s", (_case, measurementId, pixelId, awaited) => {
+    browser = installFakeBrowser({ timezone: "America/New_York" });
+
+    // A tag's browser id is awaited until it exists; a tag that is not
+    // deployed never writes one, so waiting for it would only burn the wait.
+    expect(pass({ measurementId, pixelId }).awaited).toEqual(awaited);
+  });
+
   test("a US visitor on a Meta ad: the cookie is written, then the server is asked to set it, once", async () => {
     process.env.NEXT_PUBLIC_COOKIE_DOMAIN = ".stampeo.app";
     browser = installFakeBrowser({

@@ -12,7 +12,9 @@ import { afterEach, describe, expect, test } from "bun:test";
 import {
   CONSENT_COOKIE,
   CONSENT_VERSION,
+  categoriesToClearOnChoice,
   clearCookiesFor,
+  currentConsent,
   consentCookieAttributes,
   consentSurface,
   cookieNamesToClear,
@@ -219,7 +221,60 @@ describe("what a refusal clears (AC4.6)", () => {
   });
 });
 
+describe("withdrawing in two steps takes the campaign source with the last of them (AC4.6)", () => {
+  const CARRIER_JAR = "stampeo_src=1; stampeo_ga=2; stampeo_ad=3; _ga=4; _fbp=5";
+
+  /** What the banner does for a choice: read what was live, write the new one, clear what was revoked. */
+  function choose(state: { analytics: boolean; marketing: boolean }) {
+    const before = currentConsent();
+    writeConsentRecord(state, rowFor("US"));
+    clearCookiesFor(categoriesToClearOnChoice(before, state));
+  }
+  const left = () => browser!.jar().split("; ").map((entry) => entry.split("=")[0]);
+
+  test("refusing advertising, then analytics", () => {
+    browser = installFakeBrowser({ timezone: "America/New_York", cookie: CARRIER_JAR, hostname: "stampeo.app" });
+
+    choose({ analytics: true, marketing: false });
+    expect(left()).toEqual(expect.arrayContaining(["stampeo_src", "stampeo_ga", "_ga"]));
+    expect(left()).not.toContain("stampeo_ad");
+
+    choose({ analytics: false, marketing: false });
+    expect(left()).not.toContain("stampeo_src");
+    expect(left()).not.toContain("stampeo_ga");
+  });
+
+  test("refusing both at once takes it in one step", () => {
+    browser = installFakeBrowser({ timezone: "America/New_York", cookie: CARRIER_JAR, hostname: "stampeo.app" });
+
+    choose({ analytics: false, marketing: false });
+
+    expect(left()).not.toContain("stampeo_src");
+  });
+
+  test("a choice that revokes nothing clears nothing", () => {
+    browser = installFakeBrowser({ timezone: "America/New_York", cookie: CARRIER_JAR, hostname: "stampeo.app" });
+
+    choose({ analytics: true, marketing: true });
+
+    expect(left()).toEqual(expect.arrayContaining(["stampeo_src", "stampeo_ga", "stampeo_ad", "_ga", "_fbp"]));
+  });
+});
+
 describe("writeConsentRecord: the answer is kept, then handed to the server", () => {
+  test.each([
+    ["the US row", "US", "opt-out"],
+    ["the EEA, UK and Swiss row", "FR", "opt-in"],
+    ["the unplaced row", null, "opt-in"],
+  ] as const)("a choice made in %s is written under that row and its regime", (_row, country, regime) => {
+    browser = installFakeBrowser({ timezone: "Europe/Paris" });
+
+    expect(writeConsentRecord({ analytics: true, marketing: false }, rowFor(country))).toMatchObject({
+      regime,
+      regionRow: rowFor(country).key,
+    });
+  });
+
   test("a refusal in the US lives 400 days and is written before the server hears of it", () => {
     browser = installFakeBrowser({ timezone: "America/New_York" });
 

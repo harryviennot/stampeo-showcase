@@ -24,6 +24,7 @@ import raw from "./policy-matrix.v1.json";
 import {
   consentMaxAgeSeconds,
   effectiveRow,
+  recordRow,
   gpcDeniedCategories,
   readServerRegion,
   resolveWithPolicy,
@@ -260,6 +261,18 @@ describe("how long a choice lives", () => {
     ["a French grant", "FR", ON, 182],
   ] as const)("%s lasts %d days", (_case, country, state, days) => {
     expect(consentMaxAgeSeconds(rowFor(country), state)).toBe(days * DAY);
+  });
+});
+
+describe("the row a stored choice was made under", () => {
+  test.each([
+    ["names its row", { regime: "opt-out", regionRow: "US" }, "US"],
+    ["names a row that disagrees with its regime: the row wins", { regime: "opt-in", regionRow: "US" }, "US"],
+    ["names no row, and is opt-out", { regime: "opt-out" }, "US"],
+    ["names no row, and is opt-in", { regime: "opt-in" }, "UNKNOWN"],
+    ["names a row we do not have", { regime: "opt-out", regionRow: "MARS" }, "US"],
+  ] as const)("a record that %s", (_case, stored, key) => {
+    expect(recordRow(stored).key).toBe(key);
   });
 });
 

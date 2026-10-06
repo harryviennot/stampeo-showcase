@@ -62,6 +62,8 @@ export interface FakeBrowser {
   fetches: FetchCall[];
   /** `cookie:<name>`, `fetch`, `server-set:<name>`, `consent-change`, `reload`, in order. */
   events: string[];
+  /** The `src` of every `<script>` appended to the document head. */
+  scripts: string[];
   /** The jar as a `Cookie:` header. */
   jar(): string;
   setJar(header: string): void;
@@ -87,6 +89,7 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
   const writes: string[] = [];
   const fetches: FetchCall[] = [];
   const events: string[] = [];
+  const scripts: string[] = [];
   const pending: Promise<unknown>[] = [];
   const cookieMode = options.cookies ?? "stores";
   const hostname = options.hostname ?? "stampeo.app";
@@ -121,6 +124,12 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
   setJar(options.cookie ?? "");
 
   const document = new EventTarget() as EventTarget & { cookie: string; visibilityState: string };
+  Object.assign(document, {
+    title: "Stampeo",
+    body: { dataset: {} },
+    createElement: (): { src?: string } => ({}),
+    head: { appendChild: (el: { src?: string }) => void scripts.push(el.src ?? "") },
+  });
   Object.defineProperties(document, {
     cookie: {
       get: () => header(),
@@ -191,6 +200,7 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
     writes,
     fetches,
     events,
+    scripts,
     jar: header,
     setJar,
     setVisibility(state) {

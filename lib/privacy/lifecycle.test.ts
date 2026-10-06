@@ -50,6 +50,19 @@ afterEach(() => {
 
 const fresh = (): LifecycleSession => ({ refreshed: false });
 
+/** What GoogleAnalytics and MetaPixel do on mount: load their tag when its gate allows. */
+async function mountTags(instance: string) {
+  const ga = await import(`../google-analytics?${instance}`);
+  const meta = await import(`../meta-pixel?${instance}`);
+  const { analytics, marketing, ready } = readConsentSnapshot();
+  if (ga.shouldLoadGa({ measurementId: "G-ZFZ6JLPFXN", analytics, ready, trackable: true })) {
+    ga.initGa("G-ZFZ6JLPFXN");
+  }
+  if (meta.shouldLoadMetaPixel({ pixelId: "1088158323750710", marketing, ready, trackable: true })) {
+    meta.initMetaPixel("1088158323750710");
+  }
+}
+
 /** What GoogleAnalytics and MetaPixel decide, from the consent snapshot. */
 function tagGates(trackable = true) {
   const { analytics, marketing, ready } = readConsentSnapshot();
@@ -95,6 +108,12 @@ describe("a US visitor with no choice arrives (AC3.1)", () => {
     expect(browser.fetches).toHaveLength(1);
     expect(readConsentSnapshot().ready).toBe(true);
     expect(tagGates()).toEqual({ ga: true, meta: true });
+
+    await mountTags("us-no-choice");
+    expect(browser.scripts).toEqual([
+      "https://www.googletagmanager.com/gtag/js?id=G-ZFZ6JLPFXN",
+      "https://connect.facebook.net/en_US/fbevents.js",
+    ]);
 
     // The server's answer replaces the script-written cookie with its own.
     await browser.settled();
@@ -159,6 +178,15 @@ describe("a French visitor with no choice (AC1.6)", () => {
     expect(browser.fetches).toEqual([]);
     expect(readConsentSnapshot()).toMatchObject({ analytics: false, marketing: false, ready: true });
     expect(tagGates()).toEqual({ ga: false, meta: false });
+  });
+
+  test("no `<script>` is injected: neither vendor's tag is fetched", async () => {
+    browser = installFakeBrowser({ timezone: "Europe/Paris", fetch: "route" });
+
+    runPageLifecycle("/pricing", fresh());
+    await mountTags("eu-no-choice");
+
+    expect(browser.scripts).toEqual([]);
   });
 
   test("once they decide, their subject is kept fresh on each load, and a refusal does not slide", async () => {
