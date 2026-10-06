@@ -31,8 +31,8 @@ const TONES = {
  */
 export function CookiePreferencesButton({ tone = "footer" }: Readonly<{ tone?: keyof typeof TONES }>) {
   const t = useTranslations("common");
-  const { surface, ready } = useConsent();
-  const { key, icon } = choicesLabel({ surface, ready });
+  const { surface } = useConsent();
+  const { key, icon } = choicesLabel({ surface });
   const { head, tail } = splitLastWord(t(key));
 
   return (

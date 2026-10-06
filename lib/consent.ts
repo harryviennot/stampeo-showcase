@@ -220,19 +220,19 @@ export function explicitRefusals(
 }
 
 /**
- * The categories whose cookies a new choice clears: those it revokes. Refusing
- * the last category that was on takes the campaign-source carrier too, so a
- * two-step withdrawal clears it with the second step.
+ * The categories whose cookies a new choice clears: every one it refuses,
+ * whatever was live before, so a refusal made where the live state already
+ * denies still removes the tags' cookies and the carriers. Refusing both takes
+ * the campaign-source carrier too, and `clearCookiesFor` does that when it is
+ * given both.
  */
-export function categoriesToClearOnChoice(
-  before: ConsentState,
-  next: ConsentState,
-): ConsentCategory[] {
-  const revoked = (["analytics", "marketing"] as const).filter(
-    (category) => before[category] && !next[category],
-  );
-  if (revoked.length === 0) return [];
-  return next.analytics || next.marketing ? revoked : ["analytics", "marketing"];
+export function categoriesToClearOnChoice(next: ConsentState): ConsentCategory[] {
+  return (["analytics", "marketing"] as const).filter((category) => !next[category]);
+}
+
+/** The categories a new choice turns off that were on: a running tag needs a reload to stop. */
+export function revokedBy(before: ConsentState, next: ConsentState): ConsentCategory[] {
+  return (["analytics", "marketing"] as const).filter((category) => before[category] && !next[category]);
 }
 
 /**

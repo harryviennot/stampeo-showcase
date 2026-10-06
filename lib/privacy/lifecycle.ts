@@ -6,9 +6,9 @@ import {
   currentConsent,
   emitConsentChange,
   ensureSubjectId,
-  explicitRefusals,
   parseStoredChoice,
   type ConsentCategory,
+  type ConsentState,
   type StoredChoice,
 } from "../consent";
 import { syncPrivacyCookies, type PrivacyCookiesBody } from "./cookies";
@@ -25,15 +25,16 @@ import { readSid, writeSidCookie } from "./subject";
  * row is re-issued by the server on each trackable load, and the subject is
  * refreshed the same way. Both happen at most once per document, and never on a
  * page where no tag may run. On every such page the cookies of any category the
- * stored record explicitly refuses are cleared, so a carrier written by a request
- * a refusal outran does not outlive it.
+ * resolved consent denies (refused, a grant the live row does not honour, or no
+ * choice in an opt-in row) are cleared, so neither a carrier written by a
+ * request a refusal outran nor a cookie set under an earlier row outlives it.
  */
 
 export interface PageLoadPlan {
   mintSid: boolean;
   syncSid: boolean;
   syncConsent: boolean;
-  /** The categories the stored record explicitly refuses, whose cookies must not be in the jar. */
+  /** The categories the resolved consent denies, whose cookies must not be in the jar. */
   clear: ConsentCategory[];
 }
 
@@ -44,6 +45,8 @@ export function planPageLoad(input: {
   sid: string | null;
   /** The stored choice of any version, if the cookie holds one. */
   stored: { analytics: StoredChoice; marketing: StoredChoice } | null;
+  /** What the visitor is taken to allow now, after GPC, the live row and any older refusal. */
+  consent: ConsentState;
   trackable: boolean;
   refreshedThisDocument: boolean;
 }): PageLoadPlan {
@@ -56,7 +59,7 @@ export function planPageLoad(input: {
     mintSid,
     syncSid: mintSid || (due && input.sid !== null),
     syncConsent: due && input.row.refusal_sliding && refused,
-    clear: explicitRefusals(input.stored),
+    clear: (["analytics", "marketing"] as const).filter((category) => !input.consent[category]),
   };
 }
 
@@ -79,6 +82,7 @@ export function runPageLifecycle(
     row: detectPolicyRow(),
     sid: readSid(),
     stored,
+    consent: currentConsent(),
     trackable: isTrackablePath(pathname),
     refreshedThisDocument: session.refreshed,
   });

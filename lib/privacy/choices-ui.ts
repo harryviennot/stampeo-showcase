@@ -14,14 +14,15 @@ export const COOKIE_PREFERENCES_KEY = "footer.cookiePreferences";
 
 /**
  * The footer entry's label. A row whose surface is a notice gets the statutory
- * title and icon; everyone else, and anyone before the row is known, gets the
+ * title and icon, whether or not a subject has been minted on this page;
+ * everyone else, and the server render (which is the strict row), gets the
  * generic label, so the slot is never empty and swaps at most once.
  */
-export function choicesLabel(input: { surface: PolicySurface; ready: boolean }): {
+export function choicesLabel(input: { surface: PolicySurface }): {
   key: typeof PRIVACY_CHOICES_KEY | typeof COOKIE_PREFERENCES_KEY;
   icon: boolean;
 } {
-  const statutory = input.ready && input.surface === "notice";
+  const statutory = input.surface === "notice";
   return { key: statutory ? PRIVACY_CHOICES_KEY : COOKIE_PREFERENCES_KEY, icon: statutory };
 }
 

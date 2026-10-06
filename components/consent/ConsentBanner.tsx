@@ -12,9 +12,11 @@ import {
   categoriesToClearOnChoice,
   categoriesToClearOnLoad,
   clearCookiesFor,
+  clearPresentCookiesFor,
   consentSurface,
   currentConsent,
   emitConsentChange,
+  revokedBy,
   writeConsentRecord,
   type ConsentState,
 } from "@/lib/consent";
@@ -101,15 +103,13 @@ export function ConsentBanner() {
   const { ready, gpc } = consent;
   useEffect(() => {
     if (!ready) return;
-    const categories = categoriesToClearOnLoad({ row, gpc });
-    if (categories.length > 0) clearCookiesFor(categories);
+    clearPresentCookiesFor(categoriesToClearOnLoad({ row, gpc }));
   }, [ready, row, gpc]);
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {
-      // Read what was live BEFORE writing, so a revocation can be told from a
-      // first-time refusal: only a revocation has cookies to clean up.
-      const revoked = categoriesToClearOnChoice(currentConsent(), next);
+      // Read what was live BEFORE writing: only a tag that was running needs a reload to stop.
+      const revoked = revokedBy(currentConsent(), next);
 
       const record = writeConsentRecord(next, row);
       emitConsentChange(next);
@@ -121,8 +121,10 @@ export function ConsentBanner() {
       // survives the reload below.
       recordConsentDecision({ record, surface });
 
+      // Every refused category is cleared, whatever was live before.
+      const refused = categoriesToClearOnChoice(next);
+      if (refused.length > 0) clearCookiesFor(refused);
       if (revoked.length > 0) {
-        clearCookiesFor(revoked);
         // A running gtag or fbq cannot be unloaded. Deleting its cookies stops
         // it identifying anyone, but only a reload actually stops the script,
         // so the honest move is to reload rather than to claim it is gone.
