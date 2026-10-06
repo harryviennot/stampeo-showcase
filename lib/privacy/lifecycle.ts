@@ -1,0 +1,86 @@
+import { isTrackablePath } from "../consent-routes";
+import {
+  consentCookieObject,
+  consentCookieValue,
+  currentConsent,
+  emitConsentChange,
+  ensureSubjectId,
+  parseStoredChoice,
+} from "../consent";
+import { syncPrivacyCookies, type PrivacyCookiesBody } from "./cookies";
+import type { PolicyRow } from "./policy-matrix";
+import { detectPolicyRow } from "./region";
+import { readSid, writeSidCookie } from "./subject";
+
+/**
+ * What a page load does about the subject and the stored choice.
+ *
+ * Where a row starts tracking without a choice (the US) the subject is minted
+ * first: written to the jar, handed to the server, and only then announced, so
+ * `ready` turns true for the tag gates after it exists. A refusal in a sliding
+ * row is re-issued by the server on each trackable load, and the subject is
+ * refreshed the same way. Both happen at most once per document, and never on a
+ * page where no tag may run.
+ */
+
+export interface PageLoadPlan {
+  mintSid: boolean;
+  syncSid: boolean;
+  syncConsent: boolean;
+}
+
+const NOTHING: PageLoadPlan = { mintSid: false, syncSid: false, syncConsent: false };
+
+export function planPageLoad(input: {
+  row: PolicyRow;
+  sid: string | null;
+  /** The stored choice of any version, if the cookie holds one. */
+  stored: { analytics: boolean; marketing: boolean } | null;
+  trackable: boolean;
+  refreshedThisDocument: boolean;
+}): PageLoadPlan {
+  if (!input.trackable) return NOTHING;
+  const mintSid = input.row.mint_subject_before_tags && input.sid === null;
+  const due = !input.refreshedThisDocument;
+  const refused = input.stored !== null && (!input.stored.analytics || !input.stored.marketing);
+  return {
+    mintSid,
+    syncSid: mintSid || (due && input.sid !== null),
+    syncConsent: due && input.row.refusal_sliding && refused,
+  };
+}
+
+export interface LifecycleSession {
+  /** Has this document already refreshed its cookies? */
+  refreshed: boolean;
+}
+
+const documentSession: LifecycleSession = { refreshed: false };
+
+/** Run the plan for the page now showing. Browser only; safe to call repeatedly. */
+export function runPageLifecycle(
+  pathname: string,
+  session: LifecycleSession = documentSession,
+): void {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+
+  const stored = parseStoredChoice(consentCookieValue(document.cookie));
+  const plan = planPageLoad({
+    row: detectPolicyRow(),
+    sid: readSid(),
+    stored,
+    trackable: isTrackablePath(pathname),
+    refreshedThisDocument: session.refreshed,
+  });
+  if (!plan.mintSid && !plan.syncSid && !plan.syncConsent) return;
+
+  if (plan.mintSid) writeSidCookie(ensureSubjectId());
+
+  const body: PrivacyCookiesBody = {};
+  if (plan.syncSid) body.sid = "ensure";
+  if (plan.syncConsent && stored) body.consent = consentCookieObject(stored);
+  syncPrivacyCookies(body);
+  session.refreshed = true;
+
+  if (plan.mintSid) emitConsentChange(currentConsent());
+}

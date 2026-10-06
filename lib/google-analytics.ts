@@ -245,17 +245,27 @@ export function initGa(measurementId: string): void {
   document.head.appendChild(script);
 
   window.gtag("js", new Date());
-  window.gtag("config", measurementId, {
-    // DebugView shows only sessions explicitly flagged, and the setup guide
-    // tells the operator to append `?debug_mode=1`. Passing it through here is
-    // what makes that instruction true.
-    ...(readDebugMode(window.location.search) ? { debug_mode: true } : {}),
-  });
+  window.gtag("config", measurementId, gaConfig(window.location.search));
 }
 
 /** Is this session asking to appear in DebugView? */
 export function readDebugMode(search: string): boolean {
   return new URLSearchParams(search).get("debug_mode") === "1";
+}
+
+/**
+ * What the property is configured with. Google signals and ad personalization
+ * are always off: the property serves us as a measurement tool only, never as
+ * a way for Google to link the visitor to an ad profile. DebugView shows only
+ * sessions explicitly flagged, and the setup guide tells the operator to append
+ * `?debug_mode=1`, so passing it through is what makes that instruction true.
+ */
+export function gaConfig(search: string): Record<string, boolean> {
+  return {
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    ...(readDebugMode(search) ? { debug_mode: true } : {}),
+  };
 }
 
 /**

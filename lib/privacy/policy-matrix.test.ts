@@ -121,7 +121,9 @@ describe("a row added to the matrix is applied with no other code change", () =>
   });
 
   test("a matrix without the UNKNOWN row is refused at load", () => {
-    const { UNKNOWN: _removed, ...withoutUnknown } = raw.rows;
+    const withoutUnknown = Object.fromEntries(
+      Object.entries(raw.rows).filter(([key]) => key !== "UNKNOWN"),
+    );
     expect(() => buildPolicyMatrix({ ...raw, rows: withoutUnknown })).toThrow();
   });
 });

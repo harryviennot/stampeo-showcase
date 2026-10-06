@@ -80,8 +80,8 @@ describe("buildConsentPayload — the contract with the backend", () => {
       "gpc",
       "marketing",
       "policy_version",
-      "region_row",
       "regime",
+      "region_row",
       "subject_id",
       "surface",
       "version",
@@ -185,8 +185,9 @@ describe("recordConsentDecision — fire and forget", () => {
 
       expect(beacon.sent.length).toBe(1);
       expect(beacon.sent[0].url).toBe("https://api.example.test/public/consent");
+      // The browser's own GPC signal is read at send time: off here.
       expect(beacon.sent[0].body).toEqual(
-        buildConsentPayload({ record: RECORD, surface: "banner" }),
+        buildConsentPayload({ record: RECORD, surface: "banner", gpc: false }),
       );
     } finally {
       beacon.restore();

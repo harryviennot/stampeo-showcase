@@ -31,7 +31,6 @@ import { rowFor } from "./policy";
 import { readConsentSnapshot } from "./snapshot";
 import { readSidCookie, writeSidCookie } from "./subject";
 
-const DAY = 86_400;
 const US = rowFor("US");
 const EU = rowFor("FR");
 

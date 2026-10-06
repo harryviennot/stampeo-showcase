@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "analytics_under_us_opt_out": "off",
+  "rows": {
+    "EEA_UK_CH": {
+      "countries": ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE","IS","LI","NO","GB","CH"],
+      "regime": "opt-in",
+      "surface": "banner",
+      "default": { "analytics": false, "marketing": false },
+      "gpc_overrides_choice": false,
+      "grant_ttl_days": 182,
+      "refusal_ttl_days": 182,
+      "refusal_sliding": false,
+      "mint_subject_before_tags": false
+    },
+    "US": {
+      "countries": ["US"],
+      "regime": "opt-out",
+      "surface": "notice",
+      "default": { "analytics": true, "marketing": true },
+      "gpc_overrides_choice": true,
+      "grant_ttl_days": 182,
+      "refusal_ttl_days": 400,
+      "refusal_sliding": true,
+      "mint_subject_before_tags": true
+    },
+    "UNKNOWN": {
+      "countries": [],
+      "regime": "opt-in",
+      "surface": "banner",
+      "default": { "analytics": false, "marketing": false },
+      "gpc_overrides_choice": false,
+      "grant_ttl_days": 182,
+      "refusal_ttl_days": 182,
+      "refusal_sliding": false,
+      "mint_subject_before_tags": false
+    }
+  }
+}

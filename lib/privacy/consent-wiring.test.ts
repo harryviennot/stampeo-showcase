@@ -266,7 +266,7 @@ describe("writeConsentRecord: the answer is kept, then handed to the server", ()
   });
 });
 
-describe("a US refusal outlives the six months it used to expire in (AC2.1, AC2.2)", () => {
+describe("a US refusal outlives six months (AC2.1, AC2.2)", () => {
   function usVisitor() {
     const visitor = installFakeBrowser({ timezone: "America/New_York", fetch: "route" });
     return visitor;
@@ -288,7 +288,7 @@ describe("a US refusal outlives the six months it used to expire in (AC2.1, AC2.
     ).toEqual({ analytics: true, marketing: false });
   });
 
-  test("a US visitor who only dismissed the notice reverts to the default after 182 days, as before", async () => {
+  test("a US visitor who only dismissed the notice reverts to the default after 182 days", async () => {
     browser = usVisitor();
 
     writeConsentRecord({ analytics: true, marketing: true }, "opt-out", "US");

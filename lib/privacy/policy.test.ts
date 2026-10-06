@@ -188,6 +188,16 @@ describe("resolveWithPolicy: what a visitor is taken to have agreed to", () => {
     }
   });
 
+  test("a policy-version bump changes nothing about a stored choice (AC2.3)", () => {
+    const bumped = buildPolicyMatrix({ ...raw, version: POLICY_MATRIX.version + 1 });
+    const refusal = { ...record(false, false), policyVersion: POLICY_MATRIX.version };
+
+    for (const country of ["US", "FR"]) {
+      const row = rowFor(country, bumped);
+      expect(resolveWithPolicy({ row, record: refusal, prior: null, gpc: false }, bumped)).toEqual(OFF);
+    }
+  });
+
   test.each(["FR", "US", "BR"])("sensitive data denies both in the %s row", (country) => {
     expect(
       resolveWithPolicy({

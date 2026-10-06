@@ -90,7 +90,7 @@ export function ConsentBanner() {
         (category) => before[category] && !next[category],
       );
 
-      const record = writeConsentRecord(next, consent.regime);
+      const record = writeConsentRecord(next, consent.regime, consent.row);
       emitConsentChange(next);
       setPrefsOpen(false);
 
@@ -102,14 +102,16 @@ export function ConsentBanner() {
       recordConsentDecision({ record, surface });
 
       if (revoked.length > 0) {
-        clearCookiesFor(revoked);
+        // Refusing both takes the campaign-source carrier too, which is only
+        // cleared when both categories are given as refused.
+        clearCookiesFor(next.analytics || next.marketing ? revoked : CATEGORIES);
         // A running gtag or fbq cannot be unloaded. Deleting its cookies stops
         // it identifying anyone, but only a reload actually stops the script,
         // so the honest move is to reload rather than to claim it is gone.
         window.location.reload();
       }
     },
-    [consent.regime],
+    [consent.regime, consent.row],
   );
 
   const surface = consent.ready

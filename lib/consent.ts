@@ -1,4 +1,21 @@
-import { countryForTimezone } from "./timezone-country";
+import {
+  buildCookie,
+  serializeSetCookie,
+  syncPrivacyCookies,
+  type CookieAttributes,
+} from "./privacy/cookies";
+import {
+  consentMaxAgeSeconds,
+  gpcDeniedCategories,
+  resolveWithPolicy,
+  rowByKey,
+  rowFor,
+  rowForRegime,
+  surfaceWithPolicy,
+} from "./privacy/policy";
+import { POLICY_MATRIX, type PolicyRow } from "./privacy/policy-matrix";
+import { detectPolicyRow } from "./privacy/region";
+import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
 
 /**
  * The consent gate for GA4, the Meta pixel and the TikTok pixel (STA-318,
@@ -51,15 +68,6 @@ export const CONSENT_COOKIE = "stampeo_consent";
  */
 export const CONSENT_VERSION = 3;
 
-/**
- * Six months. CNIL's ceiling for how long a choice may stand.
- *
- * It applies to a REFUSAL just as much as to an acceptance: re-asking someone
- * who already said no, on every visit, is the exact dark pattern the rule
- * exists to stop.
- */
-const SIX_MONTHS_SECONDS = 60 * 60 * 24 * 182;
-
 export type ConsentCategory = "analytics" | "marketing";
 
 /**
@@ -92,6 +100,10 @@ export interface ConsentRecord extends ConsentState {
    * because a record read from an older cookie predates it.
    */
   subjectId?: string;
+  /** The policy matrix version the choice was made under (cookie `p`). Evidence. */
+  policyVersion?: number;
+  /** The policy row in force when they chose (cookie `g`). Evidence. */
+  regionRow?: string;
 }
 
 /**
@@ -117,106 +129,64 @@ export type ConsentSurface = "none" | "banner" | "notice";
  * property, and a literal list would leave the real session cookie in place
  * while reporting the visitor as opted out.
  *
- * `stampeo_attribution` (STA-323) is the one entry we set ourselves, and it is
- * here for the same reason the rest are: it holds the ad platforms' click ids
- * and the GA client id, so it is a tracker by content even though it is
- * first-party by origin. Revoking has to delete the carrier, or the identifiers
- * would still cross to app.stampeo.app and be stored against a business after
- * the refusal. It is listed under BOTH categories because it can hold fields
- * bought by either, and a record half-authorised is not authorised.
+ * `stampeo_ga` and `stampeo_ad` are our own carriers of each category's
+ * identifiers. `stampeo_src` (campaign source) holds neither and is cleared
+ * only when both categories are refused; the legacy `stampeo_attribution`
+ * holds both and goes on any refusal.
  *
- * What must never appear here is CONSENT_COOKIE itself — clearing that would
- * erase the very refusal being acted on.
+ * What must never appear here is CONSENT_COOKIE or the subject cookie:
+ * clearing them would erase the very refusal being acted on.
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
-  analytics: ["_ga", "_ga_*", "_gid", "stampeo_attribution"],
-  marketing: ["_fbp", "_fbc", "_ttp", "stampeo_attribution"],
+  analytics: ["_ga", "_ga_*", "_gid", "stampeo_ga"],
+  marketing: ["_fbp", "_fbc", "_ttp", "stampeo_ad"],
 };
+const SOURCE_CARRIER = "stampeo_src";
+const LEGACY_CARRIER = "stampeo_attribution";
 
 /**
  * The regime a country falls under. Anything but the US is opt-in, including
- * `null`.
- *
- * Null is the case that matters: it is the server render, a timezone we do not
- * map, and a browser that refuses `Intl`. Guessing "US" there would fire three
- * ad pixels at a visitor who never agreed, so the unknown case is the strict
- * one and always will be.
+ * `null`: the unknown case is the server render, a timezone we do not map and
+ * a browser that refuses `Intl`, and it is always the strict one.
  */
 export function consentRegimeForCountry(
   country: string | null | undefined,
 ): ConsentRegime {
-  return (country || "").trim().toUpperCase() === "US" ? "opt-out" : "opt-in";
+  return rowFor(country).regime;
 }
 
 /**
- * What this visitor is taken to have agreed to.
- *
- * The order is the whole design. In the opt-out regime GPC wins over
- * everything, a recorded choice included (see `gpcOverridesChoice`). Otherwise
- * an explicit choice wins, because someone who clicked a button said something
- * more specific than any signal. Only when there is no current choice does GPC
- * decide in the opt-in regime, and only then does the regime's default apply.
- *
- * A `prior` (older-version) record is not a current choice, but its refusals
- * still stand: refusing the narrower processing an older text described is a
- * refusal of today's too. Its grants are not carried, so a granted category
- * falls to GPC and the regime default like no choice at all.
+ * What this visitor is taken to have agreed to, by the policy row's rules
+ * (`lib/privacy/policy.ts`): GPC first where the row overrides, then a
+ * current choice, then the row's default. An older (`prior`) record's refusals
+ * stand and its grants are not carried. `row` defaults to the one for `regime`.
  */
 export function resolveConsent(input: {
   record: ConsentRecord | null;
   prior: PriorConsent | null;
   regime: ConsentRegime;
   gpc: boolean;
+  row?: PolicyRow;
 }): ConsentState {
-  if (gpcOverridesChoice(input.regime, input.gpc)) {
-    return { analytics: false, marketing: false };
-  }
-  if (input.record) {
-    return { analytics: input.record.analytics, marketing: input.record.marketing };
-  }
-  const fallback = regimeDefault(input.regime, input.gpc);
-  const refused = (category: ConsentCategory) => input.prior?.[category] === false;
-  return {
-    analytics: fallback.analytics && !refused("analytics"),
-    marketing: fallback.marketing && !refused("marketing"),
-  };
+  return resolveWithPolicy({
+    row: input.row ?? rowForRegime(input.regime),
+    record: input.record,
+    prior: input.prior,
+    gpc: input.gpc,
+  });
 }
 
 /**
- * Does Global Privacy Control override even a recorded choice?
- *
- * Only in the opt-out regime: the CCPA regulations (§7025) require the signal
- * to be processed as an opt-out even when it conflicts with an earlier setting,
- * such as "Got it" on the US notice. In the opt-in regime an explicit choice
- * still wins.
- */
-function gpcOverridesChoice(regime: ConsentRegime, gpc: boolean): boolean {
-  return gpc && regime === "opt-out";
-}
-
-/**
- * The categories whose trackers must be cleared when a page loads.
- *
- * Both, whenever GPC overrides in the US: a recorded grant or the opt-out
- * default may have let trackers into the jar before the signal was on,
- * `stampeo_attribution` included, and none of them may outlive the override or
- * cross to the dashboard. Otherwise none.
+ * The categories whose trackers must be cleared when a page loads: those GPC
+ * denies where the row overrides, since a recorded grant or the opt-out
+ * default may have let trackers into the jar before the signal was on.
  */
 export function categoriesToClearOnLoad(input: {
   regime: ConsentRegime;
   gpc: boolean;
+  row?: PolicyRow;
 }): ConsentCategory[] {
-  return gpcOverridesChoice(input.regime, input.gpc) ? ["analytics", "marketing"] : [];
-}
-
-/** What a visitor with no choice on record is taken to have agreed to. */
-function regimeDefault(regime: ConsentRegime, gpc: boolean): ConsentState {
-  // Global Privacy Control. Twelve US states require honouring it
-  // automatically, with no banner and no confirmation; in the EU it is a plain
-  // objection signal and costs us nothing to respect.
-  if (gpc) return { analytics: false, marketing: false };
-  if (regime === "opt-out") return { analytics: true, marketing: true };
-  return { analytics: false, marketing: false };
+  return gpcDeniedCategories(input.row ?? rowForRegime(input.regime), input.gpc);
 }
 
 /**
@@ -238,6 +208,9 @@ export function consentSnapshotKey(input: {
   prior: PriorConsent | null;
   regime: ConsentRegime;
   gpc: boolean;
+  /** The policy row key and whether tags may start: both are snapshot fields. */
+  row?: string;
+  ready?: boolean;
 }): string {
   const record = input.record
     ? [
@@ -246,6 +219,8 @@ export function consentSnapshotKey(input: {
         input.record.marketing ? 1 : 0,
         input.record.at,
         input.record.subjectId ?? "",
+        input.record.policyVersion ?? "",
+        input.record.regionRow ?? "",
       ].join(".")
     : "none";
   const prior = input.prior
@@ -256,7 +231,7 @@ export function consentSnapshotKey(input: {
         input.prior.at,
       ].join(".")
     : "none";
-  return `${record}|${prior}|${input.regime}|${input.gpc}`;
+  return `${record}|${prior}|${input.regime}|${input.gpc}|${input.row ?? ""}|${input.ready ?? true}`;
 }
 
 /** Which consent surface, if any, this visitor should see. */
@@ -266,47 +241,34 @@ export function consentSurface(input: {
   regime: ConsentRegime;
   gpc: boolean;
   trackable: boolean;
+  row?: PolicyRow;
 }): ConsentSurface {
-  if (!input.trackable) return "none";
-  if (input.record) return "none";
-  // An older record that refused everything has nothing left to ask: both
-  // refusals still stand, so neither surface would change what is in force.
-  if (input.prior && !input.prior.analytics && !input.prior.marketing) return "none";
-  // A GPC visitor in the US has already opted out, so the notice would be
-  // telling them something that is not true of them.
-  if (input.gpc && input.regime === "opt-out") return "none";
-  return input.regime === "opt-in" ? "banner" : "notice";
+  return surfaceWithPolicy({
+    row: input.row ?? rowForRegime(input.regime),
+    record: input.record,
+    prior: input.prior,
+    gpc: input.gpc,
+    trackable: input.trackable,
+  });
+}
+
+/** The JSON object stored in the cookie, and posted to the privacy route. */
+export function consentCookieObject(record: ConsentRecord): Record<string, unknown> {
+  return {
+    v: record.v,
+    a: record.analytics ? 1 : 0,
+    m: record.marketing ? 1 : 0,
+    t: record.at,
+    r: record.regime,
+    ...(record.subjectId ? { s: record.subjectId } : {}),
+    ...(record.policyVersion ? { p: record.policyVersion } : {}),
+    ...(record.regionRow ? { g: record.regionRow } : {}),
+  };
 }
 
 /** The cookie VALUE for a choice. Attributes are `consentCookieAttributes`. */
 export function serializeConsentCookie(record: ConsentRecord): string {
-  return encodeURIComponent(
-    JSON.stringify({
-      v: record.v,
-      a: record.analytics ? 1 : 0,
-      m: record.marketing ? 1 : 0,
-      t: record.at,
-      r: record.regime,
-      ...(record.subjectId ? { s: record.subjectId } : {}),
-    }),
-  );
-}
-
-/**
- * A v4 UUID, or null. Never anything else.
- *
- * The id is ours to mint, so a value we did not write is not an id -- it is
- * something a visitor typed into their own cookie jar. Replacing it costs one
- * broken chain; trusting it would let a forger write rows under an id of their
- * choosing, or smuggle a non-UUID into a `uuid` column.
- */
-function validSubjectId(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    value,
-  )
-    ? value
-    : null;
+  return encodeURIComponent(JSON.stringify(consentCookieObject(record)));
 }
 
 /**
@@ -339,33 +301,13 @@ export function readSubjectId(cookieHeader: string | null | undefined): string |
 }
 
 /**
- * The visitor's subject id, minting one if there is nothing to reuse.
- *
- * Random and meaningless on purpose: never derived from an IP, a fingerprint
- * or anything else about the person. It exists only to join one person's
- * decisions to each other.
+ * The visitor's subject id: the subject cookie, else the one inside their
+ * consent record, else a fresh one. Random and meaningless on purpose: it only
+ * joins one person's decisions to each other.
  */
 export function ensureSubjectId(): string {
-  const existing =
-    typeof document === "undefined" ? null : readSubjectId(document.cookie);
-  if (existing) return existing;
-  return mintSubjectId();
-}
-
-function mintSubjectId(): string {
-  const cryptoObj = globalThis.crypto;
-  if (cryptoObj && typeof cryptoObj.randomUUID === "function") {
-    return cryptoObj.randomUUID();
-  }
-  // Older Safari has `getRandomValues` but not `randomUUID`. Build a v4 by
-  // hand rather than falling back to Math.random, which is not a source of
-  // identifiers.
-  const bytes = new Uint8Array(16);
-  cryptoObj.getRandomValues(bytes);
-  bytes[6] = (bytes[6] & 0x0f) | 0x40;
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
-  const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  const header = typeof document === "undefined" ? null : document.cookie;
+  return readSid() ?? readSubjectId(header) ?? mintSubjectId();
 }
 
 /** `1` or `0` and nothing else. Anything we did not write is not consent. */
@@ -381,15 +323,7 @@ function choice(value: unknown): boolean | null {
  * Null for anything malformed, truncated or forged. Never throws: a corrupt
  * cookie has to degrade into asking again, not into a blank page.
  */
-function parseStoredChoice(raw: string | null | undefined): ConsentRecord | null {
-  if (!raw || !raw.trim()) return null;
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(decodeURIComponent(raw));
-  } catch {
-    return null;
-  }
+export function consentFromObject(parsed: unknown): ConsentRecord | null {
   if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
     return null;
   }
@@ -404,16 +338,33 @@ function parseStoredChoice(raw: string | null | undefined): ConsentRecord | null
   const marketing = choice(record.m);
   if (analytics === null || marketing === null) return null;
 
-  // `t` and `r` evidence the choice; they do not make it. Losing them is not a
-  // reason to interrupt someone who already answered.
+  // `t`, `r`, `p` and `g` evidence the choice; they do not make it. Losing
+  // them is not a reason to interrupt someone who already answered.
+  const p = record.p;
+  const policyVersion =
+    typeof p === "number" && Number.isInteger(p) && p >= 1 && p <= 1000 ? p : null;
+  const regionRow = rowByKey(record.g)?.key ?? null;
+  const subjectId = validSubjectId(record.s);
   return {
     v,
     analytics,
     marketing,
     at: typeof record.t === "number" ? record.t : 0,
     regime: record.r === "opt-out" ? "opt-out" : "opt-in",
-    ...(validSubjectId(record.s) ? { subjectId: record.s as string } : {}),
+    ...(subjectId ? { subjectId } : {}),
+    ...(policyVersion ? { policyVersion } : {}),
+    ...(regionRow ? { regionRow } : {}),
   };
+}
+
+/** A stored choice of any version from its raw cookie value, or null. */
+export function parseStoredChoice(raw: string | null | undefined): ConsentRecord | null {
+  if (!raw || !raw.trim()) return null;
+  try {
+    return consentFromObject(JSON.parse(decodeURIComponent(raw)));
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -445,7 +396,7 @@ export function parsePriorConsent(raw: string | null | undefined): PriorConsent 
 }
 
 /** The raw consent cookie value in a `Cookie:` header or `document.cookie`. */
-function consentCookieValue(header: string | null | undefined): string | null {
+export function consentCookieValue(header: string | null | undefined): string | null {
   if (!header) return null;
   for (const part of header.split(";")) {
     const entry = part.trim();
@@ -471,52 +422,46 @@ export function priorConsentFromCookieHeader(
   return parsePriorConsent(consentCookieValue(header));
 }
 
-export interface ConsentCookieAttributes {
-  name: string;
-  value: string;
-  maxAge: number;
-  path: string;
-  sameSite: "lax";
-  secure: boolean;
-  domain?: string;
-}
+export type ConsentCookieAttributes = CookieAttributes;
 
 /**
  * Everything needed to write the choice down.
  *
- * Not `httpOnly`: the gate runs in the browser and has to read it. That is
- * safe here in a way it would not be for a session — the value is a preference
- * whose worst forgery is showing a visitor a banner they already dismissed.
- *
- * Shares `NEXT_PUBLIC_COOKIE_DOMAIN` with `lib/last-login.ts` so the dashboard
- * on `app.stampeo.app` can read the same choice when it grows a tracker.
+ * Lives for the row's refusal lifetime when either category is refused, else
+ * its grant lifetime. Not `httpOnly`: the gate runs in the browser and has to
+ * read it, and the value is a preference whose worst forgery is showing a
+ * visitor a banner they already dismissed. The row defaults to the one the
+ * record names, else the one for its regime.
  */
 export function consentCookieAttributes(
   record: ConsentRecord,
+  row?: PolicyRow,
 ): ConsentCookieAttributes {
-  return {
-    name: CONSENT_COOKIE,
-    value: serializeConsentCookie(record),
-    maxAge: SIX_MONTHS_SECONDS,
-    path: "/",
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined,
-  };
+  const policy = row ?? rowByKey(record.regionRow) ?? rowForRegime(record.regime);
+  return buildCookie(
+    CONSENT_COOKIE,
+    serializeConsentCookie(record),
+    consentMaxAgeSeconds(policy, record),
+  );
 }
 
 /**
  * Which of the cookies actually present belong to the categories being
  * revoked.
  *
- * Only ever names third-party trackers: our own cookies are not in
- * COOKIE_PATTERNS, so clearing cannot erase the very refusal it is acting on.
+ * Only ever names trackers and their carriers: the consent and subject
+ * cookies are not in COOKIE_PATTERNS, so clearing cannot erase the very
+ * refusal it is acting on.
  */
 export function cookieNamesToClear(
   categories: readonly ConsentCategory[],
   present: readonly string[],
 ): string[] {
   const patterns = categories.flatMap((category) => COOKIE_PATTERNS[category]);
+  if (categories.length > 0) patterns.push(LEGACY_CARRIER);
+  if (categories.includes("analytics") && categories.includes("marketing")) {
+    patterns.push(SOURCE_CARRIER);
+  }
   const matched = present.filter((name) =>
     patterns.some((pattern) =>
       pattern.endsWith("*")
@@ -555,27 +500,12 @@ export function detectGpc(): boolean {
 }
 
 /**
- * The regime this visitor falls under, from the TIMEZONE alone.
- *
- * Deliberately not `detectBrowserCountry()`, which falls back to
- * `navigator.language`: a French visitor whose browser is set to `en-US` and
- * whose timezone we do not map would be read as American and tracked without
- * consent. Dropping that fallback makes the failure mode "an American sees the
- * European banner" — which costs data, not compliance.
- *
- * Not IP geolocation either. See `lib/market-suggestion.ts` for why this
- * codebase places visitors on the client or not at all, and note that showcase
- * is a standalone Docker build with no edge geo header to read.
+ * The regime this visitor falls under: that of their policy row, the stricter
+ * of the server's region cookie and the timezone (`lib/privacy/region.ts`).
+ * Not IP geolocation, and not `navigator.language`.
  */
 export function detectConsentRegime(): ConsentRegime {
-  if (typeof window === "undefined") return "opt-in";
-  try {
-    return consentRegimeForCountry(
-      countryForTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone),
-    );
-  } catch {
-    return "opt-in";
-  }
+  return detectPolicyRow().regime;
 }
 
 /** Every cookie name currently readable by script on this document. */
@@ -628,11 +558,17 @@ export function readStoredConsent(): {
  *
  * `at` is stamped here rather than passed in: the timestamp is evidence of
  * when the visitor clicked, and the only moment that is true is this one.
+ * `rowKey` names the policy row in force; one that disagrees with `regime` is
+ * ignored. The cookie is written synchronously, then the server is asked to
+ * set it again as a first-party response (see `lib/privacy/cookies.ts`).
  */
 export function writeConsentRecord(
   state: ConsentState,
   regime: ConsentRegime,
+  rowKey?: string,
 ): ConsentRecord {
+  const named = rowByKey(rowKey);
+  const row = named && named.regime === regime ? named : rowForRegime(regime);
   const record: ConsentRecord = {
     v: CONSENT_VERSION,
     analytics: state.analytics,
@@ -642,15 +578,13 @@ export function writeConsentRecord(
     // Reused across decisions AND across version bumps, so the ledger can show
     // that one person answered twice rather than two people answering once.
     subjectId: ensureSubjectId(),
+    policyVersion: POLICY_MATRIX.version,
+    regionRow: row.key,
   };
 
   if (typeof document !== "undefined") {
-    const attrs = consentCookieAttributes(record);
-    let cookie = `${attrs.name}=${attrs.value}; Max-Age=${attrs.maxAge}; Path=${attrs.path}; SameSite=Lax`;
-    if (attrs.domain) cookie += `; Domain=${attrs.domain}`;
-    if (attrs.secure) cookie += "; Secure";
     try {
-      document.cookie = cookie;
+      document.cookie = serializeSetCookie(consentCookieAttributes(record, row));
     } catch {
       // Blocked storage throws here. It can also fail without throwing, which
       // is why the check below reads the jar back rather than trusting this.
@@ -662,6 +596,8 @@ export function writeConsentRecord(
     // the source of truth, and the fallback clears itself the moment a write
     // succeeds rather than shadowing a later choice made in another tab.
     sessionRecord = consentRecordFromCookieHeader(document.cookie) ? null : record;
+
+    syncPrivacyCookies({ consent: consentCookieObject(record), sid: "ensure" });
   }
 
   return record;
@@ -724,11 +660,8 @@ export function subscribeToConsentChange(onChange: () => void): () => void {
  */
 export function currentConsent(): ConsentState {
   if (typeof window === "undefined") return { analytics: false, marketing: false };
-  return resolveConsent({
-    ...readStoredConsent(),
-    regime: detectConsentRegime(),
-    gpc: detectGpc(),
-  });
+  const row = detectPolicyRow();
+  return resolveConsent({ ...readStoredConsent(), regime: row.regime, gpc: detectGpc(), row });
 }
 
 /** May Google Analytics load? The seam STA-318 consumes. */

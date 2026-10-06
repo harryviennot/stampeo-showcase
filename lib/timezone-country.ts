@@ -12,17 +12,29 @@ import type { CountryCode } from "libphonenumber-js";
  * module stays runtime-dependency-free.
  */
 
+/**
+ * Every IANA zone whose country is the US. A browser reports the zone the OS is
+ * set to, not the canonical one for the region (Arizona says America/Phoenix,
+ * Michigan says America/Detroit), so a missing zone costs a US visitor the
+ * opt-out notice and the "see US pricing" offer. US territories are not here:
+ * they stay unmapped, which holds them to the strict row.
+ */
+const US_ZONES: readonly string[] = [
+  "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
+  "America/Phoenix", "America/Anchorage", "America/Detroit", "America/Boise",
+  "America/Juneau", "America/Sitka", "America/Nome", "America/Yakutat",
+  "America/Metlakatla", "America/Adak", "America/Menominee",
+  "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo",
+  "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay",
+  "America/Indiana/Vincennes", "America/Indiana/Winamac",
+  "America/Kentucky/Louisville", "America/Kentucky/Monticello",
+  "America/North_Dakota/Center", "America/North_Dakota/New_Salem",
+  "America/North_Dakota/Beulah", "Pacific/Honolulu",
+];
+
 const TZ_TO_COUNTRY: Record<string, CountryCode> = {
-  "Europe/Paris": "FR", "Europe/London": "GB", "America/New_York": "US",
-  "America/Chicago": "US", "America/Denver": "US", "America/Los_Angeles": "US",
-  // The four above are Eastern/Central/Mountain/Pacific and cover most of the
-  // country, but a browser reports the IANA zone the OS is set to, not the
-  // canonical one for the region -- Arizona says America/Phoenix, Michigan says
-  // America/Detroit. Missing them costs a US visitor the "see US pricing" offer
-  // and leaves them reading EUR 20 for a plan they would be charged $49 for.
-  "America/Phoenix": "US", "America/Anchorage": "US", "America/Detroit": "US",
-  "America/Indiana/Indianapolis": "US", "America/Boise": "US",
-  "America/Juneau": "US", "Pacific/Honolulu": "US",
+  ...Object.fromEntries(US_ZONES.map((zone) => [zone, "US" as CountryCode])),
+  "Europe/Paris": "FR", "Europe/London": "GB",
   "America/Toronto": "CA", "America/Montreal": "CA", "America/Vancouver": "CA",
   "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT",
   "Europe/Lisbon": "PT", "Europe/Brussels": "BE", "Europe/Zurich": "CH",

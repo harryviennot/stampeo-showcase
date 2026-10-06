@@ -1,0 +1,159 @@
+import { consentCookieAttributes, consentFromObject } from "../consent";
+import { buildCookie, serializeSetCookie, type CookieAttributes } from "./cookies";
+import { rowByKey, rowForRegime } from "./policy";
+import { mintSubjectId, readSidCookie, sidCookieAttributes } from "./subject";
+
+/**
+ * The logic of `POST /api/privacy/cookies`, kept out of the route file so
+ * `bun test lib` covers it. It reads a request, applies the guards, and answers
+ * with a status and the `Set-Cookie` values to send; it never logs and never
+ * echoes anything it was given.
+ *
+ * It writes only the names it owns (the consent and subject cookies, plus the
+ * carriers once their parsers exist) and re-validates every value with the
+ * same parsers the client uses: an invalid value is dropped, silently.
+ */
+
+/** The most it will read from a request body. */
+export const MAX_BODY_BYTES = 8 * 1024;
+
+/** The carriers a request may set, which it may also ask to be cleared. */
+const CLEARABLE_COOKIES: ReadonlySet<string> = new Set([
+  "stampeo_src",
+  "stampeo_ga",
+  "stampeo_ad",
+  "stampeo_attribution",
+]);
+
+/** Turns a posted carrier value into the cookie to set, or null to drop it. */
+export type CarrierParser = (value: unknown) => CookieAttributes | null;
+
+/**
+ * Extension point for the attribution carriers: register a parser here per
+ * carrier name (`src`, `ga`, `ad`). A carrier with no parser is accepted and
+ * ignored.
+ */
+export const CARRIER_PARSERS: ReadonlyMap<string, CarrierParser> = new Map();
+
+export interface PrivacyRequestLike {
+  headers: { get(name: string): string | null };
+  body: ReadableStream<Uint8Array> | null;
+}
+
+export interface PrivacyCookiesResult {
+  status: number;
+  setCookies: string[];
+}
+
+const refuse = (status: number): PrivacyCookiesResult => ({ status, setCookies: [] });
+
+/**
+ * Is this `Origin` the site itself? Its host must be the request's host (the
+ * first forwarded host when behind a proxy) or the configured public URL's, and
+ * its scheme https (http is allowed outside production, for local dev).
+ */
+function isSiteOrigin(origin: string, headers: PrivacyRequestLike["headers"]): boolean {
+  let url: URL;
+  try {
+    url = new URL(origin);
+  } catch {
+    return false;
+  }
+  const production = process.env.NODE_ENV === "production";
+  if (url.protocol !== "https:" && (production || url.protocol !== "http:")) return false;
+
+  const forwarded = headers.get("x-forwarded-host")?.split(",")[0].trim();
+  const host = (forwarded || headers.get("host") || "").toLowerCase();
+  if (host && url.host === host) return true;
+
+  try {
+    const configured = process.env.NEXT_PUBLIC_SHOWCASE_URL;
+    return Boolean(configured) && new URL(configured as string).origin === url.origin;
+  } catch {
+    return false;
+  }
+}
+
+/** The body as text, or null once it exceeds `limit` bytes. */
+async function readCapped(
+  body: ReadableStream<Uint8Array> | null,
+  limit: number,
+): Promise<string | null> {
+  if (!body) return "";
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let text = "";
+  let total = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > limit) {
+      await reader.cancel().catch(() => {});
+      return null;
+    }
+    text += decoder.decode(value, { stream: true });
+  }
+  return text + decoder.decode();
+}
+
+const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+export async function handlePrivacyCookies(
+  request: PrivacyRequestLike,
+): Promise<PrivacyCookiesResult> {
+  const { headers } = request;
+
+  const origin = headers.get("origin");
+  if (!origin || !isSiteOrigin(origin, headers)) return refuse(403);
+
+  const type = (headers.get("content-type") ?? "").split(";")[0].trim().toLowerCase();
+  if (type !== "application/json") return refuse(415);
+
+  const declared = Number(headers.get("content-length") ?? 0);
+  if (declared > MAX_BODY_BYTES) return refuse(413);
+  const text = await readCapped(request.body, MAX_BODY_BYTES);
+  if (text === null) return refuse(413);
+
+  let body: unknown;
+  try {
+    body = JSON.parse(text);
+  } catch {
+    return refuse(400);
+  }
+  if (!isObject(body)) return refuse(400);
+
+  const setCookies: string[] = [];
+
+  // The subject: the cookie we already hold, else the one in the consent
+  // record, else a new one. The record is then written carrying that subject.
+  const record = consentFromObject(body.consent);
+  const sid =
+    body.sid === "ensure"
+      ? (readSidCookie(headers.get("cookie")) ?? record?.subjectId ?? mintSubjectId())
+      : null;
+
+  if (record) {
+    const stored = sid ? { ...record, subjectId: sid } : record;
+    const row = rowByKey(stored.regionRow) ?? rowForRegime(stored.regime);
+    setCookies.push(serializeSetCookie(consentCookieAttributes(stored, row)));
+  }
+  if (sid) setCookies.push(serializeSetCookie(sidCookieAttributes(sid)));
+
+  if (isObject(body.carriers)) {
+    for (const [name, value] of Object.entries(body.carriers)) {
+      const cookie = CARRIER_PARSERS.get(name)?.(value);
+      if (cookie) setCookies.push(serializeSetCookie(cookie));
+    }
+  }
+
+  if (Array.isArray(body.clear)) {
+    const names = new Set(
+      body.clear.slice(0, 16).filter((n): n is string => typeof n === "string" && CLEARABLE_COOKIES.has(n)),
+    );
+    for (const name of names) setCookies.push(serializeSetCookie(buildCookie(name, "", 0)));
+  }
+
+  return { status: 204, setCookies };
+}
