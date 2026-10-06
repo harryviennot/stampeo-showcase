@@ -45,8 +45,27 @@ const US_ALIASES: readonly string[] = [
   "US/Indiana-Starke", "US/Aleutian", "Navajo",
 ];
 
+/**
+ * The zones of the EEA, the UK and Switzerland that are not a capital listed in
+ * the table below, plus the legacy names a browser may report for them. Every
+ * zone here belongs to the country it names; territories and dependencies
+ * (Gibraltar, the Faroes, the Isle of Man) stay unmapped, which holds them to
+ * the strict row.
+ */
+const EUROPEAN_ZONES: Record<string, CountryCode> = {
+  "Europe/Sofia": "BG", "Europe/Zagreb": "HR", "Asia/Nicosia": "CY",
+  "Asia/Famagusta": "CY", "Europe/Nicosia": "CY", "Europe/Tallinn": "EE",
+  "Europe/Busingen": "DE", "Europe/Riga": "LV", "Europe/Vilnius": "LT",
+  "Europe/Malta": "MT", "Atlantic/Azores": "PT", "Atlantic/Madeira": "PT",
+  "Europe/Bratislava": "SK", "Europe/Ljubljana": "SI", "Africa/Ceuta": "ES",
+  "Atlantic/Canary": "ES", "Atlantic/Reykjavik": "IS", "Europe/Vaduz": "LI",
+  "Europe/Belfast": "GB", "GB": "GB", "GB-Eire": "GB", "Eire": "IE",
+  "Iceland": "IS", "Poland": "PL", "Portugal": "PT",
+};
+
 const TZ_TO_COUNTRY: Record<string, CountryCode> = {
   ...Object.fromEntries([...US_ZONES, ...US_ALIASES].map((zone) => [zone, "US" as CountryCode])),
+  ...EUROPEAN_ZONES,
   "Europe/Paris": "FR", "Europe/London": "GB",
   "America/Toronto": "CA", "America/Montreal": "CA", "America/Vancouver": "CA",
   "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT",

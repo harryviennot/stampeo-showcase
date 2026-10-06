@@ -10,9 +10,17 @@ import { POLICY_MATRIX, UNKNOWN_ROW_KEY, type PolicyMatrix, type PolicyRow } fro
  * render always gets the strict row.
  */
 
+/**
+ * Whether `stampeo_region` is read at all. Nothing writes or signs it, so any
+ * value in it is the visitor's own; it is turned on only once a trusted writer
+ * exists.
+ */
+export const READ_REGION_COOKIE = false;
+
 /** The country a `stampeo_region` cookie carries, or null. */
 export function serverRegion(): string | null {
-  return typeof document === "undefined" ? null : readServerRegion(document.cookie);
+  if (!READ_REGION_COOKIE || typeof document === "undefined") return null;
+  return readServerRegion(document.cookie);
 }
 
 /**
