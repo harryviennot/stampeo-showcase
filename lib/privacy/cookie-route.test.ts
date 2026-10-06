@@ -10,7 +10,7 @@
  * answers a bad request with nothing.
  */
 
-import { afterEach, describe, expect, spyOn, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, spyOn, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -38,6 +38,10 @@ afterEach(() => {
     if (value === undefined) delete process.env[key];
     else process.env[key] = value;
   }
+});
+
+beforeEach(() => {
+  delete process.env.NEXT_PUBLIC_SHOWCASE_URL;
 });
 
 const CHOICE = {
@@ -125,6 +129,16 @@ describe("who may call it", () => {
     expect((await run(post({}, { host: "0.0.0.0:3000" }))).status).toBe(204);
     delete process.env.NEXT_PUBLIC_SHOWCASE_URL;
     expect((await run(post({}, { host: "0.0.0.0:3000" }))).status).toBe(403);
+  });
+
+  test("the configured public URL is accepted whatever its scheme, and nothing else is", async () => {
+    process.env.NODE_ENV = "production";
+    process.env.NEXT_PUBLIC_SHOWCASE_URL = "http://localhost:3987";
+
+    const request = (origin: string) => post({}, { origin, host: "0.0.0.0:3000" });
+    expect((await run(request("http://localhost:3987"))).status).toBe(204);
+    expect((await run(request("http://localhost:3988"))).status).toBe(403);
+    expect((await run(request("https://localhost:3987"))).status).toBe(403);
   });
 
   test.each([

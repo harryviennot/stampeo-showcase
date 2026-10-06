@@ -48,9 +48,9 @@ export interface PrivacyCookiesResult {
 const refuse = (status: number): PrivacyCookiesResult => ({ status, setCookies: [] });
 
 /**
- * Is this `Origin` the site itself? Its host must be the request's host (the
- * first forwarded host when behind a proxy) or the configured public URL's, and
- * its scheme https (http is allowed outside production, for local dev).
+ * Is this `Origin` the site itself? Either the configured public URL, or a
+ * host the request itself carries (the first forwarded host when behind a
+ * proxy) over https. http is allowed outside production, for local dev.
  */
 function isSiteOrigin(origin: string, headers: PrivacyRequestLike["headers"]): boolean {
   let url: URL;
@@ -59,19 +59,20 @@ function isSiteOrigin(origin: string, headers: PrivacyRequestLike["headers"]): b
   } catch {
     return false;
   }
+
+  try {
+    const configured = process.env.NEXT_PUBLIC_SHOWCASE_URL;
+    if (configured && new URL(configured).origin === url.origin) return true;
+  } catch {
+    // An unparseable configured URL names no site; fall through to the host.
+  }
+
   const production = process.env.NODE_ENV === "production";
   if (url.protocol !== "https:" && (production || url.protocol !== "http:")) return false;
 
   const forwarded = headers.get("x-forwarded-host")?.split(",")[0].trim();
   const host = (forwarded || headers.get("host") || "").toLowerCase();
-  if (host && url.host === host) return true;
-
-  try {
-    const configured = process.env.NEXT_PUBLIC_SHOWCASE_URL;
-    return Boolean(configured) && new URL(configured as string).origin === url.origin;
-  } catch {
-    return false;
-  }
+  return host !== "" && url.host === host;
 }
 
 /** The body as text, or null once it exceeds `limit` bytes. */
