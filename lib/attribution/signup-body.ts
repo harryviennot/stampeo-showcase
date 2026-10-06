@@ -1,9 +1,14 @@
-import { readSubjectId, type ConsentRegime, type ConsentState } from "../consent";
+import { readSubjectId, type ConsentCategory, type ConsentRegime, type ConsentState } from "../consent";
 import { POLICY_MATRIX, type PolicyRow } from "../privacy/policy-matrix";
 import { readSidCookie } from "../privacy/subject";
 import { parseAdCookie, serializeAdCarrier } from "./ad-ids";
 import { MAX_ID_FIELD, cookieValue, decodeCarrier } from "./codec";
-import { AD_COOKIE, GA_COOKIE, SOURCE_COOKIE } from "./cookie-names";
+import {
+  AD_COOKIE,
+  GA_COOKIE,
+  LEGACY_ATTRIBUTION_COOKIE,
+  SOURCE_COOKIE,
+} from "./cookie-names";
 import { gaSessionCookieName, parseGaCookie, serializeGaCarrier } from "./ga-ids";
 import { parseSourceCookie, serializeSourceCarrier } from "./source";
 
@@ -21,10 +26,12 @@ import { parseSourceCookie, serializeSourceCarrier } from "./source";
  * subject always goes: it is strictly necessary, and it is how the backend ties
  * a refusal made on the marketing site to the account.
  *
- * The basis (the regime, policy version and row the call is made under) ALWAYS
- * goes, even when everything else is left out: it is what lets the backend
- * record a US visitor's refusal under GPC when no carrier or ledger decision
- * names a regime.
+ * The basis (the regime, policy version and row the call is made under) and
+ * `refused` (the categories the browser refuses right now) ALWAYS go, even when
+ * everything else is left out: they are what let the backend record a US
+ * visitor's refusal under GPC when no carrier or ledger decision names one, and
+ * stop a carrier captured under no-choice evidence from reading as permission
+ * for a category refused since.
  *
  * Nothing here asks whether the account is new. The backend decides that.
  */
@@ -42,10 +49,16 @@ export function signupBasis(row: PolicyRow): SignupBasis {
   return { cr: row.regime, p: POLICY_MATRIX.version, g: row.key };
 }
 
+const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
+
 export interface SignupBody {
   consent_subject_id?: string;
   ad_attribution_v2?: { src?: object; ga?: object; ad?: object };
+  /** The version-1 carrier, while a browser still holds one. */
+  ad_attribution?: object;
   basis: SignupBasis;
+  /** The categories the browser refuses right now, analytics first. */
+  refused: ConsentCategory[];
   live?: {
     ga?: string;
     ga_sessions?: Record<string, string>;
@@ -102,10 +115,19 @@ export function buildSignupBody(input: {
     if (fbc) live.fbc = fbc;
   }
 
+  // The version-1 carrier holds both categories' identifiers, so it goes only
+  // when neither is refused.
+  const legacy =
+    consent.analytics && consent.marketing
+      ? decodeCarrier(cookieValue(header, LEGACY_ATTRIBUTION_COOKIE))
+      : null;
+
   return {
     ...(subject ? { consent_subject_id: subject } : {}),
     ...(Object.keys(carriers).length > 0 ? { ad_attribution_v2: carriers } : {}),
+    ...(legacy ? { ad_attribution: legacy } : {}),
     basis,
+    refused: CATEGORIES.filter((category) => !consent[category]),
     ...(Object.keys(live).length > 0 ? { live } : {}),
   };
 }

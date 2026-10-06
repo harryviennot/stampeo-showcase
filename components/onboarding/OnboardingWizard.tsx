@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/supabase/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { updateUserProfile } from "@/lib/onboarding";
 import { recordAccountSignup } from "@/lib/attribution/signup-call";
+import { leaveOnboarding } from "@/lib/attribution/signup-flow";
 import { UserInfoStep } from "./steps/UserInfoStep";
 import {
   AuthenticationStep,
@@ -128,29 +129,28 @@ export function OnboardingWizard() {
     }
 
     oauthHandledRef.current = true;
-    // A Google or Apple sign-in just came back with a session. The backend
-    // decides whether this is a new account; the wizard never waits for it.
-    recordAccountSignup({ getAccessToken: async () => session.access_token });
-    (async () => {
-      const stash = readOAuthStash();
-      const supabase = createClient();
-      const meta: Record<string, unknown> = {};
-      if (stash?.name && stash.name.trim()) meta.name = stash.name.trim();
-      if (stash?.phone && stash.phone.trim()) meta.phone = stash.phone.trim();
+    void leaveOnboarding({
+      reportSignup: () => recordAccountSignup({ getAccessToken: async () => session.access_token }),
+      syncProfile: async () => {
+        const stash = readOAuthStash();
+        const supabase = createClient();
+        const meta: Record<string, unknown> = {};
+        if (stash?.name && stash.name.trim()) meta.name = stash.name.trim();
+        if (stash?.phone && stash.phone.trim()) meta.phone = stash.phone.trim();
 
-      if (Object.keys(meta).length > 0) {
-        await supabase.auth.updateUser({ data: meta });
-        if (stash?.phone && stash.phone.trim()) {
-          await updateUserProfile(
-            { phone: stash.phone.trim() },
-            session.access_token
-          );
+        if (Object.keys(meta).length > 0) {
+          await supabase.auth.updateUser({ data: meta });
+          if (stash?.phone && stash.phone.trim()) {
+            await updateUserProfile(
+              { phone: stash.phone.trim() },
+              session.access_token
+            );
+          }
         }
-      }
-
-      clearDraft();
-      redirectToApp();
-    })();
+      },
+      clearDraft,
+      leave: redirectToApp,
+    });
   }, [justAuthed, authLoading, session, router]);
 
   useEffect(() => {
@@ -185,25 +185,27 @@ export function OnboardingWizard() {
   const handleAuthCompleted = useCallback(
     async (opts?: { isExistingUser?: boolean }) => {
       completeStep(2);
-      // An email sign-in just succeeded. The backend decides whether this is a
-      // new account (and the redirect below is why the request is keepalive);
-      // nothing here waits for it or can be blocked by it.
-      recordAccountSignup({ getAccessToken: currentAccessToken });
       // Email signup writes phone to public.users via the auth trigger (raw E.164).
       // PUT /profile/me with the same phone so the validator normalizes it to
       // the canonical dashed format. OAuth completion handles its own sync above.
       // Skip the write for existing users — they already have a profile and the
       // step-1 fields they re-entered shouldn't clobber it.
-      if (data.phone && !opts?.isExistingUser) {
-        const supabase = createClient();
-        const { data: sessionData } = await supabase.auth.getSession();
-        const token = sessionData.session?.access_token;
-        if (token) {
-          await updateUserProfile({ phone: data.phone }, token);
-        }
-      }
-      clearDraft();
-      redirectToApp();
+      const phone = data.phone && !opts?.isExistingUser ? data.phone : null;
+      await leaveOnboarding({
+        reportSignup: () => recordAccountSignup({ getAccessToken: currentAccessToken }),
+        syncProfile: phone
+          ? async () => {
+              const supabase = createClient();
+              const { data: sessionData } = await supabase.auth.getSession();
+              const token = sessionData.session?.access_token;
+              if (token) {
+                await updateUserProfile({ phone }, token);
+              }
+            }
+          : undefined,
+        clearDraft,
+        leave: redirectToApp,
+      });
     },
     [completeStep, data.phone]
   );

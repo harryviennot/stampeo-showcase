@@ -100,6 +100,34 @@ function withBrowserId(stored: AdCarrier | null, incoming: AdCarrier | null): Ad
   return stored.fbp === null && incoming.fbp !== null ? { ...stored, fbp: incoming.fbp } : null;
 }
 
+/** Does this carrier rest on the same consent as `evidence`? (The matrix version is not consent.) */
+function sameConsent(carrier: ConsentEvidence, evidence: ConsentEvidence): boolean {
+  return (
+    carrier.cv === evidence.cv &&
+    carrier.cr === evidence.cr &&
+    carrier.ca === evidence.ca &&
+    carrier.g === evidence.g
+  );
+}
+
+/**
+ * The carrier to write for one category: the one just built, else the stored
+ * one when the category is still allowed, re-stamped with the evidence of the
+ * choice in force so none keeps resting on an earlier one. Null when there is
+ * nothing to write.
+ */
+function carry<T extends ConsentEvidence>(
+  built: T | null,
+  stored: T | null,
+  allowed: boolean,
+  evidence: ConsentEvidence,
+): T | null {
+  const base = built ?? (allowed ? stored : null);
+  if (base === null) return null;
+  if (sameConsent(base, evidence)) return built;
+  return { ...base, ...evidence };
+}
+
 /** The GA carrier to write, or null while the stored one still says the same thing. */
 function refreshedGa(stored: GaCarrier | null, incoming: GaCarrier): GaCarrier | null {
   if (stored === null) return incoming;
@@ -122,21 +150,33 @@ export function planCapture(input: CaptureInput): CapturePlan {
     : null;
   const newPaidClick = incomingAd !== null && isNewPaidClick(stored.ad, incomingAd);
 
+  const ga =
+    consent.analytics && live.gaClientId !== null
+      ? refreshedGa(
+          stored.ga,
+          buildGaCarrier({
+            cid: live.gaClientId,
+            session: live.gaSession,
+            evidence,
+            capturedAt: now,
+          }),
+        )
+      : null;
+
   return {
-    src: stored.src === null || newPaidClick ? buildSourceCarrier({ landing, evidence }) : null,
-    ga:
-      consent.analytics && live.gaClientId !== null
-        ? refreshedGa(
-            stored.ga,
-            buildGaCarrier({
-              cid: live.gaClientId,
-              session: live.gaSession,
-              evidence,
-              capturedAt: now,
-            }),
-          )
-        : null,
-    ad: newPaidClick ? incomingAd : withBrowserId(stored.ad, incomingAd),
+    src: carry(
+      stored.src === null || newPaidClick ? buildSourceCarrier({ landing, evidence }) : null,
+      stored.src,
+      true,
+      evidence,
+    ),
+    ga: carry(ga, stored.ga, consent.analytics, evidence),
+    ad: carry(
+      newPaidClick ? incomingAd : withBrowserId(stored.ad, incomingAd),
+      stored.ad,
+      consent.marketing,
+      evidence,
+    ),
   };
 }
 

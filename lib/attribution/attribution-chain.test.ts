@@ -21,12 +21,12 @@ import { join } from "node:path";
 import { computeAttributionChain, type ChainInputs } from "./__fixtures__/chain";
 
 const ATTRIBUTION_CHAIN_SHA256 =
-  "a5965071f36fe4046acdf365cc0b31d5d9de15c8bbbbfa263bc88d9e8d8cc8de";
+  "d63bff285cb577bb30b884501b26773b6cdbbcaf1ae31275d22e4649cc19303f";
 
 const FILE = join(import.meta.dir, "__fixtures__", "attribution-chain.v2.json");
 const TEXT = readFileSync(FILE, "utf8");
 const FIXTURE = JSON.parse(TEXT) as {
-  version: number;
+  fixture_version: number;
   inputs: ChainInputs;
   expected_showcase: Awaited<ReturnType<typeof computeAttributionChain>>;
   expected_backend: {
@@ -50,7 +50,7 @@ describe("the shared file", () => {
   });
 
   test("starts from the landing the contract names", () => {
-    expect(FIXTURE.version).toBe(1);
+    expect(FIXTURE.fixture_version).toBe(1);
     expect(FIXTURE.inputs).toMatchObject({
       landing_url:
         "https://stampeo.app/us?fbclid=IwAR_TEST_fbclid_0001&utm_source=meta&utm_medium=paid_social&utm_campaign=us-cr-broad&utm_content=ugc-cafe-15s&utm_term=us-broad",

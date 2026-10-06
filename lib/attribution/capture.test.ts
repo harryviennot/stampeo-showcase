@@ -272,7 +272,9 @@ describe("a returning visitor: the latest paid click wins", () => {
     });
 
     expect(written.ad).toBeNull();
-    expect(written.src).toBeNull();
+    // The stored source is only re-stamped with the choice: nothing of the new visit is in it.
+    expect(written.src).toMatchObject({ us: null, lp: "/pricing", ca: 1_791_240_000 });
+    expect(JSON.stringify(written)).not.toContain("other");
   });
 
   test("a stored click whose source was cleared gets its source back, and keeps the click", () => {

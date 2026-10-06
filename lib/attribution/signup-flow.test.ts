@@ -41,8 +41,11 @@ function leaving(over: { getAccessToken?: () => Promise<string | null>; dispatch
   };
 }
 
-/** Everything the wizard did, in order, with the request named for what it is. */
-const order = () => browser!.events.filter((event) => ["fetch", "profile", "clear-draft", "leave"].includes(event));
+/** What the wizard did before it cleared the draft and left, then those two last steps. */
+function steps() {
+  const done = browser!.events.filter((event) => ["fetch", "profile", "clear-draft", "leave"].includes(event));
+  return { before: done.slice(0, -2).sort(), last: done.slice(-2) };
+}
 
 describe("an email code verified", () => {
   test("without a phone number: the sign-up request leaves before the page does", async () => {
@@ -50,7 +53,7 @@ describe("an email code verified", () => {
 
     await leaveOnboarding({ ...leaving() });
 
-    expect(order()).toEqual(["fetch", "clear-draft", "leave"]);
+    expect(steps()).toEqual({ before: ["fetch"], last: ["clear-draft", "leave"] });
     expect(browser.fetches[0].url).toBe(`${API}/account/signup-recorded`);
   });
 
@@ -65,7 +68,7 @@ describe("an email code verified", () => {
       },
     });
 
-    expect(order()).toEqual(["fetch", "profile", "clear-draft", "leave"]);
+    expect(steps()).toEqual({ before: ["fetch", "profile"], last: ["clear-draft", "leave"] });
   });
 });
 
@@ -80,7 +83,7 @@ describe("a Google or Apple return", () => {
       },
     });
 
-    expect(order()).toEqual(["fetch", "profile", "clear-draft", "leave"]);
+    expect(steps()).toEqual({ before: ["fetch", "profile"], last: ["clear-draft", "leave"] });
   });
 });
 
@@ -93,7 +96,7 @@ describe("when the request cannot leave", () => {
       ...leaving({ getAccessToken: () => new Promise(() => {}), dispatchTimeoutMs: 40 }),
     });
 
-    expect(order()).toEqual(["clear-draft", "leave"]);
+    expect(steps()).toEqual({ before: [], last: ["clear-draft", "leave"] });
     expect(Date.now() - started).toBeLessThan(1_000);
   });
 
@@ -102,6 +105,6 @@ describe("when the request cannot leave", () => {
 
     await leaveOnboarding({ ...leaving() });
 
-    expect(order()).toEqual(["fetch", "clear-draft", "leave"]);
+    expect(steps()).toEqual({ before: ["fetch"], last: ["clear-draft", "leave"] });
   });
 });
