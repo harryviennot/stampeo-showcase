@@ -30,6 +30,7 @@ import { afterAll, describe, expect, test } from "bun:test";
 import { resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { ctaClick } from "./cta/events";
+import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
 import {
   META_PIXEL_SCRIPT_SRC,
@@ -480,6 +481,8 @@ function installBrowser(
   options: {
     fbq?: unknown;
     onAppend?: (el: FakeEl, win: Record<string, unknown>) => void;
+    /** The consent cookie; a visitor who accepted everything unless said otherwise. */
+    cookie?: string;
   } = {},
 ): Record<string, unknown> {
   const win: Record<string, unknown> = {};
@@ -488,6 +491,7 @@ function installBrowser(
   (globalThis as Record<string, unknown>).document = {
     createElement: (): FakeEl => ({}),
     head: { appendChild: (el: FakeEl) => options.onAppend?.(el, win) },
+    cookie: options.cookie ?? GRANTED_COOKIE,
   };
   return win;
 }
@@ -594,6 +598,49 @@ describe("the browser side, in load order", () => {
     installBrowser({ fbq: throwingFbq });
 
     expect(() => trackMetaEvent({ event: "SignupCTA", trackable: true })).not.toThrow();
+  });
+});
+
+describe("an event is sent only while the visitor still allows it", () => {
+  const PIXEL = "1088158323750710";
+
+  async function loadedPixel(tag: string) {
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq });
+    const pixel = await import(`./meta-pixel?${tag}`);
+    pixel.initMetaPixel(PIXEL);
+    calls.length = 0;
+    return { pixel, calls };
+  }
+  const setCookie = (value: string) => {
+    ((globalThis as Record<string, unknown>).document as { cookie: string }).cookie = value;
+  };
+
+  test("a refusal made in another tab since the pixel loaded stops every event", async () => {
+    const { pixel, calls } = await loadedPixel("refused-since-load");
+
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    expect(calls).toHaveLength(1);
+
+    setCookie(REFUSED_COOKIE);
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    pixel.trackMetaEvent({ event: "SignupCTA", trackable: true });
+    pixel.trackMetaEvent({ event: "PageView", trackable: true });
+    expect(calls).toHaveLength(1);
+  });
+
+  test("refusing advertising alone stops it, and refusing analytics alone does not", async () => {
+    const { pixel, calls } = await loadedPixel("category");
+    const record = (analytics: boolean, marketing: boolean) =>
+      GRANTED_COOKIE.replace(/=.*/, `=${encodeURIComponent(JSON.stringify({ v: 3, a: +analytics, m: +marketing, t: 1_791_240_000, r: "opt-in", g: "EEA_UK_CH" }))}`);
+
+    setCookie(record(false, true));
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    expect(calls).toHaveLength(1);
+
+    setCookie(record(true, false));
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    expect(calls).toHaveLength(1);
   });
 });
 

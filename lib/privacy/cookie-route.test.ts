@@ -418,6 +418,47 @@ describe("what else it will do", () => {
   });
 });
 
+describe("a carrier whose category the request's own consent cookie refuses", () => {
+  const consentJar = (record: object) =>
+    `stampeo_consent=${encodeURIComponent(JSON.stringify({ t: 1_791_244_000, r: "opt-out", ...record }))}`;
+  const set = async (cookie?: string, body: object = { carriers: CARRIERS }) =>
+    (await run(post(body, { cookie }))).cookies.map((c) => c.name).sort();
+
+  test.each([
+    ["no consent cookie", undefined, ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
+    ["a grant of everything", consentJar({ v: CONSENT_VERSION, a: 1, m: 1 }), ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
+    ["a refusal of advertising", consentJar({ v: CONSENT_VERSION, a: 1, m: 0 }), ["stampeo_ga", "stampeo_src"]],
+    ["a refusal of analytics", consentJar({ v: CONSENT_VERSION, a: 0, m: 1 }), ["stampeo_ad", "stampeo_src"]],
+    ["a refusal of both, which leaves the source nothing to rest on", consentJar({ v: CONSENT_VERSION, a: 0, m: 0 }), []],
+    [
+      "a restored refusal of advertising",
+      consentJar({ v: CONSENT_VERSION, a: -1, m: 0, o: "restore" }),
+      ["stampeo_ga", "stampeo_src"],
+    ],
+    [
+      "an older version's refusal, which still stands",
+      consentJar({ v: CONSENT_VERSION - 1, a: 1, m: 0 }),
+      ["stampeo_ga", "stampeo_src"],
+    ],
+    ["an older version's grant, which is not a refusal", consentJar({ v: CONSENT_VERSION - 1, a: 1, m: 1 }), ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
+    ["a cookie that cannot be read", "stampeo_consent=%7Bnope", ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
+  ])("with %s", async (_case, cookie, expected) => {
+    expect(await set(cookie)).toEqual(expected);
+  });
+
+  test("a grant in the same request's body does not outweigh the cookie's refusal", async () => {
+    const refused = consentJar({ v: CONSENT_VERSION, a: 1, m: 0 });
+    const names = await set(refused, { carriers: CARRIERS, consent: { ...CHOICE, a: 1, m: 1 } });
+
+    expect(names).toEqual(["stampeo_consent", "stampeo_ga", "stampeo_src"]);
+  });
+
+  test("clearing is never held back by a refusal", async () => {
+    const refused = consentJar({ v: CONSENT_VERSION, a: 0, m: 0 });
+    expect(await set(refused, { clear: ["stampeo_ad", "stampeo_src"] })).toEqual(["stampeo_ad", "stampeo_src"]);
+  });
+});
+
 describe("the route file", () => {
   const route = join(import.meta.dir, "..", "..", "app", PRIVACY_COOKIES_PATH, "route.ts");
 

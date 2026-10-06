@@ -36,6 +36,7 @@ import { join } from "node:path";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { CONTACT_CTAS } from "./cta/taxonomy";
+import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
 import {
   gaConfig,
@@ -585,6 +586,8 @@ describe("the browser side, in load order", () => {
       },
       title: "Stampeo",
       body: { dataset: {} as Record<string, string> },
+      // A visitor who accepted everything.
+      cookie: GRANTED_COOKIE,
     };
     (globalThis as Record<string, unknown>).window = fakeWindow;
     return fakeWindow;
@@ -761,5 +764,18 @@ describe("the browser side, in load order", () => {
     trackGaPageView({ path: "/onboarding", trackable: isTrackablePath("/onboarding") });
 
     expect(calls).toEqual([]);
+  });
+
+  test("a refusal made in another tab since the tag loaded stops every event", () => {
+    const win = installBrowser("");
+    const calls = spyGtag(win);
+
+    trackGaEvent({ event: "sign_up_cta_click", trackable: true, params: {} });
+    expect(calls).toHaveLength(1);
+
+    (globalThis as { document: { cookie: string } }).document.cookie = REFUSED_COOKIE;
+    trackGaEvent({ event: "sign_up_cta_click", trackable: true, params: {} });
+    trackGaPageView({ path: "/pricing", trackable: true });
+    expect(calls).toHaveLength(1);
   });
 });
