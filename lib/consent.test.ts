@@ -28,6 +28,7 @@ import {
   consentSnapshotKey,
   consentSurface,
   cookieNamesToClear,
+  explicitRefusals,
   parseConsentCookie,
   resolveConsent,
   serializeConsentCookie,
@@ -758,6 +759,28 @@ describe("the read seam the pixel issues consume", () => {
       gpc: true,
     });
     expect(hasAnalyticsConsent()).toBe(true);
+  });
+});
+
+describe("explicitRefusals: what a stored choice refuses, and nothing it merely leaves open", () => {
+  const stored = (analytics: boolean | null, marketing: boolean | null, v = CONSENT_VERSION) => ({
+    analytics,
+    marketing,
+    v,
+    at: 1,
+  });
+
+  test.each([
+    ["no record", null, null, []],
+    ["a grant of everything", stored(true, true), null, []],
+    ["a refusal of marketing", stored(true, false), null, ["marketing"]],
+    ["a refusal of both", stored(false, false), null, ["analytics", "marketing"]],
+    ["a restored refusal, with no choice about analytics", stored(null, false), null, ["marketing"]],
+    ["no choice at all", stored(null, null), null, []],
+    ["an older version's refusal", null, stored(false, true, CONSENT_VERSION - 1), ["analytics"]],
+    ["a refusal in each of a record and an older one", stored(true, false), stored(false, true, CONSENT_VERSION - 1), ["analytics", "marketing"]],
+  ])("%s", (_case, record, prior, refused) => {
+    expect(explicitRefusals(record, prior)).toEqual(refused);
   });
 });
 

@@ -13,7 +13,12 @@
 
 import { afterEach, describe, expect, test } from "bun:test";
 
-import { CONSENT_COOKIE, CONSENT_VERSION } from "../consent";
+import {
+  CONSENT_COOKIE,
+  CONSENT_VERSION,
+  consentRecordFromCookieHeader,
+  priorConsentFromCookieHeader,
+} from "../consent";
 import { POLICY_MATRIX } from "../privacy/policy-matrix";
 import { SUBJECT as SID, installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
 import { serializeAdCarrier } from "./ad-ids";
@@ -60,7 +65,23 @@ const body = (
   consent = ALL,
   measurementId: string | null = MEASUREMENT_ID,
   basis: ReturnType<typeof signupBasis> = US_BASIS,
-) => buildSignupBody({ cookieHeader, consent, measurementId, basis });
+) =>
+  buildSignupBody({
+    cookieHeader,
+    consent,
+    stored: {
+      record: consentRecordFromCookieHeader(cookieHeader),
+      prior: priorConsentFromCookieHeader(cookieHeader),
+    },
+    measurementId,
+    basis,
+  });
+
+/** The consent cookie of a visitor who made this choice in the opt-in row. */
+const euChoice = (analytics: 0 | 1, marketing: 0 | 1) =>
+  encodeURIComponent(
+    JSON.stringify({ v: CONSENT_VERSION, a: analytics, m: marketing, t: LANDED, r: "opt-in", p: 1, g: "EEA_UK_CH" }),
+  );
 
 describe("the body, for a US visitor who never touched the notice", () => {
   test("carries the subject, the carriers as stored, and the identifiers as they are now", () => {
@@ -142,7 +163,8 @@ describe("what leaves the page follows the current choice", () => {
     ["an EU visitor who accepted everything", ALL, ["src", "ga", "ad"], ["ga", "ga_sessions", "fbp"]],
   ])("%s", (_case, consent, carriers, live) => {
     const eu = signupBasis(EU);
-    const sent = body(jar({ _fbc: "fb.1.1.2" }, EU_COOKIES), consent, MEASUREMENT_ID, eu);
+    const choice = euChoice(+consent.analytics as 0 | 1, +consent.marketing as 0 | 1);
+    const sent = body(jar({ _fbc: "fb.1.1.2", [CONSENT_COOKIE]: choice }, EU_COOKIES), consent, MEASUREMENT_ID, eu);
 
     expect(Object.keys(sent.ad_attribution_v2 ?? {}).sort()).toEqual([...carriers].sort());
     const expected = [...live, ...(consent.marketing ? ["fbc"] : [])];
@@ -156,13 +178,13 @@ describe("what leaves the page follows the current choice", () => {
   });
 
   test.each([
-    ["a US visitor under GPC", { analytics: false, marketing: false }],
-    ["an EU visitor who refused everything", { analytics: false, marketing: false }],
-  ])("%s sends the subject and the basis alone, which the backend needs to record the refusal", (_case, consent) => {
-    expect(body(jar({ _fbc: "fb.1.1.2" }), consent)).toEqual({
+    ["a US visitor under GPC, who has made no choice", {}, []],
+    ["an EU visitor who refused everything", { [CONSENT_COOKIE]: euChoice(0, 0) }, ["analytics", "marketing"]],
+  ])("%s sends the subject, the basis and only what the record refuses", (_case, cookies, refused) => {
+    expect(body(jar({ _fbc: "fb.1.1.2", ...cookies }), { analytics: false, marketing: false })).toEqual({
       consent_subject_id: SID,
       basis: US_BASIS,
-      refused: ["analytics", "marketing"],
+      refused,
     });
   });
 
@@ -185,7 +207,7 @@ describe("the basis: the regime the call was made under", () => {
     for (const row of [US, EU, UNKNOWN]) {
       const basis = signupBasis(row);
       const sent = body("", { analytics: false, marketing: false }, null, basis);
-      expect(sent).toEqual({ basis, refused: ["analytics", "marketing"] });
+      expect(sent).toEqual({ basis, refused: [] });
     }
   });
 });
@@ -343,11 +365,13 @@ describe("recordAccountSignup", () => {
     expect(browser!.fetches[0].body).toEqual({
       consent_subject_id: SID,
       basis: US_BASIS,
-      refused: ["analytics", "marketing"],
+      refused: [],
     });
   });
 
-  describe("declares what the browser refuses right now, after GPC, older refusals and the row in force", () => {
+  describe("declares only what the consent record explicitly refuses", () => {
+    // A refusal is permanent on the backend, so no choice, no record, a grant the
+    // live row does not honour and GPC are none of them declared.
     const record = (choice: object) =>
       encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, t: LANDED, s: SID, ...choice }));
     const US_CHOICE = { r: "opt-out", p: 1, g: "US" };
@@ -355,7 +379,7 @@ describe("recordAccountSignup", () => {
 
     test.each([
       ["a US visitor who never touched the notice", { timezone: "America/New_York" }, []],
-      ["a US visitor under GPC", { timezone: "America/New_York", gpc: true }, ["analytics", "marketing"]],
+      ["a US visitor under GPC, with no record", { timezone: "America/New_York", gpc: true }, []],
       [
         "a US visitor who refused advertising",
         { timezone: "America/New_York", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 0, ...US_CHOICE }) }) },
@@ -377,9 +401,9 @@ describe("recordAccountSignup", () => {
       [
         "a US notice dismissal, now that the visitor is in Paris",
         { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 1, ...US_CHOICE }) }) },
-        ["analytics", "marketing"],
+        [],
       ],
-      ["a European who has not chosen", { timezone: "Europe/Paris" }, ["analytics", "marketing"]],
+      ["a European who has not chosen", { timezone: "Europe/Paris" }, []],
       [
         "a European who accepted everything",
         { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 1, ...EU_CHOICE }) }) },
@@ -390,6 +414,11 @@ describe("recordAccountSignup", () => {
         { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 0, ...EU_CHOICE }) }) },
         ["marketing"],
       ],
+      [
+        "a European who refused everything under version 2",
+        { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ v: 2, a: 0, m: 0, ...EU_CHOICE }) }) },
+        ["analytics", "marketing"],
+      ],
     ])("%s", async (_case, options, refused) => {
       browser = installFakeBrowser({ cookie: jar(), ...options } as Parameters<typeof installFakeBrowser>[0]);
 
@@ -397,6 +426,27 @@ describe("recordAccountSignup", () => {
       await flush();
 
       expect(browser.fetches[0].body.refused).toEqual(refused);
+    });
+
+    test.each([
+      ["a US visitor under GPC with no record", { timezone: "America/New_York", gpc: true }],
+      [
+        "a US notice dismissal read in Paris",
+        {
+          timezone: "Europe/Paris",
+          cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 1, r: "opt-out", p: 1, g: "US" }) }),
+        },
+      ],
+    ])("%s still has its identifiers and carriers withheld", async (_case, options) => {
+      browser = installFakeBrowser({ cookie: jar(), ...options } as Parameters<typeof installFakeBrowser>[0]);
+
+      recordAccountSignup(ready());
+      await flush();
+
+      const sent = browser.fetches[0].body;
+      expect(sent.refused).toEqual([]);
+      expect(sent).not.toHaveProperty("ad_attribution_v2");
+      expect(sent).not.toHaveProperty("live");
     });
   });
 
@@ -452,7 +502,7 @@ describe("recordAccountSignup", () => {
       expect(sent).toEqual({
         consent_subject_id: SID,
         basis: US_BASIS,
-        refused: ["analytics", "marketing"],
+        refused: [],
       });
       expect(sent).not.toHaveProperty("ad_attribution_v2");
       expect(sent).not.toHaveProperty("live");
