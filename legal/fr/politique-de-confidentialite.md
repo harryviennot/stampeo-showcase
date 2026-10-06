@@ -130,13 +130,15 @@ Certains de nos sous-traitants (Stripe, Apple, Google) peuvent transférer des d
 
 ### 5.1 Votre choix
 
-Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google, Meta ou TikTok, et aucun de leurs cookies n'est créé. Refuser ne laisse donc rien derrière soi à supprimer.
+Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google ou Meta, et aucun de leurs cookies n'est créé. Refuser ne laisse donc rien derrière soi à supprimer.
 
-Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé six mois, au terme desquels il vous est redemandé. Vous pouvez le modifier à tout moment via **Préférences cookies** en bas de chaque page. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
+Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé 6 mois, au terme desquels nous pouvons vous le redemander. Vous pouvez le modifier à tout moment via **Préférences cookies** en bas de chaque page. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
 
-Si votre navigateur émet un signal Global Privacy Control, nous le traitons comme un refus et rien n'est chargé. Aux États-Unis, il prime même sur un choix que vous auriez fait ici auparavant, et aucun message ne vous est présenté, puisque vous avez déjà répondu. En Europe, un choix que vous faites vous-même prime sur le signal : tant que vous n'en avez pas fait, le bandeau reste proposé, afin que vous puissiez accepter délibérément si vous le souhaitez.
+Si votre navigateur émet un signal Global Privacy Control, nous le traitons comme un refus et rien n'est chargé. Aux États-Unis, il prime même sur un choix que vous auriez fait ici auparavant, et aucun message ne vous est présenté, puisque vous avez déjà répondu. Dans chacun des États américains, nous le respectons comme une opposition à la vente, au partage et à la publicité ciblée, et tant qu'il est activé, la mesure d'audience est aussi désactivée. En Europe, un choix que vous faites vous-même prime sur le signal : tant que vous n'en avez pas fait, le bandeau reste proposé, afin que vous puissiez accepter délibérément si vous le souhaitez.
 
-Les visiteurs situés aux États-Unis sont traités différemment, les lois des États applicables exigeant une information et une possibilité de refus plutôt qu'un consentement préalable. Les cookies de mesure et de publicité y sont chargés dès l'arrivée, un message l'indique, et **Préférences cookies** permet de les désactiver à tout moment.
+Les visiteurs situés aux États-Unis sont traités différemment, les lois des États applicables exigeant une information et une possibilité de refus plutôt qu'un consentement préalable. Les cookies de mesure et de publicité y sont chargés dès l'arrivée, un message l'indique, et le lien **Vos choix de confidentialité** permet de les désactiver à tout moment. Il figure en bas de chaque page, et le message comporte un bouton du même nom. Un refus est conservé 13 mois et renouvelé à chacune de vos visites, et il est restauré depuis votre compte lorsque vous vous connectez au tableau de bord.
+
+Les règles qui s'appliquent à vous sont déterminées d'après le fuseau horaire de votre appareil. Lorsque les signaux divergent, les règles les plus strictes s'appliquent, et lorsque nous ne pouvons pas vous situer, ce sont les règles strictes (opt-in) qui s'appliquent. Nous n'utilisons pas votre adresse IP pour cela.
 
 ### 5.2 Cookies présents quel que soit votre choix
 
@@ -146,17 +148,28 @@ Ils sont strictement nécessaires et ne sont pas soumis au consentement.
 |---|---|---|
 | `NEXT_LOCALE` | Retient la langue dans laquelle vous consultez le site. | 1 an |
 | `stampeo_market` | Retient le pays dont vous avez ouvert les pages, pour préremplir un champ plus tard. | 30 jours |
-| `stampeo_consent` | Enregistre le choix que vous avez fait sur les cookies du 5.3, ainsi qu'un identifiant aléatoire reliant vos choix successifs (voir 5.6). | 6 mois |
+| `stampeo_consent` | Enregistre le choix que vous avez fait sur les cookies du 5.3, ainsi que l'identifiant aléatoire reliant vos choix successifs (voir 5.6). | 6 mois. Aux États-Unis, un refus est conservé 13 mois et renouvelé à chaque visite. |
+| `stampeo_sid` | Un identifiant aléatoire qui enregistre vos choix et les relie au compte que vous créez, afin qu'un refus ultérieur s'y applique (voir 5.6). | 13 mois |
 | Cookies de session Supabase | Vous maintient connecté au tableau de bord. | Session |
 
 ### 5.3 Cookies soumis à votre consentement
+
+Ces cookies ne sont utilisés que si vous les autorisez (aux États-Unis, tant que vous ne les avez pas désactivés via **Vos choix de confidentialité** ; ailleurs, via **Préférences cookies**).
 
 | Finalité | Destinataire | Cookies |
 |---|---|---|
 | Mesure d'audience | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Mesure publicitaire | Meta | `_fbp`, `_fbc` |
-| Mesure publicitaire | TikTok | `_ttp` |
-| Attribution publicitaire | Stampeo, puis Google ou Meta | `stampeo_attribution` |
+
+Les trois cookies ci-dessous sont les nôtres. Notre serveur les dépose, et ils sont partagés entre stampeo.app et le tableau de bord.
+
+| Cookie | Finalité | Catégorie | Durée |
+|---|---|---|---|
+| `stampeo_src` | L'origine de votre visite (paramètres de campagne, page d'arrivée, site d'origine). | Mesure d'audience ou publicité | 6 mois |
+| `stampeo_ga` | Les identifiants Google Analytics de votre visite. | Mesure d'audience | 6 mois |
+| `stampeo_ad` | L'identifiant de clic de la plateforme publicitaire et l'identifiant de navigateur de Meta, uniquement si votre visite provient d'une publicité. | Publicité | 6 mois |
+
+L'ancien cookie `stampeo_attribution` n'est plus déposé ; un navigateur qui l'a reçu auparavant peut encore le conserver jusqu'à son expiration.
 
 ### 5.4 Mesure d'audience sans cookie
 
@@ -168,34 +181,42 @@ Des cookies strictement nécessaires peuvent être utilisés pour l'authentifica
 
 ### 5.5 Mesure des conversions depuis nos serveurs
 
-Si vous acceptez les cookies du 5.3 et que vous êtes arrivé sur le site depuis une publicité, nous conservons l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi (pour Google, le `gclid` ; pour Meta, le `fbclid`), ainsi que les paramètres de campagne présents dans l'adresse et l'identifiant de navigateur propre à cette plateforme décrit ci-dessus. Ils sont placés dans un cookie `stampeo_attribution`, listé au 5.3, dont la seule fonction est de subsister lors du passage de ce site au tableau de bord, hébergé sur un autre sous-domaine. Si vous revenez plus tard par une autre publicité, ce nouveau clic remplace le précédent.
+Si vous acceptez les cookies du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés), nous conservons, dans les cookies `stampeo_src`, `stampeo_ga` et `stampeo_ad` listés au 5.3 : l'origine de votre visite, c'est-à-dire les paramètres de campagne présents dans l'adresse, la page d'arrivée et le site d'origine ; les identifiants Google Analytics de votre visite ; et, si votre visite provient d'une publicité, l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi (pour Google, le `gclid` ; pour Meta, le `fbclid`), ainsi que l'identifiant de navigateur de Meta. Chaque cookie n'est conservé que tant que vous autorisez la catégorie indiquée pour lui au 5.3. Notre serveur les dépose, et ils sont partagés entre stampeo.app et le tableau de bord, hébergé sur un autre sous-domaine, afin que ces informations subsistent lors du passage de ce site au tableau de bord. Si vous revenez plus tard par une autre publicité, ce nouveau clic remplace le précédent.
 
-Si vous créez ensuite un compte professionnel, nous signalons jusqu'à quatre étapes **depuis nos serveurs** : la création du compte, l'ouverture de la page de paiement, le début de votre essai gratuit et le règlement d'une première facture. S'agissant d'un envoi côté serveur, il intervient après ce qui se passe dans votre navigateur, et indépendamment de celui-ci.
+Si vous créez un compte, nous signalons jusqu'à quatre étapes **depuis nos serveurs** : la création du compte, l'ouverture de la page de paiement, le début de votre essai gratuit et le règlement d'une première facture. La première est signalée à la confirmation du compte (par le code reçu par email, ou par une connexion avec Google ou Apple), avant toute création de commerce. S'agissant d'un envoi côté serveur, il intervient après ce qui se passe dans votre navigateur, et indépendamment de celui-ci.
 
-À chaque étape, la plateforme reçoit ses propres identifiants lorsqu'elle en dispose (l'identifiant de clic et son identifiant de navigateur) et la campagne, ainsi que, pour les trois dernières étapes, le prix de l'offre choisie ou le montant réglé, et sa devise. Chaque plateforme ne reçoit que ses propres identifiants : un clic Google n'est jamais signalé à Meta, ni un clic Meta à Google.
+À chaque étape, la plateforme reçoit ses propres identifiants lorsqu'elle en dispose (l'identifiant de clic et son identifiant de navigateur) et la campagne, ainsi que, pour les trois dernières étapes, le prix de l'offre choisie ou le montant réglé, et sa devise. Chaque plateforme ne reçoit que ses propres identifiants : un identifiant de clic Google n'est jamais transmis à Meta, ni un identifiant de clic Meta à Google.
 
 Meta reçoit en outre :
 
 - votre adresse IP et les caractéristiques techniques de votre navigateur (type, version, système d'exploitation), telles qu'enregistrées à la création de votre compte, ainsi que l'adresse de notre tableau de bord. Nous conservons ces deux données 45 jours au plus, puis nous les supprimons ;
 - votre adresse email, votre numéro de téléphone, vos prénom et nom, le pays, la ville et le code postal de votre commerce, ainsi qu'un identifiant dérivé de votre compte, chacun **haché** par l'algorithme SHA-256 avant de quitter nos serveurs. Le hachage transforme chaque donnée en un code à partir duquel on ne peut pas retrouver vos informations. Ce code vous identifie pourtant auprès de Meta, qui calcule le même code à partir des informations de ses propres utilisateurs : il reste donc une donnée personnelle. Meta compare ces codes à ceux de ses utilisateurs pour savoir si vous avez un compte Facebook ou Instagram, y compris si vous avez vu la publicité sur un autre appareil, et s'en sert pour mesurer et améliorer l'affichage de nos publicités. Meta peut aussi utiliser ces données selon ses propres conditions, par exemple pour améliorer ses systèmes publicitaires, comme le décrit [la politique de confidentialité de Meta](https://www.facebook.com/privacy/policy).
 
-Meta reçoit ces étapes que vous soyez arrivé ou non par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés). Google ne reçoit jamais vos coordonnées, votre adresse IP ni les caractéristiques de votre navigateur.
+Meta reçoit ces étapes que vous soyez arrivé ou non par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés). Google reçoit son propre identifiant de session à chaque étape, de sorte que l'étape se rattache à votre visite. Il ne reçoit jamais vos coordonnées, votre adresse IP ni les caractéristiques de votre navigateur.
 
 Nous ne transmettons jamais votre mot de passe, vos données de paiement, ni quoi que ce soit concernant vos clients (les personnes qui détiennent vos cartes de fidélité).
 
+Pour chaque étape, nous conservons aussi des éléments de diagnostic de l'envoi : son statut, les heures des tentatives et le code de réponse renvoyé par la plateforme, ainsi que les messages de réponse de la plateforme. Le §8 indique la durée de conservation de chacun.
+
 - **Destinataires** : Google désigne Google Ireland Limited, avec Google LLC aux États-Unis. Meta désigne Meta Platforms Ireland Limited, avec Meta Platforms, Inc. aux États-Unis.
-- **Base légale** : votre consentement (article 6.1.a du RGPD), donné dans le bandeau cookies ou via **Préférences cookies**. Aux États-Unis, où le consentement préalable n'est pas exigé, nous nous appuyons sur l'information et votre possibilité de refus (voir 5.1 et §6).
+- **Base légale** : votre consentement (article 6.1.a du RGPD), donné dans le bandeau cookies ou via **Préférences cookies**. Aux États-Unis, où le consentement préalable n'est pas exigé, nous nous appuyons sur l'information et sur votre possibilité de refus, via **Vos choix de confidentialité** (voir 5.1 et §6).
 - **Responsables conjoints avec Meta** : Stampeo et Meta Platforms Ireland Limited sont responsables conjoints du traitement (article 26 du RGPD) pour la collecte de données par les cookies Meta du 5.3 et par les signalements décrits ici, ainsi que pour leur transmission à Meta, dans le cadre de l'avenant « Controller Addendum » de Meta. Meta est seule responsable de ce qu'elle fait des données une fois reçues, comme le décrit [la politique de confidentialité de Meta](https://www.facebook.com/privacy/policy). Vous pouvez exercer vos droits (§10) auprès de Stampeo comme auprès de Meta.
 
-Retirer votre consentement via **Préférences cookies** supprime le cookie `stampeo_attribution` avec les autres et met fin à tout nouveau signalement pour votre compte. Les étapes déjà transmises ne peuvent pas être rappelées. Ces données sont supprimées en même temps que le compte professionnel auquel elles se rattachent (voir §8).
+Vous pouvez retirer chaque choix séparément, via **Préférences cookies** ou, aux États-Unis, via **Vos choix de confidentialité** :
+
+- Désactiver la publicité met fin à tout nouveau signalement à Meta et supprime les identifiants publicitaires que nous avions conservés.
+- Désactiver la mesure d'audience produit le même effet pour Google.
+- Désactiver les deux supprime aussi l'origine de campagne conservée.
+
+Un refus exprimé sur ce site après la création de votre compte s'applique à votre compte et à vos commerces, grâce à l'identifiant aléatoire décrit au 5.6. Les étapes déjà transmises ne peuvent pas être rappelées. Ces données sont supprimées en même temps que le compte professionnel auquel elles se rattachent (voir §8).
 
 ### 5.6 Conservation de vos choix en matière de cookies
 
-Lorsque vous acceptez ou refusez les cookies — sur la bannière, sur le bandeau affiché aux visiteurs situés aux États-Unis, ou plus tard via **Préférences cookies** — nous conservons une trace de cette décision sur nos serveurs. Le RGPD nous impose d'être en mesure de démontrer que le consentement a bien été donné (article 7.1), et un choix conservé uniquement dans votre navigateur ne démontre rien : il réside sur votre appareil, vous pouvez le modifier, et votre décision suivante l'écrase.
+Lorsque vous acceptez ou refusez les cookies — sur la bannière, sur le bandeau affiché aux visiteurs situés aux États-Unis, ou plus tard via **Préférences cookies** ou, aux États-Unis, **Vos choix de confidentialité** — nous conservons une trace de cette décision sur nos serveurs. Le RGPD nous impose d'être en mesure de démontrer que le consentement a bien été donné (article 7.1), et un choix conservé uniquement dans votre navigateur ne démontre rien : il réside sur votre appareil, vous pouvez le modifier, et votre décision suivante l'écrase.
 
 Chaque enregistrement contient la décision elle-même et rien qui vous concerne : les catégories que vous avez acceptées ou refusées, la version du texte qui vous a été présentée, le régime applicable (opt-in ou opt-out), le support sur lequel vous avez répondu, et deux horodatages — celui indiqué par votre appareil et celui de la réception par notre serveur.
 
-Pour relier entre elles les décisions d'un même visiteur, nous plaçons un identifiant aléatoire dans le cookie `stampeo_consent` mentionné en 5.3. Il est généré sur votre appareil, n'est déduit ni de votre adresse IP, ni d'une empreinte de navigateur, ni de quoi que ce soit d'autre vous concernant, et n'a aucune signification en dehors de cet enregistrement. Si vous créez ensuite un compte professionnel, nous rattachons vos décisions antérieures à ce compte afin de pouvoir établir quels choix vous avez faits ; les décisions elles-mêmes ne sont jamais modifiées.
+Pour relier entre elles les décisions d'un même visiteur, nous plaçons un identifiant aléatoire dans le cookie `stampeo_sid` mentionné en 5.2, et le cookie `stampeo_consent` porte le même identifiant. Il est aléatoire, n'est déduit ni de votre adresse IP, ni d'une empreinte de navigateur, ni de quoi que ce soit d'autre vous concernant, et n'a aucune signification en dehors de cet enregistrement. Si vous créez ensuite un compte, nous rattachons vos décisions antérieures à ce compte afin de pouvoir établir quels choix vous avez faits, et pour qu'un refus exprimé plus tard sur ce site s'y applique (voir 5.5) ; les décisions elles-mêmes ne sont jamais modifiées.
 
 Les refus sont enregistrés exactement comme les acceptations. Un registre ne conservant que les personnes ayant accepté donnerait une image fausse de la réalité et n'aurait aucune valeur probante.
 
@@ -219,7 +240,7 @@ Nous utilisons les données collectées pour :
 
 Nous **ne vendons jamais** de données personnelles contre de l'argent. Nous n'effectuons **aucun suivi inter-entreprises** : les données d'un client dans une entreprise sont totalement isolées de celles dans une autre.
 
-**Aux États-Unis :** transmettre des données à Meta et aux autres plateformes publicitaires citées au 5.3, pour notre publicité, peut constituer un « partage » au sens du droit de la Californie. Vous pouvez vous y opposer à tout moment via **Vos choix de confidentialité** dans le message d'information, via **Préférences cookies** en bas de chaque page, ou par un signal Global Privacy Control, que nous respectons comme décrit au 5.1.
+**Aux États-Unis :** transmettre des données à Meta et à Google, pour notre publicité, comme décrit au 5.5, peut constituer un « partage » au sens du droit de la Californie. Vous pouvez vous y opposer à tout moment via **Vos choix de confidentialité**, en bas de chaque page et dans le message d'information, ou par un signal Global Privacy Control, que nous respectons dans chacun des États américains comme décrit au 5.1.
 
 ### 6.1 Emails de cycle de vie et marketing adressés aux utilisateurs Business
 
@@ -276,6 +297,8 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Journaux d'accès support (sessions et entrées d'audit associées, voir §2.3) | 24 mois, puis suppression |
 | Attribution publicitaire (identifiant de clic, campagne) | Supprimée avec le compte Business auquel elle se rattache |
 | Adresse IP et caractéristiques du navigateur utilisées pour la mesure des conversions (§5.5) | 45 jours au plus, puis supprimées |
+| Éléments de diagnostic de l'envoi de chaque étape signalée au titre du §5.5 (statut, heures des tentatives, code de réponse de la plateforme) | 13 mois |
+| Messages de réponse des plateformes aux étapes signalées au titre du §5.5 | 90 jours |
 | Enregistrements de consentement — preuve de vos choix en matière de cookies (§5.6) | 3 ans à compter de la fin du consentement (remplacement ou retrait). **Non** supprimés avec le compte Business : le lien vers le compte est retiré et l'enregistrement est conservé, au titre de l'article 17.3 b) et e) du RGPD |
 
 La durée de conservation de 24 mois pour les journaux d'accès support est définie pour permettre l'instruction d'un éventuel incident de sécurité tout en restant proportionnée à sa finalité, conformément aux recommandations de la CNIL en matière de journalisation des accès.

@@ -70,6 +70,12 @@ login, it is the wrong runbook.
 
 ### Known state before you start
 
+- **The privacy policy text is a counsel draft (STA-377).** §5, §6 and §8 of the
+  four policies were rewritten for the regional rules (US "Your Privacy
+  Choices", 13-month US refusals, the cookies we set, per-purpose withdrawal) and
+  must not reach `main` before counsel signs off. LG-01 and LG-02 read that
+  draft. The questions for counsel are in
+  `docs/features/STA-377/legal-review.md`.
 - **MP-08** — fixed, pending re-verification (STA-373). Root cause: Meta's
   script reported client-side hops (PageView) and clicks
   (`SubscribedButtonClick`) on its own, bypassing `isTrackablePath`; it was
@@ -211,10 +217,11 @@ to produce.
 1. R3, R1, reload.
 
 EXPECT:
-- The slim **notice**, not the two-button banner: one line of text, "Your
-  privacy choices", and "Got it".
+- The slim **notice**, not the two-button banner: one line of text, a **Your
+  Privacy Choices** button, and "Got it".
 - No Refuse/Accept pair.
-- The footer still offers **Cookie preferences**.
+- The footer offers **Your Privacy Choices**, not **Cookie preferences**, and it
+  opens the same preferences dialog as the notice's button.
 - Note: in Polish (`/pl`) the notice text is two sentences, not one line. That
   is expected, not a layout failure.
 
@@ -344,7 +351,7 @@ EXPECT:
 - Two switches, "Audience measurement" and "Advertising", both **off**.
 - "Strictly necessary" is shown as always on and has no switch.
 - Each row names who receives the data: Google Analytics for the first, Meta
-  and TikTok for the second.
+  for the second. TikTok is named nowhere.
 
 ### PR-02 The dialog is operable by keyboard alone — CORE
 DEPENDS: PR-01
@@ -388,8 +395,8 @@ there is no pixel to unload, so what this case checks is that the reload
 happens at all.
 
 1. R6 (fake a granted state), reload.
-2. Footer > **Cookie preferences** > turn **both** switches off > **Save my
-   choice**.
+2. Footer > **Cookie preferences** (under a US timezone, R3, the entry reads
+   **Your Privacy Choices**) > turn **both** switches off > **Save my choice**.
 
 EXPECT:
 - The page **reloads** by itself.
@@ -406,10 +413,13 @@ live only in a banner that is gone the moment someone answers.
 1. After CN-02 (banner dismissed by a refusal), scroll to the footer on `/`,
    `/en`, `/es`, `/pl`.
 2. Click **Cookie preferences** on each.
+3. Repeat with R3 (New York): the same entry now reads **Your Privacy Choices**.
 
 EXPECT:
 - The entry is present in the Legal column in all four locales, translated.
 - It opens the dialog every time.
+- Under R2 it reads **Cookie preferences**; under R3 it reads **Your Privacy
+  Choices**, in the language of the page.
 
 ### PR-06 The footer entry works on the email preferences page — CORE
 DEPENDS: PR-05
@@ -420,7 +430,8 @@ and "the withdrawal control is visible here" are both true. It shipped once with
 a button that did nothing when clicked.
 
 1. Open `/email-preferences` (any locale). Scroll to the footer.
-2. Click **Cookie preferences**.
+2. Click **Cookie preferences** (**Your Privacy Choices** under a US timezone,
+   R3).
 
 EXPECT:
 - The dialog opens.
@@ -1569,9 +1580,10 @@ EXPECT:
 - The page scrolls to the Cookies section itself, **not** to the top of the
   policy. (Polish titles the section "Pliki cookie", so a locale landing at the
   top means the stable anchor is missing for it.)
-- The section lists `NEXT_LOCALE`, `stampeo_market`, `stampeo_consent` as
-  always present, and Google/Meta/TikTok with `_ga`, `_gid`, `_fbp`, `_fbc`,
-  `_ttp` as consent-gated.
+- The section lists `NEXT_LOCALE`, `stampeo_market`, `stampeo_consent` and
+  `stampeo_sid` as always present, Google and Meta with `_ga`, `_gid`, `_fbp`,
+  `_fbc` as consent-gated, and our own `stampeo_src`, `stampeo_ga` and
+  `stampeo_ad` with their 6-month lifetimes. TikTok and `_ttp` appear nowhere.
 - It does **NOT** say anywhere that the site requires no cookie banner. That
   sentence was true before this release and is the specific thing that must not
   come back.
