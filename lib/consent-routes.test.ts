@@ -204,6 +204,51 @@ describe("segment tables", () => {
     expect(isTrackablePath("/email-preferences")).toBe(false);
   });
 
+  test("every page that may set a cookie renders the footer that holds the privacy control", () => {
+    // The privacy policy places the control in the footer of the pages where
+    // the measurement and advertising cookies can be set. The sign-up, login,
+    // password-reset and enrollment pages set none and carry no footer.
+    const appDir = join(import.meta.dir, "..", "app", "[locale]");
+    const root = join(import.meta.dir, "..");
+
+    const resolveImport = (from: string, specifier: string) => {
+      const base = specifier.startsWith("@/") ? join(root, specifier.slice(2)) : join(from, "..", specifier);
+      return [`${base}.tsx`, join(base, "index.tsx")].find((file) => existsSync(file));
+    };
+    const rendersFooter = (file: string, seen = new Set<string>()): boolean => {
+      if (seen.has(file)) return false;
+      seen.add(file);
+      const source = readFileSync(file, "utf-8");
+      if (source.includes("<Footer")) return true;
+      const imports = [...source.matchAll(/from "((?:@\/components|\.\.?)\/[^"]+)"/g)].map((m) => m[1]);
+      return imports.some((specifier) => {
+        const next = resolveImport(file, specifier);
+        return next !== undefined && rendersFooter(next, seen);
+      });
+    };
+    const pagesUnder = (dir: string): string[] =>
+      readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+        entry.isDirectory()
+          ? pagesUnder(join(dir, entry.name))
+          : entry.name === "page.tsx"
+            ? [join(dir, entry.name)]
+            : [],
+      );
+
+    const cookiePages = [
+      join(appDir, "page.tsx"),
+      ...[...MARKETING_SEGMENTS]
+        .filter((segment) => !PRIVATE_SUBPATHS.some(([parent]) => parent === segment))
+        .flatMap((segment) => pagesUnder(join(appDir, segment))),
+    ];
+
+    expect(cookiePages.length).toBeGreaterThan(15);
+    expect(cookiePages.filter((page) => !rendersFooter(page))).toEqual([]);
+    for (const segment of ["login", "onboarding", "reset-password"]) {
+      expect(pagesUnder(join(appDir, segment)).some((page) => rendersFooter(page))).toBe(false);
+    }
+  });
+
   test("every private sub-route still exists, under a segment that is otherwise ours", () => {
     const routeDir = join(import.meta.dir, "..", "app", "[locale]");
 

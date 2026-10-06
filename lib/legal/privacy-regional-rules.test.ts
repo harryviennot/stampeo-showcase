@@ -174,6 +174,45 @@ describe("privacy policy: the control a visitor finds", () => {
   );
 });
 
+/** Where each locale says the control is: the footer of the pages that set the cookies. */
+const WHERE: Record<string, { footerOfCookiePages: RegExp; bottomOfEveryPage: RegExp }> = {
+  en: {
+    footerOfCookiePages: /in the footer of every page where our measurement and advertising cookies can be set/,
+    bottomOfEveryPage: /bottom of every page/,
+  },
+  fr: {
+    footerOfCookiePages: /dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés/,
+    bottomOfEveryPage: /en bas de chaque page/,
+  },
+  es: {
+    footerOfCookiePages: /en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad/,
+    bottomOfEveryPage: /al final de cada página/,
+  },
+  pl: {
+    footerOfCookiePages: /w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy/,
+    bottomOfEveryPage: /na dole każdej strony/,
+  },
+};
+
+describe("privacy policy: where the control is", () => {
+  it.each(routing.locales)(
+    "says it is in the footer of the pages that set the cookies, in §5.1 and in §6, never at the bottom of every page (%s)",
+    (locale) => {
+      const { footerOfCookiePages, bottomOfEveryPage } = WHERE[locale];
+
+      // §5.1 places both controls: Cookie preferences, then Your Privacy Choices.
+      expect(
+        s51(locale).match(new RegExp(footerOfCookiePages, "g"))?.length,
+        `${locale} §5.1 places both controls in the footer`,
+      ).toBe(2);
+      expect(s51(locale), `${locale} §5.1 still says bottom of every page`).not.toMatch(bottomOfEveryPage);
+      expect(s6(locale), `${locale} §6 omits the footer`).toMatch(footerOfCookiePages);
+      expect(s6(locale), `${locale} §6 still says bottom of every page`).not.toMatch(bottomOfEveryPage);
+      expect(privacySource(locale), `${locale} still says bottom of every page`).not.toMatch(bottomOfEveryPage);
+    },
+  );
+});
+
 describe("privacy policy: how long a choice is kept", () => {
   it.each(routing.locales)(
     "§5.1 keeps a choice 6 months, a US refusal 13 months renewed on each visit and restored from the account (%s)",
