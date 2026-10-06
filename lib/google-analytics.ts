@@ -214,6 +214,29 @@ export function isGaLoaded(): boolean {
   return initialised;
 }
 
+/** gtag's own off switch for a property: while it is true, gtag.js sends nothing. */
+export function gaDisableKey(measurementId: string): string {
+  return `ga-disable-${measurementId}`;
+}
+
+/**
+ * Keep gtag's off switch in step with the route. On a private route it is on, so
+ * that enhanced measurement (history-based page views, interactions) cannot
+ * report a client-side hop onto it; it is cleared when the route is trackable
+ * again and analytics is allowed. A trackable page where analytics is not
+ * allowed leaves it as it is: no tag runs there anyway.
+ */
+export function syncGaDisable(input: {
+  measurementId: string | null;
+  trackable: boolean;
+  analytics: boolean;
+}): void {
+  if (typeof window === "undefined" || input.measurementId === null) return;
+  const key = gaDisableKey(input.measurementId);
+  if (!input.trackable) (window as unknown as Record<string, unknown>)[key] = true;
+  else if (input.analytics) (window as unknown as Record<string, unknown>)[key] = false;
+}
+
 /**
  * Inject gtag.js and configure the property.
  *

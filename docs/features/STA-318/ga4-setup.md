@@ -200,6 +200,8 @@ settings.**
 - Turn **off** "Form interactions".
 - Leave scroll, outbound clicks and site search on.
 
+The code also sets `window['ga-disable-<id>']` on private routes (and clears it on trackable ones where analytics is allowed), so DebugView must confirm that no hit carries a private `page_location` after a client-side hop.
+
 This is a console setting, not code. After it changes, re-run QA case GA-02
 against the **production** stream: only the live stream proves that nothing is
 reported for `/onboarding` (`docs/qa/cookie-consent.md`).
