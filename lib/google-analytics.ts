@@ -27,6 +27,7 @@
  * `shouldSendPageView` exists to decide without double-counting.
  */
 
+import { hasAnalyticsConsent } from "./consent";
 import {
   CONTACT_CTAS,
   isContactHref,
@@ -272,17 +273,22 @@ export function gaConfig(search: string): Record<string, boolean> {
  * Send one event.
  *
  * `trackable` is a required argument rather than something read inside, so a
- * call site cannot forget the page check: the type system asks for it. Drops
- * silently when the tag never loaded — deliberately with NO queue-and-replay,
- * because replaying events recorded before consent into a tag loaded after it
- * would leak exactly what consent prevents.
+ * call site cannot forget the page check: the type system asks for it.
+ * Analytics consent is read when the event is sent, so a refusal made since the
+ * tag loaded (in another tab) stops it. Drops silently when the tag never
+ * loaded — deliberately with NO queue-and-replay, because replaying events
+ * recorded before consent into a tag loaded after it would leak exactly what
+ * consent prevents.
  */
 export function trackGaEvent(input: {
   event: GaEvent;
   trackable: boolean;
   params?: Record<string, unknown>;
 }): void {
-  if (!shouldSendGaEvent({ loaded: isGaLoaded(), trackable: input.trackable })) {
+  if (
+    !shouldSendGaEvent({ loaded: isGaLoaded(), trackable: input.trackable }) ||
+    !hasAnalyticsConsent()
+  ) {
     return;
   }
 

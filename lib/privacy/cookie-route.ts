@@ -7,7 +7,13 @@ import {
 } from "../attribution/cookie-names";
 import { gaCookieFor } from "../attribution/ga-ids";
 import { sourceCookieFor } from "../attribution/source";
-import { consentCookieAttributes, consentFromObject } from "../consent";
+import {
+  consentCookieAttributes,
+  consentCookieValue,
+  consentFromObject,
+  parseStoredChoice,
+  type ConsentCategory,
+} from "../consent";
 import { buildCookie, serializeSetCookie, type CookieAttributes } from "./cookies";
 import { mintSubjectId, readSidCookie, sidCookieAttributes } from "./subject";
 
@@ -46,6 +52,33 @@ export const CARRIER_PARSERS: ReadonlyMap<string, CarrierParser> = new Map([
   ["ga", gaCookieFor],
   ["ad", adCookieFor],
 ]);
+
+/** The carriers a request may set, by the key it posts them under, and the categories each rests on. */
+const CARRIER_CATEGORIES: Readonly<Record<string, readonly ConsentCategory[]>> = {
+  src: ["analytics", "marketing"],
+  ga: ["analytics"],
+  ad: ["marketing"],
+};
+
+/**
+ * Is a carrier still permitted by what the request's own consent cookie
+ * refuses? A refusal of any version stands, and a restored `0` is one; `-1` is
+ * no choice and refuses nothing. The source rests on either category, so only
+ * both refused takes it.
+ */
+function carrierPermitted(key: string, refused: ReadonlySet<ConsentCategory>): boolean {
+  const categories = CARRIER_CATEGORIES[key] ?? [];
+  return categories.some((category) => !refused.has(category));
+}
+
+/** The categories the `Cookie:` header's consent record refuses, from any version. */
+function refusedBy(cookieHeader: string | null): Set<ConsentCategory> {
+  const stored = parseStoredChoice(consentCookieValue(cookieHeader));
+  const refused = new Set<ConsentCategory>();
+  if (stored?.analytics === false) refused.add("analytics");
+  if (stored?.marketing === false) refused.add("marketing");
+  return refused;
+}
 
 export interface PrivacyRequestLike {
   headers: { get(name: string): string | null };
@@ -154,7 +187,9 @@ export async function handlePrivacyCookies(
   if (sid) setCookies.push(serializeSetCookie(sidCookieAttributes(sid)));
 
   if (isObject(body.carriers)) {
+    const refused = refusedBy(headers.get("cookie"));
     for (const [name, value] of Object.entries(body.carriers)) {
+      if (!carrierPermitted(name, refused)) continue;
       const cookie = CARRIER_PARSERS.get(name)?.(value);
       if (cookie) setCookies.push(serializeSetCookie(cookie));
     }

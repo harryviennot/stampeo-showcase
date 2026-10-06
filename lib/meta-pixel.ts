@@ -23,6 +23,7 @@
  */
 
 import { routing } from "@/i18n/routing";
+import { hasMarketingConsent } from "./consent";
 import {
   CONTACT_CTAS,
   isContactHref,
@@ -334,10 +335,12 @@ export function initMetaPixel(pixelId: string): void {
  * Send one event.
  *
  * `trackable` is a required argument rather than something read inside, so a
- * call site cannot forget the page check: the type system asks for it. Drops
- * silently when the pixel never loaded — deliberately with NO queue-and-replay,
- * because replaying events recorded before consent into a pixel loaded after it
- * would leak exactly what consent prevents.
+ * call site cannot forget the page check: the type system asks for it. Marketing
+ * consent is read when the event is sent, so a refusal made since the pixel
+ * loaded (in another tab) stops it. Drops silently when the pixel never loaded
+ * — deliberately with NO queue-and-replay, because replaying events recorded
+ * before consent into a pixel loaded after it would leak exactly what consent
+ * prevents.
  */
 export function trackMetaEvent(input: {
   event: MetaEvent;
@@ -345,7 +348,8 @@ export function trackMetaEvent(input: {
   params?: Record<string, unknown>;
 }): void {
   if (
-    !shouldSendMetaEvent({ loaded: isMetaPixelLoaded(), trackable: input.trackable })
+    !shouldSendMetaEvent({ loaded: isMetaPixelLoaded(), trackable: input.trackable }) ||
+    !hasMarketingConsent()
   ) {
     return;
   }

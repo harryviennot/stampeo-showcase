@@ -24,6 +24,7 @@ import {
 } from "@/lib/consent-ledger";
 import { PRIVACY_CHOICES_KEY, noticeAcknowledgement, preferencesView } from "@/lib/privacy/choices-ui";
 import { rowByKey } from "@/lib/privacy/policy";
+import { watchConsentAcrossTabs } from "@/lib/privacy/stale-tags";
 import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
 import { ConsentPreferences } from "./ConsentPreferences";
 
@@ -70,6 +71,9 @@ export function ConsentBanner() {
   // `trackable` too made that button dead on click. The footer is the real
   // gate here, and acquisition pages render no footer at all.
   const trackable = isTrackablePath(pathname);
+
+  // A refusal made in another tab reloads this one when it is shown again.
+  useEffect(() => watchConsentAcrossTabs(), []);
 
   // The footer entry, and anything else that wants to reopen the choice.
   // Deliberately NOT gated: see above.

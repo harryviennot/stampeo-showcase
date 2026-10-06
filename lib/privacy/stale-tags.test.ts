@@ -8,7 +8,7 @@
 
 import { afterEach, describe, expect, test } from "bun:test";
 
-import { writeConsentRecord } from "../consent";
+import { emitConsentChange, writeConsentRecord } from "../consent";
 import { installFakeBrowser, GRANTED_COOKIE, REFUSED_COOKIE, type FakeBrowser } from "./__fixtures__/fake-browser";
 import { rowFor } from "./policy";
 import { consentChangedSince, watchConsentAcrossTabs } from "./stale-tags";
@@ -86,7 +86,9 @@ describe("a tab that comes back to the front", () => {
   test("does not reload for a choice made in this tab", () => {
     const b = tab("");
 
+    // What the banner does on a click: write the choice, then announce it.
     writeConsentRecord(ON, rowFor("FR"));
+    emitConsentChange(ON);
     away(b, () => {});
 
     expect(b.events).not.toContain("reload");
