@@ -132,11 +132,11 @@ Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą prz
 
 Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakceptujesz. Do tego czasu ich skrypty w ogóle nie trafiają na stronę: żadne zapytanie nie dociera do Google ani Meta i nie powstaje żaden z ich plików cookie. Odmowa nie zostawia więc niczego do usunięcia.
 
-Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na 6 miesięcy, po czym możemy zapytać ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** na dole każdej strony. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
+Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na 6 miesięcy, po czym możemy zapytać ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
 
 Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, traktujemy go jak odmowę i nic się nie wczytuje. W Stanach Zjednoczonych sygnał ma pierwszeństwo nawet przed wcześniej zapisanym wyborem i nie pokazujemy wtedy żadnego komunikatu, bo odpowiedź już jest. W każdym stanie Stanów Zjednoczonych respektujemy ten sygnał jako sprzeciw wobec sprzedaży, udostępniania i reklamy ukierunkowanej, a dopóki jest włączony, wyłączony jest także pomiar ruchu. W Europie własny wybór ma pierwszeństwo przed sygnałem: dopóki nie ma zapisanego wyboru, baner nadal się pojawia, żeby można było świadomie wyrazić zgodę.
 
-Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a link **Twoje ustawienia prywatności** pozwala je wyłączyć w dowolnym momencie. Znajdziesz go na dole każdej strony, a komunikat zawiera przycisk o tej samej nazwie. Odmowę zapisujemy na 13 miesięcy i odnawiamy przy każdej wizycie, a po zalogowaniu do panelu przywracamy ją z Twojego konta.
+Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a link **Twoje ustawienia prywatności** pozwala je wyłączyć w dowolnym momencie. Znajdziesz go w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy, a komunikat zawiera przycisk o tej samej nazwie. Odmowę zapisujemy na 13 miesięcy i odnawiamy przy każdej wizycie, a po zalogowaniu do panelu przywracamy ją z Twojego konta.
 
 O tym, jakie zasady Cię dotyczą, decyduje strefa czasowa Twojego urządzenia. Gdy sygnały są sprzeczne, obowiązują zasady bardziej rygorystyczne, a gdy nie możemy Cię zlokalizować, obowiązują zasady ścisłe (opt-in). Nie używamy do tego Twojego adresu IP.
 
@@ -240,7 +240,7 @@ Zebrane dane wykorzystujemy, aby:
 
 **Nigdy nie sprzedajemy** danych osobowych za pieniądze. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
 
-**W Stanach Zjednoczonych:** przekazywanie danych do Meta i Google na potrzeby naszych reklam, jak opisano w punkcie 5.5, może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** na dole każdej strony i w komunikacie albo sygnałem Global Privacy Control, który respektujemy w każdym stanie Stanów Zjednoczonych zgodnie z opisem w punkcie 5.1.
+**W Stanach Zjednoczonych:** przekazywanie danych do Meta i Google na potrzeby naszych reklam, jak opisano w punkcie 5.5, może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy, i w komunikacie albo sygnałem Global Privacy Control, który respektujemy w każdym stanie Stanów Zjednoczonych zgodnie z opisem w punkcie 5.1.
 
 ### 6.1 E-maile cyklu życia i marketingowe do użytkowników Business
 
