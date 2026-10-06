@@ -1,3 +1,6 @@
+import { adCookieFor } from "../attribution/ad-ids";
+import { gaCookieFor } from "../attribution/ga-ids";
+import { sourceCookieFor } from "../attribution/source";
 import { consentCookieAttributes, consentFromObject } from "../consent";
 import { buildCookie, serializeSetCookie, type CookieAttributes } from "./cookies";
 import { rowByKey, rowForRegime } from "./policy";
@@ -9,9 +12,9 @@ import { mintSubjectId, readSidCookie, sidCookieAttributes } from "./subject";
  * with a status and the `Set-Cookie` values to send; it never logs and never
  * echoes anything it was given.
  *
- * It writes only the names it owns (the consent and subject cookies, plus the
- * carriers once their parsers exist) and re-validates every value with the
- * same parsers the client uses: an invalid value is dropped, silently.
+ * It writes only the names it owns (the consent and subject cookies, and the
+ * three attribution carriers) and re-validates every value with the same
+ * parsers the client uses: an invalid value is dropped, silently.
  */
 
 /** The most it will read from a request body. */
@@ -29,11 +32,15 @@ const CLEARABLE_COOKIES: ReadonlySet<string> = new Set([
 export type CarrierParser = (value: unknown) => CookieAttributes | null;
 
 /**
- * Extension point for the attribution carriers: register a parser here per
- * carrier name (`src`, `ga`, `ad`). A carrier with no parser is accepted and
- * ignored.
+ * The attribution carriers a request may set, by the name it posts them under.
+ * Each parser is the one the client reads its own cookie with; a carrier with
+ * no parser here is ignored.
  */
-export const CARRIER_PARSERS: ReadonlyMap<string, CarrierParser> = new Map();
+export const CARRIER_PARSERS: ReadonlyMap<string, CarrierParser> = new Map([
+  ["src", sourceCookieFor],
+  ["ga", gaCookieFor],
+  ["ad", adCookieFor],
+]);
 
 export interface PrivacyRequestLike {
   headers: { get(name: string): string | null };

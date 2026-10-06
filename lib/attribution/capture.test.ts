@@ -229,6 +229,40 @@ describe("a returning visitor: the latest paid click wins", () => {
     expect(returning.src).toMatchObject({ us: "meta", uc: "us-cr-broad", lp: "/us" });
   });
 
+  describe("which arrival replaces which stored visit", () => {
+    /** The carriers a visit with this query leaves behind, as stored. */
+    const left = (search: string) =>
+      plan(visitor(US), {
+        landing: landing(`https://stampeo.app/us${search}`),
+        now: LANDED,
+      });
+
+    test.each([
+      ["nothing stored, a paid click: written", null, "?fbclid=f-new", true, true],
+      ["nothing stored, an organic visit: the source only", null, "", false, true],
+      ["a direct visit, then a Meta click: replaced", "", "?fbclid=f-new", true, true],
+      ["a Google click, then a newer Meta click: replaced", "?gclid=g-old", "?fbclid=f-new", true, true],
+      ["a Meta click, then a newer Google click: replaced", "?fbclid=f-old", "?gclid=g-new", true, true],
+      ["a Meta click, then a newer Meta click: replaced", "?fbclid=f-old", "?fbclid=f-new", true, true],
+      ["a direct visit, then a TikTok click: replaced", "", "?ttclid=t-new", true, true],
+      ["a Google click, then an organic visit: kept", "?gclid=g-old", "", false, false],
+      ["a Meta click, then an organic visit: kept", "?fbclid=f-old", "", false, false],
+      ["a TikTok click, then an organic visit: kept", "?ttclid=t-old", "", false, false],
+      ["a direct visit, then another organic visit: kept", "", "?utm_source=newsletter", false, false],
+      // A reload, or the capture re-running after a client-side navigation.
+      ["a Meta click, then the same click again: kept", "?fbclid=f-old", "?fbclid=f-old", false, false],
+    ])("%s", (_case, stored, arriving, adWritten, srcWritten) => {
+      const written = plan(visitor(US), {
+        landing: landing(`https://stampeo.app/us${arriving}`),
+        stored: stored === null ? NOTHING_STORED : { ...left(stored), ga: null },
+        now: LANDED + 60,
+      });
+
+      expect(written.ad !== null).toBe(adWritten);
+      expect(written.src !== null).toBe(srcWritten);
+    });
+  });
+
   test("with a stored paid click, an organic revisit replaces nothing", () => {
     const revisit = plan(visitor(US), {
       landing: ORGANIC_LANDING,

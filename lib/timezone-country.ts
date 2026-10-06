@@ -32,8 +32,21 @@ const US_ZONES: readonly string[] = [
   "America/North_Dakota/Beulah", "Pacific/Honolulu",
 ];
 
+/**
+ * Legacy and CLDR names for US zones (`US/*`, the pre-2000s `America/*` links,
+ * `Navajo`). `Intl` canonicalises most of them, but an older engine or a
+ * patched OS reports them as written.
+ */
+const US_ALIASES: readonly string[] = [
+  "America/Indianapolis", "America/Fort_Wayne", "America/Knox_IN",
+  "America/Louisville", "America/Atka", "America/Shiprock",
+  "US/Eastern", "US/Central", "US/Mountain", "US/Pacific", "US/Alaska",
+  "US/Hawaii", "US/Arizona", "US/Michigan", "US/East-Indiana",
+  "US/Indiana-Starke", "US/Aleutian", "Navajo",
+];
+
 const TZ_TO_COUNTRY: Record<string, CountryCode> = {
-  ...Object.fromEntries(US_ZONES.map((zone) => [zone, "US" as CountryCode])),
+  ...Object.fromEntries([...US_ZONES, ...US_ALIASES].map((zone) => [zone, "US" as CountryCode])),
   "Europe/Paris": "FR", "Europe/London": "GB",
   "America/Toronto": "CA", "America/Montreal": "CA", "America/Vancouver": "CA",
   "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT",

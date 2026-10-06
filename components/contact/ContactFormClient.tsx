@@ -2,8 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+import { isTrackablePath } from "@/lib/consent-routes";
+import { metaEventForContactForm, trackMetaEvent } from "@/lib/meta-pixel";
 
 import { PhoneIcon, EnvelopeIcon, QuestionIcon, MapPinIcon } from "@phosphor-icons/react";
 
@@ -192,6 +194,7 @@ function DemoForm({
 export function ContactPageClient() {
   const t = useTranslations("contact");
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const isDemo = searchParams.get("type") === "demo";
   const [status, setStatus] = useState<FormStatus>("idle");
 
@@ -239,6 +242,11 @@ export function ContactPageClient() {
       });
 
       if (!res.ok) throw new Error();
+
+      // The form was received: that, not a click on a link to this page, is
+      // the Contact Meta hears about.
+      const contact = metaEventForContactForm(res.status);
+      if (contact) trackMetaEvent({ event: contact, trackable: isTrackablePath(pathname) });
 
       setStatus("success");
       form.reset();

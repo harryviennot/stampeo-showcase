@@ -1,7 +1,7 @@
 import type { CTALocation } from "../analytics";
 import { isTrackablePath } from "../consent-routes";
 import { gaEventForCTA, type GaEvent } from "../google-analytics";
-import { metaEventForCTA, type MetaStandardEvent } from "../meta-pixel";
+import { metaEventForCTA, type MetaCustomEvent } from "../meta-pixel";
 import { isContactHref } from "./taxonomy";
 
 /** The context every vendor receives with a CTA click. */
@@ -19,8 +19,8 @@ export interface CtaClick {
   };
   /** GA4's event, or null when the location is unmapped. */
   ga: { event: GaEvent; params: CtaContext } | null;
-  /** Meta's standard event, or null when the location is unmapped. */
-  meta: MetaStandardEvent | null;
+  /** Meta's custom `SignupCTA`, or null: only a signup click is reported there. */
+  meta: { event: MetaCustomEvent; params: CtaContext } | null;
   /** May the ad platforms hear about a click on this page at all? */
   trackable: boolean;
 }
@@ -29,10 +29,10 @@ export interface CtaClick {
  * What one CTA click sends, one entry per vendor.
  *
  * The destination decides the funnel for all three: a link to the contact
- * page is a sales touch, anything else a signup. `pathname` is the browser
- * path the click happened on; on a private route the ad platforms hear
- * nothing, while PostHog, which stores nothing on the device, still does.
- * `useCtaTracking` sends the result.
+ * page is a sales touch, anything else a signup, and Meta hears only the
+ * signup. `pathname` is the browser path the click happened on; on a private
+ * route the ad platforms hear nothing, while PostHog, which stores nothing on
+ * the device, still does. `useCtaTracking` sends the result.
  */
 export function ctaClick(input: {
   ctaLocation: CTALocation;
@@ -46,6 +46,7 @@ export function ctaClick(input: {
     href: input.href,
   };
   const ga = gaEventForCTA(input);
+  const meta = metaEventForCTA(input);
 
   return {
     posthog: {
@@ -55,7 +56,7 @@ export function ctaClick(input: {
     // GA4 reports on custom dimensions rather than the event name alone, so
     // the CTA context travels as parameters.
     ga: ga ? { event: ga, params: context } : null,
-    meta: metaEventForCTA(input),
+    meta: meta ? { event: meta, params: context } : null,
     trackable: isTrackablePath(input.pathname),
   };
 }

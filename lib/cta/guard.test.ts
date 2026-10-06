@@ -3,7 +3,7 @@
  * click.
  *
  * An untracked link is silent, and silence is invisible: the ad platforms
- * simply see fewer Leads and Contacts than there were, and campaigns optimise
+ * simply see fewer SignupCTAs than there were, and campaigns optimise
  * against the remainder. So this reads the source of `components/` and `app/`
  * and fails on any JSX element that points at `/onboarding` or `/contact`
  * without a `trackAs` location.

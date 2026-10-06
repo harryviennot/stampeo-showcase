@@ -11,7 +11,9 @@ import {
   metaPixelIdFromEnv,
   shouldLoadMetaPixel,
   shouldSendMetaPageView,
+  shouldSendViewContent,
   trackMetaEvent,
+  viewContentCategory,
 } from "@/lib/meta-pixel";
 
 /**
@@ -38,6 +40,9 @@ export function MetaPixel() {
    */
   const lastPageView = useRef<string | null>(null);
 
+  /** The paths a ViewContent has been sent for in this page load: once each. */
+  const viewedContent = useRef<Set<string>>(new Set());
+
   useEffect(() => {
     const pixelId = metaPixelIdFromEnv();
     const trackable = isTrackablePath(pathname);
@@ -61,7 +66,7 @@ export function MetaPixel() {
     // remounted under a resident script. Meta's own history listener is off
     // (see `initMetaPixel`), so without this every session looks like one page.
     if (
-      !shouldSendMetaPageView({
+      shouldSendMetaPageView({
         loaded: isMetaPixelLoaded(),
         trackable,
         alreadyLoaded,
@@ -69,10 +74,27 @@ export function MetaPixel() {
         nextPath: pathname,
       })
     ) {
-      return;
+      trackMetaEvent({ event: "PageView", trackable });
     }
 
-    trackMetaEvent({ event: "PageView", trackable });
+    // The pricing and feature pages also say which content was viewed, once
+    // per page per load, on the init run as well as on later navigations.
+    const category = viewContentCategory(pathname);
+    if (
+      shouldSendViewContent({
+        loaded: isMetaPixelLoaded(),
+        trackable,
+        category,
+        alreadySent: viewedContent.current.has(pathname),
+      })
+    ) {
+      viewedContent.current.add(pathname);
+      trackMetaEvent({
+        event: "ViewContent",
+        trackable,
+        params: { content_category: category },
+      });
+    }
   }, [pathname, marketing, ready]);
 
   return null;

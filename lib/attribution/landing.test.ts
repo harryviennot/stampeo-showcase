@@ -106,9 +106,9 @@ describe("captureLandingContext: the landing snapshot", () => {
    * document lifetime began on. So these tests are a SEQUENCE, the first call
    * deciding what every later one sees, as on a real page load.
    *
-   * The defect it closes: capture waits for the tags' cookies, and a
-   * navigation mid-wait used to re-read the post-navigation query and path, so
-   * a `direct` record with the wrong landing page could block the real one.
+   * Capture waits for the tags' cookies, and a navigation mid-wait must not
+   * make it read the post-navigation query and path: a `direct` visit with the
+   * wrong landing page would block the real one.
    */
   const LANDING: LandingContext = {
     search: "?gclid=abc123&utm_source=google",

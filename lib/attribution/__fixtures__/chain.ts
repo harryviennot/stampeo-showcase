@@ -6,8 +6,8 @@
  * what the test recomputes to prove the file still says what the code does.
  */
 
-import { readConsentSnapshot } from "../../consent";
 import { installFakeBrowser } from "../../privacy/__fixtures__/fake-browser";
+import { readConsentSnapshot } from "../../privacy/snapshot";
 import { capturePass, readStoredCarriers } from "../capture";
 import { consentEvidence } from "../evidence";
 import { landingFromUrl } from "../landing";

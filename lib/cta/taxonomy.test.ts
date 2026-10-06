@@ -46,7 +46,7 @@ describe("isContactHref", () => {
 
   test("repeated two-letter prefixes match too", () => {
     // Defensive, currently unreachable: a market+locale path like
-    // /en/us/contact would otherwise silently downgrade a Contact to a Lead
+    // /en/us/contact would otherwise silently be read as a signup
     // the day such routes exist.
     expect(isContactHref("/en/us/contact")).toBe(true);
     expect(isContactHref("/us/en/contact")).toBe(true);

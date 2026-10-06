@@ -151,7 +151,7 @@ describe.each(CARRIERS)("$name", (carrier) => {
     expect(carrier.parseCookie(raw as string | undefined)).toBeNull();
   });
 
-  test.each([undefined, null, "text", 3, true, [], [{ v: 2 }]])(
+  test.each([[undefined], [null], ["text"], [3], [true], [[]], [[{ v: 2 }]]])(
     "an object of %p is null, not a throw",
     (value) => {
       expect(carrier.parseObject(value)).toBeNull();

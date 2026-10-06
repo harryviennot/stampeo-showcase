@@ -7,6 +7,7 @@ import posthog from "posthog-js";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { updateUserProfile } from "@/lib/onboarding";
+import { recordAccountSignup } from "@/lib/attribution/signup-call";
 import { UserInfoStep } from "./steps/UserInfoStep";
 import {
   AuthenticationStep,
@@ -72,6 +73,12 @@ function readOAuthStash(): OAuthStash | null {
   }
 }
 
+/** The signed-in user's token, read when the call is made: the context's session lags the sign-in. */
+async function currentAccessToken(): Promise<string | undefined> {
+  const { data } = await createClient().auth.getSession();
+  return data.session?.access_token;
+}
+
 function redirectToApp() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
   window.location.href = appUrl;
@@ -121,6 +128,9 @@ export function OnboardingWizard() {
     }
 
     oauthHandledRef.current = true;
+    // A Google or Apple sign-in just came back with a session. The backend
+    // decides whether this is a new account; the wizard never waits for it.
+    recordAccountSignup({ getAccessToken: async () => session.access_token });
     (async () => {
       const stash = readOAuthStash();
       const supabase = createClient();
@@ -175,6 +185,10 @@ export function OnboardingWizard() {
   const handleAuthCompleted = useCallback(
     async (opts?: { isExistingUser?: boolean }) => {
       completeStep(2);
+      // An email sign-in just succeeded. The backend decides whether this is a
+      // new account (and the redirect below is why the request is keepalive);
+      // nothing here waits for it or can be blocked by it.
+      recordAccountSignup({ getAccessToken: currentAccessToken });
       // Email signup writes phone to public.users via the auth trigger (raw E.164).
       // PUT /profile/me with the same phone so the validator normalizes it to
       // the canonical dashed format. OAuth completion handles its own sync above.

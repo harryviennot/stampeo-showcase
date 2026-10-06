@@ -22,18 +22,35 @@
  * suppress.
  */
 
+import { routing } from "@/i18n/routing";
 import {
   CONTACT_CTAS,
   isContactHref,
+  isDirectContactHref,
   isKnownCTALocation,
 } from "./cta/taxonomy";
+import { MARKETS } from "./markets";
 
 /**
- * The events this site sends. Meta STANDARD events, not custom ones, so a
- * campaign objective can target them directly and Aggregated Event Measurement
- * can rank them.
+ * The events this site sends from the browser.
+ *
+ * Standard events, so a campaign can target them and Aggregated Event
+ * Measurement can rank them:
+ *
+ *   PageView     a trackable page was viewed
+ *   ViewContent  the pricing or a feature page, once per page load
+ *   Contact      a contact form that was sent, or a mailto:, tel: or WhatsApp
+ *                link that was followed
+ *
+ * and one custom event, `SignupCTA`, for a click on a signup button.
+ *
+ * THERE IS NO BROWSER `Lead`. A button click is intent to leave for the app,
+ * not a lead: the Lead is the server's, sent once the account is confirmed, so
+ * the two can never be mistaken for each other or counted twice.
  */
-export type MetaStandardEvent = "Lead" | "Contact" | "PageView";
+export type MetaStandardEvent = "PageView" | "ViewContent" | "Contact";
+export type MetaCustomEvent = "SignupCTA";
+export type MetaEvent = MetaStandardEvent | MetaCustomEvent;
 
 export const META_PIXEL_SCRIPT_SRC =
   "https://connect.facebook.net/en_US/fbevents.js";
@@ -141,23 +158,79 @@ export function shouldSendMetaPageView(input: {
 /**
  * The Meta event for a landing CTA click, or null to send nothing.
  *
+ * Only a signup click is reported (as the custom `SignupCTA`). A click that
+ * merely navigates to the contact page is not a Contact: the Contact is the
+ * form being sent, or a mail, phone or WhatsApp link being followed.
+ *
  * The location allowlist is checked BEFORE the destination, so a CTA nobody
- * has mapped cannot smuggle itself in by pointing at `/contact`. A new CTA
- * stays silent until someone maps it deliberately: a missing event is a gap in
- * a dashboard, a wrong one is a campaign optimising against noise.
+ * has mapped cannot smuggle itself in by its href. A new CTA stays silent until
+ * someone maps it deliberately: a missing event is a gap in a dashboard, a
+ * wrong one is a campaign optimising against noise.
  */
 export function metaEventForCTA(input: {
   ctaLocation: string;
   href: string;
-}): MetaStandardEvent | null {
+}): MetaCustomEvent | null {
   if (!isKnownCTALocation(input.ctaLocation)) return null;
 
   // The destination wins when it disagrees with the location name, mirroring
   // how `ctaClick` picks the PostHog event. `isContactHref` matches
-  // locale-prefixed hrefs too — see `lib/cta/taxonomy.ts`.
-  if (isContactHref(input.href)) return "Contact";
-  if (CONTACT_CTAS.has(input.ctaLocation)) return "Contact";
-  return "Lead";
+  // locale-prefixed hrefs too, see `lib/cta/taxonomy.ts`.
+  if (isContactHref(input.href) || CONTACT_CTAS.has(input.ctaLocation)) return null;
+  return "SignupCTA";
+}
+
+/** The event for a click on a link that leaves for the visitor's mail, phone or WhatsApp app. */
+export function metaEventForLink(href: string): "Contact" | null {
+  return isDirectContactHref(href) ? "Contact" : null;
+}
+
+/** The event for the contact form's answer: a 2xx means we received it. */
+export function metaEventForContactForm(status: number): "Contact" | null {
+  return status >= 200 && status < 300 ? "Contact" : null;
+}
+
+export type ViewContentCategory = "pricing" | "features";
+
+const LOCALES: ReadonlySet<string> = new Set(routing.locales);
+const MARKET_PREFIXES: ReadonlySet<string> = new Set(
+  (Object.keys(MARKETS) as Array<keyof typeof MARKETS>)
+    .filter((market) => market !== "int")
+    .map((market) => MARKETS[market].path.slice(1)),
+);
+
+/**
+ * Which content page this is, after the locale and market prefixes: `/pricing`
+ * and `/features/<slug>` are, wherever they sit (`/fr/pricing`, `/us/pricing`,
+ * `/en/us/pricing`). Takes the BROWSER path, as `isTrackablePath` does.
+ */
+export function viewContentCategory(pathname: string): ViewContentCategory | null {
+  if (!pathname.startsWith("/")) return null;
+  const segments = pathname.split(/[?#]/)[0].split("/").filter(Boolean);
+  if (LOCALES.has(segments[0])) segments.shift();
+  if (MARKET_PREFIXES.has(segments[0])) segments.shift();
+  return segments[0] === "pricing" || segments[0] === "features" ? segments[0] : null;
+}
+
+/**
+ * Should a ViewContent be sent for this page?
+ *
+ * Once per page per page load: `alreadySent` is whether this path has sent one
+ * in this document, so a re-render, a strict-mode double effect, or a return to
+ * the page by a client-side navigation does not send it again. Like every
+ * event, it needs the pixel to be resident and the path to be trackable.
+ */
+export function shouldSendViewContent(input: {
+  loaded: boolean;
+  trackable: boolean;
+  category: ViewContentCategory | null;
+  alreadySent: boolean;
+}): boolean {
+  return (
+    input.category !== null &&
+    !input.alreadySent &&
+    shouldSendMetaEvent({ loaded: input.loaded, trackable: input.trackable })
+  );
 }
 
 /* -------------------------------------------------------------------------
@@ -267,7 +340,7 @@ export function initMetaPixel(pixelId: string): void {
  * would leak exactly what consent prevents.
  */
 export function trackMetaEvent(input: {
-  event: MetaStandardEvent;
+  event: MetaEvent;
   trackable: boolean;
   params?: Record<string, unknown>;
 }): void {
@@ -285,7 +358,8 @@ export function trackMetaEvent(input: {
   // event too. Losing the measurement is the acceptable failure; losing the
   // signup is not.
   try {
-    window.fbq?.("track", input.event, input.params);
+    // A custom event goes through `trackCustom`, a standard one through `track`.
+    window.fbq?.(input.event === "SignupCTA" ? "trackCustom" : "track", input.event, input.params);
   } catch {
     // Deliberately silent: there is no second reporting channel to complain
     // through, and a console error on every click is its own bug report.

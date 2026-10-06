@@ -71,7 +71,7 @@ describe("the body, for a US visitor who never touched the notice", () => {
     );
   });
 
-  test("never carries the legacy carrier, which is no longer written", () => {
+  test("never carries the v1 carrier", () => {
     expect(JSON.stringify(body(jar({ stampeo_attribution: "x" })))).not.toContain("stampeo_attribution");
   });
 });
@@ -238,7 +238,7 @@ describe("recordAccountSignup", () => {
   test.each([
     ["a session with no token", { getAccessToken: async () => null }],
     ["a token that cannot be read", { getAccessToken: async () => Promise.reject(new Error("storage")) }],
-    ["no API configured", { apiUrl: undefined }],
+    ["no API configured", { apiUrl: "" }],
   ])("%s sends nothing and costs nothing", async (_case, over) => {
     visit();
 

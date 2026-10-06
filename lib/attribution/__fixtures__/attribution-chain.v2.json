@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "description": "STA-377 C-8. One US visitor who never touched the notice, landing on a Meta ad: the inputs, what showcase makes of them (the three carriers and the exact POST /account/signup-recorded body), and what the backend is expected to make of those. Showcase computes expected_showcase with its real functions; web and the backend copy this file byte for byte and pin its SHA-256.",
+  "inputs": {
+    "landing_url": "https://stampeo.app/us?fbclid=IwAR_TEST_fbclid_0001&utm_source=meta&utm_medium=paid_social&utm_campaign=us-cr-broad&utm_content=ugc-cafe-15s&utm_term=us-broad",
+    "referrer": "https://l.facebook.com/",
+    "timezone": "America/New_York",
+    "gpc": false,
+    "consent": "none",
+    "cookies": {
+      "_ga": "GA1.1.1234567890.1700000000",
+      "_ga_ZFZ6JLPFXN": "GS2.1.s1791244801$o1$g1$t1791244805$j0$l0$h0",
+      "_fbp": "fb.1.1791244801234.1122334455",
+      "stampeo_sid": "3f2504e0-4f89-41d3-9a0c-0305e82c3301"
+    },
+    "ga_measurement_id": "G-ZFZ6JLPFXN",
+    "times": {
+      "landed_at": 1791244800,
+      "captured_at": 1791244806
+    }
+  },
+  "expected_showcase": {
+    "carriers": {
+      "src": {
+        "v": 2,
+        "us": "meta",
+        "um": "paid_social",
+        "uc": "us-cr-broad",
+        "uo": "ugc-cafe-15s",
+        "ut": "us-broad",
+        "lp": "/us",
+        "rh": "l.facebook.com",
+        "at": 1791244800,
+        "cv": 3,
+        "cr": "opt-out",
+        "ca": 0,
+        "p": 1,
+        "g": "US"
+      },
+      "ga": {
+        "v": 2,
+        "cid": "1234567890.1700000000",
+        "sid": "1791244801",
+        "sn": 1,
+        "at": 1791244806,
+        "cv": 3,
+        "cr": "opt-out",
+        "ca": 0,
+        "p": 1,
+        "g": "US"
+      },
+      "ad": {
+        "v": 2,
+        "vn": "meta",
+        "ci": "IwAR_TEST_fbclid_0001",
+        "ct": 1791244800,
+        "fbp": "fb.1.1791244801234.1122334455",
+        "cv": 3,
+        "cr": "opt-out",
+        "ca": 0,
+        "p": 1,
+        "g": "US"
+      }
+    },
+    "cookie_values": {
+      "stampeo_src": "%7B%22v%22%3A2%2C%22us%22%3A%22meta%22%2C%22um%22%3A%22paid_social%22%2C%22uc%22%3A%22us-cr-broad%22%2C%22uo%22%3A%22ugc-cafe-15s%22%2C%22ut%22%3A%22us-broad%22%2C%22lp%22%3A%22%2Fus%22%2C%22rh%22%3A%22l.facebook.com%22%2C%22at%22%3A1791244800%2C%22cv%22%3A3%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D",
+      "stampeo_ga": "%7B%22v%22%3A2%2C%22cid%22%3A%221234567890.1700000000%22%2C%22sid%22%3A%221791244801%22%2C%22sn%22%3A1%2C%22at%22%3A1791244806%2C%22cv%22%3A3%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D",
+      "stampeo_ad": "%7B%22v%22%3A2%2C%22vn%22%3A%22meta%22%2C%22ci%22%3A%22IwAR_TEST_fbclid_0001%22%2C%22ct%22%3A1791244800%2C%22fbp%22%3A%22fb.1.1791244801234.1122334455%22%2C%22cv%22%3A3%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D"
+    },
+    "route_request": {
+      "path": "/api/privacy/cookies",
+      "body": {
+        "carriers": {
+          "src": {
+            "v": 2,
+            "us": "meta",
+            "um": "paid_social",
+            "uc": "us-cr-broad",
+            "uo": "ugc-cafe-15s",
+            "ut": "us-broad",
+            "lp": "/us",
+            "rh": "l.facebook.com",
+            "at": 1791244800,
+            "cv": 3,
+            "cr": "opt-out",
+            "ca": 0,
+            "p": 1,
+            "g": "US"
+          },
+          "ga": {
+            "v": 2,
+            "cid": "1234567890.1700000000",
+            "sid": "1791244801",
+            "sn": 1,
+            "at": 1791244806,
+            "cv": 3,
+            "cr": "opt-out",
+            "ca": 0,
+            "p": 1,
+            "g": "US"
+          },
+          "ad": {
+            "v": 2,
+            "vn": "meta",
+            "ci": "IwAR_TEST_fbclid_0001",
+            "ct": 1791244800,
+            "fbp": "fb.1.1791244801234.1122334455",
+            "cv": 3,
+            "cr": "opt-out",
+            "ca": 0,
+            "p": 1,
+            "g": "US"
+          }
+        }
+      }
+    },
+    "signup_request": {
+      "path": "/account/signup-recorded",
+      "body": {
+        "consent_subject_id": "3f2504e0-4f89-41d3-9a0c-0305e82c3301",
+        "ad_attribution_v2": {
+          "src": {
+            "v": 2,
+            "us": "meta",
+            "um": "paid_social",
+            "uc": "us-cr-broad",
+            "uo": "ugc-cafe-15s",
+            "ut": "us-broad",
+            "lp": "/us",
+            "rh": "l.facebook.com",
+            "at": 1791244800,
+            "cv": 3,
+            "cr": "opt-out",
+            "ca": 0,
+            "p": 1,
+            "g": "US"
+          },
+          "ga": {
+            "v": 2,
+            "cid": "1234567890.1700000000",
+            "sid": "1791244801",
+            "sn": 1,
+            "at": 1791244806,
+            "cv": 3,
+            "cr": "opt-out",
+            "ca": 0,
+            "p": 1,
+            "g": "US"
+          },
+          "ad": {
+            "v": 2,
+            "vn": "meta",
+            "ci": "IwAR_TEST_fbclid_0001",
+            "ct": 1791244800,
+            "fbp": "fb.1.1791244801234.1122334455",
+            "cv": 3,
+            "cr": "opt-out",
+            "ca": 0,
+            "p": 1,
+            "g": "US"
+          }
+        },
+        "live": {
+          "ga": "GA1.1.1234567890.1700000000",
+          "ga_sessions": {
+            "ZFZ6JLPFXN": "GS2.1.s1791244801$o1$g1$t1791244805$j0$l0$h0"
+          },
+          "fbp": "fb.1.1791244801234.1122334455"
+        }
+      }
+    }
+  },
+  "expected_backend": {
+    "_note": "For the backend to assert. Timestamps are Unix seconds (the row stores timestamptz; consent_at is null because ca is 0: nobody clicked). user_data_keys are the keys the carriers supply to Meta; the backend adds its hashed contact keys and the request's IP and user agent. The subject id never reaches Meta or GA.",
+    "account_ad_attribution": {
+      "vendor": "meta",
+      "click_id": "IwAR_TEST_fbclid_0001",
+      "click_captured_at": 1791244800,
+      "fbp": "fb.1.1791244801234.1122334455",
+      "ga_client_id": "1234567890.1700000000",
+      "ga_session_id": "1791244801",
+      "ga_session_number": 1,
+      "ga_captured_at": 1791244806,
+      "utm_source": "meta",
+      "utm_medium": "paid_social",
+      "utm_campaign": "us-cr-broad",
+      "utm_content": "ugc-cafe-15s",
+      "utm_term": "us-broad",
+      "landing_path": "/us",
+      "landing_variant": null,
+      "referrer_host": "l.facebook.com",
+      "consent_version": 3,
+      "consent_regime": "opt-out",
+      "consent_at": null,
+      "policy_version": 1,
+      "region_row": "US"
+    },
+    "meta": {
+      "fbc": "fb.1.1791244800000.IwAR_TEST_fbclid_0001",
+      "fbp": "fb.1.1791244801234.1122334455",
+      "user_data_keys": [
+        "fbc",
+        "fbp"
+      ]
+    }
+  }
+}

@@ -15,6 +15,7 @@ import {
 } from "../features/scanner-mobile/StoreBadges";
 import { marketPath, type Market } from "@/lib/markets";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
+import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
@@ -171,12 +172,12 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                 <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("help")}
                 </TrackedLink>
-                <a
+                <ContactLink
                   href="tel:+33649370470"
                   className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
                 >
                   06 49 37 04 70
-                </a>
+                </ContactLink>
               </nav>
             </div>
 

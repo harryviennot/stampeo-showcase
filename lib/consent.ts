@@ -144,6 +144,14 @@ const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
 const SOURCE_CARRIER = "stampeo_src";
 const LEGACY_CARRIER = "stampeo_attribution";
 
+/** The carriers the privacy route sets as a server response, which a refusal asks it to clear too. */
+const SERVER_SET_CARRIERS: readonly string[] = [
+  "stampeo_src",
+  "stampeo_ga",
+  "stampeo_ad",
+  LEGACY_CARRIER,
+];
+
 /**
  * The regime a country falls under. Anything but the US is opt-in, including
  * `null`: the unknown case is the server render, a timezone we do not map and
@@ -608,9 +616,10 @@ export function writeConsentRecord(
  *
  * Best effort, and honestly so. A cookie can only be deleted with the same
  * Domain and Path it was set with, and we do not know what GA or Meta chose,
- * so every plausible scope is attempted. What this CANNOT do is unload a
- * `gtag` or `fbq` that is already running — which is why revoking reloads the
- * page rather than pretending the tag is gone.
+ * so every plausible scope is attempted. The carriers our own route set are
+ * also cleared by asking it to, in a request that outlives the reload. What
+ * this CANNOT do is unload a `gtag` or `fbq` that is already running, which is
+ * why revoking reloads the page rather than pretending the tag is gone.
  */
 export function clearCookiesFor(categories: readonly ConsentCategory[]): void {
   if (typeof document === "undefined") return;
@@ -636,6 +645,9 @@ export function clearCookiesFor(categories: readonly ConsentCategory[]): void {
       }
     }
   }
+
+  const carriers = cookieNamesToClear(categories, SERVER_SET_CARRIERS);
+  if (carriers.length > 0) syncPrivacyCookies({ clear: carriers });
 }
 
 /** Announce a committed choice to anything listening (the pixel loaders). */
