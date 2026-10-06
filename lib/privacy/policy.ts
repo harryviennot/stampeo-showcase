@@ -3,6 +3,7 @@ import type {
   ConsentRecord,
   ConsentState,
   PriorConsent,
+  StoredChoice,
 } from "../consent";
 import {
   POLICY_MATRIX,
@@ -26,6 +27,7 @@ import {
 
 export const REGION_COOKIE = "stampeo_region";
 
+const CONSENT_CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
 const DAY_SECONDS = 60 * 60 * 24;
 
 function normaliseCountry(value: unknown): string | null {
@@ -72,6 +74,28 @@ export function recordRow(
   matrix: PolicyMatrix = POLICY_MATRIX,
 ): PolicyRow {
   return rowByKey(record.regionRow, matrix) ?? rowForRegime(record.regime, matrix);
+}
+
+/** Is `live` stricter than `made`? An opt-in row is stricter than an opt-out one. */
+function isStricter(live: PolicyRow, made: PolicyRow): boolean {
+  return live.regime === "opt-in" && made.regime === "opt-out";
+}
+
+/**
+ * What a current record settles for one category in the live row: `false` for a
+ * refusal in any row, `true` for a grant given under a row the live one is not
+ * stricter than, and `null` (no choice) for `-1` and for a grant that does not
+ * carry over.
+ */
+export function standingChoice(
+  record: ConsentRecord,
+  category: ConsentCategory,
+  live: PolicyRow,
+  matrix: PolicyMatrix = POLICY_MATRIX,
+): boolean | null {
+  const answer = record[category];
+  if (answer === false) return false;
+  return answer === true && !isStricter(live, recordRow(record, matrix)) ? true : null;
 }
 
 /**
@@ -160,7 +184,8 @@ export function resolveWithPolicy(
   const gpcDenied = gpcDeniedCategories(row, gpc, matrix);
   const decide = (category: ConsentCategory): boolean => {
     if (gpcDenied.includes(category)) return false;
-    if (record) return record[category];
+    const standing = record ? standingChoice(record, category, row, matrix) : null;
+    if (standing !== null) return standing;
     // A row GPC does not override still never falls to a granting default.
     if (gpc && !row.gpc_overrides_choice) return false;
     return row.default[category] && prior?.[category] !== false;
@@ -168,7 +193,13 @@ export function resolveWithPolicy(
   return { analytics: decide("analytics"), marketing: decide("marketing") };
 }
 
-/** Which consent surface, if any, this visitor should see. */
+/**
+ * Which consent surface, if any, this visitor should see.
+ *
+ * A record that leaves a category undecided in this row (`-1`, or a grant that
+ * does not carry over) is asked about again in an opt-in row. In an opt-out row
+ * there is nothing to ask: the record's refusals stand and the defaults apply.
+ */
 export function surfaceWithPolicy(input: {
   row: PolicyRow;
   record: ConsentRecord | null;
@@ -176,17 +207,25 @@ export function surfaceWithPolicy(input: {
   gpc: boolean;
   trackable: boolean;
 }): PolicySurface | "none" {
-  if (!input.trackable || input.record) return "none";
+  if (!input.trackable) return "none";
+  if (input.record) {
+    const { record, row } = input;
+    const undecided = CONSENT_CATEGORIES.some((category) => standingChoice(record, category, row) === null);
+    return undecided && row.regime === "opt-in" ? row.surface : "none";
+  }
   // An older record that refused everything has nothing left to ask.
-  if (input.prior && !input.prior.analytics && !input.prior.marketing) return "none";
+  if (input.prior?.analytics === false && input.prior.marketing === false) return "none";
   // GPC already opted this visitor out, so the notice would not be true of them.
   if (input.gpc && input.row.gpc_overrides_choice) return "none";
   return input.row.surface;
 }
 
 /** Max-Age for a stored choice: the refusal lifetime if either category is refused. */
-export function consentMaxAgeSeconds(row: PolicyRow, state: ConsentState): number {
-  const refused = !state.analytics || !state.marketing;
+export function consentMaxAgeSeconds(
+  row: PolicyRow,
+  state: { analytics: StoredChoice; marketing: StoredChoice },
+): number {
+  const refused = state.analytics === false || state.marketing === false;
   return (refused ? row.refusal_ttl_days : row.grant_ttl_days) * DAY_SECONDS;
 }
 

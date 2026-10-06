@@ -148,6 +148,11 @@ const record = (analytics: boolean, marketing: boolean): ConsentRecord => ({
   analytics,
   marketing,
 });
+/** A choice made where consent is asked for first, as a European or an unplaced visitor makes it. */
+const optIn = (analytics: boolean, marketing: boolean): ConsentRecord => ({
+  ...record(analytics, marketing),
+  regime: "opt-in",
+});
 const older = (analytics: boolean, marketing: boolean): PriorConsent => ({
   v: CONSENT_VERSION - 1,
   analytics,
@@ -166,14 +171,14 @@ describe("resolveWithPolicy: what a visitor is taken to have agreed to", () => {
     ["a US visitor with an older advertising refusal", "US", null, older(true, false), false, { analytics: true, marketing: false }],
     ["a US visitor with an older refusal of everything", "US", null, older(false, false), false, OFF],
     ["a US visitor with an older grant", "US", null, older(true, true), false, ON],
-    ["a French visitor who accepted", "FR", record(true, true), null, false, ON],
-    ["a French visitor who refused", "FR", record(false, false), null, false, OFF],
+    ["a French visitor who accepted", "FR", optIn(true, true), null, false, ON],
+    ["a French visitor who refused", "FR", optIn(false, false), null, false, OFF],
     ["a French visitor with no choice", "FR", null, null, false, OFF],
     ["a French visitor with GPC and no choice", "FR", null, null, true, OFF],
-    ["a French visitor with GPC who accepted", "FR", record(true, true), null, true, ON],
+    ["a French visitor with GPC who accepted", "FR", optIn(true, true), null, true, ON],
     ["a French visitor with an older grant", "FR", null, older(true, true), false, OFF],
     ["a visitor we cannot place, no choice", "BR", null, null, false, OFF],
-    ["a visitor we cannot place, who accepted", "BR", record(true, true), null, false, ON],
+    ["a visitor we cannot place, who accepted", "BR", optIn(true, true), null, false, ON],
   ] as const)("%s", (_visitor, country, stored, prior, gpc, expected) => {
     expect(
       resolveWithPolicy({ row: rowFor(country), record: stored, prior, gpc }),

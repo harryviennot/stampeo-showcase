@@ -71,7 +71,11 @@ describe("resolveConsent: GPC against what is stored", () => {
     ["an older advertising refusal", "opt-in", false, OFF],
     ["an older advertising refusal", "opt-in", true, OFF],
   ] as const)("%s, %s regime, GPC %p", (stored, regime, gpc, expected) => {
-    expect(resolveConsent({ ...STORED[stored], row: ROWS[regime], gpc })).toEqual(expected);
+    // The choice was made in the regime it is read in.
+    const { record, prior } = STORED[stored];
+    expect(
+      resolveConsent({ record: record && { ...record, regime }, prior, row: ROWS[regime], gpc }),
+    ).toEqual(expected);
   });
 });
 

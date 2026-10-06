@@ -91,6 +91,15 @@ export function preferencesView(
   };
 }
 
+/**
+ * What "Got it" on the notice records: the state already in force, so it only
+ * dismisses. A refusal is kept and a category with no choice takes the row's
+ * default; it never grants what was refused.
+ */
+export function noticeAcknowledgement(inForce: ConsentState): ConsentState {
+  return { analytics: inForce.analytics, marketing: inForce.marketing };
+}
+
 /** The draft to save: a locked category is off, whatever the draft says. */
 export function applyLocks(draft: ConsentState, locked: readonly ConsentCategory[]): ConsentState {
   return {

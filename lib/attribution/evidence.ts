@@ -4,7 +4,7 @@ import {
   type ConsentRegime,
   type PriorConsent,
 } from "../consent";
-import { rowByKey } from "../privacy/policy";
+import { recordRow, rowByKey } from "../privacy/policy";
 import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "../privacy/policy-matrix";
 import { epoch, integer, invalid, oneOf } from "./codec";
 
@@ -28,6 +28,20 @@ export interface ConsentEvidence {
 }
 
 /**
+ * When a current record's visitor clicked, or 0 when nothing in it was a click
+ * in the row it was made under: a restore, a category left undecided, or a US
+ * record that grants everything, which is the notice dismissed.
+ */
+function clickedAt(record: ConsentRecord): number {
+  const noClick =
+    record.origin === "restore" ||
+    record.analytics === null ||
+    record.marketing === null ||
+    (recordRow(record).regime === "opt-out" && record.analytics && record.marketing);
+  return noClick ? 0 : record.at;
+}
+
+/**
  * The version and moment a capture rests on, or null to capture nothing.
  *
  * A current choice is its own evidence. Without one, an older-version choice
@@ -43,9 +57,9 @@ export function captureConsentEvidence(
   prior: PriorConsent | null,
 ): { consentVersion: number; consentAt: number } | null {
   if (record && record.v === CONSENT_VERSION) {
-    return { consentVersion: record.v, consentAt: record.at };
+    return { consentVersion: record.v, consentAt: clickedAt(record) };
   }
-  if (prior && (!prior.analytics || !prior.marketing)) {
+  if (prior && (prior.analytics === false || prior.marketing === false)) {
     return Number.isFinite(prior.at) && prior.at > 0
       ? { consentVersion: prior.v, consentAt: prior.at }
       : null;
@@ -55,8 +69,9 @@ export function captureConsentEvidence(
 
 /**
  * The evidence for a capture under the visitor's current state: their choice,
- * the regime and policy row in force now, and the matrix version. Null when
- * the choice evidences nothing (see `captureConsentEvidence`).
+ * the regime and policy row it was made under (the live row when there is no
+ * current record), and the matrix version. Null when the choice evidences
+ * nothing (see `captureConsentEvidence`).
  */
 export function consentEvidence(input: {
   record: ConsentRecord | null;
@@ -66,7 +81,8 @@ export function consentEvidence(input: {
 }): ConsentEvidence | null {
   const base = captureConsentEvidence(input.record, input.prior);
   if (base === null) return null;
-  const row = rowByKey(input.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY];
+  const live = rowByKey(input.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY];
+  const row = input.record && input.record.v === CONSENT_VERSION ? recordRow(input.record) : live;
   return {
     cv: base.consentVersion,
     cr: row.regime,

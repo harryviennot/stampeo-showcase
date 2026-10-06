@@ -90,7 +90,15 @@ export interface ConsentState {
   marketing: boolean;
 }
 
-export interface ConsentRecord extends ConsentState {
+/**
+ * One category's answer in a stored record: granted, refused, or `null` for no
+ * choice (written as `-1` by the web dashboard's restore of a refusal).
+ */
+export type StoredChoice = boolean | null;
+
+export interface ConsentRecord {
+  analytics: StoredChoice;
+  marketing: StoredChoice;
   /** The CONSENT_VERSION this choice was made against. */
   v: number;
   /** Unix seconds. Evidence of when, not part of the decision. */
@@ -106,14 +114,21 @@ export interface ConsentRecord extends ConsentState {
   policyVersion?: number;
   /** The policy row in force when they chose (cookie `g`). Evidence. */
   regionRow?: string;
+  /** `restore` when the web dashboard wrote this record to bring back a refusal made elsewhere (cookie `o`). */
+  origin?: "restore";
 }
+
+/** A record in which every category was answered: what a visitor's own action writes. */
+export type DecidedConsentRecord = ConsentRecord & ConsentState;
 
 /**
  * The choices of a record stored under an older `CONSENT_VERSION`. Only its
  * refusals still decide anything (see `resolveConsent`); its version and moment
  * are the evidence an attribution capture rests on (`captureConsentEvidence`).
  */
-export interface PriorConsent extends ConsentState {
+export interface PriorConsent {
+  analytics: StoredChoice;
+  marketing: StoredChoice;
   /** The older CONSENT_VERSION this choice was made against. */
   v: number;
   /** Unix seconds, from the older cookie's `t`; 0 when it carried none. */
@@ -213,19 +228,20 @@ export function consentSnapshotKey(input: {
   const record = input.record
     ? [
         input.record.v,
-        input.record.analytics ? 1 : 0,
-        input.record.marketing ? 1 : 0,
+        storedCode(input.record.analytics),
+        storedCode(input.record.marketing),
         input.record.at,
         input.record.subjectId ?? "",
         input.record.policyVersion ?? "",
         input.record.regionRow ?? "",
+        input.record.origin ?? "",
       ].join(".")
     : "none";
   const prior = input.prior
     ? [
         input.prior.v,
-        input.prior.analytics ? 1 : 0,
-        input.prior.marketing ? 1 : 0,
+        storedCode(input.prior.analytics),
+        storedCode(input.prior.marketing),
         input.prior.at,
       ].join(".")
     : "none";
@@ -243,17 +259,24 @@ export function consentSurface(input: {
   return surfaceWithPolicy(input);
 }
 
+/** The cookie's number for an answer: `1` granted, `0` refused, `-1` no choice. */
+function storedCode(answer: StoredChoice): 1 | 0 | -1 {
+  if (answer === null) return -1;
+  return answer ? 1 : 0;
+}
+
 /** The JSON object stored in the cookie, and posted to the privacy route. */
 export function consentCookieObject(record: ConsentRecord): Record<string, unknown> {
   return {
     v: record.v,
-    a: record.analytics ? 1 : 0,
-    m: record.marketing ? 1 : 0,
+    a: storedCode(record.analytics),
+    m: storedCode(record.marketing),
     t: record.at,
     r: record.regime,
     ...(record.subjectId ? { s: record.subjectId } : {}),
     ...(record.policyVersion ? { p: record.policyVersion } : {}),
     ...(record.regionRow ? { g: record.regionRow } : {}),
+    ...(record.origin ? { o: record.origin } : {}),
   };
 }
 
@@ -301,11 +324,12 @@ export function ensureSubjectId(): string {
   return readSid() ?? readSubjectId(header) ?? mintSubjectId();
 }
 
-/** `1` or `0` and nothing else. Anything we did not write is not consent. */
-function choice(value: unknown): boolean | null {
+/** `1`, `0` or `-1` and nothing else (`undefined` otherwise). Anything we did not write is not consent. */
+function choice(value: unknown): StoredChoice | undefined {
   if (value === 1) return true;
   if (value === 0) return false;
-  return null;
+  if (value === -1) return null;
+  return undefined;
 }
 
 /**
@@ -327,7 +351,7 @@ export function consentFromObject(parsed: unknown): ConsentRecord | null {
 
   const analytics = choice(record.a);
   const marketing = choice(record.m);
-  if (analytics === null || marketing === null) return null;
+  if (analytics === undefined || marketing === undefined) return null;
 
   // `t`, `r`, `p` and `g` evidence the choice; they do not make it. Losing
   // them is not a reason to interrupt someone who already answered.
@@ -345,6 +369,7 @@ export function consentFromObject(parsed: unknown): ConsentRecord | null {
     ...(subjectId ? { subjectId } : {}),
     ...(policyVersion ? { policyVersion } : {}),
     ...(regionRow ? { regionRow } : {}),
+    ...(record.o === "restore" ? { origin: "restore" as const } : {}),
   };
 }
 
@@ -548,8 +573,8 @@ export function readStoredConsent(): {
  * synchronously, then the server is asked to set it again as a first-party
  * response (see `lib/privacy/cookies.ts`).
  */
-export function writeConsentRecord(state: ConsentState, row: PolicyRow): ConsentRecord {
-  const record: ConsentRecord = {
+export function writeConsentRecord(state: ConsentState, row: PolicyRow): DecidedConsentRecord {
+  const record: DecidedConsentRecord = {
     v: CONSENT_VERSION,
     analytics: state.analytics,
     marketing: state.marketing,

@@ -6,6 +6,7 @@ import {
   emitConsentChange,
   ensureSubjectId,
   parseStoredChoice,
+  type StoredChoice,
 } from "../consent";
 import { syncPrivacyCookies, type PrivacyCookiesBody } from "./cookies";
 import type { PolicyRow } from "./policy-matrix";
@@ -35,14 +36,15 @@ export function planPageLoad(input: {
   row: PolicyRow;
   sid: string | null;
   /** The stored choice of any version, if the cookie holds one. */
-  stored: { analytics: boolean; marketing: boolean } | null;
+  stored: { analytics: StoredChoice; marketing: StoredChoice } | null;
   trackable: boolean;
   refreshedThisDocument: boolean;
 }): PageLoadPlan {
   if (!input.trackable) return NOTHING;
   const mintSid = input.row.mint_subject_before_tags && input.sid === null;
   const due = !input.refreshedThisDocument;
-  const refused = input.stored !== null && (!input.stored.analytics || !input.stored.marketing);
+  const refused =
+    input.stored !== null && (input.stored.analytics === false || input.stored.marketing === false);
   return {
     mintSid,
     syncSid: mintSid || (due && input.sid !== null),

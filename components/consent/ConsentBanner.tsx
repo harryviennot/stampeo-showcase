@@ -22,7 +22,7 @@ import {
   recordConsentDecision,
   type ConsentLedgerSurface,
 } from "@/lib/consent-ledger";
-import { PRIVACY_CHOICES_KEY, preferencesView } from "@/lib/privacy/choices-ui";
+import { PRIVACY_CHOICES_KEY, noticeAcknowledgement, preferencesView } from "@/lib/privacy/choices-ui";
 import { rowByKey } from "@/lib/privacy/policy";
 import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
 import { ConsentPreferences } from "./ConsentPreferences";
@@ -229,9 +229,7 @@ export function ConsentBanner() {
                 us with no evidence of what they were told. */}
             <button
               type="button"
-              onClick={() =>
-                commit({ analytics: consent.analytics, marketing: consent.marketing }, "notice")
-              }
+              onClick={() => commit(noticeAcknowledgement(consent), "notice")}
               className="inline-flex h-11 items-center font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] sm:h-auto"
             >
               {t("notice.dismiss")}
