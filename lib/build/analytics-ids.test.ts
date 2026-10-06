@@ -147,6 +147,21 @@ describe("the built bundle", () => {
     expect(checkBuiltChunks(dir, VALID)).toHaveLength(2);
   });
 
+  test("an id that only appears inside a longer number does not count", () => {
+    const dir = chunks("coincidence", {
+      "a.js": `t.x>.${VALID.NEXT_PUBLIC_META_PIXEL_ID}9&&1;"x-${VALID.NEXT_PUBLIC_GA_MEASUREMENT_ID}-y"`,
+    });
+    expect(checkBuiltChunks(dir, VALID)).toHaveLength(2);
+  });
+
+  test.each([`"%s"`, `'%s'`, "`%s`", `" %s "`])("an id inlined as the string literal %s counts", (shape) => {
+    const literal = (id: string) => shape.replace("%s", id);
+    const dir = chunks(`literal-${Buffer.from(shape).toString("hex")}`, {
+      "a.js": `x(${literal(VALID.NEXT_PUBLIC_META_PIXEL_ID)});y(${literal(VALID.NEXT_PUBLIC_GA_MEASUREMENT_ID)})`,
+    });
+    expect(checkBuiltChunks(dir, VALID)).toEqual([]);
+  });
+
   test("a directory with no build in it is reported, not passed", () => {
     expect(checkBuiltChunks(join(root, "never-built"), VALID)).toHaveLength(1);
   });
