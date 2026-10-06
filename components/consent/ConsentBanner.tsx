@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -29,7 +29,7 @@ import {
   preferencesView,
 } from "@/lib/privacy/choices-ui";
 import { rowByKey } from "@/lib/privacy/policy";
-import { watchConsentAcrossTabs } from "@/lib/privacy/stale-tags";
+import { watchConsentAcrossTabs, type ConsentWatcher } from "@/lib/privacy/stale-tags";
 import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
 import { ConsentPreferences } from "./ConsentPreferences";
 
@@ -76,8 +76,16 @@ export function ConsentBanner() {
   // gate here, and acquisition pages render no footer at all.
   const trackable = isTrackablePath(pathname);
 
-  // A refusal made in another tab reloads this one when it is shown again.
-  useEffect(() => watchConsentAcrossTabs(), []);
+  // A refusal made in another tab or window reloads this one when it is shown or focused, and on each page.
+  const watcher = useRef<ConsentWatcher | null>(null);
+  useEffect(() => {
+    const current = watchConsentAcrossTabs();
+    watcher.current = current;
+    return current.stop;
+  }, []);
+  useEffect(() => {
+    watcher.current?.recheck();
+  }, [pathname]);
 
   // The footer entry, and anything else that wants to reopen the choice.
   // Deliberately NOT gated: see above.
