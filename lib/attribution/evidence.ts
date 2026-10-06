@@ -34,11 +34,18 @@ export interface ConsentEvidence {
  */
 function clickedAt(record: ConsentRecord): number {
   const noClick =
-    record.origin === "restore" ||
-    record.analytics === null ||
-    record.marketing === null ||
+    leavesNoClick(record) ||
     (recordRow(record).regime === "opt-out" && record.analytics && record.marketing);
   return noClick ? 0 : record.at;
+}
+
+/** A restore, or a category left undecided: neither is a click, in any version. */
+function leavesNoClick(choice: {
+  analytics: boolean | null;
+  marketing: boolean | null;
+  origin?: "restore";
+}): boolean {
+  return choice.origin === "restore" || choice.analytics === null || choice.marketing === null;
 }
 
 /**
@@ -47,10 +54,10 @@ function clickedAt(record: ConsentRecord): number {
  * A current choice is its own evidence. Without one, an older-version choice
  * that refused something is what the visitor's state rests on (its refusals
  * still stand), so the capture carries that version and moment; such a choice
- * with no moment evidences nothing, and nothing is captured. Otherwise the
- * visitor is under the US opt-out default, an older grant being no choice at
- * all: the notice text in force (`CONSENT_VERSION`) and no consent moment (`0`),
- * because nobody clicked.
+ * with no moment evidences nothing, and nothing is captured. Otherwise (the US
+ * opt-out default, an older grant being no choice at all, or an older record
+ * that was restored or left a category open) the notice text in force
+ * (`CONSENT_VERSION`) and no consent moment (`0`), because nobody clicked.
  */
 export function captureConsentEvidence(
   record: ConsentRecord | null,
@@ -59,7 +66,7 @@ export function captureConsentEvidence(
   if (record && record.v === CONSENT_VERSION) {
     return { consentVersion: record.v, consentAt: clickedAt(record) };
   }
-  if (prior && (prior.analytics === false || prior.marketing === false)) {
+  if (prior && (prior.analytics === false || prior.marketing === false) && !leavesNoClick(prior)) {
     return Number.isFinite(prior.at) && prior.at > 0
       ? { consentVersion: prior.v, consentAt: prior.at }
       : null;

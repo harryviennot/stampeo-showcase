@@ -133,6 +133,8 @@ export interface PriorConsent {
   v: number;
   /** Unix seconds, from the older cookie's `t`; 0 when it carried none. */
   at: number;
+  /** `restore` when the web dashboard wrote it (cookie `o`). */
+  origin?: "restore";
 }
 
 /** What the visitor is currently being shown, if anything. */
@@ -436,6 +438,7 @@ export function parsePriorConsent(raw: string | null | undefined): PriorConsent 
     analytics: stored.analytics,
     marketing: stored.marketing,
     at: stored.at,
+    ...(stored.origin ? { origin: stored.origin } : {}),
   };
 }
 
