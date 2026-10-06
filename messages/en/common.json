@@ -139,7 +139,7 @@
         "customise": "Choose by purpose"
       },
       "notice": {
-        "title": "Your privacy choices",
+        "title": "Your Privacy Choices",
         "body": "We use measurement and advertising cookies to see how our ads perform, and tell Meta and Google whether an ad led you to sign up.",
         "dismiss": "Got it"
       },
@@ -165,7 +165,8 @@
         "close": "Close",
         "us": {
           "title": "Your Privacy Choices",
-          "intro": "Turn off what you don't want us to share or measure. A refusal is kept for {months, plural, one {# month} other {# months}} and renews each time you visit. To change it, come back to “{choices}” at the bottom of any page.",
+          "intro": "Turn off what you don't want us to share or measure. A refusal is kept for {months, plural, one {# month} other {# months}} and renews each time you visit. To change it, come back to “{choices}” in the footer.",
+          "introLocked": "Your browser's signal already keeps both purposes off, so there is nothing to change here. You can open “{choices}” in the footer any time.",
           "gpc": {
             "statusAll": "Your browser's Global Privacy Control signal is on, and we honor it: advertising and audience measurement are off.",
             "statusAdvertising": "Your browser's Global Privacy Control signal is on, and we honor it: advertising is off."

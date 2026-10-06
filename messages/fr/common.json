@@ -148,7 +148,7 @@
         "intro": "Vous activez ou désactivez chaque finalité. Votre choix est conservé {months} mois et reste modifiable depuis le pied de page.",
         "necessary": {
           "title": "Strictement nécessaires",
-          "always": "Toujours actifs",
+          "always": "Toujours activé",
           "body": "Votre langue, votre pays et ce choix lui-même. Un identifiant aléatoire enregistre vos choix et peut être relié au compte que vous créez."
         },
         "analytics": {
@@ -161,11 +161,12 @@
         },
         "save": "Enregistrer mon choix",
         "cancel": "Annuler",
-        "lockedOff": "Désactivée",
+        "lockedOff": "Désactivé",
         "close": "Fermer",
         "us": {
           "title": "Vos choix de confidentialité",
-          "intro": "Désactivez ce que vous ne voulez pas qu'on partage ou qu'on mesure. Un refus est conservé {months} mois et se renouvelle à chacune de vos visites. Pour le modifier, retrouvez « {choices} » en bas de n'importe quelle page.",
+          "intro": "Désactivez ce que vous ne voulez pas qu'on partage ou qu'on mesure. Un refus est conservé {months} mois et se renouvelle à chacune de vos visites. Pour le modifier, retrouvez « {choices} » dans le pied de page.",
+          "introLocked": "Le signal de votre navigateur désactive déjà les deux finalités : il n'y a rien à modifier ici. Vous pouvez rouvrir « {choices} » dans le pied de page à tout moment.",
           "gpc": {
             "statusAll": "Le signal Global Privacy Control de votre navigateur est activé et on le respecte : la publicité et la mesure d'audience sont désactivées.",
             "statusAdvertising": "Le signal Global Privacy Control de votre navigateur est activé et on le respecte : la publicité est désactivée."

@@ -93,7 +93,7 @@ export function ConsentPreferences({
         {t(`${scope}title`)}
       </h2>
       <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-        {t(`${scope}intro`, { months: view.months, choices: tCommon(PRIVACY_CHOICES_KEY) })}
+        {t(view.intro, { months: view.months, choices: tCommon(PRIVACY_CHOICES_KEY) })}
       </p>
 
       <div className="mt-5 flex flex-col gap-3">

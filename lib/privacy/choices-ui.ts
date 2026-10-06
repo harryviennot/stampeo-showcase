@@ -60,6 +60,8 @@ export interface PreferencesView {
   gpcStatus: GpcStatus | null;
   /** Every choice is locked, so the only action is Close. */
   onlyClose: boolean;
+  /** The intro's key under `common.cookies.prefs`: a dialog with nothing left to switch has its own. */
+  intro: "intro" | "us.intro" | "us.introLocked";
   /** How long the intro says a choice is kept. */
   months: number;
 }
@@ -91,6 +93,7 @@ export function preferencesView(
 ): PreferencesView {
   const variant: PreferencesVariant = row.surface === "notice" ? "us" : "eu";
   const denied = gpcDeniedCategories(row, gpc, matrix);
+  const onlyClose = CONSENT_CATEGORIES.every((category) => denied.includes(category));
   const days =
     variant === "us" ? row.refusal_ttl_days : Math.min(row.grant_ttl_days, row.refusal_ttl_days);
 
@@ -99,7 +102,8 @@ export function preferencesView(
     order: ORDER[variant],
     locked: denied,
     gpcStatus: denied.length === 0 ? null : denied.includes("analytics") ? "all" : "advertising",
-    onlyClose: CONSENT_CATEGORIES.every((category) => denied.includes(category)),
+    onlyClose,
+    intro: variant === "eu" ? "intro" : onlyClose ? "us.introLocked" : "us.intro",
     months: monthsFromDays(days),
   };
 }

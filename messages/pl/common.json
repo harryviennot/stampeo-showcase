@@ -165,7 +165,8 @@
         "close": "Zamknij",
         "us": {
           "title": "Twoje ustawienia prywatności",
-          "intro": "Wyłącz to, czego nie chcesz, żebyśmy udostępniali lub mierzyli. Odmowę zapisujemy na {months, plural, one {# miesiąc} few {# miesiące} many {# miesięcy} other {# miesiąca}} i odnawiamy ją przy każdej wizycie. Aby ją zmienić, wróć do „{choices}” na dole dowolnej strony.",
+          "intro": "Wyłącz to, czego nie chcesz, żebyśmy udostępniali lub mierzyli. Odmowę zapisujemy na {months, plural, one {# miesiąc} few {# miesiące} many {# miesięcy} other {# miesiąca}} i odnawiamy ją przy każdej wizycie. Aby ją zmienić, wróć do „{choices}” w stopce strony.",
+          "introLocked": "Sygnał twojej przeglądarki już wyłącza oba cele, więc nic tu nie trzeba zmieniać. Możesz w każdej chwili otworzyć „{choices}” w stopce strony.",
           "gpc": {
             "statusAll": "Sygnał Global Privacy Control w twojej przeglądarce jest włączony i go respektujemy: reklama i statystyki są wyłączone.",
             "statusAdvertising": "Sygnał Global Privacy Control w twojej przeglądarce jest włączony i go respektujemy: reklama jest wyłączona."
