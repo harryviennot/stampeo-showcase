@@ -35,8 +35,27 @@ const TERRITORIES = [
   "Pacific/Pago_Pago",
 ];
 
+/**
+ * Names a browser may still report for a US zone: the legacy `US/*` links, the
+ * pre-2000s `America/*` names the IANA backward file keeps, and `Navajo`.
+ * `Intl` canonicalises most of them, but an older engine or a patched OS
+ * returns them as written, and each one is a US visitor.
+ */
+const US_ALIASES = [
+  "America/Indianapolis", "America/Fort_Wayne", "America/Knox_IN",
+  "America/Louisville", "America/Atka", "America/Shiprock",
+  "US/Eastern", "US/Central", "US/Mountain", "US/Pacific", "US/Alaska",
+  "US/Hawaii", "US/Arizona", "US/Michigan", "US/East-Indiana",
+  "US/Indiana-Starke", "US/Aleutian",
+  "Navajo",
+];
+
 describe("countryForTimezone: the United States", () => {
   test.each(US_ZONES)("%s is US", (zone) => {
+    expect(countryForTimezone(zone)).toBe("US");
+  });
+
+  test.each(US_ALIASES)("the alias %s is US", (zone) => {
     expect(countryForTimezone(zone)).toBe("US");
   });
 

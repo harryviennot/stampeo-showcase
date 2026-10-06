@@ -13,7 +13,7 @@
  *
  * Each case starts from the cookie value an older banner wrote and runs it
  * through what a page decides from it: the surface shown, which tags load, and
- * what the attribution capture writes down.
+ * which carriers the attribution capture writes.
  */
 
 import { afterEach, describe, expect, test } from "bun:test";
@@ -31,7 +31,9 @@ import {
   serializeConsentCookie,
   type ConsentRegime,
 } from "./consent";
-import { buildAttributionRecord, captureConsentEvidence } from "./ad-attribution";
+import { planCapture } from "./attribution/capture";
+import { consentEvidence } from "./attribution/evidence";
+import { landingFromUrl } from "./attribution/landing";
 import { shouldLoadGa } from "./google-analytics";
 import { shouldLoadMetaPixel } from "./meta-pixel";
 
@@ -49,7 +51,8 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
   const record = consentRecordFromCookieHeader(header);
   const prior = priorConsentFromCookieHeader(header);
   const state = resolveConsent({ record, prior, regime, gpc });
-  const evidence = captureConsentEvidence(record, prior);
+  const row = regime === "opt-out" ? "US" : "EEA_UK_CH";
+  const evidence = consentEvidence({ record, prior, regime, row });
   return {
     state,
     surface: consentSurface({ record, prior, regime, gpc, trackable: true }),
@@ -66,18 +69,23 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
       trackable: true,
     }),
     // A Meta ad click landing on /us/pricing, with both tags' cookies present.
-    captured: evidence && buildAttributionRecord({
-      search: "?fbclid=f-click&utm_source=facebook",
-      gaClientId: "GA1.1.1234567890.1700000000",
-      fbp: "fb.1.1700000000.987654321",
-      landingPath: "/us/pricing",
-      landingVariant: null,
-      referrer: "https://www.facebook.com/",
-      consent: state,
-      consentRegime: regime,
-      ...evidence,
-      capturedAt: 1_759_100_000,
-    }),
+    captured:
+      evidence &&
+      planCapture({
+        landing: landingFromUrl(
+          "https://stampeo.app/us/pricing?fbclid=f-click&utm_source=facebook",
+          { referrer: "https://www.facebook.com/", variant: null, landedAt: 1_759_100_000 },
+        ),
+        consent: state,
+        evidence,
+        live: {
+          gaClientId: "1234567890.1700000000",
+          gaSession: { sid: "1759100000", sn: 1 },
+          fbp: "fb.1.1700000000.987654321",
+        },
+        stored: { src: null, ga: null, ad: null },
+        now: 1_759_100_000,
+      }),
   };
 }
 
@@ -95,7 +103,7 @@ describe("an older refusal of everything stays a refusal", () => {
     expect(page.surface).toBe("none");
     expect(page.metaLoads).toBe(false);
     expect(page.gaLoads).toBe(false);
-    expect(page.captured).toBeNull();
+    expect(page.captured).toEqual({ src: null, ga: null, ad: null });
   });
 });
 
@@ -121,16 +129,12 @@ describe("an older partial refusal keeps the refused category refused", () => {
     expect(page.state).toEqual({ analytics: true, marketing: false });
     expect(page.gaLoads).toBe(true);
     expect(page.metaLoads).toBe(false);
-    // No click id without marketing, so the capture is an analytics-only row
+    // No click without marketing, so the capture is the source and the GA ids,
     // resting on the older choice: its version and its moment.
-    expect(page.captured).toMatchObject({
-      vendor: "direct",
-      clickId: null,
-      consentCategory: "analytics",
-      consentVersion: OLDER,
-      consentAt: 1_759_000_000,
-      consentRegime: "opt-out",
-    });
+    expect(page.captured!.ad).toBeNull();
+    for (const carrier of [page.captured!.src, page.captured!.ga]) {
+      expect(carrier).toMatchObject({ cv: OLDER, ca: 1_759_000_000, cr: "opt-out" });
+    }
   });
 
   test("GPC still turns off what the regime default would grant", () => {

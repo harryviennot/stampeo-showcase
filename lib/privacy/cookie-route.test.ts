@@ -16,6 +16,9 @@ import { join } from "node:path";
 
 import { CONSENT_COOKIE, CONSENT_VERSION, parseConsentCookie } from "../consent";
 import { handlePrivacyCookies } from "./cookie-route";
+import { parseAdCookie } from "../attribution/ad-ids";
+import { parseGaCookie } from "../attribution/ga-ids";
+import { parseSourceCookie } from "../attribution/source";
 import { PRIVACY_COOKIES_PATH } from "./cookies";
 import { readSidCookie } from "./subject";
 
@@ -53,6 +56,20 @@ const CHOICE = {
   s: SUBJECT,
   p: 1,
   g: "US",
+};
+
+/** Carriers as showcase posts them: the JSON a cookie holds, in the contract's field names. */
+const EVIDENCE = { cv: CONSENT_VERSION, cr: "opt-out", ca: 0, p: 1, g: "US" };
+const CARRIERS = {
+  src: {
+    v: 2, us: "meta", um: "paid_social", uc: "us-cr-broad", uo: "ugc-cafe-15s", ut: "us-broad",
+    lp: "/us", rh: "l.facebook.com", at: 1_791_244_800, ...EVIDENCE,
+  },
+  ga: { v: 2, cid: "1234567890.1700000000", sid: "1791244795", sn: 1, at: 1_791_244_800, ...EVIDENCE },
+  ad: {
+    v: 2, vn: "meta", ci: "IwAR_TEST_fbclid_0001", ct: 1_791_244_800,
+    fbp: "fb.1.1791244790123.1122334455", ...EVIDENCE,
+  },
 };
 
 interface PostOptions {
@@ -322,16 +339,54 @@ describe("what else it will do", () => {
     }
   });
 
-  test("carriers are accepted and ignored until their parsers exist", async () => {
-    const carriers = {
-      src: { v: 2, us: "meta", lp: "/us", at: 1_759_000_000 },
-      ga: { v: 2, cid: "1234567890.1700000000" },
-      ad: { v: 2, vn: "meta", ci: "IwAR_TEST", ct: 1_759_000_000 },
-    };
-    const result = await run(post({ carriers }));
+  test("it sets the three carriers it is sent, as cookies the same parsers read back", async () => {
+    process.env.NEXT_PUBLIC_COOKIE_DOMAIN = ".stampeo.app";
+    const { status, cookies } = await run(post({ carriers: CARRIERS }));
 
+    expect(status).toBe(204);
+    expect(cookies.map((c) => c.name).sort()).toEqual(["stampeo_ad", "stampeo_ga", "stampeo_src"]);
+    for (const cookie of cookies) {
+      expect(cookie.attrs.get("max-age")).toBe(String(182 * DAY));
+      expect(cookie.attrs.get("domain")).toBe(".stampeo.app");
+      expect(cookie.attrs.get("path")).toBe("/");
+      expect(cookie.attrs.get("samesite")).toBe("Lax");
+    }
+    const value = (name: string) => cookies.find((c) => c.name === name)!.value;
+    expect(parseSourceCookie(value("stampeo_src"))).toMatchObject({ us: "meta", lp: "/us" });
+    expect(parseGaCookie(value("stampeo_ga"))).toMatchObject({ cid: "1234567890.1700000000", sn: 1 });
+    expect(parseAdCookie(value("stampeo_ad"))).toMatchObject({ vn: "meta", ci: "IwAR_TEST_fbclid_0001" });
+  });
+
+  test("a carrier it cannot validate is dropped, and the others still land", async () => {
+    const { status, cookies } = await run(
+      post({
+        carriers: {
+          ...CARRIERS,
+          ad: { ...CARRIERS.ad, vn: "direct" },
+          ga: "not an object",
+        },
+      }),
+    );
+
+    expect(status).toBe(204);
+    expect(cookies.map((c) => c.name)).toEqual(["stampeo_src"]);
+  });
+
+  test.each([
+    ["a name it does not own", { session: CARRIERS.src, stampeo_consent: CARRIERS.src, evil: {} }],
+    ["a list", [CARRIERS.src]],
+    ["text", "stampeo_src"],
+    ["nothing", null],
+  ])("carriers of %s set nothing", async (_case, carriers) => {
+    const result = await run(post({ carriers }));
     expect(result.status).toBe(204);
     expect(result.setCookies).toEqual([]);
+  });
+
+  test("a carrier too big to be a cookie is dropped, not trimmed", async () => {
+    const slashes = "/".repeat(128);
+    const heavy = { ...CARRIERS.src, us: slashes, um: slashes, uc: slashes, uo: slashes, ut: slashes, lp: slashes, rh: slashes };
+    expect((await run(post({ carriers: { src: heavy } }))).setCookies).toEqual([]);
   });
 
   test("it writes only the names it owns, whatever is asked", async () => {

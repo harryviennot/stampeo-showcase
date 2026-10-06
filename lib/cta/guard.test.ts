@@ -28,6 +28,11 @@
  *
  * Files under a private route segment (`PRIVATE_SEGMENTS`) are exempt: no ad
  * tag runs there.
+ *
+ * The same silence applies to the other way a visitor reaches us: a `mailto:`,
+ * `tel:` or WhatsApp (`wa.me`) link leaves the page without a request of ours,
+ * and Meta's `Contact` is sent on that click. Such a link has to render through
+ * `<ContactLink>`, or the click is invisible.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -121,6 +126,16 @@ function untrackedCtas(source: string, file = "source"): string[] {
     .map((tag) => `${file}:${tag.line} <${tag.name}>`);
 }
 
+/** A link that opens the visitor's mail, phone or WhatsApp app. */
+const DIRECT_CONTACT_HREF = /(?:^|\s)href=\{?\s*["'`](?:mailto:|tel:|https?:\/\/wa\.me(?![\w-]))/i;
+
+/** `file:line <Tag>` for each such link in `source` that is not a `<ContactLink>`. */
+function untrackedDirectContacts(source: string, file = "source"): string[] {
+  return openingTags(source)
+    .filter((tag) => DIRECT_CONTACT_HREF.test(tag.attrs) && tag.name !== "ContactLink")
+    .map((tag) => `${file}:${tag.line} <${tag.name}>`);
+}
+
 /** `file:line <Tag>` for each raw JSX link in MDX that points at a CTA page. */
 function rawMdxCtas(source: string, file = "source"): string[] {
   return openingTags(source)
@@ -184,6 +199,53 @@ describe("the CTA guard", () => {
     );
 
     expect(untracked).toEqual([]);
+  });
+});
+
+describe("the direct-contact guard", () => {
+  test.each([
+    ['<a href="tel:+33649370470" className="x">', true],
+    ['<a\n  href={`tel:${SUPPORT_PHONE_TEL}`}\n  className="x"\n>', true],
+    ['<a href="mailto:hello@stampeo.app">', true],
+    ['<a href="https://wa.me/33649370470?text=Hi">', true],
+    ['<Link href="mailto:hello@stampeo.app">', true],
+    ['<ContactLink href="tel:+33649370470">', false],
+    ['<a href="/contact">', false],
+    ['<a href="https://example.com/wa.me/1">', false],
+    ['<a href={phoneHref}>', false],
+    ['{/* <a href="tel:+33649370470"> */}', false],
+  ])("%p is untracked: %p", (source, untracked) => {
+    expect(untrackedDirectContacts(source).length > 0).toBe(untracked);
+  });
+
+  test("the scan reaches the phone links that exist today", () => {
+    const withLinks = marketingSourceFiles().filter((file) =>
+      openingTags(readFileSync(join(ROOT, file), "utf-8")).some((tag) =>
+        DIRECT_CONTACT_HREF.test(tag.attrs),
+      ),
+    );
+
+    expect(withLinks).toContain("components/sections/Footer.tsx");
+    expect(withLinks).toContain("components/landing-variant/VariantTrustStrip.tsx");
+  });
+
+  test("every mailto, tel and WhatsApp link on a marketing page reports its click", () => {
+    const untracked = marketingSourceFiles().flatMap((file) =>
+      untrackedDirectContacts(readFileSync(join(ROOT, file), "utf-8"), file),
+    );
+
+    expect(untracked).toEqual([]);
+  });
+
+  test("a markdown link to one renders through the tracked link", async () => {
+    const { BlogLink } = await import("@/components/blog/mdx/BlogLink");
+    const { ContactLink } = await import("@/components/ui/ContactLink");
+
+    for (const href of ["mailto:hello@stampeo.app", "tel:+33649370470", "https://wa.me/33649370470"]) {
+      const link = BlogLink({ href, children: "Reach us" });
+      expect(link.type).toBe(ContactLink);
+      expect(link.props).toMatchObject({ href });
+    }
   });
 });
 

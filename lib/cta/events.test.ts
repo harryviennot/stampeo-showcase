@@ -13,16 +13,20 @@ import { describe, expect, test } from "bun:test";
 import { ctaClick, trackThen } from "./events";
 import { CONTACT_CTAS, SIGNUP_CTAS } from "./taxonomy";
 
+// Meta hears a signup click as the custom SignupCTA, never as a Lead (the Lead
+// is the server's, sent once the account is confirmed). A click that only
+// navigates to the contact page is silent there: a Contact is a form that was
+// sent, or an email, phone or WhatsApp link that was followed.
 const SIGNUP = {
   posthog: "landing_cta_clicked",
   ga: "sign_up_cta_click",
-  meta: "Lead",
+  meta: "SignupCTA",
 };
 
 const CONTACT = {
   posthog: "landing_demo_cta_clicked",
   ga: "contact_cta_click",
-  meta: "Contact",
+  meta: null,
 };
 
 /** Every CTA location, the page it links to, and what its click sends. */
@@ -66,7 +70,7 @@ describe("every CTA location", () => {
     expect({
       posthog: click.posthog.event,
       ga: click.ga?.event ?? null,
-      meta: click.meta,
+      meta: click.meta?.event ?? null,
     }).toEqual(sends);
   });
 });
@@ -83,7 +87,7 @@ describe("ctaClick", () => {
     const context = { locale: "en", cta_location: "pricing_growth", href: "/onboarding" };
     expect(click.posthog).toEqual({ event: "landing_cta_clicked", props: context });
     expect(click.ga).toEqual({ event: "sign_up_cta_click", params: context });
-    expect(click.meta).toBe("Lead");
+    expect(click.meta).toEqual({ event: "SignupCTA", params: context });
     expect(click.trackable).toBe(true);
   });
 
