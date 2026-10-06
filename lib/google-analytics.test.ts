@@ -37,6 +37,7 @@ import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { CONTACT_CTAS } from "./cta/taxonomy";
 import {
+  gaConfig,
   gaEventForCTA,
   gaScriptSrc,
   initGa,
@@ -533,6 +534,24 @@ describe("readDebugMode", () => {
   });
 });
 
+describe("gaConfig — what the property is told about itself (AC10.4)", () => {
+  const NO_SIGNALS = {
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+  };
+
+  test("Google signals and ad personalization are off, always", () => {
+    // Google may use the property as a service provider only: it cannot link
+    // the visitor to their Google account's ad profile or personalise ads.
+    expect(gaConfig("")).toEqual(NO_SIGNALS);
+    expect(gaConfig("?utm_source=meta&gclid=abc")).toEqual(NO_SIGNALS);
+  });
+
+  test("DebugView is added on request and never replaces them", () => {
+    expect(gaConfig("?debug_mode=1")).toEqual({ ...NO_SIGNALS, debug_mode: true });
+  });
+});
+
 describe("the browser side, in load order", () => {
   /**
    * `initialised` is MODULE state -- it has to be, because it models "has this
@@ -615,7 +634,8 @@ describe("the browser side, in load order", () => {
     expect(calls[1][1]).toBe(MEASUREMENT_ID);
     // `?debug_mode=1` is the documented operator instruction; passing it
     // through is what makes that instruction true.
-    expect(calls[1][2]).toEqual({ debug_mode: true });
+    expect(calls[1][2]).toEqual(gaConfig("?debug_mode=1"));
+    expect(calls[1][2]).toMatchObject({ debug_mode: true });
   });
 
   test("a second call injects nothing — strict mode mounts effects twice", () => {

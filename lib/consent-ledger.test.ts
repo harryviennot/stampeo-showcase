@@ -71,12 +71,16 @@ describe("buildConsentPayload — the contract with the backend", () => {
   test("every field the backend allowlists is present, spelled its way", () => {
     const payload = buildConsentPayload({ record: RECORD, surface: "banner" });
 
-    // Exactly the keys `validate_decision` reads. An extra key is dropped
-    // server-side; a missing one drops the whole row.
+    // The keys `validate_decision` reads, plus the three it ignores until the
+    // backend stores them. An extra key is dropped server-side; a missing one
+    // drops the whole row.
     expect(Object.keys(payload).sort()).toEqual([
       "analytics",
       "decided_at",
+      "gpc",
       "marketing",
+      "policy_version",
+      "region_row",
       "regime",
       "subject_id",
       "surface",
@@ -93,7 +97,24 @@ describe("buildConsentPayload — the contract with the backend", () => {
       regime: "opt-in",
       surface: "banner",
       decided_at: 1_789_000_000,
+      policy_version: null,
+      region_row: null,
+      gpc: null,
     });
+  });
+
+  test("the policy the visitor chose under, and whether GPC was on, ride along", () => {
+    const payload = buildConsentPayload({
+      record: { ...RECORD, regime: "opt-out", policyVersion: 1, regionRow: "US" },
+      surface: "notice",
+      gpc: true,
+    });
+
+    expect(payload).toMatchObject({ policy_version: 1, region_row: "US", gpc: true });
+  });
+
+  test("no GPC signal is reported as false, not as unknown", () => {
+    expect(buildConsentPayload({ record: RECORD, surface: "banner", gpc: false }).gpc).toBe(false);
   });
 
   test("a refusal is reported as a decision, not as an absence", () => {
@@ -167,6 +188,19 @@ describe("recordConsentDecision — fire and forget", () => {
       expect(beacon.sent[0].body).toEqual(
         buildConsentPayload({ record: RECORD, surface: "banner" }),
       );
+    } finally {
+      beacon.restore();
+    }
+  });
+
+  test("the beacon carries the browser's own GPC signal when the caller gives none", () => {
+    process.env.NEXT_PUBLIC_API_URL = "https://api.example.test";
+    const beacon = installBeacon();
+    try {
+      (navigator as unknown as Record<string, unknown>).globalPrivacyControl = true;
+      recordConsentDecision({ record: RECORD, surface: "banner" });
+
+      expect((beacon.sent[0].body as { gpc: boolean }).gpc).toBe(true);
     } finally {
       beacon.restore();
     }
