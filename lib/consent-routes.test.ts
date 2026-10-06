@@ -16,12 +16,13 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "../i18n/routing";
 import {
   MARKETING_SEGMENTS,
   PRIVATE_SEGMENTS,
+  PRIVATE_SUBPATHS,
   isTrackablePath,
 } from "./consent-routes";
 
@@ -98,6 +99,22 @@ describe("isTrackablePath — acquisition pages", () => {
 });
 
 describe("isTrackablePath — private surfaces", () => {
+  test("the demo wallet page, whose session token rides in its path, is NOT trackable", () => {
+    for (const path of [
+      "/demo/wallet-select/3f2504e0",
+      "/en/demo/wallet-select/3f2504e0",
+      "/fr/demo/wallet-select/3f2504e0/",
+      "/es/demo/wallet-select/3f2504e0?x=1",
+    ]) {
+      expect(isTrackablePath(path)).toBe(false);
+    }
+  });
+
+  test("the rest of the demo segment is still ours to measure", () => {
+    expect(isTrackablePath("/demo")).toBe(true);
+    expect(isTrackablePath("/en/demo/other-page")).toBe(true);
+  });
+
   test("the funnel and account routes are NOT trackable", () => {
     // No tag fires here, so there is nothing to consent to and the banner
     // would only be in the way of someone mid-signup or unsubscribing.
@@ -185,6 +202,15 @@ describe("segment tables", () => {
 
     expect(footerRoutes).toContain("email-preferences");
     expect(isTrackablePath("/email-preferences")).toBe(false);
+  });
+
+  test("every private sub-route still exists, under a segment that is otherwise ours", () => {
+    const routeDir = join(import.meta.dir, "..", "app", "[locale]");
+
+    for (const [segment, child] of PRIVATE_SUBPATHS) {
+      expect(MARKETING_SEGMENTS.has(segment)).toBe(true);
+      expect(existsSync(join(routeDir, segment, child))).toBe(true);
+    }
   });
 
   test("every named segment still exists as a route folder", () => {

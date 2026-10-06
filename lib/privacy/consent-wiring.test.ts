@@ -52,13 +52,18 @@ describe("which row a visitor is in, from what the browser can tell us", () => {
   test.each([
     ["a US timezone and no region cookie", "America/New_York", "", "US", "opt-out"],
     ["a Paris timezone and no region cookie", "Europe/Paris", "", "EEA_UK_CH", "opt-in"],
-    ["a Paris timezone with a server region of the US", "Europe/Paris", region({ c: "US", v: 1 }), "EEA_UK_CH", "opt-in"],
-    ["a US timezone with a server region of France", "America/New_York", region({ c: "FR", v: 1 }), "EEA_UK_CH", "opt-in"],
+    ["a London timezone", "Europe/London", "", "EEA_UK_CH", "opt-in"],
+    ["a Zurich timezone", "Europe/Zurich", "", "EEA_UK_CH", "opt-in"],
+    ["an Oslo timezone", "Europe/Oslo", "", "EEA_UK_CH", "opt-in"],
+    ["a Canary Islands timezone", "Atlantic/Canary", "", "EEA_UK_CH", "opt-in"],
     ["a timezone we do not map", "Antarctica/Troll", "", "UNKNOWN", "opt-in"],
+    ["UTC", "Etc/UTC", "", "UNKNOWN", "opt-in"],
     ["a browser that refuses Intl", null, "", "UNKNOWN", "opt-in"],
-    ["an unmapped timezone with a server region of the US", "Antarctica/Troll", region({ c: "US", v: 1 }), "US", "opt-out"],
-    ["a US timezone with a forged region cookie", "America/New_York", region({ c: "FR", v: 2 }), "US", "opt-out"],
-    ["an unmapped timezone with a forged region cookie", "Antarctica/Troll", region({ c: "USA", v: 1 }), "UNKNOWN", "opt-in"],
+    // `stampeo_region` is not read: nothing signs it, so a value in it is the visitor's own.
+    ["a Paris timezone with a region cookie naming the US", "Europe/Paris", region({ c: "US", v: 1 }), "EEA_UK_CH", "opt-in"],
+    ["a US timezone with a region cookie naming France", "America/New_York", region({ c: "FR", v: 1 }), "US", "opt-out"],
+    ["an unmapped timezone with a region cookie naming the US", "Antarctica/Troll", region({ c: "US", v: 1 }), "UNKNOWN", "opt-in"],
+    ["UTC with a region cookie naming the US", "Etc/UTC", region({ c: "US", v: 1 }), "UNKNOWN", "opt-in"],
   ] as const)("%s", (_case, timezone, cookie, row, regime) => {
     browser = installFakeBrowser({ timezone, cookie });
 

@@ -34,7 +34,7 @@ describe("what the snapshot says about the row", () => {
     ["a US visitor", "America/New_York", "", "US", "notice"],
     ["a French visitor", "Europe/Paris", "", "EEA_UK_CH", "banner"],
     ["a visitor we cannot place", "Antarctica/Troll", "", "UNKNOWN", "banner"],
-    ["a US timezone with a server region of France", "America/New_York", region("FR"), "EEA_UK_CH", "banner"],
+    ["a US timezone with a region cookie naming France", "America/New_York", region("FR"), "US", "notice"],
   ] as const)("%s", (_case, timezone, cookie, row, surface) => {
     browser = installFakeBrowser({ timezone, cookie: `stampeo_sid=${SUBJECT}; ${cookie}` });
 
@@ -71,7 +71,8 @@ describe("identity", () => {
     const ready = readConsentSnapshot();
     expect(ready).not.toBe(notReady);
 
-    browser.setJar(`stampeo_sid=${SUBJECT}; ${region("FR")}`);
+    browser.setJar(`stampeo_sid=${SUBJECT}`);
+    browser = installFakeBrowser({ timezone: "Europe/Paris", cookie: `stampeo_sid=${SUBJECT}` });
     expect(readConsentSnapshot()).not.toBe(ready);
   });
 });
