@@ -63,12 +63,14 @@ export function visitor(
   };
 }
 
+/** A choice made in the row of that regime: the US for opt-out, the EEA/UK/CH row for opt-in. */
 export const chose = (analytics: boolean, marketing: boolean, regime: "opt-in" | "opt-out", at = 1_791_240_000): ConsentRecord => ({
   v: CONSENT_VERSION,
   analytics,
   marketing,
   at,
   regime,
+  regionRow: regime === "opt-out" ? "US" : "EEA_UK_CH",
 });
 
 export function plan(

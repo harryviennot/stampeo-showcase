@@ -232,7 +232,8 @@ describe("the consent cookie", () => {
 
   test.each([
     ["a version from the future", { ...CHOICE, v: CONSENT_VERSION + 1 }],
-    ["a choice that is not 0 or 1", { ...CHOICE, a: "yes" }],
+    ["a choice that is not 0, 1 or -1", { ...CHOICE, a: 2 }],
+    ["a choice that is text", { ...CHOICE, m: "x" }],
     ["a missing choice", { ...CHOICE, m: undefined }],
     ["an array", [CHOICE]],
     ["text", "granted"],
@@ -249,6 +250,18 @@ describe("the consent cookie", () => {
     const parsed = parseConsentCookie(cookies[0].value);
     expect(parsed).toMatchObject({ analytics: true, marketing: false });
     expect(parsed?.subjectId).toBeUndefined();
+  });
+});
+
+describe("a record the web dashboard restored", () => {
+  const RESTORED = { v: CONSENT_VERSION, a: -1, m: 0, t: 1_791_244_000, r: "opt-out", s: SUBJECT, o: "restore" };
+
+  test("is set back with its no-choice answer and its origin, not as a refusal of everything", async () => {
+    const { status, cookies } = await run(post({ consent: RESTORED }));
+
+    expect(status).toBe(204);
+    expect(JSON.parse(decodeURIComponent(cookies[0].value))).toEqual(RESTORED);
+    expect(cookies[0].attrs.get("max-age")).toBe(String(400 * DAY));
   });
 });
 
