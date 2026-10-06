@@ -63,6 +63,7 @@ describe("the body, for a US visitor who never touched the notice", () => {
         ad: wireOf(written.ad),
       },
       basis: US_BASIS,
+      refused: [],
       live: {
         ga: `GA1.1.${GA_CID}`,
         ga_sessions: { ZFZ6JLPFXN: GA_SESSION },
@@ -77,8 +78,41 @@ describe("the body, for a US visitor who never touched the notice", () => {
     );
   });
 
-  test("never carries the v1 carrier", () => {
-    expect(JSON.stringify(body(jar({ stampeo_attribution: "x" })))).not.toContain("stampeo_attribution");
+});
+
+describe("the version-1 carrier, while a browser still holds one", () => {
+  const V1 = { click_id: "IwAR_old", platform: "meta", ga_client_id: GA_CID, utm_source: "meta", captured_at: LANDED };
+  const v1 = (value: unknown = V1) => ({ stampeo_attribution: encodeURIComponent(JSON.stringify(value)) });
+
+  test("is forwarded as `ad_attribution`, next to the version-2 carriers", () => {
+    const sent = body(jar(v1()));
+
+    expect(sent.ad_attribution).toEqual(V1);
+    expect(sent.ad_attribution_v2).toBeDefined();
+  });
+
+  test("is forwarded alone when no version-2 carrier exists", () => {
+    const sent = body(jar({ stampeo_src: null, stampeo_ga: null, stampeo_ad: null, ...v1() }));
+
+    expect(sent.ad_attribution).toEqual(V1);
+    expect(sent).not.toHaveProperty("ad_attribution_v2");
+  });
+
+  test.each([
+    ["analytics refused", { analytics: false, marketing: true }],
+    ["marketing refused", { analytics: true, marketing: false }],
+    ["both refused", { analytics: false, marketing: false }],
+  ])("is left out when %s, because it holds both categories' identifiers", (_case, consent) => {
+    expect(body(jar(v1()), consent)).not.toHaveProperty("ad_attribution");
+  });
+
+  test.each([
+    ["a value that is not JSON", { stampeo_attribution: "%7Bnope" }],
+    ["a list", v1([1, 2])],
+    ["text", v1("granted")],
+    ["an object past the cookie's size cap", v1({ click_id: "x".repeat(3000) })],
+  ])("%s is left out", (_case, cookies) => {
+    expect(body(jar(cookies))).not.toHaveProperty("ad_attribution");
   });
 });
 
@@ -112,11 +146,12 @@ describe("what leaves the page follows the current choice", () => {
     expect(body(jar({ _fbc: "fb.1.1.2" }), consent)).toEqual({
       consent_subject_id: SID,
       basis: US_BASIS,
+      refused: ["analytics", "marketing"],
     });
   });
 
-  test("a visitor with no subject and no carriers still sends the basis", () => {
-    expect(body("NEXT_LOCALE=fr")).toEqual({ basis: US_BASIS });
+  test("a visitor with no subject and no carriers still sends the basis and what they refuse", () => {
+    expect(body("NEXT_LOCALE=fr")).toEqual({ basis: US_BASIS, refused: [] });
   });
 });
 
@@ -134,7 +169,7 @@ describe("the basis: the regime the call was made under", () => {
     for (const row of [US, EU, UNKNOWN]) {
       const basis = signupBasis(row);
       const sent = body("", { analytics: false, marketing: false }, null, basis);
-      expect(sent).toEqual({ basis });
+      expect(sent).toEqual({ basis, refused: ["analytics", "marketing"] });
     }
   });
 });
@@ -225,13 +260,49 @@ describe("recordAccountSignup", () => {
     expect(call.body).toEqual(JSON.parse(JSON.stringify(body(jar()))));
   });
 
-  test("answers at once: the wizard is never held up for the token or the request", () => {
-    visit();
+  describe("what the wizard may wait for before it leaves", () => {
+    test("the request being handed to the browser, and not its answer", async () => {
+      visit({ fetch: "hang" });
 
-    const returned = recordAccountSignup(ready({ getAccessToken: () => new Promise(() => {}) }));
+      // A wait for the answer would outlast this test: the fetch never replies.
+      await recordAccountSignup(ready({ dispatchTimeoutMs: 60_000 }));
 
-    expect(returned).toBeUndefined();
-    expect(browser!.fetches).toHaveLength(0);
+      expect(browser!.fetches).toHaveLength(1);
+    });
+
+    test("no longer than the wait it is given, when the token never comes", async () => {
+      visit();
+
+      await recordAccountSignup(ready({ getAccessToken: () => new Promise(() => {}), dispatchTimeoutMs: 20 }));
+
+      expect(browser!.fetches).toHaveLength(0);
+    });
+
+    test.each([
+      ["a token that cannot be read", { getAccessToken: async () => Promise.reject(new Error("storage")) }],
+      ["a session with no token", { getAccessToken: async () => null }],
+      ["no API configured", { apiUrl: "" }],
+    ])("resolves, and does not throw, for %s", async (_case, over) => {
+      visit();
+
+      await expect(recordAccountSignup(ready(over))).resolves.toBeUndefined();
+    });
+
+    test.each(["reject", "throw"] as const)("resolves when the request fails (%s)", async (fetch) => {
+      visit({ fetch });
+
+      await expect(recordAccountSignup(ready())).resolves.toBeUndefined();
+    });
+
+    test("a second report on the same page resolves at once and sends nothing more", async () => {
+      visit();
+      const options = ready();
+
+      await recordAccountSignup(options);
+      await recordAccountSignup(options);
+
+      expect(browser!.fetches).toHaveLength(1);
+    });
   });
 
   test("goes out once per page, however many times the flow reports success", async () => {
@@ -253,7 +324,64 @@ describe("recordAccountSignup", () => {
     recordAccountSignup(ready());
     await flush();
 
-    expect(browser!.fetches[0].body).toEqual({ consent_subject_id: SID, basis: US_BASIS });
+    expect(browser!.fetches[0].body).toEqual({
+      consent_subject_id: SID,
+      basis: US_BASIS,
+      refused: ["analytics", "marketing"],
+    });
+  });
+
+  describe("declares what the browser refuses right now, after GPC, older refusals and the row in force", () => {
+    const record = (choice: object) =>
+      encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, t: LANDED, s: SID, ...choice }));
+    const US_CHOICE = { r: "opt-out", p: 1, g: "US" };
+    const EU_CHOICE = { r: "opt-in", p: 1, g: "EEA_UK_CH" };
+
+    test.each([
+      ["a US visitor who never touched the notice", { timezone: "America/New_York" }, []],
+      ["a US visitor under GPC", { timezone: "America/New_York", gpc: true }, ["analytics", "marketing"]],
+      [
+        "a US visitor who refused advertising",
+        { timezone: "America/New_York", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 0, ...US_CHOICE }) }) },
+        ["marketing"],
+      ],
+      [
+        "a US visitor who refused advertising under version 2",
+        { timezone: "America/New_York", cookie: jar({ [CONSENT_COOKIE]: record({ v: 2, a: 1, m: 0, ...US_CHOICE }) }) },
+        ["marketing"],
+      ],
+      [
+        "a US visitor whose refusal the web dashboard restored",
+        {
+          timezone: "America/New_York",
+          cookie: jar({ [CONSENT_COOKIE]: record({ a: -1, m: 0, r: "opt-out", o: "restore" }) }),
+        },
+        ["marketing"],
+      ],
+      [
+        "a US notice dismissal, now that the visitor is in Paris",
+        { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 1, ...US_CHOICE }) }) },
+        ["analytics", "marketing"],
+      ],
+      ["a European who has not chosen", { timezone: "Europe/Paris" }, ["analytics", "marketing"]],
+      [
+        "a European who accepted everything",
+        { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 1, ...EU_CHOICE }) }) },
+        [],
+      ],
+      [
+        "a European who accepted analytics only",
+        { timezone: "Europe/Paris", cookie: jar({ [CONSENT_COOKIE]: record({ a: 1, m: 0, ...EU_CHOICE }) }) },
+        ["marketing"],
+      ],
+    ])("%s", async (_case, options, refused) => {
+      browser = installFakeBrowser({ cookie: jar(), ...options } as Parameters<typeof installFakeBrowser>[0]);
+
+      recordAccountSignup(ready());
+      await flush();
+
+      expect(browser.fetches[0].body.refused).toEqual(refused);
+    });
   });
 
   describe("carries the basis in force at the moment of the call", () => {
@@ -305,7 +433,11 @@ describe("recordAccountSignup", () => {
       await flush();
 
       const sent = browser!.fetches[0].body;
-      expect(sent).toEqual({ consent_subject_id: SID, basis: US_BASIS });
+      expect(sent).toEqual({
+        consent_subject_id: SID,
+        basis: US_BASIS,
+        refused: ["analytics", "marketing"],
+      });
       expect(sent).not.toHaveProperty("ad_attribution_v2");
       expect(sent).not.toHaveProperty("live");
     });

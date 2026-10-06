@@ -185,7 +185,7 @@ describe("a grant counts only where the visitor could have given it", () => {
   });
 
   test("a record that names no row is read by its regime", () => {
-    const { regionRow: _row, ...unnamed } = dismissedInNewYork;
+    const unnamed = { ...dismissedInNewYork, regionRow: undefined };
     expect(resolve(EU, unnamed)).toEqual(OFF);
     expect(resolve(US, unnamed)).toEqual(ON);
   });

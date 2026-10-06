@@ -349,6 +349,56 @@ describe("stampeo_ga is refreshed as the visit goes on", () => {
   });
 });
 
+describe("a choice made after the carriers were written", () => {
+  const carrying = (written: ReturnType<typeof plan>): StoredCarriers => ({
+    src: written.src,
+    ga: written.ga,
+    ad: written.ad,
+  });
+  const REFUSED_AT = 1_791_240_500;
+
+  test("re-stamps the carriers that remain, so none still reads as no choice", () => {
+    // Written under the US default (`ca: 0`), then advertising is refused.
+    const browsed = plan(visitor(US));
+    const refuser = visitor(US, { record: chose(true, false, "opt-out", REFUSED_AT) });
+
+    const written = plan(refuser, { stored: carrying(browsed), now: LANDED + 600 });
+
+    for (const carrier of [written.src, written.ga]) {
+      expect(carrier).toMatchObject({ cv: CONSENT_VERSION, cr: "opt-out", ca: REFUSED_AT, g: "US" });
+    }
+    // Only the evidence moves: where the visit came from does not.
+    expect(written.src).toMatchObject({ us: "meta", lp: "/us", at: LANDED });
+    expect(written.ga).toMatchObject({ cid: GA_CID, sid: "1791244795", at: LANDED + 5 });
+    // The click belongs to a category that is refused now.
+    expect(written.ad).toBeNull();
+  });
+
+  test("a European who answers again with the same answers is stamped with the new moment", () => {
+    const first = plan(visitor(EU, { record: chose(true, true, "opt-in", 1_791_240_000) }));
+    const again = plan(visitor(EU, { record: chose(true, true, "opt-in", 1_791_240_900) }), {
+      stored: carrying(first),
+      now: LANDED + 900,
+    });
+
+    for (const carrier of [again.src, again.ga, again.ad]) {
+      expect(carrier).toMatchObject({ cr: "opt-in", ca: 1_791_240_900, g: "EEA_UK_CH" });
+    }
+    expect(again.ad).toMatchObject({ ci: "IwAR_TEST_fbclid_0001", ct: LANDED });
+  });
+
+  test("carriers that already carry the evidence are left alone", () => {
+    const state = visitor(EU, { record: chose(true, true, "opt-in") });
+    const first = plan(state);
+
+    expect(plan(state, { stored: carrying(first), now: LANDED + 60 })).toEqual({
+      src: null,
+      ga: null,
+      ad: null,
+    });
+  });
+});
+
 describe("what the capture still waits for", () => {
   const wait = (state: ReturnType<typeof visitor>, over: Partial<CaptureInput> = {}) =>
     awaitedIds({ landing: META_LANDING, live: NO_LIVE_IDS, stored: NOTHING_STORED, ...state, ...over });

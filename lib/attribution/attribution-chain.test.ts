@@ -91,7 +91,7 @@ describe("what this repo makes of those inputs", () => {
     expect(carriers.ga).toMatchObject({ cid: "1234567890.1700000000", sn: 1 });
   });
 
-  test("builds a sign-up body of the subject, the carriers as stored, the basis, and the live identifiers", () => {
+  test("builds a sign-up body of the subject, the carriers as stored, the basis, what is refused, and the live identifiers", () => {
     const { carriers, signup_request } = FIXTURE.expected_showcase;
 
     expect(signup_request.path).toBe("/account/signup-recorded");
@@ -100,6 +100,7 @@ describe("what this repo makes of those inputs", () => {
       ad_attribution_v2: carriers,
       // The US row, under its opt-out default: what the call was made under.
       basis: { cr: "opt-out", p: 1, g: "US" },
+      refused: [],
       live: {
         ga: FIXTURE.inputs.cookies._ga,
         ga_sessions: { ZFZ6JLPFXN: FIXTURE.inputs.cookies._ga_ZFZ6JLPFXN },

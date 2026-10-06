@@ -23,7 +23,7 @@ export interface FetchCall {
 }
 
 export type CookieMode = "stores" | "silent" | "throws";
-export type FetchMode = "ignore" | "reject" | "throw" | "route";
+export type FetchMode = "ignore" | "reject" | "throw" | "route" | "hang";
 
 export interface FakeBrowserOptions {
   /** Cookies present before the page loads, as a `Cookie:` header. */
@@ -34,7 +34,7 @@ export interface FakeBrowserOptions {
   hostname?: string;
   /** `silent` accepts a write and drops it; `throws` refuses it. */
   cookies?: CookieMode;
-  /** `route` answers with the real route handler and applies its cookies. */
+  /** `route` answers with the real route handler and applies its cookies; `hang` never answers. */
   fetch?: FetchMode;
 }
 
@@ -126,6 +126,7 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
     const body = JSON.parse(String(init.body ?? "{}")) as Record<string, unknown>;
     fetches.push({ url, init, body });
     if (fetchMode === "reject") return Promise.reject(new Error("offline"));
+    if (fetchMode === "hang") return new Promise<Response>(() => {});
     if (fetchMode === "ignore") return Promise.resolve(new Response(null, { status: 204 }));
 
     const request = new Request(`${SITE}${url}`, {
