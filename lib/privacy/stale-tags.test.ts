@@ -14,10 +14,10 @@ import { rowFor } from "./policy";
 import { consentChangedSince, watchConsentAcrossTabs } from "./stale-tags";
 
 let browser: FakeBrowser | null = null;
-let stop: (() => void) | null = null;
+let watcher: ReturnType<typeof watchConsentAcrossTabs> | null = null;
 afterEach(() => {
-  stop?.();
-  stop = null;
+  watcher?.stop();
+  watcher = null;
   browser?.restore();
   browser = null;
 });
@@ -28,9 +28,12 @@ const OFF = { analytics: false, marketing: false };
 /** A tab with the tags loaded, watching. */
 function tab(cookie: string, options: { tagsLoaded?: boolean } = {}) {
   browser = installFakeBrowser({ cookie, timezone: "Europe/Paris" });
-  stop = watchConsentAcrossTabs({ tagsLoaded: () => options.tagsLoaded ?? true });
+  watcher = watchConsentAcrossTabs({ tagsLoaded: () => options.tagsLoaded ?? true });
   return browser;
 }
+
+/** This window gets the pointer: the other one, with the refusal, was beside it all along. */
+const focus = () => (globalThis as unknown as { window: EventTarget }).window.dispatchEvent(new Event("focus"));
 
 const away = (b: FakeBrowser, whileAway: () => void) => {
   b.setVisibility("hidden");
@@ -96,11 +99,79 @@ describe("a tab that comes back to the front", () => {
 
   test("stops watching when told to", () => {
     const b = tab(GRANTED_COOKIE);
-    stop?.();
-    stop = null;
+    watcher?.stop();
+    watcher = null;
 
     away(b, () => b.setJar(REFUSED_COOKIE));
+    focus();
 
     expect(b.events).not.toContain("reload");
+  });
+});
+
+describe("a window that stayed visible beside the one where the visitor refused", () => {
+  test("reloads when it is focused, though it never fired visibilitychange", () => {
+    const b = tab(GRANTED_COOKIE);
+
+    b.setJar(REFUSED_COOKIE);
+    focus();
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+
+  test("reloads when the visitor moves to another page of the site", () => {
+    const b = tab(GRANTED_COOKIE);
+
+    b.setJar(REFUSED_COOKIE);
+    watcher!.recheck();
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+
+  test("reloads once, however many of the three signals follow", () => {
+    const b = tab(GRANTED_COOKIE);
+
+    away(b, () => b.setJar(REFUSED_COOKIE));
+    focus();
+    watcher!.recheck();
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+
+  test("does nothing while nothing changed, however often it is asked", () => {
+    const b = tab(GRANTED_COOKIE);
+
+    focus();
+    watcher!.recheck();
+    away(b, () => {});
+
+    expect(b.events).not.toContain("reload");
+  });
+
+  test("does not reload for a choice made in this window", () => {
+    const b = tab("");
+
+    writeConsentRecord(ON, rowFor("FR"));
+    emitConsentChange(ON);
+    focus();
+    watcher!.recheck();
+
+    expect(b.events).not.toContain("reload");
+  });
+
+  test("does not reload while hidden, or when no tag was ever loaded", () => {
+    const hidden = tab(GRANTED_COOKIE);
+    hidden.setJar(REFUSED_COOKIE);
+    hidden.setVisibility("hidden");
+    focus();
+    watcher!.recheck();
+    expect(hidden.events).not.toContain("reload");
+
+    watcher?.stop();
+    hidden.restore();
+    const untagged = tab(GRANTED_COOKIE, { tagsLoaded: false });
+    untagged.setJar(REFUSED_COOKIE);
+    focus();
+    expect(untagged.events).not.toContain("reload");
   });
 });

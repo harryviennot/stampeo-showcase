@@ -418,6 +418,30 @@ describe("what else it will do", () => {
   });
 });
 
+describe("a carrier key that is a name on every object", () => {
+  test.each(["constructor", "__proto__", "toString", "hasOwnProperty", "valueOf"])(
+    "%s is ignored like any other name the route does not own",
+    async (key) => {
+      const raw = `{"carriers":{"${key}":{"v":2}}}`;
+
+      const result = await run(post(null, { raw }));
+
+      expect(result.status).toBe(204);
+      expect(result.setCookies).toEqual([]);
+    },
+  );
+
+  test("the carriers posted beside one are still set", async () => {
+    const [src, ga, ad] = [CARRIERS.src, CARRIERS.ga, CARRIERS.ad].map((carrier) => JSON.stringify(carrier));
+    const raw = `{"carriers":{"__proto__":{"x":1},"constructor":1,"src":${src},"ga":${ga},"ad":${ad}}}`;
+
+    const result = await run(post(null, { raw }));
+
+    expect(result.status).toBe(204);
+    expect(result.cookies.map((c) => c.name).sort()).toEqual(["stampeo_ad", "stampeo_ga", "stampeo_src"]);
+  });
+});
+
 describe("a carrier whose category the request's own consent cookie refuses", () => {
   const consentJar = (record: object) =>
     `stampeo_consent=${encodeURIComponent(JSON.stringify({ t: 1_791_244_000, r: "opt-out", ...record }))}`;

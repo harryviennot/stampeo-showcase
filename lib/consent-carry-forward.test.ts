@@ -217,6 +217,44 @@ test("an older record appearing, or its moment changing, changes the consent sna
   expect(new Set(keys).size).toBe(3);
 });
 
+describe("a record the web dashboard restored, read after the next version bump", () => {
+  // The cookie was written under the text before the bump, so it is read as an older choice.
+  const RESTORED_AT = 1_759_400_000;
+  const stored = (choice: object) =>
+    encodeURIComponent(JSON.stringify({ v: OLDER, t: RESTORED_AT, r: "opt-out", s: SUBJECT, ...choice }));
+  const evidenceOf = (raw: string) =>
+    consentEvidence({ record: null, prior: parsePriorConsent(raw), row: "US" });
+
+  test("keeps its origin and its no-choice answer", () => {
+    expect(parsePriorConsent(stored({ a: -1, m: 0, o: "restore" }))).toEqual({
+      v: OLDER,
+      analytics: null,
+      marketing: false,
+      at: RESTORED_AT,
+      origin: "restore",
+    });
+  });
+
+  test("still refuses what it refused, and asks about nothing it left open", () => {
+    const page = visit(stored({ a: -1, m: 0, o: "restore" }), "opt-out");
+
+    expect(page.state).toEqual({ analytics: true, marketing: false });
+    expect(page.metaLoads).toBe(false);
+  });
+
+  test.each([
+    ["a restored refusal", { a: -1, m: 0, o: "restore" }],
+    ["a refusal beside a category with no choice", { a: -1, m: 0 }],
+    ["a restore of an answered category", { a: 1, m: 0, o: "restore" }],
+  ])("%s evidences no click: the text in force and ca 0", (_case, choice) => {
+    expect(evidenceOf(stored(choice))).toMatchObject({ cv: CONSENT_VERSION, ca: 0, cr: "opt-out", g: "US" });
+  });
+
+  test("a refusal the visitor clicked keeps its own version and moment", () => {
+    expect(evidenceOf(stored({ a: 1, m: 0 }))).toMatchObject({ cv: OLDER, ca: RESTORED_AT });
+  });
+});
+
 describe("the browser read path", () => {
   const RealDateTimeFormat = Intl.DateTimeFormat;
 

@@ -73,6 +73,10 @@ export interface FakeBrowser {
   advanceDays(days: number): void;
   /** Resolves once every request in flight has been answered and applied. */
   settled(): Promise<void>;
+  /** The next route response is answered but its cookies are held back, as if it were still on the wire. */
+  holdNext(): void;
+  /** Applies the held response's cookies: it lands now, after whatever happened since. */
+  release(): void;
   restore(): void;
 }
 
@@ -91,6 +95,8 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
   const events: string[] = [];
   const scripts: string[] = [];
   const pending: Promise<unknown>[] = [];
+  let holdingNext = false;
+  const held: (() => void)[] = [];
   const cookieMode = options.cookies ?? "stores";
   const hostname = options.hostname ?? "stampeo.app";
 
@@ -170,8 +176,14 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
       },
       body: String(init.body ?? "{}"),
     });
+    const hold = holdingNext;
+    holdingNext = false;
     const answered = handlePrivacyCookies(request).then((result) => {
-      for (const setCookie of result.setCookies) store(setCookie, "server-set");
+      const apply = () => {
+        for (const setCookie of result.setCookies) store(setCookie, "server-set");
+      };
+      if (hold) held.push(apply);
+      else apply();
       return new Response(null, { status: result.status });
     });
     pending.push(answered);
@@ -216,6 +228,12 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
     },
     async settled() {
       await Promise.all(pending.splice(0));
+    },
+    holdNext() {
+      holdingNext = true;
+    },
+    release() {
+      for (const apply of held.splice(0)) apply();
     },
     restore() {
       for (const name of ["document", "window", "navigator"]) {
