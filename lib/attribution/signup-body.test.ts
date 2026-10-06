@@ -14,13 +14,14 @@
 import { afterEach, describe, expect, test } from "bun:test";
 
 import { CONSENT_COOKIE, CONSENT_VERSION } from "../consent";
+import { POLICY_MATRIX } from "../privacy/policy-matrix";
 import { installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
 import { serializeAdCarrier } from "./ad-ids";
 import { serializeGaCarrier } from "./ga-ids";
-import { buildSignupBody } from "./signup-body";
+import { buildSignupBody, signupBasis } from "./signup-body";
 import { recordAccountSignup } from "./signup-call";
 import { serializeSourceCarrier } from "./source";
-import { FBP, GA_CID, LANDED, US, plan, visitor, wireOf } from "./__fixtures__/visitors";
+import { EU, FBP, GA_CID, LANDED, UNKNOWN, US, plan, visitor, wireOf } from "./__fixtures__/visitors";
 
 const SID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
 const GA_SESSION = "GS2.1.s1791244795$o1$g1$t1791244799$j0$l0$h0";
@@ -44,9 +45,14 @@ const jar = (over: Record<string, string | null> = {}) =>
     .join("; ");
 
 const ALL = { analytics: true, marketing: true };
+const US_BASIS = { cr: "opt-out", p: POLICY_MATRIX.version, g: "US" } as const;
 
-const body = (cookieHeader: string, consent = ALL, measurementId: string | null = MEASUREMENT_ID) =>
-  buildSignupBody({ cookieHeader, consent, measurementId });
+const body = (
+  cookieHeader: string,
+  consent = ALL,
+  measurementId: string | null = MEASUREMENT_ID,
+  basis: ReturnType<typeof signupBasis> = US_BASIS,
+) => buildSignupBody({ cookieHeader, consent, measurementId, basis });
 
 describe("the body, for a US visitor who never touched the notice", () => {
   test("carries the subject, the carriers as stored, and the identifiers as they are now", () => {
@@ -57,6 +63,7 @@ describe("the body, for a US visitor who never touched the notice", () => {
         ga: wireOf(written.ga),
         ad: wireOf(written.ad),
       },
+      basis: US_BASIS,
       live: {
         ga: `GA1.1.${GA_CID}`,
         ga_sessions: { ZFZ6JLPFXN: GA_SESSION },
@@ -102,12 +109,34 @@ describe("what leaves the page follows the current choice", () => {
   test.each([
     ["a US visitor under GPC", { analytics: false, marketing: false }],
     ["an EU visitor who refused everything", { analytics: false, marketing: false }],
-  ])("%s sends the subject alone, which the backend needs to record the refusal", (_case, consent) => {
-    expect(body(jar({ _fbc: "fb.1.1.2" }), consent)).toEqual({ consent_subject_id: SID });
+  ])("%s sends the subject and the basis alone, which the backend needs to record the refusal", (_case, consent) => {
+    expect(body(jar({ _fbc: "fb.1.1.2" }), consent)).toEqual({
+      consent_subject_id: SID,
+      basis: US_BASIS,
+    });
   });
 
-  test("a visitor with no subject and no carriers sends an empty body", () => {
-    expect(body("NEXT_LOCALE=fr")).toEqual({});
+  test("a visitor with no subject and no carriers still sends the basis", () => {
+    expect(body("NEXT_LOCALE=fr")).toEqual({ basis: US_BASIS });
+  });
+});
+
+describe("the basis: the regime the call was made under", () => {
+  test.each([
+    ["a US visitor", "US", { cr: "opt-out", p: POLICY_MATRIX.version, g: "US" }],
+    ["a visitor in the EEA, UK or Switzerland", "FR", { cr: "opt-in", p: POLICY_MATRIX.version, g: "EEA_UK_CH" }],
+    ["a visitor we cannot place", null, { cr: "opt-in", p: POLICY_MATRIX.version, g: "UNKNOWN" }],
+  ])("%s", (_case, country, basis) => {
+    const row = { US, FR: EU }[country ?? ""] ?? UNKNOWN;
+    expect(signupBasis(row)).toEqual(basis);
+  });
+
+  test("goes out whatever else is left out, whichever the regime", () => {
+    for (const row of [US, EU, UNKNOWN]) {
+      const basis = signupBasis(row);
+      const sent = body("", { analytics: false, marketing: false }, null, basis);
+      expect(sent).toEqual({ basis });
+    }
   });
 });
 
@@ -225,7 +254,77 @@ describe("recordAccountSignup", () => {
     recordAccountSignup(ready());
     await flush();
 
-    expect(browser!.fetches[0].body).toEqual({ consent_subject_id: SID });
+    expect(browser!.fetches[0].body).toEqual({ consent_subject_id: SID, basis: US_BASIS });
+  });
+
+  describe("carries the basis in force at the moment of the call", () => {
+    const consentCookie = (choice: object) =>
+      encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, t: LANDED, s: SID, ...choice }));
+
+    test.each([
+      [
+        "a US visitor who never touched the notice",
+        { timezone: "America/New_York" },
+        { cr: "opt-out", p: POLICY_MATRIX.version, g: "US" },
+      ],
+      [
+        "a European visitor who accepted",
+        {
+          timezone: "Europe/Paris",
+          cookie: jar({ [CONSENT_COOKIE]: consentCookie({ a: 1, m: 1, r: "opt-in", p: 1, g: "EEA_UK_CH" }) }),
+        },
+        { cr: "opt-in", p: POLICY_MATRIX.version, g: "EEA_UK_CH" },
+      ],
+      [
+        "a US visitor under GPC",
+        { timezone: "America/New_York", gpc: true },
+        { cr: "opt-out", p: POLICY_MATRIX.version, g: "US" },
+      ],
+      [
+        "a visitor whose timezone we do not map",
+        { timezone: "Antarctica/Troll" },
+        { cr: "opt-in", p: POLICY_MATRIX.version, g: "UNKNOWN" },
+      ],
+      [
+        "a visitor whose browser refuses Intl",
+        { timezone: null },
+        { cr: "opt-in", p: POLICY_MATRIX.version, g: "UNKNOWN" },
+      ],
+    ])("%s", async (_case, options, basis) => {
+      browser = installFakeBrowser({ cookie: jar(), ...options } as Parameters<typeof installFakeBrowser>[0]);
+
+      recordAccountSignup(ready());
+      await flush();
+
+      expect(browser.fetches[0].body.basis).toEqual(basis);
+    });
+
+    test("a GPC visitor sends the basis with every carrier and identifier left out", async () => {
+      visit({ gpc: true });
+
+      recordAccountSignup(ready());
+      await flush();
+
+      const sent = browser!.fetches[0].body;
+      expect(sent).toEqual({ consent_subject_id: SID, basis: US_BASIS });
+      expect(sent).not.toHaveProperty("ad_attribution_v2");
+      expect(sent).not.toHaveProperty("live");
+    });
+
+    test("a European visitor who accepted sends the carriers and identifiers as well", async () => {
+      browser = installFakeBrowser({
+        cookie: jar({ [CONSENT_COOKIE]: consentCookie({ a: 1, m: 1, r: "opt-in", p: 1, g: "EEA_UK_CH" }) }),
+        timezone: "Europe/Paris",
+      });
+
+      recordAccountSignup(ready());
+      await flush();
+
+      const sent = browser.fetches[0].body;
+      expect(sent.basis).toEqual({ cr: "opt-in", p: POLICY_MATRIX.version, g: "EEA_UK_CH" });
+      expect(Object.keys(sent.ad_attribution_v2 as object).sort()).toEqual(["ad", "ga", "src"]);
+      expect(sent).toHaveProperty("live");
+    });
   });
 
   test.each(["reject", "throw"] as const)("a request that fails (%s) is swallowed", async (fetch) => {
