@@ -33,6 +33,12 @@ import {
   serializeConsentCookie,
   type ConsentRecord,
 } from "./consent";
+import { SUBJECT as UUID } from "./privacy/__fixtures__/fake-browser";
+import { rowFor } from "./privacy/policy";
+import { restoreEnvAfterEach } from "./testing/restore-env";
+
+const EU = rowFor("FR");
+const US = rowFor("US");
 
 const GRANTED: ConsentRecord = {
   v: CONSENT_VERSION,
@@ -76,7 +82,7 @@ describe("consentRegimeForCountry", () => {
 
 describe("resolveConsent", () => {
   test("no choice in an opt-in region denies everything", () => {
-    expect(resolveConsent({ record: null, regime: "opt-in", gpc: false })).toEqual({
+    expect(resolveConsent({ record: null, prior: null, row: EU, gpc: false })).toEqual({
       analytics: false,
       marketing: false,
     });
@@ -85,7 +91,7 @@ describe("resolveConsent", () => {
   test("no choice in an opt-out region grants everything", () => {
     // The US default. Tags load on arrival; the notice tells them so and the
     // footer lets them opt out.
-    expect(resolveConsent({ record: null, regime: "opt-out", gpc: false })).toEqual({
+    expect(resolveConsent({ record: null, prior: null, row: US, gpc: false })).toEqual({
       analytics: true,
       marketing: true,
     });
@@ -94,8 +100,8 @@ describe("resolveConsent", () => {
   test("Global Privacy Control denies, in BOTH regimes", () => {
     // Twelve US states require honouring GPC automatically, with no banner and
     // no confirmation. In the EU it is a plain objection signal.
-    for (const regime of ["opt-in", "opt-out"] as const) {
-      expect(resolveConsent({ record: null, regime, gpc: true })).toEqual({
+    for (const row of [EU, US]) {
+      expect(resolveConsent({ record: null, prior: null, row, gpc: true })).toEqual({
         analytics: false,
         marketing: false,
       });
@@ -106,7 +112,7 @@ describe("resolveConsent", () => {
     // Someone who was sent GPC by their browser and then deliberately clicked
     // Accept has said the more specific thing. In the opt-out regime GPC wins
     // instead: see `consent-gpc.test.ts`.
-    expect(resolveConsent({ record: GRANTED, regime: "opt-in", gpc: true })).toEqual({
+    expect(resolveConsent({ record: GRANTED, prior: null, row: EU, gpc: true })).toEqual({
       analytics: true,
       marketing: true,
     });
@@ -114,7 +120,7 @@ describe("resolveConsent", () => {
 
   test("an explicit refusal survives an opt-out region", () => {
     // A US visitor who opted out must not be re-granted by the regime default.
-    expect(resolveConsent({ record: DENIED, regime: "opt-out", gpc: false })).toEqual({
+    expect(resolveConsent({ record: DENIED, prior: null, row: US, gpc: false })).toEqual({
       analytics: false,
       marketing: false,
     });
@@ -122,7 +128,7 @@ describe("resolveConsent", () => {
 
   test("the two categories are independent", () => {
     const mixed: ConsentRecord = { ...GRANTED, marketing: false };
-    expect(resolveConsent({ record: mixed, regime: "opt-in", gpc: false })).toEqual({
+    expect(resolveConsent({ record: mixed, prior: null, row: EU, gpc: false })).toEqual({
       analytics: true,
       marketing: false,
     });
@@ -130,32 +136,32 @@ describe("resolveConsent", () => {
 });
 
 describe("consentSurface", () => {
-  const base = { record: null, gpc: false, trackable: true } as const;
+  const base = { record: null, prior: null, gpc: false, trackable: true } as const;
 
   test("an opt-in visitor with no choice gets the banner", () => {
-    expect(consentSurface({ ...base, regime: "opt-in" })).toBe("banner");
+    expect(consentSurface({ ...base, row: EU })).toBe("banner");
   });
 
   test("an opt-out visitor with no choice gets the notice, not the banner", () => {
-    expect(consentSurface({ ...base, regime: "opt-out" })).toBe("notice");
+    expect(consentSurface({ ...base, row: US })).toBe("notice");
   });
 
   test("GPC silences the US notice entirely", () => {
     // They have already told us. Asking again would be noise, and the notice
     // says "we use cookies", which by then is no longer true for them.
-    expect(consentSurface({ ...base, regime: "opt-out", gpc: true })).toBe("none");
+    expect(consentSurface({ ...base, row: US, gpc: true })).toBe("none");
   });
 
   test("GPC does NOT silence the EU banner", () => {
     // Denied by default, but they may still want to opt in deliberately, and
     // under the ePrivacy rules the choice has to be offered.
-    expect(consentSurface({ ...base, regime: "opt-in", gpc: true })).toBe("banner");
+    expect(consentSurface({ ...base, row: EU, gpc: true })).toBe("banner");
   });
 
   test("a stored choice silences both surfaces", () => {
-    for (const regime of ["opt-in", "opt-out"] as const) {
-      expect(consentSurface({ ...base, record: DENIED, regime })).toBe("none");
-      expect(consentSurface({ ...base, record: GRANTED, regime })).toBe("none");
+    for (const row of [EU, US]) {
+      expect(consentSurface({ ...base, record: DENIED, row })).toBe("none");
+      expect(consentSurface({ ...base, record: GRANTED, row })).toBe("none");
     }
   });
 
@@ -163,8 +169,8 @@ describe("consentSurface", () => {
     // A business's QR enrollment page. No tag fires there, so there is nothing
     // to ask about, and the banner would be interrupting someone else's
     // customer mid-signup.
-    expect(consentSurface({ ...base, regime: "opt-in", trackable: false })).toBe("none");
-    expect(consentSurface({ ...base, regime: "opt-out", trackable: false })).toBe("none");
+    expect(consentSurface({ ...base, row: EU, trackable: false })).toBe("none");
+    expect(consentSurface({ ...base, row: US, trackable: false })).toBe("none");
   });
 });
 
@@ -477,7 +483,7 @@ describe("the event seam STA-318, STA-319 and STA-320 subscribe to", () => {
 describe("writeConsentRecord", () => {
   test("writes a cookie the site can read back", () => {
     const browser = installBrowser();
-    const record = writeConsentRecord({ analytics: true, marketing: false }, "opt-in");
+    const record = writeConsentRecord({ analytics: true, marketing: false }, EU);
 
     expect(browser.writes).toHaveLength(1);
     const cookie = browser.writes[0];
@@ -496,7 +502,7 @@ describe("writeConsentRecord", () => {
   test("stamps the moment of the click, not a fixed value", () => {
     installBrowser();
     const before = Math.floor(Date.now() / 1000);
-    const record = writeConsentRecord({ analytics: false, marketing: false }, "opt-out");
+    const record = writeConsentRecord({ analytics: false, marketing: false }, US);
     expect(record.at).toBeGreaterThanOrEqual(before);
     expect(record.regime).toBe("opt-out");
   });
@@ -539,7 +545,7 @@ describe("writeConsentRecord", () => {
    */
   function clearSessionFallback() {
     installBrowser();
-    writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    writeConsentRecord({ analytics: false, marketing: false }, EU);
     uninstallBrowser();
 
     installBrowser();
@@ -550,7 +556,7 @@ describe("writeConsentRecord", () => {
   test("a browser that refuses storage does not break the click", () => {
     // A thrown error inside the click handler would be a dead button.
     installUnwritableBrowser("throws");
-    expect(() => writeConsentRecord({ analytics: false, marketing: false }, "opt-in")).not.toThrow();
+    expect(() => writeConsentRecord({ analytics: false, marketing: false }, EU)).not.toThrow();
     clearSessionFallback();
   });
 
@@ -561,7 +567,7 @@ describe("writeConsentRecord", () => {
     // a refusal that cannot be stored resolves straight back to granted.
     installUnwritableBrowser("throws");
 
-    writeConsentRecord({ analytics: false, marketing: false }, "opt-out");
+    writeConsentRecord({ analytics: false, marketing: false }, US);
 
     expect(readConsentRecord()).toMatchObject({ analytics: false, marketing: false });
     expect(hasAnalyticsConsent()).toBe(false);
@@ -575,7 +581,7 @@ describe("writeConsentRecord", () => {
     // by trusting that no exception was raised.
     installUnwritableBrowser("silent");
 
-    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    writeConsentRecord({ analytics: true, marketing: true }, EU);
 
     expect(readConsentRecord()).toMatchObject({ analytics: true, marketing: true });
     clearSessionFallback();
@@ -585,7 +591,7 @@ describe("writeConsentRecord", () => {
     // The fallback must never shadow a choice made in another tab. It exists
     // only while the cookie cannot be written, and clears as soon as one can.
     installUnwritableBrowser("throws");
-    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    writeConsentRecord({ analytics: true, marketing: true }, EU);
     uninstallBrowser();
 
     const browser = installBrowser();
@@ -596,20 +602,13 @@ describe("writeConsentRecord", () => {
   });
 
   test("off the browser it records nothing and still returns the record", () => {
-    const record = writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    const record = writeConsentRecord({ analytics: true, marketing: true }, EU);
     expect(record.v).toBe(CONSENT_VERSION);
   });
 });
 
 describe("consentCookieAttributes: the two fields that decide where the cookie works", () => {
-  const originalEnv = process.env.NODE_ENV;
-  const originalDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
-
-  afterEach(() => {
-    process.env.NODE_ENV = originalEnv;
-    if (originalDomain === undefined) delete process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
-    else process.env.NEXT_PUBLIC_COOKIE_DOMAIN = originalDomain;
-  });
+  restoreEnvAfterEach("NODE_ENV", "NEXT_PUBLIC_COOKIE_DOMAIN");
 
   test("carries the configured domain, so the dashboard can read the same choice", () => {
     // Shared with lib/last-login.ts. Without a Domain the cookie is host-only,
@@ -767,59 +766,33 @@ describe("consentSnapshotKey", () => {
    * The identity `useConsent`'s snapshot cache lives on. Two rules, pulling in
    * opposite directions, and both load-bearing:
    *
-   * - The key must CHANGE whenever the stored record meaningfully changes —
-   *   the review found it built from the two booleans alone, so a re-decision
-   *   keeping the same answers served the STALE record object, and
-   *   `AttributionCapture` stamped the older `consentAt` as evidence.
+   * - The key must CHANGE whenever anything the snapshot exposes changes: a
+   *   re-decision that keeps the same answers still serves the fresher record,
+   *   so its timestamp is the evidence `AttributionCapture` stamps.
    * - The key must NOT change otherwise: `useSyncExternalStore` compares
    *   snapshots by identity, and a key that varies per call is a render loop.
    */
-  const INPUT = { record: GRANTED, regime: "opt-in" as const, gpc: false };
+  const INPUT = { record: GRANTED, prior: null, gpc: false, row: "EEA_UK_CH", ready: true };
 
-  test("the same facts produce the same key — snapshot stability", () => {
+  test("the same facts produce the same key", () => {
     expect(consentSnapshotKey(INPUT)).toBe(
       consentSnapshotKey({ ...INPUT, record: { ...GRANTED } }),
     );
   });
 
-  test("a re-decision with the same booleans still changes the key", () => {
-    // Same answers, clicked again later: `at` moved, and the fresher record
-    // must be served or its timestamp is lost as evidence.
-    expect(consentSnapshotKey(INPUT)).not.toBe(
-      consentSnapshotKey({ ...INPUT, record: { ...GRANTED, at: GRANTED.at + 60 } }),
-    );
-  });
-
-  test("a version bump changes the key", () => {
-    expect(consentSnapshotKey(INPUT)).not.toBe(
-      consentSnapshotKey({ ...INPUT, record: { ...GRANTED, v: CONSENT_VERSION + 1 } }),
-    );
-  });
-
-  test("a subject id appearing changes the key", () => {
-    expect(consentSnapshotKey(INPUT)).not.toBe(
-      consentSnapshotKey({
-        ...INPUT,
-        record: { ...GRANTED, subjectId: "0f1e2d3c-4b5a-4978-89ab-cdef01234567" },
-      }),
-    );
-  });
-
-  test("the booleans still change the key", () => {
-    expect(consentSnapshotKey(INPUT)).not.toBe(
-      consentSnapshotKey({ ...INPUT, record: DENIED }),
-    );
-  });
-
-  test("no record, regime and gpc are all part of the identity", () => {
-    const none = consentSnapshotKey({ record: null, regime: "opt-in", gpc: false });
-    expect(none).not.toBe(consentSnapshotKey(INPUT));
-    expect(none).not.toBe(
-      consentSnapshotKey({ record: null, regime: "opt-out", gpc: false }),
-    );
-    expect(none).not.toBe(
-      consentSnapshotKey({ record: null, regime: "opt-in", gpc: true }),
-    );
+  test.each([
+    ["a re-decision with the same answers, clicked later", { record: { ...GRANTED, at: GRANTED.at + 60 } }],
+    ["a version bump", { record: { ...GRANTED, v: CONSENT_VERSION + 1 } }],
+    ["a subject id appearing", { record: { ...GRANTED, subjectId: "0f1e2d3c-4b5a-4978-89ab-cdef01234567" } }],
+    ["the answers", { record: DENIED }],
+    ["the policy version of the record", { record: { ...GRANTED, policyVersion: 2 } }],
+    ["the row of the record", { record: { ...GRANTED, regionRow: "UNKNOWN" } }],
+    ["no record at all", { record: null }],
+    ["GPC", { gpc: true }],
+    ["the live row", { row: "US" }],
+    ["readiness", { ready: false }],
+  ])("%s changes it", (_case, change) => {
+    expect(consentSnapshotKey({ ...INPUT, ...change })).not.toBe(consentSnapshotKey(INPUT));
   });
 });
 
@@ -912,11 +885,9 @@ describe("the attribution carrier is revocable (STA-323)", () => {
  * ====================================================================== */
 
 describe("the consent subject id", () => {
-  const UUID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
-
   test("a written record carries a subject id", () => {
     installBrowser();
-    writeConsentRecord({ analytics: true, marketing: false }, "opt-in");
+    writeConsentRecord({ analytics: true, marketing: false }, EU);
 
     const stored = readSubjectId(document.cookie);
     expect(stored).toMatch(
@@ -928,10 +899,10 @@ describe("the consent subject id", () => {
     // Two decisions by one person have to be joinable, or the ledger cannot
     // show that a refusal replaced an acceptance.
     installBrowser();
-    writeConsentRecord({ analytics: true, marketing: true }, "opt-in");
+    writeConsentRecord({ analytics: true, marketing: true }, EU);
     const first = readSubjectId(document.cookie);
 
-    writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    writeConsentRecord({ analytics: false, marketing: false }, EU);
     const second = readSubjectId(document.cookie);
 
     expect(first).not.toBeNull();

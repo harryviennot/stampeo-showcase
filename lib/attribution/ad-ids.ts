@@ -15,6 +15,7 @@ import {
   requiredText,
   total,
 } from "./codec";
+import { AD_COOKIE } from "./cookie-names";
 import { evidenceFields, readEvidence, type ConsentEvidence } from "./evidence";
 import { readClickIds, type ClickIds, type LandingContext } from "./landing";
 
@@ -29,8 +30,6 @@ import { readClickIds, type ClickIds, type LandingContext } from "./landing";
  *   fbp     Meta's browser id, once the pixel has written it
  *   cv cr ca p g  the consent evidence (see `evidence.ts`)
  */
-
-export const AD_COOKIE = "stampeo_ad";
 
 const VENDORS = ["meta", "google", "tiktok"] as const;
 export type AdVendor = (typeof VENDORS)[number];

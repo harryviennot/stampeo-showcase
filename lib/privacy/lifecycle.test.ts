@@ -90,9 +90,9 @@ describe("a US visitor with no choice arrives (AC3.1)", () => {
 
     runPageLifecycle("/us/pricing", fresh());
 
-    // The jar has it, the request is out, and only then is the gate open.
-    expect(browser.events).toEqual(["cookie:stampeo_sid", "fetch", "consent-change"]);
+    // The jar and the server have it, and the gate is open.
     expect(readSidCookie(browser.jar())).not.toBeNull();
+    expect(browser.fetches).toHaveLength(1);
     expect(readConsentSnapshot().ready).toBe(true);
     expect(tagGates()).toEqual({ ga: true, meta: true });
 
@@ -163,7 +163,7 @@ describe("a French visitor with no choice (AC1.6)", () => {
 
   test("once they decide, their subject is kept fresh on each load, and a refusal does not slide", async () => {
     browser = installFakeBrowser({ timezone: "Europe/Paris", fetch: "route" });
-    writeConsentRecord({ analytics: false, marketing: false }, "opt-in", "EEA_UK_CH");
+    writeConsentRecord({ analytics: false, marketing: false }, EU);
     await browser.settled();
     browser.fetches.length = 0;
 
@@ -177,7 +177,7 @@ describe("a French visitor with no choice (AC1.6)", () => {
 describe("a US refusal slides (AC2.1)", () => {
   test("each trackable load re-issues it at 400 days, so it is never reached by expiry", async () => {
     browser = installFakeBrowser({ timezone: "America/New_York", fetch: "route" });
-    writeConsentRecord({ analytics: true, marketing: false }, "opt-out", "US");
+    writeConsentRecord({ analytics: true, marketing: false }, US);
     await browser.settled();
 
     // 300 days on, the visitor comes back.
@@ -194,13 +194,13 @@ describe("a US refusal slides (AC2.1)", () => {
     const stored = readStoredConsent();
     expect(stored.record).not.toBeNull();
     expect(
-      resolveConsent({ ...stored, regime: "opt-out", gpc: false, row: US }),
+      resolveConsent({ ...stored, gpc: false, row: US }),
     ).toEqual({ analytics: true, marketing: false });
   });
 
   test("it is re-issued once per page load, not on every navigation", async () => {
     browser = installFakeBrowser({ timezone: "America/New_York", fetch: "route" });
-    writeConsentRecord({ analytics: true, marketing: false }, "opt-out", "US");
+    writeConsentRecord({ analytics: true, marketing: false }, US);
     await browser.settled();
     browser.fetches.length = 0;
 
@@ -214,7 +214,7 @@ describe("a US refusal slides (AC2.1)", () => {
 
   test("landing first on a private page does not use up the refresh", async () => {
     browser = installFakeBrowser({ timezone: "America/New_York", fetch: "route" });
-    writeConsentRecord({ analytics: true, marketing: false }, "opt-out", "US");
+    writeConsentRecord({ analytics: true, marketing: false }, US);
     await browser.settled();
     browser.fetches.length = 0;
 

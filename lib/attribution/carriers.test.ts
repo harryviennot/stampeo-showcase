@@ -19,8 +19,9 @@ import { describe, expect, test } from "bun:test";
 
 import { CONSENT_VERSION } from "../consent";
 import { serializeSetCookie } from "../privacy/cookies";
+import { restoreEnvAfterEach } from "../testing/restore-env";
+import { LANDED, META_URL, landing } from "./__fixtures__/visitors";
 import {
-  AD_COOKIE,
   buildAdCarrier,
   paidClick,
   parseAdCarrier,
@@ -29,18 +30,17 @@ import {
   serializeAdCarrier,
   adCookieFor,
 } from "./ad-ids";
+import { AD_COOKIE, GA_COOKIE, SOURCE_COOKIE } from "./cookie-names";
 import type { ConsentEvidence } from "./evidence";
 import {
-  GA_COOKIE,
   buildGaCarrier,
   gaCookieFor,
   parseGaCarrier,
   parseGaCookie,
   serializeGaCarrier,
 } from "./ga-ids";
-import { landingFromUrl, readClickIds } from "./landing";
+import { readClickIds } from "./landing";
 import {
-  SOURCE_COOKIE,
   buildSourceCarrier,
   parseSourceCarrier,
   parseSourceCookie,
@@ -49,16 +49,7 @@ import {
 } from "./source";
 
 const EVIDENCE: ConsentEvidence = { cv: CONSENT_VERSION, cr: "opt-out", ca: 0, p: 1, g: "US" };
-const LANDED = 1_791_244_800;
-const URL_META =
-  "https://stampeo.app/us?fbclid=IwAR_TEST_fbclid_0001&utm_source=meta&utm_medium=paid_social&utm_campaign=us-cr-broad&utm_content=ugc-cafe-15s&utm_term=us-broad";
-
-const landing = (url: string, extras: { referrer?: string; variant?: string | null } = {}) =>
-  landingFromUrl(url, {
-    referrer: extras.referrer ?? "https://l.facebook.com/",
-    variant: extras.variant ?? null,
-    landedAt: LANDED,
-  });
+const URL_META = META_URL;
 
 const source = () => buildSourceCarrier({ landing: landing(URL_META), evidence: EVIDENCE });
 const ga = () =>
@@ -112,6 +103,8 @@ const wire = (serialized: string): Record<string, unknown> =>
 const encode = (value: unknown) => encodeURIComponent(JSON.stringify(value));
 
 describe.each(CARRIERS)("$name", (carrier) => {
+  restoreEnvAfterEach("NEXT_PUBLIC_COOKIE_DOMAIN");
+
   test("is written with the contract's field names, and nothing else", () => {
     expect(Object.keys(wire(carrier.serialize(carrier.make() as never)))).toEqual([
       ...carrier.keys,
@@ -186,37 +179,26 @@ describe.each(CARRIERS)("$name", (carrier) => {
   });
 
   test("is set with the shared scope: parent domain, root path, Lax, six months", () => {
-    const previous = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
     process.env.NEXT_PUBLIC_COOKIE_DOMAIN = ".stampeo.app";
-    try {
-      const cookie = carrier.cookieFor(carrier.make());
-      expect(cookie).toMatchObject({
-        name: carrier.name,
-        path: "/",
-        sameSite: "lax",
-        domain: ".stampeo.app",
-        maxAge: 60 * 60 * 24 * 182,
-      });
-      const header = serializeSetCookie(cookie!);
-      expect(header).toContain(`${carrier.name}=`);
-      expect(header).toContain("; Domain=.stampeo.app");
-      expect(header).toContain("; Path=/");
-      expect(header).toContain("; SameSite=Lax");
-      expect(header).toContain(`; Max-Age=${60 * 60 * 24 * 182}`);
-    } finally {
-      if (previous === undefined) delete process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
-      else process.env.NEXT_PUBLIC_COOKIE_DOMAIN = previous;
-    }
+    const cookie = carrier.cookieFor(carrier.make());
+    expect(cookie).toMatchObject({
+      name: carrier.name,
+      path: "/",
+      sameSite: "lax",
+      domain: ".stampeo.app",
+      maxAge: 60 * 60 * 24 * 182,
+    });
+    const header = serializeSetCookie(cookie!);
+    expect(header).toContain(`${carrier.name}=`);
+    expect(header).toContain("; Domain=.stampeo.app");
+    expect(header).toContain("; Path=/");
+    expect(header).toContain("; SameSite=Lax");
+    expect(header).toContain(`; Max-Age=${60 * 60 * 24 * 182}`);
   });
 
   test("with no cookie domain configured the attribute is left off", () => {
-    const previous = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
     delete process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
-    try {
-      expect(carrier.cookieFor(carrier.make())!.domain).toBeUndefined();
-    } finally {
-      if (previous !== undefined) process.env.NEXT_PUBLIC_COOKIE_DOMAIN = previous;
-    }
+    expect(carrier.cookieFor(carrier.make())!.domain).toBeUndefined();
   });
 
   test("a posted value is checked, and a bad one yields no cookie", () => {
@@ -248,7 +230,7 @@ describe("stampeo_src, from a landing", () => {
 
   test("an organic arrival keeps the landing and leaves the tags empty", () => {
     const organic = buildSourceCarrier({
-      landing: landing("https://stampeo.app/pricing", { referrer: "https://www.google.com/" }),
+      landing: landing("https://stampeo.app/pricing", "https://www.google.com/"),
       evidence: EVIDENCE,
     });
     expect(organic).toMatchObject({
@@ -262,7 +244,7 @@ describe("stampeo_src, from a landing", () => {
 
   test("our own host is not a referrer", () => {
     const own = buildSourceCarrier({
-      landing: landing("https://stampeo.app/pricing", { referrer: "https://stampeo.app/us" }),
+      landing: landing("https://stampeo.app/pricing", "https://stampeo.app/us"),
       evidence: EVIDENCE,
     });
     expect(own.rh).toBeNull();
@@ -270,7 +252,7 @@ describe("stampeo_src, from a landing", () => {
 
   test("the A/B variant that bought the visit travels with it", () => {
     expect(
-      buildSourceCarrier({ landing: landing(URL_META, { variant: "b" }), evidence: EVIDENCE }).lv,
+      buildSourceCarrier({ landing: landing(URL_META, undefined, "b"), evidence: EVIDENCE }).lv,
     ).toBe("b");
   });
 
@@ -278,7 +260,7 @@ describe("stampeo_src, from a landing", () => {
 
   test("an oversized field is shortened to 128 characters, never dropped", () => {
     const built = buildSourceCarrier({
-      landing: landing(`https://stampeo.app/us?utm_campaign=${HUGE}`, { variant: HUGE }),
+      landing: landing(`https://stampeo.app/us?utm_campaign=${HUGE}`, undefined, HUGE),
       evidence: EVIDENCE,
     });
     expect(built.uc).toHaveLength(128);
@@ -291,10 +273,11 @@ describe("stampeo_src, from a landing", () => {
       .map((tag) => `utm_${tag}=${HUGE}`)
       .join("&");
     const built = buildSourceCarrier({
-      landing: landing(`https://stampeo.app/us?${tags}`, {
-        variant: HUGE,
-        referrer: `https://${"y".repeat(200)}.example.com/`,
-      }),
+      landing: landing(
+        `https://stampeo.app/us?${tags}`,
+        `https://${"y".repeat(200)}.example.com/`,
+        HUGE,
+      ),
       evidence: EVIDENCE,
     });
     expect(serializeSourceCarrier(built).length).toBeLessThanOrEqual(2048);

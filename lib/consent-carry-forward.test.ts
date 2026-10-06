@@ -36,9 +36,10 @@ import { consentEvidence } from "./attribution/evidence";
 import { landingFromUrl } from "./attribution/landing";
 import { shouldLoadGa } from "./google-analytics";
 import { shouldLoadMetaPixel } from "./meta-pixel";
+import { SUBJECT } from "./privacy/__fixtures__/fake-browser";
+import { rowFor } from "./privacy/policy";
 
 const OLDER = CONSENT_VERSION - 1;
-const SUBJECT = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
 
 /** The cookie value a banner of version `v` wrote for this choice. */
 function storedChoice(v: unknown, a: 0 | 1, m: 0 | 1, r: ConsentRegime): string {
@@ -50,12 +51,12 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
   const header = `NEXT_LOCALE=en; ${CONSENT_COOKIE}=${cookieValue}`;
   const record = consentRecordFromCookieHeader(header);
   const prior = priorConsentFromCookieHeader(header);
-  const state = resolveConsent({ record, prior, regime, gpc });
-  const row = regime === "opt-out" ? "US" : "EEA_UK_CH";
-  const evidence = consentEvidence({ record, prior, regime, row });
+  const row = rowFor(regime === "opt-out" ? "US" : "FR");
+  const state = resolveConsent({ record, prior, gpc, row });
+  const evidence = consentEvidence({ record, prior, row: row.key });
   return {
     state,
-    surface: consentSurface({ record, prior, regime, gpc, trackable: true }),
+    surface: consentSurface({ record, prior, gpc, trackable: true, row }),
     metaLoads: shouldLoadMetaPixel({
       pixelId: "1088158323750710",
       marketing: state.marketing,
@@ -208,7 +209,7 @@ describe("parsePriorConsent", () => {
 test("an older record appearing, or its moment changing, changes the consent snapshot", () => {
   // The banner reads `prior` from the snapshot and the attribution capture
   // carries `prior.at` as evidence, so the snapshot must be rebuilt for both.
-  const base = { record: null, regime: "opt-out" as const, gpc: false };
+  const base = { record: null, gpc: false, row: "US", ready: true };
   const prior = { v: OLDER, analytics: false, marketing: false, at: 1_759_000_000 };
   const keys = [null, prior, { ...prior, at: prior.at + 60 }].map((p) =>
     consentSnapshotKey({ ...base, prior: p }),

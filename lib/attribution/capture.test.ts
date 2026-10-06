@@ -105,28 +105,10 @@ describe("a US visitor who has not chosen, landing on a Meta ad", () => {
       },
     });
   });
-
-  test("a US visitor under GPC has nothing written, whatever they landed on", () => {
-    const gpc = visitor(US, { gpc: true });
-    expect(gpc.consent).toEqual({ analytics: false, marketing: false });
-    expect(plan(gpc)).toEqual({ src: null, ga: null, ad: null });
-  });
-
-  test("a US visitor who refused advertising keeps the source and the GA ids, without the click", () => {
-    const refuser = visitor(US, { record: chose(true, false, "opt-out") });
-    const written = plan(refuser);
-
-    expect(written.src).not.toBeNull();
-    expect(written.ga).not.toBeNull();
-    expect(written.ad).toBeNull();
-    // The click id and Meta's browser id are the advertising category's.
-    expect(JSON.stringify(written)).not.toContain("IwAR_TEST_fbclid_0001");
-    expect(JSON.stringify(written)).not.toContain(FBP);
-  });
 });
 
-describe("a European visitor", () => {
-  test("who accepted everything is written under the choice they made", () => {
+describe("a European visitor who accepted everything", () => {
+  test("is written under the choice they made", () => {
     const acceptor = visitor(EU, { record: chose(true, true, "opt-in", 1_791_240_000) });
     const written = plan(acceptor);
 
@@ -141,39 +123,24 @@ describe("a European visitor", () => {
     }
     expect(written.ad).toMatchObject({ vn: "meta", ci: "IwAR_TEST_fbclid_0001", fbp: FBP });
   });
+});
 
-  test("who refused only marketing carries the source and GA ids, and no part of the click", () => {
-    const refuser = visitor(EU, { record: chose(true, false, "opt-in") });
-    const written = plan(refuser);
+describe("what each visitor's choice lets the capture write, on a Meta ad landing", () => {
+  const CLICK = "IwAR_TEST_fbclid_0001";
 
-    expect(written.src).toMatchObject({ us: "meta", lp: "/us" });
-    expect(written.ga).toMatchObject({ cid: GA_CID });
-    expect(written.ad).toBeNull();
-    expect(JSON.stringify(written)).not.toContain("IwAR_TEST_fbclid_0001");
-    expect(JSON.stringify(written)).not.toContain(FBP);
-  });
+  test.each([
+    ["a US visitor under GPC", US, { gpc: true }, [], []],
+    ["a US visitor who refused advertising", US, { record: chose(true, false, "opt-out") }, ["src", "ga"], [CLICK, FBP]],
+    ["a European who refused only marketing", EU, { record: chose(true, false, "opt-in") }, ["src", "ga"], [CLICK, FBP]],
+    ["a European who accepted only marketing", EU, { record: chose(false, true, "opt-in") }, ["src", "ad"], [GA_CID]],
+    ["a European who has not chosen", EU, {}, [], []],
+    ["a visitor we cannot place who has not chosen", UNKNOWN, {}, [], []],
+    ["a European who refused everything", EU, { record: chose(false, false, "opt-in") }, [], []],
+  ] as const)("%s: carriers %j, and nothing of %j", (_case, row, options, carriers, absent) => {
+    const written = plan(visitor(row, options));
 
-  test("who accepted only marketing carries the click, and no GA ids", () => {
-    const marketingOnly = visitor(EU, { record: chose(false, true, "opt-in") });
-    const written = plan(marketingOnly);
-
-    expect(written.ad).toMatchObject({ vn: "meta", ci: "IwAR_TEST_fbclid_0001" });
-    expect(written.src).not.toBeNull();
-    expect(written.ga).toBeNull();
-    expect(JSON.stringify(written)).not.toContain(GA_CID);
-  });
-
-  test("who has not chosen has nothing written", () => {
-    expect(plan(visitor(EU))).toEqual({ src: null, ga: null, ad: null });
-    expect(plan(visitor(UNKNOWN))).toEqual({ src: null, ga: null, ad: null });
-  });
-
-  test("who refused everything has nothing written", () => {
-    expect(plan(visitor(EU, { record: chose(false, false, "opt-in") }))).toEqual({
-      src: null,
-      ga: null,
-      ad: null,
-    });
+    expect((["src", "ga", "ad"] as const).filter((name) => written[name] !== null)).toEqual([...carriers]);
+    for (const value of absent) expect(JSON.stringify(written)).not.toContain(value);
   });
 });
 
@@ -433,20 +400,20 @@ describe("the consent evidence a capture rests on", () => {
     // Nobody clicked: the version is the notice text shown, with no moment.
     ["a visitor under the notice default carries the text in force and no moment", null, null, { cv: CONSENT_VERSION, ca: 0 }],
   ])("%s", (_case, record, prior, expected) => {
-    expect(consentEvidence({ record, prior, regime: "opt-out", row })).toEqual({
+    expect(consentEvidence({ record, prior, row })).toEqual({
       ...expected,
-      cr: "opt-out",
+      cr: "opt-in",
       p: POLICY_MATRIX.version,
       g: "EEA_UK_CH",
     });
   });
 
   test("an older choice with no moment is no evidence", () => {
-    expect(consentEvidence({ record: null, prior: { ...OLDER, at: 0 }, regime: "opt-out", row })).toBeNull();
+    expect(consentEvidence({ record: null, prior: { ...OLDER, at: 0 }, row })).toBeNull();
   });
 
   test("a row we do not know is recorded as the strict one", () => {
-    expect(consentEvidence({ record: null, prior: null, regime: "opt-in", row: "MARS" })?.g).toBe("UNKNOWN");
+    expect(consentEvidence({ record: null, prior: null, row: "MARS" })?.g).toBe("UNKNOWN");
   });
 
   describe("a US visitor who refused advertising under version 2 and kept analytics", () => {
@@ -455,8 +422,8 @@ describe("the consent evidence a capture rests on", () => {
       const header = `NEXT_LOCALE=en; ${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(choice))}`;
       const record = consentRecordFromCookieHeader(header);
       const prior = priorConsentFromCookieHeader(header);
-      const consent = resolveConsent({ record, prior, regime: "opt-out", gpc: false, row: US });
-      const evidence = consentEvidence({ record, prior, regime: "opt-out", row: "US" });
+      const consent = resolveConsent({ record, prior, gpc: false, row: US });
+      const evidence = consentEvidence({ record, prior, row: "US" });
       return {
         consent,
         written: evidence && planCapture({

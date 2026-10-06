@@ -39,12 +39,8 @@ ARG NEXT_PUBLIC_META_PIXEL_ID
 # visitor's ANALYTICS consent (lib/consent.ts) and a trackable route
 # (lib/consent-routes.ts) are also required. Production value: G-ZFZ6JLPFXN
 ARG NEXT_PUBLIC_GA_MEASUREMENT_ID
-# Production is this Dockerfile's only consumer, so the public analytics ids are
-# required: the build fails before and after `next build` if the pixel id, the GA
-# id, the cookie domain or the two public URLs are missing or malformed
-# (scripts/analytics-ids.mjs). To build without them on purpose, pass
-# `--build-arg REQUIRE_ANALYTICS_IDS=0`. Every NEXT_PUBLIC_* value is baked into
-# the bundle here, so changing one means a rebuild and a redeploy.
+# The build fails if the public ids, the cookie domain or a public URL are missing or
+# malformed, and after `next build` if the bundle lacks the ids. `--build-arg REQUIRE_ANALYTICS_IDS=0` skips both.
 ARG REQUIRE_ANALYTICS_IDS=1
 
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL

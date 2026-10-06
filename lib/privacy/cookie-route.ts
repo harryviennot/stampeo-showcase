@@ -1,9 +1,14 @@
 import { adCookieFor } from "../attribution/ad-ids";
+import {
+  AD_COOKIE,
+  GA_COOKIE,
+  LEGACY_ATTRIBUTION_COOKIE,
+  SOURCE_COOKIE,
+} from "../attribution/cookie-names";
 import { gaCookieFor } from "../attribution/ga-ids";
 import { sourceCookieFor } from "../attribution/source";
 import { consentCookieAttributes, consentFromObject } from "../consent";
 import { buildCookie, serializeSetCookie, type CookieAttributes } from "./cookies";
-import { rowByKey, rowForRegime } from "./policy";
 import { mintSubjectId, readSidCookie, sidCookieAttributes } from "./subject";
 
 /**
@@ -22,10 +27,10 @@ export const MAX_BODY_BYTES = 8 * 1024;
 
 /** The carriers a request may set, which it may also ask to be cleared. */
 const CLEARABLE_COOKIES: ReadonlySet<string> = new Set([
-  "stampeo_src",
-  "stampeo_ga",
-  "stampeo_ad",
-  "stampeo_attribution",
+  SOURCE_COOKIE,
+  GA_COOKIE,
+  AD_COOKIE,
+  LEGACY_ATTRIBUTION_COOKIE,
 ]);
 
 /** Turns a posted carrier value into the cookie to set, or null to drop it. */
@@ -144,8 +149,7 @@ export async function handlePrivacyCookies(
 
   if (record) {
     const stored = sid ? { ...record, subjectId: sid } : record;
-    const row = rowByKey(stored.regionRow) ?? rowForRegime(stored.regime);
-    setCookies.push(serializeSetCookie(consentCookieAttributes(stored, row)));
+    setCookies.push(serializeSetCookie(consentCookieAttributes(stored)));
   }
   if (sid) setCookies.push(serializeSetCookie(sidCookieAttributes(sid)));
 

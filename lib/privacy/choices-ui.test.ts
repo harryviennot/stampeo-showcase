@@ -85,11 +85,11 @@ describe("the preferences dialog by region", () => {
     expect(preferencesView(ROWS.US, false).order).toEqual(["marketing", "analytics", "necessary"]);
   });
 
-  test.each(["EEA_UK_CH", "UNKNOWN"])("a visitor in %s keeps today's order", (key) => {
+  test.each(["EEA_UK_CH", "UNKNOWN"])("a visitor in %s sees Strictly necessary first", (key) => {
     expect(preferencesView(ROWS[key], false).order).toEqual(["necessary", "analytics", "marketing"]);
   });
 
-  test("the EU dialog with no GPC is the dialog that shipped: no row, no lock, two actions", () => {
+  test("the EU dialog with no GPC has no status row, no lock and two actions", () => {
     expect(preferencesView(ROWS.EEA_UK_CH, false)).toMatchObject({
       variant: "eu",
       locked: [],

@@ -13,6 +13,7 @@ import { handlePrivacyCookies } from "../cookie-route";
 
 export const SITE = "https://stampeo.app";
 export const SUBJECT = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
+export const OTHER_SUBJECT = "9b2f0d6e-1c3a-4e5b-8a7d-0f1e2d3c4b5a";
 const DAY = 86_400;
 
 export interface FetchCall {

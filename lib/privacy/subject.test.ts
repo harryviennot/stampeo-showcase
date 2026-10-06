@@ -11,8 +11,6 @@
  */
 
 import { afterEach, describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 
 import {
   CONSENT_COOKIE,
@@ -21,12 +19,19 @@ import {
   readSubjectId,
   writeConsentRecord,
 } from "../consent";
-import { installFakeBrowser, type FakeBrowser } from "./__fixtures__/fake-browser";
+import {
+  OTHER_SUBJECT as IN_RECORD,
+  SUBJECT as SID,
+  installFakeBrowser,
+  type FakeBrowser,
+} from "./__fixtures__/fake-browser";
+import { ctaClick } from "../cta/events";
+import { gaConfig } from "../google-analytics";
+import { metaEventForContactForm, metaEventForLink, viewContentCategory } from "../meta-pixel";
+import { rowFor } from "./policy";
 import { readSidCookie, validSubjectId } from "./subject";
 
 const V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-const SID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
-const IN_RECORD = "9b2f0d6e-1c3a-4e5b-8a7d-0f1e2d3c4b5a";
 
 let browser: FakeBrowser | null = null;
 afterEach(() => {
@@ -115,7 +120,7 @@ describe("a consent-version bump leaves the subject alone (AC3.5)", () => {
       cookie: `stampeo_sid=${SID}; ${consentCookie(CONSENT_VERSION - 1, SID)}`,
     });
 
-    const record = writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    const record = writeConsentRecord({ analytics: false, marketing: false }, rowFor("FR"));
 
     expect(record.subjectId).toBe(SID);
     expect(browser.jar()).toContain(`stampeo_sid=${SID}`);
@@ -123,22 +128,23 @@ describe("a consent-version bump leaves the subject alone (AC3.5)", () => {
 });
 
 describe("the subject never reaches GA4 or Meta (AC3.1)", () => {
-  const SOURCES = ["lib/meta-pixel.ts", "lib/google-analytics.ts"];
-  const root = join(import.meta.dir, "..", "..");
+  test("a visitor who carries one sends neither vendor anything that holds it", () => {
+    browser = installFakeBrowser({ cookie: `stampeo_sid=${SID}; ${consentCookie(CONSENT_VERSION, SID)}` });
+    const clicks = [
+      { ctaLocation: "header", href: "/onboarding", pathname: "/pricing", locale: "en" },
+      { ctaLocation: "header", href: "/contact", pathname: "/pricing", locale: "en" },
+    ] as const;
 
-  test.each(SOURCES)("%s neither reads nor mentions it", (file) => {
-    const source = readFileSync(join(root, file), "utf8");
+    const sent = JSON.stringify([
+      clicks.map((click) => ctaClick(click)),
+      gaConfig("?debug_mode=1"),
+      metaEventForLink("mailto:hello@stampeo.app"),
+      metaEventForContactForm(200),
+      viewContentCategory("/pricing"),
+    ]);
 
-    for (const identifier of [
-      "stampeo_sid",
-      "SID_COOKIE",
-      "readSid",
-      "ensureSubjectId",
-      "subjectId",
-      "subject_id",
-      "privacy/subject",
-    ]) {
-      expect(source).not.toContain(identifier);
-    }
+    expect(sent).toContain("sign_up_cta_click");
+    expect(sent).not.toContain(SID);
+    expect(sent).not.toContain("stampeo_sid");
   });
 });

@@ -13,6 +13,7 @@ import {
   requiredText,
   total,
 } from "./codec";
+import { SOURCE_COOKIE } from "./cookie-names";
 import { evidenceFields, readEvidence, type ConsentEvidence } from "./evidence";
 import { readUtm, referrerHost, type LandingContext } from "./landing";
 
@@ -26,8 +27,6 @@ import { readUtm, referrerHost, type LandingContext } from "./landing";
  *   at              Unix seconds, when the landing page loaded
  *   cv cr ca p g    the consent evidence (see `evidence.ts`)
  */
-
-export const SOURCE_COOKIE = "stampeo_src";
 
 export interface SourceCarrier extends ConsentEvidence {
   v: typeof CARRIER_VERSION;

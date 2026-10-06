@@ -13,10 +13,6 @@ import { describe, expect, test } from "bun:test";
 import { ctaClick, trackThen } from "./events";
 import { CONTACT_CTAS, SIGNUP_CTAS } from "./taxonomy";
 
-// Meta hears a signup click as the custom SignupCTA, never as a Lead (the Lead
-// is the server's, sent once the account is confirmed). A click that only
-// navigates to the contact page is silent there: a Contact is a form that was
-// sent, or an email, phone or WhatsApp link that was followed.
 const SIGNUP = {
   posthog: "landing_cta_clicked",
   ga: "sign_up_cta_click",

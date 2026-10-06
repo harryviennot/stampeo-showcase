@@ -75,12 +75,7 @@ export function GoogleIcon({ className = "w-5 h-5" }: IconProps) {
   );
 }
 
-/**
- * The California privacy-options mark. Official artwork, served unmodified from
- * `public/icons/privacy-options.svg` with its own fixed colours, so it is an
- * <img> and ignores `currentColor`. The text beside it is the accessible name.
- * Renders nothing if the file cannot load, rather than a broken image.
- */
+/** The California privacy-options mark, served unmodified from `public/icons/privacy-options.svg`. */
 export function PrivacyChoicesIcon({ className = "h-3.5 w-auto" }: IconProps) {
   const [missing, setMissing] = useState(false);
   if (missing) return null;

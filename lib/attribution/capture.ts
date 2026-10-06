@@ -2,7 +2,6 @@ import type { ConsentState } from "../consent";
 import { isTrackablePath } from "../consent-routes";
 import { serializeSetCookie, syncPrivacyCookies } from "../privacy/cookies";
 import {
-  AD_COOKIE,
   buildAdCarrier,
   paidClick,
   parseAdCookie,
@@ -11,9 +10,9 @@ import {
   type AdCarrier,
 } from "./ad-ids";
 import { carrierCookie, cookieValue, decodeCarrier } from "./codec";
+import { AD_COOKIE, GA_COOKIE, SOURCE_COOKIE } from "./cookie-names";
 import type { ConsentEvidence } from "./evidence";
 import {
-  GA_COOKIE,
   buildGaCarrier,
   parseGaCookie,
   readGaClientId,
@@ -24,7 +23,6 @@ import {
 } from "./ga-ids";
 import { readClickIds, type LandingContext } from "./landing";
 import {
-  SOURCE_COOKIE,
   buildSourceCarrier,
   parseSourceCookie,
   serializeSourceCarrier,

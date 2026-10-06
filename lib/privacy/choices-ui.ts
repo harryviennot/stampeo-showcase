@@ -4,8 +4,8 @@ import { POLICY_MATRIX, type PolicyMatrix, type PolicyRow, type PolicySurface } 
 
 /**
  * What the privacy-choices surfaces show, decided from the visitor's policy
- * row. Pure, so the components only render the answers and no region is ever
- * named here: a new matrix row changes the UI without a code change.
+ * row. Pure, so the components only render the answers. A notice row gets the
+ * `us` dialog; any other row gets the `eu` one.
  */
 
 /** Message keys under `common`: the footer label, and the notice's button. */

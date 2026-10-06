@@ -5,7 +5,12 @@ import { useTranslations } from "next-intl";
 
 import { ShieldCheckIcon } from "@/components/icons";
 import type { ConsentState } from "@/lib/consent";
-import { applyLocks, preferencesView, type PreferencesView } from "@/lib/privacy/choices-ui";
+import {
+  PRIVACY_CHOICES_KEY,
+  applyLocks,
+  preferencesView,
+  type PreferencesView,
+} from "@/lib/privacy/choices-ui";
 import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
 import { PurposeCard } from "./PurposeCard";
 
@@ -29,7 +34,7 @@ const DEFAULT_VIEW = preferencesView(POLICY_MATRIX.rows[UNKNOWN_ROW_KEY], false)
  * `view` decides the region's version: the US dialog leads with Advertising,
  * explains Global Privacy Control, and shows a purpose it overrides as a fixed
  * "off" label. Without one it is the opt-in dialog. The action row stays in view
- * while the cards scroll, so a switch flipped out of sight is never unsaved.
+ * while the cards scroll, so Save is always in reach.
  */
 export function ConsentPreferences({
   open,
@@ -45,7 +50,7 @@ export function ConsentPreferences({
   onSave: (state: ConsentState) => void;
 }>) {
   const t = useTranslations("common.cookies.prefs");
-  const tFooter = useTranslations("common.footer");
+  const tCommon = useTranslations("common");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [draft, setDraft] = useState<ConsentState>(initial);
   const us = view.variant === "us";
@@ -86,7 +91,7 @@ export function ConsentPreferences({
         {t(`${scope}title`)}
       </h2>
       <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-        {t(`${scope}intro`, { months: view.months, choices: tFooter("privacyChoices") })}
+        {t(`${scope}intro`, { months: view.months, choices: tCommon(PRIVACY_CHOICES_KEY) })}
       </p>
 
       <div className="mt-5 flex flex-col gap-3">

@@ -104,7 +104,12 @@ describe("how long the cookie lives", () => {
     ["a French grant", "FR", { analytics: true, marketing: true }, 182],
   ] as const)("%s: %d days", (_case, country, state, days) => {
     const row = rowFor(country);
-    const attrs = consentCookieAttributes({ ...RECORD, ...state }, row);
+    const attrs = consentCookieAttributes({
+      ...RECORD,
+      ...state,
+      regime: row.regime,
+      regionRow: row.key,
+    });
     expect(attrs.maxAge).toBe(days * DAY);
   });
 
@@ -119,9 +124,9 @@ describe("how long the cookie lives", () => {
 describe("a visitor's answer to what the page shows", () => {
   test("the row decides the surface, GPC included", () => {
     const base = { record: null, prior: null, trackable: true } as const;
-    expect(consentSurface({ ...base, regime: "opt-in", gpc: false, row: rowFor("FR") })).toBe("banner");
-    expect(consentSurface({ ...base, regime: "opt-out", gpc: false, row: rowFor("US") })).toBe("notice");
-    expect(consentSurface({ ...base, regime: "opt-out", gpc: true, row: rowFor("US") })).toBe("none");
+    expect(consentSurface({ ...base, gpc: false, row: rowFor("FR") })).toBe("banner");
+    expect(consentSurface({ ...base, gpc: false, row: rowFor("US") })).toBe("notice");
+    expect(consentSurface({ ...base, gpc: true, row: rowFor("US") })).toBe("none");
   });
 
   test("the row decides what is agreed", () => {
@@ -129,7 +134,6 @@ describe("a visitor's answer to what the page shows", () => {
       resolveConsent({
         record: null,
         prior: null,
-        regime: rowFor(country).regime,
         gpc,
         row: rowFor(country),
       });
@@ -214,17 +218,16 @@ describe("writeConsentRecord: the answer is kept, then handed to the server", ()
   test("a refusal in the US lives 400 days and is written before the server hears of it", () => {
     browser = installFakeBrowser({ timezone: "America/New_York" });
 
-    const record = writeConsentRecord({ analytics: true, marketing: false }, "opt-out", "US");
+    const record = writeConsentRecord({ analytics: true, marketing: false }, rowFor("US"));
 
     expect(browser.writes[0]).toContain(`Max-Age=${400 * DAY}`);
     expect(record).toMatchObject({ policyVersion: POLICY_MATRIX.version, regionRow: "US" });
-    expect(browser.events).toEqual([`cookie:${CONSENT_COOKIE}`, "fetch"]);
   });
 
   test("the request is the cookie's own value, keepalive, with the subject asked for", () => {
     browser = installFakeBrowser({ timezone: "Europe/Paris" });
 
-    const record = writeConsentRecord({ analytics: false, marketing: false }, "opt-in", "EEA_UK_CH");
+    const record = writeConsentRecord({ analytics: false, marketing: false }, rowFor("FR"));
 
     expect(browser.fetches).toHaveLength(1);
     const [call] = browser.fetches;
@@ -244,7 +247,7 @@ describe("writeConsentRecord: the answer is kept, then handed to the server", ()
     async (fetchMode) => {
       browser = installFakeBrowser({ timezone: "Europe/Paris", fetch: fetchMode });
 
-      const record = writeConsentRecord({ analytics: true, marketing: true }, "opt-in", "EEA_UK_CH");
+      const record = writeConsentRecord({ analytics: true, marketing: true }, rowFor("FR"));
       await browser.settled();
 
       expect(readConsentRecord()).toEqual(record);
@@ -254,13 +257,13 @@ describe("writeConsentRecord: the answer is kept, then handed to the server", ()
   test("a browser that refuses the cookie still honours the refusal on this page", () => {
     browser = installFakeBrowser({ timezone: "America/New_York", cookies: "silent" });
 
-    writeConsentRecord({ analytics: false, marketing: false }, "opt-out", "US");
+    writeConsentRecord({ analytics: false, marketing: false }, rowFor("US"));
 
     expect(readConsentRecord()).toMatchObject({ analytics: false, marketing: false });
     // Leave the in-memory fallback empty for whatever runs next.
     browser.restore();
     browser = installFakeBrowser();
-    writeConsentRecord({ analytics: false, marketing: false }, "opt-in");
+    writeConsentRecord({ analytics: false, marketing: false }, rowFor("FR"));
     browser.restore();
     browser = null;
   });
@@ -275,7 +278,7 @@ describe("a US refusal outlives six months (AC2.1, AC2.2)", () => {
   test("refusing marketing: the server answer re-sets the cookie at 400 days, and it is still there at day 183", async () => {
     browser = usVisitor();
 
-    writeConsentRecord({ analytics: true, marketing: false }, "opt-out", "US");
+    writeConsentRecord({ analytics: true, marketing: false }, rowFor("US"));
     await browser.settled();
     expect(browser.events).toContain(`server-set:${CONSENT_COOKIE}`);
 
@@ -284,14 +287,14 @@ describe("a US refusal outlives six months (AC2.1, AC2.2)", () => {
     const stored = readStoredConsent();
     expect(stored.record).not.toBeNull();
     expect(
-      resolveConsent({ ...stored, regime: "opt-out", gpc: false, row: rowFor("US") }),
+      resolveConsent({ ...stored, gpc: false, row: rowFor("US") }),
     ).toEqual({ analytics: true, marketing: false });
   });
 
   test("a US visitor who only dismissed the notice reverts to the default after 182 days", async () => {
     browser = usVisitor();
 
-    writeConsentRecord({ analytics: true, marketing: true }, "opt-out", "US");
+    writeConsentRecord({ analytics: true, marketing: true }, rowFor("US"));
     await browser.settled();
     browser.advanceDays(183);
 

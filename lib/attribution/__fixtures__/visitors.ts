@@ -27,8 +27,8 @@ export const GA_CID = "1234567890.1700000000";
 export const META_URL =
   "https://stampeo.app/us?fbclid=IwAR_TEST_fbclid_0001&utm_source=meta&utm_medium=paid_social&utm_campaign=us-cr-broad&utm_content=ugc-cafe-15s&utm_term=us-broad";
 
-export const landing = (url: string, referrer = "https://l.facebook.com/") =>
-  landingFromUrl(url, { referrer, variant: null, landedAt: LANDED });
+export const landing = (url: string, referrer = "https://l.facebook.com/", variant: string | null = null) =>
+  landingFromUrl(url, { referrer, variant, landedAt: LANDED });
 
 export const META_LANDING = landing(META_URL);
 export const ORGANIC_LANDING = landing("https://stampeo.app/pricing", "https://www.google.com/");
@@ -58,8 +58,8 @@ export function visitor(
 ) {
   const { record = null, prior = null, gpc = false } = options;
   return {
-    consent: resolveConsent({ record, prior, regime: row.regime, gpc, row }),
-    evidence: consentEvidence({ record, prior, regime: row.regime, row: row.key })!,
+    consent: resolveConsent({ record, prior, gpc, row }),
+    evidence: consentEvidence({ record, prior, row: row.key })!,
   };
 }
 

@@ -17,16 +17,15 @@ import {
  * The policy resolver. Pure: every function takes what it needs and answers,
  * so none of it needs a browser.
  *
- * What a visitor is taken to have agreed to is decided in this order: an
- * untrackable route or sensitive data denies everything; the row (the stricter
- * of the server's country and the timezone's) supplies the rules; GPC then
- * overrides where the row says it does; then the stored choice; then the row's
- * default. Anything we cannot place is the UNKNOWN row, which is opt-in.
+ * What a visitor is taken to have agreed to is decided in this order: the row
+ * (the stricter of the server's country and the timezone's) supplies the rules;
+ * GPC then overrides where the row says it does; then the stored choice; then
+ * the row's default. Anything we cannot place is the UNKNOWN row, which is
+ * opt-in.
  */
 
 export const REGION_COOKIE = "stampeo_region";
 
-const DENIED: ConsentState = Object.freeze({ analytics: false, marketing: false });
 const DAY_SECONDS = 60 * 60 * 24;
 
 function normaliseCountry(value: unknown): string | null {
@@ -57,14 +56,22 @@ export function rowByKey(
   return Object.prototype.hasOwnProperty.call(matrix.rows, key) ? matrix.rows[key] : null;
 }
 
-/** The row to use for a stored regime when no row key was recorded. */
-export function rowForRegime(
+/** The row for a regime, for a stored choice that names none. */
+function rowForRegime(
   regime: PolicyRegime,
   matrix: PolicyMatrix = POLICY_MATRIX,
 ): PolicyRow {
   const unknown = matrix.rows[UNKNOWN_ROW_KEY];
   if (regime === "opt-in") return unknown;
   return Object.values(matrix.rows).find((row) => row.regime === regime) ?? unknown;
+}
+
+/** The row a stored choice was made under: the one it names, else the one for its regime. */
+export function recordRow(
+  record: { regime: PolicyRegime; regionRow?: string },
+  matrix: PolicyMatrix = POLICY_MATRIX,
+): PolicyRow {
+  return rowByKey(record.regionRow, matrix) ?? rowForRegime(record.regime, matrix);
 }
 
 /**
@@ -84,9 +91,9 @@ export function strictestRow(
 }
 
 /**
- * The country in a `stampeo_region` cookie, or null. Only our own middleware
- * writes it; a value that is not exactly `{"c":"XX","v":1}` is ignored, as is
- * a cookie whose name merely ends in ours.
+ * The country in a `stampeo_region` cookie, or null. Nothing writes it yet; a
+ * value that is not exactly `{"c":"XX","v":1}` is ignored, as is a cookie whose
+ * name merely ends in ours.
  */
 export function readServerRegion(cookieHeader: string | null | undefined): string | null {
   if (!cookieHeader) return null;
@@ -146,13 +153,9 @@ export function resolveWithPolicy(
     record: ConsentRecord | null;
     prior: PriorConsent | null;
     gpc: boolean;
-    sensitive?: boolean;
-    trackable?: boolean;
   },
   matrix: PolicyMatrix = POLICY_MATRIX,
 ): ConsentState {
-  if (input.sensitive || input.trackable === false) return { ...DENIED };
-
   const { row, record, prior, gpc } = input;
   const gpcDenied = gpcDeniedCategories(row, gpc, matrix);
   const decide = (category: ConsentCategory): boolean => {

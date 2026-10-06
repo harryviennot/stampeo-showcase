@@ -4,12 +4,11 @@ import {
   readStoredConsent,
   resolveConsent,
   type ConsentRecord,
-  type ConsentRegime,
   type ConsentState,
   type PriorConsent,
 } from "../consent";
 import { subjectGateOpen } from "./policy";
-import { POLICY_MATRIX, UNKNOWN_ROW_KEY, type PolicyRow, type PolicySurface } from "./policy-matrix";
+import { POLICY_MATRIX, UNKNOWN_ROW_KEY, type PolicySurface } from "./policy-matrix";
 import { detectPolicyRow } from "./region";
 import { readSid } from "./subject";
 
@@ -18,7 +17,6 @@ export interface ConsentSnapshot extends ConsentState {
   record: ConsentRecord | null;
   /** A choice stored under an older version, whose refusals still stand. */
   prior: PriorConsent | null;
-  regime: ConsentRegime;
   gpc: boolean;
   /**
    * False during the server render and the first paint, and, in a row that
@@ -34,19 +32,6 @@ export interface ConsentSnapshot extends ConsentState {
   row: string;
   /** What that row shows the visitor: a blocking banner or a notice. */
   surface: PolicySurface;
-  /** How many days a refusal lives in that row. */
-  refusal_ttl_days: number;
-  /** Whether GPC overrides even a recorded choice in that row. */
-  gpc_overrides_choice: boolean;
-}
-
-function rowFields(row: PolicyRow) {
-  return {
-    row: row.key,
-    surface: row.surface,
-    refusal_ttl_days: row.refusal_ttl_days,
-    gpc_overrides_choice: row.gpc_overrides_choice,
-  };
 }
 
 /**
@@ -61,10 +46,10 @@ export const SERVER_SNAPSHOT: ConsentSnapshot = Object.freeze({
   marketing: false,
   record: null,
   prior: null,
-  regime: "opt-in" as const,
   gpc: false,
   ready: false,
-  ...rowFields(POLICY_MATRIX.rows[UNKNOWN_ROW_KEY]),
+  row: UNKNOWN_ROW_KEY,
+  surface: POLICY_MATRIX.rows[UNKNOWN_ROW_KEY].surface,
 });
 
 let cached: ConsentSnapshot = SERVER_SNAPSHOT;
@@ -81,12 +66,12 @@ export function readConsentSnapshot(): ConsentSnapshot {
   const row = detectPolicyRow();
   const gpc = detectGpc();
   const ready = subjectGateOpen(row, readSid());
-  const key = consentSnapshotKey({ record, prior, regime: row.regime, gpc, row: row.key, ready });
+  const key = consentSnapshotKey({ record, prior, gpc, row: row.key, ready });
 
   if (key !== cachedKey) {
     cachedKey = key;
-    const state = resolveConsent({ record, prior, regime: row.regime, gpc, row });
-    cached = { ...state, record, prior, regime: row.regime, gpc, ready, ...rowFields(row) };
+    const state = resolveConsent({ record, prior, gpc, row });
+    cached = { ...state, record, prior, gpc, ready, row: row.key, surface: row.surface };
   }
   return cached;
 }

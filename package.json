@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "test": "bun test lib"
+    "test": "bun test lib scripts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

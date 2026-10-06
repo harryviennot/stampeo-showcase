@@ -4,9 +4,10 @@ import { POLICY_MATRIX, UNKNOWN_ROW_KEY, type PolicyMatrix, type PolicyRow } fro
 
 /**
  * Where the browser learns the visitor's region. Two sources, either of which
- * may be missing: the country our own middleware wrote into `stampeo_region`,
- * and the country of the device's IANA timezone. `effectiveRow` keeps the
- * stricter of the two. The server render always gets the strict row.
+ * may be missing: the country in `stampeo_region` and the country of the
+ * device's IANA timezone. `effectiveRow` keeps the stricter of the two. Nothing
+ * writes `stampeo_region` yet, so today the timezone alone decides. The server
+ * render always gets the strict row.
  */
 
 /** The country a `stampeo_region` cookie carries, or null. */

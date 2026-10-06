@@ -1,4 +1,10 @@
 import {
+  AD_COOKIE,
+  GA_COOKIE,
+  LEGACY_ATTRIBUTION_COOKIE,
+  SOURCE_COOKIE,
+} from "./attribution/cookie-names";
+import {
   buildCookie,
   serializeSetCookie,
   syncPrivacyCookies,
@@ -7,10 +13,10 @@ import {
 import {
   consentMaxAgeSeconds,
   gpcDeniedCategories,
+  recordRow,
   resolveWithPolicy,
   rowByKey,
   rowFor,
-  rowForRegime,
   surfaceWithPolicy,
 } from "./privacy/policy";
 import { POLICY_MATRIX, type PolicyRow } from "./privacy/policy-matrix";
@@ -18,9 +24,8 @@ import { detectPolicyRow } from "./privacy/region";
 import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
 
 /**
- * The consent gate for GA4, the Meta pixel and the TikTok pixel (STA-318,
- * STA-319, STA-320). Nothing in this file loads a tag; it decides whether one
- * may be loaded, and remembers the answer.
+ * The consent gate for GA4 and the Meta pixel. Nothing in this file loads a tag;
+ * it decides whether one may be loaded, and remembers the answer.
  *
  * Two rules run through everything here.
  *
@@ -30,7 +35,7 @@ import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
  *
  * THE TAG IS NEVER LOADED BEFORE THE ANSWER. Not loaded-then-suppressed, and
  * not Google Consent Mode in `denied` state either — that still contacts
- * googletagmanager.com, and Meta and TikTok have no cookieless mode at all.
+ * googletagmanager.com, and Meta has no cookieless mode at all.
  * A refusal therefore has nothing to clean up, because nothing was created.
  *
  * PostHog is deliberately outside all of this: it runs `persistence: "memory"`
@@ -50,15 +55,12 @@ export const CONSENT_COOKIE = "stampeo_consent";
  * given for a different list of recipients. A refusal stored under an older
  * version still stands: see `resolveConsent`.
  *
- * ── Version history ─────────────────────────────────────────────────
- * 1 — STA-317. The banner itself: GA4, Meta and TikTok, browser-side only.
- * 2 — STA-323. Privacy policy §5.5. The recipients did not change, but two
- *     things about the processing did, and both are material enough that a
- *     choice made against the old text is not informed consent to the new one:
- *     we now RETAIN the advertising identifier ourselves against the business
- *     account, and we report conversions SERVER-SIDE, after and independently
- *     of anything in the browser.
- * 3 — Privacy policy §5.5. Meta also receives hashed contact details, the IP
+ * What each version's text covers:
+ * 1 — The banner: browser-side tags only.
+ * 2 — Privacy policy §5.5: we retain the advertising identifier against the
+ *     business account, and report conversions server-side, independently of
+ *     the browser.
+ * 3 — Privacy policy §5.5: Meta also receives hashed contact details, the IP
  *     address and browser characteristics, four reported steps instead of
  *     two, and those steps for signups that did not come through a Meta ad.
  *
@@ -138,18 +140,16 @@ export type ConsentSurface = "none" | "banner" | "notice";
  * clearing them would erase the very refusal being acted on.
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
-  analytics: ["_ga", "_ga_*", "_gid", "stampeo_ga"],
-  marketing: ["_fbp", "_fbc", "_ttp", "stampeo_ad"],
+  analytics: ["_ga", "_ga_*", "_gid", GA_COOKIE],
+  marketing: ["_fbp", "_fbc", "_ttp", AD_COOKIE],
 };
-const SOURCE_CARRIER = "stampeo_src";
-const LEGACY_CARRIER = "stampeo_attribution";
 
 /** The carriers the privacy route sets as a server response, which a refusal asks it to clear too. */
 const SERVER_SET_CARRIERS: readonly string[] = [
-  "stampeo_src",
-  "stampeo_ga",
-  "stampeo_ad",
-  LEGACY_CARRIER,
+  SOURCE_COOKIE,
+  GA_COOKIE,
+  AD_COOKIE,
+  LEGACY_ATTRIBUTION_COOKIE,
 ];
 
 /**
@@ -164,24 +164,18 @@ export function consentRegimeForCountry(
 }
 
 /**
- * What this visitor is taken to have agreed to, by the policy row's rules
+ * What this visitor is taken to have agreed to, by the live policy row's rules
  * (`lib/privacy/policy.ts`): GPC first where the row overrides, then a
  * current choice, then the row's default. An older (`prior`) record's refusals
- * stand and its grants are not carried. `row` defaults to the one for `regime`.
+ * stand and its grants are not carried.
  */
 export function resolveConsent(input: {
   record: ConsentRecord | null;
   prior: PriorConsent | null;
-  regime: ConsentRegime;
   gpc: boolean;
-  row?: PolicyRow;
+  row: PolicyRow;
 }): ConsentState {
-  return resolveWithPolicy({
-    row: input.row ?? rowForRegime(input.regime),
-    record: input.record,
-    prior: input.prior,
-    gpc: input.gpc,
-  });
+  return resolveWithPolicy(input);
 }
 
 /**
@@ -190,35 +184,31 @@ export function resolveConsent(input: {
  * default may have let trackers into the jar before the signal was on.
  */
 export function categoriesToClearOnLoad(input: {
-  regime: ConsentRegime;
   gpc: boolean;
-  row?: PolicyRow;
+  row: PolicyRow;
 }): ConsentCategory[] {
-  return gpcDeniedCategories(input.row ?? rowForRegime(input.regime), input.gpc);
+  return gpcDeniedCategories(input.row, input.gpc);
 }
 
 /**
  * A stable identity for `useConsent`'s snapshot cache.
  *
  * `useSyncExternalStore` compares snapshots by identity, so the hook rebuilds
- * its snapshot object only when this key changes — meaning the key must cover
- * EVERY field the snapshot exposes, not just the two booleans. It once keyed
- * on `analytics`/`marketing` alone, so a re-decision that kept the same
- * answers served the stale record object and `AttributionCapture` stamped the
- * older `consentAt` as its evidence.
+ * its snapshot object only when this key changes. The key covers EVERY field
+ * the snapshot exposes, so a re-decision that keeps the same answers still
+ * serves a fresh record and its evidence.
  *
- * Equally, the key must be a pure function of the underlying facts: a value
- * that varies per call (a Date, an object identity) would rebuild the snapshot
- * every render, which under `useSyncExternalStore` is an infinite loop.
+ * The key is a pure function of the underlying facts: a value that varies per
+ * call (a Date, an object identity) would rebuild the snapshot every render,
+ * which under `useSyncExternalStore` is an infinite loop.
  */
 export function consentSnapshotKey(input: {
   record: ConsentRecord | null;
   prior: PriorConsent | null;
-  regime: ConsentRegime;
   gpc: boolean;
   /** The policy row key and whether tags may start: both are snapshot fields. */
-  row?: string;
-  ready?: boolean;
+  row: string;
+  ready: boolean;
 }): string {
   const record = input.record
     ? [
@@ -239,25 +229,18 @@ export function consentSnapshotKey(input: {
         input.prior.at,
       ].join(".")
     : "none";
-  return `${record}|${prior}|${input.regime}|${input.gpc}|${input.row ?? ""}|${input.ready ?? true}`;
+  return `${record}|${prior}|${input.gpc}|${input.row}|${input.ready}`;
 }
 
 /** Which consent surface, if any, this visitor should see. */
 export function consentSurface(input: {
   record: ConsentRecord | null;
   prior: PriorConsent | null;
-  regime: ConsentRegime;
   gpc: boolean;
   trackable: boolean;
-  row?: PolicyRow;
+  row: PolicyRow;
 }): ConsentSurface {
-  return surfaceWithPolicy({
-    row: input.row ?? rowForRegime(input.regime),
-    record: input.record,
-    prior: input.prior,
-    gpc: input.gpc,
-    trackable: input.trackable,
-  });
+  return surfaceWithPolicy(input);
 }
 
 /** The JSON object stored in the cookie, and posted to the privacy route. */
@@ -435,21 +418,16 @@ export type ConsentCookieAttributes = CookieAttributes;
 /**
  * Everything needed to write the choice down.
  *
- * Lives for the row's refusal lifetime when either category is refused, else
- * its grant lifetime. Not `httpOnly`: the gate runs in the browser and has to
- * read it, and the value is a preference whose worst forgery is showing a
- * visitor a banner they already dismissed. The row defaults to the one the
- * record names, else the one for its regime.
+ * Lives for the refusal lifetime of the row the record was made under when
+ * either category is refused, else its grant lifetime. Not `httpOnly`: the
+ * gate runs in the browser and has to read it, and the value is a preference
+ * whose worst forgery is showing a visitor a banner they already dismissed.
  */
-export function consentCookieAttributes(
-  record: ConsentRecord,
-  row?: PolicyRow,
-): ConsentCookieAttributes {
-  const policy = row ?? rowByKey(record.regionRow) ?? rowForRegime(record.regime);
+export function consentCookieAttributes(record: ConsentRecord): ConsentCookieAttributes {
   return buildCookie(
     CONSENT_COOKIE,
     serializeConsentCookie(record),
-    consentMaxAgeSeconds(policy, record),
+    consentMaxAgeSeconds(recordRow(record), record),
   );
 }
 
@@ -466,9 +444,9 @@ export function cookieNamesToClear(
   present: readonly string[],
 ): string[] {
   const patterns = categories.flatMap((category) => COOKIE_PATTERNS[category]);
-  if (categories.length > 0) patterns.push(LEGACY_CARRIER);
+  if (categories.length > 0) patterns.push(LEGACY_ATTRIBUTION_COOKIE);
   if (categories.includes("analytics") && categories.includes("marketing")) {
-    patterns.push(SOURCE_CARRIER);
+    patterns.push(SOURCE_COOKIE);
   }
   const matched = present.filter((name) =>
     patterns.some((pattern) =>
@@ -508,9 +486,9 @@ export function detectGpc(): boolean {
 }
 
 /**
- * The regime this visitor falls under: that of their policy row, the stricter
- * of the server's region cookie and the timezone (`lib/privacy/region.ts`).
- * Not IP geolocation, and not `navigator.language`.
+ * The regime this visitor falls under: that of their policy row
+ * (`lib/privacy/region.ts`). Nothing writes a server region yet, so today the
+ * timezone alone decides. Not IP geolocation, and not `navigator.language`.
  */
 export function detectConsentRegime(): ConsentRegime {
   return detectPolicyRow().regime;
@@ -566,23 +544,17 @@ export function readStoredConsent(): {
  *
  * `at` is stamped here rather than passed in: the timestamp is evidence of
  * when the visitor clicked, and the only moment that is true is this one.
- * `rowKey` names the policy row in force; one that disagrees with `regime` is
- * ignored. The cookie is written synchronously, then the server is asked to
- * set it again as a first-party response (see `lib/privacy/cookies.ts`).
+ * `row` is the live policy row the choice is made under. The cookie is written
+ * synchronously, then the server is asked to set it again as a first-party
+ * response (see `lib/privacy/cookies.ts`).
  */
-export function writeConsentRecord(
-  state: ConsentState,
-  regime: ConsentRegime,
-  rowKey?: string,
-): ConsentRecord {
-  const named = rowByKey(rowKey);
-  const row = named && named.regime === regime ? named : rowForRegime(regime);
+export function writeConsentRecord(state: ConsentState, row: PolicyRow): ConsentRecord {
   const record: ConsentRecord = {
     v: CONSENT_VERSION,
     analytics: state.analytics,
     marketing: state.marketing,
     at: Math.floor(Date.now() / 1000),
-    regime,
+    regime: row.regime,
     // Reused across decisions AND across version bumps, so the ledger can show
     // that one person answered twice rather than two people answering once.
     subjectId: ensureSubjectId(),
@@ -592,7 +564,7 @@ export function writeConsentRecord(
 
   if (typeof document !== "undefined") {
     try {
-      document.cookie = serializeSetCookie(consentCookieAttributes(record, row));
+      document.cookie = serializeSetCookie(consentCookieAttributes(record));
     } catch {
       // Blocked storage throws here. It can also fail without throwing, which
       // is why the check below reads the jar back rather than trusting this.
@@ -673,15 +645,15 @@ export function subscribeToConsentChange(onChange: () => void): () => void {
 export function currentConsent(): ConsentState {
   if (typeof window === "undefined") return { analytics: false, marketing: false };
   const row = detectPolicyRow();
-  return resolveConsent({ ...readStoredConsent(), regime: row.regime, gpc: detectGpc(), row });
+  return resolveConsent({ ...readStoredConsent(), gpc: detectGpc(), row });
 }
 
-/** May Google Analytics load? The seam STA-318 consumes. */
+/** May Google Analytics load? */
 export function hasAnalyticsConsent(): boolean {
   return currentConsent().analytics;
 }
 
-/** May the Meta and TikTok pixels load? The seam STA-319 and STA-320 consume. */
+/** May the Meta pixel load? */
 export function hasMarketingConsent(): boolean {
   return currentConsent().marketing;
 }

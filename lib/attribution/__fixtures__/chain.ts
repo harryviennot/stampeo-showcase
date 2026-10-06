@@ -9,8 +9,10 @@
 import { installFakeBrowser } from "../../privacy/__fixtures__/fake-browser";
 import { readConsentSnapshot } from "../../privacy/snapshot";
 import { capturePass, readStoredCarriers } from "../capture";
+import { AD_COOKIE, GA_COOKIE, SOURCE_COOKIE } from "../cookie-names";
 import { consentEvidence } from "../evidence";
 import { landingFromUrl } from "../landing";
+import { wireOf } from "./visitors";
 import { recordAccountSignup } from "../signup-call";
 
 export interface ChainInputs {
@@ -32,12 +34,7 @@ export interface ChainOutputs {
   signup_request: { path: string; body: unknown };
 }
 
-const CARRIER_COOKIES = { src: "stampeo_src", ga: "stampeo_ga", ad: "stampeo_ad" } as const;
-
-/** A carrier's wire object: what the cookie holds, without the empty fields. */
-const wire = (carrier: object | null): unknown =>
-  carrier &&
-  JSON.parse(JSON.stringify(carrier, (_key, value) => (value === null ? undefined : value)));
+const CARRIER_COOKIES = [SOURCE_COOKIE, GA_COOKIE, AD_COOKIE] as const;
 
 export async function computeAttributionChain(inputs: ChainInputs): Promise<ChainOutputs> {
   const cookie = Object.entries(inputs.cookies)
@@ -63,7 +60,6 @@ export async function computeAttributionChain(inputs: ChainInputs): Promise<Chai
       evidence: consentEvidence({
         record: snapshot.record,
         prior: snapshot.prior,
-        regime: snapshot.regime,
         row: snapshot.row,
       })!,
       measurementId: inputs.ga_measurement_id,
@@ -88,9 +84,9 @@ export async function computeAttributionChain(inputs: ChainInputs): Promise<Chai
     const signup = browser.fetches[browser.fetches.length - 1];
 
     return {
-      carriers: { src: wire(stored.src), ga: wire(stored.ga), ad: wire(stored.ad) },
+      carriers: { src: wireOf(stored.src), ga: wireOf(stored.ga), ad: wireOf(stored.ad) },
       cookie_values: Object.fromEntries(
-        Object.values(CARRIER_COOKIES).map((name) => [name, jar.get(name) ?? ""]),
+        CARRIER_COOKIES.map((name) => [name, jar.get(name) ?? ""]),
       ),
       route_request: { path: route.url, body: route.body },
       signup_request: { path: new URL(signup.url).pathname, body: signup.body },

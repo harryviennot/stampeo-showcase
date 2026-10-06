@@ -30,6 +30,7 @@ import { afterAll, describe, expect, test } from "bun:test";
 import { resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { ctaClick } from "./cta/events";
+import { rowFor } from "./privacy/policy";
 import {
   META_PIXEL_SCRIPT_SRC,
   initMetaPixel,
@@ -153,7 +154,7 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
     // requires prior consent, so the US is notice-and-opt-out. This test exists
     // so that fact is asserted somewhere rather than discovered during QA and
     // filed as a bug.
-    const state = resolveConsent({ record: null, regime: "opt-out", gpc: false });
+    const state = resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: false });
     expect(state.marketing).toBe(true);
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
@@ -163,14 +164,14 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
   test("a US visitor sending GPC loads nothing", () => {
     // GPC is a legally binding opt-out in twelve states and is honoured before
     // any regime default.
-    const state = resolveConsent({ record: null, regime: "opt-out", gpc: true });
+    const state = resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: true });
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
     ).toBe(false);
   });
 
   test("a European visitor with no stored choice loads nothing", () => {
-    const state = resolveConsent({ record: null, regime: "opt-in", gpc: false });
+    const state = resolveConsent({ record: null, prior: null, row: rowFor("FR"), gpc: false });
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
     ).toBe(false);
@@ -180,7 +181,8 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
     // The categories are independent. GA4 (STA-318) may run while this does not.
     const state = resolveConsent({
       record: { v: 1, analytics: true, marketing: false, at: 0, regime: "opt-in" },
-      regime: "opt-in",
+      prior: null,
+      row: rowFor("FR"),
       gpc: false,
     });
     expect(
@@ -429,10 +431,6 @@ describe("no Meta event is reported from a private route (AC5.2)", () => {
     "/mon-cafe",
     "/en/mon-cafe",
   ];
-
-  test.each(PRIVATE_PATHS)("%s is not trackable", (path) => {
-    expect(isTrackablePath(path)).toBe(false);
-  });
 
   test.each(PRIVATE_PATHS)("a resident pixel stays silent on %s, after a client-side hop", (path) => {
     const trackable = isTrackablePath(path);

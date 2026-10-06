@@ -15,7 +15,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 
 import { CONSENT_COOKIE, CONSENT_VERSION } from "../consent";
 import { POLICY_MATRIX } from "../privacy/policy-matrix";
-import { installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
+import { SUBJECT as SID, installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
 import { serializeAdCarrier } from "./ad-ids";
 import { serializeGaCarrier } from "./ga-ids";
 import { buildSignupBody, signupBasis } from "./signup-body";
@@ -23,7 +23,6 @@ import { recordAccountSignup } from "./signup-call";
 import { serializeSourceCarrier } from "./source";
 import { EU, FBP, GA_CID, LANDED, UNKNOWN, US, plan, visitor, wireOf } from "./__fixtures__/visitors";
 
-const SID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
 const GA_SESSION = "GS2.1.s1791244795$o1$g1$t1791244799$j0$l0$h0";
 const MEASUREMENT_ID = "G-ZFZ6JLPFXN";
 

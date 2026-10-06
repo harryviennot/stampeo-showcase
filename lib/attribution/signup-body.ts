@@ -3,6 +3,7 @@ import { POLICY_MATRIX, type PolicyRow } from "../privacy/policy-matrix";
 import { readSidCookie } from "../privacy/subject";
 import { parseAdCookie, serializeAdCarrier } from "./ad-ids";
 import { MAX_ID_FIELD, cookieValue, decodeCarrier } from "./codec";
+import { AD_COOKIE, GA_COOKIE, SOURCE_COOKIE } from "./cookie-names";
 import { gaSessionCookieName, parseGaCookie, serializeGaCarrier } from "./ga-ids";
 import { parseSourceCookie, serializeSourceCarrier } from "./source";
 
@@ -74,15 +75,15 @@ export function buildSignupBody(input: {
 
   const carriers: NonNullable<SignupBody["ad_attribution_v2"]> = {};
   if (consent.analytics || consent.marketing) {
-    const src = parseSourceCookie(cookieValue(header, "stampeo_src"));
+    const src = parseSourceCookie(cookieValue(header, SOURCE_COOKIE));
     if (src) carriers.src = asStored(serializeSourceCarrier(src));
   }
   if (consent.analytics) {
-    const ga = parseGaCookie(cookieValue(header, "stampeo_ga"));
+    const ga = parseGaCookie(cookieValue(header, GA_COOKIE));
     if (ga) carriers.ga = asStored(serializeGaCarrier(ga));
   }
   if (consent.marketing) {
-    const ad = parseAdCookie(cookieValue(header, "stampeo_ad"));
+    const ad = parseAdCookie(cookieValue(header, AD_COOKIE));
     if (ad) carriers.ad = asStored(serializeAdCarrier(ad));
   }
 

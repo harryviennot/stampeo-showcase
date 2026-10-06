@@ -39,7 +39,7 @@ const TAG_POLL_MS = 250;
 
 export function AttributionCapture() {
   const pathname = usePathname();
-  const { analytics, marketing, regime, record, prior, ready, row } = useConsent();
+  const { analytics, marketing, record, prior, ready, row } = useConsent();
 
   // Every navigation is another pass, so the GA carrier follows the session.
   useEffect(() => {
@@ -66,7 +66,7 @@ export function AttributionCapture() {
     // Nothing either category permits, so there is nothing to write or wait for.
     if (!analytics && !marketing) return;
     // An older choice with no recorded moment is no evidence to rest a write on.
-    const evidence = consentEvidence({ record, prior, regime, row });
+    const evidence = consentEvidence({ record, prior, row });
     if (evidence === null) return;
 
     let cancelled = false;
@@ -104,7 +104,7 @@ export function AttributionCapture() {
     return () => {
       cancelled = true;
     };
-  }, [pathname, analytics, marketing, ready, regime, record, prior, row]);
+  }, [pathname, analytics, marketing, ready, record, prior, row]);
 
   return null;
 }

@@ -16,6 +16,7 @@ import {
   requiredText,
   total,
 } from "./codec";
+import { GA_COOKIE } from "./cookie-names";
 import { evidenceFields, readEvidence, type ConsentEvidence } from "./evidence";
 
 /**
@@ -27,8 +28,6 @@ import { evidenceFields, readEvidence, type ConsentEvidence } from "./evidence";
  *   at      Unix seconds, when these ids were last read
  *   cv cr ca p g  the consent evidence (see `evidence.ts`)
  */
-
-export const GA_COOKIE = "stampeo_ga";
 
 /** A GA session: the id (a Unix timestamp as text) and how many sessions this client has had. */
 export interface GaSession {

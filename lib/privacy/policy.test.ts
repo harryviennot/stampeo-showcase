@@ -18,6 +18,7 @@ import {
   type ConsentRecord,
   type PriorConsent,
 } from "../consent";
+import { SUBJECT } from "./__fixtures__/fake-browser";
 import { POLICY_MATRIX, buildPolicyMatrix } from "./policy-matrix";
 import raw from "./policy-matrix.v1.json";
 import {
@@ -32,7 +33,6 @@ import {
   surfaceWithPolicy,
 } from "./policy";
 
-const SUBJECT_ID = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
 const ON = { analytics: true, marketing: true };
 const OFF = { analytics: false, marketing: false };
 const DAY = 86_400;
@@ -197,30 +197,6 @@ describe("resolveWithPolicy: what a visitor is taken to have agreed to", () => {
       expect(resolveWithPolicy({ row, record: refusal, prior: null, gpc: false }, bumped)).toEqual(OFF);
     }
   });
-
-  test.each(["FR", "US", "BR"])("sensitive data denies both in the %s row", (country) => {
-    expect(
-      resolveWithPolicy({
-        row: rowFor(country),
-        record: record(true, true),
-        prior: null,
-        gpc: false,
-        sensitive: true,
-      }),
-    ).toEqual(OFF);
-  });
-
-  test("an untrackable route denies both, whatever was agreed", () => {
-    expect(
-      resolveWithPolicy({
-        row: rowFor("US"),
-        record: record(true, true),
-        prior: null,
-        gpc: false,
-        trackable: false,
-      }),
-    ).toEqual(OFF);
-  });
 });
 
 describe("analytics under a US opt-out is a matrix setting", () => {
@@ -285,7 +261,7 @@ describe("how long a choice lives", () => {
 describe("the subject gate", () => {
   test("a row that mints before tags holds them back until the subject exists", () => {
     expect(subjectGateOpen(rowFor("US"), null)).toBe(false);
-    expect(subjectGateOpen(rowFor("US"), SUBJECT_ID)).toBe(true);
+    expect(subjectGateOpen(rowFor("US"), SUBJECT)).toBe(true);
   });
 
   test("a row that mints at the first decision does not wait", () => {

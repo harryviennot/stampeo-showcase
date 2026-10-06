@@ -19,15 +19,15 @@
  *    therefore look exactly like success.
  */
 
-import { afterEach, describe, expect, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { CONSENT_VERSION, type ConsentRecord } from "./consent";
 import {
   buildConsentPayload,
   consentLedgerEndpoint,
   recordConsentDecision,
 } from "./consent-ledger";
-
-const SUBJECT = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
+import { SUBJECT } from "./privacy/__fixtures__/fake-browser";
+import { restoreEnvAfterEach } from "./testing/restore-env";
 
 const RECORD: ConsentRecord = {
   v: CONSENT_VERSION,
@@ -60,12 +60,7 @@ function installBeacon(result = true) {
   };
 }
 
-const ORIGINAL_API = process.env.NEXT_PUBLIC_API_URL;
-
-afterEach(() => {
-  if (ORIGINAL_API === undefined) delete process.env.NEXT_PUBLIC_API_URL;
-  else process.env.NEXT_PUBLIC_API_URL = ORIGINAL_API;
-});
+restoreEnvAfterEach("NEXT_PUBLIC_API_URL");
 
 describe("buildConsentPayload — the contract with the backend", () => {
   test("every field the backend allowlists is present, spelled its way", () => {

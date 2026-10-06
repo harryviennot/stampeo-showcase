@@ -151,9 +151,9 @@ describe("privacy §5 cookies", () => {
     }
   });
 
-  it("still accounts for the legacy attribution cookie, in every locale (STA-323)", () => {
-    // `stampeo_attribution` is no longer set, but a browser that received it
-    // earlier holds it until it expires. It is first-party by origin and a
+  it("still accounts for the legacy attribution cookie, in every locale", () => {
+    // `stampeo_attribution` is not written any more, but a browser that
+    // received it earlier holds it until it expires. It is first-party by origin and a
     // tracker by content (ad click ids, the GA client id), and a visitor
     // inspecting their own jar finds it, so the policy has to account for it.
     for (const locale of routing.locales) {

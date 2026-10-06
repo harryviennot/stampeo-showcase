@@ -10,7 +10,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
 
 import { CONSENT_COOKIE, clearCookiesFor } from "../consent";
-import { installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
+import { SUBJECT, installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
+import { restoreEnvAfterEach } from "../testing/restore-env";
 import { serializeAdCarrier } from "./ad-ids";
 import { capturePass, readStoredCarriers } from "./capture";
 import { serializeGaCarrier } from "./ga-ids";
@@ -29,13 +30,11 @@ import {
 
 describe("writing the carriers", () => {
   let browser: FakeBrowser | null = null;
-  const savedDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
+  restoreEnvAfterEach("NEXT_PUBLIC_COOKIE_DOMAIN");
 
   afterEach(() => {
     browser?.restore();
     browser = null;
-    if (savedDomain === undefined) delete process.env.NEXT_PUBLIC_COOKIE_DOMAIN;
-    else process.env.NEXT_PUBLIC_COOKIE_DOMAIN = savedDomain;
   });
 
   const GA_JAR = `_ga=GA1.1.${GA_CID}; _ga_ZFZ6JLPFXN=GS2.1.s1791244795$o1$g1$t1791244799$j0$l0$h0; _fbp=${FBP}`;
@@ -156,7 +155,7 @@ describe("refusing a category clears only that category's carrier (AC4.6)", () =
     const written = plan(visitor(US));
     return [
       `${CONSENT_COOKIE}=x`,
-      "stampeo_sid=3f2504e0-4f89-41d3-9a0c-0305e82c3301",
+      `stampeo_sid=${SUBJECT}`,
       `stampeo_src=${serializeSourceCarrier(written.src!)}`,
       `stampeo_ga=${serializeGaCarrier(written.ga!)}`,
       `stampeo_ad=${serializeAdCarrier(written.ad!)}`,

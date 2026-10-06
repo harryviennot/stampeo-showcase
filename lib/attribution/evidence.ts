@@ -61,17 +61,18 @@ export function captureConsentEvidence(
 export function consentEvidence(input: {
   record: ConsentRecord | null;
   prior: PriorConsent | null;
-  regime: ConsentRegime;
+  /** The key of the live policy row. */
   row: string;
 }): ConsentEvidence | null {
   const base = captureConsentEvidence(input.record, input.prior);
   if (base === null) return null;
+  const row = rowByKey(input.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY];
   return {
     cv: base.consentVersion,
-    cr: input.regime,
+    cr: row.regime,
     ca: base.consentAt,
     p: POLICY_MATRIX.version,
-    g: rowByKey(input.row)?.key ?? UNKNOWN_ROW_KEY,
+    g: row.key,
   };
 }
 

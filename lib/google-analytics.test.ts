@@ -36,6 +36,7 @@ import { join } from "node:path";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { CONTACT_CTAS } from "./cta/taxonomy";
+import { rowFor } from "./privacy/policy";
 import {
   gaConfig,
   gaEventForCTA,
@@ -150,19 +151,19 @@ describe("shouldLoadGa — composed with the real consent resolver", () => {
   test("a US visitor with no stored choice loads the tag without clicking", () => {
     // The opt-out regime. Deliberate — see `resolveConsent`.
     expect(
-      gate(resolveConsent({ record: null, regime: "opt-out", gpc: false }))
+      gate(resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: false }))
     ).toBe(true);
   });
 
   test("a US visitor sending GPC loads nothing", () => {
     expect(
-      gate(resolveConsent({ record: null, regime: "opt-out", gpc: true }))
+      gate(resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: true }))
     ).toBe(false);
   });
 
   test("a European visitor with no stored choice loads nothing", () => {
     expect(
-      gate(resolveConsent({ record: null, regime: "opt-in", gpc: false }))
+      gate(resolveConsent({ record: null, prior: null, row: rowFor("FR"), gpc: false }))
     ).toBe(false);
   });
 
@@ -179,7 +180,8 @@ describe("shouldLoadGa — composed with the real consent resolver", () => {
             at: 0,
             regime: "opt-in",
           },
-          regime: "opt-in",
+          prior: null,
+          row: rowFor("FR"),
           gpc: false,
         })
       )
@@ -197,7 +199,8 @@ describe("shouldLoadGa — composed with the real consent resolver", () => {
             at: 0,
             regime: "opt-in",
           },
-          regime: "opt-in",
+          prior: null,
+          row: rowFor("FR"),
           gpc: false,
         })
       )

@@ -52,6 +52,10 @@ export function ConsentBanner() {
   const pathname = usePathname();
   const consent = useConsent();
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const row = useMemo(
+    () => rowByKey(consent.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY],
+    [consent.row],
+  );
 
   // `trackable` gates SOLICITATION, never MANAGEMENT.
   //
@@ -78,12 +82,12 @@ export function ConsentBanner() {
   // When GPC overrides in the US, trackers set before the signal was on are
   // removed on load. No reload: no tag loads under the override, so there is no
   // running script to stop, and the consent cookie itself is never cleared.
-  const { ready, regime, gpc } = consent;
+  const { ready, gpc } = consent;
   useEffect(() => {
     if (!ready) return;
-    const categories = categoriesToClearOnLoad({ regime, gpc });
+    const categories = categoriesToClearOnLoad({ row, gpc });
     if (categories.length > 0) clearCookiesFor(categories);
-  }, [ready, regime, gpc]);
+  }, [ready, row, gpc]);
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {
@@ -94,7 +98,7 @@ export function ConsentBanner() {
         (category) => before[category] && !next[category],
       );
 
-      const record = writeConsentRecord(next, consent.regime, consent.row);
+      const record = writeConsentRecord(next, row);
       emitConsentChange(next);
       setPrefsOpen(false);
 
@@ -115,26 +119,19 @@ export function ConsentBanner() {
         window.location.reload();
       }
     },
-    [consent.regime, consent.row],
+    [row],
   );
 
   // The dialog's region version, from the row in force and whether GPC is on.
-  const view = useMemo(
-    () =>
-      preferencesView(
-        rowByKey(consent.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY],
-        consent.gpc,
-      ),
-    [consent.row, consent.gpc],
-  );
+  const view = useMemo(() => preferencesView(row, gpc), [row, gpc]);
 
   const surface = consent.ready
     ? consentSurface({
         record: consent.record,
         prior: consent.prior,
-        regime: consent.regime,
-        gpc: consent.gpc,
+        gpc,
         trackable,
+        row,
       })
     : "none";
 

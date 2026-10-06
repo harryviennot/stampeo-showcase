@@ -14,11 +14,11 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { readMeasurementId } from "../google-analytics";
-import { readMetaPixelId } from "../meta-pixel";
-import { checkBuiltChunks, checkPublicIds } from "../../scripts/analytics-ids.mjs";
+import { readMeasurementId } from "../lib/google-analytics";
+import { readMetaPixelId } from "../lib/meta-pixel";
+import { checkBuiltChunks, checkPublicIds } from "./analytics-ids.mjs";
 
-const SCRIPT = join(import.meta.dir, "..", "..", "scripts", "analytics-ids.mjs");
+const SCRIPT = join(import.meta.dir, "analytics-ids.mjs");
 
 const VALID = {
   NEXT_PUBLIC_META_PIXEL_ID: "1088158323750710",
