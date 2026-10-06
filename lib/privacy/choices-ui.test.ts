@@ -45,12 +45,10 @@ afterEach(() => {
 
 describe("the footer label (AC2.5)", () => {
   test.each([
-    ["a US visitor once the region has resolved", "notice", true, PRIVACY_CHOICES_KEY, true],
-    ["an EU visitor once the region has resolved", "banner", true, COOKIE_PREFERENCES_KEY, false],
-    ["a US visitor before the region has resolved", "notice", false, COOKIE_PREFERENCES_KEY, false],
-    ["anyone before the region has resolved", "banner", false, COOKIE_PREFERENCES_KEY, false],
-  ] as const)("%s", (_who, surface, ready, key, icon) => {
-    expect(choicesLabel({ surface, ready })).toEqual({ key, icon });
+    ["a US visitor", "notice", PRIVACY_CHOICES_KEY, true],
+    ["an EU visitor", "banner", COOKIE_PREFERENCES_KEY, false],
+  ] as const)("%s", (_who, surface, key, icon) => {
+    expect(choicesLabel({ surface })).toEqual({ key, icon });
   });
 
   test("the server render, which knows nothing about the visitor, is never empty", () => {
@@ -66,12 +64,22 @@ describe("the footer label (AC2.5)", () => {
     expect(choicesLabel(readConsentSnapshot()).key).toBe(key);
   });
 
-  test("a US visitor is shown the generic label until their subject id exists", () => {
+  test("a US visitor with an empty jar is shown the US label, though no subject id is minted on this page", () => {
+    // /email-preferences and the demo wallet page are private: nothing mints a subject there.
     browser = installFakeBrowser({ timezone: "America/New_York" });
-    expect(choicesLabel(readConsentSnapshot()).key).toBe(COOKIE_PREFERENCES_KEY);
+    const snapshot = readConsentSnapshot();
+
+    expect(snapshot.ready).toBe(false);
+    expect(choicesLabel(snapshot)).toEqual({ key: PRIVACY_CHOICES_KEY, icon: true });
+  });
+
+  test("minting the subject does not change it", () => {
+    browser = installFakeBrowser({ timezone: "America/New_York" });
+    const before = choicesLabel(readConsentSnapshot());
 
     browser.setJar(`stampeo_sid=${SUBJECT}`);
-    expect(choicesLabel(readConsentSnapshot()).key).toBe(PRIVACY_CHOICES_KEY);
+
+    expect(choicesLabel(readConsentSnapshot())).toEqual(before);
   });
 
   test.each([

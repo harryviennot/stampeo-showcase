@@ -14,7 +14,7 @@ import {
   CONSENT_VERSION,
   categoriesToClearOnChoice,
   clearCookiesFor,
-  currentConsent,
+  revokedBy,
   consentCookieAttributes,
   consentSurface,
   cookieNamesToClear,
@@ -221,14 +221,31 @@ describe("what a refusal clears (AC4.6)", () => {
   });
 });
 
+describe("what a choice clears, and when the page reloads", () => {
+  const ON = { analytics: true, marketing: true };
+  const OFF = { analytics: false, marketing: false };
+  const ANALYTICS_ONLY = { analytics: true, marketing: false };
+
+  test.each([
+    ["Refuse all, from a state that already denies everything", OFF, OFF, ["analytics", "marketing"], []],
+    ["Refuse all, from everything on", ON, OFF, ["analytics", "marketing"], ["analytics", "marketing"]],
+    ["advertising refused, from everything on", ON, ANALYTICS_ONLY, ["marketing"], ["marketing"]],
+    ["advertising refused, from nothing on", OFF, ANALYTICS_ONLY, ["marketing"], []],
+    ["Accept all", OFF, ON, [], []],
+  ] as const)("%s", (_case, before, next, cleared, revoked) => {
+    // Every refused category is cleared whatever was live; only a running tag needs a reload.
+    expect(categoriesToClearOnChoice(next)).toEqual(cleared);
+    expect(revokedBy(before, next)).toEqual(revoked);
+  });
+});
+
 describe("withdrawing in two steps takes the campaign source with the last of them (AC4.6)", () => {
   const CARRIER_JAR = "stampeo_src=1; stampeo_ga=2; stampeo_ad=3; _ga=4; _fbp=5";
 
-  /** What the banner does for a choice: read what was live, write the new one, clear what was revoked. */
+  /** What the banner does for a choice: write it, then clear every category it refuses. */
   function choose(state: { analytics: boolean; marketing: boolean }) {
-    const before = currentConsent();
     writeConsentRecord(state, rowFor("US"));
-    clearCookiesFor(categoriesToClearOnChoice(before, state));
+    clearCookiesFor(categoriesToClearOnChoice(state));
   }
   const left = () => browser!.jar().split("; ").map((entry) => entry.split("=")[0]);
 

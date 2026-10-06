@@ -26,6 +26,7 @@ import {
 import { shouldLoadGa } from "../google-analytics";
 import { shouldLoadMetaPixel } from "../meta-pixel";
 import { installFakeBrowser, SUBJECT, type FakeBrowser } from "./__fixtures__/fake-browser";
+import { mountTags } from "./__fixtures__/mount-tags";
 import { planPageLoad, runPageLifecycle, type LifecycleSession } from "./lifecycle";
 import { rowFor } from "./policy";
 import { readConsentSnapshot } from "./snapshot";
@@ -50,19 +51,6 @@ afterEach(() => {
 
 const fresh = (): LifecycleSession => ({ refreshed: false });
 
-/** What GoogleAnalytics and MetaPixel do on mount: load their tag when its gate allows. */
-async function mountTags(instance: string) {
-  const ga = await import(`../google-analytics?${instance}`);
-  const meta = await import(`../meta-pixel?${instance}`);
-  const { analytics, marketing, ready } = readConsentSnapshot();
-  if (ga.shouldLoadGa({ measurementId: "G-ZFZ6JLPFXN", analytics, ready, trackable: true })) {
-    ga.initGa("G-ZFZ6JLPFXN");
-  }
-  if (meta.shouldLoadMetaPixel({ pixelId: "1088158323750710", marketing, ready, trackable: true })) {
-    meta.initMetaPixel("1088158323750710");
-  }
-}
-
 /** What GoogleAnalytics and MetaPixel decide, from the consent snapshot. */
 function tagGates(trackable = true) {
   const { analytics, marketing, ready } = readConsentSnapshot();
@@ -73,7 +61,14 @@ function tagGates(trackable = true) {
 }
 
 describe("planPageLoad", () => {
-  const base = { row: US, sid: SUBJECT, stored: null, trackable: true, refreshedThisDocument: false };
+  const base = {
+    row: US,
+    sid: SUBJECT,
+    stored: null,
+    consent: { analytics: true, marketing: true },
+    trackable: true,
+    refreshedThisDocument: false,
+  };
   const NOTHING = { mintSid: false, syncSid: false, syncConsent: false };
 
   test.each([
