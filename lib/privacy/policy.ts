@@ -166,10 +166,10 @@ export function gpcDeniedCategories(
  * What this visitor is taken to have agreed to.
  *
  * GPC overrides even a recorded choice where the row says so. Otherwise a
- * current-version record decides both categories. Without one, the row's
- * default applies (GPC never falls to a granting default), minus any category
- * an older record refused: an older refusal stands, an older grant is not a
- * choice.
+ * current-version record decides each category it settles in the live row (see
+ * `standingChoice`). Any category it leaves open takes the row's default (GPC
+ * never falls to a granting default), minus any category an older record
+ * refused: an older refusal stands, an older grant is not a choice.
  */
 export function resolveWithPolicy(
   input: {
