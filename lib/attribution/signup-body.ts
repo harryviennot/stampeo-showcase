@@ -1,4 +1,12 @@
-import { readSubjectId, type ConsentCategory, type ConsentRegime, type ConsentState } from "../consent";
+import {
+  explicitRefusals,
+  readSubjectId,
+  type ConsentCategory,
+  type ConsentRecord,
+  type ConsentRegime,
+  type ConsentState,
+  type PriorConsent,
+} from "../consent";
 import { POLICY_MATRIX, type PolicyRow } from "../privacy/policy-matrix";
 import { readSidCookie } from "../privacy/subject";
 import { parseAdCookie, serializeAdCarrier } from "./ad-ids";
@@ -27,11 +35,12 @@ import { parseSourceCookie, serializeSourceCarrier } from "./source";
  * a refusal made on the marketing site to the account.
  *
  * The basis (the regime, policy version and row the call is made under) and
- * `refused` (the categories the browser refuses right now) ALWAYS go, even when
- * everything else is left out: they are what let the backend record a US
- * visitor's refusal under GPC when no carrier or ledger decision names one, and
- * stop a carrier captured under no-choice evidence from reading as permission
- * for a category refused since.
+ * `refused` ALWAYS go, even when everything else is left out. `refused` is what
+ * the stored consent record explicitly refuses (a stored `0`, of any version,
+ * including a restored one), so a carrier captured under no-choice evidence
+ * cannot read as permission for a category refused since. Absence of consent is
+ * not declared: a backend refusal is permanent, and GPC is read by the backend
+ * from the request itself. GPC and the live row only decide what is withheld.
  *
  * Nothing here asks whether the account is new. The backend decides that.
  */
@@ -49,15 +58,13 @@ export function signupBasis(row: PolicyRow): SignupBasis {
   return { cr: row.regime, p: POLICY_MATRIX.version, g: row.key };
 }
 
-const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
-
 export interface SignupBody {
   consent_subject_id?: string;
   ad_attribution_v2?: { src?: object; ga?: object; ad?: object };
   /** The version-1 carrier, while a browser still holds one. */
   ad_attribution?: object;
   basis: SignupBasis;
-  /** The categories the browser refuses right now, analytics first. */
+  /** The categories the stored consent record explicitly refuses, analytics first. */
   refused: ConsentCategory[];
   live?: {
     ga?: string;
@@ -78,11 +85,14 @@ const asStored = (serialized: string): object => decodeCarrier(serialized) as ob
 
 export function buildSignupBody(input: {
   cookieHeader: string | null | undefined;
+  /** What the visitor allows right now: it decides which identifiers and carriers leave. */
   consent: ConsentState;
+  /** The consent record as stored: it decides what is declared as refused. */
+  stored: { record: ConsentRecord | null; prior: PriorConsent | null };
   measurementId: string | null;
   basis: SignupBasis;
 }): SignupBody {
-  const { cookieHeader: header, consent, measurementId, basis } = input;
+  const { cookieHeader: header, consent, stored, measurementId, basis } = input;
 
   const subject = readSidCookie(header) ?? readSubjectId(header);
 
@@ -127,7 +137,7 @@ export function buildSignupBody(input: {
     ...(Object.keys(carriers).length > 0 ? { ad_attribution_v2: carriers } : {}),
     ...(legacy ? { ad_attribution: legacy } : {}),
     basis,
-    refused: CATEGORIES.filter((category) => !consent[category]),
+    refused: explicitRefusals(stored.record, stored.prior),
     ...(Object.keys(live).length > 0 ? { live } : {}),
   };
 }

@@ -11,6 +11,7 @@ import {
   consentCookieAttributes,
   consentCookieValue,
   consentFromObject,
+  explicitRefusals,
   parseStoredChoice,
   type ConsentCategory,
 } from "../consent";
@@ -73,11 +74,7 @@ function carrierPermitted(key: string, refused: ReadonlySet<ConsentCategory>): b
 
 /** The categories the `Cookie:` header's consent record refuses, from any version. */
 function refusedBy(cookieHeader: string | null): Set<ConsentCategory> {
-  const stored = parseStoredChoice(consentCookieValue(cookieHeader));
-  const refused = new Set<ConsentCategory>();
-  if (stored?.analytics === false) refused.add("analytics");
-  if (stored?.marketing === false) refused.add("marketing");
-  return refused;
+  return new Set(explicitRefusals(parseStoredChoice(consentCookieValue(cookieHeader))));
 }
 
 export interface PrivacyRequestLike {

@@ -1,4 +1,4 @@
-import { currentConsent } from "../consent";
+import { currentConsent, readStoredConsent } from "../consent";
 import { measurementIdFromEnv } from "../google-analytics";
 import { detectPolicyRow } from "../privacy/region";
 import { buildSignupBody, signupBasis } from "./signup-body";
@@ -54,6 +54,7 @@ async function send(options: SignupCallOptions, dispatched: () => void): Promise
   const body = buildSignupBody({
     cookieHeader: document.cookie,
     consent: currentConsent(),
+    stored: readStoredConsent(),
     measurementId:
       options.measurementId === undefined ? measurementIdFromEnv() : options.measurementId,
     basis: signupBasis(detectPolicyRow()),

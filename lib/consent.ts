@@ -206,6 +206,18 @@ export function categoriesToClearOnLoad(input: {
 }
 
 /**
+ * The categories a stored choice, of any consent version, explicitly refuses: a
+ * stored `0`. No record, no choice (`-1`) and a grant are not refusals.
+ */
+export function explicitRefusals(
+  ...stored: Array<{ analytics: StoredChoice; marketing: StoredChoice } | null | undefined>
+): ConsentCategory[] {
+  return (["analytics", "marketing"] as const).filter((category) =>
+    stored.some((choice) => choice?.[category] === false),
+  );
+}
+
+/**
  * The categories whose cookies a new choice clears: those it revokes. Refusing
  * the last category that was on takes the campaign-source carrier too, so a
  * two-step withdrawal clears it with the second step.
