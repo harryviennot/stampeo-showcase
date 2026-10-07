@@ -87,6 +87,8 @@ interface Entry {
 
 const RealDateTimeFormat = Intl.DateTimeFormat;
 const realFetch = globalThis.fetch;
+// Bun ships a `navigator` of its own, which later test files rely on.
+const realNavigator = Object.getOwnPropertyDescriptor(globalThis, "navigator");
 
 export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowser {
   const jar = new Map<string, Entry>();
@@ -239,6 +241,7 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
       for (const name of ["document", "window", "navigator"]) {
         Reflect.deleteProperty(globalThis, name);
       }
+      if (realNavigator) Object.defineProperty(globalThis, "navigator", realNavigator);
       globalThis.fetch = realFetch;
       Intl.DateTimeFormat = RealDateTimeFormat;
     },

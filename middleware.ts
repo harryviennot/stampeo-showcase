@@ -127,9 +127,9 @@ async function acquisitionResponse(request: NextRequest, slug: string) {
 export const config = {
   matcher: [
     // Match all pathnames except for
-    // - /api, /auth, /go, /join (non-localized route handlers), /internal (dev-only
-    //   tooling pages), /_next, /_vercel
+    // - /api, /auth, /go (route handlers), /join (invite page), /internal (dev-only
+    //   tooling pages), /_next, /_vercel: whole first segments, so /good-vibe is not /go
     // - files with extensions (e.g. favicon.ico)
-    "/((?!api|auth|go|join|internal|_next|_vercel|.*\\..*).*)",
+    "/((?!(?:api|auth|go|join|internal|_next|_vercel)(?:/|$)|.*\\..*).*)",
   ],
 };
