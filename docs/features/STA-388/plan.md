@@ -30,6 +30,11 @@ for a shop slug, rewrites it to the enrollment page, and the page 404s
   matched on the WHOLE first segment (`qr(?:/|$)`), so a future shop slugged
   `qrious-cafe` still reaches its enrollment page (see Touched areas: today's
   `go` exclusion is a bare prefix and already breaks a prod shop).
+- `join` joins the reserved set too, and two filesystem-driven guards keep every
+  static top-level `app/` folder both reserved and skipped by the matcher: the
+  missing guard is how `qr` (and STA-389) slipped through. `join` was the one
+  folder missing from the set; the matcher already skipped it, so nothing a
+  visitor sees changes. (Added during implementation, reported at review.)
 - `utm_campaign=business-cards-2026-10` added to the ticket's two tags, so a later
   reprint can be told apart from this batch (GA would otherwise show "(not set)").
 - No new tracking code. The homepage already reads UTMs (see Analytics below).
@@ -78,8 +83,10 @@ checked on prod), and the existing tags handle the rest:
   then is a small middleware addition.
 - `HEAD /qr` (link previewers, some scanner apps): Next answers HEAD with the
   GET handler. Checked live with `curl -I`.
-- `www.stampeo.app/qr`: the middleware's www→apex 301 runs first, then `/qr`.
-  Checked live.
+- `www.stampeo.app/qr`: prod answers `www` with a 308 to the apex at the edge,
+  before Next (checked 2026-10-07 on `/`, `/go/app` and `/pricing?utm_source=x`,
+  query kept), so it becomes `stampeo.app/qr`. The middleware's own www branch
+  never sees `/qr`, which now skips the middleware. Runbook CQ-04.
 - A shop slugged `qr`: none on prod or dev (checked 2026-10-07). The dashboard's
   slug check already rejects slugs under 3 characters.
 - A shop slug that starts with `qr` (e.g. `qrious-cafe`): still goes through the
@@ -91,10 +98,14 @@ checked on prod), and the existing tags handle the rest:
   `Location: /?utm_source=card&utm_medium=qr&utm_campaign=business-cards-2026-10` and `Cache-Control: no-store`, and NOT a 307/308
   or an absolute URL built from the request host.
 - AC2: Given a GET `/qr?anything=1`, then the Location is exactly the same fixed
-  destination (the incoming query is not forwarded).
+  destination (the incoming query is not forwarded). Guaranteed by construction:
+  the handler takes no input. Checked live (runbook CQ-04), no unit test.
 - AC3: Given the middleware matcher, `/qr` and `/qr/` are excluded from it, and
-  `/qrious-cafe`, `/qrious-cafe/l/store` and `/kippa` are NOT excluded (they
-  still reach the enrollment rewrite).
+  `/qrious-cafe`, `/qrious-cafe/l/store` and `/kippa` are NOT excluded, and
+  `acquisitionSlug` still reads `qrious-cafe` as a shop (both enrollment shapes).
+- AC3b: Given the tagged homepage, a phone set to English or Polish is
+  redirected to `/en?…` / `/pl?…` with all three tags, and a French phone is
+  not redirected.
 - AC4: `acquisitionSlug("/qr")` is null (`qr` is in `RESERVED_TOP_SEGMENTS`), so no
   caller treats it as a shop.
 - AC5 (live, dev): `curl -L` on `showcase.dev.stampeo.app/qr` ends 200 on the
@@ -111,10 +122,14 @@ checked on prod), and the existing tags handle the rest:
 - NEW `lib/routing/card-qr.ts`: the destination and the response. In `lib/`
   because CI only runs `bun test lib scripts`, and in a new `routing/`
   subfolder because `lib/` already holds 88 entries.
-- NEW `lib/routing/card-qr.test.ts`: AC1–AC2, through the route's own `GET`.
+- NEW `lib/routing/card-qr.test.ts`: AC1 on `cardQrRedirect`, AC3b through the
+  real middleware.
+- NEW `lib/testing/app-folders.ts`: the static top-level route folders, shared
+  by the two filesystem guards.
 - `middleware.ts`: one matcher entry. It is 135 lines.
-- `lib/locale-negotiation.ts` (+ its test): `qr` in the reserved set. 178 lines.
-- `lib/middleware-matcher.test.ts` (added by STA-389): AC3 cases for `qr`.
+- `lib/locale-negotiation.ts` (+ its test): `qr` and `join` in the reserved set,
+  AC3/AC4 cases. 181 lines.
+- `lib/routing/middleware-matcher.test.ts` (added by STA-389): AC3 cases for `qr`.
 
 ## Touched areas and risks
 
