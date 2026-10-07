@@ -27,6 +27,7 @@
  * `shouldSendPageView` exists to decide without double-counting.
  */
 
+import { hasAnalyticsConsent } from "./consent";
 import {
   CONTACT_CTAS,
   isContactHref,
@@ -213,6 +214,29 @@ export function isGaLoaded(): boolean {
   return initialised;
 }
 
+/** gtag's own off switch for a property: while it is true, gtag.js sends nothing. */
+export function gaDisableKey(measurementId: string): string {
+  return `ga-disable-${measurementId}`;
+}
+
+/**
+ * Keep gtag's off switch in step with the route. On a private route it is on, so
+ * that enhanced measurement (history-based page views, interactions) cannot
+ * report a client-side hop onto it; it is cleared when the route is trackable
+ * again and analytics is allowed. A trackable page where analytics is not
+ * allowed leaves it as it is: no tag runs there anyway.
+ */
+export function syncGaDisable(input: {
+  measurementId: string | null;
+  trackable: boolean;
+  analytics: boolean;
+}): void {
+  if (typeof window === "undefined" || input.measurementId === null) return;
+  const key = gaDisableKey(input.measurementId);
+  if (!input.trackable) (window as unknown as Record<string, unknown>)[key] = true;
+  else if (input.analytics) (window as unknown as Record<string, unknown>)[key] = false;
+}
+
 /**
  * Inject gtag.js and configure the property.
  *
@@ -245,12 +269,7 @@ export function initGa(measurementId: string): void {
   document.head.appendChild(script);
 
   window.gtag("js", new Date());
-  window.gtag("config", measurementId, {
-    // DebugView shows only sessions explicitly flagged, and the setup guide
-    // tells the operator to append `?debug_mode=1`. Passing it through here is
-    // what makes that instruction true.
-    ...(readDebugMode(window.location.search) ? { debug_mode: true } : {}),
-  });
+  window.gtag("config", measurementId, gaConfig(window.location.search));
 }
 
 /** Is this session asking to appear in DebugView? */
@@ -259,20 +278,40 @@ export function readDebugMode(search: string): boolean {
 }
 
 /**
+ * What the property is configured with. Google signals and ad personalization
+ * are always off: the property serves us as a measurement tool only, never as
+ * a way for Google to link the visitor to an ad profile. DebugView shows only
+ * sessions explicitly flagged, and the setup guide tells the operator to append
+ * `?debug_mode=1`, so passing it through is what makes that instruction true.
+ */
+export function gaConfig(search: string): Record<string, boolean> {
+  return {
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    ...(readDebugMode(search) ? { debug_mode: true } : {}),
+  };
+}
+
+/**
  * Send one event.
  *
  * `trackable` is a required argument rather than something read inside, so a
- * call site cannot forget the page check: the type system asks for it. Drops
- * silently when the tag never loaded — deliberately with NO queue-and-replay,
- * because replaying events recorded before consent into a tag loaded after it
- * would leak exactly what consent prevents.
+ * call site cannot forget the page check: the type system asks for it.
+ * Analytics consent is read when the event is sent, so a refusal made since the
+ * tag loaded (in another tab) stops it. Drops silently when the tag never
+ * loaded — deliberately with NO queue-and-replay, because replaying events
+ * recorded before consent into a tag loaded after it would leak exactly what
+ * consent prevents.
  */
 export function trackGaEvent(input: {
   event: GaEvent;
   trackable: boolean;
   params?: Record<string, unknown>;
 }): void {
-  if (!shouldSendGaEvent({ loaded: isGaLoaded(), trackable: input.trackable })) {
+  if (
+    !shouldSendGaEvent({ loaded: isGaLoaded(), trackable: input.trackable }) ||
+    !hasAnalyticsConsent()
+  ) {
     return;
   }
 

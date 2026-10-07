@@ -26,19 +26,22 @@ ARG NEXT_PUBLIC_SHOWCASE_URL
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_POSTHOG_KEY
 ARG NEXT_PUBLIC_POSTHOG_HOST
-# Meta pixel (STA-319). Not a secret — it ships in the client bundle. Leave
-# UNSET to disable the pixel entirely: the loader no-ops and never contacts
+# Meta pixel (STA-319). Not a secret — it ships in the client bundle. Unset (and
+# REQUIRE_ANALYTICS_IDS=0) the loader no-ops and never contacts
 # connect.facebook.net. Setting it is NOT sufficient to make the tag fire; the
 # visitor's marketing consent (lib/consent.ts) and a trackable route
 # (lib/consent-routes.ts) are also required. Production value: 1088158323750710
 # Documented here rather than in .env.example, which is gitignored.
 ARG NEXT_PUBLIC_META_PIXEL_ID
 # GA4 measurement id (STA-318). Not a secret — it ships in the client bundle.
-# Leave UNSET to disable Google Analytics entirely: the loader no-ops and never
-# contacts googletagmanager.com. Setting it is NOT sufficient to make the tag
-# fire; the visitor's ANALYTICS consent (lib/consent.ts) and a trackable route
+# Unset (and REQUIRE_ANALYTICS_IDS=0) the loader no-ops and never contacts
+# googletagmanager.com. Setting it is NOT sufficient to make the tag fire; the
+# visitor's ANALYTICS consent (lib/consent.ts) and a trackable route
 # (lib/consent-routes.ts) are also required. Production value: G-ZFZ6JLPFXN
 ARG NEXT_PUBLIC_GA_MEASUREMENT_ID
+# The build fails if the public ids, the cookie domain or a public URL are missing or
+# malformed, and after `next build` if the bundle lacks the ids. `--build-arg REQUIRE_ANALYTICS_IDS=0` skips both.
+ARG REQUIRE_ANALYTICS_IDS=1
 
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -52,7 +55,11 @@ ENV NEXT_PUBLIC_META_PIXEL_ID=$NEXT_PUBLIC_META_PIXEL_ID
 ENV NEXT_PUBLIC_GA_MEASUREMENT_ID=$NEXT_PUBLIC_GA_MEASUREMENT_ID
 ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN if [ "$REQUIRE_ANALYTICS_IDS" = "1" ]; then node scripts/analytics-ids.mjs pre; fi
+
 RUN ./node_modules/.bin/next build
+
+RUN if [ "$REQUIRE_ANALYTICS_IDS" = "1" ]; then node scripts/analytics-ids.mjs post; fi
 
 # Production image
 FROM node:22-alpine AS runner

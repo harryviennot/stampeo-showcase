@@ -180,6 +180,114 @@
           ],
           "link": "/programa-de-fidelizacion",
           "linkLabel": "Comparar sellos y puntos"
+        },
+        {
+          "name": "Panadería",
+          "quote": "Ava se lleva un cruasán de camino al trabajo. Tras nueve visitas, ve en su tarjeta que el décimo va por nuestra cuenta.",
+          "reward": "10 cruasanes = 1 gratis",
+          "advantage": "Tus propias fotos de producto como sellos",
+          "fields": [
+            {
+              "label": "Titular",
+              "value": "Ava"
+            },
+            {
+              "label": "Recompensa",
+              "value": "Cruasán gratis"
+            }
+          ],
+          "link": "/blog/tarjeta-fidelidad-digital-pequeno-comercio",
+          "linkLabel": "Leer la guía completa"
+        },
+        {
+          "name": "Estudio de pestañas",
+          "quote": "Maya vuelve cada tres semanas para un relleno. El sexto es gratis, y su teléfono le muestra cuánto le falta.",
+          "reward": "6 rellenos = 1 gratis",
+          "advantage": "Tu logo, tus colores, tu icono de sello",
+          "fields": [
+            {
+              "label": "Titular",
+              "value": "Maya"
+            },
+            {
+              "label": "Recompensa",
+              "value": "Relleno gratis"
+            }
+          ],
+          "link": "/blog/tarjeta-fidelidad-sin-app",
+          "linkLabel": "Ver cómo funciona sin app"
+        },
+        {
+          "name": "Tienda de alimentación",
+          "quote": "Rosa hace la compra en tu tienda cada semana: un carro lleno una vez, solo pan la siguiente. Los puntos siguen lo que gasta.",
+          "reward": "-10 % a 200 puntos",
+          "advantage": "Un carro lleno suma más que una compra rápida",
+          "fields": [
+            {
+              "label": "Titular",
+              "value": "Rosa"
+            },
+            {
+              "label": "Próxima recompensa",
+              "value": "-10 %"
+            }
+          ],
+          "link": "/programa-de-fidelizacion",
+          "linkLabel": "Comparar sellos y puntos"
+        },
+        {
+          "name": "Food truck",
+          "quote": "Leo encuentra el camión allá donde aparque. Su tarjeta está en su teléfono, así que cada porción cuenta, en cualquier esquina.",
+          "reward": "8 porciones = 1 gratis",
+          "advantage": "Sin papel ni equipos, solo tu teléfono",
+          "fields": [
+            {
+              "label": "Titular",
+              "value": "Leo"
+            },
+            {
+              "label": "Recompensa",
+              "value": "Porción gratis"
+            }
+          ],
+          "link": "/blog/tarjeta-fidelidad-digital-pequeno-comercio",
+          "linkLabel": "Leer la guía completa"
+        },
+        {
+          "name": "Spa",
+          "quote": "Elena reserva un tratamiento facial cada mes. El sexto va por nuestra cuenta, y cada sello aparece en su pantalla de bloqueo.",
+          "reward": "6 tratamientos = 1 gratis",
+          "advantage": "Un aviso con cada sello",
+          "fields": [
+            {
+              "label": "Titular",
+              "value": "Elena"
+            },
+            {
+              "label": "Recompensa",
+              "value": "Facial gratis"
+            }
+          ],
+          "link": "/blog/tarjeta-fidelidad-sin-app",
+          "linkLabel": "Ver cómo funciona sin app"
+        },
+        {
+          "name": "Hamburguesería",
+          "quote": "Jordan pide una hamburguesa cada viernes al salir del trabajo. La décima va por nuestra cuenta, y la ve acercarse en su teléfono.",
+          "reward": "10 hamburguesas = 1 gratis",
+          "advantage": "Sin integración con tu caja",
+          "fields": [
+            {
+              "label": "Titular",
+              "value": "Jordan"
+            },
+            {
+              "label": "Recompensa",
+              "value": "Hamburguesa gratis"
+            }
+          ],
+          "link": "/blog/tarjeta-fidelidad-digital-pequeno-comercio",
+          "linkLabel": "Leer la guía completa"
         }
       ]
     },

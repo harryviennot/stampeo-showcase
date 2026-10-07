@@ -13,7 +13,7 @@
  * a regression that blocks a click is far worse than a missing row.
  */
 
-import { CONSENT_VERSION, type ConsentRecord, type ConsentRegime } from "./consent";
+import { CONSENT_VERSION, detectGpc, type ConsentRecord, type ConsentRegime } from "./consent";
 
 /** Which surface carried the decision. Mirrors the CHECK in migration 174. */
 export type ConsentLedgerSurface = "banner" | "notice" | "preferences";
@@ -26,6 +26,11 @@ export interface ConsentLedgerPayload {
   regime: ConsentRegime;
   surface: ConsentLedgerSurface;
   decided_at: number;
+  /** The policy matrix version and row the choice was made under, if known. */
+  policy_version: number | null;
+  region_row: string | null;
+  /** Whether Global Privacy Control was on when they chose. */
+  gpc: boolean | null;
 }
 
 /**
@@ -55,6 +60,7 @@ export function consentLedgerEndpoint(): string | null {
 export function buildConsentPayload(input: {
   record: ConsentRecord;
   surface: ConsentLedgerSurface;
+  gpc?: boolean;
 }): ConsentLedgerPayload {
   return {
     subject_id: input.record.subjectId ?? null,
@@ -66,6 +72,9 @@ export function buildConsentPayload(input: {
     // The visitor's own clock, as evidence. The server stamps `recorded_at`
     // itself and that is the one an audit would rely on.
     decided_at: input.record.at,
+    policy_version: input.record.policyVersion ?? null,
+    region_row: input.record.regionRow ?? null,
+    gpc: input.gpc ?? null,
   };
 }
 
@@ -81,6 +90,7 @@ export function buildConsentPayload(input: {
 export function recordConsentDecision(input: {
   record: ConsentRecord;
   surface: ConsentLedgerSurface;
+  gpc?: boolean;
 }): void {
   const endpoint = consentLedgerEndpoint();
   if (!endpoint) return;
@@ -92,7 +102,8 @@ export function recordConsentDecision(input: {
     // would be dropped by the browser in exactly the revoke-and-reload case
     // this exists for. The endpoint therefore reads the RAW body and parses
     // it itself -- a `dict` parameter would make FastAPI reject this as 422.
-    navigator.sendBeacon?.(endpoint, JSON.stringify(buildConsentPayload(input)));
+    const gpc = input.gpc ?? detectGpc();
+    navigator.sendBeacon?.(endpoint, JSON.stringify(buildConsentPayload({ ...input, gpc })));
   } catch {
     // Blocked by an extension, no navigator, storage partitioned, offline.
     // All of them cost one row and none of them may reach the visitor.

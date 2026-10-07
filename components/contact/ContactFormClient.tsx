@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
+import { isTrackablePath } from "@/lib/consent-routes";
+import { submitContactForm, type SubmitGuard } from "@/lib/contact/submit";
+import { trackMetaEvent } from "@/lib/meta-pixel";
 
 import { PhoneIcon, EnvelopeIcon, QuestionIcon, MapPinIcon } from "@phosphor-icons/react";
 
@@ -192,8 +195,10 @@ function DemoForm({
 export function ContactPageClient() {
   const t = useTranslations("contact");
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const isDemo = searchParams.get("type") === "demo";
   const [status, setStatus] = useState<FormStatus>("idle");
+  const guard = useRef<SubmitGuard>({ sending: false });
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -231,20 +236,16 @@ export function ContactPageClient() {
       };
     }
 
-    try {
-      const res = await fetch(`${API_URL}/public/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+    const outcome = await submitContactForm({
+      body,
+      apiUrl: API_URL,
+      guard: guard.current,
+      track: (event) => void trackMetaEvent({ event, trackable: isTrackablePath(pathname) }),
+    });
+    if (outcome === "busy") return;
 
-      if (!res.ok) throw new Error();
-
-      setStatus("success");
-      form.reset();
-    } catch {
-      setStatus("error");
-    }
+    setStatus(outcome);
+    if (outcome === "success") form.reset();
   }
 
   const reset = () => setStatus("idle");

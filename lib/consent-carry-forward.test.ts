@@ -13,7 +13,7 @@
  *
  * Each case starts from the cookie value an older banner wrote and runs it
  * through what a page decides from it: the surface shown, which tags load, and
- * what the attribution capture writes down.
+ * which carriers the attribution capture writes.
  */
 
 import { afterEach, describe, expect, test } from "bun:test";
@@ -31,12 +31,15 @@ import {
   serializeConsentCookie,
   type ConsentRegime,
 } from "./consent";
-import { buildAttributionRecord, captureConsentEvidence } from "./ad-attribution";
+import { planCapture } from "./attribution/capture";
+import { consentEvidence } from "./attribution/evidence";
+import { landingFromUrl } from "./attribution/landing";
 import { shouldLoadGa } from "./google-analytics";
 import { shouldLoadMetaPixel } from "./meta-pixel";
+import { SUBJECT } from "./privacy/__fixtures__/fake-browser";
+import { rowFor } from "./privacy/policy";
 
 const OLDER = CONSENT_VERSION - 1;
-const SUBJECT = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
 
 /** The cookie value a banner of version `v` wrote for this choice. */
 function storedChoice(v: unknown, a: 0 | 1, m: 0 | 1, r: ConsentRegime): string {
@@ -48,11 +51,12 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
   const header = `NEXT_LOCALE=en; ${CONSENT_COOKIE}=${cookieValue}`;
   const record = consentRecordFromCookieHeader(header);
   const prior = priorConsentFromCookieHeader(header);
-  const state = resolveConsent({ record, prior, regime, gpc });
-  const evidence = captureConsentEvidence(record, prior);
+  const row = rowFor(regime === "opt-out" ? "US" : "FR");
+  const state = resolveConsent({ record, prior, gpc, row });
+  const evidence = consentEvidence({ record, prior, row: row.key });
   return {
     state,
-    surface: consentSurface({ record, prior, regime, gpc, trackable: true }),
+    surface: consentSurface({ record, prior, gpc, trackable: true, row }),
     metaLoads: shouldLoadMetaPixel({
       pixelId: "1088158323750710",
       marketing: state.marketing,
@@ -66,18 +70,23 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
       trackable: true,
     }),
     // A Meta ad click landing on /us/pricing, with both tags' cookies present.
-    captured: evidence && buildAttributionRecord({
-      search: "?fbclid=f-click&utm_source=facebook",
-      gaClientId: "GA1.1.1234567890.1700000000",
-      fbp: "fb.1.1700000000.987654321",
-      landingPath: "/us/pricing",
-      landingVariant: null,
-      referrer: "https://www.facebook.com/",
-      consent: state,
-      consentRegime: regime,
-      ...evidence,
-      capturedAt: 1_759_100_000,
-    }),
+    captured:
+      evidence &&
+      planCapture({
+        landing: landingFromUrl(
+          "https://stampeo.app/us/pricing?fbclid=f-click&utm_source=facebook",
+          { referrer: "https://www.facebook.com/", variant: null, landedAt: 1_759_100_000 },
+        ),
+        consent: state,
+        evidence,
+        live: {
+          gaClientId: "1234567890.1700000000",
+          gaSession: { sid: "1759100000", sn: 1 },
+          fbp: "fb.1.1700000000.987654321",
+        },
+        stored: { src: null, ga: null, ad: null },
+        now: 1_759_100_000,
+      }),
   };
 }
 
@@ -95,7 +104,7 @@ describe("an older refusal of everything stays a refusal", () => {
     expect(page.surface).toBe("none");
     expect(page.metaLoads).toBe(false);
     expect(page.gaLoads).toBe(false);
-    expect(page.captured).toBeNull();
+    expect(page.captured).toEqual({ src: null, ga: null, ad: null });
   });
 });
 
@@ -121,16 +130,12 @@ describe("an older partial refusal keeps the refused category refused", () => {
     expect(page.state).toEqual({ analytics: true, marketing: false });
     expect(page.gaLoads).toBe(true);
     expect(page.metaLoads).toBe(false);
-    // No click id without marketing, so the capture is an analytics-only row
+    // No click without marketing, so the capture is the source and the GA ids,
     // resting on the older choice: its version and its moment.
-    expect(page.captured).toMatchObject({
-      vendor: "direct",
-      clickId: null,
-      consentCategory: "analytics",
-      consentVersion: OLDER,
-      consentAt: 1_759_000_000,
-      consentRegime: "opt-out",
-    });
+    expect(page.captured!.ad).toBeNull();
+    for (const carrier of [page.captured!.src, page.captured!.ga]) {
+      expect(carrier).toMatchObject({ cv: OLDER, ca: 1_759_000_000, cr: "opt-out" });
+    }
   });
 
   test("GPC still turns off what the regime default would grant", () => {
@@ -204,12 +209,50 @@ describe("parsePriorConsent", () => {
 test("an older record appearing, or its moment changing, changes the consent snapshot", () => {
   // The banner reads `prior` from the snapshot and the attribution capture
   // carries `prior.at` as evidence, so the snapshot must be rebuilt for both.
-  const base = { record: null, regime: "opt-out" as const, gpc: false };
+  const base = { record: null, gpc: false, row: "US", ready: true };
   const prior = { v: OLDER, analytics: false, marketing: false, at: 1_759_000_000 };
   const keys = [null, prior, { ...prior, at: prior.at + 60 }].map((p) =>
     consentSnapshotKey({ ...base, prior: p }),
   );
   expect(new Set(keys).size).toBe(3);
+});
+
+describe("a record the web dashboard restored, read after the next version bump", () => {
+  // The cookie was written under the text before the bump, so it is read as an older choice.
+  const RESTORED_AT = 1_759_400_000;
+  const stored = (choice: object) =>
+    encodeURIComponent(JSON.stringify({ v: OLDER, t: RESTORED_AT, r: "opt-out", s: SUBJECT, ...choice }));
+  const evidenceOf = (raw: string) =>
+    consentEvidence({ record: null, prior: parsePriorConsent(raw), row: "US" });
+
+  test("keeps its origin and its no-choice answer", () => {
+    expect(parsePriorConsent(stored({ a: -1, m: 0, o: "restore" }))).toEqual({
+      v: OLDER,
+      analytics: null,
+      marketing: false,
+      at: RESTORED_AT,
+      origin: "restore",
+    });
+  });
+
+  test("still refuses what it refused, and asks about nothing it left open", () => {
+    const page = visit(stored({ a: -1, m: 0, o: "restore" }), "opt-out");
+
+    expect(page.state).toEqual({ analytics: true, marketing: false });
+    expect(page.metaLoads).toBe(false);
+  });
+
+  test.each([
+    ["a restored refusal", { a: -1, m: 0, o: "restore" }],
+    ["a refusal beside a category with no choice", { a: -1, m: 0 }],
+    ["a restore of an answered category", { a: 1, m: 0, o: "restore" }],
+  ])("%s evidences no click: the text in force and ca 0", (_case, choice) => {
+    expect(evidenceOf(stored(choice))).toMatchObject({ cv: CONSENT_VERSION, ca: 0, cr: "opt-out", g: "US" });
+  });
+
+  test("a refusal the visitor clicked keeps its own version and moment", () => {
+    expect(evidenceOf(stored({ a: 1, m: 0 }))).toMatchObject({ cv: OLDER, ca: RESTORED_AT });
+  });
 });
 
 describe("the browser read path", () => {

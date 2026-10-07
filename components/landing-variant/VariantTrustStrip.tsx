@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { ShieldCheckIcon, PhoneIcon } from "../icons";
+import { ContactLink } from "../ui/ContactLink";
 
 const SUPPORT_PHONE_TEL = "+33649370470";
 
@@ -24,13 +25,13 @@ export async function VariantTrustStrip() {
               <span>{t("rgpd")}</span>
             </div>
             {hasPhone && (
-              <a
+              <ContactLink
                 href={`tel:${SUPPORT_PHONE_TEL}`}
                 className="flex items-center gap-2.5 text-sm font-semibold hover:text-[var(--foreground)] transition-colors"
               >
                 <PhoneIcon weight="fill" className="w-5 h-5 text-[var(--accent)]" />
                 <span>{t("phone")}</span>
-              </a>
+              </ContactLink>
             )}
           </div>
         </ScrollReveal>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
@@ -9,27 +9,37 @@ import { useConsent } from "@/hooks/use-consent";
 import { isTrackablePath } from "@/lib/consent-routes";
 import {
   CONSENT_OPEN_EVENT,
+  categoriesToClearOnChoice,
   categoriesToClearOnLoad,
   clearCookiesFor,
+  clearPresentCookiesFor,
   consentSurface,
   currentConsent,
   emitConsentChange,
+  revokedBy,
   writeConsentRecord,
-  type ConsentCategory,
   type ConsentState,
 } from "@/lib/consent";
 import {
   recordConsentDecision,
   type ConsentLedgerSurface,
 } from "@/lib/consent-ledger";
+import {
+  NOTICE_KEYS,
+  TAP_TARGET,
+  noticeAcknowledgement,
+  preferencesView,
+} from "@/lib/privacy/choices-ui";
+import { rowByKey } from "@/lib/privacy/policy";
+import { watchConsentAcrossTabs, type ConsentWatcher } from "@/lib/privacy/stale-tags";
+import { POLICY_MATRIX, UNKNOWN_ROW_KEY } from "@/lib/privacy/policy-matrix";
 import { ConsentPreferences } from "./ConsentPreferences";
 
 const ALL_ON: ConsentState = { analytics: true, marketing: true };
 const ALL_OFF: ConsentState = { analytics: false, marketing: false };
-const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
 
 /**
- * Where a visitor accepts or refuses GA4, the Meta pixel and the TikTok pixel.
+ * Where a visitor accepts or refuses GA4 and the Meta pixel.
  *
  * Two surfaces, one gate — see `lib/consent.ts` for which visitor gets which
  * and why the split exists at all.
@@ -45,9 +55,14 @@ const CATEGORIES: readonly ConsentCategory[] = ["analytics", "marketing"];
  */
 export function ConsentBanner() {
   const t = useTranslations("common.cookies");
+  const tCommon = useTranslations("common");
   const pathname = usePathname();
   const consent = useConsent();
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const row = useMemo(
+    () => rowByKey(consent.row) ?? POLICY_MATRIX.rows[UNKNOWN_ROW_KEY],
+    [consent.row],
+  );
 
   // `trackable` gates SOLICITATION, never MANAGEMENT.
   //
@@ -63,6 +78,17 @@ export function ConsentBanner() {
   // gate here, and acquisition pages render no footer at all.
   const trackable = isTrackablePath(pathname);
 
+  // A refusal made in another tab or window reloads this one when it is shown or focused, and on each page.
+  const watcher = useRef<ConsentWatcher | null>(null);
+  useEffect(() => {
+    const current = watchConsentAcrossTabs();
+    watcher.current = current;
+    return current.stop;
+  }, []);
+  useEffect(() => {
+    watcher.current?.recheck();
+  }, [pathname]);
+
   // The footer entry, and anything else that wants to reopen the choice.
   // Deliberately NOT gated: see above.
   useEffect(() => {
@@ -74,51 +100,50 @@ export function ConsentBanner() {
   // When GPC overrides in the US, trackers set before the signal was on are
   // removed on load. No reload: no tag loads under the override, so there is no
   // running script to stop, and the consent cookie itself is never cleared.
-  const { ready, regime, gpc } = consent;
+  const { ready, gpc } = consent;
   useEffect(() => {
     if (!ready) return;
-    const categories = categoriesToClearOnLoad({ regime, gpc });
-    if (categories.length > 0) clearCookiesFor(categories);
-  }, [ready, regime, gpc]);
+    clearPresentCookiesFor(categoriesToClearOnLoad({ row, gpc }));
+  }, [ready, row, gpc]);
 
   const commit = useCallback(
     (next: ConsentState, surface: ConsentLedgerSurface) => {
-      // Read what was live BEFORE writing, so we can tell a revocation from a
-      // first-time refusal. Only a revocation has cookies to clean up.
-      const before = currentConsent();
-      const revoked = CATEGORIES.filter(
-        (category) => before[category] && !next[category],
-      );
+      // Read what was live BEFORE writing: only a tag that was running needs a reload to stop.
+      const revoked = revokedBy(currentConsent(), next);
 
-      const record = writeConsentRecord(next, consent.regime);
+      const record = writeConsentRecord(next, row);
       emitConsentChange(next);
       setPrefsOpen(false);
 
-      // Prove the decision server-side (STA-324). Deliberately AFTER the
-      // cookie and the event: the choice is already in force by now, so this
-      // can only add evidence and can never cost the visitor their click. It
-      // uses `sendBeacon`, which is what lets it survive the reload below —
-      // a revocation is the decision it matters most to be able to prove.
+      // Prove the decision server-side. Deliberately AFTER the cookie and the
+      // event: the choice is already in force, so this can only add evidence
+      // and never cost the visitor their click. It uses `sendBeacon`, which
+      // survives the reload below.
       recordConsentDecision({ record, surface });
 
+      // Every refused category is cleared, whatever was live before.
+      const refused = categoriesToClearOnChoice(next);
+      if (refused.length > 0) clearCookiesFor(refused);
       if (revoked.length > 0) {
-        clearCookiesFor(revoked);
         // A running gtag or fbq cannot be unloaded. Deleting its cookies stops
         // it identifying anyone, but only a reload actually stops the script,
         // so the honest move is to reload rather than to claim it is gone.
         window.location.reload();
       }
     },
-    [consent.regime],
+    [row],
   );
+
+  // The dialog's region version, from the row in force and whether GPC is on.
+  const view = useMemo(() => preferencesView(row, gpc), [row, gpc]);
 
   const surface = consent.ready
     ? consentSurface({
         record: consent.record,
         prior: consent.prior,
-        regime: consent.regime,
-        gpc: consent.gpc,
+        gpc,
         trackable,
+        row,
       })
     : "none";
 
@@ -138,7 +163,7 @@ export function ConsentBanner() {
   // 44px tall and equal width: the thumb target Apple and Android both ask
   // for, and neither button can be the easier one to hit.
   const equalButton =
-    "h-11 flex-1 rounded-full bg-[var(--foreground)] px-4 text-sm font-semibold text-white transition-all hover:brightness-110";
+    `${TAP_TARGET} flex-1 rounded-full bg-[var(--foreground)] px-4 text-sm font-semibold text-white transition-all hover:brightness-110`;
 
   return (
     <>
@@ -173,7 +198,7 @@ export function ConsentBanner() {
           <button
             type="button"
             onClick={() => setPrefsOpen(true)}
-            className="mt-3 inline-flex h-11 items-center text-sm font-semibold text-[var(--muted-foreground)] underline underline-offset-4 transition-colors hover:text-[var(--foreground)] sm:mt-4 sm:h-auto"
+            className={`mt-3 inline-flex ${TAP_TARGET} items-center text-sm font-semibold text-[var(--muted-foreground)] underline underline-offset-4 transition-colors hover:text-[var(--foreground)] sm:mt-4 sm:h-auto`}
           >
             {t("banner.customise")}
           </button>
@@ -198,13 +223,15 @@ export function ConsentBanner() {
       {surface === "notice" && (
         <section role="region" aria-label={t("notice.title")} className={surfaceShell}>
           <p className="text-sm text-[var(--muted-foreground)]">{t("notice.body")}</p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          {/* The same words as the footer's US link, so what a visitor sees once
+              is what they find later. 44px tall on a phone, like "customise". */}
+          <div className="mt-1 flex flex-wrap items-center gap-x-5 text-sm sm:mt-3 sm:gap-y-2">
             <button
               type="button"
               onClick={() => setPrefsOpen(true)}
-              className="font-semibold text-[var(--accent)] underline underline-offset-2"
+              className={`inline-flex ${TAP_TARGET} items-center font-semibold text-[var(--accent)] underline underline-offset-2 sm:h-auto`}
             >
-              {t("notice.choices")}
+              {tCommon(NOTICE_KEYS.choices)}
             </button>
             {/* Dismissing RECORDS the state in force (the opt-out default, with
                 any refusal carried from an older version) rather than hiding
@@ -214,12 +241,10 @@ export function ConsentBanner() {
                 us with no evidence of what they were told. */}
             <button
               type="button"
-              onClick={() =>
-                commit({ analytics: consent.analytics, marketing: consent.marketing }, "notice")
-              }
-              className="font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
+              onClick={() => commit(noticeAcknowledgement(consent), "notice")}
+              className={`inline-flex ${TAP_TARGET} items-center font-semibold text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] sm:h-auto`}
             >
-              {t("notice.dismiss")}
+              {tCommon(NOTICE_KEYS.dismiss)}
             </button>
           </div>
         </section>
@@ -228,6 +253,7 @@ export function ConsentBanner() {
       <ConsentPreferences
         open={prefsOpen}
         initial={{ analytics: consent.analytics, marketing: consent.marketing }}
+        view={view}
         onClose={() => setPrefsOpen(false)}
         onSave={(next) => commit(next, "preferences")}
       />

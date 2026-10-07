@@ -1,5 +1,14 @@
 # Getting a Meta pixel — setup guide (STA-319, checkbox 1)
 
+> **Current state.** The pixel has been live in production since
+> 2026-10-02 17:15 UTC, loaded only after consent under the regional policy.
+> Server events (Lead, InitiateCheckout, StartTrial, Purchase) go through the
+> backend's Conversions API outbox. How it all works now, the event list, the
+> Test Events / DebugView checks and the console checklist:
+> `backend/docs/measurement/` (README, events, operations). This page stays as
+> the record of how the dataset and the domain were set up; sections E and F
+> below are updated to match today.
+
 This is the human-executed half of STA-319: everything that happens in a
 browser rather than in the repo. It produces one artifact — a **pixel ID** —
 which is the only thing the code needs.
@@ -38,7 +47,7 @@ without this, which is why it's being built first.
    precisely the un-gated install this issue exists to avoid.
 6. Copy the **dataset / pixel ID** — a 15–16 digit number. That's the deliverable.
 
-Skip any "Conversions API" prompt. Server-side is out of scope (see plan Non-goals).
+Skip any "Conversions API" set-up prompt here: the backend sends server events itself, with its own access token (`backend/docs/measurement/operations.md`).
 
 > **Current pixel ID: `1088158323750710`.**
 >
@@ -178,23 +187,23 @@ build. Two tracked places, plus your local file:
    the two silently produces an empty value. Done in STA-319, with the
    explanatory comment, because this is the only tracked file that documents
    the variable.
-2. **Production build args** — wherever the real deploy passes build args. CI
-   (`.github/workflows/ci.yml`) needs **nothing**: it uses placeholders for
-   PostHog, and the loader no-ops cleanly when the var is unset (plan AC3), so
-   an absent value cannot fail the build.
+2. **Production build args** — wherever the real deploy passes build args.
+   The Docker build fails with a named error when the pixel id, GA id,
+   showcase URL, API URL or cookie domain is missing or malformed
+   (`scripts/analytics-ids.mjs`, on by default via `ARG REQUIRE_ANALYTICS_IDS=1`).
+   Only a deliberate `REQUIRE_ANALYTICS_IDS=0` build may ship without them.
 3. **Your own `.env.local`** for local testing.
 
 > `.env.example` is **gitignored** (`.env*` in `.gitignore`) and untracked, so
 > documenting the variable there reaches nobody else. That is why the
 > explanation lives in the Dockerfile instead.
 
-**Leave it unset in production until STA-317 ships.** With the dormant design
-setting it early is harmless — the consent gate still denies, and that's plan
-AC2 — but it buys nothing and muddies the flip-on moment.
+The production build carries the id. The consent gate, not the absence of
+the id, is what keeps the tag off for a visitor who has not allowed it.
 
 ---
 
-## F. Verification — deferred, and why
+## F. Verification
 
 The two standard tools:
 
@@ -202,28 +211,24 @@ The two standard tools:
 - **Events Manager → your dataset → Test Events** — paste the site URL, click
   around, watch events land in real time.
 
-Both require the tag to *actually load*. While the pixel is dormant it loads
-never, by construction, so neither tool will show anything — that is the
-correct result, not a fault. Real verification happens after STA-317 ships and
-you accept consent in the banner; it belongs to **STA-317's runbook**, not to
-this issue's QA pass.
+Both need the tag to load, so allow advertising cookies in the banner first
+(or visit from a US timezone without GPC). The step-by-step checks, including
+the server events, are in `backend/docs/measurement/operations.md`.
 
 ### Aggregated Event Measurement — also deferred to here
 
 AEM ranks up to 8 conversion events per verified domain in priority order, which
-determines what still gets attributed for iOS users who decline ATT. Suggested
-order once it applies: `Lead` → `Contact` → `PageView`.
+determines what still gets attributed for iOS users who decline ATT. Order, only
+if Meta still exposes the setting: `Lead` → `StartTrial` → `InitiateCheckout` →
+`Purchase` → `SignupCTA` → `Contact` → `ViewContent` → `PageView`
+(console item C4 in `backend/docs/measurement/operations.md`).
 
-**Do not attempt this before STA-317.** AEM prioritises events Meta has seen,
-and a dormant pixel has sent none — so the screen is either empty, absent, or
-offers nothing worth ranking. If you go looking anyway and find nothing, check
+If you go looking and find nothing, check
 in this order: domain verification actually completed (section D); an ad account
 is attached to the dataset (section C); then the location, usually Events
 Manager → left nav **Aggregated Event Measurement** → *Configure Web Events*, or
 the dataset's **Settings** tab. Meta has moved this repeatedly.
 
-STA-319 checkbox 3 is therefore only half-deliverable here: the event mapping
-is built and unit-tested, the live verification is handed to STA-317.
 
 ---
 
@@ -254,9 +259,9 @@ Do now:
       `facebook-domain-verification=oxwnjinw6dgm7oyyf07moxqbfa0cg4`, coexisting
       with the existing SPF and Google verification records
 - [x] Automatic advanced matching left OFF
-- [x] ID recorded here — **not** set in any prod env, by design
+- [x] ID recorded here and set in the production build args
 
-Deferred to the STA-317 flip-on, do NOT attempt while dormant:
+Open (tracked in the console checklist, `backend/docs/measurement/operations.md`):
 
-- [ ] Aggregated Event Measurement events ranked
-- [ ] Pixel Helper / Test Events verification
+- [ ] Aggregated Event Measurement events ranked (C4, only if Meta still offers it)
+- [ ] Pixel Helper / Test Events verification after each deploy

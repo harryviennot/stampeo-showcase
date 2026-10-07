@@ -110,6 +110,7 @@
         "success": "Dziękujemy! Adres zapisany."
       },
       "sitemapLabel": "Mapa strony",
+      "privacyChoices": "Twoje ustawienia prywatności",
       "cookiePreferences": "Ustawienia plików cookie"
     },
     "points": "Punkty",
@@ -140,16 +141,15 @@
       "notice": {
         "title": "Twoje ustawienia prywatności",
         "body": "Używamy plików cookie do statystyk i reklam, żeby sprawdzać skuteczność naszych reklam. Informujemy też Meta i Google, czy do rejestracji doprowadziła reklama.",
-        "choices": "Twoje ustawienia prywatności",
         "dismiss": "Rozumiem"
       },
       "prefs": {
         "title": "Wybierz według celu",
-        "intro": "Każdy cel włączasz lub wyłączasz osobno. Twój wybór zapisujemy na sześć miesięcy i możesz go zmienić w stopce strony.",
+        "intro": "Każdy cel włączasz lub wyłączasz osobno. Twój wybór zapisujemy na {months, plural, one {# miesiąc} few {# miesiące} many {# miesięcy} other {# miesiąca}} i możesz go zmienić w stopce strony.",
         "necessary": {
           "title": "Niezbędne",
           "always": "Zawsze włączone",
-          "body": "Twój język, twój kraj i sam ten wybór. Nic z tego cię nie identyfikuje ani nie opuszcza Stampeo."
+          "body": "Twój język, twój kraj i sam ten wybór. Losowy identyfikator zapisuje twoje wybory i może zostać powiązany z kontem, które założysz."
         },
         "analytics": {
           "title": "Statystyki",
@@ -157,10 +157,29 @@
         },
         "marketing": {
           "title": "Reklama",
-          "body": "Meta i TikTok, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać."
+          "body": "Meta, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać."
         },
         "save": "Zapisz mój wybór",
-        "cancel": "Anuluj"
+        "cancel": "Anuluj",
+        "lockedOff": "Wyłączone",
+        "close": "Zamknij",
+        "us": {
+          "title": "Twoje ustawienia prywatności",
+          "intro": "Wyłącz to, czego nie chcesz, żebyśmy udostępniali lub mierzyli. Odmowę zapisujemy na {months, plural, one {# miesiąc} few {# miesiące} many {# miesięcy} other {# miesiąca}} i odnawiamy ją przy każdej wizycie. Aby ją zmienić, wróć do „{choices}” w stopce strony.",
+          "introLocked": "Sygnał twojej przeglądarki już wyłącza oba cele, więc nic tu nie trzeba zmieniać. Możesz w każdej chwili otworzyć „{choices}” w stopce strony.",
+          "gpc": {
+            "statusAll": "Sygnał Global Privacy Control w twojej przeglądarce jest włączony i go respektujemy: reklama i statystyki są wyłączone.",
+            "statusAdvertising": "Sygnał Global Privacy Control w twojej przeglądarce jest włączony i go respektujemy: reklama jest wyłączona."
+          },
+          "marketing": {
+            "title": "Sprzedaż, udostępnianie i reklama ukierunkowana",
+            "body": "Meta, żeby wiedzieć, które reklamy doprowadziły do rejestracji. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Po wyłączeniu nic nie trafia do Meta."
+          },
+          "analytics": {
+            "title": "Statystyki",
+            "body": "Google Analytics, żeby wiedzieć, które strony przyprowadzają nowe firmy. Google przetwarza te dane wyłącznie na nasze zlecenie."
+          }
+        }
       }
     }
   }

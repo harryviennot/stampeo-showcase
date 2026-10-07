@@ -9,6 +9,7 @@ import {
   initMetaPixel,
   isMetaPixelLoaded,
   metaPixelIdFromEnv,
+  reportViewContent,
   shouldLoadMetaPixel,
   shouldSendMetaPageView,
   trackMetaEvent,
@@ -61,7 +62,7 @@ export function MetaPixel() {
     // remounted under a resident script. Meta's own history listener is off
     // (see `initMetaPixel`), so without this every session looks like one page.
     if (
-      !shouldSendMetaPageView({
+      shouldSendMetaPageView({
         loaded: isMetaPixelLoaded(),
         trackable,
         alreadyLoaded,
@@ -69,10 +70,12 @@ export function MetaPixel() {
         nextPath: pathname,
       })
     ) {
-      return;
+      trackMetaEvent({ event: "PageView", trackable });
     }
 
-    trackMetaEvent({ event: "PageView", trackable });
+    // The pricing and feature pages also say which content was viewed, once
+    // per page per load, on the init run as well as on later navigations.
+    reportViewContent(pathname, trackable);
   }, [pathname, marketing, ready]);
 
   return null;

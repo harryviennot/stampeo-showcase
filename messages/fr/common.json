@@ -110,6 +110,7 @@
         "success": "Merci ! Vous êtes inscrit."
       },
       "sitemapLabel": "Plan du site",
+      "privacyChoices": "Vos choix de confidentialité",
       "cookiePreferences": "Préférences cookies"
     },
     "points": "Points",
@@ -140,16 +141,15 @@
       "notice": {
         "title": "Vos choix de confidentialité",
         "body": "On utilise des cookies de mesure et de publicité pour évaluer nos annonces, et on signale à Meta et Google si votre inscription vient de l'une d'elles.",
-        "choices": "Vos choix de confidentialité",
         "dismiss": "J'ai compris"
       },
       "prefs": {
         "title": "Choisir par finalité",
-        "intro": "Vous activez ou désactivez chaque finalité. Votre choix est conservé six mois et reste modifiable depuis le pied de page.",
+        "intro": "Vous activez ou désactivez chaque finalité. Votre choix est conservé {months} mois et reste modifiable depuis le pied de page.",
         "necessary": {
           "title": "Strictement nécessaires",
-          "always": "Toujours actifs",
-          "body": "Votre langue, votre pays et ce choix lui-même. Rien ici ne vous identifie ni ne sort de Stampeo."
+          "always": "Toujours activé",
+          "body": "Votre langue, votre pays et ce choix lui-même. Un identifiant aléatoire enregistre vos choix et peut être relié au compte que vous créez."
         },
         "analytics": {
           "title": "Mesure d'audience",
@@ -157,10 +157,29 @@
         },
         "marketing": {
           "title": "Publicité",
-          "body": "Meta et TikTok, pour savoir laquelle de nos annonces a vraiment servi. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître."
+          "body": "Meta, pour savoir laquelle de nos annonces a vraiment servi. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître."
         },
         "save": "Enregistrer mon choix",
-        "cancel": "Annuler"
+        "cancel": "Annuler",
+        "lockedOff": "Désactivé",
+        "close": "Fermer",
+        "us": {
+          "title": "Vos choix de confidentialité",
+          "intro": "Désactivez ce que vous ne voulez pas qu'on partage ou qu'on mesure. Un refus est conservé {months} mois et se renouvelle à chacune de vos visites. Pour le modifier, retrouvez « {choices} » dans le pied de page.",
+          "introLocked": "Le signal de votre navigateur désactive déjà les deux finalités : il n'y a rien à modifier ici. Vous pouvez rouvrir « {choices} » dans le pied de page à tout moment.",
+          "gpc": {
+            "statusAll": "Le signal Global Privacy Control de votre navigateur est activé et on le respecte : la publicité et la mesure d'audience sont désactivées.",
+            "statusAdvertising": "Le signal Global Privacy Control de votre navigateur est activé et on le respecte : la publicité est désactivée."
+          },
+          "marketing": {
+            "title": "Vente, partage et publicité ciblée",
+            "body": "Meta, pour savoir quelles annonces ont mené à une inscription. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Si vous la désactivez, rien n'est transmis à Meta."
+          },
+          "analytics": {
+            "title": "Mesure d'audience",
+            "body": "Google Analytics, pour voir quelles pages nous amènent de nouveaux commerces. Google traite ces données pour notre compte uniquement."
+          }
+        }
       }
     }
   }

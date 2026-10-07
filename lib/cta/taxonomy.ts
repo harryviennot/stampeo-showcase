@@ -59,12 +59,28 @@ export function isKnownCTALocation(location: string): boolean {
  *
  * Locale-prefixed hrefs are matched too: `Link` from @/i18n/navigation
  * prefixes at render time, and a call site passing a resolved href must not
- * silently downgrade a Contact to a Lead. The prefix strip repeats
+ * silently be read as a signup. The prefix strip repeats
  * (`(?:[a-z]{2}\/)*`) so a market+locale path like `/en/us/contact` — not a
  * route today, defensive only — is still recognised.
  */
 export function isContactHref(href: string): boolean {
   return /^\/(?:[a-z]{2}\/)*contact(?:\/|$|\?|#)/.test(href);
+}
+
+/**
+ * Does this href open the visitor's mail, phone or WhatsApp app: a `mailto:` or
+ * `tel:` link, or one to `wa.me` itself (not a look-alike host, and not a URL
+ * that merely mentions it)? Following one leaves the page without a request of
+ * ours, so the click is the only moment it can be reported.
+ */
+export function isDirectContactHref(href: string): boolean {
+  if (/^(?:mailto|tel):/i.test(href)) return true;
+  try {
+    const url = new URL(href);
+    return (url.protocol === "https:" || url.protocol === "http:") && url.hostname === "wa.me";
+  } catch {
+    return false;
+  }
 }
 
 /** Does this href point at the signup or the contact page? Same prefix rule as `isContactHref`. */

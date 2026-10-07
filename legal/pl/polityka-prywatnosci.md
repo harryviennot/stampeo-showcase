@@ -130,13 +130,15 @@ Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google), mogą prz
 
 ### 5.1 Twój wybór
 
-Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakceptujesz. Do tego czasu ich skrypty w ogóle nie trafiają na stronę: żadne zapytanie nie dociera do Google, Meta ani TikToka i nie powstaje żaden z ich plików cookie. Odmowa nie zostawia więc niczego do usunięcia.
+Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakceptujesz. Do tego czasu ich skrypty w ogóle nie trafiają na stronę: żadne zapytanie nie dociera do Google ani Meta i nie powstaje żaden z ich plików cookie. Odmowa nie zostawia więc niczego do usunięcia.
 
-Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na sześć miesięcy, po czym pytamy ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** na dole każdej strony. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
+Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na 6 miesięcy, po czym możemy zapytać ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
 
-Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, traktujemy go jak odmowę i nic się nie wczytuje. W Stanach Zjednoczonych sygnał ma pierwszeństwo nawet przed wcześniej zapisanym wyborem i nie pokazujemy wtedy żadnego komunikatu, bo odpowiedź już jest. W Europie własny wybór ma pierwszeństwo przed sygnałem: dopóki nie ma zapisanego wyboru, baner nadal się pojawia, żeby można było świadomie wyrazić zgodę.
+Jeśli twoja przeglądarka wysyła sygnał Global Privacy Control, traktujemy go jak odmowę i nic się nie wczytuje. W Stanach Zjednoczonych sygnał ma pierwszeństwo nawet przed wcześniej zapisanym wyborem i nie pokazujemy wtedy żadnego komunikatu, bo odpowiedź już jest. W każdym stanie Stanów Zjednoczonych respektujemy ten sygnał jako sprzeciw wobec sprzedaży, udostępniania i reklamy ukierunkowanej, a dopóki jest włączony, wyłączony jest także pomiar ruchu. W Europie własny wybór ma pierwszeństwo przed sygnałem: dopóki nie ma zapisanego wyboru, baner nadal się pojawia, żeby można było świadomie wyrazić zgodę.
 
-Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a **Ustawienia plików cookie** pozwalają je wyłączyć w dowolnym momencie.
+Odwiedzających ze Stanów Zjednoczonych traktujemy inaczej, ponieważ tamtejsze przepisy stanowe wymagają poinformowania i możliwości sprzeciwu, a nie uprzedniej zgody. Tam pliki cookie do statystyk i do reklamy wczytują się od razu, informuje o tym komunikat, a link **Twoje ustawienia prywatności** pozwala je wyłączyć w dowolnym momencie. Znajdziesz go w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy, a komunikat zawiera przycisk o tej samej nazwie. Odmowę zapisujemy na 13 miesięcy i odnawiamy przy każdej wizycie, a po zalogowaniu do panelu przywracamy ją z Twojego konta.
+
+O tym, jakie zasady Cię dotyczą, decyduje strefa czasowa Twojego urządzenia. Gdy sygnały są sprzeczne, obowiązują zasady bardziej rygorystyczne, a gdy nie możemy Cię zlokalizować, obowiązują zasady ścisłe (opt-in). Nie używamy do tego Twojego adresu IP.
 
 ### 5.2 Pliki cookie obecne niezależnie od wyboru
 
@@ -146,17 +148,28 @@ Są ściśle niezbędne i nie podlegają zgodzie.
 |---|---|---|
 | `NEXT_LOCALE` | Zapamiętuje język, w którym czytasz stronę. | 1 rok |
 | `stampeo_market` | Zapamiętuje kraj, którego strony otworzono, żeby później wypełnić pole. | 30 dni |
-| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3 oraz losowy identyfikator łączący kolejne decyzje (zob. 5.6). | 6 miesięcy |
+| `stampeo_consent` | Zapisuje wybór dotyczący plików cookie z punktu 5.3 oraz losowy identyfikator łączący kolejne decyzje (zob. 5.6). | 6 miesięcy. W Stanach Zjednoczonych odmowa jest zapisywana na 13 miesięcy i odnawiana przy każdej wizycie. |
+| `stampeo_sid` | Losowy identyfikator, który zapisuje Twoje wybory i łączy je z kontem, które założysz, dzięki czemu późniejsza odmowa obejmuje to konto (zob. 5.6). | 13 miesięcy |
 | Pliki cookie sesji Supabase | Utrzymuje zalogowanie w panelu firmowym. | Sesja |
 
 ### 5.3 Pliki cookie wymagające twojej zgody
+
+Te pliki cookie są używane tylko wtedy, gdy na to pozwolisz (w Stanach Zjednoczonych, dopóki ich nie wyłączysz przez **Twoje ustawienia prywatności**; gdzie indziej przez **Ustawienia plików cookie**).
 
 | Cel | Odbiorca | Pliki cookie |
 |---|---|---|
 | Pomiar ruchu | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Pomiar skuteczności reklam | Meta | `_fbp`, `_fbc` |
-| Pomiar skuteczności reklam | TikTok | `_ttp` |
-| Atrybucja reklamowa | Stampeo, następnie Google lub Meta | `stampeo_attribution` |
+
+Trzy poniższe pliki cookie są nasze. Ustawia je nasz serwer, a są one współdzielone między stampeo.app a panelem firmowym.
+
+| Plik cookie | Cel | Kategoria | Czas przechowywania |
+|---|---|---|---|
+| `stampeo_src` | Skąd pochodzi Twoja wizyta (parametry kampanii, strona wejścia, strona odsyłająca). | Pomiar ruchu lub reklama | 6 miesięcy |
+| `stampeo_ga` | Identyfikatory Google Analytics Twojej wizyty. | Pomiar ruchu | 6 miesięcy |
+| `stampeo_ad` | Identyfikator kliknięcia platformy reklamowej oraz identyfikator przeglądarki Meta, tylko gdy trafisz na stronę z reklamy. | Reklama | 6 miesięcy |
+
+Dawny plik cookie `stampeo_attribution` nie jest już ustawiany; przeglądarka, która otrzymała go wcześniej, może go jeszcze przechowywać do czasu wygaśnięcia.
 
 ### 5.4 Pomiar ruchu bez plików cookie
 
@@ -168,34 +181,42 @@ Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane 
 
 ### 5.5 Pomiar konwersji z naszych serwerów
 
-Jeżeli zaakceptujesz pliki cookie z punktu 5.3 i trafisz na stronę z reklamy, zachowujemy identyfikator dodany do klikniętego odnośnika przez platformę reklamową (w przypadku Google jest to `gclid`, w przypadku Meta `fbclid`) wraz z parametrami kampanii zawartymi w adresie oraz identyfikatorem przeglądarki właściwym dla danej platformy, opisanym powyżej. Trafiają one do pliku cookie `stampeo_attribution`, wymienionego w punkcie 5.3, którego jedynym zadaniem jest przetrwanie przejścia z tej strony do panelu firmowego, działającego w innej subdomenie. Jeżeli później wrócisz z innej reklamy, nowsze kliknięcie zastępuje wcześniejsze.
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki ich nie wyłączysz), zachowujemy w plikach `stampeo_src`, `stampeo_ga` i `stampeo_ad`, wymienionych w punkcie 5.3: informację, skąd pochodzi Twoja wizyta, czyli parametry kampanii zawarte w adresie, stronę wejścia i stronę odsyłającą; identyfikatory Google Analytics Twojej wizyty; a jeżeli trafisz na stronę z reklamy, także identyfikator dodany do klikniętego odnośnika przez platformę reklamową (w przypadku Google jest to `gclid`, w przypadku Meta `fbclid`) oraz identyfikator przeglądarki Meta. Każdy z tych plików cookie jest przechowywany tylko tak długo, jak zezwalasz na kategorię wskazaną dla niego w punkcie 5.3. Ustawia je nasz serwer i są one współdzielone między stampeo.app a panelem firmowym, działającym w innej subdomenie, dzięki czemu te informacje przetrwają przejście z tej strony do panelu. Jeżeli później wrócisz z innej reklamy, nowsze kliknięcie zastępuje wcześniejsze.
 
-Jeżeli następnie założysz konto firmowe, przekazujemy **z naszych serwerów** informacje o maksymalnie czterech etapach: założeniu konta, otwarciu strony płatności, rozpoczęciu bezpłatnego okresu próbnego oraz opłaceniu pierwszej faktury. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
+Jeżeli założysz konto, przekazujemy **z naszych serwerów** informacje o maksymalnie czterech etapach: założeniu konta, otwarciu strony płatności, rozpoczęciu bezpłatnego okresu próbnego oraz opłaceniu pierwszej faktury. Pierwszy etap przekazujemy po potwierdzeniu konta (kodem wysłanym e-mailem albo logowaniem przez Google lub Apple), zanim powstanie jakakolwiek firma. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
 
-Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posiada (identyfikator kliknięcia i swój identyfikator przeglądarki), oraz nazwę kampanii, a przy trzech ostatnich etapach także cenę wybranego planu lub zapłaconą kwotę wraz z walutą. Każda platforma otrzymuje wyłącznie własne identyfikatory: kliknięcie z Google nigdy nie jest zgłaszane do Meta ani kliknięcie z Meta do Google.
+Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posiada (identyfikator kliknięcia i swój identyfikator przeglądarki), oraz nazwę kampanii, a przy trzech ostatnich etapach także cenę wybranego planu lub zapłaconą kwotę wraz z walutą. Każda platforma otrzymuje wyłącznie własne identyfikatory: identyfikator kliknięcia z Google nigdy nie jest przekazywany do Meta ani identyfikator kliknięcia z Meta do Google.
 
 Meta otrzymuje ponadto:
 
 - Twój adres IP i parametry techniczne Twojej przeglądarki (typ, wersja, system operacyjny), zapisane w chwili zakładania konta, a także adres naszego panelu. Te dwie informacje przechowujemy najwyżej 45 dni, a następnie je usuwamy;
 - Twój adres e-mail, numer telefonu, imię i nazwisko, kraj, miasto i kod pocztowy Twojej firmy oraz identyfikator wyprowadzony z Twojego konta, każde z nich **zahaszowane** algorytmem SHA-256 przed opuszczeniem naszych serwerów. Haszowanie zamienia każdą z tych informacji w kod, z którego nie da się odtworzyć Twoich danych. Mimo to kod pozwala Meta Cię rozpoznać, ponieważ Meta tworzy taki sam kod z danych swoich użytkowników. Dlatego nadal jest to dana osobowa. Meta porównuje te kody z kodami swoich użytkowników, żeby ustalić, czy masz konto na Facebooku lub Instagramie, także wtedy, gdy reklama została wyświetlona na innym urządzeniu, i wykorzystuje wynik do pomiaru i ulepszania sposobu wyświetlania naszych reklam. Meta może też wykorzystywać te dane na własnych warunkach, na przykład do ulepszania swoich systemów reklamowych, zgodnie z [polityką prywatności Meta](https://www.facebook.com/privacy/policy).
 
-Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
+Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google przy każdym etapie otrzymuje własny identyfikator sesji, dzięki czemu etap łączy się z Twoją wizytą. Nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
 
 Nigdy nie przekazujemy Twojego hasła, danych płatniczych ani żadnych informacji o Twoich klientach (osobach, które mają Twoje karty lojalnościowe).
 
+Dla każdego etapu przechowujemy też dane diagnostyczne wysyłki: jej status, czasy prób oraz kod odpowiedzi zwrócony przez platformę, a także komunikaty odpowiedzi platformy. Okresy przechowywania podaje §8.
+
 - **Odbiorcy:** Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych. Meta to Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych.
-- **Podstawa prawna:** Twoja zgoda (art. 6 ust. 1 lit. a RODO), wyrażona w banerze plików cookie lub w **Ustawieniach plików cookie**. W Stanach Zjednoczonych, gdzie uprzednia zgoda nie jest wymagana, opieramy się na poinformowaniu i prawie do sprzeciwu (zob. 5.1 i §6).
+- **Podstawa prawna:** Twoja zgoda (art. 6 ust. 1 lit. a RODO), wyrażona w banerze plików cookie lub w **Ustawieniach plików cookie**. W Stanach Zjednoczonych, gdzie uprzednia zgoda nie jest wymagana, opieramy się na poinformowaniu i prawie do sprzeciwu, z którego skorzystasz przez **Twoje ustawienia prywatności** (zob. 5.1 i §6).
 - **Współadministratorzy z Meta:** Stampeo i Meta Platforms Ireland Limited są współadministratorami (art. 26 RODO) w zakresie zbierania danych za pomocą plików cookie Meta z punktu 5.3 i opisanego tu przekazywania etapów oraz przesyłania tych danych do Meta, na podstawie umowy Meta „Controller Addendum”. Za to, co Meta robi z danymi po ich otrzymaniu, odpowiada wyłącznie Meta (zob. [politykę prywatności Meta](https://www.facebook.com/privacy/policy)). Swoje prawa (§10) możesz wykonywać zarówno wobec Stampeo, jak i wobec Meta.
 
-Wycofanie zgody w **Ustawieniach plików cookie** usuwa plik cookie `stampeo_attribution` wraz z pozostałymi i wstrzymuje przekazywanie kolejnych etapów dla Twojego konta. Etapów już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczą (zob. §8).
+Każdy wybór możesz wycofać osobno, przez **Ustawienia plików cookie** albo, w Stanach Zjednoczonych, przez **Twoje ustawienia prywatności**:
+
+- Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta i usuwa zachowane przez nas identyfikatory reklamowe.
+- Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google.
+- Wyłączenie obu usuwa też zapisane źródło kampanii.
+
+Odmowa złożona na tej stronie po założeniu konta obejmuje Twoje konto i Twoje firmy, za pośrednictwem losowego identyfikatora opisanego w 5.6. Etapów już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczą (zob. §8).
 
 ### 5.6 Zapis Twoich decyzji dotyczących plików cookie
 
-Gdy akceptujesz lub odrzucasz pliki cookie — na banerze, w komunikacie wyświetlanym odwiedzającym ze Stanów Zjednoczonych albo później przez **Ustawienia plików cookie** — zachowujemy zapis tej decyzji na naszych serwerach. RODO wymaga od nas wykazania, że zgoda została udzielona (art. 7 ust. 1), a decyzja przechowywana wyłącznie w Twojej przeglądarce niczego nie dowodzi: znajduje się na Twoim urządzeniu, możesz ją zmienić, a kolejna decyzja ją nadpisuje.
+Gdy akceptujesz lub odrzucasz pliki cookie — na banerze, w komunikacie wyświetlanym odwiedzającym ze Stanów Zjednoczonych albo później przez **Ustawienia plików cookie** lub, w Stanach Zjednoczonych, przez **Twoje ustawienia prywatności** — zachowujemy zapis tej decyzji na naszych serwerach. RODO wymaga od nas wykazania, że zgoda została udzielona (art. 7 ust. 1), a decyzja przechowywana wyłącznie w Twojej przeglądarce niczego nie dowodzi: znajduje się na Twoim urządzeniu, możesz ją zmienić, a kolejna decyzja ją nadpisuje.
 
 Każdy zapis zawiera samą decyzję i nic, co dotyczyłoby Twojej osoby: które kategorie zaakceptowano lub odrzucono, wersję przedstawionego tekstu, obowiązujący reżim (opt-in albo opt-out), miejsce udzielenia odpowiedzi oraz dwa znaczniki czasu — wskazany przez Twoje urządzenie i zarejestrowany przez nasz serwer.
 
-Aby powiązać ze sobą decyzje tego samego odwiedzającego, umieszczamy losowy identyfikator w pliku cookie `stampeo_consent` wskazanym w 5.3. Jest generowany na Twoim urządzeniu, nie wywodzi się z Twojego adresu IP, odcisku przeglądarki ani żadnej innej informacji o Tobie i nie ma znaczenia poza tym zapisem. Jeżeli następnie założysz konto firmowe, powiążemy Twoje wcześniejsze decyzje z tym kontem, aby móc wykazać, jakie wybory zostały dokonane; same decyzje nigdy nie są zmieniane.
+Aby powiązać ze sobą decyzje tego samego odwiedzającego, umieszczamy losowy identyfikator w pliku cookie `stampeo_sid` wskazanym w 5.2, a ten sam identyfikator znajduje się w pliku `stampeo_consent`. Jest losowy, nie wywodzi się z Twojego adresu IP, odcisku przeglądarki ani żadnej innej informacji o Tobie i nie ma znaczenia poza tym zapisem. Jeżeli następnie założysz konto, powiążemy Twoje wcześniejsze decyzje z tym kontem, aby móc wykazać, jakie wybory zostały dokonane, oraz aby odmowa złożona później na tej stronie obejmowała to konto (zob. 5.5); same decyzje nigdy nie są zmieniane.
 
 Odmowy zapisujemy dokładnie tak samo jak zgody. Rejestr obejmujący wyłącznie osoby, które wyraziły zgodę, dawałby fałszywy obraz i nie miałby wartości dowodowej.
 
@@ -219,7 +240,7 @@ Zebrane dane wykorzystujemy, aby:
 
 **Nigdy nie sprzedajemy** danych osobowych za pieniądze. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
 
-**W Stanach Zjednoczonych:** przekazywanie danych do Meta i innych platform reklamowych wymienionych w punkcie 5.3 na potrzeby naszych reklam może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w komunikacie, przez **Ustawienia plików cookie** na dole każdej strony albo sygnałem Global Privacy Control, który respektujemy zgodnie z opisem w punkcie 5.1.
+**W Stanach Zjednoczonych:** przekazywanie danych do Meta i Google na potrzeby naszych reklam, jak opisano w punkcie 5.5, może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy, i w komunikacie albo sygnałem Global Privacy Control, który respektujemy w każdym stanie Stanów Zjednoczonych zgodnie z opisem w punkcie 5.1.
 
 ### 6.1 E-maile cyklu życia i marketingowe do użytkowników Business
 
@@ -276,6 +297,8 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Dzienniki dostępu serwisowego (sesje podglądu i powiązane wpisy audytowe zgodnie z §2.3) | 24 miesiące, następnie usuwane |
 | Atrybucja reklamowa (identyfikator kliknięcia, kampania) | Usuwana wraz z kontem firmowym, którego dotyczy |
 | Adres IP i parametry przeglądarki używane do pomiaru konwersji (§5.5) | Najwyżej 45 dni, następnie usuwane |
+| Dane diagnostyczne wysyłki każdego etapu przekazanego zgodnie z §5.5 (status, czasy prób, kod odpowiedzi platformy) | 13 miesięcy |
+| Komunikaty odpowiedzi platform na etapy przekazane zgodnie z §5.5 | 90 dni |
 | Zapisy zgody — dowód Twoich decyzji dotyczących cookie (§5.6) | 3 lata od zakończenia zgody (zastąpienie lub wycofanie). **Nie** są usuwane wraz z kontem firmowym: powiązanie z kontem zostaje usunięte, a zapis zachowany, na podstawie art. 17 ust. 3 lit. b) i e) RODO |
 
 Okres 24 miesięcy dla dzienników dostępu serwisowego został ustalony tak, aby umożliwić zbadanie incydentu bezpieczeństwa, pozostając jednocześnie proporcjonalnym do tego celu, zgodnie z wytycznymi CNIL dotyczącymi rejestrowania zdarzeń bezpieczeństwa.

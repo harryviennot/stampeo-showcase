@@ -1,0 +1,143 @@
+import {
+  explicitRefusals,
+  readSubjectId,
+  type ConsentCategory,
+  type ConsentRecord,
+  type ConsentRegime,
+  type ConsentState,
+  type PriorConsent,
+} from "../consent";
+import { POLICY_MATRIX, type PolicyRow } from "../privacy/policy-matrix";
+import { readSidCookie } from "../privacy/subject";
+import { parseAdCookie, serializeAdCarrier } from "./ad-ids";
+import { MAX_ID_FIELD, cookieValue, decodeCarrier } from "./codec";
+import {
+  AD_COOKIE,
+  GA_COOKIE,
+  LEGACY_ATTRIBUTION_COOKIE,
+  SOURCE_COOKIE,
+} from "./cookie-names";
+import { gaSessionCookieName, parseGaCookie, serializeGaCarrier } from "./ga-ids";
+import { parseSourceCookie, serializeSourceCarrier } from "./source";
+
+/**
+ * The body of `POST /account/signup-recorded`, built from the cookie jar.
+ *
+ * It carries what the backend cannot see from the browser itself: the subject
+ * that chains the visitor's consent decisions, the three carriers as stored,
+ * and the identifier cookies as they are RIGHT NOW, raw (the backend parses
+ * them, and keeps only the property it is configured for).
+ *
+ * Which of them leave the page is the visitor's choice. Each category's values
+ * are left out unless the CURRENT resolved consent allows it, so a visitor
+ * under GPC, or one who refused a category, sends none of its identifiers. The
+ * subject always goes: it is strictly necessary, and it is how the backend ties
+ * a refusal made on the marketing site to the account.
+ *
+ * The basis (the regime, policy version and row the call is made under) and
+ * `refused` ALWAYS go, even when everything else is left out. `refused` is what
+ * the stored consent record explicitly refuses (a stored `0`, of any version,
+ * including a restored one), so a carrier captured under no-choice evidence
+ * cannot read as permission for a category refused since. Absence of consent is
+ * not declared: a backend refusal is permanent, and GPC is read by the backend
+ * from the request itself. GPC and the live row only decide what is withheld.
+ *
+ * Nothing here asks whether the account is new. The backend decides that.
+ */
+
+/** The regime in force at the moment of the call, as the backend's fallback basis. */
+export interface SignupBasis {
+  cr: ConsentRegime;
+  /** The policy matrix version. */
+  p: number;
+  /** The policy row key (`EEA_UK_CH`, `US`, `UNKNOWN`). */
+  g: string;
+}
+
+export function signupBasis(row: PolicyRow): SignupBasis {
+  return { cr: row.regime, p: POLICY_MATRIX.version, g: row.key };
+}
+
+export interface SignupBody {
+  consent_subject_id?: string;
+  ad_attribution_v2?: { src?: object; ga?: object; ad?: object };
+  /** The version-1 carrier, while a browser still holds one. */
+  ad_attribution?: object;
+  basis: SignupBasis;
+  /** The categories the stored consent record explicitly refuses, analytics first. */
+  refused: ConsentCategory[];
+  live?: {
+    ga?: string;
+    ga_sessions?: Record<string, string>;
+    fbp?: string;
+    fbc?: string;
+  };
+}
+
+/** A raw cookie value to forward, or null: empty, or past the cap (a cut identifier looks like data). */
+function liveValue(header: string | null | undefined, name: string): string | null {
+  const value = cookieValue(header, name)?.trim();
+  return value && value.length <= MAX_ID_FIELD ? value : null;
+}
+
+/** The carrier's JSON as it is stored, re-written from what validated: nothing extra rides along. */
+const asStored = (serialized: string): object => decodeCarrier(serialized) as object;
+
+export function buildSignupBody(input: {
+  cookieHeader: string | null | undefined;
+  /** What the visitor allows right now: it decides which identifiers and carriers leave. */
+  consent: ConsentState;
+  /** The consent record as stored: it decides what is declared as refused. */
+  stored: { record: ConsentRecord | null; prior: PriorConsent | null };
+  measurementId: string | null;
+  basis: SignupBasis;
+}): SignupBody {
+  const { cookieHeader: header, consent, stored, measurementId, basis } = input;
+
+  const subject = readSidCookie(header) ?? readSubjectId(header);
+
+  const carriers: NonNullable<SignupBody["ad_attribution_v2"]> = {};
+  if (consent.analytics || consent.marketing) {
+    const src = parseSourceCookie(cookieValue(header, SOURCE_COOKIE));
+    if (src) carriers.src = asStored(serializeSourceCarrier(src));
+  }
+  if (consent.analytics) {
+    const ga = parseGaCookie(cookieValue(header, GA_COOKIE));
+    if (ga) carriers.ga = asStored(serializeGaCarrier(ga));
+  }
+  if (consent.marketing) {
+    const ad = parseAdCookie(cookieValue(header, AD_COOKIE));
+    if (ad) carriers.ad = asStored(serializeAdCarrier(ad));
+  }
+
+  const live: NonNullable<SignupBody["live"]> = {};
+  if (consent.analytics) {
+    const ga = liveValue(header, "_ga");
+    if (ga) live.ga = ga;
+    const sessionCookie = gaSessionCookieName(measurementId);
+    const session = sessionCookie && liveValue(header, sessionCookie);
+    if (sessionCookie && session) live.ga_sessions = { [sessionCookie.slice("_ga_".length)]: session };
+  }
+  if (consent.marketing) {
+    const fbp = liveValue(header, "_fbp");
+    if (fbp) live.fbp = fbp;
+    const fbc = liveValue(header, "_fbc");
+    if (fbc) live.fbc = fbc;
+  }
+
+  // The version-1 carrier holds both categories' identifiers, so it goes only
+  // when neither is refused.
+  const legacy =
+    consent.analytics && consent.marketing
+      ? decodeCarrier(cookieValue(header, LEGACY_ATTRIBUTION_COOKIE))
+      : null;
+
+  return {
+    ...(subject ? { consent_subject_id: subject } : {}),
+    ...(Object.keys(carriers).length > 0 ? { ad_attribution_v2: carriers } : {}),
+    ...(legacy ? { ad_attribution: legacy } : {}),
+    basis,
+    refused: explicitRefusals(stored.record, stored.prior),
+    ...(Object.keys(live).length > 0 ? { live } : {}),
+  };
+}

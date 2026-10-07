@@ -7,6 +7,8 @@ import posthog from "posthog-js";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { updateUserProfile } from "@/lib/onboarding";
+import { recordAccountSignup } from "@/lib/attribution/signup-call";
+import { leaveOnboarding } from "@/lib/attribution/signup-flow";
 import { UserInfoStep } from "./steps/UserInfoStep";
 import {
   AuthenticationStep,
@@ -72,6 +74,12 @@ function readOAuthStash(): OAuthStash | null {
   }
 }
 
+/** The signed-in user's token, read when the call is made: the context's session lags the sign-in. */
+async function currentAccessToken(): Promise<string | undefined> {
+  const { data } = await createClient().auth.getSession();
+  return data.session?.access_token;
+}
+
 function redirectToApp() {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
   window.location.href = appUrl;
@@ -121,26 +129,28 @@ export function OnboardingWizard() {
     }
 
     oauthHandledRef.current = true;
-    (async () => {
-      const stash = readOAuthStash();
-      const supabase = createClient();
-      const meta: Record<string, unknown> = {};
-      if (stash?.name && stash.name.trim()) meta.name = stash.name.trim();
-      if (stash?.phone && stash.phone.trim()) meta.phone = stash.phone.trim();
+    void leaveOnboarding({
+      reportSignup: () => recordAccountSignup({ getAccessToken: async () => session.access_token }),
+      syncProfile: async () => {
+        const stash = readOAuthStash();
+        const supabase = createClient();
+        const meta: Record<string, unknown> = {};
+        if (stash?.name && stash.name.trim()) meta.name = stash.name.trim();
+        if (stash?.phone && stash.phone.trim()) meta.phone = stash.phone.trim();
 
-      if (Object.keys(meta).length > 0) {
-        await supabase.auth.updateUser({ data: meta });
-        if (stash?.phone && stash.phone.trim()) {
-          await updateUserProfile(
-            { phone: stash.phone.trim() },
-            session.access_token
-          );
+        if (Object.keys(meta).length > 0) {
+          await supabase.auth.updateUser({ data: meta });
+          if (stash?.phone && stash.phone.trim()) {
+            await updateUserProfile(
+              { phone: stash.phone.trim() },
+              session.access_token
+            );
+          }
         }
-      }
-
-      clearDraft();
-      redirectToApp();
-    })();
+      },
+      clearDraft,
+      leave: redirectToApp,
+    });
   }, [justAuthed, authLoading, session, router]);
 
   useEffect(() => {
@@ -180,16 +190,22 @@ export function OnboardingWizard() {
       // the canonical dashed format. OAuth completion handles its own sync above.
       // Skip the write for existing users — they already have a profile and the
       // step-1 fields they re-entered shouldn't clobber it.
-      if (data.phone && !opts?.isExistingUser) {
-        const supabase = createClient();
-        const { data: sessionData } = await supabase.auth.getSession();
-        const token = sessionData.session?.access_token;
-        if (token) {
-          await updateUserProfile({ phone: data.phone }, token);
-        }
-      }
-      clearDraft();
-      redirectToApp();
+      const phone = data.phone && !opts?.isExistingUser ? data.phone : null;
+      await leaveOnboarding({
+        reportSignup: () => recordAccountSignup({ getAccessToken: currentAccessToken }),
+        syncProfile: phone
+          ? async () => {
+              const supabase = createClient();
+              const { data: sessionData } = await supabase.auth.getSession();
+              const token = sessionData.session?.access_token;
+              if (token) {
+                await updateUserProfile({ phone }, token);
+              }
+            }
+          : undefined,
+        clearDraft,
+        leave: redirectToApp,
+      });
     },
     [completeStep, data.phone]
   );

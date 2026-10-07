@@ -130,13 +130,15 @@ Some of our sub-processors (Stripe, Apple, Google) may transfer data to the Unit
 
 ### 5.1 Your choice
 
-Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google, Meta or TikTok, and none of their cookies is created. Refusing therefore leaves nothing behind to delete.
+Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google or Meta, and none of their cookies is created. Refusing therefore leaves nothing behind to delete.
 
-Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for six months, after which you are asked again. You can change it at any time through **Cookie preferences** at the bottom of every page. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
+Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for 6 months, after which we may ask you again. You can change it at any time through **Cookie preferences** in the footer of every page where our measurement and advertising cookies can be set. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
 
-If your browser sends a Global Privacy Control signal, we treat it as a refusal and nothing is loaded. In the United States this holds even over a choice you made earlier here, and we show you no notice at all, since you have already answered. In Europe a choice you make yourself takes precedence over the signal: until you make one, the banner is still offered, so that you can opt in deliberately if you want to.
+If your browser sends a Global Privacy Control signal, we treat it as a refusal and nothing is loaded. In the United States this holds even over a choice you made earlier here, and we show you no notice at all, since you have already answered. In every US state we honor the signal as an opt-out of sale, sharing and targeted advertising, and while it is on, audience measurement is also turned off. In Europe a choice you make yourself takes precedence over the signal: until you make one, the banner is still offered, so that you can opt in deliberately if you want to.
 
-Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, a notice says so, and **Cookie preferences** switches them off at any time.
+Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, a notice says so, and the **Your Privacy Choices** link switches them off at any time. It sits in the footer of every page where our measurement and advertising cookies can be set, and the notice has a button of the same name. A refusal is kept for 13 months and renewed on each visit, and when you sign in to the dashboard it is restored from your account.
+
+Which rules apply to you is decided from your device's time zone. When the signals disagree, the stricter rules apply, and where we cannot place you, the strict (opt-in) rules apply. We do not use your IP address for this.
 
 ### 5.2 Cookies present whatever you choose
 
@@ -146,17 +148,28 @@ These are strictly necessary and are not subject to consent.
 |---|---|---|
 | `NEXT_LOCALE` | Remembers which language you are reading the site in. | 1 year |
 | `stampeo_market` | Remembers which country's pages you opened, to prefill a field later. | 30 days |
-| `stampeo_consent` | Records the choice you made about the cookies in 5.3, and a random identifier that links your successive choices together (see 5.6). | 6 months |
+| `stampeo_consent` | Records the choice you made about the cookies in 5.3, and the random identifier that links your successive choices together (see 5.6). | 6 months. In the United States, a refusal is kept 13 months and renewed on each visit. |
+| `stampeo_sid` | A random identifier that records your choices and links them to the account you create, so that a later refusal applies to it (see 5.6). | 13 months |
 | Supabase session cookies | Keeps you signed in on the business dashboard. | Session |
 
 ### 5.3 Cookies subject to your consent
+
+These cookies are used only if you allow them (in the United States, until you switch them off through **Your Privacy Choices**; elsewhere, through **Cookie preferences**).
 
 | Purpose | Recipient | Cookies |
 |---|---|---|
 | Audience measurement | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Advertising measurement | Meta | `_fbp`, `_fbc` |
-| Advertising measurement | TikTok | `_ttp` |
-| Advertising attribution | Stampeo, then Google or Meta | `stampeo_attribution` |
+
+The three cookies below are our own. Our server sets them, and they are shared between stampeo.app and the dashboard.
+
+| Cookie | Purpose | Category | Duration |
+|---|---|---|---|
+| `stampeo_src` | Where your visit came from (campaign parameters, landing page, referring site). | Audience measurement or advertising | 6 months |
+| `stampeo_ga` | Google Analytics' identifiers for your visit. | Audience measurement | 6 months |
+| `stampeo_ad` | The advertising platform's click identifier and Meta's browser identifier, only when you arrived from an ad. | Advertising | 6 months |
+
+The earlier `stampeo_attribution` cookie is no longer set; a browser that received it earlier may still hold it until it expires.
 
 ### 5.4 Audience measurement without cookies
 
@@ -168,34 +181,42 @@ Strictly necessary cookies may be used for authentication and session management
 
 ### 5.5 Conversion measurement from our servers
 
-If you accept the cookies in 5.3 and you reached this site from an advertisement, we keep the identifier the advertising platform added to the link you followed (for Google the `gclid`, for Meta the `fbclid`), together with the campaign parameters in the address and that platform's own browser identifier described above. They are held in a `stampeo_attribution` cookie, listed in 5.3, whose only purpose is to survive the move from this site to the business dashboard, which runs on a different subdomain. If you later come back through another advertisement, the newer click replaces the earlier one.
+If you accept the cookies in 5.3 (in the United States, as long as you have not switched them off), we keep, in the `stampeo_src`, `stampeo_ga` and `stampeo_ad` cookies listed there: where your visit came from, meaning the campaign parameters in the address, the landing page and the referring site; Google Analytics' identifiers for your visit; and, if you reached this site from an advertisement, the identifier the advertising platform added to the link you followed (for Google the `gclid`, for Meta the `fbclid`), together with Meta's browser identifier. Each cookie is kept only while you allow the category listed for it in 5.3. Our server sets them, and they are shared between stampeo.app and the dashboard, which runs on a different subdomain, so that this information survives the move from this site to the dashboard. If you later come back through another advertisement, the newer click replaces the earlier one.
 
-If you go on to create a business account, we report up to four steps **from our servers**: that the account was created, that you opened the payment page, that your free trial started, and that a first invoice was paid. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
+If you create an account, we report up to four steps **from our servers**: that the account was created, that you opened the payment page, that your free trial started, and that a first invoice was paid. The first is reported when you confirm the account (with the code we email you, or by signing in with Google or Apple), before any business exists. Because this is sent server-side, it happens after whatever runs in your browser, and independently of it.
 
-With each step, the platform receives its own identifiers when it has them (the click identifier and its browser identifier) and the campaign, plus, for the last three steps, the price of the plan you chose or the amount paid, and its currency. Each platform receives only its own identifiers: a Google click is never reported to Meta, and a Meta click is never reported to Google.
+With each step, the platform receives its own identifiers when it has them (the click identifier and its browser identifier) and the campaign, plus, for the last three steps, the price of the plan you chose or the amount paid, and its currency. Each platform receives only its own identifiers: a Google click identifier is never sent to Meta, and a Meta click identifier is never sent to Google.
 
 Meta also receives:
 
 - your IP address and your browser's technical characteristics (type, version, operating system), as recorded when you created your account, and the address of our dashboard. We keep these two items for 45 days at most, then delete them;
 - your email address, telephone number, first name, last name, the country, city and postcode of your business, and an identifier derived from your account, each **hashed** with the SHA-256 algorithm before it leaves our servers. Hashing turns each item into a code from which your details cannot be recovered. The code still identifies you to Meta, which makes the same code from the details of its own users, so it remains personal data. Meta compares these codes with those of its users to tell whether you have a Facebook or Instagram account, including when you saw the advertisement on another device, and uses the result to measure and improve how our advertisements are shown. Meta may also use this data under its own terms, for example to improve its advertising systems, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy).
 
-Meta receives these steps whether or not you came from one of its advertisements, as long as you accepted the advertising cookies in 5.3 (in the United States, as long as you have not switched them off). Google never receives your contact details, your IP address or your browser's characteristics.
+Meta receives these steps whether or not you came from one of its advertisements, as long as you accepted the advertising cookies in 5.3 (in the United States, as long as you have not switched them off). Google receives its own session identifier with each step, so that the step joins your visit. It never receives your contact details, your IP address or your browser's characteristics.
 
 We never send your password, your payment details, or anything about your customers (the people who hold your loyalty cards).
 
+For each step we also keep delivery diagnostics: its status, the times we tried to send it and the response code returned by the platform, along with the platform's response messages. §8 gives how long we keep each.
+
 - **Recipients:** Google means Google Ireland Limited, with Google LLC in the United States. Meta means Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States.
-- **Legal basis:** your consent (GDPR Art. 6(1)(a)), given in the cookie banner or through **Cookie preferences**. In the United States, where prior consent is not required, we rely on notice and your right to opt out (see 5.1 and §6).
+- **Legal basis:** your consent (GDPR Art. 6(1)(a)), given in the cookie banner or through **Cookie preferences**. In the United States, where prior consent is not required, we rely on notice and your right to opt out through **Your Privacy Choices** (see 5.1 and §6).
 - **Joint controllers with Meta:** Stampeo and Meta Platforms Ireland Limited are joint controllers (GDPR Art. 26) for collecting data through the Meta cookies in 5.3 and the reporting described here, and for transmitting it to Meta, under Meta's Controller Addendum. Meta alone is responsible for what it does with the data once received, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy). You can exercise your rights (§10) with either of us.
 
-Withdrawing your consent through **Cookie preferences** deletes the `stampeo_attribution` cookie along with the others and stops any further step being reported for your account. Steps already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
+You can withdraw each choice separately, through **Cookie preferences** or, in the United States, **Your Privacy Choices**:
+
+- Turning off advertising stops anything further being reported to Meta, and deletes the advertising identifiers we kept.
+- Turning off audience measurement does the same for Google.
+- Turning off both also deletes the stored campaign source.
+
+A refusal you make on this site after you created an account applies to your account and your businesses, through the random identifier described in 5.6. Steps already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
 
 ### 5.6 Record of your cookie choices
 
-When you accept or refuse cookies — on the banner, in the notice shown to visitors in the United States, or later through **Cookie preferences** — we keep a record of that decision on our servers. The GDPR requires us to be able to demonstrate that consent was given (Article 7(1)), and a choice stored only in your browser cannot demonstrate anything: it lives on your device, you can change it, and your next decision overwrites it.
+When you accept or refuse cookies — on the banner, in the notice shown to visitors in the United States, or later through **Cookie preferences** or, in the United States, **Your Privacy Choices** — we keep a record of that decision on our servers. The GDPR requires us to be able to demonstrate that consent was given (Article 7(1)), and a choice stored only in your browser cannot demonstrate anything: it lives on your device, you can change it, and your next decision overwrites it.
 
 Each record contains the decision itself and nothing about you: which categories you accepted or refused, the version of the cookie text you were shown, whether you were under the opt-in or opt-out regime, which surface you answered on, and two timestamps — the time your own device reported, and the time our server received it.
 
-To link the decisions of one visitor together, we set a random identifier in the `stampeo_consent` cookie listed in 5.3. It is generated on your device, it is not derived from your IP address, your browser fingerprint or anything else about you, and it means nothing outside this record. If you later create a business account, we attach your earlier decisions to that account so we can show which choices you made; the decisions themselves are never altered.
+To link the decisions of one visitor together, we set a random identifier in the `stampeo_sid` cookie listed in 5.2, and the `stampeo_consent` cookie carries the same identifier. It is random, it is not derived from your IP address, your browser fingerprint or anything else about you, and it means nothing outside this record. If you then create an account, we attach your earlier decisions to that account so we can show which choices you made, and so that a refusal you make later on this site applies to it (see 5.5); the decisions themselves are never altered.
 
 Refusals are recorded in exactly the same way as acceptances. A record showing only the people who agreed would misrepresent what actually happened, and would be of no use as proof.
 
@@ -219,7 +240,7 @@ We use collected data to:
 
 We **never sell** personal data for money. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
 
-**In the United States:** sending data to Meta and the other advertising platforms named in 5.3, for our advertising, may count as "sharing" under California law. You can opt out at any time through **Your privacy choices** in the notice, through **Cookie preferences** at the bottom of every page, or with a Global Privacy Control signal, which we honor as described in 5.1.
+**In the United States:** sending data to Meta and to Google for our advertising, as described in 5.5, may count as "sharing" under California law. You can opt out at any time through **Your Privacy Choices**, in the footer of every page where our measurement and advertising cookies can be set and in the notice, or with a Global Privacy Control signal, which we honor in every US state as described in 5.1.
 
 ### 6.1 Marketing and lifecycle emails to Business Users
 
@@ -276,6 +297,8 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Support access logs (impersonation sessions and associated audit entries per §2.3) | 24 months, then deleted |
 | Advertising attribution (click identifier, campaign) | Deleted with the Business account it belongs to |
 | IP address and browser characteristics used for conversion reporting (§5.5) | 45 days at most, then deleted |
+| Delivery diagnostics for each step reported under §5.5 (status, attempt times, the platform's response code) | 13 months |
+| Platforms' response messages to the steps reported under §5.5 | 90 days |
 | Consent records — proof of your cookie choices (§5.6) | 3 years after the consent ends (replaced or withdrawn). **Not** deleted with the Business account: the account link is removed and the record is kept, under GDPR Art. 17(3)(b) and (e) |
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.

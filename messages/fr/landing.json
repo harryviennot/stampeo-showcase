@@ -180,6 +180,114 @@
           ],
           "link": "/programme-fidelite",
           "linkLabel": "Comparer tampons et points"
+        },
+        {
+          "name": "Boulangerie",
+          "quote": "Ava passe prendre un croissant en allant travailler. Après neuf passages, elle voit que le dixième lui est offert.",
+          "reward": "10 croissants = 1 offert",
+          "advantage": "Vos propres photos de produits comme tampons",
+          "fields": [
+            {
+              "label": "Titulaire",
+              "value": "Ava"
+            },
+            {
+              "label": "Récompense",
+              "value": "Croissant offert"
+            }
+          ],
+          "link": "/blog/carte-fidelite-boulangerie",
+          "linkLabel": "Lire le guide pour les boulangeries"
+        },
+        {
+          "name": "Bar à cils",
+          "quote": "Maya revient toutes les trois semaines pour un remplissage. Le sixième est offert, et son téléphone lui montre où elle en est.",
+          "reward": "6 remplissages = 1 offert",
+          "advantage": "Votre logo, vos couleurs, votre icône de tampon",
+          "fields": [
+            {
+              "label": "Titulaire",
+              "value": "Maya"
+            },
+            {
+              "label": "Récompense",
+              "value": "Remplissage offert"
+            }
+          ],
+          "link": "/blog/fidelite-institut-beaute",
+          "linkLabel": "Lire le guide pour les instituts"
+        },
+        {
+          "name": "Épicerie",
+          "quote": "Rosa fait ses courses chez vous chaque semaine : un panier plein une fois, juste du pain la suivante. Les points suivent ce qu'elle dépense.",
+          "reward": "-10 % à 200 points",
+          "advantage": "Un gros panier rapporte plus qu'un passage rapide",
+          "fields": [
+            {
+              "label": "Titulaire",
+              "value": "Rosa"
+            },
+            {
+              "label": "Prochaine récompense",
+              "value": "-10 %"
+            }
+          ],
+          "link": "/programme-fidelite",
+          "linkLabel": "Comparer tampons et points"
+        },
+        {
+          "name": "Food truck",
+          "quote": "Leo retrouve le camion où qu'il se gare. Sa carte est dans son téléphone, donc chaque part compte, à chaque coin de rue.",
+          "reward": "8 parts = 1 offerte",
+          "advantage": "Ni papier ni matériel, juste votre téléphone",
+          "fields": [
+            {
+              "label": "Titulaire",
+              "value": "Leo"
+            },
+            {
+              "label": "Récompense",
+              "value": "Part offerte"
+            }
+          ],
+          "link": "/blog/carte-fidelite-sans-application",
+          "linkLabel": "Lire le guide de la carte sans application"
+        },
+        {
+          "name": "Spa",
+          "quote": "Elena réserve un soin du visage chaque mois. Le sixième est offert, et chaque tampon s'affiche sur son écran de verrouillage.",
+          "reward": "6 soins = 1 offert",
+          "advantage": "Une notification à chaque tampon",
+          "fields": [
+            {
+              "label": "Titulaire",
+              "value": "Elena"
+            },
+            {
+              "label": "Récompense",
+              "value": "Soin offert"
+            }
+          ],
+          "link": "/blog/fidelite-institut-beaute",
+          "linkLabel": "Lire le guide pour les instituts"
+        },
+        {
+          "name": "Burgers",
+          "quote": "Jordan prend un burger chaque vendredi après le travail. Le dixième est offert, et il le voit approcher sur son téléphone.",
+          "reward": "10 burgers = 1 offert",
+          "advantage": "Aucune intégration à la caisse nécessaire",
+          "fields": [
+            {
+              "label": "Titulaire",
+              "value": "Jordan"
+            },
+            {
+              "label": "Récompense",
+              "value": "Burger offert"
+            }
+          ],
+          "link": "/blog/carte-fidelite-restaurant",
+          "linkLabel": "Lire le guide pour les restaurants"
         }
       ]
     },

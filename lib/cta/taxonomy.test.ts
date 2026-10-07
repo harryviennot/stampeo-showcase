@@ -11,6 +11,7 @@ import {
   SIGNUP_CTAS,
   blogLinkLocation,
   isContactHref,
+  isDirectContactHref,
   isKnownCTALocation,
 } from "./taxonomy";
 
@@ -45,7 +46,7 @@ describe("isContactHref", () => {
 
   test("repeated two-letter prefixes match too", () => {
     // Defensive, currently unreachable: a market+locale path like
-    // /en/us/contact would otherwise silently downgrade a Contact to a Lead
+    // /en/us/contact would otherwise silently be read as a signup
     // the day such routes exist.
     expect(isContactHref("/en/us/contact")).toBe(true);
     expect(isContactHref("/us/en/contact")).toBe(true);
@@ -56,6 +57,35 @@ describe("isContactHref", () => {
     expect(isContactHref("/en/contacted")).toBe(false);
     expect(isContactHref("/onboarding")).toBe(false);
     expect(isContactHref("/abc/contact")).toBe(false);
+  });
+});
+
+describe("isDirectContactHref: an email, phone or WhatsApp link", () => {
+  test.each([
+    "mailto:hello@stampeo.app",
+    "MAILTO:hello@stampeo.app",
+    "tel:+33649370470",
+    "https://wa.me/33649370470",
+    "https://WA.ME/33649370470?text=Hi",
+    "http://wa.me/1",
+  ])("%s is one", (href) => {
+    expect(isDirectContactHref(href)).toBe(true);
+  });
+
+  test.each([
+    "/contact",
+    "/en/contact",
+    "/onboarding",
+    "https://stampeo.app/contact",
+    "https://wa.me.evil.example/1",
+    "https://example.com/wa.me/1",
+    "https://example.com/?u=mailto:a@b.c",
+    "tel",
+    "mailto",
+    "wa.me/1",
+    "",
+  ])("%s is not", (href) => {
+    expect(isDirectContactHref(href)).toBe(false);
   });
 });
 

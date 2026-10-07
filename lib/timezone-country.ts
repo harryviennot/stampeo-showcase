@@ -12,17 +12,61 @@ import type { CountryCode } from "libphonenumber-js";
  * module stays runtime-dependency-free.
  */
 
+/**
+ * Every IANA zone whose country is the US. A browser reports the zone the OS is
+ * set to, not the canonical one for the region (Arizona says America/Phoenix,
+ * Michigan says America/Detroit), so a missing zone costs a US visitor the
+ * opt-out notice and the "see US pricing" offer. US territories are not here:
+ * they stay unmapped, which holds them to the strict row.
+ */
+const US_ZONES: readonly string[] = [
+  "America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles",
+  "America/Phoenix", "America/Anchorage", "America/Detroit", "America/Boise",
+  "America/Juneau", "America/Sitka", "America/Nome", "America/Yakutat",
+  "America/Metlakatla", "America/Adak", "America/Menominee",
+  "America/Indiana/Indianapolis", "America/Indiana/Knox", "America/Indiana/Marengo",
+  "America/Indiana/Petersburg", "America/Indiana/Tell_City", "America/Indiana/Vevay",
+  "America/Indiana/Vincennes", "America/Indiana/Winamac",
+  "America/Kentucky/Louisville", "America/Kentucky/Monticello",
+  "America/North_Dakota/Center", "America/North_Dakota/New_Salem",
+  "America/North_Dakota/Beulah", "Pacific/Honolulu",
+];
+
+/**
+ * Legacy and CLDR names for US zones (`US/*`, the pre-2000s `America/*` links,
+ * `Navajo`). `Intl` canonicalises most of them, but an older engine or a
+ * patched OS reports them as written.
+ */
+const US_ALIASES: readonly string[] = [
+  "America/Indianapolis", "America/Fort_Wayne", "America/Knox_IN",
+  "America/Louisville", "America/Atka", "America/Shiprock",
+  "US/Eastern", "US/Central", "US/Mountain", "US/Pacific", "US/Alaska",
+  "US/Hawaii", "US/Arizona", "US/Michigan", "US/East-Indiana",
+  "US/Indiana-Starke", "US/Aleutian", "Navajo",
+];
+
+/**
+ * The zones of the EEA, the UK and Switzerland that are not a capital listed in
+ * the table below, plus the legacy names a browser may report for them. Every
+ * zone here belongs to the country it names; territories and dependencies
+ * (Gibraltar, the Faroes, the Isle of Man) stay unmapped, which holds them to
+ * the strict row.
+ */
+const EUROPEAN_ZONES: Record<string, CountryCode> = {
+  "Europe/Sofia": "BG", "Europe/Zagreb": "HR", "Asia/Nicosia": "CY",
+  "Asia/Famagusta": "CY", "Europe/Nicosia": "CY", "Europe/Tallinn": "EE",
+  "Europe/Busingen": "DE", "Europe/Riga": "LV", "Europe/Vilnius": "LT",
+  "Europe/Malta": "MT", "Atlantic/Azores": "PT", "Atlantic/Madeira": "PT",
+  "Europe/Bratislava": "SK", "Europe/Ljubljana": "SI", "Africa/Ceuta": "ES",
+  "Atlantic/Canary": "ES", "Atlantic/Reykjavik": "IS", "Europe/Vaduz": "LI",
+  "Europe/Belfast": "GB", "GB": "GB", "GB-Eire": "GB", "Eire": "IE",
+  "Iceland": "IS", "Poland": "PL", "Portugal": "PT",
+};
+
 const TZ_TO_COUNTRY: Record<string, CountryCode> = {
-  "Europe/Paris": "FR", "Europe/London": "GB", "America/New_York": "US",
-  "America/Chicago": "US", "America/Denver": "US", "America/Los_Angeles": "US",
-  // The four above are Eastern/Central/Mountain/Pacific and cover most of the
-  // country, but a browser reports the IANA zone the OS is set to, not the
-  // canonical one for the region -- Arizona says America/Phoenix, Michigan says
-  // America/Detroit. Missing them costs a US visitor the "see US pricing" offer
-  // and leaves them reading EUR 20 for a plan they would be charged $49 for.
-  "America/Phoenix": "US", "America/Anchorage": "US", "America/Detroit": "US",
-  "America/Indiana/Indianapolis": "US", "America/Boise": "US",
-  "America/Juneau": "US", "Pacific/Honolulu": "US",
+  ...Object.fromEntries([...US_ZONES, ...US_ALIASES].map((zone) => [zone, "US" as CountryCode])),
+  ...EUROPEAN_ZONES,
+  "Europe/Paris": "FR", "Europe/London": "GB",
   "America/Toronto": "CA", "America/Montreal": "CA", "America/Vancouver": "CA",
   "Europe/Berlin": "DE", "Europe/Madrid": "ES", "Europe/Rome": "IT",
   "Europe/Lisbon": "PT", "Europe/Brussels": "BE", "Europe/Zurich": "CH",

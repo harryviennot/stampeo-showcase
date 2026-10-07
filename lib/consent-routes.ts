@@ -57,6 +57,15 @@ export const PRIVATE_SEGMENTS: ReadonlySet<string> = new Set([
   "reset-password",
 ]);
 
+/**
+ * Private routes below a marketing segment, as `[segment, child]`: the demo
+ * wallet page carries a session token in its path, and a tag would send that
+ * path to an ad platform.
+ */
+export const PRIVATE_SUBPATHS: ReadonlyArray<readonly [segment: string, child: string]> = [
+  ["demo", "wallet-select"],
+];
+
 const LOCALES: ReadonlySet<string> = new Set(routing.locales);
 
 /**
@@ -88,6 +97,9 @@ export function isTrackablePath(pathname: string): boolean {
   // table decorative: emptying PRIVATE_SEGMENTS would change nothing, and the
   // test asserting `/onboarding` is untracked would pass for the wrong reason.
   if (PRIVATE_SEGMENTS.has(segments[0])) return false;
+  if (PRIVATE_SUBPATHS.some(([segment, child]) => segments[0] === segment && segments[1] === child)) {
+    return false;
+  }
 
   return MARKETING_SEGMENTS.has(segments[0]);
 }
