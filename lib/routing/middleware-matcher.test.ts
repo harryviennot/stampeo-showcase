@@ -5,6 +5,8 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
 import { config } from "../../middleware";
 
@@ -20,6 +22,7 @@ describe("middleware matcher", () => {
     "/authentic-cafe",
     "/joint-burger",
     "/internal-affairs-bar",
+    "/qrious-cafe",
     // The per-store enrollment shape.
     "/good-vibe-lemonade-and-more/l/rue-de-rivoli",
   ])("a shop whose slug starts like a handler still enrolls: %s", (path) => {
@@ -39,10 +42,25 @@ describe("middleware matcher", () => {
     "/go/app",
     "/join/ABC123",
     "/internal/changelog-graphics",
+    "/qr",
+    "/qr/",
     "/_next/static/chunks/main.js",
     "/favicon.ico",
     "/sitemap.xml",
   ])("non-localized routes and files skip it: %s", (path) => {
     expect(runsMiddleware(path)).toBe(false);
+  });
+
+  test("every top-level route folder outside [locale] skips it", () => {
+    // A folder the middleware does not skip is taken for a shop slug and
+    // rewritten to the enrollment page, which 404s.
+    const folders = readdirSync(join(import.meta.dir, "..", "..", "app"), { withFileTypes: true })
+      .filter((e) => e.isDirectory() && !e.name.startsWith("["))
+      .map((e) => e.name);
+
+    expect(folders).toContain("qr");
+    for (const folder of folders) {
+      expect(runsMiddleware(`/${folder}`)).toBe(false);
+    }
   });
 });

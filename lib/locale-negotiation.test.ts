@@ -119,6 +119,7 @@ describe("acquisitionSlug", () => {
     expect(acquisitionSlug("/blog/how-loyalty-works")).toBeNull();
     expect(acquisitionSlug("/programme-fidelite")).toBeNull();
     expect(acquisitionSlug("/uk")).toBeNull();
+    expect(acquisitionSlug("/qr")).toBeNull();
   });
 
   test("returns null for a shape that is not an enrollment URL", () => {
@@ -142,6 +143,19 @@ describe("acquisitionSlug", () => {
     expect(staticRoutes.length).toBeGreaterThan(0);
     for (const route of staticRoutes) {
       expect(RESERVED_TOP_SEGMENTS.has(route)).toBe(true);
+    }
+  });
+
+  test("every top-level route folder outside app/[locale] is reserved", () => {
+    // `/qr`, `/go/app`, `/join/{code}`: ours, never a shop. Folders with a dot
+    // are files (`feed.xml`), and a slug cannot contain a dot.
+    const handlers = readdirSync(join(import.meta.dir, "..", "app"), { withFileTypes: true })
+      .filter((e) => e.isDirectory() && !e.name.startsWith("[") && !e.name.includes("."))
+      .map((e) => e.name);
+
+    expect(handlers).toContain("qr");
+    for (const handler of handlers) {
+      expect(RESERVED_TOP_SEGMENTS.has(handler)).toBe(true);
     }
   });
 });

@@ -116,6 +116,8 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "auth",
   "go",
   "internal",
+  "join",
+  "qr",
 ]);
 
 /**
