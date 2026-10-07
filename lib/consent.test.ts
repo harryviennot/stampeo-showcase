@@ -428,10 +428,14 @@ function installBrowser(options: { cookie?: string; gpc?: boolean } = {}): FakeB
   return { writes, setJar: (value: string) => (jar = parseJar(value)) };
 }
 
+// Bun ships a `navigator` of its own, which later test files rely on.
+const RUNTIME_NAVIGATOR = Object.getOwnPropertyDescriptor(globalThis, "navigator");
+
 function uninstallBrowser() {
   for (const name of ["document", "window", "navigator"]) {
     Reflect.deleteProperty(globalThis, name);
   }
+  if (RUNTIME_NAVIGATOR) Object.defineProperty(globalThis, "navigator", RUNTIME_NAVIGATOR);
 }
 
 afterEach(uninstallBrowser);

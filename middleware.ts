@@ -128,8 +128,9 @@ export const config = {
   matcher: [
     // Match all pathnames except for
     // - /api, /auth, /go, /join (non-localized route handlers), /internal (dev-only
-    //   tooling pages), /_next, /_vercel
+    //   tooling pages), /_next, /_vercel, each matched as a whole first segment
+    //   so a shop slug like `good-vibe` still reaches the enrollment rewrite
     // - files with extensions (e.g. favicon.ico)
-    "/((?!api|auth|go|join|internal|_next|_vercel|.*\\..*).*)",
+    "/((?!(?:api|auth|go|join|internal|_next|_vercel)(?:/|$)|.*\\..*).*)",
   ],
 };
