@@ -1,19 +1,12 @@
 /**
- * Which paths the middleware runs on.
- *
- * A shop's enrollment URL is `/{slug}`, printed on its counter QR code, and it
- * only renders because the middleware rewrites it to `/{locale}/{slug}`. The
- * matcher skips the non-localized route handlers (`/go/app`, `/join/{code}`…),
- * and a skip that matches on a prefix rather than the whole first segment
- * takes every shop whose slug starts with the same letters down with it.
- *
- * Runs the real `config` through Next's own matcher, so the regex is tested as
- * Next compiles it, not as we read it.
+ * `/{slug}` enrollment URLs only render through the middleware rewrite, so the
+ * matcher's skips must match a whole first segment, never a prefix (`/go` vs
+ * `/good-vibe`). Runs the real `config` through Next's own matcher.
  */
 
 import { describe, expect, test } from "bun:test";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
-import { config } from "../middleware";
+import { config } from "../../middleware";
 
 const runsMiddleware = (url: string) => unstable_doesMiddlewareMatch({ config, url });
 
@@ -49,7 +42,7 @@ describe("middleware matcher", () => {
     "/_next/static/chunks/main.js",
     "/favicon.ico",
     "/sitemap.xml",
-  ])("route handlers and files skip it: %s", (path) => {
+  ])("non-localized routes and files skip it: %s", (path) => {
     expect(runsMiddleware(path)).toBe(false);
   });
 });

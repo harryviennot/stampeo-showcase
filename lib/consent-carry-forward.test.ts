@@ -38,6 +38,7 @@ import { shouldLoadGa } from "./google-analytics";
 import { shouldLoadMetaPixel } from "./meta-pixel";
 import { SUBJECT } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
+import { restoreGlobalsAfterEach } from "./testing/restore-globals";
 
 const OLDER = CONSENT_VERSION - 1;
 
@@ -257,15 +258,10 @@ describe("a record the web dashboard restored, read after the next version bump"
 
 describe("the browser read path", () => {
   const RealDateTimeFormat = Intl.DateTimeFormat;
-  // Bun ships a `navigator` of its own, which later test files rely on.
-  const runtimeNavigator = Object.getOwnPropertyDescriptor(globalThis, "navigator");
 
+  restoreGlobalsAfterEach("document", "window", "navigator");
   afterEach(() => {
     Intl.DateTimeFormat = RealDateTimeFormat;
-    for (const name of ["document", "window", "navigator"]) {
-      Reflect.deleteProperty(globalThis, name);
-    }
-    if (runtimeNavigator) Object.defineProperty(globalThis, "navigator", runtimeNavigator);
   });
 
   test("a US visitor who opted out under an older version is not tracked", () => {

@@ -349,7 +349,7 @@ describe("cookieNamesToClear", () => {
  * name three other issues are blocked on.
  * ---------------------------------------------------------------------- */
 
-import { afterEach } from "bun:test";
+import { restoreGlobalsAfterEach } from "./testing/restore-globals";
 import {
   CONSENT_CHANGED_EVENT,
   CONSENT_COOKIE,
@@ -428,17 +428,13 @@ function installBrowser(options: { cookie?: string; gpc?: boolean } = {}): FakeB
   return { writes, setJar: (value: string) => (jar = parseJar(value)) };
 }
 
-// Bun ships a `navigator` of its own, which later test files rely on.
-const RUNTIME_NAVIGATOR = Object.getOwnPropertyDescriptor(globalThis, "navigator");
-
 function uninstallBrowser() {
   for (const name of ["document", "window", "navigator"]) {
     Reflect.deleteProperty(globalThis, name);
   }
-  if (RUNTIME_NAVIGATOR) Object.defineProperty(globalThis, "navigator", RUNTIME_NAVIGATOR);
 }
 
-afterEach(uninstallBrowser);
+restoreGlobalsAfterEach("document", "window", "navigator");
 
 describe("the event seam STA-318, STA-319 and STA-320 subscribe to", () => {
   test("the event names are part of the contract, not an implementation detail", () => {

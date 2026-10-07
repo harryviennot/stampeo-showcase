@@ -1,19 +1,24 @@
 # STA-389 fix log
 
 - F0 failure report: `failure-reports/prefixed-slug-404.md`.
-- F1 regression test: `lib/middleware-matcher.test.ts`, run through Next's own
+- F1 regression test: `lib/routing/middleware-matcher.test.ts`, run through Next's own
   matcher (`unstable_doesMiddlewareMatch`). Failed 6/7 shop cases before the fix.
 - F2 fix: `middleware.ts` matcher, each excluded name matched as a whole first
   segment (`(?:api|…)(?:/|$)`). Live on local dev: `/golden-hour-coffee` 404
   before, 200 after.
-- Test isolation: `lib/consent.test.ts` and `lib/consent-carry-forward.test.ts`
-  deleted Bun's own `navigator` after each test, and Next's matcher helper reads
-  it at import, so the new test errored in the full run (alone it passed). Both
-  now put the runtime's `navigator` back. Full suite: 2183 pass, 0 fail.
+- Test isolation: Next's matcher helper reads Bun's `navigator` at import, and
+  three test teardowns deleted it (`consent.test.ts`,
+  `consent-carry-forward.test.ts`, and the shared
+  `privacy/__fixtures__/fake-browser.ts` `restore()`), so the new test errored
+  or passed depending on file order. All three now put the runtime's
+  `navigator` back (`lib/testing/restore-globals.ts` for the two test files).
+  Full suite: 2183 pass, 0 fail; five `--randomize` seeds show no `navigator`
+  error (their only failures are tests that are sequential by design, and they
+  fail identically without this change).
 - F3 UX polish: skipped. No UI changed; the shop page itself is untouched.
 - F4 audit: coverage-auditor and security-reviewer skipped (11-line product
   diff, no auth/billing/webhook/migration path). code-quality-reviewer run
-  because the diff adds a file.
+  because the diff adds a file: `quality-report.md`, all findings resolved.
 - F5 runbook: new `docs/qa/public-urls.md`, SU-01..03. SU-02 is the case that
   would have caught this; re-run it on prod after the deploy.
 
