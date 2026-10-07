@@ -84,8 +84,8 @@ export function deviceLanguage(
  *
  * Anything else in that position is a business slug. Kept as a literal list
  * because the middleware runs on the edge and cannot read the filesystem;
- * `locale-negotiation.test.ts` diffs it against `app/[locale]/` so a new
- * marketing page cannot quietly start being treated as a shop.
+ * `locale-negotiation.test.ts` diffs it against `app/[locale]/` and the top of
+ * `app/`, so a new page cannot quietly start being treated as a shop.
  */
 export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   // Static routes under app/[locale]
@@ -110,12 +110,15 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "terms",
   "uk",
   "us",
-  // Non-localized route handlers. The middleware matcher already skips these,
-  // but the set is also the answer to "is this a shop?" for callers that do not.
+  // Top-level folders in app/ outside [locale]. The middleware matcher already
+  // skips these, but the set is also the answer to "is this a shop?" for callers
+  // that do not.
   "api",
   "auth",
   "go",
   "internal",
+  "join",
+  "qr",
 ]);
 
 /**

@@ -349,7 +349,7 @@ describe("cookieNamesToClear", () => {
  * name three other issues are blocked on.
  * ---------------------------------------------------------------------- */
 
-import { afterEach } from "bun:test";
+import { restoreGlobalsAfterEach } from "./testing/restore-globals";
 import {
   CONSENT_CHANGED_EVENT,
   CONSENT_COOKIE,
@@ -434,7 +434,7 @@ function uninstallBrowser() {
   }
 }
 
-afterEach(uninstallBrowser);
+restoreGlobalsAfterEach("document", "window", "navigator");
 
 describe("the event seam STA-318, STA-319 and STA-320 subscribe to", () => {
   test("the event names are part of the contract, not an implementation detail", () => {
