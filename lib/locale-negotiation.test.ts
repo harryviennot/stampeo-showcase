@@ -8,8 +8,6 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { readdirSync } from "node:fs";
-import { join } from "node:path";
 
 import { routing } from "../i18n/routing";
 import {
@@ -18,6 +16,7 @@ import {
   deviceLanguage,
   resolveAcquisitionLocale,
 } from "./locale-negotiation";
+import { staticSegments } from "./testing/app-folders";
 
 describe("deviceLanguage", () => {
   test("matches a region-qualified tag to its base language", () => {
@@ -119,6 +118,7 @@ describe("acquisitionSlug", () => {
     expect(acquisitionSlug("/blog/how-loyalty-works")).toBeNull();
     expect(acquisitionSlug("/programme-fidelite")).toBeNull();
     expect(acquisitionSlug("/uk")).toBeNull();
+    expect(acquisitionSlug("/qr")).toBeNull();
   });
 
   test("returns null for a shape that is not an enrollment URL", () => {
@@ -129,21 +129,23 @@ describe("acquisitionSlug", () => {
     expect(acquisitionSlug("/usual-cafe/l/rue-de-rivoli/extra")).toBeNull();
   });
 
-  test("every static route under app/[locale] is reserved", () => {
-    // A static route folder that is missing from RESERVED_TOP_SEGMENTS would be
-    // treated as a business slug, and we would call the API on every page view
-    // of it. Driven off the filesystem so a new marketing page cannot drift.
-    const staticRoutes = readdirSync(join(import.meta.dir, "..", "app", "[locale]"), {
-      withFileTypes: true,
-    })
-      .filter((e) => e.isDirectory() && !e.name.startsWith("["))
-      .map((e) => e.name);
-
-    expect(staticRoutes.length).toBeGreaterThan(0);
-    for (const route of staticRoutes) {
-      expect(RESERVED_TOP_SEGMENTS.has(route)).toBe(true);
+  test.each(["[locale]", ""])("every static route folder under app/%s is reserved", (dir) => {
+    // A route folder missing from RESERVED_TOP_SEGMENTS is taken for a business
+    // slug. Driven off the filesystem so a new route cannot drift.
+    const segments = staticSegments(dir);
+    expect(segments.length).toBeGreaterThan(0);
+    for (const segment of segments) {
+      expect(RESERVED_TOP_SEGMENTS.has(segment)).toBe(true);
     }
   });
+
+  test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger"])(
+    "a slug that starts like a reserved route is still a shop: %s",
+    (slug) => {
+      expect(acquisitionSlug(`/${slug}`)).toBe(slug);
+      expect(acquisitionSlug(`/${slug}/l/rue-de-rivoli`)).toBe(slug);
+    }
+  );
 });
 
 describe("resolveAcquisitionLocale", () => {
