@@ -11,6 +11,7 @@ import {
   measurementIdFromEnv,
   shouldLoadGa,
   shouldSendPageView,
+  syncGaDisable,
   trackGaPageView,
 } from "@/lib/google-analytics";
 
@@ -58,7 +59,9 @@ export function GoogleAnalytics() {
 
     // Re-evaluated on every navigation, not just at mount: `trackable` changes
     // under the visitor's feet when they step into /onboarding or follow a QR
-    // link to a business page.
+    // link to a business page. gtag's own off switch follows it, first, so the
+    // tag cannot report the hop itself.
+    syncGaDisable({ measurementId, trackable, analytics });
     if (!shouldLoadGa({ measurementId, analytics, ready, trackable })) return;
 
     if (!alreadyLoaded) {

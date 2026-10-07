@@ -1,84 +1,17 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { usePathname } from "next/navigation";
 
+import { currentConsent, subscribeToConsentChange } from "@/lib/consent";
+import { runPageLifecycle } from "@/lib/privacy/lifecycle";
 import {
-  consentSnapshotKey,
-  currentConsent,
-  detectConsentRegime,
-  detectGpc,
-  readStoredConsent,
-  resolveConsent,
-  subscribeToConsentChange,
-  type ConsentRecord,
-  type ConsentRegime,
-  type ConsentState,
-  type PriorConsent,
-} from "@/lib/consent";
+  SERVER_SNAPSHOT,
+  readConsentSnapshot,
+  type ConsentSnapshot,
+} from "@/lib/privacy/snapshot";
 
-export interface ConsentSnapshot extends ConsentState {
-  /** The stored current-version choice, or null if there is none. */
-  record: ConsentRecord | null;
-  /** A choice stored under an older version, whose refusals still stand. */
-  prior: PriorConsent | null;
-  regime: ConsentRegime;
-  gpc: boolean;
-  /**
-   * False during the server render and the first paint.
-   *
-   * Nothing consent-shaped may be decided until this is true. The server
-   * cannot know the visitor's timezone, so `regime` is a placeholder there;
-   * rendering the banner on its strength would show a French banner to an
-   * American and, worse, would make the page's HTML depend on the visitor,
-   * which is exactly what keeps showcase static.
-   */
-  ready: boolean;
-}
-
-/**
- * The server answer: denied, and not ready.
- *
- * A single frozen object rather than a fresh one per call, because
- * `useSyncExternalStore` compares snapshots by identity and a new object every
- * render is an infinite loop.
- */
-const SERVER_SNAPSHOT: ConsentSnapshot = Object.freeze({
-  analytics: false,
-  marketing: false,
-  record: null,
-  prior: null,
-  regime: "opt-in" as const,
-  gpc: false,
-  ready: false,
-});
-
-let cached: ConsentSnapshot = SERVER_SNAPSHOT;
-let cachedKey = "";
-
-/**
- * Same identity-stability problem on the client, solved by only building a new
- * object when something actually changed.
- *
- * "Changed" is decided by `consentSnapshotKey`, which covers every field the
- * snapshot exposes (`v`, `at`, `subjectId` included, not just the booleans) —
- * a re-decision that keeps the same answers must still serve the fresh record,
- * or consumers stamp the older `consentAt` as evidence. The key is a pure
- * function of the cookie's parsed fields, so it holds still across renders
- * until the cookie itself changes and cannot loop the store.
- */
-function clientSnapshot(): ConsentSnapshot {
-  const { record, prior } = readStoredConsent();
-  const regime = detectConsentRegime();
-  const gpc = detectGpc();
-  const state = resolveConsent({ record, prior, regime, gpc });
-  const key = consentSnapshotKey({ record, prior, regime, gpc });
-
-  if (key !== cachedKey) {
-    cachedKey = key;
-    cached = { ...state, record, prior, regime, gpc, ready: true };
-  }
-  return cached;
-}
+export type { ConsentSnapshot };
 
 /**
  * What this visitor has agreed to, re-read whenever it changes.
@@ -86,13 +19,24 @@ function clientSnapshot(): ConsentSnapshot {
  * Mirrors the `useSyncExternalStore` shape used by
  * `components/market/MarketSuggestion.tsx`: the server snapshot is inert, the
  * real answer arrives after mount, and no page becomes dynamic because of it.
+ *
+ * Each page also runs the privacy lifecycle (`lib/privacy/lifecycle.ts`): in
+ * the US it mints the subject id before any tag may load, and it re-issues a
+ * standing refusal. It is idempotent, so every consumer of this hook can run it.
  */
 export function useConsent(): ConsentSnapshot {
+  const pathname = usePathname();
   const subscribe = useCallback(
     (onChange: () => void) => subscribeToConsentChange(onChange),
     [],
   );
-  return useSyncExternalStore(subscribe, clientSnapshot, () => SERVER_SNAPSHOT);
+  const snapshot = useSyncExternalStore(subscribe, readConsentSnapshot, () => SERVER_SNAPSHOT);
+
+  useEffect(() => {
+    runPageLifecycle(pathname ?? "");
+  }, [pathname]);
+
+  return snapshot;
 }
 
 /**

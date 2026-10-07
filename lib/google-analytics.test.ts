@@ -36,7 +36,10 @@ import { join } from "node:path";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { CONTACT_CTAS } from "./cta/taxonomy";
+import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
+import { rowFor } from "./privacy/policy";
 import {
+  gaConfig,
   gaEventForCTA,
   gaScriptSrc,
   initGa,
@@ -149,19 +152,19 @@ describe("shouldLoadGa — composed with the real consent resolver", () => {
   test("a US visitor with no stored choice loads the tag without clicking", () => {
     // The opt-out regime. Deliberate — see `resolveConsent`.
     expect(
-      gate(resolveConsent({ record: null, regime: "opt-out", gpc: false }))
+      gate(resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: false }))
     ).toBe(true);
   });
 
   test("a US visitor sending GPC loads nothing", () => {
     expect(
-      gate(resolveConsent({ record: null, regime: "opt-out", gpc: true }))
+      gate(resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: true }))
     ).toBe(false);
   });
 
   test("a European visitor with no stored choice loads nothing", () => {
     expect(
-      gate(resolveConsent({ record: null, regime: "opt-in", gpc: false }))
+      gate(resolveConsent({ record: null, prior: null, row: rowFor("FR"), gpc: false }))
     ).toBe(false);
   });
 
@@ -178,7 +181,8 @@ describe("shouldLoadGa — composed with the real consent resolver", () => {
             at: 0,
             regime: "opt-in",
           },
-          regime: "opt-in",
+          prior: null,
+          row: rowFor("FR"),
           gpc: false,
         })
       )
@@ -196,7 +200,8 @@ describe("shouldLoadGa — composed with the real consent resolver", () => {
             at: 0,
             regime: "opt-in",
           },
-          regime: "opt-in",
+          prior: null,
+          row: rowFor("FR"),
           gpc: false,
         })
       )
@@ -533,6 +538,24 @@ describe("readDebugMode", () => {
   });
 });
 
+describe("gaConfig — what the property is told about itself (AC10.4)", () => {
+  const NO_SIGNALS = {
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+  };
+
+  test("Google signals and ad personalization are off, always", () => {
+    // Google may use the property as a service provider only: it cannot link
+    // the visitor to their Google account's ad profile or personalise ads.
+    expect(gaConfig("")).toEqual(NO_SIGNALS);
+    expect(gaConfig("?utm_source=meta&gclid=abc")).toEqual(NO_SIGNALS);
+  });
+
+  test("DebugView is added on request and never replaces them", () => {
+    expect(gaConfig("?debug_mode=1")).toEqual({ ...NO_SIGNALS, debug_mode: true });
+  });
+});
+
 describe("the browser side, in load order", () => {
   /**
    * `initialised` is MODULE state -- it has to be, because it models "has this
@@ -563,6 +586,8 @@ describe("the browser side, in load order", () => {
       },
       title: "Stampeo",
       body: { dataset: {} as Record<string, string> },
+      // A visitor who accepted everything.
+      cookie: GRANTED_COOKIE,
     };
     (globalThis as Record<string, unknown>).window = fakeWindow;
     return fakeWindow;
@@ -615,7 +640,8 @@ describe("the browser side, in load order", () => {
     expect(calls[1][1]).toBe(MEASUREMENT_ID);
     // `?debug_mode=1` is the documented operator instruction; passing it
     // through is what makes that instruction true.
-    expect(calls[1][2]).toEqual({ debug_mode: true });
+    expect(calls[1][2]).toEqual(gaConfig("?debug_mode=1"));
+    expect(calls[1][2]).toMatchObject({ debug_mode: true });
   });
 
   test("a second call injects nothing — strict mode mounts effects twice", () => {
@@ -738,5 +764,18 @@ describe("the browser side, in load order", () => {
     trackGaPageView({ path: "/onboarding", trackable: isTrackablePath("/onboarding") });
 
     expect(calls).toEqual([]);
+  });
+
+  test("a refusal made in another tab since the tag loaded stops every event", () => {
+    const win = installBrowser("");
+    const calls = spyGtag(win);
+
+    trackGaEvent({ event: "sign_up_cta_click", trackable: true, params: {} });
+    expect(calls).toHaveLength(1);
+
+    (globalThis as { document: { cookie: string } }).document.cookie = REFUSED_COOKIE;
+    trackGaEvent({ event: "sign_up_cta_click", trackable: true, params: {} });
+    trackGaPageView({ path: "/pricing", trackable: true });
+    expect(calls).toHaveLength(1);
   });
 });

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 import { Link } from "@/i18n/navigation";
 import { walletBadges } from "@/lib/store-badges";
 import posthog from "posthog-js";
@@ -86,6 +87,12 @@ export default function WalletSelectPage() {
           >
             {t("backToStampeo")}
           </Link>
+        </div>
+
+        {/* This page is tracked but has no footer, so the way back to the
+            privacy choice lives here. */}
+        <div className="mt-4">
+          <CookiePreferencesButton tone="page" />
         </div>
       </div>
     </div>

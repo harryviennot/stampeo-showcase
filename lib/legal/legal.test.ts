@@ -7,6 +7,7 @@ import GithubSlugger from "github-slugger";
 import { routing } from "@/i18n/routing";
 import { getLegalContent } from "./index";
 import { STABLE_LEGAL_IDS } from "./mdx";
+import { commonCatalog, privacySource, retentionTable, section } from "./policy-test-utils";
 
 const PAGES = ["privacy", "terms"] as const;
 
@@ -80,51 +81,6 @@ describe("STABLE_LEGAL_IDS", () => {
   });
 });
 
-/** The privacy policy's Markdown source in one locale. */
-function privacySource(locale: string) {
-  const dir = path.join(process.cwd(), "legal", locale);
-  const file = fs
-    .readdirSync(dir)
-    .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
-  return fs.readFileSync(path.join(dir, file!), "utf-8");
-}
-
-/**
- * The body of the first privacy-policy section whose heading matches
- * `heading`, up to the next heading matching `next` (by default the next
- * numbered one).
- *
- * Scoping matters more than it looks: `stampeo_consent` and the word "consent"
- * both appear in §5.3's cookie table, so a document-wide search passes whether
- * or not the section under test says anything. Empty when the heading is
- * missing, so an assertion on it fails rather than reading the wrong text.
- */
-function section(locale: string, heading: RegExp, next: RegExp = /^#+\s+\d/m) {
-  const source = privacySource(locale);
-  const start = source.search(heading);
-  if (start === -1) return "";
-  // Start AFTER the heading line, or the heading itself would match `next`.
-  const afterHeading = source.indexOf("\n", start);
-  if (afterHeading === -1) return "";
-  const rest = source.slice(afterHeading);
-  const end = rest.search(next);
-  return end === -1 ? rest : rest.slice(0, end);
-}
-
-/** One locale's `common` message catalog, as the banner and the toggle render it. */
-function commonCatalog(locale: string) {
-  return JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), "messages", locale, "common.json"), "utf-8"),
-  ).common;
-}
-
-/** The rows of the retention table in §8, a different table from §5.3's. */
-function retentionTable(locale: string) {
-  return section(locale, /^##\s+8\./m, /^##\s+9\./m)
-    .split("\n")
-    .filter((line) => line.trim().startsWith("|"));
-}
-
 /**
  * The cookie section of the privacy policy (STA-317).
  *
@@ -154,13 +110,23 @@ describe("privacy §5 cookies", () => {
 
   it("names every recipient the banner offers, in every locale", () => {
     // CNIL requires the purposes AND the recipients to be disclosed. The
-    // banner names Google, Meta and TikTok; if the policy does not, the two
-    // disagree and the disclosure is the one that loses.
+    // banner names Google and Meta; if the policy does not, the two disagree
+    // and the disclosure is the one that loses.
     for (const locale of routing.locales) {
       const source = privacySource(locale);
-      for (const recipient of ["Google Analytics 4", "Meta", "TikTok"]) {
+      for (const recipient of ["Google Analytics 4", "Meta"]) {
         expect(source, `${locale} does not name ${recipient}`).toContain(recipient);
       }
+    }
+  });
+
+  it("names no TikTok tag or cookie, in any locale", () => {
+    // No TikTok tag is installed, so the policy must not list a recipient or a
+    // cookie (`_ttp`) that nothing sets.
+    for (const locale of routing.locales) {
+      expect(privacySource(locale), `${locale} still names TikTok`).not.toMatch(
+        /tiktok|_ttp/i,
+      );
     }
   });
 
@@ -169,18 +135,27 @@ describe("privacy §5 cookies", () => {
     // revocation path in `lib/consent.ts` deletes. The two lists must agree.
     for (const locale of routing.locales) {
       const source = privacySource(locale);
-      for (const cookie of ["_ga", "_gid", "_fbp", "_fbc", "_ttp", "stampeo_consent"]) {
+      for (const cookie of [
+        "_ga",
+        "_gid",
+        "_fbp",
+        "_fbc",
+        "stampeo_consent",
+        "stampeo_sid",
+        "stampeo_src",
+        "stampeo_ga",
+        "stampeo_ad",
+      ]) {
         expect(source, `${locale} does not list ${cookie}`).toContain(cookie);
       }
     }
   });
 
-  it("discloses the attribution cookie, in every locale (STA-323)", () => {
-    // `stampeo_attribution` is first-party by origin but a tracker by content:
-    // it holds the ad platforms' click ids and the GA client id, and it is
-    // deleted by the same revoke path as the rest (see COOKIE_PATTERNS in
-    // lib/consent.ts). A visitor inspecting their own jar finds it, so the
-    // policy has to account for it or the table is an incomplete disclosure.
+  it("still accounts for the legacy attribution cookie, in every locale", () => {
+    // `stampeo_attribution` is not written any more, but a browser that
+    // received it earlier holds it until it expires. It is first-party by origin and a
+    // tracker by content (ad click ids, the GA client id), and a visitor
+    // inspecting their own jar finds it, so the policy has to account for it.
     for (const locale of routing.locales) {
       expect(
         privacySource(locale),
@@ -575,9 +550,10 @@ describe("privacy — the statements the legal review requires", () => {
       const common = commonCatalog(locale);
       expectAll(text, REQUIRED[locale].sharing, `${locale} §6 US sharing`);
       expect(text).toContain("Global Privacy Control");
-      // The opt-out names the controls a visitor can actually find on the page.
-      expect(text).toContain(common.cookies.notice.choices);
-      expect(text).toContain(common.footer.cookiePreferences);
+      // §6 addresses US visitors, so its opt-out names the control a US visitor
+      // finds on the page, and not the one shown everywhere else.
+      expect(text).toContain(common.footer.privacyChoices);
+      expect(text).not.toContain(common.footer.cookiePreferences);
     },
   );
 

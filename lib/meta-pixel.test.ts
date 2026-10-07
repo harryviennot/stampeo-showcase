@@ -28,16 +28,25 @@
 
 import { afterAll, describe, expect, test } from "bun:test";
 import { resolveConsent } from "./consent";
+import { isTrackablePath } from "./consent-routes";
+import { ctaClick } from "./cta/events";
+import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
+import { rowFor } from "./privacy/policy";
 import {
   META_PIXEL_SCRIPT_SRC,
   initMetaPixel,
   isMetaPixelLoaded,
+  metaEventForContactForm,
   metaEventForCTA,
+  metaEventForLink,
   readMetaPixelId,
   shouldLoadMetaPixel,
   shouldSendMetaEvent,
   shouldSendMetaPageView,
+  shouldSendViewContent,
   trackMetaEvent,
+  viewContentCategory,
+  type MetaEvent,
 } from "./meta-pixel";
 
 /** Every condition satisfied. Each test below breaks exactly one. */
@@ -146,7 +155,7 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
     // requires prior consent, so the US is notice-and-opt-out. This test exists
     // so that fact is asserted somewhere rather than discovered during QA and
     // filed as a bug.
-    const state = resolveConsent({ record: null, regime: "opt-out", gpc: false });
+    const state = resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: false });
     expect(state.marketing).toBe(true);
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
@@ -156,14 +165,14 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
   test("a US visitor sending GPC loads nothing", () => {
     // GPC is a legally binding opt-out in twelve states and is honoured before
     // any regime default.
-    const state = resolveConsent({ record: null, regime: "opt-out", gpc: true });
+    const state = resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: true });
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
     ).toBe(false);
   });
 
   test("a European visitor with no stored choice loads nothing", () => {
-    const state = resolveConsent({ record: null, regime: "opt-in", gpc: false });
+    const state = resolveConsent({ record: null, prior: null, row: rowFor("FR"), gpc: false });
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
     ).toBe(false);
@@ -173,7 +182,8 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
     // The categories are independent. GA4 (STA-318) may run while this does not.
     const state = resolveConsent({
       record: { v: 1, analytics: true, marketing: false, at: 0, regime: "opt-in" },
-      regime: "opt-in",
+      prior: null,
+      row: rowFor("FR"),
       gpc: false,
     });
     expect(
@@ -284,62 +294,173 @@ describe("metaEventForCTA", () => {
   // Which event each location sends is tabled once, in lib/cta/events.test.ts.
   // These are the rules that table relies on.
 
-  test("a contact location is a Contact", () => {
-    // Kept distinct from Lead: self-serve signup and a sales touch are
-    // different funnels and campaigns optimise for them separately. AEM ranks
-    // 8 events and this taxonomy uses 3, so the distinction is free.
-    expect(metaEventForCTA({ ctaLocation: "footer_contact", href: "/onboarding" })).toBe(
-      "Contact",
-    );
+  test("a signup location is a SignupCTA, never a Lead", () => {
+    // The click leaves showcase for the app and we do not observe whether an
+    // account was created. The Lead is the server's, sent when the account is
+    // confirmed, so the browser's custom event can never be mistaken for it.
+    expect(metaEventForCTA({ ctaLocation: "hero", href: "/onboarding" })).toBe("SignupCTA");
   });
 
-  test("a signup location is a Lead", () => {
-    // Lead, not CompleteRegistration: the click leaves showcase for the app
-    // and we do not observe whether an account was created.
-    expect(metaEventForCTA({ ctaLocation: "hero", href: "/onboarding" })).toBe("Lead");
-  });
+  test.each(["hero_demo", "footer_contact", "faq_contact", "pricing_contact"])(
+    "the contact location %s sends nothing: it only navigates to the contact page",
+    (ctaLocation) => {
+      expect(metaEventForCTA({ ctaLocation, href: "/contact" })).toBeNull();
+      expect(metaEventForCTA({ ctaLocation, href: "/onboarding" })).toBeNull();
+    },
+  );
 
-  test("the destination decides when it disagrees with the location", () => {
-    // `ctaClick` picks the PostHog event from the href rather than the
-    // location name, so a mapped CTA repointed at /contact must follow.
-    expect(metaEventForCTA({ ctaLocation: "hero", href: "/contact" })).toBe(
-      "Contact",
-    );
-  });
-
-  test("a locale-prefixed contact href is still a Contact", () => {
-    // `Link` from @/i18n/navigation prefixes at render time. The raw prop is
-    // unprefixed today, but a call site passing a resolved href must not
-    // silently downgrade to Lead.
-    expect(metaEventForCTA({ ctaLocation: "hero_demo", href: "/en/contact" })).toBe(
-      "Contact",
-    );
-    expect(metaEventForCTA({ ctaLocation: "hero_demo", href: "/es/contact" })).toBe(
-      "Contact",
-    );
-  });
-
-  test("a market+locale contact href is still a Contact", () => {
-    // Defensive: no /en/us/* route exists today, but a second two-letter
-    // segment must not silently downgrade a Contact to a Lead the day one
-    // does. The strip repeats — see `isContactHref` in `lib/cta/taxonomy.ts`.
-    expect(metaEventForCTA({ ctaLocation: "hero", href: "/en/us/contact" })).toBe(
-      "Contact",
-    );
-  });
+  test.each(["/contact", "/contact?type=demo", "/en/contact", "/es/contact", "/en/us/contact"])(
+    "a signup location repointed at %s sends nothing",
+    (href) => {
+      // The destination decides when it disagrees with the location name, as it
+      // does for PostHog: a visit to the contact page is not a signup.
+      expect(metaEventForCTA({ ctaLocation: "hero", href })).toBeNull();
+    },
+  );
 
   test("an unmapped CTA location is silent", () => {
-    // AC6's negative half. A CTA added later sends nothing until someone maps
-    // it: a missing event is a gap in a dashboard, a wrong one is a campaign
-    // optimising against noise.
+    // A CTA added later sends nothing until someone maps it: a missing event is
+    // a gap in a dashboard, a wrong one is a campaign optimising against noise.
     expect(metaEventForCTA({ ctaLocation: "newsletter_signup", href: "/x" })).toBeNull();
     expect(metaEventForCTA({ ctaLocation: "", href: "/onboarding" })).toBeNull();
   });
+});
 
-  test("an unmapped location pointing at /contact is still silent", () => {
-    // The location allowlist is checked BEFORE the href, so an unknown CTA
-    // cannot smuggle itself in by its destination.
-    expect(metaEventForCTA({ ctaLocation: "footer_demo", href: "/contact" })).toBeNull();
+describe("metaEventForLink: a way to reach us that leaves the page", () => {
+  test.each([
+    "mailto:hello@stampeo.app",
+    "mailto:hello@stampeo.app?subject=Demo",
+    "tel:+33649370470",
+    "TEL:+33649370470",
+    "https://wa.me/33649370470",
+    "https://wa.me/33649370470?text=Bonjour",
+    "http://wa.me/33649370470",
+  ])("%s is a Contact", (href) => {
+    expect(metaEventForLink(href)).toBe("Contact");
+  });
+
+  test.each([
+    ["the contact page, which only navigates", "/contact"],
+    ["the contact page with its locale", "/en/contact?type=demo"],
+    ["the signup page", "/onboarding"],
+    ["a site that merely mentions it", "https://example.com/?next=mailto:x@y.z"],
+    ["a look-alike WhatsApp host", "https://wa.me.evil.example/1"],
+    ["another host's wa.me path", "https://example.com/wa.me/1"],
+    ["a telephone-looking path", "/tel:123"],
+    ["an empty href", ""],
+  ])("%s is not", (_case, href) => {
+    expect(metaEventForLink(href)).toBeNull();
+  });
+});
+
+describe("metaEventForContactForm: the form's answer", () => {
+  test.each([200, 201, 202, 204, 299])("a %d is a Contact", (status) => {
+    expect(metaEventForContactForm(status)).toBe("Contact");
+  });
+
+  test.each([0, 100, 301, 400, 404, 422, 429, 500, 503])(
+    "a %d is not: nothing was sent to us",
+    (status) => {
+      expect(metaEventForContactForm(status)).toBeNull();
+    },
+  );
+});
+
+describe("ViewContent: the pricing and features pages", () => {
+  test.each([
+    ["/pricing", "pricing"],
+    ["/en/pricing", "pricing"],
+    ["/fr/pricing/", "pricing"],
+    ["/us/pricing", "pricing"],
+    ["/uk/pricing", "pricing"],
+    ["/en/us/pricing", "pricing"],
+    ["/pl/pricing?plan=growth#faq", "pricing"],
+    ["/features/design-de-carte", "features"],
+    ["/en/features/card-design", "features"],
+    ["/features", "features"],
+    ["/es/features/scanner-mobile", "features"],
+  ])("%s is %s", (path, category) => {
+    expect(viewContentCategory(path)).toBe(category);
+  });
+
+  test.each([
+    "/",
+    "/us",
+    "/en",
+    "/about",
+    "/blog/pricing",
+    "/pricing-guide",
+    "/contact",
+    "/onboarding",
+    "/login",
+    "/mon-cafe",
+    "/en/mon-cafe/pricing",
+    "pricing",
+    "",
+  ])("%s is neither", (path) => {
+    expect(viewContentCategory(path)).toBeNull();
+  });
+
+  const SENDABLE = { loaded: true, trackable: true, category: "pricing", alreadySent: false } as const;
+
+  test("a page that is viewed for the first time this load sends one", () => {
+    expect(shouldSendViewContent(SENDABLE)).toBe(true);
+    expect(shouldSendViewContent({ ...SENDABLE, category: "features" })).toBe(true);
+  });
+
+  test.each([
+    ["a page that already sent one", { alreadySent: true }],
+    ["a page that is neither", { category: null }],
+    ["a pixel that never loaded", { loaded: false }],
+    ["a path where no tag may run", { trackable: false }],
+  ])("%s sends nothing", (_case, over) => {
+    expect(shouldSendViewContent({ ...SENDABLE, ...over })).toBe(false);
+  });
+});
+
+describe("no Meta event is reported from a private route (AC5.2)", () => {
+  const PRIVATE_PATHS = [
+    "/onboarding",
+    "/en/onboarding",
+    "/login",
+    "/fr/login",
+    "/reset-password",
+    "/en/reset-password",
+    "/email-preferences",
+    "/es/email-preferences",
+    // A business's enrollment page, reached by scanning a QR code on a counter.
+    "/mon-cafe",
+    "/en/mon-cafe",
+  ];
+
+  test.each(PRIVATE_PATHS)("a resident pixel stays silent on %s, after a client-side hop", (path) => {
+    const trackable = isTrackablePath(path);
+
+    // PageView: the router moved here from a marketing page.
+    expect(
+      shouldSendMetaPageView({
+        loaded: true,
+        trackable,
+        alreadyLoaded: true,
+        lastPath: "/pricing",
+        nextPath: path,
+      }),
+    ).toBe(false);
+    // ViewContent, SignupCTA and Contact all pass through the same send gate.
+    expect(shouldSendMetaEvent({ loaded: true, trackable })).toBe(false);
+    expect(
+      shouldSendViewContent({
+        loaded: true,
+        trackable,
+        category: viewContentCategory(path),
+        alreadySent: false,
+      }),
+    ).toBe(false);
+    // A click on a signup CTA there reports to PostHog only.
+    expect(
+      ctaClick({ ctaLocation: "header", href: "/onboarding", pathname: path, locale: "en" })
+        .trackable,
+    ).toBe(false);
   });
 });
 
@@ -360,6 +481,8 @@ function installBrowser(
   options: {
     fbq?: unknown;
     onAppend?: (el: FakeEl, win: Record<string, unknown>) => void;
+    /** The consent cookie; a visitor who accepted everything unless said otherwise. */
+    cookie?: string;
   } = {},
 ): Record<string, unknown> {
   const win: Record<string, unknown> = {};
@@ -368,6 +491,7 @@ function installBrowser(
   (globalThis as Record<string, unknown>).document = {
     createElement: (): FakeEl => ({}),
     head: { appendChild: (el: FakeEl) => options.onAppend?.(el, win) },
+    cookie: options.cookie ?? GRANTED_COOKIE,
   };
   return win;
 }
@@ -405,7 +529,7 @@ describe("the browser side, in load order", () => {
     installBrowser({ fbq, onAppend: recordAppends });
 
     expect(isMetaPixelLoaded()).toBe(false);
-    trackMetaEvent({ event: "Lead", trackable: true });
+    trackMetaEvent({ event: "SignupCTA", trackable: true });
 
     expect(calls).toEqual([]);
   });
@@ -429,20 +553,39 @@ describe("the browser side, in load order", () => {
     expect(appended.length).toBe(1);
   });
 
-  test("once loaded, an event on a marketing page sends", () => {
+  test("once loaded, a standard event on a marketing page sends through track", () => {
     const { fbq, calls } = recordingFbq();
     installBrowser({ fbq });
 
-    trackMetaEvent({ event: "Lead", trackable: true });
+    trackMetaEvent({ event: "Contact", trackable: true });
+    trackMetaEvent({ event: "ViewContent", trackable: true, params: { content_category: "pricing" } });
 
-    expect(calls).toEqual([["track", "Lead", undefined]]);
+    expect(calls).toEqual([
+      ["track", "Contact", undefined],
+      ["track", "ViewContent", { content_category: "pricing" }],
+    ]);
   });
 
-  test("the same event on a private page sends nothing, pixel loaded or not", () => {
+  test("a signup CTA is a custom event: trackCustom, with the click's context", () => {
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq });
+    const params = { locale: "en", cta_location: "hero", href: "/onboarding" };
+
+    trackMetaEvent({ event: "SignupCTA", trackable: true, params });
+
+    expect(calls).toEqual([["trackCustom", "SignupCTA", params]]);
+  });
+
+  test("no event, standard or custom, sends from a private page, pixel loaded", () => {
     const { fbq, calls } = recordingFbq();
     installBrowser({ fbq });
 
-    trackMetaEvent({ event: "Lead", trackable: false });
+    const EVENTS: MetaEvent[] = ["PageView", "ViewContent", "SignupCTA", "Contact"];
+    for (const path of ["/onboarding", "/login", "/reset-password", "/email-preferences", "/mon-cafe"]) {
+      for (const event of EVENTS) {
+        trackMetaEvent({ event, trackable: isTrackablePath(path) });
+      }
+    }
 
     expect(calls).toEqual([]);
   });
@@ -454,7 +597,108 @@ describe("the browser side, in load order", () => {
     // the navigation. Losing the measurement is the acceptable failure.
     installBrowser({ fbq: throwingFbq });
 
-    expect(() => trackMetaEvent({ event: "Lead", trackable: true })).not.toThrow();
+    expect(() => trackMetaEvent({ event: "SignupCTA", trackable: true })).not.toThrow();
+  });
+});
+
+describe("ViewContent is sent once per page for the life of the page load (AC6.3)", () => {
+  const PIXEL = "1088158323750710";
+  const viewContents = (calls: unknown[][]) => calls.filter((call) => call[1] === "ViewContent");
+
+  async function loadedPixel(tag: string, cookie?: string) {
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq, cookie });
+    const pixel = await import(`./meta-pixel?${tag}`);
+    pixel.initMetaPixel(PIXEL);
+    calls.length = 0;
+    return { pixel, calls };
+  }
+
+  test("a component that mounts again on the same page does not send it again", async () => {
+    const { pixel, calls } = await loadedPixel("view-content-remount");
+
+    pixel.reportViewContent("/pricing", true);
+    pixel.reportViewContent("/pricing", true);
+
+    expect(viewContents(calls)).toEqual([["track", "ViewContent", { content_category: "pricing" }]]);
+  });
+
+  test("each page sends its own, and coming back to one sends nothing more", async () => {
+    const { pixel, calls } = await loadedPixel("view-content-pages");
+
+    pixel.reportViewContent("/pricing", true);
+    pixel.reportViewContent("/features/card-design", true);
+    pixel.reportViewContent("/pricing", true);
+
+    expect(viewContents(calls).map((call) => (call[2] as { content_category: string }).content_category)).toEqual([
+      "pricing",
+      "features",
+    ]);
+  });
+
+  test("a page the visitor had not yet allowed it on is still due one once they do", async () => {
+    const { pixel, calls } = await loadedPixel("view-content-consent", REFUSED_COOKIE);
+
+    pixel.reportViewContent("/pricing", true);
+    expect(viewContents(calls)).toEqual([]);
+
+    (globalThis as unknown as { document: { cookie: string } }).document.cookie = GRANTED_COOKIE;
+    pixel.reportViewContent("/pricing", true);
+    expect(viewContents(calls)).toHaveLength(1);
+  });
+
+  test.each([
+    ["a page that is neither pricing nor a feature", "about", "/about", true],
+    ["a private route", "onboarding", "/onboarding", false],
+  ])("%s sends none", async (_case, tag, path, trackable) => {
+    const { pixel, calls } = await loadedPixel(`view-content-${tag}`);
+
+    pixel.reportViewContent(path, trackable);
+
+    expect(viewContents(calls)).toEqual([]);
+  });
+});
+
+describe("an event is sent only while the visitor still allows it", () => {
+  const PIXEL = "1088158323750710";
+
+  async function loadedPixel(tag: string) {
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq });
+    const pixel = await import(`./meta-pixel?${tag}`);
+    pixel.initMetaPixel(PIXEL);
+    calls.length = 0;
+    return { pixel, calls };
+  }
+  const setCookie = (value: string) => {
+    ((globalThis as Record<string, unknown>).document as { cookie: string }).cookie = value;
+  };
+
+  test("a refusal made in another tab since the pixel loaded stops every event", async () => {
+    const { pixel, calls } = await loadedPixel("refused-since-load");
+
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    expect(calls).toHaveLength(1);
+
+    setCookie(REFUSED_COOKIE);
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    pixel.trackMetaEvent({ event: "SignupCTA", trackable: true });
+    pixel.trackMetaEvent({ event: "PageView", trackable: true });
+    expect(calls).toHaveLength(1);
+  });
+
+  test("refusing advertising alone stops it, and refusing analytics alone does not", async () => {
+    const { pixel, calls } = await loadedPixel("category");
+    const record = (analytics: boolean, marketing: boolean) =>
+      GRANTED_COOKIE.replace(/=.*/, `=${encodeURIComponent(JSON.stringify({ v: 3, a: +analytics, m: +marketing, t: 1_791_240_000, r: "opt-in", g: "EEA_UK_CH" }))}`);
+
+    setCookie(record(false, true));
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    expect(calls).toHaveLength(1);
+
+    setCookie(record(true, false));
+    pixel.trackMetaEvent({ event: "Contact", trackable: true });
+    expect(calls).toHaveLength(1);
   });
 });
 

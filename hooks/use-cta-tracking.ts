@@ -34,7 +34,11 @@ export function useCtaTracking(trackAs: CTALocation, href: string): () => void {
     }
 
     if (click.meta) {
-      trackMetaEvent({ event: click.meta, trackable: click.trackable });
+      trackMetaEvent({
+        event: click.meta.event,
+        trackable: click.trackable,
+        params: click.meta.params,
+      });
     }
 
     if (click.ga) {

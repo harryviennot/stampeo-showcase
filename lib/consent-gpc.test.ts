@@ -21,6 +21,7 @@ import {
   type ConsentRecord,
   type PriorConsent,
 } from "./consent";
+import { rowFor } from "./privacy/policy";
 
 /** What "Got it" on the US notice records: the opt-out default, both on. */
 const GRANT: ConsentRecord = {
@@ -37,6 +38,8 @@ const OLDER_AD_REFUSAL: PriorConsent = {
   marketing: false,
   at: 1_759_000_000,
 };
+
+const ROWS = { "opt-out": rowFor("US"), "opt-in": rowFor("FR") } as const;
 
 const STORED = {
   "a recorded grant": { record: GRANT, prior: null },
@@ -68,7 +71,11 @@ describe("resolveConsent: GPC against what is stored", () => {
     ["an older advertising refusal", "opt-in", false, OFF],
     ["an older advertising refusal", "opt-in", true, OFF],
   ] as const)("%s, %s regime, GPC %p", (stored, regime, gpc, expected) => {
-    expect(resolveConsent({ ...STORED[stored], regime, gpc })).toEqual(expected);
+    // The choice was made in the regime it is read in.
+    const { record, prior } = STORED[stored];
+    expect(
+      resolveConsent({ record: record && { ...record, regime }, prior, row: ROWS[regime], gpc }),
+    ).toEqual(expected);
   });
 });
 
@@ -77,7 +84,7 @@ describe("categoriesToClearOnLoad", () => {
     const jar = ["NEXT_LOCALE", CONSENT_COOKIE, "_ga", "_ga_ZFZ6JLPFXN", "_fbp", "stampeo_attribution"];
 
     const cleared = cookieNamesToClear(
-      categoriesToClearOnLoad({ regime: "opt-out", gpc: true }),
+      categoriesToClearOnLoad({ row: ROWS["opt-out"], gpc: true }),
       jar,
     );
 
@@ -96,6 +103,6 @@ describe("categoriesToClearOnLoad", () => {
     ["a US visitor without GPC clears nothing", "opt-out", false, []],
     ["an EU visitor under GPC clears nothing", "opt-in", true, []],
   ] as const)("%s", (_case, regime, gpc, categories) => {
-    expect(categoriesToClearOnLoad({ regime, gpc })).toEqual(categories);
+    expect(categoriesToClearOnLoad({ row: ROWS[regime], gpc })).toEqual(categories);
   });
 });
