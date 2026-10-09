@@ -10,8 +10,8 @@
 
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { BLOG_LOCALES } from "./blog/locales";
-import { MARKETS, type Market } from "./markets";
+import { BLOG_LOCALES } from "../blog/locales";
+import { MARKETS, type Market } from "../markets";
 
 export interface LegacyRedirect {
   source: string;

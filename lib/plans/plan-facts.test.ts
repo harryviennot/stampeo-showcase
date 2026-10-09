@@ -10,15 +10,15 @@ import {
   planMessageArgs,
   planSummary,
 } from "./plan-facts";
-import { FEATURE_CATEGORIES } from "./pricing-features";
+import { FEATURE_CATEGORIES } from "../pricing-features";
 
 /**
- * Plan facts are stated once, in `lib/plan-facts.ts`, mirroring
+ * Plan facts are stated once, in `lib/plans/plan-facts.ts`, mirroring
  * backend/app/core/features.py. Copy that cannot read from it (translated
  * meta descriptions and pricing feature lists) is checked against it here.
  */
 
-const MESSAGES = join(import.meta.dir, "..", "messages");
+const MESSAGES = join(import.meta.dir, "..", "..", "messages");
 const catalog = (locale: string, file: string) =>
   JSON.parse(readFileSync(join(MESSAGES, locale, file), "utf8"));
 

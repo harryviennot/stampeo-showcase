@@ -5,10 +5,10 @@
  * a business can actually use; when the two disagree, the backend is right and
  * this file changes. llms.txt and the structured-data Offers read from here,
  * translated copy that quotes a number takes it through `planMessageArgs()`,
- * and lib/plan-facts.test.ts checks the pricing page feature lists against it.
+ * and lib/plans/plan-facts.test.ts checks the pricing page feature lists against it.
  */
 
-import type { TierId } from "./pricing";
+import type { TierId } from "../pricing";
 
 export type Unlimited = "unlimited";
 export type LoyaltyType = "stamps" | "points";

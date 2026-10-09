@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { NOINDEX } from "@/lib/page-robots";
+import { NOINDEX } from "@/lib/seo/page-robots";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 
 // The page is a client component, so its metadata lives here.

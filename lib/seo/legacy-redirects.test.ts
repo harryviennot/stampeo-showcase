@@ -16,13 +16,13 @@ import {
 import { NextRequest } from "next/server";
 import sitemap from "@/app/sitemap";
 import { routing } from "@/i18n/routing";
-import proxy from "../proxy";
-import { hasBlog } from "./blog/locales";
-import { FEATURE_SLUGS, getLocalizedSlug } from "./feature-slugs";
+import proxy from "../../proxy";
+import { hasBlog } from "../blog/locales";
+import { FEATURE_SLUGS, getLocalizedSlug } from "../feature-slugs";
 import { DEFAULT_LOCALE, SITE_LOCALES, legacyRedirects } from "./legacy-redirects";
 
 const ORIGIN = "https://stampeo.app";
-const ROOT = join(import.meta.dir, "..");
+const ROOT = join(import.meta.dir, "..", "..");
 const APP = join(ROOT, "app", "[locale]");
 const BLOG = join(ROOT, "content", "blog");
 

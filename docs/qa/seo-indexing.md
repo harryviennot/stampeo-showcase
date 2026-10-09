@@ -84,7 +84,7 @@ use a real person's account, and never run SX-30 on production.
   coordinator. Until it is fixed, expect SX-04 to fail and keep `/` out of any
   shared cache (STA-379).
 - **Blog post titles are outside the 60-character rule.** The title test
-  (`lib/metadata-copy.test.ts`) covers the catalog pages only. A post's title
+  (`lib/seo/metadata-copy.test.ts`) covers the catalog pages only. A post's title
   is its MDX frontmatter plus " | Stampeo", and 31 of the 33 posts run past 60
   characters. SX-26 checks catalog pages only. The one-brand rule holds
   everywhere, posts included. This is an open question for the coordinator,
@@ -202,7 +202,7 @@ French URLs used to 404 for Google's English crawler.
 
 Old URLs that Google still crawls, from Reference A in
 `docs/features/STA-358/plan.md`. Each one is a single 308 served by
-`next.config.ts` `redirects()` (`lib/legacy-redirects.ts`), straight to a
+`next.config.ts` `redirects()` (`lib/seo/legacy-redirects.ts`), straight to a
 page that answers 200.
 
 To count hops, run `curl -sL -o /dev/null -w '%{num_redirects} %{http_code} %{url_effective}\n' -H "Accept-Language: en-US" <url>`.
@@ -481,7 +481,7 @@ for p in /pricing /us/pricing /us /en; do printf '%s ' "$(curl -s $B$p | grep -o
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. `hdr $B/llms.txt` 2. `curl -s $B/llms.txt \| sed -n '/^## Plans/,/^## FAQ/p'` 3. `curl -s $B/llms.txt \| grep -nE '[0-9]+ ?%'` 4. `curl -s $B/llms.txt \| grep -niE 'stamps-only\|geofencing \(Pro\)\|3 free\|45 ?%\|95 ?% of users\|\{[a-zA-Z]+\}'` |
-| EXPECT | Step 1: `200`, `content-type: text/plain; charset=utf-8`. Step 2, Plans: Starter "stamps or points, 2 team members (owner + 1), no broadcasts, single location, basic analytics". Growth "… 8 broadcasts per month, 3 custom milestones per program, single location, basic analytics". Pro "… scheduled broadcasts … multiple locations, per-location analytics, basic and advanced analytics, scheduled card designs, geofencing notifications (coming soon)". Pricing has `### Europe and rest of the world (EUR)`: €20 / €40 / €60 a month, yearly €16 / €32 / €48 billed €192 / €384 / €576, 30-day trial. It also has `### United States (USD)`: $49 / $79 / $119, yearly $39 / $63 / $95 billed $468 / $756 / $1,140, 14-day trial, links to `/us` and `/us/pricing`. Step 3: every line either is "Yearly billing is 20% off" or ends with "(Stampeo data, 86 businesses, Feb–Oct 2026)". Step 4 prints nothing. You do NOT see a plan fact that contradicts `lib/plan-facts.ts`, a percentage without its source line, or a literal `{…}` token. |
+| EXPECT | Step 1: `200`, `content-type: text/plain; charset=utf-8`. Step 2, Plans: Starter "stamps or points, 2 team members (owner + 1), no broadcasts, single location, basic analytics". Growth "… 8 broadcasts per month, 3 custom milestones per program, single location, basic analytics". Pro "… scheduled broadcasts … multiple locations, per-location analytics, basic and advanced analytics, scheduled card designs, geofencing notifications (coming soon)". Pricing has `### Europe and rest of the world (EUR)`: €20 / €40 / €60 a month, yearly €16 / €32 / €48 billed €192 / €384 / €576, 30-day trial. It also has `### United States (USD)`: $49 / $79 / $119, yearly $39 / $63 / $95 billed $468 / $756 / $1,140, 14-day trial, links to `/us` and `/us/pricing`. Step 3: every line either is "Yearly billing is 20% off" or ends with "(Stampeo data, 86 businesses, Feb–Oct 2026)". Step 4 prints nothing. You do NOT see a plan fact that contradicts `lib/plans/plan-facts.ts`, a percentage without its source line, or a literal `{…}` token. |
 | RESET | None. Amounts come from the plan catalog at request time and refresh every 300 s. On a price mismatch, check the catalog first. |
 
 ### SX-24: The IndexNow key is served, and the ping fails soft [EDGE]

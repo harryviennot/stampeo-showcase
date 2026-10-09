@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { StampeoLogo } from "@/components/logo";
-import { NOINDEX } from "@/lib/page-robots";
+import { NOINDEX } from "@/lib/seo/page-robots";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 
 export async function generateMetadata(): Promise<Metadata> {

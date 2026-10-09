@@ -4,9 +4,9 @@ import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { localePath } from "@/lib/hreflang";
 import { routing } from "@/i18n/routing";
-import { BENCHMARK, sourceLine } from "./benchmark";
+import { BENCHMARK, sourceLine } from "./plans/benchmark";
 import { MARKETS, type Market } from "./markets";
-import { PLAN_FACTS, PLAN_NAMES, TIERS, availability, planSummary } from "./plan-facts";
+import { PLAN_FACTS, PLAN_NAMES, TIERS, availability, planSummary } from "./plans/plan-facts";
 import {
   FALLBACK_PRICING,
   FOUNDING_PRICING,
@@ -21,8 +21,8 @@ import {
  * Everything that can drift is derived: pages and articles from the constants
  * the router and the sitemap read (`routing.locales`, `FEATURE_SLUGS`,
  * `LOYALTY_SLUGS`, `BLOG_LOCALES`, the MDX files on disk), plan facts from
- * `lib/plan-facts.ts`, prices from the plan catalog, trial lengths from
- * `MARKETS`, and figures from `lib/benchmark.ts`. The positioning and product
+ * `lib/plans/plan-facts.ts`, prices from the plan catalog, trial lengths from
+ * `MARKETS`, and figures from `lib/plans/benchmark.ts`. The positioning and product
  * prose around them is hand-written.
  */
 
@@ -49,7 +49,7 @@ interface CorePage {
 }
 
 /**
- * Mirrors STATIC_PAGES in `lib/sitemap.ts`; the founding routes are absent
+ * Mirrors STATIC_PAGES in `lib/seo/sitemap.ts`; the founding routes are absent
  * from both (they 308 to `/pricing`).
  */
 const CORE_PAGES: CorePage[] = [
@@ -226,7 +226,7 @@ The dashboard answers the questions paper cards can't: who comes back, how often
 - GDPR-compliant (data hosted in the EU, minimal customer data collected — typically just a phone number or email, never required).
 - Customers can be anonymous: a loyalty card can work with nothing more than a device token.`;
 
-/** Every plan's facts, from `lib/plan-facts.ts`. */
+/** Every plan's facts, from `lib/plans/plan-facts.ts`. */
 function plans(): string {
   return [
     "## Plans",

@@ -3,9 +3,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createTranslator } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { MARKETS, type Market } from "./markets";
-import { planMessageArgs } from "./plan-facts";
-import { FALLBACK_PRICING, pricingMessageArgs } from "./pricing";
+import { MARKETS, type Market } from "../markets";
+import { planMessageArgs } from "../plans/plan-facts";
+import { FALLBACK_PRICING, pricingMessageArgs } from "../pricing";
 
 /**
  * Every page title and meta description, checked as a search result shows it.
@@ -17,7 +17,7 @@ import { FALLBACK_PRICING, pricingMessageArgs } from "./pricing";
  * and 160 of a description, and cuts the rest.
  */
 
-const MESSAGES = join(import.meta.dir, "..", "messages");
+const MESSAGES = join(import.meta.dir, "..", "..", "messages");
 const SUFFIX = " | Stampeo";
 const TITLE_MAX = 60;
 const DESCRIPTION_MAX = 160;

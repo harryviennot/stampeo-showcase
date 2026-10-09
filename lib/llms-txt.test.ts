@@ -5,9 +5,9 @@ import { BLOG_LOCALES } from "./blog/locales";
 import { FEATURE_SLUGS, getLocalizedSlug } from "./feature-slugs";
 import { LOYALTY_SLUGS } from "./loyalty-routes";
 import { routing } from "@/i18n/routing";
-import { BENCHMARK, sourceLine } from "./benchmark";
+import { BENCHMARK, sourceLine } from "./plans/benchmark";
 import { MARKETS } from "./markets";
-import { PLAN_FACTS, TIERS, planSummary } from "./plan-facts";
+import { PLAN_FACTS, TIERS, planSummary } from "./plans/plan-facts";
 import { FALLBACK_PRICING, FOUNDING_PRICING, type Pricing } from "./pricing";
 
 /**

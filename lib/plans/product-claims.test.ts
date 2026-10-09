@@ -3,9 +3,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { BENCHMARK, sourceLine } from "./benchmark";
-import { BLOG_LOCALES } from "./blog/locales";
+import { BLOG_LOCALES } from "../blog/locales";
 import { PLAN_FACTS } from "./plan-facts";
-import { FEATURE_CATEGORIES } from "./pricing-features";
+import { FEATURE_CATEGORIES } from "../pricing-features";
 
 /**
  * Product claims the product does not back, kept out of every blog post and
@@ -17,7 +17,7 @@ import { FEATURE_CATEGORIES } from "./pricing-features";
  * - broadcast open rates: we have no figure we can source.
  */
 
-const ROOT = join(import.meta.dir, "..");
+const ROOT = join(import.meta.dir, "..", "..");
 const MESSAGES = join(ROOT, "messages");
 const BLOG = join(ROOT, "content", "blog");
 

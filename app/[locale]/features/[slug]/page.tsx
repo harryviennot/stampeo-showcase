@@ -19,7 +19,7 @@ import {
   getLocalizedSlug,
 } from "@/lib/feature-slugs";
 import { localeAlternates } from "@/lib/hreflang";
-import { planMessageArgs } from "@/lib/plan-facts";
+import { planMessageArgs } from "@/lib/plans/plan-facts";
 import { routing } from "@/i18n/routing";
 
 const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {

@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { EmailPreferencesClient } from "@/components/email-preferences/EmailPreferencesClient";
-import { NOINDEX } from "@/lib/page-robots";
+import { NOINDEX } from "@/lib/seo/page-robots";
 
 export function generateMetadata(): Metadata {
   return { robots: NOINDEX };

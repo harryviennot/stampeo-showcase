@@ -10,10 +10,10 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { PRIVATE_SEGMENTS, PRIVATE_SUBPATHS } from "./consent-routes";
+import { PRIVATE_SEGMENTS, PRIVATE_SUBPATHS } from "../consent-routes";
 import { NOINDEX } from "./page-robots";
 
-const APP = join(import.meta.dir, "..", "app", "[locale]");
+const APP = join(import.meta.dir, "..", "..", "app", "[locale]");
 
 function pagesUnder(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>

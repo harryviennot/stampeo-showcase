@@ -1,6 +1,6 @@
 import { routing } from "@/i18n/routing";
 import { interpolatePricing, type Pricing } from "./pricing";
-import { PLAN_NAMES, TIERS, planSummary } from "./plan-facts";
+import { PLAN_NAMES, TIERS, planSummary } from "./plans/plan-facts";
 
 const BASE_URL = "https://stampeo.app";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
