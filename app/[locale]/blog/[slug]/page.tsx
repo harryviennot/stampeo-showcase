@@ -20,9 +20,12 @@ import {
   getAllSlugs,
   getRelatedPosts,
 } from "@/lib/blog";
+import { feedPath } from "@/lib/blog/feed";
 import { compileBlogMDX } from "@/lib/blog/mdx";
 import { BLOG_LOCALES, hasBlog } from "@/lib/blog/locales";
+import { postLanguages } from "@/lib/blog/translations";
 import { localePath } from "@/lib/hreflang";
+import { ogLocaleFor } from "@/lib/og/metadata";
 
 export async function generateStaticParams() {
   return BLOG_LOCALES.flatMap((locale) =>
@@ -41,20 +44,27 @@ export async function generateMetadata({
   const post = getPostBySlug(slug, locale);
   if (!post) return {};
 
+  const canonical = localePath(locale, `/blog/${slug}`);
   return {
     title: post.title,
     description: post.description,
+    // No `images`: the post's own opengraph-image.tsx fills them in.
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
+      siteName: "Stampeo",
+      locale: ogLocaleFor(locale),
+      url: canonical,
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt || post.publishedAt,
       authors: [post.author],
       tags: post.tags,
     },
     alternates: {
-      canonical: localePath(locale, `/blog/${slug}`),
+      canonical,
+      languages: postLanguages(locale, slug),
+      types: { "application/rss+xml": feedPath(locale) },
     },
   };
 }
@@ -99,9 +109,9 @@ export default async function BlogPostPage({
       />
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Home", url: "/" },
-          { name: t("title"), url: "/blog" },
-          { name: post.title, url: `/blog/${slug}` },
+          { name: t("breadcrumbHome"), url: localePath(locale, "/") },
+          { name: t("title"), url: localePath(locale, "/blog") },
+          { name: post.title, url: localePath(locale, `/blog/${slug}`) },
         ])}
       />
       {post.faqs && post.faqs.length > 0 && (

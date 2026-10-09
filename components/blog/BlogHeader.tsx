@@ -1,6 +1,15 @@
+import { useTranslations } from "next-intl";
 import type { BlogPostMeta } from "@/lib/blog/types";
 
+const formatDate = (iso: string, locale: string) =>
+  new Date(iso).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
 export function BlogHeader({ post }: { post: BlogPostMeta }) {
+  const t = useTranslations("blog");
   const initials = post.author
     .split(" ")
     .map((n) => n[0])
@@ -13,7 +22,7 @@ export function BlogHeader({ post }: { post: BlogPostMeta }) {
           {post.category}
         </span>
         <span className="text-[var(--muted-foreground)]">
-          {post.readingTime}
+          {t("readingTime", { minutes: post.readingMinutes })}
         </span>
       </div>
       <h1 className="text-h1 mb-4 leading-[1.1] text-[var(--near-black)]">
@@ -31,24 +40,16 @@ export function BlogHeader({ post }: { post: BlogPostMeta }) {
         </span>
         <span>·</span>
         <time dateTime={post.publishedAt}>
-          {new Date(post.publishedAt).toLocaleDateString(post.locale, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          {formatDate(post.publishedAt, post.locale)}
         </time>
         {post.updatedAt && post.updatedAt !== post.publishedAt && (
           <>
             <span>·</span>
             <span>
-              Mis à jour le{" "}
-              <time dateTime={post.updatedAt}>
-                {new Date(post.updatedAt).toLocaleDateString(post.locale, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
+              {t.rich("updatedOn", {
+                date: formatDate(post.updatedAt, post.locale),
+                time: (chunks) => <time dateTime={post.updatedAt}>{chunks}</time>,
+              })}
             </span>
           </>
         )}

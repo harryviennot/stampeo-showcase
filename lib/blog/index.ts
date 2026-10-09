@@ -20,6 +20,11 @@ const matterOptions = {
   },
 };
 
+/** Whole minutes to read, rounded up the way reading-time's own label does. */
+function readingMinutes(content: string): number {
+  return Math.ceil(Number(readingTime(content).minutes.toFixed(2)));
+}
+
 export function getPostBySlug(
   slug: string,
   locale: string
@@ -30,7 +35,6 @@ export function getPostBySlug(
 
   const source = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(source, matterOptions);
-  const stats = readingTime(content);
 
   return {
     title: data.title,
@@ -42,11 +46,10 @@ export function getPostBySlug(
     tags: data.tags || [],
     faqs: data.faqs,
     category: data.category || "General",
-    translationSlug: data.translationSlug,
     featured: data.featured || false,
     slug,
     locale,
-    readingTime: stats.text,
+    readingMinutes: readingMinutes(content),
     content,
   };
 }
@@ -62,7 +65,6 @@ export function getAllPosts(locale: string): BlogPostMeta[] {
     const slug = file.replace(/\.mdx$/, "");
     const source = fs.readFileSync(path.join(dir, file), "utf-8");
     const { data, content } = matter(source, matterOptions);
-    const stats = readingTime(content);
 
     return {
       title: data.title,
@@ -74,11 +76,10 @@ export function getAllPosts(locale: string): BlogPostMeta[] {
       tags: data.tags || [],
       faqs: data.faqs,
       category: data.category || "General",
-      translationSlug: data.translationSlug,
       featured: data.featured || false,
       slug,
       locale,
-      readingTime: stats.text,
+      readingMinutes: readingMinutes(content),
     } satisfies BlogPostMeta;
   });
 

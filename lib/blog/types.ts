@@ -8,11 +8,11 @@ export interface BlogPostMeta {
   tags: string[];
   faqs?: Array<{ question: string; answer: string }>;
   category: string;
-  translationSlug?: string;
   featured?: boolean;
   slug: string;
   locale: string;
-  readingTime: string;
+  /** Whole minutes to read, as reading-time rounds them. */
+  readingMinutes: number;
 }
 
 export interface BlogPost extends BlogPostMeta {
