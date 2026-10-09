@@ -1,23 +1,28 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { SectorCarousel } from "./SectorCarousel";
 import { SECTOR_DISPLAY_ORDER, SECTOR_THEMES } from "./sector-themes";
-import { orderSectorSlides } from "@/lib/landing/sector-slides";
+import {
+  fillSectorMoney,
+  orderSectorSlides,
+  type SectorCopy,
+} from "@/lib/landing/sector-slides";
+import { MARKETS, type Market } from "@/lib/markets";
 
-export async function VariantSectorCards() {
+export async function VariantSectorCards({
+  market = "int",
+}: Readonly<{ market?: Market }>) {
   const t = await getTranslations("landing.sectorCards");
   const tc = await getTranslations("common");
+  const locale = await getLocale();
 
-  const sectors = t.raw("sectors") as Array<{
-    name: string;
-    quote: string;
-    reward: string;
-    advantage: string;
-    fields?: Array<{ label: string; value: string }>;
-    link: string;
-    linkLabel: string;
-  }>;
+  // Sample rewards quote money in the page's market currency, formatted here on
+  // the server so the carousel receives finished strings.
+  const currency = MARKETS[market].currency.code;
+  const sectors = (t.raw("sectors") as SectorCopy[]).map((sector) =>
+    fillSectorMoney(sector, currency, locale),
+  );
 
   const slides = orderSectorSlides(sectors, SECTOR_THEMES, SECTOR_DISPLAY_ORDER);
 

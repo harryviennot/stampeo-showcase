@@ -2,7 +2,13 @@ import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-import { orderSectorSlides, sectorWalletDesign, type SectorTheme } from "./sector-slides";
+import {
+  fillSectorMoney,
+  orderSectorSlides,
+  sectorWalletDesign,
+  type SectorCopy,
+  type SectorTheme,
+} from "./sector-slides";
 import {
   SECTOR_DISPLAY_ORDER,
   SECTOR_THEMES,
@@ -11,15 +17,7 @@ import {
 const ROOT = join(import.meta.dir, "../..");
 const LOCALES = ["en", "fr", "es", "pl"] as const;
 
-type Sector = {
-  name: string;
-  quote: string;
-  reward: string;
-  fields?: Array<{ label: string; value: string }>;
-  link: string;
-};
-
-const sectorsFor = (locale: string): Sector[] =>
+const sectorsFor = (locale: string): SectorCopy[] =>
   JSON.parse(readFileSync(join(ROOT, "messages", locale, "landing.json"), "utf-8"))
     .landing.sectorCards.sectors;
 
@@ -111,6 +109,46 @@ describe("catalog copy", () => {
       expect(sector.quote.length).toBeLessThanOrEqual(longest);
       expect(sector.reward.length).toBeLessThanOrEqual(38);
     }
+  });
+});
+
+describe("sector money follows the page's market currency", () => {
+  const bookstore = (locale: string) =>
+    sectorsFor(locale)[SECTOR_THEMES.findIndex((t) => t.id === "marginalia")];
+
+  const strings = (sector: SectorCopy): string[] => [
+    sector.name,
+    sector.quote,
+    sector.reward,
+    sector.advantage,
+    sector.linkLabel,
+    ...(sector.fields ?? []).flatMap((f) => [f.label, f.value]),
+  ];
+
+  test.each([
+    ["USD", "$1 spent = 1 point, $10 off at 150 pts", "$10 off"],
+    ["EUR", "€1 spent = 1 point, €10 off at 150 pts", "€10 off"],
+  ])("the English bookstore card quotes its reward in %s", (currency, reward, field) => {
+    const filled = fillSectorMoney(bookstore("en"), currency, "en");
+    expect(filled.reward).toBe(reward);
+    expect(filled.fields?.at(-1)?.value).toBe(field);
+  });
+
+  test("French places the euro after the amount", () => {
+    expect(fillSectorMoney(bookstore("fr"), "EUR", "fr").fields?.at(-1)?.value).toMatch(/^-10\s€$/u);
+  });
+
+  const cases = LOCALES.flatMap((locale) =>
+    (["EUR", "USD"] as const).map((currency) => [locale, currency] as const),
+  );
+
+  test.each(cases)("%s in %s: every token is filled and only that currency shows", (locale, currency) => {
+    const text = sectorsFor(locale)
+      .flatMap((sector) => strings(fillSectorMoney(sector, currency, locale)))
+      .join("\n");
+    expect(text).not.toMatch(/[{}]/);
+    expect(text).toContain(currency === "USD" ? "$" : "€");
+    expect(text).not.toContain(currency === "USD" ? "€" : "$");
   });
 });
 

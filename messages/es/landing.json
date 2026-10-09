@@ -130,8 +130,8 @@
         {
           "name": "Restaurante",
           "quote": "Thomas cena en tu local casi cada semana, pero la cuenta nunca es igual. Los puntos recompensan lo que gasta de verdad, no solo que haya venido.",
-          "reward": "1 € gastado = 1 punto, -25 % a 100 pts",
-          "advantage": "Una cena de 40 € suma más que un almuerzo rápido",
+          "reward": "{m1} gastado = 1 punto, -25 % a 100 pts",
+          "advantage": "Una cena de {m40} suma más que un almuerzo rápido",
           "fields": [
             {
               "label": "Próximo hito",
@@ -148,7 +148,7 @@
         {
           "name": "Salón de belleza",
           "quote": "Chloé viene para una manicura una semana, y un conjunto completo la siguiente. Los puntos recompensan lo que gasta, así que cada visita la acerca a su recompensa.",
-          "reward": "1 € gastado = 1 punto, manicura gratis a 80 pts",
+          "reward": "{m1} gastado = 1 punto, manicura gratis a 80 pts",
           "advantage": "Los servicios más caros suman más rápido",
           "fields": [
             {
@@ -166,7 +166,7 @@
         {
           "name": "Librería",
           "quote": "Elias se lleva un libro de bolsillo una semana y una pila de novelas la siguiente. Los puntos cuentan lo que gasta: las cestas grandes acercan su recompensa más rápido.",
-          "reward": "1 € gastado = 1 punto, -10 € a 150 pts",
+          "reward": "{m1} gastado = 1 punto, -{m10} a 150 pts",
           "advantage": "Las cestas grandes suman más rápido",
           "fields": [
             {
@@ -175,7 +175,7 @@
             },
             {
               "label": "Próxima recompensa",
-              "value": "-10 €"
+              "value": "-{m10}"
             }
           ],
           "link": "/programa-de-fidelizacion",
