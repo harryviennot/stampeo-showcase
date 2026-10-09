@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { buildIndexNowPayload, extractSitemapUrls } from "./indexnow";
+import { buildIndexNowPayload, extractSitemapUrls, findKeyFile, reportFor, warning } from "./indexnow";
+
+const KEY = "a54facc9a2c4dbf7f5170fa9e04b6dbc";
 
 describe("extractSitemapUrls", () => {
   test("extracts URLs from <loc> tags", () => {
@@ -46,13 +48,12 @@ describe("extractSitemapUrls", () => {
 describe("buildIndexNowPayload", () => {
   test("returns payload with correct shape", () => {
     const urls = ["https://stampeo.app/", "https://stampeo.app/en/about"];
-    const key = "a54facc9a2c4dbf7f5170fa9e04b6dbc";
-    const payload = buildIndexNowPayload(urls, key);
+    const payload = buildIndexNowPayload(urls, KEY);
 
     expect(payload).toEqual({
       host: "stampeo.app",
-      key,
-      keyLocation: `https://stampeo.app/${key}.txt`,
+      key: KEY,
+      keyLocation: `https://stampeo.app/${KEY}.txt`,
       urlList: urls,
     });
   });
@@ -63,8 +64,7 @@ describe("buildIndexNowPayload", () => {
       "https://example.com/",
       "https://stampeo.app/en/about",
     ];
-    const key = "a54facc9a2c4dbf7f5170fa9e04b6dbc";
-    const payload = buildIndexNowPayload(urls, key);
+    const payload = buildIndexNowPayload(urls, KEY);
 
     expect(payload.urlList).toEqual([
       "https://stampeo.app/",
@@ -79,8 +79,7 @@ describe("buildIndexNowPayload", () => {
       "https://stampeo.app/en/about",
       "https://stampeo.app/en/about",
     ];
-    const key = "a54facc9a2c4dbf7f5170fa9e04b6dbc";
-    const payload = buildIndexNowPayload(urls, key);
+    const payload = buildIndexNowPayload(urls, KEY);
 
     expect(payload.urlList).toEqual([
       "https://stampeo.app/",
@@ -92,29 +91,38 @@ describe("buildIndexNowPayload", () => {
     const urls = Array.from({ length: 15000 }, (_, i) =>
       `https://stampeo.app/page-${i}`,
     );
-    const key = "a54facc9a2c4dbf7f5170fa9e04b6dbc";
-    const payload = buildIndexNowPayload(urls, key);
+    const payload = buildIndexNowPayload(urls, KEY);
 
     expect(payload.urlList.length).toBe(10000);
   });
 
   test("keyLocation matches the actual key file in public/", () => {
-    const publicDir = join(import.meta.dir, "..", "public");
-    const files = readdirSync(publicDir);
-    const keyFile = files.find((f) => /^[0-9a-f]{32}\.txt$/.test(f));
-
+    const keyFile = findKeyFile();
     expect(keyFile).toBeDefined();
 
-    if (keyFile) {
-      const keyContent = readFileSync(join(publicDir, keyFile), "utf-8").trim();
-      const key = keyFile.replace(".txt", "");
-
-      expect(keyContent).toBe(key);
-
-      const payload = buildIndexNowPayload([], key);
-      expect(payload.keyLocation).toBe(
-        `https://stampeo.app/${keyFile}`,
-      );
-    }
+    const key = keyFile!.replace(".txt", "");
+    expect(readFileSync(join(import.meta.dir, "..", "public", keyFile!), "utf-8").trim()).toBe(key);
+    expect(buildIndexNowPayload([], key).keyLocation).toBe(`https://stampeo.app/${keyFile}`);
   });
+});
+
+describe("reportFor", () => {
+  test.each([200, 202])("HTTP %p is a plain log line", (status) => {
+    expect(reportFor(status)).toEqual({ ok: true, line: `IndexNow response: ${status}` });
+  });
+
+  test.each([400, 403, 422, 429, 500, 0])(
+    "HTTP %p becomes a warning annotation that names the status",
+    (status) => {
+      const { ok, line } = reportFor(status);
+
+      expect(ok).toBe(false);
+      expect(line).toStartWith("::warning::IndexNow ");
+      expect(line).toContain(status === 0 ? "no response" : String(status));
+    },
+  );
+});
+
+test("warning is a single-line GitHub Actions annotation", () => {
+  expect(warning("sitemap fetch failed")).toBe("::warning::IndexNow sitemap fetch failed");
 });

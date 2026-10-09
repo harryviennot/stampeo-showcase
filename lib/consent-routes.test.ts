@@ -19,6 +19,7 @@ import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "../i18n/routing";
+import { pagesUnder } from "./testing/app-folders";
 import {
   MARKETING_SEGMENTS,
   PRIVATE_SEGMENTS,
@@ -226,14 +227,6 @@ describe("segment tables", () => {
         return next !== undefined && rendersFooter(next, seen);
       });
     };
-    const pagesUnder = (dir: string): string[] =>
-      readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
-        entry.isDirectory()
-          ? pagesUnder(join(dir, entry.name))
-          : entry.name === "page.tsx"
-            ? [join(dir, entry.name)]
-            : [],
-      );
 
     // The closed founding pages answer with a 308 and serve no HTML, so no
     // cookie is set on them.

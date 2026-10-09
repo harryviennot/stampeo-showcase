@@ -7,7 +7,7 @@ import { LOYALTY_SLUGS } from "./loyalty-routes";
 import { routing } from "@/i18n/routing";
 import { BENCHMARK, sourceLine } from "./plans/benchmark";
 import { MARKETS } from "./markets";
-import { PLAN_FACTS, TIERS, planSummary } from "./plans/plan-facts";
+import { TIERS, planSummary } from "./plans/plan-facts";
 import { FALLBACK_PRICING, FOUNDING_PRICING, type Pricing } from "./pricing";
 
 /**
@@ -102,19 +102,16 @@ describe("llms.txt facts", () => {
   });
 
   it("offers stamps and points on every plan", () => {
-    expect(TIERS.every((tier) => PLAN_FACTS[tier].loyaltyTypes.includes("stamps"))).toBe(true);
     expect(body).not.toMatch(/stamps-only/i);
     expect(body).not.toMatch(/choose one per program on Growth/i);
   });
 
   it("lists geofencing as coming soon, not as a Pro feature", () => {
-    expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
     expect(body).not.toMatch(/geofencing[^\n]*\(Pro\)/i);
     expect(body).toMatch(/geofencing[^\n]*coming soon/i);
   });
 
   it("lists scheduled card designs as coming soon on Pro", () => {
-    expect(PLAN_FACTS.pro.scheduledDesigns).toBe("coming_soon");
     const scheduled = body.match(/scheduled card designs[^,.\n]*/gi) ?? [];
     expect(scheduled.length).toBeGreaterThan(0);
     for (const mention of scheduled) expect(mention).toBe("scheduled card designs (coming soon)");

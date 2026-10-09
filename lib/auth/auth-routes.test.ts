@@ -9,8 +9,9 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
+import { pagesUnder } from "../testing/app-folders";
 
 const ROOT = join(import.meta.dir, "..", "..");
 const APP = join(ROOT, "app");
@@ -47,16 +48,6 @@ function staticGraph(start: string): { files: Set<string>; packages: Set<string>
   };
   visit(start);
   return { files, packages };
-}
-
-function pagesUnder(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
-    entry.isDirectory()
-      ? pagesUnder(join(dir, entry.name))
-      : entry.name === "page.tsx"
-        ? [join(dir, entry.name)]
-        : [],
-  );
 }
 
 function layoutsAbove(page: string): string[] {

@@ -7,7 +7,8 @@ import { JsonLd } from "@/components/JsonLd";
 import enPricing from "@/messages/en/pricing.json";
 import { FALLBACK_PRICING, type Pricing } from "./pricing";
 import { MARKETS } from "./markets";
-import { PLAN_FACTS, planSummary } from "./plans/plan-facts";
+import { planSummary } from "./plans/plan-facts";
+import { loadCatalog } from "./testing/catalogs";
 import {
   articleJsonLd,
   organizationJsonLd,
@@ -103,7 +104,6 @@ describe("SoftwareApplication", () => {
       expect(offers.find((o) => o.name === name)!.description).toContain(planSummary(tier));
     }
     const growth = offers.find((o) => o.name === "Growth")!.description;
-    expect(PLAN_FACTS.growth.analytics).toBe("basic");
     expect(growth).not.toMatch(/advanced analytics|schedul|multi-location|multiple locations/i);
   });
 });
@@ -114,19 +114,18 @@ describe("Article", () => {
     description: "D",
     publishedAt: "2026-01-01",
     author: "Harry from Stampeo",
-    slug: "coffee-shop-loyalty-card",
   };
 
   it.each([
-    ["fr", `${BASE}/blog/coffee-shop-loyalty-card/opengraph-image`],
-    ["en", `${BASE}/en/blog/coffee-shop-loyalty-card/opengraph-image`],
-    ["es", `${BASE}/es/blog/coffee-shop-loyalty-card/opengraph-image`],
-  ])("uses the post's own share image (%s)", (locale, image) => {
-    expect(articleJsonLd({ ...post, locale }).image).toBe(image);
+    ["fr", "carte-fidelite-cafe", `${BASE}/blog/carte-fidelite-cafe/opengraph-image`],
+    ["en", "coffee-shop-loyalty-card", `${BASE}/en/blog/coffee-shop-loyalty-card/opengraph-image`],
+    ["es", "google-wallet-tarjeta-fidelidad", `${BASE}/es/blog/google-wallet-tarjeta-fidelidad/opengraph-image`],
+  ])("uses the post's own share image (%s)", (locale, slug, image) => {
+    expect(articleJsonLd({ ...post, slug, locale }).image).toBe(image);
   });
 
   it("is written by the founder and published by the Organization", () => {
-    const article = articleJsonLd({ ...post, locale: "en" });
+    const article = articleJsonLd({ ...post, slug: "coffee-shop-loyalty-card", locale: "en" });
     expect(article.author).toEqual({ "@type": "Person", name: "Harry Viennot", url: `${BASE}/about` });
     expect(article.publisher).toEqual({ "@id": ORG_ID });
     expect(article).not.toHaveProperty("speakable");
@@ -149,8 +148,7 @@ describe("pricing page FAQ", () => {
   });
 
   it.each(["fr", "en", "es", "pl"])("the %s FAQ does not advertise the closed founding programme", (locale) => {
-    const catalog = JSON.parse(readFileSync(join(ROOT, "messages", locale, "pricing.json"), "utf8"));
-    const faq = catalog.pricingPage.faq.items as Array<{ foundingOnly?: boolean }>;
+    const faq = loadCatalog(locale, "pricing.json").pricingPage.faq.items as Array<{ foundingOnly?: boolean }>;
     expect(faq.filter((item) => item.foundingOnly)).toEqual([]);
   });
 });

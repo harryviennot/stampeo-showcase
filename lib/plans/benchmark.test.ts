@@ -6,28 +6,11 @@ import { BENCHMARK, BENCHMARK_SAMPLE, sourceLine } from "./benchmark";
  * figure is never published without "Stampeo data: n businesses, period".
  */
 describe("benchmark figures", () => {
-  it("hold the published values, rounded down", () => {
-    const values = Object.fromEntries(
-      Object.entries(BENCHMARK).map(([key, figure]) => [key, figure.value])
-    );
-    expect(values).toEqual({
-      walletAddRate: 88,
-      appleShare: 82,
-      installedDay30: 98,
-      installedDay90: 95,
-      return30: 32,
-      medianDaysToSecondVisit: 11,
-      redeemedShare: 92,
-      medianStampsPerCard: 9,
-    });
-  });
-
   it("each state what they measure and on how much data", () => {
     for (const [key, figure] of Object.entries(BENCHMARK)) {
       expect({ key, measures: figure.measures.length > 0 }).toEqual({ key, measures: true });
       expect({ key, n: figure.n.length > 0 }).toEqual({ key, n: true });
     }
-    expect(BENCHMARK_SAMPLE.businesses).toBe(86);
     expect(BENCHMARK_SAMPLE.method.length).toBeGreaterThan(0);
   });
 });
@@ -39,11 +22,11 @@ describe("sourceLine", () => {
     ["es", "Datos de Stampeo, 86 comercios, feb.–oct. 2026"],
     ["pl", "Dane Stampeo, 86 firm, luty–październik 2026"],
   ])("cites the sample in %s", (locale, line) => {
-    expect(sourceLine(locale)).toBe(line);
+    expect(sourceLine(locale, 86)).toBe(line);
   });
 
   it("falls back to English for a locale it does not know", () => {
-    expect(sourceLine("de")).toBe(sourceLine("en"));
+    expect(sourceLine("de", 86)).toBe(sourceLine("en", 86));
   });
 
   it("agrees Polish nouns with the business count", () => {

@@ -8,22 +8,13 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { PRIVATE_SEGMENTS, PRIVATE_SUBPATHS } from "../consent-routes";
+import { pagesUnder } from "../testing/app-folders";
 import { NOINDEX } from "./page-robots";
 
 const APP = join(import.meta.dir, "..", "..", "app", "[locale]");
-
-function pagesUnder(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
-    entry.isDirectory()
-      ? pagesUnder(join(dir, entry.name))
-      : entry.name === "page.tsx"
-        ? [join(dir, entry.name)]
-        : [],
-  );
-}
 
 /** Does the page, or a layout between it and the private segment, set `robots: NOINDEX`? */
 function declaresNoindex(page: string, segmentRoot: string): boolean {

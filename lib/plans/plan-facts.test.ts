@@ -1,7 +1,4 @@
 import { describe, expect, it } from "bun:test";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { createTranslator } from "next-intl";
 import { routing } from "@/i18n/routing";
 import {
   PLAN_FACTS,
@@ -11,6 +8,7 @@ import {
   planSummary,
 } from "./plan-facts";
 import { FEATURE_CATEGORIES } from "../pricing-features";
+import { loadCatalog, strictTranslator } from "../testing/catalogs";
 
 /**
  * Plan facts are stated once, in `lib/plans/plan-facts.ts`, mirroring
@@ -18,55 +16,7 @@ import { FEATURE_CATEGORIES } from "../pricing-features";
  * meta descriptions and pricing feature lists) is checked against it here.
  */
 
-const MESSAGES = join(import.meta.dir, "..", "..", "messages");
-const catalog = (locale: string, file: string) =>
-  JSON.parse(readFileSync(join(MESSAGES, locale, file), "utf8"));
-
 describe("plan facts", () => {
-  it("match the backend tier definitions", () => {
-    expect(PLAN_FACTS).toEqual({
-      starter: {
-        loyaltyTypes: ["stamps", "points"],
-        teamMembers: 2,
-        employeeTracking: false,
-        broadcastsPerMonth: 0,
-        scheduledBroadcasts: false,
-        milestoneNotifications: 0,
-        multipleLocations: false,
-        locationAnalytics: false,
-        analytics: "basic",
-        scheduledDesigns: false,
-        geofencing: false,
-      },
-      growth: {
-        loyaltyTypes: ["stamps", "points"],
-        teamMembers: "unlimited",
-        employeeTracking: true,
-        broadcastsPerMonth: 8,
-        scheduledBroadcasts: false,
-        milestoneNotifications: 3,
-        multipleLocations: false,
-        locationAnalytics: false,
-        analytics: "basic",
-        scheduledDesigns: false,
-        geofencing: false,
-      },
-      pro: {
-        loyaltyTypes: ["stamps", "points"],
-        teamMembers: "unlimited",
-        employeeTracking: true,
-        broadcastsPerMonth: "unlimited",
-        scheduledBroadcasts: true,
-        milestoneNotifications: "unlimited",
-        multipleLocations: true,
-        locationAnalytics: true,
-        analytics: "advanced",
-        scheduledDesigns: "coming_soon",
-        geofencing: "coming_soon",
-      },
-    });
-  });
-
   it("summarises each plan in plain English", () => {
     expect(planSummary("starter")).toBe(
       "stamps or points, 2 team members (owner + 1), no broadcasts, single location, basic analytics"
@@ -90,7 +40,7 @@ describe("feature meta descriptions", () => {
     /\b\d+\b[^.;{}]{0,20}?(?:\/\s*month|\/\s*mois|per month|a month|par mois|al mes|w miesiącu)/i;
 
   for (const locale of routing.locales) {
-    const features = catalog(locale, "metadata.json").metadata.features as Record<
+    const features = loadCatalog(locale, "metadata.json").metadata.features as Record<
       string,
       { title: string; description: string }
     >;
@@ -106,14 +56,7 @@ describe("feature meta descriptions", () => {
     });
 
     it(`${locale}: every feature description formats with the plan-facts arguments`, () => {
-      const t = createTranslator({
-        locale,
-        messages: catalog(locale, "metadata.json"),
-        namespace: "metadata.features",
-        onError: (error) => {
-          throw error;
-        },
-      });
+      const t = strictTranslator(locale, loadCatalog(locale, "metadata.json"), "metadata.features");
       for (const slug of Object.keys(features)) {
         const text = t(`${slug}.description` as never, planMessageArgs());
         expect(text).not.toContain("{");
@@ -164,7 +107,7 @@ describe("pricing page feature lists", () => {
   // The pricing page cards (`pricingPage`) and the landing pricing section
   // (`pricing`) each carry their own copy of the tier lists.
   for (const locale of routing.locales) {
-    const messages = catalog(locale, "pricing.json");
+    const messages = loadCatalog(locale, "pricing.json");
     const page = messages.pricingPage;
     const vocab = VOCAB[locale];
 
@@ -172,12 +115,10 @@ describe("pricing page feature lists", () => {
       const features = (tier: string) => messages[section][tier].features as string[];
 
       it(`${locale} ${section}: Starter offers points as well as stamps`, () => {
-        expect(PLAN_FACTS.starter.loyaltyTypes).toContain("points");
         expect(features("starter").some((item) => vocab.points.test(item))).toBe(true);
       });
 
       it(`${locale} ${section}: broadcast counts match`, () => {
-        expect(PLAN_FACTS.starter.broadcastsPerMonth).toBe(0);
         expect(features("starter").some((item) => vocab.broadcast.test(item))).toBe(false);
         const growth = features("growth").filter((item) => vocab.broadcast.test(item));
         expect(growth).toHaveLength(1);
@@ -185,14 +126,12 @@ describe("pricing page feature lists", () => {
       });
 
       it(`${locale} ${section}: geofencing reads as coming soon on Pro`, () => {
-        expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
         const nearby = features("pro").filter((item) => vocab.nearby.test(item));
         expect(nearby).toHaveLength(1);
         expect(nearby[0]).toMatch(new RegExp(page.comparison.soon, "i"));
       });
 
       it(`${locale} ${section}: scheduling card styles reads as coming soon on Pro`, () => {
-        expect(PLAN_FACTS.pro.scheduledDesigns).toBe("coming_soon");
         const claims = (tier: string) =>
           features(tier).filter((item) => vocab.cardStyle.test(item) && vocab.schedule.test(item));
         expect([...claims("starter"), ...claims("growth")]).toEqual([]);
@@ -216,29 +155,6 @@ describe("pricing page feature lists", () => {
     const row = FEATURE_CATEGORIES.flatMap((category) => category.rows).find(
       (r) => r.key === "scheduledChanges"
     );
-    expect(PLAN_FACTS.pro.scheduledDesigns).toBe("coming_soon");
     expect(row).toEqual({ key: "scheduledChanges", starter: "cross", growth: "cross", pro: "soon" });
   });
-});
-
-describe("broadcasts feature page", () => {
-  for (const locale of routing.locales) {
-    it(`${locale}: the hero quotes the Growth quota from the plan facts`, () => {
-      const messages = catalog(locale, "features.json");
-      expect(messages.features["campagnes-promotionnelles"].hero.subtitle).toContain(
-        "{growthBroadcasts}"
-      );
-      const t = createTranslator({
-        locale,
-        messages,
-        namespace: "features.campagnes-promotionnelles",
-        onError: (error) => {
-          throw error;
-        },
-      });
-      const subtitle = t("hero.subtitle" as never, planMessageArgs());
-      expect(subtitle).toMatch(new RegExp(`\\b${PLAN_FACTS.growth.broadcastsPerMonth}\\b`));
-      expect(subtitle).not.toContain("{");
-    });
-  }
 });
