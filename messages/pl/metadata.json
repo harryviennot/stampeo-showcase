@@ -33,7 +33,7 @@
       },
       "analytiques": {
         "title": "Dane o lojalności: kto wraca, a kto przestaje wracać",
-        "description": "Panel na żywo: skany z dziś, aktywni klienci, odebrane nagrody. Plan Growth dodaje trendy, godziny szczytu, powroty w 30 dni i ostrzeżenia o odpływie."
+        "description": "Panel na żywo: skany z dziś, aktywni klienci, odebrane nagrody. Plan Growth dodaje trendy i godziny szczytu, plan Pro powroty w 30 dni i ostrzeżenia o odpływie."
       },
       "geolocalisation": {
         "title": "Karta na ekranie telefonu, gdy klient przechodzi obok",
@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Rozsyłki promocyjne w portfelu: tańsze niż SMS-y",
-        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet. Bez kosztu za wiadomość, około 85% otwarć, z segmentacją i planowaniem. 3 w miesiącu na Growth."
+        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet. Bez kosztu za wiadomość, około 85% otwarć, segmentacja i planowanie na Pro. {growthBroadcasts} w miesiącu na Growth."
       },
       "programme-fondateur": {
         "title": "Oferta na start",

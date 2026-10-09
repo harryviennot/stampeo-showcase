@@ -13,6 +13,7 @@ import {
   isValidSlug,
   generateFeatureStaticParams,
 } from "@/lib/feature-slugs";
+import { planMessageArgs } from "@/lib/plan-facts";
 
 export const alt = "Stampeo Feature";
 export const size = { width: OG_WIDTH, height: OG_HEIGHT };
@@ -38,7 +39,7 @@ export default async function Image({
     : slug;
   const title = truncate(titleRaw, 60);
   const description = t.has(`${slug}.description`)
-    ? truncate(t(`${slug}.description`), 120)
+    ? truncate(t(`${slug}.description`, planMessageArgs()), 120)
     : "";
 
   const iconPath = isValidSlug(slug) ? FEATURES[slug].icon : undefined;

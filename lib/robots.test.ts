@@ -51,7 +51,11 @@ describe("robots disallow rules", () => {
     expect(rulesFor("/login")).toEqual(["/login/", "/login$", "/login?"]);
   });
 
-  it("still blocks opengraph images", () => {
-    expect(DISALLOW_PATHS).toContain("/*opengraph-image*");
+  // Share previews and Google Images fetch these; the Article structured data
+  // points at them too.
+  it("lets crawlers fetch opengraph images", () => {
+    expect(DISALLOW_PATHS.some((rule) => rule.includes("opengraph-image"))).toBe(false);
+    expect(isDisallowed("/blog/carte-fidelite-cafe/opengraph-image")).toBe(false);
+    expect(isDisallowed("/en/blog/coffee-shop-loyalty-card/opengraph-image")).toBe(false);
   });
 });
