@@ -130,8 +130,8 @@
         {
           "name": "Restaurant",
           "quote": "Thomas has dinner with you most weeks, but the bill is never the same. Points reward what he actually spends, not just that he showed up.",
-          "reward": "€1 spent = 1 point, 25% off at 100 pts",
-          "advantage": "A €40 dinner earns more than a quick lunch",
+          "reward": "{m1} spent = 1 point, 25% off at 100 pts",
+          "advantage": "A {m40} dinner earns more than a quick lunch",
           "fields": [
             {
               "label": "Next milestone",
@@ -148,7 +148,7 @@
         {
           "name": "Beauty salon",
           "quote": "Chloé comes in for a manicure one week, a full set the next. Points reward what she spends, so every visit moves her closer to a treat.",
-          "reward": "€1 spent = 1 point, free manicure at 80 pts",
+          "reward": "{m1} spent = 1 point, free manicure at 80 pts",
           "advantage": "Higher-value services earn faster",
           "fields": [
             {
@@ -166,7 +166,7 @@
         {
           "name": "Bookstore",
           "quote": "Elias grabs a paperback one visit and a stack of novels the next. Points count what he spends, so the big hauls bring his reward closer, faster.",
-          "reward": "€1 spent = 1 point, €10 off at 150 pts",
+          "reward": "{m1} spent = 1 point, {m10} off at 150 pts",
           "advantage": "Big baskets earn faster",
           "fields": [
             {
@@ -175,7 +175,7 @@
             },
             {
               "label": "Next reward",
-              "value": "€10 off"
+              "value": "{m10} off"
             }
           ],
           "link": "/loyalty-programs",

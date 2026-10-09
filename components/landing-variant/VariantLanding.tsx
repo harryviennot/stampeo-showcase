@@ -102,7 +102,7 @@ export async function VariantLanding({
               below. The one place on the page it earns its keep. */}
           <Container><div className="perforation" aria-hidden /></Container>
           <div data-landing-section="try_it"><VariantTryIt /></div>
-          <div data-landing-section="sectors"><VariantSectorCards /></div>
+          <div data-landing-section="sectors"><VariantSectorCards market={market} /></div>
           <div data-landing-section="metrics"><VariantMetricStrip /></div>
           <div data-landing-section="feature_grid"><FeatureGrid /></div>
           <div data-landing-section="pricing">

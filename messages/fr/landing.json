@@ -130,8 +130,8 @@
         {
           "name": "Restaurant",
           "quote": "Thomas dîne chez vous presque chaque semaine, mais l'addition n'est jamais la même. Les points récompensent ce qu'il dépense vraiment, pas seulement sa présence.",
-          "reward": "1 € dépensé = 1 point, -25 % à 100 pts",
-          "advantage": "Un dîner à 40 € rapporte plus qu'un déjeuner sur le pouce",
+          "reward": "{m1} dépensé = 1 point, -25 % à 100 pts",
+          "advantage": "Un dîner à {m40} rapporte plus qu'un déjeuner sur le pouce",
           "fields": [
             {
               "label": "Prochain palier",
@@ -148,7 +148,7 @@
         {
           "name": "Salon de beauté",
           "quote": "Chloé vient pour une manucure une semaine, une pose complète la suivante. Les points récompensent ce qu'elle dépense, chaque visite la rapproche de sa récompense.",
-          "reward": "1 € dépensé = 1 point, manucure offerte à 80 pts",
+          "reward": "{m1} dépensé = 1 point, manucure offerte à 80 pts",
           "advantage": "Les prestations les plus chères rapportent plus vite",
           "fields": [
             {
@@ -166,7 +166,7 @@
         {
           "name": "Librairie",
           "quote": "Elias repart avec un poche une semaine, une pile de romans la suivante. Les points comptent ce qu'il dépense : les gros paniers rapprochent sa récompense, plus vite.",
-          "reward": "1 € dépensé = 1 point, -10 € à 150 pts",
+          "reward": "{m1} dépensé = 1 point, -{m10} à 150 pts",
           "advantage": "Les gros paniers rapportent plus vite",
           "fields": [
             {
@@ -175,7 +175,7 @@
             },
             {
               "label": "Prochaine récompense",
-              "value": "-10 €"
+              "value": "-{m10}"
             }
           ],
           "link": "/programme-fidelite",

@@ -75,50 +75,28 @@ export function resolveRegionLadder(
   return ladders[pageDefault];
 }
 
-/**
- * Every placeholder `interpolatePricing` (lib/pricing.ts) replaces — kept in
- * lockstep by the parity test in region-pricing.test.ts, which feeds each one
- * through the real replacer and requires the braces to be gone.
- */
-export const PRICING_TOKENS = [
-  "starterPrice",
-  "growthPrice",
-  "proPrice",
-  "starterYearlyPrice",
-  "growthYearlyPrice",
-  "proYearlyPrice",
-  "starterYearlyMonthly",
-  "growthYearlyMonthly",
-  "proYearlyMonthly",
-  "starterFoundingPrice",
-  "growthFoundingPrice",
-  "zero",
-  "yearlyDiscount",
-  "freeMonths",
-  "trialDays",
-] as const;
-
-export type RawPart = { type: "text" | "token"; value: string };
-
-const TOKEN_PATTERN = new RegExp(`\\{(${PRICING_TOKENS.join("|")})\\}`, "g");
+/** What a price surface shows: one ladder and its trial length. */
+export interface DisplayTerms {
+  pricing: Pricing;
+  trialDays: number;
+}
 
 /**
- * Split a raw i18n string into text and pricing-token parts, so a held render
- * can skeleton ONLY the tokens while the translator's sentence stays visible.
- * Unknown placeholders (ICU arguments like {count}) are plain text: they
- * belong to next-intl, not to pricing, and must never be blanked.
+ * The terms a price surface shows on a page whose market terms are `page`.
+ *
+ * `country` is null on the server and during hydration, so that render carries
+ * the page market's real prices (the HTML crawlers read). Once the browser's
+ * country is known its region wins; an undetectable country keeps the page's.
  */
-export function splitPricingParts(raw: string): RawPart[] {
-  const parts: RawPart[] = [];
-  let last = 0;
-  TOKEN_PATTERN.lastIndex = 0;
-  for (let m = TOKEN_PATTERN.exec(raw); m !== null; m = TOKEN_PATTERN.exec(raw)) {
-    if (m.index > last) parts.push({ type: "text", value: raw.slice(last, m.index) });
-    parts.push({ type: "token", value: m[1] });
-    last = m.index + m[0].length;
-  }
-  if (last < raw.length || parts.length === 0) {
-    parts.push({ type: "text", value: raw.slice(last) });
-  }
-  return parts;
+export function displayTerms(
+  ladders: Record<RegionCurrency, Pricing>,
+  page: RegionBilling,
+  country: string | null,
+): DisplayTerms {
+  const region = regionBilling(country);
+  if (!region) return { pricing: ladders[page.currency], trialDays: page.trialDays };
+  return {
+    pricing: resolveRegionLadder(ladders, region.currency, page.currency),
+    trialDays: region.trialDays,
+  };
 }

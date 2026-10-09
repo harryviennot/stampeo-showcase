@@ -7,23 +7,14 @@ import { CenterCarousel } from "../ui/CenterCarousel";
 import { ArrowRightIcon, CheckIcon } from "../icons";
 import {
   sectorWalletDesign,
+  type SectorCopy,
   type SectorTheme,
 } from "@/lib/landing/sector-slides";
 
 export type { SectorTheme };
 
-export type SectorSlide = {
-  name: string;
-  quote: string;
-  reward: string;
-  advantage: string;
-  link: string;
-  linkLabel: string;
-  /** Per-sector wallet-card fields (reward, cardholder name, next reward…):
-      first renders left-aligned, last right-aligned, like Apple Wallet. */
-  fields?: Array<{ label: string; value: string }>;
-  theme: SectorTheme;
-};
+/** A sector's copy, money already formatted, paired with its card theme. */
+export type SectorSlide = SectorCopy & { theme: SectorTheme };
 
 function SlideCard({
   slide,

@@ -40,19 +40,12 @@ const PRICED_FILES = ["pricing.json", "landing.json", "features.json", "metadata
 const GLYPHS = /[€$£]|[\d}]\s*zł|&euro;|&#8364;/;
 
 /**
- * Demo content is exempt: the sector cards illustrate a merchant's own reward
- * ("1 EUR spent = 1 point"), which is their currency, not ours. Everything else
- * in these files is a price we charge.
+ * features.json is mostly product copy: an SMS cost comparison, sample rewards,
+ * a demo card. Only the price tokens had to be de-glyphed. The sector cards in
+ * landing.json are NOT exempt: their amounts are `{m<amount>}` tokens formatted
+ * in the page's market currency, so /us never shows a euro reward.
  */
-const EXEMPT = new RegExp(
-  [
-    // Sector cards illustrate a merchant's own reward, in their currency.
-    "^landing\\.sectorCards\\.",
-    // features.json is mostly product copy: an SMS cost comparison, sample
-    // rewards, a demo card. Only the price tokens had to be de-glyphed.
-    "^features\\.(?!.*\\{(?:starter|growth|pro)\\w*Price\\})",
-  ].join("|"),
-);
+const EXEMPT = /^features\.(?!.*\{(?:starter|growth|pro)\w*Price\})/;
 
 function walk(value: unknown, path: string, out: Array<[string, string]>) {
   if (typeof value === "string") {

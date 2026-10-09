@@ -277,12 +277,9 @@ export function HeroDemo() {
   const t = useTranslations("landing.hero");
   const tCommon = useTranslations("common");
   const isMobilePhone = useIsMobilePhone();
-  // STA-330: the demo card's reward lines quote the trial length, which
-  // follows the visitor's detected region. The lines are plain strings fed
-  // into WalletCard fields, so the held state is an ellipsis where the day
-  // count goes — resolved at hydration, before the demo is interactive.
-  const region = usePricingRegion();
-  const trialDays: number | string = region.ready ? region.trialDays : "…";
+  // The demo card's reward lines quote the trial length: the page market's on
+  // the server, the visitor's detected region's after hydration.
+  const { trialDays } = usePricingRegion();
 
   // Which engine the visitor is previewing. "stamps" is the eager, real demo;
   // "points" lazy-inits its own real session the first time it's selected, so
