@@ -32,8 +32,11 @@ export interface PlanFacts {
   locationAnalytics: boolean;
   /** "advanced" means basic plus advanced (`analytics.advanced`). */
   analytics: "basic" | "advanced";
-  /** `designs.scheduled`. */
-  scheduledDesigns: boolean;
+  /**
+   * Gated on for Pro (`designs.scheduled`), but the dashboard has no screen to
+   * schedule a card style yet, so it is sold as coming soon.
+   */
+  scheduledDesigns: boolean | "coming_soon";
   /**
    * Gated on for Pro, but the pass generator does not emit locations yet
    * (backend/app/services/pass_generator.py), so it is sold as coming soon.
@@ -86,7 +89,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: true,
     locationAnalytics: true,
     analytics: "advanced",
-    scheduledDesigns: true,
+    scheduledDesigns: "coming_soon",
     geofencing: "coming_soon",
   },
 };
@@ -144,7 +147,8 @@ export function planFactLines(tier: TierId): string[] {
   lines.push(facts.multipleLocations ? "multiple locations" : "single location");
   if (facts.locationAnalytics) lines.push("per-location analytics");
   lines.push(facts.analytics === "advanced" ? "basic and advanced analytics" : "basic analytics");
-  if (facts.scheduledDesigns) lines.push("scheduled card designs");
+  if (facts.scheduledDesigns === "coming_soon") lines.push("scheduled card designs (coming soon)");
+  else if (facts.scheduledDesigns) lines.push("scheduled card designs");
 
   if (facts.geofencing === "coming_soon") lines.push("geofencing notifications (coming soon)");
   else if (facts.geofencing) lines.push("geofencing notifications");

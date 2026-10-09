@@ -10,6 +10,7 @@ import {
   planMessageArgs,
   planSummary,
 } from "./plan-facts";
+import { FEATURE_CATEGORIES } from "./pricing-features";
 
 /**
  * Plan facts are stated once, in `lib/plan-facts.ts`, mirroring
@@ -60,7 +61,7 @@ describe("plan facts", () => {
         multipleLocations: true,
         locationAnalytics: true,
         analytics: "advanced",
-        scheduledDesigns: true,
+        scheduledDesigns: "coming_soon",
         geofencing: "coming_soon",
       },
     });
@@ -73,6 +74,7 @@ describe("plan facts", () => {
     expect(planSummary("growth")).toContain("8 broadcasts per month");
     expect(planSummary("growth")).not.toMatch(/advanced|schedul|multiple locations|geofencing/);
     expect(planSummary("pro")).toContain("geofencing notifications (coming soon)");
+    expect(planSummary("pro")).toContain("scheduled card designs (coming soon)");
   });
 
   it("names the plans a feature is on", () => {
@@ -125,11 +127,38 @@ describe("feature meta descriptions", () => {
 
 describe("pricing page feature lists", () => {
   // Locked vocabulary per locale (see the stampeo-copywriting skill).
-  const VOCAB: Record<string, { broadcast: RegExp; points: RegExp; nearby: RegExp }> = {
-    en: { broadcast: /broadcast/i, points: /points/i, nearby: /nearby/i },
-    fr: { broadcast: /diffusion/i, points: /points/i, nearby: /proximité/i },
-    es: { broadcast: /difusi/i, points: /puntos/i, nearby: /cerca/i },
-    pl: { broadcast: /rozsył/i, points: /punkt/i, nearby: /pobliżu/i },
+  const VOCAB: Record<
+    string,
+    { broadcast: RegExp; points: RegExp; nearby: RegExp; cardStyle: RegExp; schedule: RegExp }
+  > = {
+    en: {
+      broadcast: /broadcast/i,
+      points: /points/i,
+      nearby: /nearby/i,
+      cardStyle: /card styles?/i,
+      schedule: /schedul/i,
+    },
+    fr: {
+      broadcast: /diffusion/i,
+      points: /points/i,
+      nearby: /proximité/i,
+      cardStyle: /styles? de carte/i,
+      schedule: /programm|planifi/i,
+    },
+    es: {
+      broadcast: /difusi/i,
+      points: /puntos/i,
+      nearby: /cerca/i,
+      cardStyle: /estilos? de tarjeta/i,
+      schedule: /program/i,
+    },
+    pl: {
+      broadcast: /rozsył/i,
+      points: /punkt/i,
+      nearby: /pobliżu/i,
+      cardStyle: /wz[oó]r\w* karty/i,
+      schedule: /zaplan|planow/i,
+    },
   };
 
   // The pricing page cards (`pricingPage`) and the landing pricing section
@@ -161,6 +190,16 @@ describe("pricing page feature lists", () => {
         expect(nearby).toHaveLength(1);
         expect(nearby[0]).toMatch(new RegExp(page.comparison.soon, "i"));
       });
+
+      it(`${locale} ${section}: scheduling card styles reads as coming soon on Pro`, () => {
+        expect(PLAN_FACTS.pro.scheduledDesigns).toBe("coming_soon");
+        const claims = (tier: string) =>
+          features(tier).filter((item) => vocab.cardStyle.test(item) && vocab.schedule.test(item));
+        expect([...claims("starter"), ...claims("growth")]).toEqual([]);
+        for (const item of claims("pro")) {
+          expect(item).toMatch(new RegExp(page.comparison.soon, "i"));
+        }
+      });
     }
 
     it(`${locale}: the comparison table agrees on loyalty types and broadcasts`, () => {
@@ -172,4 +211,12 @@ describe("pricing page feature lists", () => {
       ]);
     });
   }
+
+  it("the comparison table marks scheduled card changes as coming soon on Pro", () => {
+    const row = FEATURE_CATEGORIES.flatMap((category) => category.rows).find(
+      (r) => r.key === "scheduledChanges"
+    );
+    expect(PLAN_FACTS.pro.scheduledDesigns).toBe("coming_soon");
+    expect(row).toEqual({ key: "scheduledChanges", starter: "cross", growth: "cross", pro: "soon" });
+  });
 });
