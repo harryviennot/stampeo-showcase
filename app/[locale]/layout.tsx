@@ -5,7 +5,6 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { ogLocaleFor } from "@/lib/og/metadata";
-import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
@@ -99,23 +98,21 @@ export default async function RootLayout({
       >
         <ScrollRevealInit />
         <NextIntlClientProvider>
-          <AuthProvider>
-            {children}
-            <FloatingLanguageSwitcher />
-            {/* Last in the tree so it paints over the page, and inside the
-                intl provider because its copy is localized. It decides for
-                itself whether this route and this visitor need it. */}
-            <ConsentBanner />
-            {/* Renders nothing. Decides for itself whether this visitor and
-                this route allow the pixel, and re-decides on every
-                navigation. */}
-            <MetaPixel />
-            <GoogleAnalytics />
-            {/* Must stay AFTER {children}: its landing-context snapshot reads
-                body.dataset.landingVariant, which LandingTracker (inside the
-                page subtree) stamps in an effect that has to fire first. */}
-            <AttributionCapture />
-          </AuthProvider>
+          {children}
+          <FloatingLanguageSwitcher />
+          {/* Last in the tree so it paints over the page, and inside the
+              intl provider because its copy is localized. It decides for
+              itself whether this route and this visitor need it. */}
+          <ConsentBanner />
+          {/* Renders nothing. Decides for itself whether this visitor and
+              this route allow the pixel, and re-decides on every
+              navigation. */}
+          <MetaPixel />
+          <GoogleAnalytics />
+          {/* Must stay AFTER {children}: its landing-context snapshot reads
+              body.dataset.landingVariant, which LandingTracker (inside the
+              page subtree) stamps in an effect that has to fire first. */}
+          <AttributionCapture />
         </NextIntlClientProvider>
       </body>
     </html>

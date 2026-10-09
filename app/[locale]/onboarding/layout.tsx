@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 
 import { StampeoLogo } from "@/components/logo";
 import { NOINDEX } from "@/lib/page-robots";
+import { AuthProvider } from "@/lib/supabase/auth-provider";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata.onboarding");
@@ -39,7 +40,10 @@ export default async function OnboardingLayout({
       </header>
 
       {/* Main content */}
-      <main className="pt-16 pb-8 px-3 sm:pt-20 sm:pb-12 sm:px-2">{children}</main>
+      <main className="pt-16 pb-8 px-3 sm:pt-20 sm:pb-12 sm:px-2">
+        {/* AuthProvider loads supabase-js, so only the sign-in pages mount it. */}
+        <AuthProvider>{children}</AuthProvider>
+      </main>
     </div>
   );
 }
