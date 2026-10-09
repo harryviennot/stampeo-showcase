@@ -311,11 +311,6 @@
           "title": "Web scanner",
           "description": "Don't want to install an app? Scan directly from your phone or tablet browser. Ideal for businesses using a shared tablet at the counter.",
           "icon": "globe"
-        },
-        {
-          "title": "Offline mode",
-          "description": "Works even without internet. Scans are saved locally and synced automatically when connection returns. No stamp is ever lost.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -370,29 +365,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Works even without Wi-Fi",
-          "subtitle": "Outdoor market, basement, festival — scanning works everywhere, even offline.",
-          "situations": [
-            "Outdoor market without Wi-Fi",
-            "Basement or wine cellar",
-            "Festival or temporary event",
-            "Rural area with unstable network",
-            "Temporary internet outage"
-          ],
-          "online": "Online",
-          "offline_label": "Offline",
-          "pending": "Pending sync",
-          "synced": "Synced",
-          "syncing": "Syncing...",
-          "stampedTitle": "Stamp added",
-          "stampedSub": "Synced instantly",
-          "pendingSub": "1 stamp queued",
-          "syncingSub": "Connection restored",
-          "syncedSub": "No stamp lost",
-          "offlineHint": "Offline mode on",
-          "toggleHint": "Tap the switch to try it"
-        },
         "employee": {
           "title": "Built for your employees",
           "subtitle": "Your employees aren't technicians. The interface is so simple that no training is needed.",
@@ -421,7 +393,6 @@
             "features": [
               "3 employee accounts included",
               "Dedicated app + web scanner",
-              "Offline mode",
               "Scan history"
             ]
           },
@@ -868,34 +839,34 @@
       "hero": {
         "title": "Reach every customer. Without the SMS bill.",
         "navTitle": "Promotional Campaigns — Wallet push to every customer",
-        "subtitle": "Send promotional notifications straight to your customers' Apple Wallet and Google Wallet. ~85% open rate. No per-message fee. Segmentation and scheduling included.",
+        "subtitle": "Send broadcasts straight to your customers' Apple Wallet and Google Wallet, with no per-message fee. {growthBroadcasts} a month on Growth with basic segmentation, unlimited on Pro with advanced segmentation and scheduling.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "The math speaks for itself",
-        "subtitle": "Average performance across wallet, SMS and email, pulled from public industry data.",
+        "title": "Your customers keep the card",
+        "subtitle": "A broadcast reaches every card still in a wallet. Here is what we measure across the businesses on Stampeo.",
         "stats": [
           {
-            "value": "~85%",
-            "label": "Wallet open rate",
-            "caption": "vs ~20% for email and ~35% CTR for SMS"
+            "value": "88%",
+            "label": "Wallet add rate",
+            "caption": "Customers who join and save the card to Apple Wallet or Google Wallet, where your broadcasts land (Stampeo data, 86 businesses, Feb–Oct 2026)."
+          },
+          {
+            "value": "95%",
+            "label": "Still installed at 90 days",
+            "caption": "Cards still in the wallet three months after being added (Stampeo data, 86 businesses, Feb–Oct 2026)."
           },
           {
             "value": "€0",
             "label": "Per message",
-            "caption": "Flat plan fee, not €0.04 to €0.10 per SMS"
-          },
-          {
-            "value": "+78%",
-            "label": "Revenue uplift",
-            "caption": "Reported by walletized loyalty card holders"
+            "caption": "Broadcasts are part of your plan. SMS bills every message."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, email, wallet:<br></br>what actually lands",
-        "subtitle": "The open rate and the delivery cost are not the same story. Here is how the three channels stack up for a small business sending promotional offers.",
+        "subtitle": "Here is how the three channels stack up for a small business sending promotional offers.",
         "columns": [
           "",
           "SMS",
@@ -904,17 +875,9 @@
         ],
         "rows": [
           {
-            "label": "Typical open rate",
+            "label": "Cost per message",
             "values": [
-              "~35% CTR",
-              "~20%",
-              "~85%"
-            ]
-          },
-          {
-            "label": "Cost per message (France)",
-            "values": [
-              "€0.04 – €0.10",
+              "Billed per message",
               "Low, variable",
               "€0 (included in plan)"
             ]
@@ -959,8 +922,7 @@
               "Lock-screen banner, no inbox"
             ]
           }
-        ],
-        "caption": "Sources: Twilio France pricing, PushPass 2026 SMS vs push report, Yotpo mobile wallet guide."
+        ]
       },
       "howItWorks": {
         "badge": "How it works",
@@ -1078,7 +1040,7 @@
           },
           {
             "question": "How does wallet marketing compare to SMS?",
-            "answer": "Wallet notifications appear on the lock screen like an SMS, but they are free to send, reach around 85% open rate, and won't land in the iOS 26 \"Unknown sender\" filter. You also get built-in segmentation (by stamps earned, redemptions, or recent inactivity), which SMS platforms usually charge extra for."
+            "answer": "Wallet notifications appear on the lock screen like an SMS, but they are free to send and won't land in the iOS 26 \"Unknown sender\" filter. Segmentation is built in too: by enrollment date on Growth, and by stamps earned, redemptions or recent inactivity on Pro. SMS platforms usually charge extra for that."
           },
           {
             "question": "Can I schedule campaigns in advance?",

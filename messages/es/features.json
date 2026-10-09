@@ -311,11 +311,6 @@
           "title": "El escáner web",
           "description": "¿No quieres instalar una app? Escanea directamente desde el navegador de tu teléfono o tablet. Ideal para comercios que usan una tablet compartida en el mostrador.",
           "icon": "globe"
-        },
-        {
-          "title": "Modo sin conexión",
-          "description": "Funciona incluso sin internet. Los escaneos se guardan en el dispositivo y se sincronizan automáticamente cuando vuelve la conexión. No se pierde ningún sello.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -370,29 +365,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Funciona incluso sin Wi-Fi",
-          "subtitle": "Mercado al aire libre, sótano, festival: el escaneo funciona en cualquier sitio, aunque no haya conexión.",
-          "situations": [
-            "Mercado al aire libre sin Wi-Fi",
-            "Sótano o bodega",
-            "Festival o evento temporal",
-            "Zona rural con red inestable",
-            "Corte de internet temporal"
-          ],
-          "online": "Conectado",
-          "offline_label": "Sin conexión",
-          "pending": "Pendiente de sincronizar",
-          "synced": "Sincronizado",
-          "syncing": "Sincronizando...",
-          "stampedTitle": "Sello añadido",
-          "stampedSub": "Sincronizado al instante",
-          "pendingSub": "1 sello en cola",
-          "syncingSub": "Conexión restablecida",
-          "syncedSub": "Ningún sello perdido",
-          "offlineHint": "Modo sin conexión activado",
-          "toggleHint": "Pulsa el interruptor para probarlo"
-        },
         "employee": {
           "title": "Pensado para tus empleados",
           "subtitle": "Tus empleados no son técnicos. La interfaz es tan sencilla que no hace falta ninguna formación.",
@@ -421,7 +393,6 @@
             "features": [
               "3 cuentas de empleado incluidas",
               "Aplicación dedicada + escáner web",
-              "Modo sin conexión",
               "Historial de escaneos"
             ]
           },
@@ -868,34 +839,34 @@
       "hero": {
         "title": "Llega a todos tus clientes. Sin la factura de los SMS.",
         "navTitle": "Difusiones promocionales: avisos en Apple Wallet y Google Wallet a todos tus clientes",
-        "subtitle": "Envía avisos promocionales directamente a Apple Wallet y Google Wallet. ~85 % de tasa de apertura. Cero coste por mensaje. Segmentación y programación incluidas.",
+        "subtitle": "Envía difusiones directamente a Apple Wallet y Google Wallet, sin coste por mensaje. {growthBroadcasts} al mes en Growth con segmentación básica, ilimitadas en Pro con segmentación avanzada y programación.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "Los números hablan por sí solos",
-        "subtitle": "Rendimiento medio observado en la tarjeta, los SMS y el email, a partir de datos públicos del sector.",
+        "title": "Tus clientes conservan la tarjeta",
+        "subtitle": "Una difusión llega a cada tarjeta que sigue en el teléfono. Esto es lo que medimos en los comercios que usan Stampeo.",
         "stats": [
           {
-            "value": "~85 %",
-            "label": "Tasa de apertura en la tarjeta",
-            "caption": "frente a ~20 % en email y ~35 % de CTR en SMS"
+            "value": "88 %",
+            "label": "Tarjetas guardadas",
+            "caption": "Clientes registrados que guardan la tarjeta en Apple Wallet o Google Wallet, donde llegan tus difusiones (Datos de Stampeo, 86 comercios, feb.–oct. 2026)."
+          },
+          {
+            "value": "95 %",
+            "label": "Siguen ahí a los 90 días",
+            "caption": "Tarjetas que siguen en el teléfono tres meses después de añadirlas (Datos de Stampeo, 86 comercios, feb.–oct. 2026)."
           },
           {
             "value": "0 €",
             "label": "Por mensaje",
-            "caption": "Cuota fija del plan, no 0,04 a 0,10 € por SMS"
-          },
-          {
-            "value": "+78 %",
-            "label": "De facturación",
-            "caption": "Subida observada por los comercios que usan tarjetas en Apple Wallet y Google Wallet"
+            "caption": "Las difusiones van incluidas en tu plan. El SMS cobra cada envío."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, email, tarjeta: <br></br>qué llega de verdad",
-        "subtitle": "La tasa de apertura y el coste de entrega no cuentan la misma historia. Así se comparan los tres canales para un comercio que envía promociones.",
+        "subtitle": "Así se comparan los tres canales para un comercio que envía promociones.",
         "columns": [
           "",
           "SMS",
@@ -904,17 +875,9 @@
         ],
         "rows": [
           {
-            "label": "Tasa de apertura típica",
+            "label": "Coste por mensaje",
             "values": [
-              "~35 % CTR",
-              "~20 %",
-              "~85 %"
-            ]
-          },
-          {
-            "label": "Coste por mensaje (España)",
-            "values": [
-              "0,04 – 0,10 €",
+              "Se paga cada envío",
               "Bajo, variable",
               "0 € (incluido en el plan)"
             ]
@@ -959,8 +922,7 @@
               "Aviso en pantalla de bloqueo, sin bandeja"
             ]
           }
-        ],
-        "caption": "Fuentes: tarifas de Twilio España, informe PushPass 2026 SMS vs aviso, guía de Yotpo sobre la tarjeta en el teléfono."
+        ]
       },
       "howItWorks": {
         "badge": "Cómo funciona",
@@ -1078,7 +1040,7 @@
           },
           {
             "question": "¿Cómo se compara con el SMS?",
-            "answer": "Los avisos en la tarjeta aparecen en la pantalla de bloqueo como un SMS, pero son gratis de enviar, alcanzan ~85 % de tasa de apertura, y no caen en el filtro «Remitente desconocido» de iOS 26. Además tienes una segmentación integrada (por sellos ganados, recompensas canjeadas, o inactividad reciente) que las plataformas de SMS suelen cobrar aparte."
+            "answer": "Los avisos en la tarjeta aparecen en la pantalla de bloqueo como un SMS, pero son gratis de enviar y no caen en el filtro «Remitente desconocido» de iOS 26. La segmentación viene integrada: por fecha de registro en Growth, y por sellos ganados, recompensas canjeadas o inactividad reciente en Pro. Las plataformas de SMS suelen cobrarla aparte."
           },
           {
             "question": "¿Puedo programar mis difusiones con antelación?",

@@ -220,3 +220,25 @@ describe("pricing page feature lists", () => {
     expect(row).toEqual({ key: "scheduledChanges", starter: "cross", growth: "cross", pro: "soon" });
   });
 });
+
+describe("broadcasts feature page", () => {
+  for (const locale of routing.locales) {
+    it(`${locale}: the hero quotes the Growth quota from the plan facts`, () => {
+      const messages = catalog(locale, "features.json");
+      expect(messages.features["campagnes-promotionnelles"].hero.subtitle).toContain(
+        "{growthBroadcasts}"
+      );
+      const t = createTranslator({
+        locale,
+        messages,
+        namespace: "features.campagnes-promotionnelles",
+        onError: (error) => {
+          throw error;
+        },
+      });
+      const subtitle = t("hero.subtitle" as never, planMessageArgs());
+      expect(subtitle).toMatch(new RegExp(`\\b${PLAN_FACTS.growth.broadcastsPerMonth}\\b`));
+      expect(subtitle).not.toContain("{");
+    });
+  }
+});

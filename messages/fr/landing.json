@@ -303,7 +303,7 @@
         },
         {
           "title": "Campagnes promotionnelles",
-          "description": "Atteignez tous vos clients, sans la facture SMS. 85 % d'ouverture.",
+          "description": "Atteignez tous vos clients, sans la facture SMS.",
           "link": "/features/campagnes-promotionnelles"
         },
         {
@@ -313,7 +313,7 @@
         },
         {
           "title": "Scanner mobile",
-          "description": "Un scan, un tampon. Même sans internet.",
+          "description": "Un scan, un tampon. Votre téléphone suffit.",
           "link": "/features/scanner-mobile"
         },
         {

@@ -120,6 +120,12 @@ describe("llms.txt facts", () => {
     for (const mention of scheduled) expect(mention).toBe("scheduled card designs (coming soon)");
   });
 
+  it("says offline scanning is coming soon, not that the scanner works offline", () => {
+    expect(body).not.toMatch(/supports offline/i);
+    const offline = body.split("\n").filter((line) => /offline (scanning|stamping)/i.test(line));
+    expect(offline.length).toBeGreaterThan(0);
+    for (const line of offline) expect(line).toMatch(/offline scanning is coming soon/i);
+  });
 
   it("has a European block with euro prices and the international trial", () => {
     const eur = body.slice(body.indexOf("### Europe"));

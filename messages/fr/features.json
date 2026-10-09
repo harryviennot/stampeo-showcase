@@ -311,11 +311,6 @@
           "title": "Le scanner web",
           "description": "Pas envie d'installer une app ? Scannez directement depuis le navigateur de votre téléphone ou tablette. Idéal pour les commerces qui utilisent une tablette partagée au comptoir.",
           "icon": "globe"
-        },
-        {
-          "title": "Mode hors ligne",
-          "description": "Ça marche même sans internet. Les scans sont enregistrés localement et synchronisés automatiquement dès que la connexion revient. Aucun tampon n'est perdu.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -370,29 +365,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Ça marche même sans Wi-Fi",
-          "subtitle": "Marché en plein air, sous-sol, festival — le scan fonctionne partout, même sans connexion.",
-          "situations": [
-            "Marché de plein air sans Wi-Fi",
-            "Sous-sol ou cave à vin",
-            "Festival ou événement temporaire",
-            "Zone rurale avec réseau instable",
-            "Panne internet temporaire"
-          ],
-          "online": "En ligne",
-          "offline_label": "Hors ligne",
-          "pending": "En attente de sync",
-          "synced": "Synchronisé",
-          "syncing": "Synchronisation...",
-          "stampedTitle": "Tampon ajouté",
-          "stampedSub": "Synchronisé instantanément",
-          "pendingSub": "1 tampon en file d'attente",
-          "syncingSub": "Connexion rétablie",
-          "syncedSub": "Aucun tampon perdu",
-          "offlineHint": "Mode hors ligne activé",
-          "toggleHint": "Appuyez sur le bouton pour tester"
-        },
         "employee": {
           "title": "Pensé pour vos employés",
           "subtitle": "Vos employés ne sont pas des techniciens. L'interface est si simple qu'aucune formation n'est nécessaire.",
@@ -421,7 +393,6 @@
             "features": [
               "3 comptes employé inclus",
               "Application dédiée + scanner web",
-              "Mode hors ligne",
               "Historique des scans"
             ]
           },
@@ -868,34 +839,34 @@
       "hero": {
         "title": "Atteignez tous vos clients. Sans la facture SMS.",
         "navTitle": "Campagnes promotionnelles — Notifications wallet à tous vos clients",
-        "subtitle": "Envoyez des notifications promotionnelles directement dans Apple Wallet et Google Wallet. ~85 % de taux d'ouverture. Zéro coût par message. Segmentation et programmation incluses.",
+        "subtitle": "Envoyez vos diffusions directement dans Apple Wallet et Google Wallet, sans coût par message. {growthBroadcasts} par mois sur Growth avec une segmentation de base, illimitées sur Pro avec la segmentation avancée et la programmation.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "Les chiffres parlent d'eux-mêmes",
-        "subtitle": "Performance moyenne constatée sur wallet, SMS et email, à partir de données publiques du marché.",
+        "title": "Vos clients gardent la carte",
+        "subtitle": "Une diffusion arrive sur chaque carte encore dans le téléphone. Voici ce qu'on mesure chez les commerces qui utilisent Stampeo.",
         "stats": [
           {
-            "value": "~85 %",
-            "label": "Taux d'ouverture wallet",
-            "caption": "contre ~20 % en email et ~35 % de CTR en SMS"
+            "value": "88 %",
+            "label": "Taux d'ajout de la carte",
+            "caption": "Clients inscrits qui enregistrent la carte dans Apple Wallet ou Google Wallet, là où arrivent vos diffusions (Données Stampeo, 86 commerces, févr.–oct. 2026)."
+          },
+          {
+            "value": "95 %",
+            "label": "Toujours là après 90 jours",
+            "caption": "Cartes encore dans le téléphone trois mois après leur ajout (Données Stampeo, 86 commerces, févr.–oct. 2026)."
           },
           {
             "value": "0 €",
             "label": "Par message",
-            "caption": "Forfait fixe, pas 0,04 à 0,10 € par SMS"
-          },
-          {
-            "value": "+78 %",
-            "label": "De chiffre d'affaires",
-            "caption": "Hausse observée par les commerces utilisant des cartes wallet"
+            "caption": "Les diffusions sont comprises dans votre plan. Le SMS facture chaque envoi."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, email, wallet : <br></br>qu'est-ce qui arrive vraiment",
-        "subtitle": "Le taux d'ouverture et le coût de livraison ne racontent pas la même histoire. Voici comment les trois canaux se comparent pour un commerce qui envoie des promos.",
+        "subtitle": "Voici comment les trois canaux se comparent pour un commerce qui envoie des promos.",
         "columns": [
           "",
           "SMS",
@@ -904,17 +875,9 @@
         ],
         "rows": [
           {
-            "label": "Taux d'ouverture type",
+            "label": "Coût par message",
             "values": [
-              "~35 % CTR",
-              "~20 %",
-              "~85 %"
-            ]
-          },
-          {
-            "label": "Coût par message (France)",
-            "values": [
-              "0,04 – 0,10 €",
+              "Facturé à chaque envoi",
               "Faible, variable",
               "0 € (inclus dans le forfait)"
             ]
@@ -959,8 +922,7 @@
               "Bannière lock-screen, pas d'inbox"
             ]
           }
-        ],
-        "caption": "Sources : tarifs Twilio France, rapport PushPass 2026 SMS vs push, guide Yotpo mobile wallet."
+        ]
       },
       "howItWorks": {
         "badge": "Comment ça marche",
@@ -1078,7 +1040,7 @@
           },
           {
             "question": "Comment se compare le marketing wallet au SMS ?",
-            "answer": "Les notifications wallet apparaissent sur l'écran de verrouillage comme un SMS, mais sont gratuites à envoyer, atteignent ~85 % de taux d'ouverture, et ne tombent pas dans le filtre iOS 26 « Expéditeur inconnu ». Vous disposez aussi d'une segmentation intégrée (par tampons gagnés, récompenses utilisées, ou inactivité récente) que les plateformes SMS facturent généralement en option."
+            "answer": "Les notifications de la carte apparaissent sur l'écran de verrouillage comme un SMS, mais elles sont gratuites à envoyer et ne tombent pas dans le filtre iOS 26 « Expéditeur inconnu ». La segmentation est intégrée : par date d'inscription sur Growth, par tampons gagnés, récompenses utilisées ou inactivité récente sur Pro. Les plateformes SMS la facturent généralement en option."
           },
           {
             "question": "Puis-je programmer mes campagnes à l'avance ?",

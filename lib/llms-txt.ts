@@ -220,7 +220,7 @@ The dashboard answers the questions paper cards can't: who comes back, how often
 ### Integrations & platforms
 - **Apple Wallet** (iOS, via signed .pkpass files and Apple Push Notification service).
 - **Google Wallet** (Android).
-- **Scanner app**: Expo / React Native, runs on any iPhone or Android device. Supports offline scanning.
+- **Scanner app**: Expo / React Native, runs on any iPhone or Android device. Needs a connection to add stamps; offline scanning is coming soon.
 - **Business dashboard**: web app, works on desktop and mobile.
 
 ### Compliance
@@ -297,7 +297,7 @@ const FAQ = `## FAQ (condensed)
 - **Do customers need to download an app?** No. Apple Wallet and Google Wallet are pre-installed on every modern smartphone. Customers scan a QR code and the card is saved in about ten seconds.
 - **What if a customer loses their phone?** Stamps are stored on the server, not only on the device. The customer restores the card on their new phone and keeps their progress.
 - **Can customers cheat by adding their own stamps?** No. Only the business's scanner app can write stamps to a pass. Customers can't modify their own card.
-- **Does it work offline?** Yes. The scanner app supports offline stamping, and installed passes stay accessible without a network connection.
+- **Does it work offline?** Installed cards open without a network connection. The scanner app needs one to add stamps; offline scanning is coming soon.
 - **Does it work on Android?** Yes, via Google Wallet. Stampeo auto-detects the device and serves the right format from a single QR code.
 - **Stamps or points?** Either, on ${availability((f) => f.loyaltyTypes.length > 1)}. Each business runs one program and picks stamps or points for it.
 - **How is this different from paper cards?** Paper cards get lost or forgotten; digital wallet passes stay on the phone, update live, and give the business real customer data (visit frequency, retention, top customers).

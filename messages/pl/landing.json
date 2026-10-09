@@ -303,7 +303,7 @@
         },
         {
           "title": "Rozsyłki promocyjne",
-          "description": "Dotrzyj do wszystkich klientów, bez rachunku za SMS-y. 85% otwarć.",
+          "description": "Dotrzyj do wszystkich klientów, bez rachunku za SMS-y.",
           "link": "/features/rozsylki-promocyjne"
         },
         {
@@ -313,7 +313,7 @@
         },
         {
           "title": "Skaner mobilny",
-          "description": "Jeden skan, jedna pieczątka. Nawet bez internetu.",
+          "description": "Jeden skan, jedna pieczątka. Wystarczy telefon.",
           "link": "/features/skaner-mobilny"
         },
         {
