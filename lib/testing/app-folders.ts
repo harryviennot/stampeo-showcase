@@ -12,3 +12,14 @@ export function staticSegments(dir = ""): string[] {
     .filter((e) => e.isDirectory() && !/^[[(_]/.test(e.name) && !e.name.includes("."))
     .map((e) => e.name);
 }
+
+/** Every `page.tsx` under an absolute folder, at any depth. */
+export function pagesUnder(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+    entry.isDirectory()
+      ? pagesUnder(join(dir, entry.name))
+      : entry.name === "page.tsx"
+        ? [join(dir, entry.name)]
+        : [],
+  );
+}

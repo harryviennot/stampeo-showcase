@@ -13,7 +13,7 @@ import {
   isValidSlug,
   generateFeatureStaticParams,
 } from "@/lib/feature-slugs";
-import { planMessageArgs } from "@/lib/plan-facts";
+import { planMessageArgs } from "@/lib/plans/plan-facts";
 
 export const alt = "Stampeo Feature";
 export const size = { width: OG_WIDTH, height: OG_HEIGHT };

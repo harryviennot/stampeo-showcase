@@ -628,18 +628,10 @@ describe('market-scoped copy', () => {
 const WORDED_TRIAL =
   /\b(?:free month|month free|one month free|\d+[\s-]*(?:days?|jours?)[\s-]*(?:free|trial)|free\s+(?:for\s+)?\d+[\s-]*days?|\d+[\s-]*days?\s+for\s+free|first\s+month\s+is\s+free)\b/i;
 
-/**
- * The founding-partner pages are exempt for a different reason: that programme
- * closed on 2026-08-04, so the whole subtree is stale and is being removed
- * under its own issue rather than half-corrected here.
- */
-const FOUNDING_SUBTREE = /(?:^|\.)(?:programme-fondateur|founding-partner)(?:\.|$)/i;
-
 describe('English copy never writes a trial length in words', () => {
   test.each(NAMESPACES)('%s', (namespace) => {
     const offenders: string[] = [];
     for (const [key, value] of Object.entries(load(SOURCE_LOCALE, namespace))) {
-      if (FOUNDING_SUBTREE.test(key)) continue;
       if (!WORDED_TRIAL.test(value)) continue;
       offenders.push(
         `messages/en/${namespace} "${key}" states a trial length in words, ` +

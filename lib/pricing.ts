@@ -202,7 +202,7 @@ export function yearlyCardView(
  * all three in sync. Since this moment:
  *   - new signups no longer get founding pricing
  *   - the pricing page hides founding badges and strikethroughs
- *   - /founding-partner + /programme-fondateur 307 to /pricing
+ *   - /founding-partner + /programme-fondateur 308 to /pricing
  *
  * Existing founding partners are grandfathered server-side via the DB flag,
  * with no expiry.

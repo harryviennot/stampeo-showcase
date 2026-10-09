@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { getAllPosts } from "./index";
 import { BLOG_LOCALES } from "./locales";
-import { BRAND_SUFFIX, postTitle, type PostTitle } from "./title";
+import { BRAND_SUFFIX, POST_TITLE_MAX, postTitle, type PostTitle } from "./title";
 
 /** The `<title>` a browser and a search result show for a post. */
 const rendered = (title: PostTitle) =>
@@ -27,6 +27,6 @@ describe.each(BLOG_LOCALES)("%s posts", (locale) => {
   it.each(posts.map((post) => [post.slug, post] as const))("%s: title and description", (_slug, post) => {
     expect(`${post.title}\n${post.description}`).not.toContain("—");
     const shown = rendered(postTitle(post.title));
-    expect({ shown, length: shown.length <= 70 }).toEqual({ shown, length: true });
+    expect({ shown, length: shown.length <= POST_TITLE_MAX }).toEqual({ shown, length: true });
   });
 });

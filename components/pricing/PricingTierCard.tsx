@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { formatMoney } from "@/lib/pricing";
+import { PriceText } from "@/components/market/PriceText";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { InfoIcon } from "@/components/icons";
@@ -160,20 +161,15 @@ export function PricingTierCard({
         <h3 className="text-h3">{name}</h3>
         <p className="text-sm text-[var(--muted-foreground)] font-medium">{tagline}</p>
 
-        {/* Price text skips React's hydration text check: Node and the browser
-            can format the same amount differently. */}
         {showDiscount ? (
           <div className="flex flex-col gap-1">
-            <span
-              suppressHydrationWarning
-              className="text-base font-semibold text-[var(--muted-foreground)] line-through"
-            >
+            <PriceText className="text-base font-semibold text-[var(--muted-foreground)] line-through">
               {formatMoney(price, currency, locale)}
-            </span>
+            </PriceText>
             <div className="flex items-baseline gap-1">
-              <span suppressHydrationWarning className="text-4xl font-bold tracking-tight">
+              <PriceText className="text-4xl font-bold tracking-tight">
                 {formatMoney(discounted, currency, locale)}
-              </span>
+              </PriceText>
               <span className="text-[var(--muted-foreground)] text-base font-semibold">
                 {forLifeLabel ?? perMonthLabel}
               </span>
@@ -181,9 +177,9 @@ export function PricingTierCard({
           </div>
         ) : (
           <div className="flex items-baseline gap-1">
-            <span suppressHydrationWarning className="text-4xl font-bold tracking-tight">
+            <PriceText className="text-4xl font-bold tracking-tight">
               {formatMoney(price, currency, locale)}
-            </span>
+            </PriceText>
             <span className="text-[var(--muted-foreground)] text-base font-semibold">
               {perMonthLabel}
             </span>
@@ -191,9 +187,9 @@ export function PricingTierCard({
         )}
 
         {subLabel && (
-          <p suppressHydrationWarning className="text-sm text-[var(--muted-foreground)] font-medium -mt-2">
+          <PriceText as="p" className="text-sm text-[var(--muted-foreground)] font-medium -mt-2">
             {subLabel}
-          </p>
+          </PriceText>
         )}
       </div>
 
@@ -229,9 +225,9 @@ export function PricingTierCard({
           </Link>
         )}
         {ctaSubtext && (
-          <p suppressHydrationWarning className="text-xs text-center text-[var(--muted-foreground)]">
+          <PriceText as="p" className="text-xs text-center text-[var(--muted-foreground)]">
             {ctaSubtext}
-          </p>
+          </PriceText>
         )}
       </div>
     </div>

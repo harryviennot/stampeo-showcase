@@ -18,6 +18,7 @@ import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 import { MarketSuggestion } from "@/components/market/MarketSuggestion";
 import { RegionText } from "@/components/market/RegionText";
+import { PriceText } from "@/components/market/PriceText";
 import { usePricingRegion } from "@/hooks/use-pricing-region";
 import type { Market } from "@/lib/markets";
 
@@ -101,12 +102,8 @@ function FeatureComparisonTable() {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
   const { pricing } = usePricingRegion();
-  // Its own span so the amount alone skips React's hydration text check: Node
-  // and the browser can format it differently.
   const monthlyPrice = (tier: Tier) => (
-    <span suppressHydrationWarning>
-      {formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)}
-    </span>
+    <PriceText>{formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)}</PriceText>
   );
   const [mobileTier, setMobileTier] = useState<Tier>("growth");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -325,14 +322,9 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
+function PricingFAQ() {
   const t = useTranslations("pricingPage");
-  const allFaqs = t.raw("faq.items") as Array<{
-    question: string;
-    answer: string;
-    foundingOnly?: boolean;
-  }>;
-  const faqs = foundingOpen ? allFaqs : allFaqs.filter((f) => !f.foundingOnly);
+  const faqs = t.raw("faq.items") as Array<{ question: string; answer: string }>;
 
   return (
     <div className="mt-16 lg:mt-24 max-w-[840px] mx-auto">
@@ -431,7 +423,7 @@ export function PricingPageContent({
       <ROICalculator pricing={pricing} />
 
       {/* FAQ */}
-      <PricingFAQ foundingOpen={foundingOpen} />
+      <PricingFAQ />
 
       {/* Bottom CTA */}
       <ScrollReveal

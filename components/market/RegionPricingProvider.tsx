@@ -38,10 +38,8 @@ function clientCountry(): string | null {
  * DETECTED region, whatever page they are on.
  *
  * The server and hydration passes render the page market's terms, so the HTML
- * carries real prices; after hydration the detected region swaps in. Node and
- * the browser can format the same amount differently (fr narrow spaces, es/pl
- * grouping), so every price text node sits in an element carrying
- * `suppressHydrationWarning`.
+ * carries real prices; after hydration the detected region swaps in. Every price
+ * text node sits in a `PriceText`.
  *
  * Mounted inside VariantLanding / MarketPricingPage only — never around the
  * layout's tracker siblings (GoogleAnalytics, MetaPixel, AttributionCapture,

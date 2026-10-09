@@ -42,10 +42,6 @@
       "campagnes-promotionnelles": {
         "title": "Difusiones promocionales: la alternativa a los SMS",
         "description": "Envía avisos promocionales a Apple Wallet y Google Wallet, sin coste por mensaje. {growthBroadcasts} difusiones al mes en Growth, ilimitadas y programadas en Pro."
-      },
-      "programme-fondateur": {
-        "title": "Oferta de lanzamiento",
-        "description": "El programa de miembros fundadores de Stampeo. Todas las funciones de Growth, disponibles hoy."
       }
     },
     "acquisition": {

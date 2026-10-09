@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { withSentryConfig } from "@sentry/nextjs";
-import { legacyRedirects } from "./lib/legacy-redirects";
+import { legacyRedirects } from "./lib/seo/legacy-redirects";
 
 const withNextIntl = createNextIntlPlugin();
 

@@ -2,8 +2,8 @@
  * Stampeo production figures that the site may quote.
  *
  * Read-only queries on production, all markets combined, pulled 2026-10-09
- * (SQL and cohort rules: docs/audits/2026-10-09-seo-geo/evidence/barometer-data.md
- * in the workspace). Values are rounded down. Anything quoted from here carries
+ * (SQL and cohort rules: docs/features/STA-358/benchmark-sources.md). Values are
+ * rounded down. Anything quoted from here carries
  * `sourceLine(locale)`. Not publishable from this data: broadcast uplift,
  * France-only or US-only figures, and stamps-vs-points comparisons.
  */

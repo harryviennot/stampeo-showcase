@@ -1,11 +1,14 @@
 import { describe, expect, it } from "bun:test";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { renderToStaticMarkup } from "react-dom/server";
 import manifest from "@/app/manifest";
+import { JsonLd } from "@/components/JsonLd";
 import enPricing from "@/messages/en/pricing.json";
 import { FALLBACK_PRICING, type Pricing } from "./pricing";
 import { MARKETS } from "./markets";
-import { PLAN_FACTS, planSummary } from "./plan-facts";
+import { planSummary } from "./plans/plan-facts";
+import { loadCatalog } from "./testing/catalogs";
 import {
   articleJsonLd,
   organizationJsonLd,
@@ -101,7 +104,6 @@ describe("SoftwareApplication", () => {
       expect(offers.find((o) => o.name === name)!.description).toContain(planSummary(tier));
     }
     const growth = offers.find((o) => o.name === "Growth")!.description;
-    expect(PLAN_FACTS.growth.analytics).toBe("basic");
     expect(growth).not.toMatch(/advanced analytics|schedul|multi-location|multiple locations/i);
   });
 });
@@ -112,19 +114,18 @@ describe("Article", () => {
     description: "D",
     publishedAt: "2026-01-01",
     author: "Harry from Stampeo",
-    slug: "coffee-shop-loyalty-card",
   };
 
   it.each([
-    ["fr", `${BASE}/blog/coffee-shop-loyalty-card/opengraph-image`],
-    ["en", `${BASE}/en/blog/coffee-shop-loyalty-card/opengraph-image`],
-    ["es", `${BASE}/es/blog/coffee-shop-loyalty-card/opengraph-image`],
-  ])("uses the post's own share image (%s)", (locale, image) => {
-    expect(articleJsonLd({ ...post, locale }).image).toBe(image);
+    ["fr", "carte-fidelite-cafe", `${BASE}/blog/carte-fidelite-cafe/opengraph-image`],
+    ["en", "coffee-shop-loyalty-card", `${BASE}/en/blog/coffee-shop-loyalty-card/opengraph-image`],
+    ["es", "google-wallet-tarjeta-fidelidad", `${BASE}/es/blog/google-wallet-tarjeta-fidelidad/opengraph-image`],
+  ])("uses the post's own share image (%s)", (locale, slug, image) => {
+    expect(articleJsonLd({ ...post, slug, locale }).image).toBe(image);
   });
 
   it("is written by the founder and published by the Organization", () => {
-    const article = articleJsonLd({ ...post, locale: "en" });
+    const article = articleJsonLd({ ...post, slug: "coffee-shop-loyalty-card", locale: "en" });
     expect(article.author).toEqual({ "@type": "Person", name: "Harry Viennot", url: `${BASE}/about` });
     expect(article.publisher).toEqual({ "@id": ORG_ID });
     expect(article).not.toHaveProperty("speakable");
@@ -132,14 +133,13 @@ describe("Article", () => {
 });
 
 describe("pricing page FAQ", () => {
-  type Faq = { question: string; answer: string; foundingOnly?: boolean };
-  const items = enPricing.pricingPage.faq.items as Faq[];
+  const items = enPricing.pricingPage.faq.items;
 
   it.each([
     ["int", "eur"],
     ["us", "usd"],
   ] as const)("resolves every price and trial token for the %s market", (market, currency) => {
-    const faq = pricingFaqJsonLd(items, livePricing(currency), "en", MARKETS[market].trialDays, false);
+    const faq = pricingFaqJsonLd(items, livePricing(currency), "en", MARKETS[market].trialDays);
     const text = JSON.stringify(faq);
     expect(faq["@type"]).toBe("FAQPage");
     expect(text).not.toMatch(/\{\w+\}/);
@@ -147,12 +147,9 @@ describe("pricing page FAQ", () => {
     expect(text).toContain(currency === "usd" ? "$49" : "€20");
   });
 
-  it("leaves out founding-only questions once the programme has closed", () => {
-    const closed = pricingFaqJsonLd(items, livePricing("eur"), "en", 30, false);
-    const open = pricingFaqJsonLd(items, livePricing("eur"), "en", 30, true);
-    const founding = items.filter((item) => item.foundingOnly).length;
-    expect(founding).toBeGreaterThan(0);
-    expect(open.mainEntity.length - closed.mainEntity.length).toBe(founding);
+  it.each(["fr", "en", "es", "pl"])("the %s FAQ does not advertise the closed founding programme", (locale) => {
+    const faq = loadCatalog(locale, "pricing.json").pricingPage.faq.items as Array<{ foundingOnly?: boolean }>;
+    expect(faq.filter((item) => item.foundingOnly)).toEqual([]);
   });
 });
 
@@ -166,5 +163,31 @@ describe("referenced images", () => {
         expect(pngSize(path)).toEqual({ width, height });
       }
     }
+  });
+});
+
+/**
+ * What a crawler that does not run JavaScript receives: the server markup.
+ * Structured data has to be in it, as a plain data block.
+ */
+describe("JsonLd", () => {
+  it("renders a server-side ld+json script with the data as valid JSON", () => {
+    const data = { "@context": "https://schema.org", "@type": "Organization", name: "Stampeo" };
+    const html = renderToStaticMarkup(<JsonLd data={data} />);
+
+    expect(html).toStartWith('<script type="application/ld+json">');
+    const body = html.replace(/^<script[^>]*>/, "").replace(/<\/script>$/, "");
+    expect(JSON.parse(body)).toEqual(data);
+  });
+
+  it("escapes < so a string in the data cannot close the script tag", () => {
+    const data = { "@type": "FAQPage", name: "</script><script>alert(1)</script>" };
+    const html = renderToStaticMarkup(<JsonLd data={data} />);
+
+    // Exactly one closing tag: the component's own.
+    expect(html.match(/<\/script>/g)).toHaveLength(1);
+    expect(html).toContain("\\u003c/script>");
+    const body = html.replace(/^<script[^>]*>/, "").replace(/<\/script>$/, "");
+    expect(JSON.parse(body).name).toBe(data.name);
   });
 });

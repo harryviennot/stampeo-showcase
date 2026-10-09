@@ -42,10 +42,6 @@
       "campagnes-promotionnelles": {
         "title": "Rozsyłki promocyjne w portfelu: tańsze niż SMS-y",
         "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet, bez opłat za wiadomość. Na Growth {growthBroadcasts} w miesiącu, na Pro bez limitu i z planowaniem."
-      },
-      "programme-fondateur": {
-        "title": "Oferta na start",
-        "description": "Program członków założycieli Stampeo. Wszystkie funkcje planu Growth, dostępne od dziś."
       }
     },
     "acquisition": {

@@ -7,13 +7,13 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import sitemap from "../app/sitemap";
-import { routing } from "../i18n/routing";
-import { getAllSlugs } from "./blog/index";
-import { BLOG_LOCALES } from "./blog/locales";
-import { PRIVATE_SEGMENTS, PRIVATE_SUBPATHS } from "./consent-routes";
-import { FEATURE_SLUGS } from "./feature-slugs";
-import { MARKETS, indexablePilotPaths, marketFromPath } from "./markets";
+import sitemap from "../../app/sitemap";
+import { routing } from "../../i18n/routing";
+import { getAllSlugs } from "../blog/index";
+import { BLOG_LOCALES } from "../blog/locales";
+import { PRIVATE_SEGMENTS, PRIVATE_SUBPATHS } from "../consent-routes";
+import { FEATURE_SLUGS } from "../feature-slugs";
+import { MARKETS, indexablePilotPaths, marketFromPath } from "../markets";
 import { SITEMAP_BASE_URL, STATIC_PAGES } from "./sitemap";
 
 const entries = sitemap();

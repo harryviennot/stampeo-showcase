@@ -1,11 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { createTranslator } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { MARKETS, type Market } from "./markets";
-import { planMessageArgs } from "./plan-facts";
-import { FALLBACK_PRICING, pricingMessageArgs } from "./pricing";
+import { MARKETS, type Market } from "../markets";
+import { planMessageArgs } from "../plans/plan-facts";
+import { FALLBACK_PRICING, pricingMessageArgs } from "../pricing";
+import { catalogFiles, catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
 
 /**
  * Every page title and meta description, checked as a search result shows it.
@@ -17,19 +15,9 @@ import { FALLBACK_PRICING, pricingMessageArgs } from "./pricing";
  * and 160 of a description, and cuts the rest.
  */
 
-const MESSAGES = join(import.meta.dir, "..", "messages");
 const SUFFIX = " | Stampeo";
 const TITLE_MAX = 60;
 const DESCRIPTION_MAX = 160;
-
-/** Every namespace merged into one tree, as `i18n/request.ts` serves it. */
-function catalog(locale: string): Record<string, unknown> {
-  const files = readdirSync(join(MESSAGES, locale)).filter((f) => f.endsWith(".json"));
-  return Object.assign(
-    {},
-    ...files.map((f) => JSON.parse(readFileSync(join(MESSAGES, locale, f), "utf8"))),
-  );
-}
 
 /** The interpolated `{starterPrice}` and `{trialDays}` a market's page passes. */
 function marketArgs(market: Market, locale: string) {
@@ -58,7 +46,7 @@ interface Page {
 }
 
 const FEATURE_SLUGS = Object.keys(
-  (catalog("en").metadata as { features: Record<string, unknown> }).features,
+  (loadCatalog("en").metadata as { features: Record<string, unknown> }).features,
 );
 
 const PAGES: Page[] = [
@@ -128,13 +116,7 @@ const PAGES: Page[] = [
 ];
 
 describe.each(routing.locales)("%s", (locale) => {
-  const t = createTranslator({
-    locale,
-    messages: catalog(locale),
-    onError: (error) => {
-      throw error;
-    },
-  });
+  const t = strictTranslator(locale, loadCatalog(locale));
   const pages = PAGES.filter((page) => !page.locales || page.locales.includes(locale));
 
   describe.each(pages.map((page) => [page.path, page] as const))("%s", (_path, page) => {
@@ -176,24 +158,13 @@ describe("punch card vocabulary", () => {
   ]);
   const FAQ_ENTRY = /^landing\.json::variant\.us\.faq\.items\[\d+\]\.(?:question|answer)$/;
 
-  const found: string[] = [];
-  const walk = (value: unknown, id: string) => {
-    if (typeof value === "string") {
-      if (/punch/i.test(value)) found.push(id);
-    } else if (Array.isArray(value)) {
-      value.forEach((item, i) => walk(item, `${id}[${i}]`));
-    } else if (value && typeof value === "object") {
-      for (const [key, child] of Object.entries(value)) {
-        walk(child, id.endsWith("::") ? `${id}${key}` : `${id}.${key}`);
-      }
-    }
-  };
-  for (const locale of routing.locales) {
-    for (const file of readdirSync(join(MESSAGES, locale)).filter((f) => f.endsWith(".json"))) {
-      const tree = JSON.parse(readFileSync(join(MESSAGES, locale, file), "utf8"));
-      walk(tree, `${locale}/${file}::`);
-    }
-  }
+  const found = routing.locales.flatMap((locale) =>
+    catalogFiles(locale).flatMap((file) =>
+      catalogStrings(loadCatalog(locale, file), `${locale}/${file}::`)
+        .filter(({ text }) => /punch/i.test(text))
+        .map(({ where }) => where),
+    ),
+  );
 
   test("appears only on the /us SEO surfaces", () => {
     const outside = found.filter((id) => {

@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { readFileSync, readdirSync } from "node:fs";
-import { join } from "node:path";
+import { catalogLocales, catalogStrings, loadCatalog } from "./testing/catalogs";
 
 /**
  * A currency glyph baked into a translation cannot be repriced into another
@@ -17,7 +16,6 @@ import { join } from "node:path";
  * we charge, and is deliberately left alone.
  */
 
-const MESSAGES = join(import.meta.dir, "..", "messages");
 // metadata.json quotes plan prices in page descriptions, which are what Google
 // prints in a search result. It was outside this guard, which is exactly how
 // "1 month free, then EUR20/month for life" survived into the US launch: a
@@ -47,20 +45,8 @@ const GLYPHS = /[€$£]|[\d}]\s*zł|&euro;|&#8364;/;
  */
 const EXEMPT = /^features\.(?!.*\{(?:starter|growth|pro)\w*Price\})/;
 
-function walk(value: unknown, path: string, out: Array<[string, string]>) {
-  if (typeof value === "string") {
-    if (GLYPHS.test(value) && !EXEMPT.test(path)) out.push([path, value]);
-  } else if (Array.isArray(value)) {
-    value.forEach((v, i) => walk(v, `${path}[${i}]`, out));
-  } else if (value && typeof value === "object") {
-    for (const [k, v] of Object.entries(value)) walk(v, path ? `${path}.${k}` : k, out);
-  }
-}
-
 describe("plan-price translations carry no currency glyph", () => {
-  const locales = readdirSync(MESSAGES).filter((entry) =>
-    !entry.startsWith(".") && readdirSync(join(MESSAGES, entry)).length > 0,
-  );
+  const locales = catalogLocales();
 
   test("every locale directory is checked", () => {
     // Guards the guard: a new locale must not silently escape it.
@@ -70,12 +56,10 @@ describe("plan-price translations carry no currency glyph", () => {
   for (const locale of locales) {
     for (const file of PRICED_FILES) {
       test(`${locale}/${file}`, () => {
-        const raw = readFileSync(join(MESSAGES, locale, file), "utf8");
-        const offenders: Array<[string, string]> = [];
-        walk(JSON.parse(raw), "", offenders);
-        expect(
-          offenders.map(([path, value]) => `${path}: ${value}`),
-        ).toEqual([]);
+        const offenders = catalogStrings(loadCatalog(locale, file))
+          .filter(({ where, text }) => GLYPHS.test(text) && !EXEMPT.test(where))
+          .map(({ where, text }) => `${where}: ${text}`);
+        expect(offenders).toEqual([]);
       });
     }
   }

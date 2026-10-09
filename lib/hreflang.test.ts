@@ -47,7 +47,7 @@ describe("marketAlternates", () => {
   });
 
   test("the homepage cluster is exactly the one the homepage declares", () => {
-    // The layout emits PILOT_HREFLANG and the sitemap emits marketAlternates("/");
+    // The homepage emits PILOT_HREFLANG and the sitemap emits marketAlternates("/");
     // if they drift, the homepage and /us stop reciprocating.
     expect(marketAlternates("/")).toEqual(PILOT_HREFLANG);
   });

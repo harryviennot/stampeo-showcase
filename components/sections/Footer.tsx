@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
@@ -15,6 +14,7 @@ import {
   PLAY_STORE_URL,
 } from "../features/scanner-mobile/StoreBadges";
 import { marketPath, type Market } from "@/lib/markets";
+import { MarketLink } from "../market/MarketLink";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
@@ -29,9 +29,6 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
 
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = buildSeoLinks(locale, market);
-  // A market path (/us/pricing) is complete as written; next-intl's Link would
-  // prefix it to /en/us/pricing.
-  const PricingLink = market === "int" ? Link : NextLink;
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">
@@ -148,9 +145,9 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                 <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("changelog")}
                 </Link>
-                <PricingLink href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <MarketLink market={market} href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("pricing")}
-                </PricingLink>
+                </MarketLink>
                 <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {tNav("loyaltyPrograms")}
                 </Link>

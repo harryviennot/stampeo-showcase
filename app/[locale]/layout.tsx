@@ -57,8 +57,8 @@ export async function generateMetadata({
     formatDetection: {
       telephone: false,
     },
-    // No title or description here: Next fills the OpenGraph and Twitter ones
-    // from each page's own. No `alternates` either, so a page that declares no
+    // openGraph and twitter carry no title or description: Next fills them from
+    // each page's own. No `alternates` either, so a page that declares no
     // canonical inherits none.
     openGraph: {
       type: "website",

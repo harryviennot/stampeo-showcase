@@ -19,7 +19,7 @@ import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 import { JsonLd } from "@/components/JsonLd";
 import { faqPageJsonLd } from "@/lib/structured-data";
-import { planMessageArgs } from "@/lib/plan-facts";
+import { planMessageArgs } from "@/lib/plans/plan-facts";
 
 const capabilityIcons = [TargetIcon, ClockIcon, TranslateIcon, ChartPieSliceIcon];
 

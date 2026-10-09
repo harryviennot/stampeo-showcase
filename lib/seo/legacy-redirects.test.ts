@@ -16,14 +16,13 @@ import {
 import { NextRequest } from "next/server";
 import sitemap from "@/app/sitemap";
 import { routing } from "@/i18n/routing";
-import proxy from "../proxy";
-import { hasBlog } from "./blog/locales";
-import { FEATURE_SLUGS, getLocalizedSlug } from "./feature-slugs";
+import proxy from "../../proxy";
+import { hasBlog } from "../blog/locales";
+import { FEATURE_SLUGS, getLocalizedSlug } from "../feature-slugs";
 import { DEFAULT_LOCALE, SITE_LOCALES, legacyRedirects } from "./legacy-redirects";
-import { isFoundingProgramOpen } from "./pricing";
 
 const ORIGIN = "https://stampeo.app";
-const ROOT = join(import.meta.dir, "..");
+const ROOT = join(import.meta.dir, "..", "..");
 const APP = join(ROOT, "app", "[locale]");
 const BLOG = join(ROOT, "content", "blog");
 
@@ -80,7 +79,7 @@ function probesFor(source: string): string[] {
 
 const PROBES = [...new Set(RULES.flatMap((rule) => probesFor(rule.source)))];
 
-/** The supplied table (plan Reference A), restated as the expectation. */
+/** Every explicit rule, restated so a dropped entry fails. */
 const REFERENCE_A: Array<[string, string]> = [
   // Search Console 404s with a real destination
   ["/en/en/onboarding", "/en/onboarding"],
@@ -110,6 +109,10 @@ const REFERENCE_A: Array<[string, string]> = [
   ["/founding-partner", "/pricing"],
   ["/en/programme-fondateur", "/en/pricing"],
   ["/en/founding-partner", "/en/pricing"],
+  ["/es/programme-fondateur", "/es/pricing"],
+  ["/es/founding-partner", "/es/pricing"],
+  ["/pl/programme-fondateur", "/pl/pricing"],
+  ["/pl/founding-partner", "/pl/pricing"],
   // Locale-prefixed copies of the country pilots
   ["/en/us", "/us"],
   ["/es/us/pricing", "/us/pricing"],
@@ -118,12 +121,13 @@ const REFERENCE_A: Array<[string, string]> = [
 ];
 
 /** Live pages a rule replaces on purpose. */
-const FOUNDING_ROUTES = new Set([
-  "/programme-fondateur",
-  "/founding-partner",
-  "/en/programme-fondateur",
-  "/en/founding-partner",
-]);
+const FOUNDING_ROUTES = new Set(
+  SITE_LOCALES.flatMap((locale) =>
+    ["programme-fondateur", "founding-partner"].map((slug) =>
+      locale === DEFAULT_LOCALE ? `/${slug}` : `/${locale}/${slug}`,
+    ),
+  ),
+);
 const isPilotCopy = (path: string) => /^\/(en|es|pl)\/(us|uk)(\/|$)/.test(path);
 
 describe("legacy URLs from Search Console and git history", () => {
@@ -142,12 +146,52 @@ describe("legacy URLs from Search Console and git history", () => {
   });
 
   test("no rule replaces a live page, except the closed founding routes and the pilot copies", () => {
-    // The founding pages only redirect while the programme is closed.
-    expect(isFoundingProgramOpen()).toBe(false);
-
     const shadowed = PROBES.filter((probe) => isLiveRoute(probe));
     expect(shadowed.filter((probe) => !FOUNDING_ROUTES.has(probe) && !isPilotCopy(probe))).toEqual([]);
   });
+});
+
+/** Rules that are not themselves a doubled-prefix copy (`/en/en/...`). */
+const DOUBLED = new RegExp(`^/(${SITE_LOCALES.join("|")})/\\1(/|$)`);
+
+/** `/en/us` -> `/en/en/us`; an unprefixed path doubles the default locale: `/signup` -> `/fr/fr/signup`. */
+function withDoubledPrefix(path: string): string | null {
+  const head = path.split("/")[1];
+  if (head === DEFAULT_LOCALE || DOUBLED.test(path)) return null;
+  const locale = (SITE_LOCALES as readonly string[]).includes(head) ? head : DEFAULT_LOCALE;
+  return locale === DEFAULT_LOCALE ? `/${locale}/${locale}${path}` : `/${locale}${path}`;
+}
+
+const DOUBLED_VARIANTS = PROBES.flatMap((probe) => {
+  const doubled = withDoubledPrefix(probe);
+  return doubled ? [[probe, doubled] as const] : [];
+});
+
+describe("a doubled locale prefix", () => {
+  test("every rule family has doubled variants to probe", () => {
+    // Explicit, blog in both directions, the founding routes and the pilot copies.
+    const samples = [
+      "/signup",
+      "/en/signup",
+      "/blog/apple-wallet-loyalty-card",
+      "/en/blog/carte-fidelite-cafe",
+      "/en/founding-partner",
+      "/es/us/pricing",
+    ];
+    const probes = DOUBLED_VARIANTS.map(([probe]) => probe);
+    for (const sample of samples) expect(probes).toContain(sample);
+  });
+
+  test.each(DOUBLED_VARIANTS)(
+    "%s doubled as %s reaches the same page in one permanent hop",
+    async (probe, doubled) => {
+      const hop = await redirectOf(doubled);
+
+      expect(hop?.status).toBe(308);
+      expect(hop?.to).toBe((await redirectOf(probe))?.to);
+      expect(await redirectOf(hop?.to ?? "")).toBeNull();
+    },
+  );
 });
 
 describe("blog posts asked for in the wrong language", () => {

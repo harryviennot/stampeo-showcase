@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { PriceText } from "@/components/market/PriceText";
 import { formatMoney, type Pricing } from "@/lib/pricing";
 
 type Mode = "prudent" | "optimiste";
@@ -37,8 +38,6 @@ export function ROICalculator({
     n % 1 === 0 ? String(n) : isComma ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
   // Placement and glyph both follow the currency+locale pair, not the locale
   // alone: "40€" is right for a French euro price and wrong for a US dollar one.
-  // Every element holding one of these amounts skips React's hydration text
-  // check: Node and the browser can format the same amount differently.
   const euro = (n: number) => formatMoney(n, pricing.currency, locale);
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
@@ -125,12 +124,9 @@ export function ROICalculator({
                   <label htmlFor="roi-basket" className="text-sm sm:text-base font-bold text-[var(--foreground)]">
                     {t("basketLabel")}
                   </label>
-                  <span
-                    suppressHydrationWarning
-                    className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums"
-                  >
+                  <PriceText className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
                     {euro(basket)}
-                  </span>
+                  </PriceText>
                 </div>
                 <input
                   id="roi-basket"
@@ -143,8 +139,8 @@ export function ROICalculator({
                   className="roi-slider w-full"
                 />
                 <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
-                  <span suppressHydrationWarning>{euro(3)}</span>
-                  <span suppressHydrationWarning>{euro(50)}</span>
+                  <PriceText>{euro(3)}</PriceText>
+                  <PriceText>{euro(50)}</PriceText>
                 </div>
               </div>
             </div>
@@ -162,13 +158,13 @@ export function ROICalculator({
                     extra: fmtDecimal(extraClientsPerDay),
                   })}
                 </p>
-                <p suppressHydrationWarning>
+                <PriceText as="p">
                   {t("breakdownRevenue", {
                     extra: fmtDecimal(extraClientsPerDay),
                     basket: euro(basket),
                     total: euro(extraRevenue),
                   })}
-                </p>
+                </PriceText>
               </div>
             </div>
 
@@ -179,12 +175,12 @@ export function ROICalculator({
                   {t("extraRevenue")}
                 </p>
                 <div className="mt-auto">
-                  <p
-                    suppressHydrationWarning
+                  <PriceText
+                    as="p"
                     className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums transition-all duration-300"
                   >
                     {euro(extraRevenue)}
-                  </p>
+                  </PriceText>
                   <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
                   </p>
@@ -196,12 +192,12 @@ export function ROICalculator({
                   {t("stampeoCost")}
                 </p>
                 <div className="mt-auto">
-                  <p
-                    suppressHydrationWarning
+                  <PriceText
+                    as="p"
                     className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums"
                   >
                     {euro(stampeoCost)}
-                  </p>
+                  </PriceText>
                   <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
                   </p>

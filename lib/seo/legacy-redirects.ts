@@ -10,14 +10,16 @@
 
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { BLOG_LOCALES } from "./blog/locales";
-import { MARKETS, type Market } from "./markets";
+import { BLOG_LOCALES } from "../blog/locales";
+import { MARKETS, type Market } from "../markets";
 
 export interface LegacyRedirect {
   source: string;
   destination: string;
   permanent: true;
 }
+
+type Rule = [source: string, destination: string];
 
 /** `i18n/routing` restated; `legacy-redirects.test.ts` pins the two together. */
 export const SITE_LOCALES = ["fr", "en", "es", "pl"] as const;
@@ -26,7 +28,7 @@ export const DEFAULT_LOCALE = "fr";
 const PREFIXED_LOCALES = SITE_LOCALES.filter((locale) => locale !== DEFAULT_LOCALE);
 
 /** Search Console 404s and renamed posts, each with the page that replaced it. */
-const EXPLICIT: ReadonlyArray<readonly [source: string, destination: string]> = [
+const EXPLICIT: ReadonlyArray<Rule> = [
   // Search Console 404s with a real destination
   ["/en/en/onboarding", "/en/onboarding"],
   ["/blog/apple-wallet-loyalty-card", "/en/blog/apple-wallet-loyalty-card"],
@@ -55,6 +57,10 @@ const EXPLICIT: ReadonlyArray<readonly [source: string, destination: string]> = 
   ["/founding-partner", "/pricing"],
   ["/en/programme-fondateur", "/en/pricing"],
   ["/en/founding-partner", "/en/pricing"],
+  ["/es/programme-fondateur", "/es/pricing"],
+  ["/es/founding-partner", "/es/pricing"],
+  ["/pl/programme-fondateur", "/pl/pricing"],
+  ["/pl/founding-partner", "/pl/pricing"],
 ];
 
 /** The post slugs in each blog locale, read from `content/blog/<locale>/`. */
@@ -91,8 +97,8 @@ function assertDisjoint(slugs: Map<string, string[]>): void {
 }
 
 /** A blog post asked for under the wrong locale goes to the locale that has it. */
-function blogRules(slugs: Map<string, string[]>): Array<[string, string]> {
-  const rules: Array<[string, string]> = [];
+function blogRules(slugs: Map<string, string[]>): Rule[] {
+  const rules: Rule[] = [];
   const prefixed = BLOG_LOCALES.filter((locale) => locale !== DEFAULT_LOCALE);
 
   for (const locale of prefixed) {
@@ -108,26 +114,43 @@ function blogRules(slugs: Map<string, string[]>): Array<[string, string]> {
   return rules;
 }
 
-/** A doubled locale prefix (`/en/en/...`) loses one copy. `:path*` also matches the bare prefix. */
-function doubledLocaleRules(): Array<[string, string]> {
+const DOUBLED_SOURCE = new RegExp(`^/(${SITE_LOCALES.join("|")})/\\1(/|$)`);
+
+/**
+ * A doubled locale prefix (`/en/en/...`) loses one copy. When the de-doubled
+ * path is itself a redirect source, the doubled copy gets its own rule to that
+ * final page, listed before the generic rule, so no URL takes two hops.
+ * `:path*` also matches the bare prefix.
+ */
+function doubledLocaleRules(base: ReadonlyArray<Rule>): Rule[] {
+  const rules: Rule[] = [];
+  for (const locale of SITE_LOCALES) {
+    // The default locale is unprefixed: `/fr/fr/x` de-doubles to `/x`.
+    const isDefault = locale === DEFAULT_LOCALE;
+    const stem = isDefault ? `/${locale}/${locale}` : `/${locale}`;
+    for (const [source, destination] of base) {
+      const first = source.split("/")[1];
+      const inLocale = isDefault
+        ? !(SITE_LOCALES as readonly string[]).includes(first)
+        : first === locale;
+      if (inLocale && !DOUBLED_SOURCE.test(source)) rules.push([`${stem}${source}`, destination]);
+    }
+  }
   return [
-    ...PREFIXED_LOCALES.map((locale): [string, string] => [
-      `/${locale}/${locale}/:path*`,
-      `/${locale}/:path*`,
-    ]),
-    // The default locale is unprefixed, so `/fr/fr/x` goes straight to `/x`.
+    ...rules,
+    ...PREFIXED_LOCALES.map((locale): Rule => [`/${locale}/${locale}/:path*`, `/${locale}/:path*`]),
     [`/${DEFAULT_LOCALE}/${DEFAULT_LOCALE}/:path+`, "/:path+"],
   ];
 }
 
 /** Pilots live at locale-free URLs, so a locale-prefixed copy goes to the real one. */
-function pilotRules(): Array<[string, string]> {
+function pilotRules(): Rule[] {
   const pilots = (Object.keys(MARKETS) as Market[])
     .filter((market) => market !== "int")
     .map((market) => MARKETS[market].path);
 
   return PREFIXED_LOCALES.flatMap((locale) =>
-    pilots.map((pilot): [string, string] => [`/${locale}${pilot}/:path*`, `${pilot}/:path*`]),
+    pilots.map((pilot): Rule => [`/${locale}${pilot}/:path*`, `${pilot}/:path*`]),
   );
 }
 
@@ -142,16 +165,17 @@ export function legacyRedirects(
   assertDisjoint(slugs);
 
   const seen = new Set<string>();
-  const redirects: LegacyRedirect[] = [];
-  for (const [source, destination] of [
-    ...EXPLICIT,
-    ...blogRules(slugs),
-    ...doubledLocaleRules(),
-    ...pilotRules(),
-  ]) {
-    if (seen.has(source)) continue;
-    seen.add(source);
-    redirects.push({ source, destination, permanent: true });
-  }
-  return redirects;
+  const unique = (rules: ReadonlyArray<Rule>): Rule[] =>
+    rules.filter(([source]) => {
+      if (seen.has(source)) return false;
+      seen.add(source);
+      return true;
+    });
+
+  const base = unique([...EXPLICIT, ...blogRules(slugs), ...pilotRules()]);
+  return [...base, ...unique(doubledLocaleRules(base))].map(([source, destination]) => ({
+    source,
+    destination,
+    permanent: true,
+  }));
 }

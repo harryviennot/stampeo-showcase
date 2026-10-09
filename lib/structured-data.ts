@@ -1,6 +1,6 @@
 import { routing } from "@/i18n/routing";
 import { interpolatePricing, type Pricing } from "./pricing";
-import { PLAN_NAMES, TIERS, planSummary } from "./plan-facts";
+import { PLAN_NAMES, TIERS, planSummary } from "./plans/plan-facts";
 
 const BASE_URL = "https://stampeo.app";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
@@ -117,17 +117,14 @@ export function faqPageJsonLd(
  * the visitor's region the way the visible FAQ does.
  */
 export function pricingFaqJsonLd(
-  items: Array<{ question: string; answer: string; foundingOnly?: boolean }>,
+  items: Array<{ question: string; answer: string }>,
   pricing: Pricing,
   locale: string,
   trialDays: number,
-  foundingOpen: boolean,
 ) {
   const resolve = (text: string) => interpolatePricing(text, pricing, locale, trialDays);
   return faqPageJsonLd(
-    items
-      .filter((item) => foundingOpen || !item.foundingOnly)
-      .map((item) => ({ question: resolve(item.question), answer: resolve(item.answer) })),
+    items.map((item) => ({ question: resolve(item.question), answer: resolve(item.answer) })),
   );
 }
 

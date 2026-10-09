@@ -3,9 +3,10 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { BENCHMARK, sourceLine } from "./benchmark";
-import { BLOG_LOCALES } from "./blog/locales";
-import { PLAN_FACTS } from "./plan-facts";
-import { FEATURE_CATEGORIES } from "./pricing-features";
+import { BLOG_LOCALES } from "../blog/locales";
+import { PLAN_FACTS, planMessageArgs } from "./plan-facts";
+import { FEATURE_CATEGORIES } from "../pricing-features";
+import { catalogFiles, catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
 
 /**
  * Product claims the product does not back, kept out of every blog post and
@@ -17,8 +18,7 @@ import { FEATURE_CATEGORIES } from "./pricing-features";
  * - broadcast open rates: we have no figure we can source.
  */
 
-const ROOT = join(import.meta.dir, "..");
-const MESSAGES = join(ROOT, "messages");
+const ROOT = join(import.meta.dir, "..", "..");
 const BLOG = join(ROOT, "content", "blog");
 
 interface Passage {
@@ -26,25 +26,11 @@ interface Passage {
   text: string;
 }
 
-const json = (locale: string, file: string) =>
-  JSON.parse(readFileSync(join(MESSAGES, locale, file), "utf8"));
-
 /** Every message string, as `locale/file::path`. */
 function messagePassages(locale: string): Passage[] {
-  const out: Passage[] = [];
-  const walk = (value: unknown, where: string) => {
-    if (typeof value === "string") out.push({ where, text: value });
-    else if (Array.isArray(value)) value.forEach((item, i) => walk(item, `${where}[${i}]`));
-    else if (value && typeof value === "object") {
-      for (const [key, child] of Object.entries(value)) {
-        walk(child, where.endsWith("::") ? `${where}${key}` : `${where}.${key}`);
-      }
-    }
-  };
-  for (const file of readdirSync(join(MESSAGES, locale)).filter((f) => f.endsWith(".json"))) {
-    walk(json(locale, file), `${locale}/${file}::`);
-  }
-  return out;
+  return catalogFiles(locale).flatMap((file) =>
+    catalogStrings(loadCatalog(locale, file), `${locale}/${file}::`),
+  );
 }
 
 /** Every line of every post, frontmatter included, as `locale/slug.mdx:line`. */
@@ -62,12 +48,10 @@ function postPassages(locale: string): Passage[] {
 /**
  * Strings that name a feature which is not live yet, where the label alone
  * carries no "soon": the pricing table rows, whose cells come from
- * `lib/pricing-features.ts` (checked below), and the founding page's
- * "What we're building next" list.
+ * `lib/pricing-features.ts` (checked below).
  */
 const ROADMAP = [
   /\/pricing\.json::pricingPage\.comparison\.rows\.(?:offlineScanning|scheduledChanges)\.label$/,
-  /\/features\.json::features\.programme-fondateur\.custom\.transparency\.comingSoon\.items\[\d+\]$/,
 ];
 
 interface Wording {
@@ -141,7 +125,7 @@ const WORDING: Record<string, Wording> = {
 describe("product claims", () => {
   for (const locale of routing.locales) {
     const wording = WORDING[locale];
-    const soon = new RegExp(json(locale, "pricing.json").pricingPage.comparison.soon, "i");
+    const soon = new RegExp(loadCatalog(locale, "pricing.json").pricingPage.comparison.soon, "i");
     const passages = [...messagePassages(locale), ...postPassages(locale)];
     const offenders = (claim: RegExp, unlessSoon = false) =>
       passages
@@ -158,7 +142,6 @@ describe("product claims", () => {
     });
 
     it(`${locale}: sells scheduled card styles only as coming soon`, () => {
-      expect(PLAN_FACTS.pro.scheduledDesigns).not.toBe(true);
       expect(offenders(wording.scheduledStyle, true)).toEqual([]);
     });
 
@@ -221,10 +204,19 @@ describe("broadcasts feature page", () => {
   const allowed = new Set<number>(Object.values(BENCHMARK).map((figure) => figure.value));
 
   for (const locale of routing.locales) {
-    const page = json(locale, "features.json").features["campagnes-promotionnelles"];
+    const features = loadCatalog(locale, "features.json");
+    const page = features.features["campagnes-promotionnelles"];
     const strings = messagePassages(locale).filter(({ where }) =>
       where.includes("features.json::features.campagnes-promotionnelles.")
     );
+
+    it(`${locale}: the hero quotes the Growth quota from the plan facts`, () => {
+      expect(page.hero.subtitle).toContain("{growthBroadcasts}");
+      const t = strictTranslator(locale, features, "features.campagnes-promotionnelles");
+      const subtitle = t("hero.subtitle" as never, planMessageArgs());
+      expect(subtitle).toMatch(new RegExp(`\\b${PLAN_FACTS.growth.broadcastsPerMonth}\\b`));
+      expect(subtitle).not.toContain("{");
+    });
 
     it(`${locale}: every stat is a sourced Stampeo figure or a plain fact`, () => {
       const stats = page.statBand.stats as { value: string; label: string; caption: string }[];

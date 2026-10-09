@@ -42,10 +42,6 @@
       "campagnes-promotionnelles": {
         "title": "Campagnes promotionnelles : l'alternative aux SMS",
         "description": "Envoyez vos promotions dans Apple Wallet et Google Wallet, sans coût par message. {growthBroadcasts} diffusions par mois sur Growth, illimitées et programmables sur Pro."
-      },
-      "programme-fondateur": {
-        "title": "Offre de lancement",
-        "description": "Le programme des membres fondateurs Stampeo. Toutes les fonctionnalités Growth, disponibles aujourd'hui."
       }
     },
     "acquisition": {

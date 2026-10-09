@@ -1,6 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPlanCatalog } from "@/lib/plan-catalog";
-import { isFoundingProgramOpen } from "@/lib/pricing";
 import { pricingFaqJsonLd, softwareApplicationJsonLd } from "@/lib/structured-data";
 import { JsonLd } from "@/components/JsonLd";
 import { MARKETS, type Market } from "@/lib/markets";
@@ -36,22 +35,12 @@ export async function MarketPricingPage({
   // Structured data states this URL's market, never the visitor's region.
   const marketPricing = marketCurrency === "usd" ? usd : eur;
   const t = await getTranslations("pricingPage");
-  const faqItems = t.raw("faq.items") as Array<{
-    question: string;
-    answer: string;
-    foundingOnly?: boolean;
-  }>;
+  const faqItems = t.raw("faq.items") as Array<{ question: string; answer: string }>;
   return (
     <div className="min-h-screen bg-[var(--background)]">
       <JsonLd data={softwareApplicationJsonLd(marketPricing)} />
       <JsonLd
-        data={pricingFaqJsonLd(
-          faqItems,
-          marketPricing,
-          locale,
-          MARKETS[market].trialDays,
-          isFoundingProgramOpen(),
-        )}
+        data={pricingFaqJsonLd(faqItems, marketPricing, locale, MARKETS[market].trialDays)}
       />
       <RegionPricingProvider
         ladders={{ eur, usd }}

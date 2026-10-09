@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import { getBusinessBySlug, getActiveCardDesign } from "@/lib/acquisition";
-import { acquisitionMetadata, acquisitionNotFoundMetadata } from "@/lib/acquisition-metadata";
+import { acquisitionMetadata, acquisitionNotFoundMetadata } from "@/lib/seo/acquisition-metadata";
 import { AcquisitionFlow } from "@/components/acquisition/AcquisitionFlow";
 
 /**
