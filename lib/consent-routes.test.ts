@@ -51,7 +51,7 @@ describe("isTrackablePath — marketing surfaces", () => {
   });
 
   test("the country pilots and everything beneath them are trackable", () => {
-    // Pilots are served at locale-free URLs by a middleware rewrite, so the
+    // Pilots are served at locale-free URLs by a proxy rewrite, so the
     // browser path stays /us — there is no locale prefix to strip here.
     for (const path of ["/us", "/us/pricing", "/uk", "/uk/pricing"]) {
       expect(isTrackablePath(path)).toBe(true);

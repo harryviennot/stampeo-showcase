@@ -4,7 +4,7 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { ogLocale } from "@/lib/og-locale";
+import { ogLocaleFor } from "@/lib/og/metadata";
 import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
@@ -60,7 +60,7 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       siteName: "Stampeo",
-      locale: ogLocale(locale),
+      locale: ogLocaleFor(locale),
     },
     twitter: {
       card: "summary_large_image",

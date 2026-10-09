@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { VariantLanding } from "@/components/landing-variant/VariantLanding";
 import { localePath } from "@/lib/hreflang";
 import { PILOT_HREFLANG } from "@/lib/markets";
-import { ogLocale } from "@/lib/og-locale";
+import { ogLocaleFor } from "@/lib/og/metadata";
 
 export async function generateMetadata({
   params,
@@ -28,7 +28,7 @@ export async function generateMetadata({
     openGraph: {
       type: "website",
       siteName: "Stampeo",
-      locale: ogLocale(locale),
+      locale: ogLocaleFor(locale),
       title,
       description,
     },
