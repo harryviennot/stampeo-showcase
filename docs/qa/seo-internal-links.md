@@ -74,6 +74,16 @@ cookie, or the filesystem. Recorded explicitly so nobody invents a reset.
   until STA-359 publishes them: `programa-fidelidad-peluqueria`,
   `tarjeta-fidelidad-cafeteria`, `tarjeta-fidelidad-restaurante`. IL-07 asserts
   nothing links to them in the meantime.
+- **STA-358 (2026-10-09).** The header's hidden, `aria-hidden` copy of the
+  navigation is gone. The footer's visually hidden sitemap nav is now the only
+  place these links ship besides the visible menus, so IL-09 reads the footer
+  alone and IL-10 (new) checks that the header block stays gone. The blog
+  breadcrumb now follows the post's locale, and IL-11 (new) checks it. IL-09,
+  IL-10 and IL-11 were dry-run on a local production build of
+  `feat/sta-358-seo-geo-hardening` (`903dfd5`); IL-09's counts were unchanged
+  (12, 12, 12, 11 and 0 failures). Not yet run on the dev server. **Targeted
+  re-run:** IL-01, IL-09, IL-10, IL-11. The crawler-view checks shared by
+  every page are in `seo-indexing.md`.
 
 ---
 
@@ -184,13 +194,18 @@ output before touching a browser; it names the file and line.
 
 ### IL-09: Header and footer links, on a rendered page [CORE]
 
+*(Amended 2026-10-09 (STA-358): the header's hidden copy of these links is
+gone, so the recipe below now reads the footer's sitemap nav alone. The link
+counts are unchanged, because the recipe already merged the two copies. IL-10
+checks that the header block stays gone.)*
+
 | Field | Content |
 |---|---|
 | WHY | This surface shipped a redirect on EVERY page of the site and no test saw it, because the hrefs were built from template strings inside two components. `buildSeoLinks` in `lib/seo-links.ts` is now a pure function and `lib/seo-links.test.ts` walks it, so most of this case is automated. What stays manual is the rendered form: the test checks what the function RETURNS, this checks what the page SHIPS. |
 | DEPENDS | IL-01 |
 | ACCOUNT | None. |
 | STEPS | 1. Run the block below for all four locales. 2. Spot-click three footer links and the language switcher. |
-| EXPECT | Every sr-only href returns 200 with no `location` header. No doubled locale (`/en/en/`), no `/fr/` prefix (French is unprefixed), and **no trailing slash except the site root**. You do NOT see a 308, and you do NOT see the link count drop below 11 for any locale. |
+| EXPECT | Every href in the footer's sitemap nav (the only sr-only link block since STA-358) returns 200 with no `location` header. No doubled locale (`/en/en/`), no `/fr/` prefix (French is unprefixed), and **no trailing slash except the site root**. You do NOT see a 308, and you do NOT see the link count drop below 11 for any locale. |
 | RESET | None. |
 
 > **Check the status code, not just the shape.** The first run of this case
@@ -221,9 +236,53 @@ echo "failures: $bad"
 ```
 
 Expect 12 links for `/`, `/en`, `/es`, 11 for `/pl` (no blog), and 0 failures.
-A count below that means the sr-only block stopped rendering, which the grep
-alone would report as a pass.
+A count below that means the footer's sitemap nav stopped rendering, which
+the grep alone would report as a pass.
 </details>
+
+### IL-10: The header ships no hidden link block, and the footer keeps one sitemap nav [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | The header carried an `aria-hidden`, focus-skipped copy of the navigation. Links a crawler can see and a person cannot reach read as cloaking. The footer's visually hidden sitemap nav stays, reachable by keyboard and screen readers, and it is what IL-09 reads. IL-09's counts cannot tell one copy from two, because its recipe merges them. |
+| DEPENDS | IL-09 |
+| ACCOUNT | None. |
+| STEPS | 1. Run the block below against the dev server or a production build of the branch. |
+| EXPECT | Every line reads `hidden=0 sitemap=1 skipped=0`. You do NOT see `hidden=1` (the header block is back), `skipped` above 0 (a link taken out of the tab order), or `sitemap=0` (the footer lost the links IL-09 relies on). |
+| RESET | None. |
+
+```bash
+B=http://localhost:3001
+for page in / /en /es /pl /us; do
+  html=$(curl -s "$B$page")
+  printf '%-4s hidden=%s sitemap=%s skipped=%s\n' "$page" \
+    "$(printf '%s' "$html" | grep -o '<nav class="sr-only" aria-hidden="true"' | wc -l | tr -d ' ')" \
+    "$(printf '%s' "$html" | grep -o '<nav class="sr-only" aria-label=' | wc -l | tr -d ' ')" \
+    "$(printf '%s' "$html" | grep -oE '<a [^>]*tabindex="-1"' | wc -l | tr -d ' ')"
+done
+```
+
+### IL-11: Blog breadcrumbs point at real, locale-prefixed pages [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | The breadcrumb structured data on every post named `/` and `/blog` whatever the post's language, so an English post's trail pointed Google at the French blog, and its first item was always labelled "Home". The trail now follows the post's locale, and every item must answer 200. The line under a post's title (dates and reading time) also read French on every post; it now follows the post's language. |
+| DEPENDS | IL-01 |
+| ACCOUNT | None. |
+| STEPS | 1. Run the block below. 2. Open `/en/blog/coffee-shop-loyalty-card` and `/es/blog/tarjeta-fidelidad-digital-pequeno-comercio`, and read the line under the title. |
+| EXPECT | Step 1, the English post: `/en` (`Home`), `/en/blog` (`Blog`), then its own URL. The Spanish post: `/es` (`Inicio`), `/es/blog` (`Blog`), then its own URL. The French post: `/` (`Accueil`), `/blog` (`Blog`), then its own URL. Every item answers `200` with no redirect. Step 2: "Updated on August 3, 2026" and "min read" on the English post, "Actualizado el 3 de agosto de 2026" and "min de lectura" on the Spanish one. You do NOT see an unprefixed `/blog` item on an English or Spanish post, an item that redirects or 404s, or "Mis à jour le" on a post that is not French. |
+| RESET | None. |
+
+```bash
+B=http://localhost:3001
+for p in /en/blog/coffee-shop-loyalty-card /es/blog/tarjeta-fidelidad-sin-app /blog/carte-fidelite-cafe; do
+  echo "== $p"
+  curl -s "$B$p" | grep -oE '"name":"[^"]*","item":"[^"]+"' | sed -E 's#"name":"([^"]*)","item":"https://stampeo.app([^"]*)"#\2 \1#' |
+  while IFS=' ' read -r u label; do
+    printf '  %-50s %-12.12s %s\n' "${u:-/}" "$label" "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$B${u:-/}")"
+  done
+done
+```
 
 ---
 
