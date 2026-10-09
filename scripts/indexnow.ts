@@ -25,14 +25,9 @@ export function buildIndexNowPayload(
   keyLocation: string;
   urlList: string[];
 } {
-  // Filter to stampeo.app URLs only
-  const filtered = urls.filter((url) => url.includes("stampeo.app"));
-
-  // Deduplicate
-  const deduped = Array.from(new Set(filtered));
-
-  // Cap at 10,000
-  const capped = deduped.slice(0, 10000);
+  // IndexNow rejects the whole batch if any URL is on another host; 10,000 is its per-request cap.
+  const sameHost = urls.filter((url) => URL.canParse(url) && new URL(url).host === "stampeo.app");
+  const capped = Array.from(new Set(sameHost)).slice(0, 10000);
 
   return {
     host: "stampeo.app",
@@ -69,7 +64,7 @@ if (import.meta.main) {
 
   const publicDir = join(import.meta.dir, "..", "public");
   const files = readdirSync(publicDir);
-  const keyFile = files.find((f) => f.endsWith(".txt"));
+  const keyFile = files.find((f) => /^[0-9a-f]{32}\.txt$/.test(f));
 
   if (!keyFile) {
     console.error("No .txt key file found in public/");
