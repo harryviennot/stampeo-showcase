@@ -1,7 +1,7 @@
 /**
  * A new owner who signs in with Google before creating a business lands on
- * onboarding in their language. Only the LanguageSwitcher writes `NEXT_LOCALE`
- * now, so most visitors arrive with no cookie and the phone's language decides.
+ * onboarding in their language. Only the LanguageSwitcher writes `NEXT_LOCALE`,
+ * so most visitors arrive with no cookie and the phone's language decides.
  */
 
 import { beforeEach, describe, expect, test } from "bun:test";

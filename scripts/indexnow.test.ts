@@ -109,7 +109,6 @@ describe("buildIndexNowPayload", () => {
       const keyContent = readFileSync(join(publicDir, keyFile), "utf-8").trim();
       const key = keyFile.replace(".txt", "");
 
-      // Verify the key content matches the filename (minus .txt)
       expect(keyContent).toBe(key);
 
       const payload = buildIndexNowPayload([], key);

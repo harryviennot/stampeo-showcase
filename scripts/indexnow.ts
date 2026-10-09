@@ -56,9 +56,7 @@ async function submitToIndexNow(
   }
 }
 
-// CLI entry point
 if (import.meta.main) {
-  // Read the key from the key file in public/
   const { readdirSync, readFileSync } = await import("node:fs");
   const { join } = await import("node:path");
 
@@ -73,7 +71,6 @@ if (import.meta.main) {
 
   const key = keyFile.replace(".txt", "");
 
-  // Fetch sitemap
   let xml: string;
   try {
     const response = await fetch("https://stampeo.app/sitemap.xml");
@@ -83,14 +80,11 @@ if (import.meta.main) {
     process.exit(0);
   }
 
-  // Extract URLs and build payload
   const urls = extractSitemapUrls(xml);
   const payload = buildIndexNowPayload(urls, key);
 
-  // Submit to IndexNow
   const status = await submitToIndexNow(payload);
   console.log(`IndexNow response: ${status}`);
 
-  // Always exit 0 (fail soft)
   process.exit(0);
 }

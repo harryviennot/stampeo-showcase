@@ -49,9 +49,8 @@ interface CorePage {
 }
 
 /**
- * Mirrors `app/sitemap.ts`. `/programme-fondateur` and `/founding-partner` are
- * deliberately absent from both: the founding program closed and those routes
- * now 308 to `/pricing`.
+ * Mirrors STATIC_PAGES in `lib/sitemap.ts`; the founding routes are absent
+ * from both (they 308 to `/pricing`).
  */
 const CORE_PAGES: CorePage[] = [
   { label: "Homepage", path: "/", description: "product overview and call to action." },

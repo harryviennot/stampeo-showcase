@@ -79,7 +79,7 @@ function probesFor(source: string): string[] {
 
 const PROBES = [...new Set(RULES.flatMap((rule) => probesFor(rule.source)))];
 
-/** The supplied table (plan Reference A), restated as the expectation. */
+/** Every explicit rule, restated so a dropped entry fails. */
 const REFERENCE_A: Array<[string, string]> = [
   // Search Console 404s with a real destination
   ["/en/en/onboarding", "/en/onboarding"],

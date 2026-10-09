@@ -18,7 +18,7 @@ import {
   isCorrectSlugForLocale,
   getLocalizedSlug,
 } from "@/lib/feature-slugs";
-import { localeAlternates, localePath } from "@/lib/hreflang";
+import { localeAlternates } from "@/lib/hreflang";
 import { planMessageArgs } from "@/lib/plan-facts";
 import { routing } from "@/i18n/routing";
 
@@ -69,11 +69,7 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: featureUrl(getLocalizedSlug(canonical, locale), locale),
-      languages: {
-        ...localeAlternates(`/features/${canonical}`, { overrides: localizedPaths }),
-        // Most organic visitors read English, so English is the fallback.
-        "x-default": localePath("en", localizedPaths.en),
-      },
+      languages: localeAlternates(`/features/${canonical}`, { overrides: localizedPaths }),
     },
     openGraph: {
       title,

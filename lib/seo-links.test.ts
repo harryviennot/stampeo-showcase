@@ -1,5 +1,5 @@
 /**
- * The footer's sr-only sitemap navigation (STA-355 QA, blocker 2).
+ * The footer's sr-only sitemap navigation.
  *
  * This surface shipped a redirect on EVERY page of the site and no test saw it.
  * Two reasons, both fixed here rather than documented:

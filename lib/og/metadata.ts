@@ -21,8 +21,8 @@ const OG_IMAGE_ROUTE = "/opengraph-image";
 
 /**
  * Path of the site card rendered by `app/[locale]/opengraph-image.tsx`.
- * French is unprefixed: Next emits `/fr/opengraph-image`, which the proxy
- * redirects. `query` is the content hash Next appends to bust caches.
+ * French is unprefixed; the proxy serves Next's `/fr/opengraph-image` as is.
+ * `query` is the content hash Next appends to bust caches.
  */
 export function ogImagePath(locale: string, query = ""): string {
   return `${localePath(locale, OG_IMAGE_ROUTE)}${query}`;
