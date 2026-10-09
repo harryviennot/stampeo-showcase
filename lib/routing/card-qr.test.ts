@@ -3,7 +3,7 @@
 import { describe, expect, test } from "bun:test";
 import { getRedirectUrl } from "next/experimental/testing/server";
 import { NextRequest } from "next/server";
-import middleware from "../../middleware";
+import proxy from "../../proxy";
 import { cardQrRedirect } from "./card-qr";
 
 const TAGS = "utm_source=card&utm_medium=qr&utm_campaign=business-cards-2026-10";
@@ -29,6 +29,6 @@ describe("the business-card QR redirect", () => {
       headers: { "accept-language": acceptLanguage },
     });
 
-    expect(getRedirectUrl(await middleware(landing))).toBe(redirect);
+    expect(getRedirectUrl(await proxy(landing))).toBe(redirect);
   });
 });

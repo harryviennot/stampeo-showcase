@@ -11,7 +11,7 @@
  * language rather than the site default. A shop's customers speak the shop's
  * language far more often than they speak French.
  *
- * Everything in this file is pure and synchronous; the middleware owns the one
+ * Everything in this file is pure and synchronous; the proxy owns the one
  * network call (looking up the shop's language) and only makes it when the
  * first two signals came up empty.
  */
@@ -83,7 +83,7 @@ export function deviceLanguage(
  * First path segments that belong to the marketing site, not to a merchant.
  *
  * Anything else in that position is a business slug. Kept as a literal list
- * because the middleware runs on the edge and cannot read the filesystem;
+ * so the proxy never reads the filesystem on a request;
  * `locale-negotiation.test.ts` diffs it against `app/[locale]/` and the top of
  * `app/`, so a new page cannot quietly start being treated as a shop.
  */
@@ -110,7 +110,7 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "terms",
   "uk",
   "us",
-  // Top-level folders in app/ outside [locale]. The middleware matcher already
+  // Top-level folders in app/ outside [locale]. The proxy matcher already
   // skips these, but the set is also the answer to "is this a shop?" for callers
   // that do not.
   "api",

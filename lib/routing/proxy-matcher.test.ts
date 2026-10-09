@@ -1,17 +1,17 @@
 /**
- * `/{slug}` enrollment URLs only render through the middleware rewrite, so the
+ * `/{slug}` enrollment URLs only render through the proxy rewrite, so the
  * matcher's skips must match a whole first segment, never a prefix (`/go` vs
  * `/good-vibe`). Runs the real `config` through Next's own matcher.
  */
 
 import { describe, expect, test } from "bun:test";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
-import { config } from "../../middleware";
+import { config } from "../../proxy";
 import { staticSegments } from "../testing/app-folders";
 
-const runsMiddleware = (url: string) => unstable_doesMiddlewareMatch({ config, url });
+const runsProxy = (url: string) => unstable_doesMiddlewareMatch({ config, url });
 
-describe("middleware matcher", () => {
+describe("proxy matcher", () => {
   test.each([
     // Real slugs: an active prod shop and a dev fixture.
     "/good-vibe-lemonade-and-more",
@@ -26,13 +26,13 @@ describe("middleware matcher", () => {
     "/good-vibe-lemonade-and-more/l/rue-de-rivoli",
     "/qrious-cafe/l/rue-de-rivoli",
   ])("a shop whose slug starts like a handler still enrolls: %s", (path) => {
-    expect(runsMiddleware(path)).toBe(true);
+    expect(runsProxy(path)).toBe(true);
   });
 
   test.each(["/", "/kippa", "/pricing", "/en/pricing", "/us"])(
     "marketing pages and ordinary shops run it: %s",
     (path) => {
-      expect(runsMiddleware(path)).toBe(true);
+      expect(runsProxy(path)).toBe(true);
     }
   );
 
@@ -48,16 +48,16 @@ describe("middleware matcher", () => {
     "/favicon.ico",
     "/sitemap.xml",
   ])("non-localized routes and files skip it: %s", (path) => {
-    expect(runsMiddleware(path)).toBe(false);
+    expect(runsProxy(path)).toBe(false);
   });
 
   test("every static route folder at the top of app/ skips it", () => {
-    // A folder the middleware does not skip is taken for a shop slug and
+    // A folder the proxy does not skip is taken for a shop slug and
     // rewritten to the enrollment page, which 404s.
     const segments = staticSegments();
     expect(segments.length).toBeGreaterThan(0);
     for (const segment of segments) {
-      expect(runsMiddleware(`/${segment}`)).toBe(false);
+      expect(runsProxy(`/${segment}`)).toBe(false);
     }
   });
 });

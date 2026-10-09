@@ -16,8 +16,20 @@ import {
   isPilotPath,
   marketFromPath,
 } from "./lib/markets";
+import {
+  negotiatedResponseHeaders,
+  negotiatesLanguage,
+} from "./lib/routing/root-language";
 
-const intlMiddleware = createMiddleware(routing);
+// `/` follows the visitor's cookie and browser language. Every other path is
+// served in the language its prefix names (French when unprefixed) and never
+// writes `NEXT_LOCALE`; only the LanguageSwitcher sets that cookie.
+const intlRoot = createMiddleware(routing);
+const intlDeep = createMiddleware({
+  ...routing,
+  localeDetection: false,
+  localeCookie: false,
+});
 
 const getBusinessLocale = createBusinessLocaleLookup({
   apiUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -34,7 +46,7 @@ const getBusinessLocale = createBusinessLocaleLookup({
 // 404'd as /en/us/pricing, stranding US visitors on the euro pricing page. The
 // prefix check requires a following slash, so /usual-cafe is still unaffected.
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   // 301 redirect www → non-www
   if (request.headers.get("host")?.startsWith("www.")) {
     const url = request.nextUrl.clone();
@@ -84,7 +96,15 @@ export default async function middleware(request: NextRequest) {
   const slug = acquisitionSlug(request.nextUrl.pathname);
   if (slug) return acquisitionResponse(request, slug);
 
-  return intlMiddleware(request);
+  if (negotiatesLanguage(request.nextUrl.pathname)) {
+    const response = intlRoot(request);
+    for (const [name, value] of Object.entries(negotiatedResponseHeaders(response.status))) {
+      response.headers.set(name, value);
+    }
+    return response;
+  }
+
+  return intlDeep(request);
 }
 
 /**
