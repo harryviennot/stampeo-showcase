@@ -5,8 +5,6 @@
  * page in one permanent hop, and junk must stay 404.
  */
 
-// Next's config matcher needs the AsyncLocalStorage global the server installs.
-import "next/dist/server/node-environment-baseline";
 import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
