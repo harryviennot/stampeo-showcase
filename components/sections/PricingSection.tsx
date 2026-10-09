@@ -25,15 +25,16 @@ const TIERS = [
 /**
  * Landing-page pricing block. Client-side because of the cadence switcher —
  * the card itself was already a client component, so the boundary only moves
- * up by one level. The ladder and trial length come from the region provider
- * (STA-330): the visitor's detected region decides them, not the page.
+ * up by one level. The ladder and trial length come from the region provider:
+ * the page market's on the server, the visitor's detected region after
+ * hydration.
  */
 export function PricingSection({
   market = "int",
 }: Readonly<{ market?: Market }>) {
   const t = useTranslations("pricing");
   const locale = useLocale();
-  const { pricing, trialDays, ready } = usePricingRegion();
+  const { pricing, trialDays } = usePricingRegion();
   const foundingOpen = isFoundingProgramOpen();
   // Yearly is the default here too, so the price on the homepage matches the
   // one on /pricing.
@@ -73,7 +74,6 @@ export function PricingSection({
                 key={id}
                 // Cheap-to-expensive at every width: the stacked mobile order
                 // matches the desktop one.
-                loading={!ready}
                 currency={pricing.currency}
                 name={t(`${id}.name`)}
                 tagline={t(`${id}.tagline`)}
