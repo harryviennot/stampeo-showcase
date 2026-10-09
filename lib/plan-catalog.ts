@@ -12,7 +12,8 @@
  * region; the market's own currency remains what JSON-LD asserts per URL.
  */
 
-import { FALLBACK_PRICING, type Pricing, type TierId } from "./pricing";
+import { MARKETS, type Market } from "./markets";
+import { FALLBACK_PRICING, pricingMessageArgs, type Pricing, type TierId } from "./pricing";
 
 const INTERVALS = ["month", "year"] as const;
 const TIERS: TierId[] = ["starter", "growth", "pro"];
@@ -80,4 +81,17 @@ export async function getPlanCatalog(currency: string): Promise<Pricing> {
   } catch {
     return fallback;
   }
+}
+
+/**
+ * `{starterPrice}` and `{trialDays}` for a page title or description, from the
+ * ladder of the market the URL belongs to (never the visitor's region).
+ */
+export async function marketPriceArgs(
+  market: Market,
+  locale: string,
+): Promise<{ starterPrice: string; trialDays: number }> {
+  const { currency, trialDays } = MARKETS[market];
+  const pricing = await getPlanCatalog(currency.code.toLowerCase());
+  return pricingMessageArgs(pricing, locale, trialDays);
 }

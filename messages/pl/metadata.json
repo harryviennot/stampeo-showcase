@@ -6,8 +6,8 @@
       "keywords": "program lojalnościowy, pieczątki czy punkty, cyfrowa karta lojalnościowa, karta na pieczątki, program punktowy, karta lojalnościowa Apple Wallet, karta lojalnościowa bez aplikacji"
     },
     "home": {
-      "title": "Stampeo - karty lojalnościowe, które klienci zatrzymują",
-      "description": "Cyfrowe karty lojalnościowe do Apple Wallet i Google Wallet. Bez aplikacji do pobrania, bez plastiku do zgubienia. Twoja karta gotowa w kilka minut.",
+      "title": "Cyfrowa karta lojalnościowa Apple i Google Wallet | Stampeo",
+      "description": "Klienci dodają twoją kartę do Apple Wallet lub Google Wallet jednym skanem. Bez aplikacji do pobrania i bez plastiku do zgubienia. Gotowa w kilka minut.",
       "keywords": "karty lojalnościowe, cyfrowa karta lojalnościowa, Apple Wallet, Google Wallet, nagrody dla klientów, karta na pieczątki, program lojalnościowy dla kawiarni"
     },
     "onboarding": {
@@ -20,28 +20,28 @@
     },
     "features": {
       "design-de-carte": {
-        "title": "Karta lojalnościowa w twoich kolorach i z twoim logo",
+        "title": "Karta lojalnościowa w twoich kolorach, z logo",
         "description": "Twoje logo, twoje kolory, własne ikony pieczątek (tło usuwamy sami) albo 98 gotowych. Złóż kartę w kilka minut albo przyślij logo, zrobimy ją w 24-48 h."
       },
       "scanner-mobile": {
-        "title": "Skaner w telefonie: pieczątka w 0,8 s, bez internetu też",
-        "description": "Osobna aplikacja z wibracją potwierdzenia (0,8 s) albo skaner w przeglądarce. Tryb bez internetu na targi, piwnice i festiwale, sam się zsynchronizuje."
+        "title": "Skaner w telefonie: pieczątka w 0,8 s",
+        "description": "Osobna aplikacja z wibracją potwierdzenia (0,8 s) albo skaner w przeglądarce. Bez sprzętu do kupienia i bez zmian przy kasie."
       },
       "notifications-push": {
-        "title": "Powiadomienie na ekranie klienta po każdej pieczątce",
+        "title": "Powiadomienie na ekranie po każdej pieczątce",
         "description": "Pieczątka, nagroda, kolejny próg: każde zdarzenie wysyła powiadomienie na kartę klienta. Automatycznie, bez dodatkowej aplikacji i bez kosztów SMS."
       },
       "analytiques": {
-        "title": "Dane o lojalności: kto wraca, a kto przestaje wracać",
+        "title": "Dane o lojalności: kto wraca, a kto nie",
         "description": "Panel na żywo: skany z dziś, aktywni klienci, odebrane nagrody. Plan Growth dodaje trendy i godziny szczytu, plan Pro powroty w 30 dni i ostrzeżenia o odpływie."
       },
       "geolocalisation": {
-        "title": "Karta na ekranie telefonu, gdy klient przechodzi obok",
-        "description": "Gdy klient jest blisko twojego lokalu, jego karta pojawia się na ekranie blokady. Bez aplikacji, bez Bluetootha. Nie zbierasz danych o lokalizacji."
+        "title": "Karta na ekranie, gdy klient przechodzi obok",
+        "description": "Gdy klient jest blisko twojego lokalu, jego karta pojawia się na ekranie blokady. Bez aplikacji, bez Bluetootha, bez danych o lokalizacji. Wkrótce w planie Pro."
       },
       "campagnes-promotionnelles": {
         "title": "Rozsyłki promocyjne w portfelu: tańsze niż SMS-y",
-        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet. Bez kosztu za wiadomość, około 85% otwarć, segmentacja i planowanie na Pro. {growthBroadcasts} w miesiącu na Growth."
+        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet, bez opłat za wiadomość. Na Growth {growthBroadcasts} w miesiącu, na Pro bez limitu i z planowaniem."
       },
       "programme-fondateur": {
         "title": "Oferta na start",
@@ -49,9 +49,9 @@
       }
     },
     "acquisition": {
-      "notFound": "Nie znaleziono firmy | Stampeo",
+      "notFound": "Nie znaleziono firmy",
       "notFoundDesc": "Nie udało się znaleźć tej firmy.",
-      "title": "Odbierz kartę lojalnościową {businessName} | Stampeo",
+      "title": "Odbierz kartę lojalnościową {businessName}",
       "cardTitle": "Karta lojalnościowa {businessName}",
       "defaultDesc": "Dołącz do programu lojalnościowego {businessName} i zbieraj nagrody przy każdej wizycie."
     }

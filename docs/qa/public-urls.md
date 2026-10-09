@@ -70,7 +70,7 @@ to `/{locale}/{slug}`; without that rewrite the page 404s. Dev fixtures used:
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Pick an active dev shop whose slug does not start with go/api/auth/join/internal/qr. 2. `curl -s -o /dev/null -w "%{http_code}\n" -H "Accept-Language: fr-FR" https://showcase.dev.stampeo.app/<slug>` 3. Open the same URL in a private window. |
-| EXPECT | 200. The page title names the shop ("Obtenez votre carte de fidélité <Shop>"). You do NOT see the site's 404 page or the marketing homepage. |
+| EXPECT | 200. The page title is exactly "Obtenez votre carte de fidélité <Shop> \| Stampeo", with "Stampeo" once. You do NOT see the site's 404 page or the marketing homepage. |
 | RESET | R1 |
 
 ### SU-02: A shop whose slug starts like a route handler still opens [BLOCKER]

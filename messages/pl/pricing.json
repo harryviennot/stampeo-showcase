@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Cennik: porównaj plany | Stampeo",
-      "description": "Porównaj plany i funkcje Stampeo. Od jednoosobowej firmy po sieć lokali, znajdziesz plan dopasowany do swojego programu lojalnościowego."
+      "title": "Cennik karty lojalnościowej: od {starterPrice}/mies.",
+      "description": "Porównaj plany Starter, Growth i Pro. Pieczątki lub punkty w każdym planie, bez opłat za klienta i {trialDays} dni za darmo na test z klientami."
     },
     "hero": {
       "title": "Wybierz plan dopasowany do swojej firmy",

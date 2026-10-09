@@ -237,6 +237,20 @@ export function formatPrice(price: number, locale?: string): string {
 }
 
 /**
+ * ICU arguments for a page title or description that quotes the entry price
+ * and the trial, e.g. "from {starterPrice}/month". Formatted server-side from
+ * the market's ladder, so the catalog never carries a currency glyph.
+ */
+export function pricingMessageArgs(
+  pricing: Pricing, locale: string, trialDays: number,
+): { starterPrice: string; trialDays: number } {
+  return {
+    starterPrice: formatMoney(pricing.tiers.starter.month, pricing.currency, locale),
+    trialDays,
+  };
+}
+
+/**
  * Replace pricing placeholders in raw translation strings.
  *
  * For strings from `t.raw()` that contain {starterPrice}, {growthPrice}, etc.

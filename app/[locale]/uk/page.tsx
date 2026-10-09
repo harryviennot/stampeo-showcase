@@ -23,7 +23,9 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const t = await getTranslations({ locale: "en", namespace: "metadata.home" });
   return {
-    title: t("title"),
+    // The homepage title already names the brand, so it skips the layout's
+    // "%s | Stampeo" template.
+    title: { absolute: t("title") },
     description: t("description"),
     // One flag, shared with PILOT_HREFLANG and with this market's other pages:
     // a page Google may index is a page the homepage advertises. See
