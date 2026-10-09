@@ -3,13 +3,14 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
 import { StampeoLogo } from "@/components/logo";
+import { NOINDEX } from "@/lib/page-robots";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("metadata.onboarding");
   return {
     title: t("title"),
     description: t("description"),
-    robots: { index: false, follow: false },
+    robots: NOINDEX,
   };
 }
 

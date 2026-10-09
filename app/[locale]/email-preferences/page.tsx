@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { setRequestLocale } from "next-intl/server";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { EmailPreferencesClient } from "@/components/email-preferences/EmailPreferencesClient";
+import { NOINDEX } from "@/lib/page-robots";
+
+export function generateMetadata(): Metadata {
+  return { robots: NOINDEX };
+}
 
 export default async function EmailPreferencesPage({
   params,

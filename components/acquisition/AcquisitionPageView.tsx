@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import { getBusinessBySlug, getActiveCardDesign } from "@/lib/acquisition";
+import { acquisitionMetadata, acquisitionNotFoundMetadata } from "@/lib/acquisition-metadata";
 import { AcquisitionFlow } from "@/components/acquisition/AcquisitionFlow";
 
 /**
@@ -13,31 +14,30 @@ import { AcquisitionFlow } from "@/components/acquisition/AcquisitionFlow";
  * threaded down to tag where the customer signed up.
  */
 
-/** Metadata is driven by the business, so it's identical across both routes. */
-export async function buildAcquisitionMetadata(slug: string): Promise<Metadata> {
+/** Copy is driven by the business; the canonical names the route's own URL. */
+export async function buildAcquisitionMetadata(
+  slug: string,
+  locationSlug?: string | null,
+): Promise<Metadata> {
   const t = await getTranslations("metadata.acquisition");
   const { data: business } = await getBusinessBySlug(slug);
 
   if (!business) {
-    return {
+    return acquisitionNotFoundMetadata({
       title: t("notFound"),
       description: t("notFoundDesc"),
-    };
+    });
   }
 
-  const description =
-    business.settings?.description ||
-    t("defaultDesc", { businessName: business.name });
-
-  return {
+  return acquisitionMetadata({
+    slug,
+    locationSlug,
     title: t("title", { businessName: business.name }),
-    description,
-    openGraph: {
-      title: t("cardTitle", { businessName: business.name }),
-      description,
-      type: "website",
-    },
-  };
+    description:
+      business.settings?.description ||
+      t("defaultDesc", { businessName: business.name }),
+    cardTitle: t("cardTitle", { businessName: business.name }),
+  });
 }
 
 interface AcquisitionPageViewProps {
