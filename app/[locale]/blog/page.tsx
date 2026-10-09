@@ -7,6 +7,7 @@ import { FeaturedHeroCard } from "@/components/blog/FeaturedHeroCard";
 import { JsonLd } from "@/components/JsonLd";
 import { collectionPageJsonLd } from "@/lib/structured-data";
 import { getAllPosts } from "@/lib/blog";
+import { feedPath } from "@/lib/blog/feed";
 import { BLOG_LOCALES, hasBlog } from "@/lib/blog/locales";
 import { localeAlternates, localePath } from "@/lib/hreflang";
 
@@ -24,6 +25,7 @@ export async function generateMetadata({
     alternates: {
       canonical: localePath(locale, "/blog"),
       languages: localeAlternates("/blog", { locales: BLOG_LOCALES }),
+      types: { "application/rss+xml": feedPath(locale) },
     },
   };
 }
