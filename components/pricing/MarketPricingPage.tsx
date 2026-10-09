@@ -20,10 +20,10 @@ import { RegionPricingProvider } from "@/components/market/RegionPricingProvider
  * US visitor euros. Adding a market now means adding a route that passes its
  * name here, not copying a page.
  *
- * Since STA-330 the market no longer fixes what a visitor sees either: both
- * ladders are fetched at render time (the page stays fully cacheable) and the
- * RegionPricingProvider resolves the browser's detected region after hydration.
- * The market currency remains the default for an undetectable visitor.
+ * Both ladders are fetched at render time (the page stays fully cacheable). The
+ * server HTML carries this market's prices and trial length; after hydration
+ * RegionPricingProvider swaps to the browser's detected region. An undetectable
+ * visitor keeps the market's terms.
  */
 export async function MarketPricingPage({
   locale,
