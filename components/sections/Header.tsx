@@ -4,10 +4,9 @@ import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "
 import NextLink from "next/link";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { buildSeoLinks } from "@/lib/seo-links";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { ChevronDownIcon } from "../icons";
-import { useAuth } from "@/lib/supabase/auth-provider";
+import { signOut, useHasSession } from "@/lib/auth/use-has-session";
 import { StampeoLogo } from "../logo";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { TrackedLink } from "../ui/TrackedLink";
@@ -15,29 +14,22 @@ import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { hasBlog } from "@/lib/blog/locales";
 import { AnimatePresence, motion } from "framer-motion";
-import type { User } from "@supabase/supabase-js";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
 import { marketPath, type Market } from "@/lib/markets";
 
 function DesktopAuthButtons({
-  loading,
-  user,
+  signedIn,
   appUrl,
   onSignOut,
 }: Readonly<{
-  loading: boolean;
-  user: User | null;
+  signedIn: boolean;
   appUrl: string;
   onSignOut: () => void;
 }>) {
   const t = useTranslations();
 
-  if (loading) {
-    return <div className="w-20 h-9 bg-[var(--muted)] animate-pulse rounded-full" />;
-  }
-
-  if (user) {
+  if (signedIn) {
     return (
       <>
         <button
@@ -239,7 +231,7 @@ function MobileFeaturesAccordion({
 export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { user, loading, signOut } = useAuth();
+  const signedIn = useHasSession();
   const t = useTranslations();
   const locale = useLocale();
   const pathname = usePathname();
@@ -353,17 +345,8 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 
-  const seoLinks = buildSeoLinks(locale, market);
-
   return (
     <>
-      {/* Plain <a> duplicate of the nav — guarantees link signal in raw HTML
-          regardless of hover state, viewport, or client hydration timing */}
-      <nav className="sr-only" aria-hidden="true">
-        {seoLinks.map((l) => (
-          <a key={l.href} href={l.href} tabIndex={-1}>{l.label}</a>
-        ))}
-      </nav>
       <header className="fixed top-0 left-0 right-0 z-50">
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
         <div
@@ -417,8 +400,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
             {/* Desktop auth */}
             <div className="hidden lg:flex items-center gap-3 shrink-0">
               <DesktopAuthButtons
-                loading={loading}
-                user={user}
+                signedIn={signedIn}
                 appUrl={appUrl}
                 onSignOut={handleSignOut}
               />
@@ -488,7 +470,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                       <LanguageSwitcher />
                     </div>
                     <div className="flex flex-col gap-2">
-                      {user ? (
+                      {signedIn ? (
                         <>
                           <button
                             onClick={handleSignOut}

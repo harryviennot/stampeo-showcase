@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PkceCallbackHandler } from "@/components/auth/PkceCallbackHandler";
 import { VariantLanding } from "@/components/landing-variant/VariantLanding";
 import { localePath } from "@/lib/hreflang";
 import { PILOT_HREFLANG } from "@/lib/markets";
@@ -48,5 +49,10 @@ export default async function Home({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <VariantLanding locale={locale} />;
+  return (
+    <>
+      <PkceCallbackHandler />
+      <VariantLanding locale={locale} />
+    </>
+  );
 }
