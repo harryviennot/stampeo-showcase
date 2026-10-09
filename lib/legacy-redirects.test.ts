@@ -150,6 +150,49 @@ describe("legacy URLs from Search Console and git history", () => {
   });
 });
 
+/** Rules that are not themselves a doubled-prefix copy (`/en/en/...`). */
+const DOUBLED = new RegExp(`^/(${SITE_LOCALES.join("|")})/\\1(/|$)`);
+
+/** `/en/us` -> `/en/en/us`; an unprefixed path doubles the default locale: `/signup` -> `/fr/fr/signup`. */
+function withDoubledPrefix(path: string): string | null {
+  const head = path.split("/")[1];
+  if (head === DEFAULT_LOCALE || DOUBLED.test(path)) return null;
+  const locale = (SITE_LOCALES as readonly string[]).includes(head) ? head : DEFAULT_LOCALE;
+  return locale === DEFAULT_LOCALE ? `/${locale}/${locale}${path}` : `/${locale}${path}`;
+}
+
+const DOUBLED_VARIANTS = PROBES.flatMap((probe) => {
+  const doubled = withDoubledPrefix(probe);
+  return doubled ? [[probe, doubled] as const] : [];
+});
+
+describe("a doubled locale prefix", () => {
+  test("every rule family has doubled variants to probe", () => {
+    // Explicit, blog in both directions, the founding routes and the pilot copies.
+    const samples = [
+      "/signup",
+      "/en/signup",
+      "/blog/apple-wallet-loyalty-card",
+      "/en/blog/carte-fidelite-cafe",
+      "/en/founding-partner",
+      "/es/us/pricing",
+    ];
+    const probes = DOUBLED_VARIANTS.map(([probe]) => probe);
+    for (const sample of samples) expect(probes).toContain(sample);
+  });
+
+  test.each(DOUBLED_VARIANTS)(
+    "%s doubled as %s reaches the same page in one permanent hop",
+    async (probe, doubled) => {
+      const hop = await redirectOf(doubled);
+
+      expect(hop?.status).toBe(308);
+      expect(hop?.to).toBe((await redirectOf(probe))?.to);
+      expect(await redirectOf(hop?.to ?? "")).toBeNull();
+    },
+  );
+});
+
 describe("blog posts asked for in the wrong language", () => {
   test("an English or Spanish post asked for without its prefix gets it", async () => {
     for (const locale of ["en", "es"]) {
