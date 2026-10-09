@@ -18,6 +18,7 @@ import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 import { MarketSuggestion } from "@/components/market/MarketSuggestion";
 import { RegionText } from "@/components/market/RegionText";
+import { PriceText } from "@/components/market/PriceText";
 import { usePricingRegion } from "@/hooks/use-pricing-region";
 import type { Market } from "@/lib/markets";
 
@@ -101,12 +102,8 @@ function FeatureComparisonTable() {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
   const { pricing } = usePricingRegion();
-  // Its own span so the amount alone skips React's hydration text check: Node
-  // and the browser can format it differently.
   const monthlyPrice = (tier: Tier) => (
-    <span suppressHydrationWarning>
-      {formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)}
-    </span>
+    <PriceText>{formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)}</PriceText>
   );
   const [mobileTier, setMobileTier] = useState<Tier>("growth");
   const [dropdownOpen, setDropdownOpen] = useState(false);

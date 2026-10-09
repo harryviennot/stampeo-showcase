@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
-import NextLink from "next/link";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
@@ -17,6 +16,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
 import { marketPath, type Market } from "@/lib/markets";
+import { MarketLink } from "../market/MarketLink";
 
 function DesktopAuthButtons({
   signedIn,
@@ -301,15 +301,9 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
   // A market is a set of routes, not one landing page. /us quotes dollars, so a
   // bare "/pricing" here walks a US visitor straight onto the euro ladder — a
   // price checkout will not honour.
-  // A market path (/us/pricing) is complete as written, so it renders through
-  // next/link: next-intl's Link would prefix it to /en/us/pricing.
-  const navItems = [
-    { label: t("common.nav.loyalty"), href: loyaltySlug, LinkAs: Link },
-    {
-      label: t("common.nav.pricing"),
-      href: marketPath(market, "/pricing"),
-      LinkAs: market === "int" ? Link : NextLink,
-    },
+  const navItems: Array<{ label: string; href: string; market: Market }> = [
+    { label: t("common.nav.loyalty"), href: loyaltySlug, market: "int" },
+    { label: t("common.nav.pricing"), href: marketPath(market, "/pricing"), market },
   ];
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
@@ -379,8 +373,9 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                 active={pathname.startsWith("/features/")}
               />
               {navItems.map((item) => (
-                <item.LinkAs
+                <MarketLink
                   key={item.href}
+                  market={item.market}
                   href={item.href}
                   className={`py-2 text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
                     ? "text-[var(--accent)]"
@@ -388,7 +383,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                     }`}
                 >
                   {item.label}
-                </item.LinkAs>
+                </MarketLink>
               ))}
               <NavDropdown
                 label={t("common.nav.resources")}
@@ -439,8 +434,9 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                   <div className="flex flex-col gap-1">
                     <MobileFeaturesAccordion onNavigate={closeMobileMenu} />
                     {navItems.map((item) => (
-                      <item.LinkAs
+                      <MarketLink
                         key={item.href}
+                        market={item.market}
                         href={item.href}
                         className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
                           ? "text-[var(--accent)] bg-[var(--accent)]/5"
@@ -449,7 +445,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                         onClick={closeMobileMenu}
                       >
                         {item.label}
-                      </item.LinkAs>
+                      </MarketLink>
                     ))}
                     {/* Resources are a dropdown on desktop; on a phone they
                         read better as plain rows than as a second accordion. */}
