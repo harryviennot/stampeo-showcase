@@ -246,6 +246,30 @@ Probably none: marketing site only, with no dashboard behaviour change. A one-li
    Capterra and Trustpilot numbers must never be copied into the markup: Google's guidelines say "Don't aggregate reviews or ratings from other websites", which is what Passtastic does.
 10. **A comment on STA-379** (not a ticket): check Cloudflare's "Block AI bots" and managed robots.txt settings, and make `/` bypass the HTML cache because it varies by Accept-Language.
 
+
+## Scope additions during implementation (2026-10-09/10, coordinator; flagged to Harry)
+
+Each addition came out of AC11/AC13 work, where the copy turned out to contradict the product. They are recorded here so the plan matches the diff (gap-report drift).
+
+**False claims removed:**
+
+| Addition | Why | Pinned by |
+|---|---|---|
+| **Scheduled card designs are "coming soon"** (`PLAN_FACTS.pro.scheduledDesigns = "coming_soon"`), not "yes" as in Reference B | The backend gate is on, but the dashboard has no UI and lists `designs.scheduled` in `HIDDEN_FEATURES`. A gate is not a shipped feature, the same reasoning as geofencing. Reference B is corrected below. | `lib/product-claims.test.ts`, `lib/plan-facts.test.ts` |
+| **Offline scanning withdrawn everywhere** (scanner page section, `OfflineToggleDemo`, posts, llms.txt) | The scanner app has no offline queue, and the pricing table already said "soon" | `lib/product-claims.test.ts` (offlineScan) |
+| **"No card required" claims replaced** with "we ask for a card to start the free trial; nothing is charged before it ends" | New signups are card-required (`requires_card_upfront`) | `lib/product-claims.test.ts` (noCard) |
+| **Unsourced broadcast figures removed** from the broadcasts page and the landing page: ~85% open rate, €0.04–0.10 per SMS, +78% uplift, "read 5–10× more than email". The stat band now uses sourced `lib/benchmark.ts` figures. | No source | The product-claims guard |
+
+**Related changes:**
+- **llms.txt PRODUCT section reshaped:** the plan bullets now come from plan-facts. The hand-written "Team & multi-location" block, which had wrong template counts, was folded into the plan lines.
+- **The proxy serves `/fr/**/opengraph-image` and `twitter-image` as is.** Next writes those URLs into og:image on French pages, and the as-needed prefix redirect cost every unfurler a hop. Pinned by `lib/routing/share-image-paths.test.ts`.
+- **`/llms.txt` uses `revalidate = 300`,** the same as the plan catalog it reads, instead of a 1-day Cache-Control.
+- **Blog posts render `title: { absolute }` when the title plus " | Stampeo" exceeds 60 characters,** and rendered titles are ≤ 70. AC20's 60-character rule applies to catalog (page) titles. Post titles are article headlines, and Google truncates them on its own.
+
+**Reference B correction:** scheduled card designs on Pro = "coming soon" (gate on, no UI).
+
+**Known deviation (AC2):** on the French 200 at `/`, Next 16 overwrites the proxy's `Vary` (`app-page-runtime.js` sets its own). The 307 carries `Vary` and `no-store` as specified. No CDN sits in front today. The STA-379 Cloudflare cutover must bypass the HTML cache for `/` (comment posted on STA-379). Runbook case SX-04 is marked known-failing.
+
 ---
 
 ## Reference A: the legacy redirect table (supplied by Harry, 2026-09-24)
