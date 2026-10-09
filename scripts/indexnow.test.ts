@@ -101,7 +101,7 @@ describe("buildIndexNowPayload", () => {
   test("keyLocation matches the actual key file in public/", () => {
     const publicDir = join(import.meta.dir, "..", "public");
     const files = readdirSync(publicDir);
-    const keyFile = files.find((f) => f.endsWith(".txt"));
+    const keyFile = files.find((f) => /^[0-9a-f]{32}\.txt$/.test(f));
 
     expect(keyFile).toBeDefined();
 
