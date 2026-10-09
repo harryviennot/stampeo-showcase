@@ -1,13 +1,13 @@
 {
   "metadata": {
     "loyaltyPrograms": {
-      "title": "Tampons ou points : quel programme de fidélité pour votre commerce",
-      "description": "Comparez la carte à tampons et le programme à points pour Apple Wallet et Google Wallet. Trouvez en une minute le programme de fidélité fait pour votre commerce, café, restaurant ou salon.",
+      "title": "Tampons ou points : quel programme de fidélité ?",
+      "description": "Carte à tampons ou programme à points pour Apple Wallet et Google Wallet ? Trouvez en une minute le programme fait pour votre café, restaurant ou salon.",
       "keywords": "programme de fidélité, tampons ou points, carte de fidélité digitale, carte de fidélité Apple Wallet, points de fidélité, carte à tampons, carte de fidélité sans application"
     },
     "home": {
-      "title": "Stampeo - Des cartes de fidélité que vos clients gardent vraiment",
-      "description": "Cartes de fidélité digitales pour Apple Wallet et Google Wallet. Aucune appli à télécharger, aucune carte à perdre. Créez votre carte en minutes.",
+      "title": "Carte de fidélité digitale Apple & Google Wallet | Stampeo",
+      "description": "Votre carte de fidélité dans Apple Wallet et Google Wallet, ajoutée en un scan. Aucune appli à télécharger, aucune carte à perdre. Prête en quelques minutes.",
       "keywords": "cartes de fidélité, fidélité digitale, Apple Wallet, Google Wallet, récompenses clients, cartes à tampons"
     },
     "onboarding": {
@@ -20,28 +20,28 @@
     },
     "features": {
       "design-de-carte": {
-        "title": "Votre carte de fidélité, à votre image jusqu'aux icônes",
-        "description": "Votre logo, vos couleurs, vos propres icônes de tampon détourées automatiquement, ou 98 icônes prêtes à l'emploi. Composez votre carte en quelques minutes, ou envoyez votre logo et on la crée en 24-48h."
+        "title": "Carte de fidélité à votre image, jusqu'aux icônes",
+        "description": "Votre logo, vos couleurs, vos propres icônes de tampon détourées pour vous, ou 98 icônes prêtes. Composez-la en quelques minutes, ou on la crée en 24-48h."
       },
       "scanner-mobile": {
-        "title": "Scanner mobile — tamponnez en 0,8 seconde, même sans connexion",
-        "description": "Appli dédiée (retour haptique, 0,8 s) ou scanner web sans installation. Mode hors ligne pour les marchés, festivals et caves — synchro auto au retour du réseau."
+        "title": "Scanner mobile : un tampon en 0,8 seconde",
+        "description": "Tamponnez la carte de vos clients depuis l'appli Stampeo, avec confirmation par vibration en 0,8 s, ou depuis un navigateur. Aucun matériel à acheter."
       },
       "notifications-push": {
-        "title": "Un tampon posé, une notification dans leur wallet — automatique",
-        "description": "Tampon, récompense, palier : chaque événement envoie une notification dans le wallet de votre client. Automatique, sans app supplémentaire, sans SMS."
+        "title": "Une notification sur leur écran à chaque tampon",
+        "description": "Tampon, récompense, palier : chaque étape envoie une notification sur la carte de votre client. Automatique, sans appli à installer, sans SMS."
       },
       "analytiques": {
-        "title": "Analytiques fidélité — savoir qui revient et qui décroche",
-        "description": "Tableau de bord en temps réel : clients, scans, récompenses distribuées. Plan Growth : tendances hebdo et heatmap des heures de pointe. Plan Pro : rétention 30 jours et alertes clients à risque."
+        "title": "Statistiques fidélité : qui revient, qui décroche",
+        "description": "Tableau de bord en direct : clients, passages, récompenses. Growth ajoute tendances et heures de pointe, Pro la rétention à 30 jours et les clients à risque."
       },
       "geolocalisation": {
-        "title": "Votre carte s'affiche sur leur téléphone quand ils passent",
-        "description": "Quand un client passe à proximité, sa carte apparaît sur son écran de verrouillage. Sans app, sans Bluetooth. Zéro donnée de localisation collectée."
+        "title": "Votre carte s'affiche quand ils passent devant",
+        "description": "Quand un client passe à proximité, sa carte apparaît sur son écran de verrouillage. Sans appli, sans Bluetooth, sans collecte de localisation. Bientôt sur Pro."
       },
       "campagnes-promotionnelles": {
-        "title": "Campagnes promotionnelles wallet — Alternative aux SMS",
-        "description": "Envoyez des notifications promo dans Apple Wallet et Google Wallet. ~85 % de taux d'ouverture, pas de coût par message, segmentation et programmation sur Pro. {growthBroadcasts} offertes/mois sur Growth, illimitées sur Pro."
+        "title": "Campagnes promotionnelles : l'alternative aux SMS",
+        "description": "Envoyez vos promotions dans Apple Wallet et Google Wallet, sans coût par message. {growthBroadcasts} diffusions par mois sur Growth, illimitées et programmables sur Pro."
       },
       "programme-fondateur": {
         "title": "Offre de lancement",
@@ -49,9 +49,9 @@
       }
     },
     "acquisition": {
-      "notFound": "Commerce introuvable | Stampeo",
+      "notFound": "Commerce introuvable",
       "notFoundDesc": "Ce commerce n'a pas été trouvé.",
-      "title": "Obtenez votre carte de fidélité {businessName} | Stampeo",
+      "title": "Obtenez votre carte de fidélité {businessName}",
       "cardTitle": "Carte de fidélité {businessName}",
       "defaultDesc": "Rejoignez le programme de fidélité de {businessName} et gagnez des récompenses à chaque visite."
     }

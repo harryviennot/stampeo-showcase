@@ -1,6 +1,7 @@
 {
   "about": {
-    "title": "À propos de Stampeo",
+    "title": "À propos",
+    "metaDescription": "Les cartes papier se perdent, les applis de fidélité ne sont jamais téléchargées. On a donc créé une carte de fidélité qui vit dans le téléphone de vos clients.",
     "hero": {
       "badge": "Notre Histoire",
       "headline": "Chaque commerce de proximité mérite des clients fidèles.",

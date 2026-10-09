@@ -394,7 +394,7 @@
       "items": [
         {
           "title": "A card that never gets lost",
-          "description": "No more paper punch cards, no more stamps to stick on. The card lives in Apple Wallet or Google Wallet, where your customers find it on every visit."
+          "description": "No more paper cards to lose, no more stamps to stick on. The card lives in Apple Wallet or Google Wallet, where your customers find it on every visit."
         },
         {
           "title": "Customers you actually know",
@@ -480,6 +480,7 @@
         "reassurance": "{trialDays} days free · Cancel anytime"
       },
       "differentiator": {
+        "title": "Why businesses choose our digital punch card.",
         "subtitle": "Four things you won't have to deal with.",
         "items": [
           {
@@ -537,8 +538,20 @@
           {
             "question": "Can I change my card later?",
             "answer": "Yes. Change the logo, colors, number of stamps and rewards anytime from your dashboard. Cards already in your customers' wallets update automatically, with nothing to re-download."
+          },
+          {
+            "question": "Is this a digital punch card?",
+            "answer": "Yes. It works like a paper punch card: your customers collect a stamp on each visit and get their reward when the card is full. It just lives in Apple Wallet or Google Wallet, so there's no app to download and no card to lose."
           }
         ]
+      },
+      "meta": {
+        "title": "Digital Punch Cards for Apple & Google Wallet",
+        "description": "Digital punch cards your customers keep in Apple Wallet and Google Wallet. No app to download. From {starterPrice}/mo, {trialDays}-day free trial."
+      },
+      "pricingMeta": {
+        "title": "Digital Punch Card Pricing from {starterPrice}/mo",
+        "description": "Simple pricing for digital punch cards in Apple Wallet and Google Wallet. Plans from {starterPrice}/mo, no setup fee, no contract, {trialDays}-day free trial."
       }
     }
   }

@@ -108,26 +108,11 @@ const LEGACY_EM_DASH: ReadonlySet<string> = new Set([
   'en/landing.json::landing.hero.badge',
   'en/landing.json::landing.hero.stamp.mobileAddWallet',
   'en/landing.json::landing.featureGrid.features[1].description',
-  'fr/metadata.json::metadata.features.scanner-mobile.title',
-  'fr/metadata.json::metadata.features.scanner-mobile.description',
-  'fr/metadata.json::metadata.features.notifications-push.title',
-  'fr/metadata.json::metadata.features.analytiques.title',
-  'fr/metadata.json::metadata.features.campagnes-promotionnelles.title',
-  'en/metadata.json::metadata.features.scanner-mobile.title',
-  'en/metadata.json::metadata.features.scanner-mobile.description',
-  'en/metadata.json::metadata.features.notifications-push.title',
-  'en/metadata.json::metadata.features.analytiques.title',
-  'en/metadata.json::metadata.features.geolocalisation.title',
-  'en/metadata.json::metadata.features.campagnes-promotionnelles.title',
   'fr/pricing.json::pricing.deadlineNotice',
   'fr/pricing.json::pricing.countdown.daysHours',
   'fr/pricing.json::pricing.countdown.hoursMinutes',
-  'fr/pricing.json::pricingPage.meta.title',
-  'fr/pricing.json::pricingPage.meta.description',
   'fr/pricing.json::pricingPage.faq.items[5].answer',
   'en/pricing.json::pricing.deadlineNotice',
-  'en/pricing.json::pricingPage.meta.title',
-  'en/pricing.json::pricingPage.meta.description',
   'en/pricing.json::pricingPage.faq.items[5].answer',
 ]);
 
@@ -453,6 +438,14 @@ describe('market-scoped copy', () => {
     // in the US the trial is the strongest thing we can say there. Gated by
     // `copy.has("hero.reassurance")` in VariantHero.
     'landing.json::variant.us.hero.reassurance',
+    // The /us and /us/pricing title and description. The international pages
+    // read `metadata.home` and `pricingPage.meta`, which live outside `variant`,
+    // so there is no base key under `variant` to shadow. Read by
+    // app/[locale]/us/page.tsx and us/pricing/page.tsx.
+    'landing.json::variant.us.meta.title',
+    'landing.json::variant.us.meta.description',
+    'landing.json::variant.us.pricingMeta.title',
+    'landing.json::variant.us.pricingMeta.description',
   ]);
 
   /**

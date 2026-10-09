@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Precios: compara los planes | Stampeo",
-      "description": "Compara los planes y funciones de Stampeo. Del autónomo al multiestablecimiento, encuentra el plan adecuado para tu programa de fidelidad."
+      "title": "Precio de la tarjeta de fidelidad: desde {starterPrice}/mes",
+      "description": "Compara Starter, Growth y Pro. Sellos o puntos en todos los planes, sin coste por cliente y {trialDays} días gratis para probarlo con tus clientes."
     },
     "hero": {
       "title": "Elige el plan adecuado para tu comercio",

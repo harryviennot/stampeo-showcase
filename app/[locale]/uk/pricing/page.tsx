@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { MarketPricingPage } from "@/components/pricing/MarketPricingPage";
 import { marketAlternates } from "@/lib/hreflang";
 import { MARKETS, marketRobots, type Market } from "@/lib/markets";
+import { marketPriceArgs } from "@/lib/plan-catalog";
 import { resolvePageOpenGraph } from "@/lib/og/metadata";
 
 /**
@@ -19,17 +20,20 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const t = await getTranslations({ locale: "en", namespace: "pricingPage.meta" });
+  const args = await marketPriceArgs(MARKET, "en");
+  const title = t("title", args);
+  const description = t("description", args);
   const canonical = `${M.path}/pricing`;
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
     robots: marketRobots(MARKET),
     // Its own canonical: this page must not collapse into /pricing, which
     // quotes a different currency. The cluster names both as alternates.
     alternates: { canonical, languages: marketAlternates("/pricing") },
     openGraph: await resolvePageOpenGraph(parent, {
-      title: t("title"),
-      description: t("description"),
+      title,
+      description,
       url: canonical,
       locale: "en",
       ogLocale: M.ogLocale,

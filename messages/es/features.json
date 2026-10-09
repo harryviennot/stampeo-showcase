@@ -624,7 +624,7 @@
       ],
       "cta": {
         "title": "Deja de adivinar. Empieza a saber.",
-        "subtitle": "El panel está incluido en todos los planes. Las estadísticas avanzadas están disponibles en el plan Growth."
+        "subtitle": "El panel está incluido en todos los planes. Growth añade tendencias y horas punta, y Pro, retención, frecuencia y clientes en riesgo."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -663,9 +663,9 @@
           "timeAgo": "hace {seconds}s"
         },
         "proAnalytics": {
-          "badge": "Plan Growth",
+          "badge": "Planes Growth y Pro",
           "title": "Entiende las tendencias, no solo los números",
-          "description": "El plan Growth añade una capa de análisis que te ayuda a tomar decisiones."
+          "description": "Growth añade tendencias y horas punta. Pro añade retención, frecuencia y los clientes que estás a punto de perder."
         },
         "proCharts": {
           "lineChart": {
@@ -856,7 +856,7 @@
       ],
       "cta": {
         "title": "Está presente en el momento justo",
-        "subtitle": "La geolocalización está incluida en el plan Growth. Empieza tu mes gratis para aprovecharla ya."
+        "subtitle": "La geolocalización llega pronto al plan Pro. Empieza tu mes gratis ya y tu tarjeta estará lista cuando se lance."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1070,7 +1070,7 @@
         "items": [
           {
             "question": "¿Cuánto cuestan las difusiones promocionales a la tarjeta?",
-            "answer": "Nada más. Las difusiones están incluidas en el plan Growth (8 al mes) y en el plan Pro (ilimitadas). No hay coste por mensaje, a diferencia del SMS, que cuesta entre 0,04 y 0,10 € por envío en España. Una sola difusión por SMS a 500 clientes puede costar fácilmente entre 30 y 50 €."
+            "answer": "Nada más. Las difusiones están incluidas en el plan Growth (8 al mes) y en el plan Pro (ilimitadas). No hay coste por mensaje, a diferencia del SMS, en el que se paga cada envío."
           },
           {
             "question": "¿Los clientes tienen que instalar una app?",

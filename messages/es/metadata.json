@@ -1,13 +1,13 @@
 {
   "metadata": {
     "loyaltyPrograms": {
-      "title": "Sellos o puntos: qué programa de fidelidad encaja con tu comercio",
-      "description": "Compara la tarjeta de sellos y el programa de puntos para Apple Wallet y Google Wallet. Descubre en un minuto el programa de fidelidad ideal para tu comercio, cafetería, restaurante o peluquería.",
+      "title": "Sellos o puntos: qué programa de fidelidad elegir",
+      "description": "¿Tarjeta de sellos o programa de puntos para Apple Wallet y Google Wallet? Descubre en un minuto el programa ideal para tu cafetería, restaurante o peluquería.",
       "keywords": "programa de fidelización, sellos o puntos, tarjeta de fidelización digital, tarjeta de sellos, tarjeta de puntos, fidelización Apple Wallet, tarjeta de fidelidad sin aplicación"
     },
     "home": {
-      "title": "Stampeo - Tarjetas de fidelidad que tus clientes conservan",
-      "description": "Tarjetas de fidelidad digitales para Apple Wallet y Google Wallet. Sin aplicación que descargar, sin tarjetas que perder. Crea la tuya en minutos.",
+      "title": "Tarjeta de fidelidad digital Apple y Google Wallet | Stampeo",
+      "description": "Tu tarjeta de fidelidad en Apple Wallet o Google Wallet, guardada con un escaneo. Sin aplicación que descargar ni tarjetas que perder. Lista en minutos.",
       "keywords": "tarjetas de fidelidad, fidelización digital, Apple Wallet, Google Wallet, recompensas para clientes, tarjeta de sellos"
     },
     "onboarding": {
@@ -20,28 +20,28 @@
     },
     "features": {
       "design-de-carte": {
-        "title": "Tu tarjeta de fidelidad, a tu imagen hasta los sellos",
-        "description": "Tu logo, tus colores, tus propios iconos de sello recortados de forma automática, o 98 iconos listos para usar. Monta tu tarjeta en unos minutos, o envíanos tu logo y la creamos en 24-48 h."
+        "title": "Tu tarjeta de fidelidad, con tu logo y tus sellos",
+        "description": "Tu logo, tus colores, tus propios iconos de sello (quitamos el fondo) o 98 listos para usar. Móntala en minutos, o envíanos tu logo y la creamos en 24-48 h."
       },
       "scanner-mobile": {
-        "title": "Escáner móvil: sella en 0,8 segundos, incluso sin conexión",
-        "description": "Aplicación propia con confirmación táctil (0,8 s) o escáner web sin instalar nada. Modo sin conexión para mercados, sótanos y ferias: se sincroniza solo al volver."
+        "title": "Escáner móvil: un sello en 0,8 segundos",
+        "description": "Sella la tarjeta de tu cliente desde la aplicación de Stampeo, con confirmación por vibración en 0,8 s, o desde cualquier navegador. Sin aparatos que comprar."
       },
       "notifications-push": {
-        "title": "Un sello puesto, un aviso en su teléfono y de forma automática",
+        "title": "Un aviso en su pantalla con cada sello",
         "description": "Sello, recompensa o meta: cada evento envía un aviso a la tarjeta de tu cliente. Automático, sin otra aplicación y sin coste de SMS."
       },
       "analytiques": {
-        "title": "Datos de fidelidad: descubre quién vuelve y quién se aleja",
-        "description": "Panel en tiempo real: sellos del día, clientes activos y recompensas canjeadas. El plan Growth añade tendencias y horas punta; el plan Pro, retención a 30 días y avisos de riesgo."
+        "title": "Datos de fidelidad: quién vuelve y quién se aleja",
+        "description": "Panel en tiempo real: sellos del día, clientes activos, recompensas. Growth añade tendencias y horas punta; Pro, retención a 30 días y clientes en riesgo."
       },
       "geolocalisation": {
-        "title": "Su tarjeta aparece en su teléfono cuando pasan cerca de ti",
-        "description": "Cuando un cliente pasa cerca de tu comercio, su tarjeta aparece en su pantalla bloqueada. Sin aplicación, sin Bluetooth. Cero datos de ubicación recogidos."
+        "title": "Tu tarjeta en su pantalla cuando pasan cerca",
+        "description": "Cuando un cliente pasa cerca de tu comercio, su tarjeta aparece en su pantalla bloqueada. Sin aplicación, sin Bluetooth, sin datos de ubicación. Pronto en Pro."
       },
       "campagnes-promotionnelles": {
         "title": "Difusiones promocionales: la alternativa a los SMS",
-        "description": "Envía avisos promocionales a Apple Wallet y Google Wallet. Sin coste por mensaje, cerca del 85 % de apertura, segmentación y programación en Pro. {growthBroadcasts} gratis al mes en Growth, sin límite en Pro."
+        "description": "Envía avisos promocionales a Apple Wallet y Google Wallet, sin coste por mensaje. {growthBroadcasts} difusiones al mes en Growth, ilimitadas y programadas en Pro."
       },
       "programme-fondateur": {
         "title": "Oferta de lanzamiento",
@@ -49,9 +49,9 @@
       }
     },
     "acquisition": {
-      "notFound": "Comercio no encontrado | Stampeo",
+      "notFound": "Comercio no encontrado",
       "notFoundDesc": "No se ha encontrado este comercio.",
-      "title": "Consigue tu tarjeta de fidelidad de {businessName} | Stampeo",
+      "title": "Consigue tu tarjeta de fidelidad de {businessName}",
       "cardTitle": "Tarjeta de fidelidad de {businessName}",
       "defaultDesc": "Únete al programa de fidelidad de {businessName} y gana recompensas en cada visita."
     }

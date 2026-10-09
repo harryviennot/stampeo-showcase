@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Tarifs — Comparer les plans | Stampeo",
-      "description": "Comparez les plans et fonctionnalités Stampeo. De l'auto-entrepreneur au multi-établissement — trouvez le plan adapté à votre programme de fidélité."
+      "title": "Prix carte de fidélité digitale : dès {starterPrice}/mois",
+      "description": "Comparez Starter, Growth et Pro. Tampons ou points sur tous les plans, sans frais par client, et {trialDays} jours offerts pour l'essayer avec vos clients."
     },
     "hero": {
       "title": "Choisissez le plan adapté à votre commerce",

@@ -624,7 +624,7 @@
       ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "The dashboard is included in all plans. Advanced analytics are available on the Growth plan."
+        "subtitle": "The dashboard is included in every plan. Growth adds trends and peak hours, and Pro adds retention, frequency and at-risk customers."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -663,9 +663,9 @@
           "timeAgo": "{seconds}s ago"
         },
         "proAnalytics": {
-          "badge": "Growth Plan",
+          "badge": "Growth and Pro",
           "title": "Understand trends, not just numbers",
-          "description": "The Growth plan adds an analytics layer that helps you make decisions."
+          "description": "Growth adds trends and peak hours. Pro adds retention, frequency and the customers you're about to lose."
         },
         "proCharts": {
           "lineChart": {
@@ -856,7 +856,7 @@
       ],
       "cta": {
         "title": "Be present at the right moment",
-        "subtitle": "Geofencing is included in the Growth plan. Start your free trial to try it now."
+        "subtitle": "Geofencing is coming soon to the Pro plan. Start your free trial now, and your card is ready when it launches."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1070,7 +1070,7 @@
         "items": [
           {
             "question": "How much do wallet promotional campaigns cost?",
-            "answer": "Nothing extra. Broadcasts are included in the Growth plan (8 per month) and the Pro plan (unlimited). There is no per-message fee, unlike SMS where each send costs €0.04 to €0.10 in France. A single SMS campaign to 500 customers can easily cost €30 to €50."
+            "answer": "Nothing extra. Broadcasts are included in the Growth plan (8 per month) and the Pro plan (unlimited). There is no per-message fee, unlike SMS, where every message sent is billed."
           },
           {
             "question": "Do customers need to install an app?",

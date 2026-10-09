@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Pricing — Compare Plans | Stampeo",
-      "description": "Compare Stampeo plans and features. From solo operators to multi-location businesses — find the right plan for your loyalty program."
+      "title": "Digital Loyalty Card Pricing from {starterPrice}/month",
+      "description": "Compare Starter, Growth and Pro. Stamps or points on every plan, no per-customer fees, and {trialDays} days free to try it with your customers."
     },
     "hero": {
       "title": "Choose the right plan for your business",

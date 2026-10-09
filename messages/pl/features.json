@@ -849,7 +849,7 @@
       ],
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
-        "subtitle": "Panel jest w każdym planie. Rozbudowane statystyki są w planie Growth."
+        "subtitle": "Panel jest w każdym planie. Growth dodaje trendy i godziny szczytu, a Pro powroty, częstotliwość wizyt i klientów, którzy przestają wracać."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -888,9 +888,9 @@
           "timeAgo": "{seconds}s temu"
         },
         "proAnalytics": {
-          "badge": "Plan Growth",
+          "badge": "Plany Growth i Pro",
           "title": "Zrozum trendy, nie tylko liczby",
-          "description": "Plan Growth dokłada warstwę analizy, która pomaga podejmować decyzje."
+          "description": "Growth dodaje trendy i godziny szczytu. Pro dodaje powroty, częstotliwość wizyt i klientów, którzy przestają wracać."
         },
         "proCharts": {
           "lineChart": {
@@ -1081,7 +1081,7 @@
       ],
       "cta": {
         "title": "Bądź na miejscu w dobrym momencie",
-        "subtitle": "Geolokalizacja jest w planie Growth. Zacznij darmowy miesiąc i sprawdź ją od razu."
+        "subtitle": "Geolokalizacja pojawi się wkrótce w planie Pro. Zacznij darmowy miesiąc już teraz, a karta będzie gotowa na start."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1295,7 +1295,7 @@
         "items": [
           {
             "question": "Ile kosztują rozsyłki promocyjne na kartę?",
-            "answer": "Nic ponad plan. Rozsyłki są w cenie planu Growth (8 w miesiącu) i planu Pro (bez limitu). Nie ma opłaty za wiadomość, inaczej niż przy SMS-ach, gdzie jeden SMS kosztuje we Francji od 0,04 do 0,10 €. Jedna akcja SMS do 500 klientów potrafi kosztować od 30 do 50 €."
+            "answer": "Nic ponad plan. Rozsyłki są w cenie planu Growth (8 w miesiącu) i planu Pro (bez limitu). Nie ma opłaty za wiadomość, inaczej niż przy SMS-ach, gdzie płacisz za każdą wysłaną wiadomość."
           },
           {
             "question": "Czy klienci muszą instalować aplikację?",

@@ -624,7 +624,7 @@
       ],
       "cta": {
         "title": "Arrêtez de deviner. Commencez à savoir.",
-        "subtitle": "Le tableau de bord est inclus dans tous les plans. Les analytiques avancées sont disponibles sur le plan Growth."
+        "subtitle": "Le tableau de bord est inclus dans tous les plans. Growth ajoute les tendances et les heures de pointe, Pro la rétention, la fréquence et les clients à risque."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -663,9 +663,9 @@
           "timeAgo": "il y a {seconds}s"
         },
         "proAnalytics": {
-          "badge": "Plan Growth",
+          "badge": "Plans Growth et Pro",
           "title": "Comprenez les tendances, pas juste les chiffres",
-          "description": "Le plan Growth ajoute une couche d'analyse qui vous aide à prendre des décisions."
+          "description": "Growth ajoute les tendances et les heures de pointe. Pro ajoute la rétention, la fréquence et les clients sur le départ."
         },
         "proCharts": {
           "lineChart": {
@@ -856,7 +856,7 @@
       ],
       "cta": {
         "title": "Soyez présent au bon moment",
-        "subtitle": "Le géofencing est inclus dans le plan Growth. Commencez votre mois gratuit pour en profiter dès maintenant."
+        "subtitle": "La géolocalisation arrive bientôt sur le plan Pro. Commencez votre mois gratuit dès maintenant, votre carte sera prête à son lancement."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1070,7 +1070,7 @@
         "items": [
           {
             "question": "Combien coûtent les campagnes promotionnelles wallet ?",
-            "answer": "Rien de plus. Les campagnes sont incluses dans le plan Growth (8 par mois) et le plan Pro (illimitées). Il n'y a pas de coût par message, contrairement au SMS qui coûte entre 0,04 et 0,10 € par envoi en France. Une seule campagne SMS à 500 clients peut facilement coûter 30 à 50 €."
+            "answer": "Rien de plus. Les campagnes sont incluses dans le plan Growth (8 par mois) et le plan Pro (illimitées). Il n'y a pas de coût par message, contrairement au SMS, où chaque envoi est facturé."
           },
           {
             "question": "Les clients doivent-ils installer une app ?",

@@ -1,13 +1,13 @@
 {
   "metadata": {
     "loyaltyPrograms": {
-      "title": "Stamps or Points: Which Loyalty Program Fits Your Business",
-      "description": "Compare stamp cards and points programs for Apple Wallet and Google Wallet. Take the 60-second quiz to find the right loyalty program for your shop, café, restaurant, or salon.",
+      "title": "Stamps vs Points: Choose Your Loyalty Program",
+      "description": "Compare stamp cards and points programs for Apple Wallet and Google Wallet. A 60-second quiz finds the right fit for your café, restaurant, salon or shop.",
       "keywords": "loyalty program, stamps vs points, digital loyalty card, points loyalty program, stamp card, Apple Wallet loyalty, Google Wallet loyalty, loyalty card no app"
     },
     "home": {
-      "title": "Stampeo - Loyalty cards your customers actually keep",
-      "description": "Digital loyalty cards for Apple Wallet and Google Wallet. No app to download, no card to lose. Create your free loyalty card in minutes.",
+      "title": "Digital Loyalty Cards for Apple & Google Wallet | Stampeo",
+      "description": "Your customers add your loyalty card to Apple Wallet or Google Wallet in one scan. No app to download, no card to lose. Ready in minutes.",
       "keywords": "loyalty cards, digital loyalty, Apple Wallet, Google Wallet, customer rewards, stamp cards"
     },
     "onboarding": {
@@ -20,38 +20,38 @@
     },
     "features": {
       "design-de-carte": {
-        "title": "Design Your Loyalty Card: Your Logo, Your Own Stamp Icons",
-        "description": "Your logo, your colors, your own stamp icons with the background removed for you, or 98 ready-made ones. Build your wallet card in minutes, or send your logo and we design it in 24-48h."
+        "title": "Custom Loyalty Card: Your Logo, Your Stamp Icons",
+        "description": "Your logo, your colors, your own stamp icons (background removed) or 98 ready-made ones. Build it in minutes, or send your logo and we make it in 24-48h."
       },
       "scanner-mobile": {
-        "title": "Mobile Scanner — Stamp Customers in 0.8 Seconds, Even Offline",
-        "description": "Dedicated app with haptic confirmation (0.8s) or in-browser web scanner. Offline mode for markets, basements and festivals — auto-syncs when back online."
+        "title": "Mobile Scanner: Add a Stamp in 0.8 Seconds",
+        "description": "Scan your customer's card from the Stampeo app, with a haptic confirmation in 0.8s, or from any web browser. No hardware to buy, nothing changes at your till."
       },
       "notifications-push": {
-        "title": "Wallet Push Notifications — Every Stamp, Every Lock Screen",
+        "title": "Lock Screen Notifications for Every Stamp",
         "description": "Stamp added, reward unlocked, milestone reached: every event sends an automatic notification to your customer's wallet. No extra app, no SMS cost."
       },
       "analytiques": {
-        "title": "Loyalty Analytics — See Who's Coming Back and Who's Drifting",
-        "description": "Real-time dashboard: daily scans, active customers, rewards claimed. Growth tier adds trends and peak hours; Pro adds 30-day retention and at-risk customer alerts."
+        "title": "Loyalty Analytics: Who Comes Back, Who Drifts",
+        "description": "Real-time dashboard: daily scans, active customers, rewards claimed. Growth adds trends and peak hours. Pro adds 30-day retention and at-risk customers."
       },
       "geolocalisation": {
-        "title": "Loyalty Geofencing — On Their Lock Screen When They Walk Past",
-        "description": "When a customer walks near your shop, their loyalty card appears on their lock screen. No app, no Bluetooth. Zero location data collected on your end."
+        "title": "Geofencing: Your Card Pops Up When They Walk Past",
+        "description": "When a customer walks near your shop, their loyalty card appears on their lock screen. No app, no Bluetooth, no location data collected. Coming soon on Pro."
       },
       "campagnes-promotionnelles": {
-        "title": "Wallet Promotional Campaigns — SMS Alternative for Small Business",
-        "description": "Send promotional push notifications to your customers' Apple Wallet and Google Wallet. No SMS costs, ~85% open rate, segmentation and scheduling on Pro. {growthBroadcasts} free/month on Growth, unlimited on Pro."
+        "title": "Promotional Campaigns: The SMS Alternative",
+        "description": "Send promotional broadcasts to your customers' Apple Wallet and Google Wallet, with no per-message fee. {growthBroadcasts} a month on Growth, unlimited and scheduled on Pro."
       },
       "programme-fondateur": {
         "title": "Launch offer",
-        "description": "The Stampeo founding members programme. All Growth features, available today."
+        "description": "The Stampeo founding members program. All Growth features, available today."
       }
     },
     "acquisition": {
-      "notFound": "Business Not Found | Stampeo",
+      "notFound": "Business Not Found",
       "notFoundDesc": "This business could not be found.",
-      "title": "Get your {businessName} loyalty card | Stampeo",
+      "title": "Get your {businessName} loyalty card",
       "cardTitle": "{businessName} Loyalty Card",
       "defaultDesc": "Join {businessName}'s loyalty program and earn rewards with every visit."
     }
