@@ -315,13 +315,15 @@ function buildChecks(baseUrl: string): Check[] {
     },
 
     {
-      name: "Redirect / (en-US) → 307 /en, Vary: Accept-Language",
+      name: "Redirect / (en-US) → 307 /en, Vary: Accept-Language, Cache-Control: no-store",
       run: async () => {
         const res = await request("/", EN_US);
         const vary = res.headers.get("vary") ?? "";
+        const cacheControl = res.headers.get("cache-control") ?? "";
         return [
           ...redirectProblems(res, { status: 307, to: "/en" }),
           ...(/accept-language/i.test(vary) ? [] : [`Vary is "${vary}", expected it to contain Accept-Language`]),
+          ...(/no-store/i.test(cacheControl) ? [] : [`Cache-Control is "${cacheControl}", expected no-store`]),
         ];
       },
     },
