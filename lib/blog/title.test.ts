@@ -21,6 +21,9 @@ describe("postTitle", () => {
   });
 });
 
+/** Search results cut a description at about 160 characters. */
+const DESCRIPTION_MAX = 160;
+
 describe.each(BLOG_LOCALES)("%s posts", (locale) => {
   const posts = getAllPosts(locale);
 
@@ -28,5 +31,9 @@ describe.each(BLOG_LOCALES)("%s posts", (locale) => {
     expect(`${post.title}\n${post.description}`).not.toContain("—");
     const shown = rendered(postTitle(post.title));
     expect({ shown, length: shown.length <= POST_TITLE_MAX }).toEqual({ shown, length: true });
+    expect({ description: post.description, length: post.description.length <= DESCRIPTION_MAX }).toEqual({
+      description: post.description,
+      length: true,
+    });
   });
 });

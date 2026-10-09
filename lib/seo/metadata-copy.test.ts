@@ -1,4 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { generateMetadata as privacyMetadata } from "@/app/[locale]/privacy/page";
+import { generateMetadata as termsMetadata } from "@/app/[locale]/terms/page";
 import { routing } from "@/i18n/routing";
 import { MARKETS, type Market } from "../markets";
 import { planMessageArgs } from "../plans/plan-facts";
@@ -140,6 +142,57 @@ describe.each(routing.locales)("%s", (locale) => {
     test("uses no em dash", () => {
       expect(`${title}\n${description}`).not.toContain("—");
     });
+  });
+});
+
+/** What each locale's searchers type for a loyalty card: the homepage title has to say it. */
+const CATEGORY_TERM: Record<string, string> = {
+  fr: "carte de fidélité",
+  en: "loyalty card",
+  es: "tarjeta de fidelidad",
+  pl: "karta lojalnościowa",
+};
+
+describe("titles and descriptions that name the category, the price and the trial", () => {
+  test.each(routing.locales)("%s: the homepage title names the category", (locale) => {
+    const title = loadCatalog(locale).metadata.home.title as string;
+
+    expect(title.toLowerCase()).toContain(CATEGORY_TERM[locale]);
+  });
+
+  // The starting price is interpolated per market, so no currency is typed into a catalog.
+  test.each(
+    routing.locales.flatMap((locale) => {
+      const catalog = loadCatalog(locale);
+      return [
+        [locale, "pricingPage.meta.title", catalog.pricingPage?.meta?.title],
+        [locale, "variant.us.pricingMeta.title", catalog.variant?.us?.pricingMeta?.title],
+      ] as const;
+    }).filter(([, , title]) => title !== undefined),
+  )("%s: %s carries the starting price token", (_locale, _key, title) => {
+    expect(title).toContain("{starterPrice}");
+  });
+
+  test.each(["meta", "pricingMeta"] as const)("en: variant.us.%s.description states the market's trial length", (group) => {
+    expect(loadCatalog("en").variant.us[group].description).toContain("{trialDays}");
+  });
+});
+
+/**
+ * The legal pages take their title from the first heading of the policy text,
+ * which already ends in ": Stampeo". The page's own `generateMetadata` is read
+ * here, so the template that suffixes a plain string is applied the way Next does.
+ */
+describe.each([
+  ["/privacy", privacyMetadata],
+  ["/terms", termsMetadata],
+])("%s legal page", (_path, generateMetadata) => {
+  test.each(routing.locales)("%s: the title names Stampeo once and fits", async (locale) => {
+    const { title } = await generateMetadata({ params: Promise.resolve({ locale }) });
+    const rendered = typeof title === "string" ? `${title}${SUFFIX}` : title.absolute;
+
+    expect(withinLimit(rendered, rendered.match(/Stampeo/g)?.length ?? 0, 1)).toBe("ok");
+    expect(withinLimit(rendered, rendered.length, TITLE_MAX)).toBe("ok");
   });
 });
 
