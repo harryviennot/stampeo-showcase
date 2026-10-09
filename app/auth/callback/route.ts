@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { deviceLanguage } from "@/lib/locale-negotiation";
 import {
   buildLastLoginCookie,
   type LastLoginMethod,
@@ -114,8 +115,8 @@ export async function GET(request: Request) {
   }
 
   // 4. New user with no usable `next` (typical login → no business yet) —
-  //    drop them into the onboarding funnel using the locale from the
-  //    NEXT_LOCALE cookie (falls back to FR, the default app locale).
+  //    drop them into the onboarding funnel in the language they picked
+  //    (NEXT_LOCALE), else their device's language, else FR.
   const localeCookie = request.headers
     .get("cookie")
     ?.split(";")
@@ -124,7 +125,7 @@ export async function GET(request: Request) {
     ?.split("=")[1];
   const locale = hasLocale(routing.locales, localeCookie)
     ? localeCookie
-    : routing.defaultLocale;
+    : deviceLanguage(request.headers.get("accept-language")) ?? routing.defaultLocale;
   return buildResponse(
     new URL(`/${locale}/onboarding?just_authed=oauth`, baseUrl)
   );
