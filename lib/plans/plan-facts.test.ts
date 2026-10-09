@@ -2,10 +2,12 @@ import { describe, expect, it } from "bun:test";
 import { routing } from "@/i18n/routing";
 import {
   PLAN_FACTS,
+  PLAN_NAMES,
   TIERS,
   availability,
   planMessageArgs,
   planSummary,
+  tiersWhere,
 } from "./plan-facts";
 import { FEATURE_CATEGORIES } from "../pricing-features";
 import { loadCatalog, strictTranslator } from "../testing/catalogs";
@@ -64,6 +66,84 @@ describe("feature meta descriptions", () => {
       expect(t("campagnes-promotionnelles.description" as never, planMessageArgs())).toContain(
         String(PLAN_FACTS.growth.broadcastsPerMonth)
       );
+    });
+  }
+});
+
+describe("feature meta descriptions state the plan facts", () => {
+  // The words each locale uses in these descriptions for scheduling and for
+  // several locations. A description that carries none of them says nothing.
+  const SCHEDULING: Record<string, RegExp> = {
+    en: /schedul/i,
+    fr: /programmable|programm[ée]e?s?\b|planifi/i,
+    es: /programad|programable/i,
+    pl: /planowani|zaplan/i,
+  };
+  const MULTI_LOCATION: Record<string, RegExp> = {
+    en: /multi-?location|multiple locations|several locations|more than one location/i,
+    fr: /multi-?(?:site|boutique|établissement)|plusieurs (?:sites|boutiques|établissements|adresses)/i,
+    es: /multi-?(?:local|ubicación)|varios (?:locales|comercios|establecimientos|puntos)/i,
+    pl: /wielu lokalizacj|wiele lokalizacji|wielolokaliz|wiele lokali|wielu lokali/i,
+  };
+
+  /**
+   * The clauses of `text` that match `claim` and do not sit with the plans that
+   * have the feature: the clause must name one of them and none of the others.
+   */
+  function misplacedClaims(text: string, claim: RegExp, plans: readonly (typeof TIERS)[number][]) {
+    const wanted = plans.map((tier) => PLAN_NAMES[tier]);
+    const unwanted = TIERS.filter((tier) => !plans.includes(tier)).map((tier) => PLAN_NAMES[tier]);
+    return text
+      .split(/[.;,]\s+/)
+      .filter((clause) => claim.test(clause))
+      .filter(
+        (clause) =>
+          !wanted.some((name) => clause.includes(name)) || unwanted.some((name) => clause.includes(name))
+      );
+  }
+
+  it.each([
+    ["Unlimited and scheduled on Pro", SCHEDULING.en, false],
+    ["Scheduled broadcasts on Growth and Pro", SCHEDULING.en, true],
+    ["Schedule your promotions in advance", SCHEDULING.en, true],
+    ["Illimitées et programmables sur Pro", SCHEDULING.fr, false],
+    ["Programmables dès Growth", SCHEDULING.fr, true],
+    ["Multiple locations on Growth", MULTI_LOCATION.en, true],
+    ["Multiple locations on Pro", MULTI_LOCATION.en, false],
+  ])("a clause reading %p is misplaced: %p", (text, claim, misplaced) => {
+    expect(misplacedClaims(text, claim, ["pro"]).length > 0).toBe(misplaced);
+  });
+
+  for (const locale of routing.locales) {
+    const features = loadCatalog(locale, "metadata.json").metadata.features as Record<
+      string,
+      { title: string; description: string }
+    >;
+    const soon = new RegExp(loadCatalog(locale, "pricing.json").pricingPage.comparison.soon, "i");
+
+    it(`${locale}: geofencing is described as coming soon while the plan facts say so`, () => {
+      expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
+      expect(soon.test(features.geolocalisation.description)).toBe(true);
+    });
+
+    it(`${locale}: scheduling is sold with the plans that have it, never with the others`, () => {
+      const plans = tiersWhere((facts) => facts.scheduledBroadcasts);
+      for (const [slug, { description }] of Object.entries(features)) {
+        expect({ slug, misplaced: misplacedClaims(description, SCHEDULING[locale], plans) }).toEqual({
+          slug,
+          misplaced: [],
+        });
+      }
+    });
+
+    it(`${locale}: several locations are never claimed below the plans that have them`, () => {
+      const plans = tiersWhere((facts) => facts.multipleLocations);
+      for (const [slug, { description }] of Object.entries(features)) {
+        expect({ slug, misplaced: misplacedClaims(description, MULTI_LOCATION[locale], plans) }).toEqual({
+          slug,
+          misplaced: [],
+        });
+      }
     });
   }
 });

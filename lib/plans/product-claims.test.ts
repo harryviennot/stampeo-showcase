@@ -33,16 +33,19 @@ function messagePassages(locale: string): Passage[] {
   );
 }
 
-/** Every line of every post, frontmatter included, as `locale/slug.mdx:line`. */
-function postPassages(locale: string): Passage[] {
+/** Every post of a locale with its lines, frontmatter included. */
+function postFiles(locale: string): Array<{ file: string; lines: string[] }> {
   if (!(BLOG_LOCALES as readonly string[]).includes(locale)) return [];
   return readdirSync(join(BLOG, locale))
     .filter((f) => f.endsWith(".mdx"))
-    .flatMap((file) =>
-      readFileSync(join(BLOG, locale, file), "utf8")
-        .split("\n")
-        .map((text, i) => ({ where: `${locale}/${file}:${i + 1}`, text }))
-    );
+    .map((file) => ({ file, lines: readFileSync(join(BLOG, locale, file), "utf8").split("\n") }));
+}
+
+/** Every line of every post, as `locale/slug.mdx:line`. */
+function postPassages(locale: string): Passage[] {
+  return postFiles(locale).flatMap(({ file, lines }) =>
+    lines.map((text, i) => ({ where: `${locale}/${file}:${i + 1}`, text }))
+  );
 }
 
 /**
@@ -237,4 +240,117 @@ describe("broadcasts feature page", () => {
       expect([...cited, ...smsPrice]).toEqual([]);
     });
   }
+});
+
+describe("blog percentages", () => {
+  const FIGURE = /\d+(?:[.,]\d+)?\s?%/g;
+  /** "3,5 %" and "3.5%" are the same figure. */
+  const figuresIn = (text: string) => [...text.matchAll(FIGURE)].map((m) => m[0].replace(/\s/g, "").replace(",", "."));
+
+  const LINK = /\]\(/;
+  /** A parenthesis opening on a capital, or on "study"/"étude"/"source" and a capital: "(CodeBroker)", "(Stampeo data, …)". */
+  const NAMED_SOURCE = /\((?:(?:étude|study|estudio|source|fuente)\s)?[A-ZÀ-Ý][^)]*\)/;
+  /** The studies and publishers the posts name in prose ("According to CodeBroker, 43% …"). */
+  const PUBLISHER =
+    /\b(?:CodeBroker|Bain|Appfigures|Pushwoosh|StatCounter|Mastercard|Nunes|Dr[eè]ze|Fishbach|Antavo|Bond (?:Brand )?Loyalty|ARCEP|We Are Testers|UK Finance|Treatwell)\b/;
+  /** A reward or discount offered as an example ("20% off your next cut"), which is an offer and not a statistic. */
+  const OFFER_EXAMPLE =
+    /\d\s?%\s*(?:off\b|de remise|de descuento)|[-–−]\s?\d+\s?%|discount rate|taux de remise|tasa de descuento/i;
+
+  /**
+   * Figures that stay unsourced on their line, per post: the author's own
+   * pricing guidance, arithmetic on a sourced figure, a hypothetical shop,
+   * a published commission rate. Anything else needs a source.
+   */
+  const ACCEPTED: Record<string, { figures: string[]; why: string }> = {
+    "en/points-based-loyalty-program.mdx": {
+      figures: ["2%", "3%", "7%"],
+      why: "the author's guideline for pricing a points reward",
+    },
+    "fr/programme-fidelite-a-points.mdx": {
+      figures: ["1.5%", "2%", "5%", "9%", "10%", "35%"],
+      why: "the author's pricing guideline and worked examples",
+    },
+    "en/best-loyalty-card-system-small-business.mdx": {
+      figures: ["97%"],
+      why: "the complement of the 3% app-retention figure sourced to Pushwoosh in the same section",
+    },
+    "fr/digitaliser-carte-fidelite-papier.mdx": {
+      figures: ["9%"],
+      why: "the complement of the 91% smartphone ownership figure sourced to ARCEP in the same post",
+    },
+    "fr/carte-fidelite-sans-application.mdx": {
+      figures: ["30%"],
+      why: "the App Store's published commission range",
+    },
+    "fr/points-ou-tampons.mdx": { figures: ["80%"], why: "a hypothetical shop whose sales fall in a narrow range" },
+    "fr/carte-fidelite-cafe.mdx": { figures: ["70%"], why: "a hypothetical café whose orders are mostly espresso" },
+    "fr/google-wallet-carte-fidelite.mdx": { figures: ["100%"], why: "\"not 100%\" is a manner of speaking" },
+    "es/google-wallet-tarjeta-fidelidad.mdx": {
+      figures: ["22%", "22.22%", "24.93%", "3.28%", "5.40%", "100%"],
+      why: "the brand share table, introduced by its StatCounter source one line above",
+    },
+  };
+
+  /** The lines of one post whose percentages carry no source, with the figures that lack one. */
+  function unsourcedPercentages(locale: string, lines: string[], accepted: readonly string[] = []) {
+    const carriesSource = (text: string) =>
+      LINK.test(text) || NAMED_SOURCE.test(text) || PUBLISHER.test(text) || text.includes(sourceLine(locale));
+    // A figure repeated from a sourced line of the same post is as sourced as its first mention.
+    const sourced = new Set(lines.filter(carriesSource).flatMap(figuresIn));
+    return lines.flatMap((text, i) => {
+      if (carriesSource(text) || OFFER_EXAMPLE.test(text)) return [];
+      const open = figuresIn(text).filter((figure) => !sourced.has(figure) && !accepted.includes(figure));
+      return open.length > 0 ? [{ line: i + 1, figures: open, text: text.trim().slice(0, 100) }] : [];
+    });
+  }
+
+  for (const locale of BLOG_LOCALES) {
+    it(`${locale}: every percentage in a post is sourced`, () => {
+      const offenders = postFiles(locale).flatMap(({ file, lines }) =>
+        unsourcedPercentages(locale, lines, ACCEPTED[`${locale}/${file}`]?.figures).map(
+          ({ line, figures, text }) => `${locale}/${file}:${line} ${figures.join(", ")} in "${text}"`
+        )
+      );
+      expect(offenders).toEqual([]);
+    });
+  }
+
+  it("every accepted figure is still one that would otherwise be flagged", () => {
+    const stale = Object.entries(ACCEPTED).flatMap(([post, { figures }]) => {
+      const [locale, file] = post.split("/");
+      const lines = postFiles(locale).find((p) => p.file === file)?.lines ?? [];
+      const flagged = new Set(unsourcedPercentages(locale, lines).flatMap((offender) => offender.figures));
+      return figures.filter((figure) => !flagged.has(figure)).map((figure) => `${post}: ${figure}`);
+    });
+    expect(stale).toEqual([]);
+  });
+
+  describe.each([
+    ["en", "According to CodeBroker, 43% of consumers say the card is the problem.", true],
+    ["en", "Retention up 5% can lift profit 25-95% ([Bain](https://example.org/study)).", true],
+    ["en", "57% of adults used a wallet (UK Finance 2025).", true],
+    ["en", "A \"20% off your next cut\" reward works for a salon.", true],
+    ["fr", "66 % des smartphones sont Android (StatCounter, janvier 2026).", true],
+    ["fr", "Pour un café où 70 % des commandes sont un expresso.", false],
+    ["en", "Nine in ten shops see a 40% lift in repeat visits.", false],
+    ["es", "El 85 % de los clientes vuelve en un mes.", false],
+  ] as const)("a %s line", (locale, text, passes) => {
+    it(`${passes ? "passes" : "is flagged"}: ${text}`, () => {
+      expect(unsourcedPercentages(locale, [text]).length === 0).toBe(passes);
+    });
+  });
+
+  it("a figure repeated from a sourced line of the same post is sourced", () => {
+    const lines = ["According to Pushwoosh, only 3% still use the app.", "Remember: 3% is all that is left."];
+
+    expect(unsourcedPercentages("en", lines)).toEqual([]);
+    expect(unsourcedPercentages("en", lines.slice(1))).toHaveLength(1);
+  });
+
+  it("the Stampeo data line counts as a source, in the reader's language", () => {
+    for (const locale of ["en", "fr", "es"]) {
+      expect(unsourcedPercentages(locale, [`88% add the card (${sourceLine(locale)})`])).toEqual([]);
+    }
+  });
 });
