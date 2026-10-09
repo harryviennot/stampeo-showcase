@@ -24,6 +24,7 @@ import { feedPath } from "@/lib/blog/feed";
 import { compileBlogMDX } from "@/lib/blog/mdx";
 import { BLOG_LOCALES, hasBlog } from "@/lib/blog/locales";
 import { postLanguages } from "@/lib/blog/translations";
+import { postTitle } from "@/lib/blog/title";
 import { localePath } from "@/lib/hreflang";
 import { ogLocaleFor } from "@/lib/og/metadata";
 
@@ -46,7 +47,7 @@ export async function generateMetadata({
 
   const canonical = localePath(locale, `/blog/${slug}`);
   return {
-    title: post.title,
+    title: postTitle(post.title),
     description: post.description,
     // No `images`: the post's own opengraph-image.tsx fills them in.
     openGraph: {
