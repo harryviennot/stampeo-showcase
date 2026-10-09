@@ -77,6 +77,9 @@ const LANDING_SECTIONS = [
   "final_cta",
 ];
 
+// How long the visitor's region may take to replace the page market's terms after hydration.
+const REGION_SWAP_TIMEOUT_MS = 3_000;
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 class CdpClient {
@@ -199,6 +202,9 @@ const snapshotExpression = `(() => {
     (count, root) => count + [...root.querySelectorAll('.animate-pulse')].filter(visible).length,
     0
   );
+  const hydrated = relevantRoots.length > 0 && relevantRoots.every(
+    (root) => Object.keys(root).some((key) => key.startsWith('__reactFiber'))
+  );
   return {
     href: location.href,
     readyState: document.readyState,
@@ -206,6 +212,7 @@ const snapshotExpression = `(() => {
     language: navigator.language,
     landing,
     pending,
+    hydrated,
     sections,
     text: landing
       ? Object.values(sections).filter(Boolean).join('\\n')
@@ -213,19 +220,23 @@ const snapshotExpression = `(() => {
   };
 })()`;
 
-async function settledSnapshot(client) {
+/**
+ * The server HTML already carries the page market's prices, so a loaded page is
+ * not a settled one: wait until React has hydrated the price surfaces, then
+ * until the expected region's terms show (the post-hydration swap) or
+ * REGION_SWAP_TIMEOUT_MS passes, and let assertSnapshot judge what is there.
+ */
+async function settledSnapshot(client, expected) {
   let snapshot;
+  let hydratedAt = null;
   for (let attempt = 0; attempt < 80; attempt += 1) {
     snapshot = await evaluate(client, snapshotExpression);
     const sectionsReady = !snapshot.landing || LANDING_SECTIONS.every((name) => snapshot.sections[name]);
-    if (
-      snapshot.readyState === "complete" &&
-      sectionsReady &&
-      snapshot.pending === 0 &&
-      snapshot.text &&
-      !snapshot.text.includes("…")
-    ) {
-      return snapshot;
+    if (snapshot.readyState === "complete" && sectionsReady && snapshot.hydrated && snapshot.text) {
+      hydratedAt ??= Date.now();
+      if (showsTerms(snapshot.text, expected) || Date.now() - hydratedAt > REGION_SWAP_TIMEOUT_MS) {
+        return snapshot;
+      }
     }
     await sleep(250);
   }
@@ -246,6 +257,13 @@ function priceFacts(text) {
     ),
     compact: normalized.replace(/[\s,]/g, ""),
   };
+}
+
+/** Does the text show only the expected currency and trial length? */
+function showsTerms(text, { currency, trial }) {
+  const facts = priceFacts(text);
+  const currencyShown = currency === "usd" ? facts.hasUsd && !facts.hasEur : facts.hasEur && !facts.hasUsd;
+  return currencyShown && facts.trials.length > 0 && facts.trials.every((days) => days === trial);
 }
 
 function assertSnapshot({ scenario, route, expectedCurrency, expectedTrial, snapshot, phase }) {
@@ -333,9 +351,10 @@ async function runScenario({ port, scenario }) {
         document.querySelectorAll('details').forEach((details) => { details.open = true; });
         return true;
       })()`);
-      const snapshot = await settledSnapshot(client);
       const expectedCurrency = scenario.currency ?? route.fallback;
       const expectedTrial = scenario.trial ?? route.fallbackTrial;
+      const expected = { currency: expectedCurrency, trial: expectedTrial };
+      const snapshot = await settledSnapshot(client, expected);
       const routeFailures = assertSnapshot({
         scenario,
         route,
@@ -358,7 +377,7 @@ async function runScenario({ port, scenario }) {
         return Boolean(monthly);
       })()`);
       await sleep(100);
-      const monthlySnapshot = await settledSnapshot(client);
+      const monthlySnapshot = await settledSnapshot(client, expected);
       const monthlyFailures = assertSnapshot({
         scenario,
         route,
@@ -378,7 +397,7 @@ async function runScenario({ port, scenario }) {
         deviceScaleFactor: 1,
         mobile: true,
       });
-      const mobileSnapshot = await settledSnapshot(client);
+      const mobileSnapshot = await settledSnapshot(client, expected);
       const mobileFailures = assertSnapshot({
         scenario,
         route,
