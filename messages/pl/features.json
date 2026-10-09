@@ -536,11 +536,6 @@
           "title": "Skaner w przeglądarce",
           "description": "Nie chcesz nic instalować? Skanuj prosto z przeglądarki w telefonie albo na tablecie. Idealne dla firm, które trzymają na ladzie jeden wspólny tablet.",
           "icon": "globe"
-        },
-        {
-          "title": "Tryb bez połączenia",
-          "description": "Działa nawet bez internetu. Skany zapisują się na urządzeniu i same się synchronizują, gdy tylko wróci zasięg. Żadna pieczątka nie przepada.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -595,29 +590,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Działa nawet bez Wi-Fi",
-          "subtitle": "Targ pod gołym niebem, piwnica, festyn: skanowanie działa wszędzie, także bez zasięgu.",
-          "situations": [
-            "Targ pod gołym niebem bez Wi-Fi",
-            "Piwnica albo sala pod ziemią",
-            "Festyn albo impreza plenerowa",
-            "Wieś ze słabym zasięgiem",
-            "Chwilowa awaria internetu"
-          ],
-          "online": "Połączono",
-          "offline_label": "Bez połączenia",
-          "pending": "Czeka na synchronizację",
-          "synced": "Zsynchronizowano",
-          "syncing": "Synchronizacja...",
-          "stampedTitle": "Pieczątka dodana",
-          "stampedSub": "Zsynchronizowano od razu",
-          "pendingSub": "1 pieczątka w kolejce",
-          "syncingSub": "Zasięg wrócił",
-          "syncedSub": "Żadna pieczątka nie przepadła",
-          "offlineHint": "Tryb bez połączenia włączony",
-          "toggleHint": "Naciśnij przełącznik, żeby sprawdzić"
-        },
         "employee": {
           "title": "Zrobione z myślą o twoich pracownikach",
           "subtitle": "Twoi pracownicy nie są informatykami. Obsługa jest tak prosta, że nie trzeba żadnego szkolenia.",
@@ -646,7 +618,6 @@
             "features": [
               "3 konta pracownicze w cenie",
               "Osobna aplikacja i skaner w przeglądarce",
-              "Tryb bez połączenia",
               "Historia skanów"
             ]
           },
@@ -1093,34 +1064,34 @@
       "hero": {
         "title": "Dotrzyj do każdego klienta. Bez rachunku za SMS-y.",
         "navTitle": "Rozsyłki promocyjne: powiadomienia na karcie do wszystkich klientów",
-        "subtitle": "Wysyłaj promocje prosto na kartę w Apple Wallet i Google Wallet. Około 85% otwarć. Zero opłat za wiadomość. Segmentacja i planowanie rozsyłek w cenie planu.",
+        "subtitle": "Wysyłaj rozsyłki prosto na kartę w Apple Wallet i Google Wallet, bez opłat za wiadomość. W Growth {growthBroadcasts} miesięcznie z podstawową segmentacją, w Pro bez limitu, z zaawansowaną segmentacją i planowaniem.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "Liczby mówią same za siebie",
-        "subtitle": "Średnie wyniki karty w telefonie, SMS-ów i e-maili, na podstawie publicznych danych rynkowych.",
+        "title": "Klienci zatrzymują kartę",
+        "subtitle": "Rozsyłka trafia na każdą kartę, która wciąż jest w telefonie. Oto, co mierzymy w firmach, które korzystają ze Stampeo.",
         "stats": [
           {
-            "value": "~85%",
-            "label": "Otwarć powiadomień na karcie",
-            "caption": "wobec ~20% w e-mailu i ~35% CTR w SMS-ie"
+            "value": "88%",
+            "label": "Karta w telefonie",
+            "caption": "Tylu zapisanych klientów dodaje kartę do Apple Wallet lub Google Wallet, czyli tam, gdzie trafiają rozsyłki (Dane Stampeo, 86 firm, luty–październik 2026)."
+          },
+          {
+            "value": "95%",
+            "label": "Wciąż w telefonie po 90 dniach",
+            "caption": "Tyle kart zostaje w telefonie trzy miesiące po dodaniu (Dane Stampeo, 86 firm, luty–październik 2026)."
           },
           {
             "value": "0 €",
             "label": "Za wiadomość",
-            "caption": "Stała opłata za plan, a nie 0,04 do 0,10 € za SMS"
-          },
-          {
-            "value": "+78%",
-            "label": "Wzrost obrotów",
-            "caption": "Tyle notują firmy z kartą lojalnościową w telefonie"
+            "caption": "Rozsyłki są w cenie planu. Za SMS płacisz od każdej wiadomości."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, e-mail, karta w telefonie:<br></br>co naprawdę dociera",
-        "subtitle": "Otwieralność i koszt dotarcia to dwie różne historie. Tak wypadają trzy kanały u małej firmy, która wysyła promocje.",
+        "subtitle": "Tak wypadają trzy kanały u małej firmy, która wysyła promocje.",
         "columns": [
           "",
           "SMS",
@@ -1129,17 +1100,9 @@
         ],
         "rows": [
           {
-            "label": "Typowa otwieralność",
+            "label": "Koszt jednej wiadomości",
             "values": [
-              "~35% CTR",
-              "~20%",
-              "~85%"
-            ]
-          },
-          {
-            "label": "Koszt jednej wiadomości (Francja)",
-            "values": [
-              "0,04 – 0,10 €",
+              "Opłata za każdą wiadomość",
               "Niski, zmienny",
               "0 € (w cenie planu)"
             ]
@@ -1184,8 +1147,7 @@
               "Baner na ekranie blokady, bez skrzynki"
             ]
           }
-        ],
-        "caption": "Źródła: cennik Twilio Francja, raport PushPass 2026 SMS kontra powiadomienia, poradnik Yotpo o karcie w telefonie."
+        ]
       },
       "howItWorks": {
         "badge": "Jak to działa",
@@ -1303,7 +1265,7 @@
           },
           {
             "question": "Jak to wypada przy SMS-ie?",
-            "answer": "Powiadomienie z karty pojawia się na ekranie blokady tak samo jak SMS, ale nic nie kosztuje, ma około 85% otwarć i nie wpada do filtra „Nieznany nadawca” w iOS 26. Do tego masz segmentację od razu w środku (po zebranych pieczątkach, odebranych nagrodach albo braku wizyt), za którą platformy SMS zwykle każą dopłacać."
+            "answer": "Powiadomienie z karty pojawia się na ekranie blokady tak samo jak SMS, ale nic nie kosztuje i nie wpada do filtra „Nieznany nadawca” w iOS 26. Segmentacja jest od razu w środku: w Growth po dacie zapisu, w Pro po zebranych pieczątkach, odebranych nagrodach albo braku wizyt. Platformy SMS zwykle każą za nią dopłacać."
           },
           {
             "question": "Czy mogę zaplanować rozsyłkę z wyprzedzeniem?",

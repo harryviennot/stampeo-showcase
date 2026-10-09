@@ -7,12 +7,10 @@ import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { CTAButton } from "@/components/ui/CTAButton";
 import {
   CameraIcon,
-  CheckIcon,
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
   SparklesIcon,
   BellIcon,
-  WifiOffIcon,
   ClockIcon,
   QRCodeIcon,
   LockIcon,
@@ -21,7 +19,6 @@ import {
   GlobeIcon,
 } from "@/components/icons";
 import { ScanDemo } from "./ScanDemo";
-import { OfflineToggleDemo } from "./OfflineToggleDemo";
 import { StoreBadges } from "./StoreBadges";
 import { GetTheAppBand } from "./GetTheAppBand";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
@@ -35,7 +32,6 @@ export function ScannerMobilePage() {
 
   const howItWorksApp = tc.raw("howItWorks.app.steps") as string[];
   const howItWorksWeb = tc.raw("howItWorks.web.steps") as string[];
-  const offlineSituations = tc.raw("offline.situations") as string[];
   const employeeFeatures = tc.raw("employee.features") as {
     title: string;
     description: string;
@@ -212,45 +208,8 @@ export function ScannerMobilePage() {
         </Container>
       </section>
 
-      {/* ============ 4. Offline ============ */}
+      {/* ============ 4. Employee Experience ============ */}
       <section className="bg-[var(--blog-bg)] py-20 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
-            {/* Left - Situations */}
-            <ScrollReveal>
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
-                <WifiOffIcon className="h-7 w-7" />
-              </div>
-              <h2 className="mb-4 text-h2 text-[var(--foreground)]">
-                {tc("offline.title")}
-              </h2>
-              <p className="mb-8 text-lg leading-relaxed text-[var(--muted-foreground)]">
-                {tc("offline.subtitle")}
-              </p>
-              <ul className="space-y-3">
-                {offlineSituations.map((situation, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)]/10">
-                      <CheckIcon className="h-3 w-3 text-[var(--accent)]" />
-                    </div>
-                    <span className="text-[var(--muted-foreground)]">
-                      {situation}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </ScrollReveal>
-
-            {/* Right - Demo */}
-            <ScrollReveal delay={200} className="flex justify-center">
-              <OfflineToggleDemo />
-            </ScrollReveal>
-          </div>
-        </Container>
-      </section>
-
-      {/* ============ 5. Employee Experience ============ */}
-      <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="mx-auto mb-16 max-w-2xl text-center">
             <h2 className="mb-4 text-h2 text-[var(--foreground)]">
@@ -285,8 +244,8 @@ export function ScannerMobilePage() {
         </Container>
       </section>
 
-      {/* ============ 6. Security ============ */}
-      <section className="bg-[var(--blog-bg)] py-20 sm:py-28">
+      {/* ============ 5. Security ============ */}
+      <section className="py-20 sm:py-28">
         <Container>
           <ScrollReveal className="mx-auto mb-16 max-w-2xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-[var(--muted-foreground)]">
@@ -325,7 +284,7 @@ export function ScannerMobilePage() {
         </Container>
       </section>
 
-      {/* ============ 7. Get the app (download closer) ============ */}
+      {/* ============ 6. Get the app (download closer) ============ */}
       <GetTheAppBand />
 
       <RelatedFeatures related={related} />

@@ -113,6 +113,20 @@ describe("llms.txt facts", () => {
     expect(body).toMatch(/geofencing[^\n]*coming soon/i);
   });
 
+  it("lists scheduled card designs as coming soon on Pro", () => {
+    expect(PLAN_FACTS.pro.scheduledDesigns).toBe("coming_soon");
+    const scheduled = body.match(/scheduled card designs[^,.\n]*/gi) ?? [];
+    expect(scheduled.length).toBeGreaterThan(0);
+    for (const mention of scheduled) expect(mention).toBe("scheduled card designs (coming soon)");
+  });
+
+  it("says offline scanning is coming soon, not that the scanner works offline", () => {
+    expect(body).not.toMatch(/supports offline/i);
+    const offline = body.split("\n").filter((line) => /offline (scanning|stamping)/i.test(line));
+    expect(offline.length).toBeGreaterThan(0);
+    for (const line of offline) expect(line).toMatch(/offline scanning is coming soon/i);
+  });
+
   it("has a European block with euro prices and the international trial", () => {
     const eur = body.slice(body.indexOf("### Europe"));
     expect(eur).toContain("€20 / month");
