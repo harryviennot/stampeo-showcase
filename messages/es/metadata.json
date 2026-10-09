@@ -33,7 +33,7 @@
       },
       "analytiques": {
         "title": "Datos de fidelidad: descubre quién vuelve y quién se aleja",
-        "description": "Panel en tiempo real: sellos del día, clientes activos y recompensas canjeadas. El plan Growth añade tendencias, horas punta, retención a 30 días y avisos de riesgo."
+        "description": "Panel en tiempo real: sellos del día, clientes activos y recompensas canjeadas. El plan Growth añade tendencias y horas punta; el plan Pro, retención a 30 días y avisos de riesgo."
       },
       "geolocalisation": {
         "title": "Su tarjeta aparece en su teléfono cuando pasan cerca de ti",
@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Difusiones promocionales: la alternativa a los SMS",
-        "description": "Envía avisos promocionales a Apple Wallet y Google Wallet. Sin coste por mensaje, cerca del 85 % de apertura, con segmentación y programación. 3 gratis al mes en Growth, sin límite en Pro."
+        "description": "Envía avisos promocionales a Apple Wallet y Google Wallet. Sin coste por mensaje, cerca del 85 % de apertura, segmentación y programación en Pro. {growthBroadcasts} gratis al mes en Growth, sin límite en Pro."
       },
       "programme-fondateur": {
         "title": "Oferta de lanzamiento",

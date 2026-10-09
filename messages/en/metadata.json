@@ -33,7 +33,7 @@
       },
       "analytiques": {
         "title": "Loyalty Analytics — See Who's Coming Back and Who's Drifting",
-        "description": "Real-time dashboard: daily scans, active customers, rewards claimed. Growth tier adds trends, peak hours, 30-day retention and at-risk customer alerts."
+        "description": "Real-time dashboard: daily scans, active customers, rewards claimed. Growth tier adds trends and peak hours; Pro adds 30-day retention and at-risk customer alerts."
       },
       "geolocalisation": {
         "title": "Loyalty Geofencing — On Their Lock Screen When They Walk Past",
@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Wallet Promotional Campaigns — SMS Alternative for Small Business",
-        "description": "Send promotional push notifications to your customers' Apple Wallet and Google Wallet. No SMS costs, ~85% open rate, segmentation and scheduling included. 3 free/month on Growth, unlimited on Pro."
+        "description": "Send promotional push notifications to your customers' Apple Wallet and Google Wallet. No SMS costs, ~85% open rate, segmentation and scheduling on Pro. {growthBroadcasts} free/month on Growth, unlimited on Pro."
       },
       "programme-fondateur": {
         "title": "Launch offer",

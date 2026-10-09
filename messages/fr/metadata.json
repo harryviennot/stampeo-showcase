@@ -33,7 +33,7 @@
       },
       "analytiques": {
         "title": "Analytiques fidélité — savoir qui revient et qui décroche",
-        "description": "Tableau de bord en temps réel : clients, scans, récompenses distribuées. Plan Growth : tendances hebdo, heatmap des heures de pointe, rétention 30 jours et alertes clients à risque."
+        "description": "Tableau de bord en temps réel : clients, scans, récompenses distribuées. Plan Growth : tendances hebdo et heatmap des heures de pointe. Plan Pro : rétention 30 jours et alertes clients à risque."
       },
       "geolocalisation": {
         "title": "Votre carte s'affiche sur leur téléphone quand ils passent",
@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Campagnes promotionnelles wallet — Alternative aux SMS",
-        "description": "Envoyez des notifications promo dans Apple Wallet et Google Wallet. ~85 % de taux d'ouverture, pas de coût par message, segmentation et programmation incluses. 3 offertes/mois sur Growth, illimitées sur Pro."
+        "description": "Envoyez des notifications promo dans Apple Wallet et Google Wallet. ~85 % de taux d'ouverture, pas de coût par message, segmentation et programmation sur Pro. {growthBroadcasts} offertes/mois sur Growth, illimitées sur Pro."
       },
       "programme-fondateur": {
         "title": "Offre de lancement",
