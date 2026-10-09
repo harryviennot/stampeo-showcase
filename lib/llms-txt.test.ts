@@ -134,17 +134,14 @@ describe("llms.txt facts", () => {
     expect(buildLlmsTxt()).toContain(`$${FALLBACK_PRICING.usd.tiers.starter.month} / month`);
   });
 
-  // Article titles are listed verbatim; their figures are sourced in the posts.
-  const ownLines = body
-    .split("\n")
-    .filter((line) => !/^- \[.*\]\(https:\/\/stampeo\.app(?:\/[a-z]{2})?\/blog\/[^)]+\)$/.test(line));
+  const lines = body.split("\n");
 
   it("quotes no percentage that is not a sourced Stampeo figure", () => {
     const allowed = new Set([
       ...Object.values(BENCHMARK).map((figure) => figure.value),
       FOUNDING_PRICING.yearlyDiscountPercent,
     ]);
-    const quoted = ownLines.flatMap((line) =>
+    const quoted = lines.flatMap((line) =>
       [...line.matchAll(/(\d+(?:[.,]\d+)?)\s?%/g)].map((m) => Number(m[1]))
     );
     expect(quoted.length).toBeGreaterThan(0);
@@ -152,7 +149,7 @@ describe("llms.txt facts", () => {
   });
 
   it("cites the sample next to every Stampeo figure", () => {
-    const figures = ownLines.filter((line) => /\d\s?%/.test(line) && !/yearly/i.test(line));
+    const figures = lines.filter((line) => /\d\s?%/.test(line) && !/yearly/i.test(line));
     expect(figures.length).toBeGreaterThan(0);
     for (const line of figures) expect(line).toContain(sourceLine("en"));
   });
