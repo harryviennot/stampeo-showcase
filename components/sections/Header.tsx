@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import NextLink from "next/link";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { buildSeoLinks } from "@/lib/seo-links";
@@ -308,9 +309,15 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
   // A market is a set of routes, not one landing page. /us quotes dollars, so a
   // bare "/pricing" here walks a US visitor straight onto the euro ladder — a
   // price checkout will not honour.
+  // A market path (/us/pricing) is complete as written, so it renders through
+  // next/link: next-intl's Link would prefix it to /en/us/pricing.
   const navItems = [
-    { label: t("common.nav.loyalty"), href: loyaltySlug },
-    { label: t("common.nav.pricing"), href: marketPath(market, "/pricing") },
+    { label: t("common.nav.loyalty"), href: loyaltySlug, LinkAs: Link },
+    {
+      label: t("common.nav.pricing"),
+      href: marketPath(market, "/pricing"),
+      LinkAs: market === "int" ? Link : NextLink,
+    },
   ];
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
@@ -389,7 +396,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                 active={pathname.startsWith("/features/")}
               />
               {navItems.map((item) => (
-                <Link
+                <item.LinkAs
                   key={item.href}
                   href={item.href}
                   className={`py-2 text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
@@ -398,7 +405,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                     }`}
                 >
                   {item.label}
-                </Link>
+                </item.LinkAs>
               ))}
               <NavDropdown
                 label={t("common.nav.resources")}
@@ -450,7 +457,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                   <div className="flex flex-col gap-1">
                     <MobileFeaturesAccordion onNavigate={closeMobileMenu} />
                     {navItems.map((item) => (
-                      <Link
+                      <item.LinkAs
                         key={item.href}
                         href={item.href}
                         className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
@@ -460,7 +467,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
                         onClick={closeMobileMenu}
                       >
                         {item.label}
-                      </Link>
+                      </item.LinkAs>
                     ))}
                     {/* Resources are a dropdown on desktop; on a phone they
                         read better as plain rows than as a second accordion. */}

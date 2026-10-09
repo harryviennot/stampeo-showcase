@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
@@ -28,6 +29,9 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
 
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = buildSeoLinks(locale, market);
+  // A market path (/us/pricing) is complete as written; next-intl's Link would
+  // prefix it to /en/us/pricing.
+  const PricingLink = market === "int" ? Link : NextLink;
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">
@@ -144,9 +148,9 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                 <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("changelog")}
                 </Link>
-                <Link href={marketPath(market, "/pricing") as "/pricing"} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <PricingLink href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("pricing")}
-                </Link>
+                </PricingLink>
                 <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {tNav("loyaltyPrograms")}
                 </Link>
