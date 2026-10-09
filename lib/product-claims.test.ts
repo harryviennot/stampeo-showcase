@@ -81,8 +81,12 @@ interface Wording {
 const offlineScan = (scan: string, offline: string, mode: string) =>
   new RegExp(`(?:${scan})[\\s\\S]{0,60}?(?:${offline})|(?:${offline})[\\s\\S]{0,60}?(?:${scan})|${mode}`, "i");
 
-/** A percentage next to the locale's word for an open rate. */
-const openRate = (term: string) => new RegExp(`\\d\\s?%[^.]{0,30}(?:${term})|(?:${term})[^.]{0,30}\\d\\s?%`, "i");
+/** A percentage next to the locale's word for an open rate, or a "read N× more than email" multiplier. */
+const openRate = (term: string, email: string) =>
+  new RegExp(
+    `\\d\\s?%[^.]{0,30}(?:${term})|(?:${term})[^.]{0,30}\\d\\s?%|\\d\\s?(?:×|x\\b|times|fois|veces)[^.]{0,30}(?:${email})`,
+    "i"
+  );
 
 const WORDING: Record<string, Wording> = {
   en: {
@@ -95,7 +99,7 @@ const WORDING: Record<string, Wording> = {
     ),
     scheduledStyle:
       /schedul\w*[^.]{0,40}(?:card styles?|designs?)\b|\b(?:card styles?|designs?)\b[^.]{0,40}schedul/i,
-    openRate: openRate("open rate"),
+    openRate: openRate("open rate", "e-?mails?"),
   },
   fr: {
     noCard:
@@ -107,7 +111,7 @@ const WORDING: Record<string, Wording> = {
     ),
     scheduledStyle:
       /(?:programm(?:ez|er|é|ation)|planifi)[^.]{0,40}(?:styles? de carte|design)|(?:styles? de carte|design)[^.]{0,40}(?:programm(?:ez|er|é|ation)|planifi)/i,
-    openRate: openRate("d['’]ouverture"),
+    openRate: openRate("d['’]ouverture", "e-?mails?"),
   },
   es: {
     noCard:
@@ -119,7 +123,7 @@ const WORDING: Record<string, Wording> = {
     ),
     scheduledStyle:
       /(?:programar|programad[oa]s?|programación|programa tus)[^.]{0,40}estilos? de tarjeta|estilos? de tarjeta[^.]{0,40}(?:programad|con antelación)/i,
-    openRate: openRate("apertura"),
+    openRate: openRate("apertura", "correos?|e-?mails?"),
   },
   pl: {
     noCard:
@@ -130,7 +134,7 @@ const WORDING: Record<string, Wording> = {
       "tryb bez połączenia|tryb offline"
     ),
     scheduledStyle: /(?:zaplan|planow)\w*[^.]{0,40}wz[oó]r\w* karty|wz[oó]r\w* karty[^.]{0,40}(?:zaplan|planow)/i,
-    openRate: openRate("otwarć|otwieraln"),
+    openRate: openRate("otwarć|otwieraln", "e-?mail"),
   },
 };
 
@@ -190,6 +194,10 @@ describe("product claim wording", () => {
     ["pl", "scheduledStyle", "Zaplanuj rozsyłki i wzory karty z wyprzedzeniem"],
     ["en", "openRate", "Reach every customer, 85% open rate."],
     ["fr", "openRate", "~85 % de taux d'ouverture"],
+    ["en", "openRate", "get read 5 to 10× more than email"],
+    ["fr", "openRate", "sont lus 5 à 10× plus que les emails"],
+    ["es", "openRate", "se leen de 5 a 10 veces más que los correos"],
+    ["pl", "openRate", "są czytane 5 do 10× częściej niż e-maile"],
   ] as const)("%s %s flags %p", (locale, claim, text) => {
     expect(WORDING[locale][claim].test(text)).toBe(true);
   });

@@ -20,6 +20,7 @@ import {
   negotiatedResponseHeaders,
   negotiatesLanguage,
 } from "./lib/routing/root-language";
+import { isDefaultLocaleShareImage } from "./lib/routing/share-image-paths";
 
 // `/` follows the visitor's cookie and browser language. Every other path is
 // served in the language its prefix names (French when unprefixed) and never
@@ -95,6 +96,10 @@ export default async function proxy(request: NextRequest) {
 
   const slug = acquisitionSlug(request.nextUrl.pathname);
   if (slug) return acquisitionResponse(request, slug);
+
+  if (isDefaultLocaleShareImage(request.nextUrl.pathname, routing.defaultLocale)) {
+    return NextResponse.next();
+  }
 
   if (negotiatesLanguage(request.nextUrl.pathname)) {
     const response = intlRoot(request);

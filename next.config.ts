@@ -7,7 +7,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const DISCOVERY_LINKS = [
   '</sitemap.xml>; rel="sitemap"',
-  '</feed.xml>; rel="alternate"; type="application/rss+xml"; title="Stampeo Blog"',
+  '</feed-fr.xml>; rel="alternate"; type="application/rss+xml"; title="Stampeo Blog"',
   '</privacy>; rel="privacy-policy"',
   '</terms>; rel="terms-of-service"',
   '</llms.txt>; rel="describedby"; type="text/plain"',

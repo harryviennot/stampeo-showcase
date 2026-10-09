@@ -839,7 +839,7 @@
       "hero": {
         "title": "Reach every customer. Without the SMS bill.",
         "navTitle": "Promotional Campaigns — Wallet push to every customer",
-        "subtitle": "Send broadcasts straight to your customers' Apple Wallet and Google Wallet, with no per-message fee. {growthBroadcasts} a month on Growth with basic segmentation, unlimited on Pro with advanced segmentation and scheduling.",
+        "subtitle": "Send broadcasts straight to your customers' Apple Wallet and Google Wallet, with no per-message fee. Growth includes {growthBroadcasts} broadcasts a month with basic segmentation. Pro has no limit, plus advanced segmentation and scheduling.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },

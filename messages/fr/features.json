@@ -839,7 +839,7 @@
       "hero": {
         "title": "Atteignez tous vos clients. Sans la facture SMS.",
         "navTitle": "Campagnes promotionnelles — Notifications wallet à tous vos clients",
-        "subtitle": "Envoyez vos diffusions directement dans Apple Wallet et Google Wallet, sans coût par message. {growthBroadcasts} par mois sur Growth avec une segmentation de base, illimitées sur Pro avec la segmentation avancée et la programmation.",
+        "subtitle": "Envoyez vos diffusions directement dans Apple Wallet et Google Wallet, sans coût par message. Growth inclut {growthBroadcasts} diffusions par mois avec une segmentation de base. Pro n'a pas de limite, avec la segmentation avancée et la programmation.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
