@@ -1,185 +1,353 @@
-# STA-358 — Indexing metadata and legacy redirects
+# Plan: STA-358 (extended): Showcase SEO/GEO hardening + US market fixes
 
-## Why
+ISSUE: STA-358, extended and retitled. It is the implementation ticket and sits under a new **parent ticket**, "stampeo.app SEO/GEO programme (audit 2026-10-09)". Every future ticket below is also a sub-issue of that parent.
+LINEAR STRUCTURE: create the parent → re-parent STA-358 under it → create future tickets 1–9 as sub-issues → link related existing issues (STA-359 Spanish sector guides, STA-66/65 Lighthouse, STA-369 merchant-page CTA) as "related" (not re-parented) → comment on STA-379. The parent's description links `docs/audits/2026-10-09-seo-geo/`.
+BRANCH: `feat/sta-358-seo-geo-hardening`, off `dev` in `showcase/`. Stage branches are worktrees off it.
+REPOS: showcase only. Backend and prod are read-only, for checking plan facts and re-running benchmark figures.
+MIGRATION: no
+STATUS: APPROVED (2026-10-09, by Harry)
 
-Two problems the STA-355 crawl surfaced that are about what pages SAY, not where
-links point.
+## Context
 
-**The canonical leak.** `app/[locale]/layout.tsx:84` sets `alternates.canonical`
-and `alternates.languages` on the locale LAYOUT. Next merges metadata down the
-segment chain, so every page that does not define its own `alternates` inherits
-`canonical → the locale homepage` plus the country-pilot hreflang cluster. Today
-that is `/login`, `/reset-password`, `/email-preferences`,
-`/demo/wallet-select/[token]`, `/onboarding`, both founding-partner routes for
-their non-owning locale, the loyalty siblings for non-canonical locales,
-`/pl/blog*`, and **every merchant enrollment page**. A café's QR landing page
-currently tells Google it is the Stampeo homepage.
+The 2026-10-09 audit (`docs/audits/2026-10-09-seo-geo/report.md` + `us-first-addendum.md`) found that stampeo.app hides its best content from crawlers and AI assistants, and that `/us` (the Meta-ads landing page, now the #1 SEO target) has specific problems. Verified on production:
 
-It also means every blog post advertises `en-US → /us`, because
-`blog/[slug]/page.tsx` sets `canonical` but no `languages` and inherits
-`PILOT_HREFLANG`.
+- **French URLs 404 for other browser languages.** A French blog URL requested with an `en`/`es`/`pl` browser language gets a 307 to `/{locale}/blog/<fr-slug>`, which is a 404.
+- **No prices or trial length in the HTML.** Every price and trial slot is a skeleton until the page loads.
+- **Structured data only appears after JavaScript runs** (`next/script afterInteractive`), so it is absent from the server HTML.
+- **The logo and default images 404:** `/icon-512.png`, `/icon-192.png` and `/og-image.png`.
+- **Homepage metadata leaks into other pages:** merchant pages declare the homepage as their canonical.
+- **Plan facts disagree** between llms.txt, the structured data, the meta descriptions and the pricing page.
+- **Blog posts have no hreflang**, and the breadcrumb structured data points at 404 URLs.
+- **Titles repeat the brand:** "| Stampeo | Stampeo".
+- **`/us` has problems of its own:**
+  - Its title and description are copied from `/en`.
+  - The demo cards say "€10 off" to US visitors; the strings are hardcoded and region-independent (verified with a New York browser).
+  - The Header and Footer link to `/en/us/pricing`, which returns a 200 duplicate.
+  - It has no "punch card" vocabulary.
+- **The site ships ~674 KB of gzipped JS**, including supabase-js on every page, and a 514 KB strip image.
 
-**Legacy 404s.** Search Console reports 24 distinct 404s; 12 have a real
-destination and none currently redirects. `next.config.ts` has no `redirects()`
-at all.
+STA-358 already planned the canonical leak, noindex, legacy redirects and the `proxy.ts` rename. This plan absorbs its acceptance criteria unchanged (renumbered as R-AC1…R-AC9 below) and adds the rest. **Outcome:**
+- Every indexable page states its real prices, structured data, canonical and hreflang in the server HTML.
+- Product facts come from one source.
+- `/us` is a credible US page.
+- Marketing pages load less JS.
 
-## Verified before planning
+## Decisions (from discussion, 2026-10-09)
 
-`showcase/AGENTS.md` warns this Next diverges from training data, so the two
-load-bearing assumptions were checked in `node_modules/next/dist/docs/` rather
-than assumed:
+- **Single ticket:** extend STA-358 rather than create a new one. Future work gets separate tickets.
+- **Pricing render:** the server renders the URL market's prices and trial length (EUR/30 on `/`, `/en`, `/es`, `/pl`, `/uk`; USD/14 on `/us`). After load, the visitor still sees their own region's prices, exactly as today. A cross-region visitor sees a brief swap; that is accepted.
+- **Language detection runs only when the path is exactly `/`.** Use two next-intl middleware instances:
+  - `intlRoot`, the current routing, for `/`.
+  - `intlDeep` (`localeDetection:false, localeCookie:false`) for every other path.
 
-1. **`redirects` runs before Proxy.** The documented order is `headers` (1),
-   `redirects` from `next.config` (2), **Proxy** (3), `beforeFiles` (4),
-   filesystem (5). So a config redirect fires before next-intl's locale
-   negotiation and produces one clean hop. The design depends on this.
-2. **`middleware.ts` is deprecated in Next 16**, renamed `proxy.ts`. This repo
-   still uses the old name. **In scope** (section 6): this issue already rewires
-   the routing pipeline and reasons in terms of "Proxy", so leaving the file
-   called `middleware.ts` would ship an incoherent codebase.
+  `/` with an en-US browser still goes to `/en`. Deep unprefixed URLs are served in French with no redirect and no cookie write. `NEXT_LOCALE` is then written only by the LanguageSwitcher. A global `localeDetection:false` is rejected: it would rewrite the cookie to `fr` and flip merchant QR pages to French.
+- **Side effect accepted:** a reader with an English browser on a French deep page who clicks the logo lands on `/en`.
+- **x-default → English everywhere**, because 68% of organic traffic is English. Today it is `/en` on the homepage and French elsewhere.
+- **"Punch card":** used on SEO surfaces only: `/us` and `/us/pricing` titles and meta descriptions, one H2 line and one FAQ entry. Product copy keeps "stamps". Add a one-line exception to the `stampeo-copywriting` skill.
+- **US spelling in English copy** ("program", not "programme"); the copywriting skill already uses "program". Don't change URL slugs like `/programme-fidelite`.
+- **E-E-A-T:** normalise every post author to "Harry Viennot". The Person structured data's `url` becomes `/about`. The Organization gets `founder` and `sameAs` with existing URLs only (nothing invented). The About founder section is a future ticket.
+- **Extras in scope:** performance quick wins, IndexNow, and replacing the unsourced statistics.
+- **Not in scope:** merging duplicate French posts.
+- **Unsourced statistics:** replaced by Stampeo production figures (re-run read-only at implementation time, all markets combined) with an inline source line, or by a real cited source, or removed. Nothing is invented.
+- **Merchant pages:** `noindex, follow`, with a self-canonical on the unprefixed `/{slug}` (`/{slug}/l/{loc}` for locations). The not-found branch is noindex too.
+- **lastmod:** only where it is true (blog posts). No invented dates on static pages.
+- **The layout keeps OpenGraph `{type, siteName, locale}` and the Twitter `card`.** Only `title` and `description` leave the layout (Next fills them from each page). `alternates` move to the homepage. Pages that set their own `openGraph` spread a shared base that includes the image.
+
+## UX decisions
+
+- **The DESIGN pass is skipped.** Reason: no new page, placement or affordance. Every change edits metadata, data, copy or rendering of existing surfaces. The POLISH pass still runs in Phase 3.
+- **PLACEMENT:** unchanged. Prices fill the existing slots. The sector demo cards keep their layout, with the currency formatted by the page's market.
+- **Header:** the server HTML shows "Log in" and "Get started" instead of the pulse skeleton, which is better for CLS and gives crawlable calls to action. A visitor with a session cookie sees Dashboard and Sign out after hydration.
+- **MOBILE:** no layout change. Images get lighter, and the price slots stop flashing skeletons on first paint.
+- **REJECTED:**
+  - a "View in English" banner on French pages (`FloatingLanguageSwitcher` already exists)
+  - markdown `<link rel=alternate>` tags (no evidence of effect)
+  - city or programmatic pages
+
+## Non-goals
+
+These are future tickets (see the end of this plan):
+- new US trade, pillar or comparison pages
+- the data report
+- About founder section and author page
+- lazy-loading PostHog and Sentry
+- trimming the `NextIntlClientProvider` messages payload
+- merging duplicate French posts
+- an ROI calculator page
+- off-site work (directories, reviews, list outreach, YouTube)
+- review stars
+
+Also not in this ticket: any backend change, and any change to billing currency or trial length.
 
 ## Acceptance criteria
 
-**AC1 — No page inherits a canonical it did not declare.**
-Given any route that does not set `alternates.canonical`, when its HTML is
-rendered, then it emits no canonical at all, and never one pointing at the
-locale homepage.
+### Carried over from STA-358 (text unchanged; see docs/features/STA-358/plan-2026-09-24.md)
+- R-AC1 No page inherits a canonical it did not declare.
+- R-AC2 Private routes (`/login`, `/reset-password`, `/email-preferences`, `/onboarding`, `/demo/wallet-select/{token}`) are `noindex, nofollow`.
+- R-AC3 Merchant enrolment pages are `noindex, follow`, with a self-canonical.
+- R-AC4 Every supplied legacy URL redirects once, permanently (308), and its destination returns 200.
+- R-AC5 Derived legacy blog redirects work in both directions (`/blog/{en|es-slug}` → prefixed, `/{en|es}/blog/{fr-slug}` → unprefixed).
+- R-AC6 Junk stays 404.
+- R-AC7 The founding routes resolve in one 308.
+- R-AC8 Private routes and redirect sources never appear in the sitemap; every sitemap URL is self-canonical and indexable.
+- R-AC9 `proxy.ts` replaces `middleware.ts` with every behaviour preserved.
 
-**AC2 — Private routes are noindex.**
-Given `/login`, `/reset-password`, `/email-preferences`, `/onboarding` or
-`/demo/wallet-select/{token}` in any locale, when the page is rendered, then it
-emits `noindex, nofollow` and no canonical pointing elsewhere.
+### Language routing
+- AC1: Given `/blog/{fr-slug}` (or any other unprefixed deep URL) with `Accept-Language: en-US`, `es` or `pl`, when requested, then it rewrites to `/fr/…` with 200 and no redirect, and the response has NO `Set-Cookie: NEXT_LOCALE`.
+- AC2: Given `/` with `en-US`, `pl-PL` or `fr`, when requested, then the behaviour is unchanged (`card-qr.test.ts` still passes). Both the 307 and the rewrite carry `Vary: Accept-Language, Cookie`, and the 307 carries `Cache-Control: no-store`.
+- AC3: Given `/{en|es|pl}/us…` or `/{en|es|pl}/uk…`, when requested, then a single 308 goes to `/us…` or `/uk…`. Given the Header or Footer on `/us`, when rendered, then the pricing link is `/us/pricing` and NOT `/en/us/pricing`.
+- AC4: For every `redirects()` entry (via `unstable_getResponseFromNextConfig`) and its destination run through the proxy with `en-US` and no cookie, there is no further redirect. No chains and no loops.
+- AC4b: `auth/callback`'s locale fallback uses `deviceLanguage(accept-language)` before French, because `NEXT_LOCALE` is no longer written on `/en/*` visits.
 
-**AC3 — Merchant enrollment pages are noindex, follow, self-canonical.**
-Given `/{businessSlug}` or `/{businessSlug}/l/{location}`, when rendered, then
-it emits `robots: noindex, follow` and a canonical to its own URL.
+### Server HTML (what a non-JS crawler sees)
+- AC5: Given `/`, `/pricing`, `/en/pricing`, `/us`, `/us/pricing`, when the raw HTML is fetched, then every plan price and trial length is present as numbers in the market currency (€ on int/uk, $ and 14 on `/us`). `TextSkeleton`, `splitPricingParts` and the `ready` skeleton branches are deleted.
+- AC6: Given a visitor whose region differs from the URL market, or a browser whose Intl separators differ from Node's (fr U+202F, es/pl grouping), when the page hydrates, then the prices switch to their region exactly as today. NO hydration error is logged and the trackers do not remount: price token spans carry `suppressHydrationWarning`.
+- AC7: Given any page that emits structured data, when the raw HTML is fetched, then it contains `<script type="application/ld+json">` with valid JSON, and `<` is escaped.
+- AC8: Given the Organization, Article and manifest data, when the referenced images are requested, then they return 200 (`/icon-192.png`, `/icon-512.png`). An Article image is the per-post OG image URL.
+- AC9: Given `/pricing` (every locale) and `/us/pricing`, when rendered, then they emit SoftwareApplication with Offers in the market currency (suppressed on the fallback ladder, as today) plus a FAQPage.
+- AC10: The WebSite structured data has no `SearchAction` and no `speakable`.
 
-**AC4 — Every supplied legacy URL redirects once, permanently.**
-Given any of the 21 legacy paths, when requested, then the response is a single
-308 to the stated destination, and that destination returns 200 with no further
-hop.
+### Product facts (one source)
+- AC11: `lib/plan-facts.ts` is the only place plan facts are stated. These all read from it or are asserted against it by a test:
+  - llms.txt plan bullets
+  - the Offer descriptions
+  - the feature meta descriptions that mention plans
+  - the pricing feature lists
 
-**AC5 — Derived legacy blog redirects work in both directions.**
-Given `/blog/{en-or-es-slug}` (locale-less), when requested, then it 308s to the
-prefixed URL. Given `/en/blog/{fr-slug}` or `/es/blog/{fr-slug}`, then it 308s to
-the unprefixed French URL. Today the first case is a hard 404: Googlebot sends no
-usable `Accept-Language`, next-intl resolves `fr`, rewrites to
-`/fr/blog/{en-slug}`, finds no French post, and 404s.
+  Covered facts: loyalty types per plan, broadcasts per month, locations, analytics level, scheduling, geofencing status. Where today's copy disagrees with `backend/app/core/features.py`, the backend wins.
+- AC12: llms.txt includes a US block (USD prices, 14-day trial, `/us`, `/us/pricing`). Prices come from the plan catalog, falling back to `FALLBACK_PRICING`.
+- AC13: llms.txt and the blog contain no statistic without a source. Stampeo figures carry "Stampeo data: n businesses, period". `lib/benchmark.ts` holds the values, with n, period and method.
 
-**AC6 — Junk stays 404.**
-Given `/month`, `/mo`, `/mois`, `/mes`, or an obsolete fingerprinted `.woff2`,
-when requested, then the response is 404 and the path appears in no redirect rule.
+### hreflang, sitemap, blog
+- AC14: x-default points to the English version in every cluster (homepage, locale pages, loyalty, features, blog).
+- AC15: `/pricing` (every locale) and `/us/pricing` share one reciprocal cluster that includes `en-US → /us/pricing`. Each sitemap entry carries its own page's cluster, never the homepage's.
+- AC16: Blog posts that have translations emit reciprocal hreflang, both in the page and in the sitemap, from one pair map (`lib/blog/translations.ts`). A test asserts both slugs exist and every pair is bidirectional.
+- AC17: The blog breadcrumb uses locale-prefixed URLs and localised labels, and every item URL returns 200. "Updated on" and the reading time are localised; there is no French text on English or Spanish posts.
+- AC18: `/feed-pl.xml` is not served empty (404 while Polish has no posts). Each locale page declares its RSS `<link rel="alternate">`. `/feed.xml` → `/feed-fr.xml` is a 308.
+- AC19: `/us`, `/uk`, `/us/pricing`, `/contact` and the pricing pages emit a full openGraph block (title, description, siteName, type, locale, image). Nothing drops the image.
 
-**AC7 — The founding routes resolve in one permanent hop.**
-Given `/programme-fondateur`, `/founding-partner`, `/en/programme-fondateur` or
-`/en/founding-partner`, when requested, then the response is a single 308 to that
-locale's `/pricing`. Today `/founding-partner` takes three hops, two of them
-temporary.
+### Copy and metadata
+- AC20: No rendered title contains "Stampeo" twice. Every title, suffix included, is ≤ 60 characters, and every meta description is ≤ 160, in all 4 locales. Enforced by a catalog test in `lib/`. Rewritten keys are removed from `LEGACY_EM_DASH`, and there are no new em dashes.
+- AC21: The FR and EN homepage titles name the category (FR "carte de fidélité digitale" plus Apple/Google Wallet; EN "digital loyalty card"). The pricing titles state the starting price as a token interpolated server-side from the market ladder. No hardcoded currency glyph goes into `metadata.json`, which is in `PRICED_FILES`.
+- AC22: `/us` has its own title and description under `variant.us.*` (with `MARKET_ONLY_KEYS` entries, or `MARKET_SCOPED`/`baseIdOf` widened together), using `{trialDays}`. "Digital punch card" appears in the `/us` and `/us/pricing` metadata, one H2 line and one FAQ entry, and nowhere else in the product copy.
+- AC23: The sector demo cards format money with the page's market currency (€ on int, $ on `/us`). The money tokens are present in all 4 locales, and the `landing.sectorCards` exemption is removed from `no-currency-glyph.test.ts`.
+- AC24: All 33 posts have author "Harry Viennot". English titles and descriptions use "program", while slugs and URLs are unchanged.
 
-**AC8 — Private routes never enter the sitemap.**
-Given the generated sitemap, when each URL is checked, then none is a private
-segment, none is a redirect source, and each is self-canonical and indexable.
+### Performance
+- AC25: Given no Supabase auth cookie (`sb-<ref>-auth-token` or its `.N` chunks, excluding `-code-verifier`), when any marketing page loads, then supabase-js is NOT downloaded. Given a session cookie, the Header shows Dashboard and Sign out; Sign out lazy-imports the client, signs out, and the Header updates. `AuthProvider` wraps only `login`, `reset-password` and `onboarding`, through per-route `layout.tsx` files (no route group). Login, reset-password, onboarding and the OAuth flows still work.
+- AC26: Caveat and Geist Mono are not preloaded. The restaurant strip image is ≤ 80 KB. The gelo cone images are ≤ 60 KB each.
+- AC27: robots.txt no longer disallows `/*opengraph-image*`.
+- AC28: The hidden `aria-hidden` link block is removed from the Header. The Footer's links still cover every page it listed (asserted by `seo-links.test.ts`).
 
-**AC9 — The routing entry point uses the current file convention.**
-Given the repo, when the routing pipeline is inspected, then it is `proxy.ts`
-exporting `proxy`, no `middleware.ts` remains, and every behaviour the old file
-had still holds: the www 301, the `/us` + `/uk` pilot rewrites with the market
-cookie, `text/markdown` negotiation, and the acquisition-slug rewrite.
+### IndexNow
+- AC29: An IndexNow key file is served at `/<key>.txt`. `scripts/indexnow.ts` builds a valid payload from the sitemap (unit-tested). A GitHub workflow runs it after a push to `main`. It fails soft: a failed ping never fails the deploy.
 
-## Approach
+### Guard
+- AC30: `scripts/seo-smoke.ts` runs against a built server (locally, and in CI after `bun run build`) and asserts:
+  - ld+json is in the raw HTML
+  - price numbers are present (fallback ladder tolerated)
+  - no double brand in titles
+  - the canonical and hreflang on 6 representative URLs
+  - the AC1/AC3/R-AC4 redirects
+  - icons return 200
 
-### 1. Move `alternates` off the layout
-Out of `app/[locale]/layout.tsx:83-93`, into `app/[locale]/page.tsx`, where the
-homepage canonical and `PILOT_HREFLANG` belong. One change, and AC1 falls out.
-Regression risk is the pages that already set their own `alternates` — pricing,
-about, privacy, terms, contact, changelog, blog index, blog post, features, the
-four loyalty siblings, us/uk, both founding routes. AC8's self-canonical
-assertion is what catches one silently losing its canonical.
+## Edge cases considered
 
-### 2. `noindex` on private routes
-Reuse `PRIVATE_SEGMENTS` from `lib/consent-routes.ts` — already pinned to the
-real route tree in both directions by `consent-routes.test.ts`, so a new private
-page cannot skip this. Add `lib/page-robots.ts` with one `NOINDEX` constant;
-copy the shape at `app/[locale]/onboarding/layout.tsx:12`. `login`,
-`reset-password` and `demo/wallet-select/[token]` are client components and need
-a sibling `layout.tsx`; `email-preferences` takes `generateMetadata` directly.
+- **Redirect loops** between R-AC5 and language detection: removed by the root-only detection and pinned by AC4.
+- **The `proxy.ts` rename moves the code from Edge to the Node runtime.** Keep `export default`; the two tests importing it only change their path. Check that the Sentry server config covers the proxy (the edge config no longer applies). Prove the file is registered against a built server.
+- **`lib/legacy-redirects.ts` is imported by `next.config.ts`** (compiled to CommonJS). It must not import `next-intl` or `@/i18n/routing`; use `lib/blog/locales.ts`.
+- **Supabase `detectSessionInUrl`** currently handles `?code=` on any page. Confirm the Supabase redirect allowlist and Site URL never land on a marketing page without `AuthProvider`. If they can, keep a minimal handler on `/`.
+- **Stale session cookie** (expired but present): the Header shows Dashboard; the dashboard middleware clears it. Accepted.
+- **Plan catalog fallback** (backend down at build): prices render from `FALLBACK_PRICING` and the Offer is suppressed, as today. The smoke test tolerates this.
+- **Cloudflare (STA-379)** ignores `Vary` on HTML, so `/` must bypass its cache. This goes in the STA-379 comment.
+- **Tests only run from `lib/` and `scripts/`** (`package.json`). A test placed under `components/` is silently skipped.
 
-### 3. Merchant pages
-`buildAcquisitionMetadata` in `components/acquisition/AcquisitionPageView.tsx:17`
-gains `robots: { index: false, follow: true }` and a self-canonical. robots.txt
-cannot help here by design — see the `/auth` vs `authentic-cafe` note in
-`lib/robots.ts`.
+## Stages and subagents (after approval)
 
-### 4. The redirect table
-New `lib/legacy-redirects.ts`, consumed by a `redirects()` in `next.config.ts`,
-all `permanent: true`. Explicit entries for the 21 supplied paths; derived rules
-for the mechanical cases so the table self-maintains as posts are added. The
-derived rules must assert FR/EN/ES slug sets are disjoint, so a future French
-post named `digital-stamp-card` cannot be hijacked by an English rule.
+The coordinator is me, on Opus. Its jobs:
+- Linear: retitle STA-358, update its description, create the future tickets.
+- Write `docs/features/STA-358/plan.md`.
+- Create the branch and worktrees.
+- Write each stage brief and merge the stages.
+- Run the reviews and the verification.
+- Re-run the benchmark SQL read-only on prod.
+- Check plan facts against `backend/app/core/features.py`.
 
-`next.config.ts` will import a module that reads `content/blog` from disk. Config
-runs in Node at build time, so this is fine, but it must not be pulled into the
-Proxy bundle — verified by the build, not by a unit test.
+Each stage is a `stage-implementer` working in its own worktree (`isolation: "worktree"`, with `bun install` first). It writes tests first in `lib/` or `scripts/` and commits on its stage branch. A stage sweeps "middleware" comments only in files it owns; the coordinator sweeps the rest after merging.
 
-### 5. Founding routes
-Add the four paths to the table so they resolve in one hop, AND fix the in-page
-fallback so both agree: test `!isFoundingProgramOpen()` first, and use
-`permanentRedirect(localePath(locale, "/pricing"))`. The hardcoded
-`/${locale}/pricing` is what produced the extra `/fr/pricing → /pricing` hop.
+**Wave 1 (parallel):**
 
-Do not delete the route folders: `consent-routes.test.ts` asserts every
-`MARKETING_SEGMENTS` name still exists as a folder.
+| Stage | Model | Owns, exclusively |
+|---|---|---|
+| **S1 Routing & indexing** | Sonnet | `middleware.ts`→`proxy.ts` (+ the imports in `lib/routing/card-qr.test.ts` and `middleware-matcher.test.ts`); the `intlRoot`/`intlDeep` split + Vary; `next.config.ts` `redirects()` + `lib/legacy-redirects.ts` (+ a loop test, with a read-only import of the sitemap for "no redirect source"); the pilot de-prefix 308s; `lib/page-robots.ts` + per-route `robots` (no new copy keys); `AcquisitionPageView.tsx` (`locationSlug`, not-found noindex); founding pages; `app/[locale]/layout.tsx` + `app/[locale]/page.tsx` metadata move; raw market links in `Header.tsx:313` and `Footer.tsx:147`; the `auth/callback` fallback. ACs: R-AC1–7, R-AC9, AC1–4b, part of AC3 |
+| **S2 Structured data + facts + llms.txt** | Sonnet | `components/JsonLd.tsx`; `lib/structured-data.ts` (backward-compatible signatures); new `lib/plan-facts.ts` + `lib/benchmark.ts`; `lib/llms-txt.ts` + route; `MarketPricingPage.tsx` structured data; icons through file conventions (`public/icon-192.png`, `icon-512.png`) + `app/manifest.ts`; `lib/robots.ts` + its test; `t()` call-site arguments for plan facts (no copy edits). ACs: AC7–13, AC27 |
+| **S3 Pricing SSR + sector money** | Sonnet | `components/market/*` (server snapshot = market ladder, delete `ready`, `TextSkeleton`, `splitPricingParts` + their tests, `suppressHydrationWarning` on the price spans); the price slots in `PricingTierCard`, `PricingSection`, `PricingPageContent`, `ROICalculator`, `HeroDemo`, `Variant*`; `VariantSectorCards` + `SectorCarousel` (market prop, money tokens in `messages/*/landing.json` `sectorCards`, all 4 locales); the glyph test exemption; rewriting runbook cases RP-03, RP-08 and RP-09. ACs: AC5, AC6, AC23 |
+| **S5 hreflang, sitemap, blog, OG** | Sonnet | `lib/hreflang.ts` (x-default EN), `PILOT_HREFLANG` + the pricing cluster in `lib/markets.ts`; `us`/`uk`/`us/pricing`/`uk/pricing`/`pricing`/`contact` page metadata (shared OG base with the image); `app/sitemap.ts` + `lib/sitemap.test.ts`; `lib/blog/translations.ts`; the blog `[slug]` page metadata and its breadcrumb call site; `BlogHeader` + `messages/*/blog.json`; feeds. ACs: R-AC8, AC14–19 |
 
-### 6. Rename `middleware.ts` to `proxy.ts`
-Deprecated in Next 16. Two mechanical changes: the filename, and
-`export default async function middleware` -> `proxy`.
+**Merge order:** S1 and S5 together (between them, `/us/pricing` has no hreflang), then S2, then S3. The coordinator resolves conflicts, runs the full test suite, type-check, lint and build after each merge, and sweeps the remaining comments.
 
-**By hand, not with the codemod.** The published codemod is
-`npx @next/codemod@canary middleware-to-proxy .` — `canary` is a moving target,
-and running an unpinned canary transform across the repo to save a two-line edit
-is a worse trade than doing it deliberately. The matcher config is untouched.
+**Wave 2 (after wave 1 merges):**
 
-`next-intl/middleware` and `createMiddleware` stay exactly as they are: those are
-next-intl's API, not the Next file convention, and renaming them would break the
-import.
+| Stage | Model | Owns |
+|---|---|---|
+| **S4 Copy & metadata** | Sonnet + `stampeo-copywriting` skill | Every title and description in `metadata.json`/`pricing.json`/`about.json` in all locales; `/us` keys under `variant.us.*`; the punch-card SEO surfaces (meta, one H2, one FAQ); the skill exception line; `LEGACY_EM_DASH` cleanup; the title-length/double-brand catalog test; replacing the unsourced statistics in posts and in `lib/benchmark.ts` references. ACs: AC20–22, part of AC13 |
+| **S4b Mechanical content** | Haiku | Author → "Harry Viennot" in 33 frontmatters; "programme(s)" → "program(s)" in English post titles, descriptions and body text, never inside URLs or slugs (explicit grep checklist). AC: AC24 |
+| **S6 Performance + Header session** | Sonnet | The `useHasSession` hook (`useSyncExternalStore` on the sb cookie); `Header.tsx` auth buttons + lazy sign-out; `AuthProvider` moved to the `login`/`reset-password`/`onboarding` `layout.tsx` files; removing the hidden nav; font `preload:false`. ACs: AC25, AC26 (fonts), AC28 |
+| **S6b Images** | Haiku | Resize `public/themes/restaurant/strip.jpg` (~750 px wide) and `gelo/cone*.png` (256²) with `sips`, and verify the sizes and rendering. AC: AC26 (images) |
+| **S7 IndexNow** | Haiku | `public/<key>.txt`, `scripts/indexnow.ts` + `scripts/indexnow.test.ts`, `.github/workflows/indexnow.yml` (soft-fail). AC: AC29 |
 
-Roughly fifteen files mention "middleware" in comments and prose (including
-`lib/consent-routes.ts`, `lib/markets.ts`, `lib/internal-links.ts` and
-`lib/seo-links.ts`). Those get updated too — a comment pointing at a file that no
-longer exists is how the next person loses an hour.
+**Wave 3:**
 
-This lands as its own commit, before the redirect table, so that if the rename
-regresses anything the bisect is one file wide.
+| Step | Who | Model |
+|---|---|---|
+| `scripts/seo-smoke.ts` + CI step after build (AC30) | `stage-implementer` | Sonnet |
+| Runbooks: amend `public-urls.md` (SU-*), `us-market-landing.md` (MK/SE), `region-pricing.md`, `seo-internal-links.md`; new `docs/qa/seo-indexing.md` (crawler-view cases: curl HTML, redirects, robots, hreflang, ld+json, llms.txt) | `stage-implementer` | Sonnet |
+| UX polish pass on the diff | `ux-designer` (MODE: POLISH) | its own model |
+| Coverage audit | `coverage-auditor` | Opus |
+| Hygiene review (diff > 150 lines) | `code-quality-reviewer` | Opus |
+| Security review, because S6 touches auth and session handling | `security-reviewer` | Opus |
 
-## Tests, written first
+## Verification
 
-- `lib/legacy-redirects.test.ts` — AC4, AC5, AC6. Destinations are real routes;
-  no source is also a destination (no chains); no rule shadows a live URL; the
-  keep-as-404 list is absent; slug sets disjoint.
-- `lib/sitemap.test.ts` — AC8. The first test `app/sitemap.ts` has ever had.
-- `lib/page-robots.test.ts` — AC2, AC3.
-- AC9 has no new unit test: the existing `lib/locale-negotiation.test.ts`,
-  `lib/market-paths.test.ts`, `lib/markets.test.ts` and `lib/business-locale.test.ts`
-  already cover the logic the file delegates to, and the rename does not touch
-  it. What the rename CAN break is whether Next picks the file up at all, which
-  no unit test can see — so it is verified by `curl` on a built server: a www
-  redirect, `/us/pricing`, and a business slug.
+1. In `showcase/`: `bun run test && bun run type-check && bun run lint && bun run build`. Never build while the dev server runs.
+2. `bun start` on the build, then `bun scripts/seo-smoke.ts http://localhost:3000`.
+3. Hand curl checks:
+   - `/blog/carte-fidelite-wallet` with `en-US` → 200, no Set-Cookie
+   - `/` with `en-US` → 307 `/en` + Vary
+   - `/en/us/pricing` → 308 `/us/pricing`
+   - `/us` contains `$` and 14, and no € in the sector cards
+   - ld+json is present on `/`, a blog post and `/pricing`
+   - a merchant slug is noindex and self-canonical
+   - `/icon-512.png` → 200
+4. Playwright, New York vs Paris browser contexts on `/us`, `/pricing` and `/es/pricing`: the swap works, there are no hydration errors in the console, and the Header session works (log in, then Dashboard, then Sign out).
+5. After deploy: the smoke test against https://stampeo.app.
+6. Search Console: URL Inspection on `/us` (Google-selected canonical) and resubmit the sitemap.
+7. Bing Webmaster Tools: import from Search Console and enable the AI Performance report. **This is a manual step for Harry.**
 
-Two things unit tests cannot prove, so they are runbook cases against a built
-server, not assertions: that `redirects` actually fires before Proxy (a unit test
-cannot see the pipeline), and AC1/AC2/AC3, which are about rendered HTML.
+## Docs impact (preliminary)
 
-## Risks
+Probably none: marketing site only, with no dashboard behaviour change. A one-line `docs-decision.md` is expected.
 
-- **The whole redirect table rests on order step 2 before step 3.** Documented
-  and quoted above, but prove it with `curl` on a built server before believing
-  the table works.
-- **Moving `alternates` touches every page's metadata.** The sitemap
-  self-canonical assertion is the guard.
-- **21 explicit redirects is a hand-copied list.** Every destination gets
-  asserted to be a real route, so a typo fails the suite rather than shipping.
-- **A silently-unregistered `proxy.ts` fails open, not loud.** If Next does not
-  pick the file up, every request simply skips it: no error, no failing unit
-  test, and pilot URLs and QR enrollment pages quietly break. This is the one
-  change in the issue that must be verified against a built server before it is
-  believed.
+## Future tickets (created after approval, all sub-issues of the parent)
+
+1. **US trade pages under `/us`:** digital-punch-card pillar, coffee shop, salon, barbershop; then bakery, restaurant, food truck.
+2. **US comparison pages:** vs Square Loyalty, Loopy Loyalty, Stamp Me, paper punch cards.
+3. **Wallet Loyalty Report 2026** (target January 2027), plus product data-quality fixes: `businesses.timezone` is UTC for every business, and 212 businesses have no `country`.
+4. **Off-site presence:** Capterra/GetApp/G2, review drive, list outreach, Product Hunt, YouTube Shorts, monthly AI prompt panel.
+5. **About page founder section + author page.**
+6. **Performance phase 2:** lazy-load PostHog and Sentry, trim the client i18n payload, CSS instead of framer-motion in the Header.
+7. **French content consolidation:** merge the duplicate posts.
+8. **Standalone ROI calculator page.**
+9. **First-party review stars:**
+   - A merchant rating prompt in the dashboard (`web/` + `backend/`).
+   - Reviews shown visibly on stampeo.app.
+   - `SoftwareApplication.aggregateRating` / `review` markup, never on `Organization`.
+
+   Capterra and Trustpilot numbers must never be copied into the markup: Google's guidelines say "Don't aggregate reviews or ratings from other websites", which is what Passtastic does.
+10. **A comment on STA-379** (not a ticket): check Cloudflare's "Block AI bots" and managed robots.txt settings, and make `/` bypass the HTML cache because it varies by Accept-Language.
+
+---
+
+## Reference A: the legacy redirect table (supplied by Harry, 2026-09-24)
+
+All are permanent (308) and one hop. All 12 Search Console destinations were verified 200 on 2026-09-24.
+
+**Search Console 404s with a real destination:**
+
+| Legacy path | Destination |
+|---|---|
+| `/en/en/onboarding` | `/en/onboarding` |
+| `/blog/apple-wallet-loyalty-card` | `/en/blog/apple-wallet-loyalty-card` |
+| `/blog/paper-vs-digital-loyalty-card` | `/en/blog/paper-vs-digital-loyalty-card` |
+| `/blog/como-crear-tarjeta-fidelidad-digital` | `/es/blog/como-crear-tarjeta-fidelidad-digital` |
+| `/blog/mejor-app-fidelizacion-comercios` | `/es/blog/mejor-app-fidelizacion-comercios` |
+| `/blog/coffee-shop-loyalty-card` | `/en/blog/coffee-shop-loyalty-card` |
+| `/features/notificaciones` | `/es/features/notificaciones-push` |
+| `/blog/best-loyalty-card-system-small-business` | `/en/blog/best-loyalty-card-system-small-business` |
+| `/en/blog/carte-fidelite-dematerialisee` | `/blog/carte-fidelite-dematerialisee` |
+| `/en/blog/carte-fidelite-sans-application` | `/blog/carte-fidelite-sans-application` |
+| `/en/blog/carte-fidelite-cafe` | `/blog/carte-fidelite-cafe` |
+| `/en/blog/carte-fidelite-papier-vs-digitale` | `/blog/carte-fidelite-papier-vs-digitale` |
+
+**Paths from git history:**
+
+| Historical path | Destination |
+|---|---|
+| `/en/blog/apple-wallet-loyalty-cards-setup` | `/en/blog/apple-wallet-loyalty-card` |
+| `/en/blog/why-digital-loyalty-cards` | `/en/blog/digital-loyalty-card-small-business` |
+| `/en/blog/founding-partner-program` | `/en/pricing` |
+| `/blog/configurer-cartes-fidelite-apple-wallet` | `/blog/apple-wallet-carte-fidelite` |
+| `/blog/pourquoi-cartes-fidelite-digitales` | `/blog/carte-fidelite-dematerialisee` |
+| `/blog/programme-partenaire-fondateur` | `/pricing` |
+| `/signup` | `/onboarding` |
+| `/en/signup` | `/en/onboarding` |
+| `/fr/signup` | `/onboarding` |
+
+**Founding routes:**
+
+| Path | Destination |
+|---|---|
+| `/programme-fondateur` | `/pricing` |
+| `/founding-partner` | `/pricing` |
+| `/en/programme-fondateur` | `/en/pricing` |
+| `/en/founding-partner` | `/en/pricing` |
+
+**New in this extension:** `/{en,es,pl}/us`, `/{en,es,pl}/us/:path*`, `/{en,es,pl}/uk` and `/{en,es,pl}/uk/:path*` redirect to `/us…` and `/uk…`.
+
+**These stay 404** (asserted absent from the table):
+- `/month`, `/mo`, `/mois`, `/mes`
+- `/_next/static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2`, `/_next/static/media/caa3a2e1cccd8315-s.p.853070df.woff2`
+
+**Not redirected:**
+- `/es/blog/tarjeta-fidelidad-sin-app` returns 200 (the Search Console report is stale).
+- `/es/blog/tarjeta-sellos-digital`, `/es/blog/tarjeta-fidelidad-cafeteria`, `/blog/tarjeta-fidelidad-restaurante` and `/blog/tarjeta-fidelidad-panaderia` were intended articles that never existed. They stay 404 until STA-359 writes them; never send them to the homepage.
+
+**Out of scope:** `https://dev.stampeo.app/` (handled at DNS level).
+
+## Reference B: plan facts (backend truth, `backend/app/core/features.py`, read 2026-10-09)
+
+| Fact | Starter | Growth | Pro |
+|---|---|---|---|
+| Loyalty types (`programs.type`) | stamps + points | stamps + points | stamps + points |
+| Team members (`team.max_members`) | 2 (owner + 1) | unlimited | unlimited |
+| Employee scan tracking | no | yes | yes |
+| Broadcasts / month | 0 (none) | 8 | unlimited |
+| Scheduled broadcasts | no | no | yes |
+| Milestone notifications | 0 | 3 | unlimited |
+| Multiple locations | no | no | yes |
+| Location analytics | no | no | yes |
+| Analytics | basic | basic | basic + advanced |
+| Scheduled card designs | no | no | yes |
+| Geofencing | no | no | gate is on, but **disabled in the pass generator since 2026-05-29** (`pass_generator.py:31`), so it reads "coming soon" |
+
+**Copy that is currently wrong against this table:**
+- `llms-txt.ts` says "Starter is stamps-only".
+- The meta descriptions say "3 free/month on Growth" (it is 8), and "scheduling included" (it is Pro only).
+- `OFFER_DESCRIPTIONS` gives Growth "advanced analytics, scheduled campaigns, multi-location"; all three are Pro only.
+- llms.txt says "geofencing (Pro)"; it is coming soon.
+
+## Reference C: benchmark figures (prod, read-only, 2026-10-09)
+
+Source: `docs/audits/2026-10-09-seo-geo/evidence/barometer-data.md` (workspace), which has the SQL and cohort rules. All markets are combined. A business qualifies with at least 10 real customers and at least 10 scans; founder-owned and test businesses and staff cards are excluded. **Always round down. Quote "Stampeo data, 86 businesses, Feb–Oct 2026".**
+
+| Key | Value | n |
+|---|---|---|
+| `walletAddRate` | 88% of customers who join add the card to their wallet | 6,816 customers since 1 Jul, 79 businesses |
+| `appleShare` | 82% Apple Wallet / 18% Google Wallet | 6,020 adds |
+| `installedDay30` | 98% still in the wallet after 30 days | 4,406 installs |
+| `installedDay90` | 95% after 90 days | 856 installs |
+| `return30` | 32% (about 1 in 3) come back within 30 days | 3,213 customers, 86 businesses |
+| `medianDaysToSecondVisit` | 11 days | 1,693 returning customers |
+| `redeemedShare` | 92% of full cards are redeemed | 223 cards, 40 businesses |
+| `medianStampsPerCard` | 9 | |
+
+**Do NOT publish:**
+- any broadcast-uplift claim
+- France-only or US-only figures
+- stamps-vs-points comparisons
+
+**Unsourced claims to replace or remove:**
+- "~45% of paper-card holders don't present them"
+- "95% of users abandon a new app within a month" (cite a real study, or remove)
+- "retention on wallet passes is above 90%" (use `installedDay30`)
+- the blog title "90 % de rétention" (`carte-fidelite-sans-application`, which ranks second on Bing FR): keep the query wording and make the number sourced
