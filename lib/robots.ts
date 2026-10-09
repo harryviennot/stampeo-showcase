@@ -29,5 +29,4 @@ export const DISALLOW_PATHS = [
     .flatMap((locale) =>
       PRIVATE_PATHS.flatMap((path) => rulesFor(`/${locale}${path}`))
     ),
-  "/*opengraph-image*",
 ];
