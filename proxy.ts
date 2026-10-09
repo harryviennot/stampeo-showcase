@@ -34,7 +34,7 @@ const getBusinessLocale = createBusinessLocaleLookup({
 // 404'd as /en/us/pricing, stranding US visitors on the euro pricing page. The
 // prefix check requires a following slash, so /usual-cafe is still unaffected.
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   // 301 redirect www → non-www
   if (request.headers.get("host")?.startsWith("www.")) {
     const url = request.nextUrl.clone();
