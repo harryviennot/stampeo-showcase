@@ -1,22 +1,41 @@
 import { routing } from "@/i18n/routing";
-import { type Pricing } from "./pricing";
+import { interpolatePricing, type Pricing } from "./pricing";
+import { PLAN_NAMES, TIERS, planSummary } from "./plan-facts";
 
 const BASE_URL = "https://stampeo.app";
+const ORGANIZATION_ID = `${BASE_URL}/#organization`;
+
+/** The default locale is unprefixed, every other locale is `/{locale}`. */
+const localePrefix = (locale: string) =>
+  locale === routing.defaultLocale ? "" : `/${locale}`;
+
+const FOUNDER = {
+  "@type": "Person",
+  name: "Harry Viennot",
+  url: `${BASE_URL}/about`,
+} as const;
+
+/** Profiles the site already links to (Footer, contact page, scanner store badges). */
+const SAME_AS = [
+  "https://x.com/stampeo_app",
+  "https://linkedin.com/company/stampeo",
+  "https://instagram.com/stampeo.app",
+  "https://apps.apple.com/app/id6761758382",
+  "https://play.google.com/store/apps/details?id=com.hryvnt.stampeo",
+];
 
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": ORGANIZATION_ID,
     name: "Stampeo",
     url: BASE_URL,
     logo: `${BASE_URL}/icon-512.png`,
     description:
       "Digital loyalty cards for Apple Wallet and Google Wallet. Empowering local businesses with modern customer retention tools.",
-    sameAs: [
-      "https://x.com/stampeo_app",
-      "https://linkedin.com/company/stampeo",
-      "https://instagram.com/stampeo.app",
-    ],
+    founder: FOUNDER,
+    sameAs: SAME_AS,
     contactPoint: {
       "@type": "ContactPoint",
       email: "contact@stampeo.app",
@@ -30,58 +49,45 @@ export function webSiteJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${BASE_URL}/#website`,
     name: "Stampeo",
     url: BASE_URL,
     inLanguage: [...routing.locales],
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${BASE_URL}/blog?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
-    speakable: {
-      "@type": "SpeakableSpecification",
-      cssSelector: ["h1", "h2", "[data-speakable]"],
-    },
+    publisher: { "@id": ORGANIZATION_ID },
   };
 }
 
-const OFFER_NAMES = { starter: "Starter", growth: "Growth", pro: "Pro" } as const;
-
-const OFFER_DESCRIPTIONS = {
-  starter:
-    "1 card template, unlimited customers & scans, 2 team members, push notifications.",
-  growth:
-    "Multiple card templates, unlimited team members, multi-location support, advanced analytics, scheduled campaigns.",
-  pro: "Everything in Growth, plus multi-location analytics and priority support.",
-} as const;
+/** What a plan includes, from the plan facts. */
+const offerDescription = (tier: (typeof TIERS)[number]) =>
+  `Unlimited customers and scans, ${planSummary(tier)}.`;
 
 export function softwareApplicationJsonLd(pricing: Pricing) {
-  // No Offer block when the amounts are a fallback. A human seeing a stale
-  // price is survivable; Google indexing EUR amounts against /us is not, and
-  // the baked ladder is EUR-only so that is exactly what a fallback would
-  // publish. An Organization/WebSite entry with no offers is valid structured
-  // data; a wrong price is not.
+  // No Offer block when the amounts are the baked fallback: structured data is
+  // machine-read and indexed, so a stale price there outlives the outage. A
+  // SoftwareApplication with no offers is valid; a wrong price is not.
   const offers = pricing.isFallback
     ? undefined
-    : (["starter", "growth", "pro"] as const).flatMap((tier) =>
+    : TIERS.flatMap((tier) =>
         (["month", "year"] as const).map((interval) => ({
           "@type": "Offer",
-          name: interval === "year" ? `${OFFER_NAMES[tier]} (annual)` : OFFER_NAMES[tier],
+          name: interval === "year" ? `${PLAN_NAMES[tier]} (annual)` : PLAN_NAMES[tier],
           price: String(pricing.tiers[tier][interval]),
           priceCurrency: pricing.currency.toUpperCase(),
           description:
             interval === "year"
-              ? `${OFFER_NAMES[tier]} billed yearly: ${OFFER_DESCRIPTIONS[tier]}`
-              : OFFER_DESCRIPTIONS[tier],
+              ? `${PLAN_NAMES[tier]} billed yearly: ${offerDescription(tier)}`
+              : offerDescription(tier),
         })),
       );
 
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": `${BASE_URL}/#software`,
     name: "Stampeo",
+    url: BASE_URL,
     applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
+    operatingSystem: "Web, iOS, Android",
     ...(offers ? { offers } : {}),
     description:
       "Digital loyalty card platform for local businesses. Create Apple Wallet and Google Wallet passes in minutes.",
@@ -105,48 +111,53 @@ export function faqPageJsonLd(
   };
 }
 
+/**
+ * The pricing page FAQ for one market, price and trial tokens resolved with
+ * that market's ladder. Structured data is read per URL, so it never follows
+ * the visitor's region the way the visible FAQ does.
+ */
+export function pricingFaqJsonLd(
+  items: Array<{ question: string; answer: string; foundingOnly?: boolean }>,
+  pricing: Pricing,
+  locale: string,
+  trialDays: number,
+  foundingOpen: boolean,
+) {
+  const resolve = (text: string) => interpolatePricing(text, pricing, locale, trialDays);
+  return faqPageJsonLd(
+    items
+      .filter((item) => foundingOpen || !item.foundingOnly)
+      .map((item) => ({ question: resolve(item.question), answer: resolve(item.answer) })),
+  );
+}
+
 export function articleJsonLd(article: {
   title: string;
   description: string;
   publishedAt: string;
   updatedAt?: string;
-  author: string;
+  /** The display byline. The structured-data author is always the founder. */
+  author?: string;
   coverImage?: string;
   slug: string;
   locale: string;
 }) {
+  const url = `${BASE_URL}${localePrefix(article.locale)}/blog/${article.slug}`;
+  // The post's opengraph-image route: one share image per post, in every locale.
+  const shareImage = `${url}/opengraph-image`;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: article.title,
     description: article.description,
-    image: article.coverImage
-      ? `${BASE_URL}${article.coverImage}`
-      : `${BASE_URL}/og-image.png`,
+    image: article.coverImage ? [shareImage, `${BASE_URL}${article.coverImage}`] : shareImage,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt || article.publishedAt,
-    author: {
-      "@type": "Person",
-      name: article.author,
-      url: "https://linkedin.com/company/stampeo",
-      description:
-        "Founder of Stampeo, building digital loyalty cards for local businesses.",
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "Stampeo",
-      logo: {
-        "@type": "ImageObject",
-        url: `${BASE_URL}/icon-512.png`,
-      },
-    },
+    author: FOUNDER,
+    publisher: { "@id": ORGANIZATION_ID },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${BASE_URL}${article.locale === "fr" ? "" : `/${article.locale}`}/blog/${article.slug}`,
-    },
-    speakable: {
-      "@type": "SpeakableSpecification",
-      cssSelector: ["h1", ".article-summary", "[data-speakable]"],
+      "@id": url,
     },
   };
 }
@@ -162,20 +173,19 @@ export function collectionPageJsonLd(collection: {
     publishedAt: string;
   }>;
 }) {
-  const localePrefix =
-    collection.locale === "fr" ? "" : `/${collection.locale}`;
+  const prefix = localePrefix(collection.locale);
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: collection.name,
     description: collection.description,
-    url: `${BASE_URL}${localePrefix}/blog`,
+    url: `${BASE_URL}${prefix}/blog`,
     mainEntity: {
       "@type": "ItemList",
       itemListElement: collection.posts.map((post, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `${BASE_URL}${localePrefix}/blog/${post.slug}`,
+        url: `${BASE_URL}${prefix}/blog/${post.slug}`,
         name: post.title,
       })),
     },
