@@ -164,13 +164,17 @@ then continue with AN (analytics must hold regardless).
 
 ### RP-03: Language switch keeps the region currency [BLOCKER]
 
+*(Amended 2026-10-09 (STA-358): the server HTML now carries the URL market's
+prices instead of skeleton chips, so a brief swap to the region's currency
+after each load is expected.)*
+
 | Field | Content |
 |---|---|
 | WHY | The reported bug: switching language (or clicking the logo from `/us`) used to drop a US visitor onto EUR pricing. |
 | DEPENDS | RP-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R1 (US spoof). 2. Open `/us`. 3. Click the Stampeo logo in the header (lands on the international landing). 4. Use the language switcher: fr → en → pl. 5. Navigate to Pricing from the header on the last locale. |
-| EXPECT | After every navigation, prices stay `$` and trial mentions stay 14. You do NOT see a EUR flash after the page settles (one skeleton frame is allowed, a `€` amount is not). |
+| EXPECT | After every navigation, prices settle on `$` and trial mentions on 14. The international pages are server-rendered in `€` and 30, so a brief `€` → `$` swap right after each load is expected. You do NOT see a `€` amount or a 30-day trial once the page has settled, and the DevTools console shows no hydration error. |
 | RESET | None. |
 
 ### RP-04: US visitor on /uk sees USD [CORE]
@@ -217,18 +221,25 @@ then continue with AN (analytics must hold regardless).
 | EXPECT | `/` shows `€` + 30; `/us` shows `$` + 14 (each page's own market default). You do NOT see indefinitely-pulsing skeletons — every chip resolves to a number. |
 | RESET | Restore your real language settings (chrome://settings/languages). |
 
-### RP-08: Skeleton hold, no wrong-currency flash, no layout jump [CORE]
+### RP-08: Server-rendered prices, region swap, no layout jump [CORE]
+
+*(Amended 2026-10-09 (STA-358): the skeleton hold is gone. The server renders
+the URL market's prices so crawlers and AI assistants read real numbers; the
+visitor's region swaps in after hydration.)*
 
 | Field | Content |
 |---|---|
-| WHY | The user chose hold-until-detected over a flash of the page-default currency; the chips must also not shift layout (CLS) when they resolve. |
+| WHY | The server HTML must carry real prices, and the swap to the visitor's region must neither shift layout (CLS) nor trip a hydration mismatch, which would re-render the page and remount the trackers. |
 | DEPENDS | RP-01 |
 | ACCOUNT | No session at all. |
-| STEPS | 1. R1 (US spoof). 2. DevTools → Performance → CPU: 6x slowdown. 3. Hard-reload `/pricing` and watch the tier cards during load. 4. Watch card heights as chips resolve. 5. Disable JS (DevTools → Cmd+Shift+P → "Disable JavaScript"), reload once, observe; re-enable JS. |
-| EXPECT | During load, price slots show small pulsing chips inline with the text; the rest of each card (name, features, CTA) is fully rendered. Chips resolve to `$` amounts. Card heights do NOT change when chips resolve, and at no point does a `€` amount appear before the `$` one. With JS disabled, chips remain (accepted trade-off — this is not a failure, note it only if actual amounts render wrong instead). |
+| STEPS | 1. R1 (US spoof). 2. DevTools → Performance → CPU: 6x slowdown. 3. Hard-reload `/pricing` and watch the tier cards during load. 4. Watch card heights as the amounts swap. 5. Read the DevTools console. 6. Disable JS (DevTools → Cmd+Shift+P → "Disable JavaScript"), reload once, observe; re-enable JS. |
+| EXPECT | During load, every price slot shows a full `€` amount and the trial says 30 (the `/pricing` market); there are no pulsing chips and no empty "/month" slot. After hydration they swap to `$` amounts and 14. Card heights do NOT jump on the swap. The console shows no hydration error or warning ("Hydration failed", "didn't match"). With JS disabled, the `€` amounts and 30 stay on screen. |
 | RESET | CPU throttle off, JS re-enabled. |
 
 ### RP-09: JSON-LD keeps the market default [CORE]
+
+*(Amended 2026-10-09 (STA-358): the visible price slots in the raw HTML now
+carry the URL market's amounts instead of skeleton markup.)*
 
 | Field | Content |
 |---|---|
@@ -236,7 +247,7 @@ then continue with AN (analytics must hold regardless).
 | DEPENDS | none |
 | ACCOUNT | No session at all (curl). |
 | STEPS | 1. R3 on `/`. 2. R3 on `/us`. 3. In each, read the SoftwareApplication offers and the FAQPage answers. |
-| EXPECT | `/` JSON-LD quotes EUR amounts; `/us` JSON-LD quotes USD amounts. FAQ JSON-LD answers contain real numbers and do NOT contain the literal text `{starterPrice}`, `{trialDays}`, or any other `{...}` token. The visible-HTML price slots in the curl output contain skeleton markup, not amounts — that is expected. |
+| EXPECT | `/` JSON-LD quotes EUR amounts; `/us` JSON-LD quotes USD amounts. FAQ JSON-LD answers contain real numbers and do NOT contain the literal text `{starterPrice}`, `{trialDays}`, or any other `{...}` token. The visible price slots in the curl output carry the URL market's amounts: `€` and 30 on `/`, `$` and 14 on `/us`. You do NOT see skeleton markup or an empty "/mois" or "/month" slot. |
 | RESET | None. |
 
 ### RP-10: MarketSuggestion banner still offered [CORE]
