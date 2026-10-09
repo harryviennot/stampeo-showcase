@@ -57,6 +57,10 @@ const EXPLICIT: ReadonlyArray<Rule> = [
   ["/founding-partner", "/pricing"],
   ["/en/programme-fondateur", "/en/pricing"],
   ["/en/founding-partner", "/en/pricing"],
+  ["/es/programme-fondateur", "/es/pricing"],
+  ["/es/founding-partner", "/es/pricing"],
+  ["/pl/programme-fondateur", "/pl/pricing"],
+  ["/pl/founding-partner", "/pl/pricing"],
 ];
 
 /** The post slugs in each blog locale, read from `content/blog/<locale>/`. */

@@ -132,14 +132,13 @@ describe("Article", () => {
 });
 
 describe("pricing page FAQ", () => {
-  type Faq = { question: string; answer: string; foundingOnly?: boolean };
-  const items = enPricing.pricingPage.faq.items as Faq[];
+  const items = enPricing.pricingPage.faq.items;
 
   it.each([
     ["int", "eur"],
     ["us", "usd"],
   ] as const)("resolves every price and trial token for the %s market", (market, currency) => {
-    const faq = pricingFaqJsonLd(items, livePricing(currency), "en", MARKETS[market].trialDays, false);
+    const faq = pricingFaqJsonLd(items, livePricing(currency), "en", MARKETS[market].trialDays);
     const text = JSON.stringify(faq);
     expect(faq["@type"]).toBe("FAQPage");
     expect(text).not.toMatch(/\{\w+\}/);
@@ -147,12 +146,10 @@ describe("pricing page FAQ", () => {
     expect(text).toContain(currency === "usd" ? "$49" : "€20");
   });
 
-  it("leaves out founding-only questions once the programme has closed", () => {
-    const closed = pricingFaqJsonLd(items, livePricing("eur"), "en", 30, false);
-    const open = pricingFaqJsonLd(items, livePricing("eur"), "en", 30, true);
-    const founding = items.filter((item) => item.foundingOnly).length;
-    expect(founding).toBeGreaterThan(0);
-    expect(open.mainEntity.length - closed.mainEntity.length).toBe(founding);
+  it.each(["fr", "en", "es", "pl"])("the %s FAQ does not advertise the closed founding programme", (locale) => {
+    const catalog = JSON.parse(readFileSync(join(ROOT, "messages", locale, "pricing.json"), "utf8"));
+    const faq = catalog.pricingPage.faq.items as Array<{ foundingOnly?: boolean }>;
+    expect(faq.filter((item) => item.foundingOnly)).toEqual([]);
   });
 });
 

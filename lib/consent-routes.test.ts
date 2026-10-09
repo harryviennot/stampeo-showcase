@@ -235,9 +235,14 @@ describe("segment tables", () => {
             : [],
       );
 
+    // The closed founding pages answer with a 308 and serve no HTML, so no
+    // cookie is set on them.
+    const redirectOnly = ["founding-partner", "programme-fondateur"];
+
     const cookiePages = [
       join(appDir, "page.tsx"),
       ...[...MARKETING_SEGMENTS]
+        .filter((segment) => !redirectOnly.includes(segment))
         .filter((segment) => !PRIVATE_SUBPATHS.some(([parent]) => parent === segment))
         .flatMap((segment) => pagesUnder(join(appDir, segment))),
     ];

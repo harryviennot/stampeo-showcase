@@ -325,14 +325,9 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
+function PricingFAQ() {
   const t = useTranslations("pricingPage");
-  const allFaqs = t.raw("faq.items") as Array<{
-    question: string;
-    answer: string;
-    foundingOnly?: boolean;
-  }>;
-  const faqs = foundingOpen ? allFaqs : allFaqs.filter((f) => !f.foundingOnly);
+  const faqs = t.raw("faq.items") as Array<{ question: string; answer: string }>;
 
   return (
     <div className="mt-16 lg:mt-24 max-w-[840px] mx-auto">
@@ -431,7 +426,7 @@ export function PricingPageContent({
       <ROICalculator pricing={pricing} />
 
       {/* FAQ */}
-      <PricingFAQ foundingOpen={foundingOpen} />
+      <PricingFAQ />
 
       {/* Bottom CTA */}
       <ScrollReveal

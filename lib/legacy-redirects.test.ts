@@ -20,7 +20,6 @@ import proxy from "../proxy";
 import { hasBlog } from "./blog/locales";
 import { FEATURE_SLUGS, getLocalizedSlug } from "./feature-slugs";
 import { DEFAULT_LOCALE, SITE_LOCALES, legacyRedirects } from "./legacy-redirects";
-import { isFoundingProgramOpen } from "./pricing";
 
 const ORIGIN = "https://stampeo.app";
 const ROOT = join(import.meta.dir, "..");
@@ -110,6 +109,10 @@ const REFERENCE_A: Array<[string, string]> = [
   ["/founding-partner", "/pricing"],
   ["/en/programme-fondateur", "/en/pricing"],
   ["/en/founding-partner", "/en/pricing"],
+  ["/es/programme-fondateur", "/es/pricing"],
+  ["/es/founding-partner", "/es/pricing"],
+  ["/pl/programme-fondateur", "/pl/pricing"],
+  ["/pl/founding-partner", "/pl/pricing"],
   // Locale-prefixed copies of the country pilots
   ["/en/us", "/us"],
   ["/es/us/pricing", "/us/pricing"],
@@ -118,12 +121,13 @@ const REFERENCE_A: Array<[string, string]> = [
 ];
 
 /** Live pages a rule replaces on purpose. */
-const FOUNDING_ROUTES = new Set([
-  "/programme-fondateur",
-  "/founding-partner",
-  "/en/programme-fondateur",
-  "/en/founding-partner",
-]);
+const FOUNDING_ROUTES = new Set(
+  SITE_LOCALES.flatMap((locale) =>
+    ["programme-fondateur", "founding-partner"].map((slug) =>
+      locale === DEFAULT_LOCALE ? `/${slug}` : `/${locale}/${slug}`,
+    ),
+  ),
+);
 const isPilotCopy = (path: string) => /^\/(en|es|pl)\/(us|uk)(\/|$)/.test(path);
 
 describe("legacy URLs from Search Console and git history", () => {
@@ -142,9 +146,6 @@ describe("legacy URLs from Search Console and git history", () => {
   });
 
   test("no rule replaces a live page, except the closed founding routes and the pilot copies", () => {
-    // The founding pages only redirect while the programme is closed.
-    expect(isFoundingProgramOpen()).toBe(false);
-
     const shadowed = PROBES.filter((probe) => isLiveRoute(probe));
     expect(shadowed.filter((probe) => !FOUNDING_ROUTES.has(probe) && !isPilotCopy(probe))).toEqual([]);
   });

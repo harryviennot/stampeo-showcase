@@ -281,11 +281,6 @@
         {
           "question": "Can I cancel anytime?",
           "answer": "Yes. There are no contracts or cancellation fees. Cancel anytime and you'll keep access until the end of your current billing period."
-        },
-        {
-          "question": "What is the Founding Partner program?",
-          "answer": "Our Founding Partner program gives early adopters 50% off their plan — locked for life. Spots are limited and the program closes soon.",
-          "foundingOnly": true
         }
       ]
     },

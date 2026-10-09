@@ -62,12 +62,10 @@ function postPassages(locale: string): Passage[] {
 /**
  * Strings that name a feature which is not live yet, where the label alone
  * carries no "soon": the pricing table rows, whose cells come from
- * `lib/pricing-features.ts` (checked below), and the founding page's
- * "What we're building next" list.
+ * `lib/pricing-features.ts` (checked below).
  */
 const ROADMAP = [
   /\/pricing\.json::pricingPage\.comparison\.rows\.(?:offlineScanning|scheduledChanges)\.label$/,
-  /\/features\.json::features\.programme-fondateur\.custom\.transparency\.comingSoon\.items\[\d+\]$/,
 ];
 
 interface Wording {

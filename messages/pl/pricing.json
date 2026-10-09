@@ -281,11 +281,6 @@
         {
           "question": "Czy mogę zrezygnować w każdej chwili?",
           "answer": "Tak. Nie ma umów ani opłat za rezygnację. Rezygnujesz kiedy chcesz i zachowujesz dostęp do końca opłaconego okresu rozliczeniowego."
-        },
-        {
-          "question": "Czym jest Program Założycielski?",
-          "answer": "Program Założycielski daje pierwszym firmom 50% zniżki na plan, na zawsze. Miejsc jest niewiele i program wkrótce się zamyka.",
-          "foundingOnly": true
         }
       ]
     },

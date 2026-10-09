@@ -281,11 +281,6 @@
         {
           "question": "¿Puedo cancelar cuando quiera?",
           "answer": "Sí. No hay contratos ni gastos de cancelación. Cancela cuando quieras y conservarás el acceso hasta el final de tu periodo de facturación actual."
-        },
-        {
-          "question": "¿Qué es el Programa Fundador?",
-          "answer": "Nuestro Programa Fundador ofrece a los primeros usuarios un 50 % de descuento en su plan, garantizado de por vida. Las plazas son limitadas y el programa cierra pronto.",
-          "foundingOnly": true
         }
       ]
     },
