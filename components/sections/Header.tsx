@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "
 import NextLink from "next/link";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { buildSeoLinks } from "@/lib/seo-links";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { ChevronDownIcon } from "../icons";
 import { useAuth } from "@/lib/supabase/auth-provider";
@@ -353,17 +352,8 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 
-  const seoLinks = buildSeoLinks(locale, market);
-
   return (
     <>
-      {/* Plain <a> duplicate of the nav — guarantees link signal in raw HTML
-          regardless of hover state, viewport, or client hydration timing */}
-      <nav className="sr-only" aria-hidden="true">
-        {seoLinks.map((l) => (
-          <a key={l.href} href={l.href} tabIndex={-1}>{l.label}</a>
-        ))}
-      </nav>
       <header className="fixed top-0 left-0 right-0 z-50">
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
         <div

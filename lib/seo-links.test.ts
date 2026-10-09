@@ -1,5 +1,5 @@
 /**
- * The sr-only header/footer navigation (STA-355 QA, blocker 2).
+ * The footer's sr-only sitemap navigation (STA-355 QA, blocker 2).
  *
  * This surface shipped a redirect on EVERY page of the site and no test saw it.
  * Two reasons, both fixed here rather than documented:
@@ -91,23 +91,39 @@ describe("buildSeoLinks", () => {
     expect(buildSeoLinks("fr").some((l) => l.label === "Blog")).toBe(true);
   });
 
-  test("the components use this function instead of rebuilding the list", () => {
-    // The drift guard. The list used to be inline and identical in both files,
-    // so a fix to one left the other broken. If either grows its own copy
-    // again, this surface silently leaves the suite's reach.
-    for (const file of ["Header.tsx", "Footer.tsx"]) {
-      const source = readFileSync(
-        join(import.meta.dir, "..", "components", "sections", file),
-        "utf-8"
-      );
-      expect({ file, calls: source.includes("buildSeoLinks(locale, market)") }).toEqual({
-        file,
-        calls: true,
-      });
-      expect({ file, rebuilds: /const seoLinks = \[/.test(source) }).toEqual({
-        file,
-        rebuilds: false,
-      });
-    }
+  test("the footer renders every destination as a crawlable anchor, in every locale and market", () => {
+    // The footer is the only place these links ship, so it must take the whole
+    // list for the page's own locale and market, render each entry verbatim,
+    // and keep it visible to assistive tech and crawlers alike.
+    const footer = readSection("Footer.tsx");
+
+    expect({
+      takesTheWholeList: footer.includes("const seoLinks = buildSeoLinks(locale, market);"),
+      rebuildsItsOwnList: /const seoLinks = \[/.test(footer),
+      rendersEachAsAVisibleAnchor:
+        /<nav(?![^>]*aria-hidden)[^>]*>\s*\{seoLinks\.map\(\(l\) => \(\s*<a key=\{l\.href\} href=\{l\.href\}>/.test(
+          footer
+        ),
+    }).toEqual({
+      takesTheWholeList: true,
+      rebuildsItsOwnList: false,
+      rendersEachAsAVisibleAnchor: true,
+    });
+  });
+
+  test("the header carries no hidden duplicate of the navigation", () => {
+    // A focus-skipped, aria-hidden link block reads as cloaking; the footer
+    // already gives crawlers every one of these links.
+    const header = readSection("Header.tsx");
+
+    expect({
+      buildsSeoLinks: header.includes("buildSeoLinks"),
+      hidesFromAssistiveTech: header.includes('aria-hidden="true"'),
+      skipsFocus: header.includes("tabIndex={-1}"),
+    }).toEqual({ buildsSeoLinks: false, hidesFromAssistiveTech: false, skipsFocus: false });
   });
 });
+
+function readSection(file: string): string {
+  return readFileSync(join(import.meta.dir, "..", "components", "sections", file), "utf-8");
+}
