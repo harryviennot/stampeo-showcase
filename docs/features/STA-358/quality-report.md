@@ -47,3 +47,21 @@ VERDICT: FINDINGS
 
 ## Waivers
 (filled by the main agent only if the user explicitly waives a finding)
+
+## Resolution (2026-10-10, coordinator)
+Every finding above was addressed in F1, merged at bbc7039:
+- the comments
+- the smoke split into `scripts/seo-smoke/{html,checks,client}.ts`
+- `lib/seo/` and `lib/plans/` (`lib/` went from 106 to 93 entries)
+- the json-ld test merged
+- the founding gate: one dispatch point, the dead FounderProgramPage path and its copy deleted
+- the PriceText and MarketLink components
+- `lib/testing/catalogs.ts` and `pagesUnder`
+- `findKeyFile`
+- change detectors deleted
+- `POST_TITLE_MAX` named
+- the duplicate describe merged
+
+**Residual (tracked as follow-ups, not blocking):**
+- `scripts/seo-smoke.ts` is 345 lines after F2 added 39 checks. That is above the ~300 guidance and well under 800; the check list can move into `scripts/seo-smoke/` later.
+- `isFoundingProgramOpen()` still gates `PricingPageContent`, `PricingSection` and `yearlyCardView`. It is the same dead path in pre-existing pricing code, and its cleanup is follow-up work.

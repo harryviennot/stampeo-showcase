@@ -71,3 +71,61 @@ VERDICT: DRIFT FOUND
 
 ## Waivers
 (filled by the main agent only if the user explicitly waives a gap)
+
+## Resolution (2026-10-10, coordinator)
+Fixed in F1 (refactors and bug fixes) and F2 (coverage); both are merged into feat/sta-358-seo-geo-hardening.
+
+**Bugs fixed:**
+- **Doubled-prefix redirect chains:** every doubled variant now gets one 308 to the final page. Pinned per rule family in `lib/seo/legacy-redirects.test.ts`.
+- **IndexNow fail-silent:** non-2xx responses now print a `::warning::` and still exit 0. `reportFor()` is tested for 200/202/400/403/422/429/500/0.
+- **The founding gate** now has a single dispatch point.
+- **The legal titles' double brand,** found by F2.
+
+**Covered by the built-server smoke (`scripts/seo-smoke.ts`, 72 checks, green on dev-backend and CI-fallback builds):**
+
+| ACs | What the smoke checks |
+|---|---|
+| R-AC1, R-AC2 | Private routes: noindex, no canonical |
+| R-AC6 | Junk paths are 404 |
+| R-AC8 | All 94 sitemap URLs: 200, self-canonical, indexable |
+| AC3 | The `/us` links |
+| AC5 | Prices on 5 pages, with ≥ 3 amounts each, plus the trial length |
+| AC8 | Article image returns 200 |
+| AC9 | Offer currency |
+| AC14–16, AC30 | hreflang on 7 URLs |
+| AC17 | Blog header and breadcrumb |
+| AC18 | RSS link |
+| AC19 | OpenGraph |
+| AC23 | `$10` and no € on `/us` |
+| AC26 | Font preloads |
+| AC28 | Footer links, no hidden header nav |
+| AC29 | IndexNow key file |
+
+**Covered by unit tests:**
+
+| ACs | Test |
+|---|---|
+| AC11 (beyond broadcasts) | `lib/plans/plan-facts.test.ts` |
+| AC13 (blog half) | `lib/plans/product-claims.test.ts`, with explicit, ratcheted allowances |
+| AC20 (blog descriptions, legal titles) | `lib/blog/title.test.ts`, `lib/seo/metadata-copy.test.ts` |
+| AC21, AC22 | `lib/seo/metadata-copy.test.ts` |
+| AC24 | `lib/blog/posts.test.ts` |
+| AC26 (images) | `lib/landing/theme-images.test.ts` |
+| R-AC9 and the missing workflows | `lib/routing/proxy-behaviour.test.ts`: www 301, pilot rewrite plus cookie, markdown negotiation, merchant QR on an English phone, a NEXT_LOCALE=en deep URL stays French |
+| AC25 (hook and sign-out) | `lib/auth/use-has-session.test.ts` |
+
+**Suspect tests addressed:**
+- The change-detector tests are deleted.
+- founding-routes asserts the URL and status, not Next's digest.
+- The seo-links source-text assertions are replaced by the smoke check.
+- The Article image test uses real slugs.
+
+**Drift:** recorded in plan.md under "Scope additions during implementation".
+
+**Proposed waivers (await Harry's explicit OK). They are not covered by automated tests:**
+1. **AC6 hydration (no hydration error, no tracker remount):** covered by the browser harness `scripts/qa-region-pricing-cdp.mjs` (48/48) and by the region-pricing runbook, not by `bun test`, because the repo has no DOM runner in CI.
+2. **The PKCE `/?code=` exchange in `PkceCallbackHandler`:** only `isPkceCallback` is unit-tested. The exchange needs a DOM and supabase-js; it is covered manually by runbook SX-30 on the dev host.
+3. **The Header component's signed-in rendering:** the hook, sign-out and the SSR markup are tested; the component swap is covered manually by runbook SX-29.
+
+## Waivers
+(pending Harry's explicit approval of the three items above)
