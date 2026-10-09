@@ -32,27 +32,31 @@ export function BlogHeader({ post }: { post: BlogPostMeta }) {
         {post.description}
       </p>
       <div className="flex items-center gap-3 text-sm text-[var(--muted-foreground)]">
-        <div className="w-9 h-9 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)] font-bold text-xs">
+        <div className="w-9 h-9 shrink-0 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)] font-bold text-xs">
           {initials}
         </div>
-        <span className="font-semibold text-[var(--foreground)]">
-          {post.author}
-        </span>
-        <span>·</span>
-        <time dateTime={post.publishedAt}>
-          {formatDate(post.publishedAt, post.locale)}
-        </time>
-        {post.updatedAt && post.updatedAt !== post.publishedAt && (
-          <>
-            <span>·</span>
-            <span>
-              {t.rich("updatedOn", {
-                date: formatDate(post.updatedAt, post.locale),
-                time: (chunks) => <time dateTime={post.updatedAt}>{chunks}</time>,
-              })}
-            </span>
-          </>
-        )}
+        {/* Below md the name and each date take a line beside the avatar, as
+            in AuthorCard; from md they share one row. */}
+        <div className="flex flex-col md:flex-row md:items-center md:gap-3">
+          <span className="font-semibold text-[var(--foreground)]">
+            {post.author}
+          </span>
+          <span aria-hidden className="hidden md:inline">·</span>
+          <time dateTime={post.publishedAt}>
+            {formatDate(post.publishedAt, post.locale)}
+          </time>
+          {post.updatedAt && post.updatedAt !== post.publishedAt && (
+            <>
+              <span aria-hidden className="hidden md:inline">·</span>
+              <span>
+                {t.rich("updatedOn", {
+                  date: formatDate(post.updatedAt, post.locale),
+                  time: (chunks) => <time dateTime={post.updatedAt}>{chunks}</time>,
+                })}
+              </span>
+            </>
+          )}
+        </div>
       </div>
       {post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-5">
