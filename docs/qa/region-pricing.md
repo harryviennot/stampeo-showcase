@@ -31,9 +31,10 @@ pages — no login is required anywhere in this book.
 
 ### Accounts
 
-None. Every case runs logged-out ("No session at all"). Do not log in: an
-authenticated session changes the Header auth slot and can confuse the
-skeleton observations in RP-08.
+None. Every case runs logged-out ("No session at all"). Do not log in: a
+session swaps the Header's buttons after hydration, which is easy to mistake
+for the price swap RP-08 watches. *(Amended 2026-10-09 (STA-358): the Header no
+longer shows a skeleton while it checks the session.)*
 
 ### Reset recipes
 
@@ -79,20 +80,38 @@ From `showcase/`, run:
 bun scripts/qa-region-pricing-cdp.mjs
 ```
 
+*(Amended 2026-10-09 (STA-358): the server HTML now carries the URL market's
+prices, so a loaded page is not yet a settled one. The harness waits for React
+to hydrate the price surfaces, then for the region's terms to replace the
+market's, instead of waiting for skeletons to resolve.)*
+
 The script launches a fresh isolated Chrome profile and applies Chrome's real
 DevTools `Emulation.setTimezoneOverride` before navigation. It checks all ten
 landing/pricing routes with `America/New_York`, `Europe/Paris`, `Asia/Tokyo`,
-and the undetectable fallback (`Etc/UTC` + regionless `en`). It fails on a
-wrong currency, wrong trial length, missing ladder amount, or unresolved price
-skeleton, and also exercises monthly and 390px mobile pricing on the cross-
-market pricing page. A passing run currently reports `48` checks and `0`
-failures.
+and the undetectable fallback (`Etc/UTC` + regionless `en`). On each route it
+waits until React has hydrated the price surfaces, then until the expected
+region's terms show (at most 3 s), and fails on a wrong currency, wrong trial
+length, missing ladder amount, or any pulsing placeholder left in a price
+surface (there should be none at all now). It also exercises monthly and 390px
+mobile pricing on the cross-market pricing page. A passing run reports `48`
+checks and `0` failures: STA-358 changed how the harness waits, not which
+routes and regions it checks.
 
 R4 proves the hydrated browser behavior and route matrix. It does not replace
 RP-08's visual flash/CLS observation or AN-01..AN-03's analytics tooling.
 
 ### Known state before you start
 
+- **STA-358 (2026-10-09): server-rendered prices.** The server HTML now
+  carries the URL market's prices and trial length (EUR and 30 on the
+  international pages and `/uk`, USD and 14 on `/us`), and the visitor's
+  region swaps in after hydration. The skeleton chips, the "…" holds and the
+  held card state are gone. Rewritten in place: RP-03, RP-08 and RP-09 (with
+  the code), then RP-06, RP-07, AN-02, ED-01, ED-02, R4 and the Accounts note.
+  ED-01 also changed because the founding routes now answer one 308 and
+  `/llms.txt` now has a USD block. The crawler-view checks of the same server
+  HTML are in `seo-indexing.md` (SX-18, SX-19). **Targeted re-run:** R4, then
+  RP-03, RP-06, RP-07, RP-08, RP-09, AN-02, ED-01, ED-02.
 - **Run of 2026-09-21 at `fd8c880` (post-implementation):** PASSED: RP-05, RP-06
   (real Paris browser), plus RP-01, RP-05 and the GB-on-/us rule re-verified via
   CDP timezone override; RP-10's banner observed with the new copy. RP-09 FAILED
@@ -124,14 +143,17 @@ RP-08's visual flash/CLS observation or AN-01..AN-03's analytics tooling.
 - **Trial-day expectations:** US region = 14, everything else = 30.
 - **A dismissed MarketSuggestion banner persists in localStorage** — use R2 if a
   case expects the banner and it does not appear.
-- **Untested until the next promo:** `PricingTierCard`'s held state suppresses
-  the strikethrough discount pair (both numbers would be chips). No discount is
-  active today (founding program closed 2026-08-04), so no case exercises it.
-  When a promo next activates a discount, add a case: held card shows a single
-  chip, resolved card shows the strikethrough pair in the region's currency.
-- **HeroDemo and ROICalculator hold with "…" instead of chips** (their figures
-  live inside strings that cannot hold an element — sanctioned by the plan's
-  2026-09-21 amendment). A one-frame ellipsis there is expected, not a failure.
+- **Untested until the next promo:** `PricingTierCard`'s strikethrough
+  discount pair. No discount is active today (founding program closed
+  2026-08-04), so no case exercises it. *(Amended 2026-10-09 (STA-358): there
+  is no held state any more.)* When a promo next activates a discount, add a
+  case: the server HTML shows the strikethrough pair in the URL market's
+  currency, and it swaps to the region's currency after hydration with no
+  hydration error.
+- **HeroDemo and ROICalculator** render the URL market's figures on the
+  server and swap to the region's after hydration, like every other price
+  surface. *(Amended 2026-10-09 (STA-358): they used to hold with "…".)* An
+  ellipsis where a number belongs is now a failure.
 
 ---
 
@@ -201,16 +223,22 @@ after each load is expected.)*
 
 ### RP-06: French visitor baseline unchanged [CORE]
 
+*(Amended 2026-10-09 (STA-358): the server renders these pages' own prices, so
+there is no skeleton left to resolve.)*
+
 | Field | Content |
 |---|---|
 | WHY | Regression guard: the majority path (EU visitor on EU pages) must look exactly as before the change. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R1 (FR spoof). 2. Open `/` and `/pricing`, read all price surfaces. |
-| EXPECT | `€` and 30 throughout, amounts identical to production today (Starter 20/mo ladder). You do NOT see `$`, 14, or any skeleton chip that never resolves. |
+| EXPECT | `€` and 30 throughout, amounts identical to production today (Starter 20/mo ladder), from the first paint: a Paris visitor on these pages sees no swap at all. You do NOT see `$`, 14, or a pulsing placeholder in a price slot. |
 | RESET | None. |
 
 ### RP-07: Undetectable region falls back to the page market [CORE]
+
+*(Amended 2026-10-09 (STA-358): the page market's numbers are now in the server
+HTML, so an undetectable visitor keeps what was rendered.)*
 
 | Field | Content |
 |---|---|
@@ -218,7 +246,7 @@ after each load is expected.)*
 | DEPENDS | RP-01, RP-05 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R2, then R1 (Unknown spoof — `Etc/UTC` + regionless language). 2. Open `/` and read the pricing section. 3. Open `/us` and read the pricing section. |
-| EXPECT | `/` shows `€` + 30; `/us` shows `$` + 14 (each page's own market default). You do NOT see indefinitely-pulsing skeletons — every chip resolves to a number. |
+| EXPECT | `/` shows `€` + 30; `/us` shows `$` + 14 (each page's own market default): the numbers the server rendered, with no swap after load. You do NOT see a pulsing placeholder or an empty price slot. |
 | RESET | Restore your real language settings (chrome://settings/languages). |
 
 ### RP-08: Server-rendered prices, region swap, no layout jump [CORE]
@@ -282,13 +310,16 @@ Meta Pixel Helper extension and access to GA4 DebugView on the dev property.
 
 ### AN-02: Consent behavior unchanged by region detection [BLOCKER]
 
+*(Amended 2026-10-09 (STA-358): wording only. The prices no longer resolve from
+chips; they swap after hydration.)*
+
 | Field | Content |
 |---|---|
 | WHY | The consent regime is derived from the same timezone table the pricing detection reads. If the feature leaked into consent, an EU visitor could get trackers without opting in (compliance breach) or a US visitor could get a surprise banner. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. R2, then R1 (FR spoof). 2. Open `/` — observe the consent banner and check no gtag/fbevents script is loaded (DevTools → Network, filter `gtag`/`fbevents`) before answering. 3. Do not answer the banner; read the pricing section (prices resolve to €). 4. R2, then R1 (US spoof). 5. Open `/` — observe banner behavior and script loading. |
-| EXPECT | FR spoof: banner shows, and no gtag/fbevents request fires before consent — even after the price chips resolve. US spoof: the opt-out regime behaves exactly as on current dev (no banner, trackers load). You do NOT see the banner appear or disappear as a result of the price swap, at any point mid-session. |
+| STEPS | 1. R2, then R1 (FR spoof). 2. Open `/` — observe the consent banner and check no gtag/fbevents script is loaded (DevTools → Network, filter `gtag`/`fbevents`) before answering. 3. Do not answer the banner; read the pricing section (prices read €). 4. R2, then R1 (US spoof). 5. Open `/` — observe banner behavior and script loading. |
+| EXPECT | FR spoof: banner shows, and no gtag/fbevents request fires before consent — even after the prices settle. US spoof: the opt-out regime behaves exactly as on current dev (no banner, trackers load). You do NOT see the banner appear or disappear as a result of the price swap, at any point mid-session. |
 | RESET | R2. |
 
 ### AN-03: Attribution still captures the landing variant [CORE]
@@ -312,16 +343,23 @@ Meta Pixel Helper extension and access to GA4 DebugView on the dev property.
 since the program closed on 2026-08-04 — `lib/pricing.ts`
 `FOUNDING_PROGRAM_END_DATE` — so the reachable frozen surface is `/llms.txt`.)*
 
+*(Amended 2026-10-09 (STA-358): the founding routes now answer one 308 from
+`next.config.ts`, and `/llms.txt` quotes no founding price. It now has a EUR
+block and a USD block, each fixed to its market.)*
+
 | Field | Content |
 |---|---|
-| WHY | Founding prices are frozen history, always EUR by design; region detection must not reach them, and the retired route must stay retired. |
+| WHY | Founding prices are frozen history: the retired routes must stay retired, and no machine-read surface may quote a founding price or let region detection pick its currency. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. R1 (US spoof). 2. `curl -I /programme-fondateur`. 3. `curl -s /llms.txt` and read the pricing prose. |
-| EXPECT | `/programme-fondateur` answers 307 to the pricing page (no founder page renders). `/llms.txt` prose quotes EUR only. You do NOT see `$` in `/llms.txt` and do NOT see a rendered founder price reveal. |
+| STEPS | 1. R1 (US spoof). 2. `curl -I /programme-fondateur` and `curl -I /founding-partner`. 3. `curl -s /llms.txt` and read the Pricing section. |
+| EXPECT | Both routes answer `308` to `/pricing` (no founder page renders). `/llms.txt` has `### Europe and rest of the world (EUR)` quoting `€` only and `### United States (USD)` quoting `$` only: the same file for every visitor, since curl runs no region detection. You do NOT see a 307, a rendered founder price reveal, a founding price or "for life" in `/llms.txt`, or a `$` amount inside its EUR block. |
 | RESET | None. |
 
 ### ED-02: Backend down → baked USD ladder, not EUR [EDGE — local only]
+
+*(Amended 2026-10-09 (STA-358): the server renders the baked ladder of the
+page's market first, then the region's after hydration.)*
 
 | Field | Content |
 |---|---|
@@ -329,7 +367,7 @@ since the program closed on 2026-08-04 — `lib/pricing.ts`
 | DEPENDS | RP-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Run the showcase locally with `NEXT_PUBLIC_API_URL` pointing at an unreachable host (ask the developer for the exact env override; do not touch dev infra). 2. R1 (US spoof). 3. Open `http://localhost:3001/` pricing section. |
-| EXPECT | Prices resolve to `$` amounts (the baked fallback ladder). You do NOT see `€` amounts or unresolved skeletons. (JSON-LD omitting offers in this state is existing, correct behavior.) |
+| EXPECT | The server HTML shows the baked EUR ladder (`/` is an international page), then after hydration the prices swap to the baked `$` ladder and 14 days. You do NOT see a `€` amount once the page has settled, or a pulsing placeholder at any point. (JSON-LD omitting offers in this state is existing, correct behavior.) |
 | RESET | Restore the env and restart the local server. |
 
 ---

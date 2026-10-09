@@ -112,6 +112,15 @@ domain.
 
 ### Known state before you start
 
+- **STA-358 (2026-10-09) changed when `NEXT_LOCALE` is written.** Only `/`
+  still negotiates the language, and it writes the cookie only for a browser
+  language the site does not serve. The language switcher writes it too. No
+  other page does, so a first visit usually leaves no `NEXT_LOCALE` at all.
+  CN-01 and RG-04 were edited in place for this, and RG-04 now also lists
+  `stampeo_market=us`, which `/us` has always set and the case had left out.
+  Nothing else in this runbook depends on the cookie. `middleware.ts` is now
+  `proxy.ts`, with the same matcher; the consent rules did not change.
+  **Targeted re-run:** CN-01, RG-04.
 - **STA-377 (this pass) rewrites the rules that decide what loads, so run the
   whole runbook once.** What changed, and where each change is checked:
   - The visitor's row (`EEA_UK_CH`, `US`, `UNKNOWN`) is decided from the
@@ -204,8 +213,10 @@ to this one.
 3. Read the cookie jar.
 
 EXPECT:
-- Exactly these cookies, and nothing else: `NEXT_LOCALE`. (`stampeo_market`
-  appears only if you reached the page via `/us` or `/uk`.)
+- At most one cookie, `NEXT_LOCALE`, and nothing else. Since STA-358 only `/`
+  writes it, and only for a browser language the site does not serve, so a
+  first visit usually has no cookie at all. (`stampeo_market` appears only if
+  you reached the page via `/us` or `/uk`.)
 - NO `stampeo_consent` yet: not answering must not count as answering.
 - NO `stampeo_sid`: in this row the subject is minted at the first decision, not
   before (SP-02). The US is the row that mints it on arrival (SP-01).
@@ -373,8 +384,11 @@ EXPECT:
   `googletagmanager.com`, `google-analytics.com`, `connect.facebook.net`,
   `facebook.com`. `typeof window.fbq === "undefined"` and
   `typeof window.gtag === "undefined"`.
-- New York cookies: `NEXT_LOCALE` and `stampeo_sid` (the subject is still minted:
-  it is strictly necessary and identifies nothing to any tag), and nothing else.
+- New York cookies: `stampeo_sid` (the subject is still minted: it is strictly
+  necessary and identifies nothing to any tag) and `stampeo_market=us` (set by
+  `/us` itself), and nothing else. `NEXT_LOCALE` appears only if this jar
+  opened `/` with a browser language the site does not serve, or used the
+  language switcher (STA-358).
   NO `_ga*`, `_fbp`, NO `stampeo_src`, `stampeo_ga`, `stampeo_ad`, and NO
   `stampeo_consent`: nobody chose, and the signal overrides without recording a
   choice.
