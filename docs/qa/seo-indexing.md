@@ -31,7 +31,7 @@ on production every case is a read, and SX-30 is skipped.
 |---|---|---|
 | Local production build | `cd showcase && bun run build && bun start -p 3458` then `http://localhost:3458` | The main target. Any free port works (3000 is `web/`, 3001 the showcase dev server). Build in a checkout or worktree whose dev server is **not** running: `bun run build` clobbers `.next` under a live `next dev`. |
 | Production | `https://stampeo.app` | After the deploy. Cloudflare sits in front (STA-379) and pages are cached up to 300 s (R3). Redirect `Location`s come back absolute (`https://stampeo.app/...`): compare the path. |
-| Smoke test | `bun scripts/seo-smoke.ts <base>` from `showcase/` | 33 crawler-view checks; CI runs it after `bun run build` with no backend. |
+| Smoke test | `bun scripts/seo-smoke.ts <base>` from `showcase/` | 72 crawler-view checks; CI runs it after `bun run build` with no backend (prices from the fallback ladder, no Offers). |
 | Plan catalog | `https://api.dev.stampeo.app/public/plans?currency=eur` (and `usd`) | Where the build reads prices (`NEXT_PUBLIC_API_URL` in `showcase/.env.local`; `api.dev.stampeo.app` is the local backend container). If it is unreachable the pages use the baked ladder, which today has the same amounts, and the structured data drops its Offers (SX-18). |
 | Dev host | `https://showcase.dev.stampeo.app` | Tunnels to `next dev` (`bun run publicdev`). Only SX-30 uses it. `next dev` compiles on demand and sends dev caching headers, so it proves nothing for the header cases. |
 | Helpers | the block below | Paste once per terminal. Every command below uses them and `$B`. They work in bash and zsh with the system `curl`, `grep` and `python3`. |
@@ -77,6 +77,10 @@ use a real person's account, and never run SX-30 on production.
   the dev backend reachable. Every curl case was dry-run there with the system
   `grep` while writing, and the smoke test passed 33/33. The browser cases
   (SX-29 to SX-31) and the production run have not been run.
+- **The smoke test now has 72 checks.** It was extended after that run (the
+  table below lists each) and passes on a build that reads the dev backend and
+  on one built with the CI placeholder environment, where the structured data
+  carries no Offers and `Offers …` accepts that.
 - **SX-04 fails on `903dfd5`.** The proxy sets `Vary: Accept-Language, Cookie`
   on both answers at `/`, but on the 200 (the French homepage) Next replaces it
   with its own `Vary: rsc, next-router-state-tree, …, Accept-Encoding`, next to
@@ -100,24 +104,40 @@ use a real person's account, and never run SX-30 on production.
   | Smoke check | Case |
   |---|---|
   | `JSON-LD <page>` (6 pages) | SX-16 |
-  | `Prices /pricing`, `/us/pricing`, `/us` | SX-19 |
-  | `Title <page>` (6 pages) | SX-26 |
+  | `Prices <page>` (`/`, `/pricing`, `/en/pricing`, `/us/pricing`, `/us`) | SX-19 |
+  | `/us links to /us/pricing, never /en/us/pricing` | SX-27, SX-08 |
+  | `/us sector cards show $10, and no € anywhere` | `us-market-landing.md` (the sector cards); no case here |
+  | `Offers /pricing are in EUR`, `Offers /us/pricing are in USD` | SX-18 |
+  | `Title <page>` (8 pages: the six market pages, `/privacy`, `/terms`) | SX-26 (its block lists catalog pages, not the legal pages) |
   | `Canonical <page>` (6 pages) | SX-12 |
-  | `hreflang /pricing` | SX-13 |
-  | `hreflang /en/blog/coffee-shop-loyalty-card` | SX-15 |
+  | `Sitemap: every URL answers 200, is its own canonical and is indexable` | SX-12 |
+  | `Private page <path>` (5 pages) | SX-11 |
+  | `Junk paths /month /mo /mois /mes stay 404` | SX-10 |
+  | `hreflang <page>` (`/`, `/en`, `/us`) | SX-14 |
+  | `hreflang <page>` (`/pricing`, `/us/pricing`) | SX-13 |
+  | `hreflang <page>` (the two coffee-shop posts) | SX-15 |
+  | `RSS link <page>` (4 pages) | SX-25 |
+  | `OpenGraph <page>` (5 pages, each `og:image` fetched) | SX-22 |
+  | `Article image <post>` (2 posts) | SX-21 |
+  | `Footer links and no hidden header nav <page>` (3 pages) | SX-27 |
+  | `At most 2 font preloads on /` | SX-32 |
+  | `Blog header …` (2 posts), `Breadcrumb …` | none: smoke only |
   | `Redirect / (en-US) → 307 /en …` | SX-03 |
   | `French deep URL … no NEXT_LOCALE cookie` | SX-02 |
   | `Redirect /en/us/pricing`, `/founding-partner`, `/en/blog/carte-fidelite-cafe` | SX-08, SX-09, SX-07 |
   | `Icon /icon-192.png`, `/icon-512.png` | SX-21 |
+  | `IndexNow key file is served and holds the key` | SX-24 |
   | `llms.txt has a US section`, `robots.txt …`, `sitemap.xml answers 200` | SX-23, SX-20, SX-12 |
 
 - **Not covered by the smoke test:** the French 200 at `/` (SX-04), the
   callback language (SX-05), most of the redirect table (SX-06 to SX-10),
-  noindex (SX-11, and merchant pages in `public-urls.md` SU-04 to SU-06), the
-  sitemap's contents (SX-12), most hreflang (SX-13 to SX-15), what the
-  structured data says (SX-17, SX-18), OpenGraph (SX-22), llms.txt facts
-  (SX-23), the IndexNow key (SX-24), feeds (SX-25), the Header and the
-  supabase-js split (SX-27 to SX-31), and fonts and images (SX-32).
+  noindex on merchant pages (`public-urls.md` SU-04 to SU-06) and on the demo
+  wallet page, the sitemap's per-entry hreflang clusters (SX-12), the
+  hreflang of the other locales and posts (SX-13 to SX-15), what the
+  structured data says (SX-17), llms.txt facts (SX-23), the IndexNow ping and
+  its soft failure (SX-24), the feeds themselves and `/feed.xml` (SX-25), the
+  supabase-js split and the signed-in Header (SX-28 to SX-31), and image sizes
+  (SX-32).
 - **Not covered by this runbook at all:**
   - The visual share preview. After the deploy, paste `/us` and a blog post
     into a share-preview debugger.
@@ -141,7 +161,7 @@ use a real person's account, and never run SX-30 on production.
 | DEPENDS | none |
 | ACCOUNT | None. |
 | STEPS | 1. R1. 2. From `showcase/`: `bun scripts/seo-smoke.ts $B` |
-| EXPECT | The output ends with `33 passed, 0 failed`. You do NOT see a `FAIL` line, and you do NOT see `request failed` (the server is down or `$B` is wrong). On a FAIL, report SX-01, then run the case its check maps to (Known state) before anything else. |
+| EXPECT | The output ends with `72 passed, 0 failed`. You do NOT see a `FAIL` line, and you do NOT see `request failed` (the server is down or `$B` is wrong). On a FAIL, report SX-01, then run the case its check maps to (Known state) before anything else. |
 | RESET | R1 if the build is older than the code under test. |
 
 ---

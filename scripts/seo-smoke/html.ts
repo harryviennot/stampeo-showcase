@@ -39,8 +39,11 @@ function markup(html: string): string {
     .replace(/<svg\b[\s\S]*?<\/svg\s*>/gi, "");
 }
 
+/** The inside of a start tag, skipping quoted values (Tailwind class names contain `>`). */
+const TAG_BODY = `(?:[^>"']|"[^"]*"|'[^']*')*`;
+
 function tags(html: string, name: string): Record<string, string>[] {
-  return [...markup(html).matchAll(new RegExp(`<${name}\\b[^>]*>`, "gi"))].map((m) => parseAttributes(m[0]));
+  return [...markup(html).matchAll(new RegExp(`<${name}\\b${TAG_BODY}>`, "gi"))].map((m) => parseAttributes(m[0]));
 }
 
 /** The page text without tags, entities decoded and every no-break space made a plain space. */
@@ -103,6 +106,92 @@ export function parseJsonLdBlocks(html: string): JsonLdBlock[] {
     }
   }
   return blocks;
+}
+
+/** The robots meta directives as written, or null when the page declares none. */
+export function parseRobots(html: string): string | null {
+  const meta = tags(html, "meta").find((attrs) => attrs.name?.toLowerCase() === "robots");
+  return meta?.content ?? null;
+}
+
+/** Every `<a href>` in the page, as written. */
+export function parseHrefs(html: string): string[] {
+  return tags(html, "a").flatMap((attrs) => (attrs.href ? [attrs.href] : []));
+}
+
+/** `og:*` property → content. The first tag wins when a property repeats. */
+export function parseOpenGraph(html: string): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const attrs of tags(html, "meta")) {
+    const property = attrs.property?.toLowerCase();
+    if (property?.startsWith("og:") && attrs.content !== undefined && !(property in map)) {
+      map[property] = attrs.content;
+    }
+  }
+  return map;
+}
+
+/** The hrefs of `<link rel="alternate" type="application/rss+xml">`. */
+export function parseFeedLinks(html: string): string[] {
+  return linksWithRel(html, "alternate")
+    .filter((attrs) => (attrs.type ?? "").toLowerCase() === "application/rss+xml" && attrs.href)
+    .map((attrs) => attrs.href);
+}
+
+/** The hrefs of `<link rel="preload" as="font">`. */
+export function parseFontPreloads(html: string): string[] {
+  return linksWithRel(html, "preload")
+    .filter((attrs) => (attrs.as ?? "").toLowerCase() === "font")
+    .map((attrs) => attrs.href ?? "");
+}
+
+const VOID_ELEMENTS = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"]);
+
+/**
+ * The hrefs of links that sit inside `<scope>` and are hidden from assistive
+ * technology: the link itself, or an ancestor up to the scope, has
+ * `aria-hidden="true"`.
+ */
+export function hiddenLinksWithin(html: string, scope: string): string[] {
+  const hidden: string[] = [];
+  const open: Array<{ name: string; hidden: boolean }> = [];
+  let scopeDepth = 0;
+
+  for (const [raw, closing, rawName] of markup(html).matchAll(new RegExp(`<(/?)([a-z][a-z0-9-]*)\\b${TAG_BODY}>`, "gi"))) {
+    const name = rawName.toLowerCase();
+    if (closing) {
+      const index = open.map((entry) => entry.name).lastIndexOf(name);
+      if (index === -1) continue;
+      if (open.slice(index).some((entry) => entry.name === scope)) scopeDepth -= 1;
+      open.length = index;
+      continue;
+    }
+    const attributes = parseAttributes(raw);
+    const hiddenHere = attributes["aria-hidden"] === "true";
+    if (name === "a" && attributes.href && scopeDepth > 0 && (hiddenHere || open.some((entry) => entry.hidden))) {
+      hidden.push(attributes.href);
+    }
+    if (raw.endsWith("/>") || VOID_ELEMENTS.has(name)) continue;
+    open.push({ name, hidden: hiddenHere });
+    if (name === scope) scopeDepth += 1;
+  }
+  return hidden;
+}
+
+/** The structured-data objects of one `@type`, found in any block, array or `@graph`. */
+export function jsonLdOfType(html: string, type: string): Record<string, unknown>[] {
+  const flatten = (value: unknown): unknown[] =>
+    Array.isArray(value)
+      ? value.flatMap(flatten)
+      : value && typeof value === "object"
+        ? [value, ...flatten((value as Record<string, unknown>)["@graph"])]
+        : [];
+  return parseJsonLdBlocks(html)
+    .flatMap((block) => (block.ok ? flatten(block.data) : []))
+    .filter((node): node is Record<string, unknown> => {
+      const nodeType = (node as Record<string, unknown>)["@type"];
+      return nodeType === type || (Array.isArray(nodeType) && nodeType.includes(type));
+    });
 }
 
 export function countBrand(title: string): number {

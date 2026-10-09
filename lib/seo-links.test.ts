@@ -19,8 +19,6 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { routing } from "../i18n/routing";
 import { BLOG_LOCALES } from "./blog/locales";
 import { getAllSlugs } from "./blog/index";
@@ -90,40 +88,4 @@ describe("buildSeoLinks", () => {
     expect(buildSeoLinks("pl").some((l) => l.label === "Blog")).toBe(false);
     expect(buildSeoLinks("fr").some((l) => l.label === "Blog")).toBe(true);
   });
-
-  test("the footer renders every destination as a crawlable anchor, in every locale and market", () => {
-    // The footer is the only place these links ship, so it must take the whole
-    // list for the page's own locale and market, render each entry verbatim,
-    // and keep it visible to assistive tech and crawlers alike.
-    const footer = readSection("Footer.tsx");
-
-    expect({
-      takesTheWholeList: footer.includes("const seoLinks = buildSeoLinks(locale, market);"),
-      rebuildsItsOwnList: /const seoLinks = \[/.test(footer),
-      rendersEachAsAVisibleAnchor:
-        /<nav(?![^>]*aria-hidden)[^>]*>\s*\{seoLinks\.map\(\(l\) => \(\s*<a key=\{l\.href\} href=\{l\.href\}>/.test(
-          footer
-        ),
-    }).toEqual({
-      takesTheWholeList: true,
-      rebuildsItsOwnList: false,
-      rendersEachAsAVisibleAnchor: true,
-    });
-  });
-
-  test("the header carries no hidden duplicate of the navigation", () => {
-    // A focus-skipped, aria-hidden link block reads as cloaking; the footer
-    // already gives crawlers every one of these links.
-    const header = readSection("Header.tsx");
-
-    expect({
-      buildsSeoLinks: header.includes("buildSeoLinks"),
-      hidesFromAssistiveTech: header.includes('aria-hidden="true"'),
-      skipsFocus: header.includes("tabIndex={-1}"),
-    }).toEqual({ buildsSeoLinks: false, hidesFromAssistiveTech: false, skipsFocus: false });
-  });
 });
-
-function readSection(file: string): string {
-  return readFileSync(join(import.meta.dir, "..", "components", "sections", file), "utf-8");
-}
