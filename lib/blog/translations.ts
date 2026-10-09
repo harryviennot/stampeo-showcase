@@ -14,11 +14,7 @@ export type PostCluster = Partial<Record<BlogLocale, string>>;
 export const POST_TRANSLATIONS: readonly PostCluster[] = [
   { fr: "apple-wallet-carte-fidelite", en: "apple-wallet-loyalty-card" },
   { fr: "carte-fidelite-cafe", en: "coffee-shop-loyalty-card" },
-  {
-    fr: "carte-fidelite-dematerialisee",
-    en: "how-to-create-digital-loyalty-card",
-    es: "como-crear-tarjeta-fidelidad-digital",
-  },
+  { en: "how-to-create-digital-loyalty-card", es: "como-crear-tarjeta-fidelidad-digital" },
   { fr: "carte-fidelite-papier-vs-digitale", en: "paper-vs-digital-loyalty-card" },
   { fr: "carte-fidelite-points-wallet", en: "points-loyalty-card-wallet" },
   {
