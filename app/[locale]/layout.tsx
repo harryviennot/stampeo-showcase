@@ -19,9 +19,12 @@ const geistSans = Geist({
   subsets: ["latin", "latin-ext"],
 });
 
+// Only Geist is preloaded. The mono and handwriting faces are secondary, so
+// they load when first used instead of competing with the first paint.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin", "latin-ext"],
+  preload: false,
 });
 
 /* Handwriting face for ink annotations only (.ink-note), never for UI text.
@@ -29,6 +32,7 @@ const geistMono = Geist_Mono({
 const caveat = Caveat({
   variable: "--font-annotation",
   subsets: ["latin", "latin-ext"],
+  preload: false,
 });
 
 export function generateStaticParams() {
