@@ -1,5 +1,9 @@
-import { redirect } from "next/navigation";
+import { feedPath } from "@/lib/blog/feed";
 
+/** The unlocalised feed URL moves permanently to the French feed. */
 export async function GET() {
-  redirect("/feed-fr.xml");
+  return new Response(null, {
+    status: 308,
+    headers: { Location: feedPath("fr") },
+  });
 }

@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { VariantLanding } from "@/components/landing-variant/VariantLanding";
 import { MARKETS, PILOT_HREFLANG, marketRobots, type Market } from "@/lib/markets";
+import { resolvePageOpenGraph } from "@/lib/og/metadata";
 
 /**
- * UK English pilot (served at /uk via the middleware rewrite, and directly at
- * /en/uk). Distinct URL so it can rank independently of the generic English
- * homepage via hreflang en-GB.
+ * UK English pilot, served at /uk by a proxy rewrite to this route.
+ * Distinct URL so it can rank independently of the generic English homepage
+ * via hreflang en-GB.
  *
  * Indexability comes from `MARKETS.<market>.indexable`, which also decides
  * whether the homepage advertises this URL via hreflang. Both are the same
@@ -16,7 +17,10 @@ import { MARKETS, PILOT_HREFLANG, marketRobots, type Market } from "@/lib/market
 const MARKET: Market = "uk";
 const M = MARKETS[MARKET];
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+  _props: unknown,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const t = await getTranslations({ locale: "en", namespace: "metadata.home" });
   return {
     title: t("title"),
@@ -26,7 +30,13 @@ export async function generateMetadata(): Promise<Metadata> {
     // lib/markets.ts.
     robots: marketRobots(MARKET),
     alternates: { canonical: M.path, languages: PILOT_HREFLANG },
-    openGraph: { locale: M.ogLocale },
+    openGraph: await resolvePageOpenGraph(parent, {
+      title: t("title"),
+      description: t("description"),
+      url: M.path,
+      locale: "en",
+      ogLocale: M.ogLocale,
+    }),
   };
 }
 
