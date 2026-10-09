@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { permanentRedirect, redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { FounderProgramPage } from "@/components/features/programme-fondateur/FounderProgramPage";
 import { isFoundingProgramOpen } from "@/lib/pricing";
+import { localePath } from "@/lib/hreflang";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -35,14 +36,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function FoundingPartnerPage({ params }: PageProps) {
   const { locale } = await params;
 
+  // The programme is closed: one permanent hop to this locale's pricing page.
+  if (!isFoundingProgramOpen()) {
+    permanentRedirect(localePath(locale, "/pricing"));
+  }
+
   // FR users should use the French URL
   if (locale === "fr") {
     permanentRedirect("/programme-fondateur");
-  }
-
-  // Founding partner program is closed → send visitors to the regular pricing page.
-  if (!isFoundingProgramOpen()) {
-    redirect(`/${locale}/pricing`);
   }
 
   return (

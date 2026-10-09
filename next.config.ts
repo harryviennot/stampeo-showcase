@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { withSentryConfig } from "@sentry/nextjs";
+import { legacyRedirects } from "./lib/legacy-redirects";
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -19,6 +20,12 @@ const nextConfig: NextConfig = {
     "192.168.20.93",
     "showcase.dev.stampeo.app",
   ],
+  // Old URLs (Search Console 404s, renamed posts, locale-prefixed pilot copies)
+  // to the page that replaced them, one 308 each. Runs before the proxy.
+  async redirects() {
+    return legacyRedirects();
+  },
+
   async rewrites() {
     // The two app-association files must live at fixed .well-known paths, but
     // a folder starting with a dot is not routable in the app directory, and
