@@ -11,6 +11,14 @@ import { commonCatalog, privacySource, retentionTable, section } from "./policy-
 
 const PAGES = ["privacy", "terms"] as const;
 
+/** The heading of §4's "transfers outside the EU" paragraph, per locale. */
+const TRANSFERS: Record<string, RegExp> = {
+  en: /^#+\s+Transfers Outside the EU/m,
+  fr: /^#+\s+Transferts/m,
+  es: /^#+\s+Transferencias/m,
+  pl: /^#+\s+Transfery poza UE/m,
+};
+
 describe("getLegalContent", () => {
   // Both pages call notFound() on a null return, and merchant emails deep-link
   // to /{locale}/privacy and /{locale}/terms, so an unmapped locale is a hard
@@ -447,12 +455,6 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
   );
 
   it("names Meta among the United States transfers, in every locale", () => {
-    const TRANSFERS: Record<string, RegExp> = {
-      en: /^#+\s+Transfers Outside the EU/m,
-      fr: /^#+\s+Transferts/m,
-      es: /^#+\s+Transferencias/m,
-      pl: /^#+\s+Transfery poza UE/m,
-    };
     for (const locale of routing.locales) {
       const text = section(locale, TRANSFERS[locale], /^#+\s/m);
       expect(text, `${locale} transfers paragraph does not name Meta`).toContain("Meta");
@@ -590,4 +592,46 @@ describe("privacy — the statements the legal review requires", () => {
       }
     },
   );
+});
+
+/**
+ * Trustpilot receives paying business owners' email address, name, business
+ * identifier and language so it can invite them to review Stampeo, so §4 must
+ * name it like every other recipient of personal data.
+ */
+describe("privacy: Trustpilot receives business-owner data", () => {
+  const sentences = (text: string) => text.split(/(?<=\.)\s+/);
+
+  it.each(routing.locales)("the processor table has a Trustpilot row (%s)", (locale) => {
+    // §4's table only, up to "Resellers".
+    const rows = section(locale, /^##\s+4\./m, /^#+\s/m)
+      .split("\n")
+      .filter((line) => line.trim().startsWith("|") && line.includes("Trustpilot"));
+    expect(rows, `${locale} §4 has no Trustpilot row`).toHaveLength(1);
+    expect(rows[0]).toContain("Trustpilot A/S");
+  });
+
+  it.each(routing.locales)(
+    "the transfers paragraph says Trustpilot may transfer data outside the EU (%s)",
+    (locale) => {
+      const all = sentences(section(locale, TRANSFERS[locale], /^#+\s/m));
+      // The sentence naming the sub-processors that may transfer data to the
+      // US, and the one naming those that stay within the EU.
+      const mayTransfer = all.find((sentence) => sentence.includes("Stripe"));
+      const staysInEu = all.find((sentence) => sentence.includes("Redis"));
+      expect(mayTransfer, `${locale} has no sentence on transfers to the US`).toBeDefined();
+      expect(staysInEu, `${locale} has no sentence on processing within the EU`).toBeDefined();
+      expect(mayTransfer, `${locale} transfers paragraph does not name Trustpilot`).toContain(
+        "Trustpilot",
+      );
+      expect(staysInEu).not.toContain("Trustpilot");
+    },
+  );
+
+  it.each(routing.locales)("§6 lists the review invitation among the purposes (%s)", (locale) => {
+    // §6 only, up to 6.1, where the purposes are listed.
+    expect(section(locale, /^##\s+6\./m), `${locale} §6 does not mention Trustpilot`).toContain(
+      "Trustpilot",
+    );
+  });
 });
