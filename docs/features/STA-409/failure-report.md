@@ -43,7 +43,7 @@ The Trustpilot invitation integration shipped in the backend without a step that
 
 ## Notes (fix track)
 
-- **F1:** the regression test lives in `lib/legal/legal.test.ts` and reads §4 only (`section` helper), so a mention in another section cannot satisfy it.
+- **F1:** the regression test lives in `lib/legal/legal.test.ts` and scopes each assertion with the `section` helper: the table row and the transfers sentence are read from §4 only, so a mention elsewhere cannot satisfy them, and a separate case reads §6.
 - **F3 (UX pass), skipped:** a Markdown text change to an existing table, no layout change.
 - **F4 (audit), skipped:** a text diff of about 30 lines in no auth, billing, webhook or migration path, so no subagents; the implementation checklist was walked by hand.
 - **F5 (runbook):** `docs/qa/cookie-consent.md` has an `LG` section ("the privacy policy agrees with the banner"). LG-04 is added there with a WHY and a negative assertion, and the "Last updated" line in LG-01 now reads 10 October 2026. The regression test is the first guard; LG-04 covers the rendered page and the part a test cannot judge (whether the row is true).
