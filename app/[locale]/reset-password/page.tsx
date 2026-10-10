@@ -6,15 +6,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
-import { createClient } from "@supabase/supabase-js";
+import { createRecoveryClient, saveNewPassword } from "@/lib/supabase/recovery-client";
 import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
-
-function createStandaloneClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
-}
 
 export default function ResetPasswordPage() {
   return (
@@ -44,7 +37,8 @@ function ResetPasswordContent() {
   const [ready, setReady] = useState(!hasTokenHash);
   const verified = useRef(false);
 
-  const supabaseRef = useRef(createStandaloneClient());
+  // Lazy initialiser: one client for the life of the page, not one per render.
+  const [recovery] = useState(createRecoveryClient);
 
   const passwordChecks = useMemo(() => ({
     lowercase: /[a-z]/.test(newPassword),
@@ -76,15 +70,18 @@ function ResetPasswordContent() {
     verified.current = true;
 
     const tokenHash = searchParams.get("token_hash")!;
-    supabaseRef.current.auth
+    recovery.auth
       .verifyOtp({ token_hash: tokenHash, type: "recovery" })
       .then(({ error }) => {
         if (error) {
           setError(translateError(error.message));
         }
-        setReady(true);
-      });
-  }, [searchParams, hasTokenHash, translateError]);
+      })
+      .catch((err: unknown) => {
+        setError(translateError(err instanceof Error ? err.message : String(err)));
+      })
+      .finally(() => setReady(true));
+  }, [recovery, searchParams, hasTokenHash, translateError]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -102,17 +99,14 @@ function ResetPasswordContent() {
 
       setLoading(true);
 
-      const { error, data } = await supabaseRef.current.auth.updateUser({
-        password: newPassword,
-      });
+      const { email, error } = await saveNewPassword(recovery, newPassword);
 
       if (error) {
-        setError(translateError(error.message));
+        setError(translateError(error));
         setLoading(false);
         return;
       }
 
-      const email = data.user?.email;
       if (email) {
         const { error: signInError } = await signIn(email, newPassword);
         if (!signInError) {
@@ -125,7 +119,7 @@ function ResetPasswordContent() {
       setSuccess(true);
       setLoading(false);
     },
-    [newPassword, isPasswordStrong, passwordsMatch, t, signIn, translateError]
+    [recovery, newPassword, isPasswordStrong, passwordsMatch, t, signIn, translateError]
   );
 
   const checkLabels = [
