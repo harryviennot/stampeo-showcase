@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 3 de octubre de 2026**
+**Última actualización: 10 de octubre de 2026**
 
 ## 1. Introducción
 
@@ -112,6 +112,7 @@ Recurrimos a los siguientes encargados del tratamiento:
 | Google (Analytics 4): Google Ireland Limited, con Google LLC | Medición de audiencia y comunicación de conversiones, según tu elección sobre las cookies (véanse 5.3 y 5.5) | UE (posibles transferencias a EE. UU. bajo el Data Privacy Framework) |
 | PostHog | Estadísticas del sitio (sin cookies) | UE |
 | Sentry | Supervisión de errores | Alemania (UE) |
+| Trustpilot A/S | Invitaciones a dejar una opinión, enviadas a los propietarios de comercios (correo electrónico, nombre, identificador del comercio, idioma) | Dinamarca (UE), con posibles transferencias fuera de la UE bajo cláusulas contractuales tipo |
 | Redis (autoalojado, a través de Taskiq) | Cola de tareas y caché de corta duración para los elementos visuales de las tarjetas y la entrega de notificaciones | Francia (UE), misma infraestructura que nuestro VPS |
 
 ### Revendedores (cuando proceda)
@@ -124,7 +125,7 @@ Un comercio que no sea gestionado por un revendedor no queda expuesto a ningún 
 
 ### Transferencias fuera de la UE
 
-Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google) pueden transferir datos a Estados Unidos. Estas transferencias se enmarcan en el EU-US Data Privacy Framework o en cláusulas contractuales tipo aprobadas por la Comisión Europea. Supabase, OVH, Resend, PostHog, Sentry y nuestro Redis autoalojado tratan los datos exclusivamente dentro de la UE. Las plataformas publicitarias a las que comunicamos conversiones conforme al §5.5, Google (Google Ireland Limited, con Google LLC en Estados Unidos) y Meta (Meta Platforms Ireland Limited, con Meta Platforms, Inc. en Estados Unidos), pueden tratar esos datos en Estados Unidos, en el mismo marco.
+Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google, Trustpilot) pueden transferir datos a Estados Unidos. Estas transferencias se enmarcan en el EU-US Data Privacy Framework o en cláusulas contractuales tipo aprobadas por la Comisión Europea. Supabase, OVH, Resend, PostHog, Sentry y nuestro Redis autoalojado tratan los datos exclusivamente dentro de la UE. Las plataformas publicitarias a las que comunicamos conversiones conforme al §5.5, Google (Google Ireland Limited, con Google LLC en Estados Unidos) y Meta (Meta Platforms Ireland Limited, con Meta Platforms, Inc. en Estados Unidos), pueden tratar esos datos en Estados Unidos, en el mismo marco.
 
 ## 5. Cookies
 
@@ -236,6 +237,7 @@ Utilizamos los datos recogidos para:
 - Producir estadísticas anonimizadas para los comercios
 - Producir estadísticas internas agregadas sobre el uso de la Plataforma en el conjunto de los comercios, detectar abusos y priorizar las mejoras
 - Enviar a los usuarios Business un número limitado de correos de ciclo de vida y marketing, sujetos a la oposición descrita en el §6.1
+- Invitar a los propietarios de comercios con una suscripción de pago a dejar una opinión sobre Stampeo en Trustpilot, sobre la base de nuestro interés legítimo en recoger opiniones sobre nuestro servicio (artículo 6.1.f del RGPD; destinatario descrito en el §4)
 - Mejorar la Plataforma
 
 **Nunca vendemos** datos personales a cambio de dinero. No realizamos **ningún seguimiento entre comercios**: los datos de un cliente en un comercio están totalmente aislados de los que tenga en otro.
