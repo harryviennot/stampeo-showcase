@@ -4,20 +4,26 @@ import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { localePath } from "@/lib/hreflang";
 import { routing } from "@/i18n/routing";
+import { BENCHMARK, sourceLine } from "./plans/benchmark";
+import { MARKETS, type Market } from "./markets";
+import { PLAN_FACTS, PLAN_NAMES, TIERS, availability, planSummary } from "./plans/plan-facts";
+import {
+  FALLBACK_PRICING,
+  FOUNDING_PRICING,
+  formatMoney,
+  monthlyEquivalent,
+  type Pricing,
+} from "./pricing";
 
 /**
  * The `/llms.txt` body.
  *
- * This used to be a hand-maintained `public/llms.txt`. It rotted: it still
- * claimed the site spoke "French (default) and English" long after Spanish
- * shipped, listed 12 of French's 16 articles and 5 of English's 10, and had no
- * Spanish or Polish URLs at all.
- *
- * So everything that can drift is derived from the same constants the router
- * and the sitemap already read (`routing.locales`, `FEATURE_SLUGS`,
- * `LOYALTY_SLUGS`, `BLOG_LOCALES`, the MDX files on disk). A new locale or a
- * new article now shows up here on its own. The prose below (positioning,
- * product, pricing, FAQ) is genuinely hand-written and stays hand-written.
+ * Everything that can drift is derived: pages and articles from the constants
+ * the router and the sitemap read (`routing.locales`, `FEATURE_SLUGS`,
+ * `LOYALTY_SLUGS`, `BLOG_LOCALES`, the MDX files on disk), plan facts from
+ * `lib/plans/plan-facts.ts`, prices from the plan catalog, trial lengths from
+ * `MARKETS`, and figures from `lib/plans/benchmark.ts`. The positioning and product
+ * prose around them is hand-written.
  */
 
 const BASE_URL = "https://stampeo.app";
@@ -43,9 +49,8 @@ interface CorePage {
 }
 
 /**
- * Mirrors `app/sitemap.ts`. `/programme-fondateur` and `/founding-partner` are
- * deliberately absent from both: the founding program closed and those routes
- * now 307 to `/pricing`.
+ * Mirrors STATIC_PAGES in `lib/seo/sitemap.ts`; the founding routes are absent
+ * from both (they 308 to `/pricing`).
  */
 const CORE_PAGES: CorePage[] = [
   { label: "Homepage", path: "/", description: "product overview and call to action." },
@@ -72,10 +77,11 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
   "notifications-push":
     "wallet push notifications triggered at every stamp, reward, or customer return.",
   analytiques: "customer insights — retention, visit frequency, top customers.",
-  geolocalisation:
-    "surface the loyalty card on the lock screen when the customer is near the shop.",
+  geolocalisation: `surface the loyalty card on the lock screen when the customer is near the shop${
+    PLAN_FACTS.pro.geofencing === "coming_soon" ? " (coming soon)" : ""
+  }.`,
   "campagnes-promotionnelles":
-    "targeted broadcasts — the SMS alternative with ~85% read-through.",
+    "broadcasts to every cardholder's lock screen, the SMS alternative.",
 };
 
 const url = (locale: string, path: string) =>
@@ -139,6 +145,13 @@ function languages(): string {
   ].join("\n");
 }
 
+const SOURCE = `(${sourceLine("en")})`;
+const pct = (key: keyof typeof BENCHMARK) => `${BENCHMARK[key].value}%`;
+const GEOFENCING =
+  PLAN_FACTS.pro.geofencing === "coming_soon"
+    ? "coming soon"
+    : availability((f) => f.geofencing === true);
+
 const INTRO = `# Stampeo
 
 > Digital loyalty cards for Apple Wallet and Google Wallet. No app to download, no card to lose. Built for local businesses — bakeries, cafés, restaurants, hair salons, beauty institutes.
@@ -148,8 +161,9 @@ Stampeo is a SaaS platform that helps local businesses create and manage digital
 ## Positioning
 
 - **Who it's for**: independent businesses that want a modern loyalty program without asking customers to download an app.
-- **Problem it solves**: paper cards get lost or forgotten (~45% of paper-card holders don't present them); dedicated loyalty apps fail — 95% of users abandon a new app within a month.
-- **How it's different**: the card lives in Apple Wallet / Google Wallet, which are already installed on every modern smartphone. Retention on wallet passes is above 90%. No app build, no app store, no account creation.`;
+- **Problem it solves**: paper cards get lost or forgotten, and customers rarely install a dedicated loyalty app for one shop.
+- **How it's different**: the card lives in Apple Wallet / Google Wallet, which are already installed on every modern smartphone. No app build, no app store, no account creation.
+- **What we see**: ${pct("walletAddRate")} of customers who join add the card to their wallet, ${pct("installedDay30")} of cards are still there 30 days later, and ${pct("return30")} of customers come back within 30 days ${SOURCE}.`;
 
 const PRODUCT = `## Product
 
@@ -162,89 +176,131 @@ const PRODUCT = `## Product
 6. After N stamps, the customer earns a reward, claimed at the counter on their next visit.
 
 ### Loyalty mechanics
-- **Stamps** (classic stamp card) or **points** (spend-based) — choose one per program on Growth and above.
-- **Milestone rewards**: trigger a reward at arbitrary stamp counts (e.g. welcome bonus at 1, surprise gift at 5, main reward at 10). 3 custom milestones per program on Growth, unlimited on Pro.
+- **Stamps** (classic stamp card) or **points** (spend-based): each business runs one program, stamps or points, on ${availability((f) => f.loyaltyTypes.length > 1)}.
+- **Milestone rewards**: trigger a reward at arbitrary stamp counts (e.g. welcome bonus at 1, surprise gift at 5, main reward at 10). ${PLAN_FACTS.growth.milestoneNotifications} custom milestones per program on Growth, unlimited on Pro.
 - **Automatic notifications** on every stamp, milestone, and reward unlock — delivered through Apple Wallet / Google Wallet push, no app required.
-- **Geofencing notifications** (Pro): surface the card on the lock screen when the customer is near the shop.
+- **Geofencing notifications** (${GEOFENCING}): surface the card on the lock screen when the customer is near the shop.
 
-### Promotional campaigns (broadcasts) — Growth / Pro
+### Promotional campaigns (broadcasts): ${availability((f) => f.broadcastsPerMonth !== 0)}
 Promotional campaigns are one-off push notifications sent straight to customers' Apple Wallet and Google Wallet — the marketing-channel alternative to SMS and email.
 
 - **Reach**: broadcast to all loyalty-card holders, or segment.
-- **Open rate**: ~85% (lock-screen banner), vs ~20% for email and ~35% click-through for SMS.
-- **Cost**: included in the plan — €0 per message. No SMS carrier fees (€0.04–€0.10 per SMS in France).
-- **Quotas**: Growth = 8 campaigns / month. Pro = unlimited.
+- **Cost**: included in the plan, with no per-message fee and no SMS carrier fees.
+- **Quotas**: Growth = ${PLAN_FACTS.growth.broadcastsPerMonth} campaigns / month. Pro = unlimited.
 - **Segmentation**:
   - Growth: basic (enrollment date).
   - Pro: advanced — by stamp count, last redemption, inactivity window, recent signups.
-- **Scheduling** (Pro): pick a local send time with timezone awareness — Thursday 5pm, Saturday noon, etc. Growth sends immediately.
+- **Scheduling** (${availability((f) => f.scheduledBroadcasts)}): pick a local send time with timezone awareness — Thursday 5pm, Saturday noon, etc. Other plans send immediately.
 - **Multilingual delivery**: write the copy once per language you serve; each customer receives the language their device is set to. Single send, not one per language.
 - **Delivery transparency**: per-campaign breakdown showing Apple-delivered vs Google-delivered vs throttled vs uninstalled. No inflated rates.
 - **Consent**: handled at pass install — no double opt-in flow like SMS / email.
 - **Use cases**: flash promos, new-product launches, happy hours, seasonal offers, weekend openings, "first 30 buyers get a free pastry" style drops.
 
-### Analytics — all plans; advanced on Growth / Pro
+### Analytics
 The dashboard answers the questions paper cards can't: who comes back, how often, what works.
 
-**Starter (basic dashboard — every plan)**:
+**Basic analytics (every plan)**:
 - Total registered customers.
 - Scans this week / this month.
 - Rewards claimed.
 - Instant customer search by name or email with full visit history.
 - Live activity feed (stamps, rewards, signups in real time).
 
-**Growth (trends & retention layer)**:
-- Scans per week with trend (e.g. "+23% WoW").
-- Peak-hours heatmap (day × hour of the week) to spot slow periods and staffing needs.
-- 30-day retention rate.
-- Customer segments (New / Occasional / Regular / VIP).
-- At-risk customers (inactive 30+ days) — surface before they churn.
-- Most-active days of the week.
-- Average time to complete a card, completion rate, post-reward return rate (did they start a second card).
+**${availability((f) => f.employeeTracking)} add**:
+- Peak hours and weekly trends.
+- Employee scan tracking: which team member made each scan.
 
-**Pro (everything in Growth, plus)**:
-- Per-location analytics (multi-location accounts).
-- Employee scan tracking.
-- Advanced segmentation (same filters that drive broadcast targeting).
+**Advanced analytics (${availability((f) => f.analytics === "advanced")})**:
+- 30-day retention rate, visit frequency and redemption stats.
+- Customer segments (New / Occasional / Regular / VIP) and at-risk customers (inactive 30+ days).
+- Average time to complete a card, completion rate, post-reward return rate.
+- Per-location analytics (${availability((f) => f.locationAnalytics)}).
 
 ### Integrations & platforms
 - **Apple Wallet** (iOS, via signed .pkpass files and Apple Push Notification service).
 - **Google Wallet** (Android).
-- **Scanner app**: Expo / React Native, runs on any iPhone or Android device. Supports offline scanning.
+- **Scanner app**: Expo / React Native, runs on any iPhone or Android device. Needs a connection to add stamps; offline scanning is coming soon.
 - **Business dashboard**: web app, works on desktop and mobile.
-
-### Team & multi-location
-- Starter: 2 team members (owner + 1), single location, 1 active card template.
-- Growth: unlimited team members, single location, 1 active card template (unlimited saved templates).
-- Pro: unlimited team members, multi-location with per-location analytics, multiple active card templates.
 
 ### Compliance
 - GDPR-compliant (data hosted in the EU, minimal customer data collected — typically just a phone number or email, never required).
 - Customers can be anonymous: a loyalty card can work with nothing more than a device token.`;
 
-const PRICING = `## Pricing
+/** Every plan's facts, from `lib/plans/plan-facts.ts`. */
+function plans(): string {
+  return [
+    "## Plans",
+    "",
+    "Three plans. Unlimited customers and unlimited scans on every plan.",
+    "",
+    ...TIERS.map((tier) => `- **${PLAN_NAMES[tier]}**: ${planSummary(tier)}.`),
+  ].join("\n");
+}
 
-Three tiers. Unlimited customers and unlimited scans on every plan. 30-day free trial; a card is required to start the trial but is not charged until the 30 days are up.
+interface PriceBlock {
+  heading: string;
+  market: Market;
+  pricing: Pricing;
+  links: string[];
+}
 
-- **Starter — €20 / month**: 1 active card template, unlimited customers & scans, 2 team members (owner + 1), automatic push notifications (predefined text), basic dashboard & stats, email support.
-- **Growth — €40 / month**: everything in Starter, plus stamps or points (choose one), unlimited team members, custom notification messages, 8 broadcast campaigns per month, 3 custom milestones per program, basic segmentation (date-based), trends & analytics.
-- **Pro — €60 / month**: everything in Growth, plus multiple active card templates, multi-location with per-location analytics, geofencing notifications, unlimited broadcast campaigns, advanced segmentation (by stamps, inactivity, redemptions), unlimited custom milestones, advanced analytics & retention, priority email support.
+/** One market's ladder, in its own currency, with its own trial length. */
+function priceBlock({ heading, market, pricing, links }: PriceBlock): string {
+  const money = (amount: number) => formatMoney(amount, pricing.currency, "en");
+  const trialDays = MARKETS[market].trialDays;
+  const monthly = TIERS.map(
+    (tier) => `- **${PLAN_NAMES[tier]}**: ${money(pricing.tiers[tier].month)} / month`
+  );
+  const perMonth = TIERS.map((tier) => money(monthlyEquivalent(pricing.tiers[tier].year)));
+  const perYear = TIERS.map((tier) => money(pricing.tiers[tier].year));
+  return [
+    `### ${heading}`,
+    "",
+    ...monthly,
+    `- Yearly billing is ${FOUNDING_PRICING.yearlyDiscountPercent}% off: ${perMonth.join(" / ")} per month, billed ${perYear.join(" / ")} a year.`,
+    `- ${trialDays}-day free trial on every plan. A card is required to start the trial but is not charged until the ${trialDays} days are up.`,
+    ...links.map((link) => `- ${link}`),
+  ].join("\n");
+}
 
-Yearly billing is 20% off (€16 / €32 / €48 per month, billed for the year).`;
+function pricingSection(ladders: { eur: Pricing; usd: Pricing }): string {
+  return [
+    "## Pricing",
+    "",
+    "Prices depend on where the business is: euros in Europe and the rest of the world, dollars in the United States.",
+    "",
+    priceBlock({
+      heading: "Europe and rest of the world (EUR)",
+      market: "int",
+      pricing: ladders.eur,
+      links: [`Pricing page: [/pricing](${BASE_URL}/pricing) (also /en/pricing, /es/pricing, /pl/pricing)`],
+    }),
+    "",
+    priceBlock({
+      heading: "United States (USD)",
+      market: "us",
+      pricing: ladders.usd,
+      links: [
+        `US landing page: [/us](${BASE_URL}/us)`,
+        `US pricing page: [/us/pricing](${BASE_URL}/us/pricing)`,
+      ],
+    }),
+  ].join("\n");
+}
 
 const FAQ = `## FAQ (condensed)
 
-- **Is there a free trial?** Yes — 30-day free trial on every plan. A card is required to start the trial, but nothing is charged until the 30 days are up. Cancel anytime.
+- **Is there a free trial?** Yes, on every plan: ${MARKETS.int.trialDays} days in Europe and the rest of the world, ${MARKETS.us.trialDays} days in the United States. A card is required to start the trial, but nothing is charged until the trial ends. Cancel anytime.
 - **Can I switch plans?** Yes, at any time. Upgrades take effect immediately; downgrades at the end of the billing cycle.
 - **Are there per-customer charges?** No. Every plan includes unlimited customers and unlimited scans.
 - **Do customers need to download an app?** No. Apple Wallet and Google Wallet are pre-installed on every modern smartphone. Customers scan a QR code and the card is saved in about ten seconds.
 - **What if a customer loses their phone?** Stamps are stored on the server, not only on the device. The customer restores the card on their new phone and keeps their progress.
 - **Can customers cheat by adding their own stamps?** No. Only the business's scanner app can write stamps to a pass. Customers can't modify their own card.
-- **Does it work offline?** Yes. The scanner app supports offline stamping, and installed passes stay accessible without a network connection.
+- **Does it work offline?** Installed cards open without a network connection. The scanner app needs one to add stamps; offline scanning is coming soon.
 - **Does it work on Android?** Yes, via Google Wallet. Stampeo auto-detects the device and serves the right format from a single QR code.
-- **Stamps or points?** Either. Starter is stamps-only; Growth lets you pick stamps or points per program; Pro supports both and multiple programs in parallel.
+- **Stamps or points?** Either, on ${availability((f) => f.loyaltyTypes.length > 1)}. Each business runs one program and picks stamps or points for it.
 - **How is this different from paper cards?** Paper cards get lost or forgotten; digital wallet passes stay on the phone, update live, and give the business real customer data (visit frequency, retention, top customers).
-- **How is this different from a dedicated loyalty app?** Dedicated apps fail — 95% of users abandon a new app within a month. Wallet passes don't require a download, so adoption and retention are much higher.`;
+- **How is this different from a dedicated loyalty app?** Customers have nothing to download: ${pct("walletAddRate")} of customers who join add the card to their wallet, and ${pct("installedDay90")} of cards are still there after 90 days ${SOURCE}.`;
 
 const MACHINE_READABLE = `## Machine-readable versions
 
@@ -262,14 +318,30 @@ const CONTACT = `## Contact
 - LinkedIn: https://linkedin.com/company/stampeo
 - Instagram: https://instagram.com/stampeo.app`;
 
-/** The full `/llms.txt` body, ending with a newline. */
-export function buildLlmsTxt(): string {
+/**
+ * The full `/llms.txt` body, ending with a newline. Prices come from the plan
+ * catalog the route fetches; without one, the baked ladder.
+ */
+export function buildLlmsTxt(
+  ladders: { eur: Pricing; usd: Pricing } = {
+    eur: FALLBACK_PRICING.eur,
+    usd: FALLBACK_PRICING.usd,
+  }
+): string {
   const localeList = routing.locales.map(localeName).join(", ");
   const intro = `${INTRO}\n- **Languages**: ${localeList}.`;
 
   return (
-    [intro, keyPages(), PRODUCT, PRICING, FAQ, MACHINE_READABLE, languages(), CONTACT].join(
-      "\n\n"
-    ) + "\n"
+    [
+      intro,
+      keyPages(),
+      PRODUCT,
+      plans(),
+      pricingSection(ladders),
+      FAQ,
+      MACHINE_READABLE,
+      languages(),
+      CONTACT,
+    ].join("\n\n") + "\n"
   );
 }

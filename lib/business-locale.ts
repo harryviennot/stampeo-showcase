@@ -1,5 +1,5 @@
 /**
- * Look up a shop's own language, for the middleware's locale fallback.
+ * Look up a shop's own language, for the proxy's locale fallback.
  *
  * This runs in front of every QR scan that arrives without a usable
  * `Accept-Language`, so it is deliberately small: one GET against the public
@@ -8,7 +8,7 @@
  * the site default, so a slow or down API costs the visitor nothing but the
  * shop's language.
  *
- * Next's Data Cache is not available in middleware, hence the local map. It is
+ * Next's Data Cache is not available in the proxy, hence the local map. It is
  * per-instance and best-effort; the point is to keep a shop that is being
  * scanned all afternoon from re-reading on every scan.
  */

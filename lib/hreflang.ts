@@ -1,4 +1,5 @@
 import { routing } from "@/i18n/routing";
+import { indexablePilotLanguages } from "@/lib/markets";
 
 /**
  * hreflang helpers.
@@ -25,9 +26,12 @@ interface AlternatesOptions {
   baseUrl?: string;
 }
 
+/** The locale `x-default` points at: most organic visitors read English. */
+const X_DEFAULT_LOCALE = "en";
+
 /**
  * hreflang map for one page: `x-default` plus one entry per locale.
- * `x-default` always points at the default locale's URL.
+ * `x-default` points at the English URL.
  */
 export function localeAlternates(
   path: string,
@@ -37,8 +41,23 @@ export function localeAlternates(
     `${baseUrl}${localePath(locale, overrides[locale] ?? path)}`;
 
   const languages: Record<string, string> = {
-    "x-default": url(routing.defaultLocale),
+    "x-default": url(X_DEFAULT_LOCALE),
   };
   for (const locale of locales) languages[locale] = url(locale);
   return languages;
+}
+
+/**
+ * hreflang map for a page that also exists inside the country pilots
+ * (the homepage and /pricing): every locale, plus each indexable pilot's
+ * version of the same page, e.g. `en-US -> /us/pricing`.
+ */
+export function marketAlternates(
+  path: string,
+  { baseUrl = "" }: Pick<AlternatesOptions, "baseUrl"> = {}
+): Record<string, string> {
+  const pilots = Object.entries(indexablePilotLanguages(path)).map(
+    ([hreflang, pilotPath]) => [hreflang, `${baseUrl}${pilotPath}`]
+  );
+  return { ...localeAlternates(path, { baseUrl }), ...Object.fromEntries(pilots) };
 }

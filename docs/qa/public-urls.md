@@ -36,6 +36,7 @@ Everything runs against dev. Nothing here touches production.
 | ID | Recipe |
 |---|---|
 | R1 | Clear the locale choice: delete the `NEXT_LOCALE` cookie (devtools > Application > Cookies), or use a private window. Needed when a case pins the language by `Accept-Language`. |
+| R2 | Read what a crawler is told: `curl -s -H "Accept-Language: fr-FR" <url> \| grep -oE '<title>[^<]*</title>\|<meta name="robots"[^>]*>\|<link rel="(canonical\|alternate)"[^>]*>'`. Next writes the hreflang attribute as `hrefLang`. The backslash before each pipe is only the table escape. |
 
 ### Known state before you start
 
@@ -53,6 +54,22 @@ Everything runs against dev. Nothing here touches production.
 - **Analytics caveat.** GA4 and Meta only load after the visitor accepts the
   cookie banner, so a card scan that refuses never reaches them. PostHog
   records every scan. CQ-03 accepts the banner on purpose.
+- **New cases (STA-358, 2026-10-09): what crawlers are told about shop
+  pages.** SU-04 to SU-06 are new. A shop page used to inherit the homepage's
+  canonical and hreflang from the layout. It is now `noindex, follow`, with a
+  canonical on its own unprefixed URL, and an unknown slug is a 404 marked
+  noindex. The three cases were dry-run on a local production build of
+  `feat/sta-358-seo-geo-hardening` (`903dfd5`) against the dev backend, with
+  the expected results. They have not run on the dev host or production yet.
+  The rest of the crawler view is in `seo-indexing.md`.
+- **Since STA-358, `middleware.ts` is `proxy.ts`.** Wherever this runbook says
+  middleware, read proxy: the matcher and the shop rewrite are unchanged.
+  SU-01's title EXPECT already names "Stampeo" once.
+- **Targeted re-run (STA-358):** SU-01, SU-02 (the rename kept the matcher),
+  then SU-04 to SU-06. After the deploy, run SU-04 and SU-06 on
+  `https://stampeo.app` with `good-vibe-lemonade-and-more` and
+  `qa-no-such-shop-358`. Skip SU-05 on production: no live location URL is on
+  record, and you must not guess one.
 
 ---
 
@@ -70,7 +87,7 @@ to `/{locale}/{slug}`; without that rewrite the page 404s. Dev fixtures used:
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Pick an active dev shop whose slug does not start with go/api/auth/join/internal/qr. 2. `curl -s -o /dev/null -w "%{http_code}\n" -H "Accept-Language: fr-FR" https://showcase.dev.stampeo.app/<slug>` 3. Open the same URL in a private window. |
-| EXPECT | 200. The page title names the shop ("Obtenez votre carte de fidélité <Shop>"). You do NOT see the site's 404 page or the marketing homepage. |
+| EXPECT | 200. The page title is exactly "Obtenez votre carte de fidélité <Shop> \| Stampeo", with "Stampeo" once. You do NOT see the site's 404 page or the marketing homepage. |
 | RESET | R1 |
 
 ### SU-02: A shop whose slug starts like a route handler still opens [BLOCKER]
@@ -94,6 +111,39 @@ to `/{locale}/{slug}`; without that rewrite the page 404s. Dev fixtures used:
 | STEPS | 1. `curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" https://showcase.dev.stampeo.app/go/app` 2. Same with `-A "Mozilla/5.0 (Linux; Android 14)"`. 3. `curl -s -o /dev/null -w "%{http_code}\n" https://showcase.dev.stampeo.app/sitemap.xml` |
 | EXPECT | Step 1: 302 to `apps.apple.com`. Step 2: 302 to `play.google.com`. Step 3: 200. None of them returns 404 or redirects to `/fr/...`/`/en/...`. |
 | RESET | none |
+
+### SU-04: A shop page stays out of search results but names its own URL [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | A shop page is a counter QR target: useful to the shop's customers, useless as a search result. It used to inherit the homepage's canonical from the layout, which told Google the shop page *was* the homepage. `follow` keeps its links counting. The canonical is the unprefixed URL the shop printed, whatever language the page is served in. |
+| DEPENDS | SU-01 |
+| ACCOUNT | No session at all. |
+| STEPS | 1. R2 on `https://showcase.dev.stampeo.app/lustre`. 2. The same with `Accept-Language: en-US` instead of `fr-FR`. 3. R2 on `https://showcase.dev.stampeo.app/en/lustre`. 4. `curl -s https://showcase.dev.stampeo.app/sitemap.xml \| grep -c lustre` |
+| EXPECT | Steps 1 to 3 each print `<meta name="robots" content="noindex, follow"/>` and `<link rel="canonical" href="https://stampeo.app/lustre"/>`: one canonical in French, in English and under `/en`. Step 1's title is "Obtenez votre carte de fidélité Lustre \| Stampeo" and step 2's "Get your Lustre loyalty card \| Stampeo". Step 4: `0`. You do NOT see a canonical of `https://stampeo.app` or `https://stampeo.app/en`, any `hrefLang` line, or `index, follow`. |
+| RESET | R1 |
+
+### SU-05: A location page names its own URL [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Each location of a multi-site shop has its own printed QR code. Collapsing them into the shop page's canonical would claim that every location URL duplicates the main one. |
+| DEPENDS | SU-04 |
+| ACCOUNT | No session at all. |
+| STEPS | 1. R2 on `https://showcase.dev.stampeo.app/lustre/l/bastille`. 2. R2 on `https://showcase.dev.stampeo.app/lustre/l/nation`. |
+| EXPECT | `noindex, follow` on both, with canonicals `https://stampeo.app/lustre/l/bastille` and `https://stampeo.app/lustre/l/nation`. You do NOT see `https://stampeo.app/lustre` as either canonical, or any `hrefLang` line. |
+| RESET | R1 |
+
+### SU-06: A slug no shop owns is a 404 that asks not to be indexed [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | A mistyped or retired QR slug must not become a thin indexable page (a soft 404), and must not claim another URL as its canonical. |
+| DEPENDS | SU-01 |
+| ACCOUNT | No session at all. |
+| STEPS | 1. `curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" https://showcase.dev.stampeo.app/qa-no-such-shop-358` 2. R2 on the same URL. |
+| EXPECT | Step 1: `404`, with no redirect. Step 2 prints `<meta name="robots" content="noindex"/>`, and no `rel="canonical"` or `hrefLang` line. You do NOT see a 200 "not found" page, a redirect to the homepage, or a canonical. |
+| RESET | R1 |
 
 ---
 

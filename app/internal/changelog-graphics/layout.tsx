@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 /**
  * Root layout for the dev-only /internal segment. It lives outside [locale]
- * (excluded from the next-intl middleware matcher), so it provides its own
+ * (excluded from the proxy matcher), so it provides its own
  * <html>/<body>. The intl provider lives in Studio, which switches locale
  * per export; the page supplies the per-locale messages.
  *

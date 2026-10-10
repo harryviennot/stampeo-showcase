@@ -56,8 +56,8 @@
         "Plusieurs établissements, avec les statistiques de chacun",
         "Diffusions illimitées, avec segmentation clients",
         "Plusieurs paliers de panier, chacun avec son bonus",
-        "Programmez vos diffusions et vos styles de carte à l'avance",
-        "Notifications quand vos clients sont à proximité (Apple Wallet)",
+        "Programmez vos diffusions à l'avance (styles de carte bientôt)",
+        "Notifications quand vos clients sont à proximité (Apple Wallet, bientôt)",
         "Statistiques de rétention, de fréquence et de récompenses",
         "Assistance prioritaire"
       ]
@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Tarifs — Comparer les plans | Stampeo",
-      "description": "Comparez les plans et fonctionnalités Stampeo. De l'auto-entrepreneur au multi-établissement — trouvez le plan adapté à votre programme de fidélité."
+      "title": "Prix carte de fidélité digitale : dès {starterPrice}/mois",
+      "description": "Comparez Starter, Growth et Pro. Tampons ou points sur tous les plans, sans frais par client, et {trialDays} jours offerts pour l'essayer avec vos clients."
     },
     "hero": {
       "title": "Choisissez le plan adapté à votre commerce",
@@ -138,8 +138,8 @@
         "Plusieurs établissements, avec les statistiques de chacun",
         "Diffusions illimitées, avec segmentation clients",
         "Plusieurs paliers de panier, chacun avec son bonus",
-        "Programmez vos diffusions et vos styles de carte à l'avance",
-        "Notifications quand vos clients sont à proximité (Apple Wallet)",
+        "Programmez vos diffusions à l'avance (styles de carte bientôt)",
+        "Notifications quand vos clients sont à proximité (Apple Wallet, bientôt)",
         "Statistiques de rétention, de fréquence et de récompenses",
         "Assistance prioritaire"
       ],
@@ -281,11 +281,6 @@
         {
           "question": "Puis-je résilier à tout moment ?",
           "answer": "Oui. Pas de contrat ni de frais de résiliation. Résiliez quand vous voulez et conservez l'accès jusqu'à la fin de votre période de facturation en cours."
-        },
-        {
-          "question": "Qu'est-ce que le Programme Fondateur ?",
-          "answer": "Notre Programme Fondateur offre aux premiers utilisateurs -50% sur leur plan — verrouillé à vie. Les places sont limitées et le programme ferme bientôt.",
-          "foundingOnly": true
         }
       ]
     },

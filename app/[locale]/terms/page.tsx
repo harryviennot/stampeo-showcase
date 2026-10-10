@@ -15,7 +15,7 @@ export async function generateMetadata({
   if (!legal) return {};
 
   return {
-    title: legal.title,
+    title: { absolute: legal.title },
     alternates: {
       canonical: localePath(locale, "/terms"),
       languages: localeAlternates("/terms"),

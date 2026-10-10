@@ -1,12 +1,13 @@
-import Script from "next/script";
-
+/**
+ * Structured data as a plain data block, rendered on the server so crawlers
+ * that do not run JavaScript still read it. `<` is escaped so a string in the
+ * data can never close the tag.
+ */
 export function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
-    <Script
-      id={`jsonld-${data["@type"] || "default"}`}
+    <script
       type="application/ld+json"
-      strategy="afterInteractive"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
     />
   );
 }

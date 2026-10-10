@@ -6,6 +6,7 @@ import type {
   PointsStripStyle,
   RewardTier,
 } from "../types/design";
+import { formatMoney } from "../pricing";
 
 export type SectorTheme = {
   /** Stable brand id, used by tests and as a readable reference in the data. */
@@ -56,6 +57,45 @@ export type SectorTheme = {
   /** 0-100. Defaults to 40 (soft watermark); 100 makes the image the strip. */
   stripImageOpacity?: number;
 };
+
+/** One sector's copy, as `landing.sectorCards.sectors[i]` holds it. */
+export type SectorCopy = {
+  name: string;
+  quote: string;
+  reward: string;
+  advantage: string;
+  /** Wallet-card fields: first renders left-aligned, last right-aligned. */
+  fields?: Array<{ label: string; value: string }>;
+  link: string;
+  linkLabel: string;
+};
+
+/** `{m<amount>}` in sector copy: that whole amount in the page's currency. */
+const MONEY_TOKEN = /\{m(\d+)\}/g;
+
+/** Fills a sector's money tokens in `currency` as `locale` writes it, so /us
+ *  quotes "$10 off" where /en quotes "€10 off". */
+export function fillSectorMoney(
+  sector: SectorCopy,
+  currency: string,
+  locale: string
+): SectorCopy {
+  const fill = (text: string) =>
+    text.replace(MONEY_TOKEN, (_, amount: string) =>
+      formatMoney(Number(amount), currency, locale)
+    );
+  return {
+    ...sector,
+    name: fill(sector.name),
+    quote: fill(sector.quote),
+    reward: fill(sector.reward),
+    advantage: fill(sector.advantage),
+    linkLabel: fill(sector.linkLabel),
+    ...(sector.fields && {
+      fields: sector.fields.map((f) => ({ label: fill(f.label), value: fill(f.value) })),
+    }),
+  };
+}
 
 /** Pairs catalog sectors with their themes by catalog index, then lays them
  *  out in display order. A slot whose sector or theme is missing is skipped,

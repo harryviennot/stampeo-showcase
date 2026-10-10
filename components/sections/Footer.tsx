@@ -14,6 +14,7 @@ import {
   PLAY_STORE_URL,
 } from "../features/scanner-mobile/StoreBadges";
 import { marketPath, type Market } from "@/lib/markets";
+import { MarketLink } from "../market/MarketLink";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
@@ -144,9 +145,9 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                 <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("changelog")}
                 </Link>
-                <Link href={marketPath(market, "/pricing") as "/pricing"} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                <MarketLink market={market} href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {t("pricing")}
-                </Link>
+                </MarketLink>
                 <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                   {tNav("loyaltyPrograms")}
                 </Link>

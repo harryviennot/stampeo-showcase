@@ -10,8 +10,8 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  return buildAcquisitionMetadata(slug);
+  const { slug, locationSlug } = await params;
+  return buildAcquisitionMetadata(slug, locationSlug);
 }
 
 export default async function LocationAcquisitionPage({ params }: PageProps) {

@@ -83,7 +83,6 @@ const LEGACY_EM_DASH: ReadonlySet<string> = new Set([
   'fr/features.json::features.scanner-mobile.custom.howItWorks.subtitle',
   'fr/features.json::features.scanner-mobile.custom.howItWorks.app.steps[3]',
   'fr/features.json::features.scanner-mobile.custom.howItWorks.web.steps[3]',
-  'fr/features.json::features.scanner-mobile.custom.offline.subtitle',
   'fr/features.json::features.notifications-push.howItWorks.steps[2].description',
   'fr/features.json::features.notifications-push.privacy.points[1]',
   'fr/features.json::features.analytiques.custom.activityFeed.sectionDescription',
@@ -96,7 +95,6 @@ const LEGACY_EM_DASH: ReadonlySet<string> = new Set([
   'en/features.json::features.scanner-mobile.custom.howItWorks.subtitle',
   'en/features.json::features.scanner-mobile.custom.howItWorks.app.steps[3]',
   'en/features.json::features.scanner-mobile.custom.howItWorks.web.steps[3]',
-  'en/features.json::features.scanner-mobile.custom.offline.subtitle',
   'en/features.json::features.notifications-push.howItWorks.steps[2].description',
   'en/features.json::features.notifications-push.privacy.points[1]',
   'en/features.json::features.analytiques.custom.activityFeed.sectionDescription',
@@ -107,27 +105,11 @@ const LEGACY_EM_DASH: ReadonlySet<string> = new Set([
   'en/features.json::features.campagnes-promotionnelles.hero.navTitle',
   'en/landing.json::landing.hero.badge',
   'en/landing.json::landing.hero.stamp.mobileAddWallet',
-  'en/landing.json::landing.featureGrid.features[1].description',
-  'fr/metadata.json::metadata.features.scanner-mobile.title',
-  'fr/metadata.json::metadata.features.scanner-mobile.description',
-  'fr/metadata.json::metadata.features.notifications-push.title',
-  'fr/metadata.json::metadata.features.analytiques.title',
-  'fr/metadata.json::metadata.features.campagnes-promotionnelles.title',
-  'en/metadata.json::metadata.features.scanner-mobile.title',
-  'en/metadata.json::metadata.features.scanner-mobile.description',
-  'en/metadata.json::metadata.features.notifications-push.title',
-  'en/metadata.json::metadata.features.analytiques.title',
-  'en/metadata.json::metadata.features.geolocalisation.title',
-  'en/metadata.json::metadata.features.campagnes-promotionnelles.title',
   'fr/pricing.json::pricing.deadlineNotice',
   'fr/pricing.json::pricing.countdown.daysHours',
   'fr/pricing.json::pricing.countdown.hoursMinutes',
-  'fr/pricing.json::pricingPage.meta.title',
-  'fr/pricing.json::pricingPage.meta.description',
   'fr/pricing.json::pricingPage.faq.items[5].answer',
   'en/pricing.json::pricing.deadlineNotice',
-  'en/pricing.json::pricingPage.meta.title',
-  'en/pricing.json::pricingPage.meta.description',
   'en/pricing.json::pricingPage.faq.items[5].answer',
 ]);
 
@@ -453,6 +435,14 @@ describe('market-scoped copy', () => {
     // in the US the trial is the strongest thing we can say there. Gated by
     // `copy.has("hero.reassurance")` in VariantHero.
     'landing.json::variant.us.hero.reassurance',
+    // The /us and /us/pricing title and description. The international pages
+    // read `metadata.home` and `pricingPage.meta`, which live outside `variant`,
+    // so there is no base key under `variant` to shadow. Read by
+    // app/[locale]/us/page.tsx and us/pricing/page.tsx.
+    'landing.json::variant.us.meta.title',
+    'landing.json::variant.us.meta.description',
+    'landing.json::variant.us.pricingMeta.title',
+    'landing.json::variant.us.pricingMeta.description',
   ]);
 
   /**
@@ -638,18 +628,10 @@ describe('market-scoped copy', () => {
 const WORDED_TRIAL =
   /\b(?:free month|month free|one month free|\d+[\s-]*(?:days?|jours?)[\s-]*(?:free|trial)|free\s+(?:for\s+)?\d+[\s-]*days?|\d+[\s-]*days?\s+for\s+free|first\s+month\s+is\s+free)\b/i;
 
-/**
- * The founding-partner pages are exempt for a different reason: that programme
- * closed on 2026-08-04, so the whole subtree is stale and is being removed
- * under its own issue rather than half-corrected here.
- */
-const FOUNDING_SUBTREE = /(?:^|\.)(?:programme-fondateur|founding-partner)(?:\.|$)/i;
-
 describe('English copy never writes a trial length in words', () => {
   test.each(NAMESPACES)('%s', (namespace) => {
     const offenders: string[] = [];
     for (const [key, value] of Object.entries(load(SOURCE_LOCALE, namespace))) {
-      if (FOUNDING_SUBTREE.test(key)) continue;
       if (!WORDED_TRIAL.test(value)) continue;
       offenders.push(
         `messages/en/${namespace} "${key}" states a trial length in words, ` +

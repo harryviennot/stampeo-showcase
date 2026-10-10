@@ -130,8 +130,8 @@
         {
           "name": "Restauracja",
           "quote": "Tomasz je u ciebie prawie co tydzień, ale rachunek nigdy nie jest taki sam. Punkty nagradzają to, ile naprawdę wydaje, a nie samą obecność.",
-          "reward": "1 € wydane = 1 punkt, -25% przy 100 pkt",
-          "advantage": "Kolacja za 40 € daje więcej niż szybki lunch",
+          "reward": "{m1} wydane = 1 punkt, -25% przy 100 pkt",
+          "advantage": "Kolacja za {m40} daje więcej niż szybki lunch",
           "fields": [
             {
               "label": "Następny próg",
@@ -148,7 +148,7 @@
         {
           "name": "Salon piękności",
           "quote": "Lena przychodzi w jednym tygodniu na manicure, w kolejnym na pełną stylizację. Punkty nagradzają to, ile wydaje, więc każda wizyta przybliża ją do nagrody.",
-          "reward": "1 € wydane = 1 punkt, manicure za darmo przy 80 pkt",
+          "reward": "{m1} wydane = 1 punkt, manicure za darmo przy 80 pkt",
           "advantage": "Droższe zabiegi zbierają punkty szybciej",
           "fields": [
             {
@@ -166,7 +166,7 @@
         {
           "name": "Księgarnia",
           "quote": "Filip wychodzi raz z jedną książką w miękkiej oprawie, a następnym razem ze stosem powieści. Punkty liczą to, ile wydaje: duże zakupy szybciej przybliżają nagrodę.",
-          "reward": "1 € wydane = 1 punkt, -10 € przy 150 pkt",
+          "reward": "{m1} wydane = 1 punkt, -{m10} przy 150 pkt",
           "advantage": "Duże koszyki zbierają punkty szybciej",
           "fields": [
             {
@@ -175,7 +175,7 @@
             },
             {
               "label": "Następna nagroda",
-              "value": "-10 €"
+              "value": "-{m10}"
             }
           ],
           "link": "/program-lojalnosciowy",
@@ -303,7 +303,7 @@
         },
         {
           "title": "Rozsyłki promocyjne",
-          "description": "Dotrzyj do wszystkich klientów, bez rachunku za SMS-y. 85% otwarć.",
+          "description": "Dotrzyj do wszystkich klientów, bez rachunku za SMS-y.",
           "link": "/features/rozsylki-promocyjne"
         },
         {
@@ -313,7 +313,7 @@
         },
         {
           "title": "Skaner mobilny",
-          "description": "Jeden skan, jedna pieczątka. Nawet bez internetu.",
+          "description": "Jeden skan, jedna pieczątka. Wystarczy telefon.",
           "link": "/features/skaner-mobilny"
         },
         {
@@ -402,7 +402,7 @@
         },
         {
           "title": "Wyślij promocje prosto na ich telefon",
-          "description": "Ogłoś promocję, nowe menu, pustą godzinę do zapełnienia. Twoje wiadomości docierają jak SMS, tylko bez rachunku za SMS-y, i są czytane 5 do 10× częściej niż e-maile."
+          "description": "Ogłoś promocję, nowe menu, pustą godzinę do zapełnienia. Twoje wiadomości docierają jak SMS, tylko bez rachunku za SMS-y."
         }
       ]
     },

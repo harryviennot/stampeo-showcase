@@ -3,9 +3,9 @@
 import { Link } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { formatMoney } from "@/lib/pricing";
+import { PriceText } from "@/components/market/PriceText";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
-import { TextSkeleton } from "@/components/ui/TextSkeleton";
 import { InfoIcon } from "@/components/icons";
 import type { CTALocation } from "@/lib/analytics";
 import { useCtaTracking } from "@/hooks/use-cta-tracking";
@@ -58,14 +58,6 @@ type PricingTierCardProps = {
   trackAs: CTALocation;
   /** Lets the page control stacking order (recommended tier first on mobile). */
   className?: string;
-  /**
-   * STA-330: true while the visitor's region is unresolved. The price, the
-   * sub-label and the trial subtext render as inline skeleton chips — sized to
-   * their text, so the card's height never changes — because the amounts passed
-   * in were computed from the page default and may be the wrong currency for
-   * this visitor. Everything region-independent renders normally.
-   */
-  loading?: boolean;
 };
 
 function FeatureListItem({ feature }: { feature: FeatureItem }) {
@@ -123,12 +115,10 @@ export function PricingTierCard({
   currency,
   trackAs,
   className = "",
-  loading = false,
 }: PricingTierCardProps) {
   const locale = useLocale();
   const discounted = discount ? getDiscountedPrice(price, discount) : undefined;
-  // A held card never shows a struck-through pair: both numbers would be chips.
-  const showDiscount = !loading && discounted !== undefined && discounted < price;
+  const showDiscount = discounted !== undefined && discounted < price;
   const annotated = Boolean(highlighted && annotationLabel);
 
   // Pricing clicks are the highest-intent signal on the site, so the card's
@@ -173,13 +163,13 @@ export function PricingTierCard({
 
         {showDiscount ? (
           <div className="flex flex-col gap-1">
-            <span className="text-base font-semibold text-[var(--muted-foreground)] line-through">
+            <PriceText className="text-base font-semibold text-[var(--muted-foreground)] line-through">
               {formatMoney(price, currency, locale)}
-            </span>
+            </PriceText>
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-bold tracking-tight">
+              <PriceText className="text-4xl font-bold tracking-tight">
                 {formatMoney(discounted, currency, locale)}
-              </span>
+              </PriceText>
               <span className="text-[var(--muted-foreground)] text-base font-semibold">
                 {forLifeLabel ?? perMonthLabel}
               </span>
@@ -187,9 +177,9 @@ export function PricingTierCard({
           </div>
         ) : (
           <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-bold tracking-tight">
-              {loading ? <TextSkeleton ch={4} /> : formatMoney(price, currency, locale)}
-            </span>
+            <PriceText className="text-4xl font-bold tracking-tight">
+              {formatMoney(price, currency, locale)}
+            </PriceText>
             <span className="text-[var(--muted-foreground)] text-base font-semibold">
               {perMonthLabel}
             </span>
@@ -197,9 +187,9 @@ export function PricingTierCard({
         )}
 
         {subLabel && (
-          <p className="text-sm text-[var(--muted-foreground)] font-medium -mt-2">
-            {loading ? <TextSkeleton ch={18} /> : subLabel}
-          </p>
+          <PriceText as="p" className="text-sm text-[var(--muted-foreground)] font-medium -mt-2">
+            {subLabel}
+          </PriceText>
         )}
       </div>
 
@@ -235,9 +225,9 @@ export function PricingTierCard({
           </Link>
         )}
         {ctaSubtext && (
-          <p className="text-xs text-center text-[var(--muted-foreground)]">
-            {loading ? <TextSkeleton ch={14} /> : ctaSubtext}
-          </p>
+          <PriceText as="p" className="text-xs text-center text-[var(--muted-foreground)]">
+            {ctaSubtext}
+          </PriceText>
         )}
       </div>
     </div>

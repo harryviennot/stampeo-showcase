@@ -4,8 +4,7 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { localePath } from "@/lib/hreflang";
-import { AuthProvider } from "@/lib/supabase/auth-provider";
+import { ogLocaleFor } from "@/lib/og/metadata";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
@@ -13,16 +12,18 @@ import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ScrollRevealInit } from "@/components/ui/ScrollRevealInit";
 import "../globals.css";
-import { PILOT_HREFLANG } from "@/lib/markets";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin", "latin-ext"],
 });
 
+// Only Geist is preloaded. The mono and handwriting faces are secondary, so
+// they load when first used instead of competing with the first paint.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin", "latin-ext"],
+  preload: false,
 });
 
 /* Handwriting face for ink annotations only (.ink-note), never for UI text.
@@ -30,19 +31,12 @@ const geistMono = Geist_Mono({
 const caveat = Caveat({
   variable: "--font-annotation",
   subsets: ["latin", "latin-ext"],
+  preload: false,
 });
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
-
-/** OpenGraph wants a language_TERRITORY tag, so each locale names a region. */
-const OG_LOCALES: Record<string, string> = {
-  fr: "fr_FR",
-  en: "en_US",
-  es: "es_ES",
-  pl: "pl_PL",
-};
 
 export async function generateMetadata({
   params,
@@ -63,33 +57,21 @@ export async function generateMetadata({
     formatDetection: {
       telephone: false,
     },
+    // openGraph and twitter carry no title or description: Next fills them from
+    // each page's own. No `alternates` either, so a page that declares no
+    // canonical inherits none.
     openGraph: {
-      title: t("title"),
-      description: t("description"),
       type: "website",
       siteName: "Stampeo",
-      locale: OG_LOCALES[locale] ?? OG_LOCALES.en,
+      locale: ogLocaleFor(locale),
     },
     twitter: {
       card: "summary_large_image",
-      title: t("title"),
-      description: t("description"),
     },
     verification: {
       other: {
         "msvalidate.01": "7306B78C81A951C4E332C053B9367FD7",
       },
-    },
-    alternates: {
-      canonical: localePath(locale, "/"),
-      // PILOT_HREFLANG, not localeAlternates: the homepage has to advertise the
-      // live country pilots back. hreflang must be RECIPROCAL — /us declares
-      // `en-US -> /us`, and if the homepage does not declare it in return Google
-      // drops the annotation and crawls /us and /en as two competing English
-      // pages. That duplicate split is the exact thing a distinct pilot URL
-      // exists to avoid, so indexing /us without this would be worse than
-      // leaving it noindex.
-      languages: PILOT_HREFLANG,
     },
   };
 }
@@ -116,23 +98,21 @@ export default async function RootLayout({
       >
         <ScrollRevealInit />
         <NextIntlClientProvider>
-          <AuthProvider>
-            {children}
-            <FloatingLanguageSwitcher />
-            {/* Last in the tree so it paints over the page, and inside the
-                intl provider because its copy is localized. It decides for
-                itself whether this route and this visitor need it. */}
-            <ConsentBanner />
-            {/* Renders nothing. Decides for itself whether this visitor and
-                this route allow the pixel, and re-decides on every
-                navigation. */}
-            <MetaPixel />
-            <GoogleAnalytics />
-            {/* Must stay AFTER {children}: its landing-context snapshot reads
-                body.dataset.landingVariant, which LandingTracker (inside the
-                page subtree) stamps in an effect that has to fire first. */}
-            <AttributionCapture />
-          </AuthProvider>
+          {children}
+          <FloatingLanguageSwitcher />
+          {/* Last in the tree so it paints over the page, and inside the
+              intl provider because its copy is localized. It decides for
+              itself whether this route and this visitor need it. */}
+          <ConsentBanner />
+          {/* Renders nothing. Decides for itself whether this visitor and
+              this route allow the pixel, and re-decides on every
+              navigation. */}
+          <MetaPixel />
+          <GoogleAnalytics />
+          {/* Must stay AFTER {children}: its landing-context snapshot reads
+              body.dataset.landingVariant, which LandingTracker (inside the
+              page subtree) stamps in an effect that has to fire first. */}
+          <AttributionCapture />
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { getTranslations } from "next-intl/server";
 import {
   OG_WIDTH,
   OG_HEIGHT,
@@ -45,6 +46,7 @@ export default async function Image({
   }
 
   const title = truncate(post.title, 80);
+  const t = await getTranslations({ locale: post.locale, namespace: "blog" });
 
   return new ImageResponse(
     (
@@ -92,7 +94,7 @@ export default async function Image({
               &bull;
             </span>
             <span style={{ fontSize: 20, color: "#71717a", display: "flex" }}>
-              {post.readingTime}
+              {t("readingTime", { minutes: post.readingMinutes })}
             </span>
           </div>
         </div>

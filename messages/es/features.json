@@ -311,11 +311,6 @@
           "title": "El escáner web",
           "description": "¿No quieres instalar una app? Escanea directamente desde el navegador de tu teléfono o tablet. Ideal para comercios que usan una tablet compartida en el mostrador.",
           "icon": "globe"
-        },
-        {
-          "title": "Modo sin conexión",
-          "description": "Funciona incluso sin internet. Los escaneos se guardan en el dispositivo y se sincronizan automáticamente cuando vuelve la conexión. No se pierde ningún sello.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -370,29 +365,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Funciona incluso sin Wi-Fi",
-          "subtitle": "Mercado al aire libre, sótano, festival: el escaneo funciona en cualquier sitio, aunque no haya conexión.",
-          "situations": [
-            "Mercado al aire libre sin Wi-Fi",
-            "Sótano o bodega",
-            "Festival o evento temporal",
-            "Zona rural con red inestable",
-            "Corte de internet temporal"
-          ],
-          "online": "Conectado",
-          "offline_label": "Sin conexión",
-          "pending": "Pendiente de sincronizar",
-          "synced": "Sincronizado",
-          "syncing": "Sincronizando...",
-          "stampedTitle": "Sello añadido",
-          "stampedSub": "Sincronizado al instante",
-          "pendingSub": "1 sello en cola",
-          "syncingSub": "Conexión restablecida",
-          "syncedSub": "Ningún sello perdido",
-          "offlineHint": "Modo sin conexión activado",
-          "toggleHint": "Pulsa el interruptor para probarlo"
-        },
         "employee": {
           "title": "Pensado para tus empleados",
           "subtitle": "Tus empleados no son técnicos. La interfaz es tan sencilla que no hace falta ninguna formación.",
@@ -421,7 +393,6 @@
             "features": [
               "3 cuentas de empleado incluidas",
               "Aplicación dedicada + escáner web",
-              "Modo sin conexión",
               "Historial de escaneos"
             ]
           },
@@ -624,7 +595,7 @@
       ],
       "cta": {
         "title": "Deja de adivinar. Empieza a saber.",
-        "subtitle": "El panel está incluido en todos los planes. Las estadísticas avanzadas están disponibles en el plan Growth."
+        "subtitle": "El panel está incluido en todos los planes. Growth añade tendencias y horas punta, y Pro, retención, frecuencia y clientes en riesgo."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -663,9 +634,9 @@
           "timeAgo": "hace {seconds}s"
         },
         "proAnalytics": {
-          "badge": "Plan Growth",
+          "badge": "Planes Growth y Pro",
           "title": "Entiende las tendencias, no solo los números",
-          "description": "El plan Growth añade una capa de análisis que te ayuda a tomar decisiones."
+          "description": "Growth añade tendencias y horas punta. Pro añade retención, frecuencia y los clientes que estás a punto de perder."
         },
         "proCharts": {
           "lineChart": {
@@ -856,7 +827,7 @@
       ],
       "cta": {
         "title": "Está presente en el momento justo",
-        "subtitle": "La geolocalización está incluida en el plan Growth. Empieza tu mes gratis para aprovecharla ya."
+        "subtitle": "La geolocalización llega pronto al plan Pro. Empieza tu mes gratis ya y tu tarjeta estará lista cuando se lance."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -868,34 +839,34 @@
       "hero": {
         "title": "Llega a todos tus clientes. Sin la factura de los SMS.",
         "navTitle": "Difusiones promocionales: avisos en Apple Wallet y Google Wallet a todos tus clientes",
-        "subtitle": "Envía avisos promocionales directamente a Apple Wallet y Google Wallet. ~85 % de tasa de apertura. Cero coste por mensaje. Segmentación y programación incluidas.",
+        "subtitle": "Envía difusiones directamente a Apple Wallet y Google Wallet, sin coste por mensaje. Growth incluye {growthBroadcasts} difusiones al mes con segmentación básica. Pro no tiene límite y suma segmentación avanzada y programación.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "Los números hablan por sí solos",
-        "subtitle": "Rendimiento medio observado en la tarjeta, los SMS y el email, a partir de datos públicos del sector.",
+        "title": "Tus clientes conservan la tarjeta",
+        "subtitle": "Una difusión llega a cada tarjeta que sigue en el teléfono. Esto es lo que medimos en los comercios que usan Stampeo.",
         "stats": [
           {
-            "value": "~85 %",
-            "label": "Tasa de apertura en la tarjeta",
-            "caption": "frente a ~20 % en email y ~35 % de CTR en SMS"
+            "value": "88 %",
+            "label": "Tarjetas guardadas",
+            "caption": "Clientes registrados que guardan la tarjeta en Apple Wallet o Google Wallet, donde llegan tus difusiones (Datos de Stampeo, 86 comercios, feb.–oct. 2026)."
+          },
+          {
+            "value": "95 %",
+            "label": "Siguen ahí a los 90 días",
+            "caption": "Tarjetas que siguen en el teléfono tres meses después de añadirlas (Datos de Stampeo, 86 comercios, feb.–oct. 2026)."
           },
           {
             "value": "0 €",
             "label": "Por mensaje",
-            "caption": "Cuota fija del plan, no 0,04 a 0,10 € por SMS"
-          },
-          {
-            "value": "+78 %",
-            "label": "De facturación",
-            "caption": "Subida observada por los comercios que usan tarjetas en Apple Wallet y Google Wallet"
+            "caption": "Las difusiones van incluidas en tu plan. El SMS cobra cada envío."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, email, tarjeta: <br></br>qué llega de verdad",
-        "subtitle": "La tasa de apertura y el coste de entrega no cuentan la misma historia. Así se comparan los tres canales para un comercio que envía promociones.",
+        "subtitle": "Así se comparan los tres canales para un comercio que envía promociones.",
         "columns": [
           "",
           "SMS",
@@ -904,17 +875,9 @@
         ],
         "rows": [
           {
-            "label": "Tasa de apertura típica",
+            "label": "Coste por mensaje",
             "values": [
-              "~35 % CTR",
-              "~20 %",
-              "~85 %"
-            ]
-          },
-          {
-            "label": "Coste por mensaje (España)",
-            "values": [
-              "0,04 – 0,10 €",
+              "Se paga cada envío",
               "Bajo, variable",
               "0 € (incluido en el plan)"
             ]
@@ -959,8 +922,7 @@
               "Aviso en pantalla de bloqueo, sin bandeja"
             ]
           }
-        ],
-        "caption": "Fuentes: tarifas de Twilio España, informe PushPass 2026 SMS vs aviso, guía de Yotpo sobre la tarjeta en el teléfono."
+        ]
       },
       "howItWorks": {
         "badge": "Cómo funciona",
@@ -1070,7 +1032,7 @@
         "items": [
           {
             "question": "¿Cuánto cuestan las difusiones promocionales a la tarjeta?",
-            "answer": "Nada más. Las difusiones están incluidas en el plan Growth (8 al mes) y en el plan Pro (ilimitadas). No hay coste por mensaje, a diferencia del SMS, que cuesta entre 0,04 y 0,10 € por envío en España. Una sola difusión por SMS a 500 clientes puede costar fácilmente entre 30 y 50 €."
+            "answer": "Nada más. Las difusiones están incluidas en el plan Growth (8 al mes) y en el plan Pro (ilimitadas). No hay coste por mensaje, a diferencia del SMS, en el que se paga cada envío."
           },
           {
             "question": "¿Los clientes tienen que instalar una app?",
@@ -1078,7 +1040,7 @@
           },
           {
             "question": "¿Cómo se compara con el SMS?",
-            "answer": "Los avisos en la tarjeta aparecen en la pantalla de bloqueo como un SMS, pero son gratis de enviar, alcanzan ~85 % de tasa de apertura, y no caen en el filtro «Remitente desconocido» de iOS 26. Además tienes una segmentación integrada (por sellos ganados, recompensas canjeadas, o inactividad reciente) que las plataformas de SMS suelen cobrar aparte."
+            "answer": "Los avisos en la tarjeta aparecen en la pantalla de bloqueo como un SMS, pero son gratis de enviar y no caen en el filtro «Remitente desconocido» de iOS 26. La segmentación viene integrada: por fecha de registro en Growth, y por sellos ganados, recompensas canjeadas o inactividad reciente en Pro. Las plataformas de SMS suelen cobrarla aparte."
           },
           {
             "question": "¿Puedo programar mis difusiones con antelación?",
@@ -1122,174 +1084,6 @@
         "analytiques",
         "geolocalisation"
       ]
-    },
-    "programme-fondateur": {
-      "hero": {
-        "title": "Todo Stampeo, desde hoy. Y <accent>20 €/mes bloqueados de por vida</accent>.",
-        "navTitle": "Oferta de lanzamiento: tarifa bloqueada de por vida",
-        "subtitle": "Stampeo ya funciona cada día en decenas de comercios. Los primeros en unirse conservan la tarifa de lanzamiento, para siempre.",
-        "badge": "Oferta de lanzamiento",
-        "secondaryCta": "1 mes gratis, luego {growthFoundingPrice}/mes de por vida"
-      },
-      "problem": {
-        "title": "Te lo contamos sin rodeos",
-        "description": "Preferimos ser claros. Esto es exactamente dónde está Stampeo hoy."
-      },
-      "sections": [
-        {
-          "title": "1 mes gratis, sin trampa",
-          "description": "Te pedimos una tarjeta al registrarte, pero no hay ningún cobro durante la prueba. Lo pruebas en condiciones reales. Si Stampeo no es para ti, te vas sin pagar nada.",
-          "icon": "calendar"
-        },
-        {
-          "title": "{growthFoundingPrice}/mes de por vida",
-          "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice}/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
-          "icon": "tag"
-        },
-        {
-          "title": "Todas las funciones Growth",
-          "description": "Varios estilos de tarjeta, sellos o puntos (a tu elección), miembros de equipo ilimitados, mensajes de aviso personalizados, y difusiones a todos tus clientes.",
-          "icon": "crown"
-        }
-      ],
-      "cta": {
-        "title": "Únete a los primeros comercios",
-        "subtitle": "1 mes gratis. {growthFoundingPrice}/mes de por vida. Todas las funciones Growth, disponibles hoy."
-      },
-      "related": [
-        "notifications-push",
-        "scanner-mobile",
-        "design-de-carte"
-      ],
-      "custom": {
-        "seeAllPlans": "Ver todos los planes",
-        "benefits": {
-          "title": "Lo que consigues",
-          "items": [
-            {
-              "title": "1 mes gratis, sin trampa",
-              "description": "Te pedimos una tarjeta al registrarte, pero no hay ningún cobro durante la prueba. Lo pruebas en condiciones reales. Si Stampeo no es para ti, te vas sin pagar nada.",
-              "icon": "calendar"
-            },
-            {
-              "title": "{growthFoundingPrice}/mes de por vida",
-              "description": "Tras la prueba, tu tarifa queda bloqueada en {growthFoundingPrice}/mes. Para siempre, incluso cuando el precio suba para los nuevos comercios.",
-              "icon": "tag"
-            },
-            {
-              "title": "Todas las funciones Growth",
-              "description": "Varios estilos de tarjeta, sellos o puntos (a tu elección), miembros de equipo ilimitados, mensajes de aviso personalizados, y difusiones a todos tus clientes.",
-              "icon": "crown"
-            },
-            {
-              "title": "Un canal directo con el equipo",
-              "description": "Sin robots, sin ticket número 47832. Hablas directamente con las personas que construyen Stampeo. ¿Un problema, una idea? Nos ocupamos.",
-              "icon": "signal"
-            },
-            {
-              "title": "Tu tarjeta creada por nosotros",
-              "description": "Envíanos tu logo y tus colores. Creamos tu tarjeta de fidelidad, limpia y conforme a Apple Wallet y Google Wallet, el porta tarjetas integrado en el teléfono de tus clientes. Incluido.",
-              "icon": "palette"
-            },
-            {
-              "title": "Prioridad en todo",
-              "description": "Nuevas funciones en primicia, soporte prioritario. Como comercio pionero, pasas el primero.",
-              "icon": "sparkles"
-            }
-          ]
-        },
-        "transparency": {
-          "title": "Te lo contamos sin rodeos",
-          "description": "Preferimos ser claros. Esto es exactamente dónde está Stampeo hoy.",
-          "worksNow": {
-            "title": "Lo que funciona, hoy",
-            "items": [
-              "Tarjetas de Apple Wallet y Google Wallet",
-              "Escaneo del código QR con aviso en tiempo real",
-              "Difusiones a todos tus clientes (Growth y Pro)",
-              "Segmentación de clientes para tus difusiones (Pro)",
-              "Panel con lista de clientes y estadísticas",
-              "Editor de tarjeta con vista previa en tiempo real"
-            ]
-          },
-          "comingSoon": {
-            "title": "Lo que construimos a continuación",
-            "items": [
-              "Modo sin conexión para el escáner",
-              "Geolocalización para Apple Wallet y Google Wallet",
-              "Creación de tarjeta asistida por IA",
-              "Estilos de tarjeta programados y de temporada"
-            ]
-          },
-          "expectFromYou": {
-            "title": "Lo que te pedimos",
-            "items": [
-              "Usar Stampeo a diario en tu comercio",
-              "Decirnos qué funciona y qué te ahorraría tiempo",
-              "Compartir tus ideas de mejora"
-            ]
-          },
-          "closing": "Stampeo está listo para funcionar en tu comercio desde hoy. Al unirte ahora, bloqueas la mejor tarifa e influyes en lo que construimos a continuación."
-        },
-        "price": {
-          "original": "{growthPrice}/mes",
-          "founding": "{growthFoundingPrice}/mes",
-          "forLife": "de por vida"
-        },
-        "timeline": {
-          "badge": "Cómo funciona",
-          "title": "4 pasos para empezar",
-          "subtitle": "",
-          "steps": [
-            {
-              "title": "Crea tu cuenta",
-              "description": "Configura tu programa en 2 minutos."
-            },
-            {
-              "title": "Personaliza tu tarjeta",
-              "description": "Hazla tú, o escríbenos con tu logo y tus colores: la creamos por ti."
-            },
-            {
-              "title": "Muestra tu código QR",
-              "description": "En el mostrador. Tus clientes añaden su tarjeta con un escaneo."
-            },
-            {
-              "title": "Lanza tu programa",
-              "description": "Primer sello desde el primer día."
-            }
-          ]
-        },
-        "faq": {
-          "title": "Preguntas frecuentes",
-          "items": [
-            {
-              "question": "¿El producto está completo y se puede usar ya?",
-              "answer": "Sí. Stampeo ya funciona cada día en decenas de comercios: tarjetas de Apple Wallet y Google Wallet, escaneo, avisos, difusiones y estadísticas están en marcha. Puedes lanzar tu programa hoy mismo."
-            },
-            {
-              "question": "¿Cuánto tiempo sigue abierta la oferta de lanzamiento?",
-              "answer": "La tarifa de lanzamiento ({growthFoundingPrice}/mes de por vida) sigue abierta durante la fase de lanzamiento, y luego el precio sube para los nuevos comercios. Una vez dentro, tu tarifa queda bloqueada de por vida."
-            },
-            {
-              "question": "¿Qué pasa después del mes gratis?",
-              "answer": "Pasas a {growthFoundingPrice}/mes. Te avisamos dos veces: una semana antes, y luego 3 días antes. Si no quieres continuar, cancelas en un clic, sin gastos."
-            },
-            {
-              "question": "¿Mantengo mi tarifa si subís los precios?",
-              "answer": "Sí. {growthFoundingPrice}/mes de por vida significa de por vida. Aunque el plan Growth pase a 49,99 € dentro de tres años, tu tarifa no se mueve. Es contractual."
-            },
-            {
-              "question": "¿Puedo cancelar?",
-              "answer": "En cualquier momento tras el mes gratis. Sin compromiso. Si cancelas, pierdes el acceso, pero tus clientes conservan sus tarjetas."
-            }
-          ]
-        },
-        "finalCta": {
-          "title": "Únete a los primeros comercios",
-          "subtitle": "1 mes gratis. {growthFoundingPrice}/mes de por vida. Todas las funciones Growth, disponibles hoy.",
-          "urgency": "La tarifa de lanzamiento subirá para los nuevos comercios. Bloquea la tuya ahora."
-        }
-      }
     },
     "relatedTitle": "Descubre también",
     "discoverLink": "Descubrir",

@@ -202,7 +202,7 @@ export function yearlyCardView(
  * all three in sync. Since this moment:
  *   - new signups no longer get founding pricing
  *   - the pricing page hides founding badges and strikethroughs
- *   - /founding-partner + /programme-fondateur 307 to /pricing
+ *   - /founding-partner + /programme-fondateur 308 to /pricing
  *
  * Existing founding partners are grandfathered server-side via the DB flag,
  * with no expiry.
@@ -234,6 +234,20 @@ export function formatPrice(price: number, locale?: string): string {
     return price % 1 === 0 ? `${price}` : price.toFixed(2).replace(".", ",");
   }
   return price % 1 === 0 ? `${price}` : price.toFixed(2);
+}
+
+/**
+ * ICU arguments for a page title or description that quotes the entry price
+ * and the trial, e.g. "from {starterPrice}/month". Formatted server-side from
+ * the market's ladder, so the catalog never carries a currency glyph.
+ */
+export function pricingMessageArgs(
+  pricing: Pricing, locale: string, trialDays: number,
+): { starterPrice: string; trialDays: number } {
+  return {
+    starterPrice: formatMoney(pricing.tiers.starter.month, pricing.currency, locale),
+    trialDays,
+  };
 }
 
 /**

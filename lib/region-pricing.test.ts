@@ -1,12 +1,14 @@
 import { describe, expect, test } from "bun:test";
 
 import {
-  PRICING_TOKENS,
+  displayTerms,
   regionBilling,
   resolveRegionLadder,
-  splitPricingParts,
+  type RegionBilling,
+  type RegionCurrency,
 } from "./region-pricing";
 import { FALLBACK_PRICING, interpolatePricing, type Pricing } from "./pricing";
+import { MARKETS, type Market } from "./markets";
 
 import enLanding from "../messages/en/landing.json";
 import frLanding from "../messages/fr/landing.json";
@@ -58,53 +60,41 @@ describe("regionBilling", () => {
   });
 });
 
-describe("splitPricingParts", () => {
-  test("round-trips: reassembling the parts yields the raw string", () => {
-    const raw =
-      "Try free for {trialDays} days, then from {starterPrice}/month or {starterYearlyMonthly} billed yearly.";
-    const parts = splitPricingParts(raw);
-    const reassembled = parts
-      .map((p) => (p.type === "token" ? `{${p.value}}` : p.value))
-      .join("");
-    expect(reassembled).toBe(raw);
+describe("displayTerms: the ladder and trial a price surface shows", () => {
+  // `country` is null on the server and during hydration: that render is the
+  // HTML crawlers and AI assistants read, so it must carry real numbers.
+  const ladders = { eur: FALLBACK_PRICING.eur, usd: FALLBACK_PRICING.usd };
+  // The page terms as VariantLanding and MarketPricingPage hand them to the provider.
+  const pageTerms = (market: Market): RegionBilling => ({
+    currency: MARKETS[market].currency.code.toLowerCase() as RegionCurrency,
+    trialDays: MARKETS[market].trialDays,
   });
 
-  test("marks exactly the pricing tokens as tokens, in order", () => {
-    const parts = splitPricingParts("A {starterPrice} B {trialDays} C");
-    expect(parts).toEqual([
-      { type: "text", value: "A " },
-      { type: "token", value: "starterPrice" },
-      { type: "text", value: " B " },
-      { type: "token", value: "trialDays" },
-      { type: "text", value: " C" },
-    ]);
+  test.each([
+    ["us", "usd", 14],
+    ["int", "eur", 30],
+    ["uk", "eur", 30],
+  ] as const)("the server renders the %s page in %s with a %d-day trial", (market, currency, days) => {
+    const terms = displayTerms(ladders, pageTerms(market), null);
+    expect(terms.pricing).toBe(ladders[currency]);
+    expect(terms.trialDays).toBe(days);
   });
 
-  test("plain text yields a single text part", () => {
-    expect(splitPricingParts("No numbers here.")).toEqual([
-      { type: "text", value: "No numbers here." },
-    ]);
+  test.each([
+    ["a US visitor on /en", "int", "US", "usd", 14],
+    ["a US visitor on /uk", "uk", "US", "usd", 14],
+    ["a French visitor on /us", "us", "FR", "eur", 30],
+    ["a British visitor on /us", "us", "GB", "eur", 30],
+  ] as const)("after hydration, %s gets their region's terms", (_, market, country, currency, days) => {
+    const terms = displayTerms(ladders, pageTerms(market), country);
+    expect(terms.pricing).toBe(ladders[currency]);
+    expect(terms.trialDays).toBe(days);
   });
 
-  test("an unknown placeholder is NOT treated as a pricing token", () => {
-    // ICU arguments like {count} belong to next-intl, not to us; skeletoning
-    // them would blank text the translator owns.
-    expect(splitPricingParts("Hello {name}")).toEqual([
-      { type: "text", value: "Hello {name}" },
-    ]);
-  });
-
-  test("token list parity: interpolatePricing replaces every token we would skeleton", () => {
-    // If interpolatePricing learns a token this list does not know, the chip
-    // never covers it and a raw "{newToken}" flashes; if the list knows one
-    // interpolatePricing dropped, the chip resolves to a literal token. Feed
-    // each token through the real replacer and require the braces to be gone.
-    const pricing: Pricing = FALLBACK_PRICING.eur;
-    for (const token of PRICING_TOKENS) {
-      const out = interpolatePricing(`{${token}}`, pricing, "en", 30);
-      expect(out).not.toContain("{");
-      expect(out).not.toContain("}");
-    }
+  test.each(["", "Etc", null])("an undetectable visitor (%p) keeps the /us page's terms", (country) => {
+    const terms = displayTerms(ladders, pageTerms("us"), country);
+    expect(terms.pricing).toBe(ladders.usd);
+    expect(terms.trialDays).toBe(14);
   });
 });
 

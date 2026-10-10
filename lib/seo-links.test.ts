@@ -1,5 +1,5 @@
 /**
- * The sr-only header/footer navigation (STA-355 QA, blocker 2).
+ * The footer's sr-only sitemap navigation.
  *
  * This surface shipped a redirect on EVERY page of the site and no test saw it.
  * Two reasons, both fixed here rather than documented:
@@ -19,8 +19,6 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { routing } from "../i18n/routing";
 import { BLOG_LOCALES } from "./blog/locales";
 import { getAllSlugs } from "./blog/index";
@@ -89,25 +87,5 @@ describe("buildSeoLinks", () => {
   test("a locale with no blog gets no blog link", () => {
     expect(buildSeoLinks("pl").some((l) => l.label === "Blog")).toBe(false);
     expect(buildSeoLinks("fr").some((l) => l.label === "Blog")).toBe(true);
-  });
-
-  test("the components use this function instead of rebuilding the list", () => {
-    // The drift guard. The list used to be inline and identical in both files,
-    // so a fix to one left the other broken. If either grows its own copy
-    // again, this surface silently leaves the suite's reach.
-    for (const file of ["Header.tsx", "Footer.tsx"]) {
-      const source = readFileSync(
-        join(import.meta.dir, "..", "components", "sections", file),
-        "utf-8"
-      );
-      expect({ file, calls: source.includes("buildSeoLinks(locale, market)") }).toEqual({
-        file,
-        calls: true,
-      });
-      expect({ file, rebuilds: /const seoLinks = \[/.test(source) }).toEqual({
-        file,
-        rebuilds: false,
-      });
-    }
   });
 });

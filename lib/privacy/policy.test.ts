@@ -70,7 +70,7 @@ describe("rowFor", () => {
 });
 
 describe("readServerRegion", () => {
-  test("reads a region the middleware wrote, among other cookies", () => {
+  test("reads a region the proxy wrote, among other cookies", () => {
     const header = `NEXT_LOCALE=fr; ${region({ c: "FR", v: 1 })}; stampeo_market=us`;
     expect(readServerRegion(header)).toBe("FR");
   });
@@ -101,7 +101,7 @@ describe("readServerRegion", () => {
 
 describe("effectiveRow: the stricter of the server and the timezone", () => {
   test.each([
-    // The interim, until the middleware writes a region: timezone alone.
+    // The interim, until the proxy writes a region: timezone alone.
     ["a French timezone", null, "FR", "EEA_UK_CH"],
     ["a British timezone", null, "GB", "EEA_UK_CH"],
     ["a Swiss timezone", null, "CH", "EEA_UK_CH"],

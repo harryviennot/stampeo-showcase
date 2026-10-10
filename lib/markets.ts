@@ -5,8 +5,8 @@
  *
  * A pilot renders the same VariantLanding as /en, with a `market` that overrides
  * the country-specific bits (currency wording, trust strip). The clean URLs
- * (/uk, /us) are served by a middleware rewrite to the English route so they
- * keep lang=en and never 307 to /en/uk for English visitors.
+ * (/uk, /us) are served by a proxy rewrite to the English route so they keep
+ * lang=en and never 307 to /en/uk for English visitors.
  *
  * A pilot goes live by setting `indexable: true` on its market. That one flag
  * drives both the page's `robots` and its presence in PILOT_HREFLANG, because
@@ -118,12 +118,21 @@ export const PILOT_HREFLANG: Record<string, string> = {
   en: "/en",
   es: "/es",
   pl: "/pl",
-  ...Object.fromEntries(
+  ...indexablePilotLanguages("/"),
+};
+
+/**
+ * `{ hreflang: path }` for the page at `path` inside every indexable pilot,
+ * e.g. `{ "en-US": "/us/pricing" }` for "/pricing". Reads the same `indexable`
+ * flag as the pages' `robots`, so a pilot joins a cluster when it goes live.
+ */
+export function indexablePilotLanguages(path: string): Record<string, string> {
+  return Object.fromEntries(
     (Object.keys(MARKETS) as Market[])
       .filter((market) => market !== "int" && MARKETS[market].indexable)
-      .map((market) => [MARKETS[market].hreflang, MARKETS[market].path]),
-  ),
-};
+      .map((market) => [MARKETS[market].hreflang, marketPath(market, path)]),
+  );
+}
 
 /**
  * The `robots` directive for any page inside a market.

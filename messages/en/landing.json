@@ -130,8 +130,8 @@
         {
           "name": "Restaurant",
           "quote": "Thomas has dinner with you most weeks, but the bill is never the same. Points reward what he actually spends, not just that he showed up.",
-          "reward": "€1 spent = 1 point, 25% off at 100 pts",
-          "advantage": "A €40 dinner earns more than a quick lunch",
+          "reward": "{m1} spent = 1 point, 25% off at 100 pts",
+          "advantage": "A {m40} dinner earns more than a quick lunch",
           "fields": [
             {
               "label": "Next milestone",
@@ -148,7 +148,7 @@
         {
           "name": "Beauty salon",
           "quote": "Chloé comes in for a manicure one week, a full set the next. Points reward what she spends, so every visit moves her closer to a treat.",
-          "reward": "€1 spent = 1 point, free manicure at 80 pts",
+          "reward": "{m1} spent = 1 point, free manicure at 80 pts",
           "advantage": "Higher-value services earn faster",
           "fields": [
             {
@@ -166,7 +166,7 @@
         {
           "name": "Bookstore",
           "quote": "Elias grabs a paperback one visit and a stack of novels the next. Points count what he spends, so the big hauls bring his reward closer, faster.",
-          "reward": "€1 spent = 1 point, €10 off at 150 pts",
+          "reward": "{m1} spent = 1 point, {m10} off at 150 pts",
           "advantage": "Big baskets earn faster",
           "fields": [
             {
@@ -175,7 +175,7 @@
             },
             {
               "label": "Next reward",
-              "value": "€10 off"
+              "value": "{m10} off"
             }
           ],
           "link": "/loyalty-programs",
@@ -303,7 +303,7 @@
         },
         {
           "title": "Promotional campaigns",
-          "description": "Reach every customer — no SMS bill, 85% open rate.",
+          "description": "Reach every customer, with no SMS bill.",
           "link": "/features/promotional-campaigns"
         },
         {
@@ -313,7 +313,7 @@
         },
         {
           "title": "Mobile scanner",
-          "description": "One scan, one stamp. Even without internet.",
+          "description": "One scan, one stamp. Your phone is all you need.",
           "link": "/features/mobile-scanner"
         },
         {
@@ -394,7 +394,7 @@
       "items": [
         {
           "title": "A card that never gets lost",
-          "description": "No more paper punch cards, no more stamps to stick on. The card lives in Apple Wallet or Google Wallet, where your customers find it on every visit."
+          "description": "No more paper cards to lose, no more stamps to stick on. The card lives in Apple Wallet or Google Wallet, where your customers find it on every visit."
         },
         {
           "title": "Customers you actually know",
@@ -402,7 +402,7 @@
         },
         {
           "title": "Send your promos straight to their phone",
-          "description": "Announce a promotion, a new menu, a quiet hour to fill. Your messages arrive like a text, without the text-message bill, and get read 5 to 10× more than email."
+          "description": "Announce a promotion, a new menu, a quiet hour to fill. Your messages arrive like a text, without the text-message bill."
         }
       ]
     },
@@ -480,6 +480,7 @@
         "reassurance": "{trialDays} days free · Cancel anytime"
       },
       "differentiator": {
+        "title": "Why businesses choose our digital punch card.",
         "subtitle": "Four things you won't have to deal with.",
         "items": [
           {
@@ -537,8 +538,20 @@
           {
             "question": "Can I change my card later?",
             "answer": "Yes. Change the logo, colors, number of stamps and rewards anytime from your dashboard. Cards already in your customers' wallets update automatically, with nothing to re-download."
+          },
+          {
+            "question": "Is this a digital punch card?",
+            "answer": "Yes. It works like a paper punch card: your customers collect a stamp on each visit and get their reward when the card is full. It just lives in Apple Wallet or Google Wallet, so there's no app to download and no card to lose."
           }
         ]
+      },
+      "meta": {
+        "title": "Digital Punch Cards for Apple & Google Wallet",
+        "description": "Digital punch cards your customers keep in Apple Wallet and Google Wallet. No app to download. From {starterPrice}/mo, {trialDays}-day free trial."
+      },
+      "pricingMeta": {
+        "title": "Digital Punch Card Pricing from {starterPrice}/mo",
+        "description": "Simple pricing for digital punch cards in Apple Wallet and Google Wallet. Plans from {starterPrice}/mo, no setup fee, no contract, {trialDays}-day free trial."
       }
     }
   }

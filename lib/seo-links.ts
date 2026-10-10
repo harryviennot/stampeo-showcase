@@ -6,7 +6,7 @@ import { loyaltyPath } from "@/lib/loyalty-routes";
 import { marketLink, type Market } from "@/lib/markets";
 
 /**
- * The sr-only navigation rendered in the header and the footer.
+ * The sr-only sitemap navigation rendered in the footer.
  *
  * These are raw `<a href>`, not next-intl `Link`s, so every href ships EXACTLY
  * as written: the locale prefix is built here by hand, and nothing downstream

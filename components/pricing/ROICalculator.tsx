@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { PriceText } from "@/components/market/PriceText";
 import { formatMoney, type Pricing } from "@/lib/pricing";
 
 type Mode = "prudent" | "optimiste";
@@ -22,20 +23,12 @@ interface ROICalculatorProps {
   monthlyCost?: number;
   /** The live ladder, so the calculator quotes the same price as the cards. */
   pricing: Pricing;
-  /**
-   * STA-330: false while the visitor's region is still unresolved, in which
-   * case every money figure renders as "…" rather than in a currency that may
-   * be wrong for this visitor. Defaults to true — the founder page passes a
-   * frozen EUR ladder that is never region-dependent.
-   */
-  ready?: boolean;
 }
 
 export function ROICalculator({
   namespace = "pricing.roi",
   monthlyCost,
   pricing,
-  ready = true,
 }: ROICalculatorProps) {
   const t = useTranslations(namespace);
   const locale = useLocale();
@@ -45,9 +38,7 @@ export function ROICalculator({
     n % 1 === 0 ? String(n) : isComma ? n.toFixed(1).replace(".", ",") : n.toFixed(1);
   // Placement and glyph both follow the currency+locale pair, not the locale
   // alone: "40€" is right for a French euro price and wrong for a US dollar one.
-  // Some of these figures are interpolated into ICU sentences, so the held
-  // state is an ellipsis rather than a skeleton element.
-  const euro = (n: number) => (ready ? formatMoney(n, pricing.currency, locale) : "…");
+  const euro = (n: number) => formatMoney(n, pricing.currency, locale);
   const [clients, setClients] = useState(40);
   const [basket, setBasket] = useState(8);
   const [mode, setMode] = useState<Mode>("prudent");
@@ -133,9 +124,9 @@ export function ROICalculator({
                   <label htmlFor="roi-basket" className="text-sm sm:text-base font-bold text-[var(--foreground)]">
                     {t("basketLabel")}
                   </label>
-                  <span className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
+                  <PriceText className="text-base sm:text-lg font-extrabold text-[var(--accent)] tabular-nums">
                     {euro(basket)}
-                  </span>
+                  </PriceText>
                 </div>
                 <input
                   id="roi-basket"
@@ -148,8 +139,8 @@ export function ROICalculator({
                   className="roi-slider w-full"
                 />
                 <div className="flex justify-between text-xs text-[var(--muted-foreground)] mt-1">
-                  <span>{euro(3)}</span>
-                  <span>{euro(50)}</span>
+                  <PriceText>{euro(3)}</PriceText>
+                  <PriceText>{euro(50)}</PriceText>
                 </div>
               </div>
             </div>
@@ -167,13 +158,13 @@ export function ROICalculator({
                     extra: fmtDecimal(extraClientsPerDay),
                   })}
                 </p>
-                <p>
+                <PriceText as="p">
                   {t("breakdownRevenue", {
                     extra: fmtDecimal(extraClientsPerDay),
                     basket: euro(basket),
                     total: euro(extraRevenue),
                   })}
-                </p>
+                </PriceText>
               </div>
             </div>
 
@@ -184,9 +175,12 @@ export function ROICalculator({
                   {t("extraRevenue")}
                 </p>
                 <div className="mt-auto">
-                  <p className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums transition-all duration-300">
+                  <PriceText
+                    as="p"
+                    className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums transition-all duration-300"
+                  >
                     {euro(extraRevenue)}
-                  </p>
+                  </PriceText>
                   <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
                   </p>
@@ -198,9 +192,12 @@ export function ROICalculator({
                   {t("stampeoCost")}
                 </p>
                 <div className="mt-auto">
-                  <p className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums">
+                  <PriceText
+                    as="p"
+                    className="text-lg sm:text-3xl font-extrabold text-[var(--foreground)] tabular-nums"
+                  >
                     {euro(stampeoCost)}
-                  </p>
+                  </PriceText>
                   <p className="text-xs font-medium text-[var(--muted-foreground)]">
                     {t("perMonth")}
                   </p>

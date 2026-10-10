@@ -19,6 +19,7 @@ import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "../i18n/routing";
+import { pagesUnder } from "./testing/app-folders";
 import {
   MARKETING_SEGMENTS,
   PRIVATE_SEGMENTS,
@@ -51,7 +52,7 @@ describe("isTrackablePath — marketing surfaces", () => {
   });
 
   test("the country pilots and everything beneath them are trackable", () => {
-    // Pilots are served at locale-free URLs by a middleware rewrite, so the
+    // Pilots are served at locale-free URLs by a proxy rewrite, so the
     // browser path stays /us — there is no locale prefix to strip here.
     for (const path of ["/us", "/us/pricing", "/uk", "/uk/pricing"]) {
       expect(isTrackablePath(path)).toBe(true);
@@ -226,18 +227,15 @@ describe("segment tables", () => {
         return next !== undefined && rendersFooter(next, seen);
       });
     };
-    const pagesUnder = (dir: string): string[] =>
-      readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
-        entry.isDirectory()
-          ? pagesUnder(join(dir, entry.name))
-          : entry.name === "page.tsx"
-            ? [join(dir, entry.name)]
-            : [],
-      );
+
+    // The closed founding pages answer with a 308 and serve no HTML, so no
+    // cookie is set on them.
+    const redirectOnly = ["founding-partner", "programme-fondateur"];
 
     const cookiePages = [
       join(appDir, "page.tsx"),
       ...[...MARKETING_SEGMENTS]
+        .filter((segment) => !redirectOnly.includes(segment))
         .filter((segment) => !PRIVATE_SUBPATHS.some(([parent]) => parent === segment))
         .flatMap((segment) => pagesUnder(join(appDir, segment))),
     ];

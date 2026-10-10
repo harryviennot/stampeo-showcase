@@ -18,7 +18,7 @@ import { ROICalculator } from "@/components/pricing/ROICalculator";
 import { FEATURE_CATEGORIES, type CellType } from "@/lib/pricing-features";
 import { MarketSuggestion } from "@/components/market/MarketSuggestion";
 import { RegionText } from "@/components/market/RegionText";
-import { TextSkeleton } from "@/components/ui/TextSkeleton";
+import { PriceText } from "@/components/market/PriceText";
 import { usePricingRegion } from "@/hooks/use-pricing-region";
 import type { Market } from "@/lib/markets";
 
@@ -35,14 +35,13 @@ function PricingCard({
 }) {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
-  // Region-resolved (STA-330): the visitor's detected region picks the ladder
-  // and trial length, whatever market page this is.
-  const { pricing, trialDays, ready } = usePricingRegion();
+  // Region-resolved: the page market's ladder and trial length on the server,
+  // the visitor's detected region's after hydration.
+  const { pricing, trialDays } = usePricingRegion();
   const view = yearlyCardView(pricing, tier, interval, foundingOpen);
 
   return (
     <PricingTierCard
-      loading={!ready}
       currency={pricing.currency}
       name={t(`${tier}.name`)}
       tagline={t(`${tier}.tagline`)}
@@ -102,15 +101,10 @@ type Tier = (typeof TIERS)[number];
 function FeatureComparisonTable() {
   const t = useTranslations("pricingPage");
   const locale = useLocale();
-  const { pricing, ready } = usePricingRegion();
-  // The chip stands in for the money alone; the "/month" suffix is text and
-  // stays visible, so the header keeps its shape while the region resolves.
-  const monthlyPrice = (tier: Tier) =>
-    ready ? (
-      formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)
-    ) : (
-      <TextSkeleton ch={3} />
-    );
+  const { pricing } = usePricingRegion();
+  const monthlyPrice = (tier: Tier) => (
+    <PriceText>{formatMoney(tierPrice(pricing, tier, "month"), pricing.currency, locale)}</PriceText>
+  );
   const [mobileTier, setMobileTier] = useState<Tier>("growth");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // Every category starts closed. The full table is 20 rows and was more than
@@ -328,14 +322,9 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
+function PricingFAQ() {
   const t = useTranslations("pricingPage");
-  const allFaqs = t.raw("faq.items") as Array<{
-    question: string;
-    answer: string;
-    foundingOnly?: boolean;
-  }>;
-  const faqs = foundingOpen ? allFaqs : allFaqs.filter((f) => !f.foundingOnly);
+  const faqs = t.raw("faq.items") as Array<{ question: string; answer: string }>;
 
   return (
     <div className="mt-16 lg:mt-24 max-w-[840px] mx-auto">
@@ -362,8 +351,7 @@ function PricingFAQ({ foundingOpen }: { foundingOpen: boolean }) {
             </summary>
             <div className="pt-2 pb-4">
               <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                {/* Tokens resolve to the visitor's region (STA-330), chips
-                    while it is unknown. */}
+                {/* Tokens resolve to the visitor's region after hydration. */}
                 <RegionText raw={faq.answer} />
               </p>
             </div>
@@ -378,9 +366,9 @@ export function PricingPageContent({
   market = "int",
 }: Readonly<{ market?: Market }>) {
   const t = useTranslations("pricingPage");
-  // Region-resolved (STA-330). Read here only for the ROI calculator, which
-  // keeps its `pricing` prop because the founder page feeds it a frozen ladder.
-  const { pricing, ready } = usePricingRegion();
+  // Region-resolved. Read here only for the ROI calculator, which keeps its
+  // `pricing` prop because the founder page feeds it a frozen ladder.
+  const { pricing } = usePricingRegion();
   const foundingOpen = isFoundingProgramOpen();
   // Yearly is the default: it is the price we want anchored, and the monthly
   // equivalent it shows (with the yearly total spelled out underneath) is what
@@ -432,10 +420,10 @@ export function PricingPageContent({
 
       {/* "Is it worth it?" simulator — rehomed here when the founding page
           retired. Measured against the public Growth price. */}
-      <ROICalculator pricing={pricing} ready={ready} />
+      <ROICalculator pricing={pricing} />
 
       {/* FAQ */}
-      <PricingFAQ foundingOpen={foundingOpen} />
+      <PricingFAQ />
 
       {/* Bottom CTA */}
       <ScrollReveal

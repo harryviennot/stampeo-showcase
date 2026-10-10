@@ -19,6 +19,7 @@ import {
   getLocalizedSlug,
 } from "@/lib/feature-slugs";
 import { localeAlternates } from "@/lib/hreflang";
+import { planMessageArgs } from "@/lib/plans/plan-facts";
 import { routing } from "@/i18n/routing";
 
 const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {
@@ -57,7 +58,7 @@ export async function generateMetadata({
   // Use canonical (FR) slug for translation keys
   const t = await getTranslations({ locale, namespace: "metadata.features" });
   const title = t(`${canonical}.title`);
-  const description = t(`${canonical}.description`);
+  const description = t(`${canonical}.description`, planMessageArgs());
 
   const localizedPaths = Object.fromEntries(
     routing.locales.map((l) => [l, `/features/${getLocalizedSlug(canonical, l)}`])
@@ -68,9 +69,7 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: featureUrl(getLocalizedSlug(canonical, locale), locale),
-      languages: localeAlternates(`/features/${canonical}`, {
-        overrides: localizedPaths,
-      }),
+      languages: localeAlternates(`/features/${canonical}`, { overrides: localizedPaths }),
     },
     openGraph: {
       title,

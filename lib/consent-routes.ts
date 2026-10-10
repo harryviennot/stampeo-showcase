@@ -39,7 +39,7 @@ export const MARKETING_SEGMENTS: ReadonlySet<string> = new Set([
   "pricing",
   "privacy",
   "terms",
-  // Country pilots. Served at locale-free URLs by a middleware rewrite, so
+  // Country pilots. Served at locale-free URLs by a proxy rewrite, so
   // they arrive here as a first segment, not as a locale.
   "uk",
   "us",

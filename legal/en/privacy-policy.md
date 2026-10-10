@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: October 3, 2026**
+**Last updated: October 10, 2026**
 
 ## 1. Introduction
 
@@ -112,6 +112,7 @@ We use the following sub-processors:
 | Google (Analytics 4): Google Ireland Limited, with Google LLC | Audience measurement and conversion reporting, subject to your cookie choice (see 5.3 and 5.5) | EU (possible US transfers under Data Privacy Framework) |
 | PostHog | Website analytics (cookieless) | EU |
 | Sentry | Error monitoring | Germany (EU) |
+| Trustpilot A/S | Review invitations sent to business owners (email address, name, business identifier, language) | Denmark (EU), with possible transfers outside the EU under Standard Contractual Clauses |
 | Redis (self-hosted, via Taskiq) | Job queue and short-lived cache for pass assets and notification delivery | France (EU), same infrastructure as our VPS |
 
 ### Resellers (when applicable)
@@ -124,7 +125,7 @@ A business that is not managed by a reseller is not exposed to any reseller acce
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Apple, Google) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google (Google Ireland Limited, with Google LLC in the United States) and Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States), may process that data in the United States, under the same framework.
+Some of our sub-processors (Stripe, Apple, Google, Trustpilot) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google (Google Ireland Limited, with Google LLC in the United States) and Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States), may process that data in the United States, under the same framework.
 
 ## 5. Cookies
 
@@ -236,6 +237,7 @@ We use collected data to:
 - Produce anonymized statistics for businesses
 - Produce aggregate, internal product analytics to understand how the Platform is used across all businesses, detect abuse, and prioritize improvements
 - Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
+- Invite paying business owners to review Stampeo on Trustpilot, on the basis of our legitimate interest in collecting feedback on our service (GDPR Art. 6(1)(f); the recipient is described in §4)
 - Improve the Platform
 
 We **never sell** personal data for money. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.

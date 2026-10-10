@@ -19,6 +19,7 @@ import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 import { JsonLd } from "@/components/JsonLd";
 import { faqPageJsonLd } from "@/lib/structured-data";
+import { planMessageArgs } from "@/lib/plans/plan-facts";
 
 const capabilityIcons = [TargetIcon, ClockIcon, TranslateIcon, ChartPieSliceIcon];
 
@@ -110,7 +111,7 @@ export function BroadcastsPage() {
               </h1>
 
               <p className="text-lg lg:text-xl text-[var(--muted-foreground)] leading-relaxed max-w-2xl mx-auto mb-10 text-balance">
-                {tp("hero.subtitle")}
+                {tp("hero.subtitle", planMessageArgs())}
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
@@ -231,10 +232,6 @@ export function BroadcastsPage() {
               </div>
             </div>
           </ScrollReveal>
-
-          <p className="mt-6 text-xs text-[var(--muted-foreground)] text-center italic max-w-3xl mx-auto">
-            {tp("whyNotSms.caption")}
-          </p>
         </Container>
       </section>
 
