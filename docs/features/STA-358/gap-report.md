@@ -128,4 +128,4 @@ Fixed in F1 (refactors and bug fixes) and F2 (coverage); both are merged into fe
 3. **The Header component's signed-in rendering:** the hook, sign-out and the SSR markup are tested; the component swap is covered manually by runbook SX-29.
 
 ## Waivers
-(pending Harry's explicit approval of the three items above)
+- 2026-10-10, Harry: he approved the scope additions and told us to open the PR to dev, validate it once green, and delete the branch. The three proposed waivers above (AC6 hydration, the PKCE `/?code=` exchange, the Header's signed-in rendering) are accepted on that instruction. They stay covered by the browser harness and runbook cases SX-29 and SX-30.

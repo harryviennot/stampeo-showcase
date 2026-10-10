@@ -247,7 +247,7 @@ Probably none: marketing site only, with no dashboard behaviour change. A one-li
 10. **A comment on STA-379** (not a ticket): check Cloudflare's "Block AI bots" and managed robots.txt settings, and make `/` bypass the HTML cache because it varies by Accept-Language.
 
 
-## Scope additions during implementation (2026-10-09/10, coordinator; flagged to Harry)
+## Scope additions during implementation (2026-10-09/10, coordinator; APPROVED by Harry 2026-10-10: "site promises, leave them that way")
 
 Each addition came out of AC11/AC13 work, where the copy turned out to contradict the product. They are recorded here so the plan matches the diff (gap-report drift).
 
