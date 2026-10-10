@@ -22,7 +22,7 @@ export async function VariantDifferentiator({
     <section className="relative py-16 lg:py-24 bg-[var(--blog-bg-alt)]">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="flex flex-col items-center text-center mb-12 gap-4">
-          <h2 className="text-h2 max-w-3xl">
+          <h2 className="text-h2 max-w-3xl text-balance">
             {copy.t("differentiator.title")}
           </h2>
           <p className="text-lead text-[var(--muted-foreground)] max-w-2xl">

@@ -1,7 +1,7 @@
 /**
  * The one network call in the acquisition locale path.
  *
- * It sits in the middleware, in front of every QR scan, so the things worth
+ * It sits in the proxy, in front of every QR scan, so the things worth
  * pinning are the ones that keep it off the hot path: it is cached, it fails
  * open, and a bot walking made-up slugs cannot turn it into a request amplifier.
  */

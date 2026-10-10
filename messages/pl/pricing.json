@@ -56,8 +56,8 @@
         "Wiele lokali, ze statystykami dla każdego",
         "Rozsyłki bez limitu, z segmentacją klientów",
         "Kilka progów kwotowych, każdy z własną premią punktową",
-        "Zaplanuj rozsyłki i wzory karty z wyprzedzeniem",
-        "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet)",
+        "Zaplanuj rozsyłki z wyprzedzeniem (wzory karty wkrótce)",
+        "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet, wkrótce)",
         "Statystyki powrotów, częstotliwości i odebranych nagród",
         "Wsparcie priorytetowe"
       ]
@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Cennik: porównaj plany | Stampeo",
-      "description": "Porównaj plany i funkcje Stampeo. Od jednoosobowej firmy po sieć lokali, znajdziesz plan dopasowany do swojego programu lojalnościowego."
+      "title": "Cennik karty lojalnościowej: od {starterPrice}/mies.",
+      "description": "Porównaj plany Starter, Growth i Pro. Pieczątki lub punkty w każdym planie, bez opłat za klienta i {trialDays} dni za darmo na test z klientami."
     },
     "hero": {
       "title": "Wybierz plan dopasowany do swojej firmy",
@@ -138,8 +138,8 @@
         "Wiele lokali, ze statystykami dla każdego",
         "Rozsyłki bez limitu, z segmentacją klientów",
         "Kilka progów kwotowych, każdy z własną premią punktową",
-        "Zaplanuj rozsyłki i wzory karty z wyprzedzeniem",
-        "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet)",
+        "Zaplanuj rozsyłki z wyprzedzeniem (wzory karty wkrótce)",
+        "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet, wkrótce)",
         "Statystyki powrotów, częstotliwości i odebranych nagród",
         "Wsparcie priorytetowe"
       ],
@@ -281,11 +281,6 @@
         {
           "question": "Czy mogę zrezygnować w każdej chwili?",
           "answer": "Tak. Nie ma umów ani opłat za rezygnację. Rezygnujesz kiedy chcesz i zachowujesz dostęp do końca opłaconego okresu rozliczeniowego."
-        },
-        {
-          "question": "Czym jest Program Założycielski?",
-          "answer": "Program Założycielski daje pierwszym firmom 50% zniżki na plan, na zawsze. Miejsc jest niewiele i program wkrótce się zamyka.",
-          "foundingOnly": true
         }
       ]
     },

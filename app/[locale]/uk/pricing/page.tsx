@@ -1,34 +1,43 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { MarketPricingPage } from "@/components/pricing/MarketPricingPage";
+import { marketAlternates } from "@/lib/hreflang";
 import { MARKETS, marketRobots, type Market } from "@/lib/markets";
+import { marketPriceArgs } from "@/lib/plan-catalog";
+import { resolvePageOpenGraph } from "@/lib/og/metadata";
 
 /**
- * Pricing for the UK pilot (served at /uk/pricing via the middleware
- * rewrite, and directly at /en/uk/pricing).
- *
- * Exists so a visitor on /uk cannot navigate out of their own currency: the
- * shared nav used to point at /pricing, which quotes the international ladder.
- * Its robots directive is DERIVED from the market, not written here. This file
- * used to hardcode `index: false` while `MARKETS.us.indexable` was true and
- * `indexablePilotPaths()` was already advertising this URL in the sitemap, so
- * the sitemap invited Google to a page telling it to go away. The comment that
- * replaced this one claimed the directive "tracks the pilot landing page"; it
- * did not, because tracking something by hand is not tracking it.
+ * Pricing for the UK pilot, served at /uk/pricing by a proxy rewrite to
+ * this route. It exists so a visitor on /uk never navigates out of their own
+ * currency. Its robots directive and its place in the pricing hreflang cluster
+ * both derive from `MARKETS.uk.indexable`.
  */
 const MARKET: Market = "uk";
 const M = MARKETS[MARKET];
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(
+  _props: unknown,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const t = await getTranslations({ locale: "en", namespace: "pricingPage.meta" });
+  const args = await marketPriceArgs(MARKET, "en");
+  const title = t("title", args);
+  const description = t("description", args);
+  const canonical = `${M.path}/pricing`;
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
     robots: marketRobots(MARKET),
     // Its own canonical: this page must not collapse into /pricing, which
-    // quotes a different currency.
-    alternates: { canonical: `${M.path}/pricing` },
-    openGraph: { locale: M.ogLocale },
+    // quotes a different currency. The cluster names both as alternates.
+    alternates: { canonical, languages: marketAlternates("/pricing") },
+    openGraph: await resolvePageOpenGraph(parent, {
+      title,
+      description,
+      url: canonical,
+      locale: "en",
+      ogLocale: M.ogLocale,
+    }),
   };
 }
 

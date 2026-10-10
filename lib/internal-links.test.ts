@@ -121,7 +121,7 @@ describe("classifyLink — route resolution", () => {
   });
 
   test("routes outside the [locale] tree take no prefix, in either direction", () => {
-    // middleware.ts excludes these from the matcher, so /go/app is right and
+    // proxy.ts excludes these from the matcher, so /go/app is right and
     // /es/go/app does not exist. Without this the guard cries wolf on a correct
     // link, which is how a guard gets switched off.
     expect(classifyLink("/go/app", "es", "localized-link", BLOG).ok).toBe(true);
@@ -173,7 +173,7 @@ describe("classifyLink — route resolution", () => {
   });
 
   test("country pilots are locale-free URLs, not locale-prefixed ones", () => {
-    // /us and /uk are served by a middleware rewrite, so the prefix rules do
+    // /us and /uk are served by a proxy rewrite, so the prefix rules do
     // not apply. The footer links here via marketLink().
     expect(classifyLink("/us/pricing", "en", "raw-anchor", BLOG).ok).toBe(true);
     expect(classifyLink("/uk", "en", "raw-anchor", BLOG).ok).toBe(true);

@@ -4,7 +4,7 @@
  * STA-275. /us quoted dollars while the shared Header hardcoded href="/pricing"
  * and the pricing page hardcoded MARKETS.int, so one click walked a US visitor
  * from a $49 page to a EUR 20 page. /us/pricing did not exist at all, and the
- * middleware's pilot rewrite was exact-match, so the URL fell through to locale
+ * proxy's pilot rewrite was exact-match, so the URL fell through to locale
  * detection and 404'd as /en/us/pricing.
  *
  * A quoted price the checkout will not honour is the defect this release exists

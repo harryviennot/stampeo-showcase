@@ -42,11 +42,10 @@ export async function VariantLanding({
   // reachable from the same translator as the base copy.
   const t = await getTranslations("variant");
   // Both ladders are fetched here, at render time, so the page stays fully
-  // cacheable — but since STA-330 the market no longer fixes what a VISITOR
-  // sees. The RegionPricingProvider below picks the ladder for the browser's
-  // detected region after hydration (US → usd/14, elsewhere → eur/30); the
-  // market currency is only the default for a visitor we cannot place, and the
-  // ladder JSON-LD asserts to crawlers for THIS url.
+  // cacheable. The server HTML (and the JSON-LD) carries this market's ladder
+  // and trial length; after hydration RegionPricingProvider swaps to the
+  // browser's detected region (US → usd/14, elsewhere → eur/30). A visitor we
+  // cannot place keeps the market's terms.
   const marketCurrency: RegionCurrency =
     MARKETS[market].currency.code.toLowerCase() === "usd" ? "usd" : "eur";
   const [eur, usd] = await Promise.all([getPlanCatalog("eur"), getPlanCatalog("usd")]);
@@ -64,8 +63,8 @@ export async function VariantLanding({
     question: faq.question,
     answer: interpolatePricing(faq.answer, pricing, locale, trialDays),
   }));
-  // The visible FAQ resolves per-visitor instead: raw strings through the
-  // client leaf, which chips the tokens until the region is known.
+  // The visible FAQ goes through the client leaf: market terms in the server
+  // HTML, the visitor's region after hydration.
   const visibleFaqItems = rawFaqItems.map((faq) => ({
     question: faq.question,
     answer: <RegionText raw={faq.answer} />,
@@ -102,7 +101,7 @@ export async function VariantLanding({
               below. The one place on the page it earns its keep. */}
           <Container><div className="perforation" aria-hidden /></Container>
           <div data-landing-section="try_it"><VariantTryIt /></div>
-          <div data-landing-section="sectors"><VariantSectorCards /></div>
+          <div data-landing-section="sectors"><VariantSectorCards market={market} /></div>
           <div data-landing-section="metrics"><VariantMetricStrip /></div>
           <div data-landing-section="feature_grid"><FeatureGrid /></div>
           <div data-landing-section="pricing">

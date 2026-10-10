@@ -55,7 +55,7 @@ import {
  */
 
 /**
- * Routes served outside the `[locale]` tree. `middleware.ts` excludes them from
+ * Routes served outside the `[locale]` tree. `proxy.ts` excludes them from
  * the matcher, so they take no locale prefix: `/go/app` is right and
  * `/es/go/app` does not exist. Listed here so a link to one resolves instead of
  * false-alarming as `unknown-route`.
@@ -245,7 +245,7 @@ export function classifyLink(
   const path = normalizePath(href);
   const prefix = leadingLocale(path);
 
-  // Country pilots are served at locale-free URLs by a middleware rewrite, so
+  // Country pilots are served at locale-free URLs by a proxy rewrite, so
   // the prefix rules below do not apply to them in either direction.
   if (isPilotPath(path)) return { ok: true, resolved: path };
 

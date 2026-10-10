@@ -56,8 +56,8 @@
         "Multiple locations, with stats for each",
         "Unlimited broadcasts, with customer segmentation",
         "Several basket levels, each with its own boost",
-        "Schedule broadcasts and card styles in advance",
-        "Notifications when customers are nearby (Apple Wallet)",
+        "Schedule broadcasts in advance (card styles coming soon)",
+        "Notifications when customers are nearby (Apple Wallet, coming soon)",
         "Retention, frequency and redemption stats",
         "Priority support"
       ]
@@ -83,8 +83,8 @@
   },
   "pricingPage": {
     "meta": {
-      "title": "Pricing — Compare Plans | Stampeo",
-      "description": "Compare Stampeo plans and features. From solo operators to multi-location businesses — find the right plan for your loyalty program."
+      "title": "Digital Loyalty Card Pricing from {starterPrice}/month",
+      "description": "Compare Starter, Growth and Pro. Stamps or points on every plan, no per-customer fees, and {trialDays} days free to try it with your customers."
     },
     "hero": {
       "title": "Choose the right plan for your business",
@@ -138,8 +138,8 @@
         "Multiple locations, with stats for each",
         "Unlimited broadcasts, with customer segmentation",
         "Several basket levels, each with its own boost",
-        "Schedule broadcasts and card styles in advance",
-        "Notifications when customers are nearby (Apple Wallet)",
+        "Schedule broadcasts in advance (card styles coming soon)",
+        "Notifications when customers are nearby (Apple Wallet, coming soon)",
         "Retention, frequency and redemption stats",
         "Priority support"
       ],
@@ -281,11 +281,6 @@
         {
           "question": "Can I cancel anytime?",
           "answer": "Yes. There are no contracts or cancellation fees. Cancel anytime and you'll keep access until the end of your current billing period."
-        },
-        {
-          "question": "What is the Founding Partner program?",
-          "answer": "Our Founding Partner program gives early adopters 50% off their plan — locked for life. Spots are limited and the program closes soon.",
-          "foundingOnly": true
         }
       ]
     },

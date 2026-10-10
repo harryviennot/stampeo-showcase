@@ -311,11 +311,6 @@
           "title": "Web scanner",
           "description": "Don't want to install an app? Scan directly from your phone or tablet browser. Ideal for businesses using a shared tablet at the counter.",
           "icon": "globe"
-        },
-        {
-          "title": "Offline mode",
-          "description": "Works even without internet. Scans are saved locally and synced automatically when connection returns. No stamp is ever lost.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -370,29 +365,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Works even without Wi-Fi",
-          "subtitle": "Outdoor market, basement, festival — scanning works everywhere, even offline.",
-          "situations": [
-            "Outdoor market without Wi-Fi",
-            "Basement or wine cellar",
-            "Festival or temporary event",
-            "Rural area with unstable network",
-            "Temporary internet outage"
-          ],
-          "online": "Online",
-          "offline_label": "Offline",
-          "pending": "Pending sync",
-          "synced": "Synced",
-          "syncing": "Syncing...",
-          "stampedTitle": "Stamp added",
-          "stampedSub": "Synced instantly",
-          "pendingSub": "1 stamp queued",
-          "syncingSub": "Connection restored",
-          "syncedSub": "No stamp lost",
-          "offlineHint": "Offline mode on",
-          "toggleHint": "Tap the switch to try it"
-        },
         "employee": {
           "title": "Built for your employees",
           "subtitle": "Your employees aren't technicians. The interface is so simple that no training is needed.",
@@ -421,7 +393,6 @@
             "features": [
               "3 employee accounts included",
               "Dedicated app + web scanner",
-              "Offline mode",
               "Scan history"
             ]
           },
@@ -624,7 +595,7 @@
       ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "The dashboard is included in all plans. Advanced analytics are available on the Growth plan."
+        "subtitle": "The dashboard is included in every plan. Growth adds trends and peak hours, and Pro adds retention, frequency and at-risk customers."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -663,9 +634,9 @@
           "timeAgo": "{seconds}s ago"
         },
         "proAnalytics": {
-          "badge": "Growth Plan",
+          "badge": "Growth and Pro",
           "title": "Understand trends, not just numbers",
-          "description": "The Growth plan adds an analytics layer that helps you make decisions."
+          "description": "Growth adds trends and peak hours. Pro adds retention, frequency and the customers you're about to lose."
         },
         "proCharts": {
           "lineChart": {
@@ -856,7 +827,7 @@
       ],
       "cta": {
         "title": "Be present at the right moment",
-        "subtitle": "Geofencing is included in the Growth plan. Start your free trial to try it now."
+        "subtitle": "Geofencing is coming soon to the Pro plan. Start your free trial now, and your card is ready when it launches."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -868,34 +839,34 @@
       "hero": {
         "title": "Reach every customer. Without the SMS bill.",
         "navTitle": "Promotional Campaigns — Wallet push to every customer",
-        "subtitle": "Send promotional notifications straight to your customers' Apple Wallet and Google Wallet. ~85% open rate. No per-message fee. Segmentation and scheduling included.",
+        "subtitle": "Send broadcasts straight to your customers' Apple Wallet and Google Wallet, with no per-message fee. Growth includes {growthBroadcasts} broadcasts a month with basic segmentation. Pro has no limit, plus advanced segmentation and scheduling.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "The math speaks for itself",
-        "subtitle": "Average performance across wallet, SMS and email, pulled from public industry data.",
+        "title": "Your customers keep the card",
+        "subtitle": "A broadcast reaches every card still in a wallet. Here is what we measure across the businesses on Stampeo.",
         "stats": [
           {
-            "value": "~85%",
-            "label": "Wallet open rate",
-            "caption": "vs ~20% for email and ~35% CTR for SMS"
+            "value": "88%",
+            "label": "Wallet add rate",
+            "caption": "Customers who join and save the card to Apple Wallet or Google Wallet, where your broadcasts land (Stampeo data, 86 businesses, Feb–Oct 2026)."
+          },
+          {
+            "value": "95%",
+            "label": "Still installed at 90 days",
+            "caption": "Cards still in the wallet three months after being added (Stampeo data, 86 businesses, Feb–Oct 2026)."
           },
           {
             "value": "€0",
             "label": "Per message",
-            "caption": "Flat plan fee, not €0.04 to €0.10 per SMS"
-          },
-          {
-            "value": "+78%",
-            "label": "Revenue uplift",
-            "caption": "Reported by walletized loyalty card holders"
+            "caption": "Broadcasts are part of your plan. SMS bills every message."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, email, wallet:<br></br>what actually lands",
-        "subtitle": "The open rate and the delivery cost are not the same story. Here is how the three channels stack up for a small business sending promotional offers.",
+        "subtitle": "Here is how the three channels stack up for a small business sending promotional offers.",
         "columns": [
           "",
           "SMS",
@@ -904,17 +875,9 @@
         ],
         "rows": [
           {
-            "label": "Typical open rate",
+            "label": "Cost per message",
             "values": [
-              "~35% CTR",
-              "~20%",
-              "~85%"
-            ]
-          },
-          {
-            "label": "Cost per message (France)",
-            "values": [
-              "€0.04 – €0.10",
+              "Billed per message",
               "Low, variable",
               "€0 (included in plan)"
             ]
@@ -959,8 +922,7 @@
               "Lock-screen banner, no inbox"
             ]
           }
-        ],
-        "caption": "Sources: Twilio France pricing, PushPass 2026 SMS vs push report, Yotpo mobile wallet guide."
+        ]
       },
       "howItWorks": {
         "badge": "How it works",
@@ -1070,7 +1032,7 @@
         "items": [
           {
             "question": "How much do wallet promotional campaigns cost?",
-            "answer": "Nothing extra. Broadcasts are included in the Growth plan (8 per month) and the Pro plan (unlimited). There is no per-message fee, unlike SMS where each send costs €0.04 to €0.10 in France. A single SMS campaign to 500 customers can easily cost €30 to €50."
+            "answer": "Nothing extra. Broadcasts are included in the Growth plan (8 per month) and the Pro plan (unlimited). There is no per-message fee, unlike SMS, where every message sent is billed."
           },
           {
             "question": "Do customers need to install an app?",
@@ -1078,7 +1040,7 @@
           },
           {
             "question": "How does wallet marketing compare to SMS?",
-            "answer": "Wallet notifications appear on the lock screen like an SMS, but they are free to send, reach around 85% open rate, and won't land in the iOS 26 \"Unknown sender\" filter. You also get built-in segmentation (by stamps earned, redemptions, or recent inactivity), which SMS platforms usually charge extra for."
+            "answer": "Wallet notifications appear on the lock screen like an SMS, but they are free to send and won't land in the iOS 26 \"Unknown sender\" filter. Segmentation is built in too: by enrollment date on Growth, and by stamps earned, redemptions or recent inactivity on Pro. SMS platforms usually charge extra for that."
           },
           {
             "question": "Can I schedule campaigns in advance?",
@@ -1122,174 +1084,6 @@
         "analytiques",
         "geolocalisation"
       ]
-    },
-    "programme-fondateur": {
-      "hero": {
-        "title": "All of Stampeo, today. And <accent>€20/month locked for life</accent>.",
-        "navTitle": "Launch offer: rate locked for life",
-        "subtitle": "Stampeo already runs every day in dozens of businesses. The first to join keep the launch rate, for good.",
-        "badge": "Launch offer",
-        "secondaryCta": "1 month free, then {growthFoundingPrice}/month for life"
-      },
-      "problem": {
-        "title": "Let's be transparent",
-        "description": "We'd rather be clear. Here's exactly where Stampeo stands today."
-      },
-      "sections": [
-        {
-          "title": "1 month free, no catch",
-          "description": "We ask for a card at signup, but there's no charge during the trial. You test it in real conditions. If Stampeo isn't for you, you leave without paying a thing.",
-          "icon": "calendar"
-        },
-        {
-          "title": "{growthFoundingPrice}/month for life",
-          "description": "After the trial, your rate is locked at {growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
-          "icon": "tag"
-        },
-        {
-          "title": "All Growth features",
-          "description": "Multiple card styles, stamps or points (your choice), unlimited team members, custom notification messages, and broadcasts to all your customers.",
-          "icon": "crown"
-        }
-      ],
-      "cta": {
-        "title": "Join the first businesses",
-        "subtitle": "1 month free. {growthFoundingPrice}/month for life. All Growth features, available today."
-      },
-      "related": [
-        "notifications-push",
-        "scanner-mobile",
-        "design-de-carte"
-      ],
-      "custom": {
-        "seeAllPlans": "See all plans",
-        "benefits": {
-          "title": "What you get",
-          "items": [
-            {
-              "title": "1 month free, no catch",
-              "description": "We ask for a card at signup, but there's no charge during the trial. You test it in real conditions. If Stampeo isn't for you, you leave without paying a thing.",
-              "icon": "calendar"
-            },
-            {
-              "title": "{growthFoundingPrice}/month for life",
-              "description": "After the trial, your rate is locked at {growthFoundingPrice}/month. For good, even when the price goes up for new businesses.",
-              "icon": "tag"
-            },
-            {
-              "title": "All Growth features",
-              "description": "Multiple card styles, stamps or points (your choice), unlimited team members, custom notification messages, and broadcasts to all your customers.",
-              "icon": "crown"
-            },
-            {
-              "title": "A direct channel with the team",
-              "description": "No bot, no ticket number 47832. You talk straight to the people building Stampeo. A problem, an idea: we handle it.",
-              "icon": "signal"
-            },
-            {
-              "title": "Your card created by us",
-              "description": "Send us your logo and colors. We create your loyalty card, clean and compliant with Apple Wallet and Google Wallet, the card holder built into your customers' phones. Included.",
-              "icon": "palette"
-            },
-            {
-              "title": "Priority on everything",
-              "description": "New features first, priority support. As an early business, you go to the front.",
-              "icon": "sparkles"
-            }
-          ]
-        },
-        "transparency": {
-          "title": "Let's be transparent",
-          "description": "We'd rather be clear. Here's exactly where Stampeo stands today.",
-          "worksNow": {
-            "title": "What works, today",
-            "items": [
-              "Apple Wallet and Google Wallet cards",
-              "QR code scanning with real-time notifications",
-              "Broadcasts to all your customers (Growth and Pro)",
-              "Customer segmentation for your broadcasts (Pro)",
-              "Dashboard with customer list and statistics",
-              "Card editor with real-time preview"
-            ]
-          },
-          "comingSoon": {
-            "title": "What we're building next",
-            "items": [
-              "Offline mode for the scanner",
-              "Geolocation for Apple Wallet and Google Wallet",
-              "AI-assisted card creation",
-              "Scheduled and seasonal card styles"
-            ]
-          },
-          "expectFromYou": {
-            "title": "What we ask of you",
-            "items": [
-              "Use Stampeo daily in your business",
-              "Tell us what works and what would save you time",
-              "Share your ideas for improvement"
-            ]
-          },
-          "closing": "Stampeo is ready to run in your business today. By joining now, you lock in the best rate and you shape what we build next."
-        },
-        "price": {
-          "original": "{growthPrice}/month",
-          "founding": "{growthFoundingPrice}/month",
-          "forLife": "for life"
-        },
-        "timeline": {
-          "badge": "How it works",
-          "title": "4 steps to get started",
-          "subtitle": "",
-          "steps": [
-            {
-              "title": "Create your account",
-              "description": "Set up your program in 2 minutes."
-            },
-            {
-              "title": "Customize your card",
-              "description": "Do it yourself, or email us your logo and colors and we'll create it for you."
-            },
-            {
-              "title": "Display your QR code",
-              "description": "On the counter. Customers add their card in one scan."
-            },
-            {
-              "title": "Launch your program",
-              "description": "First stamp on day one."
-            }
-          ]
-        },
-        "faq": {
-          "title": "Frequently asked questions",
-          "items": [
-            {
-              "question": "Is the product complete and usable right away?",
-              "answer": "Yes. Stampeo already runs every day in dozens of businesses: Apple Wallet and Google Wallet cards, scanning, notifications, broadcasts, and statistics are all in place. You can launch your program today."
-            },
-            {
-              "question": "How long does the launch offer stay open?",
-              "answer": "The launch rate ({growthFoundingPrice}/month for life) stays open during the launch phase, then the price goes up for new businesses. Once you're in, your rate is locked for life."
-            },
-            {
-              "question": "What happens after the free month?",
-              "answer": "You move to {growthFoundingPrice}/month. We notify you twice: a week before, then 3 days before. If you don't want to continue, cancel in one click, no fees."
-            },
-            {
-              "question": "Do I keep my rate if you raise prices?",
-              "answer": "Yes. {growthFoundingPrice}/month for life means for life. Even if the Growth plan goes to €49.99 in three years, your rate doesn't move. It's contractual."
-            },
-            {
-              "question": "Can I cancel?",
-              "answer": "Anytime after the free month. No commitment. If you cancel, you lose access, but your customers keep their cards."
-            }
-          ]
-        },
-        "finalCta": {
-          "title": "Join the first businesses",
-          "subtitle": "1 month free. {growthFoundingPrice}/month for life. All Growth features, available today.",
-          "urgency": "The launch rate goes up for new businesses. Lock yours in now."
-        }
-      }
     },
     "relatedTitle": "Discover more",
     "discoverLink": "Discover",

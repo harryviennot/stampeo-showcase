@@ -536,11 +536,6 @@
           "title": "Skaner w przeglądarce",
           "description": "Nie chcesz nic instalować? Skanuj prosto z przeglądarki w telefonie albo na tablecie. Idealne dla firm, które trzymają na ladzie jeden wspólny tablet.",
           "icon": "globe"
-        },
-        {
-          "title": "Tryb bez połączenia",
-          "description": "Działa nawet bez internetu. Skany zapisują się na urządzeniu i same się synchronizują, gdy tylko wróci zasięg. Żadna pieczątka nie przepada.",
-          "icon": "wifi-off"
         }
       ],
       "cta": {
@@ -595,29 +590,6 @@
             ]
           }
         },
-        "offline": {
-          "title": "Działa nawet bez Wi-Fi",
-          "subtitle": "Targ pod gołym niebem, piwnica, festyn: skanowanie działa wszędzie, także bez zasięgu.",
-          "situations": [
-            "Targ pod gołym niebem bez Wi-Fi",
-            "Piwnica albo sala pod ziemią",
-            "Festyn albo impreza plenerowa",
-            "Wieś ze słabym zasięgiem",
-            "Chwilowa awaria internetu"
-          ],
-          "online": "Połączono",
-          "offline_label": "Bez połączenia",
-          "pending": "Czeka na synchronizację",
-          "synced": "Zsynchronizowano",
-          "syncing": "Synchronizacja...",
-          "stampedTitle": "Pieczątka dodana",
-          "stampedSub": "Zsynchronizowano od razu",
-          "pendingSub": "1 pieczątka w kolejce",
-          "syncingSub": "Zasięg wrócił",
-          "syncedSub": "Żadna pieczątka nie przepadła",
-          "offlineHint": "Tryb bez połączenia włączony",
-          "toggleHint": "Naciśnij przełącznik, żeby sprawdzić"
-        },
         "employee": {
           "title": "Zrobione z myślą o twoich pracownikach",
           "subtitle": "Twoi pracownicy nie są informatykami. Obsługa jest tak prosta, że nie trzeba żadnego szkolenia.",
@@ -646,7 +618,6 @@
             "features": [
               "3 konta pracownicze w cenie",
               "Osobna aplikacja i skaner w przeglądarce",
-              "Tryb bez połączenia",
               "Historia skanów"
             ]
           },
@@ -849,7 +820,7 @@
       ],
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
-        "subtitle": "Panel jest w każdym planie. Rozbudowane statystyki są w planie Growth."
+        "subtitle": "Panel jest w każdym planie. Growth dodaje trendy i godziny szczytu, a Pro powroty, częstotliwość wizyt i klientów, którzy przestają wracać."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -888,9 +859,9 @@
           "timeAgo": "{seconds}s temu"
         },
         "proAnalytics": {
-          "badge": "Plan Growth",
+          "badge": "Plany Growth i Pro",
           "title": "Zrozum trendy, nie tylko liczby",
-          "description": "Plan Growth dokłada warstwę analizy, która pomaga podejmować decyzje."
+          "description": "Growth dodaje trendy i godziny szczytu. Pro dodaje powroty, częstotliwość wizyt i klientów, którzy przestają wracać."
         },
         "proCharts": {
           "lineChart": {
@@ -1081,7 +1052,7 @@
       ],
       "cta": {
         "title": "Bądź na miejscu w dobrym momencie",
-        "subtitle": "Geolokalizacja jest w planie Growth. Zacznij darmowy miesiąc i sprawdź ją od razu."
+        "subtitle": "Geolokalizacja pojawi się wkrótce w planie Pro. Zacznij darmowy miesiąc już teraz, a karta będzie gotowa na start."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -1093,34 +1064,34 @@
       "hero": {
         "title": "Dotrzyj do każdego klienta. Bez rachunku za SMS-y.",
         "navTitle": "Rozsyłki promocyjne: powiadomienia na karcie do wszystkich klientów",
-        "subtitle": "Wysyłaj promocje prosto na kartę w Apple Wallet i Google Wallet. Około 85% otwarć. Zero opłat za wiadomość. Segmentacja i planowanie rozsyłek w cenie planu.",
+        "subtitle": "Wysyłaj rozsyłki prosto na kartę w Apple Wallet i Google Wallet, bez opłat za wiadomość. Plan Growth obejmuje {growthBroadcasts} rozsyłek miesięcznie z podstawową segmentacją. Pro nie ma limitu i dodaje zaawansowaną segmentację oraz planowanie.",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },
       "statBand": {
-        "title": "Liczby mówią same za siebie",
-        "subtitle": "Średnie wyniki karty w telefonie, SMS-ów i e-maili, na podstawie publicznych danych rynkowych.",
+        "title": "Klienci zatrzymują kartę",
+        "subtitle": "Rozsyłka trafia na każdą kartę, która wciąż jest w telefonie. Oto, co mierzymy w firmach, które korzystają ze Stampeo.",
         "stats": [
           {
-            "value": "~85%",
-            "label": "Otwarć powiadomień na karcie",
-            "caption": "wobec ~20% w e-mailu i ~35% CTR w SMS-ie"
+            "value": "88%",
+            "label": "Karta w telefonie",
+            "caption": "Tylu zapisanych klientów dodaje kartę do Apple Wallet lub Google Wallet, czyli tam, gdzie trafiają rozsyłki (Dane Stampeo, 86 firm, luty–październik 2026)."
+          },
+          {
+            "value": "95%",
+            "label": "Wciąż w telefonie po 90 dniach",
+            "caption": "Tyle kart zostaje w telefonie trzy miesiące po dodaniu (Dane Stampeo, 86 firm, luty–październik 2026)."
           },
           {
             "value": "0 €",
             "label": "Za wiadomość",
-            "caption": "Stała opłata za plan, a nie 0,04 do 0,10 € za SMS"
-          },
-          {
-            "value": "+78%",
-            "label": "Wzrost obrotów",
-            "caption": "Tyle notują firmy z kartą lojalnościową w telefonie"
+            "caption": "Rozsyłki są w cenie planu. Za SMS płacisz od każdej wiadomości."
           }
         ]
       },
       "whyNotSms": {
         "title": "SMS, e-mail, karta w telefonie:<br></br>co naprawdę dociera",
-        "subtitle": "Otwieralność i koszt dotarcia to dwie różne historie. Tak wypadają trzy kanały u małej firmy, która wysyła promocje.",
+        "subtitle": "Tak wypadają trzy kanały u małej firmy, która wysyła promocje.",
         "columns": [
           "",
           "SMS",
@@ -1129,17 +1100,9 @@
         ],
         "rows": [
           {
-            "label": "Typowa otwieralność",
+            "label": "Koszt jednej wiadomości",
             "values": [
-              "~35% CTR",
-              "~20%",
-              "~85%"
-            ]
-          },
-          {
-            "label": "Koszt jednej wiadomości (Francja)",
-            "values": [
-              "0,04 – 0,10 €",
+              "Opłata za każdą wiadomość",
               "Niski, zmienny",
               "0 € (w cenie planu)"
             ]
@@ -1184,8 +1147,7 @@
               "Baner na ekranie blokady, bez skrzynki"
             ]
           }
-        ],
-        "caption": "Źródła: cennik Twilio Francja, raport PushPass 2026 SMS kontra powiadomienia, poradnik Yotpo o karcie w telefonie."
+        ]
       },
       "howItWorks": {
         "badge": "Jak to działa",
@@ -1295,7 +1257,7 @@
         "items": [
           {
             "question": "Ile kosztują rozsyłki promocyjne na kartę?",
-            "answer": "Nic ponad plan. Rozsyłki są w cenie planu Growth (8 w miesiącu) i planu Pro (bez limitu). Nie ma opłaty za wiadomość, inaczej niż przy SMS-ach, gdzie jeden SMS kosztuje we Francji od 0,04 do 0,10 €. Jedna akcja SMS do 500 klientów potrafi kosztować od 30 do 50 €."
+            "answer": "Nic ponad plan. Rozsyłki są w cenie planu Growth (8 w miesiącu) i planu Pro (bez limitu). Nie ma opłaty za wiadomość, inaczej niż przy SMS-ach, gdzie płacisz za każdą wysłaną wiadomość."
           },
           {
             "question": "Czy klienci muszą instalować aplikację?",
@@ -1303,7 +1265,7 @@
           },
           {
             "question": "Jak to wypada przy SMS-ie?",
-            "answer": "Powiadomienie z karty pojawia się na ekranie blokady tak samo jak SMS, ale nic nie kosztuje, ma około 85% otwarć i nie wpada do filtra „Nieznany nadawca” w iOS 26. Do tego masz segmentację od razu w środku (po zebranych pieczątkach, odebranych nagrodach albo braku wizyt), za którą platformy SMS zwykle każą dopłacać."
+            "answer": "Powiadomienie z karty pojawia się na ekranie blokady tak samo jak SMS, ale nic nie kosztuje i nie wpada do filtra „Nieznany nadawca” w iOS 26. Segmentacja jest od razu w środku: w Growth po dacie zapisu, w Pro po zebranych pieczątkach, odebranych nagrodach albo braku wizyt. Platformy SMS zwykle każą za nią dopłacać."
           },
           {
             "question": "Czy mogę zaplanować rozsyłkę z wyprzedzeniem?",
@@ -1347,174 +1309,6 @@
         "analytiques",
         "geolocalisation"
       ]
-    },
-    "programme-fondateur": {
-      "hero": {
-        "title": "Całe Stampeo, już dziś. I <accent>20 €/mies. na zawsze</accent>.",
-        "navTitle": "Oferta na start: cena zablokowana na zawsze",
-        "subtitle": "Stampeo działa już codziennie w dziesiątkach firm. Kto dołączy jako pierwszy, zatrzymuje cenę startową na zawsze.",
-        "badge": "Oferta na start",
-        "secondaryCta": "1 miesiąc za darmo, potem {growthFoundingPrice}/mies. na zawsze"
-      },
-      "problem": {
-        "title": "Gramy w otwarte karty",
-        "description": "Wolimy powiedzieć wprost. Oto dokładnie, w jakim miejscu jest dziś Stampeo."
-      },
-      "sections": [
-        {
-          "title": "1 miesiąc za darmo, bez haczyka",
-          "description": "Przy zapisie prosimy o kartę płatniczą, ale w czasie próby nie pobieramy ani grosza. Testujesz w prawdziwych warunkach. Jeśli Stampeo nie pasuje, odchodzisz, nie płacąc nic.",
-          "icon": "calendar"
-        },
-        {
-          "title": "{growthFoundingPrice}/mies. na zawsze",
-          "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice}/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
-          "icon": "tag"
-        },
-        {
-          "title": "Wszystkie funkcje Growth",
-          "description": "Kilka wzorów karty, pieczątki albo punkty (do wyboru), nieograniczona liczba osób w zespole, własne treści powiadomień i rozsyłki do wszystkich klientów.",
-          "icon": "crown"
-        }
-      ],
-      "cta": {
-        "title": "Dołącz do pierwszych firm",
-        "subtitle": "1 miesiąc za darmo. {growthFoundingPrice}/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś."
-      },
-      "related": [
-        "notifications-push",
-        "scanner-mobile",
-        "design-de-carte"
-      ],
-      "custom": {
-        "seeAllPlans": "Zobacz wszystkie plany",
-        "benefits": {
-          "title": "Co dostajesz",
-          "items": [
-            {
-              "title": "1 miesiąc za darmo, bez haczyka",
-              "description": "Przy zapisie prosimy o kartę płatniczą, ale w czasie próby nie pobieramy ani grosza. Testujesz w prawdziwych warunkach. Jeśli Stampeo nie pasuje, odchodzisz, nie płacąc nic.",
-              "icon": "calendar"
-            },
-            {
-              "title": "{growthFoundingPrice}/mies. na zawsze",
-              "description": "Po okresie próbnym twoja cena zostaje zablokowana na {growthFoundingPrice}/mies. Na zawsze, nawet kiedy cena dla nowych firm pójdzie w górę.",
-              "icon": "tag"
-            },
-            {
-              "title": "Wszystkie funkcje Growth",
-              "description": "Kilka wzorów karty, pieczątki albo punkty (do wyboru), nieograniczona liczba osób w zespole, własne treści powiadomień i rozsyłki do wszystkich klientów.",
-              "icon": "crown"
-            },
-            {
-              "title": "Bezpośredni kontakt z zespołem",
-              "description": "Żadnego bota, żadnego zgłoszenia numer 47832. Rozmawiasz wprost z ludźmi, którzy budują Stampeo. Problem albo pomysł: zajmujemy się tym.",
-              "icon": "signal"
-            },
-            {
-              "title": "Karta przygotowana przez nas",
-              "description": "Wyślij nam logo i kolory. Przygotujemy twoją kartę lojalnościową, czystą i zgodną z Apple Wallet i Google Wallet, czyli z portfelem wbudowanym w telefon klienta. W cenie.",
-              "icon": "palette"
-            },
-            {
-              "title": "Pierwszeństwo we wszystkim",
-              "description": "Nowe funkcje przed innymi, wsparcie w pierwszej kolejności. Jako jedna z pierwszych firm wchodzisz bez kolejki.",
-              "icon": "sparkles"
-            }
-          ]
-        },
-        "transparency": {
-          "title": "Gramy w otwarte karty",
-          "description": "Wolimy powiedzieć wprost. Oto dokładnie, w jakim miejscu jest dziś Stampeo.",
-          "worksNow": {
-            "title": "Co działa już dziś",
-            "items": [
-              "Karty w Apple Wallet i Google Wallet",
-              "Skanowanie kodu QR z powiadomieniem w czasie rzeczywistym",
-              "Rozsyłki do wszystkich klientów (Growth i Pro)",
-              "Segmentacja klientów w rozsyłkach (Pro)",
-              "Panel z listą klientów i statystykami",
-              "Edytor karty z podglądem na żywo"
-            ]
-          },
-          "comingSoon": {
-            "title": "Co budujemy dalej",
-            "items": [
-              "Tryb bez połączenia w skanerze",
-              "Geolokalizacja dla Apple Wallet i Google Wallet",
-              "Tworzenie karty z pomocą sztucznej inteligencji",
-              "Zaplanowane i sezonowe wzory karty"
-            ]
-          },
-          "expectFromYou": {
-            "title": "O co prosimy",
-            "items": [
-              "Używaj Stampeo na co dzień w swojej firmie",
-              "Mów nam, co działa i co oszczędziłoby ci czas",
-              "Dziel się pomysłami na ulepszenia"
-            ]
-          },
-          "closing": "Stampeo jest gotowe, żeby ruszyć w twojej firmie już dziś. Dołączając teraz, blokujesz najlepszą cenę i masz wpływ na to, co zbudujemy dalej."
-        },
-        "price": {
-          "original": "{growthPrice}/mies.",
-          "founding": "{growthFoundingPrice}/mies.",
-          "forLife": "na zawsze"
-        },
-        "timeline": {
-          "badge": "Jak to działa",
-          "title": "4 kroki do startu",
-          "subtitle": "",
-          "steps": [
-            {
-              "title": "Załóż konto",
-              "description": "Ustaw swój program w 2 minuty."
-            },
-            {
-              "title": "Dopasuj kartę",
-              "description": "Zrób ją samodzielnie albo napisz do nas, przyślij logo i kolory: zrobimy ją za ciebie."
-            },
-            {
-              "title": "Wystaw kod QR",
-              "description": "Na ladzie. Klient dodaje swoją kartę jednym skanem."
-            },
-            {
-              "title": "Uruchom program",
-              "description": "Pierwsza pieczątka już pierwszego dnia."
-            }
-          ]
-        },
-        "faq": {
-          "title": "Najczęstsze pytania",
-          "items": [
-            {
-              "question": "Czy produkt jest gotowy i można go używać od razu?",
-              "answer": "Tak. Stampeo działa już codziennie w dziesiątkach firm: karty Apple Wallet i Google Wallet, skanowanie, powiadomienia, rozsyłki i statystyki są na miejscu. Swój program możesz uruchomić dzisiaj."
-            },
-            {
-              "question": "Jak długo trwa oferta na start?",
-              "answer": "Cena startowa ({growthFoundingPrice}/mies. na zawsze) obowiązuje przez fazę startową, potem cena dla nowych firm pójdzie w górę. Kto już jest w środku, ma swoją cenę zablokowaną na zawsze."
-            },
-            {
-              "question": "Co się dzieje po darmowym miesiącu?",
-              "answer": "Przechodzisz na {growthFoundingPrice}/mies. Uprzedzamy dwa razy: tydzień wcześniej, a potem 3 dni wcześniej. Jeśli nie chcesz kontynuować, rezygnujesz jednym kliknięciem, bez opłat."
-            },
-            {
-              "question": "Czy zachowam swoją cenę, jeśli podniesiecie ceny?",
-              "answer": "Tak. {growthFoundingPrice}/mies. na zawsze znaczy na zawsze. Nawet jeśli plan Growth za trzy lata będzie kosztował 49,99 €, twoja cena się nie ruszy. Mamy to w umowie."
-            },
-            {
-              "question": "Czy mogę zrezygnować?",
-              "answer": "W każdej chwili po darmowym miesiącu. Bez zobowiązań. Po rezygnacji tracisz dostęp, ale twoi klienci zachowują swoje karty."
-            }
-          ]
-        },
-        "finalCta": {
-          "title": "Dołącz do pierwszych firm",
-          "subtitle": "1 miesiąc za darmo. {growthFoundingPrice}/mies. na zawsze. Wszystkie funkcje Growth, dostępne już dziś.",
-          "urgency": "Cena startowa dla nowych firm pójdzie w górę. Zablokuj swoją teraz."
-        }
-      }
     },
     "relatedTitle": "Warto poznać",
     "discoverLink": "Zobacz",

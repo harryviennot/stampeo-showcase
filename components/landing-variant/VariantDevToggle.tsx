@@ -14,7 +14,7 @@ import { useRouter as useLocaleRouter } from "@/i18n/navigation";
  * The homepage locale is resolved from the NEXT_LOCALE cookie, so "int · fr" /
  * "int · en" go through next-intl's router (it sets that cookie); otherwise an
  * English browser just 307s back to /en and you can never reach the FR page.
- * The pilots (/uk, /us) are plain hard navigations — the middleware serves them.
+ * The pilots (/uk, /us) are plain hard navigations — the proxy serves them.
  */
 type Target = { key: string; label: string; locale?: "fr" | "en"; href?: string };
 
@@ -50,7 +50,7 @@ function VariantDevToggleInner() {
       // next-intl sets NEXT_LOCALE + navigates to the homepage in that locale.
       localeRouter.push("/", { locale: t.locale });
     } else if (t.href) {
-      // Literal path (the middleware serves /uk, /us); plain router keeps it verbatim.
+      // Literal path (the proxy serves /uk, /us); plain router keeps it verbatim.
       router.push(t.href);
     }
   };

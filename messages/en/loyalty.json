@@ -12,7 +12,7 @@
       "labelBestFor": "Best for",
       "stamps": {
         "name": "Stamps",
-        "tagline": "A digital punch card.",
+        "tagline": "A digital stamp card.",
         "how": "Every visit adds one stamp. Fill the card, earn the reward. One tap at the counter, no price to enter.",
         "bestFor": "Best for fixed-price, repeat purchases: coffees, pastries, blow-dries, car washes."
       },
@@ -70,7 +70,7 @@
       "results": {
         "stamps": {
           "title": "Go with stamps",
-          "body": "Your visits look steady and similar in price, so a punch card is the clearest, most motivating choice."
+          "body": "Your visits look steady and similar in price, so a stamp card is the clearest, most motivating choice."
         },
         "points": {
           "title": "Go with points",

@@ -1,21 +1,38 @@
+import type { Metadata, ResolvingMetadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { MarketPricingPage } from "@/components/pricing/MarketPricingPage";
-import { localeAlternates, localePath } from "@/lib/hreflang";
+import { localePath, marketAlternates } from "@/lib/hreflang";
+import { marketPriceArgs } from "@/lib/plan-catalog";
+import { resolvePageOpenGraph } from "@/lib/og/metadata";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export async function generateMetadata(
+  {
+    params,
+  }: {
+    params: Promise<{ locale: string }>;
+  },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pricingPage.meta" });
+  const args = await marketPriceArgs("int", locale);
+  const title = t("title", args);
+  const description = t("description", args);
+  const canonical = localePath(locale, "/pricing");
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
     alternates: {
-      canonical: localePath(locale, "/pricing"),
-      languages: localeAlternates("/pricing"),
+      canonical,
+      // One cluster with the market pricing pages (/us/pricing as en-US).
+      languages: marketAlternates("/pricing"),
     },
+    openGraph: await resolvePageOpenGraph(parent, {
+      title,
+      description,
+      url: canonical,
+      locale,
+    }),
   };
 }
 

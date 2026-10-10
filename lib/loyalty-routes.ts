@@ -23,9 +23,9 @@ export function loyaltyPath(locale: string): string {
   return l === "fr" ? slug : `/${l}${slug}`;
 }
 
-/** hreflang alternates map (locale -> localized path, plus x-default = fr). */
+/** hreflang alternates map (locale -> localized path, plus x-default = en). */
 export const LOYALTY_LANGUAGES: Record<string, string> = {
-  "x-default": loyaltyPath("fr"),
+  "x-default": loyaltyPath("en"),
   ...Object.fromEntries(
     (Object.keys(LOYALTY_SLUGS) as LoyaltyLocale[]).map((l) => [l, loyaltyPath(l)])
   ),

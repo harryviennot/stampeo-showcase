@@ -1,5 +1,7 @@
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPlanCatalog } from "@/lib/plan-catalog";
+import { pricingFaqJsonLd, softwareApplicationJsonLd } from "@/lib/structured-data";
+import { JsonLd } from "@/components/JsonLd";
 import { MARKETS, type Market } from "@/lib/markets";
 import type { RegionCurrency } from "@/lib/region-pricing";
 import { Header } from "@/components/sections/Header";
@@ -17,10 +19,10 @@ import { RegionPricingProvider } from "@/components/market/RegionPricingProvider
  * US visitor euros. Adding a market now means adding a route that passes its
  * name here, not copying a page.
  *
- * Since STA-330 the market no longer fixes what a visitor sees either: both
- * ladders are fetched at render time (the page stays fully cacheable) and the
- * RegionPricingProvider resolves the browser's detected region after hydration.
- * The market currency remains the default for an undetectable visitor.
+ * Both ladders are fetched at render time (the page stays fully cacheable). The
+ * server HTML carries this market's prices and trial length; after hydration
+ * RegionPricingProvider swaps to the browser's detected region. An undetectable
+ * visitor keeps the market's terms.
  */
 export async function MarketPricingPage({
   locale,
@@ -30,8 +32,16 @@ export async function MarketPricingPage({
   const marketCurrency: RegionCurrency =
     MARKETS[market].currency.code.toLowerCase() === "usd" ? "usd" : "eur";
   const [eur, usd] = await Promise.all([getPlanCatalog("eur"), getPlanCatalog("usd")]);
+  // Structured data states this URL's market, never the visitor's region.
+  const marketPricing = marketCurrency === "usd" ? usd : eur;
+  const t = await getTranslations("pricingPage");
+  const faqItems = t.raw("faq.items") as Array<{ question: string; answer: string }>;
   return (
     <div className="min-h-screen bg-[var(--background)]">
+      <JsonLd data={softwareApplicationJsonLd(marketPricing)} />
+      <JsonLd
+        data={pricingFaqJsonLd(faqItems, marketPricing, locale, MARKETS[market].trialDays)}
+      />
       <RegionPricingProvider
         ladders={{ eur, usd }}
         defaultCurrency={marketCurrency}
