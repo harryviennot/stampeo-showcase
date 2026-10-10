@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { sameOriginAppUrl } from "@/lib/auth/app-redirect";
 import { deviceLanguage } from "@/lib/locale-negotiation";
 import {
   buildLastLoginCookie,
@@ -83,21 +84,13 @@ export async function GET(request: Request) {
     return response;
   };
 
-  // 1. Absolute `next` targeting the configured app host — invite-link
+  // 1. Absolute `next` on the configured app origin — invite-link
   //    round-trips that started on app.stampeo.app. Wins over the membership
   //    branch so a fresh user accepting an invite still lands on the invite
   //    page (where the membership is actually created).
-  if (next) {
-    try {
-      const target = new URL(next);
-      const allowedHost = new URL(appUrl).host;
-      if (target.host === allowedHost) {
-        return buildResponse(target.toString());
-      }
-    } catch {
-      // not an absolute URL — fall through to the relative/business-aware
-      // branches below.
-    }
+  const appTarget = sameOriginAppUrl(next, appUrl);
+  if (appTarget) {
+    return buildResponse(appTarget);
   }
 
   // 2. Existing user (has any membership) → straight to the dashboard.
