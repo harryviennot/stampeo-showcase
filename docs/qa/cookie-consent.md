@@ -112,6 +112,12 @@ domain.
 
 ### Known state before you start
 
+- **STA-409 (2026-10-10) added Trustpilot to §4 and §6 of the four policies**
+  and moved "Last updated" to 10 October 2026. LG-04 is new and LG-01's date line
+  was edited in place. Root cause: the review-invitation integration (live since
+  2026-06-29) sent business-owner data to Trustpilot while no policy named it.
+  Verified by `lib/legal/legal.test.ts` on the fix branch; not yet read on a
+  deployed page. **Targeted re-run:** LG-01, LG-04.
 - **STA-358 (2026-10-09) changed when `NEXT_LOCALE` is written.** Only `/`
   still negotiates the language, and it writes the cookie only for a browser
   language the site does not serve. The language switcher writes it too. No
@@ -2856,7 +2862,7 @@ EXPECT:
 - It does **NOT** say anywhere that the site requires no cookie banner. That
   sentence was true before this release and is the specific thing that must not
   come back.
-- "Last updated" reads 3 October 2026 in all four.
+- "Last updated" reads 10 October 2026 in all four.
 
 ### LG-02 §5.5 says what Meta now receives — BLOCKER
 DEPENDS: LG-01
@@ -2904,6 +2910,34 @@ EXPECT:
   **Your Privacy Choices** (PR-08).
 - NEGATIVE: the policy does not say the control is at the bottom of "every page",
   and does not say a private page (login, onboarding) sets a cookie.
+
+### LG-04 §4 names every recipient of business-owner data — CORE
+DEPENDS: LG-01
+
+WHY: §4 is what a business owner is told about who receives their email address
+and name. Trustpilot received both from 2026-06-29 (a review invitation) and §4
+named it nowhere until STA-409. A new integration that sends personal data to a
+third party has to be in §4 the day it ships, and this is the case that checks.
+
+1. Read §4 "Third-Party Services" in `fr`, `en`, `es`, `pl`: the table, then the
+   "Transfers Outside the EU" paragraph. Read §6 in `en`.
+2. Ask the backend owner for the current list of outbound integrations that carry
+   personal data, and tick each one against the table.
+
+EXPECT:
+- The table has a **Trustpilot A/S** row in all four locales, naming the review
+  invitations and what is sent (email address, name, business identifier,
+  language), with Denmark (EU) and the Standard Contractual Clauses for transfers
+  outside the EU.
+- The transfers paragraph lists Trustpilot with Stripe, Apple and Google as a
+  sub-processor that may transfer data to the United States.
+- §6 lists the review invitation among the purposes, on the basis of legitimate
+  interest.
+- NEGATIVE: Trustpilot is **not** in the sentence naming the sub-processors that
+  process data exclusively within the EU (Supabase, OVH, Resend, PostHog, Sentry,
+  Redis).
+- NEGATIVE: no integration on the backend owner's list is missing from the table.
+  If one is, file it as its own issue instead of widening this case.
 
 ---
 
