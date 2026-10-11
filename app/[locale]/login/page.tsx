@@ -9,6 +9,7 @@ import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
 import { writeLastLogin } from "@/lib/last-login";
+import { postLoginUrl } from "@/lib/auth/app-redirect";
 
 export default function LoginPage() {
   return (
@@ -80,24 +81,13 @@ function LoginContent() {
   }, [phase]);
 
   // Resolve where to send the user after a successful sign-in. We honor the
-  // `redirect` query param when it points to the configured app host, so
+  // `redirect` query param when it is on the configured app origin, so
   // flows like the team-invite "switch account" link can return the user to
   // the exact invite URL after authenticating.
-  const resolvePostLoginUrl = useCallback(() => {
-    const fallback =
-      process.env.NEXT_PUBLIC_APP_URL || "https://app.stampeo.app";
-    if (!redirectParam) return fallback;
-    try {
-      const target = new URL(redirectParam);
-      const allowedHost = new URL(fallback).host;
-      if (target.host === allowedHost) {
-        return target.toString();
-      }
-    } catch {
-      // not a valid absolute URL — ignore
-    }
-    return fallback;
-  }, [redirectParam]);
+  const resolvePostLoginUrl = useCallback(
+    () => postLoginUrl(redirectParam),
+    [redirectParam]
+  );
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
