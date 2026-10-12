@@ -12,6 +12,7 @@ import { createElement, type ReactNode } from "react";
 import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { restoreEnvAfterEach } from "../testing/restore-env";
+import { fakeStorage } from "../testing/fake-storage";
 import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 
 const REF = "ysdpjxzldqwlmhlwzdaq";
@@ -40,15 +41,6 @@ function fakeDocument() {
       if (expired || value.join("=") === "") jar.delete(name);
       else jar.set(name, value.join("="));
     },
-  };
-}
-
-function fakeStorage(initial: Record<string, string>) {
-  const items = new Map(Object.entries(initial));
-  return {
-    getItem: (key: string) => items.get(key) ?? null,
-    removeItem: (key: string) => void items.delete(key),
-    setItem: (key: string, value: string) => void items.set(key, value),
   };
 }
 

@@ -1,4 +1,4 @@
-BRANCH: `fix/sta-419-reset-password-lock` (showcase)
+BRANCH: `fix/sta-419-reset-password-lock`, then `fix/sta-418-420-421-425-reset-hardening` (showcase)
 SCOPES: showcase (`/reset-password`)
 ENVIRONMENT: dev. No migration. The reset email itself comes from Supabase (or the STA-416 hook when it is on).
 
@@ -42,6 +42,12 @@ delete from auth.users where email = '<alias>';
   the current one (or below the project policy) is refused by Supabase with a 422
   and the page only says "update failed"; that is expected today, not a failure.
   RP-02 and RP-03 not yet run.
+- **2026-10-11 batch (STA-418/420/421/425):** the address bar drops the token once
+  read; PostHog and Sentry strip credential parameters; old recovery sessions in
+  localStorage are signed out and removed when any page loads; the form names the account and appears only after the link is verified;
+  refused passwords say why; the onboarding forgot link opens the login with the
+  email filled. Unit-tested; **not yet verified in a browser.** Run RP-03 and
+  RP-04 to RP-09.
 
 ---
 
@@ -77,8 +83,74 @@ delete from auth.users where email = '<alias>';
 | DEPENDS | none |
 | ACCOUNT | Your alias, confirmed. |
 | STEPS | 1. Request a reset, open the link (the form appears). 2. Reload the page. 3. If the form shows again, submit a new password. |
-| EXPECT | Either the "link expired" message right after the reload, or the page's "update failed" message on submit, each with a way to request a new email. You do NOT see a raw error or an endless spinner. |
+| EXPECT | After the reload the page shows the "link expired" message in the red box (it says to choose "Forgot password?" on the sign-in page) and a full-width sign-in button, and NO password form. You do NOT see a raw error, an endless spinner, or a form that cannot save. |
 | RESET | R1. |
+
+### RP-04: The token leaves the address bar and the analytics [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | STA-418: a single-use reset token must not sit in the URL bar, PostHog or Sentry. |
+| DEPENDS | none |
+| ACCOUNT | Your alias, confirmed. |
+| STEPS | 1. Request a reset, open the link with devtools Network open (filter `posthog`). 2. Watch the address bar after the spinner. 3. Look for PostHog requests. 4. Open `/en/pricing` in the same tab. |
+| EXPECT | The address bar shows `/<locale>/reset-password` with no `token_hash` or `type`, and the form appears (the link still verified). No request goes to PostHog while the reset page is open (a page opened with a token starts without analytics). After step 4, PostHog requests appear again. You do NOT see the token come back in the address bar after typing in the form. |
+| RESET | R1. |
+
+### RP-05: An old recovery session is cleared from the browser [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | STA-420: resets before 2026-10-11 left a working refresh token in localStorage. |
+| DEPENDS | none |
+| ACCOUNT | Your alias, signed in on the dashboard (cookie session). |
+| STEPS | 1. In devtools on `showcase.dev.stampeo.app`, Application → Local Storage: create `sb-ysdpjxzldqwlmhlwzdaq-auth-token` with a session JSON copied from a fresh sign-in (or any JSON). 2. Open the homepage `/en`. 3. Look at Local Storage again, and open `app.dev.stampeo.app` in another tab. 4. Reload `/en` with the Network tab open. |
+| EXPECT | The key is gone after the homepage loads. On the reload in step 4 no request goes to `supabase.co` (nothing is stored any more). The dashboard tab is still signed in (the real cookie session is untouched). You do NOT get signed out anywhere. |
+| RESET | None. |
+
+### RP-06: The form names the account [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | STA-421: someone opening another person's reset link must notice before setting a password. |
+| DEPENDS | none |
+| ACCOUNT | Your alias, confirmed; also a long alias (40+ characters) at 390px width. |
+| STEPS | 1. Request a reset, open the link. 2. Read under the title. 3. Repeat on a phone-width window with the long alias. |
+| EXPECT | The alias is shown in full under the title, with a short line saying not to set a password if it isn't yours. A long address wraps inside itself; it is never cut with "…". |
+| RESET | R1. |
+
+### RP-07: Reusing the current password is explained [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | STA-425: Supabase refuses the current password with `same_password`; the page used to say only "update failed". |
+| DEPENDS | none |
+| ACCOUNT | Your alias, whose current password you know. |
+| STEPS | 1. Request a reset, open the link. 2. Type the CURRENT password in both fields, submit. 3. Change one character in New password. |
+| EXPECT | A red line under the New password field says it is already your current password. It disappears as soon as you edit New password. You do NOT see "Impossible de mettre à jour le mot de passe" / "update failed" for this case. |
+| RESET | R1. |
+
+### RP-08: A rate-limited or offline check says so [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | Verify failures other than an expired link must not read as "expired". |
+| DEPENDS | none |
+| ACCOUNT | Your alias. |
+| STEPS | 1. Request a reset. 2. Turn the network off in devtools, open the link. |
+| EXPECT | The connection-error message in the red box and the sign-in button; no form, no endless spinner. |
+| RESET | R1. |
+
+### RP-09: The sign-up step's "Forgot password?" opens the login [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | That link used to open the reset page with no token, now a dead end. |
+| DEPENDS | none |
+| ACCOUNT | None. |
+| STEPS | 1. In the onboarding wizard's sign-up step, type an email, then press "Forgot password?". |
+| EXPECT | The login page opens with that email filled in. You do NOT land on `/reset-password`. |
+| RESET | None. |
 
 ---
 

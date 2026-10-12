@@ -6,8 +6,26 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { StampeoLogo } from "@/components/logo";
 import { useAuth } from "@/lib/supabase/auth-provider";
-import { createRecoveryClient, saveNewPassword } from "@/lib/supabase/recovery-client";
+import {
+  createRecoveryClient,
+  passwordRefusalKeys,
+  saveNewPassword,
+  verifyRecoveryLink,
+  type PasswordRefusalKey,
+} from "@/lib/supabase/recovery-client";
+import {
+  addressWithoutRecoveryParams,
+  resetPageView,
+  type VerifyFailureReason,
+  type VerifyState,
+} from "@/lib/auth/reset-page-state";
 import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
+
+const ERROR_BOX_CLASS =
+  "p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400";
+const PILL_LINK_CLASS =
+  "block w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 text-center";
+const REFUSAL_ID = "newPassword-refusal";
 
 export default function ResetPasswordPage() {
   return (
@@ -31,14 +49,18 @@ function ResetPasswordContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [refusal, setRefusal] = useState<PasswordRefusalKey[]>([]);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const hasTokenHash = searchParams.has("token_hash");
-  const [ready, setReady] = useState(!hasTokenHash);
-  const verified = useRef(false);
+  const [saved, setSaved] = useState(false);
+  // The token lives in memory only: the address bar is cleaned right after load.
+  const [tokenHash] = useState(() => searchParams.get("token_hash"));
+  const [verify, setVerify] = useState<VerifyState>({ status: "pending" });
+  const verifyStarted = useRef(false);
 
   // Lazy initialiser: one client for the life of the page, not one per render.
   const [recovery] = useState(createRecoveryClient);
+
+  const view = resetPageView({ hasToken: Boolean(tokenHash), verify, saved });
 
   const passwordChecks = useMemo(() => ({
     lowercase: /[a-z]/.test(newPassword),
@@ -66,27 +88,25 @@ function ResetPasswordContent() {
   }, [tErrors, t]);
 
   useEffect(() => {
-    if (verified.current || !hasTokenHash) return;
-    verified.current = true;
+    if (!tokenHash || verifyStarted.current) return;
+    verifyStarted.current = true;
+    void verifyRecoveryLink(recovery, tokenHash).then(setVerify);
+  }, [recovery, tokenHash]);
 
-    const tokenHash = searchParams.get("token_hash")!;
-    recovery.auth
-      .verifyOtp({ token_hash: tokenHash, type: "recovery" })
-      .then(({ error }) => {
-        if (error) {
-          setError(translateError(error.message));
-        }
-      })
-      .catch((err: unknown) => {
-        setError(translateError(err instanceof Error ? err.message : String(err)));
-      })
-      .finally(() => setReady(true));
-  }, [recovery, searchParams, hasTokenHash, translateError]);
+  useEffect(() => {
+    if (!tokenHash) return;
+    // Deferred so Next's router has patched the history API and follows the change.
+    const timer = setTimeout(() => {
+      window.history.replaceState(null, "", addressWithoutRecoveryParams(window.location.href));
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [tokenHash]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       setError(null);
+      setRefusal([]);
 
       if (!isPasswordStrong) {
         return;
@@ -99,10 +119,12 @@ function ResetPasswordContent() {
 
       setLoading(true);
 
-      const { email, error } = await saveNewPassword(recovery, newPassword);
+      const { email, error, code, reasons } = await saveNewPassword(recovery, newPassword);
 
       if (error) {
-        setError(translateError(error));
+        const refusalKeys = passwordRefusalKeys(code, reasons);
+        if (refusalKeys.length > 0) setRefusal(refusalKeys);
+        else setError(translateError(error));
         setLoading(false);
         return;
       }
@@ -116,7 +138,7 @@ function ResetPasswordContent() {
         }
       }
 
-      setSuccess(true);
+      setSaved(true);
       setLoading(false);
     },
     [recovery, newPassword, isPasswordStrong, passwordsMatch, t, signIn, translateError]
@@ -130,8 +152,14 @@ function ResetPasswordContent() {
     ["minLength", t("minLength")],
   ] as const;
 
+  const failureText: Record<VerifyFailureReason, string> = {
+    linkExpired: t("linkExpired"),
+    network: tErrors("networkError"),
+    rateLimited: tErrors("tooManyRequests"),
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-3 py-20 sm:px-0">
       <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
         <Link href="/" className="inline-block group">
           <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
@@ -142,12 +170,12 @@ function ResetPasswordContent() {
           </div>
         </Link>
       </header>
-      <div className="w-full max-w-md p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm">
-        {!ready ? (
+      <div className="w-full max-w-md p-4 sm:p-8 space-y-6 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl shadow-sm">
+        {view.view === "verifying" ? (
           <div className="text-center py-8">
             <div className="animate-spin h-8 w-8 border-2 border-amber-500 border-t-transparent rounded-full mx-auto" />
           </div>
-        ) : success ? (
+        ) : view.view === "success" ? (
           <>
             <div className="text-center">
               <h1 className="text-2xl font-bold text-[var(--foreground)]">
@@ -157,10 +185,19 @@ function ResetPasswordContent() {
                 {t("successDescription")}
               </p>
             </div>
-            <Link
-              href="/login"
-              className="block w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 text-center"
-            >
+            <Link href="/login" className={PILL_LINK_CLASS}>
+              {t("signIn")}
+            </Link>
+          </>
+        ) : view.view === "no-session" ? (
+          <>
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-[var(--foreground)]">
+                {t("title")}
+              </h1>
+            </div>
+            <div className={ERROR_BOX_CLASS}>{failureText[view.reason]}</div>
+            <Link href="/login" className={PILL_LINK_CLASS}>
               {t("signIn")}
             </Link>
           </>
@@ -170,13 +207,23 @@ function ResetPasswordContent() {
               <h1 className="text-2xl font-bold text-[var(--foreground)]">
                 {t("title")}
               </h1>
+              {view.email && (
+                <>
+                  <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+                    <span className="text-[var(--foreground)] font-medium wrap-anywhere">
+                      {view.email}
+                    </span>
+                  </p>
+                  <p className="text-[var(--muted-foreground)] mt-1 text-xs">
+                    {t("notYourAddress")}
+                  </p>
+                </>
+              )}
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <div className="p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400">
-                  {error}
-                </div>
+                <div className={ERROR_BOX_CLASS}>{error}</div>
               )}
 
               {/* New password */}
@@ -192,8 +239,13 @@ function ResetPasswordContent() {
                     id="newPassword"
                     type={showPassword ? "text" : "password"}
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      setRefusal([]);
+                    }}
                     required
+                    aria-invalid={refusal.length > 0 || undefined}
+                    aria-describedby={refusal.length > 0 ? REFUSAL_ID : undefined}
                     className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
                     placeholder={t("newPasswordPlaceholder")}
                   />
@@ -222,6 +274,15 @@ function ResetPasswordContent() {
                       </li>
                     ))}
                   </ul>
+                )}
+                {refusal.length > 0 && (
+                  <div id={REFUSAL_ID} role="alert" className="space-y-1">
+                    {refusal.map((key) => (
+                      <p key={key} className="text-sm text-red-600 dark:text-red-400">
+                        {t(key)}
+                      </p>
+                    ))}
+                  </div>
                 )}
               </div>
 
@@ -253,7 +314,7 @@ function ResetPasswordContent() {
                   </button>
                 </div>
                 {confirmPassword.length > 0 && !passwordsMatch && (
-                  <p className="text-xs text-red-500">{t("passwordMismatch")}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">{t("passwordMismatch")}</p>
                 )}
               </div>
 
