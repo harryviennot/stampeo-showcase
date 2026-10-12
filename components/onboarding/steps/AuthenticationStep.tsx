@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { loginHrefWithEmail } from "@/lib/auth/login-link";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
 import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
 
@@ -467,7 +468,7 @@ export function AuthenticationStep({
               {t("password")}
             </label>
             <Link
-              href="/reset-password"
+              href={loginHrefWithEmail(email)}
               className="text-xs text-[var(--accent)] hover:underline"
             >
               {tAuth("forgotPassword")}
