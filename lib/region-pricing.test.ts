@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 
 import {
   displayTerms,
@@ -8,6 +8,7 @@ import {
   type RegionCurrency,
 } from "./region-pricing";
 import { FALLBACK_PRICING, interpolatePricing, type Pricing } from "./pricing";
+import { getPlanCatalog } from "./plan-catalog";
 import { MARKETS, type Market } from "./markets";
 
 import enLanding from "../messages/en/landing.json";
@@ -100,14 +101,7 @@ describe("displayTerms: the ladder and trial a price surface shows", () => {
 
 describe("resolveRegionLadder", () => {
   const eur: Pricing = { currency: "eur", tiers: FALLBACK_PRICING.eur.tiers };
-  const usd: Pricing = {
-    currency: "usd",
-    tiers: {
-      starter: { month: 49, year: 468 },
-      growth: { month: 79, year: 756 },
-      pro: { month: 119, year: 1140 },
-    },
-  };
+  const usd: Pricing = { currency: "usd", tiers: FALLBACK_PRICING.usd.tiers };
 
   test("returns the requested region's ladder when it really is in that currency", () => {
     expect(resolveRegionLadder({ eur, usd }, "usd", "eur")).toBe(usd);
@@ -183,14 +177,14 @@ describe("FALLBACK_PRICING.usd", () => {
   });
 
   test("carries the captured Stripe USD ladder, amount for amount", () => {
-    // Captured from GET /public/plans?currency=usd on dev, 2026-09-21. Shape
+    // The live ladder, as GET /public/plans?currency=usd returns it. Shape
     // checks alone let a transposed amount through, and "shown one number,
     // debited another" is the worst case the baked ladder exists to prevent.
     // A deliberate Stripe reprice updates BOTH the constant and this test.
     expect(FALLBACK_PRICING.usd.tiers).toEqual({
-      starter: { month: 49, year: 468 },
-      growth: { month: 79, year: 756 },
-      pro: { month: 119, year: 1140 },
+      starter: { month: 29, year: 276 },
+      growth: { month: 49, year: 468 },
+      pro: { month: 79, year: 756 },
     });
   });
 
@@ -206,5 +200,53 @@ describe("FALLBACK_PRICING.usd", () => {
         expect(usd.tiers[tier][interval]).toBeGreaterThan(0);
       }
     }
+  });
+});
+
+describe("FALLBACK_PRICING ladders", () => {
+  // The yearly toggle claims "Save 20%" and the yearly card headlines a
+  // per-month figure, including when the baked ladder is what renders.
+  test.each(["eur", "usd"])("%s yearly is at least 20 percent off, in whole units a month", (currency) => {
+    for (const { month, year } of Object.values(FALLBACK_PRICING[currency].tiers)) {
+      expect(year * 5).toBeLessThanOrEqual(month * 12 * 4);
+      expect(year % 12).toBe(0);
+    }
+  });
+});
+
+describe("getPlanCatalog with the backend unreachable", () => {
+  const realFetch = globalThis.fetch;
+  const realBase = process.env.NEXT_PUBLIC_API_URL;
+
+  beforeEach(() => {
+    process.env.NEXT_PUBLIC_API_URL = "https://api.test";
+  });
+  afterEach(() => {
+    globalThis.fetch = realFetch;
+    process.env.NEXT_PUBLIC_API_URL = realBase;
+  });
+
+  const respond = (fn: () => Promise<Response>) => {
+    globalThis.fetch = (() => fn()) as unknown as typeof fetch;
+  };
+
+  test.each([
+    ["the request throws", () => Promise.reject(new Error("ECONNREFUSED"))],
+    ["the backend answers 503", () => Promise.resolve(new Response("", { status: 503 }))],
+    ["the ladder comes back partial", () =>
+      Promise.resolve(Response.json({ currency: "usd", tiers: { starter: { month: { amount: 2900 } } } }))],
+  ] as const)("a US page gets the baked USD ladder when %s", async (_, fn) => {
+    respond(fn);
+    const got = await getPlanCatalog("usd");
+    expect(got.currency).toBe("usd");
+    expect(got.tiers).toEqual(FALLBACK_PRICING.usd.tiers);
+    expect(got.isFallback).toBe(true);
+  });
+
+  test("a currency with no baked ladder falls back to euros, flagged", async () => {
+    respond(() => Promise.reject(new Error("down")));
+    const got = await getPlanCatalog("gbp");
+    expect(got.currency).toBe("eur");
+    expect(got.isFallback).toBe(true);
   });
 });

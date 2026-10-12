@@ -51,9 +51,9 @@ export const FALLBACK_PRICING: Record<string, Pricing> = {
   usd: {
     currency: "usd",
     tiers: {
-      starter: { month: 49, year: 468 },
-      growth: { month: 79, year: 756 },
-      pro: { month: 119, year: 1140 },
+      starter: { month: 29, year: 276 },
+      growth: { month: 49, year: 468 },
+      pro: { month: 79, year: 756 },
     },
   },
 };
