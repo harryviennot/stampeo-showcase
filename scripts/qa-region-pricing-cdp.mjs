@@ -292,9 +292,9 @@ function assertSnapshot({ scenario, route, expectedCurrency, expectedTrial, snap
 
   if (phase === "annual") {
     const annual = expectedCurrency === "usd"
-      ? [39, 63, 95, 468, 756, 1140]
+      ? [23, 39, 63, 276, 468, 756]
       : [16, 32, 48, 192, 384, 576];
-    const comparison = expectedCurrency === "usd" ? [49, 79, 119] : [20, 40, 60];
+    const comparison = expectedCurrency === "usd" ? [29, 49, 79] : [20, 40, 60];
     const amounts = route.kind === "pricing" ? [...annual, ...comparison] : annual;
     for (const amount of amounts) {
       if (!facts.compact.includes(String(amount))) failures.push(`expected ladder amount ${amount} was absent`);

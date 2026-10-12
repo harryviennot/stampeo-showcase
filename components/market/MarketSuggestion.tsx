@@ -14,7 +14,7 @@ const DISMISS_KEY = "stampeo_market_suggestion_dismissed";
  * Offers a visitor the market page that quotes the currency they will be billed
  * in — when that is not the page they are on.
  *
- * The euro pages quote EUR 20 and a US business is billed $49. Until `/us` is
+ * The euro pages quote euros and a US business is billed in dollars. Until `/us` is
  * indexed, hreflang protects nobody, so every US visitor meets the real number
  * at the last step of a thirty-step wizard. This turns that into one line and
  * one click, before they invest anything.

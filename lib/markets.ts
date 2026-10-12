@@ -94,11 +94,8 @@ export const MARKETS: Record<Market, MarketConfig> = {
     europeTrust: false,
     label: "us",
     trialDays: 14,
-    // LIVE since 2026-09-15. All six public Prices carry currency_options.usd,
-    // `currency_is_priceable('usd')` is true, and /us/pricing renders
-    // $49 / $79 / $119 — so the page Google crawls quotes what a US business is
-    // actually charged. It was noindex until that was true, for exactly this
-    // reason: an indexed snippet outlives the page by weeks.
+    // Indexable: /us/pricing renders the live USD catalog, and an indexed
+    // snippet outlives the page by weeks.
     indexable: true,
   },
 };
@@ -202,10 +199,10 @@ export function marketLink(market: Market, seoPrefix: string, path: string): str
  * Where a visitor's chosen market is remembered between the showcase and the
  * dashboard.
  *
- * **A hint, never a price.** `/us` quotes $49 and a 14-day trial, its CTA opens
+ * **A hint, never a price.** `/us` quotes dollars and a 14-day trial, its CTA opens
  * `/onboarding` on another host, and the country field there is defaulted by a
  * 12-entry timezone table that falls back to `en -> GB`. GB has no USD ladder,
- * so a US visitor could be quoted $49 and then check out at EUR 20. Someone who
+ * so a US visitor could be quoted dollars and then check out in euros. Someone who
  * deliberately opened `/us` has told us more than that heuristic can guess.
  *
  * What it must not do is decide the price. The backend never reads it: billing

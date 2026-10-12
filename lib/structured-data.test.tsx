@@ -144,7 +144,7 @@ describe("pricing page FAQ", () => {
     expect(faq["@type"]).toBe("FAQPage");
     expect(text).not.toMatch(/\{\w+\}/);
     expect(text).toContain(`${MARKETS[market].trialDays}-day free trial`);
-    expect(text).toContain(currency === "usd" ? "$49" : "€20");
+    expect(text).toContain(currency === "usd" ? "$29" : "€20");
   });
 
   it.each(["fr", "en", "es", "pl"])("the %s FAQ does not advertise the closed founding programme", (locale) => {
