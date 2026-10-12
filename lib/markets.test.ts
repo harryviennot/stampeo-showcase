@@ -168,7 +168,7 @@ describe("PILOT_HREFLANG", () => {
 describe("indexablePilotPaths", () => {
   test("lists the landing page and the pricing page of each live pilot", () => {
     // Both are indexable and both quote money, so both belong in the sitemap.
-    // /us/pricing is the one that actually renders $49 / $79 / $119.
+    // /us/pricing is the one that actually renders the USD ladder.
     expect(indexablePilotPaths()).toEqual(["/us", "/us/pricing"]);
   });
 

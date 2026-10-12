@@ -171,9 +171,9 @@ timezone spoof is needed.
 EXPECT:
 - `/us`: "Digital Punch Cards for Apple &amp; Google Wallet | Stampeo", and the
   description "Digital punch cards your customers keep in Apple Wallet and
-  Google Wallet. No app to download. From $49/mo, 14-day free trial."
-- `/us/pricing`: "Digital Punch Card Pricing from $49/mo | Stampeo", with a
-  description that quotes "$49/mo" and a "14-day free trial".
+  Google Wallet. No app to download. From $29/mo, 14-day free trial."
+- `/us/pricing`: "Digital Punch Card Pricing from $29/mo | Stampeo", with a
+  description that quotes "$29/mo" and a "14-day free trial".
 - `/en`: "Digital Loyalty Cards for Apple &amp; Google Wallet | Stampeo".
 - NOT the same title on `/us` and `/en`. NOT "Stampeo" twice. NOT `€`,
   "30-day", or a literal `{starterPrice}` or `{trialDays}`. (`&amp;` is how
@@ -238,8 +238,8 @@ caught last time.
 EXPECT:
 - URL is `/us/pricing`, NOT `/pricing` and NOT `/en/pricing`.
 - Every plan card says "14-day free trial · Cancel anytime".
-- Prices are `$49 / $79 / $119` monthly. Toggle to Yearly: `$39 / $63 / $95`
-  per month, billed `$468 / $756 / $1,140`.
+- Prices are `$29 / $49 / $79` monthly. Toggle to Yearly: `$23 / $39 / $63`
+  per month, billed `$276 / $468 / $756`.
 - There is **no `€` anywhere on the page**, including the ROI calculator.
 
 ### TR-04 The server HTML on /us already says dollars and 14 days — CORE
@@ -258,9 +258,9 @@ amendment at the top.
 
 EXPECT:
 - `/us`: "14 days free · Cancel anytime", plan amounts in dollars (for example
-  $39 / $63 / $95 a month billed yearly, $468 / $756 / $1,140 a year), and
+  $23 / $39 / $63 a month billed yearly, $276 / $468 / $756 a year), and
   "$10 off" in the bookstore demo card.
-- `/us/pricing`: "14-day free trial" and $49 / $79 / $119.
+- `/us/pricing`: "14-day free trial" and $29 / $49 / $79.
 - Step 3: `0` for both.
 - NOT a `€` anywhere in the visible text. NOT "30 days" or "30-day free
   trial". NOT an empty "/mo" slot.
