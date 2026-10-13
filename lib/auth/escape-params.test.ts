@@ -47,7 +47,7 @@ describe("escapeParamsFromCookies", () => {
     expect(params.get("fbclid")).toBe("IwAR3abc");
   });
 
-  test("only tags the ad actually set are carried", () => {
+  test("a visit with only some tags and no click id carries just those tags", () => {
     const params = escapeParamsFromCookies(
       cookieHeaderFor("https://stampeo.app/us?utm_source=instagram&utm_medium=bio"),
     );
@@ -71,11 +71,6 @@ describe("escapeParamsFromCookies", () => {
     expect(params.has("fbclid")).toBe(false);
     expect(params.has("gclid")).toBe(false);
     expect(params.get("utm_source")).toBe("google");
-  });
-
-  test("a visitor with only the source cookie carries the tags and no click id", () => {
-    const params = escapeParamsFromCookies(cookieHeaderFor("https://stampeo.app/us?utm_source=newsletter"));
-    expect(params.toString()).toBe("utm_source=newsletter");
   });
 
   test.each([

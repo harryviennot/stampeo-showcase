@@ -5,7 +5,13 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { attemptBrowserEscape, type EscapeDocument, type EscapeTimers, type EscapeWindow } from "./browser-escape";
+import {
+  attemptBrowserEscape,
+  type EscapeDocument,
+  type EscapeOutcome,
+  type EscapeTimers,
+  type EscapeWindow,
+} from "./browser-escape";
 
 type Listener = () => void;
 
@@ -56,25 +62,40 @@ function fakeTimers() {
   return { timers, advance, pendingCount: () => pending.size };
 }
 
-const URL_TO_OPEN = "x-safari-https://stampeo.app/en/onboarding";
+const URL_TO_OPEN = "x-safari-https://stampeo.app/en/start";
+
+type EscapeInput = Parameters<typeof attemptBrowserEscape>[0];
+
+/** Begins an escape attempt on a fresh clock and the given page (a fresh one by default); `overrides` replace any input. */
+function start(overrides: Partial<EscapeInput> = {}, page = fakePage()) {
+  const clock = fakeTimers();
+  const result = attemptBrowserEscape({
+    url: URL_TO_OPEN,
+    navigate: () => {},
+    doc: page.doc,
+    win: page.win,
+    timers: clock.timers,
+    ...overrides,
+  });
+  /** The outcome so far, or "pending" while the attempt is still waiting. */
+  const outcome = (): Promise<EscapeOutcome | "pending"> => Promise.race([result, "pending" as const]);
+  return { page, clock, result, outcome };
+}
 
 describe("attemptBrowserEscape", () => {
   test("hands the link to the browser, with the page already being watched", async () => {
     const page = fakePage();
-    const clock = fakeTimers();
-    let watchedWhenNavigating = 0;
     const opened: string[] = [];
-
-    const result = attemptBrowserEscape({
-      url: URL_TO_OPEN,
-      navigate: (url) => {
-        opened.push(url);
-        watchedWhenNavigating = page.listenerCount();
+    let watchedWhenNavigating = 0;
+    const { result } = start(
+      {
+        navigate: (url) => {
+          opened.push(url);
+          watchedWhenNavigating = page.listenerCount();
+        },
       },
-      doc: page.doc,
-      win: page.win,
-      timers: clock.timers,
-    });
+      page,
+    );
     page.fire("win", "pagehide");
 
     expect(await result).toBe("left");
@@ -82,44 +103,37 @@ describe("attemptBrowserEscape", () => {
     expect(watchedWhenNavigating).toBeGreaterThan(0);
   });
 
-  test("the page going hidden within the wait means the visitor left", async () => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = attemptBrowserEscape({ url: URL_TO_OPEN, navigate: () => {}, doc: page.doc, win: page.win, timers: clock.timers });
-
-    clock.advance(400);
+  type Page = ReturnType<typeof fakePage>;
+  const goesHidden = (page: Page) => {
     page.doc.visibilityState = "hidden";
     page.fire("doc", "visibilitychange");
+  };
+  const unloads = (page: Page) => page.fire("win", "pagehide");
 
-    expect(await result).toBe("left");
-  });
+  test.each([
+    ["the page going hidden", 400, goesHidden],
+    ["the page being unloaded", 900, unloads],
+  ])("%s within the wait means the visitor left", async (_label, atMs, leave) => {
+    const { page, clock, result } = start();
 
-  test("the page being unloaded within the wait means the visitor left", async () => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = attemptBrowserEscape({ url: URL_TO_OPEN, navigate: () => {}, doc: page.doc, win: page.win, timers: clock.timers });
-
-    clock.advance(900);
-    page.fire("win", "pagehide");
+    clock.advance(atMs);
+    leave(page);
 
     expect(await result).toBe("left");
   });
 
   test("a page still visible when the wait ends means the visitor stayed", async () => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = attemptBrowserEscape({ url: URL_TO_OPEN, navigate: () => {}, doc: page.doc, win: page.win, timers: clock.timers });
+    const { clock, outcome } = start();
 
     clock.advance(1499);
-    clock.advance(1);
+    expect(await outcome()).toBe("pending");
 
-    expect(await result).toBe("stayed");
+    clock.advance(1);
+    expect(await outcome()).toBe("stayed");
   });
 
   test("a visibility change that leaves the page visible is not leaving", async () => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = attemptBrowserEscape({ url: URL_TO_OPEN, navigate: () => {}, doc: page.doc, win: page.win, timers: clock.timers });
+    const { page, clock, result } = start();
 
     page.doc.visibilityState = "visible";
     page.fire("doc", "visibilitychange");
@@ -129,16 +143,7 @@ describe("attemptBrowserEscape", () => {
   });
 
   test("the wait can be set by the caller", async () => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = attemptBrowserEscape({
-      url: URL_TO_OPEN,
-      navigate: () => {},
-      doc: page.doc,
-      win: page.win,
-      timers: clock.timers,
-      timeoutMs: 300,
-    });
+    const { clock, result } = start({ timeoutMs: 300 });
 
     clock.advance(300);
 
@@ -146,30 +151,22 @@ describe("attemptBrowserEscape", () => {
   });
 
   test("a navigation the browser refuses counts as staying", async () => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = await attemptBrowserEscape({
-      url: URL_TO_OPEN,
+    const { result } = start({
       navigate: () => {
         throw new Error("blocked");
       },
-      doc: page.doc,
-      win: page.win,
-      timers: clock.timers,
     });
 
-    expect(result).toBe("stayed");
+    expect(await result).toBe("stayed");
   });
 
-  test.each(["left", "stayed"] as const)("when the answer is %s, no listener or timer is left behind", async (outcome) => {
-    const page = fakePage();
-    const clock = fakeTimers();
-    const result = attemptBrowserEscape({ url: URL_TO_OPEN, navigate: () => {}, doc: page.doc, win: page.win, timers: clock.timers });
+  test.each(["left", "stayed"] as const)("when the answer is %s, no listener or timer is left behind", async (answer) => {
+    const { page, clock, result } = start();
 
-    if (outcome === "left") page.fire("win", "pagehide");
+    if (answer === "left") page.fire("win", "pagehide");
     else clock.advance(1500);
 
-    expect(await result).toBe(outcome);
+    expect(await result).toBe(answer);
     expect(page.listenerCount()).toBe(0);
     expect(clock.pendingCount()).toBe(0);
   });
