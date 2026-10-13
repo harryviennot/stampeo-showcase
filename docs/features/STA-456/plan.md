@@ -4,7 +4,7 @@ ISSUE: STA-456 (https://linear.app/stampeo/issue/STA-456)
 BRANCH: feat/sta-456-in-app-signup (worktree `showcase/.claude/worktrees/sta-456`, cut from `dev` at 3c23ee2)
 REPOS: showcase
 MIGRATION: no
-STATUS: APPROVED (2026-10-13, Harry: hybrid version, with the recommended answers to every open question)
+STATUS: APPROVED (2026-10-13, Harry: hybrid version, with the recommended answers to every open question). REVISED 2026-10-13 after review and QA, approved by Harry: password rules unchanged; the escape lands on a forwarding page `/start`.
 
 ## Problem
 
@@ -54,9 +54,12 @@ are US and about 98% mobile. Device split: iOS 122, Android 41.
 - **Hybrid, not removal.** In-app, Google and Apple stay on the chooser, below email. A tap first tries to reopen the page in the phone's real browser, where the saved Google or Apple login lives. The page can't force that on iOS (Apple allows no reliable way, and Meta blocks the known tricks inconsistently). Android's `intent://` to Chrome works on a tap.
 - **When the switch fails**, the visitor gets a choice: the "Tap ••• → Open in browser" instruction, or continue with Google or Apple right here (today's behaviour). Today's in-app OAuth went 0 for 6 for paid visitors, so we don't send them back into it silently.
 - **Real browsers and `/login` are unchanged.** An owner whose account is Google-only or Apple-only has no password, so changing `/login` in-app could lock them out.
-- **The escape link carries no personal data** (URLs reach analytics). It carries `utm_*` (from `stampeo_src`) and `fbclid` (from `stampeo_ad`). `AttributionCapture` runs from the `[locale]` layout on every page, so Safari records them on its first load.
-- **Password rules:** minimum 8 characters, no character-class rules, on both signup and `/reset-password`. The cloud projects enforce only a 6-character minimum, with no character classes and leaked-password protection off (STA-421 notes), so the client is the stricter side. Existing passwords are untouched; `/login` never checks rules. Code-only signup is a separate issue: `/login` has no code sign-in yet.
-- **Resume storage:** localStorage, so it survives Instagram closing its browser while the visitor is in Mail. It expires 60 min after the code was sent (the code's own lifetime), is cleared on completion, and never holds the password.
+- **The escape link carries no personal data** (URLs reach analytics). It carries `utm_*` (from `stampeo_src`) and `fbclid` (from `stampeo_ad`).
+- **The escape lands on a forwarding page, `/{locale}/start`, not on `/onboarding`.** `/onboarding` is a PRIVATE_SEGMENTS path (`lib/consent-routes.ts`) where no tag and no attribution capture run. `/start` is a marketing path: `AttributionCapture` and the Meta pixel run there exactly as on a landing page. It then replaces itself with `/{locale}/onboarding` (fixed destination, never taken from the URL). It is noindex and stays out of the sitemap.
+- **The Android escape opens the default browser,** not specifically Chrome: `intent://…#Intent;scheme=https;end`, with no `package` and no `browser_fallback_url`. A phone without Chrome uses its own browser. If nothing handles the intent, the page stays visible and the fallback appears, instead of the fallback URL reloading the same in-app page (which would loop back to step 1).
+- **An in-app browser reporting a desktop platform** (rare, e.g. a tablet in desktop mode) skips the escape and goes straight to OAuth: there is no phone browser to hand over to.
+- **Password rules: unchanged.** The dev cloud project enforces lowercase, uppercase, number and symbol on the server: QA got a 422 "Password should contain at least one character of each…". The local `config.toml` and the STA-421 notes were wrong about that. Relaxing the rules would need Supabase changes on dev and prod plus a common-password check (security review, MED), so Harry kept today's rules.
+- **Resume storage:** localStorage, so it survives Instagram closing its browser while the visitor is in Mail. It holds only the email, the code type and the send time (security review, LOW: name/phone stay in the tab-scoped sessionStorage draft). It expires 60 min after the code was sent (the code's own lifetime), is written only when a code was actually sent, is cleared on completion, and never holds the password. A record dated in the future is discarded.
 - **In-app browsers in scope:** the Meta family (Instagram, Facebook, Messenger, Threads). Others are treated as real browsers.
 - **Analytics:** onboarding events carry `in_app_browser`, and two new events measure the escape. That tells us how often the iOS switch actually works.
 - **A real-device check is required before release:** iPhone + Android, inside Instagram and Facebook.
@@ -72,7 +75,6 @@ Built on `ux-brief.md` (ux-designer, MODE: DESIGN), adjusted to the hybrid that 
 - **ADDED: an inline fallback after a failed switch.** It shows one instruction line ("Tap ••• then Open in browser") and a "Continue with {Google|Apple} here" button. Answers "nothing happened" and keeps today's path one tap away (AC5).
 - **ADDED: `autoComplete="email"` / `"new-password"` on the email form.** Removes a step (AC11).
 - **ADDED: `verifyMode` restored together with step, phase and email on resume.** Prevents a wrong-code-type error (AC6).
-- **ADDED: one password rule ("At least 8 characters") instead of a five-line checklist.** Removes a step (AC12).
 - **REJECTED:**
   - an escape banner on step 1 or the landing page (pushes everyone out before email gets a chance);
   - an automatic browser switch on load (blocked on iOS and jarring);
@@ -94,7 +96,7 @@ Built on `ux-brief.md` (ux-designer, MODE: DESIGN), adjusted to the hybrid that 
 - The web dashboard and the scanner app.
 - Linking a visitor's in-app and real-browser PostHog identities.
 - `/login`, and the shared `AuthMethodChooser` behaviour.
-- Code-only (passwordless) signup.
+- Code-only (passwordless) signup, and any change to password rules.
 
 ## Edge cases considered
 
@@ -106,9 +108,11 @@ Built on `ux-brief.md` (ux-designer, MODE: DESIGN), adjusted to the hybrid that 
 - **OAuth return** (`?just_authed=oauth`): unchanged; resume is not read on that path.
 - **Switch succeeds** (page hidden within the wait): nothing more happens in-app. If the visitor comes back to Instagram, the chooser is as they left it.
 - **Switch fails** (page still visible after the wait): the fallback appears. Tapping "Continue with … here" runs today's `signInWithOAuth` with today's stash.
-- **Android without Chrome:** the intent's `browser_fallback_url` is the same https URL, so the visitor stays in-app, the wait expires, and the fallback appears.
+- **Android without Chrome:** the intent names no package, so the phone's default browser opens. If nothing handles it, the page stays visible and the fallback appears.
+- **Meta's "Leave Instagram?" or iOS's "Open in Safari?" prompt held open past 1.5 s, then accepted:** the fallback (and `onboarding_browser_escape_failed`) shows although the switch then succeeds. Accepted: it slightly undercounts escape success in AC10.
+- **Two tabs on one resume record:** after one verifies, the other shows a stale code screen until reload. Accepted.
 - **Meta's in-app browser shows its own "Leave Instagram?" confirm:** the page is still visible, so the fallback may appear under the confirm. That's harmless: both choices still work.
-- **Escape to the real browser:** the visitor lands on step 1 and re-types the name (the draft doesn't cross browsers).
+- **Escape to the real browser:** `/start` forwards to step 1, where the visitor re-types the name (the draft doesn't cross browsers).
 - **Attribution cookies absent** (no consent, direct visit): the escape URL carries no parameters, just the onboarding path.
 - **Unknown or non-Meta in-app browsers** (TikTok, LinkedIn): treated as real browsers (today's behaviour).
 - **Existing account on the email path:** unchanged (sign-in code, `verifyMode = signin`). The resume record keeps `signin` so the code verifies.
@@ -118,15 +122,16 @@ Built on `ux-brief.md` (ux-designer, MODE: DESIGN), adjusted to the hybrid that 
 - **AC1:** Given a user-agent string, when classified, then Instagram (iOS + Android), Facebook (`FBAN`/`FBAV`/`FB_IAB`/`FB4A`), Messenger (`MessengerForiOS`/`Orca`) and Threads (`Barcelona`) return their name. Safari, Chrome (`CriOS` + Android), Samsung Internet, Firefox, desktop browsers, Gmail and LinkedIn/TikTok in-app return null. Parametrized over real UA strings.
 - **AC2:** Given an in-app visitor on step 2, then the chooser shows Email first, then Google, then Apple.
 - **AC3:** Given a real-browser visitor, then step 2 shows today's chooser (Google, Apple, Email) with today's behaviour. And `/login` is unchanged in every browser, in-app included.
-- **AC4:** Given an in-app visitor on Android, when they tap Google or Apple, then the page navigates to `intent://<host>/<locale>/onboarding?<params>#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=<same https url>;end`. On iOS it navigates to `x-safari-https://<host>/<locale>/onboarding?<params>`. `<params>` holds only the `utm_*` and `fbclid` from the attribution cookies, NOT name, phone or email. `signInWithOAuth` is NOT called on that tap.
+- **AC4:** Given an in-app visitor on Android, when they tap Google or Apple, then the page navigates to `intent://<host>/<locale>/start?<params>#Intent;scheme=https;end`. On iOS it navigates to `x-safari-https://<host>/<locale>/start?<params>`. `<params>` holds only the `utm_*` and `fbclid` from the attribution cookies, NOT name, phone or email. `signInWithOAuth` is NOT called on that tap.
 - **AC5:** Given the switch attempt, when the page becomes hidden (`visibilitychange` → hidden, or `pagehide`) within 1500 ms, then nothing else happens. When it stays visible for 1500 ms, the instruction line and a "Continue with {provider} here" button appear. Tapping that button runs today's OAuth (stash + `signInWithOAuth`).
-- **AC6:** Given a visitor on the code screen for email x (sign-up or sign-in code), when the page reloads, or the browser is closed and `/onboarding` reopened within 60 min of the code being sent (or re-sent), then the wizard opens on that code screen for x, with the same `verifyMode` and the name/phone draft. Verify, resend and "use a different email" all work.
-- **AC7:** Given the same visitor more than 60 min after the last send, then the wizard opens on step 1 with the draft, NOT on the code screen, and the expired record is removed.
-- **AC8:** Given any point in the flow, then the password is never written to localStorage, sessionStorage or a URL.
+- **AC6:** Given a visitor on the code screen for email x (sign-up or sign-in code), when the page reloads, or the browser is closed and `/onboarding` reopened within 60 min of the code being sent (or re-sent), then the wizard opens on that code screen for x, with the same `verifyMode`. Verify, resend (a sign-in record resends with `signInWithOtp`) and "use a different email" all work. When a send fails, no record is written.
+- **AC7:** Given the same visitor more than 60 min after the last send (exactly 60:00 still resumes), then the wizard opens on step 1 (with the draft if the tab still has it), NOT on the code screen, and the expired record is removed.
+- **AC8:** Given any point in the flow, then the password is never written to localStorage, sessionStorage or a URL, and the localStorage record holds only the email, the code type and the send time (no name, no phone).
 - **AC9:** Given a successful verify or OAuth completion, then the resume record is removed together with the existing draft.
 - **AC10:** Then `onboarding_wizard_started` and `onboarding_step_completed` carry `in_app_browser` (the classified name or null). An escape tap fires `onboarding_browser_escape_attempted` {provider, platform, in_app_browser}. The fallback appearing fires `onboarding_browser_escape_failed` {provider, platform, in_app_browser}. None of these carry an email.
 - **AC11:** Given the email form in any browser, then the email input has `autoComplete="email"` and the password input `autoComplete="new-password"`.
-- **AC12:** Given the signup form or `/reset-password`, then a password of 8+ characters is accepted whatever its character mix (e.g. `abcdefgh`). 7 characters is refused before any request is made. The visible requirement is the single line "at least 8 characters" in all four locales.
+- **AC12:** RETIRED (2026-10-13). Password rules stay as on `dev`: the checklist and validation in signup and `/reset-password` are unchanged.
+- **AC13:** Given a visitor opening `/{locale}/start?utm_…&fbclid=…` in a real browser, then `stampeo_src` and `stampeo_ad` record those values (consent permitting, as on any landing page), and the page replaces itself with `/{locale}/onboarding` step 1 within about 2 s. Query parameters never change the destination. `/start` is noindex and absent from the sitemap.
 
 ## File layout
 
@@ -134,17 +139,17 @@ Built on `ux-brief.md` (ux-designer, MODE: DESIGN), adjusted to the hybrid that 
 - `lib/auth/browser-escape.ts` (+ test): `attemptBrowserEscape({navigate, doc, win, timeoutMs})` resolves `"left" | "stayed"`. Its document, window and timers are injected so the test drives them.
 - `lib/auth/escape-params.ts` (+ test): `escapeParamsFromCookies(cookieHeader)` gives the `utm_*` from `stampeo_src` and the `fbclid` from `stampeo_ad`, and nothing else.
 - `lib/auth/onboarding-resume.ts` (+ test): read, write and expiry of `{v, step, phase, email, verifyMode, name, phone, sentAt}` in localStorage, with storage and clock injected.
-- `lib/auth/password-rules.ts` (+ test): one `isPasswordAcceptable(pw)` (length ≥ 8) shared by signup and reset-password.
+- `app/[locale]/start/page.tsx`: the forwarding page (noindex; `start` added to `MARKETING_SEGMENTS` in `lib/consent-routes.ts`), with its forwarding decision in a pure lib helper + test.
 - `components/onboarding/steps/InAppAuthChooser.tsx`: the in-app chooser, escape, fallback and its analytics.
-- `components/onboarding/steps/AuthenticationStep.tsx` (554 lines, already over the cap): only the mount switch, the `verifyMode` lift (for resume), the `autoComplete` attributes and the password-rule swap. These must not grow it. Move the password checklist block to a small `PasswordRequirement` sub-component if needed, to stay ≤ 554.
+- `components/onboarding/steps/AuthenticationStep.tsx` (554 lines, already over the cap): only the mount switch, the `verifyMode` lift (for resume) and the `autoComplete` attributes. These must not grow it past 554.
 - `components/onboarding/OnboardingWizard.tsx` (281 lines): initial state from the resume record, writes the record on code send/resend, clears it on completion, adds `in_app_browser` to the two events.
-- `app/[locale]/reset-password/page.tsx`: the password-rule swap only.
 - `components/auth/AuthMethodChooser.tsx`: export `MethodButton`, with no behaviour change.
 - `messages/{en,fr,es,pl}/onboarding.json` + `auth.json`: new strings via the stampeo-copywriting skill. Remove the now-unused checklist keys from all four locales together (catalog parity test).
 
 ## Touched areas and risks
 
-- **Auth:** the change touches the signup and reset-password flows, so the security reviewer is mandatory.
+- **Auth:** the change touches the signup flow, so the security reviewer is mandatory.
+- **Consent routes:** adding `start` to `MARKETING_SEGMENTS` makes tags and the consent banner eligible there, exactly as on a landing page; the consent-route tests must cover it.
 - **Attribution:** the escape URL is the only way Safari can attribute the click. Verify `utm_*`/`fbclid` round-trip into `stampeo_src`/`stampeo_ad` on the first Safari load (runbook case).
 - **Privacy:**
   - The resume record keeps an email and a name/phone on the device for up to 60 min, cleared on completion or expiry.
