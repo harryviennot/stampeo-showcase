@@ -62,6 +62,10 @@ describe("inventory", () => {
     }
   });
 
+  test("the /start forwarding page is not listed", () => {
+    for (const { url } of entries) expect(segmentsOf(url)[0]).not.toBe("start");
+  });
+
   test("no page of a noindex market is listed", () => {
     for (const { url } of entries) {
       const market = marketFromPath(pathOf(url));
