@@ -7,17 +7,11 @@ import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { loginHrefWithEmail } from "@/lib/auth/login-link";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
-import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
-import { useInAppBrowser } from "@/hooks/useInAppBrowser";
-import { InAppAuthChooser } from "./InAppAuthChooser";
+import type { VerifyMode } from "@/lib/auth/onboarding-resume";
+import { resendCode, sendCodeToExistingUser } from "@/lib/auth/send-code";
+import { OnboardingMethodChooser } from "./OnboardingMethodChooser";
 
 export type AuthPhase = "choose" | "form" | "verify";
-
-/** "signup" = verify the signup-confirmation OTP for a brand-new account.
- *  "signin" = verify the magic-link OTP we sent to log in an EXISTING account
- *  (wrong password, OAuth-only, unconfirmed email — all routed here so we
- *  never block the user with an error). */
-export type VerifyMode = "signup" | "signin";
 
 interface AuthenticationStepProps {
   name: string;
@@ -28,9 +22,8 @@ interface AuthenticationStepProps {
   onPhaseChange: (phase: AuthPhase) => void;
   onBack: () => void;
   onCompleted: (opts?: { isExistingUser?: boolean }) => void;
-  /** A sign-up or sign-in code was just sent (or re-sent) to `email`. */
+  /** A code was just sent (or re-sent) to `email`. */
   onCodeSent: (sent: { email: string; verifyMode: VerifyMode }) => void;
-  /** The code type to verify when the wizard reopens straight on the code screen. */
   initialVerifyMode?: VerifyMode;
   /** sessionStorage key where {name, phone} is stashed before OAuth redirect. */
   oauthStashKey: string;
@@ -54,7 +47,6 @@ export function AuthenticationStep({
   const tc = useTranslations("common.buttons");
   const { signUp, signIn, verifyOtp, resendOtp, signInWithOtp } = useAuth();
   const locale = useLocale();
-  const inAppBrowser = useInAppBrowser();
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -123,18 +115,9 @@ export function AuthenticationStep({
   // dashboard after entering the code. We never surface an "account exists"
   // error: registering an existing email always resolves to a logged-in state.
   const routeExistingUserToOtp = useCallback(async () => {
-    let mode: VerifyMode = "signin";
-    setVerifyMode(mode);
-    const { error: otpError } = await signInWithOtp(email);
-    if (otpError) {
-      // signInWithOtp can fail for unconfirmed emails (`shouldCreateUser:false`
-      // requires a confirmed user on some Supabase configs). Fall back to the
-      // signup-confirmation OTP, which works for unconfirmed accounts.
-      mode = "signup";
-      setVerifyMode(mode);
-      await resendOtp(email);
-    }
-    onCodeSent({ email, verifyMode: mode });
+    const sentMode = await sendCodeToExistingUser({ signInWithOtp, resendOtp }, email);
+    setVerifyMode(sentMode ?? "signup");
+    if (sentMode) onCodeSent({ email, verifyMode: sentMode });
     setResendCooldown(60);
     onPhaseChange("verify");
     setLoading(false);
@@ -245,11 +228,7 @@ export function AuthenticationStep({
   const handleResend = useCallback(async () => {
     if (resendCooldown > 0) return;
 
-    const { error } =
-      verifyMode === "signin"
-        ? await signInWithOtp(email)
-        : await resendOtp(email);
-    if (!error) {
+    if (await resendCode({ signInWithOtp, resendOtp }, email, verifyMode)) {
       onCodeSent({ email, verifyMode });
       setResendCooldown(60);
       setCodeSentMessage(true);
@@ -370,15 +349,6 @@ export function AuthenticationStep({
   }
 
   if (phase === "choose") {
-    const chooserProps = {
-      returnTo: `/${locale}/onboarding?just_authed=oauth`,
-      onChooseEmail: () => {
-        onPhaseChange("form");
-        setError(null);
-      },
-      onBeforeOAuth: stashForOAuth,
-      onError: (message: string) => setError(message),
-    };
     return (
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
@@ -396,11 +366,15 @@ export function AuthenticationStep({
           </div>
         )}
 
-        {inAppBrowser ? (
-          <InAppAuthChooser inAppBrowser={inAppBrowser} {...chooserProps} />
-        ) : (
-          <AuthMethodChooser namespace="onboarding.createAccount" {...chooserProps} />
-        )}
+        <OnboardingMethodChooser
+          returnTo={`/${locale}/onboarding?just_authed=oauth`}
+          onChooseEmail={() => {
+            onPhaseChange("form");
+            setError(null);
+          }}
+          onBeforeOAuth={stashForOAuth}
+          onError={(message) => setError(message)}
+        />
 
         <div className="flex pt-5">
           <button
