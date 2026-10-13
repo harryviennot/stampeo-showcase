@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Suspense, useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -19,7 +19,9 @@ import {
   type VerifyFailureReason,
   type VerifyState,
 } from "@/lib/auth/reset-page-state";
-import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
+import { isPasswordAcceptable } from "@/lib/auth/password-rules";
+import { PasswordRequirement } from "@/components/auth/PasswordRequirement";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 
 const ERROR_BOX_CLASS =
   "p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 dark:bg-red-950/50 dark:border-red-900/50 dark:text-red-400";
@@ -62,15 +64,7 @@ function ResetPasswordContent() {
 
   const view = resetPageView({ hasToken: Boolean(tokenHash), verify, saved });
 
-  const passwordChecks = useMemo(() => ({
-    lowercase: /[a-z]/.test(newPassword),
-    uppercase: /[A-Z]/.test(newPassword),
-    number: /[0-9]/.test(newPassword),
-    symbol: /[^a-zA-Z0-9]/.test(newPassword),
-    minLength: newPassword.length >= 6,
-  }), [newPassword]);
-
-  const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
+  const isPasswordStrong = isPasswordAcceptable(newPassword);
   const passwordsMatch = newPassword === confirmPassword;
 
   const translateError = useCallback((message: string) => {
@@ -143,14 +137,6 @@ function ResetPasswordContent() {
     },
     [recovery, newPassword, isPasswordStrong, passwordsMatch, t, signIn, translateError]
   );
-
-  const checkLabels = [
-    ["lowercase", t("lowercase")],
-    ["uppercase", t("uppercase")],
-    ["number", t("number")],
-    ["symbol", t("symbol")],
-    ["minLength", t("minLength")],
-  ] as const;
 
   const failureText: Record<VerifyFailureReason, string> = {
     linkExpired: t("linkExpired"),
@@ -258,23 +244,7 @@ function ResetPasswordContent() {
                     {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
-                {newPassword.length > 0 && (
-                  <ul className="grid grid-cols-2 gap-x-4 gap-y-0.5 mt-1">
-                    {checkLabels.map(([key, label]) => (
-                      <li
-                        key={key}
-                        className={`flex items-center gap-1.5 text-xs transition-colors ${
-                          passwordChecks[key]
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-[var(--muted-foreground)]"
-                        }`}
-                      >
-                        <Check size={12} weight={passwordChecks[key] ? "bold" : "regular"} />
-                        {label}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <PasswordRequirement password={newPassword} label={t("passwordRequirement")} />
                 {refusal.length > 0 && (
                   <div id={REFUSAL_ID} role="alert" className="space-y-1">
                     {refusal.map((key) => (
