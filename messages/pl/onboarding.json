@@ -118,6 +118,8 @@
       "continueGoogleShort": "Google",
       "continueAppleShort": "Apple",
       "continueEmailShort": "E-mail",
+      "continueHere": "Kontynuuj z {provider} tutaj",
+      "escapeHint": "Nic się nie otworzyło? Naciśnij ••• i wybierz „Otwórz w przeglądarce”.",
       "chooseDifferentMethod": "Wybierz inny sposób",
       "emailTitle": "Załóż konto na e-mail",
       "emailSubtitle": "Twój e-mail i mocne hasło.",
@@ -125,13 +127,7 @@
       "emailPlaceholder": "ty@przyklad.pl",
       "password": "Hasło",
       "passwordPlaceholder": "Ustaw mocne hasło",
-      "passwordRequirements": {
-        "lowercase": "Mała litera (a-z)",
-        "uppercase": "Wielka litera (A-Z)",
-        "number": "Cyfra (0-9)",
-        "symbol": "Symbol (!@#$...)",
-        "minLength": "Co najmniej 6 znaków"
-      },
+      "passwordRequirement": "Co najmniej 8 znaków",
       "continue": "Dalej",
       "submitting": "Chwileczkę...",
       "verifyTitle": "Sprawdź swoją skrzynkę",

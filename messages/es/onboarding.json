@@ -118,6 +118,8 @@
       "continueGoogleShort": "Google",
       "continueAppleShort": "Apple",
       "continueEmailShort": "Correo",
+      "continueHere": "Continuar con {provider} aquí",
+      "escapeHint": "¿No se ha abierto nada? Pulsa ••• y luego «Abrir en el navegador».",
       "chooseDifferentMethod": "Elegir otro método",
       "emailTitle": "Crea tu cuenta con correo electrónico",
       "emailSubtitle": "Tu correo electrónico y una contraseña segura.",
@@ -125,13 +127,7 @@
       "emailPlaceholder": "tu@ejemplo.com",
       "password": "Contraseña",
       "passwordPlaceholder": "Crea una contraseña segura",
-      "passwordRequirements": {
-        "lowercase": "Letra minúscula (a-z)",
-        "uppercase": "Letra mayúscula (A-Z)",
-        "number": "Número (0-9)",
-        "symbol": "Símbolo (!@#$...)",
-        "minLength": "Al menos 6 caracteres"
-      },
+      "passwordRequirement": "Al menos 8 caracteres",
       "continue": "Continuar",
       "submitting": "Un momento...",
       "verifyTitle": "Revisa tu correo electrónico",

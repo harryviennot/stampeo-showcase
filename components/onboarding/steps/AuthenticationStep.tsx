@@ -2,12 +2,16 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { loginHrefWithEmail } from "@/lib/auth/login-link";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
 import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
+import { PasswordRequirement } from "@/components/auth/PasswordRequirement";
+import { useInAppBrowser } from "@/hooks/useInAppBrowser";
+import { MIN_PASSWORD_LENGTH, isPasswordAcceptable } from "@/lib/auth/password-rules";
+import { InAppAuthChooser } from "./InAppAuthChooser";
 
 export type AuthPhase = "choose" | "form" | "verify";
 
@@ -15,7 +19,7 @@ export type AuthPhase = "choose" | "form" | "verify";
  *  "signin" = verify the magic-link OTP we sent to log in an EXISTING account
  *  (wrong password, OAuth-only, unconfirmed email — all routed here so we
  *  never block the user with an error). */
-type VerifyMode = "signup" | "signin";
+export type VerifyMode = "signup" | "signin";
 
 interface AuthenticationStepProps {
   name: string;
@@ -26,6 +30,10 @@ interface AuthenticationStepProps {
   onPhaseChange: (phase: AuthPhase) => void;
   onBack: () => void;
   onCompleted: (opts?: { isExistingUser?: boolean }) => void;
+  /** A sign-up or sign-in code was just sent (or re-sent) to `email`. */
+  onCodeSent: (sent: { email: string; verifyMode: VerifyMode }) => void;
+  /** The code type to verify when the wizard reopens straight on the code screen. */
+  initialVerifyMode?: VerifyMode;
   /** sessionStorage key where {name, phone} is stashed before OAuth redirect. */
   oauthStashKey: string;
 }
@@ -39,6 +47,8 @@ export function AuthenticationStep({
   onPhaseChange,
   onBack,
   onCompleted,
+  onCodeSent,
+  initialVerifyMode = "signup",
   oauthStashKey,
 }: AuthenticationStepProps) {
   const t = useTranslations("onboarding.createAccount");
@@ -46,6 +56,7 @@ export function AuthenticationStep({
   const tc = useTranslations("common.buttons");
   const { signUp, signIn, verifyOtp, resendOtp, signInWithOtp } = useAuth();
   const locale = useLocale();
+  const inAppBrowser = useInAppBrowser();
 
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -54,23 +65,11 @@ export function AuthenticationStep({
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
-  const [verifyMode, setVerifyMode] = useState<VerifyMode>("signup");
+  const [verifyMode, setVerifyMode] = useState<VerifyMode>(initialVerifyMode);
   const otpInputRef = useRef<HTMLInputElement>(null);
 
-  const passwordChecks = useMemo(
-    () => ({
-      lowercase: /[a-z]/.test(password),
-      uppercase: /[A-Z]/.test(password),
-      number: /[0-9]/.test(password),
-      symbol: /[^a-zA-Z0-9]/.test(password),
-      minLength: password.length >= 6,
-    }),
-    [password]
-  );
-
-  const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
   const isFormValid =
-    email.includes("@") && email.includes(".") && isPasswordStrong;
+    email.includes("@") && email.includes(".") && isPasswordAcceptable(password);
   const isOtpValid = otpCode.length === 6;
 
   useEffect(() => {
@@ -114,19 +113,22 @@ export function AuthenticationStep({
   // dashboard after entering the code. We never surface an "account exists"
   // error: registering an existing email always resolves to a logged-in state.
   const routeExistingUserToOtp = useCallback(async () => {
-    setVerifyMode("signin");
+    let mode: VerifyMode = "signin";
+    setVerifyMode(mode);
     const { error: otpError } = await signInWithOtp(email);
     if (otpError) {
       // signInWithOtp can fail for unconfirmed emails (`shouldCreateUser:false`
       // requires a confirmed user on some Supabase configs). Fall back to the
       // signup-confirmation OTP, which works for unconfirmed accounts.
-      setVerifyMode("signup");
+      mode = "signup";
+      setVerifyMode(mode);
       await resendOtp(email);
     }
+    onCodeSent({ email, verifyMode: mode });
     setResendCooldown(60);
     onPhaseChange("verify");
     setLoading(false);
-  }, [email, signInWithOtp, resendOtp, onPhaseChange]);
+  }, [email, signInWithOtp, resendOtp, onPhaseChange, onCodeSent]);
 
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -177,6 +179,7 @@ export function AuthenticationStep({
 
         // Fresh signup — go to the confirmation OTP.
         setVerifyMode("signup");
+        onCodeSent({ email, verifyMode: "signup" });
         setResendCooldown(60);
         onPhaseChange("verify");
         setLoading(false);
@@ -196,6 +199,7 @@ export function AuthenticationStep({
       signIn,
       onCompleted,
       onPhaseChange,
+      onCodeSent,
       routeExistingUserToOtp,
     ]
   );
@@ -236,11 +240,12 @@ export function AuthenticationStep({
         ? await signInWithOtp(email)
         : await resendOtp(email);
     if (!error) {
+      onCodeSent({ email, verifyMode });
       setResendCooldown(60);
       setCodeSentMessage(true);
       setTimeout(() => setCodeSentMessage(false), 3000);
     }
-  }, [resendCooldown, resendOtp, signInWithOtp, verifyMode, email]);
+  }, [resendCooldown, resendOtp, signInWithOtp, verifyMode, email, onCodeSent]);
 
   const handleChangeEmail = useCallback(() => {
     onPhaseChange("form");
@@ -355,6 +360,15 @@ export function AuthenticationStep({
   }
 
   if (phase === "choose") {
+    const chooserProps = {
+      returnTo: `/${locale}/onboarding?just_authed=oauth`,
+      onChooseEmail: () => {
+        onPhaseChange("form");
+        setError(null);
+      },
+      onBeforeOAuth: stashForOAuth,
+      onError: (message: string) => setError(message),
+    };
     return (
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
@@ -372,16 +386,11 @@ export function AuthenticationStep({
           </div>
         )}
 
-        <AuthMethodChooser
-          namespace="onboarding.createAccount"
-          returnTo={`/${locale}/onboarding?just_authed=oauth`}
-          onChooseEmail={() => {
-            onPhaseChange("form");
-            setError(null);
-          }}
-          onBeforeOAuth={stashForOAuth}
-          onError={(message) => setError(message)}
-        />
+        {inAppBrowser ? (
+          <InAppAuthChooser inAppBrowser={inAppBrowser} {...chooserProps} />
+        ) : (
+          <AuthMethodChooser namespace="onboarding.createAccount" {...chooserProps} />
+        )}
 
         <div className="flex pt-5">
           <button
@@ -439,6 +448,7 @@ export function AuthenticationStep({
           <input
             id="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
             required
@@ -478,10 +488,11 @@ export function AuthenticationStep({
             <input
               id="password"
               type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={MIN_PASSWORD_LENGTH}
               className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
               placeholder={t("passwordPlaceholder")}
             />
@@ -494,23 +505,7 @@ export function AuthenticationStep({
               {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          {password.length > 0 && (
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
-              {(["lowercase", "uppercase", "number", "symbol", "minLength"] as const).map((key) => (
-                <li
-                  key={key}
-                  className={`flex items-center gap-1.5 text-xs transition-colors ${
-                    passwordChecks[key]
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-[var(--muted-foreground)]"
-                  }`}
-                >
-                  <Check size={12} weight={passwordChecks[key] ? "bold" : "regular"} />
-                  {t(`passwordRequirements.${key}`)}
-                </li>
-              ))}
-            </ul>
-          )}
+          <PasswordRequirement password={password} label={t("passwordRequirement")} />
         </div>
 
         <div className="flex gap-3">
