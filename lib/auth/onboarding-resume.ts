@@ -1,8 +1,9 @@
 /**
- * The record that reopens the sign-up code screen after a reload or a trip to
- * the mail app. It lives in localStorage for as long as the code does, holds the
- * email and the step-1 details, and never a password. Storage and clock are
- * injected, and every storage call tolerates a browser that refuses it.
+ * The record that reopens the code screen after a reload or a trip to the mail
+ * app. It lives in localStorage for as long as the code does and holds the
+ * email, the code type and the send time: no name, phone or password. Storage
+ * and clock are injected, and every storage call tolerates a browser that
+ * refuses it.
  */
 
 export const RESUME_STORAGE_KEY = "stampeo_onboarding_resume_v1";
@@ -10,22 +11,23 @@ export const RESUME_STORAGE_KEY = "stampeo_onboarding_resume_v1";
 /** A sign-up code lives an hour, so the record does too. */
 export const RESUME_TTL_MS = 60 * 60 * 1000;
 
-export type ResumeVerifyMode = "signup" | "signin";
+/** "signup" verifies the sign-up confirmation code of a new account; "signin"
+ *  verifies the sign-in code sent to an EXISTING account (wrong password,
+ *  OAuth-only, unconfirmed email), so nobody is ever shown an "account exists" error. */
+export type VerifyMode = "signup" | "signin";
 
 export interface ResumeRecord {
   v: 1;
   step: 2;
   phase: "verify";
   email: string;
-  verifyMode: ResumeVerifyMode;
-  name: string;
-  phone: string;
+  verifyMode: VerifyMode;
   /** Epoch milliseconds when the code was last sent. */
   sentAt: number;
 }
 
 /** What the caller supplies; the version, step and phase are fixed. */
-export type ResumeInput = Pick<ResumeRecord, "email" | "verifyMode" | "name" | "phone" | "sentAt">;
+export type ResumeInput = Pick<ResumeRecord, "email" | "verifyMode" | "sentAt">;
 
 export interface ResumeStorage {
   getItem(key: string): string | null;
@@ -51,8 +53,6 @@ export function writeResume(storage: ResumeStorage | null, input: ResumeInput): 
     phase: "verify",
     email: input.email,
     verifyMode: input.verifyMode,
-    name: input.name,
-    phone: input.phone,
     sentAt: input.sentAt,
   };
   try {
@@ -108,12 +108,10 @@ function parseRecord(raw: string): ResumeRecord | null {
     (verifyMode !== "signup" && verifyMode !== "signin") ||
     typeof r.email !== "string" ||
     r.email === "" ||
-    typeof r.name !== "string" ||
-    typeof r.phone !== "string" ||
     typeof r.sentAt !== "number" ||
     !Number.isFinite(r.sentAt)
   ) {
     return null;
   }
-  return { v: 1, step: 2, phase: "verify", email: r.email, verifyMode, name: r.name, phone: r.phone, sentAt: r.sentAt };
+  return { v: 1, step: 2, phase: "verify", email: r.email, verifyMode, sentAt: r.sentAt };
 }

@@ -1,14 +1,13 @@
 /**
  * A visitor who fetches the sign-up code from their mail app comes back to a
  * page that may have been reloaded or closed. The wizard reopens on the code
- * screen for up to an hour, and the record that makes that possible never holds
- * a password.
+ * screen for up to an hour, and the record that makes that possible holds the
+ * email, the code type and the send time, and nothing else.
  */
 
 import { describe, expect, test } from "bun:test";
 import {
   RESUME_STORAGE_KEY,
-  RESUME_TTL_MS,
   clearResume,
   readResume,
   writeResume,
@@ -44,12 +43,10 @@ const blockedStorage: ResumeStorage = {
 const CODE_SCREEN = {
   email: "ines@example.com",
   verifyMode: "signup" as const,
-  name: "Inès Martin",
-  phone: "+33612345678",
 };
 
 describe("a visitor returning to the code screen", () => {
-  test("59 minutes after the code was sent, the code screen reopens with everything they typed", () => {
+  test("59 minutes after the code was sent, the code screen reopens for the same email", () => {
     const storage = memoryStorage();
     writeResume(storage, { ...CODE_SCREEN, sentAt: NOW });
 
@@ -59,22 +56,17 @@ describe("a visitor returning to the code screen", () => {
       phase: "verify",
       email: "ines@example.com",
       verifyMode: "signup",
-      name: "Inès Martin",
-      phone: "+33612345678",
       sentAt: NOW,
     });
   });
 
-  test("61 minutes after, the code is dead: they start over, and the stale record is removed", () => {
+  test("exactly 60:00 after the send still resumes; one millisecond later the code is dead and the record is removed", () => {
     const storage = memoryStorage();
     writeResume(storage, { ...CODE_SCREEN, sentAt: NOW });
 
-    expect(readResume(storage, NOW + 61 * MIN)).toBeNull();
+    expect(readResume(storage, NOW + 60 * MIN)?.email).toBe("ines@example.com");
+    expect(readResume(storage, NOW + 60 * MIN + 1)).toBeNull();
     expect(storage.data.has(RESUME_STORAGE_KEY)).toBe(false);
-  });
-
-  test("the lifetime is the sign-up code's own, one hour", () => {
-    expect(RESUME_TTL_MS).toBe(60 * MIN);
   });
 
   test("an existing account's sign-in code reopens as a sign-in code", () => {
@@ -108,16 +100,16 @@ describe("a visitor returning to the code screen", () => {
 });
 
 describe("the stored record", () => {
-  test("never holds a password, even when one is handed in", () => {
+  test("holds only the email, the code type and the send time, even when more is handed in", () => {
     const storage = memoryStorage();
-    const withPassword = { ...CODE_SCREEN, sentAt: NOW, password: "hunter2hunter2", newPassword: "x" };
+    const extras = { password: "hunter2hunter2", name: "Inès Martin", phone: "+33612345678" };
 
-    writeResume(storage, withPassword as never);
+    writeResume(storage, { ...CODE_SCREEN, sentAt: NOW, ...extras } as never);
 
     const stored = storage.data.get(RESUME_STORAGE_KEY) ?? "";
-    expect(stored).not.toContain("hunter2");
+    for (const secret of ["hunter2", "Inès", "+33612345678"]) expect(stored).not.toContain(secret);
     expect(Object.keys(JSON.parse(stored)).sort()).toEqual(
-      ["email", "name", "phase", "phone", "sentAt", "step", "v", "verifyMode"],
+      ["email", "phase", "sentAt", "step", "v", "verifyMode"],
     );
   });
 });
@@ -135,7 +127,6 @@ describe("a damaged or unusable record", () => {
     ["an unknown code type", JSON.stringify({ ...valid, verifyMode: "magic" })],
     ["no email", JSON.stringify({ ...valid, email: "" })],
     ["an email that is not text", JSON.stringify({ ...valid, email: 12 })],
-    ["a name that is not text", JSON.stringify({ ...valid, name: null })],
     ["no send time", JSON.stringify({ ...valid, sentAt: undefined })],
     ["a send time in the future", JSON.stringify({ ...valid, sentAt: NOW + 10 * MIN })],
   ])("%s is ignored and removed", (_label, raw) => {
