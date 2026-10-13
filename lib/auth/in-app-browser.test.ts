@@ -37,6 +37,11 @@ describe("classifyInAppBrowser", () => {
       `${ANDROID_WV} [FBAN/FB4A;FBAV/390.0.0.10.119;FBBV/353000000;FBDM/{density=2.75,width=1080,height=2220};FBLC/en_US]`,
       "facebook",
     ],
+    // One marker each, so the classifier's four Facebook alternatives are each pinned on their own.
+    ["Facebook with only the FBAN marker", `${IOS} Mobile/21F90 [FBAN/FBIOS;]`, "facebook"],
+    ["Facebook with only the FBAV marker", `${ANDROID_WV} [FBAV/466.0.0.46.108;]`, "facebook"],
+    ["Facebook with only the FB_IAB marker", `${ANDROID_WV} [FB_IAB/Unknown;]`, "facebook"],
+    ["Facebook with only the FB4A marker", `${ANDROID_WV} [FB4A;]`, "facebook"],
     [
       "Messenger on iPhone",
       `${IOS} Mobile/21E219 [FBAN/MessengerForiOS;FBAV/460.0.0.45.113;FBBV/580000000;FBDV/iPhone13,2;FBMD/iPhone;FBSN/iOS;FBSV/17.4;FBSS/3;FBID/phone;FBLC/en_US;FBOP/5]`,
