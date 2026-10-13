@@ -2,15 +2,13 @@
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { Eye, EyeSlash, Check } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { loginHrefWithEmail } from "@/lib/auth/login-link";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
 import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
-import { PasswordRequirement } from "@/components/auth/PasswordRequirement";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
-import { MIN_PASSWORD_LENGTH, isPasswordAcceptable } from "@/lib/auth/password-rules";
 import { InAppAuthChooser } from "./InAppAuthChooser";
 
 export type AuthPhase = "choose" | "form" | "verify";
@@ -68,8 +66,20 @@ export function AuthenticationStep({
   const [verifyMode, setVerifyMode] = useState<VerifyMode>(initialVerifyMode);
   const otpInputRef = useRef<HTMLInputElement>(null);
 
+  const passwordChecks = useMemo(
+    () => ({
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password),
+      symbol: /[^a-zA-Z0-9]/.test(password),
+      minLength: password.length >= 6,
+    }),
+    [password]
+  );
+
+  const isPasswordStrong = Object.values(passwordChecks).every(Boolean);
   const isFormValid =
-    email.includes("@") && email.includes(".") && isPasswordAcceptable(password);
+    email.includes("@") && email.includes(".") && isPasswordStrong;
   const isOtpValid = otpCode.length === 6;
 
   useEffect(() => {
@@ -489,11 +499,10 @@ export function AuthenticationStep({
               id="password"
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
-              aria-describedby="password-requirement"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={MIN_PASSWORD_LENGTH}
+              minLength={6}
               className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-[var(--accent)]/50 focus:border-[var(--accent)] outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
               placeholder={t("passwordPlaceholder")}
             />
@@ -506,7 +515,23 @@ export function AuthenticationStep({
               {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          <PasswordRequirement id="password-requirement" password={password} label={t("passwordRequirement")} />
+          {password.length > 0 && (
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
+              {(["lowercase", "uppercase", "number", "symbol", "minLength"] as const).map((key) => (
+                <li
+                  key={key}
+                  className={`flex items-center gap-1.5 text-xs transition-colors ${
+                    passwordChecks[key]
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-[var(--muted-foreground)]"
+                  }`}
+                >
+                  <Check size={12} weight={passwordChecks[key] ? "bold" : "regular"} />
+                  {t(`passwordRequirements.${key}`)}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="flex gap-3">

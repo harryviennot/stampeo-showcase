@@ -127,7 +127,13 @@
       "emailPlaceholder": "ty@przyklad.pl",
       "password": "Hasło",
       "passwordPlaceholder": "Ustaw mocne hasło",
-      "passwordRequirement": "Co najmniej 8 znaków",
+      "passwordRequirements": {
+        "lowercase": "Mała litera (a-z)",
+        "uppercase": "Wielka litera (A-Z)",
+        "number": "Cyfra (0-9)",
+        "symbol": "Symbol (!@#$...)",
+        "minLength": "Co najmniej 6 znaków"
+      },
       "continue": "Dalej",
       "submitting": "Chwileczkę...",
       "verifyTitle": "Sprawdź swoją skrzynkę",

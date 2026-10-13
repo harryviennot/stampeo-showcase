@@ -127,7 +127,13 @@
       "emailPlaceholder": "you@example.com",
       "password": "Password",
       "passwordPlaceholder": "Create a strong password",
-      "passwordRequirement": "At least 8 characters",
+      "passwordRequirements": {
+        "lowercase": "Lowercase letter (a-z)",
+        "uppercase": "Uppercase letter (A-Z)",
+        "number": "Number (0-9)",
+        "symbol": "Symbol (!@#$...)",
+        "minLength": "At least 6 characters"
+      },
       "continue": "Continue",
       "submitting": "Please wait...",
       "verifyTitle": "Check your email",

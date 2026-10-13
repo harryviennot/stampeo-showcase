@@ -127,7 +127,13 @@
       "emailPlaceholder": "vous@exemple.com",
       "password": "Mot de passe",
       "passwordPlaceholder": "Créez un mot de passe sécurisé",
-      "passwordRequirement": "Au moins 8 caractères",
+      "passwordRequirements": {
+        "lowercase": "Lettre minuscule (a-z)",
+        "uppercase": "Lettre majuscule (A-Z)",
+        "number": "Chiffre (0-9)",
+        "symbol": "Symbole (!@#$...)",
+        "minLength": "Au moins 6 caractères"
+      },
       "continue": "Continuer",
       "submitting": "Un instant...",
       "verifyTitle": "Vérifiez votre email",

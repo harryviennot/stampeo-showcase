@@ -127,7 +127,13 @@
       "emailPlaceholder": "tu@ejemplo.com",
       "password": "Contraseña",
       "passwordPlaceholder": "Crea una contraseña segura",
-      "passwordRequirement": "Al menos 8 caracteres",
+      "passwordRequirements": {
+        "lowercase": "Letra minúscula (a-z)",
+        "uppercase": "Letra mayúscula (A-Z)",
+        "number": "Número (0-9)",
+        "symbol": "Símbolo (!@#$...)",
+        "minLength": "Al menos 6 caracteres"
+      },
       "continue": "Continuar",
       "submitting": "Un momento...",
       "verifyTitle": "Revisa tu correo electrónico",
