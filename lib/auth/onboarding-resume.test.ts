@@ -136,7 +136,7 @@ describe("a damaged or unusable record", () => {
     expect(storage.data.has(RESUME_STORAGE_KEY)).toBe(false);
   });
 
-  test("storage that refuses every call (private mode) leaves the flow as it is today", () => {
+  test("storage that refuses every call (private mode) still lets the visitor sign up, without resume", () => {
     expect(readResume(blockedStorage, NOW)).toBeNull();
     expect(() => writeResume(blockedStorage, { ...CODE_SCREEN, sentAt: NOW })).not.toThrow();
     expect(() => clearResume(blockedStorage)).not.toThrow();
