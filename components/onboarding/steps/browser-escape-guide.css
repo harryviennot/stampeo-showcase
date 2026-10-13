@@ -1,0 +1,17 @@
+/* The guide's arrow nudges toward the app's ••• button; people who ask for less motion get it still. */
+@media (prefers-reduced-motion: no-preference) {
+  .browser-escape-arrow {
+    animation: browser-escape-arrow-nudge 1.4s ease-in-out infinite;
+  }
+}
+
+@keyframes browser-escape-arrow-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
