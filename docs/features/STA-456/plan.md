@@ -144,7 +144,7 @@ Built on `ux-brief.md` (ux-designer, MODE: DESIGN), adjusted to the hybrid that 
 - `components/onboarding/steps/AuthenticationStep.tsx` (554 lines, already over the cap): only the mount switch, the `verifyMode` lift (for resume) and the `autoComplete` attributes. These must not grow it past 554.
 - `components/onboarding/OnboardingWizard.tsx` (281 lines): initial state from the resume record, writes the record on code send/resend, clears it on completion, adds `in_app_browser` to the two events.
 - `components/auth/AuthMethodChooser.tsx`: export `MethodButton`, with no behaviour change.
-- `messages/{en,fr,es,pl}/onboarding.json` + `auth.json`: new strings via the stampeo-copywriting skill. Remove the now-unused checklist keys from all four locales together (catalog parity test).
+- `messages/{en,fr,es,pl}/onboarding.json`: the escape strings (`continueHere`, `escapeHint`) via the stampeo-copywriting skill; the password checklist keys stay as on `dev`. `/start` needs a short "one moment" line if it shows any text.
 
 ## Touched areas and risks
 
