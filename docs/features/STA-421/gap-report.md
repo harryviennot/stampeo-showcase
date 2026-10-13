@@ -1,0 +1,62 @@
+# Gap Report: STA-421 (batch STA-418 / STA-420 / STA-421 / STA-425)
+AUDITED: 2026-10-11  DIFF: `scratchpad/batch-code.diff` + `scratchpad/batch-tests.diff` (showcase worktree `reset-batch`, branch `fix/sta-418-420-421-425-reset-hardening`, uncommitted)
+VERDICT: DRIFT FOUND (gaps found too)
+
+Note: the showcase has no DOM runner, so all wiring in `page.tsx`, `AuthenticationStep.tsx`, `auth-provider.tsx` and `instrumentation-client.ts` is untested. The items below list it anyway. Closest coverage is named where it exists.
+
+## Criteria without tests
+- AC1: the address-bar strip (`app/[locale]/reset-password/page.tsx:96-103`) and "the link still verifies". That depends on the token being read into memory at `page.tsx:56` before the deferred `replaceState`. No test found. Closest: `addressWithoutRecoveryParams` table (`lib/auth/reset-page-state.test.ts:61-71`), which tests the URL maths only. Manual check: RP-04.
+- AC2: the `before_send: scrubPostHogEvent` wiring (`instrumentation-client.ts:10`) has no test. If that line were deleted, every test would still pass. Closest: the `scrubPostHogEvent` tests.
+- AC3: the `beforeSend` / `beforeSendTransaction` wiring (`instrumentation-client.ts:23-24`) has no test. Closest: the `scrubSentryEvent` tests.
+- AC4 ("when **any** showcase page loads"): no test found, and the diff doesn't do this. The cleanup is called from `AuthProvider` (`lib/supabase/auth-provider.tsx:95-111`), which only the `login`, `reset-password` and `onboarding` layouts mount (`app/[locale]/{login,reset-password,onboarding}/layout.tsx`). The landing, pricing and blog pages never run it. Closest: the `clearLegacyRecoverySession` tests. RP-05 only loads `/en/login`.
+- AC7 ("any other error → today's generic message, and NOT the raw Supabase text"): the page branch at `page.tsx:124-127` has no test. That branch sends empty refusal keys to `translateError` in the top red box, and `translateError` is defined inline in the page and untested. Closest: the `passwordRefusalKeys` cases that return `[]`.
+- AC9: no test found. The `notYourAddress` hint renders only inside `view.email &&` (`page.tsx:210-221`). Closest: none. The catalog parity test only proves the key exists in 4 locales.
+- AC10 (render half): the no-session view's reason → text mapping (`failureText`, `page.tsx:155-159`) and the sign-in pill have no test. Closest: the `resetPageView` tests, which cover the state only.
+- AC11 (clear/keep half): no test for lines clearing on a New password change (`page.tsx:242-245`), staying on a Confirm-only change, or being replaced on the next submit (`page.tsx:109`). Closest: the `passwordRefusalKeys` order cases. RP-07 checks only clear-on-New. Nothing covers "stays when only Confirm changes".
+- AC12: the link wiring (`components/onboarding/steps/AuthenticationStep.tsx:471`) has no test, and neither does the negative "NOT `/reset-password`". The prefill depends on `app/[locale]/login/page.tsx:31-42` (existing code, untested). Closest: `lib/auth/login-link.test.ts`. Manual check: RP-09.
+
+## Untested diff behavior
+- `lib/supabase/recovery-client.ts:37,41`: the message regex `/network|fetch|load failed/i` is never tested on its own. Every "network" case also matches by `name === "AuthRetryableFetchError"` or by `instanceof TypeError`. Risk: the regex can be deleted or over-match (an API error whose message mentions "fetch" would show "connection error" for an expired link) and nothing fails.
+- `lib/supabase/recovery-client.ts:44`: `status === 429` and `code?.includes("rate_limit")` are never tested separately. The only rate-limit case (`recovery-client.test.ts:170`) has both. Risk: either half can break unnoticed.
+- `lib/privacy/credential-params.ts:50`: any string containing whitespace is returned unscrubbed. A credential URL inside free text keeps its token: Sentry console-breadcrumb `message`, exception values, span descriptions, PostHog `$exception_message`. The test at `credential-params.test.ts:61` (`"item #3 code=9"` unchanged) pins this as intended. Risk: the token leaks through any text field that quotes the URL. AC3 names "breadcrumb URLs".
+- PostHog `/flags` request (not covered by `before_send`): no test, and the diff doesn't address it. In `node_modules/posthog-js/dist/module.js` the flags body sets `person_properties` from `get_initial_props()`, and `qr()` maps the stored initial URL to `$current_url`. That initial URL is the load URL, captured at `posthog.init` before the deferred `replaceState`, so it still contains `token_hash`. `instrumentation-client.ts` does not disable flags. Risk: the token still reaches PostHog on every reset-link load, against the failure report's "not in analytics". I haven't confirmed whether this config actually fires `/flags` on load.
+- `lib/privacy/credential-params.ts:10,77`: strings deeper than `MAX_DEPTH = 12` pass through unscrubbed. Untested. Risk: low (top-level URL properties sit at depth ≤ 5).
+- `lib/supabase/legacy-recovery-session.ts:16`: the storage proxy's `setItem` writes into the legacy key. That only happens when supabase-js refreshes an expired session before `/logout`, and no test does this (see workflows). Risk: the refreshed session is written back and the code depends on the `finally` to remove it.
+- `lib/supabase/legacy-recovery-session.ts:36`: when `supabaseProjectRef` returns null (env var missing or malformed), the cleanup is a silent no-op. Untested. Risk: low.
+- `lib/supabase/auth-provider.tsx:99-104`: the case where reading `window.localStorage` itself throws (old Safari private mode) is untested. Only a throwing `getItem` is tested. Risk: low.
+- `page.tsx:247-248,279`: `aria-invalid`, `aria-describedby` and `role="alert"` on the refusal lines (UX decision) are untested.
+
+## Drift (in diff, not in plan.md)
+- `sentry.server.config.ts:2,15-16` and `sentry.edge.config.ts:2,15-16`: server and edge Sentry events are scrubbed too. The plan only covers Sentry browser events and transactions. The wiring is untested. Either the plan is stale (update it and add tests) or this is scope creep (escalate).
+- AC4 vs implementation: the plan says the cleanup runs on "any showcase page" and, under Touched areas, that "the cleanup runs on every page". The diff only runs it on the login, reset and onboarding pages, and `docs/qa/reset-password.md:47-48` already describes that narrower behaviour. Either the plan is stale (update AC4) or the AC is not met (escalate). Covering every page would mean loading supabase-js on every page, which the layout comments say is deliberately avoided.
+- `lib/supabase/recovery-client.ts:39-46`: an unrecognised verify error (for example a Supabase 500) now shows `linkExpired` ("request a new one"). Before, it went through `translateError` and showed `updateFailed`. The new `rateLimited` reason also has its own copy in the no-session view. The plan only says "else the verify error". The behaviour is pinned by `recovery-client.test.ts:167` but not decided in the plan.
+
+## Suspect tests
+- `lib/auth/login-link.test.ts:16` ("%p opens the sign-in page with the email filled"): the second assertion parses the table's expected `href`, not the function's output. It checks the fixture against itself and no code change can make it fail. The first assertion carries the test.
+- `lib/privacy/credential-params.test.ts:184-200` ("scrubs a transaction's name and its trace data"): the fixture puts `spans[0].description: "GET /en/reset-password?code=pkce"` in the event. The scrubber leaves it untouched (whitespace guard), and the test never checks it. It also has no `not.toContain("pkce")`, which the error-event test does have. Adding that check would make the test fail. (In Sentry 10.76 fetch spans already drop the query from their name, so this exact shape is synthetic. The point is that the test's own fixture shows a leak and the test stays green.)
+- Weakened assertions: none found. The pre-existing `recovery-client.test.ts` cases are unchanged. `toEqual({ error: message })` still passes because `toEqual` ignores the new undefined `code` / `reasons` keys.
+
+## Unrealistic or missing workflow tests
+- `legacy-recovery-session.test.ts:152` ("revokes the session on the server…"): starts from `oldSession()` with `expires_at` one hour in the future (line 34). Every real legacy entry predates 2026-10-11, so its access token has expired. With the real supabase-js, that means a `/token?grant_type=refresh_token` call first, the rotated session written back through the proxy, and only then `/logout`. The asserted single-request sequence only holds for a fresh entry, which can't exist in the field. Use: `expires_at` in the past, with fetch answering the refresh and then 204 on logout. Add a variant where the refresh is refused (already used or revoked): key deleted, no throw.
+- `reset-page-state.test.ts:52-57`: `saved: true` with `verify: pending` can't happen, because saving needs the form and the form needs a verified link. Use only verified states.
+- Missing: a reload after the token was stripped, at page level (iOS Safari switching back from Mail). The ordering "token captured before `replaceState`" has no automated test. Manual checks: RP-03 and RP-04.
+- Missing: retry after a refusal. Submit and get `samePassword`; edit Confirm only (lines stay); edit New (lines clear); resubmit and get a different refusal (lines replaced). No test found.
+- Missing: two tabs loading `/login` at once while the legacy key exists, so two cleanup clients race the same refresh token. No test found.
+- Missing: a browser holding the legacy key that only visits marketing pages, where the cleanup never runs (see AC4). No test or QA case.
+- Missing: a real supabase-js 422 response through `updateUser` (a `weak_password` body with `reasons`, or `same_password`), fed through a fetch mock the way the legacy test already does. Today the tests hand `saveNewPassword` pre-shaped objects. `weak_password` is dormant on dev and prod, so neither QA nor a unit test ever sees the real response shape. Risk is low: `AuthWeakPasswordError` carries `code` and `reasons` (`node_modules/@supabase/auth-js/dist/module/lib/errors.js:240-248`).
+- `legacy-recovery-session.test.ts:70-76`: pins `autoRefreshToken`, `detectSessionInUrl` and the shape of the `lock` option in the `createClient` call arguments. These are not user-observable. The observable properties (app lock untouched, no app broadcast, one logout request) are what the real-client test checks. Its `not.toContain(APP_SESSION_LOCK)` (line 178) would still pass without the no-op lock, because the throwaway client's own storage key gives a different lock name. Low priority, since the plan names the no-op lock explicitly.
+
+## Waivers
+(filled by the main agent only if the user explicitly waives a gap)
+
+## Resolution (2026-10-11)
+
+- PostHog `/flags`: confirmed in `posthog-js` 1.372.1 (the flags body carries `get_initial_props()`, which maps the landing URL to `$initial_current_url`). Fixed twice over: PostHog no longer requests flags on load (`advanced_disable_feature_flags_on_first_load`; the showcase uses none), and it does not start on a page load carrying a sign-in token (`carriesSessionToken`, AC13).
+- Whitespace guard: removed. The scrubber cleans every URL inside text (split on whitespace and double quotes) and URLs used as object keys. Tests cover a message, an exception, the element chain, heatmap keys and the span description.
+- AC4: the cleanup now runs from the `[locale]` root layout on every page; supabase-js is downloaded only when the key exists. RP-05 loads the homepage.
+- Realistic legacy session: the real-client test is parametrized over a live session, an expired one (refresh, then logout with the new token) and a dead refresh token (key deleted, no logout).
+- Verify reasons: separate cases for the message regex, a 429 without a code, and a rate-limit code on another status.
+- Impossible `saved + pending` state dropped; the login-link test asserts on the function's output.
+- Real 422 shapes: `recovery-client.test.ts` runs `same_password` and `weak_password` bodies through the real supabase-js client.
+- Drift: the plan now records the Sentry server/edge scrub, unrecognised verify errors counting as an expired link, and AC4's scope.
+- Still manual only (no DOM runner in the showcase): page wiring for AC1, AC7, AC9, AC10 (render), AC11 (clear/keep), AC12 and the instrumentation hooks; covered by RP-03 to RP-09.

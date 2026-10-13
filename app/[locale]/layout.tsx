@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import { ogLocaleFor } from "@/lib/og/metadata";
 import { FloatingLanguageSwitcher } from "@/components/ui/FloatingLanguageSwitcher";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
+import { LegacyRecoverySessionCleanup } from "@/components/auth/LegacyRecoverySessionCleanup";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
@@ -113,6 +114,8 @@ export default async function RootLayout({
               body.dataset.landingVariant, which LandingTracker (inside the
               page subtree) stamps in an effect that has to fire first. */}
           <AttributionCapture />
+          {/* Renders nothing; no request unless an old recovery session is stored. */}
+          <LegacyRecoverySessionCleanup />
         </NextIntlClientProvider>
       </body>
     </html>

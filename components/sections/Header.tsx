@@ -12,6 +12,7 @@ import { TrackedLink } from "../ui/TrackedLink";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { hasBlog } from "@/lib/blog/locales";
+import { lockBodyScroll } from "@/lib/dom/body-scroll-lock";
 import { AnimatePresence, motion } from "framer-motion";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
@@ -250,14 +251,8 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
 
   // Body scroll lock when mobile menu is open
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (!mobileMenuOpen) return;
+    return lockBodyScroll();
   }, [mobileMenuOpen]);
 
   // Escape key closes mobile menu
