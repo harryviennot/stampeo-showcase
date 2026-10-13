@@ -107,6 +107,7 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "programme-fidelite",
   "programme-fondateur",
   "reset-password",
+  "start",
   "terms",
   "uk",
   "us",

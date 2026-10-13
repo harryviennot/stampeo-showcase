@@ -7,15 +7,11 @@ import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { loginHrefWithEmail } from "@/lib/auth/login-link";
 import { suggestCorrectedEmail } from "@/lib/email-typo-check";
-import { AuthMethodChooser } from "@/components/auth/AuthMethodChooser";
+import type { VerifyMode } from "@/lib/auth/onboarding-resume";
+import { resendCode, sendCodeToExistingUser } from "@/lib/auth/send-code";
+import { OnboardingMethodChooser } from "./OnboardingMethodChooser";
 
 export type AuthPhase = "choose" | "form" | "verify";
-
-/** "signup" = verify the signup-confirmation OTP for a brand-new account.
- *  "signin" = verify the magic-link OTP we sent to log in an EXISTING account
- *  (wrong password, OAuth-only, unconfirmed email — all routed here so we
- *  never block the user with an error). */
-type VerifyMode = "signup" | "signin";
 
 interface AuthenticationStepProps {
   name: string;
@@ -26,6 +22,9 @@ interface AuthenticationStepProps {
   onPhaseChange: (phase: AuthPhase) => void;
   onBack: () => void;
   onCompleted: (opts?: { isExistingUser?: boolean }) => void;
+  /** A code was just sent (or re-sent) to `email`. */
+  onCodeSent: (sent: { email: string; verifyMode: VerifyMode }) => void;
+  initialVerifyMode?: VerifyMode;
   /** sessionStorage key where {name, phone} is stashed before OAuth redirect. */
   oauthStashKey: string;
 }
@@ -39,6 +38,8 @@ export function AuthenticationStep({
   onPhaseChange,
   onBack,
   onCompleted,
+  onCodeSent,
+  initialVerifyMode = "signup",
   oauthStashKey,
 }: AuthenticationStepProps) {
   const t = useTranslations("onboarding.createAccount");
@@ -54,7 +55,7 @@ export function AuthenticationStep({
   const [otpCode, setOtpCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [codeSentMessage, setCodeSentMessage] = useState(false);
-  const [verifyMode, setVerifyMode] = useState<VerifyMode>("signup");
+  const [verifyMode, setVerifyMode] = useState<VerifyMode>(initialVerifyMode);
   const otpInputRef = useRef<HTMLInputElement>(null);
 
   const passwordChecks = useMemo(
@@ -114,19 +115,13 @@ export function AuthenticationStep({
   // dashboard after entering the code. We never surface an "account exists"
   // error: registering an existing email always resolves to a logged-in state.
   const routeExistingUserToOtp = useCallback(async () => {
-    setVerifyMode("signin");
-    const { error: otpError } = await signInWithOtp(email);
-    if (otpError) {
-      // signInWithOtp can fail for unconfirmed emails (`shouldCreateUser:false`
-      // requires a confirmed user on some Supabase configs). Fall back to the
-      // signup-confirmation OTP, which works for unconfirmed accounts.
-      setVerifyMode("signup");
-      await resendOtp(email);
-    }
+    const sentMode = await sendCodeToExistingUser({ signInWithOtp, resendOtp }, email);
+    setVerifyMode(sentMode ?? "signup");
+    if (sentMode) onCodeSent({ email, verifyMode: sentMode });
     setResendCooldown(60);
     onPhaseChange("verify");
     setLoading(false);
-  }, [email, signInWithOtp, resendOtp, onPhaseChange]);
+  }, [email, signInWithOtp, resendOtp, onPhaseChange, onCodeSent]);
 
   const handleFormSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -177,6 +172,7 @@ export function AuthenticationStep({
 
         // Fresh signup — go to the confirmation OTP.
         setVerifyMode("signup");
+        onCodeSent({ email, verifyMode: "signup" });
         setResendCooldown(60);
         onPhaseChange("verify");
         setLoading(false);
@@ -196,6 +192,7 @@ export function AuthenticationStep({
       signIn,
       onCompleted,
       onPhaseChange,
+      onCodeSent,
       routeExistingUserToOtp,
     ]
   );
@@ -231,16 +228,13 @@ export function AuthenticationStep({
   const handleResend = useCallback(async () => {
     if (resendCooldown > 0) return;
 
-    const { error } =
-      verifyMode === "signin"
-        ? await signInWithOtp(email)
-        : await resendOtp(email);
-    if (!error) {
+    if (await resendCode({ signInWithOtp, resendOtp }, email, verifyMode)) {
+      onCodeSent({ email, verifyMode });
       setResendCooldown(60);
       setCodeSentMessage(true);
       setTimeout(() => setCodeSentMessage(false), 3000);
     }
-  }, [resendCooldown, resendOtp, signInWithOtp, verifyMode, email]);
+  }, [resendCooldown, resendOtp, signInWithOtp, verifyMode, email, onCodeSent]);
 
   const handleChangeEmail = useCallback(() => {
     onPhaseChange("form");
@@ -372,8 +366,7 @@ export function AuthenticationStep({
           </div>
         )}
 
-        <AuthMethodChooser
-          namespace="onboarding.createAccount"
+        <OnboardingMethodChooser
           returnTo={`/${locale}/onboarding?just_authed=oauth`}
           onChooseEmail={() => {
             onPhaseChange("form");
@@ -439,6 +432,7 @@ export function AuthenticationStep({
           <input
             id="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
             required
@@ -478,6 +472,7 @@ export function AuthenticationStep({
             <input
               id="password"
               type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

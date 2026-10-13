@@ -59,6 +59,12 @@ describe("isTrackablePath — marketing surfaces", () => {
     }
   });
 
+  test("the /start forwarding page is trackable, so an ad click that lands there is attributed", () => {
+    for (const path of ["/start", "/en/start", "/es/start?utm_source=meta&fbclid=IwAR3x"]) {
+      expect(isTrackablePath(path)).toBe(true);
+    }
+  });
+
   test("a nested marketing page is trackable", () => {
     expect(isTrackablePath("/blog/some-post")).toBe(true);
     expect(isTrackablePath("/en/features/card-design")).toBe(true);
@@ -96,6 +102,7 @@ describe("isTrackablePath — acquisition pages", () => {
     expect(isTrackablePath("/pricing-cafe")).toBe(false);
     expect(isTrackablePath("/usual-cafe")).toBe(false);
     expect(isTrackablePath("/blogger-coffee")).toBe(false);
+    expect(isTrackablePath("/starter-cafe")).toBe(false);
   });
 });
 

@@ -86,7 +86,7 @@ export function AuthMethodChooser({
   );
 }
 
-interface MethodButtonProps {
+export interface MethodButtonProps {
   onClick: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -97,7 +97,7 @@ interface MethodButtonProps {
   lastUsedLabel?: string;
 }
 
-function MethodButton({
+export function MethodButton({
   onClick,
   disabled,
   loading,

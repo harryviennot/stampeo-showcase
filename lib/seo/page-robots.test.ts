@@ -1,6 +1,7 @@
 /**
- * Sign-up, login, password reset, email preferences and the demo wallet page
- * must never show up in search results, in any locale.
+ * Sign-up, login, password reset, email preferences, the demo wallet page and
+ * the /start forwarding page must never show up in search results, in any
+ * locale.
  *
  * Driven off the private tables in `consent-routes.ts`, which
  * `consent-routes.test.ts` pins to the real route folders, so a new private
@@ -39,6 +40,16 @@ describe("private routes", () => {
 
   test.each(PRIVATE_ROOTS)("every page under /%s declares NOINDEX", (root) => {
     const segmentRoot = join(APP, root);
+    const pages = pagesUnder(segmentRoot);
+
+    expect(pages.length).toBeGreaterThan(0);
+    expect(pages.filter((page) => !declaresNoindex(page, segmentRoot))).toEqual([]);
+  });
+});
+
+describe("the /start forwarding page", () => {
+  test("declares NOINDEX: it only forwards, and holds nothing to search for", () => {
+    const segmentRoot = join(APP, "start");
     const pages = pagesUnder(segmentRoot);
 
     expect(pages.length).toBeGreaterThan(0);

@@ -9,11 +9,17 @@ import { createClient } from "@/lib/supabase/client";
 import { updateUserProfile } from "@/lib/onboarding";
 import { recordAccountSignup } from "@/lib/attribution/signup-call";
 import { leaveOnboarding } from "@/lib/attribution/signup-flow";
-import { UserInfoStep } from "./steps/UserInfoStep";
 import {
-  AuthenticationStep,
-  type AuthPhase,
-} from "./steps/AuthenticationStep";
+  browserResumeStorage,
+  clearResume,
+  readResume,
+  writeResume,
+  type VerifyMode,
+} from "@/lib/auth/onboarding-resume";
+import { useInAppBrowser } from "@/hooks/useInAppBrowser";
+import { useInAppEntryReload } from "@/hooks/useInAppEntryReload";
+import { UserInfoStep } from "./steps/UserInfoStep";
+import { AuthenticationStep, type AuthPhase } from "./steps/AuthenticationStep";
 
 const OAUTH_STASH_KEY = "stampeo_onboarding_oauth_pending_v1";
 const DRAFT_STORAGE_KEY = "stampeo_onboarding_draft_v1";
@@ -62,6 +68,7 @@ function clearDraft() {
   } catch {
     // ignore
   }
+  clearResume(browserResumeStorage());
 }
 
 function readOAuthStash(): OAuthStash | null {
@@ -92,10 +99,18 @@ export function OnboardingWizard() {
   const { session, loading: authLoading } = useAuth();
   const justAuthed = searchParams.get("just_authed") === "oauth";
 
-  const [step, setStep] = useState<1 | 2>(1);
-  const [authPhase, setAuthPhase] = useState<AuthPhase>("choose");
-  const [data, setData] = useState<DraftData>(() => loadDraft());
-  const [email, setEmail] = useState("");
+  const inAppBrowser = useInAppBrowser();
+  const reloading = useInAppEntryReload(justAuthed);
+
+  // A code sent within the last hour reopens the code screen (not after an OAuth
+  // return); name and phone come from this tab's draft, if it still has one.
+  const [resume] = useState(() =>
+    justAuthed ? null : readResume(browserResumeStorage(), Date.now())
+  );
+  const [step, setStep] = useState<1 | 2>(resume ? 2 : 1);
+  const [authPhase, setAuthPhase] = useState<AuthPhase>(resume ? "verify" : "choose");
+  const [data, setData] = useState<DraftData>(loadDraft);
+  const [email, setEmail] = useState(resume?.email ?? "");
 
   const startedRef = useRef(false);
   const oauthHandledRef = useRef(false);
@@ -155,22 +170,35 @@ export function OnboardingWizard() {
 
   useEffect(() => {
     if (startedRef.current) return;
-    if (authLoading || justAuthed) return;
+    if (authLoading || justAuthed || reloading) return;
     startedRef.current = true;
     posthog.capture("onboarding_wizard_started", {
       is_authenticated: !!session?.access_token,
+      in_app_browser: inAppBrowser,
     });
-  }, [authLoading, justAuthed, session]);
+  }, [authLoading, justAuthed, reloading, session, inAppBrowser]);
 
   const completeStep = useCallback(
     (currentStep: 1 | 2) => {
       posthog.capture("onboarding_step_completed", {
         step: currentStep,
         step_name: STEP_NAMES[currentStep] ?? `step_${currentStep}`,
+        in_app_browser: inAppBrowser,
       });
     },
-    []
+    [inAppBrowser]
   );
+
+  // Remember the code screen so a reload or a trip to the mail app reopens it.
+  const handleCodeSent = useCallback((sent: { email: string; verifyMode: VerifyMode }) => {
+    writeResume(browserResumeStorage(), { ...sent, sentAt: Date.now() });
+  }, []);
+
+  // Leaving the code screen (to pick a different email) drops the record.
+  const handleAuthPhaseChange = useCallback((phase: AuthPhase) => {
+    setAuthPhase(phase);
+    if (phase !== "verify") clearResume(browserResumeStorage());
+  }, []);
 
   const handleStep1Next = useCallback(() => {
     completeStep(1);
@@ -223,7 +251,7 @@ export function OnboardingWizard() {
     );
   }
 
-  if (authLoading) {
+  if (authLoading || reloading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
         <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
@@ -269,9 +297,11 @@ export function OnboardingWizard() {
             email={email}
             onEmailChange={setEmail}
             phase={authPhase}
-            onPhaseChange={setAuthPhase}
+            onPhaseChange={handleAuthPhaseChange}
             onBack={handleBackToStep1}
             onCompleted={handleAuthCompleted}
+            onCodeSent={handleCodeSent}
+            initialVerifyMode={resume?.verifyMode}
             oauthStashKey={OAUTH_STASH_KEY}
           />
         )}

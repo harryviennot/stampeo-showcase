@@ -38,6 +38,9 @@ export const MARKETING_SEGMENTS: ReadonlySet<string> = new Set([
   "programme-fondateur",
   "pricing",
   "privacy",
+  // The forwarding page the in-app browser escape lands on: it records the
+  // ad click like a landing page, then moves on to the (private) sign-up.
+  "start",
   "terms",
   // Country pilots. Served at locale-free URLs by a proxy rewrite, so
   // they arrive here as a first segment, not as a locale.
