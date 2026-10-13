@@ -130,15 +130,15 @@ Run first. If these fail, the change leaked outside the in-app browsers.
 | EXPECT | iOS: the page tries to open `x-safari-https://showcase.dev.stampeo.app/en/start?…`. Android: `intent://showcase.dev.stampeo.app/en/start?…#Intent;scheme=https;end`, with no `package=` and no `browser_fallback_url`. The query holds `utm_source=ig`, `utm_medium=paid`, `utm_campaign=qa456`, `utm_content=adA` and `fbclid=QA456test`. You do NOT see the name, phone or any email in it, and the page does NOT go to `accounts.google.com` on that tap. |
 | RESET | R2. |
 
-### IA-03: When nothing opens, the fallback appears and works [CORE]
+### IA-03: When nothing opens, the guide appears and works [CORE]
 
 | Field | Content |
 |---|---|
-| WHY | On iPhone the switch often fails; the visitor must get the manual instruction and still be able to use Google/Apple here (AC5). |
+| WHY | On iPhone the switch fails in Meta's apps (device test 2026-10-13); the guide is the only route to Google/Apple, and it must carry the ad click (AC5). |
 | DEPENDS | IA-02 |
 | ACCOUNT | No session (R2). |
-| STEPS | 1. Desktop, iOS Instagram user agent (the custom scheme does nothing on desktop, so the page stays visible). 2. Reach step 2, tap Apple. 3. Wait 2 seconds. 4. Tap "Continue with Apple here". |
-| EXPECT | Within about 1.5 s, under the Apple row, a short instruction ("Tap ••• then Open in browser" or the agreed copy) and a "Continue with Apple here" button appear. Step 4 goes to `appleid.apple.com`. You do NOT see the fallback under the Google row, and it does NOT appear before the 1.5 s wait. |
+| STEPS | 1. Desktop, Android Instagram user agent (the intent does nothing on desktop, so the page stays visible; on a Mac the iOS user agent hands the link to Safari and blocks input). 2. Landing with ad params → CTA → step 1 → Continue → tap Apple. 3. Wait 2 seconds; read the address. 4. Press Escape; read the address. 5. Tap Apple again, then "Use email instead". |
+| EXPECT | Within about 1.5 s the guide covers the page: title naming Apple, an arrow at the top-right corner, step ① with a ••• token, step ② with an "Open in external browser" token, "Use email instead" and a close button. While it is open the address is `/en/start?utm_…&fbclid=…`; after closing (X or Escape) it is `/en/onboarding` again and focus is back on the Apple row. "Use email instead" opens the email form. You do NOT see any "Continue with Apple here" action, and NO request goes to `appleid.apple.com` or `/auth/v1/authorize`. |
 | RESET | R2. |
 
 ### IA-04: iPhone inside Instagram — what really happens (device) [CORE]
@@ -149,7 +149,7 @@ Run first. If these fail, the change leaked outside the in-app browsers.
 | DEPENDS | IA-01 |
 | ACCOUNT | No session. |
 | STEPS | 1. iPhone, open the landing link from an Instagram DM. 2. CTA → step 1 → Continue. 3. Tap Google. 4. Repeat from Facebook (Messenger link). |
-| EXPECT | One of: (a) Safari opens, shows a spinner for a moment, then `/en/onboarding` step 1 (record "SAFARI OPENED"), or (b) within ~2 s the fallback appears and "Continue with Google here" opens Google's sign-in inside Instagram (record "FALLBACK"). Write which one happened for each app and the iOS version. You do NOT see the page sitting unchanged with no fallback. |
+| EXPECT | One of: (a) Safari opens, shows a spinner for a moment, then `/en/onboarding` step 1 (record "SAFARI OPENED"), or (b) within ~2 s the guide covers the page: arrow at the top right, ① Tap ••• ② Tap "Open in external browser" (record "GUIDE"). In case (b), follow the two steps: Safari opens `/en/start?…` (the ad parameters are in the address), then step 1. Then close the in-app browser and check that "Use email instead" and the X both work in a second try. Write which one happened for each app and the iOS version. You do NOT see the page sitting unchanged with no guide, and there is NO "Continue with Google here" button. |
 | RESET | None. |
 
 ### IA-05: Android inside Instagram opens the default browser (device) [CORE]
