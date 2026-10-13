@@ -1,6 +1,6 @@
 /**
  * Which visitors are inside a Meta app's own browser, and the link that asks
- * the phone's real browser to open the same page.
+ * the phone's own browser to open the forwarding page.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -95,8 +95,12 @@ describe("classifyInAppBrowser", () => {
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15",
     ],
     [
-      "the Gmail / Google app on iPhone (GSA)",
+      "the Google app on iPhone (GSA)",
       `${IOS} GSA/320.0.641164538 Mobile/15E148 Safari/604.1`,
+    ],
+    [
+      "Gmail on iPhone",
+      `${IOS} Mobile/15E148`,
     ],
     [
       "LinkedIn on iPhone",
@@ -104,7 +108,7 @@ describe("classifyInAppBrowser", () => {
     ],
     [
       "LinkedIn on Android",
-      `${ANDROID_WV} LinkedInApp`,
+      "Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/AP2A.240805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/126.0.6478.122 Mobile Safari/537.36 LinkedInApp",
     ],
     [
       "TikTok on iPhone",
@@ -122,39 +126,42 @@ describe("classifyInAppBrowser", () => {
 
 describe("buildBrowserEscapeUrl", () => {
   const origin = "https://stampeo.app";
-  const path = "/en/onboarding";
+  const path = "/en/start";
   const ad = new URLSearchParams({ utm_source: "meta", utm_medium: "paid", fbclid: "IwAR3x" });
+  const adQuery = "utm_source=meta&utm_medium=paid&fbclid=IwAR3x";
 
-  test("iPhone: opens the same page in Safari, carrying the ad parameters", () => {
+  test("iPhone: opens the forwarding page in Safari, carrying the ad parameters", () => {
     expect(buildBrowserEscapeUrl({ platform: "ios", origin, path, params: ad })).toBe(
-      "x-safari-https://stampeo.app/en/onboarding?utm_source=meta&utm_medium=paid&fbclid=IwAR3x",
+      `x-safari-https://stampeo.app/en/start?${adQuery}`,
     );
   });
 
-  test("Android: hands the same page to Chrome, falling back to the plain https address", () => {
-    const url = buildBrowserEscapeUrl({ platform: "android", origin, path, params: ad });
-    const https = "https://stampeo.app/en/onboarding?utm_source=meta&utm_medium=paid&fbclid=IwAR3x";
-    expect(url).toBe(
-      `intent://stampeo.app/en/onboarding?utm_source=meta&utm_medium=paid&fbclid=IwAR3x` +
-        `#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(https)};end`,
+  // No package and no fallback URL: a phone without Chrome opens its own
+  // browser, and a fallback would reload this same in-app page.
+  test("Android: hands the forwarding page to the phone's default browser", () => {
+    expect(buildBrowserEscapeUrl({ platform: "android", origin, path, params: ad })).toBe(
+      `intent://stampeo.app/en/start?${adQuery}#Intent;scheme=https;end`,
     );
   });
 
-  test.each(["ios", "android"] as const)("%s: no parameters means a bare onboarding path", (platform) => {
+  test.each(["ios", "android"] as const)("%s: no parameters means a bare forwarding path", (platform) => {
     const url = buildBrowserEscapeUrl({ platform, origin, path, params: new URLSearchParams() });
     expect(url).not.toContain("?");
-    expect(url).toContain("stampeo.app/en/onboarding");
+    expect(url).toContain("stampeo.app/en/start");
   });
 
-  test("a development origin keeps its port and its scheme", () => {
+  test.each([
+    ["ios", "x-safari-http://localhost:3001/fr/start"],
+    ["android", "intent://localhost:3001/fr/start#Intent;scheme=http;end"],
+  ] as const)("%s: a development origin keeps its port and its scheme", (platform, expected) => {
     expect(
       buildBrowserEscapeUrl({
-        platform: "ios",
+        platform,
         origin: "http://localhost:3001",
-        path: "/fr/onboarding",
+        path: "/fr/start",
         params: new URLSearchParams(),
       }),
-    ).toBe("x-safari-http://localhost:3001/fr/onboarding");
+    ).toBe(expected);
   });
 
   test("parameter values are URL-encoded", () => {
@@ -164,6 +171,6 @@ describe("buildBrowserEscapeUrl", () => {
       path,
       params: new URLSearchParams({ utm_campaign: "spring sale&more" }),
     });
-    expect(url).toBe("x-safari-https://stampeo.app/en/onboarding?utm_campaign=spring+sale%26more");
+    expect(url).toBe("x-safari-https://stampeo.app/en/start?utm_campaign=spring+sale%26more");
   });
 });

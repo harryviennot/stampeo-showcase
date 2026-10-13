@@ -1,7 +1,7 @@
 /**
  * Meta's in-app browsers (Instagram, Facebook, Messenger, Threads) hold none of
  * the phone's Google or Apple logins. Detecting them and building the link that
- * asks the phone's real browser to open the same page are both pure.
+ * asks the phone's own browser to open a page are both pure.
  */
 
 export type InAppBrowser = "instagram" | "facebook" | "messenger" | "threads";
@@ -28,9 +28,9 @@ export function classifyInAppBrowser(ua: string): InAppBrowser | null {
 export type EscapePlatform = "ios" | "android";
 
 /**
- * The link that asks the phone's real browser to open `path` on `origin`.
- * iOS takes `x-safari-https://`; Android takes an `intent://` for Chrome that
- * falls back to the plain https address when Chrome is missing.
+ * The link that asks the phone's own browser to open `path` on `origin`.
+ * iOS takes `x-safari-https://`; Android takes an `intent://` with no package
+ * (the default browser opens) and no fallback URL (it would reload this page).
  */
 export function buildBrowserEscapeUrl(input: {
   platform: EscapePlatform;
@@ -46,6 +46,5 @@ export function buildBrowserEscapeUrl(input: {
 
   if (platform === "ios") return `x-safari-${scheme}://${hostAndPath}`;
 
-  const fallback = encodeURIComponent(`${scheme}://${hostAndPath}`);
-  return `intent://${hostAndPath}#Intent;scheme=${scheme};package=com.android.chrome;S.browser_fallback_url=${fallback};end`;
+  return `intent://${hostAndPath}#Intent;scheme=${scheme};end`;
 }

@@ -12,7 +12,7 @@ import { escapeParamsFromCookies } from "@/lib/auth/escape-params";
 import { buildBrowserEscapeUrl, type InAppBrowser } from "@/lib/auth/in-app-browser";
 import { useAuth, type OAuthProvider } from "@/lib/supabase/auth-provider";
 
-interface InAppAuthChooserProps {
+export interface InAppAuthChooserProps {
   inAppBrowser: InAppBrowser;
   returnTo: string;
   onChooseEmail: () => void;
@@ -21,12 +21,7 @@ interface InAppAuthChooserProps {
   onBeforeOAuth: (provider: OAuthProvider) => void;
 }
 
-/**
- * The account chooser inside Meta's in-app browsers: email first, because it is
- * the one method that always works there. Google and Apple follow and first try
- * to reopen the page in the phone's real browser, where the saved login lives;
- * when that does not happen, the visitor can continue with the provider here.
- */
+/** The chooser inside Meta's in-app browsers: email first, Google and Apple try the phone's own browser before signing in here. */
 export function InAppAuthChooser({
   inAppBrowser,
   returnTo,
@@ -63,7 +58,7 @@ export function InAppAuthChooser({
     const url = buildBrowserEscapeUrl({
       platform,
       origin: window.location.origin,
-      path: `/${locale}/onboarding`,
+      path: `/${locale}/start`,
       params: escapeParamsFromCookies(document.cookie),
     });
     const outcome = await attemptBrowserEscape({
