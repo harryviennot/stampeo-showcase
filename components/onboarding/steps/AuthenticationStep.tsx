@@ -489,6 +489,7 @@ export function AuthenticationStep({
               id="password"
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
+              aria-describedby="password-requirement"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -505,7 +506,7 @@ export function AuthenticationStep({
               {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
             </button>
           </div>
-          <PasswordRequirement password={password} label={t("passwordRequirement")} />
+          <PasswordRequirement id="password-requirement" password={password} label={t("passwordRequirement")} />
         </div>
 
         <div className="flex gap-3">

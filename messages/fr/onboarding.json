@@ -119,7 +119,7 @@
       "continueAppleShort": "Apple",
       "continueEmailShort": "Email",
       "continueHere": "Continuer avec {provider} ici",
-      "escapeHint": "Rien ne s'est ouvert ? Appuyez sur ••• puis sur « Ouvrir dans le navigateur ».",
+      "escapeHint": "Rien ne s'est ouvert\u00a0? Appuyez sur ••• puis sur «\u00a0Ouvrir dans le navigateur\u00a0».",
       "chooseDifferentMethod": "Choisir une autre méthode",
       "emailTitle": "Créez votre compte avec un email",
       "emailSubtitle": "Votre email et un mot de passe sécurisé.",

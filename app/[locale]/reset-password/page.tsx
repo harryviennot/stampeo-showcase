@@ -28,6 +28,7 @@ const ERROR_BOX_CLASS =
 const PILL_LINK_CLASS =
   "block w-full py-3.5 px-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-full hover:from-amber-600 hover:to-orange-600 hover:scale-[1.02] hover:shadow-lg hover:shadow-amber-500/25 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 text-center";
 const REFUSAL_ID = "newPassword-refusal";
+const REQUIREMENT_ID = "newPassword-requirement";
 
 export default function ResetPasswordPage() {
   return (
@@ -231,7 +232,7 @@ function ResetPasswordContent() {
                     }}
                     required
                     aria-invalid={refusal.length > 0 || undefined}
-                    aria-describedby={refusal.length > 0 ? REFUSAL_ID : undefined}
+                    aria-describedby={refusal.length > 0 ? `${REQUIREMENT_ID} ${REFUSAL_ID}` : REQUIREMENT_ID}
                     className="w-full px-4 py-3.5 pr-12 rounded-xl border border-[var(--border)] bg-white/50 dark:bg-white/5 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 outline-none transition-all duration-200 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
                     placeholder={t("newPasswordPlaceholder")}
                   />
@@ -244,7 +245,7 @@ function ResetPasswordContent() {
                     {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
-                <PasswordRequirement password={newPassword} label={t("passwordRequirement")} />
+                <PasswordRequirement id={REQUIREMENT_ID} password={newPassword} label={t("passwordRequirement")} />
                 {refusal.length > 0 && (
                   <div id={REFUSAL_ID} role="alert" className="space-y-1">
                     {refusal.map((key) => (
