@@ -33,13 +33,16 @@ describe("isPasswordAcceptable", () => {
 
 describe("the visible requirement", () => {
   test.each([
-    ["onboarding.json", (c: Record<string, any>) => c.onboarding.createAccount.passwordRequirement],
-    ["auth.json", (c: Record<string, any>) => c.auth.resetPassword.passwordRequirement],
-  ])("%s states the minimum in every language", (file, pick) => {
+    ["onboarding.json", ["onboarding", "createAccount", "passwordRequirement"]],
+    ["auth.json", ["auth", "resetPassword", "passwordRequirement"]],
+  ])("%s states the minimum in every language", (file, path) => {
     for (const locale of catalogLocales()) {
-      const line = pick(loadCatalog(locale, file));
+      const line = path.reduce<unknown>(
+        (node, key) => (node as Record<string, unknown> | undefined)?.[key],
+        loadCatalog(locale, file),
+      );
       expect(typeof line).toBe("string");
-      expect(line).toContain(String(MIN_PASSWORD_LENGTH));
+      expect(line as string).toContain(String(MIN_PASSWORD_LENGTH));
     }
   });
 });
