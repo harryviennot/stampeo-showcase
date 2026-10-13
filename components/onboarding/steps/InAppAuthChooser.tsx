@@ -110,14 +110,15 @@ export function InAppAuthChooser({
           </MethodButton>
           <div aria-live="polite">
             {stayedOn === id && (
-              <div className="mt-3 space-y-3 text-center">
-                <p className="text-sm text-[var(--muted-foreground)]">{t("escapeHint")}</p>
+              <div className="pt-2 pb-2 flex flex-col items-center gap-2 text-center">
+                <p className="text-sm text-balance text-[var(--muted-foreground)]">{t("escapeHint")}</p>
                 <button
                   type="button"
                   onClick={() => continueHere(id)}
                   disabled={pending !== null}
-                  className="w-full h-11 px-5 rounded-full border border-[var(--border)] text-sm font-medium text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-full bg-[var(--muted)] hover:bg-[var(--border)] text-sm font-semibold text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  <Logo size={16} />
                   {t("continueHere", { provider: name })}
                 </button>
               </div>
