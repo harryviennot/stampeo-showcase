@@ -118,8 +118,6 @@
       "continueGoogleShort": "Google",
       "continueAppleShort": "Apple",
       "continueEmailShort": "Email",
-      "continueHere": "Continue with {provider} here",
-      "escapeHint": "Nothing opened? Tap ••• then “Open in browser”.",
       "guideTitle": "Open this page in your browser to use {provider}",
       "guideStepMenu": "Tap <pill>•••</pill> at the top right",
       "guideStepExternal": "Tap <pill>Open in external browser</pill>",

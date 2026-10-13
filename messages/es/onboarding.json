@@ -118,8 +118,6 @@
       "continueGoogleShort": "Google",
       "continueAppleShort": "Apple",
       "continueEmailShort": "Correo",
-      "continueHere": "Continuar con {provider} aquí",
-      "escapeHint": "¿No se ha abierto nada? Pulsa ••• y luego «Abrir en el navegador».",
       "guideTitle": "Abre esta página en tu navegador para continuar con {provider}",
       "guideStepMenu": "Pulsa <pill>•••</pill> arriba a la derecha",
       "guideStepExternal": "Pulsa <pill>Abrir en navegador externo</pill>",
