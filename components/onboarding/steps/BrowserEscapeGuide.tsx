@@ -20,14 +20,7 @@ const pill = (chunks: ReactNode) => (
   </strong>
 );
 
-/**
- * Full-screen guide shown when the page could not hand itself to the phone's
- * browser: it dims the page, points at the app's own ••• button above the web
- * view and spells out the two taps that open the page in the real browser.
- *
- * A native modal `<dialog>`, like `ConsentPreferences`: it stays above the site
- * header and gives a focus trap, Escape and an inert page behind it.
- */
+/** Full-screen steps for opening this page in the real browser; a modal `<dialog>` (focus trap, Escape, inert page) with `showModal()`. */
 export function BrowserEscapeGuide({ provider, onClose, onChooseEmail }: BrowserEscapeGuideProps) {
   const t = useTranslations("onboarding.createAccount");
   const titleId = useId();
