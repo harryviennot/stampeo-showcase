@@ -70,7 +70,16 @@ const r = JSON.parse(localStorage.getItem(k)); r.sentAt -= 61 * 60 * 1000; local
 
 ### Known state before you start
 
-- **First desktop pass, 2026-10-13 (emulated user agents, 390px):** RB-01, RB-02, IA-01, IA-02 and IA-03 PASSED for iOS Instagram and Android Facebook. IA-06 FAILED: the escape pointed at `/onboarding`, where attribution never runs (private route). Fixed by landing on `/start`; IA-02 and IA-06 need a re-run. RS-01 FAILED: the relaxed 8-character rule was refused by the dev Supabase project (422, character classes enforced server-side). The rules were reverted to today's, so the PW section is retired and RS-01 needs a re-run with a compliant password.
+- **Desktop passes, 2026-10-13** (headless Chrome, emulated user agents, 390px, against `showcase.dev.stampeo.app`; dev accounts `qa-sta456-NN@seed.stampeo.app`, codes read from the dev database):
+  - PASSED: RB-01, RB-02, IA-01, IA-02 (both platforms; `/en/start` with every ad parameter and no personal data), IA-06 (forward in ~0.8 s, `stampeo_src`/`stampeo_ad` hold `qa456`/`QA456test`, `next=` ignored, noindex), IA-08 (one PageView on `/start`, none on `/onboarding`), RS-01, RS-03 (desktop version: browser closed on the code screen, reopened, code screen back, code verified, landed on the app), RS-04 (sign-in code survives a reload and verifies), RS-05, RS-06, RS-07 (record = email, code type, send time; nothing left after success), RS-08, PW-02, AN-02 (exact payloads, no personal data).
+  - Earlier failures, now fixed: IA-06 (the escape pointed at private `/onboarding`; now `/start`) and RS-01 (the relaxed password rule was refused server-side; rules reverted).
+  - IA-03 was re-specified for the guide (no "continue here" button) after Harry's device test. Re-run it against the latest build.
+  - On a Mac, the iOS user agent's `x-safari-https://` link is handed to the desktop Safari, and Chrome then swallows real input events. Drive the iOS guide with in-page `element.click()`, or use the Android user agent for real taps.
+- **Device pass, 2026-10-13 (Harry, iPhone):**
+  - IA-04 Instagram: the switch failed immediately and the guide flow works.
+  - Messenger: the same. Both apps label the ••• item "Open in external browser".
+  - Messenger showed a blank landing page on the dev server (`next dev`) while prod `stampeo.app/us` loaded fine. Re-check `/us` in Messenger against a production build of the branch before release.
+  - Still to run on devices: IA-05, IA-07, RS-03 (real app), RS-09.
 - **Use a password that meets today's rules** in every case, e.g. `QaStampeo!456`.
 - **The iOS browser switch is not guaranteed.** Apple offers no reliable way for a page to open Safari from Instagram, and Meta blocks the known tricks inconsistently. IA-04 records WHICH outcome you got. Both "Safari opened" and "the fallback appeared within ~2 s" are passes; "nothing visible happened and no fallback" is a failure.
 - **Dev showcase has no PostHog key.** AN-02 checks the event payloads before release by running with a dummy key and reading the outgoing requests; AN-01 checks real data after release.
@@ -137,8 +146,8 @@ Run first. If these fail, the change leaked outside the in-app browsers.
 | WHY | On iPhone the switch fails in Meta's apps (device test 2026-10-13); the guide is the only route to Google/Apple, and it must carry the ad click (AC5). |
 | DEPENDS | IA-02 |
 | ACCOUNT | No session (R2). |
-| STEPS | 1. Desktop, Android Instagram user agent (the intent does nothing on desktop, so the page stays visible; on a Mac the iOS user agent hands the link to Safari and blocks input). 2. Landing with ad params → CTA → step 1 → Continue → tap Apple. 3. Wait 2 seconds; read the address. 4. Press Escape; read the address. 5. Tap Apple again, then "Use email instead". |
-| EXPECT | Within about 1.5 s the guide covers the page: title naming Apple, an arrow at the top-right corner, step ① with a ••• token, step ② with an "Open in external browser" token, "Use email instead" and a close button. While it is open the address is `/en/start?utm_…&fbclid=…`; after closing (X or Escape) it is `/en/onboarding` again and focus is back on the Apple row. "Use email instead" opens the email form. You do NOT see any "Continue with Apple here" action, and NO request goes to `appleid.apple.com` or `/auth/v1/authorize`. |
+| STEPS | 1. Desktop, Android Instagram user agent (the intent does nothing on desktop, so the page stays visible; on a Mac the iOS user agent hands the link to Safari and blocks input). 2. Landing with ad params → CTA → step 1 → Continue → tap Apple. 3. Wait 2 seconds. 4. Press Escape. 5. Tap Apple again, then "Use email instead". |
+| EXPECT | Within about 1.5 s the guide covers the page: title naming Apple, an arrow at the top-right corner, step ① with a ••• token, step ② with an "Open in external browser" token, "Use email instead" and a close button. After closing (X or Escape), focus is back on the Apple row and the address is still `/en/onboarding`. "Use email instead" opens the email form. You do NOT see any "Continue with Apple here" action, and NO request goes to `appleid.apple.com` or `/auth/v1/authorize`. |
 | RESET | R2. |
 
 ### IA-04: iPhone inside Instagram — what really happens (device) [CORE]
@@ -149,7 +158,7 @@ Run first. If these fail, the change leaked outside the in-app browsers.
 | DEPENDS | IA-01 |
 | ACCOUNT | No session. |
 | STEPS | 1. iPhone, open the landing link from an Instagram DM. 2. CTA → step 1 → Continue. 3. Tap Google. 4. Repeat from Facebook (Messenger link). |
-| EXPECT | One of: (a) Safari opens, shows a spinner for a moment, then `/en/onboarding` step 1 (record "SAFARI OPENED"), or (b) within ~2 s the guide covers the page: arrow at the top right, ① Tap ••• ② Tap "Open in external browser" (record "GUIDE"). In case (b), follow the two steps: Safari opens `/en/start?…` (the ad parameters are in the address), then step 1. Then close the in-app browser and check that "Use email instead" and the X both work in a second try. Write which one happened for each app and the iOS version. You do NOT see the page sitting unchanged with no guide, and there is NO "Continue with Google here" button. |
+| EXPECT | One of: (a) Safari opens, shows a spinner for a moment, then `/en/onboarding` step 1 (record "SAFARI OPENED"), or (b) within ~2 s the guide covers the page: arrow at the top right, ① Tap ••• ② Tap "Open in external browser" (record "GUIDE"). In case (b), follow the two steps: Safari opens `/en/start?…` (the ad parameters are in the address), shows a spinner, then step 1. It must NOT open the landing page. Then close the in-app browser and check that "Use email instead" and the X both work in a second try. Write which one happened for each app and the iOS version. You do NOT see the page sitting unchanged with no guide, and there is NO "Continue with Google here" button. |
 | RESET | None. |
 
 ### IA-05: Android inside Instagram opens the default browser (device) [CORE]
@@ -195,6 +204,17 @@ Run first. If these fail, the change leaked outside the in-app browsers.
 | STEPS | 1. DevTools → Network, filter `facebook`. 2. Open the `/en/start?…` URL from IA-06. 3. Let it forward to `/en/onboarding`, fill step 1. |
 | EXPECT | A `PageView` request to `facebook.com/tr` may appear for `/en/start`. You do NOT see any `facebook.com/tr` request whose `dl` is an `/onboarding` URL. |
 | RESET | None. |
+
+### IA-09: Entering sign-up in-app goes through /start once [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Meta's "Open in external browser" opens the last full page load; without this, Safari reopens the landing page and the visitor starts over (AC14). |
+| DEPENDS | IA-01 |
+| ACCOUNT | No session (R2). |
+| STEPS | 1. In-app user agent (or device): landing with ad params → tap "Start my free trial". 2. Watch the address and the network. 3. Repeat in a real-browser user agent. 4. In-app, reload `/en/onboarding` directly. |
+| EXPECT | Step 1: a spinner, one full load of `/en/start?utm_…&fbclid=…`, then step 1 of sign-up; in DevTools the navigation entry's URL is `/en/start?…`. Step 3: NO extra load. Step 4: NO extra load (no loop). You do NOT see the landing page again, or two `onboarding_wizard_started` events. |
+| RESET | R2. |
 
 ---
 

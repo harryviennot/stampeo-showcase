@@ -8,3 +8,15 @@ VERDICT: FINDINGS (1 MED, 1 LOW, no HIGH)
 
 ## Checked and sound
 Cross-tenant access, gate bypass, state forgery (verifyOtp still needs the code), escape-URL injection (fixed origin/path, URLSearchParams-encoded, strict cookie parsers, only 5 UTM tags + fbclid), open redirect (fixed returnTo), XSS from the resume record (type-checked, rendered as text), password exposure (field-by-field copy, tested), secrets in logs/analytics (provider, platform, in_app_browser only), resend email-bombing (server limits unchanged), account enumeration (nothing new), OTP replay (single-use), abuse economics (unchanged).
+
+---
+
+# Security Report: STA-456, final pass
+REVIEWED: 2026-10-13  DIFF: origin/dev...feat/sta-456-in-app-signup (HEAD 235bcd5)
+VERDICT: FINDINGS (1 LOW; no HIGH, no MED)
+
+## Findings
+- [SEV: LOW] InAppAuthChooser.tsx:52-62: the guide's `history.replaceState` to `/{locale}/start?utm…&fbclid` feeds the Next router, so `usePathname()` reports `/start`. MetaPixel and GoogleAnalytics (with consent) then send a PageView for `/start` from the private onboarding page, the ConsentBanner sees a trackable path, and PostHog's history-change pageview records `/start`. This inflates landing counts and sidesteps the private-segment rule in spirit; no PII leaves. Direction: keep the gated components on the real route while the guide is open, and pin it with a test.
+
+## Checked and sound
+Prior MED (password rules) resolved: reverted to origin/dev. Prior LOW (resume storage) resolved: email/verifyMode/sentAt only, cleared on leaving verify. Escape URL and address are built from a fixed path, an encoded allowlist and the origin. No open redirect (`/start` → fixed `/onboarding`). No XSS. The address restore only undoes its own swap. Cross-tenant, gate bypass, state forgery, race/replay and enumeration are unchanged or not applicable. Analytics payloads carry no PII. Removing in-app OAuth from mobile is security-positive. `/start` is reserved and noindex.

@@ -28,3 +28,19 @@ VERDICT: FINDINGS (minor; nothing blocking)
 
 ## Waivers
 (none)
+
+---
+
+# Quality Report: STA-456, final pass
+REVIEWED: 2026-10-13  DIFF: origin/dev...feat/sta-456-in-app-signup (HEAD 235bcd5)
+VERDICT: FINDINGS (minor)
+
+## Previous findings
+All fixed (docblocks, test.each, start() helper, the 1499 ms assertion, merged duplicates, constant-only tests, a single VerifyMode). The "strong password" copy is moot after the revert.
+
+## New
+- BrowserEscapeGuide.tsx:23-30: 8-line docblock → one line; it claims a focus trap, Escape and an inert page, which hold only on the `showModal()` path, not the `open`-attribute fallback.
+- lib/dom/body-scroll-lock.ts says "Locks nest", but Header.tsx:251-261 runs its own `overflow` lock, and the test names its first lock `releaseMenu`. Move Header onto `lockBodyScroll()` or rename the test.
+- onboarding-resume.test.ts:139: the test name "leaves the flow as it is today" will go stale.
+- Component comment density 1.7x baseline (mostly the guide docblock).
+File size, folder tree, flag paths and test shape: none.

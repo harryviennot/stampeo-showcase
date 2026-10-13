@@ -17,6 +17,7 @@ import {
   type VerifyMode,
 } from "@/lib/auth/onboarding-resume";
 import { useInAppBrowser } from "@/hooks/useInAppBrowser";
+import { useInAppEntryReload } from "@/hooks/useInAppEntryReload";
 import { UserInfoStep } from "./steps/UserInfoStep";
 import { AuthenticationStep, type AuthPhase } from "./steps/AuthenticationStep";
 
@@ -99,6 +100,7 @@ export function OnboardingWizard() {
   const justAuthed = searchParams.get("just_authed") === "oauth";
 
   const inAppBrowser = useInAppBrowser();
+  const reloading = useInAppEntryReload(justAuthed);
 
   // A code sent within the last hour reopens the code screen (not after an OAuth
   // return); name and phone come from this tab's draft, if it still has one.
@@ -168,13 +170,13 @@ export function OnboardingWizard() {
 
   useEffect(() => {
     if (startedRef.current) return;
-    if (authLoading || justAuthed) return;
+    if (authLoading || justAuthed || reloading) return;
     startedRef.current = true;
     posthog.capture("onboarding_wizard_started", {
       is_authenticated: !!session?.access_token,
       in_app_browser: inAppBrowser,
     });
-  }, [authLoading, justAuthed, session, inAppBrowser]);
+  }, [authLoading, justAuthed, reloading, session, inAppBrowser]);
 
   const completeStep = useCallback(
     (currentStep: 1 | 2) => {
@@ -249,7 +251,7 @@ export function OnboardingWizard() {
     );
   }
 
-  if (authLoading) {
+  if (authLoading || reloading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
         <div className="w-8 h-8 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />

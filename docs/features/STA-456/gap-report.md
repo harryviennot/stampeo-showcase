@@ -37,3 +37,23 @@ VERDICT: DRIFT FOUND (gaps found too)
 
 ## Waivers
 (none)
+
+---
+
+# Gap Report: STA-456, final pass
+AUDITED: 2026-10-13  DIFF: dev@3c23ee2..feat/sta-456-in-app-signup (HEAD 235bcd5)
+VERDICT: DRIFT FOUND (gaps too)
+
+The audit read the runbook before the coordinator recorded the later QA results. RS-01..08, AN-02, the IA-06 re-run and IA-08 have since passed (see the runbook's Known state), which closes the "not run" gaps for AC6, AC9, AC10, AC11 and AC13 (cookies).
+
+## Acted on (final fix round)
+- The guide's address swap made tracking components see `/start` on `/onboarding` → tracking reads the held real route, and PostHog pageviews are dropped while held (same as security LOW).
+- `/start` forwarded on any `stampeo_src`, stale included → forward only on a cookie written this visit, or at the ceiling; the suspect test is replaced.
+- The `FBAV` and `FB4A` regex alternatives were never isolated → dedicated fixtures.
+- Plan drift → plan updated: new files, the guide's account note, the `/start` footer, `start` reserved (prod slug check before release), the stale edge cases, AC5's desktop exception.
+
+## Accepted, covered by QA only (no component runner)
+AC2/AC3 dispatch, AC5 wiring (guide open/close/focus/address), the chooser double-tap and re-open sequences, and the wizard reading the record. The in-app reload while the guide is open → `/start` forwards to step 1 (plan edge case).
+
+## Waivers
+(none)
