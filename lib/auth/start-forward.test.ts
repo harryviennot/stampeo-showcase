@@ -1,7 +1,8 @@
 /**
  * The /start page gives the attribution capture its moment, then sends the
- * visitor on to sign-up. It leaves as soon as the landing is recorded, or when
- * the ceiling is reached for a visitor whose consent writes nothing.
+ * visitor on to sign-up. It leaves as soon as THIS visit's landing is recorded
+ * (a source cookie left by an earlier visit does not count), or when the
+ * ceiling is reached for a visitor whose consent writes nothing.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -17,27 +18,40 @@ import {
 
 const EVIDENCE = { cv: 1, cr: "opt-out", ca: 0, p: 1, g: "US" } as const;
 
-/** The cookie header a visitor carries once their landing on `/start` was recorded. */
-const RECORDED = `theme=dark; ${SOURCE_COOKIE}=${serializeSourceCarrier(
-  buildSourceCarrier({
-    landing: landingFromUrl("https://stampeo.app/en/start?utm_source=meta&utm_medium=paid&fbclid=IwAR3x", {
-      referrer: "https://l.instagram.com/",
-      variant: null,
-      landedAt: 1_760_000_000,
+/** Epoch seconds at which the /start page loaded. */
+const LOADED_AT = 1_760_000_000;
+
+/** The cookie header of a visitor whose landing on `/start` was recorded at `landedAt`. */
+function recordedAt(landedAt: number) {
+  return `theme=dark; ${SOURCE_COOKIE}=${serializeSourceCarrier(
+    buildSourceCarrier({
+      landing: landingFromUrl("https://stampeo.app/en/start?utm_source=meta&utm_medium=paid&fbclid=IwAR3x", {
+        referrer: "https://l.instagram.com/",
+        variant: null,
+        landedAt,
+      }),
+      evidence: EVIDENCE,
     }),
-    evidence: EVIDENCE,
-  }),
-)}`;
+  )}`;
+}
+
+/** Written by this visit's landing. */
+const RECORDED = recordedAt(LOADED_AT);
+/** Left by a visit from the day before: a returning visitor's browser still holds it. */
+const FROM_YESTERDAY = recordedAt(LOADED_AT - 86_400);
 
 describe("shouldForwardFromStart", () => {
   test.each([
-    ["the landing is recorded", RECORDED, 0, true],
+    ["this visit's landing is recorded", RECORDED, 0, true],
+    ["this visit's landing is recorded in the second before the page loaded", recordedAt(LOADED_AT - 1), 0, true],
+    ["only an earlier visit's landing is recorded and the ceiling is not reached", FROM_YESTERDAY, START_FORWARD_CEILING_MS - 1, false],
+    ["only an earlier visit's landing is recorded and the ceiling is reached", FROM_YESTERDAY, START_FORWARD_CEILING_MS, true],
     ["the landing is not recorded and the ceiling is not reached", "theme=dark", START_FORWARD_CEILING_MS - 1, false],
     ["the landing is not recorded and the ceiling is reached", "theme=dark", START_FORWARD_CEILING_MS, true],
     ["a source cookie is unreadable and the ceiling is not reached", `${SOURCE_COOKIE}=%7Bnot-json`, 300, false],
     ["there is no cookie header at all and the ceiling is not reached", undefined, 0, false],
   ])("when %s", (_label, cookieHeader, elapsedMs, expected) => {
-    expect(shouldForwardFromStart({ cookieHeader, elapsedMs })).toBe(expected);
+    expect(shouldForwardFromStart({ cookieHeader, elapsedMs, pageLoadedAt: LOADED_AT })).toBe(expected);
   });
 });
 
@@ -76,6 +90,7 @@ function visit(cookieHeader: () => string) {
   const stop = forwardWhenRecorded({
     readCookies: cookieHeader,
     now: clock.now,
+    pageLoadedAt: LOADED_AT,
     timers: clock.timers,
     forward: () => forwarded.push(clock.now()),
   });
@@ -83,14 +98,30 @@ function visit(cookieHeader: () => string) {
 }
 
 describe("a visitor landing on /start", () => {
-  test("whose landing is already recorded is sent on at the first tick, not before", () => {
+  test("whose landing this visit recorded is sent on at the first tick, not before", () => {
     const { clock, forwarded } = visit(() => RECORDED);
 
     expect(forwarded).toEqual([]);
     clock.advance(1000);
 
     expect(forwarded.length).toBe(1);
+    expect(forwarded[0]).toBeGreaterThan(0);
     expect(forwarded[0]).toBeLessThanOrEqual(150);
+  });
+
+  test("with an earlier visit's cookie waits until this visit's landing replaces it", () => {
+    let header = FROM_YESTERDAY;
+    const { clock, forwarded } = visit(() => header);
+
+    clock.advance(1000);
+    expect(forwarded).toEqual([]);
+
+    header = RECORDED;
+    clock.advance(1000);
+
+    expect(forwarded.length).toBe(1);
+    expect(forwarded[0]).toBeGreaterThan(1000);
+    expect(forwarded[0]).toBeLessThanOrEqual(1150);
   });
 
   test("whose landing is recorded a moment later is sent on right after", () => {
@@ -108,8 +139,11 @@ describe("a visitor landing on /start", () => {
     expect(forwarded[0]).toBeLessThanOrEqual(650);
   });
 
-  test("whose consent writes nothing is sent on at the ceiling, once", () => {
-    const { clock, forwarded, running } = visit(() => "theme=dark");
+  test.each([
+    ["no source cookie", "theme=dark"],
+    ["only an earlier visit's source cookie", FROM_YESTERDAY],
+  ])("whose consent writes nothing (%s) is sent on at the ceiling, once", (_label, header) => {
+    const { clock, forwarded, running } = visit(() => header);
 
     clock.advance(START_FORWARD_CEILING_MS - 1);
     expect(forwarded).toEqual([]);
@@ -119,6 +153,22 @@ describe("a visitor landing on /start", () => {
 
     expect(forwarded).toEqual([START_FORWARD_CEILING_MS]);
     expect(running()).toBe(0);
+  });
+
+  test("is sent on with no destination from the helper: the caller's route is the only way out", () => {
+    const calls: unknown[][] = [];
+    const clock = fakeClock();
+    forwardWhenRecorded({
+      readCookies: () => RECORDED,
+      now: clock.now,
+      pageLoadedAt: LOADED_AT,
+      timers: clock.timers,
+      forward: (...args: unknown[]) => calls.push(args),
+    });
+
+    clock.advance(1000);
+
+    expect(calls).toEqual([[]]);
   });
 
   test("who leaves the page first is never forwarded", () => {

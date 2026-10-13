@@ -5,7 +5,7 @@ import { useRouter } from "@/i18n/navigation";
 import { forwardWhenRecorded } from "@/lib/auth/start-forward";
 
 /**
- * A spinner while the landing is recorded, then the sign-up page. The
+ * A spinner while this visit's landing is recorded, then the sign-up page. The
  * destination is fixed: nothing in the URL can change where the visitor goes.
  */
 export function StartForwarder() {
@@ -16,6 +16,7 @@ export function StartForwarder() {
       forwardWhenRecorded({
         readCookies: () => document.cookie,
         now: Date.now,
+        pageLoadedAt: Math.floor(performance.timeOrigin / 1000),
         forward: () => router.replace("/onboarding"),
       }),
     [router],
