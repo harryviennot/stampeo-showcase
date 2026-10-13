@@ -9,7 +9,7 @@ import { AppleLogo, GoogleLogo } from "@/components/auth/OAuthButtons";
 import { useDevicePlatform } from "@/hooks/useDevicePlatform";
 import { attemptBrowserEscape } from "@/lib/auth/browser-escape";
 import { escapeParamsFromCookies } from "@/lib/auth/escape-params";
-import { buildBrowserEscapeUrl, escapeAddress, type InAppBrowser } from "@/lib/auth/in-app-browser";
+import { buildBrowserEscapeUrl, type InAppBrowser } from "@/lib/auth/in-app-browser";
 import { useAuth, type OAuthProvider } from "@/lib/supabase/auth-provider";
 import { BrowserEscapeGuide } from "./BrowserEscapeGuide";
 
@@ -46,20 +46,6 @@ export function InAppAuthChooser({
     rows.current[returnFocusTo.current]?.querySelector("button")?.focus();
     returnFocusTo.current = null;
   }, [guideFor]);
-
-  // While the guide is open the address bar holds the forwarding page with the ad click, so
-  // "Open in external browser" hands both to the real browser. Closing it puts the address back.
-  useEffect(() => {
-    if (guideFor === null) return;
-    const previous = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    const shared = escapeAddress(locale, escapeParamsFromCookies(document.cookie));
-    window.history.replaceState(window.history.state, "", shared);
-    return () => {
-      if (`${window.location.pathname}${window.location.search}` === shared) {
-        window.history.replaceState(window.history.state, "", previous);
-      }
-    };
-  }, [guideFor, locale]);
 
   const openInBrowser = async (provider: OAuthProvider) => {
     // No phone browser to hand over to: sign in here.

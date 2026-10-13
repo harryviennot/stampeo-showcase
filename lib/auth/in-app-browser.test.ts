@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { buildBrowserEscapeUrl, classifyInAppBrowser, escapeAddress } from "./in-app-browser";
+import { buildBrowserEscapeUrl, classifyInAppBrowser } from "./in-app-browser";
 
 const IOS = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)";
 const ANDROID_WV =
@@ -172,16 +172,5 @@ describe("buildBrowserEscapeUrl", () => {
       params: new URLSearchParams({ utm_campaign: "spring sale&more" }),
     });
     expect(url).toBe("x-safari-https://stampeo.app/en/start?utm_campaign=spring+sale%26more");
-  });
-});
-
-describe("escapeAddress", () => {
-  test("the page the real browser opens carries the ad click", () => {
-    const params = new URLSearchParams({ utm_source: "ig", utm_medium: "paid", fbclid: "QA456test" });
-    expect(escapeAddress("en", params)).toBe("/en/start?utm_source=ig&utm_medium=paid&fbclid=QA456test");
-  });
-
-  test("a visitor with no recorded click still lands on the forwarding page", () => {
-    expect(escapeAddress("fr", new URLSearchParams())).toBe("/fr/start");
   });
 });

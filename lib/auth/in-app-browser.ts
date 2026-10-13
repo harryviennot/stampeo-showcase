@@ -48,9 +48,3 @@ export function buildBrowserEscapeUrl(input: {
 
   return `intent://${hostAndPath}#Intent;scheme=${scheme};end`;
 }
-
-/** The forwarding page a real browser should open: it records the ad click, then moves on to sign-up. */
-export function escapeAddress(locale: string, params: URLSearchParams): string {
-  const query = params.toString();
-  return `/${locale}/start${query ? `?${query}` : ""}`;
-}
