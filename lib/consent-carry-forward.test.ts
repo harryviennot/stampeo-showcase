@@ -20,12 +20,14 @@ import { afterEach, describe, expect, test } from "bun:test";
 import {
   CONSENT_COOKIE,
   CONSENT_VERSION,
+  cookieNamesToClear,
   consentRecordFromCookieHeader,
   consentSnapshotKey,
   consentSurface,
   hasAnalyticsConsent,
   hasMarketingConsent,
   parsePriorConsent,
+  parseStoredChoice,
   priorConsentFromCookieHeader,
   resolveConsent,
   serializeConsentCookie,
@@ -37,6 +39,7 @@ import { landingFromUrl } from "./attribution/landing";
 import { shouldLoadGa } from "./google-analytics";
 import { shouldLoadMetaPixel } from "./meta-pixel";
 import { SUBJECT } from "./privacy/__fixtures__/fake-browser";
+import { planPageLoad } from "./privacy/lifecycle";
 import { rowFor } from "./privacy/policy";
 import { restoreGlobalsAfterEach } from "./testing/restore-globals";
 
@@ -161,6 +164,91 @@ describe("an older grant is asked again", () => {
 
     expect(page.surface).toBe("notice");
     expect(page.state).toEqual({ analytics: true, marketing: true });
+  });
+});
+
+describe("Google Ads joining the advertising choice (version 3 to version 4)", () => {
+  const PAGE_OPEN = { sid: SUBJECT, trackable: true, refreshedThisDocument: false } as const;
+
+  test("the choices these cases carry forward are the ones the version 3 banner wrote", () => {
+    expect(CONSENT_VERSION).toBe(4);
+    expect(OLDER).toBe(3);
+  });
+
+  test("an EU visitor who accepted everything under version 3 is asked again, and the cookies of what they accepted are cleared", () => {
+    const cookie = storedChoice(3, 1, 1, "opt-in");
+    const page = visit(cookie, "opt-in");
+    const plan = planPageLoad({
+      ...PAGE_OPEN,
+      row: rowFor("FR"),
+      stored: parseStoredChoice(cookie),
+      consent: page.state,
+    });
+
+    expect(page.surface).toBe("banner");
+    expect(page.state).toEqual({ analytics: false, marketing: false });
+    expect(page.metaLoads).toBe(false);
+    expect(page.gaLoads).toBe(false);
+    expect(plan.clear).toEqual(["analytics", "marketing"]);
+    expect(cookieNamesToClear(plan.clear, ["_gcl_au", "_gcl_aw", "_fbp", "_ga"]).sort()).toEqual([
+      "_fbp",
+      "_ga",
+      "_gcl_au",
+      "_gcl_aw",
+    ]);
+  });
+
+  test("an EU visitor who refused advertising under version 3 is not asked about it again, and the Google Ads cookies are cleared", () => {
+    const cookie = storedChoice(3, 1, 0, "opt-in");
+    const page = visit(cookie, "opt-in");
+    const plan = planPageLoad({
+      ...PAGE_OPEN,
+      row: rowFor("FR"),
+      stored: parseStoredChoice(cookie),
+      consent: page.state,
+    });
+
+    expect(page.state.marketing).toBe(false);
+    expect(plan.clear).toContain("marketing");
+    expect(cookieNamesToClear(plan.clear, ["_gcl_au", "_gcl_gs"]).sort()).toEqual(["_gcl_au", "_gcl_gs"]);
+  });
+
+  test("a US visitor who opted out of advertising under version 3 stays opted out", () => {
+    const page = visit(storedChoice(3, 1, 0, "opt-out"), "opt-out");
+
+    expect(page.state).toEqual({ analytics: true, marketing: false });
+    expect(page.captured!.ad).toBeNull();
+  });
+
+  test("GPC still overrides what a US visitor chose under version 3", () => {
+    const page = visit(storedChoice(3, 1, 1, "opt-out"), "opt-out", true);
+
+    expect(page.state).toEqual({ analytics: false, marketing: false });
+    expect(page.surface).toBe("none");
+  });
+
+  test.each([
+    ["a US visitor who never touched the notice", 4, 0, "NEXT_LOCALE=en"],
+    [
+      "a visitor whose current choice was made under version 4",
+      4,
+      1_759_000_000,
+      `${CONSENT_COOKIE}=${serializeConsentCookie({ v: 4, analytics: true, marketing: false, at: 1_759_000_000, regime: "opt-out" })}`,
+    ],
+    [
+      "a visitor whose refusal dates from version 3",
+      3,
+      1_759_000_000,
+      `${CONSENT_COOKIE}=${storedChoice(3, 1, 0, "opt-out")}`,
+    ],
+  ] as const)("the capture evidence of %s names consent version %d", (_who, cv, ca, header) => {
+    const evidence = consentEvidence({
+      record: consentRecordFromCookieHeader(header),
+      prior: priorConsentFromCookieHeader(header),
+      row: "US",
+    });
+
+    expect(evidence).toMatchObject({ cv, ca });
   });
 });
 

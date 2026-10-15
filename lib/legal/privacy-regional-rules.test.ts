@@ -73,11 +73,11 @@ const WORDING: Record<
     createAccount: /If you create an account, we report up to four steps/,
     retiredCreateBusinessAccount: /If you go on to create a business account/,
     beforeAnyBusiness: /before any business exists/,
-    googleSessionId: /Google receives its own session identifier with each step/,
+    googleSessionId: /Google Analytics receives its own session identifier with each step/,
     googleNeverContact:
       /It never receives your contact details, your IP address or your browser's characteristics/,
-    offAdvertising: /Turning off advertising stops anything further being reported to Meta/,
-    offMeasurement: /Turning off audience measurement does the same for Google/,
+    offAdvertising: /Turning off advertising stops anything further being reported to Meta and Google Ads/,
+    offMeasurement: /Turning off audience measurement does the same for Google Analytics/,
     offBoth: /Turning off both also deletes the stored campaign source/,
     laterRefusalApplies: /applies to your account and your businesses/,
     cannotBeRecalled: /cannot be recalled/,
@@ -94,11 +94,11 @@ const WORDING: Record<
     createAccount: /Si vous créez un compte, nous signalons jusqu'à quatre étapes/,
     retiredCreateBusinessAccount: /Si vous créez ensuite un compte professionnel/,
     beforeAnyBusiness: /avant toute création de commerce/,
-    googleSessionId: /Google reçoit son propre identifiant de session à chaque étape/,
+    googleSessionId: /Google Analytics reçoit son propre identifiant de session à chaque étape/,
     googleNeverContact:
       /Il ne reçoit jamais vos coordonnées, votre adresse IP ni les caractéristiques de votre navigateur/,
-    offAdvertising: /Désactiver la publicité met fin à tout nouveau signalement à Meta/,
-    offMeasurement: /Désactiver la mesure d'audience produit le même effet pour Google/,
+    offAdvertising: /Désactiver la publicité met fin à tout nouveau signalement à Meta et à Google Ads/,
+    offMeasurement: /Désactiver la mesure d'audience produit le même effet pour Google Analytics/,
     offBoth: /Désactiver les deux supprime aussi l'origine de campagne conservée/,
     laterRefusalApplies: /s'applique à votre compte et à vos commerces/,
     cannotBeRecalled: /ne peuvent pas être rappelées/,
@@ -115,11 +115,11 @@ const WORDING: Record<
     createAccount: /Si creas una cuenta, comunicamos hasta cuatro pasos/,
     retiredCreateBusinessAccount: /Si después creas una cuenta profesional/,
     beforeAnyBusiness: /antes de que exista ningún comercio/,
-    googleSessionId: /Google recibe su propio identificador de sesión en cada paso/,
+    googleSessionId: /Google Analytics recibe su propio identificador de sesión en cada paso/,
     googleNeverContact:
       /Nunca recibe tus datos de contacto, tu dirección IP ni las características de tu navegador/,
-    offAdvertising: /Desactivar la publicidad pone fin a cualquier nueva comunicación a Meta/,
-    offMeasurement: /Desactivar la medición de audiencia hace lo mismo con Google/,
+    offAdvertising: /Desactivar la publicidad pone fin a cualquier nueva comunicación a Meta y a Google Ads/,
+    offMeasurement: /Desactivar la medición de audiencia hace lo mismo con Google Analytics/,
     offBoth: /Desactivar ambas elimina además el origen de campaña guardado/,
     laterRefusalApplies: /se aplica a tu cuenta y a tus comercios/,
     cannotBeRecalled: /no pueden retirarse/,
@@ -136,11 +136,11 @@ const WORDING: Record<
     createAccount: /Jeżeli założysz konto, przekazujemy/,
     retiredCreateBusinessAccount: /Jeżeli następnie założysz konto firmowe/,
     beforeAnyBusiness: /zanim powstanie jakakolwiek firma/,
-    googleSessionId: /Google przy każdym etapie otrzymuje własny identyfikator sesji/,
+    googleSessionId: /Google Analytics przy każdym etapie otrzymuje własny identyfikator sesji/,
     googleNeverContact:
       /Nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki/,
-    offAdvertising: /Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta/,
-    offMeasurement: /Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google/,
+    offAdvertising: /Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta i Google Ads/,
+    offMeasurement: /Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google Analytics/,
     offBoth: /Wyłączenie obu usuwa też zapisane źródło kampanii/,
     laterRefusalApplies: /obejmuje Twoje konto i Twoje firmy/,
     cannotBeRecalled: /nie można wycofać/,
@@ -295,7 +295,7 @@ describe("privacy policy: what is reported and what a withdrawal stops", () => {
   );
 
   it.each(routing.locales)(
-    "§5.5 gives Google its session identifier and still never its contact details (%s)",
+    "§5.5 gives Google Analytics its session identifier and still never its contact details (%s)",
     (locale) => {
       const text = s55(locale);
       expect(text).toMatch(WORDING[locale].googleSessionId);

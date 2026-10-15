@@ -118,11 +118,11 @@ describe("privacy §5 cookies", () => {
 
   it("names every recipient the banner offers, in every locale", () => {
     // CNIL requires the purposes AND the recipients to be disclosed. The
-    // banner names Google and Meta; if the policy does not, the two disagree
+    // banner names Google Ads and Meta; if the policy does not, the two disagree
     // and the disclosure is the one that loses.
     for (const locale of routing.locales) {
       const source = privacySource(locale);
-      for (const recipient of ["Google Analytics 4", "Meta"]) {
+      for (const recipient of ["Google Analytics 4", "Google Ads", "Meta"]) {
         expect(source, `${locale} does not name ${recipient}`).toContain(recipient);
       }
     }
@@ -438,7 +438,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
   });
 
   it.each(routing.locales)(
-    "the Advertising toggle names Meta and the irreversible code (%s)",
+    "the Advertising toggle names Meta, Google Ads and the irreversible code (%s)",
     (locale) => {
       // The line a visitor reads when they decide on marketing cookies.
       const IRREVERSIBLE_CODE: Record<string, RegExp> = {
@@ -450,14 +450,16 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
       const body: string = commonCatalog(locale).cookies.prefs.marketing.body;
 
       expect(body).toContain("Meta");
+      expect(body).toContain("Google Ads");
       expect(body).toMatch(IRREVERSIBLE_CODE[locale]);
     },
   );
 
-  it("names Meta among the United States transfers, in every locale", () => {
+  it("names Meta and Google Ads among the United States transfers, in every locale", () => {
     for (const locale of routing.locales) {
       const text = section(locale, TRANSFERS[locale], /^#+\s/m);
       expect(text, `${locale} transfers paragraph does not name Meta`).toContain("Meta");
+      expect(text, `${locale} transfers paragraph does not name Google Ads`).toContain("Google Ads");
     }
   });
 });
@@ -582,13 +584,13 @@ describe("privacy — the statements the legal review requires", () => {
   );
 
   it.each(routing.locales)(
-    "the banner and the US notice name Meta and Google (%s)",
+    "the banner and the US notice name Meta and Google Ads (%s)",
     (locale) => {
       // The first layer a visitor reads before deciding.
       const { banner, notice } = commonCatalog(locale).cookies;
       for (const body of [banner.body, notice.body]) {
         expect(body).toContain("Meta");
-        expect(body).toContain("Google");
+        expect(body).toContain("Google Ads");
       }
     },
   );
