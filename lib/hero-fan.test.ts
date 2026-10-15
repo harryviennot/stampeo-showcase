@@ -2,11 +2,19 @@ import { describe, expect, it } from "bun:test";
 
 import {
   FAN_ARC_RADIUS_PCT,
+  FAN_CARDS,
   FAN_SLOTS,
+  HERO_FAN_SEASON,
+  fanSlots,
   resolveFanCard,
   slotStyle,
+  type FanSeason,
   type FanTier,
 } from "./hero-fan";
+import {
+  HALLOWEEN_POINTS_SAMPLES,
+  HALLOWEEN_STAMP_SAMPLES,
+} from "./halloween-samples";
 import { POINTS_SAMPLES, STAMP_SAMPLES } from "./loyalty-samples";
 
 const TIERS: FanTier[] = ["sm", "md", "lg"];
@@ -28,7 +36,12 @@ describe("FAN_SLOTS shape", () => {
     const ids = FAN_SLOTS.map((s) => s.cardId);
     expect(new Set(ids).size).toBe(ids.length);
     const known = new Set(
-      [...STAMP_SAMPLES, ...POINTS_SAMPLES].map((s) => s.id),
+      [
+        ...STAMP_SAMPLES,
+        ...POINTS_SAMPLES,
+        ...HALLOWEEN_STAMP_SAMPLES,
+        ...HALLOWEEN_POINTS_SAMPLES,
+      ].map((s) => s.id),
     );
     for (const id of ids) expect(known.has(id)).toBe(true);
   });
@@ -176,5 +189,40 @@ describe("resolveFanCard", () => {
 
   it("throws on an unknown id", () => {
     expect(() => resolveFanCard("not-a-brand")).toThrow();
+  });
+});
+
+describe("seasons", () => {
+  const SEASONS = Object.keys(FAN_CARDS) as FanSeason[];
+
+  it("gives every season a distinct card for each of the seven slots", () => {
+    for (const season of SEASONS) {
+      const cards = FAN_CARDS[season];
+      const ids = [-3, -2, -1, 0, 1, 2, 3].map((i) => cards[i]);
+      expect(ids.every(Boolean)).toBe(true);
+      expect(new Set(ids).size).toBe(7);
+      for (const id of ids) expect(() => resolveFanCard(id)).not.toThrow();
+    }
+  });
+
+  it("keeps a stamp card and a points card among the three a phone shows", () => {
+    for (const season of SEASONS) {
+      const kinds = new Set(
+        fanSlots(season)
+          .filter((s) => Math.abs(s.index) <= 1)
+          .map((s) => resolveFanCard(s.cardId).kind),
+      );
+      expect(kinds).toEqual(new Set(["stamps", "points"]));
+    }
+  });
+
+  it("changes only the cards, never where they sit", () => {
+    const places = (season: FanSeason) =>
+      fanSlots(season).map((s) => ({ ...s, cardId: "" }));
+    for (const season of SEASONS) expect(places(season)).toEqual(places("default"));
+  });
+
+  it("shows the season the config names", () => {
+    expect(FAN_SLOTS).toEqual(fanSlots(HERO_FAN_SEASON));
   });
 });
