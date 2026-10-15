@@ -132,7 +132,7 @@
     "cookies": {
       "banner": {
         "title": "Your cookie choices",
-        "body": "We load measurement and advertising cookies, and tell Meta and Google whether an ad led you to sign up, only if you accept. Refusing changes nothing about how the site works.",
+        "body": "We load measurement and advertising cookies, and tell Meta and Google Ads whether an ad led you to sign up, only if you accept. Refusing changes nothing about how the site works.",
         "learnMore": "See the details",
         "accept": "Accept all",
         "refuse": "Refuse all",
@@ -140,7 +140,7 @@
       },
       "notice": {
         "title": "Your Privacy Choices",
-        "body": "We use measurement and advertising cookies to see how our ads perform, and tell Meta and Google whether an ad led you to sign up.",
+        "body": "We use measurement and advertising cookies to see how our ads perform, and tell Meta and Google Ads whether an ad led you to sign up.",
         "dismiss": "Got it"
       },
       "prefs": {
@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Advertising",
-          "body": "Meta, to know which of our ads actually led somewhere. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you."
+          "body": "Meta and Google Ads, to know which of our ads actually led somewhere. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you. Google Ads receives only your account email, as an irreversible code, and nothing else about you."
         },
         "save": "Save my choice",
         "cancel": "Cancel",
@@ -173,11 +173,11 @@
           },
           "marketing": {
             "title": "Sale, sharing and targeted advertising",
-            "body": "Meta, to know which of our ads led to a sign-up. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you. Turned off, nothing is sent to Meta."
+            "body": "Meta and Google Ads, to know which of our ads led to a sign-up. If you create an account, Meta also receives your contact details as an irreversible code, to recognize you. Google Ads receives only your account email, as an irreversible code, and nothing else about you. Turned off, nothing is sent to Meta or Google Ads."
           },
           "analytics": {
             "title": "Audience measurement",
-            "body": "Google Analytics, to see which pages bring us new businesses. Google handles this data on our behalf only."
+            "body": "Google Analytics, to see which pages bring us new businesses. Google Analytics handles this data on our behalf only."
           }
         }
       }
