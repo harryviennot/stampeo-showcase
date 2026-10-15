@@ -63,12 +63,15 @@ export const CONSENT_COOKIE = "stampeo_consent";
  * 3 — Privacy policy §5.5: Meta also receives hashed contact details, the IP
  *     address and browser characteristics, four reported steps instead of
  *     two, and those steps for signups that did not come through a Meta ad.
+ * 4 — Privacy policy §4 and §5.5: Google Ads also receives three reported
+ *     steps from our servers, with the Google click identifier and the
+ *     account email hashed with SHA-256, under the advertising choice.
  *
  * The backend's `CONSENT_VERSION` mirrors this and must move with it: the
  * backend honours only the versions in `ACCEPTED_CONSENT_VERSIONS` (backend
  * `app/services/attribution/eligibility.py`).
  */
-export const CONSENT_VERSION = 3;
+export const CONSENT_VERSION = 4;
 
 export type ConsentCategory = "analytics" | "marketing";
 
@@ -146,7 +149,9 @@ export type ConsentSurface = "none" | "banner" | "notice";
  *
  * `_ga_*` has to be a prefix: GA4 writes one `_ga_<MEASUREMENT_ID>` cookie per
  * property, and a literal list would leave the real session cookie in place
- * while reporting the visitor as opted out.
+ * while reporting the visitor as opted out. `_gcl_*` is the same for the
+ * cookies a Google Ads tag leaves (`_gcl_au`, `_gcl_aw`, `_gcl_gs`, ...): the
+ * site loads no such tag, so these only clear what a browser still carries.
  *
  * `stampeo_ga` and `stampeo_ad` are our own carriers of each category's
  * identifiers. `stampeo_src` (campaign source) holds neither and is cleared
@@ -158,7 +163,7 @@ export type ConsentSurface = "none" | "banner" | "notice";
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
   analytics: ["_ga", "_ga_*", "_gid", GA_COOKIE],
-  marketing: ["_fbp", "_fbc", "_ttp", AD_COOKIE],
+  marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", AD_COOKIE],
 };
 
 /** The carriers the privacy route sets as a server response, which a refusal asks it to clear too. */
