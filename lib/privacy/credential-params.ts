@@ -66,6 +66,11 @@ function scrubUrl(url: string, names: ParamNames): string {
   return path + (nextQuery ? `?${nextQuery}` : "") + (nextFragment ? `#${nextFragment}` : "");
 }
 
+/** One URL without the listed parameters; what is left of it is byte for byte what it was. */
+export function scrubUrlParams(url: string, names: ParamNames): string {
+  return scrubUrl(url, names);
+}
+
 /**
  * `text` without the listed parameters, whether it is a URL or text with URLs
  * in it: a message (`GET /reset-password?token_hash=…`) or PostHog's element
