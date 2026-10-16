@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { routing } from "@/i18n/routing";
-import { commonCatalog, privacySource, retentionTable, section } from "./policy-test-utils";
+import { commonCatalog, privacySource, retentionTable, s55, section } from "./policy-test-utils";
 
 /**
  * What §5, §6 and §8 of the privacy policy say about the regional rules, the
@@ -11,7 +11,6 @@ import { commonCatalog, privacySource, retentionTable, section } from "./policy-
 const s51 = (locale: string) => section(locale, /^#+\s+5\.1\s/m);
 const s52 = (locale: string) => section(locale, /^#+\s+5\.2\s/m);
 const s53 = (locale: string) => section(locale, /^#+\s+5\.3\s/m);
-const s55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
 const s56 = (locale: string) => section(locale, /^#+\s+5\.6\s/m);
 const s6 = (locale: string) => section(locale, /^##\s+6\./m);
 
@@ -297,9 +296,10 @@ describe("privacy policy: what is reported and what a withdrawal stops", () => {
   it.each(routing.locales)(
     "§5.5 gives Google Analytics its session identifier and still never its contact details (%s)",
     (locale) => {
-      const text = s55(locale);
-      expect(text).toMatch(WORDING[locale].googleSessionId);
-      expect(text).toMatch(WORDING[locale].googleNeverContact);
+      const w = WORDING[locale];
+      // One sentence follows the other, so "It" cannot drift to Google Ads.
+      const joined = new RegExp(`${w.googleSessionId.source}[^.]*\\.\\s+${w.googleNeverContact.source}`);
+      expect(s55(locale)).toMatch(joined);
     },
   );
 

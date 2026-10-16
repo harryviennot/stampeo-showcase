@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Publicidad",
-          "body": "Meta y Google Ads, para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Google Ads recibe únicamente el correo electrónico de tu cuenta, como código irreversible, y nada más sobre ti."
+          "body": "Meta y Google Ads, para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Google Ads recibe su identificador de clic si vienes de uno de sus anuncios, y el correo electrónico de tu cuenta como código irreversible, junto con el paso alcanzado y, para una prueba o un pago, su precio. Nada más sobre ti."
         },
         "save": "Guardar mi elección",
         "cancel": "Cancelar",
@@ -173,7 +173,7 @@
           },
           "marketing": {
             "title": "Venta, uso compartido y publicidad dirigida",
-            "body": "Meta y Google Ads, para saber qué anuncios han llevado a un registro. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Google Ads recibe únicamente el correo electrónico de tu cuenta, como código irreversible, y nada más sobre ti. Si lo desactivas, no se envía nada a Meta ni a Google Ads."
+            "body": "Meta y Google Ads, para saber qué anuncios han llevado a un registro. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Google Ads recibe su identificador de clic si vienes de uno de sus anuncios, y el correo electrónico de tu cuenta como código irreversible, junto con el paso alcanzado y, para una prueba o un pago, su precio. Nada más sobre ti. Si lo desactivas, no se envía nada a Meta ni a Google Ads."
           },
           "analytics": {
             "title": "Medición de audiencia",

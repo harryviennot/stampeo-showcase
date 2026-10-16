@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Reklama",
-          "body": "Meta i Google Ads, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Google Ads otrzyma wyłącznie adres e-mail twojego konta, w postaci nieodwracalnego kodu, i nic więcej o tobie."
+          "body": "Meta i Google Ads, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Google Ads otrzyma identyfikator kliknięcia, jeśli przychodzisz z jednej z jego reklam, oraz adres e-mail twojego konta w postaci nieodwracalnego kodu, a do tego etap i, przy okresie próbnym lub płatności, cenę. Nic więcej o tobie."
         },
         "save": "Zapisz mój wybór",
         "cancel": "Anuluj",
@@ -173,7 +173,7 @@
           },
           "marketing": {
             "title": "Sprzedaż, udostępnianie i reklama ukierunkowana",
-            "body": "Meta i Google Ads, żeby wiedzieć, które reklamy doprowadziły do rejestracji. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Google Ads otrzyma wyłącznie adres e-mail twojego konta, w postaci nieodwracalnego kodu, i nic więcej o tobie. Po wyłączeniu nic nie trafia do Meta ani do Google Ads."
+            "body": "Meta i Google Ads, żeby wiedzieć, które reklamy doprowadziły do rejestracji. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Google Ads otrzyma identyfikator kliknięcia, jeśli przychodzisz z jednej z jego reklam, oraz adres e-mail twojego konta w postaci nieodwracalnego kodu, a do tego etap i, przy okresie próbnym lub płatności, cenę. Nic więcej o tobie. Po wyłączeniu nic nie trafia do Meta ani do Google Ads."
           },
           "analytics": {
             "title": "Statystyki",

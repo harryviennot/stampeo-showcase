@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Publicité",
-          "body": "Meta et Google Ads, pour savoir laquelle de nos annonces a vraiment servi. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Google Ads reçoit uniquement l'adresse email de votre compte, sous forme de code irréversible, et rien d'autre sur vous."
+          "body": "Meta et Google Ads, pour savoir laquelle de nos annonces a vraiment servi. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Google Ads reçoit son identifiant de clic si vous venez d'une de ses annonces, et l'adresse email de votre compte sous forme de code irréversible, avec l'étape franchie et, pour un essai ou un paiement, son prix. Rien d'autre sur vous."
         },
         "save": "Enregistrer mon choix",
         "cancel": "Annuler",
@@ -173,7 +173,7 @@
           },
           "marketing": {
             "title": "Vente, partage et publicité ciblée",
-            "body": "Meta et Google Ads, pour savoir quelles annonces ont mené à une inscription. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Google Ads reçoit uniquement l'adresse email de votre compte, sous forme de code irréversible, et rien d'autre sur vous. Si vous la désactivez, rien n'est transmis à Meta ni à Google Ads."
+            "body": "Meta et Google Ads, pour savoir quelles annonces ont mené à une inscription. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Google Ads reçoit son identifiant de clic si vous venez d'une de ses annonces, et l'adresse email de votre compte sous forme de code irréversible, avec l'étape franchie et, pour un essai ou un paiement, son prix. Rien d'autre sur vous. Si vous la désactivez, rien n'est transmis à Meta ni à Google Ads."
           },
           "analytics": {
             "title": "Mesure d'audience",

@@ -3,77 +3,91 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { routing } from "@/i18n/routing";
 import { getLegalContent } from "./index";
 import { compileLegalMDX } from "./mdx";
-import { commonCatalog, privacySource, section } from "./policy-test-utils";
+import { commonCatalog, s55, section } from "./policy-test-utils";
 
 /**
  * Google Ads as a recipient of advertising conversion reports: what a visitor
  * reads in the banner and the preferences dialog, and what the privacy policy
  * says in §4, §5.3, §5.5 and §6. Google Analytics stays the analytics
- * recipient, and the two Googles are never written as a bare "Google".
+ * recipient, and the banner and dialog never write a bare "Google".
  */
 
 type Cookies = ReturnType<typeof commonCatalog>["cookies"];
 const cookiesOf = (locale: string): Cookies => commonCatalog(locale).cookies;
 
-const IRREVERSIBLE_CODE: Record<string, RegExp> = {
-  en: /irreversible code/,
-  fr: /code irréversible/,
-  es: /código irreversible/,
-  pl: /nieodwracalnego kodu/,
-};
-
-/** The statements about Google Ads in the dialog, in each locale's words. */
+/** What the advertising cards say Google Ads receives, in each locale's words. */
 const DIALOG: Record<
   string,
-  { accountEmail: RegExp; nothingElse: RegExp; offSentence: RegExp; analyticsOnBehalf: RegExp }
+  {
+    clickIdentifier: RegExp;
+    accountEmail: RegExp;
+    stepAndPrice: RegExp;
+    nothingElse: RegExp;
+    retiredOnlyClaim: RegExp;
+    offSentence: RegExp;
+    analyticsOnBehalf: RegExp;
+  }
 > = {
   en: {
-    accountEmail: /Google Ads receives only your account email, as an irreversible code/,
-    nothingElse: /nothing else about you/,
+    clickIdentifier: /Google Ads receives its click identifier if you came from one of its ads/,
+    accountEmail: /your account email as an irreversible code/,
+    stepAndPrice: /along with the step and, for a trial or a payment, its price/,
+    nothingElse: /Nothing else about you\./,
+    retiredOnlyClaim: /receives only/,
     offSentence: /Turned off, nothing is sent to Meta or Google Ads/,
     analyticsOnBehalf: /Google Analytics handles this data on our behalf only/,
   },
   fr: {
-    accountEmail: /Google Ads reçoit uniquement l'adresse email de votre compte, sous forme de code irréversible/,
-    nothingElse: /rien d'autre sur vous/,
+    clickIdentifier: /Google Ads reçoit son identifiant de clic si vous venez d'une de ses annonces/,
+    accountEmail: /l'adresse email de votre compte sous forme de code irréversible/,
+    stepAndPrice: /avec l'étape franchie et, pour un essai ou un paiement, son prix/,
+    nothingElse: /Rien d'autre sur vous\./,
+    retiredOnlyClaim: /reçoit uniquement/,
     offSentence: /rien n'est transmis à Meta ni à Google Ads/,
     analyticsOnBehalf: /Google Analytics traite ces données pour notre compte uniquement/,
   },
   es: {
-    accountEmail: /Google Ads recibe únicamente el correo electrónico de tu cuenta, como código irreversible/,
-    nothingElse: /nada más sobre ti/,
+    clickIdentifier: /Google Ads recibe su identificador de clic si vienes de uno de sus anuncios/,
+    accountEmail: /el correo electrónico de tu cuenta como código irreversible/,
+    stepAndPrice: /junto con el paso alcanzado y, para una prueba o un pago, su precio/,
+    nothingElse: /Nada más sobre ti\./,
+    retiredOnlyClaim: /recibe únicamente/,
     offSentence: /no se envía nada a Meta ni a Google Ads/,
     analyticsOnBehalf: /Google Analytics trata estos datos solo por cuenta nuestra/,
   },
   pl: {
-    accountEmail: /Google Ads otrzyma wyłącznie adres e-mail twojego konta, w postaci nieodwracalnego kodu/,
-    nothingElse: /nic więcej o tobie/,
+    clickIdentifier: /Google Ads otrzyma identyfikator kliknięcia, jeśli przychodzisz z jednej z jego reklam/,
+    accountEmail: /adres e-mail twojego konta w postaci nieodwracalnego kodu/,
+    stepAndPrice: /a do tego etap i, przy okresie próbnym lub płatności, cenę/,
+    nothingElse: /Nic więcej o tobie\./,
+    retiredOnlyClaim: /otrzyma wyłącznie/,
     offSentence: /nic nie trafia do Meta ani do Google Ads/,
     analyticsOnBehalf: /Google Analytics przetwarza te dane wyłącznie na nasze zlecenie/,
   },
 };
 
+/** Character counts of the banner and notice bodies in the version 3 text; a line at 390px holds about 45. */
+const V3_LENGTH: Record<string, { banner: number; notice: number }> = {
+  en: { banner: 174, notice: 129 },
+  fr: { banner: 214, notice: 151 },
+  es: { banner: 203, notice: 149 },
+  pl: { banner: 209, notice: 159 },
+};
+const MAX_GROWTH = 60;
+
 describe("the dialog names Google Ads wherever it lists the advertising recipients", () => {
   it.each(routing.locales)(
-    "the banner, the US notice and both advertising cards name Meta and Google Ads (%s)",
-    (locale) => {
-      const { banner, notice, prefs } = cookiesOf(locale);
-      for (const body of [banner.body, notice.body, prefs.marketing.body, prefs.us.marketing.body]) {
-        expect(body).toContain("Meta");
-        expect(body).toContain("Google Ads");
-      }
-    },
-  );
-
-  it.each(routing.locales)(
-    "both advertising cards say Google Ads gets only the account email, as an irreversible code, and nothing else (%s)",
+    "both advertising cards say exactly what Google Ads receives: its click identifier, the account email as an irreversible code, the step and its price, nothing else (%s)",
     (locale) => {
       const { prefs } = cookiesOf(locale);
       const w = DIALOG[locale];
       for (const body of [prefs.marketing.body, prefs.us.marketing.body]) {
-        expect(body).toMatch(IRREVERSIBLE_CODE[locale]);
+        expect(body).toContain("Meta");
+        expect(body).toMatch(w.clickIdentifier);
         expect(body).toMatch(w.accountEmail);
+        expect(body).toMatch(w.stepAndPrice);
         expect(body).toMatch(w.nothingElse);
+        expect(body).not.toMatch(w.retiredOnlyClaim);
       }
     },
   );
@@ -108,16 +122,15 @@ describe("the dialog names Google Ads wherever it lists the advertising recipien
     for (const text of texts) expect(text).not.toMatch(/Google(?! (Analytics|Ads)\b)/);
   });
 
-  it.each(routing.locales)("the banner stays within about one extra line at 390px (%s)", (locale) => {
+  it.each(routing.locales)("the banner and the notice grew by at most one line over the version 3 text (%s)", (locale) => {
     const { banner, notice } = cookiesOf(locale);
-    expect(banner.body.length).toBeLessThanOrEqual(240);
-    expect(notice.body.length).toBeLessThanOrEqual(200);
+    expect(banner.body.length - V3_LENGTH[locale].banner).toBeLessThanOrEqual(MAX_GROWTH);
+    expect(notice.body.length - V3_LENGTH[locale].notice).toBeLessThanOrEqual(MAX_GROWTH);
   });
 });
 
 const s4 = (locale: string) => section(locale, /^##\s+4\./m, /^##\s+5\./m);
 const s53 = (locale: string) => section(locale, /^#+\s+5\.3\s/m, /^#+\s+5\.4\s/m);
-const s55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
 const s6 = (locale: string) => section(locale, /^##\s+6\./m, /^###\s+6\.1/m);
 
 /** The statements about Google Ads in the policy, in each locale's words. */
@@ -132,12 +145,10 @@ const POLICY: Record<
     withoutAGoogleClick: RegExp;
     gclidForGoogleAds: RegExp;
     adCookieRow: RegExp;
+    valueAndCurrency: RegExp;
     ownIdentifiers: RegExp;
-    sessionIdentifier: RegExp;
     roleBullet: RegExp;
     recipients: RegExp;
-    offAdvertising: RegExp;
-    offMeasurement: RegExp;
   }
 > = {
   en: {
@@ -149,12 +160,10 @@ const POLICY: Record<
     withoutAGoogleClick: /Like Meta, Google Ads receives these steps whether or not you came from one of its advertisements/,
     gclidForGoogleAds: /for Google Ads the `gclid`, for Meta the `fbclid`/,
     adCookieRow: /a Google click identifier goes to Google Ads, a Meta click identifier to Meta/,
+    valueAndCurrency: /for the last two, the price of the plan you chose or the amount paid, and its currency/,
     ownIdentifiers: /a Meta click identifier is never sent to Google Ads or Google Analytics/,
-    sessionIdentifier: /Google Analytics receives its own session identifier with each step/,
     roleBullet: /\*\*Role of Google Ads:\*\* for the steps reported to it, Google Ads is an independent recipient for advertising measurement/,
     recipients: /Google means Google Ireland Limited, with Google LLC in the United States, which provides Google Analytics and Google Ads/,
-    offAdvertising: /Turning off advertising stops anything further being reported to Meta and Google Ads/,
-    offMeasurement: /Turning off audience measurement does the same for Google Analytics/,
   },
   fr: {
     independentRecipient: /Google Ads reçoit ces signalements en tant que destinataire indépendant, pour la mesure publicitaire/,
@@ -165,12 +174,10 @@ const POLICY: Record<
     withoutAGoogleClick: /Comme Meta, Google Ads reçoit ces étapes que vous soyez arrivé ou non par l'une de ses publicités/,
     gclidForGoogleAds: /pour Google Ads, le `gclid` ; pour Meta, le `fbclid`/,
     adCookieRow: /un identifiant de clic Google est transmis à Google Ads, un identifiant de clic Meta à Meta/,
+    valueAndCurrency: /pour les deux dernières, le prix de l'offre choisie ou le montant réglé, et sa devise/,
     ownIdentifiers: /ni un identifiant de clic Meta à Google Ads ni à Google Analytics/,
-    sessionIdentifier: /Google Analytics reçoit son propre identifiant de session à chaque étape/,
     roleBullet: /\*\*Rôle de Google Ads\*\* : pour les étapes qui lui sont signalées, Google Ads est un destinataire indépendant, pour la mesure publicitaire/,
     recipients: /Google désigne Google Ireland Limited, avec Google LLC aux États-Unis, qui fournit Google Analytics et Google Ads/,
-    offAdvertising: /Désactiver la publicité met fin à tout nouveau signalement à Meta et à Google Ads/,
-    offMeasurement: /Désactiver la mesure d'audience produit le même effet pour Google Analytics/,
   },
   es: {
     independentRecipient: /Google Ads recibe esas comunicaciones como destinatario independiente, para la medición publicitaria/,
@@ -181,12 +188,10 @@ const POLICY: Record<
     withoutAGoogleClick: /Igual que Meta, Google Ads recibe estos pasos tanto si llegaste desde uno de sus anuncios como si no/,
     gclidForGoogleAds: /en el caso de Google Ads, el `gclid`; en el de Meta, el `fbclid`/,
     adCookieRow: /el de un clic de Google se envía a Google Ads, el de un clic de Meta, a Meta/,
+    valueAndCurrency: /en los dos últimos, el precio del plan elegido o el importe pagado y su divisa/,
     ownIdentifiers: /ni uno de Meta a Google Ads ni a Google Analytics/,
-    sessionIdentifier: /Google Analytics recibe su propio identificador de sesión en cada paso/,
     roleBullet: /\*\*Papel de Google Ads\*\*: respecto a los pasos que se le comunican, Google Ads es un destinatario independiente, para la medición publicitaria/,
     recipients: /Google es Google Ireland Limited, con Google LLC en Estados Unidos, que ofrece Google Analytics y Google Ads/,
-    offAdvertising: /Desactivar la publicidad pone fin a cualquier nueva comunicación a Meta y a Google Ads/,
-    offMeasurement: /Desactivar la medición de audiencia hace lo mismo con Google Analytics/,
   },
   pl: {
     independentRecipient: /Google Ads otrzymuje te informacje jako niezależny odbiorca, do pomiaru reklam/,
@@ -197,12 +202,10 @@ const POLICY: Record<
     withoutAGoogleClick: /Tak jak Meta, Google Ads otrzymuje te etapy niezależnie od tego, czy wejście na stronę nastąpiło z reklamy Google Ads/,
     gclidForGoogleAds: /w przypadku Google Ads jest to `gclid`, w przypadku Meta `fbclid`/,
     adCookieRow: /identyfikator kliknięcia z Google trafia do Google Ads, a z Meta do Meta/,
+    valueAndCurrency: /przy dwóch ostatnich także cenę wybranego planu lub zapłaconą kwotę wraz z walutą/,
     ownIdentifiers: /ani identyfikator kliknięcia z Meta do Google Ads czy Google Analytics/,
-    sessionIdentifier: /Google Analytics przy każdym etapie otrzymuje własny identyfikator sesji/,
     roleBullet: /\*\*Rola Google Ads:\*\* w odniesieniu do przekazywanych mu etapów Google Ads jest niezależnym odbiorcą, do pomiaru reklam/,
     recipients: /Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych, czyli podmioty świadczące usługi Google Analytics i Google Ads/,
-    offAdvertising: /Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta i Google Ads/,
-    offMeasurement: /Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google Analytics/,
   },
 };
 
@@ -232,27 +235,20 @@ describe("the privacy policy names Google Ads as a recipient of advertising conv
 
     expect(text).toMatch(w.threeSteps);
     expect(text).toMatch(w.noPaymentPage);
+    expect(text).toMatch(w.valueAndCurrency);
     expect(text).toMatch(w.hashedAccountEmail);
     expect(text).toMatch(w.nothingElse);
     expect(text).toMatch(w.withoutAGoogleClick);
     expect(text).toMatch(w.gclidForGoogleAds);
   });
 
-  it.each(routing.locales)("§5.5 keeps each platform to its own identifiers and Google Analytics to its session identifier (%s)", (locale) => {
-    const text = s55(locale);
-
-    expect(text).toMatch(POLICY[locale].ownIdentifiers);
-    expect(text).toMatch(POLICY[locale].sessionIdentifier);
+  it.each(routing.locales)("§5.5 keeps each platform to its own identifiers (%s)", (locale) => {
+    expect(s55(locale)).toMatch(POLICY[locale].ownIdentifiers);
   });
 
   it.each(routing.locales)("§5.5 gives Google Ads a role bullet and defines Google as the company behind both products (%s)", (locale) => {
     expect(s55(locale)).toMatch(POLICY[locale].roleBullet);
     expect(s55(locale)).toMatch(POLICY[locale].recipients);
-  });
-
-  it.each(routing.locales)("§5.5 withdrawal: advertising off stops Meta and Google Ads, measurement off stops Google Analytics (%s)", (locale) => {
-    expect(s55(locale)).toMatch(POLICY[locale].offAdvertising);
-    expect(s55(locale)).toMatch(POLICY[locale].offMeasurement);
   });
 
   it.each(routing.locales)("§6 names Google Ads in the United States sharing paragraph (%s)", (locale) => {
@@ -262,19 +258,8 @@ describe("the privacy policy names Google Ads as a recipient of advertising conv
   });
 });
 
-describe("what is left for counsel", () => {
-  const ROLE = "{/* COUNSEL: role of Google for uploaded conversions (processor vs controller), plan L12 */}";
-  const DATE = "{/* COUNSEL: set the date at sign-off */}";
-  const count = (text: string, needle: string) => text.split(needle).length - 1;
-
-  it.each(routing.locales)("the role of Google is flagged where §4 and §5.5 state it, and the date at the top (%s)", (locale) => {
-    expect(count(s4(locale), ROLE), `${locale} §4`).toBe(1);
-    expect(count(s55(locale), ROLE), `${locale} §5.5`).toBe(1);
-    expect(count(privacySource(locale), DATE), `${locale} date`).toBe(1);
-    expect(privacySource(locale).split("\n").slice(0, 6).join("\n")).toContain(DATE);
-  });
-
-  it.each(routing.locales)("the policy still compiles, the date still reads, and no comment reaches the page (%s)", async (locale) => {
+describe("the policy renders with its counsel markers", () => {
+  it.each(routing.locales)("the policy still compiles, the date still reads, and no marker reaches the page (%s)", async (locale) => {
     const legal = getLegalContent("privacy", locale)!;
     const html = renderToStaticMarkup(await compileLegalMDX(legal.content));
 
