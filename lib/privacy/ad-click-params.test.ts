@@ -13,9 +13,10 @@ describe("stripAdClickIds", () => {
     ["a Meta ad landing", "https://stampeo.app/fr/tarifs?fbclid=IwAR1", "https://stampeo.app/fr/tarifs"],
     ["an app-campaign Google click", "https://stampeo.app/?gbraid=0AAAA", "https://stampeo.app/"],
     ["a web-to-app Google click", "https://stampeo.app/?wbraid=CjkKCQ", "https://stampeo.app/"],
+    ["a TikTok ad landing", "https://stampeo.app/us?ttclid=E.C.P.abc", "https://stampeo.app/us"],
     [
       "every click id at once",
-      "https://stampeo.app/?gclid=g&gbraid=b&wbraid=w&fbclid=f",
+      "https://stampeo.app/?gclid=g&gbraid=b&wbraid=w&fbclid=f&ttclid=t",
       "https://stampeo.app/",
     ],
     [
