@@ -31,7 +31,7 @@ export interface PointsSample {
 /** A merchant-uploaded icon and its variants, from a public base path
  *  (filled `${base}.${ext}`, empty `${base}-grey.${ext}`). Mirrors the shape
  *  the backend rembg pipeline produces for a real upload. */
-function themedIcon(id: string, base: string, ext = "svg"): ProcessedIconAsset {
+export function themedIcon(id: string, base: string, ext = "svg"): ProcessedIconAsset {
   return {
     id,
     original_url: `${base}.${ext}`,

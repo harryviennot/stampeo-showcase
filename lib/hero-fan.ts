@@ -16,6 +16,10 @@
 import type { CSSProperties } from "react";
 
 import {
+  HALLOWEEN_POINTS_SAMPLES,
+  HALLOWEEN_STAMP_SAMPLES,
+} from "@/lib/halloween-samples";
+import {
   POINTS_SAMPLES,
   STAMP_SAMPLES,
   type PointsSample,
@@ -32,7 +36,7 @@ type PerTier<T> = Record<FanTier, T>;
 export interface FanSlot {
   /** Position in the arch: 0 is the apex, negative is left of it. */
   index: number;
-  /** Sample id in STAMP_SAMPLES or POINTS_SAMPLES. */
+  /** Sample id, from the active season's FAN_CARDS. */
   cardId: string;
   /** Card center, as a percentage of the strip's width. */
   x: PerTier<number>;
@@ -95,10 +99,10 @@ export const FAN_ARC_RADIUS_PCT = {
   md: 100.0,
   lg: 62.6,
 } as const satisfies Record<FanTier, number>;
-export const FAN_SLOTS: FanSlot[] = [
+/** Where each slot sits; which card fills it comes from FAN_CARDS. */
+const FAN_GEOMETRY: Omit<FanSlot, "cardId">[] = [
   {
     index: -3,
-    cardId: "pace",
     x: { sm: -14.5, md: -16.9, lg: 2.1 },
     y: { sm: 38.73, md: 25.69, lg: 22.36 },
     r: { sm: -62, md: -42, lg: -50 },
@@ -116,7 +120,6 @@ export const FAN_SLOTS: FanSlot[] = [
   },
   {
     index: -2,
-    cardId: "marginalia",
     x: { sm: -0.7, md: 3.0, lg: 16.8 },
     y: { sm: 20.49, md: 11.71, lg: 9.51 },
     r: { sm: -44, md: -28, lg: -32 },
@@ -134,7 +137,6 @@ export const FAN_SLOTS: FanSlot[] = [
   },
   {
     index: -1,
-    cardId: "restaurant",
     x: { sm: 18.0, md: 25.8, lg: 33.8 },
     y: { sm: 7.39, md: 2.97, lg: 2.13 },
     r: { sm: -26, md: -14, lg: -15 },
@@ -152,7 +154,6 @@ export const FAN_SLOTS: FanSlot[] = [
   },
   {
     index: 0,
-    cardId: "aurevo",
     x: { sm: 50, md: 50, lg: 50 },
     y: { sm: 0, md: 0, lg: 0 },
     r: { sm: 0, md: 0, lg: 0 },
@@ -170,7 +171,6 @@ export const FAN_SLOTS: FanSlot[] = [
   },
   {
     index: 1,
-    cardId: "salon",
     x: { sm: 82.0, md: 74.2, lg: 66.2 },
     y: { sm: 7.39, md: 2.97, lg: 2.13 },
     r: { sm: 26, md: 14, lg: 15 },
@@ -188,7 +188,6 @@ export const FAN_SLOTS: FanSlot[] = [
   },
   {
     index: 2,
-    cardId: "lustre",
     x: { sm: 100.7, md: 97.0, lg: 83.2 },
     y: { sm: 20.49, md: 11.71, lg: 9.51 },
     r: { sm: 44, md: 28, lg: 32 },
@@ -206,7 +205,6 @@ export const FAN_SLOTS: FanSlot[] = [
   },
   {
     index: 3,
-    cardId: "gelo",
     x: { sm: 114.5, md: 116.9, lg: 97.9 },
     y: { sm: 38.73, md: 25.69, lg: 22.36 },
     r: { sm: 62, md: 42, lg: 50 },
@@ -223,6 +221,47 @@ export const FAN_SLOTS: FanSlot[] = [
     visibility: "hidden lg:block",
   },
 ];
+
+export type FanSeason = "default" | "halloween";
+
+/** The card in each slot (by index, 0 the apex), per season. The year-round set
+ *  is described above. Halloween is the October card themes on sector brands
+ *  (lib/halloween-samples.ts): the three a phone keeps mix stamps and points,
+ *  the colours alternate along each side so no two purples touch, and the
+ *  loudest card, Pumpkin Night's solid orange, sits at the far edge (desktop
+ *  only) so it never pulls the eye off the headline. */
+export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
+  default: {
+    [-3]: "pace",
+    [-2]: "marginalia",
+    [-1]: "restaurant",
+    0: "aurevo",
+    1: "salon",
+    2: "lustre",
+    3: "gelo",
+  },
+  halloween: {
+    [-3]: "halloween-pumpkin-night",
+    [-2]: "halloween-haunted-moon",
+    [-1]: "halloween-ghostly-graveyard",
+    0: "halloween-jack-o-lantern",
+    1: "halloween-witches-brew",
+    2: "halloween-blood-moon",
+    3: "halloween-trick-or-treat",
+  },
+};
+
+/** Which set the hero shows. The landing page is built statically, so a change
+ *  here goes live with the next deploy: set it back to "default" once
+ *  Halloween is over. */
+export const HERO_FAN_SEASON: FanSeason = "halloween";
+
+/** The arch for a season: the same seven places, that season's cards. */
+export function fanSlots(season: FanSeason): FanSlot[] {
+  return FAN_GEOMETRY.map((slot) => ({ ...slot, cardId: FAN_CARDS[season][slot.index] }));
+}
+
+export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
 
 /** Every tier's numbers at once; CSS resolves which set is live. Rotation and
  *  position stay unitless so the stylesheet can reuse them in calc() for both
@@ -255,10 +294,10 @@ export type FanCard =
 
 /** Which engine a slot's brand runs decides which props <WalletCard> needs. */
 export function resolveFanCard(cardId: string): FanCard {
-  const stamp = STAMP_SAMPLES.find((s) => s.id === cardId);
+  const stamp = [...STAMP_SAMPLES, ...HALLOWEEN_STAMP_SAMPLES].find((s) => s.id === cardId);
   if (stamp) return { kind: "stamps", sample: stamp };
 
-  const points = POINTS_SAMPLES.find((s) => s.id === cardId);
+  const points = [...POINTS_SAMPLES, ...HALLOWEEN_POINTS_SAMPLES].find((s) => s.id === cardId);
   if (points) return { kind: "points", sample: points };
 
   throw new Error(`hero fan: unknown card id "${cardId}"`);
