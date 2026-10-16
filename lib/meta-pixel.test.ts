@@ -27,7 +27,7 @@
  */
 
 import { afterAll, describe, expect, test } from "bun:test";
-import { resolveConsent } from "./consent";
+import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { isTrackablePath } from "./consent-routes";
 import { ctaClick } from "./cta/events";
 import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
@@ -690,7 +690,7 @@ describe("an event is sent only while the visitor still allows it", () => {
   test("refusing advertising alone stops it, and refusing analytics alone does not", async () => {
     const { pixel, calls } = await loadedPixel("category");
     const record = (analytics: boolean, marketing: boolean) =>
-      GRANTED_COOKIE.replace(/=.*/, `=${encodeURIComponent(JSON.stringify({ v: 3, a: +analytics, m: +marketing, t: 1_791_240_000, r: "opt-in", g: "EEA_UK_CH" }))}`);
+      GRANTED_COOKIE.replace(/=.*/, `=${encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, a: +analytics, m: +marketing, t: 1_791_240_000, r: "opt-in", g: "EEA_UK_CH" }))}`);
 
     setCookie(record(false, true));
     pixel.trackMetaEvent({ event: "Contact", trackable: true });

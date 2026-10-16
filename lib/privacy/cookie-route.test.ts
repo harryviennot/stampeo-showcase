@@ -465,6 +465,12 @@ describe("a carrier whose category the request's own consent cookie refuses", ()
       ["stampeo_ga", "stampeo_src"],
     ],
     ["an older version's grant, which is not a refusal", consentJar({ v: CONSENT_VERSION - 1, a: 1, m: 1 }), ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
+    [
+      "a newer version's refusal, which still stands",
+      consentJar({ v: CONSENT_VERSION + 1, a: 1, m: 0 }),
+      ["stampeo_ga", "stampeo_src"],
+    ],
+    ["a newer version's grant, which is not a refusal", consentJar({ v: CONSENT_VERSION + 1, a: 1, m: 1 }), ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
     ["a cookie that cannot be read", "stampeo_consent=%7Bnope", ["stampeo_ad", "stampeo_ga", "stampeo_src"]],
   ])("with %s", async (_case, cookie, expected) => {
     expect(await set(cookie)).toEqual(expected);

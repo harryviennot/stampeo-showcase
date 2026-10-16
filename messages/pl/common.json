@@ -132,7 +132,7 @@
     "cookies": {
       "banner": {
         "title": "Twój wybór plików cookie",
-        "body": "Pliki cookie do statystyk i reklam włączamy tylko wtedy, gdy je zaakceptujesz, i dopiero wtedy informujemy Meta i Google, czy do rejestracji doprowadziła reklama. Odmowa niczego nie zmienia w działaniu strony.",
+        "body": "Pliki cookie do statystyk i reklam włączamy tylko wtedy, gdy je zaakceptujesz, i dopiero wtedy informujemy Meta i Google Ads, czy do rejestracji doprowadziła reklama. Odmowa niczego nie zmienia w działaniu strony.",
         "learnMore": "Zobacz szczegóły",
         "accept": "Zaakceptuj wszystkie",
         "refuse": "Odrzuć wszystkie",
@@ -140,7 +140,7 @@
       },
       "notice": {
         "title": "Twoje ustawienia prywatności",
-        "body": "Używamy plików cookie do statystyk i reklam, żeby sprawdzać skuteczność naszych reklam. Informujemy też Meta i Google, czy do rejestracji doprowadziła reklama.",
+        "body": "Używamy plików cookie do statystyk i reklam, żeby sprawdzać skuteczność naszych reklam. Informujemy też Meta i Google Ads, czy do rejestracji doprowadziła reklama.",
         "dismiss": "Rozumiem"
       },
       "prefs": {
@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Reklama",
-          "body": "Meta, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać."
+          "body": "Meta i Google Ads, żeby wiedzieć, która z naszych reklam naprawdę zadziałała. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Google Ads otrzyma identyfikator kliknięcia, jeśli przychodzisz z jednej z jego reklam, oraz adres e-mail twojego konta w postaci nieodwracalnego kodu, a do tego etap i, przy okresie próbnym lub płatności, cenę. Nic więcej o tobie."
         },
         "save": "Zapisz mój wybór",
         "cancel": "Anuluj",
@@ -173,11 +173,11 @@
           },
           "marketing": {
             "title": "Sprzedaż, udostępnianie i reklama ukierunkowana",
-            "body": "Meta, żeby wiedzieć, które reklamy doprowadziły do rejestracji. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Po wyłączeniu nic nie trafia do Meta."
+            "body": "Meta i Google Ads, żeby wiedzieć, które reklamy doprowadziły do rejestracji. Jeśli założysz konto, Meta otrzyma też twoje dane kontaktowe w postaci nieodwracalnego kodu, żeby cię rozpoznać. Google Ads otrzyma identyfikator kliknięcia, jeśli przychodzisz z jednej z jego reklam, oraz adres e-mail twojego konta w postaci nieodwracalnego kodu, a do tego etap i, przy okresie próbnym lub płatności, cenę. Nic więcej o tobie. Po wyłączeniu nic nie trafia do Meta ani do Google Ads."
           },
           "analytics": {
             "title": "Statystyki",
-            "body": "Google Analytics, żeby wiedzieć, które strony przyprowadzają nowe firmy. Google przetwarza te dane wyłącznie na nasze zlecenie."
+            "body": "Google Analytics, żeby wiedzieć, które strony przyprowadzają nowe firmy. Google Analytics przetwarza te dane wyłącznie na nasze zlecenie."
           }
         }
       }

@@ -2,6 +2,8 @@
 
 **Ostatnia aktualizacja: 10 października 2026**
 
+{/* COUNSEL: set the date at sign-off */}
+
 ## 1. Wprowadzenie
 
 Niniejsza polityka prywatności opisuje, w jaki sposób Stampeo (dalej „my”, „nasz” lub „Platforma”), prowadzone przez Harry'ego Viennot, przedsiębiorcę prowadzącego jednoosobową działalność gospodarczą zarejestrowaną we Francji pod numerem SIRET **10477625700016**, zbiera, wykorzystuje, przechowuje i chroni dane osobowe w ramach swojej usługi cyfrowych kart lojalnościowych.
@@ -125,7 +127,7 @@ Firma, która nie jest obsługiwana przez dystrybutora, nie jest narażona na ż
 
 ### Transfery poza UE
 
-Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google, Trustpilot), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5, czyli Google (Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych) i Meta (Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie.
+Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google, Trustpilot), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5, czyli Google Ads (Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych) i Meta (Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie. Google Ads otrzymuje te informacje jako niezależny odbiorca, do pomiaru reklam. {/* COUNSEL: role of Google for uploaded conversions (processor vs controller) */}
 
 ## 5. Pliki cookie
 
@@ -168,7 +170,7 @@ Trzy poniższe pliki cookie są nasze. Ustawia je nasz serwer, a są one współ
 |---|---|---|---|
 | `stampeo_src` | Skąd pochodzi Twoja wizyta (parametry kampanii, strona wejścia, strona odsyłająca). | Pomiar ruchu lub reklama | 6 miesięcy |
 | `stampeo_ga` | Identyfikatory Google Analytics Twojej wizyty. | Pomiar ruchu | 6 miesięcy |
-| `stampeo_ad` | Identyfikator kliknięcia platformy reklamowej oraz identyfikator przeglądarki Meta, tylko gdy trafisz na stronę z reklamy. | Reklama | 6 miesięcy |
+| `stampeo_ad` | Identyfikator kliknięcia platformy reklamowej (identyfikator kliknięcia z Google trafia do Google Ads, a z Meta do Meta) oraz identyfikator przeglądarki Meta, tylko gdy trafisz na stronę z reklamy. | Reklama | 6 miesięcy |
 
 Dawny plik cookie `stampeo_attribution` nie jest już ustawiany; przeglądarka, która otrzymała go wcześniej, może go jeszcze przechowywać do czasu wygaśnięcia.
 
@@ -182,31 +184,34 @@ Do uwierzytelniania i zarządzania sesją w panelu firmowym mogą być używane 
 
 ### 5.5 Pomiar konwersji z naszych serwerów
 
-Jeżeli zaakceptujesz pliki cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki ich nie wyłączysz), zachowujemy w plikach `stampeo_src`, `stampeo_ga` i `stampeo_ad`, wymienionych w punkcie 5.3: informację, skąd pochodzi Twoja wizyta, czyli parametry kampanii zawarte w adresie, stronę wejścia i stronę odsyłającą; identyfikatory Google Analytics Twojej wizyty; a jeżeli trafisz na stronę z reklamy, także identyfikator dodany do klikniętego odnośnika przez platformę reklamową (w przypadku Google jest to `gclid`, w przypadku Meta `fbclid`) oraz identyfikator przeglądarki Meta. Każdy z tych plików cookie jest przechowywany tylko tak długo, jak zezwalasz na kategorię wskazaną dla niego w punkcie 5.3. Ustawia je nasz serwer i są one współdzielone między stampeo.app a panelem firmowym, działającym w innej subdomenie, dzięki czemu te informacje przetrwają przejście z tej strony do panelu. Jeżeli później wrócisz z innej reklamy, nowsze kliknięcie zastępuje wcześniejsze.
+Jeżeli zaakceptujesz pliki cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki ich nie wyłączysz), zachowujemy w plikach `stampeo_src`, `stampeo_ga` i `stampeo_ad`, wymienionych w punkcie 5.3: informację, skąd pochodzi Twoja wizyta, czyli parametry kampanii zawarte w adresie, stronę wejścia i stronę odsyłającą; identyfikatory Google Analytics Twojej wizyty; a jeżeli trafisz na stronę z reklamy, także identyfikator dodany do klikniętego odnośnika przez platformę reklamową (w przypadku Google Ads jest to `gclid`, w przypadku Meta `fbclid`) oraz identyfikator przeglądarki Meta. Każdy z tych plików cookie jest przechowywany tylko tak długo, jak zezwalasz na kategorię wskazaną dla niego w punkcie 5.3. Ustawia je nasz serwer i są one współdzielone między stampeo.app a panelem firmowym, działającym w innej subdomenie, dzięki czemu te informacje przetrwają przejście z tej strony do panelu. Jeżeli później wrócisz z innej reklamy, nowsze kliknięcie zastępuje wcześniejsze.
 
 Jeżeli założysz konto, przekazujemy **z naszych serwerów** informacje o maksymalnie czterech etapach: założeniu konta, otwarciu strony płatności, rozpoczęciu bezpłatnego okresu próbnego oraz opłaceniu pierwszej faktury. Pierwszy etap przekazujemy po potwierdzeniu konta (kodem wysłanym e-mailem albo logowaniem przez Google lub Apple), zanim powstanie jakakolwiek firma. Ponieważ dane wysyłane są po stronie serwera, dzieje się to już po działaniach w Twojej przeglądarce i niezależnie od nich.
 
-Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posiada (identyfikator kliknięcia i swój identyfikator przeglądarki), oraz nazwę kampanii, a przy trzech ostatnich etapach także cenę wybranego planu lub zapłaconą kwotę wraz z walutą. Każda platforma otrzymuje wyłącznie własne identyfikatory: identyfikator kliknięcia z Google nigdy nie jest przekazywany do Meta ani identyfikator kliknięcia z Meta do Google.
+Przy każdym etapie platforma otrzymuje własne identyfikatory, jeżeli je posiada (identyfikator kliknięcia i swój identyfikator przeglądarki), oraz nazwę kampanii, a przy trzech ostatnich etapach także cenę wybranego planu lub zapłaconą kwotę wraz z walutą. Każda platforma otrzymuje wyłącznie własne identyfikatory: identyfikator kliknięcia z Google nigdy nie jest przekazywany do Meta ani identyfikator kliknięcia z Meta do Google Ads czy Google Analytics.
 
 Meta otrzymuje ponadto:
 
 - Twój adres IP i parametry techniczne Twojej przeglądarki (typ, wersja, system operacyjny), zapisane w chwili zakładania konta, a także adres naszego panelu. Te dwie informacje przechowujemy najwyżej 45 dni, a następnie je usuwamy;
 - Twój adres e-mail, numer telefonu, imię i nazwisko, kraj, miasto i kod pocztowy Twojej firmy oraz identyfikator wyprowadzony z Twojego konta, każde z nich **zahaszowane** algorytmem SHA-256 przed opuszczeniem naszych serwerów. Haszowanie zamienia każdą z tych informacji w kod, z którego nie da się odtworzyć Twoich danych. Mimo to kod pozwala Meta Cię rozpoznać, ponieważ Meta tworzy taki sam kod z danych swoich użytkowników. Dlatego nadal jest to dana osobowa. Meta porównuje te kody z kodami swoich użytkowników, żeby ustalić, czy masz konto na Facebooku lub Instagramie, także wtedy, gdy reklama została wyświetlona na innym urządzeniu, i wykorzystuje wynik do pomiaru i ulepszania sposobu wyświetlania naszych reklam. Meta może też wykorzystywać te dane na własnych warunkach, na przykład do ulepszania swoich systemów reklamowych, zgodnie z [polityką prywatności Meta](https://www.facebook.com/privacy/policy).
 
-Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google przy każdym etapie otrzymuje własny identyfikator sesji, dzięki czemu etap łączy się z Twoją wizytą. Nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
+Meta otrzymuje informacje o tych etapach niezależnie od tego, czy wejście na stronę nastąpiło z jej reklamy, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone). Google Analytics przy każdym etapie otrzymuje własny identyfikator sesji, dzięki czemu etap łączy się z Twoją wizytą. Nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki.
+
+Google Ads otrzymuje trzy z tych etapów: założenie konta, rozpoczęcie bezpłatnego okresu próbnego i opłacenie pierwszej faktury. Nie otrzymuje informacji o otwarciu strony płatności. Przy każdym etapie otrzymuje identyfikator kliknięcia z Google, jeżeli taki istnieje; przy dwóch ostatnich także cenę wybranego planu lub zapłaconą kwotę wraz z walutą; oraz adres e-mail Twojego konta, **zahaszowany** algorytmem SHA-256 przed opuszczeniem naszych serwerów. Nic więcej o Tobie nie trafia do Google Ads: ani numer telefonu, ani imię i nazwisko, ani adres, ani adres IP, ani parametry przeglądarki. Powstały kod nadal jest daną osobową, ponieważ Google Ads porównuje go z kodami kont Google, które weszły w interakcję z naszymi reklamami, żeby przypisać etap do reklamy. Tak jak Meta, Google Ads otrzymuje te etapy niezależnie od tego, czy wejście na stronę nastąpiło z reklamy Google Ads, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5.3 (w Stanach Zjednoczonych: dopóki nie zostaną wyłączone).
 
 Nigdy nie przekazujemy Twojego hasła, danych płatniczych ani żadnych informacji o Twoich klientach (osobach, które mają Twoje karty lojalnościowe).
 
 Dla każdego etapu przechowujemy też dane diagnostyczne wysyłki: jej status, czasy prób oraz kod odpowiedzi zwrócony przez platformę, a także komunikaty odpowiedzi platformy. Okresy przechowywania podaje §8.
 
-- **Odbiorcy:** Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych. Meta to Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych.
+- **Odbiorcy:** Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych, czyli podmioty świadczące usługi Google Analytics i Google Ads. Meta to Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych.
 - **Podstawa prawna:** Twoja zgoda (art. 6 ust. 1 lit. a RODO), wyrażona w banerze plików cookie lub w **Ustawieniach plików cookie**. W Stanach Zjednoczonych, gdzie uprzednia zgoda nie jest wymagana, opieramy się na poinformowaniu i prawie do sprzeciwu, z którego skorzystasz przez **Twoje ustawienia prywatności** (zob. 5.1 i §6).
 - **Współadministratorzy z Meta:** Stampeo i Meta Platforms Ireland Limited są współadministratorami (art. 26 RODO) w zakresie zbierania danych za pomocą plików cookie Meta z punktu 5.3 i opisanego tu przekazywania etapów oraz przesyłania tych danych do Meta, na podstawie umowy Meta „Controller Addendum”. Za to, co Meta robi z danymi po ich otrzymaniu, odpowiada wyłącznie Meta (zob. [politykę prywatności Meta](https://www.facebook.com/privacy/policy)). Swoje prawa (§10) możesz wykonywać zarówno wobec Stampeo, jak i wobec Meta.
+- **Rola Google Ads:** w odniesieniu do przekazywanych mu etapów Google Ads jest niezależnym odbiorcą, do pomiaru reklam. {/* COUNSEL: role of Google for uploaded conversions (processor vs controller) */}
 
 Każdy wybór możesz wycofać osobno, przez **Ustawienia plików cookie** albo, w Stanach Zjednoczonych, przez **Twoje ustawienia prywatności**:
 
-- Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta i usuwa zachowane przez nas identyfikatory reklamowe.
-- Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google.
+- Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta i Google Ads oraz usuwa zachowane przez nas identyfikatory reklamowe.
+- Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google Analytics.
 - Wyłączenie obu usuwa też zapisane źródło kampanii.
 
 Odmowa złożona na tej stronie po założeniu konta obejmuje Twoje konto i Twoje firmy, za pośrednictwem losowego identyfikatora opisanego w 5.6. Etapów już przekazanych nie można wycofać. Dane te są usuwane razem z kontem firmowym, którego dotyczą (zob. §8).
@@ -242,7 +247,7 @@ Zebrane dane wykorzystujemy, aby:
 
 **Nigdy nie sprzedajemy** danych osobowych za pieniądze. Nie prowadzimy **żadnego śledzenia pomiędzy firmami**: dane klienta w jednej firmie są całkowicie odseparowane od jego danych w innej.
 
-**W Stanach Zjednoczonych:** przekazywanie danych do Meta i Google na potrzeby naszych reklam, jak opisano w punkcie 5.5, może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy, i w komunikacie albo sygnałem Global Privacy Control, który respektujemy w każdym stanie Stanów Zjednoczonych zgodnie z opisem w punkcie 5.1.
+**W Stanach Zjednoczonych:** przekazywanie danych do Meta i Google Ads na potrzeby naszych reklam, jak opisano w punkcie 5.5, może zostać uznane za „udostępnianie” w rozumieniu prawa Kalifornii. Możesz się temu sprzeciwić w każdej chwili przez **Twoje ustawienia prywatności** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy, i w komunikacie albo sygnałem Global Privacy Control, który respektujemy w każdym stanie Stanów Zjednoczonych zgodnie z opisem w punkcie 5.1.
 
 ### 6.1 E-maile cyklu życia i marketingowe do użytkowników Business
 
