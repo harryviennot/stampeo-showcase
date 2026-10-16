@@ -125,14 +125,14 @@ export interface ConsentRecord {
 export type DecidedConsentRecord = ConsentRecord & ConsentState;
 
 /**
- * The choices of a record stored under an older `CONSENT_VERSION`. Only its
- * refusals still decide anything (see `resolveConsent`); its version and moment
+ * The choices of a record stored under another `CONSENT_VERSION`, older or
+ * newer than this build's. Only its refusals still decide anything (see `resolveConsent`); its version and moment
  * are the evidence an attribution capture rests on (`captureConsentEvidence`).
  */
 export interface PriorConsent {
   analytics: StoredChoice;
   marketing: StoredChoice;
-  /** The older CONSENT_VERSION this choice was made against. */
+  /** The other CONSENT_VERSION this choice was made against. */
   v: number;
   /** Unix seconds, from the older cookie's `t`; 0 when it carried none. */
   at: number;
@@ -368,7 +368,11 @@ function choice(value: unknown): StoredChoice | undefined {
 }
 
 /**
- * A stored choice of any version from 1 to CONSENT_VERSION, or null.
+ * A stored choice of any version, or null.
+ *
+ * A newer version than this build's is read too: its refusals stand and its
+ * grants are not carried, the same as an older version's (see
+ * `parsePriorConsent`), so a rollback or a deploy-order gap cannot lose a refusal.
  *
  * Null for anything malformed, truncated or forged. Never throws: a corrupt
  * cookie has to degrade into asking again, not into a blank page.
@@ -380,9 +384,7 @@ export function consentFromObject(parsed: unknown): ConsentRecord | null {
 
   const record = parsed as Record<string, unknown>;
   const v = record.v;
-  if (typeof v !== "number" || !Number.isInteger(v) || v < 1 || v > CONSENT_VERSION) {
-    return null;
-  }
+  if (typeof v !== "number" || !Number.isInteger(v) || v < 1) return null;
 
   const analytics = choice(record.a);
   const marketing = choice(record.m);
@@ -421,7 +423,7 @@ export function parseStoredChoice(raw: string | null | undefined): ConsentRecord
 /**
  * A choice stored under the current version, or null for "no current choice".
  *
- * Null for an older version too: that record is read by `parsePriorConsent`.
+ * Null for any other version too: that record is read by `parsePriorConsent`.
  */
 export function parseConsentCookie(
   raw: string | null | undefined,
@@ -431,7 +433,8 @@ export function parseConsentCookie(
 }
 
 /**
- * A choice stored under an older version, or null.
+ * A choice stored under another version than the current one, older or newer,
+ * or null.
  *
  * Returned even without a moment (`at` 0): its refusals still stand.
  */

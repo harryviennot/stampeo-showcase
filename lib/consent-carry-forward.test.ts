@@ -44,6 +44,7 @@ import { rowFor } from "./privacy/policy";
 import { restoreGlobalsAfterEach } from "./testing/restore-globals";
 
 const OLDER = CONSENT_VERSION - 1;
+const NEWER = CONSENT_VERSION + 1;
 
 /** The cookie value a banner of version `v` wrote for this choice. */
 function storedChoice(v: unknown, a: 0 | 1, m: 0 | 1, r: ConsentRegime): string {
@@ -281,7 +282,7 @@ describe("parsePriorConsent", () => {
     expect(parsePriorConsent(storedChoice(CONSENT_VERSION, 0, 0, "opt-in"))).toBeNull();
   });
 
-  test.each([0, CONSENT_VERSION + 1, -1, 1.5, "2", null])(
+  test.each([0, -1, 1.5, "2", null])(
     "version %p is no choice at all",
     (v) => {
       expect(parsePriorConsent(storedChoice(v, 0, 0, "opt-in"))).toBeNull();
@@ -292,6 +293,65 @@ describe("parsePriorConsent", () => {
     const forged = encodeURIComponent(JSON.stringify({ v: OLDER, a: "no", m: 0 }));
     expect(parsePriorConsent(forged)).toBeNull();
     expect(parsePriorConsent("%7Bnope")).toBeNull();
+  });
+});
+
+describe("a choice stored under a newer consent version", () => {
+  // A rollback, or the dashboard shipping a version first: showcase reads what a
+  // later text recorded. A refusal stands, a grant was given for text this build
+  // does not know and is asked again.
+  test.each(["opt-out", "opt-in"] as const)("a refusal of everything stays a refusal (%s)", (regime) => {
+    const page = visit(storedChoice(NEWER, 0, 0, regime), regime);
+
+    expect(page.state).toEqual({ analytics: false, marketing: false });
+    expect(page.surface).toBe("none");
+    expect(page.metaLoads).toBe(false);
+    expect(page.gaLoads).toBe(false);
+    expect(page.captured).toEqual({ src: null, ga: null, ad: null });
+  });
+
+  test("a refusal of advertising stands in the US, where Meta would load by default", () => {
+    const page = visit(storedChoice(NEWER, 1, 0, "opt-out"), "opt-out");
+
+    expect(page.state).toEqual({ analytics: true, marketing: false });
+    expect(page.metaLoads).toBe(false);
+    expect(page.captured!.ad).toBeNull();
+  });
+
+  test("a grant is no choice: the EU banner asks again and nothing loads", () => {
+    const page = visit(storedChoice(NEWER, 1, 1, "opt-in"), "opt-in");
+
+    expect(page.surface).toBe("banner");
+    expect(page.state).toEqual({ analytics: false, marketing: false });
+    expect(page.metaLoads).toBe(false);
+    expect(page.gaLoads).toBe(false);
+  });
+
+  test("a grant is no choice: the US visitor falls to the notice default", () => {
+    const page = visit(storedChoice(NEWER, 1, 1, "opt-out"), "opt-out");
+
+    expect(page.surface).toBe("notice");
+    expect(page.state).toEqual({ analytics: true, marketing: true });
+  });
+
+  test("a refusal the web dashboard restored under a newer version still withholds advertising", () => {
+    // The mixed deploy window: web already writes the next version's restore
+    // record (`-1` for the category left open) before this build knows it.
+    const restored = encodeURIComponent(
+      JSON.stringify({ v: NEWER, a: -1, m: 0, t: 1_759_400_000, r: "opt-out", s: SUBJECT, o: "restore" }),
+    );
+    const page = visit(restored, "opt-out");
+
+    expect(page.state).toEqual({ analytics: true, marketing: false });
+    expect(page.metaLoads).toBe(false);
+    expect(page.captured!.ad).toBeNull();
+  });
+
+  test("it is read as a prior choice, never as a current one", () => {
+    const raw = storedChoice(NEWER, 1, 0, "opt-in");
+
+    expect(parsePriorConsent(raw)).toMatchObject({ v: NEWER, analytics: true, marketing: false });
+    expect(consentRecordFromCookieHeader(`${CONSENT_COOKIE}=${raw}`)).toBeNull();
   });
 });
 

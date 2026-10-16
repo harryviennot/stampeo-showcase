@@ -8,6 +8,7 @@ import {
 import { gaCookieFor } from "../attribution/ga-ids";
 import { sourceCookieFor } from "../attribution/source";
 import {
+  CONSENT_VERSION,
   consentCookieAttributes,
   consentCookieValue,
   consentFromObject,
@@ -140,6 +141,12 @@ async function readCapped(
   return text + decoder.decode();
 }
 
+/** A posted record this build may write: a version it knows (a newer one is read for its refusals, never re-issued). */
+function writableConsent(posted: unknown) {
+  const record = consentFromObject(posted);
+  return record && record.v <= CONSENT_VERSION ? record : null;
+}
+
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -171,7 +178,7 @@ export async function handlePrivacyCookies(
 
   // The subject: the cookie we already hold, else the one in the consent
   // record, else a new one. The record is then written carrying that subject.
-  const record = consentFromObject(body.consent);
+  const record = writableConsent(body.consent);
   const sid =
     body.sid === "ensure"
       ? (readSidCookie(headers.get("cookie")) ?? record?.subjectId ?? mintSubjectId())
