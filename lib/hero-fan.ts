@@ -227,7 +227,9 @@ export type FanSeason = "default" | "halloween";
 /** The card in each slot (by index, 0 the apex), per season. The year-round set
  *  is described above. Halloween is the October card themes on sector brands
  *  (lib/halloween-samples.ts): the three a phone keeps mix stamps and points,
- *  and the colours alternate along each side so no two purples touch. */
+ *  the colours alternate along each side so no two purples touch, and the
+ *  loudest card, Pumpkin Night's solid orange, sits at the far edge (desktop
+ *  only) so it never pulls the eye off the headline. */
 export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
   default: {
     [-3]: "pace",
@@ -239,12 +241,12 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
     3: "gelo",
   },
   halloween: {
-    [-3]: "halloween-blood-moon",
+    [-3]: "halloween-pumpkin-night",
     [-2]: "halloween-haunted-moon",
-    [-1]: "halloween-pumpkin-night",
+    [-1]: "halloween-ghostly-graveyard",
     0: "halloween-jack-o-lantern",
     1: "halloween-witches-brew",
-    2: "halloween-ghostly-graveyard",
+    2: "halloween-blood-moon",
     3: "halloween-trick-or-treat",
   },
 };
