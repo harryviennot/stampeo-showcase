@@ -71,6 +71,20 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
+  counsel-signoff:
+    # A release to main waits for counsel: no COUNSEL marker may remain in the
+    # legal texts. Pull requests into other branches are not held.
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No COUNSEL marker left under legal/
+        run: |
+          if grep -rn "COUNSEL" legal/; then
+            echo "::error::Counsel has not signed off: resolve every COUNSEL marker under legal/ before merging to main"
+            exit 1
+          fi
+
   audit:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
