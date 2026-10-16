@@ -16,7 +16,7 @@ browser rather than in the repo. It produces one artifact — a **Measurement ID
 |---|---|---|
 | A Google account that will own the property | GA4 properties belong to an account, and moving one later is painful | Use a role address, not a personal one — see below |
 | Admin on the Google Analytics **account** (not just the property) | Data sharing and the processing terms are account-level | Same |
-| Google Ads account, eventually | Linking is how conversions reach campaign bidding | Your ads consultant |
+| Google Ads account | Not linked to this property. Conversions reach Google Ads from our server, not through GA4 (section H) | Your ads consultant |
 
 ### Which Google login to use
 
@@ -106,16 +106,29 @@ precisely the un-gated install this issue exists to avoid, and would undo
 STA-317. Our loader in `lib/google-analytics.ts` injects the same script itself,
 only after consent resolves and only on trackable routes.
 
-### Also skip: Google Consent Mode
+### Consent Mode: not a gate, used once to deny ad signals
 
 Google's UI will push you toward **Consent Mode v2** as the compliance answer.
-We deliberately do not use it. In its `denied` state Consent Mode still loads
-the tag and still sends cookieless pings to `googletagmanager.com`. STA-317's
-rule is that a refusal leaves *nothing* behind, which is only true if the script
-was never fetched. Our gate is the script tag itself, not a flag inside it.
+We do not use it to decide whether the tag loads. In its `denied` state Consent
+Mode still loads the tag and still sends cookieless pings to
+`googletagmanager.com`. STA-317's rule is that a refusal leaves *nothing*
+behind, which is only true if the script was never fetched. Our gate is the
+script tag itself: it is injected only after the analytics answer.
 
-If a Google screen warns that Consent Mode is not detected, that is expected and
-not a fault to fix.
+We do use one Consent Mode call, after that gate. When the tag is injected,
+`initGa` in `lib/google-analytics.ts` queues
+`gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied",
+ad_personalization: "denied", analytics_storage: "granted" })` before
+`config`, so nothing is sent before the visitor's answer. The denial is
+permanent: the browser never grants those signals. If a Google Ads destination
+is ever attached to this property again, the tag can neither set ad cookies nor
+use our visitors for advertising. Google Ads only receives what our servers
+upload (section H).
+
+If a Google screen warns that Consent Mode is incomplete or that no consent
+update was detected, that is expected and not a fault to fix: there is no
+banner-driven update, because the tag never loads without the analytics grant
+and never grants ad signals.
 
 ---
 
@@ -171,7 +184,7 @@ dimensions in the report, not enabling signals.
 settings**, and **Data streams → Showcase → Data redaction**.
 
 - Turn **on** email redaction and URL-query redaction.
-- Add query parameters to strip: `email`, `token`, `code`, `phone`.
+- Add query parameters to strip: `email`, `token`, `code`, `phone`. Once the Google Ads Final URL suffix is live (backend `docs/measurement/operations.md` C26), also add `gclid`, `fbclid`, `gbraid`, `wbraid` (C27), so GA4 still sees the campaign through the UTMs. The code already removes those click ids, and `ttclid`, from the page address it reports (section J); this is defence beside it.
 
 Showcase has routes that can legitimately carry a token in the URL
 (`/demo/wallet-select/[token]`, email preference links). Sending a token to
@@ -205,6 +218,23 @@ The code also sets `window['ga-disable-<id>']` on private routes (and clears it 
 This is a console setting, not code. After it changes, re-run QA case GA-02
 against the **production** stream: only the live stream proves that nothing is
 reported for `/onboarding` (`docs/qa/cookie-consent.md`).
+
+### D8. User-provided data collection — off, both switches
+**Admin → Data collection and modification → Data collection → User-provided data
+collection**, and the tag setting that detects it (**Data streams → Showcase →
+Configure tag settings → Collect user-provided data from your website**; names
+move).
+
+Turn off **automatic detection** and **manual collection**. With either on, the
+tag can read an email address, a phone number or an address from a page, and
+`/contact` and the newsletter field are tracked pages. Contact details must
+reach Google only through our server's Google Ads upload, hashed and under
+advertising consent, never by the tag scraping a form. The privacy policy says
+Google Analytics never receives them.
+
+Verify from the live script (section H): the `__ogt_1p_data_v2` instance reads
+`"vtp_isAutoEnabled":false` and `"vtp_isManualEnabled":false`. The console's
+names change; the script is the authority.
 
 ### On IP addresses
 
@@ -324,6 +354,13 @@ What to check, in order:
 5. Open devtools → Application → Cookies. `_ga` and `_ga_G-XXXXXXXXXX` exist
    *only* after accepting. Refuse in a fresh private window and neither appears,
    and there is no request to `googletagmanager.com` in the Network tab at all.
+6. Open `/pricing?gclid=test&utm_source=google&keep=1` and accept analytics. The
+   `page_view` in DebugView (or the `dl` parameter of the `/g/collect` request)
+   shows the address without `gclid`, with `utm_source` and `keep` intact, and no
+   `_gcl_*` or `_gac_*` cookie is set.
+7. In the console, `window.dataLayer` holds a `consent` `default` entry with
+   `ad_storage`, `ad_user_data` and `ad_personalization` denied, before the
+   `config` entry. The collect request carries `gcs=G101`.
 
 ### Mark the conversion as a key event
 Once `sign_up_cta_click` has been seen at least once:
@@ -334,16 +371,36 @@ is the usual reason this step gets skipped and then forgotten.
 
 ---
 
-## H. For the ads work (later, with your consultant)
+## H. Google Ads: no link, and no destination on this tag
 
-Not part of this issue — recorded so it is not rediscovered:
+Google Ads conversions are uploaded by our server (Data Manager API: the Google
+click id when there is one, and the SHA-256 of the account email, only under
+advertising consent). The setup is in the backend repo, `docs/measurement/`
+(`events.md`, `operations.md` C18 to C27). So, for this property:
 
-- **Admin → Product links → Google Ads links.** Linking is what lets a GA4 key
-  event be imported as an Ads conversion for bidding.
-- Showcase can only measure as far as the CTA click. Signup completion happens on
-  `app.stampeo.app` and checkout in `web/` — see the plan's funnel section for
-  why, and for the recommendation to capture both `gclid` and GA4 `client_id`
-  when that work starts.
+- **Admin → Product links → Google Ads links** stays empty. GA4 key events are
+  not imported into Google Ads as conversions, and no audience is shared.
+- **The Google tag has no Google Ads destination.** Admin → Data streams →
+  Showcase → Configure tag settings → the tag's destinations lists this property
+  only. If an Ads account is ever attached (it was on 15 October 2026, which made
+  this analytics-only tag send advertising data), use **Remove destination** and
+  **Create a new tag**: the destination moves to a tag we never install. A
+  combined tag cannot be un-combined any other way.
+- **Verify from the live script**, not from the console, because the script's
+  tag-id list can keep ids of removed destinations. Only an *instance* counts:
+
+  ```bash
+  curl -s -A "Mozilla/5.0" "https://www.googletagmanager.com/gtag/js?id=<GA_MEASUREMENT_ID>" -o /tmp/gtag.js
+  grep -o '"function":"__[a-z0-9_]*"' /tmp/gtag.js | sort | uniq -c
+  grep -c '"function":"__dest_aw"' /tmp/gtag.js                # must print 0
+  grep -o '"function":"__ogt_1p_data_v2"[^}]*' /tmp/gtag.js    # isAutoEnabled and isManualEnabled false
+  ```
+
+  `__dest_ga` is the only destination instance; `__dest_aw` and `__ccd_ads_*` are
+  absent. The bare string `__dest_aw` always appears once in Google's library
+  code and is not a destination.
+- The browser tag also denies ad signals for good (see "Consent Mode" above), so
+  a re-attached destination could not use our visitors even before you notice it.
 
 ### Console audit — 20 September 2026
 
@@ -353,6 +410,15 @@ Not part of this issue — recorded so it is not rediscovered:
   showed one `page_view` and three `sign_up` debug events during the audit, so
   Measurement Protocol/test traffic can reach the property; this does not prove
   that the production Showcase build is sending browser events.
+
+### Console audit — 15 October 2026
+
+- A Google Ads account had been attached to this Google tag, so loading the GA4
+  tag also activated an Ads destination. The destination was split off into its
+  own uninstalled tag. The live script read on 16 October 2026 holds no Google
+  Ads destination instance, and both user-provided-data switches read false; its
+  tag-id list still names a few ids of removed destinations, which is harmless.
+  Harry confirms these in the console.
 
 ---
 
@@ -365,6 +431,18 @@ Not part of this issue — recorded so it is not rediscovered:
 - The privacy policy must name Google Analytics as a tracker before the tag can
   fire. STA-317 already did this (commit `7a23674`) — verify GA4 is actually
   named there before flipping the ID on in production.
+
+---
+
+## J. Click ids in the page address
+
+`gclid`, `gbraid`, `wbraid`, `fbclid` and `ttclid` are removed, in code, from the
+`page_location` the tag reports: in the `config` call and in every manual
+`page_view` (`stripAdClickIds` in `lib/privacy/ad-click-params.ts`, used by
+`lib/google-analytics.ts`). Every other parameter, `utm_*` included, is kept as
+written, so GA4 still sees the campaign. PostHog is deliberately outside this: it
+is our EU processor and keeps the full address as `$current_url` for the
+ad-landing analysis. The redaction in D5 is a second layer, not the first.
 
 ---
 
@@ -387,6 +465,12 @@ Not part of this issue — recorded so it is not rediscovered:
 - [x] D6 — ad personalization disabled for EEA/UK and separately listed EU territories
 - [ ] D7 — "Page changes based on browser history events" and "Form interactions"
       off on the Showcase stream; then re-verify GA-02 on the production stream
+- [ ] D8 — user-provided data collection off, automatic detection and manual
+      (read from the live script on 16 October 2026: both false; Harry confirms)
+- [ ] D5 — `gclid`, `fbclid`, `gbraid`, `wbraid` added to the redacted query
+      parameters, after the Google Ads Final URL suffix is live
+- [ ] H — no Google Ads link, no Google Ads destination on the Google tag
+      (verified from the live script)
 - [x] E — reporting identity set to Device-based
 - [x] F — `NEXT_PUBLIC_GA_MEASUREMENT_ID` in `.env.example` and the Dockerfile
       (ARG line 41 *and* ENV line 52). **Prod build args still to do** — the
