@@ -222,6 +222,12 @@ describe("seasons", () => {
     for (const season of SEASONS) expect(places(season)).toEqual(places("default"));
   });
 
+  it("keeps the loudest Halloween card, Pumpkin Night, at the edge", () => {
+    const slots = fanSlots("halloween");
+    const pumpkin = slots.find((s) => s.cardId === "halloween-pumpkin-night");
+    expect(Math.abs(pumpkin?.index ?? 0)).toBe(3);
+  });
+
   it("shows the season the config names", () => {
     expect(FAN_SLOTS).toEqual(fanSlots(HERO_FAN_SEASON));
   });
