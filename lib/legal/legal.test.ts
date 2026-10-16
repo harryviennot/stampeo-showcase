@@ -315,8 +315,8 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
 
   /**
    * What §5.5 must name, in the words each locale's text uses: the four
-   * reported steps, and every field Meta receives. Consent version 3 is valid
-   * only while the text describes what the backend sends.
+   * reported steps, and every field Meta receives. The current consent version
+   * is valid only while the text describes what the backend sends.
    */
   const DISCLOSED: Record<string, { steps: string[]; fields: Record<string, string> }> = {
     en: {

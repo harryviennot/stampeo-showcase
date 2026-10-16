@@ -126,8 +126,9 @@ export type DecidedConsentRecord = ConsentRecord & ConsentState;
 
 /**
  * The choices of a record stored under another `CONSENT_VERSION`, older or
- * newer than this build's. Only its refusals still decide anything (see `resolveConsent`); its version and moment
- * are the evidence an attribution capture rests on (`captureConsentEvidence`).
+ * newer than this build's. Only its refusals still decide anything (see
+ * `resolveConsent`); its version and moment are the evidence an attribution
+ * capture rests on (`captureConsentEvidence`).
  */
 export interface PriorConsent {
   analytics: StoredChoice;
@@ -149,9 +150,8 @@ export type ConsentSurface = "none" | "banner" | "notice";
  *
  * `_ga_*` has to be a prefix: GA4 writes one `_ga_<MEASUREMENT_ID>` cookie per
  * property, and a literal list would leave the real session cookie in place
- * while reporting the visitor as opted out. `_gcl_*` is the same for the
- * cookies a Google Ads tag leaves (`_gcl_au`, `_gcl_aw`, `_gcl_gs`, ...): the
- * site loads no such tag, so these only clear what a browser still carries.
+ * while reporting the visitor as opted out. `_gcl_*` and `_gac_*` clear Google
+ * Ads cookies a browser may still hold; the site loads no Ads tag.
  *
  * `stampeo_ga` and `stampeo_ad` are our own carriers of each category's
  * identifiers. `stampeo_src` (campaign source) holds neither and is cleared
@@ -163,7 +163,7 @@ export type ConsentSurface = "none" | "banner" | "notice";
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
   analytics: ["_ga", "_ga_*", "_gid", GA_COOKIE],
-  marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", AD_COOKIE],
+  marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", "_gac_*", AD_COOKIE],
 };
 
 /** The carriers the privacy route sets as a server response, which a refusal asks it to clear too. */

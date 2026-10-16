@@ -130,7 +130,7 @@ describe("every trackable load clears the cookies of every category the resolved
     ["a European refusal of analytics", "Europe/Paris", record({ a: 0, m: 1, r: "opt-in", g: "EEA_UK_CH" }), ["stampeo_ga", "_ga", "_ga_ZFZ6JLPFXN"], ["stampeo_src", "stampeo_ad", "_fbp", "_gcl_au"]],
     ["a refusal of both", "Europe/Paris", record({ a: 0, m: 0, r: "opt-in" }), EVERYTHING, []],
     // Denied without being refused:
-    ["a refusal of advertising under the previous text, which asks about analytics again", "Europe/Paris", record({ v: 2, a: 1, m: 0, r: "opt-in" }), EVERYTHING, []],
+    ["a refusal of advertising under the previous text, which asks about analytics again", "Europe/Paris", record({ v: CONSENT_VERSION - 1, a: 1, m: 0, r: "opt-in" }), EVERYTHING, []],
     ["a US notice dismissal, now in Paris", "Europe/Paris", record({ a: 1, m: 1, r: "opt-out", g: "US" }), EVERYTHING, []],
     ["a European who never chose", "Europe/Paris", "", EVERYTHING, []],
     ["a visitor whose timezone we cannot place, who never chose", "Antarctica/Troll", "", EVERYTHING, []],

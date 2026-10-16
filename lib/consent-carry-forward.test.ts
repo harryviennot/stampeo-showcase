@@ -20,7 +20,6 @@ import { afterEach, describe, expect, test } from "bun:test";
 import {
   CONSENT_COOKIE,
   CONSENT_VERSION,
-  cookieNamesToClear,
   consentRecordFromCookieHeader,
   consentSnapshotKey,
   consentSurface,
@@ -61,6 +60,15 @@ function visit(cookieValue: string, regime: ConsentRegime, gpc = false) {
   const evidence = consentEvidence({ record, prior, row: row.key });
   return {
     state,
+    // The categories whose cookies the page load removes.
+    clear: planPageLoad({
+      sid: SUBJECT,
+      trackable: true,
+      refreshedThisDocument: false,
+      row,
+      stored: parseStoredChoice(cookieValue),
+      consent: state,
+    }).clear,
     surface: consentSurface({ record, prior, gpc, trackable: true, row }),
     metaLoads: shouldLoadMetaPixel({
       pixelId: "1088158323750710",
@@ -118,13 +126,15 @@ describe("an older partial refusal keeps the refused category refused", () => {
   // analytics grant is asked again.
   const partial = storedChoice(OLDER, 1, 0, "opt-in");
 
-  test("in the EU the banner asks again and nothing loads until it is answered", () => {
+  test("in the EU the refusal stands, but the banner shows because the analytics grant is asked again", () => {
     const page = visit(partial, "opt-in");
 
     expect(page.surface).toBe("banner");
     expect(page.state).toEqual({ analytics: false, marketing: false });
     expect(page.metaLoads).toBe(false);
     expect(page.gaLoads).toBe(false);
+    // The refused category's cookies are removed on load.
+    expect(page.clear).toContain("marketing");
   });
 
   test("in the US the notice shows, GA loads by default, and Meta stays off", () => {
@@ -158,6 +168,8 @@ describe("an older grant is asked again", () => {
     expect(page.surface).toBe("banner");
     expect(page.metaLoads).toBe(false);
     expect(page.gaLoads).toBe(false);
+    // What the old grant let in is removed on load.
+    expect(page.clear).toEqual(["analytics", "marketing"]);
   });
 
   test("in the US it falls to the notice default", () => {
@@ -168,79 +180,28 @@ describe("an older grant is asked again", () => {
   });
 });
 
-describe("Google Ads joining the advertising choice (version 3 to version 4)", () => {
-  const PAGE_OPEN = { sid: SUBJECT, trackable: true, refreshedThisDocument: false } as const;
-
-  test("the choices these cases carry forward are the ones the version 3 banner wrote", () => {
-    expect(CONSENT_VERSION).toBe(4);
-    expect(OLDER).toBe(3);
-  });
-
-  test("an EU visitor who accepted everything under version 3 is asked again, and the cookies of what they accepted are cleared", () => {
-    const cookie = storedChoice(3, 1, 1, "opt-in");
-    const page = visit(cookie, "opt-in");
-    const plan = planPageLoad({
-      ...PAGE_OPEN,
-      row: rowFor("FR"),
-      stored: parseStoredChoice(cookie),
-      consent: page.state,
-    });
-
-    expect(page.surface).toBe("banner");
-    expect(page.state).toEqual({ analytics: false, marketing: false });
-    expect(page.metaLoads).toBe(false);
-    expect(page.gaLoads).toBe(false);
-    expect(plan.clear).toEqual(["analytics", "marketing"]);
-    expect(cookieNamesToClear(plan.clear, ["_gcl_au", "_gcl_aw", "_fbp", "_ga"]).sort()).toEqual([
-      "_fbp",
-      "_ga",
-      "_gcl_au",
-      "_gcl_aw",
-    ]);
-  });
-
-  test("an EU visitor who refused advertising under version 3 is not asked about it again, and the Google Ads cookies are cleared", () => {
-    const cookie = storedChoice(3, 1, 0, "opt-in");
-    const page = visit(cookie, "opt-in");
-    const plan = planPageLoad({
-      ...PAGE_OPEN,
-      row: rowFor("FR"),
-      stored: parseStoredChoice(cookie),
-      consent: page.state,
-    });
-
-    expect(page.state.marketing).toBe(false);
-    expect(plan.clear).toContain("marketing");
-    expect(cookieNamesToClear(plan.clear, ["_gcl_au", "_gcl_gs"]).sort()).toEqual(["_gcl_au", "_gcl_gs"]);
-  });
-
-  test("a US visitor who opted out of advertising under version 3 stays opted out", () => {
-    const page = visit(storedChoice(3, 1, 0, "opt-out"), "opt-out");
-
-    expect(page.state).toEqual({ analytics: true, marketing: false });
-    expect(page.captured!.ad).toBeNull();
-  });
-
-  test("GPC still overrides what a US visitor chose under version 3", () => {
-    const page = visit(storedChoice(3, 1, 1, "opt-out"), "opt-out", true);
-
-    expect(page.state).toEqual({ analytics: false, marketing: false });
-    expect(page.surface).toBe("none");
-  });
+describe("the consent version a capture names across a version bump", () => {
+  const dismissedOlderNotice = `${CONSENT_COOKIE}=${storedChoice(OLDER, 1, 1, "opt-out")}`;
 
   test.each([
-    ["a US visitor who never touched the notice", 4, 0, "NEXT_LOCALE=en"],
+    ["a US visitor who never touched the notice", CONSENT_VERSION, 0, "NEXT_LOCALE=en"],
     [
-      "a visitor whose current choice was made under version 4",
-      4,
-      1_759_000_000,
-      `${CONSENT_COOKIE}=${serializeConsentCookie({ v: 4, analytics: true, marketing: false, at: 1_759_000_000, regime: "opt-out" })}`,
+      "a US visitor who dismissed the previous notice, which evidences no click",
+      CONSENT_VERSION,
+      0,
+      dismissedOlderNotice,
     ],
     [
-      "a visitor whose refusal dates from version 3",
-      3,
+      "a visitor whose current choice was made under the current version",
+      CONSENT_VERSION,
       1_759_000_000,
-      `${CONSENT_COOKIE}=${storedChoice(3, 1, 0, "opt-out")}`,
+      `${CONSENT_COOKIE}=${serializeConsentCookie({ v: CONSENT_VERSION, analytics: true, marketing: false, at: 1_759_000_000, regime: "opt-out" })}`,
+    ],
+    [
+      "a visitor whose refusal dates from the previous version",
+      OLDER,
+      1_759_000_000,
+      `${CONSENT_COOKIE}=${storedChoice(OLDER, 1, 0, "opt-out")}`,
     ],
   ] as const)("the capture evidence of %s names consent version %d", (_who, cv, ca, header) => {
     const evidence = consentEvidence({
