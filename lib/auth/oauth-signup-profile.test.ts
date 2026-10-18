@@ -95,6 +95,14 @@ describe("the profile sync after a Google or Apple sign-up", () => {
     expect(writes).toEqual([{ metadata: { locale: "es" } }]);
   });
 
+  test("writes the page's language when the stored one is not a language the site serves", async () => {
+    const { writes, sync } = recorder();
+
+    await syncOAuthSignupProfile({ ...sync, stash: null, locale: "pl", existingLocale: "de" });
+
+    expect(writes).toEqual([{ metadata: { locale: "pl" } }]);
+  });
+
   test("never blocks the redirect when a write fails", async () => {
     const sync: OAuthSignupSync = {
       stash: { phone: "+33612345678" },
