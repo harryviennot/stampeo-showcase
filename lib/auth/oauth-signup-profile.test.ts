@@ -87,6 +87,29 @@ describe("the profile sync after a Google or Apple sign-up", () => {
     ]);
   });
 
+  test("keeps the language a returning account already has", async () => {
+    const { writes, sync } = recorder();
+
+    await syncOAuthSignupProfile({ ...sync, stash: null, locale: "en", existingLocale: "es" });
+
+    expect(writes).toEqual([{ metadata: { locale: "es" } }]);
+  });
+
+  test("never blocks the redirect when a write fails", async () => {
+    const sync: OAuthSignupSync = {
+      stash: { phone: "+33612345678" },
+      locale: "fr",
+      updateUserMetadata: async () => {
+        throw new Error("network down");
+      },
+      updateProfilePhone: async () => {
+        throw new Error("network down");
+      },
+    };
+
+    await expect(syncOAuthSignupProfile(sync)).resolves.toBeUndefined();
+  });
+
   test("leaves the profile phone alone when there is none", async () => {
     const { writes, sync } = recorder();
 

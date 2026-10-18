@@ -152,6 +152,7 @@ export function OnboardingWizard() {
         syncOAuthSignupProfile({
           stash: readOAuthStash(),
           locale,
+          existingLocale: session.user?.user_metadata?.locale,
           updateUserMetadata: (data) => createClient().auth.updateUser({ data }),
           updateProfilePhone: (phone) => updateUserProfile({ phone }, session.access_token),
         }),
