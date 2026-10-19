@@ -21,7 +21,7 @@ import { join } from "node:path";
 import { computeAttributionChain, type ChainInputs } from "./__fixtures__/chain";
 
 const ATTRIBUTION_CHAIN_SHA256 =
-  "d63bff285cb577bb30b884501b26773b6cdbbcaf1ae31275d22e4649cc19303f";
+  "2ec2446b9a9ee2c7ca0a51f0c45c5fde7dce34aede160b12fd23c85b5568ba73";
 
 const FILE = join(import.meta.dir, "__fixtures__", "attribution-chain.v2.json");
 const TEXT = readFileSync(FILE, "utf8");

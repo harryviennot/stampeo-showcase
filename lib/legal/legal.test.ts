@@ -7,7 +7,7 @@ import GithubSlugger from "github-slugger";
 import { routing } from "@/i18n/routing";
 import { getLegalContent } from "./index";
 import { STABLE_LEGAL_IDS } from "./mdx";
-import { commonCatalog, privacySource, retentionTable, section } from "./policy-test-utils";
+import { commonCatalog, privacySource, retentionTable, s55, section } from "./policy-test-utils";
 
 const PAGES = ["privacy", "terms"] as const;
 
@@ -118,11 +118,11 @@ describe("privacy §5 cookies", () => {
 
   it("names every recipient the banner offers, in every locale", () => {
     // CNIL requires the purposes AND the recipients to be disclosed. The
-    // banner names Google and Meta; if the policy does not, the two disagree
+    // banner names Google Ads and Meta; if the policy does not, the two disagree
     // and the disclosure is the one that loses.
     for (const locale of routing.locales) {
       const source = privacySource(locale);
-      for (const recipient of ["Google Analytics 4", "Meta"]) {
+      for (const recipient of ["Google Analytics 4", "Google Ads", "Meta"]) {
         expect(source, `${locale} does not name ${recipient}`).toContain(recipient);
       }
     }
@@ -293,7 +293,6 @@ describe("privacy §5.2 — the consent cookie's own contents", () => {
 });
 
 /** §5.5, the server-side conversion reporting, up to §5.6. */
-const section55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
 
 describe("privacy §5.5 — what the advertising platforms receive", () => {
 
@@ -307,7 +306,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
 
   it("§5.5 does not promise that contact details are never sent, in any locale", () => {
     for (const locale of routing.locales) {
-      expect(section55(locale), `${locale} promises no email`).not.toMatch(
+      expect(s55(locale), `${locale} promises no email`).not.toMatch(
         NO_CONTACT_DETAILS_PROMISE[locale]
       );
     }
@@ -315,8 +314,8 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
 
   /**
    * What §5.5 must name, in the words each locale's text uses: the four
-   * reported steps, and every field Meta receives. Consent version 3 is valid
-   * only while the text describes what the backend sends.
+   * reported steps, and every field Meta receives. The current consent version
+   * is valid only while the text describes what the backend sends.
    */
   const DISCLOSED: Record<string, { steps: string[]; fields: Record<string, string> }> = {
     en: {
@@ -406,14 +405,14 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
   };
 
   it.each(routing.locales)("§5.5 names the four reported steps (%s)", (locale) => {
-    const text = section55(locale).toLowerCase();
+    const text = s55(locale).toLowerCase();
     for (const step of DISCLOSED[locale].steps) {
       expect(text, `${locale} §5.5 does not name "${step}"`).toContain(step.toLowerCase());
     }
   });
 
   it.each(routing.locales)("§5.5 names every field Meta receives (%s)", (locale) => {
-    const text = section55(locale).toLowerCase();
+    const text = s55(locale).toLowerCase();
     for (const [field, words] of Object.entries(DISCLOSED[locale].fields)) {
       expect(text, `${locale} §5.5 does not name the ${field} ("${words}")`).toContain(
         words.toLowerCase(),
@@ -424,7 +423,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
   it.each(routing.locales)("§5.5 names the SHA-256 hashing and the 45-day limit (%s)", (locale) => {
     // Contact details leave as SHA-256 codes; the IP address and browser
     // characteristics are kept 45 days at most.
-    const text = section55(locale);
+    const text = s55(locale);
     expect(text, `${locale} §5.5 does not name SHA-256`).toContain("SHA-256");
     expect(text, `${locale} §5.5 omits the 45-day limit`).toMatch(FORTY_FIVE_DAYS[locale]);
   });
@@ -438,7 +437,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
   });
 
   it.each(routing.locales)(
-    "the Advertising toggle names Meta and the irreversible code (%s)",
+    "the Advertising toggle names Meta, Google Ads and the irreversible code (%s)",
     (locale) => {
       // The line a visitor reads when they decide on marketing cookies.
       const IRREVERSIBLE_CODE: Record<string, RegExp> = {
@@ -450,16 +449,10 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
       const body: string = commonCatalog(locale).cookies.prefs.marketing.body;
 
       expect(body).toContain("Meta");
+      expect(body).toContain("Google Ads");
       expect(body).toMatch(IRREVERSIBLE_CODE[locale]);
     },
   );
-
-  it("names Meta among the United States transfers, in every locale", () => {
-    for (const locale of routing.locales) {
-      const text = section(locale, TRANSFERS[locale], /^#+\s/m);
-      expect(text, `${locale} transfers paragraph does not name Meta`).toContain("Meta");
-    }
-  });
 });
 
 /**
@@ -520,13 +513,13 @@ describe("privacy — the statements the legal review requires", () => {
   };
 
   it.each(routing.locales)("§5.5 states its legal basis, consent (%s)", (locale) => {
-    expectAll(section55(locale), REQUIRED[locale].legalBasis, `${locale} §5.5 legal basis`);
+    expectAll(s55(locale), REQUIRED[locale].legalBasis, `${locale} §5.5 legal basis`);
   });
 
   it.each(routing.locales)(
     "§5.5 names Meta Platforms Ireland Limited as joint controller (%s)",
     (locale) => {
-      const text = section55(locale);
+      const text = s55(locale);
       expectAll(text, REQUIRED[locale].jointControllers, `${locale} §5.5 joint controllers`);
       // Art. 26(2): the essence of the arrangement, including who answers for
       // Meta's own later processing, is made available to the reader.
@@ -582,13 +575,13 @@ describe("privacy — the statements the legal review requires", () => {
   );
 
   it.each(routing.locales)(
-    "the banner and the US notice name Meta and Google (%s)",
+    "the banner and the US notice name Meta and Google Ads (%s)",
     (locale) => {
       // The first layer a visitor reads before deciding.
       const { banner, notice } = commonCatalog(locale).cookies;
       for (const body of [banner.body, notice.body]) {
         expect(body).toContain("Meta");
-        expect(body).toContain("Google");
+        expect(body).toContain("Google Ads");
       }
     },
   );

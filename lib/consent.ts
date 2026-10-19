@@ -63,12 +63,15 @@ export const CONSENT_COOKIE = "stampeo_consent";
  * 3 — Privacy policy §5.5: Meta also receives hashed contact details, the IP
  *     address and browser characteristics, four reported steps instead of
  *     two, and those steps for signups that did not come through a Meta ad.
+ * 4 — Privacy policy §4 and §5.5: Google Ads also receives three reported
+ *     steps from our servers, with the Google click identifier and the
+ *     account email hashed with SHA-256, under the advertising choice.
  *
  * The backend's `CONSENT_VERSION` mirrors this and must move with it: the
  * backend honours only the versions in `ACCEPTED_CONSENT_VERSIONS` (backend
  * `app/services/attribution/eligibility.py`).
  */
-export const CONSENT_VERSION = 3;
+export const CONSENT_VERSION = 4;
 
 export type ConsentCategory = "analytics" | "marketing";
 
@@ -122,14 +125,15 @@ export interface ConsentRecord {
 export type DecidedConsentRecord = ConsentRecord & ConsentState;
 
 /**
- * The choices of a record stored under an older `CONSENT_VERSION`. Only its
- * refusals still decide anything (see `resolveConsent`); its version and moment
- * are the evidence an attribution capture rests on (`captureConsentEvidence`).
+ * The choices of a record stored under another `CONSENT_VERSION`, older or
+ * newer than this build's. Only its refusals still decide anything (see
+ * `resolveConsent`); its version and moment are the evidence an attribution
+ * capture rests on (`captureConsentEvidence`).
  */
 export interface PriorConsent {
   analytics: StoredChoice;
   marketing: StoredChoice;
-  /** The older CONSENT_VERSION this choice was made against. */
+  /** The other CONSENT_VERSION this choice was made against. */
   v: number;
   /** Unix seconds, from the older cookie's `t`; 0 when it carried none. */
   at: number;
@@ -146,7 +150,8 @@ export type ConsentSurface = "none" | "banner" | "notice";
  *
  * `_ga_*` has to be a prefix: GA4 writes one `_ga_<MEASUREMENT_ID>` cookie per
  * property, and a literal list would leave the real session cookie in place
- * while reporting the visitor as opted out.
+ * while reporting the visitor as opted out. `_gcl_*` and `_gac_*` clear Google
+ * Ads cookies a browser may still hold; the site loads no Ads tag.
  *
  * `stampeo_ga` and `stampeo_ad` are our own carriers of each category's
  * identifiers. `stampeo_src` (campaign source) holds neither and is cleared
@@ -158,7 +163,7 @@ export type ConsentSurface = "none" | "banner" | "notice";
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
   analytics: ["_ga", "_ga_*", "_gid", GA_COOKIE],
-  marketing: ["_fbp", "_fbc", "_ttp", AD_COOKIE],
+  marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", "_gac_*", AD_COOKIE],
 };
 
 /** The carriers the privacy route sets as a server response, which a refusal asks it to clear too. */
@@ -363,7 +368,11 @@ function choice(value: unknown): StoredChoice | undefined {
 }
 
 /**
- * A stored choice of any version from 1 to CONSENT_VERSION, or null.
+ * A stored choice of any version, or null.
+ *
+ * A newer version than this build's is read too: its refusals stand and its
+ * grants are not carried, the same as an older version's (see
+ * `parsePriorConsent`), so a rollback or a deploy-order gap cannot lose a refusal.
  *
  * Null for anything malformed, truncated or forged. Never throws: a corrupt
  * cookie has to degrade into asking again, not into a blank page.
@@ -375,9 +384,7 @@ export function consentFromObject(parsed: unknown): ConsentRecord | null {
 
   const record = parsed as Record<string, unknown>;
   const v = record.v;
-  if (typeof v !== "number" || !Number.isInteger(v) || v < 1 || v > CONSENT_VERSION) {
-    return null;
-  }
+  if (typeof v !== "number" || !Number.isInteger(v) || v < 1) return null;
 
   const analytics = choice(record.a);
   const marketing = choice(record.m);
@@ -416,7 +423,7 @@ export function parseStoredChoice(raw: string | null | undefined): ConsentRecord
 /**
  * A choice stored under the current version, or null for "no current choice".
  *
- * Null for an older version too: that record is read by `parsePriorConsent`.
+ * Null for any other version too: that record is read by `parsePriorConsent`.
  */
 export function parseConsentCookie(
   raw: string | null | undefined,
@@ -426,7 +433,8 @@ export function parseConsentCookie(
 }
 
 /**
- * A choice stored under an older version, or null.
+ * A choice stored under another version than the current one, older or newer,
+ * or null.
  *
  * Returned even without a moment (`at` 0): its refusals still stand.
  */

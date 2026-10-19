@@ -441,12 +441,12 @@ describe("what the capture still waits for", () => {
 
 describe("the consent evidence a capture rests on", () => {
   const CURRENT = chose(true, true, "opt-in", 1_759_000_000);
-  const OLDER: PriorConsent = { v: 2, analytics: true, marketing: false, at: 1_759_400_000 };
+  const OLDER: PriorConsent = { v: CONSENT_VERSION - 1, analytics: true, marketing: false, at: 1_759_400_000 };
   const row = EU.key;
 
   test.each([
     ["a visitor who chose carries their own choice", CURRENT, null, { cv: CONSENT_VERSION, ca: 1_759_000_000 }],
-    ["a visitor whose only choice is older carries that choice", null, OLDER, { cv: 2, ca: 1_759_400_000 }],
+    ["a visitor whose only choice is older carries that choice", null, OLDER, { cv: CONSENT_VERSION - 1, ca: 1_759_400_000 }],
     // Its grants are not carried, so the state in force is the opt-out default.
     ["a visitor whose older choice refused nothing carries the text in force and no moment", null, { ...OLDER, marketing: true }, { cv: CONSENT_VERSION, ca: 0 }],
     // Nobody clicked: the version is the notice text shown, with no moment.
@@ -468,7 +468,7 @@ describe("the consent evidence a capture rests on", () => {
     expect(consentEvidence({ record: null, prior: null, row: "MARS" })?.g).toBe("UNKNOWN");
   });
 
-  describe("a US visitor who refused advertising under version 2 and kept analytics", () => {
+  describe("a US visitor who refused advertising under the previous version and kept analytics", () => {
     /** The carriers an organic landing on /us writes for a visitor carrying this cookie. */
     function organicLanding(choice: Record<string, unknown>) {
       const header = `NEXT_LOCALE=en; ${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(choice))}`;
@@ -489,22 +489,22 @@ describe("the consent evidence a capture rests on", () => {
       };
     }
 
-    test("carries the version-2 choice, never the never-chose shape", () => {
-      // `cv:3, ca:0` is what the backend reads as the opt-out default, which
-      // grants advertising this visitor refused.
-      const { consent, written } = organicLanding({ v: 2, a: 1, m: 0, t: 1_759_400_000, r: "opt-out" });
+    test("carries the previous version's choice, never the never-chose shape", () => {
+      // `cv: CONSENT_VERSION, ca: 0` is what the backend reads as the opt-out
+      // default, which grants advertising this visitor refused.
+      const { consent, written } = organicLanding({ v: CONSENT_VERSION - 1, a: 1, m: 0, t: 1_759_400_000, r: "opt-out" });
 
       expect(consent).toEqual({ analytics: true, marketing: false });
       for (const carrier of [written!.src, written!.ga]) {
-        expect(carrier).toMatchObject({ cv: 2, ca: 1_759_400_000, cr: "opt-out" });
+        expect(carrier).toMatchObject({ cv: CONSENT_VERSION - 1, ca: 1_759_400_000, cr: "opt-out" });
       }
       expect(written!.ad).toBeNull();
     });
 
     test.each([undefined, 0, -1, "1759400000"])(
-      "a version-2 cookie with moment %p captures nothing, and its refusal still stands",
+      "a previous-version cookie with moment %p captures nothing, and its refusal still stands",
       (t) => {
-        const { consent, written } = organicLanding({ v: 2, a: 1, m: 0, t, r: "opt-out" });
+        const { consent, written } = organicLanding({ v: CONSENT_VERSION - 1, a: 1, m: 0, t, r: "opt-out" });
 
         expect(consent).toEqual({ analytics: true, marketing: false });
         expect(written).toBeNull();

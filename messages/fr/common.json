@@ -132,7 +132,7 @@
     "cookies": {
       "banner": {
         "title": "Vos choix de cookies",
-        "body": "On n'active les cookies de mesure et de publicité que si vous les acceptez, et alors seulement on signale à Meta et Google si votre inscription vient d'une annonce. Refuser ne change rien au fonctionnement du site.",
+        "body": "On n'active les cookies de mesure et de publicité que si vous les acceptez, et alors seulement on signale à Meta et Google Ads si votre inscription vient d'une annonce. Refuser ne change rien au fonctionnement du site.",
         "learnMore": "Voir le détail",
         "accept": "Tout accepter",
         "refuse": "Tout refuser",
@@ -140,7 +140,7 @@
       },
       "notice": {
         "title": "Vos choix de confidentialité",
-        "body": "On utilise des cookies de mesure et de publicité pour évaluer nos annonces, et on signale à Meta et Google si votre inscription vient de l'une d'elles.",
+        "body": "On utilise des cookies de mesure et de publicité pour évaluer nos annonces, et on signale à Meta et Google Ads si votre inscription vient de l'une d'elles.",
         "dismiss": "J'ai compris"
       },
       "prefs": {
@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Publicité",
-          "body": "Meta, pour savoir laquelle de nos annonces a vraiment servi. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître."
+          "body": "Meta et Google Ads, pour savoir laquelle de nos annonces a vraiment servi. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Google Ads reçoit son identifiant de clic si vous venez d'une de ses annonces, et l'adresse email de votre compte sous forme de code irréversible, avec l'étape franchie et, pour un essai ou un paiement, son prix. Rien d'autre sur vous."
         },
         "save": "Enregistrer mon choix",
         "cancel": "Annuler",
@@ -173,11 +173,11 @@
           },
           "marketing": {
             "title": "Vente, partage et publicité ciblée",
-            "body": "Meta, pour savoir quelles annonces ont mené à une inscription. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Si vous la désactivez, rien n'est transmis à Meta."
+            "body": "Meta et Google Ads, pour savoir quelles annonces ont mené à une inscription. Si vous créez un compte, Meta reçoit aussi vos coordonnées sous forme de code irréversible, pour vous reconnaître. Google Ads reçoit son identifiant de clic si vous venez d'une de ses annonces, et l'adresse email de votre compte sous forme de code irréversible, avec l'étape franchie et, pour un essai ou un paiement, son prix. Rien d'autre sur vous. Si vous la désactivez, rien n'est transmis à Meta ni à Google Ads."
           },
           "analytics": {
             "title": "Mesure d'audience",
-            "body": "Google Analytics, pour voir quelles pages nous amènent de nouveaux commerces. Google traite ces données pour notre compte uniquement."
+            "body": "Google Analytics, pour voir quelles pages nous amènent de nouveaux commerces. Google Analytics traite ces données pour notre compte uniquement."
           }
         }
       }

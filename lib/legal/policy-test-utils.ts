@@ -34,6 +34,9 @@ export function section(locale: string, heading: RegExp, next: RegExp = /^#+\s+\
   return end === -1 ? rest : rest.slice(0, end);
 }
 
+/** §5.5, conversion measurement from our servers. */
+export const s55 = (locale: string) => section(locale, /^#+\s+5\.5\s/m, /^#+\s+5\.6\s/m);
+
 /** One locale's `common` message catalog, as the banner and the toggle render it. */
 export function commonCatalog(locale: string) {
   return JSON.parse(

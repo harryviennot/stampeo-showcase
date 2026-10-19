@@ -7,13 +7,18 @@
  * here consumes both. It is the analytics-category sibling of
  * `lib/meta-pixel.ts`, and deliberately keeps the same shape.
  *
- * THE SCRIPT IS NEVER LOADED BEFORE THE ANSWER, and specifically NOT via
- * Google Consent Mode. Consent Mode in `denied` state still loads gtag.js and
- * still sends cookieless pings to googletagmanager.com. STA-317's rule is that
- * a refusal leaves nothing behind, which is only true if the script was never
+ * THE SCRIPT IS NEVER LOADED BEFORE THE ANSWER, and Google Consent Mode is not
+ * what gates it. Consent Mode in `denied` state still loads gtag.js and still
+ * sends cookieless pings to googletagmanager.com. STA-317's rule is that a
+ * refusal leaves nothing behind, which is only true if the script was never
  * fetched. So there is no `<Script src>` in any JSX — a static tag would render
- * before any gate ran — and Google's console warning that Consent Mode is not
- * detected is the expected result rather than a fault.
+ * before any gate ran.
+ *
+ * Consent Mode is used for one thing: once the tag is loaded, `initGa` denies
+ * the ad signals (storage, user data, personalization) for good. The browser
+ * never grants them, so a Google Ads destination attached to this property in
+ * Google's console can neither set ad cookies nor use the visitor for
+ * advertising; Google Ads only receives what our servers upload.
  *
  * ONCE RESIDENT, IT CANNOT BE UNLOADED. That is why `trackable` is checked on
  * every event and not only at load: a visitor who accepted on `/pricing` and
@@ -33,6 +38,7 @@ import {
   isContactHref,
   isKnownCTALocation,
 } from "./cta/taxonomy";
+import { stripAdClickIds } from "./privacy/ad-click-params";
 
 /**
  * The events this site sends.
@@ -209,6 +215,14 @@ declare global {
 
 let initialised = false;
 
+/** The Consent Mode default: ad signals denied, analytics granted (the tag only loads under the analytics grant). */
+const AD_SIGNALS_DENIED = {
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+  analytics_storage: "granted",
+} as const;
+
 /** Has the tag been injected in this page's lifetime? */
 export function isGaLoaded(): boolean {
   return initialised;
@@ -263,13 +277,19 @@ export function initGa(measurementId: string): void {
     } as GtagFn;
   }
 
+  // Queued first, so the script reads it before the property's config.
+  window.gtag("consent", "default", AD_SIGNALS_DENIED);
+
   const script = document.createElement("script");
   script.async = true;
   script.src = gaScriptSrc(measurementId);
   document.head.appendChild(script);
 
   window.gtag("js", new Date());
-  window.gtag("config", measurementId, gaConfig(window.location.search));
+  window.gtag("config", measurementId, {
+    ...gaConfig(window.location.search),
+    page_location: stripAdClickIds(window.location.href),
+  });
 }
 
 /** Is this session asking to appear in DebugView? */
@@ -364,7 +384,7 @@ export function trackGaPageView(input: {
     params: {
       page_path: input.path,
       page_location:
-        typeof window === "undefined" ? undefined : window.location.href,
+        typeof window === "undefined" ? undefined : stripAdClickIds(window.location.href),
       page_title: typeof document === "undefined" ? undefined : document.title,
     },
   });

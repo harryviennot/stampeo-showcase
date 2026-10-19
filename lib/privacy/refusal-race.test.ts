@@ -11,6 +11,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { capturePass } from "../attribution/capture";
 import { FBP, GA_CID, META_LANDING, US, visitor } from "../attribution/__fixtures__/visitors";
 import {
+  CONSENT_VERSION,
   categoriesToClearOnChoice,
   clearCookiesFor,
   currentConsent,
@@ -106,9 +107,9 @@ describe("a US visitor on a Meta ad refuses advertising while the capture is sti
 
 describe("every trackable load clears the cookies of every category the resolved consent denies", () => {
   const record = (choice: object) =>
-    `stampeo_consent=${encodeURIComponent(JSON.stringify({ v: 3, t: 1_791_244_000, s: SUBJECT, ...choice }))}`;
-  const CARRIERS_JAR = "stampeo_src=1; stampeo_ga=2; stampeo_ad=3; _ga=4; _ga_ZFZ6JLPFXN=7; _fbp=5; _fbc=6";
-  const EVERYTHING = ["stampeo_src", "stampeo_ga", "stampeo_ad", "_ga", "_ga_ZFZ6JLPFXN", "_fbp", "_fbc"];
+    `stampeo_consent=${encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, t: 1_791_244_000, s: SUBJECT, ...choice }))}`;
+  const CARRIERS_JAR = "stampeo_src=1; stampeo_ga=2; stampeo_ad=3; _ga=4; _ga_ZFZ6JLPFXN=7; _fbp=5; _fbc=6; _gcl_au=8";
+  const EVERYTHING = ["stampeo_src", "stampeo_ga", "stampeo_ad", "_ga", "_ga_ZFZ6JLPFXN", "_fbp", "_fbc", "_gcl_au"];
 
   const load = async (timezone: string, consent: string, options: { gpc?: boolean } = {}) => {
     browser = installFakeBrowser({
@@ -124,12 +125,12 @@ describe("every trackable load clears the cookies of every category the resolved
   };
 
   test.each([
-    ["a US refusal of advertising", "America/New_York", record({ a: 1, m: 0, r: "opt-out" }), ["stampeo_ad", "_fbp", "_fbc"], ["stampeo_src", "stampeo_ga", "_ga"]],
-    ["a restored refusal of advertising", "America/New_York", record({ a: -1, m: 0, r: "opt-out", o: "restore" }), ["stampeo_ad", "_fbp", "_fbc"], ["stampeo_src", "stampeo_ga", "_ga"]],
-    ["a European refusal of analytics", "Europe/Paris", record({ a: 0, m: 1, r: "opt-in", g: "EEA_UK_CH" }), ["stampeo_ga", "_ga", "_ga_ZFZ6JLPFXN"], ["stampeo_src", "stampeo_ad", "_fbp"]],
+    ["a US refusal of advertising", "America/New_York", record({ a: 1, m: 0, r: "opt-out" }), ["stampeo_ad", "_fbp", "_fbc", "_gcl_au"], ["stampeo_src", "stampeo_ga", "_ga"]],
+    ["a restored refusal of advertising", "America/New_York", record({ a: -1, m: 0, r: "opt-out", o: "restore" }), ["stampeo_ad", "_fbp", "_fbc", "_gcl_au"], ["stampeo_src", "stampeo_ga", "_ga"]],
+    ["a European refusal of analytics", "Europe/Paris", record({ a: 0, m: 1, r: "opt-in", g: "EEA_UK_CH" }), ["stampeo_ga", "_ga", "_ga_ZFZ6JLPFXN"], ["stampeo_src", "stampeo_ad", "_fbp", "_gcl_au"]],
     ["a refusal of both", "Europe/Paris", record({ a: 0, m: 0, r: "opt-in" }), EVERYTHING, []],
     // Denied without being refused:
-    ["a refusal of advertising under the previous text, which asks about analytics again", "Europe/Paris", record({ v: 2, a: 1, m: 0, r: "opt-in" }), EVERYTHING, []],
+    ["a refusal of advertising under the previous text, which asks about analytics again", "Europe/Paris", record({ v: CONSENT_VERSION - 1, a: 1, m: 0, r: "opt-in" }), EVERYTHING, []],
     ["a US notice dismissal, now in Paris", "Europe/Paris", record({ a: 1, m: 1, r: "opt-out", g: "US" }), EVERYTHING, []],
     ["a European who never chose", "Europe/Paris", "", EVERYTHING, []],
     ["a visitor whose timezone we cannot place, who never chose", "Antarctica/Troll", "", EVERYTHING, []],

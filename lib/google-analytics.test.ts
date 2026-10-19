@@ -571,11 +571,16 @@ describe("the browser side, in load order", () => {
   type FakeEl = { async?: boolean; src?: string };
 
   const appended: FakeEl[] = [];
+  /** The page `initGa` ran on: its queue is what the tag will replay. */
+  let initialisedWindow: Record<string, unknown>;
 
-  function installBrowser(search: string): Record<string, unknown> {
+  function installBrowser(
+    search: string,
+    href = "https://stampeo.app/us/pricing",
+  ): Record<string, unknown> {
     appended.length = 0;
     const fakeWindow: Record<string, unknown> = {
-      location: { search, href: "https://stampeo.app/us/pricing" },
+      location: { search, href },
     };
     (globalThis as Record<string, unknown>).document = {
       createElement: (): FakeEl => ({}),
@@ -622,8 +627,12 @@ describe("the browser side, in load order", () => {
 
   test("initGa injects gtag.js once, configured for the property", () => {
     // AC1/AC4. A fresh window with NO gtag, so the dataLayer stub is the one
-    // under test rather than a spy.
-    const win = installBrowser("?debug_mode=1");
+    // under test rather than a spy. The landing carries an ad click id.
+    const win = installBrowser(
+      "?debug_mode=1",
+      "https://stampeo.app/us/pricing?utm_source=google&gclid=abc&debug_mode=1",
+    );
+    initialisedWindow = win;
     initGa(MEASUREMENT_ID);
 
     expect(appended.length).toBe(1);
@@ -635,13 +644,42 @@ describe("the browser side, in load order", () => {
     // reads `arguments.length` off what it finds queued.
     const queue = win.dataLayer as unknown[];
     const calls = queue.map((entry) => Array.from(entry as IArguments));
-    expect(calls[0][0]).toBe("js");
-    expect(calls[1][0]).toBe("config");
-    expect(calls[1][1]).toBe(MEASUREMENT_ID);
+    const config = calls.find((call) => call[0] === "config")!;
+    expect(calls.some((call) => call[0] === "js")).toBe(true);
+    expect(config[1]).toBe(MEASUREMENT_ID);
     // `?debug_mode=1` is the documented operator instruction; passing it
     // through is what makes that instruction true.
-    expect(calls[1][2]).toEqual(gaConfig("?debug_mode=1"));
-    expect(calls[1][2]).toMatchObject({ debug_mode: true });
+    expect(config[2]).toMatchObject(gaConfig("?debug_mode=1"));
+    expect(config[2]).toMatchObject({ debug_mode: true });
+    // The address GA4 receives carries the campaign but not the click id.
+    expect(config[2]).toMatchObject({
+      page_location: "https://stampeo.app/us/pricing?utm_source=google&debug_mode=1",
+    });
+  });
+
+  test("ad signals are denied before the property is configured, and never granted", () => {
+    // An Ads destination attached to this tag in Google's console must not be
+    // able to set ad cookies or use the visitor for advertising. Consent Mode
+    // here only denies; analytics storage stays granted because the tag loads
+    // only under the analytics grant.
+    const queue = initialisedWindow.dataLayer as unknown[];
+    const calls = queue.map((entry) => Array.from(entry as IArguments));
+    const consentAt = calls.findIndex((call) => call[0] === "consent");
+    const configAt = calls.findIndex((call) => call[0] === "config");
+
+    expect(consentAt).toBeGreaterThanOrEqual(0);
+    expect(consentAt).toBeLessThan(configAt);
+    expect(calls[consentAt]).toEqual([
+      "consent",
+      "default",
+      {
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        analytics_storage: "granted",
+      },
+    ]);
+    expect(calls.filter((call) => call[0] === "consent")).toHaveLength(1);
   });
 
   test("a second call injects nothing — strict mode mounts effects twice", () => {
@@ -698,6 +736,20 @@ describe("the browser side, in load order", () => {
       page_path: "/fr/tarifs",
       page_location: "https://stampeo.app/us/pricing",
       page_title: "Stampeo",
+    });
+  });
+
+  test("a page view reports the address without the ad click ids and keeps the campaign", () => {
+    const win = installBrowser(
+      "",
+      "https://stampeo.app/us/pricing?utm_source=meta&fbclid=f1&gclid=g1&gbraid=b1&wbraid=w1&utm_campaign=spring",
+    );
+    const calls = spyGtag(win);
+
+    trackGaPageView({ path: "/us/pricing", trackable: true });
+
+    expect(calls[0][2]).toMatchObject({
+      page_location: "https://stampeo.app/us/pricing?utm_source=meta&utm_campaign=spring",
     });
   });
 
