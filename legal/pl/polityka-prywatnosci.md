@@ -1,8 +1,6 @@
 # Polityka prywatności: Stampeo
 
-**Ostatnia aktualizacja: 10 października 2026**
-
-{/* COUNSEL: set the date at sign-off */}
+**Ostatnia aktualizacja: 19 października 2026**
 
 ## 1. Wprowadzenie
 
@@ -127,7 +125,7 @@ Firma, która nie jest obsługiwana przez dystrybutora, nie jest narażona na ż
 
 ### Transfery poza UE
 
-Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google, Trustpilot), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5, czyli Google Ads (Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych) i Meta (Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie. Google Ads otrzymuje te informacje jako niezależny odbiorca, do pomiaru reklam. {/* COUNSEL: role of Google for uploaded conversions (processor vs controller) */}
+Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google, Trustpilot), mogą przekazywać dane do Stanów Zjednoczonych. Transfery te odbywają się na podstawie EU-US Data Privacy Framework albo standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Supabase, OVH, Resend, PostHog, Sentry oraz nasz własny Redis przetwarzają dane wyłącznie na terenie UE. Platformy reklamowe, którym przekazujemy konwersje zgodnie z §5.5, czyli Google Ads (Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych) i Meta (Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych), mogą przetwarzać te dane w Stanach Zjednoczonych na tej samej podstawie. Google Ads otrzymuje te informacje jako niezależny odbiorca, do pomiaru reklam.
 
 ## 5. Pliki cookie
 
@@ -206,7 +204,7 @@ Dla każdego etapu przechowujemy też dane diagnostyczne wysyłki: jej status, c
 - **Odbiorcy:** Google to Google Ireland Limited wraz z Google LLC w Stanach Zjednoczonych, czyli podmioty świadczące usługi Google Analytics i Google Ads. Meta to Meta Platforms Ireland Limited wraz z Meta Platforms, Inc. w Stanach Zjednoczonych.
 - **Podstawa prawna:** Twoja zgoda (art. 6 ust. 1 lit. a RODO), wyrażona w banerze plików cookie lub w **Ustawieniach plików cookie**. W Stanach Zjednoczonych, gdzie uprzednia zgoda nie jest wymagana, opieramy się na poinformowaniu i prawie do sprzeciwu, z którego skorzystasz przez **Twoje ustawienia prywatności** (zob. 5.1 i §6).
 - **Współadministratorzy z Meta:** Stampeo i Meta Platforms Ireland Limited są współadministratorami (art. 26 RODO) w zakresie zbierania danych za pomocą plików cookie Meta z punktu 5.3 i opisanego tu przekazywania etapów oraz przesyłania tych danych do Meta, na podstawie umowy Meta „Controller Addendum”. Za to, co Meta robi z danymi po ich otrzymaniu, odpowiada wyłącznie Meta (zob. [politykę prywatności Meta](https://www.facebook.com/privacy/policy)). Swoje prawa (§10) możesz wykonywać zarówno wobec Stampeo, jak i wobec Meta.
-- **Rola Google Ads:** w odniesieniu do przekazywanych mu etapów Google Ads jest niezależnym odbiorcą, do pomiaru reklam. {/* COUNSEL: role of Google for uploaded conversions (processor vs controller) */}
+- **Rola Google Ads:** w odniesieniu do przekazywanych mu etapów Google Ads jest niezależnym odbiorcą, do pomiaru reklam.
 
 Każdy wybór możesz wycofać osobno, przez **Ustawienia plików cookie** albo, w Stanach Zjednoczonych, przez **Twoje ustawienia prywatności**:
 
