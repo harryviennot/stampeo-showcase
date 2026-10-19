@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import posthog from "posthog-js";
 import { useAuth } from "@/lib/supabase/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 import { updateUserProfile } from "@/lib/onboarding";
 import { recordAccountSignup } from "@/lib/attribution/signup-call";
 import { leaveOnboarding } from "@/lib/attribution/signup-flow";
+import { syncOAuthSignupProfile } from "@/lib/auth/oauth-signup-profile";
 import {
   browserResumeStorage,
   clearResume,
@@ -94,6 +95,7 @@ function redirectToApp() {
 
 export function OnboardingWizard() {
   const t = useTranslations("onboarding.steps");
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { session, loading: authLoading } = useAuth();
@@ -146,27 +148,18 @@ export function OnboardingWizard() {
     oauthHandledRef.current = true;
     void leaveOnboarding({
       reportSignup: () => recordAccountSignup({ getAccessToken: async () => session.access_token }),
-      syncProfile: async () => {
-        const stash = readOAuthStash();
-        const supabase = createClient();
-        const meta: Record<string, unknown> = {};
-        if (stash?.name && stash.name.trim()) meta.name = stash.name.trim();
-        if (stash?.phone && stash.phone.trim()) meta.phone = stash.phone.trim();
-
-        if (Object.keys(meta).length > 0) {
-          await supabase.auth.updateUser({ data: meta });
-          if (stash?.phone && stash.phone.trim()) {
-            await updateUserProfile(
-              { phone: stash.phone.trim() },
-              session.access_token
-            );
-          }
-        }
-      },
+      syncProfile: () =>
+        syncOAuthSignupProfile({
+          stash: readOAuthStash(),
+          locale,
+          existingLocale: session.user?.user_metadata?.locale,
+          updateUserMetadata: (data) => createClient().auth.updateUser({ data }),
+          updateProfilePhone: (phone) => updateUserProfile({ phone }, session.access_token),
+        }),
       clearDraft,
       leave: redirectToApp,
     });
-  }, [justAuthed, authLoading, session, router]);
+  }, [justAuthed, authLoading, session, router, locale]);
 
   useEffect(() => {
     if (startedRef.current) return;
