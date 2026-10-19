@@ -1,8 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: October 10, 2026**
-
-{/* COUNSEL: set the date at sign-off */}
+**Last updated: October 19, 2026**
 
 ## 1. Introduction
 
@@ -127,7 +125,7 @@ A business that is not managed by a reseller is not exposed to any reseller acce
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Apple, Google, Trustpilot) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google Ads (Google Ireland Limited, with Google LLC in the United States) and Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States), may process that data in the United States, under the same framework. Google Ads receives these reports as an independent recipient for advertising measurement. {/* COUNSEL: role of Google for uploaded conversions (processor vs controller) */}
+Some of our sub-processors (Stripe, Apple, Google, Trustpilot) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google Ads (Google Ireland Limited, with Google LLC in the United States) and Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States), may process that data in the United States, under the same framework. Google Ads receives these reports as an independent recipient for advertising measurement.
 
 ## 5. Cookies
 
@@ -206,7 +204,7 @@ For each step we also keep delivery diagnostics: its status, the times we tried 
 - **Recipients:** Google means Google Ireland Limited, with Google LLC in the United States, which provides Google Analytics and Google Ads. Meta means Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States.
 - **Legal basis:** your consent (GDPR Art. 6(1)(a)), given in the cookie banner or through **Cookie preferences**. In the United States, where prior consent is not required, we rely on notice and your right to opt out through **Your Privacy Choices** (see 5.1 and §6).
 - **Joint controllers with Meta:** Stampeo and Meta Platforms Ireland Limited are joint controllers (GDPR Art. 26) for collecting data through the Meta cookies in 5.3 and the reporting described here, and for transmitting it to Meta, under Meta's Controller Addendum. Meta alone is responsible for what it does with the data once received, as described in [Meta's privacy policy](https://www.facebook.com/privacy/policy). You can exercise your rights (§10) with either of us.
-- **Role of Google Ads:** for the steps reported to it, Google Ads is an independent recipient for advertising measurement. {/* COUNSEL: role of Google for uploaded conversions (processor vs controller) */}
+- **Role of Google Ads:** for the steps reported to it, Google Ads is an independent recipient for advertising measurement.
 
 You can withdraw each choice separately, through **Cookie preferences** or, in the United States, **Your Privacy Choices**:
 
