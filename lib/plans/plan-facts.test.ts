@@ -238,3 +238,60 @@ describe("pricing page feature lists", () => {
     expect(row).toEqual({ key: "scheduledChanges", starter: "cross", growth: "cross", pro: "soon" });
   });
 });
+
+describe("pricing page analytics rows", () => {
+  // The words each locale uses for a length of history in the comparison table.
+  const UNITS: Record<string, { day: RegExp; year: RegExp }> = {
+    en: { day: /\bdays?\b/i, year: /\byears?\b/i },
+    fr: { day: /\bjours?\b/i, year: /\ban\b/i },
+    es: { day: /\bdías?\b/i, year: /\baños?\b/i },
+    pl: { day: /\b(?:dni|dzień)\b/i, year: /\b(?:rok|lata|lat)\b/i },
+  };
+  const daysIn = (text: string, locale: string) => {
+    const amount = Number(text.match(/\d+/)?.[0]);
+    if (UNITS[locale].year.test(text)) return amount * 365;
+    if (UNITS[locale].day.test(text)) return amount;
+    return Number.NaN;
+  };
+  const analyticsRows = FEATURE_CATEGORIES.find((category) => category.key === "analytics")!.rows;
+
+  it("the matrix gives Starter 30 days, Growth 90 and Pro a year, with cohorts on Pro only", () => {
+    expect(TIERS.map((tier) => PLAN_FACTS[tier].analyticsHistoryDays)).toEqual([30, 90, 365]);
+    expect(availability((f) => f.analytics === "advanced")).toBe("Pro");
+  });
+
+  it("the Analytics group lists the history and the monthly cohorts", () => {
+    expect(analyticsRows.map((row) => row.key)).toEqual(["analyticsHistory", "monthlyCohorts"]);
+  });
+
+  it("the history row has a figure for every plan, and the cohorts row is a tick where the plan has them", () => {
+    const [history, cohorts] = analyticsRows;
+    expect(TIERS.map((tier) => history[tier])).toEqual(["text", "text", "text"]);
+    for (const tier of TIERS) {
+      expect({ tier, cell: cohorts[tier] }).toEqual({
+        tier,
+        cell: PLAN_FACTS[tier].analytics === "advanced" ? "check" : "cross",
+      });
+    }
+  });
+
+  for (const locale of routing.locales) {
+    it(`${locale}: each plan's history reads as the matrix says`, () => {
+      const rows = loadCatalog(locale, "pricing.json").pricingPage.comparison.rows;
+      for (const tier of TIERS) {
+        expect({ tier, days: daysIn(rows.analyticsHistory[tier], locale) }).toEqual({
+          tier,
+          days: PLAN_FACTS[tier].analyticsHistoryDays,
+        });
+      }
+    });
+
+    it(`${locale}: both rows are named, and the old basic and advanced rows are gone`, () => {
+      const rows = loadCatalog(locale, "pricing.json").pricingPage.comparison.rows;
+      expect(rows.analyticsHistory.label).toBeTruthy();
+      expect(rows.monthlyCohorts.label).toBeTruthy();
+      expect(rows.basicStats).toBeUndefined();
+      expect(rows.advancedAnalytics).toBeUndefined();
+    });
+  }
+});

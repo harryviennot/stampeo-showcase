@@ -241,11 +241,14 @@
         "employeeTracking": {
           "label": "Skany przypisane do pracownika"
         },
-        "basicStats": {
-          "label": "Statystyki podstawowe"
+        "analyticsHistory": {
+          "label": "Historia statystyk",
+          "starter": "30 dni",
+          "growth": "90 dni",
+          "pro": "1 rok"
         },
-        "advancedAnalytics": {
-          "label": "Statystyki zaawansowane"
+        "monthlyCohorts": {
+          "label": "Kohorty miesięczne"
         },
         "offlineScanning": {
           "label": "Skanowanie bez internetu"

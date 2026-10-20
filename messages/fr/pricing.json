@@ -241,11 +241,14 @@
         "employeeTracking": {
           "label": "Suivi des scans par employé"
         },
-        "basicStats": {
-          "label": "Statistiques de base"
+        "analyticsHistory": {
+          "label": "Historique des statistiques",
+          "starter": "30 jours",
+          "growth": "90 jours",
+          "pro": "1 an"
         },
-        "advancedAnalytics": {
-          "label": "Analytiques avancées"
+        "monthlyCohorts": {
+          "label": "Cohortes mensuelles"
         },
         "offlineScanning": {
           "label": "Scan hors-ligne"

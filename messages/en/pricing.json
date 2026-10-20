@@ -241,11 +241,14 @@
         "employeeTracking": {
           "label": "Employee scan tracking"
         },
-        "basicStats": {
-          "label": "Basic stats"
+        "analyticsHistory": {
+          "label": "Analytics history",
+          "starter": "30 days",
+          "growth": "90 days",
+          "pro": "1 year"
         },
-        "advancedAnalytics": {
-          "label": "Advanced analytics"
+        "monthlyCohorts": {
+          "label": "Monthly cohorts"
         },
         "offlineScanning": {
           "label": "Offline scanning"

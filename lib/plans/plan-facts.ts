@@ -30,8 +30,10 @@ export interface PlanFacts {
   multipleLocations: boolean;
   /** `locations.analytics`. */
   locationAnalytics: boolean;
-  /** "advanced" means basic plus advanced (`analytics.advanced`). */
+  /** "advanced" means basic plus advanced (`analytics.advanced`): monthly cohorts. */
   analytics: "basic" | "advanced";
+  /** `analytics.history_days`: the longest period the Analytics page serves, in days. */
+  analyticsHistoryDays: number | Unlimited;
   /**
    * Gated on for Pro (`designs.scheduled`), but the dashboard has no screen to
    * schedule a card style yet, so it is sold as coming soon.
@@ -63,6 +65,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: false,
     locationAnalytics: false,
     analytics: "basic",
+    analyticsHistoryDays: 30,
     scheduledDesigns: false,
     geofencing: false,
   },
@@ -76,6 +79,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: false,
     locationAnalytics: false,
     analytics: "basic",
+    analyticsHistoryDays: 90,
     scheduledDesigns: false,
     geofencing: false,
   },
@@ -89,6 +93,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: true,
     locationAnalytics: true,
     analytics: "advanced",
+    analyticsHistoryDays: 365,
     scheduledDesigns: "coming_soon",
     geofencing: "coming_soon",
   },

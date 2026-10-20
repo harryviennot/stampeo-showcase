@@ -6,6 +6,8 @@
  * In the future, this can be fetched from GET /config/features at build time.
  */
 
+import { PLAN_FACTS, type PlanFacts } from "./plans/plan-facts";
+
 export type CellType = "check" | "cross" | "text" | "soon";
 
 export interface FeatureRow {
@@ -18,6 +20,16 @@ export interface FeatureRow {
 export interface FeatureCategory {
   key: string;
   rows: FeatureRow[];
+}
+
+/** A row whose cell for each plan is read from that plan's facts (lib/plans/plan-facts.ts). */
+function fromFacts(key: string, cell: (facts: PlanFacts) => CellType): FeatureRow {
+  return {
+    key,
+    starter: cell(PLAN_FACTS.starter),
+    growth: cell(PLAN_FACTS.growth),
+    pro: cell(PLAN_FACTS.pro),
+  };
 }
 
 export const FEATURE_CATEGORIES: FeatureCategory[] = [
@@ -68,8 +80,9 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
   {
     key: "analytics",
     rows: [
-      { key: "basicStats", starter: "check", growth: "check", pro: "check" },
-      { key: "advancedAnalytics", starter: "cross", growth: "cross", pro: "check" },
+      // The figure on each plan is `analyticsHistoryDays`, written in the messages and checked against it.
+      fromFacts("analyticsHistory", () => "text"),
+      fromFacts("monthlyCohorts", (facts) => (facts.analytics === "advanced" ? "check" : "cross")),
     ],
   },
   {
