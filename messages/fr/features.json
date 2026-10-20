@@ -583,19 +583,17 @@
         {
           "title": "Tendances et heures de pointe",
           "description": "Visualisez l'évolution de vos métriques jour par jour. Découvrez quand vos clients viennent et identifiez les creux pour optimiser votre activité.",
-          "icon": "trending-up",
-          "badge": "Growth"
+          "icon": "trending-up"
         },
         {
           "title": "Fréquence et rétention",
           "description": "Comprenez le rythme de vos clients : quotidiens, hebdomadaires, mensuels. Suivez votre taux de rétention et identifiez les clients à risque.",
-          "icon": "users",
-          "badge": "Growth"
+          "icon": "users"
         }
       ],
       "cta": {
         "title": "Arrêtez de deviner. Commencez à savoir.",
-        "subtitle": "Le tableau de bord est inclus dans tous les plans. Growth ajoute les tendances et les heures de pointe, Pro la rétention, la fréquence et les clients à risque."
+        "subtitle": "Chaque plan montre vos passages, vos heures de pointe et la fréquence de retour de vos clients. Growth et Pro remontent plus loin dans le temps, et Pro ajoute les cohortes mensuelles."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -634,9 +632,9 @@
           "timeAgo": "il y a {seconds}s"
         },
         "proAnalytics": {
-          "badge": "Plans Growth et Pro",
+          "badge": "Tous les plans",
           "title": "Comprenez les tendances, pas juste les chiffres",
-          "description": "Growth ajoute les tendances et les heures de pointe. Pro ajoute la rétention, la fréquence et les clients sur le départ."
+          "description": "Passages dans le temps, heures de pointe, fréquence de retour et avancement des cartes, dans tous les plans. Growth et Pro remontent plus loin, et Pro ajoute les cohortes mensuelles."
         },
         "proCharts": {
           "lineChart": {

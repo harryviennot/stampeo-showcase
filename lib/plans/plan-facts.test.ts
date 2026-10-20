@@ -5,6 +5,7 @@ import {
   PLAN_NAMES,
   TIERS,
   availability,
+  planFactLines,
   planMessageArgs,
   planSummary,
   tiersWhere,
@@ -21,7 +22,7 @@ import { loadCatalog, strictTranslator } from "../testing/catalogs";
 describe("plan facts", () => {
   it("summarises each plan in plain English", () => {
     expect(planSummary("starter")).toBe(
-      "stamps or points, 2 team members (owner + 1), no broadcasts, single location, basic analytics"
+      "stamps or points, 2 team members (owner + 1), no broadcasts, single location, 30 days of analytics history"
     );
     expect(planSummary("growth")).toContain("8 broadcasts per month");
     expect(planSummary("growth")).not.toMatch(/advanced|schedul|multiple locations|geofencing/);
@@ -264,13 +265,21 @@ describe("pricing page analytics rows", () => {
     expect(analyticsRows.map((row) => row.key)).toEqual(["analyticsHistory", "monthlyCohorts"]);
   });
 
-  it("the history row has a figure for every plan, and the cohorts row is a tick where the plan has them", () => {
-    const [history, cohorts] = analyticsRows;
-    expect(TIERS.map((tier) => history[tier])).toEqual(["text", "text", "text"]);
+  it("the cohorts row is a tick on Pro only", () => {
+    const [, cohorts] = analyticsRows;
+    expect(TIERS.map((tier) => cohorts[tier])).toEqual(["cross", "cross", "check"]);
+  });
+
+  it("the plan summary quoted in llms.txt and the Offers gives each plan's history as the matrix does", () => {
     for (const tier of TIERS) {
-      expect({ tier, cell: cohorts[tier] }).toEqual({
+      const history = planFactLines(tier).filter((line) => /analytics history/i.test(line));
+      expect({ tier, days: history.map((line) => daysIn(line, "en")) }).toEqual({
         tier,
-        cell: PLAN_FACTS[tier].analytics === "advanced" ? "check" : "cross",
+        days: [PLAN_FACTS[tier].analyticsHistoryDays],
+      });
+      expect({ tier, cohorts: planSummary(tier).includes("monthly cohorts") }).toEqual({
+        tier,
+        cohorts: PLAN_FACTS[tier].analytics === "advanced",
       });
     }
   });
@@ -286,12 +295,23 @@ describe("pricing page analytics rows", () => {
       }
     });
 
-    it(`${locale}: both rows are named, and the old basic and advanced rows are gone`, () => {
+    it(`${locale}: both rows are named`, () => {
       const rows = loadCatalog(locale, "pricing.json").pricingPage.comparison.rows;
       expect(rows.analyticsHistory.label).toBeTruthy();
       expect(rows.monthlyCohorts.label).toBeTruthy();
-      expect(rows.basicStats).toBeUndefined();
-      expect(rows.advancedAnalytics).toBeUndefined();
     });
+
+    // The plan cards quote the history in a bullet; it must be the table's figure.
+    for (const section of ["pricingPage", "pricing"] as const) {
+      it(`${locale} ${section}: the cards quote each plan's history as the table does`, () => {
+        const messages = loadCatalog(locale, "pricing.json");
+        for (const tier of ["growth", "pro"] as const) {
+          const quoted = (messages[section][tier].features as string[])
+            .map((item) => daysIn(item, locale))
+            .filter((days) => !Number.isNaN(days));
+          expect({ tier, quoted }).toEqual({ tier, quoted: [PLAN_FACTS[tier].analyticsHistoryDays] });
+        }
+      });
+    }
   }
 });

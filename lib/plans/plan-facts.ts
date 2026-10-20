@@ -121,6 +121,13 @@ export function availability(has: (facts: PlanFacts) => boolean): string {
   return tiers.map((tier) => PLAN_NAMES[tier]).join(" and ");
 }
 
+/** "30 days", "1 year", "unlimited": a length of Analytics history, in English. */
+export function analyticsHistoryLabel(days: number | Unlimited): string {
+  if (days === "unlimited") return "unlimited";
+  if (days % 365 === 0) return days === 365 ? "1 year" : `${days / 365} years`;
+  return `${days} days`;
+}
+
 const count = (value: number | Unlimited, noun: string) =>
   value === "unlimited" ? `unlimited ${noun}` : `${value} ${noun}`;
 
@@ -151,7 +158,9 @@ export function planFactLines(tier: TierId): string[] {
 
   lines.push(facts.multipleLocations ? "multiple locations" : "single location");
   if (facts.locationAnalytics) lines.push("per-location analytics");
-  lines.push(facts.analytics === "advanced" ? "basic and advanced analytics" : "basic analytics");
+  const history = analyticsHistoryLabel(facts.analyticsHistoryDays);
+  lines.push(facts.analyticsHistoryDays === "unlimited" ? `${history} analytics history` : `${history} of analytics history`);
+  if (facts.analytics === "advanced") lines.push("monthly cohorts");
   if (facts.scheduledDesigns === "coming_soon") lines.push("scheduled card designs (coming soon)");
   else if (facts.scheduledDesigns) lines.push("scheduled card designs");
 

@@ -583,19 +583,17 @@
         {
           "title": "Trends and peak hours",
           "description": "Visualize your metrics day by day. Discover when your customers visit and identify slow periods to optimize your business.",
-          "icon": "trending-up",
-          "badge": "Growth"
+          "icon": "trending-up"
         },
         {
           "title": "Frequency and retention",
           "description": "Understand your customers' rhythm: daily, weekly, monthly. Track your retention rate and identify at-risk customers.",
-          "icon": "users",
-          "badge": "Growth"
+          "icon": "users"
         }
       ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "The dashboard is included in every plan. Growth adds trends and peak hours, and Pro adds retention, frequency and at-risk customers."
+        "subtitle": "Every plan shows your visits, your busiest times and how often customers come back. Growth and Pro look further back, and Pro adds monthly cohorts."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -634,9 +632,9 @@
           "timeAgo": "{seconds}s ago"
         },
         "proAnalytics": {
-          "badge": "Growth and Pro",
+          "badge": "Every plan",
           "title": "Understand trends, not just numbers",
-          "description": "Growth adds trends and peak hours. Pro adds retention, frequency and the customers you're about to lose."
+          "description": "Visits over time, busiest times, how often customers come and where they are on the card, on every plan. Growth and Pro look further back, and Pro adds monthly cohorts."
         },
         "proCharts": {
           "lineChart": {

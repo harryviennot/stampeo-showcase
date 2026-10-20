@@ -80,7 +80,6 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
   {
     key: "analytics",
     rows: [
-      // The figure on each plan is `analyticsHistoryDays`, written in the messages and checked against it.
       fromFacts("analyticsHistory", () => "text"),
       fromFacts("monthlyCohorts", (facts) => (facts.analytics === "advanced" ? "check" : "cross")),
     ],

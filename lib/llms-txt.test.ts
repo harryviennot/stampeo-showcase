@@ -7,7 +7,7 @@ import { LOYALTY_SLUGS } from "./loyalty-routes";
 import { routing } from "@/i18n/routing";
 import { BENCHMARK, sourceLine } from "./plans/benchmark";
 import { MARKETS } from "./markets";
-import { TIERS, planSummary } from "./plans/plan-facts";
+import { PLAN_FACTS, PLAN_NAMES, TIERS, analyticsHistoryLabel, availability, planSummary } from "./plans/plan-facts";
 import { FALLBACK_PRICING, FOUNDING_PRICING, type Pricing } from "./pricing";
 
 /**
@@ -99,6 +99,15 @@ describe("llms.txt facts", () => {
 
   it("states each plan with the plan facts", () => {
     for (const tier of TIERS) expect(body).toContain(planSummary(tier));
+  });
+
+  it("gives the Analytics history of each plan and names the plan with monthly cohorts", () => {
+    const analytics = body.slice(body.indexOf("### Analytics"), body.indexOf("### Integrations"));
+
+    for (const tier of TIERS) {
+      expect(analytics).toContain(`${PLAN_NAMES[tier]}: ${analyticsHistoryLabel(PLAN_FACTS[tier].analyticsHistoryDays)}`);
+    }
+    expect(analytics).toContain(`Monthly cohorts (${availability((f) => f.analytics === "advanced")})`);
   });
 
   it("offers stamps and points on every plan", () => {

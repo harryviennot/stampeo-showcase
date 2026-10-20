@@ -33,7 +33,7 @@
       },
       "analytiques": {
         "title": "Loyalty Analytics: Who Comes Back, Who Drifts",
-        "description": "Real-time dashboard: daily scans, active customers, rewards claimed. Growth adds trends and peak hours. Pro adds 30-day retention and at-risk customers."
+        "description": "Real-time dashboard on every plan: visits, busiest times, how often customers come back. More history on Growth and Pro, monthly cohorts on Pro."
       },
       "geolocalisation": {
         "title": "Geofencing: Your Card Pops Up When They Walk Past",

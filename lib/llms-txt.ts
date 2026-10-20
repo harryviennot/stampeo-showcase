@@ -6,7 +6,7 @@ import { localePath } from "@/lib/hreflang";
 import { routing } from "@/i18n/routing";
 import { BENCHMARK, sourceLine } from "./plans/benchmark";
 import { MARKETS, type Market } from "./markets";
-import { PLAN_FACTS, PLAN_NAMES, TIERS, availability, planSummary } from "./plans/plan-facts";
+import { PLAN_FACTS, PLAN_NAMES, TIERS, analyticsHistoryLabel, availability, planSummary } from "./plans/plan-facts";
 import {
   FALLBACK_PRICING,
   FOUNDING_PRICING,
@@ -197,24 +197,26 @@ Promotional campaigns are one-off push notifications sent straight to customers'
 - **Use cases**: flash promos, new-product launches, happy hours, seasonal offers, weekend openings, "first 30 buyers get a free pastry" style drops.
 
 ### Analytics
-The dashboard answers the questions paper cards can't: who comes back, how often, what works.
+The Analytics page answers what paper cards can't: who comes back, how often, when it is busy.
 
-**Basic analytics (every plan)**:
-- Total registered customers.
-- Scans this week / this month.
-- Rewards claimed.
+**On every plan**:
+- Visits over time, with the change against the period before.
+- Busiest times: visits by weekday and hour.
+- How often customers come, and the 30-day return rate.
+- Reward progress: where customers are on the card.
+- History: ${TIERS.map((tier) => `${PLAN_NAMES[tier]}: ${analyticsHistoryLabel(PLAN_FACTS[tier].analyticsHistoryDays)}`).join(", ")}.
+- Total registered customers, scans this week / this month, rewards claimed.
 - Instant customer search by name or email with full visit history.
 - Live activity feed (stamps, rewards, signups in real time).
+- Customer segments (New / Occasional / Regular / VIP) and at-risk customers (inactive 30+ days).
+- Program health: reward completion rate, redemption rate, average time to reward.
 
 **${availability((f) => f.employeeTracking)} add**:
-- Peak hours and weekly trends.
 - Employee scan tracking: which team member made each scan.
 
-**Advanced analytics (${availability((f) => f.analytics === "advanced")})**:
-- 30-day retention rate, visit frequency and redemption stats.
-- Customer segments (New / Occasional / Regular / VIP) and at-risk customers (inactive 30+ days).
-- Average time to complete a card, completion rate, post-reward return rate.
-- Per-location analytics (${availability((f) => f.locationAnalytics)}).
+**More on the higher plans**:
+- Monthly cohorts (${availability((f) => f.analytics === "advanced")}): how many of each month's new customers came back within 30, 60, 90 and 180 days.
+- Per-location analytics (${availability((f) => f.locationAnalytics)}): the Analytics page filtered on one location.
 
 ### Integrations & platforms
 - **Apple Wallet** (iOS, via signed .pkpass files and Apple Push Notification service).

@@ -808,19 +808,17 @@
         {
           "title": "Trendy i godziny szczytu",
           "description": "Zobacz swoje liczby dzień po dniu. Sprawdź, kiedy klienci przychodzą, i wyłap godziny, w których jest pusto.",
-          "icon": "trending-up",
-          "badge": "Growth"
+          "icon": "trending-up"
         },
         {
           "title": "Częstotliwość i powroty",
           "description": "Poznaj rytm swoich klientów: codziennie, co tydzień, co miesiąc. Śledź, ilu wraca, i wyłap tych, którzy zaczynają znikać.",
-          "icon": "users",
-          "badge": "Growth"
+          "icon": "users"
         }
       ],
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
-        "subtitle": "Panel jest w każdym planie. Growth dodaje trendy i godziny szczytu, a Pro powroty, częstotliwość wizyt i klientów, którzy przestają wracać."
+        "subtitle": "Każdy plan pokazuje wizyty, godziny szczytu i to, jak często wracają klienci. Growth i Pro sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -859,9 +857,9 @@
           "timeAgo": "{seconds}s temu"
         },
         "proAnalytics": {
-          "badge": "Plany Growth i Pro",
+          "badge": "Wszystkie plany",
           "title": "Zrozum trendy, nie tylko liczby",
-          "description": "Growth dodaje trendy i godziny szczytu. Pro dodaje powroty, częstotliwość wizyt i klientów, którzy przestają wracać."
+          "description": "Wizyty w czasie, godziny szczytu, częstotliwość powrotów i postęp na karcie, w każdym planie. Growth i Pro sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
         },
         "proCharts": {
           "lineChart": {
