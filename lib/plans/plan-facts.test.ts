@@ -11,7 +11,7 @@ import {
   tiersWhere,
 } from "./plan-facts";
 import { FEATURE_CATEGORIES } from "../pricing-features";
-import { loadCatalog, strictTranslator } from "../testing/catalogs";
+import { catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
 
 /**
  * Plan facts are stated once, in `lib/plans/plan-facts.ts`, mirroring
@@ -240,20 +240,21 @@ describe("pricing page feature lists", () => {
   });
 });
 
+// The words each locale uses for a length of history.
+const UNITS: Record<string, { day: RegExp; year: RegExp }> = {
+  en: { day: /\bdays?\b/i, year: /\byears?\b/i },
+  fr: { day: /\bjours?\b/i, year: /\ban\b/i },
+  es: { day: /\bdías?\b/i, year: /\baños?\b/i },
+  pl: { day: /\b(?:dni|dzień)\b/i, year: /\b(?:rok|lata|lat)\b/i },
+};
+const daysIn = (text: string, locale: string) => {
+  const amount = Number(text.match(/\d+/)?.[0]);
+  if (UNITS[locale].year.test(text)) return amount * 365;
+  if (UNITS[locale].day.test(text)) return amount;
+  return Number.NaN;
+};
+
 describe("pricing page analytics rows", () => {
-  // The words each locale uses for a length of history in the comparison table.
-  const UNITS: Record<string, { day: RegExp; year: RegExp }> = {
-    en: { day: /\bdays?\b/i, year: /\byears?\b/i },
-    fr: { day: /\bjours?\b/i, year: /\ban\b/i },
-    es: { day: /\bdías?\b/i, year: /\baños?\b/i },
-    pl: { day: /\b(?:dni|dzień)\b/i, year: /\b(?:rok|lata|lat)\b/i },
-  };
-  const daysIn = (text: string, locale: string) => {
-    const amount = Number(text.match(/\d+/)?.[0]);
-    if (UNITS[locale].year.test(text)) return amount * 365;
-    if (UNITS[locale].day.test(text)) return amount;
-    return Number.NaN;
-  };
   const analyticsRows = FEATURE_CATEGORIES.find((category) => category.key === "analytics")!.rows;
 
   it("the matrix gives Starter 30 days, Growth 90 and Pro a year, with cohorts on Pro only", () => {
@@ -270,18 +271,10 @@ describe("pricing page analytics rows", () => {
     expect(TIERS.map((tier) => cohorts[tier])).toEqual(["cross", "cross", "check"]);
   });
 
-  it("the plan summary quoted in llms.txt and the Offers gives each plan's history as the matrix does", () => {
-    for (const tier of TIERS) {
-      const history = planFactLines(tier).filter((line) => /analytics history/i.test(line));
-      expect({ tier, days: history.map((line) => daysIn(line, "en")) }).toEqual({
-        tier,
-        days: [PLAN_FACTS[tier].analyticsHistoryDays],
-      });
-      expect({ tier, cohorts: planSummary(tier).includes("monthly cohorts") }).toEqual({
-        tier,
-        cohorts: PLAN_FACTS[tier].analytics === "advanced",
-      });
-    }
+  it("the plan summary quoted in llms.txt and the Offers states each plan's history, and the monthly cohorts on Pro only", () => {
+    const history = TIERS.map((tier) => planFactLines(tier).filter((line) => /analytics history/i.test(line)));
+    expect(history).toEqual([["30 days of analytics history"], ["90 days of analytics history"], ["1 year of analytics history"]]);
+    expect(TIERS.map((tier) => planSummary(tier).includes("monthly cohorts"))).toEqual([false, false, true]);
   });
 
   for (const locale of routing.locales) {
@@ -313,5 +306,64 @@ describe("pricing page analytics rows", () => {
         }
       });
     }
+  }
+});
+
+describe("the landing FAQ and the feature copy state the Analytics plan facts", () => {
+  // The words each locale uses for the cohorts, and for a plan that looks further back than Starter.
+  const COHORTS: Record<string, string> = {
+    en: "monthly cohorts",
+    fr: "cohortes mensuelles",
+    es: "cohortes mensuales",
+    pl: "kohorty miesięczne",
+  };
+  const LONGER_HISTORY: Record<string, RegExp> = {
+    en: /look further back|more history/i,
+    fr: /remontent plus loin|plus d'historique/i,
+    es: /miran más atrás|más historial/i,
+    pl: /sięgają dalej wstecz|dłuższa historia/i,
+  };
+  // "(30 days, 90 days or 1 year)" in each locale.
+  const HISTORY_LIST = /\((\d+ [^,)]+), (\d+ [^,)]+) (?:or|ou|o|lub) (\d+ [^,)]+)\)/;
+  const FILES = ["landing.json", "features.json", "metadata.json"];
+
+  const copy = (locale: string) =>
+    FILES.flatMap((file) => catalogStrings(loadCatalog(locale, file), `${locale}/${file}::`));
+  /** The plans named in the clause of `text` that holds `phrase`. */
+  const plansNamedWith = (text: string, phrase: string | RegExp) => {
+    const clause = text.split(/[.,;:]/).find((part) => (typeof phrase === "string" ? part.toLowerCase().includes(phrase) : phrase.test(part))) ?? "";
+    return TIERS.filter((tier) => new RegExp(`\\b${PLAN_NAMES[tier]}\\b`).test(clause));
+  };
+
+  for (const locale of routing.locales) {
+    it(`${locale}: the FAQ gives the history lengths of Starter, Growth and Pro as the matrix does`, () => {
+      const lists = copy(locale).flatMap(({ text }) => text.match(HISTORY_LIST)?.slice(1) ?? []);
+      expect(lists.length).toBeGreaterThan(0);
+      for (let i = 0; i < lists.length; i += 3) {
+        expect(lists.slice(i, i + 3).map((item) => daysIn(item, locale))).toEqual(TIERS.map((tier) => PLAN_FACTS[tier].analyticsHistoryDays));
+      }
+    });
+
+    it(`${locale}: every mention of the monthly cohorts names the plans that have them`, () => {
+      const mentions = copy(locale).filter(({ text }) => text.toLowerCase().includes(COHORTS[locale]));
+      expect(mentions.length).toBeGreaterThan(0);
+      for (const { where, text } of mentions) {
+        expect({ where, plans: plansNamedWith(text, COHORTS[locale]) }).toEqual({
+          where,
+          plans: tiersWhere((f) => f.analytics === "advanced"),
+        });
+      }
+    });
+
+    it(`${locale}: every mention of a longer history names the plans that have one`, () => {
+      const mentions = copy(locale).filter(({ text }) => LONGER_HISTORY[locale].test(text));
+      expect(mentions.length).toBeGreaterThan(0);
+      for (const { where, text } of mentions) {
+        expect({ where, plans: plansNamedWith(text, LONGER_HISTORY[locale]) }).toEqual({
+          where,
+          plans: tiersWhere((f) => f.analyticsHistoryDays !== PLAN_FACTS.starter.analyticsHistoryDays),
+        });
+      }
+    });
   }
 });
