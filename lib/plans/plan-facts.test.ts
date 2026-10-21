@@ -88,6 +88,14 @@ describe("feature meta descriptions state the plan facts", () => {
     pl: /wielu lokalizacj|wiele lokalizacji|wielolokaliz|wiele lokali|wielu lokali/i,
   };
 
+  // The words each locale uses to say a feature is on every plan.
+  const EVERY_PLAN: Record<string, RegExp> = {
+    en: /\b(?:every|all) plans?\b/i,
+    fr: /\btous les plans\b|\bchaque plan\b/i,
+    es: /\btodos los planes\b|\bcada plan\b/i,
+    pl: /\bwe wszystkich planach\b|\bw ka[zż]dym planie\b|\bwszystkie plany\b/i,
+  };
+
   /**
    * The clauses of `text` that match `claim` and do not sit with the plans that
    * have the feature: the clause must name one of them and none of the others.
@@ -126,6 +134,13 @@ describe("feature meta descriptions state the plan facts", () => {
     it(`${locale}: geofencing is described as coming soon while the plan facts say so`, () => {
       expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
       expect(soon.test(features.geolocalisation.description)).toBe(true);
+    });
+
+    it(`${locale}: Analytics is never sold as on every plan, since its charts are on Growth and Pro`, () => {
+      expect(features.analytiques.description).not.toMatch(EVERY_PLAN[locale]);
+      for (const plan of tiersWhere((facts) => facts.analyticsCharts)) {
+        expect(features.analytiques.description).toContain(PLAN_NAMES[plan]);
+      }
     });
 
     it(`${locale}: scheduling is sold with the plans that have it, never with the others`, () => {
