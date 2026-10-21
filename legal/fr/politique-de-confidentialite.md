@@ -34,6 +34,8 @@ Des membres autorisés du personnel Stampeo peuvent, de manière strictement enc
 
 Base légale : intérêt légitime (intérêt de l'exploitant à fournir un support et à assurer la sécurité de la plateforme), mis en balance avec les intérêts de l'utilisateur Business par les garanties décrites ci-dessus (lecture seule, durée limitée, audité, notifié). Les journaux d'accès support sont conservés pendant 24 mois (voir §8).
 
+Indépendamment de l'accès support, des membres autorisés du personnel Stampeo peuvent consulter les statistiques agrégées de chaque entreprise (totaux de passages, heures d'affluence, taux de retour) afin de fournir un support et de superviser le bon fonctionnement de la Plateforme. Cette vue n'affiche jamais l'identifiant, le nom, l'adresse email ou le numéro de téléphone d'un client final.
+
 ## 3. Données collectées
 
 ### 3.1 Utilisateurs Business

@@ -34,6 +34,8 @@ Los miembros autorizados del personal de Stampeo pueden, de forma estrictamente 
 
 Base jurídica: interés legítimo (el interés del operador en prestar soporte y garantizar la seguridad de la plataforma), ponderado frente a los intereses del usuario Business mediante las garantías descritas anteriormente (solo lectura, duración limitada, auditado, notificado). Los registros de acceso de soporte se conservan durante 24 meses (véase el §8).
 
+Con independencia del acceso de soporte, los miembros autorizados del personal de Stampeo pueden consultar las estadísticas agregadas de cada comercio (totales de visitas, horas punta, tasas de retorno) para prestar soporte y supervisar el buen funcionamiento de la Plataforma. Esta vista nunca muestra el identificador, el nombre, la dirección de correo electrónico ni el número de teléfono de un cliente final.
+
 ## 3. Datos recogidos
 
 ### 3.1 Usuarios Business

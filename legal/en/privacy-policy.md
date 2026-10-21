@@ -34,6 +34,8 @@ Authorized Stampeo personnel may, on a strictly limited basis, access a Business
 
 Legal basis: legitimate interest (the operator's interest in providing support and ensuring platform security), balanced against the Business User's interests by the safeguards described above (read-only, time-limited, audited, notified). Support access logs are retained for 24 months (see §8).
 
+Separately from support access, authorized Stampeo personnel may view each business's aggregate statistics (visit totals, busiest times, return rates) in order to provide support and to check that the Platform is working properly. This view never shows an end customer's identifier, name, email address or phone number.
+
 ## 3. Data Collected
 
 ### 3.1 Business Users

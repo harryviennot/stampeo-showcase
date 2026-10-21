@@ -34,6 +34,8 @@ Upoważnieni członkowie personelu Stampeo mogą, w ściśle ograniczonym zakres
 
 Podstawa prawna: prawnie uzasadniony interes (interes operatora w udzielaniu wsparcia i zapewnieniu bezpieczeństwa platformy), wyważony wobec interesów użytkownika Business dzięki opisanym wyżej zabezpieczeniom (tylko do odczytu, ograniczony czas, audyt, powiadomienie). Dzienniki dostępu serwisowego są przechowywane przez 24 miesiące (zob. §8).
 
+Niezależnie od dostępu serwisowego upoważnieni członkowie personelu Stampeo mogą przeglądać zbiorcze statystyki każdej firmy (łączną liczbę wizyt, godziny szczytu, wskaźniki powrotów), aby udzielać wsparcia i nadzorować prawidłowe działanie Platformy. Ten widok nigdy nie pokazuje identyfikatora, imienia i nazwiska, adresu e-mail ani numeru telefonu klienta końcowego.
+
 ## 3. Zbierane dane
 
 ### 3.1 Użytkownicy Business
