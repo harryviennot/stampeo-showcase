@@ -593,7 +593,7 @@
       ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "Every plan shows your visits, your busiest times and how often customers come back. Growth and Pro look further back, and Pro adds monthly cohorts."
+        "subtitle": "Every plan shows the highlights of your visits, your busiest times and how often customers come back. Growth and Pro show every chart and look further back, and Pro adds monthly cohorts."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -634,7 +634,7 @@
         "proAnalytics": {
           "badge": "Every plan",
           "title": "Understand trends, not just numbers",
-          "description": "Visits over time, busiest times, how often customers come and where they are on the card, on every plan. Growth and Pro look further back, and Pro adds monthly cohorts."
+          "description": "The highlights of visits, busiest times, how often customers come and where they are on the card, on every plan. Growth and Pro show every chart and look further back, and Pro adds monthly cohorts."
         },
         "proCharts": {
           "lineChart": {

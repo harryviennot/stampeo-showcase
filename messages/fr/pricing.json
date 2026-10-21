@@ -30,6 +30,7 @@
         "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
         "Liste clients, statistiques et recherche",
+        "L'essentiel des statistiques (30 jours)",
         "Assistance par e-mail"
       ]
     },
@@ -42,7 +43,7 @@
         "Des points en plus sur les paniers au-dessus du montant que vous fixez",
         "Vos propres messages de tampon et de récompense",
         "Styles de carte enregistrés illimités",
-        "90 jours d'historique des statistiques",
+        "Tous les graphiques des statistiques, 90 jours d'historique",
         "Membres d'équipe illimités",
         "Voir qui a scanné quoi dans votre équipe",
         "Offrez un cadeau et fixez sa date d'expiration"
@@ -58,7 +59,7 @@
         "Plusieurs paliers de panier, chacun avec son bonus",
         "Programmez vos diffusions à l'avance (styles de carte bientôt)",
         "Notifications quand vos clients sont à proximité (Apple Wallet, bientôt)",
-        "1 an d'historique des statistiques et cohortes mensuelles",
+        "1 an d'historique, cohortes mensuelles, statistiques par établissement",
         "Assistance prioritaire"
       ]
     },
@@ -112,6 +113,7 @@
         "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
         "Liste clients, statistiques et recherche",
+        "L'essentiel des statistiques (30 jours)",
         "Assistance par e-mail"
       ],
       "featuresLabel": "Tout est inclus :"
@@ -124,7 +126,7 @@
         "Des points en plus sur les paniers au-dessus du montant que vous fixez",
         "Vos propres messages de tampon et de récompense",
         "Styles de carte enregistrés illimités",
-        "90 jours d'historique des statistiques",
+        "Tous les graphiques des statistiques, 90 jours d'historique",
         "Membres d'équipe illimités",
         "Voir qui a scanné quoi dans votre équipe",
         "Offrez un cadeau et fixez sa date d'expiration"
@@ -140,7 +142,7 @@
         "Plusieurs paliers de panier, chacun avec son bonus",
         "Programmez vos diffusions à l'avance (styles de carte bientôt)",
         "Notifications quand vos clients sont à proximité (Apple Wallet, bientôt)",
-        "1 an d'historique des statistiques et cohortes mensuelles",
+        "1 an d'historique, cohortes mensuelles, statistiques par établissement",
         "Assistance prioritaire"
       ],
       "featuresLabel": "Tout le plan Growth, plus :"
@@ -246,6 +248,9 @@
           "starter": "30 jours",
           "growth": "90 jours",
           "pro": "1 an"
+        },
+        "analyticsCharts": {
+          "label": "Graphiques des statistiques"
         },
         "monthlyCohorts": {
           "label": "Cohortes mensuelles"

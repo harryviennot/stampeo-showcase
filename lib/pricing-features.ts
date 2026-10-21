@@ -81,6 +81,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     key: "analytics",
     rows: [
       fromFacts("analyticsHistory", () => "text"),
+      fromFacts("analyticsCharts", (facts) => (facts.analyticsCharts ? "check" : "cross")),
       fromFacts("monthlyCohorts", (facts) => (facts.analytics === "advanced" ? "check" : "cross")),
     ],
   },

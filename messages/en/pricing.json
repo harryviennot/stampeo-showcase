@@ -30,6 +30,7 @@
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
+        "Analytics highlights (30 days)",
         "Email support"
       ]
     },
@@ -42,7 +43,7 @@
         "Extra points on baskets above the amount you set",
         "Write your own stamp and reward messages",
         "Unlimited saved card styles",
-        "90 days of Analytics history",
+        "Every Analytics chart, 90 days of history",
         "Unlimited team members",
         "See which team member made each scan",
         "Gift a free item and set when it expires"
@@ -58,7 +59,7 @@
         "Several basket levels, each with its own boost",
         "Schedule broadcasts in advance (card styles coming soon)",
         "Notifications when customers are nearby (Apple Wallet, coming soon)",
-        "1 year of Analytics history and monthly cohorts",
+        "1 year of history, monthly cohorts, per-location stats",
         "Priority support"
       ]
     },
@@ -112,6 +113,7 @@
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
+        "Analytics highlights (30 days)",
         "Email support"
       ],
       "featuresLabel": "Everything included:"
@@ -124,7 +126,7 @@
         "Extra points on baskets above the amount you set",
         "Write your own stamp and reward messages",
         "Unlimited saved card styles",
-        "90 days of Analytics history",
+        "Every Analytics chart, 90 days of history",
         "Unlimited team members",
         "See which team member made each scan",
         "Gift a free item and set when it expires"
@@ -140,7 +142,7 @@
         "Several basket levels, each with its own boost",
         "Schedule broadcasts in advance (card styles coming soon)",
         "Notifications when customers are nearby (Apple Wallet, coming soon)",
-        "1 year of Analytics history and monthly cohorts",
+        "1 year of history, monthly cohorts, per-location stats",
         "Priority support"
       ],
       "featuresLabel": "Everything in Growth, plus:"
@@ -246,6 +248,9 @@
           "starter": "30 days",
           "growth": "90 days",
           "pro": "1 year"
+        },
+        "analyticsCharts": {
+          "label": "Analytics charts"
         },
         "monthlyCohorts": {
           "label": "Monthly cohorts"

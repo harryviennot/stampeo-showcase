@@ -200,10 +200,8 @@ Promotional campaigns are one-off push notifications sent straight to customers'
 The Analytics page answers what paper cards can't: who comes back, how often, when it is busy.
 
 **On every plan**:
-- Visits over time, with the change against the period before.
-- Busiest times: visits by weekday and hour.
-- How often customers come, and the 30-day return rate.
-- Reward progress: where customers are on the card.
+- The KPI row: visits, new customers and the 30-day return rate, with the change against the period before.
+- The highlights of each section, one sentence each: the best day for visits, the busiest time, how many customers came only once, how many cards are near a reward.
 - History: ${TIERS.map((tier) => `${PLAN_NAMES[tier]}: ${analyticsHistoryLabel(PLAN_FACTS[tier].analyticsHistoryDays)}`).join(", ")}.
 - Total registered customers, scans this week / this month, rewards claimed.
 - Instant customer search by name or email with full visit history.
@@ -215,6 +213,7 @@ The Analytics page answers what paper cards can't: who comes back, how often, wh
 - Employee scan tracking: which team member made each scan.
 
 **More on the higher plans**:
+- Every Analytics chart (${availability((f) => f.analyticsCharts)}): visits over time, busiest times by weekday and hour, how often customers come, and reward progress. ${PLAN_NAMES.starter} gets the highlights instead.
 - Monthly cohorts (${availability((f) => f.analytics === "advanced")}): how many of each month's new customers came back within 30, 60, 90 and 180 days.
 - Per-location analytics (${availability((f) => f.locationAnalytics)}): the Analytics page filtered on one location.
 

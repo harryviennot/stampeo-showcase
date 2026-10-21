@@ -593,7 +593,7 @@
       ],
       "cta": {
         "title": "Arrêtez de deviner. Commencez à savoir.",
-        "subtitle": "Chaque plan montre vos passages, vos heures de pointe et la fréquence de retour de vos clients. Growth et Pro remontent plus loin dans le temps, et Pro ajoute les cohortes mensuelles."
+        "subtitle": "Chaque plan montre l'essentiel de vos passages, de vos heures de pointe et de la fréquence de retour de vos clients. Growth et Pro affichent tous les graphiques et remontent plus loin dans le temps, et Pro ajoute les cohortes mensuelles."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -634,7 +634,7 @@
         "proAnalytics": {
           "badge": "Tous les plans",
           "title": "Comprenez les tendances, pas juste les chiffres",
-          "description": "Passages dans le temps, heures de pointe, fréquence de retour et avancement des cartes, dans tous les plans. Growth et Pro remontent plus loin, et Pro ajoute les cohortes mensuelles."
+          "description": "Les points clés des passages, des heures de pointe, de la fréquence de retour et de l'avancement des cartes, dans tous les plans. Growth et Pro affichent tous les graphiques et remontent plus loin, et Pro ajoute les cohortes mensuelles."
         },
         "proCharts": {
           "lineChart": {

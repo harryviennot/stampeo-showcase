@@ -32,6 +32,8 @@ export interface PlanFacts {
   locationAnalytics: boolean;
   /** "advanced" means basic plus advanced (`analytics.advanced`): monthly cohorts. */
   analytics: "basic" | "advanced";
+  /** `analytics.charts`: every Analytics chart. Without it each section shows one highlight sentence instead. */
+  analyticsCharts: boolean;
   /** `analytics.history_days`: the longest period the Analytics page serves, in days. */
   analyticsHistoryDays: number | Unlimited;
   /**
@@ -65,6 +67,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: false,
     locationAnalytics: false,
     analytics: "basic",
+    analyticsCharts: false,
     analyticsHistoryDays: 30,
     scheduledDesigns: false,
     geofencing: false,
@@ -79,6 +82,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: false,
     locationAnalytics: false,
     analytics: "basic",
+    analyticsCharts: true,
     analyticsHistoryDays: 90,
     scheduledDesigns: false,
     geofencing: false,
@@ -93,6 +97,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: true,
     locationAnalytics: true,
     analytics: "advanced",
+    analyticsCharts: true,
     analyticsHistoryDays: 365,
     scheduledDesigns: "coming_soon",
     geofencing: "coming_soon",
@@ -160,6 +165,7 @@ export function planFactLines(tier: TierId): string[] {
   if (facts.locationAnalytics) lines.push("per-location analytics");
   const history = analyticsHistoryLabel(facts.analyticsHistoryDays);
   lines.push(facts.analyticsHistoryDays === "unlimited" ? `${history} analytics history` : `${history} of analytics history`);
+  lines.push(facts.analyticsCharts ? "every analytics chart" : "analytics highlights instead of charts");
   if (facts.analytics === "advanced") lines.push("monthly cohorts");
   if (facts.scheduledDesigns === "coming_soon") lines.push("scheduled card designs (coming soon)");
   else if (facts.scheduledDesigns) lines.push("scheduled card designs");

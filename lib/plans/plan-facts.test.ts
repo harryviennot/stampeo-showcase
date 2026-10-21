@@ -22,7 +22,7 @@ import { catalogStrings, loadCatalog, strictTranslator } from "../testing/catalo
 describe("plan facts", () => {
   it("summarises each plan in plain English", () => {
     expect(planSummary("starter")).toBe(
-      "stamps or points, 2 team members (owner + 1), no broadcasts, single location, 30 days of analytics history"
+      "stamps or points, 2 team members (owner + 1), no broadcasts, single location, 30 days of analytics history, analytics highlights instead of charts"
     );
     expect(planSummary("growth")).toContain("8 broadcasts per month");
     expect(planSummary("growth")).not.toMatch(/advanced|schedul|multiple locations|geofencing/);
@@ -34,6 +34,7 @@ describe("plan facts", () => {
     expect(availability((f) => f.loyaltyTypes.includes("points"))).toBe("every plan");
     expect(availability((f) => f.employeeTracking)).toBe("Growth and Pro");
     expect(availability((f) => f.scheduledBroadcasts)).toBe("Pro");
+    expect(availability((f) => f.analyticsCharts)).toBe("Growth and Pro");
   });
 });
 
@@ -262,12 +263,18 @@ describe("pricing page analytics rows", () => {
     expect(availability((f) => f.analytics === "advanced")).toBe("Pro");
   });
 
-  it("the Analytics group lists the history and the monthly cohorts", () => {
-    expect(analyticsRows.map((row) => row.key)).toEqual(["analyticsHistory", "monthlyCohorts"]);
+  it("the Analytics group lists the history, the charts and the monthly cohorts", () => {
+    expect(analyticsRows.map((row) => row.key)).toEqual(["analyticsHistory", "analyticsCharts", "monthlyCohorts"]);
+  });
+
+  it("the charts row is a tick on Growth and Pro, as the matrix has it", () => {
+    const charts = analyticsRows.find((row) => row.key === "analyticsCharts")!;
+    expect(TIERS.map((tier) => charts[tier])).toEqual(["cross", "check", "check"]);
+    expect(TIERS.map((tier) => PLAN_FACTS[tier].analyticsCharts)).toEqual([false, true, true]);
   });
 
   it("the cohorts row is a tick on Pro only", () => {
-    const [, cohorts] = analyticsRows;
+    const cohorts = analyticsRows.find((row) => row.key === "monthlyCohorts")!;
     expect(TIERS.map((tier) => cohorts[tier])).toEqual(["cross", "cross", "check"]);
   });
 
@@ -275,6 +282,11 @@ describe("pricing page analytics rows", () => {
     const history = TIERS.map((tier) => planFactLines(tier).filter((line) => /analytics history/i.test(line)));
     expect(history).toEqual([["30 days of analytics history"], ["90 days of analytics history"], ["1 year of analytics history"]]);
     expect(TIERS.map((tier) => planSummary(tier).includes("monthly cohorts"))).toEqual([false, false, true]);
+  });
+
+  it("the plan summary says who gets every chart and who gets highlights", () => {
+    expect(TIERS.map((tier) => planSummary(tier).includes("every analytics chart"))).toEqual([false, true, true]);
+    expect(TIERS.map((tier) => planSummary(tier).includes("analytics highlights instead of charts"))).toEqual([true, false, false]);
   });
 
   for (const locale of routing.locales) {
@@ -288,9 +300,10 @@ describe("pricing page analytics rows", () => {
       }
     });
 
-    it(`${locale}: both rows are named`, () => {
+    it(`${locale}: the three rows are named`, () => {
       const rows = loadCatalog(locale, "pricing.json").pricingPage.comparison.rows;
       expect(rows.analyticsHistory.label).toBeTruthy();
+      expect(rows.analyticsCharts.label).toBeTruthy();
       expect(rows.monthlyCohorts.label).toBeTruthy();
     });
 
@@ -298,7 +311,7 @@ describe("pricing page analytics rows", () => {
     for (const section of ["pricingPage", "pricing"] as const) {
       it(`${locale} ${section}: the cards quote each plan's history as the table does`, () => {
         const messages = loadCatalog(locale, "pricing.json");
-        for (const tier of ["growth", "pro"] as const) {
+        for (const tier of TIERS) {
           const quoted = (messages[section][tier].features as string[])
             .map((item) => daysIn(item, locale))
             .filter((days) => !Number.isNaN(days));
@@ -322,6 +335,13 @@ describe("the landing FAQ and the feature copy state the Analytics plan facts", 
     fr: /remontent plus loin|plus d'historique/i,
     es: /miran más atrás|más historial/i,
     pl: /sięgają dalej wstecz|dłuższa historia/i,
+  };
+  // The words each locale uses for the charts a Starter does not get.
+  const CHARTS: Record<string, RegExp> = {
+    en: /every (?:analytics )?chart/i,
+    fr: /tous les graphiques/i,
+    es: /todos los gráficos/i,
+    pl: /wszystkie wykresy/i,
   };
   // "(30 days, 90 days or 1 year)" in each locale.
   const HISTORY_LIST = /\((\d+ [^,)]+), (\d+ [^,)]+) (?:or|ou|o|lub) (\d+ [^,)]+)\)/;
@@ -351,6 +371,17 @@ describe("the landing FAQ and the feature copy state the Analytics plan facts", 
         expect({ where, plans: plansNamedWith(text, COHORTS[locale]) }).toEqual({
           where,
           plans: tiersWhere((f) => f.analytics === "advanced"),
+        });
+      }
+    });
+
+    it(`${locale}: every mention of every chart names the plans that have them`, () => {
+      const mentions = copy(locale).filter(({ text }) => CHARTS[locale].test(text));
+      expect(mentions.length).toBeGreaterThan(0);
+      for (const { where, text } of mentions) {
+        expect({ where, plans: plansNamedWith(text, CHARTS[locale]) }).toEqual({
+          where,
+          plans: tiersWhere((f) => f.analyticsCharts),
         });
       }
     });
