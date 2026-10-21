@@ -84,9 +84,9 @@ Les données collectées dépendent entièrement de la configuration choisie par
 | Tampons/points accumulés | Automatique | Programme de fidélité |
 | Montant d'achat / valeur de la transaction | Automatique (programmes à points uniquement) | Calcul des points et statistiques de l'entreprise |
 
-**Statistiques présentées à l'entreprise.** À partir des visites, l'entreprise voit des statistiques sur son propre commerce : nombre de passages dans le temps, heures d'affluence, part des nouveaux clients qui reviennent sous 30 jours, groupes mensuels de nouveaux clients, répartition des clients selon leur fréquence de retour et progression vers la récompense. Ces statistiques sont calculées sous forme de totaux. Pour chaque client, l'entreprise voit uniquement son nombre de visites et sa progression.
+**Statistiques présentées à l'entreprise.** À partir des visites, l'entreprise voit des statistiques sur son propre commerce : nombre de passages dans le temps, heures d'affluence, part des nouveaux clients qui reviennent sous 30 jours, groupes mensuels de nouveaux clients, répartition des clients selon leur fréquence de retour et progression vers la récompense. Ces statistiques sont calculées sous forme de totaux.
 
-Nous ne construisons pas de profil individuel : nous ne prédisons pas le comportement d'un client et ne lui attribuons aucune catégorie.
+Ces statistiques ne reposent sur aucun profil individuel : nous ne prédisons pas le comportement d'un client.
 
 L'anniversaire est collecté **au jour et au mois uniquement**. Aucune année n'est conservée : nous ne détenons donc ni date de naissance, ni âge.
 

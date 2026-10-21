@@ -84,9 +84,9 @@ Zbierane dane zależą w całości od konfiguracji wybranej przez firmę. Wszyst
 | Saldo pieczątek/punktów | Automatycznie | Program lojalnościowy |
 | Kwota zakupu / wartość transakcji | Automatycznie (tylko programy punktowe) | Naliczanie punktów i statystyki firmy |
 
-**Statystyki pokazywane firmie.** Na podstawie wizyt firma widzi statystyki dotyczące własnej działalności: liczbę wizyt w czasie, godziny szczytu, odsetek nowych klientów, którzy wracają w ciągu 30 dni, miesięczne grupy nowych klientów, podział klientów według tego, jak często wracają, oraz postęp w drodze do nagrody. Statystyki te są obliczane jako wartości zbiorcze. W przypadku każdego klienta firma widzi wyłącznie liczbę jego wizyt i jego postęp.
+**Statystyki pokazywane firmie.** Na podstawie wizyt firma widzi statystyki dotyczące własnej działalności: liczbę wizyt w czasie, godziny szczytu, odsetek nowych klientów, którzy wracają w ciągu 30 dni, miesięczne grupy nowych klientów, podział klientów według tego, jak często wracają, oraz postęp w drodze do nagrody. Statystyki te są obliczane jako wartości zbiorcze.
 
-Nie tworzymy profili poszczególnych osób: nie przewidujemy zachowań klienta i nie przypisujemy go do żadnej kategorii.
+Statystyki te nie opierają się na profilach poszczególnych osób: nie przewidujemy zachowań klienta.
 
 Data urodzin jest zbierana **wyłącznie jako dzień i miesiąc**. Nie przechowujemy roku, więc nie mamy ani daty urodzenia, ani wieku.
 

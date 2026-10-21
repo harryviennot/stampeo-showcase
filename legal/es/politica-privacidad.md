@@ -84,9 +84,9 @@ Los datos recogidos dependen por completo de la configuración elegida por el co
 | Sellos/puntos acumulados | Automática | Programa de fidelidad |
 | Importe de compra / valor de la transacción | Automática (solo programas de puntos) | Cálculo de puntos y estadísticas del comercio |
 
-**Estadísticas que ve el comercio.** A partir de las visitas, el comercio ve estadísticas sobre su propia actividad: número de visitas a lo largo del tiempo, horas punta, proporción de clientes nuevos que vuelven en los 30 días siguientes, grupos mensuales de clientes nuevos, reparto de los clientes según la frecuencia con la que vuelven y progreso hacia la recompensa. Estas estadísticas se calculan como totales. De cada cliente, el comercio solo ve su número de visitas y su progreso.
+**Estadísticas que ve el comercio.** A partir de las visitas, el comercio ve estadísticas sobre su propia actividad: número de visitas a lo largo del tiempo, horas punta, proporción de clientes nuevos que vuelven en los 30 días siguientes, grupos mensuales de clientes nuevos, reparto de los clientes según la frecuencia con la que vuelven y progreso hacia la recompensa. Estas estadísticas se calculan como totales.
 
-No elaboramos perfiles individuales: no predecimos el comportamiento de ningún cliente ni le asignamos ninguna categoría.
+Estas estadísticas no se basan en ningún perfil individual: no predecimos el comportamiento de ningún cliente.
 
 El cumpleaños se recoge **solo con el día y el mes**. No se guarda ningún año, por lo que no conservamos ni fecha de nacimiento ni edad.
 

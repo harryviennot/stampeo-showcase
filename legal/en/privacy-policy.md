@@ -84,9 +84,9 @@ Data collected depends entirely on the configuration chosen by the business. All
 | Stamps/points balance | Automatic | Loyalty program |
 | Purchase amount / transaction value | Automatic (points programs only) | Points accrual and business analytics |
 
-**Statistics shown to the business.** From the visits, the business sees statistics on its own activity: the number of visits over time, its busiest times, the share of new customers who come back within 30 days, new customers grouped by the month they joined, how customers divide by how often they come back, and progress toward the reward. These statistics are calculated as totals. For each customer, the business sees only their number of visits and their progress.
+**Statistics shown to the business.** From the visits, the business sees statistics on its own activity: the number of visits over time, its busiest times, the share of new customers who come back within 30 days, new customers grouped by the month they joined, how customers divide by how often they come back, and progress toward the reward. These statistics are calculated as totals.
 
-We do not build individual profiles: we do not predict a customer's behavior and do not place them in any category.
+These statistics rely on no individual profile: we do not predict a customer's behavior.
 
 The birthday is collected as a **day and month only**. No year is stored, so we hold neither a date of birth nor an age.
 
