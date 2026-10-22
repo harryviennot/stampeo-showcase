@@ -818,7 +818,7 @@
       ],
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
-        "subtitle": "Każdy plan pokazuje najważniejsze liczby o wizytach, godzinach szczytu i tym, jak często wracają klienci. Growth i Pro pokazują wszystkie wykresy i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
+        "subtitle": "Każdy plan pokazuje najważniejsze liczby o wizytach, godzinach szczytu i tym, jak często wracają klienci. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -859,7 +859,7 @@
         "proAnalytics": {
           "badge": "Wszystkie plany",
           "title": "Zrozum trendy, nie tylko liczby",
-          "description": "Najważniejsze liczby o wizytach, godzinach szczytu, częstotliwości powrotów i postępie na karcie, w każdym planie. Growth i Pro pokazują wszystkie wykresy i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
+          "description": "Najważniejsze liczby o wizytach, godzinach szczytu, częstotliwości powrotów i postępie na karcie, w każdym planie. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
         },
         "proCharts": {
           "lineChart": {

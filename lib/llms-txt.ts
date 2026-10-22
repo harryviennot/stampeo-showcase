@@ -213,7 +213,7 @@ The Analytics page answers what paper cards can't: who comes back, how often, wh
 - Employee scan tracking: which team member made each scan.
 
 **More on the higher plans**:
-- Every Analytics chart (${availability((f) => f.analyticsCharts)}): visits over time, busiest times by weekday and hour, how often customers come, and reward progress. ${PLAN_NAMES.starter} gets the highlights instead.
+- Analytics charts (${availability((f) => f.analyticsCharts)}): visits over time, busiest times by weekday and hour, how often customers come, and reward progress. ${PLAN_NAMES.starter} gets the highlights instead.
 - Monthly cohorts (${availability((f) => f.analytics === "advanced")}): how many of each month's new customers came back within 30, 60, 90 and 180 days.
 - Per-location analytics (${availability((f) => f.locationAnalytics)}): the Analytics page filtered on one location.
 

@@ -299,8 +299,9 @@ describe("pricing page analytics rows", () => {
     expect(TIERS.map((tier) => planSummary(tier).includes("monthly cohorts"))).toEqual([false, false, true]);
   });
 
-  it("the plan summary says who gets every chart and who gets highlights", () => {
-    expect(TIERS.map((tier) => planSummary(tier).includes("every analytics chart"))).toEqual([false, true, true]);
+  it("the plan summary says who gets the charts and who gets highlights, and never every chart", () => {
+    expect(TIERS.map((tier) => planSummary(tier).includes("analytics charts"))).toEqual([false, true, true]);
+    expect(TIERS.map((tier) => /every (?:analytics )?chart/i.test(planSummary(tier)))).toEqual([false, false, false]);
     expect(TIERS.map((tier) => planSummary(tier).includes("analytics highlights instead of charts"))).toEqual([true, false, false]);
   });
 
@@ -353,7 +354,14 @@ describe("the landing FAQ and the feature copy state the Analytics plan facts", 
   };
   // The words each locale uses for the charts a Starter does not get.
   const CHARTS: Record<string, RegExp> = {
-    en: /every (?:analytics )?chart/i,
+    en: /\bas charts\b/i,
+    fr: /sous forme de graphiques|graphiques et plus d'historique/i,
+    es: /en gráficos|gráficos y más historial/i,
+    pl: /na wykresach|wykresy i dłuższa historia/i,
+  };
+  // Growth does not get every chart (the cohorts are on Pro), so no copy says it does.
+  const EVERY_CHART: Record<string, RegExp> = {
+    en: /every (?:analytics )?chart|all (?:the )?charts/i,
     fr: /tous les graphiques/i,
     es: /todos los gráficos/i,
     pl: /wszystkie wykresy/i,
@@ -390,7 +398,13 @@ describe("the landing FAQ and the feature copy state the Analytics plan facts", 
       }
     });
 
-    it(`${locale}: every mention of every chart names the plans that have them`, () => {
+    it(`${locale}: no copy says a plan has every chart`, () => {
+      const pricing = catalogStrings(loadCatalog(locale, "pricing.json"), `${locale}/pricing.json::`);
+      const claims = [...copy(locale), ...pricing].filter(({ text }) => EVERY_CHART[locale].test(text)).map(({ where }) => where);
+      expect(claims).toEqual([]);
+    });
+
+    it(`${locale}: every mention of the charts names the plans that have them`, () => {
       const mentions = copy(locale).filter(({ text }) => CHARTS[locale].test(text));
       expect(mentions.length).toBeGreaterThan(0);
       for (const { where, text } of mentions) {
