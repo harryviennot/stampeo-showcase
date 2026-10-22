@@ -583,19 +583,17 @@
         {
           "title": "Tendencias y horas punta",
           "description": "Visualiza tus métricas día a día. Descubre cuándo vienen tus clientes e identifica las horas flojas para optimizar tu actividad.",
-          "icon": "trending-up",
-          "badge": "Growth"
+          "icon": "trending-up"
         },
         {
           "title": "Frecuencia y retención",
           "description": "Entiende el ritmo de tus clientes: diario, semanal, mensual. Sigue tu tasa de retención e identifica a los clientes en riesgo.",
-          "icon": "users",
-          "badge": "Growth"
+          "icon": "users"
         }
       ],
       "cta": {
         "title": "Deja de adivinar. Empieza a saber.",
-        "subtitle": "El panel está incluido en todos los planes. Growth añade tendencias y horas punta, y Pro, retención, frecuencia y clientes en riesgo."
+        "subtitle": "Todos los planes muestran lo esencial de tus visitas, tus horas punta y cada cuánto vuelven tus clientes. Growth y Pro los muestran en gráficos y miran más atrás en el tiempo, y Pro añade cohortes mensuales."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -634,9 +632,9 @@
           "timeAgo": "hace {seconds}s"
         },
         "proAnalytics": {
-          "badge": "Planes Growth y Pro",
+          "badge": "Todos los planes",
           "title": "Entiende las tendencias, no solo los números",
-          "description": "Growth añade tendencias y horas punta. Pro añade retención, frecuencia y los clientes que estás a punto de perder."
+          "description": "Lo esencial de las visitas, las horas punta, cada cuánto vuelven tus clientes y en qué punto de la tarjeta están, en todos los planes. Growth y Pro los muestran en gráficos y miran más atrás, y Pro añade cohortes mensuales."
         },
         "proCharts": {
           "lineChart": {

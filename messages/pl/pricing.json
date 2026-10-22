@@ -30,6 +30,7 @@
         "1 aktywny wzór karty",
         "2 osoby w zespole (właściciel + 1)",
         "Lista klientów, statystyki i wyszukiwanie",
+        "Najważniejsze statystyki (30 dni)",
         "Wsparcie przez e-mail"
       ]
     },
@@ -42,7 +43,7 @@
         "Dodatkowe punkty za zakupy powyżej kwoty, którą ustawisz",
         "Własne treści powiadomień o pieczątce i nagrodzie",
         "Zapisane wzory karty bez limitu",
-        "Godziny szczytu i trendy tygodniowe",
+        "Wykresy statystyk, 90 dni historii",
         "Osoby w zespole bez limitu",
         "Widzisz, kto z zespołu zrobił każdy skan",
         "Podaruj prezent i ustaw, kiedy wygasa"
@@ -58,7 +59,7 @@
         "Kilka progów kwotowych, każdy z własną premią punktową",
         "Zaplanuj rozsyłki z wyprzedzeniem (wzory karty wkrótce)",
         "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet, wkrótce)",
-        "Statystyki powrotów, częstotliwości i odebranych nagród",
+        "1 rok historii, kohorty miesięczne, statystyki dla każdego lokalu",
         "Wsparcie priorytetowe"
       ]
     },
@@ -112,6 +113,7 @@
         "1 aktywny wzór karty",
         "2 osoby w zespole (właściciel + 1)",
         "Lista klientów, statystyki i wyszukiwanie",
+        "Najważniejsze statystyki (30 dni)",
         "Wsparcie przez e-mail"
       ],
       "featuresLabel": "Wszystko w cenie:"
@@ -124,7 +126,7 @@
         "Dodatkowe punkty za zakupy powyżej kwoty, którą ustawisz",
         "Własne treści powiadomień o pieczątce i nagrodzie",
         "Zapisane wzory karty bez limitu",
-        "Godziny szczytu i trendy tygodniowe",
+        "Wykresy statystyk, 90 dni historii",
         "Osoby w zespole bez limitu",
         "Widzisz, kto z zespołu zrobił każdy skan",
         "Podaruj prezent i ustaw, kiedy wygasa"
@@ -140,7 +142,7 @@
         "Kilka progów kwotowych, każdy z własną premią punktową",
         "Zaplanuj rozsyłki z wyprzedzeniem (wzory karty wkrótce)",
         "Powiadomienia, gdy klienci są w pobliżu (Apple Wallet, wkrótce)",
-        "Statystyki powrotów, częstotliwości i odebranych nagród",
+        "1 rok historii, kohorty miesięczne, statystyki dla każdego lokalu",
         "Wsparcie priorytetowe"
       ],
       "featuresLabel": "Wszystko z planu Growth, a do tego:"
@@ -241,11 +243,17 @@
         "employeeTracking": {
           "label": "Skany przypisane do pracownika"
         },
-        "basicStats": {
-          "label": "Statystyki podstawowe"
+        "analyticsHistory": {
+          "label": "Historia statystyk",
+          "starter": "30 dni",
+          "growth": "90 dni",
+          "pro": "1 rok"
         },
-        "advancedAnalytics": {
-          "label": "Statystyki zaawansowane"
+        "analyticsCharts": {
+          "label": "Wykresy statystyk"
+        },
+        "monthlyCohorts": {
+          "label": "Kohorty miesięczne"
         },
         "offlineScanning": {
           "label": "Skanowanie bez internetu"
