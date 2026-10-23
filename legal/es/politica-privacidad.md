@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 19 de octubre de 2026**
+**Última actualización: 23 de octubre de 2026**
 
 ## 1. Introducción
 
@@ -34,6 +34,8 @@ Los miembros autorizados del personal de Stampeo pueden, de forma estrictamente 
 
 Base jurídica: interés legítimo (el interés del operador en prestar soporte y garantizar la seguridad de la plataforma), ponderado frente a los intereses del usuario Business mediante las garantías descritas anteriormente (solo lectura, duración limitada, auditado, notificado). Los registros de acceso de soporte se conservan durante 24 meses (véase el §8).
 
+Con independencia del acceso de soporte, los miembros autorizados del personal de Stampeo pueden consultar las estadísticas agregadas de cada comercio (totales de visitas, horas punta, tasas de retorno) para prestar soporte y supervisar el buen funcionamiento de la Plataforma. Esta vista nunca muestra el identificador, el nombre, la dirección de correo electrónico ni el número de teléfono de un cliente final.
+
 ## 3. Datos recogidos
 
 ### 3.1 Usuarios Business
@@ -50,6 +52,7 @@ Base jurídica: interés legítimo (el interés del operador en prestar soporte 
 | Información de pago | Facturación a través de Stripe | Ejecución del contrato | Sí |
 | Logotipo y elementos de marca | Funcionamiento del servicio | Ejecución del contrato | Sí |
 | Idioma preferido (configuración regional) | Localización de la interfaz y de los correos transaccionales | Interés legítimo | No |
+| Zona horaria del comercio (deducida de la dirección o del país del comercio, o del navegador del propietario al iniciar sesión, salvo que la elija él mismo) | Mostrar las estadísticas en la hora local del comercio | Ejecución del contrato | No |
 | Registros de acceso de soporte (sesiones, marcas de tiempo, páginas consultadas, IP del personal) | Trazabilidad de auditoría de las sesiones de soporte previstas en el §2.3 | Interés legítimo | Sí (operativo) |
 
 El sitio web, el número de teléfono y la respuesta «cómo conociste Stampeo» se recogen en el momento del registro y se almacenan en una tabla interna accesible únicamente para la administración, utilizada para el soporte, el seguimiento y el análisis del proceso de incorporación. Esta información no se muestra a los demás usuarios de la Plataforma.
@@ -77,9 +80,13 @@ Los datos recogidos dependen por completo de la configuración elegida por el co
 | Número de teléfono | Opcional (desactivable) | Comunicación |
 | Cumpleaños (día y mes) | Opcional (desactivable) | Regalos de cumpleaños y personalización |
 | Campos definidos por el comercio | Opcional (definido por el comercio) | Fijada por el comercio, indicada en el formulario de alta |
-| Historial de visitas | Automática | Seguimiento de fidelidad y estadísticas |
+| Visitas: fecha y hora, establecimiento, empleado que escaneó, sellos o puntos obtenidos, recompensas canjeadas (varios escaneos con menos de 60 minutos de diferencia cuentan como una sola visita) | Automática | Funcionamiento del programa de fidelidad y estadísticas del comercio |
 | Sellos/puntos acumulados | Automática | Programa de fidelidad |
 | Importe de compra / valor de la transacción | Automática (solo programas de puntos) | Cálculo de puntos y estadísticas del comercio |
+
+**Estadísticas que ve el comercio.** A partir de las visitas, el comercio ve estadísticas sobre su propia actividad: número de visitas a lo largo del tiempo, horas punta, proporción de clientes nuevos que vuelven en los 30 días siguientes, grupos mensuales de clientes nuevos, reparto de los clientes según la frecuencia con la que vuelven y progreso hacia la recompensa. Estas estadísticas se calculan como totales.
+
+Estas estadísticas no se basan en ningún perfil individual: no predecimos el comportamiento de ningún cliente.
 
 El cumpleaños se recoge **solo con el día y el mes**. No se guarda ningún año, por lo que no conservamos ni fecha de nacimiento ni edad.
 
@@ -237,7 +244,7 @@ Utilizamos los datos recogidos para:
 - Enviar notificaciones de fidelidad (sellos, recompensas)
 - Gestionar las cuentas, las suscripciones y la facturación
 - Enviar correos transaccionales y operativos (confirmación de cuenta, recuperación de tarjeta, notificaciones relacionadas con la prueba, confirmaciones de cambio de plan, el recordatorio enviado antes de cada renovación anual y otras notificaciones de facturación; véanse los Términos del servicio §5.7)
-- Producir estadísticas anonimizadas para los comercios
+- Producir, para cada comercio, estadísticas agregadas sobre la actividad de su propio programa (véase el §3.3)
 - Producir estadísticas internas agregadas sobre el uso de la Plataforma en el conjunto de los comercios, detectar abusos y priorizar las mejoras
 - Enviar a los usuarios Business un número limitado de correos de ciclo de vida y marketing, sujetos a la oposición descrita en el §6.1
 - Invitar a los propietarios de comercios con una suscripción de pago a dejar una opinión sobre Stampeo en Trustpilot, sobre la base de nuestro interés legítimo en recoger opiniones sobre nuestro servicio (artículo 6.1.f del RGPD; destinatario descrito en el §4)

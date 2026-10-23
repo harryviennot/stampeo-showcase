@@ -30,8 +30,12 @@ export interface PlanFacts {
   multipleLocations: boolean;
   /** `locations.analytics`. */
   locationAnalytics: boolean;
-  /** "advanced" means basic plus advanced (`analytics.advanced`). */
+  /** "advanced" means basic plus advanced (`analytics.advanced`): monthly cohorts. */
   analytics: "basic" | "advanced";
+  /** `analytics.charts`: the charts of visits, busiest times, how often customers come and reward progress. Without it each section shows one highlight sentence instead. */
+  analyticsCharts: boolean;
+  /** `analytics.history_days`: the longest period the Analytics page serves, in days. */
+  analyticsHistoryDays: number | Unlimited;
   /**
    * Gated on for Pro (`designs.scheduled`), but the dashboard has no screen to
    * schedule a card style yet, so it is sold as coming soon.
@@ -63,6 +67,8 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: false,
     locationAnalytics: false,
     analytics: "basic",
+    analyticsCharts: false,
+    analyticsHistoryDays: 30,
     scheduledDesigns: false,
     geofencing: false,
   },
@@ -76,6 +82,8 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: false,
     locationAnalytics: false,
     analytics: "basic",
+    analyticsCharts: true,
+    analyticsHistoryDays: 90,
     scheduledDesigns: false,
     geofencing: false,
   },
@@ -89,6 +97,8 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     multipleLocations: true,
     locationAnalytics: true,
     analytics: "advanced",
+    analyticsCharts: true,
+    analyticsHistoryDays: 365,
     scheduledDesigns: "coming_soon",
     geofencing: "coming_soon",
   },
@@ -114,6 +124,13 @@ export function availability(has: (facts: PlanFacts) => boolean): string {
   if (tiers.length === TIERS.length) return "every plan";
   if (tiers.length === 0) return "no plan";
   return tiers.map((tier) => PLAN_NAMES[tier]).join(" and ");
+}
+
+/** "30 days", "1 year", "unlimited": a length of Analytics history, in English. */
+export function analyticsHistoryLabel(days: number | Unlimited): string {
+  if (days === "unlimited") return "unlimited";
+  if (days % 365 === 0) return days === 365 ? "1 year" : `${days / 365} years`;
+  return `${days} days`;
 }
 
 const count = (value: number | Unlimited, noun: string) =>
@@ -146,7 +163,10 @@ export function planFactLines(tier: TierId): string[] {
 
   lines.push(facts.multipleLocations ? "multiple locations" : "single location");
   if (facts.locationAnalytics) lines.push("per-location analytics");
-  lines.push(facts.analytics === "advanced" ? "basic and advanced analytics" : "basic analytics");
+  const history = analyticsHistoryLabel(facts.analyticsHistoryDays);
+  lines.push(facts.analyticsHistoryDays === "unlimited" ? `${history} analytics history` : `${history} of analytics history`);
+  lines.push(facts.analyticsCharts ? "analytics charts" : "analytics highlights instead of charts");
+  if (facts.analytics === "advanced") lines.push("monthly cohorts");
   if (facts.scheduledDesigns === "coming_soon") lines.push("scheduled card designs (coming soon)");
   else if (facts.scheduledDesigns) lines.push("scheduled card designs");
 

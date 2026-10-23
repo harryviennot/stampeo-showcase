@@ -101,6 +101,21 @@ describe("llms.txt facts", () => {
     for (const tier of TIERS) expect(body).toContain(planSummary(tier));
   });
 
+  it("gives the Analytics history of each plan and names the plan with monthly cohorts", () => {
+    const analytics = body.slice(body.indexOf("### Analytics"), body.indexOf("### Integrations"));
+
+    expect(analytics).toContain("History: Starter: 30 days, Growth: 90 days, Pro: 1 year.");
+    expect(analytics).toContain("Monthly cohorts (Pro)");
+  });
+
+  it("says that the Analytics charts are on Growth and Pro, and that Starter gets the highlights", () => {
+    const analytics = body.slice(body.indexOf("### Analytics"), body.indexOf("### Integrations"));
+
+    expect(analytics).toContain("Analytics charts (Growth and Pro)");
+    expect(analytics).not.toMatch(/every (?:analytics )?chart/i);
+    expect(analytics).toMatch(/Starter[^\n]*highlights|highlights[^\n]*Starter/i);
+  });
+
   it("offers stamps and points on every plan", () => {
     expect(body).not.toMatch(/stamps-only/i);
     expect(body).not.toMatch(/choose one per program on Growth/i);

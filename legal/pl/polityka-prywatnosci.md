@@ -1,6 +1,6 @@
 # Polityka prywatności: Stampeo
 
-**Ostatnia aktualizacja: 19 października 2026**
+**Ostatnia aktualizacja: 23 października 2026**
 
 ## 1. Wprowadzenie
 
@@ -34,6 +34,8 @@ Upoważnieni członkowie personelu Stampeo mogą, w ściśle ograniczonym zakres
 
 Podstawa prawna: prawnie uzasadniony interes (interes operatora w udzielaniu wsparcia i zapewnieniu bezpieczeństwa platformy), wyważony wobec interesów użytkownika Business dzięki opisanym wyżej zabezpieczeniom (tylko do odczytu, ograniczony czas, audyt, powiadomienie). Dzienniki dostępu serwisowego są przechowywane przez 24 miesiące (zob. §8).
 
+Niezależnie od dostępu serwisowego upoważnieni członkowie personelu Stampeo mogą przeglądać zbiorcze statystyki każdej firmy (łączną liczbę wizyt, godziny szczytu, wskaźniki powrotów), aby udzielać wsparcia i nadzorować prawidłowe działanie Platformy. Ten widok nigdy nie pokazuje identyfikatora, imienia i nazwiska, adresu e-mail ani numeru telefonu klienta końcowego.
+
 ## 3. Zbierane dane
 
 ### 3.1 Użytkownicy Business
@@ -50,6 +52,7 @@ Podstawa prawna: prawnie uzasadniony interes (interes operatora w udzielaniu wsp
 | Informacje o płatności | Rozliczenia przez Stripe | Wykonanie umowy | Tak |
 | Logo i materiały identyfikacji wizualnej | Działanie usługi | Wykonanie umowy | Tak |
 | Preferowany język (ustawienia regionalne) | Lokalizacja interfejsu i e-maili transakcyjnych | Prawnie uzasadniony interes | Nie |
+| Strefa czasowa firmy (ustalana na podstawie adresu lub kraju firmy albo przeglądarki właściciela przy logowaniu, chyba że właściciel sam ją wybierze) | Wyświetlanie statystyk według czasu lokalnego firmy | Wykonanie umowy | Nie |
 | Dzienniki dostępu serwisowego (sesje, znaczniki czasu, przeglądane strony, adres IP personelu) | Ślad audytowy sesji serwisowych zgodnie z §2.3 | Prawnie uzasadniony interes | Tak (operacyjnie) |
 
 Strona internetowa, numer telefonu i odpowiedź na pytanie o źródło informacji o Stampeo są zbierane przy rejestracji i przechowywane w wewnętrznej tabeli dostępnej wyłącznie dla administracji, wykorzystywanej do wsparcia, kontaktu z firmami i analizy procesu wdrożenia. Informacje te nie są pokazywane innym użytkownikom Platformy.
@@ -77,9 +80,13 @@ Zbierane dane zależą w całości od konfiguracji wybranej przez firmę. Wszyst
 | Numer telefonu | Opcjonalnie (można wyłączyć) | Komunikacja |
 | Urodziny (dzień i miesiąc) | Opcjonalnie (można wyłączyć) | Nagrody urodzinowe i personalizacja |
 | Pola zdefiniowane przez firmę | Opcjonalnie (definiuje firma) | Ustalany przez firmę, podany na formularzu rejestracji |
-| Historia wizyt | Automatycznie | Śledzenie lojalności i statystyki |
+| Wizyty: data i godzina, lokal, pracownik, który zeskanował kartę, zdobyte pieczątki lub punkty, wykorzystane nagrody (kilka skanów w odstępie krótszym niż 60 minut liczy się jako jedna wizyta) | Automatycznie | Działanie programu lojalnościowego i statystyki firmy |
 | Saldo pieczątek/punktów | Automatycznie | Program lojalnościowy |
 | Kwota zakupu / wartość transakcji | Automatycznie (tylko programy punktowe) | Naliczanie punktów i statystyki firmy |
+
+**Statystyki pokazywane firmie.** Na podstawie wizyt firma widzi statystyki dotyczące własnej działalności: liczbę wizyt w czasie, godziny szczytu, odsetek nowych klientów, którzy wracają w ciągu 30 dni, miesięczne grupy nowych klientów, podział klientów według tego, jak często wracają, oraz postęp w drodze do nagrody. Statystyki te są obliczane jako wartości zbiorcze.
+
+Statystyki te nie opierają się na profilach poszczególnych osób: nie przewidujemy zachowań klienta.
 
 Data urodzin jest zbierana **wyłącznie jako dzień i miesiąc**. Nie przechowujemy roku, więc nie mamy ani daty urodzenia, ani wieku.
 
@@ -237,7 +244,7 @@ Zebrane dane wykorzystujemy, aby:
 - Wysyłać powiadomienia lojalnościowe (pieczątki, nagrody)
 - Zarządzać kontami, subskrypcjami i rozliczeniami
 - Wysyłać e-maile transakcyjne i operacyjne (potwierdzenie konta, odzyskanie karty, powiadomienia dotyczące okresu próbnego, potwierdzenia zmiany planu, informację wysyłaną przed każdym rocznym odnowieniem subskrypcji oraz inne powiadomienia rozliczeniowe; zob. Regulamin §5.7)
-- Tworzyć zanonimizowane statystyki dla firm
+- Tworzyć dla każdej firmy zbiorcze statystyki aktywności jej własnego programu (zob. §3.3)
 - Tworzyć zbiorcze, wewnętrzne statystyki produktowe pozwalające zrozumieć, jak Platforma jest używana we wszystkich firmach, wykrywać nadużycia i ustalać priorytety ulepszeń
 - Wysyłać użytkownikom Business ograniczoną liczbę e-maili cyklu życia i marketingowych, z zastrzeżeniem sprzeciwu opisanego w §6.1
 - Zapraszać właścicieli firm z płatną subskrypcją do wystawienia opinii o Stampeo na platformie Trustpilot, na podstawie naszego prawnie uzasadnionego interesu w zbieraniu opinii o naszej usłudze (art. 6 ust. 1 lit. f RODO; odbiorca opisany w §4)

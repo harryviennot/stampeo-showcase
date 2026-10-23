@@ -317,7 +317,7 @@
           "link": "/features/scanner-mobile"
         },
         {
-          "title": "Analytiques",
+          "title": "Statistiques",
           "description": "Connaissez vos habitués. Pas juste de vue.",
           "link": "/features/analytiques"
         },
@@ -452,7 +452,7 @@
         },
         {
           "question": "Combien de clients puis-je inscrire ?",
-          "answer": "Les plans Starter, Growth et Pro se distinguent par les fonctionnalités (notifications, campagnes, analytique avancée), pas par le volume. Consultez la page tarifs pour le détail par plan."
+          "answer": "Les plans Starter, Growth et Pro se distinguent par les fonctionnalités, pas par le volume : notifications, diffusions et durée de l'historique des statistiques (30 jours, 90 jours ou 1 an). Growth et Pro affichent les statistiques sous forme de graphiques, Starter en donne l'essentiel. Pro ajoute les cohortes mensuelles et les statistiques par établissement. Consultez la page tarifs pour le détail par plan."
         },
         {
           "question": "Puis-je modifier le design de ma carte après ?",

@@ -30,6 +30,7 @@
         "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
         "Lista de clientes, estadísticas y búsqueda",
+        "Lo esencial de las estadísticas (30 días)",
         "Asistencia por correo"
       ]
     },
@@ -42,7 +43,7 @@
         "Puntos extra en compras por encima del importe que fijes",
         "Tus propios mensajes de sello y recompensa",
         "Estilos de tarjeta guardados ilimitados",
-        "Horas punta y tendencias semanales",
+        "Gráficos de estadísticas, 90 días de historial",
         "Miembros del equipo ilimitados",
         "Quién ha escaneado cada tarjeta en tu equipo",
         "Regala un producto y fija cuándo caduca"
@@ -58,7 +59,7 @@
         "Varios niveles de compra, cada uno con su bonus",
         "Programa tus difusiones con antelación (estilos de tarjeta, pronto)",
         "Notificaciones cuando tus clientes están cerca (Apple Wallet, pronto)",
-        "Estadísticas de retención, frecuencia y recompensas",
+        "1 año de historial, cohortes mensuales, estadísticas por establecimiento",
         "Asistencia prioritaria"
       ]
     },
@@ -112,6 +113,7 @@
         "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
         "Lista de clientes, estadísticas y búsqueda",
+        "Lo esencial de las estadísticas (30 días)",
         "Asistencia por correo"
       ],
       "featuresLabel": "Todo incluido:"
@@ -124,7 +126,7 @@
         "Puntos extra en compras por encima del importe que fijes",
         "Tus propios mensajes de sello y recompensa",
         "Estilos de tarjeta guardados ilimitados",
-        "Horas punta y tendencias semanales",
+        "Gráficos de estadísticas, 90 días de historial",
         "Miembros del equipo ilimitados",
         "Quién ha escaneado cada tarjeta en tu equipo",
         "Regala un producto y fija cuándo caduca"
@@ -140,7 +142,7 @@
         "Varios niveles de compra, cada uno con su bonus",
         "Programa tus difusiones con antelación (estilos de tarjeta, pronto)",
         "Notificaciones cuando tus clientes están cerca (Apple Wallet, pronto)",
-        "Estadísticas de retención, frecuencia y recompensas",
+        "1 año de historial, cohortes mensuales, estadísticas por establecimiento",
         "Asistencia prioritaria"
       ],
       "featuresLabel": "Todo el plan Growth, y además:"
@@ -241,11 +243,17 @@
         "employeeTracking": {
           "label": "Seguimiento de escaneos por empleado"
         },
-        "basicStats": {
-          "label": "Estadísticas básicas"
+        "analyticsHistory": {
+          "label": "Historial de estadísticas",
+          "starter": "30 días",
+          "growth": "90 días",
+          "pro": "1 año"
         },
-        "advancedAnalytics": {
-          "label": "Estadísticas avanzadas"
+        "analyticsCharts": {
+          "label": "Gráficos de estadísticas"
+        },
+        "monthlyCohorts": {
+          "label": "Cohortes mensuales"
         },
         "offlineScanning": {
           "label": "Escaneo sin conexión"

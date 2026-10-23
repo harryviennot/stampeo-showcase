@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: October 19, 2026**
+**Last updated: October 23, 2026**
 
 ## 1. Introduction
 
@@ -34,6 +34,8 @@ Authorized Stampeo personnel may, on a strictly limited basis, access a Business
 
 Legal basis: legitimate interest (the operator's interest in providing support and ensuring platform security), balanced against the Business User's interests by the safeguards described above (read-only, time-limited, audited, notified). Support access logs are retained for 24 months (see §8).
 
+Separately from support access, authorized Stampeo personnel may view each business's aggregate statistics (visit totals, busiest times, return rates) in order to provide support and to check that the Platform is working properly. This view never shows an end customer's identifier, name, email address or phone number.
+
 ## 3. Data Collected
 
 ### 3.1 Business Users
@@ -50,6 +52,7 @@ Legal basis: legitimate interest (the operator's interest in providing support a
 | Payment information | Billing via Stripe | Performance of contract | Yes |
 | Logo and brand assets | Service operation | Performance of contract | Yes |
 | Preferred language (locale) | Interface localization and transactional emails | Legitimate interest | No |
+| Business time zone (worked out from the business's address or country, or from the owner's browser at sign-in, unless the owner chooses it) | Showing statistics in the business's local time | Performance of contract | No |
 | Support access logs (sessions, timestamps, pages viewed, IP of personnel) | Audit trail for support sessions per §2.3 | Legitimate interest | Yes (operational) |
 
 The website, phone number, and "how you heard about us" fields are collected at signup and stored in an admin-only internal table used for support, outreach, and onboarding analytics. They are not shown to other users of the Platform.
@@ -77,9 +80,13 @@ Data collected depends entirely on the configuration chosen by the business. All
 | Phone number | Optional (can be disabled) | Communication |
 | Birthday (day and month) | Optional (can be disabled) | Birthday rewards and personalization |
 | Fields defined by the business | Optional (defined by the business) | Set by the business, stated on the sign-up form |
-| Visit history | Automatic | Loyalty tracking and statistics |
+| Visits: date and time, location, the employee who scanned, stamps or points earned, rewards redeemed (scans less than 60 minutes apart count as a single visit) | Automatic | Running the loyalty program and the business's statistics |
 | Stamps/points balance | Automatic | Loyalty program |
 | Purchase amount / transaction value | Automatic (points programs only) | Points accrual and business analytics |
+
+**Statistics shown to the business.** From the visits, the business sees statistics on its own activity: the number of visits over time, its busiest times, the share of new customers who come back within 30 days, new customers grouped by the month they joined, how customers divide by how often they come back, and progress toward the reward. These statistics are calculated as totals.
+
+These statistics rely on no individual profile: we do not predict a customer's behavior.
 
 The birthday is collected as a **day and month only**. No year is stored, so we hold neither a date of birth nor an age.
 
@@ -237,7 +244,7 @@ We use collected data to:
 - Send loyalty notifications (stamps, rewards)
 - Manage accounts, subscriptions, and billing
 - Send transactional and operational emails (account confirmation, pass recovery, trial notifications, plan-change confirmations, the notice sent before each yearly subscription renewal, and other billing notifications; see Terms of Service §5.7)
-- Produce anonymized statistics for businesses
+- Produce, for each business, aggregate statistics on the activity of its own program (see §3.3)
 - Produce aggregate, internal product analytics to understand how the Platform is used across all businesses, detect abuse, and prioritize improvements
 - Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
 - Invite paying business owners to review Stampeo on Trustpilot, on the basis of our legitimate interest in collecting feedback on our service (GDPR Art. 6(1)(f); the recipient is described in §4)

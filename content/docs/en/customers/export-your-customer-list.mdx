@@ -1,0 +1,68 @@
+---
+title: Export your customer list
+description: Download what your customers gave you when they signed up (name, email, phone, birthday, your own questions) as a spreadsheet file, and what the file leaves out.
+---
+
+Download every customer's sign-up details as one file. You can open it in Excel, Numbers or Google Sheets, or import it into your email or CRM tool.
+
+## Before you start
+
+- Only you, the owner, can export the list. People who help you run the program don't see the button. See [Add a team member](/docs/team/add-a-team-member) for who can do what.
+- The button appears once you have at least one customer.
+
+## Download the list
+
+1. Open **Customers** in the sidebar.
+2. Click **Export** at the top right of the page. On a phone, it sits at the top of the screen, next to the menu button.
+
+![The top of the Customers page, with the Export button on the right](/docs/export-your-customer-list-01.png)
+
+3. The file downloads, and a message at the bottom of the screen (at the top on a phone) says **Customer list downloaded**.
+
+The file is named after your business and the day, for example `lustre-customers-2026-10-22.csv`. On an iPhone, you find it in the Files app, under **Downloads**.
+
+The file always holds every customer, whatever you have typed in the search or picked as a segment.
+
+## What is in the file
+
+One row per customer, newest first, with these columns:
+
+- **Name**.
+- **Email address**, **Phone number** and **Birthday**, if you ask for them on your sign-up form, or if customers already gave them.
+- Each question you added to your sign-up form, headed with your own wording.
+- **Enrolled at**: the location where the customer signed up, or **Direct signup**. This column appears only if you have locations.
+- **Customer since**: the day they signed up.
+
+The headings and the birthdays are written in the language your dashboard is set to.
+
+The file holds what your customers gave you when they signed up. Their stamps, points, rewards and visits are not in it.
+
+> **Note:** Stampeo doesn't record whether a customer agreed to receive marketing emails. Before you import the list into an email tool, make sure you are allowed to email the people on it.
+
+You can export ten times an hour. Each export reads your whole customer list, and the limit keeps the service fast for everyone.
+
+## Troubleshooting
+
+**I don't see the Export button**
+
+Only the owner sees it. If you help run the program, ask the owner to export the list. The button is also hidden while you have no customers yet.
+
+**Excel puts everything in one column**
+
+Excel splits a file on the separator your computer's region uses. The file uses commas when your dashboard is in English, and semicolons when it is in French, Spanish or Polish. Switch the dashboard to the language that matches your Excel and export again. Alternatively, open the file from Excel with **Data**, then **From Text/CSV**, and pick the separator there.
+
+**Phone numbers lost their + sign**
+
+Excel reads a phone number like +33612345678 as a plain number and drops the +. The file itself is correct. Open it in Google Sheets or Numbers, or import it in Excel and set the phone column to **Text**.
+
+**A name starts with an apostrophe**
+
+When something a customer typed would run as a formula in a spreadsheet, we put an apostrophe in front of it so it shows as plain text. Nothing else in the value changes.
+
+**The message says "Couldn't export your customer list"**
+
+Check your connection and try again. If you already exported ten times within the hour, wait until the hour has passed.
+
+## Related pages
+
+- [Add a team member](/docs/team/add-a-team-member)

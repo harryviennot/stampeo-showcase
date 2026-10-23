@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 19 octobre 2026**
+**Dernière mise à jour : 23 octobre 2026**
 
 ## 1. Introduction
 
@@ -34,6 +34,8 @@ Des membres autorisés du personnel Stampeo peuvent, de manière strictement enc
 
 Base légale : intérêt légitime (intérêt de l'exploitant à fournir un support et à assurer la sécurité de la plateforme), mis en balance avec les intérêts de l'utilisateur Business par les garanties décrites ci-dessus (lecture seule, durée limitée, audité, notifié). Les journaux d'accès support sont conservés pendant 24 mois (voir §8).
 
+Indépendamment de l'accès support, des membres autorisés du personnel Stampeo peuvent consulter les statistiques agrégées de chaque entreprise (totaux de passages, heures d'affluence, taux de retour) afin de fournir un support et de superviser le bon fonctionnement de la Plateforme. Cette vue n'affiche jamais l'identifiant, le nom, l'adresse email ou le numéro de téléphone d'un client final.
+
 ## 3. Données collectées
 
 ### 3.1 Utilisateurs Business
@@ -50,6 +52,7 @@ Base légale : intérêt légitime (intérêt de l'exploitant à fournir un supp
 | Informations de paiement | Facturation via Stripe | Exécution du contrat | Oui |
 | Logo et visuels de marque | Fonctionnement du service | Exécution du contrat | Oui |
 | Langue préférée (locale) | Localisation de l'interface et des emails transactionnels | Intérêt légitime | Non |
+| Fuseau horaire de l'entreprise (déduit de l'adresse ou du pays de l'entreprise, ou du navigateur du propriétaire à la connexion, sauf s'il le choisit lui-même) | Afficher les statistiques à l'heure locale de l'entreprise | Exécution du contrat | Non |
 | Journaux d'accès support (sessions, horodatages, pages consultées, IP du personnel) | Traçabilité d'audit des sessions support prévues au §2.3 | Intérêt légitime | Oui (opérationnel) |
 
 Le site web, le numéro de téléphone et la réponse « comment vous avez connu Stampeo » sont collectés à l'inscription et stockés dans une table interne accessible uniquement à l'administration, utilisée pour le support, les relances et l'analyse de l'onboarding. Ces informations ne sont pas exposées aux autres utilisateurs de la Plateforme.
@@ -77,9 +80,13 @@ Les données collectées dépendent entièrement de la configuration choisie par
 | Numéro de téléphone | Optionnel (désactivable) | Communication |
 | Anniversaire (jour et mois) | Optionnel (désactivable) | Cadeaux d'anniversaire et personnalisation |
 | Champs définis par l'entreprise | Optionnel (défini par l'entreprise) | Fixée par l'entreprise, indiquée sur le formulaire d'inscription |
-| Historique de visites | Automatique | Suivi de fidélité et statistiques |
+| Visites : date et heure, établissement, employé ayant scanné, tampons ou points obtenus, récompenses utilisées (plusieurs scans à moins de 60 minutes d'intervalle comptent pour une seule visite) | Automatique | Fonctionnement du programme de fidélité et statistiques de l'entreprise |
 | Tampons/points accumulés | Automatique | Programme de fidélité |
 | Montant d'achat / valeur de la transaction | Automatique (programmes à points uniquement) | Calcul des points et statistiques de l'entreprise |
+
+**Statistiques présentées à l'entreprise.** À partir des visites, l'entreprise voit des statistiques sur son propre commerce : nombre de passages dans le temps, heures d'affluence, part des nouveaux clients qui reviennent sous 30 jours, groupes mensuels de nouveaux clients, répartition des clients selon leur fréquence de retour et progression vers la récompense. Ces statistiques sont calculées sous forme de totaux.
+
+Ces statistiques ne reposent sur aucun profil individuel : nous ne prédisons pas le comportement d'un client.
 
 L'anniversaire est collecté **au jour et au mois uniquement**. Aucune année n'est conservée : nous ne détenons donc ni date de naissance, ni âge.
 
@@ -237,7 +244,7 @@ Nous utilisons les données collectées pour :
 - Envoyer des notifications de fidélité (tampons, récompenses)
 - Gérer les comptes, les abonnements et la facturation
 - Envoyer des emails transactionnels et opérationnels (confirmation de compte, récupération de pass, notifications liées à l'essai, confirmations de changement de plan, rappel envoyé avant chaque renouvellement annuel, et autres notifications de facturation ; voir CGU §5.7)
-- Produire des statistiques anonymisées pour les entreprises
+- Produire, pour chaque entreprise, des statistiques agrégées sur l'activité de son propre programme (voir §3.3)
 - Produire des statistiques internes agrégées sur l'utilisation de la Plateforme à travers l'ensemble des entreprises, détecter les abus et prioriser les améliorations
 - Adresser aux utilisateurs Business un nombre limité d'emails de cycle de vie et marketing, sous réserve de l'opposition décrite au §6.1
 - Inviter les propriétaires d'entreprise ayant un abonnement payant à laisser un avis sur Stampeo via Trustpilot, sur la base de notre intérêt légitime à recueillir des retours sur notre service (article 6.1.f du RGPD ; destinataire décrit au §4)
