@@ -1,6 +1,6 @@
 # Polityka prywatności: Stampeo
 
-**Ostatnia aktualizacja: 21 października 2026**
+**Ostatnia aktualizacja: 23 października 2026**
 
 ## 1. Wprowadzenie
 

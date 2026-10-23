@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: October 21, 2026**
+**Last updated: October 23, 2026**
 
 ## 1. Introduction
 
