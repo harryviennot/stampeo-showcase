@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import type { Metadata } from "next";
+import { joinLocale, type JoinLocale } from "@/lib/join-locale";
 import { OpenInApp } from "./open-in-app";
 
 /**
@@ -22,9 +23,7 @@ const PLAY_STORE_URL =
 
 const ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
 
-type Locale = "en" | "fr" | "es" | "pl";
-
-const COPY: Record<Locale, Record<string, string>> = {
+const COPY: Record<JoinLocale, Record<string, string>> = {
   en: {
     eyebrow: "Join your team",
     title: "Your team code",
@@ -88,14 +87,7 @@ export default async function JoinPage({
   params: Promise<{ code: string }>;
 }) {
   const { code: raw } = await params;
-  const cookieStore = await cookies();
-  const cookieLocale = cookieStore.get("NEXT_LOCALE")?.value;
-  const locale: Locale = (["en", "fr", "es", "pl"] as const).includes(
-    cookieLocale as Locale
-  )
-    ? (cookieLocale as Locale)
-    : "fr";
-  const t = COPY[locale];
+  const t = COPY[joinLocale((await cookies()).get("NEXT_LOCALE")?.value)];
 
   const code = normalize(raw);
   const valid = isValid(code);
