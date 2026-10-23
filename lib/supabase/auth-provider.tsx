@@ -249,7 +249,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Clear onboarding session data on logout
     sessionStorage.removeItem("stampeo_onboarding_session");
     localStorage.removeItem("stampeo_onboarding");
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: "local" });
   }, [supabase.auth]);
 
   return (
