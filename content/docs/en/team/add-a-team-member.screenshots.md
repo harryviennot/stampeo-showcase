@@ -1,60 +1,53 @@
-# Screenshot specs — add-a-team-member
+# Screenshot specs: team pages
 
-Captured 9 September 2026 against dev. Recapture any shot whose UI changes; the
-spec is what makes that reproducible.
+Shots 01 to 04 and 10 of add-a-team-member, and the manage-a-team-member and remove-a-team-member shots, were captured 26 October 2026 on the STA-190 branch of the web app (production build served on a local port, signed in as the Lustre fixture admin). They were not taken from a deployed dashboard: recapture them from `dev` or prod once the STA-190 web PR ships.
 
-All four were taken on **Aurevo** (Growth, stamps) at 1280x900, dashboard language
-switched to English, cropped to the element named under "Capture".
+Common setup: **Lustre** (Pro, stamps), desktop viewport 1280x900 at 2x, English. The dashboard language comes from the user profile, so the capture script overlaid the profile locale to `en` (display only). The same script overlaid, in the browser only and without writing anything: last-scan and all-time-scan figures (Marion 143 scans, 2 hours ago; Amine 3 days ago), Kevin as paused, two invitations (Sofia: code K7P-2QM, 9 days left; Lucas: email invitation, expired), and the owner row renamed to "Camille Laurent / camille@lustre.seed.stampeo.app" so the real owner address never shows. `owner` mode also overlays the viewer's role to owner so the owner controls render. Nothing was submitted.
 
-Aurevo rather than a Starter business on purpose: Starter covers two people and
-Patoune already has two, so the invite flow there only shows the seat limit. The
-dialog itself is identical on every plan.
-
-> Both shots of the dialog need an **owner**, and all six demo businesses are owned
-> by harry.viennot@icloud.com. To capture these I temporarily promoted
-> `camille@aurevo.seed.stampeo.app` from admin to owner and set her locale to
-> English, then put both back. If you would rather not repeat that, capture these
-> two while signed in as yourself.
-
----
+Script: copy of the STA-190 `shoot.cjs` pipeline (Playwright, routes app.dev.stampeo.app to the branch build). Crops are by element region of the 2x capture.
 
 SHOT: add-a-team-member-01.png
-Business: Aurevo (Growth, stamps), signed in as owner
 Where: Dashboard > Team
-Data prep: none
-Capture: the page header only, from the title down to the subtitle, including the
-  Add Member button on the right. Excludes the members table.
-Shows: where **Add Member** is
-Why cropped this tight: the members table below carries real addresses, including
-  the owner's own. Never widen this shot to include it.
+Capture: page header, Members list and Waiting to join list (no sidebar)
+Shows: Add member button, roles, status lines, Waiting to join with a code and an expired email invitation
 
 SHOT: add-a-team-member-02.png
-Business: Aurevo (Growth, stamps), signed in as owner
-Where: Dashboard > Team > Add Member
-Data prep: none; dialog freshly opened so the first role is selected
+Where: Team > Add member (owner), freshly opened
 Capture: the dialog only
-Shows: the two roles with their descriptions, the first one selected, and the code
-  form that follows from it
+Shows: Scanner selected, the code form (Who is it for?, Their email, Create the code)
 
 SHOT: add-a-team-member-03.png
-Business: Aurevo (Growth, stamps), signed in as owner
-Where: Dashboard > Team > Add Member, after creating a code
-Data prep: name "Yasmine Okonkwo", email "yasmine@aurevo.example" (an invented
-  person on a reserved example domain, so nothing real is on screen). Delete the
-  invitation afterwards.
-Capture: the dialog only
-Shows: the six-character code, who it is for, the copy button, and the line saying
-  it works once for 14 days
+Where: Team > Waiting to join > Sofia (code invitation), owner
+Capture: the panel from the top through Cancel invitation
+Shows: the code with its copy button, New code and its note, Cancel invitation
+Note: the dialog state right after Create the code was not shot because it needs a real submit. The panel shows the same code display.
 
 SHOT: add-a-team-member-04.png
-Business: Aurevo (Growth, stamps), signed in as owner
-Where: Dashboard > Team > Add Member, second role selected
-Data prep: none; fields left empty so their placeholders read
+Where: Team > Add member (owner), Admin selected
 Capture: the dialog only
-Shows: the second role selected and the email invitation form that replaces the
-  code form
+Shows: Admin selected, Full Name, Email Address, Send Invitation
 
----
+SHOT: add-a-team-member-10.png
+Where: Team > Waiting to join > Lucas (expired email invitation), owner
+Capture: the panel through Cancel invitation
+Shows: the expired notice, Resend invitation, Cancel invitation
+
+SHOT: manage-a-team-member-01.png
+Where: Team > Marion Perez, owner
+Capture: the whole panel
+Shows: Role cards, Activity (Joined, Last scan, All-time scans), Locations, Scanning access switch, Danger zone
+
+SHOT: manage-a-team-member-02.png
+Where: Team > Marion Perez, signed in as admin (no owner overlay)
+Capture: the panel through Locations
+Shows: read-only role, the line "Only the owner can change roles and scanning access.", no controls
+
+SHOT: remove-a-team-member-01.png
+Where: Team > Marion Perez, owner
+Capture: the bottom of the panel, from Scanning access down
+Shows: the switch and the Remove from team button under Danger zone
+
+Not captured: the Starter states (seat count "N of 2", team-full upgrade card, gated Activity). The fixtures have no Starter business with a dashboard login. Capture them on Patoune as the owner account next time.
 
 ## The invited person's side (05 to 09)
 
