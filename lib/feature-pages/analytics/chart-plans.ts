@@ -1,12 +1,7 @@
-import type { TierId } from "../pricing";
-import { PLAN_NAMES } from "../plans/plan-facts";
+import type { TierId } from "../../pricing";
+import { PLAN_NAMES } from "../../plans/plan-facts";
 
-/**
- * The plan each card of the Analytics feature page's chart grid names in its
- * pill. Charts are on Growth and up; the 30-day return rate is a number on
- * every plan. The cards for charts the product does not have yet
- * (`timeToReward`, `completionRate`, `returnRate`) also name Growth.
- */
+/** The plan each chart card's pill names (`every` = all plans); cards for charts not built yet name the charts' plan. */
 export const CHART_PLANS = {
   lineChart: "growth",
   heatmap: "growth",

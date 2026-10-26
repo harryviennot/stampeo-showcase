@@ -1,9 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import { routing } from "@/i18n/routing";
-import { PLAN_NAMES, TIERS, tiersWhere } from "../plans/plan-facts";
-import { catalogStrings, loadCatalog } from "../testing/catalogs";
+import { tiersWhere } from "../plans/plan-facts";
+import { loadCatalog } from "../testing/catalogs";
 import { CAPTURE_PLAN } from "./dashboard-shots";
-import { OFF_PICTURE } from "../testing/analytics-claims";
+import { OFF_PICTURE, claimOffenders, plansNamed } from "../testing/analytics-claims";
 
 /**
  * The landing's dashboard section (`variant.dashboard`) sits beside real
@@ -16,23 +16,12 @@ const dashboard = (locale: string) => loadCatalog(locale, "landing.json").varian
 
 describe("landing dashboard section copy", () => {
   it.each(routing.locales)("%s: says nothing the captures do not show", (locale) => {
-    const offenders = catalogStrings(dashboard(locale), "variant.dashboard").flatMap(({ where, text }) =>
-      Object.entries(OFF_PICTURE)
-        .filter(([, pattern]) => pattern.test(text))
-        .map(([rule]) => `${rule} at ${where}: ${text}`),
-    );
-    expect(offenders).toEqual([]);
+    expect(claimOffenders(dashboard(locale), "variant.dashboard", OFF_PICTURE)).toEqual([]);
   });
 
   it.each(routing.locales)("%s: the plan line leads with the captured plan and names only plans with charts", (locale) => {
-    const line: string = dashboard(locale).planLine;
-    const at = (tier: (typeof TIERS)[number]) => line.search(new RegExp(`\\b${PLAN_NAMES[tier]}\\b`));
-    const withCharts = tiersWhere((facts) => facts.analyticsCharts);
-
-    for (const tier of TIERS) {
-      expect({ tier, named: at(tier) >= 0 }).toEqual({ tier, named: withCharts.includes(tier) });
-    }
-    const first = TIERS.filter((tier) => at(tier) >= 0).sort((a, b) => at(a) - at(b))[0];
-    expect(first).toBe(CAPTURE_PLAN);
+    const named = plansNamed(dashboard(locale).planLine);
+    expect([...named].sort()).toEqual([...tiersWhere((facts) => facts.analyticsCharts)].sort());
+    expect(named[0]).toBe(CAPTURE_PLAN);
   });
 });

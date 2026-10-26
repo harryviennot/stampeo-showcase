@@ -32,7 +32,8 @@ export function PhoneScreenshot({
         />
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--paper-hover)] to-transparent"
+          className="absolute inset-x-0 bottom-0 h-16"
+          style={{ backgroundImage: `linear-gradient(to top, ${SCREEN}, transparent)` }}
         />
       </div>
     </PhoneMockup>

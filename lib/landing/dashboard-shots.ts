@@ -4,7 +4,7 @@ import type { TierId } from "@/lib/pricing";
 /**
  * Real captures of the dashboard's Analytics page, per locale: the top of
  * the page (the landing's desktop and phone) and two phone views scrolled to
- * a card pair (the Analytics feature page's hero and busiest row).
+ * a card (the Analytics feature page's hero and busiest row).
  * They come from promo-videos `tools/screens/landing-shots.ts` (dev fixture
  * Aurevo, Growth); re-shoot them with that command, never by hand. The sizes
  * are the files' real pixel sizes, checked by `dashboard-shots.test.ts`.

@@ -59,8 +59,8 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | WHY | Phone visitors from ads must read the promise and reach the button before the cookie banner covers the bottom of the screen. |
 | DEPENDS | AF-01 |
 | ACCOUNT | No session at all. |
-| STEPS | 1. R1. 2. Each locale at 390×844, first load, cookie banner showing. |
-| EXPECT | Headline (3 lines at most), subtitle, then the "Start free" button fully visible above the banner, then the phone starting below it. The page does not scroll sideways. You do NOT see the phone before the headline, or the button under the banner. |
+| STEPS | 1. R1. 2. Each locale at 390×844, first load, cookie banner showing. 3. In the console: `document.querySelector('h1').compareDocumentPosition(document.querySelector('figure')) & 4` and the `getBoundingClientRect()` of the hero's "Start free" link and of the phone frame. |
+| EXPECT | Headline (3 lines at most), subtitle, then the "Start free" button fully visible above the banner (its bottom ≤ 600px; measured 388–425px), then the phone starting below it (its top ≤ 844px; measured 428–465px). Step 3's first value is 4 (the headline comes before the phone in the page). The page does not scroll sideways (`scrollX` stays 0 after a sideways swipe). You do NOT see the phone before the headline, or the button under the banner. |
 | RESET | None. |
 
 ### AF-03: Split hero on desktop [CORE]
@@ -92,8 +92,8 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | WHY | It answers the problem section's "Which day is quietest" with the real section, and says honestly what Starter gets. |
 | DEPENDS | AF-01 |
 | ACCOUNT | No session at all. |
-| STEPS | 1. Each locale at 390 and 1440, scroll past the problem cards. |
-| EXPECT | A heading, a lead naming the day × hour grid, the busiest slot and the quietest open hour, ending with Starter getting the busiest hour in a sentence and Growth and Pro the grid; a phone with the locale's real Busiest times card. Stacked on a phone (text, then phone), side by side from 1024. You do NOT see the old "Starter Plan / The essentials to get started" mock anywhere on the page. |
+| STEPS | 1. Each locale at 390, 768, 1024 and 1440, scroll past the problem cards. |
+| EXPECT | A heading, a lead naming the day × hour grid, the busiest slot and the quietest open hour, ending with Starter getting the busiest hour in a sentence and Growth and Pro the grid; a phone with the locale's real Busiest times card. Stacked at 390 and 768 (text, then phone), side by side from 1024. You do NOT see the old "Starter Plan / The essentials to get started" mock anywhere on the page. |
 | RESET | None. |
 
 ### AF-06: The activity feed matches the dashboard [EDGE]
@@ -104,7 +104,7 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Each locale, watch the feed for 15 seconds. |
-| EXPECT | Header "Activity" with an accent-coloured dot and "Live" (FR "Activité" / "En direct", ES "Actividad" / "En directo", PL "Aktywność" / "Na żywo"); rows read "received a stamp", "redeemed a reward", "added their card" (and translations), each labelled "Just now". You do NOT see a counter in seconds ("3s ago"), "signed up", or a green dot. |
+| EXPECT | Header "Activity" with an accent-coloured dot and "Live" (FR "Activité" / "En direct", ES "Actividad" / "En directo", PL "Aktywność" / "Na żywo"). Rows read, per locale: EN "received a stamp" / "redeemed a reward" / "added their card" · FR "a reçu un tampon" / "a utilisé une récompense" / "a ajouté sa carte" · ES "ha recibido un sello" / "ha canjeado una recompensa" / "ha añadido su tarjeta" · PL "dostaje pieczątkę" / "odbiera nagrodę" / "dodaje kartę"; each labelled "Just now" / "À l'instant" / "Ahora mismo" / "Przed chwilą". Every row is a customer doing something. You do NOT see a counter in seconds ("3s ago"), "signed up", a green dot, or a row about a team member (an employee's name or "scanned by"). |
 | RESET | None. |
 
 ### AF-07: The chart grid's pills [CORE]
@@ -126,7 +126,7 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | DEPENDS | AF-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Production build. 2. Lighthouse mobile and desktop on `/en/features/analytics` and `/features/analytiques`. 3. In the Elements panel, inspect the hero `<img>`. |
-| EXPECT | LCP ≤ 2.5 s (mobile), the LCP element being the hero image or the headline; CLS ≤ 0.1 with no shift from the hero. The hero `<img>` has `loading="eager"` and `fetchpriority="high"` and is the only one with it. You do NOT see the hero fade or slide in. |
+| EXPECT | LCP ≤ 2.5 s (mobile), the LCP element being the hero image or the headline; CLS ≤ 0.1 with no shift from the hero. The hero `<img>` has `loading="eager"` and `fetchpriority="high"` and is the only one with it; at 390 (DPR 3) the Network tab shows one request for `<locale>-phone-habits.png` at `w=828` or less. The busiest `<img>` has `loading="lazy"`. You do NOT see the hero fade or slide in. |
 | RESET | None. |
 
 ### AF-09: No raw keys anywhere [BLOCKER]
@@ -136,8 +136,8 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | WHY | The page dropped strings (the old mock, the unused sections list); a component still reading one would show its key path in prod. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. Each locale: Cmd+F for `features.analytiques`. |
-| EXPECT | No match on any of the four pages. |
+| STEPS | 1. Each locale: Cmd+F for `features.analytiques`. 2. Each locale: view the page source (Cmd+Option+U) and search it for `features.analytiques`. |
+| EXPECT | No match on any of the four pages, on screen or in the source (alt texts, `<title>`, `<meta name="description">`). |
 | RESET | None. |
 
 ### AF-10: The landing's phone is unchanged [EDGE]
@@ -147,8 +147,8 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | WHY | The landing's dashboard section now uses the same `PhoneScreenshot`; it must look exactly as it did (verified pixel-identical at 390/768/1440 on 2026-10-26). |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. `/en` at 390 and 1440: the dashboard section's phone. |
-| EXPECT | The phone capture, warm status-bar background running into it, soft fade at its bottom. You do NOT see a grey stripe under the status bar or a hard cut at the bottom. |
+| STEPS | 1. `/en` at 390, 768 and 1440: the dashboard section's phone. 2. DevTools Network → "Slow 3G", reload, and watch the phone while its image loads. |
+| EXPECT | The phone capture, warm status-bar background running into it, soft fade at its bottom. While loading, the screen is the same warm colour (not grey). You do NOT see a grey stripe under the status bar or a hard cut at the bottom. |
 | RESET | None. |
 
 ### AF-11: Reduced motion [EDGE]
@@ -169,8 +169,19 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | WHY | The captures go stale when the Analytics page changes. |
 | DEPENDS | none |
 | ACCOUNT | `camille@aurevo.seed.stampeo.app` (read via `.env.tools`). |
-| STEPS | 1. Showcase on `bun run publicdev` and web dev up (or `SHOWCASE_ORIGIN` / `APP_ORIGIN` pointing at local `next start` builds). 2. In `promo-videos/`: `bun --env-file=.env.tools tools/screens/landing-shots.ts --out=/tmp/shots --locales=es --views=habits,busiest`. 3. `... --views=habits --sizes=desktop`. 4. In `showcase/`: `bun test lib/landing/dashboard-shots.test.ts`. |
-| EXPECT | Step 2 writes `es-phone-habits.png` and `es-phone-busiest.png` (1206×2622), the Spanish page scrolled to "Cada cuánto vienen" + "Progreso hacia la recompensa" and to "Horas punta", nothing tapped, no banner or dialog. Step 3 refuses (the views are phone captures). The test passes on the committed files. You do NOT see the login page in an image. |
+| STEPS | 1. Showcase on `bun run publicdev` and web dev up (or `SHOWCASE_ORIGIN` / `APP_ORIGIN` pointing at local `next start` builds). 2. In `promo-videos/`: `bun --env-file=.env.tools tools/screens/landing-shots.ts --out=/tmp/shots --locales=es,pl --views=habits,busiest`. 3. `... --views=habits --sizes=desktop`. 4. `... --view=habits` (typo). 5. In `showcase/`: `bun test lib/landing/dashboard-shots.test.ts`. |
+| EXPECT | Step 2 writes `{es,pl}-phone-habits.png` and `{es,pl}-phone-busiest.png` (1206×2622): each page scrolled to its How often they come + Reward progress pair ("Cada cuánto vienen" / "Jak często przychodzą") and to its Busiest times card ("Horas punta" / "Godziny szczytu"), nothing tapped, no banner or dialog. Steps 3 and 4 refuse without writing anything. The test passes on the committed files. You do NOT see the login page, or a different card than the one named, in an image. |
+| RESET | None. |
+
+### AF-13: The new headline in "Discover more" [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | The Analytics headline also titles its card in the "Discover more" row of the scanner, notifications, geolocation and broadcasts pages (252px wide on a phone). |
+| DEPENDS | none |
+| ACCOUNT | No session at all. |
+| STEPS | 1. `/en/features/mobile-scanner`, `/features/scanner-mobile`, `/es/features/escaner-movil`, `/pl/features/skaner-mobilny` at 390 and 1440. 2. Scroll to "Discover more". |
+| EXPECT | The Analytics card's title is the new headline ("See how often your customers come back." and translations) on 2 lines at most (measured 2 at 390, 1–2 at 1440). You do NOT see "Know your regulars" or a title cut off. |
 | RESET | None. |
 
 ---

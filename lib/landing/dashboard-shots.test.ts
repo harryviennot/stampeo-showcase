@@ -2,11 +2,10 @@ import { describe, expect, it } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
-import { landingShot, type ShotView } from "./dashboard-shots";
+import { SHOT_SIZES, landingShot, type ShotView } from "./dashboard-shots";
 
 const PUBLIC = join(import.meta.dir, "..", "..", "public");
-/** The landing's desktop and phone captures, and the Analytics feature page's two phone views. */
-const VIEWS: ShotView[] = ["desktop", "phone", "phone-habits", "phone-busiest"];
+const VIEWS = Object.keys(SHOT_SIZES) as ShotView[];
 
 /** Pixel size from a PNG's IHDR chunk (big-endian width then height at byte 16). */
 function pngSize(file: string) {

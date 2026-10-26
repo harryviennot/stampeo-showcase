@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { motion, useInView } from "framer-motion";
-import { chartPillLabel, type ChartKey } from "@/lib/features/analytics-chart-plans";
+import { chartPillLabel, type ChartKey } from "@/lib/feature-pages/analytics/chart-plans";
 import { Container } from "@/components/ui/Container";
+import { ChartHeader } from "./ChartHeader";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 // Heatmap data: 7 days x 5 time slots, values 0.1-0.9
@@ -17,19 +18,6 @@ const HEATMAP_DATA = [
   [0.8, 0.7, 0.4, 0.3, 0.1],
   [0.7, 0.6, 0.3, 0.2, 0.1],
 ];
-
-/** Card title with its plan pill in the top-right corner. The pill floats, so a
- *  long title wraps beside or below it instead of running underneath. */
-function ChartHeader({ label, plan }: { label: string; plan: string }) {
-  return (
-    <div className="flow-root mb-4">
-      <span className="float-right -mt-2 -mr-2 ml-3 mb-1 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold whitespace-nowrap">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)]">{label}</p>
-    </div>
-  );
-}
 
 /* ─── Row 1 (all screens): existing charts ─── */
 

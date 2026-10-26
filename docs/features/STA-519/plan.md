@@ -8,7 +8,7 @@ STATUS: APPROVED (2026-10-26, by Harry, with the chart grid kept: see Decisions)
 
 ## Problem
 
-Harry (2026-10-26): "we need a better hero for the analytics page". The feature page `/features/analytics` (`components/features/analytics/AnalyticsPageContent.tsx`, 4 locales) is the only feature page with a text-only hero, and its headline, "Know your regulars. Not just by sight.", promises per-customer knowledge; Analytics shows totals by design (STA-482 removed per-customer rhythm and prediction for consent reasons). Below it, two hand-built mocks predate the Analytics page: `DashboardSection` (the "Starter Plan" dashboard-home mock with invented customers) and `ProChartCards`, nine mock charts with "Pro" pills under an "Every plan" badge, several of which do not exist in the product ("Avg time to complete card", "Post-reward return", "Completion rate", "Customer segments … VIP", "At-risk customers"). That is a live false claim. The page's meta description also calls Analytics "real-time"; it refreshes every 10 minutes.
+Harry (2026-10-26): "we need a better hero for the analytics page". The feature page `/features/analytics` (`components/features/analytics/AnalyticsPageContent.tsx`, 4 locales) is the only feature page with a text-only hero, and its headline, "Know your regulars. Not just by sight.", promises per-customer knowledge; Analytics shows totals by design (STA-482 removed per-customer rhythm and prediction for consent reasons). Below it, two hand-built mocks predate the Analytics page: `DashboardSection` (the "Starter Plan" dashboard-home mock with invented customers) and `ProChartCards`, nine mock charts with "Pro" pills under an "Every plan" badge, three of which do not exist in the product ("Avg time to complete card", "Post-reward return", "Completion rate"); "Customer segments" and "At-risk customers" are drawn versions of real sections (How often they come; Reward progress's "not back for 30+ days"). The page's meta description also calls Analytics "real-time"; it refreshes every 10 minutes.
 
 ## Decisions
 
@@ -33,9 +33,9 @@ Folded in from `ux-brief.md` (ux-designer, MODE: DESIGN, 2026-10-26, VERDICT: RE
 - ADDED: LiveActivityFeed matched to the product ("Just now", accent dot, product verbs, title "Activity", never team-member names) - prevents a false claim. AC12.
 - REJECTED: a three-card plan section replacing the chart grid (Harry kept the grid); desktop capture in a BrowserFrame; top-of-page phone as hero; KPI + Visits capture in the body; ink note in the hero; eyebrow/badge above the h1; wallet badges; Pro cohorts capture; Starter teaser capture; HowItWorks steps; a privacy block (legal, follow-up); reworking BlindSpotCards; "Compare plans" link, prices in cards; a real Activity capture; lightbox, carousel, animated numbers, hover tilt.
 - MOBILE: 390×844, text first: left-aligned h1 (≤3 lines), subtitle (≤5), 52px CTA (bottom ~430–460px, above the cookie banner), then the 280px phone centred and the plan line. Busiest row stacks (text, then lazy phone); the chart grid is unchanged. 768 the same single column. ≥1024: the `GeofencingPage` hero shell (`min-h-[85vh]`, `grid lg:grid-cols-2`), hero phone + plan line in view at 1440×900 and 1024×768; busiest row text left / phone right.
-- COPY SLOTS (stampeo-copywriting): h1 ~40 chars EN, one promise about customers as a group; subtitle ≤ ~30 words (what the screen shows, as totals; fills itself from every scan; no plan names); planLine; hero alt; busiest h2 ≤ ~6 words + lead ≤ ~30 words ending with the plan split (Starter: the busiest hour as one sentence; the grid on Growth and Pro) + alt. Banned everywhere: "who"/names/individuals, predictions, money, "real time"/"live" about Analytics, Pro-only things, "every/all charts", export, prices, trial length. Also rephrased: BlindSpotCards "Who stopped coming" (as a count), the activity feed strings, `cta.subtitle` (no longer repeats the plan list).
-- CAPTURE SPEC: promo-videos `--view=top|habits|busiest`. habits and busiest: phone only, 402×874 @3x, Aurevo, 90 days, scrolled so the card pair's top sits 16px below the viewport top (`scrollIntoView`), nothing tapped.
-- LOADING: hero image `fill`, `sizes="260px"`, `loading="eager"`, `fetchPriority="high"`; no ScrollReveal anywhere in the hero; busiest image lazy; fixed-aspect frame and muted placeholder (no shift).
+- COPY SLOTS (stampeo-copywriting): h1 ~40 chars EN, one promise about customers as a group; subtitle ≤ ~30 words (what the screen shows, as totals; fills itself from every scan; no plan names); planLine; hero alt; busiest h2 ≤ ~6 words + lead ≤ ~30 words ending with the plan split (Starter: the busiest hour as one sentence; the grid on Growth and Pro) + alt. Banned everywhere: "who"/names/individuals, predictions, money, "real time"/"live" about Analytics, Pro-only things, "every/all charts", export, prices, trial length. Also rephrased: BlindSpotCards "Who stopped coming" (as a count), the activity feed strings, and the line chart's comparison (`proCharts.lineChart.comparison`, was hard-coded French). `cta.subtitle` keeps its plan list: with the chart grid kept, it is the page's one plain statement of who gets what.
+- CAPTURE SPEC: promo-videos `--views=top,habits,busiest` (top at both sizes, the card views on the phone; unknown flags refused). `APP_ORIGIN` / `SHOWCASE_ORIGIN` (localhost only) take the dashboard and login from local `next start` builds, e.g. web at `origin/main`. habits and busiest: phone only, 402×874 @3x, Aurevo, 90 days, scrolled so the card pair's top sits 16px below the viewport top (`scrollIntoView`), nothing tapped.
+- LOADING: hero image `fill`, `sizes="260px"`, `loading="eager"`, `fetchPriority="high"`; no ScrollReveal anywhere in the hero; busiest image lazy; fixed-aspect frame; the placeholder, status bar and fade all use the capture's page colour (`PhoneScreenshot`'s one token; the landing's placeholder changes from muted to it, visible only before the image loads).
 - REUSES: Container, CTAButton, PhoneMockup (through PhoneScreenshot), ScrollReveal (body only), PLAN_FACTS / PLAN_NAMES, the captures map + test, the landing's copy rules, FeatureCTA, RelatedFeatures, BlindSpotCards, LiveActivityFeed, the capture tool. NEW: `components/ui/PhoneScreenshot.tsx` (three sites in two features, one colour invariant); `BusiestTimesSection` (page section).
 
 ## Non-goals
@@ -50,8 +50,8 @@ Folded in from `ux-brief.md` (ux-designer, MODE: DESIGN, 2026-10-26, VERDICT: RE
 ## Edge cases considered
 
 - Each locale shows its own captures (same rule as STA-514); /us and /uk use the English ones.
-- The busiest capture is found by its localized card title (it has no id): the tool reads the title from `web/messages/<locale>/analytics.json` and fails loudly if it can't find it.
-- Starter visitors: the plan line and the Starter card say what Starter gets; no chart is shown as Starter's.
+- The busiest capture is found through the page's only `role="table"` (the day × hour grid) inside web's card-pair layout class; habits through `#reward-progress`. A missing one stops the run; a changed layout in web/ is caught by looking at the re-shot images (AF-12).
+- Starter visitors: the plan line and the busiest row say what Starter gets; the only card marked "Every plan" is the 30-day return rate, which Starter shows as a number.
 - The h1 also titles the "Discover more" cards on sibling pages (252px): if it runs past two lines there, a shorter `hero.navTitle` is added.
 - "Live" stays only on the Activity feed, which is live; never about Analytics.
 - Reduced motion: body reveals show at once (existing CSS guard); the hero has none.
@@ -71,19 +71,18 @@ Folded in from `ux-brief.md` (ux-designer, MODE: DESIGN, 2026-10-26, VERDICT: RE
 - AC11: Given the "When they come" row, then it shows that locale's `phone-busiest` capture and its lead says Starter gets the busiest hour as a sentence and the grid comes with Growth and Pro; stacked below lg, two columns from lg.
 - AC12: Given LiveActivityFeed, then no label counts seconds ("{n}s ago"), the verbs are the product's, no team-member name appears, and the live dot uses `--accent`.
 - AC13: Given the repo, then `DashboardSection.tsx`, `features.analytiques.custom.dashboard` and `features.analytiques.sections` are gone in four locales (the chart grid's `proAnalytics`/`proCharts` keys stay), catalog parity passes, and no raw `features.analytiques.` key path appears in any locale's rendered HTML.
-- AC14: Given `PhoneScreenshot`, then the hero and the busiest row use it; if the landing adopts it, the landing's section renders pixel-identical at 390, 768 and 1440 (otherwise the landing is untouched).
-- AC15: Given the capture tool, when run with `--view=habits` or `--view=busiest`, then it writes `<locale>-phone-<view>.png` scrolled to that card pair, and refuses `--view=habits|busiest` with `--sizes=desktop`.
+- AC14: Given `PhoneScreenshot`, then the hero and the busiest row use it; if the landing adopts it, the landing's section renders pixel-identical at 390, 768 and 1440 once its images have loaded (otherwise the landing is untouched).
+- AC15: Given the capture tool, when run with `--views=habits` or `--views=busiest`, then it writes `<locale>-phone-<view>.png` scrolled to that card; it refuses those views with `--sizes=desktop` alone, and refuses any unknown flag (a typo must not re-shoot the defaults).
 
 ## File layout
 
 - `components/features/analytics/AnalyticsPageContent.tsx`: new hero inline + section order (stays well under 200 lines).
 - New `components/features/analytics/BusiestTimesSection.tsx`.
-- `components/features/analytics/ProChartCards.tsx` renamed `AnalyticsChartCards.tsx`; each chart takes its pill label instead of a hard-coded "Pro" (the file is already 657 lines: no growth beyond the prop). New `lib/features/analytics-chart-plans.ts` (+ test): chart key → plan.
+- `components/features/analytics/ProChartCards.tsx` renamed `AnalyticsChartCards.tsx` (657 → 629 lines); each chart takes its pill label instead of a hard-coded "Pro", through one `ChartHeader.tsx` whose pill floats so a long title wraps beside it (polish). New `lib/feature-pages/analytics/chart-plans.ts` (+ test): chart key → plan. Copy guard: `lib/feature-pages/analytics/copy.test.ts`; shared rules and helpers: `lib/testing/analytics-claims.ts`.
 - New `components/ui/PhoneScreenshot.tsx`.
 - Deleted `components/features/analytics/DashboardSection.tsx`.
 - `components/features/analytics/LiveActivityFeed.tsx`: time label and dot colour.
 - `lib/landing/dashboard-shots.ts` (+ test): a view dimension; new files `public/images/landing/dashboard/<locale>-phone-{habits,busiest}.png`.
-- Copy rules shared between the landing and this page move out of `lib/landing/dashboard-copy.test.ts` into `lib/testing/analytics-claims.ts`; new guard `lib/features/analytics-copy.test.ts` (or beside the existing features tests, wherever they live).
 - `messages/{fr,en,es,pl}/features.json`, `metadata.json`; `lib/llms-txt.ts`.
 - promo-videos: `--view` in `tools/screens/shot-spec.ts` + `landing-shots.ts` (+ test), PLAYBOOK row.
 
