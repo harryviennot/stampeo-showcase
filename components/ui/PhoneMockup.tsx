@@ -11,6 +11,9 @@ interface PhoneMockupProps {
   statusBarStyle?: "full" | "time-only";
   /** Phone frame width in pixels (default 280) */
   width?: number;
+  /** CSS colour behind the status bar; match a screenshot's page colour so
+   *  the bar doesn't read as a stripe. Default: iOS light grey. */
+  screenBackground?: string;
 }
 
 export function PhoneMockup({
@@ -20,6 +23,7 @@ export function PhoneMockup({
   statusBarColor = "black",
   statusBarStyle = "full",
   width = 280,
+  screenBackground,
 }: PhoneMockupProps) {
   const barColor = statusBarColor === "white" ? "text-white" : "text-black/80";
   const barFill = statusBarColor === "white" ? "white" : "rgba(0,0,0,0.8)";
@@ -54,6 +58,7 @@ export function PhoneMockup({
           style={{
             aspectRatio: "9/19.5",
             boxShadow: "inset 0 0 8px rgba(0,0,0,0.15)",
+            backgroundColor: screenBackground,
           }}
         >
           {/* Dynamic Island */}

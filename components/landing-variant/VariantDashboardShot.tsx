@@ -79,7 +79,8 @@ export async function VariantDashboardShot() {
                 className="flex justify-center md:absolute md:right-0 md:bottom-0 md:block"
               >
                 <div className="md:origin-bottom-right md:scale-[0.55] lg:scale-[0.68] xl:scale-[0.78]">
-                  <PhoneMockup>
+                  {/* The capture's page colour, so the status bar runs into it. */}
+                  <PhoneMockup screenBackground="var(--paper-hover)">
                     <div className="relative w-full h-full bg-[var(--muted)]">
                       <Image
                         src={phone.src}
@@ -94,11 +95,15 @@ export async function VariantDashboardShot() {
               </ScrollReveal>
 
               {/* Points at the phone, which a visitor could take for a
-                  separate app. */}
-              <div className="hidden md:flex absolute bottom-8 lg:bottom-5 right-[168px] lg:right-[206px] xl:right-[236px] items-center gap-1.5">
+                  separate app. Its own reveal: the arrow only draws under a
+                  revealed ancestor. */}
+              <ScrollReveal
+                delay={300}
+                className="hidden md:flex absolute bottom-8 lg:bottom-5 right-[168px] lg:right-[206px] xl:right-[236px] items-center gap-1.5"
+              >
                 <InkNote rotate={-2}>{t("annotation")}</InkNote>
-                <InkArrow variant="right" className="w-9" delay={0.5} />
-              </div>
+                <InkArrow variant="right" className="w-14" delay={0.5} />
+              </ScrollReveal>
             </div>
 
             <figcaption className="mt-6 md:mt-4 text-sm text-center text-[var(--muted-foreground)]">
@@ -106,7 +111,7 @@ export async function VariantDashboardShot() {
             </figcaption>
           </figure>
 
-          <ScrollReveal delay={100} className="lg:order-3 w-full max-w-sm mx-auto lg:max-w-none lg:mx-0 lg:pt-2">
+          <ScrollReveal delay={100} className="lg:order-3 w-full max-w-sm md:max-w-md mx-auto lg:max-w-none lg:mx-0 lg:pt-2">
             <ul className="space-y-4">
               {points.map((point) => (
                 <li key={point} className="flex items-start gap-3">
