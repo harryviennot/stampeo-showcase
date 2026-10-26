@@ -18,7 +18,7 @@ export function BusiestTimesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <ScrollReveal className="max-w-xl">
             <h2 className="text-h2 text-[var(--foreground)]">{t("title")}</h2>
-            <p className="mt-6 text-lead text-[var(--muted-foreground)] leading-relaxed">{t("lead")}</p>
+            <p className="mt-4 text-lead text-[var(--muted-foreground)] leading-relaxed">{t("lead")}</p>
           </ScrollReveal>
           <ScrollReveal delay={150} className="flex justify-center">
             <PhoneScreenshot src={shot.src} alt={t("alt")} />

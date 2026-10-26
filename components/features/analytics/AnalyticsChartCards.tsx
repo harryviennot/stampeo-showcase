@@ -18,6 +18,19 @@ const HEATMAP_DATA = [
   [0.7, 0.6, 0.3, 0.2, 0.1],
 ];
 
+/** Card title with its plan pill in the top-right corner. The pill floats, so a
+ *  long title wraps beside or below it instead of running underneath. */
+function ChartHeader({ label, plan }: { label: string; plan: string }) {
+  return (
+    <div className="flow-root mb-4">
+      <span className="float-right -mt-2 -mr-2 ml-3 mb-1 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold whitespace-nowrap">
+        {plan}
+      </span>
+      <p className="text-sm font-semibold text-[var(--muted-foreground)]">{label}</p>
+    </div>
+  );
+}
+
 /* ─── Row 1 (all screens): existing charts ─── */
 
 function LineChart({ label, trend, plan }: { label: string; trend: string; plan: string }) {
@@ -29,12 +42,7 @@ function LineChart({ label, trend, plan }: { label: string; trend: string; plan:
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <svg viewBox="0 0 200 100" className="w-full h-auto mb-3">
         {[25, 50, 75].map((y) => (
           <line
@@ -85,12 +93,7 @@ function Heatmap({ label, days, plan }: { label: string; days: string[]; plan: s
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <svg
         viewBox={`0 0 ${7 * (cellSize + gap)} ${5 * (cellSize + gap) + 20}`}
         className="w-full h-auto mb-1"
@@ -157,12 +160,7 @@ function DonutChart({ label, valueLabel, plan }: { label: string; valueLabel: st
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="flex justify-center">
         <svg viewBox="0 0 100 100" className="w-32 h-32">
           <circle
@@ -225,12 +223,7 @@ function SegmentsChart({ label, categories, plan }: { label: string; categories:
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="space-y-2.5">
         {data.map((d, i) => (
           <div key={i} className="flex items-center gap-3">
@@ -277,12 +270,7 @@ function ChurnChart({ label, value, subtitle, plan }: { label: string; value: st
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="flex items-end gap-4">
         <span className="text-5xl font-extrabold text-[#ef4444] leading-none tabular-nums">
           {count}
@@ -317,12 +305,7 @@ function BestDaysChart({ label, days, plan }: { label: string; days: string[]; p
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="flex items-end justify-between gap-2" style={{ height: maxH + 20 }}>
         {values.map((val, i) => {
           const h = (val / maxVal) * maxH;
@@ -387,12 +370,7 @@ function TimeToRewardChart({ label, value, unit, plan }: { label: string; value:
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="flex items-end gap-1 mb-3">
         <span className="text-5xl font-extrabold text-[var(--foreground)] leading-none tabular-nums">
           {count}
@@ -451,12 +429,7 @@ function CompletionRateChart({ label, value, subtitle, plan }: { label: string; 
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="flex items-center gap-5">
         <svg viewBox="0 0 100 100" className="w-28 h-28 shrink-0">
           <circle cx="50" cy="50" r={radius} fill="none" stroke="var(--border)" strokeWidth="8" />
@@ -507,12 +480,7 @@ function ReturnRateChart({ label, value, subtitle, plan }: { label: string; valu
 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
-      <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        {plan}
-      </span>
-      <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
-        {label}
-      </p>
+      <ChartHeader label={label} plan={plan} />
       <div className="flex items-end gap-1 mb-4">
         <span className="text-5xl font-extrabold text-[var(--stamp-sage)] leading-none tabular-nums">
           {count}%

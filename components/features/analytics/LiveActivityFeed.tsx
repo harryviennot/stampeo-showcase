@@ -112,8 +112,8 @@ export function LiveActivityFeed() {
                       >
                         {event.name.charAt(0)}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-sm text-[var(--foreground)]">
+                      <div className="flex-1 min-w-0 text-sm leading-snug">
+                        <span className="text-[var(--foreground)]">
                           <span className="font-semibold">{event.name}</span>{" "}
                           {event.action}
                         </span>
