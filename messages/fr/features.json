@@ -621,15 +621,15 @@
             "Récompenses réclamées",
             "Recherche client instantanée"
           ],
-            "stats": {
-              "totalCustomers": "Clients totaux",
-              "visitsThisWeek": "Visites cette semaine",
-              "rewardsClaimed": "Récompenses réclamées"
-            },
-            "recentCustomers": "Clients récents",
-            "progress": "Progression",
-            "visitedToday": "Visite aujourd'hui",
-            "almost": "Presque !"
+          "stats": {
+            "totalCustomers": "Clients totaux",
+            "visitsThisWeek": "Visites cette semaine",
+            "rewardsClaimed": "Récompenses réclamées"
+          },
+          "recentCustomers": "Clients récents",
+          "progress": "Progression",
+          "visitedToday": "Visite aujourd'hui",
+          "almost": "Presque !"
         },
         "activityFeed": {
           "title": "Activité en direct",

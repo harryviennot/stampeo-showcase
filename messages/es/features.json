@@ -621,15 +621,15 @@
             "Recompensas canjeadas",
             "Búsqueda de clientes al instante"
           ],
-            "stats": {
-              "totalCustomers": "Clientes totales",
-              "visitsThisWeek": "Visitas esta semana",
-              "rewardsClaimed": "Recompensas canjeadas"
-            },
-            "recentCustomers": "Clientes recientes",
-            "progress": "Progreso",
-            "visitedToday": "Visita hoy",
-            "almost": "¡Ya casi!"
+          "stats": {
+            "totalCustomers": "Clientes totales",
+            "visitsThisWeek": "Visitas esta semana",
+            "rewardsClaimed": "Recompensas canjeadas"
+          },
+          "recentCustomers": "Clientes recientes",
+          "progress": "Progreso",
+          "visitedToday": "Visita hoy",
+          "almost": "¡Ya casi!"
         },
         "activityFeed": {
           "title": "Actividad en directo",
