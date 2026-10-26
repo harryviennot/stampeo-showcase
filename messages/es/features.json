@@ -567,30 +567,20 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Conoce a tus habituales. No solo de vista.",
-        "subtitle": "Con una tarjeta de cartón no sabes nada de tus clientes. Con Stampeo ves quién vuelve, con qué frecuencia y qué funciona."
+        "title": "Mira cada cuánto vuelven tus clientes.",
+        "subtitle": "Cada cuánto vienen tus clientes, en qué punto de la tarjeta están y cuándo hay más gente. Cada escaneo lo rellena solo, sin escribir nada.",
+        "planLine": "Pantalla del plan Growth. Los gráficos vienen con Growth y Pro.",
+        "alt": "La página Estadísticas de Stampeo en un teléfono: cada cuánto vienen los clientes y en qué punto de la tarjeta están."
+      },
+      "busiest": {
+        "title": "Tus horas punta, de un vistazo",
+        "lead": "Las visitas por día y hora, en la zona horaria de tu comercio, con tu franja más concurrida y tu hora abierta más tranquila. Starter muestra la hora punta en una frase; Growth y Pro, la cuadrícula.",
+        "alt": "La sección Horas punta en un teléfono: visitas por día y hora, la franja más concurrida y la hora abierta más tranquila."
       },
       "problem": {
         "title": "Lo que hoy no sabes",
         "description": "Con tarjetas de cartón, gestionas tu fidelización a ciegas. Ningún dato, ninguna visibilidad, ninguna forma de mejorar lo que no puedes medir."
       },
-      "sections": [
-        {
-          "title": "Panel esencial",
-          "description": "Total de clientes, escaneos de esta semana, recompensas canjeadas. Busca a un cliente por nombre o email y recupera su historial al instante.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Tendencias y horas punta",
-          "description": "Visualiza tus métricas día a día. Descubre cuándo vienen tus clientes e identifica las horas flojas para optimizar tu actividad.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Frecuencia y retención",
-          "description": "Entiende el ritmo de tus clientes: diario, semanal, mensual. Sigue tu tasa de retención e identifica a los clientes en riesgo.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Deja de adivinar. Empieza a saber.",
         "subtitle": "Todos los planes muestran lo esencial de tus visitas, tus horas punta y cada cuánto vuelven tus clientes. Growth y Pro los muestran en gráficos y miran más atrás en el tiempo, y Pro añade cohortes mensuales."
@@ -604,41 +594,22 @@
           "questions": [
             "Cuántos clientes habituales",
             "Con qué frecuencia vuelven",
-            "Quién ha dejado de venir",
+            "Cuántos dejaron de venir",
             "Qué día es el más tranquilo",
             "Cuántas recompensas este mes",
             "Si tu programa funciona"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Plan Starter",
-          "title": "Lo esencial para empezar",
-          "description": "El plan Starter incluye un panel sencillo y claro que responde a las preguntas fundamentales.",
-          "features": [
-            "Total de clientes registrados",
-            "Escaneos de esta semana y de este mes",
-            "Recompensas canjeadas",
-            "Búsqueda de clientes al instante"
-          ],
-          "stats": {
-            "totalCustomers": "Clientes totales",
-            "visitsThisWeek": "Visitas esta semana",
-            "rewardsClaimed": "Recompensas canjeadas"
-          },
-          "recentCustomers": "Clientes recientes",
-          "progress": "Progreso",
-          "visitedToday": "Visita hoy",
-          "almost": "¡Ya casi!"
-        },
         "activityFeed": {
-          "title": "Actividad en directo",
+          "title": "Actividad",
           "sectionTitle": "Tu comercio, en tiempo real",
-          "sectionDescription": "Cada sello, cada recompensa, cada alta: sigue la actividad de tu programa de fidelidad en directo.",
-          "stampAction": "ha conseguido un sello",
-          "rewardAction": "ha canjeado su recompensa",
-          "newCustomerAction": "acaba de registrarse",
-          "timeAgo": "hace {seconds}s"
+          "sectionDescription": "Cada sello, cada recompensa, cada tarjeta nueva: sigue tu programa de fidelidad en directo.",
+          "stampAction": "ha recibido un sello",
+          "rewardAction": "ha canjeado una recompensa",
+          "live": "En directo",
+          "cardAction": "ha añadido su tarjeta",
+          "justNow": "Ahora mismo"
         },
         "proAnalytics": {
           "badge": "Todos los planes",

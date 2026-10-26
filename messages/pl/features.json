@@ -792,30 +792,20 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Poznaj swoich stałych klientów. Nie tylko z widzenia.",
-        "subtitle": "Przy papierowej karcie nie wiesz o klientach nic. W Stampeo widzisz, kto wraca, jak często i co naprawdę działa."
+        "title": "Zobacz, jak często wracają twoi klienci.",
+        "subtitle": "Jak często przychodzą klienci, na którym miejscu karty są i kiedy masz największy ruch. Każdy skan sam uzupełnia statystyki, bez wpisywania.",
+        "planLine": "Ekran z planu Growth. Wykresy są w planach Growth i Pro.",
+        "alt": "Strona Statystyki w Stampeo na telefonie: jak często przychodzą klienci i na którym miejscu karty są."
+      },
+      "busiest": {
+        "title": "Godziny szczytu na pierwszy rzut oka",
+        "lead": "Wizyty według dnia i godziny w strefie czasowej twojego lokalu, z godziną największego ruchu i najcichszą godziną otwarcia. Starter pokazuje godzinę szczytu w jednym zdaniu, Growth i Pro całą siatkę.",
+        "alt": "Sekcja Godziny szczytu na telefonie: wizyty według dnia i godziny, największy ruch i najcichsza godzina otwarcia."
       },
       "problem": {
         "title": "Czego dziś nie wiesz",
         "description": "Przy papierowych kartach prowadzisz swój program po omacku. Żadnych danych, żadnego wglądu, żadnej szansy na poprawienie czegoś, czego nie mierzysz."
       },
-      "sections": [
-        {
-          "title": "Panel z podstawami",
-          "description": "Liczba klientów, skany w tym tygodniu, odebrane nagrody. Wpisz nazwisko albo e-mail i od razu masz całą historię klienta.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Trendy i godziny szczytu",
-          "description": "Zobacz swoje liczby dzień po dniu. Sprawdź, kiedy klienci przychodzą, i wyłap godziny, w których jest pusto.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Częstotliwość i powroty",
-          "description": "Poznaj rytm swoich klientów: codziennie, co tydzień, co miesiąc. Śledź, ilu wraca, i wyłap tych, którzy zaczynają znikać.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
         "subtitle": "Każdy plan pokazuje najważniejsze liczby o wizytach, godzinach szczytu i tym, jak często wracają klienci. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
@@ -829,41 +819,22 @@
           "questions": [
             "Ilu masz stałych klientów",
             "Jak często wracają",
-            "Kto przestał przychodzić",
+            "Ilu przestało przychodzić",
             "Który dzień jest najspokojniejszy",
             "Ile nagród w tym miesiącu",
             "Czy twój program w ogóle działa"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Plan Starter",
-          "title": "To, co najpotrzebniejsze na start",
-          "description": "Plan Starter daje prosty i czytelny panel, który odpowiada na podstawowe pytania.",
-          "features": [
-            "Liczba zapisanych klientów",
-            "Skany w tym tygodniu i w tym miesiącu",
-            "Odebrane nagrody",
-            "Natychmiastowe wyszukiwanie klienta"
-          ],
-          "stats": {
-            "totalCustomers": "Wszyscy klienci",
-            "visitsThisWeek": "Wizyty w tym tygodniu",
-            "rewardsClaimed": "Odebrane nagrody"
-          },
-          "recentCustomers": "Ostatni klienci",
-          "progress": "Postęp",
-          "visitedToday": "Wizyta dzisiaj",
-          "almost": "Już prawie!"
-        },
         "activityFeed": {
-          "title": "Na żywo",
+          "title": "Aktywność",
           "sectionTitle": "Twoja firma w czasie rzeczywistym",
-          "sectionDescription": "Każda pieczątka, każda nagroda, każdy nowy zapis: śledź swój program lojalnościowy na żywo.",
-          "stampAction": "zdobywa pieczątkę",
+          "sectionDescription": "Każda pieczątka, każda nagroda, każda nowa karta: śledź swój program lojalnościowy na żywo.",
+          "stampAction": "dostaje pieczątkę",
           "rewardAction": "odbiera nagrodę",
-          "newCustomerAction": "właśnie dołącza",
-          "timeAgo": "{seconds}s temu"
+          "live": "Na żywo",
+          "cardAction": "dodaje kartę",
+          "justNow": "Przed chwilą"
         },
         "proAnalytics": {
           "badge": "Wszystkie plany",

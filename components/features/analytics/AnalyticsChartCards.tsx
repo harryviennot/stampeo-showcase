@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { motion, useInView } from "framer-motion";
+import { chartPillLabel, type ChartKey } from "@/lib/features/analytics-chart-plans";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
@@ -19,7 +20,7 @@ const HEATMAP_DATA = [
 
 /* ─── Row 1 (all screens): existing charts ─── */
 
-function LineChart({ label, trend }: { label: string; trend: string }) {
+function LineChart({ label, trend, plan }: { label: string; trend: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -29,7 +30,7 @@ function LineChart({ label, trend }: { label: string; trend: string }) {
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -75,7 +76,7 @@ function LineChart({ label, trend }: { label: string; trend: string }) {
   );
 }
 
-function Heatmap({ label, days }: { label: string; days: string[] }) {
+function Heatmap({ label, days, plan }: { label: string; days: string[]; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -85,7 +86,7 @@ function Heatmap({ label, days }: { label: string; days: string[] }) {
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -131,7 +132,7 @@ function Heatmap({ label, days }: { label: string; days: string[] }) {
   );
 }
 
-function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }) {
+function DonutChart({ label, valueLabel, plan }: { label: string; valueLabel: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [count, setCount] = useState(0);
@@ -157,7 +158,7 @@ function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -211,7 +212,7 @@ function DonutChart({ label, valueLabel }: { label: string; valueLabel: string }
 
 /* ─── Row 2 (desktop only): customer segments, churn risk, best days ─── */
 
-function SegmentsChart({ label, categories }: { label: string; categories: string[] }) {
+function SegmentsChart({ label, categories, plan }: { label: string; categories: string[]; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -225,7 +226,7 @@ function SegmentsChart({ label, categories }: { label: string; categories: strin
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -255,7 +256,7 @@ function SegmentsChart({ label, categories }: { label: string; categories: strin
   );
 }
 
-function ChurnChart({ label, value, subtitle }: { label: string; value: string; subtitle: string }) {
+function ChurnChart({ label, value, subtitle, plan }: { label: string; value: string; subtitle: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [count, setCount] = useState(0);
@@ -277,7 +278,7 @@ function ChurnChart({ label, value, subtitle }: { label: string; value: string; 
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -305,7 +306,7 @@ function ChurnChart({ label, value, subtitle }: { label: string; value: string; 
   );
 }
 
-function BestDaysChart({ label, days }: { label: string; days: string[] }) {
+function BestDaysChart({ label, days, plan }: { label: string; days: string[]; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -317,7 +318,7 @@ function BestDaysChart({ label, days }: { label: string; days: string[] }) {
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -365,7 +366,7 @@ function BestDaysChart({ label, days }: { label: string; days: string[] }) {
 
 /* ─── Row 3 (desktop only): time to reward, completion rate, return rate ─── */
 
-function TimeToRewardChart({ label, value, unit }: { label: string; value: string; unit: string }) {
+function TimeToRewardChart({ label, value, unit, plan }: { label: string; value: string; unit: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [count, setCount] = useState(0);
@@ -387,7 +388,7 @@ function TimeToRewardChart({ label, value, unit }: { label: string; value: strin
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -425,7 +426,7 @@ function TimeToRewardChart({ label, value, unit }: { label: string; value: strin
   );
 }
 
-function CompletionRateChart({ label, value, subtitle }: { label: string; value: string; subtitle: string }) {
+function CompletionRateChart({ label, value, subtitle, plan }: { label: string; value: string; subtitle: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [count, setCount] = useState(0);
@@ -451,7 +452,7 @@ function CompletionRateChart({ label, value, subtitle }: { label: string; value:
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -485,7 +486,7 @@ function CompletionRateChart({ label, value, subtitle }: { label: string; value:
   );
 }
 
-function ReturnRateChart({ label, value, subtitle }: { label: string; value: string; subtitle: string }) {
+function ReturnRateChart({ label, value, subtitle, plan }: { label: string; value: string; subtitle: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [count, setCount] = useState(0);
@@ -507,7 +508,7 @@ function ReturnRateChart({ label, value, subtitle }: { label: string; value: str
   return (
     <div ref={ref} className="blog-card-3d rounded-2xl bg-white p-6 relative overflow-hidden">
       <span className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[var(--stamp-sage)]/10 text-[var(--stamp-sage)] text-xs font-bold">
-        Pro
+        {plan}
       </span>
       <p className="text-sm font-semibold text-[var(--muted-foreground)] mb-4">
         {label}
@@ -543,8 +544,9 @@ function ReturnRateChart({ label, value, subtitle }: { label: string; value: str
 
 /* ─── Section ─── */
 
-export function ProChartCards() {
+export function AnalyticsChartCards() {
   const t = useTranslations("features.analytiques.custom");
+  const pill = (chart: ChartKey) => chartPillLabel(chart, t("proAnalytics.badge"));
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg-alt)]">
@@ -566,18 +568,21 @@ export function ProChartCards() {
           <ScrollReveal delay={0}>
             <LineChart
               label={t("proCharts.lineChart.label")}
+              plan={pill("lineChart")}
               trend={t("proCharts.lineChart.trend")}
             />
           </ScrollReveal>
           <ScrollReveal delay={100}>
             <Heatmap
               label={t("proCharts.heatmap.label")}
+              plan={pill("heatmap")}
               days={t.raw("proCharts.heatmap.days") as string[]}
             />
           </ScrollReveal>
           <ScrollReveal delay={200}>
             <DonutChart
               label={t("proCharts.donut.label")}
+              plan={pill("donut")}
               valueLabel={t("proCharts.donut.value")}
             />
           </ScrollReveal>
@@ -589,12 +594,14 @@ export function ProChartCards() {
           <ScrollReveal delay={0}>
             <LineChart
               label={t("proCharts.lineChart.label")}
+              plan={pill("lineChart")}
               trend={t("proCharts.lineChart.trend")}
             />
           </ScrollReveal>
           <ScrollReveal delay={300}>
             <SegmentsChart
               label={t("proCharts.segments.label")}
+              plan={pill("segments")}
               categories={t.raw("proCharts.segments.categories") as string[]}
             />
           </ScrollReveal>
@@ -602,6 +609,7 @@ export function ProChartCards() {
 
             <CompletionRateChart
               label={t("proCharts.completionRate.label")}
+              plan={pill("completionRate")}
               value={t("proCharts.completionRate.value")}
               subtitle={t("proCharts.completionRate.subtitle")}
             />
@@ -611,6 +619,7 @@ export function ProChartCards() {
           <ScrollReveal delay={100}>
             <ChurnChart
               label={t("proCharts.churn.label")}
+              plan={pill("churn")}
               value={t("proCharts.churn.value")}
               subtitle={t("proCharts.churn.subtitle")}
             />
@@ -618,12 +627,14 @@ export function ProChartCards() {
           <ScrollReveal delay={400}>
             <Heatmap
               label={t("proCharts.heatmap.label")}
+              plan={pill("heatmap")}
               days={t.raw("proCharts.heatmap.days") as string[]}
             />
           </ScrollReveal>
           <ScrollReveal delay={700}>
             <BestDaysChart
               label={t("proCharts.bestDays.label")}
+              plan={pill("bestDays")}
               days={t.raw("proCharts.bestDays.days") as string[]}
             />
           </ScrollReveal>
@@ -632,6 +643,7 @@ export function ProChartCards() {
           <ScrollReveal delay={200}>
             <DonutChart
               label={t("proCharts.donut.label")}
+              plan={pill("donut")}
               valueLabel={t("proCharts.donut.value")}
             />
           </ScrollReveal>
@@ -639,6 +651,7 @@ export function ProChartCards() {
 
             <TimeToRewardChart
               label={t("proCharts.timeToReward.label")}
+              plan={pill("timeToReward")}
               value={t("proCharts.timeToReward.value")}
               unit={t("proCharts.timeToReward.unit")}
             />
@@ -646,6 +659,7 @@ export function ProChartCards() {
           <ScrollReveal delay={800}>
             <ReturnRateChart
               label={t("proCharts.returnRate.label")}
+              plan={pill("returnRate")}
               value={t("proCharts.returnRate.value")}
               subtitle={t("proCharts.returnRate.subtitle")}
             />

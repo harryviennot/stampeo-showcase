@@ -32,8 +32,8 @@
         "description": "Pieczątka, nagroda, kolejny próg: każde zdarzenie wysyła powiadomienie na kartę klienta. Automatycznie, bez dodatkowej aplikacji i bez kosztów SMS."
       },
       "analytiques": {
-        "title": "Dane o lojalności: kto wraca, a kto nie",
-        "description": "Panel na żywo: wizyty, godziny szczytu i to, jak często wracają klienci. Wykresy i dłuższa historia w Growth i Pro, kohorty miesięczne w Pro."
+        "title": "Dane o lojalności: jak często wracają klienci",
+        "description": "Uzupełniany przy każdym skanie: wizyty, godziny szczytu i to, jak często wracają klienci. Wykresy i dłuższa historia w Growth i Pro, kohorty miesięczne w Pro."
       },
       "geolocalisation": {
         "title": "Karta na ekranie, gdy klient przechodzi obok",

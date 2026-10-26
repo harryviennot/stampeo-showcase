@@ -567,30 +567,20 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Know your regulars. Not just by sight.",
-        "subtitle": "With a paper card, you know nothing about your customers. With Stampeo, you see who comes back, how often, and what works."
+        "title": "See how often your customers come back.",
+        "subtitle": "How often your customers come, where they are on their card, and when your shop is busiest. Every scan fills it in, with nothing to type.",
+        "planLine": "Screen from the Growth plan. Charts come with Growth and Pro.",
+        "alt": "The Stampeo Analytics page on a phone: how often customers come, and where they are on their stamp card."
+      },
+      "busiest": {
+        "title": "Your rush hours, at a glance",
+        "lead": "Visits by day and hour in your shop's time zone, with your busiest slot and your quietest open hour. Starter shows the busiest hour in a sentence; Growth and Pro show the grid.",
+        "alt": "The Busiest times section on a phone: visits by day and hour, the busiest slot and the quietest open hour."
       },
       "problem": {
         "title": "What you don't know today",
         "description": "With paper cards, you're managing loyalty blind. No data, no visibility, no way to improve what you can't measure."
       },
-      "sections": [
-        {
-          "title": "Essential dashboard",
-          "description": "Total customers, scans this week, rewards claimed. Search a customer by name or email and instantly find their history.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Trends and peak hours",
-          "description": "Visualize your metrics day by day. Discover when your customers visit and identify slow periods to optimize your business.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Frequency and retention",
-          "description": "Understand your customers' rhythm: daily, weekly, monthly. Track your retention rate and identify at-risk customers.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
         "subtitle": "Every plan shows the highlights of your visits, your busiest times and how often customers come back. Growth and Pro show them as charts and look further back, and Pro adds monthly cohorts."
@@ -604,41 +594,22 @@
           "questions": [
             "How many regular customers",
             "How often do they come back",
-            "Who stopped coming",
+            "How many stopped coming",
             "Which day is quietest",
             "How many rewards this month",
             "Is your program working"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Starter Plan",
-          "title": "The essentials to get started",
-          "description": "The Starter plan includes a simple, clear dashboard that answers the fundamental questions.",
-          "features": [
-            "Total registered customers",
-            "Scans this week and this month",
-            "Rewards claimed",
-            "Instant customer search"
-          ],
-          "stats": {
-            "totalCustomers": "Total Customers",
-            "visitsThisWeek": "Visits This Week",
-            "rewardsClaimed": "Rewards Claimed"
-          },
-          "recentCustomers": "Recent customers",
-          "progress": "Progress",
-          "visitedToday": "Visited today",
-          "almost": "Almost!"
-        },
         "activityFeed": {
-          "title": "Live activity",
+          "title": "Activity",
           "sectionTitle": "Your business, in real time",
-          "sectionDescription": "Every stamp, every reward, every signup — follow your loyalty program activity live.",
-          "stampAction": "earned a stamp",
-          "rewardAction": "claimed their reward",
-          "newCustomerAction": "just signed up",
-          "timeAgo": "{seconds}s ago"
+          "sectionDescription": "Every stamp, every reward, every new card: follow your loyalty program as it happens.",
+          "stampAction": "received a stamp",
+          "rewardAction": "redeemed a reward",
+          "live": "Live",
+          "cardAction": "added their card",
+          "justNow": "Just now"
         },
         "proAnalytics": {
           "badge": "Every plan",

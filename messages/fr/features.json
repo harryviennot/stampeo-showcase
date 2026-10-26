@@ -567,30 +567,20 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Connaissez vos habitués. Pas juste de vue.",
-        "subtitle": "Avec une carte en carton, vous ne savez rien de vos clients. Avec Stampeo, vous voyez qui revient, à quelle fréquence, et ce qui fonctionne."
+        "title": "Voyez à quel rythme vos clients reviennent.",
+        "subtitle": "La fréquence de passage de vos clients, leur avancée sur la carte et vos heures de pointe. Chaque scan remplit vos statistiques, sans rien à saisir.",
+        "planLine": "Écran du plan Growth. Les graphiques sont inclus dans Growth et Pro.",
+        "alt": "La page Statistiques de Stampeo sur téléphone : la fréquence de passage des clients et leur avancée sur la carte."
+      },
+      "busiest": {
+        "title": "Vos heures de pointe, d'un coup d'œil",
+        "lead": "Les visites par jour et par heure, à l'heure de votre commerce, avec votre créneau le plus chargé et votre heure d'ouverture la plus calme. Starter donne l'heure de pointe en une phrase ; Growth et Pro affichent la grille.",
+        "alt": "La section Heures de pointe sur téléphone : les visites par jour et par heure, le créneau le plus chargé et l'heure d'ouverture la plus calme."
       },
       "problem": {
         "title": "Ce que vous ne savez pas aujourd'hui",
         "description": "Avec des cartes en carton, vous gérez votre fidélisation à l'aveugle. Aucune donnée, aucune visibilité, aucune possibilité d'améliorer ce que vous ne mesurez pas."
       },
-      "sections": [
-        {
-          "title": "Tableau de bord essentiel",
-          "description": "Nombre total de clients, scans cette semaine, récompenses réclamées. Recherchez un client par nom ou email et retrouvez instantanément son historique.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Tendances et heures de pointe",
-          "description": "Visualisez l'évolution de vos métriques jour par jour. Découvrez quand vos clients viennent et identifiez les creux pour optimiser votre activité.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Fréquence et rétention",
-          "description": "Comprenez le rythme de vos clients : quotidiens, hebdomadaires, mensuels. Suivez votre taux de rétention et identifiez les clients à risque.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Arrêtez de deviner. Commencez à savoir.",
         "subtitle": "Chaque plan montre l'essentiel de vos passages, de vos heures de pointe et de la fréquence de retour de vos clients. Growth et Pro les affichent sous forme de graphiques et remontent plus loin dans le temps, et Pro ajoute les cohortes mensuelles."
@@ -604,41 +594,22 @@
           "questions": [
             "Combien de clients réguliers",
             "À quelle fréquence reviennent-ils",
-            "Qui a arrêté de venir",
+            "Combien ont arrêté de venir",
             "Quel jour est le plus calme",
             "Combien de récompenses ce mois",
             "Votre programme fonctionne-t-il"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Plan Starter",
-          "title": "L'essentiel pour commencer",
-          "description": "Le plan Starter inclut un tableau de bord simple et clair qui répond aux questions fondamentales.",
-          "features": [
-            "Nombre total de clients inscrits",
-            "Scans cette semaine et ce mois",
-            "Récompenses réclamées",
-            "Recherche client instantanée"
-          ],
-          "stats": {
-            "totalCustomers": "Clients totaux",
-            "visitsThisWeek": "Visites cette semaine",
-            "rewardsClaimed": "Récompenses réclamées"
-          },
-          "recentCustomers": "Clients récents",
-          "progress": "Progression",
-          "visitedToday": "Visite aujourd'hui",
-          "almost": "Presque !"
-        },
         "activityFeed": {
-          "title": "Activité en direct",
+          "title": "Activité",
           "sectionTitle": "Votre commerce, en temps réel",
-          "sectionDescription": "Chaque tampon, chaque récompense, chaque inscription — suivez l'activité de votre programme de fidélité en direct.",
-          "stampAction": "a obtenu un tampon",
-          "rewardAction": "a réclamé sa récompense",
-          "newCustomerAction": "vient de s'inscrire",
-          "timeAgo": "il y a {seconds}s"
+          "sectionDescription": "Chaque tampon, chaque récompense, chaque nouvelle carte : suivez votre programme de fidélité en direct.",
+          "stampAction": "a reçu un tampon",
+          "rewardAction": "a utilisé une récompense",
+          "live": "En direct",
+          "cardAction": "a ajouté sa carte",
+          "justNow": "À l'instant"
         },
         "proAnalytics": {
           "badge": "Tous les plans",

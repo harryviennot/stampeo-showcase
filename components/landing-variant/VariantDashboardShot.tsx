@@ -6,7 +6,7 @@ import { Container } from "../ui/Container";
 import { ScrollReveal } from "../ui/ScrollReveal";
 import { InkArrow, InkNote } from "../ui/InkAnnotation";
 import { BrowserFrame } from "../ui/BrowserFrame";
-import { PhoneMockup } from "../ui/PhoneMockup";
+import { PhoneScreenshot } from "../ui/PhoneScreenshot";
 import { CheckIcon } from "../icons";
 
 /**
@@ -58,24 +58,7 @@ export async function VariantDashboardShot() {
                 className="flex justify-center md:absolute md:right-0 md:bottom-0 md:block"
               >
                 <div className="md:origin-bottom-right md:scale-[0.55] lg:scale-[0.68] xl:scale-[0.78]">
-                  {/* The capture's page colour, so the status bar runs into it. */}
-                  <PhoneMockup screenBackground="var(--paper-hover)">
-                    <div className="relative w-full h-full bg-[var(--muted)]">
-                      <Image
-                        src={phone.src}
-                        fill
-                        alt={t("alt.phone")}
-                        sizes="260px"
-                        className="object-cover object-top"
-                      />
-                      {/* The capture runs past the screen; fade its cut edge
-                          instead of ending mid-line. */}
-                      <div
-                        aria-hidden
-                        className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--paper-hover)] to-transparent"
-                      />
-                    </div>
-                  </PhoneMockup>
+                  <PhoneScreenshot src={phone.src} alt={t("alt.phone")} />
                 </div>
               </ScrollReveal>
 
