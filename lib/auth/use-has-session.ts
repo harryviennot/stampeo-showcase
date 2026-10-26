@@ -35,6 +35,6 @@ export async function signOut(): Promise<void> {
   sessionStorage.removeItem("stampeo_onboarding_session");
   localStorage.removeItem("stampeo_onboarding");
   const { createClient } = await import("@/lib/supabase/client");
-  await createClient().auth.signOut();
+  await createClient().auth.signOut({ scope: "local" });
   notifySessionChanged();
 }
