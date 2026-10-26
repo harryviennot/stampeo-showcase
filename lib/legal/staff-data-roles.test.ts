@@ -23,7 +23,7 @@ const WORDING: Record<
     processor: RegExp;
     staffRow: RegExp;
     businessBasis: RegExp;
-    retiredNoOwnUse: RegExp;
+    deniesOwnUse: RegExp;
     ownUses: RegExp;
     positionNeverSent: RegExp;
     retentionRow: RegExp;
@@ -37,7 +37,7 @@ const WORDING: Record<
     processor: /Stampeo acts as a \*\*data processor\*\* for this data/,
     staffRow: /^\|\s*(Team activity|Per-transaction attribution)/,
     businessBasis: /Determined by the business, as controller/,
-    retiredNoOwnUse: /Stampeo does not use them for its own purposes/,
+    deniesOwnUse: /Stampeo does not use them for its own purposes/,
     ownUses: /for two purposes of its own, as controller/,
     positionNeverSent: /never sent to Stampeo/,
     retentionRow: /Staff activity data/,
@@ -52,7 +52,7 @@ const WORDING: Record<
     processor: /Stampeo agit en tant que \*\*sous-traitant\*\* pour ces données/,
     staffRow: /^\|\s*(Activité de l'équipe|Attribution des opérations)/,
     businessBasis: /Déterminée par l'entreprise, responsable de traitement/,
-    retiredNoOwnUse: /Stampeo ne les utilise pas à ses propres fins/,
+    deniesOwnUse: /Stampeo ne les utilise pas à ses propres fins/,
     ownUses: /deux finalités qui lui sont propres, en tant que responsable de traitement/,
     positionNeverSent: /n'est jamais envoyée à Stampeo/,
     retentionRow: /Données d'activité de l'équipe/,
@@ -67,7 +67,7 @@ const WORDING: Record<
     processor: /Stampeo actúa como \*\*encargado del tratamiento\*\* de estos datos/,
     staffRow: /^\|\s*(Actividad del equipo|Atribución de las operaciones)/,
     businessBasis: /Determinada por el comercio, como responsable del tratamiento/,
-    retiredNoOwnUse: /Stampeo no las utiliza con fines propios/,
+    deniesOwnUse: /Stampeo no las utiliza con fines propios/,
     ownUses: /dos finalidades propias, como responsable del tratamiento/,
     positionNeverSent: /nunca se envía a Stampeo/,
     retentionRow: /Datos de actividad del equipo/,
@@ -81,7 +81,7 @@ const WORDING: Record<
     processor: /Stampeo działa wobec tych danych jako \*\*podmiot przetwarzający\*\*/,
     staffRow: /^\|\s*(Aktywność zespołu|Przypisanie operacji)/,
     businessBasis: /Określa ją firma jako administrator/,
-    retiredNoOwnUse: /Stampeo nie wykorzystuje ich do własnych celów/,
+    deniesOwnUse: /Stampeo nie wykorzystuje ich do własnych celów/,
     ownUses: /w dwóch własnych celach, jako administrator/,
     positionNeverSent: /nigdy nie jest wysyłane do Stampeo/,
     retentionRow: /Dane o aktywności zespołu/,
@@ -120,10 +120,10 @@ describe("privacy: staff activity data belongs to the business", () => {
   it.each(routing.locales)(
     "§3.2 states Stampeo's own uses instead of denying any (%s)",
     (locale) => {
-      // Stampeo's support console and the inactivity rule do use this data, so
-      // the old denial was untrue and must not come back.
+      // Stampeo's support console and the inactivity rule use this data, so the
+      // policy must not deny it.
       const w = WORDING[locale];
-      expect(privacySource(locale)).not.toMatch(w.retiredNoOwnUse);
+      expect(privacySource(locale)).not.toMatch(w.deniesOwnUse);
       expect(s32(locale)).toMatch(w.ownUses);
     },
   );
