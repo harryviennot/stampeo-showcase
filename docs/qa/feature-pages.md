@@ -185,16 +185,16 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | RESET | None. |
 
 
-### AF-14: The geolocation hero's map shows [BLOCKER]
+### AF-14: The geolocation hero plays its walk [BLOCKER]
 
 | Field | Content |
 |---|---|
-| WHY | The hero's map collapsed to 0×0 and its whole visual (map and phone) was invisible in production until STA-520. |
+| WHY | The hero's map collapsed to 0×0 and its whole visual was invisible in production until STA-520; Harry then asked for a nicer animation that fits the site (27 Oct 2026). |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. `/en/features/geolocation` and `/features/geolocalisation` at 390, 768 and 1440. |
-| EXPECT | A green map square with the pulsing pin, and the iPhone lock screen in its corner with the notification sliding in. At 1440 the "built into the card" note sits by the map's corner. You do NOT see an empty space where the map should be. |
-| RESET | None. |
+| STEPS | 1. `/en/features/geolocation` and `/features/geolocalisation` at 320, 390, 768, 1024, 1280 and 1440. 2. Watch the hero for two loops (about 18 s). 3. Scroll the hero out of view and back. 4. DevTools → Rendering → "prefers-reduced-motion: reduce", reload. 5. Scroll to "How it works" and look at its phone. |
+| EXPECT | A paper street map with an ink border and hard shadow, tilted slightly, and the orange iPhone over its right side, never cropped. An ink dot walks down the avenue leaving a dotted trail; as it crosses the dotted orange ring around the shop pin, the ring pulses, then the lock screen brightens and the Stampeo notification drops in with a small shake. The dot stops at the shop's door, everything fades, and it starts again about every 9 s. From 1024 the "built into the card" note sits above the map with its arrow down to the phone, fully on screen (French included). Scrolled back in, the loop restarts. With reduced motion: one still frame, dot at the door, ring lit, notification shown. The "How it works" phone has the same dark dusk wallpaper. You do NOT see a "~300m" label, an empty space where the map should be, a sideways scroll at any width, or the map and the notification out of step. |
+| RESET | Turn reduced motion back off. |
 
 ---
 

@@ -17,7 +17,7 @@ import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
-import { GeofencingHeroAnimation } from "./GeofencingHeroAnimation";
+import { GeofencingHeroAnimation, LOCK_WALLPAPER } from "./GeofencingHeroAnimation";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 
 const technicalIcons = [MapPinIcon, SignalIcon, ClockIcon];
@@ -94,16 +94,14 @@ export function GeofencingPage() {
               delay={200}
               className="flex justify-center order-1 lg:order-2"
             >
-              <div className="relative w-full max-w-lg">
-                <GeofencingHeroAnimation />
+              <GeofencingHeroAnimation>
                 {/* Ink note: no extra setup, the reminder ships in the card.
-                    The map fills the column, so the note sits on it, right
-                    above the hero phone (280 px at 0.55, bottom-4 right-4). */}
-                <div className="hidden lg:flex absolute right-4 bottom-[339px] w-[154px] flex-col items-center pointer-events-none">
-                  <InkNote rotate={3} className="whitespace-nowrap">{tp("hero.annotation")}</InkNote>
-                  <InkArrow variant="down" className="w-5 mt-1" delay={0.5} />
+                    Written in the strip above the map, pointing at the phone. */}
+                <div className="hidden lg:flex absolute right-[46%] top-0 flex-col items-end pointer-events-none">
+                  <InkNote rotate={-3} className="whitespace-nowrap">{tp("hero.annotation")}</InkNote>
+                  <InkArrow variant="downRight" className="w-9 -mt-0.5 -mr-6" delay={0.5} />
                 </div>
-              </div>
+              </GeofencingHeroAnimation>
             </ScrollReveal>
           </div>
         </Container>
@@ -139,7 +137,7 @@ export function GeofencingPage() {
           >
             <div className="scale-100 origin-top-right">
               <IPhone statusBar="lock">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
+                <div className="absolute inset-0" style={{ background: LOCK_WALLPAPER }} />
                 <div className="relative z-10 flex flex-col items-center pt-[calc(var(--iphone-safe-top)+2.5rem)]">
                   <div
                     className="text-[64px] font-light text-white leading-none tracking-tight"

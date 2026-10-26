@@ -696,7 +696,6 @@
       "problemNarrative": "Et si son téléphone pouvait le faire à votre place ?",
       "demo": {
         "lockScreenDate": "Lundi 17 février",
-        "radiusLabel": "~300m",
         "notificationTitle": "Café Le Comptoir à proximité",
         "notificationBody": "Une petite soif ? Vous êtes à 3 tampons de votre café offert ☕",
         "timeAgo": "maintenant"

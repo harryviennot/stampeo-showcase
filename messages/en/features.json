@@ -696,7 +696,6 @@
       "problemNarrative": "What if their phone could do it for you?",
       "demo": {
         "lockScreenDate": "Monday, February 17",
-        "radiusLabel": "~300m",
         "notificationTitle": "Café Le Comptoir nearby",
         "notificationBody": "Feeling thirsty? You're 3 stamps away from a free coffee ☕",
         "timeAgo": "now"
