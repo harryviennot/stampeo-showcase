@@ -49,7 +49,7 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R1. 2. Open the four URLs at 390 and 1440. |
-| EXPECT | A phone frame showing the locale's Analytics page scrolled to "How often they come" over "Reward progress" (FR "À quel rythme ils viennent" / "Progression des cartes", ES "Cada cuánto vienen", PL "Jak często przychodzą"), cropped at the bottom with a soft fade, and under it the line naming the Growth plan and that charts come with Growth and Pro. You do NOT see an English capture on fr/es/pl, a "app.stampeo.app" mock, or invented customer rows. |
+| EXPECT | A phone frame showing the locale's Analytics page scrolled to "How often they come" over "Reward progress" (FR "À quel rythme ils viennent" / "Progression des cartes", ES "Cada cuánto vienen", PL "Jak często przychodzą"), below a real iOS status bar and running to the screen's bottom edge, and under it the line naming the Growth plan and that charts come with Growth and Pro. You do NOT see an English capture on fr/es/pl, a "app.stampeo.app" mock, or invented customer rows. |
 | RESET | None. |
 
 ### AF-02: Headline first on a phone [CORE]
@@ -140,15 +140,15 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | EXPECT | No match on any of the four pages, on screen or in the source (alt texts, `<title>`, `<meta name="description">`). |
 | RESET | None. |
 
-### AF-10: The landing's phone is unchanged [EDGE]
+### AF-10: Every phone is the real iPhone [CORE]
 
 | Field | Content |
 |---|---|
-| WHY | The landing's dashboard section now uses the same `PhoneScreenshot`; it must look exactly as it did (verified pixel-identical at 390/768/1440 on 2026-10-26). |
+| WHY | One phone across the site: Apple's iPhone 17 Pro bezel, unaltered, with a real iOS status bar; no hand-drawn frame, island or status bar is left. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. `/en` at 390, 768 and 1440: the dashboard section's phone. 2. DevTools Network → "Slow 3G", reload, and watch the phone while its image loads. |
-| EXPECT | The phone capture, warm status-bar background running into it, soft fade at its bottom. While loading, the screen is the same warm colour (not grey). You do NOT see a grey stripe under the status bar or a hard cut at the bottom. |
+| STEPS | 1. At 390 and 1440, open `/en` (dashboard section), `/en/features/analytics` (hero and "When they come"), `/en/features/push-notifications` (hero and the notification sequence), `/en/features/geolocation` (hero map, and the "How it works" phone from 1024 up), `/en/features/mobile-scanner` (hero demo and "Get the app"). 2. DevTools Network → "Slow 3G", reload the Analytics page and watch the hero phone load. |
+| EXPECT | Every phone is the orange iPhone 17 Pro with its own Dynamic Island and side buttons. Dashboard screenshots and the notification sequence carry a dark status bar (9:41, signal, Wi-Fi, battery); the scanner phones a white one; the lock screens a white one without the time, above their own big 9:41. Screenshots start below the status bar and run to the screen's bottom edge. While loading, the screen is the warm page colour. You do NOT see a home indicator, a drawn second island, a grey band under the status bar, a fade at the bottom of a screenshot, or a status bar overlapping content. |
 | RESET | None. |
 
 ### AF-11: Reduced motion [EDGE]
@@ -182,6 +182,18 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | ACCOUNT | No session at all. |
 | STEPS | 1. `/en/features/mobile-scanner`, `/features/scanner-mobile`, `/es/features/escaner-movil`, `/pl/features/skaner-mobilny` at 390 and 1440. 2. Scroll to "Discover more". |
 | EXPECT | The Analytics card's title is the new headline ("See how often your customers come back." and translations) on 2 lines at most (measured 2 at 390, 1–2 at 1440). You do NOT see "Know your regulars" or a title cut off. |
+| RESET | None. |
+
+
+### AF-14: The geolocation hero's map shows [BLOCKER]
+
+| Field | Content |
+|---|---|
+| WHY | The hero's map collapsed to 0×0 and its whole visual (map and phone) was invisible in production until STA-520. |
+| DEPENDS | none |
+| ACCOUNT | No session at all. |
+| STEPS | 1. `/en/features/geolocation` and `/features/geolocalisation` at 390, 768 and 1440. |
+| EXPECT | A green map square with the pulsing pin, and the iPhone lock screen in its corner with the notification sliding in. At 1440 the "built into the card" note sits by the map's corner. You do NOT see an empty space where the map should be. |
 | RESET | None. |
 
 ---

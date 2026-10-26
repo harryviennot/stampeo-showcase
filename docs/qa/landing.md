@@ -77,7 +77,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | DEPENDS | LD-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R1. 2. DevTools device mode at 390×844, Network tab filtered on `dashboard`. 3. Open `/en` and scroll through the section. 4. Repeat on `/`, `/es`, `/pl`. |
-| EXPECT | Heading, caption (three lines at most), the phone frame with the phone capture fading out at its bottom edge, the plan line under it, then three check-marked points. The Network tab shows `<locale>-phone.png` only. You do NOT see a browser frame, you do NOT see the handwritten note, the Network tab does NOT show a `-desktop.png`, and no locale's page scrolls sideways. |
+| EXPECT | Heading, caption (three lines at most), the iPhone with the phone capture below its status bar, the plan line under it, then three check-marked points. The Network tab shows `<locale>-phone.png` only. You do NOT see a browser frame, you do NOT see the handwritten note, the Network tab does NOT show a `-desktop.png`, and no locale's page scrolls sideways. |
 | RESET | None. |
 
 ### LD-04: The frame peeks above the fold on desktop [EDGE]
@@ -201,15 +201,15 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | EXPECT | `/tmp/shots/{pl,es}-phone.png` (1206×2622) and `-desktop.png` (2560×1600) exist: the Polish and Spanish Analytics page at 90 days, the desktop one showing the KPI row, Visits over time and Busiest times with no Pro cohorts preview in frame. No trial, over-limit or "What's new" banner or dialog over any of them. Step 4 refuses with a message asking for `--out`. The showcase test passes on the committed files. You do NOT see the login page in an image, and nothing is saved to the fixture's profile (its language stays what it was). |
 | RESET | None. |
 
-### LD-15: The other phone frames are unchanged [EDGE]
+### LD-15: The other phones on the site [EDGE]
 
 | Field | Content |
 |---|---|
-| WHY | `PhoneMockup` moved to `components/ui/` and gained an optional background; the three feature pages that already used it must look exactly as before. |
+| WHY | `PhoneMockup` was replaced site-wide by the real iPhone (STA-520); the phones on the notification, geolocation and scanner pages must show their content inside it. Full check: AF-10 in `docs/qa/feature-pages.md`. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. Open `/en/features/push-notifications` and `/en/features/geolocation` at 390 and 1440, next to the same pages on production. |
-| EXPECT | The phone frames, their light-grey screens, status bars and animations match production. You do NOT see a different screen colour, a missing frame, or a console error. |
+| STEPS | 1. Open `/en/features/push-notifications` and `/en/features/geolocation` at 390 and 1440. |
+| EXPECT | The lock screens and notifications sit inside the orange iPhone, their clocks below a white status bar without a time. You do NOT see a hand-drawn phone frame, a second island, or content cut by the status bar. |
 | RESET | None. |
 
 ### LD-16: Reduced motion shows everything [EDGE]
