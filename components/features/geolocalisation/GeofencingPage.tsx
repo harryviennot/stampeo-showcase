@@ -94,7 +94,7 @@ export function GeofencingPage() {
               delay={200}
               className="flex justify-center order-1 lg:order-2"
             >
-              <div className="relative">
+              <div className="relative w-full max-w-lg">
                 <GeofencingHeroAnimation />
                 {/* Margin note: no extra setup, the reminder ships in the card. */}
                 <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">
