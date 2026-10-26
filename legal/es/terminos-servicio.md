@@ -178,7 +178,7 @@ El Usuario Business autoriza asimismo a Stampeo a mostrar su tarjeta de fidelida
 
 ## 8. Datos de los clientes finales: Anexo de encargo del tratamiento
 
-Esta sección constituye el anexo de encargo del tratamiento (Data Processing Addendum) en el sentido del artículo 28 del RGPD entre el Usuario Business (responsable del tratamiento) y Stampeo (encargado del tratamiento) en relación con los datos personales de los clientes finales. En caso de aceptación de los presentes Términos, el Usuario Business y Stampeo se considerarán vinculados por este anexo.
+Esta sección constituye el anexo de encargo del tratamiento (Data Processing Addendum) en el sentido del artículo 28 del RGPD entre el Usuario Business (responsable del tratamiento) y Stampeo (encargado del tratamiento) en relación con los datos personales de los clientes finales y, según lo previsto en el §8.11, con los Datos de Actividad del Equipo. En caso de aceptación de los presentes Términos, el Usuario Business y Stampeo se considerarán vinculados por este anexo.
 
 ### 8.1 Funciones y alcance
 
@@ -251,6 +251,19 @@ El incumplimiento de estas restricciones constituye una infracción sustancial d
 ### 8.10 Aislamiento de los datos
 
 Los datos de los clientes finales están estrictamente aislados por comercio. Stampeo no realiza ningún cruce de datos entre los distintos comercios usuarios. Los datos de un mismo cliente final en dos comercios distintos permanecen estrictamente separados.
+
+### 8.11 Datos de Actividad del Equipo
+
+Se entiende por **Datos de Actividad del Equipo** la indicación de qué miembro del equipo del Usuario Business (el propietario, un administrador o un Empleado) registró cada operación en la Plataforma, así como el último escaneo y el número de escaneos de cada miembro, tal y como se muestran al propietario y a los administradores del Usuario Business (§3.2 de la Política de privacidad).
+
+El Usuario Business es el responsable del tratamiento de los Datos de Actividad del Equipo, y Stampeo los trata como encargado del tratamiento. Los §8.1 a 8.5 y el §8.10 se aplican a los Datos de Actividad del Equipo del mismo modo que a los datos de los clientes finales, con dos excepciones descritas en la Política de privacidad: los usos que Stampeo hace de ellos como responsable del tratamiento, es decir, el soporte, la investigación de usos abusivos de la Plataforma y la regla de inactividad de los §6.2 y §6.3 (§3.2 de la Política de privacidad), y su plazo de conservación (§8 de la Política de privacidad).
+
+El Usuario Business se compromete a:
+
+- informar a los miembros de su equipo, antes de que empiecen a usar la aplicación de escaneo, de que cada operación que registran queda guardada a su nombre, y de que el propietario y los administradores pueden ver quién registró qué, así como el último escaneo y el número de escaneos de cada miembro;
+- disponer de una base jurídica válida para cualquier uso que haga de los Datos de Actividad del Equipo, y mantener ese uso proporcionado a su finalidad, de conformidad con la normativa de protección de datos y la normativa laboral que le sean aplicables;
+- cuando dicha normativa lo exija, informar o consultar a los representantes de los trabajadores antes de utilizar los Datos de Actividad del Equipo para controlar la actividad de su equipo, como, en Francia, el comité social y económico (CSE) de una empresa con al menos 50 empleados;
+- atender las solicitudes de los miembros de su equipo para ejercer sus derechos del RGPD sobre los Datos de Actividad del Equipo, con la asistencia de Stampeo prevista en el §8.5.
 
 ## 9. Obligaciones de los usuarios
 
