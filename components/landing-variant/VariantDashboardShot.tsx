@@ -89,6 +89,12 @@ export async function VariantDashboardShot() {
                         sizes="260px"
                         className="object-cover object-top"
                       />
+                      {/* The capture runs past the screen; fade its cut edge
+                          instead of ending mid-line. */}
+                      <div
+                        aria-hidden
+                        className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--paper-hover)] to-transparent"
+                      />
                     </div>
                   </PhoneMockup>
                 </div>

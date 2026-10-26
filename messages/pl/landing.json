@@ -331,7 +331,7 @@
     },
     "dashboard": {
       "title": "Ich karta, twoje liczby.",
-      "caption": "Każdy skan sam aktualizuje statystyki, bez wpisywania czegokolwiek. Sprawdzisz je na telefonie między dwoma klientami albo na komputerze.",
+      "caption": "Każdy skan sam uzupełnia statystyki, bez wpisywania. Sprawdzisz je na telefonie albo na komputerze.",
       "points": [
         "Wizyty, nowi klienci i powroty w 30 dni",
         "Wizyty w czasie, z historią z 90 dni",

@@ -331,7 +331,7 @@
     },
     "dashboard": {
       "title": "Leur carte, vos chiffres.",
-      "caption": "Chaque scan met vos statistiques à jour tout seul, sans rien à saisir. Consultez-les sur votre téléphone entre deux clients, ou sur votre ordinateur.",
+      "caption": "Chaque scan remplit vos statistiques, sans rien à saisir. Sur votre téléphone comme sur votre ordinateur.",
       "points": [
         "Visites, nouveaux clients et retour à 30 jours",
         "L'évolution des visites, sur 90 jours d'historique",
