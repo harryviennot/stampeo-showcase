@@ -63,15 +63,6 @@
       ]
     },
     "dashboard": {
-      "badge": "Analytics dashboard",
-      "title": "Know your regulars.",
-      "subtitle": "Your dashboard shows you who's visiting, how often, and when they're close to a reward. Spot your best customers. See what's working. Make smarter decisions.",
-      "features": [
-        "See visit frequency and patterns",
-        "Track rewards claimed and pending",
-        "Identify your most loyal customers",
-        "Export data anytime"
-      ],
       "stats": {
         "totalCustomers": "Total Customers",
         "visitsThisWeek": "Visits This Week",
@@ -80,8 +71,7 @@
       "recentCustomers": "Recent customers",
       "progress": "Progress",
       "visitedToday": "Visited today",
-      "almost": "Almost!",
-      "annotation": "Sophie's coming back tomorrow"
+      "almost": "Almost!"
     },
     "sectorCards": {
       "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
@@ -95,7 +85,7 @@
           "name": "Barbershop",
           "quote": "Julien comes in every three weeks for his fade. With Stampeo it's automatic, and his sixth cut is on the house.",
           "reward": "6 cuts = 1 free",
-          "advantage": "A notification when he walks past the shop",
+          "advantage": "Card added in one scan, no app to download",
           "fields": [
             {
               "label": "Reward",
@@ -308,8 +298,9 @@
         },
         {
           "title": "Geolocation",
-          "description": "Remind them you exist when they walk by.",
-          "link": "/features/geolocation"
+          "description": "Your card will show on their lock screen near your shop.",
+          "link": "/features/geolocation",
+          "badge": "Soon"
         },
         {
           "title": "Mobile scanner",
@@ -338,6 +329,21 @@
       "tryDemoCta": "Try the live demo",
       "annotation": "One scan, one stamp"
     },
+    "dashboard": {
+      "title": "Their card, your numbers.",
+      "caption": "Every scan updates your Analytics on its own, with nothing to type. Check it on your phone between two customers, or on your computer.",
+      "points": [
+        "Visits, new customers and your 30-day return rate",
+        "Visits over time, with 90 days of history",
+        "Your busiest times, by day and hour"
+      ],
+      "planLine": "Screens from the Growth plan. Charts come with Growth and Pro.",
+      "annotation": "same dashboard, in your pocket",
+      "alt": {
+        "desktop": "The Stampeo Analytics page on a computer: visits, new customers, 30-day return rate, visits over time and busiest times.",
+        "phone": "The same Analytics page on a phone: visits, new customers and 30-day return rate."
+      }
+    },
     "tryIt": {
       "eyebrow": "Live demo, no signup",
       "title": "See it on your own phone",
@@ -352,11 +358,11 @@
           "label": "active businesses"
         },
         {
-          "value": "12,500+",
+          "value": "20,000+",
           "label": "stamps issued"
         },
         {
-          "value": "22",
+          "value": "25+",
           "label": "countries"
         }
       ]

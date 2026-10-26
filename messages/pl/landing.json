@@ -63,15 +63,6 @@
       ]
     },
     "dashboard": {
-      "badge": "Panel z danymi",
-      "title": "Poznaj swoich stałych klientów.",
-      "subtitle": "Panel pokazuje, kto do ciebie wraca, jak często i kto jest już blisko nagrody. Zobacz, kim są twoi najlepsi klienci. Sprawdź, co działa. Podejmuj lepsze decyzje.",
-      "features": [
-        "Częstotliwość i rytm wizyt",
-        "Nagrody odebrane i oczekujące",
-        "Rozpoznaj najwierniejszych klientów",
-        "Eksportuj dane, kiedy chcesz"
-      ],
       "stats": {
         "totalCustomers": "Wszyscy klienci",
         "visitsThisWeek": "Wizyty w tym tygodniu",
@@ -80,8 +71,7 @@
       "recentCustomers": "Ostatni klienci",
       "progress": "Postęp",
       "visitedToday": "Wizyta dzisiaj",
-      "almost": "Już prawie!",
-      "annotation": "Sophie wraca jutro"
+      "almost": "Już prawie!"
     },
     "sectorCards": {
       "title": "Stampeo dopasuje się <mbr></mbr><br></br>do twojej firmy",
@@ -95,7 +85,7 @@
           "name": "Barber",
           "quote": "Jakub wpada co trzy tygodnie na to samo cieniowanie. Ze Stampeo liczy się samo, a szóste strzyżenie jest za darmo.",
           "reward": "6 strzyżeń = 1 za darmo",
-          "advantage": "Powiadomienie, kiedy przechodzi obok salonu",
+          "advantage": "Karta dodana jednym skanem, bez aplikacji do pobrania",
           "fields": [
             {
               "label": "Nagroda",
@@ -308,8 +298,9 @@
         },
         {
           "title": "Geolokalizacja",
-          "description": "Przypomnij o sobie, kiedy przechodzą obok.",
-          "link": "/features/geolokalizacja"
+          "description": "Twoja karta pojawi się na ich ekranie blokady w pobliżu lokalu.",
+          "link": "/features/geolokalizacja",
+          "badge": "Wkrótce"
         },
         {
           "title": "Skaner mobilny",
@@ -338,6 +329,21 @@
       "tryDemoCta": "Wypróbuj demo na żywo",
       "annotation": "Jeden skan, jedna pieczątka"
     },
+    "dashboard": {
+      "title": "Ich karta, twoje liczby.",
+      "caption": "Każdy skan sam aktualizuje statystyki, bez wpisywania czegokolwiek. Sprawdzisz je na telefonie między dwoma klientami albo na komputerze.",
+      "points": [
+        "Wizyty, nowi klienci i powroty w 30 dni",
+        "Wizyty w czasie, z historią z 90 dni",
+        "Godziny szczytu w każdym dniu tygodnia"
+      ],
+      "planLine": "Ekrany z planu Growth. Wykresy są w planach Growth i Pro.",
+      "annotation": "ten sam panel, w kieszeni",
+      "alt": {
+        "desktop": "Strona Statystyki w Stampeo na komputerze: wizyty, nowi klienci, powroty w 30 dni, wizyty w czasie i godziny szczytu.",
+        "phone": "Ta sama strona Statystyki na telefonie: wizyty, nowi klienci i powroty w 30 dni."
+      }
+    },
     "tryIt": {
       "eyebrow": "Demo na żywo, bez rejestracji",
       "title": "Zobacz to na własnym telefonie",
@@ -352,12 +358,12 @@
           "label": "aktywnych firm"
         },
         {
-          "value": "+12 500",
+          "value": "+20 000",
           "label": "wydanych pieczątek"
         },
         {
-          "value": "22",
-          "label": "kraje"
+          "value": "+25",
+          "label": "krajów"
         }
       ]
     },
