@@ -844,7 +844,8 @@
         "proCharts": {
           "lineChart": {
             "label": "Skany / tydzień",
-            "trend": "+23%"
+            "trend": "+23%",
+            "comparison": "vs poprzedni tydzień"
           },
           "heatmap": {
             "label": "Godziny szczytu",

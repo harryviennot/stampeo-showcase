@@ -619,7 +619,8 @@
         "proCharts": {
           "lineChart": {
             "label": "Escaneos / semana",
-            "trend": "+23%"
+            "trend": "+23%",
+            "comparison": "vs la semana pasada"
           },
           "heatmap": {
             "label": "Horas punta",

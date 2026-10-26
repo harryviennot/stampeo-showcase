@@ -33,7 +33,7 @@ function ChartHeader({ label, plan }: { label: string; plan: string }) {
 
 /* ─── Row 1 (all screens): existing charts ─── */
 
-function LineChart({ label, trend, plan }: { label: string; trend: string; plan: string }) {
+function LineChart({ label, trend, comparison, plan }: { label: string; trend: string; comparison: string; plan: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -78,7 +78,7 @@ function LineChart({ label, trend, plan }: { label: string; trend: string; plan:
       </svg>
       <div className="flex items-center gap-2">
         <span className="text-green-600 text-sm font-bold">{trend}</span>
-        <span className="text-xs text-[var(--muted-foreground)]">vs semaine dernière</span>
+        <span className="text-xs text-[var(--muted-foreground)]">{comparison}</span>
       </div>
     </div>
   );
@@ -538,6 +538,7 @@ export function AnalyticsChartCards() {
               label={t("proCharts.lineChart.label")}
               plan={pill("lineChart")}
               trend={t("proCharts.lineChart.trend")}
+              comparison={t("proCharts.lineChart.comparison")}
             />
           </ScrollReveal>
           <ScrollReveal delay={100}>
@@ -564,6 +565,7 @@ export function AnalyticsChartCards() {
               label={t("proCharts.lineChart.label")}
               plan={pill("lineChart")}
               trend={t("proCharts.lineChart.trend")}
+              comparison={t("proCharts.lineChart.comparison")}
             />
           </ScrollReveal>
           <ScrollReveal delay={300}>

@@ -574,7 +574,7 @@
       },
       "busiest": {
         "title": "Vos heures de pointe, d'un coup d'œil",
-        "lead": "Les visites par jour et par heure, à l'heure de votre commerce, avec votre créneau le plus chargé et votre heure d'ouverture la plus calme. Starter donne l'heure de pointe en une phrase ; Growth et Pro affichent la grille.",
+        "lead": "Vos visites par jour et par heure, avec le créneau le plus chargé et l'heure d'ouverture la plus calme. Starter donne l'heure de pointe en une phrase ; Growth et Pro, la grille.",
         "alt": "La section Heures de pointe sur téléphone : les visites par jour et par heure, le créneau le plus chargé et l'heure d'ouverture la plus calme."
       },
       "problem": {
@@ -619,7 +619,8 @@
         "proCharts": {
           "lineChart": {
             "label": "Scans / semaine",
-            "trend": "+23%"
+            "trend": "+23%",
+            "comparison": "vs semaine dernière"
           },
           "heatmap": {
             "label": "Heures de pointe",
