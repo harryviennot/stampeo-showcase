@@ -22,6 +22,8 @@ export async function FeatureGrid() {
     title: string;
     description: string;
     link: string;
+    /** "Soon" for a feature that is not live yet, in the pricing table's word. */
+    badge?: string;
   }>;
 
   return (
@@ -45,8 +47,15 @@ export async function FeatureGrid() {
                   href={feature.link as "/features/notifications-push"}
                   className="group flex flex-col w-full bg-white card-stamp card-stamp-lift rounded-xl md:rounded-2xl p-4 md:p-6 transition-transform duration-300 hover:-translate-y-1"
                 >
-                  <div className="flex h-9 w-9 md:h-12 md:w-12 items-center justify-center rounded-lg md:rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] mb-3 md:mb-4 transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="w-4 h-4 md:w-6 md:h-6" />
+                  <div className="flex items-start justify-between gap-2 mb-3 md:mb-4">
+                    <div className="flex h-9 w-9 md:h-12 md:w-12 items-center justify-center rounded-lg md:rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] transition-transform duration-300 group-hover:scale-110">
+                      <Icon className="w-4 h-4 md:w-6 md:h-6" />
+                    </div>
+                    {feature.badge && (
+                      <span className="inline-flex items-center rounded-full bg-[var(--muted)] px-2 py-0.5 text-[11px] font-semibold text-[var(--muted-foreground)] whitespace-nowrap">
+                        {feature.badge}
+                      </span>
+                    )}
                   </div>
                   <h3 className="text-h3 text-[var(--foreground)] mb-1 md:mb-2">
                     {feature.title}

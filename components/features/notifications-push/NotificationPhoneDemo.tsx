@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { PhoneMockup } from "./PhoneMockup";
+import { PhoneMockup } from "@/components/ui/PhoneMockup";
 import { NotificationBanner } from "./NotificationBanner";
 
 export function NotificationPhoneDemo() {

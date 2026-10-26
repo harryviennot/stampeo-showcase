@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { MapPinIcon } from "@/components/icons";
-import { PhoneMockup } from "@/components/features/notifications-push/PhoneMockup";
+import { PhoneMockup } from "@/components/ui/PhoneMockup";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 
 export function GeofencingHeroAnimation() {
