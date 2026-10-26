@@ -2,9 +2,9 @@ import { describe, expect, it } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
-import { SHOT_SIZES, landingShot, type ShotSize } from "./landing-shots";
+import { SHOT_SIZES, landingShot, type ShotSize } from "./dashboard-shots";
 
-const PUBLIC = join(import.meta.dir, "..", "public");
+const PUBLIC = join(import.meta.dir, "..", "..", "public");
 const SIZES = Object.keys(SHOT_SIZES) as ShotSize[];
 
 /** Pixel size from a PNG's IHDR chunk (big-endian width then height at byte 16). */
@@ -31,8 +31,9 @@ describe("landing dashboard captures", () => {
     }
   }
 
-  it("each locale shows its own captures, never another locale's", () => {
-    const sources = routing.locales.flatMap((locale) => SIZES.map((size) => landingShot(locale, size).src));
-    expect(new Set(sources).size).toBe(sources.length);
+  it.each(routing.locales)("%s: shows its own captures, never another locale's", (locale) => {
+    for (const size of SIZES) {
+      expect(landingShot(locale, size).src).toBe(`/images/landing/dashboard/${locale}-${size}.png`);
+    }
   });
 });

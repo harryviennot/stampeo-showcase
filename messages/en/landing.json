@@ -62,17 +62,6 @@
         }
       ]
     },
-    "dashboard": {
-      "stats": {
-        "totalCustomers": "Total Customers",
-        "visitsThisWeek": "Visits This Week",
-        "rewardsClaimed": "Rewards Claimed"
-      },
-      "recentCustomers": "Recent customers",
-      "progress": "Progress",
-      "visitedToday": "Visited today",
-      "almost": "Almost!"
-    },
     "sectorCards": {
       "title": "Stampeo adapts <mbr></mbr><br></br>to your business",
       "subtitle": "A barbershop or café rewards visits with stamps. <br></br>A restaurant or salon rewards spending with points.",

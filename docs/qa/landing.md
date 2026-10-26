@@ -38,7 +38,9 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 
 - **New this round (STA-514):** the dashboard section right after the hero, the numbers strip refresh, the location-notification copy, the Geolocation "Soon" pill, and the hero cards back to the year-round set.
 - **The captures show the 90-day view.** The Aurevo fixture was seeded around 20 Oct 2026, so its last days are empty and the 30-day view led with a red ▼25%. If the fixture is reseeded, re-shoot with LD-14 and look again.
-- **Accepted at 1440×900:** the browser bar plus about 14px of screenshot show above the fold on `/en`, `/es`, `/pl`; on `/` (French title wraps differently) only the bar, and on `/us` (extra trial line) only part of it. The plan says report, not shrink the hero further. On a real 1440×900 laptop the browser's own toolbars take ~110px, so the peek is a 1080p-and-up effect.
+- **Known misses, pending Harry's waiver (they fail LD-04 / LD-13 until waived):**
+  - At 1440×900 the browser bar plus ~14px of screenshot show above the fold on `/en`, `/es`, `/pl`; on `/` only the bar (13px of it below the fold), on `/us` (extra trial line) only part of it. The plan says report, not shrink the hero further. A real 1440×900 laptop's own toolbars take ~110px, so the peek is a 1080p-and-up effect.
+  - At 1920×1080 the desktop capture, not the hero, is the LCP element. It painted at ~870ms with Fast 4G and 4x CPU slowdown (2026-10-26), earlier than the hero's own LCP at 1440. The plan's remedy (an eager ≥768 `<picture>` source) was not built because of that timing.
 - **Hero season:** LD-12 depends on the release date. The year-round cards ship in their own commit, held back if the release goes out before 1 Nov.
 
 ---
@@ -74,8 +76,8 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | WHY | 90% of visitors from ads are on a phone. A desktop screenshot shrunk to 358px is unreadable and costs a download for nothing. |
 | DEPENDS | LD-01 |
 | ACCOUNT | No session at all. |
-| STEPS | 1. R1. 2. DevTools device mode at 390×844, Network tab filtered on `dashboard`. 3. Open `/en` and scroll through the section. |
-| EXPECT | Heading, caption, the phone frame with the phone capture, the plan line under it, then three check-marked points. The Network tab shows `en-phone.png` only. You do NOT see a browser frame, you do NOT see the handwritten note, the Network tab does NOT show `en-desktop.png`, and the page does NOT scroll sideways. |
+| STEPS | 1. R1. 2. DevTools device mode at 390×844, Network tab filtered on `dashboard`. 3. Open `/en` and scroll through the section. 4. Repeat on `/`, `/es`, `/pl`. |
+| EXPECT | Heading, caption (three lines at most), the phone frame with the phone capture fading out at its bottom edge, the plan line under it, then three check-marked points. The Network tab shows `<locale>-phone.png` only. You do NOT see a browser frame, you do NOT see the handwritten note, the Network tab does NOT show a `-desktop.png`, and no locale's page scrolls sideways. |
 | RESET | None. |
 
 ### LD-04: The frame peeks above the fold on desktop [EDGE]
@@ -86,7 +88,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | DEPENDS | LD-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R1. 2. Window at 1920×1080, then 1440×900 (DevTools responsive). 3. Load `/en`, `/es`, `/pl`, `/`, `/us` without scrolling. |
-| EXPECT | At 1920×1080: the browser bar and a good part of the screenshot are visible on every page. At 1440×900: the bar and the top edge of the screenshot on `/en`, `/es`, `/pl`; the bar on `/`; at least part of the bar on `/us` (see Known state). You do NOT see the hero's wallet badges touching or overlapped by the frame. |
+| EXPECT | At 1920×1080 and at 1440×900: the browser bar and the top edge of the screenshot are visible on every page without scrolling. You do NOT see the hero's wallet badges touching or overlapped by the frame. (Known misses at 1440×900 on `/` and `/us`: see Known state.) |
 | RESET | None. |
 
 ### LD-05: The section says only what the picture shows [CORE]
@@ -107,7 +109,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | WHY | The KPI row is the most legible part of the capture; the overlapping phone must hang below it. |
 | DEPENDS | LD-01 |
 | ACCOUNT | No session at all. |
-| STEPS | 1. Open `/en` and `/` at 768, 1024 and 1440 wide. 2. Look where the phone's top edge sits against the capture. |
+| STEPS | 1. Open `/en`, `/`, `/es`, `/pl` at 768, 1024 and 1440 wide. 2. Look where the phone's top edge sits against the capture (the es/pl KPI labels are the longest). |
 | EXPECT | The phone's top is below the three KPI cards (Visits, New customers, 30-day return rate) at every width; it covers at most the right-hand columns of the "Busiest times" grid. You do NOT see the phone over any KPI figure or its line under it, and it does NOT stick out past the page's right margin. |
 | RESET | None. |
 
@@ -118,8 +120,8 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | WHY | It answers "is the phone a separate app?". It must point at the phone, not into the screenshot. |
 | DEPENDS | LD-06 |
 | ACCOUNT | No session at all. |
-| STEPS | 1. Open `/en`, `/`, `/es`, `/pl` at 768 and 1440 wide. |
-| EXPECT | One handwritten note under the browser frame, left of the phone, with an arrow pointing right at it ("same dashboard, in your pocket" and its translations). You do NOT see the note overlapping the phone, the frame, or the plan line, and you do NOT see it at 390. |
+| STEPS | 1. Open `/en`, `/`, `/es`, `/pl` at 768, 1024, 1280 and 1440 wide. 2. Scroll the section into view and wait a second for the arrow to draw. |
+| EXPECT | One handwritten note under the browser frame, left of the phone, with a drawn arrow pointing right at it ("same dashboard, in your pocket" and its translations). You do NOT see the note overlapping the phone, the frame, or the plan line, you do NOT see an undrawn (invisible) arrow, and you do NOT see the note at 390. |
 | RESET | None. |
 
 ### LD-08: The numbers strip is current, and the same everywhere [CORE]
@@ -152,7 +154,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. In each locale at 390 and 1440, find "Everything you need to build loyalty". 2. Tap the Geolocation tile. |
-| EXPECT | A grey "Soon" / "Bientôt" / "Pronto" / "Wkrótce" pill top-right of the Geolocation tile, at both widths; at 1440 its description is in the future tense ("Your card will show on their lock screen near your shop."). The tile opens the geolocation feature page. You do NOT see a pill on any other tile, the tile is NOT dimmed, and its title does NOT wrap where it did not before. |
+| EXPECT | A grey "Soon" / "Bientôt" / "Pronto" / "Wkrótce" pill top-right of the Geolocation tile, at both widths; at 1440 its description is in the future tense ("Your card will show on their lock screen near your shop."). The tile opens the geolocation feature page. You do NOT see a pill on any other tile, the tile is NOT dimmed, and no tile's icon, title or spacing differs from production (all six share the new icon row). |
 | RESET | None. |
 
 ### LD-11: /features/analytics still renders its text [BLOCKER]
@@ -185,7 +187,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | DEPENDS | LD-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Production build (see Where things live). 2. Lighthouse (navigation, mobile then desktop) on `/en`, and DevTools Performance at 1920×1080. |
-| EXPECT | CLS 0.00 attributed to this section. LCP stays in the hero on mobile and at 1440; at 1920×1080 the desktop capture may be the LCP element but paints under 1.5s on "Fast 4G" with 4x CPU slowdown (measured ~870ms on 2026-10-26). You do NOT see the section jump when its images arrive. |
+| EXPECT | CLS 0.00 attributed to this section. LCP stays in the hero on mobile, at 1440 and at 1920 (known miss at 1920: see Known state). You do NOT see the section jump when its images arrive. |
 | RESET | None. |
 
 ### LD-14: The captures re-shoot with one command [EDGE]
@@ -195,8 +197,30 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | WHY | The screenshots go stale whenever the Analytics page changes; re-shooting must not need anyone's memory. |
 | DEPENDS | none |
 | ACCOUNT | `camille@aurevo.seed.stampeo.app` (read via `.env.tools`). |
-| STEPS | 1. Showcase dev server on `bun run publicdev` (or a local `next start` and `SHOWCASE_ORIGIN=http://localhost:<port>`). 2. In `promo-videos/`: `bun --env-file=.env.tools tools/screens/landing-shots.ts --out=/tmp/shots --locales=pl --sizes=phone`. 3. Open the file. 4. In `showcase/`: `bun test lib/landing-shots.test.ts`. |
-| EXPECT | `/tmp/shots/pl-phone.png` exists, 1206×2622, the Polish Analytics page at 90 days, no banner or dialog over it. The showcase test passes on the committed files. You do NOT see the login page in the image, and nothing is saved to the fixture's profile (its language stays what it was). |
+| STEPS | 1. Showcase dev server on `bun run publicdev` (or a local `next start` and `SHOWCASE_ORIGIN=http://localhost:<port>`). 2. In `promo-videos/`: `bun --env-file=.env.tools tools/screens/landing-shots.ts --out=/tmp/shots --locales=pl,es`. 3. Open the four files. 4. From a promo-videos worktree, run it again without `--out`. 5. In `showcase/`: `bun test lib/landing/dashboard-shots.test.ts`. |
+| EXPECT | `/tmp/shots/{pl,es}-phone.png` (1206×2622) and `-desktop.png` (2560×1600) exist: the Polish and Spanish Analytics page at 90 days, the desktop one showing the KPI row, Visits over time and Busiest times with no Pro cohorts preview in frame. No trial, over-limit or "What's new" banner or dialog over any of them. Step 4 refuses with a message asking for `--out`. The showcase test passes on the committed files. You do NOT see the login page in an image, and nothing is saved to the fixture's profile (its language stays what it was). |
+| RESET | None. |
+
+### LD-15: The other phone frames are unchanged [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | `PhoneMockup` moved to `components/ui/` and gained an optional background; the three feature pages that already used it must look exactly as before. |
+| DEPENDS | none |
+| ACCOUNT | No session at all. |
+| STEPS | 1. Open `/en/features/push-notifications` and `/en/features/geolocation` at 390 and 1440, next to the same pages on production. |
+| EXPECT | The phone frames, their light-grey screens, status bars and animations match production. You do NOT see a different screen colour, a missing frame, or a console error. |
+| RESET | None. |
+
+### LD-16: Reduced motion shows everything [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | The phone and the handwritten note sit in scroll reveals; with reduced motion they must simply be there. |
+| DEPENDS | LD-01 |
+| ACCOUNT | No session at all. |
+| STEPS | 1. DevTools → Rendering → "Emulate CSS prefers-reduced-motion: reduce". 2. Open `/en` at 1440 and 390 and scroll to the section. |
+| EXPECT | The phone, the note and its arrow (1440) are fully visible at once, with no slide or fade. You do NOT see an empty gap where the phone or note should be. |
 | RESET | None. |
 
 ---

@@ -62,17 +62,6 @@
         }
       ]
     },
-    "dashboard": {
-      "stats": {
-        "totalCustomers": "Clientes totales",
-        "visitsThisWeek": "Visitas esta semana",
-        "rewardsClaimed": "Recompensas canjeadas"
-      },
-      "recentCustomers": "Clientes recientes",
-      "progress": "Progreso",
-      "visitedToday": "Visita hoy",
-      "almost": "¡Ya casi!"
-    },
     "sectorCards": {
       "title": "Stampeo se adapta <mbr></mbr><br></br>a tu comercio",
       "subtitle": "Una barbería o una cafetería recompensa las visitas con sellos. <br></br>Un restaurante o un salón recompensa el gasto con puntos.",

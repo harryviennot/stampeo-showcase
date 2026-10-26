@@ -620,7 +620,16 @@
             "Scans this week and this month",
             "Rewards claimed",
             "Instant customer search"
-          ]
+          ],
+            "stats": {
+              "totalCustomers": "Total Customers",
+              "visitsThisWeek": "Visits This Week",
+              "rewardsClaimed": "Rewards Claimed"
+            },
+            "recentCustomers": "Recent customers",
+            "progress": "Progress",
+            "visitedToday": "Visited today",
+            "almost": "Almost!"
         },
         "activityFeed": {
           "title": "Live activity",

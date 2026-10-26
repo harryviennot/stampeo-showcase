@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { routing } from "@/i18n/routing";
-import { loadCatalog } from "./testing/catalogs";
+import { loadCatalog } from "../testing/catalogs";
 
 /**
  * The landing numbers strip (`variant.metrics`) is maintained by hand in four
@@ -15,12 +15,15 @@ const items = (locale: string): Item[] =>
 
 const digits = (value: string) => Number(value.replace(/\D/g, ""));
 
+/** "+20 000": a space, no-break space or narrow no-break space between groups. */
+const SPACED_PREFIX = /^\+\d{1,3}(?:[ \u00a0\u202f]\d{3})*$/;
+
 /** Each locale's way of writing a rounded-down count: separators and where "+" goes. */
 const FLOOR_FORMAT: Record<string, RegExp> = {
   en: /^\d{1,3}(?:,\d{3})*\+$/,
-  fr: /^\+\d{1,3}(?:[   ]\d{3})*$/,
+  fr: SPACED_PREFIX,
   es: /^\+\d{1,3}(?:\.\d{3})*$/,
-  pl: /^\+\d{1,3}(?:[   ]\d{3})*$/,
+  pl: SPACED_PREFIX,
 };
 
 describe("landing numbers strip", () => {

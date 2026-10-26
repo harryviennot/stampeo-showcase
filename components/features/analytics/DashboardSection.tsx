@@ -29,7 +29,6 @@ function Sparkline({ trend }: { trend: "up" | "down" }) {
 
 export function DashboardSection() {
   const t = useTranslations("features.analytiques.custom.dashboard");
-  const td = useTranslations("landing.dashboard");
 
   const features = t.raw("features") as string[];
 
@@ -84,9 +83,9 @@ export function DashboardSection() {
                 {/* Stats row */}
                 <div className="grid grid-cols-3 gap-3 mb-5">
                   {[
-                    { label: td("stats.totalCustomers"), value: "1,234", change: "+12%", trend: "up" as const },
-                    { label: td("stats.visitsThisWeek"), value: "89", change: "+23%", trend: "up" as const },
-                    { label: td("stats.rewardsClaimed"), value: "156", change: "+8%", trend: "up" as const },
+                    { label: t("stats.totalCustomers"), value: "1,234", change: "+12%", trend: "up" as const },
+                    { label: t("stats.visitsThisWeek"), value: "89", change: "+23%", trend: "up" as const },
+                    { label: t("stats.rewardsClaimed"), value: "156", change: "+8%", trend: "up" as const },
                   ].map((stat, index) => (
                     <div
                       key={index}
@@ -114,8 +113,8 @@ export function DashboardSection() {
                 {/* Customer list */}
                 <div>
                   <div className="flex items-center justify-between text-[10px] text-[var(--muted-foreground)] px-1 font-semibold uppercase tracking-wider mb-2">
-                    <span>{td("recentCustomers")}</span>
-                    <span>{td("progress")}</span>
+                    <span>{t("recentCustomers")}</span>
+                    <span>{t("progress")}</span>
                   </div>
                   <div className="space-y-2">
                     {CUSTOMERS.map((customer, index) => (
@@ -136,7 +135,7 @@ export function DashboardSection() {
                             </p>
                             {customer.recent && (
                               <p className="text-[10px] text-green-600 font-medium">
-                                {td("visitedToday")}
+                                {t("visitedToday")}
                               </p>
                             )}
                           </div>
@@ -144,7 +143,7 @@ export function DashboardSection() {
                         <div className="flex items-center gap-2.5">
                           {customer.stamps === customer.total - 1 && (
                             <span className="text-[10px] bg-[var(--accent)]/10 text-[var(--accent)] px-2 py-0.5 rounded-full font-bold">
-                              {td("almost")}
+                              {t("almost")}
                             </span>
                           )}
                           {/* Stamp dots */}

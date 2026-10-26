@@ -62,17 +62,6 @@
         }
       ]
     },
-    "dashboard": {
-      "stats": {
-        "totalCustomers": "Wszyscy klienci",
-        "visitsThisWeek": "Wizyty w tym tygodniu",
-        "rewardsClaimed": "Odebrane nagrody"
-      },
-      "recentCustomers": "Ostatni klienci",
-      "progress": "Postęp",
-      "visitedToday": "Wizyta dzisiaj",
-      "almost": "Już prawie!"
-    },
     "sectorCards": {
       "title": "Stampeo dopasuje się <mbr></mbr><br></br>do twojej firmy",
       "subtitle": "Barber albo kawiarnia nagradza wizyty pieczątkami. <br></br>Restauracja albo salon nagradza wydatki punktami.",

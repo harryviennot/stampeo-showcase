@@ -11,8 +11,8 @@ interface PhoneMockupProps {
   statusBarStyle?: "full" | "time-only";
   /** Phone frame width in pixels (default 280) */
   width?: number;
-  /** CSS colour behind the status bar; match a screenshot's page colour so
-   *  the bar doesn't read as a stripe. Default: iOS light grey. */
+  /** Screen background (default iOS light grey). Match a screenshot's page
+   *  colour so the status bar doesn't read as a stripe. */
   screenBackground?: string;
 }
 

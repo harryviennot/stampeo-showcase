@@ -845,7 +845,16 @@
             "Skany w tym tygodniu i w tym miesiącu",
             "Odebrane nagrody",
             "Natychmiastowe wyszukiwanie klienta"
-          ]
+          ],
+            "stats": {
+              "totalCustomers": "Wszyscy klienci",
+              "visitsThisWeek": "Wizyty w tym tygodniu",
+              "rewardsClaimed": "Odebrane nagrody"
+            },
+            "recentCustomers": "Ostatni klienci",
+            "progress": "Postęp",
+            "visitedToday": "Wizyta dzisiaj",
+            "almost": "Już prawie!"
         },
         "activityFeed": {
           "title": "Na żywo",
