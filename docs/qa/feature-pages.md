@@ -126,7 +126,7 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | DEPENDS | AF-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Production build. 2. Lighthouse mobile and desktop on `/en/features/analytics` and `/features/analytiques`. 3. In the Elements panel, inspect the hero `<img>`. |
-| EXPECT | LCP ≤ 2.5 s (mobile), the LCP element being the hero image or the headline; CLS ≤ 0.1 with no shift from the hero. The hero `<img>` has `loading="eager"` and `fetchpriority="high"` and is the only one with it; at 390 (DPR 3) the Network tab shows one request for `<locale>-phone-habits.png` at `w=828` or less. The busiest `<img>` has `loading="lazy"`. You do NOT see the hero fade or slide in. |
+| EXPECT | LCP ≤ 2.5 s (mobile), the LCP element being the hero phone (its bezel or its capture) or the headline; CLS ≤ 0.1 with no shift from the hero. The hero phone's three `<img>` (bezel, status bar, capture) have `loading="eager"` and `fetchpriority="high"`, and no other image on the page has them; at 390 (DPR 3) the Network tab shows one request for `<locale>-phone-habits.png` at `w=828` or less. The busiest `<img>` has `loading="lazy"`. You do NOT see the hero fade or slide in. |
 | RESET | None. |
 
 ### AF-09: No raw keys anywhere [BLOCKER]
@@ -148,7 +148,7 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. At 390 and 1440, open `/en` (dashboard section), `/en/features/analytics` (hero and "When they come"), `/en/features/push-notifications` (hero and the notification sequence), `/en/features/geolocation` (hero map, and the "How it works" phone from 1024 up), `/en/features/mobile-scanner` (hero demo and "Get the app"). 2. DevTools Network → "Slow 3G", reload the Analytics page and watch the hero phone load. |
-| EXPECT | Every phone is the orange iPhone 17 Pro with its own Dynamic Island and side buttons. Dashboard screenshots and the notification sequence carry a dark status bar (9:41, signal, Wi-Fi, battery); the scanner phones a white one; the lock screens a white one without the time, above their own big 9:41. Screenshots start below the status bar and run to the screen's bottom edge. While loading, the screen is the warm page colour. You do NOT see a home indicator, a drawn second island, a grey band under the status bar, a fade at the bottom of a screenshot, or a status bar overlapping content. |
+| EXPECT | Every phone is the orange iPhone 17 Pro with its own Dynamic Island and side buttons. Dashboard screenshots and the notification sequence carry black status-bar glyphs (9:41, signal, Wi-Fi, battery: `status-bar-light.png`, for light screens); the scanner phones white glyphs (`status-bar-dark.png`); the lock screens white glyphs without the time (`status-bar-lock.png`), above their own big 9:41. Screenshots start below the status bar and run to the screen's bottom edge. While loading, the screen is the warm page colour. You do NOT see a home indicator, a drawn second island, a grey band under the status bar, a fade at the bottom of a screenshot, or a status bar overlapping content. |
 | RESET | None. |
 
 ### AF-11: Reduced motion [EDGE]
