@@ -321,13 +321,7 @@
     "dashboard": {
       "title": "Ich karta, twoje liczby.",
       "caption": "Każdy skan sam uzupełnia statystyki, bez wpisywania. Sprawdzisz je na telefonie albo na komputerze.",
-      "points": [
-        "Wizyty, nowi klienci i powroty w 30 dni",
-        "Wizyty w czasie, z historią z 90 dni",
-        "Godziny szczytu w każdym dniu tygodnia"
-      ],
       "planLine": "Ekrany z planu Growth. Wykresy są w planach Growth i Pro.",
-      "annotation": "ten sam panel, w kieszeni",
       "alt": {
         "desktop": "Strona Statystyki w Stampeo na komputerze: wizyty, nowi klienci, powroty w 30 dni, wizyty w czasie i godziny szczytu.",
         "phone": "Ta sama strona Statystyki na telefonie: wizyty, nowi klienci i powroty w 30 dni."

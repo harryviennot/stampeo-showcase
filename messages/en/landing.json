@@ -321,13 +321,7 @@
     "dashboard": {
       "title": "Their card, your numbers.",
       "caption": "Every scan updates your Analytics on its own, with nothing to type. Check it on your phone between two customers, or on your computer.",
-      "points": [
-        "Visits, new customers and your 30-day return rate",
-        "Visits over time, with 90 days of history",
-        "Your busiest times, by day and hour"
-      ],
       "planLine": "Screens from the Growth plan. Charts come with Growth and Pro.",
-      "annotation": "same dashboard, in your pocket",
       "alt": {
         "desktop": "The Stampeo Analytics page on a computer: visits, new customers, 30-day return rate, visits over time and busiest times.",
         "phone": "The same Analytics page on a phone: visits, new customers and 30-day return rate."

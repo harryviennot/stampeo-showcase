@@ -19,6 +19,10 @@ describe("landing dashboard section copy", () => {
     expect(claimOffenders(dashboard(locale), "variant.dashboard", OFF_PICTURE)).toEqual([]);
   });
 
+  it.each(routing.locales)("%s: is a heading, one caption and the plan line, the picture does the rest", (locale) => {
+    expect(Object.keys(dashboard(locale)).sort()).toEqual(["alt", "caption", "planLine", "title"]);
+  });
+
   it.each(routing.locales)("%s: the plan line leads with the captured plan and names only plans with charts", (locale) => {
     const named = plansNamed(dashboard(locale).planLine);
     expect([...named].sort()).toEqual([...tiersWhere((facts) => facts.analyticsCharts)].sort());

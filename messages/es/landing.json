@@ -321,13 +321,7 @@
     "dashboard": {
       "title": "Su tarjeta, tus números.",
       "caption": "Cada escaneo actualiza tus estadísticas solo, sin escribir nada. Consúltalas en tu teléfono entre dos clientes, o desde cualquier navegador.",
-      "points": [
-        "Visitas, clientes nuevos y retorno a 30 días",
-        "Visitas a lo largo del tiempo, con 90 días de historial",
-        "Tus horas punta, por día y por hora"
-      ],
       "planLine": "Pantallas del plan Growth. Los gráficos vienen con Growth y Pro.",
-      "annotation": "el mismo panel, en tu bolsillo",
       "alt": {
         "desktop": "La página Estadísticas de Stampeo en una pantalla grande: visitas, clientes nuevos, retorno a 30 días, visitas a lo largo del tiempo y horas punta.",
         "phone": "La misma página Estadísticas en un teléfono: visitas, clientes nuevos y retorno a 30 días."
