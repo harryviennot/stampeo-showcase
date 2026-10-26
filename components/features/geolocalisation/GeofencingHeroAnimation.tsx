@@ -86,7 +86,9 @@ export function GeofencingHeroAnimation() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
         >
-          <div className="scale-[0.55] origin-bottom-right">
+          {/* Smaller below sm: on a 320–390 map the phone would cover the pin
+              and the map's overflow would crop the top of the bezel. */}
+          <div className="scale-[0.45] sm:scale-[0.55] origin-bottom-right">
             <IPhone statusBar="lock" eager>
               {/* Lock screen wallpaper */}
               <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />

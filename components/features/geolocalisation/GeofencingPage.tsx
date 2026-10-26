@@ -96,10 +96,12 @@ export function GeofencingPage() {
             >
               <div className="relative w-full max-w-lg">
                 <GeofencingHeroAnimation />
-                {/* Margin note: no extra setup, the reminder ships in the card. */}
-                <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">
-                  <InkNote rotate={3}>{tp("hero.annotation")}</InkNote>
-                  <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
+                {/* Ink note: no extra setup, the reminder ships in the card.
+                    The map fills the column, so the note sits on it, right
+                    above the hero phone (280 px at 0.55, bottom-4 right-4). */}
+                <div className="hidden lg:flex absolute right-4 bottom-[339px] w-[154px] flex-col items-center pointer-events-none">
+                  <InkNote rotate={3} className="whitespace-nowrap">{tp("hero.annotation")}</InkNote>
+                  <InkArrow variant="down" className="w-5 mt-1" delay={0.5} />
                 </div>
               </div>
             </ScrollReveal>
