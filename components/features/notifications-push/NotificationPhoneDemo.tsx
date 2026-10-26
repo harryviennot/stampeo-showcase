@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { PhoneMockup } from "@/components/ui/PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "./NotificationBanner";
 
 export function NotificationPhoneDemo() {
@@ -27,7 +27,7 @@ export function NotificationPhoneDemo() {
   }, [isVisible]);
 
   return (
-    <PhoneMockup statusBarColor="white" showStatusBar={false}>
+    <IPhone statusBar="lock" eager>
       {/* Lock screen wallpaper — deep dark gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460]" />
 
@@ -35,7 +35,7 @@ export function NotificationPhoneDemo() {
       <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }} />
 
       {/* Lock screen content */}
-      <div className="relative z-10 flex flex-col items-center pt-6">
+      <div className="relative z-10 flex flex-col items-center pt-[calc(var(--iphone-safe-top)+2rem)]">
         {/* Clock — iOS ultralight */}
         <div
           className="text-[72px] leading-none tracking-tight text-white"
@@ -98,6 +98,6 @@ export function NotificationPhoneDemo() {
           </svg>
         </div>
       </div>
-    </PhoneMockup>
+    </IPhone>
   );
 }

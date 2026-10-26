@@ -15,7 +15,7 @@ import {
 import { FeatureCTA } from "@/components/features/FeatureCTA";
 import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
 import { HowItWorks } from "@/components/sections/HowItWorks";
-import { PhoneMockup } from "@/components/ui/PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { GeofencingHeroAnimation } from "./GeofencingHeroAnimation";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
@@ -136,9 +136,9 @@ export function GeofencingPage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="scale-100 origin-top-right">
-              <PhoneMockup showStatusBar={false}>
+              <IPhone statusBar="lock">
                 <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
-                <div className="relative z-10 flex flex-col items-center pt-8">
+                <div className="relative z-10 flex flex-col items-center pt-[calc(var(--iphone-safe-top)+2.5rem)]">
                   <div
                     className="text-[64px] font-light text-white leading-none tracking-tight"
                     style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
@@ -160,7 +160,7 @@ export function GeofencingPage() {
                     timeAgo={tp("demo.timeAgo")}
                   />
                 </div>
-              </PhoneMockup>
+              </IPhone>
             </div>
           </motion.div>
         }

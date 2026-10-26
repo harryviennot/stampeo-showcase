@@ -1,27 +1,25 @@
 import Image from "next/image";
-import { PhoneMockup } from "./PhoneMockup";
+import { IPhone } from "./IPhone";
 
 /**
- * The page colour of the dashboard captures. The status bar behind the frame,
- * the loading placeholder and the bottom fade all use it, so the screen reads
- * as one surface; change it with the captures.
+ * The page colour of the dashboard captures: the status bar sits on it, and it
+ * is what shows while the capture loads, so the screen reads as one surface.
  */
 const SCREEN = "var(--paper-hover)";
 
 /**
- * A real dashboard capture in the phone frame, cropped from the bottom with a
- * soft edge. `eager` is for a capture above the fold (it may be the page's
- * largest paint); everything else loads lazily.
+ * A real dashboard capture on Apple's iPhone, below the status bar like a web
+ * app on the home screen; the screen's bottom edge cuts it, as on a phone.
  */
 export function PhoneScreenshot({
   src,
   alt,
-  sizes = "260px",
+  sizes = "250px",
   eager = false,
 }: Readonly<{ src: string; alt: string; sizes?: string; eager?: boolean }>) {
   return (
-    <PhoneMockup screenBackground={SCREEN}>
-      <div className="relative w-full h-full" style={{ backgroundColor: SCREEN }}>
+    <IPhone statusBar="light" screenBackground={SCREEN} eager={eager}>
+      <div className="absolute inset-x-0 bottom-0" style={{ top: "var(--iphone-safe-top)" }}>
         <Image
           src={src}
           fill
@@ -30,12 +28,7 @@ export function PhoneScreenshot({
           className="object-cover object-top"
           {...(eager ? { loading: "eager", fetchPriority: "high" } : {})}
         />
-        <div
-          aria-hidden
-          className="absolute inset-x-0 bottom-0 h-16"
-          style={{ backgroundImage: `linear-gradient(to top, ${SCREEN}, transparent)` }}
-        />
       </div>
-    </PhoneMockup>
+    </IPhone>
   );
 }
