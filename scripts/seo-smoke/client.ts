@@ -5,6 +5,7 @@ const REQUEST_TIMEOUT_MS = 30_000;
 export interface FetchedPage {
   status: number;
   html: string;
+  headers: Headers;
 }
 
 export function createClient(baseUrl: string) {
@@ -14,7 +15,7 @@ export function createClient(baseUrl: string) {
 
   const fetchPage = async (path: string): Promise<FetchedPage> => {
     const res = await request(path);
-    return { status: res.status, html: await res.text() };
+    return { status: res.status, html: await res.text(), headers: res.headers };
   };
 
   const pages = new Map<string, Promise<FetchedPage>>();
@@ -31,6 +32,13 @@ export function createClient(baseUrl: string) {
       return status === 200 ? check(html) : [`HTTP ${status}, expected 200`];
     };
 
+  /** Runs `check` on a page that must answer 200 without redirecting, with the headers it came with. */
+  const onResponse =
+    (path: string, check: (fetched: FetchedPage) => string[]) => async () => {
+      const fetched = await page(path);
+      return fetched.status === 200 ? check(fetched) : [`HTTP ${fetched.status}, expected 200`];
+    };
+
   /** The status and content type of a URL, with the body left unread. */
   const probe = async (path: string) => {
     const res = await request(path);
@@ -38,7 +46,7 @@ export function createClient(baseUrl: string) {
     return { status: res.status, contentType: res.headers.get("content-type") };
   };
 
-  return { request, fetchPage, page, onPage, probe };
+  return { request, fetchPage, page, onPage, onResponse, probe };
 }
 
 /** The path and query of an absolute URL, to request it from the server under test whatever host the page names. */

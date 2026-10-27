@@ -22,7 +22,10 @@ import {
   statusProblems,
   textProblems,
   titleProblems,
+  unindexedPageProblems,
 } from "./checks";
+import { HELP_INDEXABLE } from "../../lib/help/config";
+import { buildChecks } from "../seo-smoke.ts";
 import { page, PRICING_HEAD } from "./fixtures";
 
 describe("jsonLdProblems", () => {
@@ -238,6 +241,38 @@ describe("privatePageProblems", () => {
       "robots meta is missing, expected noindex",
       'declares canonical "https://stampeo.app"',
     ]);
+  });
+});
+
+describe("unindexedPageProblems", () => {
+  const HELD_OUT = `${robotsHead("noindex, follow")}<title>Help center</title>`;
+  const response = (head: string, headers: Record<string, string> = { "X-Robots-Tag": "noindex" }, lang = "en") => ({
+    html: page({ head, lang }),
+    headers: new Headers(headers),
+  });
+
+  test("passes an English page that is noindex in its meta and its header and names no other version", () => {
+    expect(unindexedPageProblems(response(HELD_OUT), { lang: "en" })).toEqual([]);
+  });
+
+  test.each([
+    ["a robots meta that allows indexing", response(robotsHead("index, follow")), 'robots meta is "index, follow", expected noindex'],
+    ["no X-Robots-Tag header", response(HELD_OUT, {}), "X-Robots-Tag is missing, expected noindex"],
+    ["an X-Robots-Tag that does not say noindex", response(HELD_OUT, { "X-Robots-Tag": "nofollow" }), 'X-Robots-Tag is "nofollow", expected noindex'],
+    ["a canonical naming a preferred URL", response(`${HELD_OUT}${canonicalHead("https://stampeo.app/help")}`), 'declares canonical "https://stampeo.app/help"'],
+    ["hreflang alternates", response(`${HELD_OUT}${PRICING_HEAD}`), "declares hreflang alternates (x-default, fr, en-US)"],
+    ["another language in the html tag", response(HELD_OUT, undefined, "fr"), '<html lang> is "fr", expected "en"'],
+  ])("fails %s", (_case, fetched, problem) => {
+    expect(unindexedPageProblems(fetched, { lang: "en" })).toContain(problem);
+  });
+});
+
+describe("the help center in the smoke list", () => {
+  const names = buildChecks("http://localhost:3000").map((check) => check.name);
+
+  test("is checked as an unindexed page exactly while the switch holds it out of search, and never as a private one", () => {
+    expect(names.some((name) => name.startsWith("Unindexed page /help:"))).toBe(!HELP_INDEXABLE);
+    expect(names.some((name) => name.startsWith("Private page /help"))).toBe(false);
   });
 });
 

@@ -5,6 +5,7 @@ import {
   countBrand,
   parseAlternates,
   parseCanonical,
+  parseHtmlLang,
   parseJsonLdBlocks,
   parseMetaDescription,
   parseTitle,
@@ -30,6 +31,11 @@ describe("metadata parsers", () => {
     });
 
     expect(parseTitle(html)).toBe("Pricing | Stampeo");
+  });
+
+  test("the html element's language is read, and a page without one has none", () => {
+    expect(parseHtmlLang(page({ lang: "en" }))).toBe("en");
+    expect(parseHtmlLang("<!DOCTYPE html><html><head></head></html>")).toBeNull();
   });
 
   test("a page without metadata yields nulls and an empty hreflang map", () => {

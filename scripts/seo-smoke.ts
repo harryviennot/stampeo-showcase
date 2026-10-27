@@ -11,6 +11,7 @@
  * catalog and on one without (the fallback price ladder, which emits no Offers).
  */
 
+import { HELP_INDEXABLE } from "../lib/help/config";
 import { buildSeoLinks } from "../lib/seo-links";
 import type { Market } from "../lib/markets";
 import {
@@ -36,6 +37,7 @@ import {
   statusProblems,
   textProblems,
   titleProblems,
+  unindexedPageProblems,
 } from "./seo-smoke/checks";
 import { createClient, inBatches, onBase } from "./seo-smoke/client";
 import { parseOpenGraph, parseTitle } from "./seo-smoke/html";
@@ -59,11 +61,13 @@ const PRICING_CLUSTER = cluster({
 const COFFEE_POST_CLUSTER = cluster({ fr: "/blog/carte-fidelite-cafe", en: "/en/blog/coffee-shop-loyalty-card" });
 
 export function buildChecks(baseUrl: string): Check[] {
-  const { request, fetchPage, page, onPage, probe } = createClient(baseUrl);
+  const { request, fetchPage, page, onPage, onResponse, probe } = createClient(baseUrl);
   const jsonLdPages = ["/", "/en", "/us", "/pricing", "/us/pricing", "/en/blog/coffee-shop-loyalty-card"];
   const metadataPages = ["/", "/en", "/us", "/pricing", "/en/pricing", "/us/pricing"];
   const titlePages = [...metadataPages, "/privacy", "/terms"];
-  const privatePages = ["/login", "/en/login", "/onboarding", "/reset-password", "/email-preferences", "/help"];
+  const privatePages = ["/login", "/en/login", "/onboarding", "/reset-password", "/email-preferences"];
+  // Public, English only, held out of search until HELP_INDEXABLE is lifted.
+  const unindexedPages = HELP_INDEXABLE ? [] : ["/help", "/help/roles"];
   const junkPaths = ["/month", "/mo", "/mois", "/mes"];
   const openGraphPages = ["/us", "/us/pricing", "/pricing", "/en/pricing", "/contact"];
   const footerPages: Array<{ path: string; locale: string; market: Market }> = [
@@ -211,6 +215,10 @@ export function buildChecks(baseUrl: string): Check[] {
     })),
     sitemapIsSelfCanonical,
     ...privatePages.map((path) => ({ name: `Private page ${path}: noindex, no canonical`, run: onPage(path, privatePageProblems) })),
+    ...unindexedPages.map((path) => ({
+      name: `Unindexed page ${path}: noindex in meta and header, no canonical or hreflang, lang="en"`,
+      run: onResponse(path, (fetched) => unindexedPageProblems(fetched, { lang: "en" })),
+    })),
     {
       name: `Junk paths ${junkPaths.join(" ")} stay 404`,
       run: async () =>

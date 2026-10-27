@@ -8,8 +8,9 @@
 
 /**
  * May search engines index the help center? The ONE switch: the robots meta
- * (`helpRobots`) and the `X-Robots-Tag` header (`helpHeaders`) both read it.
- * The sitemap, llms.txt and IndexNow gain the help URLs separately, at launch.
+ * (`helpRobots`), the `X-Robots-Tag` header (`helpHeaders`), the Markdown
+ * exclusion and the seo-smoke check all read it. The sitemap, llms.txt and
+ * IndexNow gain the help URLs separately, at launch.
  */
 export const HELP_INDEXABLE = false;
 
@@ -26,16 +27,16 @@ export function isHelpLocale(value: unknown): value is HelpLocale {
  * The `robots` directive for any help page. `follow` stays true when noindex,
  * so going live does not start from zero discovery.
  */
-export function helpRobots(): { index: boolean; follow: boolean } {
-  return { index: HELP_INDEXABLE, follow: true };
+export function helpRobots(indexable: boolean = HELP_INDEXABLE): { index: boolean; follow: boolean } {
+  return { index: indexable, follow: true };
 }
 
 /**
  * Is this URL inside the help center?
  *
  * Matches `/help` or `/help/…` and nothing longer, so a shop slugged
- * `helpful-cafe` is not mistaken for it. Takes the BROWSER path: a
- * locale-prefixed copy (`/en/help`) is not the real URL, it redirects to it.
+ * `helpful-cafe` is not mistaken for it. `/en/help` is false: that copy 308s
+ * to `/help`.
  */
 export function isHelpPath(pathname: string): boolean {
   return pathname === "/help" || pathname.startsWith("/help/");

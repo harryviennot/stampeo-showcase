@@ -10,6 +10,7 @@ import {
   parseFeedLinks,
   parseFontPreloads,
   parseHrefs,
+  parseHtmlLang,
   parseJsonLdBlocks,
   parseOpenGraph,
   parseRobots,
@@ -135,6 +136,28 @@ export function privatePageProblems(html: string): string[] {
   return [
     ...(robots && NOINDEX.test(robots) ? [] : [`robots meta is ${robots === null ? "missing" : `"${robots}"`}, expected noindex`]),
     ...(canonical ? [`declares canonical "${canonical}"`] : []),
+  ];
+}
+
+/**
+ * A public page held out of search: noindex in the robots meta and in the
+ * X-Robots-Tag header, no canonical or hreflang alternates naming another
+ * version, and the one language it is written in.
+ */
+export function unindexedPageProblems(
+  response: { html: string; headers: Headers },
+  expected: { lang: string },
+): string[] {
+  const header = response.headers.get("x-robots-tag");
+  const lang = parseHtmlLang(response.html);
+  const alternates = Object.keys(parseAlternates(response.html));
+  return [
+    ...privatePageProblems(response.html),
+    ...(header && NOINDEX.test(header)
+      ? []
+      : [`X-Robots-Tag is ${header === null ? "missing" : `"${header}"`}, expected noindex`]),
+    ...(lang === expected.lang ? [] : [`<html lang> is ${lang === null ? "missing" : `"${lang}"`}, expected "${expected.lang}"`]),
+    ...(alternates.length > 0 ? [`declares hreflang alternates (${alternates.join(", ")})`] : []),
   ];
 }
 

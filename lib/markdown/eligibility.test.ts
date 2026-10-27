@@ -1,5 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import { routing } from "@/i18n/routing";
+import { HELP_LOOKALIKE_SLUGS, HELP_PATHS } from "@/lib/help/__fixtures__/paths";
+import { HELP_INDEXABLE } from "@/lib/help/config";
 import { isMarkdownEligible } from "./eligibility";
 
 const PRIVATE = ["/api", "/auth", "/onboarding", "/login"];
@@ -36,17 +38,19 @@ describe("isMarkdownEligible", () => {
     expect(isMarkdownEligible("/authentic-cafe")).toBe(true);
   });
 
-  // The Markdown variant is a plain response with no robots meta, so a help
-  // page served through it would carry no noindex.
-  it("never serves the help center as Markdown", () => {
-    for (const path of ["/help", "/help/add-a-team-member", "/en/help", "/en/help/add-a-team-member"]) {
-      expect(isMarkdownEligible(path)).toBe(false);
+  // The Markdown variant is a plain response with no robots meta, so it serves
+  // the help center only once the center may be indexed.
+  it("serves the help center as Markdown exactly when it is indexable", () => {
+    for (const path of [...HELP_PATHS, "/en/help", "/en/help/add-a-team-member"]) {
+      expect(isMarkdownEligible(path)).toBe(HELP_INDEXABLE);
     }
   });
 
   it("does not exclude pages and shops that merely start with help", () => {
-    expect(isMarkdownEligible("/helpful-cafe")).toBe(true);
-    expect(isMarkdownEligible("/pl/help-me-coffee")).toBe(true);
+    for (const slug of HELP_LOOKALIKE_SLUGS) {
+      expect(isMarkdownEligible(`/${slug}`)).toBe(true);
+      expect(isMarkdownEligible(`/pl/${slug}`)).toBe(true);
+    }
   });
 
   it("rejects traversal, relative paths and file extensions", () => {

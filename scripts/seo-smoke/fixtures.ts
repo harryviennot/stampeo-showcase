@@ -1,8 +1,8 @@
 /** HTML fixtures shaped like `next start` output, shared by the smoke tests. */
 
 /** A page shaped like `next start` output: head metadata, body, RSC flight payload. */
-export function page({ head = "", body = "" }: { head?: string; body?: string }): string {
-  return `<!DOCTYPE html><html lang="fr"><head><meta charSet="utf-8"/>${head}</head><body>${body}<script>self.__next_f.push([1,"[\\"$\\",\\"script\\",null,{\\"type\\":\\"application/ld+json\\",\\"dangerouslySetInnerHTML\\":{\\"__html\\":\\"$11\\"}}]"])</script></body></html>`;
+export function page({ head = "", body = "", lang = "fr" }: { head?: string; body?: string; lang?: string }): string {
+  return `<!DOCTYPE html><html lang="${lang}"><head><meta charSet="utf-8"/>${head}</head><body>${body}<script>self.__next_f.push([1,"[\\"$\\",\\"script\\",null,{\\"type\\":\\"application/ld+json\\",\\"dangerouslySetInnerHTML\\":{\\"__html\\":\\"$11\\"}}]"])</script></body></html>`;
 }
 
 export const PRICING_HEAD = [

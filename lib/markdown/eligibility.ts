@@ -1,13 +1,11 @@
 import { routing } from "@/i18n/routing";
+import { HELP_INDEXABLE } from "@/lib/help/config";
 
 /** Paths that never serve Markdown, in every locale prefix we ship. */
 const PRIVATE_PATHS = ["/api", "/auth", "/onboarding", "/login"];
 
-/**
- * Public but not for search yet: a Markdown response carries no robots meta,
- * so the help center's noindex would not travel with it.
- */
-const UNINDEXED_PATHS = ["/help"];
+// Not for search yet: lifted with HELP_INDEXABLE (lib/help/config.ts).
+const UNINDEXED_PATHS = HELP_INDEXABLE ? [] : ["/help"];
 
 const NO_MARKDOWN_PATHS = [...PRIVATE_PATHS, ...UNINDEXED_PATHS];
 

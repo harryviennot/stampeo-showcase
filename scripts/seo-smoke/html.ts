@@ -108,6 +108,11 @@ export function parseJsonLdBlocks(html: string): JsonLdBlock[] {
   return blocks;
 }
 
+/** The `lang` of the `<html>` element, or null when it has none. */
+export function parseHtmlLang(html: string): string | null {
+  return tags(html, "html")[0]?.lang || null;
+}
+
 /** The robots meta directives as written, or null when the page declares none. */
 export function parseRobots(html: string): string | null {
   const meta = tags(html, "meta").find((attrs) => attrs.name?.toLowerCase() === "robots");
