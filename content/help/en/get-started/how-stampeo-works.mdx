@@ -1,0 +1,57 @@
+---
+title: How Stampeo works
+description: Your loyalty card lives in your customers' phone wallet. How they get it, how your team stamps it, and where you manage it all.
+type: concept
+audience: [owner, admin, scanner]
+keywords: [getting started, overview, how it works, basics, digital loyalty card, punch card, wallet pass, pass, apple wallet, google wallet, qr code, app, download]
+screens: []
+sources:
+  - showcase/app/[locale]/[slug]
+  - showcase/components/acquisition
+  - scanner-app/src/app/(protected)/scan.tsx
+  - backend/app/services/customer_fields.py
+related: [stamps-or-points, install-the-scanner-app, add-stamps, roles]
+updated: 2026-10-28
+---
+
+Your loyalty card lives on your customers' phones, in Apple Wallet or Google Wallet. They add it in a few seconds, with no app to download. It updates by itself every time your team scans it.
+
+## Three pieces
+
+- **The card** sits in the wallet app that's already on your customers' phones: Apple Wallet on iPhone, Google Wallet on Android. It shows their stamps or points and your reward.
+- **The scanner app** is the free Stampeo app your team uses at the counter. It scans the card and adds stamps or points.
+- **The dashboard** at app.stampeo.app is where you set up the card, see your customers and manage your team.
+
+## Two QR codes, two jobs
+
+This is what confuses most people at first.
+
+| QR code | Where it is | Who scans it | What it does |
+|---|---|---|---|
+| Your shop's QR code | On your counter, your flyer, your social media | A customer, with their phone camera | Opens your sign-up page, so they can get the card |
+| The QR code on the card | On each customer's card, in their wallet | Your team, with the scanner app | Finds that customer and adds their stamps or points |
+
+Customers never stamp their own card. The scanner app only reads the QR code on a customer's card. If it says "Invalid QR code", someone has usually scanned your shop's QR code instead.
+
+## A visit, step by step
+
+1. A new customer scans your shop's QR code and fills in a short form. By default, it asks for their name and email.
+2. The card opens on their phone, and they add it to their wallet in one tap.
+3. On their next visit, they show the card. Someone on your team scans it with the scanner app and adds a stamp. For points, they type what the customer spent.
+4. The card updates on the customer's phone, usually within a few seconds, with a short message on their lock screen.
+5. When the card is full, or they have enough points, your team gives them their reward from the scanner app.
+
+## Stamps or points
+
+- **Stamps:** one stamp per visit, or several at once, and a reward when the card is full. Just like a paper card.
+- **Points:** customers earn points for what they spend, then swap them for a reward from your menu.
+
+You choose one when you set up your card. See [Stamps or points: how each one works](/help/stamps-or-points).
+
+## Who does what
+
+- **You, the owner,** set up the card and manage your plan.
+- **Admins** help you look after your customers in the dashboard.
+- **Scanners** use the scanner app at the counter, and nothing else.
+
+See [Roles and what each one can do](/help/roles).

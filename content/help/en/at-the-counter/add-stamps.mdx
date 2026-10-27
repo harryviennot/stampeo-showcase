@@ -1,0 +1,58 @@
+---
+title: Add stamps to a customer's card
+description: Scan a customer's card with the scanner app and add one stamp, or several at once, in a few seconds.
+type: how-to
+audience: [owner, admin, scanner]
+keywords: [stamp, scan, scanning, add stamp, punch, give a stamp, multiple stamps, several stamps, qr code, counter]
+screens: ["scanner: scan", "scanner: stamp"]
+sources:
+  - scanner-app/src/app/(protected)/scan.tsx
+  - scanner-app/src/components/confirmation/StampFlow.tsx
+  - scanner-app/src/components/confirmation/StampStepper.tsx
+  - scanner-app/src/locales/en/stamp.json
+related: [install-the-scanner-app, how-stampeo-works, stamps-or-points]
+updated: 2026-10-28
+---
+
+The customer shows their card, you scan it and add the stamp. Their card updates on their phone within a few seconds.
+
+## Add a stamp
+
+1. In the scanner app, tap **Start Scanning**.
+2. Point the camera at the QR code on the customer's card. A screenshot of the card works too.
+3. Check the customer's name and how many stamps they have, for example **4 / 10**.
+4. Tap **Add Stamp**.
+
+The app shows **Stamp Added!**. Tap **Scan Next Customer** for the next person.
+
+## Add several stamps at once
+
+For a group or a bigger order, tap **+** before you add. The button changes to **Add 3 stamps**, or however many you chose, up to 50 at once. When you reach the end of the card, the app shows **This completes the card**.
+
+## When the card is full
+
+The app shows **Card Complete!**. Tap **Redeem Reward** to give the reward now, or **Skip for Now** to keep it for their next visit.
+
+If your card saves rewards and keeps going, the app shows **Reward saved!** instead, and the customer starts a new card straight away.
+
+<Details summary="Your card uses points">
+Instead of adding a stamp, type the amount the customer spent, then tap **Add Points**. The app works out the points for you.
+</Details>
+
+## Troubleshooting
+
+<Symptom title="It says &quot;Invalid QR code&quot;">
+You've probably scanned your shop's QR code, the one customers use to get the card. Scan the QR code on the customer's own card instead, in their wallet app.
+</Symptom>
+
+<Symptom title="It says the card isn't recognised">
+The card belongs to another shop, or it's an old copy. Ask the customer to open your card in their wallet app, then scan again.
+</Symptom>
+
+<Symptom title="It says &quot;Daily limit reached&quot;">
+On Growth and Pro, your program can limit what one customer earns in a day or a week. An owner or admin can tap **Add anyway**. A scanner can't, so ask a manager.
+</Symptom>
+
+<Symptom title="It says &quot;Slow network, still sending.&quot;">
+Wait a moment. The app checks whether the stamp went through and never counts it twice. If it then says **Nothing was recorded. Try again.**, scan the card again.
+</Symptom>
