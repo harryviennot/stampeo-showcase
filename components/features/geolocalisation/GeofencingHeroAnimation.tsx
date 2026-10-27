@@ -1,136 +1,136 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, type ReactNode } from "react";
+import {
+  animate,
+  backOut,
+  easeIn,
+  motion,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from "framer-motion";
 import { useTranslations } from "next-intl";
-import { MapPinIcon } from "@/components/icons";
-import { PhoneMockup } from "@/components/features/notifications-push/PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
+import { FADE_END, FADE_START, LOOP, NOTIFY_T, POSTER_T } from "@/lib/feature-pages/geolocation/geofence-walk";
+import { GeofenceMap } from "./GeofenceMap";
 
-export function GeofencingHeroAnimation() {
+const linear = (v: number) => v;
+
+/* Dusk over the city: dark at the top so the white clock and status bar
+   read, warming to the brand orange at the bottom. Both phones on the page use it. */
+export const LOCK_WALLPAPER =
+  "radial-gradient(120% 60% at 50% 110%, #f0894e 0%, rgba(240,137,78,0) 62%), linear-gradient(180deg, #1c1613 0%, #2c201a 48%, #4f2c1d 100%)";
+
+/**
+ * The geolocation hero: a paper street map with the phone in front of it.
+ * A customer walks into the shop's ring and the lock screen wakes with the
+ * card's reminder. Children are positioned over the stage (the ink note).
+ */
+export function GeofencingHeroAnimation({ children }: Readonly<{ children?: ReactNode }>) {
   const t = useTranslations("features.geolocalisation");
-  const [isHovered, setIsHovered] = useState(false);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(stageRef, { amount: 0.3 });
+  const reduceMotion = useReducedMotion();
+  const clock = useMotionValue(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      clock.set(POSTER_T);
+      return;
+    }
+    if (!inView) return;
+    clock.set(0);
+    const controls = animate(clock, LOOP, { duration: LOOP, ease: "linear", repeat: Infinity });
+    return () => controls.stop();
+  }, [clock, inView, reduceMotion]);
+
+  // Asleep until the notification wakes the screen, asleep again at the end.
+  const screenDim = useTransform(
+    clock,
+    [NOTIFY_T - 0.05, NOTIFY_T + 0.3, FADE_START, FADE_END],
+    [0.45, 0, 0, 0.45],
+  );
+  const bannerY = useTransform(
+    clock,
+    [NOTIFY_T, NOTIFY_T + 0.55, FADE_START, FADE_START + 0.45],
+    [-90, 0, 0, -36],
+    { ease: [backOut, linear, easeIn] },
+  );
+  const bannerOpacity = useTransform(
+    clock,
+    [NOTIFY_T, NOTIFY_T + 0.2, FADE_START, FADE_START + 0.4],
+    [0, 1, 1, 0],
+  );
+  const bannerScale = useTransform(clock, [NOTIFY_T, NOTIFY_T + 0.45], [0.92, 1]);
+  const buzz = useTransform(
+    clock,
+    [NOTIFY_T, NOTIFY_T + 0.06, NOTIFY_T + 0.12, NOTIFY_T + 0.18, NOTIFY_T + 0.24, NOTIFY_T + 0.3],
+    [0, -1.4, 1.4, -1, 1, 0],
+  );
 
   return (
-    <div className="relative w-full max-w-lg mx-auto">
-      {/* CSS keyframe for the pulse */}
-      <style>{`
-        @keyframes geofence-pulse {
-          0% { transform: scale(0.3); opacity: 0.45; }
-          100% { transform: scale(1.6); opacity: 0; }
-        }
-        .geofence-ring {
-          animation: geofence-pulse 3.6s cubic-bezier(0.2, 0, 0.2, 1) infinite;
-          will-change: transform, opacity;
-        }
-        .geofence-ring:nth-child(2) { animation-delay: 1.2s; }
-        .geofence-ring:nth-child(3) { animation-delay: 2.4s; }
-      `}</style>
-
-      {/* Map area */}
-      <div
-        className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#e8f5e9] via-[#f1f8e9] to-[#e0e0e0] aspect-square"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {/* Faint street lines */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-[30%] left-0 right-0 h-[2px] bg-white/50" />
-          <div className="absolute top-[60%] left-0 right-0 h-[2px] bg-white/50" />
-          <div className="absolute top-0 bottom-0 left-[25%] w-[2px] bg-white/50" />
-          <div className="absolute top-0 bottom-0 left-[55%] w-[2px] bg-white/50" />
-          <div className="absolute top-0 bottom-0 left-[80%] w-[2px] bg-white/40" />
-          <div className="absolute top-[45%] left-[10%] right-[30%] h-[2px] bg-white/40 rotate-[15deg]" />
+    <div
+      ref={stageRef}
+      className="relative mx-auto aspect-[100/96] w-full max-w-[420px] sm:max-w-[500px] lg:max-w-none xl:max-w-[600px]"
+    >
+      {/* The map: a stamped paper card, set down slightly crooked */}
+      <div className="absolute left-0 top-[8%] h-[84%] w-[74%] -rotate-[1.5deg]">
+        <div className="card-stamp relative h-full w-full overflow-hidden rounded-[24px] bg-[var(--paper)]">
+          <GeofenceMap t={clock} />
+          <div className="paper-grain pointer-events-none absolute inset-0" />
         </div>
+      </div>
 
-        {/* Pulsing geofence circles */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className="geofence-ring absolute rounded-full"
-              style={{
-                width: 180,
-                height: 180,
-                boxShadow: "inset 0 0 0 2px var(--accent)",
-                opacity: 0,
-              }}
-            />
-          ))}
+      {/* The phone, outside the map's clip so its bezel is never cut. Scaled
+          only, from its right edge; -mt is half its 572px height, so it sits
+          centred. Each band keeps it at ~44% of the stage width. */}
+      <div className="absolute right-0 top-1/2 z-10 -mt-[286px] origin-right scale-[0.47] min-[360px]:scale-[0.535] min-[390px]:scale-[0.6] sm:scale-[0.785] lg:scale-[0.69] xl:scale-[0.9]">
+        <motion.div style={{ rotate: buzz }}>
+          <IPhone statusBar="lock" eager>
+            <div className="absolute inset-0" style={{ background: LOCK_WALLPAPER }} />
 
-          {/* Center pin */}
-          <div className="relative z-10 flex flex-col items-center">
-            <motion.div
-              animate={{ y: isHovered ? -4 : 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            >
-              <MapPinIcon className="w-12 h-12 text-[var(--accent)] drop-shadow-lg" />
-            </motion.div>
-
-            {/* Radius label on hover */}
-            <motion.span
-              className="mt-2 px-3 py-1 rounded-full bg-white/90 text-sm font-semibold text-[var(--foreground)] shadow-sm pointer-events-none"
-              initial={false}
-              animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 4 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-            >
-              {t("demo.radiusLabel")}
-            </motion.span>
-          </div>
-        </div>
-
-        {/* Phone mockup - bottom right */}
-        <motion.div
-          className="absolute bottom-4 right-4 z-20"
-          initial={{ y: 60, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-        >
-          <div className="scale-[0.55] origin-bottom-right">
-            <PhoneMockup showStatusBar={false}>
-              {/* Lock screen wallpaper */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
-
-              {/* Lock screen content */}
-              <div className="relative z-10 flex flex-col items-center pt-8">
-                <div
-                  className="text-[64px] font-light text-white leading-none tracking-tight"
-                  style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
-                >
-                  9:41
-                </div>
-                <div
-                  className="text-[15px] font-medium text-white/80 mt-1"
-                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
-                >
-                  {t("demo.lockScreenDate")}
-                </div>
-              </div>
-
-              {/* Notification */}
-              <motion.div
-                className="relative z-10 px-3 mt-8"
-                initial={{ y: -80, opacity: 0, scale: 0.9 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 24,
-                  mass: 0.8,
-                  delay: 1.5,
-                }}
+            <div className="relative z-10 flex flex-col items-center pt-[calc(var(--iphone-safe-top)+2rem)]">
+              <div
+                className="text-[72px] leading-none tracking-tight text-white"
+                style={{ fontWeight: 200, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
               >
+                9:41
+              </div>
+              <div
+                className="mt-1 text-[13px] font-medium text-white/75"
+                style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
+              >
+                {t("demo.lockScreenDate")}
+              </div>
+            </div>
+
+            <div className="relative z-10 mt-6 px-3">
+              <motion.div style={{ y: bannerY, opacity: bannerOpacity, scale: bannerScale }}>
                 <NotificationBanner
                   appName="Stampeo"
                   title={t("demo.notificationTitle")}
                   body={t("demo.notificationBody")}
                   timeAgo={t("demo.timeAgo")}
+                  // Over this smooth wallpaper a backdrop blur adds nothing, and
+                  // on the scaled phone Chrome paints a ghost of text through it.
+                  className="bg-white/85! backdrop-blur-none!"
                 />
               </motion.div>
-            </PhoneMockup>
-          </div>
+            </div>
+
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 z-20 bg-black"
+              style={{ opacity: screenDim }}
+            />
+          </IPhone>
         </motion.div>
       </div>
+
+      {children}
     </div>
   );
 }

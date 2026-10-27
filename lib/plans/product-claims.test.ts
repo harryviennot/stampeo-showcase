@@ -15,7 +15,10 @@ import { catalogFiles, catalogStrings, loadCatalog, strictTranslator } from "../
  * - offline scanning: the scanner needs a connection, and the pricing table
  *   marks offline scanning as coming soon;
  * - scheduled card styles: not in the dashboard yet, so only ever "coming soon";
- * - broadcast open rates: we have no figure we can source.
+ * - broadcast open rates: we have no figure we can source;
+ * - a notification when a customer walks past the shop: wallet passes carry
+ *   no locations. Checked on the landing only, because the geolocation
+ *   feature page and some posts still describe it as live.
  */
 
 const ROOT = join(import.meta.dir, "..", "..");
@@ -62,6 +65,7 @@ interface Wording {
   offlineScan: RegExp;
   scheduledStyle: RegExp;
   openRate: RegExp;
+  locationNotify: RegExp;
 }
 
 /** A scan word and an offline phrase close together, or a named offline mode. */
@@ -87,6 +91,7 @@ const WORDING: Record<string, Wording> = {
     scheduledStyle:
       /schedul\w*[^.]{0,40}(?:card styles?|designs?)\b|\b(?:card styles?|designs?)\b[^.]{0,40}schedul/i,
     openRate: openRate("open rate", "e-?mails?"),
+    locationNotify: /\bwalks?\s+(?:past|by)\b/i,
   },
   fr: {
     noCard:
@@ -99,6 +104,7 @@ const WORDING: Record<string, Wording> = {
     scheduledStyle:
       /(?:programm(?:ez|er|é|ation)|planifi)[^.]{0,40}(?:styles? de carte|design)|(?:styles? de carte|design)[^.]{0,40}(?:programm(?:ez|er|é|ation)|planifi)/i,
     openRate: openRate("d['’]ouverture", "e-?mails?"),
+    locationNotify: /\bpass(?:e|ent)\s+(?:devant\b|à côté)/i,
   },
   es: {
     noCard:
@@ -111,6 +117,7 @@ const WORDING: Record<string, Wording> = {
     scheduledStyle:
       /(?:programar|programad[oa]s?|programación|programa tus)[^.]{0,40}estilos? de tarjeta|estilos? de tarjeta[^.]{0,40}(?:programad|con antelación)/i,
     openRate: openRate("apertura", "correos?|e-?mails?"),
+    locationNotify: /\bpasan?\s+(?:por delante|al lado)\b/i,
   },
   pl: {
     noCard:
@@ -122,6 +129,7 @@ const WORDING: Record<string, Wording> = {
     ),
     scheduledStyle: /(?:zaplan|planow)\w*[^.]{0,40}wz[oó]r\w* karty|wz[oó]r\w* karty[^.]{0,40}(?:zaplan|planow)/i,
     openRate: openRate("otwarć|otwieraln", "e-?mail"),
+    locationNotify: /\bprzechodz(?:i|ą)\s+obok\b/i,
   },
 };
 
@@ -150,6 +158,12 @@ describe("product claims", () => {
 
     it(`${locale}: quotes no broadcast open rate`, () => {
       expect(offenders(wording.openRate)).toEqual([]);
+    });
+
+    it(`${locale}: the landing promises no notification when a customer walks by`, () => {
+      const landing = passages.filter(({ where }) => where.includes("/landing.json::"));
+      const claims = landing.filter(({ text }) => wording.locationNotify.test(text));
+      expect(claims.map(({ where, text }) => `${where}: ${text}`)).toEqual([]);
     });
   }
 
@@ -184,6 +198,14 @@ describe("product claim wording", () => {
     ["fr", "openRate", "sont lus 5 à 10× plus que les emails"],
     ["es", "openRate", "se leen de 5 a 10 veces más que los correos"],
     ["pl", "openRate", "są czytane 5 do 10× częściej niż e-maile"],
+    ["en", "locationNotify", "A notification when he walks past the shop"],
+    ["en", "locationNotify", "Remind them you exist when they walk by."],
+    ["fr", "locationNotify", "Une notification quand il passe devant la boutique"],
+    ["fr", "locationNotify", "Rappelez-leur que vous existez quand ils passent à côté."],
+    ["es", "locationNotify", "Un aviso cuando pasa por delante de la barbería"],
+    ["es", "locationNotify", "Recuérdales que existes cuando pasan al lado."],
+    ["pl", "locationNotify", "Powiadomienie, kiedy przechodzi obok salonu"],
+    ["pl", "locationNotify", "Przypomnij o sobie, kiedy przechodzą obok."],
   ] as const)("%s %s flags %p", (locale, claim, text) => {
     expect(WORDING[locale][claim].test(text)).toBe(true);
   });
@@ -198,6 +220,10 @@ describe("product claim wording", () => {
     ["en", "scheduledStyle", "Unlimited saved card styles"],
     ["es", "scheduledStyle", "Tu programa de fidelidad, con tu estilo de tarjeta."],
     ["pl", "openRate", "wiadomość wyjdzie dokładnie wtedy, kiedy pasuje do godzin otwarcia"],
+    ["en", "locationNotify", "Card added in one scan, no app to download"],
+    ["en", "locationNotify", "Walk-ins welcome"],
+    ["fr", "locationNotify", "Carte ajoutée en un scan, aucune appli à télécharger"],
+    ["fr", "locationNotify", "Passez à la caisse"],
   ] as const)("%s %s leaves %p alone", (locale, claim, text) => {
     expect(WORDING[locale][claim].test(text)).toBe(false);
   });

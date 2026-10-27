@@ -62,27 +62,6 @@
         }
       ]
     },
-    "dashboard": {
-      "badge": "Tableau de bord analytique",
-      "title": "Connaissez vos habitués.",
-      "subtitle": "Votre tableau de bord vous montre qui visite, à quelle fréquence, et quand ils approchent d'une récompense. Repérez vos meilleurs clients. Voyez ce qui fonctionne. Prenez de meilleures décisions.",
-      "features": [
-        "Fréquence et habitudes de visite",
-        "Récompenses réclamées et en attente",
-        "Identifiez vos clients les plus fidèles",
-        "Exportez vos données à tout moment"
-      ],
-      "stats": {
-        "totalCustomers": "Clients totaux",
-        "visitsThisWeek": "Visites cette semaine",
-        "rewardsClaimed": "Récompenses réclamées"
-      },
-      "recentCustomers": "Clients récents",
-      "progress": "Progression",
-      "visitedToday": "Visite aujourd'hui",
-      "almost": "Presque !",
-      "annotation": "Sophie revient demain"
-    },
     "sectorCards": {
       "title": "Stampeo s'adapte <mbr></mbr><br></br>à votre commerce",
       "subtitle": "Un barbier ou un café récompense les visites avec des tampons. <br></br>Un restaurant ou un salon récompense la dépense avec des points.",
@@ -95,7 +74,7 @@
           "name": "Barbier",
           "quote": "Julien passe toutes les trois semaines pour son dégradé. Avec Stampeo, c'est automatique, et sa sixième coupe est offerte.",
           "reward": "6 coupes = 1 offerte",
-          "advantage": "Une notification quand il passe devant la boutique",
+          "advantage": "Carte ajoutée en un scan, aucune appli à télécharger",
           "fields": [
             {
               "label": "Récompense",
@@ -308,8 +287,9 @@
         },
         {
           "title": "Géolocalisation",
-          "description": "Rappelez-leur que vous existez quand ils passent à côté.",
-          "link": "/features/geolocalisation"
+          "description": "Votre carte s'affichera sur leur écran de verrouillage près de votre commerce.",
+          "link": "/features/geolocalisation",
+          "badge": "Bientôt"
         },
         {
           "title": "Scanner mobile",
@@ -338,6 +318,15 @@
       "tryDemoCta": "Essayer la démo",
       "annotation": "Un scan, un tampon"
     },
+    "dashboard": {
+      "title": "Leur carte, vos chiffres.",
+      "caption": "Chaque scan remplit vos statistiques, sans rien à saisir. Sur votre téléphone comme sur votre ordinateur.",
+      "planLine": "Les graphiques sont inclus dans Growth et Pro.",
+      "alt": {
+        "desktop": "La page Statistiques de Stampeo sur ordinateur : visites, nouveaux clients, retour à 30 jours, visites dans le temps et heures de pointe.",
+        "phone": "La même page Statistiques sur téléphone : visites, nouveaux clients et retour à 30 jours."
+      }
+    },
     "tryIt": {
       "eyebrow": "Démo en direct, sans inscription",
       "title": "Voyez-la sur votre téléphone",
@@ -352,11 +341,11 @@
           "label": "commerces actifs"
         },
         {
-          "value": "+12 500",
+          "value": "+20 000",
           "label": "tampons distribués"
         },
         {
-          "value": "22",
+          "value": "+25",
           "label": "pays"
         }
       ]

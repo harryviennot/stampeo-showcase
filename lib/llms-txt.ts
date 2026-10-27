@@ -76,7 +76,7 @@ const FEATURE_DESCRIPTIONS: Record<string, string> = {
     "employee QR scanner app (iOS + Android) for adding stamps at the counter.",
   "notifications-push":
     "wallet push notifications triggered at every stamp, reward, or customer return.",
-  analytiques: "customer insights — retention, visit frequency, top customers.",
+  analytiques: "totals from every scan — visits, busiest times, how often customers come back, reward progress.",
   geolocalisation: `surface the loyalty card on the lock screen when the customer is near the shop${
     PLAN_FACTS.pro.geofencing === "coming_soon" ? " (coming soon)" : ""
   }.`,
@@ -197,7 +197,7 @@ Promotional campaigns are one-off push notifications sent straight to customers'
 - **Use cases**: flash promos, new-product launches, happy hours, seasonal offers, weekend openings, "first 30 buyers get a free pastry" style drops.
 
 ### Analytics
-The Analytics page answers what paper cards can't: who comes back, how often, when it is busy.
+The Analytics page answers what paper cards can't: how many customers come back, how often, and when the shop is busy. It shows totals, never a profile of one customer.
 
 **On every plan**:
 - The KPI row: visits, new customers and the 30-day return rate, with the change against the period before.

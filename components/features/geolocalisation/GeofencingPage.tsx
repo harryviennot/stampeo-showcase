@@ -15,9 +15,9 @@ import {
 import { FeatureCTA } from "@/components/features/FeatureCTA";
 import { FeaturePrivacy } from "@/components/features/FeaturePrivacy";
 import { HowItWorks } from "@/components/sections/HowItWorks";
-import { PhoneMockup } from "@/components/features/notifications-push/PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
-import { GeofencingHeroAnimation } from "./GeofencingHeroAnimation";
+import { GeofencingHeroAnimation, LOCK_WALLPAPER } from "./GeofencingHeroAnimation";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
 
 const technicalIcons = [MapPinIcon, SignalIcon, ClockIcon];
@@ -94,14 +94,14 @@ export function GeofencingPage() {
               delay={200}
               className="flex justify-center order-1 lg:order-2"
             >
-              <div className="relative">
-                <GeofencingHeroAnimation />
-                {/* Margin note: no extra setup, the reminder ships in the card. */}
-                <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">
-                  <InkNote rotate={3}>{tp("hero.annotation")}</InkNote>
-                  <InkArrow variant="downLeft" className="w-9 mt-1 ml-2" delay={0.5} />
+              <GeofencingHeroAnimation>
+                {/* Ink note: no extra setup, the reminder ships in the card.
+                    Written in the strip above the map, pointing at the phone. */}
+                <div className="hidden lg:flex absolute right-[46%] top-0 flex-col items-end pointer-events-none">
+                  <InkNote rotate={-3} className="whitespace-nowrap">{tp("hero.annotation")}</InkNote>
+                  <InkArrow variant="downRight" className="w-9 -mt-0.5 -mr-6" delay={0.5} />
                 </div>
-              </div>
+              </GeofencingHeroAnimation>
             </ScrollReveal>
           </div>
         </Container>
@@ -136,9 +136,9 @@ export function GeofencingPage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="scale-100 origin-top-right">
-              <PhoneMockup showStatusBar={false}>
-                <div className="absolute inset-0 bg-gradient-to-b from-[#e8e0f0] via-[#d4c8e8] to-[#b8a8d8]" />
-                <div className="relative z-10 flex flex-col items-center pt-8">
+              <IPhone statusBar="lock">
+                <div className="absolute inset-0" style={{ background: LOCK_WALLPAPER }} />
+                <div className="relative z-10 flex flex-col items-center pt-[calc(var(--iphone-safe-top)+2.5rem)]">
                   <div
                     className="text-[64px] font-light text-white leading-none tracking-tight"
                     style={{ textShadow: "0 1px 4px rgba(0,0,0,0.1)" }}
@@ -160,7 +160,7 @@ export function GeofencingPage() {
                     timeAgo={tp("demo.timeAgo")}
                   />
                 </div>
-              </PhoneMockup>
+              </IPhone>
             </div>
           </motion.div>
         }

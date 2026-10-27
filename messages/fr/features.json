@@ -511,17 +511,17 @@
           {
             "title": "Messages personnalisés",
             "description": "Affichez le prénom du client, le nombre de tampons restants, et le nom de la récompense. Chaque notification a l'air écrite pour lui.",
-            "badge": "Growth"
+            "badge": "Growth et Pro"
           },
           {
             "title": "Jalons personnalisés",
             "description": "Déclenchez un message au tampon exact qui compte. « À mi-chemin ! » au tampon 5, « Plus qu'un ! » au tampon 9. 3 jalons par programme en Growth, illimités en Pro.",
-            "badge": "Growth / Pro"
+            "badge": "Growth et Pro"
           },
           {
             "title": "Campagnes & segmentation",
             "description": "Adressez-vous à tous vos clients en un seul message, ou ciblez par nombre de tampons, inactivité et récompenses récentes. Parfait pour les promos flash et les lancements de nouveautés.",
-            "badge": "Growth / Pro",
+            "badge": "Growth et Pro",
             "href": "/features/campagnes-promotionnelles",
             "cta": "Découvrir les campagnes"
           }
@@ -567,30 +567,20 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Connaissez vos habitués. Pas juste de vue.",
-        "subtitle": "Avec une carte en carton, vous ne savez rien de vos clients. Avec Stampeo, vous voyez qui revient, à quelle fréquence, et ce qui fonctionne."
+        "title": "Voyez à quel rythme vos clients reviennent.",
+        "subtitle": "La fréquence de passage de vos clients, leur avancée sur la carte et vos heures de pointe. Chaque scan remplit vos statistiques, sans rien à saisir.",
+        "planLine": "Les graphiques sont inclus dans Growth et Pro.",
+        "alt": "La page Statistiques de Stampeo sur téléphone : la fréquence de passage des clients et leur avancée sur la carte."
+      },
+      "busiest": {
+        "title": "Vos heures de pointe, d'un coup d'œil",
+        "lead": "Vos visites par jour et par heure, avec le créneau le plus chargé et l'heure d'ouverture la plus calme. Starter donne l'heure de pointe en une phrase ; Growth et Pro, la grille.",
+        "alt": "La section Heures de pointe sur téléphone : les visites par jour et par heure, le créneau le plus chargé et l'heure d'ouverture la plus calme."
       },
       "problem": {
         "title": "Ce que vous ne savez pas aujourd'hui",
         "description": "Avec des cartes en carton, vous gérez votre fidélisation à l'aveugle. Aucune donnée, aucune visibilité, aucune possibilité d'améliorer ce que vous ne mesurez pas."
       },
-      "sections": [
-        {
-          "title": "Tableau de bord essentiel",
-          "description": "Nombre total de clients, scans cette semaine, récompenses réclamées. Recherchez un client par nom ou email et retrouvez instantanément son historique.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Tendances et heures de pointe",
-          "description": "Visualisez l'évolution de vos métriques jour par jour. Découvrez quand vos clients viennent et identifiez les creux pour optimiser votre activité.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Fréquence et rétention",
-          "description": "Comprenez le rythme de vos clients : quotidiens, hebdomadaires, mensuels. Suivez votre taux de rétention et identifiez les clients à risque.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Arrêtez de deviner. Commencez à savoir.",
         "subtitle": "Chaque plan montre l'essentiel de vos passages, de vos heures de pointe et de la fréquence de retour de vos clients. Growth et Pro les affichent sous forme de graphiques et remontent plus loin dans le temps, et Pro ajoute les cohortes mensuelles."
@@ -604,42 +594,34 @@
           "questions": [
             "Combien de clients réguliers",
             "À quelle fréquence reviennent-ils",
-            "Qui a arrêté de venir",
+            "Combien ont arrêté de venir",
             "Quel jour est le plus calme",
             "Combien de récompenses ce mois",
             "Votre programme fonctionne-t-il"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Plan Starter",
-          "title": "L'essentiel pour commencer",
-          "description": "Le plan Starter inclut un tableau de bord simple et clair qui répond aux questions fondamentales.",
-          "features": [
-            "Nombre total de clients inscrits",
-            "Scans cette semaine et ce mois",
-            "Récompenses réclamées",
-            "Recherche client instantanée"
-          ]
-        },
         "activityFeed": {
-          "title": "Activité en direct",
+          "title": "Activité",
           "sectionTitle": "Votre commerce, en temps réel",
-          "sectionDescription": "Chaque tampon, chaque récompense, chaque inscription — suivez l'activité de votre programme de fidélité en direct.",
-          "stampAction": "a obtenu un tampon",
-          "rewardAction": "a réclamé sa récompense",
-          "newCustomerAction": "vient de s'inscrire",
-          "timeAgo": "il y a {seconds}s"
+          "sectionDescription": "Chaque tampon, chaque récompense, chaque nouvelle carte : suivez votre programme de fidélité en direct.",
+          "stampAction": "a reçu un tampon",
+          "rewardAction": "a utilisé une récompense",
+          "live": "En direct",
+          "cardAction": "a ajouté sa carte",
+          "justNow": "À l'instant"
         },
         "proAnalytics": {
           "badge": "Tous les plans",
+          "chartsBadge": "Growth et Pro",
           "title": "Comprenez les tendances, pas juste les chiffres",
           "description": "Les points clés des passages, des heures de pointe, de la fréquence de retour et de l'avancement des cartes, dans tous les plans. Growth et Pro les affichent sous forme de graphiques et remontent plus loin, et Pro ajoute les cohortes mensuelles."
         },
         "proCharts": {
           "lineChart": {
             "label": "Scans / semaine",
-            "trend": "+23%"
+            "trend": "+23%",
+            "comparison": "vs semaine dernière"
           },
           "heatmap": {
             "label": "Heures de pointe",
@@ -702,7 +684,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Growth",
+      "heroBadge": "Growth et Pro",
       "hero": {
         "title": "Rappelez-leur que vous existez. Au bon moment.",
         "subtitle": "Quand votre client passe près de votre commerce, son téléphone lui rappelle qu'il a une carte de fidélité chez vous. Sans que vous ne fassiez rien.",
@@ -715,7 +697,6 @@
       "problemNarrative": "Et si son téléphone pouvait le faire à votre place ?",
       "demo": {
         "lockScreenDate": "Lundi 17 février",
-        "radiusLabel": "~300m",
         "notificationTitle": "Café Le Comptoir à proximité",
         "notificationBody": "Une petite soif ? Vous êtes à 3 tampons de votre café offert ☕",
         "timeAgo": "maintenant"
@@ -786,7 +767,7 @@
             "title": "Multi-établissement",
             "description": "Ajoutez jusqu'à 10 adresses par carte. Chaque point de vente déclenche le rappel automatiquement.",
             "icon": "building",
-            "badge": "Growth"
+            "badge": "Growth et Pro"
           },
           {
             "title": "Mise à jour en temps réel",
@@ -962,12 +943,12 @@
           {
             "title": "Livraison bilingue",
             "description": "Rédigez en français et en anglais une seule fois. Chaque client voit la langue réglée sur son appareil. Pas de doubles campagnes, pas de devinette.",
-            "badge": "Growth / Pro"
+            "badge": "Growth et Pro"
           },
           {
             "title": "Transparence de livraison",
             "description": "Voyez combien de messages sont arrivés sur Apple Wallet, sur Google Wallet, ont été limités par le quota, ou ignorés parce que le wallet a été désinstallé. Des stats honnêtes, pas gonflées.",
-            "badge": "Growth / Pro"
+            "badge": "Growth et Pro"
           }
         ]
       },

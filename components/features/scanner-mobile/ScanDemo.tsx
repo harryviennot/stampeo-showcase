@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { CheckIcon, ClockIcon } from "@/components/icons";
-import { PhoneMockup } from "./PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 
 type Phase = "scanning" | "success" | "result" | "idle";
 
@@ -47,7 +47,7 @@ export function ScanDemo() {
   }, [phase]);
 
   return (
-    <PhoneMockup>
+    <IPhone statusBar="dark" screenBackground="#0a0a0a" eager>
       {/* Camera viewfinder */}
       <div className="absolute inset-0 bg-[#0a0a0a] flex flex-col">
         {/* Top bar with camera UI */}
@@ -311,6 +311,6 @@ export function ScanDemo() {
           </AnimatePresence>
         </div>
       </div>
-    </PhoneMockup>
+    </IPhone>
   );
 }

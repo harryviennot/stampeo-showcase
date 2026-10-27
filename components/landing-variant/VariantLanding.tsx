@@ -21,7 +21,7 @@ import { VariantDifferentiator } from "./VariantDifferentiator";
 import { VariantHowItWorks } from "./VariantHowItWorks";
 import { VariantMetricStrip } from "./VariantMetricStrip";
 import { VariantChangelogTeaser } from "./VariantChangelogTeaser";
-import { DashboardPreview } from "@/components/sections/DashboardPreview";
+import { VariantDashboardShot } from "./VariantDashboardShot";
 import { VariantFAQ } from "./VariantFAQ";
 import { VariantFinalCTA } from "./VariantFinalCTA";
 import { VariantDevToggle } from "./VariantDevToggle";
@@ -89,13 +89,15 @@ export async function VariantLanding({
         <Header market={market} />
         <main className="relative">
           <div data-landing-section="hero"><VariantHero market={market} /></div>
-          {/* "Made in Europe · GDPR" trust strip — hidden outside Europe (US). */}
+          {/* The customer's card above, the business's dashboard here. */}
+          <div data-landing-section="dashboard_preview"><VariantDashboardShot /></div>
+          {/* "Made in Europe · GDPR" trust strip — hidden outside Europe (US).
+              Right after the dashboard, it says where that data lives. */}
           {MARKETS[market].europeTrust && (
             <div data-landing-section="trust_strip"><VariantTrustStrip /></div>
           )}
           <div data-landing-section="benefits"><VariantBenefits /></div>
           <div data-landing-section="differentiator"><VariantDifferentiator market={market} /></div>
-          <div data-landing-section="dashboard_preview"><DashboardPreview /></div>
           <div data-landing-section="how_it_works"><VariantHowItWorks /></div>
           {/* Tear line: the pitch is above, the thing you can actually touch is
               below. The one place on the page it earns its keep. */}
