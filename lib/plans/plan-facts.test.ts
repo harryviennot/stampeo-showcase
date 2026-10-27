@@ -19,6 +19,14 @@ import { catalogStrings, loadCatalog, strictTranslator } from "../testing/catalo
  * meta descriptions and pricing feature lists) is checked against it here.
  */
 
+// The words each locale uses to say a feature is on every plan.
+const EVERY_PLAN: Record<string, RegExp> = {
+  en: /\b(?:every|all) plans?\b/i,
+  fr: /\btous les plans\b|\bchaque plan\b/i,
+  es: /\btodos los planes\b|\bcada plan\b/i,
+  pl: /\bwe wszystkich planach\b|\bw ka[zż]dym planie\b|\bka[zż]dy plan\b|\bwszystkie plany\b/i,
+};
+
 describe("plan facts", () => {
   it("summarises each plan in plain English", () => {
     expect(planSummary("starter")).toBe(
@@ -88,14 +96,6 @@ describe("feature meta descriptions state the plan facts", () => {
     pl: /wielu lokalizacj|wiele lokalizacji|wielolokaliz|wiele lokali|wielu lokali/i,
   };
 
-  // The words each locale uses to say a feature is on every plan.
-  const EVERY_PLAN: Record<string, RegExp> = {
-    en: /\b(?:every|all) plans?\b/i,
-    fr: /\btous les plans\b|\bchaque plan\b/i,
-    es: /\btodos los planes\b|\bcada plan\b/i,
-    pl: /\bwe wszystkich planach\b|\bw ka[zż]dym planie\b|\bwszystkie plany\b/i,
-  };
-
   /**
    * The clauses of `text` that match `claim` and do not sit with the plans that
    * have the feature: the clause must name one of them and none of the others.
@@ -136,7 +136,7 @@ describe("feature meta descriptions state the plan facts", () => {
       expect(soon.test(features.geolocalisation.description)).toBe(true);
     });
 
-    it(`${locale}: Analytics is never sold as on every plan, since its charts are on Growth and Pro`, () => {
+    it(`${locale}: the Analytics meta description never sells all of Analytics as on every plan and names the plans with the full charts`, () => {
       expect(features.analytiques.description).not.toMatch(EVERY_PLAN[locale]);
       for (const plan of tiersWhere((facts) => facts.analyticsCharts)) {
         expect(features.analytiques.description).toContain(PLAN_NAMES[plan]);
@@ -393,19 +393,36 @@ describe("the landing FAQ and the feature copy state the Analytics plan facts", 
     es: /todos los gráficos/i,
     pl: /wszystkie wykresy/i,
   };
-  // Ways the copy said Starter gets the highlights in place of the charts; the visits chart is now on every plan.
+  // Copy that tells Starter it gets highlights in place of every chart.
   const HIGHLIGHTS_ONLY: Record<string, RegExp> = {
-    en: /highlights instead|Starter shows the highlights|^Analytics highlights/i,
-    fr: /Starter en donne l'essentiel|à la place des graphiques|^L'essentiel des statistiques/i,
-    es: /Starter ofrece lo esencial|en lugar de gráficos|^Lo esencial de las estadísticas/i,
-    pl: /Starter daje najważniejsze|zamiast wykresów|^Najważniejsze statystyki/i,
+    en: /highlights instead|Starter shows the highlights|^Analytics highlights|^Charts come with Growth and Pro/i,
+    fr: /Starter en donne l'essentiel|à la place des graphiques|^L'essentiel des statistiques|^Les graphiques sont inclus dans Growth et Pro/i,
+    es: /Starter ofrece lo esencial|en lugar de gráficos|^Lo esencial de las estadísticas|^Los gráficos vienen con Growth y Pro/i,
+    pl: /Starter daje najważniejsze|zamiast wykresów|^Najważniejsze statystyki|^Wykresy są w planach Growth i Pro/i,
   };
+  // How each locale says a plan shows the highlights of the busiest times and of how often customers come.
+  const HIGHLIGHTS: Record<string, RegExp> = {
+    en: /highlights/i,
+    fr: /résum\w*|l'essentiel|points clés/i,
+    es: /resum\w*|lo esencial/i,
+    pl: /podsumowuj\w*|najważniejsze/i,
+  };
+  // The strings that say what every plan gets on Analytics, picked by key path so a rewrite cannot drop one from the check.
+  const PLAN_COPY_PATHS: { file: string; path: string; locales?: string[] }[] = [
+    { file: "landing.json", path: "variant.faq.items[5].answer" },
+    { file: "landing.json", path: "variant.us.faq.items[6].answer", locales: ["en"] },
+    { file: "features.json", path: "features.analytiques.cta.subtitle" },
+    { file: "features.json", path: "features.analytiques.custom.proAnalytics.description" },
+  ];
   // "(30 days, 90 days or 1 year)" in each locale.
   const HISTORY_LIST = /\((\d+ [^,)]+), (\d+ [^,)]+) (?:or|ou|o|lub) (\d+ [^,)]+)\)/;
   const FILES = ["landing.json", "features.json", "metadata.json"];
 
   const copy = (locale: string) =>
     FILES.flatMap((file) => catalogStrings(loadCatalog(locale, file), `${locale}/${file}::`));
+  /** The string at key path `path` (`a.b[0].c`) in one catalog file, if the catalog has it. */
+  const stringAt = (locale: string, file: string, path: string) =>
+    catalogStrings(loadCatalog(locale, file)).find(({ where }) => where === path)?.text;
   /** The plans named in the clause of `text` that holds `phrase`. */
   const plansNamedWith = (text: string, phrase: string | RegExp) => {
     const clause = text.split(/[.,;:]/).find((part) => (typeof phrase === "string" ? part.toLowerCase().includes(phrase) : phrase.test(part))) ?? "";
@@ -438,12 +455,22 @@ describe("the landing FAQ and the feature copy state the Analytics plan facts", 
       expect(claims).toEqual([]);
     });
 
-    it(`${locale}: every plan comparison that names the monthly cohorts says the visits chart is on every plan`, () => {
-      const comparisons = copy(locale).filter(({ text }) => text.toLowerCase().includes(COHORTS[locale]));
-      expect(comparisons.length).toBeGreaterThan(0);
-      for (const { where, text } of comparisons) {
-        expect({ where, visitsChart: VISITS_CHART[locale].test(text) }).toEqual({ where, visitsChart: true });
-      }
+    for (const { file, path } of PLAN_COPY_PATHS.filter(({ locales }) => !locales || locales.includes(locale))) {
+      it(`${locale}/${file}::${path}: the visits chart is on every plan and the rest gets the highlights`, () => {
+        const text = stringAt(locale, file, path);
+        expect(text).toBeDefined();
+        const visits = text!.split(/(?<=[.!?])\s+/).find((sentence) => VISITS_CHART[locale].test(sentence));
+        expect(visits).toBeDefined();
+        expect(visits).toMatch(EVERY_PLAN[locale]);
+        expect(text).toMatch(HIGHLIGHTS[locale]);
+        expect(plansNamedWith(text!, HIGHLIGHTS[locale]).filter((tier) => tier !== "starter")).toEqual([]);
+      });
+    }
+
+    it(`${locale}: the Analytics meta description puts the visits chart on Starter`, () => {
+      const text = stringAt(locale, "metadata.json", "metadata.features.analytiques.description");
+      expect(text).toBeDefined();
+      expect(plansNamedWith(text!, VISITS_CHART[locale])).toContain("starter");
     });
 
     it(`${locale}: no copy says Starter gets only the highlights`, () => {
