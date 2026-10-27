@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
 import { createBusinessLocaleLookup } from "./lib/business-locale";
+import { isHelpPath } from "./lib/help/config";
 import { isMarkdownEligible } from "./lib/markdown/eligibility";
 import {
   acquisitionSlug,
@@ -53,6 +54,15 @@ export default async function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.host = url.host.replace(/^www\./, "");
     return NextResponse.redirect(url, 301);
+  }
+
+  // The help center is English at a locale-free URL: the rewrite keeps /help
+  // in the address bar. Before the markdown and shop-slug checks, which would
+  // otherwise claim it, and independent of any language cookie.
+  if (isHelpPath(request.nextUrl.pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/en${request.nextUrl.pathname}`;
+    return NextResponse.rewrite(url);
   }
 
   if (isPilotPath(request.nextUrl.pathname)) {

@@ -155,6 +155,14 @@ function pilotRules(): Rule[] {
 }
 
 /**
+ * The help center is English at the locale-free `/help`, so every locale
+ * prefix, French included, leads to the real URL.
+ */
+function helpRules(): Rule[] {
+  return SITE_LOCALES.map((locale): Rule => [`/${locale}/help/:path*`, "/help/:path*"]);
+}
+
+/**
  * Every legacy redirect, explicit entries first. A derived rule whose source an
  * explicit entry already covers is dropped.
  */
@@ -172,7 +180,7 @@ export function legacyRedirects(
       return true;
     });
 
-  const base = unique([...EXPLICIT, ...blogRules(slugs), ...pilotRules()]);
+  const base = unique([...EXPLICIT, ...blogRules(slugs), ...pilotRules(), ...helpRules()]);
   return [...base, ...unique(doubledLocaleRules(base))].map(([source, destination]) => ({
     source,
     destination,

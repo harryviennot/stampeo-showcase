@@ -7,7 +7,7 @@
 import { describe, expect, test } from "bun:test";
 import { getRedirectUrl, unstable_getResponseFromNextConfig } from "next/experimental/testing/server";
 import nextConfig from "../../next.config";
-import { HELP_INDEXABLE, HELP_LOCALES, helpRobots, isHelpPath } from "./config";
+import { HELP_INDEXABLE, HELP_LOCALES, helpHeaders, helpRobots, isHelpLocale, isHelpPath } from "./config";
 
 const ORIGIN = "https://stampeo.app";
 
@@ -21,8 +21,14 @@ describe("the indexing switch", () => {
     expect(helpRobots().index).toBe(HELP_INDEXABLE);
   });
 
+  test("the header is dropped once the center is indexable", () => {
+    expect(helpHeaders(false)).toHaveLength(1);
+    expect(helpHeaders(true)).toEqual([]);
+  });
+
   test("English is the only help language", () => {
     expect([...HELP_LOCALES]).toEqual(["en"]);
+    expect(["en", "fr", "es", "pl"].filter(isHelpLocale)).toEqual(["en"]);
   });
 });
 
