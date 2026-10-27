@@ -1,6 +1,18 @@
 ---
 title: Understanding your analytics
-description: What every number and chart on the Analytics page means, how a visit is counted, how much history each plan shows, and why a section may say it unlocks later.
+description: What each number and chart on the Analytics page means, how a visit is counted, how much history each plan shows, and why a section unlocks later.
+type: concept
+audience: [owner, admin]
+keywords: [stats, statistics, reports, charts, visits, return rate, busiest time, cohorts, history, kpi]
+screens: [/analytics]
+sources:
+  - web/src/app/(dashboard)/analytics
+  - web/src/components/analytics
+  - backend/app/analytics
+  - backend/app/api/routes/analytics
+  - backend/app/core/features.py
+related: [set-your-time-zone]
+updated: 2026-10-21
 ---
 
 The **Analytics** page shows how your loyalty program is doing over time and when your customers come in. This page explains each number in plain words, so you know what you are looking at before you act on it.
@@ -164,36 +176,44 @@ A longer period often unlocks a section: 50 visits are easier to reach over 90 d
 
 ## When your day starts
 
-Every day and every hour on this page is counted in your business time zone. If the busiest hour looks a few hours off, your time zone is probably not the one you expect. Check it in **Settings**: see [Set your business time zone](/docs/account-and-settings/set-your-time-zone).
+Every day and every hour on this page is counted in your business time zone. If the busiest hour looks a few hours off, your time zone is probably not the one you expect. Check it in **Settings**: see [Set your business time zone](/help/set-your-time-zone).
 
 The first time a business opens **Analytics**, the page says **We are preparing your analytics** while it builds your history. This takes a few minutes, and the page updates by itself. The same happens after you change your time zone, with the message **Recalculating your analytics in your new time zone**.
 
 ## Troubleshooting
 
-**The visit I just made is not on the page**
+<Symptom title="The visit I just made is not on the page">
 
 A period ends yesterday, so today's visits are on **Activity**, not here. For earlier days, the figures refresh about every ten minutes.
 
-**A section is missing, or the page is shorter than I expected**
+</Symptom>
+
+<Symptom title="A section is missing, or the page is shorter than I expected">
 
 A section that does not have enough data yet moves into the **Unlocks as you grow** card. Open it to see how close it is. Picking a longer period can help.
 
-**The numbers do not match Activity or the home page**
+</Symptom>
+
+<Symptom title="The numbers do not match Activity or the home page">
 
 **Activity** and the home page count every scan, including stamps added by hand, and their days follow a different clock, so they can differ from visits here, mostly around midnight. **Analytics** counts visits, in your business time zone.
 
-**I cannot pick 90 days or 1 year**
+</Symptom>
+
+<Symptom title="I cannot pick 90 days or 1 year">
 
 Those periods belong to the Growth and Pro plans. A crown on the button means your plan does not include it.
 
-**I do not see a Location filter**
+</Symptom>
+
+<Symptom title="I do not see a Location filter">
 
 It is part of the Pro plan, and it appears only when your business has two or more locations.
 
-**Analytics is not in my sidebar**
+</Symptom>
+
+<Symptom title="Analytics is not in my sidebar">
 
 Only owners and admins can open it.
 
-## Related pages
-
-- [Set your business time zone](/docs/account-and-settings/set-your-time-zone)
+</Symptom>

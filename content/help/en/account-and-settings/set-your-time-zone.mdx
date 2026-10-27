@@ -1,6 +1,17 @@
 ---
 title: Set your business time zone
 description: See which time zone your business days are counted in, and change it in Settings when it is not the right one.
+type: how-to
+audience: [owner]
+keywords: [timezone, clock, wrong hours, busiest hour, midnight, region, utc, daylight saving, day starts]
+screens: [/settings]
+sources:
+  - web/src/app/(dashboard)/settings
+  - web/src/components/settings/timezone-field.tsx
+  - backend/app/api/routes/setup/business_timezone.py
+  - backend/app/api/routes/businesses.py
+related: [understanding-your-analytics, update-your-opening-hours-and-contact-details, change-your-business-name-logo-and-color]
+updated: 2026-10-27
 ---
 
 Your business time zone decides where one day ends and the next begins. Your analytics use it to place every visit on the right day and hour, and so does the daily limit you can set for each customer. Stampeo picks one for you, and you can correct it in a few clicks.
@@ -18,12 +29,12 @@ A time zone you choose in **Settings** always wins. After that, Stampeo never ch
 1. Open **Settings** in the sidebar.
 2. Scroll to the card called **Address and time zone**, and find **Time zone** in it.
 
-![The Address and time zone section, with the Country and Time zone fields side by side](/docs/set-your-time-zone-01.png)
+![The Address and time zone section, with the Country and Time zone fields side by side](/help/set-your-time-zone-01.png)
 
 3. Click the field. The list opens with your business's current time zone first, then your browser's if it is different, then all the others.
 4. Type the name of a big city in your region in **Search time zones…**, for example "Paris" or "Chicago", and click the one you want.
 
-![The time zone list with "Paris" typed in the search and Paris (GMT+1) found](/docs/set-your-time-zone-02.png)
+![The time zone list with "Paris" typed in the search and Paris (GMT+1) found](/help/set-your-time-zone-02.png)
 
 5. Click **Save changes** at the bottom of the screen. A message says **Changes saved.**
 
@@ -38,24 +49,26 @@ Nothing else moves. Your cards, your customers, their stamps and their points st
 
 ## Troubleshooting
 
-**My busiest hour looks a few hours off**
+<Symptom title="My busiest hour looks a few hours off">
 
 Your time zone is probably not the one you expect. Open **Settings**, check **Time zone**, change it if needed and click **Save changes**. The hours on **Analytics** follow it.
 
-**I cannot find my country in the list**
+</Symptom>
+
+<Symptom title="I cannot find my country in the list">
 
 The list is made of cities, not countries, and the search matches city and region names. Search for a large city in your time zone instead. If you are not sure which, use the one your browser suggests: it is pinned at the top of the list.
 
-**I do not see Settings, or the Time zone field**
+</Symptom>
+
+<Symptom title="I do not see Settings, or the Time zone field">
 
 Only the owner can open **Settings**. Ask the owner of the business to change it.
 
-**I changed it and Analytics still says it is recalculating**
+</Symptom>
+
+<Symptom title="I changed it and Analytics still says it is recalculating">
 
 The recalculation runs about every ten minutes and the page updates when it finishes. Nothing is lost while you wait.
 
-## Related pages
-
-- [Understanding your analytics](/docs/analytics/understanding-your-analytics)
-- [Update your opening hours and contact details](/docs/account-and-settings/update-your-opening-hours-and-contact-details)
-- [Change your business name, logo and brand color](/docs/account-and-settings/change-your-business-name-logo-and-color)
+</Symptom>

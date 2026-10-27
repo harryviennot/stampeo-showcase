@@ -1,6 +1,18 @@
 ---
 title: Manage a team member
 description: Open someone on the Team page to change their role, pause or resume their scanning, and see when they last scanned.
+type: how-to
+audience: [owner]
+keywords: [employee, staff, pause, change role, activity, last scan, suspend, access, locations, scan count]
+screens: [/team]
+sources:
+  - web/src/app/(dashboard)/team
+  - web/src/components/team
+  - backend/app/api/routes/memberships.py
+  - backend/app/core/permissions.py
+  - backend/app/core/features.py
+related: [roles, add-a-team-member, remove-a-team-member]
+updated: 2026-10-26
 ---
 
 Everything you can do about one person lives in a single panel that opens when you tap them on the Team page: their role, their scans, their locations, and whether they can scan.
@@ -8,9 +20,9 @@ Everything you can do about one person lives in a single panel that opens when y
 ## Before you start
 
 - Only you, the owner, can change a role or pause scanning. An admin can open the same panel but only to read it, and sees the line **Only the owner can change roles and scanning access.**
-- To add someone first, see [Add a team member](/docs/team/add-a-team-member).
+- To add someone first, see [Add a team member](/help/add-a-team-member).
 
-![An admin's view of a team member: their role as text, the owner-only line, Activity and Locations, and no controls](/docs/manage-a-team-member-02.png)
+![An admin's view of a team member: their role as text, the owner-only line, Activity and Locations, and no controls](/help/manage-a-team-member-02.png)
 
 ## Open someone
 
@@ -24,7 +36,7 @@ The panel opens from the right on a computer and from the bottom on a phone. Eac
 - **Paused** if you have turned their scanning off.
 - **Can't scan: no location** on a business with several locations, when a scanner is not assigned to any (see below).
 
-![A team member's panel, with Role, Activity, Locations, Scanning access and Remove from team](/docs/manage-a-team-member-01.png)
+![A team member's panel, with Role, Activity, Locations, Scanning access and Remove from team](/help/manage-a-team-member-01.png)
 
 ## Change a role
 
@@ -42,7 +54,9 @@ Pausing stops someone scanning without removing them, for example while they are
 
 A paused person who tries to scan sees that their scanning access has been paused for this business. They keep their seat and their place in the list, and the panel shows a note that scanning is paused.
 
-> **Note:** on the **Starter** plan, turning scanning back on when your team is already at its limit pauses another person to make room. Stampeo asks you to confirm first with the message **Activating this member will pause another.**
+<Callout type="note">
+On the **Starter** plan, turning scanning back on when your team is already at its limit pauses another person to make room. Stampeo asks you to confirm first with the message **Activating this member will pause another.**
+</Callout>
 
 ## See their activity
 
@@ -63,9 +77,3 @@ If you run several locations on the **Pro** plan, a scanner can only scan at the
 A scanner with no location ticked can't scan anywhere: their row and their panel show **Can't scan: no location** until you tick one. You can also assign people from the other side, in a location's own panel on the **Locations** page; both stay in sync.
 
 Owners and admins can scan at every location, so they have nothing to tick. Admins see where each scanner works but only the owner can change it.
-
-## Related pages
-
-- [Roles and what each one can do](/docs/team/roles)
-- [Add a team member](/docs/team/add-a-team-member)
-- [Remove someone from your team](/docs/team/remove-a-team-member)

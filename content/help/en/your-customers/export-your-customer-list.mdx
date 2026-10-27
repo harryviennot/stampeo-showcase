@@ -1,13 +1,22 @@
 ---
 title: Export your customer list
-description: Download what your customers gave you when they signed up (name, email, phone, birthday, your own questions) as a spreadsheet file, and what the file leaves out.
+description: Download your customers' sign-up details (name, email, phone, birthday, your own questions) as a spreadsheet file, and see what the file leaves out.
+type: how-to
+audience: [owner]
+keywords: [csv, excel, download, spreadsheet, backup, mailing list, email list, contacts, customer data]
+screens: [/customers]
+sources:
+  - web/src/app/(dashboard)/customers
+  - backend/app/api/routes/customer_data/export.py
+related: [add-a-team-member]
+updated: 2026-10-22
 ---
 
 Download every customer's sign-up details as one file. You can open it in Excel, Numbers or Google Sheets, or import it into your email or CRM tool.
 
 ## Before you start
 
-- Only you, the owner, can export the list. People who help you run the program don't see the button. See [Add a team member](/docs/team/add-a-team-member) for who can do what.
+- Only you, the owner, can export the list. People who help you run the program don't see the button. See [Add a team member](/help/add-a-team-member) for who can do what.
 - The button appears once you have at least one customer.
 
 ## Download the list
@@ -15,7 +24,7 @@ Download every customer's sign-up details as one file. You can open it in Excel,
 1. Open **Customers** in the sidebar.
 2. Click **Export** at the top right of the page. On a phone, it sits at the top of the screen, next to the menu button.
 
-![The top of the Customers page, with the Export button on the right](/docs/export-your-customer-list-01.png)
+![The top of the Customers page, with the Export button on the right](/help/export-your-customer-list-01.png)
 
 3. The file downloads, and a message at the bottom of the screen (at the top on a phone) says **Customer list downloaded**.
 
@@ -37,32 +46,40 @@ The headings and the birthdays are written in the language your dashboard is set
 
 The file holds what your customers gave you when they signed up. Their stamps, points, rewards and visits are not in it.
 
-> **Note:** Stampeo doesn't record whether a customer agreed to receive marketing emails. Before you import the list into an email tool, make sure you are allowed to email the people on it.
+<Callout type="note">
+Stampeo doesn't record whether a customer agreed to receive marketing emails. Before you import the list into an email tool, make sure you are allowed to email the people on it.
+</Callout>
 
 You can export ten times an hour. Each export reads your whole customer list, and the limit keeps the service fast for everyone.
 
 ## Troubleshooting
 
-**I don't see the Export button**
+<Symptom title="I don't see the Export button">
 
 Only the owner sees it. If you help run the program, ask the owner to export the list. The button is also hidden while you have no customers yet.
 
-**Excel puts everything in one column**
+</Symptom>
+
+<Symptom title="Excel puts everything in one column">
 
 Excel splits a file on the separator your computer's region uses. The file uses commas when your dashboard is in English, and semicolons when it is in French, Spanish or Polish. Switch the dashboard to the language that matches your Excel and export again. Alternatively, open the file from Excel with **Data**, then **From Text/CSV**, and pick the separator there.
 
-**Phone numbers lost their + sign**
+</Symptom>
+
+<Symptom title="Phone numbers lost their + sign">
 
 Excel reads a phone number like +33612345678 as a plain number and drops the +. The file itself is correct. Open it in Google Sheets or Numbers, or import it in Excel and set the phone column to **Text**.
 
-**A name starts with an apostrophe**
+</Symptom>
+
+<Symptom title="A name starts with an apostrophe">
 
 When something a customer typed would run as a formula in a spreadsheet, we put an apostrophe in front of it so it shows as plain text. Nothing else in the value changes.
 
-**The message says "Couldn't export your customer list"**
+</Symptom>
+
+<Symptom title="The message says &quot;Couldn't export your customer list&quot;">
 
 Check your connection and try again. If you already exported ten times within the hour, wait until the hour has passed.
 
-## Related pages
-
-- [Add a team member](/docs/team/add-a-team-member)
+</Symptom>

@@ -1,6 +1,17 @@
 ---
 title: Remove someone from your team
 description: Remove a scanner or an admin from your business, what happens to their access and their past scans, and when to pause instead.
+type: how-to
+audience: [owner]
+keywords: [fire, delete, employee, staff, remove access, offboard, revoke, seat, leave]
+screens: [/team]
+sources:
+  - web/src/app/(dashboard)/team
+  - web/src/components/team
+  - backend/app/api/routes/memberships.py
+  - backend/app/core/permissions.py
+related: [manage-a-team-member, roles, add-a-team-member]
+updated: 2026-10-26
 ---
 
 Remove someone who no longer works with you. They lose access to your business straight away, and on a Starter plan their seat becomes free.
@@ -9,7 +20,7 @@ Remove someone who no longer works with you. They lose access to your business s
 
 - Only you, the owner, can remove people. An admin can open a person but does not see the remove button.
 - The owner can't be removed.
-- If someone is only away for a while, [pause their scanning](/docs/team/manage-a-team-member) instead. They keep their seat and you can turn it back on.
+- If someone is only away for a while, [pause their scanning](/help/manage-a-team-member) instead. They keep their seat and you can turn it back on.
 
 ## Remove someone
 
@@ -17,13 +28,15 @@ Remove someone who no longer works with you. They lose access to your business s
 2. Tap the person under **Members**. On a computer, click their row.
 3. At the bottom of the panel, under **Danger zone**, tap **Remove from team**.
 
-![The bottom of a team member's panel, with the Scanning access switch and the Remove from team button under Danger zone](/docs/remove-a-team-member-01.png)
+![The bottom of a team member's panel, with the Scanning access switch and the Remove from team button under Danger zone](/help/remove-a-team-member-01.png)
 
 4. Read the message and tap **Remove** to confirm.
 
 A message at the bottom of the screen confirms that the person has been removed, and they disappear from your list.
 
-> **Warning:** you can't undo a removal. To bring them back, add them again with a new code or invitation.
+<Callout type="warning">
+You can't undo a removal. To bring them back, add them again with a new code or invitation.
+</Callout>
 
 ## What happens when you remove someone
 
@@ -34,10 +47,4 @@ A message at the bottom of the screen confirms that the person has been removed,
 
 ## Cancel an invitation instead
 
-Someone who has not joined yet is not a member. Find them under **Waiting to join** and tap **Cancel invitation**. See [Add a team member](/docs/team/add-a-team-member).
-
-## Related pages
-
-- [Manage a team member](/docs/team/manage-a-team-member)
-- [Roles and what each one can do](/docs/team/roles)
-- [Add a team member](/docs/team/add-a-team-member)
+Someone who has not joined yet is not a member. Find them under **Waiting to join** and tap **Cancel invitation**. See [Add a team member](/help/add-a-team-member).

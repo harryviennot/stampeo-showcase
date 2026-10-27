@@ -1,15 +1,27 @@
 ---
 title: Change your business name, logo and brand color
 description: Update the name and logo shown on your sign-up page, in emails and in your team's app, and the brand color of your dashboard, in Settings.
+type: how-to
+audience: [owner]
+keywords: [rename, business name, upload logo, brand color, colour, branding, picture, image, profile]
+screens: [/settings]
+sources:
+  - web/src/app/(dashboard)/settings
+  - web/src/components/settings
+  - backend/app/api/routes/businesses.py
+related: [update-your-opening-hours-and-contact-details, set-your-time-zone]
+updated: 2026-10-27
 ---
 
 Your business name and logo appear on your sign-up page, in the emails Stampeo sends for you, and in your team's scanner app. Your brand color is the accent color of your dashboard, your sign-up page and your team invitations. You change all three in **Settings**, under **Business profile**.
 
-> **Note:** these don't change your card. The title, logo and colors on your customers' cards are set in **Card styles**, and there is a **Card style** link under this section to get there.
+<Callout type="note">
+These don't change your card. The title, logo and colors on your customers' cards are set in **Card styles**, and there is a **Card style** link under this section to get there.
+</Callout>
 
 > Only the owner can open **Settings**. Admins and people who scan don't see it.
 
-![The Business profile section, with the logo and its Change, Adjust crop and Remove buttons, the business name and the brand color](/docs/change-your-business-name-logo-and-color-01.png)
+![The Business profile section, with the logo and its Change, Adjust crop and Remove buttons, the business name and the brand color](/help/change-your-business-name-logo-and-color-01.png)
 
 ## Change your logo
 
@@ -24,7 +36,7 @@ The new logo saves straight away, with no need to click **Save changes**. To cro
 1. Under **Logo**, click **Remove**.
 2. Settings asks **Remove your logo?** Click **Remove logo** to confirm, or **Keep logo** to leave it.
 
-![The Remove your logo? confirmation, with Keep logo and Remove logo](/docs/change-your-business-name-logo-and-color-02.png)
+![The Remove your logo? confirmation, with Keep logo and Remove logo](/help/change-your-business-name-logo-and-color-02.png)
 
 Without a logo, your sign-up page shows the first letters of your business name on your brand color. You can upload a logo again whenever you like.
 
@@ -45,23 +57,26 @@ If you leave the page or click **Discard** without saving, your dashboard goes b
 
 ## Troubleshooting
 
-**I changed my logo but my customers' cards still show the old one**
+<Symptom title="I changed my logo but my customers' cards still show the old one">
 
 The logo on your cards is part of your card style, not of your business profile. Open **Card styles** in the sidebar, or the **Card style** link under **Business profile**, and change it there.
 
-**My logo was refused**
+</Symptom>
+
+<Symptom title="My logo was refused">
 
 Only PNG and JPG files of 2 MB or less are accepted. Save the image as PNG or JPG, or make it smaller, and try again.
 
-**My brand color went back to the old one**
+</Symptom>
+
+<Symptom title="My brand color went back to the old one">
 
 The color was only previewed. Pick it again and click **Save changes** before leaving the page.
 
-**I don't see Settings**
+</Symptom>
+
+<Symptom title="I don't see Settings">
 
 Only the owner of the business can open **Settings**. Ask the owner to make the change.
 
-## Related pages
-
-- [Update your opening hours and contact details](/docs/account-and-settings/update-your-opening-hours-and-contact-details)
-- [Set your business time zone](/docs/account-and-settings/set-your-time-zone)
+</Symptom>

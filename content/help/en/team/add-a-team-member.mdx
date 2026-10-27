@@ -1,6 +1,19 @@
 ---
 title: Add a team member
 description: Add a scanner with a join code or an admin with an email link, follow invitations under Waiting to join, and what the new person does to join.
+type: how-to
+audience: [owner, admin]
+keywords: [employee, staff, worker, invite, join code, invitation, add scanner, add admin, new hire, team]
+screens: [/team]
+sources:
+  - web/src/app/(dashboard)/team
+  - web/src/components/team
+  - backend/app/api/routes/invitations
+  - backend/app/core/join_codes.py
+  - backend/app/core/invitation_policy.py
+  - backend/app/core/features.py
+related: [roles, manage-a-team-member, remove-a-team-member]
+updated: 2026-10-26
 ---
 
 Add the people who work with you, so they can scan customer cards on their phone or help you look after customers from the dashboard.
@@ -16,15 +29,15 @@ Add the people who work with you, so they can scan customer cards on their phone
 1. Open **Team** in the sidebar.
 2. Click **Add member**.
 
-![The Team page with the Members list, the Waiting to join list and the Add member button in the top right](/docs/add-a-team-member-01.png)
+![The Team page with the Members list, the Waiting to join list and the Add member button in the top right](/help/add-a-team-member-01.png)
 
 3. Pick the role of the person you are adding.
 
-![The Add a team member dialog, with Scanner selected and the code form below](/docs/add-a-team-member-02.png)
+![The Add a team member dialog, with Scanner selected and the code form below](/help/add-a-team-member-02.png)
 
 **Scanner** scans customer cards from their phone. That is all they can do: they have no dashboard, and there is nothing for them to set up.
 
-**Admin** sees the dashboard and looks after your customers. The program, the card style and the team stay with you. See [Roles and what each one can do](/docs/team/roles).
+**Admin** sees the dashboard and looks after your customers. The program, the card style and the team stay with you. See [Roles and what each one can do](/help/roles).
 
 The rest of the form changes to match, because the two arrive differently. A scanner gets a code you hand over. An admin gets a link by email.
 
@@ -39,7 +52,9 @@ The six-character code appears on screen and goes to that address at the same ti
 
 They then open the Stampeo scanner app, tap **Join my team**, and type the six characters. They are in straight away, with no account to prepare in advance.
 
-> **Note:** the code works once, for 14 days. Once someone has used it, it is spent, so create one code per person rather than sharing one around.
+<Callout type="note">
+The code works once, for 14 days. Once someone has used it, it is spent, so create one code per person rather than sharing one around.
+</Callout>
 
 The address is only where the code is sent. Whoever you invite can create their account with a different address if they prefer, and the code still works.
 
@@ -49,7 +64,7 @@ The address is only where the code is sent. Whoever you invite can create their 
 2. Fill in **Full Name** and **Email Address**.
 3. Click **Send Invitation**.
 
-![The invite form for an admin, with name and email fields](/docs/add-a-team-member-04.png)
+![The invite form for an admin, with name and email fields](/help/add-a-team-member-04.png)
 
 They get an email with a link. Opening it lets them set up an account and join, and the link lasts 7 days.
 
@@ -61,14 +76,14 @@ Everyone you have invited who has not joined yet appears under **Waiting to join
 
 Tap a row (on a computer, click it) to open the invitation. What you can do there depends on the kind.
 
-![The panel for a code invitation, with the code, a copy button, the New code button and Cancel invitation](/docs/add-a-team-member-03.png)
+![The panel for a code invitation, with the code, a copy button, the New code button and Cancel invitation](/help/add-a-team-member-03.png)
 
 **A code** is shown in large letters, with a copy button next to it. You can reopen it as often as you like until it is used.
 
 - **New code** replaces the code: the previous one stops working immediately, which is what you want if you think it went to the wrong person. A new code is not emailed, so hand it over yourself. An expired code is renewed the same way.
 - **Cancel invitation** stops the code working straight away.
 
-![The panel for an expired email invitation, with Resend invitation and Cancel invitation](/docs/add-a-team-member-10.png)
+![The panel for an expired email invitation, with Resend invitation and Cancel invitation](/help/add-a-team-member-10.png)
 
 **An email invitation** shows who it was sent to.
 
@@ -87,17 +102,17 @@ You need the Stampeo scanner app, on your own phone or the shop's. It is free, o
 
 1. Open the app. The first screen offers **Join my team**.
 
-![The scanner app's first screen, with Join my team as the main button](/docs/add-a-team-member-05.png)
+![The scanner app's first screen, with Join my team as the main button](/help/add-a-team-member-05.png)
 
 2. Tap it, then type your six characters.
 
-![The code screen, with six empty boxes and the Find my shop button](/docs/add-a-team-member-06.png)
+![The code screen, with six empty boxes and the Find my shop button](/help/add-a-team-member-06.png)
 
 3. Tap **Find my shop**.
 
 **If you have never used Stampeo**, you are asked to create an account: your name, an email address, and a password. Your code is kept while you do this, so you do not have to type it again.
 
-![The account form, saying the code has been kept](/docs/add-a-team-member-07.png)
+![The account form, saying the code has been kept](/help/add-a-team-member-07.png)
 
 Use whichever email address you like. It does not have to be the one the code was sent to, and the code works either way. You will get a six-digit code by email to confirm the address is yours.
 
@@ -105,7 +120,7 @@ Use whichever email address you like. It does not have to be the one the code wa
 
 4. Either way, you land on a screen naming the shop you are about to join.
 
-![The confirmation screen, naming the shop and who invited you](/docs/add-a-team-member-08.png)
+![The confirmation screen, naming the shop and who invited you](/help/add-a-team-member-08.png)
 
 5. Check the name is right, then tap **Join this team**. If it is not the shop you expected, tap **This isn't my shop** and ask whoever gave you the code for a new one.
 
@@ -120,7 +135,7 @@ You do not need a second account, and you do not sign out. Your existing shops s
    **If you work at several**, tap the same banner to reach your list of shops, then tap **Join another shop** at the top of it.
 3. Either way, the same panel opens. Type the six characters and tap **Find my shop**.
 
-![The Join another shop panel, with six empty boxes](/docs/add-a-team-member-09.png)
+![The Join another shop panel, with six empty boxes](/help/add-a-team-member-09.png)
 
 4. Confirm the shop's name, exactly as above.
 
@@ -140,37 +155,42 @@ You can use whichever account suits you, even if it is not the address the invit
 
 If you already have a Stampeo account, sign in with it and you land straight on that last screen. Your other businesses stay where they are, and you switch between them from the dashboard.
 
-> **Note:** the link lasts 7 days. If yours has run out, ask whoever invited you to send another from their team page.
+<Callout type="note">
+The link lasts 7 days. If yours has run out, ask whoever invited you to send another from their team page.
+</Callout>
 
 ## Troubleshooting
 
-**They never got the email**
+<Symptom title="They never got the email">
 
 Check the address in your team list first, then ask them to look in their spam folder. For a scanner the email does not matter much: the code is on screen when you create it and you can simply read it out.
 
 If we could not send it at all, we tell you so at the time, in the dialog and in a message at the bottom of the screen. The code still works.
 
-**The code says it does not exist**
+</Symptom>
+
+<Symptom title="The code says it does not exist">
 
 Codes are six characters and work once. If someone has already used it, or it is more than 14 days old, or you pressed **New code** after handing it over, it stops working. Create another one for them.
 
 Codes never contain the letters O, I, L or U, or the digits 0 and 1, so nothing in a code can be confused with anything else. If the app rejects what they typed, it is worth checking they have not read an 8 as a B.
 
-**They joined with a different email than the one I entered**
+</Symptom>
+
+<Symptom title="They joined with a different email than the one I entered">
 
 That is normal and nothing is wrong. The code and the invitation link are what let someone in, not the address we sent them to. Your team list updates to show the address they actually signed up with.
 
-**They cannot see the dashboard**
+</Symptom>
 
-A scanner only has the scanner app, so signing in to the dashboard shows them nothing to manage. If they need the dashboard as well, you do not have to add them again: tap them in your team list and pick **Admin** under **Role**. Only you can do this. See [Manage a team member](/docs/team/manage-a-team-member).
+<Symptom title="They cannot see the dashboard">
 
-**My team is full**
+A scanner only has the scanner app, so signing in to the dashboard shows them nothing to manage. If they need the dashboard as well, you do not have to add them again: tap them in your team list and pick **Admin** under **Role**. Only you can do this. See [Manage a team member](/help/manage-a-team-member).
 
-The Starter plan covers two people in total, and the **Members** heading shows **2 of 2**. Adding a third asks you to move to a bigger plan first, and everyone you have already added keeps working while you decide. If someone has left, [remove them](/docs/team/remove-a-team-member) to free their seat.
+</Symptom>
 
-## Related pages
+<Symptom title="My team is full">
 
-- [Roles and what each one can do](/docs/team/roles)
-- [Manage a team member](/docs/team/manage-a-team-member)
-- [Remove someone from your team](/docs/team/remove-a-team-member)
-- [Install the scanner app](/docs/scanner-app/install-the-scanner-app)
+The Starter plan covers two people in total, and the **Members** heading shows **2 of 2**. Adding a third asks you to move to a bigger plan first, and everyone you have already added keeps working while you decide. If someone has left, [remove them](/help/remove-a-team-member) to free their seat.
+
+</Symptom>
