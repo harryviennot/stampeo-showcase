@@ -894,9 +894,12 @@ body {
 
 /* Anchor support — leave room below the fixed header when navigating
    to a section, and flash the destination heading so deep links from
-   transactional emails are unmistakable. */
+   transactional emails and from the apps' help links are unmistakable.
+   Shared with the help center's articles. */
 .legal-prose h2,
-.legal-prose h3 {
+.legal-prose h3,
+.help-prose h2,
+.help-prose h3 {
   scroll-margin-top: 6rem;
 }
 
@@ -913,14 +916,18 @@ body {
 }
 
 .legal-prose h2:target,
-.legal-prose h3:target {
+.legal-prose h3:target,
+.help-prose h2:target,
+.help-prose h3:target {
   animation: legalSectionFlash 3s ease-out;
   border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .legal-prose h2:target,
-  .legal-prose h3:target {
+  .legal-prose h3:target,
+  .help-prose h2:target,
+  .help-prose h3:target {
     animation: none;
     background-color: rgba(249, 115, 22, 0.16);
   }
@@ -940,6 +947,59 @@ body {
 
 .legal-prose table {
   font-size: 0.95rem;
+}
+
+/* Help prose — an article body on the blog skeleton: a lead-sized intro, links
+   that are underlined, plain Markdown quotes as quiet notes, and long words
+   (file names, addresses) that wrap instead of widening the page. */
+.help-prose {
+  overflow-wrap: break-word;
+}
+
+.help-prose > p:first-of-type {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+@media (min-width: 1024px) {
+  .help-prose > p:first-of-type {
+    font-size: 1.25rem;
+  }
+}
+
+.help-prose a:not(.not-prose a):not(h2 a):not(h3 a) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.help-prose blockquote {
+  border-left-color: var(--border);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.help-prose blockquote p:first-of-type::before,
+.help-prose blockquote p:last-of-type::after {
+  content: none;
+}
+
+/* Inline code (file names, button text) reads as a chip, without the plugin's backticks. */
+.help-prose :not(pre) > code {
+  background: var(--blog-bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.1em 0.35em;
+  font-weight: 500;
+}
+
+.help-prose :not(pre) > code::before,
+.help-prose :not(pre) > code::after {
+  content: none;
+}
+
+.help-prose > :first-child {
+  margin-top: 0;
 }
 
 /* ROI Calculator slider */

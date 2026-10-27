@@ -9,7 +9,12 @@ interface Heading {
   level: number;
 }
 
-export function TableOfContents() {
+interface TableOfContentsProps {
+  /** Which headings to list; a page whose h3s are not sections passes "h2". */
+  selector?: string;
+}
+
+export function TableOfContents({ selector = "h2, h3" }: TableOfContentsProps) {
   const t = useTranslations("blog");
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [activeId, setActiveId] = useState<string>("");
@@ -20,7 +25,7 @@ export function TableOfContents() {
     const article = document.querySelector("article");
     if (!article) return;
 
-    const elements = article.querySelectorAll("h2, h3");
+    const elements = article.querySelectorAll(selector);
     const items: Heading[] = Array.from(elements).map((el) => ({
       id: el.id,
       text: el.textContent || "",
@@ -28,7 +33,7 @@ export function TableOfContents() {
     }));
     initialized.current = true;
     setHeadings(items);
-  }, []);
+  }, [selector]);
 
   useEffect(() => {
     requestAnimationFrame(initHeadings);
@@ -38,7 +43,7 @@ export function TableOfContents() {
     const handleScroll = () => {
       const article = document.querySelector("article");
       if (!article) return;
-      const elements = article.querySelectorAll("h2, h3");
+      const elements = article.querySelectorAll(selector);
       let currentId = "";
       for (const el of elements) {
         const rect = el.getBoundingClientRect();
@@ -51,7 +56,7 @@ export function TableOfContents() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [selector]);
 
   if (headings.length === 0) return null;
 

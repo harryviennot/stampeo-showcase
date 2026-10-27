@@ -164,7 +164,8 @@ describe("links and headings", () => {
   test("a ## section is h3-sized and keeps its id for links", async () => {
     const html = await render("Intro.\n\n## Add a scanner\n\nText.\n");
 
-    expect(html).toMatch(/<h2 id="add-a-scanner"[^>]*class="[^"]*text-h3/);
+    expect(html).toMatch(/<h2[^>]*\bid="add-a-scanner"/);
+    expect(html).toMatch(/<h2[^>]*\bclass="[^"]*text-h3/);
     expect(html).not.toMatch(/<h2[^>]*text-h2/);
   });
 

@@ -50,6 +50,10 @@ export {
   Translate as TranslateIcon,
   ChartPieSlice as ChartPieSliceIcon,
   Phone as PhoneIcon,
+  ArrowSquareOut as ArrowSquareOutIcon,
+  Warning as WarningIcon,
+  Envelope as EnvelopeIcon,
+  WhatsappLogo as WhatsappLogoIcon,
 } from "@phosphor-icons/react";
 
 interface IconProps {

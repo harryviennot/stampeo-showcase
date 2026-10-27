@@ -3,6 +3,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { restoreEnvAfterEach } from "@/lib/testing/restore-env";
 import { getAllHelpPages } from "./index";
 import HelpArticlePage, {
   generateMetadata as articleMetadata,
@@ -29,7 +30,10 @@ describe("the help home", () => {
 describe("a help article", () => {
   const params = (locale: string, slug: string) => ({ params: Promise.resolve({ locale, slug }) });
 
+  restoreEnvAfterEach("NODE_ENV");
+
   test("is generated in English for every published page, and for nothing else", () => {
+    process.env.NODE_ENV = "production";
     const expected = getAllHelpPages({ includeDrafts: false }).map((page) => ({ locale: "en", slug: page.slug }));
 
     expect(articleParams()).toEqual(expected);
