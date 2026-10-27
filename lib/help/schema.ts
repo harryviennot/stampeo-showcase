@@ -42,6 +42,9 @@ export const RELATED_MAX = 5;
 /** A page's file name, and so its URL: lower case words joined by single dashes. */
 export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+/** `/help/<slug>` names these routes of the help center itself, so no page can. */
+export const RESERVED_SLUGS: readonly string[] = ["topics", "search-index"];
+
 const KNOWN_KEYS: ReadonlySet<string> = new Set([
   "title",
   "description",

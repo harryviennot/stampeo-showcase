@@ -160,6 +160,13 @@ describe("a content mistake fails the load, naming the file", () => {
     expect(message).toContain("Roles And Rights.mdx");
   });
 
+  test.each(["topics", "search-index"])("a page named %s, which is a route of the help center itself", (slug) => {
+    const message = loadError(contentRoot({ [`team/${slug}.mdx`]: page() }));
+
+    expect(message).toContain(`${slug}.mdx`);
+    expect(message).toContain("reserved");
+  });
+
   test("the same slug in two categories names both files", () => {
     const message = loadError(
       contentRoot({ "team/roles.mdx": page(), "account-and-settings/roles.mdx": page() })

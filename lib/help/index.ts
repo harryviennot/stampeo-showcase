@@ -11,7 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseFrontmatter, readingMinutes } from "@/lib/content/frontmatter";
 import { HELP_CATEGORIES, getHelpCategory, type HelpCategory } from "./categories";
-import { HelpContentError, SLUG_PATTERN, parseHelpFrontmatter } from "./schema";
+import { HelpContentError, RESERVED_SLUGS, SLUG_PATTERN, parseHelpFrontmatter } from "./schema";
 import type { HelpPage } from "./types";
 
 export { HelpContentError } from "./schema";
@@ -35,6 +35,10 @@ function readPage(file: string, category: string): HelpPage {
   const slug = path.basename(file, MDX_EXTENSION);
   if (!SLUG_PATTERN.test(slug)) {
     throw new HelpContentError(`${file}: the file name must be lower case words joined by dashes, as it is the page's URL`);
+  }
+
+  if (RESERVED_SLUGS.includes(slug)) {
+    throw new HelpContentError(`${file}: "${slug}" is reserved for a route of the help center (reserved: ${RESERVED_SLUGS.join(", ")})`);
   }
 
   let parsed: ReturnType<typeof parseFrontmatter>;

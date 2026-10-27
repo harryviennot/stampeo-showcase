@@ -2,12 +2,43 @@
   "help": {
     "home": {
       "title": "Help center",
-      "building": "We are still building the help center. These are the pages written so far.",
-      "allPages": "All pages"
+      "searchPlaceholder": "Search the help center",
+      "popular": "Popular",
+      "browseByTopic": "Browse by topic",
+      "seeAll": "See all {count}",
+      "doors": {
+        "setup": {
+          "title": "Setting up my card",
+          "line": "Your account, your card and your first customers."
+        },
+        "counter": {
+          "title": "Scanning at the counter",
+          "line": "Add stamps and points with the scanner app."
+        },
+        "customers": {
+          "title": "Helping my customers",
+          "line": "Pages you can send to your customers."
+        }
+      }
     },
     "article": {
       "breadcrumbLabel": "Breadcrumb",
-      "home": "Help"
+      "home": "Help",
+      "onThisPage": "On this page"
+    },
+    "search": {
+      "open": "Search",
+      "label": "Search the help center",
+      "close": "Close search",
+      "popular": "Popular",
+      "results": "Results",
+      "noResult": "No page matches <strong>“{query}”</strong>.",
+      "noResultTip": "Try another word, like “stamps” or “team”.",
+      "unavailable": "Search is not available right now."
+    },
+    "topics": {
+      "back": "Help center",
+      "otherTopics": "Other topics"
     },
     "roles": {
       "owner": "owner",
@@ -38,6 +69,15 @@
       "note": "Note",
       "warning": "Warning"
     },
-    "openInDashboard": "Open in dashboard"
+    "openInDashboard": "Open in dashboard",
+    "share": {
+      "share": "Share",
+      "copied": "Link copied",
+      "askAtTheShop": "Still stuck? Ask at the shop, they can help you."
+    },
+    "footer": {
+      "navLabel": "Help center footer",
+      "helpCenter": "Help center"
+    }
   }
 }

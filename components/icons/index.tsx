@@ -54,6 +54,8 @@ export {
   Warning as WarningIcon,
   Envelope as EnvelopeIcon,
   WhatsappLogo as WhatsappLogoIcon,
+  MagnifyingGlass as MagnifyingGlassIcon,
+  Export as ShareIcon,
 } from "@phosphor-icons/react";
 
 interface IconProps {
