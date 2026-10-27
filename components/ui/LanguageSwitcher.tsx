@@ -4,14 +4,15 @@ import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { LanguagePicker } from "@/components/ui/LanguagePicker";
+import { hidesLanguageSwitcher } from "@/lib/routing/language-switcher";
 
 export function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
 
-  // Hide language switcher on individual blog posts (different slugs per language)
-  if (/^\/blog\/.+/.test(pathname)) return null;
+  // Hide on individual blog posts (different slugs per language) and the help center (English only)
+  if (hidesLanguageSwitcher(pathname)) return null;
 
   return (
     <LanguagePicker

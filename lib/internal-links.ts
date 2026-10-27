@@ -1,5 +1,6 @@
 import { routing } from "@/i18n/routing";
 import { isPilotPath } from "@/lib/markets";
+import { isHelpPath } from "@/lib/help/config";
 import { BLOG_LOCALES } from "@/lib/blog/locales";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { MARKETING_SEGMENTS, PRIVATE_SEGMENTS } from "@/lib/consent-routes";
@@ -207,6 +208,13 @@ function classifyLocaleFreePath(
     };
   }
 
+  if (head === "help") {
+    return {
+      problem: "always-redirects",
+      detail: `the help center is locale-free: "/${locale}${path}" 308s to "${path}"`,
+    };
+  }
+
   if (MARKETING_SEGMENTS.has(head) || PRIVATE_SEGMENTS.has(head)) return null;
 
   return {
@@ -245,9 +253,10 @@ export function classifyLink(
   const path = normalizePath(href);
   const prefix = leadingLocale(path);
 
-  // Country pilots are served at locale-free URLs by a proxy rewrite, so
-  // the prefix rules below do not apply to them in either direction.
-  if (isPilotPath(path)) return { ok: true, resolved: path };
+  // Country pilots and the help center are served at locale-free URLs by a
+  // proxy rewrite, so the prefix rules below do not apply to them in either
+  // direction.
+  if (isPilotPath(path) || isHelpPath(path)) return { ok: true, resolved: path };
 
   // Outside the locale tree, so the locale rules below do not apply in either
   // direction: these take no prefix, from a localized Link or a raw <a> alike.
