@@ -178,6 +178,21 @@ describe("classifyLink — route resolution", () => {
     expect(classifyLink("/us/pricing", "en", "raw-anchor", BLOG).ok).toBe(true);
     expect(classifyLink("/uk", "en", "raw-anchor", BLOG).ok).toBe(true);
   });
+
+  test("the help center is a locale-free URL in every file, whatever its language", () => {
+    for (const locale of ["fr", "en", "pl"]) {
+      for (const kind of ["localized-link", "raw-anchor"] as const) {
+        expect(classifyLink("/help", locale, kind, BLOG)).toEqual({ ok: true, resolved: "/help" });
+        expect(classifyLink("/help/add-a-team-member#roles", locale, kind, BLOG).ok).toBe(true);
+      }
+    }
+  });
+
+  test("a locale-prefixed help link costs a redirect", () => {
+    expect(classifyLink("/en/help/add-a-team-member", "en", "raw-anchor", BLOG)).toMatchObject({
+      problem: "always-redirects",
+    });
+  });
 });
 
 // ---------------------------------------------------------------------------

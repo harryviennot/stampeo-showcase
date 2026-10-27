@@ -52,6 +52,55 @@ describe("the country pilots", () => {
   });
 });
 
+describe("the help center", () => {
+  // English, at a locale-free URL, whatever language the visitor's browser or
+  // an earlier language choice would have picked.
+  test.each(["/help", "/help/add-a-team-member", "/help/a/b"])(
+    "%s keeps its clean URL and serves the English page",
+    async (path) => {
+      const response = await visit(path, { host: "stampeo.app", "accept-language": "fr-FR,fr;q=0.9" });
+
+      expect(getRedirectUrl(response)).toBeNull();
+      expect(getRewrittenUrl(response)).toBe(`${ORIGIN}/en${path}`);
+    },
+  );
+
+  test("a returning French visitor still reads English, with no redirect and no cookie written", async () => {
+    const response = await visit("/help/add-a-team-member", {
+      cookie: "NEXT_LOCALE=fr",
+      "accept-language": "fr-FR,fr;q=0.9",
+    });
+
+    expect(getRedirectUrl(response)).toBeNull();
+    expect(getRewrittenUrl(response)).toBe(`${ORIGIN}/en/help/add-a-team-member`);
+    expect(response.headers.get("set-cookie") ?? "").not.toContain("NEXT_LOCALE");
+  });
+
+  test("a Polish phone reads English too: help is not a shop's enrollment page", async () => {
+    const response = await visit("/help", { "accept-language": "pl-PL,pl;q=0.9" });
+
+    expect(getRewrittenUrl(response)).toBe(`${ORIGIN}/en/help`);
+  });
+
+  test("a page asked for as text/markdown is still the HTML page", async () => {
+    const response = await visit("/help/add-a-team-member", { accept: "text/markdown" });
+
+    expect(getRewrittenUrl(response)).toBe(`${ORIGIN}/en/help/add-a-team-member`);
+  });
+
+  test("sets no market cookie", async () => {
+    const response = await visit("/help", { host: "stampeo.app" });
+
+    expect(response.headers.get("set-cookie") ?? "").not.toContain("stampeo_market");
+  });
+
+  test.each(["/helpful-cafe", "/help-me-coffee"])("a shop whose slug starts with help still enrolls: %s", async (path) => {
+    const response = await visit(path, { "accept-language": "en-US,en;q=0.9" });
+
+    expect(getRewrittenUrl(response)).toBe(`${ORIGIN}/en${path}`);
+  });
+});
+
 describe("Markdown for agents", () => {
   test("a page asked for as text/markdown is served by the Markdown route", async () => {
     const response = await visit("/pricing", { accept: "text/markdown" });

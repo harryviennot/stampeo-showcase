@@ -139,7 +139,13 @@ describe("acquisitionSlug", () => {
     }
   });
 
-  test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger"])(
+  test("the help center is never taken for a shop called help", () => {
+    expect(RESERVED_TOP_SEGMENTS.has("help")).toBe(true);
+    expect(acquisitionSlug("/help")).toBeNull();
+    expect(acquisitionSlug("/help/add-a-team-member")).toBeNull();
+  });
+
+  test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger", "helpful-cafe", "help-me-coffee"])(
     "a slug that starts like a reserved route is still a shop: %s",
     (slug) => {
       expect(acquisitionSlug(`/${slug}`)).toBe(slug);

@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   getRedirectUrl,
+  getRewrittenUrl,
   unstable_getResponseFromNextConfig,
 } from "next/experimental/testing/server";
 import { NextRequest } from "next/server";
@@ -67,6 +68,9 @@ function isLiveRoute(path: string): boolean {
   if (head === "features" && slug && rest.length === 0) {
     return FEATURE_SLUGS.some((fr) => getLocalizedSlug(fr, locale) === slug);
   }
+  if (head === "help" && slug && rest.length === 0) {
+    return existsSync(join(APP, "help", "[slug]", "page.tsx"));
+  }
   return existsSync(join(APP, ...segments, "page.tsx"));
 }
 
@@ -118,6 +122,12 @@ const REFERENCE_A: Array<[string, string]> = [
   ["/es/us/pricing", "/us/pricing"],
   ["/pl/uk", "/uk"],
   ["/en/uk/pricing", "/uk/pricing"],
+  // Locale-prefixed copies of the help center, which is English and locale-free
+  ["/en/help", "/help"],
+  ["/es/help/add-a-team-member", "/help/add-a-team-member"],
+  ["/pl/help/a/b", "/help/a/b"],
+  ["/fr/help", "/help"],
+  ["/fr/help/add-a-team-member", "/help/add-a-team-member"],
 ];
 
 /** Live pages a rule replaces on purpose. */
@@ -128,7 +138,7 @@ const FOUNDING_ROUTES = new Set(
     ),
   ),
 );
-const isPilotCopy = (path: string) => /^\/(en|es|pl)\/(us|uk)(\/|$)/.test(path);
+const isLocalePrefixedCopy = (path: string) => /^\/(en|es|pl)\/(us|uk|help)(\/|$)/.test(path);
 
 describe("legacy URLs from Search Console and git history", () => {
   test.each(REFERENCE_A)("%s -> %s in one permanent hop", async (source, destination) => {
@@ -145,9 +155,9 @@ describe("legacy URLs from Search Console and git history", () => {
     expect(await proxyRedirects(to)).toBe(false);
   });
 
-  test("no rule replaces a live page, except the closed founding routes and the pilot copies", () => {
+  test("no rule replaces a live page, except the closed founding routes and the locale-prefixed copies", () => {
     const shadowed = PROBES.filter((probe) => isLiveRoute(probe));
-    expect(shadowed.filter((probe) => !FOUNDING_ROUTES.has(probe) && !isPilotCopy(probe))).toEqual([]);
+    expect(shadowed.filter((probe) => !FOUNDING_ROUTES.has(probe) && !isLocalePrefixedCopy(probe))).toEqual([]);
   });
 });
 
@@ -192,6 +202,44 @@ describe("a doubled locale prefix", () => {
       expect(await redirectOf(hop?.to ?? "")).toBeNull();
     },
   );
+});
+
+describe("the help center", () => {
+  test.each([
+    ["/en/help", "/help"],
+    ["/es/help", "/help"],
+    ["/pl/help", "/help"],
+    ["/fr/help", "/help"],
+    ["/en/help/add-a-team-member?utm_source=app", "/help/add-a-team-member?utm_source=app"],
+    ["/en/en/help/add-a-team-member", "/help/add-a-team-member"],
+  ])("%s moves permanently to %s", async (source, destination) => {
+    expect(await redirectOf(source)).toEqual({ status: 308, to: destination });
+  });
+
+  test("a French visitor following a /fr/help link reaches the English page in two steps, with no loop", async () => {
+    const request = (path: string) =>
+      new NextRequest(`${ORIGIN}${path}`, {
+        headers: { cookie: "NEXT_LOCALE=fr", "accept-language": "fr-FR,fr;q=0.9" },
+      });
+
+    const hop = await redirectOf("/fr/help/add-a-team-member");
+    expect(hop).toEqual({ status: 308, to: "/help/add-a-team-member" });
+    expect(await redirectOf(hop?.to ?? "")).toBeNull();
+
+    const page = await proxy(request(hop?.to ?? ""));
+    expect(getRedirectUrl(page)).toBeNull();
+    expect(getRewrittenUrl(page)).toBe(`${ORIGIN}/en/help/add-a-team-member`);
+  });
+
+  test("the locale-free URL itself is never a redirect source", async () => {
+    for (const path of ["/help", "/help/add-a-team-member"]) {
+      expect(await redirectOf(path)).toBeNull();
+    }
+  });
+
+  test.each(["/helpful-cafe", "/en/helpful-cafe", "/help-me-coffee"])("a shop whose slug starts with help is not redirected: %s", async (path) => {
+    expect(await redirectOf(path)).toBeNull();
+  });
 });
 
 describe("blog posts asked for in the wrong language", () => {
