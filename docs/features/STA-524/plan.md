@@ -60,6 +60,13 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 - The dead `/docs/scanner-app/install-the-scanner-app` link: becomes `/help/install-the-scanner-app`, a P0 page that doesn't exist yet. Until it does, the link test catches it, so the migrated page drops the link or the page ships first.
 - Language switchers on help pages: hidden (no other language exists), like blog posts.
 
+## Stages
+
+1. **Routing and safety** (AC1 to AC4, AC7, AC12): proxy rewrite and redirects, reserved segment, the analytics-only consent class, `HELP_INDEXABLE`, `X-Robots-Tag`, the markdown leak, switchers hidden, internal-links and seo-smoke aware of `/help`, placeholder routes.
+2. **Content engine and articles** (AC5, AC6, AC10 mechanical part, AC11, AC16, AC17): loader, frontmatter validation, MDX components, article layout, `help.json` chrome, and the 9 pages from `dev` moved to `content/help/en/` with new frontmatter and `/help/` links (no rewriting or splitting yet).
+3. **Finding things** (AC8, AC9, AC14, AC15): help home, topic pages, search, share layout.
+4. **Screenshots and splits** (AC13, AC10 splits): capture script, the two long pages split through the skill, the locations drafts once STA-189 merges.
+
 ## Acceptance criteria
 
 - AC1: Given the showcase, when `/help` and `/help/<slug>` are requested, then English content renders with `lang="en"`, and the URL stays `/help/...`.
@@ -73,7 +80,7 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 - AC9: Given a search for a word only in a page's `keywords` (e.g. "employee"), then that page is in the results; given a query with no match, then the empty state offers the contact options.
 - AC10: Given the migrated content, then the 9 pages from `dev` exist under `content/help/en/` with the new frontmatter, `add-a-team-member` and `understanding-your-analytics` are split per the inventory, and the 7 locations pages are `draft: true`.
 - AC11: Given the help MDX components (`Details`, `Callout`, `Symptom`, `OpenInDashboard`, `Screenshot`) and the layout's badges, Related and "Still stuck?" blocks (from frontmatter `audience`, `plans`, `related`), then each renders at 390px without horizontal scroll, `Screenshot` keeps the image's aspect ratio, and `OpenInDashboard` links to `NEXT_PUBLIC_APP_URL` + path.
-- AC12: Given `/help` and `/help/<slug>` (including `share` pages), then the route classifier says analytics may run and advertising may not: GA4 can load with analytics consent, with Google signals and ad personalization off; the Meta pixel and every Meta or Google Ads event do NOT fire, whatever the visitor consented to; the consent banner offers analytics only. Every other path keeps its current classification (marketing and private tables unchanged), and the folder-pinning test covers `help`.
+- AC12: Given `/help` and `/help/<slug>` (including `share` pages), then the route classifier says analytics may run and advertising may not: GA4 can load with analytics consent, with Google signals and ad personalization off; the Meta pixel and every Meta or Google Ads event do NOT fire, whatever the visitor consented to. The consent banner is the site-wide one (consent is shared across pages), shown on `/help` because a tag can run there. Every other path keeps its current classification (marketing and private tables unchanged), and the folder-pinning test covers `help`.
 - AC14: Given the search dialog on a phone, when it opens with an empty query, then it shows the top tasks; when a query matches nothing, then it echoes the query and shows the email and WhatsApp rows.
 - AC15: Given a `share` page, then it renders without the site header and footer, with a Share button that uses Web Share and falls back to copying the link, and a print stylesheet that hides the bar and keeps each step on one page.
 - AC16: Given a `<Symptom title="…">`, then its heading has a stable id derived from the title, and `/help/<slug>#<id>` scrolls it into view below the header.
