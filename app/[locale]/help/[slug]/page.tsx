@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { HelpLayout } from "@/components/help/HelpLayout";
+import { ShareLayout } from "@/components/help/ShareLayout";
 import { HELP_LOCALES, helpRobots, isHelpLocale } from "@/lib/help/config";
 import { getHelpCategory } from "@/lib/help/categories";
 import { getAllHelpPages, getHelpPage } from "@/lib/help/index";
+import { layoutFor } from "@/lib/help/share/layout-for";
 import { compileHelpMDX } from "@/lib/help/mdx";
 import { tocPlacement } from "@/lib/help/toc";
 
@@ -45,6 +47,8 @@ export default async function HelpArticlePage({
   setRequestLocale(locale);
 
   const content = await compileHelpMDX(page.content);
+  if (layoutFor(page.type) === "share") return <ShareLayout page={page}>{content}</ShareLayout>;
+
   const related = page.related.map((relatedSlug) => {
     const target = getHelpPage(relatedSlug);
     if (!target) throw new Error(`${page.filePath}: related page "${relatedSlug}" does not exist`);
