@@ -1,0 +1,53 @@
+---
+title: Set up your locations and who scans where
+description: Add your first and second location, choose who scans at each one, and print each shop's QR code.
+type: how-to
+audience: [owner]
+plans: [pro]
+keywords: [multiple shops, several stores, branches, outlets, sites, second shop, add a shop, add a store, qr code per shop, assign employee to shop, staff per location]
+screens: [/program/locations]
+sources:
+  - web/src/app/(dashboard)/program/locations
+  - web/src/components/locations
+  - web/src/lib/locations
+  - backend/app/api/routes/locations.py
+  - backend/app/services/locations
+  - backend/app/core/features.py
+related: [how-locations-work, choose-your-location-in-the-scanner, manage-a-team-member, roles]
+updated: 2026-10-27
+draft: true
+---
+
+Give each shop its own QR code and its own scanners. Locations switch on when you add a second one. With one location, nothing changes: everyone on your team can scan, and the page shows no numbers.
+
+## Add your first location
+
+1. Open **Locations** in the sidebar, under **Loyalty Program**, then select **Add your first location**.
+2. Type a **Location name**, such as the street or neighborhood your customers know it by. The address starts from your business address. Change it if the shop is somewhere else.
+3. If your card already has scans or sign-ups, answer **Where did your past activity happen?** Then select **Add location**.
+
+![The first location form. Under the address, Where did your past activity happen? offers two choices.](/docs/set-up-your-locations-01.png)
+
+Choose **Only at this location** if all your past activity came from this shop. It now counts here. Choose **At more than one location** if it did not. It stays unassigned, and each location counts from today. You choose once, and you can't change it later.
+
+![The Locations page with one location and the Add your next location button below it.](/docs/set-up-your-locations-02.png)
+
+## Add your next location
+
+1. Select **Add your next location**, type its name, and select **Add location**. Its panel opens.
+2. Under **Who can scan here**, tick each person who scans at this shop. Each tick saves at once.
+
+![A new location's panel. Under Who can scan here, a note says who stays at the first location, and nobody is ticked yet.](/docs/set-up-your-locations-03.png)
+
+People who have been scanning stay at your first location. People who have never scanned have no location yet. They can't scan until you tick one, and the same goes for scanners you add later. A notice at the top of **Locations** counts them.
+
+Owners and admins can scan at every location. You can also tick locations from a person's panel on the Team page: see [Manage a team member](/help/manage-a-team-member).
+
+## Print each location's QR code
+
+1. Open the location, then select **Download PDF**. Or select **Counter flyer for this location** for a flyer that shows your customers the steps.
+2. Put it at that shop's counter.
+
+Customers who scan it count as sign-ups for that location. The link and the QR code never change, so what you print stays valid.
+
+[Open Locations in your dashboard](https://app.stampeo.app/program/locations)

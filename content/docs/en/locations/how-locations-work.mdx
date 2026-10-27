@@ -1,56 +1,65 @@
 ---
-title: How locations work and who can change them
-description: What a location gives you, how its link differs from your main link, what the primary location means, and who can add, edit and delete locations.
+title: How locations work
+description: What locations give you, what switches on at two shops, the Main link row, the primary location, deleting one, and who can change what.
+type: concept
+audience: [owner, admin]
+plans: [pro]
+keywords: [multiple shops, several stores, branches, outlets, sites, main link, primary location, delete a location, numbers per shop, who can scan where, admin view]
+screens: [/program/locations]
+sources:
+  - web/src/app/(dashboard)/program/locations
+  - web/src/components/locations
+  - web/src/lib/locations
+  - backend/app/services/locations
+  - backend/app/api/routes/locations.py
+  - backend/app/core/features.py
+related: [set-up-your-locations, choose-your-location-in-the-scanner, roles]
+updated: 2026-10-27
+draft: true
 ---
 
-If you run more than one shop, locations give each one its own sign-up QR code, its own scanners and its own numbers. This page explains how the pieces fit together. Each task has its own page, linked at the end.
+A location is one of your shops, with its own QR code, its own scanners and its own numbers. Locations switch on when you have two.
 
-> Available on the Pro plan.
+## With one location, nothing changes
 
-## What a location gives you
+Everyone on your team can scan. The **Locations** page shows no numbers and no tick boxes. Everything counts for your one location.
 
-Open **Locations** in the sidebar, under **Loyalty Program**. Each location you add has:
+## From two locations, you see each one
 
-- **Its own link and QR code.** Customers who join through it are counted for that location. See [Print a QR code for each location](/docs/locations/print-a-qr-code-for-each-location).
-- **Its own scanners.** A scanner can only scan at the locations you tick for them. Owners and admins can scan at every location. See [Choose who can scan at each location](/docs/locations/choose-who-can-scan-at-each-location).
-- **Its own numbers:** scans, sign-ups and rewards, and when the last scan was. See [Understand your location numbers](/docs/locations/understand-your-location-numbers).
-- **An address and a map pin.** The scanner app uses the pin to suggest the nearest location to the person scanning.
+Each location shows these numbers for the last 30 days:
 
-## The main link is not a location
+- **Scans**: stamps or points your team added there.
+- **Sign-ups**: customers who joined through that location's QR code.
+- **Rewards**: rewards your team gave out there.
 
-Your business also has a main link, with its own QR code, on **Overview**. Customers who join through it, for example from a post on social media, count for no location. They show up in the **Main link** row at the top of the **Locations** page, above your locations.
+![The Locations page with two locations. Above them, a Main link row. Each location shows scans, sign-ups and rewards.](/docs/how-locations-work-01.png)
 
-So that sign-ups are counted for the right shop, put each location's own QR code at its own counter, and keep the main link for places that are not a shop.
+Some customers join through your main QR code or link, for example from a social media post. They show in a **Main link** row above your locations. If a shop's **Sign-ups** are low and **Main link** is high, its customers probably scan your main QR code. Put the shop's own QR code at its counter.
+
+## Who scans where
+
+Scanners scan only at the locations you tick for them. They choose their location in the scanner app. A scanner with no location can't scan. Owners and admins can scan at every location. See [Choose your location in the scanner app](/help/choose-your-location-in-the-scanner).
 
 ## The primary location
 
-The first location you add is the primary one. It is listed first, it is the scanner app's default for staff who haven't picked a location, and it can't be deleted. You can make another location primary whenever you like: see [Edit a location or change the primary one](/docs/locations/edit-a-location).
+Your first location is the primary one. It is listed first, and the scanner app starts on it for people who haven't picked a location. To make another location the primary one, open it and select **Make primary** under **Details**.
 
-Primary does not change where sign-ups are counted. Sign-ups through the main link stay under **Main link**.
+## Delete a location
+
+Open the location and select **Delete location** under **Danger zone**. The message tells you who would be left without a location. Past activity stays under the location's name, and its printed QR code still signs customers up.
+
+You can't delete the primary location. Make another one primary first. If you go back to one location, everyone on your team can scan again.
 
 ## Who can change what
 
-Only you, the owner, can change locations. Admins see the page without the buttons and boxes that change anything, and scanners have no dashboard.
-
 | | Owner | Admin | Scanner |
 |---|---|---|---|
-| See the **Locations** page and its numbers | Yes | Yes | No |
-| Download a location's QR code and counter flyer | Yes | Yes | No |
-| Add, edit, make primary or delete a location | Yes | No | No |
-| Choose who can scan at each location | Yes | No | No |
+| See locations, numbers and QR codes | Yes | Yes | No |
+| Add, edit or delete a location, make one primary | Yes | No | No |
+| Choose who scans where | Yes | No | No |
 
-An admin who opens a location sees who is assigned to it, and the line **The owner decides who scans where.** A scanner sees only the locations they are assigned to, in the scanner app. For the full list of what each role does, see [Roles and what each one can do](/docs/team/roles).
+Admins see the same page without the buttons that change anything. The panel says **The owner decides who scans where.** If you are an admin and need a change, ask the owner. For every role, see [Roles and what each one can do](/help/roles).
 
-## If you are not on the Pro plan
+Locations are part of the Pro plan. On Starter and Growth, **Locations** shows an upgrade message instead.
 
-On the Starter and Growth plans, **Locations** shows an upgrade message instead of your locations, and the sidebar entry carries a **PRO** label.
-
-## Related pages
-
-- [Add a location](/docs/locations/add-a-location)
-- [Print a QR code for each location](/docs/locations/print-a-qr-code-for-each-location)
-- [Choose who can scan at each location](/docs/locations/choose-who-can-scan-at-each-location)
-- [Understand your location numbers](/docs/locations/understand-your-location-numbers)
-- [Edit a location or change the primary one](/docs/locations/edit-a-location)
-- [Delete a location](/docs/locations/delete-a-location)
-- [Roles and what each one can do](/docs/team/roles)
+To add your locations, see [Set up your locations and who scans where](/help/set-up-your-locations).
