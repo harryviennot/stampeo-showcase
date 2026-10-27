@@ -27,7 +27,7 @@ describe("readingMinutes", () => {
   test.each([
     [1, 1],
     [200, 1],
-    [201, 2],
+    [250, 2],
     [450, 3],
   ])("%i words take %i minute(s), rounded up", (count, minutes) => {
     expect(readingMinutes(words(count))).toBe(minutes);

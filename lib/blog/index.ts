@@ -1,29 +1,10 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import yaml from "js-yaml";
-import readingTime from "reading-time";
+import { matterOptions, readingMinutes } from "@/lib/content/frontmatter";
 import type { BlogPost, BlogPostMeta } from "./types";
 
 const CONTENT_DIR = path.join(process.cwd(), "content/blog");
-
-// gray-matter ships a js-yaml 3 engine that calls the removed `yaml.safeLoad`.
-// Provide a js-yaml 4 engine so frontmatter parsing works on the patched version.
-const matterOptions = {
-  engines: {
-    yaml: {
-      parse: (input: string) => yaml.load(input) as object,
-      stringify: () => {
-        throw new Error("YAML stringify is not supported for blog frontmatter");
-      },
-    },
-  },
-};
-
-/** Whole minutes to read, rounded up the way reading-time's own label does. */
-function readingMinutes(content: string): number {
-  return Math.ceil(Number(readingTime(content).minutes.toFixed(2)));
-}
 
 export function getPostBySlug(
   slug: string,
