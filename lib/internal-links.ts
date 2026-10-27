@@ -253,10 +253,24 @@ export function classifyLink(
   const path = normalizePath(href);
   const prefix = leadingLocale(path);
 
-  // Country pilots and the help center are served at locale-free URLs by a
-  // proxy rewrite, so the prefix rules below do not apply to them in either
-  // direction.
-  if (isPilotPath(path) || isHelpPath(path)) return { ok: true, resolved: path };
+  // Country pilots are served at locale-free URLs by a proxy rewrite, so the
+  // prefix rules below do not apply to them in either direction.
+  if (isPilotPath(path)) return { ok: true, resolved: path };
+
+  // The help center is locale-free too, but only a raw anchor keeps it so:
+  // next-intl's Link would prepend the locale, and `/en/help` 308s to `/help`.
+  if (isHelpPath(path)) {
+    if (kind === "raw-anchor") return { ok: true, resolved: path };
+    const resolved = locale === DEFAULT_LOCALE ? path : `/${locale}${path}`;
+    return {
+      ok: false,
+      problem: "always-redirects",
+      resolved,
+      detail: `a help link is a plain <a href="${path}">; next-intl's Link renders "${resolved}"${
+        resolved === path ? " here, but prefixes every other language, where it 308s" : ", which 308s"
+      }`,
+    };
+  }
 
   // Outside the locale tree, so the locale rules below do not apply in either
   // direction: these take no prefix, from a localized Link or a raw <a> alike.

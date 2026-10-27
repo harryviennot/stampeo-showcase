@@ -20,6 +20,7 @@ import { join } from "node:path";
 import { routing } from "../i18n/routing";
 import { BLOG_LOCALES } from "./blog/locales";
 import { getAllSlugs } from "./blog/index";
+import { HELP_PATHS } from "./help/__fixtures__/paths";
 import {
   classifyLink,
   extractCatalogLinks,
@@ -179,13 +180,26 @@ describe("classifyLink — route resolution", () => {
     expect(classifyLink("/uk", "en", "raw-anchor", BLOG).ok).toBe(true);
   });
 
-  test("the help center is a locale-free URL in every file, whatever its language", () => {
-    for (const locale of ["fr", "en", "pl"]) {
-      for (const kind of ["localized-link", "raw-anchor"] as const) {
-        expect(classifyLink("/help", locale, kind, BLOG)).toEqual({ ok: true, resolved: "/help" });
-        expect(classifyLink("/help/add-a-team-member#roles", locale, kind, BLOG).ok).toBe(true);
-      }
+  test.each(["fr", "en", "es", "pl"])("a raw anchor to the help center is right as written, in %s", (locale) => {
+    for (const path of HELP_PATHS) {
+      expect(classifyLink(path, locale, "raw-anchor", BLOG)).toEqual({ ok: true, resolved: path });
     }
+    expect(classifyLink("/help/add-a-team-member#roles", locale, "raw-anchor", BLOG).ok).toBe(true);
+  });
+
+  test.each([
+    ["fr", "/help", "/help"],
+    ["en", "/help", "/en/help"],
+    ["es", "/help/add-a-team-member", "/es/help/add-a-team-member"],
+    ["pl", "/help/add-a-team-member#roles", "/pl/help/add-a-team-member#roles"],
+  ])("a localized Link to the help center is flagged in %s: %s renders as %s", (locale, href, rendered) => {
+    // next-intl's Link prepends the locale and the help center has none, so a
+    // help link is a plain anchor, never the Link.
+    expect(classifyLink(href, locale, "localized-link", BLOG)).toMatchObject({
+      ok: false,
+      problem: "always-redirects",
+      resolved: rendered.replace(/#.*/, ""),
+    });
   });
 
   test("a locale-prefixed help link costs a redirect", () => {
