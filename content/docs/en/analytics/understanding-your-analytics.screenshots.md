@@ -71,7 +71,7 @@ Business: Aurevo (Growth, stamps)
 Where: Dashboard > Analytics, tap the crowned 1 year button
 Capture: the panel that opens
 Shows: the plan named in the title, and that nothing changed behind it
-Goes under: "How much history your plan shows"
+Goes under: "What your plan shows"
 
 SHOT: understanding-your-analytics-09.png
 Business: Patoune (Starter, stamps), as the owner
