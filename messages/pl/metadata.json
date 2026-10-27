@@ -33,7 +33,7 @@
       },
       "analytiques": {
         "title": "Dane o lojalności: jak często wracają klienci",
-        "description": "Uzupełniany przy każdym skanie: wizyty, godziny szczytu i to, jak często wracają klienci. Wykresy i dłuższa historia w Growth i Pro, kohorty miesięczne w Pro."
+        "description": "Uzupełniany przy każdym skanie: wykres wizyt już w planie Starter, godziny szczytu i powroty klientów na wykresach w Growth i Pro, kohorty miesięczne w Pro."
       },
       "geolocalisation": {
         "title": "Karta na ekranie, gdy klient przechodzi obok",

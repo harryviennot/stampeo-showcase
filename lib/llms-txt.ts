@@ -201,7 +201,7 @@ The Analytics page answers what paper cards can't: how many customers come back,
 
 **On every plan**:
 - The KPI row: visits, new customers and the 30-day return rate, with the change against the period before.
-- The highlights of each section, one sentence each: the best day for visits, the busiest time, how many customers came only once, how many cards are near a reward.
+- The highlights of the sections beyond visits, one sentence each: the busiest time, how many customers came only once, how many cards are near a reward.
 - History: ${TIERS.map((tier) => `${PLAN_NAMES[tier]}: ${analyticsHistoryLabel(PLAN_FACTS[tier].analyticsHistoryDays)}`).join(", ")}.
 - Total registered customers, scans this week / this month, rewards claimed.
 - Instant customer search by name or email with full visit history.
@@ -213,7 +213,7 @@ The Analytics page answers what paper cards can't: how many customers come back,
 - Employee scan tracking: which team member made each scan.
 
 **More on the higher plans**:
-- Analytics charts (${availability((f) => f.analyticsCharts)}): visits over time, busiest times by weekday and hour, how often customers come, and reward progress. ${PLAN_NAMES.starter} gets the highlights instead.
+- Analytics charts (${availability((f) => f.analyticsCharts)}): busiest times by weekday and hour, how often customers come, and reward progress. Visits over time is a chart on every plan; ${PLAN_NAMES.starter} gets the highlights of the rest.
 - Monthly cohorts (${availability((f) => f.analytics === "advanced")}): how many of each month's new customers came back within 30, 60, 90 and 180 days.
 - Per-location analytics (${availability((f) => f.locationAnalytics)}): the Analytics page filtered on one location.
 

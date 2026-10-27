@@ -440,7 +440,7 @@
         },
         {
           "question": "How many customers can I enroll?",
-          "answer": "The Starter, Growth and Pro plans differ by features, not by volume: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Growth and Pro show Analytics as charts, while Starter shows the highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for the details of each plan."
+          "answer": "The Starter, Growth and Pro plans differ by features, not by volume: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Every plan includes the visits chart. Growth and Pro show the rest of Analytics as charts too, while Starter shows its highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for the details of each plan."
         },
         {
           "question": "Can I change my card later?",
@@ -522,7 +522,7 @@
           },
           {
             "question": "How many customers can I enroll?",
-            "answer": "Starter, Growth and Pro differ by features, not by how many customers you have: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Growth and Pro show Analytics as charts, while Starter shows the highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for what each plan includes."
+            "answer": "Starter, Growth and Pro differ by features, not by how many customers you have: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Every plan includes the visits chart. Growth and Pro show the rest of Analytics as charts too, while Starter shows its highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for what each plan includes."
           },
           {
             "question": "Can I change my card later?",
