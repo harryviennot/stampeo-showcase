@@ -321,7 +321,7 @@
     "dashboard": {
       "title": "Ich karta, twoje liczby.",
       "caption": "Każdy skan sam uzupełnia statystyki, bez wpisywania. Sprawdzisz je na telefonie albo na komputerze.",
-      "planLine": "Wykresy są w planach Growth i Pro.",
+      "planLine": "Więcej wykresów jest w planach Growth i Pro.",
       "alt": {
         "desktop": "Strona Statystyki w Stampeo na komputerze: wizyty, nowi klienci, powroty w 30 dni, wizyty w czasie i godziny szczytu.",
         "phone": "Ta sama strona Statystyki na telefonie: wizyty, nowi klienci i powroty w 30 dni."
