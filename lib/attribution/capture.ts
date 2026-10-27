@@ -1,5 +1,5 @@
 import { currentConsent, type ConsentState } from "../consent";
-import { isTrackablePath } from "../consent-routes";
+import { mayRunAdvertising, mayRunAnalytics } from "../consent-routes";
 import { serializeSetCookie, syncPrivacyCookies } from "../privacy/cookies";
 import {
   buildAdCarrier,
@@ -136,13 +136,25 @@ function refreshedGa(stored: GaCarrier | null, incoming: GaCarrier): GaCarrier |
   return changed || incoming.at - stored.at >= GA_REFRESH_SECONDS ? incoming : null;
 }
 
+/**
+ * What the visitor allows on the page they landed on: their choice, narrowed
+ * by what the page permits. Never for a landing on a business's enrollment
+ * page or a private route (those visitors are our customers' customers, not
+ * ad prospects), and never advertising on the help center. Checked against the
+ * landing, because the carriers describe where the visit began.
+ */
+function allowedAt(landing: LandingContext, consent: ConsentState): ConsentState {
+  return {
+    ...consent,
+    analytics: consent.analytics && mayRunAnalytics(landing.path),
+    marketing: consent.marketing && mayRunAdvertising(landing.path),
+  };
+}
+
 export function planCapture(input: CaptureInput): CapturePlan {
-  const { landing, consent, evidence, live, stored, now } = input;
+  const { landing, evidence, live, stored, now } = input;
+  const consent = allowedAt(landing, input.consent);
   if (!consent.analytics && !consent.marketing) return NOTHING;
-  // Never for a landing on a business's enrollment page or a private route:
-  // those visitors are our customers' customers, not ad prospects. Checked
-  // against the landing, because the carriers describe where the visit began.
-  if (!isTrackablePath(landing.path)) return NOTHING;
 
   // The click and Meta's browser id are advertising identifiers.
   const incomingAd = consent.marketing
@@ -186,8 +198,8 @@ export function planCapture(input: CaptureInput): CapturePlan {
  * them; the carriers that do not need them are written without waiting.
  */
 export function awaitedIds(input: Omit<CaptureInput, "now">): { ga: boolean; fbp: boolean } {
-  const { landing, consent, live, stored } = input;
-  if (!isTrackablePath(landing.path)) return { ga: false, fbp: false };
+  const { landing, live, stored } = input;
+  const consent = allowedAt(landing, input.consent);
 
   // Only a Meta click needs `_fbp`: a Google click that also carries an fbclid
   // is a Google click, and is not held up waiting for Meta.

@@ -95,9 +95,10 @@ export function metaPixelIdFromEnv(): string | null {
  * - `ready`     — false during SSR and the first paint. Acting earlier would
  *                 decide on a server-render placeholder for the regime, which
  *                 means firing at a European visitor on a default.
- * - `trackable` — `isTrackablePath()`. Any unrecognised segment under a locale
- *                 is a business's enrollment page, and its visitors are our
- *                 customers' customers rather than ad prospects.
+ * - `trackable` — `mayRunAdvertising()`. Any unrecognised segment under a
+ *                 locale is a business's enrollment page, and the help center
+ *                 is read by shops' customers: neither visitor is an ad
+ *                 prospect.
  */
 export function shouldLoadMetaPixel(input: {
   pixelId: string | null;
@@ -203,7 +204,7 @@ const MARKET_PREFIXES: ReadonlySet<string> = new Set(
 /**
  * Which content page this is, after the locale and market prefixes: `/pricing`
  * and `/features/<slug>` are, wherever they sit (`/fr/pricing`, `/us/pricing`,
- * `/en/us/pricing`). Takes the BROWSER path, as `isTrackablePath` does.
+ * `/en/us/pricing`). Takes the BROWSER path, as `mayRunAdvertising` does.
  */
 export function viewContentCategory(pathname: string): ViewContentCategory | null {
   if (!pathname.startsWith("/")) return null;
@@ -274,7 +275,7 @@ export function isMetaPixelLoaded(): boolean {
  *
  * META'S OWN REPORTING IS SWITCHED OFF. Unprompted, `fbevents.js` sends a
  * PageView on every History API change and, through `autoConfig`, button
- * clicks with page metadata. Neither consults `isTrackablePath`, so once the
+ * clicks with page metadata. Neither consults `mayRunAdvertising`, so once the
  * script is resident they would report a client-side hop onto `/onboarding` or
  * `/login`. With both off, only our gated calls reach Meta. The two flags are
  * read when `fbevents.js` installs its listeners, so they are set before the

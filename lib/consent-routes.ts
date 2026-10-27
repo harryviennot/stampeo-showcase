@@ -3,6 +3,12 @@ import { routing } from "@/i18n/routing";
 /**
  * Where a tracker may fire, and therefore where the consent banner appears.
  *
+ * Two kinds of tracker, asked about separately: ANALYTICS (GA4) measures our
+ * own pages; ADVERTISING (the Meta pixel, Meta and Google Ads events, the paid
+ * click) hands a visitor to an ad platform. A path belongs to one of three
+ * classes: marketing (both), analytics-only (analytics, never advertising), or
+ * neither.
+ *
  * An ALLOWLIST, deliberately. `app/[locale]/[slug]` is the catch-all
  * acquisition route: any segment under a locale that is not named here is a
  * business's own enrollment page, reached by scanning a QR code on their
@@ -15,12 +21,13 @@ import { routing } from "@/i18n/routing";
  * prefix rule for `/auth` also matches the business slugged `authentic-cafe`.
  * So matching here is on the whole first segment, never on a prefix.
  *
- * Both tables are pinned to the real route folders by `consent-routes.test.ts`,
- * in both directions — a new page under `app/[locale]/` fails the suite until
- * someone decides which side it belongs on.
+ * All three tables are pinned to the real route folders by
+ * `consent-routes.test.ts`, in both directions — a new page under
+ * `app/[locale]/` fails the suite until someone decides which class it belongs
+ * to.
  */
 
-/** Segments that are ours, public, and may carry a tracker. */
+/** Segments that are ours, public, and may carry any tracker. */
 export const MARKETING_SEGMENTS: ReadonlySet<string> = new Set([
   "about",
   "blog",
@@ -49,6 +56,13 @@ export const MARKETING_SEGMENTS: ReadonlySet<string> = new Set([
 ]);
 
 /**
+ * Segments that are ours and public, where analytics may run and advertising
+ * may NOT. The help center: some of its pages are read by a shop's own
+ * customers, who must never reach an ad platform because of it.
+ */
+export const ANALYTICS_ONLY_SEGMENTS: ReadonlySet<string> = new Set(["help"]);
+
+/**
  * Segments that are ours but private: no tag fires, so there is nothing to
  * consent to and the banner would only interrupt someone mid-signup or
  * unsubscribing from an email.
@@ -71,38 +85,61 @@ export const PRIVATE_SUBPATHS: ReadonlyArray<readonly [segment: string, child: s
 
 const LOCALES: ReadonlySet<string> = new Set(routing.locales);
 
+type RouteClass = "marketing" | "analytics-only" | "none";
+
 /**
- * May a tracker fire on this path, and should the banner be offered here?
- *
- * One predicate for both questions, because they are the same question: the
- * banner exists to gate the tags, so it belongs exactly where a tag could run.
+ * Which class this path is in.
  *
  * Takes the BROWSER path (`usePathname()` from `next/navigation`), not the
  * rewritten one. `/us/pricing` is rewritten to `/en/us/pricing` on the server
  * but the URL bar — and therefore the client — still says `/us/pricing`.
  */
-export function isTrackablePath(pathname: string): boolean {
-  if (!pathname.startsWith("/")) return false;
-  if (pathname.includes("..")) return false;
-  if (pathname.includes("//")) return false;
+function routeClass(pathname: string): RouteClass {
+  if (!pathname.startsWith("/")) return "none";
+  if (pathname.includes("..")) return "none";
+  if (pathname.includes("//")) return "none";
 
   const path = pathname.split(/[?#]/)[0].replace(/\/+$/, "");
-  if (path === "") return true; // the home page
+  if (path === "") return "marketing"; // the home page
 
   const segments = path.slice(1).split("/");
   // Strip a leading locale. French is unprefixed today (`as-needed`), but all
   // four are stripped so a routing change cannot silently reclassify a page.
   if (LOCALES.has(segments[0])) segments.shift();
-  if (segments.length === 0) return true; // a locale home page
+  if (segments.length === 0) return "marketing"; // a locale home page
 
   // Private segments are rejected BEFORE the allowlist rather than by falling
   // through it. Falling through would give the same answer today and make the
   // table decorative: emptying PRIVATE_SEGMENTS would change nothing, and the
   // test asserting `/onboarding` is untracked would pass for the wrong reason.
-  if (PRIVATE_SEGMENTS.has(segments[0])) return false;
+  if (PRIVATE_SEGMENTS.has(segments[0])) return "none";
   if (PRIVATE_SUBPATHS.some(([segment, child]) => segments[0] === segment && segments[1] === child)) {
-    return false;
+    return "none";
   }
 
-  return MARKETING_SEGMENTS.has(segments[0]);
+  if (MARKETING_SEGMENTS.has(segments[0])) return "marketing";
+  if (ANALYTICS_ONLY_SEGMENTS.has(segments[0])) return "analytics-only";
+  return "none";
+}
+
+/** May an analytics tag (GA4) run on this path? */
+export function mayRunAnalytics(pathname: string): boolean {
+  return routeClass(pathname) !== "none";
+}
+
+/**
+ * May an advertising tag run on this path: the Meta pixel, a Meta or Google
+ * Ads event, the paid-click carrier?
+ */
+export function mayRunAdvertising(pathname: string): boolean {
+  return routeClass(pathname) === "marketing";
+}
+
+/**
+ * May ANY tag run on this path? The consent banner is offered exactly there,
+ * because it exists to gate the tags: asking where nothing can run would only
+ * interrupt the visitor.
+ */
+export function mayRunAnyTag(pathname: string): boolean {
+  return routeClass(pathname) !== "none";
 }

@@ -1,5 +1,5 @@
 import type { CTALocation } from "../analytics";
-import { isTrackablePath } from "../consent-routes";
+import { mayRunAdvertising, mayRunAnalytics } from "../consent-routes";
 import { gaEventForCTA, type GaEvent } from "../google-analytics";
 import { metaEventForCTA, type MetaCustomEvent } from "../meta-pixel";
 import { isContactHref } from "./taxonomy";
@@ -21,8 +21,8 @@ export interface CtaClick {
   ga: { event: GaEvent; params: CtaContext } | null;
   /** Meta's custom `SignupCTA`, or null: only a signup click is reported there. */
   meta: { event: MetaCustomEvent; params: CtaContext } | null;
-  /** May the ad platforms hear about a click on this page at all? */
-  trackable: boolean;
+  /** May GA4, and may the ad platforms, hear about a click on this page at all? */
+  allowed: { analytics: boolean; advertising: boolean };
 }
 
 /**
@@ -31,8 +31,9 @@ export interface CtaClick {
  * The destination decides the funnel for all three: a link to the contact
  * page is a sales touch, anything else a signup, and Meta hears only the
  * signup. `pathname` is the browser path the click happened on; on a private
- * route the ad platforms hear nothing, while PostHog, which stores nothing on
- * the device, still does. `useCtaTracking` sends the result.
+ * route GA4 and the ad platforms hear nothing, and on the help center only GA4
+ * does, while PostHog, which stores nothing on the device, hears every click.
+ * `useCtaTracking` sends the result.
  */
 export function ctaClick(input: {
   ctaLocation: CTALocation;
@@ -57,7 +58,10 @@ export function ctaClick(input: {
     // the CTA context travels as parameters.
     ga: ga ? { event: ga, params: context } : null,
     meta: meta ? { event: meta, params: context } : null,
-    trackable: isTrackablePath(input.pathname),
+    allowed: {
+      analytics: mayRunAnalytics(input.pathname),
+      advertising: mayRunAdvertising(input.pathname),
+    },
   };
 }
 

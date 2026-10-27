@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from "react";
 import { usePathname } from "next/navigation";
-import { isTrackablePath } from "@/lib/consent-routes";
+import { mayRunAdvertising } from "@/lib/consent-routes";
 import { trackThen } from "@/lib/cta/events";
 import { metaEventForLink, trackMetaEvent } from "@/lib/meta-pixel";
 
@@ -26,7 +26,7 @@ export function ContactLink({ href, onClick, ...props }: ContactLinkProps) {
       href={href}
       onClick={trackThen(() => {
         const event = metaEventForLink(href);
-        if (event) trackMetaEvent({ event, trackable: isTrackablePath(pathname) });
+        if (event) trackMetaEvent({ event, trackable: mayRunAdvertising(pathname) });
       }, onClick)}
     />
   );

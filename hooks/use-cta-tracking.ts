@@ -15,10 +15,11 @@ import { trackMetaEvent } from "@/lib/meta-pixel";
  * The click handler for a signup or contact CTA: sends what `ctaClick`
  * decides to PostHog, GA4 and Meta.
  *
- * The ad platforms send only when their tag loaded (which needs consent) AND
- * the current page is trackable, so the same click on a private route reaches
- * neither. `usePathname` from `next/navigation` gives the browser path that
- * `isTrackablePath` expects, not the locale-stripped one.
+ * Each tag sends only when it loaded (which needs consent) AND the current
+ * page allows its kind: the same click on a private route reaches neither GA4
+ * nor Meta, and on the help center reaches GA4 only. `usePathname` from
+ * `next/navigation` gives the browser path the route predicates expect, not
+ * the locale-stripped one.
  */
 export function useCtaTracking(trackAs: CTALocation, href: string): () => void {
   const locale = useLocale();
@@ -36,13 +37,17 @@ export function useCtaTracking(trackAs: CTALocation, href: string): () => void {
     if (click.meta) {
       trackMetaEvent({
         event: click.meta.event,
-        trackable: click.trackable,
+        trackable: click.allowed.advertising,
         params: click.meta.params,
       });
     }
 
     if (click.ga) {
-      trackGaEvent({ event: click.ga.event, trackable: click.trackable, params: click.ga.params });
+      trackGaEvent({
+        event: click.ga.event,
+        trackable: click.allowed.analytics,
+        params: click.ga.params,
+      });
     }
   };
 }

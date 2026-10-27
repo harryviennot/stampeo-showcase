@@ -100,9 +100,11 @@ export function gaScriptSrc(measurementId: string): string {
  *                     would decide on a server-render placeholder for the
  *                     regime, which means firing at a European visitor on a
  *                     default.
- * - `trackable`     — `isTrackablePath()`. Private routes and any unrecognised
+ * - `trackable`     — `mayRunAnalytics()`. Private routes and any unrecognised
  *                     segment under a locale, which is a business's enrollment
- *                     page whose visitors are our customers' customers.
+ *                     page whose visitors are our customers' customers. The
+ *                     help center is allowed: the tag there carries the same
+ *                     denied ad signals as everywhere else.
  */
 export function shouldLoadGa(input: {
   measurementId: string | null;

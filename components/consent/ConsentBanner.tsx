@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 import { useConsent } from "@/hooks/use-consent";
-import { isTrackablePath } from "@/lib/consent-routes";
+import { mayRunAnyTag } from "@/lib/consent-routes";
 import {
   CONSENT_OPEN_EVENT,
   categoriesToClearOnChoice,
@@ -76,7 +76,7 @@ export function ConsentBanner() {
   // therefore shows the Cookie preferences button: gating the dialog on
   // `trackable` too made that button dead on click. The footer is the real
   // gate here, and acquisition pages render no footer at all.
-  const trackable = isTrackablePath(pathname);
+  const trackable = mayRunAnyTag(pathname);
 
   // A refusal made in another tab or window reloads this one when it is shown or focused, and on each page.
   const watcher = useRef<ConsentWatcher | null>(null);

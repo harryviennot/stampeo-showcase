@@ -1,4 +1,4 @@
-import { isTrackablePath } from "../consent-routes";
+import { mayRunAnyTag } from "../consent-routes";
 import {
   consentCookieObject,
   clearPresentCookiesFor,
@@ -83,7 +83,7 @@ export function runPageLifecycle(
     sid: readSid(),
     stored,
     consent: currentConsent(),
-    trackable: isTrackablePath(pathname),
+    trackable: mayRunAnyTag(pathname),
     refreshedThisDocument: session.refreshed,
   });
   // A carrier written by a request that was outrun by a refusal is removed here.

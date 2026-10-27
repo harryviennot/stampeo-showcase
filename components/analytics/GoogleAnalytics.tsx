@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { useConsent } from "@/hooks/use-consent";
-import { isTrackablePath } from "@/lib/consent-routes";
+import { mayRunAnalytics } from "@/lib/consent-routes";
 import {
   initGa,
   isGaLoaded,
@@ -49,7 +49,7 @@ export function GoogleAnalytics() {
 
   useEffect(() => {
     const measurementId = measurementIdFromEnv();
-    const trackable = isTrackablePath(pathname);
+    const trackable = mayRunAnalytics(pathname);
     // Read BEFORE any init this run performs: "was the script resident before
     // this effect ran" is what separates the config-sends-the-first-page_view
     // seed from a remount whose path never got one.

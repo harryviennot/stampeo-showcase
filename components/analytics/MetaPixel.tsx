@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 import { useConsent } from "@/hooks/use-consent";
-import { isTrackablePath } from "@/lib/consent-routes";
+import { mayRunAdvertising } from "@/lib/consent-routes";
 import {
   initMetaPixel,
   isMetaPixelLoaded,
@@ -41,7 +41,7 @@ export function MetaPixel() {
 
   useEffect(() => {
     const pixelId = metaPixelIdFromEnv();
-    const trackable = isTrackablePath(pathname);
+    const trackable = mayRunAdvertising(pathname);
     // Read BEFORE any init this run performs — "resident before this run" is
     // what separates init's own PageView from a remount that needs one sent.
     const alreadyLoaded = isMetaPixelLoaded();

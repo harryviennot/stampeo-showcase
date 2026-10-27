@@ -4,7 +4,7 @@ import { useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
-import { isTrackablePath } from "@/lib/consent-routes";
+import { mayRunAdvertising } from "@/lib/consent-routes";
 import { submitContactForm, type SubmitGuard } from "@/lib/contact/submit";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 
@@ -240,7 +240,7 @@ export function ContactPageClient() {
       body,
       apiUrl: API_URL,
       guard: guard.current,
-      track: (event) => void trackMetaEvent({ event, trackable: isTrackablePath(pathname) }),
+      track: (event) => void trackMetaEvent({ event, trackable: mayRunAdvertising(pathname) }),
     });
     if (outcome === "busy") return;
 
