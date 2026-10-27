@@ -81,7 +81,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     key: "analytics",
     rows: [
       fromFacts("analyticsHistory", () => "text"),
-      // A plan without the full set of charts still has the visits chart, so its cell reads "Visits only".
+      // A text cell ("Visits only") for a plan without the full set of charts.
       fromFacts("analyticsCharts", (facts) => (facts.analyticsCharts ? "check" : "text")),
       fromFacts("monthlyCohorts", (facts) => (facts.analytics === "advanced" ? "check" : "cross")),
     ],

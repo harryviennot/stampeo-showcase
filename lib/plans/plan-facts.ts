@@ -32,10 +32,7 @@ export interface PlanFacts {
   locationAnalytics: boolean;
   /** "advanced" means basic plus advanced (`analytics.advanced`): monthly cohorts. */
   analytics: "basic" | "advanced";
-  /**
-   * `analytics.charts`: the charts of busiest times, how often customers come and reward progress.
-   * Without it those sections show one highlight sentence each. The visits chart is on every plan.
-   */
+  /** `analytics.charts`: the charts of busiest times, frequency and reward progress (Visits over time is on every plan). */
   analyticsCharts: boolean;
   /** `analytics.history_days`: the longest period the Analytics page serves, in days. */
   analyticsHistoryDays: number | Unlimited;
