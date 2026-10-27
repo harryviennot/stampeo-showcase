@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import { withSentryConfig } from "@sentry/nextjs";
+import { helpHeaders } from "./lib/help/config";
 import { legacyRedirects } from "./lib/seo/legacy-redirects";
 
 const withNextIntl = createNextIntlPlugin();
@@ -49,6 +50,7 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [{ key: "Link", value: DISCOVERY_LINKS }],
       },
+      ...helpHeaders(),
     ];
   },
 };

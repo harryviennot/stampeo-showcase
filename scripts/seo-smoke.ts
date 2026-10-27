@@ -63,7 +63,7 @@ export function buildChecks(baseUrl: string): Check[] {
   const jsonLdPages = ["/", "/en", "/us", "/pricing", "/us/pricing", "/en/blog/coffee-shop-loyalty-card"];
   const metadataPages = ["/", "/en", "/us", "/pricing", "/en/pricing", "/us/pricing"];
   const titlePages = [...metadataPages, "/privacy", "/terms"];
-  const privatePages = ["/login", "/en/login", "/onboarding", "/reset-password", "/email-preferences"];
+  const privatePages = ["/login", "/en/login", "/onboarding", "/reset-password", "/email-preferences", "/help"];
   const junkPaths = ["/month", "/mo", "/mois", "/mes"];
   const openGraphPages = ["/us", "/us/pricing", "/pricing", "/en/pricing", "/contact"];
   const footerPages: Array<{ path: string; locale: string; market: Market }> = [
