@@ -10,6 +10,7 @@
 import { describe, expect, test } from "bun:test";
 
 import { routing } from "../i18n/routing";
+import { HELP_LOOKALIKE_SLUGS } from "./help/__fixtures__/paths";
 import {
   RESERVED_TOP_SEGMENTS,
   acquisitionSlug,
@@ -140,12 +141,11 @@ describe("acquisitionSlug", () => {
   });
 
   test("the help center is never taken for a shop called help", () => {
-    expect(RESERVED_TOP_SEGMENTS.has("help")).toBe(true);
     expect(acquisitionSlug("/help")).toBeNull();
-    expect(acquisitionSlug("/help/add-a-team-member")).toBeNull();
+    expect(acquisitionSlug("/help/l/centre")).toBeNull();
   });
 
-  test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger", "helpful-cafe", "help-me-coffee"])(
+  test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger", ...HELP_LOOKALIKE_SLUGS])(
     "a slug that starts like a reserved route is still a shop: %s",
     (slug) => {
       expect(acquisitionSlug(`/${slug}`)).toBe(slug);

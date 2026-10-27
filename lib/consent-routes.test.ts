@@ -19,6 +19,7 @@ import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "../i18n/routing";
+import { HELP_LOOKALIKE_SLUGS, HELP_PATHS } from "./help/__fixtures__/paths";
 import { pagesUnder } from "./testing/app-folders";
 import {
   ANALYTICS_ONLY_SEGMENTS,
@@ -163,19 +164,16 @@ describe("route classes — private surfaces", () => {
 });
 
 describe("route classes — the help center", () => {
-  test.each([
-    "/help",
-    "/help/",
-    "/help/add-a-team-member",
-    "/help/some-page?utm_source=app#top",
-    "/en/help/add-a-team-member",
-  ])("%s may run analytics, never advertising, and offers the banner", (path) => {
-    // Shops' own customers read some help pages, so no ad platform may hear
-    // about them. Analytics is the one thing that runs there.
-    expect(verdict(path)).toEqual(ANALYTICS_ONLY);
-  });
+  test.each([...HELP_PATHS, "/help/", "/help/some-page?utm_source=app#top"])(
+    "%s may run analytics, never advertising, and offers the banner",
+    (path) => {
+      // Shops' own customers read some help pages, so no ad platform may hear
+      // about them. Analytics is the one thing that runs there.
+      expect(verdict(path)).toEqual(ANALYTICS_ONLY);
+    },
+  );
 
-  test.each(["/helpful-cafe", "/help-me-coffee", "/fr/helpdesk-bar", "/helpers/l/centre", "/es/helping-hands"])(
+  test.each(HELP_LOOKALIKE_SLUGS.flatMap((slug) => [`/${slug}`, `/fr/${slug}`, `/${slug}/l/centre`]))(
     "a shop whose slug merely starts with help is still a shop: %s",
     (path) => {
       expect(verdict(path)).toEqual(NO_TAG);
@@ -187,16 +185,47 @@ describe("route classes — the help center", () => {
     // measured by; it must be a deliberate decision, not a side effect.
     expect([...ANALYTICS_ONLY_SEGMENTS]).toEqual(["help"]);
   });
+});
 
-  test("the banner is offered wherever any tag can run, and nowhere else", () => {
-    const paths = [
-      "/", "/pricing", "/us/pricing", "/blog/x", "/help", "/help/x", "/en/help/x",
-      "/onboarding", "/demo/wallet-select/abc", "/some-cafe", "/some-cafe/l/centre", "", "//",
-    ];
-    for (const path of paths) {
-      const { analytics, advertising, anyTag } = verdict(path);
-      expect(anyTag).toBe(analytics || advertising);
+describe("each tag asks its own question", () => {
+  const root = join(import.meta.dir, "..");
+  const read = (file: string) => readFileSync(join(root, file), "utf-8");
+
+  /** Which route predicates each file calls, comments left out. A new call site fails until it is listed. */
+  const ASKS = {
+    "components/analytics/GoogleAnalytics.tsx": ["mayRunAnalytics"],
+    "components/analytics/MetaPixel.tsx": ["mayRunAdvertising"],
+    "components/consent/ConsentBanner.tsx": ["mayRunAnyTag"],
+    "components/contact/ContactFormClient.tsx": ["mayRunAdvertising"],
+    "components/ui/ContactLink.tsx": ["mayRunAdvertising"],
+    "lib/attribution/capture.ts": ["mayRunAdvertising", "mayRunAnalytics"],
+    "lib/cta/events.ts": ["mayRunAdvertising", "mayRunAnalytics"],
+    "lib/privacy/lifecycle.ts": ["mayRunAnyTag"],
+  };
+
+  const sourceFiles = ["app", "components", "hooks", "lib"].flatMap((dir) =>
+    (readdirSync(join(root, dir), { recursive: true }) as string[])
+      .filter((file) => /\.tsx?$/.test(file) && !/\.test\.tsx?$/.test(file))
+      .map((file) => `${dir}/${file}`)
+      .filter((file) => file !== "lib/consent-routes.ts"),
+  );
+
+  test("the Meta pixel and every Meta event ask about advertising, GA4 about analytics, the banner and the cleanup about any tag", () => {
+    const asked: Record<string, string[]> = {};
+    for (const file of sourceFiles) {
+      const code = read(file).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+      const predicates = [...new Set([...code.matchAll(/\b(mayRun\w+)\(/g)].map((match) => match[1]))].sort();
+      if (predicates.length > 0) asked[file] = predicates;
     }
+
+    expect(asked).toEqual(ASKS);
+  });
+
+  test("a CTA click reaches Meta on the advertising answer and GA4 on the analytics one", () => {
+    const hook = read("hooks/use-cta-tracking.ts");
+
+    expect(hook).toMatch(/trackMetaEvent\(\{[^}]*trackable:\s*click\.allowed\.advertising/);
+    expect(hook).toMatch(/trackGaEvent\(\{[^}]*trackable:\s*click\.allowed\.analytics/);
   });
 });
 
@@ -306,9 +335,9 @@ describe("segment tables", () => {
         .flatMap((segment) => pagesUnder(join(appDir, segment))),
     ];
 
-    // A page with no JSX serves no markup (it only answers 404), so it sets
-    // no cookie and has nothing to hold a footer.
-    const servesMarkup = (page: string) => /<[A-Za-z]/.test(readFileSync(page, "utf-8"));
+    // A page that returns no JSX serves no markup (it only answers 404), so it
+    // sets no cookie and has nothing to hold a footer.
+    const servesMarkup = (page: string) => /return\s*\(\s*</.test(readFileSync(page, "utf-8"));
     const analyticsOnlyPages = [...ANALYTICS_ONLY_SEGMENTS]
       .flatMap((segment) => pagesUnder(join(appDir, segment)))
       .filter(servesMarkup);

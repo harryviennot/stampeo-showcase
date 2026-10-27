@@ -30,6 +30,8 @@ import { afterAll, describe, expect, test } from "bun:test";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { mayRunAdvertising } from "./consent-routes";
 import { ctaClick } from "./cta/events";
+import { HELP_PATHS } from "./help/__fixtures__/paths";
+import { SUPPORT_MAILTO, SUPPORT_TEL, SUPPORT_WHATSAPP } from "./help/contact";
 import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
 import {
@@ -176,6 +178,21 @@ describe("shouldLoadMetaPixel — composed with the real consent resolver", () =
     expect(
       shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing }),
     ).toBe(false);
+  });
+
+  test.each(HELP_PATHS)("a first landing on %s never loads the pixel, whatever the visitor accepted", (path) => {
+    const accepted = resolveConsent({
+      record: { v: CONSENT_VERSION, analytics: true, marketing: true, at: 0, regime: "opt-in" },
+      prior: null,
+      row: rowFor("FR"),
+      gpc: false,
+    });
+    const usDefault = resolveConsent({ record: null, prior: null, row: rowFor("US"), gpc: false });
+
+    for (const state of [accepted, usDefault]) {
+      expect(state.marketing).toBe(true);
+      expect(shouldLoadMetaPixel({ ...LOADABLE, marketing: state.marketing, trackable: mayRunAdvertising(path) })).toBe(false);
+    }
   });
 
   test("a visitor who accepted analytics but refused marketing loads nothing", () => {
@@ -419,11 +436,9 @@ describe("ViewContent: the pricing and features pages", () => {
 });
 
 describe("no Meta event is reported from a private route (AC5.2), nor from the help center", () => {
-  const PRIVATE_PATHS = [
+  const NO_AD_PATHS = [
     // The help center: GA4 may run there, an ad platform may not.
-    "/help",
-    "/help/add-a-team-member",
-    "/en/help/add-a-team-member",
+    ...HELP_PATHS,
     "/onboarding",
     "/en/onboarding",
     "/login",
@@ -437,7 +452,7 @@ describe("no Meta event is reported from a private route (AC5.2), nor from the h
     "/en/mon-cafe",
   ];
 
-  test.each(PRIVATE_PATHS)("a resident pixel stays silent on %s, after a client-side hop", (path) => {
+  test.each(NO_AD_PATHS)("a resident pixel stays silent on %s, after a client-side hop", (path) => {
     const trackable = mayRunAdvertising(path);
 
     // PageView: the router moved here from a marketing page.
@@ -585,13 +600,31 @@ describe("the browser side, in load order", () => {
     installBrowser({ fbq });
 
     const EVENTS: MetaEvent[] = ["PageView", "ViewContent", "SignupCTA", "Contact"];
-    for (const path of ["/onboarding", "/login", "/reset-password", "/email-preferences", "/mon-cafe", "/help", "/help/add-a-team-member"]) {
+    for (const path of ["/onboarding", "/login", "/reset-password", "/email-preferences", "/mon-cafe", ...HELP_PATHS]) {
       for (const event of EVENTS) {
         trackMetaEvent({ event, trackable: mayRunAdvertising(path) });
       }
     }
 
     expect(calls).toEqual([]);
+  });
+
+  test("a Still stuck? tap on a help page sends no Contact, though the pixel loaded on an earlier page", () => {
+    const { fbq, calls } = recordingFbq();
+    installBrowser({ fbq });
+    expect(isMetaPixelLoaded()).toBe(true);
+
+    // What ContactLink does on a tap: the link decides the event, the page decides whether it may leave.
+    const tap = (href: string, path: string) => {
+      const event = metaEventForLink(href);
+      if (event) trackMetaEvent({ event, trackable: mayRunAdvertising(path) });
+    };
+
+    for (const href of [SUPPORT_MAILTO, SUPPORT_WHATSAPP, SUPPORT_TEL]) tap(href, "/help/roles");
+    expect(calls).toEqual([]);
+
+    tap(SUPPORT_WHATSAPP, "/pricing");
+    expect(calls).toEqual([["track", "Contact", undefined]]);
   });
 
   test("a throw from fbq cannot break the click", () => {

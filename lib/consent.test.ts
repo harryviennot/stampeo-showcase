@@ -34,6 +34,8 @@ import {
   serializeConsentCookie,
   type ConsentRecord,
 } from "./consent";
+import { mayRunAnyTag } from "./consent-routes";
+import { HELP_PATHS } from "./help/__fixtures__/paths";
 import { SUBJECT as UUID } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
 import { restoreEnvAfterEach } from "./testing/restore-env";
@@ -164,6 +166,14 @@ describe("consentSurface", () => {
       expect(consentSurface({ ...base, record: DENIED, row })).toBe("none");
       expect(consentSurface({ ...base, record: GRANTED, row })).toBe("none");
     }
+  });
+
+  test.each(HELP_PATHS)("a first visit to %s is asked, since a tag runs there", (path) => {
+    // GA4 runs on the help center, so it is not a page where nothing could be agreed to.
+    const help = { ...base, trackable: mayRunAnyTag(path) };
+
+    expect(consentSurface({ ...help, row: EU })).toBe("banner");
+    expect(consentSurface({ ...help, row: US })).toBe("notice");
   });
 
   test("nothing is shown on an untrackable page", () => {

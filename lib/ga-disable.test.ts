@@ -11,6 +11,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 
 import { syncGaDisable } from "./google-analytics";
 import { mayRunAnalytics } from "./consent-routes";
+import { HELP_PATHS } from "./help/__fixtures__/paths";
 import { installFakeBrowser, type FakeBrowser } from "./privacy/__fixtures__/fake-browser";
 
 const ID = "G-ZFZ6JLPFXN";
@@ -60,7 +61,7 @@ describe("the off switch follows the route", () => {
     },
   );
 
-  test.each(["/help", "/help/add-a-team-member"])("%s leaves it off: analytics runs on the help center", (path) => {
+  test.each([...HELP_PATHS])("%s leaves it off: analytics runs on the help center", (path) => {
     browser = installFakeBrowser();
 
     visit("/onboarding");

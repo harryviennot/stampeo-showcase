@@ -4,14 +4,15 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { HELP_LOOKALIKE_SLUGS, HELP_PATHS } from "../help/__fixtures__/paths";
 import { hidesLanguageSwitcher } from "./language-switcher";
 
 describe("hidesLanguageSwitcher", () => {
-  test.each(["/blog/carte-fidelite-cafe", "/help", "/help/add-a-team-member"])("%s has no switcher", (path) => {
+  test.each(["/blog/carte-fidelite-cafe", ...HELP_PATHS])("%s has no switcher", (path) => {
     expect(hidesLanguageSwitcher(path)).toBe(true);
   });
 
-  test.each(["/", "/pricing", "/blog", "/features/card-design", "/us", "/helpful-cafe"])("%s keeps it", (path) => {
+  test.each(["/", "/pricing", "/blog", "/features/card-design", "/us", ...HELP_LOOKALIKE_SLUGS.map((slug) => `/${slug}`)])("%s keeps it", (path) => {
     expect(hidesLanguageSwitcher(path)).toBe(false);
   });
 });

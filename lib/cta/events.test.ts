@@ -10,6 +10,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { HELP_PATHS } from "../help/__fixtures__/paths";
 import { ctaClick, trackThen } from "./events";
 import { CONTACT_CTAS, SIGNUP_CTAS } from "./taxonomy";
 
@@ -96,7 +97,7 @@ describe("ctaClick", () => {
     },
   );
 
-  test.each(["/help", "/help/add-a-team-member"])(
+  test.each(HELP_PATHS)(
     "a click on the help page %s reaches GA4 but neither ad platform",
     (pathname) => {
       const click = ctaClick({ ctaLocation: "header", href: "/onboarding", pathname, locale: "en" });

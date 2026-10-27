@@ -27,6 +27,7 @@ import {
   resolveConsent,
   type PriorConsent,
 } from "../consent";
+import { HELP_PATHS } from "../help/__fixtures__/paths";
 import { POLICY_MATRIX } from "../privacy/policy-matrix";
 import {
   NO_LIVE_IDS,
@@ -173,18 +174,28 @@ describe("a landing that is not ours to measure", () => {
 });
 
 describe("a landing on the help center: measured, never advertised on", () => {
-  const HELP_CLICK = landing("https://stampeo.app/help/add-a-team-member?fbclid=IwAR_HELP_fbclid_0001&utm_source=app", "");
+  const HELP_PAGE = HELP_PATHS[1];
+  const CLICKS = [
+    ["Meta", "fbclid=IwAR_HELP_fbclid_0001", "IwAR_HELP_fbclid_0001"],
+    ["Google", "gclid=Cj0KCQ_HELP_gclid_0001", "Cj0KCQ_HELP_gclid_0001"],
+    ["TikTok", "ttclid=E.C.P_HELP_ttclid_0001", "E.C.P_HELP_ttclid_0001"],
+  ] as const;
+  const helpLanding = (query: string) => landing(`https://stampeo.app${HELP_PAGE}?${query}&utm_source=app`, "");
+  const HELP_CLICK = helpLanding(CLICKS[0][1]);
 
-  test("a visitor who accepted everything gets the source and the GA ids, and no paid click", () => {
-    const written = plan(visitor(EU, { record: chose(true, true, "opt-in") }), { landing: HELP_CLICK });
+  test.each(CLICKS)(
+    "a visitor who accepted everything and arrives from a %s click gets the source and the GA ids, and no paid click",
+    (_vendor, query, clickId) => {
+      const written = plan(visitor(EU, { record: chose(true, true, "opt-in") }), { landing: helpLanding(query) });
 
-    expect(written.src).toMatchObject({ lp: "/help/add-a-team-member", us: "app" });
-    expect(written.ga).not.toBeNull();
-    expect(written.ad).toBeNull();
-    for (const identifier of ["IwAR_HELP_fbclid_0001", FBP]) {
-      expect(JSON.stringify(written)).not.toContain(identifier);
-    }
-  });
+      expect(written.src).toMatchObject({ lp: HELP_PAGE, us: "app" });
+      expect(written.ga).not.toBeNull();
+      expect(written.ad).toBeNull();
+      for (const identifier of [clickId, FBP]) {
+        expect(JSON.stringify(written)).not.toContain(identifier);
+      }
+    },
+  );
 
   test("a visitor who allowed advertising only is not written down at all", () => {
     const written = plan(visitor(EU, { record: chose(false, true, "opt-in") }), { landing: HELP_CLICK });
@@ -192,11 +203,15 @@ describe("a landing on the help center: measured, never advertised on", () => {
     expect(written).toEqual({ src: null, ga: null, ad: null });
   });
 
-  test("a stored paid click is left as it is", () => {
+  test("a stored paid click is left as it is, source included", () => {
     const stored = plan(visitor(US));
+    expect(stored.ad).toMatchObject({ vn: "meta" });
+    expect(stored.src).toMatchObject({ us: "meta", lp: "/us" });
+
     const written = plan(visitor(US), { landing: HELP_CLICK, stored });
 
     expect(written.ad).toBeNull();
+    expect(written.src).toBeNull();
   });
 
   test("the capture waits for Google's client id but never for Meta's browser id", () => {

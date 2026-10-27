@@ -20,6 +20,8 @@ import { routing } from "@/i18n/routing";
 import proxy from "../../proxy";
 import { hasBlog } from "../blog/locales";
 import { FEATURE_SLUGS, getLocalizedSlug } from "../feature-slugs";
+import { HELP_LOOKALIKE_SLUGS } from "../help/__fixtures__/paths";
+import { getAllHelpPages, getHelpPage } from "../help/index";
 import { DEFAULT_LOCALE, SITE_LOCALES, legacyRedirects } from "./legacy-redirects";
 
 const ORIGIN = "https://stampeo.app";
@@ -68,16 +70,19 @@ function isLiveRoute(path: string): boolean {
   if (head === "features" && slug && rest.length === 0) {
     return FEATURE_SLUGS.some((fr) => getLocalizedSlug(fr, locale) === slug);
   }
-  if (head === "help" && slug && rest.length === 0) {
-    return existsSync(join(APP, "help", "[slug]", "page.tsx"));
-  }
+  // Only a slug the help loader knows renders; any other answers 404.
+  if (head === "help" && slug && rest.length === 0) return getHelpPage(slug, { includeDrafts: false }) !== null;
   return existsSync(join(APP, ...segments, "page.tsx"));
 }
+
+/** A page that exists, to stand in for `:path*` under each section. */
+const SAMPLE_PAGE = { help: getAllHelpPages({ includeDrafts: false })[0].slug, other: "pricing" };
 
 /** Concrete URLs a rule answers: the source itself, or samples of its pattern. */
 function probesFor(source: string): string[] {
   if (!source.includes(":")) return [source];
-  const sample = source.replace(/\/:path[*+]$/, "/pricing");
+  const page = /\/help\/:path[*+]$/.test(source) ? SAMPLE_PAGE.help : SAMPLE_PAGE.other;
+  const sample = source.replace(/\/:path[*+]$/, `/${page}`);
   return source.endsWith(":path*") ? [source.replace(/\/:path\*$/, ""), sample] : [sample];
 }
 
@@ -122,12 +127,6 @@ const REFERENCE_A: Array<[string, string]> = [
   ["/es/us/pricing", "/us/pricing"],
   ["/pl/uk", "/uk"],
   ["/en/uk/pricing", "/uk/pricing"],
-  // Locale-prefixed copies of the help center, which is English and locale-free
-  ["/en/help", "/help"],
-  ["/es/help/add-a-team-member", "/help/add-a-team-member"],
-  ["/pl/help/a/b", "/help/a/b"],
-  ["/fr/help", "/help"],
-  ["/fr/help/add-a-team-member", "/help/add-a-team-member"],
 ];
 
 /** Live pages a rule replaces on purpose. */
@@ -237,7 +236,7 @@ describe("the help center", () => {
     }
   });
 
-  test.each(["/helpful-cafe", "/en/helpful-cafe", "/help-me-coffee"])("a shop whose slug starts with help is not redirected: %s", async (path) => {
+  test.each(HELP_LOOKALIKE_SLUGS.flatMap((slug) => [`/${slug}`, `/en/${slug}`]))("a shop whose slug starts with help is not redirected: %s", async (path) => {
     expect(await redirectOf(path)).toBeNull();
   });
 });

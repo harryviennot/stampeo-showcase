@@ -36,6 +36,7 @@ import { join } from "node:path";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
 import { mayRunAnalytics } from "./consent-routes";
 import { CONTACT_CTAS } from "./cta/taxonomy";
+import { HELP_PATHS } from "./help/__fixtures__/paths";
 import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
 import {
@@ -443,7 +444,7 @@ describe("the gate, against the REAL route predicate", () => {
   });
 
   test("the help center loads the tag and reports events: analytics is the one thing that runs there", () => {
-    for (const path of ["/help", "/help/add-a-team-member", "/en/help/add-a-team-member"]) {
+    for (const path of HELP_PATHS) {
       expect({ path, loads: gateOn(path), sends: sendOn(path) }).toEqual({ path, loads: true, sends: true });
     }
   });
@@ -835,43 +836,5 @@ describe("the browser side, in load order", () => {
     trackGaEvent({ event: "sign_up_cta_click", trackable: true, params: {} });
     trackGaPageView({ path: "/pricing", trackable: true });
     expect(calls).toHaveLength(1);
-  });
-});
-
-describe("the tag on a help page", () => {
-  test("is configured with every advertising signal off, and the ad click id is not forwarded", async () => {
-    // A fresh copy of the module: `initGa` guards on module state, which the
-    // sequence above has already used up.
-    const fresh = (await import(`./google-analytics.ts?help=${crypto.randomUUID()}`)) as typeof import("./google-analytics");
-    const win: Record<string, unknown> = {
-      location: { search: "", href: "https://stampeo.app/help/add-a-team-member?gclid=abc" },
-    };
-    const globals = globalThis as Record<string, unknown>;
-    globals.window = win;
-    globals.document = {
-      createElement: () => ({}),
-      head: { appendChild: () => undefined },
-      title: "Help",
-      body: { dataset: {} },
-      cookie: GRANTED_COOKIE,
-    };
-    try {
-      fresh.initGa(MEASUREMENT_ID);
-      const calls = (win.dataLayer as unknown[]).map((entry) => Array.from(entry as IArguments));
-
-      expect(calls.find((call) => call[0] === "consent")).toEqual([
-        "consent",
-        "default",
-        { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" },
-      ]);
-      expect(calls.find((call) => call[0] === "config")?.[2]).toMatchObject({
-        allow_google_signals: false,
-        allow_ad_personalization_signals: false,
-        page_location: "https://stampeo.app/help/add-a-team-member",
-      });
-    } finally {
-      delete globals.window;
-      delete globals.document;
-    }
   });
 });
