@@ -44,7 +44,7 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 ## Non-goals
 
 - Translating pages (English only).
-- Lifting noindex, sitemap entries, footer link, `/features/*` links, Search Console: the launch PR, a separate decision.
+- Lifting noindex (the `HELP_INDEXABLE` switch, which the Markdown exclusion, the seo-smoke entry and the tests pinning it at false all follow), sitemap entries, footer link, `/features/*` links, Search Console: the launch PR, a separate decision.
 - Adding help links inside web or scanner-app (designed here, shipped at launch).
 - Writing the P0 and P1 pages beyond migrating and splitting the existing ones: each writing wave runs through the skill after this branch merges.
 - Fixing the product bugs found during research (listed in the hand-back, each to its own issue).
@@ -72,7 +72,7 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 ## Acceptance criteria
 
 - AC1: Given the showcase, when `/help` and `/help/<slug>` are requested, then English content renders with `lang="en"`, and the URL stays `/help/...`.
-- AC2: Given `/en/help/x`, `/es/help/x`, `/pl/help/x`, when requested, then they redirect (308) to `/help/x`.
+- AC2: Given `/en/help/x`, `/es/help/x`, `/pl/help/x` (and `/fr/help/x`), when requested, then they redirect (308) to `/help/x`.
 - AC3: Given `HELP_INDEXABLE` is false, when any `/help` page renders, then its robots meta is `noindex` and the response has `X-Robots-Tag: noindex`, and NOT a canonical or `hreflang` alternates.
 - AC4: Given `HELP_INDEXABLE` is false, then `buildSitemap()`, `buildLlmsTxt()` and the IndexNow list contain no `/help` URL, and robots.txt does NOT disallow `/help`.
 - AC5: Given the help content, then every page has `title` (at most 65 characters), `description` (at most 155 characters), `type` (one of six), `audience`, `updated`; every slug is unique; every internal `/help/` link and every `related` slug resolves to an existing page; every image reference exists under `public/help/`; no content links to `/docs/`.
