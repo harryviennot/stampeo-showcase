@@ -321,7 +321,7 @@
     "dashboard": {
       "title": "Their card, your numbers.",
       "caption": "Every scan updates your Analytics on its own, with nothing to type. Check it on your phone between two customers, or on your computer.",
-      "planLine": "Charts come with Growth and Pro.",
+      "planLine": "More charts come with Growth and Pro.",
       "alt": {
         "desktop": "The Stampeo Analytics page on a computer: visits, new customers, 30-day return rate, visits over time and busiest times.",
         "phone": "The same Analytics page on a phone: visits, new customers and 30-day return rate."
@@ -440,7 +440,7 @@
         },
         {
           "question": "How many customers can I enroll?",
-          "answer": "The Starter, Growth and Pro plans differ by features, not by volume: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Growth and Pro show Analytics as charts, while Starter shows the highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for the details of each plan."
+          "answer": "The Starter, Growth and Pro plans differ by features, not by volume: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Every plan includes the visits chart. Growth and Pro show the rest of Analytics as charts too, while Starter shows its highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for the details of each plan."
         },
         {
           "question": "Can I change my card later?",
@@ -522,7 +522,7 @@
           },
           {
             "question": "How many customers can I enroll?",
-            "answer": "Starter, Growth and Pro differ by features, not by how many customers you have: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Growth and Pro show Analytics as charts, while Starter shows the highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for what each plan includes."
+            "answer": "Starter, Growth and Pro differ by features, not by how many customers you have: notifications, broadcasts and how far back your Analytics history goes (30 days, 90 days or 1 year). Every plan includes the visits chart. Growth and Pro show the rest of Analytics as charts too, while Starter shows its highlights. Pro adds monthly cohorts and per-location stats. See the pricing page for what each plan includes."
           },
           {
             "question": "Can I change my card later?",

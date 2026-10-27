@@ -569,7 +569,7 @@
       "hero": {
         "title": "Mira cada cuánto vuelven tus clientes.",
         "subtitle": "Cada cuánto vienen tus clientes, en qué punto de la tarjeta están y cuándo hay más gente. Cada escaneo lo rellena solo, sin escribir nada.",
-        "planLine": "Los gráficos vienen con Growth y Pro.",
+        "planLine": "Más gráficos vienen con Growth y Pro.",
         "alt": "La página Estadísticas de Stampeo en un teléfono: cada cuánto vienen los clientes y en qué punto de la tarjeta están."
       },
       "busiest": {
@@ -583,7 +583,7 @@
       },
       "cta": {
         "title": "Deja de adivinar. Empieza a saber.",
-        "subtitle": "Todos los planes muestran lo esencial de tus visitas, tus horas punta y cada cuánto vuelven tus clientes. Growth y Pro los muestran en gráficos y miran más atrás en el tiempo, y Pro añade cohortes mensuales."
+        "subtitle": "Todos los planes muestran tus visitas en un gráfico y resumen tus horas punta y cada cuánto vuelven tus clientes. Growth y Pro también muestran esos datos en gráficos y miran más atrás en el tiempo, y Pro añade cohortes mensuales."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -615,7 +615,7 @@
           "badge": "Todos los planes",
           "chartsBadge": "Growth y Pro",
           "title": "Entiende las tendencias, no solo los números",
-          "description": "Lo esencial de las visitas, las horas punta, cada cuánto vuelven tus clientes y en qué punto de la tarjeta están, en todos los planes. Growth y Pro los muestran en gráficos y miran más atrás, y Pro añade cohortes mensuales."
+          "description": "Un gráfico de visitas en todos los planes, junto con lo esencial de tus horas punta, de cada cuánto vuelven tus clientes y del avance de sus tarjetas. Growth y Pro también muestran esos datos en gráficos y miran más atrás, y Pro añade cohortes mensuales."
         },
         "proCharts": {
           "lineChart": {

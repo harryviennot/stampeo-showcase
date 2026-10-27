@@ -794,7 +794,7 @@
       "hero": {
         "title": "Zobacz, jak często wracają twoi klienci.",
         "subtitle": "Jak często przychodzą klienci, na którym miejscu karty są i kiedy masz największy ruch. Każdy skan sam uzupełnia statystyki, bez wpisywania.",
-        "planLine": "Wykresy są w planach Growth i Pro.",
+        "planLine": "Więcej wykresów jest w planach Growth i Pro.",
         "alt": "Strona Statystyki w Stampeo na telefonie: jak często przychodzą klienci i na którym miejscu karty są."
       },
       "busiest": {
@@ -808,7 +808,7 @@
       },
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
-        "subtitle": "Każdy plan pokazuje najważniejsze liczby o wizytach, godzinach szczytu i tym, jak często wracają klienci. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
+        "subtitle": "Każdy plan pokazuje wizyty na wykresie i podsumowuje godziny szczytu oraz to, jak często wracają klienci. Growth i Pro pokazują je też na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -840,7 +840,7 @@
           "badge": "Wszystkie plany",
           "chartsBadge": "Growth i Pro",
           "title": "Zrozum trendy, nie tylko liczby",
-          "description": "Najważniejsze liczby o wizytach, godzinach szczytu, częstotliwości powrotów i postępie na karcie, w każdym planie. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
+          "description": "Wykres wizyt w każdym planie oraz najważniejsze liczby o godzinach szczytu, częstotliwości powrotów i postępie na karcie. Growth i Pro pokazują je też na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
         },
         "proCharts": {
           "lineChart": {

@@ -30,7 +30,7 @@
         "1 aktywny wzór karty",
         "2 osoby w zespole (właściciel + 1)",
         "Lista klientów, statystyki i wyszukiwanie",
-        "Najważniejsze statystyki (30 dni)",
+        "Wykres wizyt i najważniejsze statystyki (30 dni)",
         "Wsparcie przez e-mail"
       ]
     },
@@ -113,7 +113,7 @@
         "1 aktywny wzór karty",
         "2 osoby w zespole (właściciel + 1)",
         "Lista klientów, statystyki i wyszukiwanie",
-        "Najważniejsze statystyki (30 dni)",
+        "Wykres wizyt i najważniejsze statystyki (30 dni)",
         "Wsparcie przez e-mail"
       ],
       "featuresLabel": "Wszystko w cenie:"
@@ -250,7 +250,8 @@
           "pro": "1 rok"
         },
         "analyticsCharts": {
-          "label": "Wykresy statystyk"
+          "label": "Wykresy statystyk",
+          "starter": "Tylko wizyty"
         },
         "monthlyCohorts": {
           "label": "Kohorty miesięczne"

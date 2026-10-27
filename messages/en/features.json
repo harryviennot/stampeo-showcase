@@ -569,7 +569,7 @@
       "hero": {
         "title": "See how often your customers come back.",
         "subtitle": "How often your customers come, where they are on their card, and when your shop is busiest. Every scan fills it in, with nothing to type.",
-        "planLine": "Charts come with Growth and Pro.",
+        "planLine": "More charts come with Growth and Pro.",
         "alt": "The Stampeo Analytics page on a phone: how often customers come, and where they are on their stamp card."
       },
       "busiest": {
@@ -583,7 +583,7 @@
       },
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "Every plan shows the highlights of your visits, your busiest times and how often customers come back. Growth and Pro show them as charts and look further back, and Pro adds monthly cohorts."
+        "subtitle": "Every plan charts your visits and shows the highlights of your busiest times and how often customers come back. Growth and Pro chart those too and look further back, and Pro adds monthly cohorts."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -615,7 +615,7 @@
           "badge": "Every plan",
           "chartsBadge": "Growth and Pro",
           "title": "Understand trends, not just numbers",
-          "description": "The highlights of visits, busiest times, how often customers come and where they are on the card, on every plan. Growth and Pro show them as charts and look further back, and Pro adds monthly cohorts."
+          "description": "A visits chart on every plan, with the highlights of busiest times, how often customers come and where they are on the card. Growth and Pro chart those too and look further back, and Pro adds monthly cohorts."
         },
         "proCharts": {
           "lineChart": {

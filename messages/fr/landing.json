@@ -321,7 +321,7 @@
     "dashboard": {
       "title": "Leur carte, vos chiffres.",
       "caption": "Chaque scan remplit vos statistiques, sans rien à saisir. Sur votre téléphone comme sur votre ordinateur.",
-      "planLine": "Les graphiques sont inclus dans Growth et Pro.",
+      "planLine": "D'autres graphiques sont inclus dans Growth et Pro.",
       "alt": {
         "desktop": "La page Statistiques de Stampeo sur ordinateur : visites, nouveaux clients, retour à 30 jours, visites dans le temps et heures de pointe.",
         "phone": "La même page Statistiques sur téléphone : visites, nouveaux clients et retour à 30 jours."
@@ -441,7 +441,7 @@
         },
         {
           "question": "Combien de clients puis-je inscrire ?",
-          "answer": "Les plans Starter, Growth et Pro se distinguent par les fonctionnalités, pas par le volume : notifications, diffusions et durée de l'historique des statistiques (30 jours, 90 jours ou 1 an). Growth et Pro affichent les statistiques sous forme de graphiques, Starter en donne l'essentiel. Pro ajoute les cohortes mensuelles et les statistiques par établissement. Consultez la page tarifs pour le détail par plan."
+          "answer": "Les plans Starter, Growth et Pro se distinguent par les fonctionnalités, pas par le volume : notifications, diffusions et durée de l'historique des statistiques (30 jours, 90 jours ou 1 an). Chaque plan inclut le graphique des visites. Growth et Pro affichent aussi le reste des statistiques sous forme de graphiques, tandis que Starter en résume l'essentiel. Pro ajoute les cohortes mensuelles et les statistiques par établissement. Consultez la page tarifs pour le détail par plan."
         },
         {
           "question": "Puis-je modifier le design de ma carte après ?",
