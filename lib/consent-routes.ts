@@ -141,5 +141,5 @@ export function mayRunAdvertising(pathname: string): boolean {
  * interrupt the visitor.
  */
 export function mayRunAnyTag(pathname: string): boolean {
-  return routeClass(pathname) !== "none";
+  return mayRunAnalytics(pathname) || mayRunAdvertising(pathname);
 }

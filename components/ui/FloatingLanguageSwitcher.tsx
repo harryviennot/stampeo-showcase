@@ -131,7 +131,6 @@ export function FloatingLanguageSwitcher() {
     };
   }, [detectBackground]);
 
-  // Hide on individual blog posts (different slugs per language) and the help center (English only)
   if (hidesLanguageSwitcher(pathname)) return null;
 
   return (

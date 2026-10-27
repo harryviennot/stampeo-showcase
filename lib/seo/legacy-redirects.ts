@@ -154,10 +154,7 @@ function pilotRules(): Rule[] {
   );
 }
 
-/**
- * The help center is English at the locale-free `/help`, so every locale
- * prefix, French included, leads to the real URL.
- */
+/** Every locale prefix of the English, locale-free help center leads to `/help`. */
 function helpRules(): Rule[] {
   return SITE_LOCALES.map((locale): Rule => [`/${locale}/help/:path*`, "/help/:path*"]);
 }

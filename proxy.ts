@@ -56,9 +56,7 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // The help center is English at a locale-free URL: the rewrite keeps /help
-  // in the address bar. Before the markdown and shop-slug checks, which would
-  // otherwise claim it, and independent of any language cookie.
+  // English at a locale-free URL: rewritten before next-intl, so no language cookie or Accept-Language applies.
   if (isHelpPath(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = `/en${request.nextUrl.pathname}`;

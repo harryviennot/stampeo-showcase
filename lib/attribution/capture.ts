@@ -137,11 +137,8 @@ function refreshedGa(stored: GaCarrier | null, incoming: GaCarrier): GaCarrier |
 }
 
 /**
- * What the visitor allows on the page they landed on: their choice, narrowed
- * by what the page permits. Never for a landing on a business's enrollment
- * page or a private route (those visitors are our customers' customers, not
- * ad prospects), and never advertising on the help center. Checked against the
- * landing, because the carriers describe where the visit began.
+ * The visitor's choice narrowed by what the landing page permits: no analytics
+ * where no tag runs, no advertising on the help center or any non-marketing page.
  */
 function allowedAt(landing: LandingContext, consent: ConsentState): ConsentState {
   return {
