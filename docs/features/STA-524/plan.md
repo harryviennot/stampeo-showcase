@@ -41,6 +41,10 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 - MOBILE: home = search field, three stacked doors, 6 to 8 top-task rows, compact category cards, "Still stuck?". Article = breadcrumb + Search pill, H1, badges, 16px body, full-width Open in dashboard, Related, "Still stuck?". Share = slim logo bar with Share, 3 to 5 steps, no site header or footer.
 - REUSES: `Header`, `Footer`, `Container`, `TableOfContents` (new optional `selector` prop, help passes `"h2"`), blog `Heading`, `lib/blog/mdx-options.ts`, the native `<dialog>` pattern from `ConsentPreferences`, `ContactLink`, `CTAButton` class maps, `FAQList`'s native `details`. NEW: `components/help/mdx/{Details,Callout,Symptom,OpenInDashboard,Screenshot}` (blog equivalents crop images, carry French titles, or log signup-funnel events), `components/help/{HelpSearch,HelpBreadcrumb,StillStuck,ShareLayout}`.
 
+## UI decisions from the benchmark (28 Oct)
+
+`ui-spec.md` (7 help centers benchmarked at 390 and 1280) overrides parts of `ux-brief.md`: "On this page" in a right rail (help only), topic pages on the article grid, badges as one labelled line ("Who can do this"), near-black links with an orange underline in `.help-prose` (the orange-on-cream links measured 2.51:1), larger `##` headings, troubleshooting as a divided list, and a slim `HelpFooter` with the cookie-preferences control, privacy and a few site links on every help page instead of the full site footer (Harry can restore the full footer at launch if it matters for search). Must-haves and S-effort nice-to-haves are built in stage 3; L-effort nice-to-haves are listed in the stage 3 report.
+
 ## Non-goals
 
 - Translating pages (English only).
@@ -88,7 +92,7 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 - AC14: Given the search dialog on a phone, when it opens with an empty query, then it shows the top tasks; when a query matches nothing, then it echoes the query and shows the email and WhatsApp rows.
 - AC15: Given a `share` page, then it renders without the site header and the full footer, with a slim footer carrying the cookie-preferences control and the privacy link (the consent footer test requires the control wherever a cookie can be set), with a Share button that uses Web Share and falls back to copying the link, and a print stylesheet that hides the bar and keeps each step on one page.
 - AC16: Given a `<Symptom title="…">`, then its heading has a stable id derived from the title, and `/help/<slug>#<id>` scrolls it into view below the header.
-- AC17: Given an article with fewer than three `##` headings, then no "On this page" list renders; given three or more, then it renders on desktop only, and NOT with Symptom titles in it.
+- AC17: Given an article with fewer than three `##` headings, then no "On this page" list renders; given three or more, then it renders in a right rail on desktop, and folded at the top on phones for concept, reference and guide pages only, and NOT with Symptom titles in it.
 - AC13: Given the capture script `scripts/help-shots/`, when run with a local env file, then it signs in as a fixture account, overlays the English profile, and writes a named shot to `public/help/`, and NOT with any credential in the repo.
 
 ## File layout
