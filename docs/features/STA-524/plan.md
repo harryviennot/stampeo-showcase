@@ -69,6 +69,8 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 3. **Finding things** (AC8, AC9, AC14, AC15): help home, topic pages, search, share layout.
 4. **Screenshots and splits** (AC13, AC10 splits): capture script, the two long pages split through the skill, the locations drafts once STA-189 merges.
 
+**Verification (Harry, 28 Oct, for speed):** from the stage 1 fix pass on, each stage runs only the tests it touches plus type-check, and UI is checked by screenshots as we go. The full test suites, lint, build, served-build and seo-smoke checks, and ONE coverage + code-quality review of the whole branch run once at the end, replacing the per-stage reviews (stage 1 was reviewed on its own before this change).
+
 ## Acceptance criteria
 
 - AC1: Given the showcase, when `/help` and `/help/<slug>` are requested, then English content renders with `lang="en"`, and the URL stays `/help/...`.
