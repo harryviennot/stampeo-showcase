@@ -17,6 +17,12 @@ import HelpHomePage, {
   generateMetadata as homeMetadata,
   generateStaticParams as homeParams,
 } from "../../app/[locale]/help/page";
+import { GET as searchIndex, generateStaticParams as searchIndexParams } from "../../app/[locale]/help/search-index/route";
+import HelpTopicPage, {
+  generateMetadata as topicMetadata,
+  generateStaticParams as topicParams,
+} from "../../app/[locale]/help/topics/[category]/page";
+import { groupTopics } from "./home/topics";
 
 // The home's title comes from the server-side translator, which needs a Next
 // request; this one reads the real catalog and is put back after the file.
@@ -91,5 +97,67 @@ describe("a help article", () => {
 
   test("a slug with no page is still marked noindex", async () => {
     expect((await articleMetadata(params("en", "nope"))).robots).toEqual(helpRobots());
+  });
+});
+
+describe("a topic page", () => {
+  const params = (locale: string, category: string) => ({ params: Promise.resolve({ locale, category }) });
+
+  test("is generated in English for every category that has a page, and for nothing else", () => {
+    const expected = groupTopics(getAllHelpPages()).map((topic) => ({ locale: "en", category: topic.category.slug }));
+
+    expect(topicParams()).toEqual(expected);
+    expect(topicParams()).toContainEqual({ locale: "en", category: "team" });
+    expect(topicParams()).not.toContainEqual({ locale: "en", category: "guides" });
+  });
+
+  test.each(["fr", "es", "pl"])("answers 404 under the %s locale", async (locale) => {
+    const error = await HelpTopicPage(params(locale, "team")).catch((e: unknown) => e);
+
+    expect(isNotFound(error)).toBe(true);
+  });
+
+  test.each(["guides", "nope"])("answers 404 for %s, a category with no page", async (category) => {
+    const error = await HelpTopicPage(params("en", category)).catch((e: unknown) => e);
+
+    expect(isNotFound(error)).toBe(true);
+  });
+
+  test("is titled by its topic, marked noindex, and names no canonical or alternates", async () => {
+    const metadata = await topicMetadata(params("en", "team"));
+
+    expect(metadata.title).toBe("Your team");
+    expect(metadata.description).toBe("Adding people, roles and access.");
+    expect(metadata.robots).toEqual(helpRobots());
+    expect(metadata.alternates).toBeUndefined();
+  });
+
+  test("a category with no page is still marked noindex", async () => {
+    expect((await topicMetadata(params("en", "guides"))).robots).toEqual(helpRobots());
+  });
+});
+
+describe("the search index route", () => {
+  test("is generated for English only", () => {
+    expect(searchIndexParams()).toEqual([{ locale: "en" }]);
+  });
+
+  test("serves every published page, and the pages offered before a reader types", async () => {
+    const response = await searchIndex(new Request("http://localhost/help/search-index"), {
+      params: Promise.resolve({ locale: "en" }),
+    });
+    const index = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(index.entries.map((entry: { slug: string }) => entry.slug)).toContain("roles");
+    expect(index.popular.length).toBeGreaterThanOrEqual(6);
+  });
+
+  test("answers 404 under another locale", async () => {
+    const response = await searchIndex(new Request("http://localhost/fr/help/search-index"), {
+      params: Promise.resolve({ locale: "fr" }),
+    });
+
+    expect(response.status).toBe(404);
   });
 });

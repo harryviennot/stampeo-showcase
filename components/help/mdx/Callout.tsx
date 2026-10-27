@@ -17,7 +17,7 @@ export function Callout({ type = "note", children }: { type?: CalloutType; child
 
   return (
     <aside
-      className={`my-6 rounded-r-xl border-l-4 px-5 py-4 text-[0.95em] [&>*:last-child]:mb-0 [&>div+*]:mt-0 ${box}`}
+      className={`my-6 rounded-r-xl border-l-4 px-5 py-4 [&>*:last-child]:mb-0 [&>div+*]:mt-0 ${box}`}
     >
       <div className="mb-1 flex items-center gap-1.5 text-sm font-semibold text-[var(--near-black)]">
         <Icon aria-hidden className="h-4 w-4" weight="bold" />

@@ -315,7 +315,7 @@ describe("segment tables", () => {
       if (seen.has(file)) return false;
       seen.add(file);
       const source = readFileSync(file, "utf-8");
-      if (source.includes("<Footer")) return true;
+      if (/<(?:Help)?Footer\b/.test(source)) return true;
       const imports = [...source.matchAll(/from "((?:@\/components|\.\.?)\/[^"]+)"/g)].map((m) => m[1]);
       return imports.some((specifier) => {
         const next = resolveImport(file, specifier);
@@ -348,6 +348,16 @@ describe("segment tables", () => {
     for (const segment of ["login", "onboarding", "reset-password"]) {
       expect(pagesUnder(join(appDir, segment)).some((page) => rendersFooter(page))).toBe(false);
     }
+  });
+
+  test("the slim footer that help pages render in place of the full one holds the privacy control", () => {
+    // `rendersFooter` above accepts `<HelpFooter` for the help routes, so it
+    // must itself carry what the full footer carries: the cookie-preferences
+    // control and the privacy link.
+    const source = readFileSync(join(import.meta.dir, "..", "components", "help", "HelpFooter.tsx"), "utf-8");
+
+    expect(source).toContain("<CookiePreferencesButton");
+    expect(source).toContain('site("/privacy")');
   });
 
   test("every private sub-route still exists, under a segment that is otherwise ours", () => {

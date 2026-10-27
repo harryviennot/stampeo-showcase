@@ -206,12 +206,11 @@ describe("links and headings", () => {
     expect(html).toMatch(/<a href="https:\/\/example\.com"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/);
   });
 
-  test("a ## section is h3-sized and keeps its id for links", async () => {
+  test("a ## section keeps its id for links and takes its size from the article, not a heading class", async () => {
     const html = await render("Intro.\n\n## Add a scanner\n\nText.\n");
 
     expect(html).toMatch(/<h2[^>]*\bid="add-a-scanner"/);
-    expect(html).toMatch(/<h2[^>]*\bclass="[^"]*text-h3/);
-    expect(html).not.toMatch(/<h2[^>]*text-h2/);
+    expect(html).not.toMatch(/<h2[^>]*\bclass="[^"]*text-(h1|h2|h3|display)/);
   });
 
   test("a wide table scrolls inside its own box instead of widening the page", async () => {

@@ -10,11 +10,8 @@ export function Symptom({ title, id, children }: { title: string; id?: string; c
   const headingId = id ?? slug(title);
 
   return (
-    <section
-      aria-labelledby={headingId}
-      className="my-5 rounded-xl border border-[var(--border)] bg-[var(--paper)] p-4"
-    >
-      <h3 id={headingId} className="mb-2! mt-0! text-base! font-semibold! text-[var(--near-black)]">
+    <section aria-labelledby={headingId} className="help-symptom my-6">
+      <h3 id={headingId} className="mb-2! mt-0! text-lg! font-semibold! text-[var(--near-black)]">
         {title}
       </h3>
       <div className="[&>*:first-child]:mt-0 [&>*:last-child]:mb-0">{children}</div>

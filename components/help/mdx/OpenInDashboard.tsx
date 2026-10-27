@@ -13,7 +13,7 @@ export function OpenInDashboard({ path, label }: { path: string; label?: string 
 
   return (
     // not-prose keeps the article's link colour off the button text.
-    <div className="not-prose my-6">
+    <div className="not-prose my-8">
       <a
         href={dashboardUrl(path)}
         target="_blank"

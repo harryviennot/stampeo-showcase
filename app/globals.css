@@ -949,11 +949,23 @@ body {
   font-size: 0.95rem;
 }
 
-/* Help prose — an article body on the blog skeleton: a lead-sized intro, links
-   that are underlined, plain Markdown quotes as quiet notes, and long words
-   (file names, addresses) that wrap instead of widening the page. */
+/* Help prose — an article body on the blog skeleton: near-black text, section
+   titles sized as headings, links in near-black with an accent underline (the
+   accent itself is too pale on the warm background to read as text), a
+   lead-sized intro, plain Markdown quotes as quiet notes, and long words (file
+   names, addresses) that wrap instead of widening the page. */
 .help-prose {
+  --tw-prose-body: var(--near-black);
+  --tw-prose-bold: var(--near-black);
   overflow-wrap: break-word;
+}
+
+.help-prose h2 {
+  font-size: clamp(1.375rem, 1.2654rem + 0.4494vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 2.5rem 0 0.5rem;
 }
 
 .help-prose > p:first-of-type {
@@ -968,15 +980,30 @@ body {
 }
 
 .help-prose a:not(.not-prose a):not(h2 a):not(h3 a) {
+  color: var(--near-black);
+  font-weight: 500;
   text-decoration: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
   text-underline-offset: 3px;
+}
+
+.help-prose a:not(.not-prose a):not(h2 a):not(h3 a):hover {
+  text-decoration-color: var(--accent-hover);
 }
 
 .help-prose blockquote {
   border-left-color: var(--border);
   font-style: normal;
   font-weight: 400;
+}
+
+.help-prose blockquote > :first-child {
+  margin-top: 0;
+}
+
+.help-prose blockquote > :last-child {
+  margin-bottom: 0;
 }
 
 .help-prose blockquote p:first-of-type::before,
@@ -1000,6 +1027,63 @@ body {
 
 .help-prose > :first-child {
   margin-top: 0;
+}
+
+/* Troubleshooting entries: a divided list, not a stack of boxes. */
+.help-prose .help-symptom + .help-symptom {
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+}
+
+/* Procedures and pages sent to customers: numbered steps in accent circles. */
+.help-steps ol,
+.help-share ol {
+  counter-reset: step;
+  list-style: none;
+  padding-left: 0;
+}
+
+.help-steps ol > li,
+.help-share ol > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.help-steps ol > li::before,
+.help-share ol > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background: var(--accent-light);
+  /* The tint alone is close to the page colour; a hairline of the accent keeps the circle visible. */
+  box-shadow: inset 0 0 0 1px rgb(249 115 22 / 0.25);
+  color: var(--near-black);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* A shot on a page sent to customers is a phone capture, smaller than in an article. */
+.help-share .help-shot {
+  max-width: 260px;
+}
+
+@media print {
+  .help-share li {
+    break-inside: avoid;
+  }
+
+  .help-share .help-shot {
+    max-width: 50mm;
+  }
 }
 
 /* ROI Calculator slider */

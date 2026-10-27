@@ -13,7 +13,7 @@ export function Screenshot({ src, alt = "", device }: { src: string; alt?: strin
 
   // A span, not a figure: a Markdown image sits inside a paragraph.
   return (
-    <span className={`not-prose my-6 block ${phone ? "mx-auto max-w-[300px]" : ""}`}>
+    <span className={`help-shot not-prose my-6 block ${phone ? "mx-auto max-w-[300px]" : ""}`}>
       <Image
         src={src}
         alt={alt}

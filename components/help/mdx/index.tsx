@@ -7,10 +7,10 @@ import { OpenInDashboard } from "./OpenInDashboard";
 import { Screenshot } from "./Screenshot";
 import { Symptom } from "./Symptom";
 
-// The blog's heading, with a help-sized `##` and a plain `###`. Important, so the
-// article's desktop prose size (lg:prose-lg) does not enlarge them.
-const SECTION =
-  "text-h3! text-[var(--near-black)] mt-10! mb-2! [&>a]:text-inherit [&>a]:no-underline";
+// The blog's heading, with a plain `###`; the `##` size and spacing come from
+// `.help-prose h2`. Important on the `###`, so the article's desktop prose size
+// (lg:prose-lg) does not enlarge it.
+const SECTION = "text-[var(--near-black)] [&>a]:text-inherit [&>a]:no-underline";
 const SUBSECTION =
   "text-lg! font-semibold! text-[var(--near-black)] mt-6! mb-1.5! [&>a]:text-inherit [&>a]:no-underline";
 

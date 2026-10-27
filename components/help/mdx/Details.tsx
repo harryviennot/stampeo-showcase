@@ -7,7 +7,7 @@ import { ChevronDownIcon } from "@/components/icons";
  */
 export function Details({ summary, children }: { summary: string; children: ReactNode }) {
   return (
-    <details className="group my-5 rounded-xl border border-[var(--border)] bg-[var(--paper)]">
+    <details className="group my-6 rounded-xl border border-[var(--border)] bg-[var(--paper)]">
       <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-2.5 font-semibold text-[var(--near-black)] [&::-webkit-details-marker]:hidden">
         <span>{summary}</span>
         <ChevronDownIcon

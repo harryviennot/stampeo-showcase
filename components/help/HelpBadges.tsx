@@ -2,13 +2,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { planBadge } from "@/lib/help/badges";
 import type { HelpAudience, HelpPageType, HelpPlan } from "@/lib/help/types";
 
-const PILL =
-  "inline-flex h-7 items-center rounded-full border border-[var(--border)] px-3 text-sm font-semibold";
+const PLAN_PILL =
+  "inline-flex h-7 items-center rounded-full bg-[var(--accent-light)] px-3 font-semibold text-[var(--near-black)] ring-1 ring-inset ring-[var(--accent)]/25";
 
 /**
- * Who can do the task, and the plans it is gated to, under the title of a
- * how-to. One pill for the roles, and one for the plans only when the whole
- * page is gated; a page on every plan has none.
+ * Who can do the task, and the plans it is gated to, as one labelled line
+ * under the title of a how-to. The plan is named only when the whole page is
+ * gated; a page on every plan says nothing about plans.
  */
 export function HelpBadges({
   type,
@@ -32,17 +32,16 @@ export function HelpBadges({
   const roles = phrase.charAt(0).toLocaleUpperCase(locale) + phrase.slice(1);
 
   return (
-    <ul className="mt-4 flex flex-wrap gap-2">
-      <li className={`${PILL} bg-[var(--paper)] text-[var(--near-black)]`}>
-        <span className="sr-only">{t("badges.rolesLead")} </span>
-        {roles}
-      </li>
+    <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-[var(--near-black)]">
+      <span>
+        {t("badges.rolesLead")} <span className="font-semibold">{roles}</span>
+      </span>
       {plan && (
-        <li className={`${PILL} bg-[var(--accent-light)] text-[var(--accent-hover)]`}>
-          <span className="sr-only">{t("badges.planLead")} </span>
-          {t(`badges.plan.${plan}`)}
-        </li>
+        <span className="inline-flex items-center gap-2">
+          {t("badges.planLead")}
+          <span className={PLAN_PILL}>{t(`badges.plan.${plan}`)}</span>
+        </span>
       )}
-    </ul>
+    </p>
   );
 }

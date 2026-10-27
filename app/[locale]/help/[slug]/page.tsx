@@ -6,7 +6,7 @@ import { HELP_LOCALES, helpRobots, isHelpLocale } from "@/lib/help/config";
 import { getHelpCategory } from "@/lib/help/categories";
 import { getAllHelpPages, getHelpPage } from "@/lib/help/index";
 import { compileHelpMDX } from "@/lib/help/mdx";
-import { showsToc } from "@/lib/help/toc";
+import { tocPlacement } from "@/lib/help/toc";
 
 // English only, and only the pages that exist: any other slug answers 404.
 export const dynamicParams = false;
@@ -56,7 +56,7 @@ export default async function HelpArticlePage({
       page={page}
       categoryName={getHelpCategory(page.category)?.name ?? page.category}
       related={related}
-      showToc={showsToc(page.content)}
+      toc={tocPlacement(page.content, page.type)}
     >
       {content}
     </HelpLayout>
