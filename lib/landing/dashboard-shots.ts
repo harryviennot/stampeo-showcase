@@ -1,16 +1,14 @@
 import type { Locale } from "@/i18n/routing";
-import type { TierId } from "@/lib/pricing";
 
 /**
  * Real captures of the dashboard's Analytics page, per locale: the top of
  * the page (the landing's desktop and phone) and two phone views scrolled to
  * a card (the Analytics feature page's hero and busiest row).
  * They come from promo-videos `tools/screens/landing-shots.ts` (dev fixture
- * Aurevo, Growth); re-shoot them with that command, never by hand. The sizes
- * are the files' real pixel sizes, checked by `dashboard-shots.test.ts`.
+ * Aurevo, shown as a Pro account with a busy café's numbers); re-shoot them
+ * with that command, never by hand. The sizes are the files' real pixel sizes,
+ * checked by `dashboard-shots.test.ts`.
  */
-/** The plan the captured business is on; the section's plan line names it first. */
-export const CAPTURE_PLAN: TierId = "growth";
 
 const PHONE = { width: 1206, height: 2622 };
 

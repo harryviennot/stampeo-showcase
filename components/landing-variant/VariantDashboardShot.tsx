@@ -8,7 +8,7 @@ import { PhoneScreenshot } from "../ui/PhoneScreenshot";
 
 /**
  * The business's half of the product, right under the hero's cards: real
- * captures of the Growth Analytics page (lib/landing/dashboard-shots.ts). Below
+ * captures of the Analytics page (lib/landing/dashboard-shots.ts). Below
  * md only the phone shows; from md the desktop capture leads and the phone
  * overlaps its right edge, both standing on the same baseline. The heading and
  * caption sit under the picture; the DOM keeps the heading first.

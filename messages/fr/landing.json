@@ -321,7 +321,7 @@
     "dashboard": {
       "title": "Leur carte, vos chiffres.",
       "caption": "Chaque scan remplit vos statistiques, sans rien à saisir. Sur votre téléphone comme sur votre ordinateur.",
-      "planLine": "Écrans du plan Growth. Les graphiques sont inclus dans Growth et Pro.",
+      "planLine": "Les graphiques sont inclus dans Growth et Pro.",
       "alt": {
         "desktop": "La page Statistiques de Stampeo sur ordinateur : visites, nouveaux clients, retour à 30 jours, visites dans le temps et heures de pointe.",
         "phone": "La même page Statistiques sur téléphone : visites, nouveaux clients et retour à 30 jours."

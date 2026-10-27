@@ -502,7 +502,8 @@ function ReturnRateChart({ label, value, subtitle, plan }: { label: string; valu
 
 export function AnalyticsChartCards() {
   const t = useTranslations("features.analytiques.custom");
-  const pill = (chart: ChartKey) => chartPillLabel(chart, t("proAnalytics.badge"));
+  const pill = (chart: ChartKey) =>
+    chartPillLabel(chart, { every: t("proAnalytics.badge"), charts: t("proAnalytics.chartsBadge") });
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg-alt)]">

@@ -1,14 +1,13 @@
 import { describe, expect, it } from "bun:test";
 import { routing } from "@/i18n/routing";
 import { buildLlmsTxt } from "../../llms-txt";
-import { tiersWhere } from "../../plans/plan-facts";
+import { PLAN_NAMES, TIERS, tiersWhere } from "../../plans/plan-facts";
 import { loadCatalog } from "../../testing/catalogs";
 import { OFF_PICTURE, PER_CUSTOMER, REAL_TIME, claimOffenders, plansNamed } from "../../testing/analytics-claims";
-import { CAPTURE_PLAN } from "../../landing/dashboard-shots";
 
 /**
- * The Analytics feature page sits next to real captures of the Growth
- * Analytics page, which shows totals and refreshes every ten minutes. The
+ * The Analytics feature page sits next to real captures of the Analytics
+ * page (shown as a Pro account), which shows totals and refreshes every ten minutes. The
  * page, its search snippet and llms.txt must say the same.
  */
 const page = (locale: string) => loadCatalog(locale, "features.json").features.analytiques;
@@ -32,12 +31,11 @@ describe("analytics feature page copy", () => {
     ]).toEqual([]);
   });
 
-  it.each(routing.locales)("%s: the hero's subtitle names no plan; its plan line leads with the captured plan and names only plans with charts", (locale) => {
+  it.each(routing.locales)("%s: the hero's subtitle names no plan; its plan line names the plans with charts once each, not the plan the screen comes from", (locale) => {
     const { subtitle, planLine } = page(locale).hero;
     expect(plansNamed(subtitle)).toEqual([]);
-    const named = plansNamed(planLine);
-    expect([...named].sort()).toEqual([...WITH_CHARTS].sort());
-    expect(named[0]).toBe(CAPTURE_PLAN);
+    expect(plansNamed(planLine)).toEqual(WITH_CHARTS);
+    for (const tier of TIERS) expect(planLine.split(PLAN_NAMES[tier]).length - 1).toBe(WITH_CHARTS.includes(tier) ? 1 : 0);
   });
 
   it.each(routing.locales)("%s: the busiest row names Starter first, then the plans that show the grid", (locale) => {

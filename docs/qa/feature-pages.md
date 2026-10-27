@@ -49,7 +49,7 @@ Clear site data for the showcase origin (DevTools → Application → Storage �
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. R1. 2. Open the four URLs at 390 and 1440. |
-| EXPECT | A phone frame showing the locale's Analytics page scrolled to "How often they come" over "Reward progress" (FR "À quel rythme ils viennent" / "Progression des cartes", ES "Cada cuánto vienen", PL "Jak często przychodzą"), below a real iOS status bar and running to the screen's bottom edge, and under it the line naming the Growth plan and that charts come with Growth and Pro. You do NOT see an English capture on fr/es/pl, a "app.stampeo.app" mock, or invented customer rows. |
+| EXPECT | A phone frame showing the locale's Analytics page scrolled to "How often they come" over "Reward progress" (FR "À quel rythme ils viennent" / "Progression des cartes", ES "Cada cuánto vienen", PL "Jak często przychodzą"), below a real iOS status bar and running to the screen's bottom edge, and under it the line saying charts come with Growth and Pro (no "Screen from the … plan" before it). No crown or lock anywhere in the capture. You do NOT see an English capture on fr/es/pl, a "app.stampeo.app" mock, or invented customer rows. |
 | RESET | None. |
 
 ### AF-02: Headline first on a phone [CORE]

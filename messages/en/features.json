@@ -511,17 +511,17 @@
           {
             "title": "Personalized messages",
             "description": "Show the customer's first name, remaining stamps, and reward name. Each notification reads like it was written for them.",
-            "badge": "Growth"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Custom milestones",
             "description": "Trigger a message at the exact stamp count that matters. \"Halfway there!\" at stamp 5, \"One more!\" at stamp 9. 3 milestones per program on Growth, unlimited on Pro.",
-            "badge": "Growth / Pro"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Campaigns & segmentation",
             "description": "Reach every customer at once with a broadcast, or target by stamp count, inactivity, and recent redemptions. Perfect for flash promos and product launches.",
-            "badge": "Growth / Pro",
+            "badge": "Growth and Pro",
             "href": "/features/promotional-campaigns",
             "cta": "Explore broadcasts"
           }
@@ -569,7 +569,7 @@
       "hero": {
         "title": "See how often your customers come back.",
         "subtitle": "How often your customers come, where they are on their card, and when your shop is busiest. Every scan fills it in, with nothing to type.",
-        "planLine": "Screen from the Growth plan. Charts come with Growth and Pro.",
+        "planLine": "Charts come with Growth and Pro.",
         "alt": "The Stampeo Analytics page on a phone: how often customers come, and where they are on their stamp card."
       },
       "busiest": {
@@ -613,6 +613,7 @@
         },
         "proAnalytics": {
           "badge": "Every plan",
+          "chartsBadge": "Growth and Pro",
           "title": "Understand trends, not just numbers",
           "description": "The highlights of visits, busiest times, how often customers come and where they are on the card, on every plan. Growth and Pro show them as charts and look further back, and Pro adds monthly cohorts."
         },
@@ -683,7 +684,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Growth",
+      "heroBadge": "Growth and Pro",
       "hero": {
         "title": "Remind them you exist. At the right moment.",
         "subtitle": "When your customer passes near your business, their phone reminds them they have a loyalty card with you. Without you doing anything.",
@@ -766,7 +767,7 @@
             "title": "Multi-location",
             "description": "Add up to 10 addresses per card. Each location triggers the reminder automatically.",
             "icon": "building",
-            "badge": "Growth"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Real-time updates",
@@ -942,12 +943,12 @@
           {
             "title": "Bilingual delivery",
             "description": "Write in English and French once. Each customer sees the language set on their device. No duplicate campaigns, no guesswork.",
-            "badge": "Growth / Pro"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Delivery transparency",
             "description": "See exactly how many messages reached Apple Wallet, Google Wallet, got throttled by quota, or skipped because the wallet was uninstalled. Honest reporting, not inflated rates.",
-            "badge": "Growth / Pro"
+            "badge": "Growth and Pro"
           }
         ]
       },

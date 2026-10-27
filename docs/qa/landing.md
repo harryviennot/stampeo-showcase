@@ -37,7 +37,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 ### Known state before you start
 
 - **New this round (STA-514):** the dashboard section right after the hero, the numbers strip refresh, the location-notification copy, the Geolocation "Soon" pill, and the hero cards back to the year-round set.
-- **The captures show the 90-day view, with a busy café's numbers.** The dashboard is the real Growth Analytics page signed in as the Aurevo fixture, but its four cards are fed `promo-videos/tools/screens/showcase-analytics.ts` during the capture: a café shaped on prod's best stamp-card cafés and set at the high end of normal (shot 27 Oct 2026: 2,770 visits ▲17%, 460 new customers ▲11%, 61% 30-day return ▲2 pts, a quiet August, 31% of visitors came once). The period always ends on the last full Sunday.
+- **The captures show the 90-day view, with a busy café's numbers.** The dashboard is the real Analytics page signed in as the Aurevo fixture, shown as a Pro account (`promo-videos/tools/screens/pro-account.ts`: no crown on "1 year", no PRO pill in the sidebar), and its four cards are fed `promo-videos/tools/screens/showcase-analytics.ts` during the capture: a café shaped on prod's best stamp-card cafés and set at the high end of normal (shot 27 Oct 2026: 2,770 visits ▲17%, 460 new customers ▲11%, 61% 30-day return ▲2 pts, a quiet August, 31% of visitors came once). The period always ends on the last full Sunday.
 - **The section is a plain window, not a browser.** The desktop capture has rounded corners, a hairline border and a soft shadow; the phone stands on its bottom edge; the heading, caption and plan line sit under the picture.
 - **Known misses, pending Harry's waiver (they fail LD-04 / LD-13 until waived):**
   - At 1440×900 the capture's top shows above the fold by 74px on `/en`, `/es`, `/pl` and 47px on `/`, but only 15px on `/us` (extra trial line). At 1920×1080: 155–215px. The plan says report, not shrink the hero further.
@@ -96,11 +96,11 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 
 | Field | Content |
 |---|---|
-| WHY | Analytics shows totals, on Growth. Copy that predicts one customer's return, mentions money, or sells Pro-only charts beside a Growth screenshot is a promise the product does not keep. |
+| WHY | Analytics shows totals. Copy that predicts one customer's return, mentions money, or sells Pro-only charts beside the screenshot is a promise the product does not keep; the screenshot is a Pro account but the copy never says so. |
 | DEPENDS | LD-01 |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Read the heading, the caption, the small line under it, and the image alt text (inspect the two `<img>`) on all four locales. |
-| EXPECT | Three pieces of text only: heading, caption, plan line. The plan line names the Growth plan and says charts come with Growth and Pro. You do NOT see "Starter" in that line, any prediction ("will come back", "revient demain"), any money or spend, "cohorts", "per location", "1 year", or "export". |
+| EXPECT | Three pieces of text only: heading, caption, plan line. The plan line says only that charts come with Growth and Pro. You do NOT see "Starter" in that line, "Screens from the … plan", any prediction ("will come back", "revient demain"), any money or spend, "cohorts", "per location", "1 year", or "export". |
 | RESET | None. |
 
 ### LD-06: The phone never covers a number [EDGE]

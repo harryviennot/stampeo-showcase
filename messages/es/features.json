@@ -511,17 +511,17 @@
           {
             "title": "Mensajes personalizados",
             "description": "Muestra el nombre del cliente, los sellos que le quedan y el nombre de la recompensa. Cada aviso parece escrito para esa persona.",
-            "badge": "Growth"
+            "badge": "Growth y Pro"
           },
           {
             "title": "Hitos personalizados",
             "description": "Lanza un mensaje en el sello exacto que cuenta. «¡A mitad de camino!» en el sello 5, «¡Solo uno más!» en el sello 9. 3 hitos por programa en Growth, ilimitados en Pro.",
-            "badge": "Growth / Pro"
+            "badge": "Growth y Pro"
           },
           {
             "title": "Difusiones y segmentación",
             "description": "Dirígete a todos tus clientes con una sola difusión, o segmenta por número de sellos, inactividad y recompensas recientes. Perfecto para promociones rápidas y lanzamientos de novedades.",
-            "badge": "Growth / Pro",
+            "badge": "Growth y Pro",
             "href": "/features/difusiones-promocionales",
             "cta": "Descubrir las difusiones"
           }
@@ -569,7 +569,7 @@
       "hero": {
         "title": "Mira cada cuánto vuelven tus clientes.",
         "subtitle": "Cada cuánto vienen tus clientes, en qué punto de la tarjeta están y cuándo hay más gente. Cada escaneo lo rellena solo, sin escribir nada.",
-        "planLine": "Pantalla del plan Growth. Los gráficos vienen con Growth y Pro.",
+        "planLine": "Los gráficos vienen con Growth y Pro.",
         "alt": "La página Estadísticas de Stampeo en un teléfono: cada cuánto vienen los clientes y en qué punto de la tarjeta están."
       },
       "busiest": {
@@ -613,6 +613,7 @@
         },
         "proAnalytics": {
           "badge": "Todos los planes",
+          "chartsBadge": "Growth y Pro",
           "title": "Entiende las tendencias, no solo los números",
           "description": "Lo esencial de las visitas, las horas punta, cada cuánto vuelven tus clientes y en qué punto de la tarjeta están, en todos los planes. Growth y Pro los muestran en gráficos y miran más atrás, y Pro añade cohortes mensuales."
         },
@@ -683,7 +684,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Growth",
+      "heroBadge": "Growth y Pro",
       "hero": {
         "title": "Recuérdales que existes. En el momento justo.",
         "subtitle": "Cuando tu cliente pasa cerca de tu comercio, su teléfono le recuerda que tiene una tarjeta de fidelidad contigo. Sin que tú hagas nada.",
@@ -766,7 +767,7 @@
             "title": "Multiestablecimiento",
             "description": "Añade hasta 10 direcciones por tarjeta. Cada punto de venta activa el recordatorio automáticamente.",
             "icon": "building",
-            "badge": "Growth"
+            "badge": "Growth y Pro"
           },
           {
             "title": "Actualización en tiempo real",
@@ -942,12 +943,12 @@
           {
             "title": "Entrega bilingüe",
             "description": "Escribe en español y en inglés una sola vez. Cada cliente ve el idioma configurado en su dispositivo. Sin difusiones duplicadas, sin conjeturas.",
-            "badge": "Growth / Pro"
+            "badge": "Growth y Pro"
           },
           {
             "title": "Transparencia de entrega",
             "description": "Mira cuántos mensajes han llegado a Apple Wallet, a Google Wallet, se han frenado por el límite, o se han descartado porque se desinstaló la tarjeta. Estadísticas honestas, sin inflar.",
-            "badge": "Growth / Pro"
+            "badge": "Growth y Pro"
           }
         ]
       },
