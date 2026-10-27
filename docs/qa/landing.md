@@ -42,7 +42,7 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 - **Known misses, pending Harry's waiver (they fail LD-04 / LD-13 until waived):**
   - At 1440×900 the capture's top shows above the fold by 74px on `/en`, `/es`, `/pl` and 47px on `/`, but only 15px on `/us` (extra trial line). At 1920×1080: 155–215px. The plan says report, not shrink the hero further.
   - At 1920×1080 the desktop capture, not the hero, is the LCP element. It painted at ~870ms with Fast 4G and 4x CPU slowdown (2026-10-26), earlier than the hero's own LCP at 1440. The plan's remedy (an eager ≥768 `<picture>` source) was not built because of that timing.
-- **Hero season:** LD-12 depends on the release date. The year-round cards ship in their own commit, held back if the release goes out before 1 Nov.
+- **Hero season:** this release keeps the Halloween cards (Harry, 27 Oct). The year-round set comes back in its own change after 31 Oct.
 
 ---
 
@@ -169,15 +169,15 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | EXPECT | Stat labels ("Total Customers", "Visits This Week", "Rewards Claimed"), "Recent customers", "Progress", "Visited today", "Almost!" (and translations) render as text. You do NOT see any string starting with `landing.dashboard.`. |
 | RESET | None. |
 
-### LD-12: Year-round hero cards after Halloween [CORE]
+### LD-12: The hero keeps its Halloween cards [CORE]
 
 | Field | Content |
 |---|---|
-| WHY | The hero's card set is a manual switch that only changes on deploy; Halloween cards in November look abandoned. |
+| WHY | The hero's card set is a manual switch that only changes on deploy. This release keeps Halloween; the year-round set returns in a separate change after 31 Oct. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
-| STEPS | 1. On a build released on or after 1 Nov 2026, open `/` and `/en` at 390 and 1440. |
-| EXPECT | The arch shows the year-round brands (Aurevo at the apex, Lustre, Gelo, Marginalia, PACE…). You do NOT see pumpkins, ghosts or the "Smash Club" Halloween card. On a build released before 1 Nov, the Halloween set is expected and this case is N/A. |
+| STEPS | 1. Open `/` and `/en` at 390 and 1440. |
+| EXPECT | The arch shows the Halloween cards (pumpkins, ghosts, the "Smash Club" card). You do NOT see an empty slot or a card from the wrong set mixed in. After the year-round change ships, this case is replaced. |
 | RESET | None. |
 
 ### LD-13: The section costs nothing at load [EDGE]
