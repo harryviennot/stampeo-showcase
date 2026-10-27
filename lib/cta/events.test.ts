@@ -84,15 +84,25 @@ describe("ctaClick", () => {
     expect(click.posthog).toEqual({ event: "landing_cta_clicked", props: context });
     expect(click.ga).toEqual({ event: "sign_up_cta_click", params: context });
     expect(click.meta).toEqual({ event: "SignupCTA", params: context });
-    expect(click.trackable).toBe(true);
+    expect(click.allowed).toEqual({ analytics: true, advertising: true });
   });
 
   test.each(["/", "/en/pricing", "/us/pricing", "/blog/points-ou-tampons"])(
-    "a click on the marketing page %s may reach the ad platforms",
+    "a click on the marketing page %s may reach GA4 and the ad platforms",
     (pathname) => {
       expect(
-        ctaClick({ ctaLocation: "header", href: "/onboarding", pathname, locale: "fr" }).trackable,
-      ).toBe(true);
+        ctaClick({ ctaLocation: "header", href: "/onboarding", pathname, locale: "fr" }).allowed,
+      ).toEqual({ analytics: true, advertising: true });
+    },
+  );
+
+  test.each(["/help", "/help/add-a-team-member"])(
+    "a click on the help page %s reaches GA4 but neither ad platform",
+    (pathname) => {
+      const click = ctaClick({ ctaLocation: "header", href: "/onboarding", pathname, locale: "en" });
+
+      expect(click.allowed).toEqual({ analytics: true, advertising: false });
+      expect(click.ga).not.toBeNull();
     },
   );
 
@@ -103,7 +113,7 @@ describe("ctaClick", () => {
       // and runs outside the consent gate.
       const click = ctaClick({ ctaLocation: "header", href: "/onboarding", pathname, locale: "en" });
 
-      expect(click.trackable).toBe(false);
+      expect(click.allowed).toEqual({ analytics: false, advertising: false });
       expect(click.posthog.event).toBe("landing_cta_clicked");
     },
   );

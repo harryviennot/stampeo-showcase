@@ -10,7 +10,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 
 import { syncGaDisable } from "./google-analytics";
-import { isTrackablePath } from "./consent-routes";
+import { mayRunAnalytics } from "./consent-routes";
 import { installFakeBrowser, type FakeBrowser } from "./privacy/__fixtures__/fake-browser";
 
 const ID = "G-ZFZ6JLPFXN";
@@ -26,7 +26,7 @@ const flag = () => (globalThis as unknown as { window: Record<string, unknown> }
 
 /** What the page does on each navigation: the route decides, and so does what the visitor allows. */
 const visit = (path: string, analytics = true, measurementId: string | null = ID) =>
-  syncGaDisable({ measurementId, trackable: isTrackablePath(path), analytics });
+  syncGaDisable({ measurementId, trackable: mayRunAnalytics(path), analytics });
 
 describe("the off switch follows the route", () => {
   test("a private route turns it on, on the first load as well as after a hop", () => {
@@ -59,6 +59,15 @@ describe("the off switch follows the route", () => {
       expect(flag()).toBe(true);
     },
   );
+
+  test.each(["/help", "/help/add-a-team-member"])("%s leaves it off: analytics runs on the help center", (path) => {
+    browser = installFakeBrowser();
+
+    visit("/onboarding");
+    visit(path);
+
+    expect(flag()).toBe(false);
+  });
 
   test("a page where analytics is not allowed does not turn it off", () => {
     browser = installFakeBrowser();

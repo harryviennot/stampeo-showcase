@@ -172,6 +172,43 @@ describe("a landing that is not ours to measure", () => {
   });
 });
 
+describe("a landing on the help center: measured, never advertised on", () => {
+  const HELP_CLICK = landing("https://stampeo.app/help/add-a-team-member?fbclid=IwAR_HELP_fbclid_0001&utm_source=app", "");
+
+  test("a visitor who accepted everything gets the source and the GA ids, and no paid click", () => {
+    const written = plan(visitor(EU, { record: chose(true, true, "opt-in") }), { landing: HELP_CLICK });
+
+    expect(written.src).toMatchObject({ lp: "/help/add-a-team-member", us: "app" });
+    expect(written.ga).not.toBeNull();
+    expect(written.ad).toBeNull();
+    for (const identifier of ["IwAR_HELP_fbclid_0001", FBP]) {
+      expect(JSON.stringify(written)).not.toContain(identifier);
+    }
+  });
+
+  test("a visitor who allowed advertising only is not written down at all", () => {
+    const written = plan(visitor(EU, { record: chose(false, true, "opt-in") }), { landing: HELP_CLICK });
+
+    expect(written).toEqual({ src: null, ga: null, ad: null });
+  });
+
+  test("a stored paid click is left as it is", () => {
+    const stored = plan(visitor(US));
+    const written = plan(visitor(US), { landing: HELP_CLICK, stored });
+
+    expect(written.ad).toBeNull();
+  });
+
+  test("the capture waits for Google's client id but never for Meta's browser id", () => {
+    const state = visitor(US);
+
+    expect(awaitedIds({ landing: HELP_CLICK, live: NO_LIVE_IDS, stored: NOTHING_STORED, ...state })).toEqual({
+      ga: true,
+      fbp: false,
+    });
+  });
+});
+
 describe("a returning visitor: the latest paid click wins", () => {
   const first = plan(visitor(US), { landing: ORGANIC_LANDING });
   const withMeta = plan(visitor(US));

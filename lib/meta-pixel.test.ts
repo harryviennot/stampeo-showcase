@@ -28,7 +28,7 @@
 
 import { afterAll, describe, expect, test } from "bun:test";
 import { CONSENT_VERSION, resolveConsent } from "./consent";
-import { isTrackablePath } from "./consent-routes";
+import { mayRunAdvertising } from "./consent-routes";
 import { ctaClick } from "./cta/events";
 import { GRANTED_COOKIE, REFUSED_COOKIE } from "./privacy/__fixtures__/fake-browser";
 import { rowFor } from "./privacy/policy";
@@ -418,8 +418,12 @@ describe("ViewContent: the pricing and features pages", () => {
   });
 });
 
-describe("no Meta event is reported from a private route (AC5.2)", () => {
+describe("no Meta event is reported from a private route (AC5.2), nor from the help center", () => {
   const PRIVATE_PATHS = [
+    // The help center: GA4 may run there, an ad platform may not.
+    "/help",
+    "/help/add-a-team-member",
+    "/en/help/add-a-team-member",
     "/onboarding",
     "/en/onboarding",
     "/login",
@@ -434,7 +438,7 @@ describe("no Meta event is reported from a private route (AC5.2)", () => {
   ];
 
   test.each(PRIVATE_PATHS)("a resident pixel stays silent on %s, after a client-side hop", (path) => {
-    const trackable = isTrackablePath(path);
+    const trackable = mayRunAdvertising(path);
 
     // PageView: the router moved here from a marketing page.
     expect(
@@ -458,8 +462,8 @@ describe("no Meta event is reported from a private route (AC5.2)", () => {
     ).toBe(false);
     // A click on a signup CTA there reports to PostHog only.
     expect(
-      ctaClick({ ctaLocation: "header", href: "/onboarding", pathname: path, locale: "en" })
-        .trackable,
+      ctaClick({ ctaLocation: "header", href: "/onboarding", pathname: path, locale: "en" }).allowed
+        .advertising,
     ).toBe(false);
   });
 });
@@ -581,9 +585,9 @@ describe("the browser side, in load order", () => {
     installBrowser({ fbq });
 
     const EVENTS: MetaEvent[] = ["PageView", "ViewContent", "SignupCTA", "Contact"];
-    for (const path of ["/onboarding", "/login", "/reset-password", "/email-preferences", "/mon-cafe"]) {
+    for (const path of ["/onboarding", "/login", "/reset-password", "/email-preferences", "/mon-cafe", "/help", "/help/add-a-team-member"]) {
       for (const event of EVENTS) {
-        trackMetaEvent({ event, trackable: isTrackablePath(path) });
+        trackMetaEvent({ event, trackable: mayRunAdvertising(path) });
       }
     }
 
@@ -706,7 +710,7 @@ describe("Meta's own automatic reporting is off before the script can run", () =
   /**
    * `fbevents.js` reports on its own unless told not to: a PageView on every
    * History API change, and (autoConfig) button clicks with page metadata.
-   * Neither consults `isTrackablePath`, so once the script is resident a
+   * Neither consults `mayRunAdvertising`, so once the script is resident a
    * client-side hop to `/onboarding` or `/login` reaches Meta. Only the calls
    * our gated code makes may leave the browser.
    *

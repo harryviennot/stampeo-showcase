@@ -21,63 +21,76 @@ import { join } from "node:path";
 import { routing } from "../i18n/routing";
 import { pagesUnder } from "./testing/app-folders";
 import {
+  ANALYTICS_ONLY_SEGMENTS,
   MARKETING_SEGMENTS,
   PRIVATE_SEGMENTS,
   PRIVATE_SUBPATHS,
-  isTrackablePath,
+  mayRunAdvertising,
+  mayRunAnalytics,
+  mayRunAnyTag,
 } from "./consent-routes";
 
-describe("isTrackablePath — marketing surfaces", () => {
+/** What a path answers to the three questions callers ask of it. */
+const verdict = (path: string) => ({
+  analytics: mayRunAnalytics(path),
+  advertising: mayRunAdvertising(path),
+  anyTag: mayRunAnyTag(path),
+});
+const EVERY_TAG = { analytics: true, advertising: true, anyTag: true };
+const ANALYTICS_ONLY = { analytics: true, advertising: false, anyTag: true };
+const NO_TAG = { analytics: false, advertising: false, anyTag: false };
+
+describe("route classes — marketing surfaces", () => {
   test("the home page is trackable in every locale", () => {
     // French is the default locale and unprefixed (`localePrefix: "as-needed"`),
     // so `/` and `/en` are both real home pages.
     for (const path of ["/", "/en", "/es", "/pl"]) {
-      expect(isTrackablePath(path)).toBe(true);
+      expect(verdict(path)).toEqual(EVERY_TAG);
     }
   });
 
   test("a marketing page is trackable under every locale prefix", () => {
     for (const path of ["/pricing", "/en/pricing", "/es/pricing", "/pl/pricing"]) {
-      expect(isTrackablePath(path)).toBe(true);
+      expect(verdict(path)).toEqual(EVERY_TAG);
     }
   });
 
   test("the localized loyalty-program route names are trackable", () => {
     // These are four sibling FOLDERS, not one route with a translated slug, so
     // a raw match on "loyalty-programs" would leave three of them untracked.
-    expect(isTrackablePath("/programme-fidelite")).toBe(true);
-    expect(isTrackablePath("/en/loyalty-programs")).toBe(true);
-    expect(isTrackablePath("/es/programa-de-fidelizacion")).toBe(true);
-    expect(isTrackablePath("/pl/program-lojalnosciowy")).toBe(true);
+    expect(verdict("/programme-fidelite")).toEqual(EVERY_TAG);
+    expect(verdict("/en/loyalty-programs")).toEqual(EVERY_TAG);
+    expect(verdict("/es/programa-de-fidelizacion")).toEqual(EVERY_TAG);
+    expect(verdict("/pl/program-lojalnosciowy")).toEqual(EVERY_TAG);
   });
 
   test("the country pilots and everything beneath them are trackable", () => {
     // Pilots are served at locale-free URLs by a proxy rewrite, so the
     // browser path stays /us — there is no locale prefix to strip here.
     for (const path of ["/us", "/us/pricing", "/uk", "/uk/pricing"]) {
-      expect(isTrackablePath(path)).toBe(true);
+      expect(verdict(path)).toEqual(EVERY_TAG);
     }
   });
 
   test("the /start forwarding page is trackable, so an ad click that lands there is attributed", () => {
     for (const path of ["/start", "/en/start", "/es/start?utm_source=meta&fbclid=IwAR3x"]) {
-      expect(isTrackablePath(path)).toBe(true);
+      expect(verdict(path)).toEqual(EVERY_TAG);
     }
   });
 
   test("a nested marketing page is trackable", () => {
-    expect(isTrackablePath("/blog/some-post")).toBe(true);
-    expect(isTrackablePath("/en/features/card-design")).toBe(true);
-    expect(isTrackablePath("/pl/features/wzor-karty")).toBe(true);
+    expect(verdict("/blog/some-post")).toEqual(EVERY_TAG);
+    expect(verdict("/en/features/card-design")).toEqual(EVERY_TAG);
+    expect(verdict("/pl/features/wzor-karty")).toEqual(EVERY_TAG);
   });
 
   test("trailing slashes and query strings do not change the answer", () => {
-    expect(isTrackablePath("/pricing/")).toBe(true);
-    expect(isTrackablePath("/pricing?utm_source=meta")).toBe(true);
+    expect(verdict("/pricing/")).toEqual(EVERY_TAG);
+    expect(verdict("/pricing?utm_source=meta")).toEqual(EVERY_TAG);
   });
 });
 
-describe("isTrackablePath — acquisition pages", () => {
+describe("route classes — acquisition pages", () => {
   test("a business enrollment page is NOT trackable", () => {
     // The headline case. `/some-cafe` is a merchant's printed QR destination.
     for (const path of [
@@ -87,26 +100,26 @@ describe("isTrackablePath — acquisition pages", () => {
       "/es/some-cafe",
       "/pl/some-cafe",
     ]) {
-      expect(isTrackablePath(path)).toBe(false);
+      expect(verdict(path)).toEqual(NO_TAG);
     }
   });
 
   test("a per-location enrollment page is NOT trackable", () => {
-    expect(isTrackablePath("/some-cafe/l/centre")).toBe(false);
-    expect(isTrackablePath("/fr/some-cafe/l/centre")).toBe(false);
+    expect(verdict("/some-cafe/l/centre")).toEqual(NO_TAG);
+    expect(verdict("/fr/some-cafe/l/centre")).toEqual(NO_TAG);
   });
 
   test("a slug that merely starts like a marketing segment is NOT trackable", () => {
     // The `/authentic-cafe` vs `/auth` collision, in the tracking direction:
     // prefix matching here would leak a real business's customers.
-    expect(isTrackablePath("/pricing-cafe")).toBe(false);
-    expect(isTrackablePath("/usual-cafe")).toBe(false);
-    expect(isTrackablePath("/blogger-coffee")).toBe(false);
-    expect(isTrackablePath("/starter-cafe")).toBe(false);
+    expect(verdict("/pricing-cafe")).toEqual(NO_TAG);
+    expect(verdict("/usual-cafe")).toEqual(NO_TAG);
+    expect(verdict("/blogger-coffee")).toEqual(NO_TAG);
+    expect(verdict("/starter-cafe")).toEqual(NO_TAG);
   });
 });
 
-describe("isTrackablePath — private surfaces", () => {
+describe("route classes — private surfaces", () => {
   test("the demo wallet page, whose session token rides in its path, is NOT trackable", () => {
     for (const path of [
       "/demo/wallet-select/3f2504e0",
@@ -114,13 +127,13 @@ describe("isTrackablePath — private surfaces", () => {
       "/fr/demo/wallet-select/3f2504e0/",
       "/es/demo/wallet-select/3f2504e0?x=1",
     ]) {
-      expect(isTrackablePath(path)).toBe(false);
+      expect(verdict(path)).toEqual(NO_TAG);
     }
   });
 
   test("the rest of the demo segment is still ours to measure", () => {
-    expect(isTrackablePath("/demo")).toBe(true);
-    expect(isTrackablePath("/en/demo/other-page")).toBe(true);
+    expect(verdict("/demo")).toEqual(EVERY_TAG);
+    expect(verdict("/en/demo/other-page")).toEqual(EVERY_TAG);
   });
 
   test("the funnel and account routes are NOT trackable", () => {
@@ -138,29 +151,72 @@ describe("isTrackablePath — private surfaces", () => {
       "/reset-password",
       "/es/email-preferences",
     ]) {
-      expect(isTrackablePath(path)).toBe(false);
+      expect(verdict(path)).toEqual(NO_TAG);
     }
   });
 
   test("a malformed path is NOT trackable", () => {
     for (const path of ["", "pricing", "//", "/.."]) {
-      expect(isTrackablePath(path)).toBe(false);
+      expect(verdict(path)).toEqual(NO_TAG);
+    }
+  });
+});
+
+describe("route classes — the help center", () => {
+  test.each([
+    "/help",
+    "/help/",
+    "/help/add-a-team-member",
+    "/help/some-page?utm_source=app#top",
+    "/en/help/add-a-team-member",
+  ])("%s may run analytics, never advertising, and offers the banner", (path) => {
+    // Shops' own customers read some help pages, so no ad platform may hear
+    // about them. Analytics is the one thing that runs there.
+    expect(verdict(path)).toEqual(ANALYTICS_ONLY);
+  });
+
+  test.each(["/helpful-cafe", "/help-me-coffee", "/fr/helpdesk-bar", "/helpers/l/centre", "/es/helping-hands"])(
+    "a shop whose slug merely starts with help is still a shop: %s",
+    (path) => {
+      expect(verdict(path)).toEqual(NO_TAG);
+    },
+  );
+
+  test("the analytics-only class is exactly the help center", () => {
+    // Growing this table widens what a visitor on a customer-facing page is
+    // measured by; it must be a deliberate decision, not a side effect.
+    expect([...ANALYTICS_ONLY_SEGMENTS]).toEqual(["help"]);
+  });
+
+  test("the banner is offered wherever any tag can run, and nowhere else", () => {
+    const paths = [
+      "/", "/pricing", "/us/pricing", "/blog/x", "/help", "/help/x", "/en/help/x",
+      "/onboarding", "/demo/wallet-select/abc", "/some-cafe", "/some-cafe/l/centre", "", "//",
+    ];
+    for (const path of paths) {
+      const { analytics, advertising, anyTag } = verdict(path);
+      expect(anyTag).toBe(analytics || advertising);
     }
   });
 });
 
 describe("segment tables", () => {
-  test("no segment is both marketing and private", () => {
+  test("no segment is in two classes", () => {
     for (const segment of MARKETING_SEGMENTS) {
+      expect(PRIVATE_SEGMENTS.has(segment)).toBe(false);
+      expect(ANALYTICS_ONLY_SEGMENTS.has(segment)).toBe(false);
+    }
+    for (const segment of ANALYTICS_ONLY_SEGMENTS) {
       expect(PRIVATE_SEGMENTS.has(segment)).toBe(false);
     }
   });
 
-  test("no locale is claimed as a marketing segment", () => {
+  test("no locale is claimed as a segment", () => {
     // `/es` is a locale prefix, not a page. Listing it would make the stripper
     // and the allowlist disagree about what the first segment means.
     for (const locale of routing.locales) {
       expect(MARKETING_SEGMENTS.has(locale)).toBe(false);
+      expect(ANALYTICS_ONLY_SEGMENTS.has(locale)).toBe(false);
     }
   });
 
@@ -178,14 +234,17 @@ describe("segment tables", () => {
       .filter((name) => name !== "[slug]");
 
     const unclassified = folders.filter(
-      (name) => !MARKETING_SEGMENTS.has(name) && !PRIVATE_SEGMENTS.has(name),
+      (name) =>
+        !MARKETING_SEGMENTS.has(name) &&
+        !ANALYTICS_ONLY_SEGMENTS.has(name) &&
+        !PRIVATE_SEGMENTS.has(name),
     );
 
     expect(unclassified).toEqual([]);
   });
 
   test("a private route that carries the footer is still known to be private", () => {
-    // `isTrackablePath` gates SOLICITATION only. `/email-preferences` is
+    // The banner predicate (`mayRunAnyTag`) gates SOLICITATION only. `/email-preferences` is
     // private — no tag may fire there — yet it renders the `Footer`, and the
     // footer carries the Cookie preferences button. Gating the preferences
     // DIALOG on this predicate therefore made that button dead on click.
@@ -209,7 +268,7 @@ describe("segment tables", () => {
       .map((entry) => entry.name);
 
     expect(footerRoutes).toContain("email-preferences");
-    expect(isTrackablePath("/email-preferences")).toBe(false);
+    expect(verdict("/email-preferences")).toEqual(NO_TAG);
   });
 
   test("every page that may set a cookie renders the footer that holds the privacy control", () => {
@@ -247,8 +306,16 @@ describe("segment tables", () => {
         .flatMap((segment) => pagesUnder(join(appDir, segment))),
     ];
 
+    // A page with no JSX serves no markup (it only answers 404), so it sets
+    // no cookie and has nothing to hold a footer.
+    const servesMarkup = (page: string) => /<[A-Za-z]/.test(readFileSync(page, "utf-8"));
+    const analyticsOnlyPages = [...ANALYTICS_ONLY_SEGMENTS]
+      .flatMap((segment) => pagesUnder(join(appDir, segment)))
+      .filter(servesMarkup);
+
     expect(cookiePages.length).toBeGreaterThan(15);
-    expect(cookiePages.filter((page) => !rendersFooter(page))).toEqual([]);
+    expect(analyticsOnlyPages.length).toBeGreaterThan(0);
+    expect([...cookiePages, ...analyticsOnlyPages].filter((page) => !rendersFooter(page))).toEqual([]);
     for (const segment of ["login", "onboarding", "reset-password"]) {
       expect(pagesUnder(join(appDir, segment)).some((page) => rendersFooter(page))).toBe(false);
     }
@@ -273,7 +340,7 @@ describe("segment tables", () => {
         .map((entry) => entry.name),
     );
 
-    const orphans = [...MARKETING_SEGMENTS, ...PRIVATE_SEGMENTS].filter(
+    const orphans = [...MARKETING_SEGMENTS, ...ANALYTICS_ONLY_SEGMENTS, ...PRIVATE_SEGMENTS].filter(
       (segment) => !folders.has(segment),
     );
 
