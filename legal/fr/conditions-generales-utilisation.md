@@ -178,7 +178,7 @@ L'Utilisateur Business autorise également Stampeo à présenter sa carte de fid
 
 ## 8. Données des Clients Finaux : Avenant de sous-traitance
 
-Cette section constitue l'avenant de sous-traitance (Data Processing Addendum) au sens de l'article 28 du RGPD entre l'Utilisateur Business (responsable de traitement) et Stampeo (sous-traitant) pour les données à caractère personnel des Clients Finaux. En cas d'acceptation des présentes CGU, l'Utilisateur Business et Stampeo sont réputés avoir conclu cet avenant.
+Cette section constitue l'avenant de sous-traitance (Data Processing Addendum) au sens de l'article 28 du RGPD entre l'Utilisateur Business (responsable de traitement) et Stampeo (sous-traitant) pour les données à caractère personnel des Clients Finaux et, comme précisé au §8.11, pour les Données d'Activité de l'Équipe. En cas d'acceptation des présentes CGU, l'Utilisateur Business et Stampeo sont réputés avoir conclu cet avenant.
 
 ### 8.1 Rôles et portée
 
@@ -251,6 +251,19 @@ Le non-respect de ces restrictions constitue une violation substantielle des pr�
 ### 8.10 Isolation des données
 
 Les données des Clients Finaux sont strictement isolées par entreprise. Stampeo n'effectue aucun croisement de données entre les différentes entreprises utilisatrices. Les données d'un même Client Final chez deux entreprises distinctes restent strictement séparées.
+
+### 8.11 Données d'Activité de l'Équipe
+
+Les **Données d'Activité de l'Équipe** désignent l'indication du membre de l'équipe de l'Utilisateur Business (propriétaire, administrateur ou Employé) qui a enregistré chaque opération sur la Plateforme, ainsi que la date du dernier scan et le nombre de scans de chaque membre, tels qu'ils sont présentés au propriétaire et aux administrateurs de l'Utilisateur Business (§3.2 de la Politique de Confidentialité).
+
+L'Utilisateur Business est responsable de traitement des Données d'Activité de l'Équipe, et Stampeo les traite en qualité de sous-traitant. Les §8.1 à 8.5 et le §8.10 s'appliquent aux Données d'Activité de l'Équipe comme aux données des Clients Finaux, à deux exceptions près, décrites dans la Politique de Confidentialité : les utilisations que Stampeo en fait en tant que responsable de traitement, à savoir le support, l'instruction des usages abusifs de la Plateforme et la règle d'inactivité des §6.2 et §6.3 (§3.2 de la Politique de Confidentialité), et leur durée de conservation (§8 de la Politique de Confidentialité).
+
+L'Utilisateur Business s'engage à :
+
+- informer les membres de son équipe, avant qu'ils ne commencent à utiliser l'application scanner, que chaque opération qu'ils enregistrent est conservée à leur nom, et que le propriétaire et les administrateurs peuvent voir qui a enregistré quoi, ainsi que la date du dernier scan et le nombre de scans de chaque membre ;
+- disposer d'une base légale valide pour toute utilisation qu'il fait des Données d'Activité de l'Équipe, et limiter cette utilisation à ce qui est proportionné à sa finalité, conformément au droit de la protection des données et au droit du travail qui lui sont applicables ;
+- lorsque ce droit l'exige, informer ou consulter les représentants du personnel avant d'utiliser les Données d'Activité de l'Équipe pour contrôler l'activité de son équipe, comme, en France, le comité social et économique (CSE) d'une entreprise d'au moins 50 salariés ;
+- traiter les demandes que lui adressent les membres de son équipe pour exercer leurs droits prévus par le RGPD sur les Données d'Activité de l'Équipe, avec l'assistance de Stampeo prévue au §8.5.
 
 ## 9. Obligations des utilisateurs
 

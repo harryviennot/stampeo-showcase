@@ -16,6 +16,8 @@ This policy applies to all users of the Platform, whether they are business owne
 
 Stampeo acts as the **data controller** for business account data (registration, authentication, billing).
 
+The business is the **data controller** for staff activity data: which member of its team recorded each transaction, and each member's most recent scan and number of scans, as shown to the business's owner and administrators. Stampeo acts as a **data processor** for this data: we process it solely on behalf of the business and in accordance with its instructions, under the data processing terms of the Terms of Service (§8.11). This data, and the two purposes for which Stampeo also uses it as controller, are described in §3.2.
+
 ### 2.2 End Customers (loyalty card holders)
 
 The business using Stampeo is the **data controller** for its own customers' data. Stampeo acts as a **data processor**: we process end customer data solely on behalf of the business and in accordance with its instructions.
@@ -63,10 +65,19 @@ The website, phone number, and "how you heard about us" fields are collected at 
 |------|---------|-------------|
 | Email address | Invitation and authentication | Performance of contract |
 | Full name | Identification | Performance of contract |
-| Activity metrics (number of scans recorded, last-active timestamp) | Team-activity statistics shown to the business owner | Legitimate interest |
-| Per-scan attribution (which employee recorded each scan) | Loyalty audit trail and business analytics | Legitimate interest |
+| Team activity (each team member's most recent scan and number of scans) | Showing the business's owner and administrators how their team uses the scanner app, where the business's plan includes it | Determined by the business, as controller (usually its legitimate interest) |
+| Per-transaction attribution (which team member recorded each transaction: stamps or points added, rewards redeemed, scans cancelled) | The business's record of its loyalty transactions, shown in its activity feed and in each customer's history | Determined by the business, as controller (usually its legitimate interest) |
 
-These activity metrics are visible to the business owner to give a view of team activity. Stampeo does not use them for its own purposes.
+These last two rows are the staff activity data. For them, the business is the controller and Stampeo its processor (see 2.1). The business decides whether and how it uses this data, and it must inform its team before relying on it, as set out in the Terms of Service (§8.11). In the dashboard, this data is shown only to the business's owner and administrators. The scanner app shows each team member their own number of scans, never a colleague's.
+
+A scan records the business location selected in the scanner app, not where the phone is. The scanner app may ask for the phone's location, only to suggest the business's nearest location: the position is used on the phone itself and is never sent to Stampeo.
+
+Stampeo also uses staff activity data for two purposes of its own, as controller, on the basis of its legitimate interest in running and securing the Platform:
+
+- **Support and investigation of misuse:** authorized Stampeo personnel can see a business's team, with each member's activity, and its recent transactions with the name of the team member who recorded each (never an end customer's identity).
+- **Account inactivity:** a scan counts as activity on the business account for the inactivity rule in §8.
+
+Stampeo does not use staff activity data to assess team members, and does not share it with any other business.
 
 ### 3.3 End Customers
 
@@ -299,6 +310,7 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Active Business account | Duration of subscription |
 | Business account after cancellation | Up to 12 months of inactivity, then personal data is deleted. Two email warnings are sent (30 and 14 days before), and the account is kept if the owner logs back in or resubscribes |
 | End customer data | Kept while the business is active; irreversibly anonymized when the business account is deleted (anonymized statistics may be retained) |
+| Staff activity data (§3.2): which team member recorded each transaction, each member's most recent scan and number of scans | Kept as long as the business account. When a team member leaves the team, their team activity is no longer shown, but their name stays on the transactions they recorded, so that the business's history remains complete. When the business account is deleted, the team's memberships are deleted and each member's name and email are erased, unless they still belong to another business on Stampeo; the transactions themselves are kept as statistics, as for end customer data |
 | Billing data | 10 years (French legal requirement) |
 | Technical logs | 12 months maximum |
 | Push registration tokens | Deleted when the customer removes the pass from their wallet, or when the wallet push service reports the token as permanently invalid |
