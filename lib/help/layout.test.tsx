@@ -33,8 +33,19 @@ describe("the badges under the title", () => {
   test("a how-to shows who can do it in one pill, and the plans only when it is gated", () => {
     const text = textOf(render(<HelpBadges type="how-to" audience={["owner", "admin"]} plans={["growth", "pro"]} />));
 
-    expect(text).toContain("Owner and Admin");
+    expect(text).toContain("Owner and admin");
     expect(text).toContain("Growth and Pro");
+  });
+
+  test.each([
+    [["owner"], "Owner"],
+    [["owner", "admin"], "Owner and admin"],
+    [["owner", "admin", "scanner"], "Owner, admin and scanner"],
+    [["owner", "admin", "scanner", "customer"], "Owner, admin, scanner and customer"],
+  ] as const)("the roles %j read as one sentence-case phrase: %s", (audience, phrase) => {
+    const text = textOf(render(<HelpBadges type="how-to" audience={audience} />));
+
+    expect(text).toContain(`Who can do this: ${phrase}`);
   });
 
   test("a Pro-only page says Pro", () => {
@@ -49,7 +60,7 @@ describe("the badges under the title", () => {
     const html = render(<HelpBadges type="how-to" audience={["owner", "admin", "scanner"]} />);
     const text = textOf(html);
 
-    expect(text).toContain("Owner, Admin, and Scanner");
+    expect(text).toContain("Owner, admin and scanner");
     expect(text).not.toMatch(/Growth|Starter|Pro/);
   });
 

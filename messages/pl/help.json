@@ -10,10 +10,10 @@
       "home": "Help"
     },
     "roles": {
-      "owner": "Owner",
-      "admin": "Admin",
-      "scanner": "Scanner",
-      "customer": "Customer"
+      "owner": "owner",
+      "admin": "admin",
+      "scanner": "scanner",
+      "customer": "customer"
     },
     "badges": {
       "rolesLead": "Who can do this:",
@@ -21,7 +21,8 @@
       "plan": {
         "pro": "Pro",
         "growthPro": "Growth and Pro"
-      }
+      },
+      "roleAnd": "{rest} and {last}"
     },
     "related": {
       "title": "Related pages"
@@ -32,6 +33,11 @@
       "email": "Email us",
       "whatsapp": "Message us on WhatsApp",
       "phone": "Call us"
-    }
+    },
+    "callout": {
+      "note": "Note",
+      "warning": "Warning"
+    },
+    "openInDashboard": "Open in dashboard"
   }
 }

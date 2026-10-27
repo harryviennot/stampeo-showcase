@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { ArrowSquareOutIcon } from "@/components/icons";
 import { ctaBase, ctaSizeStyles, ctaVariantStyles } from "@/components/ui/cta-styles";
 import { dashboardUrl } from "@/lib/help/links";
@@ -7,7 +8,9 @@ import { dashboardUrl } from "@/lib/help/links";
  * anchor wearing the CTA look: the CTAButton itself would report a signup-funnel
  * click and add a locale prefix.
  */
-export function OpenInDashboard({ path, label = "Open in dashboard" }: { path: string; label?: string }) {
+export function OpenInDashboard({ path, label }: { path: string; label?: string }) {
+  const t = useTranslations("help");
+
   return (
     // not-prose keeps the article's link colour off the button text.
     <div className="not-prose my-6">
@@ -17,7 +20,7 @@ export function OpenInDashboard({ path, label = "Open in dashboard" }: { path: s
         rel="noopener"
         className={`w-full sm:w-auto ${ctaBase} ${ctaSizeStyles.md} ${ctaVariantStyles.primary}`}
       >
-        <span>{label}</span>
+        <span>{label ?? t("openInDashboard")}</span>
         <ArrowSquareOutIcon aria-hidden className="h-4 w-4" weight="bold" />
       </a>
     </div>

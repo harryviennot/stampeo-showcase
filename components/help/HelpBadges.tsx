@@ -1,4 +1,4 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { planBadge } from "@/lib/help/badges";
 import type { HelpAudience, HelpPageType, HelpPlan } from "@/lib/help/types";
 
@@ -20,15 +20,16 @@ export function HelpBadges({
   plans?: readonly HelpPlan[];
 }) {
   const t = useTranslations("help");
-  const format = useFormatter();
+  const locale = useLocale();
 
   if (type !== "how-to") return null;
 
   const plan = planBadge(plans);
-  const roles = format.list(
-    audience.map((role) => t(`roles.${role}`)),
-    { type: "conjunction" }
-  );
+  const names = audience.map((role) => t(`roles.${role}`));
+  const phrase =
+    names.length > 1 ? t("badges.roleAnd", { rest: names.slice(0, -1).join(", "), last: names[names.length - 1] }) : names[0];
+  // Sentence case: the first role is capitalised, the others stay lower case.
+  const roles = phrase.charAt(0).toLocaleUpperCase(locale) + phrase.slice(1);
 
   return (
     <ul className="mt-4 flex flex-wrap gap-2">

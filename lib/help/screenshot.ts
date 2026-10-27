@@ -13,9 +13,12 @@ export interface ImageSize {
   height: number;
 }
 
-/** Taller than wide is a phone capture; everything else is a desktop one. */
-export function inferDevice({ width, height }: ImageSize): ScreenshotDevice {
-  return height > width ? "phone" : "desktop";
+/** Our phone captures are 390px wide at 1x and 804px at 2x; desktop ones are wider. */
+const PHONE_MAX_WIDTH = 900;
+
+/** Under 900px wide is a phone capture, however tall; anything wider is a desktop one. */
+export function inferDevice({ width }: ImageSize): ScreenshotDevice {
+  return width < PHONE_MAX_WIDTH ? "phone" : "desktop";
 }
 
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);

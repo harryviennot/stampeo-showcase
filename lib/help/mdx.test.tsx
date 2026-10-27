@@ -4,11 +4,28 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { NextIntlClientProvider } from "next-intl";
 import { renderToStaticMarkup } from "react-dom/server";
+import { loadCatalog } from "@/lib/testing/catalogs";
 import { restoreEnvAfterEach } from "@/lib/testing/restore-env";
 import { compileHelpMDX } from "./mdx";
 
-const render = async (source: string) => renderToStaticMarkup(await compileHelpMDX(source));
+const CATALOG = loadCatalog("en");
+
+/** A page as the reader gets it, with the chrome strings of `messages` (the English catalog by default). */
+const render = async (source: string, messages = CATALOG) =>
+  renderToStaticMarkup(
+    <NextIntlClientProvider
+      locale="en"
+      timeZone="UTC"
+      messages={messages}
+      onError={(error) => {
+        throw error;
+      }}
+    >
+      {await compileHelpMDX(source)}
+    </NextIntlClientProvider>
+  );
 const idsOf = (html: string) => [...html.matchAll(/<h[23][^>]*\bid="([^"]+)"/g)].map((m) => m[1]);
 
 describe("Symptom", () => {
@@ -77,6 +94,28 @@ describe("Callout", () => {
   });
 });
 
+describe("the chrome strings", () => {
+  const translated = {
+    ...CATALOG,
+    help: {
+      ...CATALOG.help,
+      callout: { note: "Remarque", warning: "Attention" },
+      openInDashboard: "Ouvrir dans le tableau de bord",
+    },
+  };
+
+  test("a callout's label and the dashboard button's default label come from the catalog", async () => {
+    const html = await render(
+      ['<Callout type="warning">', "Careful.", "</Callout>", "", '<OpenInDashboard path="/team" />'].join("\n"),
+      translated
+    );
+
+    expect(html).toContain("Attention");
+    expect(html).not.toContain("Warning");
+    expect(html).toContain("Ouvrir dans le tableau de bord");
+  });
+});
+
 describe("Details", () => {
   test("is a native details element, closed until opened, so find-in-page still works", async () => {
     const html = await render(`<Details summary="They already scan for another shop">\n\nNo second account.\n\n</Details>\n`);
@@ -124,7 +163,7 @@ describe("Screenshot", () => {
     expect(html).not.toContain("object-cover");
   });
 
-  test("a taller-than-wide image is a phone shot: narrow, centred, rounded", async () => {
+  test("an image under 900px wide is a phone shot: narrow, centred, rounded", async () => {
     const html = await render("![The join screen](/help/add-a-team-member-05.png)\n");
 
     expect(html).toContain("max-w-[300px]");
@@ -132,17 +171,23 @@ describe("Screenshot", () => {
     expect(html).toContain("rounded-2xl");
   });
 
-  test("a wider-than-tall image is a desktop shot at the column's width", async () => {
-    const html = await render("![The Team page](/help/add-a-team-member-01.png)\n");
+  test.each([
+    ["wider than tall", "add-a-team-member-01.png"],
+    ["taller than wide", "add-a-team-member-02.png"],
+  ])("a desktop capture %s fills the column's width", async (_shape, file) => {
+    const html = await render(`![The Team page](/help/${file})\n`);
 
     expect(html).not.toContain("max-w-[300px]");
     expect(html).toContain("rounded-xl");
   });
 
-  test("the device can be said outright", async () => {
-    const html = await render(`<Screenshot src="/help/add-a-team-member-05.png" alt="x" device="desktop" />\n`);
+  test.each([
+    ["a phone capture", "add-a-team-member-05.png", "desktop", false],
+    ["a desktop capture", "add-a-team-member-01.png", "phone", true],
+  ])("the device can be said outright: %s as %s", async (_case, file, device, narrow) => {
+    const html = await render(`<Screenshot src="/help/${file}" alt="x" device="${device}" />\n`);
 
-    expect(html).not.toContain("max-w-[300px]");
+    expect(html.includes("max-w-[300px]")).toBe(narrow);
   });
 
   test("an image that is not in public/help stops the build", async () => {

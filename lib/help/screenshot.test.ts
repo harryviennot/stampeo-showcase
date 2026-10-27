@@ -2,12 +2,15 @@ import { describe, expect, test } from "bun:test";
 import { inferDevice, readHelpImage, readImageSize } from "./screenshot";
 
 describe("which frame a screenshot gets", () => {
+  // Our phone captures are 390px wide at 1x and 804px at 2x; the desktop ones are wider, however tall.
   test.each([
     [390, 844, "phone"],
-    [1040, 1799, "phone"],
+    [804, 1740, "phone"],
+    [899, 1200, "phone"],
+    [900, 1200, "desktop"],
+    [1039, 1312, "desktop"],
     [1344, 688, "desktop"],
     [2340, 165, "desktop"],
-    [600, 600, "desktop"],
   ])("%ix%i is a %s shot", (width, height, device) => {
     expect(inferDevice({ width, height })).toBe(device as "phone" | "desktop");
   });
