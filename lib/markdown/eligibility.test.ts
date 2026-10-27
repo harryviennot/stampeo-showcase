@@ -36,6 +36,19 @@ describe("isMarkdownEligible", () => {
     expect(isMarkdownEligible("/authentic-cafe")).toBe(true);
   });
 
+  // The Markdown variant is a plain response with no robots meta, so a help
+  // page served through it would carry no noindex.
+  it("never serves the help center as Markdown", () => {
+    for (const path of ["/help", "/help/add-a-team-member", "/en/help", "/en/help/add-a-team-member"]) {
+      expect(isMarkdownEligible(path)).toBe(false);
+    }
+  });
+
+  it("does not exclude pages and shops that merely start with help", () => {
+    expect(isMarkdownEligible("/helpful-cafe")).toBe(true);
+    expect(isMarkdownEligible("/pl/help-me-coffee")).toBe(true);
+  });
+
   it("rejects traversal, relative paths and file extensions", () => {
     expect(isMarkdownEligible("pricing")).toBe(false);
     expect(isMarkdownEligible("/../secret")).toBe(false);
