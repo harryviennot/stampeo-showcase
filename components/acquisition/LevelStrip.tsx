@@ -11,7 +11,7 @@ import {
   usableLevels,
   type LevelProgramType,
   type PublicLevel,
-} from "@/lib/levels";
+} from "@/lib/levels/levels";
 import { LevelSheet } from "./LevelSheet";
 
 const CHIP = "inline-flex h-6 items-center gap-1 rounded-full border px-2.5 text-xs font-semibold";
@@ -20,7 +20,7 @@ const CHIP = "inline-flex h-6 items-center gap-1 rounded-full border px-2.5 text
  * The ladder in one compact block under the card preview: a chip per level
  * with the top one emphasised, the first step in one line, and a button that
  * opens the full ladder. Renders nothing unless the business has two or more
- * levels, so a program without levels shows the page exactly as before.
+ * named levels.
  */
 export function LevelStrip({
   levels,

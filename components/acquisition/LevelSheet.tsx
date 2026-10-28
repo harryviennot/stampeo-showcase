@@ -4,7 +4,7 @@ import { useEffect, useId, useRef } from "react";
 import { useTranslations } from "next-intl";
 
 import { CheckIcon, StarIcon, XMarkIcon } from "@/components/icons";
-import type { LadderRow } from "@/lib/levels";
+import type { LadderRow } from "@/lib/levels/levels";
 
 const CLOSE_BUTTON =
   "flex items-center justify-center text-[var(--muted-foreground)] transition-colors hover:bg-[var(--muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";

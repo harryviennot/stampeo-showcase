@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { renderToStaticMarkup } from "react-dom/server";
 import { LevelStrip } from "@/components/acquisition/LevelStrip";
 import type { PublicLevel } from "./levels";
-import { loadCatalog } from "./testing/catalogs";
+import { loadCatalog } from "../testing/catalogs";
 
 const STAMPS: PublicLevel[] = [
   {

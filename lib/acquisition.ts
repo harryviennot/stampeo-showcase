@@ -4,7 +4,7 @@
  */
 
 import type { Locale } from "@/i18n/routing";
-import type { PublicLevel } from "@/lib/levels";
+import type { PublicLevel } from "@/lib/levels/levels";
 import {
   mapSubmissionError,
   mapValidationError,

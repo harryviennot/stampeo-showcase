@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { catalogLocales, loadCatalog, strictTranslator } from "./testing/catalogs";
+import { catalogLocales, loadCatalog, strictTranslator } from "../testing/catalogs";
 import {
   ladderRows,
   levelName,
