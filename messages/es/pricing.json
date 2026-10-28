@@ -30,7 +30,7 @@
         "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
         "Lista de clientes, estadísticas y búsqueda",
-        "Lo esencial de las estadísticas (30 días)",
+        "Gráfico de visitas y lo esencial de las estadísticas (30 días)",
         "Asistencia por correo"
       ]
     },
@@ -113,7 +113,7 @@
         "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
         "Lista de clientes, estadísticas y búsqueda",
-        "Lo esencial de las estadísticas (30 días)",
+        "Gráfico de visitas y lo esencial de las estadísticas (30 días)",
         "Asistencia por correo"
       ],
       "featuresLabel": "Todo incluido:"
@@ -250,7 +250,8 @@
           "pro": "1 año"
         },
         "analyticsCharts": {
-          "label": "Gráficos de estadísticas"
+          "label": "Gráficos de estadísticas",
+          "starter": "Solo visitas"
         },
         "monthlyCohorts": {
           "label": "Cohortes mensuales"

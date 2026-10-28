@@ -511,17 +511,17 @@
           {
             "title": "Personalized messages",
             "description": "Show the customer's first name, remaining stamps, and reward name. Each notification reads like it was written for them.",
-            "badge": "Growth"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Custom milestones",
             "description": "Trigger a message at the exact stamp count that matters. \"Halfway there!\" at stamp 5, \"One more!\" at stamp 9. 3 milestones per program on Growth, unlimited on Pro.",
-            "badge": "Growth / Pro"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Campaigns & segmentation",
             "description": "Reach every customer at once with a broadcast, or target by stamp count, inactivity, and recent redemptions. Perfect for flash promos and product launches.",
-            "badge": "Growth / Pro",
+            "badge": "Growth and Pro",
             "href": "/features/promotional-campaigns",
             "cta": "Explore broadcasts"
           }
@@ -567,33 +567,23 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Know your regulars. Not just by sight.",
-        "subtitle": "With a paper card, you know nothing about your customers. With Stampeo, you see who comes back, how often, and what works."
+        "title": "See how often your customers come back.",
+        "subtitle": "How often your customers come, where they are on their card, and when your shop is busiest. Every scan fills it in, with nothing to type.",
+        "planLine": "More charts come with Growth and Pro.",
+        "alt": "The Stampeo Analytics page on a phone: how often customers come, and where they are on their stamp card."
+      },
+      "busiest": {
+        "title": "Your rush hours, at a glance",
+        "lead": "Visits by day and hour in your shop's time zone, with your busiest slot and your quietest open hour. Starter shows the busiest hour in a sentence; Growth and Pro show the grid.",
+        "alt": "The Busiest times section on a phone: visits by day and hour, the busiest slot and the quietest open hour."
       },
       "problem": {
         "title": "What you don't know today",
         "description": "With paper cards, you're managing loyalty blind. No data, no visibility, no way to improve what you can't measure."
       },
-      "sections": [
-        {
-          "title": "Essential dashboard",
-          "description": "Total customers, scans this week, rewards claimed. Search a customer by name or email and instantly find their history.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Trends and peak hours",
-          "description": "Visualize your metrics day by day. Discover when your customers visit and identify slow periods to optimize your business.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Frequency and retention",
-          "description": "Understand your customers' rhythm: daily, weekly, monthly. Track your retention rate and identify at-risk customers.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Stop guessing. Start knowing.",
-        "subtitle": "Every plan shows the highlights of your visits, your busiest times and how often customers come back. Growth and Pro show them as charts and look further back, and Pro adds monthly cohorts."
+        "subtitle": "Every plan charts your visits and shows the highlights of your busiest times and how often customers come back. Growth and Pro chart those too and look further back, and Pro adds monthly cohorts."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -604,42 +594,34 @@
           "questions": [
             "How many regular customers",
             "How often do they come back",
-            "Who stopped coming",
+            "How many stopped coming",
             "Which day is quietest",
             "How many rewards this month",
             "Is your program working"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Starter Plan",
-          "title": "The essentials to get started",
-          "description": "The Starter plan includes a simple, clear dashboard that answers the fundamental questions.",
-          "features": [
-            "Total registered customers",
-            "Scans this week and this month",
-            "Rewards claimed",
-            "Instant customer search"
-          ]
-        },
         "activityFeed": {
-          "title": "Live activity",
+          "title": "Activity",
           "sectionTitle": "Your business, in real time",
-          "sectionDescription": "Every stamp, every reward, every signup — follow your loyalty program activity live.",
-          "stampAction": "earned a stamp",
-          "rewardAction": "claimed their reward",
-          "newCustomerAction": "just signed up",
-          "timeAgo": "{seconds}s ago"
+          "sectionDescription": "Every stamp, every reward, every new card: follow your loyalty program as it happens.",
+          "stampAction": "received a stamp",
+          "rewardAction": "redeemed a reward",
+          "live": "Live",
+          "cardAction": "added their card",
+          "justNow": "Just now"
         },
         "proAnalytics": {
           "badge": "Every plan",
+          "chartsBadge": "Growth and Pro",
           "title": "Understand trends, not just numbers",
-          "description": "The highlights of visits, busiest times, how often customers come and where they are on the card, on every plan. Growth and Pro show them as charts and look further back, and Pro adds monthly cohorts."
+          "description": "A visits chart on every plan, with the highlights of busiest times, how often customers come and where they are on the card. Growth and Pro chart those too and look further back, and Pro adds monthly cohorts."
         },
         "proCharts": {
           "lineChart": {
             "label": "Scans / week",
-            "trend": "+23%"
+            "trend": "+23%",
+            "comparison": "vs last week"
           },
           "heatmap": {
             "label": "Peak hours",
@@ -702,7 +684,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Growth",
+      "heroBadge": "Growth and Pro",
       "hero": {
         "title": "Remind them you exist. At the right moment.",
         "subtitle": "When your customer passes near your business, their phone reminds them they have a loyalty card with you. Without you doing anything.",
@@ -715,7 +697,6 @@
       "problemNarrative": "What if their phone could do it for you?",
       "demo": {
         "lockScreenDate": "Monday, February 17",
-        "radiusLabel": "~300m",
         "notificationTitle": "Café Le Comptoir nearby",
         "notificationBody": "Feeling thirsty? You're 3 stamps away from a free coffee ☕",
         "timeAgo": "now"
@@ -786,7 +767,7 @@
             "title": "Multi-location",
             "description": "Add up to 10 addresses per card. Each location triggers the reminder automatically.",
             "icon": "building",
-            "badge": "Growth"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Real-time updates",
@@ -962,12 +943,12 @@
           {
             "title": "Bilingual delivery",
             "description": "Write in English and French once. Each customer sees the language set on their device. No duplicate campaigns, no guesswork.",
-            "badge": "Growth / Pro"
+            "badge": "Growth and Pro"
           },
           {
             "title": "Delivery transparency",
             "description": "See exactly how many messages reached Apple Wallet, Google Wallet, got throttled by quota, or skipped because the wallet was uninstalled. Honest reporting, not inflated rates.",
-            "badge": "Growth / Pro"
+            "badge": "Growth and Pro"
           }
         ]
       },

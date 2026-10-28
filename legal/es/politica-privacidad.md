@@ -16,6 +16,8 @@ Esta política se aplica a todos los usuarios de la Plataforma, ya sean propieta
 
 Stampeo actúa como **responsable del tratamiento** de los datos de las cuentas profesionales (registro, autenticación, facturación).
 
+El comercio es el **responsable del tratamiento** de los datos de actividad del equipo: qué miembro de su equipo registró cada operación, así como el último escaneo y el número de escaneos de cada miembro, tal y como se muestran al propietario y a los administradores del comercio. Stampeo actúa como **encargado del tratamiento** de estos datos: los tratamos únicamente por cuenta del comercio y según sus instrucciones, en el marco del anexo de encargo del tratamiento de los Términos del servicio (§8.11). Estos datos, y las dos finalidades para las que Stampeo también los utiliza como responsable del tratamiento, se describen en el §3.2.
+
 ### 2.2 Clientes finales (titulares de tarjetas de fidelidad)
 
 El comercio que utiliza Stampeo es el **responsable del tratamiento** de los datos de sus propios clientes. Stampeo actúa como **encargado del tratamiento**: tratamos los datos de los clientes finales únicamente por cuenta del comercio y según sus instrucciones.
@@ -63,10 +65,19 @@ El sitio web, el número de teléfono y la respuesta «cómo conociste Stampeo»
 |--------|----------|-------------|
 | Correo electrónico | Invitación y autenticación | Ejecución del contrato |
 | Nombre y apellidos | Identificación | Ejecución del contrato |
-| Estadísticas de actividad (número de escaneos registrados, fecha de última actividad) | Estadísticas de actividad del equipo mostradas al propietario del comercio | Interés legítimo |
-| Atribución por escaneo (qué empleado registró cada escaneo) | Traza de auditoría de fidelidad y estadísticas del comercio | Interés legítimo |
+| Actividad del equipo (último escaneo y número de escaneos de cada miembro del equipo) | Mostrar al propietario y a los administradores del comercio cómo usa su equipo la aplicación de escaneo, cuando el plan del comercio lo incluye | Determinada por el comercio, como responsable del tratamiento (por lo general, su interés legítimo) |
+| Atribución de las operaciones (qué miembro del equipo registró cada operación: sellos o puntos añadidos, recompensas canjeadas, escaneos anulados) | Historial de las operaciones de fidelidad del comercio, mostrado en su página de actividad y en el historial de cada cliente | Determinada por el comercio, como responsable del tratamiento (por lo general, su interés legítimo) |
 
-Estas estadísticas de actividad son visibles para el propietario del comercio con el fin de ofrecerle una visión de la actividad de su equipo. Stampeo no las utiliza con fines propios.
+Estas dos últimas filas son los datos de actividad del equipo. Para ellos, el comercio es el responsable del tratamiento y Stampeo su encargado (véase el 2.1). El comercio decide si utiliza estos datos y cómo, y debe informar a su equipo antes de servirse de ellos, tal como establecen los Términos del servicio (§8.11). En el panel, estos datos solo los ven el propietario y los administradores del comercio. La aplicación de escaneo muestra a cada miembro del equipo su propio número de escaneos, nunca el de otra persona del equipo.
+
+Un escaneo registra el establecimiento del comercio seleccionado en la aplicación de escaneo, no el lugar donde está el teléfono. La aplicación de escaneo puede pedir acceso a la ubicación del teléfono, solo para sugerir el establecimiento más cercano: esa ubicación se usa en el propio teléfono y nunca se envía a Stampeo.
+
+Stampeo también utiliza los datos de actividad del equipo para dos finalidades propias, como responsable del tratamiento, sobre la base de su interés legítimo en explotar y proteger la Plataforma:
+
+- **Soporte e investigación de usos abusivos:** el personal autorizado de Stampeo puede consultar el equipo de un comercio, con la actividad de cada miembro, y sus operaciones recientes con el nombre del miembro del equipo que registró cada una (nunca la identidad de un cliente final).
+- **Inactividad de la cuenta:** un escaneo cuenta como actividad de la cuenta Business para la regla de inactividad del §8.
+
+Stampeo no utiliza los datos de actividad del equipo para evaluar a los miembros de un equipo, y no los comunica a ningún otro comercio.
 
 ### 3.3 Clientes finales
 
@@ -299,6 +310,7 @@ Los comercios que utilicen las difusiones deben publicar su propia política de 
 | Cuenta Business activa | Duración de la suscripción |
 | Cuenta Business tras la cancelación | Hasta 12 meses de inactividad, después se eliminan los datos personales. Se envían dos correos de aviso (30 y 14 días antes), y la cuenta se conserva si el propietario vuelve a iniciar sesión o se vuelve a suscribir |
 | Datos de los clientes finales | Se conservan mientras el comercio esté activo; se anonimizan de forma irreversible cuando se elimina la cuenta Business (pueden conservarse estadísticas anonimizadas) |
+| Datos de actividad del equipo (§3.2): qué miembro del equipo registró cada operación, último escaneo y número de escaneos de cada miembro | Se conservan mientras exista la cuenta Business. Cuando un miembro deja el equipo, su actividad deja de mostrarse, pero su nombre sigue asociado a las operaciones que registró, para que el historial del comercio siga completo. Cuando se elimina la cuenta Business, los miembros se retiran del equipo y se borran el nombre y el correo electrónico de cada uno, salvo que siga perteneciendo a otro comercio en Stampeo; las operaciones en sí se conservan como estadísticas, igual que los datos de los clientes finales |
 | Datos de facturación | 10 años (obligación legal francesa) |
 | Registros técnicos | 12 meses como máximo |
 | Tokens de registro push (device tokens) | Se eliminan cuando el cliente retira la tarjeta de su wallet, o cuando el servicio push del wallet señala el token como inválido de forma permanente |

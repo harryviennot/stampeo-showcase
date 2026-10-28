@@ -37,7 +37,6 @@ interface FeedEvent {
   id: number;
   name: string;
   action: string;
-  seconds: number;
   color: string;
 }
 
@@ -46,7 +45,8 @@ export function LiveActivityFeed() {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const idRef = useRef(0);
 
-  const actions = [t("stampAction"), t("rewardAction"), t("newCustomerAction")];
+  // The dashboard's Activity page verbs.
+  const actions = [t("stampAction"), t("rewardAction"), t("cardAction")];
 
   const generateEvent = useCallback(() => {
     const name = FAKE_NAMES[Math.floor(Math.random() * FAKE_NAMES.length)];
@@ -56,7 +56,7 @@ export function LiveActivityFeed() {
     const id = idRef.current;
 
     setEvents((evts) => [
-      { id, name, action, seconds: 1, color },
+      { id, name, action, color },
       ...evts.slice(0, MAX_VISIBLE),
     ]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,16 +68,9 @@ export function LiveActivityFeed() {
 
     const interval = setInterval(generateEvent, 2500);
 
-    const secondsInterval = setInterval(() => {
-      setEvents((evts) =>
-        evts.map((e) => ({ ...e, seconds: e.seconds + 1 }))
-      );
-    }, 1000);
-
     return () => {
       clearTimeout(seedTimeout);
       clearInterval(interval);
-      clearInterval(secondsInterval);
     };
   }, [generateEvent]);
 
@@ -88,10 +81,13 @@ export function LiveActivityFeed() {
           {/* Left: feed */}
           <ScrollReveal variant="left">
             <div className="blog-card-3d rounded-2xl bg-white overflow-hidden">
-              <div className="flex items-center gap-2 px-5 py-3 border-b border-[var(--border)]">
-                <span className="w-2 h-2 rounded-full bg-green-500 pulse-dot" />
+              <div className="flex items-center justify-between gap-2 px-5 py-3 border-b border-[var(--border)]">
                 <span className="text-sm font-semibold text-[var(--foreground)]">
                   {t("title")}
+                </span>
+                <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)]">
+                  <span className="w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot" />
+                  {t("live")}
                 </span>
               </div>
               <div
@@ -116,14 +112,14 @@ export function LiveActivityFeed() {
                       >
                         {event.name.charAt(0)}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <span className="text-sm text-[var(--foreground)]">
+                      <div className="flex-1 min-w-0 text-sm leading-snug">
+                        <span className="text-[var(--foreground)]">
                           <span className="font-semibold">{event.name}</span>{" "}
                           {event.action}
                         </span>
                       </div>
                       <span className="text-xs text-[var(--muted-foreground)] shrink-0">
-                        {t("timeAgo", { seconds: event.seconds })}
+                        {t("justNow")}
                       </span>
                     </motion.div>
                   ))}

@@ -16,6 +16,8 @@ Cette politique s'applique à tous les utilisateurs de la Plateforme, qu'ils soi
 
 Stampeo agit en tant que **responsable de traitement** pour les données des comptes professionnels (inscription, authentification, facturation).
 
+L'entreprise est **responsable de traitement** des données d'activité de l'équipe : quel membre de son équipe a enregistré chaque opération, ainsi que la date du dernier scan et le nombre de scans de chaque membre, tels qu'ils sont présentés au propriétaire et aux administrateurs de l'entreprise. Stampeo agit en tant que **sous-traitant** pour ces données : nous les traitons uniquement pour le compte de l'entreprise et selon ses instructions, dans le cadre de l'avenant de sous-traitance des Conditions Générales d'Utilisation (§8.11). Ces données, et les deux finalités pour lesquelles Stampeo les utilise aussi en tant que responsable de traitement, sont décrites au §3.2.
+
 ### 2.2 Pour les clients finaux (détenteurs de cartes de fidélité)
 
 L'entreprise utilisant Stampeo est le **responsable de traitement** des données de ses propres clients. Stampeo agit en tant que **sous-traitant** : nous traitons les données des clients finaux uniquement pour le compte de l'entreprise et selon ses instructions.
@@ -63,10 +65,19 @@ Le site web, le numéro de téléphone et la réponse « comment vous avez connu
 |--------|----------|-------------|
 | Adresse email | Invitation et authentification | Exécution du contrat |
 | Nom et prénom | Identification | Exécution du contrat |
-| Statistiques d'activité (nombre de scans enregistrés, date de dernière activité) | Statistiques d'activité de l'équipe présentées au propriétaire de l'entreprise | Intérêt légitime |
-| Attribution par scan (quel employé a enregistré chaque scan) | Piste d'audit de fidélité et statistiques de l'entreprise | Intérêt légitime |
+| Activité de l'équipe (date du dernier scan et nombre de scans de chaque membre de l'équipe) | Montrer au propriétaire et aux administrateurs de l'entreprise comment leur équipe utilise l'application scanner, lorsque l'abonnement de l'entreprise l'inclut | Déterminée par l'entreprise, responsable de traitement (en général son intérêt légitime) |
+| Attribution des opérations (quel membre de l'équipe a enregistré chaque opération : tampons ou points ajoutés, récompenses utilisées, scans annulés) | Historique des opérations de fidélité de l'entreprise, affiché dans son fil d'activité et dans l'historique de chaque client | Déterminée par l'entreprise, responsable de traitement (en général son intérêt légitime) |
 
-Ces statistiques d'activité sont visibles par le propriétaire de l'entreprise afin de lui donner une vue de l'activité de son équipe. Stampeo ne les utilise pas à ses propres fins.
+Ces deux dernières lignes constituent les données d'activité de l'équipe. Pour celles-ci, l'entreprise est responsable de traitement et Stampeo son sous-traitant (voir 2.1). L'entreprise décide si et comment elle utilise ces données, et doit en informer son équipe avant de s'en servir, comme le prévoient les Conditions Générales d'Utilisation (§8.11). Dans le tableau de bord, ces données ne sont visibles que par le propriétaire et les administrateurs de l'entreprise. L'application scanner montre à chaque membre de l'équipe son propre nombre de scans, jamais celui d'un collègue.
+
+Un scan enregistre l'établissement de l'entreprise choisi dans l'application scanner, et non l'endroit où se trouve le téléphone. L'application scanner peut demander l'accès à la position du téléphone, uniquement pour suggérer l'établissement le plus proche : cette position est utilisée sur le téléphone lui-même et n'est jamais envoyée à Stampeo.
+
+Stampeo utilise aussi les données d'activité de l'équipe pour deux finalités qui lui sont propres, en tant que responsable de traitement, sur la base de son intérêt légitime à exploiter et à sécuriser la Plateforme :
+
+- **Support et instruction des usages abusifs** : le personnel autorisé de Stampeo peut consulter l'équipe d'une entreprise, avec l'activité de chaque membre, ainsi que ses dernières opérations avec le nom du membre de l'équipe qui a enregistré chacune d'elles (jamais l'identité d'un client final).
+- **Inactivité du compte** : un scan compte comme une activité du compte Business pour la règle d'inactivité du §8.
+
+Stampeo n'utilise pas les données d'activité de l'équipe pour évaluer les membres d'une équipe, et ne les communique à aucune autre entreprise.
 
 ### 3.3 Clients finaux
 
@@ -299,6 +310,7 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Compte Business actif | Durée de l'abonnement |
 | Compte Business après annulation | Jusqu'à 12 mois d'inactivité, puis suppression des données personnelles. Deux e-mails d'avertissement sont envoyés (30 et 14 jours avant), et le compte est conservé si le propriétaire se reconnecte ou se réabonne |
 | Données des clients finaux | Conservées tant que l'entreprise est active ; anonymisées de manière irréversible lors de la suppression du compte Business (des statistiques anonymisées peuvent être conservées) |
+| Données d'activité de l'équipe (§3.2) : quel membre de l'équipe a enregistré chaque opération, date du dernier scan et nombre de scans de chaque membre | Conservées aussi longtemps que le compte Business. Lorsqu'un membre quitte l'équipe, son activité n'est plus affichée, mais son nom reste attaché aux opérations qu'il a enregistrées, afin que l'historique de l'entreprise reste complet. Lors de la suppression du compte Business, les membres sont retirés de l'équipe et le nom et l'email de chacun sont effacés, sauf s'il appartient encore à une autre entreprise sur Stampeo ; les opérations elles-mêmes sont conservées sous forme de statistiques, comme les données des clients finaux |
 | Données de facturation | 10 ans (obligation légale française) |
 | Logs techniques | 12 mois maximum |
 | Jetons d'enregistrement push (device tokens) | Supprimés lorsque le client retire le pass de son wallet, ou lorsque le service push du wallet signale le jeton comme invalide de manière permanente |

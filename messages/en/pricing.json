@@ -30,7 +30,7 @@
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
-        "Analytics highlights (30 days)",
+        "Visits chart and analytics highlights (30 days)",
         "Email support"
       ]
     },
@@ -113,7 +113,7 @@
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
-        "Analytics highlights (30 days)",
+        "Visits chart and analytics highlights (30 days)",
         "Email support"
       ],
       "featuresLabel": "Everything included:"
@@ -250,7 +250,8 @@
           "pro": "1 year"
         },
         "analyticsCharts": {
-          "label": "Analytics charts"
+          "label": "Analytics charts",
+          "starter": "Visits only"
         },
         "monthlyCohorts": {
           "label": "Monthly cohorts"

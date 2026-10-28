@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { PhoneMockup } from "./PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "./NotificationBanner";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
@@ -41,11 +41,11 @@ export function NotificationSequenceDemo() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
       {/* Phone demo */}
       <div className="flex justify-center order-1 lg:order-2">
-        <PhoneMockup statusBarStyle="time-only">
+        <IPhone statusBar="light">
           {/* Light background */}
           <div className="absolute inset-0 bg-[#f2f2f7]" />
 
-          <div className="relative z-10 flex flex-col h-full">
+          <div className="relative z-10 flex flex-col h-full pt-[calc(var(--iphone-safe-top)+0.5rem)]">
             {/* Mini wallet card */}
             <div className="px-3">
               <ScaledCardWrapper size="md">
@@ -91,7 +91,7 @@ export function NotificationSequenceDemo() {
               </AnimatePresence>
             </div>
           </div>
-        </PhoneMockup>
+        </IPhone>
       </div>
 
       {/* Tab descriptions */}

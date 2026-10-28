@@ -56,8 +56,9 @@ export async function VariantHero({
 
   return (
     /* The header is fixed, so the hero needs to clear it by more than a normal
-       section's top padding or the arch sits right under the nav. */
-    <section className="relative pt-24 lg:pt-28 pb-16 lg:pb-24">
+       section's top padding or the arch sits right under the nav. The bottom is
+       short from lg so the dashboard section's frame shows above the fold. */
+    <section className="relative pt-24 lg:pt-28 pb-16 lg:pb-6">
       <FanParallax>
         <HeroCardFan />
       </FanParallax>

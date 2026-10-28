@@ -175,7 +175,7 @@ Business Users also authorize Stampeo to showcase their loyalty card and logo as
 
 ## 8. End Customer Data (Data Processing Terms)
 
-This section functions as the Data Processing Addendum between the Business User (as **Controller**) and Stampeo (as **Processor**) with respect to End Customer personal data, in accordance with Article 28 of the GDPR. Where the Business User requires a standalone DPA for its own compliance records, these clauses may be relied on as such.
+This section functions as the Data Processing Addendum between the Business User (as **Controller**) and Stampeo (as **Processor**) with respect to End Customer personal data and, as set out in §8.11, Staff Activity Data, in accordance with Article 28 of the GDPR. Where the Business User requires a standalone DPA for its own compliance records, these clauses may be relied on as such.
 
 ### 8.1 Roles and Scope
 
@@ -245,6 +245,19 @@ Breach of this section is grounds for immediate suspension under §6.2, without 
 ### 8.10 Data Isolation
 
 End Customer data is strictly isolated per business. Stampeo performs no cross-business data matching.
+
+### 8.11 Staff Activity Data
+
+**Staff Activity Data** means which member of the Business User's team (the owner, an administrator or an Employee) recorded each transaction on the Platform, and each member's most recent scan and number of scans, as shown to the Business User's owner and administrators (Privacy Policy §3.2).
+
+The Business User is the controller of Staff Activity Data, and Stampeo processes it as its processor. Sections 8.1 to 8.5 and 8.10 apply to Staff Activity Data as they apply to End Customer data, with two exceptions described in the Privacy Policy: the uses Stampeo makes of it as controller, namely support, the investigation of misuse of the Platform and the inactivity rule of §6.2 and §6.3 (Privacy Policy §3.2), and its retention (Privacy Policy §8).
+
+The Business User agrees to:
+
+- inform the members of its team, before they start using the scanner app, that each transaction they record is saved under their name, and that the owner and administrators can see who recorded what, along with each member's most recent scan and number of scans;
+- have a valid legal basis for any use it makes of Staff Activity Data, and keep that use proportionate to its purpose, in accordance with the data protection and employment law that applies to it;
+- where that law requires it, inform or consult its staff representatives before using Staff Activity Data to monitor its team's activity, such as, in France, the social and economic committee (CSE) of a business with at least 50 employees;
+- handle its team members' requests to exercise their GDPR rights over Staff Activity Data, with Stampeo's assistance under §8.5.
 
 ## 9. User Obligations
 

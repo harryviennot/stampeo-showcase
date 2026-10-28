@@ -44,7 +44,7 @@ export async function VariantMetricStrip() {
                     tilt alternates so three figures in a row do not line up
                     like type. */}
                 <dd
-                  className="ink-figure mb-2"
+                  className="ink-figure mb-2 whitespace-nowrap"
                   style={{ transform: `rotate(${[-2, 1.5, -1][i % 3]}deg)` }}
                 >
                   {item.value}

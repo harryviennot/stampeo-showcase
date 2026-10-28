@@ -231,4 +231,10 @@ describe("seasons", () => {
   it("shows the season the config names", () => {
     expect(FAN_SLOTS).toEqual(fanSlots(HERO_FAN_SEASON));
   });
+
+  // The season is a manual switch that only changes on deploy; this catches a
+  // Halloween set still live in November.
+  it.skipIf(new Date().getMonth() === 9)("outside October, the hero shows the year-round cards", () => {
+    expect(HERO_FAN_SEASON).toBe("default");
+  });
 });

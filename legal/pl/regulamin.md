@@ -175,7 +175,7 @@ Użytkownik Business upoważnia również Stampeo do prezentowania swojej karty 
 
 ## 8. Dane Klientów Końcowych (warunki powierzenia przetwarzania)
 
-Niniejsza sekcja pełni funkcję umowy powierzenia przetwarzania danych osobowych między Użytkownikiem Business (jako **administratorem**) a Stampeo (jako **podmiotem przetwarzającym**) w odniesieniu do danych osobowych Klientów Końcowych, zgodnie z art. 28 RODO. Jeżeli Użytkownik Business potrzebuje odrębnej umowy powierzenia na potrzeby własnej dokumentacji zgodności, może powołać się na niniejsze postanowienia jako na taką umowę.
+Niniejsza sekcja pełni funkcję umowy powierzenia przetwarzania danych osobowych między Użytkownikiem Business (jako **administratorem**) a Stampeo (jako **podmiotem przetwarzającym**) w odniesieniu do danych osobowych Klientów Końcowych oraz, na zasadach z §8.11, Danych o Aktywności Zespołu, zgodnie z art. 28 RODO. Jeżeli Użytkownik Business potrzebuje odrębnej umowy powierzenia na potrzeby własnej dokumentacji zgodności, może powołać się na niniejsze postanowienia jako na taką umowę.
 
 ### 8.1 Role i zakres
 
@@ -245,6 +245,19 @@ Naruszenie niniejszej sekcji stanowi podstawę do natychmiastowego zawieszenia n
 ### 8.10 Izolacja danych
 
 Dane Klientów Końcowych są ściśle izolowane w podziale na firmy. Stampeo nie prowadzi żadnego dopasowywania danych między firmami.
+
+### 8.11 Dane o Aktywności Zespołu
+
+**Dane o Aktywności Zespołu** oznaczają informację o tym, który członek zespołu Użytkownika Business (właściciel, administrator lub Pracownik) zarejestrował każdą operację na Platformie, oraz datę ostatniego skanu i liczbę skanów każdego członka, w postaci, w jakiej widzą je właściciel i administratorzy Użytkownika Business (§3.2 Polityki prywatności).
+
+Użytkownik Business jest administratorem Danych o Aktywności Zespołu, a Stampeo przetwarza je jako podmiot przetwarzający. Punkty 8.1–8.5 i 8.10 stosuje się do Danych o Aktywności Zespołu tak samo jak do danych Klientów Końcowych, z dwoma wyjątkami opisanymi w Polityce prywatności: wykorzystaniem tych danych przez Stampeo jako administratora, czyli do wsparcia, wyjaśniania nadużyć Platformy i stosowania zasady nieaktywności z §6.2 i §6.3 (§3.2 Polityki prywatności), oraz okresem ich przechowywania (§8 Polityki prywatności).
+
+Użytkownik Business zobowiązuje się:
+
+- poinformować członków swojego zespołu, zanim zaczną korzystać z aplikacji do skanowania, że każda zarejestrowana przez nich operacja jest zapisywana pod ich imieniem i nazwiskiem oraz że właściciel i administratorzy widzą, kto co zarejestrował, a także datę ostatniego skanu i liczbę skanów każdego członka;
+- dysponować ważną podstawą prawną dla każdego wykorzystania Danych o Aktywności Zespołu i ograniczać je do tego, co proporcjonalne do celu, zgodnie z mającymi do niego zastosowanie przepisami o ochronie danych i prawem pracy;
+- jeżeli wymagają tego te przepisy, poinformować przedstawicieli pracowników lub skonsultować się z nimi, zanim zacznie wykorzystywać Dane o Aktywności Zespołu do kontroli pracy zespołu, na przykład we Francji komitet społeczno-ekonomiczny (CSE) w firmie zatrudniającej co najmniej 50 pracowników;
+- obsługiwać żądania członków swojego zespołu dotyczące realizacji ich praw z RODO w odniesieniu do Danych o Aktywności Zespołu, przy wsparciu Stampeo zgodnie z §8.5.
 
 ## 9. Obowiązki użytkowników
 

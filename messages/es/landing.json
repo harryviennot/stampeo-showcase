@@ -62,27 +62,6 @@
         }
       ]
     },
-    "dashboard": {
-      "badge": "Panel de datos",
-      "title": "Conoce a tus habituales.",
-      "subtitle": "Tu panel te muestra quién visita, con qué frecuencia y cuándo se acercan a una recompensa. Detecta a tus mejores clientes. Ve qué funciona. Toma mejores decisiones.",
-      "features": [
-        "Frecuencia y hábitos de visita",
-        "Recompensas canjeadas y pendientes",
-        "Identifica a tus clientes más fieles",
-        "Exporta tus datos cuando quieras"
-      ],
-      "stats": {
-        "totalCustomers": "Clientes totales",
-        "visitsThisWeek": "Visitas esta semana",
-        "rewardsClaimed": "Recompensas canjeadas"
-      },
-      "recentCustomers": "Clientes recientes",
-      "progress": "Progreso",
-      "visitedToday": "Visita hoy",
-      "almost": "¡Ya casi!",
-      "annotation": "Sophie vuelve mañana"
-    },
     "sectorCards": {
       "title": "Stampeo se adapta <mbr></mbr><br></br>a tu comercio",
       "subtitle": "Una barbería o una cafetería recompensa las visitas con sellos. <br></br>Un restaurante o un salón recompensa el gasto con puntos.",
@@ -95,7 +74,7 @@
           "name": "Barbería",
           "quote": "Julien viene cada tres semanas para su degradado. Con Stampeo es automático, y su sexto corte va por nuestra cuenta.",
           "reward": "6 cortes = 1 gratis",
-          "advantage": "Un aviso cuando pasa por delante de la barbería",
+          "advantage": "Tarjeta guardada con un escaneo, sin aplicación que descargar",
           "fields": [
             {
               "label": "Recompensa",
@@ -308,8 +287,9 @@
         },
         {
           "title": "Geolocalización",
-          "description": "Recuérdales que existes cuando pasan al lado.",
-          "link": "/features/geolocalizacion"
+          "description": "Tu tarjeta aparecerá en su pantalla de bloqueo cerca de tu comercio.",
+          "link": "/features/geolocalizacion",
+          "badge": "Pronto"
         },
         {
           "title": "Escáner móvil",
@@ -338,6 +318,15 @@
       "tryDemoCta": "Prueba la demo",
       "annotation": "Un escaneo, un sello"
     },
+    "dashboard": {
+      "title": "Su tarjeta, tus números.",
+      "caption": "Cada escaneo actualiza tus estadísticas solo, sin escribir nada. Consúltalas en tu teléfono entre dos clientes, o desde cualquier navegador.",
+      "planLine": "Más gráficos vienen con Growth y Pro.",
+      "alt": {
+        "desktop": "La página Estadísticas de Stampeo en una pantalla grande: visitas, clientes nuevos, retorno a 30 días, visitas a lo largo del tiempo y horas punta.",
+        "phone": "La misma página Estadísticas en un teléfono: visitas, clientes nuevos y retorno a 30 días."
+      }
+    },
     "tryIt": {
       "eyebrow": "Demo en directo, sin registro",
       "title": "Míralo en tu propio teléfono",
@@ -352,11 +341,11 @@
           "label": "comercios activos"
         },
         {
-          "value": "+12.500",
+          "value": "+20.000",
           "label": "sellos entregados"
         },
         {
-          "value": "22",
+          "value": "+25",
           "label": "países"
         }
       ]
@@ -451,7 +440,7 @@
         },
         {
           "question": "¿A cuántos clientes puedo registrar?",
-          "answer": "Los planes Starter, Growth y Pro se distinguen por las funciones, no por el volumen: notificaciones, difusiones y hasta dónde llega el historial de estadísticas (30 días, 90 días o 1 año). Growth y Pro muestran las estadísticas en gráficos, Starter ofrece lo esencial. Pro añade las cohortes mensuales y las estadísticas por establecimiento. Consulta la página de precios para ver el detalle de cada plan."
+          "answer": "Los planes Starter, Growth y Pro se distinguen por las funciones, no por el volumen: notificaciones, difusiones y hasta dónde llega el historial de estadísticas (30 días, 90 días o 1 año). Todos los planes incluyen el gráfico de visitas. Growth y Pro muestran además el resto de las estadísticas en gráficos, mientras que Starter resume lo esencial. Pro añade las cohortes mensuales y las estadísticas por establecimiento. Consulta la página de precios para ver el detalle de cada plan."
         },
         {
           "question": "¿Puedo cambiar el estilo de mi tarjeta después?",
