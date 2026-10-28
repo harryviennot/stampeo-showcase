@@ -1,0 +1,42 @@
+---
+title: Choose your location in the scanner app
+description: Pick the shop you work at before you scan, and what to do when the scanner app says No location assigned.
+type: how-to
+audience: [scanner]
+plans: [pro]
+keywords: [which shop, switch shop, change location, wrong location, cannot scan, no location assigned, several shops, store, branch, employee]
+screens: [scanner lobby, scanner scan screen]
+sources:
+  - scanner-app/src/components/LocationPicker.tsx
+  - scanner-app/src/contexts/location-context.tsx
+  - scanner-app/src/app/(protected)/lobby.tsx
+  - scanner-app/src/locales/en/location.json
+  - backend/app/services/locations
+related: [how-locations-work, set-up-your-locations]
+updated: 2026-10-27
+draft: true
+---
+
+If your business has several locations, pick the one where you work before you scan. The scanner app remembers your choice.
+
+## Pick your location
+
+1. Open the scanner app. At the top of the first screen, tap the location name.
+2. Under **Where are you scanning?**, tap your location.
+3. Tap **Start Scanning**. The scan screen shows **Scanning at** and your location.
+
+You only see the locations you can scan at. If that is just one, the app shows its name and there is nothing to pick. Owners and admins can pick any location.
+
+With one location in the whole business, you don't pick anything. Everyone scans, and everything counts for that location.
+
+## If you see No location assigned
+
+The app shows **No location assigned** and no scan button. Your owner has not picked a location for you yet. This can happen if you had not scanned before the business added a second location.
+
+Ask your owner to pick one. The app shows their name when it can. After they have, close the app and open it again. Then you can scan.
+
+## If the app asks about your location
+
+The app may ask **Use your location?** It checks only on your phone that you are at the right shop. Nobody receives your location. If you tap **Not now**, you can still pick your location by hand.
+
+If the app thinks you are at another shop, it asks **Wrong location?** Tap **Switch to** to change, or **Stay at** to keep your choice.
