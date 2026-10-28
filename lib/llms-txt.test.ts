@@ -108,12 +108,14 @@ describe("llms.txt facts", () => {
     expect(analytics).toContain("Monthly cohorts (Pro)");
   });
 
-  it("says that the Analytics charts are on Growth and Pro, and that Starter gets the highlights", () => {
+  it("says that the Analytics charts are on Growth and Pro, that visits over time is a chart on every plan, and that Starter gets the highlights of the rest", () => {
     const analytics = body.slice(body.indexOf("### Analytics"), body.indexOf("### Integrations"));
 
     expect(analytics).toContain("Analytics charts (Growth and Pro)");
+    expect(analytics).toContain("Visits over time is a chart on every plan");
     expect(analytics).not.toMatch(/every (?:analytics )?chart/i);
-    expect(analytics).toMatch(/Starter[^\n]*highlights|highlights[^\n]*Starter/i);
+    expect(analytics).toMatch(/Starter gets the highlights of the rest/);
+    expect(analytics).not.toMatch(/highlights instead|best day for visits/i);
   });
 
   it("offers stamps and points on every plan", () => {

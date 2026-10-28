@@ -32,8 +32,8 @@
         "description": "Tampon, récompense, palier : chaque étape envoie une notification sur la carte de votre client. Automatique, sans appli à installer, sans SMS."
       },
       "analytiques": {
-        "title": "Statistiques fidélité : qui revient, qui décroche",
-        "description": "Tableau de bord en direct : passages, heures de pointe, retours. Graphiques et plus d'historique avec Growth et Pro, cohortes mensuelles avec Pro."
+        "title": "Statistiques fidélité : fréquence et retours",
+        "description": "Nourri par chaque scan : graphique des visites dès Starter, heures de pointe et retours en graphiques avec Growth et Pro, cohortes mensuelles avec Pro."
       },
       "geolocalisation": {
         "title": "Votre carte s'affiche quand ils passent devant",

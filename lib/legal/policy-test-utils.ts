@@ -1,16 +1,24 @@
 import fs from "fs";
 import path from "path";
 
-// Readers shared by the privacy-policy tests.
+// Readers shared by the privacy-policy and terms tests.
 
-/** The privacy policy's Markdown source in one locale. */
-export function privacySource(locale: string) {
+const FILE_PATTERN = {
+  privacy: /privacy|confidentialite|privacidad|prywatnosci/,
+  terms: /terms|conditions|terminos|regulamin/,
+};
+
+function legalSource(locale: string, page: keyof typeof FILE_PATTERN) {
   const dir = path.join(process.cwd(), "legal", locale);
-  const file = fs
-    .readdirSync(dir)
-    .find((f) => /privacy|confidentialite|privacidad|prywatnosci/.test(f));
+  const file = fs.readdirSync(dir).find((f) => FILE_PATTERN[page].test(f));
   return fs.readFileSync(path.join(dir, file!), "utf-8");
 }
+
+/** The privacy policy's Markdown source in one locale. */
+export const privacySource = (locale: string) => legalSource(locale, "privacy");
+
+/** The Terms of Service's Markdown source in one locale. */
+export const termsSource = (locale: string) => legalSource(locale, "terms");
 
 /**
  * The body of the first privacy-policy section whose heading matches
@@ -23,7 +31,15 @@ export function privacySource(locale: string) {
  * missing, so an assertion on it fails rather than reading the wrong text.
  */
 export function section(locale: string, heading: RegExp, next: RegExp = /^#+\s+\d/m) {
-  const source = privacySource(locale);
+  return sectionOf(privacySource(locale), heading, next);
+}
+
+/** The same slice as `section`, from the Terms of Service. */
+export function termsSection(locale: string, heading: RegExp, next: RegExp = /^#+\s+\d/m) {
+  return sectionOf(termsSource(locale), heading, next);
+}
+
+function sectionOf(source: string, heading: RegExp, next: RegExp) {
   const start = source.search(heading);
   if (start === -1) return "";
   // Start AFTER the heading line, or the heading itself would match `next`.

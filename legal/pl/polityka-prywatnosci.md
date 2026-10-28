@@ -16,6 +16,8 @@ Niniejsza polityka dotyczy wszystkich użytkowników Platformy: właścicieli fi
 
 Stampeo działa jako **administrator danych** w odniesieniu do danych kont firmowych (rejestracja, uwierzytelnianie, rozliczenia).
 
+Firma jest **administratorem** danych o aktywności zespołu, czyli informacji o tym, który członek jej zespołu zarejestrował każdą operację, oraz o dacie ostatniego skanu i liczbie skanów każdego członka, w postaci, w jakiej widzą je właściciel i administratorzy firmy. Stampeo działa wobec tych danych jako **podmiot przetwarzający**: przetwarzamy je wyłącznie w imieniu firmy i zgodnie z jej poleceniami, na warunkach powierzenia przetwarzania określonych w Regulaminie (§8.11). Te dane oraz dwa cele, w których Stampeo wykorzystuje je również jako administrator, opisano w §3.2.
+
 ### 2.2 Klienci końcowi (posiadacze kart lojalnościowych)
 
 Firma korzystająca ze Stampeo jest **administratorem danych** swoich własnych klientów. Stampeo działa jako **podmiot przetwarzający**: przetwarzamy dane klientów końcowych wyłącznie w imieniu firmy i zgodnie z jej poleceniami.
@@ -63,10 +65,19 @@ Strona internetowa, numer telefonu i odpowiedź na pytanie o źródło informacj
 |------|-----|-----------------|
 | Adres e-mail | Zaproszenie i uwierzytelnianie | Wykonanie umowy |
 | Imię i nazwisko | Identyfikacja | Wykonanie umowy |
-| Statystyki aktywności (liczba zarejestrowanych skanów, data ostatniej aktywności) | Statystyki aktywności zespołu pokazywane właścicielowi firmy | Prawnie uzasadniony interes |
-| Przypisanie skanów (który pracownik zarejestrował dany skan) | Ślad audytowy programu lojalnościowego i statystyki firmy | Prawnie uzasadniony interes |
+| Aktywność zespołu (data ostatniego skanu i liczba skanów każdego członka zespołu) | Pokazywanie właścicielowi i administratorom firmy, jak ich zespół korzysta z aplikacji do skanowania, jeżeli plan firmy to obejmuje | Określa ją firma jako administrator (zwykle jej prawnie uzasadniony interes) |
+| Przypisanie operacji (który członek zespołu zarejestrował każdą operację: dodane pieczątki lub punkty, wykorzystane nagrody, anulowane skany) | Historia operacji programu lojalnościowego firmy, widoczna na stronie Aktywność i w historii każdego klienta | Określa ją firma jako administrator (zwykle jej prawnie uzasadniony interes) |
 
-Te statystyki aktywności są widoczne dla właściciela firmy i dają mu obraz pracy zespołu. Stampeo nie wykorzystuje ich do własnych celów.
+Dwa ostatnie wiersze to dane o aktywności zespołu. W ich przypadku firma jest administratorem, a Stampeo jej podmiotem przetwarzającym (zob. 2.1). Firma decyduje, czy i jak korzysta z tych danych, i musi poinformować o nich swój zespół, zanim zacznie się nimi posługiwać, zgodnie z Regulaminem (§8.11). W panelu te dane widzą wyłącznie właściciel i administratorzy firmy. Aplikacja do skanowania pokazuje każdemu członkowi zespołu tylko jego własną liczbę skanów, nigdy liczbę skanów innej osoby z zespołu.
+
+Skan zapisuje lokal firmy wybrany w aplikacji do skanowania, a nie miejsce, w którym znajduje się telefon. Aplikacja do skanowania może poprosić o dostęp do położenia telefonu wyłącznie po to, aby zaproponować najbliższy lokal firmy: to położenie jest używane na samym telefonie i nigdy nie jest wysyłane do Stampeo.
+
+Stampeo wykorzystuje dane o aktywności zespołu również w dwóch własnych celach, jako administrator, na podstawie prawnie uzasadnionego interesu polegającego na prowadzeniu i zabezpieczaniu Platformy:
+
+- **Wsparcie i wyjaśnianie nadużyć:** upoważniony personel Stampeo może zobaczyć zespół firmy wraz z aktywnością każdego członka oraz jej ostatnie operacje z imieniem i nazwiskiem członka zespołu, który zarejestrował każdą z nich (nigdy tożsamość klienta końcowego).
+- **Nieaktywność konta:** skan liczy się jako aktywność konta Business na potrzeby zasady nieaktywności z §8.
+
+Stampeo nie wykorzystuje danych o aktywności zespołu do oceniania członków zespołu i nie udostępnia ich żadnej innej firmie.
 
 ### 3.3 Klienci końcowi
 
@@ -299,6 +310,7 @@ Firmy korzystające z rozsyłek muszą opublikować własną informację o prywa
 | Aktywne konto Business | Czas trwania subskrypcji |
 | Konto Business po rezygnacji | Do 12 miesięcy nieaktywności, po czym dane osobowe są usuwane. Wysyłamy dwa e-maile z ostrzeżeniem (30 i 14 dni wcześniej), a konto zostaje zachowane, jeśli właściciel zaloguje się ponownie lub odnowi subskrypcję |
 | Dane klientów końcowych | Przechowywane, dopóki firma jest aktywna; nieodwracalnie anonimizowane w momencie usunięcia konta Business (zanonimizowane statystyki mogą zostać zachowane) |
+| Dane o aktywności zespołu (§3.2): który członek zespołu zarejestrował każdą operację, data ostatniego skanu i liczba skanów każdego członka | Przechowywane tak długo jak konto Business. Gdy członek odchodzi z zespołu, jego aktywność przestaje być pokazywana, ale jego imię i nazwisko pozostaje przy zarejestrowanych przez niego operacjach, aby historia firmy pozostała kompletna. Po usunięciu konta Business członkostwa w zespole są usuwane, a imię i nazwisko oraz adres e-mail każdego członka są kasowane, chyba że nadal należy on do innej firmy w Stampeo; same operacje są zachowywane jako statystyki, tak jak dane klientów końcowych |
 | Dane rozliczeniowe | 10 lat (wymóg prawa francuskiego) |
 | Dzienniki techniczne | Maksymalnie 12 miesięcy |
 | Tokeny urządzeń do powiadomień | Usuwane, gdy klient usunie kartę z portfela albo gdy usługa powiadomień portfela zgłosi token jako trwale nieprawidłowy |

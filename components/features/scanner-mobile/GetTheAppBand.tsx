@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { DevicePhoneMobileIcon, QRCodeIcon } from "@/components/icons";
-import { PhoneMockup } from "./PhoneMockup";
+import { IPhone } from "@/components/ui/IPhone";
 import { StoreBadges } from "./StoreBadges";
 
 const SHOWCASE_URL =
@@ -121,9 +121,9 @@ export function GetTheAppBand() {
 
                 {/* Right — phone */}
                 <div className="order-1 flex justify-center lg:order-2">
-                  <PhoneMockup>
+                  <IPhone statusBar="dark" screenBackground="#0a0a0a">
                     <ReadyScreen />
-                  </PhoneMockup>
+                  </IPhone>
                 </div>
               </div>
             </div>

@@ -736,17 +736,17 @@
           {
             "title": "Wiadomości skrojone pod klienta",
             "description": "Pokaż imię klienta, liczbę brakujących pieczątek i nazwę nagrody. Każde powiadomienie wygląda, jakby powstało dla tej jednej osoby.",
-            "badge": "Growth"
+            "badge": "Growth i Pro"
           },
           {
             "title": "Własne progi",
             "description": "Wyślij wiadomość dokładnie przy tej pieczątce, która się liczy. „Półmetek!” przy piątej, „Jeszcze jedna!” przy dziewiątej. 3 progi na program w planie Growth, bez limitu w Pro.",
-            "badge": "Growth / Pro"
+            "badge": "Growth i Pro"
           },
           {
             "title": "Rozsyłki i segmentacja",
             "description": "Odezwij się do wszystkich klientów jedną rozsyłką albo wybierz ich po liczbie pieczątek, braku wizyt i ostatnio odebranych nagrodach. Idealne na szybkie promocje i nowości w ofercie.",
-            "badge": "Growth / Pro",
+            "badge": "Growth i Pro",
             "href": "/features/rozsylki-promocyjne",
             "cta": "Zobacz rozsyłki"
           }
@@ -792,33 +792,23 @@
     },
     "analytiques": {
       "hero": {
-        "title": "Poznaj swoich stałych klientów. Nie tylko z widzenia.",
-        "subtitle": "Przy papierowej karcie nie wiesz o klientach nic. W Stampeo widzisz, kto wraca, jak często i co naprawdę działa."
+        "title": "Zobacz, jak często wracają twoi klienci.",
+        "subtitle": "Jak często przychodzą klienci, na którym miejscu karty są i kiedy masz największy ruch. Każdy skan sam uzupełnia statystyki, bez wpisywania.",
+        "planLine": "Więcej wykresów jest w planach Growth i Pro.",
+        "alt": "Strona Statystyki w Stampeo na telefonie: jak często przychodzą klienci i na którym miejscu karty są."
+      },
+      "busiest": {
+        "title": "Godziny szczytu na pierwszy rzut oka",
+        "lead": "Wizyty według dnia i godziny w strefie czasowej twojego lokalu, z godziną największego ruchu i najcichszą godziną otwarcia. Starter pokazuje godzinę szczytu w jednym zdaniu, Growth i Pro całą siatkę.",
+        "alt": "Sekcja Godziny szczytu na telefonie: wizyty według dnia i godziny, największy ruch i najcichsza godzina otwarcia."
       },
       "problem": {
         "title": "Czego dziś nie wiesz",
         "description": "Przy papierowych kartach prowadzisz swój program po omacku. Żadnych danych, żadnego wglądu, żadnej szansy na poprawienie czegoś, czego nie mierzysz."
       },
-      "sections": [
-        {
-          "title": "Panel z podstawami",
-          "description": "Liczba klientów, skany w tym tygodniu, odebrane nagrody. Wpisz nazwisko albo e-mail i od razu masz całą historię klienta.",
-          "icon": "layout-dashboard"
-        },
-        {
-          "title": "Trendy i godziny szczytu",
-          "description": "Zobacz swoje liczby dzień po dniu. Sprawdź, kiedy klienci przychodzą, i wyłap godziny, w których jest pusto.",
-          "icon": "trending-up"
-        },
-        {
-          "title": "Częstotliwość i powroty",
-          "description": "Poznaj rytm swoich klientów: codziennie, co tydzień, co miesiąc. Śledź, ilu wraca, i wyłap tych, którzy zaczynają znikać.",
-          "icon": "users"
-        }
-      ],
       "cta": {
         "title": "Przestań zgadywać. Zacznij wiedzieć.",
-        "subtitle": "Każdy plan pokazuje najważniejsze liczby o wizytach, godzinach szczytu i tym, jak często wracają klienci. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
+        "subtitle": "Każdy plan pokazuje wizyty na wykresie i podsumowuje godziny szczytu oraz to, jak często wracają klienci. Growth i Pro pokazują je też na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
       },
       "related": [
         "campagnes-promotionnelles",
@@ -829,42 +819,34 @@
           "questions": [
             "Ilu masz stałych klientów",
             "Jak często wracają",
-            "Kto przestał przychodzić",
+            "Ilu przestało przychodzić",
             "Który dzień jest najspokojniejszy",
             "Ile nagród w tym miesiącu",
             "Czy twój program w ogóle działa"
           ],
           "noAnswer": "???"
         },
-        "dashboard": {
-          "badge": "Plan Starter",
-          "title": "To, co najpotrzebniejsze na start",
-          "description": "Plan Starter daje prosty i czytelny panel, który odpowiada na podstawowe pytania.",
-          "features": [
-            "Liczba zapisanych klientów",
-            "Skany w tym tygodniu i w tym miesiącu",
-            "Odebrane nagrody",
-            "Natychmiastowe wyszukiwanie klienta"
-          ]
-        },
         "activityFeed": {
-          "title": "Na żywo",
+          "title": "Aktywność",
           "sectionTitle": "Twoja firma w czasie rzeczywistym",
-          "sectionDescription": "Każda pieczątka, każda nagroda, każdy nowy zapis: śledź swój program lojalnościowy na żywo.",
-          "stampAction": "zdobywa pieczątkę",
+          "sectionDescription": "Każda pieczątka, każda nagroda, każda nowa karta: śledź swój program lojalnościowy na żywo.",
+          "stampAction": "dostaje pieczątkę",
           "rewardAction": "odbiera nagrodę",
-          "newCustomerAction": "właśnie dołącza",
-          "timeAgo": "{seconds}s temu"
+          "live": "Na żywo",
+          "cardAction": "dodaje kartę",
+          "justNow": "Przed chwilą"
         },
         "proAnalytics": {
           "badge": "Wszystkie plany",
+          "chartsBadge": "Growth i Pro",
           "title": "Zrozum trendy, nie tylko liczby",
-          "description": "Najważniejsze liczby o wizytach, godzinach szczytu, częstotliwości powrotów i postępie na karcie, w każdym planie. Growth i Pro pokazują je na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
+          "description": "Wykres wizyt w każdym planie oraz najważniejsze liczby o godzinach szczytu, częstotliwości powrotów i postępie na karcie. Growth i Pro pokazują je też na wykresach i sięgają dalej wstecz, a Pro dodaje kohorty miesięczne."
         },
         "proCharts": {
           "lineChart": {
             "label": "Skany / tydzień",
-            "trend": "+23%"
+            "trend": "+23%",
+            "comparison": "vs poprzedni tydzień"
           },
           "heatmap": {
             "label": "Godziny szczytu",
@@ -927,7 +909,7 @@
       }
     },
     "geolocalisation": {
-      "heroBadge": "Growth",
+      "heroBadge": "Growth i Pro",
       "hero": {
         "title": "Przypomnij im, że istniejesz. W dobrym momencie.",
         "subtitle": "Gdy klient przechodzi obok twojego lokalu, telefon sam przypomina mu, że ma u ciebie kartę lojalnościową. Bez żadnego ruchu z twojej strony.",
@@ -940,7 +922,6 @@
       "problemNarrative": "A gdyby jego telefon zrobił to za ciebie?",
       "demo": {
         "lockScreenDate": "Poniedziałek, 17 lutego",
-        "radiusLabel": "~300 m",
         "notificationTitle": "Kawiarnia Na Rogu w pobliżu",
         "notificationBody": "Napijesz się czegoś? Do darmowej kawy zostały 3 pieczątki ☕",
         "timeAgo": "teraz"
@@ -1011,7 +992,7 @@
             "title": "Kilka lokali",
             "description": "Dodaj do 10 adresów na jednej karcie. Każdy lokal sam uruchamia przypomnienie.",
             "icon": "building",
-            "badge": "Growth"
+            "badge": "Growth i Pro"
           },
           {
             "title": "Aktualizacja w czasie rzeczywistym",
@@ -1187,12 +1168,12 @@
           {
             "title": "Dwa języki naraz",
             "description": "Napisz raz po polsku i po angielsku. Każdy klient zobaczy język ustawiony w swoim telefonie. Bez dublowania rozsyłek, bez zgadywania.",
-            "badge": "Growth / Pro"
+            "badge": "Growth i Pro"
           },
           {
             "title": "Przejrzysta dostarczalność",
             "description": "Zobacz dokładnie, ile wiadomości dotarło do Apple Wallet, ile do Google Wallet, ile przyciął limit, a ile przepadło, bo karta zniknęła z telefonu. Uczciwe liczby, nienapompowane.",
-            "badge": "Growth / Pro"
+            "badge": "Growth i Pro"
           }
         ]
       },
