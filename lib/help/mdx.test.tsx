@@ -153,11 +153,11 @@ describe("OpenInDashboard", () => {
 });
 
 describe("Screenshot", () => {
-  test("keeps the image's own proportions, even for a 2340x165 strip, and loads lazily", async () => {
+  test("keeps the image's own proportions, even for a 804x248 strip, and loads lazily", async () => {
     const html = await render("![The top of the Customers page](/help/export-your-customer-list-01.png)\n");
 
-    expect(html).toContain('width="2340"');
-    expect(html).toContain('height="165"');
+    expect(html).toContain('width="804"');
+    expect(html).toContain('height="248"');
     expect(html).toContain('alt="The top of the Customers page"');
     expect(html).toContain('loading="lazy"');
     expect(html).not.toContain("object-cover");

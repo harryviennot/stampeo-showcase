@@ -74,7 +74,7 @@ describe("reading an image's size from its first bytes", () => {
 
 describe("a screenshot file under public/help", () => {
   test("is measured from the real file, however thin", () => {
-    expect(readHelpImage("/help/export-your-customer-list-01.png")).toEqual({ width: 2340, height: 165 });
+    expect(readHelpImage("/help/export-your-customer-list-01.png")).toEqual({ width: 804, height: 248 });
     expect(readHelpImage("/help/add-a-team-member-05.png")).toEqual({ width: 390, height: 844 });
   });
 
