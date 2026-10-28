@@ -20,6 +20,15 @@ export const helpMdxComponents: MDXComponents = {
   h3: (props) => <Heading level={3} {...props} className={SUBSECTION} />,
   a: HelpLink,
   img: ({ src, alt }) => (typeof src === "string" ? <Screenshot src={src} alt={alt} /> : null),
+  // A screenshot between steps splits the list in two; the second list starts at
+  // its own number, so its step circles (a CSS counter) start there too.
+  ol: ({ start, style, ...props }) => (
+    <ol
+      start={start}
+      style={start && start > 1 ? { ...style, counterReset: `step ${start - 1}` } : style}
+      {...props}
+    />
+  ),
   // A wide table scrolls inside its own box instead of widening the page.
   table: (props) => (
     <div className="my-6 overflow-x-auto [&>table]:my-0">

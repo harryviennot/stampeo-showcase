@@ -213,6 +213,15 @@ describe("links and headings", () => {
     expect(html).not.toMatch(/<h2[^>]*\bclass="[^"]*text-(h1|h2|h3|display)/);
   });
 
+  test("steps split by a screenshot keep counting: the list after it starts its circles at its own number", async () => {
+    const html = await render(
+      "1. Open **Team**.\n2. Select **Add member**.\n\n![The Team page](/help/add-a-team-member-01.png)\n\n3. Pick a role.\n"
+    );
+
+    expect(html).toMatch(/<ol(?![^>]*counter-reset)[^>]*>\s*<li>Open/);
+    expect(html).toMatch(/<ol[^>]*start="3"[^>]*style="counter-reset:step 2"/);
+  });
+
   test("a wide table scrolls inside its own box instead of widening the page", async () => {
     const html = await render("| A | B |\n|---|---|\n| 1 | 2 |\n");
 
