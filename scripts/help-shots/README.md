@@ -19,6 +19,26 @@ bun scripts/help-shots/run.ts <slug> --headed               # watch the browser
 
 Playwright comes from the `playwright-core` devDependency (pinned to 1.61.0). It uses the browsers Playwright already installed on the machine (`~/Library/Caches/ms-playwright`); run `bunx playwright-core install chromium` if one is missing.
 
+## Scanner app shots
+
+`scanner/run.ts` takes the scanner app screens on the promo simulator ("Stampeo Promo iPhone 17 Pro", set up by `promo-videos/tools/sim/sim.ts`: English, 9:41, full battery). It needs a Release simulator build of `scanner-app` (the JS is embedded, so no Metro):
+
+```bash
+cd scanner-app/ios
+SENTRY_DISABLE_AUTO_UPLOAD=true xcodebuild -workspace StampeoDev.xcworkspace -scheme StampeoDev \
+  -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+  -derivedDataPath <build dir> ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \
+  CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=YES \
+  CODE_SIGN_ENTITLEMENTS=<showcase>/scripts/help-shots/scanner/simulator.entitlements.plist build
+bun scripts/help-shots/scanner/run.ts --app <build dir>/Build/Products/Release-iphonesimulator/StampeoDev.app
+```
+
+Build with the entitlements file and without `CODE_SIGNING_ALLOWED=NO`: an unsigned simulator app has no keychain access, so email sign-in fails with "An unexpected error occurred". The app's `.env` points at the dev Supabase and dev API; never build it against production.
+
+The flow resets the simulator's keychain, installs the build, shows the welcome screen and the sign-in chooser, signs in as the Aurevo fixture admin (email and password typed through AXe), skips the tour and opens a fixture customer's stamp screen by deep link (`stampeo-scanner:///stamp/<customer id>`, no camera needed). It raises the stepper to 3 and stops: it never taps Add Stamp, so no stamp is written. The "Stamp Added!" screen is therefore not captured. `--shot <name>` limits the run (the sign-in is skipped when only the first two shots are asked for). Each screen is saved at 804x1748.
+
+The password is typed through AXe, so it is briefly visible in this machine's process list.
+
 ## Credentials
 
 Dashboard recipes sign in through `https://showcase.dev.stampeo.app/en/login` as the dev fixture staff accounts listed in `lib/session.ts`. They share one password, `FIXTURE_PASSWORD`, read from the env file `promo-videos/.env.tools` (found by walking up from this folder, or set `HELP_SHOTS_ENV` to its path). The value is never printed, logged or written. Dev only: never point this at production.
@@ -41,6 +61,7 @@ Overlays never change labels or add UI. A recipe's `shows` line and its sidecar 
 - `lib/session.ts`: fixture accounts, sign-in, the public showcase session.
 - `lib/overlays.ts`: the overlays. `lib/capture.ts`: crop helpers (`snap`, `snapBand`, `snapClip`, `tall`).
 - `lib/devices.ts`: phone 402x874 and desktop 1280x900, both at 2x.
+- `scanner/run.ts`: the scanner app shots on the simulator. `scanner/simulator.entitlements.plist`: the entitlements its build is signed with.
 
 ## Add a shot
 
