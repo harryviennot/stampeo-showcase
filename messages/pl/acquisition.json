@@ -64,6 +64,21 @@
     "previewSampleName": "Zofia",
     "welcome": {
       "title": "Twoje od razu po zapisaniu się"
+    },
+    "levels": {
+      "title": "Twoja karta awansuje",
+      "howItWorks": "Jak to działa",
+      "sheetTitle": "Jak działają poziomy",
+      "close": "Zamknij",
+      "lineStampsFaster": "Wypełnij {count, plural, one {# kartę} few {# karty} many {# kart} other {# karty}}, aby osiągnąć poziom {level}: nagrodę zdobędziesz szybciej.",
+      "lineStampsUnlock": "Wypełnij {count, plural, one {# kartę} few {# karty} many {# kart} other {# karty}}, aby osiągnąć poziom {level} i odblokować nagrodę: {reward}.",
+      "lineStamps": "Wypełnij {count, plural, one {# kartę} few {# karty} many {# kart} other {# karty}}, aby osiągnąć poziom {level}.",
+      "linePoints": "Zdobądź {count, plural, one {# punkt} few {# punkty} many {# punktów} other {# punktu}}, aby osiągnąć poziom {level}.",
+      "cardStamps": "Karta na {count, plural, one {# pieczątkę} few {# pieczątki} many {# pieczątek} other {# pieczątki}}, nagroda: {reward}",
+      "cardStampsNoReward": "Karta na {count, plural, one {# pieczątkę} few {# pieczątki} many {# pieczątek} other {# pieczątki}}",
+      "moveUpStamps": "Wypełnij {count, plural, one {# kartę} few {# karty} many {# kart} other {# karty}}, aby osiągnąć poziom {level}",
+      "moveUpPoints": "Zdobądź {count, plural, one {# punkt} few {# punkty} many {# punktów} other {# punktu}}, aby osiągnąć poziom {level}",
+      "keepForGood": "Najwyższy poziom: zostaje z tobą na stałe"
     }
   }
 }

@@ -64,6 +64,21 @@
     "previewSampleName": "Lucía",
     "welcome": {
       "title": "Tuyo nada más apuntarte"
+    },
+    "levels": {
+      "title": "Tu tarjeta sube de nivel",
+      "howItWorks": "Cómo funciona",
+      "sheetTitle": "Cómo funcionan los niveles",
+      "close": "Cerrar",
+      "lineStampsFaster": "Completa {count, plural, one {# tarjeta} other {# tarjetas}} para llegar al nivel {level}: tu recompensa llega antes.",
+      "lineStampsUnlock": "Completa {count, plural, one {# tarjeta} other {# tarjetas}} para llegar al nivel {level} y desbloquear {reward}.",
+      "lineStamps": "Completa {count, plural, one {# tarjeta} other {# tarjetas}} para llegar al nivel {level}.",
+      "linePoints": "Gana {count, plural, one {# punto} other {# puntos}} para llegar al nivel {level}.",
+      "cardStamps": "{count, plural, one {# sello} other {# sellos}} para {reward}",
+      "cardStampsNoReward": "{count, plural, one {# sello} other {# sellos}} por tarjeta",
+      "moveUpStamps": "Completa {count, plural, one {# tarjeta} other {# tarjetas}} para llegar al nivel {level}",
+      "moveUpPoints": "Gana {count, plural, one {# punto} other {# puntos}} para llegar al nivel {level}",
+      "keepForGood": "Nivel máximo: lo conservas para siempre"
     }
   }
 }

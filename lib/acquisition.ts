@@ -4,6 +4,7 @@
  */
 
 import type { Locale } from "@/i18n/routing";
+import type { PublicLevel } from "@/lib/levels";
 import {
   mapSubmissionError,
   mapValidationError,
@@ -105,6 +106,8 @@ export interface CardDesignPublicResponse {
   initial_points?: number;
   /** Free items a new customer is handed on sign-up, names only (STA-264). */
   signup_items?: string[];
+  /** The business's level ladder. Null while levels are off; absent on older backends. */
+  levels?: PublicLevel[] | null;
   stamp_icon?: string | null;
   reward_icon?: string | null;
   icon_color?: string | null;

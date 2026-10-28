@@ -12,6 +12,7 @@ import {
   CustomerCreatePublic,
 } from "@/lib/acquisition";
 import { AcquisitionForm } from "./AcquisitionForm";
+import { LevelStrip } from "./LevelStrip";
 import { WalletButtons } from "./WalletButtons";
 import { useDevicePlatform, type DevicePlatform } from "@/hooks/useDevicePlatform";
 import { WalletCard } from "../card/WalletCard";
@@ -220,6 +221,7 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                   interactive3D={true}
                 />
               </ScaledCardWrapper>
+              <LevelStrip levels={cardDesign?.levels} programType={isPoints ? "points" : "stamps"} />
             </div>
           </div>
 

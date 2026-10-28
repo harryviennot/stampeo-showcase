@@ -64,6 +64,21 @@
     "previewSampleName": "Jeanne",
     "welcome": {
       "title": "Offert dès votre inscription"
+    },
+    "levels": {
+      "title": "Votre carte monte de niveau",
+      "howItWorks": "Comment ça marche",
+      "sheetTitle": "Comment fonctionnent les niveaux",
+      "close": "Fermer",
+      "lineStampsFaster": "Remplissez {count, plural, one {# carte} other {# cartes}} pour atteindre le niveau {level} : votre récompense arrive plus vite.",
+      "lineStampsUnlock": "Remplissez {count, plural, one {# carte} other {# cartes}} pour atteindre le niveau {level} et débloquer {reward}.",
+      "lineStamps": "Remplissez {count, plural, one {# carte} other {# cartes}} pour atteindre le niveau {level}.",
+      "linePoints": "Gagnez {count, plural, one {# point} other {# points}} pour atteindre le niveau {level}.",
+      "cardStamps": "{count, plural, one {# tampon} other {# tampons}} pour {reward}",
+      "cardStampsNoReward": "{count, plural, one {# tampon} other {# tampons}} par carte",
+      "moveUpStamps": "Remplissez {count, plural, one {# carte} other {# cartes}} pour atteindre le niveau {level}",
+      "moveUpPoints": "Gagnez {count, plural, one {# point} other {# points}} pour atteindre le niveau {level}",
+      "keepForGood": "Niveau maximal : vous le gardez pour toujours"
     }
   }
 }
