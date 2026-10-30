@@ -17,8 +17,9 @@ const CLOSE_BUTTON =
 export function LevelSheet({
   open,
   rows,
+  markColor,
   onClose,
-}: Readonly<{ open: boolean; rows: LadderRow[]; onClose: () => void }>) {
+}: Readonly<{ open: boolean; rows: LadderRow[]; markColor: string; onClose: () => void }>) {
   const t = useTranslations("acquisition.levels");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -62,12 +63,7 @@ export function LevelSheet({
             <li key={row.rank} className="py-3 first:pt-0 last:pb-0">
               <p className="flex items-center gap-1.5 font-semibold text-[var(--primary)]">
                 {row.isTop && (
-                  <StarIcon
-                    size={14}
-                    weight="fill"
-                    aria-hidden="true"
-                    style={{ color: "var(--business-accent, var(--accent))" }}
-                  />
+                  <StarIcon size={14} weight="fill" aria-hidden="true" style={{ color: markColor }} />
                 )}
                 {row.name}
               </p>

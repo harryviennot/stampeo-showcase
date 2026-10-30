@@ -221,7 +221,11 @@ export function AcquisitionFlow({ business, cardDesign, locationSlug }: Acquisit
                   interactive3D={true}
                 />
               </ScaledCardWrapper>
-              <LevelStrip levels={cardDesign?.levels} programType={isPoints ? "points" : "stamps"} />
+              <LevelStrip
+                levels={cardDesign?.levels}
+                programType={isPoints ? "points" : "stamps"}
+                accent={business.settings?.accentColor}
+              />
             </div>
           </div>
 

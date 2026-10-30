@@ -35,7 +35,12 @@ const STAMPS: PublicLevel[] = [
   },
 ];
 
-function render(locale: string, levels: PublicLevel[] | null | undefined, programType: "stamps" | "points" = "stamps") {
+function render(
+  locale: string,
+  levels: PublicLevel[] | null | undefined,
+  programType: "stamps" | "points" = "stamps",
+  accent?: string | null,
+) {
   return renderToStaticMarkup(
     <NextIntlClientProvider
       locale={locale}
@@ -45,7 +50,7 @@ function render(locale: string, levels: PublicLevel[] | null | undefined, progra
         throw error;
       }}
     >
-      <LevelStrip levels={levels} programType={programType} />
+      <LevelStrip levels={levels} programType={programType} accent={accent} />
     </NextIntlClientProvider>,
   );
 }
@@ -97,6 +102,19 @@ describe("the sign-up page level strip", () => {
     const text = textOf(render("en", points, "points"));
     expect(text).toContain("Earn 500 points to reach Silver.");
     expect(text).not.toContain("stamps for");
+  });
+
+  test.each([
+    ["a cream accent the strip cannot show", "#FFF7ED", "var(--primary)"],
+    ["no accent at all", null, "var(--primary)"],
+    ["an accent that reads on the strip", "#1d4ed8", "#1d4ed8"],
+  ])("draws the top level's star in a colour that shows on the strip: %s", (_, accent, expected) => {
+    const html = render("en", STAMPS, "stamps", accent);
+    // One star in the strip, one in the sheet; the arrows carry no inline colour.
+    const starColors = [...html.matchAll(/<svg[^>]*style="color:([^";]+)/g)].map((m) => m[1]);
+
+    expect(starColors).toEqual([expected, expected]);
+    if (accent === "#FFF7ED") expect(html.toLowerCase()).not.toContain("fff7ed");
   });
 
   test("reads in the visitor's language, level names included", () => {

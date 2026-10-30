@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { ArrowRightIcon, StarIcon } from "@/components/icons";
+import { levelMarkColor } from "@/lib/levels/level-mark";
 import {
   ladderRows,
   levelName,
@@ -25,7 +26,13 @@ const CHIP = "inline-flex h-6 items-center gap-1 rounded-full border px-2.5 text
 export function LevelStrip({
   levels,
   programType,
-}: Readonly<{ levels: PublicLevel[] | null | undefined; programType: LevelProgramType }>) {
+  accent,
+}: Readonly<{
+  levels: PublicLevel[] | null | undefined;
+  programType: LevelProgramType;
+  /** The business's own accent colour; the marks use it only when it shows on the strip. */
+  accent?: string | null;
+}>) {
   const t = useTranslations("acquisition.levels");
   const locale = useLocale();
   const titleId = useId();
@@ -34,6 +41,7 @@ export function LevelStrip({
   const ladder = usableLevels(levels);
   if (!ladder) return null;
 
+  const mark = levelMarkColor(accent);
   const line = stripLine(ladder, programType, locale, t);
   const rows = ladderRows(ladder, programType, locale, t);
 
@@ -66,17 +74,11 @@ export function LevelStrip({
                 <span
                   className={`${CHIP} font-bold text-[var(--primary)]`}
                   style={{
-                    borderColor: "var(--business-accent, var(--accent))",
-                    backgroundColor:
-                      "color-mix(in srgb, var(--business-accent, var(--accent)) 14%, transparent)",
+                    borderColor: mark,
+                    backgroundColor: `color-mix(in srgb, ${mark} 14%, transparent)`,
                   }}
                 >
-                  <StarIcon
-                    size={11}
-                    weight="fill"
-                    aria-hidden="true"
-                    style={{ color: "var(--business-accent, var(--accent))" }}
-                  />
+                  <StarIcon size={11} weight="fill" aria-hidden="true" style={{ color: mark }} />
                   {levelName(level, locale)}
                 </span>
               ) : (
@@ -99,7 +101,7 @@ export function LevelStrip({
 
       {line && <p className="mt-1.5 text-[13px] leading-snug text-[var(--muted-foreground)]">{line}</p>}
 
-      <LevelSheet open={sheetOpen} rows={rows} onClose={() => setSheetOpen(false)} />
+      <LevelSheet open={sheetOpen} rows={rows} markColor={mark} onClose={() => setSheetOpen(false)} />
     </section>
   );
 }
