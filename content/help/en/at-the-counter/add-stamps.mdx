@@ -7,11 +7,12 @@ keywords: [stamp, scan, scanning, add stamp, punch, give a stamp, multiple stamp
 screens: ["scanner: scan", "scanner: stamp"]
 sources:
   - scanner-app/src/app/(protected)/scan.tsx
+  - scanner-app/src/components/levels
   - scanner-app/src/components/confirmation/StampFlow.tsx
   - scanner-app/src/components/confirmation/StampStepper.tsx
   - scanner-app/src/locales/en/stamp.json
 related: [install-the-scanner-app, how-stampeo-works, stamps-or-points]
-updated: 2026-10-28
+updated: 2026-10-30
 ---
 
 The customer shows their card, you scan it and add the stamp. Their card updates on their phone within a few seconds.
@@ -39,6 +40,16 @@ If your card saves rewards and keeps going, the app shows **Reward saved!** inst
 
 <Details summary="Your card uses points">
 Instead of adding a stamp, type the amount the customer spent, then tap **Add Points**. The app works out the points for you.
+</Details>
+
+<Details summary="Your shop uses levels">
+The customer's level shows next to their name, for example **Silver**. The card shows the size of their level's card, so a Silver card can read **0 / 8** while Bronze reads 0 / 10.
+
+If their level has perks, a box above the card lists them, for example **Silver perk: Free refill**. Apply them before you charge.
+
+When a scan moves the customer up, the app shows the customer's first name and the level, for example **Camille reached Silver!**. A **Tell them** box says what they now get. On a points card, the same appears above the keypad.
+
+A one-time level gift appears under **Rewards to redeem** with a **Gift** tag.
 </Details>
 
 ## Troubleshooting
