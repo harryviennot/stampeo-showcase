@@ -1,0 +1,65 @@
+---
+title: How levels work
+description: Levels give your best regulars a better card. How customers move up, what each level can give, and what stays the same when they do.
+type: concept
+audience: [owner, admin]
+keywords: [tiers, tier, bronze silver gold, vip, membership levels, loyalty tiers, status, rank, reward best customers, upgrade card, level up, perks, loyalty levels]
+screens: [/program]
+sources:
+  - web/src/components/levels
+  - web/messages/en/levels.json
+  - backend/app/services/programs/levels
+  - backend/app/core/features.py
+  - scanner-app/src/components/levels
+related: [set-up-levels, edit-your-levels, move-up-levels, stamps-or-points]
+updated: 2026-10-30
+draft: true
+---
+
+Levels give your best regulars a better card. Customers start on your first level and move up as they earn. Every plan includes levels, up to 5.
+
+## What a level is
+
+Each level has:
+
+- **A card.** Its own colors and, on a stamps card, its own size and reward.
+- **A rule to move up.** What a customer must earn to reach the next level.
+- **A gift,** if you want one. A one-time reward when a customer reaches the level.
+- **Perks,** if you want some. Up to 3 short lines, like "Free refill", that your team applies at the till.
+
+You name the levels. The defaults are Bronze, Silver and Gold. Your first level is the card you already have. Customers who haven't moved up see the card they know.
+
+## How customers move up
+
+A customer moves up when they earn. Spending or redeeming never moves them.
+
+- **Stamps cards:** you choose a number of full cards. With 2 full cards of 10 stamps, a customer moves up after earning 20 stamps on that level.
+- **Points cards:** you choose a number of points. A customer moves up after earning that many points on the level. Spending points on a reward doesn't slow them down.
+
+The top level has no rule. Customers who reach it keep it.
+
+## What carries over
+
+- **Stamps and points.** The stamps on a customer's card come with them onto the new card. If they fill the new card, the reward is saved. A points balance never changes when someone moves up.
+- **Earned rewards.** A reward earned on a lower level stays valid.
+- **Levels only go up.** If you make a rule harder, nobody moves back. The one exception is a mistake. If you undo the scan that moved a customer up, they return to their old level. The level gift is taken back.
+- **Your program type.** If you switch between stamps and points, your levels convert too. Customers keep their level.
+
+## What changes when levels are on
+
+- A full stamps card always saves its reward and starts a new card. **Stackable rewards** turns on and stays on.
+- Your program settings edit your first level only. The other levels have their own cards.
+- Customers see their level name on their card. When they move up, the card changes look and a message arrives on their lock screen.
+- Your sign-up page shows your levels under the card.
+- Your team sees the level and any perks in the scanner app before they add a stamp.
+
+## Put levels to work
+
+- [Set up levels](/help/set-up-levels)
+- [Change, add or remove a level](/help/edit-your-levels)
+- [Change how a level's card looks](/help/change-a-level-card)
+- [See and change a customer's level](/help/change-a-customers-level)
+- [Send a broadcast to one level](/help/send-a-broadcast-to-a-level)
+- [Switch levels off, and back on](/help/switch-off-levels)
+
+To explain levels to your customers, send them [Move up levels on your loyalty card](/help/move-up-levels).

@@ -1,0 +1,54 @@
+---
+title: Send a broadcast to one level
+description: Reach only your Silver customers, only Gold, or any mix of levels. Pick levels in the audience step of a broadcast.
+type: how-to
+audience: [owner]
+plans: [growth, pro]
+keywords: [tiers, message gold customers, vip message, target customers, audience, segment, send to silver, push notification, campaign, level audience, filter by level]
+screens: [/program/broadcasts]
+sources:
+  - web/src/app/(dashboard)/program/broadcasts
+  - web/src/components/levels/running/LevelAudienceGroup.tsx
+  - web/messages/en/notifications.json
+  - backend/app/services/programs/levels/jobs
+related: [how-levels-work, change-a-customers-level, edit-your-levels]
+updated: 2026-10-30
+draft: true
+---
+
+Send a broadcast to only the customers on the levels you pick, like your Gold customers.
+
+## Before you start
+
+- Levels must be on. See [Set up levels](/help/set-up-levels).
+- Only you, the owner, can send broadcasts.
+
+## Pick a level
+
+1. Open **Broadcasts** in the sidebar, then select **New broadcast**.
+2. Write your message on **Compose**, then select **Next**.
+3. On **Audience**, select **Filtered audience**.
+4. Under **Level**, select one or more levels. Each shows its customers, for example **Silver · 12**.
+5. Check the estimate, then select **Next** and finish as usual.
+
+The estimate counts every customer on the levels you picked. You can pick several levels.
+
+<Callout type="note">
+The level filter is included on Growth and Pro. Filters by stamps, points, rewards, last visit or location are on Pro.
+</Callout>
+
+<OpenInDashboard path="/program/broadcasts" label="Open Broadcasts" />
+
+<Details summary="You remove a level later">
+A scheduled broadcast aimed at a removed level loses that level. If it has no level left, it goes back to draft. Pick a level again before you schedule it.
+</Details>
+
+## Troubleshooting
+
+<Symptom title="There is no Level group">
+The **Level** group only appears under **Filtered audience**, and only while levels are on.
+</Symptom>
+
+<Symptom title="It says &quot;Levels are off, so you can't send to a level&quot;">
+Levels are off. Take the level out of the audience, or [switch levels back on](/help/switch-off-levels).
+</Symptom>

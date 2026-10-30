@@ -1,0 +1,58 @@
+---
+title: Switch levels off, and back on
+description: Switching off puts everyone back on your first card. Nobody loses stamps, points or rewards, and your levels are kept for later.
+type: how-to
+audience: [owner]
+keywords: [tiers, turn off levels, disable levels, stop levels, remove tiers, pause levels, turn levels back on, restart levels, cancel levels, end levels]
+screens: [/program, /levels/switch-off]
+sources:
+  - web/src/components/levels/switch-off
+  - web/src/components/levels/LevelsSection.tsx
+  - web/messages/en/levels.json
+  - backend/app/api/routes/levels
+  - backend/app/services/programs/levels/jobs
+related: [set-up-levels, edit-your-levels, how-levels-work]
+updated: 2026-10-30
+draft: true
+---
+
+Switching off puts everyone back on your first card. Nobody loses stamps, points or rewards. Your levels and their cards are kept, so you can switch them back on.
+
+## Switch levels off
+
+1. Open **Overview** in the sidebar.
+2. On the **Levels** card, select **Switch off**.
+3. Turn on **Announce it on their card** to send customers a short message that your levels have ended.
+4. Select **Switch off levels**.
+
+Cards update on your customers' phones in the background. You can leave the page. When it ends, you see **Levels are off**.
+
+## What changes
+
+- Every customer is on your first card. The stamps on their card come with them.
+- Rewards they hold stay valid.
+- Levels disappear from the **Customers** page, the scanner app, your sign-up page and **Analytics**.
+- You can't send a broadcast to a level, and the level-up message stops.
+
+<Callout type="note">
+If you switch between stamps and points while levels are off, your kept levels are deleted. They would be the wrong type.
+</Callout>
+
+<OpenInDashboard path="/program" label="Open Overview" />
+
+## Switch levels back on
+
+1. On **Overview**, the card now reads **Your levels are switched off**. Select **Set up levels again**.
+2. The guide opens with your kept levels. Go through it as in [Set up levels](/help/set-up-levels).
+
+Choose **By their history** to place customers again. Each customer gets the level their visits earn. Levels you gave by hand are not restored.
+
+## Troubleshooting
+
+<Symptom title="It says &quot;You announced levels recently&quot;">
+You can announce levels once every 7 days, including when you switch them on or off. Select **Switch off without announcing**, or wait until the date shown.
+</Symptom>
+
+<Symptom title="It says &quot;The update stopped&quot;">
+We couldn't finish switching levels off. Open **Overview** to see where things stand, then switch off again.
+</Symptom>

@@ -1,0 +1,45 @@
+---
+title: Change how a level's card looks
+description: Each level has its own card. Change a level's colors and stamp look, and see how many customers will get the new look first.
+type: how-to
+audience: [owner]
+keywords: [tiers, level card, silver card, gold card, card design, card template, card colors, change level look, tier card, card style]
+screens: [/program/templates, /design]
+sources:
+  - web/src/app/(dashboard)/program/templates
+  - web/src/app/(dashboard)/design
+  - web/src/components/levels/running/LevelCardsSection.tsx
+  - web/src/components/levels/running/LevelCardSaveDialog.tsx
+  - web/messages/en/levels.json
+  - backend/app/services/programs/levels/designs.py
+related: [edit-your-levels, set-up-levels, how-levels-work]
+updated: 2026-10-30
+draft: true
+---
+
+Each level has its own card. Change its colors, and customers on that level get the new look on their phones.
+
+## Before you start
+
+- Only you, the owner, can change a level card.
+- Your first level uses your active card style. Change it from **Card styles** as usual.
+
+## Change a level card
+
+1. Open **Card styles** in the sidebar.
+2. In the **Level cards** group, select **Edit** on the level.
+3. Change the colors under **Card style**. Change the stamps under **Stamps and rewards**, or **Points and rewards** on a points card.
+4. Select **Save Card Style**.
+5. Check how many customers will get the new look, then select **Update the card**.
+
+Their cards refresh on their phones. Customers on other levels keep theirs. If nobody is on the level yet, no card changes now.
+
+<Callout type="note">
+A level card keeps the logo, texts and fields of your main card. You can't make it live, copy it or delete it. It doesn't count toward your card style limit. To change how many stamps it holds, see [Change, add or remove a level](/help/edit-your-levels).
+</Callout>
+
+<OpenInDashboard path="/program/templates" label="Open Card styles" />
+
+<Details summary="Your card uses a photo">
+When a card uses a photo, every level starts with the same look. Only the number of stamps differs.
+</Details>

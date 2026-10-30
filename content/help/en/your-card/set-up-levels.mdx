@@ -1,0 +1,100 @@
+---
+title: Set up levels on your loyalty card
+description: Choose your levels, what each one gives and how customers move up, then turn levels on. Your current customers are placed for you.
+type: how-to
+audience: [owner]
+keywords: [tiers, tier, bronze silver gold, vip, membership levels, loyalty tiers, status, rank, create levels, add levels, reward best customers, perks, level up]
+screens: [/program, /levels]
+sources:
+  - web/src/app/levels
+  - web/src/components/levels
+  - web/messages/en/levels.json
+  - backend/app/api/routes/levels
+  - backend/app/services/programs/levels
+  - backend/app/core/features.py
+related: [how-levels-work, edit-your-levels, change-a-level-card, move-up-levels, switch-off-levels]
+updated: 2026-10-30
+draft: true
+---
+
+Levels give your regulars a better card as they earn. You set them up once, in a full-screen guide. If you leave, your draft is kept: select **Continue setup** to pick it up.
+
+## Before you start
+
+- You can have 2 to 5 levels, on every plan.
+- Only you, the owner, can set up levels. Admins can see them once they are on.
+- New to levels? Read [How levels work](/help/how-levels-work).
+
+## Set up your levels
+
+1. Open **Overview** in the sidebar, then select **Set up levels**.
+2. On **Choose your levels**, pick the **Number of levels** and name each one. Set what it takes to move up.
+3. On **What each level gives**, set the reward of each level above the first. Add a gift or perks if you like.
+4. On **Level cards**, check each card. Select one to change its colors, then select **Done**.
+5. On **Where do your customers start?**, choose how to place your current customers.
+6. On **The level-up message**, read the message customers get when they move up.
+7. On **Review your levels**, select **Turn on levels**, then confirm.
+
+Select **Continue** at the end of each screen. If you have no customers yet, step 5 is skipped.
+
+<Callout type="note">
+On Starter, customers get the default level-up message and you can't change it. Growth and Pro can edit it, and can set how many days a gift stays valid.
+</Callout>
+
+<Details summary="What to enter for each level">
+- **Move-up rule:** **Full cards to move up** on a stamps card, **Points to earn to move up** on a points card. Under each level, a line shows about how many visits and months a new customer needs. It follows how often your regulars visit.
+- **First level:** it is your current card. Its reward and size are edited in your program settings. Only its move-up rule is set here.
+- **Name:** up to 16 characters.
+- **Stamps on the card:** 1 to 21, for each level above the first.
+- **Gift:** turn on **Give a gift on reaching this level** and name the gift. Customers get it once, when they move up.
+- **Perks:** your team applies them at the till. Up to 3, each up to 40 characters.
+- **Level cards:** each level keeps your logo and texts. Only the colors and the stamp count change. If your card uses a photo, every level keeps the same look.
+</Details>
+
+<Details summary="Add the level or the gift to the message">
+On Growth and Pro, add these with the chips in the editor:
+
+- **Current level**
+- **Next level**
+- **Stamps left to the next level** or **Points left to the next level**
+- **Perks of the current level**
+- **The gift just given, as a sentence**, which only works in this message
+</Details>
+
+## Your current customers
+
+If you have customers, choose where they start:
+
+- **By their history.** Each customer starts on the level their past visits earn. Their cards update on their phones.
+- **Everyone starts on** your first level. Nobody moves yet. Customers move up on their next visits.
+
+<Details summary="The two switches on this screen">
+With **By their history**, two switches can appear.
+
+- **Give level gifts now** is off by default. When on, customers placed on a higher level get the gifts of the levels they skip. A customer placed on Gold gets the Silver and Gold gifts.
+- **Tell customers who move up** is on by default. They get your level-up message once.
+
+A full card that was waiting to be claimed is saved as a reward when you turn levels on. Customers keep every stamp.
+</Details>
+
+## What happens next
+
+Customers are placed and their cards update on their phones in the background. You can leave the page. When it ends, you see **Levels are on**.
+
+From now on, a full stamps card saves its reward and starts a new one. To explain levels to your customers, send them [Move up levels on your loyalty card](/help/move-up-levels).
+
+<OpenInDashboard path="/program" label="Open Overview" />
+
+## Troubleshooting
+
+<Symptom title="Continue stays grey on Level cards">
+Your level cards are still being made. Wait until **Making your level cards. This takes a moment.** goes away. If you see **We couldn't make the level cards.**, select **Try again**. On the review screen, **Go to level cards** takes you back.
+</Symptom>
+
+<Symptom title="It says &quot;The update stopped&quot;">
+Levels are on, but we couldn't finish placing everyone. Customers who weren't placed yet move up on their next visit. Open the **Levels** card on **Overview** to check where things stand.
+</Symptom>
+
+<Symptom title="It says &quot;You announced levels recently&quot;">
+You can tell all customers about levels once every 7 days, including when you switch levels on or off. Select **Turn on without announcing**, or wait until the date shown.
+</Symptom>

@@ -1,0 +1,58 @@
+---
+title: See and change a customer's level
+description: See who is on each level, and move one customer to another level. Their card updates now, with no message or gift unless you choose.
+type: how-to
+audience: [owner, admin]
+keywords: [tiers, customer level, move customer, promote customer, demote customer, silver gold, vip customer, change tier, level filter, who is on gold]
+screens: [/customers, /program, /activity, /analytics]
+sources:
+  - web/src/components/levels/running
+  - web/src/components/customers/customer-detail-sheet.tsx
+  - web/messages/en/levels.json
+  - web/messages/en/customers.json
+  - backend/app/api/routes/levels/customers.py
+  - backend/app/services/programs/levels/manual.py
+related: [how-levels-work, edit-your-levels, send-a-broadcast-to-a-level]
+updated: 2026-10-30
+draft: true
+---
+
+Each customer's level shows on the **Customers** page. Owners and admins can also move a customer to another level, up or down.
+
+## See who is on each level
+
+- On **Overview**, the **Levels** card lists each level with its customers. Select a level to open them.
+- On **Customers**, each customer has a chip with their level. Use the **Level** filter to show one level. **All levels** shows everyone.
+- On **Analytics**, **Levels** shows the split. **Moves up per month** shows how many customers moved up.
+
+## Change a customer's level
+
+1. Open **Customers** in the sidebar.
+2. Select the customer.
+3. Under their card, select **Change level**.
+4. Choose the level. Their current one is marked **Current level**.
+5. Select the **Move to** button. It names the level you chose.
+
+Their card updates now. No message or gift is sent. Their stamps, points and rewards stay. They start counting toward the next level from the level you chose.
+
+<OpenInDashboard path="/customers" label="Open Customers" />
+
+<Details summary="Send the level-up message">
+When you move a customer up, a box appears: **Send the level-up message and their Silver gift**. Silver stands for your own level's name. Select it to send the message and give the gift. Moving down never sends anything.
+
+A customer gets the message and the gift for a level once. If they already reached that level, the move is quiet.
+</Details>
+
+<Details summary="Where level changes show">
+On **Activity**, open the **Type** filter and choose **Level changes**. Rows read, for example, "moved up to Silver" or "was moved to Gold". The customer's own history lists the same moves.
+</Details>
+
+## Troubleshooting
+
+<Symptom title="It says &quot;Someone else just updated this customer&quot;">
+The customer was scanned at the same moment. Select **Change level** again and repeat the move.
+</Symptom>
+
+<Symptom title="There is no Change level button">
+Levels are off. The button appears only while levels are on, so switch them back on first.
+</Symptom>

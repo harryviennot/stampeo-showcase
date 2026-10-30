@@ -1,0 +1,77 @@
+---
+title: Change, add or remove a level
+description: Change what a level asks for, add a level on top, or remove one and choose where its customers go. Nobody moves down or loses anything.
+type: how-to
+audience: [owner]
+keywords: [tiers, tier, edit levels, change levels, rename level, add level, delete level, remove level, new tier, bronze silver gold, move up rule, card size]
+screens: [/levels/edit, /program]
+sources:
+  - web/src/app/levels/edit
+  - web/src/components/levels/edit
+  - web/messages/en/levels.json
+  - backend/app/api/routes/levels
+  - backend/app/services/programs/levels
+related: [how-levels-work, set-up-levels, change-a-level-card, switch-off-levels]
+updated: 2026-10-30
+draft: true
+---
+
+Change what each level asks for, add a level on top, or remove one. Nobody moves down, and nobody loses stamps, points or rewards.
+
+## Before you start
+
+- Only you, the owner, can edit levels. Admins can see the list.
+- A new level always goes on top. You can't reorder levels.
+- You need at least 2 levels. To stop using levels, [switch them off](/help/switch-off-levels).
+
+## Edit your levels
+
+1. Open **Overview** in the sidebar. On the **Levels** card, select **Edit**.
+2. On **Edit your levels**, change names, **Stamps on the card** or the move-up rules. Select **Add a level** to add one on top.
+3. Select **Continue**. On **What each level gives**, change rewards, gifts or perks, then select **Continue**.
+4. On **Review your changes**, read **What changes**.
+5. Select **Apply changes**, then confirm.
+
+Cards update on your customers' phones in the background. You can leave the page. When it ends, you see **Levels updated**.
+
+## What changes for customers
+
+| You change | What happens |
+|---|---|
+| A harder rule | Nobody moves down. Customers who already moved up keep their level. |
+| An easier rule | Customers who now qualify move up. **Customers moving up now** lists them before you apply. |
+| A card size | Cards update. A customer with more stamps than the new card holds gets the extra as a saved reward. |
+| A new level | Its card is made for you. Customers who already earned enough move up. |
+| A removed level | You choose where its customers go. They keep their stamps, points and rewards. |
+
+If customers move up, the review shows a switch: **Tell customers who move up and give them their level gift**. It is on by default, and customers get your level-up message once. Customers moved off a removed level are never told.
+
+To change how a level's card looks, see [Change how a level's card looks](/help/change-a-level-card).
+
+<OpenInDashboard path="/program" label="Open Overview" />
+
+<Details summary="Remove a level">
+1. On **Edit your levels**, select the trash icon next to a level above your first.
+2. If customers are on it, a sheet asks where they go. Choose **Move them to** the level below or the level above. The top level can only move down.
+3. Select the **Remove** button. It carries the level's name. To change your mind, select **Undo** under **Removed levels**.
+
+No message or gift is sent. Scheduled broadcasts aimed at the removed level lose it. If no level is left, they go back to draft, and the last screen tells you how many.
+</Details>
+
+<Details summary="Change a card size">
+The review shows the change, for example **Silver card** from 8 to 6 stamps. It also shows how many customers are on that level. Nobody loses stamps. The new cards are drawn first, so the screen may say **Preparing the new cards…** for a few minutes.
+</Details>
+
+<Details summary="Your program switches between stamps and points">
+Levels convert with your card. In the switch, a **Levels** screen shows each level's new card and move-up rule. Select **Make the level cards**, check them, then continue. Customers keep their level and their progress. If a levels setup is unfinished, finish or discard it first.
+</Details>
+
+## Troubleshooting
+
+<Symptom title="It says &quot;Levels are already being changed&quot;">
+A change is still running in the background. Wait for it to finish, then try again.
+</Symptom>
+
+<Symptom title="Continue is grey after you removed a level">
+A removed level still has customers and no destination. Under **Removed levels**, select **Choose**, pick a level, then select **Save**.
+</Symptom>
