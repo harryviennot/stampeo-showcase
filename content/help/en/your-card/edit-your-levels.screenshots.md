@@ -6,7 +6,7 @@ Overlays: Owner view from an admin session (`asOwner`), profile shown in English
 
 SHOT: edit-your-levels-01.png
 Business: Lustre (Pro, stamps)
-Where: Dashboard > Overview > Levels card > Edit > Remove Gold? sheet (route: /levels/edit)
+Where: Dashboard > Configuration > Program type > Edit levels > Remove Gold? sheet (route: /levels/edit)
 Data prep: Levels on with 3 levels and customers on Gold, so the removal sheet asks where they go
 Capture: The Remove Gold? bottom sheet with Move them to Silver selected, the note that nothing is lost, and the Remove Gold button
 Shows: The choice of where a removed level's customers go

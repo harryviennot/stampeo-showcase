@@ -4,20 +4,21 @@ description: Choose your levels, what each one gives and how customers move up, 
 type: how-to
 audience: [owner]
 keywords: [tiers, tier, bronze silver gold, vip, membership levels, loyalty tiers, status, rank, create levels, add levels, reward best customers, perks, level up]
-screens: [/program, /levels]
+screens: [/program/settings, /levels]
 sources:
   - web/src/app/levels
   - web/src/components/levels
+  - web/src/components/program/settings/ProgramTypeSection.tsx
   - web/messages/en/levels.json
   - backend/app/api/routes/levels
   - backend/app/services/programs/levels
   - backend/app/core/features.py
 related: [how-levels-work, edit-your-levels, change-a-level-card, move-up-levels, switch-off-levels]
-updated: 2026-10-30
+updated: 2026-11-02
 draft: true
 ---
 
-Levels give your regulars a better card as they earn. You set them up once, in a full-screen guide. If you leave, your draft is kept: select **Continue setup** to pick it up.
+Levels give your regulars a better card as they earn. You set them up in a full-screen guide. Nothing changes for your customers until the last step, **Turn on levels**.
 
 ## Before you start
 
@@ -27,13 +28,13 @@ Levels give your regulars a better card as they earn. You set them up once, in a
 
 ## Set up your levels
 
-1. Open **Overview** in the sidebar, then select **Set up levels**.
+1. Open **Configuration** in the sidebar. On the **Program type** card, select **Add levels**.
 2. On **Choose your levels**, pick the **Number of levels** and name each one. Set what it takes to move up.
-3. On **What each level gives**, set the reward of each level above the first. Add a gift or perks if you like.
-4. On **Level cards**, check each card. Select one to change its colors, then select **Done**.
+3. On **What each level gives**, set the reward of each level. Add a gift or perks if you like.
+4. On **Level cards**, pick a look for each card. Select **Customize** to change the colors.
 5. On **Where do your customers start?**, choose how to place your current customers.
 6. On **The level-up message**, read the message customers get when they move up.
-7. On **Review your levels**, select **Turn on levels**, then confirm.
+7. On **Review your levels**, check each level, then select **Turn on levels** and confirm.
 
 Select **Continue** at the end of each screen. If you have no customers yet, step 5 is skipped.
 
@@ -41,18 +42,33 @@ Select **Continue** at the end of each screen. If you have no customers yet, ste
 On Starter, customers get the default level-up message and you can't change it. Growth and Pro can edit it, and can set how many days a gift stays valid.
 </Callout>
 
+## Leave and come back
+
+Select the X to leave. A sheet offers three choices:
+
+- **Keep for later** saves your setup as a draft. Nothing changes for your customers or your live card, and your team sees nothing.
+- **Discard** deletes the setup.
+- **Keep editing** closes the sheet.
+
+To pick a draft up again, open **Configuration**. On the **Program type** card, select **Continue setting up levels**.
+
+If you switch your program between stamps and points while a draft exists, the draft is discarded.
+
 <Details summary="What to enter for each level">
-- **Move-up rule:** **Full cards to move up** on a stamps card, **Points to earn to move up** on a points card. Under each level, a line shows about how many visits and months a new customer needs. It follows how often your regulars visit.
-- **First level:** it is your current card. Its reward and size are edited in your program settings. Only its move-up rule is set here.
-- **Name:** up to 16 characters.
-- **Stamps on the card:** 1 to 21, for each level above the first.
-- **Gift:** turn on **Give a gift on reaching this level** and name the gift. Customers get it once, when they move up.
+- **Move-up rule:** **Full cards to move up** on a stamps card, **Points to earn to move up** on a points card. A new level starts at 1 full card. On points, it starts at the price of your most expensive reward.
+- **First level:** it is your current card, and you edit it here like the others. Its changes are applied only when you turn levels on. If your card has several rewards, its size and rewards are shown but can't be changed.
+- **Name:** up to 16 characters. The default names follow your business language and are translated for your customers in other languages. If you rename a level, the translations are cleared.
+- **Stamps on the card:** 2 to 21, on a stamps card.
+- **Gift:** turn on **Give a gift on reaching this level** and name the gift. Customers get it once, when they move up. The first level has no gift: customers start there.
 - **Perks:** your team applies them at the till. Up to 3, each up to 40 characters.
-- **Level cards:** each level keeps your logo and texts. Only the colors and the stamp count change. If your card uses a photo, every level keeps the same look.
+</Details>
+
+<Details summary="How long does each level take">
+Under each level, a line shows about how many visits and months a new customer needs, for example **≈ 6 visits · about 2 months**. A note above the levels says what it is based on. With 20 or more returning customers, it uses how often they come back and how much they earn per visit over the last 6 months. With fewer, it assumes one visit a week. The numbers change as you change card sizes and move-up rules.
 </Details>
 
 <Details summary="Add the level or the gift to the message">
-On Growth and Pro, add these with the chips in the editor:
+On Growth and Pro, add these with the chips in the editor. The chips are grouped under **Levels**:
 
 - **Current level**
 - **Next level**
@@ -60,6 +76,16 @@ On Growth and Pro, add these with the chips in the editor:
 - **Perks of the current level**
 - **The gift just given, as a sentence**, which only works in this message
 </Details>
+
+## Choose how each card looks
+
+Every level, the first one included, has a row of looks: **Your card**, **Bronze**, **Silver**, **Gold**, **Platinum** and **Noir**. Select one and the card changes at once. The first level starts as **Your card**. The next levels start as Silver, Gold, Platinum and Noir.
+
+Select **Customize** to open the color editor. The looks stay on top. The colors are under **Fine-tune colors**. Each level keeps your logo and texts. Only the colors and the stamp count change.
+
+If your card is a photo, or was made by Stampeo, there are no looks to pick. Every level keeps the same look, and you can still change the colors where the editor allows it.
+
+The look of your first level is applied to your live card when you turn levels on.
 
 ## Your current customers
 
@@ -77,13 +103,21 @@ With **By their history**, two switches can appear.
 A full card that was waiting to be claimed is saved as a reward when you turn levels on. Customers keep every stamp.
 </Details>
 
+## Review before you turn on
+
+Each level on **Review your levels** shows a small picture of its card. Select it to go back to the card step. Select **Edit** on a level to change what it gives. A footer button, **Back to review**, brings you straight back. When the first level's card changes size, the review shows it, for example **10 → 8 stamps**.
+
+<Details summary="If the first card gets bigger">
+When the first level's card grows, some customers may already have more stamps than before. The **Turn on levels** sheet asks what to do with their stamp goal. You can give the reward now, or keep the stamps. Giving the reward now is chosen for you.
+</Details>
+
 ## What happens next
 
-Customers are placed and their cards update on their phones in the background. You can leave the page. When it ends, you see **Levels are on**.
+Your first level's new card and look are applied. Then customers are placed, and their cards update on their phones in the background. You can leave the page. When it ends, you see **Levels are on**.
 
 From now on, a full stamps card saves its reward and starts a new one. To explain levels to your customers, send them [Move up levels on your loyalty card](/help/move-up-levels).
 
-<OpenInDashboard path="/program" label="Open Overview" />
+<OpenInDashboard path="/program/settings" label="Open Configuration" />
 
 ## Troubleshooting
 
@@ -92,9 +126,13 @@ Your level cards are still being made. Wait until **Making your level cards. Thi
 </Symptom>
 
 <Symptom title="It says &quot;The update stopped&quot;">
-Levels are on, but we couldn't finish placing everyone. Customers who weren't placed yet move up on their next visit. Open the **Levels** card on **Overview** to check where things stand.
+Levels are on, but we couldn't finish placing everyone. Customers who weren't placed yet move up on their next visit. If your first level's card had already been changed, the screen says so, and trying again doesn't change it twice. Open **Configuration** to check where things stand.
 </Symptom>
 
 <Symptom title="It says &quot;You announced levels recently&quot;">
 You can tell all customers about levels once every 7 days, including when you switch levels on or off. Select **Turn on without announcing**, or wait until the date shown.
+</Symptom>
+
+<Symptom title="It says &quot;Levels are already being changed&quot;">
+A levels change is still running in the background. Saving your program settings is refused until it ends. Wait for it to finish, then try again.
 </Symptom>

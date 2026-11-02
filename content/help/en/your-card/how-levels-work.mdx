@@ -4,7 +4,7 @@ description: Levels give your best regulars a better card. How customers move up
 type: concept
 audience: [owner, admin]
 keywords: [tiers, tier, bronze silver gold, vip, membership levels, loyalty tiers, status, rank, reward best customers, upgrade card, level up, perks, loyalty levels]
-screens: [/program]
+screens: [/program, /program/settings]
 sources:
   - web/src/components/levels
   - web/messages/en/levels.json
@@ -12,7 +12,7 @@ sources:
   - backend/app/core/features.py
   - scanner-app/src/components/levels
 related: [set-up-levels, edit-your-levels, move-up-levels, stamps-or-points]
-updated: 2026-10-30
+updated: 2026-11-02
 draft: true
 ---
 
@@ -27,7 +27,7 @@ Each level has:
 - **A gift,** if you want one. A one-time reward when a customer reaches the level.
 - **Perks,** if you want some. Up to 3 short lines, like "Free refill", that your team applies at the till.
 
-You name the levels. The defaults are Bronze, Silver and Gold. Your first level is the card you already have. Customers who haven't moved up see the card they know.
+You name the levels. The defaults are Bronze, Silver and Gold. Your first level starts as the card you already have, and you can change its size, reward and look while you set up. Nothing changes until you turn levels on. Customers who haven't moved up see the card they know.
 
 ## How customers move up
 
@@ -49,6 +49,7 @@ The top level has no rule. Customers who reach it keep it.
 
 - A full stamps card always saves its reward and starts a new card. **Stackable rewards** turns on and stays on.
 - Your program settings edit your first level only. The other levels have their own cards.
+- **Overview** shows a **Levels** card with how many customers are on each level. Owners manage levels from **Configuration**, on the **Program type** card.
 - Customers see their level name on their card. When they move up, the card changes look and a message arrives on their lock screen.
 - Your sign-up page shows your levels under the card.
 - Your team sees the level and any perks in the scanner app before they add a stamp.

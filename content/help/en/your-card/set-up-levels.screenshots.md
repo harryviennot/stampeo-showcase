@@ -6,7 +6,7 @@ Overlays: Owner view from an admin session (`asOwner`), profile shown in English
 
 SHOT: set-up-levels-01.png
 Business: Lustre (Pro, stamps)
-Where: Dashboard > Overview > Set up levels > step 1 (route: /levels)
+Where: Dashboard > Configuration > Program type > Add levels > step 1 (route: /levels)
 Data prep: A saved levels draft with 3 levels named Bronze, Silver, Gold; Bronze 2 full cards, Silver 3 full cards; Silver 8 stamps, Gold 6 stamps; at least 20 repeat customers so the estimate lines show
 Capture: The Number of levels stepper, level 1 with its Your card box, level 2 with Stamps on the card, Full cards to move up and the estimate line. Crop below the wizard header, above the footer.
 Shows: The Number of levels stepper and the Your card box, level 2's rules and the estimate line
@@ -16,9 +16,9 @@ NOT CAPTURED: STA-525 is not deployed to the dev dashboard, so the screen does n
 SHOT: set-up-levels-02.png
 Business: Lustre (Pro, stamps)
 Where: Dashboard > Set up levels > Level cards (route: /levels/cards)
-Data prep: The same draft, with the Silver and Gold cards made and ready, in different colors from Bronze
-Capture: The grid of three tiles: Bronze marked Your card, Silver and Gold with Tap to edit. Crop to the grid and its title.
-Shows: Three cards in three looks, and which one is the live card
+Data prep: The same draft, with the Silver and Gold cards made and ready, in different looks from the first level
+Capture: The grid of three tiles: each card with its look picker (Your card, Bronze, Silver, Gold, Platinum, Noir). Crop to the grid and its title.
+Shows: Three cards in three looks, and the one-tap look picker
 Goes under: Set up your levels, after step 4
 NOT CAPTURED: STA-525 is not deployed to the dev dashboard, so the screen does not exist there yet.
 

@@ -6,7 +6,7 @@ Overlays: Owner view from an admin session (`asOwner`), profile shown in English
 
 SHOT: switch-off-levels-01.png
 Business: Lustre (Pro, stamps)
-Where: Dashboard > Overview > Levels card > Switch off
+Where: Dashboard > Configuration > Program type > Switch off levels
 Data prep: Levels on with 3 levels
 Capture: The Switch off levels? bottom sheet with the Announce it on their card toggle and the Cancel and Switch off levels buttons
 Shows: What the switch-off promises before the owner confirms
