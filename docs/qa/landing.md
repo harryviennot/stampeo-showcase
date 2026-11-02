@@ -169,15 +169,15 @@ Clear site data for `showcase.dev.stampeo.app` (DevTools → Application → Sto
 | EXPECT | Stat labels ("Total Customers", "Visits This Week", "Rewards Claimed"), "Recent customers", "Progress", "Visited today", "Almost!" (and translations) render as text. You do NOT see any string starting with `landing.dashboard.`. |
 | RESET | None. |
 
-### LD-12: The hero keeps its Halloween cards [CORE]
+### LD-12: The hero shows the year-round cards [CORE]
 
 | Field | Content |
 |---|---|
-| WHY | The hero's card set is a manual switch that only changes on deploy. This release keeps Halloween; the year-round set returns in a separate change after 31 Oct. |
+| WHY | The hero's card set is a manual switch (`HERO_FAN_SEASON` in `lib/hero-fan.ts`) that only changes on deploy. Outside October it is the year-round set; a Halloween arch still live in November is the failure this catches. |
 | DEPENDS | none |
 | ACCOUNT | No session at all. |
 | STEPS | 1. Open `/` and `/en` at 390 and 1440. |
-| EXPECT | The arch shows the Halloween cards (pumpkins, ghosts, the "Smash Club" card). You do NOT see an empty slot or a card from the wrong set mixed in. After the year-round change ships, this case is replaced. |
+| EXPECT | The arch shows the year-round sample cards, the Aurevo café card at the apex. You do NOT see any Halloween card (pumpkins, ghosts, the "Smash Club" card), an empty slot, or a mix of the two sets. |
 | RESET | None. |
 
 ### LD-13: The section costs nothing at load [EDGE]
