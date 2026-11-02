@@ -254,7 +254,7 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
 /** Which set the hero shows. The landing page is built statically, so a change
  *  here goes live with the next deploy: set it back to "default" once
  *  Halloween is over. */
-export const HERO_FAN_SEASON: FanSeason = "halloween";
+export const HERO_FAN_SEASON: FanSeason = "default";
 
 /** The arch for a season: the same seven places, that season's cards. */
 export function fanSlots(season: FanSeason): FanSlot[] {
