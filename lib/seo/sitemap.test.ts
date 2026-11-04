@@ -135,24 +135,24 @@ describe("comparison pages", () => {
   const withComparisons = buildSitemap(allComparisonPages(FIXTURES));
   const urls = withComparisons.map((entry) => entry.url);
 
-  it("lists each published comparison once, at its own market's URL", () => {
+  test("lists each published comparison once, at its own market's URL", () => {
     expect(urls).toContain(`${SITEMAP_BASE_URL}/us/vs/acme-loyalty`);
     expect(urls).toContain(`${SITEMAP_BASE_URL}/us/vs/globex-stamps`);
     expect(urls).toContain(`${SITEMAP_BASE_URL}/comparatif/acme-fidelite`);
     expect(new Set(urls).size).toBe(urls.length);
   });
 
-  it("never lists a draft", () => {
+  test("never lists a draft", () => {
     expect(urls.filter((url) => url.includes("acme-loyalty-draft"))).toEqual([]);
   });
 
-  it("lists them without an hreflang cluster, because each exists in one market only", () => {
+  test("lists them without an hreflang cluster, because each exists in one market only", () => {
     for (const entry of withComparisons) {
       if (/\/(?:us\/vs|comparatif)\//.test(entry.url)) expect(entry.alternates).toBeUndefined();
     }
   });
 
-  it("adds nothing to the sitemap while there are no published comparisons", () => {
+  test("adds nothing to the sitemap while there are no published comparisons", () => {
     const none = buildSitemap([]).map((entry) => entry.url);
     expect(none.filter((url) => /\/(?:us\/vs|comparatif)(?:\/|$)/.test(url))).toEqual([]);
     expect(withComparisons.length - none.length).toBe(comparisonPages(FIXTURES).length);
