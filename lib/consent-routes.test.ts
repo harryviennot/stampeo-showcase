@@ -235,7 +235,7 @@ describe("segment tables", () => {
       seen.add(file);
       const source = readFileSync(file, "utf-8");
       if (source.includes("<Footer")) return true;
-      const imports = [...source.matchAll(/from "((?:@\/components|\.\.?)\/[^"]+)"/g)].map((m) => m[1]);
+      const imports = [...source.matchAll(/from "((?:@\/(?:components|lib)|\.\.?)\/[^"]+)"/g)].map((m) => m[1]);
       return imports.some((specifier) => {
         const next = resolveImport(file, specifier);
         return next !== undefined && rendersFooter(next, seen);
