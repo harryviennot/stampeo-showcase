@@ -1,10 +1,13 @@
 import type { CompetitorFacts, Market, SourcedFact } from "../types";
+import { FR_COMPETITORS } from "./fr";
+import { US_COMPETITORS } from "./us";
 
 /**
  * Every competitor with a comparison page, one file per competitor
- * (`facts/<id>.ts`). `facts/validate.test.ts` checks them all.
+ * (`facts/<id>.ts`), listed per market in `us.ts` and `fr.ts`.
+ * `facts/validate.test.ts` checks them all.
  */
-export const COMPETITOR_FACTS: readonly CompetitorFacts[] = [];
+export const COMPETITOR_FACTS: readonly CompetitorFacts[] = [...US_COMPETITORS, ...FR_COMPETITORS];
 
 export function findCompetitor(
   id: string,
