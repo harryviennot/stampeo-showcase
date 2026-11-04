@@ -1,7 +1,7 @@
 # Hey Pongo (also written "Pongo")
 
 Researched: 2026-11-04 by research agent · Markets compared: fr
-Fact-checked: 2026-11-04 by fact-check agent · Status: CHECKED
+Fact-checked: 2026-11-04 by fact-check agent · Status: CHECKED · VERDICT APPROVED (2026-11-04, Harry)
 
 All "Read on" dates are 2026-11-04. Quotes are French as published (apostrophes normalised to '), with an English gloss. The fact-checker re-opened every source with WebFetch on 2026-11-04; where the researcher's quote was a tool extract, the Check column says the quote was recaptured from the live page. Blocked sources are UNVERIFIABLE. No archive snapshots were checked. Nothing was signed up for, requested or submitted (no demo booked).
 
