@@ -1,6 +1,6 @@
 /**
- * Pages that exist in one language only: switching language there would land
- * on a 404. Takes the locale-stripped path, as `usePathname` from
+ * Blog posts (slug differs per language) and comparison pages (one language)
+ * would 404 on a switch. Takes the locale-stripped path, as `usePathname` from
  * `@/i18n/navigation` gives it.
  */
 const SINGLE_LANGUAGE_PAGES = /^\/(?:blog|comparatif|us\/vs)\/.+/;

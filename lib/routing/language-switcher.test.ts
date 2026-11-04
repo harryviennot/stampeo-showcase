@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { hidesLanguageSwitcher } from "./language-switcher";
 
-describe("hidesLanguageSwitcher: pages that exist in one language only", () => {
+describe("hidesLanguageSwitcher: pages a language switch would 404 on", () => {
   test.each([
     "/blog/carte-fidelite-cafe",
     "/comparatif/fidelatoo",
     "/us/vs/loopy-loyalty",
-  ])("hides it on %s, where switching language would land on a 404", (pathname) => {
+  ])("hides it on %s: its slug differs per language, or it exists in one language only", (pathname) => {
     expect(hidesLanguageSwitcher(pathname)).toBe(true);
   });
 

@@ -23,7 +23,7 @@ export interface SourcedFact {
 }
 
 export interface CompetitorMarketFacts {
-  /** The competitor's own pricing page, linked from the prices section. */
+  /** The competitor's pricing page; validated, not rendered. */
   pricingUrl: string;
   facts: SourcedFact[];
 }

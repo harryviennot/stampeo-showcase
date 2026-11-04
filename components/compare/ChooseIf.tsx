@@ -4,11 +4,7 @@ import type { Market } from "@/lib/compare/types";
 
 type Side = "competitor" | "stampeo";
 
-/**
- * One of the two "Choose X if" cards. It carries its own heading: the title
- * the writer put above it, or "Choose X if" in the market's language. The surface is the blog's card without its hover lift, since the
- * card is not a link. The competitor's card is first on a phone.
- */
+/** One of the two "Choose X if" cards, under its own heading. The competitor's card comes first at every width. */
 export function ChooseIf({
   side,
   competitor,

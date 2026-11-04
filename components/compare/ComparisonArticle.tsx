@@ -22,15 +22,7 @@ interface ComparisonArticleProps {
   others: readonly OtherComparison[];
 }
 
-/**
- * Everything between the header and the footer of a comparison page: the title,
- * the verdict, the date the facts were checked, the written comparison, the FAQ,
- * the sources, the other comparisons and the closing call to action. The
- * structured data renders with it, in the server HTML.
- *
- * There is no cover image, tag, reading time, share button, back link or author:
- * the page is Stampeo's own and says so in its sources.
- */
+/** The title, verdict, check date, written comparison, FAQ, sources, other comparisons and closing call to action, with the structured data. */
 export function ComparisonArticle({ view, verdict, body, others }: ComparisonArticleProps) {
   const { page, competitor, checkedAt } = view;
   const copy = COPY[page.market];

@@ -11,7 +11,7 @@ export function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Blog posts and comparison pages exist in one language only
+  // Blog posts (slug differs per language) and comparison pages (one language) would 404 on a switch.
   if (hidesLanguageSwitcher(pathname)) return null;
 
   return (

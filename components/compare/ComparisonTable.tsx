@@ -3,14 +3,7 @@ import { COPY } from "@/lib/compare/page/copy";
 import { tableRows, type Cell } from "@/lib/compare/page/rows";
 import type { ComparisonView } from "@/lib/compare/page/view";
 
-/**
- * Competitor and Stampeo side by side, one row per standard fact the
- * competitor has. One `<table>` at every width: from the tablet up it is a
- * table, on a phone each row is a card with the criterion on top and the two
- * values below, each under its vendor's name. The roles keep the table
- * semantics when the browser stops drawing it as one. Stampeo's column wears
- * the tint of the pricing page's Growth column; no cell is marked better.
- */
+/** Competitor and Stampeo side by side, one row per standard fact the competitor has: a table from the tablet up, a card per row on a phone. */
 export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | "competitor" | "stampeo"> }) {
   const { market } = view.page;
   const copy = COPY[market];

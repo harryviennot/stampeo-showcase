@@ -6,11 +6,7 @@ import { formatDate } from "@/lib/compare/page/format";
 import { sourceEntries } from "@/lib/compare/page/sources";
 import type { ComparisonView } from "@/lib/compare/page/view";
 
-/**
- * Every page a competitor fact on this page was read from: its title, its
- * domain (never the raw address) and the day it was read. The correction
- * contact and the disclaimer close the list, so every page carries them.
- */
+/** Every page a competitor fact on this page was read from, then the correction contact and the disclaimer. */
 export function SourcesList({ view }: { view: Pick<ComparisonView, "page" | "competitor"> }) {
   const { market } = view.page;
   const copy = COPY[market];
