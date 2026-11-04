@@ -1,4 +1,5 @@
-import type { CompetitorFacts, SourcedFact } from "../types";
+import type { CompetitorFacts } from "../types";
+import { factsReadOn } from "./build";
 
 const HOME = { sourceUrl: "https://winstamp.com", sourceTitle: "WinStamp homepage" };
 const PRICING = { sourceUrl: "https://winstamp.com/pricing", sourceTitle: "WinStamp pricing" };
@@ -13,15 +14,7 @@ const BUSINESS_APP = {
   sourceTitle: "WinStamp Business app on the App Store",
 };
 
-const READ_ON = "2026-11-04";
-
-const fact = (source: { sourceUrl: string; sourceTitle: string }, id: string, value: string, quote: string): SourcedFact => ({
-  id,
-  value,
-  ...source,
-  quote,
-  checkedAt: READ_ON,
-});
+const fact = factsReadOn("2026-11-04");
 
 /**
  * WinStamp on the US page, from the checked rows of `docs/compare/dossiers/winstamp.md`.

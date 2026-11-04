@@ -1,4 +1,5 @@
-import type { CompetitorFacts, SourcedFact } from "../types";
+import type { CompetitorFacts } from "../types";
+import { factsReadOn } from "./build";
 
 const PRICING = {
   sourceUrl: "https://www.stampme.com/punch-card-app/pricing-plans/",
@@ -35,15 +36,7 @@ const HELP_IMPORT = help("6211233-how-to-bulk-import-contacts-to-stamp-me", "bul
 const HELP_INVITE = help("10998921-how-do-i-invite-up-to-500-members", "inviting members");
 const HELP_SEARCH = help("6151198-why-can-t-my-business-be-found-via-the-in-app-search", "in-app search");
 
-const READ_ON = "2026-11-04";
-
-const fact = (source: { sourceUrl: string; sourceTitle: string }, id: string, value: string, quote: string): SourcedFact => ({
-  id,
-  value,
-  ...source,
-  quote,
-  checkedAt: READ_ON,
-});
+const fact = factsReadOn("2026-11-04");
 
 /**
  * Stamp Me on the US page, from the checked rows of `docs/compare/dossiers/stamp-me.md`.

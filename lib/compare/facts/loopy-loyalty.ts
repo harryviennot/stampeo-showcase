@@ -1,4 +1,5 @@
-import type { CompetitorFacts, SourcedFact } from "../types";
+import type { CompetitorFacts } from "../types";
+import { factsReadOn } from "./build";
 
 const HOME = { sourceUrl: "https://loopyloyalty.com", sourceTitle: "Loopy Loyalty homepage" };
 const PRICING = { sourceUrl: "https://loopyloyalty.com/pricing", sourceTitle: "Loopy Loyalty pricing" };
@@ -16,15 +17,7 @@ const POS_BLOG = {
 };
 const APP_STORE = { sourceUrl: "https://apps.apple.com/app/id945301614", sourceTitle: "Stamper app on the App Store" };
 
-const READ_ON = "2026-11-04";
-
-const fact = (source: { sourceUrl: string; sourceTitle: string }, id: string, value: string, quote: string): SourcedFact => ({
-  id,
-  value,
-  ...source,
-  quote,
-  checkedAt: READ_ON,
-});
+const fact = factsReadOn("2026-11-04");
 
 /** Loopy Loyalty on the US page, from the checked rows of `docs/compare/dossiers/loopy-loyalty.md`. */
 export const LOOPY_LOYALTY: CompetitorFacts = {
