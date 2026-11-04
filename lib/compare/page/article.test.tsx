@@ -222,7 +222,12 @@ describe("the table at phone width", () => {
   });
 
   it("pairs a yes or a no with an icon, hidden from screen readers since the word is there", () => {
-    expect(html).toMatch(/<svg[^>]*aria-hidden="true"/);
+    // Acme's only yes/no answer is on the customer-app row, which stays iconless; give it a till row too.
+    const view = fixtureView("acme-loyalty");
+    const us = view.competitor.markets.us!;
+    const till = { ...us.facts[0], id: "pos.integration", value: "No till integration" };
+    const withTill = { ...view, competitor: { ...view.competitor, markets: { us: { ...us, facts: [...us.facts, till] } } } };
+    expect(renderToStaticMarkup(<ComparisonTable view={withTill} />)).toMatch(/<svg[^>]*aria-hidden="true"/);
   });
 
   it("cannot scroll the page sideways: values wrap", () => {
