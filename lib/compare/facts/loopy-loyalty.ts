@@ -50,7 +50,7 @@ export const LOOPY_LOYALTY: CompetitorFacts = {
         fact(
           HELP,
           "program.types",
-          "Stamp cards. For points-based programs with advanced features, Loopy's help center refers to PassKit, a separate product. Levels: not published",
+          "Stamp cards. For points-based programs with advanced features, Loopy's help center refers to a separate, more advanced product. Levels: not published",
           "Loopy Loyalty offers digital stamp cards; for points-based systems with advanced features, visit PassKit.",
         ),
         fact(

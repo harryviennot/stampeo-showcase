@@ -17,7 +17,6 @@ const PAGES = {
   },
   franchises: { url: "https://www.heypongo.com/solutions/franchises", title: "Hey Pongo, solution pour les franchises" },
   integrations: { url: "https://www.heypongo.com/integrations", title: "Hey Pongo, intégrations" },
-  logicielsPro: { url: "https://www.logiciels.pro/heypongo/", title: "logiciels.pro, fiche Hey Pongo" },
 } as const;
 
 const fact = (id: string, value: string, page: keyof typeof PAGES, quote: string): SourcedFact => ({
@@ -100,9 +99,9 @@ export const HEY_PONGO: CompetitorFacts = {
         ),
         fact(
           "commitment",
-          "Non communiqué sur son site\u00a0; selon logiciels.pro, la durée d'engagement varie selon l'offre",
-          "logicielsPro",
-          "nombre de fonctionnalités, quotas d'utilisation, durée d'engagement",
+          "Non communiqué",
+          "demo",
+          "C'est un échange de 30 minutes pour voir si Pongo correspond à vos besoins, sans obligation de souscription.",
         ),
         fact(
           "customer.signup.payment",
