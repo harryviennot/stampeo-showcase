@@ -98,7 +98,7 @@ From `ux-brief.md` (DESIGN, 2026-11-04):
 New domain folders, so nothing grows an existing file much:
 - `lib/compare/`:
   - `types.ts`
-  - `registry.ts` (market, competitor, slug, draft)
+  - no `registry.ts`: the page list comes from the MDX files, and competitor and draft from their frontmatter; competitors are listed per market in `facts/us.ts` and `facts/fr.ts`
   - `facts/<competitor>.ts`, one per competitor
   - `stampeo.ts` (our side, from `lib/plans/plan-facts.ts` + `getPlanCatalog`)
   - `content.ts` (MDX loader for `content/compare/{en,fr}/`)
@@ -111,7 +111,9 @@ New domain folders, so nothing grows an existing file much:
 - Touches:
   - `lib/locale-negotiation.ts` (`RESERVED_TOP_SEGMENTS`)
   - `lib/seo/sitemap.ts`
-  - `lib/markets.ts` (`/us/vs/*` indexable)
+  - `lib/markets.ts` is read, not changed: US robots come from `marketRobots("us")`, and the sitemap follows `MARKETS.us.indexable` too
+  - `lib/consent-routes.ts` (`comparatif` joins MARKETING_SEGMENTS, so FR comparison pages get the same consent-gated analytics as the other marketing pages; needed for AC13 on FR)
+  - `app/[locale]/[slug]/page.tsx` (a reserved top segment never resolves to a merchant, AC7)
   - `lib/llms-txt.ts`
   - `scripts/seo-smoke/checks.ts`
   - the pricing comparison's basket-booster row
