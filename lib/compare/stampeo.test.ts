@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from "bun:test";
 import { MARKETS } from "../markets";
-import { PLAN_FACTS } from "../plans/plan-facts";
+import { routing } from "../../i18n/routing";
+import { PLAN_FACTS, PLAN_NAMES, TIERS } from "../plans/plan-facts";
 import { FALLBACK_PRICING, formatMoney, type Pricing } from "../pricing";
 import { findCurrencyAmounts } from "./body-checks";
 import { STAMPEO_FACT_IDS, buildStampeoColumn, getStampeoColumn, isStampeoFactId } from "./stampeo";
@@ -55,6 +56,24 @@ describe.each(["us", "fr"] as const)("Stampeo's side on the %s market", (market)
     expect(column.rows["locations.multiple"]).not.toMatch(/Starter|Growth/);
   });
 
+  it("states the plan numbers a page quotes in prose, from the plan facts", () => {
+    expect(column.facts["stampeo.broadcasts.growth"]).toBe(String(PLAN_FACTS.growth.broadcastsPerMonth));
+    expect(column.facts["stampeo.team.starter"]).toBe(String(PLAN_FACTS.starter.teamMembers));
+    expect(column.rows["program.types"]).toContain(column.facts["stampeo.levels"]);
+  });
+
+  it("names the plans that have milestone messages from the plan facts", () => {
+    const names = TIERS.filter((tier) => PLAN_FACTS[tier].milestoneNotifications !== 0).map((tier) => PLAN_NAMES[tier]);
+    expect(column.rows["push.automatic"]).toContain(names.join(market === "us" ? " and " : " et "));
+  });
+
+  it("lists every language the site is served in, written in the page's language", () => {
+    const languageName = new Intl.DisplayNames(LOCALE[market], { type: "language" });
+    for (const code of routing.locales) {
+      expect(column.rows.languages.toLowerCase()).toContain(languageName.of(code)!.toLowerCase());
+    }
+  });
+
   it("says no VAT applies on the French market only", () => {
     const priced = [column.rows["price.entry"], ...PRICE_IDS.map((id) => column.facts[id])];
     for (const value of priced) {
@@ -65,8 +84,14 @@ describe.each(["us", "fr"] as const)("Stampeo's side on the %s market", (market)
 });
 
 describe("Stampeo's inline facts", () => {
-  it("are the three monthly prices and the trial, and nothing else", () => {
-    expect([...STAMPEO_FACT_IDS]).toEqual([...PRICE_IDS, "stampeo.trial"]);
+  it("are the three monthly prices, the trial and the plan numbers pages quote", () => {
+    expect([...STAMPEO_FACT_IDS]).toEqual([
+      ...PRICE_IDS,
+      "stampeo.trial",
+      "stampeo.broadcasts.growth",
+      "stampeo.team.starter",
+      "stampeo.levels",
+    ]);
     expect(isStampeoFactId("stampeo.trial")).toBe(true);
     expect(isStampeoFactId("stampeo.price.enterprise")).toBe(false);
     expect(isStampeoFactId("price.entry")).toBe(false);

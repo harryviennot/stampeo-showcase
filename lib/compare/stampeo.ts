@@ -4,23 +4,30 @@
  *
  * Plan limits come from `lib/plans/plan-facts.ts`, prices from the live plan
  * catalog in the market's currency (the baked ladder when the backend is
- * unreachable, as /pricing does), the trial length from `lib/markets.ts`.
- * Values are plain text in the market's language, from STAMPEO.md.
+ * unreachable, as /pricing does), the trial length from `lib/markets.ts`, the
+ * languages from `i18n/routing.ts`. Values are plain text in the market's
+ * language, worded from STAMPEO.md (`stampeo-seo/stampeo seo fr/STAMPEO.md`,
+ * outside this repo).
  */
 
+import { routing } from "../../i18n/routing";
 import { getPlanCatalog } from "../plan-catalog";
 import { MARKETS } from "../markets";
 import { PLAN_FACTS, PLAN_NAMES, TIERS, tiersWhere, type PlanFacts } from "../plans/plan-facts";
 import { formatMoney, type Pricing, type TierId } from "../pricing";
+import { MARKET_LOCALE, NBSP, languageList } from "./page/format";
 import { pageSetup } from "./page/setup";
-import { STANDARD_FACT_IDS, type Market, type StandardFactId } from "./types";
+import type { Market, StandardFactId } from "./types";
 
-/** Facts a page cites by id. Values are monthly prices and the trial. */
+/** Facts a page cites by id: monthly prices, the trial, and the plan numbers pages quote in prose. */
 export const STAMPEO_FACT_IDS = [
   "stampeo.price.starter",
   "stampeo.price.growth",
   "stampeo.price.pro",
   "stampeo.trial",
+  "stampeo.broadcasts.growth",
+  "stampeo.team.starter",
+  "stampeo.levels",
 ] as const;
 
 export type StampeoFactId = (typeof STAMPEO_FACT_IDS)[number];
@@ -39,22 +46,21 @@ export interface StampeoColumn {
   facts: Record<StampeoFactId, string>;
 }
 
-const LOCALE: Record<Market, string> = { us: "en", fr: "fr" };
+// The most levels a ladder can have: backend/app/services/programs/levels/core.py `MAX_LEVELS`.
+const MAX_LEVELS = 5;
 
 interface Copy {
-  /** Rows that do not depend on plan limits, prices or the trial. */
+  /** Rows that do not depend on plan limits, prices, the trial or the languages. */
   fixed: Pick<
     Record<StandardFactId, string>,
-    | "card.where"
-    | "customer.app_required"
-    | "push.automatic"
-    | "staff.scanning"
-    | "pos.integration"
-    | "languages"
-    | "commitment"
-    | "export"
-    | "designer"
+    "card.where" | "customer.app_required" | "staff.scanning" | "pos.integration" | "commitment" | "export" | "designer"
   >;
+  /** The automatic notifications, given the plans that add milestone messages. */
+  pushAutomatic: (milestonePlans: string) => string;
+  /** The languages row, given the languages' names. */
+  languages: (names: string) => string;
+  /** The word that joins the last two items of a list. */
+  and: string;
   programTypes: (plans: string) => string;
   /** One clause per plan, cheapest first, for the promotional-message allowance. */
   broadcasts: (plan: string, facts: PlanFacts) => string;
@@ -66,26 +72,25 @@ interface Copy {
   trial: (days: number) => string;
 }
 
-const NBSP = "\u00a0";
-
 const EN: Copy = {
   fixed: {
     "card.where": "Apple Wallet and Google Wallet, on the customer's phone",
     "customer.app_required": "None: no app to download and no account to create",
-    "push.automatic":
-      "Yes, on every stamp, reward and level-up, on the lock screen (Apple Wallet and Google Wallet), plus milestone messages on Growth and Pro",
     "staff.scanning":
       "The Stampeo Scanner app on iPhone and Android, with a connection required (offline scanning isn't available yet)",
     "pos.integration": "None: staff add stamps or points by hand in the Scanner app",
-    languages:
-      "English, Spanish, French and Polish: dashboard, Scanner app, card and notifications; each customer's card follows their phone's language",
     commitment:
       "None: no setup fee, pay monthly or yearly and cancel any time. A canceled plan stays active until the end of the paid period",
     export: "The customer list as a CSV file with sign-up details (not stamps or points), on every plan, owner only",
     designer: "Self-service card designer with a live Apple Wallet and Google Wallet preview, on every plan",
   },
+  pushAutomatic: (milestonePlans) =>
+    `Yes, on every stamp, reward and level-up, on the lock screen (Apple Wallet and Google Wallet), plus milestone messages on ${milestonePlans}`,
+  languages: (names) =>
+    `${names}: dashboard, Scanner app, card and notifications; each customer's card follows their phone's language`,
+  and: "and",
   programTypes: (plans) =>
-    `Stamps or points on ${plans}, with optional loyalty levels (up to 5), each of which can have its own card look`,
+    `Stamps or points on ${plans}, with optional loyalty levels (up to ${MAX_LEVELS}), each of which can have its own card look`,
   broadcasts: (plan, facts) => {
     const { broadcastsPerMonth: limit } = facts;
     if (limit === 0) return `${plan}: none`;
@@ -106,18 +111,20 @@ const FR: Copy = {
   fixed: {
     "card.where": "Dans Apple Wallet ou Google Wallet, sur le téléphone du client",
     "customer.app_required": `Aucune${NBSP}: ni application à télécharger, ni compte à créer`,
-    "push.automatic":
-      "Oui, à chaque tampon ou point ajouté, chaque récompense et chaque changement de niveau, sur l'écran de verrouillage (Apple Wallet et Google Wallet), plus des messages de palier avec Growth et Pro",
     "staff.scanning":
       "L'application Scanner Stampeo sur iPhone et Android, avec une connexion nécessaire (le scan hors ligne n'est pas encore disponible)",
     "pos.integration": `Aucune${NBSP}: l'équipe ajoute les tampons ou les points à la main dans l'application Scanner`,
-    languages: `Français, anglais, espagnol et polonais${NBSP}: tableau de bord, application Scanner, carte et notifications${NBSP}; la carte suit la langue du téléphone du client`,
     commitment: `Aucun${NBSP}: sans frais de mise en service, paiement mensuel ou annuel, résiliable à tout moment. Un plan résilié reste actif jusqu'à la fin de la période payée`,
     export: "La liste des clients en fichier CSV, avec les informations d'inscription (sans tampons ni points), sur tous les plans (réservé au propriétaire)",
     designer: "Éditeur de carte en libre-service, avec un aperçu en direct de la carte dans Apple Wallet et Google Wallet, sur tous les plans",
   },
+  pushAutomatic: (milestonePlans) =>
+    `Oui, à chaque tampon ou point ajouté, chaque récompense et chaque changement de niveau, sur l'écran de verrouillage (Apple Wallet et Google Wallet), plus des messages de palier avec ${milestonePlans}`,
+  languages: (names) =>
+    `${names}${NBSP}: tableau de bord, application Scanner, carte et notifications${NBSP}; la carte suit la langue du téléphone du client`,
+  and: "et",
   programTypes: (plans) =>
-    `Tampons ou points sur ${plans}, avec des niveaux de fidélité en option (jusqu'à 5), chacun pouvant avoir sa propre apparence de carte`,
+    `Tampons ou points sur ${plans}, avec des niveaux de fidélité en option (jusqu'à ${MAX_LEVELS}), chacun pouvant avoir sa propre apparence de carte`,
   broadcasts: (plan, facts) => {
     const { broadcastsPerMonth: limit } = facts;
     if (limit === 0) return `${plan}${NBSP}: aucune diffusion`;
@@ -134,14 +141,20 @@ const FR: Copy = {
   trial: (days) => `essai gratuit de ${days} jours`,
 };
 
-const COPY: Record<Market, Copy> = { us: EN, fr: FR };
+const STAMPEO_COPY: Record<Market, Copy> = { us: EN, fr: FR };
 
 const upperFirst = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
+/** A plan limit written into prose: it must be a number, not "unlimited". */
+function quotedNumber(limit: number | "unlimited"): string {
+  if (limit === "unlimited") throw new Error("An unlimited plan limit cannot be quoted as a number");
+  return String(limit);
+}
+
 /** Stampeo's column for a market, from a plan catalog already in that market's currency. */
 export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoColumn {
-  const copy = COPY[market];
-  const money = (tier: TierId) => formatMoney(pricing.tiers[tier].month, pricing.currency, LOCALE[market]);
+  const copy = STAMPEO_COPY[market];
+  const money = (tier: TierId) => formatMoney(pricing.tiers[tier].month, pricing.currency, MARKET_LOCALE[market]);
   const plansWhere = (has: (facts: PlanFacts) => boolean) => {
     const tiers = tiersWhere(has);
     return copy.plans(tiers.map((tier) => PLAN_NAMES[tier]), tiers.length === TIERS.length);
@@ -153,11 +166,16 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     "stampeo.price.growth": copy.price(money("growth")),
     "stampeo.price.pro": copy.price(money("pro")),
     "stampeo.trial": trial,
+    "stampeo.broadcasts.growth": quotedNumber(PLAN_FACTS.growth.broadcastsPerMonth),
+    "stampeo.team.starter": quotedNumber(PLAN_FACTS.starter.teamMembers),
+    "stampeo.levels": String(MAX_LEVELS),
   };
 
   const cheapest = TIERS[0];
   const rows: StampeoColumn["rows"] = {
     ...copy.fixed,
+    "push.automatic": copy.pushAutomatic(plansWhere((plan) => plan.milestoneNotifications !== 0)),
+    languages: copy.languages(languageList(market, routing.locales, copy.and)),
     "program.types": copy.programTypes(plansWhere((plan) => plan.loyaltyTypes.length > 1)),
     "push.broadcasts": TIERS.map((tier) => copy.broadcasts(PLAN_NAMES[tier], PLAN_FACTS[tier])).join(". "),
     "locations.multiple": copy.multipleLocations(plansWhere((plan) => plan.multipleLocations)),
@@ -165,9 +183,7 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     trial: upperFirst(trial),
   };
 
-  // The standard order, so a table can walk this object.
-  const ordered = Object.fromEntries(STANDARD_FACT_IDS.map((id) => [id, rows[id]])) as StampeoColumn["rows"];
-  return { market, currency: pricing.currency.toLowerCase(), rows: ordered, facts };
+  return { market, currency: pricing.currency.toLowerCase(), rows, facts };
 }
 
 /** Stampeo's column for a market, priced from the live catalog in the market's currency. */

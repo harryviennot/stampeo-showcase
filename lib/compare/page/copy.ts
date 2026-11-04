@@ -1,4 +1,5 @@
 import type { Market, StandardFactId } from "../types";
+import { NBSP } from "./format";
 
 /**
  * The words around the facts on a comparison page, one set per market. A page
@@ -28,8 +29,6 @@ export interface PageCopy {
   /** The closing call to action. */
   closing: { title: string; subtitle: string };
 }
-
-const NBSP = "\u00a0";
 
 const EN: PageCopy = {
   h1: (competitor) => `${competitor} vs Stampeo`,
