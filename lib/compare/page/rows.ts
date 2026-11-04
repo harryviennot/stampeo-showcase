@@ -46,7 +46,8 @@ const cellFor = (id: StandardFactId, text: string, market: Market): Cell =>
   PLAIN_ROWS.has(id) ? { text, tone: "plain" } : cellOf(text, market);
 
 const TTC_RATE = 1.2;
-const HT_AMOUNT = /(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\s*HT\b/gi;
+// An amount whose thousands may be separated by a space, a no-break space or a narrow no-break space.
+const HT_AMOUNT = /(\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)\s*(?:€|euros?)\s*HT\b/gi;
 
 const euros = (amount: number) =>
   new Intl.NumberFormat("fr-FR", {
@@ -65,7 +66,8 @@ export function competitorText(value: string, market: Market): string {
   if (!note || /\bTTC\b/i.test(value)) return value;
 
   return value.replace(HT_AMOUNT, (published, amount: string) => {
-    const ttc = Math.round(Number.parseFloat(amount.replace(",", ".")) * TTC_RATE * 100) / 100;
+    const ht = Number.parseFloat(amount.replace(/[ \u00a0\u202f]/g, "").replace(",", "."));
+    const ttc = Math.round(ht * TTC_RATE * 100) / 100;
     return `${published} (${note(euros(ttc))})`;
   });
 }

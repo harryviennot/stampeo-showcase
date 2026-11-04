@@ -57,6 +57,24 @@ describe("a competitor's price on a French page", () => {
   });
 
   it.each([
+    ["a space", "1 200 € HT par an"],
+    ["a no-break space", "1\u00a0200 € HT par an"],
+    ["a narrow no-break space", "1\u202f200 € HT par an"],
+  ])("reads a thousands separator written as %s", (_name, value) => {
+    expect(norm(competitorText(value, "fr"))).toBe("1 200 € HT (soit 1 440 € TTC, TVA à 20 %) par an");
+  });
+
+  it("converts a thousands amount with decimals", () => {
+    expect(norm(competitorText("1 234,50 € HT", "fr"))).toContain("soit 1 481,40 € TTC");
+  });
+
+  it("leaves the number before an amount alone", () => {
+    expect(norm(competitorText("Jusqu'à 5 000 clients, 19 € HT par mois", "fr"))).toBe(
+      "Jusqu'à 5 000 clients, 19 € HT (soit 22,80 € TTC, TVA à 20 %) par mois",
+    );
+  });
+
+  it.each([
     ["a price already given TTC", "23 € TTC par mois"],
     ["a quote-only price", "Sur devis"],
     ["an HT price with no amount to convert", "Tarif HT sur demande"],
