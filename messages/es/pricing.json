@@ -186,7 +186,7 @@
         "basketBoost": {
           "label": "Bonus por compra grande",
           "growth": "1 nivel",
-          "pro": "Ilimitados"
+          "pro": "Hasta 6 niveles"
         },
         "rewardExpiry": {
           "label": "Fechas de caducidad de recompensas"
