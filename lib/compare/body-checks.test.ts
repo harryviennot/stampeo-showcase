@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { factIdsIn, findCurrencyAmounts, findMarkdownTables, hasComparisonTable } from "./body-checks";
+import { factIdsIn, findCurrencyAmounts, findInternalLinks, findMarkdownTables, hasComparisonTable } from "./body-checks";
 
 describe("typed currency amounts", () => {
   it.each([
@@ -93,5 +93,26 @@ describe("the comparison table in a body", () => {
     ["another component", "<ComparisonTables />"],
   ])("is missing with %s", (_name, body) => {
     expect(hasComparisonTable(body)).toBe(false);
+  });
+});
+
+describe("internal links in a body", () => {
+  it("lists the site paths of markdown links and of href attributes, with their line", () => {
+    const body = 'Read [the prices](/us/pricing) first.\n\nOr <a href="/onboarding?plan=growth">start</a>.\n\n[Docs](/docs "A title")';
+    expect(findInternalLinks(body)).toEqual([
+      { href: "/us/pricing", line: 1 },
+      { href: "/onboarding?plan=growth", line: 3 },
+      { href: "/docs", line: 5 },
+    ]);
+  });
+
+  it.each([
+    ["an external link", "[Them](https://acme.example/pricing)"],
+    ["a protocol-relative link", "[Them](//acme.example/pricing)"],
+    ["a mail link", "[Write](mailto:contact@stampeo.app)"],
+    ["an anchor", "[Below](#sources)"],
+    ["a link in a code fence", "```\n[Prices](/pricing)\n```"],
+  ])("ignores %s", (_name, body) => {
+    expect(findInternalLinks(body)).toEqual([]);
   });
 });

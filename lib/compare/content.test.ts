@@ -143,6 +143,30 @@ describe("comparison page validation", () => {
     expect(() => load(source(), { slug: "Acme_Loyalty" })).toThrow(/Acme_Loyalty\.mdx.*slug/s);
   });
 
+  describe("internal links", () => {
+    const withLink = (href: string) => source({}, `Read [this](${href}).\n\n${BODY}`);
+
+    it.each(["/us/pricing", "/us", "/onboarding", "/onboarding?plan=growth", "https://acme-loyalty.example/pricing"])(
+      "lets a US page link to %s",
+      (href) => {
+        expect(load(withLink(href))).toHaveLength(1);
+      },
+    );
+
+    it.each(["/pricing", "/blog/digital-stamp-card", "/usual-cafe", "/comparatif/zerosix"])(
+      "rejects a US page linking to %s, which leaves the US market",
+      (href) => {
+        const failure = () => load(withLink(href));
+        expect(failure).toThrow(/acme-loyalty\.mdx:\d+/);
+        expect(failure).toThrow(`"${href}"`);
+      },
+    );
+
+    it("leaves a French page free to link anywhere on its own site", () => {
+      expect(load(source({ competitor: "acme-fidelite" }, `Voir [les tarifs](/pricing).\n\n${BODY}`), { locale: "fr" })).toHaveLength(1);
+    });
+  });
+
   it("accepts a Fact that is a competitor fact of the market or a Stampeo fact", () => {
     const body = `${BODY}<Fact id="support.hours" /> and <Fact id="stampeo.trial" />\n`;
     expect(load(source({}, body))).toHaveLength(1);

@@ -3,7 +3,14 @@ import path from "path";
 import matter from "gray-matter";
 import yaml from "js-yaml";
 import { marketPath } from "../markets";
-import { factIdsIn, findCurrencyAmounts, findMarkdownTables, hasChooseIf, hasComparisonTable } from "./body-checks";
+import {
+  factIdsIn,
+  findCurrencyAmounts,
+  findInternalLinks,
+  findMarkdownTables,
+  hasChooseIf,
+  hasComparisonTable,
+} from "./body-checks";
 import { COMPETITOR_FACTS, findCompetitor, marketFacts } from "./facts";
 import { isStampeoFactId } from "./stampeo";
 import type { CompetitorFacts, ComparisonFaq, ComparisonPage, Market } from "./types";
@@ -30,6 +37,8 @@ const MARKET_OF: Record<Locale, Market> = { en: "us", fr: "fr" };
 
 const FRONTMATTER_KEYS = ["competitor", "title", "description", "faqs", "draft"];
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// The paths a US page may link to: its own market, and the sign-up page.
+const STAYS_IN_US = /^\/(?:us|onboarding)(?:[/?#]|$)/;
 
 // gray-matter ships a js-yaml 3 engine that calls the removed `yaml.safeLoad`.
 const matterOptions = {
@@ -107,6 +116,13 @@ function readPage(
   }
   for (const hit of findMarkdownTables(content)) {
     problems.push(`${where}:${bodyStart + hit.line}: markdown table (tables come from <ComparisonTable />)`);
+  }
+  if (market === "us") {
+    for (const link of findInternalLinks(content)) {
+      if (!STAYS_IN_US.test(link.href)) {
+        problems.push(`${where}:${bodyStart + link.line}: internal link "${link.href}" leaves the US market (link inside /us, or to /onboarding)`);
+      }
+    }
   }
   for (const use of factIdsIn(content)) {
     const line = `${where}:${bodyStart + use.line}`;

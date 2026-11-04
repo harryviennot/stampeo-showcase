@@ -88,3 +88,12 @@ export function hasChooseIf(text: string, side: "competitor" | "stampeo"): boole
 export function hasComparisonTable(text: string): boolean {
   return /<ComparisonTable\s*\/>/.test(withoutCodeFences(text));
 }
+
+// A markdown link `](/path` or an attribute `href="/path"`, for a path on this site (not `//host`).
+const INTERNAL_LINK = /\]\((\/(?!\/)[^\s)]*)|\bhref=(["'])(\/(?!\/)[^"']*)\2/g;
+
+/** The site paths a body links to (markdown links and `href`s), by the line they sit on. */
+export function findInternalLinks(text: string): Array<LineHit & { href: string }> {
+  const clean = withoutCodeFences(text);
+  return [...clean.matchAll(INTERNAL_LINK)].map((hit) => ({ line: lineAt(clean, hit.index), href: hit[1] ?? hit[3] }));
+}
