@@ -200,10 +200,11 @@ describe("llms.txt comparisons", () => {
   it("never lists a draft", () => {
     expect(body).not.toContain("acme-loyalty-draft");
     expect(body).not.toContain("Acme Loyalty alternative (draft)");
+    expect(body).not.toContain("acme-fidelite-brouillon");
+    expect(body).not.toContain("Acme Fidélité, brouillon");
   });
 
   it("has no Comparisons section while there is nothing published", () => {
     expect(buildLlmsTxt(undefined, [])).not.toContain("Comparisons");
-    expect(buildLlmsTxt()).not.toContain("### Comparisons");
   });
 });

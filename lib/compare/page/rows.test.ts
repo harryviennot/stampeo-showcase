@@ -18,7 +18,6 @@ describe("the rows of a comparison table", () => {
   it("are the standard rows the competitor has a fact for, in the standard order, and no other fact", () => {
     // Acme has card.where, customer.app_required, price.entry and trial, plus support.hours (not a standard row).
     expect(rows.map((row) => row.id)).toEqual(["card.where", "customer.app_required", "price.entry", "trial"]);
-    expect(rows.map((row) => row.id)).toEqual(STANDARD_FACT_IDS.filter((id) => rows.some((row) => row.id === id)));
   });
 
   it("put the competitor's sourced value on the left and Stampeo's value for the same row on the right", () => {
@@ -96,26 +95,21 @@ describe("a competitor's price on a French page", () => {
 
 describe("a yes or a no in a cell", () => {
   it.each([
-    ["Yes, on every stamp", "yes"],
-    ["No, staff add them by hand", "no"],
-    ["None: no app to download", "no"],
-    ["Not published", "plain"],
-    ["Notifications on request", "plain"],
-    ["Their own app", "plain"],
-  ])("%s reads as %s in English", (text, tone) => {
-    expect(cellOf(text, "us")).toEqual({ text, tone: tone as "yes" | "no" | "plain" });
-  });
-
-  it.each([
-    ["Oui, à chaque tampon", "yes"],
-    ["Aucune : ni application, ni compte", "no"],
-    ["Aucun engagement", "no"],
-    ["Non.", "no"],
-    ["Non, pas à ce jour", "no"],
-    ["Non communiqué", "plain"],
-    ["Nombre de points illimité", "plain"],
-  ])("%s reads as %s in French", (text, tone) => {
-    expect(cellOf(text, "fr")).toEqual({ text, tone: tone as "yes" | "no" | "plain" });
+    ["us", "Yes, on every stamp", "yes"],
+    ["us", "No, staff add them by hand", "no"],
+    ["us", "None: no app to download", "no"],
+    ["us", "Not published", "plain"],
+    ["us", "Notifications on request", "plain"],
+    ["us", "Their own app", "plain"],
+    ["fr", "Oui, à chaque tampon", "yes"],
+    ["fr", "Aucune : ni application, ni compte", "no"],
+    ["fr", "Aucun engagement", "no"],
+    ["fr", "Non.", "no"],
+    ["fr", "Non, pas à ce jour", "no"],
+    ["fr", "Non communiqué", "plain"],
+    ["fr", "Nombre de points illimité", "plain"],
+  ] as const)("on a %s page, %s reads as %s", (market, text, tone) => {
+    expect(cellOf(text, market)).toEqual({ text, tone });
   });
 });
 

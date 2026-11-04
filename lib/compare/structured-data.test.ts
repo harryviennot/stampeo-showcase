@@ -1,11 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { FIXTURES } from "./__fixtures__";
-import { allComparisonPages } from "./content";
+import { fixturePage } from "./__fixtures__";
 import { comparisonJsonLd } from "./structured-data";
-import type { ComparisonPage } from "./types";
 
-const pages = allComparisonPages(FIXTURES);
-const pageFor = (slug: string): ComparisonPage => pages.find((page) => page.slug === slug)!;
 const CHECKED = "2026-10-05";
 
 /** Every object in a JSON-LD tree. */
@@ -22,7 +18,7 @@ describe.each([
   ["a US page", "acme-loyalty", "Acme Loyalty", "https://stampeo.app/us", "https://stampeo.app/us/vs/acme-loyalty"],
   ["a FR page", "acme-fidelite", "Acme Fidélité", "https://stampeo.app/", "https://stampeo.app/comparatif/acme-fidelite"],
 ])("structured data of %s", (_name, slug, competitorName, homeUrl, pageUrl) => {
-  const page = pageFor(slug);
+  const page = fixturePage(slug);
   const nodes = comparisonJsonLd(page, CHECKED);
 
   it("is a page, a breadcrumb and an FAQ", () => {

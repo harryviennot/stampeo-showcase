@@ -1,7 +1,8 @@
-import { describe, expect, it } from "bun:test";
+import { afterAll, describe, expect, it } from "bun:test";
+import { copyFileSync, mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { FIXTURES } from "../__fixtures__";
+import { FIXTURES, FIXTURE_FACTS, FIXTURE_ROOT } from "../__fixtures__";
 import { comparisonSlugs, loadComparison, otherComparisons } from "./load";
 
 describe("opening a comparison by market, language and slug", () => {
@@ -17,8 +18,11 @@ describe("opening a comparison by market, language and slug", () => {
     expect(loadComparison({ market: "fr", locale: "fr", slug: "acme-fidelite" }, FIXTURES)?.checkedAt).toBe("2026-10-12");
   });
 
-  it("opens a draft by its URL", () => {
-    expect(loadComparison({ market: "us", locale: "en", slug: "acme-loyalty-draft" }, FIXTURES)?.page.draft).toBe(true);
+  it.each([
+    ["us", "en", "acme-loyalty-draft"],
+    ["fr", "fr", "acme-fidelite-brouillon"],
+  ] as const)("opens the %s draft by its URL", (market, locale, slug) => {
+    expect(loadComparison({ market, locale, slug }, FIXTURES)?.page.draft).toBe(true);
   });
 
   it.each([
@@ -34,7 +38,7 @@ describe("opening a comparison by market, language and slug", () => {
 
   it("lists the slugs to prerender per market, drafts included since they open by URL", () => {
     expect(comparisonSlugs("us", FIXTURES).sort()).toEqual(["acme-loyalty", "acme-loyalty-draft", "globex-stamps"]);
-    expect(comparisonSlugs("fr", FIXTURES)).toEqual(["acme-fidelite"]);
+    expect(comparisonSlugs("fr", FIXTURES).sort()).toEqual(["acme-fidelite", "acme-fidelite-brouillon", "bravo-carte"]);
   });
 
   it("lists nothing when there is no content folder yet, so the build still passes", () => {
@@ -42,6 +46,11 @@ describe("opening a comparison by market, language and slug", () => {
     expect(comparisonSlugs("us", empty)).toEqual([]);
     expect(comparisonSlugs("fr", empty)).toEqual([]);
   });
+});
+
+const folders: string[] = [];
+afterAll(() => {
+  for (const folder of folders) rmSync(folder, { recursive: true, force: true });
 });
 
 describe("the other comparisons listed on a page", () => {
@@ -57,21 +66,22 @@ describe("the other comparisons listed on a page", () => {
     const hrefs = otherComparisons(view("globex-stamps", "us", "en"), FIXTURES).map((other) => other.href);
 
     expect(hrefs).toEqual(["/us/vs/acme-loyalty"]);
-    expect(hrefs).not.toContain("/us/vs/acme-loyalty-draft");
     expect(hrefs.some((href) => href.startsWith("/comparatif"))).toBe(false);
   });
 
-  it("are empty for the only page of a market", () => {
-    expect(otherComparisons(view("acme-fidelite", "fr", "fr"), FIXTURES)).toEqual([]);
+  it("name a French page in French and link to it under /comparatif", () => {
+    expect(otherComparisons(view("acme-fidelite", "fr", "fr"), FIXTURES)).toEqual([
+      { href: "/comparatif/bravo-carte", label: "Bravo Carte ou Stampeo" },
+    ]);
   });
 
-  it("name a French page in French", () => {
-    const fr = view("acme-fidelite", "fr", "fr");
-    // Seen from another French page, so the fixture page is the one listed.
-    const fromElsewhere = { ...fr, page: { ...fr.page, slug: "autre" } };
+  it("are empty for the only page of a market", () => {
+    const root = mkdtempSync(join(tmpdir(), "compare-single-"));
+    folders.push(root);
+    mkdirSync(join(root, "fr"));
+    copyFileSync(join(FIXTURE_ROOT, "fr", "acme-fidelite.mdx"), join(root, "fr", "acme-fidelite.mdx"));
+    const alone = { root, facts: FIXTURE_FACTS };
 
-    expect(otherComparisons(fromElsewhere, FIXTURES)).toEqual([
-      { href: "/comparatif/acme-fidelite", label: "Acme Fidélité ou Stampeo" },
-    ]);
+    expect(otherComparisons(loadComparison({ market: "fr", locale: "fr", slug: "acme-fidelite" }, alone)!, alone)).toEqual([]);
   });
 });

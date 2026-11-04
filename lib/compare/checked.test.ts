@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { ACME_LOYALTY } from "./__fixtures__";
+import { ACME_LOYALTY, withUsFacts } from "./__fixtures__";
 import { checkedDate } from "./checked";
 import type { ComparisonPage } from "./types";
 
@@ -26,17 +26,9 @@ describe("the date a page was checked", () => {
   });
 
   it("does not look fresher because one fact was read again", () => {
-    const reread = {
-      ...ACME_LOYALTY,
-      markets: {
-        us: {
-          ...ACME_LOYALTY.markets.us!,
-          facts: ACME_LOYALTY.markets.us!.facts.map((fact) =>
-            fact.id === "trial" ? { ...fact, checkedAt: "2026-11-03" } : fact,
-          ),
-        },
-      },
-    };
+    const reread = withUsFacts(ACME_LOYALTY, (facts) =>
+      facts.map((fact) => (fact.id === "trial" ? { ...fact, checkedAt: "2026-11-03" } : fact)),
+    );
     expect(checkedDate(page(""), reread)).toBe("2026-10-20");
   });
 
@@ -69,7 +61,7 @@ describe("the date a page was checked", () => {
   });
 
   it("fails loudly for a page that uses no competitor fact", () => {
-    const noRows = { ...ACME_LOYALTY, markets: { us: { ...ACME_LOYALTY.markets.us!, facts: [ACME_LOYALTY.markets.us!.facts[4]] } } };
+    const noRows = withUsFacts(ACME_LOYALTY, (facts) => facts.filter((fact) => fact.id === "support.hours"));
     expect(() => checkedDate(page("Nothing cited."), noRows)).toThrow(/no competitor fact/i);
   });
 });

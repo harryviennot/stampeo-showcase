@@ -8,7 +8,6 @@ import {
   allComparisonPages,
   comparisonPages,
   comparisonPath,
-  comparisonsForMarket,
 } from "./content";
 
 const dirs: string[] = [];
@@ -21,7 +20,7 @@ const slugs = (pages: Array<{ slug: string }>) => pages.map((page) => page.slug)
 describe("comparison pages on disk", () => {
   it("lists every page with drafts, and only the published ones otherwise", () => {
     expect(slugs(allComparisonPages(FIXTURES))).toEqual(
-      [...FIXTURE_SLUGS.us, ...FIXTURE_SLUGS.usDraft, ...FIXTURE_SLUGS.fr].sort(),
+      [...FIXTURE_SLUGS.us, ...FIXTURE_SLUGS.usDraft, ...FIXTURE_SLUGS.fr, ...FIXTURE_SLUGS.frDraft].sort(),
     );
     expect(slugs(comparisonPages(FIXTURES))).toEqual([...FIXTURE_SLUGS.us, ...FIXTURE_SLUGS.fr].sort());
   });
@@ -44,7 +43,9 @@ describe("comparison pages on disk", () => {
     ]);
     expect(us?.content).toContain('<Fact id="price.entry" />');
     expect(fr).toMatchObject({ market: "fr", locale: "fr", competitor: "acme-fidelite", draft: false });
-    expect(pages.find((page) => page.slug === "acme-loyalty-draft")?.draft).toBe(true);
+    expect(pages.filter((page) => page.draft).map((page) => page.slug).sort()).toEqual(
+      [...FIXTURE_SLUGS.usDraft, ...FIXTURE_SLUGS.frDraft].sort(),
+    );
   });
 
   it("serves US pages at /us/vs/<slug> and FR pages at /comparatif/<slug>", () => {
@@ -52,12 +53,6 @@ describe("comparison pages on disk", () => {
 
     expect(comparisonPath(pages.find((page) => page.slug === "acme-loyalty")!)).toBe("/us/vs/acme-loyalty");
     expect(comparisonPath(pages.find((page) => page.slug === "acme-fidelite")!)).toBe("/comparatif/acme-fidelite");
-  });
-
-  it("lists the other published pages of the same market, never a draft or the other market", () => {
-    expect(slugs(comparisonsForMarket("us", { excludeSlug: "acme-loyalty", ...FIXTURES }))).toEqual(["globex-stamps"]);
-    expect(slugs(comparisonsForMarket("us", FIXTURES))).toEqual([...FIXTURE_SLUGS.us].sort());
-    expect(slugs(comparisonsForMarket("fr", { excludeSlug: "acme-fidelite", ...FIXTURES }))).toEqual([]);
   });
 
   it("loads an empty or missing content folder as no pages", () => {
@@ -125,6 +120,9 @@ describe("comparison page validation", () => {
     ["a draft flag that is not a boolean", source({ draft: "yes" }), /acme-loyalty\.mdx.*draft/s],
     ["no FAQ", source({ faqs: [] }), /acme-loyalty\.mdx.*faqs/s],
     ["an FAQ without an answer", source({ faqs: [{ question: "Q?" }] }), /acme-loyalty\.mdx.*faqs/s],
+    ["frontmatter that is not valid YAML", `---\ncompetitor: [unclosed\ntitle: x\n---\n\n${BODY}`, /acme-loyalty\.mdx.*not valid YAML/s],
+    ["no competitor", source({ competitor: undefined }), /acme-loyalty\.mdx.*"competitor" must name a competitor/s],
+    ["a competitor that is not a string", source({ competitor: 42 }), /acme-loyalty\.mdx.*"competitor" must name a competitor/s],
     ["a competitor missing from the index", source({ competitor: "nobody" }), /acme-loyalty\.mdx.*nobody/s],
     ["a typed price in an FAQ answer", source({ faqs: [{ question: "Q?", answer: "It costs $25." }] }), /acme-loyalty\.mdx:\d+.*\$25/s],
     ["an unknown Stampeo fact", source({}, `${BODY}<Fact id="stampeo.price.enterprise" />\n`), /stampeo\.price\.enterprise/],

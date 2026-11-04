@@ -139,11 +139,12 @@ describe("comparison pages", () => {
     expect(urls).toContain(`${SITEMAP_BASE_URL}/us/vs/acme-loyalty`);
     expect(urls).toContain(`${SITEMAP_BASE_URL}/us/vs/globex-stamps`);
     expect(urls).toContain(`${SITEMAP_BASE_URL}/comparatif/acme-fidelite`);
+    expect(urls).toContain(`${SITEMAP_BASE_URL}/comparatif/bravo-carte`);
     expect(new Set(urls).size).toBe(urls.length);
   });
 
   test("never lists a draft", () => {
-    expect(urls.filter((url) => url.includes("acme-loyalty-draft"))).toEqual([]);
+    expect(urls.filter((url) => /acme-loyalty-draft|acme-fidelite-brouillon/.test(url))).toEqual([]);
   });
 
   test("lists them without an hreflang cluster, because each exists in one market only", () => {

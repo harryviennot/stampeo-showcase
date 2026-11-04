@@ -45,7 +45,9 @@ describe("the French route /comparatif/<competitor>", () => {
   const route = comparisonRoute("fr", FIXTURES);
 
   it("prerenders every French page in French, and no US page", async () => {
-    expect(await route.generateStaticParams()).toEqual([{ locale: "fr", competitor: "acme-fidelite" }]);
+    const staticParams = await route.generateStaticParams();
+    expect(staticParams.map((entry) => entry.locale)).toEqual(["fr", "fr", "fr"]);
+    expect(staticParams.map((entry) => entry.competitor).sort()).toEqual(["acme-fidelite", "acme-fidelite-brouillon", "bravo-carte"]);
   });
 
   it("renders a French page", async () => {
