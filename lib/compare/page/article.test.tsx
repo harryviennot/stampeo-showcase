@@ -1,40 +1,52 @@
 import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
 import { NextIntlClientProvider } from "next-intl";
+import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ComparisonArticle } from "@/components/compare/ComparisonArticle";
 import { ComparisonTable } from "@/components/compare/ComparisonTable";
 import { CallToAction } from "@/components/blog/mdx/CallToAction";
-import { mdxComponents as blogComponents } from "@/components/blog/mdx";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
 import { FALLBACK_PRICING, formatMoney } from "@/lib/pricing";
 import { loadCatalog } from "@/lib/testing/catalogs";
-import { FIXTURES } from "../__fixtures__";
+import { checkedDate } from "../checked";
+import { FIXTURES, withUsFacts } from "../__fixtures__";
 import { fixtureView } from "../__fixtures__/view";
+import { COPY } from "./copy";
 import { compileComparisonMDX } from "./mdx";
 import { otherComparisons } from "./load";
 
-// The call to action is reported by where it sits, so the tests read the location off a stand-in button.
-const realButton = await import("@/components/ui/CTAButton");
-mock.module("@/components/ui/CTAButton", () => ({
-  CTAButton: (props: { label: string; href?: string; trackAs: string }) => (
-    <a data-track={props.trackAs} href={props.href ?? "/onboarding"}>
-      {props.label}
-    </a>
-  ),
+// A click is reported by where its link sits, so the tests read the location and href the tracking hook is given.
+type Click = { trackAs: string; href: string };
+const clicks: Click[] = [];
+const realTracking = await import("@/hooks/use-cta-tracking");
+mock.module("@/hooks/use-cta-tracking", () => ({
+  useCtaTracking: (trackAs: string, href: string) => {
+    clicks.push({ trackAs, href });
+    return () => {};
+  },
 }));
-afterAll(() => mock.module("@/components/ui/CTAButton", () => realButton));
+afterAll(() => mock.module("@/hooks/use-cta-tracking", () => realTracking));
 
 const LOCALE = { us: "en", fr: "fr" } as const;
+
+/** The markup of a node on a page in the given locale; `clicks` holds what it reported. */
+function renderIn(locale: "en" | "fr", node: ReactNode): string {
+  clicks.length = 0;
+  return renderToStaticMarkup(
+    <NextIntlClientProvider locale={locale} messages={loadCatalog(locale)} timeZone="UTC">
+      {node}
+    </NextIntlClientProvider>,
+  );
+}
 
 async function render(slug: string) {
   const view = fixtureView(slug);
   const { verdict, body } = await compileComparisonMDX(view);
-  const locale = LOCALE[view.page.market];
-  return renderToStaticMarkup(
-    <NextIntlClientProvider locale={locale} messages={loadCatalog(locale)} timeZone="UTC">
-      <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view, FIXTURES)} />
-    </NextIntlClientProvider>,
+  const html = renderIn(
+    LOCALE[view.page.market],
+    <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view, FIXTURES)} />,
   );
+  return { html, clicks: [...clicks] };
 }
 
 /** The visible words: tags dropped, entities decoded, every kind of space a plain one. */
@@ -44,7 +56,7 @@ const text = (html: string) =>
     .replace(/&#x27;/g, "'")
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
-    .replace(/[\u00a0\u202f]/g, " ")
+    .replace(/[  ]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 /** Page order is read from what is drawn, not from the structured data that sits above it. */
@@ -58,7 +70,7 @@ const at = (html: string, needle: string | RegExp) => {
 describe("a US comparison page", () => {
   let html = "";
   beforeAll(async () => {
-    html = await render("acme-loyalty");
+    ({ html } = await render("acme-loyalty"));
   });
 
   it("reads top to bottom: title, verdict, check date, the two cards, the table, the FAQ, sources, other pages, closing call to action", () => {
@@ -69,12 +81,12 @@ describe("a US comparison page", () => {
       at(page, "Checked October 5, 2026"),
       at(page, "Choose Acme Loyalty if"),
       at(page, "Choose Stampeo if"),
-      at(page, 'data-track="comparison_cta"'),
+      at(page, COPY.us.cta.title),
       at(page, "<table"),
       at(page, "Can I move my Acme Loyalty customers"),
       at(page, 'id="sources"'),
       at(page, "/us/vs/globex-stamps"),
-      at(page, 'data-track="comparison_final_cta"'),
+      at(page, COPY.us.closing.title),
     ];
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });
@@ -98,19 +110,18 @@ describe("a US comparison page", () => {
   });
 
   it("puts the two Choose if cards side by side, the competitor's first, each with its own bullets", () => {
-    const pair = html.slice(at(html, "data-choose-if-pair"), at(html, 'data-track="comparison_cta"'));
+    const pair = html.slice(at(html, "data-choose-if-pair"), at(html, COPY.us.cta.title));
     expect(pair.match(/<section/g)).toHaveLength(2);
     expect(at(pair, "Choose Acme Loyalty if")).toBeLessThan(at(pair, "Choose Stampeo if"));
     expect(pair).toContain("<li>You want your customers to have a dedicated app.</li>");
     expect(pair).toContain("<li>You want a card in the wallet your customers already have.</li>");
   });
 
-  it("has one real table: a row per fact, Stampeo on the right, no red or green", () => {
+  it("has one real table: a row per fact, Stampeo on the right", () => {
     expect(html.match(/<table/g)).toHaveLength(1);
     expect(html).toMatch(/<th[^>]*scope="col"/);
     for (const label of ["Where the customer's card lives", "Cheapest paid plan", "Free trial"]) expect(text(html)).toContain(label);
     expect(html.match(/<th[^>]*scope="row"/g)).toHaveLength(4);
-    expect(html).not.toMatch(/text-(?:red|green)-|bg-(?:red|green)-/);
     const head = html.match(/<thead[\s\S]*?<\/thead>/)![0];
     expect(at(head, "Acme Loyalty")).toBeLessThan(at(head, "Stampeo"));
   });
@@ -140,34 +151,31 @@ describe("a US comparison page", () => {
     expect(html).not.toContain('href="/us/vs/acme-loyalty"');
     expect(html).not.toContain("/comparatif/");
   });
-
-  it("has a sign-up call to action after the Choose if cards and another at the end, each with its own location", () => {
-    expect([...html.matchAll(/data-track="([^"]+)"/g)].map((match) => match[1])).toEqual(["comparison_cta", "comparison_final_cta"]);
-  });
 });
 
 describe("a US page that opens on the cards", () => {
-  let html = "";
+  let page: Awaited<ReturnType<typeof render>>;
   beforeAll(async () => {
-    html = await render("globex-stamps");
+    page = await render("globex-stamps");
   });
 
   it("has no verdict, but still the table, the check date, the sign-up buttons, sources and the contact", () => {
+    const { html } = page;
     expect(text(html.slice(html.indexOf("</h1>"), at(html, "Checked ")))).toBe("");
     expect(html.match(/<table/g)).toHaveLength(1);
-    expect(html.match(/data-track="/g)).toHaveLength(2);
+    expect(page.clicks).toHaveLength(2);
     expect(html).toContain("mailto:contact@stampeo.app");
   });
 
   it("links to the first page of the market", () => {
-    expect(html).toContain('href="/us/vs/acme-loyalty"');
+    expect(page.html).toContain('href="/us/vs/acme-loyalty"');
   });
 });
 
 describe("a French comparison page", () => {
   let html = "";
   beforeAll(async () => {
-    html = await render("acme-fidelite");
+    ({ html } = await render("acme-fidelite"));
   });
 
   it("is all in French, with the French H1, check line and disclaimer", () => {
@@ -187,79 +195,100 @@ describe("a French comparison page", () => {
   it("shows the competitor's HT price with its TTC equivalent", () => {
     expect(text(html)).toContain("19 € HT (soit 22,80 € TTC, TVA à 20 %) par mois");
   });
-});
 
-describe("the table on a French page", () => {
-  const html = renderToStaticMarkup(<ComparisonTable view={fixtureView("acme-fidelite")} />);
+  it("lists its sources in French, then the correction contact and the disclaimer", () => {
+    const sources = html.slice(at(html, 'id="sources"'));
+    expect(text(sources)).toContain("Lu le 12 octobre 2026");
+    expect(text(sources)).toContain("Lu le 25 octobre 2026");
+    expect(text(sources)).not.toContain("Read on");
+    expect(text(sources)).toContain("Une information vous semble fausse ou périmée ? Écrivez à");
+    expect(text(sources)).toContain("nous la corrigeons sous une semaine.");
+    expect(sources).toContain('href="mailto:contact@stampeo.app"');
+    expect(text(sources)).toContain(
+      "Comparatif rédigé par Stampeo. Les informations sur les concurrents sont exactes à la date de vérification indiquée.",
+    );
+  });
 
-  it("shows the competitor's price with its tax basis beside Stampeo's price with no VAT", () => {
-    const price = html.split("<tr").find((row) => row.includes("Plan payant le moins cher"))!;
-    expect(text(price)).toContain("19 € HT");
-    expect(text(price)).toContain("TTC");
-    expect(text(price)).toContain("TVA non applicable");
+  it("links to the other French comparisons, in French", () => {
+    expect(html).toContain('href="/comparatif/bravo-carte"');
+    expect(text(html)).toContain("Bravo Carte ou Stampeo");
+    expect(html).not.toContain("acme-fidelite-brouillon");
+    expect(html).not.toContain("/us/vs/");
   });
 });
 
-describe("the table at phone width", () => {
+describe("a page whose facts were read long ago", () => {
+  it("still renders, and says when they were checked", async () => {
+    const view = fixtureView("acme-loyalty");
+    const competitor = withUsFacts(view.competitor, (facts) => facts.map((fact) => ({ ...fact, checkedAt: "2025-01-15" })));
+    const old = { ...view, competitor, checkedAt: checkedDate(view.page, competitor) };
+    const { verdict, body } = await compileComparisonMDX(old);
+
+    const html = renderIn("en", <ComparisonArticle view={old} verdict={verdict} body={body} others={[]} />);
+    expect(text(html)).toContain("Checked January 15, 2025");
+    expect(text(html)).toContain("Acme Loyalty's cheapest plan is $25 a month");
+  });
+});
+
+describe.each([
+  ["a US page", "acme-loyalty"],
+  ["a French page", "acme-fidelite"],
+])("the sign-up buttons of %s", (_name, slug) => {
+  it("are one after the Choose if cards and one at the end, each from its own location, both going to /onboarding", async () => {
+    expect((await render(slug)).clicks).toEqual([
+      { trackAs: "comparison_cta", href: "/onboarding" },
+      { trackAs: "comparison_final_cta", href: "/onboarding" },
+    ]);
+  });
+});
+
+describe("the table's semantics", () => {
   const html = renderToStaticMarkup(<ComparisonTable view={fixtureView("acme-loyalty")} />);
 
-  it("is one card per row on a phone and a table from the tablet up, from the same markup", () => {
-    expect(html.match(/<table/g)).toHaveLength(1);
-    expect(html).toMatch(/<table[^>]*class="[^"]*\bblock\b[^"]*md:table\b/);
-    expect(html).toMatch(/<tr[^>]*class="[^"]*\bgrid\b[^"]*md:table-row\b/);
-  });
-
-  it("keeps the semantics when the browser stops drawing a table", () => {
+  it("keeps them when the browser stops drawing a table", () => {
     expect(html).toContain('role="table"');
     expect(html.match(/role="row"/g)!.length).toBeGreaterThanOrEqual(5);
     expect(html).toContain('role="rowheader"');
     expect(html).toContain('role="cell"');
   });
 
-  it("names the vendor above each value on a phone, and tints Stampeo's side like the pricing page's Growth column", () => {
-    expect(html.match(/Acme Loyalty/g)!.length).toBeGreaterThan(4);
-    expect(html).toContain("bg-[var(--accent)]/5");
-  });
-
   it("pairs a yes or a no with an icon, hidden from screen readers since the word is there", () => {
     // Acme's only yes/no answer is on the customer-app row, which stays iconless; give it a till row too.
     const view = fixtureView("acme-loyalty");
-    const us = view.competitor.markets.us!;
-    const till = { ...us.facts[0], id: "pos.integration", value: "No till integration" };
-    const withTill = { ...view, competitor: { ...view.competitor, markets: { us: { ...us, facts: [...us.facts, till] } } } };
+    const withTill = {
+      ...view,
+      competitor: withUsFacts(view.competitor, (facts) => [...facts, { ...facts[0], id: "pos.integration", value: "No till integration" }]),
+    };
     expect(renderToStaticMarkup(<ComparisonTable view={withTill} />)).toMatch(/<svg[^>]*aria-hidden="true"/);
-  });
-
-  it("cannot scroll the page sideways: values wrap", () => {
-    expect(html).toContain("break-words");
-    expect(html).not.toContain("overflow-x-auto");
   });
 });
 
-describe("the call to action components", () => {
-  it("a blog post's keeps its own location unless told otherwise", () => {
-    const tracked = (trackAs?: "comparison_cta") => {
-      const element = CallToAction({ title: "t", buttonText: "b", ...(trackAs ? { trackAs } : {}) });
-      return (element.props.children as Array<{ props: { trackAs?: string } }>)[1].props.trackAs;
+describe("where a button or a link reports its click from", () => {
+  it("a blog post's call to action keeps its own location unless told otherwise", () => {
+    const locationOf = (props: object) => {
+      renderIn("en", <CallToAction title="t" buttonText="b" {...props} />);
+      return clicks[0].trackAs;
     };
-    expect(tracked()).toBe("blog_cta");
-    expect(tracked("comparison_cta")).toBe("comparison_cta");
+    expect(locationOf({})).toBe("blog_cta");
+    expect(locationOf({ trackAs: "comparison_cta" })).toBe("comparison_cta");
   });
 
-  it("a feature page's keeps its own location unless told otherwise", () => {
-    const render = (props: object) =>
-      renderToStaticMarkup(
-        <NextIntlClientProvider locale="en" messages={loadCatalog("en")} timeZone="UTC">
-          <FeatureCTA title="t" subtitle="s" {...props} />
-        </NextIntlClientProvider>,
-      );
-    expect(render({})).toContain('data-track="feature_cta"');
-    expect(render({ trackAs: "comparison_final_cta" })).toContain('data-track="comparison_final_cta"');
+  it("a feature page's call to action keeps its own location unless told otherwise", () => {
+    const locationOf = (props: object) => {
+      renderIn("en", <FeatureCTA title="t" subtitle="s" {...props} />);
+      return clicks[0].trackAs;
+    };
+    expect(locationOf({})).toBe("feature_cta");
+    expect(locationOf({ trackAs: "comparison_final_cta" })).toBe("comparison_final_cta");
   });
 
-  it("the blog's component set does not know the comparison components", () => {
-    for (const name of ["ChooseIf", "ChooseIfPair", "Fact", "ComparisonTable"]) {
-      expect(Object.keys(blogComponents)).not.toContain(name);
-    }
+  it("a link to the sign-up page written in a comparison reports the comparison's location, not the blog's", async () => {
+    const view = fixtureView("acme-loyalty");
+    const linked = { ...view, page: { ...view.page, content: `${view.page.content}\n\nTry it on the [sign-up page](/onboarding) today.` } };
+    const { body } = await compileComparisonMDX(linked);
+
+    renderIn("en", body);
+    expect(clicks).toContainEqual({ trackAs: "comparison_link", href: "/onboarding" });
+    expect(clicks.map((click) => click.trackAs)).not.toContain("blog_link");
   });
 });

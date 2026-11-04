@@ -39,6 +39,7 @@ export const SIGNUP_CTAS: ReadonlySet<string> = new Set([
   "pricing_final_cta",
   "comparison_cta",
   "comparison_final_cta",
+  "comparison_link",
 ]);
 
 /** CTAs that mean "talk to a human". A different funnel, tracked separately. */

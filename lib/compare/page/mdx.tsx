@@ -1,8 +1,9 @@
 import type { MDXComponents } from "mdx/types";
 import { compileMDX } from "next-mdx-remote/rsc";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { CallToAction } from "@/components/blog/mdx/CallToAction";
 import { mdxComponents as blogComponents } from "@/components/blog/mdx";
+import { BlogLink } from "@/components/blog/mdx/BlogLink";
 import { ChooseIf, ChooseIfPair } from "@/components/compare/ChooseIf";
 import { ComparisonTable } from "@/components/compare/ComparisonTable";
 import { Fact } from "@/components/compare/Fact";
@@ -23,6 +24,7 @@ function comparisonComponents(view: ViewForComponents): MDXComponents {
 
   return {
     ...blogComponents,
+    a: (props: ComponentProps<"a">) => <BlogLink {...props} trackAs="comparison_link" />,
     Fact: ({ id }: { id: string }) => <Fact id={id} view={view} />,
     ChooseIf: ({ side, title, children }: { side: "competitor" | "stampeo"; title?: string; children?: ReactNode }) => (
       <ChooseIf side={side} title={title} competitor={view.competitor.name} market={market}>
