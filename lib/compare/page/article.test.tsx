@@ -146,15 +146,15 @@ describe("a US comparison page", () => {
   });
 });
 
-describe("a US page that opens on the cards and has no table", () => {
+describe("a US page that opens on the cards", () => {
   let html = "";
   beforeAll(async () => {
     html = await render("globex-stamps");
   });
 
-  it("has no verdict and no table, but still the check date, the sign-up buttons, sources and the contact", () => {
-    expect(html).not.toContain("<table");
-    expect(at(html, "<h1")).toBeLessThan(at(html, "Checked "));
+  it("has no verdict, but still the table, the check date, the sign-up buttons, sources and the contact", () => {
+    expect(text(html.slice(html.indexOf("</h1>"), at(html, "Checked ")))).toBe("");
+    expect(html.match(/<table/g)).toHaveLength(1);
     expect(html.match(/data-track="/g)).toHaveLength(2);
     expect(html).toContain("mailto:contact@stampeo.app");
   });

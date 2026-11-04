@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { factIdsIn, findCurrencyAmounts, findMarkdownTables } from "./body-checks";
+import { factIdsIn, findCurrencyAmounts, findMarkdownTables, hasComparisonTable } from "./body-checks";
 
 describe("typed currency amounts", () => {
   it.each([
@@ -79,5 +79,19 @@ describe("fact ids in a body", () => {
   it("flags a <Fact> whose id is not a plain string", () => {
     expect(factIdsIn("Price: <Fact id={id} />").map((hit) => hit.id)).toEqual([null]);
     expect(factIdsIn("Price: <Fact />").map((hit) => hit.id)).toEqual([null]);
+  });
+});
+
+describe("the comparison table in a body", () => {
+  it.each(["<ComparisonTable />", "<ComparisonTable/>", "Intro.\n\n<ComparisonTable />\n\nOutro."])("is found in: %s", (body) => {
+    expect(hasComparisonTable(body)).toBe(true);
+  });
+
+  it.each([
+    ["no table at all", "Just prose."],
+    ["a table inside a code fence", "```mdx\n<ComparisonTable />\n```"],
+    ["another component", "<ComparisonTables />"],
+  ])("is missing with %s", (_name, body) => {
+    expect(hasComparisonTable(body)).toBe(false);
   });
 });

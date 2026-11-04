@@ -3,7 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import yaml from "js-yaml";
 import { marketPath } from "../markets";
-import { factIdsIn, findCurrencyAmounts, findMarkdownTables, hasChooseIf } from "./body-checks";
+import { factIdsIn, findCurrencyAmounts, findMarkdownTables, hasChooseIf, hasComparisonTable } from "./body-checks";
 import { COMPETITOR_FACTS, findCompetitor, marketFacts } from "./facts";
 import { isStampeoFactId } from "./stampeo";
 import type { CompetitorFacts, ComparisonFaq, ComparisonPage, Market } from "./types";
@@ -117,6 +117,8 @@ function readPage(
       problems.push(`${line}: "${use.id}" is not a ${competitor.id} fact for the ${market} market`);
     }
   }
+  // The checked date and the sources count every standard row, so the page must show them.
+  if (!hasComparisonTable(content)) problems.push(`${where}: needs a <ComparisonTable /> (it shows the standard rows the sources list cites)`);
   for (const side of ["competitor", "stampeo"] as const) {
     if (!hasChooseIf(content, side)) problems.push(`${where}: needs a <ChooseIf side="${side}"> section`);
   }

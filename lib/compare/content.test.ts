@@ -87,6 +87,8 @@ const BODY = [
   "",
   "</ChooseIf>",
   "",
+  "<ComparisonTable />",
+  "",
 ].join("\n");
 
 const FRONT = {
@@ -127,6 +129,7 @@ describe("comparison page validation", () => {
     ["a typed price in an FAQ answer", source({ faqs: [{ question: "Q?", answer: "It costs $25." }] }), /acme-loyalty\.mdx:\d+.*\$25/s],
     ["an unknown Stampeo fact", source({}, `${BODY}<Fact id="stampeo.price.enterprise" />\n`), /stampeo\.price\.enterprise/],
     ["a Fact with a computed id", source({}, `${BODY}<Fact id={id} />\n`), /Fact.*id/],
+    ["no comparison table", source({}, BODY.replace("<ComparisonTable />", "")), /acme-loyalty\.mdx.*<ComparisonTable \/>/s],
     ["no competitor side in Choose if", source({}, BODY.replace('side="competitor"', 'side="stampeo"')), /ChooseIf side="competitor"/],
     ["no Stampeo side in Choose if", source({}, BODY.replace(/side="stampeo"/, 'side="competitor"')), /ChooseIf side="stampeo"/],
   ])("rejects %s, naming the file", (_name, file, message) => {

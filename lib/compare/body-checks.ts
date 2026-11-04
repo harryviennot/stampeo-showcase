@@ -83,3 +83,8 @@ export function factIdsIn(text: string): FactUse[] {
 export function hasChooseIf(text: string, side: "competitor" | "stampeo"): boolean {
   return new RegExp(String.raw`<ChooseIf\s+side=(["'])${side}\1\s*>`).test(withoutCodeFences(text));
 }
+
+/** Does the text place `<ComparisonTable />`? */
+export function hasComparisonTable(text: string): boolean {
+  return /<ComparisonTable\s*\/>/.test(withoutCodeFences(text));
+}
