@@ -1,6 +1,8 @@
 import { describe, expect, it } from "bun:test";
 import { buildLlmsTxt } from "./llms-txt";
 import { getAllPosts } from "./blog";
+import { FIXTURES } from "./compare/__fixtures__";
+import { allComparisonPages } from "./compare/content";
 import { BLOG_LOCALES } from "./blog/locales";
 import { FEATURE_SLUGS, getLocalizedSlug } from "./feature-slugs";
 import { LOYALTY_SLUGS } from "./loyalty-routes";
@@ -180,5 +182,28 @@ describe("llms.txt facts", () => {
     const figures = lines.filter((line) => /\d\s?%/.test(line) && !/yearly/i.test(line));
     expect(figures.length).toBeGreaterThan(0);
     for (const line of figures) expect(line).toContain(sourceLine("en"));
+  });
+});
+
+describe("llms.txt comparisons", () => {
+  // Every fixture page, drafts included: the section must drop the drafts itself.
+  const body = buildLlmsTxt(undefined, allComparisonPages(FIXTURES));
+
+  it("lists each published comparison with its title and URL", () => {
+    expect(body).toContain("### Comparisons");
+    expect(body).toContain("- [Acme Loyalty vs Stampeo: prices, pros and cons](https://stampeo.app/us/vs/acme-loyalty)");
+    expect(body).toContain(
+      "- [Acme Fidélité vs Stampeo : tarifs, avantages et limites](https://stampeo.app/comparatif/acme-fidelite)",
+    );
+  });
+
+  it("never lists a draft", () => {
+    expect(body).not.toContain("acme-loyalty-draft");
+    expect(body).not.toContain("Acme Loyalty alternative (draft)");
+  });
+
+  it("has no Comparisons section while there is nothing published", () => {
+    expect(buildLlmsTxt(undefined, [])).not.toContain("Comparisons");
+    expect(buildLlmsTxt()).not.toContain("### Comparisons");
   });
 });
