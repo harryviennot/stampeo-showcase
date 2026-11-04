@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { ACME_FIDELITE, ACME_LOYALTY, FIXTURE_FACTS } from "../__fixtures__";
 import type { CompetitorFacts, SourcedFact } from "../types";
 import { COMPETITOR_FACTS } from "./index";
-import { validateCompetitorFacts } from "./validate";
+import { todayIso, validateCompetitorFacts } from "./validate";
 
 const TODAY = "2026-11-04";
 
@@ -14,6 +14,18 @@ function withFact(id: string, change: Partial<SourcedFact>): CompetitorFacts {
     markets: { us: { ...us, facts: us.facts.map((fact) => (fact.id === id ? { ...fact, ...change } : fact)) } },
   };
 }
+
+describe("today, for the check dates", () => {
+  // A fact read at 00:30 in Paris is dated that day, even though UTC is still on the day before.
+  it.each([
+    ["00:30 in winter (UTC+1)", "2026-11-03T23:30:00Z", "2026-11-04"],
+    ["00:30 in summer (UTC+2)", "2026-06-30T22:30:00Z", "2026-07-01"],
+    ["23:59 in winter", "2026-11-04T22:59:00Z", "2026-11-04"],
+    ["noon", "2026-11-04T11:00:00Z", "2026-11-04"],
+  ])("is the Paris calendar day at %s", (_name, instant, day) => {
+    expect(todayIso(new Date(instant))).toBe(day);
+  });
+});
 
 describe("competitor facts", () => {
   it("accept sourced facts read today or earlier, in either market", () => {

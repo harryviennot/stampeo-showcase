@@ -1,8 +1,15 @@
 import type { CompetitorFacts, SourcedFact } from "../types";
 
-/** Today as `YYYY-MM-DD` in UTC. */
+/** Today as `YYYY-MM-DD`, the calendar day in Paris where the facts are checked. */
 export function todayIso(now: Date = new Date()): string {
-  return now.toISOString().slice(0, 10);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const part = (type: string) => parts.find((candidate) => candidate.type === type)!.value;
+  return `${part("year")}-${part("month")}-${part("day")}`;
 }
 
 /** Is this `YYYY-MM-DD` and a real calendar day? */
