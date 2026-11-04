@@ -25,7 +25,9 @@ export type CTALocation =
   | "pricing_contact"
   | "faq_contact"
   | "footer_contact"
-  | "blog_contact";
+  | "blog_contact"
+  | "comparison_cta"
+  | "comparison_final_cta";
 
 type BaseProps = {
   locale: string;

@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { CTAButton } from "@/components/ui/CTAButton";
+import type { CTALocation } from "@/lib/analytics";
 
 interface FeatureCTAProps {
   title: string;
@@ -9,6 +10,8 @@ interface FeatureCTAProps {
   buttonText?: string;
   urgencyText?: string;
   className?: string;
+  /** Where the button sits, as the click is reported. */
+  trackAs?: CTALocation;
 }
 
 export function FeatureCTA({
@@ -17,6 +20,7 @@ export function FeatureCTA({
   buttonText,
   urgencyText,
   className,
+  trackAs = "feature_cta",
 }: FeatureCTAProps) {
   const tb = useTranslations("common.buttons");
   const label = buttonText ?? tb("startFree");
@@ -89,7 +93,7 @@ export function FeatureCTA({
                 <CTAButton
                   label={label}
                   className="feature-cta-button"
-                  trackAs="feature_cta"
+                  trackAs={trackAs}
                 />
 
                 {urgencyText && (
