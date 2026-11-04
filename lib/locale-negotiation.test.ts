@@ -271,3 +271,14 @@ describe("resolveAcquisitionLocale", () => {
     }
   });
 });
+
+describe("the shop routes", () => {
+  // Every page under app/[locale]/[slug] would otherwise look a reserved section up as a shop.
+  const shopPages = ["app/[locale]/[slug]/page.tsx", "app/[locale]/[slug]/l/[locationSlug]/page.tsx"];
+
+  test.each(shopPages)("%s turns a reserved top segment away before any shop lookup", async (file) => {
+    const source = await Bun.file(file).text();
+    expect(source).toContain("isReservedTopSegment(slug)) notFound()");
+    expect(source).toContain("isReservedTopSegment(slug)) return { robots: NOINDEX }");
+  });
+});
