@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import yaml from "js-yaml";
+import { matterOptions } from "../frontmatter";
 import { marketPath } from "../markets";
 import {
   factIdsIn,
@@ -39,18 +39,6 @@ const FRONTMATTER_KEYS = ["competitor", "title", "description", "faqs", "draft"]
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 // The paths a US page may link to: its own market, and the sign-up page.
 const STAYS_IN_US = /^\/(?:us|onboarding)(?:[/?#]|$)/;
-
-// gray-matter ships a js-yaml 3 engine that calls the removed `yaml.safeLoad`.
-const matterOptions = {
-  engines: {
-    yaml: {
-      parse: (input: string) => yaml.load(input) as object,
-      stringify: () => {
-        throw new Error("YAML stringify is not supported for comparison frontmatter");
-      },
-    },
-  },
-};
 
 const isText = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
 

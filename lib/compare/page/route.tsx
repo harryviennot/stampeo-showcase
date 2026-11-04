@@ -5,13 +5,11 @@ import { ComparisonPage } from "@/components/compare/ComparisonPage";
 import { resolvePageOpenGraph } from "@/lib/og/metadata";
 import type { LoaderOptions } from "../content";
 import type { Market } from "../types";
+import { MARKET_LOCALE } from "./format";
 import { comparisonSlugs, loadComparison } from "./load";
 import { comparisonMetadata, comparisonOpenGraphPage } from "./metadata";
 
 type Props = { params: Promise<{ locale: string; competitor: string }> };
-
-/** The language each market's pages are written in: a page opened in any other is a 404. */
-const LOCALE: Record<Market, string> = { us: "en", fr: "fr" };
 
 /**
  * The route module of one market's comparisons (`/us/vs/<slug>`, `/comparatif/<slug>`):
@@ -20,7 +18,7 @@ const LOCALE: Record<Market, string> = { us: "en", fr: "fr" };
 export function comparisonRoute(market: Market, options: LoaderOptions = {}) {
   return {
     async generateStaticParams() {
-      return comparisonSlugs(market, options).map((competitor) => ({ locale: LOCALE[market], competitor }));
+      return comparisonSlugs(market, options).map((competitor) => ({ locale: MARKET_LOCALE[market], competitor }));
     },
 
     async generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
