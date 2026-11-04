@@ -124,8 +124,9 @@ export function buildSitemap(comparisons: readonly ComparisonPage[] = comparison
   }
 
   // A comparison page exists in one market only, so it has no hreflang cluster.
+  // A US page is listed only while the US market is indexable, as its robots tag follows the same flag.
   for (const page of comparisons) {
-    if (page.draft) continue;
+    if (page.draft || (page.market === "us" && !MARKETS.us.indexable)) continue;
     entries.push({ url: absolute(comparisonPath(page)), changeFrequency: "monthly", priority: 0.7 });
   }
 

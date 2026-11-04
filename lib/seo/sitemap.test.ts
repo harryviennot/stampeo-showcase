@@ -152,6 +152,18 @@ describe("comparison pages", () => {
     }
   });
 
+  test("leaves the US comparisons out while the US market is noindex, and keeps the French ones", () => {
+    const wasIndexable = MARKETS.us.indexable;
+    MARKETS.us.indexable = false;
+    try {
+      const held = buildSitemap(allComparisonPages(FIXTURES)).map((entry) => entry.url);
+      expect(held.filter((url) => url.includes("/us/vs/"))).toEqual([]);
+      expect(held).toContain(`${SITEMAP_BASE_URL}/comparatif/acme-fidelite`);
+    } finally {
+      MARKETS.us.indexable = wasIndexable;
+    }
+  });
+
   test("adds nothing to the sitemap while there are no published comparisons", () => {
     const none = buildSitemap([]).map((entry) => entry.url);
     expect(none.filter((url) => /\/(?:us\/vs|comparatif)(?:\/|$)/.test(url))).toEqual([]);
