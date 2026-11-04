@@ -43,10 +43,17 @@ function factProblems(fact: SourcedFact, today: string): string[] {
   return problems;
 }
 
+// A French price states its tax basis next to the amount; a value with no amount ("Sur devis…", "Non communiqué") has none to state.
+function frenchPriceProblem(fact: SourcedFact): string | null {
+  const quotesAmount = /\d/.test(fact.value) && !/^(?:sur devis|non communiqué)/i.test(fact.value);
+  return quotesAmount && !/\b(?:HT|TTC)\b/.test(fact.value) ? "price must state its tax basis, HT or TTC" : null;
+}
+
 /**
  * Everything wrong with the competitor facts, one line per problem naming the
  * competitor, market and fact. Empty means every fact is sourced, quoted and
- * dated on or before `today`, and no id repeats within a market.
+ * dated on or before `today`, no id repeats within a market, and every French
+ * price states its tax basis.
  */
 export function validateCompetitorFacts(
   competitors: readonly CompetitorFacts[],
@@ -74,6 +81,8 @@ export function validateCompetitorFacts(
         if (ids.has(fact.id)) problems.push(`${where}/${fact.id}: appears more than once`);
         ids.add(fact.id);
         for (const problem of factProblems(fact, today)) problems.push(`${where}/${fact.id}: ${problem}`);
+        const basis = market === "fr" && fact.id.startsWith("price.") ? frenchPriceProblem(fact) : null;
+        if (basis) problems.push(`${where}/${fact.id}: ${basis}`);
       }
     }
   }

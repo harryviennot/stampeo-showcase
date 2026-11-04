@@ -1,19 +1,20 @@
 import { describe, expect, it } from "bun:test";
-import { ACME_FIDELITE, ACME_LOYALTY, FIXTURE_FACTS } from "../__fixtures__";
+import { ACME_FIDELITE, ACME_LOYALTY, BRAVO_CARTE, FIXTURE_FACTS, withUsFacts } from "../__fixtures__";
 import type { CompetitorFacts, SourcedFact } from "../types";
 import { COMPETITOR_FACTS } from "./index";
 import { todayIso, validateCompetitorFacts } from "./validate";
 
 const TODAY = "2026-11-04";
 
-/** The fixture competitor with one of its US facts changed. */
-function withFact(id: string, change: Partial<SourcedFact>): CompetitorFacts {
-  const us = ACME_LOYALTY.markets.us!;
-  return {
-    ...ACME_LOYALTY,
-    markets: { us: { ...us, facts: us.facts.map((fact) => (fact.id === id ? { ...fact, ...change } : fact)) } },
-  };
-}
+/** The fixture competitor with its US price fact changed. */
+const withPrice = (change: Partial<SourcedFact>) =>
+  withUsFacts(ACME_LOYALTY, (facts) => facts.map((fact) => (fact.id === "price.entry" ? { ...fact, ...change } : fact)));
+
+/** The fixture French competitor with its price fact's value changed. */
+const withFrenchPrice = (value: string): CompetitorFacts => {
+  const fr = ACME_FIDELITE.markets.fr!;
+  return { ...ACME_FIDELITE, markets: { fr: { ...fr, facts: fr.facts.map((fact) => (fact.id === "price.entry" ? { ...fact, value } : fact)) } } };
+};
 
 describe("today, for the check dates", () => {
   // A fact read at 00:30 in Paris is dated that day, even though UTC is still on the day before.
@@ -30,33 +31,57 @@ describe("today, for the check dates", () => {
 describe("competitor facts", () => {
   it("accept sourced facts read today or earlier, in either market", () => {
     expect(validateCompetitorFacts(FIXTURE_FACTS, TODAY)).toEqual([]);
-    expect(validateCompetitorFacts([withFact("trial", { checkedAt: TODAY })], TODAY)).toEqual([]);
+    expect(validateCompetitorFacts([withPrice({ checkedAt: TODAY })], TODAY)).toEqual([]);
+  });
+
+  it("accept a fact read long ago: staleness is a refresh task, not a failure", () => {
+    expect(validateCompetitorFacts([withPrice({ checkedAt: "2025-01-15" })], TODAY)).toEqual([]);
+  });
+
+  // Each problem names the competitor, market and fact it is about.
+  const US_PRICE = "acme-loyalty/us/price\\.entry";
+  it.each([
+    ["a source that is not https", [withPrice({ sourceUrl: "http://acme-loyalty.example/pricing" })], `${US_PRICE}.*sourceUrl`],
+    ["no source URL", [withPrice({ sourceUrl: "" })], `${US_PRICE}.*sourceUrl`],
+    ["a source that is not a URL", [withPrice({ sourceUrl: "acme-loyalty.example/pricing" })], `${US_PRICE}.*sourceUrl`],
+    ["no quote", [withPrice({ quote: "  " })], `${US_PRICE}.*quote`],
+    ["no source title", [withPrice({ sourceTitle: "" })], `${US_PRICE}.*sourceTitle`],
+    ["no checked date", [withPrice({ checkedAt: "" })], `${US_PRICE}.*checkedAt`],
+    ["a date written day first", [withPrice({ checkedAt: "01/11/2026" })], `${US_PRICE}.*checkedAt`],
+    ["a date that does not exist", [withPrice({ checkedAt: "2026-02-30" })], `${US_PRICE}.*checkedAt`],
+    ["a date after today", [withPrice({ checkedAt: "2026-11-05" })], `${US_PRICE}.*after today`],
+    ["no value", [withPrice({ value: "" })], `${US_PRICE}.*value`],
+    ["an empty fact id", [withPrice({ id: "" })], "acme-loyalty/us/.*id is empty"],
+    ["a website that is not https", [{ ...ACME_LOYALTY, website: "http://acme-loyalty.example" }], "acme-loyalty.*website"],
+    ["no market", [{ ...ACME_LOYALTY, markets: {} }], "acme-loyalty.*no market"],
+    ["a market with no facts", [withUsFacts(ACME_LOYALTY, () => [])], "acme-loyalty/us.*no facts"],
+    [
+      "a pricing page that is not https",
+      [{ ...ACME_LOYALTY, markets: { us: { ...ACME_LOYALTY.markets.us!, pricingUrl: "http://acme-loyalty.example/p" } } }],
+      "acme-loyalty/us.*pricingUrl",
+    ],
+    ["a competitor listed twice", [ACME_LOYALTY, ACME_LOYALTY], "acme-loyalty.*twice"],
+    ["a French price with no tax basis", [withFrenchPrice("19 € par mois")], "acme-fidelite/fr/price\\.entry.*HT or TTC"],
+  ])("are rejected with %s", (_name, registry, message) => {
+    expect(validateCompetitorFacts(registry, TODAY).join("\n")).toMatch(new RegExp(message));
   });
 
   it.each([
-    ["a source that is not https", { sourceUrl: "http://acme-loyalty.example/pricing" }, /price\.entry.*sourceUrl/],
-    ["no source URL", { sourceUrl: "" }, /price\.entry.*sourceUrl/],
-    ["a source that is not a URL", { sourceUrl: "acme-loyalty.example/pricing" }, /price\.entry.*sourceUrl/],
-    ["no quote", { quote: "  " }, /price\.entry.*quote/],
-    ["no source title", { sourceTitle: "" }, /price\.entry.*sourceTitle/],
-    ["no checked date", { checkedAt: "" }, /price\.entry.*checkedAt/],
-    ["a date written day first", { checkedAt: "01/11/2026" }, /price\.entry.*checkedAt/],
-    ["a date that does not exist", { checkedAt: "2026-02-30" }, /price\.entry.*checkedAt/],
-    ["a date after today", { checkedAt: "2026-11-05" }, /price\.entry.*after today/],
-    ["no value", { value: "" }, /price\.entry.*value/],
-  ])("are rejected with %s", (_name, change, message) => {
-    const problems = validateCompetitorFacts([withFact("price.entry", change)], TODAY);
-    expect(problems.length).toBeGreaterThan(0);
-    expect(problems.join("\n")).toMatch(message);
-    expect(problems.join("\n")).toContain("acme-loyalty");
+    ["an HT price", "19 € HT par mois"],
+    ["a TTC price", "29 € TTC par mois"],
+    ["a quote-only price", "Sur devis, après une démo : aucun prix publié"],
+    ["a price that is not published", "Non communiqué"],
+    ["a fee that is none", "aucuns frais d'installation"],
+  ])("accept a French price that is %s", (_name, value) => {
+    expect(validateCompetitorFacts([withFrenchPrice(value)], TODAY)).toEqual([]);
+  });
+
+  it("do not ask a US price for a tax basis", () => {
+    expect(validateCompetitorFacts([withPrice({ value: "$25 a month" })], TODAY)).toEqual([]);
   });
 
   it("are rejected when a fact id repeats within a market, and not across markets", () => {
-    const us = ACME_LOYALTY.markets.us!;
-    const repeated: CompetitorFacts = {
-      ...ACME_LOYALTY,
-      markets: { us: { ...us, facts: [...us.facts, { ...us.facts[0] }] } },
-    };
+    const repeated = withUsFacts(ACME_LOYALTY, (facts) => [...facts, { ...facts[0] }]);
     expect(validateCompetitorFacts([repeated], TODAY).join("\n")).toMatch(/card\.where.*more than once/);
 
     const bothMarkets: CompetitorFacts = {
@@ -66,25 +91,8 @@ describe("competitor facts", () => {
     expect(validateCompetitorFacts([bothMarkets], TODAY)).toEqual([]);
   });
 
-  it("are rejected when a competitor id repeats", () => {
-    expect(validateCompetitorFacts([ACME_LOYALTY, ACME_LOYALTY], TODAY).join("\n")).toMatch(/acme-loyalty.*twice/);
-  });
-
-  it("are rejected when a competitor has no market, or a market has no facts or no https pricing page", () => {
-    const empty = validateCompetitorFacts([{ ...ACME_LOYALTY, markets: {} }], TODAY);
-    expect(empty.join("\n")).toMatch(/no market/);
-
-    const noFacts = validateCompetitorFacts(
-      [{ ...ACME_LOYALTY, markets: { us: { pricingUrl: "https://acme-loyalty.example/pricing", facts: [] } } }],
-      TODAY,
-    );
-    expect(noFacts.join("\n")).toMatch(/no facts/);
-
-    const badPricing = validateCompetitorFacts(
-      [{ ...ACME_LOYALTY, markets: { us: { ...ACME_LOYALTY.markets.us!, pricingUrl: "http://acme-loyalty.example/p" } } }],
-      TODAY,
-    );
-    expect(badPricing.join("\n")).toMatch(/pricingUrl/);
+  it("hold for the French fixture that quotes TTC", () => {
+    expect(validateCompetitorFacts([BRAVO_CARTE], TODAY)).toEqual([]);
   });
 
   it("hold for every competitor registered in the app, so a bad facts file fails the test run", () => {
