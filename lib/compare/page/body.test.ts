@@ -56,6 +56,22 @@ describe("the Choose if cards of a page", () => {
     expect(arranged.indexOf("<CallToAction />")).toBeLessThan(arranged.indexOf("After."));
   });
 
+  it("take a heading written right above them as their title, and then sit back to back", () => {
+    const arranged = arrangeBody(`## Choose Acme if\n\n${COMPETITOR}\n\n## Choose Stampeo if\n\n${STAMPEO}`);
+
+    expect(arranged).not.toMatch(/^##/m);
+    expect(arranged).toContain('<ChooseIf side="competitor" title={"Choose Acme if"}>');
+    expect(arranged).toContain('<ChooseIf side="stampeo" title={"Choose Stampeo if"}>');
+    expect(arranged).toContain("<ChooseIfPair>");
+  });
+
+  it("leave a heading that does not sit right above a card where it is", () => {
+    const arranged = arrangeBody(`## Prices\n\nSome words.\n\n${COMPETITOR}\n\n${STAMPEO}`);
+
+    expect(arranged).toContain("## Prices");
+    expect(arranged).not.toContain("title=");
+  });
+
   it("do not get a second call to action when the writer placed one", () => {
     const arranged = arrangeBody(`${COMPETITOR}\n\n${STAMPEO}\n\n<CallToAction title="Try it" buttonText="Go" />`);
 

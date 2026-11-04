@@ -69,7 +69,7 @@ function readPage(
     problems.push(`${where}: "${slug}" is not a slug (lowercase letters, digits and single hyphens)`);
   }
 
-  const source = fs.readFileSync(file, "utf-8");
+  const source = fs.readFileSync(/*turbopackIgnore: true*/ file, "utf-8");
   let parsed: matter.GrayMatterFile<string>;
   try {
     parsed = matter(source, matterOptions);
@@ -138,16 +138,32 @@ function readPage(
   };
 }
 
+/**
+ * The `.mdx` files of one locale folder, sorted. The default folder is read
+ * with a path the build can see, so `content/compare` is traced into the
+ * server output; a folder passed in (tests) is read outside the build's view.
+ */
+function mdxFiles(root: string | undefined, locale: Locale): string[] {
+  const isMdx = (name: string) => name.endsWith(".mdx");
+
+  if (root === undefined) {
+    const dir = path.join(DEFAULT_ROOT, locale);
+    return fs.existsSync(dir) ? fs.readdirSync(dir).filter(isMdx).sort().map((name) => path.join(dir, name)) : [];
+  }
+  const dir = path.join(root, locale);
+  return fs.existsSync(/*turbopackIgnore: true*/ dir)
+    ? fs.readdirSync(/*turbopackIgnore: true*/ dir).filter(isMdx).sort().map((name) => path.join(dir, name))
+    : [];
+}
+
 /** Every page, drafts included, English files first. Throws with all problems found. */
-export function allComparisonPages({ root = DEFAULT_ROOT, facts = COMPETITOR_FACTS }: LoaderOptions = {}): ComparisonPage[] {
+export function allComparisonPages({ root, facts = COMPETITOR_FACTS }: LoaderOptions = {}): ComparisonPage[] {
   const pages: ComparisonPage[] = [];
   const problems: string[] = [];
 
   for (const locale of LOCALES) {
-    const dir = path.join(root, locale);
-    if (!fs.existsSync(dir)) continue;
-    for (const name of fs.readdirSync(dir).filter((f) => f.endsWith(".mdx")).sort()) {
-      const result = readPage(path.join(dir, name), locale, facts);
+    for (const file of mdxFiles(root, locale)) {
+      const result = readPage(file, locale, facts);
       problems.push(...result.problems);
       if (result.page) pages.push(result.page);
     }

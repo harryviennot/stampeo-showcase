@@ -46,7 +46,7 @@ describe("the sources a page lists", () => {
 
   it("read the French facts of a French page", () => {
     const entries = sourceEntries(usedFacts({ market: "fr", content: "" }, ACME_FIDELITE));
-    expect(entries.map((entry) => entry.domain)).toEqual(["acme-fidelite.example"]);
-    expect(entries).toHaveLength(2);
+    expect(entries.map((entry) => entry.title)).toEqual(["Acme Fidélité, fonctionnement", "Acme Fidélité, tarifs"]);
+    expect(entries.every((entry) => entry.domain === "acme-fidelite.example")).toBe(true);
   });
 });
