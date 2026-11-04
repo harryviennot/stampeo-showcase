@@ -39,6 +39,12 @@ export function cellOf(text: string, market: Market): Cell {
   return { text, tone: "plain" };
 }
 
+// Rows where "none" is the answer a shop wants: a minus icon would read as a gap.
+const PLAIN_ROWS: ReadonlySet<StandardFactId> = new Set(["customer.app_required"]);
+
+const cellFor = (id: StandardFactId, text: string, market: Market): Cell =>
+  PLAIN_ROWS.has(id) ? { text, tone: "plain" } : cellOf(text, market);
+
 const TTC_RATE = 1.2;
 const HT_AMOUNT = /(\d+(?:[.,]\d+)?)\s*(?:€|euros?)\s*HT\b/gi;
 
@@ -77,8 +83,8 @@ export function tableRows({ market, competitor, stampeo }: TableInput): TableRow
         id,
         label: labels[id],
         price: id === "price.entry",
-        competitor: cellOf(competitorText(fact.value, market), market),
-        stampeo: cellOf(stampeo.rows[id], market),
+        competitor: cellFor(id, competitorText(fact.value, market), market),
+        stampeo: cellFor(id, stampeo.rows[id], market),
       },
     ];
   });

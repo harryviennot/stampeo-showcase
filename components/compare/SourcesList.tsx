@@ -42,7 +42,7 @@ export function SourcesList({ view }: { view: Pick<ComparisonView, "page" | "com
         {copy.correction.before}
         <ContactLink
           href={`mailto:${copy.correction.email}`}
-          className="inline-flex min-h-11 items-center font-medium text-[var(--accent)] underline-offset-4 hover:underline"
+          className="py-3 font-medium whitespace-nowrap text-[var(--accent)] underline-offset-4 hover:underline"
         >
           {copy.correction.email}
         </ContactLink>

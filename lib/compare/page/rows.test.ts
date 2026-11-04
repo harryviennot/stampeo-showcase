@@ -32,6 +32,13 @@ describe("the rows of a comparison table", () => {
     expect(rows.filter((row) => row.price).map((row) => row.id)).toEqual(["price.entry"]);
   });
 
+  it("show no yes/no icon on the customer-app row, where 'none' is the answer a shop wants", () => {
+    const app = rows.find((row) => row.id === "customer.app_required")!;
+    expect(US.rows["customer.app_required"]).toMatch(/^None\b/);
+    expect(app.stampeo.tone).toBe("plain");
+    expect(app.competitor.tone).toBe("plain");
+  });
+
   it("are labelled in the page's language", () => {
     const fr = tableRows({ market: "fr", competitor: ACME_FIDELITE, stampeo: FR });
     expect(fr.map((row) => row.label)).toEqual(["Où vit la carte du client", "Plan payant le moins cher"]);

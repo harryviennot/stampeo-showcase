@@ -17,7 +17,7 @@ export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | 
   const rows = tableRows({ market, competitor: view.competitor, stampeo: view.stampeo });
 
   return (
-    <div className="not-prose my-8">
+    <div className="not-prose mt-4 mb-8">
       <table
         role="table"
         className="block w-full text-left md:table md:overflow-hidden md:rounded-3xl md:border md:border-[var(--border)] md:border-separate md:border-spacing-0 md:bg-white md:shadow-sm"
@@ -25,13 +25,13 @@ export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | 
         <caption className="sr-only">{copy.tableCaption(view.competitor.name)}</caption>
         <thead className="hidden md:table-header-group">
           <tr role="row">
-            <th scope="col" role="columnheader" className="w-[34%] p-5 text-left text-sm font-semibold text-[var(--muted-foreground)]">
+            <th scope="col" role="columnheader" className="w-[28%] p-5 text-left text-sm font-semibold text-[var(--muted-foreground)]">
               {copy.criterion}
             </th>
-            <th scope="col" role="columnheader" className="w-[33%] p-5 text-left text-sm font-bold">
+            <th scope="col" role="columnheader" className="w-[36%] p-5 text-left text-sm font-bold">
               {view.competitor.name}
             </th>
-            <th scope="col" role="columnheader" className="w-[33%] bg-[var(--accent)]/5 p-5 text-left text-sm font-bold text-[var(--accent)]">
+            <th scope="col" role="columnheader" className="w-[36%] bg-[var(--accent)]/5 p-5 text-left text-sm font-bold text-[var(--accent)]">
               Stampeo
             </th>
           </tr>
@@ -41,22 +41,25 @@ export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | 
             <tr
               key={row.id}
               role="row"
-              className="grid grid-cols-2 gap-x-3 gap-y-3 rounded-2xl border border-[var(--border)] bg-white p-4 shadow-sm md:table-row md:rounded-none md:border-0 md:p-0 md:shadow-none"
+              className="grid grid-cols-2 gap-2 rounded-2xl border border-[var(--border)] bg-white p-3 shadow-sm md:table-row md:rounded-none md:border-0 md:p-0 md:shadow-none"
             >
               <th
                 scope="row"
                 role="rowheader"
-                className="col-span-2 text-left text-sm font-semibold text-[var(--near-black)] md:table-cell md:border-t md:border-[var(--border)]/50 md:p-5 md:font-medium md:text-[var(--muted-foreground)]"
+                className="col-span-2 pt-1 text-left text-sm font-semibold text-[var(--near-black)] md:table-cell md:border-t md:border-[var(--border)]/50 md:p-5 md:align-top md:font-medium md:text-[var(--muted-foreground)]"
               >
                 {row.label}
               </th>
-              <td role="cell" className="min-w-0 text-[15px] leading-snug break-words md:table-cell md:border-t md:border-[var(--border)]/50 md:p-5">
+              <td
+                role="cell"
+                className="min-w-0 rounded-xl bg-[var(--muted)]/30 px-3 py-2.5 text-[15px] leading-snug break-words md:table-cell md:rounded-none md:border-t md:border-[var(--border)]/50 md:bg-transparent md:p-5 md:align-top"
+              >
                 <Vendor name={view.competitor.name} />
                 <CellValue cell={row.competitor} />
               </td>
               <td
                 role="cell"
-                className="min-w-0 rounded-xl bg-[var(--accent)]/5 p-3 text-[15px] leading-snug break-words md:table-cell md:rounded-none md:border-t md:border-[var(--border)]/50 md:p-5"
+                className="min-w-0 rounded-xl bg-[var(--accent)]/5 px-3 py-2.5 text-[15px] leading-snug break-words md:table-cell md:rounded-none md:border-t md:border-[var(--border)]/50 md:p-5 md:align-top"
               >
                 <Vendor name="Stampeo" accent />
                 <CellValue cell={row.stampeo} />
