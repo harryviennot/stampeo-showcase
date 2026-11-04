@@ -193,7 +193,7 @@ describe("the table on a French page", () => {
   const html = renderToStaticMarkup(<ComparisonTable view={fixtureView("acme-fidelite")} />);
 
   it("shows the competitor's price with its tax basis beside Stampeo's price with no VAT", () => {
-    const price = html.split("<tr").find((row) => row.includes("Formule payante la moins chère"))!;
+    const price = html.split("<tr").find((row) => row.includes("Plan payant le moins cher"))!;
     expect(text(price)).toContain("19 € HT");
     expect(text(price)).toContain("TTC");
     expect(text(price)).toContain("TVA non applicable");

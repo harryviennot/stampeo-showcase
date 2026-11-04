@@ -34,7 +34,7 @@ describe("the rows of a comparison table", () => {
 
   it("are labelled in the page's language", () => {
     const fr = tableRows({ market: "fr", competitor: ACME_FIDELITE, stampeo: FR });
-    expect(fr.map((row) => row.label)).toEqual(["Où vit la carte du client", "Formule payante la moins chère"]);
+    expect(fr.map((row) => row.label)).toEqual(["Où vit la carte du client", "Plan payant le moins cher"]);
   });
 });
 

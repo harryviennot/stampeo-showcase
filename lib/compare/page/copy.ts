@@ -87,7 +87,7 @@ const FR: PageCopy = {
     "pos.integration": "Intégration caisse",
     "locations.multiple": "Plusieurs établissements",
     languages: "Langues",
-    "price.entry": "Formule payante la moins chère",
+    "price.entry": "Plan payant le moins cher",
     trial: "Essai gratuit",
     commitment: "Engagement",
     export: "Export des données clients",
