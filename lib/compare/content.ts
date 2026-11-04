@@ -59,7 +59,8 @@ function readPage(
   locale: Locale,
   facts: readonly CompetitorFacts[],
 ): { page?: ComparisonPage; problems: string[] } {
-  const where = path.relative(process.cwd(), file).startsWith("..") ? file : path.relative(process.cwd(), file);
+  const relative = path.relative(process.cwd(), file);
+  const where = relative.startsWith("..") ? file : relative;
   const problems: string[] = [];
   const slug = path.basename(file, ".mdx");
   const market = MARKET_OF[locale];
