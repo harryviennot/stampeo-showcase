@@ -9,9 +9,10 @@
  */
 
 import { getPlanCatalog } from "../plan-catalog";
-import { MARKETS, type Market as SiteMarket } from "../markets";
+import { MARKETS } from "../markets";
 import { PLAN_FACTS, PLAN_NAMES, TIERS, tiersWhere, type PlanFacts } from "../plans/plan-facts";
 import { formatMoney, type Pricing, type TierId } from "../pricing";
+import { pageSetup } from "./page/setup";
 import { STANDARD_FACT_IDS, type Market, type StandardFactId } from "./types";
 
 /** Facts a page cites by id. Values are monthly prices and the trial. */
@@ -38,8 +39,6 @@ export interface StampeoColumn {
   facts: Record<StampeoFactId, string>;
 }
 
-/** The site market whose currency and trial length each comparison market uses. */
-const SITE_MARKET: Record<Market, SiteMarket> = { us: "us", fr: "int" };
 const LOCALE: Record<Market, string> = { us: "en", fr: "fr" };
 
 interface Copy {
@@ -148,7 +147,7 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     return copy.plans(tiers.map((tier) => PLAN_NAMES[tier]), tiers.length === TIERS.length);
   };
 
-  const trial = copy.trial(MARKETS[SITE_MARKET[market]].trialDays);
+  const trial = copy.trial(MARKETS[pageSetup(market).siteMarket].trialDays);
   const facts: StampeoColumn["facts"] = {
     "stampeo.price.starter": copy.price(money("starter")),
     "stampeo.price.growth": copy.price(money("growth")),
@@ -173,6 +172,5 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
 
 /** Stampeo's column for a market, priced from the live catalog in the market's currency. */
 export async function getStampeoColumn(market: Market): Promise<StampeoColumn> {
-  const currency = MARKETS[SITE_MARKET[market]].currency.code.toLowerCase();
-  return buildStampeoColumn(market, await getPlanCatalog(currency));
+  return buildStampeoColumn(market, await getPlanCatalog(pageSetup(market).currency));
 }
