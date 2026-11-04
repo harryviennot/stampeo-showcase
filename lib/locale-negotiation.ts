@@ -92,6 +92,7 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "about",
   "blog",
   "changelog",
+  "comparatif",
   "contact",
   "demo",
   "email-preferences",

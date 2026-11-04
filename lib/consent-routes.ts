@@ -25,6 +25,8 @@ export const MARKETING_SEGMENTS: ReadonlySet<string> = new Set([
   "about",
   "blog",
   "changelog",
+  // French comparison pages ("/comparatif/<slug>"); the US ones sit under "us".
+  "comparatif",
   "contact",
   "demo",
   "features",

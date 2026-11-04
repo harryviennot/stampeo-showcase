@@ -47,6 +47,8 @@ const text = (html: string) =>
     .replace(/[\u00a0\u202f]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+/** Page order is read from what is drawn, not from the structured data that sits above it. */
+const drawn = (html: string) => html.replace(/<script[\s\S]*?<\/script>/g, "");
 const at = (html: string, needle: string | RegExp) => {
   const index = typeof needle === "string" ? html.indexOf(needle) : html.search(needle);
   expect({ needle: String(needle), found: index >= 0 }).toEqual({ needle: String(needle), found: true });
@@ -60,18 +62,19 @@ describe("a US comparison page", () => {
   });
 
   it("reads top to bottom: title, verdict, check date, the two cards, the table, the FAQ, sources, other pages, closing call to action", () => {
+    const page = drawn(html);
     const order = [
-      at(html, "<h1"),
-      at(html, "Acme Loyalty&#x27;s cheapest plan"),
-      at(html, "Checked October 5, 2026"),
-      at(html, "Choose Acme Loyalty if"),
-      at(html, "Choose Stampeo if"),
-      at(html, 'data-track="comparison_cta"'),
-      at(html, "<table"),
-      at(html, "Can I move my Acme Loyalty customers"),
-      at(html, 'id="sources"'),
-      at(html, "/us/vs/globex-stamps"),
-      at(html, 'data-track="comparison_final_cta"'),
+      at(page, "<h1"),
+      at(page, "Acme Loyalty&#x27;s cheapest plan"),
+      at(page, "Checked October 5, 2026"),
+      at(page, "Choose Acme Loyalty if"),
+      at(page, "Choose Stampeo if"),
+      at(page, 'data-track="comparison_cta"'),
+      at(page, "<table"),
+      at(page, "Can I move my Acme Loyalty customers"),
+      at(page, 'id="sources"'),
+      at(page, "/us/vs/globex-stamps"),
+      at(page, 'data-track="comparison_final_cta"'),
     ];
     expect(order).toEqual([...order].sort((a, b) => a - b));
   });
@@ -241,7 +244,7 @@ describe("the call to action components", () => {
   it("a feature page's keeps its own location unless told otherwise", () => {
     const render = (props: object) =>
       renderToStaticMarkup(
-        <NextIntlClientProvider locale="en" messages={loadCatalog("en")}>
+        <NextIntlClientProvider locale="en" messages={loadCatalog("en")} timeZone="UTC">
           <FeatureCTA title="t" subtitle="s" {...props} />
         </NextIntlClientProvider>,
       );
