@@ -14,6 +14,7 @@ import {
   RESERVED_TOP_SEGMENTS,
   acquisitionSlug,
   deviceLanguage,
+  isReservedTopSegment,
   resolveAcquisitionLocale,
 } from "./locale-negotiation";
 import { staticSegments } from "./testing/app-folders";
@@ -143,6 +144,16 @@ describe("acquisitionSlug", () => {
     expect(RESERVED_TOP_SEGMENTS.has("comparatif")).toBe(true);
     expect(acquisitionSlug("/comparatif")).toBeNull();
     expect(acquisitionSlug("/comparatif/fidelatoo")).toBeNull();
+  });
+
+  // The enrollment page asks this before any business lookup, so a bare
+  // /comparatif is a 404 and never a shop.
+  test.each(["comparatif", "us", "pricing"])("%s belongs to the site, not to a shop", (segment) => {
+    expect(isReservedTopSegment(segment)).toBe(true);
+  });
+
+  test("a business slug is not reserved", () => {
+    expect(isReservedTopSegment("good-vibe-lemonade-and-more")).toBe(false);
   });
 
   test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger"])(
