@@ -71,6 +71,13 @@ describe("isTrackablePath — marketing surfaces", () => {
     expect(isTrackablePath("/pl/features/wzor-karty")).toBe(true);
   });
 
+  test.each(["/comparatif/fidelatoo", "/us/vs/loopy-loyalty", "/en/us/vs/loopy-loyalty"])(
+    "a comparison page is trackable: its sign-up clicks are what the page exists to measure (%s)",
+    (path) => {
+      expect(isTrackablePath(path)).toBe(true);
+    },
+  );
+
   test("trailing slashes and query strings do not change the answer", () => {
     expect(isTrackablePath("/pricing/")).toBe(true);
     expect(isTrackablePath("/pricing?utm_source=meta")).toBe(true);

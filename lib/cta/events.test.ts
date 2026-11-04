@@ -45,6 +45,9 @@ const LOCATIONS: Record<string, [href: string, sends: typeof SIGNUP]> = {
   card_style_gallery: ["/onboarding", SIGNUP],
   blog_cta: ["/onboarding", SIGNUP],
   pricing_final_cta: ["/onboarding", SIGNUP],
+  // The two sign-up buttons of a comparison page, kept apart from the blog's and the features'.
+  comparison_cta: ["/onboarding", SIGNUP],
+  comparison_final_cta: ["/onboarding", SIGNUP],
   // A markdown link in a blog post keeps the locale it was written with.
   blog_link: ["/en/onboarding", SIGNUP],
   hero_demo: ["/contact?type=demo", CONTACT],

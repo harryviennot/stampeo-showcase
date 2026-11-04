@@ -139,6 +139,12 @@ describe("acquisitionSlug", () => {
     }
   });
 
+  test("a shop slugged comparatif is never enrolled: the comparisons section owns the segment", () => {
+    expect(RESERVED_TOP_SEGMENTS.has("comparatif")).toBe(true);
+    expect(acquisitionSlug("/comparatif")).toBeNull();
+    expect(acquisitionSlug("/comparatif/fidelatoo")).toBeNull();
+  });
+
   test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger"])(
     "a slug that starts like a reserved route is still a shop: %s",
     (slug) => {
