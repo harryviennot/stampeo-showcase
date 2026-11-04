@@ -1,0 +1,174 @@
+# Fidelatoo
+
+Researched: 2026-11-04 by research agent · Markets compared: fr
+Fact-checked: 2026-11-04 by fact-check agent · Status: CHECKED
+
+All "Read on" dates are 2026-11-04. Quotes are French as published (apostrophes normalised to '), with an English gloss. The fact-checker re-opened every source with WebFetch on 2026-11-04; where the researcher's quote was a tool summary, the Check column says the quote was recaptured from the live page. No archive snapshots were checked. Nothing was signed up for or submitted.
+
+Conventions shared by the three FR dossiers (fidelatoo, zerosix, heypongo): prices are written "<amount> € HT per month" as published, with the TTC equivalent at 20 % in brackets for the writer; Stampeo prices are never typed here (live catalog, "TVA non applicable", STAMPEO.md §7). A Check value of WRONG means the value or a material detail is not what the live page says; secondary details that could not be re-found were removed and are listed under the row's Check note.
+
+## Identity
+- Website: https://fidelatoo.fr (French site; the /en/ subtree was not re-opened by the checker). https://fidelatoo.com returned an empty server directory listing, so it is not used.
+- Company: Fidelatoo, SAS with a share capital of 1 000 €, 5 ter lotissement des Tamarins, 97419 La Possession (La Réunion), RCS Saint-Denis de La Réunion 942 677 535, hosted by OVH (https://fidelatoo.fr/mentions-legales/, read 2026-11-04). Footer: "Fidelatoo, l'application de fidélité digitale des commerçants depuis 2021". A menu item reads "Fidelie devient Fidelatoo" (a rebrand).
+- Markets and languages: French site. The homepage says "+5 000 commerçants satisfaits dans +25 pays"; its FAQ says "présent dans +40 pays". Both customer and merchant apps list French and English on the App Store FR.
+- Size signals:
+  - Claimed: "+5 000 commerçants satisfaits dans +25 pays" and "nos +500 000 utilisateurs via le Wallet Apple/Google" (homepage).
+  - Third party: Leader Réunion reportedly wrote of 5,000 users and 300 shops six months after a July 2022 launch (search snippet only, not opened; do not use).
+  - Customer app "Fidelatoo - Carte de fidélité" (App Store FR): 4,5 out of 5, 274 ratings, version 8.1.
+  - Merchant app "Fidelatoo Commerçant" (App Store FR): 4,6 out of 5, 46 ratings, version 8.2. The homepage shows 4,7 (App Store) and 4,5 (Google Play) in its hero and 4,6 / 4,4 lower down; its HeyPongo comparison page shows 4,7 / 4,5. Google Play was not opened.
+  - Trustpilot: 7 reviews, TrustScore 4,2, star distribution 100 % five-star, "0 avis reçus au cours des 12 derniers mois".
+  - Appvizer: 5.0 on 4 reviews (https://www.appvizer.fr/relation-client/fidelite-client/fidelatoo, read 2026-11-04).
+
+## Who they're for
+Local merchants of any kind (restaurants, coffee shops, cheese shops, butchers, wine shops, hotels and leisure, car trade have dedicated pages), including shops that want one card shared across a network of merchants, and shopkeeper associations ("union commerciale"). Homepage line: "La carte est toujours sur eux, parce qu'elle vit dans leur téléphone." (the card is always on them, because it lives in their phone). Facts that matter for fit: the Apple Wallet card shows no balance (card.where.pass_content), push needs the free Fidelatoo Wallet app (customer.app_for_push), and the pages read do not describe card design options (designer).
+
+## Product shape
+- Customer: gives a phone number at the till and the merchant credits points, or joins through the shop's own membership web page; the card goes in Apple Wallet or Google Wallet ("La carte, dans Apple Wallet et Google Wallet."). A free optional "Fidelatoo - Wallet de fidélité" app shows balances, shop by shop.
+- One personal QR code works at every merchant in the Fidelatoo network ("Une seule carte suffit pour tous les commerces du réseau.").
+- The Apple Wallet card shows no balance; it identifies the customer at the till. Balances are in the Fidelatoo Wallet app.
+- Push notifications: sent from the merchant side, received through the free Fidelatoo Wallet app. The notifications page does not describe delivery through the wallet pass. The homepage also offers geolocated push to users passing nearby.
+- Staff: the merchant app (named "Fidelatoo Pro" in the FAQ, "Fidelatoo Commerçant" on the App Store FR): type the customer's phone number or scan their QR code. Also a dashboard, CRM filters, SMS campaigns (pay per use), a Google review booster, a printed kit, statistics.
+- Programs: points per spend (1 € = 1 point), points per visit (1 visit = 1 point), tiers ("paliers"), cards with a validity period and a status, permanent and periodic benefits.
+- Till integration: Popina (restaurants); the QR code can be embedded in the merchant's own app or mobile site (API, Webview).
+
+## Pricing, per market
+| Market | Plan | Price | Period | Tax basis | Setup fee | Commitment | Free trial | Source | Read on | Check |
+|---|---|---|---|---|---|---|---|---|---|---|
+| fr | Premium, annual | 25 € HT (30 € TTC) | per month, one-year commitment; billing frequency not stated | HT (excl. VAT) | none | 1 year, no early termination, no partial refund, renews for 12 months | 14 days | https://fidelatoo.fr/tarifs/ | 2026-11-04 | VERIFIED 2026-11-04: FAQ "Le Plan Premium est à 25€ HT/mois (avec engagement d'un an) ou 30€ HT/mois (sans engagement – arrêtez quand vous voulez)"; the price block shows "25€ /mois 2 MOIS OFFERTS" under "Engagement d'un an" |
+| fr | Premium, monthly | 30 € HT (36 € TTC) | per month | HT (excl. VAT) | none | none (one month, auto-renewed; cancellation effective at the end of the paid month) | 14 days | https://fidelatoo.fr/tarifs/ (FAQ) | 2026-11-04 | VERIFIED 2026-11-04: same FAQ sentence; "Oui, notre plan Premium mensuel est sans engagement." |
+| fr | SMS campaigns | 0,06 € per SMS (0,072 € TTC) | pay as you go | HT per CGV art. 4 (not shown on the price line) | none | none | n/a | https://fidelatoo.fr/tarifs/ | 2026-11-04 | VERIFIED 2026-11-04: "0,06€ / coût unitaire du SMS" |
+
+Notes that change the real cost:
+- One plan ("Premium"): "Cartes, clients, points et Push illimités" and "Gestion multi points de vente" in its feature list. Each establishment has its own subscription and statistics (Popina FAQ), with a multi-site discount "dès 2 établissements" (their Zerosix comparison table; amount not stated).
+- The 25 € price is the annual-commitment price ("2 MOIS OFFERTS" against 30 € monthly). Their Zerosix comparison table still reads "25€/mois HT, tout illimité, sans engagement"; their HeyPongo comparison page body gives "30€/mois HT sans engagement". The pricing-page FAQ and the CGV are used here.
+- Staff access: "Créez jusqu'à 5 accès collaborateurs" sits in the list of what the 14-day trial includes; the paid-plan limit is not stated.
+- SMS are billed on top.
+- CGV art. 4: "Tous les prix sont exprimés en euros et hors taxes." and "La taxe sur la valeur ajoutée s'y ajoute au taux applicable". The pricing page shows no TTC figure.
+- After cancelling, the account returns to a free plan and keeps the programme, members and points (CGV art. 7). The export is only available while the subscription is valid (CGV art. 9.2).
+- Their Popina page: the integration is "comprise dans votre abonnement Fidelatoo à 25€/mois HT", "pas de frais d'activation, pas de module payant".
+- Not used (secondary sources that disagree with the vendor's site): the merchant app's App Store in-app purchases list "Premium mensuel" at 29,99 € (one variant with a 30-day free trial) and "Premium 1 an" at 300,00 €, tax basis not stated; Appvizer lists 30,00 € "/mois /utilisateurs illimités" and a 30-day trial of a "PRO" plan.
+- Stampeo: prices from the live catalog, "TVA non applicable" (STAMPEO.md §7).
+
+## Facts
+| id | Claim (plain English) | Value | Source URL | Quote | Read on | Check |
+|---|---|---|---|---|---|---|
+| card.where | Where the customer's card lives | Apple Wallet or Google Wallet pass; optional free Fidelatoo Wallet app for balances | https://fidelatoo.fr | "La carte est toujours sur eux, parce qu'elle vit dans leur téléphone." (the card is always on them because it lives in their phone); "La carte, dans Apple Wallet et Google Wallet." | 2026-11-04 | VERIFIED 2026-11-04 |
+| card.where.pass_content | Apple Wallet card does not show the balance | The card identifies the customer at the till; the balance is in the Fidelatoo Wallet app | https://fidelatoo.fr/carte-de-fidelite-apple-wallet/ | "La carte dans l'app Cartes n'affiche pas de solde : elle sert à vous identifier en caisse, partout." (the card in the Cards app shows no balance: it identifies you at the till, everywhere) | 2026-11-04 | VERIFIED 2026-11-04 (quote recaptured from the live page) |
+| card.network | One card works at every merchant of the network | Yes, one personal QR code | https://fidelatoo.fr/carte-de-fidelite-apple-wallet/ | "Une seule carte suffit pour tous les commerces du réseau." (one card is enough for all shops in the network) | 2026-11-04 | VERIFIED 2026-11-04 |
+| customer.app_required | Customer app or account required | No app required to join or earn; the phone number is the identifier. The app is required to receive push (customer.app_for_push) | https://fidelatoo.fr/faq/ | "Il n'a rien à faire, aucune app à télécharger !" (he has nothing to do, no app to download; said of a customer added by phone number) | 2026-11-04 | VERIFIED 2026-11-04 |
+| customer.app_for_push | Push notifications need the customer app | Yes | https://fidelatoo.fr/notifications-push/ | "Oui, pour recevoir un push, le client doit télécharger gratuitement l'application Fidelatoo Wallet." (to receive a push the customer must download the free Fidelatoo Wallet app) | 2026-11-04 | VERIFIED 2026-11-04 |
+| customer.signup | How customers enrol | By phone number at the till, staff then credit points; each shop also has its own membership web page | https://fidelatoo.fr | "Votre client donne son numéro, vous créditez ses points." (the customer gives their number, you credit their points) | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from customer.join_without_phone to match the other FR dossiers) |
+| program.types | Stamps, points, levels | Points per spend (1 € = 1 point), points per visit, tiers ("paliers"), cards with a validity period and a status, permanent and periodic benefits; no separate stamp type | https://fidelatoo.fr/programme-de-fidelite/ and https://fidelatoo.fr | "en fonction de leurs dépenses (1 € = 1 point)"; "1 passage en caisse = 1 point"; "Les points débloquent différents paliers."; homepage: "10 cafés = 1 offert", "Activez une carte avec une durée de validité et un statut pour vos adhérents ou meilleurs clients." | 2026-11-04 | VERIFIED 2026-11-04 (the "10 cafés" example, validity/status cards and benefits are on the homepage, not on /programme-de-fidelite/; homepage added as a source) |
+| push.automatic | Automatic notifications on activity | Not stated for activity events (points credited, reward available). The notifications page has a "Reconquête automatisée" section about re-engaging lapsed customers, without saying the messages fire on their own | https://fidelatoo.fr/notifications-push/ | "Reconquête automatisée": "Relancez les clients qui ne sont pas venus depuis longtemps avec une offre personnalisée." (win back customers who have not come for a long time with a personalised offer) | 2026-11-04 | VERIFIED 2026-11-04 (value refined: the section was not mentioned before) |
+| push.broadcasts | Promotional messages | Unlimited push, sent now or scheduled, to everyone or a segment (VIP, birthday, absent customers, last visit, average basket); SMS pay per use | https://fidelatoo.fr/notifications-push/ | "Contrairement aux SMS facturés à l'envoi, les Notifications Push sont illimitées."; "Envoyez la notification en temps réel, ou programmez-la à l'avance" | 2026-11-04 | VERIFIED 2026-11-04 |
+| push.geo | Geolocated push | Offered to users passing near the shop | https://fidelatoo.fr | "Push géo-localisés à tous les utilisateurs passant à proximité." (geolocated push to all users passing nearby) | 2026-11-04 | VERIFIED 2026-11-04 |
+| sms.price | SMS campaigns and price | 0,06 € HT per SMS, pay as you go | https://fidelatoo.fr/tarifs/ | "0,06€ / coût unitaire du SMS" (unit cost of an SMS) | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from sms.marketing to match zerosix) |
+| staff.scanning | How staff add points | Merchant app: type the customer's phone number or scan their QR code | https://fidelatoo.fr/faq/ | "Saisissez le numéro de téléphone du client ou scannez son QR code pour accéder à sa carte de fidélité." | 2026-11-04 | VERIFIED 2026-11-04 |
+| staff.scanning.no_scan | Points without scanning | Included in Premium (listed in what the trial includes) | https://fidelatoo.fr/tarifs/ | "Donnez des points et échangez des récompenses sans scanner" (give points and redeem rewards without scanning) | 2026-11-04 | VERIFIED 2026-11-04 (quote corrected to the live wording) |
+| staff.offline | Offline use | Not stated | https://fidelatoo.fr/faq/ | Not stated: no "hors ligne", "sans connexion" or "internet" on the FAQ; nothing on the pricing page or homepage | 2026-11-04 | VERIFIED 2026-11-04 |
+| staff.team_access | Staff accounts | Up to 5 in the trial's feature list; paid-plan limit not stated | https://fidelatoo.fr/tarifs/ | "Créez jusqu'à 5 accès collaborateurs" (create up to 5 staff accesses; in the FAQ list of what the 14-day trial includes) | 2026-11-04 | VERIFIED 2026-11-04 |
+| pos.integration | Till (POS) integration | Popina, included in the subscription; the QR code can be embedded in the merchant's own app or mobile site (API, Webview) | https://fidelatoo.fr/integration-popina/ and https://fidelatoo.fr | "chaque passage en caisse nourrit le profil client, les paliers et vos statistiques"; homepage: "Intégrez le QR Code dans votre propre app ou site mobile (API, Webview)." | 2026-11-04 | VERIFIED 2026-11-04 (API/Webview is on the homepage, not the Popina page; homepage added as a source) |
+| pos.other | Other tills | Studied on request; none listed | https://fidelatoo.fr/integration-popina/ | "Nous étudions chaque intégration sur demande et nous n'avons aucune limite technique sur le sujet" | 2026-11-04 | VERIFIED 2026-11-04 (quote recaptured) |
+| locations.multiple | Several locations | One programme across several shops, seen by the customer as one card; each establishment has its own subscription and statistics | https://fidelatoo.fr/faq/ and https://fidelatoo.fr/integration-popina/ | "vous permet d'associer plusieurs points de vente à un seul et unique programme de fidélité du point de vue client"; Popina FAQ: "Chaque établissement a son abonnement et ses statistiques" | 2026-11-04 | VERIFIED 2026-11-04 |
+| locations.pricing | Multi-location discount | Degressive price from 2 establishments; amount not stated | https://fidelatoo.fr/comparaison-fidelatoo-vs-zerosix/ | Row "Multi-points de vente": "Oui – Tarif dégressif dès 2 établissements" | 2026-11-04 | VERIFIED 2026-11-04 (quote recaptured; the row is "Multi-points de vente") |
+| languages | Languages of the product | Customer and merchant apps: French and English (App Store FR); product languages not stated on the site | https://apps.apple.com/fr/app/fidelatoo/id1619041868 | "Français et Anglais" | 2026-11-04 | VERIFIED 2026-11-04 (merchant app id1619041583 lists the same two) |
+| price.entry | Cheapest paid plan | 25 € HT per month with a one-year commitment (30 € TTC); 30 € HT per month without (36 € TTC) | https://fidelatoo.fr/tarifs/ | "25€ HT/mois (avec engagement d'un an)" and "30€ HT/mois (sans engagement – arrêtez quand vous voulez)" | 2026-11-04 | VERIFIED 2026-11-04 |
+| price.setup | Setup fee | None | https://fidelatoo.fr/tarifs/ | "sans aucun frais d'installation ni coût caché" (no setup fee or hidden cost) | 2026-11-04 | VERIFIED 2026-11-04 |
+| price.tax | Tax basis | Euros, excl. VAT; VAT added at the applicable rate | https://fidelatoo.fr/conditions-generales-de-vente/ | "Tous les prix sont exprimés en euros et hors taxes." | 2026-11-04 | VERIFIED 2026-11-04 (CGV art. 4) |
+| trial | Free trial | 14 days, all Premium features, no payment method needed | https://fidelatoo.fr/conditions-generales-de-vente/ | "précédée d'un essai gratuit de quatorze jours"; "L'essai ne nécessite aucun moyen de paiement." (the trial needs no payment method) | 2026-11-04 | VERIFIED 2026-11-04 (CGV art. 3) |
+| commitment | Commitment | Monthly: one month, auto-renewed. Annual: cannot be terminated before term, no partial refund, renews for 12 months | https://fidelatoo.fr/conditions-generales-de-vente/ | "Elle ne peut pas être résiliée avant son terme et ne donne lieu à aucun remboursement partiel." (annual plan) | 2026-11-04 | VERIFIED 2026-11-04 (CGV art. 7) |
+| commitment.cancel | How to cancel | From the billing area (billing.stripe.com) reached from the dashboard, or by email to contact@fidelatoo.fr; a monthly cancellation takes effect at the end of the month already paid | https://fidelatoo.fr/conditions-generales-de-vente/ | "Depuis votre espace de facturation (billing.stripe.com), accessible depuis votre tableau de bord, ou par email à contact@fidelatoo.fr."; "la résiliation prend effet à la fin du mois en cours, déjà payé." | 2026-11-04 | WRONG 2026-11-04: the row said "billing portal link in the Stripe email"; CGV art. 7 says the billing area is reached from the dashboard. Value and quote corrected |
+| price.changes | Price increases | Announced by email at least 30 days ahead | https://fidelatoo.fr/conditions-generales-de-vente/ | "Toute hausse vous est annoncée par email au moins trente jours avant de s'appliquer" | 2026-11-04 | VERIFIED 2026-11-04 (CGV art. 4) |
+| export | Customer data export | Export of cardholder data from the dashboard, only while the subscription is valid; format not stated. Import of an existing customer base offered | https://fidelatoo.fr/conditions-generales-de-vente/ | "Cet export est réservé aux abonnements en cours de validité" (this export is reserved for active subscriptions); FAQ: "Importez votre base clients existante" | 2026-11-04 | VERIFIED 2026-11-04 (CGV art. 9.2) |
+| data.after_cancel | Data after cancelling | Programme, members and points kept; account returns to the free plan | https://fidelatoo.fr/conditions-generales-de-vente/ | "votre compte repasse en formule gratuite : votre programme, vos membres et leurs points sont conservés." | 2026-11-04 | VERIFIED 2026-11-04 (CGV art. 7) |
+| designer | Designing the card | Not described on the FAQ, programme, Apple Wallet or homepage pages; the shop's membership web page shows its logo, programme and rewards | https://fidelatoo.fr/faq/ | "Cette page web propre à votre commerce présente votre logo, votre programme de fidélité et vos récompenses." | 2026-11-04 | VERIFIED 2026-11-04 |
+| data.hosting | Hosting and data protection | OVH hosting; claims GDPR compliance | https://fidelatoo.fr/conditions-generales-de-vente/ | "OVH pour l'hébergement" (CGV art. 8); FAQ: "Nous sommes 100% conformes RGPD." | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from hosting to match zerosix) |
+| crm | Customer segments | CRM filters and segmentation | https://fidelatoo.fr/tarifs/ | "Filtrez et segmentez votre base de données clients (CRM)" | 2026-11-04 | VERIFIED 2026-11-04 (quote corrected; "attendance and purchase statistics" not re-found on this page, removed) |
+| customers.limit | Customer and usage caps | Unlimited cards, customers, points and push | https://fidelatoo.fr/tarifs/ | "Cartes, clients, points et Push illimités" | 2026-11-04 | VERIFIED 2026-11-04 (row added by the checker) |
+| extra.google_reviews | Google review requests | Offered, automated | https://fidelatoo.fr/comparaison-fidelatoo-vs-zerosix/ | Row "Booster d'avis Google automatisé": "Oui — au pic émotionnel client" | 2026-11-04 | VERIFIED 2026-11-04 (quote recaptured; the same row is on the HeyPongo comparison page) |
+| extra.kit | Printed marketing kit | Delivered: window sticker and HD sticker | https://fidelatoo.fr/comparaison-fidelatoo-vs-zerosix/ | Row "Kit de communication imprimé livré": "Oui — vitrophanie et sticker HD" | 2026-11-04 | VERIFIED 2026-11-04 (quote recaptured) |
+| extra.paper_migration | Moving from paper cards | The merchant adds the customer by phone number and credits points matching the paper card (visit-based or spend-based) | https://fidelatoo.fr | FAQ "J'ai déjà une carte papier, comment passer à Fidelatoo ?": "Si vous voulez rester le même principe de fidélité, choisissez la carte qui récompense selon le nombre de visites." | 2026-11-04 | VERIFIED 2026-11-04 (quote recaptured) |
+| company.founded | Founded | 2021 (their claim) | https://fidelatoo.fr | "Fidelatoo, l'application de fidélité digitale des commerçants depuis 2021" | 2026-11-04 | VERIFIED 2026-11-04 (row added by the checker) |
+| company.hq | Headquarters | La Possession, La Réunion | https://fidelatoo.fr/mentions-legales/ | "5 ter lotissement des Tamarins, 97419 La Possession" | 2026-11-04 | VERIFIED 2026-11-04 (row added by the checker) |
+| size.merchants | Merchants (claimed) | "+5 000" in "+25 pays"; the FAQ says "+40 pays" | https://fidelatoo.fr | "+5 000 commerçants satisfaits dans +25 pays" | 2026-11-04 | VERIFIED 2026-11-04 (as a vendor claim) |
+| reviews.app_store | Customer app rating | 4,5 out of 5, 274 ratings (App Store FR, version 8.1) | https://apps.apple.com/fr/app/fidelatoo/id1619041868 | Rating 4,5, 274 ratings, version 8.1 | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from size.app_rating) |
+| reviews.app_store_merchant | Merchant app rating | 4,6 out of 5, 46 ratings (App Store FR, "Fidelatoo Commerçant", version 8.2) | https://apps.apple.com/fr/app/fidelatoo-pro/id1619041583 | Rating 4,6, 46 ratings | 2026-11-04 | VERIFIED 2026-11-04 (row added by the checker) |
+| reviews.appvizer | Reviews on Appvizer | 5.0 on 4 reviews (too few to use as customer themes) | https://www.appvizer.fr/relation-client/fidelite-client/fidelatoo | "Basé sur 4 avis", "5.0" | 2026-11-04 | VERIFIED 2026-11-04 (row added by the checker to match zerosix and heypongo) |
+| onboarding | Setup help | Human support included in the setup, at no fee (their comparison table) | https://fidelatoo.fr/comparaison-fidelatoo-vs-zerosix/ | Row "Frais de mise en place": "0€ — accompagnement humain inclus" | 2026-11-04 | VERIFIED 2026-11-04 (row added by the checker to match zerosix and heypongo) |
+| reviews.trustpilot | Trustpilot | 7 reviews, TrustScore 4,2, 0 in the last 12 months | https://fr.trustpilot.com/review/fidelatoo.fr | "7 avis", TrustScore "4,2", "0 avis reçus au cours des 12 derniers mois" | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from size.trustpilot) |
+
+Google Play listings (merchant and customer apps) were not opened: no Google Play rating is used.
+
+## What their customers say
+Very few public reviews; no theme has a meaningful sample.
+- Ease of adoption, "nothing to install": 2 of 7 Trustpilot reviews (one merchant reports about 80 % of customers joined). Source: https://fr.trustpilot.com/review/fidelatoo.fr
+- Replaces paper cards, practical: about 4 Trustpilot reviews; Appvizer's 4 reviews say the same (faster than paper, quick to credit points). The Appvizer reviews are too few to use as customer themes. Sources: Trustpilot above; https://www.appvizer.fr/relation-client/fidelite-client/fidelatoo
+- Friendly, reachable team: 1 Trustpilot review, 1 Appvizer review.
+- Complaints: none found. Trustpilot shows no review in the last 12 months and "Aucun historique récent de demande d'avis".
+- Customer app on the App Store: 4,5 from 274 ratings. No review text was read.
+Review date range read: Trustpilot and Appvizer pages as of 2026-11-04.
+
+## Their comparison pages
+Eight pages at https://fidelatoo.fr/comparaison-fidelatoo-vs-<slug>/ : captain-wallet, heypongo, fideliz, fidellio, fidwallet, zerosix, fydl, thegiftsclub. Pages read in full: heypongo and zerosix. Stampeo is not among them. Pattern: a table with founded year, merchant count, entry price, setup fee, native Apple/Google Wallet yes/no, "Application requise côté client", unlimited push, SMS price, Google review booster, printed kit. They list webapp-based rivals as having no native Apple/Google Wallet pass and write that the wallet card "est utilisée 5 fois plus souvent qu'un lien webapp ajouté à l'écran d'accueil" (no source given). Their table lists "Application requise côté client: Non — un simple numéro de téléphone suffit"; their notifications page says push needs the Fidelatoo Wallet app (customer.app_for_push). How they would describe a wallet-only product without a customer app is not known from the pages read.
+
+## Where they're stronger than Stampeo
+- Customers can join with only a phone number given at the till, and staff can credit points by phone number (customer.signup, staff.scanning). Stampeo customers join through the sign-up page; staff cannot add customers by hand (STAMPEO.md §8).
+- A till integration exists (Popina, included in the subscription) and the QR code can be embedded through an API or Webview (pos.integration). Stampeo has no POS integration (§8).
+- SMS campaigns at 0,06 € HT per SMS, in addition to push (sms.price, push.broadcasts). Stampeo sends no SMS or email to customers (§8).
+- Geolocated push to users near the shop (push.geo). Stampeo's geofencing is coming soon, not live (§8).
+- One card across a network of merchants and a consumer app showing all balances (card.network). Stampeo keeps customers separate per business by design (§8).
+- One plan with unlimited cards, customers, points and push, multi-location management included, from 25 € HT per month on the annual plan, with a multi-site discount from the second establishment (price.entry, customers.limit, locations.multiple, locations.pricing). Stampeo's multi-location is on Pro only (§6, §8).
+- Google review booster, printed kit delivered, CRM segmentation, import of an existing customer base (extra.google_reviews, extra.kit, crm, export).
+- Points can be credited without a scan (staff.scanning.no_scan).
+- Operating since 2021 with a claimed 5,000+ merchants (company.founded, size.merchants; their claims).
+
+## Where Stampeo is stronger
+- The wallet card is the whole customer experience: it shows the stamps or points balance, and notifications reach the lock screen through the pass on Apple and Google with no customer app (STAMPEO.md §1, §4, §6 Automatic notifications). On Fidelatoo, the Apple Wallet card shows no balance (card.where.pass_content) and push needs their Wallet app (customer.app_for_push).
+- Self-service card designer on every plan with live Apple/Google Wallet preview, custom stamp icons and card styles, card text translatable into four languages (§6 Card designer). Fidelatoo's pages read do not describe card design (designer).
+- Automatic notifications on every scan, reward unlocked and reward redeemed on every plan, with custom text and milestones on Growth and Pro (§6; features.py `notifications.type`, `notifications.milestone_limit`). Fidelatoo's pages read do not describe notifications on activity events (push.automatic).
+- Loyalty levels on every plan, with a card look per level and perks the Scanner shows to staff (§6 Loyalty levels). Fidelatoo has tiers and status cards (program.types); a card look per level is not described there.
+- Staff roles (Owner, Admin, Scanner) with single-use team codes, and the Activity feed names who made each scan, on every plan; team of 2 on Starter, unlimited on Growth and Pro (§5; features.py `team.max_members`). Fidelatoo's paid staff-access limit is not stated (staff.team_access).
+- Dashboard, Scanner, card and notifications in French, English, Spanish and Polish (§1). Fidelatoo's apps list French and English (languages).
+- Free trial: 30 days in France per STAMPEO.md §7, rendered from the live catalog on the page, against 14 days (trial).
+
+## Our gaps that matter here
+From STAMPEO.md §8:
+- No POS integration (Fidelatoo has Popina and an API/Webview embed).
+- No SMS or email to customers; wallet notifications only.
+- No geofencing yet, coming soon (Fidelatoo offers geolocated push).
+- No offline scanning yet; the Scanner needs a connection (Fidelatoo does not state offline either).
+- No adding customers by hand; customers join through the sign-up page (Fidelatoo enrols by phone number at the till).
+- No cross-business profile or shared network card.
+- No multi-location below Pro.
+- No birthday automation; no review prompts (Fidelatoo offers a Google review booster).
+- No import of an existing customer base is listed in STAMPEO.md; do not claim one.
+- No permanent free tier (Fidelatoo's cancelled account returns to a free plan, per its CGV).
+
+## Draft verdict (for Harry's gate)
+- **Choose Fidelatoo if:**
+  - You want customers to join by giving a phone number at the till, with nothing to scan on their side.
+  - You use the Popina till, or want SMS campaigns and geolocated push alongside notifications.
+  - You like one card and one app that customers use across several local shops in the Fidelatoo network.
+  - You run several shops and want them on the same single plan, with a discount from the second shop.
+- **Choose Stampeo if:**
+  - You want the card, its balance and its notifications to live in Apple or Google Wallet, with no customer app at all.
+  - You want to design the card in your own brand with a live wallet preview, on any plan.
+  - You want automatic notifications on each scan and reward, plus optional loyalty levels with a card look per level.
+  - You want a 30-day free trial and a team and customers served in French, English, Spanish or Polish.
+- **Two-sentence verdict:** Fidelatoo and Stampeo both put a loyalty card in the customer's Apple or Google Wallet; Fidelatoo adds phone-number enrolment at the till, SMS, geolocated push, a Popina till integration and one card shared across its merchant network, with balances and push in its free Fidelatoo Wallet app. Stampeo keeps everything in the wallet card itself, with the balance on the card, automatic lock-screen notifications, a self-service card designer and loyalty levels with a card look per level, for a shop that wants nothing else for its customers to install.
+
+## Switching from Fidelatoo
+- Customers re-join by scanning a new Stampeo QR code; balances do not import automatically (STAMPEO.md describes no import), and Stampeo has no way to add customers by hand.
+- The Fidelatoo annual plan cannot be terminated before its term and does not refund partly (CGV art. 7), so the practical moment to switch is on the monthly plan or at the renewal date. A monthly cancellation takes effect at the end of the month already paid.
+- Fidelatoo's export is available only while the subscription is valid (CGV art. 9.2): export before cancelling.
+- Both can run in parallel for a while: Fidelatoo cards stay in customers' phones, and a cancelled Fidelatoo account keeps its programme and points on the free plan (CGV art. 7).
+
+## Open questions
+- Their Zerosix comparison table still calls 25 € HT "sans engagement"; the pricing-page FAQ, the price block ("Engagement d'un an", "2 MOIS OFFERTS") and the HeyPongo comparison page say 25 € HT is the annual price and 30 € HT the no-commitment price. The page should state both, as in price.entry.
+- Does the Fidelatoo pass update and notify through Apple/Google Wallet without their app? Their pages say the Apple card shows no balance and push needs their app; their comparison page claims "passes natifs certifiés Apple Wallet et Google Wallet depuis 2023". Keep the page to the two verified facts.
+- Card design control (colours, logo on the wallet card): not described on any page read; /demo/ not opened.
+- The merchant app's App Store in-app purchases (29,99 € monthly with a 30-day trial variant, 300,00 € a year) and Appvizer (30-day PRO trial, a free plan) differ from the website's 25/30 € HT and 14 days. The website and CGV are used.
+- Country count (+25 vs +40) and the merchant count are vendor claims.
+- The paid staff-access limit is not stated.
+- Whether Fidelatoo accepts a non-France business or non-euro billing was not checked (France only here).
+- Stampeo setup fee: STAMPEO.md is silent; the showcase landing FAQ (messages/fr/landing.json) says "Pas de frais de mise en service". Add it to STAMPEO.md §7 before a page compares setup fees.

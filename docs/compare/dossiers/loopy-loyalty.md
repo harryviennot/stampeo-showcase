@@ -1,0 +1,131 @@
+# Loopy Loyalty
+
+Researched: 2026-11-04 by research agent · Markets compared: us
+Fact-checked: 2026-11-04 by fact-check agent · Status: CHECKED
+
+## Identity
+- Website: https://loopyloyalty.com (pricing: https://loopyloyalty.com/pricing; help center: https://docs.loopyloyalty.com)
+- Company, HQ, founded, parent: footer says "Made with by PassKit" and "© 2026 Loopy Loyalty. Digital loyalty cards for Apple Wallet and Google Wallet" (https://loopyloyalty.com, read 2026-11-04). The Stamper app's App Store seller is "PassKit, Inc." (https://apps.apple.com/app/id945301614, read 2026-11-04). HQ and founding date: not stated on the pages read.
+- Markets and languages: English site. Languages of the card or dashboard are not stated on the pricing page, homepage or help article read (see `languages`); the Stamper app's App Store listing names 14 languages (see `languages.staff_app`).
+- Size signals:
+  - "89k" labelled "Cards created today"; "Trusted by thousands of small businesses worldwide" (https://loopyloyalty.com, 2026-11-04).
+  - Homepage self-reported ratings: Capterra 4.6/5, Featured Customers 4.8/5, Software Advice 4.6/5 (same page). The Capterra pages (.com and .ca) returned 403 again on 2026-11-04, so review counts are UNVERIFIABLE (`size.reviews`).
+  - Stamper app, App Store: 4.5 out of 5, 105 ratings (https://apps.apple.com/app/id945301614, 2026-11-04; `size.app_rating.staff`). Google Play listing not read.
+
+## Who they're for
+Homepage: "Built for every kind of local business", listing Cafes & Coffee Shops; Restaurants & Food Service; Fitness & Classes; Hair, Beauty & Personal Care; Pet Care & Local Services. Pricing FAQ: choose a plan "based on how many loyalty card designs you need", locations and Stamper app users. Stamp cards only; for points the help center refers businesses to PassKit, a separate product.
+
+## Product shape
+Customers add the card to Apple Wallet or Google Wallet from a QR code or link; homepage: "no app required". Staff scan the wallet card in the Stamper app (iOS and Android) or stamp remotely ("Remote Stamping / Web Stamper" row on the pricing page). Businesses design and manage the program in a web app ("Visual Card Designer (Web App)"). Integrations: Zapier, Make, a developer API. Push messages can go to all customers, a segment or one customer.
+
+## Pricing, per market
+| Market | Plan | Price | Period | Tax basis | Setup fee | Commitment | Free trial | Source | Read on | Check |
+|---|---|---|---|---|---|---|---|---|---|---|
+| US | Starter | $25 | per month, billed monthly | Not stated | None listed | None; cancel any time; no refunds | 15 days | https://loopyloyalty.com/pricing | 2026-11-04 | VERIFIED 2026-11-04 |
+| US | Starter | $250 | per year, billed yearly ($20.83 a month equivalent) | Not stated | None listed | Same | 15 days | same | 2026-11-04 | VERIFIED 2026-11-04 |
+| US | Growth | $69 | per month, billed monthly | Not stated | None listed | Same | 15 days | same | 2026-11-04 | VERIFIED 2026-11-04 |
+| US | Growth | $690 | per year, billed yearly ($57.50 a month equivalent) | Not stated | None listed | Same | 15 days | same | 2026-11-04 | VERIFIED 2026-11-04 |
+| US | Ultimate | $95 | per month, billed monthly | Not stated | None listed | Same | 15 days | same | 2026-11-04 | VERIFIED 2026-11-04 |
+| US | Ultimate | $950 | per year, billed yearly ($79.17 a month equivalent) | Not stated | None listed | Same | 15 days | same | 2026-11-04 | VERIFIED 2026-11-04 |
+
+Currency: shown with "$", no currency code on the page ("USD" does not appear). Tax: no statement on the page, so US pages show the price as published with no "+ tax". Real-cost notes: unlimited customers on all plans; limits are card designs (1 / 3 / 10), locations (1 / 3 / 10) and Stamper app users (3 / 10 / 50). No refunds: "Loopy Loyalty does not offer refunds for subscriptions or renewal charges." After cancellation, "your account and all associated loyalty cards are scheduled for deletion" at the end of the billing period. Upgrades apply immediately, downgrades at the next cycle. The page says "Save 20% with annual billing", but each yearly price is 10 x the monthly price, about 16.7% below 12 months; do not state a percentage, state the price rows. No add-ons listed.
+
+## Facts
+Check legend: a STALE or WRONG row has been rewritten to what the page said on 2026-11-04, and the rewritten value is the checked value. UNVERIFIABLE rows must not reach a page. Rows marked "added by checker" are new and were read by the checker.
+
+| id | Claim (plain English) | Value | Source URL | Quote | Read on | Check |
+|---|---|---|---|---|---|---|
+| card.where | Where the card lives | Apple Wallet and Google Wallet pass | https://loopyloyalty.com | "Digital stamp cards for Apple & Google Wallet"; FAQ: "customers can add the card to Apple Wallet or Google Wallet" | 2026-11-04 | VERIFIED 2026-11-04 (quote replaced: the researcher's "Cards work with Apple Wallet and Google Wallet" is not on the page) |
+| customer.app_required | Customer app/account | No customer app | https://loopyloyalty.com | "Reward repeat visits, capture data, and message customers — no app required." | 2026-11-04 | VERIFIED 2026-11-04 |
+| program.types | Stamps, points, levels | Stamp cards only (single or multi-reward). Points-based systems are referred to PassKit, a separate product. Levels or tiers: not stated. | https://docs.loopyloyalty.com/en/articles/11142679-loopy-loyalty-your-digital-stamp-card-solution | "Loopy Loyalty offers digital stamp cards; for points-based systems with advanced features, visit PassKit." (article dated April 25, 2025) | 2026-11-04 | VERIFIED 2026-11-04 |
+| program.multi_reward | Multi-reward stamp cards, up to 30 stamps | Single and multi-reward cards (pricing page row); up to 30 stamps per card (June 2022 article) | https://loopyloyalty.com/pricing ; https://docs.loopyloyalty.com/en/articles/1043131-what-s-new-in-loopy-loyalty | Pricing row: "Single & Multi-Reward Card Options". Article (June 16, 2022): "any quantity of stamps (up to 30)" | 2026-11-04 | VERIFIED 2026-11-04 (current pricing row added; the 30-stamp figure is from a 2022 article) |
+| push.automatic | Automatic notifications | The homepage says reward notifications and expiry reminders can be automated, and the card updates on every stamp or reward. A notification on each stamp is not stated. Pricing row "Lock Screen Notifications (iOS)" (plan availability not readable). | https://loopyloyalty.com | "Automate customer messages, expiry reminders and reward notifications"; "Every stamp or reward updates the card in your customer's wallet" | 2026-11-04 | STALE 2026-11-04 (was "Not stated as a feature on pages read"; the homepage now states it) |
+| push.broadcasts | Promotional messages | Push messages to all customers, a segment or one customer; "Unlimited Push Messages" row on the pricing page, plan availability not readable | https://docs.loopyloyalty.com/en/articles/11142679-loopy-loyalty-your-digital-stamp-card-solution | "You can target all customers, specific segments, or even individuals."; pricing row: "Unlimited Push Messages" | 2026-11-04 | VERIFIED 2026-11-04 (quote replaced: the researcher's wording was a paraphrase) |
+| staff.scanning | How staff add stamps | Stamper app (iOS, Android) camera scan; remote stamping via a web stamper. Offline: not stated; the page says it "Works online" | https://loopyloyalty.com/features/stamper-app/ | "Scan digital stamp cards using your phone's camera"; "Works online with changes synced instantly"; pricing row "Remote Stamping / Web Stamper" | 2026-11-04 | VERIFIED 2026-11-04 |
+| team.users | Staff app users per plan | 3 / 10 / 50 Stamper app users (Starter / Growth / Ultimate) | https://loopyloyalty.com/pricing | "Number of Stamper App Users": "Up to 3" / "Up to 10" / "Up to 50"; plan cards: "3 sub-users" / "10 sub-users" / "50 sub-users" | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from `staff.app_users` to match the other dossiers) |
+| pos.integration | Till (POS) integration | No native POS integration. A Loopy blog post names Square, Zapier, Make and the API as ways to link stamp cards to POS workflows | https://loopyloyalty.com/blog/cost-effective-pos-linked-loyalty-programs-for-cafes-1f0254f334cc/ ; https://loopyloyalty.com/features/stamper-app/ | Blog (April 20, 2026, updated June 15, 2026): "linked to POS workflows through Square, Zapier, Make, or the API"; Stamper page: "Works on iOS and Android with no POS integration." | 2026-11-04 | VERIFIED 2026-11-04 |
+| locations.multiple | Several locations | 1 / 3 / 10 by plan | https://loopyloyalty.com/pricing | "Maximum Locations Supported": "1 Location" / "3 Locations" / "10 Locations" | 2026-11-04 | VERIFIED 2026-11-04 |
+| languages | Languages (card, dashboard) | Not stated on the pricing page, homepage or help article read | https://loopyloyalty.com/pricing ; https://loopyloyalty.com | Not stated (no mention of languages or translation on either page) | 2026-11-04 | VERIFIED 2026-11-04 |
+| languages.staff_app | Languages of the Stamper app | English, Arabic, Cambodian, Dutch, Filipino, French, German, Italian, Japanese, Korean, Portuguese, Spanish, Thai, Traditional Chinese | https://apps.apple.com/app/id945301614 | App Store "Languages" list (14 languages; Polish not listed) | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| price.entry | Cheapest paid plan | Starter: $25 per month, billed monthly, or $250 per year, billed yearly; tax basis not stated | https://loopyloyalty.com/pricing | Starter "$ 25 / mo", "$ 250 / yr"; "Save 20% with annual billing" | 2026-11-04 | VERIFIED 2026-11-04 |
+| price.mid | Middle plan | Growth: $69 per month, billed monthly, or $690 per year, billed yearly; tax basis not stated | https://loopyloyalty.com/pricing | Growth "$ 69 / mo", "$ 690 / yr" | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| price.top | Top plan | Ultimate: $95 per month, billed monthly, or $950 per year, billed yearly; tax basis not stated | https://loopyloyalty.com/pricing | Ultimate "$ 95 / mo", "$ 950 / yr" | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| price.tax_basis | Tax basis shown | Not stated; "$" with no currency code | https://loopyloyalty.com/pricing | Not stated (no tax, sales tax, VAT or "USD" on the page) | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from `pricing.tax`) |
+| trial | Free trial | 15 days on every plan. No payment details to create an account and set up a draft project; a card is needed to move the project live | https://loopyloyalty.com/pricing | "Try Loopy Loyalty free for 15 days. If you cancel within the trial, your card will not be charged."; FAQ: "A credit card is only required when you move a draft project into an active, live project" | 2026-11-04 | VERIFIED 2026-11-04 |
+| commitment | Commitment | No contract term stated; cancel any time from account settings, plan stays active to the end of the period; no refunds | https://loopyloyalty.com/pricing | "Your plan will remain active until the end of the current billing period"; "does not offer refunds for subscriptions or renewal charges" | 2026-11-04 | VERIFIED 2026-11-04 (quote replaced: "You can cancel your subscription at any time from your account settings." was not confirmed verbatim) |
+| refunds | Refund policy | No refunds | https://loopyloyalty.com/pricing | "Loopy Loyalty does not offer refunds for subscriptions or renewal charges." | 2026-11-04 | VERIFIED 2026-11-04 |
+| cancel.data | What happens to cards after cancelling | Account and cards scheduled for deletion after the billing period; customers stop receiving updates | https://loopyloyalty.com/pricing | "your account and all associated loyalty cards are scheduled for deletion" | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| export | Customer data export | Data export listed on every plan (Starter, Growth and Ultimate plan cards); table row says CSV/spreadsheet | https://loopyloyalty.com/pricing | Plan cards: "Data export"; table row: "Data Export (CSV/Spreadsheet)" | 2026-11-04 | VERIFIED 2026-11-04 (the third-party "top tier only" conflict is resolved by Loopy's own plan cards) |
+| designer | Designing the card | Self-service web designer with an Apple and Google Wallet preview; 1 / 3 / 10 card designs by plan | https://loopyloyalty.com ; https://docs.loopyloyalty.com/en/articles/11142679-loopy-loyalty-your-digital-stamp-card-solution | "add your logo, colours, and rewards, and preview it in Apple and Google Wallet"; "Create visually appealing loyalty cards that reflect your brand, without needing any design skills." | 2026-11-04 | VERIFIED 2026-11-04 (homepage preview quote added) |
+| customers.cap | Customer cap | Unlimited customers on all plans | https://loopyloyalty.com/pricing | "Number of Customers": "Unlimited" | 2026-11-04 | VERIFIED 2026-11-04 |
+| customers.import | Importing existing customers | Via Make (homepage) | https://loopyloyalty.com | "Use Make to import existing customers and issue their cards" | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| integrations | Zapier/Make and developer API | Zapier and Make, developer API; plan availability not readable | https://loopyloyalty.com/pricing ; https://loopyloyalty.com | Rows "No-Code Integration (via Zapier/Make)", "Developer API Access"; homepage: "Use Zapier and Make to reduce manual work when enrolling customers." | 2026-11-04 | VERIFIED 2026-11-04 (id renamed from `integrations.api`) |
+| analytics | Analytics | "Real Time Analytics & Reporting" row; plan availability not readable | https://loopyloyalty.com/pricing | "Real Time Analytics & Reporting" | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| support | Support | "Standard Customer Support" and "Priority Customer Service" rows (plans not readable); 24/7 live chat stated in a June 2022 article | https://docs.loopyloyalty.com/en/articles/1043131-what-s-new-in-loopy-loyalty | "Access live chat 24/7 from inside your Loopy Loyalty account." (June 16, 2022) | 2026-11-04 | VERIFIED 2026-11-04 (the live-chat claim is four years old; prefer not to state it on a page) |
+| signup.data | Collect details at sign-up | Yes: built-in enrolment forms | https://loopyloyalty.com/pricing ; https://docs.loopyloyalty.com/en/articles/1043131-what-s-new-in-loopy-loyalty | Pricing row: "Built-in Enrolment Forms"; 2022 article: "Get to know your customers a little bit more by collecting information upon signup." | 2026-11-04 | VERIFIED 2026-11-04 |
+| remote.issue | Issue stamps/rewards without scanning | Yes: web stamper | https://loopyloyalty.com/pricing ; https://docs.loopyloyalty.com/en/articles/1043131-what-s-new-in-loopy-loyalty | Pricing row: "Remote Stamping / Web Stamper"; 2022 article: "no need to physically scan their digital stamp card!" | 2026-11-04 | VERIFIED 2026-11-04 |
+| geofence | Location-based messages | "Location-Based Messages (Geo-Fencing)" row on the pricing page; plan availability not readable | https://loopyloyalty.com/pricing | "Location-Based Messages (Geo-Fencing)" | 2026-11-04 | STALE 2026-11-04 (was UNVERIFIABLE from a search summary; now read on Loopy's pricing page) |
+| size.app_rating.staff | App Store rating, Stamper app | 4.5 out of 5, 105 ratings | https://apps.apple.com/app/id945301614 | "4.5 out of 5", "105 Ratings" | 2026-11-04 | VERIFIED 2026-11-04 (added by checker) |
+| size.reviews | Review-site counts | Capterra, Software Advice, GetApp counts | https://www.capterra.com/p/160859/Loopy-Loyalty/reviews | 403 Forbidden | 2026-11-04 | UNVERIFIABLE 2026-11-04 |
+| plans.feature_matrix | Which plan includes push, geofencing, API, Zapier/Make, analytics, priority support, custom label text | Tick marks do not come through in the page text | https://loopyloyalty.com/pricing | Row labels only | 2026-11-04 | UNVERIFIABLE 2026-11-04 (needs a human read in a browser) |
+
+## What their customers say
+Read: none of these could be opened on a primary page. Capterra (.com and .ca) returned 403 on 2026-11-04; the counts below come from the researcher's search-result summaries and are UNVERIFIABLE. Nothing in this section may reach a page.
+- Ease of use and value for price: the most repeated praise (Capterra, about 65 to 67 reviews, 4.6, per a search summary). https://www.capterra.com/p/160859/Loopy-Loyalty/reviews (403)
+- Admin dashboard on a phone: a reviewer says it works poorly on mobile devices. Same source (403).
+- Adding the card on Android: one reviewer reports difficulty for some customers. https://www.capterra.ca/software/160859/loopy-loyalty (403)
+- Stamp-only: FaveCard, a competing loyalty product, writes that Loopy offers "stamp cards only, with no points or tiers" (https://favecard.netlify.app/en/blog/loopy-loyalty-review/, published March 16, 2026, updated October 19, 2026, read 2026-11-04). Consistent with Loopy's own help text (`program.types`); a competitor's page, so low weight.
+- Stamper app crashes: from an automated third-party audit site (https://marlvel.ai/api/llm/apps/business/loopy-loyalty-stamper); not re-opened, low confidence, not for a page.
+
+## Their comparison pages
+No "alternatives" or "vs" pages found at https://loopyloyalty.com/blog. Closest: "Cost-Effective POS-Linked Loyalty Programs for Cafes" (https://loopyloyalty.com/blog/cost-effective-pos-linked-loyalty-programs-for-cafes-1f0254f334cc/, April 20, 2026, updated June 15, 2026), which says native POS loyalty means "you are usually tied more closely to that POS ecosystem, which can limit flexibility and increase costs". Also "Create a Loyalty Card in Apple Wallet: Custom Pass vs Digital Stamp Card" (https://loopyloyalty.com/blog/create-loyalty-card-apple-wallet/, October 12, 2026), which contrasts customer-made passes with business-issued stamp cards. Neither names Stampeo or another vendor (both re-read 2026-11-04).
+
+## Where they're stronger than Stampeo
+- Zapier and Make integrations and a developer API (`integrations`, `customers.import`): Loopy's homepage describes importing existing customers through Make. Stampeo has no integrations or public API and cannot add customers by hand (STAMPEO.md §8).
+- Remote stamping through a web stamper, and stamps triggered from other tools through Zapier or Make (`remote.issue`, `integrations`). Stampeo adds stamps by scanning in the Scanner app, or by hand from a customer's profile in the dashboard (Owner or Admin, with a reason; STAMPEO.md §6 Managing customers), with no automation.
+- Several locations below the top plan: 3 on Growth, 10 on Ultimate (`locations.multiple`). Stampeo's multi-location is on Pro only, with no cap (STAMPEO.md §6 Multi-location).
+- Multi-reward stamp cards (`program.multi_reward`).
+- Push messages to a segment or to one customer (`push.broadcasts`; plan availability not readable). Stampeo has no broadcasts on Starter, and its broadcasts target groups, never a single customer (STAMPEO.md §6 Broadcasts; the production broadcast filters in `app/services/notifications/segmentation.py` have no per-customer key).
+- Location-based messages (`geofence`; plan availability not readable). Stampeo's geofencing is coming soon, not live (STAMPEO.md §8).
+- Automated expiry reminders (`push.automatic`). Stampeo does not remind customers before a reward expires (STAMPEO.md §6, §8).
+- 3 Stamper app users on Starter (`team.users`), against 2 people (owner + 1) on Stampeo Starter; Stampeo Growth and Pro have no team cap (STAMPEO.md §5, features.py `team.max_members`).
+
+## Where Stampeo is stronger
+- Stamps or points on every plan, plus up to 5 loyalty levels on every plan (STAMPEO.md §6 Loyalty program, Loyalty levels), versus stamp cards only, with points referred to PassKit (`program.types`).
+- The card, sign-up page, notifications and dashboard in French, English, Spanish and Polish, with each customer seeing the card's labels in their phone's language (STAMPEO.md §1). Loopy's pages do not state card or dashboard languages (`languages`); its Stamper app lists 14 languages, Polish not among them (`languages.staff_app`).
+- Milestone messages ("Halfway there!": 3 on Growth, unlimited on Pro) and rewritable notification text on Growth and Pro (STAMPEO.md §6 Automatic notifications). Loopy does not state milestone messages (`push.automatic`).
+- A welcome gift on every plan; earning limits on Growth and Pro; basket boosters on points programs, Growth and Pro (STAMPEO.md §6). Not mentioned on the Loopy pages read.
+
+## Our gaps that matter here
+- No POS integration, no Zapier or Make, no public API (STAMPEO.md §8).
+- No adding or importing customers by hand (STAMPEO.md §8).
+- No geofencing yet, coming soon (STAMPEO.md §8); Loopy lists location-based messages.
+- No reward-expiry reminders to customers (STAMPEO.md §8).
+- No offline scanning yet, coming soon (STAMPEO.md §8). Loopy's Stamper page says it "Works online" and does not state offline use.
+- One program and one active card design per business; multi-location only on Pro (STAMPEO.md §6, §8).
+- No broadcasts on Starter (STAMPEO.md §8).
+
+## Draft verdict (for Harry's gate)
+- **Choose Loopy Loyalty if:**
+  - You run a stamp card and want Zapier, Make or an API to connect it to bookings, online orders or your till.
+  - You have two to ten locations and want them below the top plan.
+  - You want to import existing customers or stamp remotely through a web stamper.
+  - You want messages to a single customer or location-based messages.
+- **Choose Stampeo if:**
+  - You want points or loyalty levels as well as stamps, on any plan.
+  - You want the card and its notifications in French, English, Spanish or Polish, matching each customer's phone.
+  - You want milestone messages and wording you can rewrite (Growth and Pro).
+- **Two-sentence verdict:** Loopy Loyalty and Stampeo both put a loyalty card in Apple Wallet and Google Wallet with no app for the customer; Loopy Loyalty runs stamp cards only and adds Zapier, Make, an API and up to 10 locations below its top plan, while Stampeo runs stamps or points, with loyalty levels, on every plan. Pick Loopy Loyalty for a stamp card connected to your other tools, and Stampeo for points, levels or a card in four languages. Stampeo price: from the live catalog.
+
+## Switching from Loopy Loyalty
+Customers install a new Stampeo card by scanning a new QR code; balances do not import automatically (nothing in STAMPEO.md says otherwise), and Stampeo cannot add customers by hand. Loopy schedules the account and cards for deletion when the billing period ends, and its homepage FAQ says to export data first; data export is on every Loopy plan (`export`, `cancel.data`). No refunds for the current period (`refunds`). The Stampeo card can be live the same day.
+
+## Open questions
+- Which plans include push messages, geofencing, the API, Zapier/Make, analytics and priority support (`plans.feature_matrix`): tick marks are unreadable in text. Needs a browser read before any per-plan cell is written.
+- Whether Loopy sends a notification on each stamp (homepage says the card "updates" and reward notifications can be automated).
+- Capterra, Software Advice and GetApp counts (403).
+- Stamper app offline behaviour (not stated) and Google Play rating (not read).
+- Languages of the card and dashboard (not stated).
+- Annual saving: the page says 20%, the prices give about 16.7%; state the prices, not a percentage.
+- Whether to mention PassKit as Loopy's route for points (it is a separate product).
+- The 24/7 live chat and 30-stamp figures come from a June 2022 article; do not use them on a page without a current source.
