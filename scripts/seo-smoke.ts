@@ -19,6 +19,8 @@ import {
   breadcrumbPaths,
   breadcrumbProblems,
   canonicalProblems,
+  comparisonPaths,
+  comparisonProblems,
   feedLinkProblems,
   fontPreloadProblems,
   hiddenHeaderLinkProblems,
@@ -150,6 +152,20 @@ export function buildChecks(baseUrl: string): Check[] {
     },
   };
 
+  const comparisonPagesAreSound: Check = {
+    name: "Comparison pages in the sitemap: own canonical, indexable, structured data, no hreflang (nothing to check until one is published)",
+    run: async () => {
+      const res = await request("/sitemap.xml");
+      if (res.status !== 200) return [`sitemap.xml: HTTP ${res.status}, expected 200`];
+      const results = await inBatches(comparisonPaths(await res.text()), SITEMAP_BATCH, async (path) => {
+        const { status, html } = await fetchPage(path);
+        const problems = status === 200 ? comparisonProblems(html, { path, draft: false }) : [`HTTP ${status}, expected 200`];
+        return problems.map((problem) => `${path}: ${problem}`);
+      });
+      return results.flat();
+    },
+  };
+
   const breadcrumbLeadsToPages = (path: string, prefix: string): Check => ({
     name: `Breadcrumb ${path}: items under ${prefix}, each answers 200`,
     run: onPage(path, async (html) => {
@@ -210,7 +226,19 @@ export function buildChecks(baseUrl: string): Check[] {
       run: onPage(path, (html) => canonicalProblems(html, path)),
     })),
     sitemapIsSelfCanonical,
+    comparisonPagesAreSound,
     ...privatePages.map((path) => ({ name: `Private page ${path}: noindex, no canonical`, run: onPage(path, privatePageProblems) })),
+    {
+      name: "A comparison slug that does not exist answers 404 in both markets",
+      run: async () =>
+        (
+          await Promise.all(
+            ["/us/vs/no-such-competitor", "/comparatif/no-such-competitor"].map(async (path) =>
+              statusProblems((await request(path)).status, 404).map((problem) => `${path}: ${problem}`),
+            ),
+          )
+        ).flat(),
+    },
     {
       name: `Junk paths ${junkPaths.join(" ")} stay 404`,
       run: async () =>

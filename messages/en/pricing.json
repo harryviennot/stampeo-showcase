@@ -186,7 +186,7 @@
         "basketBoost": {
           "label": "Basket boosters",
           "growth": "1 level",
-          "pro": "Unlimited"
+          "pro": "Up to 6 levels"
         },
         "rewardExpiry": {
           "label": "Reward expiry dates"

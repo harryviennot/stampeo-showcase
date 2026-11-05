@@ -1,5 +1,7 @@
 import { getAllPosts } from "@/lib/blog";
 import { BLOG_LOCALES } from "@/lib/blog/locales";
+import { comparisonPages, comparisonPath } from "@/lib/compare/content";
+import type { ComparisonPage } from "@/lib/compare/types";
 import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { localePath } from "@/lib/hreflang";
@@ -121,8 +123,17 @@ function blogSection(locale: string): string {
   return [`### Blog — ${localeName(locale)}`, ...lines].join("\n");
 }
 
-function keyPages(): string {
+/** The published comparison pages, or nothing while there are none. */
+function comparisonsSection(pages: readonly ComparisonPage[]): string | null {
+  const published = pages.filter((page) => !page.draft);
+  if (published.length === 0) return null;
+  const lines = published.map((page) => `- [${page.title}](${BASE_URL}${comparisonPath(page)})`);
+  return ["### Comparisons", ...lines].join("\n");
+}
+
+function keyPages(comparisons: readonly ComparisonPage[]): string {
   const locales = routing.locales;
+  const comparisonBlock = comparisonsSection(comparisons);
   return [
     "## Key pages",
     "",
@@ -131,6 +142,7 @@ function keyPages(): string {
     locales.map(featureSection).join("\n\n"),
     "",
     BLOG_LOCALES.map(blogSection).join("\n\n"),
+    ...(comparisonBlock ? ["", comparisonBlock] : []),
   ].join("\n");
 }
 
@@ -327,7 +339,8 @@ export function buildLlmsTxt(
   ladders: { eur: Pricing; usd: Pricing } = {
     eur: FALLBACK_PRICING.eur,
     usd: FALLBACK_PRICING.usd,
-  }
+  },
+  comparisons: readonly ComparisonPage[] = comparisonPages()
 ): string {
   const localeList = routing.locales.map(localeName).join(", ");
   const intro = `${INTRO}\n- **Languages**: ${localeList}.`;
@@ -335,7 +348,7 @@ export function buildLlmsTxt(
   return (
     [
       intro,
-      keyPages(),
+      keyPages(comparisons),
       PRODUCT,
       plans(),
       pricingSection(ladders),
