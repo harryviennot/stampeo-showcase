@@ -73,3 +73,22 @@ unchanged).
 - backend: `app/services/privacy/policy-matrix.v1.json`,
   `app/services/privacy/policy_matrix.py` (SHA), `tests/privacy/test_policy_matrix.py`,
   `docs/measurement/policy-matrix.md`.
+
+## Decided during the build
+
+- The footer label, its icon and the US dialog follow the row's `regime`
+  (opt-out), not its `surface`. `ConsentSnapshot.surface` is replaced by
+  `regime`. Any future opt-out row gets the US label and dialog, whatever
+  surface it shows.
+- A US visitor who never acts now leaves no `stampeo_consent` record and no
+  ledger row (the notice's "Got it" wrote both). The notice is given by the
+  privacy policy and the footer link.
+- Region is still read from the timezone only (`READ_REGION_COOKIE = false`),
+  so an EU resident with a US-timezone device was already treated as US
+  (tracked from arrival). They now also see no notice.
+- The notice code path is kept on purpose, so the US row can switch back with
+  one word in the matrix: the `ConsentBanner` notice block, `NOTICE_KEYS`,
+  `noticeAcknowledgement` and the `cookies.notice.*` copy. This is Harry's
+  call; no deletion ticket.
+- `backend/docs/features/STA-377/contracts.md` C-1 pins the matrix file's size
+  and SHA-256, and carries the new SHA.
