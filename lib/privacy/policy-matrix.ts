@@ -7,7 +7,8 @@ import raw from "./policy-matrix.v1.json";
  */
 
 export type PolicyRegime = "opt-in" | "opt-out";
-export type PolicySurface = "banner" | "notice";
+/** What a row shows a visitor who has not chosen: a blocking banner, a notice, or nothing. */
+export type PolicySurface = "banner" | "notice" | "none";
 
 export interface PolicyRow {
   /** The row's key in the matrix (`EEA_UK_CH`, `US`, `UNKNOWN`). */
@@ -37,7 +38,7 @@ export const UNKNOWN_ROW_KEY = "UNKNOWN";
  * copy; changing the file means updating both copies and both constants.
  */
 export const POLICY_MATRIX_SHA256 =
-  "ebbacb154791add81d3007c19d5c3e8094c35674dc219b4ad4cfa4ef02e42273";
+  "4bbc23d97429e3b48f790a40b70c7baf134481600289166cf06fb25a9b57c20d";
 
 type RawRow = Omit<PolicyRow, "key" | "regime" | "surface"> & {
   regime: string;
@@ -65,7 +66,7 @@ export function buildPolicyMatrix(input: RawPolicyMatrix): PolicyMatrix {
     if (row.regime !== "opt-in" && row.regime !== "opt-out") {
       throw new Error(`policy matrix: row ${key} has regime "${row.regime}"`);
     }
-    if (row.surface !== "banner" && row.surface !== "notice") {
+    if (row.surface !== "banner" && row.surface !== "notice" && row.surface !== "none") {
       throw new Error(`policy matrix: row ${key} has surface "${row.surface}"`);
     }
     rows[key] = { ...row, key, regime: row.regime, surface: row.surface };

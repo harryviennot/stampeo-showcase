@@ -16,7 +16,7 @@ import type { CountryCode } from "libphonenumber-js";
  * Every IANA zone whose country is the US. A browser reports the zone the OS is
  * set to, not the canonical one for the region (Arizona says America/Phoenix,
  * Michigan says America/Detroit), so a missing zone costs a US visitor the
- * opt-out notice and the "see US pricing" offer. US territories are not here:
+ * US opt-out row and the "see US pricing" offer. US territories are not here:
  * they stay unmapped, which holds them to the strict row.
  */
 const US_ZONES: readonly string[] = [
