@@ -11,7 +11,7 @@ describe("typed currency amounts", () => {
     "Costs 25€ par mois.",
     "Coûte 25 € par mois.",
     "Coûte 19,90 € HT.",
-    "Coûte 1 200 € par an.",
+    "Coûte 1\u00a0200 € par an.",
     "Costs $1,200.50 a year.",
     "Costs 25 EUR a month.",
     "Costs EUR 25 a month.",

@@ -12,7 +12,7 @@ const text = (html: string) =>
     .replace(/<[^>]*>/g, " ")
     .replace(/&#x27;/g, "'")
     .replace(/&amp;/g, "&")
-    .replace(/[  ]/g, " ")
+    .replace(/[\u00a0\u202f]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 

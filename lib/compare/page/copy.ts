@@ -128,7 +128,7 @@ const FR: PageCopy = {
     "Comparatif rédigé par Stampeo. Les informations sur les concurrents sont exactes à la date de vérification indiquée. Les fonctionnalités et tarifs peuvent avoir évolué.",
   otherTitle: "Autres comparatifs",
   otherLabel: (competitor) => `${competitor} ou Stampeo`,
-  cta: { title: "Envie de voir Stampeo dans votre commerce ?", button: "Commencer gratuitement" },
+  cta: { title: "Envie de voir Stampeo dans votre commerce\u00a0?", button: "Commencer gratuitement" },
   closing: {
     title: "Essayez Stampeo dans votre commerce",
     subtitle: "Créez votre carte, ajoutez-la à votre téléphone et voyez ce que verront vos clients.",

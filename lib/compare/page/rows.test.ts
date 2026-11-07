@@ -7,7 +7,7 @@ import { COPY } from "./copy";
 import { ROW_GROUPS, competitorText, hasDetail, openableRows, tableGroups, type Side, type TableGroup, type TableRow } from "./rows";
 
 /** French typography uses no-break spaces; the tests read them as plain ones. */
-const norm = (text: string) => text.replace(/[  ]/g, " ");
+const norm = (text: string) => text.replace(/[\u00a0\u202f]/g, " ");
 
 const US = buildStampeoColumn("us", FALLBACK_PRICING.usd);
 const FR = buildStampeoColumn("fr", FALLBACK_PRICING.eur);
@@ -129,8 +129,8 @@ describe("a competitor's price on a French page", () => {
 
   it.each([
     ["a space", "1 200 € HT par an"],
-    ["a no-break space", "1 200 € HT par an"],
-    ["a narrow no-break space", "1 200 € HT par an"],
+    ["a no-break space", "1\u00a0200 € HT par an"],
+    ["a narrow no-break space", "1\u202f200 € HT par an"],
   ])("reads a thousands separator written as %s", (_name, value) => {
     expect(norm(competitorText(value, "fr"))).toBe("1 200 € HT (soit 1 440 € TTC, TVA à 20 %) par an");
   });

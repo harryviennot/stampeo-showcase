@@ -55,7 +55,7 @@ const text = (html: string) =>
     .replace(/&#x27;/g, "'")
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
-    .replace(/[  ]/g, " ")
+    .replace(/[\u00a0\u202f]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 /** Page order is read from what is drawn, not from the structured data that sits above it. */
