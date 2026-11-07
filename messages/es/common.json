@@ -132,7 +132,7 @@
     "cookies": {
       "banner": {
         "title": "Tus opciones de cookies",
-        "body": "Solo activamos las cookies de medición y de publicidad si las aceptas, y solo entonces indicamos a Meta y Google Ads si te registras desde un anuncio. Rechazarlas no cambia nada del funcionamiento del sitio.",
+        "body": "Solo activamos las cookies de medición y de publicidad si las aceptas, y solo entonces indicamos a Meta, Google Ads y OpenAI (anuncios en ChatGPT) si te registras desde un anuncio. Rechazarlas no cambia nada del funcionamiento del sitio.",
         "learnMore": "Ver el detalle",
         "accept": "Aceptar todo",
         "refuse": "Rechazar todo",
@@ -140,7 +140,7 @@
       },
       "notice": {
         "title": "Tus opciones de privacidad",
-        "body": "Usamos cookies de medición y de publicidad para ver cómo funcionan nuestros anuncios, e indicamos a Meta y Google Ads si te registras desde uno de ellos.",
+        "body": "Usamos cookies de medición y de publicidad para ver cómo funcionan nuestros anuncios, e indicamos a Meta, Google Ads y OpenAI (anuncios en ChatGPT) si te registras desde uno de ellos.",
         "dismiss": "Entendido"
       },
       "prefs": {
@@ -157,7 +157,7 @@
         },
         "marketing": {
           "title": "Publicidad",
-          "body": "Meta y Google Ads, para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Google Ads recibe su identificador de clic si vienes de uno de sus anuncios, y el correo electrónico de tu cuenta como código irreversible, junto con el paso alcanzado y, para una prueba o un pago, su precio. Nada más sobre ti."
+          "body": "Meta, Google Ads y OpenAI (anuncios en ChatGPT), para saber cuál de nuestros anuncios ha servido de verdad. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Solo avisamos a Google Ads y a OpenAI si vienes de uno de sus anuncios, y entonces cada uno recibe su propio identificador de clic y el correo electrónico de tu cuenta como código irreversible, junto con el paso alcanzado y, para una prueba o un pago, su precio. Nada más sobre ti."
         },
         "save": "Guardar mi elección",
         "cancel": "Cancelar",
@@ -173,7 +173,7 @@
           },
           "marketing": {
             "title": "Venta, uso compartido y publicidad dirigida",
-            "body": "Meta y Google Ads, para saber qué anuncios han llevado a un registro. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Google Ads recibe su identificador de clic si vienes de uno de sus anuncios, y el correo electrónico de tu cuenta como código irreversible, junto con el paso alcanzado y, para una prueba o un pago, su precio. Nada más sobre ti. Si lo desactivas, no se envía nada a Meta ni a Google Ads."
+            "body": "Meta, Google Ads y OpenAI (anuncios en ChatGPT), para saber qué anuncios han llevado a un registro. Si creas una cuenta, Meta también recibe tus datos de contacto como código irreversible, para reconocerte. Solo avisamos a Google Ads y a OpenAI si vienes de uno de sus anuncios, y entonces cada uno recibe su propio identificador de clic y el correo electrónico de tu cuenta como código irreversible, junto con el paso alcanzado y, para una prueba o un pago, su precio. Nada más sobre ti. Si lo desactivas, no se envía nada a Meta, a Google Ads ni a OpenAI."
           },
           "analytics": {
             "title": "Medición de audiencia",
