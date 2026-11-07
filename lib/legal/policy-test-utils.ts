@@ -66,3 +66,19 @@ export function retentionTable(locale: string) {
     .split("\n")
     .filter((line) => line.trim().startsWith("|"));
 }
+
+/** Character counts of the banner and notice bodies in the version 3 text; a line at 390px holds about 45. */
+export const V3_LENGTH: Record<string, { banner: number; notice: number }> = {
+  en: { banner: 174, notice: 129 },
+  fr: { banner: 214, notice: 151 },
+  es: { banner: 203, notice: 149 },
+  pl: { banner: 209, notice: 159 },
+};
+
+/** The most the banner and notice may grow over the version 3 text: one more line. */
+export const MAX_GROWTH = 60;
+
+/** The first blank-line-separated paragraph of `text` that matches `pattern`, or "". */
+export function paragraphWith(text: string, pattern: RegExp) {
+  return text.split(/\n\s*\n/).find((paragraph) => pattern.test(paragraph)) ?? "";
+}
