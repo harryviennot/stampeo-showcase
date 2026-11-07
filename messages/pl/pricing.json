@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Rodzaj programu",
-          "starter": "Pieczątki lub punkty",
-          "growth": "Pieczątki lub punkty",
-          "pro": "Pieczątki lub punkty"
+          "starter": "Pieczątki, punkty lub poziomy",
+          "growth": "Pieczątki, punkty lub poziomy",
+          "pro": "Pieczątki, punkty lub poziomy"
         },
         "earningCaps": {
           "label": "Limity zbierania na klienta"

@@ -32,3 +32,15 @@ The comparison table's "Loyalty type" row ("Stamps or Points"), the
 `/llms.txt` plan facts (`lib/plans/plan-facts.ts`, `lib/llms-txt.ts`) and the
 blog and docs pages still say "stamps or points". They are not the plan
 feature lists; they get their own pass when levels go live.
+
+## Levels in the plan facts and the comparison table (Harry, 2026-11-07)
+
+- `lib/plans/plan-facts.ts` gains `levels` (5 on every plan, mirroring the
+  backend's `programs.levels` limit from STA-525). llms.txt states it in the
+  loyalty mechanics, each plan's summary and the "Stamps or points?" answer.
+- The pricing comparison row "Loyalty type" reads "Stamps, points or levels" in
+  en/fr/es/pl, the same words as the plan cards.
+- Left as is: the pricing meta description ("Stamps or points on every plan")
+  and marketing prose (landing, features, blog), which describe the program
+  types, not the plan lists.
+- Releases with or after STA-525.

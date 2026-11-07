@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Loyalty type",
-          "starter": "Stamps or Points",
-          "growth": "Stamps or Points",
-          "pro": "Stamps or Points"
+          "starter": "Stamps, points or levels",
+          "growth": "Stamps, points or levels",
+          "pro": "Stamps, points or levels"
         },
         "earningCaps": {
           "label": "Per-customer earning limits"

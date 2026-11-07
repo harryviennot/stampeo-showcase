@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Tipo de fidelidad",
-          "starter": "Sellos o puntos",
-          "growth": "Sellos o puntos",
-          "pro": "Sellos o puntos"
+          "starter": "Sellos, puntos o niveles",
+          "growth": "Sellos, puntos o niveles",
+          "pro": "Sellos, puntos o niveles"
         },
         "earningCaps": {
           "label": "Límites por cliente"

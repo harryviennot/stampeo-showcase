@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Type de fidélité",
-          "starter": "Tampons ou Points",
-          "growth": "Tampons ou Points",
-          "pro": "Tampons ou Points"
+          "starter": "Tampons, points ou niveaux",
+          "growth": "Tampons, points ou niveaux",
+          "pro": "Tampons, points ou niveaux"
         },
         "earningCaps": {
           "label": "Limites par client"
