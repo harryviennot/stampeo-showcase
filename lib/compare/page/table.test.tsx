@@ -57,7 +57,7 @@ const shownTable = (table: string) => table.replace(HIDDEN_ROW, "");
 describe("the comparison table on a phone", () => {
   const { phone } = parts(US_VIEW);
 
-  it("is one card per theme, each with a title, holding one expandable row per fact", () => {
+  it("has a titled section per theme, each holding one expandable row per fact", () => {
     expect(phone.match(/<section\b/g)).toHaveLength(2);
     expect(phone.match(/<h3\b/g)).toHaveLength(2);
     expect(text(phone)).toContain("Your customer's side");
