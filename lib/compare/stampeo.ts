@@ -42,6 +42,10 @@ export interface StampeoColumn {
   currency: string;
   /** Stampeo's cell for each standard table row. */
   rows: Record<StandardFactId, string>;
+  /** The at-a-glance version of each row: one line, the same facts and qualifiers. */
+  rowsShort: Record<StandardFactId, string>;
+  /** The line under the price row: "TVA non applicable" on the French market, null where prices carry no such note. */
+  taxNote: string | null;
   /** The values behind `<Fact id="stampeo.…" />`. */
   facts: Record<StampeoFactId, string>;
 }
@@ -67,9 +71,35 @@ interface Copy {
   multipleLocations: (plans: string) => string;
   /** "every plan" / "Growth and Pro", from the plan facts. */
   plans: (names: string[], all: boolean) => string;
-  price: (amount: string) => string;
+  /** A monthly amount in words ("$29 a month"). */
+  perMonth: (amount: string) => string;
+  /** The note stating the tax basis of Stampeo's prices, when it has one. */
+  taxNote: string | null;
   priceEntry: (plan: string, price: string) => string;
   trial: (days: number) => string;
+  short: ShortCopy;
+}
+
+/** The wording of the at-a-glance values; each row's short value keeps its full value's facts and qualifiers. */
+interface ShortCopy {
+  fixed: Pick<
+    Record<StandardFactId, string>,
+    | "card.where"
+    | "customer.app_required"
+    | "push.automatic"
+    | "staff.scanning"
+    | "pos.integration"
+    | "commitment"
+    | "export"
+    | "designer"
+  >;
+  /** The program types, given the plans that run stamps or points and whether that is every plan. */
+  programTypes: (plans: string, all: boolean) => string;
+  /** One plan's promotional-message allowance, in a few words. */
+  broadcasts: (plan: string, limit: number | "unlimited") => string;
+  /** Said when no plan sends promotional messages. */
+  noBroadcasts: string;
+  multipleLocations: (plans: string, all: boolean) => string;
 }
 
 const EN: Copy = {
@@ -102,9 +132,26 @@ const EN: Copy = {
   multipleLocations: (plans) =>
     `On ${plans}: several locations, with stats and sign-up links for each, no cap and no extra charge per location`,
   plans: (names, all) => (all ? "every plan" : names.join(" and ")),
-  price: (amount) => `${amount} a month`,
+  perMonth: (amount) => `${amount} a month`,
+  taxNote: null,
   priceEntry: (plan, price) => `${plan}, ${price}`,
   trial: (days) => `${days}-day free trial`,
+  short: {
+    fixed: {
+      "card.where": "Apple Wallet and Google Wallet",
+      "customer.app_required": "None: no app, no account",
+      "push.automatic": "Yes, on every stamp and reward",
+      "staff.scanning": "Scanner app (iPhone, Android)",
+      "pos.integration": "None: added by hand in the app",
+      commitment: "None, cancel any time",
+      export: "CSV of sign-ups, every plan",
+      designer: "Self-service, with live preview",
+    },
+    programTypes: (plans, all) => (all ? "Stamps or points, optional levels" : `Stamps or points on ${plans}`),
+    broadcasts: (plan, limit) => `${plan}: ${limit === "unlimited" ? "unlimited" : `${limit} a month`}`,
+    noBroadcasts: "None",
+    multipleLocations: (plans, all) => (all ? "No cap, no fee per location" : `On ${plans}: no cap, no fee per location`),
+  },
 };
 
 const FR: Copy = {
@@ -136,9 +183,26 @@ const FR: Copy = {
   multipleLocations: (plans) =>
     `Avec ${plans}${NBSP}: plusieurs établissements, avec statistiques et lien d'inscription pour chacun, sans plafond ni supplément par établissement`,
   plans: (names, all) => (all ? "tous les plans" : names.join(" et ")),
-  price: (amount) => `${amount} par mois, TVA non applicable`,
+  perMonth: (amount) => `${amount} par mois`,
+  taxNote: "TVA non applicable",
   priceEntry: (plan, price) => `${plan}, ${price}`,
   trial: (days) => `essai gratuit de ${days} jours`,
+  short: {
+    fixed: {
+      "card.where": "Apple Wallet et Google Wallet",
+      "customer.app_required": `Aucune${NBSP}: ni appli, ni compte`,
+      "push.automatic": "Oui, à chaque tampon et récompense",
+      "staff.scanning": "Appli Scanner (iPhone, Android)",
+      "pos.integration": `Aucune${NBSP}: ajout à la main dans l'appli`,
+      commitment: "Aucun, résiliable à tout moment",
+      export: "CSV des inscriptions, tous les plans",
+      designer: "Libre-service, aperçu en direct",
+    },
+    programTypes: (plans, all) => (all ? "Tampons ou points, niveaux en option" : `Tampons ou points sur ${plans}`),
+    broadcasts: (plan, limit) => `${plan}${NBSP}: ${limit === "unlimited" ? "illimitées" : `${limit} par mois`}`,
+    noBroadcasts: "Aucune",
+    multipleLocations: (plans, all) => (all ? "Sans plafond ni supplément" : `Avec ${plans}${NBSP}: sans plafond ni supplément`),
+  },
 };
 
 const STAMPEO_COPY: Record<Market, Copy> = { us: EN, fr: FR };
@@ -159,12 +223,21 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     const tiers = tiersWhere(has);
     return copy.plans(tiers.map((tier) => PLAN_NAMES[tier]), tiers.length === TIERS.length);
   };
+  // The plans where `has` holds, for the short values: their names, and whether that is every plan.
+  const planNamesWhere = (has: (facts: PlanFacts) => boolean) => {
+    const tiers = tiersWhere(has);
+    return { names: copy.plans(tiers.map((tier) => PLAN_NAMES[tier]), false), all: tiers.length === TIERS.length };
+  };
+  const price = (tier: TierId) => {
+    const perMonth = copy.perMonth(money(tier));
+    return copy.taxNote ? `${perMonth}, ${copy.taxNote}` : perMonth;
+  };
 
   const trial = copy.trial(MARKETS[pageSetup(market).siteMarket].trialDays);
   const facts: StampeoColumn["facts"] = {
-    "stampeo.price.starter": copy.price(money("starter")),
-    "stampeo.price.growth": copy.price(money("growth")),
-    "stampeo.price.pro": copy.price(money("pro")),
+    "stampeo.price.starter": price("starter"),
+    "stampeo.price.growth": price("growth"),
+    "stampeo.price.pro": price("pro"),
     "stampeo.trial": trial,
     "stampeo.broadcasts.growth": quotedNumber(PLAN_FACTS.growth.broadcastsPerMonth),
     "stampeo.team.starter": quotedNumber(PLAN_FACTS.starter.teamMembers),
@@ -172,10 +245,11 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
   };
 
   const cheapest = TIERS[0];
+  const languageNames = languageList(market, routing.locales, copy.and);
   const rows: StampeoColumn["rows"] = {
     ...copy.fixed,
     "push.automatic": copy.pushAutomatic(plansWhere((plan) => plan.milestoneNotifications !== 0)),
-    languages: copy.languages(languageList(market, routing.locales, copy.and)),
+    languages: copy.languages(languageNames),
     "program.types": copy.programTypes(plansWhere((plan) => plan.loyaltyTypes.length > 1)),
     "push.broadcasts": TIERS.map((tier) => copy.broadcasts(PLAN_NAMES[tier], PLAN_FACTS[tier])).join(". "),
     "locations.multiple": copy.multipleLocations(plansWhere((plan) => plan.multipleLocations)),
@@ -183,7 +257,23 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     trial: upperFirst(trial),
   };
 
-  return { market, currency: pricing.currency.toLowerCase(), rows, facts };
+  const programPlans = planNamesWhere((plan) => plan.loyaltyTypes.length > 1);
+  const locationPlans = planNamesWhere((plan) => plan.multipleLocations);
+  const broadcastClauses = TIERS.flatMap((tier) => {
+    const limit = PLAN_FACTS[tier].broadcastsPerMonth;
+    return limit === 0 ? [] : [copy.short.broadcasts(PLAN_NAMES[tier], limit)];
+  });
+  const rowsShort: StampeoColumn["rowsShort"] = {
+    ...copy.short.fixed,
+    "program.types": copy.short.programTypes(programPlans.names, programPlans.all),
+    "push.broadcasts": broadcastClauses.length > 0 ? broadcastClauses.join(". ") : copy.short.noBroadcasts,
+    "locations.multiple": copy.short.multipleLocations(locationPlans.names, locationPlans.all),
+    languages: languageNames,
+    "price.entry": `${PLAN_NAMES[cheapest]}, ${copy.perMonth(money(cheapest))}`,
+    trial: rows.trial,
+  };
+
+  return { market, currency: pricing.currency.toLowerCase(), rows, rowsShort, taxNote: copy.taxNote, facts };
 }
 
 /** Stampeo's column for a market, priced from the live catalog in the market's currency. */

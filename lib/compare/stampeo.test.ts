@@ -5,7 +5,7 @@ import { PLAN_FACTS, PLAN_NAMES, TIERS } from "../plans/plan-facts";
 import { FALLBACK_PRICING, formatMoney, type Pricing } from "../pricing";
 import { findCurrencyAmounts } from "./body-checks";
 import { STAMPEO_FACT_IDS, buildStampeoColumn, getStampeoColumn, isStampeoFactId } from "./stampeo";
-import { STANDARD_FACT_IDS, type Market } from "./types";
+import { SHORT_MAX_LENGTH, STANDARD_FACT_IDS, type Market } from "./types";
 
 /** A ladder that differs from the baked one, so a match proves the amounts came from the catalog. */
 const CATALOG: Record<Market, Pricing> = {
@@ -79,6 +79,62 @@ describe.each(["us", "fr"] as const)("Stampeo's side on the %s market", (market)
     for (const value of priced) {
       if (market === "fr") expect(value).toContain("TVA non applicable");
       else expect(value).not.toMatch(/TVA|VAT|tax/i);
+    }
+  });
+});
+
+describe.each(["us", "fr"] as const)("Stampeo's at-a-glance values on the %s market", (market) => {
+  const column = buildStampeoColumn(market, CATALOG[market]);
+  const money = (amount: number) => formatMoney(amount, CATALOG[market].currency, LOCALE[market]);
+  const shorts = Object.entries(column.rowsShort);
+
+  it("answer every standard table row in one line of at most 40 characters, with no em dash", () => {
+    expect(Object.keys(column.rowsShort).sort()).toEqual([...STANDARD_FACT_IDS].sort());
+    for (const [id, short] of shorts) {
+      expect({ id, text: short.trim() }).not.toEqual({ id, text: "" });
+      expect({ id, oneLine: !/[\r\n]/.test(short) }).toEqual({ id, oneLine: true });
+      expect({ id, length: Array.from(short).length <= SHORT_MAX_LENGTH }).toEqual({ id, length: true });
+      expect(short).not.toContain("—");
+    }
+  });
+
+  it("type no currency amount: the one price comes from the catalog it was given", () => {
+    for (const [id, short] of shorts.filter(([id]) => id !== "price.entry")) {
+      expect({ id, amounts: findCurrencyAmounts(short) }).toEqual({ id, amounts: [] });
+    }
+    expect(column.rowsShort["price.entry"]).toContain(money(CATALOG[market].tiers.starter.month));
+  });
+
+  it("take the trial length from the market", () => {
+    expect(column.rowsShort.trial).toContain(String(TRIAL_DAYS[market]));
+  });
+
+  it("name the plans and numbers the plan facts give, and no other plan", () => {
+    expect(column.rowsShort["push.broadcasts"]).toContain(String(PLAN_FACTS.growth.broadcastsPerMonth));
+    expect(column.rowsShort["push.broadcasts"]).toContain("Pro");
+    expect(column.rowsShort["push.broadcasts"]).not.toContain("Starter");
+    expect(column.rowsShort["locations.multiple"]).toContain("Pro");
+    expect(column.rowsShort["locations.multiple"]).not.toMatch(/Starter|Growth/);
+  });
+
+  it("list every language the site is served in, written in the page's language", () => {
+    const languageName = new Intl.DisplayNames(LOCALE[market], { type: "language" });
+    for (const code of routing.locales) {
+      expect(column.rowsShort.languages.toLowerCase()).toContain(languageName.of(code)!.toLowerCase());
+    }
+  });
+
+  it("leave the tax line to the price row's own note, shown on the French market only", () => {
+    expect(column.rowsShort["price.entry"]).not.toMatch(/TVA|VAT|tax/i);
+    expect(column.taxNote).toBe(market === "fr" ? "TVA non applicable" : null);
+  });
+});
+
+describe("Stampeo's French at-a-glance values", () => {
+  it("never put a breaking space before a colon, so the colon cannot wrap onto a line of its own", () => {
+    const column = buildStampeoColumn("fr", CATALOG.fr);
+    for (const [id, short] of Object.entries(column.rowsShort)) {
+      expect({ id, spacedPunctuation: / [:;?!]/.test(short) }).toEqual({ id, spacedPunctuation: false });
     }
   });
 });
