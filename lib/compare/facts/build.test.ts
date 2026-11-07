@@ -16,6 +16,11 @@ describe("the fact builder", () => {
     });
   });
 
+  it("carries the at-a-glance value the table shows, when one is given", () => {
+    expect(fact(PRICING, "price.entry", "Starter, $25 a month, billed monthly", '"$25 / mo"', "$25/mo").short).toBe("$25/mo");
+    expect(fact(PRICING, "price.entry", "$25 a month", '"$25 / mo"')).not.toHaveProperty("short");
+  });
+
   it("dates every fact of a reading session the same day", () => {
     expect(fact(PRICING, "trial", "7-day free trial", "q").checkedAt).toBe(fact(PRICING, "commitment", "None", "q").checkedAt);
   });

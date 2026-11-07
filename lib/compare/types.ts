@@ -13,6 +13,8 @@ export interface SourcedFact {
   id: string;
   /** What the table and prose show, written in the market's language. */
   value: string;
+  /** The table's at-a-glance version of `value`: same facts and qualifiers, at most 40 characters. */
+  short?: string;
   /** An https page the fact was read from. */
   sourceUrl: string;
   sourceTitle: string;

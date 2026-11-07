@@ -6,11 +6,12 @@ export interface FactSource {
   sourceTitle: string;
 }
 
-/** The `fact(source, id, value, quote)` builder of one reading session: every fact it builds carries the day it was read. */
+/** The `fact(source, id, value, quote, short?)` builder of one reading session: every fact it builds carries the day it was read. */
 export function factsReadOn(checkedAt: string) {
-  return (source: FactSource, id: string, value: string, quote: string): SourcedFact => ({
+  return (source: FactSource, id: string, value: string, quote: string, short?: string): SourcedFact => ({
     id,
     value,
+    ...(short === undefined ? {} : { short }),
     ...source,
     quote,
     checkedAt,
