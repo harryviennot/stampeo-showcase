@@ -288,6 +288,9 @@ describe("consentCookieAttributes", () => {
 /** The cookies a Google Ads tag leaves in the jar. */
 const GOOGLE_ADS_LEFTOVERS = ["_gcl_au", "_gcl_aw", "_gcl_gs", "_gcl_gb", "_gcl_dc"];
 
+/** The cookies OpenAI's pixel writes. The site loads no pixel, so these only exist if a browser holds them. */
+const OPENAI_LEFTOVERS = ["__oppref", "__obref"];
+
 describe("cookieNamesToClear", () => {
   const present = [
     "NEXT_LOCALE",
@@ -302,8 +305,9 @@ describe("cookieNamesToClear", () => {
     // STA-323. First-party by origin, tracker by content: it carries the ad
     // platforms' click ids and the GA client id, so revoking must delete it.
     "stampeo_attribution",
-    // Google Ads cookies a browser may still hold.
+    // Google Ads and OpenAI cookies a browser may still hold.
     ...GOOGLE_ADS_LEFTOVERS,
+    ...OPENAI_LEFTOVERS,
   ];
 
   test("revoking marketing clears the marketing cookies only", () => {
@@ -314,11 +318,12 @@ describe("cookieNamesToClear", () => {
       "_ttp",
       "stampeo_attribution",
       ...GOOGLE_ADS_LEFTOVERS,
+      ...OPENAI_LEFTOVERS,
     ].sort());
   });
 
-  test("refusing analytics alone leaves the Google Ads cookies", () => {
-    expect(cookieNamesToClear(["analytics"], GOOGLE_ADS_LEFTOVERS)).toEqual([]);
+  test("refusing analytics alone leaves the Google Ads and OpenAI cookies", () => {
+    expect(cookieNamesToClear(["analytics"], [...GOOGLE_ADS_LEFTOVERS, ...OPENAI_LEFTOVERS])).toEqual([]);
   });
 
   test("revoking analytics expands the per-property GA prefix", () => {
@@ -830,7 +835,7 @@ describe("consentSnapshotKey", () => {
 });
 
 describe("CONSENT_VERSION", () => {
-  test("is 4, the wire format written into the cookie", () => {
+  test("is 5, the wire format written into the cookie", () => {
     // Every other test uses the constant, so a bump would pass them all while
     // silently invalidating every visitor's stored choice. Bumping it IS the
     // mechanism for re-consenting a new vendor or a new processing purpose, so
@@ -851,8 +856,8 @@ describe("CONSENT_VERSION", () => {
     //     app/services/attribution/eligibility.py);
     //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
     //     shared cookie to notice a withdrawal.
-    expect(CONSENT_VERSION).toBe(4);
-    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A4");
+    expect(CONSENT_VERSION).toBe(5);
+    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A5");
   });
 
   test("a grant stored under version 1 is no longer honoured", () => {

@@ -33,8 +33,12 @@ export const landing = (url: string, referrer = "https://l.facebook.com/", varia
 export const GOOGLE_URL =
   "https://stampeo.app/fr?gclid=Cj0KCQ_TEST_gclid_0001&utm_source=google&utm_medium=cpc&utm_campaign=fr-search-brand&utm_content=rsa-cafe-01&utm_term=carte-fidelite";
 
+export const OPPREF = "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw";
+export const CHATGPT_URL = `https://stampeo.app/us?oppref=${OPPREF}&utm_source=chatgpt&utm_medium=cpc&utm_campaign=us-chatgpt-brand`;
+
 export const META_LANDING = landing(META_URL);
 export const GOOGLE_LANDING = landing(GOOGLE_URL, "https://www.google.com/");
+export const CHATGPT_LANDING = landing(CHATGPT_URL, "https://chatgpt.com/");
 export const ORGANIC_LANDING = landing("https://stampeo.app/pricing", "https://www.google.com/");
 
 export const LIVE_ALL: LiveIds = {

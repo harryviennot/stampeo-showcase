@@ -1,6 +1,6 @@
 /**
- * What the real-browser link may carry: the ad's UTM tags and the Meta click
- * id from the attribution cookies, and nothing else. The link reaches
+ * What the real-browser link may carry: the ad's UTM tags and the Meta or
+ * ChatGPT click id from the attribution cookies, and nothing else. The link reaches
  * analytics, so no personal detail and no consent evidence ride along.
  */
 
@@ -30,6 +30,8 @@ function cookieHeaderFor(url: string, extra: string[] = []): string {
 
 const META_LANDING =
   "https://stampeo.app/us?utm_source=meta&utm_medium=paid&utm_campaign=spring&utm_content=video1&utm_term=punch-card&fbclid=IwAR3abc";
+const OPPREF = "OAI_TEST_oppref-0001.x~y";
+const CHATGPT_LANDING = `https://stampeo.app/us?utm_source=chatgpt&utm_medium=cpc&utm_campaign=spring&oppref=${OPPREF}`;
 
 describe("escapeParamsFromCookies", () => {
   test("a Meta ad visitor carries the five UTM tags and the click id, in a fixed order", () => {
@@ -56,7 +58,7 @@ describe("escapeParamsFromCookies", () => {
 
   test("nothing but the UTM tags and the click id is ever carried", () => {
     const params = escapeParamsFromCookies(cookieHeaderFor(META_LANDING));
-    const allowed = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid"];
+    const allowed = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "fbclid", "oppref"];
     for (const key of params.keys()) expect(allowed).toContain(key);
     const text = params.toString();
     for (const leaked of ["l.instagram.com", "fb.1.", "opt-out", "1760000000"]) {
@@ -64,13 +66,33 @@ describe("escapeParamsFromCookies", () => {
     }
   });
 
-  test("a Google ad click does not put a Meta click id in the link", () => {
+  test("a Google ad click does not put a Meta or ChatGPT click id in the link", () => {
     const params = escapeParamsFromCookies(
       cookieHeaderFor("https://stampeo.app/?utm_source=google&utm_medium=cpc&gclid=g123"),
     );
     expect(params.has("fbclid")).toBe(false);
+    expect(params.has("oppref")).toBe(false);
     expect(params.has("gclid")).toBe(false);
     expect(params.get("utm_source")).toBe("google");
+  });
+
+  test("a ChatGPT ad visitor carries the campaign tags and the oppref, next to where fbclid goes, and no Meta id", () => {
+    const params = escapeParamsFromCookies(
+      cookieHeaderFor(CHATGPT_LANDING, ["_ga=GA1.1.1", "theme=dark"]),
+    );
+    expect([...params.keys()]).toEqual(["utm_source", "utm_medium", "utm_campaign", "oppref"]);
+    expect(params.get("utm_source")).toBe("chatgpt");
+    expect(params.get("oppref")).toBe(OPPREF);
+    expect(params.has("fbclid")).toBe(false);
+  });
+
+  test("the ChatGPT link round-trips: the landing page reads back the same oppref, whatever it holds", () => {
+    // Characters URLSearchParams writes differently from how they arrived.
+    const tricky = "op~9-x_y.z+/=";
+    const params = escapeParamsFromCookies(
+      cookieHeaderFor(`https://stampeo.app/us?utm_source=chatgpt&oppref=${encodeURIComponent(tricky)}`),
+    );
+    expect(readClickIds(`?${params.toString()}`).oppref).toBe(tricky);
   });
 
   test.each([

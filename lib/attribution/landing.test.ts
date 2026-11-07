@@ -16,14 +16,17 @@ import {
 } from "./landing";
 
 describe("readClickIds", () => {
+  const NONE = { gclid: null, fbclid: null, oppref: null, ttclid: null };
+
   test("each platform's click id is read from the query", () => {
-    expect(readClickIds("?gclid=g1")).toEqual({ gclid: "g1", fbclid: null, ttclid: null });
-    expect(readClickIds("?fbclid=f1")).toEqual({ gclid: null, fbclid: "f1", ttclid: null });
-    expect(readClickIds("?ttclid=t1")).toEqual({ gclid: null, fbclid: null, ttclid: "t1" });
+    expect(readClickIds("?gclid=g1")).toEqual({ ...NONE, gclid: "g1" });
+    expect(readClickIds("?fbclid=f1")).toEqual({ ...NONE, fbclid: "f1" });
+    expect(readClickIds("?oppref=o1")).toEqual({ ...NONE, oppref: "o1" });
+    expect(readClickIds("?ttclid=t1")).toEqual({ ...NONE, ttclid: "t1" });
   });
 
   test("an empty query yields no click ids", () => {
-    expect(readClickIds("")).toEqual({ gclid: null, fbclid: null, ttclid: null });
+    expect(readClickIds("")).toEqual(NONE);
   });
 
   test("an empty parameter value is null, not an empty string", () => {
@@ -37,6 +40,40 @@ describe("readClickIds", () => {
     const realistic = `IwAR${"3".repeat(150)}`;
     expect(readClickIds(`?fbclid=${realistic}`).fbclid).toBe(realistic);
     expect(readClickIds(`?fbclid=${"x".repeat(4000)}`).fbclid).toHaveLength(512);
+  });
+});
+
+describe("readClickIds: the ChatGPT click id (oppref)", () => {
+  // OpenAI documents no format and asks for "the original string without
+  // modification", so the value is returned exactly as one decode left it.
+  test.each([
+    ["an opaque id", "oppref=aB3dE9fGh1JkLm0pQr"],
+    ["the unreserved punctuation - _ . ~", "oppref=ab-cd_ef.gh~ij"],
+    ["capitals, which are not folded", "oppref=AbCdEfGh"],
+    ["surrounding spaces, which are not trimmed", "oppref=%20ab%20"],
+    ["a real-length id", `oppref=op_${"A1b2".repeat(30)}`],
+  ])("%s arrives byte for byte", (_case, query) => {
+    const expected = new URLSearchParams(query).get("oppref");
+    expect(readClickIds(`?${query}&utm_source=chatgpt`).oppref).toBe(expected!);
+  });
+
+  test("a percent-encoded value is decoded exactly once", () => {
+    expect(readClickIds("?oppref=a%2Fb%3Dc").oppref).toBe("a/b=c");
+    // `%25` is a literal percent sign: a second decode would turn this into `a/b`.
+    expect(readClickIds("?oppref=a%252Fb").oppref).toBe("a%2Fb");
+  });
+
+  test("an empty value is no click", () => {
+    expect(readClickIds("?oppref=").oppref).toBeNull();
+    expect(readClickIds("?oppref=%20%20").oppref).toBeNull();
+  });
+
+  test("an id at the bound is kept whole, and one past it is dropped, never cut short", () => {
+    // A truncated id still looks like data and attributes to nothing at OpenAI,
+    // so unlike the other click ids it is refused outright.
+    expect(readClickIds(`?oppref=${"x".repeat(512)}`).oppref).toBe("x".repeat(512));
+    expect(readClickIds(`?oppref=${"x".repeat(513)}`).oppref).toBeNull();
+    expect(readClickIds(`?oppref=${"x".repeat(4000)}`).oppref).toBeNull();
   });
 });
 

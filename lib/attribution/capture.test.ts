@@ -210,6 +210,13 @@ describe("a returning visitor: the latest paid click wins", () => {
       ["a direct visit, then a Meta click: replaced", "", "?fbclid=f-new", true, true],
       ["a Google click, then a newer Meta click: replaced", "?gclid=g-old", "?fbclid=f-new", true, true],
       ["a Meta click, then a newer Google click: replaced", "?fbclid=f-old", "?gclid=g-new", true, true],
+      ["a Google click, then a newer ChatGPT click: replaced", "?gclid=g-old", "?oppref=o-new", true, true],
+      ["a ChatGPT click, then a newer Google click: replaced", "?oppref=o-old", "?gclid=g-new", true, true],
+      ["a Meta click, then a newer ChatGPT click: replaced", "?fbclid=f-old", "?oppref=o-new", true, true],
+      ["a ChatGPT click, then a newer ChatGPT click: replaced", "?oppref=o-old", "?oppref=o-new", true, true],
+      ["a ChatGPT click, then an organic visit: kept", "?oppref=o-old", "", false, false],
+      // A reload, or the capture re-running after a client-side navigation.
+      ["a ChatGPT click, then the same click again: kept", "?oppref=o-old", "?oppref=o-old", false, false],
       ["a Meta click, then a newer Meta click: replaced", "?fbclid=f-old", "?fbclid=f-new", true, true],
       ["a direct visit, then a TikTok click: replaced", "", "?ttclid=t-new", true, true],
       ["a Google click, then an organic visit: kept", "?gclid=g-old", "", false, false],
@@ -251,6 +258,7 @@ describe("a returning visitor: the latest paid click wins", () => {
   test.each([
     ["a newer Meta click", "?fbclid=f-new", "meta", "f-new"],
     ["a Google click", "?gclid=g-new", "google", "g-new"],
+    ["a ChatGPT click", "?oppref=o-new", "openai", "o-new"],
     ["a TikTok click", "?ttclid=t-new", "tiktok", "t-new"],
   ])("%s replaces the stored Meta click, and the source with it", (_case, search, vn, ci) => {
     const later = plan(visitor(US), {
@@ -421,6 +429,8 @@ describe("what the capture still waits for", () => {
 
   test.each([
     ["a Google click", "https://stampeo.app/us?gclid=g1"],
+    ["a ChatGPT click", "https://stampeo.app/us?oppref=o1&utm_source=chatgpt"],
+    ["a ChatGPT click that also carries a ttclid", "https://stampeo.app/us?oppref=o1&ttclid=t1"],
     ["an organic arrival", "https://stampeo.app/us"],
   ])("%s does not wait for Meta's browser id", (_case, url) => {
     expect(wait(visitor(US), { landing: landing(url) }).fbp).toBe(false);
