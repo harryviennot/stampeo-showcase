@@ -25,8 +25,8 @@
       "featuresLabel": "Tout est inclus :",
       "features": [
         "Clients et scans illimités",
-        "Cartes à tampons ou à points, entièrement personnalisables",
-        "Notifications automatiques de tampon et de récompense",
+        "Tampons, points ou niveaux",
+        "Notifications automatiques",
         "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
         "Liste clients, statistiques et recherche",
@@ -41,7 +41,7 @@
       "features": [
         "8 diffusions par mois à tous vos clients",
         "Des points en plus sur les paniers au-dessus du montant que vous fixez",
-        "Vos propres messages de tampon et de récompense",
+        "Personnalisez les notifications automatiques",
         "Styles de carte enregistrés illimités",
         "Graphiques des statistiques, 90 jours d'historique",
         "Membres d'équipe illimités",
@@ -108,8 +108,8 @@
       "tagline": "Pour les indépendants et les commerces mono-établissement",
       "features": [
         "Clients et scans illimités",
-        "Cartes à tampons ou à points, entièrement personnalisables",
-        "Notifications automatiques de tampon et de récompense",
+        "Tampons, points ou niveaux",
+        "Notifications automatiques",
         "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
         "Liste clients, statistiques et recherche",
@@ -124,7 +124,7 @@
       "features": [
         "8 diffusions par mois à tous vos clients",
         "Des points en plus sur les paniers au-dessus du montant que vous fixez",
-        "Vos propres messages de tampon et de récompense",
+        "Personnalisez les notifications automatiques",
         "Styles de carte enregistrés illimités",
         "Graphiques des statistiques, 90 jours d'historique",
         "Membres d'équipe illimités",
@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Type de fidélité",
-          "starter": "Tampons ou Points",
-          "growth": "Tampons ou Points",
-          "pro": "Tampons ou Points"
+          "starter": "Tampons, points ou niveaux",
+          "growth": "Tampons, points ou niveaux",
+          "pro": "Tampons, points ou niveaux"
         },
         "earningCaps": {
           "label": "Limites par client"

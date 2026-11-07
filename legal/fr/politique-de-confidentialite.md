@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 23 octobre 2026**
+**Dernière mise à jour : 7 novembre 2026**
 
 {/* COUNSEL: set the date at sign-off */}
 
@@ -155,9 +155,9 @@ Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptat
 
 Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé 6 mois, au terme desquels nous pouvons vous le redemander. Vous pouvez le modifier à tout moment via **Préférences cookies**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
 
-Si votre navigateur émet un signal Global Privacy Control, nous le traitons comme un refus et rien n'est chargé. Aux États-Unis, il prime même sur un choix que vous auriez fait ici auparavant, et aucun message ne vous est présenté, puisque vous avez déjà répondu. Dans chacun des États américains, nous le respectons comme une opposition à la vente, au partage et à la publicité ciblée, et tant qu'il est activé, la mesure d'audience est aussi désactivée. En Europe, un choix que vous faites vous-même prime sur le signal : tant que vous n'en avez pas fait, le bandeau reste proposé, afin que vous puissiez accepter délibérément si vous le souhaitez.
+Si votre navigateur émet un signal Global Privacy Control, nous le traitons comme un refus et rien n'est chargé. Aux États-Unis, il prime même sur un choix que vous auriez fait ici auparavant. Dans chacun des États américains, nous le respectons comme une opposition à la vente, au partage et à la publicité ciblée, et tant qu'il est activé, la mesure d'audience est aussi désactivée. En Europe, un choix que vous faites vous-même prime sur le signal : tant que vous n'en avez pas fait, le bandeau reste proposé, afin que vous puissiez accepter délibérément si vous le souhaitez.
 
-Les visiteurs situés aux États-Unis sont traités différemment, les lois des États applicables exigeant une information et une possibilité de refus plutôt qu'un consentement préalable. Les cookies de mesure et de publicité y sont chargés dès l'arrivée, un message l'indique, et le lien **Vos choix de confidentialité** permet de les désactiver à tout moment. Il figure dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés, et le message comporte un bouton du même nom. Un refus est conservé 13 mois et renouvelé à chacune de vos visites, et il est restauré depuis votre compte lorsque vous vous connectez au tableau de bord.
+Les visiteurs situés aux États-Unis sont traités différemment, les lois des États applicables exigeant une information et une possibilité de refus plutôt qu'un consentement préalable. Les cookies de mesure et de publicité y sont chargés dès l'arrivée, et le lien **Vos choix de confidentialité** permet de les désactiver à tout moment. Il figure dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés. Un refus est conservé 13 mois et renouvelé à chacune de vos visites, et il est restauré depuis votre compte lorsque vous vous connectez au tableau de bord.
 
 Les règles qui s'appliquent à vous sont déterminées d'après le fuseau horaire de votre appareil. Lorsque les signaux divergent, les règles les plus strictes s'appliquent, et lorsque nous ne pouvons pas vous situer, ce sont les règles strictes (opt-in) qui s'appliquent. Nous n'utilisons pas votre adresse IP pour cela.
 
@@ -241,7 +241,7 @@ Un refus exprimé sur ce site après la création de votre compte s'applique à 
 
 ### 5.6 Conservation de vos choix en matière de cookies
 
-Lorsque vous acceptez ou refusez les cookies — sur la bannière, sur le bandeau affiché aux visiteurs situés aux États-Unis, ou plus tard via **Préférences cookies** ou, aux États-Unis, **Vos choix de confidentialité** — nous conservons une trace de cette décision sur nos serveurs. Le RGPD nous impose d'être en mesure de démontrer que le consentement a bien été donné (article 7.1), et un choix conservé uniquement dans votre navigateur ne démontre rien : il réside sur votre appareil, vous pouvez le modifier, et votre décision suivante l'écrase.
+Lorsque vous acceptez ou refusez les cookies — sur la bannière, ou plus tard via **Préférences cookies** ou, aux États-Unis, **Vos choix de confidentialité** — nous conservons une trace de cette décision sur nos serveurs. Le RGPD nous impose d'être en mesure de démontrer que le consentement a bien été donné (article 7.1), et un choix conservé uniquement dans votre navigateur ne démontre rien : il réside sur votre appareil, vous pouvez le modifier, et votre décision suivante l'écrase.
 
 Chaque enregistrement contient la décision elle-même et rien qui vous concerne : les catégories que vous avez acceptées ou refusées, la version du texte qui vous a été présentée, le régime applicable (opt-in ou opt-out), le support sur lequel vous avez répondu, et deux horodatages — celui indiqué par votre appareil et celui de la réception par notre serveur.
 
@@ -270,7 +270,7 @@ Nous utilisons les données collectées pour :
 
 Nous **ne vendons jamais** de données personnelles contre de l'argent. Nous n'effectuons **aucun suivi inter-entreprises** : les données d'un client dans une entreprise sont totalement isolées de celles dans une autre.
 
-**Aux États-Unis :** transmettre des données à Meta, à Google Ads et à OpenAI, pour notre publicité, comme décrit au 5.5, peut constituer un « partage » au sens du droit de la Californie. Vous pouvez vous y opposer à tout moment via **Vos choix de confidentialité**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés et dans le message d'information, ou par un signal Global Privacy Control, que nous respectons dans chacun des États américains comme décrit au 5.1.
+**Aux États-Unis :** transmettre des données à Meta, à Google Ads et à OpenAI, pour notre publicité, comme décrit au 5.5, peut constituer un « partage » au sens du droit de la Californie. Vous pouvez vous y opposer à tout moment via **Vos choix de confidentialité**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés, ou par un signal Global Privacy Control, que nous respectons dans chacun des États américains comme décrit au 5.1.
 
 ### 6.1 Emails de cycle de vie et marketing adressés aux utilisateurs Business
 

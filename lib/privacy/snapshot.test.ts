@@ -26,19 +26,19 @@ describe("what the snapshot says about the row", () => {
       marketing: false,
       ready: false,
       row: "UNKNOWN",
-      surface: "banner",
+      regime: "opt-in",
     });
   });
 
   test.each([
-    ["a US visitor", "America/New_York", "", "US", "notice"],
-    ["a French visitor", "Europe/Paris", "", "EEA_UK_CH", "banner"],
-    ["a visitor we cannot place", "Antarctica/Troll", "", "UNKNOWN", "banner"],
-    ["a US timezone with a region cookie naming France", "America/New_York", region("FR"), "US", "notice"],
-  ] as const)("%s", (_case, timezone, cookie, row, surface) => {
+    ["a US visitor", "America/New_York", "", "US", "opt-out"],
+    ["a French visitor", "Europe/Paris", "", "EEA_UK_CH", "opt-in"],
+    ["a visitor we cannot place", "Antarctica/Troll", "", "UNKNOWN", "opt-in"],
+    ["a US timezone with a region cookie naming France", "America/New_York", region("FR"), "US", "opt-out"],
+  ] as const)("%s", (_case, timezone, cookie, row, regime) => {
     browser = installFakeBrowser({ timezone, cookie: `stampeo_sid=${SUBJECT}; ${cookie}` });
 
-    expect(readConsentSnapshot()).toMatchObject({ row, surface, ready: true });
+    expect(readConsentSnapshot()).toMatchObject({ row, regime, ready: true });
   });
 });
 

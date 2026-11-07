@@ -1,6 +1,6 @@
 # Política de privacidad: Stampeo
 
-**Última actualización: 23 de octubre de 2026**
+**Última actualización: 7 de noviembre de 2026**
 
 {/* COUNSEL: set the date at sign-off */}
 
@@ -155,9 +155,9 @@ Las cookies de medición y de publicidad solo se cargan después de que las acep
 
 Rechazar cuesta un clic, en el mismo banner y con la misma visibilidad que aceptar, y el sitio funciona igual en ambos casos. Guardamos tu elección durante 6 meses, pasados los cuales podemos volver a pedírtela. Puedes cambiarla cuando quieras desde **Preferencias de cookies**, en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad. Retirar un consentimiento borra las cookies afectadas y recarga la página para que los scripts dejen de ejecutarse.
 
-Si tu navegador envía una señal Global Privacy Control, la tratamos como un rechazo y no se carga nada. En Estados Unidos prevalece incluso sobre una elección que hayas hecho aquí antes, y no te mostramos ningún aviso, porque ya has respondido. En cada uno de los estados de Estados Unidos respetamos la señal como una oposición a la venta, al uso compartido y a la publicidad dirigida, y mientras esté activada, la medición de audiencia también queda desactivada. En Europa tu propia elección prevalece sobre la señal: mientras no hayas elegido, el banner se sigue ofreciendo, para que puedas aceptar deliberadamente si así lo quieres.
+Si tu navegador envía una señal Global Privacy Control, la tratamos como un rechazo y no se carga nada. En Estados Unidos prevalece incluso sobre una elección que hayas hecho aquí antes. En cada uno de los estados de Estados Unidos respetamos la señal como una oposición a la venta, al uso compartido y a la publicidad dirigida, y mientras esté activada, la medición de audiencia también queda desactivada. En Europa tu propia elección prevalece sobre la señal: mientras no hayas elegido, el banner se sigue ofreciendo, para que puedas aceptar deliberadamente si así lo quieres.
 
-Los visitantes situados en Estados Unidos reciben un trato distinto, porque las leyes estatales aplicables exigen información y una opción de rechazo, no un consentimiento previo. Allí las cookies de medición y de publicidad se cargan desde la llegada, un aviso lo indica, y el enlace **Tus opciones de privacidad** permite desactivarlas en cualquier momento. Está en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad, y el aviso incluye un botón con el mismo nombre. Un rechazo se guarda durante 13 meses y se renueva en cada visita, y se restaura desde tu cuenta cuando inicias sesión en el panel.
+Los visitantes situados en Estados Unidos reciben un trato distinto, porque las leyes estatales aplicables exigen información y una opción de rechazo, no un consentimiento previo. Allí las cookies de medición y de publicidad se cargan desde la llegada, y el enlace **Tus opciones de privacidad** permite desactivarlas en cualquier momento. Está en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad. Un rechazo se guarda durante 13 meses y se renueva en cada visita, y se restaura desde tu cuenta cuando inicias sesión en el panel.
 
 Las reglas que se te aplican se determinan a partir de la zona horaria de tu dispositivo. Cuando las señales no coinciden, se aplican las reglas más estrictas, y cuando no podemos ubicarte, se aplican las reglas estrictas (opt-in). No usamos tu dirección IP para ello.
 
@@ -241,7 +241,7 @@ Un rechazo que hagas en este sitio después de crear tu cuenta se aplica a tu cu
 
 ### 5.6 Registro de tus decisiones sobre cookies
 
-Cuando aceptas o rechazas las cookies —en el banner, en el aviso mostrado a los visitantes situados en Estados Unidos, o más tarde mediante **Preferencias de cookies** o, en Estados Unidos, **Tus opciones de privacidad**— conservamos constancia de esa decisión en nuestros servidores. El RGPD nos obliga a poder demostrar que el consentimiento se prestó (artículo 7.1), y una decisión guardada únicamente en tu navegador no demuestra nada: reside en tu dispositivo, puedes modificarla y tu siguiente decisión la sobrescribe.
+Cuando aceptas o rechazas las cookies —en el banner, o más tarde mediante **Preferencias de cookies** o, en Estados Unidos, **Tus opciones de privacidad**— conservamos constancia de esa decisión en nuestros servidores. El RGPD nos obliga a poder demostrar que el consentimiento se prestó (artículo 7.1), y una decisión guardada únicamente en tu navegador no demuestra nada: reside en tu dispositivo, puedes modificarla y tu siguiente decisión la sobrescribe.
 
 Cada registro contiene la decisión en sí y nada relativo a tu persona: qué categorías aceptaste o rechazaste, la versión del texto que se te mostró, si te correspondía el régimen de opt-in o de opt-out, en qué superficie respondiste y dos marcas de tiempo: la que indicó tu propio dispositivo y la de recepción en nuestro servidor.
 
@@ -270,7 +270,7 @@ Utilizamos los datos recogidos para:
 
 **Nunca vendemos** datos personales a cambio de dinero. No realizamos **ningún seguimiento entre comercios**: los datos de un cliente en un comercio están totalmente aislados de los que tenga en otro.
 
-**En Estados Unidos:** enviar datos a Meta, a Google Ads y a OpenAI, para nuestra publicidad, como se describe en el 5.5, puede considerarse «compartir» datos según la ley de California. Puedes oponerte en cualquier momento mediante **Tus opciones de privacidad**, en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad y en el aviso, o con una señal Global Privacy Control, que respetamos en cada estado de Estados Unidos como se describe en el 5.1.
+**En Estados Unidos:** enviar datos a Meta, a Google Ads y a OpenAI, para nuestra publicidad, como se describe en el 5.5, puede considerarse «compartir» datos según la ley de California. Puedes oponerte en cualquier momento mediante **Tus opciones de privacidad**, en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad, o con una señal Global Privacy Control, que respetamos en cada estado de Estados Unidos como se describe en el 5.1.
 
 ### 6.1 Correos de ciclo de vida y marketing dirigidos a los usuarios Business
 

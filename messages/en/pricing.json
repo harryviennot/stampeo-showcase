@@ -25,8 +25,8 @@
       "featuresLabel": "Everything included:",
       "features": [
         "Unlimited customers and scans",
-        "Stamp or points cards, fully customisable",
-        "Automatic stamp and reward notifications",
+        "Stamps, points or levels",
+        "Automatic notifications",
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
@@ -41,7 +41,7 @@
       "features": [
         "8 broadcasts a month to all your customers",
         "Extra points on baskets above the amount you set",
-        "Write your own stamp and reward messages",
+        "Customise automatic notifications",
         "Unlimited saved card styles",
         "Analytics charts, 90 days of history",
         "Unlimited team members",
@@ -108,8 +108,8 @@
       "tagline": "For solo operators and single-location businesses",
       "features": [
         "Unlimited customers and scans",
-        "Stamp or points cards, fully customisable",
-        "Automatic stamp and reward notifications",
+        "Stamps, points or levels",
+        "Automatic notifications",
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
@@ -124,7 +124,7 @@
       "features": [
         "8 broadcasts a month to all your customers",
         "Extra points on baskets above the amount you set",
-        "Write your own stamp and reward messages",
+        "Customise automatic notifications",
         "Unlimited saved card styles",
         "Analytics charts, 90 days of history",
         "Unlimited team members",
@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Loyalty type",
-          "starter": "Stamps or Points",
-          "growth": "Stamps or Points",
-          "pro": "Stamps or Points"
+          "starter": "Stamps, points or levels",
+          "growth": "Stamps, points or levels",
+          "pro": "Stamps, points or levels"
         },
         "earningCaps": {
           "label": "Per-customer earning limits"

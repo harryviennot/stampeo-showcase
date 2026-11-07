@@ -177,6 +177,7 @@ const PRODUCT = `## Product
 
 ### Loyalty mechanics
 - **Stamps** (classic stamp card) or **points** (spend-based): each business runs one program, stamps or points, on ${availability((f) => f.loyaltyTypes.length > 1)}.
+- **Levels** (up to ${PLAN_FACTS.starter.levels}) on top of either program: customers move up a level as they earn, and each level can have its own card style, reward and perks. On ${availability((f) => f.levels > 0)}.
 - **Milestone rewards**: trigger a reward at arbitrary stamp counts (e.g. welcome bonus at 1, surprise gift at 5, main reward at 10). ${PLAN_FACTS.growth.milestoneNotifications} custom milestones per program on Growth, unlimited on Pro.
 - **Automatic notifications** on every stamp, milestone, and reward unlock — delivered through Apple Wallet / Google Wallet push, no app required.
 - **Geofencing notifications** (${GEOFENCING}): surface the card on the lock screen when the customer is near the shop.
@@ -299,7 +300,7 @@ const FAQ = `## FAQ (condensed)
 - **Can customers cheat by adding their own stamps?** No. Only the business's scanner app can write stamps to a pass. Customers can't modify their own card.
 - **Does it work offline?** Installed cards open without a network connection. The scanner app needs one to add stamps; offline scanning is coming soon.
 - **Does it work on Android?** Yes, via Google Wallet. Stampeo auto-detects the device and serves the right format from a single QR code.
-- **Stamps or points?** Either, on ${availability((f) => f.loyaltyTypes.length > 1)}. Each business runs one program and picks stamps or points for it.
+- **Stamps or points?** Either, on ${availability((f) => f.loyaltyTypes.length > 1)}. Each business runs one program and picks stamps or points for it, and can add up to ${PLAN_FACTS.starter.levels} levels on top.
 - **How is this different from paper cards?** Paper cards get lost or forgotten; digital wallet passes stay on the phone, update live, and give the business real customer data (visit frequency, retention, top customers).
 - **How is this different from a dedicated loyalty app?** Customers have nothing to download: ${pct("walletAddRate")} of customers who join add the card to their wallet, and ${pct("installedDay90")} of cards are still there after 90 days ${SOURCE}.`;
 

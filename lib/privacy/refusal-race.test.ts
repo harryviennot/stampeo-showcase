@@ -20,8 +20,6 @@ import {
 } from "../consent";
 import { SUBJECT, installFakeBrowser, type FakeBrowser } from "./__fixtures__/fake-browser";
 import { mountTags } from "./__fixtures__/mount-tags";
-import { noticeAcknowledgement } from "./choices-ui";
-import { readConsentSnapshot } from "./snapshot";
 import { planPageLoad, runPageLifecycle } from "./lifecycle";
 import { rowFor } from "./policy";
 
@@ -33,6 +31,10 @@ afterEach(() => {
 
 const GA_JAR = `_ga=GA1.1.${GA_CID}; _ga_ZFZ6JLPFXN=GS2.1.s1791244795$o1$g1$t1791244799$j0$l0$h0`;
 const names = (jar: string) => jar.split("; ").map((entry) => entry.split("=")[0]);
+
+/** The consent cookie a banner wrote for this choice. */
+const record = (choice: object) =>
+  `stampeo_consent=${encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, t: 1_791_244_000, s: SUBJECT, ...choice }))}`;
 
 /** What the page does when polling for the tags' cookies. */
 const poll = (consent = visitor(US)) =>
@@ -106,8 +108,6 @@ describe("a US visitor on a Meta ad refuses advertising while the capture is sti
 });
 
 describe("every trackable load clears the cookies of every category the resolved consent denies", () => {
-  const record = (choice: object) =>
-    `stampeo_consent=${encodeURIComponent(JSON.stringify({ v: CONSENT_VERSION, t: 1_791_244_000, s: SUBJECT, ...choice }))}`;
   const CARRIERS_JAR =
     "stampeo_src=1; stampeo_ga=2; stampeo_ad=3; _ga=4; _ga_ZFZ6JLPFXN=7; _fbp=5; _fbc=6; _gcl_au=8; __oppref=9; __obref=10";
   const EVERYTHING = [
@@ -197,28 +197,21 @@ describe("every trackable load clears the cookies of every category the resolved
   });
 });
 
-describe("Got it in New York, then the same browser in Paris", () => {
+describe("a notice dismissal saved before the notice was retired, then the same browser in Paris", () => {
   const stray = `_ga=GA1.1.${GA_CID}; _ga_ZFZ6JLPFXN=GS2.1.s1791244795$o1$g1; _fbp=${FBP}; _fbc=fb.1.1791244800000.IwAR_TEST_fbclid_0001`;
+  const carriers = "stampeo_src=1; stampeo_ga=2; stampeo_ad=3";
 
   test("the tags' cookies and the carriers are gone, no tag loads, and Refuse all clears again, every time", async () => {
-    browser = installFakeBrowser({ timezone: "America/New_York", hostname: "stampeo.app", fetch: "route" });
-    runPageLifecycle("/us/pricing", { refreshed: false });
-    writeConsentRecord(noticeAcknowledgement(readConsentSnapshot()), US);
-    // The tags ran and set their cookies, and the capture wrote the carriers.
-    browser.setJar(`${browser.jar()}; ${stray}`);
-    poll();
-    await browser.settled();
-    for (const name of ["_ga", "_fbp", "_fbc", "stampeo_src", "stampeo_ga", "stampeo_ad"]) {
-      expect(names(browser.jar())).toContain(name);
-    }
-    const jar = browser.jar();
-    browser.restore();
-
-    // Paris: the live row is stricter than the row the notice was dismissed in.
-    browser = installFakeBrowser({ cookie: jar, timezone: "Europe/Paris", hostname: "stampeo.app", fetch: "route" });
+    // The live row (Paris) is stricter than the row the notice was dismissed in.
+    browser = installFakeBrowser({
+      cookie: `stampeo_sid=${SUBJECT}; ${record({ a: 1, m: 1, r: "opt-out", g: "US" })}; ${stray}; ${carriers}`,
+      timezone: "Europe/Paris",
+      hostname: "stampeo.app",
+      fetch: "route",
+    });
     runPageLifecycle("/pricing", { refreshed: false });
     await browser.settled();
-    await mountTags("got-it-in-paris");
+    await mountTags("dismissal-in-paris");
 
     for (const name of ["_ga", "_ga_ZFZ6JLPFXN", "_fbp", "_fbc", "stampeo_src", "stampeo_ga", "stampeo_ad"]) {
       expect(names(browser.jar())).not.toContain(name);
