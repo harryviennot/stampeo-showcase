@@ -75,6 +75,13 @@ describe("the comparison table on a phone", () => {
     expect(summary.indexOf("Their own app")).toBeLessThan(summary.indexOf("Apple Wallet and Google Wallet"));
   });
 
+  it("tells a screen reader which product each short answer belongs to", () => {
+    const summary = phone.match(/<details\b[\s\S]*?<\/details>/)![0].match(/<summary\b[\s\S]*?<\/summary>/)![0];
+
+    expect(text(summary)).toContain("Acme Loyalty: Their own app");
+    expect(text(summary)).toContain("Stampeo: Apple Wallet and Google Wallet");
+  });
+
   it("opens on the full sentence of each product, and the competitor's ends with a link to where it was read", () => {
     const row = phone.match(/<details\b[\s\S]*?<\/details>/)![0];
     const open = row.slice(row.indexOf("</summary>"));

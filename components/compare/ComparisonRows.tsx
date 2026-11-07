@@ -41,10 +41,13 @@ export function ComparisonRows({ groups, names, labels, open, onSet }: RowsProps
                   )}
                 </span>
                 <span className="mt-1 grid grid-cols-2 gap-4">
+                  {/* The names line above the rows is hidden from screen readers, so each value carries its product's name. */}
                   <span className="min-w-0">
+                    <span className="sr-only">{`${names.competitor}: `}</span>
                     <ShortValue side={row.competitor} />
                   </span>
                   <span className="min-w-0">
+                    <span className="sr-only">{`${names.stampeo}: `}</span>
                     <ShortValue side={row.stampeo} />
                   </span>
                 </span>
