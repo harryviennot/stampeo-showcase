@@ -1,7 +1,4 @@
-import type { ComponentType } from "react";
-import { DevicePhoneMobileIcon, Gift, PriceTagIcon, QRCodeIcon } from "@/components/icons";
 import type { Side } from "@/lib/compare/page/rows";
-import type { RowGroupId } from "@/lib/compare/types";
 
 /** The words the table's client parts draw, passed as plain text. */
 export interface TableLabels {
@@ -18,21 +15,19 @@ export interface Names {
   stampeo: string;
 }
 
-const GROUP_ICONS: Record<RowGroupId, ComponentType<{ className?: string; weight?: "regular" | "bold" | "duotone" }>> = {
-  customer: DevicePhoneMobileIcon,
-  program: Gift,
-  counter: QRCodeIcon,
-  price: PriceTagIcon,
-};
+/** Stampeo's column, tinted like the highlighted plan of the pricing table. */
+export const STAMPEO_TINT = "bg-[var(--accent)]/5";
 
-/** The accent-tinted square that marks a theme. */
-export function GroupChip({ group }: { group: RowGroupId }) {
-  const Icon = GROUP_ICONS[group];
+/** Every other row tinted, as the pricing table stripes its rows. */
+export const rowTint = (index: number) => (index % 2 === 0 ? "bg-[var(--muted)]/30" : "");
 
+/** A product's short answer, with the tax line under it when the row has one. */
+export function ShortValue({ side }: { side: Side }) {
   return (
-    <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
-      <Icon className="h-5 w-5" weight="duotone" />
-    </span>
+    <>
+      <span className="block text-sm leading-snug font-medium break-words text-[var(--near-black)]">{side.short}</span>
+      {side.taxLine && <span className="mt-0.5 block text-xs leading-snug break-words text-[var(--muted-foreground)]">{side.taxLine}</span>}
+    </>
   );
 }
 

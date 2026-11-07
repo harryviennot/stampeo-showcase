@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import { ChevronDownIcon } from "@/components/icons";
 import { allOpen, toggleAll, toggleRow, type OpenRows } from "@/lib/compare/page/open-rows";
 import { openableRows, type TableGroup } from "@/lib/compare/page/rows";
 import { ComparisonGrid } from "./ComparisonGrid";
@@ -12,17 +13,19 @@ export function ComparisonTableView({ groups, names, labels }: { groups: TableGr
   const ids = useMemo(() => openableRows(groups), [groups]);
   const [open, setOpen] = useState<OpenRows>(() => new Set());
   const idBase = useId();
+  const everyRowOpen = allOpen(open, ids);
 
   return (
     <div className="not-prose mt-4 mb-2">
       {ids.length > 0 && (
-        <div className="flex justify-end">
+        <div className="mb-2 flex justify-end">
           <button
             type="button"
             onClick={() => setOpen((current) => toggleAll(current, ids))}
-            className="inline-flex min-h-11 items-center text-sm font-medium text-[var(--accent)] underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-[var(--accent)] underline-offset-4 hover:underline"
           >
-            {allOpen(open, ids) ? labels.hideAll : labels.showAll}
+            {everyRowOpen ? labels.hideAll : labels.showAll}
+            <ChevronDownIcon aria-hidden="true" weight="bold" className={`h-4 w-4 transition-transform duration-200 ${everyRowOpen ? "rotate-180" : ""}`} />
           </button>
         </div>
       )}

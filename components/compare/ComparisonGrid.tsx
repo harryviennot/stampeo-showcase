@@ -1,10 +1,8 @@
 import { Fragment } from "react";
 import { ChevronDownIcon } from "@/components/icons";
-import { hasDetail, type Side, type TableGroup } from "@/lib/compare/page/rows";
+import { hasDetail, type TableGroup } from "@/lib/compare/page/rows";
 import type { OpenRows } from "@/lib/compare/page/open-rows";
-import { GroupChip, SideDetail, type Names, type TableLabels } from "./TableParts";
-
-const STAMPEO_TINT = "bg-[var(--accent)]/5";
+import { rowTint, ShortValue, SideDetail, STAMPEO_TINT, type Names, type TableLabels } from "./TableParts";
 
 interface GridProps {
   groups: TableGroup[];
@@ -16,77 +14,88 @@ interface GridProps {
   idBase: string;
 }
 
-/** The comparison from the tablet up: a real table of labels and short answers, each row opening on its full sentences and sources. */
+/** Where each theme's first row falls in the table, so the stripes run on across themes. */
+const firstRows = (groups: TableGroup[]) => groups.map((_, index) => groups.slice(0, index).reduce((count, group) => count + group.rows.length, 0));
+
+/**
+ * The comparison from the tablet up, drawn like the pricing page's feature
+ * table: one card, a bold row per theme, striped rows with Stampeo's column
+ * tinted. Each row opens on its full sentences and sources, in the same columns.
+ */
 export function ComparisonGrid({ groups, names, labels, open, onToggle, idBase }: GridProps) {
+  const starts = firstRows(groups);
+
   return (
-    <div className="hidden overflow-hidden rounded-3xl border border-[var(--border)] bg-white shadow-sm md:block">
+    <div className="card-stamp hidden overflow-hidden rounded-3xl bg-white md:block">
       <table role="table" className="w-full table-fixed border-collapse text-left">
         <caption className="sr-only">{labels.caption}</caption>
         <colgroup>
-          <col className="w-[24%]" />
-          <col className="w-[38%]" />
-          <col className="w-[38%]" />
+          <col className="w-[34%]" />
+          <col className="w-[33%]" />
+          <col className="w-[33%]" />
         </colgroup>
         <thead role="rowgroup">
-          <tr role="row">
-            <th scope="col" role="columnheader" className="p-5">
+          <tr role="row" className="border-b border-[var(--border)]">
+            <th scope="col" role="columnheader" className="p-6">
               <span className="sr-only">{labels.criterion}</span>
             </th>
-            <th scope="col" role="columnheader" className="p-5 text-sm font-bold text-[var(--near-black)]">
+            <th scope="col" role="columnheader" className="p-6 text-left text-sm font-bold text-[var(--near-black)]">
               {names.competitor}
             </th>
-            <th scope="col" role="columnheader" className={`p-5 text-sm font-bold text-[var(--accent)] ${STAMPEO_TINT}`}>
+            <th scope="col" role="columnheader" className={`p-6 text-left text-sm font-bold text-[var(--accent)] ${STAMPEO_TINT}`}>
               {names.stampeo}
             </th>
           </tr>
         </thead>
-        {groups.map((group) => (
+        {groups.map((group, groupIndex) => (
           <tbody key={group.id} role="rowgroup">
-            <tr role="row">
-              <th scope="rowgroup" role="rowheader" colSpan={3} className="border-t border-[var(--border)] bg-[var(--cream)]/70 px-5 py-3 text-left">
-                <span className="flex items-center gap-3">
-                  <GroupChip group={group.id} />
-                  <span className="text-h3 text-[var(--near-black)]">{group.label}</span>
-                </span>
+            <tr role="row" className="border-t border-[var(--border)]/50">
+              <th scope="rowgroup" role="rowheader" colSpan={3} className="px-6 py-4 text-left text-sm font-bold text-[var(--foreground)]">
+                {group.label}
               </th>
             </tr>
-            {group.rows.map((row) => {
+            {group.rows.map((row, rowIndex) => {
               const isOpen = open.has(row.id);
               const detailId = `${idBase}-${row.id}`;
+              const tint = rowTint(starts[groupIndex] + rowIndex);
 
               return (
                 <Fragment key={row.id}>
-                  <tr role="row">
-                    <th scope="row" role="rowheader" className="border-t border-[var(--border)]/60 p-0 text-left align-top">
+                  <tr role="row" className={`border-t border-[var(--border)]/50 ${tint}`}>
+                    <th scope="row" role="rowheader" className="p-0 text-left text-[13px] font-medium text-[var(--muted-foreground)]">
                       {hasDetail(row) ? (
                         <button
                           type="button"
                           aria-expanded={isOpen}
                           aria-controls={detailId}
                           onClick={() => onToggle(row.id)}
-                          className={`flex min-h-11 w-full items-start justify-between gap-2 px-5 pt-4 text-left text-sm font-medium text-[var(--near-black)] hover:text-[var(--accent)] ${isOpen ? "pb-2" : "pb-4"}`}
+                          className="flex min-h-11 w-full items-center justify-between gap-3 px-6 py-2.5 text-left transition-colors hover:text-[var(--near-black)]"
                         >
                           {row.label}
                           <ChevronDownIcon
                             aria-hidden="true"
                             weight="bold"
-                            className={`mt-0.5 h-4 w-4 shrink-0 text-[var(--muted-foreground)] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                            className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 text-[var(--accent)]" : ""}`}
                           />
                         </button>
                       ) : (
-                        <span className="block px-5 py-4 text-sm font-medium text-[var(--near-black)]">{row.label}</span>
+                        <span className="block px-6 py-2.5">{row.label}</span>
                       )}
                     </th>
-                    <ShortCell side={row.competitor} compact={isOpen} />
-                    <ShortCell side={row.stampeo} tint={STAMPEO_TINT} compact={isOpen} />
+                    <td role="cell" className="px-6 py-2.5">
+                      <ShortValue side={row.competitor} />
+                    </td>
+                    <td role="cell" className={`px-6 py-2.5 ${STAMPEO_TINT}`}>
+                      <ShortValue side={row.stampeo} />
+                    </td>
                   </tr>
                   {hasDetail(row) && (
-                    <tr role="row" id={detailId} hidden={!isOpen}>
+                    <tr role="row" id={detailId} hidden={!isOpen} className={tint}>
                       <td role="cell" aria-hidden="true" />
-                      <td role="cell" className="min-w-0 px-5 pb-5 align-top text-sm leading-relaxed break-words text-[var(--muted-foreground)]">
+                      <td role="cell" className="px-6 pb-1 align-top text-[13px] leading-relaxed break-words text-[var(--muted-foreground)]">
                         <SideDetail side={row.competitor} sourceLabel={labels.source} />
                       </td>
-                      <td role="cell" className={`min-w-0 px-5 pb-5 align-top text-sm leading-relaxed break-words text-[var(--muted-foreground)] ${STAMPEO_TINT}`}>
+                      <td role="cell" className={`px-6 pb-1 align-top text-[13px] leading-relaxed break-words text-[var(--muted-foreground)] ${STAMPEO_TINT}`}>
                         <SideDetail side={row.stampeo} sourceLabel={labels.source} />
                       </td>
                     </tr>
@@ -98,15 +107,5 @@ export function ComparisonGrid({ groups, names, labels, open, onToggle, idBase }
         ))}
       </table>
     </div>
-  );
-}
-
-/** A product's short answer, with the tax line under it when the row has one. */
-function ShortCell({ side, tint = "", compact }: { side: Side; tint?: string; compact: boolean }) {
-  return (
-    <td role="cell" className={`min-w-0 border-t border-[var(--border)]/60 px-5 align-top break-words ${compact ? "pt-4 pb-2" : "py-4"} ${tint}`}>
-      <span className="block text-base leading-snug font-semibold text-[var(--near-black)]">{side.short}</span>
-      {side.taxLine && <span className="mt-1 block text-sm text-[var(--muted-foreground)]">{side.taxLine}</span>}
-    </td>
   );
 }
