@@ -27,7 +27,7 @@ import { consentMaxAgeSeconds, effectiveRow, resolveWithPolicy, rowFor } from ".
 const FILE = join(import.meta.dir, "policy-matrix.v1.json");
 
 describe("the shared file", () => {
-  test("hashes to the pinned constant, the same one the backend pins", () => {
+  test("the file hashes to its pinned constant", () => {
     const digest = createHash("sha256").update(readFileSync(FILE)).digest("hex");
     expect(digest).toBe(POLICY_MATRIX_SHA256);
   });

@@ -7,7 +7,7 @@ import raw from "./policy-matrix.v1.json";
  */
 
 export type PolicyRegime = "opt-in" | "opt-out";
-/** What a row shows a visitor who has not chosen: a blocking banner, a notice, or nothing. */
+/** A consent surface: a blocking banner, a notice, or nothing. */
 export type PolicySurface = "banner" | "notice" | "none";
 
 export interface PolicyRow {

@@ -212,7 +212,7 @@ describe("privacy policy: where the control is", () => {
   );
 });
 
-/** The sentences that described a notice shown to US visitors, in each locale. */
+/** Phrases that describe a notice shown to US visitors, in each locale. */
 const US_NOTICE: Record<string, RegExp> = {
   en: /no notice at all|a notice says so|the notice has a button|in the notice shown|and in the notice/,
   fr: /aucun message ne vous est présenté|un message l'indique|le message comporte|sur le bandeau affiché aux visiteurs|dans le message d'information/,

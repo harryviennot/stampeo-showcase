@@ -23,7 +23,7 @@ import {
 } from "./consent";
 import { rowFor } from "./privacy/policy";
 
-/** A US grant: the opt-out default, both on, as the privacy dialog or an earlier notice stored it. */
+/** A US grant: the opt-out default, both on. */
 const GRANT: ConsentRecord = {
   v: CONSENT_VERSION,
   analytics: true,

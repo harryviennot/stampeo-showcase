@@ -29,8 +29,8 @@ export interface ConsentEvidence {
 
 /**
  * When a current record's visitor clicked, or 0 when nothing in it was a click
- * in the row it was made under: a restore, a category left undecided, or a US
- * record that grants everything, which is the notice dismissed.
+ * in the row it was made under: a restore, a category left undecided, or an
+ * opt-out record that grants everything, which is the default with no click.
  */
 function clickedAt(record: ConsentRecord): number {
   const noClick =
@@ -56,7 +56,7 @@ function leavesNoClick(choice: {
  * still stand), so the capture carries that version and moment; such a choice
  * with no moment evidences nothing, and nothing is captured. Otherwise (the US
  * opt-out default, an older grant being no choice at all, or an older record
- * that was restored or left a category open) the notice text in force
+ * that was restored or left a category open) the consent text in force
  * (`CONSENT_VERSION`) and no consent moment (`0`), because nobody clicked.
  */
 export function captureConsentEvidence(
