@@ -7,9 +7,10 @@
  *     accepting records the click under the current one;
  *   - a refusal from the previous version stays a refusal; only a refusal of
  *     everything goes unasked;
- *   - a US visitor on the notice default is captured under the current version,
- *     unless a previous-version refusal with a click moment still stands, which
- *     keeps its own version (the backend then holds the click back from OpenAI);
+ *   - a US visitor, who is shown no consent surface, is captured on the opt-out
+ *     default under the current version, unless a previous-version refusal with
+ *     a click moment still stands, which keeps its own version (the backend then
+ *     holds the click back from OpenAI);
  *   - Global Privacy Control still beats a US choice.
  *
  * The browser never talks to OpenAI: the click rides in our own cookie and
@@ -116,13 +117,13 @@ test("a European with a grant from the previous version is asked again, and acce
 });
 
 describe("a refusal of advertising made under the previous version still stands", () => {
-  // Only a refusal of everything goes unasked: a grant of the other category
-  // was given for the older text, so that one is asked again.
+  // A European is asked again unless they refused everything: a grant of the
+  // other category was given for the older text. An American is never asked.
   test.each([
     ["a European who refused everything", EU, { a: 0, m: 0, r: "opt-in" }, "none"],
     ["an American who opted out of everything", US, { a: 0, m: 0, r: "opt-out" }, "none"],
     ["a European who refused advertising only", EU, { a: 1, m: 0, r: "opt-in" }, "banner"],
-    ["an American who opted out of advertising only", US, { a: 1, m: 0, r: "opt-out" }, "notice"],
+    ["an American who opted out of advertising only", US, { a: 1, m: 0, r: "opt-out" }, "none"],
   ])("%s: advertising stays off, the click is not recorded, and the surface is %s", async (_case, timezone, fields, shown) => {
     open({ consent: choice(PREVIOUS, fields), timezone });
 
@@ -137,12 +138,12 @@ describe("a refusal of advertising made under the previous version still stands"
 describe("a US visitor from a ChatGPT ad", () => {
   test.each([
     ["has no record", undefined],
-    ["holds a previous-version grant, which is the notice dismissed", choice(PREVIOUS, { a: 1, m: 1, r: "opt-out", g: "US" })],
+    ["holds a previous-version grant", choice(PREVIOUS, { a: 1, m: 1, r: "opt-out", g: "US" })],
     ["holds a previous-version record with nothing chosen", choice(PREVIOUS, { a: -1, m: -1, r: "opt-out" })],
-  ])("who %s is captured under the current notice, with nobody having clicked", async (_case, consent) => {
+  ])("who %s is shown nothing and captured on the opt-out default, with nobody having clicked", async (_case, consent) => {
     open({ consent, timezone: US });
 
-    expect(surface()).toBe("notice");
+    expect(surface()).toBe("none");
     capture();
     await browser!.settled();
     expect(adCarrier()).toMatchObject({
@@ -177,7 +178,7 @@ describe("a US visitor from a ChatGPT ad", () => {
     expect(adCarrier()).toBeNull();
   });
 
-  test("who refuses advertising on the notice keeps the click out", async () => {
+  test("who refused advertising in Your Privacy Choices keeps the click out", async () => {
     open({ consent: choice(CURRENT, { a: 1, m: 0, r: "opt-out", g: "US" }), timezone: US });
 
     capture();
