@@ -18,8 +18,13 @@ import { afterEach, describe, expect, test } from "bun:test";
 
 import {
   CONSENT_VERSION,
+  categoriesToClearOnChoice,
+  clearCookiesFor,
+  consentSurface,
+  currentConsent,
   readStoredConsent,
   resolveConsent,
+  revokedBy,
   writeConsentRecord,
   type ConsentRecord,
 } from "../consent";
@@ -101,8 +106,12 @@ describe("a US visitor with no choice arrives (AC3.1)", () => {
     // The jar and the server have it, and the gate is open.
     expect(readSidCookie(browser.jar())).not.toBeNull();
     expect(browser.fetches).toHaveLength(1);
-    expect(readConsentSnapshot().ready).toBe(true);
+    const arrived = readConsentSnapshot();
+    expect(arrived.ready).toBe(true);
     expect(tagGates()).toEqual({ ga: true, meta: true });
+
+    // Nothing is asked: the opt-out default is in force and no surface shows.
+    expect(consentSurface({ ...arrived, trackable: true, row: US })).toBe("none");
 
     await mountTags("us-no-choice");
     expect(browser.scripts).toEqual([
@@ -160,6 +169,41 @@ describe("a US visitor with no choice arrives (AC3.1)", () => {
     await browser.settled();
 
     expect(readConsentSnapshot().ready).toBe(true);
+  });
+});
+
+describe("a US visitor refuses everything in Your Privacy Choices (AC2)", () => {
+  test("the tag gates close, the page reloads, and the next load shows nothing and loads no tag", async () => {
+    browser = installFakeBrowser({ timezone: "America/New_York", fetch: "route" });
+    runPageLifecycle("/us/pricing", fresh());
+    await browser.settled();
+    expect(readConsentSnapshot()).toMatchObject({ analytics: true, marketing: true, record: null });
+    expect(tagGates()).toEqual({ ga: true, meta: true });
+
+    // Save in the dialog: the choice is written, what it refuses is cleared, and a running tag forces a reload.
+    const before = currentConsent();
+    const refusal = { analytics: false, marketing: false };
+    writeConsentRecord(refusal, US);
+    clearCookiesFor(categoriesToClearOnChoice(refusal));
+    await browser.settled();
+
+    expect(readConsentSnapshot()).toMatchObject(refusal);
+    expect(tagGates()).toEqual({ ga: false, meta: false });
+    expect(revokedBy(before, refusal)).toEqual(["analytics", "marketing"]);
+
+    // The reload: the same visitor with the jar they left.
+    const jar = browser.jar();
+    browser.restore();
+    browser = installFakeBrowser({ cookie: jar, timezone: "America/New_York", fetch: "route" });
+    runPageLifecycle("/us/pricing", fresh());
+    await browser.settled();
+
+    const reloaded = readConsentSnapshot();
+    expect(reloaded).toMatchObject({ ...refusal, ready: true });
+    expect(consentSurface({ ...reloaded, trackable: true, row: US })).toBe("none");
+    expect(tagGates()).toEqual({ ga: false, meta: false });
+    await mountTags("us-refused-in-dialog");
+    expect(browser.scripts).toEqual([]);
   });
 });
 

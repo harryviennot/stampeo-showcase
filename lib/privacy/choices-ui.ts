@@ -1,10 +1,10 @@
 import type { ConsentCategory, ConsentState } from "../consent";
 import { gpcDeniedCategories } from "./policy";
-import { POLICY_MATRIX, type PolicyMatrix, type PolicyRow, type PolicySurface } from "./policy-matrix";
+import { POLICY_MATRIX, type PolicyMatrix, type PolicyRegime, type PolicyRow } from "./policy-matrix";
 
 /**
  * What the privacy-choices surfaces show, decided from the visitor's policy
- * row. Pure, so the components only render the answers. A notice row gets the
+ * row. Pure, so the components only render the answers. An opt-out row gets the
  * `us` dialog; any other row gets the `eu` one.
  */
 
@@ -13,16 +13,17 @@ export const PRIVACY_CHOICES_KEY = "footer.privacyChoices";
 export const COOKIE_PREFERENCES_KEY = "footer.cookiePreferences";
 
 /**
- * The footer entry's label. A row whose surface is a notice gets the statutory
- * title and icon, whether or not a subject has been minted on this page;
- * everyone else, and the server render (which is the strict row), gets the
- * generic label, so the slot is never empty and swaps at most once.
+ * The footer entry's label. An opt-out row gets the statutory title and icon,
+ * whether or not a subject has been minted on this page and whatever surface
+ * the row shows; everyone else, and the server render (which is the strict
+ * row), gets the generic label, so the slot is never empty and swaps at most
+ * once.
  */
-export function choicesLabel(input: { surface: PolicySurface }): {
+export function choicesLabel(input: { regime: PolicyRegime }): {
   key: typeof PRIVACY_CHOICES_KEY | typeof COOKIE_PREFERENCES_KEY;
   icon: boolean;
 } {
-  const statutory = input.surface === "notice";
+  const statutory = input.regime === "opt-out";
   return { key: statutory ? PRIVACY_CHOICES_KEY : COOKIE_PREFERENCES_KEY, icon: statutory };
 }
 
@@ -83,7 +84,7 @@ export function monthsFromDays(days: number): number {
 }
 
 /**
- * The dialog for this row and GPC state. A notice row is the US dialog and its
+ * The dialog for this row and GPC state. An opt-out row is the US dialog and its
  * intro is about how long a refusal lasts; any other row is the EU dialog and
  * says how long its choice is kept, the shorter of a grant and a refusal.
  */
@@ -92,7 +93,7 @@ export function preferencesView(
   gpc: boolean,
   matrix: PolicyMatrix = POLICY_MATRIX,
 ): PreferencesView {
-  const variant: PreferencesVariant = row.surface === "notice" ? "us" : "eu";
+  const variant: PreferencesVariant = row.regime === "opt-out" ? "us" : "eu";
   const denied = gpcDeniedCategories(row, gpc, matrix);
   const onlyClose = CONSENT_CATEGORIES.every((category) => denied.includes(category));
   const days =

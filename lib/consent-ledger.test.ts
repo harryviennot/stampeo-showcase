@@ -101,7 +101,7 @@ describe("buildConsentPayload — the contract with the backend", () => {
   test("the policy the visitor chose under, and whether GPC was on, ride along", () => {
     const payload = buildConsentPayload({
       record: { ...RECORD, regime: "opt-out", policyVersion: 1, regionRow: "US" },
-      surface: "notice",
+      surface: "preferences",
       gpc: true,
     });
 
@@ -149,14 +149,17 @@ describe("buildConsentPayload — the contract with the backend", () => {
     expect(previous.version).not.toBe(CONSENT_VERSION);
   });
 
-  test("the US notice reports its own surface and regime", () => {
-    const payload = buildConsentPayload({
-      record: { ...RECORD, regime: "opt-out" },
-      surface: "notice",
-    });
-    expect(payload.regime).toBe("opt-out");
-    expect(payload.surface).toBe("notice");
-  });
+  test.each(["preferences", "notice"] as const)(
+    "a US choice reports the opt-out regime and the surface it was made on (%s)",
+    (surface) => {
+      const payload = buildConsentPayload({
+        record: { ...RECORD, regime: "opt-out", regionRow: "US" },
+        surface,
+      });
+      expect(payload.regime).toBe("opt-out");
+      expect(payload.surface).toBe(surface);
+    },
+  );
 
   test("a record without a subject id still reports one", () => {
     // `writeConsentRecord` always mints one, so this is defensive — but a

@@ -1,0 +1,15 @@
+# STA-539 coverage audit: findings and resolutions
+
+Plan: `docs/features/STA-539/plan.md`. Status: all findings resolved or accepted.
+
+1. AC2 refusal half had no workflow test. FIXED: `lib/privacy/lifecycle.test.ts`, "a US visitor refuses everything in Your Privacy Choices (AC2)". A US visitor with no choice and open GA and Meta gates saves a refusal of both categories; the snapshot denies both, both gates close, `revokedBy(...)` returns both categories (the reload decision), and the next load resolves no surface and mounts no tag script.
+2. `surfaceWithPolicy` GPC and regime guards were no longer pinned (every US test used the shipped `none` row). FIXED: `lib/privacy/policy.test.ts`, new `US_NOTICE` fixture (`lib/privacy/__fixtures__/notice-row.ts`) and a "declares a notice" block pinning no choice gives "notice", GPC gives "none", an opt-out row with an undecided record gives "none", and a stored current-version choice gives "none". The old "a stored choice silences both" case moved onto this row. The duplicate shipped-US pairs are merged (see quality-report.md, item 12).
+3. Unrealistic tests that dismissed the US notice on the shipped row. FIXED: `lib/privacy/no-choice.test.ts` "a notice dismissal saved before the notice was retired, read in Paris" now starts from a jar that already holds the pre-release dismissal record. `lib/privacy/no-choice.test.ts` "on a row that shows the notice, `Got it` over a restored refusal never turns it into a grant" now writes under `US_NOTICE`. `lib/privacy/refusal-race.test.ts` "a notice dismissal saved before the notice was retired, then the same browser in Paris" seeds the jar with the dismissal, the tags' cookies and the carriers, then keeps its Paris and Refuse-all assertions.
+4. `lib/privacy/policy-matrix.test.ts` test name claimed a cross-repo check. FIXED: renamed "the file hashes to its pinned constant". The cross-repo byte identity cannot be enforced inside one repo's CI. ACCEPTED: each repo pins the same literal SHA and `backend/docs/features/STA-377/contracts.md` C-1 holds it.
+5. `lib/legal/privacy-regional-rules.test.ts` regex only lists the removed phrasings. ACCEPTED: it is a regression guard for the removed sentences; a positive "no notice" wording check would trip on the legal sense "require notice and an opt-out".
+6. "Last updated" date untested. ACCEPTED: low value.
+7. Plan drift. FIXED: `docs/features/STA-539/plan.md`, new "Decided during the build" section covering the regime-driven label and dialog (`ConsentSnapshot.surface` replaced by `regime`), no `stampeo_consent` record or ledger row for a US visitor who never acts, region still timezone-only (`READ_REGION_COOKIE = false`), the kept notice code path (Harry's call, no deletion ticket), and the C-1 SHA update in the backend contracts file.
+
+## Notes on item 3
+
+The `Got it` test is now about `noticeAcknowledgement` only. On a notice row a restored record already silences the notice, so the state arises only when the notice was open in one tab while the dashboard's restore landed from another. The test comment says so.

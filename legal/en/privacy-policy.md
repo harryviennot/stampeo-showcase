@@ -1,6 +1,6 @@
 # Privacy Policy: Stampeo
 
-**Last updated: October 23, 2026**
+**Last updated: November 7, 2026**
 
 ## 1. Introduction
 
@@ -153,9 +153,9 @@ Measurement and advertising cookies are loaded only after you accept them. Until
 
 Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for 6 months, after which we may ask you again. You can change it at any time through **Cookie preferences** in the footer of every page where our measurement and advertising cookies can be set. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
 
-If your browser sends a Global Privacy Control signal, we treat it as a refusal and nothing is loaded. In the United States this holds even over a choice you made earlier here, and we show you no notice at all, since you have already answered. In every US state we honor the signal as an opt-out of sale, sharing and targeted advertising, and while it is on, audience measurement is also turned off. In Europe a choice you make yourself takes precedence over the signal: until you make one, the banner is still offered, so that you can opt in deliberately if you want to.
+If your browser sends a Global Privacy Control signal, we treat it as a refusal and nothing is loaded. In the United States this holds even over a choice you made earlier here. In every US state we honor the signal as an opt-out of sale, sharing and targeted advertising, and while it is on, audience measurement is also turned off. In Europe a choice you make yourself takes precedence over the signal: until you make one, the banner is still offered, so that you can opt in deliberately if you want to.
 
-Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, a notice says so, and the **Your Privacy Choices** link switches them off at any time. It sits in the footer of every page where our measurement and advertising cookies can be set, and the notice has a button of the same name. A refusal is kept for 13 months and renewed on each visit, and when you sign in to the dashboard it is restored from your account.
+Visitors in the United States are handled differently, because the applicable state laws require notice and an opt-out rather than prior consent. There, measurement and advertising cookies load on arrival, and the **Your Privacy Choices** link switches them off at any time. It sits in the footer of every page where our measurement and advertising cookies can be set. A refusal is kept for 13 months and renewed on each visit, and when you sign in to the dashboard it is restored from your account.
 
 Which rules apply to you is decided from your device's time zone. When the signals disagree, the stricter rules apply, and where we cannot place you, the strict (opt-in) rules apply. We do not use your IP address for this.
 
@@ -234,7 +234,7 @@ A refusal you make on this site after you created an account applies to your acc
 
 ### 5.6 Record of your cookie choices
 
-When you accept or refuse cookies — on the banner, in the notice shown to visitors in the United States, or later through **Cookie preferences** or, in the United States, **Your Privacy Choices** — we keep a record of that decision on our servers. The GDPR requires us to be able to demonstrate that consent was given (Article 7(1)), and a choice stored only in your browser cannot demonstrate anything: it lives on your device, you can change it, and your next decision overwrites it.
+When you accept or refuse cookies — on the banner, or later through **Cookie preferences** or, in the United States, **Your Privacy Choices** — we keep a record of that decision on our servers. The GDPR requires us to be able to demonstrate that consent was given (Article 7(1)), and a choice stored only in your browser cannot demonstrate anything: it lives on your device, you can change it, and your next decision overwrites it.
 
 Each record contains the decision itself and nothing about you: which categories you accepted or refused, the version of the cookie text you were shown, whether you were under the opt-in or opt-out regime, which surface you answered on, and two timestamps — the time your own device reported, and the time our server received it.
 
@@ -263,7 +263,7 @@ We use collected data to:
 
 We **never sell** personal data for money. We perform **no cross-business tracking**: a customer's data at one business is completely isolated from their data at another.
 
-**In the United States:** sending data to Meta and to Google Ads for our advertising, as described in 5.5, may count as "sharing" under California law. You can opt out at any time through **Your Privacy Choices**, in the footer of every page where our measurement and advertising cookies can be set and in the notice, or with a Global Privacy Control signal, which we honor in every US state as described in 5.1.
+**In the United States:** sending data to Meta and to Google Ads for our advertising, as described in 5.5, may count as "sharing" under California law. You can opt out at any time through **Your Privacy Choices**, in the footer of every page where our measurement and advertising cookies can be set, or with a Global Privacy Control signal, which we honor in every US state as described in 5.1.
 
 ### 6.1 Marketing and lifecycle emails to Business Users
 

@@ -21,18 +21,21 @@ import { NO_LIVE_IDS, planCapture } from "../attribution/capture";
 import { captureConsentEvidence, consentEvidence } from "../attribution/evidence";
 import { META_LANDING } from "../attribution/__fixtures__/visitors";
 import {
+  CONSENT_COOKIE,
   CONSENT_VERSION,
   consentRecordFromCookieHeader,
   consentSnapshotKey,
   consentSurface,
   parseConsentCookie,
   readStoredConsent,
+  serializeConsentCookie,
   writeConsentRecord,
   type ConsentRecord,
 } from "../consent";
 import { shouldLoadGa } from "../google-analytics";
 import { shouldLoadMetaPixel } from "../meta-pixel";
 import { installFakeBrowser, SUBJECT, type FakeBrowser } from "./__fixtures__/fake-browser";
+import { US_NOTICE } from "./__fixtures__/notice-row";
 import { noticeAcknowledgement } from "./choices-ui";
 import { runPageLifecycle } from "./lifecycle";
 import { resolveWithPolicy, rowFor, surfaceWithPolicy } from "./policy";
@@ -190,18 +193,12 @@ describe("a grant counts only where the visitor could have given it", () => {
     expect(resolve(US, unnamed)).toEqual(ON);
   });
 
-  test("dismiss the US notice in New York, move to Paris, reload: no tag, the banner, no EU evidence", async () => {
-    browser = installFakeBrowser({ timezone: "America/New_York", fetch: "route" });
-    runPageLifecycle("/us/pricing", { refreshed: false });
-    const inNewYork = readConsentSnapshot();
-    expect(inNewYork).toMatchObject({ analytics: true, marketing: true, ready: true });
-
-    const dismissed = writeConsentRecord(noticeAcknowledgement(inNewYork), US);
-    await browser.settled();
-    const jar = browser.jar();
-    browser.restore();
-
-    browser = installFakeBrowser({ cookie: jar, timezone: "Europe/Paris", fetch: "route" });
+  test("a notice dismissal saved before the notice was retired, read in Paris: no tag, the banner, no EU evidence", () => {
+    browser = installFakeBrowser({
+      cookie: `stampeo_sid=${SUBJECT}; ${CONSENT_COOKIE}=${serializeConsentCookie(dismissedInNewYork)}`,
+      timezone: "Europe/Paris",
+      fetch: "route",
+    });
     const inParis = readConsentSnapshot();
     const row = detectPolicyRow();
 
@@ -213,14 +210,14 @@ describe("a grant counts only where the visitor could have given it", () => {
     // What a capture would rest on cites the New York dismissal, never Paris.
     const evidence = consentEvidence({ record: inParis.record, prior: inParis.prior, row: row.key })!;
     expect(evidence).toMatchObject({ cr: "opt-out", g: "US", ca: 0 });
-    expect(evidence.ca).not.toBe(dismissed.at);
+    expect(evidence.ca).not.toBe(dismissedInNewYork.at);
     const written = planCapture({
       landing: META_LANDING,
       consent: { analytics: inParis.analytics, marketing: inParis.marketing },
       evidence,
       live: NO_LIVE_IDS,
       stored: { src: null, ga: null, ad: null },
-      now: dismissed.at + 60,
+      now: dismissedInNewYork.at + 60,
     });
     expect(written).toEqual({ src: null, ga: null, ad: null });
     expect(browser.writes.filter((w) => w.startsWith("stampeo_src=") || w.startsWith("stampeo_ad="))).toEqual([]);
@@ -289,12 +286,13 @@ describe("the privacy route and the sliding refresh keep a restored record as it
 });
 
 describe("a visitor's own action replaces the restored record with a full choice", () => {
-  test("`Got it` on the US notice never turns a restored refusal into a grant", async () => {
+  test("on a row that shows the notice, `Got it` over a restored refusal never turns it into a grant", async () => {
+    // The notice was open when the dashboard's restore landed from another tab.
     const page = visit(RESTORED_COOKIE, "America/New_York");
     runPageLifecycle("/us/pricing", { refreshed: false });
     await browser!.settled();
 
-    const record = writeConsentRecord(noticeAcknowledgement(page.snapshot), US);
+    const record = writeConsentRecord(noticeAcknowledgement(page.snapshot), US_NOTICE);
     await browser!.settled();
 
     // Analytics takes the row default, marketing keeps its refusal, and the

@@ -8,7 +8,7 @@ import {
   type PriorConsent,
 } from "../consent";
 import { subjectGateOpen } from "./policy";
-import { POLICY_MATRIX, UNKNOWN_ROW_KEY, type PolicySurface } from "./policy-matrix";
+import { POLICY_MATRIX, UNKNOWN_ROW_KEY, type PolicyRegime } from "./policy-matrix";
 import { detectPolicyRow } from "./region";
 import { readSid } from "./subject";
 
@@ -30,8 +30,8 @@ export interface ConsentSnapshot extends ConsentState {
   ready: boolean;
   /** The policy row key in force (`EEA_UK_CH`, `US`, `UNKNOWN`). */
   row: string;
-  /** What that row shows the visitor: a blocking banner or a notice. */
-  surface: PolicySurface;
+  /** That row's regime, which decides the footer label and the dialog. */
+  regime: PolicyRegime;
 }
 
 /**
@@ -49,7 +49,7 @@ export const SERVER_SNAPSHOT: ConsentSnapshot = Object.freeze({
   gpc: false,
   ready: false,
   row: UNKNOWN_ROW_KEY,
-  surface: POLICY_MATRIX.rows[UNKNOWN_ROW_KEY].surface,
+  regime: POLICY_MATRIX.rows[UNKNOWN_ROW_KEY].regime,
 });
 
 let cached: ConsentSnapshot = SERVER_SNAPSHOT;
@@ -71,7 +71,7 @@ export function readConsentSnapshot(): ConsentSnapshot {
   if (key !== cachedKey) {
     cachedKey = key;
     const state = resolveConsent({ record, prior, gpc, row });
-    cached = { ...state, record, prior, gpc, ready, row: row.key, surface: row.surface };
+    cached = { ...state, record, prior, gpc, ready, row: row.key, regime: row.regime };
   }
   return cached;
 }

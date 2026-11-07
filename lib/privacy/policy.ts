@@ -206,7 +206,7 @@ export function surfaceWithPolicy(input: {
   prior: PriorConsent | null;
   gpc: boolean;
   trackable: boolean;
-}): PolicySurface | "none" {
+}): PolicySurface {
   if (!input.trackable) return "none";
   if (input.record) {
     const { record, row } = input;

@@ -19,7 +19,7 @@ import {
   rowFor,
   surfaceWithPolicy,
 } from "./privacy/policy";
-import { POLICY_MATRIX, type PolicyRow } from "./privacy/policy-matrix";
+import { POLICY_MATRIX, type PolicyRow, type PolicySurface } from "./privacy/policy-matrix";
 import { detectPolicyRow } from "./privacy/region";
 import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
 
@@ -142,7 +142,7 @@ export interface PriorConsent {
 }
 
 /** What the visitor is currently being shown, if anything. */
-export type ConsentSurface = "none" | "banner" | "notice";
+export type ConsentSurface = PolicySurface;
 
 /**
  * The cookies each category is responsible for, so revoking can actually
