@@ -101,7 +101,7 @@ describe("the dialog names Google Ads wherever it lists the advertising recipien
     for (const text of texts) expect(text).not.toMatch(/Google(?! (Analytics|Ads)\b)/);
   });
 
-  it.each(routing.locales)("the banner and the notice grew by at most one line over the version 3 text (%s)", (locale) => {
+  it.each(routing.locales)("the banner and the notice, which now name Google Ads and OpenAI, grew by at most one line over the version 3 text (%s)", (locale) => {
     const { banner, notice } = cookiesOf(locale);
     expect(banner.body.length - V3_LENGTH[locale].banner).toBeLessThanOrEqual(MAX_GROWTH);
     expect(notice.body.length - V3_LENGTH[locale].notice).toBeLessThanOrEqual(MAX_GROWTH);
