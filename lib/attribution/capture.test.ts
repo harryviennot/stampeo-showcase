@@ -470,6 +470,34 @@ describe("the consent evidence a capture rests on", () => {
     });
   });
 
+  describe("a US visitor holding a version 4 record, the text before OpenAI was named", () => {
+    const V4: PriorConsent = { v: 4, analytics: true, marketing: true, at: 1_759_400_000 };
+
+    // A version 4 grant is no choice under version 5: the notice in force is
+    // what they were shown, and nobody clicked on it.
+    test.each([
+      ["a grant", V4],
+      ["a record with nothing chosen", { ...V4, analytics: null, marketing: null }],
+      ["a restored record", { ...V4, origin: "restore" as const }],
+    ])("%s carries the version 5 notice and no consent moment", (_case, prior) => {
+      expect(consentEvidence({ record: null, prior, row: US.key })).toMatchObject({ cv: 5, ca: 0, cr: "opt-out", g: "US" });
+    });
+
+    // A refusal made under version 4 rests on that text, so the capture keeps
+    // its version and moment; the backend then holds ChatGPT Ads back.
+    test.each([
+      ["analytics", { ...V4, analytics: false }],
+      ["advertising", { ...V4, marketing: false }],
+    ])("a refusal of %s with a click moment carries version 4 and that moment", (_category, prior) => {
+      expect(consentEvidence({ record: null, prior, row: US.key })).toMatchObject({
+        cv: 4,
+        ca: 1_759_400_000,
+        cr: "opt-out",
+        g: "US",
+      });
+    });
+  });
+
   test("an older choice with no moment is no evidence", () => {
     expect(consentEvidence({ record: null, prior: { ...OLDER, at: 0 }, row })).toBeNull();
   });

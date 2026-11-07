@@ -5,8 +5,9 @@ import { parseSourceCookie } from "../attribution/source";
 
 /**
  * The query parameters the real-browser link carries so the paid click is still
- * attributed there: the ad's UTM tags from `stampeo_src` and the Meta click id
- * from `stampeo_ad`. Nothing else, because the link reaches analytics.
+ * attributed there: the ad's UTM tags from `stampeo_src` and the Meta or
+ * ChatGPT click id from `stampeo_ad`. Nothing else, because the link reaches
+ * analytics.
  */
 export function escapeParamsFromCookies(cookieHeader: string | null | undefined): URLSearchParams {
   const params = new URLSearchParams();
@@ -27,6 +28,7 @@ export function escapeParamsFromCookies(cookieHeader: string | null | undefined)
 
   const ad = parseAdCookie(cookieValue(cookieHeader, AD_COOKIE));
   if (ad?.vn === "meta") params.set("fbclid", ad.ci);
+  if (ad?.vn === "openai") params.set("oppref", ad.ci);
 
   return params;
 }

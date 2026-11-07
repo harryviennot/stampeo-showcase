@@ -19,7 +19,7 @@ import { join } from "node:path";
 
 import { computeAttributionChain, type ChainInputs } from "./__fixtures__/chain";
 
-const GOOGLE_CHAIN_SHA256 = "c549ee7b49d2779a6e2640e681b6e6c05677849c9965d42d0ebbab88da0b6a80";
+const GOOGLE_CHAIN_SHA256 = "b1cf0e456ab8d772edd54eae735c5098ccae1e8330b918f9f290a6bf97569de1";
 
 const FILE = join(import.meta.dir, "__fixtures__", "attribution-chain.google.v1.json");
 const TEXT = readFileSync(FILE, "utf8");

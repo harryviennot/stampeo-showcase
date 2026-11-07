@@ -9,6 +9,8 @@ import { MAX_FIELD, MAX_ID_FIELD } from "./codec";
 export interface ClickIds {
   gclid: string | null;
   fbclid: string | null;
+  /** OpenAI's click id from a ChatGPT ad. */
+  oppref: string | null;
   ttclid: string | null;
 }
 
@@ -35,15 +37,28 @@ function param(search: URLSearchParams, name: string, max: number): string | nul
 }
 
 /**
+ * Like `param`, but a value past `max` is dropped rather than cut, and what is
+ * kept is the decoded value untouched (never trimmed or case-folded). For an id
+ * the platform only accepts as the original string.
+ */
+function wholeParam(search: URLSearchParams, name: string, max: number): string | null {
+  const value = search.get(name);
+  if (!value || value.trim() === "" || value.length > max) return null;
+  return value;
+}
+
+/**
  * The platforms' click ids. They get the larger cap: a real `fbclid` runs past
  * 100 characters, and a truncated one is an identifier that still looks like
- * data and attributes to nothing.
+ * data and attributes to nothing. OpenAI's `oppref` is opaque and must arrive
+ * unmodified, so one past the cap is refused instead.
  */
 export function readClickIds(search: string): ClickIds {
   const params = new URLSearchParams(search);
   return {
     gclid: param(params, "gclid", MAX_ID_FIELD),
     fbclid: param(params, "fbclid", MAX_ID_FIELD),
+    oppref: wholeParam(params, "oppref", MAX_ID_FIELD),
     ttclid: param(params, "ttclid", MAX_ID_FIELD),
   };
 }

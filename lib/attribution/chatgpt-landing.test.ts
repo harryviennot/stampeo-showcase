@@ -117,16 +117,19 @@ test("a European with a version 4 grant is asked again, and accepting records th
   expect(browser!.fetches.filter((call) => /openai/i.test(call.url))).toEqual([]);
 });
 
-describe("a refusal made under version 4 still stands", () => {
+describe("a refusal of advertising made under version 4 still stands", () => {
+  // Only a refusal of everything goes unasked: a grant of the other category
+  // was given for the older text, so that one is asked again.
   test.each([
-    ["a European who refused everything", EU, { a: 0, m: 0, r: "opt-in" }],
-    ["a European who refused advertising only", EU, { a: 1, m: 0, r: "opt-in" }],
-    ["an American who opted out of advertising", US, { a: 1, m: 0, r: "opt-out" }],
-  ])("%s is not asked again, and the click is not recorded", async (_case, timezone, fields) => {
+    ["a European who refused everything", EU, { a: 0, m: 0, r: "opt-in" }, "none"],
+    ["an American who opted out of everything", US, { a: 0, m: 0, r: "opt-out" }, "none"],
+    ["a European who refused advertising only", EU, { a: 1, m: 0, r: "opt-in" }, "banner"],
+    ["an American who opted out of advertising only", US, { a: 1, m: 0, r: "opt-out" }, "notice"],
+  ])("%s: advertising stays off, the click is not recorded, and the surface is %s", async (_case, timezone, fields, shown) => {
     open({ consent: choice(PREVIOUS, fields), timezone });
 
     expect(readConsentSnapshot().marketing).toBe(false);
-    expect(surface()).toBe("none");
+    expect(surface()).toBe(shown);
     capture();
     await browser!.settled();
     expect(adCarrier()).toBeNull();

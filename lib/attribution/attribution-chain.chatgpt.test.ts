@@ -19,7 +19,7 @@ import { join } from "node:path";
 
 import { computeAttributionChain, type ChainInputs } from "./__fixtures__/chain";
 
-const CHATGPT_CHAIN_SHA256 = "0000000000000000000000000000000000000000000000000000000000000000";
+const CHATGPT_CHAIN_SHA256 = "859f0bfb7f3255a8f22c10c2a173d9ff3151e9c1d804bdaa2aa583266fc33a30";
 
 const FILE = join(import.meta.dir, "__fixtures__", "attribution-chain.chatgpt.v1.json");
 const TEXT = readFileSync(FILE, "utf8");
