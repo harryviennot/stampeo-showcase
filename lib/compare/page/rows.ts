@@ -5,14 +5,10 @@ import { COPY } from "./copy";
 
 /** One product's side of a table row. */
 export interface Side {
-  /** The at-a-glance answer, shown in bold. */
+  /** The at-a-glance answer. */
   short: string;
   /** The line under the price: the TTC equivalent of an HT price, or Stampeo's "TVA non applicable". */
   taxLine: string | null;
-  /** The full sentence, when it says more than `short` does. */
-  detail: string | null;
-  /** The page a competitor's value was read on; Stampeo's side has none. */
-  source: { url: string; title: string } | null;
 }
 
 export interface TableRow {
@@ -71,8 +67,6 @@ export function competitorText(value: string, market: Market): string {
   return value.replace(HT_AMOUNT, (published, amount: string) => `${published} (${note(ttcOf(amount))})`);
 }
 
-const sameText = (a: string, b: string) => a.trim() === b.trim();
-
 /** The TTC equivalent of every HT amount in a price, as one line; null when there is no HT amount to convert. */
 function taxLineOf(price: string, market: Market): string | null {
   const note = COPY[market].ttcEquivalent;
@@ -82,28 +76,16 @@ function taxLineOf(price: string, market: Market): string | null {
   return ttc.length > 0 ? note(ttc.join(" / ")) : null;
 }
 
+/** The competitor's short value, or its full value while the fact has none. */
 function competitorSide(fact: SourcedFact, market: Market, price: boolean): Side {
-  const full = competitorText(fact.value, market);
-  const source = { url: fact.sourceUrl, title: fact.sourceTitle };
-  if (fact.short === undefined) return { short: full, taxLine: null, detail: null, source };
-
-  return {
-    short: fact.short,
-    taxLine: price ? taxLineOf(fact.short, market) : null,
-    detail: sameText(full, fact.short) ? null : full,
-    source,
-  };
+  if (fact.short === undefined) return { short: competitorText(fact.value, market), taxLine: null };
+  return { short: fact.short, taxLine: price ? taxLineOf(fact.short, market) : null };
 }
 
-function stampeoSide(column: StampeoColumn, id: StandardFactId): Side {
-  const short = column.rowsShort[id];
-  const full = column.rows[id];
-  const taxLine = id === "price.entry" ? column.taxNote : null;
-  // The price's full sentence is its short value plus the tax note, which the summary already shows.
-  const says = taxLine ? `${short}, ${taxLine}` : short;
-
-  return { short, taxLine, detail: sameText(full, short) || sameText(full, says) ? null : full, source: null };
-}
+const stampeoSide = (column: StampeoColumn, id: StandardFactId): Side => ({
+  short: column.rowsShort[id],
+  taxLine: id === "price.entry" ? column.taxNote : null,
+});
 
 /** The table's rows by theme: the standard rows the competitor has a sourced fact for, beside Stampeo's value for each. A theme with no row is left out. */
 export function tableGroups({ market, competitor, stampeo }: TableInput): TableGroup[] {
@@ -126,10 +108,3 @@ export function tableGroups({ market, competitor, stampeo }: TableInput): TableG
     return rows.length > 0 ? [{ id: group.id, label: copy.groupLabels[group.id], rows }] : [];
   });
 }
-
-/** Does a row have anything to show when opened: a sentence, or a source to read? */
-export const hasDetail = (row: TableRow) => Boolean(row.competitor.detail || row.competitor.source || row.stampeo.detail);
-
-/** The ids of the rows that open, across the themes in the table's order. */
-export const openableRows = (groups: TableGroup[]): StandardFactId[] =>
-  groups.flatMap((group) => group.rows.filter(hasDetail).map((row) => row.id));

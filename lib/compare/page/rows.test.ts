@@ -4,7 +4,7 @@ import { ACME_FIDELITE, ACME_LOYALTY, withUsFacts } from "../__fixtures__";
 import { buildStampeoColumn } from "../stampeo";
 import { STANDARD_FACT_IDS, type CompetitorFacts, type SourcedFact } from "../types";
 import { COPY } from "./copy";
-import { ROW_GROUPS, competitorText, hasDetail, openableRows, tableGroups, type Side, type TableGroup, type TableRow } from "./rows";
+import { ROW_GROUPS, competitorText, tableGroups, type TableGroup, type TableRow } from "./rows";
 
 /** French typography uses no-break spaces; the tests read them as plain ones. */
 const norm = (text: string) => text.replace(/[\u00a0\u202f]/g, " ");
@@ -76,43 +76,23 @@ describe("the rows of a comparison table", () => {
 });
 
 describe("the competitor's side of a row", () => {
-  it("shows the fact's short value at a glance, the full sentence as the detail, and the page it was read on", () => {
+  it("is the fact's short value, with nothing else to show", () => {
     const competitor = withFact("card.where", { short: "Their own app" });
     const { competitor: cell } = find(tableGroups({ market: "us", competitor, stampeo: US }), "card.where");
 
-    expect(cell.short).toBe("Their own app");
-    expect(cell.detail).toBe("Their own app on the customer's phone");
-    expect(cell.source).toEqual({ url: "https://acme-loyalty.example/pricing", title: "Acme Loyalty pricing" });
+    expect(cell).toEqual({ short: "Their own app", taxLine: null });
   });
 
-  it("falls back to the full value, with nothing repeated under it, while a fact has no short value", () => {
+  it("falls back to the full value while a fact has no short value", () => {
     const { competitor: cell } = find(tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US }), "card.where");
-
-    expect(cell.short).toBe("Their own app on the customer's phone");
-    expect(cell.detail).toBeNull();
-    expect(cell.source?.url).toBe("https://acme-loyalty.example/pricing");
-  });
-
-  it("shows no detail when the short value is the whole sentence", () => {
-    const competitor = withFact("trial", { short: "7-day free trial" });
-    expect(find(tableGroups({ market: "us", competitor, stampeo: US }), "trial").competitor.detail).toBeNull();
+    expect(cell).toEqual({ short: "Their own app on the customer's phone", taxLine: null });
   });
 });
 
 describe("Stampeo's side of a row", () => {
-  const groups = tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US });
-
-  it("shows its short value at a glance and the full Stampeo value as the detail, with no source to read", () => {
-    const { stampeo: cell } = find(groups, "card.where");
-
-    expect(cell.short).toBe(US.rowsShort["card.where"]);
-    expect(cell.detail).toBe(US.rows["card.where"]);
-    expect(cell.source).toBeNull();
-  });
-
-  it("shows no detail when the short value says it all", () => {
-    expect(find(groups, "trial").stampeo.detail).toBeNull();
-    expect(find(groups, "price.entry").stampeo.detail).toBeNull();
+  it("is Stampeo's short value", () => {
+    const { stampeo: cell } = find(tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US }), "card.where");
+    expect(cell).toEqual({ short: US.rowsShort["card.where"], taxLine: null });
   });
 });
 
@@ -169,17 +149,6 @@ describe("the tax line under a price", () => {
     expect(row.stampeo.taxLine).toBe("TVA non applicable");
   });
 
-  it("keeps the TTC equivalent in the full sentence under it, beside the source", () => {
-    const row = priceRow(withFrenchPrice({ short: "Essentiel, 19 € HT par mois" }));
-
-    expect(norm(row.competitor.detail!)).toBe("19 € HT (soit 22,80 € TTC, TVA à 20 %) par mois");
-    expect(row.competitor.source?.url).toBe("https://acme-fidelite.example/tarifs");
-  });
-
-  it("is not repeated as a detail on Stampeo's side", () => {
-    expect(priceRow(ACME_FIDELITE).stampeo.detail).toBeNull();
-  });
-
   it.each([
     ["a price already given TTC", { short: "Essentiel, 23 € TTC par mois", value: "23 € TTC par mois" }],
     ["a quote-only price", { short: "Sur devis", value: "Sur devis" }],
@@ -196,33 +165,5 @@ describe("the tax line under a price", () => {
   it("only ever sits on the price row", () => {
     const rows = rowsOf(tableGroups({ market: "fr", competitor: withFrenchPrice({ short: "Essentiel, 19 € HT par mois" }), stampeo: FR }));
     expect(rows.filter((row) => row.stampeo.taxLine || row.competitor.taxLine).map((row) => row.id)).toEqual(["price.entry"]);
-  });
-});
-
-describe("the rows that open", () => {
-  const side = (change: Partial<Side> = {}): Side => ({ short: "Answer", taxLine: null, detail: null, source: null, ...change });
-  const row = (competitor: Partial<Side>, stampeo: Partial<Side>): TableRow => ({
-    id: "card.where",
-    label: "A row",
-    competitor: side(competitor),
-    stampeo: side(stampeo),
-  });
-  const SOURCE = { url: "https://acme-loyalty.example/pricing", title: "Acme pricing" };
-
-  it.each([
-    ["a competitor's full sentence", row({ detail: "Full" }, {})],
-    ["Stampeo's full sentence", row({}, { detail: "Full" })],
-    ["a source to read, with no sentence", row({ source: SOURCE }, {})],
-  ])("are the rows with %s", (_name, openable) => {
-    expect(hasDetail(openable)).toBe(true);
-  });
-
-  it("are not a row with no detail on either side, which gets no toggle", () => {
-    expect(hasDetail(row({}, {}))).toBe(false);
-  });
-
-  it("are listed by id across the themes, in the table's order", () => {
-    const groups = tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US });
-    expect(openableRows(groups)).toEqual(["card.where", "customer.app_required", "price.entry", "trial"]);
   });
 });
