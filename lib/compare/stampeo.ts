@@ -95,6 +95,8 @@ interface ShortCopy {
   >;
   /** The program types, given the plans that run stamps or points and whether that is every plan. */
   programTypes: (plans: string, all: boolean) => string;
+  /** A monthly amount in the table's short form ("$29/month"), as the competitors' short values write it. */
+  perMonth: (amount: string) => string;
   /** One plan's promotional-message allowance, in a few words. */
   broadcasts: (plan: string, limit: number | "unlimited") => string;
   /** Said when no plan sends promotional messages. */
@@ -143,12 +145,13 @@ const EN: Copy = {
       "push.automatic": "Yes, on every stamp and reward",
       "staff.scanning": "Scanner app (iPhone, Android)",
       "pos.integration": "None: added by hand in the app",
-      commitment: "None, cancel any time",
+      commitment: "None, cancel anytime",
       export: "CSV of sign-ups, every plan",
       designer: "Self-service, with live preview",
     },
     programTypes: (plans, all) => (all ? "Stamps or points, optional levels" : `Stamps or points on ${plans}`),
-    broadcasts: (plan, limit) => `${plan}: ${limit === "unlimited" ? "unlimited" : `${limit} a month`}`,
+    perMonth: (amount) => `${amount}/month`,
+    broadcasts: (plan, limit) => `${plan}: ${limit === "unlimited" ? "unlimited" : `${limit}/month`}`,
     noBroadcasts: "None",
     multipleLocations: (plans, all) => (all ? "No cap, no fee per location" : `On ${plans}: no cap, no fee per location`),
   },
@@ -199,7 +202,8 @@ const FR: Copy = {
       designer: "Libre-service, aperçu en direct",
     },
     programTypes: (plans, all) => (all ? "Tampons ou points, niveaux en option" : `Tampons ou points sur ${plans}`),
-    broadcasts: (plan, limit) => `${plan}${NBSP}: ${limit === "unlimited" ? "illimitées" : `${limit} par mois`}`,
+    perMonth: (amount) => `${amount}/mois`,
+    broadcasts: (plan, limit) => `${plan}${NBSP}: ${limit === "unlimited" ? "illimitées" : `${limit}/mois`}`,
     noBroadcasts: "Aucune",
     multipleLocations: (plans, all) => (all ? "Sans plafond ni supplément" : `Avec ${plans}${NBSP}: sans plafond ni supplément`),
   },
@@ -269,7 +273,7 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     "push.broadcasts": broadcastClauses.length > 0 ? broadcastClauses.join(". ") : copy.short.noBroadcasts,
     "locations.multiple": copy.short.multipleLocations(locationPlans.names, locationPlans.all),
     languages: languageNames,
-    "price.entry": `${PLAN_NAMES[cheapest]}, ${copy.perMonth(money(cheapest))}`,
+    "price.entry": `${PLAN_NAMES[cheapest]}, ${copy.short.perMonth(money(cheapest))}`,
     trial: rows.trial,
   };
 

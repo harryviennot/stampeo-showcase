@@ -88,6 +88,13 @@ describe.each(["us", "fr"] as const)("Stampeo's at-a-glance values on the %s mar
   const money = (amount: number) => formatMoney(amount, CATALOG[market].currency, LOCALE[market]);
   const shorts = Object.entries(column.rowsShort);
 
+  it("reads like the competitor's short values beside it: a monthly price written per month", () => {
+    const perMonth = market === "us" ? "/month" : "/mois";
+    expect(column.rowsShort["price.entry"]).toBe(`Starter, ${money(CATALOG[market].tiers.starter.month)}${perMonth}`);
+    expect(column.rowsShort["push.broadcasts"]).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth}${perMonth}`);
+    if (market === "us") expect(column.rowsShort.commitment).toBe("None, cancel anytime");
+  });
+
   it("answer every standard table row in one line of at most 40 characters, with no em dash", () => {
     expect(Object.keys(column.rowsShort).sort()).toEqual([...STANDARD_FACT_IDS].sort());
     for (const [id, short] of shorts) {
