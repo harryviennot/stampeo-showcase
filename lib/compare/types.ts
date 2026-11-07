@@ -7,13 +7,16 @@
 
 export type Market = "us" | "fr";
 
+/** The most characters a fact's `short` value may have. */
+export const SHORT_MAX_LENGTH = 40;
+
 /** One thing we say about a competitor, with the proof. */
 export interface SourcedFact {
   /** A standard row id (`price.entry`) or a competitor-specific id (`support.hours`). */
   id: string;
   /** What the table and prose show, written in the market's language. */
   value: string;
-  /** The table's at-a-glance version of `value`: same facts and qualifiers, at most 40 characters. */
+  /** The table's at-a-glance version of `value`: same facts and qualifiers, one line of at most `SHORT_MAX_LENGTH` characters. */
   short?: string;
   /** An https page the fact was read from. */
   sourceUrl: string;

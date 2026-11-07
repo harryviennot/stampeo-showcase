@@ -76,6 +76,27 @@ describe("competitor facts", () => {
     expect(validateCompetitorFacts([withFrenchPrice(value)], TODAY)).toEqual([]);
   });
 
+  describe("short value", () => {
+    it.each([
+      ["a single character", "$"],
+      ["exactly 40 characters", "x".repeat(40)],
+      ["a French price with its basis", "Premium, 19 € HT par mois"],
+    ])("accepts %s", (_name, short) => {
+      expect(validateCompetitorFacts([withPrice({ short })], TODAY)).toEqual([]);
+    });
+
+    it.each([
+      ["empty", "", "short is empty"],
+      ["blank", "   ", "short is empty"],
+      ["on two lines", "Yes\nbut only on Pro", "short must be one line"],
+      ["over 40 characters", "x".repeat(41), "short is 41 characters"],
+    ])("is rejected when it is %s, naming the fact", (_name, short, message) => {
+      expect(validateCompetitorFacts([withPrice({ short })], TODAY).join("\n")).toMatch(
+        new RegExp(`${US_PRICE}: ${message}`),
+      );
+    });
+  });
+
   it("do not ask a US price for a tax basis", () => {
     expect(validateCompetitorFacts([withPrice({ value: "$25 a month" })], TODAY)).toEqual([]);
   });

@@ -1,4 +1,4 @@
-import type { CompetitorFacts, SourcedFact } from "../types";
+import { SHORT_MAX_LENGTH, type CompetitorFacts, type SourcedFact } from "../types";
 
 /** Today as `YYYY-MM-DD`, the calendar day in Paris where the facts are checked. */
 export function todayIso(now: Date = new Date()): string {
@@ -31,6 +31,15 @@ function isHttpsUrl(value: string): boolean {
 
 const blank = (value: string | undefined) => !value || value.trim() === "";
 
+function shortProblems(short: string): string[] {
+  if (blank(short)) return ["short is empty"];
+  const problems: string[] = [];
+  if (/[\r\n]/.test(short)) problems.push("short must be one line");
+  const length = Array.from(short).length;
+  if (length > SHORT_MAX_LENGTH) problems.push(`short is ${length} characters, the limit is ${SHORT_MAX_LENGTH}`);
+  return problems;
+}
+
 function factProblems(fact: SourcedFact, today: string): string[] {
   const problems: string[] = [];
   if (blank(fact.id)) problems.push("id is empty");
@@ -38,6 +47,7 @@ function factProblems(fact: SourcedFact, today: string): string[] {
   if (!isHttpsUrl(fact.sourceUrl)) problems.push("sourceUrl must be an https URL");
   if (blank(fact.sourceTitle)) problems.push("sourceTitle is empty");
   if (blank(fact.quote)) problems.push("quote is empty");
+  if (fact.short !== undefined) problems.push(...shortProblems(fact.short));
   if (!isCalendarDate(fact.checkedAt)) problems.push("checkedAt must be a real date written YYYY-MM-DD");
   else if (fact.checkedAt > today) problems.push(`checkedAt ${fact.checkedAt} is after today (${today})`);
   return problems;
@@ -52,8 +62,8 @@ function frenchPriceProblem(fact: SourcedFact): string | null {
 /**
  * Everything wrong with the competitor facts, one line per problem naming the
  * competitor, market and fact. Empty means every fact is sourced, quoted and
- * dated on or before `today`, no id repeats within a market, and every French
- * price states its tax basis.
+ * dated on or before `today`, no id repeats within a market, every French
+ * price states its tax basis, and a `short` value is one line of at most 40 characters.
  */
 export function validateCompetitorFacts(
   competitors: readonly CompetitorFacts[],
