@@ -16,6 +16,7 @@ Why: Harry, 2026-11-07, after reading the drafts: "I don't like the comparison t
 Same routes. Restructure `components/compare/ComparisonArticle.tsx` and rewrite `ComparisonTable.tsx`.
 - Drop the blog shell (`bg-[var(--blog-bg)]`) and the `TableOfContents` sidebar. The H2 ids stay, so anchors still work.
 - The page sits on `paper-grain bg-[var(--cream)]`, like the landing.
+- (POLISH, 2026-11-07) Plain sections are a centred 46rem reading column on desktop (heading, prose, price cards, Fit list, FAQ, Sources). The full-width bands stay full width. This replaces "stays on the Container's left edge" below. The table rows are collapsed on desktop too, with an "open all" button (Harry found the always-open desktop detail hard to read).
 - Sections use `py-16 lg:py-24` in `<Container>`, with left-aligned `text-h2` titles. Prose is capped at `max-w-[46rem]` and stays on the Container's left edge.
 
 ## Proposed additions
