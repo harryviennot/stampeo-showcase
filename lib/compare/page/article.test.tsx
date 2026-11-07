@@ -347,9 +347,11 @@ describe("a page laid out in full", () => {
     const stampeo = element("div", 'data-price-card="stampeo"');
     const competitor = element("div", 'data-price-card="competitor"');
 
-    expect(text(competitor)).toContain("Acme Loyalty $25 a month, billed monthly.");
+    expect(text(competitor)).toContain("Acme Loyalty $25 a month, billed monthly");
+    expect(text(competitor)).not.toContain("billed monthly.");
     expect(text(competitor)).not.toContain("Acme Loyalty:");
-    expect(text(stampeo)).toContain("Stampeo Starter, $29 a month; Growth, $49 a month.");
+    expect(text(stampeo)).toContain("Stampeo Starter, $29 a month Growth, $49 a month");
+    expect(text(stampeo)).not.toMatch(/a month[;.]/);
     expect(stampeo.match(/<li/g)).toHaveLength(2);
   });
 

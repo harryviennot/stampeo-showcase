@@ -21,7 +21,7 @@ export async function ComparisonPage({ loaded }: { loaded: LoadedComparison }) {
   return (
     <div className="paper-grain min-h-screen bg-[var(--cream)]">
       <Header market={siteMarket} />
-      <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view)} heroVisual={<HeroCardStack />} />
+      <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view)} heroVisual={<HeroCardStack showQR />} />
       <Footer market={siteMarket} />
     </div>
   );

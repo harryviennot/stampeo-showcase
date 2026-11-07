@@ -33,7 +33,7 @@ export function Strengths({ side, title, children }: { side: Side; title?: strin
   return (
     <section data-strengths={side} aria-labelledby={id} className={`not-prose ${sideOrder(side)}`}>
       {title && (
-        <h2 id={id} className="text-h2 text-[var(--near-black)]">
+        <h2 id={id} className="text-h2 text-balance text-[var(--near-black)]">
           {title}
         </h2>
       )}

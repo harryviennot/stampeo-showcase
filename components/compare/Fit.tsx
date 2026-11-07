@@ -11,11 +11,14 @@ function reasonOf(children: ReactNode): ReactNode {
 
 /** One type of shop, why it suits one of the two products, and a neutral pill naming that product. */
 export function Fit({ side, name, shop, children }: { side: Side; name: string; shop: string; children: ReactNode }) {
+  const reason = reasonOf(children);
+  const hasReason = Children.toArray(reason).some((part) => !(typeof part === "string" && part.trim() === ""));
+
   return (
     <li data-fit={side} className="flex flex-col gap-3 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between md:gap-8">
       <div className="min-w-0">
         <p className="font-semibold text-[var(--near-black)]">{withoutTrailingColon(shop)}</p>
-        <p className="mt-1 leading-snug text-[var(--muted-foreground)]">{reasonOf(children)}</p>
+        {hasReason && <p className="mt-1 leading-snug text-[var(--muted-foreground)]">{reason}</p>}
       </div>
       <span
         data-pick

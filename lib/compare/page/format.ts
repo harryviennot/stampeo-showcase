@@ -43,3 +43,6 @@ export const withoutTrailingColon = (label: string) => label.replace(/[\s\u00a0\
 
 /** A lead-in without its closing full stop, for when it is drawn as a title. */
 export const withoutTrailingPeriod = (lead: string) => lead.replace(/\.\s*$/, "");
+
+/** A list line without the ";" or "." that closed it as part of a sentence, for when each line is drawn on its own. */
+export const withoutClosingPunctuation = (line: string) => line.replace(/[\s\u00a0\u202f]*[;.]\s*$/, "");

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { domainOf, formatDate, headingId, languageList, withoutTrailingColon, withoutTrailingPeriod } from "./format";
+import { domainOf, formatDate, headingId, languageList, withoutClosingPunctuation, withoutTrailingColon, withoutTrailingPeriod } from "./format";
 
 describe("the dates a comparison page shows", () => {
   it("reads in the market's language, on the day written, wherever the server runs", () => {
@@ -61,5 +61,20 @@ describe("a label drawn as a title", () => {
     ["Version 2.0 and more", "Version 2.0 and more"],
   ])("%s loses its closing full stop", (lead, title) => {
     expect(withoutTrailingPeriod(lead)).toBe(title);
+  });
+});
+
+describe("a price line drawn in a price card", () => {
+  it.each([
+    ["an English line ending in a semicolon", "Starter, $25 a month;", "Starter, $25 a month"],
+    ["a French line ending in a spaced semicolon", "Starter, 20 € par mois, TVA non applicable\u00a0;", "Starter, 20 € par mois, TVA non applicable"],
+    ["the last line, ending in a full stop", "Ultimate, $95 a month.", "Ultimate, $95 a month"],
+    ["a line with no closing punctuation", "Pro, $79 a month", "Pro, $79 a month"],
+  ])("drops its closing punctuation: %s", (_name, line, shown) => {
+    expect(withoutClosingPunctuation(line)).toBe(shown);
+  });
+
+  it("keeps punctuation inside the line", () => {
+    expect(withoutClosingPunctuation("Starter: $25; billed monthly")).toBe("Starter: $25; billed monthly");
   });
 });

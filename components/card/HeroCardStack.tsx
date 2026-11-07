@@ -6,9 +6,10 @@ import { STAMP_SAMPLES, POINTS_SAMPLES } from "@/lib/loyalty-samples";
 /**
  * Hero visual built entirely from the hand-designed brand bank: the Aurevo
  * café card (real imported cup icons) front and center, with two points cards
- * peeking out behind it on large screens.
+ * peeking out behind it on large screens. `showQR` draws the front card's QR
+ * code, so it reads as a complete pass rather than ending halfway down.
  */
-export async function HeroCardStack() {
+export async function HeroCardStack({ showQR = false }: { showQR?: boolean } = {}) {
   const tp = await getTranslations("features.design-de-carte.custom.playground");
 
   const center = STAMP_SAMPLES.find((s) => s.id === "aurevo") ?? STAMP_SAMPLES[0];
@@ -60,7 +61,7 @@ export async function HeroCardStack() {
           <WalletCard
             design={centerDesign}
             stamps={center.stamps}
-            showQR={false}
+            showQR={showQR}
             interactive3D
           />
         </ScaledCardWrapper>

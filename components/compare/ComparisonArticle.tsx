@@ -39,7 +39,7 @@ export function ComparisonArticle({ view, verdict, body, others, heroVisual }: C
         <Container>
           <div className="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
             <header className="max-w-[46rem]">
-              <h1 className="text-h1 text-[var(--near-black)]">{copy.h1(competitor.name)}</h1>
+              <h1 className="text-h1 text-balance text-[var(--near-black)]">{copy.h1(competitor.name)}</h1>
               {verdict && <div className="mt-5 text-lead text-[var(--near-black)]/85 [&>p]:m-0">{verdict}</div>}
               <p className="mt-6 inline-flex h-8 items-center gap-2 rounded-full border border-[var(--border)] bg-white px-3 text-sm text-[var(--muted-foreground)]">
                 <CalendarCheckIcon aria-hidden="true" className="h-4 w-4 shrink-0" />
@@ -54,7 +54,7 @@ export function ComparisonArticle({ view, verdict, body, others, heroVisual }: C
       {body}
 
       <Container className="pb-16 lg:pb-24">
-        <div className="max-w-[46rem]">
+        <div className="mx-auto max-w-[46rem] lg:[&>section>h2]:mt-16 [&>section:first-child>h2]:mt-0 [&>section>h2]:text-balance">
           <section aria-labelledby="faq">
             <Heading level={2} id="faq">
               {copy.faqTitle}
