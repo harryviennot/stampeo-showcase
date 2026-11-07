@@ -4,7 +4,7 @@ import { ACME_FIDELITE, ACME_LOYALTY, withUsFacts } from "../__fixtures__";
 import { buildStampeoColumn } from "../stampeo";
 import { STANDARD_FACT_IDS, type CompetitorFacts, type SourcedFact } from "../types";
 import { COPY } from "./copy";
-import { ROW_GROUPS, competitorText, tableGroups, type TableGroup, type TableRow } from "./rows";
+import { ROW_GROUPS, competitorText, hasDetail, openableRows, tableGroups, type Side, type TableGroup, type TableRow } from "./rows";
 
 /** French typography uses no-break spaces; the tests read them as plain ones. */
 const norm = (text: string) => text.replace(/[  ]/g, " ");
@@ -196,5 +196,33 @@ describe("the tax line under a price", () => {
   it("only ever sits on the price row", () => {
     const rows = rowsOf(tableGroups({ market: "fr", competitor: withFrenchPrice({ short: "Essentiel, 19 € HT par mois" }), stampeo: FR }));
     expect(rows.filter((row) => row.stampeo.taxLine || row.competitor.taxLine).map((row) => row.id)).toEqual(["price.entry"]);
+  });
+});
+
+describe("the rows that open", () => {
+  const side = (change: Partial<Side> = {}): Side => ({ short: "Answer", taxLine: null, detail: null, source: null, ...change });
+  const row = (competitor: Partial<Side>, stampeo: Partial<Side>): TableRow => ({
+    id: "card.where",
+    label: "A row",
+    competitor: side(competitor),
+    stampeo: side(stampeo),
+  });
+  const SOURCE = { url: "https://acme-loyalty.example/pricing", title: "Acme pricing" };
+
+  it.each([
+    ["a competitor's full sentence", row({ detail: "Full" }, {})],
+    ["Stampeo's full sentence", row({}, { detail: "Full" })],
+    ["a source to read, with no sentence", row({ source: SOURCE }, {})],
+  ])("are the rows with %s", (_name, openable) => {
+    expect(hasDetail(openable)).toBe(true);
+  });
+
+  it("are not a row with no detail on either side, which gets no toggle", () => {
+    expect(hasDetail(row({}, {}))).toBe(false);
+  });
+
+  it("are listed by id across the themes, in the table's order", () => {
+    const groups = tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US });
+    expect(openableRows(groups)).toEqual(["card.where", "customer.app_required", "price.entry", "trial"]);
   });
 });

@@ -17,7 +17,7 @@ afterAll(() => mock.module("@/hooks/use-cta-tracking", () => realTracking));
 describe.each(allComparisonPages().map((page) => [`${page.locale}/${page.slug}`, page] as const))(
   "the page content/compare/%s",
   (_file, page) => {
-    it("compiles and renders, every <Fact> resolved, with its table, sources and FAQ", async () => {
+    it("compiles and renders, every <Fact> resolved, with its table, both products' cards and rows, sources and FAQ", async () => {
       const loaded = loadComparison(page)!;
       const pricing = page.market === "fr" ? FALLBACK_PRICING.eur : FALLBACK_PRICING.usd;
       const view = { ...loaded, stampeo: buildStampeoColumn(page.market, pricing) };
@@ -30,6 +30,9 @@ describe.each(allComparisonPages().map((page) => [`${page.locale}/${page.slug}`,
       );
 
       expect(html).toContain("<table");
+      for (const part of ["data-choose-if", "data-price-card", "data-strengths", "data-fit"]) {
+        for (const side of ["competitor", "stampeo"]) expect(html).toContain(`${part}="${side}"`);
+      }
       expect(html).toContain('id="sources"');
       expect(html).toContain('id="faq"');
       expect(html).not.toMatch(/undefined|\[object|<Fact|\{\{/);

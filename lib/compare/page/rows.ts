@@ -126,3 +126,10 @@ export function tableGroups({ market, competitor, stampeo }: TableInput): TableG
     return rows.length > 0 ? [{ id: group.id, label: copy.groupLabels[group.id], rows }] : [];
   });
 }
+
+/** Does a row have anything to show when opened: a sentence, or a source to read? */
+export const hasDetail = (row: TableRow) => Boolean(row.competitor.detail || row.competitor.source || row.stampeo.detail);
+
+/** The ids of the rows that open, across the themes in the table's order. */
+export const openableRows = (groups: TableGroup[]): StandardFactId[] =>
+  groups.flatMap((group) => group.rows.filter(hasDetail).map((row) => row.id));

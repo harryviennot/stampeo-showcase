@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { ComparisonTable } from "@/components/compare/ComparisonTable";
 import { ACME_LOYALTY, withUsFacts } from "../__fixtures__";
 import { fixtureView } from "../__fixtures__/view";
+import { COPY } from "./copy";
 import type { ComparisonView } from "./view";
 
 /** The visible words: tags dropped, entities decoded, every kind of space a plain one. */
@@ -41,15 +42,23 @@ const US_VIEW = withShorts(fixtureView("acme-loyalty"), {
 });
 const FR_VIEW = withShorts(fixtureView("acme-fidelite"), { "price.entry": "Essentiel, 19 € HT par mois" });
 
-/** The phone list and the table, as the page draws them. */
-const split = (html: string) => ({ phone: html.slice(0, html.indexOf("<table")), table: html.slice(html.indexOf("<table")) });
+/** The button above the table, the phone list and the table, as the page draws them. */
+function parts(view: ComparisonView) {
+  const html = renderToStaticMarkup(<ComparisonTable view={view} />);
+  const phoneAt = html.lastIndexOf("<", html.indexOf("md:hidden"));
+  return { html, before: html.slice(0, phoneAt), phone: html.slice(phoneAt, html.indexOf("<table")), table: html.slice(html.indexOf("<table")) };
+}
+
+/** The rows that are hidden until opened, and the rest of the table. */
+const HIDDEN_ROW = /<tr\b[^>]*\shidden=""[\s\S]*?<\/tr>/g;
+const hiddenRows = (table: string) => [...table.matchAll(HIDDEN_ROW)].map((match) => match[0]);
+const shownTable = (table: string) => table.replace(HIDDEN_ROW, "");
 
 describe("the comparison table on a phone", () => {
-  const { phone } = split(renderToStaticMarkup(<ComparisonTable view={US_VIEW} />));
+  const { phone } = parts(US_VIEW);
 
   it("is one card per theme, each with a title, holding one expandable row per fact", () => {
-    const cards = phone.match(/<section\b/g) ?? [];
-    expect(cards).toHaveLength(2);
+    expect(phone.match(/<section\b/g)).toHaveLength(2);
     expect(phone.match(/<h3\b/g)).toHaveLength(2);
     expect(text(phone)).toContain("Your customer's side");
     expect(text(phone)).toContain("Price and commitment");
@@ -87,13 +96,13 @@ describe("the comparison table on a phone", () => {
   });
 
   it("falls back to the full sentence while a fact has no short value, without saying it twice", () => {
-    const { phone: bare } = split(renderToStaticMarkup(<ComparisonTable view={fixtureView("acme-loyalty")} />));
+    const { phone: bare } = parts(fixtureView("acme-loyalty"));
     const row = bare.match(/<details\b[\s\S]*?<\/details>/)![0];
     expect(text(row).match(/Their own app on the customer's phone/g)).toHaveLength(1);
   });
 
   it("keeps the tax line of a French price in the summary, for both products", () => {
-    const { phone: fr } = split(renderToStaticMarkup(<ComparisonTable view={FR_VIEW} />));
+    const { phone: fr } = parts(FR_VIEW);
     const price = fr.match(/<details\b(?:(?!<\/details>)[\s\S])*?Plan payant le moins cher[\s\S]*?<\/details>/)![0];
     const summary = price.match(/<summary\b[\s\S]*?<\/summary>/)![0];
 
@@ -104,7 +113,7 @@ describe("the comparison table on a phone", () => {
 });
 
 describe("the comparison table from the tablet up", () => {
-  const { table } = split(renderToStaticMarkup(<ComparisonTable view={US_VIEW} />));
+  const { table } = parts(US_VIEW);
 
   it("is one real table with the competitor on the left and Stampeo on the right, and one body per theme", () => {
     expect(table.match(/<table\b/g)).toHaveLength(1);
@@ -121,32 +130,90 @@ describe("the comparison table from the tablet up", () => {
     expect(table).toContain('role="cell"');
   });
 
-  it("shows each cell's short answer with the full sentence and the source under it, no toggle to open", () => {
-    const cell = table.match(/<th[^>]*scope="row"[\s\S]*?<\/th>\s*(<td\b[\s\S]*?<\/td>)/)![1];
+  it("names the two products once, in the column header, whose label column carries no visible title", () => {
+    const head = table.match(/<thead[\s\S]*?<\/thead>/)![0];
+    const labelHeader = head.match(/<th\b[\s\S]*?<\/th>/)![0];
 
-    expect(text(cell)).toContain("Their own app");
-    expect(text(cell)).toContain("Their own app on the customer's phone");
-    expect(cell).toContain('href="https://acme-loyalty.example/pricing"');
-    expect(cell).toContain('rel="noopener nofollow"');
-    expect(table).not.toContain("<details");
+    expect(labelHeader).toMatch(/<span class="sr-only">Criterion<\/span>/);
+    expect(text(head.replace(labelHeader, ""))).toBe("Acme Loyalty Stampeo");
+    const shown = shownTable(table);
+    expect(shown.slice(shown.indexOf("</thead>"))).not.toContain("Acme Loyalty");
+    expect(shown.slice(shown.indexOf("</thead>"))).not.toContain("Stampeo<");
   });
 
-  it("repeats the two names above each theme's rows for the eye, hidden from screen readers", () => {
+  it("opens each theme with a full-width label, a title and no product names", () => {
     const body = table.match(/<tbody\b[\s\S]*?<\/tbody>/)![0];
     const header = body.match(/<tr\b[\s\S]*?<\/tr>/)![0];
 
-    expect(text(header)).toContain("Your customer's side");
-    expect(header.match(/aria-hidden="true"/g)!.length).toBeGreaterThanOrEqual(2);
+    expect(header).toContain('colSpan="3"');
+    expect(text(header)).toBe("Your customer's side");
+  });
+
+  it("shows only the label and the short answers of each row until it is opened", () => {
+    const shown = shownTable(table);
+
+    expect(text(shown)).toContain("Their own app");
+    expect(text(shown)).toContain("Apple Wallet and Google Wallet");
+    expect(text(shown)).not.toContain("on the customer's phone");
+    expect(shown).not.toContain("<a ");
+  });
+
+  it("holds each row's full sentences and the competitor's source in a hidden row of the same markup, one per row", () => {
+    const hidden = hiddenRows(table);
+
+    expect(hidden).toHaveLength(4);
+    expect(text(hidden[0])).toContain("Their own app on the customer's phone");
+    expect(text(hidden[0])).toContain("Apple Wallet and Google Wallet, on the customer's phone");
+    const link = hidden[0].match(/<a\b[^>]*>/)![0];
+    expect(link).toContain('href="https://acme-loyalty.example/pricing"');
+    expect(link).toContain('rel="noopener nofollow"');
+    expect(link).toContain('target="_blank"');
+  });
+
+  it("gives each row a closed toggle in its label cell that points at its hidden row and is easy to tap", () => {
+    const labelCell = table.match(/<th[^>]*scope="row"[\s\S]*?<\/th>/)![0];
+    const button = labelCell.match(/<button\b[^>]*>/)![0];
+    const controls = button.match(/aria-controls="([^"]+)"/)![1];
+
+    expect(button).toContain('aria-expanded="false"');
+    expect(button).toContain('type="button"');
+    expect(button).toMatch(/class="[^"]*\bmin-h-11\b/);
+    expect(text(labelCell)).toBe("Where the customer's card lives");
+    expect(hiddenRows(table)[0]).toContain(`id="${controls}"`);
+  });
+
+  it("keeps the tax line of a French price under its short answer, in view before anything is opened", () => {
+    const fr = shownTable(parts(FR_VIEW).table);
+    const price = fr.match(/<th[^>]*scope="row"(?:(?!<\/tr>)[\s\S])*Plan payant le moins cher[\s\S]*?<\/tr>/)![0];
+
+    expect(text(price)).toContain("soit 22,80 € TTC, TVA à 20 %");
+    expect(text(price)).toContain("TVA non applicable");
+  });
+
+  it("tints Stampeo's column and no other", () => {
+    const head = table.match(/<thead[\s\S]*?<\/thead>/)![0];
+    const cells = [...shownTable(table).matchAll(/<td\b[^>]*>/g)].map((match) => match[0]);
+
+    expect(head.match(/bg-\[var\(--accent\)\]\/5/g)).toHaveLength(1);
+    expect(cells.filter((cell) => cell.includes("bg-[var(--accent)]/5"))).toHaveLength(cells.length / 2);
   });
 });
 
-describe("a French table", () => {
-  it("is titled in French, and every theme the competitor has a row for appears in the fixed order", () => {
-    const html = renderToStaticMarkup(<ComparisonTable view={FR_VIEW} />);
-    expect(text(html)).toContain("Côté client");
-    expect(text(html)).toContain("Prix et engagement");
-    expect(html.indexOf("Côté client")).toBeLessThan(html.indexOf("Prix et engagement"));
-    expect(text(html)).toContain("Source");
+describe("the button above the table", () => {
+  it.each([
+    ["English", US_VIEW, "Show all details and sources"],
+    ["French", FR_VIEW, "Afficher le détail et les sources"],
+  ])("offers to open every row, in %s", (_name, view, label) => {
+    const { before } = parts(view);
+
+    expect(text(before)).toBe(label);
+    expect(before).toContain('type="button"');
+    expect(text(before)).toBe(COPY[view.page.market].table.showAll);
+  });
+
+  it("has a word for its next press in both languages", () => {
+    expect(COPY.us.table.hideAll).toBe("Hide details");
+    expect(COPY.fr.table.hideAll).toBe("Masquer le détail");
   });
 });
 
