@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { ACME_FIDELITE, ACME_LOYALTY, BRAVO_CARTE, FIXTURE_FACTS, withUsFacts } from "../__fixtures__";
 import type { CompetitorFacts, SourcedFact } from "../types";
 import { COMPETITOR_FACTS } from "./index";
-import { todayIso, validateCompetitorFacts } from "./validate";
+import { missingShortValues, todayIso, validateCompetitorFacts } from "./validate";
 
 const TODAY = "2026-11-04";
 
@@ -118,5 +118,24 @@ describe("competitor facts", () => {
 
   it("hold for every competitor registered in the app, so a bad facts file fails the test run", () => {
     expect(validateCompetitorFacts(COMPETITOR_FACTS)).toEqual([]);
+  });
+});
+
+describe("short values on the real pages", () => {
+  it("lists every standard-row fact with no short value, and asks none of a competitor-specific fact", () => {
+    // Acme has card.where, customer.app_required, price.entry and trial (standard) plus support.hours (not).
+    const missing = missingShortValues([ACME_LOYALTY]);
+    expect(missing).toHaveLength(4);
+    expect(missing.join("\n")).toMatch(/acme-loyalty\/us\/price\.entry: no short value/);
+    expect(missing.join("\n")).not.toMatch(/support\.hours/);
+  });
+
+  it("is satisfied once every standard-row fact has one", () => {
+    const complete = withUsFacts(ACME_LOYALTY, (facts) => facts.map((fact) => ({ ...fact, short: "Short" })));
+    expect(missingShortValues([complete])).toEqual([]);
+  });
+
+  it("holds for every competitor with a page, so no table row falls back to a full sentence", () => {
+    expect(missingShortValues(COMPETITOR_FACTS)).toEqual([]);
   });
 });
