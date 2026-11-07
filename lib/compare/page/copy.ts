@@ -1,4 +1,4 @@
-import type { Market, StandardFactId } from "../types";
+import type { Market, RowGroupId, StandardFactId } from "../types";
 import { NBSP } from "./format";
 
 /**
@@ -13,6 +13,10 @@ export interface PageCopy {
   criterion: string;
   tableCaption: (competitor: string) => string;
   rowLabels: Record<StandardFactId, string>;
+  /** The title of each theme the rows are grouped under. */
+  groupLabels: Record<RowGroupId, string>;
+  /** The link to the page a competitor fact was read on. */
+  source: string;
   /** The note that adds a TTC equivalent to an HT price; absent where prices carry no such basis. */
   ttcEquivalent?: (ttc: string) => string;
   chooseIf: { competitor: (competitor: string) => string; stampeo: string };
@@ -51,6 +55,13 @@ const EN: PageCopy = {
     export: "Customer data export",
     designer: "Designing the card",
   },
+  groupLabels: {
+    customer: "Your customer's side",
+    program: "The program",
+    counter: "At the counter",
+    price: "Price and commitment",
+  },
+  source: "Source",
   chooseIf: { competitor: (competitor) => `Choose ${competitor} if`, stampeo: "Choose Stampeo if" },
   faqTitle: "Frequently asked questions",
   sourcesTitle: "Sources",
@@ -92,6 +103,13 @@ const FR: PageCopy = {
     export: "Export des données clients",
     designer: "Création de la carte",
   },
+  groupLabels: {
+    customer: "Côté client",
+    program: "Le programme",
+    counter: "Au comptoir",
+    price: "Prix et engagement",
+  },
+  source: "Source",
   ttcEquivalent: (ttc) => `soit ${ttc} TTC, TVA à 20${NBSP}%`,
   chooseIf: { competitor: (competitor) => `Choisissez ${competitor} si`, stampeo: "Choisissez Stampeo si" },
   faqTitle: "Questions fréquentes",

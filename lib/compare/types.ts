@@ -61,6 +61,11 @@ export const STANDARD_FACT_IDS = [
 
 export type StandardFactId = (typeof STANDARD_FACT_IDS)[number];
 
+/** The four themes the table rows are grouped into, in display order. */
+export const ROW_GROUP_IDS = ["customer", "program", "counter", "price"] as const;
+
+export type RowGroupId = (typeof ROW_GROUP_IDS)[number];
+
 export interface ComparisonFaq {
   question: string;
   answer: string;

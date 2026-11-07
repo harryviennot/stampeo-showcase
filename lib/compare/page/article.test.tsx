@@ -3,7 +3,6 @@ import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ComparisonArticle } from "@/components/compare/ComparisonArticle";
-import { ComparisonTable } from "@/components/compare/ComparisonTable";
 import { CallToAction } from "@/components/blog/mdx/CallToAction";
 import { FeatureCTA } from "@/components/features/FeatureCTA";
 import { FALLBACK_PRICING, formatMoney } from "@/lib/pricing";
@@ -136,7 +135,8 @@ describe("a US comparison page", () => {
   });
 
   it("lists the FAQ from the frontmatter, and the data behind it is in the same HTML", () => {
-    expect(html.match(/<details/g)).toHaveLength(2);
+    const faq = html.slice(at(html, 'id="faq"'), at(html, 'id="sources"'));
+    expect(faq.match(/<details/g)).toHaveLength(2);
     const nodes = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
     expect(nodes.map((node) => node["@type"])).toEqual(["WebPage", "BreadcrumbList", "FAQPage"]);
     expect(nodes[2].mainEntity.map((q: { name: string }) => q.name)).toEqual([
@@ -239,27 +239,6 @@ describe.each([
       { trackAs: "comparison_cta", href: "/onboarding" },
       { trackAs: "comparison_final_cta", href: "/onboarding" },
     ]);
-  });
-});
-
-describe("the table's semantics", () => {
-  const html = renderToStaticMarkup(<ComparisonTable view={fixtureView("acme-loyalty")} />);
-
-  it("keeps them when the browser stops drawing a table", () => {
-    expect(html).toContain('role="table"');
-    expect(html.match(/role="row"/g)!.length).toBeGreaterThanOrEqual(5);
-    expect(html).toContain('role="rowheader"');
-    expect(html).toContain('role="cell"');
-  });
-
-  it("pairs a yes or a no with an icon, hidden from screen readers since the word is there", () => {
-    // Acme's only yes/no answer is on the customer-app row, which stays iconless; give it a till row too.
-    const view = fixtureView("acme-loyalty");
-    const withTill = {
-      ...view,
-      competitor: withUsFacts(view.competitor, (facts) => [...facts, { ...facts[0], id: "pos.integration", value: "No till integration" }]),
-    };
-    expect(renderToStaticMarkup(<ComparisonTable view={withTill} />)).toMatch(/<svg[^>]*aria-hidden="true"/);
   });
 });
 

@@ -1,23 +1,31 @@
 import { marketFacts } from "../facts";
 import type { StampeoColumn } from "../stampeo";
-import { STANDARD_FACT_IDS, type CompetitorFacts, type Market, type StandardFactId } from "../types";
+import type { CompetitorFacts, Market, RowGroupId, SourcedFact, StandardFactId } from "../types";
 import { COPY } from "./copy";
 
-/** How a cell reads at a glance: an affirmative, a negative, or just text. */
-export type Tone = "yes" | "no" | "plain";
-
-export interface Cell {
-  text: string;
-  tone: Tone;
+/** One product's side of a table row. */
+export interface Side {
+  /** The at-a-glance answer, shown in bold. */
+  short: string;
+  /** The line under the price: the TTC equivalent of an HT price, or Stampeo's "TVA non applicable". */
+  taxLine: string | null;
+  /** The full sentence, when it says more than `short` does. */
+  detail: string | null;
+  /** The page a competitor's value was read on; Stampeo's side has none. */
+  source: { url: string; title: string } | null;
 }
 
 export interface TableRow {
   id: StandardFactId;
   label: string;
-  /** The price row shows its period and tax basis in the text of both cells. */
-  price: boolean;
-  competitor: Cell;
-  stampeo: Cell;
+  competitor: Side;
+  stampeo: Side;
+}
+
+export interface TableGroup {
+  id: RowGroupId;
+  label: string;
+  rows: TableRow[];
 }
 
 export interface TableInput {
@@ -26,24 +34,13 @@ export interface TableInput {
   stampeo: StampeoColumn;
 }
 
-// A cell opens with its answer when it has one; "Not published" and "Non communiqué" are neither.
-const YES: Record<Market, RegExp> = { us: /^yes\b/i, fr: /^oui\b/i };
-const NO: Record<Market, RegExp> = {
-  us: /^(?:no|none)\b/i,
-  fr: /^(?:aucune?\b|non(?=\s*[,.:;!]|\s*$))/i,
-};
-
-export function cellOf(text: string, market: Market): Cell {
-  if (YES[market].test(text)) return { text, tone: "yes" };
-  if (NO[market].test(text)) return { text, tone: "no" };
-  return { text, tone: "plain" };
-}
-
-// Rows where "none" is the answer a shop wants: a minus icon would read as a gap.
-const PLAIN_ROWS: ReadonlySet<StandardFactId> = new Set(["customer.app_required"]);
-
-const cellFor = (id: StandardFactId, text: string, market: Market): Cell =>
-  PLAIN_ROWS.has(id) ? { text, tone: "plain" } : cellOf(text, market);
+/** The four themes the rows are grouped under, in display order, each with its rows in display order. */
+export const ROW_GROUPS: ReadonlyArray<{ id: RowGroupId; rows: readonly StandardFactId[] }> = [
+  { id: "customer", rows: ["card.where", "customer.app_required", "languages"] },
+  { id: "program", rows: ["program.types", "designer", "push.automatic", "push.broadcasts"] },
+  { id: "counter", rows: ["staff.scanning", "pos.integration", "locations.multiple", "export"] },
+  { id: "price", rows: ["price.entry", "trial", "commitment"] },
+];
 
 const TTC_RATE = 1.2;
 // An amount whose thousands may be separated by a space, a no-break space or a narrow no-break space.
@@ -56,6 +53,12 @@ const euros = (amount: number) =>
     minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
   }).format(amount);
 
+/** The TTC price of an HT amount written as the source writes it ("1 234,50"), in euros. */
+function ttcOf(amount: string): string {
+  const ht = Number.parseFloat(amount.replace(/[ \u00a0\u202f]/g, "").replace(",", "."));
+  return euros(Math.round(ht * TTC_RATE * 100) / 100);
+}
+
 /**
  * A competitor's value as the page shows it. On a French page an amount quoted
  * HT is followed by its TTC equivalent at 20 %, so a shop that pays VAT and
@@ -65,29 +68,61 @@ export function competitorText(value: string, market: Market): string {
   const note = COPY[market].ttcEquivalent;
   if (!note || /\bTTC\b/i.test(value)) return value;
 
-  return value.replace(HT_AMOUNT, (published, amount: string) => {
-    const ht = Number.parseFloat(amount.replace(/[ \u00a0\u202f]/g, "").replace(",", "."));
-    const ttc = Math.round(ht * TTC_RATE * 100) / 100;
-    return `${published} (${note(euros(ttc))})`;
-  });
+  return value.replace(HT_AMOUNT, (published, amount: string) => `${published} (${note(ttcOf(amount))})`);
 }
 
-/** The standard rows the competitor has a sourced fact for, in the standard order, beside Stampeo's value for each. */
-export function tableRows({ market, competitor, stampeo }: TableInput): TableRow[] {
-  const facts = new Map(marketFacts(competitor, market).map((fact) => [fact.id, fact]));
-  const labels = COPY[market].rowLabels;
+const sameText = (a: string, b: string) => a.trim() === b.trim();
 
-  return STANDARD_FACT_IDS.flatMap((id) => {
-    const fact = facts.get(id);
-    if (!fact) return [];
-    return [
-      {
-        id,
-        label: labels[id],
-        price: id === "price.entry",
-        competitor: cellFor(id, competitorText(fact.value, market), market),
-        stampeo: cellFor(id, stampeo.rows[id], market),
-      },
-    ];
+/** The TTC equivalent of every HT amount in a price, as one line; null when there is no HT amount to convert. */
+function taxLineOf(price: string, market: Market): string | null {
+  const note = COPY[market].ttcEquivalent;
+  if (!note || /\bTTC\b/i.test(price)) return null;
+
+  const ttc = [...price.matchAll(HT_AMOUNT)].map((match) => ttcOf(match[1]));
+  return ttc.length > 0 ? note(ttc.join(" / ")) : null;
+}
+
+function competitorSide(fact: SourcedFact, market: Market, price: boolean): Side {
+  const full = competitorText(fact.value, market);
+  const source = { url: fact.sourceUrl, title: fact.sourceTitle };
+  if (fact.short === undefined) return { short: full, taxLine: null, detail: null, source };
+
+  return {
+    short: fact.short,
+    taxLine: price ? taxLineOf(fact.short, market) : null,
+    detail: sameText(full, fact.short) ? null : full,
+    source,
+  };
+}
+
+function stampeoSide(column: StampeoColumn, id: StandardFactId): Side {
+  const short = column.rowsShort[id];
+  const full = column.rows[id];
+  const taxLine = id === "price.entry" ? column.taxNote : null;
+  // The price's full sentence is its short value plus the tax note, which the summary already shows.
+  const says = taxLine ? `${short}, ${taxLine}` : short;
+
+  return { short, taxLine, detail: sameText(full, short) || sameText(full, says) ? null : full, source: null };
+}
+
+/** The table's rows by theme: the standard rows the competitor has a sourced fact for, beside Stampeo's value for each. A theme with no row is left out. */
+export function tableGroups({ market, competitor, stampeo }: TableInput): TableGroup[] {
+  const facts = new Map(marketFacts(competitor, market).map((fact) => [fact.id, fact]));
+  const copy = COPY[market];
+
+  return ROW_GROUPS.flatMap((group) => {
+    const rows = group.rows.flatMap((id): TableRow[] => {
+      const fact = facts.get(id);
+      if (!fact) return [];
+      return [
+        {
+          id,
+          label: copy.rowLabels[id],
+          competitor: competitorSide(fact, market, id === "price.entry"),
+          stampeo: stampeoSide(stampeo, id),
+        },
+      ];
+    });
+    return rows.length > 0 ? [{ id: group.id, label: copy.groupLabels[group.id], rows }] : [];
   });
 }
