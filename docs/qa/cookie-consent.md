@@ -213,7 +213,7 @@ domain.
 - **STA-540 (ChatGPT ads conversions) moved the consent version to 5 and added the
   CS section.** The site still loads no OpenAI tag (CS-05). It captures OpenAI's
   click id, `oppref`, like `gclid` (CS-01 to CS-03, CS-08), keeps a raw `+` in it
-  (CS-02), drops it from the address Google Analytics receives (CS-04) and clears
+  and drops an id that is not printable ASCII (CS-02), drops it from the address Google Analytics receives (CS-04) and clears
   `__oppref` and `__obref` on an advertising refusal (CS-09). A version-4 grant
   is asked again (CS-06) and a version-4 refusal stands (CS-07). The banner, the
   notice, the advertising cards and the privacy policy name OpenAI (CS-10,
@@ -3214,27 +3214,29 @@ EXPECT:
 ### CS-02 The click id arrives byte for byte, and a plus sign stays a plus sign — CORE
 DEPENDS: CS-01
 
-WHY: OpenAI documents no format and asks for "the original string without modification". An id that is trimmed, case-folded, decoded twice, cut short, or has its `+` turned into a space still looks like data and attributes to nothing at OpenAI. The other platforms' ids keep the rule they always had.
+WHY: OpenAI documents no format and asks for "the original string without modification". An id that is trimmed, case-folded, decoded twice, cut short, or has its `+` turned into a space still looks like data and attributes to nothing at OpenAI. Every platform's id must also be printable ASCII (no space, control character or non-ASCII byte): one that is not is dropped, never cleaned, so a crafted id can never abort a sign-up record.
 
 For each address: R17, R13 with `America/New_York`, R9, R7, open it, wait 5s, R22. Read `ci`.
 
 1. `/us?oppref=aB3dE9fGh1JkLm0pQr`
-2. `/us?oppref=ab+cd%2Bef%20gh%3Dz`
+2. `/us?oppref=ab+cd%2Bef%2Fgh%3Dz`
 3. `/us?oppref=a%252Fb`
 4. console, `location.href = '/us?oppref=' + 'x'.repeat(512)`
 5. console, `location.href = '/us?oppref=' + 'x'.repeat(513)`
 6. `/us?oppref=%E0%A4%A` (a malformed escape)
 7. `/us?oppref=` and `/us?oppref=%20%20` (empty)
 8. `/us?gclid=a+b`
+9. `/us?oppref=ab%20cd`, `/us?oppref=a%00b` and `/us?gclid=a%09b` (a space, a NUL and a tab)
 
 EXPECT:
 - 1: `"vn":"openai"` and `ci` is `aB3dE9fGh1JkLm0pQr`, capitals kept.
-- 2: `ci` is `ab+cd+ef gh=z`: the raw `+` stays a `+`, `%2B` is a `+`, `%20` is a space, `%3D` is `=`.
+- 2: `ci` is `ab+cd+ef/gh=z`: the raw `+` stays a `+`, `%2B` is a `+`, `%2F` is `/`, `%3D` is `=`.
 - 3: `ci` is `a%2Fb`: the value is decoded exactly once.
 - 4: `ci` is 512 `x` characters.
 - 5, 6 and 7: no `stampeo_ad` at all. The page loads normally, with no error page and no uncaught error in the console.
-- 8: `"vn":"google"` and `ci` is `a b`: the plus rule belongs to `oppref` alone.
-- NEGATIVE: in 5 the cookie is never an `x` string shorter than 513 characters (an id we would have to cut is useless to OpenAI, so it is refused), and in 2 no `ci` holds a space where the address had a raw `+`.
+- 8: no `stampeo_ad` at all: a form decode turns the raw `+` of a `gclid` into a space, and an id with a space is dropped. The raw-plus rule belongs to `oppref` alone.
+- 9: no `stampeo_ad` at all, for each address.
+- NEGATIVE: in 5 the cookie is never an `x` string shorter than 513 characters (an id we would have to cut is useless to OpenAI, so it is refused), in 2 no `ci` holds a space where the address had a raw `+`, and in 9 no `ci` is the address's value with the bad character removed.
 
 ### CS-03 Click priority: gclid, then fbclid, then oppref, then ttclid, and the newest click wins — CORE
 DEPENDS: CS-01
@@ -3384,7 +3386,7 @@ EXPECT:
 - The "Last updated" line still carries the previous release's date (23 October 2026 in `en`): it changes at counsel sign-off.
 - §4 names OpenAI (ChatGPT ads) beside Google Ads and Meta as a platform we report conversions to, which may process that data in the United States, and says Google Ads and OpenAI receive the reports as independent recipients for advertising measurement.
 - §5.3: the `stampeo_ad` row says an OpenAI click identifier goes to OpenAI, beside the Google and Meta ones. The third-party cookie table has NO OpenAI row: no OpenAI cookie is ever set.
-- §5.5 lists `oppref` as the OpenAI click identifier beside `gclid` and `fbclid`, and says an OpenAI click identifier goes to OpenAI alone while a Google or Meta one is never sent to OpenAI. The Google Ads paragraph says it receives these steps only when the person came through one of its advertisements (Meta alone receives them whether or not they came from one of its ads). A new OpenAI paragraph says OpenAI receives the same three steps (account created, free trial started, first invoice paid) and not the opening of the payment page, only when the person came through one of its advertisements; the OpenAI click identifier; the price or amount and currency for the last two; the account email hashed with SHA-256; nothing else (no telephone number, name, address, IP address or browser characteristics); and that every report asks OpenAI not to use it to personalise the advertising it shows the person. The Recipients line defines OpenAI as the United States company that operates ChatGPT and its advertising, there is a "Role of OpenAI" line (an independent recipient for advertising measurement), and the withdrawal line says turning advertising off stops reporting to Meta, Google Ads and OpenAI and deletes the advertising identifiers.
+- §5.5 lists `oppref` as the OpenAI click identifier beside `gclid` and `fbclid`, and scopes the own-identifiers promise to the reports sent from our servers: an OpenAI click identifier goes to OpenAI alone while a Google or Meta one is never sent to OpenAI. A paragraph after "We never send your password" says the browser is a separate matter: Meta's pixel (which runs only with the advertising cookies) reads the address of the page, and that address can carry another platform's click identifier, so Meta can see it. The Google Ads paragraph says it receives these steps only when the person came through one of its advertisements (Meta alone receives them whether or not they came from one of its ads). A new OpenAI paragraph says OpenAI receives the same three steps (account created, free trial started, first invoice paid) and not the opening of the payment page, only when the person came through one of its advertisements; the OpenAI click identifier; the price or amount and currency for the last two; the account email hashed with SHA-256; nothing else (no telephone number, name, address, IP address or browser characteristics); and that every report asks OpenAI not to use it to personalise the advertising it shows the person. The Recipients line defines OpenAI as the United States company that operates ChatGPT and its advertising, there is a "Role of OpenAI" line (an independent recipient for advertising measurement), and the withdrawal line says turning advertising off stops reporting to Meta, Google Ads and OpenAI and deletes the advertising identifiers.
 - §6 names OpenAI beside Meta and Google Ads in the US "sharing" paragraph.
 - The headings are the same list as before, and none names OpenAI.
 - Step 2: the rendered page contains no `COUNSEL` text in any locale (the markers are hidden MDX comments).
