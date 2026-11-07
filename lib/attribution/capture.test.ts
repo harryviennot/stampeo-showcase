@@ -460,8 +460,8 @@ describe("the consent evidence a capture rests on", () => {
     ["a visitor whose older choice refused analytics carries that choice", null, { ...OLDER, analytics: false, marketing: true }, { cv: CONSENT_VERSION - 1, ca: 1_759_400_000 }],
     // Its grants are not carried, so the state in force is the opt-out default.
     ["a visitor whose older choice refused nothing carries the text in force and no moment", null, { ...OLDER, marketing: true }, { cv: CONSENT_VERSION, ca: 0 }],
-    // Nobody clicked: the version is the notice text shown, with no moment.
-    ["a visitor under the notice default carries the text in force and no moment", null, null, { cv: CONSENT_VERSION, ca: 0 }],
+    // Nobody clicked: the version is the consent text in force, with no moment.
+    ["a visitor with no choice at all carries the text in force and no moment", null, null, { cv: CONSENT_VERSION, ca: 0 }],
     ["a visitor whose older record left both categories undecided carries the text in force and no moment", null, { ...OLDER, analytics: null, marketing: null }, { cv: CONSENT_VERSION, ca: 0 }],
     ["a visitor whose older record was restored carries the text in force and no moment", null, { ...OLDER, origin: "restore" as const }, { cv: CONSENT_VERSION, ca: 0 }],
   ])("%s", (_case, record, prior, expected) => {
