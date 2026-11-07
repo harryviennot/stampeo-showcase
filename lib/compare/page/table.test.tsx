@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { ComparisonTable } from "@/components/compare/ComparisonTable";
 import { ACME_LOYALTY, withUsFacts } from "../__fixtures__";
 import { fixtureView } from "../__fixtures__/view";
-import { COPY } from "./copy";
+import { tableGroups } from "./rows";
 import type { ComparisonView } from "./view";
 
 /** The visible words: tags dropped, entities decoded, every kind of space a plain one. */
@@ -12,7 +12,7 @@ const text = (html: string) =>
     .replace(/<[^>]*>/g, " ")
     .replace(/&#x27;/g, "'")
     .replace(/&amp;/g, "&")
-    .replace(/[\u00a0\u202f]/g, " ")
+    .replace(/[  ]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 
@@ -42,80 +42,50 @@ const US_VIEW = withShorts(fixtureView("acme-loyalty"), {
 });
 const FR_VIEW = withShorts(fixtureView("acme-fidelite"), { "price.entry": "Essentiel, 19 € HT par mois" });
 
-/** The button above the table, the phone list and the table, as the page draws them. */
+/** The phone list and the table, as the page draws them. */
 function parts(view: ComparisonView) {
   const html = renderToStaticMarkup(<ComparisonTable view={view} />);
-  const phoneAt = html.lastIndexOf("<", html.indexOf("md:hidden"));
-  return { html, before: html.slice(0, phoneAt), phone: html.slice(phoneAt, html.indexOf("<table")), table: html.slice(html.indexOf("<table")) };
+  const tableAt = html.indexOf("<table");
+  return { html, phone: html.slice(0, tableAt), table: html.slice(tableAt) };
 }
 
-/** The rows that are hidden until opened, and the rest of the table. */
-const HIDDEN_ROW = /<tr\b[^>]*\shidden=""[\s\S]*?<\/tr>/g;
-const hiddenRows = (table: string) => [...table.matchAll(HIDDEN_ROW)].map((match) => match[0]);
-const shownTable = (table: string) => table.replace(HIDDEN_ROW, "");
+/** Each phone row: its label and the two products' answers. */
+const phoneRows = (phone: string) => [...phone.matchAll(/<dt\b[\s\S]*?<\/dd>\s*<dd\b[\s\S]*?<\/dd>/g)].map((match) => match[0]);
+/** Each table row that answers a fact, without the theme rows. */
+const tableRows = (table: string) => [...table.matchAll(/<tr\b[^>]*>\s*<th[^>]*scope="row"[\s\S]*?<\/tr>/g)].map((match) => match[0]);
 
 describe("the comparison table on a phone", () => {
   const { phone } = parts(US_VIEW);
 
-  it("has a titled section per theme, each holding one expandable row per fact", () => {
+  it("has a titled section per theme, each listing one row per fact", () => {
     expect(phone.match(/<section\b/g)).toHaveLength(2);
     expect(phone.match(/<h3\b/g)).toHaveLength(2);
     expect(text(phone)).toContain("Your customer's side");
     expect(text(phone)).toContain("Price and commitment");
-    expect(phone.match(/<details\b/g)).toHaveLength(4);
+    expect(phoneRows(phone)).toHaveLength(4);
   });
 
-  it("is closed at first, with both products' short answers side by side in each row's summary", () => {
-    const row = phone.match(/<details\b[\s\S]*?<\/details>/)![0];
-    const summary = row.match(/<summary\b[\s\S]*?<\/summary>/)![0];
-
-    expect(row).not.toMatch(/<details[^>]*\sopen/);
-    expect(text(summary)).toContain("Where the customer's card lives");
-    expect(summary.indexOf("Their own app")).toBeGreaterThan(-1);
-    expect(summary.indexOf("Their own app")).toBeLessThan(summary.indexOf("Apple Wallet and Google Wallet"));
-  });
-
-  it("tells a screen reader which product each short answer belongs to", () => {
-    const summary = phone.match(/<details\b[\s\S]*?<\/details>/)![0].match(/<summary\b[\s\S]*?<\/summary>/)![0];
-
-    expect(text(summary)).toContain("Acme Loyalty: Their own app");
-    expect(text(summary)).toContain("Stampeo: Apple Wallet and Google Wallet");
-  });
-
-  it("opens on the full sentence of each product, and the competitor's ends with a link to where it was read", () => {
-    const row = phone.match(/<details\b[\s\S]*?<\/details>/)![0];
-    const open = row.slice(row.indexOf("</summary>"));
-
-    expect(text(open)).toContain("Their own app on the customer's phone");
-    expect(text(open)).toContain("Apple Wallet and Google Wallet, on the customer's phone");
-    const link = open.match(/<a\b[^>]*>/)![0];
-    expect(link).toContain('href="https://acme-loyalty.example/pricing"');
-    expect(link).toContain('target="_blank"');
-    expect(link).toContain('rel="noopener nofollow"');
-    expect(text(open.match(/<a\b[\s\S]*?<\/a>/)![0])).toContain("Source");
+  it("shows each row's label, then the competitor's short answer and Stampeo's, each named for a screen reader", () => {
+    expect(text(phoneRows(phone)[0])).toBe("Where the customer's card lives Acme Loyalty: Their own app Stampeo: Apple Wallet and Google Wallet");
   });
 
   it("names the two products once per theme, above the rows", () => {
     const card = phone.match(/<section\b[\s\S]*?<\/section>/)![0];
     expect(card.indexOf("Acme Loyalty")).toBeGreaterThan(-1);
-    expect(card.indexOf("Acme Loyalty")).toBeLessThan(card.indexOf("<details"));
-    expect(card.indexOf("Stampeo")).toBeLessThan(card.indexOf("<details"));
+    expect(card.indexOf("Acme Loyalty")).toBeLessThan(card.indexOf("<dt"));
+    expect(card.indexOf("Stampeo")).toBeLessThan(card.indexOf("<dt"));
   });
 
-  it("falls back to the full sentence while a fact has no short value, without saying it twice", () => {
+  it("falls back to the full sentence while a fact has no short value, and says it once", () => {
     const { phone: bare } = parts(fixtureView("acme-loyalty"));
-    const row = bare.match(/<details\b[\s\S]*?<\/details>/)![0];
-    expect(text(row).match(/Their own app on the customer's phone/g)).toHaveLength(1);
+    expect(text(bare).match(/Their own app on the customer's phone/g)).toHaveLength(1);
   });
 
-  it("keeps the tax line of a French price in the summary, for both products", () => {
-    const { phone: fr } = parts(FR_VIEW);
-    const price = fr.match(/<details\b(?:(?!<\/details>)[\s\S])*?Plan payant le moins cher[\s\S]*?<\/details>/)![0];
-    const summary = price.match(/<summary\b[\s\S]*?<\/summary>/)![0];
+  it("keeps the tax line of a French price under each product's short answer", () => {
+    const price = phoneRows(parts(FR_VIEW).phone).find((row) => row.includes("Plan payant le moins cher"))!;
 
-    expect(text(summary)).toContain("soit 22,80 € TTC, TVA à 20 %");
-    expect(text(summary)).toContain("TVA non applicable");
-    expect(text(price.slice(price.indexOf("</summary>")))).not.toContain("TVA non applicable");
+    expect(text(price)).toContain("Essentiel, 19 € HT par mois soit 22,80 € TTC, TVA à 20 %");
+    expect(text(price)).toContain("TVA non applicable");
   });
 });
 
@@ -143,9 +113,8 @@ describe("the comparison table from the tablet up", () => {
 
     expect(labelHeader).toMatch(/<span class="sr-only">Criterion<\/span>/);
     expect(text(head.replace(labelHeader, ""))).toBe("Acme Loyalty Stampeo");
-    const shown = shownTable(table);
-    expect(shown.slice(shown.indexOf("</thead>"))).not.toContain("Acme Loyalty");
-    expect(shown.slice(shown.indexOf("</thead>"))).not.toContain("Stampeo<");
+    expect(table.slice(table.indexOf("</thead>"))).not.toContain("Acme Loyalty");
+    expect(table.slice(table.indexOf("</thead>"))).not.toContain("Stampeo<");
   });
 
   it("opens each theme with a full-width label, a title and no product names", () => {
@@ -156,71 +125,55 @@ describe("the comparison table from the tablet up", () => {
     expect(text(header)).toBe("Your customer's side");
   });
 
-  it("shows only the label and the short answers of each row until it is opened", () => {
-    const shown = shownTable(table);
-
-    expect(text(shown)).toContain("Their own app");
-    expect(text(shown)).toContain("Apple Wallet and Google Wallet");
-    expect(text(shown)).not.toContain("on the customer's phone");
-    expect(shown).not.toContain("<a ");
+  it("shows each row's label and the two short answers, competitor first", () => {
+    expect(text(tableRows(table)[0])).toBe("Where the customer's card lives Their own app Apple Wallet and Google Wallet");
   });
 
-  it("holds each row's full sentences and the competitor's source in a hidden row of the same markup, one per row", () => {
-    const hidden = hiddenRows(table);
+  it("keeps the tax line of a French price under its short answer", () => {
+    const price = tableRows(parts(FR_VIEW).table).find((row) => row.includes("Plan payant le moins cher"))!;
 
-    expect(hidden).toHaveLength(4);
-    expect(text(hidden[0])).toContain("Their own app on the customer's phone");
-    expect(text(hidden[0])).toContain("Apple Wallet and Google Wallet, on the customer's phone");
-    const link = hidden[0].match(/<a\b[^>]*>/)![0];
-    expect(link).toContain('href="https://acme-loyalty.example/pricing"');
-    expect(link).toContain('rel="noopener nofollow"');
-    expect(link).toContain('target="_blank"');
-  });
-
-  it("gives each row a closed toggle in its label cell that points at its hidden row and is easy to tap", () => {
-    const labelCell = table.match(/<th[^>]*scope="row"[\s\S]*?<\/th>/)![0];
-    const button = labelCell.match(/<button\b[^>]*>/)![0];
-    const controls = button.match(/aria-controls="([^"]+)"/)![1];
-
-    expect(button).toContain('aria-expanded="false"');
-    expect(button).toContain('type="button"');
-    expect(button).toMatch(/class="[^"]*\bmin-h-11\b/);
-    expect(text(labelCell)).toBe("Where the customer's card lives");
-    expect(hiddenRows(table)[0]).toContain(`id="${controls}"`);
-  });
-
-  it("keeps the tax line of a French price under its short answer, in view before anything is opened", () => {
-    const fr = shownTable(parts(FR_VIEW).table);
-    const price = fr.match(/<th[^>]*scope="row"(?:(?!<\/tr>)[\s\S])*Plan payant le moins cher[\s\S]*?<\/tr>/)![0];
-
-    expect(text(price)).toContain("soit 22,80 € TTC, TVA à 20 %");
+    expect(text(price)).toContain("Essentiel, 19 € HT par mois soit 22,80 € TTC, TVA à 20 %");
     expect(text(price)).toContain("TVA non applicable");
   });
 
   it("tints Stampeo's column and no other", () => {
     const head = table.match(/<thead[\s\S]*?<\/thead>/)![0];
-    const cells = [...shownTable(table).matchAll(/<td\b[^>]*>/g)].map((match) => match[0]);
+    const cells = [...table.matchAll(/<td\b[^>]*>/g)].map((match) => match[0]);
 
     expect(head.match(/bg-\[var\(--accent\)\]\/5/g)).toHaveLength(1);
     expect(cells.filter((cell) => cell.includes("bg-[var(--accent)]/5"))).toHaveLength(cells.length / 2);
   });
 });
 
-describe("the button above the table", () => {
-  it.each([
-    ["English", US_VIEW, "Show all details and sources"],
-    ["French", FR_VIEW, "Afficher le détail et les sources"],
-  ])("offers to open every row, in %s", (_name, view, label) => {
-    const { before } = parts(view);
+describe.each([
+  ["a US page", US_VIEW],
+  ["a French page", FR_VIEW],
+])("the comparison table of %s, at every width", (_name, view) => {
+  const { html, phone, table } = parts(view);
+  const rows = tableGroups({ market: view.page.market, competitor: view.competitor, stampeo: view.stampeo }).flatMap((group) => group.rows);
+  const answer = (side: { short: string; taxLine: string | null }) => [side.short, side.taxLine].filter(Boolean).join(" ");
 
-    expect(text(before)).toBe(label);
-    expect(before).toContain('type="button"');
-    expect(text(before)).toBe(COPY[view.page.market].table.showAll);
+  it("shows every row's label and its two short answers, with any tax line, and nothing more", () => {
+    expect(phoneRows(phone).map(text)).toEqual(
+      rows.map((row) => text(`${row.label} ${view.competitor.name}: ${answer(row.competitor)} Stampeo: ${answer(row.stampeo)}`)),
+    );
+    expect(tableRows(table).map(text)).toEqual(rows.map((row) => text(`${row.label} ${answer(row.competitor)} ${answer(row.stampeo)}`)));
   });
 
-  it("has a word for its next press in both languages", () => {
-    expect(COPY.us.table.hideAll).toBe("Hide details");
-    expect(COPY.fr.table.hideAll).toBe("Masquer le détail");
+  it("has nothing to open and nothing to follow: no button, no disclosure, no source link", () => {
+    expect(html).not.toMatch(/<button\b/);
+    expect(html).not.toMatch(/<details\b|<summary\b/);
+    expect(html).not.toMatch(/<a\b/);
+    expect(text(html)).not.toContain("Source");
+  });
+});
+
+describe("a table whose facts have short values", () => {
+  it("leaves the full sentences out, for both products", () => {
+    const { html } = parts(US_VIEW);
+
+    expect(text(html)).not.toContain("Their own app on the customer's phone");
+    expect(text(html)).not.toContain("Apple Wallet and Google Wallet, on the customer's phone");
   });
 });
 

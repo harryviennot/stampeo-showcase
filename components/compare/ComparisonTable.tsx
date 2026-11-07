@@ -1,13 +1,13 @@
 import { COPY } from "@/lib/compare/page/copy";
 import { tableGroups } from "@/lib/compare/page/rows";
 import type { ComparisonView } from "@/lib/compare/page/view";
-import { ComparisonTableView } from "./ComparisonTableView";
+import { ComparisonGrid } from "./ComparisonGrid";
+import { ComparisonRows } from "./ComparisonRows";
 
 /**
  * Competitor and Stampeo side by side, grouped into four themes with one row
- * per standard fact the competitor has. Each row shows two short answers and
- * opens on the full sentences and the competitor's source: tap-to-open rows on
- * a phone, a real table from the tablet up.
+ * per standard fact the competitor has, each showing the two short answers: a
+ * list of rows on a phone, a real table from the tablet up.
  */
 export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | "competitor" | "stampeo"> }) {
   const { market } = view.page;
@@ -16,13 +16,12 @@ export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | 
   if (groups.length === 0) return null;
 
   const names = { competitor: view.competitor.name, stampeo: "Stampeo" };
-  const labels = {
-    criterion: copy.criterion,
-    caption: copy.tableCaption(names.competitor),
-    source: copy.source,
-    showAll: copy.table.showAll,
-    hideAll: copy.table.hideAll,
-  };
+  const labels = { criterion: copy.criterion, caption: copy.tableCaption(names.competitor) };
 
-  return <ComparisonTableView groups={groups} names={names} labels={labels} />;
+  return (
+    <div data-comparison-table className="not-prose mt-6 mb-2">
+      <ComparisonRows groups={groups} names={names} />
+      <ComparisonGrid groups={groups} names={names} labels={labels} />
+    </div>
+  );
 }

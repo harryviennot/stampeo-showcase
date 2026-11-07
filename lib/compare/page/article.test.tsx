@@ -110,7 +110,7 @@ describe("a US comparison page", () => {
   });
 
   it("puts the two Choose if cards side by side, the competitor's first, each with its own bullets", () => {
-    const pair = html.slice(at(html, "data-choose-if-pair"), at(html, COPY.us.table.showAll));
+    const pair = html.slice(at(html, "data-choose-if-pair"), at(html, "data-comparison-table"));
     expect(pair.match(/<section/g)).toHaveLength(2);
     expect(at(pair, "Choose Acme Loyalty if")).toBeLessThan(at(pair, "Choose Stampeo if"));
     expect(pair).toContain("<li>You want your customers to have a dedicated app.</li>");

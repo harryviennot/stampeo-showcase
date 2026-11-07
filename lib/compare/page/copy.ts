@@ -15,10 +15,6 @@ export interface PageCopy {
   rowLabels: Record<StandardFactId, string>;
   /** The title of each theme the rows are grouped under. */
   groupLabels: Record<RowGroupId, string>;
-  /** The link to the page a competitor fact was read on. */
-  source: string;
-  /** The button above the table that opens every row, and what it says once they are all open. */
-  table: { showAll: string; hideAll: string };
   /** The note that adds a TTC equivalent to an HT price; absent where prices carry no such basis. */
   ttcEquivalent?: (ttc: string) => string;
   chooseIf: { competitor: (competitor: string) => string; stampeo: string };
@@ -63,8 +59,6 @@ const EN: PageCopy = {
     counter: "At the counter",
     price: "Price and commitment",
   },
-  source: "Source",
-  table: { showAll: "Show all details and sources", hideAll: "Hide details" },
   chooseIf: { competitor: (competitor) => `Choose ${competitor} if`, stampeo: "Choose Stampeo if" },
   faqTitle: "Frequently asked questions",
   sourcesTitle: "Sources",
@@ -112,8 +106,6 @@ const FR: PageCopy = {
     counter: "Au comptoir",
     price: "Prix et engagement",
   },
-  source: "Source",
-  table: { showAll: "Afficher le détail et les sources", hideAll: "Masquer le détail" },
   ttcEquivalent: (ttc) => `soit ${ttc} TTC, TVA à 20${NBSP}%`,
   chooseIf: { competitor: (competitor) => `Choisissez ${competitor} si`, stampeo: "Choisissez Stampeo si" },
   faqTitle: "Questions fréquentes",

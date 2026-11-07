@@ -1,23 +1,12 @@
-import { ChevronDownIcon } from "@/components/icons";
-import { hasDetail, type TableGroup } from "@/lib/compare/page/rows";
-import type { OpenRows } from "@/lib/compare/page/open-rows";
-import { rowTint, ShortValue, SideDetail, type Names, type TableLabels } from "./TableParts";
-
-interface RowsProps {
-  groups: TableGroup[];
-  names: Names;
-  labels: TableLabels;
-  open: OpenRows;
-  /** Called when the browser opens or closes a row on its own, so the state follows it. */
-  onSet: (id: string, open: boolean) => void;
-}
+import type { Side, TableGroup } from "@/lib/compare/page/rows";
+import { rowTint, ShortValue, type Names } from "./TableParts";
 
 /**
  * The comparison on a phone, drawn like the pricing page's phone table: one
  * card, a bold title per theme with the two products named under it, and
- * striped rows that open on their full sentences and sources.
+ * striped rows of a label above the two short answers.
  */
-export function ComparisonRows({ groups, names, labels, open, onSet }: RowsProps) {
+export function ComparisonRows({ groups, names }: { groups: TableGroup[]; names: Names }) {
   return (
     <div className="card-stamp overflow-hidden rounded-2xl bg-white md:hidden">
       {groups.map((group) => (
@@ -27,62 +16,27 @@ export function ComparisonRows({ groups, names, labels, open, onSet }: RowsProps
             <span className="text-[var(--near-black)]">{names.competitor}</span>
             <span className="text-[var(--accent)]">{names.stampeo}</span>
           </div>
-          {group.rows.map((row, index) => {
-            const summary = (
-              <>
-                <span className="flex items-start justify-between gap-3 text-[13px] font-medium text-[var(--muted-foreground)]">
-                  {row.label}
-                  {hasDetail(row) && (
-                    <ChevronDownIcon
-                      aria-hidden="true"
-                      weight="bold"
-                      className="mt-px h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180 group-open:text-[var(--accent)]"
-                    />
-                  )}
-                </span>
-                <span className="mt-1 grid grid-cols-2 gap-4">
-                  {/* The names line above the rows is hidden from screen readers, so each value carries its product's name. */}
-                  <span className="min-w-0">
-                    <span className="sr-only">{`${names.competitor}: `}</span>
-                    <ShortValue side={row.competitor} />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="sr-only">{`${names.stampeo}: `}</span>
-                    <ShortValue side={row.stampeo} />
-                  </span>
-                </span>
-              </>
-            );
-            const rowClass = `border-t border-[var(--border)]/50 ${rowTint(index)}`;
-
-            if (!hasDetail(row)) {
-              return (
-                <div key={row.id} className={`${rowClass} px-5 py-2.5`}>
-                  {summary}
-                </div>
-              );
-            }
-            return (
-              <details
-                key={row.id}
-                open={open.has(row.id)}
-                onToggle={(event) => onSet(row.id, event.currentTarget.open)}
-                className={`group ${rowClass}`}
-              >
-                <summary className="block min-h-11 cursor-pointer list-none px-5 py-2.5 [&::-webkit-details-marker]:hidden">{summary}</summary>
-                <div className="grid grid-cols-2 gap-4 px-5 pb-1 text-[13px] leading-relaxed text-[var(--muted-foreground)]">
-                  <div className="min-w-0 break-words">
-                    <SideDetail side={row.competitor} sourceLabel={labels.source} />
-                  </div>
-                  <div className="min-w-0 break-words">
-                    <SideDetail side={row.stampeo} sourceLabel={labels.source} />
-                  </div>
-                </div>
-              </details>
-            );
-          })}
+          <dl>
+            {group.rows.map((row, index) => (
+              <div key={row.id} className={`grid grid-cols-2 gap-x-4 border-t border-[var(--border)]/50 px-5 py-2.5 ${rowTint(index)}`}>
+                <dt className="col-span-2 text-[13px] font-medium text-[var(--muted-foreground)]">{row.label}</dt>
+                <Answer name={names.competitor} side={row.competitor} />
+                <Answer name={names.stampeo} side={row.stampeo} />
+              </div>
+            ))}
+          </dl>
         </section>
       ))}
     </div>
+  );
+}
+
+/** One product's short answer; the names line above the rows is hidden from screen readers, so the answer carries its product's name. */
+function Answer({ name, side }: { name: string; side: Side }) {
+  return (
+    <dd className="mt-1 min-w-0">
+      <span className="sr-only">{`${name}: `}</span>
+      <ShortValue side={side} />
+    </dd>
   );
 }
