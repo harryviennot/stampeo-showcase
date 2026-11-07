@@ -28,7 +28,7 @@ Shop owners already search for competitor names next to "alternative" ("loopy lo
 ## UX decisions
 
 **Redesign (2026-11-07, Harry: "I don't like the comparison table, and the pages look pretty bland"):** `ux-brief-v2.md` supersedes the layout below.
-- The table is grouped into 4 themes, with short at-a-glance values and the sourced sentence plus source as detail. No ✓/– icons.
+- The table is grouped into 4 themes and shows short at-a-glance values only: a plain static table, nothing to open (Harry, 2026-11-07: "everything is a dropdown is too long and bad UX, let's keep it simple"). Full sentences and sources live in the Sources section. No ✓/– icons. Visual language: the /pricing comparison table's (stage D).
 - The page leaves the blog shell: the landing's paper background, a real card stack in the hero, side cards for prices and strengths, and "by type of shop" pick pills.
 - No table of contents. The sign-up CTA moves into the "Choose Stampeo if" card.
 - New ACs: AC17–AC19.
@@ -98,8 +98,8 @@ From `ux-brief.md` (DESIGN, 2026-11-04):
 - AC13: Given a click on a comparison CTA, then the analytics event carries a comparison-specific `CTALocation`, NOT `blog_cta` or `feature_cta`.
 - AC14: Given comparison MDX containing a markdown table, then the content test fails (tables come from `ComparisonTable` only).
 - AC15: Given a draft comparison, then `ComparisonLinks` on other pages does NOT link to it.
-- AC17: Given a competitor standard-row fact, then it has a `short` value of at most 40 characters (validation fails otherwise), and the table shows the short value with the full sourced sentence and a link to its source as detail. Stampeo's short values are computed from plan facts and the catalog, never typed.
-- AC18: Given any comparison table, then its rows are grouped into the 4 themes in a fixed order, and no cell carries a yes/no icon.
+- AC17: Given a competitor standard-row fact, then it has a `short` value of at most 40 characters, one line (validation fails otherwise; `missingShortValues` fails a real competitor without one), and the table shows only the two short values per row (plus the FR price's tax line). Stampeo's short values are computed from plan facts and the catalog, never typed.
+- AC18: Given any comparison table, then its rows are grouped into the 4 themes in a fixed order, no cell carries a yes/no icon, and nothing in it opens (no button, no disclosure, no per-row source link).
 - AC19: Given the redesigned page, then the sign-up CTA sits in the "Choose Stampeo if" card and closes the page (AC11 still holds), and the MDX restructure leaves every page's visible words unchanged.
 
 ## File layout
