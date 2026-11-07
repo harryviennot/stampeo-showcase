@@ -16,6 +16,8 @@ export type LoyaltyType = "stamps" | "points";
 export interface PlanFacts {
   /** Program types the plan may run (`programs.type`); one program per business. */
   loyaltyTypes: readonly LoyaltyType[];
+  /** `programs.levels`: the most levels a program can have; customers move up as they earn. */
+  levels: number;
   /** `team.max_members`, owner included. */
   teamMembers: number | Unlimited;
   /** See which team member made each scan (`team.employee_tracking`). */
@@ -59,6 +61,7 @@ export const PLAN_NAMES: Record<TierId, string> = {
 export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
   starter: {
     loyaltyTypes: ["stamps", "points"],
+    levels: 5,
     teamMembers: 2,
     employeeTracking: false,
     broadcastsPerMonth: 0,
@@ -74,6 +77,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
   },
   growth: {
     loyaltyTypes: ["stamps", "points"],
+    levels: 5,
     teamMembers: "unlimited",
     employeeTracking: true,
     broadcastsPerMonth: 8,
@@ -89,6 +93,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
   },
   pro: {
     loyaltyTypes: ["stamps", "points"],
+    levels: 5,
     teamMembers: "unlimited",
     employeeTracking: true,
     broadcastsPerMonth: "unlimited",
@@ -140,6 +145,7 @@ const count = (value: number | Unlimited, noun: string) =>
 export function planFactLines(tier: TierId): string[] {
   const facts = PLAN_FACTS[tier];
   const lines: string[] = [facts.loyaltyTypes.join(" or ")];
+  if (facts.levels > 0) lines.push(`up to ${facts.levels} levels`);
 
   lines.push(
     typeof facts.teamMembers === "number"
