@@ -36,25 +36,34 @@ function param(search: URLSearchParams, name: string, max: number): string | nul
   return value.slice(0, max);
 }
 
+/** A click id is opaque printable ASCII (0x21-0x7E): no space, control character or byte outside ASCII. */
+const CLICK_ID = /^[\x21-\x7e]+$/;
+
+/** A click id read like `param`, or null when it is not printable ASCII: dropped, never cleaned. */
+function clickParam(search: URLSearchParams, name: string): string | null {
+  const value = param(search, name, MAX_ID_FIELD);
+  return value !== null && CLICK_ID.test(value) ? value : null;
+}
+
 /**
  * An id the platform only accepts as the original string: the first `name=`
- * pair of the raw query, decoded once with `decodeURIComponent` so a raw `+`
- * stays a `+` (a form decode would make it a space, which no id contains).
- * Never trimmed or case-folded. A malformed escape, an empty value, or one
+ * pair of the raw query (a bare `name` is skipped), decoded once with
+ * `decodeURIComponent` so a raw `+` stays a `+` (a form decode would turn it
+ * into a space the platform never sent). Never trimmed or case-folded. A
+ * malformed escape, an empty value, one that is not printable ASCII, or one
  * past `max` characters is no click, never a thrown error or a cut-short id.
  */
 function wholeParam(search: string, name: string, max: number): string | null {
   for (const pair of search.replace(/^\?/, "").split("&")) {
     const eq = pair.indexOf("=");
-    if (pair.slice(0, eq === -1 ? pair.length : eq) !== name) continue;
-    if (eq === -1) return null;
+    if (eq === -1 || pair.slice(0, eq) !== name) continue;
     let value: string;
     try {
       value = decodeURIComponent(pair.slice(eq + 1));
     } catch {
       return null;
     }
-    return value.trim() === "" || value.length > max ? null : value;
+    return value.length > max || !CLICK_ID.test(value) ? null : value;
   }
   return null;
 }
@@ -63,15 +72,16 @@ function wholeParam(search: string, name: string, max: number): string | null {
  * The platforms' click ids. They get the larger cap: a real `fbclid` runs past
  * 100 characters, and a truncated one is an identifier that still looks like
  * data and attributes to nothing. OpenAI's `oppref` is opaque and must arrive
- * unmodified, so one past the cap is refused instead.
+ * unmodified, so one past the cap is refused instead. Every id must be
+ * printable ASCII; one that is not is dropped.
  */
 export function readClickIds(search: string): ClickIds {
   const params = new URLSearchParams(search);
   return {
-    gclid: param(params, "gclid", MAX_ID_FIELD),
-    fbclid: param(params, "fbclid", MAX_ID_FIELD),
+    gclid: clickParam(params, "gclid"),
+    fbclid: clickParam(params, "fbclid"),
     oppref: wholeParam(search, "oppref", MAX_ID_FIELD),
-    ttclid: param(params, "ttclid", MAX_ID_FIELD),
+    ttclid: clickParam(params, "ttclid"),
   };
 }
 
