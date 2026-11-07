@@ -16,7 +16,7 @@ import { describe, expect, test } from "bun:test";
 import { describeGoldenChain } from "./__fixtures__/golden-chain";
 import { readClickIds } from "./landing";
 
-const CHATGPT_CHAIN_SHA256 = "859f0bfb7f3255a8f22c10c2a173d9ff3151e9c1d804bdaa2aa583266fc33a30";
+const CHATGPT_CHAIN_SHA256 = "b4b4b38648c6502436b26a0e380026bf0e6cd738e70ae9675eae6cddc87c99a5";
 
 const FIXTURE = describeGoldenChain<{
   account_ad_attribution: Record<string, unknown>;

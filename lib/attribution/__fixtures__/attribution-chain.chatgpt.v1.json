@@ -1,8 +1,8 @@
 {
   "fixture_version": 1,
-  "description": "One US visitor who never touched the notice, landing on a ChatGPT ad: the inputs, what showcase makes of them (the three carriers and the exact POST /account/signup-recorded body), and what the backend is expected to make of those. Showcase computes expected_showcase with its real functions; web and the backend copy this file byte for byte and pin its SHA-256.",
+  "description": "One US visitor who never touched the notice, landing on a ChatGPT ad whose oppref holds a +, a /, an = and a percent-encoded +: the inputs, what showcase makes of them (the three carriers and the exact POST /account/signup-recorded body), and what the backend is expected to make of those. Showcase computes expected_showcase with its real functions; web and the backend copy this file byte for byte and pin its SHA-256.",
   "inputs": {
-    "landing_url": "https://stampeo.app/us?oppref=OAI_TEST_oppref_0001-a8F3kQ2xT7Lw&utm_source=chatgpt&utm_medium=cpc&utm_campaign=us-chatgpt-brand",
+    "landing_url": "https://stampeo.app/us?oppref=OAI_TEST+a8F3/kQ2x=T7%2BLw&utm_source=chatgpt&utm_medium=cpc&utm_campaign=us-chatgpt-brand",
     "referrer": "https://chatgpt.com/",
     "timezone": "America/New_York",
     "gpc": false,
@@ -50,7 +50,7 @@
       "ad": {
         "v": 2,
         "vn": "openai",
-        "ci": "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw",
+        "ci": "OAI_TEST+a8F3/kQ2x=T7+Lw",
         "ct": 1791244800,
         "fbp": "fb.1.1791244801234.1122334455",
         "cv": 5,
@@ -63,7 +63,7 @@
     "cookie_values": {
       "stampeo_src": "%7B%22v%22%3A2%2C%22us%22%3A%22chatgpt%22%2C%22um%22%3A%22cpc%22%2C%22uc%22%3A%22us-chatgpt-brand%22%2C%22lp%22%3A%22%2Fus%22%2C%22rh%22%3A%22chatgpt.com%22%2C%22at%22%3A1791244800%2C%22cv%22%3A5%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D",
       "stampeo_ga": "%7B%22v%22%3A2%2C%22cid%22%3A%221234567890.1700000000%22%2C%22sid%22%3A%221791244801%22%2C%22sn%22%3A1%2C%22at%22%3A1791244806%2C%22cv%22%3A5%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D",
-      "stampeo_ad": "%7B%22v%22%3A2%2C%22vn%22%3A%22openai%22%2C%22ci%22%3A%22OAI_TEST_oppref_0001-a8F3kQ2xT7Lw%22%2C%22ct%22%3A1791244800%2C%22fbp%22%3A%22fb.1.1791244801234.1122334455%22%2C%22cv%22%3A5%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D"
+      "stampeo_ad": "%7B%22v%22%3A2%2C%22vn%22%3A%22openai%22%2C%22ci%22%3A%22OAI_TEST%2Ba8F3%2FkQ2x%3DT7%2BLw%22%2C%22ct%22%3A1791244800%2C%22fbp%22%3A%22fb.1.1791244801234.1122334455%22%2C%22cv%22%3A5%2C%22cr%22%3A%22opt-out%22%2C%22ca%22%3A0%2C%22p%22%3A1%2C%22g%22%3A%22US%22%7D"
     },
     "route_request": {
       "path": "/api/privacy/cookies",
@@ -98,7 +98,7 @@
           "ad": {
             "v": 2,
             "vn": "openai",
-            "ci": "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw",
+            "ci": "OAI_TEST+a8F3/kQ2x=T7+Lw",
             "ct": 1791244800,
             "fbp": "fb.1.1791244801234.1122334455",
             "cv": 5,
@@ -144,7 +144,7 @@
           "ad": {
             "v": 2,
             "vn": "openai",
-            "ci": "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw",
+            "ci": "OAI_TEST+a8F3/kQ2x=T7+Lw",
             "ct": 1791244800,
             "fbp": "fb.1.1791244801234.1122334455",
             "cv": 5,
@@ -171,10 +171,10 @@
     }
   },
   "expected_backend": {
-    "_note": "For the backend to assert. Timestamps are Unix seconds (the row stores timestamptz; consent_at is null because ca is 0: nobody clicked). The OpenAI click identifier (oppref) reaches ChatGPT Ads alone and unchanged: Meta gets the browser id (fbp) and no fbc, GA4 gets the client and session ids and no click id, and Google Ads has no gclid. The visit is a ChatGPT ad by its vendor, although its referrer chatgpt.com would on its own read as another website. The subject id never reaches a platform.",
+    "_note": "For the backend to assert. Timestamps are Unix seconds (the row stores timestamptz; consent_at is null because ca is 0: nobody clicked). The OpenAI click identifier (oppref) reaches ChatGPT Ads alone and unchanged (here with a +, a /, an = and a percent-encoded + in it): Meta gets the browser id (fbp) and no fbc, GA4 gets the client and session ids and no click id, and Google Ads has no gclid. The visit is a ChatGPT ad by its vendor, although its referrer chatgpt.com would on its own read as another website. The subject id never reaches a platform.",
     "account_ad_attribution": {
       "vendor": "openai",
-      "click_id": "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw",
+      "click_id": "OAI_TEST+a8F3/kQ2x=T7+Lw",
       "click_captured_at": 1791244800,
       "fbp": "fb.1.1791244801234.1122334455",
       "ga_client_id": "1234567890.1700000000",
@@ -197,7 +197,7 @@
     },
     "acquisition_source": "chatgpt_ad",
     "chatgpt_ads": {
-      "oppref": "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw",
+      "oppref": "OAI_TEST+a8F3/kQ2x=T7+Lw",
       "click_captured_at": 1791244800
     },
     "google_ads": {
