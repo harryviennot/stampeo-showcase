@@ -1,9 +1,9 @@
 /**
  * Global Privacy Control against what the visitor has stored.
  *
- * In the US the signal is an opt-out that wins even over a recorded choice,
- * "Got it" included: the CCPA regulations (§7025) require processing it as an
- * opt-out when it conflicts with an earlier setting. In the EU an explicit
+ * In the US the signal is an opt-out that wins even over a recorded grant: the
+ * CCPA regulations (§7025) require processing it as an opt-out when it
+ * conflicts with an earlier setting. In the EU an explicit
  * choice still wins over the signal.
  *
  * While the override is in force, the trackers the recorded grant let in are
@@ -23,7 +23,7 @@ import {
 } from "./consent";
 import { rowFor } from "./privacy/policy";
 
-/** What "Got it" on the US notice records: the opt-out default, both on. */
+/** A US grant: the opt-out default, both on, as the privacy dialog or an earlier notice stored it. */
 const GRANT: ConsentRecord = {
   v: CONSENT_VERSION,
   analytics: true,
@@ -80,7 +80,7 @@ describe("resolveConsent: GPC against what is stored", () => {
 });
 
 describe("categoriesToClearOnLoad", () => {
-  test("a US visitor who clicked Got it, then turned GPC on, loses the trackers but keeps the choice", () => {
+  test("a US visitor with a recorded grant, then GPC on, loses the trackers but keeps the choice", () => {
     const jar = ["NEXT_LOCALE", CONSENT_COOKIE, "_ga", "_ga_ZFZ6JLPFXN", "_fbp", "stampeo_attribution"];
 
     const cleared = cookieNamesToClear(

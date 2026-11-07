@@ -90,8 +90,7 @@ describe("resolveConsent", () => {
   });
 
   test("no choice in an opt-out region grants everything", () => {
-    // The US default. Tags load on arrival; the notice tells them so and the
-    // footer lets them opt out.
+    // The US default. Tags load on arrival; the footer lets them opt out.
     expect(resolveConsent({ record: null, prior: null, row: US, gpc: false })).toEqual({
       analytics: true,
       marketing: true,
@@ -143,13 +142,11 @@ describe("consentSurface", () => {
     expect(consentSurface({ ...base, row: EU })).toBe("banner");
   });
 
-  test("an opt-out visitor with no choice gets the notice, not the banner", () => {
-    expect(consentSurface({ ...base, row: US })).toBe("notice");
+  test("an opt-out visitor with no choice sees no surface at all", () => {
+    expect(consentSurface({ ...base, row: US })).toBe("none");
   });
 
-  test("GPC silences the US notice entirely", () => {
-    // They have already told us. Asking again would be noise, and the notice
-    // says "we use cookies", which by then is no longer true for them.
+  test("GPC leaves the US visitor with no surface either", () => {
     expect(consentSurface({ ...base, row: US, gpc: true })).toBe("none");
   });
 

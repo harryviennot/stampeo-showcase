@@ -238,16 +238,21 @@ describe("surfaceWithPolicy", () => {
   const base = { record: null, prior: null, gpc: false, trackable: true } as const;
 
   test.each([
-    ["a US visitor with no choice sees the notice", "US", {}, "notice"],
+    ["a US visitor with no choice sees nothing", "US", {}, "none"],
     ["a French visitor with no choice sees the banner", "FR", {}, "banner"],
     ["a visitor we cannot place sees the banner", "BR", {}, "banner"],
-    ["GPC silences the US notice", "US", { gpc: true }, "none"],
+    ["a US visitor under GPC sees nothing", "US", { gpc: true }, "none"],
+    ["a US visitor with an older partial refusal has nothing to be asked", "US", { prior: older(true, false) }, "none"],
     ["GPC does not silence the EU banner", "FR", { gpc: true }, "banner"],
     ["a stored choice silences both", "US", { record: record(false, false) }, "none"],
     ["an older refusal of everything leaves nothing to ask", "FR", { prior: older(false, false) }, "none"],
     ["an untrackable page shows nothing", "FR", { trackable: false }, "none"],
   ] as const)("%s", (_case, country, overrides, expected) => {
     expect(surfaceWithPolicy({ ...base, ...overrides, row: rowFor(country) })).toBe(expected);
+  });
+
+  test("a row that declares a notice shows it to a visitor with no choice", () => {
+    expect(surfaceWithPolicy({ ...base, row: { ...rowFor("US"), surface: "notice" } })).toBe("notice");
   });
 });
 

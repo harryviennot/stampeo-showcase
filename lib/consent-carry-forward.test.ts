@@ -8,8 +8,7 @@
  * European visitor who refused everything is not asked again.
  *
  * A GRANT DOES NOT. It was given for less than today's text describes, so the
- * category is asked again (the banner, opt-in) or falls to the notice default
- * (opt-out). Global Privacy Control still decides before any default.
+ * category is asked again (the banner, opt-in) or falls to the opt-out default. Global Privacy Control still decides before any default.
  *
  * Each case starts from the cookie value an older banner wrote and runs it
  * through what a page decides from it: the surface shown, which tags load, and
@@ -137,11 +136,10 @@ describe("an older partial refusal keeps the refused category refused", () => {
     expect(page.clear).toContain("marketing");
   });
 
-  test("in the US the notice shows, GA loads by default, and Meta stays off", () => {
-    // The state in force is also what "Got it" on the notice records.
+  test("in the US nothing is shown, GA loads by default, and Meta stays off", () => {
     const page = visit(partial, "opt-out");
 
-    expect(page.surface).toBe("notice");
+    expect(page.surface).toBe("none");
     expect(page.state).toEqual({ analytics: true, marketing: false });
     expect(page.gaLoads).toBe(true);
     expect(page.metaLoads).toBe(false);
@@ -172,10 +170,10 @@ describe("an older grant is asked again", () => {
     expect(page.clear).toEqual(["analytics", "marketing"]);
   });
 
-  test("in the US it falls to the notice default", () => {
+  test("in the US it falls to the opt-out default and nothing is shown", () => {
     const page = visit(storedChoice(OLDER, 1, 1, "opt-out"), "opt-out");
 
-    expect(page.surface).toBe("notice");
+    expect(page.surface).toBe("none");
     expect(page.state).toEqual({ analytics: true, marketing: true });
   });
 });
@@ -184,7 +182,7 @@ describe("the consent version a capture names across a version bump", () => {
   const dismissedOlderNotice = `${CONSENT_COOKIE}=${storedChoice(OLDER, 1, 1, "opt-out")}`;
 
   test.each([
-    ["a US visitor who never touched the notice", CONSENT_VERSION, 0, "NEXT_LOCALE=en"],
+    ["a US visitor with no stored choice", CONSENT_VERSION, 0, "NEXT_LOCALE=en"],
     [
       "a US visitor who dismissed the previous notice, which evidences no click",
       CONSENT_VERSION,
@@ -288,10 +286,10 @@ describe("a choice stored under a newer consent version", () => {
     expect(page.gaLoads).toBe(false);
   });
 
-  test("a grant is no choice: the US visitor falls to the notice default", () => {
+  test("a grant is no choice: the US visitor falls to the opt-out default and nothing is shown", () => {
     const page = visit(storedChoice(NEWER, 1, 1, "opt-out"), "opt-out");
 
-    expect(page.surface).toBe("notice");
+    expect(page.surface).toBe("none");
     expect(page.state).toEqual({ analytics: true, marketing: true });
   });
 

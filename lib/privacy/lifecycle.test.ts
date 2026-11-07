@@ -18,6 +18,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 
 import {
   CONSENT_VERSION,
+  consentSurface,
   readStoredConsent,
   resolveConsent,
   writeConsentRecord,
@@ -101,8 +102,12 @@ describe("a US visitor with no choice arrives (AC3.1)", () => {
     // The jar and the server have it, and the gate is open.
     expect(readSidCookie(browser.jar())).not.toBeNull();
     expect(browser.fetches).toHaveLength(1);
-    expect(readConsentSnapshot().ready).toBe(true);
+    const arrived = readConsentSnapshot();
+    expect(arrived.ready).toBe(true);
     expect(tagGates()).toEqual({ ga: true, meta: true });
+
+    // Nothing is asked: the opt-out default is in force and no surface shows.
+    expect(consentSurface({ ...arrived, trackable: true, row: US })).toBe("none");
 
     await mountTags("us-no-choice");
     expect(browser.scripts).toEqual([
