@@ -57,6 +57,7 @@ export const STAMP_ME: CompetitorFacts = {
           "card.where",
           "In the Stamp Me app. When the business uses Stamp Business, Apple Wallet or Google Wallet can hold the customer's Member Code to show at checkout",
           '"They can then save their unique Member Code to their phone\'s Wallet and show it at checkout."; "Limited — Wallet is used for Member Code access"',
+          "Stamp Me app",
         ),
         fact(
           PRICING,
@@ -69,12 +70,14 @@ export const STAMP_ME: CompetitorFacts = {
           "customer.app_required",
           "Yes: customers download the Stamp Me app and create an account with a few personal details",
           '"Members will first need to download the Stamp Me App."; "Once they have created an account on the App by registering a few basic personal details"',
+          "App download + account",
         ),
         fact(
           VS_SQUARE,
           "program.types",
           "Stamp cards; Stamp Me's blog says it also supports points. Levels: not published",
           "Stamp Me supports both digital punch cards and points.",
+          "Stamps; points per blog; levels unstated",
         ),
         fact(
           PRICING,
@@ -87,12 +90,14 @@ export const STAMP_ME: CompetitorFacts = {
           "push.automatic",
           "Not published for each stamp. Its help center lists reward expiry reminders among push message uses (Pro and Elite)",
           "Reward expiry reminders",
+          "Not published for each stamp",
         ),
         fact(
           HELP_PUSH_PLANS,
           "push.broadcasts",
           "Push messages and SMS on Pro and Elite, not on Lite. Push messages are free and unlimited; SMS has a small charge per message",
           '"Stamp Me\'s Push Notification and SMS messaging features are available for all Pro and Elite plans."; "They are free and unlimited."; "small charge per message"',
+          "Pro and Elite: unlimited push, paid SMS",
         ),
         fact(
           HELP_BULK_PUSH,
@@ -111,6 +116,7 @@ export const STAMP_ME: CompetitorFacts = {
           "staff.scanning",
           "StampPod tap device (Pro and Elite), StampTag, OneStamps codes, a Stamp Code, the Stamp Business app or the web Loyalty Portal",
           '"Stamp methods: Merchant Console/Loyalty Portal, Stamp Code, Onestamps, StampTag, StampPod"; "StampPod™" row: crossed out on Lite, ticked on Pro and Elite',
+          "App, web, codes, tag, pod (Pro, Elite)",
         ),
         fact(
           HOME,
@@ -123,6 +129,7 @@ export const STAMP_ME: CompetitorFacts = {
           "pos.integration",
           "None required: Stamp Me runs without a till connection",
           "There is no software, hardware or point-of-sale integration required.",
+          "None required",
         ),
         fact(
           PRICING,
@@ -135,6 +142,7 @@ export const STAMP_ME: CompetitorFacts = {
           "locations.multiple",
           "One location included on every plan, then $30 USD a month for each extra location",
           "1 included. $30 USD per month fee for each additional location",
+          "1 included, each extra $30/month",
         ),
         fact(
           PRICING,
@@ -147,8 +155,9 @@ export const STAMP_ME: CompetitorFacts = {
           "languages",
           "The customer app in English, French, Spanish, Portuguese, Swedish and more, per Stamp Me's site",
           "The Stamp Me loyalty app is available in multiple languages, including English, French, Spanish, Portuguese, Swedish & more!",
+          "App: 5+ languages, per Stamp Me's site",
         ),
-        fact(PRICING, "price.entry", "Lite, $49 USD a month", "$49 USD / Month"),
+        fact(PRICING, "price.entry", "Lite, $49 USD a month", "$49 USD / Month", "Lite, $49/month"),
         fact(PRICING, "price.mid", "Pro, $79 USD a month", "$79 USD / Month"),
         fact(PRICING, "price.top", "Elite, $199 USD a month", "$199 USD / Month"),
         fact(PRICING, "price.setup", "no setup costs", "there are no set up costs at all!"),
@@ -157,19 +166,28 @@ export const STAMP_ME: CompetitorFacts = {
           "trial",
           "30-day free trial, starting when you publish your first stamp card",
           "Once you publish your first Stamp Card, your 30-day free trial begins",
+          "30-day free trial once a card is live",
         ),
-        fact(PRICING, "commitment", "None: no lock-in contract, cancel any time", '"No Lock-In Contract" and "Cancel Any Time"'),
+        fact(
+          PRICING,
+          "commitment",
+          "None: no lock-in contract, cancel any time",
+          '"No Lock-In Contract" and "Cancel Any Time"',
+          "None, cancel anytime",
+        ),
         fact(
           HELP_EXPORT,
           "export",
           "Member list download from the Loyalty Portal, with names, email, phone, join date, active stamps and total redemptions",
           "Press purple download icon to the top right hand side of the table to export all data.",
+          "Member list download, with stamps",
         ),
         fact(
           HOW,
           "designer",
           "Self-service: logo, business details, a custom stamp icon and terms. Stamp Me says a simple card takes about 5 minutes",
           "it can take only 5 minutes to set up and publish a simple Stamp Card program.",
+          "Simple card in 5 minutes, per Stamp Me",
         ),
         fact(PRICING, "team.users", "unlimited users", '"Unlimited users" row: ticked on Lite, Pro and Elite'),
         fact(
