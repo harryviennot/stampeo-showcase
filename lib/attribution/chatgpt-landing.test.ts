@@ -1,14 +1,15 @@
 /**
  * A visitor lands from a ChatGPT ad (`?oppref=`). The click is advertising
- * data, so it is recorded only under an advertising choice made against consent
- * version 5, the text that names OpenAI as a recipient:
+ * data, so it is recorded only under an advertising choice made against the
+ * current consent version, the text that names OpenAI as a recipient:
  *
- *   - a European with a version 4 grant is asked again, and accepting records
- *     the click under version 5;
- *   - a version 4 refusal stays a refusal, and nobody is asked;
- *   - a US visitor on the notice default is captured under version 5, unless a
- *     version 4 refusal with a click moment still stands, which keeps its own
- *     version (the backend then holds the click back from OpenAI);
+ *   - a European with a grant from the previous version is asked again, and
+ *     accepting records the click under the current one;
+ *   - a refusal from the previous version stays a refusal; only a refusal of
+ *     everything goes unasked;
+ *   - a US visitor on the notice default is captured under the current version,
+ *     unless a previous-version refusal with a click moment still stands, which
+ *     keeps its own version (the backend then holds the click back from OpenAI);
  *   - Global Privacy Control still beats a US choice.
  *
  * The browser never talks to OpenAI: the click rides in our own cookie and
@@ -25,12 +26,13 @@ import { readConsentSnapshot } from "../privacy/snapshot";
 import { parseAdCookie } from "./ad-ids";
 import { capturePass } from "./capture";
 import { cookieValue } from "./codec";
-import { AD_COOKIE } from "./cookie-names";
+import { AD_COOKIE, SOURCE_COOKIE } from "./cookie-names";
 import { consentEvidence } from "./evidence";
+import { parseSourceCookie } from "./source";
 import { CHATGPT_LANDING, GA_CID, LANDED, OPPREF } from "./__fixtures__/visitors";
 
-const PREVIOUS = 4;
-const CURRENT = 5;
+const CURRENT = CONSENT_VERSION;
+const PREVIOUS = CONSENT_VERSION - 1;
 const CHOSEN_AT = 1_759_000_000;
 const GA_JAR = `_ga=GA1.1.${GA_CID}; _ga_ZFZ6JLPFXN=GS2.1.s1791244795$o1$g1$t1791244799$j0$l0$h0`;
 
@@ -88,11 +90,7 @@ const surface = () => {
   });
 };
 
-test("the consent text that names OpenAI is version 5", () => {
-  expect(CONSENT_VERSION).toBe(CURRENT);
-});
-
-test("a European with a version 4 grant is asked again, and accepting records the ChatGPT click under version 5", async () => {
+test("a European with a grant from the previous version is asked again, and accepting records the ChatGPT click under the current one", async () => {
   open({ consent: choice(PREVIOUS, { a: 1, m: 1, r: "opt-in" }), timezone: EU });
 
   // The landing: the old grant is not carried, so the banner shows and nothing is recorded.
@@ -117,7 +115,7 @@ test("a European with a version 4 grant is asked again, and accepting records th
   expect(browser!.fetches.filter((call) => /openai/i.test(call.url))).toEqual([]);
 });
 
-describe("a refusal of advertising made under version 4 still stands", () => {
+describe("a refusal of advertising made under the previous version still stands", () => {
   // Only a refusal of everything goes unasked: a grant of the other category
   // was given for the older text, so that one is asked again.
   test.each([
@@ -139,9 +137,9 @@ describe("a refusal of advertising made under version 4 still stands", () => {
 describe("a US visitor from a ChatGPT ad", () => {
   test.each([
     ["has no record", undefined],
-    ["holds a version 4 grant, which is the notice dismissed", choice(PREVIOUS, { a: 1, m: 1, r: "opt-out", g: "US" })],
-    ["holds a version 4 record with nothing chosen", choice(PREVIOUS, { a: -1, m: -1, r: "opt-out" })],
-  ])("who %s is captured under the version 5 notice, with nobody having clicked", async (_case, consent) => {
+    ["holds a previous-version grant, which is the notice dismissed", choice(PREVIOUS, { a: 1, m: 1, r: "opt-out", g: "US" })],
+    ["holds a previous-version record with nothing chosen", choice(PREVIOUS, { a: -1, m: -1, r: "opt-out" })],
+  ])("who %s is captured under the current notice, with nobody having clicked", async (_case, consent) => {
     open({ consent, timezone: US });
 
     expect(surface()).toBe("notice");
@@ -157,7 +155,7 @@ describe("a US visitor from a ChatGPT ad", () => {
     });
   });
 
-  test("who refused analytics under version 4 is captured under version 4 and that moment", async () => {
+  test("who refused analytics under the previous version is captured under that version and that moment", async () => {
     // Their state rests on the older text, so the backend holds the click back
     // from OpenAI until they choose again.
     open({ consent: choice(PREVIOUS, { a: 0, m: 1, r: "opt-out" }), timezone: US });
@@ -168,7 +166,7 @@ describe("a US visitor from a ChatGPT ad", () => {
   });
 
   test.each([
-    ["a version 5 grant", choice(CURRENT, { a: 1, m: 1, r: "opt-out", g: "US" })],
+    ["a current-version grant", choice(CURRENT, { a: 1, m: 1, r: "opt-out", g: "US" })],
     ["no record", undefined],
   ])("under Global Privacy Control, whatever %s says, nothing is recorded", async (_case, consent) => {
     open({ consent, timezone: US, gpc: true });
@@ -185,5 +183,27 @@ describe("a US visitor from a ChatGPT ad", () => {
     capture();
     await browser!.settled();
     expect(adCarrier()).toBeNull();
+  });
+});
+
+describe("a visitor from a ChatGPT ad who allows analytics and refuses advertising", () => {
+  // The source cookie belongs to analytics, so it is written; the click id is
+  // advertising data and appears in no cookie and in no request.
+  test.each([
+    ["a European", EU, { a: 1, m: 0, r: "opt-in" }],
+    ["an American", US, { a: 1, m: 0, r: "opt-out", g: "US" }],
+  ])("%s keeps the campaign, and the oppref is nowhere in the jar or the route", async (_case, timezone, fields) => {
+    open({ consent: choice(CURRENT, fields), timezone });
+
+    capture();
+    await browser!.settled();
+
+    const jar = browser!.jar();
+    expect(adCarrier()).toBeNull();
+    expect(parseSourceCookie(cookieValue(jar, SOURCE_COOKIE))).toMatchObject({ us: "chatgpt", um: "cpc" });
+    // The id's opening characters survive every spelling (raw, escaped once or twice).
+    const opening = OPPREF.slice(0, 8);
+    expect(jar).not.toContain(opening);
+    expect(JSON.stringify(browser!.fetches.map((call) => call.body))).not.toContain(opening);
   });
 });

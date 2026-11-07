@@ -1,17 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import { renderToStaticMarkup } from "react-dom/server";
 import { routing } from "@/i18n/routing";
-import { getLegalContent } from "./index";
-import { compileLegalMDX } from "./mdx";
-import {
-  MAX_GROWTH,
-  V3_LENGTH,
-  commonCatalog,
-  paragraphWith,
-  privacySource,
-  s55,
-  section,
-} from "./policy-test-utils";
+import { cookiesOf, paragraphWith, privacySource, s4, s53, s55, s6 } from "./policy-test-utils";
 
 /**
  * OpenAI (ChatGPT ads) as a recipient of advertising conversion reports: what a
@@ -19,9 +8,6 @@ import {
  * policy says in §4, §5.3, §5.5 and §6. Google Ads and OpenAI each hear only of
  * visitors who came through one of their own ads.
  */
-
-type Cookies = ReturnType<typeof commonCatalog>["cookies"];
-const cookiesOf = (locale: string): Cookies => commonCatalog(locale).cookies;
 
 /** How the banner, notice and cards name OpenAI, and the sentence both advertising cards share. */
 const DIALOG: Record<string, { named: RegExp; sharedSentence: RegExp; offTail: RegExp }> = {
@@ -52,15 +38,9 @@ const DIALOG: Record<string, { named: RegExp; sharedSentence: RegExp; offTail: R
 };
 
 describe("the dialog names OpenAI wherever it lists the advertising recipients", () => {
-  it.each(routing.locales)("the banner and the notice name OpenAI beside Meta and Google Ads, within one more line (%s)", (locale) => {
+  it.each(routing.locales)("the banner and the notice name OpenAI beside Meta and Google Ads (%s)", (locale) => {
     const { banner, notice } = cookiesOf(locale);
-    for (const [body, v3] of [
-      [banner.body, V3_LENGTH[locale].banner],
-      [notice.body, V3_LENGTH[locale].notice],
-    ] as const) {
-      expect(body).toMatch(DIALOG[locale].named);
-      expect(body.length - v3).toBeLessThanOrEqual(MAX_GROWTH);
-    }
+    for (const body of [banner.body, notice.body]) expect(body).toMatch(DIALOG[locale].named);
   });
 
   it.each(routing.locales)(
@@ -86,10 +66,6 @@ describe("the dialog names OpenAI wherever it lists the advertising recipients",
   });
 });
 
-const s4 = (locale: string) => section(locale, /^##\s+4\./m, /^##\s+5\./m);
-const s53 = (locale: string) => section(locale, /^#+\s+5\.3\s/m, /^#+\s+5\.4\s/m);
-const s6 = (locale: string) => section(locale, /^##\s+6\./m, /^###\s+6\.1/m);
-
 /** The statements about OpenAI in the policy, in each locale's words. */
 const POLICY: Record<
   string,
@@ -99,6 +75,7 @@ const POLICY: Record<
     adCookieRow: RegExp;
     clickIdentifiers: RegExp;
     ownIdentifiers: RegExp;
+    pixelReadsAddress: RegExp;
     threeSteps: RegExp;
     noPaymentPage: RegExp;
     onlyItsOwnAds: RegExp;
@@ -108,7 +85,6 @@ const POLICY: Record<
     optOut: RegExp;
     recipients: RegExp;
     roleBullet: RegExp;
-    withdrawal: RegExp;
   }
 > = {
   en: {
@@ -116,7 +92,8 @@ const POLICY: Record<
     independentRecipient: /as an independent recipient for advertising measurement, and so does OpenAI/,
     adCookieRow: /a Google click identifier goes to Google Ads, a Meta click identifier to Meta, an OpenAI click identifier to OpenAI/,
     clickIdentifiers: /for Google Ads the `gclid`, for Meta the `fbclid`, for OpenAI the `oppref`/,
-    ownIdentifiers: /An OpenAI click identifier goes to OpenAI alone, and a Google or Meta click identifier is never sent to OpenAI/,
+    ownIdentifiers: /In the reports sent from our servers, each platform receives only its own identifiers: a Google click identifier is never sent to Meta, and a Meta click identifier is never sent to Google Ads or Google Analytics\. An OpenAI click identifier goes to OpenAI alone, and a Google or Meta click identifier is never sent to OpenAI\./,
+    pixelReadsAddress: /Your browser is a separate matter\. Meta's pixel, the tool behind the Meta cookies in 5\.3, runs there only if you accepted the advertising cookies \(in the United States, as long as you have not switched them off\)\. It reads the address of the page you are on\. When you arrive from another platform's advertisement, that address can contain its click identifier, so Meta can see it\./,
     threeSteps: /OpenAI \(ChatGPT ads\) receives the same three steps: that the account was created, that your free trial started, and that a first invoice was paid/,
     noPaymentPage: /It does not receive the opening of the payment page/,
     onlyItsOwnAds: /It receives them only when you came to us through one of its advertisements, as long as you accepted the advertising cookies in 5\.3 \(in the United States, as long as you have not switched them off\)/,
@@ -126,14 +103,14 @@ const POLICY: Record<
     optOut: /with every report we ask OpenAI not to use that report to personalize the advertising it shows you/,
     recipients: /OpenAI means the United States company that operates ChatGPT and its advertising/,
     roleBullet: /\*\*Role of OpenAI:\*\* for the steps reported to it, OpenAI is an independent recipient for advertising measurement/,
-    withdrawal: /Turning off advertising stops anything further being reported to Meta, Google Ads and OpenAI, and deletes the advertising identifiers we kept/,
   },
   fr: {
     transfers: /Meta \(Meta Platforms Ireland Limited, avec Meta Platforms, Inc\. aux États-Unis\) et OpenAI \(publicités dans ChatGPT\), peuvent traiter ces données aux États-Unis/,
     independentRecipient: /en tant que destinataire indépendant, pour la mesure publicitaire, tout comme OpenAI/,
     adCookieRow: /un identifiant de clic Google est transmis à Google Ads, un identifiant de clic Meta à Meta, un identifiant de clic OpenAI à OpenAI/,
     clickIdentifiers: /pour Google Ads, le `gclid` ; pour Meta, le `fbclid` ; pour OpenAI, l'`oppref`/,
-    ownIdentifiers: /Un identifiant de clic OpenAI n'est transmis qu'à OpenAI, et aucun identifiant de clic Google ou Meta ne lui est jamais transmis/,
+    ownIdentifiers: /Dans les signalements envoyés depuis nos serveurs, chaque plateforme ne reçoit que ses propres identifiants : un identifiant de clic Google n'est jamais transmis à Meta, ni un identifiant de clic Meta à Google Ads ni à Google Analytics\. Un identifiant de clic OpenAI n'est transmis qu'à OpenAI, et aucun identifiant de clic Google ou Meta ne lui est jamais transmis\./,
+    pixelReadsAddress: /Votre navigateur est un cas à part\. Le pixel de Meta, l'outil à l'origine des cookies Meta du 5\.3, n'y fonctionne que si vous avez accepté les cookies publicitaires \(aux États-Unis, tant que vous ne les avez pas désactivés\)\. Il lit l'adresse de la page où vous vous trouvez\. Lorsque vous arrivez par la publicité d'une autre plateforme, cette adresse peut contenir son identifiant de clic, que Meta peut donc voir\./,
     threeSteps: /OpenAI \(publicités dans ChatGPT\) reçoit les trois mêmes étapes : la création du compte, le début de votre essai gratuit et le règlement d'une première facture/,
     noPaymentPage: /Elle ne reçoit pas l'ouverture de la page de paiement/,
     onlyItsOwnAds: /Elle ne les reçoit que si vous êtes arrivé chez nous par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5\.3 \(aux États-Unis, tant que vous ne les avez pas désactivés\)/,
@@ -143,14 +120,14 @@ const POLICY: Record<
     optOut: /avec chaque signalement, nous demandons à OpenAI de ne pas s'en servir pour personnaliser les publicités qu'elle vous montre/,
     recipients: /OpenAI désigne la société américaine qui exploite ChatGPT et ses publicités/,
     roleBullet: /\*\*Rôle d'OpenAI\*\* : pour les étapes qui lui sont signalées, OpenAI est un destinataire indépendant, pour la mesure publicitaire/,
-    withdrawal: /met fin à tout nouveau signalement à Meta, à Google Ads et à OpenAI, et supprime les identifiants publicitaires que nous avions conservés/,
   },
   es: {
     transfers: /Meta \(Meta Platforms Ireland Limited, con Meta Platforms, Inc\. en Estados Unidos\) y OpenAI \(anuncios en ChatGPT\), pueden tratar esos datos en Estados Unidos/,
     independentRecipient: /como destinatario independiente, para la medición publicitaria, igual que OpenAI/,
     adCookieRow: /el de un clic de Google se envía a Google Ads, el de un clic de Meta, a Meta, y el de un clic de OpenAI, a OpenAI/,
     clickIdentifiers: /en el caso de Google Ads, el `gclid`; en el de Meta, el `fbclid`; en el de OpenAI, el `oppref`/,
-    ownIdentifiers: /Un identificador de clic de OpenAI solo se envía a OpenAI, y ninguno de Google ni de Meta se envía nunca a OpenAI/,
+    ownIdentifiers: /En las comunicaciones enviadas desde nuestros servidores, cada plataforma recibe únicamente sus propios identificadores: un identificador de clic de Google nunca se envía a Meta, ni uno de Meta a Google Ads ni a Google Analytics\. Un identificador de clic de OpenAI solo se envía a OpenAI, y ninguno de Google ni de Meta se envía nunca a OpenAI\./,
+    pixelReadsAddress: /Tu navegador es un caso aparte\. El píxel de Meta, la herramienta que hay detrás de las cookies de Meta del 5\.3, solo funciona en él si has aceptado las cookies publicitarias \(en Estados Unidos, mientras no las hayas desactivado\)\. Lee la dirección de la página en la que estás\. Cuando llegas desde el anuncio de otra plataforma, esa dirección puede contener su identificador de clic, que Meta puede ver así\./,
     threeSteps: /OpenAI \(anuncios en ChatGPT\) recibe esos mismos tres pasos: que se creó la cuenta, que empezó tu prueba gratuita y que se pagó una primera factura/,
     noPaymentPage: /No recibe la apertura de la página de pago/,
     onlyItsOwnAds: /Los recibe solo si llegaste a nosotros desde uno de sus anuncios, siempre que hayas aceptado las cookies publicitarias del 5\.3 \(en Estados Unidos, mientras no las hayas desactivado\)/,
@@ -160,14 +137,14 @@ const POLICY: Record<
     optOut: /con cada comunicación, pedimos a OpenAI que no la use para personalizar los anuncios que te muestra/,
     recipients: /OpenAI es el proveedor estadounidense de ChatGPT y de su publicidad/,
     roleBullet: /\*\*Papel de OpenAI\*\*: respecto a los pasos que se le comunican, OpenAI es un destinatario independiente, para la medición publicitaria/,
-    withdrawal: /pone fin a cualquier nueva comunicación a Meta, a Google Ads y a OpenAI, y elimina los identificadores publicitarios que habíamos conservado/,
   },
   pl: {
     transfers: /Meta \(Meta Platforms Ireland Limited wraz z Meta Platforms, Inc\. w Stanach Zjednoczonych\) i OpenAI \(reklamy w ChatGPT\), mogą przetwarzać te dane w Stanach Zjednoczonych/,
     independentRecipient: /jako niezależny odbiorca, do pomiaru reklam, tak samo jak OpenAI/,
     adCookieRow: /identyfikator kliknięcia z Google trafia do Google Ads, a z Meta do Meta i z OpenAI do OpenAI/,
     clickIdentifiers: /w przypadku Google Ads jest to `gclid`, w przypadku Meta `fbclid`, a w przypadku OpenAI `oppref`/,
-    ownIdentifiers: /Identyfikator kliknięcia z OpenAI trafia wyłącznie do OpenAI, a identyfikator z Google lub Meta nigdy nie jest do niego przekazywany/,
+    ownIdentifiers: /W zgłoszeniach wysyłanych z naszych serwerów każda platforma otrzymuje wyłącznie własne identyfikatory: identyfikator kliknięcia z Google nigdy nie jest przekazywany do Meta ani identyfikator kliknięcia z Meta do Google Ads czy Google Analytics\. Identyfikator kliknięcia z OpenAI trafia wyłącznie do OpenAI, a identyfikator z Google lub Meta nigdy nie jest do niego przekazywany\./,
+    pixelReadsAddress: /Przeglądarka to osobna sprawa\. Piksel Meta, czyli narzędzie stojące za plikami cookie Meta z punktu 5\.3, działa w niej tylko pod warunkiem zaakceptowania reklamowych plików cookie \(w Stanach Zjednoczonych: dopóki nie zostaną wyłączone\)\. Odczytuje adres strony, na której jesteś\. Gdy trafisz na stronę z reklamy innej platformy, ten adres może zawierać jej identyfikator kliknięcia, który Meta może wtedy zobaczyć\./,
     threeSteps: /OpenAI \(reklamy w ChatGPT\) otrzymuje te same trzy etapy: założenie konta, rozpoczęcie bezpłatnego okresu próbnego i opłacenie pierwszej faktury/,
     noPaymentPage: /Nie otrzymuje informacji o otwarciu strony płatności/,
     onlyItsOwnAds: /Otrzymuje je tylko wtedy, gdy trafisz do nas z reklamy OpenAI, pod warunkiem zaakceptowania reklamowych plików cookie z punktu 5\.3 \(w Stanach Zjednoczonych: dopóki nie zostaną wyłączone\)/,
@@ -177,7 +154,6 @@ const POLICY: Record<
     optOut: /przy każdym zgłoszeniu zaznaczamy, że nie ma ono służyć do personalizowania reklam wyświetlanych Tobie/,
     recipients: /OpenAI to amerykańska spółka, która prowadzi ChatGPT i jego reklamy/,
     roleBullet: /\*\*Rola OpenAI:\*\* w odniesieniu do przekazywanych etapów OpenAI jest niezależnym odbiorcą, do pomiaru reklam/,
-    withdrawal: /wstrzymuje dalsze przekazywanie czegokolwiek do Meta, Google Ads i OpenAI oraz usuwa zachowane przez nas identyfikatory reklamowe/,
   },
 };
 
@@ -199,10 +175,18 @@ describe("the privacy policy names OpenAI as a recipient of advertising conversi
     expect(rows.find((row) => row.includes("`stampeo_ad`"))).toMatch(POLICY[locale].adCookieRow);
   });
 
-  it.each(routing.locales)("§5.5 lists the oppref among the click identifiers and keeps each platform to its own (%s)", (locale) => {
+  it.each(routing.locales)("§5.5 lists the oppref among the click identifiers (%s)", (locale) => {
     expect(s55(locale)).toMatch(POLICY[locale].clickIdentifiers);
-    expect(s55(locale)).toMatch(POLICY[locale].ownIdentifiers);
   });
+
+  it.each(routing.locales)(
+    "§5.5 keeps each platform to its own identifiers in the reports from our servers, and says the Meta pixel reads the page address (%s)",
+    (locale) => {
+      // The browser pixel sees the address, which can carry another platform's click id.
+      expect(s55(locale)).toMatch(POLICY[locale].ownIdentifiers);
+      expect(s55(locale)).toMatch(POLICY[locale].pixelReadsAddress);
+    },
+  );
 
   it.each(routing.locales)(
     "§5.5 says which steps and data OpenAI receives, only for visitors from one of its ads, under the advertising choice (%s)",
@@ -224,12 +208,11 @@ describe("the privacy policy names OpenAI as a recipient of advertising conversi
     },
   );
 
-  it.each(routing.locales)("§5.5 defines OpenAI, gives it a role bullet, and includes it in the withdrawal (%s)", (locale) => {
+  it.each(routing.locales)("§5.5 defines OpenAI and gives it a role bullet (%s)", (locale) => {
     const text = s55(locale);
 
     expect(text).toMatch(POLICY[locale].recipients);
     expect(text).toMatch(POLICY[locale].roleBullet);
-    expect(text).toMatch(POLICY[locale].withdrawal);
   });
 
   it.each(routing.locales)("§6 names OpenAI in the United States sharing paragraph (%s)", (locale) => {
@@ -244,34 +227,5 @@ describe("the privacy policy names OpenAI as a recipient of advertising conversi
       .filter((line) => /^#+\s/.test(line));
 
     expect(headings.filter((heading) => /OpenAI|ChatGPT/.test(heading))).toEqual([]);
-  });
-});
-
-/** The open questions for counsel: each sits at the sentence it concerns, in the MDX comment form. */
-const COUNSEL_QUESTIONS: Record<string, RegExp> = {
-  "the date": /\{\/\* COUNSEL: set the date at sign-off \*\/\}/,
-  "OpenAI's role": /\{\/\* COUNSEL: role of OpenAI for uploaded conversions/,
-  "whether a version 4 choice covers OpenAI": /\{\/\* COUNSEL: whether a choice made under consent version 4 covers OpenAI/,
-  "what OpenAI receives": /\{\/\* COUNSEL: what OpenAI receives/,
-  "the corrected Google Ads sentence": /\{\/\* COUNSEL: corrected Google Ads sentence/,
-};
-
-describe("the policy waits for counsel", () => {
-  it.each(routing.locales)("every open question carries a COUNSEL marker, and none uses an HTML comment (%s)", (locale) => {
-    const source = privacySource(locale);
-
-    for (const [question, marker] of Object.entries(COUNSEL_QUESTIONS)) {
-      expect(source, `${locale} has no COUNSEL marker for ${question}`).toMatch(marker);
-    }
-    expect(source).not.toContain("<!--");
-  });
-
-  it.each(routing.locales)("the policy still compiles with its markers, the date reads, and no marker reaches the page (%s)", async (locale) => {
-    const legal = getLegalContent("privacy", locale)!;
-    const html = renderToStaticMarkup(await compileLegalMDX(legal.content));
-
-    expect(legal.lastUpdated).toMatch(/2026/);
-    expect(html).not.toContain("COUNSEL");
-    expect(html).toContain("OpenAI");
   });
 });

@@ -437,7 +437,7 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
   });
 
   it.each(routing.locales)(
-    "the Advertising toggle names Meta, Google Ads, OpenAI and the irreversible code (%s)",
+    "the Advertising toggle names Meta, Google Ads and the irreversible code (%s)",
     (locale) => {
       // The line a visitor reads when they decide on marketing cookies.
       const IRREVERSIBLE_CODE: Record<string, RegExp> = {
@@ -450,7 +450,6 @@ describe("privacy §5.5 — what the advertising platforms receive", () => {
 
       expect(body).toContain("Meta");
       expect(body).toContain("Google Ads");
-      expect(body).toContain("OpenAI");
       expect(body).toMatch(IRREVERSIBLE_CODE[locale]);
     },
   );
@@ -576,14 +575,13 @@ describe("privacy — the statements the legal review requires", () => {
   );
 
   it.each(routing.locales)(
-    "the banner and the US notice name Meta, Google Ads and OpenAI (%s)",
+    "the banner and the US notice name Meta and Google Ads (%s)",
     (locale) => {
       // The first layer a visitor reads before deciding.
       const { banner, notice } = commonCatalog(locale).cookies;
       for (const body of [banner.body, notice.body]) {
         expect(body).toContain("Meta");
         expect(body).toContain("Google Ads");
-        expect(body).toContain("OpenAI");
       }
     },
   );

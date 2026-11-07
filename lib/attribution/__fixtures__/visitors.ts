@@ -33,8 +33,11 @@ export const landing = (url: string, referrer = "https://l.facebook.com/", varia
 export const GOOGLE_URL =
   "https://stampeo.app/fr?gclid=Cj0KCQ_TEST_gclid_0001&utm_source=google&utm_medium=cpc&utm_campaign=fr-search-brand&utm_content=rsa-cafe-01&utm_term=carte-fidelite";
 
-export const OPPREF = "OAI_TEST_oppref_0001-a8F3kQ2xT7Lw";
-export const CHATGPT_URL = `https://stampeo.app/us?oppref=${OPPREF}&utm_source=chatgpt&utm_medium=cpc&utm_campaign=us-chatgpt-brand`;
+/** A ChatGPT click id holding the characters a form decode or a careless copy corrupts: `+`, `/`, `=` and an encoded `+`. */
+export const OPPREF_IN_URL = "OAI_TEST+a8F3/kQ2x=T7%2BLw";
+/** What the landing page reads from `OPPREF_IN_URL`, and what OpenAI must receive. */
+export const OPPREF = "OAI_TEST+a8F3/kQ2x=T7+Lw";
+export const CHATGPT_URL = `https://stampeo.app/us?oppref=${OPPREF_IN_URL}&utm_source=chatgpt&utm_medium=cpc&utm_campaign=us-chatgpt-brand`;
 
 export const META_LANDING = landing(META_URL);
 export const GOOGLE_LANDING = landing(GOOGLE_URL, "https://www.google.com/");

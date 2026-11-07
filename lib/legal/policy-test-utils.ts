@@ -60,6 +60,19 @@ export function commonCatalog(locale: string) {
   ).common;
 }
 
+/** The cookie dialog's strings: banner, notice and the preference cards. */
+export type Cookies = ReturnType<typeof commonCatalog>["cookies"];
+export const cookiesOf = (locale: string): Cookies => commonCatalog(locale).cookies;
+
+/** §4, international transfers. */
+export const s4 = (locale: string) => section(locale, /^##\s+4\./m, /^##\s+5\./m);
+
+/** §5.3, the cookies that need consent. */
+export const s53 = (locale: string) => section(locale, /^#+\s+5\.3\s/m, /^#+\s+5\.4\s/m);
+
+/** §6, the United States sharing paragraph sits here. */
+export const s6 = (locale: string) => section(locale, /^##\s+6\./m, /^###\s+6\.1/m);
+
 /** The rows of the retention table in §8, a different table from §5.3's. */
 export function retentionTable(locale: string) {
   return section(locale, /^##\s+8\./m, /^##\s+9\./m)
