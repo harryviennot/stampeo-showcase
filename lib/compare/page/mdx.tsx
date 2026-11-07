@@ -7,6 +7,11 @@ import { BlogLink } from "@/components/blog/mdx/BlogLink";
 import { ChooseIf, ChooseIfPair } from "@/components/compare/ChooseIf";
 import { ComparisonTable } from "@/components/compare/ComparisonTable";
 import { Fact } from "@/components/compare/Fact";
+import { Fit, FitList } from "@/components/compare/Fit";
+import { PageSection } from "@/components/compare/PageSection";
+import { PriceCard, PriceCardPair } from "@/components/compare/PriceCard";
+import type { Side } from "@/components/compare/SideCard";
+import { Strengths, StrengthsPair } from "@/components/compare/Strengths";
 import { blogMdxOptions } from "@/lib/blog/mdx-options";
 import { arrangeBody, splitVerdict } from "./body";
 import { COPY } from "./copy";
@@ -21,17 +26,37 @@ type ViewForComponents = Pick<ComparisonView, "page" | "competitor" | "stampeo">
 function comparisonComponents(view: ViewForComponents): MDXComponents {
   const { market } = view.page;
   const copy = COPY[market];
+  const nameOf = (side: Side) => (side === "competitor" ? view.competitor.name : "Stampeo");
 
   return {
     ...blogComponents,
     a: (props: ComponentProps<"a">) => <BlogLink {...props} trackAs="comparison_link" />,
     Fact: ({ id }: { id: string }) => <Fact id={id} view={view} />,
-    ChooseIf: ({ side, title, children }: { side: "competitor" | "stampeo"; title?: string; children?: ReactNode }) => (
+    PageSection,
+    ChooseIf: ({ side, title, children }: { side: Side; title?: string; children?: ReactNode }) => (
       <ChooseIf side={side} title={title} competitor={view.competitor.name} market={market}>
         {children}
       </ChooseIf>
     ),
     ChooseIfPair,
+    PriceCard: ({ side, title, children }: { side: Side; title?: string; children?: ReactNode }) => (
+      <PriceCard side={side} title={title} name={nameOf(side)}>
+        {children}
+      </PriceCard>
+    ),
+    PriceCardPair,
+    Strengths: ({ side, title, children }: { side: Side; title?: string; children?: ReactNode }) => (
+      <Strengths side={side} title={title}>
+        {children}
+      </Strengths>
+    ),
+    StrengthsPair,
+    Fit: ({ side, shop, children }: { side: Side; shop: string; children?: ReactNode }) => (
+      <Fit side={side} shop={shop} name={nameOf(side)}>
+        {children}
+      </Fit>
+    ),
+    FitList,
     ComparisonTable: () => <ComparisonTable view={view} />,
     CallToAction: ({ title, buttonText, href }: { title?: string; buttonText?: string; href?: string }) => (
       <CallToAction
@@ -46,8 +71,7 @@ function comparisonComponents(view: ViewForComponents): MDXComponents {
 
 /**
  * The page's MDX as two parts: the verdict (its first paragraph, when it opens
- * with one) and the body, with the Choose if cards paired and a sign-up button
- * after them.
+ * with one) and the body, arranged into sections with its side-by-side parts paired.
  */
 export async function compileComparisonMDX(
   view: ViewForComponents,

@@ -43,7 +43,7 @@ async function render(slug: string) {
   const { verdict, body } = await compileComparisonMDX(view);
   const html = renderIn(
     LOCALE[view.page.market],
-    <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view, FIXTURES)} />,
+    <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view, FIXTURES)} heroVisual={<div data-hero-visual />} />,
   );
   return { html, clicks: [...clicks] };
 }
@@ -72,15 +72,16 @@ describe("a US comparison page", () => {
     ({ html } = await render("acme-loyalty"));
   });
 
-  it("reads top to bottom: title, verdict, check date, the two cards, the table, the FAQ, sources, other pages, closing call to action", () => {
+  it("reads top to bottom: title, verdict, check date, card stack, the two cards with the sign-up button, the table, the FAQ, sources, other pages, closing call to action", () => {
     const page = drawn(html);
     const order = [
       at(page, "<h1"),
       at(page, "Acme Loyalty&#x27;s cheapest plan"),
       at(page, "Checked October 5, 2026"),
+      at(page, "data-hero-visual"),
       at(page, "Choose Acme Loyalty if"),
       at(page, "Choose Stampeo if"),
-      at(page, COPY.us.cta.title),
+      at(page, COPY.us.cta.button),
       at(page, "<table"),
       at(page, "Can I move my Acme Loyalty customers"),
       at(page, 'id="sources"'),
@@ -109,7 +110,7 @@ describe("a US comparison page", () => {
   });
 
   it("puts the two Choose if cards side by side, the competitor's first, each with its own bullets", () => {
-    const pair = html.slice(at(html, "data-choose-if-pair"), at(html, COPY.us.cta.title));
+    const pair = html.slice(at(html, "data-choose-if-pair"), at(html, "space-y-4 md:hidden"));
     expect(pair.match(/<section/g)).toHaveLength(2);
     expect(at(pair, "Choose Acme Loyalty if")).toBeLessThan(at(pair, "Choose Stampeo if"));
     expect(pair).toContain("<li>You want your customers to have a dedicated app.</li>");
@@ -214,6 +215,170 @@ describe("a French comparison page", () => {
     expect(text(html)).toContain("Bravo Carte ou Stampeo");
     expect(html).not.toContain("acme-fidelite-brouillon");
     expect(html).not.toContain("/us/vs/");
+  });
+});
+
+/** A page that uses every part of the layout, the two products written in an order the page must not follow. */
+const FULL_PAGE = `Acme Loyalty costs <Fact id="price.entry" />.
+
+## Choose Stampeo if
+
+<ChooseIf side="stampeo">
+
+- You want a wallet card.
+
+</ChooseIf>
+
+## Choose Acme Loyalty if
+
+<ChooseIf side="competitor">
+
+- You want an app.
+
+</ChooseIf>
+
+## Side by side
+
+<ComparisonTable />
+
+## How the prices compare
+
+As of today:
+
+<PriceCard side="stampeo" title="Stampeo:">
+
+- Starter, <Fact id="stampeo.price.starter" />;
+- Growth, <Fact id="stampeo.price.growth" />.
+
+</PriceCard>
+
+<PriceCard side="competitor" title="Acme Loyalty:">
+
+- <Fact id="price.entry" />.
+
+</PriceCard>
+
+**One shop.** Compare the first plans.
+
+## Where Stampeo is stronger
+
+<Strengths side="stampeo">
+
+**Points and levels.** Stampeo runs points on every plan.
+
+</Strengths>
+
+## Where Acme Loyalty is stronger
+
+<Strengths side="competitor">
+
+**Connections.** Acme Loyalty links to other tools.
+
+**Messages.** Acme Loyalty sends messages from Starter.
+
+</Strengths>
+
+## Which fits your shop?
+
+<Fit side="competitor" shop="A café that runs orders through other software:">
+Acme Loyalty, which connects through Zapier.
+</Fit>
+
+<Fit side="stampeo" shop="A bakery that rewards spending:">
+Stampeo, with points.
+</Fit>
+
+## Switching from Acme Loyalty
+
+Scan the flyer.`;
+
+describe("a page laid out in full", () => {
+  let html = "";
+  let page = "";
+  beforeAll(async () => {
+    const view = fixtureView("acme-loyalty");
+    const full = { ...view, page: { ...view.page, content: FULL_PAGE } };
+    const { verdict, body } = await compileComparisonMDX(full);
+    html = renderIn("en", <ComparisonArticle view={full} verdict={verdict} body={body} others={[]} heroVisual={<div data-hero-visual />} />);
+    page = drawn(html);
+  });
+
+  /** A whole element of the page, from the tag that carries `attribute` to its closing tag. */
+  const element = (tag: string, attribute: string) => {
+    const found = page.match(new RegExp(`<${tag}\\b[^>]*${attribute}[\\s\\S]*?</${tag}>`));
+    expect({ attribute, found: found !== null }).toEqual({ attribute, found: true });
+    return found![0];
+  };
+
+  it("has no table of contents and no blog shell, and its headings keep their anchors", () => {
+    expect(html).not.toContain("<aside");
+    expect(html).not.toContain("--blog-bg)] min-h-screen");
+    for (const id of ["side-by-side", "how-the-prices-compare", "switching-from-acme-loyalty", "faq", "sources"]) {
+      expect(html).toContain(`id="${id}"`);
+    }
+  });
+
+  it("opens with the title, the verdict and a check-date pill beside the card stack", () => {
+    const hero = page.slice(0, at(page, "data-choose-if-pair"));
+    expect(text(hero)).toContain("Acme Loyalty vs Stampeo");
+    expect(text(hero)).toContain("Acme Loyalty costs $25 a month, billed monthly.");
+    expect(text(hero)).toContain("Checked October 5, 2026");
+    expect(hero).toContain("data-hero-visual");
+    expect(hero).toMatch(/rounded-full[^"]*"[^>]*>(?:(?!<\/p>)[\s\S])*Checked/);
+  });
+
+  it("puts the competitor's card, price card and strengths first at every width, though the page wrote Stampeo's first", () => {
+    for (const attribute of ["data-choose-if", "data-price-card", "data-strengths"]) {
+      expect(page).toMatch(new RegExp(`${attribute}="competitor"[^>]*class="[^"]*\\border-1\\b`));
+      expect(page).toMatch(new RegExp(`${attribute}="stampeo"[^>]*class="[^"]*\\border-2\\b`));
+    }
+  });
+
+  it("ends the Stampeo card with the sign-up button, and gives the competitor's card none", () => {
+    const stampeo = element("section", 'data-choose-if="stampeo"');
+    const competitor = element("section", 'data-choose-if="competitor"');
+
+    expect(stampeo).toContain('href="/en/onboarding"');
+    expect(stampeo.lastIndexOf("<a ")).toBeGreaterThan(stampeo.lastIndexOf("<li"));
+    expect(competitor).not.toContain("<a ");
+  });
+
+  it("shows each price card under its own name, one line per price, from the facts and the catalog", () => {
+    const stampeo = element("div", 'data-price-card="stampeo"');
+    const competitor = element("div", 'data-price-card="competitor"');
+
+    expect(text(competitor)).toContain("Acme Loyalty $25 a month, billed monthly.");
+    expect(text(competitor)).not.toContain("Acme Loyalty:");
+    expect(text(stampeo)).toContain("Stampeo Starter, $29 a month; Growth, $49 a month.");
+    expect(stampeo.match(/<li/g)).toHaveLength(2);
+  });
+
+  it("makes a card of each bold-lead paragraph of the strengths, under the section's own heading and anchor", () => {
+    const competitor = element("section", 'data-strengths="competitor"');
+
+    expect(competitor).toContain('id="where-acme-loyalty-is-stronger"');
+    expect(competitor.match(/<h3/g)).toHaveLength(2);
+    expect(text(competitor)).toContain("Where Acme Loyalty is stronger Connections Acme Loyalty links to other tools. Messages Acme Loyalty sends messages from Starter.");
+    expect(text(element("section", 'data-strengths="stampeo"'))).toContain("Points and levels Stampeo runs points on every plan.");
+  });
+
+  it("lists the shop types in one list, each with its reason and a pick pill that looks the same for both products", () => {
+    const rows = [...page.matchAll(/<li[^>]*data-fit="(competitor|stampeo)"[\s\S]*?<\/li>/g)];
+
+    expect(rows.map((row) => row[1])).toEqual(["competitor", "stampeo"]);
+    expect(text(rows[0][0])).toContain("A café that runs orders through other software");
+    expect(text(rows[0][0])).not.toMatch(/software:/);
+    expect(text(rows[0][0])).toContain("Acme Loyalty, which connects through Zapier.");
+    const pill = (row: string) => row.match(/<span[^>]*data-pick[^>]*>([^<]*)</)!;
+    expect(pill(rows[0][0])[1]).toBe("Acme Loyalty");
+    expect(pill(rows[1][0])[1]).toBe("Stampeo");
+    expect(pill(rows[0][0])[0].match(/class="([^"]*)"/)![1]).toBe(pill(rows[1][0])[0].match(/class="([^"]*)"/)![1]);
+    expect(page).not.toMatch(/<p[^>]*><li/);
+  });
+
+  it("puts the table and the strengths on bands, and the rest on plain sections", () => {
+    const tones = [...page.matchAll(/data-section="(plain|band)"/g)].map((match) => match[1]);
+    expect(tones).toEqual(["plain", "band", "plain", "band", "plain"]);
   });
 });
 

@@ -1,3 +1,4 @@
+import { HeroCardStack } from "@/components/card/HeroCardStack";
 import { Footer } from "@/components/sections/Footer";
 import { Header } from "@/components/sections/Header";
 import { otherComparisons } from "@/lib/compare/page/load";
@@ -8,9 +9,9 @@ import { getStampeoColumn } from "@/lib/compare/stampeo";
 import { ComparisonArticle } from "./ComparisonArticle";
 
 /**
- * A comparison page: the blog's reading shell (its background, the header and
- * footer of the page's market) around the article. Stampeo's column is priced
- * in the page's own currency, and nothing here swaps it for the visitor's.
+ * A comparison page: the landing's paper background, the header and footer of
+ * the page's market, and the article. Stampeo's column is priced in the page's
+ * own currency, and nothing here swaps it for the visitor's.
  */
 export async function ComparisonPage({ loaded }: { loaded: LoadedComparison }) {
   const view = { ...loaded, stampeo: await getStampeoColumn(loaded.page.market) };
@@ -18,9 +19,9 @@ export async function ComparisonPage({ loaded }: { loaded: LoadedComparison }) {
   const { siteMarket } = pageSetup(view.page.market);
 
   return (
-    <div className="min-h-screen bg-[var(--blog-bg)]">
+    <div className="paper-grain min-h-screen bg-[var(--cream)]">
       <Header market={siteMarket} />
-      <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view)} />
+      <ComparisonArticle view={view} verdict={verdict} body={body} others={otherComparisons(view)} heroVisual={<HeroCardStack />} />
       <Footer market={siteMarket} />
     </div>
   );

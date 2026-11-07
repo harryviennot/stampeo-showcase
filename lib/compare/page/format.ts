@@ -29,3 +29,17 @@ export function languageList(market: Market, codes: readonly string[], and: stri
   const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} ${and} ${names[names.length - 1]}` : names.join("");
   return list.charAt(0).toUpperCase() + list.slice(1);
 }
+
+/** The anchor of a heading: what the MDX pipeline's own headings get, so a component's heading is linkable the same way. */
+export function headingId(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^\p{L}\p{M}\p{N}\p{Pc}\- ]/gu, "")
+    .replace(/ /g, "-");
+}
+
+/** A label without the colon that introduced what follows it, in English ("Stampeo:") or French ("Stampeo :"). */
+export const withoutTrailingColon = (label: string) => label.replace(/[\s\u00a0\u202f]*:\s*$/, "");
+
+/** A lead-in without its closing full stop, for when it is drawn as a title. */
+export const withoutTrailingPeriod = (lead: string) => lead.replace(/\.\s*$/, "");
