@@ -63,6 +63,39 @@ describe("readClickIds: the ChatGPT click id (oppref)", () => {
     expect(readClickIds("?oppref=a%252Fb").oppref).toBe("a%2Fb");
   });
 
+  test("a plus sign stays a plus sign, and only %2B or %20 say what they mean", () => {
+    // A form-style decode turns a raw `+` into a space; an id never contains a space.
+    expect(readClickIds("?oppref=ab+cd").oppref).toBe("ab+cd");
+    expect(readClickIds("?oppref=ab%2Bcd").oppref).toBe("ab+cd");
+    // `%20` is a space the platform really sent, so it is the original string.
+    expect(readClickIds("?oppref=ab%20cd").oppref).toBe("ab cd");
+    expect(readClickIds("?oppref=a=b&utm_source=chatgpt").oppref).toBe("a=b");
+  });
+
+  test("the plus rule is for oppref alone", () => {
+    expect(readClickIds("?gclid=a+b&fbclid=c+d&ttclid=e+f")).toEqual({
+      gclid: "a b",
+      fbclid: "c d",
+      oppref: null,
+      ttclid: "e f",
+    });
+  });
+
+  test("a malformed escape is no click and never throws", () => {
+    expect(readClickIds("?oppref=%E0%A4%A").oppref).toBeNull();
+    expect(readClickIds("?oppref=%E0%A4%A&gclid=g1")).toEqual({
+      gclid: "g1",
+      fbclid: null,
+      oppref: null,
+      ttclid: null,
+    });
+  });
+
+  test("the bound counts the decoded id, not its escaped spelling", () => {
+    expect(readClickIds(`?oppref=${"%2B".repeat(200)}`).oppref).toBe("+".repeat(200));
+    expect(readClickIds(`?oppref=${"%2B".repeat(513)}`).oppref).toBeNull();
+  });
+
   test("an empty value is no click", () => {
     expect(readClickIds("?oppref=").oppref).toBeNull();
     expect(readClickIds("?oppref=%20%20").oppref).toBeNull();

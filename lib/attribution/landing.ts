@@ -37,14 +37,26 @@ function param(search: URLSearchParams, name: string, max: number): string | nul
 }
 
 /**
- * Like `param`, but a value past `max` is dropped rather than cut, and what is
- * kept is the decoded value untouched (never trimmed or case-folded). For an id
- * the platform only accepts as the original string.
+ * An id the platform only accepts as the original string: the first `name=`
+ * pair of the raw query, decoded once with `decodeURIComponent` so a raw `+`
+ * stays a `+` (a form decode would make it a space, which no id contains).
+ * Never trimmed or case-folded. A malformed escape, an empty value, or one
+ * past `max` characters is no click, never a thrown error or a cut-short id.
  */
-function wholeParam(search: URLSearchParams, name: string, max: number): string | null {
-  const value = search.get(name);
-  if (!value || value.trim() === "" || value.length > max) return null;
-  return value;
+function wholeParam(search: string, name: string, max: number): string | null {
+  for (const pair of search.replace(/^\?/, "").split("&")) {
+    const eq = pair.indexOf("=");
+    if (pair.slice(0, eq === -1 ? pair.length : eq) !== name) continue;
+    if (eq === -1) return null;
+    let value: string;
+    try {
+      value = decodeURIComponent(pair.slice(eq + 1));
+    } catch {
+      return null;
+    }
+    return value.trim() === "" || value.length > max ? null : value;
+  }
+  return null;
 }
 
 /**
@@ -58,7 +70,7 @@ export function readClickIds(search: string): ClickIds {
   return {
     gclid: param(params, "gclid", MAX_ID_FIELD),
     fbclid: param(params, "fbclid", MAX_ID_FIELD),
-    oppref: wholeParam(params, "oppref", MAX_ID_FIELD),
+    oppref: wholeParam(search, "oppref", MAX_ID_FIELD),
     ttclid: param(params, "ttclid", MAX_ID_FIELD),
   };
 }
