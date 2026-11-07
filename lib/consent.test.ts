@@ -142,12 +142,10 @@ describe("consentSurface", () => {
     expect(consentSurface({ ...base, row: EU })).toBe("banner");
   });
 
-  test("an opt-out visitor with no choice sees no surface at all", () => {
-    expect(consentSurface({ ...base, row: US })).toBe("none");
-  });
-
-  test("GPC leaves the US visitor with no surface either", () => {
-    expect(consentSurface({ ...base, row: US, gpc: true })).toBe("none");
+  test("an opt-out visitor with no choice sees no surface at all, GPC or not", () => {
+    for (const gpc of [false, true]) {
+      expect(consentSurface({ ...base, row: US, gpc })).toBe("none");
+    }
   });
 
   test("GPC does NOT silence the EU banner", () => {

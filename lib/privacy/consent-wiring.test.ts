@@ -132,8 +132,9 @@ describe("a visitor's answer to what the page shows", () => {
   test("the row decides the surface, GPC included", () => {
     const base = { record: null, prior: null, trackable: true } as const;
     expect(consentSurface({ ...base, gpc: false, row: rowFor("FR") })).toBe("banner");
-    expect(consentSurface({ ...base, gpc: false, row: rowFor("US") })).toBe("none");
-    expect(consentSurface({ ...base, gpc: true, row: rowFor("US") })).toBe("none");
+    for (const gpc of [false, true]) {
+      expect(consentSurface({ ...base, gpc, row: rowFor("US") })).toBe("none");
+    }
   });
 
   test("the row decides what is agreed", () => {

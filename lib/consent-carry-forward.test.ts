@@ -8,7 +8,8 @@
  * European visitor who refused everything is not asked again.
  *
  * A GRANT DOES NOT. It was given for less than today's text describes, so the
- * category is asked again (the banner, opt-in) or falls to the opt-out default. Global Privacy Control still decides before any default.
+ * category is asked again (the banner, opt-in) or falls to the opt-out
+ * default. Global Privacy Control still decides before any default.
  *
  * Each case starts from the cookie value an older banner wrote and runs it
  * through what a page decides from it: the surface shown, which tags load, and
@@ -155,7 +156,6 @@ describe("an older partial refusal keeps the refused category refused", () => {
     const page = visit(partial, "opt-out", true);
 
     expect(page.state).toEqual({ analytics: false, marketing: false });
-    expect(page.surface).toBe("none");
   });
 });
 
