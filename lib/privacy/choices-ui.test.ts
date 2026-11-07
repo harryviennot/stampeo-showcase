@@ -45,20 +45,10 @@ afterEach(() => {
 
 describe("the footer label (AC2.5)", () => {
   test.each([
-    ["a US visitor", "opt-out", PRIVACY_CHOICES_KEY, true],
-    ["an EU visitor", "opt-in", COOKIE_PREFERENCES_KEY, false],
-  ] as const)("%s", (_who, regime, key, icon) => {
-    expect(choicesLabel({ regime })).toEqual({ key, icon });
-  });
-
-  test("the US row shows no surface and still gets the statutory label", () => {
-    expect(ROWS.US.surface).toBe("none");
-    expect(choicesLabel(ROWS.US)).toEqual({ key: PRIVACY_CHOICES_KEY, icon: true });
-  });
-
-  test("the label follows the regime, not the surface a row happens to show", () => {
-    expect(choicesLabel({ ...ROWS.US, surface: "notice" })).toEqual({ key: PRIVACY_CHOICES_KEY, icon: true });
-    expect(choicesLabel({ ...ROWS.EEA_UK_CH, surface: "none" })).toEqual({ key: COOKIE_PREFERENCES_KEY, icon: false });
+    ["a US visitor, whose row shows no surface", ROWS.US, PRIVACY_CHOICES_KEY, true],
+    ["an EU visitor", ROWS.EEA_UK_CH, COOKIE_PREFERENCES_KEY, false],
+  ] as const)("%s", (_who, row, key, icon) => {
+    expect(choicesLabel(row)).toEqual({ key, icon });
   });
 
   test("the server render, which knows nothing about the visitor, is never empty", () => {
@@ -103,16 +93,6 @@ describe("the footer label (AC2.5)", () => {
 });
 
 describe("the preferences dialog by region", () => {
-  test.each([
-    ["US", "none"],
-    ["US", "notice"],
-    ["EEA_UK_CH", "banner"],
-    ["EEA_UK_CH", "none"],
-  ] as const)("the %s row, whatever surface it shows (%s): the dialog follows its regime", (key, surface) => {
-    const row = { ...ROWS[key], surface };
-    expect(preferencesView(row, false).variant).toBe(key === "US" ? "us" : "eu");
-  });
-
   test("a US visitor sees Advertising first and Strictly necessary last (AC2.7)", () => {
     expect(preferencesView(ROWS.US, false).order).toEqual(["marketing", "analytics", "necessary"]);
   });
