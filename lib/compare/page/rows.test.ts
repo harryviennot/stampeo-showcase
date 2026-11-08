@@ -4,6 +4,7 @@ import { ACME_FIDELITE, ACME_LOYALTY, withUsFacts } from "../__fixtures__";
 import { buildStampeoColumn } from "../stampeo";
 import { STANDARD_FACT_IDS, type CompetitorFacts, type SourcedFact } from "../types";
 import { COPY } from "./copy";
+import { COMPETITOR_FACTS } from "../facts";
 import { ROW_GROUPS, competitorText, tableGroups, type TableGroup, type TableRow } from "./rows";
 
 /** French typography uses no-break spaces; the tests read them as plain ones. */
@@ -26,14 +27,14 @@ const withFrenchPrice = (change: Partial<SourcedFact>): CompetitorFacts => {
 };
 
 describe("the themes of a comparison table", () => {
-  it("are four, in a fixed order, and hold every standard row exactly once", () => {
+  it("are four, in a fixed order, and hold every standard row exactly once, except the languages the table does not show", () => {
     expect(ROW_GROUPS.map((group) => group.id)).toEqual(["customer", "program", "counter", "price"]);
-    expect(ROW_GROUPS.flatMap((group) => group.rows).sort()).toEqual([...STANDARD_FACT_IDS].sort());
+    expect(ROW_GROUPS.flatMap((group) => group.rows).sort()).toEqual(STANDARD_FACT_IDS.filter((id) => id !== "languages").sort());
   });
 
   it("put each row under the theme the owner looks for it in", () => {
     expect(Object.fromEntries(ROW_GROUPS.map((group) => [group.id, group.rows]))).toEqual({
-      customer: ["card.where", "customer.app_required", "languages"],
+      customer: ["card.where", "customer.app_required"],
       program: ["program.types", "designer", "push.automatic", "push.broadcasts"],
       counter: ["staff.scanning", "pos.integration", "locations.multiple", "export"],
       price: ["price.entry", "trial", "commitment"],
@@ -65,6 +66,30 @@ describe("the rows of a comparison table", () => {
     const fr = tableGroups({ market: "fr", competitor: ACME_FIDELITE, stampeo: FR });
     expect(fr.map((group) => group.label)).toEqual(["Côté client", "Prix et engagement"]);
     expect(fr.flatMap((group) => group.rows.map((row) => row.label))).toEqual(["Où vit la carte du client", "Plan payant le moins cher"]);
+  });
+
+  it("leave out the languages a competitor lists: they are no argument for a small shop", () => {
+    const withLanguages = withUsFacts(ACME_LOYALTY, (facts) => [
+      ...facts,
+      { ...facts[0], id: "languages", value: "English and Spanish", short: "English and Spanish" },
+    ]);
+    const shown = rowsOf(tableGroups({ market: "us", competitor: withLanguages, stampeo: US })).map((row) => row.id);
+
+    expect(shown).toEqual(["card.where", "customer.app_required", "price.entry", "trial"]);
+  });
+
+  it("never include languages for any competitor with a page, in either market", () => {
+    for (const competitor of COMPETITOR_FACTS) {
+      for (const market of ["us", "fr"] as const) {
+        if (!competitor.markets[market]) continue;
+        const shown = rowsOf(tableGroups({ market, competitor, stampeo: market === "us" ? US : FR })).map((row) => row.id);
+        expect({ competitor: competitor.id, market, languages: shown.includes("languages") }).toEqual({
+          competitor: competitor.id,
+          market,
+          languages: false,
+        });
+      }
+    }
   });
 
   it("carry no yes or no verdict: a cell is words, and is the same shape for both products", () => {

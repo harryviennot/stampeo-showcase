@@ -177,6 +177,22 @@ describe("a table whose facts have short values", () => {
   });
 });
 
+describe("a table for a competitor whose facts list the languages it speaks", () => {
+  it("draws no languages row: the fact stays in the facts file and out of the table", () => {
+    const view = {
+      ...US_VIEW,
+      competitor: withUsFacts(US_VIEW.competitor, (facts) => [
+        ...facts,
+        { ...facts[0], id: "languages", value: "English, French and Spanish", short: "Three languages" },
+      ]),
+    };
+    const { html, table } = parts(view);
+
+    expect(tableRows(table)).toHaveLength(4);
+    expect(text(html)).not.toMatch(/Languages|Three languages/);
+  });
+});
+
 describe("a table with nothing to compare", () => {
   it("draws nothing for a competitor that has no standard fact", () => {
     const view = { ...fixtureView("acme-loyalty"), competitor: withUsFacts(ACME_LOYALTY, (facts) => facts.filter((fact) => fact.id === "support.hours")) };

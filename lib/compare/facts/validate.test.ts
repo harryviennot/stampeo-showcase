@@ -130,6 +130,14 @@ describe("short values on the real pages", () => {
     expect(missing.join("\n")).not.toMatch(/support\.hours/);
   });
 
+  it("asks nothing of the languages fact, which the table does not show", () => {
+    const complete = withUsFacts(ACME_LOYALTY, (facts) => [
+      ...facts.map((fact) => ({ ...fact, short: "Short" })),
+      { ...facts[0], id: "languages", short: undefined },
+    ]);
+    expect(missingShortValues([complete])).toEqual([]);
+  });
+
   it("is satisfied once every standard-row fact has one", () => {
     const complete = withUsFacts(ACME_LOYALTY, (facts) => facts.map((fact) => ({ ...fact, short: "Short" })));
     expect(missingShortValues([complete])).toEqual([]);
