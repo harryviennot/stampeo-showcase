@@ -1,4 +1,5 @@
-import { SHORT_MAX_LENGTH, STANDARD_FACT_IDS, type CompetitorFacts, type SourcedFact } from "../types";
+import { TABLE_FACT_IDS } from "../page/rows";
+import { SHORT_MAX_LENGTH, type CompetitorFacts, type SourcedFact } from "../types";
 
 /** Today as `YYYY-MM-DD`, the calendar day in Paris where the facts are checked. */
 export function todayIso(now: Date = new Date()): string {
@@ -100,14 +101,14 @@ export function validateCompetitorFacts(
   return problems;
 }
 
-const STANDARD_IDS: ReadonlySet<string> = new Set(STANDARD_FACT_IDS);
+const SHOWN_IDS: ReadonlySet<string> = new Set(TABLE_FACT_IDS);
 
-/** Every standard-row fact with no `short` value, which the table would show as its full sentence instead. */
+/** Every fact of a table row with no `short` value, which the table would show as its full sentence instead. */
 export function missingShortValues(competitors: readonly CompetitorFacts[]): string[] {
   return competitors.flatMap((competitor) =>
     Object.entries(competitor.markets).flatMap(([market, entry]) =>
       (entry?.facts ?? [])
-        .filter((fact) => STANDARD_IDS.has(fact.id) && fact.short === undefined)
+        .filter((fact) => SHOWN_IDS.has(fact.id) && fact.short === undefined)
         .map((fact) => `${competitor.id}/${market}/${fact.id}: no short value`),
     ),
   );

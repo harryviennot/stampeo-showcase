@@ -30,13 +30,20 @@ export interface TableInput {
   stampeo: StampeoColumn;
 }
 
-/** The four themes the rows are grouped under, in display order, each with its rows in display order. */
+/**
+ * The four themes the rows are grouped under, in display order, each with its
+ * rows in display order. `languages` is a standard fact but no row: a facts
+ * file may keep it, the table never shows it.
+ */
 export const ROW_GROUPS: ReadonlyArray<{ id: RowGroupId; rows: readonly StandardFactId[] }> = [
-  { id: "customer", rows: ["card.where", "customer.app_required", "languages"] },
+  { id: "customer", rows: ["card.where", "customer.app_required"] },
   { id: "program", rows: ["program.types", "designer", "push.automatic", "push.broadcasts"] },
   { id: "counter", rows: ["staff.scanning", "pos.integration", "locations.multiple", "export"] },
   { id: "price", rows: ["price.entry", "trial", "commitment"] },
 ];
+
+/** The fact ids the table shows, in display order. */
+export const TABLE_FACT_IDS: readonly StandardFactId[] = ROW_GROUPS.flatMap((group) => group.rows);
 
 const TTC_RATE = 1.2;
 // An amount whose thousands may be separated by a space, a no-break space or a narrow no-break space.

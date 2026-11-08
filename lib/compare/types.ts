@@ -41,7 +41,7 @@ export interface CompetitorFacts {
   markets: Partial<Record<Market, CompetitorMarketFacts>>;
 }
 
-/** The table rows every comparison uses, in display order. */
+/** The standard facts, in display order. The table shows all but `languages` (see `ROW_GROUPS`). */
 export const STANDARD_FACT_IDS = [
   "card.where",
   "customer.app_required",
