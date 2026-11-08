@@ -7,7 +7,7 @@ import { ComparisonRows } from "./ComparisonRows";
 /**
  * Competitor and Stampeo side by side, grouped into four themes with one row
  * per standard fact the competitor has, each showing the two short answers: a
- * list of rows on a phone, a real table from the tablet up.
+ * list of rows on a phone or a tablet, a real table from laptop width up.
  */
 export function ComparisonTable({ view }: { view: Pick<ComparisonView, "page" | "competitor" | "stampeo"> }) {
   const { market } = view.page;

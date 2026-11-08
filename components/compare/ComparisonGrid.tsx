@@ -11,7 +11,7 @@ interface GridProps {
 const firstRows = (groups: TableGroup[]) => groups.map((_, index) => groups.slice(0, index).reduce((count, group) => count + group.rows.length, 0));
 
 /**
- * The comparison from the tablet up, drawn like the pricing page's feature
+ * The comparison from laptop width up, drawn like the pricing page's feature
  * table: one card, a bold row per theme, then striped rows of a label and the
  * two short answers, with Stampeo's column tinted.
  */
@@ -19,7 +19,7 @@ export function ComparisonGrid({ groups, names, labels }: GridProps) {
   const starts = firstRows(groups);
 
   return (
-    <div className="card-stamp hidden overflow-hidden rounded-3xl bg-white md:block">
+    <div className="card-stamp hidden overflow-hidden rounded-3xl bg-white lg:block">
       <table role="table" className="w-full table-fixed border-collapse text-left">
         <caption className="sr-only">{labels.caption}</caption>
         <colgroup>
