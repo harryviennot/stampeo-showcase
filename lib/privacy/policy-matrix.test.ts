@@ -27,7 +27,7 @@ import { consentMaxAgeSeconds, effectiveRow, resolveWithPolicy, rowFor } from ".
 const FILE = join(import.meta.dir, "policy-matrix.v1.json");
 
 describe("the shared file", () => {
-  test("hashes to the pinned constant, the same one the backend pins", () => {
+  test("the file hashes to its pinned constant", () => {
     const digest = createHash("sha256").update(readFileSync(FILE)).digest("hex");
     expect(digest).toBe(POLICY_MATRIX_SHA256);
   });
@@ -62,7 +62,7 @@ describe("the shared file", () => {
     });
     expect(US).toMatchObject({
       regime: "opt-out",
-      surface: "notice",
+      surface: "none",
       default: { analytics: true, marketing: true },
       gpc_overrides_choice: true,
       refusal_ttl_days: 400,
@@ -118,6 +118,11 @@ describe("a row added to the matrix is applied with no other code change", () =>
       60 * 86_400,
     );
     expect(consentMaxAgeSeconds(row, { analytics: true, marketing: true })).toBe(30 * 86_400);
+  });
+
+  test("a surface the app cannot render is refused at load", () => {
+    const rows = { ...raw.rows, US: { ...raw.rows.US, surface: "modal" } };
+    expect(() => buildPolicyMatrix({ ...raw, rows })).toThrow(/surface/);
   });
 
   test("a matrix without the UNKNOWN row is refused at load", () => {

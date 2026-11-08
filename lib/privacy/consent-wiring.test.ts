@@ -132,8 +132,9 @@ describe("a visitor's answer to what the page shows", () => {
   test("the row decides the surface, GPC included", () => {
     const base = { record: null, prior: null, trackable: true } as const;
     expect(consentSurface({ ...base, gpc: false, row: rowFor("FR") })).toBe("banner");
-    expect(consentSurface({ ...base, gpc: false, row: rowFor("US") })).toBe("notice");
-    expect(consentSurface({ ...base, gpc: true, row: rowFor("US") })).toBe("none");
+    for (const gpc of [false, true]) {
+      expect(consentSurface({ ...base, gpc, row: rowFor("US") })).toBe("none");
+    }
   });
 
   test("the row decides what is agreed", () => {
@@ -368,7 +369,7 @@ describe("a US refusal outlives six months (AC2.1, AC2.2)", () => {
     ).toEqual({ analytics: true, marketing: false });
   });
 
-  test("a US visitor who only dismissed the notice reverts to the default after 182 days", async () => {
+  test("a US visitor whose saved choice grants both reverts to the default after 182 days", async () => {
     browser = usVisitor();
 
     writeConsentRecord({ analytics: true, marketing: true }, rowFor("US"));

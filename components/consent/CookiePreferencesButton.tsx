@@ -20,9 +20,9 @@ const TONES = {
  * Withdrawing consent has to be as easy as giving it, which means it cannot
  * live only in a banner that disappears the moment someone answers.
  *
- * The label comes from the visitor's policy row. A row that shows a notice (the
- * US) gets "Your Privacy Choices" and the opt-out icon; every other row, and
- * the moment before the row is known, gets "Cookie preferences".
+ * The label comes from the visitor's policy row. An opt-out row (the US) gets
+ * "Your Privacy Choices" and the opt-out icon; every other row, and the moment
+ * before the row is known, gets "Cookie preferences".
  *
  * A button rather than a link, and an event rather than a prop: the footer is
  * an async server component and the banner lives up in the locale layout, so
@@ -31,8 +31,8 @@ const TONES = {
  */
 export function CookiePreferencesButton({ tone = "footer" }: Readonly<{ tone?: keyof typeof TONES }>) {
   const t = useTranslations("common");
-  const { surface } = useConsent();
-  const { key, icon } = choicesLabel({ surface });
+  const { regime } = useConsent();
+  const { key, icon } = choicesLabel({ regime });
   const { head, tail } = splitLastWord(t(key));
 
   return (

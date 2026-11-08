@@ -45,10 +45,10 @@ afterEach(() => {
 
 describe("the footer label (AC2.5)", () => {
   test.each([
-    ["a US visitor", "notice", PRIVACY_CHOICES_KEY, true],
-    ["an EU visitor", "banner", COOKIE_PREFERENCES_KEY, false],
-  ] as const)("%s", (_who, surface, key, icon) => {
-    expect(choicesLabel({ surface })).toEqual({ key, icon });
+    ["a US visitor, whose row shows no surface", ROWS.US, PRIVACY_CHOICES_KEY, true],
+    ["an EU visitor", ROWS.EEA_UK_CH, COOKIE_PREFERENCES_KEY, false],
+  ] as const)("%s", (_who, row, key, icon) => {
+    expect(choicesLabel(row)).toEqual({ key, icon });
   });
 
   test("the server render, which knows nothing about the visitor, is never empty", () => {

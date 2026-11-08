@@ -20,7 +20,7 @@ export interface ChainInputs {
   referrer: string;
   timezone: string;
   gpc: boolean;
-  /** What the visitor chose: `none` is a US visitor who never touched the notice. */
+  /** What the visitor chose: `none` is a US visitor with no stored choice. */
   consent: "none";
   cookies: Record<string, string>;
   ga_measurement_id: string;

@@ -212,6 +212,20 @@ describe("privacy policy: where the control is", () => {
   );
 });
 
+/** Phrases that describe a notice shown to US visitors, in each locale. */
+const US_NOTICE: Record<string, RegExp> = {
+  en: /no notice at all|a notice says so|the notice has a button|in the notice shown|and in the notice/,
+  fr: /aucun message ne vous est présenté|un message l'indique|le message comporte|sur le bandeau affiché aux visiteurs|dans le message d'information/,
+  es: /ningún aviso|un aviso lo indica|el aviso incluye|en el aviso mostrado|y en el aviso/,
+  pl: /żadnego komunikatu|informuje o tym komunikat|komunikat zawiera|w komunikacie wyświetlanym|i w komunikacie/,
+};
+
+describe("privacy policy: US visitors are told by the policy and the footer link, not by a notice", () => {
+  it.each(routing.locales)("describes no notice shown to US visitors (%s)", (locale) => {
+    expect(privacySource(locale)).not.toMatch(US_NOTICE[locale]);
+  });
+});
+
 describe("privacy policy: how long a choice is kept", () => {
   it.each(routing.locales)(
     "§5.1 keeps a choice 6 months, a US refusal 13 months renewed on each visit and restored from the account (%s)",
