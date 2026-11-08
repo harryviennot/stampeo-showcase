@@ -75,7 +75,7 @@ const WORDING: Record<
     googleSessionId: /Google Analytics receives its own session identifier with each step/,
     googleNeverContact:
       /It never receives your contact details, your IP address or your browser's characteristics/,
-    offAdvertising: /Turning off advertising stops anything further being reported to Meta and Google Ads/,
+    offAdvertising: /Turning off advertising stops anything further being reported to Meta, Google Ads and OpenAI/,
     offMeasurement: /Turning off audience measurement does the same for Google Analytics/,
     offBoth: /Turning off both also deletes the stored campaign source/,
     laterRefusalApplies: /applies to your account and your businesses/,
@@ -96,7 +96,7 @@ const WORDING: Record<
     googleSessionId: /Google Analytics reçoit son propre identifiant de session à chaque étape/,
     googleNeverContact:
       /Il ne reçoit jamais vos coordonnées, votre adresse IP ni les caractéristiques de votre navigateur/,
-    offAdvertising: /Désactiver la publicité met fin à tout nouveau signalement à Meta et à Google Ads/,
+    offAdvertising: /Désactiver la publicité met fin à tout nouveau signalement à Meta, à Google Ads et à OpenAI/,
     offMeasurement: /Désactiver la mesure d'audience produit le même effet pour Google Analytics/,
     offBoth: /Désactiver les deux supprime aussi l'origine de campagne conservée/,
     laterRefusalApplies: /s'applique à votre compte et à vos commerces/,
@@ -117,7 +117,7 @@ const WORDING: Record<
     googleSessionId: /Google Analytics recibe su propio identificador de sesión en cada paso/,
     googleNeverContact:
       /Nunca recibe tus datos de contacto, tu dirección IP ni las características de tu navegador/,
-    offAdvertising: /Desactivar la publicidad pone fin a cualquier nueva comunicación a Meta y a Google Ads/,
+    offAdvertising: /Desactivar la publicidad pone fin a cualquier nueva comunicación a Meta, a Google Ads y a OpenAI/,
     offMeasurement: /Desactivar la medición de audiencia hace lo mismo con Google Analytics/,
     offBoth: /Desactivar ambas elimina además el origen de campaña guardado/,
     laterRefusalApplies: /se aplica a tu cuenta y a tus comercios/,
@@ -138,7 +138,7 @@ const WORDING: Record<
     googleSessionId: /Google Analytics przy każdym etapie otrzymuje własny identyfikator sesji/,
     googleNeverContact:
       /Nigdy nie otrzymuje Twoich danych kontaktowych, adresu IP ani parametrów przeglądarki/,
-    offAdvertising: /Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta i Google Ads/,
+    offAdvertising: /Wyłączenie reklamy wstrzymuje dalsze przekazywanie czegokolwiek do Meta, Google Ads i OpenAI/,
     offMeasurement: /Wyłączenie pomiaru ruchu daje ten sam skutek w przypadku Google Analytics/,
     offBoth: /Wyłączenie obu usuwa też zapisane źródło kampanii/,
     laterRefusalApplies: /obejmuje Twoje konto i Twoje firmy/,

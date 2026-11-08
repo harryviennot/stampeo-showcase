@@ -1,5 +1,5 @@
 /**
- * The page address GA4 receives. Ad click ids are removed (Google Ads and Meta
+ * The page address GA4 receives. Ad click ids are removed (the ad platforms
  * hold them for their own attribution, and GA4 has no use for them); the rest
  * of the address, utm_* included, arrives as it was.
  */
@@ -14,9 +14,15 @@ describe("stripAdClickIds", () => {
     ["an app-campaign Google click", "https://stampeo.app/?gbraid=0AAAA", "https://stampeo.app/"],
     ["a web-to-app Google click", "https://stampeo.app/?wbraid=CjkKCQ", "https://stampeo.app/"],
     ["a TikTok ad landing", "https://stampeo.app/us?ttclid=E.C.P.abc", "https://stampeo.app/us"],
+    ["a ChatGPT ad landing", "https://stampeo.app/us?oppref=OAI-abc_123.x~y", "https://stampeo.app/us"],
+    [
+      "a ChatGPT ad landing keeps its campaign tags",
+      "https://stampeo.app/us?utm_source=chatgpt&oppref=OAI-abc&utm_medium=cpc&utm_campaign=spring",
+      "https://stampeo.app/us?utm_source=chatgpt&utm_medium=cpc&utm_campaign=spring",
+    ],
     [
       "every click id at once",
-      "https://stampeo.app/?gclid=g&gbraid=b&wbraid=w&fbclid=f&ttclid=t",
+      "https://stampeo.app/?gclid=g&gbraid=b&wbraid=w&fbclid=f&oppref=o&ttclid=t",
       "https://stampeo.app/",
     ],
     [

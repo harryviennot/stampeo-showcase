@@ -1,12 +1,15 @@
 import { cookieValue } from "../attribution/codec";
+import { currentConsent } from "../consent";
 import { AD_COOKIE, SOURCE_COOKIE } from "../attribution/cookie-names";
 import { parseAdCookie } from "../attribution/ad-ids";
 import { parseSourceCookie } from "../attribution/source";
 
 /**
  * The query parameters the real-browser link carries so the paid click is still
- * attributed there: the ad's UTM tags from `stampeo_src` and the Meta click id
- * from `stampeo_ad`. Nothing else, because the link reaches analytics.
+ * attributed there: the ad's UTM tags from `stampeo_src` and the Meta or
+ * ChatGPT click id from `stampeo_ad`. Nothing else, because the link reaches
+ * analytics. The click id is carried only while the visitor allows advertising
+ * right now, whatever a carrier still holds.
  */
 export function escapeParamsFromCookies(cookieHeader: string | null | undefined): URLSearchParams {
   const params = new URLSearchParams();
@@ -25,8 +28,11 @@ export function escapeParamsFromCookies(cookieHeader: string | null | undefined)
     }
   }
 
-  const ad = parseAdCookie(cookieValue(cookieHeader, AD_COOKIE));
+  const ad = currentConsent().marketing
+    ? parseAdCookie(cookieValue(cookieHeader, AD_COOKIE))
+    : null;
   if (ad?.vn === "meta") params.set("fbclid", ad.ci);
+  if (ad?.vn === "openai") params.set("oppref", ad.ci);
 
   return params;
 }
