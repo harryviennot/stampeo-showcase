@@ -93,7 +93,7 @@ interface ShortCopy {
     | "export"
     | "designer"
   >;
-  /** The program types, given the plans that run stamps or points and whether that is every plan. */
+  /** The program types, given the plans that run stamps and points and whether that is every plan. */
   programTypes: (plans: string, all: boolean) => string;
   /** A monthly amount in the table's short form ("$29/month"), as the competitors' short values write it. */
   perMonth: (amount: string) => string;
@@ -108,13 +108,13 @@ const EN: Copy = {
   fixed: {
     "card.where": "Apple Wallet and Google Wallet, on the customer's phone",
     "customer.app_required": "None: no app to download and no account to create",
-    "staff.scanning":
-      "The Stampeo Scanner app on iPhone and Android, with a connection required (offline scanning isn't available yet)",
-    "pos.integration": "None: staff add stamps or points by hand in the Scanner app",
+    "staff.scanning": "The Stampeo Scanner app on iPhone and Android, or any phone or tablet browser at scan.stampeo.app",
+    "pos.integration": "Runs without a till connection: staff scan the card in the Scanner app or in a browser",
     commitment:
       "None: no setup fee, pay monthly or yearly and cancel any time. A canceled plan stays active until the end of the paid period",
     export: "The customer list as a CSV file with sign-up details (not stamps or points), on every plan, owner only",
-    designer: "Self-service card designer with a live Apple Wallet and Google Wallet preview, on every plan",
+    designer:
+      "Design it yourself in minutes with a live Apple Wallet and Google Wallet preview, or send us your logo and we design it for you, free",
   },
   pushAutomatic: (milestonePlans) =>
     `Yes, on every stamp, reward and level-up, on the lock screen (Apple Wallet and Google Wallet), plus milestone messages on ${milestonePlans}`,
@@ -122,7 +122,7 @@ const EN: Copy = {
     `${names}: dashboard, Scanner app, card and notifications; each customer's card follows their phone's language`,
   and: "and",
   programTypes: (plans) =>
-    `Stamps or points on ${plans}, with optional loyalty levels (up to ${MAX_LEVELS}), each of which can have its own card look`,
+    `Stamps, points and loyalty levels (up to ${MAX_LEVELS}, each with its own card look), on ${plans}`,
   broadcasts: (plan, facts) => {
     const { broadcastsPerMonth: limit } = facts;
     if (limit === 0) return `${plan}: none`;
@@ -142,14 +142,14 @@ const EN: Copy = {
     fixed: {
       "card.where": "Apple Wallet and Google Wallet",
       "customer.app_required": "None: no app, no account",
-      "push.automatic": "Yes, on every stamp and reward",
-      "staff.scanning": "Scanner app (iPhone, Android)",
-      "pos.integration": "None: added by hand in the app",
-      commitment: "None, cancel anytime",
+      "push.automatic": "On every scan, on the lock screen",
+      "staff.scanning": "Scanner app or any browser",
+      "pos.integration": "Runs without a till connection",
+      commitment: "No setup fee, cancel anytime",
       export: "CSV of sign-ups, every plan",
-      designer: "Self-service, with live preview",
+      designer: "In minutes, or designed for you free",
     },
-    programTypes: (plans, all) => (all ? "Stamps or points, optional levels" : `Stamps or points on ${plans}`),
+    programTypes: (plans, all) => `Stamps, points and levels on ${all ? "every plan" : plans}`,
     perMonth: (amount) => `${amount}/month`,
     broadcasts: (plan, limit) => `${plan}: ${limit === "unlimited" ? "unlimited" : `${limit}/month`}`,
     noBroadcasts: "None",
@@ -161,12 +161,12 @@ const FR: Copy = {
   fixed: {
     "card.where": "Dans Apple Wallet ou Google Wallet, sur le téléphone du client",
     "customer.app_required": `Aucune${NBSP}: ni application à télécharger, ni compte à créer`,
-    "staff.scanning":
-      "L'application Scanner Stampeo sur iPhone et Android, avec une connexion nécessaire (le scan hors ligne n'est pas encore disponible)",
-    "pos.integration": `Aucune${NBSP}: l'équipe ajoute les tampons ou les points à la main dans l'application Scanner`,
+    "staff.scanning": "L'appli Scanner Stampeo sur iPhone et Android, ou n'importe quel navigateur sur scan.stampeo.app",
+    "pos.integration": `Fonctionne sans caisse connectée${NBSP}: l'équipe scanne la carte dans l'appli Scanner ou dans un navigateur`,
     commitment: `Aucun${NBSP}: sans frais de mise en service, paiement mensuel ou annuel, résiliable à tout moment. Un plan résilié reste actif jusqu'à la fin de la période payée`,
     export: "La liste des clients en fichier CSV, avec les informations d'inscription (sans tampons ni points), sur tous les plans (réservé au propriétaire)",
-    designer: "Éditeur de carte en libre-service, avec un aperçu en direct de la carte dans Apple Wallet et Google Wallet, sur tous les plans",
+    designer:
+      "Créez-la vous-même en quelques minutes avec un aperçu en direct, ou envoyez-nous votre logo et on la crée pour vous, gratuitement",
   },
   pushAutomatic: (milestonePlans) =>
     `Oui, à chaque tampon ou point ajouté, chaque récompense et chaque changement de niveau, sur l'écran de verrouillage (Apple Wallet et Google Wallet), plus des messages de palier avec ${milestonePlans}`,
@@ -174,7 +174,7 @@ const FR: Copy = {
     `${names}${NBSP}: tableau de bord, application Scanner, carte et notifications${NBSP}; la carte suit la langue du téléphone du client`,
   and: "et",
   programTypes: (plans) =>
-    `Tampons ou points sur ${plans}, avec des niveaux de fidélité en option (jusqu'à ${MAX_LEVELS}), chacun pouvant avoir sa propre apparence de carte`,
+    `Tampons, points et niveaux de fidélité (jusqu'à ${MAX_LEVELS}, chacun avec sa propre apparence de carte), sur ${plans}`,
   broadcasts: (plan, facts) => {
     const { broadcastsPerMonth: limit } = facts;
     if (limit === 0) return `${plan}${NBSP}: aucune diffusion`;
@@ -194,14 +194,14 @@ const FR: Copy = {
     fixed: {
       "card.where": "Apple Wallet et Google Wallet",
       "customer.app_required": `Aucune${NBSP}: ni appli, ni compte`,
-      "push.automatic": "Oui, à chaque tampon et récompense",
-      "staff.scanning": "Appli Scanner (iPhone, Android)",
-      "pos.integration": `Aucune${NBSP}: ajout à la main dans l'appli`,
-      commitment: "Aucun, résiliable à tout moment",
+      "push.automatic": "À chaque passage, sur l'écran verrouillé",
+      "staff.scanning": "Appli Scanner ou navigateur",
+      "pos.integration": "Fonctionne sans caisse connectée",
+      commitment: "Sans frais ni engagement",
       export: "CSV des inscriptions, tous les plans",
-      designer: "Libre-service, aperçu en direct",
+      designer: "En quelques minutes, ou créée pour vous",
     },
-    programTypes: (plans, all) => (all ? "Tampons ou points, niveaux en option" : `Tampons ou points sur ${plans}`),
+    programTypes: (plans, all) => `Tampons, points et niveaux${all ? "" : ` sur ${plans}`}`,
     perMonth: (amount) => `${amount}/mois`,
     broadcasts: (plan, limit) => `${plan}${NBSP}: ${limit === "unlimited" ? "illimitées" : `${limit}/mois`}`,
     noBroadcasts: "Aucune",
