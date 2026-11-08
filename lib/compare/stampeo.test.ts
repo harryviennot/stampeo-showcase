@@ -4,6 +4,7 @@ import { routing } from "../../i18n/routing";
 import { PLAN_FACTS, PLAN_NAMES, TIERS } from "../plans/plan-facts";
 import { FALLBACK_PRICING, formatMoney, type Pricing } from "../pricing";
 import { findCurrencyAmounts } from "./body-checks";
+import { NBSP } from "./page/format";
 import { STAMPEO_FACT_IDS, buildStampeoColumn, getStampeoColumn, isStampeoFactId } from "./stampeo";
 import { SHORT_MAX_LENGTH, STANDARD_FACT_IDS, type Market } from "./types";
 
@@ -92,7 +93,6 @@ describe.each(["us", "fr"] as const)("Stampeo's at-a-glance values on the %s mar
     const perMonth = market === "us" ? "/month" : "/mois";
     expect(column.rowsShort["price.entry"]).toBe(`Starter, ${money(CATALOG[market].tiers.starter.month)}${perMonth}`);
     expect(column.rowsShort["push.broadcasts"]).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth}${perMonth}`);
-    if (market === "us") expect(column.rowsShort.commitment).toBe("None, cancel anytime");
   });
 
   it("answer every standard table row in one line of at most 40 characters, with no em dash", () => {
@@ -137,12 +137,78 @@ describe.each(["us", "fr"] as const)("Stampeo's at-a-glance values on the %s mar
   });
 });
 
-describe("Stampeo's French at-a-glance values", () => {
+describe("Stampeo's French values", () => {
   it("never put a breaking space before a colon, so the colon cannot wrap onto a line of its own", () => {
     const column = buildStampeoColumn("fr", CATALOG.fr);
-    for (const [id, short] of Object.entries(column.rowsShort)) {
-      expect({ id, spacedPunctuation: / [:;?!]/.test(short) }).toEqual({ id, spacedPunctuation: false });
+    for (const [id, text] of [...Object.entries(column.rows), ...Object.entries(column.rowsShort)]) {
+      expect({ id, spacedPunctuation: / [:;?!]/.test(text) }).toEqual({ id, spacedPunctuation: false });
     }
+  });
+});
+
+/** The wording that leads with what a small shop weighs: nothing to install, no till needed, set up in minutes. */
+const LEAD = {
+  us: {
+    short: {
+      "pos.integration": "Runs without a till connection",
+      "staff.scanning": "Scanner app or any browser",
+      "program.types": "Stamps, points and levels on every plan",
+      designer: "In minutes, or designed for you free",
+      commitment: "No setup fee, cancel anytime",
+      "push.automatic": "On every scan, on the lock screen",
+    },
+    full: {
+      "pos.integration": "Runs without a till connection: staff scan the card in the Scanner app or in a browser",
+      "staff.scanning": "The Stampeo Scanner app on iPhone and Android, or any phone or tablet browser at scan.stampeo.app",
+      "program.types": "Stamps, points and loyalty levels (up to 5, each with its own card look), on every plan",
+      designer:
+        "Design it yourself in minutes with a live Apple Wallet and Google Wallet preview, or send us your logo and we design it for you, free",
+    },
+    commitment: [/no setup fee/i, /monthly or yearly/i, /cancel any ?time/i],
+  },
+  fr: {
+    short: {
+      "pos.integration": "Fonctionne sans caisse connectée",
+      "staff.scanning": "Appli Scanner ou navigateur",
+      "program.types": "Tampons, points et niveaux",
+      designer: "En quelques minutes, ou créée pour vous",
+      commitment: "Sans frais ni engagement",
+      "push.automatic": "À chaque passage, sur l'écran verrouillé",
+    },
+    full: {
+      "pos.integration": `Fonctionne sans caisse connectée${NBSP}: l'équipe scanne la carte dans l'appli Scanner ou dans un navigateur`,
+      "staff.scanning": "L'appli Scanner Stampeo sur iPhone et Android, ou n'importe quel navigateur sur scan.stampeo.app",
+      "program.types":
+        "Tampons, points et niveaux de fidélité (jusqu'à 5, chacun avec sa propre apparence de carte), sur tous les plans",
+      designer:
+        "Créez-la vous-même en quelques minutes avec un aperçu en direct, ou envoyez-nous votre logo et on la crée pour vous, gratuitement",
+    },
+    commitment: [/sans frais de mise en service/i, /mensuel ou annuel/i, /résiliable à tout moment/i],
+  },
+} as const;
+
+describe.each(["us", "fr"] as const)("Stampeo's column on the %s market leads with what a small shop weighs", (market) => {
+  const column = buildStampeoColumn(market, CATALOG[market]);
+  const lead = LEAD[market];
+
+  it.each(Object.entries(lead.short))("says %s in a few plain words", (id, short) => {
+    expect(column.rowsShort[id as keyof typeof column.rowsShort]).toBe(short);
+  });
+
+  it.each(Object.entries(lead.full))("says %s in full", (id, full) => {
+    expect(column.rows[id as keyof typeof column.rows]).toBe(full);
+  });
+
+  it("keeps the commitment row's three facts in full: no setup fee, monthly or yearly, cancel any time", () => {
+    for (const fact of lead.commitment) expect(column.rows.commitment).toMatch(fact);
+  });
+
+  it("never hedges: no optional extras, no offline gap, no stamping by hand", () => {
+    const hedge = /optional|en option|\byet\b|pas encore|offline|hors ligne|by hand|à la main/i;
+    for (const [id, text] of [...Object.entries(column.rows), ...Object.entries(column.rowsShort)]) {
+      expect({ id, hedged: hedge.test(text) }).toEqual({ id, hedged: false });
+    }
+    expect(column.rows["pos.integration"]).not.toMatch(/^(?:None|Aucune?)\b/);
   });
 });
 
