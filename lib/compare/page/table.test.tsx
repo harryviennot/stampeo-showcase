@@ -54,7 +54,10 @@ const phoneRows = (phone: string) => [...phone.matchAll(/<dt\b[\s\S]*?<\/dd>\s*<
 /** Each table row that answers a fact, without the theme rows. */
 const tableRows = (table: string) => [...table.matchAll(/<tr\b[^>]*>\s*<th[^>]*scope="row"[\s\S]*?<\/tr>/g)].map((match) => match[0]);
 
-describe("the comparison table on a phone", () => {
+/** The phone markup a reader sees: the screen-reader-only names dropped. */
+const visible = (html: string) => html.replace(/<span class="sr-only">[\s\S]*?<\/span>/g, "");
+
+describe("the comparison table on a phone or a tablet", () => {
   const { phone } = parts(US_VIEW);
 
   it("has a titled section per theme, each listing one row per fact", () => {
@@ -69,11 +72,18 @@ describe("the comparison table on a phone", () => {
     expect(text(phoneRows(phone)[0])).toBe("Where the customer's card lives Acme Loyalty: Their own app Stampeo: Apple Wallet and Google Wallet");
   });
 
-  it("names the two products once per theme, above the rows", () => {
-    const card = phone.match(/<section\b[\s\S]*?<\/section>/)![0];
-    expect(card.indexOf("Acme Loyalty")).toBeGreaterThan(-1);
-    expect(card.indexOf("Acme Loyalty")).toBeLessThan(card.indexOf("<dt"));
-    expect(card.indexOf("Stampeo")).toBeLessThan(card.indexOf("<dt"));
+  it("names the two products once, above every theme, in a header that stays in view while the rows scroll by", () => {
+    const top = phone.slice(0, phone.indexOf("<section"));
+    const names = top.match(/<div[^>]*\bsticky\b[^>]*>[\s\S]*?<\/div>/)![0];
+
+    expect(text(names)).toBe("Acme Loyalty Stampeo");
+    expect(text(visible(phone.slice(phone.indexOf("<section"))))).not.toContain("Acme Loyalty");
+  });
+
+  it("gives way to the table at laptop width, where the answers fit on one line", () => {
+    const { html } = parts(US_VIEW);
+    expect(html.match(/<div[^>]*data-comparison-table[^>]*>\s*<div class="([^"]*)"/)![1]).toContain("lg:hidden");
+    expect(html.match(/<div class="([^"]*)"[^>]*>\s*<table/)![1]).toContain("lg:block");
   });
 
   it("falls back to the full sentence while a fact has no short value, and says it once", () => {
@@ -89,7 +99,7 @@ describe("the comparison table on a phone", () => {
   });
 });
 
-describe("the comparison table from the tablet up", () => {
+describe("the comparison table from laptop width up", () => {
   const { table } = parts(US_VIEW);
 
   it("is one real table with the competitor on the left and Stampeo on the right, and one body per theme", () => {
