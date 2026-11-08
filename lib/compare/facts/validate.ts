@@ -32,12 +32,12 @@ function isHttpsUrl(value: string): boolean {
 
 const blank = (value: string | undefined) => !value || value.trim() === "";
 
-function shortProblems(short: string): string[] {
-  if (blank(short)) return ["short is empty"];
+function shortProblems(field: "short" | "shortNote", text: string): string[] {
+  if (blank(text)) return [`${field} is empty`];
   const problems: string[] = [];
-  if (/[\r\n]/.test(short)) problems.push("short must be one line");
-  const length = Array.from(short).length;
-  if (length > SHORT_MAX_LENGTH) problems.push(`short is ${length} characters, the limit is ${SHORT_MAX_LENGTH}`);
+  if (/[\r\n]/.test(text)) problems.push(`${field} must be one line`);
+  const length = Array.from(text).length;
+  if (length > SHORT_MAX_LENGTH) problems.push(`${field} is ${length} characters, the limit is ${SHORT_MAX_LENGTH}`);
   return problems;
 }
 
@@ -48,7 +48,10 @@ function factProblems(fact: SourcedFact, today: string): string[] {
   if (!isHttpsUrl(fact.sourceUrl)) problems.push("sourceUrl must be an https URL");
   if (blank(fact.sourceTitle)) problems.push("sourceTitle is empty");
   if (blank(fact.quote)) problems.push("quote is empty");
-  if (fact.short !== undefined) problems.push(...shortProblems(fact.short));
+  if (fact.short !== undefined) problems.push(...shortProblems("short", fact.short));
+  if (fact.shortNote !== undefined) {
+    problems.push(...(fact.short === undefined ? ["shortNote needs a short value to sit under"] : shortProblems("shortNote", fact.shortNote)));
+  }
   if (!isCalendarDate(fact.checkedAt)) problems.push("checkedAt must be a real date written YYYY-MM-DD");
   else if (fact.checkedAt > today) problems.push(`checkedAt ${fact.checkedAt} is after today (${today})`);
   return problems;

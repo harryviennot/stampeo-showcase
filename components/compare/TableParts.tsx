@@ -18,12 +18,12 @@ export const STAMPEO_TINT = "bg-[var(--accent)]/5";
 /** Every other row tinted, as the pricing table stripes its rows. */
 export const rowTint = (index: number) => (index % 2 === 0 ? "bg-[var(--muted)]/30" : "");
 
-/** A product's short answer, with the tax line under it when the row has one. */
+/** A product's short answer, with its note under it when it has one. */
 export function ShortValue({ side }: { side: Side }) {
   return (
     <>
       <span className="block text-sm leading-snug font-medium break-words text-[var(--near-black)]">{side.short}</span>
-      {side.taxLine && <span className="mt-0.5 block text-xs leading-snug break-words text-[var(--muted-foreground)]">{side.taxLine}</span>}
+      {side.note && <span className="mt-0.5 block text-xs leading-snug break-words text-[var(--muted-foreground)]">{side.note}</span>}
     </>
   );
 }

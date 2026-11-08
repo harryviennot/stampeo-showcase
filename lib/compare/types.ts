@@ -18,6 +18,8 @@ export interface SourcedFact {
   value: string;
   /** The table's at-a-glance version of `value`: same facts and qualifiers, one line of at most `SHORT_MAX_LENGTH` characters. */
   short?: string;
+  /** A line under `short` in the table, for what the cell must carry and the short value has no room for, such as what an SMS costs. Same limits as `short`. */
+  shortNote?: string;
   /** An https page the fact was read from. */
   sourceUrl: string;
   sourceTitle: string;

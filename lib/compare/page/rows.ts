@@ -7,8 +7,8 @@ import { COPY } from "./copy";
 export interface Side {
   /** The at-a-glance answer. */
   short: string;
-  /** The line under the price: the TTC equivalent of an HT price, or Stampeo's "TVA non applicable". */
-  taxLine: string | null;
+  /** The line under the answer: the TTC equivalent of an HT price, Stampeo's "TVA non applicable", or a competitor fact's short note. */
+  note: string | null;
 }
 
 export interface TableRow {
@@ -83,15 +83,15 @@ function taxLineOf(price: string, market: Market): string | null {
   return ttc.length > 0 ? note(ttc.join(" / ")) : null;
 }
 
-/** The competitor's short value, or its full value while the fact has none. */
+/** The competitor's short value, or its full value while the fact has none, with the price's tax line or the fact's short note under it. */
 function competitorSide(fact: SourcedFact, market: Market, price: boolean): Side {
-  if (fact.short === undefined) return { short: competitorText(fact.value, market), taxLine: null };
-  return { short: fact.short, taxLine: price ? taxLineOf(fact.short, market) : null };
+  if (fact.short === undefined) return { short: competitorText(fact.value, market), note: null };
+  return { short: fact.short, note: (price ? taxLineOf(fact.short, market) : null) ?? fact.shortNote ?? null };
 }
 
 const stampeoSide = (column: StampeoColumn, id: StandardFactId): Side => ({
   short: column.rowsShort[id],
-  taxLine: id === "price.entry" ? column.taxNote : null,
+  note: id === "price.entry" ? column.taxNote : null,
 });
 
 /** The table's rows by theme: the standard rows the competitor has a sourced fact for, beside Stampeo's value for each. A theme with no row is left out. */
