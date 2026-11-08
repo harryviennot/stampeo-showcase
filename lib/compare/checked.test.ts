@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { ACME_LOYALTY, withUsFacts } from "./__fixtures__";
-import { checkedDate } from "./checked";
+import { checkedDate, usedFacts } from "./checked";
 import type { ComparisonPage } from "./types";
 
 const page = (content: string): ComparisonPage => ({
@@ -30,6 +30,16 @@ describe("the date a page was checked", () => {
       facts.map((fact) => (fact.id === "trial" ? { ...fact, checkedAt: "2026-11-03" } : fact)),
     );
     expect(checkedDate(page(""), reread)).toBe("2026-10-20");
+  });
+
+  it("ignores a standard fact the table doesn't show, like languages, unless the prose cites it", () => {
+    const withLanguages = withUsFacts(ACME_LOYALTY, (facts) => [
+      ...facts,
+      { ...facts[0], id: "languages", value: "English only", checkedAt: "2026-01-01" },
+    ]);
+    expect(checkedDate(page(""), withLanguages)).toBe("2026-10-05");
+    expect(usedFacts(page(""), withLanguages).map((fact) => fact.id)).not.toContain("languages");
+    expect(checkedDate(page('Languages: <Fact id="languages" />.'), withLanguages)).toBe("2026-01-01");
   });
 
   it("ignores Stampeo's own facts, which carry no check date", () => {
