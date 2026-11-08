@@ -151,7 +151,7 @@ describe.each([
 ])("the comparison table of %s, at every width", (_name, view) => {
   const { html, phone, table } = parts(view);
   const rows = tableGroups({ market: view.page.market, competitor: view.competitor, stampeo: view.stampeo }).flatMap((group) => group.rows);
-  const answer = (side: { short: string; taxLine: string | null }) => [side.short, side.taxLine].filter(Boolean).join(" ");
+  const answer = (side: { short: string; note: string | null }) => [side.short, side.note].filter(Boolean).join(" ");
 
   it("shows every row's label and its two short answers, with any tax line, and nothing more", () => {
     expect(phoneRows(phone).map(text)).toEqual(

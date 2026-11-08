@@ -105,19 +105,26 @@ describe("the competitor's side of a row", () => {
     const competitor = withFact("card.where", { short: "Their own app" });
     const { competitor: cell } = find(tableGroups({ market: "us", competitor, stampeo: US }), "card.where");
 
-    expect(cell).toEqual({ short: "Their own app", taxLine: null });
+    expect(cell).toEqual({ short: "Their own app", note: null });
   });
 
   it("falls back to the full value while a fact has no short value", () => {
     const { competitor: cell } = find(tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US }), "card.where");
-    expect(cell).toEqual({ short: "Their own app on the customer's phone", taxLine: null });
+    expect(cell).toEqual({ short: "Their own app on the customer's phone", note: null });
+  });
+
+  it("carries the fact's short note on the line under it, such as what an SMS costs", () => {
+    const competitor = withFact("card.where", { short: "Email, notifications and SMS", shortNote: "SMS price not published" });
+    const { competitor: cell } = find(tableGroups({ market: "us", competitor, stampeo: US }), "card.where");
+
+    expect(cell).toEqual({ short: "Email, notifications and SMS", note: "SMS price not published" });
   });
 });
 
 describe("Stampeo's side of a row", () => {
   it("is Stampeo's short value", () => {
     const { stampeo: cell } = find(tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US }), "card.where");
-    expect(cell).toEqual({ short: US.rowsShort["card.where"], taxLine: null });
+    expect(cell).toEqual({ short: US.rowsShort["card.where"], note: null });
   });
 });
 
@@ -163,32 +170,32 @@ describe("a competitor's price on a French page", () => {
   });
 });
 
-describe("the tax line under a price", () => {
+describe("the line under a price", () => {
   const priceRow = (competitor: CompetitorFacts) => find(tableGroups({ market: "fr", competitor, stampeo: FR }), "price.entry");
 
   it("gives the TTC equivalent of an HT short price, and says Stampeo's price carries no VAT", () => {
     const row = priceRow(withFrenchPrice({ short: "Essentiel, 19 € HT par mois" }));
 
     expect(row.competitor.short).toBe("Essentiel, 19 € HT par mois");
-    expect(norm(row.competitor.taxLine!)).toBe("soit 22,80 € TTC, TVA à 20 %");
-    expect(row.stampeo.taxLine).toBe("TVA non applicable");
+    expect(norm(row.competitor.note!)).toBe("soit 22,80 € TTC, TVA à 20 %");
+    expect(row.stampeo.note).toBe("TVA non applicable");
   });
 
   it.each([
     ["a price already given TTC", { short: "Essentiel, 23 € TTC par mois", value: "23 € TTC par mois" }],
     ["a quote-only price", { short: "Sur devis", value: "Sur devis" }],
   ])("is absent for %s", (_name, change) => {
-    expect(priceRow(withFrenchPrice(change)).competitor.taxLine).toBeNull();
+    expect(priceRow(withFrenchPrice(change)).competitor.note).toBeNull();
   });
 
   it("is absent on a US page, for both products", () => {
     const row = find(tableGroups({ market: "us", competitor: ACME_LOYALTY, stampeo: US }), "price.entry");
-    expect(row.competitor.taxLine).toBeNull();
-    expect(row.stampeo.taxLine).toBeNull();
+    expect(row.competitor.note).toBeNull();
+    expect(row.stampeo.note).toBeNull();
   });
 
   it("only ever sits on the price row", () => {
     const rows = rowsOf(tableGroups({ market: "fr", competitor: withFrenchPrice({ short: "Essentiel, 19 € HT par mois" }), stampeo: FR }));
-    expect(rows.filter((row) => row.stampeo.taxLine || row.competitor.taxLine).map((row) => row.id)).toEqual(["price.entry"]);
+    expect(rows.filter((row) => row.stampeo.note || row.competitor.note).map((row) => row.id)).toEqual(["price.entry"]);
   });
 });

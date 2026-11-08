@@ -97,6 +97,21 @@ describe("competitor facts", () => {
     });
   });
 
+  describe("short note", () => {
+    it("is accepted under a short value, up to 40 characters", () => {
+      expect(validateCompetitorFacts([withPrice({ short: "Campaigns", shortNote: "x".repeat(40) })], TODAY)).toEqual([]);
+    });
+
+    it.each([
+      ["empty", { short: "Campaigns", shortNote: " " }, "shortNote is empty"],
+      ["on two lines", { short: "Campaigns", shortNote: "SMS\nextra" }, "shortNote must be one line"],
+      ["over 40 characters", { short: "Campaigns", shortNote: "x".repeat(41) }, "shortNote is 41 characters"],
+      ["without a short value to sit under", { short: undefined, shortNote: "SMS extra" }, "shortNote needs a short value"],
+    ])("is rejected when it is %s, naming the fact", (_name, change, message) => {
+      expect(validateCompetitorFacts([withPrice(change)], TODAY).join("\n")).toMatch(new RegExp(`${US_PRICE}: ${message}`));
+    });
+  });
+
   it("do not ask a US price for a tax basis", () => {
     expect(validateCompetitorFacts([withPrice({ value: "$25 a month" })], TODAY)).toEqual([]);
   });
