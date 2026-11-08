@@ -26,6 +26,8 @@ export interface PageCopy {
   disclaimer: string;
   otherTitle: string;
   otherLabel: (competitor: string) => string;
+  /** The label over the comparison links in the site footer. */
+  footerTitle: string;
   /** The button after the Choose if cards. */
   cta: { title: string; button: string };
   /** The closing call to action. */
@@ -72,6 +74,7 @@ const EN: PageCopy = {
     "Written by Stampeo. Competitor information is accurate as of the date checked above. Features and prices may have changed since.",
   otherTitle: "Other comparisons",
   otherLabel: (competitor) => `${competitor} vs Stampeo`,
+  footerTitle: "Compare",
   cta: { title: "Ready to see Stampeo in your shop?", button: "Start Free" },
   closing: {
     title: "Try Stampeo in your shop",
@@ -120,6 +123,7 @@ const FR: PageCopy = {
     "Comparatif rédigé par Stampeo. Les informations sur les concurrents sont exactes à la date de vérification indiquée. Les fonctionnalités et tarifs peuvent avoir évolué.",
   otherTitle: "Autres comparatifs",
   otherLabel: (competitor) => `${competitor} ou Stampeo`,
+  footerTitle: "Comparatifs",
   cta: { title: "Envie de voir Stampeo dans votre commerce\u00a0?", button: "Commencer gratuitement" },
   closing: {
     title: "Essayez Stampeo dans votre commerce",
