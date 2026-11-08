@@ -21,9 +21,16 @@ describe.each([
   const page = fixturePage(slug);
   const nodes = comparisonJsonLd(page, CHECKED);
 
-  it("is a page, a breadcrumb and an FAQ", () => {
-    expect(nodes).toHaveLength(3);
-    expect(nodes.map((node) => node["@type"])).toEqual(["WebPage", "BreadcrumbList", "FAQPage"]);
+  it("is a page, a breadcrumb, an FAQ and the organization behind it", () => {
+    expect(nodes).toHaveLength(4);
+    expect(nodes.map((node) => node["@type"])).toEqual(["WebPage", "BreadcrumbList", "FAQPage", "Organization"]);
+  });
+
+  it("says Stampeo wrote and publishes the page, and describes Stampeo on the page itself", () => {
+    const organization = nodes.find((node) => node["@type"] === "Organization")!;
+    expect(organization.name).toBe("Stampeo");
+    expect(nodes[0].author).toEqual({ "@id": organization["@id"] });
+    expect(nodes[0].publisher).toEqual({ "@id": organization["@id"] });
   });
 
   it("dates the page by the computed check date and points at its own URL", () => {

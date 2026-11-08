@@ -9,9 +9,10 @@ const HOME: Record<Market, { name: string; path: string; inLanguage: string }> =
 
 /**
  * The structured data of a comparison page, as separate JSON-LD nodes: the
- * page itself (a WebPage dated by the check date), its breadcrumb, and the FAQ
- * from the frontmatter. It never describes the competitor: no Product, Review,
- * AggregateRating or organization of theirs.
+ * page itself (a WebPage dated by the check date, written and published by
+ * Stampeo), its breadcrumb, the FAQ from the frontmatter, and Stampeo's
+ * organization so the page's author resolves on the page. It never describes
+ * the competitor: no Product, Review, AggregateRating or organization of theirs.
  */
 export function comparisonJsonLd(page: ComparisonPage, checkedAt: string): Array<Record<string, unknown>> {
   const organization = organizationJsonLd();
@@ -29,6 +30,7 @@ export function comparisonJsonLd(page: ComparisonPage, checkedAt: string): Array
       inLanguage: home.inLanguage,
       dateModified: checkedAt,
       isPartOf: { "@id": webSiteJsonLd()["@id"] },
+      author: { "@id": organization["@id"] },
       publisher: { "@id": organization["@id"] },
     },
     breadcrumbJsonLd([
@@ -36,5 +38,6 @@ export function comparisonJsonLd(page: ComparisonPage, checkedAt: string): Array
       { name: page.title, url: comparisonPath(page) },
     ]),
     faqPageJsonLd(page.faqs),
+    organization,
   ];
 }

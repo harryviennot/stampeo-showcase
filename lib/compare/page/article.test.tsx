@@ -99,7 +99,9 @@ describe("a US comparison page", () => {
   });
 
   it("says how old the facts are and carries no author byline, only the disclaimer that the page is Stampeo's own", () => {
-    expect(text(html)).not.toMatch(/\bBy [A-Z]|Harry|[Ff]ounder|\bauthor\b/);
+    // A byline is something a reader sees: the structured data, which names the organization's founder, is not one.
+    const visible = text(html.replace(/<script[\s\S]*?<\/script>/g, ""));
+    expect(visible).not.toMatch(/\bBy [A-Z]|Harry|[Ff]ounder|\bauthor\b/);
     expect(text(html)).toContain("Written by Stampeo. Competitor information is accurate as of the date checked above.");
   });
 
@@ -139,7 +141,7 @@ describe("a US comparison page", () => {
     const faq = html.slice(at(html, 'id="faq"'), at(html, 'id="sources"'));
     expect(faq.match(/<details/g)).toHaveLength(2);
     const nodes = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
-    expect(nodes.map((node) => node["@type"])).toEqual(["WebPage", "BreadcrumbList", "FAQPage"]);
+    expect(nodes.map((node) => node["@type"])).toEqual(["WebPage", "BreadcrumbList", "FAQPage", "Organization"]);
     expect(nodes[2].mainEntity.map((q: { name: string }) => q.name)).toEqual([
       "Can I move my Acme Loyalty customers to Stampeo?",
       "Does Stampeo need an app for customers?",
