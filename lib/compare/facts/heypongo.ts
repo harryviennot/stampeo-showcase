@@ -49,20 +49,26 @@ export const HEY_PONGO: CompetitorFacts = {
           "Points, paliers, récompenses expérientielles ou produits offerts / vous définissez librement le ratio points/euro",
           "Points par euro (taux libre), paliers",
         ),
-        fact(
-          PAGES.program,
-          "push.automatic",
-          "Oui, par SMS ou email, selon des déclencheurs à régler (anniversaire, inactivité, seuil de points atteint)",
-          "Pongo envoie le bon SMS ou email au bon moment, sans intervention de votre part. / Vous configurez les déclencheurs (anniversaire, inactivité, seuil de points atteint…)",
-          "Oui, par SMS ou email",
-        ),
-        fact(
-          PAGES.home,
-          "push.broadcasts",
-          "Campagnes par SMS, email et notifications",
-          "Campagnes email, SMS & push",
-          "Campagnes SMS, email et notifications",
-        ),
+        {
+          ...fact(
+            PAGES.program,
+            "push.automatic",
+            "Oui, par SMS ou email, selon des déclencheurs à régler (anniversaire, inactivité, seuil de points atteint)\u00a0; le prix des SMS n'est pas communiqué",
+            "Pongo envoie le bon SMS ou email au bon moment, sans intervention de votre part. / Vous configurez les déclencheurs (anniversaire, inactivité, seuil de points atteint…)",
+            "Oui, par SMS ou email",
+          ),
+          shortNote: "Prix des SMS non communiqué",
+        },
+        {
+          ...fact(
+            PAGES.home,
+            "push.broadcasts",
+            "Campagnes par SMS, email et notifications\u00a0; le prix des SMS n'est pas communiqué",
+            "Campagnes email, SMS & push",
+            "Campagnes SMS, email et notifications",
+          ),
+          shortNote: "Prix des SMS non communiqué",
+        },
         fact(
           PAGES.independents,
           "staff.scanning",

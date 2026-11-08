@@ -42,7 +42,7 @@ export const WINSTAMP: CompetitorFacts = {
           "customer.app_required",
           "Yes: customers install the free WinStamp app and show its QR code to collect stamps",
           '"Install the WinStamp app and create your free account."; "Simply show your QR code to participating businesses to receive stamps."',
-          "App download",
+          "Yes: customers install the WinStamp app",
         ),
         fact(
           BUSINESS_APP,
@@ -81,9 +81,9 @@ export const WINSTAMP: CompetitorFacts = {
         fact(
           BUSINESS_APP,
           "staff.scanning",
-          "The WinStamp Business app on a phone reads the customer's QR code, with no extra hardware. Offline use: not published",
+          "The WinStamp Business app on a phone reads the customer's QR code, with no extra hardware",
           '"Secure System: Stamps are only added through the business app."; "Fully Mobile: No extra devices or hardware needed - just your phone."',
-          "Business app; offline use not published",
+          "Business app on a phone",
         ),
         fact(
           HOME,
@@ -167,6 +167,12 @@ export const WINSTAMP: CompetitorFacts = {
           "In the Business app: number of stamps, card color and stamp image",
           "Customizable Stamp Cards: Set the number of stamps, card color and your stamp image.",
           "Business app: stamp count, color, image",
+        ),
+        fact(
+          BUSINESS_APP,
+          "analytics",
+          "live daily, weekly and monthly stats",
+          "Live Stats: Track your daily, weekly and monthly performance.",
         ),
         fact(
           FAQ,

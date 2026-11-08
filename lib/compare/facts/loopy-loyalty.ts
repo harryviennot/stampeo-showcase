@@ -78,9 +78,9 @@ export const LOOPY_LOYALTY: CompetitorFacts = {
         fact(
           STAMPER,
           "staff.scanning",
-          "The Stamper app on iOS and Android scans the card with the phone's camera. Offline use: not published",
-          '"Scan digital stamp cards using your phone\'s camera"; "Works online with changes synced instantly"; "Works on iOS and Android with no POS integration."',
-          "Stamper app; offline use not published",
+          "The Stamper app on iOS and Android scans the card with the phone's camera, and a web stamper, on every plan, adds stamps remotely",
+          '"Scan digital stamp cards using your phone\'s camera"; "Works on iOS and Android with no POS integration."; pricing page row "Remote Stamping / Web Stamper", ticked on Starter, Growth and Ultimate',
+          "Stamper app or web stamper",
         ),
         fact(
           PRICING,

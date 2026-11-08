@@ -58,13 +58,16 @@ export const ZEROSIX: CompetitorFacts = {
           "Envoyez une notification à chaque événement client (mise à jour des points, disponibilité d'un coupon, etc.).",
           "Oui, à chaque événement client",
         ),
-        fact(
-          PAGES.campaigns,
-          "push.broadcasts",
-          "Campagnes SMS programmables, filtrées par anniversaire, établissement de référence, code postal, fréquence ou date de dernière visite",
-          "Grâce à notre plateforme intuitive, concevez et programmez vos campagnes SMS en un instant. / Filtres clients : anniversaire, établissement de référence, code postal, etc. / Filtres comportementaux, RFM : fréquence de visite, date de dernière visite",
-          "Campagnes SMS programmables et ciblées",
-        ),
+        {
+          ...fact(
+            PAGES.campaigns,
+            "push.broadcasts",
+            "Campagnes SMS programmables, filtrées par anniversaire, établissement de référence, code postal, fréquence ou date de dernière visite\u00a0; les SMS sont facturés en plus de l'offre, à un prix non publié",
+            "Grâce à notre plateforme intuitive, concevez et programmez vos campagnes SMS en un instant. / Filtres clients : anniversaire, établissement de référence, code postal, etc. / Filtres comportementaux, RFM : fréquence de visite, date de dernière visite / Page tarifs : Campagnes SMS* / * Hors consommables",
+            "Campagnes SMS programmables et ciblées",
+          ),
+          shortNote: "SMS facturés en plus, prix non publié",
+        },
         fact(
           PAGES.journeys,
           "staff.scanning",

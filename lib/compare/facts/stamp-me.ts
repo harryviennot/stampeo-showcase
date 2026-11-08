@@ -70,7 +70,7 @@ export const STAMP_ME: CompetitorFacts = {
           "customer.app_required",
           "Yes: customers download the Stamp Me app and create an account with a few personal details",
           '"Members will first need to download the Stamp Me App."; "Once they have created an account on the App by registering a few basic personal details"',
-          "App download + account",
+          "Yes: Stamp Me app download + account",
         ),
         fact(
           VS_SQUARE,

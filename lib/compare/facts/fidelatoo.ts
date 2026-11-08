@@ -45,7 +45,7 @@ export const FIDELATOO: CompetitorFacts = {
           "customer.app_required",
           "Aucune pour s'inscrire et cumuler des points\u00a0: le numéro de téléphone suffit",
           "Il n'a rien à faire, aucune app à télécharger !",
-          "Aucune pour l'inscription et les points",
+          "Aucune appli pour s'inscrire ni cumuler",
         ),
         fact(
           PAGES.program,
@@ -66,7 +66,7 @@ export const FIDELATOO: CompetitorFacts = {
           "push.broadcasts",
           "Notifications illimitées, envoyées tout de suite ou programmées, à tous les clients ou à un groupe (VIP, anniversaire, absents, dernière visite, panier moyen)\u00a0; SMS en plus, facturés à l'envoi",
           "Contrairement aux SMS facturés à l'envoi, les Notifications Push sont illimitées. / Envoyez la notification en temps réel, ou programmez-la à l'avance",
-          "Notifications illimitées, SMS facturés",
+          "Illimitées, SMS facturés à l'envoi",
         ),
         fact(
           PAGES.faq,
