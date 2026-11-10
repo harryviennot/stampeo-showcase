@@ -138,9 +138,9 @@ describe("stripLine", () => {
   });
 
   test.each([
-    [500, "Earn 500 points to reach Silver."],
-    [1, "Earn 1 point to reach Silver."],
-    [1500, "Earn 1,500 points to reach Silver."],
+    [500, "Earn 500 points on this level to reach Silver. Points you spend still count."],
+    [1, "Earn 1 point on this level to reach Silver. Points you spend still count."],
+    [1500, "Earn 1,500 points on this level to reach Silver. Points you spend still count."],
   ])("a points program says the points: %p", (points, line) => {
     const ladder = [{ ...POINTS[0], advance: { points } }, POINTS[1]];
     expect(stripLine(ladder, "points", "en", copy())).toBe(line);
@@ -208,8 +208,8 @@ describe("ladderRows", () => {
     const rows = ladderRows(POINTS, "points", "en", copy());
     expect(rows.map((r) => r.card)).toEqual([null, null, null]);
     expect(rows.map((r) => r.moveUp)).toEqual([
-      "Earn 500 points to reach Silver",
-      "Earn 1,000 points to reach Gold",
+      "Earn 500 points on this level to reach Silver",
+      "Earn 1,000 points on this level to reach Gold",
       "Top level: you keep it for good",
     ]);
     expect(rows[1].perks).toEqual(["Free birthday drink"]);
@@ -283,7 +283,7 @@ describe("every language", () => {
     const stamps = [{ ...STAMPS[0], advance: { fills: n } }, STAMPS[1]];
     const pts = [{ ...POINTS[0], advance: { points: n } }, POINTS[1]];
     expect(stripLine(stamps, "stamps", "pl", t)).toContain(`Wypełnij ${cards}, aby osiągnąć poziom Silver`);
-    expect(stripLine(pts, "points", "pl", t)).toContain(`Zdobądź ${points}, aby osiągnąć poziom Silver`);
+    expect(stripLine(pts, "points", "pl", t)).toContain(`Zdobądź ${points} na tym poziomie, aby osiągnąć poziom Silver`);
   });
 
   test.each([
@@ -300,7 +300,10 @@ describe("every language", () => {
       "Completa 2 tarjetas para llegar al nivel Silver: tu recompensa llega antes.",
     );
     expect(stripLine(POINTS, "points", "fr", copy("fr"))).toBe(
-      "Gagnez 500 points pour atteindre le niveau Argent.",
+      "Gagnez 500 points sur ce niveau pour atteindre le niveau Argent. Les points que vous dépensez comptent toujours.",
+    );
+    expect(stripLine(POINTS, "points", "es", copy("es"))).toBe(
+      "Gana 500 puntos en este nivel para llegar al nivel Silver. Los puntos que gastes siguen contando.",
     );
   });
 });

@@ -100,7 +100,7 @@ describe("the sign-up page level strip", () => {
       advance: l.advance && { points: 500 },
     }));
     const text = textOf(render("en", points, "points"));
-    expect(text).toContain("Earn 500 points to reach Silver.");
+    expect(text).toContain("Earn 500 points on this level to reach Silver. Points you spend still count.");
     expect(text).not.toContain("stamps for");
   });
 

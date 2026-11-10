@@ -73,11 +73,11 @@
       "lineStampsFaster": "Fill {count, plural, one {# card} other {# cards}} to reach {level}: your reward comes faster.",
       "lineStampsUnlock": "Fill {count, plural, one {# card} other {# cards}} to reach {level} and unlock {reward}.",
       "lineStamps": "Fill {count, plural, one {# card} other {# cards}} to reach {level}.",
-      "linePoints": "Earn {count, plural, one {# point} other {# points}} to reach {level}.",
+      "linePoints": "Earn {count, plural, one {# point} other {# points}} on this level to reach {level}. Points you spend still count.",
       "cardStamps": "{count, plural, one {# stamp} other {# stamps}} for {reward}",
       "cardStampsNoReward": "{count, plural, one {# stamp} other {# stamps}} per card",
       "moveUpStamps": "Fill {count, plural, one {# card} other {# cards}} to reach {level}",
-      "moveUpPoints": "Earn {count, plural, one {# point} other {# points}} to reach {level}",
+      "moveUpPoints": "Earn {count, plural, one {# point} other {# points}} on this level to reach {level}",
       "keepForGood": "Top level: you keep it for good"
     }
   }
