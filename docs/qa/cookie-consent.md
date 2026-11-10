@@ -245,11 +245,10 @@ domain.
     neighbours), not exercised on a deployed build. If a quoted string differs,
     report it as AMBIGUOUS with what you saw. The dev showcase, web and backend
     must all run `feat/sta-540-chatgpt-ads-conversions`.
-  - **Two things are not QA's to decide:** counsel has not signed the copy or
-    OpenAI's role (the policy's date line was not moved for OpenAI, it is still
-    the 7 November 2026 one from the US-notice removal, and hidden `COUNSEL`
-    markers remain in the four policies), and the re-ask of a carried refusal
-    through **Accept all** (CS-07, GS-03) is open with counsel.
+  - **Not QA's to decide:** counsel signed off the copy and OpenAI's role on
+    10 November 2026 (the four policies' date line moved to that day and their
+    `COUNSEL` markers were removed); the re-ask of a carried refusal through
+    **Accept all** (CS-07, GS-03) is counsel's call.
   - **Needs a human:** CS-12 is IA-02's emulation and a real GPC browser is
     needed for CS-01 (h) and CS-05 (g).
   - **The server half** (what is sent to OpenAI, the 30-day click window, the
@@ -2935,8 +2934,8 @@ EXPECT:
 - It does **NOT** say anywhere that the site requires no cookie banner. That
   sentence was true before this release and is the specific thing that must not
   come back.
-- "Last updated" reads 7 November 2026 in all four (`7 novembre 2026`, `7 de noviembre de 2026`,
-  `7 listopada 2026`).
+- "Last updated" reads 10 November 2026 in all four (`10 novembre 2026`, `10 de noviembre de 2026`,
+  `10 listopada 2026`): the date moved at the STA-540 counsel sign-off.
 - §5.1 and §6 describe the **Your Privacy Choices** link and Global Privacy Control,
   and say nothing of a notice shown to US visitors.
 
