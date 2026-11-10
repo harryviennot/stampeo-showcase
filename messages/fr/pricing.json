@@ -186,7 +186,7 @@
         "basketBoost": {
           "label": "Bonus gros panier",
           "growth": "1 palier",
-          "pro": "Illimités"
+          "pro": "Jusqu'à 6 paliers"
         },
         "rewardExpiry": {
           "label": "Dates d'expiration des récompenses"

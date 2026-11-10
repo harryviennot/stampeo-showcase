@@ -175,6 +175,27 @@ describe("product claims", () => {
   });
 });
 
+describe("pricing table basket boosters", () => {
+  // The backend applies at most 6 basket-booster levels on Pro (MAX_TIERS in
+  // backend/app/services/programs/basket_boost.py), so the Pro cell is never "unlimited".
+  const PRO_LEVELS = 6;
+  const UNLIMITED: Record<string, RegExp> = {
+    en: /unlimited/i,
+    fr: /illimit/i,
+    es: /ilimitad/i,
+    pl: /bez limitu|nieograniczon/i,
+  };
+
+  for (const locale of routing.locales) {
+    it(`${locale}: Pro basket boosters are capped at ${PRO_LEVELS} levels, not unlimited`, () => {
+      const { pro } = loadCatalog(locale, "pricing.json").pricingPage.comparison.rows.basketBoost;
+
+      expect(pro).not.toMatch(UNLIMITED[locale]);
+      expect(pro).toContain(String(PRO_LEVELS));
+    });
+  }
+});
+
 describe("product claim wording", () => {
   it.each([
     ["en", "noCard", "1 month free trial, no credit card required."],

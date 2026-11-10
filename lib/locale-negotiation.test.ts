@@ -14,6 +14,7 @@ import {
   RESERVED_TOP_SEGMENTS,
   acquisitionSlug,
   deviceLanguage,
+  isReservedTopSegment,
   resolveAcquisitionLocale,
 } from "./locale-negotiation";
 import { staticSegments } from "./testing/app-folders";
@@ -139,6 +140,22 @@ describe("acquisitionSlug", () => {
     }
   });
 
+  test("a shop slugged comparatif is never enrolled: the comparisons section owns the segment", () => {
+    expect(RESERVED_TOP_SEGMENTS.has("comparatif")).toBe(true);
+    expect(acquisitionSlug("/comparatif")).toBeNull();
+    expect(acquisitionSlug("/comparatif/fidelatoo")).toBeNull();
+  });
+
+  // The enrollment page asks this before any business lookup, so a bare
+  // /comparatif is a 404 and never a shop.
+  test.each(["comparatif", "us", "pricing"])("%s belongs to the site, not to a shop", (segment) => {
+    expect(isReservedTopSegment(segment)).toBe(true);
+  });
+
+  test("a business slug is not reserved", () => {
+    expect(isReservedTopSegment("good-vibe-lemonade-and-more")).toBe(false);
+  });
+
   test.each(["good-vibe-lemonade-and-more", "qrious-cafe", "joint-burger"])(
     "a slug that starts like a reserved route is still a shop: %s",
     (slug) => {
@@ -252,5 +269,16 @@ describe("resolveAcquisitionLocale", () => {
         expect(routing.locales).toContain(locale);
       }
     }
+  });
+});
+
+describe("the shop routes", () => {
+  // Every page under app/[locale]/[slug] would otherwise look a reserved section up as a shop.
+  const shopPages = ["app/[locale]/[slug]/page.tsx", "app/[locale]/[slug]/l/[locationSlug]/page.tsx"];
+
+  test.each(shopPages)("%s turns a reserved top segment away before any shop lookup", async (file) => {
+    const source = await Bun.file(file).text();
+    expect(source).toContain("isReservedTopSegment(slug)) notFound()");
+    expect(source).toContain("isReservedTopSegment(slug)) return { robots: NOINDEX }");
   });
 });
