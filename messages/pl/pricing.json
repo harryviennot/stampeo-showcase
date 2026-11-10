@@ -186,7 +186,7 @@
         "basketBoost": {
           "label": "Premia za większe zakupy",
           "growth": "1 próg",
-          "pro": "Bez limitu"
+          "pro": "Do 6 progów"
         },
         "rewardExpiry": {
           "label": "Daty wygaśnięcia nagród"

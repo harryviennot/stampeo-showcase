@@ -92,6 +92,7 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "about",
   "blog",
   "changelog",
+  "comparatif",
   "contact",
   "demo",
   "email-preferences",
@@ -122,6 +123,11 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "qr",
 ]);
 
+/** Does this first path segment belong to the site rather than to a shop? */
+export function isReservedTopSegment(segment: string): boolean {
+  return RESERVED_TOP_SEGMENTS.has(segment);
+}
+
 /**
  * The business slug this pathname enrolls into, or `null`.
  *
@@ -135,7 +141,7 @@ export function acquisitionSlug(pathname: string): string | null {
   if (isSupportedLocale(segments[0])) return null;
 
   const slug = segments[0];
-  if (RESERVED_TOP_SEGMENTS.has(slug)) return null;
+  if (isReservedTopSegment(slug)) return null;
 
   // `/{slug}` and `/{slug}/l/{store}` are the only enrollment shapes.
   const isPlain = segments.length === 1;

@@ -5,7 +5,7 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { FAQList } from "@/components/ui/FAQList";
 import { JsonLd } from "@/components/JsonLd";
 import { faqPageJsonLd } from "@/lib/structured-data";
-import { HeroCardStack } from "./HeroCardStack";
+import { HeroCardStack } from "@/components/card/HeroCardStack";
 import { CardDesignPlayground } from "./CardDesignPlayground";
 import { CardStyleGallery } from "./CardStyleGallery";
 import { CustomIconsSection } from "./CustomIconsSection";

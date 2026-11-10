@@ -18,6 +18,8 @@ import { MarketLink } from "../market/MarketLink";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
+import { FooterComparisons } from "./FooterComparisons";
+import { footerComparisons, footerComparisonsTitle } from "@/lib/compare/footer";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
   const t = await getTranslations("common.footer");
@@ -29,6 +31,7 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
 
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = buildSeoLinks(locale, market);
+  const comparisons = footerComparisons(market, locale);
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">
@@ -158,6 +161,7 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
                   FAQ
                 </Link>
               </nav>
+              <FooterComparisons market={market} title={footerComparisonsTitle(market, locale)} comparisons={comparisons} />
             </div>
 
             {/* Company — where you reach a human */}

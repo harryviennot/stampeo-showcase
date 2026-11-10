@@ -243,3 +243,59 @@ export function breadcrumbProblems(html: string, prefix: string): string[] {
     .filter((path) => path !== prefix && !path.startsWith(`${prefix}/`))
     .map((path) => `breadcrumb item ${path} is outside ${prefix}`);
 }
+
+const COMPARISON_PATH = /^\/(?:us\/vs|comparatif)\/[^/]+$/;
+const FORBIDDEN_COMPARISON_TYPES = ["Product", "Review", "AggregateRating"];
+const REQUIRED_COMPARISON_TYPES = ["WebPage", "BreadcrumbList", "FAQPage"];
+
+/** The paths of the comparison pages a sitemap lists: `/us/vs/<slug>` and `/comparatif/<slug>`. */
+export function comparisonPaths(sitemapXml: string): string[] {
+  return sitemapPaths(sitemapXml).filter((path) => COMPARISON_PATH.test(path));
+}
+
+/** Every `@type` named anywhere in the page's structured data. */
+function structuredDataTypes(html: string): string[] {
+  const types: string[] = [];
+  const walk = (value: unknown): void => {
+    if (Array.isArray(value)) return value.forEach(walk);
+    if (!value || typeof value !== "object") return;
+    for (const [key, child] of Object.entries(value)) {
+      if (key === "@type") types.push(...[child].flat().map(String));
+      else walk(child);
+    }
+  };
+  for (const block of parseJsonLdBlocks(html)) if (block.ok) walk(block.data);
+  return types;
+}
+
+/**
+ * A comparison page: its own canonical, indexable when published and noindex
+ * when a draft, page + breadcrumb + FAQ structured data in the server HTML
+ * and none about a competitor's product or reviews, and no hreflang since it
+ * exists in one market only.
+ */
+export function comparisonProblems(html: string, expected: { path: string; draft: boolean }): string[] {
+  const robots = parseRobots(html);
+  const indexing = expected.draft
+    ? [
+        ...canonicalProblems(html, expected.path),
+        ...(robots && NOINDEX.test(robots) ? [] : [`robots meta is ${robots === null ? "missing" : `"${robots}"`}, expected noindex`]),
+      ]
+    : indexablePageProblems(html, expected.path);
+
+  const parseProblems = jsonLdProblems(html);
+  const types = structuredDataTypes(html);
+  const structured =
+    parseProblems.length > 0
+      ? parseProblems
+      : [
+          ...REQUIRED_COMPARISON_TYPES.filter((type) => !types.includes(type)).map((type) => `no ${type} structured data`),
+          ...FORBIDDEN_COMPARISON_TYPES.filter((type) => types.includes(type)).map((type) => `structured data has a ${type}`),
+        ];
+
+  const hreflang = Object.entries(parseAlternates(html)).map(
+    ([language, href]) => `hreflang="${language}" points at ${pathOf(href)}`,
+  );
+
+  return [...indexing, ...structured, ...hreflang];
+}
