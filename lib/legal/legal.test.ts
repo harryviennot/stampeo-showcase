@@ -118,11 +118,11 @@ describe("privacy §5 cookies", () => {
 
   it("names every recipient the banner offers, in every locale", () => {
     // CNIL requires the purposes AND the recipients to be disclosed. The
-    // banner names Google Ads and Meta; if the policy does not, the two disagree
-    // and the disclosure is the one that loses.
+    // banner names Google Ads, Meta and OpenAI; if the policy does not, the two
+    // disagree and the disclosure is the one that loses.
     for (const locale of routing.locales) {
       const source = privacySource(locale);
-      for (const recipient of ["Google Analytics 4", "Google Ads", "Meta"]) {
+      for (const recipient of ["Google Analytics 4", "Google Ads", "Meta", "OpenAI"]) {
         expect(source, `${locale} does not name ${recipient}`).toContain(recipient);
       }
     }

@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 7 novembre 2026**
+**Dernière mise à jour : 10 novembre 2026**
 
 ## 1. Introduction
 
@@ -143,7 +143,7 @@ Une entreprise qui n'est pas gérée par un revendeur n'est exposée à aucun ac
 
 ### Transferts hors UE
 
-Certains de nos sous-traitants (Stripe, Apple, Google, Trustpilot) peuvent transférer des données vers les États-Unis. Ces transferts sont encadrés par le EU-US Data Privacy Framework ou par des clauses contractuelles types approuvées par la Commission européenne. Supabase, OVH, Resend, PostHog, Sentry et notre Redis auto-hébergé traitent les données exclusivement dans l'UE. Les plateformes publicitaires auxquelles nous signalons des conversions au titre du §5.5, Google Ads (Google Ireland Limited, avec Google LLC aux États-Unis) et Meta (Meta Platforms Ireland Limited, avec Meta Platforms, Inc. aux États-Unis), peuvent traiter ces données aux États-Unis, dans le même cadre. Google Ads reçoit ces signalements en tant que destinataire indépendant, pour la mesure publicitaire.
+Certains de nos sous-traitants (Stripe, Apple, Google, Trustpilot) peuvent transférer des données vers les États-Unis. Ces transferts sont encadrés par le EU-US Data Privacy Framework ou par des clauses contractuelles types approuvées par la Commission européenne. Supabase, OVH, Resend, PostHog, Sentry et notre Redis auto-hébergé traitent les données exclusivement dans l'UE. Les plateformes publicitaires auxquelles nous signalons des conversions au titre du §5.5, Google Ads (Google Ireland Limited, avec Google LLC aux États-Unis), Meta (Meta Platforms Ireland Limited, avec Meta Platforms, Inc. aux États-Unis) et OpenAI (publicités dans ChatGPT), peuvent traiter ces données aux États-Unis, dans le même cadre. Google Ads reçoit ces signalements en tant que destinataire indépendant, pour la mesure publicitaire, tout comme OpenAI.
 
 ## 5. Cookies
 
@@ -186,7 +186,7 @@ Les trois cookies ci-dessous sont les nôtres. Notre serveur les dépose, et ils
 |---|---|---|---|
 | `stampeo_src` | L'origine de votre visite (paramètres de campagne, page d'arrivée, site d'origine). | Mesure d'audience ou publicité | 6 mois |
 | `stampeo_ga` | Les identifiants Google Analytics de votre visite. | Mesure d'audience | 6 mois |
-| `stampeo_ad` | L'identifiant de clic de la plateforme publicitaire (un identifiant de clic Google est transmis à Google Ads, un identifiant de clic Meta à Meta) et l'identifiant de navigateur de Meta, uniquement si votre visite provient d'une publicité. | Publicité | 6 mois |
+| `stampeo_ad` | L'identifiant de clic de la plateforme publicitaire (un identifiant de clic Google est transmis à Google Ads, un identifiant de clic Meta à Meta, un identifiant de clic OpenAI à OpenAI) et l'identifiant de navigateur de Meta, uniquement si votre visite provient d'une publicité. | Publicité | 6 mois |
 
 L'ancien cookie `stampeo_attribution` n'est plus déposé ; un navigateur qui l'a reçu auparavant peut encore le conserver jusqu'à son expiration.
 
@@ -200,11 +200,11 @@ Des cookies strictement nécessaires peuvent être utilisés pour l'authentifica
 
 ### 5.5 Mesure des conversions depuis nos serveurs
 
-Si vous acceptez les cookies du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés), nous conservons, dans les cookies `stampeo_src`, `stampeo_ga` et `stampeo_ad` listés au 5.3 : l'origine de votre visite, c'est-à-dire les paramètres de campagne présents dans l'adresse, la page d'arrivée et le site d'origine ; les identifiants Google Analytics de votre visite ; et, si votre visite provient d'une publicité, l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi (pour Google Ads, le `gclid` ; pour Meta, le `fbclid`), ainsi que l'identifiant de navigateur de Meta. Chaque cookie n'est conservé que tant que vous autorisez la catégorie indiquée pour lui au 5.3. Notre serveur les dépose, et ils sont partagés entre stampeo.app et le tableau de bord, hébergé sur un autre sous-domaine, afin que ces informations subsistent lors du passage de ce site au tableau de bord. Si vous revenez plus tard par une autre publicité, ce nouveau clic remplace le précédent.
+Si vous acceptez les cookies du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés), nous conservons, dans les cookies `stampeo_src`, `stampeo_ga` et `stampeo_ad` listés au 5.3 : l'origine de votre visite, c'est-à-dire les paramètres de campagne présents dans l'adresse, la page d'arrivée et le site d'origine ; les identifiants Google Analytics de votre visite ; et, si votre visite provient d'une publicité, l'identifiant que la régie publicitaire a ajouté au lien que vous avez suivi (pour Google Ads, le `gclid` ; pour Meta, le `fbclid` ; pour OpenAI, l'`oppref`), ainsi que l'identifiant de navigateur de Meta. Chaque cookie n'est conservé que tant que vous autorisez la catégorie indiquée pour lui au 5.3. Notre serveur les dépose, et ils sont partagés entre stampeo.app et le tableau de bord, hébergé sur un autre sous-domaine, afin que ces informations subsistent lors du passage de ce site au tableau de bord. Si vous revenez plus tard par une autre publicité, ce nouveau clic remplace le précédent.
 
 Si vous créez un compte, nous signalons jusqu'à quatre étapes **depuis nos serveurs** : la création du compte, l'ouverture de la page de paiement, le début de votre essai gratuit et le règlement d'une première facture. La première est signalée à la confirmation du compte (par le code reçu par email, ou par une connexion avec Google ou Apple), avant toute création de commerce. S'agissant d'un envoi côté serveur, il intervient après ce qui se passe dans votre navigateur, et indépendamment de celui-ci.
 
-À chaque étape, la plateforme reçoit ses propres identifiants lorsqu'elle en dispose (l'identifiant de clic et son identifiant de navigateur) et la campagne, ainsi que, pour les trois dernières étapes, le prix de l'offre choisie ou le montant réglé, et sa devise. Chaque plateforme ne reçoit que ses propres identifiants : un identifiant de clic Google n'est jamais transmis à Meta, ni un identifiant de clic Meta à Google Ads ni à Google Analytics.
+À chaque étape, la plateforme reçoit ses propres identifiants lorsqu'elle en dispose (l'identifiant de clic et son identifiant de navigateur) et la campagne, ainsi que, pour les trois dernières étapes, le prix de l'offre choisie ou le montant réglé, et sa devise. Dans les signalements envoyés depuis nos serveurs, chaque plateforme ne reçoit que ses propres identifiants : un identifiant de clic Google n'est jamais transmis à Meta, ni un identifiant de clic Meta à Google Ads ni à Google Analytics. Un identifiant de clic OpenAI n'est transmis qu'à OpenAI, et aucun identifiant de clic Google ou Meta ne lui est jamais transmis.
 
 Meta reçoit en outre :
 
@@ -213,20 +213,25 @@ Meta reçoit en outre :
 
 Meta reçoit ces étapes que vous soyez arrivé ou non par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés). Google Analytics reçoit son propre identifiant de session à chaque étape, de sorte que l'étape se rattache à votre visite. Il ne reçoit jamais vos coordonnées, votre adresse IP ni les caractéristiques de votre navigateur.
 
-Google Ads reçoit trois de ces étapes : la création du compte, le début de votre essai gratuit et le règlement d'une première facture. Il ne reçoit pas l'ouverture de la page de paiement. À chaque étape, il reçoit l'identifiant de clic Google lorsqu'il y en a un ; pour les deux dernières, le prix de l'offre choisie ou le montant réglé, et sa devise ; ainsi que l'adresse email de votre compte, **hachée** par l'algorithme SHA-256 avant de quitter nos serveurs. Rien d'autre à votre sujet n'arrive chez Google Ads : ni numéro de téléphone, ni nom, ni adresse, ni adresse IP, ni caractéristiques de votre navigateur. Le code obtenu reste une donnée personnelle, puisque Google Ads le compare à ceux des comptes Google qui ont interagi avec nos publicités, afin de rattacher l'étape à une publicité. Comme Meta, Google Ads reçoit ces étapes que vous soyez arrivé ou non par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés).
+Google Ads reçoit trois de ces étapes : la création du compte, le début de votre essai gratuit et le règlement d'une première facture. Il ne reçoit pas l'ouverture de la page de paiement. À chaque étape, il reçoit l'identifiant de clic Google ; pour les deux dernières, le prix de l'offre choisie ou le montant réglé, et sa devise ; ainsi que l'adresse email de votre compte, **hachée** par l'algorithme SHA-256 avant de quitter nos serveurs. Rien d'autre à votre sujet n'arrive chez Google Ads : ni numéro de téléphone, ni nom, ni adresse, ni adresse IP, ni caractéristiques de votre navigateur. Le code obtenu reste une donnée personnelle, puisque Google Ads le compare à ceux des comptes Google qui ont interagi avec nos publicités, afin de rattacher l'étape à une publicité. Contrairement à Meta, Google Ads ne reçoit ces étapes que si vous êtes arrivé chez nous par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés).
+
+OpenAI (publicités dans ChatGPT) reçoit les trois mêmes étapes : la création du compte, le début de votre essai gratuit et le règlement d'une première facture. Elle ne reçoit pas l'ouverture de la page de paiement. Elle ne les reçoit que si vous êtes arrivé chez nous par l'une de ses publicités, dès lors que vous avez accepté les cookies publicitaires du 5.3 (aux États-Unis, tant que vous ne les avez pas désactivés). À chaque étape, elle reçoit l'identifiant de clic OpenAI ; pour les deux dernières, le prix de l'offre choisie ou le montant réglé, et sa devise ; ainsi que l'adresse email de votre compte, **hachée** par l'algorithme SHA-256 avant de quitter nos serveurs. Rien d'autre à votre sujet n'arrive chez OpenAI : ni numéro de téléphone, ni nom, ni adresse, ni adresse IP, ni caractéristiques de votre navigateur. Le code obtenu reste une donnée personnelle, puisque quiconque détient la même adresse email peut calculer le même code. Nous envoyons l'identifiant de clic et ce code pour que l'étape puisse être rattachée à une publicité, et, avec chaque signalement, nous demandons à OpenAI de ne pas s'en servir pour personnaliser les publicités qu'elle vous montre.
 
 Nous ne transmettons jamais votre mot de passe, vos données de paiement, ni quoi que ce soit concernant vos clients (les personnes qui détiennent vos cartes de fidélité).
 
+Votre navigateur est un cas à part. Le pixel de Meta, l'outil à l'origine des cookies Meta du 5.3, n'y fonctionne que si vous avez accepté les cookies publicitaires (aux États-Unis, tant que vous ne les avez pas désactivés). Il lit l'adresse de la page où vous vous trouvez. Lorsque vous arrivez par la publicité d'une autre plateforme, cette adresse peut contenir son identifiant de clic, que Meta peut donc voir.
+
 Pour chaque étape, nous conservons aussi des éléments de diagnostic de l'envoi : son statut, les heures des tentatives et le code de réponse renvoyé par la plateforme, ainsi que les messages de réponse de la plateforme. Le §8 indique la durée de conservation de chacun.
 
-- **Destinataires** : Google désigne Google Ireland Limited, avec Google LLC aux États-Unis, qui fournit Google Analytics et Google Ads. Meta désigne Meta Platforms Ireland Limited, avec Meta Platforms, Inc. aux États-Unis.
+- **Destinataires** : Google désigne Google Ireland Limited, avec Google LLC aux États-Unis, qui fournit Google Analytics et Google Ads. Meta désigne Meta Platforms Ireland Limited, avec Meta Platforms, Inc. aux États-Unis. OpenAI désigne la société américaine qui exploite ChatGPT et ses publicités.
 - **Base légale** : votre consentement (article 6.1.a du RGPD), donné dans le bandeau cookies ou via **Préférences cookies**. Aux États-Unis, où le consentement préalable n'est pas exigé, nous nous appuyons sur l'information et sur votre possibilité de refus, via **Vos choix de confidentialité** (voir 5.1 et §6).
 - **Responsables conjoints avec Meta** : Stampeo et Meta Platforms Ireland Limited sont responsables conjoints du traitement (article 26 du RGPD) pour la collecte de données par les cookies Meta du 5.3 et par les signalements décrits ici, ainsi que pour leur transmission à Meta, dans le cadre de l'avenant « Controller Addendum » de Meta. Meta est seule responsable de ce qu'elle fait des données une fois reçues, comme le décrit [la politique de confidentialité de Meta](https://www.facebook.com/privacy/policy). Vous pouvez exercer vos droits (§10) auprès de Stampeo comme auprès de Meta.
 - **Rôle de Google Ads** : pour les étapes qui lui sont signalées, Google Ads est un destinataire indépendant, pour la mesure publicitaire.
+- **Rôle d'OpenAI** : pour les étapes qui lui sont signalées, OpenAI est un destinataire indépendant, pour la mesure publicitaire.
 
 Vous pouvez retirer chaque choix séparément, via **Préférences cookies** ou, aux États-Unis, via **Vos choix de confidentialité** :
 
-- Désactiver la publicité met fin à tout nouveau signalement à Meta et à Google Ads, et supprime les identifiants publicitaires que nous avions conservés.
+- Désactiver la publicité met fin à tout nouveau signalement à Meta, à Google Ads et à OpenAI, et supprime les identifiants publicitaires que nous avions conservés.
 - Désactiver la mesure d'audience produit le même effet pour Google Analytics.
 - Désactiver les deux supprime aussi l'origine de campagne conservée.
 
@@ -263,7 +268,7 @@ Nous utilisons les données collectées pour :
 
 Nous **ne vendons jamais** de données personnelles contre de l'argent. Nous n'effectuons **aucun suivi inter-entreprises** : les données d'un client dans une entreprise sont totalement isolées de celles dans une autre.
 
-**Aux États-Unis :** transmettre des données à Meta et à Google Ads, pour notre publicité, comme décrit au 5.5, peut constituer un « partage » au sens du droit de la Californie. Vous pouvez vous y opposer à tout moment via **Vos choix de confidentialité**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés, ou par un signal Global Privacy Control, que nous respectons dans chacun des États américains comme décrit au 5.1.
+**Aux États-Unis :** transmettre des données à Meta, à Google Ads et à OpenAI, pour notre publicité, comme décrit au 5.5, peut constituer un « partage » au sens du droit de la Californie. Vous pouvez vous y opposer à tout moment via **Vos choix de confidentialité**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés, ou par un signal Global Privacy Control, que nous respectons dans chacun des États américains comme décrit au 5.1.
 
 ### 6.1 Emails de cycle de vie et marketing adressés aux utilisateurs Business
 

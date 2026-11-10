@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { FooterColumn, footerLinkGrid } from "@/components/sections/FooterColumn";
 import { FooterComparisons } from "@/components/sections/FooterComparisons";
 import { loadCatalog } from "@/lib/testing/catalogs";
 import { FIXTURES, FIXTURE_FACTS, FIXTURE_ROOT } from "./__fixtures__";
@@ -109,7 +110,19 @@ function render(locale: "en" | "fr", node: ReactNode): string {
   );
 }
 
-describe("the comparisons group in the footer", () => {
+describe("the comparisons column in the footer", () => {
+  it("is a column of its own, titled exactly like the footer's other columns", () => {
+    const html = render(
+      "fr",
+      <FooterComparisons market="int" title="Comparatifs" comparisons={footerComparisons("int", "fr", FIXTURES)} />,
+    );
+    const column = render("fr", <FooterColumn title="Comparatifs">{null}</FooterColumn>);
+    const heading = (markup: string) => markup.match(/<p\b[^>]*>[^<]*<\/p>/)![0];
+
+    expect(heading(html)).toBe(heading(column));
+    expect(html).not.toMatch(/uppercase/);
+  });
+
   it("shows its title and one link per page on the US footer, staying under /us", () => {
     const html = render(
       "en",
@@ -148,5 +161,15 @@ describe("the comparisons group in the footer", () => {
     );
 
     expect(html).toBe("");
+  });
+});
+
+describe("the footer's grid of link columns", () => {
+  it("keeps four columns in a row from the tablet up when there is no comparisons column", () => {
+    expect(footerLinkGrid(4)).toBe("grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-4 flex-1");
+  });
+
+  it("wraps five columns two by two on a phone and three across on a tablet, then lines all five up from 1280px, each as wide as its longest link", () => {
+    expect(footerLinkGrid(5)).toBe("grid grid-cols-2 gap-x-10 gap-y-10 sm:grid-cols-3 xl:flex xl:justify-between xl:gap-x-8 flex-1");
   });
 });

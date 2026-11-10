@@ -25,13 +25,13 @@ import { readClickIds, type ClickIds, type LandingContext } from "./landing";
  * category. An arrival without a click has no `_fbp` copied into any carrier:
  * Meta's own cookie holds it for 90 days, and sign-up forwards it live.
  *
- *   vn      the platform: `meta`, `google` or `tiktok`
+ *   vn      the platform: `meta`, `google`, `openai` (a ChatGPT ad) or `tiktok`
  *   ci ct   the click id, and Unix seconds when the click was first seen
  *   fbp     Meta's browser id, once the pixel has written it
  *   cv cr ca p g  the consent evidence (see `evidence.ts`)
  */
 
-const VENDORS = ["meta", "google", "tiktok"] as const;
+const VENDORS = ["meta", "google", "openai", "tiktok"] as const;
 export type AdVendor = (typeof VENDORS)[number];
 
 export interface AdCarrier extends ConsentEvidence {
@@ -51,6 +51,7 @@ export interface AdCarrier extends ConsentEvidence {
 export function paidClick(ids: ClickIds): { vendor: AdVendor; clickId: string } | null {
   if (ids.gclid) return { vendor: "google", clickId: ids.gclid };
   if (ids.fbclid) return { vendor: "meta", clickId: ids.fbclid };
+  if (ids.oppref) return { vendor: "openai", clickId: ids.oppref };
   if (ids.ttclid) return { vendor: "tiktok", clickId: ids.ttclid };
   return null;
 }

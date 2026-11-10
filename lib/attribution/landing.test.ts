@@ -16,14 +16,17 @@ import {
 } from "./landing";
 
 describe("readClickIds", () => {
+  const NONE = { gclid: null, fbclid: null, oppref: null, ttclid: null };
+
   test("each platform's click id is read from the query", () => {
-    expect(readClickIds("?gclid=g1")).toEqual({ gclid: "g1", fbclid: null, ttclid: null });
-    expect(readClickIds("?fbclid=f1")).toEqual({ gclid: null, fbclid: "f1", ttclid: null });
-    expect(readClickIds("?ttclid=t1")).toEqual({ gclid: null, fbclid: null, ttclid: "t1" });
+    expect(readClickIds("?gclid=g1")).toEqual({ ...NONE, gclid: "g1" });
+    expect(readClickIds("?fbclid=f1")).toEqual({ ...NONE, fbclid: "f1" });
+    expect(readClickIds("?oppref=o1")).toEqual({ ...NONE, oppref: "o1" });
+    expect(readClickIds("?ttclid=t1")).toEqual({ ...NONE, ttclid: "t1" });
   });
 
   test("an empty query yields no click ids", () => {
-    expect(readClickIds("")).toEqual({ gclid: null, fbclid: null, ttclid: null });
+    expect(readClickIds("")).toEqual(NONE);
   });
 
   test("an empty parameter value is null, not an empty string", () => {
@@ -37,6 +40,94 @@ describe("readClickIds", () => {
     const realistic = `IwAR${"3".repeat(150)}`;
     expect(readClickIds(`?fbclid=${realistic}`).fbclid).toBe(realistic);
     expect(readClickIds(`?fbclid=${"x".repeat(4000)}`).fbclid).toHaveLength(512);
+  });
+});
+
+describe("readClickIds: the ChatGPT click id (oppref)", () => {
+  // OpenAI documents no format and asks for "the original string without
+  // modification", so the value is returned exactly as one decode left it.
+  test.each([
+    ["an opaque id", "oppref=aB3dE9fGh1JkLm0pQr", "aB3dE9fGh1JkLm0pQr"],
+    ["the unreserved punctuation - _ . ~", "oppref=ab-cd_ef.gh~ij", "ab-cd_ef.gh~ij"],
+    ["capitals, which are not folded", "oppref=AbCdEfGh", "AbCdEfGh"],
+    ["a raw plus sign, which stays a plus sign", "oppref=ab+cd", "ab+cd"],
+    ["%2B, which is a plus sign", "oppref=ab%2Bcd", "ab+cd"],
+    ["an equals sign inside the value", "oppref=a=b&utm_source=chatgpt", "a=b"],
+    ["a percent-encoded value, decoded once", "oppref=a%2Fb%3Dc", "a/b=c"],
+    // `%25` is a literal percent sign: a second decode would turn this into `a/b`.
+    ["an encoded percent sign, which a second decode would eat", "oppref=a%252Fb", "a%2Fb"],
+    ["a real-length id", `oppref=op_${"A1b2".repeat(30)}`, `op_${"A1b2".repeat(30)}`],
+    // A truncated id still looks like data and attributes to nothing at OpenAI,
+    // so unlike the other click ids one past the bound is refused outright.
+    ["an id at the bound, kept whole", `oppref=${"x".repeat(512)}`, "x".repeat(512)],
+    ["an id one past the bound, dropped and never cut short", `oppref=${"x".repeat(513)}`, null],
+    ["a hostile id, dropped", `oppref=${"x".repeat(4000)}`, null],
+    ["a bound that counts the decoded id, kept", `oppref=${"%2B".repeat(200)}`, "+".repeat(200)],
+    ["a bound that counts the decoded id, dropped", `oppref=${"%2B".repeat(513)}`, null],
+    ["a malformed escape, which is no click and never throws", "oppref=%E0%A4%A", null],
+    ["an empty value", "oppref=", null],
+    ["a value of spaces only", "oppref=%20%20", null],
+  ])("%s", (_case, query, expected) => {
+    expect(readClickIds(`?${query}&utm_source=chatgpt`).oppref).toBe(expected);
+  });
+
+  test("a plus sign is a plus sign in oppref alone: the other click ids decode it as a space, which drops them", () => {
+    // A form-style decode turns a raw `+` into a space.
+    expect(readClickIds("?gclid=a+b&fbclid=c+d&oppref=e+f&ttclid=g+h")).toEqual({
+      gclid: null,
+      fbclid: null,
+      oppref: "e+f",
+      ttclid: null,
+    });
+    expect(readClickIds("?gclid=a%2Bb&fbclid=c%2Bd&ttclid=g%2Bh")).toMatchObject({
+      gclid: "a+b",
+      fbclid: "c+d",
+      ttclid: "g+h",
+    });
+  });
+
+  test("a malformed oppref loses only itself", () => {
+    expect(readClickIds("?oppref=%E0%A4%A&gclid=g1")).toEqual({
+      gclid: "g1",
+      fbclid: null,
+      oppref: null,
+      ttclid: null,
+    });
+  });
+
+  test("an oppref with no value is skipped, not the end of the search: a later one still counts", () => {
+    expect(readClickIds("?oppref&oppref=X").oppref).toBe("X");
+    expect(readClickIds("?oppref&utm_source=chatgpt").oppref).toBeNull();
+  });
+
+  test("with two valued opprefs the first wins, as it does for the other click ids", () => {
+    expect(readClickIds("?oppref=A&oppref=B").oppref).toBe("A");
+    expect(readClickIds("?gclid=A&gclid=B").gclid).toBe("A");
+  });
+});
+
+describe("readClickIds: a click id is printable ASCII or no click", () => {
+  // The platforms' ids are opaque tokens. One with a control character, a
+  // space or a byte outside ASCII is hostile or damaged, so it is dropped and
+  // never cleaned into something that only looks like an id.
+  describe.each(["gclid", "fbclid", "oppref", "ttclid"] as const)("%s", (name) => {
+    test.each([
+      ["a NUL", "%00"],
+      ["a tab", "%09"],
+      ["a space", "%20"],
+      ["a DEL", "%7F"],
+      ["a letter outside ASCII", "%C3%A9"],
+    ])("%s makes the id no click", (_case, escape) => {
+      expect(readClickIds(`?${name}=ab${escape}cd`)[name]).toBeNull();
+    });
+
+    test("the punctuation + / = . ~ is kept", () => {
+      expect(readClickIds(`?${name}=a%2Bb/c=d.e~f`)[name]).toBe("a+b/c=d.e~f");
+    });
+  });
+
+  test("a bad id costs only its own platform", () => {
+    expect(readClickIds("?gclid=g%001&fbclid=f1")).toMatchObject({ gclid: null, fbclid: "f1" });
   });
 });
 
