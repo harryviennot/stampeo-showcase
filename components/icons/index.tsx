@@ -41,6 +41,7 @@ export {
   Megaphone as MegaphoneIcon,
   Info as InfoIcon,
   Gift,
+  Tag as PriceTagIcon,
   Lightning,
   TrendUp,
   TrendDown,

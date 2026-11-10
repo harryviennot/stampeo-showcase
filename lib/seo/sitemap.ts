@@ -3,6 +3,8 @@ import { routing } from "@/i18n/routing";
 import { getAllPosts } from "@/lib/blog";
 import { BLOG_LOCALES } from "@/lib/blog/locales";
 import { postLanguages } from "@/lib/blog/translations";
+import { comparisonPages, comparisonPath } from "@/lib/compare/content";
+import type { ComparisonPage } from "@/lib/compare/types";
 import { FEATURE_SLUGS, getLocalizedSlug } from "@/lib/feature-slugs";
 import { localeAlternates, localePath, marketAlternates } from "@/lib/hreflang";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
@@ -43,8 +45,9 @@ const absolute = (path: string) => `${SITEMAP_BASE_URL}${path}`;
 /**
  * Every indexable page, each with the hreflang cluster of its own page.
  * Only blog posts carry `lastModified`: it is the one date that is real.
+ * Comparison pages come from the published ones unless a list is passed.
  */
-export function buildSitemap(): MetadataRoute.Sitemap {
+export function buildSitemap(comparisons: readonly ComparisonPage[] = comparisonPages()): MetadataRoute.Sitemap {
   const locales = routing.locales;
   const baseUrl = SITEMAP_BASE_URL;
   const entries: MetadataRoute.Sitemap = [];
@@ -118,6 +121,13 @@ export function buildSitemap(): MetadataRoute.Sitemap {
         ...(languages && { alternates: { languages } }),
       });
     }
+  }
+
+  // A comparison page exists in one market only, so it has no hreflang cluster.
+  // A US page is listed only while the US market is indexable, as its robots tag follows the same flag.
+  for (const page of comparisons) {
+    if (page.draft || (page.market === "us" && !MARKETS.us.indexable)) continue;
+    entries.push({ url: absolute(comparisonPath(page)), changeFrequency: "monthly", priority: 0.7 });
   }
 
   return entries;
