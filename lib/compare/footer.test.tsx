@@ -61,6 +61,19 @@ describe("the comparisons a footer lists", () => {
     expect(footerComparisons("int", "fr", drafts)).toEqual([]);
   });
 
+  it("link the six live pages: the three US ones on the US footer, the three French ones on the French footer", () => {
+    expect(footerComparisons("us", "en").map((link) => link.href).sort()).toEqual([
+      "/us/vs/loopy-loyalty",
+      "/us/vs/stamp-me",
+      "/us/vs/winstamp",
+    ]);
+    expect(footerComparisons("int", "fr").map((link) => link.href).sort()).toEqual([
+      "/comparatif/fidelatoo",
+      "/comparatif/heypongo",
+      "/comparatif/zerosix",
+    ]);
+  });
+
   it("are, on the real content, exactly the published pages and no draft", () => {
     for (const [market, locale, comparisonMarket] of [
       ["us", "en", "us"],
