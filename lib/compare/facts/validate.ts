@@ -1,0 +1,118 @@
+import { TABLE_FACT_IDS } from "../page/rows";
+import { SHORT_MAX_LENGTH, type CompetitorFacts, type SourcedFact } from "../types";
+
+/** Today as `YYYY-MM-DD`, the calendar day in Paris where the facts are checked. */
+export function todayIso(now: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const part = (type: string) => parts.find((candidate) => candidate.type === type)!.value;
+  return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+/** Is this `YYYY-MM-DD` and a real calendar day? */
+function isCalendarDate(value: string): boolean {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+  const [year, month, day] = match.slice(1).map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+function isHttpsUrl(value: string): boolean {
+  try {
+    return new URL(value).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+const blank = (value: string | undefined) => !value || value.trim() === "";
+
+function shortProblems(field: "short" | "shortNote", text: string): string[] {
+  if (blank(text)) return [`${field} is empty`];
+  const problems: string[] = [];
+  if (/[\r\n]/.test(text)) problems.push(`${field} must be one line`);
+  const length = Array.from(text).length;
+  if (length > SHORT_MAX_LENGTH) problems.push(`${field} is ${length} characters, the limit is ${SHORT_MAX_LENGTH}`);
+  return problems;
+}
+
+function factProblems(fact: SourcedFact, today: string): string[] {
+  const problems: string[] = [];
+  if (blank(fact.id)) problems.push("id is empty");
+  if (blank(fact.value)) problems.push("value is empty");
+  if (!isHttpsUrl(fact.sourceUrl)) problems.push("sourceUrl must be an https URL");
+  if (blank(fact.sourceTitle)) problems.push("sourceTitle is empty");
+  if (blank(fact.quote)) problems.push("quote is empty");
+  if (fact.short !== undefined) problems.push(...shortProblems("short", fact.short));
+  if (fact.shortNote !== undefined) {
+    problems.push(...(fact.short === undefined ? ["shortNote needs a short value to sit under"] : shortProblems("shortNote", fact.shortNote)));
+  }
+  if (!isCalendarDate(fact.checkedAt)) problems.push("checkedAt must be a real date written YYYY-MM-DD");
+  else if (fact.checkedAt > today) problems.push(`checkedAt ${fact.checkedAt} is after today (${today})`);
+  return problems;
+}
+
+// A French price states its tax basis next to the amount; a value with no amount ("Sur devis…", "Non communiqué") has none to state.
+function frenchPriceProblem(fact: SourcedFact): string | null {
+  const quotesAmount = /\d/.test(fact.value) && !/^(?:sur devis|non communiqué)/i.test(fact.value);
+  return quotesAmount && !/\b(?:HT|TTC)\b/.test(fact.value) ? "price must state its tax basis, HT or TTC" : null;
+}
+
+/**
+ * Everything wrong with the competitor facts, one line per problem naming the
+ * competitor, market and fact. Empty means every fact is sourced, quoted and
+ * dated on or before `today`, no id repeats within a market, every French
+ * price states its tax basis, and a `short` value is one line of at most 40 characters.
+ */
+export function validateCompetitorFacts(
+  competitors: readonly CompetitorFacts[],
+  today: string = todayIso(),
+): string[] {
+  const problems: string[] = [];
+  const seen = new Set<string>();
+
+  for (const competitor of competitors) {
+    if (seen.has(competitor.id)) problems.push(`${competitor.id}: listed twice`);
+    seen.add(competitor.id);
+    if (!isHttpsUrl(competitor.website)) problems.push(`${competitor.id}: website must be an https URL`);
+
+    const markets = Object.entries(competitor.markets);
+    if (markets.length === 0) problems.push(`${competitor.id}: has no market`);
+
+    for (const [market, entry] of markets) {
+      const where = `${competitor.id}/${market}`;
+      if (!entry) continue;
+      if (!isHttpsUrl(entry.pricingUrl)) problems.push(`${where}: pricingUrl must be an https URL`);
+      if (entry.facts.length === 0) problems.push(`${where}: has no facts`);
+
+      const ids = new Set<string>();
+      for (const fact of entry.facts) {
+        if (ids.has(fact.id)) problems.push(`${where}/${fact.id}: appears more than once`);
+        ids.add(fact.id);
+        for (const problem of factProblems(fact, today)) problems.push(`${where}/${fact.id}: ${problem}`);
+        const basis = market === "fr" && fact.id.startsWith("price.") ? frenchPriceProblem(fact) : null;
+        if (basis) problems.push(`${where}/${fact.id}: ${basis}`);
+      }
+    }
+  }
+
+  return problems;
+}
+
+const SHOWN_IDS: ReadonlySet<string> = new Set(TABLE_FACT_IDS);
+
+/** Every fact of a table row with no `short` value, which the table would show as its full sentence instead. */
+export function missingShortValues(competitors: readonly CompetitorFacts[]): string[] {
+  return competitors.flatMap((competitor) =>
+    Object.entries(competitor.markets).flatMap(([market, entry]) =>
+      (entry?.facts ?? [])
+        .filter((fact) => SHOWN_IDS.has(fact.id) && fact.short === undefined)
+        .map((fact) => `${competitor.id}/${market}/${fact.id}: no short value`),
+    ),
+  );
+}

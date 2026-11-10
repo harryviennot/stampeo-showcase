@@ -25,8 +25,8 @@
       "featuresLabel": "Todo incluido:",
       "features": [
         "Clientes y escaneos ilimitados",
-        "Tarjetas de sellos o de puntos, totalmente personalizables",
-        "Notificaciones automáticas de sello y recompensa",
+        "Sellos, puntos o niveles",
+        "Notificaciones automáticas",
         "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
         "Lista de clientes, estadísticas y búsqueda",
@@ -41,7 +41,7 @@
       "features": [
         "8 difusiones al mes a todos tus clientes",
         "Puntos extra en compras por encima del importe que fijes",
-        "Tus propios mensajes de sello y recompensa",
+        "Personaliza las notificaciones automáticas",
         "Estilos de tarjeta guardados ilimitados",
         "Gráficos de estadísticas, 90 días de historial",
         "Miembros del equipo ilimitados",
@@ -108,8 +108,8 @@
       "tagline": "Para autónomos y comercios de un solo local",
       "features": [
         "Clientes y escaneos ilimitados",
-        "Tarjetas de sellos o de puntos, totalmente personalizables",
-        "Notificaciones automáticas de sello y recompensa",
+        "Sellos, puntos o niveles",
+        "Notificaciones automáticas",
         "1 estilo de tarjeta activo",
         "2 miembros del equipo (propietario + 1)",
         "Lista de clientes, estadísticas y búsqueda",
@@ -124,7 +124,7 @@
       "features": [
         "8 difusiones al mes a todos tus clientes",
         "Puntos extra en compras por encima del importe que fijes",
-        "Tus propios mensajes de sello y recompensa",
+        "Personaliza las notificaciones automáticas",
         "Estilos de tarjeta guardados ilimitados",
         "Gráficos de estadísticas, 90 días de historial",
         "Miembros del equipo ilimitados",
@@ -176,9 +176,9 @@
         },
         "loyaltyType": {
           "label": "Tipo de fidelidad",
-          "starter": "Sellos o puntos",
-          "growth": "Sellos o puntos",
-          "pro": "Sellos o puntos"
+          "starter": "Sellos, puntos o niveles",
+          "growth": "Sellos, puntos o niveles",
+          "pro": "Sellos, puntos o niveles"
         },
         "earningCaps": {
           "label": "Límites por cliente"
@@ -186,7 +186,7 @@
         "basketBoost": {
           "label": "Bonus por compra grande",
           "growth": "1 nivel",
-          "pro": "Ilimitados"
+          "pro": "Hasta 6 niveles"
         },
         "rewardExpiry": {
           "label": "Fechas de caducidad de recompensas"

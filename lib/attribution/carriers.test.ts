@@ -399,7 +399,7 @@ describe("stampeo_ad", () => {
     expect(parseAdCookie(encode({ ...valid, ...edit }))).toBeNull();
   });
 
-  test.each(["meta", "google", "tiktok"])("the vendor %s is accepted", (vn) => {
+  test.each(["meta", "google", "openai", "tiktok"])("the vendor %s is accepted", (vn) => {
     const valid = wire(serializeAdCarrier(ad()));
     expect(parseAdCookie(encode({ ...valid, vn }))).toMatchObject({ vn });
   });
@@ -414,6 +414,27 @@ describe("stampeo_ad", () => {
     });
     expect(built!.ci).toBe(realistic);
     expect(parseAdCookie(serializeAdCarrier(built!))!.ci).toBe(realistic);
+  });
+
+  test("a ChatGPT click is stored under openai, exactly as it arrived", () => {
+    const oppref = "op_Zm9v-YmFy_ba.z~0123";
+    const built = buildAdCarrier({
+      landing: landing(`https://stampeo.app/us?oppref=${oppref}&utm_source=chatgpt&utm_medium=cpc`),
+      fbp: null,
+      evidence: EVIDENCE,
+    });
+
+    expect(built).toEqual({ v: 2, vn: "openai", ci: oppref, ct: LANDED, fbp: null, ...EVIDENCE });
+    expect(parseAdCookie(serializeAdCarrier(built!))).toEqual(built!);
+  });
+
+  test("a ChatGPT click id past the cap leaves no carrier: a cut one would attribute to nothing", () => {
+    const built = buildAdCarrier({
+      landing: landing(`https://stampeo.app/us?oppref=${"o".repeat(4000)}`),
+      fbp: null,
+      evidence: EVIDENCE,
+    });
+    expect(built).toBeNull();
   });
 
   test("a hostile click id is cut at 512 and the carrier survives it", () => {
@@ -431,13 +452,18 @@ describe("paidClick: which platform an arrival belongs to", () => {
   test.each([
     ["a Google click", "?gclid=g1", { vendor: "google", clickId: "g1" }],
     ["a Meta click", "?fbclid=f1", { vendor: "meta", clickId: "f1" }],
+    ["a ChatGPT click", "?oppref=o1", { vendor: "openai", clickId: "o1" }],
     ["a TikTok click", "?ttclid=t1", { vendor: "tiktok", clickId: "t1" }],
     // One carrier holds one platform, so a visitor carrying two resolves the
     // same way every time rather than by parameter order.
-    ["Google over Meta over TikTok", "?ttclid=t&fbclid=f&gclid=g", { vendor: "google", clickId: "g" }],
+    ["Google over Meta over ChatGPT over TikTok", "?ttclid=t&oppref=o&fbclid=f&gclid=g", { vendor: "google", clickId: "g" }],
+    ["Google over ChatGPT", "?oppref=o&gclid=g", { vendor: "google", clickId: "g" }],
+    ["Meta over ChatGPT", "?oppref=o&fbclid=f", { vendor: "meta", clickId: "f" }],
+    ["ChatGPT over TikTok", "?ttclid=t&oppref=o", { vendor: "openai", clickId: "o" }],
     ["Meta over TikTok", "?ttclid=t&fbclid=f", { vendor: "meta", clickId: "f" }],
     ["tags with no click", "?utm_source=newsletter", null],
     ["an empty click id", "?gclid=", null],
+    ["an empty ChatGPT click id", "?oppref=", null],
     ["nothing", "", null],
   ])("%s", (_case, search, expected) => {
     expect(paidClick(readClickIds(search))).toEqual(expected);

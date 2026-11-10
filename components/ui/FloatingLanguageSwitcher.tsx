@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { LanguagePicker } from "@/components/ui/LanguagePicker";
 import { cn } from "@/lib/utils";
+import { hidesLanguageSwitcher } from "@/lib/routing/language-switcher";
 
 function isColorDark(color: string): boolean | null {
   if (!color || color === "transparent" || color === "rgba(0, 0, 0, 0)")
@@ -130,8 +131,8 @@ export function FloatingLanguageSwitcher() {
     };
   }, [detectBackground]);
 
-  // Hide on individual blog posts (different slugs per language)
-  if (/^\/blog\/.+/.test(pathname)) return null;
+  // Blog posts (slug differs per language) and comparison pages (one language) would 404 on a switch.
+  if (hidesLanguageSwitcher(pathname)) return null;
 
   return (
     <div ref={buttonRef} className="hidden md:block fixed bottom-6 right-6 z-50">

@@ -12,7 +12,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { MARKETS, marketPath, marketLink, isPilotPath } from "./markets";
+import { MARKETS, marketPath, marketLink, isPilotPath, marketFromPath } from "./markets";
 import { formatMoney } from "./pricing";
 
 describe("marketPath", () => {
@@ -54,6 +54,12 @@ describe("isPilotPath", () => {
     // The bug: exact-match meant /us/pricing fell through to locale detection
     // and became /en/us/pricing, which does not exist.
     expect(isPilotPath("/us/pricing")).toBe(true);
+  });
+
+  test("matches a comparison page inside the US market, so the proxy rewrites it like /us/pricing", () => {
+    expect(isPilotPath("/us/vs/loopy-loyalty")).toBe(true);
+    expect(marketFromPath("/us/vs/loopy-loyalty")).toBe("us");
+    expect(marketPath("us", "/vs/loopy-loyalty")).toBe("/us/vs/loopy-loyalty");
   });
 
   test("does not swallow a business slug that merely starts with the letters", () => {

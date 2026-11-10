@@ -5,6 +5,8 @@ import {
   articleImageUrls,
   breadcrumbProblems,
   canonicalProblems,
+  comparisonPaths,
+  comparisonProblems,
   feedLinkProblems,
   fontPreloadProblems,
   hiddenHeaderLinkProblems,
@@ -465,5 +467,83 @@ describe("breadcrumbProblems", () => {
 
   test("fails a page with no breadcrumb", () => {
     expect(breadcrumbProblems(page({ body: "<main/>" }), "/en")).toEqual(["no BreadcrumbList items"]);
+  });
+});
+
+describe("comparison pages", () => {
+  const ld = (...nodes: object[]) =>
+    nodes.map((node) => `<script type="application/ld+json">${JSON.stringify(node)}</script>`).join("");
+  const SCHEMA = [{ "@type": "WebPage" }, { "@type": "BreadcrumbList" }, { "@type": "FAQPage" }];
+  const head = (path: string, robots = "index, follow") =>
+    `<link rel="canonical" href="https://stampeo.app${path}"/><meta name="robots" content="${robots}"/>`;
+  const path = "/us/vs/loopy-loyalty";
+
+  test("passes a published page: own canonical, indexable, page + breadcrumb + FAQ data and no hreflang", () => {
+    const html = page({ head: head(path), body: ld(...SCHEMA) });
+
+    expect(comparisonProblems(html, { path, draft: false })).toEqual([]);
+  });
+
+  test("passes a draft that says noindex", () => {
+    const html = page({ head: head(path, "noindex, nofollow"), body: ld(...SCHEMA) });
+
+    expect(comparisonProblems(html, { path, draft: true })).toEqual([]);
+  });
+
+  test("fails a draft that can be indexed, and a published page that cannot", () => {
+    const body = ld(...SCHEMA);
+
+    expect(comparisonProblems(page({ head: head(path), body }), { path, draft: true })).toEqual([
+      'robots meta is "index, follow", expected noindex',
+    ]);
+    expect(comparisonProblems(page({ head: head(path, "noindex, nofollow"), body }), { path, draft: false })).toEqual([
+      'robots meta is "noindex, nofollow"',
+    ]);
+  });
+
+  test("fails a page that is not its own canonical", () => {
+    const html = page({ head: head("/us"), body: ld(...SCHEMA) });
+
+    expect(comparisonProblems(html, { path, draft: false })).toEqual(['canonical is "/us", expected "/us/vs/loopy-loyalty"']);
+  });
+
+  test("fails a page with no structured data in the server HTML", () => {
+    expect(comparisonProblems(page({ head: head(path), body: "<main/>" }), { path, draft: false })).toContain(
+      'no <script type="application/ld+json"> in the raw HTML',
+    );
+  });
+
+  test("fails a page missing one of its three data types", () => {
+    const html = page({ head: head(path), body: ld(SCHEMA[0], SCHEMA[1]) });
+
+    expect(comparisonProblems(html, { path, draft: false })).toEqual(["no FAQPage structured data"]);
+  });
+
+  test.each(["Product", "Review", "AggregateRating"])("fails a page whose data carries a %s", (type) => {
+    const html = page({ head: head(path), body: ld(...SCHEMA, { "@type": type, name: "Loopy Loyalty" }) });
+
+    expect(comparisonProblems(html, { path, draft: false })).toEqual([`structured data has a ${type}`]);
+  });
+
+  test("fails a page that advertises another language, since it exists in one market only", () => {
+    const hreflang = '<link rel="alternate" hrefLang="fr" href="https://stampeo.app/comparatif/loopy-loyalty"/>';
+    const html = page({ head: head(path) + hreflang, body: ld(...SCHEMA) });
+
+    expect(comparisonProblems(html, { path, draft: false })).toEqual(['hreflang="fr" points at /comparatif/loopy-loyalty']);
+  });
+});
+
+describe("comparisonPaths", () => {
+  const sitemap = (...paths: string[]) =>
+    `<urlset>${paths.map((p) => `<url><loc>https://stampeo.app${p}</loc></url>`).join("")}</urlset>`;
+
+  test("picks the comparison URLs out of a sitemap, in either market", () => {
+    const xml = sitemap("/", "/pricing", "/us/vs/loopy-loyalty", "/comparatif/fidelatoo", "/blog/a-post", "/us/pricing");
+
+    expect(comparisonPaths(xml)).toEqual(["/us/vs/loopy-loyalty", "/comparatif/fidelatoo"]);
+  });
+
+  test("is empty while no comparison is published, which the runner reads as nothing to check", () => {
+    expect(comparisonPaths(sitemap("/", "/pricing", "/us/pricing"))).toEqual([]);
   });
 });

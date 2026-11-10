@@ -30,7 +30,7 @@ const EVERY_PLAN: Record<string, RegExp> = {
 describe("plan facts", () => {
   it("summarises each plan in plain English", () => {
     expect(planSummary("starter")).toBe(
-      "stamps or points, 2 team members (owner + 1), no broadcasts, single location, 30 days of analytics history, a visits chart and analytics highlights"
+      "stamps or points, up to 5 levels, 2 team members (owner + 1), no broadcasts, single location, 30 days of analytics history, a visits chart and analytics highlights"
     );
     expect(planSummary("growth")).toContain("8 broadcasts per month");
     expect(planSummary("growth")).not.toMatch(/advanced|schedul|multiple locations|geofencing/);
@@ -40,6 +40,7 @@ describe("plan facts", () => {
 
   it("names the plans a feature is on", () => {
     expect(availability((f) => f.loyaltyTypes.includes("points"))).toBe("every plan");
+    expect(availability((f) => f.levels > 0)).toBe("every plan");
     expect(availability((f) => f.employeeTracking)).toBe("Growth and Pro");
     expect(availability((f) => f.scheduledBroadcasts)).toBe("Pro");
     expect(availability((f) => f.analyticsCharts)).toBe("Growth and Pro");

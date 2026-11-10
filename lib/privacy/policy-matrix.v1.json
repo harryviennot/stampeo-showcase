@@ -16,7 +16,7 @@
     "US": {
       "countries": ["US"],
       "regime": "opt-out",
-      "surface": "notice",
+      "surface": "none",
       "default": { "analytics": true, "marketing": true },
       "gpc_overrides_choice": true,
       "grant_ttl_days": 182,

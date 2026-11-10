@@ -19,7 +19,7 @@ import {
   rowFor,
   surfaceWithPolicy,
 } from "./privacy/policy";
-import { POLICY_MATRIX, type PolicyRow } from "./privacy/policy-matrix";
+import { POLICY_MATRIX, type PolicyRow, type PolicySurface } from "./privacy/policy-matrix";
 import { detectPolicyRow } from "./privacy/region";
 import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
 
@@ -66,12 +66,15 @@ export const CONSENT_COOKIE = "stampeo_consent";
  * 4 — Privacy policy §4 and §5.5: Google Ads also receives three reported
  *     steps from our servers, with the Google click identifier and the
  *     account email hashed with SHA-256, under the advertising choice.
+ * 5 — Privacy policy §4 and §5.5: OpenAI also receives three reported steps
+ *     from our servers, with its click identifier and the account email
+ *     hashed with SHA-256, under the advertising choice.
  *
  * The backend's `CONSENT_VERSION` mirrors this and must move with it: the
  * backend honours only the versions in `ACCEPTED_CONSENT_VERSIONS` (backend
  * `app/services/attribution/eligibility.py`).
  */
-export const CONSENT_VERSION = 4;
+export const CONSENT_VERSION = 5;
 
 export type ConsentCategory = "analytics" | "marketing";
 
@@ -142,7 +145,7 @@ export interface PriorConsent {
 }
 
 /** What the visitor is currently being shown, if anything. */
-export type ConsentSurface = "none" | "banner" | "notice";
+export type ConsentSurface = PolicySurface;
 
 /**
  * The cookies each category is responsible for, so revoking can actually
@@ -151,7 +154,8 @@ export type ConsentSurface = "none" | "banner" | "notice";
  * `_ga_*` has to be a prefix: GA4 writes one `_ga_<MEASUREMENT_ID>` cookie per
  * property, and a literal list would leave the real session cookie in place
  * while reporting the visitor as opted out. `_gcl_*` and `_gac_*` clear Google
- * Ads cookies a browser may still hold; the site loads no Ads tag.
+ * Ads cookies a browser may still hold; the site loads no Ads tag. `__oppref`
+ * and `__obref` do the same for OpenAI's pixel, which the site never loads.
  *
  * `stampeo_ga` and `stampeo_ad` are our own carriers of each category's
  * identifiers. `stampeo_src` (campaign source) holds neither and is cleared
@@ -163,7 +167,7 @@ export type ConsentSurface = "none" | "banner" | "notice";
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
   analytics: ["_ga", "_ga_*", "_gid", GA_COOKIE],
-  marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", "_gac_*", AD_COOKIE],
+  marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", "_gac_*", "__oppref", "__obref", AD_COOKIE],
 };
 
 /** The carriers the privacy route sets as a server response, which a refusal asks it to clear too. */

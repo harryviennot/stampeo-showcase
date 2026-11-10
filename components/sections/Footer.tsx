@@ -18,6 +18,9 @@ import { MarketLink } from "../market/MarketLink";
 import { CookiePreferencesButton } from "@/components/consent/CookiePreferencesButton";
 import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
+import { FooterColumn, footerLinkGrid } from "./FooterColumn";
+import { FooterComparisons } from "./FooterComparisons";
+import { footerComparisons, footerComparisonsTitle } from "@/lib/compare/footer";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
   const t = await getTranslations("common.footer");
@@ -29,6 +32,9 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
 
   const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
   const seoLinks = buildSeoLinks(locale, market);
+  const comparisons = footerComparisons(market, locale);
+  const comparisonsTitle = footerComparisonsTitle(market, locale);
+  const hasComparisons = comparisonsTitle !== null && comparisons.length > 0;
 
   return (
     <footer className="relative w-full bg-[var(--foreground)] text-white overflow-hidden">
@@ -113,91 +119,78 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
             </div>
           </div>
 
-          {/* Link columns — 2x2 on mobile, 4-col row on desktop */}
-          <div className="grid grid-cols-2 gap-x-10 gap-y-10 md:grid-cols-4 flex-1">
-            {/* Features */}
-            <div className="flex flex-col gap-4">
-              <p className="text-white text-sm font-bold">{t("featuresTitle")}</p>
-              <nav className="flex flex-col gap-3">
-                {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
-                  const slug = getLocalizedSlug(canonicalSlug, locale);
-                  return (
-                  <Link
-                    key={canonicalSlug}
-                    href={`/features/${slug}` as "/features/design-de-carte"}
-                    className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
-                  >
-                    {tNav(`featuresItems.${key}.label`)}
-                  </Link>);
-                })}
-              </nav>
-            </div>
-
-            {/* Resources */}
-            <div className="flex flex-col gap-4">
-              <p className="text-white text-sm font-bold">{t("resources")}</p>
-              <nav className="flex flex-col gap-3">
-                {hasBlog(locale) && (
-                  <Link href="/blog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                    {t("blog")}
-                  </Link>
-                )}
-                <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("changelog")}
-                </Link>
-                <MarketLink market={market} href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("pricing")}
-                </MarketLink>
-                <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {tNav("loyaltyPrograms")}
-                </Link>
-                <Link href="/#features" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("howItWorks")}
-                </Link>
-                <Link href="/#faq" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  FAQ
-                </Link>
-              </nav>
-            </div>
-
-            {/* Company — where you reach a human */}
-            <div className="flex flex-col gap-4">
-              <p className="text-white text-sm font-bold">{t("company")}</p>
-              <nav className="flex flex-col gap-3">
-                <Link href="/about" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("about")}
-                </Link>
-                <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("contact")}
-                </TrackedLink>
-                <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("help")}
-                </TrackedLink>
-                <ContactLink
-                  href="tel:+33649370470"
+          {/* Link columns: a fifth, the comparisons, joins on the footers that have published ones */}
+          <div className={footerLinkGrid(hasComparisons ? 5 : 4)}>
+            <FooterColumn title={t("featuresTitle")}>
+              {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
+                const slug = getLocalizedSlug(canonicalSlug, locale);
+                return (
+                <Link
+                  key={canonicalSlug}
+                  href={`/features/${slug}` as "/features/design-de-carte"}
                   className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
                 >
-                  06 49 37 04 70
-                </ContactLink>
-              </nav>
-            </div>
+                  {tNav(`featuresItems.${key}.label`)}
+                </Link>);
+              })}
+            </FooterColumn>
 
-            {/* Legal */}
-            <div className="flex flex-col gap-4">
-              <p className="text-white text-sm font-bold">{t("legal")}</p>
-              <nav className="flex flex-col gap-3">
-                <Link href="/privacy" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("privacyPolicy")}
+            <FooterColumn title={t("resources")}>
+              {hasBlog(locale) && (
+                <Link href="/blog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                  {t("blog")}
                 </Link>
-                <Link href="/terms" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
-                  {t("termsOfService")}
-                </Link>
-                {/* Not a Link: it reopens the consent choice in place. Consent
-                    has to be as easy to withdraw as it was to give, so it
-                    needs a home that outlives the banner. */}
-                <CookiePreferencesButton />
-              </nav>
-            </div>
+              )}
+              <Link href="/changelog" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("changelog")}
+              </Link>
+              <MarketLink market={market} href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("pricing")}
+              </MarketLink>
+              <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {tNav("loyaltyPrograms")}
+              </Link>
+              <Link href="/#features" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("howItWorks")}
+              </Link>
+              <Link href="/#faq" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                FAQ
+              </Link>
+            </FooterColumn>
+
+            <FooterComparisons market={market} title={comparisonsTitle} comparisons={comparisons} />
+
+            {/* Company — where you reach a human */}
+            <FooterColumn title={t("company")}>
+              <Link href="/about" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("about")}
+              </Link>
+              <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("contact")}
+              </TrackedLink>
+              <TrackedLink trackAs="footer_contact" href="/contact" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("help")}
+              </TrackedLink>
+              <ContactLink
+                href="tel:+33649370470"
+                className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
+              >
+                06 49 37 04 70
+              </ContactLink>
+            </FooterColumn>
+
+            <FooterColumn title={t("legal")}>
+              <Link href="/privacy" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("privacyPolicy")}
+              </Link>
+              <Link href="/terms" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+                {t("termsOfService")}
+              </Link>
+              {/* Not a Link: it reopens the consent choice in place. Consent
+                  has to be as easy to withdraw as it was to give, so it
+                  needs a home that outlives the banner. */}
+              <CookiePreferencesButton />
+            </FooterColumn>
           </div>
         </div>
 

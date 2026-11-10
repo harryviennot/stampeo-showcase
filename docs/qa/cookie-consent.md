@@ -1,11 +1,11 @@
-BRANCH: `feat/sta-377-measurement-privacy` (showcase worktree `.claude/worktrees/sta-377`, plus web and backend; builds on `feat/sta-373-ads-conversion-funnel`)
+BRANCH: `feat/sta-377-measurement-privacy` (showcase worktree `.claude/worktrees/sta-377`, plus web and backend; builds on `feat/sta-373-ads-conversion-funnel`). The GS section needs `feat/sta-459-google-ads-conversions` and the CS section `feat/sta-540-chatgpt-ads-conversions`, in showcase, web and backend.
 SCOPES: showcase, web, backend
 ENVIRONMENT: **dev only.** Migrations 186 and 189 to 193 are applied on dev only. The SG, AT and MC sections create dev accounts and businesses (and MC uses Stripe test mode); MC also needs `META_TEST_EVENT_CODE` in the dev backend. Everything else is anonymous page views plus devtools and a few `curl` calls to the showcase. The production-shaped risk is legal, not operational: what this pass protects is that nothing is stored on a visitor's device before the rules of their region allow it, that a refusal is kept and honoured everywhere, and that Meta and Google receive only what the privacy policy describes.
 
 # Cookie consent test pass
 
-Covers the consent banner, the US notice, the preferences dialog, the footer
-entry, the regional rules (STA-377), the subject and refusal cookies, the
+Covers the consent banner (a US visitor sees none), the preferences dialog, the
+footer entry, the regional rules (STA-377), the subject and refusal cookies, the
 browser events, the sign-up call, and the cookie section of the privacy policy.
 Work top to bottom: CN first, because if a cookie is set before a choice is made,
 nothing else in this runbook matters and the release is blocked.
@@ -27,11 +27,12 @@ to degrade a page, hide content, or re-ask on the next navigation.
 
 **Fourth: the visitor's timezone decides which rules apply, and nothing else
 does.** Europe, the UK, Switzerland and anything we cannot place are asked
-first; the US is told, and can opt out; a US territory is not the US. The
+first; the US is not asked, tags load, and the footer link opts out; a US
+territory is not the US. The
 `stampeo_region` cookie, the IP address and `navigator.language` are not
 signals. A visitor who refused keeps that refusal in every region, and a visitor
-who was only told (a US "Got it") is never counted as having agreed once they
-are in a stricter one.
+who was never asked (the US default, or an old US "Got it") is never counted as
+having agreed once they are in a stricter one.
 
 Note on what is NOT here: the TikTok pixel (STA-320) does not exist, so
 accepting never loads it and that is correct. GA4 (STA-318) and the Meta pixel
@@ -52,7 +53,7 @@ Everything runs against dev. Nothing here touches production.
 | Showcase (dev) | `https://showcase.dev.stampeo.app` | `dev.stampeo.app` is the API, not the showcase. ISR caches 300s: hard-reload twice before calling a string stale. |
 | Showcase (local) | `http://localhost:3001` | `bun run dev` from `showcase/`. **Do not run `bun run build` while this is up**, it clobbers `.next` out from under the dev server. |
 | Cookie jar | devtools > Application > Cookies | The primary instrument for this whole runbook. Keep it open. |
-| Network filter | devtools > Network, filter `googletagmanager\|google-analytics\|facebook\|tiktok` (a regex; a backslash before each pipe is only the table escape) | Must stay empty until the visitor's row allows it. After consent (or on arrival in the US), `connect.facebook.net` and `googletagmanager.com` are EXPECTED on marketing routes; `analytics.tiktok.com` must always stay empty. Add `googleadservices\|doubleclick\|pagead` when a case says so (GS): it must stay empty in every state, because the site loads no Google Ads tag. Turn **Preserve log** on for every SG, SP and AT case: the sign-up leaves the page. |
+| Network filter | devtools > Network, filter `googletagmanager\|google-analytics\|facebook\|tiktok` (a regex; a backslash before each pipe is only the table escape) | Must stay empty until the visitor's row allows it. After consent (or on arrival in the US), `connect.facebook.net` and `googletagmanager.com` are EXPECTED on marketing routes; `analytics.tiktok.com` must always stay empty. Add `googleadservices\|doubleclick\|pagead` when a case says so (GS): it must stay empty in every state, because the site loads no Google Ads tag. Add `openai` when a case says so (CS): it must stay empty in every state, because the site loads no OpenAI pixel. Turn **Preserve log** on for every SG, SP and AT case: the sign-up leaves the page. |
 | Privacy route | `POST <showcase origin>/api/privacy/cookies` | The same-origin route that sets the consent, subject and carrier cookies as a server response (`lib/privacy/cookie-route.ts`). Read its answer with R15. |
 | API | `NEXT_PUBLIC_API_URL` of the showcase build | Receives the consent ledger beacon (`/public/consent`), the sign-up call (`/account/signup-recorded`) and the contact form (`/public/contact`). |
 | Region | The browser's **timezone**, nothing else | Emulate it with R13. A VPN changes nothing: the IP address is not read. |
@@ -77,20 +78,22 @@ view. If another case seems to need a login, it is the wrong runbook.
 | R3 | Become American the slow way: same as R2 with `America/New_York`. Prefer R13. |
 | R4 | Corrupt the choice: in the console, `document.cookie = "stampeo_consent=%7Bnope; path=/"`, then reload. |
 | R5 | Turn on Global Privacy Control: use Brave (Settings > Shields > "Tell sites not to sell my data"), or DuckDuckGo's browser. Chrome has no built-in GPC. Verify with `navigator.globalPrivacyControl` in the console before running the case. **Fake for a Chromium driven over CDP or Playwright:** an init script `Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', { get: () => true })` (`Page.addScriptToEvaluateOnNewDocument`). It changes what the page sees but sends no `Sec-GPC` request header, so any assertion about that header (SG-03) needs a real GPC browser. |
-| R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:4,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in",s:crypto.randomUUID()})) + '; path=/'`, then reload. `v` must equal `CONSENT_VERSION` in `lib/consent.ts` (4 since Google Ads joined the advertising recipients; a `v:3` or older grant is asked again, an older refusal still stands, see R12) and `s` is the subject id the real banner would mint (STA-324). The forged record names no policy row (`g`), so it reads as made under the opt-in row, and a grant never counts in a stricter row than the one it was made in: it stands in every region. |
+| R6 | Fake a granted state without the pixels existing: console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:5,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-in",s:crypto.randomUUID()})) + '; path=/'`, then reload. `v` must equal `CONSENT_VERSION` in `lib/consent.ts` (5 since OpenAI (ChatGPT ads) joined the advertising recipients; a `v:4` or older grant is asked again, an older refusal still stands, see R12) and `s` is the subject id the real banner would mint (STA-324). The forged record names no policy row (`g`), so it reads as made under the opt-in row, and a grant never counts in a stricter row than the one it was made in: it stands in every region. |
 | R7 | Unload the GA4 tag: a hard **page reload** (not a client-side navigation). `gtag` lives in the page's JS and cannot be removed once injected, so any GA case that must start with "tag not loaded" begins here. Confirm with `typeof window.gtag === "undefined"` in the console. The GA counterpart of the pixel-unload recipe (R9). |
 | R9 | Unload the pixel: a hard **page reload** (not a client-side navigation). `fbq` lives in the page's JS and cannot be removed once injected, so any case that must start with "pixel not loaded" begins here. Confirm with `typeof window.fbq === "undefined"` in the console. (Numbered past R8, which the AT section defines below; this row shipped as a second "R5" and was renumbered.) |
 | R10 | Forge a LEGACY attribution cookie (a browser that received one before STA-377; showcase no longer writes `stampeo_attribution`, it only forwards it while neither category is refused and deletes it on any refusal): console, `document.cookie = 'stampeo_attribution=' + encodeURIComponent(JSON.stringify({v:1,vn:"meta",bi:null,ci:"qa-legacy-v2",lp:"/pricing",cc:"marketing",cv:2,cr:"opt-in",ca:Math.floor(Date.now()/1000)-60,at:Math.floor(Date.now()/1000)-60})) + '; path=/; domain=.stampeo.app'` (use the local cookie domain off dev). Then sign up. |
 | R11 | Age a test business past the 45-day context window: dev SQL `update businesses set created_at = now() - interval '46 days' where id = '<id>';`, then run the purge once: `docker exec fidelity-backend-1 python -c "from app.services.attribution.retention import purge_client_context; print(purge_client_context())"`. Put it back afterwards with the original `created_at`. |
-| R12 | Forge a choice made under an older text (written here with version 2; use `v:3` for the text before Google Ads, as GS-01 to GS-04 do, and `v:5` for one this build does not know, as GS-11 does): R1 first, then console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:2,a:A,m:M,t:Math.floor(Date.now()/1000)-86400,r:"REGIME",s:crypto.randomUUID()})) + '; path=/'` with `A`, `M` (`0` or `1`) and `REGIME` (`opt-in` or `opt-out`) as the case says, then reload. Check it took: `decodeURIComponent(document.cookie.match(/stampeo_consent=([^;]*)/)[1])` shows `"v":2`. |
+| R12 | Forge a choice made under an older text (written here with version 2; use `v:3` for the text before Google Ads, as GS-01 to GS-04 do, `v:4` for the text before OpenAI, as CS-06 to CS-08 do, and `v:6` for one this build does not know, as GS-11 does): R1 first, then console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:2,a:A,m:M,t:Math.floor(Date.now()/1000)-86400,r:"REGIME",s:crypto.randomUUID()})) + '; path=/'` with `A`, `M` (`0` or `1`) and `REGIME` (`opt-in` or `opt-out`) as the case says, then reload. Check it took: `decodeURIComponent(document.cookie.match(/stampeo_consent=([^;]*)/)[1])` shows `"v":2`. |
 | R13 | **Emulate a timezone** (the only region signal). Chrome: keep devtools open > ⋮ > More tools > **Sensors** > Location > pick a preset, or Manage > Add location with the **Timezone ID** (and, where a case says so, the **Locale**) filled in. From a CDP or Playwright session: `Emulation.setTimezoneOverride {timezoneId}`. Then **hard reload** and confirm in the console: `Intl.DateTimeFormat().resolvedOptions().timeZone`. The override ends when devtools closes, and a tab open across the change keeps the old zone. Zones used here: EU/UK/CH `Europe/Paris`, `Europe/London`, `Europe/Zurich`, `Atlantic/Reykjavik`, `Europe/Warsaw`; US `America/New_York`, `America/Phoenix`, `America/Anchorage`, `Pacific/Honolulu`; unmapped `Etc/UTC` (Chrome reports `UTC`), `Antarctica/Troll`; US territories `America/Puerto_Rico`, `Pacific/Guam`; mapped to another country `Asia/Tokyo`, `America/Toronto`. |
-| R14 | Forge the record the web dashboard restores (a marketing refusal made elsewhere, brought back into this browser): R1, then console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:4,a:-1,m:0,t:Math.floor(Date.now()/1000)-3600,r:"opt-out",s:crypto.randomUUID(),o:"restore"})) + '; path=/'`, then reload. `-1` is "no choice": neither a refusal nor a grant. |
+| R14 | Forge the record the web dashboard restores (a marketing refusal made elsewhere, brought back into this browser): R1, then console, `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:5,a:-1,m:0,t:Math.floor(Date.now()/1000)-3600,r:"opt-out",s:crypto.randomUUID(),o:"restore"})) + '; path=/'`, then reload. `-1` is "no choice": neither a refusal nor a grant. |
 | R15 | **Read what the server answered.** Network > filter `api/privacy/cookies`, Preserve log on; click the POST > Headers > Response Headers (every `Set-Cookie`, with its `Max-Age`) and Payload (what was posted). Arithmetic: 182 days = 15724800 s, 400 days = 34560000 s. The Application tab and `document.cookie` show only an expiry date, which proves nothing about what the server set: Chrome caps a script-written cookie at 400 days and Safari at 7. |
 | R16 | Forget the subject: delete `stampeo_sid` and run R1, so no `s` survives anywhere (a `stampeo_consent` that still carries `s` makes the next subject the same value). |
 | R17 | **Wipe the jar.** Console: `document.cookie.split(';').map(c => c.split('=')[0].trim()).filter(Boolean).forEach(n => ['', '; Domain=' + location.hostname, '; Domain=.' + location.hostname.split('.').slice(-2).join('.')].forEach(d => document.cookie = n + '=; Max-Age=0; Path=/' + d))`, then reload and confirm Application > Cookies is empty (a cookie set with another Domain can survive; delete it by hand). Use it wherever a case starts from "a visitor we have never seen". It also removes `NEXT_LOCALE`, which is fine. |
 | R18 | Forge three version-2 carriers: the snippet below this table. |
 | R19 | **Block a request.** Devtools > ⋮ > More tools > Network request blocking > add the pattern (`*api/privacy/cookies*`, `*signup-recorded*`, `*public/contact*`, `*/icons/privacy-options.svg*`), reload. Remove the pattern afterwards. |
 | R20 | Write a `stampeo_region` cookie by hand: console, `document.cookie = 'stampeo_region=' + encodeURIComponent(JSON.stringify({c:"FR",v:1})) + '; path=/'` with `c` as the case says. |
+| R21 | A ChatGPT-ad landing address (the convention from `backend/docs/measurement/events.md`, with a made-up click id): `/us?utm_source=chatgpt&utm_medium=cpc&utm_campaign=qa540&oppref=QA540_<case>`, with `<case>` the lower-case id of the case (`cs01`). An organic ChatGPT link, which is NOT an ad: `/us?utm_source=chatgpt.com`. |
+| R22 | Read the click carrier: Application > Cookies > `stampeo_ad`, URL-decoded, or in the console `decodeURIComponent(document.cookie.match(/stampeo_ad=([^;]*)/)?.[1] ?? 'absent')`. `ci` is the click id: read it as presence and exact characters, and never copy a real one anywhere. |
 
 **R18: Forge three version-2 carriers** (a visitor who consented earlier). Console:
 
@@ -112,6 +115,19 @@ domain.
 
 ### Known state before you start
 
+- **STA-539 (2026-11-07) removed the US notice.** The US row of the policy
+  matrix shows no consent surface (`"surface":"none"`): a US visitor sees no
+  banner and no notice, tags still load on arrival, `stampeo_sid` is still
+  minted first, the footer **Your Privacy Choices** link and its dialog work as
+  before (a refusal there switches the tags off), GPC and earlier refusals are
+  honoured as before, and the EU, UK, Swiss and unplaced banner is unchanged.
+  RG-02 was rewritten in place and RG-03 is RETIRED (its id stays). RG-06,
+  RG-07, RG-11, SP-05, PR-08, MP-05, GA-06, CL-07, LY-03, GS-04 and GS-09 were
+  amended so a choice is made in the footer dialog, never with "Got it". The
+  four privacy policies lost the sentences that described the notice, and
+  "Last updated" is 7 November 2026 (LG-01). Verified by unit tests; not yet
+  read on a deployed page. **Targeted re-run:** RG-02, RG-04, RG-06, RG-07,
+  RG-11, PR-08, PR-10, CL-07, LY-03, LG-01.
 - **STA-409 (2026-10-10) added Trustpilot to §4 and §6 of the four policies**
   and moved "Last updated" to 10 October 2026. LG-04 is new and LG-01's date line
   was edited in place. Root cause: the review-invitation integration (live since
@@ -133,8 +149,8 @@ domain.
     browser **timezone alone** (`lib/privacy/region.ts`, `lib/timezone-country.ts`,
     `lib/privacy/policy-matrix.v1.json`). `stampeo_region` is NOT read
     (`READ_REGION_COOKIE = false`). RG-08 to RG-13.
-  - US footer link **Your Privacy Choices** with the official icon, the notice
-    and dialog titled the same, the US dialog, the GPC locks. PR-08 to PR-11.
+  - US footer link **Your Privacy Choices** with the official icon, the dialog
+    titled the same, the US dialog, the GPC locks. PR-08 to PR-11.
   - The compliance subject `stampeo_sid` and the server-set, long-lived refusal
     (400 days in the US, sliding). SP section.
   - Carriers are now `stampeo_src`, `stampeo_ga`, `stampeo_ad` (version 2),
@@ -187,12 +203,13 @@ domain.
   by injecting the same settings into production with a Playwright init
   script (the run dropped to the two expected PageViews). Not yet verified on
   a deployed build. Targeted re-run: MP-08, then MP-03, MP-04, MP-01.
-- **Consent version is 4** in showcase, web and backend, since Google Ads became
-  a recipient of the advertising conversions our server reports. A consent cookie
-  written under an older text (`v:3` or `v:2`) that granted anything is asked
-  again (the banner in the EU, the notice in the US); an older refusal still
-  stands (CN-05, RG-05, RG-06, GS-01 to GS-04). If you had accepted on your own
-  browser, expect the banner again before any case.
+- **Consent version is 5** in showcase, web and backend, since OpenAI (ChatGPT
+  ads) became a recipient of the advertising conversions our server reports (4
+  was Google Ads). A consent cookie written under an older text (`v:4`, `v:3` or
+  `v:2`) that granted anything is asked again (the banner in the EU; in the US
+  nothing is shown and the opt-out default applies); an older refusal still
+  stands (CN-05, RG-05, RG-06, GS-01 to GS-04, CS-06, CS-07). If you had accepted
+  on your own browser, expect the banner again before any case.
 - **STA-459 (Google Ads conversions) added the GS section and changed what a few
   existing cases read.** The site loads no Google Ads tag and has no Google Ads
   id (GS-06). Our Google tag denies ad signals before it is configured, and the
@@ -207,6 +224,38 @@ domain.
   not wording), and the re-ask of a carried refusal through **Accept all** is the
   behaviour GS-03 pins until counsel rules on it. **Targeted re-run:** GS-01 to
   GS-11, GA-08, LG-01, LG-02, then RG-05, RG-06 and CN-05.
+- **STA-540 (ChatGPT ads conversions) moved the consent version to 5 and added the
+  CS section.** The site still loads no OpenAI tag (CS-05). It captures OpenAI's
+  click id, `oppref`, like `gclid` (CS-01 to CS-03, CS-08), keeps a raw `+` in it
+  and drops an id that is not printable ASCII (CS-02), drops it from the address Google Analytics receives (CS-04) and clears
+  `__oppref` and `__obref` on an advertising refusal (CS-09). A version-4 grant
+  is asked again (CS-06) and a version-4 refusal stands (CS-07). The banner, the
+  advertising cards and the privacy policy name OpenAI (CS-10, CS-11), and say
+  Google Ads hears only of its own ad clicks. A US visitor sees no notice, so
+  the US default is captured with nothing to dismiss (CS-01, CS-08, CS-10).
+  Nothing was retired. The version a case reads or forges was moved from 4 to 5
+  in R6, R14, CN-02, RG-06, RG-07, SP-04, SP-06, SP-08, AT-01, AT-12, AT-14,
+  AT-16 and GS-01 to GS-04; RG-03 is retired, so it is no longer among them.
+  GS-11 now forges `v:6` as the version this build does not know, and GS-09 and
+  GS-10 were rewritten for the new copy. This bump re-asks EU
+  grants a second time in about three weeks (version 4 shipped on 19 October):
+  expect the banner again, and a dip in EU consent for a few days.
+  - **Not run yet.** All CS cases are first runs, written from the diff and
+    the tests of this branch (`lib/attribution/chatgpt-landing.test.ts` and its
+    neighbours), not exercised on a deployed build. If a quoted string differs,
+    report it as AMBIGUOUS with what you saw. The dev showcase, web and backend
+    must all run `feat/sta-540-chatgpt-ads-conversions`.
+  - **Not QA's to decide:** counsel signed off the copy and OpenAI's role on
+    10 November 2026 (the four policies' date line moved to that day and their
+    `COUNSEL` markers were removed); the re-ask of a carried refusal through
+    **Accept all** (CS-07, GS-03) is counsel's call.
+  - **Needs a human:** CS-12 is IA-02's emulation and a real GPC browser is
+    needed for CS-01 (h) and CS-05 (g).
+  - **The server half** (what is sent to OpenAI, the 30-day click window, the
+    admin) is `backend/docs/qa/measurement.md`, section CG, which also holds the
+    release-order rule: the backend ships before this site.
+  - **Targeted re-run:** CS-01 to CS-12, GS-01 to GS-11, GA-08, LG-01, LG-02,
+    then RG-05, RG-06, CN-05, AT-01, AT-12, AT-14 and AT-16.
 - **Migrations 186 and 189 to 193** (conversion events, consent subject links,
   per-category refusals, attribution v2, the conversion outbox, coverage) are on
   dev only. The backend code on this branch must not run against a database
@@ -263,7 +312,7 @@ EXPECT:
 - The banner disappears immediately.
 - `stampeo_consent` now exists. Decode it (console:
   `decodeURIComponent(document.cookie.match(/stampeo_consent=([^;]*)/)[1])`);
-  it reads `"v":4,"a":0,"m":0,"r":"opt-in"`, with `"g":"EEA_UK_CH"`, `"p":1` and
+  it reads `"v":5,"a":0,"m":0,"r":"opt-in"`, with `"g":"EEA_UK_CH"`, `"p":1` and
   an `"s"` that is a lowercase v4 UUID.
 - R15: one POST to `/api/privacy/cookies`, **204**, with a `Set-Cookie` for
   `stampeo_consent` (`Max-Age=15724800`, 182 days: an EU refusal is not renewed
@@ -340,58 +389,45 @@ WHY: The opt-in half of the geo split.
 1. R17, R13 with `Europe/Paris` (R2 also works), R1, reload.
 
 EXPECT:
-- The two-button banner, not the slim notice.
+- The two-button banner, and no other surface.
 - No tracking cookie, and no `stampeo_sid`, until a button is clicked.
 
-### RG-02 A US visitor is told, not asked — CORE
+### RG-02 A US visitor sees no notice and tags load — CORE
 DEPENDS: RG-01
 
 WHY: The opt-out half. US state law requires notice and an opt-out, not prior
-consent, and a blocking banner there costs the ad measurement this epic exists
-to produce.
+consent. The privacy policy is the notice and the footer link is the opt-out, so
+nothing pops up, and a blocking banner there would cost the ad measurement this
+epic exists to produce.
 
 1. R17, R13 with `America/New_York` (R3 also works), R1, reload on `/us`.
 
 EXPECT:
-- The slim **notice**, not the two-button banner: one line of text, a **Your
-  Privacy Choices** button, and "Got it". The notice's accessible name (the
-  `aria-label` of `section[aria-label]`) is also "Your Privacy Choices".
-- No Refuse/Accept pair.
+- **No consent surface at all**: no two-button banner and no slim notice, and
+  nothing sits at the bottom of the page over the content.
 - The footer offers **Your Privacy Choices** followed by the official opt-out
-  icon (PR-10), not **Cookie preferences**, and it opens the same preferences
-  dialog as the notice's button.
+  icon (PR-10), not **Cookie preferences**, and it opens the US preferences
+  dialog (PR-08).
 - The tags load on arrival with no click (MP-05, GA-06), and `stampeo_sid`
   exists before they do (SP-01).
-- NO `stampeo_consent` yet: the notice is not a choice until "Got it" (RG-03).
-- Note: in Polish (`/pl`) the notice text is two sentences, not one line. That
-  is expected, not a layout failure.
+- NO `stampeo_consent`: nobody chose, and nothing records the visit as a choice.
+- NEGATIVE: Network shows no request to `/public/consent` (nothing was decided,
+  so the ledger has nothing to prove).
 
-### RG-03 Dismissing the US notice makes it stay dismissed — CORE
+### RG-03 RETIRED (STA-539): there is no US notice
 DEPENDS: RG-02
 
-WHY: This regressed once as component-only state, which brought the notice back
-on every navigation. That reads as a broken site, and it also means no record
-exists of what the visitor was shown.
-
-1. From RG-02, click **Got it**. Read the privacy route's answer (R15).
-2. Navigate to `/pricing`, then reload.
-
-EXPECT:
-- The notice does not reappear, on either the navigation or the reload.
-- `stampeo_consent` exists and reads `"v":4,"a":1,"m":1,"r":"opt-out"` with
-  `"g":"US"` and `"p":1`.
-- R15: the POST's `Set-Cookie` for `stampeo_consent` has `Max-Age=15724800`
-  (182 days). A grant is not given the 400-day refusal lifetime.
-- The page does **not** reload on "Got it": nothing was revoked, so the running
-  tags keep running.
-- No second POST carrying `consent` on the navigation or the reload: a grant is
-  not renewed (SP-05).
+Retired; the id stays so references keep working. There is no notice to dismiss
+and no "Got it". What it protected survives in other cases: a choice saved in the
+US dialog stays saved across navigation and reload (SP-04, SP-05), and a grant
+saved there is kept 182 days, never the 400-day refusal lifetime (SP-05, step 5).
+Skip this case.
 
 ### RG-04 Global Privacy Control is honoured without being asked — CORE
 DEPENDS: RG-02
 
-WHY: The one US requirement that is a hard requirement, and the only case where
-the correct behaviour is to show the visitor nothing at all. While
+WHY: The one US requirement that is a hard requirement: with no click and no
+surface, the signal alone stops the tags. While
 `analytics_under_us_opt_out` is `off`, the signal also switches Google Analytics
 off, not only Meta (`gpcDeniedCategories` in `lib/privacy/policy.ts`).
 
@@ -401,7 +437,7 @@ off, not only Meta (`gpcDeniedCategories` in `lib/privacy/policy.ts`).
 3. Then repeat with R13 `Europe/Paris`.
 
 EXPECT:
-- New York: **no notice at all**. Network: zero requests to
+- New York: nothing is shown (as for any US visitor, RG-02). Network: zero requests to
   `googletagmanager.com`, `google-analytics.com`, `connect.facebook.net`,
   `facebook.com`. `typeof window.fbq === "undefined"` and
   `typeof window.gtag === "undefined"`.
@@ -422,17 +458,17 @@ EXPECT:
 ### RG-05 A US visitor who opted out under the previous text stays opted out — BLOCKER
 DEPENDS: RG-02
 
-WHY: A US opt-out is the one choice the notice regime exists to honour. If the
+WHY: A US opt-out is the one choice the opt-out regime exists to honour. If the
 version bump read the version-2 opt-out as no choice, the opt-out default would
-load the pixel and GA again and capture the visitor's ad click, behind a notice
-they already answered.
+load the pixel and GA again and capture the visitor's ad click, after they had
+already said no.
 
 1. R17, R13 with `America/New_York`, R9, then R12 with `a:0`, `m:0`,
    `r:"opt-out"`.
 2. Open `/us?fbclid=qa-rg05`, wait 5s, then reload. Read R15.
 
 EXPECT:
-- **No** notice, on either load.
+- Nothing is shown, on either load.
 - Network: zero requests to `connect.facebook.net` and `googletagmanager.com`;
   `typeof window.fbq === "undefined"`.
 - **No** `_fbp`, `_ga`, and **no** `stampeo_src`, `stampeo_ga`, `stampeo_ad` and
@@ -444,22 +480,24 @@ EXPECT:
   into a grant.
 - `stampeo_sid` now exists (a US visitor gets a subject on arrival, SP-01).
 
-### RG-06 A previous-text marketing refusal survives "Got it" — CORE
+### RG-06 A previous-text marketing refusal survives saving the dialog — CORE
 DEPENDS: RG-05
 
 WHY: A version-2 `{a:1,m:0}` keeps marketing refused and asks about analytics
-again. In the US the notice reappears, and dismissing it records the state in
-force; recording the regime default instead would turn the old marketing
-refusal into a grant.
+again. In the US nothing is asked: the opt-out default applies to analytics. The
+dialog opens on the state in force (Advertising off, Audience measurement on),
+so saving it untouched records that state; recording the regime default instead
+would turn the old marketing refusal into a grant.
 
 1. With the GA measurement id and the Meta pixel id set (Setup): R17, R13 with
    `America/New_York`, R7, R9, then R12 with `a:1`, `m:0`, `r:"opt-out"`. Note
    the `t` R12 wrote.
 2. Open `/us?fbclid=qa-rg06`. Wait 5s.
-3. Click **Got it**, then reload.
+3. Open the footer **Your Privacy Choices**. Change nothing and click **Save**,
+   then reload.
 
 EXPECT:
-- The **notice** shows on the first load.
+- Nothing is shown on the first load.
 - `googletagmanager.com` is requested and `_ga` is set; `connect.facebook.net`
   is **not** requested and there is no `_fbp`.
 - `stampeo_src` and `stampeo_ga` exist; **NO `stampeo_ad`** (marketing is refused,
@@ -467,36 +505,38 @@ EXPECT:
   decode with `"cv":2`, `"cr":"opt-out"`, `"ca"` equal to the `t` from step 1,
   `"g":"US"`: the version-2 choice the visitor's state rests on (AT-12). Neither
   holds the click id.
-- After **Got it**, `stampeo_consent` decodes to `"v":4,"a":1,"m":0`, **not**
-  `"m":1`. The page does not reload (nothing was revoked). After the reload the
-  notice is gone, Meta still does not load, and both carriers now read `"cv":4`
-  with `"ca"` equal to the new record's `t` (the refusal re-stamps them, AT-16).
+- In the dialog Advertising is **off** and Audience measurement is **on**. After
+  **Save**, `stampeo_consent` decodes to `"v":5,"a":1,"m":0`, **not** `"m":1`. The
+  page does not reload (nothing was revoked). After the reload Meta still does not
+  load, and both carriers now read `"cv":5` with `"ca"` equal to the new record's
+  `t` (the refusal re-stamps them, AT-16).
 - Repeat with R13 `Europe/Paris` instead: the **banner** shows, and nothing loads
   and no carrier is written until it is answered.
 
-### RG-07 Global Privacy Control overrides an earlier "Got it" — CORE
-DEPENDS: RG-03, RG-04
+### RG-07 Global Privacy Control overrides an earlier saved grant — CORE
+DEPENDS: RG-04
 
-WHY: "Got it" records the opt-out default, everything on. The CCPA regulations
-(§7025) require GPC to be processed as an opt-out even when it conflicts with
-an earlier setting, so a US visitor who acknowledged the notice and later
-turned GPC on must stop being tracked, and the carriers written before must not
-cross to the dashboard.
+WHY: A US grant (the opt-out default saved with both on, or a record left by the
+old notice) is everything on. The CCPA regulations (§7025) require GPC to be
+processed as an opt-out even when it conflicts with an earlier setting, so a US
+visitor with a saved grant who later turns GPC on must stop being tracked, and
+the carriers written before must not cross to the dashboard.
 
 1. R17, R13 with `America/New_York`, in the R5 browser with the signal **off**.
-   R7, R9, then open `/us`, click **Got it**, and wait 5s. Confirm `_ga`, `_fbp`,
+   R7, R9, then open `/us`, open the footer **Your Privacy Choices**, leave both
+   switches on, click **Save**, and wait 5s. Confirm `_ga`, `_fbp`,
    `stampeo_src`, `stampeo_ga` exist (if the browser blocks the tags itself,
    lower its tracker blocking for the site first).
    - If the browser cannot switch GPC off, forge the same state with GPC on
      instead: console,
-     `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:4,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-out",g:"US",p:1,s:crypto.randomUUID()})) + '; path=/'`,
+     `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:5,a:1,m:1,t:Math.floor(Date.now()/1000),r:"opt-out",g:"US",p:1,s:crypto.randomUUID()})) + '; path=/'`,
      then `document.cookie = '_ga=GA1.1.111.222; path=/'`,
      `document.cookie = '_fbp=fb.1.1700000000.1; path=/'` and R18.
 2. Turn the signal on (R5) and confirm `navigator.globalPrivacyControl === true`.
 3. Reload once, wait 5s, then read the cookie jar and R15.
 
 EXPECT:
-- No notice.
+- Nothing is shown.
 - Network: zero requests to `googletagmanager.com` and `connect.facebook.net`;
   `typeof window.fbq === "undefined"` and `typeof window.gtag === "undefined"`.
 - `_ga`, `_ga_*`, `_fbp`, `stampeo_src`, `stampeo_ga`, `stampeo_ad` and any
@@ -516,20 +556,20 @@ table) and `lib/privacy/policy-matrix.v1.json` (the three rows).
 
 1. For each line of the table: R17, R13 with that zone, hard reload `/` (use
    `/us` for the US zones), wait 5s, and look at what is shown and loaded.
-2. Click **Refuse all** (or **Got it** for the notice) and decode
-   `stampeo_consent`: its `"g"` names the row the page believed in, and `"r"`
-   the regime.
+2. Click **Refuse all** (in a US zone, open the footer **Your Privacy Choices**,
+   switch Advertising off and **Save**) and decode `stampeo_consent`: its `"g"`
+   names the row the page believed in, and `"r"` the regime.
 
 | Timezone | Row (`g`) | Regime | Surface | Before any click |
 |---|---|---|---|---|
 | `Europe/Paris`, `Europe/London`, `Europe/Zurich`, `Atlantic/Reykjavik`, `Europe/Warsaw` | `EEA_UK_CH` | `opt-in` | banner | Nothing loads. No `stampeo_sid`. |
-| `America/New_York`, `America/Phoenix`, `America/Anchorage`, `Pacific/Honolulu` | `US` | `opt-out` | notice | GA and Meta load. `stampeo_sid` exists first. |
+| `America/New_York`, `America/Phoenix`, `America/Anchorage`, `Pacific/Honolulu` | `US` | `opt-out` | none | GA and Meta load. `stampeo_sid` exists first. |
 | `Etc/UTC`, `Antarctica/Troll`, `Asia/Tokyo`, `America/Toronto` | `UNKNOWN` | `opt-in` | banner | Nothing loads. No `stampeo_sid`. |
 
 EXPECT:
 - Each line behaves as its row says, in every one of its zones.
-- NEGATIVE: no US zone shows a banner or waits for a click; no EU, UK, Swiss or
-  unplaceable zone shows the notice, loads a tag, or mints a subject before a
+- NEGATIVE: no US zone shows a banner or any other surface, or waits for a click; no EU, UK, Swiss or
+  unplaceable zone skips the banner, loads a tag, or mints a subject before a
   decision.
 - NEGATIVE: the switch of zone is the only thing that changed between lines. If a
   zone behaves like the wrong row, name the zone: the table is the defect.
@@ -548,8 +588,8 @@ Cloudflare middleware exists (STA-379).
    (`document.cookie = 'stampeo_region=garbage; path=/'`).
 
 EXPECT:
-- Step 1: the **banner**, not the notice. Nothing loads, no `stampeo_sid`.
-- Step 2: the **notice**, and the US behaviour (tags load, `stampeo_sid` exists).
+- Step 1: the **banner**. Nothing loads, no `stampeo_sid`.
+- Step 2: no surface, and the US behaviour (tags load, `stampeo_sid` exists).
 - Step 3: identical to step 1, and no console error.
 - NEGATIVE: the cookie moves the row in neither direction, and the site does not
   rewrite or delete it. `stampeo_region` appears in no policy table (LG-01).
@@ -572,19 +612,20 @@ EXPECT:
   Choices" as the footer label; it reads **Cookie preferences**.
 - Step 3: the banner. `navigator.language` saying `en-US` does not make a
   French-timezone visitor American.
-- NEGATIVE: no notice, no tag, no GA or Meta request, in any step.
+- NEGATIVE: no tag and no GA or Meta request, in any step, and no US label.
 
-### RG-11 A US "Got it" does not carry into Europe — BLOCKER
-DEPENDS: RG-03, RG-08
+### RG-11 A US grant does not carry into Europe — BLOCKER
+DEPENDS: RG-08
 
-WHY: "Got it" records the opt-out default, everything on. That is not consent,
-and a grant never counts in a row stricter than the one it was made in
+WHY: A US grant (the opt-out default saved with both on) is not consent, and a
+grant never counts in a row stricter than the one it was made in
 (`standingChoice` in `lib/privacy/policy.ts`). A visitor who changes zone must be
 asked again, and what the US visit wrote must not be re-stamped with European
 evidence.
 
 1. R17, R13 `America/New_York`, R7, R9, open `/us`, wait for `_ga`, `_fbp` and
-   the carriers, then click **Got it**. Copy the three carriers' decoded values
+   the carriers, then open the footer **Your Privacy Choices**, leave both
+   switches on and click **Save**. Copy the three carriers' decoded values
    (`stampeo_src`, `stampeo_ga`, `stampeo_ad` if a click id was there) and the
    consent cookie.
 2. R13 `Europe/Paris`, hard reload `/`, wait 5s. Read R15.
@@ -627,10 +668,8 @@ not say may be read as a grant.
 3. Reload. Then R5 (GPC on) and reload once more.
 
 EXPECT:
-- Step 1: **no notice** (an opt-out row has nothing left to ask,
-  `surfaceWithPolicy` in `lib/privacy/policy.ts`). This differs from the UX brief,
-  which expected the notice and a "Got it": there is no way to click it here, and
-  that is the behaviour of the code.
+- Step 1: nothing is shown (an opt-out row has nothing to ask,
+  `surfaceWithPolicy` in `lib/privacy/policy.ts`).
 - Step 1: `googletagmanager.com` is requested and `_ga` is set (analytics takes
   the row default); `connect.facebook.net` is **not** requested, no `_fbp`,
   `typeof window.fbq === "undefined"`, and **no `stampeo_ad`** although the URL
@@ -658,7 +697,7 @@ EXPECT:
 - The **banner** shows. No request to `googletagmanager.com` or
   `connect.facebook.net`, no `_ga`, no `_fbp`, no carrier.
 - After **Refuse all**: `stampeo_consent` decodes `"a":0,"m":0` with no `"o"`.
-- NEGATIVE: the restore does not load Analytics. No notice, no tag.
+- NEGATIVE: the restore does not load Analytics. No tag.
 
 ---
 
@@ -765,7 +804,7 @@ a button that did nothing when clicked.
 EXPECT:
 - The dialog opens.
 - Changing a switch and saving is recorded, same as anywhere else.
-- No banner and no notice on the page itself: managing a choice is allowed
+- No banner on the page itself: managing a choice is allowed
   here, being asked for one is not.
 
 ### PR-07 A refusal survives a browser that blocks storage — CORE
@@ -795,14 +834,13 @@ so the dialog leads with that, is titled like the link that opened it, and says
 how long a refusal lasts. The duration is interpolated from the row, never typed
 into a string (`lib/privacy/choices-ui.ts`).
 
-1. R17, R13 `America/New_York`, open `/us`. Click the notice's **Your Privacy
-   Choices** button, then close, then open the footer entry.
+1. R17, R13 `America/New_York`, open `/us`. Open the footer **Your Privacy
+   Choices** entry, then close it.
 2. Repeat in `/fr`, `/es`, `/pl` (use the `/us` page in each locale's language
    through the language switcher).
 
 EXPECT:
-- The dialog title, the footer entry, the notice's button and the notice's
-  accessible name are the **same words**: `Your Privacy Choices` / `Vos choix de
+- The dialog title and the footer entry are the **same words**: `Your Privacy Choices` / `Vos choix de
   confidentialité` / `Tus opciones de privacidad` / `Twoje ustawienia
   prywatności`.
 - Card order: **Advertising** ("Sale, sharing and targeted advertising"), then
@@ -983,7 +1021,7 @@ The server sets it, and the response, not `document.cookie`, is the evidence.
    Application > Cookies > `stampeo_consent` > Expires.
 
 EXPECT:
-- The Save's POST payload has `consent` like `{"v":4,"a":1,"m":0,...,"r":"opt-out",
+- The Save's POST payload has `consent` like `{"v":5,"a":1,"m":0,...,"r":"opt-out",
   "g":"US","p":1,"s":"<uuid>"}`, the answer is **204**, and its `Set-Cookie` for
   `stampeo_consent` has `Max-Age=34560000` (400 days), `Path=/`, `SameSite=Lax`
   (plus `Domain=` and `Secure` wherever the build sets them). A `Set-Cookie` for
@@ -1011,7 +1049,8 @@ choice, are fixed once made.
 2. Hard reload `/blog`.
 3. Hard load `/login`.
 4. R17, R13 `Europe/Paris`, **Refuse all**, then reload twice.
-5. R17, R13 `America/New_York`, open `/us`, click **Got it**, then reload twice.
+5. R17, R13 `America/New_York`, open `/us`, open the footer **Your Privacy
+   Choices**, leave both switches on, click **Save**, then reload twice.
 
 EXPECT:
 - Step 1: no POST carrying `consent`.
@@ -1020,7 +1059,9 @@ EXPECT:
 - Step 3: **no** POST at all: a private route does nothing.
 - Step 4: any POST has a payload of at most `{"sid":"ensure"}`, never `consent`
   (an EU refusal is fixed at 182 days from when it was made).
-- Step 5: the same: no `consent` is re-posted for a grant.
+- Step 5: the Save's POST carries `consent` and answers with `Max-Age=15724800`
+  (182 days), not the 400-day refusal lifetime; the two reloads then re-post no
+  `consent`: a grant is not renewed.
 - NEGATIVE: no step produces more than one POST carrying `consent` per document.
 
 ### SP-06 A refusal older than six months is still a refusal — CORE
@@ -1031,11 +1072,11 @@ Reading it against its own age would revert marketing to the opt-out default and
 send the visitor's click to Meta (AC2.2).
 
 1. R17, R13 `America/New_York`, R9. Forge `stampeo_consent` with
-   `{v:4,a:1,m:0,t:Math.floor(Date.now()/1000)-183*86400,r:"opt-out",g:"US",p:1,s:crypto.randomUUID()}`
+   `{v:5,a:1,m:0,t:Math.floor(Date.now()/1000)-183*86400,r:"opt-out",g:"US",p:1,s:crypto.randomUUID()}`
    (the pattern of R6), then open `/us?fbclid=qa-sp06`, wait 5s.
 
 EXPECT:
-- No notice, no `connect.facebook.net` request, no `_fbp`, no `stampeo_ad`.
+- Nothing is shown, no `connect.facebook.net` request, no `_fbp`, no `stampeo_ad`.
 - GA loads (analytics was never refused).
 - NEGATIVE: marketing never reverts to the row default, however old `"t"` is.
 
@@ -1066,9 +1107,9 @@ parsers. `SITE` is the showcase origin under test; no browser state is involved.
    - b. the same with `-H 'Origin: https://evil.example'`
    - c. `-H "Origin: $SITE" -H 'Content-Type: text/plain' -d '{}'`
    - d. `-H "Origin: $SITE" -H 'Content-Type: application/json' -d '{}'`
-   - e. as d with `-d '{"consent":{"v":4,"a":1,"m":0,"t":1791244000,"r":"opt-out","s":"not-a-uuid"},"sid":"ensure"}'`
+   - e. as d with `-d '{"consent":{"v":5,"a":1,"m":0,"t":1791244000,"r":"opt-out","s":"not-a-uuid"},"sid":"ensure"}'`
    - f. as d with `-d '{"carriers":{"ad":{"v":2,"vn":"meta","ci":"qa-curl","ct":1791244000,"cv":3,"cr":"opt-out","ca":0,"p":1,"g":"US"}}}'`
-   - g. as f plus `-H 'Cookie: stampeo_consent=%7B%22v%22%3A4%2C%22a%22%3A1%2C%22m%22%3A0%2C%22t%22%3A1791244000%2C%22r%22%3A%22opt-out%22%7D'`
+   - g. as f plus `-H 'Cookie: stampeo_consent=%7B%22v%22%3A5%2C%22a%22%3A1%2C%22m%22%3A0%2C%22t%22%3A1791244000%2C%22r%22%3A%22opt-out%22%7D'`
    - h. as d with `-d '{"carriers":{"ad":{"vn":"not-a-vendor"}}}'`
    - i. as d with `-d '{"clear":["stampeo_consent","stampeo_src"]}'`
    - j. as d with a body larger than 8 KB (for example `-d "{\"x\":\"$(head -c 9000 /dev/zero | tr '\0' a)\"}"`).
@@ -1101,7 +1142,7 @@ consent banner on a merchant's sign-up page costs that merchant conversions.
    `/fr/<slug>/l/<location>`.
 
 EXPECT:
-- **No banner and no notice**, in any locale.
+- **No consent surface**, in any locale.
 - No `stampeo_consent` is written by visiting.
 - The enrollment form itself works normally.
 
@@ -1112,8 +1153,9 @@ DEPENDS: PG-01
    `/es/programa-de-fidelizacion`, `/pl/program-lojalnosciowy`, `/us`.
 
 EXPECT:
-- The banner (or, on `/us` with a US timezone, the notice) appears on every
-  one.
+- The banner appears on every one, under a European or unplaced timezone. Under
+  a US timezone (R3) none of them shows anything (RG-02), and the footer carries
+  **Your Privacy Choices**.
 
 ### PG-03 Private routes fire no tag and capture nothing — BLOCKER
 DEPENDS: PG-01
@@ -1138,8 +1180,8 @@ clicks on to a marketing page (`planCapture` checks the landing path).
 EXPECT:
 - A: after the client-side hop onto `/onboarding`, no `PageView`, `SignupCTA` or
   `page_view` beacon (GA-02, MP-08). Each hard load: zero requests to the tag
-  hosts, `fbq` and `gtag` undefined, no banner and no notice.
-- B: no notice, zero requests to the tag hosts, **no `stampeo_sid`** (a US visitor
+  hosts, `fbq` and `gtag` undefined, no banner.
+- B: zero requests to the tag hosts, **no `stampeo_sid`** (a US visitor
   gets one only on a page where a tag may run), no `stampeo_src`, `stampeo_ga` or
   `stampeo_ad`, no `stampeo_consent`, and no POST to `/api/privacy/cookies`.
 - B step 3: on `/` the tags now load (US default) and the sid is minted, but
@@ -1165,7 +1207,7 @@ EXPECT:
   preferences** (Paris), centred and muted, under the card.
 - It opens the dialog (the US version, or the EU version). Save works as
   anywhere else (a revocation reloads the page).
-- No banner or notice on the page itself, and no tag request.
+- No banner on the page itself, and no tag request.
 - NEGATIVE: on a fresh US jar (R17) with no subject, opened directly, the label
   still reads **Your Privacy Choices**: it follows the row, not the subject.
 
@@ -1282,17 +1324,18 @@ EXPECT:
 DEPENDS: RG-02
 
 WHY: Intended, and the case most likely to be misfiled as a bug. As of 2026 no
-US state law requires prior consent, so the US is notice-and-opt-out.
+US state law requires prior consent, so the US is opt-out: the policy is the
+notice and the footer link is the opt-out.
 
 1. R3 (become American), R1, R9. Open `/us`.
 
 EXPECT:
-- The **notice** appears, not the banner.
+- No banner and no notice.
 - `connect.facebook.net` is requested and `_fbp` is set, with **no click**.
 - `stampeo_sid` exists before the pixel's first request (SP-01).
 - This is CORRECT. Do not file it as a consent failure.
 - Then enable Global Privacy Control in the browser and repeat: now NOTHING
-  loads, and no notice appears (RG-04).
+  loads (RG-04).
 
 ### MP-06 Revoking stops the pixel — CORE
 DEPENDS: MP-01, PR-04
@@ -1487,12 +1530,12 @@ WHY: Intended, and the case most likely to be misfiled as a bug. Mirrors MP-05.
 1. R3 (become American), R1, R7. Open `/us`.
 
 EXPECT:
-- The **notice** appears, not the banner.
+- No banner and no notice.
 - `googletagmanager.com` is requested and `_ga` is set, with **no click**, after
   `stampeo_sid` exists (SP-01).
 - This is CORRECT. Do not file it as a consent failure.
-- Then enable GPC (R5) and repeat: NOTHING loads, neither Google nor Meta, and
-  no notice appears (RG-04: the shipped matrix turns analytics off under GPC too).
+- Then enable GPC (R5) and repeat: NOTHING loads, neither Google nor Meta
+  (RG-04: the shipped matrix turns analytics off under GPC too).
 
 ### GA-07 Revoking stops the tag — CORE
 DEPENDS: GA-01, PR-04
@@ -1789,7 +1832,7 @@ EXPECT:
   holds no click id.
 - `stampeo_ga`: `"cid"` matches `^\d+\.\d+$` and is NOT in the `GA1.1.` form;
   `"sid"` and `"sn"` appear once `_ga_ZFZ6JLPFXN` exists.
-- All three carry `"cv":3`, `"cr":"opt-in"`, `"ca"` equal to the time of the
+- All three carry `"cv":5`, `"cr":"opt-in"`, `"ca"` equal to the time of the
   Accept click, `"p":1`, `"g":"EEA_UK_CH"`.
 - NEGATIVE: no `stampeo_attribution` anywhere.
 
@@ -2039,7 +2082,7 @@ choice so the backend applies the version-2 rules.
 1. With the GA measurement id set (Setup): R17, R13 `America/New_York`, R7, then
    R12 with `a:1`, `m:0`, `r:"opt-out"`. Note the `t` it wrote:
    `JSON.parse(decodeURIComponent(document.cookie.match(/stampeo_consent=([^;]*)/)[1])).t`.
-2. Open `/us` with no parameters. Do not touch the notice. Wait 5s, then decode
+2. Open `/us` with no parameters. Wait 5s, then decode
    `stampeo_src` and `stampeo_ga`.
 3. Delete both carriers, then forge the same choice with no moment: console,
    `document.cookie = 'stampeo_consent=' + encodeURIComponent(JSON.stringify({v:2,a:1,m:0,r:"opt-out",s:crypto.randomUUID()})) + '; path=/'`.
@@ -2047,7 +2090,7 @@ choice so the backend applies the version-2 rules.
 
 EXPECT:
 - After step 2: both carriers decode with `"cv":2`, `"ca"` equal to the `t` from
-  step 1, `"cr":"opt-out"`, `"g":"US"`. **Never** `"cv":3` with `"ca":0`. No
+  step 1, `"cr":"opt-out"`, `"g":"US"`. **Never** the current version (`"cv":5`) with `"ca":0`. No
   `stampeo_ad`.
 - After step 3: `googletagmanager.com` is requested (the analytics default
   stands) but there is **no carrier at all**: an older choice with no moment is
@@ -2092,7 +2135,7 @@ EXPECT:
 - `stampeo_ad`: `"vn":"meta"`, `"ci":"qa-meta-click"`, `"ct"` set, `"fbp"` starting
   `fb.1.`.
 - `stampeo_ga`: `"cid"` digits and a dot.
-- Each carries `"cv":3`, `"cr":"opt-out"`, `"ca":0` (nobody clicked: it is the US
+- Each carries `"cv":5`, `"cr":"opt-out"`, `"ca":0` (nobody clicked: it is the US
   default), `"p":1`, `"g":"US"`.
 - NEGATIVE: no value is longer than 128 characters except the click id and the
   `fbp`, and no carrier holds a field the table above does not list.
@@ -2138,10 +2181,10 @@ keep a stale basis, which the backend would read as a permission it no longer ha
 3. Turn **Audience measurement** off too > **Save**.
 
 EXPECT:
-- Step 1: `"ca":0`, `"cv":3`, `"cr":"opt-out"`, `"g":"US"` on all three.
+- Step 1: `"ca":0`, `"cv":5`, `"cr":"opt-out"`, `"g":"US"` on all three.
 - After step 2: `stampeo_ad` is gone; `stampeo_src` and `stampeo_ga` remain with
   `"ca"` now equal to the Save's moment (the `"t"` of `stampeo_consent`), still
-  `"cv":3`, `"cr":"opt-out"`, `"g":"US"`. The UTMs inside `stampeo_src` are
+  `"cv":5`, `"cr":"opt-out"`, `"g":"US"`. The UTMs inside `stampeo_src` are
   unchanged.
 - After step 3: `stampeo_ga` and `stampeo_src` are gone.
 - NEGATIVE: once the visitor has clicked, no remaining carrier still says
@@ -2231,7 +2274,7 @@ regime applied (AC6.7).
 
 1. R5 in Brave (the header assertion needs a real GPC browser), R17,
    R13 `America/New_York`, R7, R9. Open `/us?fbclid=qa-sg03-click&utm_source=meta`.
-   Wait 5s (there is no notice and no tag).
+   Wait 5s (no tag loads under the signal).
 2. Click a signup CTA, complete the wizard, read the Payload and the request
    headers.
 
@@ -2428,18 +2471,25 @@ EXPECT:
 - A row with both categories false and `surface` `preferences` EXISTS, despite
   the reload.
 
-### CL-07 The US notice records its own surface — CORE
+### CL-07 A US choice is recorded under the opt-out regime — CORE
 DEPENDS: CL-01
 
-WHY: A US visitor's consent is implied by the opt-out regime and never clicked.
-An audit has to tell that apart from an EU visitor who actively accepted.
+WHY: A US visitor is never asked, so a US row exists only for a choice made in
+the footer dialog. An audit has to tell it apart from an EU visitor who
+actively accepted, and a US visitor who only arrived must leave no row at all.
 
-1. Recipes R3 then R1 (US visitor: opt-out regime, no stored choice).
-2. Dismiss the notice.
+1. Recipes R3 then R1 (US visitor: opt-out regime, no stored choice). Open `/us`,
+   wait 5s, and run the query below: nothing new.
+2. Open the footer **Your Privacy Choices**, switch Advertising off, **Save**.
+   The page reloads.
+3. Query the newest row.
 
 EXPECT:
-- A row with `surface` `notice` and `regime` `opt-out`, `region_row` `US`,
-  `policy_version` 1, and `gpc` false (true under the signal).
+- Step 1: no new row. Arriving, and being tracked by default, is not a decision.
+- Step 3: a row with `surface` `preferences`, `regime` `opt-out`, `region_row`
+  `US`, `policy_version` 1, `marketing` false, `analytics` true, and `gpc` false
+  (true under the signal).
+- NEGATIVE: no row has `surface` `notice`: nothing in the product writes one.
 
 ### CL-08 A forged payload writes nothing — BLOCKER
 
@@ -2831,7 +2881,7 @@ EXPECT:
   fully clickable: click it and the language menu opens.
 - Neither overlaps the other, at 1440x900 and at 1024x768.
 
-### LY-03 The US notice and dialog fit a phone — CORE
+### LY-03 The US page and dialog fit a phone — CORE
 DEPENDS: RG-02, PR-08
 
 WHY: The control a visitor came to flip must be reachable with a thumb, and Save
@@ -2840,14 +2890,14 @@ already applied, and Escape then silently discards the opt-out (AC2.8, AC2.10).
 
 1. R17, R13 `America/New_York`. Responsive mode 390x844, then 320x640. Open `/us`
    in `en`, `fr` and `pl`.
-2. Measure the notice's buttons:
-   `[...document.querySelectorAll('section[aria-label] button')].map(b => Math.round(b.getBoundingClientRect().height))`.
-3. Open the dialog from the notice. Scroll its contents. Repeat for the EU dialog
+2. Confirm `/us` shows no banner or notice at the bottom of the screen.
+3. Open the dialog from the footer entry. Scroll its contents. Repeat for the EU dialog
    (R13 `Europe/Paris`, 390x844) and for the GPC dialog (R5).
 4. Look at the footer entry in `en` and `pl`.
 
 EXPECT:
-- Both notice buttons are at least 44px tall. No horizontal scrollbar.
+- `/us` shows no banner or notice, and `document.documentElement.scrollWidth <= document.documentElement.clientWidth`
+  is `true` (no horizontal scrollbar).
 - The dialog fits the screen (at most 85% of its height) and scrolls internally.
   The action row (Cancel and Save side by side, or a single Close under GPC) stays
   visible at the bottom while the cards scroll, in **both** regions.
@@ -2884,7 +2934,10 @@ EXPECT:
 - It does **NOT** say anywhere that the site requires no cookie banner. That
   sentence was true before this release and is the specific thing that must not
   come back.
-- "Last updated" reads 10 October 2026 in all four.
+- "Last updated" reads 10 November 2026 in all four (`10 novembre 2026`, `10 de noviembre de 2026`,
+  `10 listopada 2026`): the date moved at the STA-540 counsel sign-off.
+- §5.1 and §6 describe the **Your Privacy Choices** link and Global Privacy Control,
+  and say nothing of a notice shown to US visitors.
 
 ### LG-02 §5.5 says what Meta now receives — BLOCKER
 DEPENDS: LG-01
@@ -2981,8 +3034,8 @@ WHY: Version 4 is the text that names Google Ads. A grant given for Meta alone m
 3. Click **Accept all**, on this same page.
 
 EXPECT:
-- Step 2: the **banner** shows (not the US notice). Network: zero requests to `googletagmanager.com`, `connect.facebook.net`, `googleadservices.com`. No `_ga`, `_ga_*`, `_fbp`, `_fbc`, and no `stampeo_ad` or `stampeo_ga`: the old grant is not carried and the click is not captured yet.
-- Step 3: `stampeo_consent` now decodes to `"v":4,"a":1,"m":1,"r":"opt-in"`. Both tags load without a reload. `stampeo_ad` appears, decoding to `"vn":"google"` and `"cv":4`, with the click id held in `ci` (read it as presence only, never copy it).
+- Step 2: the **banner** shows. Network: zero requests to `googletagmanager.com`, `connect.facebook.net`, `googleadservices.com`. No `_ga`, `_ga_*`, `_fbp`, `_fbc`, and no `stampeo_ad` or `stampeo_ga`: the old grant is not carried and the click is not captured yet.
+- Step 3: `stampeo_consent` now decodes to `"v":5,"a":1,"m":1,"r":"opt-in"`. Both tags load without a reload. `stampeo_ad` appears, decoding to `"vn":"google"` and `"cv":5`, with the click id held in `ci` (read it as presence only, never copy it).
 - NEGATIVE: no request to `googleadservices.com`, `googleads.g.doubleclick.net` or any `/pagead/` path at any point, and no `_gcl_*` cookie.
 
 ### GS-02 A version-3 refusal stays refused, in both regimes — BLOCKER
@@ -2995,13 +3048,13 @@ WHY: An older refusal must never be read as no choice. If it were, the bump woul
 
 EXPECT:
 - Step 1: no banner on any load. Zero requests to `googletagmanager.com`, `connect.facebook.net`, `googleadservices.com`. No `_ga`, `_fbp`. `stampeo_consent` still decodes to `"v":3,"a":0,"m":0`, and there is no request to `/api/privacy/cookies`.
-- Step 2: no notice. The same zero requests. No `stampeo_src`, `stampeo_ga`, `stampeo_ad`: the `QA459_gs02` click is not captured. `stampeo_consent` still decodes to `"v":3,"a":0,"m":0,"r":"opt-out"`, re-issued by the server on each trackable load (R15: a POST carrying that same record and a `Set-Cookie` with `Max-Age=34560000`).
-- NEGATIVE: the cookie is never rewritten as a version-4 record, and nothing turns the refusal into a grant.
+- Step 2: nothing is shown. The same zero requests. No `stampeo_src`, `stampeo_ga`, `stampeo_ad`: the `QA459_gs02` click is not captured. `stampeo_consent` still decodes to `"v":3,"a":0,"m":0,"r":"opt-out"`, re-issued by the server on each trackable load (R15: a POST carrying that same record and a `Set-Cookie` with `Max-Age=34560000`).
+- NEGATIVE: the cookie is never rewritten as a version-5 record, and nothing turns the refusal into a grant.
 
 ### GS-03 A carried refusal is asked about again through "Accept all" — CORE (KNOWN, counsel question 7)
 DEPENDS: GS-01
 
-WHY: An EU visitor who accepted analytics and refused advertising under version 3 sees the banner again, because the analytics grant is re-asked. Its **Accept all** then turns the carried advertising refusal into a version-4 grant. This is the behaviour today, the same as the version-3 rollout, and it is open with counsel (is it acceptable, or should the re-ask offer "Keep my choices", or only advertising grants be re-asked). This case pins it so that a change is deliberate. A failure here is a finding to report, not a regression, until counsel decides.
+WHY: An EU visitor who accepted analytics and refused advertising under version 3 sees the banner again, because the analytics grant is re-asked. Its **Accept all** then turns the carried advertising refusal into a grant of the current version (5 since OpenAI joined; CS-07 reads the same for version 4). This is the behaviour today, the same as the version-3 rollout, and it is open with counsel (is it acceptable, or should the re-ask offer "Keep my choices", or only advertising grants be re-asked). This case pins it so that a change is deliberate. A failure here is a finding to report, not a regression, until counsel decides.
 
 1. R17, R13 with `Europe/Paris`, R1, then R12 with `v:3`, `a:1`, `m:0`, `r:"opt-in"`. Open `/pricing`.
 2. Before clicking, open **Preferences** from the banner and read both switches. Close it.
@@ -3010,22 +3063,22 @@ WHY: An EU visitor who accepted analytics and refused advertising under version 
 EXPECT:
 - Step 1: the banner shows. Zero requests to `googletagmanager.com` and `connect.facebook.net`; no `_ga`, no `_fbp`: the analytics grant is not carried, and the advertising refusal stands.
 - Step 2: both switches are off.
-- Step 3: `stampeo_consent` decodes to `"v":4,"a":1,"m":1`, and both tags load. That is the pinned behaviour.
-- NEGATIVE: the banner's **Refuse all** and a Preferences save with advertising off both keep advertising refused (`"m":0` at version 4) and load no Meta tag. Nothing grants advertising without a click on a control that says so.
+- Step 3: `stampeo_consent` decodes to `"v":5,"a":1,"m":1`, and both tags load. That is the pinned behaviour.
+- NEGATIVE: the banner's **Refuse all** and a Preferences save with advertising off both keep advertising refused (`"m":0` at version 5) and load no Meta tag. Nothing grants advertising without a click on a control that says so.
 
-### GS-04 A US visitor who dismissed the version-3 notice carries as an opt-out — BLOCKER
+### GS-04 A US visitor with a version-3 grant carries as an opt-out — BLOCKER
 DEPENDS: RG-02
 
-WHY: A US "Got it" is not consent, it is acknowledgement of a notice. After the bump it must read as the notice default (the opt-out regime), and a click it captures must be evidenced against version 4 with no consent moment, which is what lets the backend treat it as a US no-choice basis for Google Ads.
+WHY: A US grant at version 3 (an old "Got it", or a dialog save with both on) is not consent. After the bump it must read as the opt-out default, and a click it captures must be evidenced against the current version (5) with no consent moment, which is what lets the backend treat it as a US no-choice basis for Google Ads.
 
-1. R17, R13 with `America/New_York`, R9, R7. Forge the dismissal: R12 with `v:3`, `a:1`, `m:1`, `r:"opt-out"`, and add `g:"US"`, `p:1` to the object.
+1. R17, R13 with `America/New_York`, R9, R7. Forge the stored grant: R12 with `v:3`, `a:1`, `m:1`, `r:"opt-out"`, and add `g:"US"`, `p:1` to the object.
 2. Open `/us?utm_source=google&utm_medium=cpc&gclid=QA459_gs04`, wait 5s.
 3. Read `stampeo_ad` and `stampeo_src` (URL-decoded).
 
 EXPECT:
-- Step 2: the US **notice** shows (not the banner); the stored dismissal is not a grant. Under the opt-out default Meta and Google Analytics load. NEGATIVE: zero requests to `googleadservices.com`.
-- Step 3: `stampeo_ad` decodes to `"vn":"google"`, `"cr":"opt-out"`, `"cv":4` and `"ca":0`; the other carriers (`stampeo_src`, `stampeo_ga`) read `"cv":4,"ca":0` too. `ca` is 0 because no consent moment exists for a visitor who only dismissed a notice.
-- NEGATIVE: neither carrier names `"cv":3`, and `ca` is not the time of the old dismissal.
+- Step 2: nothing is shown (neither the banner nor a notice); the stored record is not a grant. Under the opt-out default Meta and Google Analytics load. NEGATIVE: zero requests to `googleadservices.com`.
+- Step 3: `stampeo_ad` decodes to `"vn":"google"`, `"cr":"opt-out"`, `"cv":5` and `"ca":0`; the other carriers (`stampeo_src`, `stampeo_ga`) read `"cv":5,"ca":0` too. `ca` is 0 because no consent moment exists for a visitor whose only record is an old grant.
+- NEGATIVE: neither carrier names `"cv":3`, and `ca` is not the time of the old grant.
 
 ### GS-05 `_gcl_*` and `_gac_*` are cleared on an advertising refusal — BLOCKER
 DEPENDS: CN-02
@@ -3048,7 +3101,7 @@ DEPENDS: GA-01, MP-01
 
 WHY: Google Ads gets conversions only from our server. A browser tag would set ad cookies, answer to a different consent rule and defeat the refusal guarantees. Nothing in code or in Google's console may bring one back.
 
-1. Network filter `googleadservices|doubleclick|pagead|gtag/js|collect`, Preserve log on. For each state below, open `/`, `/us`, `/pricing`, a `/features/<slug>` page, `/blog` and `/contact`, each with `?gclid=QA459_gs06` added once: (a) EU, never answered; (b) EU, **Accept all**; (c) EU, analytics only; (d) EU, advertising only; (e) US, never answered; (f) US, **Got it**; (g) US with GPC (R5).
+1. Network filter `googleadservices|doubleclick|pagead|gtag/js|collect`, Preserve log on. For each state below, open `/`, `/us`, `/pricing`, a `/features/<slug>` page, `/blog` and `/contact`, each with `?gclid=QA459_gs06` added once: (a) EU, never answered; (b) EU, **Accept all**; (c) EU, analytics only; (d) EU, advertising only; (e) US, never answered; (f) US, **Save** in **Your Privacy Choices** with both switches on; (g) US with GPC (R5).
 2. Console, in each state where the Google tag loaded: `(window.dataLayer || []).filter(e => /AW-|GT-/.test(JSON.stringify(Array.from(e))))`.
 3. Page source check: `SITE=https://showcase.dev.stampeo.app` then
    `curl -s $SITE/en | grep -o '/_next/static/[^"]*\.js' | sort -u | while read p; do curl -s "$SITE$p"; done | grep -o -E 'AW-[0-9]+|GT-[A-Z0-9]+' | sort -u`
@@ -3095,12 +3148,12 @@ DEPENDS: PR-01
 WHY: Consent covers only what its text describes. The advertising cards must say that Google Ads receives something, what, and that it is not the same Google as Analytics, in every language we ship.
 
 1. For each of `en`, `fr`, `es`, `pl` (open `/<locale>/pricing`): R17, R13 with `Europe/Paris`, R1. Read the banner body, then open **Preferences** and read the **Advertising** and **Analytics** cards.
-2. Then R17, R13 with `America/New_York`: read the US **notice** body, open **Your Privacy Choices** and read the **Sale, sharing and targeted advertising** card (switch it off and read its off line) and the Analytics card.
+2. Then R17, R13 with `America/New_York`: open the footer **Your Privacy Choices** and read the **Sale, sharing and targeted advertising** card (switch it off and read its off line) and the Analytics card.
 3. Resize the window to 390 px wide and read the banner in `fr` and `pl`.
 
 EXPECT:
-- Banner and notice bodies name **Meta and Google Ads** (en "Meta and Google Ads", fr "Meta et Google Ads", es "Meta y Google Ads", pl "Meta i Google Ads").
-- The Advertising card (EU) and the US advertising card say Google Ads receives its **click identifier if you came from one of its ads**, your **account email as an irreversible code**, with the step and, for a trial or a payment, its price, and **nothing else about you**; and that Meta also receives contact details as an irreversible code. In the US card, turned off, **nothing is sent to Meta or Google Ads** (en "nothing is sent to Meta or Google Ads", fr "rien n'est transmis à Meta ni à Google Ads", es "no se envía nada a Meta ni a Google Ads", pl "nic nie trafia do Meta ani do Google Ads").
+- The banner body names **Meta, Google Ads and OpenAI (ChatGPT ads)** (CS-10 gives the wording in the four languages).
+- The Advertising card (EU) and the US advertising card say Google Ads and OpenAI hear about the person **only if they came from one of their own ads**, and then each receives its own **click identifier**, your **account email as an irreversible code**, with the step and, for a trial or a payment, its price, and **nothing else about you**; and that Meta also receives contact details as an irreversible code. In the US card, turned off, **nothing is sent to Meta, Google Ads or OpenAI** (CS-10 gives the wording in the four languages).
 - The Analytics cards name **Google Analytics** only; in the US the "on our behalf" sentence names it ("Google Analytics handles this data on our behalf only", fr "Google Analytics traite ces données pour notre compte uniquement", es "Google Analytics trata estos datos solo por cuenta nuestra", pl "Google Analytics przetwarza te dane wyłącznie na nasze zlecenie").
 - Step 3: the banner body grows by at most about one line against the version-3 text, the buttons are all visible, and `document.documentElement.scrollWidth <= document.documentElement.clientWidth` is `true`.
 - NEGATIVE: the dialogs and banner never write a bare "Google" (always "Google Analytics" or "Google Ads"), no card mentions Meta alone as the advertising recipient, and no `COUNSEL` text appears on screen.
@@ -3114,27 +3167,263 @@ WHY: The policy is what the banner points to. If it still said Google never rece
 2. Search the rendered page for `COUNSEL`.
 
 EXPECT:
-- §4 lists Google Ads as a recipient of advertising conversion reports next to Meta, with a role stated (the draft says an independent recipient for advertising measurement; counsel may change it).
-- §5.5: Google Ads receives three steps (account created, free trial started, first payment) and NOT the opening of the payment page; the click identifier when there is one; the price or amount and its currency for the last two; and the account email hashed with SHA-256. It receives them whether or not you came from one of its ads, as long as advertising is accepted (in the US, not switched off). Turning advertising off stops reporting to Meta and Google Ads; turning analytics off does the same for Google Analytics.
+- §4 lists Google Ads (and OpenAI, CS-11) as a recipient of advertising conversion reports next to Meta, with a role stated (the draft says an independent recipient for advertising measurement; counsel may change it).
+- §5.5: Google Ads receives three steps (account created, free trial started, first payment) and NOT the opening of the payment page; the Google click identifier; the price or amount and its currency for the last two; and the account email hashed with SHA-256. It receives them only when you came to us through one of its ads, as long as advertising is accepted (in the US, not switched off); Meta alone receives them whether or not you came from one of its ads. Turning advertising off stops reporting to Meta, Google Ads and OpenAI; turning analytics off does the same for Google Analytics. CS-11 reads the OpenAI half.
 - The sentence that it never receives your contact details, IP address or browser characteristics is about **Google Analytics**, not Google Ads.
-- §6 names Google Ads in the US "sharing" paragraph. The cookie table (5.3) has no Google Ads cookie row (we set none), and says the Google click identifier goes to Google Ads.
+- §6 names Google Ads (and OpenAI) in the US "sharing" paragraph. The cookie table (5.3) has no Google Ads cookie row (we set none), and says the Google click identifier goes to Google Ads.
 - Step 2: the rendered page contains no `COUNSEL` text in any locale (the markers are hidden MDX comments).
 - NEGATIVE: no policy still says Google never receives contact details without scoping it to Google Analytics, and none lists Meta alone as a conversions recipient.
 
 ### GS-11 A refusal recorded under a newer version is honoured, a newer grant is not — CORE
 DEPENDS: GS-02
 
-WHY: Deploy order and rollbacks can leave a browser holding a record from a version this build does not know (web writes version 4 before an old showcase, or showcase rolls back). A refusal must still hold; a grant from an unknown text must never be taken as consent.
+WHY: Deploy order and rollbacks can leave a browser holding a record from a version this build does not know (web writes the new version before an old showcase, or showcase rolls back). A refusal must still hold; a grant from an unknown text must never be taken as consent.
 
-1. R17, R13 with `Europe/Paris`, R1, then R12 with `v:5`, `a:0`, `m:0`, `r:"opt-in"`. Open `/pricing`, reload.
-2. R17, R13 with `America/New_York`, R9, R7, then R12 with `v:5`, `a:0`, `m:0`, `r:"opt-out"`. Open `/us?gclid=QA459_gs11`, wait 5s.
-3. R17, R13 with `Europe/Paris`, R1, then R12 with `v:5`, `a:1`, `m:1`, `r:"opt-in"`. Open `/pricing`.
+1. R17, R13 with `Europe/Paris`, R1, then R12 with `v:6`, `a:0`, `m:0`, `r:"opt-in"`. Open `/pricing`, reload.
+2. R17, R13 with `America/New_York`, R9, R7, then R12 with `v:6`, `a:0`, `m:0`, `r:"opt-out"`. Open `/us?gclid=QA459_gs11`, wait 5s.
+3. R17, R13 with `Europe/Paris`, R1, then R12 with `v:6`, `a:1`, `m:1`, `r:"opt-in"`. Open `/pricing`.
 
 EXPECT:
-- Step 1: no banner; zero requests to `googletagmanager.com` and `connect.facebook.net`; the cookie still decodes to `"v":5,"a":0,"m":0`.
-- Step 2: no notice; nothing loads; no `stampeo_src`, `stampeo_ga`, `stampeo_ad` (the click is not captured).
+- Step 1: no banner; zero requests to `googletagmanager.com` and `connect.facebook.net`; the cookie still decodes to `"v":6,"a":0,"m":0`.
+- Step 2: nothing is shown and nothing loads; no `stampeo_src`, `stampeo_ga`, `stampeo_ad` (the click is not captured).
 - Step 3: the **banner** shows and nothing loads: a grant from a newer text reads as no choice.
 - NEGATIVE: in step 3, `stampeo_ad` and the analytics cookies do not appear before a click on the banner.
+
+---
+
+## CS: ChatGPT ads on the marketing site (consent version 5)
+
+OpenAI (ChatGPT ads) became a recipient of the advertising conversions our server reports, next to Meta and Google Ads. The site's part is small and is all about what it must NOT do. It loads no OpenAI pixel and holds no OpenAI id. It reads OpenAI's click id, `oppref`, from the landing address, keeps it byte for byte in `stampeo_ad` under an advertising choice, and never sends it anywhere itself. Consent version 5 is the text that names OpenAI, so an old grant is asked again and an old refusal stands. A refusal also clears the two OpenAI cookies a browser may still hold. The server half (the sending, the 30-day click window, the admin) is the backend runbook's CG section.
+
+Instruments: the Network filter from SETUP extended with `openai` (it must stay empty in every case here), the cookie jar, and the console. `NEXT_PUBLIC_GA_MEASUREMENT_ID` and the Meta pixel id must be set (see SETUP). Every case starts from R17 unless it says otherwise. R21 is the landing address and R22 reads the click carrier.
+
+Read the privacy-policy and banner copy as a counsel draft: judge it by what it says (OpenAI named, what it receives, nothing else), not by exact wording, until counsel has signed. The golden fixtures (`attribution-chain.chatgpt.v1.json` and the two regenerated ones, byte-identical in showcase, web and backend), the `oppref` parsing and the policy text are also pinned by `bun test lib` (`attribution-chain.chatgpt.test.ts`, `landing.test.ts`, `chatgpt-landing.test.ts`, `no-openai-script.test.ts`, `chatgpt-ads-copy.test.ts`); these cases check the same things in a real browser and are not a reason to skip the tests.
+
+### CS-01 A ChatGPT-ad landing is captured only under an advertising choice made against version 5 — BLOCKER
+DEPENDS: CN-02, RG-02
+
+WHY: `oppref` is advertising data. It may be kept only where the visitor's row and choice allow advertising: after an explicit grant in the EU, and in the US until the visitor opts out or Global Privacy Control says so. Anywhere else it must leave no trace in a cookie.
+
+For each state: R17, R13 for the timezone, R1, R7, R9, then do the setup, open the R21 address with `<case>` = `cs01`, wait 5s, R22 and read the other cookies. Read R15 for the Max-Age.
+
+- (a) `Europe/Paris`, never answered (do not click).
+- (b) `Europe/Paris`, **Accept all**, then wait 3s.
+- (c) `Europe/Paris`, Preferences: Analytics ON, Advertising OFF, save.
+- (d) `Europe/Paris`, **Refuse all**.
+- (e) `America/New_York`, never answered (nothing is shown; do not open anything).
+- (f) `America/New_York`, "Your Privacy Choices": leave both switches on, save, then reload.
+- (g) `America/New_York`, "Your Privacy Choices": Advertising OFF, Analytics ON, save.
+- (h) `America/New_York` in the GPC browser (R5), nothing else.
+
+EXPECT:
+
+| State | `stampeo_ad` | The rest |
+|---|---|---|
+| (a) | absent | The banner shows. No `stampeo_src`, `stampeo_ga` or `stampeo_ad`. Zero requests to `googletagmanager.com` and `connect.facebook.net`. |
+| (b) | `"vn":"openai"`, `"ci":"QA540_cs01"`, `"cv":5`, `"cr":"opt-in"`, `"ca"` the time of the Accept click, `"p":1`, `"g":"EEA_UK_CH"`; Domain `.stampeo.app` (or the local equivalent), `Max-Age=15724800` in R15 | `stampeo_src` decodes `"us":"chatgpt"`, `"um":"cpc"`, `"uc":"qa540"`, `"lp":"/us"` and holds no click id. |
+| (c) | absent | `stampeo_src` and `stampeo_ga` exist; `QA540_cs01` is in no cookie. |
+| (d) | absent | None of the three carriers. |
+| (e) | `"vn":"openai"`, `"ci":"QA540_cs01"`, `"cv":5`, `"cr":"opt-out"`, `"ca":0`, `"p":1`, `"g":"US"`: nobody clicked, so there is no consent moment | No banner and no notice; Meta and Google Analytics load. There is no `stampeo_consent`. |
+| (f) | the same as (e) after the reload: a US record that grants everything is the opt-out default, so `"ca"` stays 0 | `stampeo_consent` decodes `"v":5,"a":1,"m":1,"r":"opt-out"`; nothing is shown. |
+| (g) | absent | `stampeo_src` and `stampeo_ga` stay; no `_fbp`. |
+| (h) | absent | Nothing is shown (RG-04 reads the rest). |
+
+- In every state there is no `__oppref` and no `__obref` cookie.
+- NEGATIVE: in (a), (c), (d), (g) and (h) the string `QA540_cs01` is in no cookie; in (b), (e) and (f) it is held in `stampeo_ad` only, never in `stampeo_src`, `stampeo_ga` or `stampeo_consent`.
+
+### CS-02 The click id arrives byte for byte, and a plus sign stays a plus sign — CORE
+DEPENDS: CS-01
+
+WHY: OpenAI documents no format and asks for "the original string without modification". An id that is trimmed, case-folded, decoded twice, cut short, or has its `+` turned into a space still looks like data and attributes to nothing at OpenAI. Every platform's id must also be printable ASCII (no space, control character or non-ASCII byte): one that is not is dropped, never cleaned, so a crafted id can never abort a sign-up record.
+
+For each address: R17, R13 with `America/New_York`, R9, R7, open it, wait 5s, R22. Read `ci`.
+
+1. `/us?oppref=aB3dE9fGh1JkLm0pQr`
+2. `/us?oppref=ab+cd%2Bef%2Fgh%3Dz`
+3. `/us?oppref=a%252Fb`
+4. console, `location.href = '/us?oppref=' + 'x'.repeat(512)`
+5. console, `location.href = '/us?oppref=' + 'x'.repeat(513)`
+6. `/us?oppref=%E0%A4%A` (a malformed escape)
+7. `/us?oppref=` and `/us?oppref=%20%20` (empty)
+8. `/us?gclid=a+b`
+9. `/us?oppref=ab%20cd`, `/us?oppref=a%00b` and `/us?gclid=a%09b` (a space, a NUL and a tab)
+
+EXPECT:
+- 1: `"vn":"openai"` and `ci` is `aB3dE9fGh1JkLm0pQr`, capitals kept.
+- 2: `ci` is `ab+cd+ef/gh=z`: the raw `+` stays a `+`, `%2B` is a `+`, `%2F` is `/`, `%3D` is `=`.
+- 3: `ci` is `a%2Fb`: the value is decoded exactly once.
+- 4: `ci` is 512 `x` characters.
+- 5, 6 and 7: no `stampeo_ad` at all. The page loads normally, with no error page and no uncaught error in the console.
+- 8: no `stampeo_ad` at all: a form decode turns the raw `+` of a `gclid` into a space, and an id with a space is dropped. The raw-plus rule belongs to `oppref` alone.
+- 9: no `stampeo_ad` at all, for each address.
+- NEGATIVE: in 5 the cookie is never an `x` string shorter than 513 characters (an id we would have to cut is useless to OpenAI, so it is refused), in 2 no `ci` holds a space where the address had a raw `+`, and in 9 no `ci` is the address's value with the bad character removed.
+
+### CS-03 Click priority: gclid, then fbclid, then oppref, then ttclid, and the newest click wins — CORE
+DEPENDS: CS-01
+
+WHY: One carrier holds one platform's click, which is how each platform receives only its own. When an address carries several, the order decides who is credited; across visits the most recent paid click wins, and an organic visit never replaces a click.
+
+For (a) to (c): R17, R13 with `America/New_York`, R9, R7, open the address, wait 5s, R22. For (d) and (e) keep the same jar.
+
+- (a) `/us?gclid=QA540_g&oppref=QA540_o`
+- (b) `/us?fbclid=QA540_f&oppref=QA540_o`
+- (c) `/us?oppref=QA540_o&ttclid=QA540_t`
+- (d) R17, then `/us?gclid=QA540_g2`, wait 5s, R22; then open `/us?oppref=QA540_o2`, wait 5s, R22.
+- (e) Then open `/us?utm_source=chatgpt.com` (an organic ChatGPT link), wait 5s, R22.
+
+EXPECT:
+- (a) `"vn":"google"`, `"ci":"QA540_g"`. (b) `"vn":"meta"`, `"ci":"QA540_f"`. (c) `"vn":"openai"`, `"ci":"QA540_o"`.
+- (d) the first read is `google` and `QA540_g2`; the second is `"vn":"openai"` and `"ci":"QA540_o2"`, with a later `"ct"`: the newer paid click replaced the older.
+- (e) `stampeo_ad` is unchanged from (d).
+- NEGATIVE: no carrier ever holds two click ids, `QA540_o` is absent from `stampeo_ad` in (a) and (b), and the organic landing in (e) does not replace or remove the click.
+
+### CS-04 `oppref` is absent from the address Google Analytics receives — BLOCKER
+DEPENDS: GA-01, GS-07
+
+WHY: Analytics-only consent must not leak an advertising identifier. The browser tag reports the page address as `page_location`, and a ChatGPT-ad landing carries `oppref` in it.
+
+1. R17, R13 with `Europe/Paris`, R1, R7. Open `/pricing?utm_source=chatgpt&utm_medium=cpc&utm_campaign=qa540&keep=1&oppref=QA540_cs04`. In the preferences, turn Analytics ON and Advertising OFF, save.
+2. Network filter `google-analytics.com/g/collect`. Read the first `page_view` request's `dl` parameter (the page location), URL-decoded.
+3. Click an internal link (for example **Features**) so a client-side navigation happens, then read the second `page_view`'s `dl`.
+
+EXPECT:
+- Step 2: `dl` ends with `?utm_source=chatgpt&utm_medium=cpc&utm_campaign=qa540&keep=1`: every other parameter is kept as written, and `oppref` is gone with its value.
+- Step 3: the second `dl` is the new path with no click id either.
+- The address bar still shows the full address: only what is reported is changed.
+- NEGATIVE: no Google Analytics request body or URL carries `QA540_cs04`. Meta's pixel (when advertising is accepted) and PostHog report the whole address by design, so a click id there is not a failure of this case.
+
+### CS-05 No request ever goes to OpenAI, and no OpenAI script exists — BLOCKER
+DEPENDS: GS-06
+
+WHY: ChatGPT Ads gets conversions only from our server. A browser tag would set `__oppref` and `__obref`, could read our forms for automatic matching, and would answer to a different consent rule than the one our refusals guarantee. Nothing in code or in OpenAI's console may bring one back.
+
+1. Network filter `openai`, Preserve log on. For each state below, open `/`, `/us`, `/pricing`, a `/features/<slug>` page, `/blog` and `/contact`, each once with `?oppref=QA540_cs05` added: (a) EU, never answered; (b) EU, **Accept all**; (c) EU, analytics only; (d) EU, advertising only; (e) US, never answered; (f) US, **Save** in **Your Privacy Choices** with both switches on; (g) US with GPC (R5).
+2. Console, in each state: `typeof window.oaiq`, then `performance.getEntriesByType('resource').filter(e => /openai/i.test(e.name)).length`, then `[...document.scripts].filter(s => /openai/i.test(s.src)).length`, then `document.cookie.match(/__oppref|__obref/)`.
+3. Bundle check: `SITE=https://showcase.dev.stampeo.app` then
+   `curl -s $SITE/en | grep -o '/_next/static/[^"]*\.js' | sort -u | while read p; do curl -s "$SITE$p"; done | grep -o -w -E 'bzrcdn\.openai\.com|bzr\.openai\.com|oaiq' | sort -u`
+
+EXPECT:
+- Step 1: zero requests to `bzr.openai.com`, `bzrcdn.openai.com`, or any host containing `openai`, in all seven states and on every page.
+- Step 2: `"undefined"`, `0`, `0` and `null` in every state.
+- Step 3: prints nothing.
+- NEGATIVE: no `__oppref` or `__obref` cookie is set in any state, including (b) with an `oppref` in the address.
+
+### CS-06 A returning EU visitor who accepted under version 4 is asked again — BLOCKER
+DEPENDS: CN-02, GS-01
+
+WHY: Version 5 is the text that names OpenAI. A grant given for Meta and Google Ads must not quietly cover a new recipient, so the banner comes back and nothing loads until the visitor answers. This is the second EU re-ask in about three weeks, so refusing must stay exactly as easy as accepting (CN-03).
+
+1. R17, R13 with `Europe/Paris`, R1. Forge the version-4 grant: R12 with `v:4`, `a:1`, `m:1`, `r:"opt-in"`. Reload to confirm it took (`"v":4`).
+2. Open the R21 address with `<case>` = `cs06`. Do not click anything yet.
+3. Click **Accept all**, on this same page.
+4. Variant: repeat 1, open `/pricing?oppref=QA540_cs06b`, open **Preferences**, turn Analytics ON and Advertising OFF, save.
+
+EXPECT:
+- Step 2: the **banner** shows. Network: zero requests to `googletagmanager.com` and `connect.facebook.net`. No `_ga`, `_ga_*`, `_fbp`, `_fbc`, and no `stampeo_src`, `stampeo_ga` or `stampeo_ad`: the old grant is not carried and the click is not captured yet.
+- Step 3: `stampeo_consent` now decodes to `"v":5,"a":1,"m":1,"r":"opt-in"`. Both tags load without a reload. `stampeo_ad` appears, decoding to `"vn":"openai"` and `"cv":5`, with the click id held in `ci` (read it as presence only, never copy it).
+- Step 4: `stampeo_consent` decodes to `"v":5,"a":1,"m":0`; `stampeo_src` and `stampeo_ga` exist; there is no `stampeo_ad` and no `_fbp`.
+- NEGATIVE: the version-4 record is never carried as a grant, nothing is requested from OpenAI at any point (CS-05), and no `__oppref` cookie appears.
+
+### CS-07 A refusal made under version 4 still stands, and a partial one is asked about again — BLOCKER
+DEPENDS: GS-02
+
+WHY: An older refusal must never be read as no choice. If it were, the bump would ask someone who already said no, or capture the click of a visitor who refused advertising.
+
+For each state: R17, R13 for the timezone, R9, R7, then R12 with the version-4 record shown, then open the R21 address with `<case>` as shown, wait 5s, reload, read R15 and R22.
+
+- (a) `Europe/Paris`; `v:4`, `a:0`, `m:0`, `r:"opt-in"`; `cs07a`.
+- (b) `America/New_York`; `v:4`, `a:0`, `m:0`, `r:"opt-out"`; `cs07b`.
+- (c) `Europe/Paris`; `v:4`, `a:1`, `m:0`, `r:"opt-in"`; `cs07c`.
+- (d) `America/New_York`; `v:4`, `a:1`, `m:0`, `r:"opt-out"`; `cs07d`. Note the `t` R12 wrote.
+
+EXPECT:
+- (a) No banner on any load. Zero requests to `googletagmanager.com` and `connect.facebook.net`. `stampeo_consent` still decodes to `"v":4,"a":0,"m":0`, there is no request to `/api/privacy/cookies`, and there is no carrier: the click is not captured.
+- (b) Nothing is shown. The same zero requests, no carrier. `stampeo_consent` still decodes to `"v":4,"a":0,"m":0,"r":"opt-out"`, re-issued by the server on each trackable load (R15: a POST carrying that same record and a `Set-Cookie` with `Max-Age=34560000`).
+- (c) The **banner** shows (analytics is asked again). Nothing loads until it is answered, there is no `_fbp`, and no `stampeo_ad`. This is the behaviour GS-03 pins, now with OpenAI as one more recipient and still the counsel question 7: **Accept all** turns the carried advertising refusal into a version-5 grant (`"v":5,"a":1,"m":1`). That is a finding to report, not a regression, until counsel decides. **Refuse all**, and a Preferences save with advertising off, keep `"m":0` at version 5 and load no Meta tag.
+- (d) Nothing is shown. Google Analytics loads (the analytics default) and Meta does not. There is no `stampeo_ad`: advertising stays refused and the click is not captured. `stampeo_src` and `stampeo_ga` decode with `"cv":4`, `"cr":"opt-out"` and `"ca"` equal to the `t` noted, the version-4 choice the visitor's state rests on (read it as RG-06 reads its version-2 twin).
+- NEGATIVE: in none of the four is the `stampeo_consent` cookie rewritten as a version-5 grant without a click, and in none is `QA540_cs07*` found in any cookie.
+
+### CS-08 A US visitor on the opt-out default is captured under version 5, and a version-4 analytics refusal keeps its own version — CORE
+DEPENDS: CS-01, GS-04
+
+WHY: A US visitor is never asked, and an old US grant (a "Got it" from before the notice was removed, or a dialog save with both on) is not consent. After the bump it must read as the opt-out default, and a click it captures must be evidenced against version 5 with no consent moment, which is what lets the backend treat it as a US no-choice basis for ChatGPT Ads. A version-4 record that refused something and carries a moment is what that visitor's state rests on, so the capture keeps version 4 and the backend holds the click back from OpenAI until they choose again (backend runbook CG-07).
+
+For each state: R17, R13 with `America/New_York`, R9, R7, then the forged record, then open the R21 address with `<case>` = `cs08`, wait 5s, R22. The forged record is R12 with `r:"opt-out"` and these values; `g:"US"` and `p:1` are added to the object in (b).
+
+- (a) no record at all.
+- (b) `v:4`, `a:1`, `m:1`: a version-4 grant (an old notice dismissal, or a dialog save with both on).
+- (c) `v:4`, `a:-1`, `m:-1`: nothing chosen (write `-1` as R14 does).
+- (d) `v:4`, `a:0`, `m:1`: analytics refused under version 4. Note the `t` R12 wrote.
+
+EXPECT:
+- (a), (b) and (c): nothing is shown. `stampeo_ad` decodes to `"vn":"openai"`, `"cr":"opt-out"`, `"cv":5`, `"ca":0` and `"g":"US"`; `stampeo_src` and `stampeo_ga` read `"cv":5,"ca":0` too.
+- (d): `stampeo_ad` decodes to `"vn":"openai"`, `"cv":4`, `"cr":"opt-out"` and `"ca"` equal to the `t` noted: the older refusal is captured as itself.
+- NEGATIVE: (a) to (c) never name `"cv":4`, (d) is never `"cv":5` with `"ca":0` (which the backend would read as an advertising grant this visitor never gave), and in (b) `"ca"` is not the time of the old grant.
+
+### CS-09 `__oppref` and `__obref` are cleared on an advertising refusal, and only then — BLOCKER
+DEPENDS: CN-02, GS-05
+
+WHY: OpenAI's pixel, which we do not load, would set these two cookies. A browser that holds one anyway (set by another page, an extension, a future change) must have it removed when advertising is refused. A refusal of analytics alone must not touch them: they are advertising cookies.
+
+1. R17, R13 with `Europe/Paris`, R1, R7, R9. Open `/pricing`, click **Accept all**.
+2. Forge the leftovers (console; see "Forging a cookie that the site also sets" for the Domain value): `['__oppref=QA540_cs09a','__obref=QA540_cs09b','_gcl_au=1.1.111.222'].forEach(c => document.cookie = c + '; path=/')`. Confirm all three are in the jar next to `_ga` and `_fbp`.
+3. Open the preferences dialog, turn **Advertising** OFF, leave **Analytics** ON, save.
+4. Variant A: R17, R1, then forge the same three plus `_ga=GA1.1.111.222`, and forge the record of R6 with `m:0`. Reload `/pricing` with no click.
+5. Variant B: R17, R1, **Accept all** on `/pricing`, forge the same three, open the preferences, turn **Analytics** OFF and leave **Advertising** ON, save.
+
+EXPECT:
+- Step 3: the page reloads once (a revocation does), and `__oppref`, `__obref`, `_gcl_au`, `_fbp`, `_fbc` and `stampeo_ad` are gone. `_ga`, `_ga_ZFZ6JLPFXN` and `stampeo_ga` are still there.
+- Step 4: the same three leftovers are gone after the plain reload, with `_ga` kept: leftovers are cleaned on every trackable load where advertising is denied, not only at the click.
+- Step 5: `__oppref`, `__obref` and `_gcl_au` are still there (advertising is still allowed), while `_ga` and `stampeo_ga` are gone.
+- NEGATIVE: `stampeo_consent` and `stampeo_sid` are never cleared, and analytics cookies are untouched when only advertising was refused.
+
+### CS-10 The banner and advertising cards name OpenAI, in four languages — CORE
+DEPENDS: PR-01, GS-09
+
+WHY: Consent covers only what its text describes. Every place that lists the advertising recipients must name OpenAI, say that Google Ads and OpenAI hear of a person only through their own ads, and say what they receive, in every language we ship. The analytics texts must not change. The slim US notice text names OpenAI too, but no policy row shows a notice since the US notice was removed, so there is nothing on screen to read; `chatgpt-ads-copy.test.ts` pins that text.
+
+1. For each of `en`, `fr`, `es`, `pl` (open `/<locale>/pricing`): R17, R13 with `Europe/Paris`, R1. Read the banner body, then open **Preferences** and read the **Advertising** and **Analytics** cards.
+2. Then R17, R13 with `America/New_York`: open the footer **Your Privacy Choices** and read the **Sale, sharing and targeted advertising** card (switch it off and read its off line) and the Analytics card.
+3. Resize the window to 390 px wide and read the banner and the US advertising card in `fr` and `pl`.
+
+EXPECT:
+- The banner body names the three recipients, with OpenAI glossed as ChatGPT ads: en "Meta, Google Ads and OpenAI (ChatGPT ads)", fr "Meta, Google Ads et OpenAI (annonces dans ChatGPT)", es "Meta, Google Ads y OpenAI (anuncios en ChatGPT)", pl "Meta, Google Ads i OpenAI (reklamy w ChatGPT)".
+- The Advertising card (EU) and the US advertising card name Meta, Google Ads and OpenAI (ChatGPT ads). They say Meta also receives contact details as an irreversible code. They say Google Ads and OpenAI hear about the person only if they came from one of their own ads (en "Google Ads and OpenAI each hear about you only if you came from one of their own ads", fr "ne sont prévenus que si vous venez de l'une de leurs annonces", es "Solo avisamos a Google Ads y a OpenAI si vienes de uno de sus anuncios", pl "informujemy tylko wtedy, gdy przychodzisz z reklamy danej platformy"), and that each then receives its own click identifier and the account email as an irreversible code, with the step and, for a trial or a payment, its price, and nothing else about the person.
+- The US card, turned off, says nothing is sent to any of the three: en "nothing is sent to Meta, Google Ads or OpenAI", fr "rien n'est transmis à Meta, à Google Ads ni à OpenAI", es "no se envía nada a Meta, a Google Ads ni a OpenAI", pl "nic nie trafia do Meta, Google Ads ani OpenAI".
+- The Analytics cards still name Google Analytics only, and in the US the "on our behalf" sentence is unchanged (GS-09).
+- Step 3: the banner body grows by at most about one line against the version-4 text, all the buttons are visible, `document.documentElement.scrollWidth <= document.documentElement.clientWidth` is `true`, and the US advertising card in `fr` and `pl` is about 11 lines with its switch still in the title band, not pushed below the text.
+- NEGATIVE: no analytics body names OpenAI or ChatGPT; no dialog has an OpenAI logo or a link to OpenAI's own policy; no card lists Meta and Google Ads alone as the advertising recipients; the banner never writes "OpenAI" without its ChatGPT gloss; no `COUNSEL` text appears on screen.
+
+### CS-11 The privacy policy names OpenAI where it must, and says Google Ads hears only of its own ad clicks — CORE
+DEPENDS: LG-01, GS-10
+
+WHY: The policy is what the banner points to. A recipient the cards name but the policy omits, or a sentence saying Google Ads receives every sign-up, would make the version-5 consent describe processing the text denies.
+
+1. In each of `en`, `fr`, `es`, `pl`, open the privacy policy (from the banner's **See the details**, or the footer link, as in LG-01). Read the top line, §4 "Transfers outside the EU", §5.3 (the `stampeo_ad` row and the third-party cookie table), §5.5 (reported steps, recipients, roles, withdrawal) and §6 (US sharing).
+2. Search the rendered page for `COUNSEL`, and list the section headings.
+
+EXPECT:
+- The "Last updated" line reads 7 November 2026 in `en`, the date set when the US-notice sentences were removed. This release does not move it: it changes at counsel sign-off.
+- §4 names OpenAI (ChatGPT ads) beside Google Ads and Meta as a platform we report conversions to, which may process that data in the United States, and says Google Ads and OpenAI receive the reports as independent recipients for advertising measurement.
+- §5.3: the `stampeo_ad` row says an OpenAI click identifier goes to OpenAI, beside the Google and Meta ones. The third-party cookie table has NO OpenAI row: no OpenAI cookie is ever set.
+- §5.5 lists `oppref` as the OpenAI click identifier beside `gclid` and `fbclid`, and scopes the own-identifiers promise to the reports sent from our servers: an OpenAI click identifier goes to OpenAI alone while a Google or Meta one is never sent to OpenAI. A paragraph after "We never send your password" says the browser is a separate matter: Meta's pixel (which runs only with the advertising cookies) reads the address of the page, and that address can carry another platform's click identifier, so Meta can see it. The Google Ads paragraph says it receives these steps only when the person came through one of its advertisements (Meta alone receives them whether or not they came from one of its ads). A new OpenAI paragraph says OpenAI receives the same three steps (account created, free trial started, first invoice paid) and not the opening of the payment page, only when the person came through one of its advertisements; the OpenAI click identifier; the price or amount and currency for the last two; the account email hashed with SHA-256; nothing else (no telephone number, name, address, IP address or browser characteristics); and that every report asks OpenAI not to use it to personalise the advertising it shows the person. The Recipients line defines OpenAI as the United States company that operates ChatGPT and its advertising, there is a "Role of OpenAI" line (an independent recipient for advertising measurement), and the withdrawal line says turning advertising off stops reporting to Meta, Google Ads and OpenAI and deletes the advertising identifiers.
+- §6 names OpenAI beside Meta and Google Ads in the US "sharing" paragraph.
+- The headings are the same list as before, and none names OpenAI.
+- Step 2: the rendered page contains no `COUNSEL` text in any locale (the markers are hidden MDX comments).
+- NEGATIVE: no policy still says Google Ads receives the steps "whether or not you came from one of its advertisements" (Meta keeps that wording), no policy lists Meta and Google Ads alone as conversion recipients, and the cookie table gained no row.
+
+### CS-12 The in-app-browser escape link carries the ChatGPT click, and only when advertising is allowed — EDGE
+DEPENDS: CS-01, IA-02 (`docs/qa/onboarding-signup.md`)
+
+WHY: An ad opened in an app's own browser (Instagram, Facebook) is sent to the phone's real browser through an escape link, so the paid click is still attributed there. The link is the one address that leaves the page, so it must carry the ad's tags and click and never personal data, and it must not carry a click the visitor refused to keep.
+
+1. Follow IA-02 (iOS Instagram user agent, DevTools Network, Preserve log), landing on the R21 address with `<case>` = `cs12`, through the CTA and step 1, then tap Google. Read the `x-safari-https://` address it tries to open.
+2. Repeat with R13 `America/New_York`, but open the footer "Your Privacy Choices" and turn Advertising OFF before the CTA.
+
+EXPECT:
+- Step 1: the query holds `utm_source=chatgpt`, `utm_medium=cpc`, `utm_campaign=qa540` and `oppref=QA540_cs12`, and nothing else.
+- Step 2: the query holds the UTM tags (analytics is still allowed) and no `oppref`.
+- NEGATIVE: neither link holds a name, a phone number or an email, and the page does not go to `accounts.google.com` on that tap.
 
 ---
 
