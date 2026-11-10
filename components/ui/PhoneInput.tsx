@@ -308,10 +308,9 @@ export function PhoneInput({
           required={required}
           aria-invalid={!!error}
           className="
-            flex-1 px-4 py-3.5
+            flex-1 w-0 min-w-0 px-4 py-3.5
             bg-transparent outline-none
             text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]
-            min-w-0
           "
           autoComplete="tel-national"
         />
