@@ -4,7 +4,7 @@ import type { CardDesign } from "@/lib/types/design";
  * The colours a level's card takes by default: level 2 is silver, level 3
  * gold. A copy of `SKINS` in
  * backend/app/services/programs/levels/skins.py (the showcase cannot import
- * it), written as the backend stores them; `looks.test.ts` holds the values.
+ * it), written as the backend stores them; `looks-values.test.ts` pins the values.
  * Keep the two in step.
  */
 export type LevelLook = Pick<
