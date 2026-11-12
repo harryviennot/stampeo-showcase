@@ -1,0 +1,96 @@
+/* The Platform hero's wheel of sample cards (CardWheel.tsx). The stage carries
+   the geometry from lib/landing-pages/card-wheel.ts as custom properties and
+   scales the whole wheel down on narrower screens. The hub, the wheel and each
+   arm are 0x0 points turning around their own origin; a card is centred on the
+   end of its arm and leans with the rim. */
+.card-wheel-stage {
+  --wheel-scale: 0.55;
+  /* Room above the top card for its shadow. */
+  --wheel-top: 28px;
+  /* Between the top card and the actions: deep enough that no card, at any
+     point of the turn, reaches into the row of buttons. */
+  --wheel-gap: 68px;
+}
+
+@media (min-width: 40rem) {
+  .card-wheel-stage {
+    --wheel-scale: 0.72;
+    --wheel-gap: 84px;
+  }
+}
+
+@media (min-width: 64rem) {
+  .card-wheel-stage {
+    --wheel-scale: 0.84;
+    --wheel-gap: 72px;
+  }
+}
+
+@media (min-width: 80rem) {
+  .card-wheel-stage {
+    --wheel-scale: 1;
+    --wheel-gap: 62px;
+  }
+}
+
+/* The actions start under the top card. */
+.card-wheel-clear {
+  padding-top: calc(var(--wheel-top) + var(--wheel-card-h) * var(--wheel-scale) + var(--wheel-gap));
+}
+
+/* The cards sink out of sight at the stage's foot. */
+.card-wheel-window {
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 140px), transparent);
+}
+
+/* The hub sits a radius below the top card's centre. */
+.card-wheel-hub {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--wheel-top) + (var(--wheel-radius) + var(--wheel-card-h) / 2) * var(--wheel-scale));
+  width: 0;
+  height: 0;
+  scale: var(--wheel-scale);
+  transform-origin: 0 0;
+}
+
+.card-wheel-turn,
+.card-wheel-arm {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+}
+
+/* Out to the rim at the card's angle. */
+.card-wheel-arm {
+  transform: rotate(var(--angle)) translateY(calc(-1 * var(--wheel-radius)));
+}
+
+.card-wheel-card {
+  position: absolute;
+  left: calc(var(--wheel-card-w) / -2);
+  top: calc(var(--wheel-card-h) / -2);
+  width: var(--wheel-card-w);
+  height: var(--wheel-card-h);
+}
+
+@keyframes card-wheel-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* One slow turn, clockwise; readers who ask for less motion see it still. */
+@media (prefers-reduced-motion: no-preference) {
+  .card-wheel-turn {
+    animation: card-wheel-turn var(--wheel-turn) linear infinite;
+  }
+}
+
+/* Off-screen, the wheel stops (WheelWindow sets data-paused). */
+.card-wheel-window[data-paused] .card-wheel-turn {
+  animation-play-state: paused;
+}

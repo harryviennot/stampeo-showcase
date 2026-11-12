@@ -88,15 +88,19 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
   });
 });
 
-describe("the hero: the headline, the card fan, then the pair of actions (AC17)", () => {
+describe("the hero: the headline, the card wheel, then the pair of actions (AC17)", () => {
   const hero = () => code(platformFile("PlatformHero"));
 
-  test("puts the headline first, then the shared fan, then the CTA pair and its reassurance", () => {
-    const order = ["<h1", "<FanParallax", "<HeroCardFan", "<LpCtaPair", "SHARED.reassurance"].map((needle) => hero().indexOf(needle));
+  test("puts the headline first, then the wheel of cards, then the CTA pair and its reassurance", () => {
+    const order = ["<h1", "<CardWheel", "<LpCtaPair", "SHARED.reassurance"].map((needle) => hero().indexOf(needle));
 
     expect(order.every((at) => at > -1)).toBe(true);
     expect(order).toEqual([...order].sort((a, b) => a - b));
     expect(literalAttr(findTag(hero(), "LpCtaPair")?.attrs ?? "", "location")).toBe("hero");
+  });
+
+  test("draws its own wheel, not the live homepage's fan", () => {
+    expect(hero()).not.toMatch(/landing-variant|HeroCardFan|FanParallax/);
   });
 
   test("has no sub and no proof line: the numbers come lower down", () => {
@@ -278,9 +282,10 @@ describe("the blog block (AC23)", () => {
 
 describe("the closing band (AC2)", () => {
   test("is the page's one last ask, in the band's own words, with the trial and its reassurance", () => {
-    const text = textOf(renderEn(<LpAccentBand />, { us: true }));
+    const html = renderEn(<LpAccentBand />, { us: true });
+    const text = textOf(html);
 
-    expect(text).toContain(PLATFORM.band.title);
+    expect(textOf(/<h2[\s\S]*?<\/h2>/.exec(html)?.[0] ?? "").replaceAll("|", "")).toBe(PLATFORM.band.title);
     expect(text).toContain(PLATFORM.band.sub);
     expect(text).toContain(SHARED.cta);
     expect(text).toContain("14 days free");
