@@ -22,30 +22,34 @@ import { SHARED, STAMP_BANNER } from "./copy/shared";
 const deliver = () => code(join(COMPONENTS_DIR, "platform", "DeliverComposition.tsx"));
 
 describe("the floating cards", () => {
-  /** Each card's title and alignment, as the section places them. */
+  /** Each card the section places: its title and the props it passes besides. */
   const cards = () =>
     openingTags(deliver())
       .filter((tag) => tag.name === "GlassCard")
       .map((tag) => ({
         title: /title=\{([^}]*)\}/.exec(tag.attrs)?.[1].trim(),
-        align: /align="([^"]+)"/.exec(tag.attrs)?.[1] ?? "left",
+        props: tag.attrs
+          .replace(/"[^"]*"|\{[^}]*\}/g, "")
+          .split(/[\s=]+/)
+          .filter(Boolean)
+          .sort(),
       }));
 
-  test("are titled from the copy: analytics and notifications to the left, the update on a scan centred", () => {
-    expect(cards().sort((a, b) => String(a.title).localeCompare(String(b.title)))).toEqual([
-      { title: "PLATFORM.deliver.analyticsLabel", align: "left" },
-      { title: "PLATFORM.deliver.notificationsLabel", align: "left" },
-      { title: "PLATFORM.deliver.updatesLabel", align: "center" },
-    ]);
+  test("are titled from the copy, and all three take the same props: one look, placed apart", () => {
+    expect(cards().map((card) => card.title).sort()).toEqual(
+      ["PLATFORM.deliver.analyticsLabel", "PLATFORM.deliver.notificationsLabel", "PLATFORM.deliver.updatesLabel"].sort(),
+    );
+    for (const card of cards()) expect(card.props).toEqual(["className", "float", "title"]);
   });
 
-  test("a card's title is a heading under the section's, centred when the card is", () => {
-    const left = renderEn(<GlassCard title="Analytics" />);
-    const centred = renderEn(<GlassCard title="Updates on every scan" align="center" />);
+  test("every card's title is the same large heading under the section's, left-aligned", () => {
+    const titles = ["Analytics", "Lock-screen notifications", "Updates on every scan"].map((title) =>
+      renderEn(<GlassCard title={title} />).replace(title, "TITLE"),
+    );
 
-    expect(left).toMatch(/<h3[^>]*>Analytics<\/h3>/);
-    expect(left).not.toContain("text-center");
-    expect(centred).toMatch(/<div[^>]*text-center[^>]*><h3[^>]*>Updates on every scan<\/h3>/);
+    expect(titles[0]).toMatch(/<h3[^>]*>TITLE<\/h3>/);
+    expect(new Set(titles).size).toBe(1);
+    expect(titles[0]).not.toContain("text-center");
   });
 });
 

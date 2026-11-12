@@ -54,11 +54,10 @@ export function DeliverComposition() {
 
         <GlassCard
           float
-          align="center"
           title={PLATFORM.deliver.updatesLabel}
-          className="relative z-20 w-full lg:absolute lg:top-[110px] lg:left-[694px] lg:w-[196px]"
+          className="relative z-20 w-full lg:absolute lg:top-[110px] lg:left-[710px] lg:w-[250px]"
         >
-          <p className="flex items-center justify-center gap-2 text-2xl font-bold tabular-nums text-[var(--foreground)]">
+          <p className="flex items-center gap-2 text-2xl font-bold tabular-nums text-[var(--foreground)]">
             {PLATFORM.deliver.updatesFrom}
             <ArrowRightIcon size={18} weight="bold" aria-hidden className="text-[var(--accent-hover)]" />
             {PLATFORM.deliver.updatesTo}
