@@ -86,6 +86,17 @@ function renderedSections(file: string, trail: string[] = []): string[] {
   return ids;
 }
 
+/** A source file with its comments blanked; empty when the file is missing, so the pins fail on what they look for. */
+const codeOf = (file: string) => (existsSync(file) ? stripComments(read(file)) : "");
+
+/** The `<PlanLine>…</PlanLine>` that holds `needle`: the paragraph a broadcast claim shares with its plans label. */
+function planLineWith(source: string, needle: string): string {
+  const at = source.indexOf(needle);
+  const open = source.lastIndexOf("<PlanLine", at);
+  const close = source.indexOf("</PlanLine>", at);
+  return at === -1 || open === -1 || close === -1 ? "" : source.slice(open, close);
+}
+
 describe("the registry (AC1, AC2, AC4)", () => {
   test("lists exactly the three pages", () => {
     expect([...LANDING_SLUGS].sort()).toEqual(["features", "how-it-works", "outcomes"]);
@@ -299,17 +310,59 @@ describe("dashboard captures (AC9)", () => {
   });
 });
 
+describe("the pieces the spotlights share (one solution each)", () => {
+  const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
+  const filesWith = (needle: RegExp) => lpFiles().filter((file) => needle.test(codeOf(file)));
+
+  test("a tall device is cut in one place: on phones only, fading into the page, with room for its shadow", () => {
+    const crop = codeOf(shared("PhoneCrop"));
+    // The hero crops its own visual flush on the section edge; every other cut is PhoneCrop.
+    const cuts = filesWith(/max-h-\[\d+px\]/).filter((file) => file !== shared("LpHero"));
+
+    expect(cuts).toEqual([shared("PhoneCrop")]);
+    expect(crop).toContain("[mask-image:linear-gradient(to_bottom");
+    for (const whole of ["lg:max-h-none", "lg:overflow-visible", "lg:[mask-image:none]"]) expect(crop).toContain(whole);
+    expect(openingTags(codeOf(shared("LpSpotlight"))).some((tag) => tag.name === "PhoneCrop")).toBe(true);
+  });
+
+  test("a spotlight centres its visual in its half, whichever side it is on", () => {
+    const spotlight = codeOf(shared("LpSpotlight"));
+
+    expect(spotlight).toContain("justify-center");
+    expect(spotlight).not.toMatch(/lg:justify-(?:start|end)/);
+  });
+
+  test("the plans a broadcast comes with print in the paragraph of the line they qualify", () => {
+    const line = codeOf(shared("PlanLine"));
+    const paragraph = line.slice(line.indexOf("<p"), line.indexOf("</p>"));
+
+    expect(filesWith(/SHARED\.broadcastPlans/)).toEqual([shared("PlanLine")]);
+    expect(paragraph).toContain("SHARED.broadcastPlans");
+    expect(paragraph).toContain("{children}");
+  });
+
+  test("the dashboard capture is one figure: the phone shot in the crop, its sample-data caption under it", () => {
+    const capture = codeOf(shared("SampleCapture"));
+    const [open, phone, close, caption] = ["<PhoneCrop", "<PhoneScreenshot", "</PhoneCrop>", "<figcaption"].map((needle) =>
+      capture.indexOf(needle),
+    );
+
+    expect(filesWith(/\blandingShot\(/)).toEqual([shared("SampleCapture")]);
+    expect(lpFiles().filter((file) => openingTags(codeOf(file)).some((tag) => tag.name === "PhoneScreenshot"))).toEqual([
+      shared("SampleCapture"),
+    ]);
+    expect(capture).toContain('landingShot("en", "phone")');
+    expect(capture).toContain("SHARED.sampleData");
+    expect(open).toBeGreaterThan(-1);
+    expect([open, phone, close, caption]).toEqual([open, phone, close, caption].sort((a, b) => a - b));
+  });
+});
+
 describe("the Features page (AC5, AC9, AC10)", () => {
   const features = () => [...landingTree(pageFile("features"))];
   const code = (file: string) => stripComments(read(file));
   const filesWith = (needle: RegExp) => features().filter((file) => needle.test(code(file)));
   const tagIn = (file: string, name: string) => openingTags(read(file)).find((tag) => tag.name === name);
-
-  /** The `<p>…</p>` that holds `needle`: the printed line the words share. */
-  const lineWith = (source: string, needle: string) => {
-    const at = source.indexOf(needle);
-    return source.slice(source.lastIndexOf("<p", at), source.indexOf("</p>", at));
-  };
 
   test("the hero shows the card stack with one banner from the sample café on it", () => {
     const visual = join(COMPONENTS_DIR, "features", "FeaturesHeroVisual.tsx");
@@ -325,7 +378,7 @@ describe("the Features page (AC5, AC9, AC10)", () => {
     const files = filesWith(/\bmessages\.broadcast\b/);
 
     expect(files).toEqual([join(COMPONENTS_DIR, "features", "MessagesSpotlight.tsx")]);
-    expect(lineWith(code(files[0]), "messages.broadcast")).toContain("SHARED.broadcastPlans");
+    expect(planLineWith(code(files[0]), "messages.broadcast")).not.toBe("");
   });
 
   test("the lock screen stacks the copy's banners, still, and is cropped on a phone", () => {
@@ -337,7 +390,7 @@ describe("the Features page (AC5, AC9, AC10)", () => {
     expect(phone?.attrs).toContain("notifications={messages.banners.map(lpBanner)}");
     expect(phone?.attrs).toContain("animate={false}");
     expect(phone?.attrs).toContain("eager={false}");
-    expect(tagIn(file, "CroppedPhone")).toBeDefined();
+    expect(tagIn(file, "LpSpotlight")?.attrs).toMatch(/\bcropOnPhone\b/);
   });
 
   test("the card gallery speaks with the page's heading and without its own CTA", () => {
@@ -348,13 +401,12 @@ describe("the Features page (AC5, AC9, AC10)", () => {
     expect(gallery[0]?.attrs).toContain("heading={");
   });
 
-  test("the one dashboard capture is the English phone shot, captioned as sample data", () => {
+  test("the one dashboard capture is the shared sample capture, with the Analytics page's alt text", () => {
     const captures = features().filter((file) => tagIn(file, "PhoneScreenshot"));
+    const [analytics] = filesWith(/section="spotlight_analytics"/);
 
-    expect(captures).toHaveLength(1);
-    expect(code(captures[0])).toContain('landingShot("en", "phone")');
-    expect(code(captures[0])).toContain("SHARED.sampleData");
-    expect(tagIn(captures[0], "CroppedPhone")).toBeDefined();
+    expect(captures).toEqual([join(SHARED_DIR, "SampleCapture.tsx")]);
+    expect(tagIn(analytics, "SampleCapture")?.attrs).toContain("alt={FEATURES.analytics.alt}");
   });
 });
 
@@ -484,9 +536,7 @@ describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
     const source = sectionSource("outcome_slow_days");
 
     expect(source).toContain("slowDays.lead");
-    expect(source).toContain("SHARED.broadcastPlans");
-    expect(source).toContain("slowDays.noFees");
-    expect(shareALine(source, "SHARED.broadcastPlans", "slowDays.noFees")).toBe(true);
+    expect(planLineWith(source, "slowDays.noFees")).not.toBe("");
   });
 
   test("the slow-days phone shows its broadcast as the sample café sends it, still", () => {
@@ -497,11 +547,12 @@ describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
     expect(phone?.attrs).toContain("animate={false}");
   });
 
-  test("the regulars spotlight shows the capture with its caption, then the example on one line", () => {
+  test("the regulars spotlight shows the shared sample capture, then the example on one line", () => {
     const source = sectionSource("outcome_regulars");
+    const capture = openingTags(source).find((tag) => tag.name === "SampleCapture");
 
-    expect(source).toContain('landingShot("en", "phone")');
-    expect(source).toContain("SHARED.sampleData");
+    expect(capture?.attrs).toContain("alt={OUTCOMES.regulars.alt}");
+    expect([...landingTree(pageFile("outcomes"))]).toContain(join(SHARED_DIR, "SampleCapture.tsx"));
     expect(shareALine(source, "example.label", "example.text")).toBe(true);
   });
 
@@ -513,11 +564,10 @@ describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
     expect(sides).toEqual(["right", "left", "right"]);
   });
 
-  // The capture crops inside its own figure, so "Sample data" prints under the cut and stays visible.
+  // The capture crops inside its own figure (SampleCapture), so "Sample data" prints under the cut and stays visible.
   test("tall devices are cropped on a phone", () => {
-    for (const id of ["outcome_slow_days", "outcome_regulars"]) {
-      expect({ id, cropped: /\bcropOnPhone\b|max-h-\[420px\]/.test(sectionSource(id)) }).toEqual({ id, cropped: true });
-    }
+    expect(spotlight(sectionSource("outcome_slow_days"))?.attrs).toMatch(/\bcropOnPhone\b/);
+    expect(openingTags(sectionSource("outcome_regulars")).some((tag) => tag.name === "SampleCapture")).toBe(true);
   });
 
   test("every notification on the page is the sample café's, through lpBanner", () => {

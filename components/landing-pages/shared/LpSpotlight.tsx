@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { LpHeading, LpSection } from "./LpSection";
+import { PhoneCrop } from "./PhoneCrop";
 import type { LandingSectionId } from "@/lib/landing-pages/pages";
 
 /**
  * One idea beside one visual: the heading and lead (and an optional line of
  * small print or a plan label) next to the picture. A single column on a phone,
- * text first; two columns from `lg`, with the visual on `side`. `cropOnPhone`
- * cuts a tall device at 420px on a phone, where its clock and banners sit in
- * the top half.
+ * text first; two columns from `lg`, with the visual on `side`, centred in its
+ * half. `cropOnPhone` cuts a tall device on a phone (see `PhoneCrop`), where its
+ * clock and banners sit in the top half.
  */
 export function LpSpotlight({
   section,
@@ -40,11 +41,9 @@ export function LpSpotlight({
         <ScrollReveal
           delay={150}
           variant={side === "left" ? "left" : "right"}
-          className={`flex justify-center ${side === "left" ? "lg:order-1 lg:justify-start" : "lg:justify-end"} ${
-            cropOnPhone ? "max-h-[420px] overflow-hidden lg:max-h-none lg:overflow-visible" : ""
-          }`}
+          className={`flex justify-center ${side === "left" ? "lg:order-1" : ""}`}
         >
-          {visual}
+          {cropOnPhone ? <PhoneCrop>{visual}</PhoneCrop> : visual}
         </ScrollReveal>
       </div>
     </LpSection>

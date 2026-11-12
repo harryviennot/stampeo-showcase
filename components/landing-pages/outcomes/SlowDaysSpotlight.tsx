@@ -1,8 +1,8 @@
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { lpBanner } from "../shared/banner";
 import { LpSpotlight } from "../shared/LpSpotlight";
+import { PlanLine } from "../shared/PlanLine";
 
 /**
  * Fill a slow day: a lock screen with the café's broadcast. The plans a
@@ -21,12 +21,7 @@ export function SlowDaysSpotlight() {
       cropOnPhone
       visual={<NotificationPhoneDemo notifications={[lpBanner(slowDays.banner)]} animate={false} eager={false} />}
     >
-      <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-base text-[var(--foreground)]">
-        <span className="rounded-full bg-[var(--blog-bg)] px-3 py-1 text-sm font-semibold ring-1 ring-[var(--border)]">
-          {SHARED.broadcastPlans}
-        </span>
-        {slowDays.noFees}
-      </p>
+      <PlanLine>{slowDays.noFees}</PlanLine>
     </LpSpotlight>
   );
 }
