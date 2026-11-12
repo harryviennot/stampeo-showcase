@@ -1,16 +1,45 @@
+import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
+import { PhoneScreenshot } from "@/components/ui/PhoneScreenshot";
+import { landingShot } from "@/lib/landing/dashboard-shots";
 import { FEATURES } from "@/lib/landing-pages/copy/features";
+import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { LpSpotlight } from "../shared/LpSpotlight";
-import { SampleCapture } from "../shared/SampleCapture";
+import { PhoneCrop } from "../shared/PhoneCrop";
 
-/** The dashboard's Analytics page on a phone, beside its heading. */
+/**
+ * "How often they come" on a phone, with the live feed floating over its lower
+ * half, and "Sample data" under both. The feed overlaps the faded cut on a
+ * phone and hangs off the phone's lower left from `lg`.
+ */
+function LayeredCapture() {
+  const shot = landingShot("en", "phone-habits");
+
+  return (
+    <figure className="flex w-full flex-col items-center lg:w-auto">
+      <div className="relative flex w-full flex-col items-center lg:w-[420px] lg:pb-16 lg:pl-24">
+        <PhoneCrop height={360}>
+          <PhoneScreenshot src={shot.src} alt={FEATURES.analytics.alt} />
+        </PhoneCrop>
+        <div className="relative z-10 -mt-24 w-full max-w-[340px] lg:absolute lg:bottom-0 lg:left-0 lg:mt-0 lg:w-[340px]">
+          <LiveActivityFeed cardOnly />
+        </div>
+      </div>
+      <figcaption className="mt-4 text-sm text-[var(--muted-foreground)]">{SHARED.sampleData}</figcaption>
+    </figure>
+  );
+}
+
+/** See who keeps coming back: the layered capture beside its heading, and the plan line for the extra charts. */
 export function AnalyticsSpotlight() {
   return (
     <LpSpotlight
       section="spotlight_analytics"
       title={FEATURES.analytics.title}
       lead={FEATURES.analytics.lead}
-      side="left"
-      visual={<SampleCapture alt={FEATURES.analytics.alt} />}
-    />
+      visual={<LayeredCapture />}
+      tinted
+    >
+      <p className="mt-6 max-w-xl text-pretty text-sm text-[var(--muted-foreground)]">{FEATURES.analytics.planLine}</p>
+    </LpSpotlight>
   );
 }
