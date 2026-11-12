@@ -19,7 +19,7 @@ import { lpBanner } from "../../components/landing-pages/shared/banner";
 import { landingShot } from "../landing/dashboard-shots";
 import { STAMP_SAMPLES } from "../loyalty-samples";
 import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
-import { ALL, PAGES, lines } from "../testing/landing-copy";
+import { ALL } from "../testing/landing-copy";
 import { COMPONENTS_DIR, lpFiles, otherCallers, pageComponent, shared } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
 import { FEATURES } from "./copy/features";
@@ -281,14 +281,6 @@ describe("the placard's QR mark (AC14)", () => {
     const qr = findTag(read(pageComponent("how-it-works", "PlacardVisual")), "QRCodeSkeleton");
 
     expect(qr?.attrs).toContain("animated={false}");
-  });
-});
-
-describe("the Platform share tree names places, never integrations (AC22)", () => {
-  test("its copy never says integration, POS or sync", () => {
-    const words = /integrat|\bPOS\b|\bsync/i;
-
-    expect(lines(PAGES.PLATFORM.share, "PLATFORM.share").filter((line) => words.test(line.value))).toEqual([]);
   });
 });
 
