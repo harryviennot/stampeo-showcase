@@ -55,7 +55,9 @@ export const OUTCOMES = {
       label: "Example",
       text: "20 customers who come back one extra time a month, at $8 a visit, bring in $160 more every month.",
     },
-  } satisfies SectionCopy & { example: { label: string; text: string } },
+    /** The dashboard capture's alt text. */
+    alt: "Aurevo's Analytics page on a phone: visits, new customers and return rate.",
+  } satisfies SectionCopy & { example: { label: string; text: string }; alt: string },
   finalCta: {
     title: "Make your next customer a regular.",
     accent: "a regular.",

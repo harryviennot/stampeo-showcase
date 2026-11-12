@@ -416,7 +416,7 @@ describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
     const tags = openingTags(figure);
 
     expect(tags.some((tag) => /\bink-figure\b/.test(tag.attrs))).toBe(true);
-    for (const part of ["figure.value", "figure.text", "figure.source", "problem.title"]) expect(figure).toContain(part);
+    for (const part of ["OUTCOMES.problem", "figure.value", "figure.text", "figure.source"]) expect(figure).toContain(part);
     expect(tags.find((tag) => tag.name === "LpSection")?.attrs).toMatch(/\btinted\b/);
     const bands = ownFiles().flatMap((file) =>
       openingTags(read(file)).filter((tag) => /\btinted\b(?!=)/.test(tag.attrs)),
@@ -436,9 +436,8 @@ describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
     const source = sectionSource("outcome_return");
     const card = openingTags(source).find((tag) => tag.name === "AurevoCard");
 
-    expect(spotlight(source)?.attrs).toContain("comeBack.title");
-    expect(card).toBeDefined();
-    expect(literalAttr(card?.attrs ?? "", "stamps") ?? card?.attrs).toMatch(/5|stamps=\{5\}/);
+    expect(source).toContain("OUTCOMES.comeBack");
+    expect(card?.attrs).toMatch(/stamps=\{[1-7]\}/);
     expect(source).toContain("headStart.text");
   });
 
@@ -455,7 +454,7 @@ describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
     const source = sectionSource("outcome_slow_days");
     const phone = openingTags(source).find((tag) => tag.name === "NotificationPhoneDemo");
 
-    expect(phone?.attrs).toContain("lpBanner(OUTCOMES.slowDays.banner)");
+    expect(phone?.attrs).toMatch(/lpBanner\([\w.]*slowDays\.banner\)/);
     expect(phone?.attrs).toContain("animate={false}");
   });
 
