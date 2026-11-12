@@ -34,7 +34,7 @@ export const PLATFORM = {
     lead: "No app to download. Their card sits right next to their payment cards.",
     analyticsLabel: "Analytics",
     notificationsLabel: "Lock-screen notifications",
-    updatesLabel: "Updates on every scan",
+    updatesLabel: "Real-time updates",
     updatesFrom: "5/8",
     updatesTo: "6/8",
   } satisfies EyebrowSection & Record<string, string>,

@@ -416,7 +416,7 @@ Everything runs against dev or a local server. No migration ships with this bran
 | DEPENDS | LP-01 |
 | ACCOUNT | No session. |
 | STEPS | At 1440, 1024 and 390, look at "Straight to Apple Wallet and Google Wallet." |
-| EXPECT | An iPhone with Aurevo in Apple Wallet and an Android phone with Aurevo in Google Wallet, both at 5 of 8. Three floating cards with the same title style ("Analytics", "Lock-screen notifications", "Updates on every scan"). The Analytics card is drawn by us: visits 2,770, 30-day return rate 61%, visits over time. The notification comes from Aurevo with its cup icon. The official wallet badges sit under the phones. You do NOT see "Sample data", a cropped dashboard screenshot, or "Stampeo" as the notification's sender. |
+| EXPECT | An iPhone with Aurevo in Apple Wallet and an Android phone with Aurevo in Google Wallet, both at 5 of 8. Three floating cards with the same title style ("Analytics", "Lock-screen notifications", "Real-time updates"; the notification in dark mode). The Analytics card is drawn by us: visits 2,770, 30-day return rate 61%, visits over time. The notification comes from Aurevo with its cup icon. The official wallet badges sit under the phones. You do NOT see "Sample data", a cropped dashboard screenshot, or "Stampeo" as the notification's sender. |
 | RESET | None. |
 
 ### LP-31: The numbers use the handwritten figures [EDGE]

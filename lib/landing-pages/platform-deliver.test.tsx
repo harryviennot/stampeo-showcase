@@ -43,7 +43,7 @@ describe("the floating cards", () => {
   });
 
   test("every card's title is the same large heading under the section's, left-aligned", () => {
-    const titles = ["Analytics", "Lock-screen notifications", "Updates on every scan"].map((title) =>
+    const titles = ["Analytics", "Lock-screen notifications", "Real-time updates"].map((title) =>
       renderEn(<GlassCard title={title} />).replace(title, "TITLE"),
     );
 
