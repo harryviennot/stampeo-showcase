@@ -357,7 +357,7 @@ describe("the Features page (AC5, AC9, AC10)", () => {
     expect(phone?.attrs).toContain("notifications={messages.banners.map(lpBanner)}");
     expect(phone?.attrs).toContain("animate={false}");
     expect(phone?.attrs).toContain("eager={false}");
-    expect(tagIn(file, "LpSpotlight")?.attrs).toContain("cropOnPhone");
+    expect(tagIn(file, "CroppedPhone")).toBeDefined();
   });
 
   test("the card gallery speaks with the page's heading and without its own CTA", () => {
@@ -374,6 +374,7 @@ describe("the Features page (AC5, AC9, AC10)", () => {
     expect(captures).toHaveLength(1);
     expect(code(captures[0])).toContain('landingShot("en", "phone")');
     expect(code(captures[0])).toContain("SHARED.sampleData");
+    expect(tagIn(captures[0], "CroppedPhone")).toBeDefined();
   });
 });
 

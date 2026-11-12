@@ -30,7 +30,9 @@ export const FEATURES = {
   analytics: {
     title: "See who keeps coming back.",
     lead: "Visits, new customers and your return rate, updated with every scan.",
-  } satisfies SectionCopy,
+    /** The capture's alt text. */
+    alt: "The Stampeo Analytics page on a phone: visits, new customers and return rate.",
+  } satisfies SectionCopy & { alt: string },
   finalCta: {
     title: "Make your card today.",
     accent: "today.",
