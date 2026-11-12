@@ -9,7 +9,7 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { GoogleWalletCard } from "@/components/card/GoogleWalletCard";
-import { ANALYTICS, DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { ANALYTICS, DeliverAnalytics, DeliverUpdate } from "@/components/landing-pages/platform/DeliverAnalytics";
 import { GlassCard } from "@/components/landing-pages/platform/GlassCard";
 import { LockScreenNotification } from "@/components/landing-pages/platform/LockScreenNotification";
 import { lpBanner } from "@/components/landing-pages/shared/banner";
@@ -42,14 +42,20 @@ describe("the floating cards", () => {
     for (const card of cards()) expect(card.props).toEqual(["className", "float", "title"]);
   });
 
-  test("every card's title is the same large heading under the section's, left-aligned", () => {
+  test("every card's title is the same heading, left-aligned, a clear step under the section's h2 at every width", () => {
     const titles = ["Analytics", "Lock-screen notifications", "Real-time updates"].map((title) =>
       renderEn(<GlassCard title={title} />).replace(title, "TITLE"),
     );
+    const heading = titles[0].match(/<h3[^>]*>TITLE<\/h3>/)?.[0] ?? "";
+    /** The heading's font size in rem, on a phone and from `lg` (the section's h2 runs 1.75rem to 2.5rem). */
+    const size = (prefix: "" | "lg:") =>
+      Number(new RegExp(`(?:^|\\s|")${prefix}text-\\[([\\d.]+)rem\\]`).exec(heading)?.[1] ?? Infinity);
 
-    expect(titles[0]).toMatch(/<h3[^>]*>TITLE<\/h3>/);
+    expect(heading).not.toBe("");
     expect(new Set(titles).size).toBe(1);
     expect(titles[0]).not.toContain("text-center");
+    expect(size("")).toBeLessThanOrEqual(1.25);
+    expect(size("lg:")).toBeLessThanOrEqual(1.5);
   });
 });
 
@@ -84,14 +90,67 @@ describe("the analytics card: our own every-plan analytics, not a capture", () =
   });
 });
 
+describe("the updates card", () => {
+  /** The opening tag of the element that holds exactly `text`, with its class and style. */
+  const holder = (html: string, text: string) =>
+    new RegExp(`<(\\w+)([^>]*)>${text.replaceAll("/", "\\/")}</\\1>`).exec(html)?.[2] ?? "";
+
+  test("shows 5/8 then 6/8 in the very type of the analytics figures: size, weight, tracking, figures and ink", () => {
+    const update = renderEn(<DeliverUpdate />);
+    const figure = holder(renderEn(<DeliverAnalytics />), "2,770");
+
+    expect(textOf(update)).toMatch(/\|5\/8\|(?:.*\|)?6\/8\|/);
+    expect(figure).not.toBe("");
+    expect(holder(update, "5/8")).toBe(figure);
+    expect(holder(update, "6/8")).toBe(figure);
+    expect(deliver()).toContain("<DeliverUpdate />");
+  });
+});
+
 describe("the notification card", () => {
+  const html = () => renderEn(<LockScreenNotification {...lpBanner(STAMP_BANNER)} />);
+
+  /** A CSS colour as red, green, blue and alpha. */
+  const rgba = (color: string) => {
+    const hex = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(color);
+    if (hex) return [...hex.slice(1).map((pair) => parseInt(pair, 16)), 1];
+    const fn = /^rgba?\(([^)]*)\)$/.exec(color);
+    return fn ? fn[1].split(",").map(Number).concat(1).slice(0, 4) : [NaN, NaN, NaN, NaN];
+  };
+  /** How light a colour reads, 0 to 255, laid over what is `under` it (the white glass card by default). */
+  const lightness = (color: string, under = 255) => {
+    const [r, g, b, a] = rgba(color);
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) * a + under * (1 - a);
+  };
+  /** The colour the element holding exactly `text` is painted in. */
+  const ink = (text: string) =>
+    new RegExp(`style="color:([^";]+)[^"]*"[^>]*>${text}<`).exec(html())?.[1] ?? "";
+
   test("is Aurevo's stamp notification, as iOS shows it: its icon, its name, the time, then the message", () => {
-    const html = renderEn(<LockScreenNotification {...lpBanner(STAMP_BANNER)} />);
-    const at = ["/themes/cafe/cup.png", ">Aurevo<", ">now<", STAMP_BANNER.body].map((needle) => html.indexOf(needle));
+    const at = ["/themes/cafe/cup.png", ">Aurevo<", ">now<", STAMP_BANNER.body].map((needle) => html().indexOf(needle));
 
     expect(at.every((index) => index > -1)).toBe(true);
     expect(at).toEqual([...at].sort((a, b) => a - b));
     expect(deliver()).toContain("<LockScreenNotification {...lpBanner(STAMP_BANNER)}");
+  });
+
+  test("is iOS's dark notification: a dark material, the name and message in white, the time in grey", () => {
+    // React hoists the icon's preload <link> ahead of the notification.
+    const material = lightness(/^(?:<link[^>]*>)*<div[^>]*style="[^"]*background-color:([^;"]+)/.exec(html())?.[1] ?? "");
+
+    expect(material).toBeLessThan(70);
+    expect(lightness(ink("Aurevo"), material)).toBeGreaterThan(240);
+    expect(lightness(ink(STAMP_BANNER.body), material)).toBeGreaterThan(240);
+    expect(lightness(ink("now"), material)).toBeGreaterThan(110);
+    expect(lightness(ink("now"), material)).toBeLessThan(200);
+  });
+
+  test("sits straight in its glass card: no wallpaper, no gradient, nothing bled to the card's edges", () => {
+    const card = deliver().slice(deliver().indexOf("title={PLATFORM.deliver.notificationsLabel}"));
+
+    expect(html()).not.toMatch(/gradient/i);
+    expect(deliver()).not.toMatch(/LockScreenSlice|GLASS_BLEED|gradient/);
+    expect(card).toMatch(/^title=\{PLATFORM\.deliver\.notificationsLabel\}[^>]*>\s*<LockScreenNotification\b/);
   });
 });
 

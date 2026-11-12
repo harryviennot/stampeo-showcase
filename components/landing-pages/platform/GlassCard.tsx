@@ -1,14 +1,11 @@
 import type { ReactNode } from "react";
 
-/** The card's title: large, left-aligned over its picture. */
+/** The card's title: left-aligned over its picture, a clear step under the section's h2. */
 const TITLE =
-  "mb-4 text-[1.5rem] leading-[1.1] font-medium tracking-[-0.025em] text-balance text-[var(--foreground)] lg:text-[1.75rem]";
-
-/** Takes a child out to the card's sides and bottom edge, rounded as the card is. */
-export const GLASS_BLEED = "-mx-5 -mb-5 rounded-b-[28px] lg:-mx-6 lg:-mb-6";
+  "mb-4 text-[1.25rem] leading-[1.15] font-medium tracking-[-0.02em] text-balance text-[var(--foreground)] lg:text-[1.5rem]";
 
 /**
- * A light, translucent card that floats over a picture, its title large and
+ * A light, translucent card that floats over a picture, its title
  * left-aligned. `float` makes it drift a few pixels (still for readers who ask
  * for less motion); the animation owns `transform`, so place a floating card
  * with offsets, not a transform.

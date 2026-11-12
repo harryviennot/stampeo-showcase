@@ -1,3 +1,6 @@
+import { ArrowRightIcon } from "@/components/icons";
+import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+
 /**
  * Aurevo's analytics, drawn: the figures are illustrative and match the
  * dashboard captures (90 days: 2,770 visits up 17%, 83% of them from returning
@@ -41,6 +44,15 @@ const AXIS_MAX = 260;
 
 const TILE = "rounded-2xl bg-white p-3 ring-1 ring-black/[0.05] sm:p-3.5";
 
+/** A figure as the dashboard's tiles print it: large, semibold, tight, tabular, in the tiles' ink. */
+function Figure({ children }: Readonly<{ children: string }>) {
+  return (
+    <span className="text-[1.625rem] leading-none font-semibold tracking-[-0.03em] tabular-nums" style={{ color: INK.figure }}>
+      {children}
+    </span>
+  );
+}
+
 function Kpi({ label, value, trend }: Readonly<{ label: string; value: string; trend: string }>) {
   return (
     <div className={TILE}>
@@ -48,9 +60,7 @@ function Kpi({ label, value, trend }: Readonly<{ label: string; value: string; t
         {label}
       </p>
       <div className="mt-1.5 flex items-baseline justify-between gap-2">
-        <span className="text-[1.625rem] leading-none font-semibold tracking-[-0.03em] tabular-nums" style={{ color: INK.figure }}>
-          {value}
-        </span>
+        <Figure>{value}</Figure>
         <span className="text-[11px] font-semibold tabular-nums" style={{ color: INK.up }}>
           {trend}
         </span>
@@ -106,5 +116,16 @@ export function DeliverAnalytics() {
         </div>
       </div>
     </div>
+  );
+}
+
+/** Aurevo's card going from 5 to 6 stamps on a scan, in the analytics' figure type. */
+export function DeliverUpdate() {
+  return (
+    <p className="flex items-center gap-2.5">
+      <Figure>{PLATFORM.deliver.updatesFrom}</Figure>
+      <ArrowRightIcon size={18} weight="bold" aria-hidden className="text-[var(--accent-hover)]" />
+      <Figure>{PLATFORM.deliver.updatesTo}</Figure>
+    </p>
   );
 }
