@@ -1,9 +1,8 @@
 import { ArrowRightIcon } from "@/components/icons";
-import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
-import { iphoneLayout } from "@/lib/devices/iphone";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { LpSection } from "../shared/LpSection";
-import { ScaledBox } from "../shared/ScaledBox";
+import { ScannerLoop } from "../shared/ScannerLoop";
+import { SCANNER_LOOP } from "../shared/scanner-loop";
 import { WalletPhone } from "../shared/WalletPhone";
 import { ARROW_LINK, CELL_TITLE } from "./classes";
 
@@ -18,8 +17,6 @@ const PHONE = { full: 280, narrow: 160 };
  * stack of three rows.
  */
 export function HowTable() {
-  const height = iphoneLayout(PHONE.full).height;
-
   return (
     <LpSection
       section="how"
@@ -30,10 +27,8 @@ export function HowTable() {
     >
       <div className="mx-auto max-w-[560px] lg:max-w-[1040px]">
         <div className="-mt-6 flex max-h-[286px] justify-center gap-4 overflow-hidden pt-6 lg:max-h-[464px] lg:gap-10">
-          <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} />
-          <ScaledBox width={PHONE.full} height={height} narrowTo={PHONE.narrow}>
-            <ScanDemo chrome="minimal" stillWhenReduced />
-          </ScaledBox>
+          <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} stamps={SCANNER_LOOP.stamps} />
+          <ScannerLoop width={PHONE.full} narrowWidth={PHONE.narrow} />
         </div>
 
         <ol className="relative -mt-10 grid divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white/80 backdrop-blur-xl lg:-mt-24 lg:grid-cols-3 lg:divide-x lg:divide-y-0">

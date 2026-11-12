@@ -1,15 +1,14 @@
-import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { FEATURES } from "@/lib/landing-pages/copy/features";
 import { FactList } from "../shared/FactList";
 import { LpHeading, LpSection } from "../shared/LpSection";
-import { PhoneCrop } from "../shared/PhoneCrop";
+import { ScannerLoop } from "../shared/ScannerLoop";
 import { LpTrialButton } from "../shared/LpTrialButton";
 
 /**
- * Stamp from any phone: the scan demo without its recording dot or timer,
- * three facts, and the trial in an outline button. A phone stacks heading, phone, facts; from `lg` the
- * phone sits left of the words.
+ * Stamp from any phone: the Scanner loop, three facts, and the trial in an
+ * outline button. A phone stacks heading, phone, facts; from `lg` the phone
+ * sits left of the words.
  */
 export function ScannerSpotlight() {
   return (
@@ -23,9 +22,7 @@ export function ScannerSpotlight() {
           variant="left"
           className="flex justify-center lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:items-center"
         >
-          <PhoneCrop height={440}>
-            <ScanDemo chrome="minimal" stillWhenReduced />
-          </PhoneCrop>
+          <ScannerLoop narrowWidth={250} />
         </ScrollReveal>
         <ScrollReveal className="lg:col-start-2 lg:row-start-2 lg:self-start">
           <FactList facts={FEATURES.scanner.facts} />
