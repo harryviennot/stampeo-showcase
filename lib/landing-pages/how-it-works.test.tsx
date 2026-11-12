@@ -175,20 +175,20 @@ describe("step 3: scan their card, that's the stamp (AC24)", () => {
 
 describe("the live feed shows the owner's side", () => {
   test("is the feed card alone on this page: its own section and heading are left out", () => {
-    const bare = render(<LiveActivityFeed bare />);
+    const cardOnly = render(<LiveActivityFeed cardOnly />);
     const own = render(<LiveActivityFeed />);
 
-    expect(bare).not.toContain("<section");
-    expect(bare).not.toContain("<h2");
+    expect(cardOnly).not.toContain("<section");
+    expect(cardOnly).not.toContain("<h2");
     expect(own).toContain("<section");
     expect(own).toContain("<h2");
   });
 
-  test("the feature page's feed keeps its section: its other callers pass no `bare`", () => {
+  test("the feature page's feed keeps its section: its other callers pass no `cardOnly`", () => {
     const callers = otherCallers("LiveActivityFeed", join(ROOT, "components/features/analytics/LiveActivityFeed.tsx"));
 
     expect(callers.length).toBeGreaterThan(0);
-    expect(callers.filter(({ attrs }) => /(?:^|\s)bare(?![\w-])/.test(attrs))).toEqual([]);
+    expect(callers.filter(({ attrs }) => /(?:^|\s)cardOnly(?![\w-])/.test(attrs))).toEqual([]);
   });
 
   test("sits under the page's own words", () => {
@@ -197,7 +197,7 @@ describe("the live feed shows the owner's side", () => {
 
     expect(found).toBeDefined();
     expect(source).toContain("seeItWork");
-    expect(findTag(source, "LiveActivityFeed")?.attrs).toMatch(/\bbare\b/);
+    expect(findTag(source, "LiveActivityFeed")?.attrs).toMatch(/\bcardOnly\b/);
   });
 });
 

@@ -40,8 +40,8 @@ interface FeedEvent {
   color: string;
 }
 
-/** `bare` is the feed card alone, for a page that brings its own section and heading. */
-export function LiveActivityFeed({ bare = false }: Readonly<{ bare?: boolean }>) {
+/** `cardOnly` draws the feed card alone, for a page that brings its own section and heading. */
+export function LiveActivityFeed({ cardOnly = false }: Readonly<{ cardOnly?: boolean }>) {
   const t = useTranslations("features.analytiques.custom.activityFeed");
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const idRef = useRef(0);
@@ -124,7 +124,7 @@ export function LiveActivityFeed({ bare = false }: Readonly<{ bare?: boolean }>)
     </div>
   );
 
-  if (bare) return feed;
+  if (cardOnly) return feed;
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">

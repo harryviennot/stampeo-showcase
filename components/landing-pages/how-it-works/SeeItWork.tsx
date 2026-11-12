@@ -14,7 +14,7 @@ export function SeeItWork() {
           <LpHeading title={title} lead={lead} />
         </ScrollReveal>
         <ScrollReveal delay={150} variant="right" className="mx-auto w-full max-w-[520px]">
-          <LiveActivityFeed bare />
+          <LiveActivityFeed cardOnly />
         </ScrollReveal>
       </div>
     </LpSection>
