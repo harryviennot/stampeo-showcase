@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
+import { lpBanner } from "../shared/banner";
 import { NumberStamp } from "@/components/stamps/StampIcons";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
@@ -50,8 +51,7 @@ function StampedVisual() {
     <div className="relative">
       <AurevoCard stamps={5} width={CARD_WIDTH} />
       <div className="absolute inset-x-[-24px] bottom-[-18px] z-10">
-        {/* The sender is the business the card belongs to; the message is Stampeo's default. */}
-        <NotificationBanner appName={STAMP_BANNER.sender} title={STAMP_BANNER.body} body="" />
+        <NotificationBanner {...lpBanner(STAMP_BANNER)} />
       </div>
     </div>
   );

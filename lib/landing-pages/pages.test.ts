@@ -350,6 +350,7 @@ describe("components the pages extend keep rendering as before (AC15)", () => {
     ["components/features/notifications-push/NotificationPhoneDemo.tsx", ["animate = true", "eager = true", "width = 280"]],
     ["components/features/design-de-carte/CardStyleGallery.tsx", ["showCta = true"]],
     ["components/ui/QRCodeSkeleton.tsx", ["animated = true"]],
+    ["components/features/notifications-push/NotificationBanner.tsx", ["icon ?? (", "{body && ("]],
   ])("%s defaults to today's behaviour", (path, defaults) => {
     for (const fragment of defaults) expect(source(path)).toContain(fragment);
   });

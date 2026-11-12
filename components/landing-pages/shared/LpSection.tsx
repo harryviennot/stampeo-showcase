@@ -18,8 +18,8 @@ export function LpHeading({
 }: Readonly<{ title: string; lead?: string; className?: string }>) {
   return (
     <div className={`max-w-2xl ${className}`}>
-      <h2 className="text-h2">{title}</h2>
-      {lead && <p className="mt-4 max-w-xl text-lead text-[var(--muted-foreground)]">{lead}</p>}
+      <h2 className="text-h2 text-balance">{title}</h2>
+      {lead && <p className="mt-4 max-w-xl text-lead text-pretty text-[var(--muted-foreground)]">{lead}</p>}
     </div>
   );
 }
@@ -78,7 +78,7 @@ export function LpSection({
       className={
         bare
           ? undefined
-          : `relative scroll-mt-24 ${PADDING[padding]} ${tinted ? "bg-[var(--blog-bg-alt)]" : ""} ${className}`
+          : `relative scroll-mt-24 ${PADDING[padding]} ${tinted ? "bg-[var(--blog-bg)]" : ""} ${className}`
       }
     >
       {bare ? body : <Container size={size}>{body}</Container>}

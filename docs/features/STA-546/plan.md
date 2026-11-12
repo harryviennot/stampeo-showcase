@@ -4,7 +4,7 @@ ISSUE: STA-546 (https://linear.app/stampeo/issue/STA-546)
 BRANCH: `feat/sta-546-landing-variants` (worktree `showcase/.claude/worktrees/sta-546`, off origin/dev 34601c3)
 REPOS: showcase only
 MIGRATION: no
-STATUS: DRAFT (at the gate, 12 Nov 2026)
+STATUS: APPROVED (12 Nov 2026, by Harry)
 
 ## Problem
 
@@ -93,7 +93,7 @@ frequently", any vendor self-reported figure, the unsourced "85%" bars on `/feat
   `lib/compare/page/copy.ts`; the shared catalogs would force fr/es/pl copies nobody reads. Prices and
   trial length stay tokens (`{trialDays}`) through `RegionText`. A test applies the catalogs' claim
   guards plus this plan's budgets to these modules.
-- **"Punch card" is allowed in these H1s and subs** (proposed): it is the US search term and what the
+- **"Punch card" is allowed in these H1s and subs** (Harry, 12 Nov): it is the US search term and what the
   ads say. The copywriting skill's SEO exception list gains `/us/landing-pages/*`. "Stamps" stays the
   word for the marks, and "punch" is never a verb.
 - **"Stamps or points", no "levels"** on these pages: levels are behind a per-business switch, so a new
@@ -295,11 +295,11 @@ New folders only; no file grows past its limit. The three extended components ge
 - Fix the stampeo-ux-ui reference calling `landing-variant/` "the A/B landing".
 - Reconnect PostHog to Stampeo's org, then run the baseline funnel queries (saved in the session notes).
 
-## Open calls for Harry
+## Harry's calls (12 Nov 2026, at approval)
 
-1. A real owner quote (name, business, city) for the slot above the final CTA, on all three pages? Default: none.
-2. "Punch card" in these H1s (extends the copywriting SEO exception to `/us/landing-pages/*`)? Default: yes.
-3. Citing Square's 2026 report (a competitor) for the "6×" figure? Default: yes, with its source line.
+1. Owner quote: none for now. The pages ship without a testimonial; the slot above the final CTA stays empty.
+2. "Punch card" in these H1s and subs: yes. The copywriting skill's US exception gains `/us/landing-pages/*`.
+3. Square's 2026 "6×" figure: yes, quoted exactly with its source line.
 
 ## Docs impact (preliminary)
 
