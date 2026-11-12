@@ -6,7 +6,14 @@ interface SegmentedProps<T extends string> {
   onChange: (next: T) => void;
   className?: string;
   ariaLabel?: string;
+  /** `lg` makes each tab 44px tall, for a tap target on a phone. */
+  size?: "md" | "lg";
 }
+
+const TAB_SIZES = {
+  md: "px-3 py-1.5 text-sm",
+  lg: "h-11 px-4 text-[15px]",
+} as const;
 
 /**
  * A compact segmented control (pill toggle). Controlled: pass `value` and
@@ -19,6 +26,7 @@ export function Segmented<T extends string>({
   onChange,
   className = "",
   ariaLabel,
+  size = "md",
 }: SegmentedProps<T>) {
   return (
     <div
@@ -35,7 +43,7 @@ export function Segmented<T extends string>({
             role="tab"
             aria-selected={active}
             onClick={() => onChange(opt.value)}
-            className="flex-1 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors"
+            className={`flex-1 rounded-lg ${TAB_SIZES[size]} font-semibold transition-colors`}
             style={
               active
                 ? {

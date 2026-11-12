@@ -2,10 +2,9 @@ import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
-import { STAMP_SAMPLES } from "@/lib/loyalty-samples";
+import { AUREVO } from "./samples";
 
-/** The sample café every visual on these pages belongs to. */
-export const AUREVO = STAMP_SAMPLES.find((sample) => sample.id === "aurevo") ?? STAMP_SAMPLES[0];
+export { AUREVO };
 
 /** The width the card is laid out at: the narrowest where its QR block fits under the fields. */
 const LAYOUT_WIDTH = 300;

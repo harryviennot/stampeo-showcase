@@ -41,6 +41,8 @@ export const SHARED = {
   broadcastPlans: "Growth and Pro",
   /** The browser bar over the desktop dashboard capture. */
   dashboardUrl: "app.stampeo.app",
+  /** Alt text of the level cards: three cards of one shop, one per level. */
+  levelCardsAlt: "A barbershop's loyalty card at three levels: Bronze, Silver and Gold.",
   /** The heading over the sector carousel when a page gives it a small label (Platform). */
   sectorsEyebrow: "For every kind of shop",
   faq: {

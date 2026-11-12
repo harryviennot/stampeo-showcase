@@ -15,8 +15,10 @@ const PHASE_DURATIONS: Record<Phase, number> = {
   idle: 300,
 };
 
-export function ScanDemo() {
+/** `minimal` leaves out the recording dot and the timing chip, which say more about the scanner than a page may claim. */
+export function ScanDemo({ chrome = "full" }: Readonly<{ chrome?: "full" | "minimal" }>) {
   const t = useTranslations("features.scanner-mobile.custom.scanDemo");
+  const full = chrome === "full";
   const [phase, setPhase] = useState<Phase>("scanning");
   const cycleCountRef = useRef(0);
   const hasScrolledRef = useRef(false);
@@ -59,7 +61,7 @@ export function ScanDemo() {
             </span>
           </div>
           <AnimatePresence>
-            {phase === "scanning" && (
+            {full && phase === "scanning" && (
               <motion.div
                 className="flex items-center gap-1.5"
                 initial={{ opacity: 0 }}
@@ -236,10 +238,12 @@ export function ScanDemo() {
                       {t("stampCount")}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] text-gray-400 font-mono bg-gray-100 px-2 py-0.5 rounded-md">
-                    <ClockIcon className="w-3 h-3" />
-                    {t("timer")}
-                  </div>
+                  {full && (
+                    <div className="flex items-center gap-1 text-[11px] text-gray-400 font-mono bg-gray-100 px-2 py-0.5 rounded-md">
+                      <ClockIcon className="w-3 h-3" />
+                      {t("timer")}
+                    </div>
+                  )}
                 </div>
 
                 {/* Stamp dots */}

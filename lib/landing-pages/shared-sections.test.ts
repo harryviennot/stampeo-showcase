@@ -15,6 +15,7 @@ import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceF
 import { ALL } from "../testing/landing-copy";
 import {
   COMPONENTS_DIR,
+  SHARED_DIR,
   lpFiles,
   otherCallers,
   pageComponent,
@@ -80,7 +81,7 @@ describe("the pieces the sections share (one solution each)", () => {
 
     expect(chip).toContain("rounded-full");
     expect(chip).toContain("--background-subtle");
-    expect(chip).toMatch(/plan:\s*PlanChip/);
+    expect(chip).toContain("@/lib/landing-pages/copy/types");
     expect(findTag(list, "PlanChip")).toBeDefined();
     expect(list).toMatch(/Fact\[\]/);
   });
@@ -127,7 +128,8 @@ describe("the level cards (AC20)", () => {
   const cards = () => code(shared("LevelCards"));
 
   test("draw the barbershop sample as Bronze, Silver and Gold, each with its level name in the header", () => {
-    expect(cards()).toMatch(/id\s*===\s*"barber"/);
+    expect(code(join(SHARED_DIR, "samples.ts"))).toMatch(/id\s*===\s*"barber"/);
+    expect(cards()).toContain("BARBER");
     for (const name of ["Bronze", "Silver", "Gold"]) expect(cards()).toContain(name);
     expect(cards()).toContain("headerLabel");
     expect(cards()).toMatch(/SILVER_LOOK|SILVER/);

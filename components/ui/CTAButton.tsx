@@ -5,7 +5,7 @@ import type { CTALocation } from "@/lib/analytics";
 import { useCtaTracking } from "@/hooks/use-cta-tracking";
 
 type Size = "sm" | "md" | "lg";
-type Variant = "primary" | "secondary" | "outline" | "link";
+type Variant = "primary" | "secondary" | "outline" | "link" | "inverse";
 
 type CTAButtonProps = Readonly<{
   label: string;
@@ -36,6 +36,9 @@ const variantStyles: Record<Variant, string> = {
   // For a secondary action next to a primary button: reads as a link, still
   // reports its click like the others.
   link: "bg-transparent text-[var(--foreground)] underline-offset-4 hover:underline",
+  // A white pill for a band that is already the accent colour.
+  inverse:
+    "bg-white text-[var(--near-black)] shadow-md shadow-black/10 hover:brightness-95",
 };
 
 export function CTAButton({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Minus, Plus, Sparkle, User } from "@phosphor-icons/react";
@@ -78,7 +78,13 @@ const STRIP_STYLES: PointsStripStyle[] = [
   "progress_icons",
 ];
 
-export function CardDesignPlayground() {
+/**
+ * `compact` is the playground as the body of a page's own section: the card
+ * and the controls without the section, its heading, or the controls that make
+ * the panel tall (first name, rewards, "Surprise me", your own icons), so on a
+ * phone the card stays in view while you tap.
+ */
+export function CardDesignPlayground({ compact = false }: Readonly<{ compact?: boolean }>) {
   const t = useTranslations("features.design-de-carte.custom.playground");
   const tc = useTranslations("common");
   const themes = t.raw("themes") as Array<{ name: string; orgName: string }>;
@@ -99,7 +105,7 @@ export function CardDesignPlayground() {
   const [arrangement, setArrangement] =
     useState<CustomStampArrangement>("staggered");
   const [showName, setShowName] = useState(true);
-  const [rewards, setRewards] = useState(1);
+  const [rewards, setRewards] = useState(compact ? 0 : 1);
   const [stripStyle, setStripStyle] = useState<PointsStripStyle>("big_point");
   const [balance, setBalance] = useState(120);
   const [stamps, setStamps] = useState(5);
@@ -194,22 +200,24 @@ export function CardDesignPlayground() {
       };
 
   return (
-    <section id="playground" className="py-16 sm:py-24 scroll-mt-24">
-      <Container>
-        <ScrollReveal className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-h2 text-[var(--foreground)] mb-4">
-            {t("sectionTitle")}
-          </h2>
-          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
-            {t("sectionSubtitle")}
-          </p>
-        </ScrollReveal>
+    <PlaygroundFrame compact={compact}>
+      <Fragment>
+        {!compact && (
+          <ScrollReveal className="max-w-3xl mx-auto text-center mb-12">
+            <h2 className="text-h2 text-[var(--foreground)] mb-4">
+              {t("sectionTitle")}
+            </h2>
+            <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
+              {t("sectionSubtitle")}
+            </p>
+          </ScrollReveal>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* Live card preview */}
           <ScrollReveal variant="right" className="flex justify-center">
             <motion.div
-              className="w-full max-w-[300px]"
+              className={compact ? "w-full max-w-[240px] lg:max-w-[300px]" : "w-full max-w-[300px]"}
               layout
               animate={complete ? { scale: [1, 1.045, 1] } : { scale: 1 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -229,7 +237,13 @@ export function CardDesignPlayground() {
 
           {/* Controls */}
           <ScrollReveal variant="left">
-            <div className="w-full max-w-xl rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-4 shadow-sm">
+            <div
+              className={
+                compact
+                  ? "w-full max-w-xl rounded-2xl border border-[var(--border)] bg-white p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-sm"
+                  : "w-full max-w-xl rounded-2xl border border-[var(--border)] bg-white p-5 sm:p-6 space-y-4 shadow-sm"
+              }
+            >
               {/* Program type: the same card runs stamps or points */}
               <div className="space-y-2.5">
                 <ControlLabel>{t("programLabel")}</ControlLabel>
@@ -244,7 +258,7 @@ export function CardDesignPlayground() {
               </div>
 
               {/* Icon source: preset library or your own icons */}
-              {!isPoints && (
+              {!isPoints && !compact && (
                 <Segmented
                   options={[
                     { value: "preset", label: t("modePreset") },
@@ -421,55 +435,69 @@ export function CardDesignPlayground() {
               )}
 
               {/* Personalization */}
-              <div className="flex flex-wrap items-center gap-2.5 pt-1">
-                <button
-                  onClick={() => setShowName((v) => !v)}
-                  className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors"
-                  style={
-                    showName
-                      ? { backgroundColor: "color-mix(in srgb, var(--accent) 14%, transparent)", color: "var(--accent)" }
-                      : { backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }
-                  }
-                  aria-pressed={showName}
-                >
-                  <User className="w-4 h-4" weight="bold" />
-                  {t("nameToggle")}
-                </button>
+              {!compact && (
+                <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                  <button
+                    onClick={() => setShowName((v) => !v)}
+                    className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition-colors"
+                    style={
+                      showName
+                        ? { backgroundColor: "color-mix(in srgb, var(--accent) 14%, transparent)", color: "var(--accent)" }
+                        : { backgroundColor: "var(--muted)", color: "var(--muted-foreground)" }
+                    }
+                    aria-pressed={showName}
+                  >
+                    <User className="w-4 h-4" weight="bold" />
+                    {t("nameToggle")}
+                  </button>
 
-                {!isPoints && (
-                  <div className="inline-flex items-center gap-2 rounded-full bg-[var(--muted)] px-2.5 py-1.5">
-                    <span className="text-sm font-semibold text-[var(--muted-foreground)] pl-1">
-                      {t("rewardsToggle")}
-                    </span>
-                    <Stepper
-                      value={rewards}
-                      min={0}
-                      max={MAX_REWARDS}
-                      onChange={setRewards}
-                      decLabel={t("rewardsDecrease")}
-                      incLabel={t("rewardsIncrease")}
-                    />
-                  </div>
-                )}
+                  {!isPoints && (
+                    <div className="inline-flex items-center gap-2 rounded-full bg-[var(--muted)] px-2.5 py-1.5">
+                      <span className="text-sm font-semibold text-[var(--muted-foreground)] pl-1">
+                        {t("rewardsToggle")}
+                      </span>
+                      <Stepper
+                        value={rewards}
+                        min={0}
+                        max={MAX_REWARDS}
+                        onChange={setRewards}
+                        decLabel={t("rewardsDecrease")}
+                        incLabel={t("rewardsIncrease")}
+                      />
+                    </div>
+                  )}
 
-                <motion.button
-                  type="button"
-                  onClick={surprise}
-                  whileTap={{ scale: 0.95, rotate: -2 }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/30 px-3.5 py-2 text-sm font-semibold text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10"
-                >
-                  <Sparkle className="w-4 h-4" weight="fill" />
-                  {t("shuffle")}
-                </motion.button>
-              </div>
+                  <motion.button
+                    type="button"
+                    onClick={surprise}
+                    whileTap={{ scale: 0.95, rotate: -2 }}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[var(--accent)]/30 px-3.5 py-2 text-sm font-semibold text-[var(--accent)] transition-colors hover:bg-[var(--accent)]/10"
+                  >
+                    <Sparkle className="w-4 h-4" weight="fill" />
+                    {t("shuffle")}
+                  </motion.button>
+                </div>
+              )}
 
-              <p className="text-sm text-[var(--muted-foreground)] pt-1">
-                {t("hint")}
-              </p>
+              {!compact && (
+                <p className="text-sm text-[var(--muted-foreground)] pt-1">
+                  {t("hint")}
+                </p>
+              )}
             </div>
           </ScrollReveal>
         </div>
-      </Container>
+      </Fragment>
+    </PlaygroundFrame>
+  );
+}
+
+/** The playground's own section and width; a compact one is the bare body of someone else's. */
+function PlaygroundFrame({ compact, children }: { compact: boolean; children: React.ReactNode }) {
+  if (compact) return <>{children}</>;
+  return (
+    <section id="playground" className="py-16 sm:py-24 scroll-mt-24">
+      <Container>{children}</Container>
     </section>
   );
 }

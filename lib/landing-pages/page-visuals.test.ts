@@ -34,7 +34,7 @@ describe("the hero the three argument pages share (AC18)", () => {
     expect(duo).toBeGreaterThan(badges);
     expect(source).toContain("badges.apple");
     expect(source).toContain("badges.google");
-    const between = source.slice(badges, duo);
+    const between = source.slice(source.indexOf("src={badges.apple}"), duo);
     expect(between).not.toMatch(/<a\b|<Link\b|<TrackedLink\b/);
     expect(findTag(source, "DashboardDuo")?.attrs).toMatch(/\bpriority\b/);
   });
@@ -79,8 +79,9 @@ describe("the dashboard duo: the computer and the phone, at every width (AC18)",
   });
 
   test("preloads the capture only when the hero asks for it", () => {
-    expect(findTag(duo(), "Image")?.attrs).toMatch(/\bpriority=\{priority\}/);
     expect(duo()).toMatch(/priority\s*=\s*false/);
+    expect(duo()).toMatch(/priority\s*\?\s*\{[^}]*fetchPriority:\s*"high"/);
+    expect(findTag(duo(), "PhoneScreenshot")?.attrs).toContain("eager={priority}");
   });
 });
 
@@ -119,7 +120,7 @@ describe("the sectors every page ends on (AC19)", () => {
   test.todo("Outcomes renders the sectors before its pricing (stage G3)");
 
   test("nothing near the sectors calls them testimonials, stories or customers", () => {
-    const heading = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).sectorCards as {
+    const heading = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).landing.sectorCards as {
       title: string;
       subtitle: string;
     };

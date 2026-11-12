@@ -277,6 +277,30 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
+/* The glass cards on the Platform landing page drift a few pixels; still for
+   readers who ask for less motion. */
+@keyframes lp-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.lp-float {
+  animation: lp-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-float {
+    animation: none;
+  }
+}
+
 /* Pulse animation for badges */
 @keyframes pulse-dot {
 

@@ -1,8 +1,13 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { BlogPostMeta } from "@/lib/blog/types";
 
-export function BlogCard({ post }: { post: BlogPostMeta }) {
+/** `rich` adds the reading time beside the category and a two-line excerpt under the title. */
+export function BlogCard({ post, detail = "default" }: { post: BlogPostMeta; detail?: "default" | "rich" }) {
+  const t = useTranslations("blog");
+  const rich = detail === "rich";
+
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -23,10 +28,18 @@ export function BlogCard({ post }: { post: BlogPostMeta }) {
           <span className="px-2.5 py-1 rounded-full bg-[var(--accent)] text-white font-semibold">
             {post.category}
           </span>
+          {rich && (
+            <span className="px-2.5 py-1 rounded-full bg-[var(--background-subtle)] ring-1 ring-inset ring-[var(--border)] text-[var(--foreground)] font-semibold">
+              {t("readingTime", { minutes: post.readingMinutes })}
+            </span>
+          )}
         </div>
         <h3 className="text-lg font-bold leading-tight group-hover:text-[var(--accent)] transition-colors">
           {post.title}
         </h3>
+        {rich && (
+          <p className="line-clamp-2 text-sm text-[var(--muted-foreground)]">{post.description}</p>
+        )}
         <time
           dateTime={post.publishedAt}
           className="text-xs text-[var(--muted-foreground)] mt-auto"

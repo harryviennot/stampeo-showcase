@@ -9,6 +9,7 @@ describe("hidesLanguageSwitcher: pages a language switch would 404 on", () => {
     "/us/landing-pages/how-it-works",
     "/us/landing-pages/features",
     "/us/landing-pages/outcomes",
+    "/us/landing-pages/platform",
   ])("hides it on %s: its slug differs per language, or it exists in one language only", (pathname) => {
     expect(hidesLanguageSwitcher(pathname)).toBe(true);
   });

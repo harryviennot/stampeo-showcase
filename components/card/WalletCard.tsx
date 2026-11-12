@@ -51,6 +51,8 @@ export interface WalletCardProps {
   pointsBalance?: number;
   /** Points reward ladder (only used when design.card_type === 'points'). */
   pointsRewards?: RewardTier[];
+  /** Text over the count in the header, in place of "Stamps" / "Points": a level card shows its level name. */
+  headerLabel?: string;
 }
 
 // ============================================================================
@@ -503,6 +505,7 @@ export function WalletCard({
   className = "",
   pointsBalance,
   pointsRewards,
+  headerLabel,
 }: WalletCardProps) {
   const { cardRef, rotate, glare, handleMouseMove, handleMouseLeave } =
     use3DEffect(interactive3D);
@@ -600,7 +603,7 @@ export function WalletCard({
                   className="text-[8px] font-bold uppercase tracking-wider transition-colors duration-300"
                   style={{ color: colors.mutedTextColor }}
                 >
-                  {isPoints ? t("points") : t("stamps")}
+                  {headerLabel ?? (isPoints ? t("points") : t("stamps"))}
                 </div>
                 <div
                   className="text-md font-medium flex items-baseline gap-1 justify-end transition-colors duration-300 leading-tight"

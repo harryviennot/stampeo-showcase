@@ -5,6 +5,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { join } from "node:path";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -17,6 +18,7 @@ import { CTAButton } from "@/components/ui/CTAButton";
 import { Segmented } from "@/components/ui/Segmented";
 import type { BlogPostMeta } from "../blog/types";
 import { loadCatalog } from "../testing/catalogs";
+import { ROOT, code } from "../testing/jsx-source";
 
 const MESSAGES = loadCatalog("en");
 
@@ -77,11 +79,16 @@ describe("ScanDemo chrome", () => {
     expect(render(<ScanDemo />)).toContain("REC");
   });
 
-  test("the minimal demo draws neither the recording dot nor the timing", () => {
-    const html = render(<ScanDemo chrome="minimal" />);
+  test("the minimal demo draws no recording dot", () => {
+    expect(render(<ScanDemo chrome="minimal" />)).not.toContain("REC");
+  });
 
-    expect(html).not.toContain("REC");
-    expect(html).not.toMatch(/\d\.\d+s/);
+  // The timing chip only appears once a scan has finished, which a static render never reaches.
+  test("the timing chip is drawn only by the full demo", () => {
+    const source = code(join(ROOT, "components/features/scanner-mobile/ScanDemo.tsx"));
+
+    expect(source).toMatch(/\bfull\s*&&\s*\(\s*<div[^>]*>\s*<ClockIcon[^>]*\/>\s*\{t\("timer"\)\}/);
+    expect(source.match(/t\("timer"\)/g)).toHaveLength(1);
   });
 });
 
