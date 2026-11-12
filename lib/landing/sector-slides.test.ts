@@ -194,7 +194,7 @@ describe("wallet design", () => {
       custom_stamp_config: undefined,
       total_stamps: 6,
       organization_name: undefined,
-      logo_url: "/themes/barber/logo.avif",
+      logo_url: "/themes/gaspard-gus/logo.avif",
       secondary_fields: [{ key: "f0", label: "Reward", value: "Free cut" }],
     });
   });

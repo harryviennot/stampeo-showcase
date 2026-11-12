@@ -112,13 +112,13 @@ export const STAMP_SAMPLES: StampSample[] = [
     },
     stamps: 6,
   },
-  // Les Garçons Barbiers — barbershop. Preset scissors, a gift on the reward
+  // Gaspard & Gus — barbershop. Preset scissors, a gift on the reward
   // slot, logo on a crisp white card.
   {
     id: "barber",
     design: {
       organization_name: "",
-      logo_url: "/themes/barber/logo.avif",
+      logo_url: "/themes/gaspard-gus/logo.avif",
       background_color: "#FFFFFF",
       foreground_color: "#343434",
       label_color: "#040404",
