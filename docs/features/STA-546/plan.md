@@ -38,6 +38,28 @@ Stampeo can do.
    offline, POS, SMS, minutes); sourced figures only; nothing invented (no testimonials, no customer
    logos).
 
+## v2.1: Platform polish (Harry, 13 Nov 2026)
+
+Harry likes the Platform page best and directed a polish round. His calls, which win over earlier text:
+- **Hero:** a slowly turning wheel of ~14-16 of our nicest sample cards (incl. the newer sector brands:
+  pizza, bakery, lash studio…), replacing the fan on Platform; never the real-brand barber card.
+- **In their wallet:** bigger floating-card titles aligned like PassEntry's; a clean notification; our own
+  analytics mini-components (every-plan analytics only) instead of a cropped screenshot; no "Sample data";
+  the right phone becomes an Android phone showing Google Wallet (own CSS/SVG frame; web's Google Wallet
+  card ported).
+- **Numbers:** the handwritten figures of the original homepage.
+- **Stamping animation:** a new ~8 s loop of the real Scanner app flow, made in promo-videos from the ported
+  Scanner screens (shotlist approved by Harry), replacing `ScanDemo` on all four pages.
+- **Program types:** rows open on hover (desktop), not on scroll; no "Every plan" chips; levels drawn on a
+  new fictional brand (another business type, barber colours); Vanity as the points card.
+- **Platform toggle:** no "Sample data · Some charts come with Growth and Pro." caption; the broadcasts fact
+  carries no "Growth and Pro" badge (broadcasts open to every plan right after shipping, STA-549).
+- **No "Sample data" anywhere on Platform** ("a landing page doesn't need the detail"). Other pages keep theirs.
+- **Share tree:** lines fill as you scroll (scroll-linked).
+- **Final band:** a cream card with orange accents instead of a massive orange box.
+- **Site-wide, separate issue STA-550:** "Les Garçons Barbiers" is a real brand; replaced by the fictional
+  "Gaspard & Gus" everywhere (branch `fix/sta-550-fictional-barbershop`, off dev).
+
 ## v2 pages (detail: `ux-brief-v2.md`)
 
 | Page | URL / variant | Sections (registry order) |

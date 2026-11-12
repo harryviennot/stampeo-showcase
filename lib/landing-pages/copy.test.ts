@@ -23,6 +23,13 @@ const BROADCAST_PLANS = ["Growth and Pro", "Pro"];
 /** The two lines that carry their plan on the same line in the page, printed with the label by their component. */
 const PLAN_LINES = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
 
+/**
+ * Mentions that carry no plan label by Harry's call (13 Nov 2026): broadcasts
+ * open to every plan right after these pages ship (STA-549), so the Platform
+ * page lists them without a badge.
+ */
+const UNBADGED = ["PLATFORM.platform.dashboard.facts[2].text"];
+
 /** Mentions of `pattern` that no plan label qualifies and no plan line accounts for. */
 const unlabelled = (pattern: RegExp) =>
   Object.entries(MODULES)
@@ -78,7 +85,7 @@ describe("what these pages may not claim (AC10)", () => {
     ["broadcast", /broadcast/i],
     ["texting fees", /texting fees/i],
   ])("%s is mentioned only under a Growth and Pro or Pro label, or on a plan line", (_what, pattern) => {
-    const loose = unlabelled(pattern);
+    const loose = unlabelled(pattern).filter((path) => !UNBADGED.includes(path));
 
     expect(loose.filter((path) => !PLAN_LINES.includes(path))).toEqual([]);
     expect(loose).toEqual(PLAN_LINES);

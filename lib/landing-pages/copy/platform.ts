@@ -72,7 +72,7 @@ export const PLATFORM = {
       facts: [
         { text: "Design your card and see it live" },
         { text: "Every customer, their progress and their rewards" },
-        { text: "Broadcasts to every card", plan: "Growth and Pro" },
+        { text: "Broadcasts to every card" },
         { text: "Your numbers, updated with every scan" },
       ] satisfies Fact[],
       link: "See the analytics",
