@@ -3,10 +3,6 @@
  * one set of shared sections. There is no component runner, so these read the
  * source: which sections a page renders and in what order, where its tracking
  * sits, which CTA locations it may use, and what its hero says.
- *
- * The page stages add each page's middle sections; until then a page's
- * section-order test is a `todo` (see `STAGED`) and a lighter one checks the
- * sections it already renders.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -93,22 +89,6 @@ const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
   ],
 };
 
-/**
- * Pages whose middle sections a page stage adds, with the stage that does it.
- * A stage deletes its page's entry to arm the full section-order test.
- */
-const STAGED: Partial<Record<LandingSlug, string>> = {
-  platform: "stage G4",
-};
-
-/** What a staged page renders already: the hero and the shared closing blocks. */
-const SHARED_SO_FAR: Record<LandingSlug, string[]> = {
-  "how-it-works": ["hero", "pricing", "faq", "final_cta"],
-  features: ["hero", "pricing", "faq", "final_cta"],
-  outcomes: ["hero", "pricing", "faq", "final_cta"],
-  platform: ["hero", "pricing", "final_cta", "sectors"],
-};
-
 describe("the registry (AC1v2, AC2v2, AC4)", () => {
   test("lists exactly the four pages", () => {
     expect([...LANDING_SLUGS].sort()).toEqual(["features", "how-it-works", "outcomes", "platform"]);
@@ -164,23 +144,9 @@ describe("the routes (AC1v2, AC2v2, AC4)", () => {
     expect(existsSync(pageFile(slug))).toBe(true);
   });
 
-  for (const slug of LANDING_SLUGS) {
-    const stage = STAGED[slug];
-    if (stage) {
-      test.todo(`${slug}: renders every registry section once, in registry order (${stage} adds the middle)`);
-      test(`${slug}: renders the sections it has so far once each, in registry order`, () => {
-        const rendered = renderedSections(pageFile(slug));
-        const expected = LANDING_PAGES[slug].sections.filter((id) => rendered.includes(id));
-
-        expect(rendered).toEqual(expected);
-        expect(rendered).toEqual(expect.arrayContaining(SHARED_SO_FAR[slug]));
-      });
-    } else {
-      test(`${slug}: renders every registry section once, in registry order`, () => {
-        expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
-      });
-    }
-  }
+  test.each(LANDING_SLUGS)("%s renders every registry section once, in registry order", (slug) => {
+    expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
+  });
 
   test.each(ARGUMENT_PAGES)("%s renders the shared FAQ and final CTA, and the US pricing block", (slug) => {
     const source = code(pageFile(slug));
