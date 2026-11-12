@@ -1,21 +1,26 @@
+import { WalletCard } from "@/components/card/WalletCard";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { AurevoCard } from "../shared/AurevoCard";
 import { LevelCards } from "../shared/LevelCards";
 import { LpSection } from "../shared/LpSection";
-import { MarginaliaCard } from "../shared/MarginaliaCard";
+import { PassFrame } from "../shared/PassFrame";
 import { ScaledBox } from "../shared/ScaledBox";
+import { VANITY } from "../shared/samples";
 import { ProgramTypeRows } from "./ProgramTypeRows";
 
 /** The card thumbnail on a row: 200px on a laptop, 128px beside the words on a phone. */
 const CARD = { width: 200, height: 257, narrow: 128 };
 
-/** The level cards on a row: the stage shrunk to a third below `lg`, to 0.6 of its drawn width from it. */
-const LEVELS = { narrowTo: 128, to: 230.4, breakpoint: "lg" } as const;
+/**
+ * The level cards on a row: the stage shrunk to a third below `lg`; from it, to 0.75 of its drawn
+ * width, as tall as a card thumbnail (it overhangs the card column into the row's padding).
+ */
+const LEVELS = { narrowTo: 128, to: 288, breakpoint: "lg" } as const;
 
 /**
  * "Stamps, points or levels": a row each, with the Aurevo card at 5 of 8, the
- * Marginalia points card, and the three level cards. The rows are one client
- * component that opens the one nearest the middle of the screen.
+ * Vanity salon's points card with its reward ring, and the three level cards.
+ * The rows are one client component that opens the one a visitor points at.
  */
 export function ProgramTypeRowsSection() {
   return (
@@ -35,7 +40,13 @@ export function ProgramTypeRowsSection() {
           ),
           points: (
             <ScaledBox width={CARD.width} height={CARD.height} narrowTo={CARD.narrow}>
-              <MarginaliaCard width={CARD.width} />
+              <PassFrame width={CARD.width}>
+                <WalletCard
+                  design={VANITY.design}
+                  pointsBalance={VANITY.pointsBalance}
+                  pointsRewards={VANITY.pointsRewards}
+                />
+              </PassFrame>
             </ScaledBox>
           ),
           levels: <LevelCards size={LEVELS} />,

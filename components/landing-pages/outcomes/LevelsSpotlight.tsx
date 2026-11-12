@@ -6,7 +6,7 @@ import { LpHeading, LpSection } from "../shared/LpSection";
 import { PlanChip } from "../shared/PlanChip";
 
 /**
- * Give regulars something to reach: the barbershop's card at three levels
+ * Give regulars something to reach: the dry cleaner's card at three levels
  * under the level-up notification. On a phone the cards sit between the
  * heading and the facts; from `lg` they sit on the left, the words on the right.
  */

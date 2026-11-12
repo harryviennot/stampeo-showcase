@@ -11,9 +11,11 @@ const SCANNER = { full: 280, narrow: 190 };
 
 /**
  * "Run it from your computer or your phone": the Dashboard and Scanner app
- * toggle. The dashboard pane is the computer and phone captures; the scanner
- * pane is the live scan demo, cut short with a fade (300px on a phone, 440px
- * from `lg`), with room above it for the phone's shadow.
+ * toggle. The dashboard pane is the computer and phone captures, with no
+ * caption under them, centred in a box as tall as the scanner's on a phone so
+ * both panes' titles sit at the same height; the scanner pane is the live scan
+ * demo, cut short with a fade (300px on a phone, 440px from `lg`), with room
+ * above it for the phone's shadow.
  */
 export function PlatformSection() {
   return (
@@ -25,7 +27,11 @@ export function PlatformSection() {
       align="center"
     >
       <PlatformToggleCard
-        dashboard={<DashboardDuo />}
+        dashboard={
+          <div className="flex min-h-[300px] w-full flex-col justify-center lg:min-h-0">
+            <DashboardDuo caption={false} />
+          </div>
+        }
         scanner={
           <div className="-mt-6 flex max-h-[324px] w-full justify-center overflow-hidden pt-6 [mask-image:linear-gradient(to_bottom,#000_88%,transparent)] lg:max-h-[464px] lg:[mask-image:linear-gradient(to_bottom,#000_84%,transparent)]">
             <ScaledBox width={SCANNER.full} height={iphoneLayout(SCANNER.full).height} narrowTo={SCANNER.narrow}>

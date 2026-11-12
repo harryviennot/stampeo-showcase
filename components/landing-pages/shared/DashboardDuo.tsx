@@ -15,10 +15,13 @@ const CAPTURE_RATIO = 1.6;
 /**
  * The dashboard on a computer and on a phone: the desktop capture in a browser
  * frame, the phone capture overlapping its bottom-right edge, at every width.
- * Sized by the box it sits in (container queries), with "Sample data" under it;
- * `priority` is for the one in a hero.
+ * Sized by the box it sits in (container queries), with "Sample data" under it
+ * unless `caption` is false; `priority` is for the one in a hero.
  */
-export async function DashboardDuo({ priority = false }: Readonly<{ priority?: boolean }>) {
+export async function DashboardDuo({
+  priority = false,
+  caption = true,
+}: Readonly<{ priority?: boolean; caption?: boolean }>) {
   const t = await getTranslations("variant.dashboard");
   const desktop = landingShot("en", "desktop");
   const phone = landingShot("en", "phone");
@@ -60,9 +63,11 @@ export async function DashboardDuo({ priority = false }: Readonly<{ priority?: b
           <PhoneScreenshot src={phone.src} alt={t("alt.phone")} eager={priority} />
         </div>
       </div>
-      <figcaption className="mt-4 text-center text-sm text-[var(--muted-foreground)]">
-        {SHARED.sampleData} · {SHARED.dashboardPlans}
-      </figcaption>
+      {caption && (
+        <figcaption className="mt-4 text-center text-sm text-[var(--muted-foreground)]">
+          {SHARED.sampleData} · {SHARED.dashboardPlans}
+        </figcaption>
+      )}
     </figure>
   );
 }

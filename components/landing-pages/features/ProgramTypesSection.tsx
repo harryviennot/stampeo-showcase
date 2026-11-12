@@ -8,7 +8,7 @@ import { ProgramTypeTabs } from "./ProgramTypeTabs";
 
 const CARD_WIDTH = 280;
 
-/** Choose how you reward: stamps on Aurevo's card, points on a bookstore's, levels on the barbershop's. */
+/** Choose how you reward: stamps on Aurevo's card, points on a bookstore's, levels on a dry cleaner's. */
 export function ProgramTypesSection() {
   return (
     <LpSection section="program_types">
