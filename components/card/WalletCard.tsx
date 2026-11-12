@@ -292,7 +292,7 @@ function SecondaryFieldsRow({ fields, colors }: SecondaryFieldsRowProps) {
   );
 }
 
-function FakeQRCode({ size = 80 }: { size?: number }) {
+export function FakeQRCode({ size = 80 }: { size?: number }) {
   const modules = 21;
   const moduleSize = size / modules;
 
