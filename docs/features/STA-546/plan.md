@@ -30,7 +30,8 @@ Why it happens. These are the only mechanisms the pages may claim, all of them l
    start (welcome stamps, every plan) makes people finish their card far more often (Nunes & Drèze, 2006).
 3. **You can bring them back on a slow day** with a broadcast to every card: Growth and Pro, included
    in the plan, no texting fees.
-4. **You see it working**: return rate and who your regulars are, on the dashboard.
+4. **You see it working**: return rate, who your regulars are and who is slipping away (customer
+   segments such as At risk and Ghost, every plan), on the dashboard.
 
 Never claimed: anything that "reminds" customers later (no geofencing, no expiry reminders, no
 automatic win-back), offline scanning, POS integration, SMS, or a number of minutes to set up.
@@ -60,7 +61,7 @@ and Shopify as structure benchmarks.
 
 | Figure | Source | Where |
 |---|---|---|
-| Regular customers generate 6x more annual revenue than one-time visitors (regular = 4+ visit days a year) | Square, 2026 Local Economy Report (Mar 2026; US Square transactions 2019-2025) | Outcomes §2 |
+| Regular customers generate 6X more annual revenue than one-time visitors (a regular "visits a business at least four times per year") | Square, 2026 Local Economy Report (Mar 2026; US Square transactions 2019-2025) | Outcomes §2 |
 | A 2-stamp head start: 34% finished the card vs 19% without | Nunes & Drèze, "The Endowed Progress Effect", Journal of Consumer Research, 2006 | Outcomes §3 |
 
 Both carry a visible source line on the page and are quoted exactly. Square's figure is about Square
@@ -120,7 +121,9 @@ stampeo-copywriting skill and reviewed on the rendered pages.
   The CTA sits at y≈370 on a 390×844 phone; the whole visual is above the fold at 1440×900.
 - **Pricing**: `PricingSection market="us"`, unchanged.
 - **FAQ**: 5 collapsed questions (customers need an app? / new hardware or POS? / how customers join /
-  after the {trialDays} days / cancel anytime) reusing the `/us` answers, then one contact line.
+  when the free trial ends / is there a contract), answers adapted from `/us` (the join answer is new:
+  counter QR, shared link, the dashboard's counter flyer; the contract answer is limited to monthly
+  plans, which is what is true), then one contact line.
 - **Final CTA**: `text-display` headline (the page's own), CTA, reassurance, `stamp-pattern`.
 - **Rhythm**: every section `py-16 lg:py-24`; one h2 (≤44 chars), one lead (≤85 chars), one visual,
   at most one small-print line, lists of 3 at most. At most one tinted band per page.
@@ -184,7 +187,10 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
   `STAMP_SAMPLES.aurevo`, `NotificationBanner`, `NumberStamp`, `walletBadges`, `LandingTracker`,
   `RegionPricingProvider`, `RegionText`. Nothing from `landing-variant/` (it is the live `/us`).
 - EXTENDED (optional props, current call sites unchanged): `NotificationPhoneDemo` (`notifications[]`,
-  `animate`, `eager`, `width`), `CardStyleGallery` (`showCta`), `QRCodeSkeleton` (`animated`).
+  `animate`, `eager`, `width`), `NotificationBanner` (`icon`, optional `body`: the sender's own icon on
+  these pages), `CardStyleGallery` (`showCta`, `heading`, `sectionClassName`), `HeroCardStack`
+  (`peekFrom`), `QRCodeSkeleton` (`animated`). Added during the build and the polish pass.
+- ALSO: the language switcher is hidden on `/us/landing-pages/*` (English-only pages, as `/us/vs`).
 - NEW (`components/landing-pages/shared/`): `LandingPageShell`, `LpSection`, `LpHero`, `LpSpotlight`,
   `LpDemo`, `LpFaq`, `LpFinalCta`; page-specific `HowSteps`, `FeaturesHeroVisual`, `RegularsFigure`.
   No existing component lays out text + visual on this rhythm; the `/us` ones carry `/us` copy.
@@ -236,17 +242,21 @@ Claims and copy
 - AC9: Every dashboard capture on these pages carries a "Sample data" caption.
 - AC10: The copy modules pass the claim guards: no "credit card" claim, no worded trial length, no em
   dash, no "reminder", no "offline", no minute count, no "levels", "punch" never a verb, "Stampeo"
-  never a banner's sender, every broadcast mention on a line with "Growth and Pro".
+  never a banner's sender, every broadcast mention on the line with "Growth and Pro" or on the line
+  directly above it (the lead, with the plan line right under it).
 - AC11: Copy budgets hold: H1 ≤46 chars, hero sub ≤90, h2 ≤44, lead ≤85, ≤3 list items.
 - AC12: Every figure in the copy has a non-empty `source` (type-enforced), and the page renders it.
-- AC13: Prices and trial length appear only as tokens (`{trialDays}`); no `$` or digit-day literal.
+- AC13: Prices and trial length appear only as tokens (`{trialDays}`), rendered through `RegionText`;
+  no digit-day literal, and no `$` except in the outcome page's labelled "Example" line (an
+  illustration of a customer's ticket, not a Stampeo price).
 - AC14: The step-2 QR mark is not a scannable code; the only real QR on a page is the demo's.
 
 Reuse safety
 - AC15: `NotificationPhoneDemo`, `CardStyleGallery` and `QRCodeSkeleton` render exactly as before
   when the new props are omitted (defaults pinned by test, `/features/*` pages checked visually).
-- AC16: `/us` and every other existing page are byte-for-byte unaffected (no edits under
-  `components/landing-variant/`, `messages/`, `lib/seo/sitemap.ts`, `lib/llms-txt.ts`).
+- AC16: `/us` and every other existing page render the same as before (no edits under
+  `components/landing-variant/`, `messages/`, `lib/seo/sitemap.ts`, `lib/llms-txt.ts`; extended
+  components produce the same markup when the new props are omitted).
 
 Visual (verified in the polish pass, 390×844 and 1440×900, PNGs read)
 - AC17: H1, sub and CTA above the fold at 390×844; the whole hero visual above the fold at 1440×900;
@@ -294,6 +304,12 @@ New folders only; no file grows past its limit. The three extended components ge
 - US re-shoot of the dashboard capture (it shows "Paris (GMT+1)").
 - Fix the stampeo-ux-ui reference calling `landing-variant/` "the A/B landing".
 - Reconnect PostHog to Stampeo's org, then run the baseline funnel queries (saved in the session notes).
+
+## Known exception
+
+The shared pricing block (`PricingSection`, reused unchanged by decision) lists "Stamps, points or
+levels" on every plan, as on `/us` and `/us/pricing`. That is a site-wide claim Harry chose to ship;
+it is out of this issue's scope. The landing copy itself never says "levels".
 
 ## Harry's calls (12 Nov 2026, at approval)
 
