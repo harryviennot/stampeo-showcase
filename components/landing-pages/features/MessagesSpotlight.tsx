@@ -7,6 +7,7 @@ import { lpBanner } from "../shared/banner";
 import { LpSection } from "../shared/LpSection";
 import { phoneCropClass } from "../shared/PhoneCrop";
 import { PlanLine } from "../shared/PlanLine";
+import { aurevoDesign } from "../shared/AurevoCard";
 import { AUREVO } from "../shared/samples";
 
 /**
@@ -30,11 +31,11 @@ export function messageMoments(): SequenceMoment[] {
 }
 
 /**
- * Reach them on their lock screen: three moments on Aurevo's card, each
+ * Reach them on their lock screen: three moments on Aurevo's whole card, each
  * banner sent by Aurevo. The phone is cut at 520px on a phone; the
  * broadcast line carries its plans.
  */
-export function MessagesSpotlight() {
+export async function MessagesSpotlight() {
   return (
     <LpSection
       section="spotlight_messages"
@@ -45,7 +46,8 @@ export function MessagesSpotlight() {
       <div className="mx-auto max-w-5xl">
         <NotificationSequenceDemo
           moments={messageMoments()}
-          design={AUREVO.design}
+          design={await aurevoDesign()}
+          fullCard
           phoneClassName={phoneCropClass(520)}
         />
         <div className="flex justify-center">

@@ -82,11 +82,11 @@ export async function DeliverComposition() {
       align="center"
     >
       <div className="relative mx-auto flex max-w-[480px] flex-col gap-4 lg:block lg:h-[700px] lg:max-w-[1040px] lg:gap-0">
-        <AnalyticsCard className="relative z-20 w-full lg:absolute lg:top-[352px] lg:left-[max(0px,calc(50%-520px))] lg:w-[380px]" />
+        <AnalyticsCard className="relative z-20 w-full lg:absolute lg:top-[404px] lg:left-[max(0px,calc(50%-520px))] lg:w-[380px]" />
 
         <div className="relative lg:static">
           <div
-            className={`flex w-full justify-center ${phoneCropClass(440)} lg:absolute lg:top-0 lg:left-[calc(50%-316px)] lg:w-auto`}
+            className={`flex justify-center ${phoneCropClass(440)} lg:absolute lg:top-0 lg:left-[calc(50%-316px)]`}
           >
             <ScaledBox width={PHONE.full} height={iphoneLayout(PHONE.full).height} narrowWidth={PHONE.narrow}>
               <WalletPhone width={PHONE.full} stamps={5} />

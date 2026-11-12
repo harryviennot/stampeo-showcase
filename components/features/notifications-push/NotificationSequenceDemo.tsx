@@ -47,12 +47,20 @@ const DEFAULT_DESIGN: Partial<CardDesign> = {
  * Three notification moments beside a lock screen. A page passes its own
  * `moments` (banners from its sample business) and `design` (that business's
  * card); `phoneClassName` is for a class on the phone's column, e.g. to crop it.
+ * `fullCard` draws the card's fields and QR code, so a sample card reads as a
+ * whole pass rather than a strip on an empty card.
  */
 export function NotificationSequenceDemo({
   moments,
   design = DEFAULT_DESIGN,
   phoneClassName = "",
-}: Readonly<{ moments?: SequenceMoment[]; design?: Partial<CardDesign>; phoneClassName?: string }>) {
+  fullCard = false,
+}: Readonly<{
+  moments?: SequenceMoment[];
+  design?: Partial<CardDesign>;
+  phoneClassName?: string;
+  fullCard?: boolean;
+}>) {
   const t = useTranslations("features.notifications-push.notificationTypes");
   const items: SequenceMoment[] =
     moments ??
@@ -100,8 +108,8 @@ export function NotificationSequenceDemo({
                 <WalletCard
                   design={design}
                   stamps={active.stamps}
-                  showQR={false}
-                  showSecondaryFields={false}
+                  showQR={fullCard}
+                  showSecondaryFields={fullCard}
                 />
               </ScaledCardWrapper>
             </div>
@@ -169,7 +177,7 @@ export function NotificationSequenceDemo({
                       {item.title}
                     </h4>
                     {item.planLabel && (
-                      <span className="rounded-full bg-[var(--background-subtle)] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--foreground)] ring-1 ring-inset ring-[var(--border)]">
+                      <span className="shrink-0 rounded-full bg-[var(--background-subtle)] px-3 py-1 text-xs font-semibold text-[var(--foreground)] ring-1 ring-inset ring-[var(--border)]">
                         {item.planLabel}
                       </span>
                     )}

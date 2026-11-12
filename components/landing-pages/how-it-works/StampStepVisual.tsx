@@ -24,7 +24,7 @@ export function StampStepVisual() {
     <div className="mx-auto flex w-full max-w-[340px] flex-col items-center gap-3 lg:max-w-none lg:flex-row lg:items-start lg:justify-center lg:gap-8">
       <figure className="flex w-full flex-col items-center lg:w-auto">
         <PhoneCrop height={440}>
-          <ScanDemo chrome="minimal" />
+          <ScanDemo chrome="minimal" stillWhenReduced />
         </PhoneCrop>
         <figcaption className={CAPTION}>{youCaption}</figcaption>
       </figure>

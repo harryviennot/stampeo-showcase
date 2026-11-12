@@ -27,8 +27,8 @@ export function LpBlogPosts() {
         </Link>
       </ScrollReveal>
 
-      <ScrollReveal delay={120} className="mt-10 lg:mt-14">
-        <ul className="grid gap-5 md:grid-cols-3 lg:gap-6">
+      <ScrollReveal delay={120} className="mt-8 lg:mt-14">
+        <ul className="grid gap-4 md:grid-cols-3 lg:gap-6">
           {posts.map((post) => (
             <li key={post.slug} className="flex [&>a]:w-full">
               <BlogCard post={post} detail="rich" />

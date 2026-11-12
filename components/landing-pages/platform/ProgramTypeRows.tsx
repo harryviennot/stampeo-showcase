@@ -86,7 +86,7 @@ export function ProgramTypeRows({ visuals }: Readonly<{ visuals: Record<Key, Rea
               data-open={open}
               className="relative border-t border-[var(--border)]"
             >
-              <div className="grid grid-cols-[128px_1fr] items-center gap-5 py-5 lg:grid-cols-[1fr_240px] lg:gap-12 lg:px-12 lg:py-10">
+              <div className="grid grid-cols-[128px_1fr] items-center gap-5 py-4 lg:grid-cols-[1fr_240px] lg:gap-12 lg:px-12 lg:py-10">
                 <div className="flex justify-center lg:order-2">{visuals[type.key]}</div>
                 <div className="min-w-0">
                   <Collapsible open={open}>
@@ -94,7 +94,7 @@ export function ProgramTypeRows({ visuals }: Readonly<{ visuals: Record<Key, Rea
                       {type.eyebrow}
                     </p>
                   </Collapsible>
-                  <h3 className="text-h1">
+                  <h3 className="text-h2 lg:text-h1">
                     <button
                       type="button"
                       aria-expanded={open}
@@ -119,7 +119,7 @@ export function ProgramTypeRows({ visuals }: Readonly<{ visuals: Record<Key, Rea
 
       <Link
         href={CHOOSING_GUIDE}
-        className="mt-6 flex min-h-14 w-full items-center justify-center gap-2 border border-[var(--border)] bg-white/60 px-4 py-3 text-center text-sm font-semibold text-[var(--foreground)] transition-colors hover:bg-white lg:min-h-[72px] lg:tracking-[0.12em] lg:uppercase"
+        className="mt-6 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border border-[var(--border)] bg-white/60 px-4 py-3 text-center text-sm font-semibold text-[var(--foreground)] transition-colors hover:bg-white lg:min-h-[72px] lg:tracking-[0.12em] lg:uppercase"
       >
         {PLATFORM.programTypes.closer}
         <ArrowRightIcon size={16} weight="bold" aria-hidden />

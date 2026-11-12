@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const FAKE_NAMES = [
   "Sophie M.",
@@ -40,11 +41,19 @@ interface FeedEvent {
   color: string;
 }
 
-/** `cardOnly` draws the feed card alone, for a page that brings its own section and heading. */
-export function LiveActivityFeed({ cardOnly = false }: Readonly<{ cardOnly?: boolean }>) {
+/**
+ * `cardOnly` draws the feed card alone, for a page that brings its own section and heading.
+ * `stillWhenReduced` stops the feed for a reader who asks for less motion: it shows a full list that stays put.
+ */
+export function LiveActivityFeed({
+  cardOnly = false,
+  stillWhenReduced = false,
+}: Readonly<{ cardOnly?: boolean; stillWhenReduced?: boolean }>) {
   const t = useTranslations("features.analytiques.custom.activityFeed");
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const idRef = useRef(0);
+  const reduced = usePrefersReducedMotion();
+  const still = stillWhenReduced && reduced;
 
   // The dashboard's Activity page verbs.
   const actions = [t("stampAction"), t("rewardAction"), t("cardAction")];
@@ -64,6 +73,10 @@ export function LiveActivityFeed({ cardOnly = false }: Readonly<{ cardOnly?: boo
   }, []);
 
   useEffect(() => {
+    if (still) {
+      for (let row = 0; row < MAX_VISIBLE; row += 1) generateEvent();
+      return;
+    }
     generateEvent();
     const seedTimeout = setTimeout(() => generateEvent(), 200);
 
@@ -73,7 +86,7 @@ export function LiveActivityFeed({ cardOnly = false }: Readonly<{ cardOnly?: boo
       clearTimeout(seedTimeout);
       clearInterval(interval);
     };
-  }, [generateEvent]);
+  }, [generateEvent, still]);
 
   const feed = (
     <div className="blog-card-3d rounded-2xl bg-white overflow-hidden">
@@ -82,7 +95,13 @@ export function LiveActivityFeed({ cardOnly = false }: Readonly<{ cardOnly?: boo
           {t("title")}
         </span>
         <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)]">
-          <span className="w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot" />
+          <span
+            className={
+              stillWhenReduced
+                ? "w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot motion-reduce:animate-none!"
+                : "w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot"
+            }
+          />
           {t("live")}
         </span>
       </div>
@@ -124,7 +143,8 @@ export function LiveActivityFeed({ cardOnly = false }: Readonly<{ cardOnly?: boo
     </div>
   );
 
-  if (cardOnly) return feed;
+  // Framer skips movement (it keeps fades) for a reader who asks for less motion; only where a page asks for it.
+  if (cardOnly) return stillWhenReduced ? <MotionConfig reducedMotion="user">{feed}</MotionConfig> : feed;
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">

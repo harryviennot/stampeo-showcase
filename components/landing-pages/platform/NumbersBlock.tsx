@@ -18,7 +18,7 @@ export async function NumbersBlock() {
       title={PLATFORM.numbers.title}
       align="center"
     >
-      <ul className="grid gap-10 text-center sm:grid-cols-3 sm:gap-6">
+      <ul className="grid gap-6 text-center sm:grid-cols-3">
         {items.map((item) => (
           <li key={item.label}>
             <p className="text-h1 tabular-nums text-[var(--accent-hover)]">{item.value}</p>

@@ -16,7 +16,7 @@ export function CreateStep() {
 
   return (
     <LpSection section="step_create" anchor>
-      <ScrollReveal className="mx-auto max-w-6xl">
+      <ScrollReveal>
         <StepHeading number={1} label={label} title={title} lead={lead} />
       </ScrollReveal>
 
@@ -24,7 +24,7 @@ export function CreateStep() {
         <CardDesignPlayground compact />
       </div>
 
-      <ScrollReveal className="mx-auto mt-10 flex max-w-6xl flex-col gap-8 lg:mt-14 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+      <ScrollReveal className="mt-10 flex flex-col gap-8 lg:mt-14 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
         <p className="flex max-w-md items-start gap-3 text-pretty text-sm text-[var(--muted-foreground)]">
           <PaletteIcon size={20} weight="duotone" aria-hidden className="mt-0.5 shrink-0 text-[var(--accent-hover)]" />
           {designHelp}

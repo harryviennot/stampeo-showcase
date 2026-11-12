@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { CheckIcon, ClockIcon } from "@/components/icons";
 import { IPhone } from "@/components/ui/IPhone";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Phase = "scanning" | "success" | "result" | "idle";
 
@@ -15,15 +16,25 @@ const PHASE_DURATIONS: Record<Phase, number> = {
   idle: 300,
 };
 
-/** `minimal` leaves out the recording dot and the timing chip, which say more about the scanner than a page may claim. */
-export function ScanDemo({ chrome = "full" }: Readonly<{ chrome?: "full" | "minimal" }>) {
+/**
+ * `minimal` leaves out the recording dot and the timing chip, which say more about the scanner than a page may claim.
+ * `stillWhenReduced` stops the loop for a reader who asks for less motion: the demo rests on a finished scan.
+ */
+export function ScanDemo({
+  chrome = "full",
+  stillWhenReduced = false,
+}: Readonly<{ chrome?: "full" | "minimal"; stillWhenReduced?: boolean }>) {
   const t = useTranslations("features.scanner-mobile.custom.scanDemo");
   const full = chrome === "full";
-  const [phase, setPhase] = useState<Phase>("scanning");
+  const reduced = usePrefersReducedMotion();
+  const still = stillWhenReduced && reduced;
+  const [cycle, setPhase] = useState<Phase>("scanning");
+  const phase: Phase = still ? "success" : cycle;
   const cycleCountRef = useRef(0);
   const hasScrolledRef = useRef(false);
 
   useEffect(() => {
+    if (still) return;
     const timeout = setTimeout(() => {
       setPhase((prev) => {
         const order: Phase[] = ["scanning", "success", "result", "idle"];
@@ -44,11 +55,11 @@ export function ScanDemo({ chrome = "full" }: Readonly<{ chrome?: "full" | "mini
 
         return next;
       });
-    }, PHASE_DURATIONS[phase]);
+    }, PHASE_DURATIONS[cycle]);
     return () => clearTimeout(timeout);
-  }, [phase]);
+  }, [cycle, still]);
 
-  return (
+  const demo = (
     <IPhone statusBar="dark" screenBackground="#0a0a0a" eager>
       {/* Camera viewfinder */}
       <div className="absolute inset-0 bg-[#0a0a0a] flex flex-col">
@@ -317,4 +328,7 @@ export function ScanDemo({ chrome = "full" }: Readonly<{ chrome?: "full" | "mini
       </div>
     </IPhone>
   );
+
+  // Framer skips movement (it keeps fades) for a reader who asks for less motion; only where a page asks for it.
+  return stillWhenReduced ? <MotionConfig reducedMotion="user">{demo}</MotionConfig> : demo;
 }

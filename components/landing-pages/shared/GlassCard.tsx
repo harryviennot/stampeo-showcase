@@ -20,7 +20,7 @@ export function GlassCard({
       } ${className}`}
     >
       {(title || icon) && (
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-balance text-[var(--foreground)]">
           {icon}
           {title}
         </div>

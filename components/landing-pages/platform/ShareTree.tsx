@@ -90,7 +90,7 @@ export function ShareTree() {
 
         <ul
           className={[
-            "relative mt-2 flex flex-col gap-5 pl-[84px] lg:static lg:mt-0 lg:block lg:pl-0",
+            "relative mt-2 flex flex-col gap-4 pl-[84px] lg:static lg:mt-0 lg:block lg:pl-0",
             "before:absolute before:top-0 before:bottom-6 before:left-[27px] before:w-0.5 before:rounded-full before:content-[''] lg:before:hidden",
             "before:[background:linear-gradient(to_bottom,var(--accent)_0,var(--accent)_14%,var(--border)_14%)]",
           ].join(" ")}

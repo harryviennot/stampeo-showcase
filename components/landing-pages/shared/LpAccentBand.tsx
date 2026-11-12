@@ -13,7 +13,7 @@ import { LpSection } from "./LpSection";
 export function LpAccentBand() {
   return (
     <LpSection section="final_cta" bare>
-      <section className="py-12 lg:py-16">
+      <section className="py-4 lg:py-16">
         <Container>
           <ScrollReveal>
             <div className="flex flex-col items-center gap-5 rounded-[28px] bg-[var(--accent)] px-6 py-14 text-center text-[var(--near-black)] sm:px-12 lg:py-20">

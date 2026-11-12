@@ -9,7 +9,7 @@ import { ProgramTypeTabs } from "./ProgramTypeTabs";
 
 const CARD_WIDTH = 280;
 
-/** The bookstore sample: a points card with a big running balance. */
+/** The bookstore sample: a points card with a big running balance, and its QR code like the stamps card. */
 const MARGINALIA = POINTS_SAMPLES.find((sample) => sample.id === "marginalia") ?? POINTS_SAMPLES[0];
 
 /** Choose how you reward: stamps on Aurevo's card, points on a bookstore's, levels on the barbershop's. */
@@ -27,7 +27,6 @@ export function ProgramTypesSection() {
                   design={MARGINALIA.design}
                   pointsBalance={MARGINALIA.pointsBalance}
                   pointsRewards={MARGINALIA.pointsRewards}
-                  showQR={false}
                 />
               </PassFrame>
             ),

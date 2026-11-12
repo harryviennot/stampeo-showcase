@@ -62,7 +62,7 @@ export function PlatformToggleCard({
               >
                 <div className="flex justify-center lg:col-span-7">{visuals[key]}</div>
                 <div className="lg:col-span-5">
-                  <h3 className="text-[1.75rem] leading-tight font-bold tracking-[-0.015em] text-[var(--foreground)] lg:text-[2rem]">
+                  <h3 className="text-[1.75rem] leading-tight font-bold tracking-[-0.015em] text-balance text-[var(--foreground)] lg:text-[2rem]">
                     {pane.title}
                   </h3>
                   <FactList facts={pane.facts} className="mt-6" />

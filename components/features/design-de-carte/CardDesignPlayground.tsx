@@ -80,9 +80,11 @@ const STRIP_STYLES: PointsStripStyle[] = [
 
 /**
  * `compact` is the playground as the body of a page's own section: the card
- * and the controls without the section, its heading, or the controls that make
- * the panel tall (first name, rewards, "Surprise me", your own icons), so on a
- * phone the card stays in view while you tap.
+ * and the controls without the section, its heading, its own width, or the
+ * controls that make the panel tall (first name, rewards, "Surprise me", your
+ * own icons), so on a phone the card stays in view while you tap. Its card shows
+ * the QR code like a real pass, and its swatches and icons are 44px to tap,
+ * the twelve icons in two even rows.
  */
 export function CardDesignPlayground({ compact = false }: Readonly<{ compact?: boolean }>) {
   const t = useTranslations("features.design-de-carte.custom.playground");
@@ -213,7 +215,13 @@ export function CardDesignPlayground({ compact = false }: Readonly<{ compact?: b
           </ScrollReveal>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
+        <div
+          className={
+            compact
+              ? "grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center"
+              : "grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto"
+          }
+        >
           {/* Live card preview */}
           <ScrollReveal variant="right" className="flex justify-center">
             <motion.div
@@ -228,7 +236,7 @@ export function CardDesignPlayground({ compact = false }: Readonly<{ compact?: b
                   stamps={isPoints ? undefined : shownStamps}
                   pointsBalance={isPoints ? balance : undefined}
                   pointsRewards={isPoints ? PLAYGROUND_POINTS_REWARDS : undefined}
-                  showQR={false}
+                  showQR={compact}
                   interactive3D={true}
                 />
               </ScaledCardWrapper>
@@ -272,12 +280,16 @@ export function CardDesignPlayground({ compact = false }: Readonly<{ compact?: b
               {/* Theme */}
               <div className="space-y-2.5">
                 <ControlLabel>{t("themeLabel")}</ControlLabel>
-                <div className="flex items-center gap-3">
+                <div className={compact ? "flex items-center gap-3 py-1" : "flex items-center gap-3"}>
                   {THEMES.map((th, index) => (
                     <button
                       key={index}
                       onClick={() => setThemeIndex(index)}
-                      className="relative w-10 h-10 rounded-xl overflow-hidden transition-transform duration-200 hover:scale-105"
+                      className={
+                        compact
+                          ? "relative w-11 h-11 rounded-xl overflow-hidden transition-transform duration-200 hover:scale-105"
+                          : "relative w-10 h-10 rounded-xl overflow-hidden transition-transform duration-200 hover:scale-105"
+                      }
                       style={{
                         background: th.bg,
                         boxShadow:
@@ -338,14 +350,24 @@ export function CardDesignPlayground({ compact = false }: Readonly<{ compact?: b
               {!isPoints && iconMode === "preset" && (
                 <div className="space-y-2.5">
                   <ControlLabel>{t("iconLabel")}</ControlLabel>
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-2">
+                  <div
+                    className={
+                      compact
+                        ? "grid grid-cols-6 gap-2"
+                        : "grid grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-2"
+                    }
+                  >
                     {PLAYGROUND_ICONS.map((id) => {
                       const active = iconId === id;
                       return (
                         <button
                           key={id}
                           onClick={() => setIconId(id)}
-                          className="w-[38px] h-[38px] flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 mx-auto"
+                          className={
+                            compact
+                              ? "relative w-[38px] h-[38px] flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 mx-auto after:absolute after:-inset-[3px] after:content-['']"
+                              : "w-[38px] h-[38px] flex items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 mx-auto"
+                          }
                           style={{
                             backgroundColor: active ? theme.accent : "var(--muted)",
                           }}

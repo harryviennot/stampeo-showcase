@@ -21,7 +21,7 @@ function LayeredCapture() {
           <PhoneScreenshot src={shot.src} alt={FEATURES.analytics.alt} />
         </PhoneCrop>
         <div className="relative z-10 -mt-24 w-full max-w-[340px] lg:absolute lg:bottom-0 lg:left-0 lg:mt-0 lg:w-[340px]">
-          <LiveActivityFeed cardOnly />
+          <LiveActivityFeed cardOnly stillWhenReduced />
         </div>
       </div>
       <figcaption className="mt-4 text-sm text-[var(--muted-foreground)]">{SHARED.sampleData}</figcaption>

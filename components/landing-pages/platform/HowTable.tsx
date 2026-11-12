@@ -11,8 +11,10 @@ const PHONE = { full: 280, narrow: 160 };
 
 /**
  * "Create it, share it, stamp it": the card in Apple Wallet and the scanner
- * side by side, their lower halves sinking behind a bordered table of the three
- * steps. On a phone the table is a stack of three rows.
+ * side by side, their lower parts sinking behind a bordered table of the three
+ * steps (low enough that the card's code and the scanner's frame show above
+ * it), with room above the phones for their shadows. On a phone the table is a
+ * stack of three rows.
  */
 export function HowTable() {
   const height = iphoneLayout(PHONE.full).height;
@@ -26,18 +28,18 @@ export function HowTable() {
       align="center"
     >
       <div className="mx-auto max-w-[560px] lg:max-w-[1040px]">
-        <div className="flex max-h-[262px] justify-center gap-4 overflow-hidden lg:max-h-[440px] lg:gap-10">
+        <div className="-mt-6 flex max-h-[286px] justify-center gap-4 overflow-hidden pt-6 lg:max-h-[464px] lg:gap-10">
           <ScaledBox width={PHONE.full} height={height} narrowWidth={PHONE.narrow}>
             <WalletPhone width={PHONE.full} />
           </ScaledBox>
           <ScaledBox width={PHONE.full} height={height} narrowWidth={PHONE.narrow}>
-            <ScanDemo chrome="minimal" />
+            <ScanDemo chrome="minimal" stillWhenReduced />
           </ScaledBox>
         </div>
 
-        <ol className="relative -mt-10 grid divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white/80 backdrop-blur-xl lg:-mt-44 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+        <ol className="relative -mt-10 grid divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white/80 backdrop-blur-xl lg:-mt-24 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
           {PLATFORM.how.cells.map((cell) => (
-            <li key={cell.title} className="p-6 lg:p-8">
+            <li key={cell.title} className="p-5 lg:p-8">
               <h3 className="text-[1.75rem] leading-tight font-bold tracking-[-0.015em] text-[var(--foreground)]">
                 {cell.title}
               </h3>

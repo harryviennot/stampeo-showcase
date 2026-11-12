@@ -10,7 +10,7 @@ import { ProgramTypeRows } from "./ProgramTypeRows";
 /** The card thumbnail on a row: 200px on a laptop, 128px beside the words on a phone. */
 const CARD = { width: 200, height: 257, narrow: 128 };
 
-/** The points sample, Marginalia, in the card colours of its own shop. */
+/** The points sample, Marginalia, in the card colours of its own shop, with its QR code like the stamps card. */
 const POINTS = POINTS_SAMPLES.find((sample) => sample.id === "marginalia") ?? POINTS_SAMPLES[0];
 
 /**
@@ -41,7 +41,6 @@ export function ProgramTypesSection() {
                   design={POINTS.design}
                   pointsBalance={POINTS.pointsBalance}
                   pointsRewards={POINTS.pointsRewards}
-                  showQR={false}
                 />
               </PassFrame>
             </ScaledBox>

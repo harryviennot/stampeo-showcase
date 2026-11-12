@@ -25,7 +25,7 @@ export function ScannerSpotlight() {
           className="flex justify-center lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:items-center"
         >
           <PhoneCrop height={440}>
-            <ScanDemo chrome="minimal" />
+            <ScanDemo chrome="minimal" stillWhenReduced />
           </PhoneCrop>
         </ScrollReveal>
         <ScrollReveal className="lg:col-start-2 lg:row-start-2 lg:self-start">
