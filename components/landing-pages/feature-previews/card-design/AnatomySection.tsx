@@ -14,6 +14,7 @@ export function AnatomySection() {
       <AnnotatedWalletCard
         heading={<LpHeading eyebrow={eyebrow} title={title} lead={lead} align="center" />}
         sectionClassName="py-16 lg:py-24"
+        toggleSize="lg"
       />
     </LpSection>
   );

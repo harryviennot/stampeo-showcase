@@ -20,17 +20,28 @@ export function ControlLabel({ children }: { children: ReactNode }) {
   );
 }
 
-interface SegmentedProps<T extends string> {
+interface PlaygroundSegmentedProps<T extends string> {
   options: { value: T; label: string }[];
   value: T;
   onChange: (next: T) => void;
+  /** `lg` makes each tab 44px tall, for a tap target on a phone. */
+  size?: "md" | "lg";
 }
 
-function Segmented<T extends string>({
+const TAB_SIZES = {
+  md: "px-3 py-1.5 text-sm",
+  lg: "h-11 px-4 text-[15px]",
+} as const;
+
+/** A range input 44px tall around the same 16px slider: the negative margins give the extra 28px back, so the layout and the track stay where they were. */
+const TOUCH_RANGE = "h-11 -my-3.5";
+
+function PlaygroundSegmented<T extends string>({
   options,
   value,
   onChange,
-}: SegmentedProps<T>) {
+  size = "md",
+}: PlaygroundSegmentedProps<T>) {
   return (
     <div className="inline-flex w-full rounded-xl bg-[var(--muted)] p-1">
       {options.map((opt) => {
@@ -39,7 +50,7 @@ function Segmented<T extends string>({
           <button
             key={opt.value}
             onClick={() => onChange(opt.value)}
-            className="flex-1 rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors"
+            className={`flex-1 rounded-lg ${TAB_SIZES[size]} font-semibold transition-colors`}
             style={
               active
                 ? {
@@ -96,18 +107,25 @@ function Stepper({ value, min, max, onChange, decLabel, incLabel }: StepperProps
   );
 }
 
-/** Program type: the same card runs stamps or points. */
-export function ProgramControl({ p: { t, tc, program, setProgram } }: { p: Playground }) {
+/** Program type: the same card runs stamps or points; `touch` makes the tabs 44px. */
+export function ProgramControl({
+  p: { t, tc, program, setProgram },
+  touch = false,
+}: {
+  p: Playground;
+  touch?: boolean;
+}) {
   return (
     <div className="space-y-2.5">
       <ControlLabel>{t("programLabel")}</ControlLabel>
-      <Segmented
+      <PlaygroundSegmented
         options={[
           { value: "stamps", label: tc("stamps") },
           { value: "points", label: tc("points") },
         ]}
         value={program}
         onChange={setProgram}
+        size={touch ? "lg" : "md"}
       />
     </div>
   );
@@ -116,7 +134,7 @@ export function ProgramControl({ p: { t, tc, program, setProgram } }: { p: Playg
 /** Icon source: preset library or your own icons. */
 export function IconModeControl({ p: { t, iconMode, setIconMode } }: { p: Playground }) {
   return (
-    <Segmented
+    <PlaygroundSegmented
       options={[
         { value: "preset", label: t("modePreset") },
         { value: "custom", label: t("modeCustom") },
@@ -170,23 +188,26 @@ export function ThemeControl({
   );
 }
 
-/** Points: strip style and a draggable balance. */
+/** Points: strip style and a draggable balance; `touch` makes the tabs and the slider 44px to tap. */
 export function PointsControl({
   p: { t, stripStyleLabels, stripStyle, setStripStyle, balance, setBalance },
+  touch = false,
 }: {
   p: Playground;
+  touch?: boolean;
 }) {
   return (
     <>
       <div className="space-y-2.5">
         <ControlLabel>{t("stripLabel")}</ControlLabel>
-        <Segmented
+        <PlaygroundSegmented
           options={STRIP_STYLES.map((style) => ({
             value: style,
             label: stripStyleLabels[style] ?? style,
           }))}
           value={stripStyle}
           onChange={setStripStyle}
+          size={touch ? "lg" : "md"}
         />
       </div>
 
@@ -205,7 +226,7 @@ export function PointsControl({
           value={balance}
           onChange={(e) => setBalance(Number(e.target.value))}
           aria-label={t("balanceLabel")}
-          className="w-full accent-[var(--accent)] cursor-pointer"
+          className={`w-full accent-[var(--accent)] cursor-pointer${touch ? ` ${TOUCH_RANGE}` : ""}`}
         />
       </div>
     </>
@@ -300,7 +321,7 @@ export function CustomIconControl({
 
       <div className="space-y-2.5">
         <ControlLabel>{t("arrangementLabel")}</ControlLabel>
-        <Segmented
+        <PlaygroundSegmented
           options={[
             { value: "straight", label: arrangements.straight },
             { value: "staggered", label: arrangements.staggered },
@@ -314,8 +335,14 @@ export function CustomIconControl({
   );
 }
 
-/** Stamps: drag to fill the card (mirrors the points balance slider). */
-export function StampsControl({ p: { tc, shownStamps, totalStamps, setStamps } }: { p: Playground }) {
+/** Stamps: drag to fill the card (mirrors the points balance slider); `touch` makes the slider 44px to tap. */
+export function StampsControl({
+  p: { tc, shownStamps, totalStamps, setStamps },
+  touch = false,
+}: {
+  p: Playground;
+  touch?: boolean;
+}) {
   return (
     <div className="space-y-2.5">
       <div className="flex items-center justify-between">
@@ -332,7 +359,7 @@ export function StampsControl({ p: { tc, shownStamps, totalStamps, setStamps } }
         value={shownStamps}
         onChange={(e) => setStamps(Number(e.target.value))}
         aria-label={tc("stamps")}
-        className="w-full accent-[var(--accent)] cursor-pointer"
+        className={`w-full accent-[var(--accent)] cursor-pointer${touch ? ` ${TOUCH_RANGE}` : ""}`}
       />
     </div>
   );

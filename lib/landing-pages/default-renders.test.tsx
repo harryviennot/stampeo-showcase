@@ -9,7 +9,9 @@
 import { describe, expect, test } from "bun:test";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
+import { NotificationSequenceDemo } from "@/components/features/notifications-push/NotificationSequenceDemo";
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
+import { CompactPlayground } from "@/components/features/design-de-carte/CompactPlayground";
 import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
 import { AnnotatedWalletCard } from "@/components/features/design-de-carte/AnnotatedWalletCard";
 import { IconLibrarySection } from "@/components/features/design-de-carte/IconLibrarySection";
@@ -33,6 +35,10 @@ const { CardStyleGallery } = await import("@/components/features/design-de-carte
 describe("what a component renders when a page's new props are left out (AC15)", () => {
   test("NotificationPhoneDemo: the lock screen with Stampeo's sample stamp notification", () => {
     expect(renderEn(<NotificationPhoneDemo />)).toMatchSnapshot();
+  });
+
+  test("NotificationSequenceDemo: the three Stampeo moments, the first one's banner on the phone", () => {
+    expect(renderEn(<NotificationSequenceDemo />)).toMatchSnapshot();
   });
 
   test("NotificationBanner: the orange bell, with no icon passed", () => {
@@ -73,6 +79,10 @@ describe("what a component renders when a page's new props are left out (AC15)",
 
   test("CardDesignPlayground: the full playground section", () => {
     expect(renderEn(<CardDesignPlayground />)).toMatchSnapshot();
+  });
+
+  test("CompactPlayground: the program toggle and the stamps slider at their compact size", () => {
+    expect(renderEn(<CompactPlayground />)).toMatchSnapshot();
   });
 
   test("AnnotatedWalletCard: the anatomy section with its own heading and band", () => {

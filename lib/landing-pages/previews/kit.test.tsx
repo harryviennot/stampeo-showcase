@@ -226,6 +226,27 @@ describe("what the Platform pieces take for the previews", () => {
     expect(text).toContain(SHARED.faq.contact.link);
   });
 
+  test("LpFaq: an eyebrow gives the FAQ Platform's centred header, with the questions and the contact line below it in the same narrow column", () => {
+    const items = [{ question: "Can I change it?", answer: "Anytime." }];
+    const withEyebrow = renderEn(<LpFaq faq={{ eyebrow: "FAQ", title: "Card styles, answered", items }} />, { us: true });
+    const text = textOf(withEyebrow);
+
+    expect(text.indexOf("FAQ")).toBeGreaterThan(-1);
+    expect(text.indexOf("FAQ")).toBeLessThan(text.indexOf("Card styles, answered"));
+    expect(text.indexOf("Card styles, answered")).toBeLessThan(text.indexOf("Can I change it?"));
+    expect(text.indexOf("Can I change it?")).toBeLessThan(text.indexOf(SHARED.faq.contact.link));
+    expect(withEyebrow).toContain("mx-auto text-center");
+    expect(withEyebrow).toMatch(/<section[^>]*data-landing-section="faq"/);
+    expect(withEyebrow).toContain("max-w-[840px]");
+  });
+
+  test("LpFaq: without an eyebrow the title stays left-aligned with no label above it", () => {
+    const html = renderEn(<LpFaq faq={{ title: "Card styles, answered", items: [{ question: "Can I change it?", answer: "Anytime." }] }} />, { us: true });
+
+    expect(html).not.toContain("text-center");
+    expect(html).not.toContain("tracking-[0.2em]");
+  });
+
   test("ScannerLoop: `still` shows the finished stamp as a picture from the first paint", () => {
     const files = scannerLoopFiles("en");
     const frame = (html: string) => html.match(/<img\b[^>]*\bsrc="\/videos\/scanner-loop\/[^"]*"[^>]*>/)?.[0] ?? "";

@@ -138,6 +138,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     link: "Compare plans",
   },
   faq: {
+    eyebrow: "FAQ",
     title: "Questions we hear a lot",
     items: [
       {

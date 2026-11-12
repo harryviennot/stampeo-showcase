@@ -547,7 +547,7 @@ describe("components the pages extend: their other callers pass none of the new 
   /** Each component with the optional props the pages added to it. */
   const EXTENDED: Array<readonly [name: string, file: string, props: string[]]> = [
     [...component("NotificationPhoneDemo", "features/notifications-push"), ["notifications", "animate", "eager", "width"]],
-    [...component("NotificationSequenceDemo", "features/notifications-push"), ["moments", "design", "phoneClassName", "fullCard"]],
+    [...component("NotificationSequenceDemo", "features/notifications-push"), ["moments", "design", "phoneClassName", "fullCard", "stillWhenReduced"]],
     [...component("NotificationBanner", "features/notifications-push"), ["icon"]],
     [...component("CardStyleGallery", "features/design-de-carte"), ["showCta", "heading", "sectionClassName"]],
     [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced"]],
@@ -557,11 +557,14 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("BlogCard", "blog"), ["detail"]],
     [...component("HeroCardFan", "landing-variant"), ["slots"]],
     [...component("ScannerLoop", "ui"), ["still"]],
-    [...component("AnnotatedWalletCard", "features/design-de-carte"), ["heading", "sectionClassName"]],
+    [...component("AnnotatedWalletCard", "features/design-de-carte"), ["heading", "sectionClassName", "toggleSize"]],
   ];
 
+  /** The one site component that hands its own optional prop on to an extended one: `toggleSize` becomes Segmented's `size`. */
+  const ANNOTATED = join(ROOT, "components", "features", "design-de-carte", "AnnotatedWalletCard.tsx");
+
   test.each(EXTENDED)("%s", (name, file, props) => {
-    const callers = otherCallers(name, file);
+    const callers = otherCallers(name, file).filter(({ file: caller }) => !(name === "Segmented" && caller === ANNOTATED));
 
     expect(callers.length).toBeGreaterThan(0);
     for (const { file: caller, attrs } of callers) {
@@ -573,6 +576,13 @@ describe("components the pages extend: their other callers pass none of the new 
         });
       }
     }
+  });
+
+  test("AnnotatedWalletCard's switch is Segmented's own size until a page asks for the large one", () => {
+    const source = code(ANNOTATED);
+
+    expect(source).toMatch(/toggleSize = "md"/);
+    expect(findTag(source, "Segmented")?.attrs).toMatch(/\bsize=\{toggleSize\}/);
   });
 
   test("CTAButton's other callers never ask for the inverse variant", () => {

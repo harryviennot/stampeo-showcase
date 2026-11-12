@@ -5,13 +5,25 @@ import { SHARED } from "@/lib/landing-pages/copy/shared";
 import type { FaqItem } from "@/lib/landing-pages/copy/types";
 import { LpSection } from "./LpSection";
 
-/** The five questions every page answers, collapsed, and one contact line; a page can bring its own questions. */
-export function LpFaq({ faq }: Readonly<{ faq?: { title: string; items: readonly FaqItem[] } }>) {
+/**
+ * The five questions every page answers, collapsed, and one contact line; a page can bring its own questions.
+ * A page's `eyebrow` puts a small label over a centred title, Platform's header.
+ */
+export function LpFaq({
+  faq,
+}: Readonly<{ faq?: { eyebrow?: string; title: string; items: readonly FaqItem[] } }>) {
   const { title, items } = faq ?? SHARED.faq;
+  const eyebrow = faq?.eyebrow;
   const { contact } = SHARED.faq;
 
   return (
-    <LpSection section="faq" size="narrow" title={title}>
+    <LpSection
+      section="faq"
+      size="narrow"
+      title={title}
+      eyebrow={eyebrow}
+      align={eyebrow ? "center" : undefined}
+    >
       <FAQList items={items.map((item) => ({ question: item.question, answer: <RegionText raw={item.answer} /> }))} />
       <p className="mt-8 text-base text-[var(--muted-foreground)]">
         {contact.before}{" "}

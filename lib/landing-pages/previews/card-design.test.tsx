@@ -118,6 +118,11 @@ describe("try the designer", () => {
     expectInOrder(html(), [...header(COPY.playground), "Stamps", "Points"]);
   });
 
+  test("its program toggle and stamps slider are 44px, to tap on a phone", () => {
+    expect(findTag(section("DesignerSection"), "CompactPlayground")?.attrs).toMatch(/\btouchTargets\b/);
+    expect(html()).toMatch(/<input[^>]*type="range"[^>]*\bh-11\b/);
+  });
+
   test("offers the trial again right under the designer, as the outline button of the page's kit", () => {
     const source = section("DesignerSection");
 
@@ -129,6 +134,11 @@ describe("try the designer", () => {
 
 describe("every part of the card is yours", () => {
   const html = () => renderEn(<AnatomySection />);
+
+  test("its stamps and points switch is 44px tall, to tap on a phone", () => {
+    expect(findTag(section("AnatomySection"), "AnnotatedWalletCard")?.attrs).toContain('toggleSize="lg"');
+    expect(html()).toContain("flex-1 rounded-lg h-11 px-4 text-[15px]");
+  });
 
   test("opens on its eyebrow, title and lead, centred, over the card", () => {
     expectInOrder(html(), header(COPY.anatomy));
@@ -238,6 +248,14 @@ describe("card styles, answered", () => {
     for (const { question } of COPY.faq.items) expect(text).toContain(question);
     expect(text).toContain(SHARED.faq.contact.link);
     expect(html()).not.toMatch(/<details[^>]*\bopen\b/);
+  });
+
+  test("opens on the FAQ eyebrow, centred over the title like the page's other headers", () => {
+    const text = textOf(html());
+
+    expect(text.indexOf("FAQ")).toBeGreaterThan(-1);
+    expect(text.indexOf("FAQ")).toBeLessThan(text.indexOf(COPY.faq.title));
+    expect(html()).toContain("mx-auto text-center");
   });
 
   test("answers 98 with the library's real count", () => {

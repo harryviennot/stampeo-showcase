@@ -87,6 +87,7 @@ export const CARD_DESIGN_PREVIEW = {
     },
   },
   faq: {
+    eyebrow: "FAQ",
     title: "Card styles, answered",
     items: [
       {

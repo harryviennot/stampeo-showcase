@@ -4,6 +4,7 @@ import { useState, useEffect, type ComponentProps } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { IPhone } from "@/components/ui/IPhone";
+import { isStill, usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { NotificationBanner } from "./NotificationBanner";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
@@ -48,6 +49,7 @@ export function NotificationSequenceDemo({
   design = DEFAULT_DESIGN,
   phoneClassName = "",
   fullCard = false,
+  stillWhenReduced = false,
 }: Readonly<{
   /** The moments listed, with their banners; the three Stampeo defaults when omitted. */
   moments?: SequenceMoment[];
@@ -57,6 +59,8 @@ export function NotificationSequenceDemo({
   phoneClassName?: string;
   /** The card's fields and QR code, so it reads as a whole pass. */
   fullCard?: boolean;
+  /** Stops the moments moving on by themselves for a reader who asks for less motion; they stay pressable. */
+  stillWhenReduced?: boolean;
 }>) {
   const t = useTranslations("features.notifications-push.notificationTypes");
   const items: SequenceMoment[] =
@@ -77,18 +81,20 @@ export function NotificationSequenceDemo({
   const [activeTab, setActiveTab] = useState(items[0].key);
   const [isPaused, setIsPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
+  const reduced = usePrefersReducedMotion();
+  const still = isStill(stillWhenReduced, reduced);
   const active = items.find((item) => item.key === activeTab) ?? items[0];
 
-  // Auto-advance tabs every 4s
+  // Auto-advance tabs every 4s, unless the demo is asked to stand still
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || still) return;
     const order = keyList.split("|");
     const timer = setInterval(() => {
       setActiveTab((prev) => order[(order.indexOf(prev) + 1) % order.length]);
       setProgressKey((k) => k + 1);
     }, 4000);
     return () => clearInterval(timer);
-  }, [isPaused, keyList]);
+  }, [isPaused, still, keyList]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -184,7 +190,7 @@ export function NotificationSequenceDemo({
                   </p>
 
                   {/* Progress bar */}
-                  {isActive && !isPaused && (
+                  {isActive && !isPaused && !still && (
                     <div className="mt-3 ml-4 h-[2px] rounded-full bg-gray-100 overflow-hidden">
                       <motion.div
                         className="h-full rounded-full bg-[var(--accent)]/40"

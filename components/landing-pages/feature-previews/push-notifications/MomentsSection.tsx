@@ -43,6 +43,7 @@ export async function MomentsSection() {
           design={await aurevoDesign()}
           fullCard
           phoneClassName={phoneCropClass(520)}
+          stillWhenReduced
         />
       </div>
     </LpSection>

@@ -146,6 +146,10 @@ describe("moments: the right message at every step", () => {
     expect(sequence?.attrs).toContain("moments={pushMoments()}");
     expect(sequence?.attrs).toContain("design={await aurevoDesign()}");
   });
+
+  test("stand still for a reader who asks for less motion, and can still be pressed one by one", () => {
+    expect(findTag(source("MomentsSection"), "NotificationSequenceDemo")?.attrs).toMatch(/\bstillWhenReduced\b/);
+  });
 });
 
 describe("wallets: Apple Wallet and Google Wallet, both", () => {

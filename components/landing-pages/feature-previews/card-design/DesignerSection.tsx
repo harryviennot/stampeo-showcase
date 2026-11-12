@@ -12,7 +12,7 @@ export function DesignerSection() {
 
   return (
     <LpSection section="playground" anchor eyebrow={eyebrow} title={title} lead={lead} align="center">
-      <CompactPlayground />
+      <CompactPlayground touchTargets />
       <div className="mt-10 flex justify-center lg:mt-12">
         <LpTrialButton />
       </div>

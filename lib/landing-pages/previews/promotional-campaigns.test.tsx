@@ -236,6 +236,11 @@ describe("questions: five, written for the US", () => {
     expect(html()).toContain('data-landing-section="faq"');
   });
 
+  test("opens on the FAQ eyebrow, centred over the title like the page's other headers", () => {
+    inOrder(textOf(html()), ["FAQ", COPY.faq.title]);
+    expect(html()).toContain("mx-auto text-center");
+  });
+
   test("leaves out what does not fit a US page: GDPR, the SMS comparison and the cap that changes", () => {
     const text = COPY.faq.items.map((item) => `${item.question} ${item.answer}`).join(" ");
 

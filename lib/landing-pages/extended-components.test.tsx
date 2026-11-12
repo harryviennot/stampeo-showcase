@@ -9,15 +9,18 @@ import { join } from "node:path";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { WalletCard } from "@/components/card/WalletCard";
 import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
+import { AnnotatedWalletCard } from "@/components/features/design-de-carte/AnnotatedWalletCard";
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
 import { CompactPlayground } from "@/components/features/design-de-carte/CompactPlayground";
+import { PointsControl } from "@/components/features/design-de-carte/playground/controls";
+import { STRIP_STYLES, type Playground } from "@/components/features/design-de-carte/playground/usePlayground";
 import { NotificationSequenceDemo } from "@/components/features/notifications-push/NotificationSequenceDemo";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Segmented } from "@/components/ui/Segmented";
 import { isStill } from "@/hooks/usePrefersReducedMotion";
 import type { BlogPostMeta } from "../blog/types";
 import { loadCatalog } from "../testing/catalogs";
-import { ROOT, code } from "../testing/jsx-source";
+import { ROOT, code, findTag } from "../testing/jsx-source";
 import { renderEn as render, textOf } from "../testing/render-en";
 
 const MESSAGES = loadCatalog("en");
@@ -96,6 +99,21 @@ describe("NotificationSequenceDemo moments and design", () => {
   });
 });
 
+// The reader's setting is read in the browser only, so the demo's rest is the same selector as the feed's.
+describe("NotificationSequenceDemo stillWhenReduced", () => {
+  const source = () => code(join(ROOT, "components/features/notifications-push/NotificationSequenceDemo.tsx"));
+
+  test("rests when the selector says so, and no other way", () => {
+    expect(source()).toMatch(/const still = isStill\(stillWhenReduced, reduced\)/);
+    expect(source()).not.toMatch(/stillWhenReduced\s*&&\s*reduced/);
+  });
+
+  test("a demo that rests never starts the timer that moves to the next moment, and shows no countdown for it", () => {
+    expect(source()).toMatch(/if \(isPaused \|\| still\) return;[\s\S]*setInterval/);
+    expect(source()).toMatch(/isActive && !isPaused && !still &&/);
+  });
+});
+
 describe("the card playground: full and compact", () => {
   const catalog = MESSAGES.features["design-de-carte"].custom.playground as Record<string, string>;
   const EXTRAS = ["nameToggle", "rewardsToggle", "shuffle", "modeCustom"];
@@ -114,6 +132,59 @@ describe("the card playground: full and compact", () => {
     for (const key of EXTRAS) expect(textOf(html)).not.toContain(catalog[key]);
     expect(html).not.toContain('id="playground"');
     expect(html).not.toContain("<h2");
+  });
+});
+
+describe("CompactPlayground touchTargets", () => {
+  /** The first segmented control of the panel: the Program toggle, or the strip toggle on its own. */
+  const firstTabs = (html: string) => html.match(/<button class="flex-1 rounded-lg[^"]*"/)?.[0] ?? "";
+  const slider = (html: string) => html.match(/<input[^>]*type="range"[^>]*>/)?.[0] ?? "";
+
+  test("the program toggle and the stamps slider are 44px tall to tap on a phone", () => {
+    const html = render(<CompactPlayground touchTargets />);
+
+    expect(firstTabs(html)).toContain("h-11");
+    expect(slider(html)).toContain("h-11");
+  });
+
+  test("left out, the toggle and the slider are the compact ones", () => {
+    const html = render(<CompactPlayground />);
+
+    expect(firstTabs(html)).toContain("px-3 py-1.5 text-sm");
+    expect(firstTabs(html)).not.toContain("h-11");
+    expect(slider(html)).not.toContain("h-11");
+  });
+
+  test("the points card's strip toggle and balance slider are 44px as well, since the same panel shows them once a visitor switches to points", () => {
+    // Points mode is state of the page; the control is rendered on its own with the playground's values.
+    const p = {
+      t: (key: string) => key,
+      stripStyleLabels: {},
+      stripStyle: STRIP_STYLES[0],
+      setStripStyle: () => {},
+      balance: 40,
+      setBalance: () => {},
+    } as unknown as Playground;
+
+    expect(firstTabs(render(<PointsControl p={p} touch />))).toContain("h-11");
+    expect(slider(render(<PointsControl p={p} touch />))).toContain("h-11");
+    expect(firstTabs(render(<PointsControl p={p} />))).not.toContain("h-11");
+    expect(slider(render(<PointsControl p={p} />))).not.toContain("h-11");
+  });
+
+  test("the how-it-works step, which has always shown the compact one, does not ask", () => {
+    const step = findTag(code(join(ROOT, "components/landing-pages/how-it-works/CreateStep.tsx")), "CompactPlayground");
+
+    expect(step).toBeDefined();
+    expect(step?.attrs).not.toMatch(/\w/);
+  });
+});
+
+describe("AnnotatedWalletCard toggleSize", () => {
+  test("the stamps and points switch is 44px tall when asked, and the compact one when not", () => {
+    expect(render(<AnnotatedWalletCard toggleSize="lg" />)).toContain("flex-1 rounded-lg h-11 px-4 text-[15px]");
+    expect(render(<AnnotatedWalletCard />)).not.toContain("h-11");
+    expect(render(<AnnotatedWalletCard toggleSize="md" />)).toBe(render(<AnnotatedWalletCard />));
   });
 });
 
