@@ -35,7 +35,7 @@ const pageFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx");
 const lpFiles = () => [...sourceFiles(COMPONENTS_DIR), ...LANDING_SLUGS.map(pageFile)];
 
 /** Pages whose middle sections a later stage adds, with the stage that does it. */
-const STAGED: Partial<Record<LandingSlug, string>> = { features: "stage B", outcomes: "stage C" };
+const STAGED: Partial<Record<LandingSlug, string>> = { outcomes: "stage C" };
 
 /** The sections of each page, in the order the plan gives them. */
 const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
@@ -319,6 +319,64 @@ describe("dashboard captures (AC9)", () => {
   });
 });
 
+describe("the Features page (AC5, AC9, AC10)", () => {
+  const features = () => [...landingTree(pageFile("features"))];
+  const code = (file: string) => stripComments(read(file));
+  const filesWith = (needle: RegExp) => features().filter((file) => needle.test(code(file)));
+  const tagIn = (file: string, name: string) => openingTags(read(file)).find((tag) => tag.name === name);
+
+  /** The `<p>…</p>` that holds `needle`: the printed line the words share. */
+  const lineWith = (source: string, needle: string) => {
+    const at = source.indexOf(needle);
+    return source.slice(source.lastIndexOf("<p", at), source.indexOf("</p>", at));
+  };
+
+  test("the hero shows the card stack with one banner from the sample café on it", () => {
+    const visual = join(COMPONENTS_DIR, "features", "FeaturesHeroVisual.tsx");
+    const hero = tagIn(pageFile("features"), "LpHero");
+
+    expect(hero?.attrs).toContain("visual={<FeaturesHeroVisual");
+    expect(features()).toContain(visual);
+    expect(openingTags(read(visual)).filter((tag) => tag.name === "HeroCardStack")).toHaveLength(1);
+    expect(code(visual).match(/<NotificationBanner \{\.\.\.lpBanner\(/g)).toHaveLength(1);
+  });
+
+  test("a broadcast is printed on one line with the plans it comes with", () => {
+    const files = filesWith(/\bmessages\.broadcast\b/);
+
+    expect(files).toEqual([join(COMPONENTS_DIR, "features", "MessagesSpotlight.tsx")]);
+    expect(lineWith(code(files[0]), "messages.broadcast")).toContain("SHARED.broadcastPlans");
+  });
+
+  test("the lock screen stacks the copy's banners, still, and is cropped on a phone", () => {
+    const files = filesWith(/section="spotlight_messages"/);
+    const [file] = files;
+    expect(files).toHaveLength(1);
+    const phone = tagIn(file, "NotificationPhoneDemo");
+
+    expect(phone?.attrs).toContain("notifications={messages.banners.map(lpBanner)}");
+    expect(phone?.attrs).toContain("animate={false}");
+    expect(phone?.attrs).toContain("eager={false}");
+    expect(tagIn(file, "LpSpotlight")?.attrs).toContain("cropOnPhone");
+  });
+
+  test("the card gallery speaks with the page's heading and without its own CTA", () => {
+    const gallery = filesWith(/<CardStyleGallery\b/).map((file) => tagIn(file, "CardStyleGallery"));
+
+    expect(gallery).toHaveLength(1);
+    expect(gallery[0]?.attrs).toContain("showCta={false}");
+    expect(gallery[0]?.attrs).toContain("heading={");
+  });
+
+  test("the one dashboard capture is the English phone shot, captioned as sample data", () => {
+    const captures = features().filter((file) => tagIn(file, "PhoneScreenshot"));
+
+    expect(captures).toHaveLength(1);
+    expect(code(captures[0])).toContain('landingShot("en", "phone")');
+    expect(code(captures[0])).toContain("SHARED.sampleData");
+  });
+});
+
 describe("the step-2 QR mark (AC14)", () => {
   test("no component of these pages draws a scannable code", () => {
     const offenders = sourceFiles(COMPONENTS_DIR).filter((file) => /qrcode\.react|\bQRCodeSVG\b/.test(read(file)));
@@ -348,7 +406,7 @@ describe("components the pages extend keep rendering as before (AC15)", () => {
 
   test.each([
     ["components/features/notifications-push/NotificationPhoneDemo.tsx", ["animate = true", "eager = true", "width = 280"]],
-    ["components/features/design-de-carte/CardStyleGallery.tsx", ["showCta = true"]],
+    ["components/features/design-de-carte/CardStyleGallery.tsx", ["showCta = true", 'heading?.title ?? t("title")', 'heading?.subtitle ?? t("subtitle")']],
     ["components/ui/QRCodeSkeleton.tsx", ["animated = true"]],
     ["components/features/notifications-push/NotificationBanner.tsx", ["icon ?? (", "{body && ("]],
   ])("%s defaults to today's behaviour", (path, defaults) => {
