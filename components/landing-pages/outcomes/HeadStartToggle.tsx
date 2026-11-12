@@ -3,8 +3,8 @@
 import { useState, type ReactNode } from "react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Segmented } from "@/components/ui/Segmented";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
-import { ScaledBox } from "../shared/ScaledBox";
 import { HeadStartBars, type HeadStartChoice } from "./HeadStartBars";
 
 /** The card is drawn at 300px and shrunk to 240px below `sm`. */

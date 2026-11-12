@@ -75,6 +75,9 @@
       "addToGoogleWallet": "Añadir a Google Wallet",
       "soon": "Pronto"
     },
+    "scannerLoop": {
+      "label": "La app de escaneo Stampeo añade un sello a la tarjeta de Sophie"
+    },
     "footer": {
       "brand": "Stampeo",
       "description": "Tarjetas de fidelidad digitales para comercios modernos. Impulsa tu crecimiento con experiencias sencillas y atractivas.",

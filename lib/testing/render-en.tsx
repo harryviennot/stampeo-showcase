@@ -6,7 +6,12 @@ import { MARKETS } from "../markets";
 import { FALLBACK_PRICING } from "../pricing";
 import { loadCatalog } from "./catalogs";
 
-const MESSAGES = loadCatalog("en");
+const CATALOGS = new Map<string, Record<string, unknown>>();
+
+const catalog = (locale: string) => {
+  if (!CATALOGS.has(locale)) CATALOGS.set(locale, loadCatalog(locale));
+  return CATALOGS.get(locale);
+};
 
 /**
  * Server-renders `node` under the English catalogs, as a page does; a missing
@@ -14,11 +19,16 @@ const MESSAGES = loadCatalog("en");
  * through `RegionText`.
  */
 export function renderEn(node: ReactNode, { us = false }: { us?: boolean } = {}): string {
+  return renderIn("en", node, { us });
+}
+
+/** `renderEn` under another locale's catalogs, as that locale's page renders `node`. */
+export function renderIn(locale: string, node: ReactNode, { us = false }: { us?: boolean } = {}): string {
   return renderToStaticMarkup(
     <NextIntlClientProvider
-      locale="en"
+      locale={locale}
       timeZone="UTC"
-      messages={MESSAGES}
+      messages={catalog(locale)}
       onError={(error) => {
         throw error;
       }}

@@ -75,6 +75,9 @@
       "addToGoogleWallet": "Ajouter à Google Wallet",
       "soon": "Bientôt"
     },
+    "scannerLoop": {
+      "label": "L'appli scanner Stampeo ajoute un tampon sur la carte de Sophie"
+    },
     "footer": {
       "brand": "Stampeo",
       "description": "Cartes de fidélité digitales pour les commerces modernes. Stimulez votre croissance grâce à des expériences simples et engageantes.",

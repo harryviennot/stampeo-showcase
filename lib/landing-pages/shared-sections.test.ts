@@ -15,7 +15,7 @@ import { LpHeading } from "@/components/landing-pages/shared/LpSection";
 import { PlanLine } from "@/components/landing-pages/shared/PlanLine";
 import { SampleCapture } from "@/components/landing-pages/shared/SampleCapture";
 import { WalletBadges } from "@/components/landing-pages/shared/WalletBadges";
-import { SCANNER_LOOP } from "@/components/landing-pages/shared/scanner-loop";
+import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { WRENFOLD } from "@/components/landing-pages/shared/samples";
 import { StampIconSvg, stampIcons } from "@/components/onboarding/StampIconPicker";
 import { lpBanner } from "../../components/landing-pages/shared/banner";
@@ -550,7 +550,6 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("NotificationSequenceDemo", "features/notifications-push"), ["moments", "design", "phoneClassName", "fullCard"]],
     [...component("NotificationBanner", "features/notifications-push"), ["icon"]],
     [...component("CardStyleGallery", "features/design-de-carte"), ["showCta", "heading", "sectionClassName"]],
-    [...component("ScanDemo", "features/scanner-mobile"), ["chrome", "stillWhenReduced"]],
     [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced"]],
     [...component("QRCodeSkeleton", "ui"), ["animated"]],
     [...component("Segmented", "ui"), ["size"]],

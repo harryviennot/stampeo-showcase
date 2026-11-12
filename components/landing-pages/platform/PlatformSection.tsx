@@ -1,7 +1,7 @@
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { DashboardDuo } from "../shared/DashboardDuo";
 import { LpSection } from "../shared/LpSection";
-import { ScannerLoop } from "../shared/ScannerLoop";
 import { PlatformToggleCard } from "./PlatformToggleCard";
 
 /** The scanner phone: drawn at 280px, shrunk to 190px on a phone so its pane is no taller than the dashboard's. */

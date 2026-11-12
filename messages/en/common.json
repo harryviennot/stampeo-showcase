@@ -75,6 +75,9 @@
       "addToGoogleWallet": "Add to Google Wallet",
       "soon": "Soon"
     },
+    "scannerLoop": {
+      "label": "The Stampeo Scanner app adding a stamp to Sophie's card"
+    },
     "footer": {
       "brand": "Stampeo",
       "description": "Digital loyalty cards for modern businesses. Empowering growth through simple, rewarding experiences.",

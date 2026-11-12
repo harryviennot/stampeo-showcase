@@ -12,7 +12,6 @@ import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFe
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
 import { CompactPlayground } from "@/components/features/design-de-carte/CompactPlayground";
 import { NotificationSequenceDemo } from "@/components/features/notifications-push/NotificationSequenceDemo";
-import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Segmented } from "@/components/ui/Segmented";
 import { isStill } from "@/hooks/usePrefersReducedMotion";
@@ -54,24 +53,6 @@ describe("WalletCard headerLabel", () => {
 
   test("without it the card says what it always did", () => {
     expect(textOf(render(<WalletCard design={design} stamps={4} />))).toContain("Stamps");
-  });
-});
-
-describe("ScanDemo chrome", () => {
-  test("the full demo draws its recording dot", () => {
-    expect(render(<ScanDemo />)).toContain("REC");
-  });
-
-  test("the minimal demo draws no recording dot", () => {
-    expect(render(<ScanDemo chrome="minimal" />)).not.toContain("REC");
-  });
-
-  // The timing chip only appears once a scan has finished, which a static render never reaches.
-  test("the timing chip is drawn only by the full demo", () => {
-    const source = code(join(ROOT, "components/features/scanner-mobile/ScanDemo.tsx"));
-
-    expect(source).toMatch(/\bfull\s*&&\s*\(\s*<div[^>]*>\s*<ClockIcon[^>]*\/>\s*\{t\("timer"\)\}/);
-    expect(source.match(/t\("timer"\)/g)).toHaveLength(1);
   });
 });
 
@@ -218,11 +199,8 @@ describe("stillWhenReduced", () => {
     expect(isStill(asked, reduced)).toBe(still);
   });
 
-  test.each([
-    ["LiveActivityFeed", "components/features/analytics/LiveActivityFeed.tsx"],
-    ["ScanDemo", "components/features/scanner-mobile/ScanDemo.tsx"],
-  ])("%s rests when the selector says so, and no other way", (_name, file) => {
-    const source = code(join(ROOT, file));
+  test("LiveActivityFeed rests when the selector says so, and no other way", () => {
+    const source = code(join(ROOT, "components/features/analytics/LiveActivityFeed.tsx"));
 
     expect(source).toMatch(/const still = isStill\(stillWhenReduced, reduced\)/);
     expect(source).not.toMatch(/stillWhenReduced\s*&&\s*reduced/);

@@ -1,6 +1,6 @@
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
-import { ScaledBox } from "../shared/ScaledBox";
 import { WalletBadges } from "../shared/WalletBadges";
 import { AUREVO } from "../shared/samples";
 

@@ -1,10 +1,10 @@
 import { WalletCard } from "@/components/card/WalletCard";
 import { IPhone } from "@/components/ui/IPhone";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { iphoneLayout } from "@/lib/devices/iphone";
 import { POINTS_SAMPLES } from "@/lib/loyalty-samples";
 import { AurevoCard } from "./AurevoCard";
 import { PassFrame } from "./PassFrame";
-import { ScaledBox } from "./ScaledBox";
 
 /** The phone is drawn 320px wide; the card fills its screen less 14px a side. */
 const DRAWN_WIDTH = 320;

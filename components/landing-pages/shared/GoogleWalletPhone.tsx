@@ -1,9 +1,9 @@
 import { GoogleWalletCard } from "@/components/card/GoogleWalletCard";
 import { AndroidPhone } from "@/components/ui/AndroidPhone";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { androidLayout } from "@/lib/devices/android";
 import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
 import { aurevoDesign } from "./AurevoCard";
-import { ScaledBox } from "./ScaledBox";
 
 /** The phone is drawn 320px wide, as `WalletPhone`'s iPhone. */
 const DRAWN_WIDTH = 320;

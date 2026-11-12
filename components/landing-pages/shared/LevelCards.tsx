@@ -1,10 +1,10 @@
 import { getTranslations } from "next-intl/server";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { WalletCard } from "@/components/card/WalletCard";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { GOLD_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
 import { LEVEL_UP_BANNER, SHARED } from "@/lib/landing-pages/copy/shared";
 import { PassFrame } from "./PassFrame";
-import { ScaledBox } from "./ScaledBox";
 import { lpBanner } from "./banner";
 import { WRENFOLD } from "./samples";
 

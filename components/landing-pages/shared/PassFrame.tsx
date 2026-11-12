@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
-import { ScaledBox } from "./ScaledBox";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 
 /** The width a card is laid out at: the narrowest where its QR block fits under the fields. */
 const LAYOUT_WIDTH = 300;

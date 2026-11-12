@@ -75,6 +75,9 @@
       "addToGoogleWallet": "Dodaj do Google Wallet",
       "soon": "Wkrótce"
     },
+    "scannerLoop": {
+      "label": "Aplikacja Stampeo do skanowania dodaje pieczątkę do karty Sophie"
+    },
     "footer": {
       "brand": "Stampeo",
       "description": "Cyfrowe karty lojalnościowe dla nowoczesnych firm. Rozwijaj się dzięki prostym nagrodom, po które klienci wracają.",

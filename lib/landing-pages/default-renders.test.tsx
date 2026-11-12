@@ -11,7 +11,6 @@ import { NotificationBanner } from "@/components/features/notifications-push/Not
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
 import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
-import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
 import { Segmented } from "@/components/ui/Segmented";
 import { renderEn } from "../testing/render-en";
@@ -43,10 +42,6 @@ describe("what a component renders when a page's new props are left out (AC15)",
 
   test("LiveActivityFeed: the feed as a section with its heading", () => {
     expect(renderEn(<LiveActivityFeed />)).toMatchSnapshot();
-  });
-
-  test("ScanDemo: the demo with its recording dot", () => {
-    expect(renderEn(<ScanDemo />)).toMatchSnapshot();
   });
 
   test("Segmented: tabs with the compact padding, px-3 py-1.5 text-sm", () => {
