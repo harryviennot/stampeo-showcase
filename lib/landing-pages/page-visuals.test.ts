@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { STAMP_SAMPLES } from "../loyalty-samples";
 import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
 import { PAGES, lines } from "../testing/landing-copy";
-import { lpFiles, pageComponent, pageFile, shared } from "../testing/landing-pages-source";
+import { lpFiles, pageComponent, pageFile, renderedSections, shared } from "../testing/landing-pages-source";
 import { SHARED, STAMP_BANNER } from "./copy/shared";
 import { LANDING_PAGES, type LandingSlug } from "./pages";
 
@@ -116,7 +116,12 @@ describe("the sectors every page ends on (AC19)", () => {
   });
 
   test.todo("How-to renders the sectors under its demo (stage G1)");
-  test.todo("Features renders the sectors before its pricing (stage G2)");
+
+  test("Features renders the sectors right before its pricing", () => {
+    expect(findTag(code(pageFile("features")), "LpSectors")).toBeDefined();
+    expect(renderedSections(pageFile("features")).slice(-4)).toEqual(["sectors", "pricing", "faq", "final_cta"]);
+  });
+
   test.todo("Outcomes renders the sectors before its pricing (stage G3)");
 
   test("nothing near the sectors calls them testimonials, stories or customers", () => {
