@@ -7,7 +7,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { createElement, type ReactElement } from "react";
 import { FactList } from "@/components/landing-pages/shared/FactList";
@@ -15,12 +15,14 @@ import { LpHeading } from "@/components/landing-pages/shared/LpSection";
 import { PlanLine } from "@/components/landing-pages/shared/PlanLine";
 import { SampleCapture } from "@/components/landing-pages/shared/SampleCapture";
 import { WalletBadges } from "@/components/landing-pages/shared/WalletBadges";
+import { WRENFOLD } from "@/components/landing-pages/shared/samples";
+import { StampIconSvg, stampIcons } from "@/components/onboarding/StampIconPicker";
 import { lpBanner } from "../../components/landing-pages/shared/banner";
 import { landingShot } from "../landing/dashboard-shots";
 import { STAMP_SAMPLES } from "../loyalty-samples";
 import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { ALL } from "../testing/landing-copy";
-import { COMPONENTS_DIR, lpFiles, otherCallers, pageComponent, shared } from "../testing/landing-pages-source";
+import { COMPONENTS_DIR, lpFiles, otherCallers, pageComponent, pageFile, shared } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
 import { FEATURES } from "./copy/features";
 import { OUTCOMES } from "./copy/outcomes";
@@ -28,6 +30,12 @@ import { LEVELS_BUSINESS, LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, SHARE
 import { LANDING_PAGES, type LandingSlug } from "./pages";
 
 describe("dashboard captures (AC9)", () => {
+  /**
+   * Platform shows its captures with no "Sample data" (Harry, 13 Nov: a landing page doesn't need the
+   * detail); the other pages keep the caption.
+   */
+  const onPlatform = (file: string) => file === pageFile("platform") || file.startsWith(join(COMPONENTS_DIR, "platform", "/"));
+
   /** A file that draws a dashboard capture has to print the sample-data caption with it. */
   const missesCaption = (source: string) =>
     (openingTags(source).some((tag) => tag.name === "PhoneScreenshot") || /\blandingShot\(/.test(source)) &&
@@ -40,8 +48,21 @@ describe("dashboard captures (AC9)", () => {
     expect(missesCaption("<IPhone />")).toBe(false);
   });
 
-  test("every file that draws a capture prints SHARED.sampleData", () => {
-    expect(lpFiles().filter((file) => missesCaption(read(file)))).toEqual([]);
+  test("every file that draws a capture prints SHARED.sampleData, Platform's apart", () => {
+    expect(lpFiles().filter((file) => !onPlatform(file) && missesCaption(read(file)))).toEqual([]);
+  });
+
+  test("the dashboard duo keeps its caption on every page but Platform, where it shows none", () => {
+    const duos = lpFiles().flatMap((file) =>
+      openingTags(read(file))
+        .filter((tag) => tag.name === "DashboardDuo")
+        .map((tag) => ({ file, captioned: !/(?:^|\s)caption=\{false\}/.test(tag.attrs) })),
+    );
+
+    expect(duos.filter(({ file }) => onPlatform(file))).toHaveLength(1);
+    expect(duos.filter(({ file }) => !onPlatform(file)).length).toBeGreaterThan(0);
+    expect(duos.filter(({ file, captioned }) => captioned === onPlatform(file))).toEqual([]);
+    expect(code(shared("DashboardDuo"))).toMatch(/caption\s*&&\s*\(\s*<figcaption/);
   });
 
   test.each(["phone", "phone-habits", "phone-busiest"] as const)(
@@ -162,6 +183,20 @@ describe("the level cards (AC20)", () => {
     for (const name of ["Bronze", "Silver", "Gold"]) expect(cards).toContain(name);
     expect(cards).toContain("LEVEL_UP_BANNER");
   });
+
+  // The barbershop's brand is a real one, so the levels belong to a made-up shop.
+  test("are a made-up dry cleaner's, never the barbershop's: preset stamps, so each level's look changes, and a logo of its own", () => {
+    const { design } = WRENFOLD;
+    const logo = join(ROOT, "public", design.logo_url ?? "-");
+
+    expect(stampIcons.map((icon) => icon.id)).toContain(design.stamp_icon ?? "-");
+    expect(design.stamp_icon_mode).toBeUndefined();
+    expect(design.background_color).toBe("#FFFFFF");
+    expect(existsSync(logo)).toBe(true);
+    expect(statSync(logo).size).toBeLessThanOrEqual(60_000);
+    expect(code(shared("LevelCards"))).toContain("WRENFOLD.design");
+    expect(code(shared("LevelCards"))).not.toMatch(/BARBER|barber/);
+  });
 });
 
 describe("a notification is the sample business's, never Stampeo's (AC10, AC24)", () => {
@@ -175,12 +210,15 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
     expect(props.title).toBe(banner.body);
   });
 
-  test("the level-up notification is the barbershop's, with its own icon, not the café's", () => {
+  test("the level-up notification is the levels shop's, wearing the stamp icon of its cards, not the café's cup", () => {
     const props = lpBanner(LEVEL_UP_BANNER);
+    const stampPath = /<path d="([^"]+)"/.exec(renderEn(createElement(StampIconSvg, { icon: WRENFOLD.design.stamp_icon ?? "-" })))?.[1];
 
     expect(LEVEL_UP_BANNER.sender).toBe(LEVELS_BUSINESS);
     expect(props.appName).toBe(LEVELS_BUSINESS);
     expect((props.icon as ReactElement).type).not.toBe((lpBanner(STAMP_BANNER).icon as ReactElement).type);
+    expect(stampPath).toBeDefined();
+    expect(renderEn(props.icon)).toContain(`d="${stampPath}"`);
   });
 
   const NOTIFICATIONS = ["NotificationPhoneDemo", "NotificationBanner", "NotificationSequenceDemo"];

@@ -4,7 +4,7 @@ import { NotificationBanner } from "@/components/features/notifications-push/Not
 import { StampIconSvg } from "@/components/onboarding/StampIconPicker";
 import { LEVELS_BUSINESS } from "@/lib/landing-pages/copy/shared";
 import type { Banner } from "@/lib/landing-pages/copy/types";
-import { AUREVO, BARBER } from "./samples";
+import { AUREVO, WRENFOLD } from "./samples";
 
 /** The sample café's notification icon: its cup on its card colour. */
 function AurevoIcon() {
@@ -18,14 +18,14 @@ function AurevoIcon() {
   );
 }
 
-/** The sample barbershop's notification icon: its scissors on its stamp colour. */
-function BarberIcon() {
+/** The levels shop's notification icon: the stamp icon of its cards, on its stamp colour. */
+function LevelsIcon() {
   return (
     <div
       className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
-      style={{ backgroundColor: BARBER.design.stamp_filled_color }}
+      style={{ backgroundColor: WRENFOLD.design.stamp_filled_color }}
     >
-      <StampIconSvg icon="scissors" className="h-5 w-5" color={BARBER.design.icon_color} />
+      <StampIconSvg icon={WRENFOLD.design.stamp_icon ?? "checkmark"} className="h-5 w-5" color={WRENFOLD.design.icon_color} />
     </div>
   );
 }
@@ -35,6 +35,6 @@ export function lpBanner(banner: Banner): ComponentProps<typeof NotificationBann
   return {
     appName: banner.sender,
     title: banner.body,
-    icon: banner.sender === LEVELS_BUSINESS ? <BarberIcon /> : <AurevoIcon />,
+    icon: banner.sender === LEVELS_BUSINESS ? <LevelsIcon /> : <AurevoIcon />,
   };
 }

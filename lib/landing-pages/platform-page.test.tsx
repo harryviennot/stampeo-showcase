@@ -14,7 +14,12 @@ import { BlogPostsSection } from "@/components/landing-pages/platform/BlogPostsS
 import { GlassCard } from "@/components/landing-pages/platform/GlassCard";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { PlatformToggleCard } from "@/components/landing-pages/platform/PlatformToggleCard";
-import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
+import {
+  HOVER_INTENT_MS,
+  ProgramTypeRows,
+  allRowsOpen,
+  hoverIntent,
+} from "@/components/landing-pages/platform/ProgramTypeRows";
 import { SHARE_ICONS, ShareTree } from "@/components/landing-pages/platform/ShareTree";
 import { BUSINESS_TYPE_ICONS } from "@/components/landing-pages/platform/TypeMarquee";
 import { getAllPosts } from "../blog";
@@ -146,18 +151,61 @@ describe("how it works: Create, Share, Stamp", () => {
   });
 });
 
-describe("program types: one row each, all open until the scroll opens one (AC21)", () => {
+describe("program types: one row each, all open until a visitor points at one (AC21)", () => {
   const VISUALS = { stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> };
 
-  test("every row is open in the server markup, with its label, title, text and card", () => {
+  test("every row is open in the server markup, with its label, title, text and card, and no plan chip", () => {
     const html = renderEn(<ProgramTypeRows visuals={VISUALS} />);
     const text = textOf(html);
 
     expect(html.match(/data-open="(?:true|false)"/g)).toEqual(['data-open="true"', 'data-open="true"', 'data-open="true"']);
     for (const type of PROGRAM_TYPES) {
-      for (const line of [type.eyebrow, type.title, type.body, type.plan]) expect(text).toContain(line);
+      for (const line of [type.eyebrow, type.title, type.body]) expect(text).toContain(line);
     }
     for (const card of ["stamps card", "points card", "levels cards"]) expect(text).toContain(card);
+    expect(text).not.toContain("Every plan");
+  });
+
+  test.each([
+    ["every row stays open on a phone", { wide: false, calm: false }, true],
+    ["every row stays open on a phone, for a reader who asks for less motion", { wide: false, calm: true }, true],
+    ["every row stays open on a computer, for a reader who asks for less motion", { wide: true, calm: true }, true],
+    ["the rows open one at a time on a computer", { wide: true, calm: false }, false],
+  ])("%s", (_case, reader, open) => {
+    expect(allRowsOpen(reader)).toBe(open);
+  });
+
+  test("a mouse that rests on a row opens it; one that only crosses rows on its way elsewhere opens none", async () => {
+    const opened: string[] = [];
+    const hover = hoverIntent((key: string) => opened.push(key));
+
+    hover.enter("stamps");
+    hover.leave();
+    hover.enter("points");
+    hover.leave();
+    await Bun.sleep(HOVER_INTENT_MS + 40);
+    expect(opened).toEqual([]);
+
+    hover.enter("points");
+    hover.leave();
+    hover.enter("levels");
+    await Bun.sleep(HOVER_INTENT_MS + 40);
+    expect(opened).toEqual(["levels"]);
+  });
+
+  test("a row also opens for keyboard focus and for a click or tap, and nothing follows the scroll any more", () => {
+    const source = code(platformFile("ProgramTypeRows"));
+    const handlers = openingTags(source).flatMap((tag) => [...tag.attrs.matchAll(/\b(on[A-Z]\w+)=\{[^}]*type\.key/g)].map((match) => match[1]));
+
+    expect(handlers.sort()).toEqual(["onClick", "onFocus", "onPointerEnter"]);
+    expect(source).not.toContain("IntersectionObserver");
+  });
+
+  test("the rows show Aurevo's stamp card, the Vanity salon's points card and the level cards", () => {
+    const section = code(platformFile("ProgramTypeRowsSection"));
+
+    for (const card of ["<AurevoCard", "VANITY.design", "<LevelCards"]) expect(section).toContain(card);
+    expect(section).not.toContain("Marginalia");
   });
 
   test("the list closes on a full-width link to the choosing guide, from the copy", () => {

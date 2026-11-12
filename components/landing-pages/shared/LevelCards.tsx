@@ -6,7 +6,7 @@ import { LEVEL_UP_BANNER, SHARED } from "@/lib/landing-pages/copy/shared";
 import { PassFrame } from "./PassFrame";
 import { ScaledBox } from "./ScaledBox";
 import { lpBanner } from "./banner";
-import { BARBER } from "./samples";
+import { WRENFOLD } from "./samples";
 
 /** The cards are drawn at this width, in a stage of this size. */
 const CARD_WIDTH = 240;
@@ -17,7 +17,7 @@ const DEFAULT_SIZE = { narrowTo: 300, breakpoint: "sm" } as const;
 
 interface Level {
   name: string;
-  /** Its look over the barbershop's own: Bronze is the sample as it is. */
+  /** Its look over the shop's own: Bronze is the sample as it is. */
   look?: LevelLook;
   stamps: number;
   /** Where the card sits in the fan, and how it is turned. */
@@ -34,7 +34,7 @@ const LEVELS: Level[] = [
 ];
 
 /**
- * The barbershop's card as Bronze (its own look), Silver and Gold, fanned,
+ * The dry cleaner's card as Bronze (its own look), Silver and Gold, fanned,
  * each with its level name over the count as on the real pass. `banner` adds
  * the default level-up notification over the front card; `size` shows the
  * stage smaller (`narrowTo` below the breakpoint, `to` from it).
@@ -71,7 +71,7 @@ export async function LevelCards({
           >
             <PassFrame width={CARD_WIDTH}>
               <WalletCard
-                design={{ ...BARBER.design, ...level.look, secondary_fields: fields }}
+                design={{ ...WRENFOLD.design, ...level.look, secondary_fields: fields }}
                 stamps={level.stamps}
                 headerLabel={level.name}
                 showQR={false}
