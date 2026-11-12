@@ -370,7 +370,7 @@ describe("the five previews' copy (STA-552)", () => {
       expect(PLAN_FACTS.pro.scheduledBroadcasts).toBe(true);
       expect(PLAN_FACTS.growth.scheduledBroadcasts).toBe(false);
       expect(pro.body).toMatch(/^Unlimited, scheduled/);
-      expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} a month`);
+      expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} broadcasts a month`);
     });
   });
 
