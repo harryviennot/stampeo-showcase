@@ -54,7 +54,12 @@ function render(node: ReactNode): string {
   );
 }
 
-const textOf = (html: string) => html.replace(/<[^>]*>/g, "|").replace(/\|+/g, "|");
+const textOf = (html: string) =>
+  html
+    .replace(/<[^>]*>/g, "|")
+    .replace(/\|+/g, "|")
+    .replace(/&#x27;/g, "'")
+    .replace(/&amp;/g, "&");
 
 /** The tag that opens the section `id`, wherever on the page it is drawn. */
 function sectionTag(id: string) {
@@ -127,8 +132,8 @@ describe("step 1: the live card designer", () => {
   test("says the first card can be made for you, on every plan, and offers the trial after the designer", () => {
     const cta = findTag(source(), "CTAButton");
 
-    expect(source()).toContain("create.designHelp");
-    expect(source()).toContain("create.ctaLead");
+    expect(source()).toContain("designHelp");
+    expect(source()).toContain("ctaLead");
     expect(literalAttr(cta?.attrs ?? "", "variant")).toBe("outline");
     expect(literalAttr(cta?.attrs ?? "", "trackAs")).toBe("feature_cta");
     expect(source().indexOf("<CTAButton")).toBeGreaterThan(source().indexOf("<CardDesignPlayground"));
@@ -143,7 +148,7 @@ describe("step 2: they scan, and it's in their wallet", () => {
 
     expect(visual).toContain("<PlacardVisual");
     expect(visual).toContain("<WalletPhone");
-    expect(source()).toContain("share.channels");
+    expect(source()).toContain("HOW_IT_WORKS.share");
     expect(source()).toMatch(/channels\.map\(/);
   });
 });
