@@ -101,7 +101,6 @@ const STAGED: Partial<Record<LandingSlug, string>> = {
   "how-it-works": "stage G1",
   features: "stage G2",
   outcomes: "stage G3",
-  platform: "stage G4",
 };
 
 /** What a staged page renders already: the hero and the shared closing blocks. */
