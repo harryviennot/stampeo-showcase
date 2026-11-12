@@ -3,8 +3,13 @@ import { setRequestLocale } from "next-intl/server";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
+import { HowSection } from "@/components/landing-pages/feature-previews/push-notifications/HowSection";
+import { MomentsSection } from "@/components/landing-pages/feature-previews/push-notifications/MomentsSection";
+import { WalletsSection } from "@/components/landing-pages/feature-previews/push-notifications/WalletsSection";
+import { WordingSection } from "@/components/landing-pages/feature-previews/push-notifications/WordingSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
+import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
 import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { lpBanner } from "@/components/landing-pages/shared/banner";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "@/lib/landing-pages/copy/previews/push-notifications";
@@ -37,7 +42,11 @@ export default function PushNotificationsPreviewPage() {
           </PhoneCrop>
         }
       />
-      {/* TODO(STA-552 builder): how, moments, wallets, wording, demo (ux-brief, page C). */}
+      <HowSection />
+      <MomentsSection />
+      <WalletsSection />
+      <WordingSection />
+      <LpDemo eyebrow={PUSH_NOTIFICATIONS_PREVIEW.demo.eyebrow} align="center" />
       <LpAccentBand copy={PUSH_NOTIFICATIONS_PREVIEW.band} />
       <RelatedPreviews slug="platform/push-notifications" />
     </LandingPageShell>
