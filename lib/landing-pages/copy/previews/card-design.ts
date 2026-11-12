@@ -17,6 +17,8 @@ export const CARD_DESIGN_PREVIEW = {
   designerLink: "Try the designer",
   icons: {
     label: "An icon for every trade",
+    /** What the two drifting rows of icon tiles are, for a screen reader. */
+    alt: "The designer's stamp icons, in two rows that drift past",
   },
   playground: {
     eyebrow: "Try the designer",
@@ -62,6 +64,12 @@ export const CARD_DESIGN_PREVIEW = {
         body: "In a row, staggered or overlapping, with a special stamp for the reward.",
       },
     ] satisfies RowCopy<"library" | "own" | "layout">[],
+    /** What each row's card is, for a screen reader. */
+    cardAlts: {
+      library: "A pet groomer's loyalty card with paw stamps from the icon library",
+      own: "A bubble tea shop's loyalty card with its own boba stamps",
+      layout: "A gelato shop's loyalty card with ice cream cones piled up as stamps",
+    },
   },
   wallets: {
     eyebrow: "Both wallets",
@@ -72,6 +80,11 @@ export const CARD_DESIGN_PREVIEW = {
       { title: "Live preview", body: "The designer shows both wallets while you work." },
       { title: "Always up to date", body: "Change your style and every card already in a wallet updates." },
     ] satisfies Tile[],
+    /** What each phone is, for a screen reader. */
+    phoneAlts: {
+      apple: "An iPhone with the loyalty card open in Apple Wallet",
+      google: "An Android phone with the same loyalty card open in Google Wallet",
+    },
   },
   faq: {
     title: "Card styles, answered",
