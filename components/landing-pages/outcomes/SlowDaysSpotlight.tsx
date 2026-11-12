@@ -4,11 +4,7 @@ import { lpBanner } from "../shared/banner";
 import { LpSpotlight } from "../shared/LpSpotlight";
 import { PlanLine } from "../shared/PlanLine";
 
-/**
- * Fill a slow day: a lock screen with the café's broadcast. The plans a
- * broadcast comes with and the "no texting fees" note share one line under the
- * lead, so the fee claim never reads as a promise to every plan.
- */
+/** Fill a slow day: a lock screen with the café's broadcast, and its plan line right under the lead. */
 export function SlowDaysSpotlight() {
   const slowDays = OUTCOMES.slowDays;
 

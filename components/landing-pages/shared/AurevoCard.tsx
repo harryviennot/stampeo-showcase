@@ -9,14 +9,10 @@ export const AUREVO = STAMP_SAMPLES.find((sample) => sample.id === "aurevo") ?? 
 
 /** The width the card is laid out at: the narrowest where its QR block fits under the fields. */
 const LAYOUT_WIDTH = 300;
-/** `ScaledCardWrapper`'s default aspect ratio, which sets the card's height. */
+/** `ScaledCardWrapper`'s default aspect ratio. */
 const CARD_RATIO = 1.282;
 
-/**
- * A wallet card laid out at `LAYOUT_WIDTH` and shrunk to `width` by a fixed CSS
- * scale, so it draws at its final size on the server and does not resize when
- * the page hydrates.
- */
+/** A card laid out at `LAYOUT_WIDTH` and shrunk to `width` by a fixed CSS scale, so it never resizes on hydration. */
 export function PassFrame({ width, children }: Readonly<{ width: number; children: ReactNode }>) {
   const scale = width / LAYOUT_WIDTH;
 
@@ -31,10 +27,7 @@ export function PassFrame({ width, children }: Readonly<{ width: number; childre
   );
 }
 
-/**
- * The Aurevo card at `stamps` of 8, with the member and reward fields
- * `HeroCardStack` gives the same card, drawn at `width`.
- */
+/** The Aurevo card at `stamps` of 8, with the member and reward fields `HeroCardStack` gives it. */
 export async function AurevoCard({ stamps, width }: Readonly<{ stamps: number; width: number }>) {
   const t = await getTranslations("features.design-de-carte.custom.playground");
   const design = {

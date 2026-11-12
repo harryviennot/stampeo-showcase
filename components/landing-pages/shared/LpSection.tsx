@@ -3,12 +3,17 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import type { LandingSectionId } from "@/lib/landing-pages/pages";
 
-/** Phones clear the fixed header at the top of the hero; every other section keeps one beat. */
+/** Vertical rhythm: the hero clears the fixed header. */
 const PADDING = {
   default: "py-16 lg:py-24",
   hero: "pt-24 pb-16 lg:pt-36 lg:pb-24",
   heroCropped: "pt-24 pb-0 lg:pt-36 lg:pb-24",
 } as const;
+
+const TINT = "bg-[var(--blog-bg)]";
+
+/** The classes of a tinted section, for a block that brings its own `<section>`. */
+export const TINTED_BAND = `${PADDING.default} ${TINT}`;
 
 /** A section title with its lead: one h2 and at most one paragraph under it. */
 export function LpHeading({
@@ -25,12 +30,8 @@ export function LpHeading({
 }
 
 /**
- * The frame of every section on the landing pages: its registry id as
- * `data-landing-section` (what `LandingTracker` reports as viewed), the page's
- * vertical rhythm and a `Container`. `anchor` also makes the id a jump target.
- * `bare` is for blocks that bring their own section, padding and container
- * (the pricing block). With a `title` the heading block and the content enter
- * with `ScrollReveal`.
+ * The frame of every landing-page section: its registry id as `data-landing-section`, the rhythm and a
+ * `Container`. `anchor` makes the id a jump target; `bare` is for blocks that bring their own section.
  */
 export function LpSection({
   section,
@@ -78,7 +79,7 @@ export function LpSection({
       className={
         bare
           ? undefined
-          : `relative scroll-mt-24 ${PADDING[padding]} ${tinted ? "bg-[var(--blog-bg)]" : ""} ${className}`
+          : `relative scroll-mt-24 ${PADDING[padding]} ${tinted ? TINT : ""} ${className}`
       }
     >
       {bare ? body : <Container size={size}>{body}</Container>}

@@ -4,13 +4,7 @@ import { LpHeading, LpSection } from "./LpSection";
 import { PhoneCrop } from "./PhoneCrop";
 import type { LandingSectionId } from "@/lib/landing-pages/pages";
 
-/**
- * One idea beside one visual: the heading and lead (and an optional line of
- * small print or a plan label) next to the picture. A single column on a phone,
- * text first; two columns from `lg`, with the visual on `side`, centred in its
- * half. `cropOnPhone` cuts a tall device on a phone (see `PhoneCrop`), where its
- * clock and banners sit in the top half.
- */
+/** One idea beside one visual, text first on a phone; `cropOnPhone` cuts a tall device there. */
 export function LpSpotlight({
   section,
   title,

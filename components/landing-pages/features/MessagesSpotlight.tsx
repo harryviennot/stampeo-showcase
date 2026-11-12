@@ -6,10 +6,7 @@ import { PlanLine } from "../shared/PlanLine";
 
 const messages = FEATURES.messages;
 
-/**
- * Automatic messages (every plan) and broadcasts (Growth and Pro), beside a
- * lock screen with both banners stacked.
- */
+/** Automatic messages (every plan) and broadcasts (Growth and Pro), beside a lock screen with both banners. */
 export function MessagesSpotlight() {
   return (
     <LpSpotlight

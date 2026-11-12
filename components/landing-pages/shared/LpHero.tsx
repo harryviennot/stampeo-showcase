@@ -9,13 +9,7 @@ import { LANDING_PAGES, hasDemoSection, type LandingSlug } from "@/lib/landing-p
 import { proofFigures } from "@/lib/landing-pages/proof";
 import { LpSection } from "./LpSection";
 
-/**
- * The hero every page shares: H1, one-line sub, the trial CTA, its reassurance
- * and the proof line, with the page's visual below on a phone and to the right
- * (5 of 12 columns) on desktop. The hero is not wrapped in `ScrollReveal`: it
- * is the first paint. `crop` lets a phone's visual rise from the section's
- * bottom edge, cut at 340px; desktop shows it whole.
- */
+/** The hero every page shares: H1, sub, trial CTA, reassurance, proof line and the page's visual. */
 export async function LpHero({
   slug,
   visual,
@@ -42,8 +36,7 @@ export async function LpHero({
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
             <CTAButton label={SHARED.cta} trackAs="hero" className="w-full sm:w-auto" />
             {hasDemoSection(slug) && (
-              // A plain anchor: the click is a scroll, not a contact, and the
-              // landing_section_viewed event already measures where it lands.
+              // A plain anchor: the click is a scroll, not a contact.
               <a
                 href="#demo"
                 className="order-3 inline-flex h-11 items-center gap-1.5 text-sm font-semibold text-[var(--foreground)] underline-offset-4 hover:underline sm:order-2"

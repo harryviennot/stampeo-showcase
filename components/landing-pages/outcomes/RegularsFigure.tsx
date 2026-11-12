@@ -2,11 +2,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
 import { LpHeading, LpSection } from "../shared/LpSection";
 
-/**
- * The problem, as one figure from someone else: the number in the page's
- * handwriting, the claim in one line and its source in small print. It is the
- * page's one tinted band.
- */
+/** The problem as one sourced figure: the number in handwriting, the claim, the source in small print. */
 export function RegularsFigure() {
   const { title, figure } = OUTCOMES.problem;
 

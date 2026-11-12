@@ -1,11 +1,7 @@
 import type { ReactNode } from "react";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 
-/**
- * A line about broadcasts with the plans they come with ("Growth and Pro") as a
- * pill in front of it, in the same paragraph, so the claim never prints without
- * its plans.
- */
+/** A line about broadcasts with its plans ("Growth and Pro") as a pill in the same paragraph. */
 export function PlanLine({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <p className="mt-6 max-w-xl text-pretty text-base text-[var(--foreground)]">

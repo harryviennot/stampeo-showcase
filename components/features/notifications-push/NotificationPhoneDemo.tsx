@@ -84,7 +84,7 @@ export function NotificationPhoneDemo({
       </div>
 
       {/* Notification area */}
-      <div className="relative z-10 px-3 mt-6 flex flex-col gap-2">
+      <div className={`relative z-10 px-3 mt-6${notifications ? " flex flex-col gap-2" : ""}`}>
         {animate ? (
           <AnimatePresence>
             {isVisible &&

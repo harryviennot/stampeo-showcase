@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import type { ReactNode } from "react";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { lpBanner } from "../shared/banner";
@@ -17,35 +18,29 @@ function CardVisual() {
   return <AurevoCard stamps={4} width={CARD_WIDTH} />;
 }
 
-/**
- * Step 2: the counter placard customers scan. Its QR is the still skeleton, not
- * a code: the only scannable code on a page is the live demo's.
- */
+/** Step 2: the counter placard. Its QR is the still skeleton, not a code: the demo's is the only scannable one. */
 function PlacardVisual() {
   const badges = walletBadges("en");
 
   return (
     <div className="flex w-[220px] flex-col items-center gap-4 rounded-xl bg-white p-4 shadow-md ring-1 ring-black/5">
-      {/* The logo is white, drawn for the brown of the card: it sits on the brand panel with the QR. */}
+      {/* The logo is white, so it sits on the card's brown. */}
       <div
         className="flex flex-col items-center gap-3 rounded-xl px-6 py-4"
         style={{ backgroundColor: AUREVO.design.background_color }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={AUREVO.design.logo_url} alt={SAMPLE_BUSINESS} className="h-7 w-auto" />
         <QRCodeSkeleton size={96} animated={false} />
       </div>
       <div className="flex items-center gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={badges.apple} alt="Apple Wallet" className="h-8 w-auto" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={badges.google} alt="Google Wallet" className="h-8 w-auto" />
       </div>
     </div>
   );
 }
 
-/** Step 3: the card at 5 of 8 with the default stamp notification dropping over it. */
+/** Step 3: the card at 5 of 8 with the default stamp notification over it. */
 function StampedVisual() {
   return (
     <div className="relative">
@@ -59,11 +54,7 @@ function StampedVisual() {
 
 const VISUALS: ReactNode[] = [<CardVisual key="card" />, <PlacardVisual key="placard" />, <StampedVisual key="stamped" />];
 
-/**
- * How-to's three steps on the page's one tinted band: a number, a title and a
- * line each, then the step's picture (on desktop the picture sits above its
- * text), and the "all you need" line that closes the band.
- */
+/** The three steps on the page's tinted band: number, title, line and picture each, then the "all you need" line. */
 export function HowSteps() {
   const { title, lead, items, allYouNeed } = HOW_IT_WORKS.steps;
 
