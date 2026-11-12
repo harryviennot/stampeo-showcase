@@ -24,8 +24,8 @@
         "description": "Your logo, your colors, your own stamp icons (background removed) or 98 ready-made ones. Build it in minutes, or send your logo and we make it in 24-48h."
       },
       "scanner-mobile": {
-        "title": "Mobile Scanner: Add a Stamp in 0.8 Seconds",
-        "description": "Scan your customer's card from the Stampeo app, with a haptic confirmation in 0.8s, or from any web browser. No hardware to buy, nothing changes at your till."
+        "title": "Mobile Scanner: Add a Stamp in Seconds",
+        "description": "Scan your customer's card from the Stampeo app or from any web browser, then tap to add the stamp. No hardware to buy, nothing changes at your till."
       },
       "notifications-push": {
         "title": "Lock Screen Notifications for Every Stamp",

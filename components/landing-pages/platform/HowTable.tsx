@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from "@/components/icons";
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { LpSection } from "../shared/LpSection";
-import { ScannerLoop } from "../shared/ScannerLoop";
-import { SCANNER_LOOP } from "../shared/scanner-loop";
 import { WalletPhone } from "../shared/WalletPhone";
 import { ARROW_LINK, CELL_TITLE } from "./classes";
 

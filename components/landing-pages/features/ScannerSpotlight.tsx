@@ -1,8 +1,8 @@
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { FEATURES } from "@/lib/landing-pages/copy/features";
 import { FactList } from "../shared/FactList";
 import { LpHeading, LpSection } from "../shared/LpSection";
-import { ScannerLoop } from "../shared/ScannerLoop";
 import { LpTrialButton } from "../shared/LpTrialButton";
 
 /**

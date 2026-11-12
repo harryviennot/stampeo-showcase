@@ -519,7 +519,7 @@
     "scanner-mobile": {
       "hero": {
         "title": "Jeden skan. Jedna pieczątka. Tyle.",
-        "subtitle": "Żadnego systemu kasowego. Żadnego dodatkowego sprzętu. Wystarczy twój telefon, żeby przybić klientowi pieczątkę w sekundę.",
+        "subtitle": "Żadnego systemu kasowego. Żadnego dodatkowego sprzętu. Wystarczy telefon, żeby przybić klientowi pieczątkę w kilka sekund.",
         "annotation": "aplikacja twojego zespołu"
       },
       "problem": {
@@ -529,7 +529,7 @@
       "sections": [
         {
           "title": "Osobna aplikacja",
-          "description": "Aplikacja Stampeo jest lekka i służy tylko do skanowania. Otwierasz ją, kierujesz aparat na kod QR klienta i pieczątka jest dodana, z wibracją potwierdzenia. Cały czas: 1 sekunda.",
+          "description": "Aplikacja Stampeo jest lekka i służy tylko do skanowania. Otwierasz ją, kierujesz aparat na kod QR klienta i stukasz „Dodaj pieczątkę”. Wibracja potwierdza, a całość trwa kilka sekund.",
           "icon": "smartphone"
         },
         {
@@ -539,7 +539,7 @@
         }
       ],
       "cta": {
-        "title": "Pieczątka w sekundę",
+        "title": "Pieczątka w kilka sekund",
         "subtitle": "Aplikacja za darmo na iOS i Androida. Skaner w przeglądarce działa na każdym urządzeniu."
       },
       "related": [
@@ -560,10 +560,6 @@
           "qrCaption": "Zeskanuj, żeby zainstalować"
         },
         "scanDemo": {
-          "customerName": "Marek D.",
-          "stampCount": "5/10 pieczątek",
-          "toast": "Pieczątka dodana",
-          "timer": "0,8 s",
           "hint": "Skieruj aparat na kod QR klienta"
         },
         "howItWorks": {
@@ -576,7 +572,7 @@
               "Pobierz aplikację Stampeo (iOS / Android)",
               "Zaloguj się na swoje konto",
               "Skieruj aparat na kod QR klienta",
-              "Wibracja: pieczątka dodana w 0,8 s"
+              "Stuknij „Dodaj pieczątkę”: karta się aktualizuje, a klient dostaje powiadomienie"
             ]
           },
           "web": {
@@ -596,7 +592,7 @@
           "features": [
             {
               "title": "Zero szkolenia",
-              "description": "Otwierasz aplikację, skanujesz, gotowe. Pracownicy korzystają z niej od pierwszego dnia."
+              "description": "Otwierasz aplikację, skanujesz, zatwierdzasz. Pracownicy korzystają z niej od pierwszego dnia."
             },
             {
               "title": "Wibracja potwierdzenia",

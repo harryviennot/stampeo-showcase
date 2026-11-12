@@ -1,4 +1,3 @@
-import { ArrowRightIcon } from "@/components/icons";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
 import { GoogleWalletPhone } from "../shared/GoogleWalletPhone";
@@ -6,9 +5,9 @@ import { LpSection } from "../shared/LpSection";
 import { WalletBadges } from "../shared/WalletBadges";
 import { WalletPhone } from "../shared/WalletPhone";
 import { lpBanner } from "../shared/banner";
-import { DeliverAnalytics } from "./DeliverAnalytics";
-import { GLASS_BLEED, GlassCard } from "./GlassCard";
-import { LockScreenNotification, LockScreenSlice } from "./LockScreenNotification";
+import { DeliverAnalytics, DeliverUpdate } from "./DeliverAnalytics";
+import { GlassCard } from "./GlassCard";
+import { LockScreenNotification } from "./LockScreenNotification";
 
 /** Both phones are drawn about 290px wide from `lg` and about 168px below it. */
 const IPHONE = { full: 290, narrow: 168 };
@@ -47,9 +46,7 @@ export function DeliverComposition() {
           title={PLATFORM.deliver.notificationsLabel}
           className="relative z-20 w-full lg:absolute lg:top-[556px] lg:left-[580px] lg:w-[380px]"
         >
-          <LockScreenSlice className={`${GLASS_BLEED} px-4 py-6 lg:px-5`}>
-            <LockScreenNotification {...lpBanner(STAMP_BANNER)} />
-          </LockScreenSlice>
+          <LockScreenNotification {...lpBanner(STAMP_BANNER)} />
         </GlassCard>
 
         <GlassCard
@@ -57,11 +54,7 @@ export function DeliverComposition() {
           title={PLATFORM.deliver.updatesLabel}
           className="relative z-20 w-full lg:absolute lg:top-[110px] lg:left-[710px] lg:w-[250px]"
         >
-          <p className="flex items-center gap-2 text-2xl font-bold tabular-nums text-[var(--foreground)]">
-            {PLATFORM.deliver.updatesFrom}
-            <ArrowRightIcon size={18} weight="bold" aria-hidden className="text-[var(--accent-hover)]" />
-            {PLATFORM.deliver.updatesTo}
-          </p>
+          <DeliverUpdate />
         </GlassCard>
 
         <GlassCard

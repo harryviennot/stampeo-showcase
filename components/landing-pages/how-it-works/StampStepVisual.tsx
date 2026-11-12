@@ -1,10 +1,10 @@
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { InkArrow } from "@/components/ui/InkAnnotation";
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { HOW_IT_WORKS } from "@/lib/landing-pages/copy/how-it-works";
 import { STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
 import { lpBanner } from "../shared/banner";
-import { ScannerLoop } from "../shared/ScannerLoop";
 
 const CAPTION = "mt-4 text-center text-sm font-semibold text-[var(--foreground)]";
 

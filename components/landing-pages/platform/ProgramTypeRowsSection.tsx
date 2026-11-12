@@ -1,10 +1,10 @@
 import { WalletCard } from "@/components/card/WalletCard";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { AurevoCard } from "../shared/AurevoCard";
 import { LevelCards } from "../shared/LevelCards";
 import { LpSection } from "../shared/LpSection";
 import { PassFrame } from "../shared/PassFrame";
-import { ScaledBox } from "../shared/ScaledBox";
 import { VANITY } from "../shared/samples";
 import { ProgramTypeRows } from "./ProgramTypeRows";
 
