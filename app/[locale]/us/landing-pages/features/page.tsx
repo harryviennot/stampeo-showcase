@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { AnalyticsSpotlight } from "@/components/landing-pages/features/AnalyticsSpotlight";
+import { DesignSpotlight } from "@/components/landing-pages/features/DesignSpotlight";
+import { FeaturesHeroVisual } from "@/components/landing-pages/features/FeaturesHeroVisual";
+import { MessagesSpotlight } from "@/components/landing-pages/features/MessagesSpotlight";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
+import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { LpFinalCta } from "@/components/landing-pages/shared/LpFinalCta";
 import { LpHero } from "@/components/landing-pages/shared/LpHero";
@@ -23,9 +28,11 @@ export default function FeaturesPage() {
 
   return (
     <LandingPageShell slug="features">
-      {/* TODO(STA-546 stage B): the hero visual, then demo, spotlight_messages,
-          spotlight_design and spotlight_analytics, in the registry's order. */}
-      <LpHero slug="features" />
+      <LpHero slug="features" visual={<FeaturesHeroVisual />} />
+      <LpDemo />
+      <MessagesSpotlight />
+      <DesignSpotlight />
+      <AnalyticsSpotlight />
       <LpSection section="pricing" bare>
         <PricingSection market="us" />
       </LpSection>
