@@ -365,7 +365,7 @@ describe("the five previews' copy (STA-552)", () => {
     test("the plans table gives Growth its monthly number and Pro no limit and scheduling, as PLAN_FACTS has them", () => {
       const [growth, pro] = PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells;
 
-      expect(growth.body).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} a month`);
+      expect(growth.body).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} broadcasts a month`);
       expect(PLAN_FACTS.pro.broadcastsPerMonth).toBe("unlimited");
       expect(PLAN_FACTS.pro.scheduledBroadcasts).toBe(true);
       expect(PLAN_FACTS.growth.scheduledBroadcasts).toBe(false);

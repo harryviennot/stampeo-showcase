@@ -210,7 +210,7 @@ describe("plans: what each plan can send", () => {
   test("the Growth number is the plan facts', never typed, and Pro is unlimited and scheduled", () => {
     const [growth, pro] = COPY.plans.cells;
 
-    expect(growth.body).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} a month`);
+    expect(growth.body).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} broadcasts a month`);
     expect(source("PlansSection")).not.toMatch(/\d+ a month/);
     expect(pro.body).toMatch(/^Unlimited, scheduled/);
   });

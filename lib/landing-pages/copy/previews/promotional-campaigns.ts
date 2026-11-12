@@ -132,7 +132,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     title: "What each plan can send.",
     lead: "Broadcasts come with Growth and Pro, with no texting fees on either.",
     cells: [
-      { title: "Growth", body: `${growthMonthly} a month, sent right away, to everyone or by when they joined.` },
+      { title: "Growth", body: `${growthMonthly} broadcasts a month, sent right away, to everyone or by when they joined.` },
       { title: "Pro", body: "Unlimited, scheduled for any date and time, with full targeting." },
     ] satisfies Tile[],
     link: "Compare plans",
@@ -142,7 +142,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     items: [
       {
         question: "How much do broadcasts cost?",
-        answer: `Nothing extra. Broadcasts come with the Growth plan, ${growthMonthly} a month, and the Pro plan, unlimited. There is no per-message fee, unlike texting, where every message is billed.`,
+        answer: `Nothing extra. Broadcasts come with the Growth plan, ${growthMonthly} broadcasts a month, and the Pro plan, unlimited. There is no per-message fee, unlike texting, where every message is billed.`,
       },
       {
         question: "Do customers need to install an app?",
