@@ -1,6 +1,7 @@
-import { SAMPLE_BUSINESS } from "./shared";
+import { LEVEL_UP_BANNER, SAMPLE_BUSINESS, STAMP_BANNER } from "./shared";
 import type {
   Banner,
+  Fact,
   FinalCtaCopy,
   HeroCopy,
   PageMeta,
@@ -8,7 +9,9 @@ import type {
   SourcedFigure,
 } from "./types";
 
-/** The outcome page: the argument is "first-time customers become regulars". */
+const HEAD_START_SOURCE = "Nunes & Drèze, Journal of Consumer Research, 2006 (car wash loyalty cards, 9 months)";
+
+/** The outcome page: the argument is "first-time customers become regulars", one mechanism per section. */
 export const OUTCOMES = {
   meta: {
     title: "Turn first-time customers into regulars | Stampeo",
@@ -30,34 +33,60 @@ export const OUTCOMES = {
         "Square, 2026 Local Economy Report (US transactions, 2019 to 2025). A regular visits a business at least 4 times a year.",
     } satisfies SourcedFigure,
   },
-  comeBack: {
-    title: "They come back sooner.",
-    lead: "The card is always on them, and every stamp shows how close the reward is.",
-    headStart: {
-      text: "Give new customers a head start: in one study, 34% finished a card that came with 2 free stamps, against 19% without.",
-      source: "Nunes & Drèze, Journal of Consumer Research, 2006 (car wash loyalty cards, 9 months)",
+  always: {
+    title: "Always on them, updated every visit.",
+    lead: "In Apple Wallet or Google Wallet, so it's never lost. Each stamp pings their phone.",
+    banner: STAMP_BANNER,
+  } satisfies SectionCopy & { banner: Banner },
+  headStart: {
+    title: "A head start gets them to finish.",
+    lead: "Give new customers their first stamps on the house. It's on every plan.",
+    toggle: { empty: "Card starts empty", headStart: "2 stamps on the house" },
+    barLabel: "finished the card",
+    empty: {
+      value: "19%",
+      text: "finished a card that started empty",
+      source: HEAD_START_SOURCE,
     } satisfies SourcedFigure,
-  } satisfies SectionCopy & { headStart: SourcedFigure },
+    withHeadStart: {
+      value: "34%",
+      text: "finished a card that came with 2 free stamps",
+      source: HEAD_START_SOURCE,
+    } satisfies SourcedFigure,
+  },
   slowDays: {
-    title: "Fill your slow days.",
-    lead: "Send a broadcast to every card: a quiet afternoon, a new item, a seasonal treat.",
-    /** Printed with the `SHARED.broadcastPlans` label on the same line. */
-    noFees: "No texting fees.",
+    title: "Fill your quiet hours.",
+    lead: "See when it's slow, then send every card a reason to come in.",
+    /** Printed with the `SHARED.broadcastPlans` label on the same line: the busiest-times chart and broadcasts are both Growth and Pro. */
+    noFees: "Broadcasts to every card, with no texting fees.",
     banner: {
       sender: SAMPLE_BUSINESS,
       body: "Quiet afternoon? Your second coffee is half price until 5pm.",
     } satisfies Banner,
-  } satisfies SectionCopy & { noFees: string; banner: Banner },
+    /** The capture's alt text. */
+    alt: "Aurevo's busiest times on a phone, with its quietest open hour.",
+  },
+  levels: {
+    title: "Give your regulars a level to reach.",
+    lead: "Bronze, Silver, Gold: customers move up as they keep coming back.",
+    facts: [
+      { text: "Up to 5 levels, each with its own card look" },
+      { text: "Perks for each level, shown to staff at the register" },
+      { text: "Customers move up on what they earn, and never slip back on their own" },
+    ] satisfies Fact[],
+    banner: LEVEL_UP_BANNER,
+  },
   regulars: {
-    title: "Know your regulars.",
-    lead: "See your return rate, who comes back most, and who's slipping away.",
+    title: "Watch first-timers turn into regulars.",
+    lead: "Your return rate, who your regulars are, and who's slipping away.",
+    segments: ["New", "Regular", "VIP", "At risk", "Ghost"],
     example: {
       label: "Example",
       text: "20 customers who come back one extra time a month, at $8 a visit, bring in $160 more every month.",
     },
     /** The dashboard capture's alt text. */
     alt: "Aurevo's Analytics page on a phone: visits, new customers and return rate.",
-  } satisfies SectionCopy & { example: { label: string; text: string }; alt: string },
+  },
   finalCta: {
     title: "Make your next customer a regular.",
     accent: "a regular.",

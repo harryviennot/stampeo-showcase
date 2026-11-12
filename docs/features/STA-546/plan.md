@@ -4,7 +4,7 @@ ISSUE: STA-546 (https://linear.app/stampeo/issue/STA-546)
 BRANCH: `feat/sta-546-landing-variants` (worktree `showcase/.claude/worktrees/sta-546`, off origin/dev 34601c3)
 REPOS: showcase only
 MIGRATION: no
-STATUS: v1 APPROVED (12 Nov 2026, by Harry) · v2 DRAFT (12 Nov 2026, after Harry's first look)
+STATUS: v1 APPROVED (12 Nov 2026, by Harry) · v2 APPROVED (12 Nov 2026, by Harry)
 
 ## v2: Harry's first look (12 Nov 2026)
 
@@ -55,8 +55,8 @@ Stampeo can do.
   white toggle card; the accent band) with the substitutions in `research-passentry.md`; our pricing before
   the band; no FAQ; site header and footer kept. Its secondary CTA "Try it on your phone" lands on our live
   demo, which PassEntry doesn't have.
-- **Defaults taken from the brief's open questions** (Harry may veto): ads wait until levels are on for new
-  sign-ups too (a backend default, outside this issue); no FAQ on Platform; two iPhones + the Google Wallet
+- **Defaults taken from the brief's open questions** (approved with the plan): ads wait until levels are on
+  for new sign-ups too (Harry handles it himself, no issue filed); no FAQ on Platform; two iPhones + the Google Wallet
   badge (no Android frame exists); near-black text on the accent band and `--accent-hover` eyebrows for
   contrast; today's Analytics captures (US re-shoot = STA-548); exits to feature pages, blog and sector
   guides kept; the 3 latest English posts.

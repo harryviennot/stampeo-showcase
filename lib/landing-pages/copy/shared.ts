@@ -15,6 +15,15 @@ export const REWARD_BANNER: Banner = {
   body: "You unlocked your reward! Come claim it.",
 };
 
+/** The barbershop sample the level cards belong to (`STAMP_SAMPLES` "barber"): preset icons, so its look changes per level. */
+export const LEVELS_BUSINESS = "Les Garçons Barbiers";
+
+/** Stampeo's default level-up notification (every plan), with no level gift. */
+export const LEVEL_UP_BANNER: Banner = {
+  sender: LEVELS_BUSINESS,
+  body: "You've reached Silver! Your card has a new look.",
+};
+
 /** The words every page shares, so the pages differ only by their argument. */
 export const SHARED = {
   cta: "Start my free trial",
@@ -30,6 +39,10 @@ export const SHARED = {
   sampleData: "Sample data",
   /** The plans a broadcast comes with; printed wherever a broadcast is mentioned. */
   broadcastPlans: "Growth and Pro",
+  /** The browser bar over the desktop dashboard capture. */
+  dashboardUrl: "app.stampeo.app",
+  /** The heading over the sector carousel when a page gives it a small label (Platform). */
+  sectorsEyebrow: "For every kind of shop",
   faq: {
     title: "Questions owners ask",
     items: [

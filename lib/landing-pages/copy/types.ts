@@ -53,3 +53,45 @@ export interface FinalCtaCopy {
   title: string;
   accent: string;
 }
+
+/** A section header with a small label above the h2 (the Platform page's pattern). */
+export interface EyebrowSection extends SectionCopy {
+  eyebrow: string;
+}
+
+/** Which plans a feature comes with, printed as a chip next to it. */
+export type PlanChip = "Every plan" | "Growth and Pro" | "Pro";
+
+/** A short fact with an optional plan chip. */
+export interface Fact {
+  text: string;
+  plan?: PlanChip;
+}
+
+/** A titled tile in a grid or list. */
+export interface Tile {
+  title: string;
+  body: string;
+  plan?: PlanChip;
+}
+
+/** One of the three program types: stamps, points or levels. */
+export interface ProgramType {
+  key: "stamps" | "points" | "levels";
+  /** The tab label. */
+  label: string;
+  /** The small label above the title on the Platform rows. */
+  eyebrow: string;
+  title: string;
+  body: string;
+  facts: Fact[];
+  plan: PlanChip;
+}
+
+/** One moment of the notification sequence: what happened, and the banner it sends. */
+export interface Moment {
+  title: string;
+  description: string;
+  banner: Banner;
+  plan: PlanChip;
+}
