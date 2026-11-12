@@ -234,9 +234,10 @@ describe("the blog block (AC23)", () => {
 
 describe("the closing band (AC2)", () => {
   test("is the page's one last ask, in the band's own words, with the trial and its reassurance", () => {
-    const text = textOf(renderEn(<LpAccentBand />, { us: true }));
+    const html = renderEn(<LpAccentBand />, { us: true });
+    const text = textOf(html);
 
-    expect(text).toContain(PLATFORM.band.title);
+    expect(textOf(/<h2[\s\S]*?<\/h2>/.exec(html)?.[0] ?? "").replaceAll("|", "")).toBe(PLATFORM.band.title);
     expect(text).toContain(PLATFORM.band.sub);
     expect(text).toContain(SHARED.cta);
     expect(text).toContain("14 days free");

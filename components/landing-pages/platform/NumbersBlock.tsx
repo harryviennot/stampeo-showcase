@@ -3,9 +3,31 @@ import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { LpCtaPair } from "./LpCtaPair";
 import { LpSection } from "../shared/LpSection";
 
+/** Each figure leans a little its own way, as the homepage's do, so a row of them never lines up like type. */
+const TILTS = [-2, 1.5, -1];
+
+/** The figures written by hand, in the homepage's ink, each over its label: one column on a phone, a row from `sm`. */
+export function NumberFigures({ items }: Readonly<{ items: Array<{ value: string; label: string }> }>) {
+  return (
+    <ul className="grid gap-8 text-center sm:grid-cols-3 sm:gap-6">
+      {items.map((item, index) => (
+        <li key={item.label} className="flex flex-col items-center">
+          <p
+            className="ink-figure whitespace-nowrap"
+            style={{ fontSize: "clamp(3.5rem, 2.2rem + 4vw, 6rem)", transform: `rotate(${TILTS[index % TILTS.length]}deg)` }}
+          >
+            {item.value}
+          </p>
+          <p className="mt-2 text-lead text-[var(--muted-foreground)] sm:mt-3">{item.label}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /**
- * "Where Stampeo stands today": the site's own three metrics as large figures
- * (one source, shared with the proof line elsewhere), then the pair of actions.
+ * "Where Stampeo stands today": the site's own three metrics (one source, shared
+ * with the proof line elsewhere), then the pair of actions.
  */
 export async function NumbersBlock() {
   const t = await getTranslations("variant.metrics");
@@ -18,14 +40,7 @@ export async function NumbersBlock() {
       title={PLATFORM.numbers.title}
       align="center"
     >
-      <ul className="grid gap-6 text-center sm:grid-cols-3">
-        {items.map((item) => (
-          <li key={item.label}>
-            <p className="text-h1 tabular-nums text-[var(--accent-hover)]">{item.value}</p>
-            <p className="mt-2 text-lead text-[var(--muted-foreground)]">{item.label}</p>
-          </li>
-        ))}
-      </ul>
+      <NumberFigures items={items} />
       <div className="mt-12 flex justify-center lg:mt-14">
         <LpCtaPair location="feature_cta" />
       </div>
