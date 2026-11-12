@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
+import { CounterSection } from "@/components/landing-pages/feature-previews/mobile-scanner/CounterSection";
+import { HowSection } from "@/components/landing-pages/feature-previews/mobile-scanner/HowSection";
+import { TeamSection } from "@/components/landing-pages/feature-previews/mobile-scanner/TeamSection";
+import { WaysSection } from "@/components/landing-pages/feature-previews/mobile-scanner/WaysSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
+import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
 import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { MOBILE_SCANNER_PREVIEW } from "@/lib/landing-pages/copy/previews/mobile-scanner";
@@ -31,7 +36,11 @@ export default function MobileScannerPreviewPage() {
           </PhoneCrop>
         }
       />
-      {/* TODO(STA-552 builder): how, counter, ways, team, demo (ux-brief, page B). */}
+      <HowSection />
+      <CounterSection />
+      <WaysSection />
+      <TeamSection />
+      <LpDemo eyebrow={MOBILE_SCANNER_PREVIEW.demo.eyebrow} align="center" />
       <LpAccentBand copy={MOBILE_SCANNER_PREVIEW.band} />
       <RelatedPreviews slug="platform/mobile-scanner" />
     </LandingPageShell>
