@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
+import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ALL, MODULES, PAGES, mentions, objectsWith, offenders } from "../testing/landing-copy";
 import { splitAccent } from "./accent";
 import * as shared from "./copy/shared";
@@ -56,14 +56,50 @@ describe("what these pages may not claim (AC10)", () => {
     ["a reminder", /remind/i],
     ["offline", /offline/i],
     ["a number of minutes", /\bminutes?\b/i],
-    ["a count of days: the trial is the {trialDays} token", /\d+[\s-]*days?\b/i],
+    ["a count of days: the trial is the {trialDays} token", DIGIT_DAYS],
     ['tiers: the product\'s word is "levels"', /\btiers?\b/i],
   ])("no line says %s", (_what, pattern) => {
     expect(offenders(pattern)).toEqual([]);
   });
 
-  test('levels are shown as live: the product\'s noun is in the copy', () => {
-    expect(ALL.some((line) => /\blevels?\b/i.test(line.value))).toBe(true);
+  /**
+   * The mentions of levels that print no chip, and why. Everything else about levels sits under an "Every plan"
+   * chip: the Features tab, and the Outcomes section.
+   */
+  const LEVELS_WITHOUT_CHIP: Record<string, string> = {
+    "FEATURES.programTypes.title": "the headline over the three tabs; the Levels tab under it carries the chip",
+    "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
+    "PLATFORM.programTypes.title": "Platform's program rows carry no chips (Harry, 13 Nov 2026)",
+    "SHARED.levelCardsAlt": "the level cards' alt text",
+  };
+
+  const levelMentions = () =>
+    Object.entries(MODULES)
+      .flatMap(([name, value]) => mentions(value, /\blevels?\b/i, name))
+      .filter(({ path }) => !path.endsWith(".key"));
+
+  test('levels are shown as live: every mention carries the "Every plan" chip, but the few that say why they do not', () => {
+    const chipped = levelMentions().filter(({ plan }) => plan !== undefined);
+
+    expect(chipped.length).toBeGreaterThanOrEqual(7);
+    expect(chipped.filter(({ plan }) => plan !== "Every plan")).toEqual([]);
+    expect(levelMentions().filter(({ plan }) => plan === undefined).map(({ path }) => path)).toEqual(
+      Object.keys(LEVELS_WITHOUT_CHIP),
+    );
+  });
+
+  test("the levels mention guard flags one with no chip and one with another plan", () => {
+    const copy = {
+      shown: { title: "Levels", plan: "Every plan" },
+      loose: { title: "Give regulars a level" },
+      gated: { title: "Levels", plan: "Pro" },
+    };
+
+    expect(mentions(copy, /\blevels?\b/i, "COPY")).toEqual([
+      { path: "COPY.shown.title", plan: "Every plan" },
+      { path: "COPY.loose.title", plan: undefined },
+      { path: "COPY.gated.title", plan: "Pro" },
+    ]);
   });
 
   test('"punch" only ever appears in "punch card"', () => {

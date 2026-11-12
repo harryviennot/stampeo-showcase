@@ -4,6 +4,9 @@
  * `/us/landing-pages/*` pages (`landing-pages/copy.test.ts`).
  */
 
+/** What may join a number to "day": whitespace, a hyphen, or a Unicode hyphen (U+2010, and the no-break U+2011 the pages write). */
+const JOIN = String.raw`[\s\-\u2010\u2011]`;
+
 /**
  * A trial length written into words cannot follow the market.
  *
@@ -16,8 +19,10 @@
  * Scoped to English: fr/es/pl genuinely get 30 days, so "1 mois gratuit" is
  * true there and stays.
  */
-export const WORDED_TRIAL =
-  /\b(?:free month|month free|one month free|\d+[\s-]*(?:days?|jours?)[\s-]*(?:free|trial)|free\s+(?:for\s+)?\d+[\s-]*days?|\d+[\s-]*days?\s+for\s+free|first\s+month\s+is\s+free)\b/i;
+export const WORDED_TRIAL = new RegExp(
+  String.raw`\b(?:free month|month free|one month free|\d+${JOIN}*(?:days?|jours?)${JOIN}*(?:free|trial)|free\s+(?:for\s+)?\d+${JOIN}*days?|\d+${JOIN}*days?\s+for\s+free|first\s+month\s+is\s+free)\b`,
+  "i",
+);
 
 /**
  * "Card" on this site means two different things, and only one of them is a
@@ -45,3 +50,6 @@ export const NO_CARD_CLAIM = new RegExp(
   ].join('|'),
   'i',
 );
+
+/** A count of days written as a number ("14 days", "30-day"): the trial is the {trialDays} token. */
+export const DIGIT_DAYS = new RegExp(String.raw`\d+${JOIN}*days?\b`, "i");
