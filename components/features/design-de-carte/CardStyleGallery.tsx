@@ -34,7 +34,8 @@ function GallerySlide({
   );
 }
 
-export async function CardStyleGallery() {
+/** `showCta` draws the "Start Free" block under the carousel; pages with their own CTA hide it. */
+export async function CardStyleGallery({ showCta = true }: Readonly<{ showCta?: boolean }>) {
   const t = await getTranslations("features.design-de-carte.gallery");
   const tc = await getTranslations("common");
   const stampCaptions = t.raw("stamps") as string[];
@@ -158,12 +159,14 @@ export async function CardStyleGallery() {
         />
       </ScrollReveal>
 
-      <Container>
-        <ScrollReveal delay={160} className="mt-10 flex flex-col items-center gap-4 text-center">
-          <p className="text-[var(--muted-foreground)]">{t("ctaLead")}</p>
-          <CTAButton label={tc("buttons.startFree")} size="md" trackAs="card_style_gallery" />
-        </ScrollReveal>
-      </Container>
+      {showCta && (
+        <Container>
+          <ScrollReveal delay={160} className="mt-10 flex flex-col items-center gap-4 text-center">
+            <p className="text-[var(--muted-foreground)]">{t("ctaLead")}</p>
+            <CTAButton label={tc("buttons.startFree")} size="md" trackAs="card_style_gallery" />
+          </ScrollReveal>
+        </Container>
+      )}
     </section>
   );
 }
