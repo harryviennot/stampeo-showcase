@@ -29,7 +29,7 @@ export function LevelsSpotlight() {
         </ScrollReveal>
 
         <ScrollReveal delay={100} className="lg:col-start-2 lg:row-start-2 lg:self-start">
-          <PlanChip plan="Every plan" />
+          <PlanChip plan={OUTCOMES.levels.plan} />
           <FactList facts={OUTCOMES.levels.facts} className="mt-6" />
         </ScrollReveal>
       </div>

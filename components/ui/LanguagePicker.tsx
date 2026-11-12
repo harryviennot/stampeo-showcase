@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type CSSProperties,
-} from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
 
 export type PickerDirection = "up" | "down" | "left" | "right";
@@ -52,20 +47,6 @@ type Phase =
 
 /** Lifecycle of the accent "flash" on the tile being selected. */
 type Flash = { stage: "active" | "fading"; value: string } | null;
-
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mq = window.matchMedia(REDUCED_MOTION_QUERY);
-      mq.addEventListener("change", onChange);
-      return () => mq.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
-    () => false
-  );
-}
 
 /**
  * A language switcher that lives as a single tile showing the current language.

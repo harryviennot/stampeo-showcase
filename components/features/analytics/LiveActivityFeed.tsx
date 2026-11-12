@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/Container";
+import { ReducedMotion } from "@/components/ui/ReducedMotion";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
@@ -41,14 +42,15 @@ interface FeedEvent {
   color: string;
 }
 
-/**
- * `cardOnly` draws the feed card alone, for a page that brings its own section and heading.
- * `stillWhenReduced` stops the feed for a reader who asks for less motion: it shows a full list that stays put.
- */
 export function LiveActivityFeed({
   cardOnly = false,
   stillWhenReduced = false,
-}: Readonly<{ cardOnly?: boolean; stillWhenReduced?: boolean }>) {
+}: Readonly<{
+  /** The feed card alone, for a page that brings its own section and heading. */
+  cardOnly?: boolean;
+  /** Stops the feed for a reader who asks for less motion: a full list that stays put. */
+  stillWhenReduced?: boolean;
+}>) {
   const t = useTranslations("features.analytiques.custom.activityFeed");
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const idRef = useRef(0);
@@ -143,8 +145,7 @@ export function LiveActivityFeed({
     </div>
   );
 
-  // Framer skips movement (it keeps fades) for a reader who asks for less motion; only where a page asks for it.
-  if (cardOnly) return stillWhenReduced ? <MotionConfig reducedMotion="user">{feed}</MotionConfig> : feed;
+  if (cardOnly) return <ReducedMotion active={stillWhenReduced}>{feed}</ReducedMotion>;
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">

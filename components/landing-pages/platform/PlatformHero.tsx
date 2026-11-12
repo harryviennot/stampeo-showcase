@@ -2,11 +2,11 @@ import { FanParallax } from "@/components/landing-variant/FanParallax";
 import { HeroCardFan } from "@/components/landing-variant/HeroCardFan";
 import { RegionText } from "@/components/market/RegionText";
 import { Container } from "@/components/ui/Container";
-import { splitAccent } from "@/lib/landing-pages/accent";
+import { AccentText } from "@/lib/landing-pages/AccentText";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { LANDING_PAGES } from "@/lib/landing-pages/pages";
-import { LpCtaPair } from "../shared/LpCtaPair";
 import { LpSection } from "../shared/LpSection";
+import { LpCtaPair } from "./LpCtaPair";
 
 /**
  * The Platform page's hero: the headline, the arch of sample cards, then the
@@ -16,16 +16,13 @@ import { LpSection } from "../shared/LpSection";
  */
 export function PlatformHero() {
   const { hero } = LANDING_PAGES.platform;
-  const { before, accent, after } = splitAccent(hero.h1, hero.accent);
 
   return (
     <LpSection section="hero" bare>
       <section className="relative pt-24 pb-12 lg:pt-28 lg:pb-20">
         <Container>
           <h1 className="text-hero mx-auto max-w-4xl text-balance text-center">
-            {before}
-            <span className="text-[var(--accent)]">{accent}</span>
-            {after}
+            <AccentText text={hero.h1} accent={hero.accent} />
           </h1>
         </Container>
 

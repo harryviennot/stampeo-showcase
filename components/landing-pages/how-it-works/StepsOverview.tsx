@@ -2,6 +2,7 @@ import { ChevronDownIcon } from "@/components/icons";
 import { NumberStamp } from "@/components/stamps/StampIcons";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { HOW_IT_WORKS } from "@/lib/landing-pages/copy/how-it-works";
+import { DashedRail } from "../shared/DashedRail";
 import { LpSection } from "../shared/LpSection";
 
 /** The sections the three steps jump to, in order. */
@@ -21,10 +22,7 @@ export function StepsOverview() {
           <li key={step.title}>
             <ScrollReveal delay={index * 100} className="relative h-full">
               {index < items.length - 1 && (
-                <span
-                  aria-hidden
-                  className="absolute left-5 top-[60px] -bottom-6 border-l-[1.5px] border-dashed border-[var(--near-black)]/25 lg:bottom-auto lg:left-[calc(50%+28px)] lg:top-5 lg:h-0 lg:w-[calc(100%-32px)] lg:border-l-0 lg:border-t-[1.5px]"
-                />
+                <DashedRail className="left-5 top-[60px] -bottom-6 lg:bottom-auto lg:left-[calc(50%+28px)] lg:top-5 lg:w-[calc(100%-32px)]" />
               )}
               <a
                 href={`#${STEP_SECTIONS[index]}`}

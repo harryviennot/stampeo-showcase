@@ -43,22 +43,19 @@ const DEFAULT_DESIGN: Partial<CardDesign> = {
   ],
 };
 
-/**
- * Three notification moments beside a lock screen. A page passes its own
- * `moments` (banners from its sample business) and `design` (that business's
- * card); `phoneClassName` is for a class on the phone's column, e.g. to crop it.
- * `fullCard` draws the card's fields and QR code, so a sample card reads as a
- * whole pass rather than a strip on an empty card.
- */
 export function NotificationSequenceDemo({
   moments,
   design = DEFAULT_DESIGN,
   phoneClassName = "",
   fullCard = false,
 }: Readonly<{
+  /** The moments listed, with their banners; the three Stampeo defaults when omitted. */
   moments?: SequenceMoment[];
+  /** The card on the lock screen's phone. */
   design?: Partial<CardDesign>;
+  /** A class on the phone's column, e.g. to crop it. */
   phoneClassName?: string;
+  /** The card's fields and QR code, so it reads as a whole pass. */
   fullCard?: boolean;
 }>) {
   const t = useTranslations("features.notifications-push.notificationTypes");

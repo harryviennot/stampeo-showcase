@@ -1,13 +1,14 @@
-import type { ComponentType } from "react";
+import type { Icon } from "@phosphor-icons/react";
 import { DevicePhoneMobileIcon, GlobeIcon, PrinterIcon } from "@/components/icons";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { HOW_IT_WORKS } from "@/lib/landing-pages/copy/how-it-works";
+import { IconTile } from "../shared/IconTile";
 import { LpSection } from "../shared/LpSection";
 import { ShareStepVisual } from "./ShareStepVisual";
 import { StepHeading } from "./StepHeading";
 
 /** One icon per channel, in the order of the copy: the counter, online, the team's phone. */
-const CHANNEL_ICONS: ComponentType<{ size?: number; weight?: "duotone"; "aria-hidden"?: boolean }>[] = [
+const CHANNEL_ICONS: Icon[] = [
   PrinterIcon,
   GlobeIcon,
   DevicePhoneMobileIcon,
@@ -40,9 +41,9 @@ export function ShareStep() {
               <li key={channel.title}>
                 <ScrollReveal delay={index * 100}>
                   <div className="flex min-h-[76px] items-center gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-[var(--border)]">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-light)] text-[var(--foreground)]">
+                    <IconTile tone="accent">
                       <Icon size={22} weight="duotone" aria-hidden />
-                    </span>
+                    </IconTile>
                     <div>
                       <h3 className="text-h3 text-[var(--foreground)]">{channel.title}</h3>
                       <p className="mt-0.5 text-base text-[var(--muted-foreground)]">{channel.body}</p>

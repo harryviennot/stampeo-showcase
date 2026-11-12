@@ -1,5 +1,5 @@
 import { NumberStamp } from "@/components/stamps/StampIcons";
-import { LpHeading } from "../shared/LpSection";
+import { EYEBROW, LpHeading } from "../shared/LpSection";
 
 /**
  * A step's heading: its number in a stamp beside "Step n", then the title and
@@ -18,7 +18,7 @@ export function StepHeading({
 }>) {
   return (
     <div>
-      <p className="mb-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent-hover)] sm:text-[13px]">
+      <p className={`mb-4 flex items-center gap-3 ${EYEBROW} text-[var(--accent-hover)]`}>
         <span aria-hidden className="flex">
           <NumberStamp number={number} size={36} color="var(--accent)" />
         </span>

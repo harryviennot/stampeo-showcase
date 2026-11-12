@@ -1,10 +1,9 @@
-import { CTAButton } from "@/components/ui/CTAButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { LpHeading, LpSection } from "../shared/LpSection";
 import { SampleCapture } from "../shared/SampleCapture";
 import { SegmentChips } from "./SegmentChips";
+import { LpTrialButton } from "../shared/LpTrialButton";
 
 /**
  * See it working: the words and the customer groups, the Analytics capture,
@@ -40,7 +39,7 @@ export function RegularsSpotlight() {
             </span>
             {example.text}
           </p>
-          <CTAButton label={SHARED.cta} variant="outline" trackAs="feature_cta" className="w-full sm:w-auto" />
+          <LpTrialButton />
         </ScrollReveal>
       </div>
     </LpSection>

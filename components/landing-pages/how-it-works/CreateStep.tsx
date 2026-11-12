@@ -1,11 +1,10 @@
-import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
+import { CompactPlayground } from "@/components/features/design-de-carte/CompactPlayground";
 import { PaletteIcon } from "@/components/icons";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { HOW_IT_WORKS } from "@/lib/landing-pages/copy/how-it-works";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { LpSection } from "../shared/LpSection";
 import { StepHeading } from "./StepHeading";
+import { LpTrialButton } from "../shared/LpTrialButton";
 
 /**
  * Step 1: the card designer, live and compact so the card stays in view on a
@@ -21,7 +20,7 @@ export function CreateStep() {
       </ScrollReveal>
 
       <div className="mt-10 lg:mt-14">
-        <CardDesignPlayground compact />
+        <CompactPlayground />
       </div>
 
       <ScrollReveal className="mt-10 flex flex-col gap-8 lg:mt-14 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
@@ -31,7 +30,7 @@ export function CreateStep() {
         </p>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-5">
           <p className="text-lead font-semibold text-[var(--foreground)]">{ctaLead}</p>
-          <CTAButton label={SHARED.cta} variant="outline" trackAs="feature_cta" className="w-full sm:w-auto" />
+          <LpTrialButton />
         </div>
       </ScrollReveal>
     </LpSection>

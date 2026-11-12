@@ -3,13 +3,17 @@ import { NotificationBanner } from "@/components/features/notifications-push/Not
 import { WalletCard } from "@/components/card/WalletCard";
 import { GOLD_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
 import { LEVEL_UP_BANNER, SHARED } from "@/lib/landing-pages/copy/shared";
-import { PassFrame } from "./AurevoCard";
+import { PassFrame } from "./PassFrame";
+import { ScaledBox } from "./ScaledBox";
 import { lpBanner } from "./banner";
 import { BARBER } from "./samples";
 
-/** The cards are drawn at this width, in a stage of this size; on a phone the stage is shrunk to 300px by a fixed CSS scale. */
+/** The cards are drawn at this width, in a stage of this size. */
 const CARD_WIDTH = 240;
 const STAGE = { width: 384, height: 340 };
+
+/** How wide the stage shows: shrunk to 300px below `sm`, whole from there. */
+const DEFAULT_SIZE = { narrowTo: 300, breakpoint: "sm" } as const;
 
 interface Level {
   name: string;
@@ -32,9 +36,16 @@ const LEVELS: Level[] = [
 /**
  * The barbershop's card as Bronze (its own look), Silver and Gold, fanned,
  * each with its level name over the count as on the real pass. `banner` adds
- * the default level-up notification over the front card.
+ * the default level-up notification over the front card; `size` shows the
+ * stage smaller (`narrowTo` below the breakpoint, `to` from it).
  */
-export async function LevelCards({ banner = false }: Readonly<{ banner?: boolean }>) {
+export async function LevelCards({
+  banner = false,
+  size = DEFAULT_SIZE,
+}: Readonly<{
+  banner?: boolean;
+  size?: { narrowTo: number; to?: number; breakpoint: "sm" | "lg" };
+}>) {
   const t = await getTranslations("features.design-de-carte.custom.playground");
   const fields = [{ key: "member", label: t("memberLabel"), value: t("memberName") }];
 
@@ -45,32 +56,30 @@ export async function LevelCards({ banner = false }: Readonly<{ banner?: boolean
       className="relative"
       style={{ paddingBottom: banner ? 40 : 0 }}
     >
-      <div className="relative h-[266px] w-[300px] sm:h-[340px] sm:w-[384px]">
-        <div className="origin-top-left scale-[0.78125] sm:scale-100" style={{ width: STAGE.width, height: STAGE.height }}>
-          {LEVELS.map((level, index) => (
-            <div
-              key={level.name}
-              aria-hidden
-              className="absolute"
-              style={{
-                left: level.left,
-                top: level.top,
-                zIndex: LEVELS.length - index,
-                transform: `rotate(${level.rotate}deg)`,
-              }}
-            >
-              <PassFrame width={CARD_WIDTH}>
-                <WalletCard
-                  design={{ ...BARBER.design, ...level.look, secondary_fields: fields }}
-                  stamps={level.stamps}
-                  headerLabel={level.name}
-                  showQR={false}
-                />
-              </PassFrame>
-            </div>
-          ))}
-        </div>
-      </div>
+      <ScaledBox width={STAGE.width} height={STAGE.height} {...size}>
+        {LEVELS.map((level, index) => (
+          <div
+            key={level.name}
+            aria-hidden
+            className="absolute"
+            style={{
+              left: level.left,
+              top: level.top,
+              zIndex: LEVELS.length - index,
+              transform: `rotate(${level.rotate}deg)`,
+            }}
+          >
+            <PassFrame width={CARD_WIDTH}>
+              <WalletCard
+                design={{ ...BARBER.design, ...level.look, secondary_fields: fields }}
+                stamps={level.stamps}
+                headerLabel={level.name}
+                showQR={false}
+              />
+            </PassFrame>
+          </div>
+        ))}
+      </ScaledBox>
       {banner && (
         <div className="absolute inset-x-0 bottom-0 z-10 mx-auto w-full max-w-[300px]">
           <NotificationBanner {...lpBanner(LEVEL_UP_BANNER)} />

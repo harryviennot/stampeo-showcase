@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { FactList } from "../shared/FactList";
+import { ARROW_LINK, CELL_TITLE } from "./classes";
 
 type Tab = keyof typeof PLATFORM.platform.tabs;
 
@@ -62,14 +63,9 @@ export function PlatformToggleCard({
               >
                 <div className="flex justify-center lg:col-span-7">{visuals[key]}</div>
                 <div className="lg:col-span-5">
-                  <h3 className="text-[1.75rem] leading-tight font-bold tracking-[-0.015em] text-balance text-[var(--foreground)] lg:text-[2rem]">
-                    {pane.title}
-                  </h3>
+                  <h3 className={`${CELL_TITLE} text-balance lg:text-[2rem]`}>{pane.title}</h3>
                   <FactList facts={pane.facts} className="mt-6" />
-                  <Link
-                    href={FEATURE_PAGE[key]}
-                    className="mt-6 inline-flex min-h-11 items-center gap-2 text-base font-semibold text-[var(--accent-hover)] underline-offset-4 hover:underline"
-                  >
+                  <Link href={FEATURE_PAGE[key]} className={`mt-6 ${ARROW_LINK}`}>
                     {pane.link}
                     <ArrowRightIcon size={16} weight="bold" aria-hidden />
                   </Link>

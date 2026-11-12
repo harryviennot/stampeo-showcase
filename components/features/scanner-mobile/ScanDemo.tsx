@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { CheckIcon, ClockIcon } from "@/components/icons";
 import { IPhone } from "@/components/ui/IPhone";
+import { ReducedMotion } from "@/components/ui/ReducedMotion";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Phase = "scanning" | "success" | "result" | "idle";
@@ -16,19 +17,20 @@ const PHASE_DURATIONS: Record<Phase, number> = {
   idle: 300,
 };
 
-/**
- * `minimal` leaves out the recording dot and the timing chip, which say more about the scanner than a page may claim.
- * `stillWhenReduced` stops the loop for a reader who asks for less motion: the demo rests on a finished scan.
- */
 export function ScanDemo({
   chrome = "full",
   stillWhenReduced = false,
-}: Readonly<{ chrome?: "full" | "minimal"; stillWhenReduced?: boolean }>) {
+}: Readonly<{
+  /** `minimal` leaves out the recording dot and the timing chip. */
+  chrome?: "full" | "minimal";
+  /** Stops the loop for a reader who asks for less motion: the demo rests on a finished scan. */
+  stillWhenReduced?: boolean;
+}>) {
   const t = useTranslations("features.scanner-mobile.custom.scanDemo");
   const full = chrome === "full";
   const reduced = usePrefersReducedMotion();
   const still = stillWhenReduced && reduced;
-  const [cycle, setPhase] = useState<Phase>("scanning");
+  const [cycle, setCycle] = useState<Phase>("scanning");
   const phase: Phase = still ? "success" : cycle;
   const cycleCountRef = useRef(0);
   const hasScrolledRef = useRef(false);
@@ -36,7 +38,7 @@ export function ScanDemo({
   useEffect(() => {
     if (still) return;
     const timeout = setTimeout(() => {
-      setPhase((prev) => {
+      setCycle((prev) => {
         const order: Phase[] = ["scanning", "success", "result", "idle"];
         const nextIndex = (order.indexOf(prev) + 1) % order.length;
         const next = order[nextIndex];
@@ -329,6 +331,5 @@ export function ScanDemo({
     </IPhone>
   );
 
-  // Framer skips movement (it keeps fades) for a reader who asks for less motion; only where a page asks for it.
-  return stillWhenReduced ? <MotionConfig reducedMotion="user">{demo}</MotionConfig> : demo;
+  return <ReducedMotion active={stillWhenReduced}>{demo}</ReducedMotion>;
 }

@@ -8,7 +8,6 @@ const CUT = {
   360: "max-h-[384px]",
   440: "max-h-[464px]",
   520: "max-h-[544px]",
-  560: "max-h-[584px]",
 } as const;
 
 export type PhoneCropHeight = keyof typeof CUT;

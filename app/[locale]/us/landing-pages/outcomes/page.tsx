@@ -15,8 +15,7 @@ import { LpSectors } from "@/components/landing-pages/shared/LpSectors";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
-// The US outcomes landing, served at /us/landing-pages/outcomes by the
-// proxy's rewrite of /us/* to this route. English only, noindex.
+// The US outcomes landing page: English only, noindex, rewritten from /us/landing-pages/outcomes.
 export function generateStaticParams() {
   return [{ locale: "en" }];
 }

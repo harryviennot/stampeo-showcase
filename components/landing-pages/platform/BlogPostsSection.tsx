@@ -11,7 +11,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
  * reading time and a two-line excerpt), each linking to its post, and a link to
  * the whole blog. The header is left-aligned, with the link on its right.
  */
-export function LpBlogPosts() {
+export function BlogPostsSection() {
   const posts = getAllPosts("en").slice(0, 3);
 
   return (

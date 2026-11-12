@@ -1,11 +1,10 @@
 import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { FEATURES } from "@/lib/landing-pages/copy/features";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { FactList } from "../shared/FactList";
 import { LpHeading, LpSection } from "../shared/LpSection";
 import { PhoneCrop } from "../shared/PhoneCrop";
+import { LpTrialButton } from "../shared/LpTrialButton";
 
 /**
  * Stamp from any phone: the scan demo without its recording dot or timer,
@@ -30,7 +29,7 @@ export function ScannerSpotlight() {
         </ScrollReveal>
         <ScrollReveal className="lg:col-start-2 lg:row-start-2 lg:self-start">
           <FactList facts={FEATURES.scanner.facts} />
-          <CTAButton label={SHARED.cta} variant="outline" trackAs="feature_cta" className="mt-8 w-full sm:w-auto" />
+          <LpTrialButton className="mt-8" />
         </ScrollReveal>
       </div>
     </LpSection>

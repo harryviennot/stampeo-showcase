@@ -31,6 +31,9 @@ export const PROGRAM_TYPES: ProgramType[] = [
   },
 ];
 
+/** The tab control's accessible name; the visible heading above it is the section's. */
+export const PROGRAM_TABS_LABEL = "Program type";
+
 /** Said once under the program types. */
 export const PROGRAM_SWITCH_LINE =
   "Start with stamps or points and switch later. Customers keep the card they already have.";

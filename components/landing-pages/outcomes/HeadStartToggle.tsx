@@ -4,10 +4,11 @@ import { useState, type ReactNode } from "react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Segmented } from "@/components/ui/Segmented";
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
+import { ScaledBox } from "../shared/ScaledBox";
 import { HeadStartBars, type HeadStartChoice } from "./HeadStartBars";
 
-/** The card is drawn at 300px and shrunk to 240px on a phone by a fixed CSS scale. */
-const CARD_STAGE = "relative h-[308px] w-[240px] sm:h-[385px] sm:w-[300px]";
+/** The card is drawn at 300px and shrunk to 240px below `sm`. */
+const CARD = { width: 300, height: 385, narrowTo: 240 };
 
 /**
  * One choice, three things that follow it: the card (empty, or with its two
@@ -70,9 +71,9 @@ export function HeadStartToggle({
                 key === selected ? "opacity-100" : "opacity-0"
               }`}
             >
-              <div className={CARD_STAGE}>
-                <div className="origin-top-left scale-[0.8] sm:scale-100">{node}</div>
-              </div>
+              <ScaledBox width={CARD.width} height={CARD.height} narrowTo={CARD.narrowTo} breakpoint="sm">
+                {node}
+              </ScaledBox>
             </div>
           ))}
         </div>

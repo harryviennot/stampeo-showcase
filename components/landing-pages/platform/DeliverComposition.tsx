@@ -1,20 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { ArrowRightIcon, ArrowsClockwiseIcon, BellIcon, ChartIcon } from "@/components/icons";
-import { iphoneLayout } from "@/lib/devices/iphone";
 import { landingShot } from "@/lib/landing/dashboard-shots";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { REWARD_BANNER, SHARED, STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
-import { walletBadges } from "@/lib/store-badges";
-import { GlassCard } from "../shared/GlassCard";
 import { LpSection } from "../shared/LpSection";
 import { phoneCropClass } from "../shared/PhoneCrop";
+import { WalletBadges } from "../shared/WalletBadges";
 import { WalletPhone } from "../shared/WalletPhone";
 import { lpBanner } from "../shared/banner";
-import { ScaledBox } from "./ScaledBox";
+import { GlassCard } from "./GlassCard";
 
 /**
  * The part of the desktop capture the analytics card shows, as fractions of the capture: the first two figures and
@@ -70,9 +67,7 @@ async function AnalyticsCard({ className }: Readonly<{ className: string }>) {
  * badges under. On a phone it is the dashboard card, one phone cut short with
  * the other two cards laid over it, and the badges.
  */
-export async function DeliverComposition() {
-  const badges = walletBadges("en");
-
+export function DeliverComposition() {
   return (
     <LpSection
       section="deliver"
@@ -88,9 +83,7 @@ export async function DeliverComposition() {
           <div
             className={`flex justify-center ${phoneCropClass(440)} lg:absolute lg:top-0 lg:left-[calc(50%-316px)]`}
           >
-            <ScaledBox width={PHONE.full} height={iphoneLayout(PHONE.full).height} narrowWidth={PHONE.narrow}>
-              <WalletPhone width={PHONE.full} stamps={5} />
-            </ScaledBox>
+            <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} stamps={5} />
           </div>
 
           <div className="absolute top-[34%] right-0 z-10 w-[176px] lg:top-[210px] lg:right-auto lg:left-[min(calc(50%+296px),calc(100%-196px))] lg:w-[196px]">
@@ -123,11 +116,7 @@ export async function DeliverComposition() {
         </div>
       </div>
 
-      {/* The badges are the official artwork, not links: they say where the card lives. */}
-      <div className="mt-14 flex items-center justify-center gap-3 lg:mt-8">
-        <img src={badges.apple} alt="Apple Wallet" className="h-10 w-auto" />
-        <img src={badges.google} alt="Google Wallet" className="h-10 w-auto" />
-      </div>
+      <WalletBadges className="mt-14 justify-center gap-3 lg:mt-8" />
     </LpSection>
   );
 }

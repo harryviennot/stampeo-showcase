@@ -7,11 +7,11 @@ import {
   PrinterIcon,
   TranslateIcon,
 } from "@/components/icons";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { FEATURES } from "@/lib/landing-pages/copy/features";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { IconTile } from "../shared/IconTile";
 import { LpSection } from "../shared/LpSection";
+import { LpTrialButton } from "../shared/LpTrialButton";
 import { PlanChip } from "../shared/PlanChip";
 
 /** One icon for each tile, in the copy's order. */
@@ -39,9 +39,9 @@ export function MoreFeaturesGrid() {
               key={tile.title}
               className="flex items-start gap-4 rounded-2xl bg-white p-3.5 ring-1 ring-[var(--border)] sm:p-5"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--background-subtle)] text-[var(--accent-hover)]">
+              <IconTile tone="subtle">
                 <Icon size={22} weight="duotone" aria-hidden />
-              </span>
+              </IconTile>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
                   <h3 className="text-[15px] font-semibold text-[var(--foreground)]">{tile.title}</h3>
@@ -54,7 +54,7 @@ export function MoreFeaturesGrid() {
         })}
       </ul>
       <ScrollReveal className="mt-10 flex justify-center">
-        <CTAButton label={SHARED.cta} variant="outline" trackAs="feature_cta" className="w-full sm:w-auto" />
+        <LpTrialButton />
       </ScrollReveal>
     </LpSection>
   );

@@ -19,7 +19,7 @@ export function SegmentChips() {
           </span>
         ))}
       </div>
-      <PlanChip plan="Every plan" />
+      <PlanChip plan={OUTCOMES.regulars.plan} />
     </div>
   );
 }

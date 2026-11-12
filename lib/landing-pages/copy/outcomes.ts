@@ -75,11 +75,13 @@ export const OUTCOMES = {
       { text: "Customers move up on what they earn, and never slip back on their own" },
     ] satisfies Fact[],
     banner: LEVEL_UP_BANNER,
+    plan: "Every plan",
   },
   regulars: {
     title: "Watch first-timers turn into regulars.",
     lead: "Your return rate, who your regulars are, and who's slipping away.",
     segments: ["New", "Regular", "VIP", "At risk", "Ghost"],
+    plan: "Every plan",
     example: {
       label: "Example",
       text: "20 customers who come back one extra time a month, at $8 a visit, bring in $160 more every month.",

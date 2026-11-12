@@ -4,7 +4,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { RegionText } from "@/components/market/RegionText";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
-import { LpSection } from "./LpSection";
+import { LpSection } from "../shared/LpSection";
 
 /**
  * Platform's closing ask: an inset, rounded band on the accent colour, its

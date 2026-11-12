@@ -1,3 +1,4 @@
+import type { Icon } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/Container";
 import {
   BooksIcon,
@@ -14,10 +15,10 @@ import {
   TruckIcon,
 } from "@/components/icons";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
-import { LpSection } from "../shared/LpSection";
+import { EYEBROW, LpSection } from "../shared/LpSection";
 
 /** One icon per business type of `PLATFORM.marquee.types`, in the same order. */
-export const BUSINESS_TYPE_ICONS = [
+export const BUSINESS_TYPE_ICONS: Icon[] = [
   CoffeeIcon,
   BreadIcon,
   ScissorsIcon,
@@ -47,7 +48,7 @@ export function TypeMarquee() {
       <section className="py-5 lg:py-8">
         <Container>
           <div className="flex items-center gap-4 motion-reduce:flex-col motion-reduce:gap-4 lg:gap-8">
-            <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)] sm:text-[13px]">
+            <p className={`shrink-0 ${EYEBROW} text-[var(--muted-foreground)]`}>
               {label}
             </p>
             <div className="min-w-0 flex-1 overflow-hidden motion-reduce:w-full [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)] motion-reduce:[mask-image:none]">

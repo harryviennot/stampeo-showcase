@@ -1,10 +1,6 @@
 import type { EyebrowSection, Fact, FinalCtaCopy, PageMeta, Tile } from "./types";
 
-/**
- * The platform page: passentry.com's homepage structure, rebuilt for Stampeo
- * (see docs/features/STA-546/research-passentry.md). Every section header is
- * an eyebrow, a centred h2 and a lead.
- */
+/** The platform page: a tour of the product. Every section header is an eyebrow, a centred h2 and a lead. */
 export const PLATFORM = {
   meta: {
     title: "Digital punch cards for Apple & Google Wallet | Stampeo",

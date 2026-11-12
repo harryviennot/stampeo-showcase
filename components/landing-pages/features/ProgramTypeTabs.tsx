@@ -1,21 +1,17 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { Segmented } from "@/components/ui/Segmented";
-import { PROGRAM_SWITCH_LINE, PROGRAM_TYPES } from "@/lib/landing-pages/copy/program-types";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { PROGRAM_SWITCH_LINE, PROGRAM_TABS_LABEL, PROGRAM_TYPES } from "@/lib/landing-pages/copy/program-types";
 import type { ProgramType } from "@/lib/landing-pages/copy/types";
 import { FactList } from "../shared/FactList";
 import { PlanChip } from "../shared/PlanChip";
+import { LpTrialButton } from "../shared/LpTrialButton";
 
 type Key = ProgramType["key"];
 
 /** All panels share one grid cell; the others are invisible, so they take space but not a reader's attention. */
 const panelClass = (open: boolean) => `col-start-1 row-start-1 ${open ? "" : "invisible"}`;
-
-/** The tab control's accessible name; the visible heading above it is the section's. */
-const TABS_LABEL = "Program type";
 
 /**
  * Stamps, points and levels as tabs: the section heading, a large tab control,
@@ -36,7 +32,7 @@ export function ProgramTypeTabs({
         {heading}
         <Segmented
           size="lg"
-          ariaLabel={TABS_LABEL}
+          ariaLabel={PROGRAM_TABS_LABEL}
           options={PROGRAM_TYPES.map((type) => ({ value: type.key, label: type.label }))}
           value={active}
           onChange={setActive}
@@ -66,7 +62,7 @@ export function ProgramTypeTabs({
           ))}
         </div>
         <p className="mt-6 max-w-xl text-pretty text-sm text-[var(--muted-foreground)]">{PROGRAM_SWITCH_LINE}</p>
-        <CTAButton label={SHARED.cta} variant="outline" trackAs="feature_cta" className="mt-6 w-full sm:w-auto" />
+        <LpTrialButton className="mt-6" />
       </div>
     </div>
   );

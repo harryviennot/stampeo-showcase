@@ -4,6 +4,7 @@ import { ArrowsClockwiseIcon, PaletteIcon, SparklesIcon } from "@/components/ico
 import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { FEATURES } from "@/lib/landing-pages/copy/features";
+import { IconTile } from "../shared/IconTile";
 import { LpSection, TINTED_BAND } from "../shared/LpSection";
 
 /** One icon for each fact, in the copy's order. */
@@ -30,9 +31,9 @@ export function DesignSpotlight() {
                 const Icon = ICONS[index];
                 return (
                   <li key={fact.text} className="flex items-start gap-4 sm:flex-col sm:items-center sm:text-center">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[var(--accent-hover)] ring-1 ring-[var(--border)]">
+                    <IconTile tone="white">
                       <Icon size={22} weight="duotone" aria-hidden />
-                    </span>
+                    </IconTile>
                     <span className="min-w-0 text-pretty text-base text-[var(--foreground)]">{fact.text}</span>
                   </li>
                 );

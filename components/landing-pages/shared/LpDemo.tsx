@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
-import { CTAButton } from "@/components/ui/CTAButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { LpHeading, LpSection } from "./LpSection";
+import { LpTrialButton } from "./LpTrialButton";
 
 const HeroDemo = dynamic(() => import("@/components/sections/HeroDemo").then((m) => m.HeroDemo));
 
@@ -33,7 +33,7 @@ export function LpDemo({
           <HeroDemo />
         </ScrollReveal>
         <ScrollReveal className={centered ? "w-full sm:w-auto" : "lg:col-start-1 lg:row-start-2 lg:self-start"}>
-          <CTAButton label={SHARED.cta} variant="outline" trackAs="feature_cta" className="w-full sm:w-auto" />
+          <LpTrialButton />
         </ScrollReveal>
       </div>
     </LpSection>

@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import type { Icon } from "@phosphor-icons/react";
 import {
   CalendarCheckIcon,
   CheckIcon,
@@ -10,10 +10,11 @@ import {
 import { RegionText } from "@/components/market/RegionText";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { HOW_IT_WORKS } from "@/lib/landing-pages/copy/how-it-works";
+import { DashedRail } from "../shared/DashedRail";
 import { LpSection } from "../shared/LpSection";
 
 /** One icon per moment, in the order of the copy: the numbers belong to the steps above. */
-const MOMENT_ICONS: ComponentType<{ size?: number; weight?: "duotone"; "aria-hidden"?: boolean }>[] = [
+const MOMENT_ICONS: Icon[] = [
   StorefrontIcon,
   PaletteIcon,
   DevicePhoneMobileIcon,
@@ -42,10 +43,7 @@ export function FirstDayTimeline() {
           return (
             <li key={index} className="relative flex gap-4 pb-8 last:pb-0 lg:flex-col lg:items-center lg:gap-4 lg:pb-0 lg:text-center">
               {index < items.length - 1 && (
-                <span
-                  aria-hidden
-                  className="absolute bottom-2 left-[22px] top-[52px] border-l-[1.5px] border-dashed border-[var(--near-black)]/25 lg:bottom-auto lg:left-[calc(50%+30px)] lg:top-[22px] lg:h-0 lg:w-[calc(100%-36px)] lg:border-l-0 lg:border-t-[1.5px]"
-                />
+                <DashedRail className="bottom-2 left-[22px] top-[52px] lg:bottom-auto lg:left-[calc(50%+30px)] lg:top-[22px] lg:w-[calc(100%-36px)]" />
               )}
               <span
                 className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full shadow-sm ring-1 ${

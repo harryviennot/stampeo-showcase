@@ -3,8 +3,9 @@ import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { iphoneLayout } from "@/lib/devices/iphone";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { LpSection } from "../shared/LpSection";
+import { ScaledBox } from "../shared/ScaledBox";
 import { WalletPhone } from "../shared/WalletPhone";
-import { ScaledBox } from "./ScaledBox";
+import { ARROW_LINK, CELL_TITLE } from "./classes";
 
 /** Both phones are drawn at 280px and shrunk to 160px on a phone. */
 const PHONE = { full: 280, narrow: 160 };
@@ -29,10 +30,8 @@ export function HowTable() {
     >
       <div className="mx-auto max-w-[560px] lg:max-w-[1040px]">
         <div className="-mt-6 flex max-h-[286px] justify-center gap-4 overflow-hidden pt-6 lg:max-h-[464px] lg:gap-10">
-          <ScaledBox width={PHONE.full} height={height} narrowWidth={PHONE.narrow}>
-            <WalletPhone width={PHONE.full} />
-          </ScaledBox>
-          <ScaledBox width={PHONE.full} height={height} narrowWidth={PHONE.narrow}>
+          <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} />
+          <ScaledBox width={PHONE.full} height={height} narrowTo={PHONE.narrow}>
             <ScanDemo chrome="minimal" stillWhenReduced />
           </ScaledBox>
         </div>
@@ -40,19 +39,14 @@ export function HowTable() {
         <ol className="relative -mt-10 grid divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white/80 backdrop-blur-xl lg:-mt-24 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
           {PLATFORM.how.cells.map((cell) => (
             <li key={cell.title} className="p-5 lg:p-8">
-              <h3 className="text-[1.75rem] leading-tight font-bold tracking-[-0.015em] text-[var(--foreground)]">
-                {cell.title}
-              </h3>
+              <h3 className={CELL_TITLE}>{cell.title}</h3>
               <p className="mt-3 text-base text-pretty text-[var(--muted-foreground)]">{cell.body}</p>
             </li>
           ))}
         </ol>
 
         <div className="mt-8 flex justify-center">
-          <a
-            href="#demo"
-            className="inline-flex min-h-11 items-center gap-2 text-base font-semibold text-[var(--accent-hover)] underline-offset-4 hover:underline"
-          >
+          <a href="#demo" className={ARROW_LINK}>
             {PLATFORM.how.link}
             <ArrowRightIcon size={16} weight="bold" aria-hidden />
           </a>

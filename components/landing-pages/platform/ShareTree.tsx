@@ -1,3 +1,4 @@
+import type { Icon } from "@phosphor-icons/react";
 import type { CSSProperties } from "react";
 import { FacebookIcon, GlobeIcon, GoogleLogoIcon, InstagramIcon, PrinterIcon, QRCodeIcon } from "@/components/icons";
 import { StampeoLogo } from "@/components/logo";
@@ -5,7 +6,7 @@ import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { LpSection } from "../shared/LpSection";
 
 /** One icon per channel of `PLATFORM.share.channels`, in the same order: places a link or a code goes. */
-export const SHARE_ICONS = [PrinterIcon, QRCodeIcon, InstagramIcon, FacebookIcon, GlobeIcon, GoogleLogoIcon];
+export const SHARE_ICONS: Icon[] = [PrinterIcon, QRCodeIcon, InstagramIcon, FacebookIcon, GlobeIcon, GoogleLogoIcon];
 
 /** The tree is drawn in a 1000 by 470 box: the root at the top, a branch to the foot of each channel. */
 const BOX = { width: 1000, height: 470 };

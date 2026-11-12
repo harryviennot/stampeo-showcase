@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
-import { LpCtaPair } from "../shared/LpCtaPair";
+import { LpCtaPair } from "./LpCtaPair";
 import { LpSection } from "../shared/LpSection";
 
 /**

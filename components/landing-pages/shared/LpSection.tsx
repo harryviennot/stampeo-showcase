@@ -3,14 +3,16 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import type { LandingSectionId } from "@/lib/landing-pages/pages";
 
-/** Vertical rhythm: the heroes clear the fixed header; the one that ends on the dashboard is short below. */
+/** Vertical rhythm: the hero clears the fixed header and is short below, since it ends on the dashboard. */
 const PADDING = {
   default: "py-16 lg:py-24",
-  hero: "pt-24 pb-16 lg:pt-36 lg:pb-24",
   heroDuo: "pt-24 pb-10 lg:pt-32 lg:pb-14",
 } as const;
 
 const TINT = "bg-[var(--blog-bg)]";
+
+/** The small uppercase label above a heading; the caller sets its colour and spacing. */
+export const EYEBROW = "text-xs font-semibold uppercase tracking-[0.2em] sm:text-[13px]";
 
 /** The classes of a tinted section, for a block that brings its own `<section>`. */
 export const TINTED_BAND = `${PADDING.default} ${TINT}`;
@@ -38,7 +40,7 @@ export function LpHeading({
   return (
     <div className={`max-w-2xl ${centered ? "mx-auto text-center" : ""} ${className}`}>
       {eyebrow && (
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent-hover)] sm:text-[13px]">
+        <p className={`mb-3 ${EYEBROW} text-[var(--accent-hover)]`}>
           {eyebrow}
         </p>
       )}
@@ -77,7 +79,7 @@ export function LpSection({
   section: LandingSectionId;
   anchor?: boolean;
   bare?: boolean;
-  /** The page's one tinted band. */
+  /** A band on the page's alternate background. */
   tinted?: boolean;
   size?: "default" | "narrow";
   padding?: keyof typeof PADDING;

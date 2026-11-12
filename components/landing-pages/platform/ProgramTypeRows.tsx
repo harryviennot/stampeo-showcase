@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ArrowRightIcon } from "@/components/icons";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { Link } from "@/i18n/navigation";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { PROGRAM_TYPES } from "@/lib/landing-pages/copy/program-types";
 import type { ProgramType } from "@/lib/landing-pages/copy/types";
+import { EYEBROW } from "../shared/LpSection";
 import { PlanChip } from "../shared/PlanChip";
 
 type Key = ProgramType["key"];
@@ -37,22 +39,19 @@ function Collapsible({ open, children }: Readonly<{ open: boolean; children: Rea
  * viewport opens and the others show their title and card; a tap opens a row.
  */
 export function ProgramTypeRows({ visuals }: Readonly<{ visuals: Record<Key, ReactNode> }>) {
-  const [follows, setFollows] = useState(false);
+  const [wide, setWide] = useState(false);
+  const calm = usePrefersReducedMotion();
+  const follows = wide && !calm;
   const [active, setActive] = useState<Key>(PROGRAM_TYPES[0].key);
   const rows = useRef(new Map<Key, HTMLLIElement>());
 
   useEffect(() => {
-    const wide = window.matchMedia("(min-width: 1024px)");
-    const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setFollows(wide.matches && !calm.matches);
+    const query = window.matchMedia("(min-width: 1024px)");
+    const update = () => setWide(query.matches);
 
     update();
-    wide.addEventListener("change", update);
-    calm.addEventListener("change", update);
-    return () => {
-      wide.removeEventListener("change", update);
-      calm.removeEventListener("change", update);
-    };
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export function ProgramTypeRows({ visuals }: Readonly<{ visuals: Record<Key, Rea
                 <div className="flex justify-center lg:order-2">{visuals[type.key]}</div>
                 <div className="min-w-0">
                   <Collapsible open={open}>
-                    <p className="pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent-hover)] sm:text-[13px]">
+                    <p className={`pb-2 ${EYEBROW} text-[var(--accent-hover)]`}>
                       {type.eyebrow}
                     </p>
                   </Collapsible>
