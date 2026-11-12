@@ -15,10 +15,12 @@
  */
 import type { CSSProperties } from "react";
 
+import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,
 } from "@/lib/halloween-samples";
+import { sectorWalletDesign } from "@/lib/landing/sector-slides";
 import {
   POINTS_SAMPLES,
   STAMP_SAMPLES,
@@ -256,12 +258,35 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
  *  Halloween is over. */
 export const HERO_FAN_SEASON: FanSeason = "default";
 
+/** The seven places of the arch, filled with `cards` (by index, 0 the apex). */
+function dealCards(cards: Record<number, string>): FanSlot[] {
+  return FAN_GEOMETRY.map((slot) => ({ ...slot, cardId: cards[slot.index] }));
+}
+
 /** The arch for a season: the same seven places, that season's cards. */
 export function fanSlots(season: FanSeason): FanSlot[] {
-  return FAN_GEOMETRY.map((slot) => ({ ...slot, cardId: FAN_CARDS[season][slot.index] }));
+  return dealCards(FAN_CARDS[season]);
 }
 
 export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
+
+/** The cards of the Platform landing page's hero (`/us/landing-pages/platform`),
+ *  dealt into the same seven places. Aurevo, the café those pages follow, is at
+ *  the apex with a points card and a stamp card either side, so a phone shows
+ *  both engines. Light and dark alternate, no two alike in colour touch, and
+ *  the photo stamps (pizza, croissant) sit apart. Never the barbershop sample:
+ *  its name and logo belong to a real shop. */
+export const PLATFORM_FAN_CARDS: Record<number, string> = {
+  [-3]: "gelo",
+  [-2]: "rolling-slice",
+  [-1]: "salon",
+  0: "aurevo",
+  1: "fournee",
+  2: "marginalia",
+  3: "pace",
+};
+
+export const PLATFORM_FAN_SLOTS: FanSlot[] = dealCards(PLATFORM_FAN_CARDS);
 
 /** Every tier's numbers at once; CSS resolves which set is live. Rotation and
  *  position stay unitless so the stylesheet can reuse them in calc() for both
@@ -292,13 +317,32 @@ export type FanCard =
   | { kind: "stamps"; sample: StampSample }
   | { kind: "points"; sample: PointsSample };
 
-/** Which engine a slot's brand runs decides which props <WalletCard> needs. */
+/** Which engine a slot's brand runs decides which props <WalletCard> needs.
+ *  The sample banks come first; a sector brand from the carousel
+ *  (sector-themes.ts) is drawn as the carousel draws its wallet card. */
 export function resolveFanCard(cardId: string): FanCard {
   const stamp = [...STAMP_SAMPLES, ...HALLOWEEN_STAMP_SAMPLES].find((s) => s.id === cardId);
   if (stamp) return { kind: "stamps", sample: stamp };
 
   const points = [...POINTS_SAMPLES, ...HALLOWEEN_POINTS_SAMPLES].find((s) => s.id === cardId);
   if (points) return { kind: "points", sample: points };
+
+  const theme = SECTOR_THEMES.find((t) => t.id === cardId);
+  if (theme?.engine === "points") {
+    return {
+      kind: "points",
+      sample: {
+        id: cardId,
+        design: sectorWalletDesign(theme, []),
+        pointsBalance: theme.pointsBalance ?? 0,
+        pointsRewards: theme.pointsRewards ?? [],
+      },
+    };
+  }
+  if (theme) {
+    const stamps = theme.walletFilled ?? Math.floor((theme.walletStamps ?? 10) * 0.6);
+    return { kind: "stamps", sample: { id: cardId, design: sectorWalletDesign(theme, []), stamps } };
+  }
 
   throw new Error(`hero fan: unknown card id "${cardId}"`);
 }

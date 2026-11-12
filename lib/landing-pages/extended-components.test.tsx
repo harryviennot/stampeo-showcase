@@ -193,3 +193,15 @@ describe("CTAButton variant", () => {
     expect(html).not.toContain("bg-[var(--accent)]");
   });
 });
+
+// The fan is an async server component that asks next-intl for a translator, which only a Next request
+// provides, so it is read as source.
+describe("HeroCardFan slots", () => {
+  const fan = () => code(join(ROOT, "components/landing-variant/HeroCardFan.tsx"));
+
+  test("deals the cards it is given, and the homepage's year-round arch when it is given none", () => {
+    expect(fan()).toMatch(/export async function HeroCardFan\(\{\s*slots\s*=\s*FAN_SLOTS\s*\}/);
+    expect(fan()).toContain("{slots.map((slot) =>");
+    expect(fan().match(/\bFAN_SLOTS\b/g)).toHaveLength(2);
+  });
+});

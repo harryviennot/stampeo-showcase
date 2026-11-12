@@ -337,6 +337,7 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("Segmented", "ui"), ["size"]],
     [...component("WalletCard", "card"), ["headerLabel"]],
     [...component("BlogCard", "blog"), ["detail"]],
+    [...component("HeroCardFan", "landing-variant"), ["slots"]],
   ];
 
   test.each(EXTENDED)("%s", (name, file, props) => {
