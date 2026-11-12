@@ -21,7 +21,7 @@ import {
   hoverIntent,
 } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { SHARE_ICONS, ShareTree } from "@/components/landing-pages/platform/ShareTree";
-import { BUSINESS_TYPE_ICONS } from "@/components/landing-pages/platform/TypeMarquee";
+import { BUSINESS_TYPE_ICONS, TypeMarquee } from "@/components/landing-pages/platform/TypeMarquee";
 import { getAllPosts } from "../blog";
 import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
@@ -109,12 +109,50 @@ describe("the hero: the headline, the fan of cards, then the pair of actions (AC
 });
 
 describe("the strip of business types", () => {
-  test("runs a type per line of the copy, each with its icon, and stands still for readers who ask for less motion", () => {
-    const source = code(platformFile("TypeMarquee"));
+  const html = () => renderEn(<TypeMarquee />);
+  const has = (classes: string, name: string) => classes.split(/\s+/).includes(name);
+  /** Each drifting row: the classes of its frame and of its list, the types a reader hears (not the loop's hidden copy), its icons. */
+  const rows = () =>
+    [...html().matchAll(/<div class="([^"]*)"><ul class="([^"]*)">([\s\S]*?)<\/ul><\/div>/g)].map(([, frame, list, items]) => ({
+      frame,
+      list,
+      heard: [...items.matchAll(/<li class="[^"]*">([\s\S]*?)<\/li>/g)].map(([, item]) => textOf(item).replaceAll("|", "")),
+      copies: [...items.matchAll(/<li aria-hidden="true" class="([^"]*)"/g)].map(([, classes]) => classes),
+      icons: items.match(/<svg/g)?.length ?? 0,
+      items: items.match(/<li/g)?.length ?? 0,
+    }));
+  /** The frame around the phone's two rows. */
+  const phone = () => /<div class="([^"]*)"><div class="[^"]*"><ul/.exec(html())?.[1] ?? "";
+  const drifts = (list: string) => /\banimate-\[marquee-scroll_/.test(list);
 
+  test("runs a type per line of the copy, each with its icon", () => {
     expect(BUSINESS_TYPE_ICONS).toHaveLength(PLATFORM.marquee.types.length);
-    expect(source).toContain("motion-reduce:");
-    expect(source).toMatch(/aria-hidden/);
+    for (const row of rows()) expect(row.icons).toBe(row.items);
+  });
+
+  test("on a phone it is two rows, half the types each, drifting in opposite directions; from sm, one row", () => {
+    const [left, right, single] = rows();
+    const { types } = PLATFORM.marquee;
+
+    expect(rows()).toHaveLength(3);
+    expect([...left.heard, ...right.heard]).toEqual([...types]);
+    expect(Math.abs(left.heard.length - right.heard.length)).toBeLessThanOrEqual(1);
+    expect([drifts(left.list), has(left.list, "[animation-direction:reverse]")]).toEqual([true, false]);
+    expect([drifts(right.list), has(right.list, "[animation-direction:reverse]")]).toEqual([true, true]);
+    expect(has(phone(), "sm:hidden")).toBe(true);
+    expect(single.heard).toEqual([...types]);
+    expect(drifts(single.list)).toBe(true);
+    expect([has(single.frame, "hidden"), has(single.frame, "sm:block")]).toEqual([true, true]);
+  });
+
+  test("stands still for readers who ask for less motion: the one row, wrapped, each type once", () => {
+    const single = rows()[2];
+
+    expect(has(phone(), "motion-reduce:hidden")).toBe(true);
+    expect(has(single.frame, "motion-reduce:block")).toBe(true);
+    for (const rule of ["motion-reduce:animate-none", "motion-reduce:flex-wrap"]) expect(has(single.list, rule)).toBe(true);
+    expect(single.copies).toHaveLength(PLATFORM.marquee.types.length);
+    for (const copy of single.copies) expect(has(copy, "motion-reduce:hidden")).toBe(true);
   });
 });
 
