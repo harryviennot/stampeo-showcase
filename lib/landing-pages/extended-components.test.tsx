@@ -1,17 +1,16 @@
 /**
- * The site components the v2 landing pages extend with an optional prop: what
- * the prop does when a page passes it. (That a component renders as before
- * when it is left out is `shared-sections.test.ts`, on the call sites.)
+ * The site components the landing pages extend with an optional prop: what the
+ * prop does when a page passes it. That a component renders as before when it
+ * is left out is the call-site table in `shared-sections.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { NextIntlClientProvider } from "next-intl";
-import type { ReactNode } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { WalletCard } from "@/components/card/WalletCard";
 import { BlogCard } from "@/components/blog/BlogCard";
+import { WalletCard } from "@/components/card/WalletCard";
+import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
+import { CompactPlayground } from "@/components/features/design-de-carte/CompactPlayground";
 import { NotificationSequenceDemo } from "@/components/features/notifications-push/NotificationSequenceDemo";
 import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { CTAButton } from "@/components/ui/CTAButton";
@@ -19,26 +18,9 @@ import { Segmented } from "@/components/ui/Segmented";
 import type { BlogPostMeta } from "../blog/types";
 import { loadCatalog } from "../testing/catalogs";
 import { ROOT, code } from "../testing/jsx-source";
+import { renderEn as render, textOf } from "../testing/render-en";
 
 const MESSAGES = loadCatalog("en");
-
-/** Server-renders `node` under the English catalogs, as a page does; a missing message throws. */
-function render(node: ReactNode): string {
-  return renderToStaticMarkup(
-    <NextIntlClientProvider
-      locale="en"
-      timeZone="UTC"
-      messages={MESSAGES}
-      onError={(error) => {
-        throw error;
-      }}
-    >
-      {node}
-    </NextIntlClientProvider>,
-  );
-}
-
-const textOf = (html: string) => html.replace(/<[^>]*>/g, "|").replace(/\|+/g, "|");
 
 describe("Segmented size", () => {
   const options = [
@@ -132,27 +114,44 @@ describe("NotificationSequenceDemo moments and design", () => {
   });
 });
 
-describe("CardDesignPlayground compact", () => {
+describe("the card playground: full and compact", () => {
   const catalog = MESSAGES.features["design-de-carte"].custom.playground as Record<string, string>;
+  const EXTRAS = ["nameToggle", "rewardsToggle", "shuffle", "modeCustom"];
 
-  test("the full playground keeps every control", () => {
-    const html = textOf(render(<CardDesignPlayground />));
+  test("the full playground is a section of its own, with every control", () => {
+    const html = render(<CardDesignPlayground />);
 
-    for (const key of ["nameToggle", "rewardsToggle", "shuffle", "modeCustom"]) expect(html).toContain(catalog[key]);
+    expect(html).toContain('id="playground"');
+    for (const key of ["sectionTitle", ...EXTRAS]) expect(textOf(html)).toContain(catalog[key]);
   });
 
-  test("the compact one keeps the program, theme, icon and stamp count, and drops the rest", () => {
-    const html = textOf(render(<CardDesignPlayground compact />));
+  test("the compact one keeps the program, theme, icon and stamp count, and drops the rest, with no section or heading of its own", () => {
+    const html = render(<CompactPlayground />);
 
-    for (const key of ["programLabel", "themeLabel", "iconLabel"]) expect(html).toContain(catalog[key]);
-    for (const key of ["nameToggle", "rewardsToggle", "shuffle", "modeCustom"]) expect(html).not.toContain(catalog[key]);
-  });
-
-  test("the compact one is a body for a page's own section: no section of its own, and no heading", () => {
-    const html = render(<CardDesignPlayground compact />);
-
+    for (const key of ["programLabel", "themeLabel", "iconLabel"]) expect(textOf(html)).toContain(catalog[key]);
+    for (const key of EXTRAS) expect(textOf(html)).not.toContain(catalog[key]);
     expect(html).not.toContain('id="playground"');
     expect(html).not.toContain("<h2");
+  });
+});
+
+describe("LiveActivityFeed cardOnly", () => {
+  const feed = MESSAGES.features.analytiques.custom.activityFeed;
+
+  test("draws the feed card alone: no section, no heading of its own", () => {
+    const html = render(<LiveActivityFeed cardOnly />);
+
+    expect(html).not.toContain("<section");
+    expect(html).not.toContain("<h2");
+    expect(textOf(html)).toContain(feed.title);
+    expect(textOf(html)).toContain(feed.live);
+  });
+
+  test("without it the feed is the section it always was, with its heading", () => {
+    const html = render(<LiveActivityFeed />);
+
+    expect(html).toContain("<section");
+    expect(textOf(html)).toContain(feed.sectionTitle);
   });
 });
 

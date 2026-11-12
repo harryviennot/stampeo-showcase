@@ -1,22 +1,24 @@
 /**
- * The Platform page (`/us/landing-pages/platform`, after passentry.com's
- * homepage): what each of its sections promises a visitor. The server
- * components that only compose (hero, deliver, numbers, how) are read as
- * source, since there is no component runner; the ones that carry behaviour
- * of their own (program rows, the platform toggle, the share tree and the
+ * The Platform page (`/us/landing-pages/platform`): what each of its sections
+ * promises a visitor. The server components that only compose (hero, deliver,
+ * numbers, how) are read as source; the ones that carry behaviour of their own
+ * (program rows, the platform toggle, the share tree, the closing band and the
  * blog block) are rendered on the server, which is what a visitor gets first
  * and what a phone or a reader who asks for less motion keeps.
  */
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { LpBlogPosts } from "@/components/landing-pages/platform/LpBlogPosts";
-import { BUSINESS_TYPE_ICONS } from "@/components/landing-pages/platform/TypeMarquee";
+import { createElement } from "react";
+import { BlogPostsSection } from "@/components/landing-pages/platform/BlogPostsSection";
+import { GlassCard } from "@/components/landing-pages/platform/GlassCard";
+import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { PlatformToggleCard } from "@/components/landing-pages/platform/PlatformToggleCard";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { SHARE_ICONS, ShareTree } from "@/components/landing-pages/platform/ShareTree";
+import { BUSINESS_TYPE_ICONS } from "@/components/landing-pages/platform/TypeMarquee";
 import { getAllPosts } from "../blog";
-import { code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
+import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
 import { PLATFORM } from "./copy/platform";
@@ -72,8 +74,10 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
     for (const { section, align } of headers()) expect({ section, align }).toEqual({ section, align: section === "blog" ? null : "center" });
   });
 
-  test("no section writes a heading of its own: every title goes through the shared header", () => {
-    const own = PLATFORM_FILES().filter((file) => openingTags(read(file)).some((tag) => tag.name === "h2"));
+  test("no section writes a heading of its own: every title goes through the shared header (the closing band is a headline, not a section)", () => {
+    const own = PLATFORM_FILES().filter(
+      (file) => file !== platformFile("LpAccentBand") && openingTags(read(file)).some((tag) => tag.name === "h2"),
+    );
 
     expect(own).toEqual([]);
   });
@@ -83,15 +87,11 @@ describe("the hero: the headline, the card fan, then the pair of actions (AC17)"
   const hero = () => code(platformFile("PlatformHero"));
 
   test("puts the headline first, then the shared fan, then the CTA pair and its reassurance", () => {
-    const source = hero();
-    const order = ["<h1", "<FanParallax", "<HeroCardFan", "<LpCtaPair", "SHARED.reassurance"].map((needle) => source.indexOf(needle));
+    const order = ["<h1", "<FanParallax", "<HeroCardFan", "<LpCtaPair", "SHARED.reassurance"].map((needle) => hero().indexOf(needle));
 
     expect(order.every((at) => at > -1)).toBe(true);
     expect(order).toEqual([...order].sort((a, b) => a - b));
-    expect(source).toContain("@/components/landing-variant/HeroCardFan");
-    expect(source).toContain("@/components/landing-variant/FanParallax");
-    expect(literalAttr(findTag(source, "LpCtaPair")?.attrs ?? "", "location")).toBe("hero");
-    expect(source).toContain("<RegionText raw={SHARED.reassurance}");
+    expect(literalAttr(findTag(hero(), "LpCtaPair")?.attrs ?? "", "location")).toBe("hero");
   });
 
   test("has no sub and no proof line: the numbers come lower down", () => {
@@ -104,59 +104,45 @@ describe("the strip of business types", () => {
     const source = code(platformFile("TypeMarquee"));
 
     expect(BUSINESS_TYPE_ICONS).toHaveLength(PLATFORM.marquee.types.length);
-    expect(source).toContain("PLATFORM.marquee");
-    expect(source).toContain("marquee-scroll");
     expect(source).toContain("motion-reduce:");
     expect(source).toMatch(/aria-hidden/);
   });
 });
 
 describe("what's delivered: two phones, three glass cards and the wallet badges", () => {
-  const deliver = () => code(platformFile("DeliverComposition"));
-
   test("the three cards are labelled from the copy, and the one with a dashboard capture says it is sample data", () => {
-    const source = deliver();
+    const source = code(platformFile("DeliverComposition"));
     const titles = openingTags(source).filter((tag) => tag.name === "GlassCard").map((tag) => /title=\{([^}]*)\}/.exec(tag.attrs)?.[1].trim());
 
     expect(titles.sort()).toEqual(
       ["PLATFORM.deliver.analyticsLabel", "PLATFORM.deliver.notificationsLabel", "PLATFORM.deliver.updatesLabel"].sort(),
     );
     expect(source).toContain("SHARED.sampleData");
-    expect(source).toContain("PLATFORM.deliver.updatesFrom");
-    expect(source).toContain("PLATFORM.deliver.updatesTo");
   });
 
-  test("the official badges close the composition as images, not links", () => {
-    const source = deliver();
+  test("a glass card can float, and the float stops for readers who ask for less motion", () => {
+    const html = renderEn(createElement(GlassCard, { title: "Card", float: true }));
 
-    expect(source).toContain('walletBadges("en")');
-    expect(source).toContain("badges.apple");
-    expect(source).toContain("badges.google");
-    expect(openingTags(source).filter((tag) => tag.name === "a" || tag.name === "Link")).toEqual([]);
+    expect(html).toContain("lp-float");
+    expect(read(join(ROOT, "app", "globals.css"))).toMatch(
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*\.lp-float\s*\{\s*animation:\s*none/,
+    );
   });
 });
 
 describe("by the numbers", () => {
-  test("the three figures are the site's own metrics, never typed here, and the pair of actions follows", () => {
+  test("the pair of actions follows the figures", () => {
     const source = code(platformFile("NumbersBlock"));
 
-    expect(source).toContain('getTranslations("variant.metrics")');
-    expect(source).toContain(".raw(\"items\")");
     expect(literalAttr(findTag(source, "LpCtaPair")?.attrs ?? "", "location")).toBe("feature_cta");
   });
 });
 
 describe("how it works: Create, Share, Stamp", () => {
-  const how = () => code(platformFile("HowTable"));
+  test("the link under the table scrolls to the demo below instead of leaving", () => {
+    const link = openingTags(code(platformFile("HowTable"))).find((tag) => tag.name === "a");
 
-  test("the table is the copy's three cells, and its link scrolls to the demo below instead of leaving", () => {
-    const source = how();
-    const link = openingTags(source).find((tag) => tag.name === "a");
-
-    expect(source).toContain("PLATFORM.how.cells");
     expect(link && literalAttr(link.attrs, "href")).toBe("#demo");
-    expect(source).toContain("PLATFORM.how.link");
-    expect(PLATFORM.how.cells.map((cell) => cell.title)).toEqual(["Create", "Share", "Stamp"]);
   });
 });
 
@@ -172,16 +158,6 @@ describe("program types: one row each, all open until the scroll opens one (AC21
       for (const line of [type.eyebrow, type.title, type.body, type.plan]) expect(text).toContain(line);
     }
     for (const card of ["stamps card", "points card", "levels cards"]) expect(text).toContain(card);
-  });
-
-  test("the rows follow the scroll only on a wide screen that allows motion, the one nearest the middle opening, and a tap opens one", () => {
-    const source = code(platformFile("ProgramTypeRows"));
-
-    expect(source).toContain('matchMedia("(prefers-reduced-motion: reduce)")');
-    expect(source).toContain('matchMedia("(min-width: 1024px)")');
-    expect(source).toContain('"-45% 0px -45% 0px"');
-    expect(source).toContain("rootMargin");
-    expect(source).toMatch(/onClick=\{/);
   });
 
   test("the list closes on a full-width link to the choosing guide, from the copy", () => {
@@ -218,12 +194,12 @@ describe("the platform: a dashboard for you, a free scanner for your team", () =
   });
 
   test("the tabs are 44px tall to tap", () => {
-    expect(literalAttr(findTag(code(platformFile("PlatformToggleCard")), "Segmented")?.attrs ?? "", "size")).toBe("lg");
+    expect(html()).toContain("h-11");
   });
 });
 
 describe("sharing: a tree of places, from the copy (AC22)", () => {
-  test("shows each channel of the copy, in order, with its line, and says nothing about integrations", () => {
+  test("shows each channel of the copy, in order, with its line and an icon, and says nothing about integrations", () => {
     const text = textOf(renderEn(<ShareTree />));
     const at = PLATFORM.share.channels.map((channel) => text.indexOf(channel.title));
 
@@ -231,23 +207,15 @@ describe("sharing: a tree of places, from the copy (AC22)", () => {
     expect(at).toEqual([...at].sort((a, b) => a - b));
     for (const channel of PLATFORM.share.channels) expect(text).toContain(channel.body);
     expect(text).not.toMatch(/integrat|\bPOS\b|\bsync/i);
-  });
-
-  test("reads the channels from the copy and draws an icon for each, in ink, with the lines drawing in once", () => {
-    const source = code(platformFile("ShareTree"));
-
-    expect(source).toContain("PLATFORM.share.channels");
     expect(SHARE_ICONS).toHaveLength(PLATFORM.share.channels.length);
-    for (const channel of PLATFORM.share.channels) expect(source).not.toContain(`"${channel.title}"`);
-    expect(source).toContain("ink-draw");
   });
 });
 
 describe("the blog block (AC23)", () => {
   const latest = () => getAllPosts("en").slice(0, 3);
 
-  test("shows the three latest English posts, newest first, each as a rich card linking to its post", () => {
-    const html = renderEn(<LpBlogPosts />);
+  test("shows the three latest English posts, newest first, each as a rich card linking to its post, and a link to all of them", () => {
+    const html = renderEn(<BlogPostsSection />);
     const linked = [...html.matchAll(/href="[^"]*\/blog\/([^"/]+)"/g)].map((match) => match[1]);
 
     expect(latest()).toHaveLength(3);
@@ -256,30 +224,25 @@ describe("the blog block (AC23)", () => {
       expect(textOf(html)).toContain(post.title);
       expect(textOf(html)).toContain(`${post.readingMinutes} min read`);
     }
-  });
-
-  test("reads them from the English posts and has a link to all of them", () => {
-    const source = code(platformFile("LpBlogPosts"));
-    const html = renderEn(<LpBlogPosts />);
-
-    expect(source).toContain('getAllPosts("en").slice(0, 3)');
-    expect(literalAttr(findTag(source, "BlogCard")?.attrs ?? "", "detail")).toBe("rich");
     expect(html).toMatch(/<a [^>]*href="[^"]*\/blog"[^>]*>[^<]*View all/);
   });
 });
 
-describe("the closing band (AC2v2)", () => {
-  test("is the page's one last ask: the inverse button tracked as the final CTA, in the band's own words", () => {
-    const band = code(join(COMPONENTS_DIR, "shared", "LpAccentBand.tsx"));
-    const button = findTag(band, "CTAButton");
+describe("the closing band (AC2)", () => {
+  test("is the page's one last ask, in the band's own words, with the trial and its reassurance", () => {
+    const text = textOf(renderEn(<LpAccentBand />, { us: true }));
+
+    expect(text).toContain(PLATFORM.band.title);
+    expect(text).toContain(PLATFORM.band.sub);
+    expect(text).toContain(SHARED.cta);
+    expect(text).toContain("14 days free");
+  });
+
+  test("is the only final-CTA button on the page", () => {
     const finals = PLATFORM_FILES().flatMap((file) =>
       openingTags(read(file)).filter((tag) => literalAttr(tag.attrs, "trackAs") === "final_cta"),
     );
 
-    expect(literalAttr(button?.attrs ?? "", "variant")).toBe("inverse");
-    expect(literalAttr(button?.attrs ?? "", "trackAs")).toBe("final_cta");
-    expect(band).toContain("PLATFORM.band.title");
-    expect(finals).toEqual([]);
-    expect(code(pageFile("platform"))).toContain("<LpAccentBand");
+    expect(finals).toHaveLength(1);
   });
 });

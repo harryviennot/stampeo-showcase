@@ -1,12 +1,19 @@
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
+import { MARKETS } from "../markets";
+import { FALLBACK_PRICING } from "../pricing";
 import { loadCatalog } from "./catalogs";
 
 const MESSAGES = loadCatalog("en");
 
-/** Server-renders `node` under the English catalogs, as a page does; a missing message throws. */
-export function renderEn(node: ReactNode): string {
+/**
+ * Server-renders `node` under the English catalogs, as a page does; a missing
+ * message throws. `us` adds the US dollars and trial length, for what prints
+ * through `RegionText`.
+ */
+export function renderEn(node: ReactNode, { us = false }: { us?: boolean } = {}): string {
   return renderToStaticMarkup(
     <NextIntlClientProvider
       locale="en"
@@ -16,7 +23,17 @@ export function renderEn(node: ReactNode): string {
         throw error;
       }}
     >
-      {node}
+      {us ? (
+        <RegionPricingProvider
+          ladders={{ eur: FALLBACK_PRICING.eur, usd: FALLBACK_PRICING.usd }}
+          defaultCurrency="usd"
+          defaultTrialDays={MARKETS.us.trialDays}
+        >
+          {node}
+        </RegionPricingProvider>
+      ) : (
+        node
+      )}
     </NextIntlClientProvider>,
   );
 }

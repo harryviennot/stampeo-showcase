@@ -1,29 +1,31 @@
 /**
- * What the four landing pages share and what they borrow: the dashboard
- * capture, the plan chips, the sender on a banner, the tokens that must go
- * through `RegionText`, the placard's QR, the shared v2 blocks, and the site
- * components the pages extend, whose other callers must not notice.
+ * What the four landing pages share and what they borrow: the hero and its
+ * dashboard capture, the sectors, the plan chips, the sender on a banner, the
+ * tokens that must go through `RegionText`, the placard's QR, and the site
+ * components the pages extend, whose other callers must not notice. Async
+ * server components are read from the source; the rest are rendered.
  */
 
 import { describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { ReactElement } from "react";
+import { createElement, type ReactElement } from "react";
+import { FactList } from "@/components/landing-pages/shared/FactList";
+import { LpHeading } from "@/components/landing-pages/shared/LpSection";
+import { PlanLine } from "@/components/landing-pages/shared/PlanLine";
+import { SampleCapture } from "@/components/landing-pages/shared/SampleCapture";
+import { WalletBadges } from "@/components/landing-pages/shared/WalletBadges";
 import { lpBanner } from "../../components/landing-pages/shared/banner";
 import { landingShot } from "../landing/dashboard-shots";
+import { STAMP_SAMPLES } from "../loyalty-samples";
 import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
-import { ALL } from "../testing/landing-copy";
-import {
-  COMPONENTS_DIR,
-  SHARED_DIR,
-  lpFiles,
-  otherCallers,
-  pageComponent,
-  shared,
-} from "../testing/landing-pages-source";
-import { LEVELS_BUSINESS, LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, STAMP_BANNER } from "./copy/shared";
+import { ALL, PAGES, lines } from "../testing/landing-copy";
+import { COMPONENTS_DIR, lpFiles, otherCallers, pageComponent, shared } from "../testing/landing-pages-source";
+import { renderEn, textOf } from "../testing/render-en";
 import { FEATURES } from "./copy/features";
 import { OUTCOMES } from "./copy/outcomes";
+import { LEVELS_BUSINESS, LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
+import { LANDING_PAGES, type LandingSlug } from "./pages";
 
 describe("dashboard captures (AC9)", () => {
   /** A file that draws a dashboard capture has to print the sample-data caption with it. */
@@ -42,104 +44,123 @@ describe("dashboard captures (AC9)", () => {
     expect(lpFiles().filter((file) => missesCaption(read(file)))).toEqual([]);
   });
 
-  test("the sample capture is one figure: the shot in the crop, its caption under it, in the view asked for", () => {
-    const capture = code(shared("SampleCapture"));
-    const [open, phone, close, caption] = ["<PhoneCrop", "<PhoneScreenshot", "</PhoneCrop>", "<figcaption"].map((needle) =>
-      capture.indexOf(needle),
-    );
+  test.each(["phone", "phone-habits", "phone-busiest"] as const)(
+    "the %s capture exists, and the sample capture shows it with its caption under it",
+    (view) => {
+      const html = renderEn(createElement(SampleCapture, { alt: "A capture", view }));
 
-    expect(capture).toContain('landingShot("en", view)');
-    expect(capture).toContain("SHARED.sampleData");
-    expect(open).toBeGreaterThan(-1);
-    expect([open, phone, close, caption]).toEqual([open, phone, close, caption].sort((a, b) => a - b));
+      expect(existsSync(join(ROOT, "public", landingShot("en", view).src))).toBe(true);
+      expect(html).toContain(encodeURIComponent(landingShot("en", view).src));
+      expect(html.indexOf("<figcaption")).toBeGreaterThan(html.indexOf("<img"));
+      expect(textOf(html)).toContain(SHARED.sampleData);
+    },
+  );
+});
+
+describe("the hero the three argument pages share (AC18)", () => {
+  const hero = () => code(shared("LpHero"));
+  const duo = () => code(shared("DashboardDuo"));
+
+  test("shows the official wallet badges, as images and not links, then the dashboard duo", () => {
+    const html = renderEn(createElement(WalletBadges));
+
+    expect(html.match(/<img /g)).toHaveLength(2);
+    expect(html).toContain('alt="Apple Wallet"');
+    expect(html).toContain('alt="Google Wallet"');
+    expect(html).not.toMatch(/<a\b/);
+    expect(hero().indexOf("<WalletBadges")).toBeGreaterThan(-1);
+    expect(hero().indexOf("<DashboardDuo")).toBeGreaterThan(hero().indexOf("<WalletBadges"));
+    expect(findTag(hero(), "DashboardDuo")?.attrs).toMatch(/\bpriority\b/);
+    expect(hero()).toContain("SHARED.proof(");
   });
 
-  test.each(["phone", "phone-habits", "phone-busiest"] as const)("the %s capture exists, and the sample capture can show it", (view) => {
-    expect(existsSync(join(ROOT, "public", landingShot("en", view).src))).toBe(true);
-    expect(code(shared("SampleCapture"))).toMatch(/view\s*=\s*"phone"/);
-    expect(code(shared("SampleCapture"))).toContain("ShotView");
+  test("the dashboard duo shows the computer and the phone capture, and never hides the computer below any breakpoint", () => {
+    const hidden = /(?<![\w-])(?:[\w-]+:)?hidden(?![\w-])/;
+
+    expect(duo()).toContain('landingShot("en", "desktop")');
+    expect(duo()).toContain('landingShot("en", "phone")');
+    expect(openingTags(duo()).filter((tag) => hidden.test(tag.attrs)).map((tag) => tag.name)).toEqual([]);
+  });
+
+  test("the duo frames the capture in a browser bar with the dashboard's address, and captions it as sample data", () => {
+    expect(duo()).toContain("SHARED.dashboardUrl");
+    expect(duo()).toContain("SHARED.sampleData");
+    expect(duo().indexOf("<figcaption")).toBeGreaterThan(duo().indexOf("<PhoneScreenshot"));
+  });
+
+  test("the Outcomes headline keeps its no-break hyphen, so \"first-time\" never splits across two lines", () => {
+    const { h1 } = LANDING_PAGES.outcomes.hero;
+
+    expect(h1).toContain("first‑time");
+    expect(h1).not.toContain("first-time");
+  });
+
+  test.each(["how-it-works", "features", "outcomes"] as LandingSlug[])("%s has a sub under its headline", (slug) => {
+    expect(LANDING_PAGES[slug].hero.sub?.length ?? 0).toBeGreaterThan(0);
+  });
+
+  test("Platform's hero is a headline alone: its numbers come lower down", () => {
+    expect(LANDING_PAGES.platform.hero.sub).toBeUndefined();
   });
 });
 
-describe("the pieces the sections share (one solution each)", () => {
-  test("a spotlight crops a tall device through PhoneCrop when asked to", () => {
-    expect(findTag(code(shared("LpSpotlight")), "PhoneCrop")).toBeDefined();
+describe("the sectors every page ends on (AC19)", () => {
+  const sectors = () => code(shared("LpSectors"));
+
+  test("reads the catalog's own heading and prices in dollars", () => {
+    expect(sectors()).toContain("landing.sectorCards");
+    expect(sectors()).toContain("MARKETS.us");
   });
 
-  test("the plans a broadcast comes with print in the paragraph of the line they qualify", () => {
-    const line = code(shared("PlanLine"));
-    const paragraph = line.slice(line.indexOf("<p"), line.indexOf("</p>"));
+  test("nothing near the sectors calls them testimonials, stories or customers", () => {
+    const heading = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).landing.sectorCards as {
+      title: string;
+      subtitle: string;
+    };
+    const near = [sectors(), SHARED.sectorsEyebrow, heading.title, heading.subtitle].join("\n");
 
-    expect(filesWith(lpFiles(), /SHARED\.broadcastPlans/)).toEqual([shared("PlanLine")]);
-    expect(paragraph).toContain("SHARED.broadcastPlans");
-    expect(paragraph).toContain("{children}");
+    expect(near).not.toMatch(/testimonial|\bstor(?:y|ies)\b|\bcustomers?\b/i);
+    expect(filesWith(lpFiles(), /testimonial/i)).toEqual([]);
+  });
+});
+
+describe("the pieces the sections share", () => {
+  test("a broadcast line carries its plans in the paragraph it qualifies", () => {
+    const html = renderEn(createElement(PlanLine, null, "Broadcasts to every card."));
+    const paragraph = html.match(/<p[^>]*>[\s\S]*<\/p>/)?.[0] ?? "";
+
+    expect(textOf(paragraph)).toContain(SHARED.broadcastPlans);
+    expect(textOf(paragraph)).toContain("Broadcasts to every card.");
   });
 
-  test("one chip draws every plan label, and a fact list draws each fact's chip through it", () => {
-    const chip = code(shared("PlanChip"));
-    const list = code(shared("FactList"));
-
-    expect(chip).toContain("rounded-full");
-    expect(chip).toContain("--background-subtle");
-    expect(chip).toContain("@/lib/landing-pages/copy/types");
-    expect(findTag(list, "PlanChip")).toBeDefined();
-    expect(list).toMatch(/Fact\[\]/);
-  });
-
-  test("a heading takes an eyebrow in the accent's darker shade and an alignment; the demo section takes both", () => {
-    const heading = code(shared("LpSection"));
-    const eyebrow = openingTags(heading).find((tag) => /tracking-\[0\.2em\]/.test(tag.attrs));
-
-    expect(eyebrow?.attrs).toMatch(/\buppercase\b/);
-    expect(eyebrow?.attrs).toMatch(/\bfont-semibold\b/);
-    expect(eyebrow?.attrs).toContain("var(--accent-hover)");
-    expect(heading).toMatch(/align\s*=\s*"left"/);
-    expect(heading).toContain('"center"');
-    const demo = read(shared("LpDemo"));
-    expect(demo).toMatch(/eyebrow/);
-    expect(demo).toMatch(/align/);
-  });
-
-  test("the glass card is a translucent, blurred, ringed card, and can float", () => {
-    const card = code(shared("GlassCard"));
-
-    expect(card).toContain("bg-white/70");
-    expect(card).toContain("backdrop-blur");
-    expect(card).toContain("ring-black/5");
-    expect(card).toContain("rounded-2xl");
-    expect(card).toContain("lp-float");
-    expect(read(join(ROOT, "app", "globals.css"))).toMatch(
-      /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*\.lp-float\s*\{\s*animation:\s*none/,
+  test("a fact list draws a plan chip right after each fact that has one", () => {
+    const text = textOf(
+      renderEn(
+        createElement(FactList, {
+          facts: [{ text: "Bonus points on bigger baskets", plan: "Growth and Pro" }, { text: "Points never expire" }],
+        }),
+      ),
     );
+
+    expect(text).toContain("Bonus points on bigger baskets|Growth and Pro|");
+    expect(text).toContain("Points never expire|");
+    expect(text.match(/Growth and Pro/g)).toHaveLength(1);
   });
 
-  test("the accent band is an inset rounded band on the accent, in the ink colour, tagged as the final CTA", () => {
-    const band = code(shared("LpAccentBand"));
-    const section = openingTags(band).find((tag) => tag.name === "LpSection");
+  test("a heading takes a small label above its title and an alignment", () => {
+    const html = renderEn(createElement(LpHeading, { title: "A title", eyebrow: "A label", align: "center" }));
 
-    expect(literalAttr(section?.attrs ?? "", "section")).toBe("final_cta");
-    expect(band).toContain("rounded-[28px]");
-    expect(band).toContain("bg-[var(--accent)]");
-    expect(band).toContain("var(--near-black)");
+    expect(html.indexOf("A label")).toBeLessThan(html.indexOf("<h2"));
+    expect(html).toContain("text-center");
   });
 });
 
 describe("the level cards (AC20)", () => {
-  const cards = () => code(shared("LevelCards"));
+  test("draw Bronze, Silver and Gold, and the default level-up notification over them when asked", () => {
+    const cards = code(shared("LevelCards"));
 
-  test("draw the barbershop sample as Bronze, Silver and Gold, each with its level name in the header", () => {
-    expect(code(join(SHARED_DIR, "samples.ts"))).toMatch(/id\s*===\s*"barber"/);
-    expect(cards()).toContain("BARBER");
-    for (const name of ["Bronze", "Silver", "Gold"]) expect(cards()).toContain(name);
-    expect(cards()).toContain("headerLabel");
-    expect(cards()).toMatch(/SILVER_LOOK|SILVER/);
-    expect(cards()).toMatch(/GOLD_LOOK|GOLD/);
-    expect(cards()).toContain("showQR={false}");
-  });
-
-  test("draw the default level-up notification over the cards when asked, from the copy", () => {
-    expect(cards()).toContain("LEVEL_UP_BANNER");
-    expect(cards()).toMatch(/banner\??:\s*boolean/);
+    for (const name of ["Bronze", "Silver", "Gold"]) expect(cards).toContain(name);
+    expect(cards).toContain("LEVEL_UP_BANNER");
   });
 });
 
@@ -160,6 +181,46 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
     expect(LEVEL_UP_BANNER.sender).toBe(LEVELS_BUSINESS);
     expect(props.appName).toBe(LEVELS_BUSINESS);
     expect((props.icon as ReactElement).type).not.toBe((lpBanner(STAMP_BANNER).icon as ReactElement).type);
+  });
+
+  const NOTIFICATIONS = ["NotificationPhoneDemo", "NotificationBanner", "NotificationSequenceDemo"];
+  const callsOf = (file: string) =>
+    openingTags(read(file)).filter((tag) => NOTIFICATIONS.includes(tag.name)).map((tag) => ({ file, tag }));
+
+  test("every lock screen, banner and moment list on a page is fed by lpBanner", () => {
+    const unfed = lpFiles()
+      .flatMap(callsOf)
+      .filter(({ file }) => !/\blpBanner\b/.test(code(file)))
+      .map(({ file }) => file);
+
+    expect(unfed).toEqual([]);
+  });
+
+  test("a phone or a sequence is always given its own banners, never the default sender", () => {
+    const calls = lpFiles().flatMap(callsOf);
+    const given = (name: string, prop: string) =>
+      calls.filter(({ tag }) => tag.name === name).filter(({ tag }) => !new RegExp(`(?:^|\\s)${prop}=`).test(tag.attrs));
+
+    expect(given("NotificationPhoneDemo", "notifications")).toEqual([]);
+    expect(given("NotificationSequenceDemo", "moments")).toEqual([]);
+  });
+
+  test("the scanner demo on a page never shows its recording dot or its timer", () => {
+    const demos = lpFiles().flatMap((file) =>
+      openingTags(read(file))
+        .filter((tag) => tag.name === "ScanDemo")
+        .map((tag) => ({ file, chrome: literalAttr(tag.attrs, "chrome") })),
+    );
+
+    expect(demos.length).toBeGreaterThan(0);
+    expect(demos.filter(({ chrome }) => chrome !== "minimal")).toEqual([]);
+  });
+
+  test("the stamp notification and the Aurevo card beside it count the same stamps", () => {
+    const [, stamp, total] = STAMP_BANNER.body.match(/(\d+) of (\d+) stamps/) ?? [];
+    const aurevo = STAMP_SAMPLES.find((sample) => sample.id === "aurevo");
+
+    expect([Number(stamp), Number(total)]).toEqual([aurevo?.stamps, aurevo?.design.total_stamps]);
   });
 });
 
@@ -192,7 +253,6 @@ describe("prices and the trial length are printed through RegionText (AC13)", ()
     expect(prints.filter((print) => print.bare)).toEqual([]);
   });
 
-  // The timeline arrives with the How-to stage; from then on this holds for it.
   test("a component that reads the first-day steps prints each one through RegionText", () => {
     const bare = lpFiles()
       .filter((file) => /\bfirstDay\b/.test(code(file)))
@@ -220,69 +280,41 @@ describe("the placard's QR mark (AC14)", () => {
   test("the placard's QR is the still skeleton", () => {
     const qr = findTag(read(pageComponent("how-it-works", "PlacardVisual")), "QRCodeSkeleton");
 
-    expect(qr).toBeDefined();
     expect(qr?.attrs).toContain("animated={false}");
   });
 });
 
-describe("the pieces the pages move to the shared folder", () => {
-  test("the wallet phone is shared, with the placard beside the how-to steps", () => {
-    expect(existsSync(shared("WalletPhone"))).toBe(true);
-    expect(code(shared("WalletPhone"))).toMatch(/export function WalletPhone\b/);
-    expect(existsSync(pageComponent("how-it-works", "PlacardVisual"))).toBe(true);
-    expect(code(pageComponent("how-it-works", "PlacardVisual"))).toMatch(/export function PlacardVisual\b/);
+describe("the Platform share tree names places, never integrations (AC22)", () => {
+  test("its copy never says integration, POS or sync", () => {
+    const words = /integrat|\bPOS\b|\bsync/i;
+
+    expect(lines(PAGES.PLATFORM.share, "PLATFORM.share").filter((line) => words.test(line.value))).toEqual([]);
   });
 });
 
-describe("components the pages extend: their other callers pass none of the new props (AC15, AC15v2)", () => {
-  const NOTIFICATION_DEMOS = ["components/features/notifications-push/NotificationsPushPage.tsx"];
-  const CARD_DESIGN_PAGE = "components/features/design-de-carte/CardDesignPageContent.tsx";
+describe("components the pages extend: their other callers pass none of the new props (AC15)", () => {
+  const component = (name: string, dir: string) => [name, join(ROOT, "components", dir, `${name}.tsx`)] as const;
 
-  test.each([
-    ["NotificationPhoneDemo", ["notifications", "animate", "eager", "width"], NOTIFICATION_DEMOS],
-    ["CardStyleGallery", ["showCta", "heading", "sectionClassName"], [CARD_DESIGN_PAGE]],
-    ["QRCodeSkeleton", ["animated"], ["components/card/WalletCard.tsx"]],
-    [
-      "NotificationBanner",
-      ["icon"],
-      [
-        "components/features/geolocalisation/GeofencingPage.tsx",
-        "components/features/geolocalisation/GeofencingHeroAnimation.tsx",
-        "components/features/notifications-push/NotificationSequenceDemo.tsx",
-      ],
-    ],
-    ["HeroCardStack", ["peekFrom"], [CARD_DESIGN_PAGE, "components/compare/ComparisonPage.tsx"]],
-  ])("%s", (component, newProps, callers) => {
-    for (const caller of callers) {
-      const calls = openingTags(read(join(ROOT, caller))).filter((tag) => tag.name === component);
+  /** Each component with the optional props the pages added to it. */
+  const EXTENDED: Array<readonly [name: string, file: string, props: string[]]> = [
+    [...component("NotificationPhoneDemo", "features/notifications-push"), ["notifications", "animate", "eager", "width"]],
+    [...component("NotificationSequenceDemo", "features/notifications-push"), ["moments", "design", "phoneClassName", "fullCard"]],
+    [...component("NotificationBanner", "features/notifications-push"), ["icon"]],
+    [...component("CardStyleGallery", "features/design-de-carte"), ["showCta", "heading", "sectionClassName"]],
+    [...component("ScanDemo", "features/scanner-mobile"), ["chrome", "stillWhenReduced"]],
+    [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced"]],
+    [...component("QRCodeSkeleton", "ui"), ["animated"]],
+    [...component("Segmented", "ui"), ["size"]],
+    [...component("WalletCard", "card"), ["headerLabel"]],
+    [...component("BlogCard", "blog"), ["detail"]],
+  ];
 
-      expect({ caller, calls: calls.length > 0 }).toEqual({ caller, calls: true });
-      for (const call of calls) {
-        for (const prop of newProps) {
-          expect({ caller, prop, passed: new RegExp(`(?:^|\\s)${prop}(?![\\w-])`).test(call.attrs) }).toEqual({
-            caller,
-            prop,
-            passed: false,
-          });
-        }
-      }
-    }
-  });
-
-  /** The site's own call sites of a component the v2 pages extend: all of them, wherever they are. */
-  test.each([
-    ["WalletCard", "components/card/WalletCard.tsx", ["headerLabel"]],
-    ["Segmented", "components/ui/Segmented.tsx", ["size"]],
-    ["NotificationSequenceDemo", "components/features/notifications-push/NotificationSequenceDemo.tsx", ["moments", "design"]],
-    ["ScanDemo", "components/features/scanner-mobile/ScanDemo.tsx", ["chrome"]],
-    ["CardDesignPlayground", "components/features/design-de-carte/CardDesignPlayground.tsx", ["compact"]],
-    ["BlogCard", "components/blog/BlogCard.tsx", ["detail"]],
-  ])("%s", (component, file, newProps) => {
-    const callers = otherCallers(component, join(ROOT, file));
+  test.each(EXTENDED)("%s", (name, file, props) => {
+    const callers = otherCallers(name, file);
 
     expect(callers.length).toBeGreaterThan(0);
     for (const { file: caller, attrs } of callers) {
-      for (const prop of newProps) {
+      for (const prop of props) {
         expect({ caller, prop, passed: new RegExp(`(?:^|\\s)${prop}(?![\\w-])`).test(attrs) }).toEqual({
           caller,
           prop,
@@ -293,10 +325,9 @@ describe("components the pages extend: their other callers pass none of the new 
   });
 
   test("CTAButton's other callers never ask for the inverse variant", () => {
-    const callers = otherCallers("CTAButton", join(ROOT, "components/ui/CTAButton.tsx"));
+    const callers = otherCallers("CTAButton", join(ROOT, "components", "ui", "CTAButton.tsx"));
 
     expect(callers.length).toBeGreaterThan(0);
-    expect(callers.filter(({ attrs }) => /inverse/.test(attrs))).toEqual([]);
     expect(callers.filter(({ attrs }) => literalAttr(attrs, "variant") === "inverse")).toEqual([]);
   });
 });

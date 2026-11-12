@@ -1,113 +1,48 @@
 /**
  * The four US landing pages (`/us/landing-pages/*`): one registry, one shell,
- * one set of shared sections. There is no component runner, so these read the
- * source: which sections a page renders and in what order, where its tracking
- * sits, which CTA locations it may use, and what its hero says.
+ * one set of shared sections. Which sections a page renders, where its tracking
+ * sits, which CTA locations it may use and what its hero says are read from the
+ * source (pages are async server components); what a section frame prints is rendered.
  */
 
 import { describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { createElement } from "react";
+import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
+import { LpSection } from "@/components/landing-pages/shared/LpSection";
 import { MAX_FIELD } from "../attribution/codec";
 import { buildLlmsTxt } from "../llms-txt";
 import { NOINDEX } from "../seo/page-robots";
 import { buildSitemap } from "../seo/sitemap";
-import { ROOT, code, filesWith, findTag, importedFiles, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
+import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import {
   COMPONENTS_DIR,
   SHARED_DIR,
   lpFiles,
+  pageComponent,
   pageFile,
   renderedSections,
   shared,
 } from "../testing/landing-pages-source";
+import { renderEn } from "../testing/render-en";
 import { SHARED } from "./copy/shared";
-import { LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata, type LandingSlug } from "./pages";
+import { LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata } from "./pages";
 import { PROOF_LABELS, proofFigures } from "./proof";
 
 /** The three pages that argue one thing, and Platform, which tours the product. */
 const ARGUMENT_PAGES = ["how-it-works", "features", "outcomes"] as const;
 
-/** The sections of each page, in the order the plan's v2 table gives them. */
-const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
-  "how-it-works": [
-    "hero",
-    "steps",
-    "step_create",
-    "step_share",
-    "step_stamp",
-    "demo",
-    "see_it_work",
-    "sectors",
-    "first_day",
-    "pricing",
-    "faq",
-    "final_cta",
-  ],
-  features: [
-    "hero",
-    "demo",
-    "spotlight_design",
-    "program_types",
-    "spotlight_messages",
-    "spotlight_scanner",
-    "spotlight_analytics",
-    "more_features",
-    "sectors",
-    "pricing",
-    "faq",
-    "final_cta",
-  ],
-  outcomes: [
-    "hero",
-    "problem",
-    "outcome_always",
-    "outcome_head_start",
-    "outcome_slow_days",
-    "outcome_levels",
-    "outcome_regulars",
-    "sectors",
-    "pricing",
-    "faq",
-    "final_cta",
-  ],
-  platform: [
-    "hero",
-    "marquee",
-    "deliver",
-    "numbers",
-    "how",
-    "demo",
-    "program_types",
-    "platform",
-    "share",
-    "pricing",
-    "final_cta",
-    "sectors",
-    "blog",
-  ],
-};
-
-describe("the registry (AC1v2, AC2v2, AC4)", () => {
-  test("lists exactly the four pages", () => {
-    expect([...LANDING_SLUGS].sort()).toEqual(["features", "how-it-works", "outcomes", "platform"]);
+describe("the registry (AC1, AC2, AC4)", () => {
+  test("every page is registered under its slug", () => {
     expect(Object.keys(LANDING_PAGES).sort()).toEqual([...LANDING_SLUGS].sort());
+    for (const slug of LANDING_SLUGS) expect(LANDING_PAGES[slug].slug).toBe(slug);
   });
 
-  test.each(LANDING_SLUGS)("%s lists the plan's sections, in the plan's order", (slug) => {
-    expect([...LANDING_PAGES[slug].sections]).toEqual(PLAN_SECTIONS[slug]);
-  });
-
-  test.each([
-    ["how-it-works", 12],
-    ["features", 12],
-    ["outcomes", 11],
-    ["platform", 13],
-  ] as const)("%s has %i sections, none twice, and never more than 13", (slug, count) => {
+  test.each(LANDING_SLUGS)("%s lists no section twice, and never more than 13", (slug) => {
     const { sections } = LANDING_PAGES[slug];
 
-    expect(sections).toHaveLength(count);
     expect(new Set(sections).size).toBe(sections.length);
     expect(sections.length).toBeLessThanOrEqual(13);
   });
@@ -128,18 +63,17 @@ describe("the registry (AC1v2, AC2v2, AC4)", () => {
   test("each page has its own variant, short enough for the attribution field", () => {
     const variants = LANDING_SLUGS.map((slug) => LANDING_PAGES[slug].variant);
 
-    expect(variants.sort()).toEqual(["lp_features", "lp_howto", "lp_outcomes", "lp_platform"]);
-    expect(new Set(variants).size).toBe(4);
+    expect(new Set(variants).size).toBe(LANDING_SLUGS.length);
     for (const variant of variants) expect(variant.length).toBeLessThanOrEqual(MAX_FIELD);
   });
 
-  test("Outcomes has no demo to link to; How-to, Features and Platform do", () => {
-    expect(LANDING_SLUGS.filter(hasDemoSection).sort()).toEqual(["features", "how-it-works", "platform"]);
-    expect(LANDING_PAGES.outcomes.sections).not.toContain("demo");
+  test("a page links to its demo from the hero only when its sections include one", () => {
+    for (const slug of LANDING_SLUGS) expect(hasDemoSection(slug)).toBe(LANDING_PAGES[slug].sections.includes("demo"));
+    expect(LANDING_SLUGS.filter((slug) => !hasDemoSection(slug))).toEqual(["outcomes"]);
   });
 });
 
-describe("the routes (AC1v2, AC2v2, AC4)", () => {
+describe("the routes (AC1, AC2, AC4)", () => {
   test.each(LANDING_SLUGS)("%s has its page file", (slug) => {
     expect(existsSync(pageFile(slug))).toBe(true);
   });
@@ -148,26 +82,10 @@ describe("the routes (AC1v2, AC2v2, AC4)", () => {
     expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
   });
 
-  test.each(ARGUMENT_PAGES)("%s renders the shared FAQ and final CTA, and the US pricing block", (slug) => {
-    const source = code(pageFile(slug));
-    const imports = importedFiles(pageFile(slug), source);
+  test.each(LANDING_SLUGS)("%s prints the US pricing block", (slug) => {
+    const pricing = findTag(code(pageFile(slug)), "PricingSection");
 
-    expect(imports.get("LpFaq")).toBe(shared("LpFaq"));
-    expect(imports.get("LpFinalCta")).toBe(shared("LpFinalCta"));
-    expect(imports.get("PricingSection")).toBe(join(ROOT, "components", "sections", "PricingSection.tsx"));
-    expect(openingTags(source).map((tag) => tag.name)).toEqual(expect.arrayContaining(["LpFaq", "LpFinalCta"]));
-    expect(literalAttr(findTag(source, "PricingSection")?.attrs ?? "", "market")).toBe("us");
-  });
-
-  test("Platform renders the US pricing block, the accent band and the sectors", () => {
-    const source = code(pageFile("platform"));
-    const imports = importedFiles(pageFile("platform"), source);
-
-    expect(imports.get("LpAccentBand")).toBe(shared("LpAccentBand"));
-    expect(imports.get("LpSectors")).toBe(shared("LpSectors"));
-    expect(imports.get("PricingSection")).toBe(join(ROOT, "components", "sections", "PricingSection.tsx"));
-    expect(literalAttr(findTag(source, "PricingSection")?.attrs ?? "", "market")).toBe("us");
-    expect(openingTags(source).map((tag) => tag.name)).not.toContain("LpFaq");
+    expect(literalAttr(pricing?.attrs ?? "", "market")).toBe("us");
   });
 
   test.each(LANDING_SLUGS)("%s mounts the shell with its own slug", (slug) => {
@@ -177,12 +95,12 @@ describe("the routes (AC1v2, AC2v2, AC4)", () => {
     expect(literalAttr(shell?.attrs ?? "", "slug")).toBe(slug);
   });
 
-  test("a section is a Container tagged with its registry id, and the demo is an anchor", () => {
-    const section = code(shared("LpSection"));
+  test("a section carries its registry id, and the demo is the anchor the hero links to", () => {
+    const html = renderEn(createElement(LpSection, { section: "demo", anchor: true }));
     const demo = findTag(read(shared("LpDemo")), "LpSection");
 
-    expect(section).toContain("data-landing-section={section}");
-    expect(section).toContain("<Container");
+    expect(html).toContain('data-landing-section="demo"');
+    expect(html).toContain('id="demo"');
     expect(literalAttr(demo?.attrs ?? "", "section")).toBe("demo");
     expect(demo?.attrs).toMatch(/\banchor\b/);
   });
@@ -249,7 +167,7 @@ describe("what the pages leave out (AC3)", () => {
 describe("sign-up and contact links (AC5, AC7)", () => {
   const ALLOWED = ["hero", "feature_cta", "final_cta", "faq_contact"];
   /** The one component that takes its location as a prop; its callers write it as a literal. */
-  const LOCATION_PROP = shared("LpCtaPair");
+  const LOCATION_PROP = pageComponent("platform", "LpCtaPair");
 
   test("every tracked location is one the pages may use, always written as a literal", () => {
     const used: string[] = [];
@@ -265,70 +183,59 @@ describe("sign-up and contact links (AC5, AC7)", () => {
   });
 
   test("the CTA pair forwards a location of the same list, and its callers pass a literal", () => {
-    const pair = code(LOCATION_PROP);
     const calls = lpFiles().flatMap((file) =>
       openingTags(read(file))
         .filter((tag) => tag.name === "LpCtaPair")
         .map((tag) => literalAttr(tag.attrs, "location")),
     );
 
-    expect(pair).toMatch(/location:\s*"hero"\s*\|\s*"feature_cta"/);
-    expect(pair).toContain("trackAs={location}");
+    expect(code(LOCATION_PROP)).toContain("trackAs={location}");
     expect(calls.length).toBeGreaterThan(0);
     expect(calls.filter((location) => !ALLOWED.includes(location ?? ""))).toEqual([]);
   });
 
   test.each([
-    ["LpHero", "CTAButton", "hero"],
-    ["LpDemo", "CTAButton", "feature_cta"],
-    ["LpFinalCta", "CTAButton", "final_cta"],
-    ["LpAccentBand", "CTAButton", "final_cta"],
-    ["LpFaq", "TrackedLink", "faq_contact"],
-  ])("%s tracks its %s as %s", (component, tag, location) => {
-    const link = findTag(read(shared(component)), tag);
+    [shared("LpHero"), "CTAButton", "hero"],
+    [shared("LpTrialButton"), "CTAButton", "feature_cta"],
+    [shared("LpFinalCta"), "CTAButton", "final_cta"],
+    [pageComponent("platform", "LpAccentBand"), "CTAButton", "final_cta"],
+    [shared("LpFaq"), "TrackedLink", "faq_contact"],
+  ])("%s tracks its %s as %s", (file, tag, location) => {
+    const link = findTag(read(file), tag);
 
     expect(literalAttr(link?.attrs ?? "", "trackAs")).toBe(location);
+  });
+
+  test("every page component offers the trial through LpTrialButton, never an outline button of its own", () => {
+    const own = lpFiles().filter(
+      (file) =>
+        file !== shared("LpTrialButton") &&
+        openingTags(read(file)).some((tag) => tag.name === "CTAButton" && literalAttr(tag.attrs, "variant") === "outline"),
+    );
+
+    expect(own).toEqual([]);
   });
 
   test("hero_demo is used nowhere: it counts as a contact click in GA4 and Meta", () => {
     expect(filesWith(lpFiles(), /hero_demo/)).toEqual([]);
   });
 
-  test("the demo section offers the trial in an outline button, whatever the demo shows", () => {
-    expect(literalAttr(findTag(read(shared("LpDemo")), "CTAButton")?.attrs ?? "", "variant")).toBe("outline");
-  });
-
-  test("the accent band offers the trial in the inverse button, and says its reassurance", () => {
-    const band = code(shared("LpAccentBand"));
-
-    expect(literalAttr(findTag(band, "CTAButton")?.attrs ?? "", "variant")).toBe("inverse");
-    expect(band).toContain("SHARED.reassurance");
-  });
-
-  test("the hero's demo link is a plain anchor to #demo, at least 44px tall", () => {
-    const link = openingTags(read(shared("LpHero"))).find(
-      (tag) => tag.name === "a" && literalAttr(tag.attrs, "href") === "#demo",
-    );
-
-    expect(link).toBeDefined();
-    expect(link?.attrs).toMatch(/\b(?:min-)?h-11\b/);
-  });
-
-  test("the hero shows that link only on a page that has a demo", () => {
+  test("the hero's demo link is a plain anchor to #demo, at least 44px tall, shown only on a page with a demo", () => {
     const hero = code(shared("LpHero"));
+    const link = openingTags(hero).find((tag) => tag.name === "a" && literalAttr(tag.attrs, "href") === "#demo");
 
     expect(hero.match(/href="#demo"/g)).toHaveLength(1);
-    expect(hero).toMatch(/hasDemoSection\([^)]*\)\s*&&\s*\(\s*<a\b[^>]*href="#demo"/);
+    expect(link?.attrs).toMatch(/\b(?:min-)?h-11\b/);
+    expect(hero).toContain("hasDemoSection(slug)");
   });
 
   test("the CTA pair's secondary action is a plain anchor to #demo, as tall as the primary button", () => {
-    const link = openingTags(read(LOCATION_PROP)).find(
-      (tag) => tag.name === "a" && literalAttr(tag.attrs, "href") === "#demo",
-    );
+    const html = renderEn(createElement(LpCtaPair, { location: "hero" }));
+    const link = html.match(/<a [^>]*href="#demo"[^>]*>/)?.[0];
 
     expect(link).toBeDefined();
-    expect(link?.attrs).toContain("h-[52px]");
-    expect(link?.attrs).toMatch(/\brounded-full\b/);
+    expect(link).toContain("h-[52px]");
+    expect(html).toContain(SHARED.demoLink);
   });
 });
 

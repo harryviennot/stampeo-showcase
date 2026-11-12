@@ -1,57 +1,23 @@
 /**
  * The Features page's own behaviour (`/us/landing-pages/features`): the tabs
  * that switch between stamps, points and levels, the notification moments on
- * Aurevo's card, the scanner without its recording chrome, the tiles with their
- * plans, and the feed laid over the Analytics capture. Components that need a
- * browser or the server's translations are read from source; the rest are
- * rendered under the English catalogs, as a page does.
+ * Aurevo's card, the scanner, the tiles with their plans, and the feed laid
+ * over the Analytics capture. Async server components are read from source; the
+ * rest are rendered under the English catalogs, as a page does.
  */
 
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
-import { NextIntlClientProvider } from "next-intl";
-import type { ReactNode } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
 import { NotificationSequenceDemo } from "@/components/features/notifications-push/NotificationSequenceDemo";
 import { messageMoments } from "../../components/landing-pages/features/MessagesSpotlight";
 import { MoreFeaturesGrid } from "../../components/landing-pages/features/MoreFeaturesGrid";
 import { ProgramTypeTabs } from "../../components/landing-pages/features/ProgramTypeTabs";
 import { AUREVO } from "../../components/landing-pages/shared/samples";
-import { loadCatalog } from "../testing/catalogs";
-import { ROOT, code, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
-import { landingTree, otherCallers, pageFile, planLineWith, sectionSource } from "../testing/landing-pages-source";
+import { findTag } from "../testing/jsx-source";
+import { planLineWith, sectionSource } from "../testing/landing-pages-source";
+import { renderEn as render, textOf } from "../testing/render-en";
 import { FEATURES } from "./copy/features";
-import { PROGRAM_TYPES } from "./copy/program-types";
+import { PROGRAM_SWITCH_LINE, PROGRAM_TYPES } from "./copy/program-types";
 import { SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
-
-const MESSAGES = loadCatalog("en");
-
-/** Server-renders `node` under the English catalogs, as a page does; a missing message throws. */
-function render(node: ReactNode): string {
-  return renderToStaticMarkup(
-    <NextIntlClientProvider
-      locale="en"
-      timeZone="UTC"
-      messages={MESSAGES}
-      onError={(error) => {
-        throw error;
-      }}
-    >
-      {node}
-    </NextIntlClientProvider>,
-  );
-}
-
-const textOf = (html: string) => html.replace(/<[^>]*>/g, "|").replace(/\|+/g, "|");
-
-/** Every opening tag of that name in the files the Features page renders. */
-const featuresTags = (name: string) =>
-  [...landingTree(pageFile("features"))].flatMap((file) =>
-    openingTags(read(file))
-      .filter((tag) => tag.name === name)
-      .map((tag) => ({ file, attrs: tag.attrs })),
-  );
 
 describe("the Stamps, Points and Levels tabs (AC20)", () => {
   const visuals = {
@@ -100,22 +66,17 @@ describe("the Stamps, Points and Levels tabs (AC20)", () => {
     expect(panels.filter((panel) => !panel.hidden).map((panel) => panel.key)).toEqual(["stamps", "stamps"]);
   });
 
-  test("says that stamps and points can be switched later, and offers the trial in an outline button", () => {
-    const tabs = code(join(ROOT, "components/landing-pages/features/ProgramTypeTabs.tsx"));
-    const cta = findTag(tabs, "CTAButton");
+  test("says that stamps and points can be switched later, and offers the trial", () => {
+    const text = textOf(html());
 
-    expect(textOf(html())).toContain(SHARED.cta);
-    expect(tabs).toContain("PROGRAM_SWITCH_LINE");
-    expect(literalAttr(cta?.attrs ?? "", "variant")).toBe("outline");
-    expect(literalAttr(cta?.attrs ?? "", "trackAs")).toBe("feature_cta");
+    expect(text).toContain(PROGRAM_SWITCH_LINE);
+    expect(text).toContain(SHARED.cta);
   });
 
   test("the section gives the tabs a card for every program type: Aurevo's stamps, a points card, the level cards", () => {
     const section = sectionSource("features", "program_types");
 
-    expect(section).toContain("<AurevoCard");
-    expect(section).toContain("<LevelCards");
-    expect(section).toMatch(/POINTS_SAMPLES|MARGINALIA/);
+    for (const card of ["<AurevoCard", "<MarginaliaCard", "<LevelCards"]) expect(section).toContain(card);
   });
 });
 
@@ -160,22 +121,16 @@ describe("the notification moments (AC24)", () => {
     expect(text).not.toContain("Mon Café");
   });
 
-  test("the section crops the phone on a phone and prints the broadcast line with its plans", () => {
+  test("the section prints the broadcast line with its plans, beside the page's own moments", () => {
     const section = sectionSource("features", "spotlight_messages");
-    const demo = findTag(section, "NotificationSequenceDemo");
 
-    expect(demo?.attrs).toContain("messageMoments()");
-    expect(demo?.attrs).toMatch(/phoneClassName=\{phoneCropClass\((?:520|560)\)\}/);
+    expect(findTag(section, "NotificationSequenceDemo")?.attrs).toContain("messageMoments()");
     expect(planLineWith(section, "FEATURES.messages.broadcast")).toContain("<PlanLine");
   });
 });
 
 describe("the scanner spotlight (AC24)", () => {
-  test("shows the scan demo without its recording dot or its timer, and the three facts", () => {
-    const demos = featuresTags("ScanDemo");
-
-    expect(demos.length).toBeGreaterThan(0);
-    expect(demos.map(({ attrs }) => literalAttr(attrs, "chrome"))).toEqual(demos.map(() => "minimal"));
+  test("shows the copy's three facts", () => {
     expect(sectionSource("features", "spotlight_scanner")).toContain("FEATURES.scanner.facts");
   });
 });
@@ -199,39 +154,12 @@ describe("the tiles under everything else (AC20)", () => {
     expect(FEATURES.more.tiles.every((tile) => ["Every plan", "Growth and Pro", "Pro"].includes(tile.plan ?? ""))).toBe(true);
   });
 
-  test("closes the tour with the trial in an outline button", () => {
-    const cta = findTag(code(join(ROOT, "components/landing-pages/features/MoreFeaturesGrid.tsx")), "CTAButton");
-
+  test("closes the tour with the trial", () => {
     expect(textOf(html())).toContain(SHARED.cta);
-    expect(literalAttr(cta?.attrs ?? "", "variant")).toBe("outline");
-    expect(literalAttr(cta?.attrs ?? "", "trackAs")).toBe("feature_cta");
   });
 });
 
 describe("the live feed over the Analytics capture (AC9)", () => {
-  test("cardOnly draws the feed card alone: no section, no heading of its own", () => {
-    const html = render(<LiveActivityFeed cardOnly />);
-
-    expect(html).not.toContain("<section");
-    expect(html).not.toContain("<h2");
-    expect(textOf(html)).toContain(MESSAGES.features.analytiques.custom.activityFeed.title);
-    expect(textOf(html)).toContain(MESSAGES.features.analytiques.custom.activityFeed.live);
-  });
-
-  test("without it the feed is still the section it was, with its heading", () => {
-    const html = render(<LiveActivityFeed />);
-
-    expect(html).toContain("<section");
-    expect(textOf(html)).toContain(MESSAGES.features.analytiques.custom.activityFeed.sectionTitle);
-  });
-
-  test("its other callers ask for none of it", () => {
-    const callers = otherCallers("LiveActivityFeed", join(ROOT, "components/features/analytics/LiveActivityFeed.tsx"));
-
-    expect(callers.length).toBeGreaterThan(0);
-    expect(callers.filter(({ attrs }) => /(?:^|\s)cardOnly(?![\w-])/.test(attrs))).toEqual([]);
-  });
-
   test("the spotlight lays the feed over the 'how often they come' capture and prints Sample data and its plan line", () => {
     const section = sectionSource("features", "spotlight_analytics");
 

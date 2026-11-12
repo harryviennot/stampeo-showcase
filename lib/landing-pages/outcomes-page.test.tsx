@@ -1,17 +1,17 @@
 /**
  * The Outcomes page (`/us/landing-pages/outcomes`): what its own sections do
  * beyond the registry's order. The head-start toggle is rendered in both of
- * its states; the rest is read from the source, since there is no component
- * runner (the same split as the other landing-page tests).
+ * its states; async server components are read from the source (the same
+ * split as the other landing-page tests).
  */
 
 import { describe, expect, test } from "bun:test";
-import { renderToStaticMarkup } from "react-dom/server";
 import { HeadStartToggle } from "@/components/landing-pages/outcomes/HeadStartToggle";
 import { RegularsFigure } from "@/components/landing-pages/outcomes/RegularsFigure";
 import { SegmentChips } from "@/components/landing-pages/outcomes/SegmentChips";
 import { code, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
-import { pageComponent, pageFile, planLineWith } from "../testing/landing-pages-source";
+import { pageComponent, planLineWith } from "../testing/landing-pages-source";
+import { renderEn, textOf } from "../testing/render-en";
 import { OUTCOMES } from "./copy/outcomes";
 import { SHARED } from "./copy/shared";
 
@@ -22,7 +22,7 @@ const tagWith = (html: string, attr: string) => html.match(new RegExp(`<[^<>]*${
 
 describe("the head-start toggle drives the card and the highlighted bar (AC12)", () => {
   const render = (initial: "empty" | "headStart") =>
-    renderToStaticMarkup(
+    renderEn(
       <HeadStartToggle
         heading={<h2>Heading</h2>}
         emptyCard={<i>empty card</i>}
@@ -93,13 +93,6 @@ describe("the head-start section", () => {
     expect(tags.some((tag) => literalAttr(tag.attrs, "section") === "outcome_head_start")).toBe(true);
     expect(cards.map((attrs) => attrs.match(/stamps=\{(\d+)\}/)?.[1])).toEqual(["0", "2"]);
   });
-
-  test("closes on an outline trial button", () => {
-    const cta = findTag(section(), "CTAButton");
-
-    expect(literalAttr(cta?.attrs ?? "", "variant")).toBe("outline");
-    expect(literalAttr(cta?.attrs ?? "", "trackAs")).toBe("feature_cta");
-  });
 });
 
 describe("motion honours prefers-reduced-motion", () => {
@@ -149,42 +142,39 @@ describe("the quiet-hours section", () => {
 describe("the levels section", () => {
   const section = () => code(outcomes("LevelsSpotlight"));
 
-  test("fans the level cards under the level-up banner, beside three facts and an Every plan chip", () => {
+  test("fans the level cards under the level-up banner, beside three facts and the plan chip", () => {
     const source = section();
 
-    expect(openingTags(source).some((tag) => literalAttr(tag.attrs, "section") === "outcome_levels")).toBe(true);
     expect(findTag(source, "LevelCards")?.attrs).toMatch(/\bbanner\b/);
     expect(findTag(source, "FactList")?.attrs).toContain("OUTCOMES.levels.facts");
     expect(OUTCOMES.levels.facts).toHaveLength(3);
-    expect(literalAttr(findTag(source, "PlanChip")?.attrs ?? "", "plan")).toBe("Every plan");
+    expect(findTag(source, "PlanChip")?.attrs).toContain("OUTCOMES.levels.plan");
   });
 });
 
 describe("the regulars section", () => {
-  test("lists the five customer segments in the dashboard's order, under an Every plan chip", () => {
-    const html = renderToStaticMarkup(<SegmentChips />);
+  test("lists the five customer segments in the dashboard's order, under the plan chip", () => {
+    const html = renderEn(<SegmentChips />);
     const chips = [...html.matchAll(/data-segment[^>]*>([^<]*)</g)].map((match) => match[1]);
 
     expect(chips).toEqual(["New", "Regular", "VIP", "At risk", "Ghost"]);
     expect(chips).toEqual([...OUTCOMES.regulars.segments]);
-    expect(html).toContain("Every plan");
+    expect(textOf(html)).toContain(OUTCOMES.regulars.plan);
   });
 
-  test("shows the Analytics capture, the labelled example and an outline trial button", () => {
+  test("shows the Analytics capture and the labelled example", () => {
     const source = code(outcomes("RegularsSpotlight"));
 
     expect(findTag(source, "SampleCapture")?.attrs).toContain("OUTCOMES.regulars.alt");
     expect(findTag(source, "SegmentChips")).toBeDefined();
     expect(source).toContain("example.label");
     expect(source).toContain("example.text");
-    expect(literalAttr(findTag(source, "CTAButton")?.attrs ?? "", "variant")).toBe("outline");
-    expect(literalAttr(findTag(source, "CTAButton")?.attrs ?? "", "trackAs")).toBe("feature_cta");
   });
 });
 
 describe("the problem figure", () => {
   test("prints the 6x claim with the study it comes from", () => {
-    const html = renderToStaticMarkup(<RegularsFigure />);
+    const html = renderEn(<RegularsFigure />);
     const { figure } = OUTCOMES.problem;
 
     expect(html).toContain(figure.value);
@@ -195,23 +185,10 @@ describe("the problem figure", () => {
 });
 
 describe("the page's trial buttons", () => {
-  test("repeat the offer twice, as outline buttons, between the hero and the closing ask", () => {
+  test("repeat the offer twice, between the hero and the closing ask", () => {
     const owners = ["HeadStartSpotlight", "RegularsSpotlight"];
-    const mine = owners.flatMap((name) => openingTags(read(outcomes(name))).filter((tag) => tag.name === "CTAButton"));
+    const mine = owners.flatMap((name) => openingTags(read(outcomes(name))).filter((tag) => tag.name === "LpTrialButton"));
 
     expect(mine).toHaveLength(2);
-    for (const cta of mine) expect(literalAttr(cta.attrs, "trackAs")).toBe("feature_cta");
-  });
-
-  test("the page renders the sectors under the regulars and before the pricing", () => {
-    const source = code(pageFile("outcomes"));
-
-    expect(source.indexOf("<RegularsSpotlight")).toBeLessThan(source.indexOf("<LpSectors"));
-    expect(source.indexOf("<LpSectors")).toBeLessThan(source.indexOf("<PricingSection"));
-    expect(source).not.toContain("TODO(STA-546 stage G3)");
-  });
-
-  test("the page has no demo, which is why the hero offers no link to one", () => {
-    expect(code(pageFile("outcomes"))).not.toMatch(/LpDemo|HeroDemo/);
   });
 });

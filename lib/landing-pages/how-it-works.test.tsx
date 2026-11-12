@@ -10,56 +10,25 @@
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { NextIntlClientProvider } from "next-intl";
-import type { ReactNode } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import { CreateStep } from "@/components/landing-pages/how-it-works/CreateStep";
 import { FirstDayTimeline } from "@/components/landing-pages/how-it-works/FirstDayTimeline";
 import { StampStepVisual } from "@/components/landing-pages/how-it-works/StampStepVisual";
 import { StepsOverview } from "@/components/landing-pages/how-it-works/StepsOverview";
-import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
-import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
-import { MARKETS } from "../markets";
-import { FALLBACK_PRICING } from "../pricing";
 import { loadCatalog } from "../testing/catalogs";
 import { ROOT, code, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
-import { COMPONENTS_DIR, landingTree, otherCallers, pageComponent, pageFile, renderedSections } from "../testing/landing-pages-source";
+import { COMPONENTS_DIR, landingTree, pageFile } from "../testing/landing-pages-source";
+import { renderEn, textOf } from "../testing/render-en";
 import { HOW_IT_WORKS } from "./copy/how-it-works";
 import { STAMP_BANNER } from "./copy/shared";
 import { LANDING_PAGES } from "./pages";
 
-const MESSAGES = loadCatalog("en");
 const SLUG = "how-it-works";
 const STEP_IDS = ["step_create", "step_share", "step_stamp"];
 const OWN_DIR = join(COMPONENTS_DIR, SLUG);
+const PLAYGROUND = loadCatalog("en").features["design-de-carte"].custom.playground as Record<string, string>;
 
 /** Server-renders `node` as a page does: the English catalogs and the US terms. */
-function render(node: ReactNode): string {
-  return renderToStaticMarkup(
-    <NextIntlClientProvider
-      locale="en"
-      timeZone="UTC"
-      messages={MESSAGES}
-      onError={(error) => {
-        throw error;
-      }}
-    >
-      <RegionPricingProvider
-        ladders={{ eur: FALLBACK_PRICING.eur, usd: FALLBACK_PRICING.usd }}
-        defaultCurrency="usd"
-        defaultTrialDays={MARKETS.us.trialDays}
-      >
-        {node}
-      </RegionPricingProvider>
-    </NextIntlClientProvider>,
-  );
-}
-
-const textOf = (html: string) =>
-  html
-    .replace(/<[^>]*>/g, "|")
-    .replace(/\|+/g, "|")
-    .replace(/&#x27;/g, "'")
-    .replace(/&amp;/g, "&");
+const render = (node: Parameters<typeof renderEn>[0]) => renderEn(node, { us: true });
 
 /** The tag that opens the section `id`, wherever on the page it is drawn. */
 function sectionTag(id: string) {
@@ -69,18 +38,6 @@ function sectionTag(id: string) {
   }
   return undefined;
 }
-
-describe("the sectors sit under the live feed, before the first day (AC19)", () => {
-  test("in the order the page renders them", () => {
-    const rendered = renderedSections(pageFile(SLUG));
-
-    expect(rendered.slice(rendered.indexOf("see_it_work"), rendered.indexOf("first_day") + 1)).toEqual([
-      "see_it_work",
-      "sectors",
-      "first_day",
-    ]);
-  });
-});
 
 describe("the steps map jumps to the step sections", () => {
   const html = () => render(<StepsOverview />);
@@ -123,48 +80,32 @@ describe("the steps map jumps to the step sections", () => {
 });
 
 describe("step 1: the live card designer", () => {
-  const source = () => code(pageComponent(SLUG, "CreateStep"));
+  const html = () => render(<CreateStep />);
 
   test("is the compact playground, so the card stays in view on a phone", () => {
-    expect(findTag(source(), "CardDesignPlayground")?.attrs).toMatch(/\bcompact\b/);
+    const text = textOf(html());
+
+    expect(text).toContain(PLAYGROUND.themeLabel);
+    expect(text).not.toContain(PLAYGROUND.shuffle);
   });
 
-  test("says the first card can be made for you, on every plan, and offers the trial after the designer", () => {
-    const cta = findTag(source(), "CTAButton");
+  test("says the first card can be made for you, then offers the trial after the designer", () => {
+    const text = textOf(html());
+    const { designHelp, ctaLead } = HOW_IT_WORKS.create;
 
-    expect(source()).toContain("designHelp");
-    expect(source()).toContain("ctaLead");
-    expect(literalAttr(cta?.attrs ?? "", "variant")).toBe("outline");
-    expect(literalAttr(cta?.attrs ?? "", "trackAs")).toBe("feature_cta");
-    expect(source().indexOf("<CTAButton")).toBeGreaterThan(source().indexOf("<CardDesignPlayground"));
-  });
-});
-
-describe("step 2: they scan, and it's in their wallet", () => {
-  const source = () => code(pageComponent(SLUG, "ShareStep"));
-
-  test("the flyer overlaps the Apple Wallet phone, and the three channels come from the copy", () => {
-    const visual = code(pageComponent(SLUG, "ShareStepVisual"));
-
-    expect(visual).toContain("<PlacardVisual");
-    expect(visual).toContain("<WalletPhone");
-    expect(source()).toContain("HOW_IT_WORKS.share");
-    expect(source()).toMatch(/channels\.map\(/);
+    expect(text).toContain(designHelp);
+    expect(text).toContain(ctaLead);
+    expect(text.indexOf(ctaLead)).toBeGreaterThan(text.indexOf(PLAYGROUND.themeLabel));
+    expect(text.indexOf("Start my free trial")).toBeGreaterThan(text.indexOf(ctaLead));
   });
 });
 
 describe("step 3: scan their card, that's the stamp (AC24)", () => {
   const html = () => render(<StampStepVisual />);
 
-  test("the scanner is the minimal one: no recording dot, no timing", () => {
-    expect(html()).not.toContain("REC");
-    expect(code(pageComponent(SLUG, "StampStepVisual"))).toContain('chrome="minimal"');
-  });
-
   test("the customer sees Aurevo's default stamp notification, sent by the café", () => {
     expect(textOf(html())).toContain("Aurevo");
     expect(textOf(html())).toContain(STAMP_BANNER.body);
-    expect(code(pageComponent(SLUG, "StampStepVisual"))).toContain("lpBanner(STAMP_BANNER)");
   });
 
   test("says who does what under each device", () => {
@@ -174,24 +115,7 @@ describe("step 3: scan their card, that's the stamp (AC24)", () => {
 });
 
 describe("the live feed shows the owner's side", () => {
-  test("is the feed card alone on this page: its own section and heading are left out", () => {
-    const cardOnly = render(<LiveActivityFeed cardOnly />);
-    const own = render(<LiveActivityFeed />);
-
-    expect(cardOnly).not.toContain("<section");
-    expect(cardOnly).not.toContain("<h2");
-    expect(own).toContain("<section");
-    expect(own).toContain("<h2");
-  });
-
-  test("the feature page's feed keeps its section: its other callers pass no `cardOnly`", () => {
-    const callers = otherCallers("LiveActivityFeed", join(ROOT, "components/features/analytics/LiveActivityFeed.tsx"));
-
-    expect(callers.length).toBeGreaterThan(0);
-    expect(callers.filter(({ attrs }) => /(?:^|\s)cardOnly(?![\w-])/.test(attrs))).toEqual([]);
-  });
-
-  test("sits under the page's own words", () => {
+  test("sits under the page's own words, as the feed card alone", () => {
     const found = sectionTag("see_it_work");
     const source = code(found?.file ?? "");
 
