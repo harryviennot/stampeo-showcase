@@ -71,3 +71,19 @@ or `stage-c/`, LOOKED AT and fixed; also screenshot `/features/notifications-pus
 `/features/card-design` once at 390 to confirm the extended components still render as before (AC15).
 Build once at the end with dev stopped. Restore `AGENTS.md`. Commit on your branch, no trailer. Report:
 files and diff stat, tests, checks, shots and what you fixed, deviations, any new optional prop.
+
+## Conventions Stage A set (follow them)
+
+- Every section is `<LpSection section="<id>">` or a component forwarding a literal `section="<id>"`
+  (e.g. `<LpSpotlight section="spotlight_messages">`); pricing is `<LpSection section="pricing" bare>`.
+  The order test follows the page's JSX and its imported `components/landing-pages/**` files in
+  document order, so new section components must use this pattern or the test can't see them.
+- Delete your page's entry from the `STAGED` map in `pages.test.ts` to arm its section-order test.
+- Cards: `AurevoCard` (`components/landing-pages/shared/AurevoCard.tsx`, any `width`, laid out at 300
+  and scaled, QR included). Banners: always `<NotificationBanner {...lpBanner(banner)} />` with
+  `lpBanner` from `components/landing-pages/shared/banner.tsx` (sender name + Aurevo cup icon), and
+  `NotificationPhoneDemo notifications={banners.map(lpBanner)}`.
+- `tinted` on `LpSection` is the `--blog-bg` band; at most one per page.
+- Headings come from `LpHeading` (balanced h2, pretty lead). Don't hand-roll an h2.
+- The How-to desktop hero shows the phone with a lot of empty Wallet screen under the card: known,
+  left for the polish pass. Don't copy that composition for your hero; follow the brief's visual.
