@@ -98,7 +98,6 @@ const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
  * A stage deletes its page's entry to arm the full section-order test.
  */
 const STAGED: Partial<Record<LandingSlug, string>> = {
-  "how-it-works": "stage G1",
   features: "stage G2",
   outcomes: "stage G3",
   platform: "stage G4",
