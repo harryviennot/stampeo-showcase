@@ -1,5 +1,5 @@
-import { join } from "node:path";
-import { LANDING_SLUGS, type LandingSlug } from "../landing-pages/pages";
+import { join, sep } from "node:path";
+import { ALL_LANDING_SLUGS, PREVIEW_SLUGS, type LandingSlug } from "../landing-pages/pages";
 import { ROOT, code, importedFiles, literalAttr, openingTags, read, sourceFiles } from "./jsx-source";
 
 /**
@@ -13,8 +13,18 @@ export const SITE_SOURCE_DIRS = [join(ROOT, "components"), join(ROOT, "app")];
 export const PAGES_DIR = join(ROOT, "app", "[locale]", "us", "landing-pages");
 export const COMPONENTS_DIR = join(ROOT, "components", "landing-pages");
 export const SHARED_DIR = join(COMPONENTS_DIR, "shared");
+/** The code only the five feature previews use; the pieces they share with Platform are in `platform/` and `shared/`. */
+export const PREVIEWS_DIR = join(COMPONENTS_DIR, "feature-previews");
 
 export const pageFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx");
+
+/** A file of one of the five feature previews: its page, or a component of `feature-previews/`. */
+export const isPreviewFile = (file: string) =>
+  file.startsWith(PREVIEWS_DIR + sep) || PREVIEW_SLUGS.some((slug) => file === pageFile(slug));
+
+/** A file of a Platform-style page: Platform's own page and components, or a preview's. */
+export const isPlatformStyleFile = (file: string) =>
+  file === pageFile("platform") || file.startsWith(join(COMPONENTS_DIR, "platform") + sep) || isPreviewFile(file);
 
 /** A component of `components/landing-pages/shared/`. */
 export const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
@@ -22,8 +32,8 @@ export const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
 /** A component of a page's own folder, `components/landing-pages/<folder>/`. */
 export const pageComponent = (folder: string, name: string) => join(COMPONENTS_DIR, folder, `${name}.tsx`);
 
-/** Every component of the pages, and the page files. */
-export const lpFiles = () => [...sourceFiles(COMPONENTS_DIR), ...LANDING_SLUGS.map(pageFile)];
+/** Every component of the pages, and the page files (the four pages and the five previews). */
+export const lpFiles = () => [...sourceFiles(COMPONENTS_DIR), ...ALL_LANDING_SLUGS.map(pageFile)];
 
 /** Every file the page renders through `components/landing-pages/`, itself included. */
 export function landingTree(file: string, seen = new Set<string>()): Set<string> {

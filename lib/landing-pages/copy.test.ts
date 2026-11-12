@@ -10,8 +10,15 @@
 
 import { describe, expect, test } from "bun:test";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
-import { ALL, MODULES, PAGES, mentions, objectsWith, offenders } from "../testing/landing-copy";
+import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
+import { PLAN_FACTS } from "../plans/plan-facts";
+import { routing } from "../../i18n/routing";
+import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
+import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
+import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
+import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
+import { PREVIEW_SHARED } from "./copy/previews/shared";
 import * as shared from "./copy/shared";
 
 /** A percentage ("34%") or a multiplier ("6×", "6X"): what only a sourced figure may print. */
@@ -26,9 +33,10 @@ const PLAN_LINES = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
 /**
  * Mentions that carry no plan label by Harry's call (13 Nov 2026): broadcasts
  * open to every plan right after these pages ship (STA-549), so the Platform
- * page lists them without a badge.
+ * page lists them without a badge, and so does the link to the broadcasts
+ * preview that the other four previews end on.
  */
-const UNBADGED = ["PLATFORM.platform.dashboard.facts[2].text"];
+const UNBADGED = ["PLATFORM.platform.dashboard.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
 
 /** Mentions of `pattern` that no plan label qualifies and no plan line accounts for. */
 const unlabelled = (pattern: RegExp) =>
@@ -71,6 +79,9 @@ describe("what these pages may not claim (AC10)", () => {
     "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
     "PLATFORM.programTypes.title": "Platform's program rows carry no chips (Harry, 13 Nov 2026)",
     "SHARED.levelCardsAlt": "the level cards' alt text",
+    "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews carry no chips (Harry, 13 Nov 2026)",
+    "MOBILE_SCANNER_PREVIEW.counter.rows[3].body": "what the register shows for a level; the previews carry no chips",
+    "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.ready.facts[0].text": "the ready-made messages cover level-ups; the previews carry no chips",
   };
 
   const levelMentions = () =>
@@ -223,6 +234,8 @@ describe("figures from other people (AC12)", () => {
       "OUTCOMES.headStart.empty",
       "OUTCOMES.headStart.withHeadStart",
       "OUTCOMES.problem.figure",
+      "PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers.figures[0]",
+      "PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers.figures[1]",
     ]);
     for (const { object } of figures) {
       expect(String(object.text).trim()).not.toBe("");
@@ -261,5 +274,114 @@ describe("prices and the trial length (AC13)", () => {
 
   test("the reassurance carries the token", () => {
     expect(shared.SHARED.reassurance).toContain("{trialDays}");
+  });
+});
+
+describe("the five previews' copy (STA-552)", () => {
+  const previewLines = () => ALL.filter((line) => inPreviews(line.path));
+  const previewModules = () => Object.entries(MODULES).filter(([name]) => inPreviews(name));
+
+  test("there is copy to check, in all five pages and the shared links", () => {
+    expect(previewModules().map(([name]) => name).sort()).toEqual([
+      "ANALYTICS_PREVIEW",
+      "CARD_DESIGN_PREVIEW",
+      "MOBILE_SCANNER_PREVIEW",
+      "PREVIEW_SHARED",
+      "PROMOTIONAL_CAMPAIGNS_PREVIEW",
+      "PUSH_NOTIFICATIONS_PREVIEW",
+    ]);
+    expect(previewLines().length).toBeGreaterThan(150);
+  });
+
+  test("no chip says Every plan, and nothing is captioned Sample data (Harry's v2.1 call for Platform-style pages)", () => {
+    const chips = previewModules().flatMap(([name, value]) => objectsWith(value, ["plan"], name));
+
+    expect(chips.filter(({ object }) => object.plan === "Every plan").map(({ path }) => path)).toEqual([]);
+    expect(previewLines().filter((line) => /sample data/i.test(line.value)).map((line) => line.path)).toEqual([]);
+  });
+
+  test("only the broadcasts preview states a plan for the whole page: Growth and Pro, as today's page does", () => {
+    const pageWide = previewModules()
+      .filter(([, value]) => typeof value === "object" && value !== null && "plan" in value)
+      .map(([name, value]) => [name, (value as { plan: string }).plan]);
+
+    expect(pageWide).toEqual([["PROMOTIONAL_CAMPAIGNS_PREVIEW", "Growth and Pro"]]);
+  });
+
+  test("a broadcast is named without a label in one place only: the link to the broadcasts preview", () => {
+    const loose = previewModules()
+      .flatMap(([name, value]) => mentions(value, /broadcast|texting fees/i, name))
+      .filter(({ plan }) => !BROADCAST_PLANS.includes(plan ?? ""))
+      .map(({ path }) => path);
+
+    expect(loose).toEqual(["PREVIEW_SHARED.related.cards.promotionalCampaigns.title"]);
+  });
+
+  describe("the broadcasts preview's figures are Stampeo's own, each with its source", () => {
+    const { figures, sourceLine } = PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers;
+
+    test("88% and 95% carry the source line that today's approved page prints", () => {
+      expect(figures.slice(0, 2).map((figure) => figure.value)).toEqual(["88%", "95%"]);
+      for (const figure of figures.slice(0, 2)) {
+        expect((figure as { source?: string }).source).toBe("Stampeo data, 86 businesses, February to October 2026");
+      }
+      expect(sourceLine).toBe("Stampeo data, 86 businesses, February to October 2026");
+    });
+
+    test("the third figure is a plan fact, not a measurement: no percentage, no source of its own", () => {
+      expect(figures[2]).toEqual({ value: "0", text: "fees per message" });
+    });
+
+    test("the 95% line says three months, not a count of days", () => {
+      expect(figures[1].text).toMatch(/three months/);
+      expect(previewLines().filter((line) => /\b90\b/.test(line.value)).map((line) => line.path)).toEqual([]);
+    });
+  });
+
+  describe("every number is the product's, not typed from memory", () => {
+    test("98 stamp icons, and 4 languages set by the customer's phone", () => {
+      const [icons, , languages] = CARD_DESIGN_PREVIEW.numbers.figures;
+
+      expect(icons.value).toBe(String(stampIcons.length));
+      expect(languages.value).toBe(String(routing.locales.length));
+    });
+
+    test("analytics history is each plan's own: 30, 90 and 365 days, with monthly cohorts on Pro alone", () => {
+      const { figures } = ANALYTICS_PREVIEW.numbers;
+
+      expect(figures.map((figure) => figure.value)).toEqual(
+        (["starter", "growth", "pro"] as const).map((tier) => String(PLAN_FACTS[tier].analyticsHistoryDays)),
+      );
+      expect(figures.map((figure) => figure.label)).toEqual([
+        "days of history on Starter",
+        "days on Growth",
+        "days on Pro, with monthly cohorts",
+      ]);
+      expect([PLAN_FACTS.starter.analytics, PLAN_FACTS.growth.analytics, PLAN_FACTS.pro.analytics]).toEqual(["basic", "basic", "advanced"]);
+    });
+
+    test("the plans table gives Growth its monthly number and Pro no limit and scheduling, as PLAN_FACTS has them", () => {
+      const [growth, pro] = PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells;
+
+      expect(growth.body).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} a month`);
+      expect(PLAN_FACTS.pro.broadcastsPerMonth).toBe("unlimited");
+      expect(PLAN_FACTS.pro.scheduledBroadcasts).toBe(true);
+      expect(PLAN_FACTS.growth.scheduledBroadcasts).toBe(false);
+      expect(pro.body).toMatch(/^Unlimited, scheduled/);
+      expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} a month`);
+    });
+  });
+
+  test("the FAQs are the five questions: card design's and the broadcasts page's", () => {
+    expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(5);
+    expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(5);
+    expect(CARD_DESIGN_PREVIEW.faq.items.at(-1)?.answer).toContain("48 hours");
+  });
+
+  test("the sibling links name the five features, in the words their own heroes use", () => {
+    const { cards } = PREVIEW_SHARED.related;
+
+    expect(Object.keys(cards).sort()).toEqual(["analytics", "cardDesign", "mobileScanner", "promotionalCampaigns", "pushNotifications"]);
+    expect(PREVIEW_SHARED.related.eyebrow.length).toBeLessThanOrEqual(28);
   });
 });

@@ -1,8 +1,10 @@
 /**
- * The four US landing pages (`/us/landing-pages/*`): one registry, one shell,
- * one set of shared sections. Which sections a page renders, where its tracking
- * sits, which CTA locations it may use and what its hero says are read from the
- * source (pages are async server components); what a section frame prints is rendered.
+ * The four US landing pages (`/us/landing-pages/*`) and the five feature previews
+ * under `/us/landing-pages/platform/*`: one registry, one shell, one set of shared
+ * sections. Which sections a page renders, where its tracking sits, which CTA
+ * locations it may use and what its hero says are read from the source (pages
+ * are async server components); what a section frame prints is rendered. What is
+ * specific to the previews is in `previews/registry.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -28,7 +30,7 @@ import {
 } from "../testing/landing-pages-source";
 import { renderEn } from "../testing/render-en";
 import { SHARED } from "./copy/shared";
-import { LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata } from "./pages";
+import { ALL_LANDING_SLUGS, LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata } from "./pages";
 import { PROOF_LABELS, proofFigures } from "./proof";
 
 /** The three pages that argue one thing, and Platform, which tours the product. */
@@ -36,11 +38,11 @@ const ARGUMENT_PAGES = ["how-it-works", "features", "outcomes"] as const;
 
 describe("the registry (AC1, AC2, AC4)", () => {
   test("every page is registered under its slug", () => {
-    expect(Object.keys(LANDING_PAGES).sort()).toEqual([...LANDING_SLUGS].sort());
-    for (const slug of LANDING_SLUGS) expect(LANDING_PAGES[slug].slug).toBe(slug);
+    expect(Object.keys(LANDING_PAGES).sort()).toEqual([...ALL_LANDING_SLUGS].sort());
+    for (const slug of ALL_LANDING_SLUGS) expect(LANDING_PAGES[slug].slug).toBe(slug);
   });
 
-  test.each(LANDING_SLUGS)("%s lists no section twice, and never more than 13", (slug) => {
+  test.each(ALL_LANDING_SLUGS)("%s lists no section twice, and never more than 13", (slug) => {
     const { sections } = LANDING_PAGES[slug];
 
     expect(new Set(sections).size).toBe(sections.length);
@@ -61,20 +63,20 @@ describe("the registry (AC1, AC2, AC4)", () => {
   });
 
   test("each page has its own variant, short enough for the attribution field", () => {
-    const variants = LANDING_SLUGS.map((slug) => LANDING_PAGES[slug].variant);
+    const variants = ALL_LANDING_SLUGS.map((slug) => LANDING_PAGES[slug].variant);
 
-    expect(new Set(variants).size).toBe(LANDING_SLUGS.length);
+    expect(new Set(variants).size).toBe(ALL_LANDING_SLUGS.length);
     for (const variant of variants) expect(variant.length).toBeLessThanOrEqual(MAX_FIELD);
   });
 
   test("a page links to its demo from the hero only when its sections include one", () => {
-    for (const slug of LANDING_SLUGS) expect(hasDemoSection(slug)).toBe(LANDING_PAGES[slug].sections.includes("demo"));
+    for (const slug of ALL_LANDING_SLUGS) expect(hasDemoSection(slug)).toBe(LANDING_PAGES[slug].sections.includes("demo"));
     expect(LANDING_SLUGS.filter((slug) => !hasDemoSection(slug))).toEqual(["outcomes"]);
   });
 });
 
 describe("the routes (AC1, AC2, AC4)", () => {
-  test.each(LANDING_SLUGS)("%s has its page file", (slug) => {
+  test.each(ALL_LANDING_SLUGS)("%s has its page file", (slug) => {
     expect(existsSync(pageFile(slug))).toBe(true);
   });
 
@@ -88,7 +90,7 @@ describe("the routes (AC1, AC2, AC4)", () => {
     expect(literalAttr(pricing?.attrs ?? "", "market")).toBe("us");
   });
 
-  test.each(LANDING_SLUGS)("%s mounts the shell with its own slug", (slug) => {
+  test.each(ALL_LANDING_SLUGS)("%s mounts the shell with its own slug", (slug) => {
     const shell = findTag(read(pageFile(slug)), "LandingPageShell");
 
     expect(shell).toBeDefined();
@@ -143,7 +145,7 @@ describe("the shell (AC4)", () => {
 });
 
 describe("what the pages leave out (AC3)", () => {
-  test.each(LANDING_SLUGS)("%s is noindex with an English title and description", (slug) => {
+  test.each(ALL_LANDING_SLUGS)("%s is noindex with an English title and description", (slug) => {
     const metadata = landingPageMetadata(slug);
     const { meta } = LANDING_PAGES[slug];
 
@@ -154,7 +156,7 @@ describe("what the pages leave out (AC3)", () => {
     expect(meta.description.length).toBeGreaterThan(0);
   });
 
-  test.each(LANDING_SLUGS)("%s declares that metadata", (slug) => {
+  test.each(ALL_LANDING_SLUGS)("%s declares that metadata", (slug) => {
     expect(code(pageFile(slug))).toContain(`landingPageMetadata("${slug}")`);
   });
 

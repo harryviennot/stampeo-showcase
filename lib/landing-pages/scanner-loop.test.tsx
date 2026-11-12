@@ -7,7 +7,7 @@
 import { describe, expect, test } from "bun:test";
 import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { code, findTag, openingTags, read } from "../testing/jsx-source";
-import { lpFiles, pageComponent, pageFile, landingTree } from "../testing/landing-pages-source";
+import { isPreviewFile, lpFiles, pageComponent, pageFile, landingTree } from "../testing/landing-pages-source";
 import { STAMP_BANNER } from "./copy/shared";
 import type { LandingSlug } from "./pages";
 
@@ -27,8 +27,10 @@ describe("every landing page's scanner visual is the Scanner loop", () => {
     expect(landingTree(pageFile(slug)).has(file)).toBe(true);
   });
 
-  test("no other file of the pages draws one", () => {
-    const users = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "ScannerLoop"));
+  test("no other file of the four pages draws one (the previews draw theirs in their own files)", () => {
+    const users = lpFiles()
+      .filter((file) => !isPreviewFile(file))
+      .filter((file) => openingTags(read(file)).some((tag) => tag.name === "ScannerLoop"));
 
     expect(users.sort()).toEqual(VISUALS.map(([, folder, name]) => pageComponent(folder, name)).sort());
   });

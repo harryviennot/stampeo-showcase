@@ -62,7 +62,12 @@ describe("isPilotPath", () => {
     expect(marketPath("us", "/vs/loopy-loyalty")).toBe("/us/vs/loopy-loyalty");
   });
 
-  test.each(["/us/landing-pages/features", "/us/landing-pages/how-it-works"])(
+  test.each([
+    "/us/landing-pages/features",
+    "/us/landing-pages/how-it-works",
+    "/us/landing-pages/platform/card-design",
+    "/us/landing-pages/platform/promotional-campaigns",
+  ])(
     "matches a landing page inside the US market, so an ad click gets the rewrite and the US cookie (%s)",
     (path) => {
       expect(isPilotPath(path)).toBe(true);

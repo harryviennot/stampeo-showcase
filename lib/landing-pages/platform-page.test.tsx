@@ -99,8 +99,9 @@ describe("the hero: the headline, the fan of cards, then the pair of actions (AC
     expect(literalAttr(findTag(hero(), "LpCtaPair")?.attrs ?? "", "location")).toBe("hero");
   });
 
-  test("deals the Platform page's own seven cards into the fan", () => {
-    expect(findTag(hero(), "HeroCardFan")?.attrs).toMatch(/\bslots=\{PLATFORM_FAN_SLOTS\}/);
+  test("deals the Platform page's own seven cards into the fan, unless a preview brings its own", () => {
+    expect(hero()).toMatch(/\bslots\s*=\s*PLATFORM_FAN_SLOTS\b/);
+    expect(findTag(hero(), "HeroCardFan")?.attrs).toMatch(/\bslots=\{slots\}/);
   });
 
   test("has no sub and no proof line: the numbers come lower down", () => {
@@ -236,8 +237,8 @@ describe("program types: one row each, all open until a visitor points at one (A
   });
 
   test("a row also opens for keyboard focus and for a click or tap, and nothing follows the scroll any more", () => {
-    const source = code(platformFile("ProgramTypeRows"));
-    const handlers = openingTags(source).flatMap((tag) => [...tag.attrs.matchAll(/\b(on[A-Z]\w+)=\{[^}]*type\.key/g)].map((match) => match[1]));
+    const source = code(platformFile("HoverRows"));
+    const handlers = openingTags(source).flatMap((tag) => [...tag.attrs.matchAll(/\b(on[A-Z]\w+)=\{[^}]*item\.key/g)].map((match) => match[1]));
 
     expect(handlers.sort()).toEqual(["onClick", "onFocus", "onPointerEnter"]);
     expect(source).not.toContain("IntersectionObserver");

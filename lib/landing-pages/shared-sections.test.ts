@@ -25,6 +25,7 @@ import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceF
 import { ALL } from "../testing/landing-copy";
 import {
   COMPONENTS_DIR,
+  isPlatformStyleFile,
   lpFiles,
   otherCallers,
   pageComponent,
@@ -47,9 +48,9 @@ const { DashboardDuo } = await import("@/components/landing-pages/shared/Dashboa
 describe("dashboard captures (AC9)", () => {
   /**
    * Platform shows its captures with no "Sample data" (Harry, 13 Nov: a landing page doesn't need the
-   * detail); the other pages keep the caption.
+   * detail), and so do the five previews in its style; the other pages keep the caption.
    */
-  const onPlatform = (file: string) => file === pageFile("platform") || file.startsWith(join(COMPONENTS_DIR, "platform", "/"));
+  const onPlatform = isPlatformStyleFile;
 
   /** What draws a capture: the phone screenshot, and the simulated feed standing in for the live dashboard. */
   const CAPTURE_TAGS = ["PhoneScreenshot", "LiveActivityFeed"];
@@ -111,20 +112,20 @@ describe("dashboard captures (AC9)", () => {
   test("the feeds the pages draw are among what the guard reads: the layered capture and the how-to feed", () => {
     const feeds = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "LiveActivityFeed"));
 
-    expect(feeds.map((file) => file.replace(ROOT, "")).sort()).toEqual([
+    expect(feeds.filter((file) => !onPlatform(file)).map((file) => file.replace(ROOT, "")).sort()).toEqual([
       "/components/landing-pages/features/AnalyticsSpotlight.tsx",
       "/components/landing-pages/how-it-works/SeeItWork.tsx",
     ]);
   });
 
-  test("the dashboard duo keeps its caption on every page but Platform, where it shows none", () => {
+  test("the dashboard duo keeps its caption on every page but Platform and its previews, where it shows none", () => {
     const duos = lpFiles().flatMap((file) =>
       openingTags(read(file))
         .filter((tag) => tag.name === "DashboardDuo")
         .map((tag) => ({ file, captioned: !/(?:^|\s)caption=\{false\}/.test(tag.attrs) })),
     );
 
-    expect(duos.filter(({ file }) => onPlatform(file))).toHaveLength(1);
+    expect(duos.filter(({ file }) => onPlatform(file)).length).toBeGreaterThanOrEqual(1);
     expect(duos.filter(({ file }) => !onPlatform(file)).length).toBeGreaterThan(0);
     expect(duos.filter(({ file, captioned }) => captioned === onPlatform(file))).toEqual([]);
     expect(code(shared("DashboardDuo"))).toMatch(/caption\s*&&\s*\(\s*<figcaption/);
@@ -556,6 +557,8 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("WalletCard", "card"), ["headerLabel"]],
     [...component("BlogCard", "blog"), ["detail"]],
     [...component("HeroCardFan", "landing-variant"), ["slots"]],
+    [...component("ScannerLoop", "ui"), ["still"]],
+    [...component("AnnotatedWalletCard", "features/design-de-carte"), ["heading", "sectionClassName"]],
   ];
 
   test.each(EXTENDED)("%s", (name, file, props) => {

@@ -2,6 +2,12 @@ import * as features from "../landing-pages/copy/features";
 import * as howItWorks from "../landing-pages/copy/how-it-works";
 import * as outcomes from "../landing-pages/copy/outcomes";
 import * as platform from "../landing-pages/copy/platform";
+import * as analyticsPreview from "../landing-pages/copy/previews/analytics";
+import * as cardDesignPreview from "../landing-pages/copy/previews/card-design";
+import * as mobileScannerPreview from "../landing-pages/copy/previews/mobile-scanner";
+import * as promotionalCampaignsPreview from "../landing-pages/copy/previews/promotional-campaigns";
+import * as pushNotificationsPreview from "../landing-pages/copy/previews/push-notifications";
+import * as previewShared from "../landing-pages/copy/previews/shared";
 import * as programTypes from "../landing-pages/copy/program-types";
 import * as shared from "../landing-pages/copy/shared";
 
@@ -47,17 +53,41 @@ export const MODULES = {
   ...platform,
   ...programTypes,
   ...shared,
+  ...cardDesignPreview,
+  ...mobileScannerPreview,
+  ...pushNotificationsPreview,
+  ...analyticsPreview,
+  ...promotionalCampaignsPreview,
+  ...previewShared,
 } as Record<string, unknown>;
+
+/** The names of the modules that are the five previews' copy: the previews' own rules apply to these. */
+export const PREVIEW_MODULES = [
+  "CARD_DESIGN_PREVIEW",
+  "MOBILE_SCANNER_PREVIEW",
+  "PUSH_NOTIFICATIONS_PREVIEW",
+  "ANALYTICS_PREVIEW",
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW",
+  "PREVIEW_SHARED",
+] as const;
+
+/** True for a path inside one of the previews' copy modules (`ANALYTICS_PREVIEW.hero.h1`). */
+export const inPreviews = (path: string) => PREVIEW_MODULES.some((name) => path === name || path.startsWith(`${name}.`));
 
 /** Every string of every copy module. */
 export const ALL: Line[] = Object.entries(MODULES).flatMap(([name, value]) => lines(value, name));
 
-/** The four pages' own copy objects, by name. */
+/** The four pages' own copy objects, by name, and the five previews'. */
 export const PAGES = {
   HOW_IT_WORKS: howItWorks.HOW_IT_WORKS,
   FEATURES: features.FEATURES,
   OUTCOMES: outcomes.OUTCOMES,
   PLATFORM: platform.PLATFORM,
+  CARD_DESIGN_PREVIEW: cardDesignPreview.CARD_DESIGN_PREVIEW,
+  MOBILE_SCANNER_PREVIEW: mobileScannerPreview.MOBILE_SCANNER_PREVIEW,
+  PUSH_NOTIFICATIONS_PREVIEW: pushNotificationsPreview.PUSH_NOTIFICATIONS_PREVIEW,
+  ANALYTICS_PREVIEW: analyticsPreview.ANALYTICS_PREVIEW,
+  PROMOTIONAL_CAMPAIGNS_PREVIEW: promotionalCampaignsPreview.PROMOTIONAL_CAMPAIGNS_PREVIEW,
 };
 
 /** The paths whose lines match `pattern`. */

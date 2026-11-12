@@ -10,6 +10,11 @@ describe("hidesLanguageSwitcher: pages a language switch would 404 on", () => {
     "/us/landing-pages/features",
     "/us/landing-pages/outcomes",
     "/us/landing-pages/platform",
+    "/us/landing-pages/platform/card-design",
+    "/us/landing-pages/platform/mobile-scanner",
+    "/us/landing-pages/platform/push-notifications",
+    "/us/landing-pages/platform/analytics",
+    "/us/landing-pages/platform/promotional-campaigns",
   ])("hides it on %s: its slug differs per language, or it exists in one language only", (pathname) => {
     expect(hidesLanguageSwitcher(pathname)).toBe(true);
   });

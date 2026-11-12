@@ -8,9 +8,11 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { join } from "node:path";
 import { FEATURE_CATEGORIES } from "../pricing-features";
 import { PLAN_FACTS, TIERS, availability, type PlanFacts } from "../plans/plan-facts";
-import { ALL, MODULES, mentions, objectsWith } from "../testing/landing-copy";
+import { ALL, MODULES, inPreviews, mentions, objectsWith } from "../testing/landing-copy";
+import { ROOT, read } from "../testing/jsx-source";
 import { SHARED } from "./copy/shared";
 
 type Gate = (facts: PlanFacts) => boolean;
@@ -31,8 +33,29 @@ function pricingRow(...keys: string[]): Gate {
   };
 }
 
+/**
+ * What the pricing page's table says in a text cell, read from the English catalog (`pricingPage.comparison.rows`):
+ * a feature whose cell is "Predefined" or "Basic" on one plan and something richer on another is a plan fact that
+ * `PLAN_FACTS` does not have a field for.
+ */
+function catalogCell(row: string, facts: PlanFacts): string {
+  const tier = TIERS.find((candidate) => PLAN_FACTS[candidate] === facts);
+  const rows = JSON.parse(read(join(ROOT, "messages", "en", "pricing.json"))).pricingPage.comparison.rows as Record<
+    string,
+    Record<string, string>
+  >;
+  if (!tier || !rows[row]) throw new Error(`no pricing cell "${row}" for ${tier}`);
+  return rows[row][tier] ?? "";
+}
+
 const BROADCASTS: Gate = (facts) => facts.broadcastsPerMonth !== 0;
 const ANALYTICS_CHARTS: Gate = (facts) => facts.analyticsCharts;
+/** Your own text on the stamp, milestone and reward messages: "Custom text", where Starter has the predefined ones. */
+const CUSTOM_MESSAGE_TEXT: Gate = (facts) => catalogCell("stampMilestoneReward", facts) !== "Predefined";
+/** Custom stamp-count milestones ("Halfway there!"): none on Starter. */
+const CUSTOM_MILESTONES: Gate = (facts) => facts.milestoneNotifications !== 0;
+/** Broadcast targeting by stamps, rewards and inactivity: "Advanced" on Pro, where Growth targets by date. */
+const ADVANCED_TARGETING: Gate = (facts) => catalogCell("segmentation", facts).startsWith("Advanced");
 
 /** Each chipped object of the copy (a Fact, Tile, Moment or program type) and the fact that decides its chip. */
 const CHIPPED: Record<string, Gate> = {
@@ -47,6 +70,17 @@ const CHIPPED: Record<string, Gate> = {
   "FEATURES.more.tiles[4]": pricingRow("earningCaps", "rewardExpiry"),
   "FEATURES.more.tiles[5]": (facts) => facts.multipleLocations,
   "PLATFORM.platform.scanner.facts[2]": (facts) => facts.teamMembers === "unlimited",
+  "MOBILE_SCANNER_PREVIEW.team.tabs.owners.facts[1]": pricingRow("earningCaps"),
+  "MOBILE_SCANNER_PREVIEW.team.tabs.owners.facts[2]": (facts) => facts.teamMembers === "unlimited",
+  "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[0]": CUSTOM_MESSAGE_TEXT,
+  "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[1]": CUSTOM_MILESTONES,
+  "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[2]": CUSTOM_MESSAGE_TEXT,
+  "ANALYTICS_PREVIEW.questions.rows[1]": ANALYTICS_CHARTS,
+  "ANALYTICS_PREVIEW.questions.rows[2]": ANALYTICS_CHARTS,
+  "ANALYTICS_PREVIEW.questions.rows[3]": ANALYTICS_CHARTS,
+  PROMOTIONAL_CAMPAIGNS_PREVIEW: BROADCASTS,
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[1]": ADVANCED_TARGETING,
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[2]": ADVANCED_TARGETING,
 };
 
 /**
@@ -110,13 +144,20 @@ describe("a broadcast is labelled with the plans that have broadcasts (STA-549 f
    */
   const NO_CHIP_ON_PURPOSE = ["PLATFORM.platform.dashboard.facts[2].text"];
 
+  /**
+   * The previews: the broadcasts preview states the plans of the whole page (its top-level `plan`, which every
+   * broadcast mention under it inherits), and the other four name the feature only in the link to it, with no
+   * badge, for the same STA-549 reason.
+   */
+  const PREVIEW_NO_CHIP = ["PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
+
   /** The two lines printed with `SHARED.broadcastPlans` in their paragraph by `PlanLine`. */
   const ON_A_PLAN_LINE = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
 
   const broadcasts = () =>
     Object.entries(MODULES)
       .flatMap(([name, value]) => mentions(value, /broadcast/i, name))
-      .filter(({ path }) => !NO_CHIP_ON_PURPOSE.includes(path))
+      .filter(({ path }) => !NO_CHIP_ON_PURPOSE.includes(path) && !inPreviews(path))
       .map(({ path, plan }) => ({ path, plan: plan ?? (ON_A_PLAN_LINE.includes(path) ? SHARED.broadcastPlans : "no label") }));
 
   test("every other mention carries the label PLAN_FACTS gives broadcasts, as a chip or on its plan line", () => {
@@ -128,6 +169,25 @@ describe("a broadcast is labelled with the plans that have broadcasts (STA-549 f
       "OUTCOMES.slowDays.noFees",
     ]);
     expect(broadcasts().filter(({ plan }) => label(plan) !== expected)).toEqual([]);
+  });
+
+  test("every broadcast mention on the broadcasts preview inherits the label PLAN_FACTS gives broadcasts, or the narrower one it names", () => {
+    const expected = label(availability(BROADCASTS));
+    const mine = Object.entries(MODULES)
+      .filter(([name]) => name === "PROMOTIONAL_CAMPAIGNS_PREVIEW")
+      .flatMap(([name, value]) => mentions(value, /broadcast|texting fees/i, name));
+
+    expect(mine.length).toBeGreaterThan(8);
+    expect(mine.filter(({ plan }) => label(plan ?? "") !== expected && label(plan ?? "") !== "pro")).toEqual([]);
+  });
+
+  test("on the other previews a broadcast is named only in the link to its preview, and PLAN_FACTS still says broadcasts are not on every plan", () => {
+    const others = Object.entries(MODULES)
+      .filter(([name]) => inPreviews(name) && name !== "PROMOTIONAL_CAMPAIGNS_PREVIEW")
+      .flatMap(([name, value]) => mentions(value, /broadcast/i, name));
+
+    expect(others.map(({ path }) => path)).toEqual(PREVIEW_NO_CHIP);
+    expect(availability(BROADCASTS)).not.toBe("every plan");
   });
 
   test("the exempt mention is the one broadcast fact that has no chip, and is still a broadcast mention", () => {
