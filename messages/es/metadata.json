@@ -24,8 +24,8 @@
         "description": "Tu logo, tus colores, tus propios iconos de sello (quitamos el fondo) o 98 listos para usar. Móntala en minutos, o envíanos tu logo y la creamos en 24-48 h."
       },
       "scanner-mobile": {
-        "title": "Escáner móvil: un sello en 0,8 segundos",
-        "description": "Sella la tarjeta de tu cliente desde la aplicación de Stampeo, con confirmación por vibración en 0,8 s, o desde cualquier navegador. Sin aparatos que comprar."
+        "title": "Escáner móvil: un sello en segundos",
+        "description": "Sella la tarjeta de tu cliente desde la aplicación de Stampeo o desde cualquier navegador, con una sola pulsación. Sin aparatos que comprar."
       },
       "notifications-push": {
         "title": "Un aviso en su pantalla con cada sello",

@@ -24,8 +24,8 @@
         "description": "Twoje logo, twoje kolory, własne ikony pieczątek (tło usuwamy sami) albo 98 gotowych. Złóż kartę w kilka minut albo przyślij logo, zrobimy ją w 24-48 h."
       },
       "scanner-mobile": {
-        "title": "Skaner w telefonie: pieczątka w 0,8 s",
-        "description": "Osobna aplikacja z wibracją potwierdzenia (0,8 s) albo skaner w przeglądarce. Bez sprzętu do kupienia i bez zmian przy kasie."
+        "title": "Skaner w telefonie: pieczątka w kilka sekund",
+        "description": "Aplikacja Stampeo albo skaner w przeglądarce: skanujesz kartę i jednym stuknięciem dodajesz pieczątkę. Bez sprzętu do kupienia i bez zmian przy kasie."
       },
       "notifications-push": {
         "title": "Powiadomienie na ekranie po każdej pieczątce",

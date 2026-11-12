@@ -294,7 +294,7 @@
     "scanner-mobile": {
       "hero": {
         "title": "One scan. One stamp. That's it.",
-        "subtitle": "No POS system. No special hardware. Your phone is all you need to stamp your customers in one second.",
+        "subtitle": "No POS system. No special hardware. Your phone is all you need to stamp your customers in seconds.",
       "annotation": "your team's app"
       },
       "problem": {
@@ -304,7 +304,7 @@
       "sections": [
         {
           "title": "Dedicated app",
-          "description": "The Stampeo app is lightweight and dedicated to scanning. Open the app, point the camera at the customer's QR code, and a stamp is added — with haptic confirmation. Total time: 1 second.",
+          "description": "The Stampeo app is lightweight and dedicated to scanning. Open the app, point the camera at the customer's QR code and tap Add stamp. A vibration confirms it, all in a few seconds.",
           "icon": "smartphone"
         },
         {
@@ -335,15 +335,11 @@
           "qrCaption": "Scan to install"
         },
         "scanDemo": {
-          "customerName": "Marc D.",
-          "stampCount": "5/10 stamps",
-          "toast": "Stamp added",
-          "timer": "0.8s",
           "hint": "Point at the customer's QR code"
         },
         "howItWorks": {
           "title": "Two ways to scan",
-          "subtitle": "Dedicated app or web scanner — choose what works for you.",
+          "subtitle": "Dedicated app or web scanner: choose what works for you.",
           "app": {
             "title": "Dedicated app",
             "badge": "Recommended",
@@ -351,7 +347,7 @@
               "Download the Stampeo app (iOS / Android)",
               "Sign in with your account",
               "Point the camera at the customer's QR code",
-              "Haptic vibration — stamp added in 0.8s"
+              "Tap Add stamp: their card updates and they get a notification"
             ]
           },
           "web": {
@@ -361,7 +357,7 @@
               "Open the dashboard in your browser",
               "Click \"Scan\" in the menu",
               "Allow camera access",
-              "Scan the QR code — stamp added"
+              "Scan the QR code and add the stamp"
             ]
           }
         },
@@ -371,7 +367,7 @@
           "features": [
             {
               "title": "Zero training",
-              "description": "Open the app, scan, done. Your employees use it from day one."
+              "description": "Open the app, scan, tap Add stamp. Your employees use it from day one."
             },
             {
               "title": "Haptic feedback",
