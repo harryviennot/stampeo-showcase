@@ -1,6 +1,6 @@
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { LpCtaPair } from "../../platform/LpCtaPair";
-import { NumberFigures } from "../../platform/NumbersBlock";
+import { NumberFigures } from "../../platform/NumberFigures";
 import { LpSection } from "../../shared/LpSection";
 
 /** The two measured figures, each over its line. */

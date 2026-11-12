@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { HoverRows } from "../../platform/HoverRows";
@@ -16,7 +17,7 @@ const VISUALS = Object.fromEntries(
       <LockScreenSlice banner={row.banner} size="thumb" />
     </ScaledBox>,
   ]),
-) as Record<Key, React.ReactNode>;
+) as Record<Key, ReactNode>;
 
 /**
  * "Give them a reason to come in today": four broadcasts a café could send, a row each
