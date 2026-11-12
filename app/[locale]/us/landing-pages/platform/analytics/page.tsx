@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
+import { ActivitySection } from "@/components/landing-pages/feature-previews/analytics/ActivitySection";
+import { GlanceSection } from "@/components/landing-pages/feature-previews/analytics/GlanceSection";
+import { HistorySection } from "@/components/landing-pages/feature-previews/analytics/HistorySection";
+import { QuestionsSection } from "@/components/landing-pages/feature-previews/analytics/QuestionsSection";
+import { Hairline } from "@/components/landing-pages/platform/Hairline";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { DashboardDuo } from "@/components/landing-pages/shared/DashboardDuo";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
@@ -23,7 +28,12 @@ export default function AnalyticsPreviewPage() {
   return (
     <LandingPageShell slug="platform/analytics">
       <PreviewHero slug="platform/analytics" secondary={null} visual={<DashboardDuo caption={false} priority />} />
-      {/* TODO(STA-552 builder): glance, questions, activity, numbers (ux-brief, page D). */}
+      <GlanceSection />
+      <QuestionsSection />
+      <ActivitySection />
+      <Hairline />
+      <HistorySection />
+      <Hairline />
       <LpAccentBand copy={ANALYTICS_PREVIEW.band} />
       <RelatedPreviews slug="platform/analytics" />
     </LandingPageShell>
