@@ -39,7 +39,7 @@ export const MOBILE_SCANNER_PREVIEW = {
         key: "points",
         eyebrow: "Type what they spent",
         title: "Points",
-        body: "Enter the amount and see the points, bonus included, before you confirm.",
+        body: "Enter the amount and see the points before you confirm.",
       },
       {
         key: "rewards",

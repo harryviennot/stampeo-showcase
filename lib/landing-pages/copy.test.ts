@@ -328,8 +328,8 @@ describe("the five previews' copy (STA-552)", () => {
       expect(sourceLine).toBe("Stampeo data, 86 businesses, February to October 2026");
     });
 
-    test("the third figure is a plan fact, not a measurement: no percentage, no source of its own", () => {
-      expect(figures[2]).toEqual({ value: "0", text: "fees per message" });
+    test("every figure under the source line is measured: the row holds only 88% and 95%", () => {
+      expect(figures.map((figure) => figure.value)).toEqual(["88%", "95%"]);
     });
 
     test("the 95% line says three months, not a count of days", () => {

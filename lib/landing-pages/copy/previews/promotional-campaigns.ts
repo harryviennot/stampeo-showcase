@@ -56,7 +56,6 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         text: "of those cards are still there three months later",
         source: FIGURES_SOURCE,
       },
-      { value: "0", text: "fees per message" },
     ],
     /** Printed once under the row of figures. */
     sourceLine: FIGURES_SOURCE,

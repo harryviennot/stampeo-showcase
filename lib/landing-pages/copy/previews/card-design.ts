@@ -79,7 +79,7 @@ export const CARD_DESIGN_PREVIEW = {
       {
         question: "Can I use my own stamp icons?",
         answer:
-          "Yes. Import any image (your croissant, your mascot, your logo): the background is removed automatically and it becomes a stamp. You can even use a different icon for each stamp, up to twelve.",
+          "Yes. Import any image (your croissant, your mascot, your logo): the background is removed automatically and it becomes a stamp. You can even use a different icon for each stamp.",
       },
       {
         question: "What if I don't have a logo or brand colors?",
