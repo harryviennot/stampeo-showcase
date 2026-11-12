@@ -12,6 +12,8 @@ This pass covers the four US ad landing pages built in STA-546 (v2, after Harry 
 
 > **Amended 13 Nov 2026 (v2):** the pages were rebuilt with richer sections and a fourth page. LP-01,
 > LP-04 to LP-07, LP-12 and LP-13 have v2 expectations; LP-18 to LP-27 are new. Case ids are unchanged.
+> **Amended 13 Nov 2026 (v2.1, Platform polish):** LP-28 to LP-34 are new. On Platform, LP-13's "Sample data"
+> and LP-27's turning-wheel wording are superseded: Platform shows no captions, and its hero is the fan (LP-28).
 
 Work top to bottom. Run LP-01 first: if a page doesn't render, nothing else can be tested.
 
@@ -380,6 +382,85 @@ Everything runs against dev or a local server. No migration ships with this bran
 | ACCOUNT | No session. |
 | STEPS | Open Platform at 1440 beside `docs/features/STA-546/shots/passentry/desktop-*.png`. |
 | EXPECT | Same order and patterns: centred headline over a card fan with two buttons, a strip under it, eyebrow + centred heading sections, two phones with floating cards and wallet badges, numbers, a three-column how-it-works table over phones, scroll-following rows, a toggle card, a branching tree, our pricing, an orange band, then sectors and the blog. You do NOT see PassEntry's name, copy, customer logos or images. |
+| RESET | None. |
+
+## LP: Platform polish v2.1 (added 13 Nov 2026)
+
+### LP-28: Platform's hero fan shows our own sample shops [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Harry chose the fan over a turning wheel and hand-picked its cards. A real brand on the fan would be a false claim. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. Open Platform at 1440x900 and at 390x844. 2. Look at the fan, then at `/us`'s fan at 1440. |
+| EXPECT | Platform's fan, left to right: Gelo, Rolling Slice (pizza), Vanity, Aurevo at the top, Fournée (croissants), Marginalia, Pace. A phone shows Vanity, Aurevo and Fournée. "Start my free trial" and "Try it on your phone" sit in clear space below the cards at 1024, 1280 and 1440, with the reassurance above the fold. `/us`'s fan is unchanged (Pace, Marginalia, Xeniká, Aurevo, Vanity, Lustre, Gelo). You do NOT see a barbershop card, or a card overlapping the buttons. |
+| RESET | None. |
+
+### LP-29: "Built for" runs as two rows on a phone [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | Harry's call: two rows in opposite directions show more shop types on a small screen. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. Open Platform at 390x844. 2. Repeat with reduced motion. 3. Open it at 768. |
+| EXPECT | At 390, two rows under "BUILT FOR", moving in opposite directions, with faded edges. With reduced motion there is one still, wrapped row. At 768 and up there is a single moving row. You do NOT see horizontal page scroll. |
+| RESET | None. |
+
+### LP-30: "In their wallet" shows both wallets and three matching cards [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | The section shows the customer's side on both platforms, plus the three things the business gets. Mismatched cards read as unfinished. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | At 1440, 1024 and 390, look at "Straight to Apple Wallet and Google Wallet." |
+| EXPECT | An iPhone with Aurevo in Apple Wallet and an Android phone with Aurevo in Google Wallet, both at 5 of 8. Three floating cards with the same title style ("Analytics", "Lock-screen notifications", "Updates on every scan"). The Analytics card is drawn by us: visits 2,770, 30-day return rate 61%, visits over time. The notification comes from Aurevo with its cup icon. The official wallet badges sit under the phones. You do NOT see "Sample data", a cropped dashboard screenshot, or "Stampeo" as the notification's sender. |
+| RESET | None. |
+
+### LP-31: The numbers use the handwritten figures [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | Harry asked for the original homepage's figures. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | Look at "Where Stampeo stands today." at 390 and 1440. |
+| EXPECT | 120+, 20,000+ and 25+ in the handwriting face, with their labels. You do NOT see the figures in the regular sans font. |
+| RESET | None. |
+
+### LP-32: The Scanner loop plays on screen, rests under reduced motion, and matches the cards beside it [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | The loop replaced a demo Harry called outdated. It must look like the real app, cost little to load, and agree with the cards beside it. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. Open How-to step 3, the Features scanner, Platform "Create it, share it, stamp it" and Platform's "Scanner app" tab. 2. Watch one loop of each. 3. Scroll away and back. 4. Turn on reduced motion and reload. 5. In DevTools → Network, load Platform without scrolling. |
+| EXPECT | 1-2. The loop runs: the scan screen with Sophie's card, "Sophie 4/8", the tap on Add Stamp, "Stamp Added! 5/8", Scan Next Customer, back to the camera. Every Aurevo card or banner shown beside it says 5 of 8. 3. It pauses off-screen and resumes. With Platform's Dashboard tab shown, the scanner video is paused. 4. With reduced motion there is no video, only the "Stamp Added! 5/8" frame. 5. Without scrolling, only the small first-frame images load, not the video files. You do NOT see "REC", a timer, or the old drawn scanner demo. |
+| RESET | Turn reduced motion off. |
+
+### LP-33: Program rows open on hover and carry no plan chips [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Harry's call: rows open on hover, not on scroll, and the "Every plan" chips go. Levels must be drawn on a fictional brand. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. At 1440, rest the mouse on each row of "Stamps, points or levels." for a moment. 2. Sweep the mouse quickly across the rows. 3. Tab through the rows. 4. Open the page at 390. |
+| EXPECT | A row opens when the mouse rests on it, focus opens a row, and a quick sweep opens nothing. At 390 every row is open. Stamps shows Aurevo, Points shows Vanity, Levels shows Wrenfold's cards at Bronze, Silver and Gold. The level-up banner on Features and Outcomes comes from Wrenfold too. You do NOT see an "Every plan" chip on these rows, or a barbershop card. |
+| RESET | None. |
+
+### LP-34: No captions, no plan badge on broadcasts, a calm final card [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | Harry: a landing page doesn't need the detail. Broadcasts open to every plan right after these pages ship (STA-549). |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. Look at "Run it from your computer or your phone." 2. Scroll the share tree. 3. Look at the final call to action. |
+| EXPECT | 1. The dashboard has no caption under it, and "Broadcasts to every card" carries no "Growth and Pro" badge. 2. The orange fills each branch of "Put your card where customers already are." as you scroll down, and empties as you scroll up; with reduced motion the tree is complete. 3. "Launch your loyalty card today." sits on a cream card with an orange accent word and an orange button. You do NOT see "Sample data" anywhere on Platform, or a solid orange box. |
 | RESET | None. |
 
 ---
