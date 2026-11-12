@@ -100,10 +100,11 @@ Harry likes the Platform page best and directed a polish round. His calls, which
   capture is visible at 390 (not hidden below `md`), captioned "Sample data".
 - AC19: all four pages render `LpSectors` with "Stampeo adapts to your business"; nothing near it says
   testimonial, story or customer.
-- AC20: levels appear as live on every plan (Features tabs, Outcomes levels, Platform rows); the copy word
-  is "levels", never "tiers"; level cards use preset-icon samples with the level name in the header.
+- AC20: levels appear as live (Features tabs and Outcomes with an "Every plan" chip; Platform rows carry
+  no chips, v2.1); the copy word is "levels", never "tiers"; level cards use a fictional preset-icon sample
+  (Wrenfold, a dry cleaner) with the level name in the header.
 - AC21: Platform's program rows render all open on the server, on phones and with reduced motion; on
-  desktop the row nearest the viewport centre opens, and a tap opens a row.
+  desktop a row opens on hover (after a short pause), keyboard focus or tap (v2.1: hover, not scroll).
 - AC22: the Platform share tree names channels only (counter flyer, Scanner app QR, Instagram, Facebook,
   website, Google Business Profile); nothing says integration, POS or sync.
 - AC23: Platform's blog block shows the 3 latest English posts, each linking to its post.

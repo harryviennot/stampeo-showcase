@@ -15,8 +15,8 @@ export const REWARD_BANNER: Banner = {
   body: "You unlocked your reward! Come claim it.",
 };
 
-/** The barbershop sample the level cards belong to (`STAMP_SAMPLES` "barber"): preset icons, so its look changes per level. */
-export const LEVELS_BUSINESS = "Les Garçons Barbiers";
+/** The fictional dry cleaner the level cards belong to (`WRENFOLD` in components/landing-pages/shared/samples.ts): preset icons, so its look changes per level. */
+export const LEVELS_BUSINESS = "Wrenfold";
 
 /** Stampeo's default level-up notification (every plan), with no level gift. */
 export const LEVEL_UP_BANNER: Banner = {
@@ -44,7 +44,7 @@ export const SHARED = {
   /** The browser bar over the desktop dashboard capture. */
   dashboardUrl: "app.stampeo.app",
   /** Alt text of the level cards: three cards of one shop, one per level. */
-  levelCardsAlt: "A barbershop's loyalty card at three levels: Bronze, Silver and Gold.",
+  levelCardsAlt: "A dry cleaner's loyalty card at three levels: Bronze, Silver and Gold.",
   /** The heading over the sector carousel when a page gives it a small label (Platform). */
   sectorsEyebrow: "For every kind of shop",
   faq: {
