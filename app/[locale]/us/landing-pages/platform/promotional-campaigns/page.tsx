@@ -3,8 +3,15 @@ import { setRequestLocale } from "next-intl/server";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
+import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
+import { HowSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/HowSection";
+import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
+import { NumbersSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/NumbersSection";
+import { PlansSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/PlansSection";
+import { Hairline } from "@/components/landing-pages/platform/Hairline";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
+import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { lpBanner } from "@/components/landing-pages/shared/banner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
@@ -39,7 +46,14 @@ export default function PromotionalCampaignsPreviewPage() {
           </PhoneCrop>
         }
       />
-      {/* TODO(STA-552 builder): numbers, how, ideas, delivery, plans, faq (ux-brief, page E). */}
+      <Hairline />
+      <NumbersSection />
+      <Hairline />
+      <HowSection />
+      <IdeasSection />
+      <DeliverySection />
+      <PlansSection />
+      <LpFaq faq={PROMOTIONAL_CAMPAIGNS_PREVIEW.faq} />
       <LpAccentBand copy={PROMOTIONAL_CAMPAIGNS_PREVIEW.band} />
       <RelatedPreviews slug="platform/promotional-campaigns" />
     </LandingPageShell>
