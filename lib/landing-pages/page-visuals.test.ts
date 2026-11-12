@@ -120,7 +120,6 @@ describe("the sectors every page ends on (AC19)", () => {
     expect(renderedSections(pageFile("features")).slice(-4)).toEqual(["sectors", "pricing", "faq", "final_cta"]);
   });
 
-  test.todo("Outcomes renders the sectors before its pricing (stage G3)");
 
   test("nothing near the sectors calls them testimonials, stories or customers", () => {
     const heading = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).landing.sectorCards as {

@@ -3,8 +3,15 @@ import { setRequestLocale } from "next-intl/server";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { LpFinalCta } from "@/components/landing-pages/shared/LpFinalCta";
+import { AlwaysSpotlight } from "@/components/landing-pages/outcomes/AlwaysSpotlight";
+import { HeadStartSpotlight } from "@/components/landing-pages/outcomes/HeadStartSpotlight";
+import { LevelsSpotlight } from "@/components/landing-pages/outcomes/LevelsSpotlight";
+import { QuietHoursSpotlight } from "@/components/landing-pages/outcomes/QuietHoursSpotlight";
+import { RegularsFigure } from "@/components/landing-pages/outcomes/RegularsFigure";
+import { RegularsSpotlight } from "@/components/landing-pages/outcomes/RegularsSpotlight";
 import { LpHero } from "@/components/landing-pages/shared/LpHero";
 import { LpSection } from "@/components/landing-pages/shared/LpSection";
+import { LpSectors } from "@/components/landing-pages/shared/LpSectors";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
@@ -24,7 +31,13 @@ export default function OutcomesPage() {
   return (
     <LandingPageShell slug="outcomes">
       <LpHero slug="outcomes" />
-      {/* TODO(STA-546 stage G3): problem, outcome_always, outcome_head_start, outcome_slow_days, outcome_levels, outcome_regulars, sectors */}
+      <RegularsFigure />
+      <AlwaysSpotlight />
+      <HeadStartSpotlight />
+      <QuietHoursSpotlight />
+      <LevelsSpotlight />
+      <RegularsSpotlight />
+      <LpSectors />
       <LpSection section="pricing" bare>
         <PricingSection market="us" />
       </LpSection>
