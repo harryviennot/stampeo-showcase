@@ -1,20 +1,18 @@
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
-import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { InkArrow } from "@/components/ui/InkAnnotation";
 import { HOW_IT_WORKS } from "@/lib/landing-pages/copy/how-it-works";
 import { STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
 import { lpBanner } from "../shared/banner";
-import { PhoneCrop } from "../shared/PhoneCrop";
+import { ScannerLoop } from "../shared/ScannerLoop";
 
 const CAPTION = "mt-4 text-center text-sm font-semibold text-[var(--foreground)]";
 
 /**
- * The stamp, from both sides: the staff phone scanning (no recording dot, no
- * timing) and the customer's lock screen with the café's own default stamp
- * notification, kept on screen. On a phone the lock screen is a strip with the
- * banner, since two whole phones would be a screen and a half; from `lg` it is
- * the phone.
+ * The stamp, from both sides: the staff phone running the Scanner loop and the
+ * customer's lock screen with the café's own default stamp notification, kept
+ * on screen. On a phone the lock screen is a strip with the banner, since two
+ * whole phones would be a screen and a half; from `lg` it is the phone.
  */
 export function StampStepVisual() {
   const { youCaption, theyCaption } = HOW_IT_WORKS.stamp;
@@ -23,9 +21,7 @@ export function StampStepVisual() {
   return (
     <div className="mx-auto flex w-full max-w-[340px] flex-col items-center gap-3 lg:max-w-none lg:flex-row lg:items-start lg:justify-center lg:gap-8">
       <figure className="flex w-full flex-col items-center lg:w-auto">
-        <PhoneCrop height={440}>
-          <ScanDemo chrome="minimal" stillWhenReduced />
-        </PhoneCrop>
+        <ScannerLoop narrowWidth={250} />
         <figcaption className={CAPTION}>{youCaption}</figcaption>
       </figure>
 

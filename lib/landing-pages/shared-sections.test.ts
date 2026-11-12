@@ -243,17 +243,6 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
     expect(given("NotificationSequenceDemo", "moments")).toEqual([]);
   });
 
-  test("the scanner demo on a page never shows its recording dot or its timer", () => {
-    const demos = lpFiles().flatMap((file) =>
-      openingTags(read(file))
-        .filter((tag) => tag.name === "ScanDemo")
-        .map((tag) => ({ file, chrome: literalAttr(tag.attrs, "chrome") })),
-    );
-
-    expect(demos.length).toBeGreaterThan(0);
-    expect(demos.filter(({ chrome }) => chrome !== "minimal")).toEqual([]);
-  });
-
   test("the stamp notification and the Aurevo card beside it count the same stamps", () => {
     const [, stamp, total] = STAMP_BANNER.body.match(/(\d+) of (\d+) stamps/) ?? [];
     const aurevo = STAMP_SAMPLES.find((sample) => sample.id === "aurevo");
