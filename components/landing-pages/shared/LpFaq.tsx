@@ -2,11 +2,13 @@ import { FAQList } from "@/components/ui/FAQList";
 import { TrackedLink } from "@/components/ui/TrackedLink";
 import { RegionText } from "@/components/market/RegionText";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
+import type { FaqItem } from "@/lib/landing-pages/copy/types";
 import { LpSection } from "./LpSection";
 
-/** The five questions every page answers, collapsed, and one contact line. */
-export function LpFaq() {
-  const { title, items, contact } = SHARED.faq;
+/** The five questions every page answers, collapsed, and one contact line; a page can bring its own questions. */
+export function LpFaq({ faq }: Readonly<{ faq?: { title: string; items: readonly FaqItem[] } }>) {
+  const { title, items } = faq ?? SHARED.faq;
+  const { contact } = SHARED.faq;
 
   return (
     <LpSection section="faq" size="narrow" title={title}>

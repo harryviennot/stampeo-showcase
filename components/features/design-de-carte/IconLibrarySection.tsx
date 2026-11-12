@@ -22,7 +22,8 @@ const TILE_COLORS = [
   "#14432E", // Marginalia green
 ];
 
-function MarqueeRow({
+/** One row of icon tiles drifting sideways; the section above draws two, in opposite directions. */
+export function IconMarquee({
   icons,
   colorOffset,
   reverse,
@@ -93,8 +94,8 @@ export function IconLibrarySection() {
         <div className="relative">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-[var(--blog-bg)] to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-[var(--blog-bg)] to-transparent" />
-          <MarqueeRow icons={rowA} colorOffset={0} duration={70} />
-          <MarqueeRow icons={rowB} colorOffset={3} reverse duration={85} />
+          <IconMarquee icons={rowA} colorOffset={0} duration={70} />
+          <IconMarquee icons={rowB} colorOffset={3} reverse duration={85} />
         </div>
       </ScrollReveal>
     </section>

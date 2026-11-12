@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
@@ -178,7 +178,15 @@ const ANATOMY_POINTS_REWARDS: RewardTier[] = [
   { id: "r3", name: "c", threshold: 300 },
 ];
 
-export function AnnotatedWalletCard() {
+export function AnnotatedWalletCard({
+  heading,
+  sectionClassName = "py-16 sm:py-24 bg-[var(--blog-bg)]",
+}: Readonly<{
+  /** Replaces the title and description above the card. */
+  heading?: ReactNode;
+  /** Replaces the section's padding and band colour. */
+  sectionClassName?: string;
+}> = {}) {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
   const tc = useTranslations("common");
   const [mode, setMode] = useState<"stamps" | "points">("stamps");
@@ -220,15 +228,19 @@ export function AnnotatedWalletCard() {
       };
 
   return (
-    <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
+    <section className={sectionClassName}>
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="text-h2 text-[var(--foreground)] mb-4">
-            {t("title")}
-          </h2>
-          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
-            {t("description")}
-          </p>
+          {heading ?? (
+            <>
+              <h2 className="text-h2 text-[var(--foreground)] mb-4">
+                {t("title")}
+              </h2>
+              <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
+                {t("description")}
+              </p>
+            </>
+          )}
         </ScrollReveal>
 
         <ScrollReveal className="max-w-3xl mx-auto">

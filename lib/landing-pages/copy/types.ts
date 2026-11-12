@@ -19,6 +19,16 @@ export interface HeroCopy {
   sub: string;
 }
 
+/** The hero of a feature preview: a small label above the headline, then the headline and its sub. */
+export interface PreviewHeroCopy extends HeroCopy {
+  eyebrow: string;
+}
+
+/** The closing card of a Platform-style page: the headline, its accent words and one line under it. */
+export interface BandCopy extends FinalCtaCopy {
+  sub: string;
+}
+
 export interface SectionCopy {
   title: string;
   lead: string;
@@ -94,4 +104,20 @@ export interface Moment {
   description: string;
   banner: Banner;
   plan: PlanChip;
+}
+
+/** One row of the hover rows: a label, a title and its text, with a plan chip where the row belongs to some plans. */
+export interface RowCopy<Key extends string = string> {
+  key: Key;
+  eyebrow: string;
+  title: string;
+  body: string;
+  plan?: PlanChip;
+}
+
+/** One tab of a toggle card: its label, the title of its pane and the facts under it. */
+export interface TabCopy {
+  label: string;
+  title: string;
+  facts: Fact[];
 }

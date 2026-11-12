@@ -53,7 +53,8 @@ function Figure({ children }: Readonly<{ children: string }>) {
   );
 }
 
-function Kpi({ label, value, trend }: Readonly<{ label: string; value: string; trend: string }>) {
+/** One of the dashboard's figure tiles: its label, the figure, and the trend beside it. */
+export function Kpi({ label, value, trend }: Readonly<{ label: string; value: string; trend: string }>) {
   return (
     <div className={TILE}>
       <p className="truncate text-[11px] leading-4" style={{ color: INK.label }}>
@@ -78,9 +79,44 @@ function Legend({ color, label }: Readonly<{ color: string; label: string }>) {
   );
 }
 
+/** The weekly "Visits over time" tile: returning and first visits stacked, thirteen weeks. */
+export function VisitsOverTime() {
+  const { weeks } = ANALYTICS;
+
+  return (
+    <div className={`col-span-2 ${TILE}`}>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-[12px] leading-4 font-semibold" style={{ color: INK.figure }}>
+          {DASHBOARD.overTime}
+        </p>
+        <div className="flex gap-2.5 text-[10px] leading-4" style={{ color: INK.label }}>
+          <Legend color={INK.navy} label={DASHBOARD.returning} />
+          <Legend color={INK.periwinkle} label={DASHBOARD.first} />
+        </div>
+      </div>
+      <div className="mt-3 flex h-[72px] items-end gap-[3%] border-b border-black/[0.07]">
+        {weeks.map((week, index) => {
+          const sum = week.returning + week.first;
+          return (
+            <div
+              key={index}
+              data-week={index}
+              className="flex flex-1 flex-col"
+              style={{ height: `${(100 * sum) / AXIS_MAX}%` }}
+            >
+              <div className="rounded-t-[2px]" style={{ height: `${(100 * week.first) / sum}%`, backgroundColor: INK.periwinkle }} />
+              <div className="flex-1" style={{ backgroundColor: INK.navy }} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /** The two figures over the weekly chart, in the dashboard's tiles; read out as one picture. */
 export function DeliverAnalytics() {
-  const { visits, returnRate, weeks } = ANALYTICS;
+  const { visits, returnRate } = ANALYTICS;
   const total = visits.total.toLocaleString("en-US");
   const label = `Analytics: ${total} visits, up ${visits.change}%; a ${DASHBOARD.returnRate} of ${returnRate.percent}%, up ${returnRate.change} points; and the visits over time, week by week.`;
 
@@ -88,33 +124,7 @@ export function DeliverAnalytics() {
     <div role="img" aria-label={label} className="grid grid-cols-2 gap-2.5">
       <Kpi label={DASHBOARD.visits} value={total} trend={`▲${visits.change}%`} />
       <Kpi label={DASHBOARD.returnRate} value={`${returnRate.percent}%`} trend={`▲${returnRate.change} pts`} />
-      <div className={`col-span-2 ${TILE}`}>
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-[12px] leading-4 font-semibold" style={{ color: INK.figure }}>
-            {DASHBOARD.overTime}
-          </p>
-          <div className="flex gap-2.5 text-[10px] leading-4" style={{ color: INK.label }}>
-            <Legend color={INK.navy} label={DASHBOARD.returning} />
-            <Legend color={INK.periwinkle} label={DASHBOARD.first} />
-          </div>
-        </div>
-        <div className="mt-3 flex h-[72px] items-end gap-[3%] border-b border-black/[0.07]">
-          {weeks.map((week, index) => {
-            const sum = week.returning + week.first;
-            return (
-              <div
-                key={index}
-                data-week={index}
-                className="flex flex-1 flex-col"
-                style={{ height: `${(100 * sum) / AXIS_MAX}%` }}
-              >
-                <div className="rounded-t-[2px]" style={{ height: `${(100 * week.first) / sum}%`, backgroundColor: INK.periwinkle }} />
-                <div className="flex-1" style={{ backgroundColor: INK.navy }} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <VisitsOverTime />
     </div>
   );
 }

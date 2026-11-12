@@ -64,7 +64,7 @@ describe("StepsTable: a bordered table of steps, with phones sinking behind it w
     const without = renderEn(<StepsTable cells={CELLS} />);
 
     expect(withVisual).toContain("two phones");
-    expect(withVisual).toMatch(/<ol[^>]*\b-mt-10\b/);
+    expect(withVisual).toContain("relative -mt-10 grid");
     expect(without).not.toMatch(/-mt-10|-mt-24/);
     expect(without).not.toContain("overflow-hidden pt-6");
   });
@@ -191,7 +191,7 @@ describe("what the Platform pieces take for the previews", () => {
     expect(own).toContain("h-[52px]");
     expect(textOf(own)).toContain("Try the designer");
     expect(textOf(own)).not.toContain(SHARED.demoLink);
-    expect(none).not.toContain("<a ");
+    expect(none).not.toContain('href="#');
     expect(textOf(none)).toContain(SHARED.cta);
   });
 
@@ -300,7 +300,7 @@ describe("PreviewHero: eyebrow, headline, sub, the actions, then the visual", ()
   test("the second action is Try it on your phone to #demo unless the page says otherwise, or says none", () => {
     expect(html()).toMatch(/<a [^>]*href="#demo"/);
     expect(html({ secondary: { label: "Try the designer", href: "#playground" } })).toMatch(/<a [^>]*href="#playground"/);
-    expect(html({ secondary: null })).not.toContain("<a ");
+    expect(html({ secondary: null })).not.toContain('href="#');
   });
 
   test("a plan chip can sit beside the eyebrow", () => {

@@ -346,3 +346,20 @@ export function resolveFanCard(cardId: string): FanCard {
 
   throw new Error(`hero fan: unknown card id "${cardId}"`);
 }
+
+/** The cards of the card design preview's hero (`/us/landing-pages/platform/card-design`), dealt into
+ *  the same seven places: seven very different shops, light and dark alternating, with every strip style
+ *  the designer makes (a photo strip, a ring, a big number, custom icons). Lustre is the apex, a stamp
+ *  card with a points card and a stamp card either side so a phone shows both engines. Never the
+ *  barbershop sample: its name and logo belong to a real shop. */
+export const CARD_DESIGN_FAN_CARDS: Record<number, string> = {
+  [-3]: "restaurant",
+  [-2]: "oba",
+  [-1]: "salon",
+  0: "lustre",
+  1: "pulp",
+  2: "marginalia",
+  3: "gelo",
+};
+
+export const CARD_DESIGN_FAN_SLOTS: FanSlot[] = dealCards(CARD_DESIGN_FAN_CARDS);

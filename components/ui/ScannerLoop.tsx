@@ -135,14 +135,17 @@ export function ScannerLoopPhone({
  * drawn at 280px and shrunk to `width` (`narrowWidth` below `lg`), so it never
  * resizes on hydration. The page serves the first frame and the video mounts as
  * the phone nears the screen; a reader who asks for less motion gets the success
- * frame instead and never downloads the video. `eager` is for a page's hero.
+ * frame instead and never downloads the video, and `still` gives every reader
+ * that frame. `eager` is for a page's hero.
  */
 export function ScannerLoop({
   width = DRAWN_WIDTH,
   narrowWidth,
   eager = false,
-}: Readonly<{ width?: number; narrowWidth?: number; eager?: boolean }>) {
-  const reduced = usePrefersReducedMotion();
+  still = false,
+}: Readonly<{ width?: number; narrowWidth?: number; eager?: boolean; still?: boolean }>) {
+  // The success frame stands in for the video when the reader asks for less motion, or the page asks for it.
+  const reduced = usePrefersReducedMotion() || still;
   const files = scannerLoopFiles(useLocale());
   const label = useTranslations("common.scannerLoop")("label");
 

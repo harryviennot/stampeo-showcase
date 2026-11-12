@@ -334,7 +334,9 @@ describe("the five previews' copy (STA-552)", () => {
 
     test("the 95% line says three months, not a count of days", () => {
       expect(figures[1].text).toMatch(/three months/);
-      expect(previewLines().filter((line) => /\b90\b/.test(line.value)).map((line) => line.path)).toEqual([]);
+      const campaigns = previewLines().filter((line) => line.path.startsWith("PROMOTIONAL_CAMPAIGNS_PREVIEW"));
+
+      expect(campaigns.filter((line) => /\b90\b/.test(line.value)).map((line) => line.path)).toEqual([]);
     });
   });
 

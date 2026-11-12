@@ -4,19 +4,41 @@ import { FEATURES } from "./copy/features";
 import { HOW_IT_WORKS } from "./copy/how-it-works";
 import { OUTCOMES } from "./copy/outcomes";
 import { PLATFORM } from "./copy/platform";
+import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
+import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
+import { MOBILE_SCANNER_PREVIEW } from "./copy/previews/mobile-scanner";
+import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
+import { PUSH_NOTIFICATIONS_PREVIEW } from "./copy/previews/push-notifications";
 import type { FinalCtaCopy, HeroCopy, PageMeta } from "./copy/types";
 
 /**
- * The four `/us/landing-pages/*` pages, in one place: each page's variant
+ * The nine `/us/landing-pages/*` pages, in one place: each page's variant
  * (what `LandingTracker` reports), its sections in render order, and the copy
  * every page has (head, hero, closing headline). The sections are the ids the
  * pages tag with `data-landing-section`, and `registry.test.ts` pins that each
  * page renders exactly these, in this order.
+ *
+ * Four are the pages ads point at; five are previews of the feature pages in
+ * Platform's style (`platform/<feature>`), English, noindex and linked only
+ * from each other.
  */
 
 export const LANDING_SLUGS = ["how-it-works", "features", "outcomes", "platform"] as const;
 
-export type LandingSlug = (typeof LANDING_SLUGS)[number];
+/** The five previews of `/en/features/*`, in Platform's style. */
+export const PREVIEW_SLUGS = [
+  "platform/card-design",
+  "platform/mobile-scanner",
+  "platform/push-notifications",
+  "platform/analytics",
+  "platform/promotional-campaigns",
+] as const;
+
+export const ALL_LANDING_SLUGS = [...LANDING_SLUGS, ...PREVIEW_SLUGS] as const;
+
+export type PreviewSlug = (typeof PREVIEW_SLUGS)[number];
+
+export type LandingSlug = (typeof ALL_LANDING_SLUGS)[number];
 
 export type LandingSectionId =
   | "hero"
@@ -49,7 +71,24 @@ export type LandingSectionId =
   | "pricing"
   | "faq"
   | "final_cta"
-  | "blog";
+  | "blog"
+  | "icons"
+  | "playground"
+  | "anatomy"
+  | "stamps"
+  | "wallets"
+  | "counter"
+  | "ways"
+  | "team"
+  | "moments"
+  | "wording"
+  | "glance"
+  | "questions"
+  | "activity"
+  | "ideas"
+  | "delivery"
+  | "plans"
+  | "related";
 
 export interface LandingPage {
   slug: LandingSlug;
@@ -57,9 +96,11 @@ export interface LandingPage {
   variant: string;
   sections: readonly LandingSectionId[];
   meta: PageMeta;
-  /** Platform's hero is a headline alone, so its `sub` is optional. */
-  hero: Omit<HeroCopy, "sub"> & { sub?: string };
-  finalCta: FinalCtaCopy;
+  /** Platform's hero is a headline alone, so its `sub` is optional; a preview's has a small label above it too. */
+  hero: Omit<HeroCopy, "sub"> & { sub?: string; eyebrow?: string };
+  finalCta: FinalCtaCopy & { sub?: string };
+  /** The three sibling previews a preview closes with. */
+  related?: readonly PreviewSlug[];
 }
 
 export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
@@ -146,6 +187,51 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
     meta: PLATFORM.meta,
     hero: PLATFORM.hero,
     finalCta: PLATFORM.band,
+  },
+  "platform/card-design": {
+    slug: "platform/card-design",
+    variant: "lp_platform_card_design",
+    sections: ["hero", "icons", "playground", "anatomy", "numbers", "stamps", "wallets", "faq", "final_cta", "related"],
+    meta: CARD_DESIGN_PREVIEW.meta,
+    hero: CARD_DESIGN_PREVIEW.hero,
+    finalCta: CARD_DESIGN_PREVIEW.band,
+    related: ["platform/mobile-scanner", "platform/push-notifications", "platform/analytics"],
+  },
+  "platform/mobile-scanner": {
+    slug: "platform/mobile-scanner",
+    variant: "lp_platform_mobile_scanner",
+    sections: ["hero", "how", "counter", "ways", "team", "demo", "final_cta", "related"],
+    meta: MOBILE_SCANNER_PREVIEW.meta,
+    hero: MOBILE_SCANNER_PREVIEW.hero,
+    finalCta: MOBILE_SCANNER_PREVIEW.band,
+    related: ["platform/card-design", "platform/push-notifications", "platform/analytics"],
+  },
+  "platform/push-notifications": {
+    slug: "platform/push-notifications",
+    variant: "lp_platform_push_notifications",
+    sections: ["hero", "how", "moments", "wallets", "wording", "demo", "final_cta", "related"],
+    meta: PUSH_NOTIFICATIONS_PREVIEW.meta,
+    hero: PUSH_NOTIFICATIONS_PREVIEW.hero,
+    finalCta: PUSH_NOTIFICATIONS_PREVIEW.band,
+    related: ["platform/promotional-campaigns", "platform/mobile-scanner", "platform/analytics"],
+  },
+  "platform/analytics": {
+    slug: "platform/analytics",
+    variant: "lp_platform_analytics",
+    sections: ["hero", "glance", "questions", "activity", "numbers", "final_cta", "related"],
+    meta: ANALYTICS_PREVIEW.meta,
+    hero: ANALYTICS_PREVIEW.hero,
+    finalCta: ANALYTICS_PREVIEW.band,
+    related: ["platform/promotional-campaigns", "platform/push-notifications", "platform/card-design"],
+  },
+  "platform/promotional-campaigns": {
+    slug: "platform/promotional-campaigns",
+    variant: "lp_platform_promotional_campaigns",
+    sections: ["hero", "numbers", "how", "ideas", "delivery", "plans", "faq", "final_cta", "related"],
+    meta: PROMOTIONAL_CAMPAIGNS_PREVIEW.meta,
+    hero: PROMOTIONAL_CAMPAIGNS_PREVIEW.hero,
+    finalCta: PROMOTIONAL_CAMPAIGNS_PREVIEW.band,
+    related: ["platform/push-notifications", "platform/analytics", "platform/card-design"],
   },
 };
 
