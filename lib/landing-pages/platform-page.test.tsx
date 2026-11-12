@@ -119,14 +119,14 @@ describe("the strip of business types", () => {
 });
 
 describe("what's delivered: two phones, three glass cards and the wallet badges", () => {
-  test("the three cards are labelled from the copy, and the one with a dashboard capture says it is sample data", () => {
+  test("the three cards are labelled from the copy, and none carries a sample-data caption (Harry, 13 Nov)", () => {
     const source = code(platformFile("DeliverComposition"));
     const titles = openingTags(source).filter((tag) => tag.name === "GlassCard").map((tag) => /title=\{([^}]*)\}/.exec(tag.attrs)?.[1].trim());
 
     expect(titles.sort()).toEqual(
       ["PLATFORM.deliver.analyticsLabel", "PLATFORM.deliver.notificationsLabel", "PLATFORM.deliver.updatesLabel"].sort(),
     );
-    expect(source).toContain("SHARED.sampleData");
+    expect(source).not.toContain("SHARED.sampleData");
   });
 
   test("a glass card can float, and the float stops for readers who ask for less motion", () => {
