@@ -268,12 +268,18 @@ Visual (verified in the polish pass, 390×844 and 1440×900, PNGs read)
 app/[locale]/us/landing-pages/
   how-it-works/page.tsx  features/page.tsx  outcomes/page.tsx
 components/landing-pages/
-  shared/      LandingPageShell, LpSection, LpHero, LpSpotlight, LpDemo, LpFaq, LpFinalCta
-  how-it-works/HowSteps   features/FeaturesHeroVisual   outcomes/RegularsFigure
+  shared/      LandingPageShell, LpSection, LpHero, LpSpotlight, LpDemo, LpFaq, LpFinalCta,
+               AurevoCard, banner (lpBanner), PhoneCrop, PlanLine, SampleCapture
+  how-it-works/HowSteps, HowHeroVisual
+  features/FeaturesHeroVisual, MessagesSpotlight, DesignSpotlight, AnalyticsSpotlight
+  outcomes/OutcomesHeroVisual, RegularsFigure, ReturnSpotlight, SlowDaysSpotlight, RegularsSpotlight
 lib/landing-pages/
   pages.ts                 # slug → variant, sections, metadata (the one source)
-  copy/{shared,how-it-works,features,outcomes}.ts
-  pages.test.ts  copy.test.ts
+  accent.ts  proof.ts
+  copy/{types,shared,how-it-works,features,outcomes}.ts
+  registry.test.ts  shared-sections.test.ts  page-visuals.test.ts  copy.test.ts
+lib/testing/
+  jsx-source.ts  landing-pages-source.ts  copy-claims.ts   # source-scan helpers, shared claim guards
 ```
 
 New folders only; no file grows past its limit. The three extended components get optional props.
