@@ -9,7 +9,7 @@ import { SHARED } from "@/lib/landing-pages/copy/shared";
 export function PlanLine({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <p className="mt-6 max-w-xl text-pretty text-base text-[var(--foreground)]">
-      <span className="mr-2 inline-block rounded-full bg-[var(--accent)]/10 px-3 py-1 align-middle text-xs font-bold text-[var(--accent)]">
+      <span className="mr-2 inline-block rounded-full bg-[var(--background-subtle)] px-3 py-1 align-middle text-xs font-semibold text-[var(--foreground)] ring-1 ring-inset ring-[var(--border)]">
         {SHARED.broadcastPlans}
       </span>
       {children}

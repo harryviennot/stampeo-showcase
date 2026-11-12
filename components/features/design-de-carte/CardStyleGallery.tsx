@@ -37,11 +37,14 @@ function GallerySlide({
 /**
  * `showCta` draws the "Start Free" block under the carousel; pages with their own
  * CTA hide it. `heading` replaces the title and subtitle above the carousel.
+ * `sectionClassName` replaces the section's padding and band colour, for a page
+ * with its own rhythm.
  */
 export async function CardStyleGallery({
   showCta = true,
   heading,
-}: Readonly<{ showCta?: boolean; heading?: { title: string; subtitle: string } }>) {
+  sectionClassName = "py-20 sm:py-28 bg-[var(--blog-bg-alt)]",
+}: Readonly<{ showCta?: boolean; heading?: { title: string; subtitle: string }; sectionClassName?: string }>) {
   const t = await getTranslations("features.design-de-carte.gallery");
   const tc = await getTranslations("common");
   const stampCaptions = t.raw("stamps") as string[];
@@ -138,7 +141,7 @@ export async function CardStyleGallery({
   }
 
   return (
-    <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)]">
+    <section className={sectionClassName}>
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-14">
           <h2 className="text-h2 text-[var(--foreground)]">

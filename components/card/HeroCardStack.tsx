@@ -3,13 +3,21 @@ import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { STAMP_SAMPLES, POINTS_SAMPLES } from "@/lib/loyalty-samples";
 
+/** The classes that show the peeking cards from a breakpoint up. */
+const PEEK_VISIBLE = { lg: "hidden lg:block", xl: "hidden xl:block" } as const;
+
 /**
  * Hero visual built entirely from the hand-designed brand bank: the Aurevo
  * café card (real imported cup icons) front and center, with two points cards
  * peeking out behind it on large screens. `showQR` draws the front card's QR
  * code, so it reads as a complete pass rather than ending halfway down.
+ * `peekFrom` is the breakpoint the peeking cards appear at, for a column too
+ * narrow to hold them at `lg`.
  */
-export async function HeroCardStack({ showQR = false }: { showQR?: boolean } = {}) {
+export async function HeroCardStack({
+  showQR = false,
+  peekFrom = "lg",
+}: { showQR?: boolean; peekFrom?: keyof typeof PEEK_VISIBLE } = {}) {
   const tp = await getTranslations("features.design-de-carte.custom.playground");
 
   const center = STAMP_SAMPLES.find((s) => s.id === "aurevo") ?? STAMP_SAMPLES[0];
@@ -30,7 +38,7 @@ export async function HeroCardStack({ showQR = false }: { showQR?: boolean } = {
     <div className="relative w-full max-w-[300px] mx-auto lg:ml-auto lg:mr-6">
       {/* Peeking cards: decoration only, desktop only to avoid mobile clutter */}
       <div
-        className="hidden lg:block absolute top-1/2 -translate-y-1/2 -left-36 w-[220px] -rotate-[9deg] opacity-70 pointer-events-none select-none"
+        className={`${PEEK_VISIBLE[peekFrom]} absolute top-1/2 -translate-y-1/2 -left-36 w-[220px] -rotate-[9deg] opacity-70 pointer-events-none select-none`}
         aria-hidden="true"
       >
         <ScaledCardWrapper baseWidth={220}>
@@ -43,7 +51,7 @@ export async function HeroCardStack({ showQR = false }: { showQR?: boolean } = {
         </ScaledCardWrapper>
       </div>
       <div
-        className="hidden lg:block absolute top-1/2 -translate-y-1/2 -right-24 w-[220px] rotate-[8deg] opacity-70 pointer-events-none select-none"
+        className={`${PEEK_VISIBLE[peekFrom]} absolute top-1/2 -translate-y-1/2 -right-24 w-[220px] rotate-[8deg] opacity-70 pointer-events-none select-none`}
         aria-hidden="true"
       >
         <ScaledCardWrapper baseWidth={220}>

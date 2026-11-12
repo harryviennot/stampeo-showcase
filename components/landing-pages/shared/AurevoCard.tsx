@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
@@ -12,10 +13,27 @@ const LAYOUT_WIDTH = 300;
 const CARD_RATIO = 1.282;
 
 /**
+ * A wallet card laid out at `LAYOUT_WIDTH` and shrunk to `width` by a fixed CSS
+ * scale, so it draws at its final size on the server and does not resize when
+ * the page hydrates.
+ */
+export function PassFrame({ width, children }: Readonly<{ width: number; children: ReactNode }>) {
+  const scale = width / LAYOUT_WIDTH;
+
+  return (
+    <div style={{ width, height: LAYOUT_WIDTH * CARD_RATIO * scale }}>
+      <div
+        style={{ width: LAYOUT_WIDTH, transform: `scale(${scale})`, transformOrigin: "top left" }}
+      >
+        <ScaledCardWrapper baseWidth={LAYOUT_WIDTH}>{children}</ScaledCardWrapper>
+      </div>
+    </div>
+  );
+}
+
+/**
  * The Aurevo card at `stamps` of 8, with the member and reward fields
- * `HeroCardStack` gives the same card. It is laid out at `LAYOUT_WIDTH` and
- * shrunk to `width` by a fixed CSS scale, so it draws at its final size on the
- * server and does not resize when the page hydrates.
+ * `HeroCardStack` gives the same card, drawn at `width`.
  */
 export async function AurevoCard({ stamps, width }: Readonly<{ stamps: number; width: number }>) {
   const t = await getTranslations("features.design-de-carte.custom.playground");
@@ -26,17 +44,10 @@ export async function AurevoCard({ stamps, width }: Readonly<{ stamps: number; w
       { key: "reward", label: t("rewardLabel"), value: t("rewardValue") },
     ],
   };
-  const scale = width / LAYOUT_WIDTH;
 
   return (
-    <div style={{ width, height: LAYOUT_WIDTH * CARD_RATIO * scale }}>
-      <div
-        style={{ width: LAYOUT_WIDTH, transform: `scale(${scale})`, transformOrigin: "top left" }}
-      >
-        <ScaledCardWrapper baseWidth={LAYOUT_WIDTH}>
-          <WalletCard design={design} stamps={stamps} />
-        </ScaledCardWrapper>
-      </div>
-    </div>
+    <PassFrame width={width}>
+      <WalletCard design={design} stamps={stamps} />
+    </PassFrame>
   );
 }
