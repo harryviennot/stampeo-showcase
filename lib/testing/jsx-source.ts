@@ -14,13 +14,14 @@ export function read(file: string): string {
 }
 
 /**
- * Block comments and whole-line `//` comments, blanked out with their line
+ * Whole-line `//` comments and block comments, blanked out with their line
  * breaks kept. A trailing `//` is left alone: it is indistinguishable from the
- * one inside `"https://…"`.
+ * one inside `"https://…"`. Line comments go first, so a `/*` inside one (as in
+ * "/us/*") does not open a block.
  */
 export function stripComments(source: string): string {
   const blank = (text: string) => text.replace(/[^\n]/g, " ");
-  return source.replace(/\/\*[\s\S]*?\*\//g, blank).replace(/^[ \t]*\/\/.*$/gm, blank);
+  return source.replace(/^[ \t]*\/\/.*$/gm, blank).replace(/\/\*[\s\S]*?\*\//g, blank);
 }
 
 export interface Tag {
