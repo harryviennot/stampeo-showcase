@@ -4,7 +4,39 @@ ISSUE: STA-546 (https://linear.app/stampeo/issue/STA-546)
 BRANCH: `feat/sta-546-landing-variants` (worktree `showcase/.claude/worktrees/sta-546`, off origin/dev 34601c3)
 REPOS: showcase only
 MIGRATION: no
-STATUS: APPROVED (12 Nov 2026, by Harry)
+STATUS: v1 APPROVED (12 Nov 2026, by Harry) · v2 DRAFT (12 Nov 2026, after Harry's first look)
+
+## v2: Harry's first look (12 Nov 2026)
+
+> This section supersedes the page outlines, the 8-section cap and the "no levels" decision below.
+> The v1 sections stay for the record; where they conflict, v2 wins.
+
+**Harry's verdict on v1:** "way too simple". Every competitor page goes into some depth about what it
+does; ours feel made quickly, with no real design or user experience, and don't show enough of what
+Stampeo can do.
+
+**What v2 changes:**
+1. **Depth and craft over restraint.** Pages run to about 10 to 12 rich sections, roughly 12 to 15 phone
+   screens, like PassEntry. A section can carry tabs, a grid, a live or animated product demo, or
+   layered captures, not just one heading and one picture. The site's existing rich components are
+   the toolbox (`CardDesignPlayground`, `ScanDemo`, `NotificationSequenceDemo`, `LiveActivityFeed`,
+   `BusiestTimesSection`, `CardStyleGallery`, `HeroCardFan`, `HeroDemo`, `ROICalculator`…).
+2. **Brought back from the main landing, on every page:**
+   - the official **Add to Apple Wallet / Add to Google Wallet** badges, directly above the dashboard;
+   - the **desktop dashboard with the phone over it** (as `VariantDashboardShot` on `/us`), so owners
+     see they also get a web dashboard on their computer, not only a phone scanner;
+   - **"Stampeo adapts to your business"** (the sector carousel).
+3. **Levels shown as live** next to stamps and points (Harry, 12 Nov). **Launch prerequisite:** Harry
+   switches levels on for every business before ads point at these pages. The copy word is
+   "levels" (the product's noun), not "tiers".
+4. **A fourth page, PassEntry's homepage rebuilt for Stampeo:** `/us/landing-pages/platform`, variant
+   `lp_platform`. Same structure, layout and interactions as passentry.com; our words, visuals and
+   brand. Reference and substitutions: `research-passentry.md`. Our pricing block sits before the
+   accent CTA band (Harry, 12 Nov). The site header and footer stay the shared ones.
+5. **Still true from v1:** one primary CTA "Start my free trial"; the reassurance line; noindex;
+   one variant per page; copy in TS modules with the claim guards; only live claims (no geofencing,
+   offline, POS, SMS, minutes); sourced figures only; nothing invented (no testimonials, no customer
+   logos).
 
 ## Problem
 
