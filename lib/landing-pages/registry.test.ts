@@ -1,8 +1,12 @@
 /**
- * The three US landing pages (`/us/landing-pages/*`): one registry, one shell,
+ * The four US landing pages (`/us/landing-pages/*`): one registry, one shell,
  * one set of shared sections. There is no component runner, so these read the
  * source: which sections a page renders and in what order, where its tracking
  * sits, which CTA locations it may use, and what its hero says.
+ *
+ * The page stages add each page's middle sections; until then a page's
+ * section-order test is a `todo` (see `STAGED`) and a lighter one checks the
+ * sections it already renders.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -23,47 +27,165 @@ import {
   shared,
 } from "../testing/landing-pages-source";
 import { SHARED } from "./copy/shared";
-import { LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata } from "./pages";
+import { LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata, type LandingSlug } from "./pages";
 import { PROOF_LABELS, proofFigures } from "./proof";
 
-describe("the registry (AC1, AC2, AC4)", () => {
-  test("lists exactly the three pages", () => {
-    expect([...LANDING_SLUGS].sort()).toEqual(["features", "how-it-works", "outcomes"]);
+/** The three pages that argue one thing, and Platform, which tours the product. */
+const ARGUMENT_PAGES = ["how-it-works", "features", "outcomes"] as const;
+
+/** The sections of each page, in the order the plan's v2 table gives them. */
+const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
+  "how-it-works": [
+    "hero",
+    "steps",
+    "step_create",
+    "step_share",
+    "step_stamp",
+    "demo",
+    "see_it_work",
+    "sectors",
+    "first_day",
+    "pricing",
+    "faq",
+    "final_cta",
+  ],
+  features: [
+    "hero",
+    "demo",
+    "spotlight_design",
+    "program_types",
+    "spotlight_messages",
+    "spotlight_scanner",
+    "spotlight_analytics",
+    "more_features",
+    "sectors",
+    "pricing",
+    "faq",
+    "final_cta",
+  ],
+  outcomes: [
+    "hero",
+    "problem",
+    "outcome_always",
+    "outcome_head_start",
+    "outcome_slow_days",
+    "outcome_levels",
+    "outcome_regulars",
+    "sectors",
+    "pricing",
+    "faq",
+    "final_cta",
+  ],
+  platform: [
+    "hero",
+    "marquee",
+    "deliver",
+    "numbers",
+    "how",
+    "demo",
+    "program_types",
+    "platform",
+    "share",
+    "pricing",
+    "final_cta",
+    "sectors",
+    "blog",
+  ],
+};
+
+/**
+ * Pages whose middle sections a page stage adds, with the stage that does it.
+ * A stage deletes its page's entry to arm the full section-order test.
+ */
+const STAGED: Partial<Record<LandingSlug, string>> = {
+  "how-it-works": "stage G1",
+  features: "stage G2",
+  outcomes: "stage G3",
+  platform: "stage G4",
+};
+
+/** What a staged page renders already: the hero and the shared closing blocks. */
+const SHARED_SO_FAR: Record<LandingSlug, string[]> = {
+  "how-it-works": ["hero", "pricing", "faq", "final_cta"],
+  features: ["hero", "pricing", "faq", "final_cta"],
+  outcomes: ["hero", "pricing", "faq", "final_cta"],
+  platform: ["hero", "pricing", "final_cta", "sectors"],
+};
+
+describe("the registry (AC1v2, AC2v2, AC4)", () => {
+  test("lists exactly the four pages", () => {
+    expect([...LANDING_SLUGS].sort()).toEqual(["features", "how-it-works", "outcomes", "platform"]);
     expect(Object.keys(LANDING_PAGES).sort()).toEqual([...LANDING_SLUGS].sort());
   });
 
-  test.each(LANDING_SLUGS)("%s has at most 8 sections, none twice, and ends with pricing, faq and final_cta", (slug) => {
+  test.each(LANDING_SLUGS)("%s lists the plan's sections, in the plan's order", (slug) => {
+    expect([...LANDING_PAGES[slug].sections]).toEqual(PLAN_SECTIONS[slug]);
+  });
+
+  test.each([
+    ["how-it-works", 12],
+    ["features", 12],
+    ["outcomes", 11],
+    ["platform", 13],
+  ] as const)("%s has %i sections, none twice, and never more than 13", (slug, count) => {
     const { sections } = LANDING_PAGES[slug];
 
+    expect(sections).toHaveLength(count);
     expect(new Set(sections).size).toBe(sections.length);
-    expect(sections.length).toBeLessThanOrEqual(8);
-    expect(sections.slice(-3)).toEqual(["pricing", "faq", "final_cta"]);
+    expect(sections.length).toBeLessThanOrEqual(13);
+  });
+
+  test.each(ARGUMENT_PAGES)("%s ends with pricing, faq and final_cta", (slug) => {
+    expect(LANDING_PAGES[slug].sections.slice(-3)).toEqual(["pricing", "faq", "final_cta"]);
+  });
+
+  test("Platform closes with pricing, the accent band, the sectors and the blog, and has no FAQ", () => {
+    expect(LANDING_PAGES.platform.sections.slice(-4)).toEqual(["pricing", "final_cta", "sectors", "blog"]);
+    expect(LANDING_PAGES.platform.sections).not.toContain("faq");
+  });
+
+  test.each(LANDING_SLUGS)("%s has the sectors and the pricing block", (slug) => {
+    expect(LANDING_PAGES[slug].sections).toEqual(expect.arrayContaining(["sectors", "pricing"]));
   });
 
   test("each page has its own variant, short enough for the attribution field", () => {
     const variants = LANDING_SLUGS.map((slug) => LANDING_PAGES[slug].variant);
 
-    expect(variants.sort()).toEqual(["lp_features", "lp_howto", "lp_outcomes"]);
-    expect(new Set(variants).size).toBe(3);
+    expect(variants.sort()).toEqual(["lp_features", "lp_howto", "lp_outcomes", "lp_platform"]);
+    expect(new Set(variants).size).toBe(4);
     for (const variant of variants) expect(variant.length).toBeLessThanOrEqual(MAX_FIELD);
   });
 
-  test("Outcomes has no demo to link to; How-to and Features do", () => {
-    expect(LANDING_SLUGS.filter(hasDemoSection).sort()).toEqual(["features", "how-it-works"]);
+  test("Outcomes has no demo to link to; How-to, Features and Platform do", () => {
+    expect(LANDING_SLUGS.filter(hasDemoSection).sort()).toEqual(["features", "how-it-works", "platform"]);
     expect(LANDING_PAGES.outcomes.sections).not.toContain("demo");
   });
 });
 
-describe("the routes (AC1, AC2, AC4)", () => {
+describe("the routes (AC1v2, AC2v2, AC4)", () => {
   test.each(LANDING_SLUGS)("%s has its page file", (slug) => {
     expect(existsSync(pageFile(slug))).toBe(true);
   });
 
-  test.each(LANDING_SLUGS)("%s renders every registry section once, in registry order", (slug) => {
-    expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
-  });
+  for (const slug of LANDING_SLUGS) {
+    const stage = STAGED[slug];
+    if (stage) {
+      test.todo(`${slug}: renders every registry section once, in registry order (${stage} adds the middle)`);
+      test(`${slug}: renders the sections it has so far once each, in registry order`, () => {
+        const rendered = renderedSections(pageFile(slug));
+        const expected = LANDING_PAGES[slug].sections.filter((id) => rendered.includes(id));
 
-  test.each(LANDING_SLUGS)("%s renders the shared FAQ and final CTA, and the US pricing block", (slug) => {
+        expect(rendered).toEqual(expected);
+        expect(rendered).toEqual(expect.arrayContaining(SHARED_SO_FAR[slug]));
+      });
+    } else {
+      test(`${slug}: renders every registry section once, in registry order`, () => {
+        expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
+      });
+    }
+  }
+
+  test.each(ARGUMENT_PAGES)("%s renders the shared FAQ and final CTA, and the US pricing block", (slug) => {
     const source = code(pageFile(slug));
     const imports = importedFiles(pageFile(slug), source);
 
@@ -72,6 +194,17 @@ describe("the routes (AC1, AC2, AC4)", () => {
     expect(imports.get("PricingSection")).toBe(join(ROOT, "components", "sections", "PricingSection.tsx"));
     expect(openingTags(source).map((tag) => tag.name)).toEqual(expect.arrayContaining(["LpFaq", "LpFinalCta"]));
     expect(literalAttr(findTag(source, "PricingSection")?.attrs ?? "", "market")).toBe("us");
+  });
+
+  test("Platform renders the US pricing block, the accent band and the sectors", () => {
+    const source = code(pageFile("platform"));
+    const imports = importedFiles(pageFile("platform"), source);
+
+    expect(imports.get("LpAccentBand")).toBe(shared("LpAccentBand"));
+    expect(imports.get("LpSectors")).toBe(shared("LpSectors"));
+    expect(imports.get("PricingSection")).toBe(join(ROOT, "components", "sections", "PricingSection.tsx"));
+    expect(literalAttr(findTag(source, "PricingSection")?.attrs ?? "", "market")).toBe("us");
+    expect(openingTags(source).map((tag) => tag.name)).not.toContain("LpFaq");
   });
 
   test.each(LANDING_SLUGS)("%s mounts the shell with its own slug", (slug) => {
@@ -152,12 +285,15 @@ describe("what the pages leave out (AC3)", () => {
 
 describe("sign-up and contact links (AC5, AC7)", () => {
   const ALLOWED = ["hero", "feature_cta", "final_cta", "faq_contact"];
+  /** The one component that takes its location as a prop; its callers write it as a literal. */
+  const LOCATION_PROP = shared("LpCtaPair");
 
   test("every tracked location is one the pages may use, always written as a literal", () => {
     const used: string[] = [];
     for (const file of lpFiles()) {
-      for (const match of code(file).matchAll(/trackAs=(?:"([^"]+)"|\{[^}]*\})/g)) {
-        used.push(match[1] ?? `${file}: ${match[0]}`);
+      for (const match of code(file).matchAll(/trackAs=(?:"([^"]+)"|\{([^}]*)\})/g)) {
+        const forwarded = file === LOCATION_PROP && match[2]?.trim() === "location";
+        if (!forwarded) used.push(match[1] ?? `${file}: ${match[0]}`);
       }
     }
 
@@ -165,10 +301,25 @@ describe("sign-up and contact links (AC5, AC7)", () => {
     expect(used.filter((location) => !ALLOWED.includes(location))).toEqual([]);
   });
 
+  test("the CTA pair forwards a location of the same list, and its callers pass a literal", () => {
+    const pair = code(LOCATION_PROP);
+    const calls = lpFiles().flatMap((file) =>
+      openingTags(read(file))
+        .filter((tag) => tag.name === "LpCtaPair")
+        .map((tag) => literalAttr(tag.attrs, "location")),
+    );
+
+    expect(pair).toMatch(/location:\s*"hero"\s*\|\s*"feature_cta"/);
+    expect(pair).toContain("trackAs={location}");
+    expect(calls.length).toBeGreaterThan(0);
+    expect(calls.filter((location) => !ALLOWED.includes(location ?? ""))).toEqual([]);
+  });
+
   test.each([
     ["LpHero", "CTAButton", "hero"],
     ["LpDemo", "CTAButton", "feature_cta"],
     ["LpFinalCta", "CTAButton", "final_cta"],
+    ["LpAccentBand", "CTAButton", "final_cta"],
     ["LpFaq", "TrackedLink", "faq_contact"],
   ])("%s tracks its %s as %s", (component, tag, location) => {
     const link = findTag(read(shared(component)), tag);
@@ -182,6 +333,13 @@ describe("sign-up and contact links (AC5, AC7)", () => {
 
   test("the demo section offers the trial in an outline button, whatever the demo shows", () => {
     expect(literalAttr(findTag(read(shared("LpDemo")), "CTAButton")?.attrs ?? "", "variant")).toBe("outline");
+  });
+
+  test("the accent band offers the trial in the inverse button, and says its reassurance", () => {
+    const band = code(shared("LpAccentBand"));
+
+    expect(literalAttr(findTag(band, "CTAButton")?.attrs ?? "", "variant")).toBe("inverse");
+    expect(band).toContain("SHARED.reassurance");
   });
 
   test("the hero's demo link is a plain anchor to #demo, at least 44px tall", () => {
@@ -198,6 +356,16 @@ describe("sign-up and contact links (AC5, AC7)", () => {
 
     expect(hero.match(/href="#demo"/g)).toHaveLength(1);
     expect(hero).toMatch(/hasDemoSection\([^)]*\)\s*&&\s*\(\s*<a\b[^>]*href="#demo"/);
+  });
+
+  test("the CTA pair's secondary action is a plain anchor to #demo, as tall as the primary button", () => {
+    const link = openingTags(read(LOCATION_PROP)).find(
+      (tag) => tag.name === "a" && literalAttr(tag.attrs, "href") === "#demo",
+    );
+
+    expect(link).toBeDefined();
+    expect(link?.attrs).toContain("h-[52px]");
+    expect(link?.attrs).toMatch(/\brounded-full\b/);
   });
 });
 

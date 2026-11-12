@@ -7,6 +7,9 @@ import { ROOT, code, importedFiles, literalAttr, openingTags, read, sourceFiles 
  * that the registry, shared-section and page-visual tests share.
  */
 
+/** The site's own components and routes: where a shared component's other callers live. */
+export const SITE_SOURCE_DIRS = [join(ROOT, "components"), join(ROOT, "app")];
+
 export const PAGES_DIR = join(ROOT, "app", "[locale]", "us", "landing-pages");
 export const COMPONENTS_DIR = join(ROOT, "components", "landing-pages");
 export const SHARED_DIR = join(COMPONENTS_DIR, "shared");
@@ -16,7 +19,10 @@ export const pageFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx")
 /** A component of `components/landing-pages/shared/`. */
 export const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
 
-/** Every component of the pages, and the three page files. */
+/** A component of a page's own folder, `components/landing-pages/<folder>/`. */
+export const pageComponent = (folder: string, name: string) => join(COMPONENTS_DIR, folder, `${name}.tsx`);
+
+/** Every component of the pages, and the page files. */
 export const lpFiles = () => [...sourceFiles(COMPONENTS_DIR), ...LANDING_SLUGS.map(pageFile)];
 
 /** Every file the page renders through `components/landing-pages/`, itself included. */
@@ -63,4 +69,19 @@ export function planLineWith(source: string, needle: string): string {
   const open = source.lastIndexOf("<PlanLine", at);
   const close = source.indexOf("</PlanLine>", at);
   return at === -1 || open === -1 || close === -1 ? "" : source.slice(open, close);
+}
+
+/**
+ * Every opening tag called `component` in the site's own source, the landing
+ * pages and their components apart: the call sites that existed before these pages and
+ * must render as they did, whatever props the pages add.
+ */
+export function otherCallers(component: string, ownFile: string): Array<{ file: string; attrs: string }> {
+  return SITE_SOURCE_DIRS.flatMap((dir) => sourceFiles(dir))
+    .filter((file) => file !== ownFile && !file.startsWith(COMPONENTS_DIR) && !file.startsWith(PAGES_DIR))
+    .flatMap((file) =>
+      openingTags(read(file))
+        .filter((tag) => tag.name === component)
+        .map((tag) => ({ file, attrs: tag.attrs })),
+    );
 }

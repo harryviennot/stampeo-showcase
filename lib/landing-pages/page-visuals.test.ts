@@ -1,38 +1,166 @@
 /**
- * What each landing page shows beside its words: the notifications on every
- * page, the Features page's hero, lock screen, gallery and capture, and the
- * Outcomes page's figure, spotlights and example. Read from the source, since
- * there is no component runner.
+ * What the landing pages show beside their words: the hero the three argument
+ * pages share (badges, then the dashboard on a computer and a phone), the
+ * sectors every page ends on, the notifications and demos the pages borrow,
+ * and the share tree's words. Read from the source, since there is no
+ * component runner.
  */
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { STAMP_SAMPLES } from "../loyalty-samples";
-import { code, filesWith, findTag, openingTags, read, sourceFiles } from "../testing/jsx-source";
-import {
-  COMPONENTS_DIR,
-  landingTree,
-  pageFile,
-  planLineWith,
-  sectionSource,
-  shared,
-} from "../testing/landing-pages-source";
-import { FEATURES } from "./copy/features";
-import { STAMP_BANNER } from "./copy/shared";
-import { LANDING_PAGES, LANDING_SLUGS } from "./pages";
+import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
+import { PAGES, lines } from "../testing/landing-copy";
+import { lpFiles, pageComponent, pageFile, shared } from "../testing/landing-pages-source";
+import { SHARED, STAMP_BANNER } from "./copy/shared";
+import { LANDING_PAGES, type LandingSlug } from "./pages";
 
-describe("every notification on a page is still and the sample café's", () => {
-  test.each(LANDING_SLUGS)("%s", (slug) => {
-    const notifications = [...landingTree(pageFile(slug))].flatMap((file) =>
+describe("the hero the three argument pages share (AC18)", () => {
+  const hero = () => code(shared("LpHero"));
+
+  test("centres its text at every width, and has no page-specific visual beside it", () => {
+    expect(hero()).toMatch(/\btext-center\b/);
+    expect(hero()).toMatch(/\bmax-w-3xl\b/);
+    expect(hero()).not.toMatch(/\bvisual\b/);
+    expect(hero()).not.toMatch(/lg:col-span/);
+  });
+
+  test("then the official wallet badges, as images and not links, then the dashboard duo", () => {
+    const source = hero();
+    const badges = source.indexOf('walletBadges("en")');
+    const duo = source.indexOf("<DashboardDuo");
+
+    expect(badges).toBeGreaterThan(-1);
+    expect(duo).toBeGreaterThan(badges);
+    expect(source).toContain("badges.apple");
+    expect(source).toContain("badges.google");
+    const between = source.slice(badges, duo);
+    expect(between).not.toMatch(/<a\b|<Link\b|<TrackedLink\b/);
+    expect(findTag(source, "DashboardDuo")?.attrs).toMatch(/\bpriority\b/);
+  });
+
+  test("says its reassurance through RegionText and prints the proof line", () => {
+    expect(hero()).toContain("<RegionText raw={SHARED.reassurance}");
+    expect(hero()).toContain("SHARED.proof(");
+  });
+
+  test("the pages have no hero visual of their own any more", () => {
+    for (const slug of ["how-it-works", "features", "outcomes"] as const) {
+      const lpHero = findTag(read(pageFile(slug)), "LpHero");
+
+      expect(lpHero).toBeDefined();
+      expect(lpHero?.attrs).not.toMatch(/\bvisual=/);
+    }
+  });
+});
+
+describe("the dashboard duo: the computer and the phone, at every width (AC18)", () => {
+  const duo = () => code(shared("DashboardDuo"));
+
+  test("shows the desktop capture and the phone capture of the sample dashboard", () => {
+    expect(duo()).toContain('landingShot("en", "desktop")');
+    expect(duo()).toContain('landingShot("en", "phone")');
+    expect(findTag(duo(), "PhoneScreenshot")).toBeDefined();
+    expect(findTag(duo(), "Image")?.attrs).toMatch(/\bsizes=/);
+  });
+
+  test("never hides the desktop capture below any breakpoint", () => {
+    const hidden = /(?<![\w-])(?:[\w-]+:)?hidden(?![\w-])/;
+
+    expect(openingTags(duo()).filter((tag) => hidden.test(tag.attrs)).map((tag) => tag.name)).toEqual([]);
+  });
+
+  test("frames the capture in a browser bar with the dashboard's address, and captions it as sample data", () => {
+    expect(duo()).toContain("SHARED.dashboardUrl");
+    expect(duo()).toContain("SHARED.sampleData");
+    expect(duo().indexOf("<figcaption")).toBeGreaterThan(duo().indexOf("<PhoneScreenshot"));
+    expect(SHARED.dashboardUrl).toBe("app.stampeo.app");
+    expect(SHARED.sampleData).toBe("Sample data");
+  });
+
+  test("preloads the capture only when the hero asks for it", () => {
+    expect(findTag(duo(), "Image")?.attrs).toMatch(/\bpriority=\{priority\}/);
+    expect(duo()).toMatch(/priority\s*=\s*false/);
+  });
+});
+
+describe("the sectors every page ends on (AC19)", () => {
+  const sectors = () => code(shared("LpSectors"));
+
+  test("composes the /us carousel and its helpers under the catalog's own heading, in dollars", () => {
+    const source = sectors();
+
+    for (const part of ["SectorCarousel", "SECTOR_THEMES", "orderSectorSlides", "fillSectorMoney", "landing.sectorCards"]) {
+      expect(source).toContain(part);
+    }
+    expect(source).toContain("MARKETS.us");
+    expect(source).toMatch(/\.rich\(\s*"title"/);
+    expect(source).toMatch(/\.rich\(\s*"subtitle"/);
+    expect(source).toContain("mbr");
+    expect(source).not.toContain("VariantSectorCards");
+  });
+
+  test("takes an optional eyebrow for the heading, and tags the section", () => {
+    const source = sectors();
+
+    expect(source).toMatch(/eyebrow\??:\s*string/);
+    expect(literalAttr(findTag(source, "LpSection")?.attrs ?? "", "section")).toBe("sectors");
+    expect(literalAttr(findTag(source, "LpHeading")?.attrs ?? "", "align")).toBe("center");
+  });
+
+  test("Platform gives it the small label; its heading is still the catalog's", () => {
+    const tag = findTag(code(pageFile("platform")), "LpSectors");
+
+    expect(tag?.attrs).toContain("eyebrow={SHARED.sectorsEyebrow}");
+  });
+
+  test.todo("How-to renders the sectors under its demo (stage G1)");
+  test.todo("Features renders the sectors before its pricing (stage G2)");
+  test.todo("Outcomes renders the sectors before its pricing (stage G3)");
+
+  test("nothing near the sectors calls them testimonials, stories or customers", () => {
+    const heading = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).sectorCards as {
+      title: string;
+      subtitle: string;
+    };
+    const near = [sectors(), SHARED.sectorsEyebrow, heading.title, heading.subtitle].join("\n");
+
+    expect(near).not.toMatch(/testimonial|\bstor(?:y|ies)\b|\bcustomers?\b/i);
+    expect(filesWith(lpFiles(), /testimonial/i)).toEqual([]);
+  });
+});
+
+describe("a notification or a demo on a page is the sample business's (AC24)", () => {
+  const NOTIFICATIONS = ["NotificationPhoneDemo", "NotificationBanner", "NotificationSequenceDemo"];
+  const callsOf = (file: string) =>
+    openingTags(read(file)).filter((tag) => NOTIFICATIONS.includes(tag.name)).map((tag) => ({ file, tag }));
+
+  test("every lock screen, banner and moment list is fed by lpBanner", () => {
+    const unfed = lpFiles()
+      .flatMap(callsOf)
+      .filter(({ file }) => !/\blpBanner\b/.test(code(file)))
+      .map(({ file }) => file);
+
+    expect(unfed).toEqual([]);
+  });
+
+  test("a phone or a sequence is always given its own banners, never the default sender", () => {
+    const calls = lpFiles().flatMap(callsOf);
+    const given = (name: string, prop: string) =>
+      calls.filter(({ tag }) => tag.name === name).filter(({ tag }) => !new RegExp(`(?:^|\\s)${prop}=`).test(tag.attrs));
+
+    expect(given("NotificationPhoneDemo", "notifications")).toEqual([]);
+    expect(given("NotificationSequenceDemo", "moments")).toEqual([]);
+  });
+
+  test("the scanner demo never shows its recording dot or its timer", () => {
+    const demos = lpFiles().flatMap((file) =>
       openingTags(read(file))
-        .filter((tag) => tag.name === "NotificationPhoneDemo" || tag.name === "NotificationBanner")
-        .map((tag) => ({ file, tag })),
+        .filter((tag) => tag.name === "ScanDemo")
+        .map((tag) => ({ file, chrome: literalAttr(tag.attrs, "chrome") })),
     );
-    const unlike = ({ tag }: (typeof notifications)[number]) =>
-      !/\blpBanner\b/.test(tag.attrs) || (tag.name === "NotificationPhoneDemo" && !tag.attrs.includes("animate={false}"));
 
-    expect(notifications.length).toBeGreaterThan(0);
-    expect(notifications.filter(unlike).map(({ file }) => file)).toEqual([]);
+    expect(demos.filter(({ chrome }) => chrome !== "minimal")).toEqual([]);
   });
 });
 
@@ -40,134 +168,50 @@ describe("the stamp notification and the card beside it count the same stamps", 
   const [, stamp, total] = STAMP_BANNER.body.match(/(\d+) of (\d+) stamps/) ?? [];
   const aurevo = STAMP_SAMPLES.find((sample) => sample.id === "aurevo");
 
-  // The Features hero draws that sample as it is, through HeroCardStack.
+  // The hero fan draws that sample as it is, through HeroCardFan.
   test("the banner's count is the Aurevo sample's stamps and total", () => {
     expect([Number(stamp), Number(total)]).toEqual([aurevo?.stamps, aurevo?.design.total_stamps]);
   });
+});
 
-  test("How-to's step 3 draws the card at that count under the banner", () => {
-    const steps = code(join(COMPONENTS_DIR, "how-it-works", "HowSteps.tsx"));
-    const step = steps.slice(steps.indexOf("function StampedVisual"));
+describe("the Platform share tree names places, never integrations (AC22)", () => {
+  const tree = code(pageComponent("platform", "ShareTree"));
+  const words = /integrat|\bPOS\b|\bsync/i;
 
-    expect(findTag(step, "AurevoCard")?.attrs).toContain(`stamps={${stamp}}`);
+  test("its copy never says integration, POS or sync", () => {
+    expect(lines(PAGES.PLATFORM.share, "PLATFORM.share").filter((line) => words.test(line.value))).toEqual([]);
+  });
+
+  // The tree arrives with the Platform stage; from then on this holds for it.
+  test("its source never says it either", () => {
+    expect(tree).not.toMatch(words);
+  });
+
+  test("it names the six channels", () => {
+    expect(PAGES.PLATFORM.share.channels.map((channel) => channel.title)).toEqual([
+      "Counter flyer",
+      "Scanner app",
+      "Instagram",
+      "Facebook",
+      "Your website",
+      "Google Business Profile",
+    ]);
   });
 });
 
-describe("the Features page (AC5, AC9, AC10)", () => {
-  const features = () => [...landingTree(pageFile("features"))];
-
-  test("the hero shows the card stack with one banner from the sample café on it", () => {
-    const visual = join(COMPONENTS_DIR, "features", "FeaturesHeroVisual.tsx");
-
-    expect(findTag(read(pageFile("features")), "LpHero")?.attrs).toContain("visual={<FeaturesHeroVisual");
-    expect(features()).toContain(visual);
-    expect(openingTags(read(visual)).filter((tag) => tag.name === "HeroCardStack")).toHaveLength(1);
-    expect(openingTags(read(visual)).filter((tag) => tag.name === "NotificationBanner")).toHaveLength(1);
-  });
-
-  test("the lock screen stacks the two banners of the copy, and is cropped on a phone", () => {
-    const source = sectionSource("features", "spotlight_messages");
-
-    expect(FEATURES.messages.banners).toHaveLength(2);
-    expect(findTag(source, "NotificationPhoneDemo")?.attrs).toMatch(/\bnotifications=/);
-    expect(findTag(source, "LpSpotlight")?.attrs).toMatch(/\bcropOnPhone\b/);
-  });
-
-  test("the card gallery speaks with the page's heading and without its own CTA", () => {
-    const gallery = filesWith(features(), /<CardStyleGallery\b/).map((file) => findTag(read(file), "CardStyleGallery"));
-
-    expect(gallery).toHaveLength(1);
-    expect(gallery[0]?.attrs).toContain("showCta={false}");
-    expect(gallery[0]?.attrs).toContain("heading={");
-  });
-});
-
-describe("the Outcomes page: results, not how", () => {
-  const OUTCOMES_DIR = join(COMPONENTS_DIR, "outcomes");
-  const component = (name: string) => code(join(OUTCOMES_DIR, `${name}.tsx`));
-  const ownFiles = () => [pageFile("outcomes"), ...sourceFiles(OUTCOMES_DIR)];
-  const section = (id: string) => sectionSource("outcomes", id);
-  /** Nothing between the two expressions opens or closes a block: they print on one line. */
-  const shareALine = (source: string, first: string, second: string) => {
-    const [a, b] = [source.indexOf(first), source.indexOf(second)];
-    if (a === -1 || b === -1) return false;
-    return !/<\/?(?:p|div|li|ul|ol|section|h[1-6]|br)\b/.test(source.slice(Math.min(a, b), Math.max(a, b)));
-  };
-
-  test("the hero is the lock screen with the stamp notification from the first paint", () => {
-    const phone = findTag(component("OutcomesHeroVisual"), "NotificationPhoneDemo");
-
-    expect(phone?.attrs).toContain("animate={false}");
-    expect(phone?.attrs).toMatch(/\bSTAMP_BANNER\b/);
-  });
-
-  test('the H1 keeps its no-break hyphen, so "first-time" never splits across two lines', () => {
+describe("the argument pages' H1s", () => {
+  test('the Outcomes headline keeps its no-break hyphen, so "first-time" never splits across two lines', () => {
     const { h1 } = LANDING_PAGES.outcomes.hero;
 
     expect(h1).toContain("first‑time");
     expect(h1).not.toContain("first-time");
   });
 
-  test("the problem is one figure in the page's handwriting, with its claim and its source, on the one tinted band", () => {
-    const figure = component("RegularsFigure");
-    const tags = openingTags(figure);
-
-    expect(tags.some((tag) => /\bink-figure\b/.test(tag.attrs))).toBe(true);
-    for (const part of ["OUTCOMES.problem", "figure.value", "figure.text", "figure.source"]) expect(figure).toContain(part);
-    expect(tags.find((tag) => tag.name === "LpSection")?.attrs).toMatch(/\btinted\b/);
-    const bands = ownFiles().flatMap((file) =>
-      openingTags(read(file)).filter((tag) => /\btinted\b(?!=)/.test(tag.attrs)),
-    );
-    expect(bands).toHaveLength(1);
+  test.each(["how-it-works", "features", "outcomes"] as LandingSlug[])("%s has a sub under its headline", (slug) => {
+    expect(LANDING_PAGES[slug].hero.sub?.length ?? 0).toBeGreaterThan(0);
   });
 
-  // AC12: a figure from someone else is never printed without where it comes from.
-  test.each([
-    ["RegularsFigure", "figure.source"],
-    ["ReturnSpotlight", "headStart.source"],
-  ])("%s renders %s", (name, accessor) => {
-    expect(component(name)).toContain(accessor);
-  });
-
-  test("the return spotlight shows the part-filled Aurevo card under the lead, then the head start", () => {
-    const source = section("outcome_return");
-
-    expect(source).toContain("OUTCOMES.comeBack");
-    expect(findTag(source, "AurevoCard")?.attrs).toMatch(/stamps=\{[1-7]\}/);
-    expect(source).toContain("headStart.text");
-  });
-
-  test("the slow-days lead is followed at once by the plans a broadcast comes with", () => {
-    const source = section("outcome_slow_days");
-    const spotlight = findTag(source, "LpSpotlight");
-
-    expect(spotlight?.attrs).toContain("lead={slowDays.lead}");
-    expect(source.slice(spotlight?.end).trimStart().slice(0, "<PlanLine>".length)).toBe("<PlanLine>");
-    expect(code(shared("LpSpotlight"))).toMatch(/<LpHeading\b[^>]*\/>\s*\{children\}/);
-  });
-
-  test("the slow-days phone shows the café's broadcast, cropped on a phone", () => {
-    const source = section("outcome_slow_days");
-
-    expect(findTag(source, "NotificationPhoneDemo")?.attrs).toContain("slowDays.banner");
-    expect(findTag(source, "LpSpotlight")?.attrs).toMatch(/\bcropOnPhone\b/);
-  });
-
-  test("the regulars spotlight shows the shared sample capture, then the example on one line", () => {
-    const source = section("outcome_regulars");
-
-    expect(findTag(source, "SampleCapture")).toBeDefined();
-    expect(shareALine(source, "example.label", "example.text")).toBe(true);
-  });
-});
-
-describe("a broadcast prints with the plans it comes with (AC10)", () => {
-  // The only places the copy mentions a broadcast (copy.test.ts holds that list); each is the plan line itself.
-  test.each([
-    ["features", "spotlight_messages", "messages.broadcast"],
-    ["outcomes", "outcome_slow_days", "slowDays.noFees"],
-  ] as const)("%s: %s prints %s inside the PlanLine", (slug, id, needle) => {
-    expect([...landingTree(pageFile(slug))].filter((file) => code(file).includes(needle))).toHaveLength(1);
-    expect(planLineWith(sectionSource(slug, id), needle)).not.toBe("");
+  test("Platform's hero is a headline alone: its numbers come lower down", () => {
+    expect(LANDING_PAGES.platform.hero.sub).toBeUndefined();
   });
 });

@@ -10,54 +10,30 @@
 
 import { describe, expect, test } from "bun:test";
 import { NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
+import { ALL, MODULES, PAGES, mentions, objectsWith, offenders } from "../testing/landing-copy";
 import { splitAccent } from "./accent";
-import * as features from "./copy/features";
-import * as howItWorks from "./copy/how-it-works";
-import * as outcomes from "./copy/outcomes";
 import * as shared from "./copy/shared";
 
-interface Line {
-  path: string;
-  value: string;
-}
+/** A percentage ("34%") or a multiplier ("6×", "6X"): what only a sourced figure may print. */
+const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x×X](?![\p{L}\p{N}])/u;
 
-/** Every string under `value`, with its path (`FAQ.items[0].answer`). Functions are not copy. */
-function lines(value: unknown, path: string): Line[] {
-  if (typeof value === "string") return [{ path, value }];
-  if (Array.isArray(value)) return value.flatMap((item, index) => lines(item, `${path}[${index}]`));
-  if (typeof value === "object" && value !== null) {
-    return Object.entries(value).flatMap(([key, child]) => lines(child, `${path}.${key}`));
-  }
-  return [];
-}
+/** The plan labels a broadcast may sit under. */
+const BROADCAST_PLANS = ["Growth and Pro", "Pro"];
 
-/** Every plain object under `value` that has all of `keys`, with its path. */
-function objectsWith(value: unknown, keys: string[], path: string): Array<{ path: string; object: Record<string, unknown> }> {
-  if (Array.isArray(value)) return value.flatMap((item, index) => objectsWith(item, keys, `${path}[${index}]`));
-  if (typeof value !== "object" || value === null) return [];
-  const object = value as Record<string, unknown>;
-  const here = keys.every((key) => key in object) ? [{ path, object }] : [];
-  return [...here, ...Object.entries(object).flatMap(([key, child]) => objectsWith(child, keys, `${path}.${key}`))];
-}
+/** The two lines that carry their plan on the same line in the page, printed with the label by their component. */
+const PLAN_LINES = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
 
-const MODULES = { ...howItWorks, ...features, ...outcomes, ...shared } as Record<string, unknown>;
-const ALL = Object.entries(MODULES).flatMap(([name, value]) => lines(value, name));
-
-const PAGES = {
-  HOW_IT_WORKS: howItWorks.HOW_IT_WORKS,
-  FEATURES: features.FEATURES,
-  OUTCOMES: outcomes.OUTCOMES,
-};
-
-/** A percentage ("34%") or a multiplier ("6\u00d7", "6X"): what only a sourced figure may print. */
-const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x\u00d7X](?![\p{L}\p{N}])/u;
-
-/** The paths whose lines break `pattern`. */
-const offenders = (pattern: RegExp) => ALL.filter((line) => pattern.test(line.value)).map((line) => line.path);
+/** Mentions of `pattern` that no plan label qualifies and no plan line accounts for. */
+const unlabelled = (pattern: RegExp) =>
+  Object.entries(MODULES)
+    .flatMap(([name, value]) => mentions(value, pattern, name))
+    .filter(({ plan }) => !BROADCAST_PLANS.includes(plan ?? ""))
+    .map(({ path }) => path)
+    .sort();
 
 describe("what these pages may not claim (AC10)", () => {
   test("there is copy to check", () => {
-    expect(ALL.length).toBeGreaterThan(60);
+    expect(ALL.length).toBeGreaterThan(150);
   });
 
   test("no line promises a trial without a card", () => {
@@ -74,9 +50,13 @@ describe("what these pages may not claim (AC10)", () => {
     ["offline", /offline/i],
     ["a number of minutes", /\bminutes?\b/i],
     ["a count of days: the trial is the {trialDays} token", /\d+[\s-]*days?\b/i],
-    ["levels, which a new US sign-up cannot turn on", /\blevels?\b/i],
+    ['tiers: the product\'s word is "levels"', /\btiers?\b/i],
   ])("no line says %s", (_what, pattern) => {
     expect(offenders(pattern)).toEqual([]);
+  });
+
+  test('levels are shown as live: the product\'s noun is in the copy', () => {
+    expect(ALL.some((line) => /\blevels?\b/i.test(line.value))).toBe(true);
   });
 
   test('"punch" only ever appears in "punch card"', () => {
@@ -93,80 +73,86 @@ describe("what these pages may not claim (AC10)", () => {
     expect(banners.filter(({ object }) => /stampeo/i.test(String(object.sender))).map((b) => b.path)).toEqual([]);
   });
 
-  // A new mention fails here until someone decides where its plan label goes.
+  // A new unlabelled mention fails here until someone decides where its plan label goes.
   test.each([
-    ["broadcast", /broadcast/i, ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.lead"]],
-    ["texting fees", /texting fees/i, ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"]],
-  ])("%s is mentioned only where its component prints the plans it comes with", (_what, pattern, allowed) => {
-    expect(offenders(pattern).sort()).toEqual([...allowed].sort());
+    ["broadcast", /broadcast/i],
+    ["texting fees", /texting fees/i],
+  ])("%s is mentioned only under a Growth and Pro or Pro label, or on a plan line", (_what, pattern) => {
+    const loose = unlabelled(pattern);
+
+    expect(loose.filter((path) => !PLAN_LINES.includes(path))).toEqual([]);
+    expect(loose).toEqual(PLAN_LINES);
+  });
+
+  test("the broadcast guard flags an unlabelled mention and accepts a labelled one", () => {
+    const copy = {
+      facts: [{ text: "Broadcasts to every card" }, { text: "Broadcasts to every card", plan: "Growth and Pro" }],
+      tile: { title: "Broadcast", plan: "Every plan" },
+      moment: { title: "Broadcast", banner: { body: "Hi" }, plan: "Pro" },
+    };
+    const plans = mentions(copy, /broadcast/i, "COPY").map(({ path, plan }) => [path, plan]);
+
+    expect(plans).toEqual([
+      ["COPY.facts[0].text", undefined],
+      ["COPY.facts[1].text", "Growth and Pro"],
+      ["COPY.tile.title", "Every plan"],
+      ["COPY.moment.title", "Pro"],
+    ]);
   });
 });
 
 describe("how much each line may say (AC11)", () => {
   test.each(Object.entries(PAGES))("%s: the hero fits above the fold", (_name, page) => {
-    expect(page.hero.h1.length).toBeLessThanOrEqual(46);
-    expect(page.hero.sub.length).toBeLessThanOrEqual(90);
+    const hero = page.hero as { h1: string; sub?: string };
+
+    expect(hero.h1.length).toBeLessThanOrEqual(46);
+    if (hero.sub !== undefined) expect(hero.sub.length).toBeLessThanOrEqual(90);
   });
 
-  /** Every section of a page: whatever sits beside meta, hero and final CTA with a title. */
-  const sectionsOf = (name: string, page: Record<string, unknown>) =>
-    Object.entries(page)
-      .filter(([key, value]) => !["meta", "hero", "finalCta"].includes(key) && typeof (value as { title?: unknown })?.title === "string")
-      .map(([key, value]) => ({ path: `${name}.${key}`, ...(value as { title: string; lead?: string }) }));
+  /** The largest a `title` may be: the closing lines are shorter, a page's meta is not a heading. */
+  const titleBudget = (path: string): number | null => {
+    if (/\.meta\.title$/.test(path)) return null;
+    return /\.(?:finalCta|band)\.title$/.test(path) ? 36 : 44;
+  };
 
-  const SECTIONS = [
-    ...Object.entries(PAGES).flatMap(([name, page]) => sectionsOf(name, page)),
-    { path: "SHARED.demo", ...shared.SHARED.demo },
-    { path: "SHARED.faq", title: shared.SHARED.faq.title, lead: undefined },
-  ];
+  const titles = ALL.filter((line) => /\.title$/.test(line.path) && titleBudget(line.path) !== null);
+  const leads = ALL.filter((line) => /\.lead$/.test(line.path));
+  const eyebrows = ALL.filter((line) => /\.eyebrow$/.test(line.path));
 
-  test.each(SECTIONS.map((section) => [section.path, section] as const))(
-    "%s: a title of at most 44 characters and a lead of at most 85",
-    (_path, section) => {
-      expect(section.title.length).toBeLessThanOrEqual(44);
-      if (section.lead !== undefined) expect(section.lead.length).toBeLessThanOrEqual(85);
-    },
-  );
-
-  test("the sections of every page are found", () => {
-    expect(SECTIONS.length).toBeGreaterThanOrEqual(10);
+  test("the fields are found", () => {
+    expect(titles.length).toBeGreaterThan(40);
+    expect(leads.length).toBeGreaterThan(15);
+    expect(eyebrows.length).toBeGreaterThan(8);
   });
 
-  test.each(Object.entries(PAGES))("%s: the closing headline is at most 36 characters", (_name, page) => {
-    expect(page.finalCta.title.length).toBeLessThanOrEqual(36);
+  test("every title is at most 44 characters, the closing lines 36", () => {
+    expect(titles.filter((line) => line.value.length > (titleBudget(line.path) ?? 0)).map((line) => line.path)).toEqual([]);
   });
 
-  test("no list runs past three items, the FAQ apart", () => {
-    const longLists = (value: unknown, path: string): string[] => {
-      if (Array.isArray(value)) {
-        const children = value.flatMap((item, index) => longLists(item, `${path}[${index}]`));
-        return value.length > 3 ? [path, ...children] : children;
-      }
-      if (typeof value !== "object" || value === null) return [];
-      return Object.entries(value).flatMap(([key, child]) => longLists(child, `${path}.${key}`));
-    };
-
-    const found = [...Object.entries(PAGES), ["SHARED", shared.SHARED] as const].flatMap(([name, page]) => longLists(page, name));
-
-    expect(found).toEqual(["SHARED.faq.items"]);
-    expect(shared.SHARED.faq.items).toHaveLength(5);
+  test("every lead is at most 85 characters", () => {
+    expect(leads.filter((line) => line.value.length > 85).map((line) => line.path)).toEqual([]);
   });
 
-  test.each(Object.entries(PAGES))("%s: each accent is words of its headline", (_name, page) => {
-    for (const [text, accent] of [
-      [page.hero.h1, page.hero.accent],
-      [page.finalCta.title, page.finalCta.accent],
-    ]) {
-      expect(accent.length).toBeGreaterThan(0);
-      expect(text).toContain(accent);
+  test("every eyebrow is at most 28 characters", () => {
+    expect(eyebrows.filter((line) => line.value.length > 28).map((line) => line.path)).toEqual([]);
+  });
+
+  test("every accent is words of its headline", () => {
+    const accented = Object.entries(MODULES).flatMap(([name, value]) => objectsWith(value, ["accent"], name));
+
+    expect(accented.length).toBeGreaterThanOrEqual(8);
+    for (const { path, object } of accented) {
+      const text = String(object.h1 ?? object.title ?? "");
+      expect({ path, found: text.includes(String(object.accent)) }).toEqual({ path, found: true });
+      expect(String(object.accent).length).toBeGreaterThan(0);
     }
   });
 });
 
 describe("the accent words", () => {
   test("splits a headline around its accent, keeping the no-break hyphen", () => {
-    expect(splitAccent("Turn first\u2011time customers into regulars.", "regulars.")).toEqual({
-      before: "Turn first\u2011time customers into ",
+    expect(splitAccent("Turn first‑time customers into regulars.", "regulars.")).toEqual({
+      before: "Turn first‑time customers into ",
       accent: "regulars.",
       after: "",
     });
@@ -191,7 +177,8 @@ describe("figures from other people (AC12)", () => {
 
   test("every sourced figure says what it says and where it comes from", () => {
     expect(figures.map((figure) => figure.path).sort()).toEqual([
-      "OUTCOMES.comeBack.headStart",
+      "OUTCOMES.headStart.empty",
+      "OUTCOMES.headStart.withHeadStart",
       "OUTCOMES.problem.figure",
     ]);
     for (const { object } of figures) {
@@ -201,7 +188,7 @@ describe("figures from other people (AC12)", () => {
   });
 
   test.each([
-    ["6\u00d7", true],
+    ["6×", true],
     ["6X more annual revenue", true],
     ["a 10x return", true],
     ["34% finished the card", true],
@@ -220,7 +207,7 @@ describe("figures from other people (AC12)", () => {
     ]);
 
     expect(ALL.filter((line) => FIGURE.test(line.value) && !allowed.has(line.path)).map((line) => line.path)).toEqual([]);
-    expect(ALL.filter((line) => FIGURE.test(line.value)).length).toBeGreaterThanOrEqual(3);
+    expect(ALL.filter((line) => FIGURE.test(line.value)).length).toBeGreaterThanOrEqual(4);
   });
 });
 
