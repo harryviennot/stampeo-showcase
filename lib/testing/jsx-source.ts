@@ -24,9 +24,16 @@ export function stripComments(source: string): string {
   return source.replace(/^[ \t]*\/\/.*$/gm, blank).replace(/\/\*[\s\S]*?\*\//g, blank);
 }
 
+/** A source file with its comments blanked; empty when the file is missing, so a pin on it fails on what it looks for. */
+export function code(file: string): string {
+  return existsSync(file) ? stripComments(read(file)) : "";
+}
+
 export interface Tag {
   name: string;
   attrs: string;
+  /** Index just past the tag's closing `>`: what follows it is the tag's first child. */
+  end: number;
 }
 
 /** Index of the `>` that closes a tag, skipping `{…}` and quoted strings. */
@@ -55,9 +62,14 @@ export function openingTags(source: string): Tag[] {
     const start = match.index + match[0].length;
     const end = tagEnd(code, start);
     if (end === -1) continue;
-    tags.push({ name: match[1], attrs: code.slice(start, end) });
+    tags.push({ name: match[1], attrs: code.slice(start, end), end: end + 1 });
   }
   return tags;
+}
+
+/** The first opening tag called `name`. */
+export function findTag(source: string, name: string): Tag | undefined {
+  return openingTags(source).find((tag) => tag.name === name);
 }
 
 /** The literal value of an attribute (`a="x"` or `a={"x"}`), or null. */
@@ -98,4 +110,9 @@ export function sourceFiles(dir: string): string[] {
     if (entry.isDirectory()) return sourceFiles(path);
     return /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name) ? [path] : [];
   });
+}
+
+/** The files whose code (comments blanked) matches `needle`. */
+export function filesWith(files: string[], needle: RegExp): string[] {
+  return files.filter((file) => needle.test(code(file)));
 }

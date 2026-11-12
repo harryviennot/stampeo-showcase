@@ -31,8 +31,7 @@ export const WORDED_TRIAL =
  *
  * So every branch below is anchored to the payment sense: an English "no card"
  * only counts when it is "required"/"needed", and the other locales must name
- * the card type. Getting this wrong in the loose direction would flag the
- * product's own tagline, which is how the first version of this guard failed.
+ * the card type. A looser pattern would flag the product's own tagline.
  */
 export const NO_CARD_CLAIM = new RegExp(
   [

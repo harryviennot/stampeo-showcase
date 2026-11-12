@@ -22,7 +22,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse, TYPE } from '@formatjs/icu-messageformat-parser';
 import { routing } from '../i18n/routing';
-import { NO_CARD_CLAIM, WORDED_TRIAL } from './copy-claim-guards';
+import { NO_CARD_CLAIM, WORDED_TRIAL } from './testing/copy-claims';
 
 const LOCALES = routing.locales;
 const MESSAGES_DIR = join(import.meta.dir, '..', 'messages');

@@ -24,7 +24,7 @@ export interface SectionCopy {
   lead: string;
 }
 
-/** A third-party figure, quoted exactly and printed with its source under it. */
+/** A third-party figure, printed with its source under it. */
 export interface SourcedFigure {
   /** The large mark drawn above the claim, e.g. "6×". */
   value?: string;

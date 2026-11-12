@@ -9,7 +9,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { NO_CARD_CLAIM, WORDED_TRIAL } from "../copy-claim-guards";
+import { NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { splitAccent } from "./accent";
 import * as features from "./copy/features";
 import * as howItWorks from "./copy/how-it-works";
@@ -49,6 +49,9 @@ const PAGES = {
   OUTCOMES: outcomes.OUTCOMES,
 };
 
+/** A percentage ("34%") or a multiplier ("6\u00d7", "6X"): what only a sourced figure may print. */
+const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x\u00d7X](?![\p{L}\p{N}])/u;
+
 /** The paths whose lines break `pattern`. */
 const offenders = (pattern: RegExp) => ALL.filter((line) => pattern.test(line.value)).map((line) => line.path);
 
@@ -70,6 +73,7 @@ describe("what these pages may not claim (AC10)", () => {
     ["a reminder", /remind/i],
     ["offline", /offline/i],
     ["a number of minutes", /\bminutes?\b/i],
+    ["a count of days: the trial is the {trialDays} token", /\d+[\s-]*days?\b/i],
     ["levels, which a new US sign-up cannot turn on", /\blevels?\b/i],
   ])("no line says %s", (_what, pattern) => {
     expect(offenders(pattern)).toEqual([]);
@@ -161,8 +165,8 @@ describe("how much each line may say (AC11)", () => {
 
 describe("the accent words", () => {
   test("splits a headline around its accent, keeping the no-break hyphen", () => {
-    expect(splitAccent(outcomes.OUTCOMES.hero.h1, outcomes.OUTCOMES.hero.accent)).toEqual({
-      before: "Turn first‑time customers into ",
+    expect(splitAccent("Turn first\u2011time customers into regulars.", "regulars.")).toEqual({
+      before: "Turn first\u2011time customers into ",
       accent: "regulars.",
       after: "",
     });
@@ -183,9 +187,9 @@ describe("the accent words", () => {
 });
 
 describe("figures from other people (AC12)", () => {
-  test("every sourced figure says what it says and where it comes from", () => {
-    const figures = Object.entries(MODULES).flatMap(([name, value]) => objectsWith(value, ["source"], name));
+  const figures = Object.entries(MODULES).flatMap(([name, value]) => objectsWith(value, ["source"], name));
 
+  test("every sourced figure says what it says and where it comes from", () => {
     expect(figures.map((figure) => figure.path).sort()).toEqual([
       "OUTCOMES.comeBack.headStart",
       "OUTCOMES.problem.figure",
@@ -195,15 +199,34 @@ describe("figures from other people (AC12)", () => {
       expect(String(object.source).trim()).not.toBe("");
     }
   });
+
+  test.each([
+    ["6\u00d7", true],
+    ["6X more annual revenue", true],
+    ["a 10x return", true],
+    ["34% finished the card", true],
+    ["3.5 %", true],
+    ["5 of 8 stamps", false],
+    ["2 free stamps", false],
+    ["20 customers, 4 times a year", false],
+  ])("a figure is a percentage or a multiplier: %s", (text, isFigure) => {
+    expect(FIGURE.test(text)).toBe(isFigure);
+  });
+
+  test("a percentage or a multiplier is printed only as a sourced figure, or in the labelled example", () => {
+    const allowed = new Set([
+      ...figures.flatMap(({ path }) => [`${path}.value`, `${path}.text`]),
+      "OUTCOMES.regulars.example.text",
+    ]);
+
+    expect(ALL.filter((line) => FIGURE.test(line.value) && !allowed.has(line.path)).map((line) => line.path)).toEqual([]);
+    expect(ALL.filter((line) => FIGURE.test(line.value)).length).toBeGreaterThanOrEqual(3);
+  });
 });
 
 describe("prices and the trial length (AC13)", () => {
   test("a dollar amount appears only in the worked example", () => {
     expect(offenders(/\$/)).toEqual(["OUTCOMES.regulars.example.text"]);
-  });
-
-  test("no line counts days: the trial is the {trialDays} token", () => {
-    expect(offenders(/\d+[\s-]*days?\b/i)).toEqual([]);
   });
 
   test("the reassurance carries the token", () => {

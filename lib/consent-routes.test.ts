@@ -78,6 +78,13 @@ describe("isTrackablePath — marketing surfaces", () => {
     },
   );
 
+  test.each(["/us/landing-pages/features", "/us/landing-pages/outcomes?gclid=abc", "/en/us/landing-pages/how-it-works"])(
+    "a US landing page is trackable: the ad click that lands there is attributed (%s)",
+    (path) => {
+      expect(isTrackablePath(path)).toBe(true);
+    },
+  );
+
   test("trailing slashes and query strings do not change the answer", () => {
     expect(isTrackablePath("/pricing/")).toBe(true);
     expect(isTrackablePath("/pricing?utm_source=meta")).toBe(true);

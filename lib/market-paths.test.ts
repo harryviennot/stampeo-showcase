@@ -62,6 +62,14 @@ describe("isPilotPath", () => {
     expect(marketPath("us", "/vs/loopy-loyalty")).toBe("/us/vs/loopy-loyalty");
   });
 
+  test.each(["/us/landing-pages/features", "/us/landing-pages/how-it-works"])(
+    "matches a landing page inside the US market, so an ad click gets the rewrite and the US cookie (%s)",
+    (path) => {
+      expect(isPilotPath(path)).toBe(true);
+      expect(marketFromPath(path)).toBe("us");
+    },
+  );
+
   test("does not swallow a business slug that merely starts with the letters", () => {
     // The reason the original was exact-match. /usual-cafe is a real shape.
     expect(isPilotPath("/usual-cafe")).toBe(false);
