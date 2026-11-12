@@ -23,7 +23,7 @@ export const PROGRAM_TYPES: ProgramType[] = [
   {
     key: "levels",
     label: "Levels",
-    eyebrow: "Reward your regulars more",
+    eyebrow: "Reward regulars more",
     title: "Levels",
     body: "Up to 5 levels, like Bronze, Silver and Gold. Customers move up as they keep coming back, and their card takes on a new look.",
     facts: [{ text: "Perks for each level, shown to staff at the register" }, { text: "A gift when they move up" }],
