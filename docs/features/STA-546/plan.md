@@ -38,6 +38,73 @@ Stampeo can do.
    offline, POS, SMS, minutes); sourced figures only; nothing invented (no testimonials, no customer
    logos).
 
+## v2 pages (detail: `ux-brief-v2.md`)
+
+| Page | URL / variant | Sections (registry order) |
+|---|---|---|
+| How-to | `how-it-works` / `lp_howto` | hero · steps (map) · step_create (live card designer) · step_share (flyer + Wallet phone + channels) · step_stamp (scanner + lock screen) · demo · see_it_work (live activity feed) · sectors · first_day (timeline) · pricing · faq · final_cta (12) |
+| Features | `features` / `lp_features` | hero · demo · spotlight_design (style gallery + 3 facts) · program_types (Stamps / Points / Levels tabs) · spotlight_messages (notification moments) · spotlight_scanner · spotlight_analytics (capture + live feed) · more_features (6 tiles) · sectors · pricing · faq · final_cta (12) |
+| Outcomes | `outcomes` / `lp_outcomes` | hero · problem (6×) · outcome_always · outcome_head_start (toggle + 34%/19% bars) · outcome_slow_days (busiest times → broadcast) · outcome_levels · outcome_regulars (capture + segments) · sectors · pricing · faq · final_cta (11) |
+| Platform | `platform` / `lp_platform` | hero (card fan) · marquee (business types) · deliver (two phones + glass cards + wallet badges) · numbers · how (Create / Share / Stamp table) · demo · program_types (scroll-driven rows) · platform (Dashboard / Scanner toggle card) · share (channels tree) · pricing · final_cta (accent band) · sectors · blog (12 + strip) |
+
+- **Shared hero on the three argument pages:** centred text, CTA, demo link (not on Outcomes), reassurance,
+  proof line, then the official wallet badges and `DashboardDuo` (desktop dashboard in a browser frame + the
+  phone over it, visible at every width, "Sample data"). The three heroes differ only by their words.
+- **`LpSectors` on all four:** the `/us` carousel under the catalog's "Stampeo adapts to your business".
+- **Platform** follows PassEntry's order and patterns (eyebrow + centred H2 + sub; CTA pairs; hairlines; one
+  white toggle card; the accent band) with the substitutions in `research-passentry.md`; our pricing before
+  the band; no FAQ; site header and footer kept. Its secondary CTA "Try it on your phone" lands on our live
+  demo, which PassEntry doesn't have.
+- **Defaults taken from the brief's open questions** (Harry may veto): ads wait until levels are on for new
+  sign-ups too (a backend default, outside this issue); no FAQ on Platform; two iPhones + the Google Wallet
+  badge (no Android frame exists); near-black text on the accent band and `--accent-hover` eyebrows for
+  contrast; today's Analytics captures (US re-shoot = STA-548); exits to feature pages, blog and sector
+  guides kept; the 3 latest English posts.
+- **Rejected for v2:** `ROICalculator` (vague "industry studies" figure, "pays for itself" promise),
+  `ChannelComparisonBars` (unsourced 85%), App Store badges (a business can't be created in the app), a
+  demo on Outcomes, sticky CTA bar, video; PassEntry items with no honest version (testimonials, customer
+  logos, integrations, "Book a demo", the API tab, a "leading platform" claim).
+
+## v2 acceptance criteria (replace v1's where they differ)
+
+- AC1v2: four slugs (`how-it-works`, `features`, `outcomes`, `platform`), each rendering its registry
+  sections once, in order, as in the table above; never more than 13.
+- AC2v2: How-to, Features and Outcomes end with pricing · faq · final_cta; Platform has pricing · final_cta
+  (accent band) · sectors · blog; every page renders `PricingSection market="us"`.
+- AC3/AC4 unchanged, plus `lp_platform`; `/us/landing-pages/platform` is noindex, absent from sitemap/llms.
+- AC6v2: the proof line on the three argument heroes; Platform's figures come from the same
+  `variant.metrics` source (no second "120+").
+- AC18: the three argument heroes render the official wallet badges and `DashboardDuo`, whose desktop
+  capture is visible at 390 (not hidden below `md`), captioned "Sample data".
+- AC19: all four pages render `LpSectors` with "Stampeo adapts to your business"; nothing near it says
+  testimonial, story or customer.
+- AC20: levels appear as live on every plan (Features tabs, Outcomes levels, Platform rows); the copy word
+  is "levels", never "tiers"; level cards use preset-icon samples with the level name in the header.
+- AC21: Platform's program rows render all open on the server, on phones and with reduced motion; on
+  desktop the row nearest the viewport centre opens, and a tap opens a row.
+- AC22: the Platform share tree names channels only (counter flyer, Scanner app QR, Instagram, Facebook,
+  website, Google Business Profile); nothing says integration, POS or sync.
+- AC23: Platform's blog block shows the 3 latest English posts, each linking to its post.
+- AC24: reused feature demos carry no false detail on these pages: `ScanDemo` shows no "REC" and no timing;
+  `NotificationSequenceDemo` banners come from Aurevo with its icon and default wording, and the broadcast
+  moment carries "Growth and Pro"; `CardDesignPlayground compact` keeps the card in view at 390.
+- AC15v2: every extended shared component (`WalletCard`, `CTAButton`, `Segmented`, `NotificationSequenceDemo`,
+  `ScanDemo`, `CardDesignPlayground`, `BlogCard`, plus v1's) renders today's markup when the new prop is
+  omitted, and its existing call sites pass none of the new props.
+- AC10/AC11/AC12/AC13/AC14/AC16/AC17 unchanged in intent (claims, budgets, sources, tokens, no real QR
+  outside the demo, nothing else on the site changes, the fold at 390 and 1440); AC10 drops the "levels" ban.
+- AC25: at 390, every page fits about 13 to 15 screens to the end of its last section, with no stretch of
+  more than about 4.5 screens without a "Start my free trial".
+
+## v2 build stages
+
+1. **Foundation (one stage):** registry v2 and the platform route; the shared v2 pieces (`LpHero` v2,
+   `DashboardDuo`, `LpSectors`, `LpHeading` eyebrow/align, `LpCtaPair`, `GlassCard`, `LevelCards`); every
+   optional prop on shared components; icon aliases; the copy modules (written by me); tests first.
+2. **The four pages in parallel**, one stage each, disjoint folders, then merged.
+3. **Consolidation**, then the **UX polish pass on pixels** (390 / 1024 / 1440), then **coverage and quality
+   reviews**, a fix stage, the runbook amended (LP- cases for v2 and Platform), final shots for Harry.
+
 ## Problem
 
 US visitors reach the homepage, mostly from Google Ads, but too few start a trial. Today's `/us` is
@@ -141,7 +208,7 @@ frequently", any vendor self-reported figure, the unsourced "85%" bars on `/feat
   footer. Reachable by URL on the dev host and on prod, so ads can point at them later.
 - **The current `/us` homepage and `components/landing-variant/` are not touched.**
 
-## The three pages
+## The three pages (v1, superseded by v2 where they differ)
 
 Headlines are the working draft. Body lines are written at implementation with the
 stampeo-copywriting skill and reviewed on the rendered pages.
@@ -248,7 +315,7 @@ From `ux-brief.md` (ux-designer, MODE: DESIGN, verdict READY).
 - Ad click on one page, signup from another visit: attribution keeps the first landing's variant
   (existing behaviour, deliberately unchanged).
 
-## Acceptance criteria
+## Acceptance criteria (v1; see v2 acceptance criteria above)
 
 Pages and routing
 - AC1: Given the three slugs, when each URL is requested, then it renders in English with the US
