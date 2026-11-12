@@ -100,7 +100,6 @@ const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
 const STAGED: Partial<Record<LandingSlug, string>> = {
   "how-it-works": "stage G1",
   features: "stage G2",
-  outcomes: "stage G3",
   platform: "stage G4",
 };
 

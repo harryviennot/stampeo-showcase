@@ -117,7 +117,6 @@ describe("the sectors every page ends on (AC19)", () => {
 
   test.todo("How-to renders the sectors under its demo (stage G1)");
   test.todo("Features renders the sectors before its pricing (stage G2)");
-  test.todo("Outcomes renders the sectors before its pricing (stage G3)");
 
   test("nothing near the sectors calls them testimonials, stories or customers", () => {
     const heading = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).landing.sectorCards as {
