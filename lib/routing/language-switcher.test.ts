@@ -6,6 +6,9 @@ describe("hidesLanguageSwitcher: pages a language switch would 404 on", () => {
     "/blog/carte-fidelite-cafe",
     "/comparatif/fidelatoo",
     "/us/vs/loopy-loyalty",
+    "/us/landing-pages/how-it-works",
+    "/us/landing-pages/features",
+    "/us/landing-pages/outcomes",
   ])("hides it on %s: its slug differs per language, or it exists in one language only", (pathname) => {
     expect(hidesLanguageSwitcher(pathname)).toBe(true);
   });
