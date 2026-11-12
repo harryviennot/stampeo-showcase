@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { OutcomesHeroVisual } from "@/components/landing-pages/outcomes/OutcomesHeroVisual";
+import { RegularsFigure } from "@/components/landing-pages/outcomes/RegularsFigure";
+import { RegularsSpotlight } from "@/components/landing-pages/outcomes/RegularsSpotlight";
+import { ReturnSpotlight } from "@/components/landing-pages/outcomes/ReturnSpotlight";
+import { SlowDaysSpotlight } from "@/components/landing-pages/outcomes/SlowDaysSpotlight";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { LpFinalCta } from "@/components/landing-pages/shared/LpFinalCta";
@@ -23,9 +28,11 @@ export default function OutcomesPage() {
 
   return (
     <LandingPageShell slug="outcomes">
-      {/* TODO(STA-546 stage C): the hero visual, then problem, outcome_return,
-          outcome_slow_days and outcome_regulars, in the registry's order. */}
-      <LpHero slug="outcomes" />
+      <LpHero slug="outcomes" visual={<OutcomesHeroVisual />} crop />
+      <RegularsFigure />
+      <ReturnSpotlight />
+      <SlowDaysSpotlight />
+      <RegularsSpotlight />
       <LpSection section="pricing" bare>
         <PricingSection market="us" />
       </LpSection>

@@ -3,9 +3,6 @@
  * shared sections. There is no component runner, so these read the source:
  * which sections a page renders and in what order, where its tracking sits,
  * which CTA locations it may use, and which claims its components must carry.
- *
- * Features and Outcomes get their middle sections in later stages; their full
- * section-order test stays a `todo` until then (see `STAGED`).
  */
 
 import { describe, expect, test } from "bun:test";
@@ -24,7 +21,7 @@ import {
   sourceFiles,
   stripComments,
 } from "../testing/jsx-source";
-import { LANDING_PAGES, LANDING_SLUGS, landingPageMetadata, type LandingSlug } from "./pages";
+import { LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata, type LandingSlug } from "./pages";
 import { PROOF_LABELS, proofFigures } from "./proof";
 
 const PAGES_DIR = join(ROOT, "app", "[locale]", "us", "landing-pages");
@@ -33,9 +30,6 @@ const SHARED_DIR = join(COMPONENTS_DIR, "shared");
 
 const pageFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx");
 const lpFiles = () => [...sourceFiles(COMPONENTS_DIR), ...LANDING_SLUGS.map(pageFile)];
-
-/** Pages whose middle sections a later stage adds, with the stage that does it. */
-const STAGED: Partial<Record<LandingSlug, string>> = { outcomes: "stage C" };
 
 /** The sections of each page, in the order the plan gives them. */
 const PLAN_SECTIONS: Record<LandingSlug, string[]> = {
@@ -124,23 +118,9 @@ describe("the routes (AC1, AC2, AC4)", () => {
     expect(existsSync(pageFile(slug))).toBe(true);
   });
 
-  for (const slug of LANDING_SLUGS) {
-    const stage = STAGED[slug];
-    if (stage) {
-      test.todo(`${slug}: renders every registry section once, in registry order (${stage} adds the middle)`);
-      test(`${slug}: renders the shared sections it has so far once each, in registry order`, () => {
-        const rendered = renderedSections(pageFile(slug));
-        const expected = LANDING_PAGES[slug].sections.filter((id) => rendered.includes(id));
-
-        expect(rendered).toEqual(expected);
-        expect(rendered).toEqual(expect.arrayContaining(["hero", "pricing", "faq", "final_cta"]));
-      });
-    } else {
-      test(`${slug}: renders every registry section once, in registry order`, () => {
-        expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
-      });
-    }
-  }
+  test.each(LANDING_SLUGS)("%s renders every registry section once, in registry order", (slug) => {
+    expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
+  });
 
   test.each(LANDING_SLUGS)("%s renders the shared FAQ, final CTA and pricing block", (slug) => {
     const source = stripComments(read(pageFile(slug)));
@@ -420,5 +400,132 @@ describe("components the pages extend keep rendering as before (AC15)", () => {
     ["components/card/WalletCard.tsx", "<QRCodeSkeleton size={100} />"],
   ])("%s still calls it with no new prop", (path, call) => {
     expect(source(path)).toContain(call);
+  });
+});
+
+describe("the Outcomes page: results, not how (STA-546 stage C)", () => {
+  const OUTCOMES_DIR = join(COMPONENTS_DIR, "outcomes");
+  /** A component of the page; empty when it is missing, so the pins fail on what they look for. */
+  const component = (name: string) => {
+    const file = join(OUTCOMES_DIR, `${name}.tsx`);
+    return existsSync(file) ? stripComments(read(file)) : "";
+  };
+  const ownFiles = () => [pageFile("outcomes"), ...(existsSync(OUTCOMES_DIR) ? sourceFiles(OUTCOMES_DIR) : [])];
+  /** The source of the file that renders the section with this id. */
+  const sectionSource = (id: string) => {
+    const file = [...landingTree(pageFile("outcomes"))].find((candidate) =>
+      openingTags(read(candidate)).some((tag) => literalAttr(tag.attrs, "section") === id),
+    );
+    return file ? stripComments(read(file)) : "";
+  };
+  const spotlight = (source: string) => openingTags(source).find((tag) => tag.name === "LpSpotlight");
+  /** Nothing between the two expressions opens or closes a block: they print on one line. */
+  const shareALine = (source: string, first: string, second: string) => {
+    const [a, b] = [source.indexOf(first), source.indexOf(second)];
+    if (a === -1 || b === -1) return false;
+    return !/<\/?(?:p|div|li|ul|ol|section|h[1-6]|br)\b/.test(source.slice(Math.min(a, b), Math.max(a, b)));
+  };
+
+  test("the page has the components of its sections", () => {
+    for (const name of ["OutcomesHeroVisual", "RegularsFigure", "ReturnSpotlight", "SlowDaysSpotlight", "RegularsSpotlight"]) {
+      expect({ name, found: component(name) !== "" }).toEqual({ name, found: true });
+    }
+  });
+
+  test("the hero is the lock screen with the stamp notification from the first paint, and no demo link", () => {
+    const hero = component("OutcomesHeroVisual");
+    const phone = openingTags(hero).find((tag) => tag.name === "NotificationPhoneDemo");
+
+    expect(phone?.attrs).toContain("animate={false}");
+    expect(phone?.attrs).toMatch(/\beager\b/);
+    expect(phone?.attrs).toContain("lpBanner(STAMP_BANNER)");
+    expect(hasDemoSection("outcomes")).toBe(false);
+    expect([...landingTree(pageFile("outcomes"))].map((file) => file.split("/").pop())).not.toContain("LpDemo.tsx");
+  });
+
+  test('the H1 keeps its no-break hyphen, so "first-time" never splits across two lines', () => {
+    const { h1 } = LANDING_PAGES.outcomes.hero;
+
+    expect(h1).toContain("first\u2011time");
+    expect(h1).not.toContain("first-time");
+  });
+
+  test("the problem is one figure in the page's handwriting, with its claim and its source, on the one tinted band", () => {
+    const figure = component("RegularsFigure");
+    const tags = openingTags(figure);
+
+    expect(tags.some((tag) => /\bink-figure\b/.test(tag.attrs))).toBe(true);
+    for (const part of ["OUTCOMES.problem", "figure.value", "figure.text", "figure.source"]) expect(figure).toContain(part);
+    expect(tags.find((tag) => tag.name === "LpSection")?.attrs).toMatch(/\btinted\b/);
+    const bands = ownFiles().flatMap((file) =>
+      openingTags(read(file)).filter((tag) => /\btinted\b(?!=)/.test(tag.attrs)),
+    );
+    expect(bands).toHaveLength(1);
+  });
+
+  // AC12: a figure from someone else is never printed without where it comes from.
+  test.each([
+    ["RegularsFigure", "figure.source"],
+    ["ReturnSpotlight", "headStart.source"],
+  ])("%s renders %s", (name, accessor) => {
+    expect(component(name)).toContain(accessor);
+  });
+
+  test("the return spotlight shows the part-filled Aurevo card under the lead, then the head start", () => {
+    const source = sectionSource("outcome_return");
+    const card = openingTags(source).find((tag) => tag.name === "AurevoCard");
+
+    expect(source).toContain("OUTCOMES.comeBack");
+    expect(card?.attrs).toMatch(/stamps=\{[1-7]\}/);
+    expect(source).toContain("headStart.text");
+  });
+
+  test("the slow-days spotlight prints the plans a broadcast comes with on the line of its fee note", () => {
+    const source = sectionSource("outcome_slow_days");
+
+    expect(source).toContain("slowDays.lead");
+    expect(source).toContain("SHARED.broadcastPlans");
+    expect(source).toContain("slowDays.noFees");
+    expect(shareALine(source, "SHARED.broadcastPlans", "slowDays.noFees")).toBe(true);
+  });
+
+  test("the slow-days phone shows its broadcast as the sample café sends it, still", () => {
+    const source = sectionSource("outcome_slow_days");
+    const phone = openingTags(source).find((tag) => tag.name === "NotificationPhoneDemo");
+
+    expect(phone?.attrs).toMatch(/lpBanner\([\w.]*slowDays\.banner\)/);
+    expect(phone?.attrs).toContain("animate={false}");
+  });
+
+  test("the regulars spotlight shows the capture with its caption, then the example on one line", () => {
+    const source = sectionSource("outcome_regulars");
+
+    expect(source).toContain('landingShot("en", "phone")');
+    expect(source).toContain("SHARED.sampleData");
+    expect(shareALine(source, "example.label", "example.text")).toBe(true);
+  });
+
+  test("the spotlights alternate sides: right, left, right", () => {
+    const sides = ["outcome_return", "outcome_slow_days", "outcome_regulars"].map(
+      (id) => literalAttr(spotlight(sectionSource(id))?.attrs ?? "", "side") ?? "right",
+    );
+
+    expect(sides).toEqual(["right", "left", "right"]);
+  });
+
+  // The capture crops inside its own figure, so "Sample data" prints under the cut and stays visible.
+  test("tall devices are cropped on a phone", () => {
+    for (const id of ["outcome_slow_days", "outcome_regulars"]) {
+      expect({ id, cropped: /\bcropOnPhone\b|max-h-\[420px\]/.test(sectionSource(id)) }).toEqual({ id, cropped: true });
+    }
+  });
+
+  test("every notification on the page is the sample café's, through lpBanner", () => {
+    for (const file of ownFiles()) {
+      const source = stripComments(read(file));
+      if (openingTags(source).some((tag) => tag.name === "NotificationPhoneDemo" || tag.name === "NotificationBanner")) {
+        expect({ file, viaLpBanner: source.includes("lpBanner(") }).toEqual({ file, viaLpBanner: true });
+      }
+    }
   });
 });

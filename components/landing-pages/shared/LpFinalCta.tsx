@@ -16,7 +16,7 @@ export function LpFinalCta({ slug }: Readonly<{ slug: LandingSlug }>) {
   return (
     <LpSection section="final_cta" className="stamp-pattern text-center">
       <ScrollReveal className="relative z-10 mx-auto flex max-w-[840px] flex-col items-center gap-6">
-        <h2 className="text-display">
+        <h2 className="text-display text-balance">
           {before}
           <span className="text-[var(--accent)]">{accent}</span>
           {after}
