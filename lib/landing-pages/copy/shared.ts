@@ -37,6 +37,8 @@ export const SHARED = {
     lead: "Add a sample card to your wallet, stamp it, and see what your customers see.",
   } satisfies SectionCopy,
   sampleData: "Sample data",
+  /** Said under the full dashboard capture, which shows charts that come with Growth and Pro. */
+  dashboardPlans: "Some charts come with Growth and Pro.",
   /** The plans a broadcast comes with; printed wherever a broadcast is mentioned. */
   broadcastPlans: "Growth and Pro",
   /** The browser bar over the desktop dashboard capture. */

@@ -57,7 +57,7 @@ export const HOW_IT_WORKS = {
       "Tell us about your shop",
       "Build your card",
       "Add a test card to your phone and stamp it",
-      "Choose a plan, and your {trialDays}-day free trial starts",
+      "Choose a plan, and your {trialDays}\u2011day free trial starts",
       "Put the flyer on your counter",
     ],
     closing: "Your card can be live the same day.",

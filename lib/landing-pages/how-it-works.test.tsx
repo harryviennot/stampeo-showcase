@@ -210,7 +210,7 @@ describe("the first-day timeline (AC13)", () => {
 
     expect(steps).toHaveLength(items.length);
     expect(steps[0]).toContain(items[0]);
-    expect(steps[3]).toContain("Choose a plan, and your 14-day free trial starts");
+    expect(steps[3]).toContain("Choose a plan, and your 14\u2011day free trial starts");
     expect(steps[4]).toContain(items[4]);
   });
 

@@ -60,7 +60,9 @@ export async function DashboardDuo({ priority = false }: Readonly<{ priority?: b
           <PhoneScreenshot src={phone.src} alt={t("alt.phone")} eager={priority} />
         </div>
       </div>
-      <figcaption className="mt-4 text-center text-sm text-[var(--muted-foreground)]">{SHARED.sampleData}</figcaption>
+      <figcaption className="mt-4 text-center text-sm text-[var(--muted-foreground)]">
+        {SHARED.sampleData} · {SHARED.dashboardPlans}
+      </figcaption>
     </figure>
   );
 }
