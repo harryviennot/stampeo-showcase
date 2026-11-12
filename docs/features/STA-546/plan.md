@@ -41,9 +41,12 @@ Stampeo can do.
 ## v2.1: Platform polish (Harry, 13 Nov 2026)
 
 Harry likes the Platform page best and directed a polish round. His calls, which win over earlier text:
-- **Hero:** a slowly turning wheel of ~14-16 of our nicest sample cards (incl. the newer sector brands:
-  pizza, bakery, lash studio…), replacing the fan on Platform; never the real-brand barber card.
-- **In their wallet:** bigger floating-card titles aligned like PassEntry's; a clean notification; our own
+- **Hero:** first built as a turning wheel; Harry reverted it (the fan already animates): the original
+  `HeroCardFan` (+ `FanParallax`) with a hand-picked Platform set (Gelo, Rolling Slice, Vanity, Aurevo,
+  Fournée, Marginalia, Pace; stamps and points mixed; never the barber), via an optional `slots` prop that
+  leaves `/us` byte-identical; the CTAs sit lower on desktop, clear of the cards. On phones the "Built for"
+  strip runs as two rows in opposite directions.
+- **In their wallet:** bigger floating-card titles, one shared style for all three cards (Harry); a clean notification; our own
   analytics mini-components (every-plan analytics only) instead of a cropped screenshot; no "Sample data";
   the right phone becomes an Android phone showing Google Wallet (own CSS/SVG frame; web's Google Wallet
   card ported).
