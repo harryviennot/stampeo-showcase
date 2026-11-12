@@ -9,7 +9,7 @@ import { IPHONE } from "@/lib/devices/iphone";
  */
 
 /** The locales the loop has been rendered in; every other locale plays the English render. */
-export const SCANNER_LOOP_LOCALES: readonly Locale[] = ["en"];
+export const SCANNER_LOOP_LOCALES: readonly Locale[] = ["en", "fr", "es", "pl"];
 
 const FALLBACK: Locale = "en";
 const FOLDER = "/videos/scanner-loop";
