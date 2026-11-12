@@ -3,8 +3,9 @@
  *
  * Wallet registers the pass with the backend on its own, so the page can learn
  * of it through the event stream, by re-reading the session when the tab comes
- * back, or by polling while the install is still unconfirmed. All three feed
- * `receive`, which captures `demo_step_reached` once per real change.
+ * back, or by polling while the install is still unconfirmed. Every status read
+ * (including the hook's SSE-fallback poll) feeds `receive`, which captures
+ * `demo_step_reached` once per real change.
  *
  * Browser handles (fetch, timers, visibility, PostHog) are injected so the
  * decisions run under `bun test`; `hooks/useDemoSession.ts` wires them.
@@ -24,7 +25,7 @@ export interface SessionSnapshot {
 
 export interface SessionSyncDeps {
   cardType: "stamp" | "points";
-  /** Reads the session from the server; null when it cannot be read right now. */
+  /** Reads the session from the server; null on a network error or a 404 (both retried until idle). */
   fetchSession: (token: string) => Promise<SessionSnapshot | null>;
   /** Pushes a snapshot into the page's state. */
   apply: (snapshot: SessionSnapshot) => void;
@@ -45,7 +46,7 @@ export interface SessionSync {
   pageHidden: () => void;
   /** Forget the session (reset or unmount). */
   stop: () => void;
-  /** No status change for the inactivity limit. */
+  /** No status change or return to the page within INACTIVITY_TIMEOUT_MS. */
   isIdle: () => boolean;
 }
 
@@ -53,7 +54,7 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
   let token: string | null = null;
   let status = "loading";
   let lastChangeAt = deps.now();
-  // Bumped on every state change so a slower read can tell it is out of date.
+  // Bumped on every adopt, receive and stop, so a slower read can tell it is out of date.
   let version = 0;
   let timer: unknown = null;
   let pollInFlight = false;
@@ -77,7 +78,7 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
     if (token === null) return;
     const seenVersion = version;
     const snapshot = await deps.fetchSession(token);
-    // An unreadable session is retried on the next tick, never treated as gone.
+    // A null read (network error or 404) changes nothing; the next tick tries again until idle.
     if (snapshot === null || version !== seenVersion) return;
     receive(snapshot);
   }

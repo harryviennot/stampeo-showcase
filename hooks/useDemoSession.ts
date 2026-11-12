@@ -125,9 +125,7 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
     }
   }, []);
 
-  // Keeps the page in step with the server: status changes from the event
-  // stream, the poll while the install is unconfirmed, and the re-read when the
-  // tab comes back all go through it (lib/demo/session-sync.ts).
+  // Keeps the page in step with the server: every status read (SSE, polls, the re-read on return) feeds it.
   const [sync] = useState(() =>
     createSessionSync({
       cardType,
