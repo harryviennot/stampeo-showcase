@@ -11,7 +11,17 @@ import { NotificationBanner } from "@/components/features/notifications-push/Not
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
 import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
+import { AnnotatedWalletCard } from "@/components/features/design-de-carte/AnnotatedWalletCard";
+import { IconLibrarySection } from "@/components/features/design-de-carte/IconLibrarySection";
+import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
+import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
+import { NumberFigures } from "@/components/landing-pages/platform/NumbersBlock";
+import { PlatformToggleCard } from "@/components/landing-pages/platform/PlatformToggleCard";
+import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
+import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { Segmented } from "@/components/ui/Segmented";
 import { renderEn } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
@@ -63,5 +73,55 @@ describe("what a component renders when a page's new props are left out (AC15)",
 
   test("CardDesignPlayground: the full playground section", () => {
     expect(renderEn(<CardDesignPlayground />)).toMatchSnapshot();
+  });
+
+  test("AnnotatedWalletCard: the anatomy section with its own heading and band", () => {
+    expect(renderEn(<AnnotatedWalletCard />)).toMatchSnapshot();
+  });
+
+  test("IconLibrarySection: the section with its heading and the two marquee rows", () => {
+    expect(renderEn(<IconLibrarySection />)).toMatchSnapshot();
+  });
+
+  test("ScannerLoop: the first frame in a phone, 280px wide", () => {
+    expect(renderEn(<ScannerLoop />)).toMatchSnapshot();
+  });
+});
+
+describe("what Platform's own pieces render when the previews' new props are left out (AC2)", () => {
+  test("LpCtaPair: the trial, and Try it on your phone as an anchor to #demo", () => {
+    expect(renderEn(<LpCtaPair location="hero" />, { us: true })).toMatchSnapshot();
+  });
+
+  test("LpAccentBand: the cream card with Platform's headline", () => {
+    expect(renderEn(<LpAccentBand />, { us: true })).toMatchSnapshot();
+  });
+
+  test("NumberFigures: the handwritten figures, with no source line", () => {
+    const items = [
+      { value: "120+", label: "businesses" },
+      { value: "25+", label: "countries" },
+      { value: "4", label: "languages" },
+    ];
+
+    expect(renderEn(<NumberFigures items={items} />)).toMatchSnapshot();
+  });
+
+  test("LpFaq: the five shared questions and the contact line", () => {
+    expect(renderEn(<LpFaq />, { us: true })).toMatchSnapshot();
+  });
+
+  test("DeliverAnalytics: the two tiles and the weekly chart", () => {
+    expect(renderEn(<DeliverAnalytics />)).toMatchSnapshot();
+  });
+
+  test("PlatformToggleCard: the dashboard and scanner panes in one white card", () => {
+    expect(renderEn(<PlatformToggleCard dashboard={<i>dashboard pictures</i>} scanner={<i>scanner phone</i>} />)).toMatchSnapshot();
+  });
+
+  test("ProgramTypeRows: every row open, the guide link under them", () => {
+    expect(
+      renderEn(<ProgramTypeRows visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }} />),
+    ).toMatchSnapshot();
   });
 });
