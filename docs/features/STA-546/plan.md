@@ -51,7 +51,7 @@ Harry likes the Platform page best and directed a polish round. His calls, which
   the right phone becomes an Android phone showing Google Wallet (own CSS/SVG frame; web's Google Wallet
   card ported).
 - **Numbers:** the handwritten figures of the original homepage.
-- **Stamping animation:** a new ~8 s loop of the real Scanner app flow, made in promo-videos from the ported
+- **Stamping animation:** a new ~8 s loop of the real Scanner app flow (`components/ui/ScannerLoop.tsx`, per locale, also on the mobile scanner feature page, whose copy now describes the real app), made in promo-videos from the ported
   Scanner screens (shotlist approved by Harry), replacing `ScanDemo` on all four pages.
 - **Program types:** rows open on hover (desktop), not on scroll; no "Every plan" chips; levels drawn on a
   new fictional brand (another business type, barber colours); Vanity as the points card.
@@ -111,11 +111,12 @@ Harry likes the Platform page best and directed a polish round. His calls, which
 - AC22: the Platform share tree names channels only (counter flyer, Scanner app QR, Instagram, Facebook,
   website, Google Business Profile); nothing says integration, POS or sync.
 - AC23: Platform's blog block shows the 3 latest English posts, each linking to its post.
-- AC24: reused feature demos carry no false detail on these pages: `ScanDemo` shows no "REC" and no timing;
+- AC24: reused feature demos carry no false detail on these pages: the scanner is the Scanner loop video of
+  the real app (v2.1; `ScanDemo` with its "REC" and "0.8s" is deleted site-wide);
   `NotificationSequenceDemo` banners come from Aurevo with its icon and default wording, and the broadcast
   moment carries "Growth and Pro"; `CardDesignPlayground compact` keeps the card in view at 390.
 - AC15v2: every extended shared component (`WalletCard`, `CTAButton`, `Segmented`, `NotificationSequenceDemo`,
-  `ScanDemo`, `CardDesignPlayground`, `BlogCard`, plus v1's) renders today's markup when the new prop is
+  `CardDesignPlayground`, `BlogCard`, `HeroCardFan`, `LiveActivityFeed`, plus v1's) renders today's markup when the new prop is
   omitted, and its existing call sites pass none of the new props.
 - AC10/AC11/AC12/AC13/AC14/AC16/AC17 unchanged in intent (claims, budgets, sources, tokens, no real QR
   outside the demo, nothing else on the site changes, the fold at 390 and 1440); AC10 drops the "levels" ban.
