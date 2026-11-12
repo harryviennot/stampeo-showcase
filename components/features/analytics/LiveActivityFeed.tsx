@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/Container";
 import { ReducedMotion } from "@/components/ui/ReducedMotion";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { isStill, usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const FAKE_NAMES = [
   "Sophie M.",
@@ -55,7 +55,7 @@ export function LiveActivityFeed({
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const idRef = useRef(0);
   const reduced = usePrefersReducedMotion();
-  const still = stillWhenReduced && reduced;
+  const still = isStill(stillWhenReduced, reduced);
 
   // The dashboard's Activity page verbs.
   const actions = [t("stampAction"), t("rewardAction"), t("cardAction")];

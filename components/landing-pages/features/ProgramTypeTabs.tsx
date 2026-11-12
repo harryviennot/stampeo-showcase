@@ -23,8 +23,9 @@ const panelClass = (open: boolean) => `col-start-1 row-start-1 ${open ? "" : "in
 export function ProgramTypeTabs({
   heading,
   visuals,
-}: Readonly<{ heading: ReactNode; visuals: Record<Key, ReactNode> }>) {
-  const [active, setActive] = useState<Key>(PROGRAM_TYPES[0].key);
+  initial = PROGRAM_TYPES[0].key,
+}: Readonly<{ heading: ReactNode; visuals: Record<Key, ReactNode>; initial?: Key }>) {
+  const [active, setActive] = useState<Key>(initial);
 
   return (
     <div className="grid gap-8 lg:grid-cols-2 lg:gap-x-20 lg:gap-y-8">

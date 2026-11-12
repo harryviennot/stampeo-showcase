@@ -15,6 +15,7 @@ import { NotificationSequenceDemo } from "@/components/features/notifications-pu
 import { ScanDemo } from "@/components/features/scanner-mobile/ScanDemo";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { Segmented } from "@/components/ui/Segmented";
+import { isStill } from "@/hooks/usePrefersReducedMotion";
 import type { BlogPostMeta } from "../blog/types";
 import { loadCatalog } from "../testing/catalogs";
 import { ROOT, code } from "../testing/jsx-source";
@@ -203,5 +204,27 @@ describe("HeroCardFan slots", () => {
     expect(fan()).toMatch(/export async function HeroCardFan\(\{\s*slots\s*=\s*FAN_SLOTS\s*\}/);
     expect(fan()).toContain("{slots.map((slot) =>");
     expect(fan().match(/\bFAN_SLOTS\b/g)).toHaveLength(2);
+  });
+});
+
+// The reader's setting is read in the browser only, so what a component does with it is this one selector.
+describe("stillWhenReduced", () => {
+  test.each([
+    [false, false, false],
+    [false, true, false],
+    [true, false, false],
+    [true, true, true],
+  ])("a component asked %p that meets a reader who asks for less motion: %p, so still is %p", (asked, reduced, still) => {
+    expect(isStill(asked, reduced)).toBe(still);
+  });
+
+  test.each([
+    ["LiveActivityFeed", "components/features/analytics/LiveActivityFeed.tsx"],
+    ["ScanDemo", "components/features/scanner-mobile/ScanDemo.tsx"],
+  ])("%s rests when the selector says so, and no other way", (_name, file) => {
+    const source = code(join(ROOT, file));
+
+    expect(source).toMatch(/const still = isStill\(stillWhenReduced, reduced\)/);
+    expect(source).not.toMatch(/stillWhenReduced\s*&&\s*reduced/);
   });
 });

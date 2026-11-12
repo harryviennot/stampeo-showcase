@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { CheckIcon, ClockIcon } from "@/components/icons";
 import { IPhone } from "@/components/ui/IPhone";
 import { ReducedMotion } from "@/components/ui/ReducedMotion";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { isStill, usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Phase = "scanning" | "success" | "result" | "idle";
 
@@ -29,7 +29,7 @@ export function ScanDemo({
   const t = useTranslations("features.scanner-mobile.custom.scanDemo");
   const full = chrome === "full";
   const reduced = usePrefersReducedMotion();
-  const still = stillWhenReduced && reduced;
+  const still = isStill(stillWhenReduced, reduced);
   const [cycle, setCycle] = useState<Phase>("scanning");
   const phase: Phase = still ? "success" : cycle;
   const cycleCountRef = useRef(0);

@@ -9,11 +9,17 @@ import { describe, expect, test } from "bun:test";
 import { HeadStartToggle } from "@/components/landing-pages/outcomes/HeadStartToggle";
 import { RegularsFigure } from "@/components/landing-pages/outcomes/RegularsFigure";
 import { SegmentChips } from "@/components/landing-pages/outcomes/SegmentChips";
+import { AUREVO } from "@/components/landing-pages/shared/samples";
 import { code, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
 import { pageComponent, planLineWith } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
+import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { OUTCOMES } from "./copy/outcomes";
 import { SHARED } from "./copy/shared";
+
+// The cards are async server components that ask next-intl for their words.
+await mockEnglishServerTranslations();
+const { AurevoCard } = await import("@/components/landing-pages/shared/AurevoCard");
 
 const outcomes = (name: string) => pageComponent("outcomes", name);
 
@@ -55,7 +61,12 @@ describe("the head-start toggle drives the card and the highlighted bar (AC12)",
     for (const initial of ["empty", "headStart"] as const) {
       const html = render(initial);
 
-      expect(tagWith(html, 'data-bar="empty"')).toBeDefined();
+      for (const bar of ["empty", "headStart"]) {
+        const tag = tagWith(html, `data-bar="${bar}"`);
+
+        expect(tag).not.toBe("");
+        expect(tag).not.toMatch(/\b(?:inert|hidden)\b/);
+      }
       expect(html).toContain(`--bar:${empty.value}`);
       expect(html).toContain(`--bar:${withHeadStart.value}`);
       expect(html).toContain(`>${empty.value}<`);
@@ -86,12 +97,43 @@ describe("the head-start toggle drives the card and the highlighted bar (AC12)",
 describe("the head-start section", () => {
   const section = () => code(outcomes("HeadStartSpotlight"));
 
-  test("is the page's head-start section, with the cards from the Aurevo sample at 0 and 2 stamps", () => {
+  /** The stamps a visitor still has to collect on each card of the toggle, read from the props the section gives it. */
+  const cards = () =>
+    openingTags(section())
+      .filter((tag) => tag.name === "AurevoCard")
+      .map((tag) => {
+        const stamps = Number(tag.attrs.match(/\bstamps=\{(\d+)\}/)?.[1]);
+        const total = Number(tag.attrs.match(/\btotal=\{(\d+)\}/)?.[1] ?? AUREVO.design.total_stamps);
+        return { stamps, total, toGo: total - stamps };
+      });
+
+  test("is the page's head-start section, with the cards from the Aurevo sample", () => {
     const tags = openingTags(section());
-    const cards = tags.filter((tag) => tag.name === "AurevoCard").map((tag) => tag.attrs);
 
     expect(tags.some((tag) => literalAttr(tag.attrs, "section") === "outcome_head_start")).toBe(true);
-    expect(cards.map((attrs) => attrs.match(/stamps=\{(\d+)\}/)?.[1])).toEqual(["0", "2"]);
+    expect(cards()).toHaveLength(2);
+  });
+
+  // The study's cards: a plain 8-slot card, against a 10-slot one that came with 2 stamps. Both needed 8 more.
+  test("the empty card is 0 of 8 and the head-start one is 2 of 10, so both need the same 8 stamps to finish", () => {
+    const [empty, headStart] = cards();
+
+    expect([empty.stamps, empty.total]).toEqual([0, 8]);
+    expect([headStart.stamps, headStart.total]).toEqual([2, 10]);
+    expect(headStart.toGo).toBe(empty.toGo);
+  });
+
+  // The card's reward field names the stamp that earns it, so a 10-slot card cannot say "8th free".
+  test.each([
+    ["Card starts empty", 0, "8th free"],
+    ["2 stamps on the house", 1, "10th free"],
+  ])("the %s card, drawn with the props the section gives it, shows its own count and its own reward", async (_tab, at, reward) => {
+    const { stamps, total } = cards()[at];
+    const text = textOf(renderEn(await AurevoCard({ stamps, total, width: 300 })));
+
+    expect(text).toContain(`${stamps} / ${total}`);
+    expect(text).toContain(reward);
+    expect(text.match(/\d+(?:st|nd|rd|th) free/g)).toEqual([reward]);
   });
 });
 

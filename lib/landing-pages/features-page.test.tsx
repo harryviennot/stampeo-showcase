@@ -15,9 +15,14 @@ import { AUREVO } from "../../components/landing-pages/shared/samples";
 import { findTag } from "../testing/jsx-source";
 import { planLineWith, sectionSource } from "../testing/landing-pages-source";
 import { renderEn as render, textOf } from "../testing/render-en";
+import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { FEATURES } from "./copy/features";
 import { PROGRAM_SWITCH_LINE, PROGRAM_TYPES } from "./copy/program-types";
-import { SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
+import { LEVEL_UP_BANNER, SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
+
+// The level cards are an async server component that asks next-intl for their words.
+await mockEnglishServerTranslations();
+const { LevelCards } = await import("@/components/landing-pages/shared/LevelCards");
 
 describe("the Stamps, Points and Levels tabs (AC20)", () => {
   const visuals = {
@@ -64,6 +69,52 @@ describe("the Stamps, Points and Levels tabs (AC20)", () => {
 
     expect(keys).toEqual(["stamps", "points", "levels"]);
     expect(panels.filter((panel) => !panel.hidden).map((panel) => panel.key)).toEqual(["stamps", "stamps"]);
+  });
+
+  describe.each(PROGRAM_TYPES.map((type) => [type.key, type] as const))("opened on %s", (key, type) => {
+    const others = PROGRAM_TYPES.filter((other) => other.key !== key);
+    /** The real level cards under the level-up banner, as the section gives them; the other two types are stand-ins. */
+    const open = async () =>
+      render(
+        <ProgramTypeTabs
+          heading={<h2>Stamps, points or levels.</h2>}
+          visuals={{ ...visuals, levels: await LevelCards({ banner: true }) }}
+          initial={key}
+        />,
+      );
+    /** Each panel of the markup: its type, whether it is invisible, and the markup up to the next panel. */
+    const panels = (html: string) =>
+      [...html.matchAll(/<div[^>]*data-panel="(\w+)"[^>]*>/g)].map((match, index, all) => ({
+        key: match[1],
+        hidden: /\binvisible\b/.test(match[0]),
+        html: html.slice(match.index, all[index + 1]?.index),
+      }));
+
+    test("its tab is the chosen one, and its card and words are the only panels in view", async () => {
+      const found = panels(await open());
+
+      expect((await open()).match(/aria-selected="true"[^>]*>([^<]*)</)?.[1]).toBe(type.label);
+      expect(found.filter((panel) => !panel.hidden).map((panel) => panel.key)).toEqual([key, key]);
+      for (const other of others) expect(found.filter((panel) => panel.key === other.key).every((panel) => panel.hidden)).toBe(true);
+    });
+
+    test("the words in view are its own, with its plan chip, and its card is the one drawn for it", async () => {
+      const shown = panels(await open()).filter((panel) => !panel.hidden);
+      const text = textOf(shown.map((panel) => panel.html).join(""));
+
+      expect(text).toContain(type.title);
+      expect(text).toContain(type.body);
+      expect(text).toContain(type.plan);
+      for (const other of others) expect(text).not.toContain(other.body);
+      if (key === "levels") {
+        expect(shown.map((panel) => panel.html).join("").replaceAll("&#x27;", "'")).toContain(
+          `aria-label="${SHARED.levelCardsAlt}"`,
+        );
+        expect(text).toContain(LEVEL_UP_BANNER.body);
+      } else {
+        expect(shown.map((panel) => panel.html).join("")).toContain(`data-visual="${key}"`);
+      }
+    });
   });
 
   test("says that stamps and points can be switched later, and offers the trial", () => {
@@ -160,11 +211,11 @@ describe("the tiles under everything else (AC20)", () => {
 });
 
 describe("the live feed over the Analytics capture (AC9)", () => {
-  test("the spotlight lays the feed over the 'how often they come' capture and prints Sample data and its plan line", () => {
+  test("the spotlight lays the feed over the top of Analytics, the every-plan charts, and prints Sample data and its plan line", () => {
     const section = sectionSource("features", "spotlight_analytics");
 
     expect(findTag(section, "LiveActivityFeed")?.attrs).toMatch(/(?:^|\s)cardOnly(?![\w-])/);
-    expect(section).toContain('landingShot("en", "phone-habits")');
+    expect(section).toContain('landingShot("en", "phone")');
     expect(section).toContain("SHARED.sampleData");
     expect(section).toContain("FEATURES.analytics.planLine");
   });

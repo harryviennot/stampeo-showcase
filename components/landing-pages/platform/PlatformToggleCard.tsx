@@ -28,8 +28,9 @@ const FEATURE_PAGE: Record<Tab, string> = {
 export function PlatformToggleCard({
   dashboard,
   scanner,
-}: Readonly<{ dashboard: ReactNode; scanner: ReactNode }>) {
-  const [tab, setTab] = useState<Tab>("dashboard");
+  initial = "dashboard",
+}: Readonly<{ dashboard: ReactNode; scanner: ReactNode; initial?: Tab }>) {
+  const [tab, setTab] = useState<Tab>(initial);
   const visuals: Record<Tab, ReactNode> = { dashboard, scanner };
 
   return (

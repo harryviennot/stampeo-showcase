@@ -16,11 +16,33 @@ export async function aurevoDesign(): Promise<Partial<CardDesign>> {
   };
 }
 
-/** The Aurevo card at `stamps` of 8, with its member and reward fields. */
-export async function AurevoCard({ stamps, width }: Readonly<{ stamps: number; width: number }>) {
+const ORDINALS = new Intl.PluralRules("en-US", { type: "ordinal" });
+const ORDINAL_SUFFIX = { one: "st", two: "nd", few: "rd", other: "th" } as Record<string, string>;
+
+/** "10th": the card's reward field names the stamp that earns it, so it follows the card's size. */
+const ordinal = (count: number) => `${count}${ORDINAL_SUFFIX[ORDINALS.select(count)] ?? "th"}`;
+
+/** The Aurevo card at `stamps` of 8, or of `total`, with its member and reward fields; the reward field names the card's last stamp. */
+export async function AurevoCard({
+  stamps,
+  width,
+  total,
+}: Readonly<{ stamps: number; width: number; total?: number }>) {
+  const design = await aurevoDesign();
+  const sized: Partial<CardDesign> =
+    total === undefined
+      ? design
+      : {
+          ...design,
+          total_stamps: total,
+          secondary_fields: design.secondary_fields?.map((field) =>
+            field.key === "reward" ? { ...field, value: field.value.replace(/^\d+(?:st|nd|rd|th)/, ordinal(total)) } : field,
+          ),
+        };
+
   return (
     <PassFrame width={width}>
-      <WalletCard design={await aurevoDesign()} stamps={stamps} />
+      <WalletCard design={sized} stamps={stamps} />
     </PassFrame>
   );
 }

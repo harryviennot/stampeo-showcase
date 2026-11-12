@@ -22,3 +22,8 @@ export function usePrefersReducedMotion(): boolean {
     () => false,
   );
 }
+
+/** Whether a component that was asked to stand still for a reader who wants less motion (`stillWhenReduced`) does so. */
+export function isStill(stillWhenReduced: boolean, prefersReduced: boolean): boolean {
+  return stillWhenReduced && prefersReduced;
+}

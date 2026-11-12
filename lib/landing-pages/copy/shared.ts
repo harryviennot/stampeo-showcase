@@ -3,6 +3,10 @@ import type { Banner, FaqItem, SectionCopy } from "./types";
 /** The sample café every visual on these pages belongs to (`STAMP_SAMPLES` "aurevo"). */
 export const SAMPLE_BUSINESS = "Aurevo";
 
+// The stamp, reward and level-up banners below are the English defaults of `stamp_added`, `reward_earned` and
+// `tier_upgrade` in backend/app/services/programs/notification_defaults.py, with the sample's numbers and level
+// filled in. The wording has to follow that file.
+
 /** Stampeo's default stamp notification (every plan), as Aurevo's 5th of 8 stamps. */
 export const STAMP_BANNER: Banner = {
   sender: SAMPLE_BUSINESS,

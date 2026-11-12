@@ -15,19 +15,34 @@ import { LpHeading } from "@/components/landing-pages/shared/LpSection";
 import { PlanLine } from "@/components/landing-pages/shared/PlanLine";
 import { SampleCapture } from "@/components/landing-pages/shared/SampleCapture";
 import { WalletBadges } from "@/components/landing-pages/shared/WalletBadges";
+import { SCANNER_LOOP } from "@/components/landing-pages/shared/scanner-loop";
 import { WRENFOLD } from "@/components/landing-pages/shared/samples";
 import { StampIconSvg, stampIcons } from "@/components/onboarding/StampIconPicker";
 import { lpBanner } from "../../components/landing-pages/shared/banner";
-import { landingShot } from "../landing/dashboard-shots";
+import { SHOT_SIZES, landingShot, type ShotView } from "../landing/dashboard-shots";
 import { STAMP_SAMPLES } from "../loyalty-samples";
 import { ROOT, code, filesWith, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { ALL } from "../testing/landing-copy";
-import { COMPONENTS_DIR, lpFiles, otherCallers, pageComponent, pageFile, shared } from "../testing/landing-pages-source";
+import {
+  COMPONENTS_DIR,
+  lpFiles,
+  otherCallers,
+  pageComponent,
+  pageFile,
+  sectionTrees,
+  shared,
+  shotViews,
+} from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
+import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { FEATURES } from "./copy/features";
 import { OUTCOMES } from "./copy/outcomes";
 import { LEVELS_BUSINESS, LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
 import { LANDING_PAGES, type LandingSlug } from "./pages";
+
+// The dashboard duo is an async server component that asks next-intl for its alt texts.
+await mockEnglishServerTranslations();
+const { DashboardDuo } = await import("@/components/landing-pages/shared/DashboardDuo");
 
 describe("dashboard captures (AC9)", () => {
   /**
@@ -36,20 +51,70 @@ describe("dashboard captures (AC9)", () => {
    */
   const onPlatform = (file: string) => file === pageFile("platform") || file.startsWith(join(COMPONENTS_DIR, "platform", "/"));
 
-  /** A file that draws a dashboard capture has to print the sample-data caption with it. */
-  const missesCaption = (source: string) =>
-    (openingTags(source).some((tag) => tag.name === "PhoneScreenshot") || /\blandingShot\(/.test(source)) &&
-    !source.includes("sampleData");
+  /** What draws a capture: the phone screenshot, and the simulated feed standing in for the live dashboard. */
+  const CAPTURE_TAGS = ["PhoneScreenshot", "LiveActivityFeed"];
 
-  test("the guard flags a capture without its caption and accepts one with it", () => {
-    expect(missesCaption('<PhoneScreenshot src="x" alt="y" />')).toBe(true);
-    expect(missesCaption('const shot = landingShot("en", "desktop");')).toBe(true);
-    expect(missesCaption('<PhoneScreenshot src="x" alt="y" />{SHARED.sampleData}')).toBe(false);
-    expect(missesCaption("<IPhone />")).toBe(false);
+  /**
+   * The captures a source draws that no figure captions: each one has to sit in
+   * a `<figure>` that prints the sample-data caption, so two figures need two captions.
+   * A figure's own picture and feed share its caption (the layered capture).
+   */
+  function uncaptioned(source: string): string[] {
+    const figures = [...source.matchAll(/<figure\b[\s\S]*?<\/figure>/g)].map((match) => ({
+      from: match.index,
+      to: match.index + match[0].length,
+      captioned: match[0].includes("sampleData"),
+    }));
+    const draws = openingTags(source)
+      .filter((tag) => CAPTURE_TAGS.includes(tag.name))
+      .filter((tag) => !figures.some((figure) => figure.captioned && tag.end > figure.from && tag.end < figure.to))
+      .map((tag) => tag.name);
+    const bare = /\blandingShot\(/.test(source) && !figures.some((figure) => figure.captioned);
+
+    return bare && draws.length === 0 ? ["landingShot"] : draws;
+  }
+
+  test.each([
+    ["a screenshot with no figure", '<PhoneScreenshot src="x" alt="y" />', ["PhoneScreenshot"]],
+    ["the simulated feed with no figure", "<LiveActivityFeed cardOnly />", ["LiveActivityFeed"]],
+    ["a capture helper with no caption", 'const shot = landingShot("en", "desktop");', ["landingShot"]],
+    ["a figure that has no caption", '<figure><PhoneScreenshot src="x" alt="y" /></figure>', ["PhoneScreenshot"]],
+    [
+      "two figures and one caption",
+      '<figure><PhoneScreenshot src="a" alt="a" /></figure><figure><PhoneScreenshot src="b" alt="b" /><figcaption>{SHARED.sampleData}</figcaption></figure>',
+      ["PhoneScreenshot"],
+    ],
+  ])("the guard flags %s", (_what, source, flagged) => {
+    expect(uncaptioned(source)).toEqual(flagged);
   });
 
-  test("every file that draws a capture prints SHARED.sampleData, Platform's apart", () => {
-    expect(lpFiles().filter((file) => !onPlatform(file) && missesCaption(read(file)))).toEqual([]);
+  test.each([
+    ["a screenshot in a captioned figure", '<figure><PhoneScreenshot src="x" alt="y" /><figcaption>{SHARED.sampleData}</figcaption></figure>'],
+    ["the feed in a captioned figure", "<figure><LiveActivityFeed cardOnly /><figcaption>{SHARED.sampleData}</figcaption></figure>"],
+    [
+      "a screenshot and the feed sharing one caption",
+      "<figure><PhoneScreenshot src=\"x\" alt=\"y\" /><LiveActivityFeed cardOnly /><figcaption>{SHARED.sampleData}</figcaption></figure>",
+    ],
+    ["a phone that draws no capture", "<IPhone />"],
+  ])("the guard accepts %s", (_what, source) => {
+    expect(uncaptioned(source)).toEqual([]);
+  });
+
+  test("every capture on a page sits in a figure that prints SHARED.sampleData, Platform's apart", () => {
+    const loose = lpFiles()
+      .filter((file) => !onPlatform(file))
+      .flatMap((file) => uncaptioned(code(file)).map((name) => `${file.replace(ROOT, "")}: ${name}`));
+
+    expect(loose).toEqual([]);
+  });
+
+  test("the feeds the pages draw are among what the guard reads: the layered capture and the how-to feed", () => {
+    const feeds = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "LiveActivityFeed"));
+
+    expect(feeds.map((file) => file.replace(ROOT, "")).sort()).toEqual([
+      "/components/landing-pages/features/AnalyticsSpotlight.tsx",
+      "/components/landing-pages/how-it-works/SeeItWork.tsx",
+    ]);
   });
 
   test("the dashboard duo keeps its caption on every page but Platform, where it shows none", () => {
@@ -78,6 +143,92 @@ describe("dashboard captures (AC9)", () => {
   );
 });
 
+describe("which plans a dashboard capture shows (AC9)", () => {
+  /**
+   * What each capture of the Analytics page shows: `phone` is the top of the page, the visits, new customers,
+   * return rate and visits over time that every plan has; the other two phone views are scrolled to a chart
+   * that comes with Growth and Pro; the `desktop` capture shows both, so it is always printed with
+   * SHARED.dashboardPlans (Platform's toggle leaves the caption off, by Harry's call).
+   */
+  const VIEW_PLANS: Record<ShotView, "every plan" | "growth and pro" | "mixed"> = {
+    phone: "every plan",
+    "phone-habits": "growth and pro",
+    "phone-busiest": "growth and pro",
+    desktop: "mixed",
+  };
+
+  /** A capture of a Growth and Pro chart, in a section that prints no plans label next to it. */
+  const unlabelled = (view: ShotView, sectionPrintsPlans: boolean) =>
+    VIEW_PLANS[view] === "growth and pro" && !sectionPrintsPlans;
+
+  test("the guard flags a Growth and Pro chart with no label and leaves the rest alone", () => {
+    expect(unlabelled("phone-habits", false)).toBe(true);
+    expect(unlabelled("phone-busiest", false)).toBe(true);
+    expect(unlabelled("phone-habits", true)).toBe(false);
+    expect(unlabelled("phone", false)).toBe(false);
+    expect(unlabelled("desktop", false)).toBe(false);
+  });
+
+  test("the map names every view there is", () => {
+    expect(Object.keys(VIEW_PLANS).sort()).toEqual(Object.keys(SHOT_SIZES).sort());
+  });
+
+  const usages = () =>
+    lpFiles().flatMap((file) => shotViews(code(file)).map((view) => ({ file, view: view as ShotView })));
+
+  test("every view a page draws is one the map knows, and the pages draw the three they use today", () => {
+    const used = [...new Set(usages().map(({ view }) => view))];
+
+    expect(used.filter((view) => !(view in VIEW_PLANS))).toEqual([]);
+    expect(used.sort()).toEqual(["desktop", "phone", "phone-busiest"]);
+  });
+
+  test("a Growth and Pro chart is drawn only in a section that prints the Growth and Pro label beside it", () => {
+    const printsPlans = (tree: Set<string>) =>
+      [...tree].some(
+        (file) =>
+          file !== shared("PlanLine") &&
+          (openingTags(read(file)).some((tag) => tag.name === "PlanLine" || tag.name === "PlanChip") ||
+            /SHARED\.broadcastPlans|Growth and Pro/.test(code(file))),
+      );
+    const gated = usages().filter(({ view }) => VIEW_PLANS[view] === "growth and pro");
+    const sections = sectionTrees();
+
+    expect(gated.length).toBeGreaterThan(0);
+    for (const { file, view } of gated) {
+      const owners = sections.filter((section) => section.tree.has(file));
+
+      expect({ file: file.replace(ROOT, ""), view, owners: owners.length > 0 }).toEqual({
+        file: file.replace(ROOT, ""),
+        view,
+        owners: true,
+      });
+      for (const owner of owners) {
+        expect({ section: owner.id, view, flagged: unlabelled(view, printsPlans(owner.tree)) }).toEqual({
+          section: owner.id,
+          view,
+          flagged: false,
+        });
+      }
+    }
+  });
+
+  test("the desktop capture is drawn only by the dashboard duo, whose caption prints SHARED.dashboardPlans", () => {
+    const drawers = usages().filter(({ view }) => view === "desktop").map(({ file }) => file);
+
+    expect(drawers).toEqual([shared("DashboardDuo")]);
+    expect(code(shared("DashboardDuo"))).toMatch(/\{SHARED\.sampleData\} · \{SHARED\.dashboardPlans\}/);
+  });
+
+  test("Features' analytics shows the every-plan view, under the line that says more charts come with Growth and Pro", () => {
+    const features = usages().filter(({ file }) => file === pageComponent("features", "AnalyticsSpotlight"));
+
+    expect(features.map(({ view }) => view)).toEqual(["phone"]);
+    expect(FEATURES.analytics.planLine).toContain(SHARED.broadcastPlans);
+    expect(FEATURES.analytics.alt).not.toMatch(/how often|reward progress|busiest/i);
+  });
+});
+
 describe("the hero the three argument pages share (AC18)", () => {
   const hero = () => code(shared("LpHero"));
   const duo = () => code(shared("DashboardDuo"));
@@ -95,12 +246,47 @@ describe("the hero the three argument pages share (AC18)", () => {
     expect(hero()).toContain("SHARED.proof(");
   });
 
-  test("the dashboard duo shows the computer and the phone capture, and never hides the computer below any breakpoint", () => {
-    const hidden = /(?<![\w-])(?:[\w-]+:)?hidden(?![\w-])/;
+  /** A `hidden` class, plain or behind a breakpoint (`md:hidden`): what would take the capture off a phone. */
+  const hides = (attrs: string) => /(?<![\w-])(?:[\w-]+:)?hidden(?![\w-])/.test(attrs);
 
+  /** The hero's markup under the proof line, up to the end of the dashboard duo's tag: the badges, the duo and every wrapper around them. */
+  const heroStretch = () => {
+    const source = hero();
+    const duoTag = findTag(source, "DashboardDuo");
+
+    return source.slice(source.indexOf("</p>", source.indexOf("SHARED.proof(")), duoTag?.end ?? 0);
+  };
+
+  test("the guard sees a hidden class, however it is written", () => {
+    for (const attrs of ['className="hidden"', 'className="mt-8 md:hidden"', 'className="lg:hidden hidden"']) {
+      expect({ attrs, hides: hides(attrs) }).toEqual({ attrs, hides: true });
+    }
+    for (const attrs of ['className="mt-8 lg:mt-10"', 'className="overflow-hidden"', 'className="no-hidden-x"']) {
+      expect({ attrs, hides: hides(attrs) }).toEqual({ attrs, hides: false });
+    }
+  });
+
+  test("the dashboard duo shows the computer and the phone capture, and never hides the computer below any breakpoint", () => {
     expect(duo()).toContain('landingShot("en", "desktop")');
     expect(duo()).toContain('landingShot("en", "phone")');
-    expect(openingTags(duo()).filter((tag) => hidden.test(tag.attrs)).map((tag) => tag.name)).toEqual([]);
+    expect(openingTags(duo()).filter((tag) => hides(tag.attrs)).map((tag) => tag.name)).toEqual([]);
+  });
+
+  test("the duo's caption says it is sample data and that some charts come with Growth and Pro, unless a page leaves it off", async () => {
+    const text = textOf(renderEn(await DashboardDuo({})));
+
+    expect(text).toContain(`${SHARED.sampleData} · ${SHARED.dashboardPlans}`);
+    expect(SHARED.dashboardPlans).toContain(SHARED.broadcastPlans);
+    expect(textOf(renderEn(await DashboardDuo({ caption: false })))).not.toContain(SHARED.dashboardPlans);
+  });
+
+  test("nothing the hero wraps around the badges and the duo hides them at any width", () => {
+    const stretch = heroStretch();
+
+    expect(stretch.indexOf("<WalletBadges")).toBeGreaterThan(-1);
+    expect(stretch.indexOf("<DashboardDuo")).toBeGreaterThan(stretch.indexOf("<WalletBadges"));
+    expect(stretch).not.toContain("<h1");
+    expect(openingTags(stretch).filter((tag) => hides(tag.attrs)).map((tag) => tag.name)).toEqual([]);
   });
 
   test("the duo frames the capture in a browser bar with the dashboard's address, and captions it as sample data", () => {
@@ -131,6 +317,13 @@ describe("the sectors every page ends on (AC19)", () => {
   test("reads the catalog's own heading and prices in dollars", () => {
     expect(sectors()).toContain("landing.sectorCards");
     expect(sectors()).toContain("MARKETS.us");
+  });
+
+  test("the heading reads \"Stampeo adapts to your business\": the catalog's title with its line-break tags stripped", () => {
+    const { title } = JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))).landing.sectorCards as { title: string };
+
+    expect(title.replace(/<[^>]*>/g, "")).toBe("Stampeo adapts to your business");
+    expect(findTag(sectors(), "LpHeading")?.attrs).toContain('t.rich("title"');
   });
 
   test("nothing near the sectors calls them testimonials, stories or customers", () => {
@@ -243,11 +436,48 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
     expect(given("NotificationSequenceDemo", "moments")).toEqual([]);
   });
 
-  test("the stamp notification and the Aurevo card beside it count the same stamps", () => {
+  describe("the stamp notification, the Scanner loop and the Aurevo card beside them count the same stamps", () => {
     const [, stamp, total] = STAMP_BANNER.body.match(/(\d+) of (\d+) stamps/) ?? [];
-    const aurevo = STAMP_SAMPLES.find((sample) => sample.id === "aurevo");
+    const CARDS = ["AurevoCard", "WalletPhone", "GoogleWalletPhone"];
 
-    expect([Number(stamp), Number(total)]).toEqual([aurevo?.stamps, aurevo?.design.total_stamps]);
+    /** The count a card tag is given: a literal, or the Scanner loop's own. */
+    const stampsOf = (attrs: string): number | string => {
+      const given = attrs.match(/\bstamps=\{([^}]*)\}/)?.[1].trim() ?? "none";
+      return given === "SCANNER_LOOP.stamps" ? SCANNER_LOOP.stamps : /^\d+$/.test(given) ? Number(given) : given;
+    };
+
+    /** Each card of a file that also shows the stamp banner or the loop, with the count it is given. */
+    const besideBanner = (file: string) => {
+      const source = code(file);
+      if (!/\bSTAMP_BANNER\b|\bOUTCOMES\.always\.banner\b|<ScannerLoop\b/.test(source)) return [];
+      return openingTags(source)
+        .filter((tag) => CARDS.includes(tag.name))
+        .map((tag) => ({ file: file.replace(ROOT, ""), card: tag.name, stamps: stampsOf(tag.attrs) }));
+    };
+
+    test("the stamp banner is the sample café's 5 of 8, as its card is", () => {
+      const aurevo = STAMP_SAMPLES.find((sample) => sample.id === "aurevo");
+
+      expect([Number(stamp), Number(total)]).toEqual([5, 8]);
+      expect([aurevo?.stamps, aurevo?.design.total_stamps]).toEqual([Number(stamp), Number(total)]);
+      expect(OUTCOMES.always.banner).toBe(STAMP_BANNER);
+    });
+
+    test("the guard reads a literal count and the loop's, and returns what it cannot read", () => {
+      expect([stampsOf("width={280} stamps={5}"), stampsOf("stamps={SCANNER_LOOP.stamps}"), stampsOf("width={1}")]).toEqual([
+        5,
+        5,
+        "none",
+      ]);
+      expect(stampsOf("stamps={count}")).toBe("count");
+    });
+
+    test("every Aurevo card beside the banner or the video is at 5 of 8", () => {
+      const cards = lpFiles().flatMap(besideBanner);
+
+      expect(cards.length).toBeGreaterThanOrEqual(4);
+      expect(cards.filter((card) => card.stamps !== Number(stamp))).toEqual([]);
+    });
   });
 });
 

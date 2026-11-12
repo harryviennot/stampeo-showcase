@@ -85,3 +85,25 @@ export function otherCallers(component: string, ownFile: string): Array<{ file: 
         .map((tag) => ({ file, attrs: tag.attrs })),
     );
 }
+
+/**
+ * The dashboard-capture views a source asks for: `landingShot("en", "x")`, and
+ * `<SampleCapture view="x">`, which shows `phone` (the top of Analytics) when it names none.
+ */
+export function shotViews(source: string): string[] {
+  const direct = [...source.matchAll(/\blandingShot\(\s*"[\w-]+"\s*,\s*"([\w-]+)"/g)].map((match) => match[1]);
+  const samples = openingTags(source)
+    .filter((tag) => tag.name === "SampleCapture")
+    .map((tag) => literalAttr(tag.attrs, "view") ?? "phone");
+  return [...direct, ...samples];
+}
+
+/** Every section frame of the pages (a file with a literal `section="x"`), with the files it renders. */
+export function sectionTrees(): Array<{ id: string; file: string; tree: Set<string> }> {
+  return lpFiles().flatMap((file) => {
+    const id = openingTags(read(file))
+      .map((tag) => literalAttr(tag.attrs, "section"))
+      .find((found) => found !== null);
+    return id ? [{ id, file, tree: landingTree(file) }] : [];
+  });
+}

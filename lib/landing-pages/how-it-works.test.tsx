@@ -10,16 +10,19 @@
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
+import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { CreateStep } from "@/components/landing-pages/how-it-works/CreateStep";
 import { FirstDayTimeline } from "@/components/landing-pages/how-it-works/FirstDayTimeline";
+import { SeeItWork } from "@/components/landing-pages/how-it-works/SeeItWork";
 import { StampStepVisual } from "@/components/landing-pages/how-it-works/StampStepVisual";
 import { StepsOverview } from "@/components/landing-pages/how-it-works/StepsOverview";
+import { lpBanner } from "@/components/landing-pages/shared/banner";
 import { loadCatalog } from "../testing/catalogs";
 import { ROOT, code, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
-import { COMPONENTS_DIR, landingTree, pageFile } from "../testing/landing-pages-source";
+import { COMPONENTS_DIR, landingTree, pageComponent, pageFile } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
 import { HOW_IT_WORKS } from "./copy/how-it-works";
-import { STAMP_BANNER } from "./copy/shared";
+import { SHARED, STAMP_BANNER } from "./copy/shared";
 import { LANDING_PAGES } from "./pages";
 
 const SLUG = "how-it-works";
@@ -108,6 +111,25 @@ describe("step 3: scan their card, that's the stamp (AC24)", () => {
     expect(textOf(html())).toContain(STAMP_BANNER.body);
   });
 
+  /** How many banners with the stamp notification a render holds. */
+  const banners = (html: string) => html.split(STAMP_BANNER.body).length - 1;
+
+  test("from lg the lock screen is the notification phone on its own, showing one banner from the first paint", () => {
+    const html = render(<NotificationPhoneDemo notifications={[lpBanner(STAMP_BANNER)]} animate={false} eager={false} />);
+
+    expect(html).toContain("9:41");
+    expect(banners(html)).toBe(1);
+    expect(textOf(html)).toContain("Aurevo");
+  });
+
+  test("the step draws that phone as it is tested above, beside the strip a phone shows, so the page holds two banners", () => {
+    const phone = findTag(code(pageComponent("how-it-works", "StampStepVisual")), "NotificationPhoneDemo");
+
+    expect(phone?.attrs).toContain("notifications={[notification]}");
+    expect(phone?.attrs).toContain("animate={false}");
+    expect(banners(html())).toBe(2);
+  });
+
   test("says who does what under each device", () => {
     expect(textOf(html())).toContain(HOW_IT_WORKS.stamp.youCaption);
     expect(textOf(html())).toContain(HOW_IT_WORKS.stamp.theyCaption);
@@ -115,6 +137,13 @@ describe("step 3: scan their card, that's the stamp (AC24)", () => {
 });
 
 describe("the live feed shows the owner's side", () => {
+  test("is captioned as sample data, since the people in it are made up", () => {
+    const html = render(<SeeItWork />);
+
+    expect(textOf(html)).toContain(SHARED.sampleData);
+    expect(html.indexOf("<figcaption")).toBeGreaterThan(html.indexOf(HOW_IT_WORKS.seeItWork.title));
+  });
+
   test("sits under the page's own words, as the feed card alone", () => {
     const found = sectionTag("see_it_work");
     const source = code(found?.file ?? "");

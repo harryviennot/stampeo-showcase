@@ -274,6 +274,32 @@ describe("the platform: a dashboard for you, a free scanner for your team", () =
     expect(text).toContain("scanner phone");
   });
 
+  test.each([
+    ["dashboard", "scanner"],
+    ["scanner", "dashboard"],
+  ] as const)("opened on %s, its pane is in view and the %s pane is inert", (open, other) => {
+    const opened = renderEn(
+      <PlatformToggleCard dashboard={<i>dashboard pictures</i>} scanner={<i>scanner phone</i>} initial={open} />,
+    );
+    /** Each pane: its tab label, the attributes of its frame, and its markup up to the next pane. */
+    const panes = [...opened.matchAll(/<div role="tabpanel" aria-label="([^"]+)"([^>]*)>/g)].map((match, index, all) => ({
+      label: match[1],
+      attrs: match[2],
+      inert: /\binert\b/.test(match[2]),
+      html: opened.slice(match.index, all[index + 1]?.index),
+    }));
+    const pane = (key: "dashboard" | "scanner") => panes.find((candidate) => candidate.label === PLATFORM.platform.tabs[key]);
+
+    expect(panes).toHaveLength(2);
+    expect(opened.match(/aria-selected="true"[^>]*>([^<]*)</)?.[1]).toBe(PLATFORM.platform.tabs[open]);
+    expect(pane(open)?.inert).toBe(false);
+    expect(pane(other)?.inert).toBe(true);
+    expect(pane(open)?.html).toContain(open === "dashboard" ? "dashboard pictures" : "scanner phone");
+    expect(textOf(pane(open)?.html ?? "")).toContain(PLATFORM.platform[open].title);
+    expect(pane(open)?.attrs).toContain("opacity-100");
+    expect(pane(other)?.attrs).toContain("opacity-0");
+  });
+
   test("everything that is a Growth and Pro thing carries its chip, and the links go to the feature pages", () => {
     const planned = [...PLATFORM.platform.dashboard.facts, ...PLATFORM.platform.scanner.facts].filter((fact) => fact.plan);
 
@@ -310,6 +336,13 @@ describe("the blog block (AC23)", () => {
 
     expect(latest()).toHaveLength(3);
     expect(linked).toEqual(latest().map((post) => post.slug));
+    // Newest first: the dates never rise down the page, and none of the other posts is newer than the last shown.
+    const dates = linked.map((slug) => getAllPosts("en").find((post) => post.slug === slug)?.publishedAt ?? "");
+    const rest = getAllPosts("en").filter((post) => !linked.includes(post.slug));
+
+    expect(dates.every((date) => /^\d{4}-\d{2}-\d{2}/.test(date))).toBe(true);
+    expect(dates).toEqual([...dates].sort((a, b) => b.localeCompare(a)));
+    expect(rest.filter((post) => post.publishedAt > dates[dates.length - 1])).toEqual([]);
     for (const post of latest()) {
       expect(textOf(html)).toContain(post.title);
       expect(textOf(html)).toContain(`${post.readingMinutes} min read`);

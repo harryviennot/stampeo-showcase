@@ -7,12 +7,12 @@ import { LpSpotlight } from "../shared/LpSpotlight";
 import { PhoneCrop } from "../shared/PhoneCrop";
 
 /**
- * "How often they come" on a phone, with the live feed floating over its lower
+ * The top of the Analytics page on a phone (the every-plan charts), with the live feed floating over its lower
  * half, and "Sample data" under both. The feed overlaps the faded cut on a
  * phone and hangs off the phone's lower left from `lg`.
  */
 function LayeredCapture() {
-  const shot = landingShot("en", "phone-habits");
+  const shot = landingShot("en", "phone");
 
   return (
     <figure className="flex w-full flex-col items-center lg:w-auto">

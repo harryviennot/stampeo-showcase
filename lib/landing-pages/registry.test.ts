@@ -216,6 +216,17 @@ describe("sign-up and contact links (AC5, AC7)", () => {
     expect(own).toEqual([]);
   });
 
+  test("no landing page's CTAButton passes an href: every sign-up button goes to /onboarding", () => {
+    const buttons = lpFiles().flatMap((file) =>
+      openingTags(code(file))
+        .filter((tag) => tag.name === "CTAButton")
+        .map((tag) => ({ file: file.replace(ROOT, ""), href: /(?:^|\s)href=/.test(tag.attrs) })),
+    );
+
+    expect(buttons.length).toBeGreaterThanOrEqual(5);
+    expect(buttons.filter(({ href }) => href)).toEqual([]);
+  });
+
   test("hero_demo is used nowhere: it counts as a contact click in GA4 and Meta", () => {
     expect(filesWith(lpFiles(), /hero_demo/)).toEqual([]);
   });

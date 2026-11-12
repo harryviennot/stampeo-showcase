@@ -65,7 +65,7 @@ export const FEATURES = {
     title: "See who keeps coming back.",
     lead: "Visits, new customers and your return rate, updated with every scan.",
     /** The capture's alt text. */
-    alt: "The Stampeo Analytics page on a phone: how often customers come back.",
+    alt: "The Stampeo Analytics page on a phone: visits, new customers and return rate.",
     planLine: "More charts come with Growth and Pro.",
   },
   more: {
