@@ -115,7 +115,6 @@ describe("the sectors every page ends on (AC19)", () => {
     expect(tag?.attrs).toContain("eyebrow={SHARED.sectorsEyebrow}");
   });
 
-  test.todo("How-to renders the sectors under its demo (stage G1)");
   test.todo("Features renders the sectors before its pricing (stage G2)");
   test.todo("Outcomes renders the sectors before its pricing (stage G3)");
 
