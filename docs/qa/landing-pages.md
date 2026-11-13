@@ -14,6 +14,9 @@ This pass covers the four US ad landing pages built in STA-546 (v2, after Harry 
 > LP-04 to LP-07, LP-12 and LP-13 have v2 expectations; LP-18 to LP-27 are new. Case ids are unchanged.
 > **Amended 13 Nov 2026 (v2.1, Platform polish):** LP-28 to LP-34 are new. On Platform, LP-13's "Sample data"
 > and LP-27's turning-wheel wording are superseded: Platform shows no captions, and its hero is the fan (LP-28).
+> **Amended 13 Nov 2026 (STA-552, feature previews):** LP-35 to LP-40 cover the five previews under
+> `/us/landing-pages/platform/<feature>`. The "broadcasts always say Growth and Pro" rule below applies to the
+> campaigns preview; the four others name no plan for broadcasts (STA-549).
 
 Work top to bottom. Run LP-01 first: if a page doesn't render, nothing else can be tested.
 
@@ -462,6 +465,86 @@ Everything runs against dev or a local server. No migration ships with this bran
 | STEPS | 1. Look at "Run it from your computer or your phone." 2. Scroll the share tree. 3. Look at the final call to action. |
 | EXPECT | 1. The dashboard has no caption under it, and "Broadcasts to every card" carries no "Growth and Pro" badge. 2. The orange fills each branch of "Put your card where customers already are." as you scroll down, and empties as you scroll up; with reduced motion the tree is complete. 3. "Launch your loyalty card today." sits on a cream card with an orange accent word and an orange button. You do NOT see "Sample data" anywhere on Platform, or a solid orange box. |
 | RESET | None. |
+
+---
+
+## LP: Feature previews (STA-552, added 13 Nov 2026)
+
+Five previews of today's feature pages, rebuilt in Platform's style so Harry can compare them side by side. Today's pages stay as they are; the previews are drafts, English and US only.
+
+| Preview | Today's page | Variant | Sections, in order |
+|---|---|---|---|
+| `/us/landing-pages/platform/card-design` | `/en/features/card-design` | `lp_platform_card_design` | hero (card fan), icons, playground, anatomy, numbers, stamps, wallets, FAQ, final call to action, related |
+| `/us/landing-pages/platform/mobile-scanner` | `/en/features/mobile-scanner` | `lp_platform_mobile_scanner` | hero (Scanner loop), how, counter, ways, team, live demo, final call to action, related |
+| `/us/landing-pages/platform/push-notifications` | `/en/features/push-notifications` | `lp_platform_push_notifications` | hero (lock screen), how, moments, wallets, wording, live demo, final call to action, related |
+| `/us/landing-pages/platform/analytics` | `/en/features/analytics` | `lp_platform_analytics` | hero (dashboard), glance, questions, activity, numbers, final call to action, related |
+| `/us/landing-pages/platform/promotional-campaigns` | `/en/features/promotional-campaigns` | `lp_platform_promotional_campaigns` | hero (broadcast), numbers, how, ideas, delivery, plans, FAQ, final call to action, related |
+
+### LP-35: Each preview renders with its sections in order, out of search, measured as itself [BLOCKER]
+
+| Field | Content |
+|---|---|
+| WHY | Harry compares each preview with today's page before anything replaces it. A preview that is indexable or uncounted can't be shipped or measured. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. Open each preview URL in the table. 2. Scroll to the bottom. 3. View the page source. 4. Open `/sitemap.xml` and `/llms.txt`. |
+| EXPECT | 1-2. Each returns 200 in English with the US header and footer, and shows exactly the sections in the table, in that order. Every section header is an orange eyebrow over a centred title. 3. The source has `noindex` and carries the page's own variant from the table. 4. No preview URL appears in either file. You do NOT see a language switcher or French text. |
+| RESET | None. |
+
+### LP-36: Platform and today's five feature pages are unchanged [BLOCKER]
+
+| Field | Content |
+|---|---|
+| WHY | The previews reuse Platform's pieces and today's feature components. A change that leaks into the live pages ships untested copy and layout to every visitor. |
+| DEPENDS | LP-01 |
+| ACCOUNT | No session. |
+| STEPS | 1. Open `/us/landing-pages/platform` at 390 and 1440. 2. Open each "today's page" in the table at 390 and 1440. |
+| EXPECT | 1. Platform looks exactly as in LP-28 to LP-34. 2. Each feature page looks as it does on `dev` (compare side by side with a `dev` checkout or the staging site). In particular, its FAQ cards, its live activity feed and its Stamps/Points toggles keep today's look. You do NOT see the previews' table-style FAQ or "FAQ" eyebrow on any live page. |
+| RESET | None. |
+
+### LP-37: Every claim on the previews is live, and plan labels are honest [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | A preview that claims something the product doesn't do becomes a live lie the day it replaces today's page. |
+| DEPENDS | LP-35 |
+| ACCOUNT | No session. |
+| STEPS | 1. Read the campaigns preview top to bottom. 2. Read the four other previews. 3. On analytics, look at the questions rows. |
+| EXPECT | 1. "Growth and Pro" sits beside the hero's eyebrow; 88% and 95% are the only figures in the numbers row, with "Stampeo data, 86 businesses, February to October 2026" under them; the Growth plan says "8 broadcasts a month"; only "We miss you" and "Close to a reward" carry a Pro chip. 2. No "Every plan" chip and no "Sample data" anywhere; the scanner's Points row does not promise a bonus. 3. Visit habits, Busiest times and Reward progress each carry "Growth and Pro"; Return rate does not. You do NOT see "no credit card required", "reminder", "offline" or a count of minutes. |
+| RESET | None. |
+
+### LP-38: The calls to action lead where they say [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Each preview may become an ad destination. A trial button that loses its variant breaks the per-page comparison (STA-547). |
+| DEPENDS | LP-35 |
+| ACCOUNT | No session. |
+| STEPS | 1. On each preview, tap "Start my free trial" in the hero. 2. Go back and tap it in the final cream card. 3. On card design, tap "Try the designer". 4. On mobile scanner and push notifications, tap "Try it on your phone". 5. In "Keep exploring" at the bottom, tap each card. |
+| EXPECT | 1-2. Onboarding opens, and the visit carries the page's variant from the table (LP-09's cookie method). 3. The page scrolls to the card designer. 4. The page scrolls to the live demo. 5. Each card opens a sibling preview under `/us/landing-pages/platform/`, never a live `/features` page. You do NOT see a "Try it on your phone" button on analytics or campaigns, which have no demo. |
+| RESET | None. |
+
+### LP-39: Phone width: nothing scrolls sideways, every control is thumb-sized, every chart reads [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Most ad visitors are on phones. A 5px chart label or a 32px toggle is the "made quickly" feel Harry rejected. |
+| DEPENDS | LP-35 |
+| ACCOUNT | No session. |
+| STEPS | 1. Open each preview at 390 x 844, then at 360 x 780. 2. On card design, tap the anatomy's and the playground's Stamps/Points toggles and drag the stamps slider. 3. On analytics (questions), mobile scanner (counter) and campaigns (ideas), read each row's picture. |
+| EXPECT | 1. No sideways scroll on any page. 2. Each toggle and the slider respond to a thumb on the first try (≥ 44px tall). 3. Each picture sits full width under its title and text, and its smallest label (heatmap hours, "Gift" tag, a notification's message) is readable without zooming. You do NOT see a picture squeezed into a narrow column beside the text on these three sections. |
+| RESET | None. |
+
+### LP-40: Reduced motion gives calm, complete pages [EDGE]
+
+| Field | Content |
+|---|---|
+| WHY | Visitors who turn motion off must still see every state, and nothing should move on its own. |
+| DEPENDS | LP-35 |
+| ACCOUNT | No session. |
+| STEPS | 1. Turn on reduced motion (OS setting or devtools emulation). 2. Open mobile scanner, push notifications and analytics, wait 15 s on each moving piece. |
+| EXPECT | Mobile scanner: the hero shows the Scanner's finished stamp as a still, with no video. Push notifications: the moments phone stays on the first moment until you tap another; the floating cards don't drift. Analytics: the live feed shows its rows without new ones sliding in, and its fifth row has space under it. Every hover row is open. |
+| RESET | Turn reduced motion back off. |
 
 ---
 
