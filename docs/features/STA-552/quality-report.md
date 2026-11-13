@@ -41,3 +41,7 @@ VERDICT: FINDINGS
 
 ## Waivers
 (none)
+
+## Coordinator decisions after Stage R (19f071c, 2f39b54)
+- Playground toggle onto `ui/Segmented`: skipped. The playground's local toggle uses `aria-pressed` buttons, `ui/Segmented` a tablist; switching changes the live `/features/card-design` markup and semantics, outside this issue. The size strings are now shared (`TAB_SIZES` exported from `ui/Segmented`).
+- JSDoc density outliers in `LpFaq` and `AnnotatedWalletCard`: kept (prop docs for optional props).

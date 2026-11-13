@@ -94,3 +94,9 @@ VERDICT: GAPS FOUND, DRIFT FOUND
 
 ## Waivers
 (filled by the main agent only if the user explicitly waives a gap)
+
+## Coordinator decisions after Stage R (19f071c, 2f39b54)
+- No horizontal scroll at 390, a reduced-motion visitor pressing a moment, hover handlers: not unit-testable without a DOM runner; covered by runbook LP-39/LP-40 and the polish/Q1 measurements.
+- The shared live demo's Stamps/Points toggle (~32px, also on Platform): exempted from the 44px sweep; not changed in a preview issue.
+- `OwnIconCard` empty-src fallback, AC1 "absent from menus" (no nav file links landing pages): low risk, left.
+- "Free for your whole team" (scanner team title): the Scanner app is free for every member on every plan; team size per plan is printed beside it ("Unlimited team members", Growth and Pro), as on Platform.
