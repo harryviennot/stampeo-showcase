@@ -129,3 +129,8 @@ Per page, what changed and the shots to compare:
 - type-check: pass   lint: pass (0 errors; 6 warnings in files this pass did not touch)
 - Byte-identity check of every shared default touched: identical (rendered before and after, compared)
 - screenshots: `docs/features/STA-552/shots/polish/before/` (123), `docs/features/STA-552/shots/polish/after/` (180)
+
+## Addendum (coordinator, after Stage Q1, 33f5512)
+- "Readable data minis at 390": handled. `HoverRows` gained an optional `stackOnPhone` (default byte-identical); analytics questions and scanner counter stack at 288px (smallest label ≥ 11px), campaigns ideas at 216px (message ~15px). Sections are longer on phones (about 2.9 / 2.6 / 1.9 screens); judged worth it from the 390 shots.
+- "LiveActivityFeed hides part of its fifth row": fixed under the previews' `soft` frame only. The live pages (analytics, features, how-it-works) keep the bug: follow-up.
+- "Three notification looks": kept. The phone lock screens show iOS's light banners on a wallpaper, the floating cards show Platform's dark notification; each matches its context. Harry may veto.
