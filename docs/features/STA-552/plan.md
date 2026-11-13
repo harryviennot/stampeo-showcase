@@ -63,6 +63,19 @@ copy, 390 and desktop layouts, the build split.
 - AC5: no horizontal scroll at 390; tap targets ≥ 44px; reduced motion gives calm static states.
 - AC6: today's five feature pages are unchanged (no edits under their routes or `messages/` beyond STA-546's).
 
+## Polish additions (Stages Q0, polish, Q1; accepted by the coordinator, Harry may veto)
+
+Each is an optional prop whose default keeps today's markup byte-identical.
+
+- `LpFaq` takes an `eyebrow` on its `faq`; with it, a centred Platform header and `ui/FAQList`'s `table` look (one white table, hairline rows ≥ 56px). Used by the card design and campaigns FAQs.
+- `NotificationSequenceDemo stillWhenReduced`: no auto-advance under reduced motion (push-notifications moments).
+- 44px toggles on the card design preview: `AnnotatedWalletCard toggleSize`, `CompactPlayground touchTargets` (playground toggles and sliders, Program and Points panels).
+- `HoverRows stackOnPhone`: below `lg`, the row's picture sits full width under its words so its smallest label prints ≥ 11px (analytics questions, scanner counter, campaigns ideas).
+- `LiveActivityFeed soft`: the previews' frame (no heavy border) with room under the fifth row. The live pages keep their frame and the fifth-row clip (follow-up).
+
+- AC7: with each prop above left out, its component renders exactly as before (snapshot or byte compare), and every live caller passes none of them.
+- AC8: with each prop given, the visitor-visible effect holds: FAQ header centred with the eyebrow and rows ≥ 56px; no auto-advance when still; toggles ≥ 44px including after switching the playground to Points; stacked pictures print their smallest label ≥ 11px; the soft feed's fifth row has padding under it.
+
 ## Build stages
 
 1. Foundation: tests, registry entries, routes, copy modules (from the brief's draft copy, reviewed by the
