@@ -45,14 +45,17 @@ interface FeedEvent {
 export function LiveActivityFeed({
   cardOnly = false,
   stillWhenReduced = false,
-  soft = false,
+  softFrame = false,
+  roomBelow = false,
 }: Readonly<{
   /** The feed card alone, for a page that brings its own section and heading. */
   cardOnly?: boolean;
   /** Stops the feed for a reader who asks for less motion: a full list that stays put. */
   stillWhenReduced?: boolean;
-  /** A light ring in place of the inked 3D border, for a card that sits on a white surface, and a body tall enough for the fifth row's bottom padding. */
-  soft?: boolean;
+  /** A light ring in place of the inked 3D border, for a card that sits on a white surface. */
+  softFrame?: boolean;
+  /** A body tall enough for the fifth row's bottom padding, which the default height clips. */
+  roomBelow?: boolean;
 }>) {
   const t = useTranslations("features.analytiques.custom.activityFeed");
   const [events, setEvents] = useState<FeedEvent[]>([]);
@@ -96,7 +99,7 @@ export function LiveActivityFeed({
   const feed = (
     <div
       className={
-        soft
+        softFrame
           ? "rounded-2xl bg-white overflow-hidden ring-1 ring-black/[0.05]"
           : "blog-card-3d rounded-2xl bg-white overflow-hidden"
       }
@@ -118,7 +121,7 @@ export function LiveActivityFeed({
       </div>
       <div
         className="p-4 overflow-hidden"
-        style={{ height: MAX_VISIBLE * ROW_HEIGHT + (soft ? 32 : 16) }}
+        style={{ height: MAX_VISIBLE * ROW_HEIGHT + (roomBelow ? 32 : 16) }}
       >
         <AnimatePresence initial={false}>
           {events.slice(0, MAX_VISIBLE).map((event) => (

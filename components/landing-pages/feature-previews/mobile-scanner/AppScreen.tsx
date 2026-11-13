@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
 import { IPhone } from "@/components/ui/IPhone";
-import { ScaledBox } from "@/components/ui/ScaledBox";
 
 /**
  * The Scanner app's own colours (scanner-app `src/constants/colors.ts`, the auth
@@ -22,30 +21,6 @@ export const APP = {
   amber: "#d97706",
   amberTint: "rgba(245, 158, 11, 0.16)",
 } as const;
-
-/** A drawn mini is laid out at this size, then shrunk to a thumbnail beside a row's words and shown whole from `lg`. */
-export const MINI = { width: 232, height: 244, narrowTo: 128, to: 240 } as const;
-
-/**
- * A piece of one Scanner screen, as a small rounded surface: a row's picture.
- * `label` is the picture's accessible name; what is drawn inside is for the eye.
- */
-export function MiniFrame({ label, children }: Readonly<{ label: string; children: ReactNode }>) {
-  return (
-    <ScaledBox width={MINI.width} height={MINI.height} to={MINI.to} narrowTo={MINI.narrowTo}>
-      <div
-        role="img"
-        aria-label={label}
-        className="flex flex-col overflow-hidden rounded-[26px] p-4 shadow-[0_2px_4px_rgba(25,18,16,0.05),0_24px_48px_-24px_rgba(25,18,16,0.32)] ring-1 ring-black/[0.06]"
-        style={{ width: MINI.width, height: MINI.height, backgroundColor: APP.surface, color: APP.ink }}
-      >
-        <div aria-hidden className="flex min-h-0 flex-1 flex-col">
-          {children}
-        </div>
-      </div>
-    </ScaledBox>
-  );
-}
 
 /** A screen cut short with a fade, on the same iPhone as the Scanner loop: a toggle pane's picture. */
 export function PhoneScreen({

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Minus, Plus, Sparkle, User } from "@phosphor-icons/react";
 import { StampIconSvg } from "@/components/onboarding/StampIconPicker";
+import { TAB_SIZES } from "@/components/ui/Segmented";
 import { PLAYGROUND_CUSTOM_ICONS } from "@/lib/custom-stamp-presets";
 import {
   MAX_BALANCE,
@@ -20,7 +21,7 @@ export function ControlLabel({ children }: { children: ReactNode }) {
   );
 }
 
-interface PlaygroundSegmentedProps<T extends string> {
+interface SegmentedProps<T extends string> {
   options: { value: T; label: string }[];
   value: T;
   onChange: (next: T) => void;
@@ -28,20 +29,15 @@ interface PlaygroundSegmentedProps<T extends string> {
   size?: "md" | "lg";
 }
 
-const TAB_SIZES = {
-  md: "px-3 py-1.5 text-sm",
-  lg: "h-11 px-4 text-[15px]",
-} as const;
-
-/** A range input 44px tall around the same 16px slider: the negative margins give the extra 28px back, so the layout and the track stay where they were. */
+/** A range input 44px tall around the same 16px slider: the negative margins give the extra 28px back, so the layout does not move. */
 const TOUCH_RANGE = "h-11 -my-3.5";
 
-function PlaygroundSegmented<T extends string>({
+function Segmented<T extends string>({
   options,
   value,
   onChange,
   size = "md",
-}: PlaygroundSegmentedProps<T>) {
+}: SegmentedProps<T>) {
   return (
     <div className="inline-flex w-full rounded-xl bg-[var(--muted)] p-1">
       {options.map((opt) => {
@@ -118,7 +114,7 @@ export function ProgramControl({
   return (
     <div className="space-y-2.5">
       <ControlLabel>{t("programLabel")}</ControlLabel>
-      <PlaygroundSegmented
+      <Segmented
         options={[
           { value: "stamps", label: tc("stamps") },
           { value: "points", label: tc("points") },
@@ -134,7 +130,7 @@ export function ProgramControl({
 /** Icon source: preset library or your own icons. */
 export function IconModeControl({ p: { t, iconMode, setIconMode } }: { p: Playground }) {
   return (
-    <PlaygroundSegmented
+    <Segmented
       options={[
         { value: "preset", label: t("modePreset") },
         { value: "custom", label: t("modeCustom") },
@@ -200,7 +196,7 @@ export function PointsControl({
     <>
       <div className="space-y-2.5">
         <ControlLabel>{t("stripLabel")}</ControlLabel>
-        <PlaygroundSegmented
+        <Segmented
           options={STRIP_STYLES.map((style) => ({
             value: style,
             label: stripStyleLabels[style] ?? style,
@@ -321,7 +317,7 @@ export function CustomIconControl({
 
       <div className="space-y-2.5">
         <ControlLabel>{t("arrangementLabel")}</ControlLabel>
-        <PlaygroundSegmented
+        <Segmented
           options={[
             { value: "straight", label: arrangements.straight },
             { value: "staggered", label: arrangements.staggered },

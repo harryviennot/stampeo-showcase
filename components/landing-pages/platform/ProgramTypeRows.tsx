@@ -8,8 +8,6 @@ import { PROGRAM_TYPES } from "@/lib/landing-pages/copy/program-types";
 import type { ProgramType } from "@/lib/landing-pages/copy/types";
 import { HoverRows } from "./HoverRows";
 
-export { HOVER_INTENT_MS, allRowsOpen, hoverIntent } from "./HoverRows";
-
 type Key = ProgramType["key"];
 
 /** The guide that helps an owner choose between stamps and points. */

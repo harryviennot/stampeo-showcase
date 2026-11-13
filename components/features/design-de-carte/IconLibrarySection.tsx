@@ -28,11 +28,14 @@ export function IconMarquee({
   colorOffset,
   reverse,
   duration,
+  stillWhenReduced = false,
 }: {
   icons: StampIconType[];
   colorOffset: number;
   reverse?: boolean;
   duration: number;
+  /** Stops the drift for a reader who asks for less motion. */
+  stillWhenReduced?: boolean;
 }) {
   // Track holds the list twice; the keyframes travel exactly one list-width
   // (-50%), so the loop is seamless. Tile gap must be uniform (gap-3 both
@@ -41,7 +44,7 @@ export function IconMarquee({
   return (
     <div className="overflow-hidden">
       <div
-        className="flex w-max gap-3 py-1.5 will-change-transform"
+        className={`flex w-max gap-3 py-1.5 will-change-transform${stillWhenReduced ? " motion-reduce:animate-none!" : ""}`}
         style={{
           animation: `marquee-scroll ${duration}s linear infinite${reverse ? " reverse" : ""}`,
         }}

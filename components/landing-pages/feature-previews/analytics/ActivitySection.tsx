@@ -24,7 +24,7 @@ export function ActivitySection() {
             facts: [...tabs.live.facts],
             visual: (
               <div className={TRAY}>
-                <LiveActivityFeed cardOnly stillWhenReduced soft />
+                <LiveActivityFeed cardOnly stillWhenReduced softFrame roomBelow />
               </div>
             ),
           },

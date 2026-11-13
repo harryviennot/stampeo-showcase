@@ -1,11 +1,15 @@
 import type { ReactNode } from "react";
-import { APP, MiniFrame } from "./AppScreen";
+import { MiniFrame } from "../MiniFrame";
+import { APP } from "./AppScreen";
 
 /**
  * The labels on these screens are the Scanner app's own English strings
  * (scanner-app `src/locales/en/stamp.json` and `points.json`), so a visitor
  * reads what a team member will read.
  */
+
+/** A screen mini sits on the app's own light surface. */
+const SCREEN_SURFACE = { background: APP.surface, color: APP.ink } as const;
 
 const PILL = "flex items-center justify-center rounded-full text-[15px] font-bold text-white";
 
@@ -36,7 +40,7 @@ function StampDots() {
 /** Adding several stamps in one scan: the stepper set to 3, and the button that says so. */
 export function StampsMini() {
   return (
-    <MiniFrame label="The Scanner app adding three stamps in one scan: a stepper set to 3 and the Add 3 stamps button.">
+    <MiniFrame {...SCREEN_SURFACE} label="The Scanner app adding three stamps in one scan: a stepper set to 3 and the Add 3 stamps button.">
       <p className="text-center text-[13px] font-medium" style={{ color: APP.muted }}>
         Sophie
       </p>
@@ -83,7 +87,7 @@ function Key({ glyph }: Readonly<{ glyph: ReactNode }>) {
 /** Points from what they spent: the amount typed so far, the points it earns, and the keypad. */
 export function PointsMini() {
   return (
-    <MiniFrame label="The Scanner app taking a spend amount of 12.50, with the keypad and the points it earns, about 12.">
+    <MiniFrame {...SCREEN_SURFACE} label="The Scanner app taking a spend amount of 12.50, with the keypad and the points it earns, about 12.">
       <div className="flex items-end justify-center gap-1.5">
         <span className="text-[40px] leading-[44px] font-bold tabular-nums">12.50</span>
         <span className="mb-1 text-[20px] font-semibold" style={{ color: APP.muted }}>
@@ -129,7 +133,7 @@ function HeldReward({ name, meta }: Readonly<{ name: string; meta: ReactNode }>)
 /** Redeeming a reward on the spot: what the customer holds, one row each. */
 export function RewardsMini() {
   return (
-    <MiniFrame label="The Scanner app's list of rewards to redeem: three rewards, each with a Redeem button.">
+    <MiniFrame {...SCREEN_SURFACE} label="The Scanner app's list of rewards to redeem: three rewards, each with a Redeem button.">
       <p className="text-[11px] font-bold tracking-[0.04em] uppercase" style={{ color: APP.muted }}>
         Rewards to redeem
       </p>

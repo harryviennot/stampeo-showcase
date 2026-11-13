@@ -1,11 +1,8 @@
 import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
-import { StepsTable } from "../../platform/StepsTable";
+import { STEPS_PHONE, StepsTable } from "../../platform/StepsTable";
 import { GoogleWalletPhone } from "../../shared/GoogleWalletPhone";
 import { LpSection } from "../../shared/LpSection";
 import { WalletPhone } from "../../shared/WalletPhone";
-
-/** Both phones are drawn at 280px and shrunk to 160px on a phone, as Platform's How table draws its two. */
-const PHONE = { full: 280, narrow: 160 };
 
 /**
  * "One card, ready for every phone": the same card in Apple Wallet and in
@@ -22,10 +19,10 @@ export function WalletsSection() {
         visual={
           <>
             <div role="img" aria-label={phoneAlts.apple} className="shrink-0">
-              <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} stamps={5} />
+              <WalletPhone width={STEPS_PHONE.full} narrowWidth={STEPS_PHONE.narrow} stamps={5} />
             </div>
             <div role="img" aria-label={phoneAlts.google} className="shrink-0">
-              <GoogleWalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} stamps={5} />
+              <GoogleWalletPhone width={STEPS_PHONE.full} narrowWidth={STEPS_PHONE.narrow} stamps={5} />
             </div>
           </>
         }

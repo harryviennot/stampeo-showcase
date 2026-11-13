@@ -2,7 +2,7 @@ import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { AurevoCard } from "../shared/AurevoCard";
-import { LevelCards } from "../shared/LevelCards";
+import { LEVELS_ON_A_ROW, LevelCards } from "../shared/LevelCards";
 import { LpSection } from "../shared/LpSection";
 import { PassFrame } from "../shared/PassFrame";
 import { VANITY } from "../shared/samples";
@@ -10,12 +10,6 @@ import { ProgramTypeRows } from "./ProgramTypeRows";
 
 /** The card thumbnail on a row: 200px on a laptop, 128px beside the words on a phone. */
 const CARD = { width: 200, height: 257, narrow: 128 };
-
-/**
- * The level cards on a row: the stage shrunk to a third below `lg`; from it, to 0.75 of its drawn
- * width, as tall as a card thumbnail (it overhangs the card column into the row's padding).
- */
-const LEVELS = { narrowTo: 128, to: 288, breakpoint: "lg" } as const;
 
 /**
  * "Stamps, points or levels": a row each, with the Aurevo card at 5 of 8, the
@@ -49,7 +43,7 @@ export function ProgramTypeRowsSection() {
               </PassFrame>
             </ScaledBox>
           ),
-          levels: <LevelCards size={LEVELS} />,
+          levels: <LevelCards size={LEVELS_ON_A_ROW} />,
         }}
       />
     </LpSection>

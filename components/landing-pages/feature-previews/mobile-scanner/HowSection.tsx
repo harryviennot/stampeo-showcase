@@ -5,10 +5,7 @@ import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { LpSection } from "../../shared/LpSection";
 import { WalletPhone } from "../../shared/WalletPhone";
 import { ARROW_LINK } from "../../platform/classes";
-import { StepsTable } from "../../platform/StepsTable";
-
-/** Both phones are drawn at 280px and shrunk to 160px on a phone, as in Platform's table. */
-const PHONE = { full: 280, narrow: 160 };
+import { STEPS_PHONE, StepsTable } from "../../platform/StepsTable";
 
 /**
  * "Scan, check, confirm": the customer's card at the stamps the Scanner ends on,
@@ -24,8 +21,8 @@ export function HowSection() {
         cells={cells}
         visual={
           <>
-            <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} stamps={SCANNER_LOOP.stamps} />
-            <ScannerLoop still width={PHONE.full} narrowWidth={PHONE.narrow} />
+            <WalletPhone width={STEPS_PHONE.full} narrowWidth={STEPS_PHONE.narrow} stamps={SCANNER_LOOP.stamps} />
+            <ScannerLoop still width={STEPS_PHONE.full} narrowWidth={STEPS_PHONE.narrow} />
           </>
         }
         link={

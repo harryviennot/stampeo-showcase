@@ -10,7 +10,7 @@ interface SegmentedProps<T extends string> {
   size?: "md" | "lg";
 }
 
-const TAB_SIZES = {
+export const TAB_SIZES = {
   md: "px-3 py-1.5 text-sm",
   lg: "h-11 px-4 text-[15px]",
 } as const;

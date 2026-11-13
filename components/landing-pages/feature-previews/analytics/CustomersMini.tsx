@@ -1,5 +1,5 @@
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
-import { INK } from "./TileFrame";
+import { INK } from "./ink";
 
 /** Three customers as the dashboard's customer list shows them: their stamps on an 8-stamp card, and the group they are in. */
 const CUSTOMERS = [

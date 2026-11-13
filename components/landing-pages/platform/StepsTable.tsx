@@ -6,6 +6,9 @@ import { CELL_TITLE } from "./classes";
 /** A cell of the table: a titled line, with an icon above it or a plan chip under it where it needs one. */
 export type StepCell = Tile & { icon?: ReactNode };
 
+/** Both phones of a steps table are drawn at 280px and shrunk to 160px on a phone. */
+export const STEPS_PHONE = { full: 280, narrow: 160 } as const;
+
 /** The table's columns from `lg`, written out so Tailwind sees them: two cells split it in half, three in thirds. */
 const COLUMNS: Record<number, string> = {
   2: "lg:grid-cols-2 lg:divide-x lg:divide-y-0",
@@ -15,9 +18,9 @@ const COLUMNS: Record<number, string> = {
 /**
  * A bordered table of steps, the body of a section. With a `visual` (phones, shown
  * as they are, side by side) their lower parts sink behind the table: low enough
- * that the card's code and the scanner's frame show above it, with room above
- * for their shadows. Without one it is a plain table. On a phone the table is a
- * stack of rows. A `link` goes centred under it.
+ * that the top of each phone shows above it, with room above for their shadows.
+ * Without one it is a plain table. On a phone the table is a stack of rows. A
+ * `link` goes centred under it.
  */
 export function StepsTable({
   cells,

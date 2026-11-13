@@ -3,10 +3,10 @@ import { HeroCardFan } from "@/components/landing-variant/HeroCardFan";
 import { RegionText } from "@/components/market/RegionText";
 import { Container } from "@/components/ui/Container";
 import { PLATFORM_FAN_SLOTS, type FanSlot } from "@/lib/hero-fan";
-import { AccentText } from "@/lib/landing-pages/AccentText";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
-import { LANDING_PAGES, type LandingSlug } from "@/lib/landing-pages/pages";
-import { EYEBROW, LpSection } from "../shared/LpSection";
+import type { LandingSlug } from "@/lib/landing-pages/pages";
+import { LpSection } from "../shared/LpSection";
+import { HeroWords } from "./HeroWords";
 import { LpCtaPair, type SecondaryAction } from "./LpCtaPair";
 
 /**
@@ -22,19 +22,11 @@ export function PlatformHero({
   slots = PLATFORM_FAN_SLOTS,
   secondary,
 }: Readonly<{ slug?: LandingSlug; slots?: FanSlot[]; secondary?: SecondaryAction | null }>) {
-  const { h1, accent, eyebrow, sub } = LANDING_PAGES[slug].hero;
-
   return (
     <LpSection section="hero" bare>
       <section className="relative pt-24 pb-12 lg:pt-28 lg:pb-7">
         <Container>
-          {eyebrow && <p className={`mb-4 text-center ${EYEBROW} text-[var(--accent-hover)]`}>{eyebrow}</p>}
-          <h1 className="text-hero mx-auto max-w-4xl text-balance text-center">
-            <AccentText text={h1} accent={accent} />
-          </h1>
-          {sub && (
-            <p className="mx-auto mt-4 max-w-2xl text-center text-pretty text-lead text-[var(--muted-foreground)]">{sub}</p>
-          )}
+          <HeroWords slug={slug} look="fan" />
         </Container>
 
         <FanParallax>

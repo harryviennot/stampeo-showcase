@@ -5,10 +5,7 @@ import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { LpSection } from "../shared/LpSection";
 import { WalletPhone } from "../shared/WalletPhone";
 import { ARROW_LINK } from "./classes";
-import { StepsTable } from "./StepsTable";
-
-/** Both phones are drawn at 280px and shrunk to 160px on a phone. */
-const PHONE = { full: 280, narrow: 160 };
+import { STEPS_PHONE, StepsTable } from "./StepsTable";
 
 /**
  * "Create it, share it, stamp it": the card in Apple Wallet and the scanner
@@ -28,8 +25,8 @@ export function HowTable() {
         cells={PLATFORM.how.cells}
         visual={
           <>
-            <WalletPhone width={PHONE.full} narrowWidth={PHONE.narrow} stamps={SCANNER_LOOP.stamps} />
-            <ScannerLoop width={PHONE.full} narrowWidth={PHONE.narrow} />
+            <WalletPhone width={STEPS_PHONE.full} narrowWidth={STEPS_PHONE.narrow} stamps={SCANNER_LOOP.stamps} />
+            <ScannerLoop width={STEPS_PHONE.full} narrowWidth={STEPS_PHONE.narrow} />
           </>
         }
         link={

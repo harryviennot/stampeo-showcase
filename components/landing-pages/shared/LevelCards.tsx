@@ -15,6 +15,12 @@ const STAGE = { width: 384, height: 340 };
 /** How wide the stage shows: shrunk to 300px below `sm`, whole from there. */
 const DEFAULT_SIZE = { narrowTo: 300, breakpoint: "sm" } as const;
 
+/**
+ * The stage on a hover row: shrunk to a third below `lg`; from it, to 0.75 of its drawn width, as tall as a
+ * card thumbnail (it overhangs the card column into the row's padding).
+ */
+export const LEVELS_ON_A_ROW = { narrowTo: 128, to: 288, breakpoint: "lg" } as const;
+
 interface Level {
   name: string;
   /** Its look over the shop's own: Bronze is the sample as it is. */

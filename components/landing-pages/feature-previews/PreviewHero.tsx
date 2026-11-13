@@ -1,13 +1,12 @@
 import type { ReactNode } from "react";
 import { RegionText } from "@/components/market/RegionText";
 import { Container } from "@/components/ui/Container";
-import { AccentText } from "@/lib/landing-pages/AccentText";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import type { PlanChip as Plan } from "@/lib/landing-pages/copy/types";
-import { LANDING_PAGES, type PreviewSlug } from "@/lib/landing-pages/pages";
+import type { PreviewSlug } from "@/lib/landing-pages/pages";
+import { HeroWords } from "../platform/HeroWords";
 import { LpCtaPair, type SecondaryAction } from "../platform/LpCtaPair";
-import { EYEBROW, LpSection } from "../shared/LpSection";
-import { PlanChip } from "../shared/PlanChip";
+import { LpSection } from "../shared/LpSection";
 
 /**
  * The hero of a feature preview whose picture is not the card fan: a small
@@ -28,23 +27,12 @@ export function PreviewHero({
   secondary?: SecondaryAction | null;
   eyebrowPlan?: Plan;
 }>) {
-  const { eyebrow, h1, accent, sub } = LANDING_PAGES[slug].hero;
-
   return (
     <LpSection section="hero" bare>
       <section className="relative pt-24 pb-10 lg:pt-28 lg:pb-14">
         <Container>
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            {eyebrow && (
-              <div className="mb-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
-                <p className={`${EYEBROW} text-[var(--accent-hover)]`}>{eyebrow}</p>
-                {eyebrowPlan && <PlanChip plan={eyebrowPlan} />}
-              </div>
-            )}
-            <h1 className="text-hero text-balance">
-              <AccentText text={h1} accent={accent} />
-            </h1>
-            {sub && <p className="mt-4 max-w-2xl text-pretty text-lead text-[var(--muted-foreground)]">{sub}</p>}
+            <HeroWords slug={slug} look="column" eyebrowPlan={eyebrowPlan} />
 
             <div className="mt-7 flex w-full flex-col items-center gap-3">
               <LpCtaPair location="hero" secondary={secondary} />

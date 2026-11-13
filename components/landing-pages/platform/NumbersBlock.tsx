@@ -4,8 +4,6 @@ import { LpCtaPair } from "./LpCtaPair";
 import { NumberFigures } from "./NumberFigures";
 import { LpSection } from "../shared/LpSection";
 
-export { NumberFigures } from "./NumberFigures";
-
 /**
  * "Where Stampeo stands today": the site's own three metrics (one source, shared
  * with the proof line elsewhere), then the pair of actions.

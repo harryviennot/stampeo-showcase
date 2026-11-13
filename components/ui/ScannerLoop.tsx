@@ -144,7 +144,6 @@ export function ScannerLoop({
   eager = false,
   still = false,
 }: Readonly<{ width?: number; narrowWidth?: number; eager?: boolean; still?: boolean }>) {
-  // The success frame stands in for the video when the reader asks for less motion, or the page asks for it.
   const reduced = usePrefersReducedMotion() || still;
   const files = scannerLoopFiles(useLocale());
   const label = useTranslations("common.scannerLoop")("label");

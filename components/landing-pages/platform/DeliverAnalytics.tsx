@@ -3,11 +3,14 @@ import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 
 /**
  * Aurevo's analytics, drawn: the figures are illustrative and match the
- * dashboard captures (90 days: 2,770 visits up 17%, 83% of them from returning
- * customers, a 61% 30-day return rate up 2 points). Every plan has all three.
+ * dashboard captures (90 days: 2,770 visits up 17%, 460 new customers up 11%,
+ * 83% of the visits from returning customers, a 61% 30-day return rate up 2
+ * points). Every plan has all of them. The feature previews' drawn dashboards
+ * read these same numbers.
  */
 export const ANALYTICS = {
   visits: { total: 2770, change: 17 },
+  newCustomers: { total: 460, change: 11 },
   returnRate: { percent: 61, change: 2 },
   /** The 13 weeks of the "visits over time" chart, oldest first. */
   weeks: [
@@ -28,8 +31,9 @@ export const ANALYTICS = {
 } as const;
 
 /** The dashboard's own labels for these figures (web's `analytics` catalog), as they appear on its tiles. */
-const DASHBOARD = {
+export const DASHBOARD = {
   visits: "Visits",
+  newCustomers: "New customers",
   returnRate: "30-day return rate",
   overTime: "Visits over time",
   returning: "Returning",
@@ -37,7 +41,7 @@ const DASHBOARD = {
 } as const;
 
 /** The dashboard's chart and trend colours, as its captures show them. */
-const INK = { navy: "#0f172a", periwinkle: "#adbbdc", up: "#2e9e5b", figure: "#1a1a1a", label: "#8a8a8a" } as const;
+export const INK = { navy: "#0f172a", periwinkle: "#adbbdc", up: "#2e9e5b", figure: "#1a1a1a", label: "#8a8a8a" } as const;
 
 /** The chart's top, as the dashboard's axis rounds it. */
 const AXIS_MAX = 260;

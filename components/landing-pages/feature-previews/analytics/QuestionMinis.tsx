@@ -1,33 +1,41 @@
-import { INK, TileFrame } from "./TileFrame";
+import { ANALYTICS, DASHBOARD } from "../../platform/DeliverAnalytics";
+import { MiniFrame } from "../MiniFrame";
+import { INK } from "./ink";
 
 /**
  * The tiles of four dashboard sections, drawn with the figures of the sample
- * café's captures. Their labels are the dashboard's own English strings
- * (web `messages/en/analytics.json`), and none names a city.
+ * café's captures (the return rate is Platform's `ANALYTICS`). Their labels
+ * are the dashboard's own English strings (web `messages/en/analytics.json`),
+ * and none names a city.
  */
 
 const TITLE = "text-[13px] leading-4 font-semibold";
 
+/** A tile is white, as the dashboard draws it, with its figure ink. */
+const TILE_SURFACE = { className: "bg-white", color: INK.figure } as const;
+
 /** The share of first-time customers who came back within 30 days: the figure, its trend and what it measures. */
 export function ReturnRateMini() {
+  const { percent, change } = ANALYTICS.returnRate;
+
   return (
-    <TileFrame label="The 30-day return rate: 61%, up 2 points, of first-time customers who came back.">
+    <MiniFrame {...TILE_SURFACE} label={`The ${DASHBOARD.returnRate}: ${percent}%, up ${change} points, of first-time customers who came back.`}>
       <p className="text-[12px] leading-4" style={{ color: INK.label }}>
-        30-day return rate
+        {DASHBOARD.returnRate}
       </p>
       <div className="mt-auto flex items-baseline justify-between gap-2">
-        <span className="text-[68px] leading-none font-semibold tracking-[-0.04em] tabular-nums">61%</span>
+        <span className="text-[68px] leading-none font-semibold tracking-[-0.04em] tabular-nums">{`${percent}%`}</span>
         <span className="text-[13px] font-semibold tabular-nums" style={{ color: INK.up }}>
-          ▲2 pts
+          {`▲${change} pts`}
         </span>
       </div>
       <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ backgroundColor: INK.track }}>
-        <div className="h-full rounded-full" style={{ width: "61%", backgroundColor: INK.navy }} />
+        <div className="h-full rounded-full" style={{ width: `${percent}%`, backgroundColor: INK.navy }} />
       </div>
       <p className="mt-2.5 mb-auto text-[12px] leading-4" style={{ color: INK.label }}>
         of first-time customers came back
       </p>
-    </TileFrame>
+    </MiniFrame>
   );
 }
 
@@ -45,7 +53,7 @@ export function HabitsMini() {
   const widest = Math.max(...HABITS.map((habit) => habit.count));
 
   return (
-    <TileFrame label="How often they come: about every week 191, every 2 weeks 125, about once a month 106, less often 33, came once 205.">
+    <MiniFrame {...TILE_SURFACE} label="How often they come: about every week 191, every 2 weeks 125, about once a month 106, less often 33, came once 205.">
       <p className={TITLE}>How often they come</p>
       <div className="mt-3 flex flex-1 flex-col justify-between">
         {HABITS.map(({ label, count, tone }) => (
@@ -60,7 +68,7 @@ export function HabitsMini() {
           </div>
         ))}
       </div>
-    </TileFrame>
+    </MiniFrame>
   );
 }
 
@@ -83,7 +91,7 @@ const RAMP = ["#eceff7", "#c9d3ea", "#8fa3d1", "#4a63a8", INK.navy];
 /** Busiest times: visits by day and hour, the busiest slot the darkest. */
 export function BusiestMini() {
   return (
-    <TileFrame label="Busiest times: visits by day and hour in a typical week, busiest on Thursday from 8 to 9 AM.">
+    <MiniFrame {...TILE_SURFACE} label="Busiest times: visits by day and hour in a typical week, busiest on Thursday from 8 to 9 AM.">
       <p className={TITLE}>Busiest times</p>
       <div className="mt-2 flex flex-1 flex-col">
         <div className="ml-[30px] grid grid-cols-7 gap-[3px] text-center text-[9px] leading-3" style={{ color: INK.label }}>
@@ -115,7 +123,7 @@ export function BusiestMini() {
           <span>More visits</span>
         </div>
       </div>
-    </TileFrame>
+    </MiniFrame>
   );
 }
 
@@ -136,7 +144,7 @@ export function RewardProgressMini() {
   const px = (count: number) => Math.max(3, Math.round((CHART_HEIGHT * count) / tallest));
 
   return (
-    <TileFrame label="Reward progress: customers by stamps on their card, with 22 rewards ready.">
+    <MiniFrame {...TILE_SURFACE} label="Reward progress: customers by stamps on their card, with 22 rewards ready.">
       <p className={TITLE}>Reward progress</p>
       <div className="mt-3 flex flex-1 items-end gap-[7px] border-b border-black/[0.07] pb-0" style={{ minHeight: CHART_HEIGHT }}>
         {PROGRESS.map(({ label, still, gone }) => (
@@ -164,6 +172,6 @@ export function RewardProgressMini() {
         </span>
         <span className="font-semibold tabular-nums">{READY}</span>
       </div>
-    </TileFrame>
+    </MiniFrame>
   );
 }

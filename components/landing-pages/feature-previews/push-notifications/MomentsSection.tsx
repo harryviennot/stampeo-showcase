@@ -9,8 +9,8 @@ import { phoneCropClass } from "../../shared/PhoneCrop";
 import { AUREVO } from "../../shared/samples";
 import { lpBanner } from "../../shared/banner";
 
-/** What Aurevo's card shows at each moment: the 5th stamp the banner counts, the full card, and the fresh card once the reward is claimed. */
 const KEYS = ["stamp", "reward", "redeemed"] as const;
+/** What Aurevo's card shows at each moment: the 5th stamp the banner counts, the full card, and a fresh card once the reward is claimed. */
 const STAMPS = [5, AUREVO.design.total_stamps ?? 8, 0] as const;
 
 /** The three moments of the lock-screen demo: each banner sent by the sample café, on every plan. */

@@ -1,11 +1,8 @@
 import { MOBILE_SCANNER_PREVIEW } from "@/lib/landing-pages/copy/previews/mobile-scanner";
-import { LevelCards } from "../../shared/LevelCards";
+import { LEVELS_ON_A_ROW, LevelCards } from "../../shared/LevelCards";
 import { LpSection } from "../../shared/LpSection";
 import { HoverRows } from "../../platform/HoverRows";
 import { PointsMini, RewardsMini, StampsMini } from "./CounterMinis";
-
-/** The level cards on their row: the same size as Platform's program rows give them. */
-const LEVELS = { narrowTo: 128, to: 288, breakpoint: "lg" } as const;
 
 /**
  * "One screen for every kind of visit": a row each for stamps, points,
@@ -24,7 +21,7 @@ export function CounterSection() {
           stamps: <StampsMini />,
           points: <PointsMini />,
           rewards: <RewardsMini />,
-          levels: <LevelCards size={LEVELS} />,
+          levels: <LevelCards size={LEVELS_ON_A_ROW} />,
         }}
       />
     </LpSection>
