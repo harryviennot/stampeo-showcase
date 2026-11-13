@@ -20,7 +20,7 @@ export function CustomersMini() {
     <div
       role="img"
       aria-label={`Customers sorted into ${OUTCOMES.regulars.segments.slice(0, -1).join(", ")} and ${OUTCOMES.regulars.segments.at(-1)}, with three customers listed by their stamps and group.`}
-      className="w-full max-w-[360px] overflow-hidden rounded-2xl border-[1.5px] border-[var(--near-black)] bg-white shadow-[0_3px_0_var(--near-black)]"
+      className="w-full overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.05]"
     >
       <div aria-hidden>
         <div className="border-b border-[var(--border)] px-5 py-3">

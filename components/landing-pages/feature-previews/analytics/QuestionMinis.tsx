@@ -146,7 +146,7 @@ export function RewardProgressMini() {
           </div>
         ))}
         <div className="flex flex-1 flex-col">
-          <div className="rounded-t-[3px]" style={{ height: px(READY), backgroundColor: "#f97316" }} />
+          <div className="rounded-t-[3px]" style={{ height: px(READY), backgroundColor: "var(--accent)" }} />
         </div>
       </div>
       <div className="mt-1 flex gap-[7px] text-center text-[10px] leading-3 tabular-nums" style={{ color: INK.label }}>
@@ -159,7 +159,7 @@ export function RewardProgressMini() {
       </div>
       <div className="mt-auto flex items-center justify-between text-[11px] leading-4">
         <span className="flex items-center gap-1.5" style={{ color: INK.label }}>
-          <span className="h-2 w-2 rounded-[2px]" style={{ backgroundColor: "#f97316" }} />
+          <span className="h-2 w-2 rounded-[2px]" style={{ backgroundColor: "var(--accent)" }} />
           Reward ready
         </span>
         <span className="font-semibold tabular-nums">{READY}</span>

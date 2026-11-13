@@ -7,8 +7,12 @@ import { LockScreenSlice } from "../push-notifications/LockScreenSlice";
 
 type Key = (typeof COPY.ideas.rows)[number]["key"];
 
-/** A row's lock screen is drawn 240px wide and shrunk to 128px beside the words on a phone. */
-const SLICE = { width: 240, height: 150, narrow: 128 };
+/**
+ * A row's notification is drawn 200px wide, shown at that size from `lg` and shrunk to 128px
+ * beside the words on a phone, where its message still reads at about 9px. The height fits the
+ * longest message.
+ */
+const SLICE = { width: 200, height: 124, narrow: 128 };
 
 const VISUALS = Object.fromEntries(
   COPY.ideas.rows.map((row) => [

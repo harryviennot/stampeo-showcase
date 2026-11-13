@@ -7,7 +7,8 @@ import { LpSection } from "./LpSection";
 
 /**
  * The five questions every page answers, collapsed, and one contact line; a page can bring its own questions.
- * A page's `eyebrow` puts a small label over a centred title, Platform's header.
+ * A page's `eyebrow` gives it Platform's look: a small label over a centred title, the questions as one
+ * white table, and the contact line centred under it.
  */
 export function LpFaq({
   faq,
@@ -24,8 +25,11 @@ export function LpFaq({
       eyebrow={eyebrow}
       align={eyebrow ? "center" : undefined}
     >
-      <FAQList items={items.map((item) => ({ question: item.question, answer: <RegionText raw={item.answer} /> }))} />
-      <p className="mt-8 text-base text-[var(--muted-foreground)]">
+      <FAQList
+        items={items.map((item) => ({ question: item.question, answer: <RegionText raw={item.answer} /> }))}
+        table={Boolean(eyebrow)}
+      />
+      <p className={eyebrow ? "mt-6 text-center text-base text-[var(--muted-foreground)]" : "mt-8 text-base text-[var(--muted-foreground)]"}>
         {contact.before}{" "}
         <TrackedLink
           href="/contact"

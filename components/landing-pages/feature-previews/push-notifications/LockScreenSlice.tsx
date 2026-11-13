@@ -2,13 +2,11 @@ import type { Banner } from "@/lib/landing-pages/copy/types";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { lpBanner } from "../../shared/banner";
 
-/** The deep blue wallpaper of the product's own lock-screen demo, for iOS's dark notification to sit on. */
-const WALLPAPER = "linear-gradient(to bottom, #1a1a2e, #16213e 55%, #0f3460)";
-
 /**
- * The top of a phone's lock screen with one sample-shop notification on it, read out as a
- * single picture. The `thumb` size is for a small drawing (the clock goes, the padding
- * tightens) that a caller scales down.
+ * A sample-shop notification as one picture, read out by who sent it and what it says.
+ * The `pane` size is the top of a lock screen: the clock over iOS's dark notification, on
+ * the page's warm grey tray. The `thumb` size is the notification alone, straight on the
+ * page as Platform shows it, for a small drawing that a caller scales down.
  */
 export function LockScreenSlice({
   banner,
@@ -20,21 +18,22 @@ export function LockScreenSlice({
     <div
       role="img"
       aria-label={`Lock screen notification from ${banner.sender}: ${banner.body}`}
-      className={`relative w-full overflow-hidden text-left ${
-        thumb ? "h-full rounded-[22px] px-3.5 pt-5" : "max-w-[440px] rounded-[28px] px-5 pt-7 pb-6 lg:px-6"
+      className={`relative w-full text-left ${
+        thumb
+          ? "flex h-full items-center"
+          : "max-w-[440px] overflow-hidden rounded-[28px] bg-[var(--background-subtle)] px-5 pt-7 pb-6 lg:px-6"
       }`}
-      style={{ background: WALLPAPER }}
     >
       {!thumb && (
         <p
           aria-hidden
-          className="mb-5 text-center text-[64px] leading-none tracking-tight text-white"
-          style={{ fontWeight: 200, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
+          className="mb-5 text-center text-[64px] leading-none tracking-tight text-[var(--foreground)]"
+          style={{ fontWeight: 200 }}
         >
           9:41
         </p>
       )}
-      <div aria-hidden>
+      <div aria-hidden className="w-full">
         <LockScreenNotification {...lpBanner(banner)} />
       </div>
     </div>
