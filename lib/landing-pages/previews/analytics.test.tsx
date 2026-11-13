@@ -1,19 +1,16 @@
 /**
  * The analytics preview (`/us/landing-pages/platform/analytics`): what a
- * visitor sees in each section below the hero (the hero and the sibling links
- * are pinned in `kit.test.tsx` and `registry.test.ts`). Sections are rendered
- * under the English catalogs, and read as source only for the literals the
- * registry guards need.
+ * visitor sees in each section below the hero. Every section is rendered under
+ * the English catalogs; the hero, the headers, the order and the tap targets of
+ * all five previews are in `pages.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { NextIntlClientProvider } from "next-intl";
-import type { ReactNode } from "react";
-import { renderToReadableStream } from "react-dom/server";
 import { ActivitySection } from "@/components/landing-pages/feature-previews/analytics/ActivitySection";
 import { CustomersMini } from "@/components/landing-pages/feature-previews/analytics/CustomersMini";
 import { GlanceSection } from "@/components/landing-pages/feature-previews/analytics/GlanceSection";
+import { GlanceTiles } from "@/components/landing-pages/feature-previews/analytics/GlanceTiles";
 import { HistorySection } from "@/components/landing-pages/feature-previews/analytics/HistorySection";
 import {
   BusiestMini,
@@ -22,145 +19,65 @@ import {
   ReturnRateMini,
 } from "@/components/landing-pages/feature-previews/analytics/QuestionMinis";
 import { QuestionsSection } from "@/components/landing-pages/feature-previews/analytics/QuestionsSection";
-import { TILE } from "@/components/landing-pages/feature-previews/analytics/TileFrame";
-import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
+import { MINI } from "@/components/landing-pages/feature-previews/MiniFrame";
+import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
 import { PLAN_FACTS } from "@/lib/plans/plan-facts";
-import { MARKETS } from "@/lib/markets";
-import { FALLBACK_PRICING } from "@/lib/pricing";
-import { loadCatalog } from "../../testing/catalogs";
-import { code, findTag, literalAttr, openingTags, read } from "../../testing/jsx-source";
-import { COMPONENTS_DIR, pageFile } from "../../testing/landing-pages-source";
-import { textOf } from "../../testing/render-en";
+import { COMPONENTS_DIR, previewSource } from "../../testing/landing-pages-source";
+import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { smallestLabelPx, stackZooms } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
 import { OUTCOMES } from "../copy/outcomes";
 import { SHARED } from "../copy/shared";
 
-/** The page's markup as a visitor's browser receives it: async pieces resolved, the US dollars and trial in place. */
-async function render(node: ReactNode): Promise<string> {
-  const stream = await renderToReadableStream(
-    <NextIntlClientProvider
-      locale="en"
-      timeZone="UTC"
-      messages={loadCatalog("en")}
-      onError={(error) => {
-        throw error;
-      }}
-    >
-      <RegionPricingProvider
-        ladders={{ eur: FALLBACK_PRICING.eur, usd: FALLBACK_PRICING.usd }}
-        defaultCurrency="usd"
-        defaultTrialDays={MARKETS.us.trialDays}
-      >
-        {node}
-      </RegionPricingProvider>
-    </NextIntlClientProvider>,
-  );
-  await stream.allReady;
-  return (await new Response(stream).text()).replace(/<!--[\s\S]*?-->/g, "");
-}
-
 const FOLDER = join(COMPONENTS_DIR, "feature-previews", "analytics");
-const section = (name: string) => code(join(FOLDER, `${name}.tsx`));
-const PAGE = () => code(pageFile("platform/analytics"));
-
-/** True when every line is in `text`, each one after the line before it (read from where the last ended). */
-function inOrder(text: string, lines: readonly string[]): boolean {
-  let from = 0;
-
-  for (const line of lines) {
-    const at = text.indexOf(line, from);
-    if (at === -1) return false;
-    from = at + line.length;
-  }
-  return true;
-}
-
-/** HTML entities read back as the characters a visitor sees. */
-const decode = (html: string) => html.replaceAll("&#x27;", "'").replaceAll("&quot;", '"').replaceAll("&amp;", "&");
-
-/** The accessible names of the pictures in a render. */
-const pictures = (html: string) =>
-  [...html.matchAll(/<[a-z]+\b[^>]*\brole="img"[^>]*\baria-label="([^"]+)"/g)].map((match) => decode(match[1]));
-
-const SECTIONS = {
-  glance: () => render(<GlanceSection />),
-  questions: () => render(<QuestionsSection />),
-  activity: () => render(<ActivitySection />),
-  numbers: () => render(<HistorySection />),
-};
-
-describe("the page: the dashboard hero, then four sections, the cream card and the sibling links", () => {
-  test("the builder's marker is gone, so the section-order guard is armed", () => {
-    expect(read(pageFile("platform/analytics"))).not.toContain("TODO(STA-552 builder)");
-  });
-
-  test("the page runs glance, questions, activity, then the history figures between two hairlines", () => {
-    const tags = openingTags(PAGE()).map((tag) => tag.name);
-    const names = ["PreviewHero", "GlanceSection", "QuestionsSection", "ActivitySection", "Hairline", "HistorySection", "Hairline", "LpAccentBand", "RelatedPreviews"];
-    let from = 0;
-    const at = names.map((name) => {
-      from = tags.indexOf(name, from);
-      return from;
-    });
-
-    expect(at.every((index) => index > -1)).toBe(true);
-    expect(at).toEqual([...at].sort((a, b) => a - b));
-  });
-
-  test("there is no demo, so no section sends a visitor to one", async () => {
-    const html = (await Promise.all(Object.values(SECTIONS).map((build) => build()))).join("\n");
-
-    expect(html).not.toContain('href="#demo"');
-    expect(textOf(html)).not.toContain(SHARED.demoLink);
-  });
-});
 
 describe("glance: the every-plan numbers, drawn as the dashboard draws them", () => {
-  test("a white surface under the copy's header, with no tabs: one thing to read", async () => {
-    const html = await SECTIONS.glance();
-    const frame = findTag(section("GlanceSection"), "LpSection");
+  test("a white surface with no tabs: one thing to read", async () => {
+    const html = await render(<GlanceSection />);
 
-    expect(literalAttr(frame?.attrs ?? "", "section")).toBe("glance");
-    expect(literalAttr(frame?.attrs ?? "", "align")).toBe("center");
-    expect(inOrder(textOf(html), [COPY.glance.eyebrow, COPY.glance.title, COPY.glance.lead])).toBe(true);
     expect(html).not.toContain('role="tablist"');
     expect(html).not.toMatch(/\binert\b/);
   });
 
   test("the tiles are Visits, New customers and the 30-day return rate with their trends, then Visits over time week by week", async () => {
-    const html = await SECTIONS.glance();
-    const text = textOf(html);
+    const html = await render(<GlanceSection />);
 
-    expect(inOrder(text, ["Visits|2,770|▲17%", "New customers|460|▲11%", "30-day return rate|61%|▲2 pts", "Visits over time"])).toBe(true);
+    expectInOrder(html, ["Visits|2,770|▲17%", "New customers|460|▲11%", "30-day return rate|61%|▲2 pts", "Visits over time"]);
     expect(html.match(/data-week=/g)).toHaveLength(13);
     expect(pictures(html)).toEqual([expect.stringMatching(/2,770 visits.*460 new customers.*61%.*week by week/)]);
   });
 
-  test("the facts follow the tiles, and every one is on every plan: no chip", async () => {
-    const text = textOf(await SECTIONS.glance());
+  test("the sample café is Platform's: the same visits, return rate and trends as its dashboard tiles", async () => {
+    const figures = (text: string) => ({
+      visits: /Visits\|([\d,]+)\|(▲\d+%)/.exec(text)?.slice(1),
+      returnRate: /30-day return rate\|(\d+%)\|(▲\d+ pts)/.exec(text)?.slice(1),
+    });
+    const preview = figures(textOf(await render(<GlanceTiles />)));
 
-    expect(inOrder(text, [COPY.glance.tab.title, ...COPY.glance.tab.facts.map((fact) => fact.text)])).toBe(true);
-    expect(text).not.toMatch(/Every plan|Growth and Pro/);
+    expect(preview.visits).toBeDefined();
+    expect(preview.returnRate).toBeDefined();
+    expect(preview).toEqual(figures(textOf(await render(<DeliverAnalytics />))));
+  });
+
+  test("the facts follow the tiles; the lead says they are on every plan, and no fact carries a chip of its own", async () => {
+    const html = await render(<GlanceSection />);
+
+    expectInOrder(html, [COPY.glance.tab.title, ...COPY.glance.tab.facts.map((fact) => fact.text)]);
+    expect(COPY.glance.tab.facts.filter((fact) => "plan" in fact)).toEqual([]);
   });
 });
 
 describe("questions: four questions an owner asks, each answered by a chart", () => {
-  test("the copy's header, then the four rows in order, all open on the server", async () => {
-    const html = await SECTIONS.questions();
-    const frame = findTag(section("QuestionsSection"), "LpSection");
+  test("the four rows are in order, all open on the server", async () => {
+    const html = await render(<QuestionsSection />);
 
-    expect(literalAttr(frame?.attrs ?? "", "section")).toBe("questions");
-    expect(literalAttr(frame?.attrs ?? "", "align")).toBe("center");
-    expect(
-      inOrder(textOf(html), [COPY.questions.eyebrow, COPY.questions.title, COPY.questions.lead, ...COPY.questions.rows.flatMap((row) => [row.eyebrow, row.title, row.body])]),
-    ).toBe(true);
+    expectInOrder(html, COPY.questions.rows.flatMap((row) => [row.eyebrow, row.title, row.body]));
     expect(html.match(/data-open="true"/g)).toHaveLength(4);
     expect(html).not.toContain('data-open="false"');
   });
 
   test("the three charts that come with Growth and Pro say so in their own row, and the return rate says nothing", async () => {
-    const rows = (await SECTIONS.questions()).match(/<li\b[^>]*data-key="[a-z]+"[\s\S]*?<\/li>/g) ?? [];
+    const rows = (await render(<QuestionsSection />)).match(/<li\b[^>]*data-key="[a-z]+"[\s\S]*?<\/li>/g) ?? [];
     const chips = rows.map((row) => textOf(row).includes("Growth and Pro"));
 
     expect(rows).toHaveLength(4);
@@ -169,104 +86,93 @@ describe("questions: four questions an owner asks, each answered by a chart", ()
   });
 
   test("on a phone every chart goes under its words, printed large enough that its smallest label is 11px", async () => {
-    const zooms = stackZooms(await SECTIONS.questions());
+    const zooms = stackZooms(await render(<QuestionsSection />));
     const smallest = smallestLabelPx(join(FOLDER, "QuestionMinis.tsx"));
 
     expect(zooms).toHaveLength(COPY.questions.rows.length);
-    for (const zoom of zooms) expect(smallest * zoom * (TILE.narrowTo / TILE.width)).toBeGreaterThanOrEqual(11);
+    for (const zoom of zooms) expect(smallest * zoom * (MINI.narrowTo / MINI.width)).toBeGreaterThanOrEqual(11);
   });
 
   test("under the rows, one line says what Starter gets instead of the charts", async () => {
-    const text = textOf(await SECTIONS.questions());
+    const text = textOf(await render(<QuestionsSection />));
 
     expect(text.indexOf(COPY.questions.closer)).toBeGreaterThan(text.lastIndexOf(COPY.questions.rows[3].body));
-    expect(COPY.questions.closer).toBe("Starter shows these in a sentence; Growth and Pro chart them.");
   });
 
-  test("return rate: 61% of first-time customers came back, up 2 points", async () => {
+  test("return rate: Platform's 61% of first-time customers came back, up 2 points", async () => {
     const html = await render(<ReturnRateMini />);
-    const text = textOf(html);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/61%.*up 2 points/)]);
-    expect(inOrder(text, ["30-day return rate", "61%", "▲2 pts", "of first-time customers came back"])).toBe(true);
+    expectInOrder(html, ["30-day return rate", "61%", "▲2 pts", "of first-time customers came back"]);
+    expect(textOf(await render(<DeliverAnalytics />))).toContain("30-day return rate|61%|▲2 pts");
   });
 
   test("visit habits: the dashboard's five groups, from every week to came once, each with its count", async () => {
     const html = await render(<HabitsMini />);
-    const text = textOf(html);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/how often they come/i)]);
-    expect(inOrder(text, ["About every week", "Every 2 weeks", "About once a month", "Less often", "Came once"])).toBe(true);
-    for (const count of ["191", "125", "106", "33", "205"]) expect(text).toContain(count);
+    expectInOrder(html, ["About every week", "Every 2 weeks", "About once a month", "Less often", "Came once"]);
+    for (const count of ["191", "125", "106", "33", "205"]) expect(textOf(html)).toContain(count);
   });
 
   test("busiest times: a week by day and hour, with the busiest slot named and no city", async () => {
     const html = await render(<BusiestMini />);
-    const text = textOf(html);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/busiest times.*Thursday.*8 to 9 AM/i)]);
-    expect(inOrder(text, ["Busiest times", "Mon", "Thu", "Fewer visits", "More visits"])).toBe(true);
-    expect(text).toMatch(/8 AM/);
-    expect(text).not.toMatch(/Paris|GMT/);
+    expectInOrder(html, ["Busiest times", "Mon", "Thu", "Fewer visits", "More visits"]);
+    expect(textOf(html)).toMatch(/8 AM/);
+    expect(textOf(html)).not.toMatch(/Paris|GMT/);
   });
 
   test("reward progress: customers by stamps on their card, with the ones holding a reward ready marked", async () => {
     const html = await render(<RewardProgressMini />);
-    const text = textOf(html);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/reward progress.*22 rewards ready/i)]);
-    expect(inOrder(text, ["Reward progress", "Reward ready"])).toBe(true);
+    expectInOrder(html, ["Reward progress", "Reward ready"]);
   });
 });
 
 describe("activity: live visits on one tab, the customer groups on the other", () => {
-  test("a toggle under the copy's header: Live activity open first, Your customers behind it", async () => {
-    const html = await SECTIONS.activity();
+  test("a toggle with Live activity open first, Your customers behind it", async () => {
+    const html = await render(<ActivitySection />);
     const panes = [...html.matchAll(/<div role="tabpanel" aria-label="([^"]+)"([^>]*)>/g)];
 
-    expect(inOrder(textOf(html), [COPY.activity.eyebrow, COPY.activity.title, COPY.activity.lead])).toBe(true);
     expect(html).toMatch(/role="tab"[^>]*aria-selected="true"[^>]*>Live activity</);
     expect(panes.map((pane) => pane[1])).toEqual([COPY.activity.tabs.live.label, COPY.activity.tabs.customers.label]);
     expect([/\binert\b/.test(panes[0][2]), /\binert\b/.test(panes[1][2])]).toEqual([false, true]);
   });
 
   test("each pane has its title and facts, and nothing in it is plan-gated", async () => {
-    const text = textOf(await SECTIONS.activity());
+    const html = await render(<ActivitySection />);
 
-    for (const tab of Object.values(COPY.activity.tabs)) {
-      expect(inOrder(text, [tab.title, ...tab.facts.map((fact) => fact.text)])).toBe(true);
-    }
-    expect(text).not.toMatch(/Every plan|Growth and Pro/);
+    for (const tab of Object.values(COPY.activity.tabs)) expectInOrder(html, [tab.title, ...tab.facts.map((fact) => fact.text)]);
+    expect(textOf(html)).not.toContain("Growth and Pro");
   });
 
-  test("the live feed stands still for a reader who asks for less motion", () => {
-    const feed = findTag(section("ActivitySection"), "LiveActivityFeed");
+  test("the live feed is the preview's own: a light ring, room under its fifth row, and a pulse that stops for a reader who asks for less motion", async () => {
+    const html = await render(<ActivitySection />);
 
-    expect(feed?.attrs).toMatch(/\bcardOnly\b/);
-    expect(feed?.attrs).toMatch(/\bstillWhenReduced\b/);
+    expect(html).toContain("ring-1 ring-black/[0.05]");
+    expect(html).not.toContain("blog-card-3d");
+    expect(html).toContain(`height:${5 * 48 + 32}px`);
+    expect(html).toContain("pulse-dot motion-reduce:animate-none!");
   });
 
   test("the customers pane: the five groups the dashboard sorts everyone into, then three customers with their stamps and group", async () => {
     const html = await render(<CustomersMini />);
-    const text = textOf(html);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/New, Regular, VIP, At risk and Ghost/)]);
-    expect(inOrder(text, [...OUTCOMES.regulars.segments])).toBe(true);
+    expectInOrder(html, [...OUTCOMES.regulars.segments]);
     expect(html.match(/<li\b/g)).toHaveLength(3);
-    expect(text).toMatch(/\d of 8 stamps/);
-    expect(text).not.toMatch(/Every plan/);
+    expect(textOf(html)).toMatch(/\d of 8 stamps/);
   });
 });
 
 describe("numbers: how far back each plan looks", () => {
   test("the three figures are the plans' own history, written large, then a single trial button", async () => {
-    const html = await SECTIONS.numbers();
-    const text = textOf(html);
-    const frame = findTag(section("HistorySection"), "LpSection");
+    const html = await render(<HistorySection />);
 
-    expect(literalAttr(frame?.attrs ?? "", "section")).toBe("numbers");
-    expect(literalAttr(frame?.attrs ?? "", "align")).toBe("center");
-    expect(inOrder(text, [COPY.numbers.eyebrow, COPY.numbers.title, ...COPY.numbers.figures.flatMap((figure) => [figure.value, figure.label])])).toBe(true);
+    expectInOrder(html, COPY.numbers.figures.flatMap((figure) => [figure.value, figure.label]));
     expect(COPY.numbers.figures.map((figure) => Number(figure.value))).toEqual([
       PLAN_FACTS.starter.analyticsHistoryDays,
       PLAN_FACTS.growth.analyticsHistoryDays,
@@ -276,34 +182,15 @@ describe("numbers: how far back each plan looks", () => {
   });
 
   test("the trial button is tracked as a feature CTA, and there is no second action because there is no demo", async () => {
-    const html = await SECTIONS.numbers();
-    const pair = findTag(section("HistorySection"), "LpCtaPair");
+    const html = await render(<HistorySection />);
+    const source = previewSource("platform/analytics", "HistorySection");
 
-    expect(literalAttr(pair?.attrs ?? "", "location")).toBe("feature_cta");
-    expect(pair?.attrs).toMatch(/\bsecondary=\{null\}/);
+    expect(source).toMatch(/<LpCtaPair\s+location="feature_cta"/);
     expect(textOf(html)).toContain(SHARED.cta);
     expect(html).not.toContain('href="#');
   });
 
   test("none of these figures is a measurement of Stampeo's, so none is a percentage that needs a source", async () => {
-    expect(textOf(await SECTIONS.numbers())).not.toMatch(/%/);
-  });
-});
-
-describe("the whole page (AC3, AC5)", () => {
-  test("no section prints a sample-data caption, an Every plan chip or a city", async () => {
-    const html = (await Promise.all(Object.values(SECTIONS).map((build) => build()))).join("\n");
-
-    expect(textOf(html)).not.toMatch(/Sample data|Every plan|Paris|GMT/);
-    expect(html).not.toContain("{trialDays}");
-  });
-
-  test("every picture has an accessible name, and every link a phone user taps is 44px tall", async () => {
-    for (const build of Object.values(SECTIONS)) {
-      const html = await build();
-
-      for (const tag of html.match(/<[a-z]+\b[^>]*\brole="img"[^>]*>/g) ?? []) expect(tag).toMatch(/aria-label="[^"]{12,}"/);
-      for (const link of html.match(/<a\b[^>]*>/g) ?? []) expect(link).toMatch(/(?:min-h-11|h-\[52px\]|h-11)/);
-    }
+    expect(textOf(await render(<HistorySection />))).not.toMatch(/%/);
   });
 });

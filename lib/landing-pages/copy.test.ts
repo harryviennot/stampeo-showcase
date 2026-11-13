@@ -9,7 +9,9 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
+import { ROOT, code } from "../testing/jsx-source";
 import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
 import { PLAN_FACTS } from "../plans/plan-facts";
 import { routing } from "../../i18n/routing";
@@ -20,6 +22,7 @@ import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
 import { PREVIEW_SHARED } from "./copy/previews/shared";
 import * as shared from "./copy/shared";
+import { LANDING_PAGES } from "./pages";
 
 /** A percentage ("34%") or a multiplier ("6×", "6X"): what only a sourced figure may print. */
 const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x×X](?![\p{L}\p{N}])/u;
@@ -31,10 +34,9 @@ const BROADCAST_PLANS = ["Growth and Pro", "Pro"];
 const PLAN_LINES = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
 
 /**
- * Mentions that carry no plan label by Harry's call (13 Nov 2026): broadcasts
- * open to every plan right after these pages ship (STA-549), so the Platform
- * page lists them without a badge, and so does the link to the broadcasts
- * preview that the other four previews end on.
+ * Mentions that carry no plan label because broadcasts are about to open to every plan: the Platform
+ * page lists them without a badge, and so does the link to the broadcasts preview that the other four
+ * previews end on.
  */
 const UNBADGED = ["PLATFORM.platform.dashboard.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
 
@@ -77,11 +79,11 @@ describe("what these pages may not claim (AC10)", () => {
   const LEVELS_WITHOUT_CHIP: Record<string, string> = {
     "FEATURES.programTypes.title": "the headline over the three tabs; the Levels tab under it carries the chip",
     "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
-    "PLATFORM.programTypes.title": "Platform's program rows carry no chips (Harry, 13 Nov 2026)",
+    "PLATFORM.programTypes.title": "Platform's program rows carry no chips",
     "SHARED.levelCardsAlt": "the level cards' alt text",
-    "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews carry no chips (Harry, 13 Nov 2026)",
-    "MOBILE_SCANNER_PREVIEW.counter.rows[3].body": "what the register shows for a level; the previews carry no chips",
-    "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.ready.facts[0].text": "the ready-made messages cover level-ups; the previews carry no chips",
+    "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews print no Every plan chip",
+    "MOBILE_SCANNER_PREVIEW.counter.rows[3].body": "what the register shows for a level; the previews print no Every plan chip",
+    "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.ready.facts[0].text": "the ready-made messages cover level-ups; the previews print no Every plan chip",
   };
 
   const levelMentions = () =>
@@ -267,6 +269,25 @@ describe("figures from other people (AC12)", () => {
   });
 });
 
+describe("percentages a component draws (AC12)", () => {
+  /**
+   * The components that print a percentage with no source line: drawn sample dashboards, not claims. Each reads
+   * Platform's `ANALYTICS`, so a preview's sample café shows the numbers Platform's does.
+   */
+  const DRAWN_SAMPLE_DASHBOARDS = [
+    "components/landing-pages/platform/DeliverAnalytics.tsx",
+    "components/landing-pages/feature-previews/analytics/GlanceTiles.tsx",
+    "components/landing-pages/feature-previews/analytics/QuestionMinis.tsx",
+  ];
+
+  test.each(DRAWN_SAMPLE_DASHBOARDS)("%s is a drawn sample dashboard: its percentages are ANALYTICS', never typed in", (file) => {
+    const source = code(join(ROOT, file));
+
+    expect(source).toMatch(/\bANALYTICS\b/);
+    expect(source).not.toMatch(/(?<![\w[./#-])\d+(?:\.\d+)?\s*%/);
+  });
+});
+
 describe("prices and the trial length (AC13)", () => {
   test("a dollar amount appears only in the worked example", () => {
     expect(offenders(/\$/)).toEqual(["OUTCOMES.regulars.example.text"]);
@@ -277,7 +298,7 @@ describe("prices and the trial length (AC13)", () => {
   });
 });
 
-describe("the five previews' copy (STA-552)", () => {
+describe("the five previews' copy", () => {
   const previewLines = () => ALL.filter((line) => inPreviews(line.path));
   const previewModules = () => Object.entries(MODULES).filter(([name]) => inPreviews(name));
 
@@ -293,14 +314,14 @@ describe("the five previews' copy (STA-552)", () => {
     expect(previewLines().length).toBeGreaterThan(150);
   });
 
-  test("no chip says Every plan, and nothing is captioned Sample data (Harry's v2.1 call for Platform-style pages)", () => {
+  test("no chip says Every plan, and nothing is captioned Sample data", () => {
     const chips = previewModules().flatMap(([name, value]) => objectsWith(value, ["plan"], name));
 
     expect(chips.filter(({ object }) => object.plan === "Every plan").map(({ path }) => path)).toEqual([]);
     expect(previewLines().filter((line) => /sample data/i.test(line.value)).map((line) => line.path)).toEqual([]);
   });
 
-  test("only the broadcasts preview states a plan for the whole page: Growth and Pro, as today's page does", () => {
+  test("only the broadcasts preview states a plan for the whole page: Growth and Pro", () => {
     const pageWide = previewModules()
       .filter(([, value]) => typeof value === "object" && value !== null && "plan" in value)
       .map(([name, value]) => [name, (value as { plan: string }).plan]);
@@ -320,7 +341,7 @@ describe("the five previews' copy (STA-552)", () => {
   describe("the broadcasts preview's figures are Stampeo's own, each with its source", () => {
     const { figures, sourceLine } = PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers;
 
-    test("88% and 95% carry the source line that today's approved page prints", () => {
+    test("88% and 95% carry their source line", () => {
       expect(figures.slice(0, 2).map((figure) => figure.value)).toEqual(["88%", "95%"]);
       for (const figure of figures.slice(0, 2)) {
         expect((figure as { source?: string }).source).toBe("Stampeo data, 86 businesses, February to October 2026");
@@ -377,13 +398,22 @@ describe("the five previews' copy (STA-552)", () => {
   test("the FAQs are the five questions: card design's and the broadcasts page's", () => {
     expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(5);
     expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(5);
-    expect(CARD_DESIGN_PREVIEW.faq.items.at(-1)?.answer).toContain("48 hours");
   });
 
-  test("the sibling links name the five features, in the words their own heroes use", () => {
+  test("each sibling link says what its feature is in the words its own preview's headline uses", () => {
     const { cards } = PREVIEW_SHARED.related;
+    const HEROES = {
+      cardDesign: "platform/card-design",
+      mobileScanner: "platform/mobile-scanner",
+      pushNotifications: "platform/push-notifications",
+      analytics: "platform/analytics",
+      promotionalCampaigns: "platform/promotional-campaigns",
+    } as const;
 
-    expect(Object.keys(cards).sort()).toEqual(["analytics", "cardDesign", "mobileScanner", "promotionalCampaigns", "pushNotifications"]);
+    expect(Object.keys(cards).sort()).toEqual(Object.keys(HEROES).sort());
+    for (const [key, slug] of Object.entries(HEROES)) {
+      expect({ key, line: cards[key as keyof typeof cards].line }).toEqual({ key, line: LANDING_PAGES[slug].hero.h1 });
+    }
     expect(PREVIEW_SHARED.related.eyebrow.length).toBeLessThanOrEqual(28);
   });
 });

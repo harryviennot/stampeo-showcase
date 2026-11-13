@@ -1,13 +1,14 @@
 /**
- * The Scanner loop on the four landing pages: every page's scanner visual is
- * the video of the Scanner app adding a stamp, and the cards beside it count
- * the stamps it ends on. The loop itself is pinned in `lib/videos/scanner-loop.test.tsx`.
+ * The Scanner loop on the landing pages: every page's scanner visual is the
+ * video of the Scanner app adding a stamp, and the cards beside it count the
+ * stamps it ends on. The loop itself is pinned in `lib/videos/scanner-loop.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
+import { join } from "node:path";
 import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { code, findTag, openingTags, read } from "../testing/jsx-source";
-import { isPreviewFile, lpFiles, pageComponent, pageFile, landingTree } from "../testing/landing-pages-source";
+import { PREVIEWS_DIR, lpFiles, pageComponent, pageFile, landingTree } from "../testing/landing-pages-source";
 import { STAMP_BANNER } from "./copy/shared";
 import type { LandingSlug } from "./pages";
 
@@ -27,12 +28,17 @@ describe("every landing page's scanner visual is the Scanner loop", () => {
     expect(landingTree(pageFile(slug)).has(file)).toBe(true);
   });
 
-  test("no other file of the four pages draws one (the previews draw theirs in their own files)", () => {
-    const users = lpFiles()
-      .filter((file) => !isPreviewFile(file))
-      .filter((file) => openingTags(read(file)).some((tag) => tag.name === "ScannerLoop"));
+  /** The previews that draw the loop: the scanner's hero, and the how-it-works tables that show its finished stamp. */
+  const PREVIEW_USERS = [
+    pageFile("platform/mobile-scanner"),
+    join(PREVIEWS_DIR, "mobile-scanner", "HowSection.tsx"),
+    join(PREVIEWS_DIR, "push-notifications", "HowSection.tsx"),
+  ];
 
-    expect(users.sort()).toEqual(VISUALS.map(([, folder, name]) => pageComponent(folder, name)).sort());
+  test("no other file of the pages draws one", () => {
+    const users = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "ScannerLoop"));
+
+    expect(users.sort()).toEqual([...VISUALS.map(([, folder, name]) => pageComponent(folder, name)), ...PREVIEW_USERS].sort());
   });
 
   test("Platform's wallet phone beside the scanner shows the stamp count the video ends on", () => {

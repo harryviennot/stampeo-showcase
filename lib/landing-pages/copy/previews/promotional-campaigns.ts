@@ -2,7 +2,7 @@ import { PLAN_FACTS } from "../../../plans/plan-facts";
 import { SAMPLE_BUSINESS } from "../shared";
 import type { Banner, BandCopy, FaqItem, Fact, PageMeta, PlanChip, PreviewHeroCopy, RowCopy, Tile } from "../types";
 
-/** Where the two measured figures come from: the businesses on Stampeo, as today's approved feature page words it. */
+/** Where the two measured figures come from: the businesses on Stampeo. */
 const FIGURES_SOURCE = "Stampeo data, 86 businesses, February to October 2026";
 
 /** Growth's monthly allowance, from the plan facts: the copy never types it. */
@@ -20,11 +20,8 @@ interface IdeaCopy extends RowCopy {
 }
 
 /**
- * The broadcasts preview. It states plan availability for the whole page, as
- * today's page does (`plan` at the top, which every mention under it inherits),
- * and a row or cell that only Pro has says so with its own chip. If broadcasts
- * open to every plan, that field, the plans table and the FAQ answers are what
- * change.
+ * The broadcasts preview. `plan` at the top is the plan availability of the whole page, which every
+ * mention under it inherits; a row or cell that only Pro has says so with its own chip.
  */
 export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
   plan: "Growth and Pro" satisfies PlanChip,
@@ -119,7 +116,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         { text: "Send it again anytime" },
       ] satisfies Fact[],
     },
-    /** One sample broadcast to 716 cards, as today's page shows it. */
+    /** One sample broadcast to 716 cards. */
     metrics: [
       { label: "Apple delivered", value: "412" },
       { label: "Google delivered", value: "268" },

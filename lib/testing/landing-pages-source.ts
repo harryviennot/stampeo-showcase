@@ -1,5 +1,5 @@
 import { join, sep } from "node:path";
-import { ALL_LANDING_SLUGS, PREVIEW_SLUGS, type LandingSlug } from "../landing-pages/pages";
+import { ALL_LANDING_SLUGS, PREVIEW_SLUGS, type LandingSlug, type PreviewSlug } from "../landing-pages/pages";
 import { ROOT, code, importedFiles, literalAttr, openingTags, read, sourceFiles } from "./jsx-source";
 
 /**
@@ -25,6 +25,14 @@ export const isPreviewFile = (file: string) =>
 /** A file of a Platform-style page: Platform's own page and components, or a preview's. */
 export const isPlatformStyleFile = (file: string) =>
   file === pageFile("platform") || file.startsWith(join(COMPONENTS_DIR, "platform") + sep) || isPreviewFile(file);
+
+/**
+ * The code of a preview's page (no `name`) or of one of its components, by file
+ * name: `previewSource("platform/analytics", "ActivitySection")`.
+ */
+export function previewSource(slug: PreviewSlug, name?: string): string {
+  return name ? code(join(PREVIEWS_DIR, slug.replace("platform/", ""), `${name}.tsx`)) : code(pageFile(slug));
+}
 
 /** A component of `components/landing-pages/shared/`. */
 export const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
@@ -82,18 +90,22 @@ export function planLineWith(source: string, needle: string): string {
 }
 
 /**
- * Every opening tag called `component` in the site's own source, the landing
- * pages and their components apart: the call sites that existed before these pages and
+ * Every opening tag of `component` (the one defined in `ownFile`, found through
+ * the import that brings it in) in the site's own source, the landing pages and
+ * their components apart: the call sites that existed before these pages and
  * must render as they did, whatever props the pages add.
  */
 export function otherCallers(component: string, ownFile: string): Array<{ file: string; attrs: string }> {
   return SITE_SOURCE_DIRS.flatMap((dir) => sourceFiles(dir))
     .filter((file) => file !== ownFile && !file.startsWith(COMPONENTS_DIR) && !file.startsWith(PAGES_DIR))
-    .flatMap((file) =>
-      openingTags(read(file))
-        .filter((tag) => tag.name === component)
-        .map((tag) => ({ file, attrs: tag.attrs })),
-    );
+    .flatMap((file) => {
+      const source = read(file);
+      const imports = importedFiles(file, source);
+
+      return openingTags(source)
+        .filter((tag) => tag.name === component && imports.get(component) === ownFile)
+        .map((tag) => ({ file, attrs: tag.attrs }));
+    });
 }
 
 /**

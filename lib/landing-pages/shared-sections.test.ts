@@ -108,10 +108,11 @@ describe("dashboard captures (AC9)", () => {
     expect(loose).toEqual([]);
   });
 
-  test("the feeds the pages draw are among what the guard reads: the layered capture and the how-to feed", () => {
+  test("the feeds the pages draw are among what the guard reads: the layered capture, the how-to feed and the analytics preview's", () => {
     const feeds = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "LiveActivityFeed"));
 
-    expect(feeds.filter((file) => !onPlatform(file)).map((file) => file.replace(ROOT, "")).sort()).toEqual([
+    expect(feeds.map((file) => file.replace(ROOT, "")).sort()).toEqual([
+      "/components/landing-pages/feature-previews/analytics/ActivitySection.tsx",
       "/components/landing-pages/features/AnalyticsSpotlight.tsx",
       "/components/landing-pages/how-it-works/SeeItWork.tsx",
     ]);
@@ -124,7 +125,10 @@ describe("dashboard captures (AC9)", () => {
         .map((tag) => ({ file, captioned: !/(?:^|\s)caption=\{false\}/.test(tag.attrs) })),
     );
 
-    expect(duos.filter(({ file }) => onPlatform(file)).length).toBeGreaterThanOrEqual(1);
+    expect(duos.filter(({ file }) => onPlatform(file)).map(({ file }) => file.replace(ROOT, "")).sort()).toEqual([
+      "/app/[locale]/us/landing-pages/platform/analytics/page.tsx",
+      "/components/landing-pages/platform/PlatformSection.tsx",
+    ]);
     expect(duos.filter(({ file }) => !onPlatform(file)).length).toBeGreaterThan(0);
     expect(duos.filter(({ file, captioned }) => captioned === onPlatform(file))).toEqual([]);
     expect(code(shared("DashboardDuo"))).toMatch(/caption\s*&&\s*\(\s*<figcaption/);
@@ -550,7 +554,7 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("NotificationSequenceDemo", "features/notifications-push"), ["moments", "design", "phoneClassName", "fullCard", "stillWhenReduced"]],
     [...component("NotificationBanner", "features/notifications-push"), ["icon"]],
     [...component("CardStyleGallery", "features/design-de-carte"), ["showCta", "heading", "sectionClassName"]],
-    [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced", "soft"]],
+    [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced", "softFrame", "roomBelow"]],
     [...component("QRCodeSkeleton", "ui"), ["animated"]],
     [...component("Segmented", "ui"), ["size"]],
     [...component("WalletCard", "card"), ["headerLabel"]],
@@ -558,9 +562,14 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("HeroCardFan", "landing-variant"), ["slots"]],
     [...component("ScannerLoop", "ui"), ["still"]],
     [...component("AnnotatedWalletCard", "features/design-de-carte"), ["heading", "sectionClassName", "toggleSize"]],
+    [...component("FAQList", "ui"), ["table"]],
   ];
 
-  /** The one site component that hands its own optional prop on to an extended one: `toggleSize` becomes Segmented's `size`. */
+  /**
+   * The one site component that hands its own optional prop on to an extended one: `toggleSize` becomes
+   * Segmented's `size`. Its default render is a snapshot in `default-renders.test.tsx`, and what the prop does is
+   * in `extended-components.test.tsx`.
+   */
   const ANNOTATED = join(ROOT, "components", "features", "design-de-carte", "AnnotatedWalletCard.tsx");
 
   test.each(EXTENDED)("%s", (name, file, props) => {
@@ -576,13 +585,6 @@ describe("components the pages extend: their other callers pass none of the new 
         });
       }
     }
-  });
-
-  test("AnnotatedWalletCard's switch is Segmented's own size until a page asks for the large one", () => {
-    const source = code(ANNOTATED);
-
-    expect(source).toMatch(/toggleSize = "md"/);
-    expect(findTag(source, "Segmented")?.attrs).toMatch(/\bsize=\{toggleSize\}/);
   });
 
   test("CTAButton's other callers never ask for the inverse variant", () => {

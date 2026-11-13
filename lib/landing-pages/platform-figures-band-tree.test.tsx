@@ -7,7 +7,7 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
-import { NumberFigures } from "@/components/landing-pages/platform/NumbersBlock";
+import { NumberFigures } from "@/components/landing-pages/platform/NumberFigures";
 import { ShareTree } from "@/components/landing-pages/platform/ShareTree";
 import { ROOT, code, findTag, read } from "../testing/jsx-source";
 import { COMPONENTS_DIR } from "../testing/landing-pages-source";

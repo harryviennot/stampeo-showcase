@@ -18,19 +18,27 @@ import { IconLibrarySection } from "@/components/features/design-de-carte/IconLi
 import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
-import { NumberFigures } from "@/components/landing-pages/platform/NumbersBlock";
+import { NumberFigures } from "@/components/landing-pages/platform/NumberFigures";
 import { PlatformToggleCard } from "@/components/landing-pages/platform/PlatformToggleCard";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
+import { FAQList } from "@/components/ui/FAQList";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
 import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { Segmented } from "@/components/ui/Segmented";
-import { renderEn } from "../testing/render-en";
+import { renderEn, renderEnAsync } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
 
 // The gallery is an async server component that asks next-intl for its words.
 await mockEnglishServerTranslations();
 const { CardStyleGallery } = await import("@/components/features/design-de-carte/CardStyleGallery");
+const { HowTable } = await import("@/components/landing-pages/platform/HowTable");
+const { PlatformHero } = await import("@/components/landing-pages/platform/PlatformHero");
+
+const FAQ_ITEMS = [
+  { question: "Can I use my own stamp icons?", answer: "Yes, import any image." },
+  { question: "Can I change the style later?", answer: "Anytime." },
+];
 
 describe("what a component renders when a page's new props are left out (AC15)", () => {
   test("NotificationPhoneDemo: the lock screen with Stampeo's sample stamp notification", () => {
@@ -96,6 +104,14 @@ describe("what a component renders when a page's new props are left out (AC15)",
   test("ScannerLoop: the first frame in a phone, 280px wide", () => {
     expect(renderEn(<ScannerLoop />)).toMatchSnapshot();
   });
+
+  test("FAQList: the inked cards, the first one open, as the card design and broadcasts pages use it", () => {
+    expect(renderEn(<FAQList items={FAQ_ITEMS} defaultOpenCount={1} />)).toMatchSnapshot();
+  });
+
+  test("FAQList: every card closed, as the homepage variant and the comparison pages use it", () => {
+    expect(renderEn(<FAQList items={FAQ_ITEMS} />)).toMatchSnapshot();
+  });
 });
 
 describe("what Platform's own pieces render when the previews' new props are left out (AC2)", () => {
@@ -115,6 +131,14 @@ describe("what Platform's own pieces render when the previews' new props are lef
     ];
 
     expect(renderEn(<NumberFigures items={items} />)).toMatchSnapshot();
+  });
+
+  test("HowTable: the card and the scanner behind the three-step table, and the link to the demo", async () => {
+    expect(await renderEnAsync(<HowTable />)).toMatchSnapshot();
+  });
+
+  test("PlatformHero: the headline, the seven-card fan, then the trial and demo buttons, with no label or sub", async () => {
+    expect(await renderEnAsync(<PlatformHero />)).toMatchSnapshot();
   });
 
   test("LpFaq: the five shared questions and the contact line", () => {

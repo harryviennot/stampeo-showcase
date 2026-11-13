@@ -5,7 +5,8 @@ import { loadCatalog } from "./catalogs";
 /**
  * Lets a test file call an async server component: `getTranslations` and
  * `getLocale` of `next-intl/server` answer from the English catalogs instead of
- * asking a Next request, and everything else of the module stays the real one.
+ * asking a Next request, `setRequestLocale` does nothing, and everything else
+ * of the module stays the real one.
  * Call it once at the top, then import the component with `await import(...)`.
  *
  * It is not undone after the file: putting the real module back makes the next
@@ -18,6 +19,7 @@ export async function mockEnglishServerTranslations(): Promise<void> {
   mock.module("next-intl/server", () => ({
     ...real,
     getLocale: async () => "en",
+    setRequestLocale: () => {},
     getTranslations: async (namespace?: string) =>
       createTranslator({ locale: "en", messages, namespace: namespace as never }),
   }));

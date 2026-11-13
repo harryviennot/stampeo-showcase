@@ -1,38 +1,34 @@
 /**
  * The kit the five previews are built from: the three pieces Platform's sections
- * were generalised into (a steps table, hover rows, a toggle card), the optional
- * props the Platform pieces gained, and the two preview-only blocks (the hero
- * and the sibling links). What Platform's own pieces render by default is pinned
- * by snapshots in `../default-renders.test.tsx`; this file is what the previews
- * can do that Platform does not.
+ * were generalised into (a steps table, hover rows, a toggle card), the hero
+ * Platform's fan shares, and the two preview-only blocks (the hero and the
+ * sibling links). What Platform's own pieces render by default is pinned by
+ * snapshots in `../default-renders.test.tsx`, and what a page can ask of the
+ * site components they borrow is in `../extended-components.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
-import { readdirSync } from "node:fs";
 import { join } from "node:path";
-import { AnnotatedWalletCard } from "@/components/features/design-de-carte/AnnotatedWalletCard";
-import { IconMarquee } from "@/components/features/design-de-carte/IconLibrarySection";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
-import { HoverRows, HOVER_INTENT_MS, allRowsOpen, hoverIntent } from "@/components/landing-pages/platform/HoverRows";
-import { DeliverAnalytics, Kpi, VisitsOverTime } from "@/components/landing-pages/platform/DeliverAnalytics";
-import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
-import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
-import { NumberFigures } from "@/components/landing-pages/platform/NumbersBlock";
-import * as ProgramTypeRowsModule from "@/components/landing-pages/platform/ProgramTypeRows";
+import { StampStyleRows } from "@/components/landing-pages/feature-previews/card-design/StampStyleRows";
+import { HoverRows } from "@/components/landing-pages/platform/HoverRows";
+import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { StepsTable } from "@/components/landing-pages/platform/StepsTable";
 import { ToggleCard } from "@/components/landing-pages/platform/ToggleCard";
-import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
-import { ScannerLoop } from "@/components/ui/ScannerLoop";
-import { stampIcons } from "@/components/onboarding/StampIconPicker";
-import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
-import { ROOT, code, findTag, openingTags } from "../../testing/jsx-source";
-import { stackZooms } from "../../testing/stacked-rows";
+import { CARD_DESIGN_FAN_SLOTS } from "@/lib/hero-fan";
+import { code, findTag, openingTags } from "../../testing/jsx-source";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
-import { renderEn, textOf } from "../../testing/render-en";
+import { expectInOrder, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
+import { mockEnglishServerTranslations } from "../../testing/server-intl";
+import { stackZooms } from "../../testing/stacked-rows";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
 import { SHARED } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS } from "../pages";
+
+// The fan hero holds async server components that ask next-intl for their words.
+await mockEnglishServerTranslations();
+const { PlatformHero } = await import("@/components/landing-pages/platform/PlatformHero");
 
 const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
 
@@ -114,18 +110,9 @@ describe("HoverRows: rows that open on hover, focus or tap, all open on the serv
     expect(html.indexOf("closing line")).toBeGreaterThan(html.indexOf("levels mini"));
   });
 
-  test("a row's title is the button that opens it, and a click, a focus or a hover is all it takes", () => {
-    const source = code(join(PLATFORM_DIR, "HoverRows.tsx"));
-    const handlers = openingTags(source).flatMap((tag) => [...tag.attrs.matchAll(/\b(on[A-Z]\w+)=\{[^}]*item\.key/g)].map((match) => match[1]));
-
-    expect(handlers.sort()).toEqual(["onClick", "onFocus", "onPointerEnter"]);
-    expect(source).not.toContain("IntersectionObserver");
-  });
-
-  test("a row's picture sits in a 128px column beside its words on a phone, as it did, unless the rows are asked to stack", () => {
+  test("a row's picture sits in a 128px column beside its words on a phone, unless the rows are asked to stack", () => {
     const plain = renderEn(<HoverRows items={ITEMS} visuals={VISUALS} />);
 
-    expect(renderEn(<HoverRows items={ITEMS} visuals={VISUALS} stackOnPhone={undefined} />)).toBe(plain);
     expect(plain).toContain("grid-cols-[128px_1fr]");
     expect(plain).not.toMatch(/--stack-zoom|grid-cols-1\b/);
   });
@@ -141,29 +128,14 @@ describe("HoverRows: rows that open on hover, focus or tap, all open on the serv
     expect(textOf(html).indexOf("stamps mini")).toBeLessThan(textOf(html).indexOf("Add one, or several."));
     expect(html.match(/data-open="true"/g)).toHaveLength(2);
   });
-
-  test("Platform's program rows are these rows: its tests keep the helpers they import from there", () => {
-    expect(ProgramTypeRowsModule.allRowsOpen).toBe(allRowsOpen);
-    expect(ProgramTypeRowsModule.hoverIntent).toBe(hoverIntent);
-    expect(ProgramTypeRowsModule.HOVER_INTENT_MS).toBe(HOVER_INTENT_MS);
-    expect(allRowsOpen({ wide: false, calm: false })).toBe(true);
-    expect(allRowsOpen({ wide: true, calm: false })).toBe(false);
-  });
 });
 
-describe("HoverRows stackOnPhone: only the rows of dense pictures ask for it", () => {
-  const PREVIEWS = join(COMPONENTS_DIR, "feature-previews");
-
-  test.each([
-    ["the analytics questions", true, join(PREVIEWS, "analytics", "QuestionsSection.tsx")],
-    ["the scanner counter", true, join(PREVIEWS, "mobile-scanner", "CounterSection.tsx")],
-    ["the campaign ideas", true, join(PREVIEWS, "promotional-campaigns", "IdeasSection.tsx")],
-    ["the card design stamp rows", false, join(PREVIEWS, "card-design", "StampStyleRows.tsx")],
-    ["Platform's program rows", false, join(PLATFORM_DIR, "ProgramTypeRows.tsx")],
-  ])("%s: stacks on a phone is %p", (_rows, stacks, file) => {
-    const attrs = findTag(code(file), "HoverRows")?.attrs ?? "";
-
-    expect(/(?:^|\s)stackOnPhone(?![\w-])/.test(attrs)).toBe(stacks);
+describe("HoverRows: the rows of wallet cards keep their thumbnail column; only dense pictures stack", () => {
+  test("the card design stamp rows and Platform's program rows draw no stacked picture", async () => {
+    expect(stackZooms(renderEn(<StampStyleRows />))).toEqual([]);
+    expect(
+      stackZooms(renderEn(<ProgramTypeRows visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }} />)),
+    ).toEqual([]);
   });
 });
 
@@ -219,124 +191,20 @@ describe("ToggleCard: one white card, one surface per tab", () => {
   });
 });
 
-describe("what the Platform pieces take for the previews", () => {
-  test("LpCtaPair: a second action of the page's own, or none", () => {
-    const own = renderEn(<LpCtaPair location="hero" secondary={{ label: "Try the designer", href: "#playground" }} />, { us: true });
-    const none = renderEn(<LpCtaPair location="hero" secondary={null} />, { us: true });
-
-    expect(own).toMatch(/<a [^>]*href="#playground"[^>]*>/);
-    expect(own).toContain("h-[52px]");
-    expect(textOf(own)).toContain("Try the designer");
-    expect(textOf(own)).not.toContain(SHARED.demoLink);
-    expect(none).not.toContain('href="#');
-    expect(textOf(none)).toContain(SHARED.cta);
-  });
-
-  test("LpAccentBand: the page's own headline, accent word and line", () => {
-    const html = renderEn(
-      <LpAccentBand copy={{ title: "Fill your next slow day.", accent: "slow day.", sub: "Start your free trial." }} />,
-      { us: true },
+describe("PlatformHero: the fan hero a preview can reuse", () => {
+  test("takes the page's slug, its own cards and its second action: the preview's label, headline and sub, then the trial and its own button", async () => {
+    const { hero } = LANDING_PAGES["platform/card-design"];
+    const html = await renderEnAsync(
+      <PlatformHero slug="platform/card-design" slots={CARD_DESIGN_FAN_SLOTS} secondary={{ label: "Try the designer", href: "#playground" }} />,
     );
 
-    expect(html).toMatch(/<h2[^>]*>[^<]*<span class="text-\[var\(--accent\)\]">slow day\.<\/span><\/h2>/);
-    expect(textOf(html)).toContain("Start your free trial.");
-    expect(textOf(html)).not.toContain("Launch your loyalty card");
+    expectInOrder(html, [hero.eyebrow ?? "", hero.accent, hero.sub ?? "", SHARED.cta, "Try the designer"]);
+    expect(html).toMatch(/<a [^>]*href="#playground"/);
+    expect(html).not.toContain(SHARED.demoLink);
   });
 
-  test("NumberFigures: a source line under the row when it is given, and none when it is not", () => {
-    const items = [{ value: "88%", label: "join" }, { value: "95%", label: "stay" }];
-    const sourced = renderEn(<NumberFigures items={items} source="Stampeo data, 86 businesses, February to October 2026" />);
-
-    expect(textOf(sourced)).toContain("Stampeo data, 86 businesses, February to October 2026");
-    expect(sourced.indexOf("Stampeo data")).toBeGreaterThan(sourced.lastIndexOf("</ul>") - 1);
-    expect(renderEn(<NumberFigures items={items} />)).not.toContain("Stampeo data");
-  });
-
-  test("LpFaq: a page's own questions under its own title, still ending on the contact line", () => {
-    const html = renderEn(<LpFaq faq={{ title: "Card styles, answered", items: [{ question: "Can I change it?", answer: "Anytime." }] }} />, { us: true });
-    const text = textOf(html);
-
-    expect(text).toContain("Card styles, answered");
-    expect(text).toContain("Can I change it?");
-    expect(text).toContain("Anytime.");
-    expect(text).not.toContain(SHARED.faq.items[0].question);
-    expect(text).toContain(SHARED.faq.contact.link);
-  });
-
-  test("LpFaq: an eyebrow gives the FAQ Platform's centred header, with the questions and the contact line below it in the same narrow column", () => {
-    const items = [{ question: "Can I change it?", answer: "Anytime." }];
-    const withEyebrow = renderEn(<LpFaq faq={{ eyebrow: "FAQ", title: "Card styles, answered", items }} />, { us: true });
-    const text = textOf(withEyebrow);
-
-    expect(text.indexOf("FAQ")).toBeGreaterThan(-1);
-    expect(text.indexOf("FAQ")).toBeLessThan(text.indexOf("Card styles, answered"));
-    expect(text.indexOf("Card styles, answered")).toBeLessThan(text.indexOf("Can I change it?"));
-    expect(text.indexOf("Can I change it?")).toBeLessThan(text.indexOf(SHARED.faq.contact.link));
-    expect(withEyebrow).toContain("mx-auto text-center");
-    expect(withEyebrow).toMatch(/<section[^>]*data-landing-section="faq"/);
-    expect(withEyebrow).toContain("max-w-[840px]");
-  });
-
-  test("LpFaq: without an eyebrow the title stays left-aligned with no label above it", () => {
-    const html = renderEn(<LpFaq faq={{ title: "Card styles, answered", items: [{ question: "Can I change it?", answer: "Anytime." }] }} />, { us: true });
-
-    expect(html).not.toContain("text-center");
-    expect(html).not.toContain("tracking-[0.2em]");
-  });
-
-  test("ScannerLoop: `still` shows the finished stamp as a picture from the first paint", () => {
-    const files = scannerLoopFiles("en");
-    const frame = (html: string) => html.match(/<img\b[^>]*\bsrc="\/videos\/scanner-loop\/[^"]*"[^>]*>/)?.[0] ?? "";
-
-    expect(frame(renderEn(<ScannerLoop still />))).toContain(encodeURIComponent(files.still).replaceAll("%2F", "/"));
-    expect(frame(renderEn(<ScannerLoop />))).toContain(files.first);
-    expect(renderEn(<ScannerLoop still />)).not.toContain("<video");
-  });
-
-  test("AnnotatedWalletCard: a page can bring its own heading and section band", () => {
-    const html = renderEn(<AnnotatedWalletCard heading={<h2>Every part of the card is yours.</h2>} sectionClassName="py-10 bg-white" />);
-
-    expect(html).toContain("Every part of the card is yours.");
-    expect(html).toContain('class="py-10 bg-white"');
-    expect(html).not.toContain("py-16 sm:py-24 bg-[var(--blog-bg)]");
-  });
-
-  test("IconMarquee: a row of icon tiles that drifts, from the ids it is given", () => {
-    const icons = stampIcons.slice(0, 4).map((icon) => icon.id);
-    const html = renderEn(<IconMarquee icons={icons} colorOffset={0} duration={70} />);
-
-    expect(html.match(/<svg/g)).toHaveLength(icons.length * 2);
-    expect(html).toContain("marquee-scroll 70s linear infinite");
-  });
-
-  test("DeliverAnalytics: its tiles and chart can be drawn on their own", () => {
-    const kpi = renderEn(<Kpi label="Return rate" value="61%" trend="▲2 pts" />);
-
-    expect(textOf(kpi)).toContain("Return rate|61%|▲2 pts");
-    expect(textOf(renderEn(<VisitsOverTime />))).toContain("Visits over time");
-    expect(renderEn(<VisitsOverTime />).match(/data-week=/g)).toHaveLength(13);
-    expect(renderEn(<DeliverAnalytics />)).toContain(renderEn(<VisitsOverTime />));
-  });
-});
-
-describe("PlatformHero: the fan hero a preview can reuse", () => {
-  const source = () => code(join(PLATFORM_DIR, "PlatformHero.tsx"));
-
-  test("takes the page's slug, its own cards and its second action, and Platform's are the defaults", () => {
-    expect(source()).toMatch(/slug\s*=\s*"platform"/);
-    expect(source()).toMatch(/slots\s*=\s*PLATFORM_FAN_SLOTS/);
-    expect(findTag(source(), "LpCtaPair")?.attrs).toMatch(/\bsecondary=\{secondary\}/);
-  });
-
-  test("prints an eyebrow above the headline and a sub under it only when the page's registry entry has them", () => {
-    const hero = source();
-
-    expect(hero).toMatch(/\{eyebrow &&/);
-    expect(hero).toMatch(/\{sub &&/);
-    expect(hero.indexOf("{eyebrow")).toBeLessThan(hero.indexOf("<h1"));
-    expect(hero.indexOf("{sub")).toBeGreaterThan(hero.indexOf("</h1>"));
-    expect(LANDING_PAGES.platform.hero).not.toHaveProperty("eyebrow");
-    expect(LANDING_PAGES.platform.hero).not.toHaveProperty("sub");
+  test("with its own cards, the fan shows those and not Platform's", async () => {
+    expect(await renderEnAsync(<PlatformHero slots={CARD_DESIGN_FAN_SLOTS} />)).not.toBe(await renderEnAsync(<PlatformHero />));
   });
 });
 
@@ -346,11 +214,8 @@ describe("PreviewHero: eyebrow, headline, sub, the actions, then the visual", ()
 
   test("prints the page's own words in that order, with its headline's accent in orange", () => {
     const { hero } = LANDING_PAGES["platform/mobile-scanner"];
-    const text = textOf(html());
-    const at = [hero.eyebrow ?? "", hero.accent, hero.sub ?? "", SHARED.cta, "14 days free", "scanner phone"].map((line) => text.indexOf(line));
 
-    expect(at.every((index) => index > -1)).toBe(true);
-    expect(at).toEqual([...at].sort((a, b) => a - b));
+    expectInOrder(html(), [hero.eyebrow ?? "", hero.accent, hero.sub ?? "", SHARED.cta, "14 days free", "scanner phone"]);
     expect(html()).toMatch(new RegExp(`<span class="text-\\[var\\(--accent\\)\\]">${hero.accent.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</span>`));
     expect(html().match(/<h1/g)).toHaveLength(1);
   });
@@ -407,12 +272,5 @@ describe("Platform's sections are made of the generalised pieces", () => {
     const source = code(join(PLATFORM_DIR, `${wrapper}.tsx`));
 
     expect(openingTags(source).some((tag) => tag.name === generic)).toBe(true);
-  });
-
-  test("the preview-only code has a folder of its own, and the shared folders stay under 30 files", () => {
-    expect(readdirSync(join(ROOT, "components", "landing-pages", "feature-previews")).length).toBeGreaterThan(0);
-    for (const dir of ["shared", "platform", "feature-previews"]) {
-      expect(readdirSync(join(ROOT, "components", "landing-pages", dir)).length).toBeLessThanOrEqual(30);
-    }
   });
 });

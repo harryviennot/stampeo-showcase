@@ -50,6 +50,12 @@ function catalogCell(row: string, facts: PlanFacts): string {
 
 const BROADCASTS: Gate = (facts) => facts.broadcastsPerMonth !== 0;
 const ANALYTICS_CHARTS: Gate = (facts) => facts.analyticsCharts;
+/** The Analytics page's visits, new customers and return rate: "basic" analytics, which Pro extends with cohorts. */
+const BASIC_ANALYTICS: Gate = (facts) => facts.analytics === "basic" || facts.analytics === "advanced";
+/** A broadcast sent at a date and time of the owner's choosing. */
+const SCHEDULED_BROADCASTS: Gate = (facts) => facts.scheduledBroadcasts;
+/** A feature on every plan that has no field of its own: scanning is unlimited on each one, whoever scans. */
+const UNLIMITED_SCANS = pricingRow("unlimitedScans");
 /** Your own text on the stamp, milestone and reward messages: "Custom text", where Starter has the predefined ones. */
 const CUSTOM_MESSAGE_TEXT: Gate = (facts) => catalogCell("stampMilestoneReward", facts) !== "Predefined";
 /** Custom stamp-count milestones ("Halfway there!"): none on Starter. */
@@ -95,11 +101,58 @@ const UNGATED: Record<string, string> = {
   "OUTCOMES.regulars": "customer groups are part of the basic Analytics every plan has (analytics.basic)",
 };
 
-/** Lines of the copy that name a plan in a sentence rather than as a chip, and the fact that decides them. */
-const PLAN_LINES: Record<string, Gate> = {
-  "SHARED.broadcastPlans": BROADCASTS,
-  "SHARED.dashboardPlans": ANALYTICS_CHARTS,
-  "FEATURES.analytics.planLine": ANALYTICS_CHARTS,
+/** What a sentence says about a plan: the words it uses for the plans, and the fact that decides them. */
+interface PlanClaim {
+  says: string;
+  gate: Gate;
+}
+
+const claim = (says: string, gate: Gate): PlanClaim => ({ says, gate });
+
+/**
+ * Lines of the copy that name a plan in a sentence rather than as a chip, each
+ * with what it says about the plans. A line may say several things.
+ */
+const PLAN_LINES: Record<string, PlanClaim[]> = {
+  "SHARED.broadcastPlans": [claim("Growth and Pro", BROADCASTS)],
+  "SHARED.dashboardPlans": [claim("Growth and Pro", ANALYTICS_CHARTS)],
+  "FEATURES.analytics.planLine": [claim("Growth and Pro", ANALYTICS_CHARTS)],
+  "ANALYTICS_PREVIEW.glance.lead": [claim("every plan", BASIC_ANALYTICS)],
+  "ANALYTICS_PREVIEW.questions.closer": [claim("Growth and Pro", ANALYTICS_CHARTS)],
+  "ANALYTICS_PREVIEW.band.sub": [claim("every plan", BASIC_ANALYTICS)],
+  "MOBILE_SCANNER_PREVIEW.ways.lead": [claim("every plan", UNLIMITED_SCANS)],
+  "PUSH_NOTIFICATIONS_PREVIEW.wording.lead": [
+    claim("every plan", pricingRow("stampMilestoneReward")),
+    claim("Growth and Pro", CUSTOM_MESSAGE_TEXT),
+  ],
+  "PUSH_NOTIFICATIONS_PREVIEW.band.sub": [claim("every plan", pricingRow("stampMilestoneReward"))],
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.lead": [claim("Growth and Pro", BROADCASTS)],
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.how.cells[1].body": [claim("Pro", ADVANCED_TARGETING)],
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.how.cells[2].body": [claim("Pro", SCHEDULED_BROADCASTS)],
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer": [
+    claim("Growth", (facts) => typeof facts.broadcastsPerMonth === "number" && facts.broadcastsPerMonth > 0),
+    claim("Pro", (facts) => facts.broadcastsPerMonth === "unlimited"),
+  ],
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[2].answer": [
+    claim("Pro", SCHEDULED_BROADCASTS),
+    claim("Growth", (facts) => BROADCASTS(facts) && !SCHEDULED_BROADCASTS(facts)),
+  ],
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[3].answer": [
+    claim("Growth", (facts) => BROADCASTS(facts) && !ADVANCED_TARGETING(facts)),
+    claim("Pro", ADVANCED_TARGETING),
+  ],
+};
+
+/**
+ * Lines of the previews that name a plan and are not a sentence about what a plan has: the figures' labels
+ * (checked against `PLAN_FACTS` in `copy.test.ts`) and the plans table's column heads.
+ */
+const PLAN_NAMES_ELSEWHERE: Record<string, string> = {
+  "ANALYTICS_PREVIEW.numbers.figures[0].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
+  "ANALYTICS_PREVIEW.numbers.figures[1].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
+  "ANALYTICS_PREVIEW.numbers.figures[2].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells[0].title": "the plans table's column heads",
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells[1].title": "the plans table's column heads",
 };
 
 /** How `availability` words a chip: lower case, as the chips are written with a capital. */
@@ -114,8 +167,8 @@ const chipAt = (path: string): string => {
 
 const lineAt = (path: string): string => ALL.find((line) => line.path === path)?.value ?? "";
 
-/** The plan a sentence names: the label at its end ("Growth and Pro", "Pro"), or the whole line when it is one. */
-const planIn = (text: string) => /(Every plan|Growth and Pro|Pro)\.?$/.exec(text)?.[1] ?? "";
+/** A plan, or every plan, named in a line's words. */
+const PLAN_WORDS = /\b(?:Starter|Growth|Pro|every plan)\b/i;
 
 describe("every chip is what PLAN_FACTS says (AC20)", () => {
   test("the chips of the copy are all in the table, so a new chip fails here until its fact is named", () => {
@@ -132,12 +185,24 @@ describe("every chip is what PLAN_FACTS says (AC20)", () => {
     expect({ path, chip: chipAt(path) }).toEqual({ path, chip: "Every plan" });
   });
 
-  test.each(Object.entries(PLAN_LINES))("the plans %s names", (path, gate) => {
-    expect({ path, plan: label(planIn(lineAt(path))) }).toEqual({ path, plan: label(availability(gate)) });
+  test.each(Object.entries(PLAN_LINES).flatMap(([path, claims]) => claims.map(({ says, gate }) => [path, says, gate] as const)))(
+    "%s says %s, which is what PLAN_FACTS gives it",
+    (path, says, gate) => {
+      expect({ path, uses: new RegExp(`\\b${says}\\b`, "i").test(lineAt(path)) }).toEqual({ path, uses: true });
+      expect({ path, plan: label(says) }).toEqual({ path, plan: label(availability(gate)) });
+    },
+  );
+
+  test("every sentence of the previews that names a plan is one of these lines, so a plan change fails here", () => {
+    const naming = ALL.filter(({ path, value }) => inPreviews(path) && !path.endsWith(".plan") && PLAN_WORDS.test(value)).map(({ path }) => path);
+
+    expect(naming.filter((path) => !(path in PLAN_LINES) && !(path in PLAN_NAMES_ELSEWHERE))).toEqual([]);
+    expect(Object.keys(PLAN_LINES).filter((path) => lineAt(path) === "")).toEqual([]);
+    expect(Object.keys(PLAN_NAMES_ELSEWHERE).filter((path) => !naming.includes(path))).toEqual([]);
   });
 });
 
-describe("a broadcast is labelled with the plans that have broadcasts (STA-549 flips this)", () => {
+describe("a broadcast is labelled with the plans that have broadcasts", () => {
   /**
    * The Platform dashboard's broadcast fact carries no chip on purpose (Harry, 13 Nov 2026): broadcasts open to
    * every plan right after these pages ship, so it is listed unbadged.
@@ -147,7 +212,7 @@ describe("a broadcast is labelled with the plans that have broadcasts (STA-549 f
   /**
    * The previews: the broadcasts preview states the plans of the whole page (its top-level `plan`, which every
    * broadcast mention under it inherits), and the other four name the feature only in the link to it, with no
-   * badge, for the same STA-549 reason.
+   * badge, for the same reason.
    */
   const PREVIEW_NO_CHIP = ["PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
 

@@ -10,18 +10,28 @@ import { BlogCard } from "@/components/blog/BlogCard";
 import { WalletCard } from "@/components/card/WalletCard";
 import { LiveActivityFeed } from "@/components/features/analytics/LiveActivityFeed";
 import { AnnotatedWalletCard } from "@/components/features/design-de-carte/AnnotatedWalletCard";
+import { IconLibrarySection, IconMarquee } from "@/components/features/design-de-carte/IconLibrarySection";
 import { CardDesignPlayground } from "@/components/features/design-de-carte/CardDesignPlayground";
 import { CompactPlayground } from "@/components/features/design-de-carte/CompactPlayground";
-import { PointsControl } from "@/components/features/design-de-carte/playground/controls";
-import { STRIP_STYLES, type Playground } from "@/components/features/design-de-carte/playground/usePlayground";
 import { NotificationSequenceDemo } from "@/components/features/notifications-push/NotificationSequenceDemo";
+import { DeliverAnalytics, Kpi, VisitsOverTime } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
+import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
+import { NumberFigures } from "@/components/landing-pages/platform/NumberFigures";
+import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
+import { stampIcons } from "@/components/onboarding/StampIconPicker";
 import { CTAButton } from "@/components/ui/CTAButton";
+import { FAQList } from "@/components/ui/FAQList";
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { Segmented } from "@/components/ui/Segmented";
 import { isStill } from "@/hooks/usePrefersReducedMotion";
+import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import type { BlogPostMeta } from "../blog/types";
 import { loadCatalog } from "../testing/catalogs";
 import { ROOT, code, findTag } from "../testing/jsx-source";
-import { renderEn as render, textOf } from "../testing/render-en";
+import { expectInOrder, renderEn as render, textOf } from "../testing/render-en";
+import { renderAs } from "../testing/visitor-seams";
+import { SHARED } from "./copy/shared";
 
 const MESSAGES = loadCatalog("en");
 
@@ -59,26 +69,26 @@ describe("WalletCard headerLabel", () => {
   });
 });
 
-describe("NotificationSequenceDemo moments and design", () => {
-  const moments = [
-    {
-      key: "stamp",
-      title: "Stamp collected",
-      description: "Sent on every scan.",
-      planLabel: "Every plan",
-      stamps: 5,
-      banner: { appName: "Aurevo", title: "Stamp collected! You have 5 of 8 stamps." },
-    },
-    {
-      key: "broadcast",
-      title: "Broadcast",
-      description: "Your own message.",
-      planLabel: "Growth and Pro",
-      stamps: 5,
-      banner: { appName: "Aurevo", title: "Fresh rolls are out." },
-    },
-  ];
+const MOMENTS = [
+  {
+    key: "stamp",
+    title: "Stamp collected",
+    description: "Sent on every scan.",
+    planLabel: "Every plan",
+    stamps: 5,
+    banner: { appName: "Aurevo", title: "Stamp collected! You have 5 of 8 stamps." },
+  },
+  {
+    key: "broadcast",
+    title: "Broadcast",
+    description: "Your own message.",
+    planLabel: "Growth and Pro",
+    stamps: 5,
+    banner: { appName: "Aurevo", title: "Fresh rolls are out." },
+  },
+];
 
+describe("NotificationSequenceDemo moments and design", () => {
   test("without moments it is the feature page's demo, sent by Stampeo", () => {
     const html = textOf(render(<NotificationSequenceDemo />));
 
@@ -87,7 +97,7 @@ describe("NotificationSequenceDemo moments and design", () => {
   });
 
   test("with moments it lists them with their plans, and the phone shows the first banner from its sender", () => {
-    const html = textOf(render(<NotificationSequenceDemo moments={moments} design={{ organization_name: "Aurevo" }} />));
+    const html = textOf(render(<NotificationSequenceDemo moments={MOMENTS} design={{ organization_name: "Aurevo" }} />));
 
     expect(html).toContain("Stamp collected");
     expect(html).toContain("Growth and Pro");
@@ -99,18 +109,19 @@ describe("NotificationSequenceDemo moments and design", () => {
   });
 });
 
-// The reader's setting is read in the browser only, so the demo's rest is the same selector as the feed's.
 describe("NotificationSequenceDemo stillWhenReduced", () => {
-  const source = () => code(join(ROOT, "components/features/notifications-push/NotificationSequenceDemo.tsx"));
+  /** The thin countdown bar under the active moment: what shows the demo is about to move on. */
+  const countdowns = (html: string) => html.match(/h-\[2px\] rounded-full bg-gray-100/g)?.length ?? 0;
 
-  test("rests when the selector says so, and no other way", () => {
-    expect(source()).toMatch(/const still = isStill\(stillWhenReduced, reduced\)/);
-    expect(source()).not.toMatch(/stillWhenReduced\s*&&\s*reduced/);
-  });
+  test.each([
+    ["a demo asked to stand still, for a reader who asks for less motion", true, true, 0],
+    ["a demo asked to stand still, for a reader who allows motion", true, false, 1],
+    ["a demo not asked, for a reader who asks for less motion", false, true, 1],
+  ])("%s", (_who, stillWhenReduced, reducedMotion, bars) => {
+    const html = renderAs({ reducedMotion }, () => render(<NotificationSequenceDemo moments={MOMENTS} stillWhenReduced={stillWhenReduced} />));
 
-  test("a demo that rests never starts the timer that moves to the next moment, and shows no countdown for it", () => {
-    expect(source()).toMatch(/if \(isPaused \|\| still\) return;[\s\S]*setInterval/);
-    expect(source()).toMatch(/isActive && !isPaused && !still &&/);
+    expect(countdowns(html)).toBe(bars);
+    expect(html.match(/<button\b/g)).toHaveLength(MOMENTS.length);
   });
 });
 
@@ -155,21 +166,20 @@ describe("CompactPlayground touchTargets", () => {
     expect(slider(html)).not.toContain("h-11");
   });
 
-  test("the points card's strip toggle and balance slider are 44px as well, since the same panel shows them once a visitor switches to points", () => {
-    // Points mode is state of the page; the control is rendered on its own with the playground's values.
-    const p = {
-      t: (key: string) => key,
-      stripStyleLabels: {},
-      stripStyle: STRIP_STYLES[0],
-      setStripStyle: () => {},
-      balance: 40,
-      setBalance: () => {},
-    } as unknown as Playground;
+  test("a visitor who switches to points keeps the 44px controls: the strip toggle's tabs and the balance slider", () => {
+    const points = renderAs({ program: "points" }, () => render(<CompactPlayground touchTargets />));
+    const tabs = points.match(/<button class="flex-1 rounded-lg[^"]*"/g) ?? [];
 
-    expect(firstTabs(render(<PointsControl p={p} touch />))).toContain("h-11");
-    expect(slider(render(<PointsControl p={p} touch />))).toContain("h-11");
-    expect(firstTabs(render(<PointsControl p={p} />))).not.toContain("h-11");
-    expect(slider(render(<PointsControl p={p} />))).not.toContain("h-11");
+    expect(tabs.length).toBeGreaterThan(2);
+    expect(tabs.filter((tab) => !tab.includes("h-11"))).toEqual([]);
+    expect(slider(points)).toContain("h-11");
+  });
+
+  test("and left out, points mode has the compact toggle and slider too", () => {
+    const points = renderAs({ program: "points" }, () => render(<CompactPlayground />));
+
+    expect(points).not.toMatch(/<button class="flex-1 rounded-lg[^"]*h-11/);
+    expect(slider(points)).not.toContain("h-11");
   });
 
   test("the how-it-works step, which has always shown the compact one, does not ask", () => {
@@ -180,11 +190,134 @@ describe("CompactPlayground touchTargets", () => {
   });
 });
 
-describe("AnnotatedWalletCard toggleSize", () => {
-  test("the stamps and points switch is 44px tall when asked, and the compact one when not", () => {
+describe("AnnotatedWalletCard", () => {
+  test("toggleSize makes the stamps and points switch 44px tall when asked, and the compact one when not", () => {
     expect(render(<AnnotatedWalletCard toggleSize="lg" />)).toContain("flex-1 rounded-lg h-11 px-4 text-[15px]");
+    expect(render(<AnnotatedWalletCard />)).toContain("flex-1 rounded-lg px-3 py-1.5 text-sm");
     expect(render(<AnnotatedWalletCard />)).not.toContain("h-11");
-    expect(render(<AnnotatedWalletCard toggleSize="md" />)).toBe(render(<AnnotatedWalletCard />));
+  });
+
+  test("a page can bring its own heading and section band", () => {
+    const html = render(<AnnotatedWalletCard heading={<h2>Every part of the card is yours.</h2>} sectionClassName="py-10 bg-white" />);
+
+    expect(html).toContain("Every part of the card is yours.");
+    expect(html).toContain('class="py-10 bg-white"');
+    expect(html).not.toContain("py-16 sm:py-24 bg-[var(--blog-bg)]");
+  });
+});
+
+describe("IconMarquee", () => {
+  const icons = stampIcons.slice(0, 4).map((icon) => icon.id);
+  /** The classes of the element that carries the drifting animation. */
+  const track = (html: string) => html.match(/<div class="([^"]*)" style="animation:marquee-scroll[^"]*"/)?.[1] ?? "";
+
+  test("a row of icon tiles drifts, from the ids it is given", () => {
+    const html = render(<IconMarquee icons={icons} colorOffset={0} duration={70} />);
+
+    expect(html.match(/<svg/g)).toHaveLength(icons.length * 2);
+    expect(html).toContain("marquee-scroll 70s linear infinite");
+  });
+
+  test("stillWhenReduced: the track that drifts stops for a reader who asks for less motion when the row is asked to", () => {
+    expect(track(render(<IconMarquee icons={icons} colorOffset={0} duration={70} stillWhenReduced />))).toContain("motion-reduce:animate-none!");
+  });
+
+  test("left out, the row drifts for every reader, and the live icon library's rows do", () => {
+    expect(track(render(<IconMarquee icons={icons} colorOffset={0} duration={70} />))).not.toContain("animate-none");
+    expect(render(<IconLibrarySection />)).not.toContain("animate-none");
+  });
+});
+
+describe("what a page can ask of Platform's pieces", () => {
+  test("LpCtaPair: a second action of the page's own, or none", () => {
+    const own = render(<LpCtaPair location="hero" secondary={{ label: "Try the designer", href: "#playground" }} />, { us: true });
+    const none = render(<LpCtaPair location="hero" secondary={null} />, { us: true });
+
+    expect(own).toMatch(/<a [^>]*href="#playground"[^>]*>/);
+    expect(own).toContain("h-[52px]");
+    expect(textOf(own)).toContain("Try the designer");
+    expect(textOf(own)).not.toContain(SHARED.demoLink);
+    expect(none).not.toContain('href="#');
+    expect(textOf(none)).toContain(SHARED.cta);
+  });
+
+  test("LpAccentBand: the page's own headline, accent word and line", () => {
+    const html = render(
+      <LpAccentBand copy={{ title: "Fill your next slow day.", accent: "slow day.", sub: "Start your free trial." }} />,
+      { us: true },
+    );
+
+    expect(html).toMatch(/<h2[^>]*>[^<]*<span class="text-\[var\(--accent\)\]">slow day\.<\/span><\/h2>/);
+    expect(textOf(html)).toContain("Start your free trial.");
+    expect(textOf(html)).not.toContain("Launch your loyalty card");
+  });
+
+  test("NumberFigures: a source line under the row when it is given, and none when it is not", () => {
+    const items = [{ value: "88%", label: "join" }, { value: "95%", label: "stay" }];
+    const sourced = render(<NumberFigures items={items} source="Stampeo data, 86 businesses, February to October 2026" />);
+
+    expect(textOf(sourced)).toContain("Stampeo data, 86 businesses, February to October 2026");
+    expect(sourced.indexOf("Stampeo data")).toBeGreaterThan(sourced.lastIndexOf("</ul>") - 1);
+    expect(render(<NumberFigures items={items} />)).not.toContain("Stampeo data");
+  });
+
+  describe("LpFaq", () => {
+    const items = [{ question: "Can I change it?", answer: "Anytime." }];
+    const faq = (eyebrow?: string) => render(<LpFaq faq={{ eyebrow, title: "Card styles, answered", items }} />, { us: true });
+
+    test("a page's own questions under its own title, still ending on the contact line", () => {
+      const text = textOf(faq());
+
+      expect(text).toContain("Card styles, answered");
+      expect(text).toContain("Can I change it?");
+      expect(text).toContain("Anytime.");
+      expect(text).not.toContain(SHARED.faq.items[0].question);
+      expect(text).toContain(SHARED.faq.contact.link);
+    });
+
+    test("an eyebrow gives it Platform's centred header, then the table of questions and the contact line in the same narrow column", () => {
+      const html = faq("FAQ");
+
+      expectInOrder(html, ["FAQ", "Card styles, answered", "Can I change it?", SHARED.faq.contact.link]);
+      expect(html).toContain("mx-auto text-center");
+      expect(html).toMatch(/<section[^>]*data-landing-section="faq"/);
+      expect(html).toContain("max-w-[840px]");
+      expect(html).toContain("min-h-14");
+    });
+
+    test("the table opens as many questions as it is told to, and the rest stay closed", () => {
+      const html = render(<FAQList table items={[...items, { question: "Second?", answer: "Yes." }]} defaultOpenCount={1} />);
+
+      expect(html.match(/<details\b[^>]*\bopen\b/g)).toHaveLength(1);
+      expect(html.match(/<details\b/g)).toHaveLength(2);
+    });
+
+    test("without an eyebrow the title stays left-aligned with no label above it, over the inked cards", () => {
+      const html = faq();
+
+      expect(html).not.toContain("text-center");
+      expect(html).not.toContain("tracking-[0.2em]");
+      expect(html).toContain("blog-card-3d");
+      expect(html).not.toContain("min-h-14");
+    });
+  });
+
+  test("ScannerLoop: `still` shows the finished stamp as a picture from the first paint", () => {
+    const files = scannerLoopFiles("en");
+    const frame = (html: string) => html.match(/<img\b[^>]*\bsrc="\/videos\/scanner-loop\/[^"]*"[^>]*>/)?.[0] ?? "";
+
+    expect(frame(render(<ScannerLoop still />))).toContain(encodeURIComponent(files.still).replaceAll("%2F", "/"));
+    expect(frame(render(<ScannerLoop />))).toContain(files.first);
+    expect(render(<ScannerLoop still />)).not.toContain("<video");
+  });
+
+  test("DeliverAnalytics: its tiles and chart can be drawn on their own", () => {
+    const kpi = render(<Kpi label="Return rate" value="61%" trend="▲2 pts" />);
+
+    expect(textOf(kpi)).toContain("Return rate|61%|▲2 pts");
+    expect(textOf(render(<VisitsOverTime />))).toContain("Visits over time");
+    expect(render(<VisitsOverTime />).match(/data-week=/g)).toHaveLength(13);
+    expect(render(<DeliverAnalytics />)).toContain(render(<VisitsOverTime />));
   });
 });
 
@@ -207,10 +340,20 @@ describe("LiveActivityFeed cardOnly", () => {
     expect(textOf(html)).toContain(feed.sectionTitle);
   });
 
-  test("soft leaves the fifth row its bottom padding: the body is five 48px rows and both paddings tall, where the default is 16px shorter", () => {
+  test("softFrame swaps the inked 3D border for a light ring, and changes nothing else", () => {
+    const soft = render(<LiveActivityFeed cardOnly softFrame />);
+    const plain = render(<LiveActivityFeed cardOnly />);
+
+    expect(soft).toContain("ring-1 ring-black/[0.05]");
+    expect(soft).not.toContain("blog-card-3d");
+    expect(plain).toContain("blog-card-3d");
+    expect(soft.replace("rounded-2xl bg-white overflow-hidden ring-1 ring-black/[0.05]", "blog-card-3d rounded-2xl bg-white overflow-hidden")).toBe(plain);
+  });
+
+  test("roomBelow leaves the fifth row its bottom padding: the body is five 48px rows and both paddings tall, where the default is 16px shorter", () => {
     const body = (node: Parameters<typeof render>[0]) => Number(render(node).match(/class="p-4 overflow-hidden" style="height:(\d+)px/)?.[1]);
 
-    expect(body(<LiveActivityFeed cardOnly soft />)).toBe(5 * 48 + 32);
+    expect(body(<LiveActivityFeed cardOnly roomBelow />)).toBe(5 * 48 + 32);
     expect(body(<LiveActivityFeed cardOnly />)).toBe(5 * 48 + 16);
     expect(body(<LiveActivityFeed />)).toBe(5 * 48 + 16);
   });
