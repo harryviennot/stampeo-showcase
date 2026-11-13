@@ -19,6 +19,7 @@ export function CounterSection() {
     <LpSection section="counter" eyebrow={eyebrow} title={title} lead={lead} align="center">
       <HoverRows
         items={rows}
+        stackOnPhone={288}
         visuals={{
           stamps: <StampsMini />,
           points: <PointsMini />,

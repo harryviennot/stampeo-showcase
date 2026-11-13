@@ -27,6 +27,7 @@ import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { stampIcons } from "@/components/onboarding/StampIconPicker";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { ROOT, code, findTag, openingTags } from "../../testing/jsx-source";
+import { stackZooms } from "../../testing/stacked-rows";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
 import { renderEn, textOf } from "../../testing/render-en";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
@@ -121,12 +122,48 @@ describe("HoverRows: rows that open on hover, focus or tap, all open on the serv
     expect(source).not.toContain("IntersectionObserver");
   });
 
+  test("a row's picture sits in a 128px column beside its words on a phone, as it did, unless the rows are asked to stack", () => {
+    const plain = renderEn(<HoverRows items={ITEMS} visuals={VISUALS} />);
+
+    expect(renderEn(<HoverRows items={ITEMS} visuals={VISUALS} stackOnPhone={undefined} />)).toBe(plain);
+    expect(plain).toContain("grid-cols-[128px_1fr]");
+    expect(plain).not.toMatch(/--stack-zoom|grid-cols-1\b/);
+  });
+
+  test("stacked, each picture goes under its row's words, centred and zoomed up to the width asked for; from lg the row is as before", () => {
+    const html = renderEn(<HoverRows items={ITEMS} visuals={VISUALS} stackOnPhone={288} />);
+    const picture = html.match(/<div class="([^"]*)" style="--stack-zoom:2\.25"><i>stamps mini<\/i>/);
+
+    expect(stackZooms(html)).toEqual([2.25, 2.25]);
+    expect(html).not.toContain("grid-cols-[128px_1fr]");
+    expect(html).toMatch(/class="grid grid-cols-1 [^"]*lg:grid-cols-\[1fr_240px\] lg:gap-12 lg:py-10 lg:pr-24 lg:pl-12"/);
+    expect(picture?.[1]).toBe("order-2 flex justify-center max-lg:[zoom:var(--stack-zoom)]");
+    expect(textOf(html).indexOf("stamps mini")).toBeLessThan(textOf(html).indexOf("Add one, or several."));
+    expect(html.match(/data-open="true"/g)).toHaveLength(2);
+  });
+
   test("Platform's program rows are these rows: its tests keep the helpers they import from there", () => {
     expect(ProgramTypeRowsModule.allRowsOpen).toBe(allRowsOpen);
     expect(ProgramTypeRowsModule.hoverIntent).toBe(hoverIntent);
     expect(ProgramTypeRowsModule.HOVER_INTENT_MS).toBe(HOVER_INTENT_MS);
     expect(allRowsOpen({ wide: false, calm: false })).toBe(true);
     expect(allRowsOpen({ wide: true, calm: false })).toBe(false);
+  });
+});
+
+describe("HoverRows stackOnPhone: only the rows of dense pictures ask for it", () => {
+  const PREVIEWS = join(COMPONENTS_DIR, "feature-previews");
+
+  test.each([
+    ["the analytics questions", true, join(PREVIEWS, "analytics", "QuestionsSection.tsx")],
+    ["the scanner counter", true, join(PREVIEWS, "mobile-scanner", "CounterSection.tsx")],
+    ["the campaign ideas", true, join(PREVIEWS, "promotional-campaigns", "IdeasSection.tsx")],
+    ["the card design stamp rows", false, join(PREVIEWS, "card-design", "StampStyleRows.tsx")],
+    ["Platform's program rows", false, join(PLATFORM_DIR, "ProgramTypeRows.tsx")],
+  ])("%s: stacks on a phone is %p", (_rows, stacks, file) => {
+    const attrs = findTag(code(file), "HoverRows")?.attrs ?? "";
+
+    expect(/(?:^|\s)stackOnPhone(?![\w-])/.test(attrs)).toBe(stacks);
   });
 });
 

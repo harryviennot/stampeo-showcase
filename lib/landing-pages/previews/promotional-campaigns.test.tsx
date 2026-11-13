@@ -16,6 +16,7 @@ import { PLAN_FACTS } from "@/lib/plans/plan-facts";
 import { code, findTag, literalAttr, openingTags } from "../../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile, renderedSections } from "../../testing/landing-pages-source";
 import { renderEn, textOf } from "../../testing/render-en";
+import { stackZooms } from "../../testing/stacked-rows";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "../copy/previews/promotional-campaigns";
 import { SAMPLE_BUSINESS, SHARED } from "../copy/shared";
 import { LANDING_PAGES } from "../pages";
@@ -145,6 +146,15 @@ describe("ideas: give them a reason to come in today", () => {
       expect(labels[index]).toContain(row.banner.body);
     });
     expect(textOf(html())).toContain("Quiet afternoon? Your second coffee is half price until 5pm.");
+  });
+
+  test("on a phone each notification goes under its words, printed at least as large as it is drawn", () => {
+    const zooms = stackZooms(html());
+    const narrow = [...html().matchAll(/--narrow-w:(\d+)px/g)].map((match) => Number(match[1]));
+    const drawn = [...html().matchAll(/<div class="origin-top-left[^"]*" style="width:(\d+)px/g)].map((match) => Number(match[1]));
+
+    expect(zooms).toHaveLength(COPY.ideas.rows.length);
+    zooms.forEach((zoom, row) => expect((narrow[row] * zoom) / drawn[row]).toBeGreaterThanOrEqual(1));
   });
 
   test("only the two rows that need Pro's targeting say Pro", () => {

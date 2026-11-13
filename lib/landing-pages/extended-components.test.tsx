@@ -206,6 +206,14 @@ describe("LiveActivityFeed cardOnly", () => {
     expect(html).toContain("<section");
     expect(textOf(html)).toContain(feed.sectionTitle);
   });
+
+  test("soft leaves the fifth row its bottom padding: the body is five 48px rows and both paddings tall, where the default is 16px shorter", () => {
+    const body = (node: Parameters<typeof render>[0]) => Number(render(node).match(/class="p-4 overflow-hidden" style="height:(\d+)px/)?.[1]);
+
+    expect(body(<LiveActivityFeed cardOnly soft />)).toBe(5 * 48 + 32);
+    expect(body(<LiveActivityFeed cardOnly />)).toBe(5 * 48 + 16);
+    expect(body(<LiveActivityFeed />)).toBe(5 * 48 + 16);
+  });
 });
 
 describe("BlogCard detail", () => {

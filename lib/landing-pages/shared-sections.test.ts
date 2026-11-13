@@ -550,7 +550,7 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("NotificationSequenceDemo", "features/notifications-push"), ["moments", "design", "phoneClassName", "fullCard", "stillWhenReduced"]],
     [...component("NotificationBanner", "features/notifications-push"), ["icon"]],
     [...component("CardStyleGallery", "features/design-de-carte"), ["showCta", "heading", "sectionClassName"]],
-    [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced"]],
+    [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced", "soft"]],
     [...component("QRCodeSkeleton", "ui"), ["animated"]],
     [...component("Segmented", "ui"), ["size"]],
     [...component("WalletCard", "card"), ["headerLabel"]],

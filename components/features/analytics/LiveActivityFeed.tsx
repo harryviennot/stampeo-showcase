@@ -51,7 +51,7 @@ export function LiveActivityFeed({
   cardOnly?: boolean;
   /** Stops the feed for a reader who asks for less motion: a full list that stays put. */
   stillWhenReduced?: boolean;
-  /** A light ring in place of the inked 3D border, for a card that sits on a white surface. */
+  /** A light ring in place of the inked 3D border, for a card that sits on a white surface, and a body tall enough for the fifth row's bottom padding. */
   soft?: boolean;
 }>) {
   const t = useTranslations("features.analytiques.custom.activityFeed");
@@ -118,7 +118,7 @@ export function LiveActivityFeed({
       </div>
       <div
         className="p-4 overflow-hidden"
-        style={{ height: MAX_VISIBLE * ROW_HEIGHT + 16 }}
+        style={{ height: MAX_VISIBLE * ROW_HEIGHT + (soft ? 32 : 16) }}
       >
         <AnimatePresence initial={false}>
           {events.slice(0, MAX_VISIBLE).map((event) => (

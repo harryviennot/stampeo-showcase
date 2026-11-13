@@ -8,9 +8,9 @@ import { LockScreenSlice } from "../push-notifications/LockScreenSlice";
 type Key = (typeof COPY.ideas.rows)[number]["key"];
 
 /**
- * A row's notification is drawn 200px wide, shown at that size from `lg` and shrunk to 128px
- * beside the words on a phone, where its message still reads at about 9px. The height fits the
- * longest message.
+ * A row's notification is drawn 200px wide and shown at that size from `lg`. On a phone it is
+ * 128px wide and the stacked row zooms it to 216px under the words, where its message prints at
+ * about 15px. The height fits the longest message.
  */
 const SLICE = { width: 200, height: 124, narrow: 128 };
 
@@ -31,7 +31,7 @@ const VISUALS = Object.fromEntries(
 export function IdeasSection() {
   return (
     <LpSection section="ideas" eyebrow={COPY.ideas.eyebrow} title={COPY.ideas.title} lead={COPY.ideas.lead} align="center">
-      <HoverRows items={COPY.ideas.rows} visuals={VISUALS} />
+      <HoverRows items={COPY.ideas.rows} visuals={VISUALS} stackOnPhone={216} />
     </LpSection>
   );
 }

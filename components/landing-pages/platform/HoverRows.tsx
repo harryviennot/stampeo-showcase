@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { RowCopy } from "@/lib/landing-pages/copy/types";
 import { EYEBROW } from "../shared/LpSection";
@@ -8,6 +8,21 @@ import { PlanChip } from "../shared/PlanChip";
 
 /** How long a mouse rests on a row before the row opens. */
 export const HOVER_INTENT_MS = 90;
+
+/** The width a row's picture is drawn at on a phone, in the column beside the words. */
+const THUMB_WIDTH = 128;
+
+/** The row's grid beside the words on a phone, and under them when the rows stack. */
+const GRID = {
+  beside: "grid grid-cols-[128px_1fr] items-center gap-5 py-4 lg:grid-cols-[1fr_240px] lg:gap-12 lg:py-10 lg:pr-24 lg:pl-12",
+  stacked: "grid grid-cols-1 items-center gap-5 py-5 lg:grid-cols-[1fr_240px] lg:gap-12 lg:py-10 lg:pr-24 lg:pl-12",
+} as const;
+
+/** A row's picture: in the right-hand column from `lg`, and zoomed up under the words on a stacked phone row. */
+const PICTURE = {
+  beside: "flex justify-center lg:order-2",
+  stacked: "order-2 flex justify-center max-lg:[zoom:var(--stack-zoom)]",
+} as const;
 
 /** Every row shows its words on the server, on a phone, and for a reader who asks for less motion. */
 export function allRowsOpen({ wide, calm }: Readonly<{ wide: boolean; calm: boolean }>): boolean {
@@ -49,17 +64,24 @@ function Collapsible({ open, children }: Readonly<{ open: boolean; children: Rea
  * a wide screen that allows motion one row is open at a time: the one a mouse
  * rests on, the one in keyboard focus, or the one tapped. A closed row keeps
  * its title, set a little in, and its picture, so no row changes height. A
- * row's `plan` is a chip under its text; `closer` goes under the list.
+ * row's `plan` is a chip under its text; `closer` goes under the list. On a
+ * phone a picture sits in a 128px column beside the words; `stackOnPhone` puts
+ * it under them instead, zoomed from that thumbnail up to the width given (px),
+ * for pictures with labels too small to read at 128.
  */
 export function HoverRows<Key extends string>({
   items,
   visuals,
   closer,
+  stackOnPhone,
 }: Readonly<{
   items: ReadonlyArray<Pick<RowCopy<Key>, "key" | "eyebrow" | "title" | "body" | "plan">>;
   visuals: Record<Key, ReactNode>;
   closer?: ReactNode;
+  stackOnPhone?: number;
 }>) {
+  const layout = stackOnPhone === undefined ? "beside" : "stacked";
+  const zoom = stackOnPhone === undefined ? undefined : ({ "--stack-zoom": stackOnPhone / THUMB_WIDTH } as CSSProperties);
   const [wide, setWide] = useState(false);
   const calm = usePrefersReducedMotion();
   const allOpen = allRowsOpen({ wide, calm });
@@ -92,8 +114,10 @@ export function HoverRows<Key extends string>({
               onPointerLeave={hover.leave}
               className="relative border-t border-[var(--border)]"
             >
-              <div className="grid grid-cols-[128px_1fr] items-center gap-5 py-4 lg:grid-cols-[1fr_240px] lg:gap-12 lg:py-10 lg:pr-24 lg:pl-12">
-                <div className="flex justify-center lg:order-2">{visuals[item.key]}</div>
+              <div className={GRID[layout]}>
+                <div className={PICTURE[layout]} style={zoom}>
+                  {visuals[item.key]}
+                </div>
                 <div
                   className={`min-w-0 transition-transform duration-300 ease-out motion-reduce:transition-none ${
                     open ? "" : "lg:translate-x-8"

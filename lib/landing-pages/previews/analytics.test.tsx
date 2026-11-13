@@ -22,6 +22,7 @@ import {
   ReturnRateMini,
 } from "@/components/landing-pages/feature-previews/analytics/QuestionMinis";
 import { QuestionsSection } from "@/components/landing-pages/feature-previews/analytics/QuestionsSection";
+import { TILE } from "@/components/landing-pages/feature-previews/analytics/TileFrame";
 import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
 import { PLAN_FACTS } from "@/lib/plans/plan-facts";
 import { MARKETS } from "@/lib/markets";
@@ -30,6 +31,7 @@ import { loadCatalog } from "../../testing/catalogs";
 import { code, findTag, literalAttr, openingTags, read } from "../../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../../testing/landing-pages-source";
 import { textOf } from "../../testing/render-en";
+import { smallestLabelPx, stackZooms } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
 import { OUTCOMES } from "../copy/outcomes";
 import { SHARED } from "../copy/shared";
@@ -164,6 +166,14 @@ describe("questions: four questions an owner asks, each answered by a chart", ()
     expect(rows).toHaveLength(4);
     expect(chips).toEqual([false, true, true, true]);
     expect(rows.every((row) => /role="img"/.test(row))).toBe(true);
+  });
+
+  test("on a phone every chart goes under its words, printed large enough that its smallest label is 11px", async () => {
+    const zooms = stackZooms(await SECTIONS.questions());
+    const smallest = smallestLabelPx(join(FOLDER, "QuestionMinis.tsx"));
+
+    expect(zooms).toHaveLength(COPY.questions.rows.length);
+    for (const zoom of zooms) expect(smallest * zoom * (TILE.narrowTo / TILE.width)).toBeGreaterThanOrEqual(11);
   });
 
   test("under the rows, one line says what Starter gets instead of the charts", async () => {

@@ -13,6 +13,7 @@ import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream } from "react-dom/server";
 import { CounterSection } from "@/components/landing-pages/feature-previews/mobile-scanner/CounterSection";
+import { MINI } from "@/components/landing-pages/feature-previews/mobile-scanner/AppScreen";
 import { PointsMini, RewardsMini, StampsMini } from "@/components/landing-pages/feature-previews/mobile-scanner/CounterMinis";
 import { HowSection } from "@/components/landing-pages/feature-previews/mobile-scanner/HowSection";
 import { JoinCodeMini, LimitMini } from "@/components/landing-pages/feature-previews/mobile-scanner/TeamMinis";
@@ -26,6 +27,7 @@ import { loadCatalog } from "../../testing/catalogs";
 import { code, findTag, literalAttr, openingTags, read } from "../../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../../testing/landing-pages-source";
 import { textOf } from "../../testing/render-en";
+import { smallestLabelPx, stackZooms } from "../../testing/stacked-rows";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { MOBILE_SCANNER_PREVIEW as COPY } from "../copy/previews/mobile-scanner";
 import { SHARED } from "../copy/shared";
@@ -184,6 +186,14 @@ describe("counter: Stamps, Points, Rewards, Levels, each with the app's own scre
 
     expect(rows).toHaveLength(COPY.counter.rows.length);
     for (const row of rows) expect(row).toMatch(/role="img"|<img/);
+  });
+
+  test("on a phone every screen goes under its words, printed large enough that its smallest label is 11px", async () => {
+    const zooms = stackZooms(await SECTIONS.counter());
+    const smallest = smallestLabelPx(join(FOLDER, "CounterMinis.tsx"));
+
+    expect(zooms).toHaveLength(COPY.counter.rows.length);
+    for (const zoom of zooms) expect(smallest * zoom * (MINI.narrowTo / MINI.width)).toBeGreaterThanOrEqual(11);
   });
 
   test("the levels row shows the three level cards the other pages show", async () => {
