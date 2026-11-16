@@ -17,24 +17,25 @@ import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
-import { REWARD_BANNER, SHARED, STAMP_BANNER } from "../copy/shared";
+import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
+import { SHARED, STAMP_BANNER } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
 import { FEATURE_PREVIEWS } from "../preview-nav";
 
 /** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
 const copyKey = (id: string) => id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 
+/** The registry sections that are not headed sections: the page's frame, the FAQ and the demo (headed on their own), and the icons strip (a figure with a label). */
+const NOT_HEADED = ["hero", "faq", "demo", "icons", "final_cta", "related"];
+
 /** Each section of a preview whose copy has an eyebrow and a title: its header. */
 const HEADERS = PREVIEW_SLUGS.flatMap((slug) =>
-  LANDING_PAGES[slug].sections.flatMap((id) => {
+  LANDING_PAGES[slug].sections.filter((id) => !NOT_HEADED.includes(id)).flatMap((id) => {
     const part = (COPY[slug] as Record<string, { eyebrow?: string; title?: string; lead?: string }>)[copyKey(id)];
 
     return part?.eyebrow && part.title ? [[slug, id, part.eyebrow, part.title, part.lead ?? ""] as const] : [];
   }),
 );
-
-/** The registry sections that are not headed sections: the page's frame, the FAQ and the demo (headed on their own), and the icons strip (a figure with a label). */
-const NOT_HEADED = ["hero", "faq", "demo", "icons", "final_cta", "related"];
 
 describe("every section opens on its header", () => {
   test.each(PREVIEW_SLUGS)("%s: every section of the registry but the frame, the FAQ, the demo and the icons strip has a header to check", (slug) => {
@@ -126,10 +127,11 @@ describe("the hero each page opens with (AC1)", () => {
     expect(pictures(html)).toEqual([expect.stringMatching(/Scanner app adding a stamp/)]);
   });
 
-  test("notifications show Aurevo's stamp banner and reward banner from the first paint", async () => {
-    const text = textOf(await hero("platform/push-notifications"));
+  test("notifications show Aurevo's stamp notification from the first paint, as the one picture the copy names", async () => {
+    const html = await hero("platform/push-notifications");
 
-    expectInOrder(text, ["Aurevo", STAMP_BANNER.body, "Aurevo", REWARD_BANNER.body]);
+    expectInOrder(textOf(html), ["Aurevo", STAMP_BANNER.body]);
+    expect(pictures(html)).toEqual([PUSH_NOTIFICATIONS_PREVIEW.hero.alt]);
   });
 
   test("geolocation says it is coming soon in its sub, over a single trial button and no demo", async () => {
@@ -149,11 +151,12 @@ describe("the hero each page opens with (AC1)", () => {
     expect(links(html)).toEqual(["/en/onboarding"]);
   });
 
-  test("broadcasts show Aurevo's broadcast over the stamp banner", async () => {
-    const text = textOf(await hero("platform/promotional-campaigns"));
+  test("campaigns show Aurevo's promotion on a lock screen, and send the second button to how it works", async () => {
+    const html = await hero("platform/promotional-campaigns");
 
-    expectInOrder(text, [LANDING_PAGES["platform/promotional-campaigns"].hero.accent, PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner.body, STAMP_BANNER.body]);
-    expect(links(await hero("platform/promotional-campaigns"))).toEqual(["/en/onboarding"]);
+    expectInOrder(textOf(html), [LANDING_PAGES["platform/promotional-campaigns"].hero.accent, "Aurevo", PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner.body]);
+    expect(pictures(html)).toEqual([PROMOTIONAL_CAMPAIGNS_PREVIEW.hero.alt]);
+    expect(links(html)).toEqual(["/en/onboarding", "#how"]);
   });
 
   test.each(PREVIEW_SLUGS)("%s closes with its own cream card, then the links to its siblings", async (slug) => {

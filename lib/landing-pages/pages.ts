@@ -238,7 +238,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/promotional-campaigns": {
     slug: "platform/promotional-campaigns",
     variant: "lp_platform_promotional_campaigns",
-    sections: ["hero", "composer", "numbers", "ideas", "delivery", "faq", "final_cta", "related"],
+    sections: ["hero", "how", "texting", "ideas", "delivery", "faq", "final_cta", "related"],
     meta: PROMOTIONAL_CAMPAIGNS_PREVIEW.meta,
     hero: PROMOTIONAL_CAMPAIGNS_PREVIEW.hero,
     finalCta: PROMOTIONAL_CAMPAIGNS_PREVIEW.band,

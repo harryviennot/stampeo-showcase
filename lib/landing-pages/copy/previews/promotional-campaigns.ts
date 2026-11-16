@@ -1,16 +1,13 @@
 import { SAMPLE_BUSINESS } from "../shared";
 import type { Banner, BandCopy, FaqItem, Fact, HeroCopy, PageMeta } from "../types";
 
-/** Where the two measured figures come from: the businesses on Stampeo. */
-const FIGURES_SOURCE = "Stampeo data, 86 businesses, February to October 2026";
-
-/** The broadcast the hero's lock screen and the first idea show: the approved Outcomes copy. */
+/** The campaign the hero's lock screen and the first idea show: the approved Outcomes copy. */
 const HAPPY_HOUR: Banner = {
   sender: SAMPLE_BUSINESS,
   body: "Quiet afternoon? Your second coffee is half price until 5pm.",
 };
 
-/** A broadcast a café could send: the chip that picks it, its sample message on the lock screen, and who gets it. */
+/** A campaign a café could send: the chip that names it, its sample message on the lock screen, and who gets it. */
 interface IdeaCopy {
   key: string;
   chip: string;
@@ -18,142 +15,145 @@ interface IdeaCopy {
   banner: Banner;
 }
 
-/** The broadcasts preview: one message written once, to every card. */
+/** The campaigns preview: one message written once, on every customer's card. */
 export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
   meta: {
-    title: "Wallet broadcasts for loyalty cards | Stampeo",
+    title: "Send promotions to customers, no texting fees | Stampeo",
     description:
-      "Send one message to every loyalty card in Apple Wallet and Google Wallet, with no texting fees. Free trial, cancel anytime.",
+      "Send a promotion to every customer's phone as a push notification on their loyalty card. An SMS marketing alternative with no fee per message.",
   } satisfies PageMeta,
   hero: {
-    h1: "Bring customers back with one message.",
-    accent: "one message.",
-    sub: "A message to every card in Apple Wallet and Google Wallet. No texting fees.",
-  } satisfies HeroCopy,
-  /** The lock screen in the hero, over the stamp banner. */
+    h1: "Send a promotion to every customer's phone.",
+    accent: "every customer's phone.",
+    sub: "Write one message and it appears on every customer's lock screen. No texting fees.",
+    alt: "An iPhone lock screen with a notification from Aurevo: Quiet afternoon? Your second coffee is half price until 5pm.",
+  } satisfies HeroCopy & { alt: string },
+  /** The notification on the hero's lock screen, and the message the "how it works" picture starts from. */
   heroBanner: HAPPY_HOUR,
-  numbers: {
-    eyebrow: "Your audience",
-    title: "Your customers keep the card.",
-    lead: "A broadcast reaches every card still in a wallet. Here's what we see.",
-    figures: [
-      {
-        value: "88%",
-        text: "of customers who join save the card to their wallet",
-        source: FIGURES_SOURCE,
-      },
-      {
-        value: "95%",
-        text: "of those cards are still there three months later",
-        source: FIGURES_SOURCE,
-      },
-    ],
-    /** Printed once under the row of figures. */
-    sourceLine: FIGURES_SOURCE,
-  },
-  /** The dashboard's own "New broadcast" screen, in its words (web's `broadcasts.wizard` and `detail` labels). */
-  composer: {
+  /** One message written once, then the same notification on several customers' lock screens. */
+  how: {
     eyebrow: "How it works",
-    title: "Write it, pick who gets it, send.",
-    lead: "Write it in your dashboard. It lands on their lock screen in seconds.",
-    card: {
-      title: "New broadcast",
-      message: HAPPY_HOUR,
-      audience: {
-        title: "Who will receive this?",
-        all: "All enrolled customers",
-        filtered: "Filtered audience",
-        filters: [{ label: "Joined in the last month" }],
-      },
-      send: "Send now",
-      sendAgain: "Send again",
-      delivered: "Delivered",
+    title: "One message on every customer's lock screen.",
+    lead: "A campaign is one message you write once. It lands on every customer's card.",
+    steps: [
+      { title: "Write your message", body: "Type it once in your dashboard, in your own words." },
+      { title: "Send it", body: "It goes to every customer who has your card in their wallet." },
+      { title: "They see it on their lock screen", body: "A notification from your shop, in Apple Wallet or Google Wallet." },
+    ],
+    visual: {
+      /** The label over the message as the owner wrote it. */
+      messageLabel: "Your message",
+      /** The label under each customer's lock screen, left to right. */
+      phones: ["On iPhone", "On Android", "On iPhone"],
+    },
+    alt: "One message written once in the dashboard, and the same notification from Aurevo on three customers' lock screens.",
+  },
+  texting: {
+    eyebrow: "Instead of texting",
+    title: "Send promotions without paying per text.",
+    lead: "No fee per message, and no limit on how many customers each one reaches.",
+    sms: {
+      title: "Text messages",
+      facts: [
+        { text: "A fee for every text you send" },
+        { text: "A bigger customer list means a bigger bill" },
+        { text: "You need every customer's phone number" },
+      ] satisfies Fact[],
+    },
+    stampeo: {
+      title: "Stampeo campaigns",
+      facts: [
+        { text: "No fee per message" },
+        { text: "No limit on how many customers it reaches" },
+        { text: "It goes to the card already in their wallet" },
+      ] satisfies Fact[],
     },
   },
   ideas: {
     eyebrow: "Ideas to send",
     title: "Give them a reason to come in today.",
-    lead: "A few messages that work for a café. Write your own the same way.",
+    lead: "Four messages a café could send this week. Write your own the same way.",
     rows: [
+      { key: "slow-afternoon", chip: "Slow afternoon", body: "Sent to everyone.", banner: HAPPY_HOUR },
       {
-        key: "happy-hour",
-        body: "Sent to everyone.",
-        chip: "Slow afternoon",
-        banner: HAPPY_HOUR,
-      },
-      {
-        key: "we-miss-you",
-        body: "A friendly nudge for customers you haven't seen in a while.",
-        chip: "Gone quiet",
-        banner: { sender: SAMPLE_BUSINESS, body: "We haven't seen you in a while. A free cookie is waiting for you." },
-      },
-      {
-        key: "close",
-        body: "A nudge to get customers to their next reward.",
-        chip: "Almost there",
-        banner: { sender: SAMPLE_BUSINESS, body: "One more stamp and your next coffee is on us." },
-      },
-      {
-        key: "new",
-        body: "Sent to every card.",
+        key: "something-new",
         chip: "Something new",
+        body: "Sent to everyone.",
         banner: { sender: SAMPLE_BUSINESS, body: "Pumpkin bread is back today." },
+      },
+      {
+        key: "tonight-only",
+        chip: "Tonight only",
+        body: "Sent to everyone.",
+        banner: { sender: SAMPLE_BUSINESS, body: "Live music tonight from 7pm. Come say hi." },
+      },
+      {
+        key: "new-customers",
+        chip: "New customers",
+        body: "Sent only to customers who joined in the last month.",
+        banner: { sender: SAMPLE_BUSINESS, body: "Thanks for joining! Your next coffee comes with a free cookie." },
       },
     ] satisfies IdeaCopy[],
   },
   delivery: {
     eyebrow: "After you send",
-    title: "See where every message landed.",
-    lead: "Each broadcast shows how many reached Apple Wallet and Google Wallet.",
+    title: "See how many customers got it.",
+    lead: "Each campaign shows how many customers got it in Apple Wallet and Google Wallet.",
+    /** One sample campaign, as the dashboard reports it: the label over the card and its total, the sum of the four counts. */
+    card: { label: "Last campaign", total: "716 customers" },
+    metrics: [
+      { label: "Got it in Apple Wallet", value: "412" },
+      { label: "Got it in Google Wallet", value: "268" },
+      { label: "Over Google's daily limit", value: "14" },
+      { label: "Removed the card", value: "22" },
+    ],
     tab: {
-      title: "Delivery you can verify",
+      title: "After every campaign",
       facts: [
-        { text: "Split by Apple and Google" },
-        { text: "Cards removed from a wallet are counted, not hidden" },
+        { text: "How many got it, in Apple Wallet and in Google Wallet" },
+        { text: "Customers who removed the card, counted apart" },
         { text: "Send it again anytime" },
       ] satisfies Fact[],
     },
-    /** One sample broadcast to 716 cards. */
-    metrics: [
-      { label: "Apple delivered", value: "412" },
-      { label: "Google delivered", value: "268" },
-      { label: "Google throttled", value: "14" },
-      { label: "Wallet uninstalled", value: "22" },
-    ],
   },
   faq: {
-    title: "Questions we hear a lot",
+    title: "Questions about campaigns",
     items: [
       {
-        question: "How much do broadcasts cost?",
+        question: "How much does it cost to send a campaign?",
         answer:
-          "Nothing extra per message, unlike texting, where every message is billed. Your plan sets how many broadcasts you can send each month (see pricing).",
+          "Nothing per message. Campaigns come with your Stampeo subscription, so you never pay for each message the way you do with texting.",
       },
       {
-        question: "Do customers need to install an app?",
+        question: "Is there a limit on campaigns?",
         answer:
-          "No. Customers add a standard Apple Wallet or Google Wallet pass, which is the loyalty card itself. Wallet notifications are built into both, so there is no store download and no account.",
+          "No limit on how many customers a campaign reaches: it goes to every customer with your card in their wallet. Your plan sets how many campaigns you can send each month (see pricing).",
       },
       {
-        question: "How fast does a broadcast arrive?",
+        question: "Do my customers need an app or a phone number?",
         answer:
-          "Write it, tap Send, and it reaches your customers' lock screens in seconds, which suits a flash promotion.",
+          "No. The message goes to the loyalty card in their Apple Wallet or Google Wallet. They download no app, and you don't need their phone number or email.",
       },
       {
-        question: "Where does the message show up?",
+        question: "Is this an alternative to SMS marketing?",
         answer:
-          "On your customer's lock screen, as a notification from your business's card in their wallet. There is nothing to download and no number to collect.",
+          "Yes, for every customer who has your card. The message shows on their lock screen like a text, with no fee per message and no phone numbers to collect.",
       },
       {
-        question: "Does it work with both Apple Wallet and Google Wallet?",
+        question: "Does it work on iPhone and Android?",
         answer:
-          "Yes. Every broadcast goes out to Apple Wallet and Google Wallet in parallel. Your customers see the notification whether they use an iPhone or an Android phone.",
+          "Yes. Every campaign goes to Apple Wallet and Google Wallet. Google shows up to three notifications per card a day, so a customer who already got three that day won't see this one.",
+      },
+      {
+        question: "Can I write it in more than one language?",
+        answer:
+          "Yes. Add a translation in English, Spanish, French or Polish, and each customer sees the one that matches their phone.",
       },
     ] satisfies FaqItem[],
   },
   band: {
-    title: "Fill your next slow day.",
-    accent: "slow day.",
-    sub: "Start your free trial, then send your first broadcast this week.",
+    title: "Fill your next slow afternoon.",
+    accent: "slow afternoon.",
+    sub: "Start your free trial and send your first campaign this week.",
   } satisfies BandCopy,
 } as const;

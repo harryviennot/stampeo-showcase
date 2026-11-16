@@ -23,7 +23,7 @@ const SECTIONS: Record<PreviewSlug, string[]> = {
   "platform/mobile-scanner": ["hero", "counter", "ways", "team", "demo", "final_cta", "related"],
   "platform/push-notifications": ["hero", "day", "wallets", "editor", "demo", "final_cta", "related"],
   "platform/analytics": ["hero", "blind_spots", "glance", "activity", "recap", "final_cta", "related"],
-  "platform/promotional-campaigns": ["hero", "composer", "numbers", "ideas", "delivery", "faq", "final_cta", "related"],
+  "platform/promotional-campaigns": ["hero", "how", "texting", "ideas", "delivery", "faq", "final_cta", "related"],
   "platform/geolocation": ["hero", "status", "how", "privacy", "faq", "final_cta", "related"],
 };
 

@@ -323,8 +323,7 @@ describe("the links a preview closes with", () => {
     const { geolocation } = PREVIEW_SHARED.related.cards;
 
     expect(geolocation.title).toBe("Geolocation");
-    expect(geolocation.line).toBe(LANDING_PAGES["platform/geolocation"].hero.h1);
-    expect(geolocation.line).toMatch(/^Soon,/);
+    expect(geolocation.line).toMatch(/^Coming soon/);
   });
 });
 

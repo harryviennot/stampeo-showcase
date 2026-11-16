@@ -3,21 +3,19 @@ import { setRequestLocale } from "next-intl/server";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
-import { ComposerSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/ComposerSection";
+import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon";
+import { CampaignsFaq } from "@/components/landing-pages/feature-previews/promotional-campaigns/CampaignsFaq";
 import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
+import { HowSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/HowSection";
 import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
-import { NumbersSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/NumbersSection";
-import { Hairline } from "@/components/landing-pages/platform/Hairline";
+import { TextingSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/TextingSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
-import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
-import { lpBanner } from "@/components/landing-pages/shared/banner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
-import { STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
-// The broadcasts preview of /en/features/promotional-campaigns: English only, noindex, in Platform's style.
+// The campaigns preview of /en/features/promotional-campaigns: English only, noindex, in Platform's style.
 export function generateStaticParams() {
   return [{ locale: "en" }];
 }
@@ -28,29 +26,28 @@ export function generateMetadata(): Metadata {
 
 export default function PromotionalCampaignsPreviewPage() {
   setRequestLocale("en");
+  const { heroBanner, hero } = PROMOTIONAL_CAMPAIGNS_PREVIEW;
 
   return (
     <LandingPageShell slug="platform/promotional-campaigns">
       <PreviewHero
         slug="platform/promotional-campaigns"
-        secondary={null}
+        secondary={{ label: "See how it works", href: "#how" }}
         visual={
           <PhoneCrop height={440}>
-            <NotificationPhoneDemo
-              animate={false}
-              eager
-              notifications={[lpBanner(PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner), lpBanner(STAMP_BANNER)]}
-            />
+            <div role="img" aria-label={hero.alt}>
+              <div aria-hidden>
+                <NotificationPhoneDemo animate={false} eager notifications={[shopBanner(heroBanner)]} />
+              </div>
+            </div>
           </PhoneCrop>
         }
       />
-      <ComposerSection />
-      <Hairline />
-      <NumbersSection />
-      <Hairline />
+      <HowSection />
+      <TextingSection />
       <IdeasSection />
       <DeliverySection />
-      <LpFaq faq={PROMOTIONAL_CAMPAIGNS_PREVIEW.faq} />
+      <CampaignsFaq />
       <LpAccentBand copy={PROMOTIONAL_CAMPAIGNS_PREVIEW.band} />
       <RelatedPreviews slug="platform/promotional-campaigns" />
     </LandingPageShell>

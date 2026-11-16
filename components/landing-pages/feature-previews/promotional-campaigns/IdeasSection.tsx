@@ -1,12 +1,27 @@
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { LpSection } from "../../shared/LpSection";
-import { IdeasChips } from "./IdeasChips";
+import { LockScreenSlice } from "../push-notifications/LockScreenSlice";
 
-/** Four broadcasts a café could send, picked from a row of chips. */
+/** Four campaigns a café could send, each on its own white card: its name, the message on Aurevo's lock screen and who gets it. */
 export function IdeasSection() {
   return (
     <LpSection section="ideas" eyebrow={COPY.ideas.eyebrow} title={COPY.ideas.title} lead={COPY.ideas.lead} align="center">
-      <IdeasChips />
+      <ul className="mx-auto grid max-w-[560px] gap-4 text-left lg:max-w-[1040px] lg:grid-cols-2 lg:gap-6">
+        {COPY.ideas.rows.map((row) => (
+          <li
+            key={row.key}
+            className="flex flex-col rounded-[28px] bg-white p-5 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_32px_72px_-32px_rgba(25,18,16,0.18)] ring-1 ring-black/5 lg:p-6"
+          >
+            <p className="self-start rounded-full bg-[var(--background-subtle)] px-3.5 py-1.5 text-sm font-semibold text-[var(--foreground)]">
+              {row.chip}
+            </p>
+            <div className="mt-4 flex-1">
+              <LockScreenSlice banner={row.banner} compact className="h-full" />
+            </div>
+            <p className="mt-4 text-[15px] text-pretty text-[var(--muted-foreground)]">{row.body}</p>
+          </li>
+        ))}
+      </ul>
     </LpSection>
   );
 }
