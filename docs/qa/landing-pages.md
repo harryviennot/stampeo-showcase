@@ -14,7 +14,7 @@ This pass covers the four US ad landing pages built in STA-546 (v2, after Harry 
 > LP-04 to LP-07, LP-12 and LP-13 have v2 expectations; LP-18 to LP-27 are new. Case ids are unchanged.
 > **Amended 13 Nov 2026 (v2.1, Platform polish):** LP-28 to LP-34 are new. On Platform, LP-13's "Sample data"
 > and LP-27's turning-wheel wording are superseded: Platform shows no captions, and its hero is the fan (LP-28).
-> **Amended 13 Nov 2026 (STA-552, feature previews):** LP-35 to LP-40 cover the five previews under
+> **Amended 13 Nov 2026 (STA-552, feature previews):** LP-35 to LP-41 cover the five previews under
 > `/us/landing-pages/platform/<feature>`. The "broadcasts always say Growth and Pro" rule below applies to the
 > campaigns preview; the four others name no plan for broadcasts (STA-549).
 
@@ -545,6 +545,17 @@ Five previews of today's feature pages, rebuilt in Platform's style so Harry can
 | STEPS | 1. Turn on reduced motion (OS setting or devtools emulation). 2. Open mobile scanner, push notifications and analytics, wait 15 s on each moving piece. |
 | EXPECT | Mobile scanner: the hero shows the Scanner's finished stamp as a still, with no video. Push notifications: the moments phone stays on the first moment until you tap another; the floating cards don't drift. Analytics: the live feed shows its rows without new ones sliding in, and its fifth row has space under it. Every hover row is open. |
 | RESET | Turn reduced motion back off. |
+
+### LP-41: From Platform and the previews, the feature menus lead to the previews; everywhere else, to today's pages [CORE]
+
+| Field | Content |
+|---|---|
+| WHY | Harry compares the new set with the live set by browsing each: a menu that crosses from one set to the other mixes the comparison. |
+| DEPENDS | LP-35 |
+| ACCOUNT | No session. |
+| STEPS | 1. On `/us/landing-pages/platform` at 1440, hover "Product" and read the links; read the footer's features column. 2. The same at 390 through the menu button and "Product". 3. Repeat on one preview, e.g. `/us/landing-pages/platform/analytics`. 4. Repeat on `/us`, `/us/landing-pages/features` and `/en/features/push-notifications`. |
+| EXPECT | 1-3. Push notifications, Promotional campaigns, Mobile scanner, Analytics and Card design open `/us/landing-pages/platform/<feature>`; Geolocation (no preview) opens `/en/features/geolocation`. 4. Every feature link opens `/en/features/<feature>`. You do NOT see a preview link on any page outside Platform and its previews. |
+| RESET | None. |
 
 ---
 

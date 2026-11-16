@@ -76,6 +76,11 @@ Each is an optional prop whose default keeps today's markup byte-identical.
 - AC7: with each prop above left out, its component renders exactly as before (snapshot or byte compare), and every live caller passes none of them.
 - AC8: with each prop given, the visitor-visible effect holds: FAQ header centred with the eyebrow and rows ≥ 56px; no auto-advance when still; toggles ≥ 44px including after switching the playground to Points; stacked pictures print their smallest label ≥ 11px; the soft feed's fifth row has padding under it.
 
+## Contextual feature links (Harry, 16 Nov)
+
+- On Platform and its previews, the header's Product menu (desktop and phone) and the footer's features column lead to the previews; a feature without a preview (geolocation) opens today's page. Every other page keeps today's feature pages. `LandingPageShell` chooses per page (`featureLinksFor`); `Header`/`Footer` default to today's pages.
+- AC9: from Platform or a preview, each of the five features opens `/us/landing-pages/platform/<feature>`; from any other page, every feature link opens `/<locale>/features/<feature>`.
+
 ## Build stages
 
 1. Foundation: tests, registry entries, routes, copy modules (from the brief's draft copy, reviewed by the

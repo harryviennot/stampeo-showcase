@@ -3,7 +3,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { buildSeoLinks } from "@/lib/seo-links";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { getLocalizedSlug } from "@/lib/feature-slugs";
+import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
@@ -22,7 +22,11 @@ import { FooterColumn, footerLinkGrid } from "./FooterColumn";
 import { FooterComparisons } from "./FooterComparisons";
 import { footerComparisons, footerComparisonsTitle } from "@/lib/compare/footer";
 
-export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
+/** `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews). */
+export async function Footer({
+  market = "int",
+  featureLinks = "live",
+}: Readonly<{ market?: Market; featureLinks?: FeatureLinks }>) {
   const t = await getTranslations("common.footer");
   const tNav = await getTranslations("common.nav");
   const locale = await getLocale();
@@ -123,15 +127,16 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
           <div className={footerLinkGrid(hasComparisons ? 5 : 4)}>
             <FooterColumn title={t("featuresTitle")}>
               {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
-                const slug = getLocalizedSlug(canonicalSlug, locale);
+                const { href, market: linkMarket } = featureLink(canonicalSlug, locale, featureLinks);
                 return (
-                <Link
+                <MarketLink
                   key={canonicalSlug}
-                  href={`/features/${slug}` as "/features/design-de-carte"}
+                  market={linkMarket}
+                  href={href as "/features/design-de-carte"}
                   className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
                 >
                   {tNav(`featuresItems.${key}.label`)}
-                </Link>);
+                </MarketLink>);
               })}
             </FooterColumn>
 

@@ -4,6 +4,7 @@ import { Footer } from "@/components/sections/Footer";
 import { LandingTracker } from "@/components/analytics/LandingTracker";
 import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
 import { LANDING_PAGES, type LandingSlug } from "@/lib/landing-pages/pages";
+import { featureLinksFor } from "@/lib/landing-pages/preview-nav";
 import { MARKETS } from "@/lib/markets";
 import { getPlanCatalog } from "@/lib/plan-catalog";
 
@@ -13,6 +14,7 @@ export async function LandingPageShell({
   children,
 }: Readonly<{ slug: LandingSlug; children: ReactNode }>) {
   const page = LANDING_PAGES[slug];
+  const featureLinks = featureLinksFor(slug);
   const [eur, usd] = await Promise.all([getPlanCatalog("eur"), getPlanCatalog("usd")]);
 
   return (
@@ -24,9 +26,9 @@ export async function LandingPageShell({
         defaultCurrency="usd"
         defaultTrialDays={MARKETS.us.trialDays}
       >
-        <Header market="us" />
+        <Header market="us" featureLinks={featureLinks} />
         <main className="relative">{children}</main>
-        <Footer market="us" />
+        <Footer market="us" featureLinks={featureLinks} />
       </RegionPricingProvider>
     </div>
   );

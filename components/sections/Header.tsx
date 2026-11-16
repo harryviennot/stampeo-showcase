@@ -10,7 +10,7 @@ import { StampeoLogo } from "../logo";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { TrackedLink } from "../ui/TrackedLink";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { getLocalizedSlug } from "@/lib/feature-slugs";
+import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { hasBlog } from "@/lib/blog/locales";
 import { lockBodyScroll } from "@/lib/dom/body-scroll-lock";
 import { AnimatePresence, motion } from "framer-motion";
@@ -72,6 +72,8 @@ export interface NavMenuItem {
   href: string;
   label: string;
   description?: string;
+  /** A market path (`/us/...`) is final as written; without one, next-intl prefixes the locale. */
+  market?: Market;
 }
 
 /**
@@ -150,8 +152,9 @@ function NavDropdown({
               role="menu"
             >
               {items.map((item) => (
-                <Link
+                <MarketLink
                   key={item.href}
+                  market={item.market ?? "int"}
                   href={item.href as "/features/design-de-carte"}
                   className="block rounded-xl px-3 py-2.5 hover:bg-[var(--cream)] transition-colors"
                   onClick={() => setOpen(false)}
@@ -165,7 +168,7 @@ function NavDropdown({
                       {item.description}
                     </span>
                   )}
-                </Link>
+                </MarketLink>
               ))}
             </div>
           </motion.div>
@@ -177,8 +180,10 @@ function NavDropdown({
 
 function MobileFeaturesAccordion({
   onNavigate,
+  featureLinks,
 }: {
   onNavigate: () => void;
+  featureLinks: FeatureLinks;
 }) {
   const t = useTranslations("common.nav");
   const locale = useLocale();
@@ -207,11 +212,12 @@ function MobileFeaturesAccordion({
           >
             <div className="pl-4 pb-2 space-y-0.5">
               {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-                const slug = getLocalizedSlug(canonicalSlug, locale);
+                const { href, market } = featureLink(canonicalSlug, locale, featureLinks);
                 return (
-                <Link
+                <MarketLink
                   key={canonicalSlug}
-                  href={`/features/${slug}` as "/features/design-de-carte"}
+                  market={market}
+                  href={href as "/features/design-de-carte"}
                   className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
                   onClick={onNavigate}
                 >
@@ -219,7 +225,7 @@ function MobileFeaturesAccordion({
                   <span className="text-sm font-medium text-[var(--foreground)]">
                     {t(`featuresItems.${key}.label`)}
                   </span>
-                </Link>);
+                </MarketLink>);
               })}
             </div>
           </motion.div>
@@ -229,7 +235,11 @@ function MobileFeaturesAccordion({
   );
 }
 
-export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
+/** `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews). */
+export function Header({
+  market = "int",
+  featureLinks = "live",
+}: Readonly<{ market?: Market; featureLinks?: FeatureLinks }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const signedIn = useHasSession();
@@ -280,7 +290,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
      which is why the whole bar collapsed to a burger below 1280px and
      laptops never saw it. */
   const productItems: NavMenuItem[] = FEATURE_ITEMS.map(({ key, canonicalSlug }) => ({
-    href: `/features/${getLocalizedSlug(canonicalSlug, locale)}`,
+    ...featureLink(canonicalSlug, locale, featureLinks),
     label: t(`common.nav.featuresItems.${key}.label`),
   }));
 
@@ -427,7 +437,7 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
               >
                 <div className="px-6 py-4">
                   <div className="flex flex-col gap-1">
-                    <MobileFeaturesAccordion onNavigate={closeMobileMenu} />
+                    <MobileFeaturesAccordion onNavigate={closeMobileMenu} featureLinks={featureLinks} />
                     {navItems.map((item) => (
                       <MarketLink
                         key={item.href}
