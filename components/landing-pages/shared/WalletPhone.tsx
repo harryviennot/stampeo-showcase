@@ -2,6 +2,7 @@ import { WalletCard } from "@/components/card/WalletCard";
 import { IPhone } from "@/components/ui/IPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { iphoneLayout } from "@/lib/devices/iphone";
+import type { PhoneSample } from "@/lib/landing-pages/card-design-samples";
 import { POINTS_SAMPLES } from "@/lib/loyalty-samples";
 import { AurevoCard } from "./AurevoCard";
 import { PassFrame } from "./PassFrame";
@@ -17,26 +18,40 @@ const PEEK = 44;
 const FRONT = 64;
 
 /**
- * Apple Wallet with the Aurevo card open at `stamps` of 8 and the customer's other
- * passes stacked below it, drawn at 320px and shrunk to `width` (`narrowWidth` below `lg`).
+ * Apple Wallet with the Aurevo card open at `stamps` of 8 (or the `sample` business's card in its place) and
+ * the customer's other passes stacked below it, drawn at 320px and shrunk to `width` (`narrowWidth` below `lg`).
  */
 export function WalletPhone({
   width = DRAWN_WIDTH,
   narrowWidth,
   stamps = 4,
-}: Readonly<{ width?: number; narrowWidth?: number; stamps?: number }>) {
+  sample,
+}: Readonly<{ width?: number; narrowWidth?: number; stamps?: number; sample?: PhoneSample }>) {
+  const passes = sample?.others ?? OTHER_PASSES;
+
   return (
     <ScaledBox width={DRAWN_WIDTH} height={iphoneLayout(DRAWN_WIDTH).height} to={width} narrowTo={narrowWidth}>
       <IPhone width={DRAWN_WIDTH} statusBar="light" screenBackground="#f2f2f7">
         <div className="px-3.5" style={{ paddingTop: "calc(var(--iphone-safe-top) + 12px)" }}>
-          <AurevoCard stamps={stamps} width={CARD_WIDTH} />
+          {sample ? (
+            <PassFrame width={CARD_WIDTH}>
+              <WalletCard
+                design={sample.design}
+                stamps={sample.stamps}
+                pointsBalance={sample.pointsBalance}
+                pointsRewards={sample.pointsRewards}
+              />
+            </PassFrame>
+          ) : (
+            <AurevoCard stamps={stamps} width={CARD_WIDTH} />
+          )}
         </div>
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-3.5 bottom-0 overflow-hidden select-none"
-          style={{ height: PEEK * (OTHER_PASSES.length - 1) + FRONT }}
+          style={{ height: PEEK * (passes.length - 1) + FRONT }}
         >
-          {OTHER_PASSES.map((pass, index) => (
+          {passes.map((pass, index) => (
             <div key={pass.id} className="absolute inset-x-0" style={{ top: index * PEEK }}>
               <PassFrame width={CARD_WIDTH}>
                 <WalletCard

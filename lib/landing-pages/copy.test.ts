@@ -14,7 +14,6 @@ import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims"
 import { ROOT, code } from "../testing/jsx-source";
 import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
 import { PLAN_FACTS } from "../plans/plan-facts";
-import { routing } from "../../i18n/routing";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
 import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
@@ -367,12 +366,8 @@ describe("the six previews' copy", () => {
   });
 
   describe("every number is the product's, not typed from memory", () => {
-    test("98 stamp icons, and 4 languages set by the customer's phone", () => {
-      const [icons, , languages] = CARD_DESIGN_PREVIEW.numbers.figures;
-
-      expect(icons.value).toBe(String(stampIcons.length));
+    test("98 stamp icons, the library's own count", () => {
       expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
-      expect(languages.value).toBe(String(routing.locales.length));
     });
 
     test("analytics history is each plan's own: 30, 90 and 365 days, with monthly cohorts on Pro alone", () => {

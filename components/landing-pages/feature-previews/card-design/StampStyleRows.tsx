@@ -1,7 +1,7 @@
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
-import { STAMP_SAMPLES } from "@/lib/loyalty-samples";
+import { resolveFanCard } from "@/lib/hero-fan";
 import { HoverRows } from "../../platform/HoverRows";
 import { LpSection } from "../../shared/LpSection";
 import { PassFrame } from "../../shared/PassFrame";
@@ -9,10 +9,11 @@ import { PassFrame } from "../../shared/PassFrame";
 /** The card thumbnail on a row: 200px on a laptop, 128px beside the words on a phone. */
 const CARD = { width: 200, height: 257, narrow: 128 };
 
-/** A brand-bank card at its sample count of stamps, named for a screen reader. */
+/** A brand's stamp card at its sample count of stamps, named for a screen reader. */
 function StampCard({ id, alt }: Readonly<{ id: string; alt: string }>) {
-  const sample = STAMP_SAMPLES.find((candidate) => candidate.id === id);
-  if (!sample) throw new Error(`No stamp sample called ${id}`);
+  const card = resolveFanCard(id);
+  if (card.kind !== "stamps") throw new Error(`${id} is not a stamp card`);
+  const { sample } = card;
 
   return (
     <div role="img" aria-label={alt}>
@@ -28,7 +29,7 @@ function StampCard({ id, alt }: Readonly<{ id: string; alt: string }>) {
 /**
  * "Stamps that look like what you sell": a row for each way a stamp can look,
  * with a card that shows it: a preset icon (the pet groomer's paw), a shop's
- * own icon (bubble tea's boba) and a layout (gelato cones piling up).
+ * own icon (the burger bar's burger) and a layout (gelato cones piling up).
  */
 export function StampStyleRows() {
   const { eyebrow, title, lead, rows, cardAlts } = CARD_DESIGN_PREVIEW.stamps;
@@ -39,7 +40,7 @@ export function StampStyleRows() {
         items={rows}
         visuals={{
           library: <StampCard id="patoune" alt={cardAlts.library} />,
-          own: <StampCard id="oba" alt={cardAlts.own} />,
+          own: <StampCard id="smash-club" alt={cardAlts.own} />,
           layout: <StampCard id="gelo" alt={cardAlts.layout} />,
         }}
       />
