@@ -5,10 +5,9 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
 import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { code, findTag, openingTags, read } from "../testing/jsx-source";
-import { PREVIEWS_DIR, lpFiles, pageComponent, pageFile, landingTree } from "../testing/landing-pages-source";
+import { lpFiles, pageComponent, pageFile, landingTree } from "../testing/landing-pages-source";
 import { STAMP_BANNER } from "./copy/shared";
 import type { LandingSlug } from "./pages";
 
