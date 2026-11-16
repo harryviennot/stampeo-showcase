@@ -4,7 +4,6 @@ import { GeofencingHeroAnimation } from "@/components/features/geolocalisation/G
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { HowSection } from "@/components/landing-pages/feature-previews/geolocation/HowSection";
-import { LOCK_DATE } from "@/components/landing-pages/feature-previews/geolocation/lock";
 import { PrivacySection } from "@/components/landing-pages/feature-previews/geolocation/PrivacySection";
 import { StatusSection } from "@/components/landing-pages/feature-previews/geolocation/StatusSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
@@ -37,7 +36,7 @@ export default function GeolocationPreviewPage() {
         eyebrowChip={GEOLOCATION_PREVIEW.heroChip}
         visual={
           <ScrollReveal className="mx-auto w-full max-w-[500px] xl:max-w-[600px]">
-            <GeofencingHeroAnimation sender={sender} icon={lpBanner({ sender, body }).icon} title={title} body={body} date={LOCK_DATE}>
+            <GeofencingHeroAnimation sender={sender} icon={lpBanner({ sender, body }).icon} title={title} body={body}>
               <div className="pointer-events-none absolute top-0 right-[46%] hidden flex-col items-end lg:flex">
                 <InkNote rotate={-3} className="whitespace-nowrap">
                   {GEOLOCATION_PREVIEW.heroNote}

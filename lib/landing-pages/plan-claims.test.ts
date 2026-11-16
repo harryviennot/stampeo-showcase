@@ -88,7 +88,6 @@ const CHIPPED: Record<string, Gate> = {
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[2]": ADVANCED_TARGETING,
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.composer.card.audience.filters[1]": ADVANCED_TARGETING,
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.composer.card.schedule": SCHEDULED_BROADCASTS,
-  "GEOLOCATION_PREVIEW.status.today.facts[2]": BROADCASTS,
   "GEOLOCATION_PREVIEW.status.soon": GEOFENCING_COMING_SOON,
 };
 
@@ -225,10 +224,10 @@ describe("a broadcast is labelled with the plans that have broadcasts", () => {
 
   /**
    * The previews: the broadcasts preview states the plans of the whole page (its top-level `plan`, which every
-   * broadcast mention under it inherits), and the others name the feature only in the link to it, with no
-   * badge, for the same reason. Geolocation's "Today" column also lists broadcasts, under their own chip.
+   * broadcast mention under it inherits). The others name broadcasts with no badge, for the same reason, in
+   * geolocation's "Today" column and in the link to the broadcasts preview.
    */
-  const PREVIEW_NO_CHIP = ["PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
+  const PREVIEW_NO_CHIP = ["GEOLOCATION_PREVIEW.status.today.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
 
   /** The two lines printed with `SHARED.broadcastPlans` in their paragraph by `PlanLine`. */
   const ON_A_PLAN_LINE = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
@@ -260,15 +259,13 @@ describe("a broadcast is labelled with the plans that have broadcasts", () => {
     expect(mine.filter(({ plan }) => label(plan ?? "") !== expected && label(plan ?? "") !== "pro")).toEqual([]);
   });
 
-  test("on the other previews a broadcast is named without a label only in the link to its preview, and PLAN_FACTS still says broadcasts are not on every plan", () => {
+  test("on the other previews a broadcast is named, without a label, only in geolocation's Today column and the link to its preview, and PLAN_FACTS still says broadcasts are not on every plan", () => {
     const others = Object.entries(MODULES)
       .filter(([name]) => inPreviews(name) && name !== "PROMOTIONAL_CAMPAIGNS_PREVIEW")
       .flatMap(([name, value]) => mentions(value, /broadcast/i, name));
 
-    expect(others.filter(({ plan }) => plan === undefined).map(({ path }) => path)).toEqual(PREVIEW_NO_CHIP);
-    expect(others.filter(({ plan }) => plan !== undefined).map(({ path, plan }) => [path, label(plan ?? "")])).toEqual([
-      ["GEOLOCATION_PREVIEW.status.today.facts[2].text", label(availability(BROADCASTS))],
-    ]);
+    expect(others.map(({ path }) => path)).toEqual(PREVIEW_NO_CHIP);
+    expect(others.filter(({ plan }) => plan !== undefined)).toEqual([]);
     expect(availability(BROADCASTS)).not.toBe("every plan");
   });
 

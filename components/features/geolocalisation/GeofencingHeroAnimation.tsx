@@ -28,7 +28,7 @@ export const LOCK_WALLPAPER =
  * The geolocation hero: a paper street map with the phone in front of it.
  * A customer walks into the shop's ring and the lock screen wakes with the
  * card's reminder. Children are positioned over the stage (the ink note).
- * A page can give the lock screen its own sender, icon, title, body and date;
+ * A page can give the lock screen its own sender, icon, title and body;
  * without them it shows the catalog's.
  */
 export function GeofencingHeroAnimation({
@@ -37,8 +37,7 @@ export function GeofencingHeroAnimation({
   icon,
   title,
   body,
-  date,
-}: Readonly<{ children?: ReactNode; sender?: string; icon?: ReactNode; title?: string; body?: string; date?: string }>) {
+}: Readonly<{ children?: ReactNode; sender?: string; icon?: ReactNode; title?: string; body?: string }>) {
   const t = useTranslations("features.geolocalisation");
   const stageRef = useRef<HTMLDivElement>(null);
   const inView = useInView(stageRef, { amount: 0.3 });
@@ -120,7 +119,7 @@ export function GeofencingHeroAnimation({
                 className="mt-1 text-[13px] font-medium text-white/75"
                 style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
               >
-                {date ?? t("demo.lockScreenDate")}
+                {t("demo.lockScreenDate")}
               </div>
             </div>
 

@@ -35,10 +35,14 @@ const PLAN_LINES = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
 
 /**
  * Mentions that carry no plan label because broadcasts are about to open to every plan: the Platform
- * page lists them without a badge, and so does the link to the broadcasts preview that the other four
- * previews end on.
+ * page lists them without a badge, and so do geolocation's "Today" column and the link to the broadcasts
+ * preview that the other previews end on.
  */
-const UNBADGED = ["PLATFORM.platform.dashboard.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
+const UNBADGED = [
+  "PLATFORM.platform.dashboard.facts[2].text",
+  "GEOLOCATION_PREVIEW.status.today.facts[2].text",
+  "PREVIEW_SHARED.related.cards.promotionalCampaigns.title",
+];
 
 /** Mentions of `pattern` that no plan label qualifies and no plan line accounts for. */
 const unlabelled = (pattern: RegExp) =>
@@ -331,13 +335,13 @@ describe("the six previews' copy", () => {
     expect(pageWide).toEqual([["PROMOTIONAL_CAMPAIGNS_PREVIEW", "Growth and Pro"]]);
   });
 
-  test("a broadcast is named without a label in one place only: the link to the broadcasts preview", () => {
+  test("a broadcast is named without a label in two places only: geolocation's Today column and the link to the broadcasts preview", () => {
     const loose = previewModules()
       .flatMap(([name, value]) => mentions(value, /broadcast|texting fees/i, name))
       .filter(({ plan }) => !BROADCAST_PLANS.includes(plan ?? ""))
       .map(({ path }) => path);
 
-    expect(loose).toEqual(["PREVIEW_SHARED.related.cards.promotionalCampaigns.title"]);
+    expect(loose).toEqual(["GEOLOCATION_PREVIEW.status.today.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"]);
   });
 
   describe("the broadcasts preview's figures are Stampeo's own, each with its source", () => {
@@ -435,28 +439,49 @@ describe("the geolocation preview says it is coming (AC12)", () => {
     expect(lines().filter((line) => dated.test(line.value)).map((line) => line.path)).toEqual([]);
   });
 
-  test.each([
-    "meta.description",
-    "hero.h1",
-    "hero.sub",
-    "heroChip",
-    "status.lead",
-    "status.soon.title",
-    "how.eyebrow",
-    "how.title",
-    "how.lead",
-    "how.cells[2].body",
-    "privacy.title",
-    "privacy.lead",
-    "privacy.facts[0].text",
-    "privacy.facts[1].text",
-    "privacy.facts[2].text",
-    "faq.items[0].answer",
-    "faq.items[1].answer",
-    "faq.items[2].answer",
-    "band.sub",
-  ])("%s speaks of what will be, not what is", (path) => {
-    expect({ path, future: FUTURE.test(text(path)) }).toEqual({ path, future: true });
+  /**
+   * The lines that need not be in the future tense, and why. Every other line of the page is held to it, so a
+   * new line fails here until it is written in the future or listed with its reason.
+   */
+  const NOT_FUTURE: Array<[path: RegExp, why: string]> = [
+    [/^hero\.eyebrow$/, "a label: the feature's name"],
+    [/^hero\.accent$/, "words of the headline, which is future"],
+    [/^band\.accent$/, "words of the closing line, an instruction"],
+    [/^banner\./, "the sample café's own notification: the owner's words, not a claim about the product"],
+    [/^status\.(?:eyebrow|title)$/, "the section's label and title, which name the two columns"],
+    [/^status\.today\./, "the Today column: what is live is said as live"],
+    [/^status\.soon\.(?:plan|facts)/, "the Pro chip and noun phrases listed under the Coming soon heading"],
+    [/^how\.cells\[0\]\.body$/, "a noun phrase naming where the owner adds the address"],
+    [/^privacy\.eyebrow$/, "a label"],
+    [/^faq\.title$/, "a label"],
+    [/^faq\.items\[\d\]\.question$/, "a question asks, it does not claim"],
+    [/^band\.title$/, "an instruction to the visitor"],
+    [/^related\.title$/, "an instruction to the visitor"],
+  ];
+  /** The step names, each exempt only while it reads as it does here: verbless, an instruction, or what the customer does. */
+  const STEP_NAMES: Record<string, string> = {
+    "how.cells[0].title": "Add your shop",
+    "how.cells[1].title": "On their card",
+    "how.cells[2].title": "They walk by",
+  };
+  const relative = (line: { path: string }) => line.path.replace("GEOLOCATION_PREVIEW.", "");
+  const exempt = (line: { path: string; value: string }) =>
+    NOT_FUTURE.some(([pattern]) => pattern.test(relative(line))) || STEP_NAMES[relative(line)] === line.value;
+
+  test("every line of the page speaks of what will be, but the labels, questions and live facts the list above gives a reason for", () => {
+    const claims = lines().filter((line) => !exempt(line));
+
+    expect(claims.length).toBeGreaterThan(15);
+    expect(claims.filter((line) => !FUTURE.test(line.value)).map(relative)).toEqual([]);
+  });
+
+  test("the list of exceptions holds no pattern that matches nothing, and each step name is one the page has", () => {
+    for (const [pattern] of NOT_FUTURE) {
+      const matched = lines().filter((line) => pattern.test(relative(line)));
+
+      expect({ pattern: String(pattern), matched: matched.length > 0 }).toEqual({ pattern: String(pattern), matched: true });
+    }
+    expect(Object.entries(STEP_NAMES).filter(([path, name]) => text(path) !== name)).toEqual([]);
   });
 
   test("the page's headline says soon, and its chip says coming soon on Pro", () => {

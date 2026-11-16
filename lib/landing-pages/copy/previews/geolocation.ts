@@ -47,7 +47,7 @@ export const GEOLOCATION_PREVIEW = {
       facts: [
         { text: "Your card in Apple Wallet and Google Wallet" },
         { text: "A notification on every stamp and reward" },
-        { text: "Broadcasts to every card", plan: "Growth and Pro" },
+        { text: "Broadcasts to every card" },
       ],
     } satisfies StatusColumn,
     soon: {
@@ -66,7 +66,7 @@ export const GEOLOCATION_PREVIEW = {
     lead: "You'll add your shop once. Their phone will do the rest.",
     cells: [
       { title: "Add your shop", body: "Your address, from your dashboard." },
-      { title: "It goes on the card", body: "Your address will travel inside their card." },
+      { title: "On their card", body: "Your address will travel inside their card." },
       { title: "They walk by", body: "Their phone will show your card, on its own." },
     ] satisfies Tile[],
   } satisfies EyebrowSection & { cells: Tile[] },
@@ -80,7 +80,7 @@ export const GEOLOCATION_PREVIEW = {
       { text: "They will be able to switch it off in their phone's settings" },
     ] satisfies Fact[],
     /** What the drawing shows, for a screen reader. */
-    alt: "A phone inside a dashed ring around a shop. A line to the cloud is cut: no location leaves the phone.",
+    alt: "A phone inside a dashed ring around a shop. A line to the cloud is cut: no location will leave the phone.",
   },
   faq: {
     title: "Questions about geolocation",

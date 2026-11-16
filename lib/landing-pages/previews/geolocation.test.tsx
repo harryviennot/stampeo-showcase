@@ -12,16 +12,21 @@ import { GeofencingHeroAnimation } from "@/components/features/geolocalisation/G
 import { HowSection } from "@/components/landing-pages/feature-previews/geolocation/HowSection";
 import { PrivacySection } from "@/components/landing-pages/feature-previews/geolocation/PrivacySection";
 import { StatusSection } from "@/components/landing-pages/feature-previews/geolocation/StatusSection";
-import { ROOT, openingTags, read } from "../../testing/jsx-source";
-import { otherCallers } from "../../testing/landing-pages-source";
+import { loadCatalog } from "../../testing/catalogs";
+import { ROOT, openingTags, read, sourceFiles, stripComments } from "../../testing/jsx-source";
+import { otherCallers, pageFile } from "../../testing/landing-pages-source";
 import { renderPreviewPage } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, renderEn, textOf } from "../../testing/render-en";
 import { GEOLOCATION_PREVIEW as COPY } from "../copy/previews/geolocation";
 
 const ANIMATION = join(ROOT, "components", "features", "geolocalisation", "GeofencingHeroAnimation.tsx");
+const GEOLOCATION_DIR = join(ROOT, "components", "landing-pages", "feature-previews", "geolocation");
 
 /** The optional props the preview gives the live hero animation. */
-const PREVIEW_PROPS = ["sender", "title", "body", "date", "icon"];
+const PREVIEW_PROPS = ["sender", "title", "body", "icon"];
+
+/** The date every lock screen of the site shows (the notifications page's and the live geolocation page's are the same line). */
+const SITE_LOCK_DATE: string = loadCatalog("en", "features.json").features["notifications-push"].demo.lockScreenDate;
 
 describe("hero: the paper map with a customer walking in, and Aurevo's own words on the lock screen", () => {
   const hero = async () => {
@@ -35,7 +40,13 @@ describe("hero: the paper map with a customer walking in, and Aurevo's own words
 
     expectInOrder(text, [COPY.banner.sender, COPY.banner.title, COPY.banner.body]);
     expect(text).not.toMatch(/Stampeo/);
-    expect(text).not.toContain("Monday, February 17");
+  });
+
+  test("the lock screen shows the site's own date, the one every other lock screen shows, never a date of its own", async () => {
+    const live = loadCatalog("en", "features.json").features.geolocalisation.demo.lockScreenDate;
+
+    expect(live).toBe(SITE_LOCK_DATE);
+    expect(textOf(await hero())).toContain(SITE_LOCK_DATE);
   });
 
   test("one handwritten note on the stage says it is coming soon", async () => {
@@ -64,15 +75,13 @@ describe("hero: the paper map with a customer walking in, and Aurevo's own words
     }
   });
 
-  test("a sender, a title, a body, a date and an icon replace the live words; the rest of the stage stays", () => {
-    const html = renderEn(
-      <GeofencingHeroAnimation sender="Aurevo" title="A title" body="A body" date="Tuesday, June 9" icon={<span>an icon</span>} />,
-    );
+  test("a sender, a title, a body and an icon replace the live words; the date and the rest of the stage stay", () => {
+    const html = renderEn(<GeofencingHeroAnimation sender="Aurevo" title="A title" body="A body" icon={<span>an icon</span>} />);
     const text = textOf(html);
 
-    expectInOrder(text, ["Tuesday, June 9", "Aurevo", "A title", "A body"]);
+    expectInOrder(text, [SITE_LOCK_DATE, "Aurevo", "A title", "A body"]);
     expect(text).toContain("an icon");
-    expect(text).not.toMatch(/Stampeo|February 17/);
+    expect(text).not.toMatch(/Stampeo/);
     expect(html).toContain("aspect-[100/96]");
   });
 });
@@ -80,7 +89,7 @@ describe("hero: the paper map with a customer walking in, and Aurevo's own words
 describe("status: what is live today, and what is coming", () => {
   const column = (html: string, which: "today" | "soon") => html.match(new RegExp(`<div\\b[^>]*data-column="${which}"[\\s\\S]*?</ul>`))?.[0] ?? "";
 
-  test("two columns, Today first: three live facts with a check each, and the broadcasts under their plans", async () => {
+  test("two columns, Today first: three live facts with a check each, the broadcasts among them with no plan chip", async () => {
     const today = column(await render(<StatusSection />), "today");
 
     expectInOrder(today, [COPY.status.today.title, ...COPY.status.today.facts.flatMap((fact) => [fact.text, ...(fact.plan ? [fact.plan] : [])])]);
@@ -122,11 +131,12 @@ describe("how: three steps in the future tense, and the lock screen they end on"
     expect(pictures(html)).toEqual([expect.stringContaining(`notification from ${COPY.banner.sender}: ${COPY.banner.body}`)]);
   });
 
-  test("the table is the stamped steps table and the phone is on the same warm lock screen as the hero's", async () => {
+  test("the table is the stamped steps table and the phone is on the same warm lock screen as the hero's, with the site's date", async () => {
     const html = await render(<HowSection />);
 
     expect(html).toContain("card-stamp");
     expect(textOf(html)).toContain(COPY.banner.title);
+    expect(textOf(html)).toContain(SITE_LOCK_DATE);
     expect(textOf(html)).not.toMatch(/Stampeo/);
   });
 });
@@ -161,6 +171,14 @@ describe("privacy: their location stays on their phone", () => {
 });
 
 describe("the source: the preview's components", () => {
+  test("no component or route of the page writes a date, so none can read as a launch date", () => {
+    const dated = /\b(?:20\d\d|Q[1-4]|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/;
+    const files = [...sourceFiles(GEOLOCATION_DIR), pageFile("platform/geolocation")];
+
+    expect(files.length).toBeGreaterThan(5);
+    expect(files.filter((file) => dated.test(stripComments(read(file)))).map((file) => file.replace(ROOT, ""))).toEqual([]);
+  });
+
   test("each section is its own file, and none draws a sign-up button of its own", () => {
     for (const name of ["StatusSection", "HowSection", "PrivacySection"]) {
       const source = read(join(ROOT, "components", "landing-pages", "feature-previews", "geolocation", `${name}.tsx`));
