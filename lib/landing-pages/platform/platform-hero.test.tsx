@@ -1,7 +1,8 @@
 /**
  * Platform's hero as a visitor meets it: the headline, then the picture of real wallet cards, then the trial.
- * From a laptop the picture is the homepage's fan of seven cards; on a phone it is a still Wallet stack with the
- * front card shown whole. Both are in the markup and CSS shows one: there is no script that picks.
+ * From a laptop the picture is the homepage's fan of seven cards; on a phone it is a Wallet stack with the
+ * front card shown whole, which starts still and cycles through its deck once the page is live. Both are in the
+ * markup and CSS shows one: there is no script that picks.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -12,15 +13,18 @@ import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { renderAsAsync } from "../../testing/visitor-seams";
 import { PLATFORM } from "../copy/platform";
 import { SHARED } from "../copy/shared";
-import { PHONE_STACK } from "./phone-stack";
+import { FIRST_PAINT, PHONE_DECK, drawn, placement } from "./phone-stack";
 
 // The cards ask next-intl for their words.
 await mockEnglishServerTranslations();
 
 const hero = () => renderEnAsync(<PlatformHero />);
 const fanLogos = PLATFORM_FAN_SLOTS.map((slot) => resolveFanCard(slot.cardId).sample.design.logo_url ?? "");
-/** The stack's logos as the markup holds them: the farthest card first, the front card last. */
-const stackLogos = [...[...PHONE_STACK.behind].reverse(), PHONE_STACK.front].map((card) => card.design.logo_url ?? "");
+/** The logos of the cards the stack draws on first paint: the four in view, the front card first. */
+const stackLogos = PHONE_DECK.map((card, index) => ({ card, place: placement(index, FIRST_PAINT, PHONE_DECK.length) }))
+  .filter(({ place }) => drawn(place, false))
+  .sort((a, b) => a.place.slot - b.place.slot)
+  .map(({ card }) => card.design.logo_url ?? "");
 
 /** The markup of the box whose opening tag carries `marker`, up to the next sibling at the same level. */
 function boxWith(html: string, marker: string): string {
@@ -75,7 +79,7 @@ describe("from a laptop: the homepage's fan of seven shops", () => {
   });
 });
 
-describe("on a phone: a still Wallet stack with the front card whole", () => {
+describe("on a phone: a Wallet stack that starts with the front card whole", () => {
   const stack = async () => boxWith(await hero(), 'role="img"');
 
   test("is one picture to a screen reader, named for what it shows, and is hidden from lg", async () => {
@@ -86,12 +90,12 @@ describe("on a phone: a still Wallet stack with the front card whole", () => {
     expect(html).toMatch(/<div class="[^"]*\blg:hidden\b[^"]*"><div role="img"/);
   });
 
-  test("shows Aurevo's card in front with its QR code, and the tops of a points card, a level card and a stamp card behind it", async () => {
+  test("first paint: Aurevo's card in front with its QR code, and the tops of a points card, a level card and a stamp card behind it", async () => {
     const html = await stack();
     const text = textOf(html);
 
-    expect(logos(html)).toEqual(stackLogos);
-    expect(logos(html).at(-1)).toMatch(/\/themes\/cafe\//);
+    expect([...logos(html)].sort()).toEqual([...stackLogos].sort());
+    expect(stackLogos[0]).toMatch(/\/themes\/cafe\//);
     expect(html).toContain("<svg");
     expect(text).toContain("5 / 8");
     expect(text).toContain("Points");
@@ -103,8 +107,12 @@ describe("on a phone: a still Wallet stack with the front card whole", () => {
     expect(logos(await hero())).toHaveLength(7 + 4);
   });
 
-  test("never moves: no keyframes and no script in the stack", async () => {
-    expect(await stack()).not.toMatch(/<style|@keyframes|<script/);
+  test("nothing has played yet and nothing is added for it: no keyframes, no script, no moment on the front card", async () => {
+    const html = await stack();
+
+    expect(html).not.toMatch(/<style|@keyframes|<script/);
+    expect(html).not.toMatch(/wst-/);
+    expect(textOf(html)).not.toContain("6 / 8");
   });
 
   test("looks the same to a reader who asks for less motion", async () => {

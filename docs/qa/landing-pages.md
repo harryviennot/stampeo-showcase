@@ -501,7 +501,7 @@ Six previews of today's feature pages so Harry can compare them side by side. To
 | DEPENDS | LP-01 |
 | ACCOUNT | No session. |
 | STEPS | 1. Open `/us/landing-pages/platform` at 1440 and 390. 2. Open each "today's page" in the table at 1440 and 390. |
-| EXPECT | 1. At 1440 the hero is the fan of cards; at 390 it is a still stack of cards with Aurevo's card fully visible in front, QR code included, and nothing cycles. Below the hero, the sections have no ink borders; "By the numbers" shows four figures, the last "95% of cards still in the wallet three months later" with its source line. The trial buttons carry the dark ledge. 2. Each feature page looks as it does on `dev`. You do NOT see the previews' heroes, sections or keycap buttons on any live page. |
+| EXPECT | 1. At 1440 the hero is the fan of cards; at 390 it is a stack of cards with Aurevo's card fully visible in front at 5 of 8, QR code included; after about a second its sixth stamp lands, the card slides down and fades, and the next card comes to the front, one every 3.2 seconds (a points card gains points, a Silver card moves up to Gold). With reduced motion it stays still. Below the hero, the sections have no ink borders; "By the numbers" shows four figures, the last "95% of cards still in the wallet three months later" with its source line. The trial buttons carry the dark ledge. 2. Each feature page looks as it does on `dev`. You do NOT see the previews' heroes, sections or keycap buttons on any live page. |
 | RESET | None. |
 
 ### LP-37: No plan names, and every claim is live [CORE]

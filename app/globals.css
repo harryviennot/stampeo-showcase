@@ -301,6 +301,23 @@ body {
   }
 }
 
+/* The front card of the phone stack on Platform's hero presses 2px as its stamp lands. */
+@keyframes wst-press {
+  35% {
+    transform: translateY(2px);
+  }
+}
+
+.wst-press {
+  animation: wst-press 450ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wst-press {
+    animation: none;
+  }
+}
+
 /* Pulse animation for badges */
 @keyframes pulse-dot {
 
