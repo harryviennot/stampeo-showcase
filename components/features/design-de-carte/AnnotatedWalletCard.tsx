@@ -9,6 +9,7 @@ import { InkNote } from "@/components/ui/InkAnnotation";
 import { Segmented } from "@/components/ui/Segmented";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
+import type { AnatomyDesigns } from "@/lib/landing-pages/card-design-samples";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
 interface Annotation {
@@ -182,6 +183,7 @@ export function AnnotatedWalletCard({
   heading,
   sectionClassName = "py-16 sm:py-24 bg-[var(--blog-bg)]",
   toggleSize = "md",
+  designs,
 }: Readonly<{
   /** Replaces the title and description above the card. */
   heading?: ReactNode;
@@ -189,6 +191,8 @@ export function AnnotatedWalletCard({
   sectionClassName?: string;
   /** `lg` makes the stamps and points switch 44px tall, for a tap target on a phone. */
   toggleSize?: "md" | "lg";
+  /** The stamps card and the points card to show in place of the sample café's. */
+  designs?: AnatomyDesigns;
 }> = {}) {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
   const tc = useTranslations("common");
@@ -269,10 +273,10 @@ export function AnnotatedWalletCard({
                 <MobileAnnotations />
                 <ScaledCardWrapper baseWidth={300}>
                   <WalletCard
-                    design={cardDesign}
-                    stamps={isPoints ? undefined : 5}
-                    pointsBalance={isPoints ? 120 : undefined}
-                    pointsRewards={isPoints ? ANATOMY_POINTS_REWARDS : undefined}
+                    design={designs ? (isPoints ? designs.points.design : designs.stamps.design) : cardDesign}
+                    stamps={isPoints ? undefined : (designs?.stamps.stamps ?? 5)}
+                    pointsBalance={isPoints ? (designs?.points.pointsBalance ?? 120) : undefined}
+                    pointsRewards={isPoints ? (designs?.points.pointsRewards ?? ANATOMY_POINTS_REWARDS) : undefined}
                     showQR={true}
                     interactive3D={true}
                   />

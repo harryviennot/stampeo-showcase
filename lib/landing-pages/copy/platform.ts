@@ -11,6 +11,11 @@ export const PLATFORM = {
     h1: "Digital punch cards for Apple & Google Wallet.",
     accent: "Apple & Google Wallet.",
   },
+  /** What the hero's cards are, for a screen reader: the stack (the default) and the shelf (`?hero=shelf`). */
+  heroCards: {
+    stackAlt: "Loyalty cards from nine different shops stacked like a phone's wallet, with stamp cards, points cards and level cards among them.",
+    shelfAlt: "Nine loyalty cards in a row: three stamp cards, three points cards, and one shop's card at Bronze, Silver and Gold.",
+  },
   marquee: {
     label: "Built for",
     types: [

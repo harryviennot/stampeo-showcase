@@ -135,10 +135,11 @@ describe("the hero each page opens with (AC1)", () => {
   const hero = async (slug: PreviewSlug) => sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "hero")?.html ?? "";
   const links = (html: string) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
 
-  test("card design deals seven cards into the fan and sends its second button to the designer, which is on the page", async () => {
+  test("card design opens on one card that takes on the look of six shops, and sends its second button to the designer, which is on the page", async () => {
     const html = await renderPreviewPage("platform/card-design");
 
-    expect((await hero("platform/card-design")).match(/class="fan-slot/g)).toHaveLength(7);
+    expect(pictures(await hero("platform/card-design"))).toEqual([CARD_DESIGN_PREVIEW.reskin.alt]);
+    expect(textOf(await hero("platform/card-design"))).toContain(CARD_DESIGN_PREVIEW.reskin.captions[0]);
     expect(links(await hero("platform/card-design"))).toContain("#playground");
     expect(html).toContain('id="playground"');
   });

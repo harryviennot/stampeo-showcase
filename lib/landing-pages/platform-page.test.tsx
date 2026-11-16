@@ -18,7 +18,6 @@ import { HOVER_INTENT_MS, allRowsOpen, hoverIntent } from "@/components/landing-
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { SHARE_ICONS, ShareTree } from "@/components/landing-pages/platform/ShareTree";
 import { BUSINESS_TYPE_ICONS, TypeMarquee } from "@/components/landing-pages/platform/TypeMarquee";
-import { PLATFORM_FAN_SLOTS } from "../hero-fan";
 import { getAllPosts } from "../blog";
 import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
@@ -28,7 +27,7 @@ import { PLATFORM } from "./copy/platform";
 import { PROGRAM_TYPES } from "./copy/program-types";
 import { SHARED } from "./copy/shared";
 
-// The hero's card fan is an async server component that asks next-intl for its words.
+// The hero's wallet cards ask next-intl for their words.
 await mockEnglishServerTranslations();
 const { PlatformHero } = await import("@/components/landing-pages/platform/PlatformHero");
 
@@ -90,12 +89,12 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
   });
 });
 
-describe("the hero: the headline, the fan of cards, then the pair of actions (AC17)", () => {
-  const hero = () => code(platformFile("PlatformHero"));
+describe("the hero: the headline, the stack of cards, then the pair of actions (AC17)", () => {
+  const hero = () => code(platformFile("WalletStackHero"));
 
-  test("puts the headline first, then the homepage's moving fan, then the CTA pair and its reassurance", async () => {
+  test("puts the headline first, then the stack of wallet cards, then the CTA pair and its reassurance", async () => {
     const html = await renderEnAsync(<PlatformHero />);
-    const order = ["<h1", 'class="fan-slot', 'href="/en/onboarding"', "14 days free"].map((needle) => html.indexOf(needle));
+    const order = ["<h1", 'role="img"', 'href="/en/onboarding"', "14 days free"].map((needle) => html.indexOf(needle));
 
     expect(order.every((at) => at > -1)).toBe(true);
     expect(order).toEqual([...order].sort((a, b) => a - b));
@@ -108,17 +107,12 @@ describe("the hero: the headline, the fan of cards, then the pair of actions (AC
     for (const name of ["PlatformHero", "LpAccentBand"]) expect(findTag(page, name)?.attrs).toMatch(/^\s*\/?\s*$/);
   });
 
-  test("deals Platform's own seven cards into the fan when it is given none", async () => {
-    expect(await renderEnAsync(<PlatformHero />)).toBe(await renderEnAsync(<PlatformHero slots={PLATFORM_FAN_SLOTS} />));
-    expect(PLATFORM_FAN_SLOTS).toHaveLength(7);
-  });
-
-  test("is a headline alone: no label above it, and no sub or proof line between it and the fan", async () => {
+  test("is a headline alone: no label above it, and no sub or proof line between it and the cards", async () => {
     const html = await renderEnAsync(<PlatformHero />);
     const title = html.indexOf("<h1");
 
     expect(html.slice(0, title)).not.toContain("<p");
-    expect(html.slice(html.indexOf("</h1>"), html.indexOf("fan-slot"))).not.toContain("<p");
+    expect(html.slice(html.indexOf("</h1>"), html.indexOf('role="img"'))).not.toContain("<p");
   });
 });
 

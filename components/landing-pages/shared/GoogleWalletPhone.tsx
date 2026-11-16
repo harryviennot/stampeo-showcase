@@ -2,6 +2,7 @@ import { GoogleWalletCard } from "@/components/card/GoogleWalletCard";
 import { AndroidPhone } from "@/components/ui/AndroidPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { androidLayout } from "@/lib/devices/android";
+import type { PhoneSample } from "@/lib/landing-pages/card-design-samples";
 import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
 import { aurevoDesign } from "./AurevoCard";
 
@@ -29,15 +30,16 @@ function AppBar() {
 }
 
 /**
- * Google Wallet on an Android phone with the Aurevo pass open at `stamps` of 8,
- * drawn at 320px and shrunk to `width` (`narrowWidth` below `lg`).
+ * Google Wallet on an Android phone with the Aurevo pass open at `stamps` of 8 (or the `sample` business's pass
+ * in its place, with its name beside a round badge), drawn at 320px and shrunk to `width` (`narrowWidth` below `lg`).
  */
 export async function GoogleWalletPhone({
   width = DRAWN_WIDTH,
   narrowWidth,
   stamps = 4,
-}: Readonly<{ width?: number; narrowWidth?: number; stamps?: number }>) {
-  const design = { ...(await aurevoDesign()), logo_url: ROUND_LOGO };
+  sample,
+}: Readonly<{ width?: number; narrowWidth?: number; stamps?: number; sample?: PhoneSample }>) {
+  const design = sample ? { ...sample.design, logo_url: undefined } : { ...(await aurevoDesign()), logo_url: ROUND_LOGO };
 
   return (
     <ScaledBox width={DRAWN_WIDTH} height={androidLayout(DRAWN_WIDTH).height} to={width} narrowTo={narrowWidth}>
@@ -45,7 +47,13 @@ export async function GoogleWalletPhone({
         <div style={{ paddingTop: "var(--android-safe-top)" }}>
           <AppBar />
           <div className="px-3">
-            <GoogleWalletCard design={design} organizationName={SAMPLE_BUSINESS} stamps={stamps} />
+            <GoogleWalletCard
+              design={design}
+              organizationName={sample?.name ?? SAMPLE_BUSINESS}
+              stamps={sample ? sample.stamps : stamps}
+              pointsBalance={sample?.pointsBalance}
+              pointsRewards={sample?.pointsRewards}
+            />
           </div>
         </div>
       </AndroidPhone>

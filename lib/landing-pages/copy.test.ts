@@ -14,7 +14,6 @@ import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims"
 import { ROOT, code } from "../testing/jsx-source";
 import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
 import { PLAN_FACTS, analyticsHistoryLabel } from "../plans/plan-facts";
-import { routing } from "../../i18n/routing";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
 import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
@@ -80,6 +79,7 @@ describe("what these pages may not claim (AC10)", () => {
   const LEVELS_WITHOUT_CHIP: Record<string, string> = {
     "FEATURES.programTypes.title": "the headline over the three tabs; the Levels tab under it carries the chip",
     "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
+    "PLATFORM.heroCards.stackAlt": "the hero cards' alt text",
     "PLATFORM.programTypes.title": "Platform's program rows carry no chips",
     "SHARED.levelCardsAlt": "the level cards' alt text",
     "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews print no Every plan chip",
@@ -366,12 +366,8 @@ describe("the six previews' copy", () => {
   });
 
   describe("every number is the product's, not typed from memory", () => {
-    test("98 stamp icons, and 4 languages set by the customer's phone", () => {
-      const [icons, , languages] = CARD_DESIGN_PREVIEW.numbers.figures;
-
-      expect(icons.value).toBe(String(stampIcons.length));
+    test("98 stamp icons, the library's own count", () => {
       expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
-      expect(languages.value).toBe(String(routing.locales.length));
     });
 
     test("analytics history is each plan's own: 30 days, 90 days and 1 year, with monthly cohorts on Pro alone", () => {

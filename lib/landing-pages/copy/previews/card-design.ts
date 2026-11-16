@@ -18,11 +18,12 @@ export const CARD_DESIGN_PREVIEW = {
   /** The hero's card re-skins itself across six shops; one caption names each, in the card's order. */
   reskin: {
     captions: ["Car wash", "Bakery", "Wine bar", "Lash studio", "Bookstore", "Pizza truck"],
+    /** What the card is, for a screen reader: it is decoration that the captions and the headline already say. */
+    alt: "One loyalty card taking on the look of six shops in turn: a car wash, a bakery, a wine bar, a lash studio, a bookstore and a pizza truck.",
   },
   icons: {
-    /** The handwritten count over the strip of icons. */
+    /** The handwritten count beside the strip of icons. */
     figure: { value: "98", label: "stamp icons" },
-    label: "An icon for every trade",
     /** What the two drifting rows of icon tiles are, for a screen reader. */
     alt: "The designer's stamp icons, in two rows that drift past",
   },
@@ -36,24 +37,17 @@ export const CARD_DESIGN_PREVIEW = {
     title: "Five color palettes, made from your logo.",
     lead: "Upload your logo and pick the one that feels like your shop.",
     logoLabel: "Your logo",
+    /** What the logo tile and the card beside it are, for a screen reader. */
+    logoAlt: "A juice bar's logo",
+    cardAlt: "The juice bar's loyalty card, in the color palette picked from its logo",
     /** The accessible name of each swatch under the card. */
     swatches: ["Palette 1", "Palette 2", "Palette 3", "Palette 4", "Palette 5"],
-  } satisfies SectionCopy & { eyebrow: string; logoLabel: string; swatches: string[] },
+  } satisfies SectionCopy & { eyebrow: string; logoLabel: string; logoAlt: string; cardAlt: string; swatches: string[] },
   anatomy: {
     eyebrow: "Every detail",
     title: "Every part of the card is yours.",
     lead: "Logo, stamps, fields and reward, laid out to read at a glance in any wallet.",
   } satisfies SectionCopy & { eyebrow: string },
-  numbers: {
-    eyebrow: "In the designer",
-    title: "Everything you need to make it yours.",
-    /** 98 is the icon library (`stampIcons`), 4 the languages a card speaks, 5 the palettes made from a logo. */
-    figures: [
-      { value: "98", label: "stamp icons" },
-      { value: "5", label: "color palettes from your logo" },
-      { value: "4", label: "languages, set by their phone" },
-    ],
-  },
   stamps: {
     eyebrow: "Stamp styles",
     title: "Stamps that look like what you sell.",
