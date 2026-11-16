@@ -1,6 +1,6 @@
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
 
-/** The five customer groups the dashboard sorts everyone into, as flat labels (they are not buttons). */
+/** The customer groups the regulars section names, as flat labels (they are not buttons). */
 export function SegmentChips() {
   return (
     <div className="flex flex-col items-start gap-3">

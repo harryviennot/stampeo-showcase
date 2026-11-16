@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-/** A small neutral pill. */
 export function Chip({ className = "", children }: Readonly<{ className?: string; children: ReactNode }>) {
   return (
     <span

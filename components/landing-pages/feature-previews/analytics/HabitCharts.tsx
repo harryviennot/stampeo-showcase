@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { CARD_STAMPS } from "@/lib/landing-pages/previews/analytics-customers";
 import { BUSIEST, HABITS, PROGRESS, READY, busiestSlots } from "@/lib/landing-pages/previews/analytics-sample";
 import { ChartPicture } from "./ChartPicture";
 import { INK, RAMP } from "./ink";
@@ -108,8 +109,9 @@ export function RewardsChart() {
             {label}
           </span>
         ))}
-        <span className="flex-1" />
+        <span className="flex-1">Ready</span>
       </div>
+      <p className={`mt-1 text-center text-[11px] leading-4 ${MUTED}`}>Stamps on an {CARD_STAMPS}-stamp card</p>
       <ul className={`mt-4 flex flex-col gap-1.5 text-[12px] leading-4 ${MUTED}`}>
         {[
           [INK.navy, "Still coming", null],

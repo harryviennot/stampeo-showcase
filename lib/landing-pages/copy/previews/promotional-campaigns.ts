@@ -1,16 +1,14 @@
+import { OUTCOMES } from "../outcomes";
 import { SAMPLE_BUSINESS } from "../shared";
 import type { Banner, BandCopy, FaqItem, Fact, HeroCopy, PageMeta } from "../types";
 
-/** The campaign the hero's lock screen and the first idea show: the approved Outcomes copy. */
-const HAPPY_HOUR: Banner = {
-  sender: SAMPLE_BUSINESS,
-  body: "Quiet afternoon? Your second coffee is half price until 5pm.",
-};
+/** The campaign the hero's lock screen and the first idea show. */
+const HAPPY_HOUR: Banner = OUTCOMES.slowDays.banner;
 
-/** A campaign a café could send: the chip that names it, its sample message on the lock screen, and who gets it. */
+/** A campaign a café could send: its name, its sample message on the lock screen, and who gets it. */
 interface IdeaCopy {
   key: string;
-  chip: string;
+  name: string;
   body: string;
   banner: Banner;
 }
@@ -44,7 +42,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       /** The label over the message as the owner wrote it. */
       messageLabel: "Your message",
       /** The label under each customer's lock screen, left to right. */
-      phones: ["On iPhone", "On Android", "On iPhone"],
+      phones: ["Sophie's iPhone", "Marc's Android", "Ana's iPhone"],
     },
     alt: "One message written once in the dashboard, and the same notification from Aurevo on three customers' lock screens.",
   },
@@ -74,22 +72,22 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     title: "Give them a reason to come in today.",
     lead: "Four messages a café could send this week. Write your own the same way.",
     rows: [
-      { key: "slow-afternoon", chip: "Slow afternoon", body: "Sent to everyone.", banner: HAPPY_HOUR },
+      { key: "slow-afternoon", name: "Slow afternoon", body: "Sent to everyone.", banner: HAPPY_HOUR },
       {
         key: "something-new",
-        chip: "Something new",
+        name: "Something new",
         body: "Sent to everyone.",
         banner: { sender: SAMPLE_BUSINESS, body: "Pumpkin bread is back today." },
       },
       {
         key: "tonight-only",
-        chip: "Tonight only",
+        name: "Tonight only",
         body: "Sent to everyone.",
         banner: { sender: SAMPLE_BUSINESS, body: "Live music tonight from 7pm. Come say hi." },
       },
       {
         key: "new-customers",
-        chip: "New customers",
+        name: "New customers",
         body: "Sent only to customers who joined in the last month.",
         banner: { sender: SAMPLE_BUSINESS, body: "Thanks for joining! Your next coffee comes with a free cookie." },
       },

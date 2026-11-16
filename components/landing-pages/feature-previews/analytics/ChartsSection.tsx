@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
+import { CARD_TITLE } from "../../platform/classes";
 import { LpSection } from "../../shared/LpSection";
 import { BusiestChart, HabitsChart, RewardsChart } from "./HabitCharts";
 import { CohortsChart, LevelsChart, LocationsChart } from "./GroupCharts";
@@ -8,7 +9,6 @@ import { VisitsPicture } from "./VisitsChart";
 
 type ChartKey = (typeof ANALYTICS_PREVIEW.charts.rows)[number]["key"];
 
-/** Each chart's picture. */
 const CHARTS: Record<ChartKey, ReactNode> = {
   visits: <VisitsPicture />,
   returnRate: <ReturnRateChart />,
@@ -23,9 +23,9 @@ const CHARTS: Record<ChartKey, ReactNode> = {
 };
 
 /**
- * How many columns of the twelve each card takes from `lg`: the weekly chart is tall beside the two figures,
- * the two heat charts are wide, the three small ones sit three across, and the last two share a row. On a tablet
- * the cards pair up two across, with the weekly chart and the levels across both.
+ * How many columns of the twelve each card takes from `lg`: the weekly chart is tall beside the two figures, and
+ * the busiest times and how often they come are wide. On a tablet the cards pair up, with the weekly chart and the
+ * levels across both.
  */
 const SPAN: Record<ChartKey, string> = {
   visits: "md:col-span-2 lg:col-span-7 lg:row-span-2",
@@ -43,8 +43,7 @@ const SPAN: Record<ChartKey, string> = {
 /** The cards that are one figure: it sits in the middle of the room under the line. */
 const FIGURES: ChartKey[] = ["returnRate", "newCustomers", "spend"];
 
-/** The card's title: the Platform card title, left-aligned over its picture. */
-const TITLE = "text-[1.25rem] leading-[1.15] font-medium tracking-[-0.02em] text-balance text-[var(--foreground)] lg:text-[1.375rem]";
+const TITLE = `${CARD_TITLE} lg:text-[1.375rem]`;
 
 const SURFACE =
   "flex flex-col rounded-[28px] bg-white p-5 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_24px_48px_-28px_rgba(25,18,16,0.2)] ring-1 ring-black/[0.06] sm:p-6";

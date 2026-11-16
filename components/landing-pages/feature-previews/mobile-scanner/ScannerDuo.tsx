@@ -2,10 +2,10 @@ import type { CSSProperties, ReactNode } from "react";
 import { APP } from "./appColors";
 import { StampsScreen } from "./CounterScreens";
 
-/** The picture is drawn at this size and shrunk by `--s`, which steps with the width of the screen. */
+/** The picture is drawn at this size and shrunk by `--s`. */
 const CANVAS = { width: 540, height: 450 } as const;
 
-/** The scale at each width: the whole picture fits the column of a 320px phone up to a laptop. */
+/** `--s` at each width, so the whole picture fits its column. */
 const SCALE =
   "[--s:0.53] min-[360px]:[--s:0.6] min-[390px]:[--s:0.66] min-[430px]:[--s:0.74] min-[480px]:[--s:0.83] min-[560px]:[--s:0.94] sm:[--s:1] lg:[--s:0.84] xl:[--s:1.05] min-[1360px]:[--s:1.12]";
 

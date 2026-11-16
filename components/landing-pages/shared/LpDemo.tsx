@@ -9,18 +9,21 @@ const HeroDemo = dynamic(() => import("@/components/sections/HeroDemo").then((m)
 /**
  * The live wallet demo; its trial CTA shows in every state, as on iPhone most "add" taps never finish.
  * Left-aligned it is a split (words and button left, demo right); centred it is one column under an eyebrow.
+ * A page can put its own `title` and `lead` over it.
  */
 export function LpDemo({
   eyebrow,
+  title = SHARED.demo.title,
+  lead = SHARED.demo.lead,
   align = "left",
-}: Readonly<{ eyebrow?: string; align?: "left" | "center" }>) {
+}: Readonly<{ eyebrow?: string; title?: string; lead?: string; align?: "left" | "center" }>) {
   const centered = align === "center";
 
   return (
     <LpSection section="demo" anchor>
       <div className={centered ? "flex flex-col items-center gap-10" : "grid gap-10 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-8"}>
         <ScrollReveal className={centered ? "" : "lg:col-start-1 lg:row-start-1 lg:self-end"}>
-          <LpHeading title={SHARED.demo.title} lead={SHARED.demo.lead} eyebrow={eyebrow} align={align} />
+          <LpHeading title={title} lead={lead} eyebrow={eyebrow} align={align} />
         </ScrollReveal>
         <ScrollReveal
           delay={150}

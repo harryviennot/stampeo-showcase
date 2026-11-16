@@ -54,12 +54,11 @@ describe("hero: a still lock screen with Aurevo's own words, and the words that 
     expect(html).not.toContain("paper-grain");
   });
 
-  test("it says coming soon once more beside the phone: a chip on a phone, one handwritten note from lg", async () => {
+  test("says it is coming soon once, in the headline: no chip under the phone and no handwritten note beside it", async () => {
     const html = await hero();
 
-    expect(textOf(html)).toContain(COPY.heroChip);
-    expect(html.match(/class="[^"]*\bink-note\b/g)).toHaveLength(1);
-    expect(html).toMatch(new RegExp(`class="[^"]*\\bink-note\\b[^"]*"[^>]*>${COPY.heroNote}<`));
+    expect(textOf(html).match(/coming soon/gi)).toHaveLength(1);
+    expect(html).not.toMatch(/class="[^"]*\bink-note\b/);
   });
 
   test("the way to the steps lands on a section that is on the page", async () => {

@@ -4,7 +4,7 @@ import { LevelCards } from "../../shared/LevelCards";
 import { LpSection } from "../../shared/LpSection";
 import { SampleCard } from "./SampleCard";
 
-/** A card is drawn 240px wide on a laptop and 144px beside its words on a phone. */
+/** The card as drawn, and the width it shrinks to beside its words on a phone. */
 const CARD = { width: 240, height: 308, narrow: 144 };
 /** The three level cards fan out in a stage of the same weight as a single card. */
 const LEVELS_STAGE = { narrowTo: 144, to: 288, breakpoint: "lg" } as const;
@@ -21,9 +21,8 @@ const VISUALS = [
 ];
 
 /**
- * "A stamp card, a points card or levels": a real card of each with its title and a line under it. On a phone each
- * is a row with the card beside its words; from `lg` three columns with the card over its words, each picture in a
- * card-tall box so the three titles line up.
+ * "A stamp card, a points card or levels": a real card of each with its title and a line under it. From `lg` each
+ * picture sits in a card-tall box, so the three titles line up.
  */
 export function TypesSection() {
   const { eyebrow, title, lead, cards, alts } = CARD_DESIGN_PREVIEW.programs;

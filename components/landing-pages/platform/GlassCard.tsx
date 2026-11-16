@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
+import { CARD_TITLE } from "./classes";
 
-/** The card's title: left-aligned over its picture, a clear step under the section's h2. */
-const TITLE =
-  "mb-4 text-[1.25rem] leading-[1.15] font-medium tracking-[-0.02em] text-balance text-[var(--foreground)] lg:text-[1.5rem]";
+/** A clear step under the section's h2. */
+const TITLE = `mb-4 ${CARD_TITLE} lg:text-[1.5rem]`;
 
 /**
  * A light, translucent card that floats over a picture, its title

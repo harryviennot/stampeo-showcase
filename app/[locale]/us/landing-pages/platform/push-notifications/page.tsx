@@ -6,10 +6,10 @@ import { RelatedPreviews } from "@/components/landing-pages/feature-previews/Rel
 import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon";
 import { DaySection } from "@/components/landing-pages/feature-previews/push-notifications/DaySection";
 import { EditorSection } from "@/components/landing-pages/feature-previews/push-notifications/EditorSection";
-import { PushDemo } from "@/components/landing-pages/feature-previews/push-notifications/PushDemo";
 import { WalletsSection } from "@/components/landing-pages/feature-previews/push-notifications/WalletsSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
+import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
 import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "@/lib/landing-pages/copy/previews/push-notifications";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
@@ -44,7 +44,7 @@ export default function PushNotificationsPreviewPage() {
       <DaySection />
       <WalletsSection />
       <EditorSection />
-      <PushDemo />
+      <LpDemo {...PUSH_NOTIFICATIONS_PREVIEW.demo} align="center" />
       <LpAccentBand copy={PUSH_NOTIFICATIONS_PREVIEW.band} />
       <RelatedPreviews slug="platform/push-notifications" />
     </LandingPageShell>

@@ -18,6 +18,7 @@ import { DeliverAnalytics, Kpi, VisitsOverTime } from "@/components/landing-page
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
 import { NumberFigures } from "@/components/landing-pages/platform/NumberFigures";
+import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { stampIcons } from "@/components/onboarding/StampIconPicker";
 import { CTAButton } from "@/components/ui/CTAButton";
@@ -28,7 +29,7 @@ import { isStill } from "@/hooks/usePrefersReducedMotion";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import type { BlogPostMeta } from "../blog/types";
 import { loadCatalog } from "../testing/catalogs";
-import { ROOT, code, findTag } from "../testing/jsx-source";
+import { ROOT, code } from "../testing/jsx-source";
 import { expectInOrder, renderEn as render, textOf } from "../testing/render-en";
 import { renderAs } from "../testing/visitor-seams";
 import { SHARED } from "./copy/shared";
@@ -139,50 +140,6 @@ describe("the card playground: full and compact", () => {
     for (const key of EXTRAS) expect(textOf(html)).not.toContain(catalog[key]);
     expect(html).not.toContain('id="playground"');
     expect(html).not.toContain("<h2");
-  });
-});
-
-describe("CompactPlayground touchTargets", () => {
-  /** The first segmented control of the panel: the Program toggle, or the strip toggle on its own. */
-  const firstTabs = (html: string) => html.match(/<button class="flex-1 rounded-lg[^"]*"/)?.[0] ?? "";
-  const slider = (html: string) => html.match(/<input[^>]*type="range"[^>]*>/)?.[0] ?? "";
-
-  test("the program toggle and the stamps slider are 44px tall to tap on a phone", () => {
-    const html = render(<CompactPlayground touchTargets />);
-
-    expect(firstTabs(html)).toContain("h-11");
-    expect(slider(html)).toContain("h-11");
-  });
-
-  test("left out, the toggle and the slider are the compact ones", () => {
-    const html = render(<CompactPlayground />);
-
-    expect(firstTabs(html)).toContain("px-3 py-1.5 text-sm");
-    expect(firstTabs(html)).not.toContain("h-11");
-    expect(slider(html)).not.toContain("h-11");
-  });
-
-  test("a visitor who switches to points keeps the 44px controls: the strip toggle's tabs and the balance slider", () => {
-    const points = renderAs({ program: "points" }, () => render(<CompactPlayground touchTargets />));
-    const tabs = points.match(/<button class="flex-1 rounded-lg[^"]*"/g) ?? [];
-
-    expect(tabs.length).toBeGreaterThan(2);
-    expect(tabs.filter((tab) => !tab.includes("h-11"))).toEqual([]);
-    expect(slider(points)).toContain("h-11");
-  });
-
-  test("and left out, points mode has the compact toggle and slider too", () => {
-    const points = renderAs({ program: "points" }, () => render(<CompactPlayground />));
-
-    expect(points).not.toMatch(/<button class="flex-1 rounded-lg[^"]*h-11/);
-    expect(slider(points)).not.toContain("h-11");
-  });
-
-  test("the how-it-works step, which has always shown the compact one, does not ask", () => {
-    const step = findTag(code(join(ROOT, "components/landing-pages/how-it-works/CreateStep.tsx")), "CompactPlayground");
-
-    expect(step).toBeDefined();
-    expect(step?.attrs).not.toMatch(/\w/);
   });
 });
 
@@ -305,6 +262,52 @@ describe("what a page can ask of Platform's pieces", () => {
       expect(html.match(/<details\b/g)).toHaveLength(2);
     });
 
+    test("the words an answer is told to link become a link to the US page, in the answer that has them only, with the sentence reading on", () => {
+      const html = render(
+        <LpFaq
+          faq={{
+            title: "Questions",
+            items: [
+              { question: "How many?", answer: "Your plan sets how many each month (see pricing)." },
+              { question: "Second?", answer: "Yes." },
+            ],
+          }}
+          answerLink={{ words: "see pricing", href: "/pricing" }}
+        />,
+        { us: true },
+      );
+      const links = [...html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/g)].filter((link) => link[2] === "see pricing");
+
+      expect(links.map((link) => link[1])).toEqual(["/us/pricing"]);
+      expect(textOf(html).replaceAll("|", "")).toContain("Your plan sets how many each month (see pricing).");
+    });
+
+    test("the contact link stays in its sentence, so a wrapped line does not drop below the first, and its tap area still reaches past the text", () => {
+      const link = /<a [^>]*href="[^"]*\/contact"[^>]*>/.exec(faq())?.[0] ?? "";
+
+      expect(link).not.toMatch(/\binline-flex\b/);
+      expect(link).toMatch(/\bafter:-inset-y-3\b/);
+    });
+  });
+
+  describe("LpDemo", () => {
+    const demo = (props: Partial<Parameters<typeof LpDemo>[0]> = {}) => render(<LpDemo {...props} />, { us: true });
+
+    test("a page can put its own title and lead under its own label, centred", () => {
+      const html = demo({ eyebrow: "Live demo", title: "Watch a stamp land on your phone.", lead: "Add a card, then add a stamp.", align: "center" });
+
+      expectInOrder(html, ["Live demo", "Watch a stamp land on your phone.", "Add a card, then add a stamp."]);
+      expect(textOf(html)).not.toContain(SHARED.demo.title);
+      expect(html).toContain('data-landing-section="demo"');
+      expect(html).toContain("text-center");
+    });
+
+    test("left out, the demo says the shared words, left-aligned beside the demo", () => {
+      const html = demo();
+
+      expectInOrder(html, [SHARED.demo.title, SHARED.demo.lead]);
+      expect(html).toContain("lg:grid-cols-2");
+    });
   });
 
   test("ScannerLoop: `still` shows the finished stamp as a picture from the first paint", () => {
@@ -343,24 +346,6 @@ describe("LiveActivityFeed cardOnly", () => {
 
     expect(html).toContain("<section");
     expect(textOf(html)).toContain(feed.sectionTitle);
-  });
-
-  test("softFrame swaps the inked 3D border for a light ring, and changes nothing else", () => {
-    const soft = render(<LiveActivityFeed cardOnly softFrame />);
-    const plain = render(<LiveActivityFeed cardOnly />);
-
-    expect(soft).toContain("ring-1 ring-black/[0.05]");
-    expect(soft).not.toContain("blog-card-3d");
-    expect(plain).toContain("blog-card-3d");
-    expect(soft.replace("rounded-2xl bg-white overflow-hidden ring-1 ring-black/[0.05]", "blog-card-3d rounded-2xl bg-white overflow-hidden")).toBe(plain);
-  });
-
-  test("roomBelow leaves the fifth row its bottom padding: the body is five 48px rows and both paddings tall, where the default is 16px shorter", () => {
-    const body = (node: Parameters<typeof render>[0]) => Number(render(node).match(/class="p-4 overflow-hidden" style="height:(\d+)px/)?.[1]);
-
-    expect(body(<LiveActivityFeed cardOnly roomBelow />)).toBe(5 * 48 + 32);
-    expect(body(<LiveActivityFeed cardOnly />)).toBe(5 * 48 + 16);
-    expect(body(<LiveActivityFeed />)).toBe(5 * 48 + 16);
   });
 });
 

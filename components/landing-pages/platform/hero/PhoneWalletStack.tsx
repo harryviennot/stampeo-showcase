@@ -7,7 +7,7 @@ const CARD_WIDTH = 300;
 const CARD_HEIGHT = Math.round(CARD_WIDTH * 1.282);
 /** How much of each card behind shows above the next one: its logo and its count. */
 const TOP_HEIGHT = 44;
-/** The stack is drawn at 255px wide on a phone, so the buttons under it stay in the first screen, and whole from `sm`. */
+/** Narrower on a phone, so the buttons under the stack stay in the first screen. */
 const PHONE_WIDTH = 255;
 
 /** A card at its laid-out size; the QR code shows on the card in front, as on an open pass. */

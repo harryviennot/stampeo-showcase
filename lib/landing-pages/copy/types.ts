@@ -64,7 +64,6 @@ export interface EyebrowSection extends SectionCopy {
   eyebrow: string;
 }
 
-/** A short fact. */
 export interface Fact {
   text: string;
 }

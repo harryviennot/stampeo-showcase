@@ -1,10 +1,10 @@
-import { ANALYTICS } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { ANALYTICS } from "@/lib/landing-pages/platform/analytics-figures";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
 import { AXIS, WEEK_LABELS } from "@/lib/landing-pages/previews/analytics-sample";
 import { ChartPicture } from "./ChartPicture";
 import { INK } from "./ink";
 
-/** The plot area: 200px, and taller from lg where the card is as tall as the two figures beside it. */
+/** The plot area, taller from `lg` where the card is as tall as the two figures beside it. */
 const PLOT = "h-[200px] lg:h-[272px]";
 
 /** The two series the chart stacks, with the words the copy gives them. */

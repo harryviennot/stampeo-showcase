@@ -31,7 +31,6 @@ const ROLE: Record<ReskinRole, string> = {
 };
 const LAYER: Record<ReskinRole, number> = { live: 30, side: 20, hidden: 10 };
 
-/** A round, 44px button. */
 const ROUND_BUTTON =
   "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[var(--foreground)] shadow-[0_1px_2px_rgba(25,18,16,0.08)] ring-1 ring-black/10 transition-colors hover:bg-[var(--background-subtle)] motion-reduce:transition-none";
 
@@ -135,7 +134,7 @@ export function ReskinCards({
         </div>
       </div>
 
-      <div aria-live="polite" className="mt-3 lg:mt-1">
+      <div aria-live={view.announce ? "polite" : "off"} className="mt-3 lg:mt-1">
         <Chip className="px-4! py-1.5! text-sm!">{captions[view.active]}</Chip>
       </div>
 

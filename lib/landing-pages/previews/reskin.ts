@@ -100,7 +100,10 @@ export function swipeDirection(dx: number, dy: number): "next" | "previous" | nu
   return dx < 0 ? "next" : "previous";
 }
 
-/** What the hero draws: the shop in front, and whether the clock runs (not for a reader who asks for less motion, nor once a visitor has chosen). */
-export function reskinView(state: ReskinState, reducedMotion: boolean): { active: number; autoplay: boolean } {
-  return { active: state.active, autoplay: !reducedMotion && !state.touched };
+/**
+ * What the hero draws: the shop in front, whether the clock runs (not for a reader who asks for less motion, nor once a
+ * visitor has chosen), and whether a screen reader is told the shop's name (only once a visitor has chosen it).
+ */
+export function reskinView(state: ReskinState, reducedMotion: boolean): { active: number; autoplay: boolean; announce: boolean } {
+  return { active: state.active, autoplay: !reducedMotion && !state.touched, announce: state.touched };
 }

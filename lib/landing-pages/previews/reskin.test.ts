@@ -126,12 +126,30 @@ describe("a swipe", () => {
 
 describe("for a reader who asks for less motion", () => {
   test("the card never changes on its own, but the buttons, the dots and a swipe still work", () => {
-    expect(reskinView(START, true)).toEqual({ active: 0, autoplay: false });
-    expect(reskinView(step(START, "next"), true)).toEqual({ active: 1, autoplay: false });
+    expect(reskinView(START, true)).toMatchObject({ active: 0, autoplay: false });
+    expect(reskinView(step(START, "next"), true)).toMatchObject({ active: 1, autoplay: false });
   });
 
   test("otherwise the clock runs until the visitor has clicked", () => {
-    expect(reskinView({ active: 4, touched: false }, false)).toEqual({ active: 4, autoplay: true });
-    expect(reskinView({ active: 4, touched: true }, false)).toEqual({ active: 4, autoplay: false });
+    expect(reskinView({ active: 4, touched: false }, false)).toMatchObject({ active: 4, autoplay: true });
+    expect(reskinView({ active: 4, touched: true }, false)).toMatchObject({ active: 4, autoplay: false });
+  });
+});
+
+describe("what a screen reader is told", () => {
+  test("nothing while the card moves on by itself: autoplay never interrupts someone reading the hero", () => {
+    expect(reskinView(START, false).announce).toBe(false);
+    expect(reskinView(step(START, "tick"), false).announce).toBe(false);
+    expect(reskinView(START, true).announce).toBe(false);
+  });
+
+  test.each([
+    ["a button", (state: ReskinState) => step(state, "next")],
+    ["the other button", (state: ReskinState) => step(state, "previous")],
+    ["a dot", (state: ReskinState) => reskinStep(state, { type: "show", index: 3 }, count)],
+  ])("the shop is announced once the visitor has chosen it with %s", (_input, choose) => {
+    const chosen = choose(START);
+
+    for (const reduced of [false, true]) expect(reskinView(chosen, reduced).announce).toBe(true);
   });
 });

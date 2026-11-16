@@ -16,9 +16,8 @@ import { usePlayground } from "./playground/usePlayground";
  * that make the panel tall (first name, rewards, "Surprise me", your own
  * icons), so on a phone the card stays in view while you tap. Its card shows
  * the QR code like a real pass, and its swatches and icons are 44px to tap.
- * `touchTargets` makes the toggles and sliders 44px too.
  */
-export function CompactPlayground({ touchTargets = false }: Readonly<{ touchTargets?: boolean }>) {
+export function CompactPlayground() {
   const p = usePlayground({ rewards: 0 });
 
   return (
@@ -29,11 +28,11 @@ export function CompactPlayground({ touchTargets = false }: Readonly<{ touchTarg
       panelClassName="w-full max-w-xl rounded-2xl border border-[var(--border)] bg-white p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-sm"
       showQR
     >
-      <ProgramControl p={p} touch={touchTargets} />
+      <ProgramControl p={p} />
       <ThemeControl p={p} touch />
-      {p.isPoints && <PointsControl p={p} touch={touchTargets} />}
+      {p.isPoints && <PointsControl p={p} />}
       {!p.isPoints && <PresetIconControl p={p} touch />}
-      {!p.isPoints && <StampsControl p={p} touch={touchTargets} />}
+      {!p.isPoints && <StampsControl p={p} />}
     </PlaygroundBody>
   );
 }

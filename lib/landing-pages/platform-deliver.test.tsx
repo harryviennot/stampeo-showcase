@@ -9,7 +9,8 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { GoogleWalletCard } from "@/components/card/GoogleWalletCard";
-import { ANALYTICS, DeliverAnalytics, DeliverUpdate } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { DeliverAnalytics, DeliverUpdate } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { ANALYTICS } from "./platform/analytics-figures";
 import { GlassCard } from "@/components/landing-pages/platform/GlassCard";
 import { LockScreenNotification } from "@/components/landing-pages/platform/LockScreenNotification";
 import { lpBanner } from "@/components/landing-pages/shared/banner";

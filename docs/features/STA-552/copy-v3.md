@@ -28,7 +28,7 @@ All six decisions below are **accepted**. One change: `ANALYTICS_PREVIEW.devices
 
 - `copy.test.ts` "each sibling link says what its feature is in the words its own preview's headline uses" becomes "each line is set, at most 50 characters, and names no plan".
 - The figure list gains `PLATFORM.numbers.figures[3]`; the campaigns `numbers`, `plans` and `composer` tests go with their sections; FAQ counts become 6 (campaigns, card design) and 4 (geolocation).
-- The geolocation tests: the H1 no longer starts "Soon,"; `heroChip` is `Coming soon`; the `status` lines and their exemptions go; `STEP_NAMES` becomes the three titles below.
+- The geolocation tests: the H1 no longer starts "Soon,"; the hero has no chip and no handwritten note ("coming soon" is said once, in the H1); the `status` lines and their exemptions go; `STEP_NAMES` becomes the three titles below.
 - The 98 icons test reads `CARD_DESIGN_PREVIEW.icons.lead` (and `facts[0]`) for `String(stampIcons.length)`.
 - The levels chip test: the previews print no chips, so the new level mentions (push `day.nodes[3]`, scanner `counter.options[3]`, analytics `charts.rows[7]`, card design `programs`) join the no-chip list.
 
@@ -170,7 +170,7 @@ Primary in the meta title, the H1 ("Send a promotion to every customer's phone")
 | `how.steps[2].title` | They see it on their lock screen |  |
 | `how.steps[2].body` | A notification from your shop, in Apple Wallet or Google Wallet. |  |
 | `how.visual.source` | Your message |  |
-| `how.visual.phones` | On iPhone · On Android · On iPhone |  |
+| `how.visual.phones` | Sophie's iPhone · Marc's Android · Ana's iPhone |  |
 | `how.alt` | One message written once in the dashboard, and the same notification from Aurevo on three customers' lock screens. |  |
 
 ### Instead of texting (new)
@@ -196,16 +196,16 @@ Primary in the meta title, the H1 ("Send a promotion to every customer's phone")
 | `ideas.eyebrow` | Ideas to send | 13/28 |
 | `ideas.title` | Give them a reason to come in today. | 36/44 |
 | `ideas.lead` | Four messages a café could send this week. Write your own the same way. | 71/85 |
-| `ideas.rows[0].chip` | Slow afternoon |  |
+| `ideas.rows[0].name` | Slow afternoon |  |
 | `ideas.rows[0].banner` | Quiet afternoon? Your second coffee is half price until 5pm. |  |
 | `ideas.rows[0].body` | Sent to everyone. |  |
-| `ideas.rows[1].chip` | Something new |  |
+| `ideas.rows[1].name` | Something new |  |
 | `ideas.rows[1].banner` | Pumpkin bread is back today. |  |
 | `ideas.rows[1].body` | Sent to everyone. |  |
-| `ideas.rows[2].chip` | Tonight only |  |
+| `ideas.rows[2].name` | Tonight only |  |
 | `ideas.rows[2].banner` | Live music tonight from 7pm. Come say hi. |  |
 | `ideas.rows[2].body` | Sent to everyone. |  |
-| `ideas.rows[3].chip` | New customers |  |
+| `ideas.rows[3].name` | New customers |  |
 | `ideas.rows[3].banner` | Thanks for joining! Your next coffee comes with a free cookie. |  |
 | `ideas.rows[3].body` | Sent only to customers who joined in the last month. **[CHECK: join-date targeting on every plan is STA-549 and the live campaigns hero ("basic segmentation"); STAMPEO.md still says Starter has no campaigns]** |  |
 
@@ -282,8 +282,6 @@ Primary in the meta title, the H1 and the how-it-works H2. Secondaries in the me
 | `hero.primary` | Start my free trial |  |
 | `hero.secondary` | See how it will work (to #how) |  |
 | `hero.reassurance` | {trialDays} days free · Cancel anytime |  |
-| `heroChip` | Coming soon |  |
-| `heroNote` | coming soon |  |
 | `banner.sender` | Aurevo |  |
 | `banner.title` | Aurevo is around the corner |  |
 | `banner.body` | Your 6th coffee is waiting. 2 stamps to a free one. |  |

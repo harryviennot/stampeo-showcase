@@ -25,10 +25,6 @@ export const GEOLOCATION_PREVIEW = {
     /** What the hero's picture shows, for a screen reader. */
     alt: "A lock screen with a notification from Aurevo: Aurevo is around the corner. Your 6th coffee is waiting. 2 stamps to a free one.",
   } satisfies HeroCopy & { secondary: string; alt: string },
-  /** The small label under the hero's phone on a phone. */
-  heroChip: "Coming soon",
-  /** The handwritten note beside the hero's phone from `lg`. */
-  heroNote: "coming soon",
   /** The hero phone's lock screen: Aurevo's own words, never Stampeo's. */
   banner: {
     sender: SAMPLE_BUSINESS,

@@ -15,13 +15,13 @@ import {
   type WordingMode,
   type WordingPart,
 } from "@/lib/landing-pages/previews/wording-editor";
+import { CARD_SHADOW } from "../../platform/classes";
 import { LockScreenSlice } from "./LockScreenSlice";
 
 const LABEL = "text-[13px] font-semibold text-[var(--muted-foreground)]";
 
 /** The editor's white card: a soft shadow and a hairline ring, as the toggle card's. */
-const SURFACE =
-  "rounded-[32px] bg-white shadow-[0_2px_4px_rgba(25,18,16,0.04),0_32px_72px_-32px_rgba(25,18,16,0.18)] ring-1 ring-black/5";
+const SURFACE = `rounded-[32px] bg-white ${CARD_SHADOW} ring-1 ring-black/5`;
 
 /** The notification's height is held at its longest wording, so typing never moves what is under it. */
 const LONGEST = [COPY.editor.ready.text, COPY.editor.own.preview].reduce((longest, text) => (text.length > longest.length ? text : longest));

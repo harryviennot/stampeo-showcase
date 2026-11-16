@@ -4,13 +4,13 @@ import { NotificationPhoneDemo } from "@/components/features/notifications-push/
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon";
-import { CampaignsFaq } from "@/components/landing-pages/feature-previews/promotional-campaigns/CampaignsFaq";
 import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
 import { HowSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/HowSection";
 import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
 import { TextingSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/TextingSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
+import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
@@ -47,7 +47,7 @@ export default function PromotionalCampaignsPreviewPage() {
       <TextingSection />
       <IdeasSection />
       <DeliverySection />
-      <CampaignsFaq />
+      <LpFaq faq={PROMOTIONAL_CAMPAIGNS_PREVIEW.faq} answerLink={{ words: "see pricing", href: "/pricing" }} />
       <LpAccentBand copy={PROMOTIONAL_CAMPAIGNS_PREVIEW.band} />
       <RelatedPreviews slug="platform/promotional-campaigns" />
     </LandingPageShell>

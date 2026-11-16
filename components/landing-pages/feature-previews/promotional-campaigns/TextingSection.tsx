@@ -1,13 +1,12 @@
 import { MegaphoneIcon, PhoneIcon, XMarkIcon } from "@/components/icons";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import type { Fact } from "@/lib/landing-pages/copy/types";
-import { CELL_TITLE } from "../../platform/classes";
+import { CARD_SHADOW, CELL_TITLE } from "../../platform/classes";
 import { FactList } from "../../shared/FactList";
 import { IconTile } from "../../shared/IconTile";
 import { LpSection } from "../../shared/LpSection";
 
-const CARD =
-  "rounded-[28px] bg-white p-6 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_32px_72px_-32px_rgba(25,18,16,0.18)] ring-1 lg:p-8";
+const CARD = `rounded-[28px] bg-white p-6 ${CARD_SHADOW} ring-1 lg:p-8`;
 
 /** What texting costs you, each line under a grey cross. */
 function Drawbacks({ facts }: Readonly<{ facts: readonly Fact[] }>) {

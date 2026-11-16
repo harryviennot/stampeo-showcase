@@ -7,7 +7,6 @@ import { SampleCard } from "./SampleCard";
 /** The three cards, in the order of the captions: a shop's own citrus icons, a shop's own cones, and paws from the library. */
 const CARDS = ["pulp", "gelo", "patoune"] as const;
 
-/** A card is drawn 200px wide from `sm` and 156px on a phone, two to a row. */
 const CARD = { width: 200, height: 257, narrow: 156 };
 
 /**

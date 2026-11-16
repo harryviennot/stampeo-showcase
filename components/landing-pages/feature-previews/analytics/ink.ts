@@ -1,4 +1,4 @@
-import { INK as DASHBOARD_INK } from "../../platform/DeliverAnalytics";
+import { INK as DASHBOARD_INK } from "@/lib/landing-pages/platform/analytics-figures";
 
 /** The dashboard's chart colours: one blue family from its pale track to its navy, with the grey of a figure and a label. */
 export const INK = { ...DASHBOARD_INK, track: "#eceff7", mid: "#4a63a8" } as const;

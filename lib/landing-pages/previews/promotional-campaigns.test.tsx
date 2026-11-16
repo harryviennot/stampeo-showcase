@@ -79,7 +79,14 @@ describe("how it works: one message, written once, on several lock screens", () 
   test("the message is on the page four times, once as written and once on each of the three lock screens, each from Aurevo", () => {
     expect(times(html(), message)).toBe(4);
     expect(times(html(), SAMPLE_BUSINESS)).toBe(3);
-    expect(visual.phones).toEqual(["On iPhone", "On Android", "On iPhone"]);
+  });
+
+  test("the three lock screens are three customers' own phones, each named, on both iPhone and Android", () => {
+    expect(visual.phones).toHaveLength(3);
+    expect(new Set(visual.phones).size).toBe(3);
+    for (const label of visual.phones) expect(label).toMatch(/^[A-Z][a-z]+'s (?:iPhone|Android)$/);
+    expect(visual.phones.some((label) => label.endsWith("iPhone"))).toBe(true);
+    expect(visual.phones.some((label) => label.endsWith("Android"))).toBe(true);
   });
 
   test("is an explanation, not a form: no field, no choice, no button to press", () => {
@@ -131,9 +138,9 @@ describe("ideas: give them a reason to come in today", () => {
   const rows = COPY.ideas.rows;
 
   test("is four ideas, in the copy's order, each with its name, its message on Aurevo's lock screen and who gets it", () => {
-    expect(rows.map((row) => row.chip)).toEqual(["Slow afternoon", "Something new", "Tonight only", "New customers"]);
+    expect(rows.map((row) => row.name)).toEqual(["Slow afternoon", "Something new", "Tonight only", "New customers"]);
     expect(html().match(/<li\b/g)).toHaveLength(4);
-    expectInOrder(html(), rows.flatMap((row) => [row.chip, SAMPLE_BUSINESS, row.banner.body, row.body]));
+    expectInOrder(html(), rows.flatMap((row) => [row.name, SAMPLE_BUSINESS, row.banner.body, row.body]));
   });
 
   test("every message is a lock-screen picture from Aurevo, all four in view at once with nothing to press", () => {

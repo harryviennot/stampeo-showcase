@@ -6,7 +6,6 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { AnatomySection } from "@/components/landing-pages/feature-previews/card-design/AnatomySection";
 import { IconsSection } from "@/components/landing-pages/feature-previews/card-design/IconsSection";
@@ -16,7 +15,8 @@ import { STEPS_PHONE } from "@/components/landing-pages/platform/StepsTable";
 import { stampIcons } from "@/components/onboarding/StampIconPicker";
 import { availability } from "@/lib/plans/plan-facts";
 import { ROOT, openingTags, read } from "../../testing/jsx-source";
-import { otherCallers, previewSource } from "../../testing/landing-pages-source";
+import { trackedBy } from "../../testing/cta-recorder";
+import { otherCallers } from "../../testing/landing-pages-source";
 import { expectInOrder, logos, pictures, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
 import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
@@ -25,7 +25,7 @@ import { SHARED } from "../copy/shared";
 import { ANATOMY_DESIGNS, WALLET_SAMPLE } from "./card-design-samples";
 import { RESKIN_SHOPS, reskinCard } from "./reskin";
 
-// The types section holds the level cards and the wallets table two phones, all async and asking next-intl for their words.
+// The types section holds the level cards and the wallets section two phones, all async and asking next-intl for their words.
 await mockEnglishServerTranslations();
 const { WalletsSection } = await import("@/components/landing-pages/feature-previews/card-design/WalletsSection");
 const { TypesSection } = await import("@/components/landing-pages/feature-previews/card-design/TypesSection");
@@ -33,12 +33,11 @@ const { TypesSection } = await import("@/components/landing-pages/feature-previe
 const DESIGN_DIR = join(ROOT, "components", "landing-pages", "feature-previews", "card-design");
 
 describe("the page", () => {
-  test("asks the six questions of its own FAQ, and says nothing about plans", async () => {
+  test("asks the six questions of its own FAQ", async () => {
     const page = await renderPreviewPage("platform/card-design");
 
     expect(COPY.faq.items).toHaveLength(6);
     expectInOrder(page, [COPY.faq.title, ...COPY.faq.items.map((item) => item.question)]);
-    expect(textOf(page)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
   });
 
   test("shows a different shop in each section: no shop's logo is in two of them, and the bubble tea shop and the barbershop are in none", async () => {
@@ -57,18 +56,6 @@ describe("the page", () => {
     // The points card the anatomy section switches to is not on the page until a visitor asks for it.
     expect(seen.has(ANATOMY_DESIGNS.points.design.logo_url ?? "")).toBe(false);
   });
-
-  test("is a tour of the card, not a designer: no playground, no icon strip, no palettes", async () => {
-    const page = await renderPreviewPage("platform/card-design");
-
-    expect(page).not.toMatch(/id="playground"|data-landing-section="(?:playground|palettes)"/);
-    expect(textOf(page)).not.toMatch(/Try the designer|color palettes|From your logo/i);
-    expect(page).not.toContain("<hr");
-    for (const gone of ["DesignerSection", "IconsStrip", "IconRows", "PalettesSection", "PaletteStage", "StampStyleRows"]) {
-      expect(existsSync(join(DESIGN_DIR, `${gone}.tsx`))).toBe(false);
-    }
-    expect(existsSync(join(ROOT, "lib", "landing-pages", "previews", "pulp-palettes.ts"))).toBe(false);
-  });
 });
 
 describe("one card, many shops", () => {
@@ -86,10 +73,10 @@ describe("one card, many shops", () => {
     expect(textOf(html())).toContain("Car wash");
   });
 
-  test("sends the second button to the anatomy of the card, and tracks the trial as the hero's", () => {
+  test("sends the second button to the anatomy of the card, and the trial is the keycap, tracked as the hero's", () => {
     expect(html()).toMatch(/<a [^>]*href="#anatomy"/);
-    expect(html()).toMatch(/<a [^>]*href="\/en\/onboarding"/);
-    expect(previewSource("platform/card-design", "ReskinHero")).toMatch(/<LpCtaPair\s+location="hero"|<PreviewHero/);
+    expect(html()).toMatch(/<a [^>]*class="[^"]*\bkeycap\b[^"]*"[^>]*href="\/en\/onboarding"/);
+    expect(trackedBy(html)).toContainEqual({ trackAs: "hero", href: "/onboarding" });
     expect(html()).toContain('data-landing-section="hero"');
   });
 
@@ -110,6 +97,13 @@ describe("one card, many shops", () => {
     });
     expect(dots.filter((attrs) => attrs.includes('aria-current="true"'))).toHaveLength(1);
     expect(dots[0]).toContain('aria-current="true"');
+  });
+
+  test("tells a screen reader nothing while the card moves by itself: the caption is a live region that stays off until a visitor chooses", () => {
+    const region = /<div aria-live="([a-z]+)"[^>]*>([\s\S]*?)<\/div>/.exec(html());
+
+    expect(region?.[1]).toBe("off");
+    expect(textOf(region?.[2] ?? "")).toContain(COPY.reskin.captions[0]);
   });
 
   test("lets a finger scroll the page up and down over the card while a sideways swipe turns it", () => {

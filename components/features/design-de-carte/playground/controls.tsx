@@ -29,9 +29,6 @@ interface SegmentedProps<T extends string> {
   size?: "md" | "lg";
 }
 
-/** A range input 44px tall around the same 16px slider: the negative margins give the extra 28px back, so the layout does not move. */
-const TOUCH_RANGE = "h-11 -my-3.5";
-
 function Segmented<T extends string>({
   options,
   value,
@@ -103,13 +100,11 @@ function Stepper({ value, min, max, onChange, decLabel, incLabel }: StepperProps
   );
 }
 
-/** Program type: the same card runs stamps or points; `touch` makes the tabs 44px. */
+/** Program type: the same card runs stamps or points. */
 export function ProgramControl({
   p: { t, tc, program, setProgram },
-  touch = false,
 }: {
   p: Playground;
-  touch?: boolean;
 }) {
   return (
     <div className="space-y-2.5">
@@ -121,7 +116,6 @@ export function ProgramControl({
         ]}
         value={program}
         onChange={setProgram}
-        size={touch ? "lg" : "md"}
       />
     </div>
   );
@@ -184,13 +178,11 @@ export function ThemeControl({
   );
 }
 
-/** Points: strip style and a draggable balance; `touch` makes the tabs and the slider 44px to tap. */
+/** Points: strip style and a draggable balance. */
 export function PointsControl({
   p: { t, stripStyleLabels, stripStyle, setStripStyle, balance, setBalance },
-  touch = false,
 }: {
   p: Playground;
-  touch?: boolean;
 }) {
   return (
     <>
@@ -203,8 +195,7 @@ export function PointsControl({
           }))}
           value={stripStyle}
           onChange={setStripStyle}
-          size={touch ? "lg" : "md"}
-        />
+          />
       </div>
 
       <div className="space-y-2.5">
@@ -222,7 +213,7 @@ export function PointsControl({
           value={balance}
           onChange={(e) => setBalance(Number(e.target.value))}
           aria-label={t("balanceLabel")}
-          className={`w-full accent-[var(--accent)] cursor-pointer${touch ? ` ${TOUCH_RANGE}` : ""}`}
+          className="w-full accent-[var(--accent)] cursor-pointer"
         />
       </div>
     </>
@@ -331,13 +322,11 @@ export function CustomIconControl({
   );
 }
 
-/** Stamps: drag to fill the card (mirrors the points balance slider); `touch` makes the slider 44px to tap. */
+/** Stamps: drag to fill the card (mirrors the points balance slider). */
 export function StampsControl({
   p: { tc, shownStamps, totalStamps, setStamps },
-  touch = false,
 }: {
   p: Playground;
-  touch?: boolean;
 }) {
   return (
     <div className="space-y-2.5">
@@ -355,7 +344,7 @@ export function StampsControl({
         value={shownStamps}
         onChange={(e) => setStamps(Number(e.target.value))}
         aria-label={tc("stamps")}
-        className={`w-full accent-[var(--accent)] cursor-pointer${touch ? ` ${TOUCH_RANGE}` : ""}`}
+        className="w-full accent-[var(--accent)] cursor-pointer"
       />
     </div>
   );

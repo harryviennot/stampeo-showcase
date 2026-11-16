@@ -10,12 +10,13 @@ import { BlindSpotsSection } from "@/components/landing-pages/feature-previews/a
 import { ChartsSection } from "@/components/landing-pages/feature-previews/analytics/ChartsSection";
 import { CustomersSection } from "@/components/landing-pages/feature-previews/analytics/CustomersSection";
 import { KeyNumbersCard } from "@/components/landing-pages/feature-previews/analytics/KeyNumbersCard";
-import { ANALYTICS, DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
 import { ROOT } from "../../testing/jsx-source";
 import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { smallestLabelPx } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
+import { ANALYTICS } from "../platform/analytics-figures";
 import { CUSTOMER_LIST } from "./analytics-customers";
 import {
   BUSIEST,
@@ -177,10 +178,10 @@ describe("every chart, as a card with its question under its title", () => {
     expectInOrder(card, HABITS.flatMap((habit) => [habit.label, String(habit.count)]));
   });
 
-  test("reward progress: customers by stamps on their card, and the ones with a reward ready", async () => {
+  test("reward progress: customers by stamps on their card, the fifth bar the ones with a reward ready, and what the axis counts", async () => {
     const card = cardOf(await render(<ChartsSection />), "rewards");
 
-    expectInOrder(card, ["0-1", "2-3", "4-5", "6-7", "Reward ready", String(READY)]);
+    expectInOrder(card, ["0-1", "2-3", "4-5", "6-7", "Ready", "Stamps on an 8-stamp card", "Reward ready", String(READY)]);
   });
 
   test("monthly cohorts: six first-visit months against 30, 60, 90 and 180 days, a dash where a window has not passed", async () => {

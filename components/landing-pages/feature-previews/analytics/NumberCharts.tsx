@@ -1,4 +1,4 @@
-import { ANALYTICS } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { ANALYTICS } from "@/lib/landing-pages/platform/analytics-figures";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
 import { SPEND, dollars } from "@/lib/landing-pages/previews/analytics-sample";
 import { ChartPicture } from "./ChartPicture";

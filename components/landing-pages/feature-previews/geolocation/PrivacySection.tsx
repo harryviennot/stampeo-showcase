@@ -1,10 +1,10 @@
 import { GEOLOCATION_PREVIEW } from "@/lib/landing-pages/copy/previews/geolocation";
+import { CARD_SHADOW } from "../../platform/classes";
 import { FactList } from "../../shared/FactList";
 import { LpSection } from "../../shared/LpSection";
 import { PrivacyDiagram } from "./PrivacyDiagram";
 
-const SURFACE =
-  "rounded-[32px] bg-white shadow-[0_2px_4px_rgba(25,18,16,0.04),0_32px_72px_-32px_rgba(25,18,16,0.18)] ring-1 ring-black/5";
+const SURFACE = `rounded-[32px] bg-white ${CARD_SHADOW} ring-1 ring-black/5`;
 
 /** A white card with the drawing of where a location goes (nowhere past the phone), beside the three facts that say it in words. */
 export function PrivacySection() {

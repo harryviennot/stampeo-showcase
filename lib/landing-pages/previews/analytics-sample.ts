@@ -1,4 +1,4 @@
-import { ANALYTICS } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { ANALYTICS } from "../platform/analytics-figures";
 
 /**
  * The numbers behind the analytics preview's charts: the sample café's, read from Platform's `ANALYTICS` (visits,
