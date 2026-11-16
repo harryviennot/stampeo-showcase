@@ -23,7 +23,7 @@ export const GEOLOCATION_PREVIEW = {
     /** The second action, to the steps. */
     secondary: "See how it will work",
     /** What the hero's picture shows, for a screen reader. */
-    alt: "A lock screen with Aurevo's loyalty card and the line: Aurevo is around the corner. Your 6th coffee is waiting. 2 stamps to a free one.",
+    alt: "A lock screen with a notification from Aurevo: Aurevo is around the corner. Your 6th coffee is waiting. 2 stamps to a free one.",
   } satisfies HeroCopy & { secondary: string; alt: string },
   /** The small label under the hero's phone on a phone. */
   heroChip: "Coming soon",
