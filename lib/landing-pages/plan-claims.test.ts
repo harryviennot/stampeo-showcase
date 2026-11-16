@@ -62,6 +62,12 @@ const CUSTOM_MESSAGE_TEXT: Gate = (facts) => catalogCell("stampMilestoneReward",
 const CUSTOM_MILESTONES: Gate = (facts) => facts.milestoneNotifications !== 0;
 /** Broadcast targeting by stamps, rewards and inactivity: "Advanced" on Pro, where Growth targets by date. */
 const ADVANCED_TARGETING: Gate = (facts) => catalogCell("segmentation", facts).startsWith("Advanced");
+/** A history longer than Starter's 30 days: the Analytics page looks further back on Growth and Pro. */
+const LONGER_HISTORY: Gate = (facts) => facts.analyticsHistoryDays !== PLAN_FACTS.starter.analyticsHistoryDays;
+/** Starter's Analytics page answers in a sentence where the other plans chart it. */
+const ANSWERS_IN_A_SENTENCE: Gate = (facts) => !facts.analyticsCharts;
+/** Geofencing is gated on for Pro but sold as coming soon: the page says "coming soon" and Pro, never "live". */
+const GEOFENCING_COMING_SOON: Gate = (facts) => facts.geofencing === "coming_soon";
 
 /** Each chipped object of the copy (a Fact, Tile, Moment or program type) and the fact that decides its chip. */
 const CHIPPED: Record<string, Gate> = {
@@ -78,15 +84,22 @@ const CHIPPED: Record<string, Gate> = {
   "PLATFORM.platform.scanner.facts[2]": (facts) => facts.teamMembers === "unlimited",
   "MOBILE_SCANNER_PREVIEW.team.tabs.owners.facts[1]": pricingRow("earningCaps"),
   "MOBILE_SCANNER_PREVIEW.team.tabs.owners.facts[2]": (facts) => facts.teamMembers === "unlimited",
+  "MOBILE_SCANNER_PREVIEW.teamStrip.facts[0]": pricingRow("earningCaps"),
+  "MOBILE_SCANNER_PREVIEW.teamStrip.facts[1]": (facts) => facts.teamMembers === "unlimited",
   "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[0]": CUSTOM_MESSAGE_TEXT,
   "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[1]": CUSTOM_MILESTONES,
   "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[2]": CUSTOM_MESSAGE_TEXT,
+  "PUSH_NOTIFICATIONS_PREVIEW.editor.toggle": CUSTOM_MESSAGE_TEXT,
   "ANALYTICS_PREVIEW.questions.rows[1]": ANALYTICS_CHARTS,
   "ANALYTICS_PREVIEW.questions.rows[2]": ANALYTICS_CHARTS,
   "ANALYTICS_PREVIEW.questions.rows[3]": ANALYTICS_CHARTS,
   PROMOTIONAL_CAMPAIGNS_PREVIEW: BROADCASTS,
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[1]": ADVANCED_TARGETING,
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[2]": ADVANCED_TARGETING,
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.composer.card.audience.filters[1]": ADVANCED_TARGETING,
+  "PROMOTIONAL_CAMPAIGNS_PREVIEW.composer.card.schedule": SCHEDULED_BROADCASTS,
+  "GEOLOCATION_PREVIEW.status.today.facts[2]": BROADCASTS,
+  "GEOLOCATION_PREVIEW.status.soon": GEOFENCING_COMING_SOON,
 };
 
 /**
@@ -120,12 +133,29 @@ const PLAN_LINES: Record<string, PlanClaim[]> = {
   "ANALYTICS_PREVIEW.glance.lead": [claim("every plan", BASIC_ANALYTICS)],
   "ANALYTICS_PREVIEW.questions.closer": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "ANALYTICS_PREVIEW.band.sub": [claim("every plan", BASIC_ANALYTICS)],
+  "ANALYTICS_PREVIEW.ladder.title": [claim("every plan", BASIC_ANALYTICS), claim("Growth and Pro", ANALYTICS_CHARTS)],
+  "ANALYTICS_PREVIEW.ladder.lead": [
+    claim("Starter", ANSWERS_IN_A_SENTENCE),
+    claim("Growth and Pro", ANALYTICS_CHARTS),
+    claim("Growth and Pro", LONGER_HISTORY),
+  ],
+  "ANALYTICS_PREVIEW.ladder.locked": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "MOBILE_SCANNER_PREVIEW.ways.lead": [claim("every plan", UNLIMITED_SCANS)],
   "PUSH_NOTIFICATIONS_PREVIEW.wording.lead": [
     claim("every plan", pricingRow("stampMilestoneReward")),
     claim("Growth and Pro", CUSTOM_MESSAGE_TEXT),
   ],
+  "PUSH_NOTIFICATIONS_PREVIEW.editor.lead": [
+    claim("every plan", pricingRow("stampMilestoneReward")),
+    claim("Growth and Pro", CUSTOM_MESSAGE_TEXT),
+  ],
   "PUSH_NOTIFICATIONS_PREVIEW.band.sub": [claim("every plan", pricingRow("stampMilestoneReward"))],
+  "GEOLOCATION_PREVIEW.meta.description": [claim("Pro", GEOFENCING_COMING_SOON)],
+  "GEOLOCATION_PREVIEW.hero.sub": [claim("Pro", GEOFENCING_COMING_SOON)],
+  "GEOLOCATION_PREVIEW.heroChip": [claim("Pro", GEOFENCING_COMING_SOON)],
+  "GEOLOCATION_PREVIEW.status.lead": [claim("Pro", GEOFENCING_COMING_SOON)],
+  "GEOLOCATION_PREVIEW.faq.items[1].answer": [claim("Pro", GEOFENCING_COMING_SOON)],
+  "GEOLOCATION_PREVIEW.band.sub": [claim("Pro", GEOFENCING_COMING_SOON)],
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.lead": [claim("Growth and Pro", BROADCASTS)],
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.how.cells[1].body": [claim("Pro", ADVANCED_TARGETING)],
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.how.cells[2].body": [claim("Pro", SCHEDULED_BROADCASTS)],
@@ -151,6 +181,9 @@ const PLAN_NAMES_ELSEWHERE: Record<string, string> = {
   "ANALYTICS_PREVIEW.numbers.figures[0].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
   "ANALYTICS_PREVIEW.numbers.figures[1].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
   "ANALYTICS_PREVIEW.numbers.figures[2].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
+  "ANALYTICS_PREVIEW.ladder.plans[0].label": "the ladder's plan tabs, in the order of TIERS",
+  "ANALYTICS_PREVIEW.ladder.plans[1].label": "the ladder's plan tabs, in the order of TIERS",
+  "ANALYTICS_PREVIEW.ladder.plans[2].label": "the ladder's plan tabs, in the order of TIERS",
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells[0].title": "the plans table's column heads",
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells[1].title": "the plans table's column heads",
 };
@@ -211,8 +244,8 @@ describe("a broadcast is labelled with the plans that have broadcasts", () => {
 
   /**
    * The previews: the broadcasts preview states the plans of the whole page (its top-level `plan`, which every
-   * broadcast mention under it inherits), and the other four name the feature only in the link to it, with no
-   * badge, for the same reason.
+   * broadcast mention under it inherits), and the others name the feature only in the link to it, with no
+   * badge, for the same reason. Geolocation's "Today" column also lists broadcasts, under their own chip.
    */
   const PREVIEW_NO_CHIP = ["PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
 
@@ -246,12 +279,15 @@ describe("a broadcast is labelled with the plans that have broadcasts", () => {
     expect(mine.filter(({ plan }) => label(plan ?? "") !== expected && label(plan ?? "") !== "pro")).toEqual([]);
   });
 
-  test("on the other previews a broadcast is named only in the link to its preview, and PLAN_FACTS still says broadcasts are not on every plan", () => {
+  test("on the other previews a broadcast is named without a label only in the link to its preview, and PLAN_FACTS still says broadcasts are not on every plan", () => {
     const others = Object.entries(MODULES)
       .filter(([name]) => inPreviews(name) && name !== "PROMOTIONAL_CAMPAIGNS_PREVIEW")
       .flatMap(([name, value]) => mentions(value, /broadcast/i, name));
 
-    expect(others.map(({ path }) => path)).toEqual(PREVIEW_NO_CHIP);
+    expect(others.filter(({ plan }) => plan === undefined).map(({ path }) => path)).toEqual(PREVIEW_NO_CHIP);
+    expect(others.filter(({ plan }) => plan !== undefined).map(({ path, plan }) => [path, label(plan ?? "")])).toEqual([
+      ["GEOLOCATION_PREVIEW.status.today.facts[2].text", label(availability(BROADCASTS))],
+    ]);
     expect(availability(BROADCASTS)).not.toBe("every plan");
   });
 

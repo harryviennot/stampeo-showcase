@@ -263,7 +263,7 @@ describe("what a page can ask of Platform's pieces", () => {
 
   describe("LpFaq", () => {
     const items = [{ question: "Can I change it?", answer: "Anytime." }];
-    const faq = (eyebrow?: string) => render(<LpFaq faq={{ eyebrow, title: "Card styles, answered", items }} />, { us: true });
+    const faq = () => render(<LpFaq faq={{ title: "Card styles, answered", items }} />, { us: true });
 
     test("a page's own questions under its own title, still ending on the contact line", () => {
       const text = textOf(faq());
@@ -275,10 +275,10 @@ describe("what a page can ask of Platform's pieces", () => {
       expect(text).toContain(SHARED.faq.contact.link);
     });
 
-    test("an eyebrow gives it Platform's centred header, then the table of questions and the contact line in the same narrow column", () => {
-      const html = faq("FAQ");
+    test("a page's own questions get Platform's centred header, then the table of questions and the contact line in the same narrow column", () => {
+      const html = faq();
 
-      expectInOrder(html, ["FAQ", "Card styles, answered", "Can I change it?", SHARED.faq.contact.link]);
+      expectInOrder(html, ["Card styles, answered", "Can I change it?", SHARED.faq.contact.link]);
       expect(html).toContain("mx-auto text-center");
       expect(html).toMatch(/<section[^>]*data-landing-section="faq"/);
       expect(html).toContain("max-w-[840px]");
@@ -292,14 +292,6 @@ describe("what a page can ask of Platform's pieces", () => {
       expect(html.match(/<details\b/g)).toHaveLength(2);
     });
 
-    test("without an eyebrow the title stays left-aligned with no label above it, over the inked cards", () => {
-      const html = faq();
-
-      expect(html).not.toContain("text-center");
-      expect(html).not.toContain("tracking-[0.2em]");
-      expect(html).toContain("blog-card-3d");
-      expect(html).not.toContain("min-h-14");
-    });
   });
 
   test("ScannerLoop: `still` shows the finished stamp as a picture from the first paint", () => {

@@ -12,10 +12,11 @@ export interface SecondaryAction {
 const DEMO: SecondaryAction = { label: SHARED.demoLink, href: "#demo" };
 
 /**
- * The two actions side by side: the trial and, as an outline pill of the same
- * height, a second action that scrolls to a section of the page ("Try it on
- * your phone" to the demo, unless the page names its own; `null` for none).
- * Stacked and full width on a phone; one centred row from `sm`.
+ * The two actions side by side: the trial as a keycap and, as a white outline
+ * pill of the same height that only lifts on hover, a second action that
+ * scrolls to a section of the page ("Try it on your phone" to the demo, unless
+ * the page names its own; `null` for none). Stacked and full width on a phone,
+ * with 3px under the keycap for its ledge; one centred row from `sm`.
  */
 export function LpCtaPair({
   location,
@@ -23,12 +24,12 @@ export function LpCtaPair({
 }: Readonly<{ location: "hero" | "feature_cta"; secondary?: SecondaryAction | null }>) {
   return (
     <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-4">
-      <CTAButton label={SHARED.cta} trackAs={location} className="w-full sm:w-auto" />
+      <CTAButton label={SHARED.cta} trackAs={location} keycap className="mb-[3px] w-full sm:mb-0 sm:w-auto" />
       {secondary && (
         // A plain anchor: the click is a scroll, not a contact.
         <a
           href={secondary.href}
-          className="inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full border-2 border-[var(--foreground)] px-7 text-base font-semibold text-[var(--foreground)] transition-colors hover:bg-[var(--foreground)] hover:text-white sm:w-auto"
+          className="keycap keycap-flat inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full border-[1.5px] border-[var(--near-black)] bg-white px-7 text-base font-semibold text-[var(--foreground)] sm:w-auto"
         >
           {secondary.label}
           <ChevronDownIcon size={16} weight="bold" aria-hidden />

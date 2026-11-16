@@ -14,9 +14,10 @@ const HAPPY_HOUR: Banner = {
   body: "Quiet afternoon? Your second coffee is half price until 5pm.",
 };
 
-/** A broadcast sent on a lock screen: its row, its sample message and who gets it. */
+/** A broadcast sent on a lock screen: its row, its sample message and who gets it, and the chip that picks it. */
 interface IdeaCopy extends RowCopy {
   banner: Banner;
+  chip: string;
 }
 
 /**
@@ -57,6 +58,30 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     /** Printed once under the row of figures. */
     sourceLine: FIGURES_SOURCE,
   },
+  /** The dashboard's own "New broadcast" screen, in its words (web's `broadcasts.wizard` and `detail` labels). */
+  composer: {
+    eyebrow: "How it works",
+    title: "Write it, pick who gets it, send.",
+    lead: "Write it in your dashboard. It lands on their lock screen in seconds.",
+    card: {
+      title: "New broadcast",
+      message: HAPPY_HOUR,
+      audience: {
+        title: "Who will receive this?",
+        all: "All enrolled customers",
+        filtered: "Filtered audience",
+        filters: [
+          { label: "Joined in the last month" },
+          { label: "Inactive for a month", plan: "Pro" },
+        ],
+      },
+      schedule: { title: "Schedule", now: "Send now", later: "Schedule for later", plan: "Pro" },
+      send: "Send now",
+      sendAgain: "Send again",
+      /** Printed before the count of cards the broadcast reached. */
+      delivered: "Delivered",
+    },
+  },
   how: {
     eyebrow: "How it works",
     title: "Write it, pick who gets it, send.",
@@ -77,6 +102,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         eyebrow: "Fill a quiet hour",
         title: "Happy hour",
         body: "Sent to everyone.",
+        chip: "Slow afternoon",
         banner: HAPPY_HOUR,
       },
       {
@@ -84,6 +110,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         eyebrow: "Bring back a regular",
         title: "We miss you",
         body: "Sent only to customers who haven't been in for a month.",
+        chip: "Gone quiet",
         plan: "Pro",
         banner: { sender: SAMPLE_BUSINESS, body: "We haven't seen you in a while. A free cookie is waiting for you." },
       },
@@ -92,6 +119,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         eyebrow: "Almost there",
         title: "Close to a reward",
         body: "A nudge to customers a stamp or two from their reward.",
+        chip: "Almost there",
         plan: "Pro",
         banner: { sender: SAMPLE_BUSINESS, body: "One more stamp and your next coffee is on us." },
       },
@@ -100,6 +128,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         eyebrow: "Something new",
         title: "New on the menu",
         body: "Sent to every card.",
+        chip: "Something new",
         banner: { sender: SAMPLE_BUSINESS, body: "Pumpkin bread is back today." },
       },
     ] satisfies IdeaCopy[],
@@ -135,7 +164,6 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     link: "Compare plans",
   },
   faq: {
-    eyebrow: "FAQ",
     title: "Questions we hear a lot",
     items: [
       {

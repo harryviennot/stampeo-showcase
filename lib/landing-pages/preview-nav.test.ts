@@ -34,11 +34,12 @@ describe("where each feature link goes", () => {
     expect(link).toEqual({ href: `/us/landing-pages/${preview}`, market: "us" });
   });
 
-  test("from Platform, a feature with no preview still opens today's page", () => {
+  test("from Platform, geolocation opens its coming-soon preview too: every feature has one", () => {
     expect(featureLink("geolocalisation", "en", "previews")).toEqual({
-      href: `/features/${getLocalizedSlug("geolocalisation", "en")}`,
-      market: "int",
+      href: "/us/landing-pages/platform/geolocation",
+      market: "us",
     });
+    expect(FEATURE_ITEMS.map(({ canonicalSlug }) => canonicalSlug).filter((slug) => !FEATURE_PREVIEWS[slug])).toEqual([]);
   });
 
   test.each(routing.locales)("everywhere else, every feature opens today's page in %s", (locale) => {
@@ -56,7 +57,7 @@ describe("the header and footer use it", () => {
     const shell = source("components/landing-pages/shared/LandingPageShell.tsx");
 
     expect(shell).toContain("const featureLinks = featureLinksFor(slug);");
-    expect(shell).toMatch(/<Header market="us" featureLinks=\{featureLinks\} \/>/);
+    expect(shell).toMatch(/<Header market="us" featureLinks=\{featureLinks\}/);
     expect(shell).toMatch(/<Footer market="us" featureLinks=\{featureLinks\} \/>/);
   });
 
@@ -73,6 +74,24 @@ describe("the header and footer use it", () => {
       );
     },
   );
+
+  test("the landing shell asks the header for the redesigned phone menu, and the header is today's unless asked", () => {
+    const shell = source("components/landing-pages/shared/LandingPageShell.tsx");
+    const header = source("components/sections/Header.tsx");
+
+    expect(shell).toMatch(/<Header market="us" featureLinks=\{featureLinks\} mobileMenu="v2" \/>/);
+    expect(header).toMatch(/mobileMenu\?: "today" \| "v2"/);
+    expect(header).toMatch(/mobileMenu = "today"/);
+    expect(header).toContain('data-mobile-menu={mobileMenu === "v2" ? "v2" : undefined}');
+  });
+
+  test("no other page passes mobileMenu: the rest of the site keeps today's phone menu", () => {
+    const callers = [
+      ...new Bun.Glob("{app,components}/**/*.tsx").scanSync({ cwd: ROOT }),
+    ].filter((path) => /<Header\b[^>]*mobileMenu=/.test(source(path)));
+
+    expect(callers).toEqual(["components/landing-pages/shared/LandingPageShell.tsx"]);
+  });
 
   test("no other page passes featureLinks: the rest of the site keeps today's feature pages", () => {
     const callers = [

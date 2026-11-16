@@ -15,7 +15,13 @@ export const CARD_DESIGN_PREVIEW = {
   } satisfies PreviewHeroCopy,
   /** The hero's second button, and the one under the figures: both jump to the designer. */
   designerLink: "Try the designer",
+  /** The hero's card re-skins itself across six shops; one caption names each, in the card's order. */
+  reskin: {
+    captions: ["Car wash", "Bakery", "Wine bar", "Lash studio", "Bookstore", "Pizza truck"],
+  },
   icons: {
+    /** The handwritten count over the strip of icons. */
+    figure: { value: "98", label: "stamp icons" },
     label: "An icon for every trade",
     /** What the two drifting rows of icon tiles are, for a screen reader. */
     alt: "The designer's stamp icons, in two rows that drift past",
@@ -25,6 +31,14 @@ export const CARD_DESIGN_PREVIEW = {
     title: "Design it your way.",
     lead: "Stamps or points, colors and icons: change them and watch the card update.",
   } satisfies SectionCopy & { eyebrow: string },
+  palettes: {
+    eyebrow: "From your logo",
+    title: "Five color palettes, made from your logo.",
+    lead: "Upload your logo and pick the one that feels like your shop.",
+    logoLabel: "Your logo",
+    /** The accessible name of each swatch under the card. */
+    swatches: ["Palette 1", "Palette 2", "Palette 3", "Palette 4", "Palette 5"],
+  } satisfies SectionCopy & { eyebrow: string; logoLabel: string; swatches: string[] },
   anatomy: {
     eyebrow: "Every detail",
     title: "Every part of the card is yours.",
@@ -53,7 +67,7 @@ export const CARD_DESIGN_PREVIEW = {
       },
       {
         key: "own",
-        eyebrow: "Your croissant, your logo",
+        eyebrow: "Your burger, your logo",
         title: "Your own icons",
         body: "Upload any image. We remove the background and it becomes a stamp.",
       },
@@ -67,7 +81,7 @@ export const CARD_DESIGN_PREVIEW = {
     /** What each row's card is, for a screen reader. */
     cardAlts: {
       library: "A pet groomer's loyalty card with paw stamps from the icon library",
-      own: "A bubble tea shop's loyalty card with its own boba stamps",
+      own: "A burger bar's loyalty card with its own burger photo as the stamp",
       layout: "A gelato shop's loyalty card with ice cream cones piled up as stamps",
     },
   },
@@ -87,7 +101,6 @@ export const CARD_DESIGN_PREVIEW = {
     },
   },
   faq: {
-    eyebrow: "FAQ",
     title: "Card styles, answered",
     items: [
       {

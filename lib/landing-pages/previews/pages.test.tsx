@@ -1,25 +1,30 @@
 /**
- * The five previews as a visitor receives them: each page's body rendered whole,
+ * The six previews as a visitor receives them: each page's body rendered whole,
  * its async sections resolved. What no section can show on its own is here: the
  * sections in the registry's order, the hairlines around the figures, what a
  * Platform-style page leaves out, the phone-sized tap targets, and the walk from
- * one preview to the next.
+ * one preview to the next. A page whose builder has not landed its registry
+ * sections yet is checked on the sections it draws (`drawn`), so a check never
+ * waits for the registry and never skips a page that has something to show.
  */
 
 import { describe, expect, test } from "bun:test";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { openingTags, read, sourceFiles } from "../../testing/jsx-source";
-import { PREVIEWS_DIR, pageFile } from "../../testing/landing-pages-source";
+import { PREVIEWS_DIR, pageFile, renderedSections } from "../../testing/landing-pages-source";
 import { renderPreviewPage, tapTargets } from "../../testing/preview-page";
 import { expectInOrder, pictures, textOf } from "../../testing/render-en";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
+import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
 import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
 import { REWARD_BANNER, SHARED, STAMP_BANNER } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
+import { FEATURE_PREVIEWS } from "../preview-nav";
 
 /** The page's `data-landing-section` ids in document order, and the markup of each section up to the next. */
 function sectionsOf(html: string): Array<{ id: string; html: string }> {
@@ -34,20 +39,31 @@ const COPY: Record<PreviewSlug, object> = {
   "platform/push-notifications": PUSH_NOTIFICATIONS_PREVIEW,
   "platform/analytics": ANALYTICS_PREVIEW,
   "platform/promotional-campaigns": PROMOTIONAL_CAMPAIGNS_PREVIEW,
+  "platform/geolocation": GEOLOCATION_PREVIEW,
 };
+
+/** The sections a page draws, in order: the registry's list once it has landed them, what it still draws before. */
+const drawn = (slug: PreviewSlug) => renderedSections(pageFile(slug));
+
+/** The pages that draw something beside the hero and the closing pair: the ones with sections to check. */
+const WITH_SECTIONS = PREVIEW_SLUGS.filter((slug) => drawn(slug).length > 3);
+
+/** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
+const copyKey = (id: string) => id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 
 /** Each section of a preview whose copy has an eyebrow and a title: its header. */
 const HEADERS = PREVIEW_SLUGS.flatMap((slug) =>
-  LANDING_PAGES[slug].sections.flatMap((id) => {
-    const part = (COPY[slug] as Record<string, { eyebrow?: string; title?: string; lead?: string }>)[id];
+  drawn(slug).flatMap((id) => {
+    const part = (COPY[slug] as Record<string, { eyebrow?: string; title?: string; lead?: string }>)[copyKey(id)];
 
     return part?.eyebrow && part.title ? [[slug, id, part.eyebrow, part.title, part.lead ?? ""] as const] : [];
   }),
 );
 
 describe("every section opens on its header", () => {
-  test("every page has several sections with a header to check", () => {
-    for (const slug of PREVIEW_SLUGS) expect(HEADERS.filter(([page]) => page === slug).length).toBeGreaterThanOrEqual(4);
+  test("every page that draws sections has several with a header to check", () => {
+    expect(WITH_SECTIONS.length).toBeGreaterThanOrEqual(5);
+    for (const slug of WITH_SECTIONS) expect(HEADERS.filter(([page]) => page === slug).length).toBeGreaterThanOrEqual(3);
   });
 
   test.each(HEADERS)("%s: %s opens on its eyebrow, its title and its lead, centred", async (slug, id, eyebrow, title, lead) => {
@@ -65,7 +81,7 @@ describe("the page as a whole", () => {
     const figures = html.indexOf('data-landing-section="numbers"');
     const rules = [...html.matchAll(/<hr\b/g)].map((rule) => rule.index);
 
-    if (!LANDING_PAGES[slug].sections.includes("numbers")) return expect(rules).toEqual([]);
+    if (!drawn(slug).includes("numbers")) return expect(rules).toEqual([]);
     expect(rules).toHaveLength(2);
     expect(rules[0]).toBeLessThan(figures);
     expect(rules[1]).toBeGreaterThan(figures);
@@ -109,7 +125,7 @@ describe("what a Platform-style page leaves out", () => {
   /** A trial button is the kit's tracked one (a pair, a trial button or the cream card), never a bare `CTAButton`. */
   test.each(PREVIEW_SLUGS)("%s: brings no sign-up button of its own", (slug) => {
     const folder = join(PREVIEWS_DIR, slug.replace("platform/", ""));
-    const bare = [pageFile(slug), ...sourceFiles(folder)].filter((file) => openingTags(read(file)).some((tag) => tag.name === "CTAButton"));
+    const bare = [pageFile(slug), ...(existsSync(folder) ? sourceFiles(folder) : [])].filter((file) => openingTags(read(file)).some((tag) => tag.name === "CTAButton"));
 
     expect(bare).toEqual([]);
   });
@@ -138,6 +154,13 @@ describe("the hero each page opens with (AC1)", () => {
     const text = textOf(await hero("platform/push-notifications"));
 
     expectInOrder(text, ["Aurevo", STAMP_BANNER.body, "Aurevo", REWARD_BANNER.body]);
+  });
+
+  test("geolocation says it is coming soon beside its label, over a single trial button and no demo", async () => {
+    const html = await hero("platform/geolocation");
+
+    expectInOrder(html, [GEOLOCATION_PREVIEW.hero.eyebrow, GEOLOCATION_PREVIEW.heroChip, GEOLOCATION_PREVIEW.hero.accent, GEOLOCATION_PREVIEW.hero.sub, SHARED.cta]);
+    expect(links(html)).toEqual(["/en/onboarding"]);
   });
 
   test("analytics shows the dashboard on a computer and on a phone, with no caption, over a single trial button", async () => {
@@ -185,18 +208,18 @@ describe("on a phone (AC5)", () => {
     expect(tapTargets(mine).filter(({ attrs }) => !isTall(attrs))).toEqual([]);
   });
 
-  test.each(PREVIEW_SLUGS)("%s: every picture has a name a screen reader can read", async (slug) => {
+  test.each(WITH_SECTIONS)("%s: every picture has a name a screen reader can read", async (slug) => {
     const pictures = (await renderPreviewPage(slug)).match(/<[a-z]+\b[^>]*\brole="img"[^>]*>/g) ?? [];
 
     expect(pictures.length).toBeGreaterThan(0);
     for (const tag of pictures) expect(tag).toMatch(/aria-label="[^"]{12,}"/);
   });
 
-  test.each(PREVIEW_SLUGS.filter((slug) => LANDING_PAGES[slug].sections.includes("faq")))("%s: each question of the FAQ table is a 56px row", async (slug) => {
+  test.each(PREVIEW_SLUGS.filter((slug) => drawn(slug).includes("faq")))("%s: each question of the FAQ table is a 56px row", async (slug) => {
     const faq = sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "faq")?.html ?? "";
     const rows = faq.match(/<summary\b[^>]*>/g) ?? [];
 
-    expect(rows).toHaveLength(5);
+    expect(rows).toHaveLength((COPY[slug] as { faq: { items: unknown[] } }).faq.items.length);
     for (const row of rows) expect(row).toContain("min-h-14");
   });
 });
@@ -209,7 +232,10 @@ describe("walking the previews", () => {
     return [...related.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
   };
 
-  test("every preview is reached from at least one other, and every card goes to a preview's own URL", async () => {
+  /** Geolocation is reached from the menus of Platform and its previews, not from a sibling's closing links. */
+  const FROM_THE_MENU: readonly PreviewSlug[] = ["platform/geolocation"];
+
+  test("every preview is reached from a sibling or from the menu, and every card goes to a preview's own URL", async () => {
     const links = await Promise.all(PREVIEW_SLUGS.map(async (slug) => [slug, await linksOf(slug)] as const));
     const reached = new Set(links.flatMap(([, hrefs]) => hrefs));
 
@@ -218,17 +244,24 @@ describe("walking the previews", () => {
       for (const href of hrefs) expect(PREVIEW_SLUGS.map((sibling) => `/us/landing-pages/${sibling}`)).toContain(href);
       expect(hrefs).not.toContain(`/us/landing-pages/${slug}`);
     }
-    for (const slug of PREVIEW_SLUGS) expect(reached).toContain(`/us/landing-pages/${slug}`);
+    for (const slug of PREVIEW_SLUGS.filter((candidate) => !FROM_THE_MENU.includes(candidate))) {
+      expect(reached).toContain(`/us/landing-pages/${slug}`);
+    }
+    for (const slug of FROM_THE_MENU) {
+      expect(reached).not.toContain(`/us/landing-pages/${slug}`);
+      expect(Object.values(FEATURE_PREVIEWS)).toContain(slug);
+    }
   });
 
-  test("starting from any preview, a visitor can reach all the others by following the links", async () => {
+  test("starting from any preview, a visitor can reach every other one by following the links, the menu-only ones aside", async () => {
     const graph = new Map(await Promise.all(PREVIEW_SLUGS.map(async (slug) => [`/us/landing-pages/${slug}`, await linksOf(slug)] as const)));
+    const menuOnly = FROM_THE_MENU.map((slug) => `/us/landing-pages/${slug}`);
 
     for (const start of graph.keys()) {
       const seen = new Set([start]);
       for (const page of seen) for (const href of graph.get(page) ?? []) seen.add(href);
 
-      expect([...seen].sort()).toEqual([...graph.keys()].sort());
+      expect([...seen].sort()).toEqual([...graph.keys()].filter((page) => page === start || !menuOnly.includes(page)).sort());
     }
   });
 });

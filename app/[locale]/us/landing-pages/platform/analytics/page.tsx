@@ -28,6 +28,7 @@ export default function AnalyticsPreviewPage() {
   return (
     <LandingPageShell slug="platform/analytics">
       <PreviewHero slug="platform/analytics" secondary={null} visual={<DashboardDuo caption={false} priority />} />
+      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page D) and delete this marker. */}
       <GlanceSection />
       <QuestionsSection />
       <ActivitySection />

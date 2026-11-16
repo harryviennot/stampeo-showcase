@@ -19,6 +19,7 @@ import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
 import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
+import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
 import { PREVIEW_SHARED } from "./copy/previews/shared";
 import * as shared from "./copy/shared";
@@ -83,6 +84,9 @@ describe("what these pages may not claim (AC10)", () => {
     "SHARED.levelCardsAlt": "the level cards' alt text",
     "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews print no Every plan chip",
     "MOBILE_SCANNER_PREVIEW.counter.rows[3].body": "what the register shows for a level; the previews print no Every plan chip",
+    "MOBILE_SCANNER_PREVIEW.counter.options[3].title": "the counter's Level button, named for the program type; the previews print no Every plan chip",
+    "PUSH_NOTIFICATIONS_PREVIEW.day.lead": "the walk from a first stamp to the next level; the previews print no Every plan chip",
+    "PUSH_NOTIFICATIONS_PREVIEW.day.nodes[3].label": "the step where the card moves up a level; the previews print no Every plan chip",
     "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.ready.facts[0].text": "the ready-made messages cover level-ups; the previews print no Every plan chip",
   };
 
@@ -298,14 +302,15 @@ describe("prices and the trial length (AC13)", () => {
   });
 });
 
-describe("the five previews' copy", () => {
+describe("the six previews' copy", () => {
   const previewLines = () => ALL.filter((line) => inPreviews(line.path));
   const previewModules = () => Object.entries(MODULES).filter(([name]) => inPreviews(name));
 
-  test("there is copy to check, in all five pages and the shared links", () => {
+  test("there is copy to check, in all six pages and the shared links", () => {
     expect(previewModules().map(([name]) => name).sort()).toEqual([
       "ANALYTICS_PREVIEW",
       "CARD_DESIGN_PREVIEW",
+      "GEOLOCATION_PREVIEW",
       "MOBILE_SCANNER_PREVIEW",
       "PREVIEW_SHARED",
       "PROMOTIONAL_CAMPAIGNS_PREVIEW",
@@ -366,6 +371,7 @@ describe("the five previews' copy", () => {
       const [icons, , languages] = CARD_DESIGN_PREVIEW.numbers.figures;
 
       expect(icons.value).toBe(String(stampIcons.length));
+      expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
       expect(languages.value).toBe(String(routing.locales.length));
     });
 
@@ -408,12 +414,81 @@ describe("the five previews' copy", () => {
       pushNotifications: "platform/push-notifications",
       analytics: "platform/analytics",
       promotionalCampaigns: "platform/promotional-campaigns",
+      geolocation: "platform/geolocation",
     } as const;
 
     expect(Object.keys(cards).sort()).toEqual(Object.keys(HEROES).sort());
     for (const [key, slug] of Object.entries(HEROES)) {
       expect({ key, line: cards[key as keyof typeof cards].line }).toEqual({ key, line: LANDING_PAGES[slug].hero.h1 });
     }
-    expect(PREVIEW_SHARED.related.eyebrow.length).toBeLessThanOrEqual(28);
+    expect(PREVIEW_SHARED.related.title.length).toBeLessThanOrEqual(44);
+  });
+
+  test("no preview header has a label above the FAQ or the sibling links: they are utility, not sections", () => {
+    expect(Object.keys(PREVIEW_SHARED.related)).not.toContain("eyebrow");
+    for (const [name, module] of previewModules()) {
+      const faq = (module as { faq?: object }).faq;
+
+      expect({ name, label: faq && "eyebrow" in faq }).toEqual({ name, label: faq ? false : undefined });
+    }
+  });
+});
+
+describe("the geolocation preview says it is coming (AC12)", () => {
+  const lines = () => ALL.filter((line) => line.path.startsWith("GEOLOCATION_PREVIEW."));
+  const text = (path: string) => lines().find((line) => line.path === `GEOLOCATION_PREVIEW.${path}`)?.value ?? "";
+  /** Every claim about geolocation is in the future, or says "soon" or "coming". */
+  const FUTURE = /\b(?:will|won't|soon|coming|building)\b|'ll\b/i;
+
+  test("it has no launch date, in any form", () => {
+    const dated = /\b(?:20\d\d|Q[1-4]|January|February|March|April|May|June|July|August|September|October|November|December|spring|summer|autumn|fall|winter)\b/;
+
+    expect(lines().filter((line) => dated.test(line.value)).map((line) => line.path)).toEqual([]);
+  });
+
+  test.each([
+    "meta.description",
+    "hero.h1",
+    "hero.sub",
+    "heroChip",
+    "status.lead",
+    "status.soon.title",
+    "how.eyebrow",
+    "how.title",
+    "how.lead",
+    "how.cells[2].body",
+    "privacy.title",
+    "privacy.lead",
+    "privacy.facts[0].text",
+    "privacy.facts[1].text",
+    "privacy.facts[2].text",
+    "faq.items[0].answer",
+    "faq.items[1].answer",
+    "faq.items[2].answer",
+    "band.sub",
+  ])("%s speaks of what will be, not what is", (path) => {
+    expect({ path, future: FUTURE.test(text(path)) }).toEqual({ path, future: true });
+  });
+
+  test("the page's headline says soon, and its chip says coming soon on Pro", () => {
+    expect(GEOLOCATION_PREVIEW.hero.h1).toMatch(/^Soon,/);
+    expect(GEOLOCATION_PREVIEW.heroChip).toBe("Coming soon · Pro");
+    expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
+    expect(PLAN_FACTS.growth.geofencing).toBe(false);
+  });
+
+  test("what is live today is the only place a wallet is named", () => {
+    const wallets = lines().filter((line) => /Apple|Google/.test(line.value));
+
+    expect(wallets.map((line) => line.path)).toEqual(["GEOLOCATION_PREVIEW.status.today.facts[0].text"]);
+  });
+
+  test("the lock screen it shows is Aurevo's, and what it says is the owner's own line", () => {
+    expect(GEOLOCATION_PREVIEW.banner.sender).toBe("Aurevo");
+    expect(GEOLOCATION_PREVIEW.banner.title).toMatch(/^Aurevo /);
+  });
+
+  test("it asks for no sign-up for the feature itself: no notify-me, no waitlist", () => {
+    expect(lines().filter((line) => /notify me|waitlist|join the list|get notified/i.test(line.value))).toEqual([]);
   });
 });

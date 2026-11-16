@@ -7,14 +7,14 @@ interface FAQListProps {
   items: Array<{ question: string; answer: ReactNode }>;
   /** Number of items open by default (from index 0). */
   defaultOpenCount?: number;
-  /** One white table with hairline rows (the landing pages' table look) instead of the inked cards. */
+  /** One white table with hairline rows, framed in ink (the landing pages' table look), instead of the inked cards. */
   table?: boolean;
 }
 
-/** The questions as rows of one white table, each row at least 56px to tap. */
+/** The questions as rows of one white table in the house ink frame, each row at least 56px to tap. */
 function FAQTable({ items, defaultOpenCount }: Readonly<Required<Omit<FAQListProps, "table">>>) {
   return (
-    <div className="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
+    <div className="card-stamp divide-y divide-[var(--border)] overflow-hidden rounded-[20px] bg-white">
       {items.map((faq, index) => (
         <details key={index} className="group px-5 lg:px-8" open={index < defaultOpenCount}>
           <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">

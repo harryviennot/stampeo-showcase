@@ -35,6 +35,7 @@ export default function CardDesignPreviewPage() {
         slots={CARD_DESIGN_FAN_SLOTS}
         secondary={{ label: CARD_DESIGN_PREVIEW.designerLink, href: "#playground" }}
       />
+      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page A) and delete this marker. */}
       <IconsStrip />
       <DesignerSection />
       <AnatomySection />

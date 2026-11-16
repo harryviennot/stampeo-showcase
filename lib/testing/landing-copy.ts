@@ -4,6 +4,7 @@ import * as outcomes from "../landing-pages/copy/outcomes";
 import * as platform from "../landing-pages/copy/platform";
 import * as analyticsPreview from "../landing-pages/copy/previews/analytics";
 import * as cardDesignPreview from "../landing-pages/copy/previews/card-design";
+import * as geolocationPreview from "../landing-pages/copy/previews/geolocation";
 import * as mobileScannerPreview from "../landing-pages/copy/previews/mobile-scanner";
 import * as promotionalCampaignsPreview from "../landing-pages/copy/previews/promotional-campaigns";
 import * as pushNotificationsPreview from "../landing-pages/copy/previews/push-notifications";
@@ -58,16 +59,18 @@ export const MODULES = {
   ...pushNotificationsPreview,
   ...analyticsPreview,
   ...promotionalCampaignsPreview,
+  ...geolocationPreview,
   ...previewShared,
 } as Record<string, unknown>;
 
-/** The names of the modules that are the five previews' copy: the previews' own rules apply to these. */
+/** The names of the modules that are the six previews' copy: the previews' own rules apply to these. */
 export const PREVIEW_MODULES = [
   "CARD_DESIGN_PREVIEW",
   "MOBILE_SCANNER_PREVIEW",
   "PUSH_NOTIFICATIONS_PREVIEW",
   "ANALYTICS_PREVIEW",
   "PROMOTIONAL_CAMPAIGNS_PREVIEW",
+  "GEOLOCATION_PREVIEW",
   "PREVIEW_SHARED",
 ] as const;
 
@@ -77,7 +80,7 @@ export const inPreviews = (path: string) => PREVIEW_MODULES.some((name) => path 
 /** Every string of every copy module. */
 export const ALL: Line[] = Object.entries(MODULES).flatMap(([name, value]) => lines(value, name));
 
-/** The four pages' own copy objects, by name, and the five previews'. */
+/** The four pages' own copy objects, by name, and the six previews'. */
 export const PAGES = {
   HOW_IT_WORKS: howItWorks.HOW_IT_WORKS,
   FEATURES: features.FEATURES,
@@ -88,6 +91,7 @@ export const PAGES = {
   PUSH_NOTIFICATIONS_PREVIEW: pushNotificationsPreview.PUSH_NOTIFICATIONS_PREVIEW,
   ANALYTICS_PREVIEW: analyticsPreview.ANALYTICS_PREVIEW,
   PROMOTIONAL_CAMPAIGNS_PREVIEW: promotionalCampaignsPreview.PROMOTIONAL_CAMPAIGNS_PREVIEW,
+  GEOLOCATION_PREVIEW: geolocationPreview.GEOLOCATION_PREVIEW,
 };
 
 /** The paths whose lines match `pattern`. */

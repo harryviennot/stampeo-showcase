@@ -26,7 +26,7 @@ export async function LandingPageShell({
         defaultCurrency="usd"
         defaultTrialDays={MARKETS.us.trialDays}
       >
-        <Header market="us" featureLinks={featureLinks} />
+        <Header market="us" featureLinks={featureLinks} mobileMenu="v2" />
         <main className="relative">{children}</main>
         <Footer market="us" featureLinks={featureLinks} />
       </RegionPricingProvider>

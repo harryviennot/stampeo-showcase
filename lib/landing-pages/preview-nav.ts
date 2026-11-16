@@ -12,6 +12,7 @@ export const FEATURE_PREVIEWS: Partial<Record<FeatureSlug, PreviewSlug>> = {
   "scanner-mobile": "platform/mobile-scanner",
   analytiques: "platform/analytics",
   "design-de-carte": "platform/card-design",
+  geolocalisation: "platform/geolocation",
 };
 
 /** Platform and its previews lead to the previews; every other page to today's feature pages. */
@@ -21,7 +22,7 @@ export function featureLinksFor(slug: LandingSlug): FeatureLinks {
 
 /**
  * A feature link: a preview is a final `/us` path; today's page is localised and left for next-intl to
- * prefix. A feature with no preview always opens today's page.
+ * prefix. A feature with no preview opens today's page.
  */
 export function featureLink(
   slug: FeatureSlug,

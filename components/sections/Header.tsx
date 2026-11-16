@@ -235,11 +235,16 @@ function MobileFeaturesAccordion({
   );
 }
 
-/** `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews). */
+/**
+ * `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews).
+ * `mobileMenu="v2"` marks the header as the one whose phone menu is the redesigned sheet; every other page keeps
+ * today's menu.
+ */
 export function Header({
   market = "int",
   featureLinks = "live",
-}: Readonly<{ market?: Market; featureLinks?: FeatureLinks }>) {
+  mobileMenu = "today",
+}: Readonly<{ market?: Market; featureLinks?: FeatureLinks; mobileMenu?: "today" | "v2" }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const signedIn = useHasSession();
@@ -346,7 +351,7 @@ export function Header({
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50">
+      <header className="fixed top-0 left-0 right-0 z-50" data-mobile-menu={mobileMenu === "v2" ? "v2" : undefined}>
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
         <div
           className={`transition-all duration-300 border-b ${scrolled

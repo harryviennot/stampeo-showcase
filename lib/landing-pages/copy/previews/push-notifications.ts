@@ -1,8 +1,11 @@
-import { REWARD_BANNER, SAMPLE_BUSINESS, STAMP_BANNER } from "../shared";
+import { LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, STAMP_BANNER } from "../shared";
 import type { Banner, BandCopy, Fact, PageMeta, PreviewHeroCopy, TabCopy, Tile } from "../types";
 
 /** What a customer sees when they claim a reward: the English default of `reward_redeemed` in the backend's notification defaults. */
 const REDEEMED_BANNER: Banner = { sender: SAMPLE_BUSINESS, body: "Reward redeemed. Enjoy!" };
+
+/** The level-up message the default wording sends, as it reaches Aurevo's customer (the sample card keeps its own look). */
+const AUREVO_LEVEL_UP: Banner = { sender: SAMPLE_BUSINESS, body: LEVEL_UP_BANNER.body };
 
 /** The notifications preview: every stamp and reward reaches the lock screen on its own, with no app and no phone number. */
 export const PUSH_NOTIFICATIONS_PREVIEW = {
@@ -26,6 +29,18 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
       { title: "Their card updates", body: "The card in their wallet changes in seconds, no app to open." },
       { title: "They get the message", body: "A notification from your shop lands on their lock screen." },
     ] satisfies Tile[],
+  },
+  /** One customer's card over several visits: each step sends its own default message. */
+  day: {
+    eyebrow: "On their lock screen",
+    title: "A message for every step of the card.",
+    lead: "From their first stamp to their next level, each one sends itself.",
+    nodes: [
+      { key: "stamp", label: "5th visit", banner: STAMP_BANNER },
+      { key: "reward", label: "Card full", banner: REWARD_BANNER },
+      { key: "redeemed", label: "Reward claimed", banner: REDEEMED_BANNER },
+      { key: "level", label: "Next level", banner: AUREVO_LEVEL_UP },
+    ] satisfies Array<{ key: "stamp" | "reward" | "redeemed" | "level"; label: string; banner: Banner }>,
   },
   moments: {
     eyebrow: "Automatic messages",
@@ -73,6 +88,24 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
         ] satisfies Fact[],
       },
     } satisfies { ready: TabCopy; words: TabCopy & { banner: Banner } },
+  },
+  /**
+   * The dashboard's message editor, in its words (web's `notifications.editor` and `triggers`): the ready-made
+   * text, or your own with variables shown as chips. `{first name}` and `{stamps left}` are the editor's
+   * "Customer first name" and "Stamps remaining".
+   */
+  editor: {
+    eyebrow: "Your words",
+    title: "Use our wording, or write your own.",
+    lead: "Ready-made messages on every plan. Growth and Pro let you rewrite them.",
+    /** The two-way control over the message; "Your words" is the one that comes with Growth and Pro. */
+    toggle: { label: "Message wording", ready: "Ready-made", own: "Your words", plan: "Growth and Pro" },
+    messageLabel: "Message",
+    previewLabel: "Preview",
+    ready: { text: STAMP_BANNER.body },
+    own: { text: "You got stamped, {first name}! {stamps left} more to go.", preview: "You got stamped, Sophie! 3 more to go." },
+    /** The messages that can be switched on or off, as the editor names them; the first is the one on screen. */
+    switches: ["Stamp collected", "Reward unlocked", "Reward redeemed"],
   },
   demo: {
     eyebrow: "Live demo",

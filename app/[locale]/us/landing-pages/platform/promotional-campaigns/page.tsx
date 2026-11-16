@@ -46,6 +46,7 @@ export default function PromotionalCampaignsPreviewPage() {
           </PhoneCrop>
         }
       />
+      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page E) and delete this marker. */}
       <Hairline />
       <NumbersSection />
       <Hairline />

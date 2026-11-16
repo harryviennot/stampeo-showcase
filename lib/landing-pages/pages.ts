@@ -6,32 +6,34 @@ import { OUTCOMES } from "./copy/outcomes";
 import { PLATFORM } from "./copy/platform";
 import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
+import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
 import { MOBILE_SCANNER_PREVIEW } from "./copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "./copy/previews/push-notifications";
 import type { FinalCtaCopy, HeroCopy, PageMeta } from "./copy/types";
 
 /**
- * The nine `/us/landing-pages/*` pages, in one place: each page's variant
+ * The ten `/us/landing-pages/*` pages, in one place: each page's variant
  * (what `LandingTracker` reports), its sections in render order, and the copy
  * every page has (head, hero, closing headline). The sections are the ids the
  * pages tag with `data-landing-section`, and `registry.test.ts` pins that each
  * page renders exactly these, in this order.
  *
- * Four are the pages ads point at; five are previews of the feature pages in
+ * Four are the pages ads point at; six are previews of the feature pages in
  * Platform's style (`platform/<feature>`), English, noindex and linked only
- * from each other.
+ * from each other and from the menus of Platform and its previews.
  */
 
 export const LANDING_SLUGS = ["how-it-works", "features", "outcomes", "platform"] as const;
 
-/** The five previews of `/en/features/*`, in Platform's style. */
+/** The six previews of `/en/features/*`, in Platform's style (geolocation's says it is coming soon). */
 export const PREVIEW_SLUGS = [
   "platform/card-design",
   "platform/mobile-scanner",
   "platform/push-notifications",
   "platform/analytics",
   "platform/promotional-campaigns",
+  "platform/geolocation",
 ] as const;
 
 export const ALL_LANDING_SLUGS = [...LANDING_SLUGS, ...PREVIEW_SLUGS] as const;
@@ -88,7 +90,16 @@ export type LandingSectionId =
   | "ideas"
   | "delivery"
   | "plans"
-  | "related";
+  | "related"
+  | "palettes"
+  | "blind_spots"
+  | "ladder"
+  | "recap"
+  | "composer"
+  | "day"
+  | "editor"
+  | "status"
+  | "privacy";
 
 export interface LandingPage {
   slug: LandingSlug;
@@ -191,7 +202,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/card-design": {
     slug: "platform/card-design",
     variant: "lp_platform_card_design",
-    sections: ["hero", "icons", "playground", "anatomy", "numbers", "stamps", "wallets", "faq", "final_cta", "related"],
+    sections: ["hero", "icons", "playground", "palettes", "anatomy", "stamps", "wallets", "faq", "final_cta", "related"],
     meta: CARD_DESIGN_PREVIEW.meta,
     hero: CARD_DESIGN_PREVIEW.hero,
     finalCta: CARD_DESIGN_PREVIEW.band,
@@ -200,7 +211,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/mobile-scanner": {
     slug: "platform/mobile-scanner",
     variant: "lp_platform_mobile_scanner",
-    sections: ["hero", "how", "counter", "ways", "team", "demo", "final_cta", "related"],
+    sections: ["hero", "counter", "ways", "team", "demo", "final_cta", "related"],
     meta: MOBILE_SCANNER_PREVIEW.meta,
     hero: MOBILE_SCANNER_PREVIEW.hero,
     finalCta: MOBILE_SCANNER_PREVIEW.band,
@@ -209,7 +220,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/push-notifications": {
     slug: "platform/push-notifications",
     variant: "lp_platform_push_notifications",
-    sections: ["hero", "how", "moments", "wallets", "wording", "demo", "final_cta", "related"],
+    sections: ["hero", "day", "wallets", "editor", "demo", "final_cta", "related"],
     meta: PUSH_NOTIFICATIONS_PREVIEW.meta,
     hero: PUSH_NOTIFICATIONS_PREVIEW.hero,
     finalCta: PUSH_NOTIFICATIONS_PREVIEW.band,
@@ -218,7 +229,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/analytics": {
     slug: "platform/analytics",
     variant: "lp_platform_analytics",
-    sections: ["hero", "glance", "questions", "activity", "numbers", "final_cta", "related"],
+    sections: ["hero", "blind_spots", "glance", "ladder", "activity", "recap", "final_cta", "related"],
     meta: ANALYTICS_PREVIEW.meta,
     hero: ANALYTICS_PREVIEW.hero,
     finalCta: ANALYTICS_PREVIEW.band,
@@ -227,11 +238,20 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/promotional-campaigns": {
     slug: "platform/promotional-campaigns",
     variant: "lp_platform_promotional_campaigns",
-    sections: ["hero", "numbers", "how", "ideas", "delivery", "plans", "faq", "final_cta", "related"],
+    sections: ["hero", "composer", "numbers", "ideas", "delivery", "plans", "faq", "final_cta", "related"],
     meta: PROMOTIONAL_CAMPAIGNS_PREVIEW.meta,
     hero: PROMOTIONAL_CAMPAIGNS_PREVIEW.hero,
     finalCta: PROMOTIONAL_CAMPAIGNS_PREVIEW.band,
     related: ["platform/push-notifications", "platform/analytics", "platform/card-design"],
+  },
+  "platform/geolocation": {
+    slug: "platform/geolocation",
+    variant: "lp_platform_geolocation",
+    sections: ["hero", "status", "how", "privacy", "faq", "final_cta", "related"],
+    meta: GEOLOCATION_PREVIEW.meta,
+    hero: GEOLOCATION_PREVIEW.hero,
+    finalCta: GEOLOCATION_PREVIEW.band,
+    related: ["platform/push-notifications", "platform/promotional-campaigns", "platform/analytics"],
   },
 };
 

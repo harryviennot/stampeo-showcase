@@ -15,6 +15,8 @@ type CTAButtonProps = Readonly<{
   className?: string;
   id?: string;
   showArrow?: boolean;
+  /** The ink frame and ledge of the landing pages' primary button, pressing flat on click. */
+  keycap?: boolean;
   /** Where the button sits; sent with the click to PostHog, GA4 and Meta. */
   trackAs: CTALocation;
 }>;
@@ -49,6 +51,7 @@ export function CTAButton({
   className = "",
   id,
   showArrow = true,
+  keycap = false,
   trackAs,
 }: CTAButtonProps) {
   const handleClick = useCtaTracking(trackAs, href);
@@ -60,7 +63,7 @@ export function CTAButton({
       id={id}
       href={href}
       onClick={handleClick}
-      className={`${base} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
+      className={`${base} ${sizeStyles[size]} ${variantStyles[variant]}${keycap ? " keycap" : ""} ${className}`}
     >
       <span>{label}</span>
       {showArrow && (

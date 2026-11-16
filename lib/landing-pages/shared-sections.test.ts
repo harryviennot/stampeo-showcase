@@ -563,6 +563,7 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("ScannerLoop", "ui"), ["still"]],
     [...component("AnnotatedWalletCard", "features/design-de-carte"), ["heading", "sectionClassName", "toggleSize"]],
     [...component("FAQList", "ui"), ["table"]],
+    [...component("CTAButton", "ui"), ["keycap"]],
   ];
 
   /**

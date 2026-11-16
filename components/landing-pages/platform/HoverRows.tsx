@@ -124,7 +124,7 @@ export function HoverRows<Key extends string>({
                   }`}
                 >
                   <Collapsible open={open}>
-                    <p className={`pb-2 ${EYEBROW} text-[var(--accent-hover)]`}>
+                    <p className={`pb-2 ${EYEBROW} text-[var(--muted-foreground)]`}>
                       {item.eyebrow}
                     </p>
                   </Collapsible>

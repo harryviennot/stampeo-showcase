@@ -6,15 +6,15 @@ import type { FaqItem } from "@/lib/landing-pages/copy/types";
 import { LpSection } from "./LpSection";
 
 /**
- * The five questions every page answers, collapsed, and one contact line; a page can bring its own questions.
- * A page's `eyebrow` gives it Platform's look: a small label over a centred title, the questions as one
- * white table, and the contact line centred under it.
+ * The five questions every page answers, collapsed, and one contact line. A page that brings its own `faq`
+ * gets Platform's look: its title centred, the questions as one white table framed in ink, and the contact
+ * line centred under it.
  */
 export function LpFaq({
   faq,
-}: Readonly<{ faq?: { eyebrow?: string; title: string; items: readonly FaqItem[] } }>) {
+}: Readonly<{ faq?: { title: string; items: readonly FaqItem[] } }>) {
   const { title, items } = faq ?? SHARED.faq;
-  const eyebrow = faq?.eyebrow;
+  const own = faq !== undefined;
   const { contact } = SHARED.faq;
 
   return (
@@ -22,14 +22,13 @@ export function LpFaq({
       section="faq"
       size="narrow"
       title={title}
-      eyebrow={eyebrow}
-      align={eyebrow ? "center" : undefined}
+      align={own ? "center" : undefined}
     >
       <FAQList
         items={items.map((item) => ({ question: item.question, answer: <RegionText raw={item.answer} /> }))}
-        table={Boolean(eyebrow)}
+        table={own}
       />
-      <p className={eyebrow ? "mt-6 text-center text-base text-[var(--muted-foreground)]" : "mt-8 text-base text-[var(--muted-foreground)]"}>
+      <p className={own ? "mt-6 text-center text-base text-[var(--muted-foreground)]" : "mt-8 text-base text-[var(--muted-foreground)]"}>
         {contact.before}{" "}
         <TrackedLink
           href="/contact"

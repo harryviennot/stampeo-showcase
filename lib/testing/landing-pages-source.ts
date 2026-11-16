@@ -13,14 +13,23 @@ export const SITE_SOURCE_DIRS = [join(ROOT, "components"), join(ROOT, "app")];
 export const PAGES_DIR = join(ROOT, "app", "[locale]", "us", "landing-pages");
 export const COMPONENTS_DIR = join(ROOT, "components", "landing-pages");
 export const SHARED_DIR = join(COMPONENTS_DIR, "shared");
-/** The code only the five feature previews use; the pieces they share with Platform are in `platform/` and `shared/`. */
+/** The code only the six feature previews use; the pieces they share with Platform are in `platform/` and `shared/`. */
 export const PREVIEWS_DIR = join(COMPONENTS_DIR, "feature-previews");
 
 export const pageFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx");
 
-/** A file of one of the five feature previews: its page, or a component of `feature-previews/`. */
+/** A file of one of the six feature previews: its page, or a component of `feature-previews/`. */
 export const isPreviewFile = (file: string) =>
   file.startsWith(PREVIEWS_DIR + sep) || PREVIEW_SLUGS.some((slug) => file === pageFile(slug));
+
+/**
+ * What a page carries until its builder renders the registry's whole section list: a comment where the new
+ * sections go. A page that has it is staged: it still renders its earlier design, so what a registry entry lists
+ * is not yet what the page draws. Deleting the marker arms the full checks.
+ */
+export const STAGED_MARKER = "TODO(STA-552 v2 builder)";
+
+export const isStaged = (slug: LandingSlug) => read(pageFile(slug)).includes(STAGED_MARKER);
 
 /** A file of a Platform-style page: Platform's own page and components, or a preview's. */
 export const isPlatformStyleFile = (file: string) =>

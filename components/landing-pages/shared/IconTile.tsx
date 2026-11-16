@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 const TONES = {
+  brand: "bg-[var(--accent)]/10 text-[var(--accent)]",
   white: "bg-white text-[var(--accent-hover)] ring-1 ring-[var(--border)]",
   subtle: "bg-[var(--background-subtle)] text-[var(--accent-hover)]",
   accent: "bg-[var(--accent-light)] text-[var(--foreground)]",

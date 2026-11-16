@@ -14,25 +14,27 @@ import { LpSection } from "../shared/LpSection";
  * and their reassurance, then the page's `visual` under them, so on a phone the
  * words come first. The second action is "Try it on your phone" to the demo
  * unless the page names its own or passes `null`; `eyebrowPlan` sets a plan
- * chip beside the label.
+ * chip beside the label, and `eyebrowChip` a plain one ("Coming soon").
  */
 export function PreviewHero({
   slug,
   visual,
   secondary,
   eyebrowPlan,
+  eyebrowChip,
 }: Readonly<{
   slug: PreviewSlug;
   visual: ReactNode;
   secondary?: SecondaryAction | null;
   eyebrowPlan?: Plan;
+  eyebrowChip?: string;
 }>) {
   return (
     <LpSection section="hero" bare>
       <section className="relative pt-24 pb-10 lg:pt-28 lg:pb-14">
         <Container>
           <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <HeroWords slug={slug} look="column" eyebrowPlan={eyebrowPlan} />
+            <HeroWords slug={slug} look="column" eyebrowPlan={eyebrowPlan} eyebrowChip={eyebrowChip} />
 
             <div className="mt-7 flex w-full flex-col items-center gap-3">
               <LpCtaPair location="hero" secondary={secondary} />

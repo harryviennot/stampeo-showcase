@@ -1,8 +1,8 @@
 import { NumberStamp } from "@/components/stamps/StampIcons";
-import { EYEBROW, LpHeading } from "../shared/LpSection";
+import { EYEBROW_PILL, LpHeading } from "../shared/LpSection";
 
 /**
- * A step's heading: its number in a stamp beside "Step n", then the title and
+ * A step's heading: its number in a stamp beside "Step n" as an orange pill, then the title and
  * the lead, on the left. The number matches the one on the steps map.
  */
 export function StepHeading({
@@ -18,11 +18,11 @@ export function StepHeading({
 }>) {
   return (
     <div>
-      <p className={`mb-4 flex items-center gap-3 ${EYEBROW} text-[var(--accent-hover)]`}>
+      <p className="mb-4 flex items-center gap-3">
         <span aria-hidden className="flex">
           <NumberStamp number={number} size={36} color="var(--accent)" />
         </span>
-        {label}
+        <span className={EYEBROW_PILL}>{label}</span>
       </p>
       <LpHeading title={title} lead={lead} />
     </div>

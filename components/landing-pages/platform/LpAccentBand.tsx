@@ -16,7 +16,7 @@ const GLOW =
  * A Platform-style page's closing ask (Platform's own words unless the page
  * brings its `copy`): an inset, rounded cream card with a warm glow at its
  * edges, the headline in the page's ink with its accent word in orange, and the
- * orange trial button.
+ * orange trial keycap.
  */
 export function LpAccentBand({ copy = PLATFORM.band }: Readonly<{ copy?: BandCopy }>) {
   return (
@@ -31,7 +31,7 @@ export function LpAccentBand({ copy = PLATFORM.band }: Readonly<{ copy?: BandCop
                   <AccentText text={copy.title} accent={copy.accent} />
                 </h2>
                 <p className="max-w-xl text-pretty text-lead text-[var(--muted-foreground)]">{copy.sub}</p>
-                <CTAButton label={SHARED.cta} trackAs="final_cta" className="mt-2 w-full sm:w-auto" />
+                <CTAButton label={SHARED.cta} trackAs="final_cta" keycap className="mt-2 mb-[3px] w-full sm:w-auto" />
                 <p className="text-sm font-medium text-[var(--muted-foreground)]">
                   <RegionText raw={SHARED.reassurance} />
                 </p>

@@ -54,6 +54,13 @@ export const MOBILE_SCANNER_PREVIEW = {
         body: "Their level and its perks show on screen, and it tells you when they move up.",
       },
     ] satisfies RowCopy<"stamps" | "points" | "rewards" | "levels">[],
+    /** The four buttons beside the phone: each one switches the screen, and the customer's card under it. */
+    options: [
+      { key: "stamps", title: "Stamps", line: "Add one, or several at once" },
+      { key: "points", title: "Points", line: "Type what they spent" },
+      { key: "rewards", title: "Reward", line: "Now or on their next visit" },
+      { key: "levels", title: "Level", line: "Their perks, on screen" },
+    ] satisfies Array<{ key: "stamps" | "points" | "rewards" | "levels"; title: string; line: string }>,
   },
   ways: {
     eyebrow: "Two ways to scan",
@@ -88,6 +95,18 @@ export const MOBILE_SCANNER_PREVIEW = {
         ] satisfies Fact[],
       },
     } satisfies Record<"staff" | "owners", TabCopy>,
+  },
+  /** From the owner's Team page to the staff phone: three frames joined by a rail, then what the team can do. */
+  teamStrip: {
+    eyebrow: "Your team",
+    title: "From a code to the counter.",
+    lead: "Staff join with a 6-character code and only ever see the scanner.",
+    frames: ["Copy your code", "They type it in", "Ready to scan"],
+    facts: [
+      { text: "Let a scan past a daily limit, under your name", plan: "Growth and Pro" },
+      { text: "Unlimited team members", plan: "Growth and Pro" },
+      { text: "Every scan carries the name of who made it" },
+    ] satisfies Fact[],
   },
   demo: {
     eyebrow: "Live demo",

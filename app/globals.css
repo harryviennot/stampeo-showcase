@@ -641,6 +641,41 @@ body {
   }
 }
 
+/* The keycap: a button in the house ink, sitting on its own ledge. A pointer
+   that can hover lifts it a pixel; pressing sinks it onto the page. The outline
+   variant (.keycap-flat) has no ledge until it is hovered or pressed. */
+.keycap {
+  border: 1.5px solid var(--near-black);
+  box-shadow: 0 3px 0 var(--near-black);
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out, background-color 150ms ease, filter 150ms ease;
+}
+
+.keycap-flat {
+  box-shadow: 0 0 0 var(--near-black);
+}
+
+@media (hover: hover) {
+  .keycap:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--near-black);
+  }
+}
+
+.keycap:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--near-black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .keycap,
+  .keycap:hover,
+  .keycap:active {
+    transform: none;
+    transition: background-color 150ms ease, filter 150ms ease;
+  }
+}
+
 /* Ink annotations. Handwritten margin notes and hand-drawn arrows scribbled
    over the page, as if someone went through a printout with a pen. Budget:
    at most one per section, or none of them read as a human touch. */

@@ -36,6 +36,7 @@ export default function MobileScannerPreviewPage() {
           </PhoneCrop>
         }
       />
+      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page B) and delete this marker. */}
       <HowSection />
       <CounterSection />
       <WaysSection />

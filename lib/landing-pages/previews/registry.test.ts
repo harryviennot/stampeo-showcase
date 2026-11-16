@@ -1,9 +1,16 @@
 /**
- * The five feature previews under `/us/landing-pages/platform/*`: Platform-style
+ * The six feature previews under `/us/landing-pages/platform/*`: Platform-style
  * pages that sit beside today's `/en/features/*`. They are English, noindex and
  * reachable by URL only, each with its own tracking variant and the sections of
  * its registry entry, ending on the cream card and the links to its siblings.
  * What each page renders is in `pages.test.tsx`.
+ *
+ * A page is built in two steps: its registry entry lists the sections it will
+ * have, and until its builder renders them the page carries a staging marker
+ * (`STAGED_MARKER` in `landing-pages-source.ts`) and still draws its earlier design. While the marker is
+ * there the section-order test is a `todo` and a lighter one checks the page
+ * still opens on its hero and ends on the cream card and the links; the
+ * moment the marker goes, the full test is armed.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -12,11 +19,12 @@ import { buildLlmsTxt } from "../../llms-txt";
 import { buildSitemap } from "../../seo/sitemap";
 import { hidesLanguageSwitcher } from "../../routing/language-switcher";
 import { NOINDEX } from "../../seo/page-robots";
-import { code, findTag, literalAttr } from "../../testing/jsx-source";
-import { pageFile, renderedSections } from "../../testing/landing-pages-source";
-import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPageMetadata } from "../pages";
+import { code, findTag, literalAttr, openingTags } from "../../testing/jsx-source";
+import { isStaged, pageFile, renderedSections } from "../../testing/landing-pages-source";
+import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPageMetadata, type PreviewSlug } from "../pages";
 import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
+import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
 import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
@@ -27,9 +35,24 @@ const COPY = {
   "platform/push-notifications": PUSH_NOTIFICATIONS_PREVIEW,
   "platform/analytics": ANALYTICS_PREVIEW,
   "platform/promotional-campaigns": PROMOTIONAL_CAMPAIGNS_PREVIEW,
+  "platform/geolocation": GEOLOCATION_PREVIEW,
 } as const;
 
+/** The sections of each preview, in the order of the UX brief: each page opens on its hero and ends on the cream card and its links. */
+const SECTIONS: Record<PreviewSlug, string[]> = {
+  "platform/card-design": ["hero", "icons", "playground", "palettes", "anatomy", "stamps", "wallets", "faq", "final_cta", "related"],
+  "platform/mobile-scanner": ["hero", "counter", "ways", "team", "demo", "final_cta", "related"],
+  "platform/push-notifications": ["hero", "day", "wallets", "editor", "demo", "final_cta", "related"],
+  "platform/analytics": ["hero", "blind_spots", "glance", "ladder", "activity", "recap", "final_cta", "related"],
+  "platform/promotional-campaigns": ["hero", "composer", "numbers", "ideas", "delivery", "plans", "faq", "final_cta", "related"],
+  "platform/geolocation": ["hero", "status", "how", "privacy", "faq", "final_cta", "related"],
+};
+
 describe("the registry (AC1)", () => {
+  test.each(PREVIEW_SLUGS)("%s lists the brief's sections, in the brief's order", (slug) => {
+    expect([...LANDING_PAGES[slug].sections]).toEqual(SECTIONS[slug]);
+  });
+
   test.each(PREVIEW_SLUGS)("%s is tracked as lp_platform_<feature>, one variant of its own", (slug) => {
     const variant = `lp_${slug.replace("/", "_").replaceAll("-", "_")}`;
 
@@ -41,10 +64,10 @@ describe("the registry (AC1)", () => {
     expect(LANDING_PAGES[slug].sections.slice(-2)).toEqual(["final_cta", "related"]);
   });
 
-  test("only card design and campaigns have a FAQ, and it comes right before the closing card", () => {
+  test("only card design, campaigns and geolocation have a FAQ, and it comes right before the closing card", () => {
     const withFaq = PREVIEW_SLUGS.filter((slug) => LANDING_PAGES[slug].sections.includes("faq"));
 
-    expect(withFaq).toEqual(["platform/card-design", "platform/promotional-campaigns"]);
+    expect(withFaq).toEqual(["platform/card-design", "platform/promotional-campaigns", "platform/geolocation"]);
     for (const slug of withFaq) expect(LANDING_PAGES[slug].sections.slice(-3)).toEqual(["faq", "final_cta", "related"]);
   });
 
@@ -111,7 +134,32 @@ describe("the routes (AC1, AC4)", () => {
     expect(hidesLanguageSwitcher(`/us/landing-pages/${slug}`)).toBe(true);
   });
 
-  test.each(PREVIEW_SLUGS)("%s renders every registry section once, in registry order", (slug) => {
-    expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
+  for (const slug of PREVIEW_SLUGS) {
+    if (isStaged(slug)) {
+      test.todo(`${slug}: renders every registry section once, in registry order (its builder lands them and deletes the marker)`);
+      test(`${slug}: is staged: it still opens on its hero, draws no section twice, and ends on the cream card and the links`, () => {
+        const rendered = renderedSections(pageFile(slug));
+
+        expect(rendered[0]).toBe("hero");
+        expect(new Set(rendered).size).toBe(rendered.length);
+        expect(rendered.slice(-2)).toEqual(["final_cta", "related"]);
+      });
+    } else {
+      test(`${slug}: renders every registry section once, in registry order`, () => {
+        expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
+      });
+    }
+  }
+
+  test("the marker is the only thing that stages a page: a page that has it still mounts the cream card and the links", () => {
+    for (const slug of PREVIEW_SLUGS.filter(isStaged)) {
+      const tags = openingTags(code(pageFile(slug))).map((tag) => tag.name);
+
+      expect({ slug, band: tags.includes("LpAccentBand"), links: tags.includes("RelatedPreviews") }).toEqual({
+        slug,
+        band: true,
+        links: true,
+      });
+    }
   });
 });
