@@ -19,6 +19,7 @@ import { stampIcons } from "@/components/onboarding/StampIconPicker";
 import { ROOT, openingTags, read } from "../../testing/jsx-source";
 import { otherCallers, previewSource } from "../../testing/landing-pages-source";
 import { expectInOrder, logos, pictures, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
+import { trackedBy } from "../../testing/cta-recorder";
 import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { CARD_DESIGN_PREVIEW as COPY } from "../copy/previews/card-design";
@@ -130,6 +131,10 @@ describe("try the designer", () => {
   test("opens on the live card and its controls, then offers the trial again right under them as a keycap", () => {
     expectInOrder(html(), ["Stamps", "Points", SHARED.cta]);
     expect(html()).toMatch(/<a [^>]*class="[^"]*\bkeycap\b[^"]*"[^>]*href="\/en\/onboarding"|<a [^>]*href="\/en\/onboarding"[^>]*class="[^"]*\bkeycap\b/);
+  });
+
+  test("the trial under the designer reports its click as a feature CTA, to the sign-up", () => {
+    expect(trackedBy(html)).toEqual([{ trackAs: "feature_cta", href: "/onboarding" }]);
   });
 
   test("the designer sits on one stamped stage", () => {

@@ -15,6 +15,7 @@ import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { MENU_VARIANTS } from "@/lib/landing-pages/platform/variants";
 import { decodeEntities, expectInOrder, renderEn, textOf } from "../testing/render-en";
+import { trackedBy } from "../testing/cta-recorder";
 import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { renderAs } from "../testing/visitor-seams";
 
@@ -119,6 +120,10 @@ describe("the index sheet", () => {
     expect(bar.map(({ name }) => name)).toEqual(["Log in", "Get started →"]);
     expect(bar[0].href).toBe("/en/login");
     expect(bar[1].href).toBe("/en/onboarding");
+  });
+
+  test.each(MENU_VARIANTS)("signed out, the %s menu's Get started reports its click as the phone header's, to the sign-up", (variant) => {
+    expect(trackedBy(() => render({ variant }))).toEqual([{ trackAs: "header_mobile", href: "/onboarding" }]);
   });
 
   test("signed in it is Sign out and Dashboard", () => {

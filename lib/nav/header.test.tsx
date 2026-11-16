@@ -9,6 +9,7 @@ import { Header } from "@/components/sections/Header";
 import { SheetMenu } from "@/components/sections/SheetMenu";
 import { AccordionMenu } from "@/components/sections/MobileMenuAccordion";
 import { renderEn } from "../testing/render-en";
+import { trackedBy } from "../testing/cta-recorder";
 import { renderAtPath } from "../testing/pathname-seam";
 import { phoneMenuProps } from "../testing/phone-menu-props";
 
@@ -95,5 +96,37 @@ describe("the bar when its phone menu is open", () => {
 
   test("scrolled, the bar is frosted cream with either menu", () => {
     for (const Menu of [SheetMenu, AccordionMenu]) expect(barClass(open(Menu, { open: false, scrolled: true }))).toContain("backdrop-blur-md");
+  });
+});
+
+describe("the sign-up buttons of the header report their clicks", () => {
+  const props = phoneMenuProps("us", "previews", "/us/landing-pages/platform");
+
+  test("the desktop bar's Get started is tracked as the header's", () => {
+    expect(trackedBy(() => render(<Header />))).toContainEqual({ trackAs: "header", href: "/onboarding" });
+  });
+
+  test("today's open accordion has one more, the phone's Get started, tracked as the phone header's", () => {
+    const buttons = trackedBy(() =>
+      render(
+        <AccordionMenu {...props}>
+          <span>bar</span>
+        </AccordionMenu>,
+      ),
+    );
+
+    expect(buttons).toEqual([{ trackAs: "header_mobile", href: "/onboarding" }]);
+  });
+
+  test("the sheet's Get started is in the menu chunk, which the server does not draw: its tracking is pinned in mobile-menu-render.test.tsx", () => {
+    const buttons = trackedBy(() =>
+      render(
+        <SheetMenu {...props}>
+          <span>bar</span>
+        </SheetMenu>,
+      ),
+    );
+
+    expect(buttons).toEqual([]);
   });
 });
