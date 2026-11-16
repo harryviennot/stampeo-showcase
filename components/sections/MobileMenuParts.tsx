@@ -150,7 +150,7 @@ export function MenuDialog({
 /** The small grey label over a group of the menu. */
 export const MENU_LABEL = "text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]";
 
-/** Log in beside Get started (a keycap), or Sign out beside Dashboard: 48px pills in a bar at the foot of the menu. */
+/** Log in beside Get started (a keycap), or Sign out beside Dashboard: 48px pills in a bar at the foot of the menu; the main action gets the wider pill and never wraps. */
 export function MenuBottomBar({
   onClose,
   signedIn,
@@ -159,9 +159,9 @@ export function MenuBottomBar({
   className = "",
 }: Readonly<Pick<MenuProps, "onClose" | "signedIn" | "appUrl" | "onSignOut"> & { className?: string }>) {
   const t = useTranslations("common.auth");
-  const pill = "flex h-12 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-bold";
-  const quiet = `${pill} keycap keycap-flat bg-white text-[var(--foreground)]`;
-  const primary = `${pill} keycap bg-[var(--accent)] text-white`;
+  const pill = "flex h-12 items-center justify-center rounded-full px-3 text-[15px] font-bold whitespace-nowrap min-[360px]:px-4";
+  const quiet = `${pill} flex-1 keycap keycap-flat bg-white text-[var(--foreground)]`;
+  const primary = `${pill} flex-[1.3] keycap bg-[var(--accent)] text-white`;
 
   return (
     <div className={`border-t border-[var(--border)] bg-[var(--cream)] ${className}`}>
