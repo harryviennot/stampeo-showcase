@@ -18,6 +18,7 @@ const COLUMNS: Record<number, string> = {
  * A bordered table of steps, the body of a section. With a `visual` (phones, shown
  * as they are, side by side) their lower parts sink behind the table: low enough
  * that the top of each phone shows above it, with room above for their shadows.
+ * Below `lg` the phones' row spans the screen, so the page margins never cut them.
  * Without one it is a plain table. On a phone the table is a stack of rows. A
  * `link` goes centred under it.
  */
@@ -29,7 +30,7 @@ export function StepsTable({
   return (
     <div className="mx-auto max-w-[560px] lg:max-w-[1040px]">
       {visual && (
-        <div className="-mt-6 flex max-h-[286px] justify-center gap-4 overflow-hidden pt-6 lg:max-h-[464px] lg:gap-10">
+        <div className="relative left-1/2 -mt-6 flex max-h-[286px] w-screen -translate-x-1/2 justify-center gap-4 overflow-hidden pt-6 lg:static lg:max-h-[464px] lg:w-auto lg:translate-x-0 lg:gap-10">
           {visual}
         </div>
       )}
