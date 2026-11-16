@@ -49,7 +49,7 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
    * "Customer first name" and "Stamps remaining".
    */
   editor: {
-    eyebrow: "Your words",
+    eyebrow: "In your voice",
     title: "Use our wording, or write your own.",
     lead: "Ready-made messages on every plan. Growth and Pro let you rewrite them.",
     /** The two-way control over the message; "Your words" is the one that comes with Growth and Pro. */

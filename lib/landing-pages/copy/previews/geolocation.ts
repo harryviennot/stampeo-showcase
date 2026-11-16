@@ -55,7 +55,7 @@ export const GEOLOCATION_PREVIEW = {
       plan: "Pro" satisfies PlanChip,
       facts: [
         { text: "Your card on their lock screen near your shop" },
-        { text: "A short line you write for each location" },
+        { text: "Built from your shop's address" },
         { text: "Nothing for your customers to set up" },
       ],
     } satisfies StatusColumn & { plan: PlanChip },
@@ -63,10 +63,10 @@ export const GEOLOCATION_PREVIEW = {
   how: {
     eyebrow: "How it will work",
     title: "Your address will do the work.",
-    lead: "You'll add your shop and write one line. Their phone will do the rest.",
+    lead: "You'll add your shop once. Their phone will do the rest.",
     cells: [
       { title: "Add your shop", body: "Your address, from your dashboard." },
-      { title: "Write one line", body: "What they'll see when they're close." },
+      { title: "It goes on the card", body: "Your address will travel inside their card." },
       { title: "They walk by", body: "Their phone will show your card, on its own." },
     ] satisfies Tile[],
   } satisfies EyebrowSection & { cells: Tile[] },

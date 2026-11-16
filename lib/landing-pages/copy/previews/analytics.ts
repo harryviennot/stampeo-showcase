@@ -118,7 +118,7 @@ export const ANALYTICS_PREVIEW = {
       from: "Stampeo",
       subject: "Your week at Aurevo",
       figures: [
-        { label: "Stamps given", value: "642" },
+        { label: "Stamps given", value: "256" },
         { label: "New customers", value: "38" },
         { label: "Returning", value: "211" },
         { label: "Rewards redeemed", value: "19" },
