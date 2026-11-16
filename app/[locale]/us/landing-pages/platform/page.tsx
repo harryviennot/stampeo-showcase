@@ -6,7 +6,7 @@ import { Hairline } from "@/components/landing-pages/platform/Hairline";
 import { HowTable } from "@/components/landing-pages/platform/HowTable";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { NumbersBlock } from "@/components/landing-pages/platform/NumbersBlock";
-import { PlatformHero } from "@/components/landing-pages/platform/PlatformHero";
+import { PlatformHero } from "@/components/landing-pages/platform/hero/PlatformHero";
 import { PlatformSection } from "@/components/landing-pages/platform/PlatformSection";
 import { ProgramTypeRowsSection } from "@/components/landing-pages/platform/ProgramTypeRowsSection";
 import { ShareTree } from "@/components/landing-pages/platform/ShareTree";

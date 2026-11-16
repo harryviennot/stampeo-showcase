@@ -93,6 +93,7 @@ describe("the keycap: a button with the house ink frame and a ledge that presses
 
     expect(plain).not.toContain("keycap");
     expect(plain).toContain("shadow-md");
+    expect([plain, renderEn(<CTAButton label="Start" trackAs="hero" variant="outline" size="md" />)]).toMatchSnapshot();
     expect(key).toMatch(/class="[^"]*\bkeycap\b/);
     expect(key).toContain("bg-[var(--accent)]");
   });
