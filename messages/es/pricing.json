@@ -230,8 +230,8 @@
         },
         "segmentation": {
           "label": "Segmentación de clientes",
-          "starter": "Básica (fecha de alta, nivel)",
-          "growth": "Básica (fecha de alta, nivel)",
+          "starter": "Básica (por fecha)",
+          "growth": "Básica (por fecha)",
           "pro": "Avanzada (sellos, inactividad, recompensas, establecimiento)"
         },
         "scheduledSends": {

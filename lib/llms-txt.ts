@@ -212,7 +212,7 @@ Promotional campaigns are one-off push notifications sent straight to customers'
 - **Cost**: included in the plan, with no per-message fee and no SMS carrier fees.
 - **Quotas**: ${broadcastQuotas()}
 - **Segmentation**:
-  - Starter and Growth: basic (enrollment date, level).
+  - Starter and Growth: basic (enrollment date).
   - Pro: advanced — by stamp count, last redemption, inactivity window, recent signups.
 - **Scheduling** (${availability((f) => f.scheduledBroadcasts)}): pick a local send time with timezone awareness — Thursday 5pm, Saturday noon, etc. Other plans send immediately.
 - **Multilingual delivery**: write the copy once per language you serve; each customer receives the language their device is set to. Single send, not one per language.

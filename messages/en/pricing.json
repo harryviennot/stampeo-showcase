@@ -230,8 +230,8 @@
         },
         "segmentation": {
           "label": "Customer segmentation",
-          "starter": "Basic (sign-up date, level)",
-          "growth": "Basic (sign-up date, level)",
+          "starter": "Basic (date-based)",
+          "growth": "Basic (date-based)",
           "pro": "Advanced (stamps, inactivity, redemptions, location)"
         },
         "scheduledSends": {

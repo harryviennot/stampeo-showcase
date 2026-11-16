@@ -230,8 +230,8 @@
         },
         "segmentation": {
           "label": "Segmentacja klientów",
-          "starter": "Podstawowa (data zapisu, poziom)",
-          "growth": "Podstawowa (data zapisu, poziom)",
+          "starter": "Podstawowa (po dacie)",
+          "growth": "Podstawowa (po dacie)",
           "pro": "Zaawansowana (pieczątki, brak wizyt, odebrane nagrody, lokal)"
         },
         "scheduledSends": {

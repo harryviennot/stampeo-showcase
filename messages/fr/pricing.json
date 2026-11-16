@@ -230,8 +230,8 @@
         },
         "segmentation": {
           "label": "Segmentation client",
-          "starter": "Basique (date d'inscription, niveau)",
-          "growth": "Basique (date d'inscription, niveau)",
+          "starter": "Basique (par date)",
+          "growth": "Basique (par date)",
           "pro": "Avancée (tampons, inactivité, récompenses, établissement)"
         },
         "scheduledSends": {
