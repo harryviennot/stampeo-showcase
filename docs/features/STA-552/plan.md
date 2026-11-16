@@ -81,6 +81,39 @@ Each is an optional prop whose default keeps today's markup byte-identical.
 - On Platform and its previews, the header's Product menu (desktop and phone) and the footer's features column lead to the previews; a feature without a preview (geolocation) opens today's page. Every other page keeps today's feature pages. `LandingPageShell` chooses per page (`featureLinksFor`); `Header`/`Footer` default to today's pages.
 - AC9: from Platform or a preview, each of the five features opens `/us/landing-pages/platform/<feature>`; from any other page, every feature link opens `/<locale>/features/<feature>`.
 
+## v2: bespoke pages in a Stampeo-Platform hybrid (Harry, 16 Nov 2026)
+
+Harry: the previews "all look the same" (they reuse Platform's kit); some sections should be built from scratch for
+what they show; the pages should "feel like us" (our heavy-black-border stamp-card look) while staying clean and
+premium; the Platform hero should try "something new"; geolocation needs a preview; the phone menu "feels extremely
+cheap" (STA-555). Spec: `ux-brief-v2.md` (ux-designer, DESIGN, READY), from the research in
+`scratchpad/research-v3/report.md`.
+
+Decisions (coordinator, on the brief's defaults; Harry may veto at review):
+- Hybrid look (brief §1): the site's orange pill eyebrows (`--accent`), keycap primary CTA, stamped floating cards,
+  steps tables, toggle surfaces, related tiles and FAQ frame; phones and wallet cards never framed. Applies to Platform,
+  the previews and the three other US landings (shared `LpSection`). Platform's default-render snapshots change on
+  purpose; every live page stays byte-identical.
+- Platform hero: two variants, Wallet stack by default and the straight "shelf" via `?hero=shelf`, for Harry to pick.
+- Phone menu: the "index sheet" by default and the drill-down via `?menu=drill`, shown only on the US landing pages
+  (`LandingPageShell`) until Harry picks; production keeps today's menu (STA-555 ships the winner site-wide).
+- Geolocation preview: "coming soon" throughout, Pro, no date; the menus label it "Soon". The live page's false claim is
+  STA-556.
+- Card design: no "oba", no sample brand repeated across sections.
+
+Acceptance criteria (v2):
+- AC10: on Platform, the previews and the three other US landings, eyebrows are the `--accent` pill, the primary CTA is
+  the keycap, and the brief's §1.3 objects are stamped; on every other page each touched component renders byte-identically.
+- AC11: Platform's hero shows stamps, points and levels in the first screen at 390, with ≥ 9 distinct real wallet
+  cards across the variant; `?hero=shelf` shows the shelf; reduced motion gives a static, complete hero.
+- AC12: each of the six previews has the brief's section list with at least two sections built for that feature;
+  analytics opens with production's blind-spot narrative and answers only with every-plan facts unless labelled;
+  geolocation is future tense, "coming soon", Pro, no date.
+- AC13: on US landing pages at 390, the menu shows every Product item without an accordion, keeps the trial CTA in view,
+  traps focus, closes on Escape, locks the page scroll and has rows ≥ 44px; `?menu=drill` gives the drill-down; every
+  other page keeps today's menu byte-identically.
+- AC14: every new product claim is traced in `claims.md`; new copy passes the copy guards and `stampeo-copywriting`.
+
 ## Build stages
 
 1. Foundation: tests, registry entries, routes, copy modules (from the brief's draft copy, reviewed by the
