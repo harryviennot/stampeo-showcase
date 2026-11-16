@@ -42,3 +42,8 @@ export function sectionsOf(html: string): Array<{ id: string; html: string }> {
 
   return marks.map((mark, index) => ({ id: mark[1], html: html.slice(mark.index, marks[index + 1]?.index ?? html.length) }));
 }
+
+/** The markup of one section of a landing page as a visitor receives it, or "" when the page has no such section. */
+export async function sectionOf(slug: LandingSlug, id: string): Promise<string> {
+  return sectionsOf(await renderPreviewPage(slug)).find((section) => section.id === id)?.html ?? "";
+}

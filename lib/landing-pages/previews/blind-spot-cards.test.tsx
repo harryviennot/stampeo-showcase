@@ -1,6 +1,7 @@
 /**
  * Production's blind-spot cards (`/en/features/analytics`): left alone they render as the live page does, and the
- * analytics preview borrows them with its own questions and no section frame.
+ * analytics preview borrows them with its own questions and no section frame. The snapshot is the live page's
+ * output, recorded from the component as the live site ships it.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -24,9 +25,5 @@ describe("a page that frames the cards itself", () => {
     expect(html).not.toContain("<h2");
     expect(html).not.toContain("What you don");
     expect(html).not.toContain("How many regular customers");
-  });
-
-  test("keeps production's grid: two columns on a phone, three from md", () => {
-    expect(html).toContain("grid-cols-2 md:grid-cols-3");
   });
 });

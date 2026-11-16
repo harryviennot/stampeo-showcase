@@ -9,6 +9,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
@@ -180,13 +181,22 @@ describe("figures from other people (AC12)", () => {
   });
 });
 
-describe("Platform's measured figure", () => {
+describe("Platform's measured figure is the retention study's", () => {
+  const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const study = readFileSync(join(ROOT, "docs", "features", "STA-552", "retention-study-2026-11-16.md"), "utf8");
+  const day90 = /Still in the wallet at day 90 \| \*\*(\d+(?:\.\d+)?)%\*\* \| ([\d,]+) cards, from (\d+) businesses, first added (\d{4})-(\d{2})-\d{2} to \d{4}-(\d{2})-\d{2}/.exec(study);
   const [figure] = PAGES.PLATFORM.numbers.figures;
 
-  test("is the share of cards still in the wallet three months later, with the study it comes from", () => {
-    expect(figure.value).toBe("95%");
+  test("the study records its day-90 result with the cards, the businesses and the months it covers", () => {
+    expect(day90).not.toBeNull();
+  });
+
+  test("the figure is that share rounded down, and its source line is that cohort: the same cards, businesses and months", () => {
+    const [, percent, cards, businesses, year, firstMonth, lastMonth] = day90 ?? [];
+
+    expect(figure.value).toBe(`${Math.floor(Number(percent))}%`);
     expect(figure.text).toMatch(/still in the wallet three months later/);
-    expect(figure.source).toMatch(/^Stampeo data: .*businesses.*2026$/);
+    expect(figure.source).toBe(`Stampeo data: ${cards} cards from ${businesses} businesses, added ${MONTHS[Number(firstMonth) - 1]} to ${MONTHS[Number(lastMonth) - 1]} ${year}`);
   });
 });
 
@@ -254,7 +264,7 @@ describe("the six previews' copy", () => {
     expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(6);
   });
 
-  test("each sibling link is a feature's name and one plain line of at most 50 characters, with no plan in it", () => {
+  test("each sibling link is a feature's name and one plain line of at most 50 characters", () => {
     const { cards } = PREVIEW_SHARED.related;
     const KEYS = ["cardDesign", "mobileScanner", "pushNotifications", "analytics", "promotionalCampaigns", "geolocation"];
 
@@ -264,7 +274,6 @@ describe("the six previews' copy", () => {
 
       expect({ key, set: title.length > 0 && line.length > 0 }).toEqual({ key, set: true });
       expect({ key, short: line.length <= 50 }).toEqual({ key, short: true });
-      expect({ key, plan: /Starter|Growth|\bPro\b|every plan|all plans/i.test(`${title} ${line}`) }).toEqual({ key, plan: false });
     }
     expect(PREVIEW_SHARED.related.title.length).toBeLessThanOrEqual(44);
   });
@@ -339,8 +348,8 @@ describe("the geolocation preview says it is coming (AC12)", () => {
     expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
   });
 
-  test("no line names a wallet or a plan: only Apple's location list is built, and plans live on pricing", () => {
-    expect(lines().filter((line) => /Apple|Google|Starter|Growth|\bPro\b/.test(line.value)).map((line) => line.path)).toEqual([]);
+  test("no line names a wallet: only Apple's location list is built", () => {
+    expect(lines().filter((line) => /Apple|Google/.test(line.value)).map((line) => line.path)).toEqual([]);
   });
 
   test("the lock screen it shows is Aurevo's, and what it says is the owner's own line", () => {

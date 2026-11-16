@@ -27,7 +27,7 @@ const SECTIONS: Record<PreviewSlug, string[]> = {
   "platform/geolocation": ["hero", "how", "privacy", "faq", "final_cta", "related"],
 };
 
-describe("the registry (AC1)", () => {
+describe("the registry", () => {
   test.each(PREVIEW_SLUGS)("%s lists the brief's sections, in the brief's order", (slug) => {
     expect([...LANDING_PAGES[slug].sections]).toEqual(SECTIONS[slug]);
   });
@@ -83,7 +83,7 @@ describe("the registry (AC1)", () => {
   });
 });
 
-describe("the routes (AC1, AC4)", () => {
+describe("the routes", () => {
   test.each(PREVIEW_SLUGS)("%s has its own page next to Platform's, and no layout wraps them", (slug) => {
     expect(existsSync(pageFile(slug))).toBe(true);
     expect(existsSync(pageFile("platform").replace("page.tsx", "layout.tsx"))).toBe(false);

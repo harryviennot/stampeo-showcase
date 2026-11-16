@@ -157,10 +157,9 @@ describe("the quiet-hours section", () => {
   const section = () => code(outcomes("QuietHoursSpotlight"));
   const visual = () => code(outcomes("QuietHoursVisual"));
 
-  test("prints the broadcast line in a paragraph of its own, with no plan beside it", () => {
+  test("prints the broadcast line in a paragraph of its own", () => {
     expect(section()).toContain("{OUTCOMES.slowDays.noFees}");
     expect(OUTCOMES.slowDays.noFees).toMatch(/broadcast/i);
-    expect(openingTags(section()).map((tag) => tag.name)).not.toContain("PlanLine");
   });
 
   test("shows the busiest-times capture, then the broadcast that fills the quiet hour, joined by an arrow", () => {

@@ -138,9 +138,8 @@ describe("the notification moments (AC24)", () => {
     });
   });
 
-  test("the moments name no plan: the stamp, the reward and the broadcast are told as they are", () => {
+  test("the moments are told as they are: the stamp, the reward and the broadcast", () => {
     expect(moments.map((moment) => moment.title)).toEqual(["Stamp collected", "Reward unlocked", "Broadcast"]);
-    expect(textOf(render(<NotificationSequenceDemo moments={moments} design={AUREVO.design} />))).not.toMatch(/Growth|Starter|\bPro\b|Every plan/);
   });
 
   test("the card beside each banner has the stamps that banner counts", () => {

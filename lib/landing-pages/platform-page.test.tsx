@@ -90,7 +90,7 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
   });
 });
 
-describe("the hero: the headline, the cards, then the pair of actions (AC17)", () => {
+describe("the hero: the headline, the cards, then the pair of actions", () => {
   const hero = () => code(platformFile("hero/PlatformHero"));
 
   test("puts the headline first, then the cards, then the CTA pair and its reassurance", async () => {
@@ -239,7 +239,6 @@ describe("program types: one row each, all open until a visitor points at one (A
       for (const line of [type.eyebrow, type.title, type.body]) expect(text).toContain(line);
     }
     for (const card of ["stamps card", "points card", "levels cards"]) expect(text).toContain(card);
-    expect(text).not.toContain("Every plan");
   });
 
   test.each([
@@ -334,8 +333,7 @@ describe("the platform: a dashboard for you, a free scanner for your team", () =
     expect(pane(other)?.attrs).toContain("opacity-0");
   });
 
-  test("the facts name no plan, and the links go to the feature pages", () => {
-    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|Every plan/);
+  test("the links go to the feature pages", () => {
     expect(html()).toMatch(/href="[^"]*\/features\/analytics"/);
     expect(html()).toMatch(/href="[^"]*\/features\/mobile-scanner"/);
   });

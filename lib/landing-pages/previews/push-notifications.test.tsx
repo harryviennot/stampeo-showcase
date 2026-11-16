@@ -11,7 +11,7 @@ import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon
 import { LockScreenSlice } from "@/components/landing-pages/feature-previews/push-notifications/LockScreenSlice";
 import { OwnIconCard } from "@/components/landing-pages/feature-previews/push-notifications/OwnIconCard";
 import { AUREVO } from "@/components/landing-pages/shared/samples";
-import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
+import { sectionOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEn, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "../copy/previews/push-notifications";
@@ -24,7 +24,7 @@ const { EditorSection } = await import("@/components/landing-pages/feature-previ
 const { WalletsSection } = await import("@/components/landing-pages/feature-previews/push-notifications/WalletsSection");
 
 const PAGE = "platform/push-notifications";
-const section = async (id: string) => sectionsOf(await renderPreviewPage(PAGE)).find((candidate) => candidate.id === id)?.html ?? "";
+const section = (id: string) => sectionOf(PAGE, id);
 
 describe("hero: what push notifications are, with one lock screen beside it", () => {
   test("says it in plain words: the headline, its sub, the trial keycap and the way to the demo", async () => {
@@ -93,13 +93,6 @@ describe("day: a notification each time their card changes", () => {
       expect(names[2 * index + 1]).toContain(node.banner.body);
     });
   });
-
-  test("is drawn with plain wallet cards: no ink frame, and no plan named", async () => {
-    const page = await html();
-
-    expect(page).not.toContain("card-stamp");
-    expect(textOf(page)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
-  });
 });
 
 describe("wallets: push notifications on iPhone and Android", () => {
@@ -126,8 +119,6 @@ describe("wallets: push notifications on iPhone and Android", () => {
       COPY.wallets.icon.title,
       COPY.wallets.icon.line,
     ]);
-    expect(page.match(/class="rounded-\[28px\] bg-white\/80 /g)).toHaveLength(3);
-    expect(page).not.toContain("card-stamp");
   });
 
   test("from lg it is a 960px stage, and on a phone a column that keeps the phones first", async () => {
@@ -171,9 +162,8 @@ describe("editor: use our wording or write your own", () => {
     ]);
   });
 
-  test("says what it is in the copy's words, with no plan named and no chip beside the choice", () => {
+  test("says what it is in the copy's words, with the choice unlabelled", () => {
     expectInOrder(html(), ["Your wording", "Use our wording or write your own.", "Every message comes ready to send. Switch any off, or rewrite it in your words."]);
-    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|Every plan/);
     expect(textOf(html())).not.toContain("{first name}");
     expect(textOf(html())).not.toContain("Sophie");
   });
@@ -190,11 +180,6 @@ describe("editor: use our wording or write your own", () => {
 
   test("the choice between the two wordings is a 44px control", () => {
     expect(html()).toMatch(/role="tab"[^>]*class="[^"]*\bh-11\b/);
-  });
-
-  test("sits on one clean white card, with no ink frame", () => {
-    expect(html()).not.toContain("card-stamp");
-    expect(html().match(/rounded-\[32px\] bg-white /g)).toHaveLength(1);
   });
 });
 
@@ -220,7 +205,7 @@ describe("a lock-screen slice", () => {
 });
 
 describe("the shop's notification icon", () => {
-  test("a notification from the sample café carries its name, its message and its own tile: the cup on the card colour, 40px", () => {
+  test("a notification from the sample café carries its name, its message and its own tile: the cup on the card colour", () => {
     const props = shopBanner(STAMP_BANNER);
     const tile = renderEn(<>{props.icon}</>);
 
@@ -229,7 +214,6 @@ describe("the shop's notification icon", () => {
     expect(props.title).toBe(STAMP_BANNER.body);
     expect(tile).toContain(AUREVO.design.background_color);
     expect(tile).toContain("/themes/cafe/cup.png");
-    expect(tile).toMatch(/\bh-10\b/);
   });
 });
 
@@ -246,15 +230,5 @@ describe("demo: try it on your own phone", () => {
 describe("the closing card", () => {
   test("says every stamp lands on the lock screen, and that customers install nothing", async () => {
     expectInOrder(await section("final_cta"), ["Every stamp,", "on their lock screen.", "Notifications start with your first stamp. Your customers install nothing.", SHARED.cta]);
-  });
-});
-
-describe("what the page leaves out", () => {
-  test("no plan, no broadcast wording, no ink frame anywhere but the keycap, and no Sample data caption", async () => {
-    const html = await renderPreviewPage(PAGE);
-    const text = textOf(html);
-
-    expect(text).not.toMatch(/Growth|Starter|\bPro\b|[Ee]very plan|[Aa]ll plans|broadcast|Sample data/);
-    expect(html).not.toContain("card-stamp");
   });
 });

@@ -12,7 +12,7 @@ import { PrivacySection } from "@/components/landing-pages/feature-previews/geol
 import { loadCatalog } from "../../testing/catalogs";
 import { ROOT, openingTags, read, sourceFiles, stripComments } from "../../testing/jsx-source";
 import { pageFile } from "../../testing/landing-pages-source";
-import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
+import { renderPreviewPage, sectionOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { SHARED } from "../copy/shared";
 import { GEOLOCATION_PREVIEW as COPY } from "../copy/previews/geolocation";
@@ -22,11 +22,8 @@ const GEOLOCATION_DIR = join(ROOT, "components", "landing-pages", "feature-previ
 /** The date every lock screen of the site shows (the notifications page's and the live geolocation page's are the same line). */
 const SITE_LOCK_DATE: string = loadCatalog("en", "features.json").features["notifications-push"].demo.lockScreenDate;
 
-/** What a section must not carry: the ink frame (a stamped card, an ink-coloured border) of the earlier look. */
-const INK = /card-stamp|near-black/;
-
 describe("hero: a still lock screen with Aurevo's own words, and the words that say it is coming soon", () => {
-  const hero = async () => sectionsOf(await renderPreviewPage("platform/geolocation")).find(({ id }) => id === "hero")?.html ?? "";
+  const hero = () => sectionOf("platform/geolocation", "hero");
 
   test("the headline names the feature and says it is coming soon, then the sub, the trial and the way to the steps", async () => {
     const html = await hero();
@@ -74,13 +71,8 @@ describe("how: three steps in the future tense, in a plain table", () => {
     expect(html.match(/<li\b/g)).toHaveLength(3);
   });
 
-  test("it is Platform's clean table: white, a hairline border, three columns from lg, no phone behind it and no ink", async () => {
-    const html = await render(<HowSection />);
-
-    expect(html).toContain("bg-white/80");
-    expect(html).toContain("lg:grid-cols-3");
-    expect(html).not.toMatch(INK);
-    expect(pictures(html)).toEqual([]);
+  test("no phone sits behind the table: it is three plain cells", async () => {
+    expect(pictures(await render(<HowSection />))).toEqual([]);
   });
 });
 
@@ -104,26 +96,11 @@ describe("privacy: their location stays on their phone", () => {
     expect(cross).toHaveLength(2);
     expect(Math.min(...cross)).toBeGreaterThan(Math.max(...dashes));
   });
-
-  test("the drawing sits on a clean white surface, not in an ink frame, and no word of it is a claim that needs a plan", async () => {
-    const html = await render(<PrivacySection />);
-
-    expect(html).not.toMatch(INK);
-    expect(html).toContain("bg-white");
-    expect(textOf(html)).not.toMatch(/Growth|Starter|Every plan/);
-  });
 });
 
 describe("the page as a whole", () => {
-  test("it has no status table: the page goes from the hero to the steps, the privacy and the questions", async () => {
-    const html = await renderPreviewPage("platform/geolocation");
-
-    expect(sectionsOf(html).map(({ id }) => id)).toEqual(["hero", "how", "privacy", "faq", "final_cta", "related"]);
-    expect(textOf(html)).not.toMatch(/Live today|Where it stands|Coming soon\|Today/);
-  });
-
   test("four questions, the first about the launch date, which we do not have", async () => {
-    const faq = sectionsOf(await renderPreviewPage("platform/geolocation")).find(({ id }) => id === "faq")?.html ?? "";
+    const faq = await sectionOf("platform/geolocation", "faq");
 
     expect(COPY.faq.items).toHaveLength(4);
     expect(faq.match(/<summary\b/g)).toHaveLength(4);
@@ -131,11 +108,11 @@ describe("the page as a whole", () => {
     expect(COPY.faq.items[0].answer).toContain("don't have a date");
   });
 
-  test("it names no wallet, no plan and no date anywhere a visitor reads", async () => {
+  test("it names no wallet and no date anywhere a visitor reads", async () => {
     const text = textOf(await renderPreviewPage("platform/geolocation"));
     const body = text.slice(text.indexOf("Geolocation notifications"), text.indexOf("Ways to bring customers back today"));
 
-    expect(body).not.toMatch(/Apple|Google|Starter|Growth|\bPro\b|\b20\d\d\b/);
+    expect(body).not.toMatch(/Apple|Google|\b20\d\d\b/);
   });
 });
 

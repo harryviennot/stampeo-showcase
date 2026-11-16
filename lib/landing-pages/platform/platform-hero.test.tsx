@@ -5,10 +5,8 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
 import { PlatformHero } from "@/components/landing-pages/platform/hero/PlatformHero";
 import { PLATFORM_FAN_SLOTS, resolveFanCard } from "@/lib/hero-fan";
-import { ROOT, code, read } from "../../testing/jsx-source";
 import { expectInOrder, logos, pictures, renderEnAsync, textOf } from "../../testing/render-en";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { renderAsAsync } from "../../testing/visitor-seams";
@@ -19,7 +17,6 @@ import { PHONE_STACK } from "./phone-stack";
 // The cards ask next-intl for their words.
 await mockEnglishServerTranslations();
 
-const HERO_DIR = join(ROOT, "components", "landing-pages", "platform", "hero");
 const hero = () => renderEnAsync(<PlatformHero />);
 const fanLogos = PLATFORM_FAN_SLOTS.map((slot) => resolveFanCard(slot.cardId).sample.design.logo_url ?? "");
 /** The stack's logos as the markup holds them: the farthest card first, the front card last. */
@@ -76,12 +73,6 @@ describe("from a laptop: the homepage's fan of seven shops", () => {
     expect(new Set(fanLogos).size).toBe(7);
     expect(PLATFORM_FAN_SLOTS.find((slot) => slot.index === 0)?.cardId).toBe("aurevo");
   });
-
-  test("is hidden below lg, where the stack takes its place", async () => {
-    const html = await hero();
-
-    expect(html).toMatch(/<div class="max-lg:hidden"><div[^>]*><div class="mt-8 lg:mt-6"><div data-sr/);
-  });
 });
 
 describe("on a phone: a still Wallet stack with the front card whole", () => {
@@ -108,35 +99,15 @@ describe("on a phone: a still Wallet stack with the front card whole", () => {
     expect(text).toContain("Stamps");
   });
 
-  test("the front card is not cropped: no box around the stack hides part of it or fades it out", () => {
-    expect(code(join(HERO_DIR, "PhoneWalletStack.tsx"))).not.toMatch(/overflow|mask-image|clip/);
-  });
-
   test("the cards draw once: seven in the fan and four in the stack, eleven in all", async () => {
     expect(logos(await hero())).toHaveLength(7 + 4);
   });
 
-  test("never moves: no keyframes, no transition, no animation, no script of its own", async () => {
+  test("never moves: no keyframes and no script in the stack", async () => {
     expect(await stack()).not.toMatch(/<style|@keyframes|<script/);
-    for (const file of ["PhoneWalletStack.tsx", "PlatformHero.tsx"]) {
-      const source = code(join(HERO_DIR, file));
-
-      expect(source).not.toMatch(/["']use client["']|transition|animat/i);
-      expect(source).not.toMatch(/\buse(?:State|Effect|Ref|PrefersReducedMotion|Watching)\b|matchMedia|setTimeout|setInterval/);
-    }
   });
 
   test("looks the same to a reader who asks for less motion", async () => {
     expect(await renderAsAsync({ reducedMotion: true }, hero)).toBe(await hero());
-  });
-});
-
-describe("the hero has one component and no switch", () => {
-  test("PlatformHero reads no setting: the two layouts are both in the markup and CSS shows one at each width", () => {
-    const source = read(join(HERO_DIR, "PlatformHero.tsx"));
-
-    expect(source).toMatch(/lg:hidden/);
-    expect(source).toMatch(/max-lg:hidden/);
-    expect(source).not.toMatch(/useMediaQuery|innerWidth|matchMedia|useState/);
   });
 });

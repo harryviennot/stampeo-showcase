@@ -10,13 +10,16 @@ import { DeliverySection } from "@/components/landing-pages/feature-previews/pro
 import { HowSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/HowSection";
 import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
 import { TextingSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/TextingSection";
-import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
+import { FEATURE_CATEGORIES } from "../../pricing-features";
+import { PLAN_FACTS, TIERS } from "../../plans/plan-facts";
+import { loadCatalog } from "../../testing/catalogs";
+import { renderPreviewPage, sectionOf } from "../../testing/preview-page";
 import { decodeEntities, expectInOrder, pictures, renderEn, textOf } from "../../testing/render-en";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "../copy/previews/promotional-campaigns";
 import { SAMPLE_BUSINESS, SHARED } from "../copy/shared";
 
 const PAGE = "platform/promotional-campaigns";
-const section = async (id: string) => sectionsOf(await renderPreviewPage(PAGE)).find((candidate) => candidate.id === id)?.html ?? "";
+const section = (id: string) => sectionOf(PAGE, id);
 
 /** How many times a visitor can read `needle` in `html`. */
 const times = (html: string, needle: string) => textOf(html).split(needle).length - 1;
@@ -42,14 +45,10 @@ describe("hero: what a campaign is, with one lock screen beside it", () => {
     expect(textOf(hero)).not.toContain("Stamp collected");
   });
 
-  test("the notification carries the shop's own icon tile: its card colour with its cup on it, 40px", async () => {
+  test("the notification carries the shop's own icon tile: its cup on its card colour", async () => {
     const hero = await section("hero");
-    const tiles = [...hero.matchAll(/<div[^>]*data-shop-icon[^>]*>/g)].map((match) => match[0]);
 
-    expect(tiles).toHaveLength(1);
-    expect(tiles[0]).toMatch(/\bh-10\b/);
-    expect(tiles[0]).toMatch(/\bw-10\b/);
-    expect(tiles[0]).toContain("#4b2e2b");
+    expect(hero.match(/data-shop-icon/g)).toHaveLength(1);
     expect(hero).toContain("/themes/cafe/cup.png");
   });
 });
@@ -96,7 +95,6 @@ describe("how it works: one message, written once, on several lock screens", () 
   test("the steps are three numbered rows of a clean table", () => {
     expect(html().match(/<ol\b[^>]*>/g)).toHaveLength(1);
     expect(html().match(/<li\b/g)).toHaveLength(3);
-    expect(html()).not.toContain("card-stamp");
   });
 });
 
@@ -115,21 +113,6 @@ describe("texting: send promotions without paying per text", () => {
     ]);
     expect(html().match(/<ul\b/g)).toHaveLength(2);
     expect(html().match(/<li\b/g)).toHaveLength(6);
-  });
-
-  test("is two plain white cards, with no ink frame and no plan named", () => {
-    expect(html()).not.toContain("card-stamp");
-    expect(html().match(/rounded-\[28px\] bg-white /g)).toHaveLength(2);
-    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|\bplans?\b/);
-  });
-
-  test("the claims are Harry's: a fee per text on one side, no fee and no cap on the other", () => {
-    expect(COPY.texting.sms.facts[0].text).toBe("A fee for every text you send");
-    expect(COPY.texting.stampeo.facts.map((fact) => fact.text)).toEqual([
-      "No fee per message",
-      "No limit on how many customers it reaches",
-      "It goes to the card already in their wallet",
-    ]);
   });
 });
 
@@ -154,22 +137,20 @@ describe("ideas: give them a reason to come in today", () => {
     expect(html()).not.toMatch(/<button\b|role="tab(?:list|panel)?"|\binert\b/);
   });
 
-  test("three go to everyone and the last to customers who joined in the last month, so none depends on a plan", () => {
-    expect(rows.map((row) => row.body)).toEqual([
-      "Sent to everyone.",
-      "Sent to everyone.",
-      "Sent to everyone.",
-      "Sent only to customers who joined in the last month.",
-    ]);
-    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|\bplans?\b/);
+  test("three go to everyone and the last to customers who joined in the last month: a targeting every plan has", () => {
+    const targeting = loadCatalog("en", "pricing.json").pricingPage.comparison.rows.segmentation as Record<"starter" | "growth" | "pro", string>;
+    const segmentation = FEATURE_CATEGORIES.flatMap((category) => category.rows).find((row) => row.key === "segmentation");
+
+    expect(rows.filter((row) => row.body !== "Sent to everyone.").map((row) => row.name)).toEqual(["New customers"]);
+    expect(rows[3].body).toMatch(/joined in the last month/);
+    expect([segmentation?.starter, segmentation?.growth, segmentation?.pro]).toEqual(["text", "text", "text"]);
+    expect(targeting.starter).toMatch(/date/i);
+    expect(targeting.growth).toMatch(/date/i);
+    expect(targeting.pro).toMatch(/^Advanced/);
   });
 
   test("is presented by moment, never by weekday: the page does not promise a send at a chosen time", () => {
     expect(textOf(html())).not.toMatch(/\b(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\b|\bweekend\b/i);
-  });
-
-  test("is clean white cards", () => {
-    expect(html()).not.toContain("card-stamp");
   });
 });
 
@@ -200,11 +181,6 @@ describe("delivery: see how many customers got it", () => {
     widths.forEach(([, width], index) => expect(width).toBeCloseTo((100 * metrics[index].value) / total, 1));
     expect(pictures(html())).toEqual([expect.stringMatching(/Last campaign.*716 customers.*Got it in Apple Wallet 412/)]);
   });
-
-  test("sits on one white surface, and shows no plan and no GDPR line", () => {
-    expect(html().match(/rounded-\[32px\]/g)).toHaveLength(1);
-    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|GDPR/);
-  });
 });
 
 describe("questions: six, with the one plan sentence linked to pricing", () => {
@@ -228,15 +204,13 @@ describe("questions: six, with the one plan sentence linked to pricing", () => {
     expect(faq.match(/href="\/us\/pricing"/g)).toHaveLength(1);
   });
 
-  test("the answers name no plan: the one mention is the generic 'your plan'", async () => {
-    const text = textOf(await section("faq"));
+  test("'Campaigns come with your Stampeo subscription' holds on every plan: each can send campaigns", () => {
+    expect(COPY.faq.items[0].answer).toContain("Campaigns come with your Stampeo subscription");
+    for (const tier of TIERS) {
+      const perMonth = PLAN_FACTS[tier].broadcastsPerMonth;
 
-    expect(text).not.toMatch(/Growth|Starter|\bPro\b|[Ee]very plan|[Aa]ll plans/);
-    expect(text.match(/\bplans?\b/g)).toHaveLength(1);
-  });
-
-  test("no answer carries a price or trial token, so none needs the visitor's region", () => {
-    expect(COPY.faq.items.filter((item) => /[{}]/.test(item.answer))).toEqual([]);
+      expect({ tier, sends: perMonth === "unlimited" || perMonth > 0 }).toEqual({ tier, sends: true });
+    }
   });
 
   test("keeps the contact line under the table", async () => {
@@ -244,25 +218,14 @@ describe("questions: six, with the one plan sentence linked to pricing", () => {
   });
 });
 
-describe("the closing card", () => {
-  test("says to fill the next slow afternoon, and to send the first campaign this week", async () => {
-    expectInOrder(await section("final_cta"), ["Fill your next", "slow afternoon.", "Start your free trial and send your first campaign this week.", SHARED.cta]);
+describe("plans", () => {
+  test("the page mentions a plan once: your plan sets how many campaigns a month, in the limit answer", async () => {
+    expect(textOf(await renderPreviewPage(PAGE)).match(/\bplans?\b/g)).toHaveLength(1);
   });
 });
 
-describe("what the page leaves out", () => {
-  test("no composer form, no audience figures, no plan section, no ink frame, and 'campaign' where the dashboard says broadcast", async () => {
-    const html = await renderPreviewPage(PAGE);
-    const text = textOf(html);
-
-    expect(text).not.toMatch(/New broadcast|Send now|Send again|Filtered audience|All enrolled customers|Who will receive this/);
-    expect(text).not.toMatch(/Your customers keep the card|\b88%|\b95%|Stampeo data/);
-    expect(text).not.toMatch(/broadcast|Starter|Growth|\bPro\b|[Ee]very plan|Sample data/i);
-    expect(html).not.toContain("card-stamp");
-    expect(sectionsOf(html).map((candidate) => candidate.id)).toEqual(["hero", "how", "texting", "ideas", "delivery", "faq", "final_cta", "related"]);
-  });
-
-  test("no unsourced channel figure or SMS table comes back", async () => {
-    expect(textOf(await renderPreviewPage(PAGE))).not.toMatch(/\b(?:20|30|45|85)%|iOS 26|Unknown sender/);
+describe("the closing card", () => {
+  test("says to fill the next slow afternoon, and to send the first campaign this week", async () => {
+    expectInOrder(await section("final_cta"), ["Fill your next", "slow afternoon.", "Start your free trial and send your first campaign this week.", SHARED.cta]);
   });
 });

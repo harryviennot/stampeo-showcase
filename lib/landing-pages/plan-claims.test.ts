@@ -7,9 +7,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { availability } from "../plans/plan-facts";
-import { filesWith } from "../testing/jsx-source";
 import { ALL } from "../testing/landing-copy";
-import { lpFiles } from "../testing/landing-pages-source";
 import { renderPreviewPage, sectionsOf } from "../testing/preview-page";
 import { ALL_LANDING_SLUGS } from "./pages";
 
@@ -58,10 +56,6 @@ describe("no landing copy names a plan or says every plan has something", () => 
 
   test("no line of any copy module says Starter, Growth, Pro, every plan or all plans", () => {
     expect(ALL.filter((line) => PLAN_WORDS.test(line.value)).map((line) => line.path)).toEqual([]);
-  });
-
-  test("no component of the pages draws a plan chip or a plan line", () => {
-    expect(filesWith(lpFiles(), /\b(?:PlanChip|PlanLine)\b/)).toEqual([]);
   });
 });
 

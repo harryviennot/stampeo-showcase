@@ -11,7 +11,7 @@ import { join } from "node:path";
 import { openingTags, read, sourceFiles } from "../../testing/jsx-source";
 import { PREVIEWS_DIR, pageFile } from "../../testing/landing-pages-source";
 import { PREVIEW_COPY as COPY } from "../../testing/landing-copy";
-import { renderPreviewPage, sectionsOf, tapTargets } from "../../testing/preview-page";
+import { renderPreviewPage, sectionOf, sectionsOf, tapTargets } from "../../testing/preview-page";
 import { expectInOrder, pictures, textOf } from "../../testing/render-en";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
@@ -29,7 +29,7 @@ const COPY_KEY_OF: Record<string, string> = { types: "programs" };
 /** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
 const copyKey = (id: string) => COPY_KEY_OF[id] ?? id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 
-/** The registry sections that are not headed sections: the page's frame, the FAQ and the demo (headed on their own), and the icons strip (a figure with a label). */
+/** The registry sections that are not headed sections: the page's frame, the FAQ and the demo (headed on their own). */
 const NOT_HEADED = ["hero", "faq", "demo", "final_cta", "related"];
 
 /** Each section of a preview whose copy has an eyebrow and a title: its header. */
@@ -47,7 +47,7 @@ describe("every section opens on its header", () => {
   });
 
   test.each(HEADERS)("%s: %s opens on its eyebrow, its title and its lead, centred", async (slug, id, eyebrow, title, lead) => {
-    const section = sectionsOf(await renderPreviewPage(slug)).find((candidate) => candidate.id === id)?.html ?? "";
+    const section = await sectionOf(slug, id);
 
     expectInOrder(section, [eyebrow, title, ...(lead ? [lead] : [])]);
     expect(section).toContain("text-center");
@@ -69,10 +69,11 @@ describe("the page as a whole", () => {
 });
 
 describe("what a Platform-style page leaves out", () => {
-  test.each(PREVIEW_SLUGS)("%s: no Every plan chip, no Sample data caption, no em dash, no unfilled token, no city", async (slug) => {
+  test.each(PREVIEW_SLUGS)("%s: no Every plan chip, no Sample data caption, no em dash, no unfilled token, no city, and campaigns are never broadcasts", async (slug) => {
     const text = textOf(await renderPreviewPage(slug));
 
     expect(text).not.toMatch(/Every plan|Sample data|—|\{trialDays\}|\bParis\b|\bGMT\b/);
+    expect(text).not.toMatch(/broadcast/i);
   });
 
   test.each(PREVIEW_SLUGS)("%s: no lock screen or notification shown is sent by Stampeo", async (slug) => {
@@ -90,7 +91,7 @@ describe("what a Platform-style page leaves out", () => {
   });
 
   test.each(PREVIEW_SLUGS.filter(hasDemoSection))("%s: the live demo is centred under the copy's own label", async (slug) => {
-    const demo = sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "demo")?.html ?? "";
+    const demo = await sectionOf(slug, "demo");
 
     expectInOrder(demo, [(COPY[slug] as { demo: { eyebrow: string } }).demo.eyebrow]);
     expect(demo).toContain("text-center");
@@ -111,8 +112,8 @@ describe("what a Platform-style page leaves out", () => {
   });
 });
 
-describe("the hero each page opens with (AC1)", () => {
-  const hero = async (slug: PreviewSlug) => sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "hero")?.html ?? "";
+describe("the hero each page opens with", () => {
+  const hero = (slug: PreviewSlug) => sectionOf(slug, "hero");
   const links = (html: string) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
 
   test("card design opens on one card that takes on the look of six shops, and sends its second button to the anatomy of the card, which is on the page", async () => {
@@ -175,7 +176,7 @@ describe("the hero each page opens with (AC1)", () => {
   });
 });
 
-describe("on a phone (AC5)", () => {
+describe("on a phone", () => {
   /** A target is at least 44px when its classes say so, or it is stretched over its whole row or card. */
   const TALL = ["min-h-11", "min-h-14", "h-11", "h-12", "h-[52px]", "py-4"];
   const isTall = (attrs: string) =>
@@ -201,7 +202,7 @@ describe("on a phone (AC5)", () => {
   });
 
   test.each(PREVIEW_SLUGS.filter((slug) => LANDING_PAGES[slug].sections.includes("faq")))("%s: each question of the FAQ table is a 56px row", async (slug) => {
-    const faq = sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "faq")?.html ?? "";
+    const faq = await sectionOf(slug, "faq");
     const rows = faq.match(/<summary\b[^>]*>/g) ?? [];
 
     expect(rows).toHaveLength((COPY[slug] as { faq: { items: unknown[] } }).faq.items.length);
@@ -212,7 +213,7 @@ describe("on a phone (AC5)", () => {
 describe("walking the previews", () => {
   /** The previews a page's closing links lead to, as the hrefs say. */
   const linksOf = async (slug: PreviewSlug) => {
-    const related = sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "related")?.html ?? "";
+    const related = await sectionOf(slug, "related");
 
     return [...related.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
   };

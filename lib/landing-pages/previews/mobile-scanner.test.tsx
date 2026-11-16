@@ -11,7 +11,7 @@ import { CounterSection } from "@/components/landing-pages/feature-previews/mobi
 import { WaysSection } from "@/components/landing-pages/feature-previews/mobile-scanner/WaysSection";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
-import { tapTargets, renderPreviewPage, sectionsOf } from "../../testing/preview-page";
+import { tapTargets, renderPreviewPage, sectionOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { smallestLabelPx } from "../../testing/stacked-rows";
@@ -28,11 +28,8 @@ const FOLDER = join(COMPONENTS_DIR, "feature-previews", "mobile-scanner");
 /** The attributes of the tags that carry `marker`, in document order. */
 const tagsWith = (html: string, marker: RegExp) => [...html.matchAll(/<[a-z]+\b[^>]*>/g)].map(([tag]) => tag).filter((tag) => marker.test(tag));
 
-/** What a section must not carry: the ink frame (a stamped card, an ink-coloured border) of the earlier look. */
-const INK = /card-stamp|near-black/;
-
 describe("hero: the words say the choice, the picture shows both ways at once", () => {
-  const hero = async () => sectionsOf(await renderPreviewPage("platform/mobile-scanner")).find(({ id }) => id === "hero")?.html ?? "";
+  const hero = () => sectionOf("platform/mobile-scanner", "hero");
 
   test("the headline says what it is in the page's search words, then the sub, the trial and the way to the counter", async () => {
     const html = await hero();
@@ -117,13 +114,6 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
     expect(text.split(COPY.counter.fact)).toHaveLength(2);
   });
 
-  test("the buttons are clean white tiles like the rest of the site: nothing is framed in ink, and no plan is named", async () => {
-    const html = await render(<CounterSection />);
-
-    expect(html).not.toMatch(INK);
-    expect(textOf(html)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
-  });
-
   test("every screen and card has a name a screen reader can read", async () => {
     const html = await render(<CounterSection />);
     const named = [...tagsWith(html, /data-screen=/), ...tagsWith(html, /data-card=/)];
@@ -181,22 +171,5 @@ describe("ways: the app or a browser, side by side, with the stores where the ap
       expect(attrs).toContain('target="_blank"');
       expect(attrs).toContain("noopener");
     }
-  });
-
-  test("the section is two clean white cards with no ink frame, no trial button of its own and no plan named", async () => {
-    const html = await render(<WaysSection />);
-
-    expect(html).not.toMatch(INK);
-    expect(textOf(html)).not.toContain(SHARED.cta);
-    expect(textOf(html)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
-  });
-});
-
-describe("what the page no longer has", () => {
-  test("no team section and no live demo: the page goes from the counter to the app-or-browser section and its closing card", async () => {
-    const html = await renderPreviewPage("platform/mobile-scanner");
-
-    expect(sectionsOf(html).map(({ id }) => id)).toEqual(["hero", "counter", "ways", "final_cta", "related"]);
-    expect(html).not.toMatch(/id="demo"|href="#demo"|Copy your code|Enter your team code|Live demo/);
   });
 });

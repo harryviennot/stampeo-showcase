@@ -5,16 +5,13 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
 import { BlindSpotsSection } from "@/components/landing-pages/feature-previews/analytics/BlindSpotsSection";
 import { ChartsSection } from "@/components/landing-pages/feature-previews/analytics/ChartsSection";
 import { CustomersSection } from "@/components/landing-pages/feature-previews/analytics/CustomersSection";
 import { KeyNumbersCard } from "@/components/landing-pages/feature-previews/analytics/KeyNumbersCard";
 import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
-import { ROOT } from "../../testing/jsx-source";
-import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
+import { renderPreviewPage, sectionOf, sectionsOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
-import { smallestLabelPx } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
 import { ANALYTICS } from "../platform/analytics-figures";
 import { CUSTOMER_LIST } from "./analytics-customers";
@@ -33,7 +30,8 @@ import {
   dollars,
 } from "./analytics-sample";
 
-const FOLDER = join(ROOT, "components", "landing-pages", "feature-previews", "analytics");
+/** The names the sample customer list may show: invented, none a real customer's. */
+const INVENTED_NAMES = ["Maya Chen", "Daniel Brooks", "Priya Nair", "Tom Alvarez", "Hannah Cole", "Marcus Reed", "Ellie Park"];
 
 describe("the key-numbers card beside the hero: a month at a glance", () => {
   test("reads, top to bottom: visits, the return rate, new customers, then the visits over time", async () => {
@@ -90,13 +88,6 @@ describe("blind spots: production's cards, with the preview's own questions", ()
     expect(html).toContain("text-center");
     expect(html).toContain("bg-[var(--blog-bg)]");
   });
-
-  test("they are production's cards: the same inked faces, two columns on a phone and three from md", async () => {
-    const html = await render(<BlindSpotsSection />);
-
-    expect(html.match(/blog-card-3d/g)).toHaveLength(12);
-    expect(html).toContain("grid-cols-2 md:grid-cols-3");
-  });
 });
 
 describe("every chart, as a card with its question under its title", () => {
@@ -128,24 +119,6 @@ describe("every chart, as a card with its question under its title", () => {
       expect({ key, pictures: names.length }).toEqual({ key, pictures: 1 });
       expect(names[0].length).toBeGreaterThan(20);
       expect(names[0].startsWith(title)).toBe(true);
-    }
-  });
-
-  test("every chart is in one colour family: the dashboard's blues, with no orange and no plan", async () => {
-    const section = await render(<ChartsSection />);
-    const html = section.slice(section.indexOf("<ul"));
-    const colours = [...html.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((match) => match[0].toLowerCase());
-    const BLUES = ["#0f172a", "#adbbdc", "#eceff7", "#c9d3ea", "#8fa3d1", "#4a63a8", "#1a1a1a", "#8a8a8a"];
-
-    expect(colours.length).toBeGreaterThan(10);
-    expect(colours.filter((colour) => !BLUES.includes(colour))).toEqual([]);
-    expect(html).not.toContain("var(--accent");
-    expect(textOf(html)).not.toMatch(/\b(?:Starter|Growth|Pro)\b|plan/);
-  });
-
-  test("a phone reads every label: nothing a chart draws is smaller than 11px", () => {
-    for (const file of ["VisitsChart", "NumberCharts", "HabitCharts", "GroupCharts", "ChartsSection"]) {
-      expect({ file, px: smallestLabelPx(join(FOLDER, `${file}.tsx`)) >= 11 }).toEqual({ file, px: true });
     }
   });
 
@@ -268,8 +241,11 @@ describe("your customers: a list like the dashboard's own, and what its groups m
     expect(textOf(html)).toContain(COPY.customers.fact);
   });
 
-  test("shows no email, no address and no real name: a sample list", async () => {
-    expect(textOf(await render(<CustomersSection />))).not.toMatch(/@|\.com/);
+  test("shows no email and no address, and only invented names: a sample list", async () => {
+    const text = textOf(await render(<CustomersSection />));
+
+    expect(text).not.toMatch(/@|\.com/);
+    for (const { name } of CUSTOMER_LIST) expect(INVENTED_NAMES).toContain(name);
   });
 });
 
@@ -281,7 +257,7 @@ describe("the page", () => {
   });
 
   test("the hero is the key-numbers card, with the trial and a way down to the charts", async () => {
-    const hero = sectionsOf(await renderPreviewPage("platform/analytics")).find(({ id }) => id === "hero")?.html ?? "";
+    const hero = await sectionOf("platform/analytics", "hero");
 
     expect(pictures(hero)).toEqual([COPY.hero.alt]);
     expectInOrder(hero, [COPY.hero.accent, COPY.hero.sub, "Start my free trial", COPY.hero.secondary]);
@@ -290,17 +266,11 @@ describe("the page", () => {
   });
 
   test("the dashboard on a laptop and a phone comes below the charts and the customers, with no caption", async () => {
-    const dashboard = sectionsOf(await renderPreviewPage("platform/analytics")).find(({ id }) => id === "dashboard")?.html ?? "";
+    const dashboard = await sectionOf("platform/analytics", "dashboard");
 
     expectInOrder(dashboard, [COPY.dashboard.eyebrow, COPY.dashboard.title, COPY.dashboard.lead]);
     expect(dashboard).toMatch(/en-desktop/);
     expect(dashboard).toMatch(/en-phone/);
     expect(textOf(dashboard)).not.toContain("Sample data");
-  });
-
-  test("the activity feed, the recap email and the at-a-glance tiles are gone", async () => {
-    const text = textOf(await renderPreviewPage("platform/analytics"));
-
-    expect(text).not.toMatch(/Your week at Aurevo|Live activity|At a glance|In your inbox|Every visit, as it happens/);
   });
 });

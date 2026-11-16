@@ -144,7 +144,7 @@ describe("dashboard captures (AC9)", () => {
   );
 });
 
-describe("which views of the dashboard the pages draw (AC9)", () => {
+describe("which views of the dashboard the pages draw", () => {
   /**
    * What each capture of the Analytics page shows: `phone` is the top of the page, the visits, new customers,
    * return rate and visits over time; `phone-habits` and `phone-busiest` are scrolled to a chart; `desktop` is the

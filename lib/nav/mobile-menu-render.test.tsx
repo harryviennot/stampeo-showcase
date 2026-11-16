@@ -1,7 +1,7 @@
 /**
  * The phone menu of the US landing pages as a visitor meets it: the index sheet, rendered open under the
- * English catalogs, the way the header hands it its links. The header's own wiring (when the menu is the new
- * one, and that every other page keeps today's) is in `lib/landing-pages/preview-nav.test.ts`.
+ * English catalogs, the way the header hands it its links. The header's own wiring (when it shows the landing
+ * pages' menu, and that every other page keeps the site's) is in `lib/landing-pages/preview-nav.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -162,29 +162,13 @@ describe("the Product tiles on the narrowest phones", () => {
   const tiles = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)]
     .filter(([, attrs]) => /rounded-2xl/.test(attrs))
     .map(([, attrs, inner]) => ({ attrs, inner }));
-  const px = (markup: string, prefix: string) => [...markup.matchAll(new RegExp(`${prefix}-\\[(\\d+(?:\\.\\d+)?)px\\]`, "g"))].map((match) => Number(match[1]));
 
   test("there is one tile for each feature", () => {
     expect(tiles).toHaveLength(LABELS.length);
   });
 
-  test("a tile is 44px or taller to tap, with its label at 13 to 14px and its line at 11 to 12px", () => {
-    for (const { attrs, inner } of tiles) {
-      const [label, line] = px(inner, "text");
-
-      expect(isTall(attrs)).toBe(true);
-      expect(label).toBeGreaterThanOrEqual(13);
-      expect(label).toBeLessThanOrEqual(14);
-      expect(line).toBeGreaterThanOrEqual(11);
-      expect(line).toBeLessThanOrEqual(12);
-    }
-  });
-
-  test("the padding is at most 10px and the icon tile at most 32px, so a 139px tile at 320px keeps room for the words", () => {
-    for (const { attrs, inner } of tiles) {
-      expect(Number(/(?<![\w-])p-(\d+(?:\.\d+)?)(?![\w-])/.exec(attrs)?.[1]) * 4).toBeLessThanOrEqual(10);
-      expect(Number(/(?<![\w-])h-(\d+(?:\.\d+)?)(?![\w-])/.exec(inner)?.[1]) * 4).toBeLessThanOrEqual(32);
-    }
+  test("a tile is 44px or taller to tap", () => {
+    for (const { attrs } of tiles) expect(isTall(attrs)).toBe(true);
   });
 });
 

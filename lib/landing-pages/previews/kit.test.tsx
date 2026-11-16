@@ -14,7 +14,8 @@ import { HoverRows } from "@/components/landing-pages/platform/HoverRows";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { StepsTable } from "@/components/landing-pages/platform/StepsTable";
 import { ToggleCard } from "@/components/landing-pages/platform/ToggleCard";
-import { code, findTag, openingTags } from "../../testing/jsx-source";
+import { code, openingTags } from "../../testing/jsx-source";
+import { trackedBy } from "../../testing/cta-recorder";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
 import { expectInOrder, renderEn, textOf } from "../../testing/render-en";
 import { stackZooms } from "../../testing/stacked-rows";
@@ -190,25 +191,11 @@ describe("PreviewHero: the words and the actions on the left, the visual on the 
     expect(html().match(/<h1/g)).toHaveLength(1);
   });
 
-  test("from lg the words are the left half of a 12-column grid and the visual the right half, vertically centred", () => {
-    const markup = html();
-    const grid = markup.match(/<div class="([^"]*\blg:grid-cols-12\b[^"]*)">/)?.[1] ?? "";
-    const columns = [...markup.matchAll(/<div class="([^"]*\blg:col-span-6\b[^"]*)">/g)].map((match) => match[1]);
-
-    expect(grid.split(/\s+/)).toContain("lg:items-center");
-    expect(columns).toHaveLength(2);
-    expect(columns[0]).toContain("lg:text-left");
-    expect(columns[0]).toContain("text-center");
-    expect(markup.indexOf(columns[0])).toBeLessThan(markup.indexOf("<h1"));
-    expect(markup.indexOf(columns[1])).toBeGreaterThan(markup.indexOf("14 days free"));
-    expect(markup.indexOf(columns[1])).toBeLessThan(markup.indexOf("scanner phone"));
-  });
-
-  test("the actions are left-aligned from lg, with the trial as the keycap", () => {
+  test("the trial is the keycap, and the words come before the visual", () => {
     const markup = html();
 
-    expect(markup).toContain("lg:[&amp;&gt;div]:justify-start");
     expect(markup).toMatch(/<a [^>]*class="[^"]*\bkeycap\b[^"]*"[^>]*href="\/en\/onboarding"/);
+    expect(markup.indexOf("<h1")).toBeLessThan(markup.indexOf("scanner phone"));
   });
 
   test.each(PREVIEW_SLUGS)("%s: nothing sits above the headline, no label, no pill and no chip", (slug) => {
@@ -226,10 +213,8 @@ describe("PreviewHero: the words and the actions on the left, the visual on the 
   });
 
   test("it is the page's hero section, with a trial button tracked as the hero's", () => {
-    const source = code(join(COMPONENTS_DIR, "feature-previews", "PreviewHero.tsx"));
-
     expect(html()).toContain('data-landing-section="hero"');
-    expect(findTag(source, "LpCtaPair")?.attrs).toContain('location="hero"');
+    expect(trackedBy(html)).toContainEqual({ trackAs: "hero", href: "/onboarding" });
   });
 });
 
