@@ -5,10 +5,7 @@ import type { RefObject } from "react";
 /** The id of the open menu: the burger's `aria-controls`. */
 export const MOBILE_MENU_ID = "mobile-menu";
 
-/**
- * The phone menu's button: 44px to tap, the burger and the X cross-fading in 150ms (an instant swap under
- * reduced motion), the 4px it overhangs the header bar given back so the bar stays 64px.
- */
+/** The phone menu's button: 44px to tap, the burger and the X cross-fading (an instant swap under reduced motion). */
 export function MenuBurger({
   open,
   onToggle,

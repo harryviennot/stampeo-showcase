@@ -17,14 +17,12 @@ export const MOBILE_SCANNER_PREVIEW = {
     eyebrow: "At the counter",
     title: "One screen for every kind of visit.",
     lead: "Several stamps, a spend amount or a reward: the same scan handles it.",
-    /** The four buttons beside the phone: each one switches the screen, and the customer's card under it. */
     options: [
       { key: "stamps", title: "Stamps", line: "Add one, or several at once" },
       { key: "points", title: "Points", line: "Type what they spent" },
       { key: "rewards", title: "Reward", line: "Now or on their next visit" },
       { key: "levels", title: "Level", line: "Their perks, on screen" },
     ] satisfies Array<{ key: "stamps" | "points" | "rewards" | "levels"; title: string; line: string }>,
-    /** The line under the wallet card: what one tap does. */
     fact: "Tap once. Their card updates in seconds and lands on their lock screen.",
   },
   ways: {

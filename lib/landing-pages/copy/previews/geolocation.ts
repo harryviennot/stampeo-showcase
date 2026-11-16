@@ -6,7 +6,6 @@ interface NearbyBanner extends Banner {
   title: string;
 }
 
-/** A column of the status table: its heading, and what is in it. */
 interface StatusColumn {
   title: string;
   facts: Fact[];
@@ -28,9 +27,7 @@ export const GEOLOCATION_PREVIEW = {
     accent: "when they walk by.",
     sub: "We're building it for the Pro plan. Make your card now and it's ready the day it launches.",
   } satisfies PreviewHeroCopy,
-  /** The plain chip beside the hero's label. */
   heroChip: "Coming soon · Pro",
-  /** The one handwritten note on the hero's stage, pointing at the lock screen. */
   heroNote: "coming soon",
   /** The hero phone's lock screen: Aurevo's own words, never Stampeo's. */
   banner: {

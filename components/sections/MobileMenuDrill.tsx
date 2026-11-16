@@ -17,10 +17,7 @@ type Screen = DrillScreen;
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]";
 
-/**
- * One screen of the drill-down. The menu stays where it is and shifts a quarter of its width as another slides in
- * from the right over 280ms (no movement under reduced motion); a screen that is not shown is inert.
- */
+/** One screen of the drill-down: another slides in from the right over it (no movement under reduced motion); a screen not shown is inert. */
 function DrillScreen({ id, shown, children }: Readonly<{ id: Screen; shown: boolean; children: ReactNode }>) {
   const hidden = id === "root" ? "-translate-x-1/4 opacity-0" : "translate-x-full";
 
@@ -81,10 +78,7 @@ function FeatureRow({ entry, onClose }: Readonly<{ entry: FeatureEntry; onClose:
 /** A top-level row: a link, or a button that slides in a screen (with the chevron that says so). */
 const ROW = `flex min-h-14 w-full items-center justify-between text-2xl font-semibold text-[var(--foreground)] ${FOCUS}`;
 
-/**
- * The drill-down: the first screen is four large rows, and Product and Resources slide their lists in under a
- * "Menu" way back. Log in and Get started are pinned at the foot of every screen.
- */
+/** The drill-down: four large rows, with Product and Resources sliding their lists in; Log in and Get started are pinned at the foot. */
 export function MobileMenuDrill({ onClose, burgerRef, featureLinks, pathname, navItems, resourceItems, signedIn, appUrl, onSignOut, language }: MenuProps) {
   const t = useTranslations("common.nav");
   const entries = useFeatureEntries(featureLinks, pathname);

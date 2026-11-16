@@ -20,10 +20,10 @@ export interface MenuLink {
   market?: Market;
 }
 
-/** What both menus are given by the header. */
+/** What both menus are given. */
 export interface MenuProps {
   onClose: () => void;
-  /** The header's button: it is the first stop of the Tab trap and takes focus back on Escape. */
+  /** The header's button: the first Tab stop, and where focus goes on Escape. */
   burgerRef: RefObject<HTMLButtonElement | null>;
   featureLinks: FeatureLinks;
   /** The page's path without its locale, to mark the entry you are on. */
@@ -77,11 +77,7 @@ export function useMotion(): MenuMotion {
   return menuMotion(usePrefersReducedMotion());
 }
 
-/**
- * What an open menu does besides drawing itself: the page behind it is inert, focus moves to its first
- * `data-menu-first` entry, Tab stays between the burger and the menu, and Escape hands focus back to the burger
- * (the header closes the menu).
- */
+/** An open menu makes the page behind it inert, focuses its first `data-menu-first` entry, and keeps Tab and Escape. */
 function useMenuDialog(menu: RefObject<HTMLElement | null>, burger: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const release = inertWhileOpen([document.querySelector("main"), document.querySelector("footer")]);
@@ -113,11 +109,7 @@ export function MenuGroup({ className = "", children }: Readonly<{ className?: s
   );
 }
 
-/**
- * The full-screen layer under the header bar: a labelled modal dialog that fades in (120ms out), its
- * `MenuGroup`s staggering, and scrolls by itself so the page behind never does. A menu draws it on top of the page
- * (`absolute` under the fixed header, as tall as the screen less the bar).
- */
+/** The full-screen layer under the header bar: a modal dialog that fades in, its `MenuGroup`s staggering, and scrolls by itself. */
 export function MenuDialog({
   burgerRef,
   className = "",
@@ -158,10 +150,7 @@ export function MenuDialog({
 /** The small grey label over a group of the menu. */
 export const MENU_LABEL = "text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]";
 
-/**
- * Log in beside Get started (a keycap), or Sign out beside Dashboard: 48px pills in a bar that stays at the foot of
- * the menu, with room under it for the home indicator and for the keycap's ledge.
- */
+/** Log in beside Get started (a keycap), or Sign out beside Dashboard: 48px pills in a bar at the foot of the menu. */
 export function MenuBottomBar({
   onClose,
   signedIn,

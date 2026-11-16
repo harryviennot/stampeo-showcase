@@ -22,7 +22,6 @@ export const CARD_DESIGN_PREVIEW = {
     alt: "One loyalty card taking on the look of six shops in turn: a car wash, a bakery, a wine bar, a lash studio, a bookstore and a pizza truck.",
   },
   icons: {
-    /** The handwritten count beside the strip of icons. */
     figure: { value: "98", label: "stamp icons" },
     /** What the two drifting rows of icon tiles are, for a screen reader. */
     alt: "The designer's stamp icons, in two rows that drift past",
@@ -40,7 +39,6 @@ export const CARD_DESIGN_PREVIEW = {
     /** What the logo tile and the card beside it are, for a screen reader. */
     logoAlt: "A juice bar's logo",
     cardAlt: "The juice bar's loyalty card, in the color palette picked from its logo",
-    /** The accessible name of each swatch under the card. */
     swatches: ["Palette 1", "Palette 2", "Palette 3", "Palette 4", "Palette 5"],
   } satisfies SectionCopy & { eyebrow: string; logoLabel: string; logoAlt: string; cardAlt: string; swatches: string[] },
   anatomy: {

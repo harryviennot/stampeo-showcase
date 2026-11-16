@@ -10,10 +10,7 @@ import { MenuBurger } from "./MenuBurger";
 /** The sheet itself is a separate chunk, loaded only by headers that draw this menu. */
 const MobileMenu = dynamic(() => import("./MobileMenu").then((module) => module.MobileMenu), { ssr: false });
 
-/**
- * The header bar with the sheet phone menu: a burger that opens a full-screen layer under the bar, which turns solid
- * cream while it is open. The menu closes by itself when the window grows to the desktop layout.
- */
+/** The header bar with the sheet menu: a burger that opens a full-screen layer, closed by itself at the desktop width. */
 export function SheetMenu({ open, onToggle, scrolled, children, ...menu }: Readonly<PhoneMenuProps>) {
   const burger = useRef<HTMLButtonElement>(null);
   const { onClose } = menu;

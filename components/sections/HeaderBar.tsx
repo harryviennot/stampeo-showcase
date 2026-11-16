@@ -23,7 +23,7 @@ export interface PhoneMenuProps {
   children: ReactNode;
 }
 
-/** The header bar: the page's links and the phone menu's button on one row, with a phone menu's panel under it if it draws one. */
+/** The header bar: the page's links and the phone menu's button on one row, and the panel under it if the menu draws one. */
 export function HeaderBar({
   scrolled,
   extra = "",

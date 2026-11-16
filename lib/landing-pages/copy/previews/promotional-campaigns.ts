@@ -81,7 +81,6 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       schedule: { title: "Schedule", now: "Send now", later: "Schedule for later", plan: "Pro" },
       send: "Send now",
       sendAgain: "Send again",
-      /** Printed before the count of cards the broadcast reached. */
       delivered: "Delivered",
     },
   },

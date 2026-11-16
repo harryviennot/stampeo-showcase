@@ -31,7 +31,6 @@ export const ANALYTICS_PREVIEW = {
     title: "What a paper card can't tell you.",
     lead: "Six questions every owner asks. Flip to see the answers.",
     toggle: { label: "How you keep track", paper: "With a paper card", stampeo: "With Stampeo" },
-    /** What every card says with a paper card. */
     unknown: "???",
     cards: [
       { key: "working", question: "Is my program working?", line: "visits in the last three months" },
@@ -88,25 +87,21 @@ export const ANALYTICS_PREVIEW = {
     title: "All plans answer. Growth and Pro chart it.",
     lead: "Starter answers in a sentence. Growth and Pro chart it and look further back.",
     toggleLabel: "Plan",
-    /** Printed after the history's unit, under the plan's handwritten figure. */
     historyLabel: "of history",
     plans: [
       { label: "Starter", history: history(PLAN_FACTS.starter.analyticsHistoryDays) },
       { label: "Growth", history: history(PLAN_FACTS.growth.analyticsHistoryDays) },
       { label: "Pro", history: history(PLAN_FACTS.pro.analyticsHistoryDays) },
     ],
-    /** The three questions every plan answers; Starter answers each in a sentence. */
     rows: [
       { key: "busiest", title: "Busiest times" },
       { key: "habits", title: "How often they come" },
       { key: "rewards", title: "Reward progress" },
     ],
-    /** What Pro adds under them. */
     proRows: [
       { key: "cohorts", title: "Monthly cohorts" },
       { key: "location", title: "Filter by location" },
     ],
-    /** Printed with a lock on Starter's rows. */
     locked: "The chart is on Growth and Pro",
   },
   /** The owner's performance email: its figures are the page's sample, like the dashboard's. */

@@ -65,11 +65,7 @@ function BigRow({ href, label, market, onClose, active }: Readonly<MenuLink & { 
   );
 }
 
-/**
- * The index sheet: under the header bar, a cream layer with every feature as a tile (no accordion to open first),
- * Loyalty and Pricing as rows, the resources in two columns, and the language where a page has more than one. Log
- * in and Get started stay in a bar at its foot, so the trial button is never off the screen.
- */
+/** The index sheet: every feature as a tile, Loyalty and Pricing as rows, the resources in two columns; Log in and Get started stay in a bar at its foot. */
 function MenuSheet({ onClose, burgerRef, featureLinks, pathname, navItems, resourceItems, signedIn, appUrl, onSignOut, language }: MenuProps) {
   const t = useTranslations("common.nav");
   const entries = useFeatureEntries(featureLinks, pathname);
@@ -128,10 +124,7 @@ export function useMenuVariant(): MenuVariant {
   return useSyncExternalStore(subscribe, currentMenu, () => "sheet");
 }
 
-/**
- * The phone menu of the US landing pages, open or closed: the index sheet, or the drill-down when the address asks
- * for it (`?menu=drill`; a `variant` given outright wins). Both are drawn only while open, and fade out when they close.
- */
+/** The phone menu, open or closed: the index sheet, or the drill-down when the address asks for it (`?menu=drill`; a `variant` wins). */
 export function MobileMenu({ variant, open, ...props }: MenuProps & Readonly<{ variant?: MenuVariant; open: boolean }>) {
   const asked = useMenuVariant();
 
