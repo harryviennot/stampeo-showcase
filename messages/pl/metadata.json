@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Rozsyłki promocyjne w portfelu: tańsze niż SMS-y",
-        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet, bez opłat za wiadomość. Na Growth {growthBroadcasts} w miesiącu, na Pro bez limitu i z planowaniem."
+        "description": "Wysyłaj promocje prosto do Apple Wallet i Google Wallet, bez opłat za wiadomość. Na Starter {starterBroadcasts} w miesiącu, na Growth i Pro bez limitu."
       }
     },
     "acquisition": {

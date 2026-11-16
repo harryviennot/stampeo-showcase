@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { BENCHMARK, sourceLine } from "./benchmark";
 import { BLOG_LOCALES } from "../blog/locales";
-import { PLAN_FACTS, planMessageArgs } from "./plan-facts";
+import { PLAN_FACTS, PLAN_NAMES, planMessageArgs, tiersWhere } from "./plan-facts";
 import { FEATURE_CATEGORIES } from "../pricing-features";
 import { catalogFiles, catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
 
@@ -260,12 +260,19 @@ describe("broadcasts feature page", () => {
       where.includes("features.json::features.campagnes-promotionnelles.")
     );
 
-    it(`${locale}: the hero quotes the Growth quota from the plan facts`, () => {
-      expect(page.hero.subtitle).toContain("{growthBroadcasts}");
+    it(`${locale}: the hero quotes the Starter quota from the plan facts`, () => {
+      expect(page.hero.subtitle).toMatch(/\{starterBroadcasts[,}]/);
       const t = strictTranslator(locale, features, "features.campagnes-promotionnelles");
       const subtitle = t("hero.subtitle" as never, planMessageArgs());
-      expect(subtitle).toMatch(new RegExp(`\\b${PLAN_FACTS.growth.broadcastsPerMonth}\\b`));
+      expect(subtitle).toMatch(new RegExp(`\\b${PLAN_FACTS.starter.broadcastsPerMonth}\\b`));
       expect(subtitle).not.toContain("{");
+    });
+
+    it(`${locale}: the hero badges every plan that has broadcasts`, () => {
+      const badged = tiersWhere((facts) => facts.broadcastsPerMonth !== 0);
+      for (const tier of badged) {
+        expect({ tier, pill: page.hero[`pill${PLAN_NAMES[tier]}`] }).toEqual({ tier, pill: PLAN_NAMES[tier] });
+      }
     });
 
     it(`${locale}: every stat is a sourced Stampeo figure or a plain fact`, () => {

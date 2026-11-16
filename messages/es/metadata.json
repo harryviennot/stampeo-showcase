@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Difusiones promocionales: la alternativa a los SMS",
-        "description": "Envía avisos promocionales a Apple Wallet y Google Wallet, sin coste por mensaje. {growthBroadcasts} difusiones al mes en Growth, ilimitadas y programadas en Pro."
+        "description": "Envía avisos promocionales a Apple Wallet y Google Wallet, sin coste por mensaje. {starterBroadcasts} difusiones al mes en Starter, ilimitadas en Growth y Pro."
       }
     },
     "acquisition": {

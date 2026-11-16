@@ -65,8 +65,8 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
     rows: [
       { key: "stampMilestoneReward", starter: "text", growth: "text", pro: "text" },
       { key: "milestoneLimit", starter: "cross", growth: "text", pro: "text" },
-      { key: "broadcastNotifications", starter: "cross", growth: "text", pro: "text" },
-      { key: "segmentation", starter: "cross", growth: "text", pro: "text" },
+      { key: "broadcastNotifications", starter: "text", growth: "text", pro: "text" },
+      { key: "segmentation", starter: "text", growth: "text", pro: "text" },
       { key: "scheduledSends", starter: "cross", growth: "cross", pro: "check" },
     ],
   },
