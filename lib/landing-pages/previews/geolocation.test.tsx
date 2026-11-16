@@ -119,7 +119,8 @@ describe("the page as a whole", () => {
 describe("the source: the preview's components", () => {
   test("no component or route of the page writes a date, so none can read as a launch date", () => {
     const dated = /\b(?:20\d\d|Q[1-4]|January|February|March|April|May|June|July|August|September|October|November|December|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/;
-    const files = [...sourceFiles(GEOLOCATION_DIR), pageFile("platform/geolocation")];
+    const shared = ["HeroLockScreen.tsx", "LockScreenPhone.tsx"].map((name) => join(GEOLOCATION_DIR, "..", name));
+    const files = [...sourceFiles(GEOLOCATION_DIR), pageFile("platform/geolocation"), ...shared];
 
     expect(files.length).toBeGreaterThan(4);
     expect(files.filter((file) => dated.test(stripComments(read(file)))).map((file) => file.replace(ROOT, ""))).toEqual([]);

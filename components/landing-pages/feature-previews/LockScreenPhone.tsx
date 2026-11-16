@@ -1,20 +1,21 @@
 "use client";
 
+import type { ComponentProps } from "react";
 import { useTranslations } from "next-intl";
 import { LOCK_WALLPAPER } from "@/components/features/geolocalisation/GeofencingHeroAnimation";
-import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { IPhone } from "@/components/ui/IPhone";
-import { GEOLOCATION_PREVIEW } from "@/lib/landing-pages/copy/previews/geolocation";
-import { shopBanner } from "../ShopIcon";
+import { LockScreenNotification } from "../platform/LockScreenNotification";
 
 /**
- * The lock screen the walk ends on: the hero's wallpaper, the clock and the site's lock-screen date, and the
- * sample café's own notification with the shop's icon tile, as on the push and campaigns heroes. A still phone,
- * drawn at `width`; `eager` is for the one in a hero.
+ * A still lock screen: the wallpaper, the clock and the site's lock-screen date, and one notification in the
+ * same dark style as every notification card on the page. Drawn at `width`; `eager` is for the one in a hero.
  */
-export function LockScreenPhone({ width, eager = false }: Readonly<{ width: number; eager?: boolean }>) {
+export function LockScreenPhone({
+  width,
+  notification,
+  eager = false,
+}: Readonly<{ width: number; notification: ComponentProps<typeof LockScreenNotification>; eager?: boolean }>) {
   const t = useTranslations("features.geolocalisation.demo");
-  const { sender, title, body } = GEOLOCATION_PREVIEW.banner;
 
   return (
     <IPhone statusBar="lock" width={width} eager={eager}>
@@ -28,7 +29,7 @@ export function LockScreenPhone({ width, eager = false }: Readonly<{ width: numb
         </div>
       </div>
       <div className="relative z-10 mt-6 px-3">
-        <NotificationBanner {...shopBanner({ sender, body })} title={title} body={body} timeAgo="now" className="bg-white/85! backdrop-blur-none!" />
+        <LockScreenNotification {...notification} />
       </div>
     </IPhone>
   );

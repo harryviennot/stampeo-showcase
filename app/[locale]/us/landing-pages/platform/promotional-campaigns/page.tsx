@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
+import { HeroLockScreen } from "@/components/landing-pages/feature-previews/HeroLockScreen";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon";
@@ -11,7 +11,6 @@ import { TextingSection } from "@/components/landing-pages/feature-previews/prom
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
-import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
@@ -33,15 +32,7 @@ export default function PromotionalCampaignsPreviewPage() {
       <PreviewHero
         slug="platform/promotional-campaigns"
         secondary={{ label: "See how it works", href: "#how" }}
-        visual={
-          <PhoneCrop height={440}>
-            <div role="img" aria-label={hero.alt}>
-              <div aria-hidden>
-                <NotificationPhoneDemo animate={false} eager notifications={[shopBanner(heroBanner)]} />
-              </div>
-            </div>
-          </PhoneCrop>
-        }
+        visual={<HeroLockScreen alt={hero.alt} notification={shopBanner(heroBanner)} />}
       />
       <HowSection />
       <TextingSection />

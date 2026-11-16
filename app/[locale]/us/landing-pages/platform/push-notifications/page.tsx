@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
+import { HeroLockScreen } from "@/components/landing-pages/feature-previews/HeroLockScreen";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon";
@@ -10,7 +10,6 @@ import { WalletsSection } from "@/components/landing-pages/feature-previews/push
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
 import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
-import { PhoneCrop } from "@/components/landing-pages/shared/PhoneCrop";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "@/lib/landing-pages/copy/previews/push-notifications";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
@@ -31,15 +30,7 @@ export default function PushNotificationsPreviewPage() {
     <LandingPageShell slug="platform/push-notifications">
       <PreviewHero
         slug="platform/push-notifications"
-        visual={
-          <PhoneCrop height={440}>
-            <div role="img" aria-label={alt}>
-              <div aria-hidden>
-                <NotificationPhoneDemo animate={false} eager notifications={[shopBanner(banner)]} />
-              </div>
-            </div>
-          </PhoneCrop>
-        }
+        visual={<HeroLockScreen alt={alt} notification={shopBanner(banner)} />}
       />
       <DaySection />
       <WalletsSection />

@@ -175,6 +175,21 @@ describe("the hero each page opens with", () => {
   });
 });
 
+describe("the notification on a hero phone", () => {
+  /** The page's own notification: iOS's dark material, as on every lock-screen card below the hero. */
+  const DARK_NOTIFICATION = "rgba(30, 30, 32, 0.88)";
+
+  test.each(["platform/push-notifications", "platform/promotional-campaigns", "platform/geolocation"] as const)(
+    "%s: the hero phone shows the same notification as the rest of the page, with the shop's icon",
+    async (slug) => {
+      const html = await sectionOf(slug, "hero");
+
+      expect(html).toContain(DARK_NOTIFICATION);
+      expect(html).toContain("data-shop-icon");
+    },
+  );
+});
+
 describe("on a phone", () => {
   /** A target is at least 44px when its classes say so, or it is stretched over its whole row or card. */
   const TALL = ["min-h-11", "min-h-14", "h-11", "h-12", "h-[52px]", "py-4"];
