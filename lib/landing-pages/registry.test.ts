@@ -167,7 +167,8 @@ describe("what the pages leave out (AC3)", () => {
 });
 
 describe("sign-up and contact links (AC5, AC7)", () => {
-  const ALLOWED = ["hero", "feature_cta", "final_cta", "faq_contact"];
+  /** `loyalty_picker` is the loyalty quiz's result, the same location as on today's loyalty programs page. */
+  const ALLOWED = ["hero", "feature_cta", "final_cta", "faq_contact", "loyalty_picker"];
   /** The one component that takes its location as a prop; its callers write it as a literal. */
   const LOCATION_PROP = pageComponent("platform", "LpCtaPair");
 

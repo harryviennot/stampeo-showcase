@@ -23,7 +23,7 @@ import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "
 import { FEATURE_PREVIEWS, loyaltyLink } from "../preview-nav";
 
 /** Sections whose copy is keyed by another word than their id: card design's `types` section is its `programs` copy. */
-const COPY_KEY_OF: Record<string, string> = { types: "programs" };
+const COPY_KEY_OF: Record<string, string> = { types: "programs", by_business: "sectors" };
 
 /** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
 const copyKey = (id: string) => COPY_KEY_OF[id] ?? id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
@@ -102,10 +102,15 @@ describe("what a Platform-style page leaves out", () => {
     expect(/href="#demo"/.test(html)).toBe(hasDemoSection(slug) && html.includes('id="demo"'));
   });
 
+  /** The loyalty quiz's result offers the trial under its own location (`loyalty_picker`), so quiz sign-ups can be counted. */
+  const OWN_TRIAL_BUTTONS = ["PickerResult.tsx"];
+
   /** A trial button is the kit's tracked one (a pair, a trial button or the cream card), never a bare `CTAButton`. */
   test.each(PREVIEW_SLUGS)("%s: brings no sign-up button of its own", (slug) => {
     const folder = join(PREVIEWS_DIR, slug.replace("platform/", ""));
-    const bare = [pageFile(slug), ...sourceFiles(folder)].filter((file) => openingTags(read(file)).some((tag) => tag.name === "CTAButton"));
+    const bare = [pageFile(slug), ...sourceFiles(folder)]
+      .filter((file) => !OWN_TRIAL_BUTTONS.some((name) => file.endsWith(`/${name}`)))
+      .filter((file) => openingTags(read(file)).some((tag) => tag.name === "CTAButton"));
 
     expect(bare).toEqual([]);
   });
