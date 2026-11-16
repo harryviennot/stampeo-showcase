@@ -19,7 +19,7 @@ import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPag
 
 /** The sections of each preview, in the order of the UX brief: each page opens on its hero and ends on the cream card and its links. */
 const SECTIONS: Record<PreviewSlug, string[]> = {
-  "platform/card-design": ["hero", "icons", "playground", "palettes", "anatomy", "stamps", "wallets", "faq", "final_cta", "related"],
+  "platform/card-design": ["hero", "anatomy", "types", "icons", "wallets", "faq", "final_cta", "related"],
   "platform/mobile-scanner": ["hero", "counter", "ways", "final_cta", "related"],
   "platform/push-notifications": ["hero", "day", "wallets", "editor", "demo", "final_cta", "related"],
   "platform/analytics": ["hero", "blind_spots", "charts", "customers", "dashboard", "final_cta", "related"],

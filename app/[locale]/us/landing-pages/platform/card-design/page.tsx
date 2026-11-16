@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { AnatomySection } from "@/components/landing-pages/feature-previews/card-design/AnatomySection";
-import { DesignerSection } from "@/components/landing-pages/feature-previews/card-design/DesignerSection";
-import { IconsStrip } from "@/components/landing-pages/feature-previews/card-design/IconsStrip";
-import { PalettesSection } from "@/components/landing-pages/feature-previews/card-design/PalettesSection";
+import { IconsSection } from "@/components/landing-pages/feature-previews/card-design/IconsSection";
 import { ReskinHero } from "@/components/landing-pages/feature-previews/card-design/ReskinHero";
-import { StampStyleRows } from "@/components/landing-pages/feature-previews/card-design/StampStyleRows";
+import { TypesSection } from "@/components/landing-pages/feature-previews/card-design/TypesSection";
 import { WalletsSection } from "@/components/landing-pages/feature-previews/card-design/WalletsSection";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
@@ -29,11 +27,9 @@ export default function CardDesignPreviewPage() {
   return (
     <LandingPageShell slug="platform/card-design">
       <ReskinHero />
-      <IconsStrip />
-      <DesignerSection />
-      <PalettesSection />
       <AnatomySection />
-      <StampStyleRows />
+      <TypesSection />
+      <IconsSection />
       <WalletsSection />
       <LpFaq faq={CARD_DESIGN_PREVIEW.faq} />
       <LpAccentBand copy={CARD_DESIGN_PREVIEW.band} />

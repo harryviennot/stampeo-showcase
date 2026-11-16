@@ -137,7 +137,7 @@ describe("what Platform's own pieces render when the previews' new props are lef
     expect(await renderEnAsync(<HowTable />)).toMatchSnapshot();
   });
 
-  test("PlatformHero: the headline, the stack of nine wallet cards, then the trial and demo buttons, with no label or sub", async () => {
+  test("PlatformHero: the headline, the phone stack and the fan of seven cards, then the trial and demo buttons, with no label or sub", async () => {
     expect(await renderEnAsync(<PlatformHero />)).toMatchSnapshot();
   });
 

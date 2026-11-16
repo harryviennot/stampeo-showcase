@@ -10,7 +10,6 @@ import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
-import { StampStyleRows } from "@/components/landing-pages/feature-previews/card-design/StampStyleRows";
 import { HoverRows } from "@/components/landing-pages/platform/HoverRows";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { StepsTable } from "@/components/landing-pages/platform/StepsTable";
@@ -121,8 +120,7 @@ describe("HoverRows: rows that open on hover, focus or tap, all open on the serv
 });
 
 describe("HoverRows: the rows of wallet cards keep their thumbnail column; only dense pictures stack", () => {
-  test("the card design stamp rows and Platform's program rows draw no stacked picture", async () => {
-    expect(stackZooms(renderEn(<StampStyleRows />))).toEqual([]);
+  test("Platform's program rows draw no stacked picture", async () => {
     expect(
       stackZooms(renderEn(<ProgramTypeRows visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }} />)),
     ).toEqual([]);

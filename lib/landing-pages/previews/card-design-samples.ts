@@ -10,6 +10,12 @@ export interface AnatomyDesigns {
   points: { design: Partial<CardDesign>; pointsBalance: number; pointsRewards: RewardTier[] };
 }
 
+/** The six labels of each program's card, in the order of the card's parts: on a laptop beside the card, on a phone in the legend. */
+export interface AnatomyLabels {
+  stamps: { desktop: readonly string[]; mobile: readonly string[] };
+  points: { desktop: readonly string[]; mobile: readonly string[] };
+}
+
 const pointsSample = (id: string): PointsSample => {
   const sample = POINTS_SAMPLES.find((candidate) => candidate.id === id);
 

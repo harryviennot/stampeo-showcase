@@ -75,9 +75,7 @@ export type LandingSectionId =
   | "final_cta"
   | "blog"
   | "icons"
-  | "playground"
   | "anatomy"
-  | "stamps"
   | "wallets"
   | "counter"
   | "ways"
@@ -87,7 +85,6 @@ export type LandingSectionId =
   | "ideas"
   | "delivery"
   | "related"
-  | "palettes"
   | "blind_spots"
   | "recap"
   | "composer"
@@ -202,7 +199,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/card-design": {
     slug: "platform/card-design",
     variant: "lp_platform_card_design",
-    sections: ["hero", "icons", "playground", "palettes", "anatomy", "stamps", "wallets", "faq", "final_cta", "related"],
+    sections: ["hero", "anatomy", "types", "icons", "wallets", "faq", "final_cta", "related"],
     meta: CARD_DESIGN_PREVIEW.meta,
     hero: CARD_DESIGN_PREVIEW.hero,
     finalCta: CARD_DESIGN_PREVIEW.band,

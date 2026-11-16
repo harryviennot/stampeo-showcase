@@ -148,6 +148,7 @@ describe("figures from other people (AC12)", () => {
       "OUTCOMES.headStart.empty",
       "OUTCOMES.headStart.withHeadStart",
       "OUTCOMES.problem.figure",
+      "PLATFORM.numbers.figures[0]",
     ]);
     for (const { object } of figures) {
       expect(String(object.text).trim()).not.toBe("");
@@ -176,6 +177,16 @@ describe("figures from other people (AC12)", () => {
 
     expect(ALL.filter((line) => FIGURE.test(line.value) && !allowed.has(line.path)).map((line) => line.path)).toEqual([]);
     expect(ALL.filter((line) => FIGURE.test(line.value)).length).toBeGreaterThanOrEqual(4);
+  });
+});
+
+describe("Platform's measured figure", () => {
+  const [figure] = PAGES.PLATFORM.numbers.figures;
+
+  test("is the share of cards still in the wallet three months later, with the study it comes from", () => {
+    expect(figure.value).toBe("95%");
+    expect(figure.text).toMatch(/still in the wallet three months later/);
+    expect(figure.source).toMatch(/^Stampeo data: .*businesses.*2026$/);
   });
 });
 
@@ -233,12 +244,13 @@ describe("the six previews' copy", () => {
 
   describe("every number is the product's, not typed from memory", () => {
     test("98 stamp icons, the library's own count", () => {
-      expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
+      expect(CARD_DESIGN_PREVIEW.icons.lead).toContain(`${stampIcons.length} ready-made icons`);
+      expect(CARD_DESIGN_PREVIEW.icons.facts[0]).toContain(`${stampIcons.length} ready-made stamp icons`);
     });
   });
 
-  test("the FAQs: card design's five questions and the campaigns page's six", () => {
-    expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(5);
+  test("the FAQs: card design's six questions and the campaigns page's six", () => {
+    expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(6);
     expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(6);
   });
 

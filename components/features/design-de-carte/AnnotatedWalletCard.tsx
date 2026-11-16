@@ -9,7 +9,7 @@ import { InkNote } from "@/components/ui/InkAnnotation";
 import { Segmented } from "@/components/ui/Segmented";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
-import type { AnatomyDesigns } from "@/lib/landing-pages/previews/card-design-samples";
+import type { AnatomyDesigns, AnatomyLabels } from "@/lib/landing-pages/previews/card-design-samples";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
 interface Annotation {
@@ -184,6 +184,7 @@ export function AnnotatedWalletCard({
   sectionClassName = "py-16 sm:py-24 bg-[var(--blog-bg)]",
   toggleSize = "md",
   designs,
+  labels: ownLabels,
 }: Readonly<{
   /** Replaces the title and description above the card. */
   heading?: ReactNode;
@@ -193,16 +194,19 @@ export function AnnotatedWalletCard({
   toggleSize?: "md" | "lg";
   /** The stamps card and the points card to show in place of the sample café's. */
   designs?: AnatomyDesigns;
+  /** The labels to use in place of the catalog's. */
+  labels?: AnatomyLabels;
 }> = {}) {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
   const tc = useTranslations("common");
   const [mode, setMode] = useState<"stamps" | "points">("stamps");
   const isPoints = mode === "points";
 
-  const labels = t.raw(isPoints ? "pointsLabels" : "labels") as string[];
-  const mobileLabels = t.raw(
-    isPoints ? "pointsMobileLabels" : "mobileLabels"
-  ) as string[];
+  const own = ownLabels?.[mode];
+  const labels = own ? [...own.desktop] : (t.raw(isPoints ? "pointsLabels" : "labels") as string[]);
+  const mobileLabels = own
+    ? [...own.mobile]
+    : (t.raw(isPoints ? "pointsMobileLabels" : "mobileLabels") as string[]);
 
   const cardDesign: Partial<CardDesign> = isPoints
     ? {

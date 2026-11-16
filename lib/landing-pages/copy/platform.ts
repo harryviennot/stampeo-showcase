@@ -13,7 +13,8 @@ export const PLATFORM = {
   },
   /** What the hero's cards are, for a screen reader. */
   heroCards: {
-    stackAlt: "Loyalty cards from nine different shops stacked like a phone's wallet, with stamp cards, points cards and level cards among them.",
+    stackAlt:
+      "Loyalty cards stacked like a phone's wallet: a café's stamp card in front, and the tops of a salon's points card, a pet groomer's level card and a bakery's stamp card behind it.",
   },
   marquee: {
     label: "Built for",
@@ -45,6 +46,14 @@ export const PLATFORM = {
   numbers: {
     eyebrow: "By the numbers",
     title: "Where Stampeo stands today.",
+    /** Measured figures, after the site's own three counts (`variant.metrics`), each with the study it comes from. */
+    figures: [
+      {
+        value: "95%",
+        text: "of cards still in the wallet three months later",
+        source: "Stampeo data: 2,786 cards from 73 businesses, added June to August 2026",
+      },
+    ],
   },
   how: {
     eyebrow: "How it works",
