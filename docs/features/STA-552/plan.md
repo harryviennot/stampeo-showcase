@@ -291,6 +291,15 @@ There is no new design pass. Harry's review gives section-level direction; the p
 - Shots at 390, 360 and 1440 (Playwright headless, cookie banner refused), and a reduced-motion pass. Harry reviews on his checkout.
 - Every new claim traced in `docs/features/STA-552/claims.md`; the study's numbers saved with their SQL.
 
+### v3 decisions after the reviews (coordinator, 16 Nov)
+
+- Scanner preview keeps the App Store and Google Play badges in its "app or browser" section, as today's live scanner page has them and as Harry asked ("download the app, or use the web scanner"); this supersedes STA-546's "no store badges" for this page.
+- Campaign ideas: "Gone quiet" and "Almost there" needed Pro targeting, so they became "Tonight only" and "New customers" (rule 2: no idea depends on a plan).
+- Rule 2 removed five plan-only lines outright rather than leaving them unlabelled ("Unlimited team members", "Bonus points on bigger baskets", "Limits and expiry", "Several locations", the analytics plan line): a feature only some plans have cannot be stated plainly as everyone's.
+- Geolocation says "coming soon" in its H1 only (no chip, no handwritten note), not three times.
+- Only the 95% retention figure moved to Platform's stats; the 88% add rate went with the campaigns figures section (not re-run). The study's SQL: `retention-study-2026-11-16.sql`.
+- Before the previews replace the live pages: confirm loyalty levels are open to new sign-ups (STA-525's per-business `levels_enabled`), since the pages show levels as live.
+
 ## Build stages
 
 1. Foundation: tests, registry entries, routes, copy modules (from the brief's draft copy, reviewed by the
