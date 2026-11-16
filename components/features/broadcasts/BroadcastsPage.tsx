@@ -115,6 +115,9 @@ export function BroadcastsPage() {
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[var(--foreground)]/5 text-[var(--foreground)] text-xs font-bold uppercase tracking-wide">
+                  {tp("hero.pillStarter")}
+                </span>
                 <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-bold uppercase tracking-wide">
                   {tp("hero.pillGrowth")}
                 </span>

@@ -22,7 +22,7 @@ export interface PlanFacts {
   teamMembers: number | Unlimited;
   /** See which team member made each scan (`team.employee_tracking`). */
   employeeTracking: boolean;
-  /** `notifications.broadcast_limit`, per calendar month. */
+  /** `notifications.broadcast_limit`: broadcasts sent per calendar month (UTC); drafts, cancelled and failed ones are free. */
   broadcastsPerMonth: number | Unlimited;
   /** `notifications.scheduled`. */
   scheduledBroadcasts: boolean;
@@ -64,7 +64,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     levels: 5,
     teamMembers: 2,
     employeeTracking: false,
-    broadcastsPerMonth: 0,
+    broadcastsPerMonth: 8,
     scheduledBroadcasts: false,
     milestoneNotifications: 0,
     multipleLocations: false,
@@ -80,7 +80,7 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
     levels: 5,
     teamMembers: "unlimited",
     employeeTracking: true,
-    broadcastsPerMonth: 8,
+    broadcastsPerMonth: "unlimited",
     scheduledBroadcasts: false,
     milestoneNotifications: 3,
     multipleLocations: false,
@@ -110,12 +110,12 @@ export const PLAN_FACTS: Readonly<Record<TierId, PlanFacts>> = {
 };
 
 /** ICU arguments for translated copy that quotes a plan number. */
-export function planMessageArgs(): { growthBroadcasts: number } {
-  const growthBroadcasts = PLAN_FACTS.growth.broadcastsPerMonth;
-  if (typeof growthBroadcasts !== "number") {
-    throw new Error("Growth broadcasts must be a number to be quoted in copy");
+export function planMessageArgs(): { starterBroadcasts: number } {
+  const starterBroadcasts = PLAN_FACTS.starter.broadcastsPerMonth;
+  if (typeof starterBroadcasts !== "number") {
+    throw new Error("Starter broadcasts must be a number to be quoted in copy");
   }
-  return { growthBroadcasts };
+  return { starterBroadcasts };
 }
 
 /** The plans where `has` holds, cheapest first. */
