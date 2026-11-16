@@ -1,29 +1,89 @@
+import type { ReactNode } from "react";
+import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
+import { WalletCard } from "@/components/card/WalletCard";
+import { ScaledBox } from "@/components/ui/ScaledBox";
 import { MOBILE_SCANNER_PREVIEW } from "@/lib/landing-pages/copy/previews/mobile-scanner";
-import { LEVELS_ON_A_ROW, LevelCards } from "../../shared/LevelCards";
+import { SILVER_LOOK } from "@/lib/levels/looks";
+import { aurevoDesign } from "../../shared/AurevoCard";
 import { LpSection } from "../../shared/LpSection";
-import { HoverRows } from "../../platform/HoverRows";
-import { PointsMini, RewardsMini, StampsMini } from "./CounterMinis";
+import { MARGINALIA, WRENFOLD } from "../../shared/samples";
+import { CounterPlayground, type CounterPane } from "./CounterPlayground";
+import { LevelScreen, PointsScreen, RewardsScreen, StampsScreen } from "./CounterScreens";
+
+/** A wallet card laid out at 300px and shown 160px wide on a phone, 240px from `lg`. */
+function Card({ children }: Readonly<{ children: ReactNode }>) {
+  return (
+    <ScaledBox width={300} height={300 * 1.282} to={240} narrowTo={160}>
+      <ScaledCardWrapper baseWidth={300}>{children}</ScaledCardWrapper>
+    </ScaledBox>
+  );
+}
 
 /**
- * "One screen for every kind of visit": a row each for stamps, points,
- * rewards and levels, with the Scanner screen that handles it drawn beside the
- * words. The rows open on hover, focus or tap, and every one is open on a phone.
+ * "One screen for every kind of visit": the Scanner app's own screen for stamps, points, a reward and a level on
+ * one phone, beside the customer's wallet card showing what that scan did to it. Sophie is the customer at three
+ * shops (a café, a bookstore, a dry cleaner), because the app wears the colour of the shop it is signed in to.
  */
-export function CounterSection() {
-  const { eyebrow, title, lead, rows } = MOBILE_SCANNER_PREVIEW.counter;
+export async function CounterSection() {
+  const { eyebrow, title, lead, options, fact } = MOBILE_SCANNER_PREVIEW.counter;
+  const aurevo = await aurevoDesign();
+  const line = (key: CounterPane["key"]) => options.find((option) => option.key === key) ?? options[0];
+  const wrenfold = { ...WRENFOLD.design, ...SILVER_LOOK, secondary_fields: aurevo.secondary_fields?.slice(0, 1) };
+
+  const panes: CounterPane[] = [
+    {
+      ...line("stamps"),
+      screenLabel: "The Scanner app adding three stamps to Sophie's card in one scan: a stepper set to 3 and the Add 3 stamps button.",
+      screen: <StampsScreen />,
+      cardLabel: "Sophie's wallet card from Aurevo, full at 8 of 8 stamps.",
+      card: (
+        <Card>
+          <WalletCard design={aurevo} stamps={8} />
+        </Card>
+      ),
+      result: "5 → 8 stamps",
+    },
+    {
+      ...line("points"),
+      screenLabel: "The Scanner app taking a spend amount of 12.50 with the keypad, and the points it earns, about 12, before anyone confirms.",
+      screen: <PointsScreen />,
+      cardLabel: "Sophie's wallet card from Marginalia, a bookstore, now at 252 points.",
+      card: (
+        <Card>
+          <WalletCard design={MARGINALIA.design} pointsBalance={252} pointsRewards={MARGINALIA.pointsRewards} />
+        </Card>
+      ),
+      result: "240 → 252 pts",
+    },
+    {
+      ...line("rewards"),
+      screenLabel: "The Scanner app's list of rewards to redeem: three rewards, each with a Redeem button.",
+      screen: <RewardsScreen />,
+      cardLabel: "Sophie's wallet card from Aurevo, back to 2 of 8 stamps once her reward is claimed.",
+      card: (
+        <Card>
+          <WalletCard design={aurevo} stamps={2} />
+        </Card>
+      ),
+      result: "Free coffee redeemed",
+    },
+    {
+      ...line("levels"),
+      screenLabel: "The Scanner app showing a Silver customer's perks to apply at the till before charging.",
+      screen: <LevelScreen />,
+      cardLabel: "Sophie's wallet card from Wrenfold, a dry cleaner, showing its Silver level.",
+      card: (
+        <Card>
+          <WalletCard design={wrenfold} stamps={4} headerLabel="Silver" />
+        </Card>
+      ),
+      result: "Level: Silver",
+    },
+  ];
 
   return (
     <LpSection section="counter" eyebrow={eyebrow} title={title} lead={lead} align="center">
-      <HoverRows
-        items={rows}
-        stackOnPhone={288}
-        visuals={{
-          stamps: <StampsMini />,
-          points: <PointsMini />,
-          rewards: <RewardsMini />,
-          levels: <LevelCards size={LEVELS_ON_A_ROW} />,
-        }}
-      />
+      <CounterPlayground label={title} panes={panes} fact={fact} />
     </LpSection>
   );
 }

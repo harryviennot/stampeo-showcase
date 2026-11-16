@@ -3,8 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { CounterSection } from "@/components/landing-pages/feature-previews/mobile-scanner/CounterSection";
-import { HowSection } from "@/components/landing-pages/feature-previews/mobile-scanner/HowSection";
-import { TeamSection } from "@/components/landing-pages/feature-previews/mobile-scanner/TeamSection";
+import { TeamStrip } from "@/components/landing-pages/feature-previews/mobile-scanner/TeamStrip";
 import { WaysSection } from "@/components/landing-pages/feature-previews/mobile-scanner/WaysSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
@@ -36,11 +35,9 @@ export default function MobileScannerPreviewPage() {
           </PhoneCrop>
         }
       />
-      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page B) and delete this marker. */}
-      <HowSection />
       <CounterSection />
       <WaysSection />
-      <TeamSection />
+      <TeamStrip />
       <LpDemo eyebrow={MOBILE_SCANNER_PREVIEW.demo.eyebrow} align="center" />
       <LpAccentBand copy={MOBILE_SCANNER_PREVIEW.band} />
       <RelatedPreviews slug="platform/mobile-scanner" />

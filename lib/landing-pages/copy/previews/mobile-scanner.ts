@@ -1,4 +1,4 @@
-import type { BandCopy, Fact, PageMeta, PreviewHeroCopy, RowCopy, TabCopy, Tile } from "../types";
+import type { BandCopy, Fact, PageMeta, PreviewHeroCopy, Tile } from "../types";
 
 /** The scanner preview: staff stamp a card in one scan, from a phone you already own. */
 export const MOBILE_SCANNER_PREVIEW = {
@@ -13,47 +13,10 @@ export const MOBILE_SCANNER_PREVIEW = {
     accent: "from any phone.",
     sub: "A free app for iPhone and Android, or any phone's browser. No new hardware.",
   } satisfies PreviewHeroCopy,
-  how: {
-    eyebrow: "How it works",
-    title: "Scan, check, confirm.",
-    lead: "Point the camera at their card. Their progress shows before anything counts.",
-    cells: [
-      { title: "Scan", body: "Point the Scanner at the QR code on their card, in either wallet." },
-      { title: "Check", body: "Their name, stamps and any rewards waiting show up first." },
-      { title: "Confirm", body: "Tap once. Their card updates in seconds and lands on their lock screen." },
-    ] satisfies Tile[],
-    link: "Try the stamp step yourself",
-  },
   counter: {
     eyebrow: "At the counter",
     title: "One screen for every kind of visit.",
     lead: "Several stamps, a spend amount or a reward: the same scan handles it.",
-    rows: [
-      {
-        key: "stamps",
-        eyebrow: "Several at once",
-        title: "Stamps",
-        body: "Add one, or use the stepper to add several in a single scan.",
-      },
-      {
-        key: "points",
-        eyebrow: "Type what they spent",
-        title: "Points",
-        body: "Enter the amount and see the points before you confirm.",
-      },
-      {
-        key: "rewards",
-        eyebrow: "Now or next time",
-        title: "Rewards",
-        body: "Redeem a reward on the spot, or save it for their next visit.",
-      },
-      {
-        key: "levels",
-        eyebrow: "Perks at the register",
-        title: "Levels",
-        body: "Their level and its perks show on screen, and it tells you when they move up.",
-      },
-    ] satisfies RowCopy<"stamps" | "points" | "rewards" | "levels">[],
     /** The four buttons beside the phone: each one switches the screen, and the customer's card under it. */
     options: [
       { key: "stamps", title: "Stamps", line: "Add one, or several at once" },
@@ -61,6 +24,8 @@ export const MOBILE_SCANNER_PREVIEW = {
       { key: "rewards", title: "Reward", line: "Now or on their next visit" },
       { key: "levels", title: "Level", line: "Their perks, on screen" },
     ] satisfies Array<{ key: "stamps" | "points" | "rewards" | "levels"; title: string; line: string }>,
+    /** The line under the wallet card: what one tap does. */
+    fact: "Tap once. Their card updates in seconds and lands on their lock screen.",
   },
   ways: {
     eyebrow: "Two ways to scan",
@@ -71,33 +36,8 @@ export const MOBILE_SCANNER_PREVIEW = {
       { title: "Web scanner", body: "Open scan.stampeo.app in any phone or tablet browser. Nothing to install." },
     ] satisfies Tile[],
   },
-  team: {
-    eyebrow: "Your team",
-    title: "Free for your whole team.",
-    lead: "Staff join with a code and only ever see the scanner.",
-    tabs: {
-      staff: {
-        label: "Staff",
-        title: "A code, then the scanner",
-        facts: [
-          { text: "A 6-character code from your Team page" },
-          { text: "No dashboard, customer list or settings" },
-          { text: "Told up front that their scans carry their name" },
-        ] satisfies Fact[],
-      },
-      owners: {
-        label: "Owners and admins",
-        title: "Scan, and step in when needed",
-        facts: [
-          { text: "The same scanner, on your own phone" },
-          { text: "Let a scan past a daily limit, under your name", plan: "Growth and Pro" },
-          { text: "Unlimited team members", plan: "Growth and Pro" },
-        ] satisfies Fact[],
-      },
-    } satisfies Record<"staff" | "owners", TabCopy>,
-  },
   /** From the owner's Team page to the staff phone: three frames joined by a rail, then what the team can do. */
-  teamStrip: {
+  team: {
     eyebrow: "Your team",
     title: "From a code to the counter.",
     lead: "Staff join with a 6-character code and only ever see the scanner.",

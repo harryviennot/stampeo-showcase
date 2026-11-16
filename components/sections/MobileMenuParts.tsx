@@ -1,0 +1,228 @@
+"use client";
+
+import { useEffect, useRef, type ReactNode, type RefObject } from "react";
+import { motion, type Variants } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { inertWhileOpen, trapStop } from "@/lib/dom/modal";
+import { FEATURE_ITEMS } from "@/lib/features";
+import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import type { Market } from "@/lib/markets";
+import { isCurrentPath, menuMotion, type MenuMotion } from "@/lib/nav/mobile-menu";
+import { TrackedLink } from "../ui/TrackedLink";
+import { MOBILE_MENU_ID } from "./MenuBurger";
+
+/** A link of the menu: `market` is the market a path belongs to, and without one next-intl prefixes the locale. */
+export interface MenuLink {
+  href: string;
+  label: string;
+  market?: Market;
+}
+
+/** What both menus are given by the header. */
+export interface MenuProps {
+  onClose: () => void;
+  /** The header's button: it is the first stop of the Tab trap and takes focus back on Escape. */
+  burgerRef: RefObject<HTMLButtonElement | null>;
+  featureLinks: FeatureLinks;
+  /** The page's path without its locale, to mark the entry you are on. */
+  pathname: string;
+  /** Loyalty and Pricing. */
+  navItems: MenuLink[];
+  /** Blog, What's new, About and Contact. */
+  resourceItems: MenuLink[];
+  signedIn: boolean;
+  appUrl: string;
+  onSignOut: () => void;
+  /** The language control, where the page has more than one language: the header's own, drawn in a row. */
+  language?: ReactNode;
+}
+
+/** One feature of the Product menu with everything a tile or a row prints. */
+export interface FeatureEntry {
+  key: string;
+  Icon: (typeof FEATURE_ITEMS)[number]["Icon"];
+  href: string;
+  market: Market;
+  label: string;
+  description: string;
+  soon: boolean;
+  current: boolean;
+}
+
+/** The Product menu's six features, linked as the header links them, with their one-line descriptions. */
+export function useFeatureEntries(featureLinks: FeatureLinks, pathname: string): FeatureEntry[] {
+  const t = useTranslations("common.nav");
+  const locale = useLocale();
+
+  return FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
+    const { href, market } = featureLink(canonicalSlug, locale, featureLinks);
+
+    return {
+      key,
+      Icon,
+      href,
+      market,
+      label: t(`featuresItems.${key}.label`),
+      description: t(`featuresItems.${key}.description`),
+      soon: canonicalSlug === "geolocalisation",
+      current: isCurrentPath(pathname, href),
+    };
+  });
+}
+
+/** The menu's timing for this reader. */
+export function useMotion(): MenuMotion {
+  return menuMotion(usePrefersReducedMotion());
+}
+
+const focusable = (root: HTMLElement | null) =>
+  [...(root?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? [])].filter((element) => !element.closest("[inert]"));
+
+/**
+ * What an open menu does besides drawing itself: the page behind it is inert, focus moves to its first
+ * `data-menu-first` entry, Tab stays between the burger and the menu, and Escape hands focus back to the burger
+ * (the header closes the menu).
+ */
+function useMenuDialog(menu: RefObject<HTMLElement | null>, burger: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const release = inertWhileOpen([document.querySelector("main"), document.querySelector("footer")]);
+
+    menu.current?.querySelector<HTMLElement>("[data-menu-first]")?.focus({ preventScroll: true });
+    return release;
+  }, [menu]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") return burger.current?.focus();
+      if (event.key !== "Tab") return;
+
+      const stops = [burger.current, ...focusable(menu.current)].filter((stop): stop is HTMLElement => stop !== null);
+      const next = trapStop(stops.length, stops.indexOf(document.activeElement as HTMLElement), event.shiftKey);
+
+      if (next === null) return;
+      event.preventDefault();
+      stops[next].focus();
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menu, burger]);
+}
+
+/** A group of the menu: it rises into place after the group before it. */
+export function MenuGroup({ className = "", children }: Readonly<{ className?: string; children: ReactNode }>) {
+  const { rise, enter } = useMotion();
+  const variants: Variants = {
+    hidden: { opacity: 0, y: -rise },
+    visible: { opacity: 1, y: 0, transition: { duration: enter, ease: "easeOut" } },
+  };
+
+  return (
+    <motion.div variants={variants} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+/**
+ * The full-screen layer under the header bar: a labelled modal dialog that fades in (120ms out), its
+ * `MenuGroup`s staggering, and scrolls by itself so the page behind never does. A menu draws it on top of the page
+ * (`absolute` under the fixed header, as tall as the screen less the bar).
+ */
+export function MenuDialog({
+  burgerRef,
+  className = "",
+  children,
+}: Readonly<{ burgerRef: RefObject<HTMLElement | null>; className?: string; children: ReactNode }>) {
+  const { enter, exit, stagger } = useMotion();
+  const menu = useRef<HTMLDivElement>(null);
+  const variants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: enter, ease: "easeOut", staggerChildren: stagger } },
+    exit: { opacity: 0, transition: { duration: exit } },
+  };
+
+  useMenuDialog(menu, burgerRef);
+
+  return (
+    <motion.div
+      ref={menu}
+      id={MOBILE_MENU_ID}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`${MOBILE_MENU_ID}-title`}
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      style={{ height: "calc(100dvh - 100%)" }}
+      className={`absolute inset-x-0 top-full overflow-x-hidden bg-[var(--cream)] lg:hidden ${className}`}
+    >
+      <h2 id={`${MOBILE_MENU_ID}-title`} className="sr-only">
+        Menu
+      </h2>
+      {children}
+    </motion.div>
+  );
+}
+
+/** The small grey label over a group of the menu. */
+export const MENU_LABEL = "text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]";
+
+/** "Soon", as the homepage's feature grid says it, on a plate of its own. */
+export function SoonPill({ className = "" }: Readonly<{ className?: string }>) {
+  const t = useTranslations("common.wallet");
+
+  return (
+    <span
+      className={`rounded-full bg-white px-2 py-0.5 text-[11px] leading-4 font-semibold text-[var(--foreground)] ring-1 ring-[var(--near-black)]/30 ${className}`}
+    >
+      {t("soon")}
+    </span>
+  );
+}
+
+/**
+ * Log in beside Get started (a keycap), or Sign out beside Dashboard: 48px pills in a bar that stays at the foot of
+ * the menu, with room under it for the home indicator and for the keycap's ledge.
+ */
+export function MenuBottomBar({
+  onClose,
+  signedIn,
+  appUrl,
+  onSignOut,
+  className = "",
+}: Readonly<Pick<MenuProps, "onClose" | "signedIn" | "appUrl" | "onSignOut"> & { className?: string }>) {
+  const t = useTranslations("common.auth");
+  const pill = "flex h-12 flex-1 items-center justify-center rounded-full px-4 text-[15px] font-bold";
+  const quiet = `${pill} keycap keycap-flat bg-white text-[var(--foreground)]`;
+  const primary = `${pill} keycap bg-[var(--accent)] text-white`;
+
+  return (
+    <div className={`border-t border-[var(--border)] bg-[var(--cream)] ${className}`}>
+      <div className="mx-auto flex max-w-2xl gap-2.5 px-4 pt-3 pb-[calc(15px+env(safe-area-inset-bottom))]">
+        {signedIn ? (
+          <>
+            <button type="button" onClick={onSignOut} className={quiet}>
+              {t("signOut")}
+            </button>
+            <Link href={appUrl} className={primary}>
+              {t("dashboard")}
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href="/login" onClick={onClose} className={quiet}>
+              {t("logIn")}
+            </Link>
+            <TrackedLink trackAs="header_mobile" href="/onboarding" onClick={onClose} className={primary}>
+              {t("getStarted")}
+            </TrackedLink>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

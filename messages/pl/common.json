@@ -12,27 +12,27 @@
       "featuresItems": {
         "designDeCarte": {
           "label": "Wzór karty",
-          "description": "Twoje kolory i logo w 5 minut"
+          "description": "Twoje logo, kolory i pieczątki"
         },
         "scannerMobile": {
           "label": "Skaner mobilny",
-          "description": "Jeden skan z telefonu, jedna sekunda"
+          "description": "Pieczątki z dowolnego telefonu"
         },
         "notificationsPush": {
           "label": "Powiadomienia",
-          "description": "Wracasz do klientów na ekranie blokady"
+          "description": "Wiadomość przy każdej pieczątce"
         },
         "campagnesPromotionnelles": {
           "label": "Rozsyłki promocyjne",
-          "description": "Docierasz do wszystkich klientów, bez rachunku za SMS-y"
+          "description": "Rozsyłka do wszystkich klientów"
         },
         "analytiques": {
           "label": "Statystyki",
-          "description": "Poznaj klientów na podstawie prawdziwych danych"
+          "description": "Zobacz, kto wraca"
         },
         "geolocalisation": {
           "label": "Geolokalizacja",
-          "description": "Przypomnij o sobie w odpowiednim momencie"
+          "description": "Twoja karta, gdy są w pobliżu"
         }
       },
       "foundingProgram": "Program założycielski",

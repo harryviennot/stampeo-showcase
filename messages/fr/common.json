@@ -12,27 +12,27 @@
       "featuresItems": {
         "designDeCarte": {
           "label": "Design de carte",
-          "description": "Personnalisez votre carte en 5 minutes"
+          "description": "Votre logo, vos couleurs, vos tampons"
         },
         "scannerMobile": {
           "label": "Scanner mobile",
-          "description": "Scannez en une seconde depuis votre téléphone"
+          "description": "Tamponnez depuis n'importe quel téléphone"
         },
         "notificationsPush": {
           "label": "Notifications push",
-          "description": "Engagez vos clients sur leur écran de verrouillage"
+          "description": "Un message à chaque tampon"
         },
         "campagnesPromotionnelles": {
           "label": "Campagnes promotionnelles",
-          "description": "Atteignez tous vos clients, sans la facture SMS"
+          "description": "Une diffusion à tous vos clients"
         },
         "analytiques": {
           "label": "Statistiques",
-          "description": "Comprenez vos clients avec des données concrètes"
+          "description": "Voyez qui revient"
         },
         "geolocalisation": {
           "label": "Géolocalisation",
-          "description": "Rappelez-leur que vous existez au bon moment"
+          "description": "Votre carte quand ils sont tout près"
         }
       },
       "foundingProgram": "Programme fondateur",

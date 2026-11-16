@@ -28,10 +28,9 @@ describe("every landing page's scanner visual is the Scanner loop", () => {
     expect(landingTree(pageFile(slug)).has(file)).toBe(true);
   });
 
-  /** The previews that draw the loop: the scanner's hero, and its how-it-works table that shows the finished stamp. */
+  /** The preview that draws the loop: the scanner's hero. */
   const PREVIEW_USERS = [
     pageFile("platform/mobile-scanner"),
-    join(PREVIEWS_DIR, "mobile-scanner", "HowSection.tsx"),
   ];
 
   test("no other file of the pages draws one", () => {
