@@ -93,7 +93,7 @@ const Slot = memo(function Slot({ card, slot, hidden, leaving, front, after, pre
  * has one, slides away, and the strip above it takes its place; the card that left comes back at the top many
  * steps later. The clock runs only while the stack is in view and the tab is in front; a reader who asks for
  * less motion gets it still, with Aurevo in front at its sixth stamp. Cards are drawn at 300px wide and the
- * whole stack is scaled to 1.2 from `lg`.
+ * whole stack is scaled to 1.1 from `lg`, so the front card ends above a 900px fold.
  */
 export function WalletStack({ label }: Readonly<{ label: string }>) {
   const stage = useRef<HTMLDivElement>(null);
@@ -120,17 +120,17 @@ export function WalletStack({ label }: Readonly<{ label: string }>) {
       ref={stage}
       role="img"
       aria-label={label}
-      className="relative w-full max-lg:overflow-hidden max-lg:[mask-image:linear-gradient(to_bottom,#000_calc(100%-64px),transparent)]"
+      className="relative w-full max-lg:-mx-4 max-lg:w-[calc(100%+2rem)] max-lg:overflow-hidden max-lg:[mask-image:linear-gradient(to_bottom,#000_calc(100%-64px),transparent)]"
     >
       <style href="wallet-stack" precedence="default">
         {KEYFRAMES}
       </style>
       {/* Room above the top strip for its shadow. */}
       <div className="pt-7">
-        <div className="mx-auto h-[324px] w-[300px] lg:h-[761px] lg:w-[360px]">
+        <div className="mx-auto h-[324px] w-[300px] lg:h-[699px] lg:w-[330px]">
           <div
             aria-hidden
-            className="relative origin-top-left [--pitch:46px] [--strips:4] lg:scale-[1.2] lg:[--pitch:41.67px] lg:[--strips:6]"
+            className="relative origin-top-left [--pitch:46px] [--strips:4] lg:scale-[1.1] lg:[--pitch:41.67px] lg:[--strips:6]"
             style={{ width: CARD_WIDTH }}
           >
             {STACK_CARDS.map((card, index) => {
