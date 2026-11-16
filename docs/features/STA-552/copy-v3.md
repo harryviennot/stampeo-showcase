@@ -433,7 +433,7 @@ Primary in the meta title, the H1 and the charts H2 ("Loyalty program analytics,
 | `hero.primary` | Start my free trial |  |
 | `hero.secondary` | See every chart (to #charts) |  |
 | `hero.reassurance` | {trialDays} days free · Cancel anytime |  |
-| `numbers.title` | This month |  |
+| `numbers.title` | Last three months (coordinator: the sample is a 13-week capture) |  |
 | `numbers.visits.label` | Visits |  |
 | `numbers.visits.line` | from {customers} customers (the dashboard's own line) |  |
 | `numbers.returnRate.label` | Return rate |  |

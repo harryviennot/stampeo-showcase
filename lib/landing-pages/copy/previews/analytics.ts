@@ -33,7 +33,7 @@ export const ANALYTICS_PREVIEW = {
   } satisfies HeroCopy & { secondary: string; alt: string },
   /** The key-numbers card beside the hero's words; `{customers}` is filled with the sample's customer count. */
   numbers: {
-    title: "This month",
+    title: "Last three months",
     visits: { label: "Visits", line: "from {customers} customers" },
     returnRate: { label: "Return rate", line: "of first-time customers came back within a month" },
     newCustomers: { label: "New customers", line: "signed up" },
