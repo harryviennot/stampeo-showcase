@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { FAN_SLOTS, resolveFanCard, slotStyle, type FanSlot } from "@/lib/hero-fan";
+import { FAN_SLOTS, resolveFanCard, slotStyle } from "@/lib/hero-fan";
 import { ScaledCardWrapper } from "../card/ScaledCardWrapper";
 import { WalletCard } from "../card/WalletCard";
 import { InkArrow, InkNote } from "../ui/InkAnnotation";
@@ -17,11 +17,8 @@ import { InkArrow, InkNote } from "../ui/InkAnnotation";
  * No interactive3D on these — its mouse-tilt writes a transform straight onto
  * the card element, which would fight the fan's rotation. The tilt stays on
  * the demo card further down the page.
- *
- * `slots` deals another set of cards into the same seven places; it defaults
- * to the homepage's.
  */
-export async function HeroCardFan({ slots = FAN_SLOTS }: Readonly<{ slots?: FanSlot[] }> = {}) {
+export async function HeroCardFan() {
   const t = await getTranslations("variant.hero");
 
   return (
@@ -35,7 +32,7 @@ export async function HeroCardFan({ slots = FAN_SLOTS }: Readonly<{ slots?: FanS
          the flanks of the headline. */
       className="@container relative z-0 mx-auto max-w-[1800px] select-none h-[clamp(240px,62vw,280px)] sm:h-[clamp(320px,41vw,360px)] lg:h-[clamp(380px,30vw,470px)]"
     >
-      {slots.map((slot) => {
+      {FAN_SLOTS.map((slot) => {
         const card = resolveFanCard(slot.cardId);
         return (
           <div

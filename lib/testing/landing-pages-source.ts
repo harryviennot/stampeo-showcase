@@ -22,15 +22,6 @@ export const pageFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx")
 export const isPreviewFile = (file: string) =>
   file.startsWith(PREVIEWS_DIR + sep) || PREVIEW_SLUGS.some((slug) => file === pageFile(slug));
 
-/**
- * What a page carries until its builder renders the registry's whole section list: a comment where the new
- * sections go. A page that has it is staged: it still renders its earlier design, so what a registry entry lists
- * is not yet what the page draws. Deleting the marker arms the full checks.
- */
-export const STAGED_MARKER = "TODO(STA-552 v2 builder)";
-
-export const isStaged = (slug: LandingSlug) => read(pageFile(slug)).includes(STAGED_MARKER);
-
 /** A file of a Platform-style page: Platform's own page and components, or a preview's. */
 export const isPlatformStyleFile = (file: string) =>
   file === pageFile("platform") || file.startsWith(join(COMPONENTS_DIR, "platform") + sep) || isPreviewFile(file);

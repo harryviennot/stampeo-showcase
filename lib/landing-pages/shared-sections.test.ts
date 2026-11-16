@@ -559,7 +559,6 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("Segmented", "ui"), ["size"]],
     [...component("WalletCard", "card"), ["headerLabel"]],
     [...component("BlogCard", "blog"), ["detail"]],
-    [...component("HeroCardFan", "landing-variant"), ["slots"]],
     [...component("ScannerLoop", "ui"), ["still"]],
     [...component("AnnotatedWalletCard", "features/design-de-carte"), ["heading", "sectionClassName", "toggleSize"]],
     [...component("FAQList", "ui"), ["table"]],

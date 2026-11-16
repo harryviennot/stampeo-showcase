@@ -3,16 +3,13 @@
  * its async sections resolved. What no section can show on its own is here: the
  * sections in the registry's order, the hairlines around the figures, what a
  * Platform-style page leaves out, the phone-sized tap targets, and the walk from
- * one preview to the next. A page whose builder has not landed its registry
- * sections yet is checked on the sections it draws (`drawn`), so a check never
- * waits for the registry and never skips a page that has something to show.
+ * one preview to the next.
  */
 
 import { describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { openingTags, read, sourceFiles } from "../../testing/jsx-source";
-import { PREVIEWS_DIR, pageFile, renderedSections } from "../../testing/landing-pages-source";
+import { PREVIEWS_DIR, pageFile } from "../../testing/landing-pages-source";
 import { renderPreviewPage, tapTargets } from "../../testing/preview-page";
 import { expectInOrder, pictures, textOf } from "../../testing/render-en";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
@@ -42,28 +39,24 @@ const COPY: Record<PreviewSlug, object> = {
   "platform/geolocation": GEOLOCATION_PREVIEW,
 };
 
-/** The sections a page draws, in order: the registry's list once it has landed them, what it still draws before. */
-const drawn = (slug: PreviewSlug) => renderedSections(pageFile(slug));
-
-/** The pages that draw something beside the hero and the closing pair: the ones with sections to check. */
-const WITH_SECTIONS = PREVIEW_SLUGS.filter((slug) => drawn(slug).length > 3);
-
 /** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
 const copyKey = (id: string) => id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 
 /** Each section of a preview whose copy has an eyebrow and a title: its header. */
 const HEADERS = PREVIEW_SLUGS.flatMap((slug) =>
-  drawn(slug).flatMap((id) => {
+  LANDING_PAGES[slug].sections.flatMap((id) => {
     const part = (COPY[slug] as Record<string, { eyebrow?: string; title?: string; lead?: string }>)[copyKey(id)];
 
     return part?.eyebrow && part.title ? [[slug, id, part.eyebrow, part.title, part.lead ?? ""] as const] : [];
   }),
 );
 
+/** The registry sections that are not headed sections: the page's frame, the FAQ and the demo (headed on their own), and the icons strip (a figure with a label). */
+const NOT_HEADED = ["hero", "faq", "demo", "icons", "final_cta", "related"];
+
 describe("every section opens on its header", () => {
-  test("every page that draws sections has several with a header to check", () => {
-    expect(WITH_SECTIONS.length).toBeGreaterThanOrEqual(5);
-    for (const slug of WITH_SECTIONS) expect(HEADERS.filter(([page]) => page === slug).length).toBeGreaterThanOrEqual(3);
+  test.each(PREVIEW_SLUGS)("%s: every section of the registry but the frame, the FAQ, the demo and the icons strip has a header to check", (slug) => {
+    expect(HEADERS.filter(([page]) => page === slug).map(([, id]) => id)).toEqual(LANDING_PAGES[slug].sections.filter((id) => !NOT_HEADED.includes(id)));
   });
 
   test.each(HEADERS)("%s: %s opens on its eyebrow, its title and its lead, centred", async (slug, id, eyebrow, title, lead) => {
@@ -81,7 +74,7 @@ describe("the page as a whole", () => {
     const figures = html.indexOf('data-landing-section="numbers"');
     const rules = [...html.matchAll(/<hr\b/g)].map((rule) => rule.index);
 
-    if (!drawn(slug).includes("numbers")) return expect(rules).toEqual([]);
+    if (!LANDING_PAGES[slug].sections.includes("numbers")) return expect(rules).toEqual([]);
     expect(rules).toHaveLength(2);
     expect(rules[0]).toBeLessThan(figures);
     expect(rules[1]).toBeGreaterThan(figures);
@@ -125,7 +118,7 @@ describe("what a Platform-style page leaves out", () => {
   /** A trial button is the kit's tracked one (a pair, a trial button or the cream card), never a bare `CTAButton`. */
   test.each(PREVIEW_SLUGS)("%s: brings no sign-up button of its own", (slug) => {
     const folder = join(PREVIEWS_DIR, slug.replace("platform/", ""));
-    const bare = [pageFile(slug), ...(existsSync(folder) ? sourceFiles(folder) : [])].filter((file) => openingTags(read(file)).some((tag) => tag.name === "CTAButton"));
+    const bare = [pageFile(slug), ...sourceFiles(folder)].filter((file) => openingTags(read(file)).some((tag) => tag.name === "CTAButton"));
 
     expect(bare).toEqual([]);
   });
@@ -209,14 +202,14 @@ describe("on a phone (AC5)", () => {
     expect(tapTargets(mine).filter(({ attrs }) => !isTall(attrs))).toEqual([]);
   });
 
-  test.each(WITH_SECTIONS)("%s: every picture has a name a screen reader can read", async (slug) => {
+  test.each(PREVIEW_SLUGS)("%s: every picture has a name a screen reader can read", async (slug) => {
     const pictures = (await renderPreviewPage(slug)).match(/<[a-z]+\b[^>]*\brole="img"[^>]*>/g) ?? [];
 
     expect(pictures.length).toBeGreaterThan(0);
     for (const tag of pictures) expect(tag).toMatch(/aria-label="[^"]{12,}"/);
   });
 
-  test.each(PREVIEW_SLUGS.filter((slug) => drawn(slug).includes("faq")))("%s: each question of the FAQ table is a 56px row", async (slug) => {
+  test.each(PREVIEW_SLUGS.filter((slug) => LANDING_PAGES[slug].sections.includes("faq")))("%s: each question of the FAQ table is a 56px row", async (slug) => {
     const faq = sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "faq")?.html ?? "";
     const rows = faq.match(/<summary\b[^>]*>/g) ?? [];
 

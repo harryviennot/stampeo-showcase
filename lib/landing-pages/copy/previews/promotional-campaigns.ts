@@ -1,6 +1,6 @@
 import { PLAN_FACTS } from "../../../plans/plan-facts";
 import { SAMPLE_BUSINESS } from "../shared";
-import type { Banner, BandCopy, FaqItem, Fact, PageMeta, PlanChip, PreviewHeroCopy, RowCopy, Tile } from "../types";
+import type { Banner, BandCopy, FaqItem, Fact, PageMeta, PlanChip, PreviewHeroCopy, Tile } from "../types";
 
 /** Where the two measured figures come from: the businesses on Stampeo. */
 const FIGURES_SOURCE = "Stampeo data, 86 businesses, February to October 2026";
@@ -14,10 +14,13 @@ const HAPPY_HOUR: Banner = {
   body: "Quiet afternoon? Your second coffee is half price until 5pm.",
 };
 
-/** A broadcast sent on a lock screen: its row, its sample message and who gets it, and the chip that picks it. */
-interface IdeaCopy extends RowCopy {
-  banner: Banner;
+/** A broadcast a café could send: the chip that picks it, its sample message on the lock screen, and who gets it. */
+interface IdeaCopy {
+  key: string;
   chip: string;
+  body: string;
+  plan?: PlanChip;
+  banner: Banner;
 }
 
 /**
@@ -89,16 +92,12 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     rows: [
       {
         key: "happy-hour",
-        eyebrow: "Fill a quiet hour",
-        title: "Happy hour",
         body: "Sent to everyone.",
         chip: "Slow afternoon",
         banner: HAPPY_HOUR,
       },
       {
         key: "we-miss-you",
-        eyebrow: "Bring back a regular",
-        title: "We miss you",
         body: "Sent only to customers who haven't been in for a month.",
         chip: "Gone quiet",
         plan: "Pro",
@@ -106,8 +105,6 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       },
       {
         key: "close",
-        eyebrow: "Almost there",
-        title: "Close to a reward",
         body: "A nudge to customers a stamp or two from their reward.",
         chip: "Almost there",
         plan: "Pro",
@@ -115,8 +112,6 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       },
       {
         key: "new",
-        eyebrow: "Something new",
-        title: "New on the menu",
         body: "Sent to every card.",
         chip: "Something new",
         banner: { sender: SAMPLE_BUSINESS, body: "Pumpkin bread is back today." },

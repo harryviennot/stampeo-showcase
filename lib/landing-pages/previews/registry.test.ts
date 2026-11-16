@@ -4,13 +4,6 @@
  * reachable by URL only, each with its own tracking variant and the sections of
  * its registry entry, ending on the cream card and the links to its siblings.
  * What each page renders is in `pages.test.tsx`.
- *
- * A page is built in two steps: its registry entry lists the sections it will
- * have, and until its builder renders them the page carries a staging marker
- * (`STAGED_MARKER` in `landing-pages-source.ts`) and still draws its earlier design. While the marker is
- * there the section-order test is a `todo` and a lighter one checks the page
- * still opens on its hero and ends on the cream card and the links; the
- * moment the marker goes, the full test is armed.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -19,8 +12,8 @@ import { buildLlmsTxt } from "../../llms-txt";
 import { buildSitemap } from "../../seo/sitemap";
 import { hidesLanguageSwitcher } from "../../routing/language-switcher";
 import { NOINDEX } from "../../seo/page-robots";
-import { code, findTag, literalAttr, openingTags } from "../../testing/jsx-source";
-import { isStaged, pageFile, renderedSections } from "../../testing/landing-pages-source";
+import { code, findTag, literalAttr } from "../../testing/jsx-source";
+import { pageFile, renderedSections } from "../../testing/landing-pages-source";
 import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPageMetadata, type PreviewSlug } from "../pages";
 import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
@@ -134,32 +127,7 @@ describe("the routes (AC1, AC4)", () => {
     expect(hidesLanguageSwitcher(`/us/landing-pages/${slug}`)).toBe(true);
   });
 
-  for (const slug of PREVIEW_SLUGS) {
-    if (isStaged(slug)) {
-      test.todo(`${slug}: renders every registry section once, in registry order (its builder lands them and deletes the marker)`);
-      test(`${slug}: is staged: it still opens on its hero, draws no section twice, and ends on the cream card and the links`, () => {
-        const rendered = renderedSections(pageFile(slug));
-
-        expect(rendered[0]).toBe("hero");
-        expect(new Set(rendered).size).toBe(rendered.length);
-        expect(rendered.slice(-2)).toEqual(["final_cta", "related"]);
-      });
-    } else {
-      test(`${slug}: renders every registry section once, in registry order`, () => {
-        expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
-      });
-    }
-  }
-
-  test("the marker is the only thing that stages a page: a page that has it still mounts the cream card and the links", () => {
-    for (const slug of PREVIEW_SLUGS.filter(isStaged)) {
-      const tags = openingTags(code(pageFile(slug))).map((tag) => tag.name);
-
-      expect({ slug, band: tags.includes("LpAccentBand"), links: tags.includes("RelatedPreviews") }).toEqual({
-        slug,
-        band: true,
-        links: true,
-      });
-    }
+  test.each(PREVIEW_SLUGS)("%s: renders every registry section once, in registry order", (slug) => {
+    expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
   });
 });
