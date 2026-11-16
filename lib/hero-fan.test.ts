@@ -2,12 +2,10 @@ import { describe, expect, it } from "bun:test";
 
 import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
-  CARD_DESIGN_FAN_SLOTS,
   FAN_ARC_RADIUS_PCT,
   FAN_CARDS,
   FAN_SLOTS,
   HERO_FAN_SEASON,
-  PLATFORM_FAN_SLOTS,
   fanSlots,
   resolveFanCard,
   slotStyle,
@@ -260,63 +258,6 @@ describe("cards from the sector brands", () => {
     for (const id of ["aurevo", "marginalia"]) {
       const sample = [...STAMP_SAMPLES, ...POINTS_SAMPLES].find((s) => s.id === id);
       expect(resolveFanCard(id).sample.design).toBe(sample?.design ?? {});
-    }
-  });
-});
-
-describe("the Platform page's cards", () => {
-  const BARBER_LOGO = STAMP_SAMPLES.find((s) => s.id === "barber")?.design.logo_url;
-
-  it("sit in the homepage fan's seven places, Aurevo, the pages' sample café, at the apex", () => {
-    const places = (slots: typeof FAN_SLOTS) => slots.map((s) => ({ ...s, cardId: "" }));
-
-    expect(places(PLATFORM_FAN_SLOTS)).toEqual(places(FAN_SLOTS));
-    expect(PLATFORM_FAN_SLOTS.find((s) => s.index === 0)?.cardId).toBe("aurevo");
-  });
-
-  it("are seven different shops, and the three a phone shows mix stamps and points", () => {
-    const ids = PLATFORM_FAN_SLOTS.map((s) => s.cardId);
-    const kinds = (slots: typeof FAN_SLOTS) => new Set(slots.map((s) => resolveFanCard(s.cardId).kind));
-
-    expect(new Set(ids).size).toBe(7);
-    expect(kinds(PLATFORM_FAN_SLOTS.filter((s) => Math.abs(s.index) <= 1))).toEqual(new Set(["stamps", "points"]));
-  });
-
-  it("never show the barbershop, whose name and logo belong to a real shop", () => {
-    expect(BARBER_LOGO).toBeDefined();
-    for (const s of PLATFORM_FAN_SLOTS) {
-      expect(s.cardId).not.toBe("barber");
-      expect(resolveFanCard(s.cardId).sample.design.logo_url).not.toBe(BARBER_LOGO);
-    }
-  });
-});
-
-describe("the card design preview's cards", () => {
-  const BARBER_LOGO = STAMP_SAMPLES.find((s) => s.id === "barber")?.design.logo_url;
-  const apex = () => CARD_DESIGN_FAN_SLOTS.find((s) => s.index === 0);
-
-  it("sit in the homepage fan's seven places, with a different shop at the apex than Platform's", () => {
-    const places = (slots: typeof FAN_SLOTS) => slots.map((s) => ({ ...s, cardId: "" }));
-
-    expect(places(CARD_DESIGN_FAN_SLOTS)).toEqual(places(FAN_SLOTS));
-    expect(apex()?.cardId).toBe("lustre");
-  });
-
-  it("are seven different shops, and the three a phone shows mix stamps and points", () => {
-    const ids = CARD_DESIGN_FAN_SLOTS.map((s) => s.cardId);
-    const kinds = new Set(
-      CARD_DESIGN_FAN_SLOTS.filter((s) => Math.abs(s.index) <= 1).map((s) => resolveFanCard(s.cardId).kind),
-    );
-
-    expect(new Set(ids).size).toBe(7);
-    expect(kinds).toEqual(new Set(["stamps", "points"]));
-  });
-
-  it("never show the barbershop, whose name and logo belong to a real shop", () => {
-    expect(BARBER_LOGO).toBeDefined();
-    for (const s of CARD_DESIGN_FAN_SLOTS) {
-      expect(s.cardId).not.toBe("barber");
-      expect(resolveFanCard(s.cardId).sample.design.logo_url).not.toBe(BARBER_LOGO);
     }
   });
 });

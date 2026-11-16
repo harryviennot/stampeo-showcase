@@ -79,6 +79,7 @@ describe("what these pages may not claim (AC10)", () => {
   const LEVELS_WITHOUT_CHIP: Record<string, string> = {
     "FEATURES.programTypes.title": "the headline over the three tabs; the Levels tab under it carries the chip",
     "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
+    "PLATFORM.heroCards.stackAlt": "the hero cards' alt text",
     "PLATFORM.programTypes.title": "Platform's program rows carry no chips",
     "SHARED.levelCardsAlt": "the level cards' alt text",
     "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews print no Every plan chip",

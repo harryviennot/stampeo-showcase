@@ -1,8 +1,7 @@
 /**
  * The kit the five previews are built from: the three pieces Platform's sections
- * were generalised into (a steps table, hover rows, a toggle card), the hero
- * Platform's fan shares, and the two preview-only blocks (the hero and the
- * sibling links). What Platform's own pieces render by default is pinned by
+ * were generalised into (a steps table, hover rows, a toggle card) and the two
+ * preview-only blocks (the hero and the sibling links). What Platform's own pieces render by default is pinned by
  * snapshots in `../default-renders.test.tsx`, and what a page can ask of the
  * site components they borrow is in `../extended-components.test.tsx`.
  */
@@ -16,19 +15,13 @@ import { HoverRows } from "@/components/landing-pages/platform/HoverRows";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { StepsTable } from "@/components/landing-pages/platform/StepsTable";
 import { ToggleCard } from "@/components/landing-pages/platform/ToggleCard";
-import { CARD_DESIGN_FAN_SLOTS } from "@/lib/hero-fan";
 import { code, findTag, openingTags } from "../../testing/jsx-source";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
-import { expectInOrder, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
-import { mockEnglishServerTranslations } from "../../testing/server-intl";
+import { expectInOrder, renderEn, textOf } from "../../testing/render-en";
 import { stackZooms } from "../../testing/stacked-rows";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
 import { SHARED } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS } from "../pages";
-
-// The fan hero holds async server components that ask next-intl for their words.
-await mockEnglishServerTranslations();
-const { PlatformHero } = await import("@/components/landing-pages/platform/PlatformHero");
 
 const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
 
@@ -188,23 +181,6 @@ describe("ToggleCard: one white card, one surface per tab", () => {
     expect(html).not.toMatch(/\binert\b/);
     expect(html).toContain("join screen");
     expect(textOf(html)).toContain("A code, then the scanner");
-  });
-});
-
-describe("PlatformHero: the fan hero a preview can reuse", () => {
-  test("takes the page's slug, its own cards and its second action: the preview's label, headline and sub, then the trial and its own button", async () => {
-    const { hero } = LANDING_PAGES["platform/card-design"];
-    const html = await renderEnAsync(
-      <PlatformHero slug="platform/card-design" slots={CARD_DESIGN_FAN_SLOTS} secondary={{ label: "Try the designer", href: "#playground" }} />,
-    );
-
-    expectInOrder(html, [hero.eyebrow ?? "", hero.accent, hero.sub ?? "", SHARED.cta, "Try the designer"]);
-    expect(html).toMatch(/<a [^>]*href="#playground"/);
-    expect(html).not.toContain(SHARED.demoLink);
-  });
-
-  test("with its own cards, the fan shows those and not Platform's", async () => {
-    expect(await renderEnAsync(<PlatformHero slots={CARD_DESIGN_FAN_SLOTS} />)).not.toBe(await renderEnAsync(<PlatformHero />));
   });
 });
 
