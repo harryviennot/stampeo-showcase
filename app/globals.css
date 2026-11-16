@@ -383,6 +383,20 @@ body {
   transform: translateY(0);
 }
 
+/* A smaller rise than .scroll-reveal's, for a figure that fades in among others. */
+.scroll-reveal-rise {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.scroll-reveal-rise.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .scroll-reveal-stagger>* {
   opacity: 0;
   transform: translateY(16px);
@@ -465,6 +479,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
 
   .scroll-reveal,
+  .scroll-reveal-rise,
   .scroll-reveal-stagger>*,
   .scroll-reveal-left,
   .scroll-reveal-right,

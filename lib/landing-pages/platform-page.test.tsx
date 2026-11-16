@@ -191,7 +191,11 @@ describe("by the numbers", () => {
     variant: { metrics: { items: Array<{ value: string; label: string }> } };
   }).variant.metrics.items;
   const [measured] = PLATFORM.numbers.figures;
+  const businesses = CATALOG.find((item) => /business/i.test(item.label)) as (typeof CATALOG)[number];
+  const countries = CATALOG.find((item) => /countr/i.test(item.label)) as (typeof CATALOG)[number];
   const block = () => renderEnAsync(<NumbersBlock />);
+  const figuresOf = (html: string) =>
+    [...html.matchAll(/<[^>]*class="[^"]*\bink-figure\b[^"]*"[^>]*>([^<]*)</g)].map((match) => match[1]);
 
   test("the pair of actions follows the figures", () => {
     const source = code(platformFile("NumbersBlock"));
@@ -199,13 +203,20 @@ describe("by the numbers", () => {
     expect(literalAttr(findTag(source, "LpCtaPair")?.attrs ?? "", "location")).toBe("feature_cta");
   });
 
-  test("shows the site's three counts, then the measured figure of cards still in the wallet, each in the homepage's hand over its label", async () => {
+  test("shows three figures in the homepage's hand over their labels: the businesses and the countries from the site's counts, then the measured card retention rate", async () => {
     const html = await block();
-    const figures = [...html.matchAll(/<[^>]*class="[^"]*\bink-figure\b[^"]*"[^>]*>([^<]*)</g)].map((match) => match[1]);
 
-    expect(CATALOG).toHaveLength(3);
-    expect(figures).toEqual([...CATALOG.map((item) => item.value), measured.value]);
-    expectInOrder(html, [...CATALOG.flatMap((item) => [item.value, item.label]), measured.value, measured.text]);
+    expect(figuresOf(html)).toEqual([businesses.value, countries.value, measured.value]);
+    expectInOrder(html, [businesses.value, businesses.label, countries.value, countries.label, measured.value, measured.text]);
+  });
+
+  test("leaves the stamps issued count to the homepage: the page does not print it", async () => {
+    const stamps = CATALOG.find((item) => /stamps/i.test(item.label));
+    const text = textOf(await block());
+
+    expect(stamps).toBeDefined();
+    expect(text).not.toContain(stamps?.value ?? "");
+    expect(text).not.toMatch(/stamps issued/i);
   });
 
   test("prints where the measured figure comes from right under it, before the actions, and sources no other figure", async () => {
@@ -215,7 +226,17 @@ describe("by the numbers", () => {
     expect(measured.source).toMatch(/^Stampeo data: .*\d/);
     expect(text.split(measured.source)).toHaveLength(2);
     expectInOrder(html, [measured.value, measured.text, measured.source, SHARED.cta]);
-    expect(text.indexOf(measured.source)).toBeGreaterThan(text.indexOf(CATALOG[2].label));
+    expect(text.indexOf(measured.source)).toBeGreaterThan(text.indexOf(countries.label));
+  });
+
+  test("every figure is in the server markup, each in its own reveal that waits a little longer than the one before", async () => {
+    const html = await block();
+    const reveals = [...html.matchAll(/<div data-sr="true" class="scroll-reveal-rise[^"]*"[^>]*>([\s\S]*?)<\/li>/g)];
+    const delays = reveals.map((match) => Number(/transition-delay:(\d+)ms/.exec(match[0])?.[1] ?? 0));
+
+    expect(reveals).toHaveLength(3);
+    expect(reveals.map((match) => figuresOf(match[1])).flat()).toEqual([businesses.value, countries.value, measured.value]);
+    expect(delays).toEqual([0, 250, 500]);
   });
 });
 

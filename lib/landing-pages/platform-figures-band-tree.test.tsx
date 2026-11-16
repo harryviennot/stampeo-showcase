@@ -37,6 +37,20 @@ describe("by the numbers: the homepage's handwritten figures", () => {
     expect(source).toContain('getTranslations("variant.metrics")');
     expect(findTag(source, "NumberFigures")?.attrs).toMatch(/items=\{items\}/);
   });
+
+  test("each figure fades in and rises a little as the row scrolls into view, one after another from the left, and appears at once for a reader who asks for less motion", () => {
+    const html = renderEn(<NumberFigures items={METRICS} />);
+    const reveals = [...html.matchAll(/<div data-sr="true" class="([^"]*)"[^>]*>/g)];
+    const delays = reveals.map((match) => Number(/transition-delay:(\d+)ms/.exec(match[0])?.[1] ?? 0));
+    const css = read(join(ROOT, "app", "globals.css"));
+    const calm = /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\.scroll-reveal,[^}]*\}/.exec(css)?.[0] ?? "";
+
+    expect(reveals).toHaveLength(METRICS.length);
+    expect(new Set(reveals.map((match) => match[1].split(" ")[0]))).toEqual(new Set(["scroll-reveal-rise"]));
+    expect(delays).toEqual([0, 250, 500]);
+    expect(calm).toContain(".scroll-reveal-rise");
+    expect(calm).toMatch(/opacity:\s*1/);
+  });
 });
 
 describe("the closing card", () => {

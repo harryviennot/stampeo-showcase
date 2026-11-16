@@ -647,17 +647,17 @@ Each card: the feature's name, then one plain line. The lines no longer repeat t
 
 Section title over the three tiles: `More Stampeo features.` (22) on every page but geolocation, which keeps its own `Ways to bring customers back today.` (35).
 
-## Platform: one new stat in "By the numbers" (`PLATFORM.numbers`)
+## Platform: "By the numbers" (`PLATFORM.numbers`)
 
-A fourth figure after the three `variant.metrics` ones (120+ active businesses, 20,000+ stamps issued, 25+ countries), kept in Platform's copy module only. It is a sourced figure (`value`, `text`, `source`), so the % guard accepts it; the source prints under it.
+Three figures in one row: the businesses and countries counts of the `variant.metrics` catalog (120+ active businesses, 25+ countries; the catalog also holds 20,000+ stamps issued, which only the homepage prints), then Platform's own measured figure, kept in its copy module only. It is a sourced figure (`value`, `text`, `source`), so the % guard accepts it; the source prints under it.
 
 | Field | Text | Chars |
 |---|---|---|
-| `numbers.figures[3].value` | 95% | 3 |
-| `numbers.figures[3].text` | of cards still in the wallet three months later | 47 |
-| `numbers.figures[3].source` | Stampeo data: 2,786 cards from 73 businesses, added June to August 2026 | 71 |
+| `numbers.figures[0].value` | 95% | 3 |
+| `numbers.figures[0].text` | card retention rate | 19 |
+| `numbers.figures[0].source` | Stampeo data: 2,786 cards from 73 businesses, added June to August 2026 | 71 |
 
-"after 90 days" would trip `DIGIT_DAYS`; the study measured day 90, which "three months later" says without a digit-day count (the campaigns figure already used "three months later" for the same measure).
+The label is PassEntry's short form ("Pass retention rate") in Stampeo's word, "card". The horizon (day 90) is not in the label any more; the source line gives the cohort. Each figure fades in and rises about 10px as the row scrolls into view, 250 ms after the one on its left, once, as PassEntry's row does (no count-up).
 
 ## Claims and their sources
 
@@ -698,4 +698,4 @@ STAMPEO.md = `stampeo-seo/stampeo seo en/STAMPEO.md` (line numbers as of 16 Nov 
 | We design the card for you, free | card design | L179 |
 | Stamps or points, up to five levels with their own card look, switch without customers losing their card | card design | L183-193, L202, L208-211, L479-480 |
 | Edited cards update in customers' wallets | card design | live card design FAQ; flagged [CHECK] above |
-| 95% of cards still in the wallet three months later | Platform | `retention-study-2026-11-16.md` (95.5% at day 90, 2,786 cards, 73 businesses, rounded down) |
+| 95% card retention rate (the share of cards still in the wallet at day 90) | Platform | `retention-study-2026-11-16.md` (95.5% at day 90, 2,786 cards, 73 businesses, rounded down) |

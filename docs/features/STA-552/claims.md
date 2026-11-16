@@ -37,7 +37,7 @@ The sample numbers in drawn dashboards and cards (Platform's `ANALYTICS`, the ha
 | Live preview of both wallets while you design | card design | L172 |
 | We design the card for you, free | card design | L179 |
 | Stamps or points, up to five levels with their own card look, switch without customers losing their card | card design | L183-193, L202, L208-211, L479-480; `PLAN_FACTS.*.levels` (tested) |
-| 95% of cards still in the wallet three months later | Platform | `retention-study-2026-11-16.md` (95.5% at day 90, 2,786 cards, 73 businesses, rounded down; tested in `copy.test.ts`) |
+| 95% card retention rate (the share of cards still in the wallet at day 90) | Platform | `retention-study-2026-11-16.md` (95.5% at day 90, 2,786 cards, 73 businesses, rounded down; tested in `copy.test.ts`) |
 | The six one-liners in the phone menu (`common.nav.featuresItems.*.description`, four locales) | menu | Each restates its feature's claim above. Geolocation's line, "Your card when they're nearby", sits under the "Soon" label |
 
 ## Claims with no confirmed source (FLAGGED)

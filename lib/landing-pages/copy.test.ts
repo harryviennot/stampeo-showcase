@@ -195,7 +195,7 @@ describe("Platform's measured figure is the retention study's", () => {
     const [, percent, cards, businesses, year, firstMonth, lastMonth] = day90 ?? [];
 
     expect(figure.value).toBe(`${Math.floor(Number(percent))}%`);
-    expect(figure.text).toMatch(/still in the wallet three months later/);
+    expect(figure.text).toBe("card retention rate");
     expect(figure.source).toBe(`Stampeo data: ${cards} cards from ${businesses} businesses, added ${MONTHS[Number(firstMonth) - 1]} to ${MONTHS[Number(lastMonth) - 1]} ${year}`);
   });
 });

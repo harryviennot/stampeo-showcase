@@ -1,18 +1,19 @@
 import { getTranslations } from "next-intl/server";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { numbersRow } from "@/lib/landing-pages/platform/number-figures";
 import { LpCtaPair } from "./LpCtaPair";
 import { NumberFigures } from "./NumberFigures";
 import { LpSection } from "../shared/LpSection";
 
 /**
- * "Where Stampeo stands today": the site's own three metrics (one source, shared
- * with the proof line elsewhere), the measured share of cards still in the wallet
- * with its source under it, then the pair of actions.
+ * "Where Stampeo stands today": the businesses and countries counts of the site's own
+ * metrics (one source, shared with the proof line elsewhere), the measured card retention
+ * rate with its source under it, then the pair of actions.
  */
 export async function NumbersBlock() {
   const t = await getTranslations("variant.metrics");
   const counts = t.raw("items") as Array<{ value: string; label: string }>;
-  const items = [...counts, ...PLATFORM.numbers.figures.map(({ value, text, source }) => ({ value, label: text, source }))];
+  const items = numbersRow(counts, PLATFORM.numbers.figures);
 
   return (
     <LpSection

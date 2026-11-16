@@ -46,11 +46,11 @@ export const PLATFORM = {
   numbers: {
     eyebrow: "By the numbers",
     title: "Where Stampeo stands today.",
-    /** Measured figures, after the site's own three counts (`variant.metrics`), each with the study it comes from. */
+    /** Measured figures, after the businesses and countries counts of the site's `variant.metrics`, each with the study it comes from. */
     figures: [
       {
         value: "95%",
-        text: "of cards still in the wallet three months later",
+        text: "card retention rate",
         source: "Stampeo data: 2,786 cards from 73 businesses, added June to August 2026",
       },
     ],
