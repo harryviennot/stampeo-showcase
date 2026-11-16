@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Tile } from "@/lib/landing-pages/copy/types";
 import { PlanChip } from "../shared/PlanChip";
-import { CELL_TITLE } from "./classes";
+import { CELL_TITLE, STAMPED_CARD } from "./classes";
 
 /** A cell of the table: a titled line, with an icon above it or a plan chip under it where it needs one. */
 export type StepCell = Tile & { icon?: ReactNode };
@@ -37,7 +37,7 @@ export function StepsTable({
 
       {cells.length > 0 && (
         <ol
-          className={`relative ${visual ? "-mt-10 " : ""}grid divide-y divide-[var(--border)] overflow-hidden rounded-[20px] bg-white card-stamp${
+          className={`relative ${visual ? "-mt-10 " : ""}grid divide-y divide-[var(--border)] overflow-hidden ${STAMPED_CARD}${
             visual ? " lg:-mt-24" : ""
           } ${COLUMNS[cells.length] ?? ""}`}
         >

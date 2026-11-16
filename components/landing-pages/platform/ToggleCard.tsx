@@ -6,7 +6,7 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Link } from "@/i18n/navigation";
 import type { TabCopy } from "@/lib/landing-pages/copy/types";
 import { FactList } from "../shared/FactList";
-import { ARROW_LINK, CELL_TITLE } from "./classes";
+import { ARROW_LINK, CELL_TITLE, STAMPED_STAGE } from "./classes";
 
 /** One surface of the card: its tab, its title and facts, an optional link and its picture. */
 export interface ToggleTab<Key extends string> extends TabCopy {
@@ -15,7 +15,7 @@ export interface ToggleTab<Key extends string> extends TabCopy {
   visual: ReactNode;
 }
 
-const SURFACE = "card-stamp rounded-[24px] bg-white p-6 sm:rounded-[28px] sm:p-10 lg:p-12";
+const SURFACE = `${STAMPED_STAGE} p-6 sm:p-10 lg:p-12`;
 
 /** A pane is a grid: one column on a phone, its picture 7 columns and its words 5 from `lg`. */
 const GRID = "grid content-start gap-8";

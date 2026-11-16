@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { STAMPED_CARD } from "./classes";
 
 /** The card's title: left-aligned over its picture, a clear step under the section's h2. */
 const TITLE =
@@ -23,7 +24,7 @@ export function GlassCard({
 }>) {
   return (
     <div
-      className={`card-stamp rounded-[20px] bg-white p-5 lg:p-6 ${float ? "lp-float" : ""} ${className}`}
+      className={`${STAMPED_CARD} p-5 lg:p-6 ${float ? "lp-float" : ""} ${className}`}
     >
       {title && <h3 className={TITLE}>{title}</h3>}
       {children}

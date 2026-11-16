@@ -12,6 +12,7 @@ import { MarketLink } from "@/components/market/MarketLink";
 import { PREVIEW_SHARED } from "@/lib/landing-pages/copy/previews/shared";
 import { LANDING_PAGES, type PreviewSlug } from "@/lib/landing-pages/pages";
 import { marketPath } from "@/lib/markets";
+import { STAMPED_CARD } from "../platform/classes";
 import { IconTile } from "../shared/IconTile";
 import { LpSection } from "../shared/LpSection";
 
@@ -47,7 +48,7 @@ export function RelatedPreviews({ slug, title }: Readonly<{ slug: PreviewSlug; t
               <MarketLink
                 market="us"
                 href={marketPath("us", `/landing-pages/${sibling}`)}
-                className="group flex min-h-14 items-center gap-4 rounded-[20px] bg-white p-4 card-stamp card-stamp-lift"
+                className={`group flex min-h-14 items-center gap-4 p-4 card-stamp-lift ${STAMPED_CARD}`}
               >
                 <IconTile tone="brand">
                   <Icon size={22} weight="duotone" aria-hidden />

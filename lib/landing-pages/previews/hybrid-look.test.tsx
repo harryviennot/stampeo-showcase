@@ -267,8 +267,10 @@ describe("the links a preview closes with", () => {
   test("they are stamped tiles that lift on hover, each with an orange icon tile, and no label above the title", () => {
     const related = html();
 
-    expect(related.match(/<a [^>]*class="[^"]*\bcard-stamp card-stamp-lift\b[^"]*"/g)).toHaveLength(3);
-    expect(related).toContain("rounded-[20px]");
+    const tiles = [...related.matchAll(/<a [^>]*class="([^"]*)"/g)].map((tile) => tile[1].split(/\s+/));
+
+    expect(tiles).toHaveLength(3);
+    for (const tile of tiles) expect(tile).toEqual(expect.arrayContaining(["card-stamp", "card-stamp-lift", "rounded-[20px]", "bg-white"]));
     expect(related.match(/bg-\[var\(--accent\)\]\/10/g)).toHaveLength(3);
     expect(related).toContain(PREVIEW_SHARED.related.title);
     expect(textOf(related)).not.toMatch(/Keep exploring/);
