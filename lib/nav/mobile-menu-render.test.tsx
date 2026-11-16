@@ -1,22 +1,19 @@
 /**
- * The phone menu of the US landing pages as a visitor meets it, both directions: the index sheet (the default)
- * and the drill-down (`?menu=drill`). Each is rendered open, under the English catalogs, the way the header hands
- * it its links. The header's own wiring (when the menu is the new one, and that every other page keeps today's) is
- * in `lib/landing-pages/preview-nav.test.ts`.
+ * The phone menu of the US landing pages as a visitor meets it: the index sheet, rendered open under the
+ * English catalogs, the way the header hands it its links. The header's own wiring (when the menu is the new
+ * one, and that every other page keeps today's) is in `lib/landing-pages/preview-nav.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
 import type { ComponentProps } from "react";
 import { MenuBurger } from "@/components/sections/MenuBurger";
-import { MobileMenu, currentMenu } from "@/components/sections/MobileMenu";
+import { MobileMenu } from "@/components/sections/MobileMenu";
 import { LanguageRow } from "@/components/ui/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
-import { MENU_VARIANTS } from "@/lib/landing-pages/platform/variants";
 import { decodeEntities, expectInOrder, renderEn, textOf } from "../testing/render-en";
 import { trackedBy } from "../testing/cta-recorder";
-import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { renderAs } from "../testing/visitor-seams";
 
 const PREVIEW = (feature: string) => `/us/landing-pages/platform/${feature}`;
@@ -32,7 +29,6 @@ const DESCRIPTIONS = [
 ];
 
 const PROPS: ComponentProps<typeof MobileMenu> = {
-  variant: "sheet",
   open: true,
   onClose: () => {},
   burgerRef: { current: null },
@@ -65,8 +61,15 @@ function targets(html: string) {
   }));
 }
 
-/** A target is 44px to tap when its classes say so: the menu's tile, row and button heights. */
-const TALL = /(?<![\w-])(?:min-h-(?:11|12|14|\[88px\])|h-(?:11|12))(?![\w-])/;
+/** The height a target's classes give it to tap, in px: `min-h-14`, `min-h-[72px]` or `h-12`; null when they say none. */
+function tapHeight(attrs: string): number | null {
+  const own = /(?<![\w-])(?:min-)?h-(?:\[(\d+(?:\.\d+)?)px\]|(\d+(?:\.\d+)?))(?![\w-])/.exec(attrs);
+
+  return own ? (own[1] ? Number(own[1]) : Number(own[2]) * 4) : null;
+}
+
+/** A target is 44px to tap when its classes say so. */
+const isTall = (attrs: string) => (tapHeight(attrs) ?? 0) >= 44;
 
 describe("the index sheet", () => {
   test("it is a dialog named Menu, and a closed menu draws nothing", () => {
@@ -122,8 +125,8 @@ describe("the index sheet", () => {
     expect(bar[1].href).toBe("/en/onboarding");
   });
 
-  test.each(MENU_VARIANTS)("signed out, the %s menu's Get started reports its click as the phone header's, to the sign-up", (variant) => {
-    expect(trackedBy(() => render({ variant }))).toEqual([{ trackAs: "header_mobile", href: "/onboarding" }]);
+  test("signed out, Get started reports its click as the phone header's, to the sign-up", () => {
+    expect(trackedBy(() => render())).toEqual([{ trackAs: "header_mobile", href: "/onboarding" }]);
   });
 
   test("signed in it is Sign out and Dashboard", () => {
@@ -146,7 +149,6 @@ describe("the index sheet", () => {
 
     expect(textOf(render({ language: row }))).toContain("|EN|");
     expect(textOf(render())).not.toContain("|EN|");
-    expect(textOf(render({ variant: "drill", language: row }))).toContain("|EN|");
   });
 
   test("it rises 6px as it appears, and for a reader who asks for less motion it only fades", () => {
@@ -155,76 +157,40 @@ describe("the index sheet", () => {
   });
 });
 
-describe("the drill-down", () => {
-  const drill = (overrides: Partial<ComponentProps<typeof MobileMenu>> = {}) => render({ variant: "drill", ...overrides });
+describe("the Product tiles on the narrowest phones", () => {
+  const html = render();
+  const tiles = [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)]
+    .filter(([, attrs]) => /rounded-2xl/.test(attrs))
+    .map(([, attrs, inner]) => ({ attrs, inner }));
+  const px = (markup: string, prefix: string) => [...markup.matchAll(new RegExp(`${prefix}-\\[(\\d+(?:\\.\\d+)?)px\\]`, "g"))].map((match) => Number(match[1]));
 
-  test("the first screen is Product, Loyalty, Pricing and Resources, the two that hold more with an arrow", () => {
-    const first = targets(drill()).filter(({ attrs }) => /data-drill-root/.test(attrs));
-
-    expect(first.map(({ name }) => name)).toEqual(["Product", "Loyalty", "Pricing", "Resources"]);
-    expect(first.filter(({ tag }) => tag === "button").map(({ name }) => name)).toEqual(["Product", "Resources"]);
+  test("there is one tile for each feature", () => {
+    expect(tiles).toHaveLength(LABELS.length);
   });
 
-  test("Product's own screen has a way back, a feature tile that leads on, and the six features with their lines", () => {
-    const html = drill();
-    const screen = html.slice(html.indexOf("data-drill-screen=\"product\""));
+  test("a tile is 44px or taller to tap, with its label at 13 to 14px and its line at 11 to 12px", () => {
+    for (const { attrs, inner } of tiles) {
+      const [label, line] = px(inner, "text");
 
-    expectInOrder(screen, ["Menu", "See every feature", ...LABELS.flatMap((label, index) => [label, DESCRIPTIONS[index]])]);
-    expect(targets(screen).some(({ href }) => href === "/us/landing-pages/features")).toBe(true);
-  });
-
-  test("the screens that are not shown are inert, so Tab and a screen reader stay on the one that is", () => {
-    const html = drill();
-
-    expect(html).toMatch(/data-drill-screen="product"[^>]*\binert\b/);
-    expect(html).toMatch(/data-drill-screen="resources"[^>]*\binert\b/);
-    expect(html).not.toMatch(/data-drill-screen="root"[^>]*\binert\b/);
-  });
-
-  test("Log in and Get started stay at the bottom, once, whichever screen is open", () => {
-    const html = drill();
-
-    expect(targets(html).filter(({ name }) => name === "Get started →")).toHaveLength(1);
-    expect(targets(html).filter(({ name }) => name === "Log in")).toHaveLength(1);
-  });
-
-  test("Log in and Get started are pinned to the foot of the menu, not left to scroll with a screen", () => {
-    const html = drill();
-    const bar = html.slice(html.lastIndexOf('<div class="border-t'));
-
-    expect(bar).toMatch(/^<div class="border-t [^"]*\babsolute inset-x-0 bottom-0\b/);
-    expect(targets(bar).map(({ name }) => name)).toEqual(["Log in", "Get started →"]);
-  });
-
-  test("the focus rules find what they look for: each opening row and each screen's way back are marked", () => {
-    const html = drill();
-
-    for (const screen of ["product", "resources"]) {
-      expect(html).toContain(`data-drill-opens="${screen}"`);
-      expect(html.slice(html.indexOf(`data-drill-screen="${screen}"`))).toMatch(/^[^]*?data-drill-first/);
+      expect(isTall(attrs)).toBe(true);
+      expect(label).toBeGreaterThanOrEqual(13);
+      expect(label).toBeLessThanOrEqual(14);
+      expect(line).toBeGreaterThanOrEqual(11);
+      expect(line).toBeLessThanOrEqual(12);
     }
-    expect(html.match(/data-menu-first/g)).toHaveLength(1);
+  });
+
+  test("the padding is at most 10px and the icon tile at most 32px, so a 139px tile at 320px keeps room for the words", () => {
+    for (const { attrs, inner } of tiles) {
+      expect(Number(/(?<![\w-])p-(\d+(?:\.\d+)?)(?![\w-])/.exec(attrs)?.[1]) * 4).toBeLessThanOrEqual(10);
+      expect(Number(/(?<![\w-])h-(\d+(?:\.\d+)?)(?![\w-])/.exec(inner)?.[1]) * 4).toBeLessThanOrEqual(32);
+    }
   });
 });
 
-describe.each(MENU_VARIANTS)("the %s menu", (variant) => {
-  test("every link and button is 44px or taller to tap", () => {
-    expect(targets(render({ variant })).filter(({ attrs }) => !TALL.test(attrs)).map(({ name }) => name)).toEqual([]);
-  });
-});
-
-describe("which menu a visitor gets", () => {
-  restoreGlobalsAfterEach("window");
-  const at = (search: string) => {
-    Object.assign(globalThis, { window: { location: { search } } });
-    return currentMenu();
-  };
-
-  test("the sheet unless the address says ?menu=drill, in the browser as on the server", () => {
-    expect(render()).toMatch(/grid-cols-2/);
-    expect(at("")).toBe("sheet");
-    expect(at("?menu=tabs")).toBe("sheet");
-    expect(at("?utm_source=ads&menu=drill")).toBe("drill");
+describe("every link and button of the sheet", () => {
+  test("is 44px or taller to tap", () => {
+    expect(targets(render()).filter(({ attrs }) => !isTall(attrs)).map(({ name }) => name)).toEqual([]);
   });
 });
 
@@ -234,7 +200,7 @@ describe("the language row", () => {
     const pills = targets(html);
 
     expect(pills.map(({ name }) => name)).toEqual(routing.locales.map((locale) => locale.toUpperCase()));
-    expect(pills.every(({ attrs }) => TALL.test(attrs))).toBe(true);
+    expect(pills.every(({ attrs }) => isTall(attrs))).toBe(true);
     expect(pills.map(({ attrs }) => /aria-pressed="true"/.test(attrs))).toEqual(routing.locales.map((locale) => locale === "fr"));
     expect(pills.map(({ attrs }) => /lang="([a-z]+)"/.exec(attrs)?.[1])).toEqual([...routing.locales]);
   });

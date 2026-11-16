@@ -1,25 +1,18 @@
 /**
  * Platform's hero as a visitor meets it: the headline, a stack of real wallet cards (stamps, points and
- * levels) like a phone's Wallet, then the trial. `?hero=shelf` swaps the stack for a straight row of nine,
- * for comparing the two. What the cards do over time is in `wallet-stack.test.ts`.
+ * levels) like a phone's Wallet, then the trial. What the cards do over time is in `wallet-stack.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
-import { WalletShelfHero } from "@/components/landing-pages/platform/hero/WalletShelfHero";
 import { WalletStackHero } from "@/components/landing-pages/platform/hero/WalletStackHero";
-import { HeroVariantSwitch, currentHero, heroFromSearch, serverHero } from "@/components/landing-pages/platform/hero/HeroVariantSwitch";
 import { PlatformHero } from "@/components/landing-pages/platform/hero/PlatformHero";
 import { PLATFORM } from "../copy/platform";
 import { SHARED } from "../copy/shared";
-import { PROGRAM_TYPES } from "../copy/program-types";
 import { expectInOrder, logos, pictures, renderEn, textOf } from "../../testing/render-en";
-import { restoreGlobalsAfterEach } from "../../testing/restore-globals";
 import { renderAs } from "../../testing/visitor-seams";
-import { SHELF_CARDS } from "./wallet-shelf";
 import { STACK_CARDS } from "./wallet-stack";
 
 const stack = () => renderEn(<WalletStackHero />, { us: true });
-const shelf = () => renderEn(<WalletShelfHero />, { us: true });
 
 describe("the stack hero", () => {
   test("puts the headline first, then the cards, then the trial and the reassurance", () => {
@@ -62,35 +55,6 @@ describe("the stack hero", () => {
   });
 });
 
-describe("the shelf hero", () => {
-  test("puts the headline first, then nine cards in a row, then the trial and the reassurance", () => {
-    const html = shelf();
-    const order = ["<h1", 'role="img"', 'href="/en/onboarding"', "14 days free"].map((needle) => html.indexOf(needle));
-
-    expect(order.every((at) => at > -1)).toBe(true);
-    expect(order).toEqual([...order].sort((a, b) => a - b));
-    expect(logos(html)).toHaveLength(9);
-  });
-
-  test("names its three groups under the row: stamps, points and levels, the words the program types use", () => {
-    const text = textOf(shelf());
-    const [stamps, points, levels] = PROGRAM_TYPES.map((type) => type.label);
-
-    expectInOrder(shelf(), [stamps, points, levels]);
-    expect(text).toContain("Bronze");
-    expect(text).toContain("Silver");
-    expect(text).toContain("Gold");
-  });
-
-  test("keeps five cards on a phone and hides the other four, in the order stamps, points, Silver, stamps, Gold", () => {
-    const html = shelf();
-    const hidden = html.match(/max-lg:hidden/g) ?? [];
-
-    expect(hidden.length).toBeGreaterThanOrEqual(4);
-    expect(html.match(/max-lg:order-\d/g)).toHaveLength(5);
-  });
-});
-
 describe("a reader who asks for less motion (AC11)", () => {
   const still = () => renderAs({ reducedMotion: true }, stack);
   const KEYFRAMES_OFF = /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*animation: none/;
@@ -105,62 +69,20 @@ describe("a reader who asks for less motion (AC11)", () => {
     expect(html).not.toMatch(/duration-300 opacity-0/);
   });
 
-  test("the shelf is complete for them too: the same nine cards, the three groups named", () => {
-    const html = renderAs({ reducedMotion: true }, shelf);
-
-    expect(logos(html)).toHaveLength(9);
-    expect(textOf(html)).toContain("Gold");
-  });
-
-  test.each([
-    ["stack", stack],
-    ["shelf", shelf],
-  ])("the %s's own keyframes switch every animation off under prefers-reduced-motion, so nothing plays whatever the setting reads", (_name, render) => {
-    expect(render()).toMatch(KEYFRAMES_OFF);
+  test("the stack's own keyframes switch every animation off under prefers-reduced-motion, so nothing plays whatever the setting reads", () => {
+    expect(stack()).toMatch(KEYFRAMES_OFF);
   });
 });
 
-describe("?hero= picks one of them", () => {
-  restoreGlobalsAfterEach("window");
-
-  test("the stack is the default, and so is anything that is not the shelf", () => {
-    expect(heroFromSearch("")).toBe("stack");
-    expect(heroFromSearch("?hero=confetti")).toBe("stack");
-    expect(heroFromSearch("?menu=drill")).toBe("stack");
-  });
-
-  test("?hero=shelf asks for the shelf, in any case", () => {
-    expect(heroFromSearch("?hero=shelf")).toBe("shelf");
-    expect(heroFromSearch("?utm_source=ads&hero=SHELF")).toBe("shelf");
-  });
-
-  test("a page the server renders has the stack in it, so the first paint never waits for the query string", () => {
-    const html = renderEn(<HeroVariantSwitch stack={<i>the stack</i>} shelf={<i>the shelf</i>} />);
-
-    expect(html).toContain("the stack");
-    expect(html).not.toContain("the shelf");
-    expect(serverHero()).toBe("stack");
-  });
-
-  test("in the browser the address decides: a visitor who followed ?hero=shelf gets the shelf, any other visitor the stack", () => {
-    Object.assign(globalThis, { window: { location: { search: "?utm_source=ads&hero=shelf" } } });
-    expect(currentHero()).toBe("shelf");
-    Object.assign(globalThis, { window: { location: { search: "" } } });
-    expect(currentHero()).toBe("stack");
-  });
-
-  test("Platform's hero is one section that holds the stack on the server and not the shelf", () => {
+describe("Platform's hero section", () => {
+  test("is one section that holds the stack", () => {
     const html = renderEn(<PlatformHero />, { us: true });
 
     expect(html.match(/data-landing-section="hero"/g)).toHaveLength(1);
     expect(html).toContain('data-href="wallet-stack"');
-    expect(html).not.toContain('data-href="wallet-shelf"');
   });
-});
 
-describe("the two heroes use the same cards the page's data names", () => {
-  test("the stack's nine are STACK_CARDS and the shelf's nine are SHELF_CARDS", () => {
+  test("shows the cards the page's data names: the stack's nine are STACK_CARDS", () => {
     expect(logos(stack())).toEqual(expect.arrayContaining(STACK_CARDS.map((card) => card.design.logo_url ?? "")));
-    expect(logos(shelf())).toEqual(expect.arrayContaining(SHELF_CARDS.map((card) => card.design.logo_url ?? "")));
   });
 });

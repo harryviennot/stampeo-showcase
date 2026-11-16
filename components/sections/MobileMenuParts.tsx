@@ -20,7 +20,7 @@ export interface MenuLink {
   market?: Market;
 }
 
-/** What both menus are given. */
+/** What the sheet menu is given. */
 export interface MenuProps {
   onClose: () => void;
   /** The header's button: the first Tab stop, and where focus goes on Escape. */

@@ -1,13 +1,10 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { CaretRightIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
-import { menuVariant, type MenuVariant } from "@/lib/landing-pages/platform/variants";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
-import { MobileMenuDrill } from "./MobileMenuDrill";
 import {
   MENU_LABEL,
   MenuBottomBar,
@@ -20,7 +17,7 @@ import {
 } from "./MobileMenuParts";
 import { SoonPill } from "./SoonPill";
 
-/** A feature as a tile: its icon, its name and its one line, then Soon where the feature is coming; the current page is orange. */
+/** A feature as a small tile: its icon, its name and its one line, then Soon where the feature is coming; the current page is orange. */
 function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; first: boolean; onClose: () => void }>) {
   const { Icon, label, description, soon, current, href, market } = entry;
 
@@ -31,17 +28,17 @@ function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; 
       onClick={onClose}
       aria-current={current ? "page" : undefined}
       data-menu-first={first ? "" : undefined}
-      className={`relative flex min-h-[88px] items-start gap-2.5 rounded-2xl border-[1.5px] p-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
+      className={`relative flex min-h-[72px] items-start gap-2 rounded-2xl border-[1.5px] p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
         current ? "border-[var(--accent)] bg-[var(--accent)]/5" : "border-[var(--near-black)] bg-white active:bg-[var(--accent)]/5"
       }`}
     >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[var(--accent)]/10 text-[var(--accent)]">
-        <Icon className="h-[18px] w-[18px]" />
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--accent)]/10 text-[var(--accent)]">
+        <Icon className="h-4 w-4" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[15px] leading-[1.2] font-semibold text-[var(--foreground)]">{label}</span>
-        <span className="mt-1 block text-xs leading-[1.35] text-[var(--muted-foreground)]">{description}</span>
-        {soon && <SoonPill className="mt-1.5 inline-block" />}
+        <span className="block text-[13px] leading-[1.2] font-semibold text-[var(--foreground)]">{label}</span>
+        <span className="mt-0.5 block text-[11px] leading-[1.3] text-[var(--muted-foreground)]">{description}</span>
+        {soon && <SoonPill className="mt-1 inline-block" />}
       </span>
     </MarketLink>
   );
@@ -75,7 +72,7 @@ function MenuSheet({ onClose, burgerRef, featureLinks, pathname, navItems, resou
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 pt-5 pb-6">
         <MenuGroup>
           <p className={MENU_LABEL}>{t("product")}</p>
-          <div className="mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             {entries.map((entry, index) => (
               <FeatureTile key={entry.key} entry={entry} first={index === 0} onClose={onClose} />
             ))}
@@ -114,19 +111,7 @@ function MenuSheet({ onClose, burgerRef, featureLinks, pathname, navItems, resou
   );
 }
 
-const subscribe = () => () => {};
-
-/** The menu the address asks for (`?menu=drill`), read in the browser. */
-export const currentMenu = (): MenuVariant => menuVariant(new URLSearchParams(window.location.search));
-
-/** Which menu the address asks for: the sheet on the server and until the browser answers. */
-export function useMenuVariant(): MenuVariant {
-  return useSyncExternalStore(subscribe, currentMenu, () => "sheet");
-}
-
-/** The phone menu, open or closed: the index sheet, or the drill-down when the address asks for it (`?menu=drill`; a `variant` wins). */
-export function MobileMenu({ variant, open, ...props }: MenuProps & Readonly<{ variant?: MenuVariant; open: boolean }>) {
-  const asked = useMenuVariant();
-
-  return <AnimatePresence>{open && ((variant ?? asked) === "drill" ? <MobileMenuDrill {...props} /> : <MenuSheet {...props} />)}</AnimatePresence>;
+/** The phone menu, open or closed: the index sheet. */
+export function MobileMenu({ open, ...props }: MenuProps & Readonly<{ open: boolean }>) {
+  return <AnimatePresence>{open && <MenuSheet {...props} />}</AnimatePresence>;
 }

@@ -64,14 +64,3 @@ export function holdPageWhileOpen({
     release();
   };
 }
-
-/** The three screens of the drill-down: the menu, then the Product list or the resources slid in over it. */
-export type DrillScreen = "root" | "product" | "resources";
-
-/**
- * What takes the focus when the drill-down shows `screen`: a screen's own way back, or, back on the menu, the row
- * that opened the screen just left (`opener`).
- */
-export function drillFocusSelector(screen: DrillScreen, opener: DrillScreen): string {
-  return screen === "root" ? `[data-drill-opens="${opener}"]` : `[data-drill-screen="${screen}"] [data-drill-first]`;
-}

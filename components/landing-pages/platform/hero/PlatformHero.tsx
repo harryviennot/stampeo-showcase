@@ -1,16 +1,11 @@
 import { LpSection } from "../../shared/LpSection";
-import { HeroVariantSwitch } from "./HeroVariantSwitch";
-import { WalletShelfHero } from "./WalletShelfHero";
 import { WalletStackHero } from "./WalletStackHero";
 
-/**
- * Platform's hero: the stack of wallet cards, or the straight shelf of nine when the address says `?hero=shelf`
- * (the two are shown for comparing until one is picked). One section either way.
- */
+/** Platform's hero section: the stack of wallet cards under its headline, with the trial and the demo link. */
 export function PlatformHero() {
   return (
     <LpSection section="hero" bare>
-      <HeroVariantSwitch stack={<WalletStackHero />} shelf={<WalletShelfHero />} />
+      <WalletStackHero />
     </LpSection>
   );
 }

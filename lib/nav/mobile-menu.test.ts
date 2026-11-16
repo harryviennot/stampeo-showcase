@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { DESKTOP_QUERY, closeWhenDesktop, drillFocusSelector, holdPageWhileOpen, isCurrentPath, menuMotion, type DesktopQuery } from "./mobile-menu";
+import { DESKTOP_QUERY, closeWhenDesktop, holdPageWhileOpen, isCurrentPath, menuMotion, type DesktopQuery } from "./mobile-menu";
 import { ROOT as SOURCE_ROOT, code } from "../testing/jsx-source";
 
 const ROOT = join(import.meta.dir, "..", "..");
@@ -146,18 +146,6 @@ describe("the page while a phone menu is open", () => {
     stop();
     press("Escape");
     expect(state.closed).toBe(0);
-  });
-});
-
-describe("where the focus goes in the drill-down", () => {
-  test("opening Product or Resources takes it to that screen's way back, whichever row opened it", () => {
-    expect(drillFocusSelector("product", "product")).toBe('[data-drill-screen="product"] [data-drill-first]');
-    expect(drillFocusSelector("resources", "resources")).toBe('[data-drill-screen="resources"] [data-drill-first]');
-  });
-
-  test("going back takes it to the row that opened the screen just left, not to the top of the menu", () => {
-    expect(drillFocusSelector("root", "resources")).toBe('[data-drill-opens="resources"]');
-    expect(drillFocusSelector("root", "product")).toBe('[data-drill-opens="product"]');
   });
 });
 
