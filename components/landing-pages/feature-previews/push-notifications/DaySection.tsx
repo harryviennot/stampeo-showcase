@@ -1,5 +1,6 @@
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
+import { NumberStamp } from "@/components/stamps/StampIcons";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
@@ -33,15 +34,14 @@ export function dayNodes() {
 const CARD_LAYOUT = { width: 300, cut: 227 };
 /** It is shown 148px wide, and 200px from `lg`. */
 const CARD_SHOWN = { narrowTo: 148, to: 200 };
-const CARD_CUT = "h-full overflow-hidden rounded-[18px] [mask-image:linear-gradient(to_bottom,#000_80%,transparent)]";
+const CARD_CUT = "h-full overflow-hidden rounded-[18px]";
 
 const RAIL =
   "absolute top-[46px] -bottom-2 left-[19px] border-l-[1.5px] border-dashed border-[var(--near-black)]/25 lg:left-1/2 lg:-translate-x-px";
 
-/** A step's number in an ink-framed disc; the last step, where the card changes level, is the orange one. */
+/** A step's number, the site's numbered stamp on a disc of the page's colour so the rail stops at its edge. */
 const DOT =
-  "absolute top-0 left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full border-[1.5px] border-[var(--near-black)] text-[15px] font-bold shadow-[0_2px_0_var(--near-black)] lg:static lg:col-start-2 lg:row-start-1 lg:justify-self-center";
-const DOT_FILL = { plain: "bg-white text-[var(--near-black)]", last: "bg-[var(--accent)] text-white" } as const;
+  "absolute top-0 left-0 z-10 flex rounded-full bg-[var(--cream)] lg:static lg:col-start-2 lg:row-start-1 lg:justify-self-center";
 
 function Notification({ banner }: Readonly<{ banner: Banner }>) {
   return (
@@ -95,8 +95,8 @@ export async function DaySection() {
             className="relative pb-10 pl-14 last:pb-0 lg:grid lg:grid-cols-[1fr_88px_1fr] lg:items-start lg:gap-0 lg:pb-14 lg:pl-0"
           >
             {index < nodes.length - 1 && <span aria-hidden className={RAIL} />}
-            <span aria-hidden className={`${DOT} ${DOT_FILL[index === nodes.length - 1 ? "last" : "plain"]}`}>
-              {index + 1}
+            <span aria-hidden className={DOT}>
+              <NumberStamp number={index + 1} size={40} color="var(--accent)" />
             </span>
 
             <ScrollReveal variant="right" delay={index * 60} className="lg:col-start-1 lg:row-start-1 lg:pr-4">

@@ -51,7 +51,7 @@ export function IdeasChips() {
         })}
       </div>
 
-      <div className={`mx-auto mt-6 max-w-[520px] p-4 sm:p-6 ${STAMPED_STAGE}`}>
+      <div className={`mx-auto mt-6 max-w-[520px] p-5 sm:p-6 ${STAMPED_STAGE}`}>
         <div className="grid">
           {IDEAS.map((idea) => {
             const active = idea.key === picked;

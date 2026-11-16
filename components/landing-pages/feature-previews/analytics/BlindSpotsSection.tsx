@@ -11,7 +11,7 @@ export function BlindSpotsSection() {
   const { eyebrow, title, lead } = ANALYTICS_PREVIEW.blindSpots;
 
   return (
-    <LpSection section="blind_spots" eyebrow={eyebrow} title={title} lead={lead} align="center" tinted>
+    <LpSection section="blind_spots" eyebrow={eyebrow} title={title} lead={lead} align="center">
       <BlindSpots />
     </LpSection>
   );

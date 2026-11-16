@@ -47,11 +47,11 @@ function Fold({
 
 /**
  * One question of the dashboard. A heading for a screen reader is always there; the visible title belongs to
- * Starter's sentence, because a chart is drawn with its own title. From `lg` the question sits on a grey tray.
+ * Starter's sentence, because a chart is drawn with its own title. The question sits straight on the stage.
  */
 function Tray({ title, className = "", children }: Readonly<{ title: string; className?: string; children: ReactNode }>) {
   return (
-    <div className={`lg:rounded-[20px] lg:bg-[var(--background-subtle)] lg:p-5 ${className}`}>
+    <div className={className}>
       <h3 className="sr-only">{title}</h3>
       {children}
     </div>
@@ -61,7 +61,7 @@ function Tray({ title, className = "", children }: Readonly<{ title: string; cla
 /** A chart: thumbnail-sized on a phone and zoomed up under the sentence's place, drawn whole from `lg`. The room for its shadow is outside the zoom. */
 function Chart({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <div className="pb-4">
+    <div className="pb-7 lg:pb-6">
       <div className="flex justify-center max-lg:[zoom:var(--stack-zoom)]" style={{ "--stack-zoom": STACK_WIDTH / THUMB_WIDTH } as CSSProperties}>
         {children}
       </div>
@@ -81,7 +81,7 @@ export function Ladder() {
   const plan = plans[TIERS.indexOf(tier)];
 
   return (
-    <div className={`mx-auto max-w-[1160px] p-4 sm:p-8 lg:p-10 ${STAMPED_STAGE}`}>
+    <div className={`mx-auto max-w-[1160px] p-5 sm:p-8 lg:p-10 ${STAMPED_STAGE}`}>
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <Segmented
           size="lg"
@@ -100,7 +100,7 @@ export function Ladder() {
       </div>
 
       <div role="tabpanel" aria-label={plan.label} className="mt-6 flex flex-col lg:mt-8">
-        <ul className="grid lg:grid-cols-3 lg:gap-4">
+        <ul className="grid lg:grid-cols-3 lg:gap-8">
           {rows.map((row) => {
             const sentence = STARTER_SENTENCES[row.key];
 
@@ -131,7 +131,7 @@ export function Ladder() {
         </ul>
 
         <Fold active={view.cohorts || view.location} extras>
-          <div className="grid lg:grid-cols-6 lg:gap-4 lg:pt-4">
+          <div className="grid lg:grid-cols-6 lg:gap-8 lg:pt-4">
             <Tray title={proRows[0].title} className="mt-5 border-t border-[var(--border)] pt-5 lg:col-span-2 lg:col-start-2 lg:mt-0 lg:border-t-0">
               <Chart>
                 <CohortsMini />

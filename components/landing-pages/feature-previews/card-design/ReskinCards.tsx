@@ -23,7 +23,7 @@ const CARD_HEIGHT = 385;
 /** Each role's look: size and opacity per breakpoint. A neighbour is invisible on a phone, where the live card stands alone. */
 const ROLE: Record<ReskinRole, string> = {
   live: "opacity-100 [--s:0.8667] lg:[--s:1.0667]",
-  side: "max-lg:opacity-0 lg:opacity-45 [--s:0.8667] lg:[--s:0.7333]",
+  side: "max-lg:opacity-0 lg:opacity-60 [--s:0.8667] lg:[--s:0.7333]",
   hidden: "opacity-0 [--s:0.8667] lg:[--s:0.7333]",
 };
 const LAYER: Record<ReskinRole, number> = { live: 30, side: 20, hidden: 10 };
@@ -50,7 +50,7 @@ const Slot = memo(function Slot({ card, offset, role }: SlotProps) {
 
   return (
     <div
-      className={`absolute top-1/2 left-1/2 transition-[transform,opacity] ease-out [transition-duration:450ms,300ms] ${ROLE[role]}`}
+      className={`absolute top-1/2 left-1/2 transition-[transform,opacity] ease-[cubic-bezier(0.2,0.8,0.2,1)] [transition-duration:450ms,300ms] ${ROLE[role]}`}
       style={{
         width: CARD_WIDTH,
         height: CARD_HEIGHT,

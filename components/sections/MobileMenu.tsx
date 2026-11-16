@@ -20,7 +20,7 @@ import {
   type MenuProps,
 } from "./MobileMenuParts";
 
-/** A feature as a tile: its icon, its name and its one line; Soon sits on the tile's top edge, the current page is orange. */
+/** A feature as a tile: its icon, its name and its one line, then Soon where the feature is coming; the current page is orange. */
 function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; first: boolean; onClose: () => void }>) {
   const { Icon, label, description, soon, current, href, market } = entry;
 
@@ -41,8 +41,8 @@ function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; 
       <span className="min-w-0 flex-1">
         <span className="block text-[15px] leading-[1.2] font-semibold text-[var(--foreground)]">{label}</span>
         <span className="mt-1 block text-xs leading-[1.35] text-[var(--muted-foreground)]">{description}</span>
+        {soon && <SoonPill className="mt-1.5 inline-block" />}
       </span>
-      {soon && <SoonPill className="absolute -top-2.5 right-3" />}
     </MarketLink>
   );
 }
