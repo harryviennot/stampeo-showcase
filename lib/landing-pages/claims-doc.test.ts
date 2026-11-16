@@ -22,7 +22,7 @@ const TRACED: Array<[copyPath: string, words: RegExp, inDoc: string]> = [
 /** The claims the doc marks FLAGGED: where the copy says each, in which words, the words the doc flags it under, and why it stays open. */
 const OPEN_FLAGS: Array<{ inDoc: string; copyPath: string; words: RegExp; why: string }> = [
   { inDoc: "joined in the last month", copyPath: "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[3].body", words: /joined in the last month/, why: "join-date targeting on every plan rests on STA-549 and the pricing page; STAMPEO.md still says Starter has no campaigns" },
-  { inDoc: "Removed the card", copyPath: "PROMOTIONAL_CAMPAIGNS_PREVIEW.delivery.metrics[3].label", words: /Removed the card/, why: "the dashboard's own wording, not in STAMPEO.md" },
+  { inDoc: "Removed the card", copyPath: "PROMOTIONAL_CAMPAIGNS_PREVIEW.delivery.after.facts[1].text", words: /removed the card/, why: "the dashboard's own wording, not in STAMPEO.md" },
   { inDoc: "check the distance itself", copyPath: "GEOLOCATION_PREVIEW.privacy.facts[0].text", words: /check the distance itself/, why: "from the live geolocation page and the pass generator, not STAMPEO.md" },
   { inDoc: "never receive their location", copyPath: "GEOLOCATION_PREVIEW.privacy.facts[1].text", words: /never receive their location/, why: "from the live geolocation page, not STAMPEO.md" },
   { inDoc: "turn it off in their phone's settings", copyPath: "GEOLOCATION_PREVIEW.privacy.facts[2].text", words: /turn it off in their phone's settings/, why: "from the live geolocation page, not STAMPEO.md" },

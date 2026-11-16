@@ -47,7 +47,7 @@ Each is kept on purpose, with the reason; `claims-doc.test.ts` fails if a row he
 | Claim (copy path) | Source |
 |---|---|
 | FLAGGED: Send only to customers who joined in the last month (`PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[3].body`) | Join-date targeting on every plan is STA-549 and the live campaigns hero ("basic segmentation"); the pricing page's segmentation row says "Basic (date-based)" for Starter and Growth and "Advanced" for Pro. STAMPEO.md still says Starter has no campaigns |
-| FLAGGED: Removed the card, counted apart (`delivery.metrics[3]`, `delivery.tab.facts[1]`) | Web `notifications.json` `detail.passRemoved`, not STAMPEO.md |
+| FLAGGED: Removed the card, counted apart (`delivery.after.facts[1]`; the report's count reads "Card removed", `delivery.missed[1]`) | Web `notifications.json` `detail.passRemoved`, not STAMPEO.md |
 | FLAGGED: Their phone will check the distance itself (`GEOLOCATION_PREVIEW.privacy.facts[0]`) | The live geolocation page's privacy points and `pass_generator.py:27-31` (iOS evaluates `locations[]` on the device); not STAMPEO.md |
 | FLAGGED: We will never receive their location (`privacy.facts[1]`) | The live geolocation page (`messages/en/features.json` `geolocalisation.privacy.points[0]`, "Stampeo collects no location data from your customers"); not STAMPEO.md |
 | FLAGGED: They will be able to turn it off in their phone's settings (`privacy.facts[2]`) | The live geolocation page (`geolocalisation.privacy.points[2]`); not STAMPEO.md |

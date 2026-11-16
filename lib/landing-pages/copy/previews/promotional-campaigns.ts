@@ -97,15 +97,29 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     eyebrow: "After you send",
     title: "See how many customers got it.",
     lead: "Each campaign shows how many customers got it in Apple Wallet and Google Wallet.",
-    /** One sample campaign, as the dashboard reports it: the label over the card and its total, the sum of the four counts. */
-    card: { label: "Last campaign", total: "716 customers" },
-    metrics: [
-      { label: "Got it in Apple Wallet", value: "412" },
-      { label: "Got it in Google Wallet", value: "268" },
-      { label: "Over Google's daily limit", value: "14" },
-      { label: "Removed the card", value: "22" },
+    /**
+     * The report of the last campaign, the first idea, in the dashboard's own words (its campaign detail sheet).
+     * `deliveryRate` is filled with the share of reachable customers the two wallets reached.
+     */
+    report: {
+      status: "Sent",
+      sentAt: "Sent at",
+      time: "2:30 PM",
+      stats: "Delivery",
+      deliveryRate: "{rate}% delivered",
+      reachable: "reachable",
+      sendAgain: "Send again",
+    },
+    /** Where it landed, in each wallet; with the two counts it missed, the customers it could reach. */
+    delivered: [
+      { label: "Apple Wallet", value: 412 },
+      { label: "Google Wallet", value: 268 },
     ],
-    tab: {
+    missed: [
+      { label: "Over Google's daily limit", value: 14 },
+      { label: "Card removed", value: 22 },
+    ],
+    after: {
       title: "After every campaign",
       facts: [
         { text: "How many got it, in Apple Wallet and in Google Wallet" },

@@ -28,6 +28,7 @@ export {
   List as MenuIcon,
   X,
   X as XMarkIcon,
+  XCircle as XCircleIcon,
   Minus,
   FileText as DocumentIcon,
   EyeSlash as EyeSlashIcon,

@@ -14,7 +14,7 @@ import { FEATURE_CATEGORIES } from "../../pricing-features";
 import { PLAN_FACTS, TIERS } from "../../plans/plan-facts";
 import { loadCatalog } from "../../testing/catalogs";
 import { renderPreviewPage, sectionOf } from "../../testing/preview-page";
-import { decodeEntities, expectInOrder, pictures, renderEn, textOf } from "../../testing/render-en";
+import { expectInOrder, pictures, renderEn, textOf } from "../../testing/render-en";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "../copy/previews/promotional-campaigns";
 import { SAMPLE_BUSINESS, SHARED } from "../copy/shared";
 
@@ -156,30 +156,62 @@ describe("ideas: give them a reason to come in today", () => {
 
 describe("delivery: see how many customers got it", () => {
   const html = () => renderEn(<DeliverySection />);
-  const metrics = COPY.delivery.metrics.map((metric) => ({ label: metric.label, value: Number(metric.value) }));
-  const total = metrics.reduce((sum, metric) => sum + metric.value, 0);
+  const { report, delivered, missed, after } = COPY.delivery;
+  const campaign = COPY.ideas.rows[0];
+  const counts = [...delivered, ...missed];
+  const reached = delivered.reduce((sum, row) => sum + row.value, 0);
+  const reachable = counts.reduce((sum, row) => sum + row.value, 0);
+  const rate = Math.round((100 * reached) / reachable);
 
-  test("is one white card: no tabs, nothing hidden", () => {
-    expect(html()).not.toContain('role="tablist"');
-    expect(html()).not.toMatch(/\binert\b/);
+  test("opens on its header, then the last campaign's report as the dashboard shows it, then what every campaign shows", () => {
+    expectInOrder(html(), [
+      COPY.delivery.eyebrow,
+      COPY.delivery.title,
+      COPY.delivery.lead,
+      campaign.name,
+      report.sentAt,
+      report.time,
+      report.status,
+      SAMPLE_BUSINESS,
+      campaign.banner.body,
+      report.stats,
+      ...counts.flatMap((row) => [row.label, String(row.value)]),
+      report.sendAgain,
+      after.title,
+      ...after.facts.map((fact) => fact.text),
+    ]);
   });
 
-  test("the card names the last campaign and its total, and the sample adds up: 716 customers split by Apple, Google and the rest", () => {
-    expectInOrder(html(), [COPY.delivery.card.label, "716", "customers", ...metrics.flatMap((metric) => [metric.label, String(metric.value)])]);
-    expect(total).toBe(716);
-    expect(COPY.delivery.card.total).toBe(`${total} customers`);
+  test("the rate it prints is the share of reachable customers the two wallets reached, and the only percentage on it", () => {
+    expect([reached, reachable, rate]).toEqual([680, 716, 95]);
+    expectInOrder(html(), [`${rate}%`, report.deliveryRate.replace("{rate}%", "").trim(), `${reached} / ${reachable}`, report.reachable]);
+    expect(textOf(html()).match(/\d+(?:\.\d+)?\s*%/g)).toEqual([`${rate}%`]);
   });
 
-  test("the words beside it say what every campaign shows, in the copy's order", () => {
-    expectInOrder(html(), [COPY.delivery.eyebrow, COPY.delivery.title, COPY.delivery.lead, COPY.delivery.tab.title, ...COPY.delivery.tab.facts.map((fact) => fact.text)]);
+  test("names both wallets with what each delivered, and counts the customers it missed apart", () => {
+    expect(delivered.map((row) => row.label)).toEqual(["Apple Wallet", "Google Wallet"]);
+    expect(missed.map((row) => row.label)).toEqual(["Over Google's daily limit", "Card removed"]);
+    for (const row of counts) expect(textOf(html())).toContain(`|${row.label}|${row.value}|`);
   });
 
-  test("the bar is cut in proportion to the four counts, and the whole card is read out as one picture", () => {
-    const widths = [...html().matchAll(/data-segment="([^"]+)"[^>]*style="width:([\d.]+)%/g)].map((match) => [match[1], Number(match[2])] as const);
+  test("its message is the slow-afternoon notification from Aurevo, with the shop's icon, once", () => {
+    expect(campaign.banner).toEqual(COPY.heroBanner);
+    expect(times(html(), campaign.banner.body)).toBe(1);
+    expect(html().match(/data-shop-icon/g)).toHaveLength(1);
+  });
 
-    expect(widths.map(([label]) => decodeEntities(label))).toEqual(metrics.map((metric) => metric.label));
-    widths.forEach(([, width], index) => expect(width).toBeCloseTo((100 * metrics[index].value) / total, 1));
-    expect(pictures(html())).toEqual([expect.stringMatching(/Last campaign.*716 customers.*Got it in Apple Wallet 412/)]);
+  test("the report is read out as one picture: the campaign, its message, the rate and the four counts", () => {
+    const [alt, ...more] = pictures(html());
+
+    expect(more).toEqual([]);
+    for (const words of [campaign.name, campaign.banner.body, report.deliveryRate.replace("{rate}", String(rate)), ...counts.map((row) => `${row.label} ${row.value}`)]) {
+      expect({ words, said: alt?.includes(words) }).toEqual({ words, said: true });
+    }
+  });
+
+  test("is a picture of the dashboard, not a control or a price list: nothing to press, no plan named, no sample caption", () => {
+    expect(html()).not.toMatch(/<(?:button|a|input)\b|role="(?:button|tab|tablist)"|\binert\b/);
+    expect(textOf(html())).not.toMatch(/\b(?:Starter|Growth|Pro)\b|sample data/i);
   });
 });
 

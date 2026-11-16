@@ -202,20 +202,22 @@ describe("Platform's measured figure is the retention study's", () => {
 
 describe("percentages a component draws (AC12)", () => {
   /**
-   * The components that print a percentage with no source line: drawn sample dashboards, not claims. Each reads
-   * Platform's `ANALYTICS`, so a preview's sample café shows the numbers Platform's does.
+   * The components that print a percentage with no source line: drawn sample dashboards, not claims. Each computes
+   * it from the sample it reads: Platform's `ANALYTICS`, so a preview's sample café shows the numbers Platform's does,
+   * or the campaigns preview's counts for its campaign report.
    */
-  const DRAWN_SAMPLE_DASHBOARDS = [
-    "components/landing-pages/platform/DeliverAnalytics.tsx",
-    "components/landing-pages/feature-previews/analytics/KeyNumbersCard.tsx",
-    "components/landing-pages/feature-previews/analytics/NumberCharts.tsx",
-    "components/landing-pages/feature-previews/analytics/VisitsChart.tsx",
+  const DRAWN_SAMPLE_DASHBOARDS: Array<[file: string, sample: RegExp]> = [
+    ["components/landing-pages/platform/DeliverAnalytics.tsx", /\bANALYTICS\b/],
+    ["components/landing-pages/feature-previews/analytics/KeyNumbersCard.tsx", /\bANALYTICS\b/],
+    ["components/landing-pages/feature-previews/analytics/NumberCharts.tsx", /\bANALYTICS\b/],
+    ["components/landing-pages/feature-previews/analytics/VisitsChart.tsx", /\bANALYTICS\b/],
+    ["components/landing-pages/feature-previews/promotional-campaigns/DeliveryCard.tsx", /\bPROMOTIONAL_CAMPAIGNS_PREVIEW\b/],
   ];
 
-  test.each(DRAWN_SAMPLE_DASHBOARDS)("%s is a drawn sample dashboard: its percentages are ANALYTICS', never typed in", (file) => {
+  test.each(DRAWN_SAMPLE_DASHBOARDS)("%s is a drawn sample dashboard: its percentages come from %s, never typed in", (file, sample) => {
     const source = code(join(ROOT, file));
 
-    expect(source).toMatch(/\bANALYTICS\b/);
+    expect(source).toMatch(sample);
     expect(source).not.toMatch(/(?<![\w[./#-])\d+(?:\.\d+)?\s*%/);
   });
 });

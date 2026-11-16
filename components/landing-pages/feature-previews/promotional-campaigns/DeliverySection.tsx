@@ -1,11 +1,12 @@
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
-import { ToggleCard } from "../../platform/ToggleCard";
+import { CELL_TITLE } from "../../platform/classes";
+import { FactList } from "../../shared/FactList";
 import { LpSection } from "../../shared/LpSection";
 import { DeliveryCard } from "./DeliveryCard";
 
-/** The delivery card beside its three facts, on one white surface as wide as the page's other cards. */
+/** The last campaign's report on its own white card, and what every campaign shows beside it from `lg` (under it on a phone). */
 export function DeliverySection() {
-  const { tab } = COPY.delivery;
+  const { after } = COPY.delivery;
 
   return (
     <LpSection
@@ -15,11 +16,14 @@ export function DeliverySection() {
       lead={COPY.delivery.lead}
       align="center"
     >
-      <div className="mx-auto max-w-[1040px]">
-        <ToggleCard
-          ariaLabel={COPY.delivery.title}
-          tabs={[{ key: "delivery", label: tab.title, title: tab.title, facts: tab.facts, visual: <DeliveryCard /> }]}
-        />
+      <div className="mx-auto grid max-w-[520px] gap-10 text-left lg:max-w-[1040px] lg:grid-cols-12 lg:items-center lg:gap-16">
+        <div className="lg:col-span-7">
+          <DeliveryCard />
+        </div>
+        <div className="lg:col-span-5">
+          <h3 className={`${CELL_TITLE} text-balance lg:text-[2rem]`}>{after.title}</h3>
+          <FactList facts={after.facts} className="mt-6" />
+        </div>
       </div>
     </LpSection>
   );
