@@ -52,7 +52,7 @@ Each is kept on purpose, with the reason; `claims-doc.test.ts` fails if a row he
 | FLAGGED: We will never receive their location (`privacy.facts[1]`) | The live geolocation page (`messages/en/features.json` `geolocalisation.privacy.points[0]`, "Stampeo collects no location data from your customers"); not STAMPEO.md |
 | FLAGGED: They will be able to turn it off in their phone's settings (`privacy.facts[2]`) | The live geolocation page (`geolocalisation.privacy.points[2]`); not STAMPEO.md |
 | FLAGGED: The card already in their wallet will pick it up with its next update (`faq.items[1]`) | `pass_generator.py:39-41`: a card already in a wallet takes new `pass.json` content at its next fetch (a stamp, a campaign or a manual refresh). That the launch design uses this path is not confirmed, so the answer stays until it is |
-| FLAGGED: A laptop runs the web scanner (`MOBILE_SCANNER_PREVIEW.ways.cells[1].devices[2]`, `hero.alt`) | Harry's statement, 16 Nov 2026. STAMPEO.md says a phone or a tablet |
+| FLAGGED: A laptop runs the web scanner (`MOBILE_SCANNER_PREVIEW.ways.cells[1].devices[2]`) | Harry's statement, 16 Nov 2026. STAMPEO.md says a phone or a tablet |
 | FLAGGED: Visits split into first visits and returning customers (`ANALYTICS_PREVIEW.charts.rows[0]`) | Web `analytics.json` `visits.legend`, not STAMPEO.md |
 | FLAGGED: Your busiest slot and quietest open hour (`charts.rows[3]`) | Web `analytics.json` `busiest.rows`, not STAMPEO.md |
 | FLAGGED: Every week, every two weeks, about once a month, or came once (`charts.rows[4]`) | Web `analytics.json` `frequency.buckets`, not STAMPEO.md |

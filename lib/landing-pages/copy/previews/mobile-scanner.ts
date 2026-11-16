@@ -17,8 +17,7 @@ export const MOBILE_SCANNER_PREVIEW = {
     /** The second action, to the counter section. */
     secondary: "See it at the counter",
     /** What the hero's picture shows, for a screen reader. */
-    alt: "The Stampeo Scanner app on a phone, and the web scanner open in a laptop browser, both showing a customer's card.",
-  } satisfies HeroCopy & { secondary: string; alt: string },
+  } satisfies HeroCopy & { secondary: string },
   counter: {
     eyebrow: "At the counter",
     title: "Add stamps, points or rewards in one scan.",

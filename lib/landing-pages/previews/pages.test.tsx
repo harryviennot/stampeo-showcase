@@ -16,7 +16,6 @@ import { expectInOrder, pictures, textOf } from "../../testing/render-en";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
-import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
 import { SHARED, STAMP_BANNER } from "../copy/shared";
@@ -125,11 +124,11 @@ describe("the hero each page opens with", () => {
     expect(html).toContain('id="anatomy"');
   });
 
-  test("the scanner shows the real Scanner loop from the first paint beside the web scanner, the finished stamp being the only other frame the page uses", async () => {
+  test("the scanner shows the real Scanner loop alone, from the first paint", async () => {
     const html = await hero("platform/mobile-scanner");
 
     expect(html).toContain(scannerLoopFiles("en").first);
-    expect(pictures(html)).toEqual([MOBILE_SCANNER_PREVIEW.hero.alt, expect.stringMatching(/Scanner app adding a stamp/)]);
+    expect(pictures(html)).toEqual([expect.stringMatching(/Scanner app adding a stamp/)]);
   });
 
   test("notifications show Aurevo's stamp notification from the first paint, as the one picture the copy names", async () => {

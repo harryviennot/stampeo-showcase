@@ -39,11 +39,12 @@ describe("hero: the words say the choice, the picture shows both ways at once", 
     expect([...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((link) => link[1])).toEqual(["/en/onboarding", "#counter"]);
   });
 
-  test("one picture, named for a screen reader, holds the Scanner app on a phone and the web scanner in a browser", async () => {
+  test("the picture is the Scanner app alone on a phone: no web scanner window beside it", async () => {
     const html = await hero();
 
-    expect(pictures(html)).toContain(COPY.hero.alt);
-    expect(textOf(html)).toContain("scan.stampeo.app");
+    expect(html).toContain(scannerLoopFiles("en").first);
+    expect(textOf(html)).not.toContain("scan.stampeo.app");
+    expect(html).not.toMatch(/role="img"/);
   });
 
   test("the phone plays the real Scanner loop from the first paint", async () => {

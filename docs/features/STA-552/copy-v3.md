@@ -354,7 +354,7 @@ Primary in the meta title, the H1 and the ways H2 ("The scanner app, or just a w
 | `meta.title` | Loyalty card scanner app for iPhone and Android \| Stampeo | 57/60 |
 | `meta.description` | Scan loyalty cards with the free Stampeo Scanner app for iPhone and Android, or the web scanner in any browser. No new hardware. Free trial. | 140/160 |
 
-### Hero (split: words left, the app on a phone and the web scanner in a browser right; no eyebrow)
+### Hero (split: words left, the Scanner app video on a phone right; no eyebrow. Harry, 16 Nov: the hero shows only the mobile video)
 
 | Field | Text | Chars |
 |---|---|---|
@@ -364,7 +364,6 @@ Primary in the meta title, the H1 and the ways H2 ("The scanner app, or just a w
 | `hero.primary` | Start my free trial |  |
 | `hero.secondary` | See it at the counter (to #counter; the demo section is removed) |  |
 | `hero.reassurance` | {trialDays} days free · Cancel anytime |  |
-| `hero.alt` | The Stampeo Scanner app on a phone, and the web scanner open in a laptop browser, both showing a customer's card. **[CHECK: laptop, see the ways section]** |  |
 
 ### The counter (interactive)
 
