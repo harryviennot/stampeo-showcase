@@ -6,26 +6,28 @@ interface NearbyBanner extends Banner {
   title: string;
 }
 
-interface StatusColumn {
-  title: string;
-  facts: Fact[];
-}
-
 /**
  * The geolocation preview. Geolocation is not live: every claim about it is in the future tense or sits under a
- * "coming soon" label, with no date. What is live today is said as live, apart from it.
+ * "coming soon" label, with no date, no plan and no wallet named.
  */
 export const GEOLOCATION_PREVIEW = {
   meta: {
-    title: "Geolocation for loyalty cards, coming soon | Stampeo",
+    title: "Geolocation notifications, coming soon | Stampeo",
     description:
-      "Coming soon: your loyalty card will show on a customer's lock screen near your shop. Start your card today.",
+      "Coming soon: location-based notifications that will put your loyalty card on a customer's lock screen when they walk near your shop.",
   } satisfies PageMeta,
   hero: {
-    h1: "Soon, your card will appear when they walk by.",
-    accent: "when they walk by.",
-    sub: "Coming soon. Make your card now and it's ready the day it launches.",
-  } satisfies HeroCopy,
+    h1: "Geolocation notifications, coming soon.",
+    accent: "coming soon.",
+    sub: "When a customer walks near your shop, your loyalty card will appear on their lock screen.",
+    /** The second action, to the steps. */
+    secondary: "See how it will work",
+    /** What the hero's picture shows, for a screen reader. */
+    alt: "A lock screen with Aurevo's loyalty card and the line: Aurevo is around the corner. Your 6th coffee is waiting. 2 stamps to a free one.",
+  } satisfies HeroCopy & { secondary: string; alt: string },
+  /** The small label under the hero's phone on a phone. */
+  heroChip: "Coming soon",
+  /** The handwritten note beside the hero's phone from `lg`. */
   heroNote: "coming soon",
   /** The hero phone's lock screen: Aurevo's own words, never Stampeo's. */
   banner: {
@@ -33,45 +35,24 @@ export const GEOLOCATION_PREVIEW = {
     title: "Aurevo is around the corner",
     body: "Your 6th coffee is waiting. 2 stamps to a free one.",
   } satisfies NearbyBanner,
-  status: {
-    eyebrow: "Where it stands",
-    title: "Live today, and what's next.",
-    lead: "What your card does today, and what geolocation will add.",
-    today: {
-      title: "Today",
-      facts: [
-        { text: "Your card in Apple Wallet and Google Wallet" },
-        { text: "A notification on every stamp and reward" },
-        { text: "Broadcasts to every card" },
-      ],
-    } satisfies StatusColumn,
-    soon: {
-      title: "Coming soon",
-      facts: [
-        { text: "Your card on their lock screen near your shop" },
-        { text: "Built from your shop's address" },
-        { text: "Nothing for your customers to set up" },
-      ],
-    } satisfies StatusColumn,
-  },
   how: {
     eyebrow: "How it will work",
-    title: "Your address will do the work.",
-    lead: "You'll add your shop once. Their phone will do the rest.",
+    title: "How geolocation notifications will work.",
+    lead: "You'll add your address once. Their phone will do the rest, with no app.",
     cells: [
-      { title: "Add your shop", body: "Your address, from your dashboard." },
-      { title: "On their card", body: "Your address will travel inside their card." },
-      { title: "They walk by", body: "Their phone will show your card, on its own." },
+      { title: "Add your shop's address", body: "You'll type it once in your dashboard." },
+      { title: "A customer walks nearby", body: "Their phone will notice they're close to your shop." },
+      { title: "Their card appears on their lock screen", body: "One tap will open it, ready to scan at the counter." },
     ] satisfies Tile[],
   } satisfies EyebrowSection & { cells: Tile[] },
   privacy: {
     eyebrow: "Privacy",
     title: "Their location will stay on their phone.",
-    lead: "The card will carry your shop's address, never their whereabouts.",
+    lead: "The card will carry your shop's address. We will never see where they are.",
     facts: [
       { text: "Their phone will check the distance itself" },
       { text: "We will never receive their location" },
-      { text: "They will be able to switch it off in their phone's settings" },
+      { text: "They will be able to turn it off in their phone's settings" },
     ] satisfies Fact[],
     /** What the drawing shows, for a screen reader. */
     alt: "A phone inside a dashed ring around a shop. A line to the cloud is cut: no location will leave the phone.",
@@ -80,26 +61,30 @@ export const GEOLOCATION_PREVIEW = {
     title: "Questions about geolocation",
     items: [
       {
-        question: "When does it launch?",
+        question: "When will it launch?",
         answer: "We don't have a date yet. When it's ready, we'll announce it on our What's new page.",
-      },
-      {
-        question: "What can I do today?",
-        answer: "Make your card now, with stamps or points. Geolocation will be ready for it when it launches.",
       },
       {
         question: "Will my customers need a new card?",
         answer: "No. The card already in their wallet will pick it up with its next update.",
+      },
+      {
+        question: "Will my customers have to set anything up?",
+        answer: "No. There will be no app to install. Their phone will handle it, and they will be able to turn it off in their settings.",
+      },
+      {
+        question: "Can I start before it launches?",
+        answer: "Yes. Your card, stamps, rewards and notifications work today, and geolocation will join them when it's ready.",
       },
     ] satisfies FaqItem[],
   },
   band: {
     title: "Get your card ready today.",
     accent: "ready today.",
-    sub: "Start with stamps or points now. Geolocation will join your card when it launches.",
+    sub: "Start with stamps or points now. Your card will be ready when geolocation launches.",
   } satisfies BandCopy,
   /** The links under the page lead to the ways to bring customers back that are live today. */
   related: {
-    title: "Bring them back today.",
+    title: "Ways to bring customers back today.",
   },
 } as const;

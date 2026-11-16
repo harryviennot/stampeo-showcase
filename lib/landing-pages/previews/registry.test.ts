@@ -20,11 +20,11 @@ import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPag
 /** The sections of each preview, in the order of the UX brief: each page opens on its hero and ends on the cream card and its links. */
 const SECTIONS: Record<PreviewSlug, string[]> = {
   "platform/card-design": ["hero", "icons", "playground", "palettes", "anatomy", "stamps", "wallets", "faq", "final_cta", "related"],
-  "platform/mobile-scanner": ["hero", "counter", "ways", "team", "demo", "final_cta", "related"],
+  "platform/mobile-scanner": ["hero", "counter", "ways", "final_cta", "related"],
   "platform/push-notifications": ["hero", "day", "wallets", "editor", "demo", "final_cta", "related"],
   "platform/analytics": ["hero", "blind_spots", "charts", "customers", "dashboard", "final_cta", "related"],
   "platform/promotional-campaigns": ["hero", "composer", "numbers", "ideas", "delivery", "faq", "final_cta", "related"],
-  "platform/geolocation": ["hero", "status", "how", "privacy", "faq", "final_cta", "related"],
+  "platform/geolocation": ["hero", "how", "privacy", "faq", "final_cta", "related"],
 };
 
 describe("the registry (AC1)", () => {
@@ -54,8 +54,8 @@ describe("the registry (AC1)", () => {
     for (const id of ["pricing", "sectors", "blog", "marquee"]) expect(LANDING_PAGES[slug].sections).not.toContain(id);
   });
 
-  test("a live demo is on the scanner and notifications previews only", () => {
-    expect(PREVIEW_SLUGS.filter(hasDemoSection)).toEqual(["platform/mobile-scanner", "platform/push-notifications"]);
+  test("a live demo is on the notifications preview only", () => {
+    expect(PREVIEW_SLUGS.filter(hasDemoSection)).toEqual(["platform/push-notifications"]);
   });
 
   test.each(PREVIEW_SLUGS)("%s takes its head, hero and closing card from its copy", (slug) => {

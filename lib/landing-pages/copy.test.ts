@@ -267,20 +267,17 @@ describe("the six previews' copy", () => {
     expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(5);
   });
 
-  test("each sibling link says what its feature is in the words its own preview's headline uses", () => {
+  test("each sibling link is a feature's name and one plain line of at most 50 characters, with no plan in it", () => {
     const { cards } = PREVIEW_SHARED.related;
-    const HEROES = {
-      cardDesign: "platform/card-design",
-      mobileScanner: "platform/mobile-scanner",
-      pushNotifications: "platform/push-notifications",
-      analytics: "platform/analytics",
-      promotionalCampaigns: "platform/promotional-campaigns",
-      geolocation: "platform/geolocation",
-    } as const;
+    const KEYS = ["cardDesign", "mobileScanner", "pushNotifications", "analytics", "promotionalCampaigns", "geolocation"];
 
-    expect(Object.keys(cards).sort()).toEqual(Object.keys(HEROES).sort());
-    for (const [key, slug] of Object.entries(HEROES)) {
-      expect({ key, line: cards[key as keyof typeof cards].line }).toEqual({ key, line: LANDING_PAGES[slug].hero.h1 });
+    expect(Object.keys(cards).sort()).toEqual([...KEYS].sort());
+    for (const key of KEYS) {
+      const { title, line } = cards[key as keyof typeof cards];
+
+      expect({ key, set: title.length > 0 && line.length > 0 }).toEqual({ key, set: true });
+      expect({ key, short: line.length <= 50 }).toEqual({ key, short: true });
+      expect({ key, plan: /Starter|Growth|\bPro\b|every plan|all plans/i.test(`${title} ${line}`) }).toEqual({ key, plan: false });
     }
     expect(PREVIEW_SHARED.related.title.length).toBeLessThanOrEqual(44);
   });
@@ -314,28 +311,25 @@ describe("the geolocation preview says it is coming (AC12)", () => {
   const NOT_FUTURE: Array<[path: RegExp, why: string]> = [
     [/^hero\.accent$/, "words of the headline, which is future"],
     [/^band\.accent$/, "words of the closing line, an instruction"],
+    [/^hero\.alt$/, "the description of the picture, for a screen reader"],
     [/^banner\./, "the sample café's own notification: the owner's words, not a claim about the product"],
-    [/^status\.(?:eyebrow|title)$/, "the section's label and title, which name the two columns"],
-    [/^status\.today\./, "the Today column: what is live is said as live"],
-    [/^status\.soon\.facts/, "noun phrases listed under the Coming soon heading"],
-    [/^how\.cells\[0\]\.body$/, "a noun phrase naming where the owner adds the address"],
     [/^privacy\.eyebrow$/, "a label"],
     [/^faq\.title$/, "a label"],
     [/^faq\.items\[\d\]\.question$/, "a question asks, it does not claim"],
     [/^band\.title$/, "an instruction to the visitor"],
     [/^related\.title$/, "an instruction to the visitor"],
   ];
-  /** The step names, each exempt only while it reads as it does here: verbless, an instruction, or what the customer does. */
+  /** The step names, each exempt only while it reads as it does here: an instruction, or what the customer does. */
   const STEP_NAMES: Record<string, string> = {
-    "how.cells[0].title": "Add your shop",
-    "how.cells[1].title": "On their card",
-    "how.cells[2].title": "They walk by",
+    "how.cells[0].title": "Add your shop's address",
+    "how.cells[1].title": "A customer walks nearby",
+    "how.cells[2].title": "Their card appears on their lock screen",
   };
   const relative = (line: { path: string }) => line.path.replace("GEOLOCATION_PREVIEW.", "");
   const exempt = (line: { path: string; value: string }) =>
     NOT_FUTURE.some(([pattern]) => pattern.test(relative(line))) || STEP_NAMES[relative(line)] === line.value;
 
-  test("every line of the page speaks of what will be, but the labels, questions and live facts the list above gives a reason for", () => {
+  test("every line of the page speaks of what will be, but the labels, questions and step names the list above gives a reason for", () => {
     const claims = lines().filter((line) => !exempt(line));
 
     expect(claims.length).toBeGreaterThan(15);
@@ -351,17 +345,15 @@ describe("the geolocation preview says it is coming (AC12)", () => {
     expect(Object.entries(STEP_NAMES).filter(([path, name]) => text(path) !== name)).toEqual([]);
   });
 
-  test("the headline says soon, the sub says Coming soon and no plan, and no label sits above the headline", () => {
-    expect(GEOLOCATION_PREVIEW.hero.h1).toMatch(/^Soon,/);
-    expect(GEOLOCATION_PREVIEW.hero.sub).toMatch(/^Coming soon\b/);
+  test("the headline says coming soon, the sub says what it will do, and no label sits above the headline", () => {
+    expect(GEOLOCATION_PREVIEW.hero.h1).toMatch(/^Geolocation notifications, coming soon\.$/);
+    expect(GEOLOCATION_PREVIEW.hero.sub).toMatch(/\bwill appear\b/);
     expect(Object.keys(GEOLOCATION_PREVIEW.hero)).not.toContain("eyebrow");
     expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
   });
 
-  test("what is live today is the only place a wallet is named", () => {
-    const wallets = lines().filter((line) => /Apple|Google/.test(line.value));
-
-    expect(wallets.map((line) => line.path)).toEqual(["GEOLOCATION_PREVIEW.status.today.facts[0].text"]);
+  test("no line names a wallet or a plan: only Apple's location list is built, and plans live on pricing", () => {
+    expect(lines().filter((line) => /Apple|Google|Starter|Growth|\bPro\b/.test(line.value)).map((line) => line.path)).toEqual([]);
   });
 
   test("the lock screen it shows is Aurevo's, and what it says is the owner's own line", () => {

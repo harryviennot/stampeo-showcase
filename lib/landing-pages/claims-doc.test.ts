@@ -13,10 +13,9 @@ const CLAIMS = read(join(ROOT, "docs", "features", "STA-552", "claims.md"));
 
 /** Each claim a review found untraced: where the copy says it, the words, and the words the doc traces it under. */
 const TRACED: Array<[copyPath: string, words: RegExp, inDoc: string]> = [
-  ["GEOLOCATION_PREVIEW.hero.sub", /ready the day it launches/i, "ready the day it launches"],
+  ["GEOLOCATION_PREVIEW.band.sub", /ready when geolocation launches/i, "ready the day it launches"],
   ["GEOLOCATION_PREVIEW.faq.items[0].answer", /What's new/, "What's new"],
-  ["GEOLOCATION_PREVIEW.faq.items[2].answer", /next update/i, "next update"],
-  ["MOBILE_SCANNER_PREVIEW.team.facts[0].text", /name of who made it/i, "name of who made it"],
+  ["GEOLOCATION_PREVIEW.faq.items[1].answer", /next update/i, "next update"],
 ];
 
 /** The rows the doc may still mark FLAGGED, and why they stay open. */

@@ -180,8 +180,8 @@ export function CounterPlayground({ label, panes, fact }: Readonly<{ label: stri
               aria-controls={`counter-screen-${pane.key}`}
               tabIndex={active ? 0 : -1}
               onClick={() => pick(pane.key)}
-              className={`relative flex min-h-14 items-start gap-4 overflow-hidden rounded-[20px] border-[1.5px] border-[var(--near-black)] px-4 py-3 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] lg:min-h-[88px] lg:items-center lg:px-5 ${
-                active ? "card-stamp bg-[var(--accent)]/10" : "bg-white active:bg-[var(--accent)]/5"
+              className={`relative flex min-h-14 items-start gap-4 overflow-hidden rounded-[20px] px-4 py-3 text-left shadow-[0_1px_2px_rgba(25,18,16,0.05),0_12px_28px_-18px_rgba(25,18,16,0.2)] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] lg:min-h-[88px] lg:items-center lg:px-5 ${
+                active ? "bg-[var(--accent)]/[0.07] ring-2 ring-[var(--accent)]/70" : "bg-white ring-1 ring-black/[0.06] hover:ring-black/15 active:bg-[var(--accent)]/5"
               }`}
             >
               <span

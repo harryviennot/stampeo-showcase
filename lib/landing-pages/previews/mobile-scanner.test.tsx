@@ -1,17 +1,17 @@
 /**
- * The scanner preview (`/us/landing-pages/platform/mobile-scanner`): what a
- * visitor sees in each section below the hero. Every section is rendered under
- * the English catalogs, async pieces included; the hero, the headers, the order
- * and the tap targets of all six previews are in `pages.test.tsx`, and the
- * counter's and the team code's own logic is in `scanner-interactions.test.ts`.
+ * The scanner preview (`/us/landing-pages/platform/mobile-scanner`): what a visitor sees in the hero and in
+ * each section. Every section is rendered under the English catalogs, async pieces included; the headers, the
+ * order and the tap targets of all six previews are in `pages.test.tsx`, and the counter's own logic is in
+ * `scanner-interactions.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { CounterSection } from "@/components/landing-pages/feature-previews/mobile-scanner/CounterSection";
-import { TeamStrip } from "@/components/landing-pages/feature-previews/mobile-scanner/TeamStrip";
 import { WaysSection } from "@/components/landing-pages/feature-previews/mobile-scanner/WaysSection";
+import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
+import { tapTargets, renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { smallestLabelPx } from "../../testing/stacked-rows";
@@ -19,7 +19,6 @@ import { renderAsAsync } from "../../testing/visitor-seams";
 import { MOBILE_SCANNER_PREVIEW as COPY } from "../copy/previews/mobile-scanner";
 import { SHARED } from "../copy/shared";
 import { COUNTER_KEYS } from "./scanner-counter";
-import { TEAM_CODE } from "./team-code";
 
 // The sections hold async server components (the wallet cards) that ask next-intl for their labels.
 await mockEnglishServerTranslations();
@@ -29,10 +28,42 @@ const FOLDER = join(COMPONENTS_DIR, "feature-previews", "mobile-scanner");
 /** The attributes of the tags that carry `marker`, in document order. */
 const tagsWith = (html: string, marker: RegExp) => [...html.matchAll(/<[a-z]+\b[^>]*>/g)].map(([tag]) => tag).filter((tag) => marker.test(tag));
 
+/** What a section must not carry: the ink frame (a stamped card, an ink-coloured border) of the earlier look. */
+const INK = /card-stamp|near-black/;
+
+describe("hero: the words say the choice, the picture shows both ways at once", () => {
+  const hero = async () => sectionsOf(await renderPreviewPage("platform/mobile-scanner")).find(({ id }) => id === "hero")?.html ?? "";
+
+  test("the headline says what it is in the page's search words, then the sub, the trial and the way to the counter", async () => {
+    const html = await hero();
+
+    expect(COPY.hero.h1).toMatch(/loyalty card scanner app/i);
+    expectInOrder(html, [COPY.hero.accent, COPY.hero.sub, SHARED.cta, COPY.hero.secondary]);
+    expect([...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((link) => link[1])).toEqual(["/en/onboarding", "#counter"]);
+  });
+
+  test("one picture, named for a screen reader, holds the Scanner app on a phone and the web scanner in a browser", async () => {
+    const html = await hero();
+
+    expect(pictures(html)).toContain(COPY.hero.alt);
+    expect(textOf(html)).toContain("scan.stampeo.app");
+  });
+
+  test("the phone plays the real Scanner loop from the first paint", async () => {
+    expect(await hero()).toContain(scannerLoopFiles("en").first);
+  });
+
+  test("the way to the counter lands on a section that is on the page", async () => {
+    const html = await renderPreviewPage("platform/mobile-scanner");
+
+    expect(html).toContain('id="counter"');
+  });
+});
+
 describe("counter: one phone and one wallet card that follow four buttons", () => {
   const buttons = (html: string) => tagsWith(html, /role="tab"/);
 
-  test("the four buttons are tabs in the copy's order: Stamps, Points, Reward, Level, each with its line, Stamps selected first", async () => {
+  test("the four buttons are tabs in the copy's order: Stamps, Points, Rewards, Levels, each with its line, Stamps selected first", async () => {
     const html = await render(<CounterSection />);
 
     expect(html).toMatch(/role="tablist"[^>]*aria-label="[^"]+"/);
@@ -79,18 +110,17 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
     ]);
   });
 
-  test("it ends on the one line the old How section said: tap once and the card updates", async () => {
+  test("it ends on the one line that says what the customer gets: a notification right after", async () => {
     const text = textOf(await render(<CounterSection />));
 
     expect(text).toContain(COPY.counter.fact);
     expect(text.split(COPY.counter.fact)).toHaveLength(2);
   });
 
-  test("nothing is framed in ink but the buttons: no stamped frame around the phone or a card, and no plan named", async () => {
+  test("the buttons are clean white tiles like the rest of the site: nothing is framed in ink, and no plan is named", async () => {
     const html = await render(<CounterSection />);
-    const framed = [...tagsWith(html, /data-screen=/), ...tagsWith(html, /data-card=/)].filter((tag) => /card-stamp/.test(tag));
 
-    expect(framed).toEqual([]);
+    expect(html).not.toMatch(INK);
     expect(textOf(html)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
   });
 
@@ -116,80 +146,57 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   });
 });
 
-describe("ways: an app or a browser, two cells and the same two actions as the hero", () => {
-  test("it is Platform's table with no phones: two cells, each led by an icon in the site's orange tile", async () => {
+describe("ways: the app or a browser, side by side, with the stores where the app is", () => {
+  const cell = (html: string, index: number) => html.match(/<li\b[\s\S]*?<\/li>/g)?.[index] ?? "";
+
+  test("two cells in the copy's order: each its title, what it is and the devices it runs on, then the line that says both do the same job", async () => {
     const html = await render(<WaysSection />);
 
-    expectInOrder(html, COPY.ways.cells.flatMap((cell) => [cell.title, cell.body]));
     expect(html.match(/<li\b/g)).toHaveLength(2);
-    expect(html.match(/<li\b[\s\S]*?<\/li>/g)?.every((cell) => cell.includes("<svg") && cell.includes("bg-[var(--accent)]/10"))).toBe(true);
-    expect(html).toContain("lg:grid-cols-2");
+    expectInOrder(html, [
+      ...COPY.ways.cells.flatMap((cell) => [cell.title, cell.body, ...cell.devices]),
+      COPY.ways.fact,
+    ]);
     expect(textOf(html)).toContain("scan.stampeo.app");
   });
 
-  test("the store badges are not here: the stores are named in words, because a business cannot be created in the app", async () => {
+  test("the App Store and Google Play badges are links to the app's listings, in the app's cell only", async () => {
     const html = await render(<WaysSection />);
+    const stores = tapTargets(html).filter(({ attrs }) => /apps\.apple\.com|play\.google\.com/.test(attrs));
 
-    expect(html).not.toMatch(/Add to (?:Apple|Google) Wallet|app-store|google-play|<img/i);
-    expect(textOf(html)).toContain("App Store and Google Play");
+    expect(stores.map(({ attrs }) => /href="([^"]+)"/.exec(attrs)?.[1])).toEqual([
+      expect.stringContaining("apps.apple.com"),
+      expect.stringContaining("play.google.com"),
+    ]);
+    expect(stores.map(({ name }) => name)).toEqual([expect.stringMatching(/App Store/), expect.stringMatching(/Google Play/)]);
+    expect(cell(html, 0)).toContain("apps.apple.com");
+    expect(cell(html, 1)).not.toMatch(/apps\.apple\.com|play\.google\.com|<img/);
   });
 
-  test("the trial button and the way to the demo follow", async () => {
+  test("each badge is 44px or more to tap and opens the listing in a new tab", async () => {
+    const stores = tapTargets(await render(<WaysSection />)).filter(({ attrs }) => /apps\.apple\.com|play\.google\.com/.test(attrs));
+
+    for (const { attrs } of stores) {
+      expect(attrs).toMatch(/\bh-1[1-9]\b|min-h-1[1-9]/);
+      expect(attrs).toContain('target="_blank"');
+      expect(attrs).toContain("noopener");
+    }
+  });
+
+  test("the section is two clean white cards with no ink frame, no trial button of its own and no plan named", async () => {
     const html = await render(<WaysSection />);
 
-    expect(textOf(html)).toContain(SHARED.cta);
-    expect(html).toMatch(/<a [^>]*href="#demo"/);
-    expect(textOf(html)).toContain(SHARED.demoLink);
+    expect(html).not.toMatch(INK);
+    expect(textOf(html)).not.toContain(SHARED.cta);
+    expect(textOf(html)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
   });
 });
 
-describe("team: from a code to the counter, three frames on a rail", () => {
-  const frames = (html: string) => html.match(/<li\b[^>]*data-frame="\d"[\s\S]*?<\/li>/g) ?? [];
+describe("what the page no longer has", () => {
+  test("no team section and no live demo: the page goes from the counter to the app-or-browser section and its closing card", async () => {
+    const html = await renderPreviewPage("platform/mobile-scanner");
 
-  test("the three frames come in order, each under its caption, joined by a dashed rail: across from lg, and a stretch between each two down the side of a phone", async () => {
-    const html = await render(<TeamStrip />);
-
-    expect(frames(html)).toHaveLength(3);
-    expectInOrder(html, COPY.team.frames);
-    expect(html.match(/border-dashed/g)).toHaveLength(1 + (frames(html).length - 1));
-    expect(html).toMatch(/<ol\b/);
-  });
-
-  test("the owner's Team page gives out the code, in groups of three as the dashboard prints it, with a copy button", async () => {
-    const [owner] = frames(await render(<TeamStrip />));
-    const grouped = `${TEAM_CODE.slice(0, 3)}-${TEAM_CODE.slice(3)}`;
-
-    expect(textOf(owner)).toContain("Give this code to");
-    expect(textOf(owner)).toContain(grouped);
-    expect(pictures(owner).join(" ")).toMatch(/Team page.*Copy button/i);
-    expect(owner).not.toMatch(/<button\b/);
-  });
-
-  test("the staff phone asks for the team code and has it entered, six characters, with Find my shop under it", async () => {
-    const [, staff] = frames(await render(<TeamStrip />));
-    const text = textOf(staff);
-
-    expect(text).toContain("Enter your team code");
-    expect(text).toContain([...TEAM_CODE].map((char) => `|${char}`).join("").slice(1));
-    expect(text).toContain("Find my shop");
-    expect(pictures(staff).join(" ")).toMatch(/team code/i);
-  });
-
-  test("then the scanner is ready: the camera, pointed at a card, as the app says it", async () => {
-    const [, , ready] = frames(await render(<TeamStrip />));
-
-    expect(textOf(ready)).toContain("Point camera at the customer loyalty card QR code");
-    expect(pictures(ready).join(" ")).toMatch(/Scanner.*ready/i);
-  });
-
-  test("below is the fact every account has, with no plan beside it", async () => {
-    const html = await render(<TeamStrip />);
-
-    expectInOrder(html, COPY.team.facts.map((fact) => fact.text));
-    expect(textOf(html)).not.toMatch(/Growth|Starter|\bPro\b/);
-  });
-
-  test("the staff-data guardrails hold: nothing here ranks, times or tracks a team member", async () => {
-    expect(textOf(await render(<TeamStrip />))).not.toMatch(/\b(?:ranking|rankings|leaderboard|top scanner|idle|pace|speed|GPS|biometric|per hour)\b/i);
+    expect(sectionsOf(html).map(({ id }) => id)).toEqual(["hero", "counter", "ways", "final_cta", "related"]);
+    expect(html).not.toMatch(/id="demo"|href="#demo"|Copy your code|Enter your team code|Live demo/);
   });
 });
