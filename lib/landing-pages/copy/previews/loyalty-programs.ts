@@ -1,4 +1,4 @@
-import type { BandCopy, FaqItem, HeroCopy, PageMeta, SourcedFigure, Tile } from "../types";
+import type { BandCopy, FaqItem, PageMeta, SourcedFigure, Tile } from "../types";
 
 /** The study behind the head-start tip, as the outcomes page cites it. */
 const HEAD_START_SOURCE = "Nunes & Drèze, Journal of Consumer Research, 2006 (car wash loyalty cards, 9 months)";
