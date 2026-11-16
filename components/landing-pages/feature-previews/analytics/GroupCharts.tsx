@@ -1,0 +1,141 @@
+import { Fragment } from "react";
+import {
+  COHORTS,
+  COHORT_DAYS,
+  LEVELS,
+  LEVEL_MOVES,
+  LOCATIONS,
+  cohortPercent,
+} from "@/lib/landing-pages/previews/analytics-sample";
+import { ChartPicture } from "./ChartPicture";
+import { INK, RAMP } from "./ink";
+
+const MUTED = "text-[var(--muted-foreground)]";
+
+/** A cohort window's ramp step from its share: under 61 is the palest, 79 and over the darkest. */
+const stepOf = (percent: number) => Math.min(RAMP.length - 1, Math.max(0, Math.floor((percent - 55) / 6)));
+
+/** Monthly cohorts: of each month's first-time customers, the share who came back within 30, 60, 90 and 180 days. */
+export function CohortsChart() {
+  return (
+    <ChartPicture
+      label={`Monthly cohorts: of each month's first-time customers, the share who came back within ${COHORT_DAYS.slice(0, -1).join(", ")} and ${COHORT_DAYS.at(-1)} days.`}
+    >
+      <div className="grid grid-cols-[2.25rem_repeat(4,minmax(0,1fr))] gap-[3px] text-[11px] leading-4">
+        <span />
+        {COHORT_DAYS.map((days) => (
+          <span key={days} className={`text-center ${MUTED}`}>
+            {days} d
+          </span>
+        ))}
+        {COHORTS.map(({ month, size, back }) => (
+          <Fragment key={month}>
+            <span data-cohort={month} className={`self-center pr-1.5 text-right ${MUTED}`}>
+              {month}
+            </span>
+            {COHORT_DAYS.map((days, at) => {
+              if (back[at] === undefined) {
+                return (
+                  <span key={days} className={`flex h-9 items-center justify-center ${MUTED}`}>
+                    –
+                  </span>
+                );
+              }
+              const percent = cohortPercent(size, back[at]);
+              const step = stepOf(percent);
+
+              return (
+                <span
+                  key={days}
+                  className="flex h-9 items-center justify-center rounded-[5px] text-[11px] font-semibold tabular-nums"
+                  style={{ backgroundColor: RAMP[step], color: step >= 3 ? "white" : INK.navy }}
+                >
+                  {percent}%
+                </span>
+              );
+            })}
+          </Fragment>
+        ))}
+      </div>
+      <p className={`mt-3 text-[12px] leading-4 ${MUTED}`}>A dash means that window has not passed yet.</p>
+    </ChartPicture>
+  );
+}
+
+/** The ramp colour of each level, from the lowest to the highest. */
+const LEVEL_TONES = [RAMP[2], RAMP[3], RAMP[4]];
+
+/** Levels: the customers on each level today, and the customers who moved up a level in each of the last six months. */
+export function LevelsChart() {
+  const widest = Math.max(...LEVELS.map((level) => level.customers));
+  const tallest = Math.max(...LEVEL_MOVES.map((month) => month.count));
+
+  return (
+    <ChartPicture
+      label={`Levels: ${LEVELS.map((level) => `${level.customers} customers on ${level.name}`).join(", ")}, and the customers who moved up each month.`}
+    >
+      <ul className="flex flex-col gap-3">
+        {LEVELS.map(({ name, customers }, index) => (
+          <li key={name}>
+            <div className="flex items-baseline justify-between gap-3 text-[13px] leading-5 sm:text-sm">
+              <span className={MUTED}>{name}</span>
+              <span className="font-semibold tabular-nums text-[var(--foreground)]">{customers}</span>
+            </div>
+            <div className="mt-1.5 h-2.5 rounded-full" style={{ backgroundColor: INK.track }}>
+              <div className="h-full rounded-full" style={{ width: `${(100 * customers) / widest}%`, backgroundColor: LEVEL_TONES[index] }} />
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-5 border-t border-black/[0.07] pt-4 text-[13px] leading-4 font-semibold text-[var(--foreground)]">Moves up per month</p>
+      <div className="mt-3 flex items-end gap-2">
+        {LEVEL_MOVES.map(({ month, count }) => (
+          <div key={month} className="flex flex-1 flex-col items-center gap-1">
+            <span className="text-[11px] leading-4 font-semibold tabular-nums text-[var(--foreground)]">{count}</span>
+            <div className="w-full rounded-t-[3px]" style={{ height: `${Math.round((56 * count) / tallest)}px`, backgroundColor: INK.navy }} />
+            <span className={`text-[11px] leading-4 ${MUTED}`}>{month}</span>
+          </div>
+        ))}
+      </div>
+    </ChartPicture>
+  );
+}
+
+/** By location: the picker that shows every chart for one shop at a time, over the locations and their visits. */
+export function LocationsChart() {
+  const widest = Math.max(...LOCATIONS.map((location) => location.visits));
+  const visits = (count: number) => count.toLocaleString("en-US");
+  const total = LOCATIONS.reduce((sum, location) => sum + location.visits, 0);
+
+  return (
+    <ChartPicture
+      label={`By location: a picker over ${LOCATIONS.map((location) => `${location.name}, ${visits(location.visits)} visits`).join(" and ")}.`}
+    >
+      <div className="flex h-11 items-center justify-between rounded-xl px-3.5 text-[14px] font-semibold text-[var(--foreground)] ring-1 ring-black/[0.14]">
+        <span>All locations</span>
+        <span className={MUTED}>▾</span>
+      </div>
+      <ul className="mt-2 flex flex-col gap-1 rounded-xl p-1.5 ring-1 ring-black/[0.07]">
+        <li className="flex h-9 items-center justify-between rounded-lg px-2.5 text-[13px] font-semibold text-[var(--foreground)] sm:text-sm" style={{ backgroundColor: INK.track }}>
+          <span>All locations</span>
+          <span className="flex items-center gap-2 tabular-nums">
+            {visits(total)}
+            <span style={{ color: INK.navy }}>✓</span>
+          </span>
+        </li>
+        {LOCATIONS.map(({ name, visits: count }) => (
+          <li key={name} className="px-2.5 py-1.5">
+            <div className="flex items-baseline justify-between text-[13px] leading-5 sm:text-sm">
+              <span className={MUTED}>{name}</span>
+              <span className="font-semibold tabular-nums text-[var(--foreground)]">{visits(count)}</span>
+            </div>
+            <div className="mt-1 h-2 rounded-full" style={{ backgroundColor: INK.track }}>
+              <div className="h-full rounded-full" style={{ width: `${(100 * count) / widest}%`, backgroundColor: INK.periwinkle }} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </ChartPicture>
+  );
+}

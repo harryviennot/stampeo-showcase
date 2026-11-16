@@ -229,7 +229,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/analytics": {
     slug: "platform/analytics",
     variant: "lp_platform_analytics",
-    sections: ["hero", "blind_spots", "glance", "activity", "recap", "final_cta", "related"],
+    sections: ["hero", "blind_spots", "charts", "customers", "dashboard", "final_cta", "related"],
     meta: ANALYTICS_PREVIEW.meta,
     hero: ANALYTICS_PREVIEW.hero,
     finalCta: ANALYTICS_PREVIEW.band,

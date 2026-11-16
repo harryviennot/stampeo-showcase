@@ -106,11 +106,10 @@ describe("dashboard captures (AC9)", () => {
     expect(loose).toEqual([]);
   });
 
-  test("the feeds the pages draw are among what the guard reads: the layered capture, the how-to feed and the analytics preview's", () => {
+  test("the feeds the pages draw are among what the guard reads: the layered capture and the how-to feed", () => {
     const feeds = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "LiveActivityFeed"));
 
     expect(feeds.map((file) => file.replace(ROOT, "")).sort()).toEqual([
-      "/components/landing-pages/feature-previews/analytics/ActivitySection.tsx",
       "/components/landing-pages/features/AnalyticsSpotlight.tsx",
       "/components/landing-pages/how-it-works/SeeItWork.tsx",
     ]);
@@ -488,6 +487,7 @@ describe("components the pages extend: their other callers pass none of the new 
     [...component("NotificationBanner", "features/notifications-push"), ["icon"]],
     [...component("CardStyleGallery", "features/design-de-carte"), ["showCta", "heading", "sectionClassName"]],
     [...component("LiveActivityFeed", "features/analytics"), ["cardOnly", "stillWhenReduced", "softFrame", "roomBelow"]],
+    [...component("BlindSpotCards", "features/analytics"), ["questions", "noAnswer", "bare"]],
     [...component("QRCodeSkeleton", "ui"), ["animated"]],
     [...component("Segmented", "ui"), ["size"]],
     [...component("WalletCard", "card"), ["headerLabel"]],

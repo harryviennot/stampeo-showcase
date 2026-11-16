@@ -1,270 +1,305 @@
 /**
- * The analytics preview (`/us/landing-pages/platform/analytics`): what a
- * visitor sees in each section below the hero. Every section is rendered under
- * the English catalogs; the hero, the headers, the order and the tap targets of
- * all six previews are in `pages.test.tsx`. How the cards flip is the pure rules in
- * `analytics-interactions.test.ts`.
+ * The analytics preview (`/us/landing-pages/platform/analytics`): what a visitor sees in each section. The hero's
+ * frame, the headers, the order and the tap targets of all six previews are in `pages.test.tsx`; production's blind-spot
+ * cards, which this page borrows, are in `blind-spot-cards.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
-import { ActivitySection } from "@/components/landing-pages/feature-previews/analytics/ActivitySection";
-import { CustomersMini } from "@/components/landing-pages/feature-previews/analytics/CustomersMini";
-import { GlanceSection } from "@/components/landing-pages/feature-previews/analytics/GlanceSection";
-import { GlanceTiles } from "@/components/landing-pages/feature-previews/analytics/GlanceTiles";
+import { join } from "node:path";
 import { BlindSpotsSection } from "@/components/landing-pages/feature-previews/analytics/BlindSpotsSection";
-import { CohortsMini, LocationMini } from "@/components/landing-pages/feature-previews/analytics/CohortsMini";
-import {
-  BusiestMini,
-  HABITS,
-  HabitsMini,
-  READY,
-  RewardProgressMini,
-} from "@/components/landing-pages/feature-previews/analytics/QuestionMinis";
-import { RecapSection } from "@/components/landing-pages/feature-previews/analytics/RecapSection";
+import { ChartsSection } from "@/components/landing-pages/feature-previews/analytics/ChartsSection";
+import { CustomersSection } from "@/components/landing-pages/feature-previews/analytics/CustomersSection";
+import { KeyNumbersCard } from "@/components/landing-pages/feature-previews/analytics/KeyNumbersCard";
 import { ANALYTICS, DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
-import { PLAN_FACTS, TIERS } from "../../plans/plan-facts";
+import { ROOT } from "../../testing/jsx-source";
+import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
+import { smallestLabelPx } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
-import { OUTCOMES } from "../copy/outcomes";
+import { CUSTOMER_LIST } from "./analytics-customers";
+import {
+  BUSIEST,
+  COHORTS,
+  COHORT_DAYS,
+  CUSTOMERS_SEEN,
+  HABITS,
+  LEVELS,
+  LOCATIONS,
+  READY,
+  SPEND,
+  busiestSlots,
+  cohortPercent,
+  dollars,
+} from "./analytics-sample";
 
-describe("blind spots: six questions a paper card cannot answer, and what Stampeo answers", () => {
-  const cardOf = (html: string, key: string) => html.match(new RegExp(`<li\\b[^>]*data-card="${key}"[\\s\\S]*?</li>`))?.[0] ?? "";
-  const faceTag = (card: string, face: "paper" | "stampeo") => card.match(new RegExp(`<[a-z]+\\b[^>]*data-face="${face}"[^>]*>`))?.[0] ?? "";
-  const returning = Math.round((100 * (HABITS[0].count + HABITS[1].count)) / HABITS.reduce((sum, habit) => sum + habit.count, 0));
+const FOLDER = join(ROOT, "components", "landing-pages", "feature-previews", "analytics");
 
-  /** What each card answers, from the sample café's own figures: the dashboard's numbers. */
-  const ANSWERS = {
-    working: [ANALYTICS.visits.total.toLocaleString("en-US"), `▲${ANALYTICS.visits.change}%`],
-    return: [`${ANALYTICS.returnRate.percent}%`],
-    regulars: [`${returning}%`],
-    busiest: ["Thursday"],
-    rewards: [String(READY)],
-    new: [String(ANALYTICS.newCustomers.total), `▲${ANALYTICS.newCustomers.change}%`],
-  } as const;
+describe("the key-numbers card beside the hero: a month at a glance", () => {
+  test("reads, top to bottom: visits, the return rate, new customers, then the visits over time", async () => {
+    const html = await render(<KeyNumbersCard />);
+    const { numbers } = COPY;
 
-  test("a two-way control sits over six cards: With a paper card is chosen, With Stampeo is one tap away", async () => {
-    const html = await render(<BlindSpotsSection />);
-    const { toggle } = COPY.blindSpots;
-
-    expect(html).toContain(`role="tablist" aria-label="${toggle.label}"`);
-    expect(html).toMatch(new RegExp(`role="tab"[^>]*aria-selected="true"[^>]*>${toggle.paper}<`));
-    expect(html).toMatch(new RegExp(`role="tab"[^>]*aria-selected="false"[^>]*>${toggle.stampeo}<`));
-    expect(html.match(/<li\b[^>]*data-card=/g)).toHaveLength(6);
+    expectInOrder(html, [
+      numbers.title,
+      numbers.visits.label,
+      numbers.visits.line.replace("{customers}", String(CUSTOMERS_SEEN)),
+      ANALYTICS.visits.total.toLocaleString("en-US"),
+      `▲${ANALYTICS.visits.change}%`,
+      numbers.returnRate.label,
+      numbers.returnRate.line,
+      `${ANALYTICS.returnRate.percent}%`,
+      `▲${ANALYTICS.returnRate.change} pts`,
+      numbers.newCustomers.label,
+      numbers.newCustomers.line,
+      String(ANALYTICS.newCustomers.total),
+      `▲${ANALYTICS.newCustomers.change}%`,
+      numbers.chart.label,
+      ...numbers.chart.legend,
+    ]);
   });
 
-  test("each card is a button that opens on its question and a handwritten ???, with the answer behind it", async () => {
-    const html = await render(<BlindSpotsSection />);
+  test("draws the thirteen weeks of visits as stacked bars, and is one picture named in the copy", async () => {
+    const html = await render(<KeyNumbersCard />);
 
-    expect(html.match(/<button\b[^>]*aria-pressed="false"/g)).toHaveLength(6);
-    for (const { key, question, line } of COPY.blindSpots.cards) {
-      const card = cardOf(html, key);
-
-      expectInOrder(card, [question, COPY.blindSpots.unknown, ...ANSWERS[key], line]);
-      expect(card).toMatch(/class="[^"]*\bink-figure\b[^"]*"[^>]*>\?\?\?</);
-    }
+    expect(html.match(/data-week=/g)).toHaveLength(ANALYTICS.weeks.length);
+    expect(pictures(html)).toEqual([COPY.hero.alt]);
   });
 
-  test("the cards are in the order of the brief: the program, the return, the regulars, the busiest time, the rewards, the new customers", async () => {
-    const html = await render(<BlindSpotsSection />);
-    const text = textOf(html);
-    const at = COPY.blindSpots.cards.map(({ question }) => text.indexOf(question));
-
-    expect(COPY.blindSpots.cards.map(({ key }) => key)).toEqual(["working", "return", "regulars", "busiest", "rewards", "new"]);
-    expect(at.every((index) => index > -1)).toBe(true);
-    expect([...at].sort((a, b) => a - b)).toEqual(at);
-  });
-
-  test("the answers are the sample café's own: Platform's visits, return rate and new customers, the regulars of its habits chart, the rewards ready of its progress chart", async () => {
-    const text = textOf(await render(<BlindSpotsSection />));
-
-    expect(returning).toBe(48);
-    expect(READY).toBe(22);
-    for (const figure of Object.values(ANSWERS).flat()) expect(text).toContain(figure);
-    expect(textOf(await render(<DeliverAnalytics />))).toContain(`${ANALYTICS.returnRate.percent}%`);
-  });
-
-  test("every answer is a key number of the dashboard's basic analytics: no plan, no cohort and no chart is named", async () => {
-    const answers = textOf(await render(<BlindSpotsSection />));
-
-    for (const key of ["working", "return", "new"] as const) expect(answers).toContain(ANSWERS[key][0]);
-    expect(answers).not.toMatch(/\b(?:Starter|Growth|Pro|Every plan)\b|cohort|chart/i);
-  });
-
-  test("a screen reader reads the face that is showing: the question and ??? first, the answer hidden until its card is turned", async () => {
-    const html = await render(<BlindSpotsSection />);
-
-    for (const { key } of COPY.blindSpots.cards) {
-      const card = cardOf(html, key);
-
-      expect(faceTag(card, "paper")).toContain('aria-hidden="false"');
-      expect(faceTag(card, "stampeo")).toContain('aria-hidden="true"');
-    }
-  });
-
-  test("the cards are the house's stamped ones, 168px tall at least on a phone, and turn in half a second unless the reader asks for less motion", async () => {
-    const html = await render(<BlindSpotsSection />);
-
-    for (const { key } of COPY.blindSpots.cards) {
-      const card = cardOf(html, key);
-
-      expect(card).toContain("card-stamp");
-      expect(card).toContain("min-h-[168px]");
-      expect(card).toContain("500ms");
-      expect(card).toContain("motion-reduce:transition-none");
-    }
-  });
-
-  test("two columns on a phone and three from md, as production's own cards lay out", async () => {
-    const html = await render(<BlindSpotsSection />);
-
-    expect(html).toMatch(/<ul\b[^>]*class="[^"]*\bgrid-cols-2\b[^"]*\bmd:grid-cols-3\b/);
-  });
-});
-
-describe("glance: the numbers from day one, drawn as the dashboard draws them", () => {
-  test("a white surface with no tabs: one thing to read", async () => {
-    const html = await render(<GlanceSection />);
-
-    expect(html).not.toContain('role="tablist"');
-    expect(html).not.toMatch(/\binert\b/);
-  });
-
-  test("the tiles are Visits, New customers and the 30-day return rate with their trends, then Visits over time week by week", async () => {
-    const html = await render(<GlanceSection />);
-
-    expectInOrder(html, ["Visits|2,770|▲17%", "New customers|460|▲11%", "30-day return rate|61%|▲2 pts", "Visits over time"]);
-    expect(html.match(/data-week=/g)).toHaveLength(13);
-    expect(pictures(html)).toEqual([expect.stringMatching(/2,770 visits.*460 new customers.*61%.*week by week/)]);
-  });
-
-  test("the sample café is Platform's: the same visits, return rate and trends as its dashboard tiles", async () => {
+  test("its figures are the sample café's own: the same visits and return rate as Platform's dashboard card", async () => {
     const figures = (text: string) => ({
-      visits: /Visits\|([\d,]+)\|(▲\d+%)/.exec(text)?.slice(1),
-      returnRate: /30-day return rate\|(\d+%)\|(▲\d+ pts)/.exec(text)?.slice(1),
+      visits: /Visits\|(?:[^|]*\|)?([\d,]+)\|(▲\d+%)/.exec(text)?.slice(1),
+      returnRate: /(?:30-day return rate|Return rate)\|(?:[^|]*\|)?(\d+%)\|(▲\d+ pts)/.exec(text)?.slice(1),
     });
-    const preview = figures(textOf(await render(<GlanceTiles />)));
+    const card = figures(textOf(await render(<KeyNumbersCard />)));
 
-    expect(preview.visits).toBeDefined();
-    expect(preview.returnRate).toBeDefined();
-    expect(preview).toEqual(figures(textOf(await render(<DeliverAnalytics />))));
-  });
-
-  test("the facts follow the tiles", async () => {
-    const html = await render(<GlanceSection />);
-
-    expectInOrder(html, [COPY.glance.tab.title, ...COPY.glance.tab.facts.map((fact) => fact.text)]);
+    expect(card.visits).toBeDefined();
+    expect(card.returnRate).toBeDefined();
+    expect(card).toEqual(figures(textOf(await render(<DeliverAnalytics />))));
   });
 });
 
-describe("the charts of the dashboard, drawn as it draws them", () => {
-  test("visit habits: the dashboard's five groups, from every week to came once, each with its count", async () => {
-    const html = await render(<HabitsMini />);
+describe("blind spots: production's cards, with the preview's own questions", () => {
+  test("six questions in the copy's order, each over a ???, under a centred header, in production's tinted band", async () => {
+    const html = await render(<BlindSpotsSection />);
+    const { eyebrow, title, lead, questions, noAnswer } = COPY.blindSpots;
 
-    expect(pictures(html)).toEqual([expect.stringMatching(/how often they come/i)]);
-    expectInOrder(html, ["About every week", "Every 2 weeks", "About once a month", "Less often", "Came once"]);
-    for (const { count } of HABITS) expect(textOf(html)).toContain(String(count));
+    expectInOrder(html, [eyebrow, title, lead, ...questions]);
+    expect(questions).toHaveLength(6);
+    expect(html.match(new RegExp(`>${noAnswer.replaceAll("?", "\\?")}<`, "g"))).toHaveLength(questions.length);
+    expect(html).toContain("text-center");
+    expect(html).toContain("bg-[var(--blog-bg)]");
   });
 
-  test("busiest times: a week by day and hour, with the busiest slot named and no city", async () => {
-    const html = await render(<BusiestMini />);
+  test("they are production's cards: the same inked faces, two columns on a phone and three from md", async () => {
+    const html = await render(<BlindSpotsSection />);
 
-    expect(pictures(html)).toEqual([expect.stringMatching(/busiest times.*Thursday.*8 to 9 AM/i)]);
-    expectInOrder(html, ["Busiest times", "Mon", "Thu", "Fewer visits", "More visits"]);
-    expect(textOf(html)).toMatch(/8 AM/);
-    expect(textOf(html)).not.toMatch(/Paris|GMT/);
-  });
-
-  test("reward progress: customers by stamps on their card, with the ones holding a reward ready marked", async () => {
-    const html = await render(<RewardProgressMini />);
-
-    expect(pictures(html)).toEqual([expect.stringMatching(new RegExp(`reward progress.*${READY} rewards ready`, "i"))]);
-    expectInOrder(html, ["Reward progress", "Reward ready"]);
-  });
-
-  test("monthly cohorts: the dashboard's grid of first-visit months against 30, 60, 90 and 180 days, a dash where a window has not passed", async () => {
-    const html = await render(<CohortsMini />);
-
-    expect(pictures(html)).toEqual([expect.stringMatching(/Monthly cohorts.*first-time customers.*30, 60, 90 and 180 days/)]);
-    expectInOrder(html, ["Monthly cohorts", "30 d", "60 d", "90 d", "180 d"]);
-    expect(html.match(/data-cohort="[a-z]+"/g)).toHaveLength(6);
-    expect(textOf(html)).toContain("–");
-    expect(textOf(html)).not.toMatch(/%|Paris|GMT/);
-  });
-
-  test("filter by location: a location picker over one location at a time, with no city", async () => {
-    const html = await render(<LocationMini />);
-
-    expect(pictures(html)).toEqual([expect.stringMatching(/Filter by location.*one location at a time/i)]);
-    expectInOrder(html, ["Filter by location", "All locations"]);
-    expect(textOf(html)).not.toMatch(/Paris|GMT/);
+    expect(html.match(/blog-card-3d/g)).toHaveLength(12);
+    expect(html).toContain("grid-cols-2 md:grid-cols-3");
   });
 });
 
-describe("activity: live visits on one tab, the customer groups on the other", () => {
-  test("a toggle with Live activity open first, Your customers behind it", async () => {
-    const html = await render(<ActivitySection />);
-    const panes = [...html.matchAll(/<div role="tabpanel" aria-label="([^"]+)"([^>]*)>/g)];
+describe("every chart, as a card with its question under its title", () => {
+  /** A card's markup: from its own tag up to the next card's (the cards hold lists of their own). */
+  const cardOf = (html: string, key: string) => {
+    const start = html.search(new RegExp(`<li\\b[^>]*data-chart="${key}"`));
+    const next = html.indexOf("<li data-chart=", start + 1);
 
-    expect(html).toMatch(/role="tab"[^>]*aria-selected="true"[^>]*>Live activity</);
-    expect(panes.map((pane) => pane[1])).toEqual([COPY.activity.tabs.live.label, COPY.activity.tabs.customers.label]);
-    expect([/\binert\b/.test(panes[0][2]), /\binert\b/.test(panes[1][2])]).toEqual([false, true]);
+    return start === -1 ? "" : html.slice(start, next === -1 ? undefined : next);
+  };
+
+  test("ten cards in the copy's order, each with its title and its one line, under the page's header", async () => {
+    const html = await render(<ChartsSection />);
+    const { eyebrow, title, lead, rows } = COPY.charts;
+
+    expect(rows).toHaveLength(10);
+    expect(html.match(/<li\b[^>]*data-chart=/g)).toHaveLength(10);
+    expectInOrder(html, [eyebrow, title, lead, ...rows.flatMap((row) => [row.title, row.line])]);
+    expect(html).toContain('id="charts"');
+    expect(html).toContain("text-center");
   });
 
-  test("each pane has its title and facts", async () => {
-    const html = await render(<ActivitySection />);
+  test("each card shows one picture of the chart, with a name that says what it shows", async () => {
+    const html = await render(<ChartsSection />);
 
-    for (const tab of Object.values(COPY.activity.tabs)) expectInOrder(html, [tab.title, ...tab.facts.map((fact) => fact.text)]);
-    expect(textOf(html)).not.toContain("Growth and Pro");
+    for (const { key, title } of COPY.charts.rows) {
+      const names = pictures(cardOf(html, key));
+
+      expect({ key, pictures: names.length }).toEqual({ key, pictures: 1 });
+      expect(names[0].length).toBeGreaterThan(20);
+      expect(names[0].startsWith(title)).toBe(true);
+    }
   });
 
-  test("the live feed is the preview's own: a light ring, room under its fifth row, and a pulse that stops for a reader who asks for less motion", async () => {
-    const html = await render(<ActivitySection />);
+  test("every chart is in one colour family: the dashboard's blues, with no orange and no plan", async () => {
+    const section = await render(<ChartsSection />);
+    const html = section.slice(section.indexOf("<ul"));
+    const colours = [...html.matchAll(/#[0-9a-fA-F]{6}\b/g)].map((match) => match[0].toLowerCase());
+    const BLUES = ["#0f172a", "#adbbdc", "#eceff7", "#c9d3ea", "#8fa3d1", "#4a63a8", "#1a1a1a", "#8a8a8a"];
 
-    expect(html).toContain("ring-1 ring-black/[0.05]");
-    expect(html).not.toContain("blog-card-3d");
-    expect(html).toContain(`height:${5 * 48 + 32}px`);
-    expect(html).toContain("pulse-dot motion-reduce:animate-none!");
+    expect(colours.length).toBeGreaterThan(10);
+    expect(colours.filter((colour) => !BLUES.includes(colour))).toEqual([]);
+    expect(html).not.toContain("var(--accent");
+    expect(textOf(html)).not.toMatch(/\b(?:Starter|Growth|Pro)\b|plan/);
   });
 
-  test("the customers pane: the five groups the dashboard sorts everyone into, then three customers with their stamps and group", async () => {
-    const html = await render(<CustomersMini />);
+  test("a phone reads every label: nothing a chart draws is smaller than 11px", () => {
+    for (const file of ["VisitsChart", "NumberCharts", "HabitCharts", "GroupCharts", "ChartsSection"]) {
+      expect({ file, px: smallestLabelPx(join(FOLDER, `${file}.tsx`)) >= 11 }).toEqual({ file, px: true });
+    }
+  });
 
-    expect(pictures(html)).toEqual([expect.stringMatching(/New, Regular, VIP, At risk and Ghost/)]);
-    expectInOrder(html, [...OUTCOMES.regulars.segments]);
-    expect(html.match(/<li\b/g)).toHaveLength(3);
-    expect(textOf(html)).toMatch(/\d of 8 stamps/);
+  test("visits over time: the thirteen weeks on the dashboard's axis, with the dates under them", async () => {
+    const card = cardOf(await render(<ChartsSection />), "visits");
+
+    expect(card.match(/data-week=/g)).toHaveLength(ANALYTICS.weeks.length);
+    expectInOrder(card, [...COPY.numbers.chart.legend, "260", "195", "130", "65", "Jul 28", "Oct 19"]);
+  });
+
+  test("return rate and new customers: the sample's figures", async () => {
+    const html = await render(<ChartsSection />);
+
+    expectInOrder(cardOf(html, "returnRate"), [`${ANALYTICS.returnRate.percent}%`]);
+    expectInOrder(cardOf(html, "newCustomers"), [String(ANALYTICS.newCustomers.total), COPY.numbers.newCustomers.line]);
+  });
+
+  test("busiest times: a week by day and hour, naming the busiest slot and the quietest open hour", async () => {
+    const card = cardOf(await render(<ChartsSection />), "busiest");
+    const { busiest, quietest } = busiestSlots();
+
+    expect(busiest).toBe("Thursday, 8 AM to 9 AM");
+    expect(quietest).toBe("Saturday, 7 AM to 8 AM");
+    expectInOrder(card, ["Busiest", busiest, "Quietest open hour", quietest, ...BUSIEST.days, ...BUSIEST.hours, "Fewer visits", "More visits"]);
+  });
+
+  test("how often they come: the five groups, from every week to came once, each with its customers", async () => {
+    const card = cardOf(await render(<ChartsSection />), "habits");
+
+    expectInOrder(card, HABITS.flatMap((habit) => [habit.label, String(habit.count)]));
+  });
+
+  test("reward progress: customers by stamps on their card, and the ones with a reward ready", async () => {
+    const card = cardOf(await render(<ChartsSection />), "rewards");
+
+    expectInOrder(card, ["0-1", "2-3", "4-5", "6-7", "Reward ready", String(READY)]);
+  });
+
+  test("monthly cohorts: six first-visit months against 30, 60, 90 and 180 days, a dash where a window has not passed", async () => {
+    const card = cardOf(await render(<ChartsSection />), "cohorts");
+    const text = textOf(card);
+
+    expectInOrder(card, [...COHORT_DAYS.map((days) => `${days} d`), ...COHORTS.map((cohort) => cohort.month)]);
+    expect(card.match(/data-cohort="[A-Za-z]+"/g)).toHaveLength(COHORTS.length);
+    expect(text).toContain("–");
+    expect(text).toContain(`${cohortPercent(COHORTS[5].size, COHORTS[5].back[0])}%`);
+  });
+
+  test("levels: the customers on each level, and the moves up month by month", async () => {
+    const card = cardOf(await render(<ChartsSection />), "levels");
+
+    expectInOrder(card, LEVELS.flatMap((level) => [level.name, String(level.customers)]));
+    expect(textOf(card)).toMatch(/Moves up/);
+  });
+
+  test("tracked spend: the total and the average ticket", async () => {
+    const card = cardOf(await render(<ChartsSection />), "spend");
+
+    expectInOrder(card, [dollars(SPEND.total), `average ticket ${dollars(SPEND.ticket, true)}`]);
+  });
+
+  test("by location: the picker over the locations, each with its visits", async () => {
+    const card = cardOf(await render(<ChartsSection />), "locations");
+
+    expectInOrder(card, ["All locations", ...LOCATIONS.flatMap((location) => [location.name, location.visits.toLocaleString("en-US")])]);
+    expect(textOf(card)).not.toMatch(/Paris|GMT/);
   });
 });
 
-describe("recap: the owner's week, in their inbox", () => {
-  test("the email is from Stampeo, titled Your week at Aurevo, with four figures and the nudge in the order of the brief", async () => {
-    const html = await render(<RecapSection />);
-    const { email } = COPY.recap;
-
-    expectInOrder(html, [email.from, email.subject, ...email.figures.flatMap((figure) => [figure.label, figure.value]), email.nudge]);
-    expect(pictures(html)).toEqual([expect.stringContaining(email.subject)]);
-    expect(email.figures.map((figure) => figure.label)).toEqual(["Stamps given", "New customers", "Returning", "Rewards redeemed"]);
+describe("the sample is one café: its charts add up", () => {
+  test("the cohorts only grow as their windows lengthen, and never pass the month's new customers", () => {
+    for (const { size, back } of COHORTS) {
+      expect([...back].sort((a, b) => a - b)).toEqual([...back]);
+      expect(Math.max(...back)).toBeLessThanOrEqual(size);
+    }
   });
 
-  test("only the stamps carry a trend, and it is the sample café's own visits trend", async () => {
-    const html = await render(<RecapSection />);
-    const trend = `▲${ANALYTICS.visits.change}%`;
+  test("the thirty-day cohorts sit around the return rate of the key numbers", () => {
+    const shares = COHORTS.map(({ size, back }) => cohortPercent(size, back[0]));
 
-    expect(html.match(/▲/g)).toHaveLength(1);
-    expectInOrder(html, ["Stamps given", COPY.recap.email.figures[0].value, trend, "New customers"]);
+    expect(Math.min(...shares)).toBeGreaterThanOrEqual(ANALYTICS.returnRate.percent - 5);
+    expect(Math.max(...shares)).toBeLessThanOrEqual(ANALYTICS.returnRate.percent + 5);
   });
 
-  test("the two facts sit beside it", async () => {
-    const html = await render(<RecapSection />);
-
-    expectInOrder(html, [COPY.recap.email.nudge, ...COPY.recap.facts.map((fact) => fact.text)]);
-    expect(COPY.recap.facts.filter((fact) => "plan" in fact)).toEqual([]);
-    expect(textOf(html)).not.toMatch(/Growth|Pro\b|Every plan/);
-    expect(TIERS.flatMap((tier) => Object.keys(PLAN_FACTS[tier])).filter((key) => /digest|recap|email/i.test(key))).toEqual([]);
-  });
-
-  test("the email is stamped in the house ink", async () => {
-    expect(await render(<RecapSection />)).toContain("card-stamp");
+  test("the levels hold every customer, the locations every visit, and the spend every visit's ticket", () => {
+    expect(LEVELS.reduce((sum, level) => sum + level.customers, 0)).toBe(CUSTOMERS_SEEN);
+    expect(LOCATIONS.reduce((sum, location) => sum + location.visits, 0)).toBe(ANALYTICS.visits.total);
+    expect(SPEND.total).toBe(ANALYTICS.visits.total * SPEND.ticket);
   });
 });
 
+describe("your customers: a list like the dashboard's own, and what its groups mean", () => {
+  test("the list has the dashboard's columns, in the copy's order, and a row for each customer", async () => {
+    const html = await render(<CustomersSection />);
+    const heads = [...html.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/g)].map((head) => textOf(head[1]).replaceAll("|", "").trim());
+
+    expect(heads).toEqual([...COPY.customers.columns]);
+    expect(html.match(/<tr\b[^>]*data-customer=/g)).toHaveLength(CUSTOMER_LIST.length);
+  });
+
+  test("each row reads: the customer, their stamps on an 8-stamp card, their segment and when they last came", async () => {
+    const html = await render(<CustomersSection />);
+
+    for (const { name, stamps, segment, lastVisit } of CUSTOMER_LIST) {
+      const row = html.match(new RegExp(`<tr\\b[^>]*data-customer="${segment}"[\\s\\S]*?</tr>`))?.[0] ?? "";
+      const label = COPY.customers.segments.find((candidate) => candidate.key === segment)?.label ?? "";
+
+      expectInOrder(row, [name, `${stamps}/8`, label, lastVisit]);
+    }
+  });
+
+  test("every segment of the copy is on the list once, in the dashboard's order, each with its meaning beside it", async () => {
+    const html = await render(<CustomersSection />);
+
+    expect(CUSTOMER_LIST.map((customer) => customer.segment)).toEqual(COPY.customers.segments.map((segment) => segment.key));
+    expectInOrder(html, [COPY.customers.eyebrow, COPY.customers.title, COPY.customers.lead]);
+    for (const { label, definition } of COPY.customers.segments) {
+      expect(textOf(html)).toContain(`${label}|${definition}`);
+    }
+    expect(textOf(html)).toContain(COPY.customers.fact);
+  });
+
+  test("shows no email, no address and no real name: a sample list", async () => {
+    expect(textOf(await render(<CustomersSection />))).not.toMatch(/@|\.com/);
+  });
+});
+
+describe("the page", () => {
+  test("opens on its hero, then the blind spots, the charts, the customers and the dashboard, and closes on its cream card", async () => {
+    const html = await renderPreviewPage("platform/analytics");
+
+    expect(sectionsOf(html).map(({ id }) => id)).toEqual(["hero", "blind_spots", "charts", "customers", "dashboard", "final_cta", "related"]);
+  });
+
+  test("the hero is the key-numbers card, with the trial and a way down to the charts", async () => {
+    const hero = sectionsOf(await renderPreviewPage("platform/analytics")).find(({ id }) => id === "hero")?.html ?? "";
+
+    expect(pictures(hero)).toEqual([COPY.hero.alt]);
+    expectInOrder(hero, [COPY.hero.accent, COPY.hero.sub, "Start my free trial", COPY.hero.secondary]);
+    expect(hero).toContain('href="#charts"');
+    expect(hero).not.toMatch(/en-desktop|en-phone|Sample data/);
+  });
+
+  test("the dashboard on a laptop and a phone comes below the charts and the customers, with no caption", async () => {
+    const dashboard = sectionsOf(await renderPreviewPage("platform/analytics")).find(({ id }) => id === "dashboard")?.html ?? "";
+
+    expectInOrder(dashboard, [COPY.dashboard.eyebrow, COPY.dashboard.title, COPY.dashboard.lead]);
+    expect(dashboard).toMatch(/en-desktop/);
+    expect(dashboard).toMatch(/en-phone/);
+    expect(textOf(dashboard)).not.toContain("Sample data");
+  });
+
+  test("the activity feed, the recap email and the at-a-glance tiles are gone", async () => {
+    const text = textOf(await renderPreviewPage("platform/analytics"));
+
+    expect(text).not.toMatch(/Your week at Aurevo|Live activity|At a glance|In your inbox|Every visit, as it happens/);
+  });
+});

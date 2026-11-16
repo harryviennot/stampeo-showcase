@@ -13,8 +13,6 @@ const CLAIMS = read(join(ROOT, "docs", "features", "STA-552", "claims.md"));
 
 /** Each claim a review found untraced: where the copy says it, the words, and the words the doc traces it under. */
 const TRACED: Array<[copyPath: string, words: RegExp, inDoc: string]> = [
-  ["ANALYTICS_PREVIEW.recap.lead", /weekly digest.*monthly recap/i, "weekly digest"],
-  ["ANALYTICS_PREVIEW.recap.facts[1].text", /unsubscribe anytime/i, "unsubscribe"],
   ["GEOLOCATION_PREVIEW.hero.sub", /ready the day it launches/i, "ready the day it launches"],
   ["GEOLOCATION_PREVIEW.faq.items[0].answer", /What's new/, "What's new"],
   ["GEOLOCATION_PREVIEW.faq.items[2].answer", /next update/i, "next update"],

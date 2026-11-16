@@ -1,98 +1,99 @@
-import type { BandCopy, Fact, HeroCopy, PageMeta, SectionCopy, TabCopy } from "../types";
+import type { BandCopy, EyebrowSection, HeroCopy, PageMeta } from "../types";
 
-/** The analytics preview: will I see whether the card works, with nothing to type. */
+/** One chart of the dashboard: its name and the one line that says what it answers. */
+interface ChartCopy {
+  key:
+    | "visits"
+    | "returnRate"
+    | "newCustomers"
+    | "busiest"
+    | "habits"
+    | "rewards"
+    | "cohorts"
+    | "levels"
+    | "spend"
+    | "locations";
+  title: string;
+  line: string;
+}
+
+/** The analytics preview: a loyalty program's numbers, filled in by every scan. */
 export const ANALYTICS_PREVIEW = {
   meta: {
-    title: "Loyalty analytics: visits, return rate and busy hours | Stampeo",
+    title: "Loyalty program analytics: visits and return rate | Stampeo",
     description:
-      "See how often your customers come back: visits, return rate and your busiest hours, filled in by every scan. Free trial, cancel anytime.",
+      "Loyalty program analytics for small businesses: visits, return rate, new customers and your busiest hours, filled in by every scan. Free trial.",
   } satisfies PageMeta,
   hero: {
-    h1: "See how often your customers come back.",
-    accent: "come back.",
-    sub: "Visits, return rate and your busiest hours. Every scan fills it in.",
-  } satisfies HeroCopy,
-  /**
-   * The six questions a paper card cannot answer, and what the dashboard answers. A card's number is the page's
-   * sample (Platform's `ANALYTICS` and the dashboard's own sentences), so only its words are here: `line` is the
-   * grey line under the figure, and `figure` is set when the answer is a word rather than a number.
-   */
+    h1: "Loyalty program analytics for your shop.",
+    accent: "analytics",
+    sub: "See visits, return rate, new customers and your busiest hours. Every scan fills it in.",
+    secondary: "See every chart",
+    alt: "A key-numbers card from the Stampeo dashboard: visits, return rate, new customers and a chart of visits over time.",
+  } satisfies HeroCopy & { secondary: string; alt: string },
+  /** The key-numbers card beside the hero's words; `{customers}` is filled with the sample's customer count. */
+  numbers: {
+    title: "This month",
+    visits: { label: "Visits", line: "from {customers} customers" },
+    returnRate: { label: "Return rate", line: "of first-time customers came back within a month" },
+    newCustomers: { label: "New customers", line: "signed up" },
+    chart: { label: "Visits over time", legend: ["Returning", "First visit"] },
+  },
   blindSpots: {
-    eyebrow: "What you know today",
-    title: "What a paper card can't tell you.",
-    lead: "Six questions every owner asks. Flip to see the answers.",
-    toggle: { label: "How you keep track", paper: "With a paper card", stampeo: "With Stampeo" },
-    unknown: "???",
-    cards: [
-      { key: "working", question: "Is my program working?", line: "visits in the last three months" },
-      { key: "return", question: "Do they come back?", line: "came back within a month" },
-      { key: "regulars", question: "How many are regulars?", line: "come at least every two weeks" },
-      { key: "busiest", question: "When is it busiest?", figure: "Thursday", line: "8 to 9 AM" },
-      { key: "rewards", question: "Who has a reward waiting?", line: "customers have a reward waiting" },
-      { key: "new", question: "Who's new?", line: "new customers" },
-    ] satisfies Array<{
-      key: "working" | "return" | "regulars" | "busiest" | "rewards" | "new";
-      question: string;
-      figure?: string;
-      line: string;
-    }>,
+    eyebrow: "With paper cards",
+    title: "What you don't know today.",
+    lead: "With paper cards, you run loyalty blind: no data, and no way to improve it.",
+    questions: [
+      "How many regular customers?",
+      "How often do they come back?",
+      "How many stopped coming?",
+      "Which day is quietest?",
+      "How many rewards this month?",
+      "Is your program working?",
+    ],
+    noAnswer: "???",
   },
-  glance: {
-    eyebrow: "At a glance",
-    title: "Your numbers, updated with every scan.",
-    lead: "Visits, new customers and your return rate.",
-    tab: {
-      title: "What you see from day one",
-      facts: [
-        { text: "Visits and new customers, with the trend" },
-        { text: "Your return rate for the past month" },
-        { text: "Visits over time, week by week" },
-        { text: "A recap in your inbox, weekly or monthly" },
-      ] satisfies Fact[],
-    },
-  } satisfies SectionCopy & { eyebrow: string; tab: { title: string; facts: Fact[] } },
-  activity: {
+  charts: {
+    eyebrow: "Every chart",
+    title: "Loyalty program analytics, chart by chart.",
+    lead: "Each chart answers one question about your customers. Every scan fills it in.",
+    rows: [
+      { key: "visits", title: "Visits over time", line: "Every visit, week by week, split into first visits and returning customers." },
+      { key: "returnRate", title: "Return rate", line: "How many first-time customers came back within a month." },
+      { key: "newCustomers", title: "New customers", line: "How many people joined your card." },
+      { key: "busiest", title: "Busiest times", line: "Your visits by day and hour, with your busiest slot and quietest open hour." },
+      { key: "habits", title: "How often they come", line: "Who comes every week, every two weeks, about once a month, or came once." },
+      { key: "rewards", title: "Reward progress", line: "How close each customer is to a reward, and who has one ready." },
+      { key: "cohorts", title: "Monthly cohorts", line: "Of each month's new customers, how many came back, and how soon." },
+      { key: "levels", title: "Levels", line: "How many customers are on each level, and how many move up each month." },
+      { key: "spend", title: "Tracked spend", line: "On a points card: what your team enters at the counter, and your average ticket." },
+      { key: "locations", title: "By location", line: "Every chart for one shop at a time, when you have more than one." },
+    ] satisfies ChartCopy[],
+  } satisfies EyebrowSection & { eyebrow: string; rows: ChartCopy[] },
+  customers: {
     eyebrow: "Your customers",
-    title: "Know who's in, and who's slipping away.",
-    lead: "Watch visits as they happen, and see which customers to win back.",
-    tabs: {
-      live: {
-        label: "Live activity",
-        title: "Every visit, as it happens",
-        facts: [{ text: "Stamps, rewards and new cards, with no refresh" }, { text: "On your phone or your computer" }] satisfies Fact[],
-      },
-      customers: {
-        label: "Your customers",
-        title: "Regulars, VIPs and who's slipping",
-        facts: [
-          { text: "New, Regular, VIP, At risk and Ghost, sorted for you" },
-          { text: "Who has a reward ready or is close to one" },
-          { text: "Download your customer list anytime" },
-        ] satisfies Fact[],
-      },
-    } satisfies Record<"live" | "customers", TabCopy>,
+    title: "Your customer list, sorted into groups.",
+    lead: "See who's new, who's a regular, and who hasn't been back in a while.",
+    columns: ["Name", "Stamps", "Segment", "Last visit"],
+    segments: [
+      { key: "new", label: "New", definition: "joined in the last two weeks" },
+      { key: "regular", label: "Regular", definition: "keeps coming back" },
+      { key: "vip", label: "VIP", definition: "has redeemed three rewards or more" },
+      { key: "rewardReady", label: "Reward ready", definition: "has a reward to claim now" },
+      { key: "closeToReward", label: "Close to reward", definition: "two stamps or fewer from it" },
+      { key: "atRisk", label: "At risk", definition: "hasn't been back in over a month" },
+      { key: "ghost", label: "Ghost", definition: "got the card, never came back" },
+    ],
+    fact: "Download your customer list anytime, as a CSV file.",
   },
-  /** The owner's performance email: its figures are the page's sample, like the dashboard's. */
-  recap: {
-    eyebrow: "In your inbox",
-    title: "Your numbers come to you.",
-    lead: "A weekly digest when you're busy, a monthly recap otherwise.",
-    email: {
-      from: "Stampeo",
-      subject: "Your week at Aurevo",
-      figures: [
-        { label: "Stamps given", value: "256" },
-        { label: "New customers", value: "38" },
-        { label: "Returning", value: "211" },
-        { label: "Rewards redeemed", value: "19" },
-      ],
-      nudge: "12 customers are close to a reward",
-    },
-    facts: [{ text: "Weekly when you're busy, monthly otherwise" }, { text: "Unsubscribe anytime" }] satisfies Fact[],
-  },
+  dashboard: {
+    eyebrow: "Laptop and phone",
+    title: "Your numbers on your laptop or your phone.",
+    lead: "The same dashboard on both. Check your numbers from anywhere.",
+  } satisfies EyebrowSection & { eyebrow: string },
   band: {
     title: "Stop guessing. Start knowing.",
     accent: "Start knowing.",
-    sub: "Your numbers start with your first stamp.",
+    sub: "Your analytics fill in from the first card you scan.",
   } satisfies BandCopy,
 } as const;

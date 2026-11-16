@@ -188,8 +188,9 @@ describe("percentages a component draws (AC12)", () => {
    */
   const DRAWN_SAMPLE_DASHBOARDS = [
     "components/landing-pages/platform/DeliverAnalytics.tsx",
-    "components/landing-pages/feature-previews/analytics/GlanceTiles.tsx",
-    "lib/landing-pages/previews/analytics-sample.ts",
+    "components/landing-pages/feature-previews/analytics/KeyNumbersCard.tsx",
+    "components/landing-pages/feature-previews/analytics/NumberCharts.tsx",
+    "components/landing-pages/feature-previews/analytics/VisitsChart.tsx",
   ];
 
   test.each(DRAWN_SAMPLE_DASHBOARDS)("%s is a drawn sample dashboard: its percentages are ANALYTICS', never typed in", (file) => {

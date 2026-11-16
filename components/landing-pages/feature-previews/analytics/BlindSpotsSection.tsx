@@ -1,14 +1,16 @@
+import { BlindSpotCards } from "@/components/features/analytics/BlindSpotCards";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
 import { LpSection } from "../../shared/LpSection";
-import { BlindSpots } from "./BlindSpots";
 
-/** Six stamped questions that open on a handwritten ??? and turn, from the control or by a tap, to the answers the dashboard gives. */
+/** Production's six blind-spot cards, each turning from its question to ???, under the preview's own heading. */
 export function BlindSpotsSection() {
-  const { eyebrow, title, lead } = ANALYTICS_PREVIEW.blindSpots;
+  const { eyebrow, title, lead, questions, noAnswer } = ANALYTICS_PREVIEW.blindSpots;
 
   return (
-    <LpSection section="blind_spots" eyebrow={eyebrow} title={title} lead={lead} align="center">
-      <BlindSpots />
+    <LpSection section="blind_spots" tinted eyebrow={eyebrow} title={title} lead={lead} align="center">
+      <div className="mx-auto max-w-[1040px]">
+        <BlindSpotCards questions={questions} noAnswer={noAnswer} bare />
+      </div>
     </LpSection>
   );
 }

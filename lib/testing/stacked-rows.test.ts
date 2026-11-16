@@ -22,6 +22,6 @@ describe("the smallest label a component draws, as a phone shows it", () => {
   });
 
   test("it reads a component's source, comments left out", () => {
-    expect(smallestLabelPx(`${import.meta.dir}/../../components/landing-pages/feature-previews/analytics/QuestionMinis.tsx`)).toBe(9);
+    expect(smallestLabelPx(`${import.meta.dir}/../../components/landing-pages/platform/DeliverAnalytics.tsx`)).toBe(10);
   });
 });

@@ -140,13 +140,14 @@ describe("the hero each page opens with (AC1)", () => {
     expect(links(html)).toEqual(["/en/onboarding"]);
   });
 
-  test("analytics shows the dashboard on a computer and on a phone, with no caption, over a single trial button", async () => {
+  test("analytics shows its key-numbers card, over the trial button and a link down to its charts, which are on the page", async () => {
     const html = await hero("platform/analytics");
 
-    expect(html).toMatch(/en-desktop/);
-    expect(html).toMatch(/en-phone/);
+    expect(pictures(html)).toEqual([COPY["platform/analytics"].hero.alt]);
+    expect(html).not.toMatch(/en-desktop|en-phone/);
     expect(textOf(html)).not.toContain(SHARED.sampleData);
-    expect(links(html)).toEqual(["/en/onboarding"]);
+    expect(links(html)).toEqual(["/en/onboarding", "#charts"]);
+    expect(await renderPreviewPage("platform/analytics")).toContain('id="charts"');
   });
 
   test("broadcasts show Aurevo's broadcast over the stamp banner", async () => {
