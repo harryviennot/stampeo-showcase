@@ -20,12 +20,16 @@ import { TypeMarquee } from "@/components/landing-pages/platform/TypeMarquee";
 import { StepHeading } from "@/components/landing-pages/how-it-works/StepHeading";
 import { IconTile } from "@/components/landing-pages/shared/IconTile";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
+import { LpFinalCta } from "@/components/landing-pages/shared/LpFinalCta";
+import { LpHero } from "@/components/landing-pages/shared/LpHero";
+import { LpTrialButton } from "@/components/landing-pages/shared/LpTrialButton";
 import { EYEBROW_PILL, LpHeading } from "@/components/landing-pages/shared/LpSection";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { FAQList } from "@/components/ui/FAQList";
 import { ROOT, filesWith, read, sourceFiles } from "../../testing/jsx-source";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
-import { renderEn, textOf } from "../../testing/render-en";
+import { renderPreviewPage } from "../../testing/preview-page";
+import { renderEn, renderEnAsync, textOf } from "../../testing/render-en";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
 import { LANDING_PAGES } from "../pages";
 
@@ -182,6 +186,33 @@ describe("the trial button is a keycap, and the second action a quiet outline", 
     const html = renderEn(<PreviewHero slug="platform/mobile-scanner" visual={<i>phone</i>} />, { us: true });
 
     expect(trial(html)).toMatch(/class="[^"]*\bkeycap\b/);
+  });
+
+  test("the trial offered between a page's sections is a keycap, not an outline pill", () => {
+    const button = trial(renderEn(<LpTrialButton />, { us: true }));
+
+    expect(button).toMatch(/class="[^"]*\bkeycap\b/);
+    expect(button).toContain("bg-[var(--accent)]");
+    expect(button).not.toMatch(/border-2|bg-transparent/);
+  });
+
+  test.each(["how-it-works", "features", "outcomes"] as const)(
+    "%s: every trial button of the page, hero to closing ask, is a keycap (the pricing cards' plan buttons are the pricing section's own)",
+    async (slug) => {
+      const buttons = [...(await renderPreviewPage(slug)).matchAll(/<a class="group inline-flex[^>]*href="\/en\/onboarding"[^>]*>/g)].map((match) => match[0]);
+
+      expect(buttons.length).toBeGreaterThanOrEqual(4);
+      expect(buttons.filter((button) => !/class="[^"]*\bkeycap\b/.test(button))).toEqual([]);
+    },
+  );
+
+  test("the hero's stacked keycap keeps 3px under it for its ledge, as the pair's does, and the closing ask too", async () => {
+    const hero = trial(await renderEnAsync(<LpHero slug="how-it-works" />));
+    const closing = trial(renderEn(<LpFinalCta slug="how-it-works" />, { us: true }));
+
+    expect(hero).toContain("mb-[3px]");
+    expect(hero).toContain("sm:mb-0");
+    expect(closing).toContain("mb-[3px]");
   });
 
   test("a hero can carry a plain chip beside its label, such as Coming soon", () => {

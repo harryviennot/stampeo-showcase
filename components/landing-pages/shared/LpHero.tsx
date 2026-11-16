@@ -12,7 +12,7 @@ import { WalletBadges } from "./WalletBadges";
 
 /**
  * The hero the three argument pages share, centred at every width: H1, sub,
- * trial CTA, demo link, reassurance and proof line, then the official wallet
+ * trial keycap, demo link, reassurance and proof line, then the official wallet
  * badges and the dashboard on a computer and a phone. The pages differ only by
  * their words.
  */
@@ -34,7 +34,7 @@ export async function LpHero({ slug }: Readonly<{ slug: LandingSlug }>) {
         )}
 
         <div className="mt-7 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-6">
-          <CTAButton label={SHARED.cta} trackAs="hero" className="w-full sm:w-auto" />
+          <CTAButton label={SHARED.cta} trackAs="hero" keycap className="mb-[3px] w-full sm:mb-0 sm:w-auto" />
           {hasDemoSection(slug) && (
             // A plain anchor: the click is a scroll, not a contact.
             <a

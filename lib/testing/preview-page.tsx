@@ -1,16 +1,16 @@
 import type { ReactElement, ReactNode } from "react";
-import type { PreviewSlug } from "../landing-pages/pages";
+import type { LandingSlug } from "../landing-pages/pages";
 import { pageFile } from "./landing-pages-source";
 import { renderEnAsync } from "./render-en";
 import { mockEnglishServerTranslations } from "./server-intl";
 
-const PAGES = new Map<PreviewSlug, Promise<string>>();
+const PAGES = new Map<LandingSlug, Promise<string>>();
 
 /**
- * A preview's page as a visitor's browser receives it, without the shell's header and footer: the page
+ * A landing page as a visitor's browser receives it, without the shell's header and footer: the page
  * function called as Next calls it, its async sections resolved, the US dollars and trial in place.
  */
-export function renderPreviewPage(slug: PreviewSlug): Promise<string> {
+export function renderPreviewPage(slug: LandingSlug): Promise<string> {
   if (!PAGES.has(slug)) {
     PAGES.set(
       slug,
