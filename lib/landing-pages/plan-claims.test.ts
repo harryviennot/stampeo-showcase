@@ -90,9 +90,6 @@ const CHIPPED: Record<string, Gate> = {
   "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[1]": CUSTOM_MILESTONES,
   "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[2]": CUSTOM_MESSAGE_TEXT,
   "PUSH_NOTIFICATIONS_PREVIEW.editor.toggle": CUSTOM_MESSAGE_TEXT,
-  "ANALYTICS_PREVIEW.questions.rows[1]": ANALYTICS_CHARTS,
-  "ANALYTICS_PREVIEW.questions.rows[2]": ANALYTICS_CHARTS,
-  "ANALYTICS_PREVIEW.questions.rows[3]": ANALYTICS_CHARTS,
   PROMOTIONAL_CAMPAIGNS_PREVIEW: BROADCASTS,
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[1]": ADVANCED_TARGETING,
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[2]": ADVANCED_TARGETING,
@@ -131,7 +128,6 @@ const PLAN_LINES: Record<string, PlanClaim[]> = {
   "SHARED.dashboardPlans": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "FEATURES.analytics.planLine": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "ANALYTICS_PREVIEW.glance.lead": [claim("every plan", BASIC_ANALYTICS)],
-  "ANALYTICS_PREVIEW.questions.closer": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "ANALYTICS_PREVIEW.band.sub": [claim("every plan", BASIC_ANALYTICS)],
   "ANALYTICS_PREVIEW.ladder.title": [claim("every plan", BASIC_ANALYTICS), claim("Growth and Pro", ANALYTICS_CHARTS)],
   "ANALYTICS_PREVIEW.ladder.lead": [
@@ -178,9 +174,6 @@ const PLAN_LINES: Record<string, PlanClaim[]> = {
  * (checked against `PLAN_FACTS` in `copy.test.ts`) and the plans table's column heads.
  */
 const PLAN_NAMES_ELSEWHERE: Record<string, string> = {
-  "ANALYTICS_PREVIEW.numbers.figures[0].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
-  "ANALYTICS_PREVIEW.numbers.figures[1].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
-  "ANALYTICS_PREVIEW.numbers.figures[2].label": "the history figures are PLAN_FACTS' analyticsHistoryDays, checked in copy.test.ts",
   "ANALYTICS_PREVIEW.ladder.plans[0].label": "the ladder's plan tabs, in the order of TIERS",
   "ANALYTICS_PREVIEW.ladder.plans[1].label": "the ladder's plan tabs, in the order of TIERS",
   "ANALYTICS_PREVIEW.ladder.plans[2].label": "the ladder's plan tabs, in the order of TIERS",

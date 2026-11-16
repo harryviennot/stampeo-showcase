@@ -4,16 +4,16 @@ import { PreviewHero } from "@/components/landing-pages/feature-previews/Preview
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { ActivitySection } from "@/components/landing-pages/feature-previews/analytics/ActivitySection";
 import { GlanceSection } from "@/components/landing-pages/feature-previews/analytics/GlanceSection";
-import { HistorySection } from "@/components/landing-pages/feature-previews/analytics/HistorySection";
-import { QuestionsSection } from "@/components/landing-pages/feature-previews/analytics/QuestionsSection";
-import { Hairline } from "@/components/landing-pages/platform/Hairline";
+import { BlindSpotsSection } from "@/components/landing-pages/feature-previews/analytics/BlindSpotsSection";
+import { LadderSection } from "@/components/landing-pages/feature-previews/analytics/LadderSection";
+import { RecapSection } from "@/components/landing-pages/feature-previews/analytics/RecapSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { DashboardDuo } from "@/components/landing-pages/shared/DashboardDuo";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
-// The analytics preview of /en/features/analytics: English only, noindex, in Platform's style.
+// The analytics preview of /en/features/analytics: English only, noindex, in the Stampeo-Platform look.
 export function generateStaticParams() {
   return [{ locale: "en" }];
 }
@@ -28,13 +28,11 @@ export default function AnalyticsPreviewPage() {
   return (
     <LandingPageShell slug="platform/analytics">
       <PreviewHero slug="platform/analytics" secondary={null} visual={<DashboardDuo caption={false} priority />} />
-      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page D) and delete this marker. */}
+      <BlindSpotsSection />
       <GlanceSection />
-      <QuestionsSection />
+      <LadderSection />
       <ActivitySection />
-      <Hairline />
-      <HistorySection />
-      <Hairline />
+      <RecapSection />
       <LpAccentBand copy={ANALYTICS_PREVIEW.band} />
       <RelatedPreviews slug="platform/analytics" />
     </LandingPageShell>

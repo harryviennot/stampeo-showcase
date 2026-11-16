@@ -13,7 +13,7 @@ import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
 import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
-import { PLAN_FACTS } from "../plans/plan-facts";
+import { PLAN_FACTS, analyticsHistoryLabel } from "../plans/plan-facts";
 import { routing } from "../../i18n/routing";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
@@ -281,7 +281,7 @@ describe("percentages a component draws (AC12)", () => {
   const DRAWN_SAMPLE_DASHBOARDS = [
     "components/landing-pages/platform/DeliverAnalytics.tsx",
     "components/landing-pages/feature-previews/analytics/GlanceTiles.tsx",
-    "components/landing-pages/feature-previews/analytics/QuestionMinis.tsx",
+    "components/landing-pages/feature-previews/analytics/sample.ts",
   ];
 
   test.each(DRAWN_SAMPLE_DASHBOARDS)("%s is a drawn sample dashboard: its percentages are ANALYTICS', never typed in", (file) => {
@@ -375,17 +375,13 @@ describe("the six previews' copy", () => {
       expect(languages.value).toBe(String(routing.locales.length));
     });
 
-    test("analytics history is each plan's own: 30, 90 and 365 days, with monthly cohorts on Pro alone", () => {
-      const { figures } = ANALYTICS_PREVIEW.numbers;
+    test("analytics history is each plan's own: 30 days, 90 days and 1 year, with monthly cohorts on Pro alone", () => {
+      const { plans } = ANALYTICS_PREVIEW.ladder;
 
-      expect(figures.map((figure) => figure.value)).toEqual(
-        (["starter", "growth", "pro"] as const).map((tier) => String(PLAN_FACTS[tier].analyticsHistoryDays)),
+      expect(plans.map((plan) => `${plan.history.value} ${plan.history.unit}`)).toEqual(
+        (["starter", "growth", "pro"] as const).map((tier) => analyticsHistoryLabel(PLAN_FACTS[tier].analyticsHistoryDays)),
       );
-      expect(figures.map((figure) => figure.label)).toEqual([
-        "days of history on Starter",
-        "days on Growth",
-        "days on Pro, with monthly cohorts",
-      ]);
+      expect(plans.map((plan) => plan.history.value)).toEqual(["30", "90", "1"]);
       expect([PLAN_FACTS.starter.analytics, PLAN_FACTS.growth.analytics, PLAN_FACTS.pro.analytics]).toEqual(["basic", "basic", "advanced"]);
     });
 

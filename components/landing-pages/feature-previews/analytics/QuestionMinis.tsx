@@ -1,12 +1,10 @@
-import { ANALYTICS, DASHBOARD } from "../../platform/DeliverAnalytics";
 import { MiniFrame } from "../MiniFrame";
 import { INK } from "./ink";
 
 /**
- * The tiles of four dashboard sections, drawn with the figures of the sample
- * café's captures (the return rate is Platform's `ANALYTICS`). Their labels
- * are the dashboard's own English strings (web `messages/en/analytics.json`),
- * and none names a city.
+ * The tiles of three dashboard sections that Growth and Pro add, drawn with the figures of the
+ * sample café's captures. Their labels are the dashboard's own English strings (web
+ * `messages/en/analytics.json`), and none names a city.
  */
 
 const TITLE = "text-[13px] leading-4 font-semibold";
@@ -14,33 +12,8 @@ const TITLE = "text-[13px] leading-4 font-semibold";
 /** A tile is white, as the dashboard draws it, with its figure ink. */
 const TILE_SURFACE = { className: "bg-white", color: INK.figure } as const;
 
-/** The share of first-time customers who came back within 30 days: the figure, its trend and what it measures. */
-export function ReturnRateMini() {
-  const { percent, change } = ANALYTICS.returnRate;
-
-  return (
-    <MiniFrame {...TILE_SURFACE} label={`The ${DASHBOARD.returnRate}: ${percent}%, up ${change} points, of first-time customers who came back.`}>
-      <p className="text-[12px] leading-4" style={{ color: INK.label }}>
-        {DASHBOARD.returnRate}
-      </p>
-      <div className="mt-auto flex items-baseline justify-between gap-2">
-        <span className="text-[68px] leading-none font-semibold tracking-[-0.04em] tabular-nums">{`${percent}%`}</span>
-        <span className="text-[13px] font-semibold tabular-nums" style={{ color: INK.up }}>
-          {`▲${change} pts`}
-        </span>
-      </div>
-      <div className="mt-4 h-2 overflow-hidden rounded-full" style={{ backgroundColor: INK.track }}>
-        <div className="h-full rounded-full" style={{ width: `${percent}%`, backgroundColor: INK.navy }} />
-      </div>
-      <p className="mt-2.5 mb-auto text-[12px] leading-4" style={{ color: INK.label }}>
-        of first-time customers came back
-      </p>
-    </MiniFrame>
-  );
-}
-
 /** The five groups the dashboard sorts customers into by how often they come, each with its count. */
-const HABITS = [
+export const HABITS = [
   { label: "About every week", count: 191, tone: INK.navy },
   { label: "Every 2 weeks", count: 125, tone: INK.navy },
   { label: "About once a month", count: 106, tone: INK.navy },
@@ -135,7 +108,7 @@ const PROGRESS = [
   { label: "6-7", still: 120, gone: 5 },
 ] as const;
 
-const READY = 22;
+export const READY = 22;
 const CHART_HEIGHT = 104;
 
 /** Reward progress: where customers are on their card, and how many have a reward ready. */

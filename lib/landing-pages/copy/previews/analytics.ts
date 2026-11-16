@@ -1,5 +1,5 @@
 import { PLAN_FACTS, analyticsHistoryLabel } from "../../../plans/plan-facts";
-import type { BandCopy, Fact, PageMeta, PreviewHeroCopy, RowCopy, SectionCopy, TabCopy } from "../types";
+import type { BandCopy, Fact, PageMeta, PreviewHeroCopy, SectionCopy, TabCopy } from "../types";
 
 /** A plan's history as the pair the ladder prints in handwriting: "30" over "days", "1" over "year". */
 function history(days: number | "unlimited"): { value: string; unit: string } {
@@ -61,42 +61,6 @@ export const ANALYTICS_PREVIEW = {
       ] satisfies Fact[],
     },
   } satisfies SectionCopy & { eyebrow: string; tab: { title: string; facts: Fact[] } },
-  questions: {
-    eyebrow: "Answers",
-    title: "What a paper card can't tell you.",
-    lead: "Each question has its own chart, filled in by every scan.",
-    rows: [
-      {
-        key: "return",
-        eyebrow: "Are they coming back?",
-        title: "Return rate",
-        body: "The share of customers who came back within a month, and its trend.",
-      },
-      {
-        key: "habits",
-        eyebrow: "How often do they come?",
-        title: "Visit habits",
-        body: "Every week, every two weeks, once a month: see how your customers split.",
-        plan: "Growth and Pro",
-      },
-      {
-        key: "busiest",
-        eyebrow: "When is it quiet?",
-        title: "Busiest times",
-        body: "Visits by day and hour, with your busiest slot and quietest open hour.",
-        plan: "Growth and Pro",
-      },
-      {
-        key: "rewards",
-        eyebrow: "Who's close to a reward?",
-        title: "Reward progress",
-        body: "Where customers are on their card, and how many rewards are waiting.",
-        plan: "Growth and Pro",
-      },
-    ] satisfies RowCopy<"return" | "habits" | "busiest" | "rewards">[],
-    /** Under the rows: what Starter shows in place of the charts. */
-    closer: "Starter shows these in a sentence; Growth and Pro chart them.",
-  },
   activity: {
     eyebrow: "Your customers",
     title: "Know who's in, and who's slipping away.",
@@ -124,6 +88,8 @@ export const ANALYTICS_PREVIEW = {
     title: "Every plan answers. Growth and Pro chart it.",
     lead: "Starter answers in a sentence. Growth and Pro chart it and look further back.",
     toggleLabel: "Plan",
+    /** Printed after the history's unit, under the plan's handwritten figure. */
+    historyLabel: "of history",
     plans: [
       { label: "Starter", history: history(PLAN_FACTS.starter.analyticsHistoryDays) },
       { label: "Growth", history: history(PLAN_FACTS.growth.analyticsHistoryDays) },
@@ -160,16 +126,6 @@ export const ANALYTICS_PREVIEW = {
       nudge: "12 customers are close to a reward",
     },
     facts: [{ text: "Weekly when you're busy, monthly otherwise" }, { text: "Unsubscribe anytime" }] satisfies Fact[],
-  },
-  numbers: {
-    eyebrow: "History",
-    title: "Look back as far as your plan goes.",
-    /** Each plan's own history (`PLAN_FACTS`), 365 days with monthly cohorts on Pro. */
-    figures: [
-      { value: String(PLAN_FACTS.starter.analyticsHistoryDays), label: "days of history on Starter" },
-      { value: String(PLAN_FACTS.growth.analyticsHistoryDays), label: "days on Growth" },
-      { value: String(PLAN_FACTS.pro.analyticsHistoryDays), label: "days on Pro, with monthly cohorts" },
-    ],
   },
   band: {
     title: "Stop guessing. Start knowing.",
