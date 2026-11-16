@@ -54,7 +54,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
         { text: "You choose the card size and the reward" },
         { text: "Extra stamps can roll over to the next card" },
       ],
-      bestFor: "Best when every visit costs about the same: coffee, haircuts, car washes, bakeries.",
+      bestFor: "Every visit costs about the same: coffee, haircuts, car washes, bakeries.",
       alt: "A café's stamp card with 5 of 8 stamps",
     },
     points: {
@@ -65,10 +65,10 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
         { text: "Customers pick any reward their points cover" },
         { text: "Points never expire" },
       ],
-      bestFor: "Best when baskets vary: restaurants, boutiques, grocery and specialty shops.",
+      bestFor: "Baskets vary: restaurants, boutiques, grocery and specialty shops.",
       alt: "A beauty salon's points card, its ring filling toward the next reward",
     },
-    bestForLabel: "Best for",
+    bestForLabel: "Best when",
   },
   levels: {
     eyebrow: "Loyalty levels",
