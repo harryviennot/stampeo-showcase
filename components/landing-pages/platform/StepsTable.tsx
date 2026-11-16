@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { Tile } from "@/lib/landing-pages/copy/types";
 import { PlanChip } from "../shared/PlanChip";
-import { CELL_TITLE, STAMPED_CARD } from "./classes";
+import { CELL_TITLE } from "./classes";
 
 /** A cell of the table: a titled line, with an icon above it or a plan chip under it where it needs one. */
 export type StepCell = Tile & { icon?: ReactNode };
@@ -16,7 +16,7 @@ const COLUMNS: Record<number, string> = {
 };
 
 /**
- * A table of steps in the house ink frame, the body of a section. With a `visual` (phones, shown
+ * A bordered table of steps, the body of a section. With a `visual` (phones, shown
  * as they are, side by side) their lower parts sink behind the table: low enough
  * that the top of each phone shows above it, with room above for their shadows.
  * Without one it is a plain table. On a phone the table is a stack of rows. A
@@ -37,7 +37,7 @@ export function StepsTable({
 
       {cells.length > 0 && (
         <ol
-          className={`relative ${visual ? "-mt-10 " : ""}grid divide-y divide-[var(--border)] overflow-hidden ${STAMPED_CARD}${
+          className={`relative ${visual ? "-mt-10 " : ""}grid divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white/80 backdrop-blur-xl${
             visual ? " lg:-mt-24" : ""
           } ${COLUMNS[cells.length] ?? ""}`}
         >

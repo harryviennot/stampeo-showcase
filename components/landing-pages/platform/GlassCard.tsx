@@ -1,12 +1,11 @@
 import type { ReactNode } from "react";
-import { STAMPED_CARD } from "./classes";
 
 /** The card's title: left-aligned over its picture, a clear step under the section's h2. */
 const TITLE =
   "mb-4 text-[1.25rem] leading-[1.15] font-medium tracking-[-0.02em] text-balance text-[var(--foreground)] lg:text-[1.5rem]";
 
 /**
- * A white card in the house ink frame that floats over a picture, its title
+ * A light, translucent card that floats over a picture, its title
  * left-aligned. `float` makes it drift a few pixels (still for readers who ask
  * for less motion); the animation owns `transform`, so place a floating card
  * with offsets, not a transform.
@@ -24,7 +23,9 @@ export function GlassCard({
 }>) {
   return (
     <div
-      className={`${STAMPED_CARD} p-5 lg:p-6 ${float ? "lp-float" : ""} ${className}`}
+      className={`rounded-[28px] bg-white/80 p-5 shadow-[0_32px_64px_-32px_rgba(25,18,16,0.32),0_6px_16px_-8px_rgba(25,18,16,0.08)] ring-1 ring-black/[0.06] backdrop-blur-xl backdrop-saturate-150 lg:p-6 ${
+        float ? "lp-float" : ""
+      } ${className}`}
     >
       {title && <h3 className={TITLE}>{title}</h3>}
       {children}

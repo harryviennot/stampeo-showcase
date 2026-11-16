@@ -8,7 +8,7 @@ export function FactList({ facts, className = "" }: Readonly<{ facts: readonly F
     <ul className={`flex flex-col gap-3 ${className}`}>
       {facts.map((fact) => (
         <li key={fact.text} className="flex items-start gap-3 text-base text-[var(--foreground)]">
-          <CheckIcon size={20} weight="bold" aria-hidden className="mt-0.5 shrink-0 text-[var(--accent)]" />
+          <CheckIcon size={20} weight="bold" aria-hidden className="mt-0.5 shrink-0 text-[var(--accent-hover)]" />
           <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1.5">
             <span className="text-pretty">{fact.text}</span>
             {fact.plan && <PlanChip plan={fact.plan} />}
