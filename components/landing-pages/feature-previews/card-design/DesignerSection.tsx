@@ -4,10 +4,7 @@ import { LpCtaPair } from "../../platform/LpCtaPair";
 import { STAMPED_STAGE } from "../../platform/classes";
 import { LpSection } from "../../shared/LpSection";
 
-/**
- * "Design it your way": the live card and its controls on one stamped stage, with the trial offered
- * right under them as a keycap. It is the jump target of the hero's second button.
- */
+/** The live card and its controls on one stamped stage, with the trial under them: the jump target of the hero's second button. */
 export function DesignerSection() {
   const { eyebrow, title, lead } = CARD_DESIGN_PREVIEW.playground;
 

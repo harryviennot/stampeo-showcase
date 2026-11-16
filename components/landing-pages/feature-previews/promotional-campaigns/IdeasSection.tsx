@@ -2,7 +2,7 @@ import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/
 import { LpSection } from "../../shared/LpSection";
 import { IdeasChips } from "./IdeasChips";
 
-/** "Give them a reason to come in today": four broadcasts a café could send, picked from a row of chips. */
+/** Four broadcasts a café could send, picked from a row of chips. */
 export function IdeasSection() {
   return (
     <LpSection section="ideas" eyebrow={COPY.ideas.eyebrow} title={COPY.ideas.title} lead={COPY.ideas.lead} align="center">

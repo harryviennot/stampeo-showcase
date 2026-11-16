@@ -5,10 +5,7 @@ import { STEPS_PHONE, StepsTable } from "../../platform/StepsTable";
 import { LpSection } from "../../shared/LpSection";
 import { LockScreenPhone } from "./LockScreenPhone";
 
-/**
- * "Your address will do the work": three steps in the future tense, and the lock screen they end on, its top
- * showing above the table and its lower part sinking behind it.
- */
+/** Three steps in the future tense, and the lock screen they end on, sinking behind the table. */
 export function HowSection() {
   const { eyebrow, title, lead, cells } = COPY.how;
   const { sender, body } = COPY.banner;

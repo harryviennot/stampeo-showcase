@@ -1,9 +1,4 @@
-/**
- * The card design hero's card: one wallet card that takes on the look of six shops in turn (a car wash, a
- * bakery, a wine bar, a lash studio, a bookstore, a pizza truck), a caption naming each. The row shows the
- * live shop with a neighbour either side on a laptop and the live shop alone on a phone. Everything here is
- * pure; the component draws it.
- */
+/** The card design hero's card: one wallet card that takes on the look of six shops in turn, a caption naming each. Pure. */
 
 import { resolveFanCard } from "@/lib/hero-fan";
 import type { CardDesign, PassField, RewardTier } from "@/lib/types/design";
@@ -62,10 +57,7 @@ export function reskinCard(id: (typeof RESKIN_SHOPS)[number]): ReskinCard {
 
 export type ReskinRole = "live" | "side" | "hidden";
 
-/**
- * Where a card sits in the row when `active` is the live one: its places to the right of the live card
- * (negative to the left, wrapping round), and whether it is the live card, a neighbour or out of sight.
- */
+/** Where a card sits when `active` is the live one: its places right of it (negative to the left, wrapping) and its role. */
 export function reskinPlacement(index: number, active: number, count: number): { offset: number; role: ReskinRole } {
   const half = Math.floor(count / 2);
   const offset = ((((index - active + half) % count) + count) % count) - half;

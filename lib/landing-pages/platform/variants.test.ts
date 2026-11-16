@@ -1,6 +1,5 @@
 /**
- * The two switches Harry compares the Platform hero and the phone menu with: `?hero=` and `?menu=`. A visitor who
- * types nothing, or something that is not a variant, always gets the default one.
+ * The `?hero=` and `?menu=` switches: anything that is not a variant gets the default.
  */
 
 import { describe, expect, test } from "bun:test";

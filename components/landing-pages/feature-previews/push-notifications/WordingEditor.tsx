@@ -69,9 +69,8 @@ function Switch({ label, on, onToggle }: Readonly<{ label: string; on: boolean; 
 }
 
 /**
- * "Use our wording, or write your own": the dashboard's message editor on a stamped stage. Ready-made is
- * the default stamp message; Your words types a message with variables in, 30ms a keystroke, and the lock
- * screen beside it follows. Three message switches flip on their own.
+ * The dashboard's message editor on a stamped stage. Ready-made is the default stamp message; Your words types a
+ * message with variables in, and the lock screen beside it follows. Three message switches, each toggled independently.
  */
 export function WordingEditor() {
   const { toggle, previewLabel, messageLabel, ready, own, switches } = COPY.editor;

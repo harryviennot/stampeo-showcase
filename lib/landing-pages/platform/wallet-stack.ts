@@ -1,9 +1,6 @@
 /**
- * The cards of the Platform hero, and what they do over time. The stack (the default) is nine wallet cards
- * laid out like a phone's Wallet, one in front with the others showing as strips above it: the front card
- * plays a small moment if it has one (a stamp lands, points add up, a level is reached), leaves, and the
- * next takes its place. Everything here is pure; the components only draw it. The shelf's cards (`?hero=shelf`)
- * are in `wallet-shelf.ts`.
+ * The Platform hero's stack: nine wallet cards, one in front and the rest as strips above it. The front card plays
+ * a small moment if it has one, leaves, and the next takes its place. Pure; the components only draw it.
  */
 
 import { WRENFOLD } from "@/components/landing-pages/shared/samples";
@@ -11,11 +8,10 @@ import { resolveFanCard } from "@/lib/hero-fan";
 import { GOLD_LOOK, NOIR_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
-/** What a card shows once its moment has played, over what it showed before. */
+/** What a card shows once its moment has played. */
 export interface StackMoment {
   stamps?: number;
   pointsBalance?: number;
-  /** Colours the card takes (a new level's look). */
   look?: LevelLook;
   headerLabel?: string;
 }
@@ -27,12 +23,11 @@ export interface StackCard {
   stamps?: number;
   pointsBalance?: number;
   pointsRewards?: RewardTier[];
-  /** A level's name, printed over the count where "Stamps" or "Points" was. */
   headerLabel?: string;
   moment?: StackMoment;
 }
 
-/** The props of a `WalletCard` for a card, before or after its moment. */
+/** The props of a `WalletCard`, before or after the moment. */
 export interface ShownCard {
   design: Partial<CardDesign>;
   stamps?: number;
@@ -41,7 +36,7 @@ export interface ShownCard {
   headerLabel?: string;
 }
 
-/** A shop's card from the brand banks, as the sample says. */
+/** A shop's card from the brand banks. */
 export function shop(id: string, extra: Partial<StackCard> = {}): StackCard {
   const card = resolveFanCard(id);
 
@@ -66,13 +61,9 @@ export function inLook(card: StackCard, look: LevelLook, headerLabel: string, ex
   return { ...card, design, headerLabel, ...extra };
 }
 
-/** The dry cleaner the level cards belong to, as a stamp card. */
 export const WRENFOLD_CARD: StackCard = { id: "wrenfold", program: "stamps", design: WRENFOLD.design, stamps: 4 };
 
-/**
- * The stack's nine, in the order they come to the front. The four strips on a phone show points, stamps and a
- * level the moment the page opens (Vanity, Patoune at Silver, Fournée and Marginalia above Aurevo).
- */
+/** The stack's nine, in the order they come to the front; the four strips a phone shows hold points, stamps and a level. */
 export const STACK_CARDS: readonly StackCard[] = [
   shop("aurevo", { moment: { stamps: 6 } }),
   shop("salon"),
@@ -85,7 +76,7 @@ export const STACK_CARDS: readonly StackCard[] = [
   inLook(shop("forme"), NOIR_LOOK, "Noir"),
 ];
 
-/** What the card shows: its own, or what it becomes once its moment has played. */
+/** What the card shows, before its moment or after it. */
 export function showing(card: StackCard, after: boolean): ShownCard {
   const { moment } = card;
   const shown: ShownCard = {
@@ -117,7 +108,7 @@ export interface StackState {
   phase: StackPhase;
 }
 
-/** How long the front card is held, plays its moment and leaves, in ms. Together with the strips' slide, a cycle is 3.2 seconds. */
+/** How long the front card plays its moment and leaves, in ms; with the rest, a cycle is 3.2 seconds. */
 const MOMENT_MS = 600;
 const LEAVE_MS = 300;
 const CYCLE_MS = 3200;
@@ -140,11 +131,7 @@ export function placement(
   };
 }
 
-/**
- * The state after the front card's current phase, and how long that phase lasts. A card with a moment rests,
- * plays it for 0.6 s and leaves for 0.3 s; one without goes from rest to leaving. Whichever it is, the card holds
- * the front for 3.2 s, the rest of it being the strips' slide and the pause.
- */
+/** The state after the front card's current phase, and how long that phase lasts: rest, then the moment if it has one, then leaving. */
 export function stepAfter(
   state: StackState,
   hasMoment: boolean,
@@ -168,10 +155,7 @@ export interface StackView {
   animated: boolean;
 }
 
-/**
- * What the stack draws for a clock state. A reader who asks for less motion gets it still, with Aurevo in front
- * at its sixth stamp; otherwise the front card shows its after state while it plays its moment and leaves.
- */
+/** What the stack draws for a clock state: still, with Aurevo at its sixth stamp, for a reader who asks for less motion. */
 export function stackView(state: StackState, reducedMotion: boolean): StackView {
   if (reducedMotion) return { front: 0, phase: "rest", after: true, animated: false };
 

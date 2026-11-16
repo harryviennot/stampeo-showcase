@@ -1,7 +1,4 @@
-/**
- * The rules behind the blind-spot cards: which face each card shows, how the control and a tap change them,
- * how they move, and when the one automatic flip fires. Pure, so the component only applies them.
- */
+/** The rules behind the blind-spot cards: which face each shows, how they flip and move, and when the one automatic flip fires. */
 
 import type { Scheduler } from "./scheduler";
 
@@ -52,11 +49,7 @@ export function autoFlipDue({
   return !reduced && !touched && !played && amountVisible >= AUTO_FLIP.visibleAmount;
 }
 
-/**
- * The automatic flip's wait. `report` is told how much of the section is in view each time the observer says so:
- * half of it starts the wait, less cancels it, and when the wait is over every card turns once, unless the visitor
- * has touched a card or the control (`touch`). `stop` cancels a wait in progress.
- */
+/** The automatic flip's wait: `report` the share in view (half starts it, less cancels it); every card turns once unless the visitor `touch`es first. */
 export function createAutoFlip({ scheduler, onFlip }: Readonly<{ scheduler: Scheduler; onFlip: () => void }>) {
   let ratio = 0;
   let reduced = false;

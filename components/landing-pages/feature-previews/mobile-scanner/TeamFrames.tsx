@@ -12,7 +12,7 @@ import { APP } from "./appColors";
  * scanner-app `join.json` and `scanner.json`).
  */
 
-/** The phone is drawn this wide and cut at `CUT` px, so its screen ends where its words do. */
+/** The phone is drawn this wide and cut at 390px by `CUT`, so its screen ends where its words do. */
 const PHONE = 250;
 const CUT =
   "-mx-8 -mt-6 flex max-h-[390px] justify-center overflow-hidden px-8 pt-6 [mask-image:linear-gradient(to_bottom,#000_88%,transparent)]";

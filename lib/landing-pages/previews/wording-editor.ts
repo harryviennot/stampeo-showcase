@@ -1,7 +1,4 @@
-/**
- * What the notifications preview's wording editor shows as it types a message in: the message as parts (plain
- * text and variables), how many keystrokes in it is, and the field, lock screen and plan chip for each point.
- */
+/** The notifications preview's wording editor as it types a message in: the message as parts and how far in it is. */
 
 /** A message as the dashboard's editor shows it: text and the variables filled in at send time, written `{first name}`. */
 export type WordingPart = { kind: "text"; text: string } | { kind: "variable"; name: string };

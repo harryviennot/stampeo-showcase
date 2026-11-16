@@ -19,11 +19,7 @@ function Card({ children }: Readonly<{ children: ReactNode }>) {
   );
 }
 
-/**
- * "One screen for every kind of visit": the Scanner app's own screen for stamps, points, a reward and a level on
- * one phone, beside the customer's wallet card showing what that scan did to it. Sophie is the customer at three
- * shops (a café, a bookstore, a dry cleaner), because the app wears the colour of the shop it is signed in to.
- */
+/** The Scanner app's screen for stamps, points, a reward and a level on one phone, beside the customer's card showing what the scan did to it. */
 export async function CounterSection() {
   const { eyebrow, title, lead, options, fact } = MOBILE_SCANNER_PREVIEW.counter;
   const aurevo = await aurevoDesign();

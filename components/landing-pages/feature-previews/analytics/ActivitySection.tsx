@@ -5,11 +5,7 @@ import { ToggleCard } from "../../platform/ToggleCard";
 import { CustomersMini } from "./CustomersMini";
 import { TRAY } from "./GlanceTiles";
 
-/**
- * "Know who's in, and who's slipping away": a toggle between the live feed of
- * visits as they happen (it stands still for a reader who asks for less motion)
- * and the groups the dashboard sorts customers into, each on the glance pane's tray.
- */
+/** A toggle between the live feed of visits (still for a reader who asks for less motion) and the groups the dashboard sorts customers into. */
 export function ActivitySection() {
   const { eyebrow, title, lead, tabs } = ANALYTICS_PREVIEW.activity;
 

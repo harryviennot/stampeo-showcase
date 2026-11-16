@@ -1,5 +1,5 @@
 /**
- * The kit the five previews are built from: the three pieces Platform's sections
+ * The kit the six previews are built from: the three pieces Platform's sections
  * were generalised into (a steps table, hover rows, a toggle card) and the two
  * preview-only blocks (the hero and the sibling links). What Platform's own pieces render by default is pinned by
  * snapshots in `../default-renders.test.tsx`, and what a page can ask of the

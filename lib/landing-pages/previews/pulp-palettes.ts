@@ -73,10 +73,7 @@ export function palettePlayback(reducedMotion: boolean): number[] {
 /** Each palette is on show this long while the card tries them in turn, in ms. */
 export const PLAY_STEP_MS = 1200;
 
-/**
- * The tour of the palettes and what a tap does to it: `start` (when the section is seen) tries the playback one
- * step apart, once; `pick` shows the palette tapped and ends the tour for good; `stop` cancels what is waiting.
- */
+/** The palette tour: `start` plays it once, `pick` shows the palette tapped and ends the tour, `stop` cancels it. */
 export function createTour({
   reducedMotion,
   scheduler,

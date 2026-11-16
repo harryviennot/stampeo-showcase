@@ -88,12 +88,8 @@ const Slot = memo(function Slot({ card, slot, hidden, leaving, front, after, pre
 });
 
 /**
- * The hero's stack of wallet cards, drawn like a phone's Wallet: the front card whole, the others showing only
- * their header as strips above it (four on a phone, six from a laptop). The front card plays its moment if it
- * has one, slides away, and the strip above it takes its place; the card that left comes back at the top many
- * steps later. The clock runs only while the stack is in view and the tab is in front; a reader who asks for
- * less motion gets it still, with Aurevo in front at its sixth stamp. Cards are drawn at 300px wide and the
- * whole stack is scaled to 1.1 from `lg`, so the front card ends above a 900px fold.
+ * The hero's stack of wallet cards, drawn like a phone's Wallet: the front card whole, the others as strips above it.
+ * The clock runs only while the stack is in view; a reader who asks for less motion gets it still, Aurevo in front.
  */
 export function WalletStack({ label }: Readonly<{ label: string }>) {
   const stage = useRef<HTMLDivElement>(null);

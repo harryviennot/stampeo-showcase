@@ -77,11 +77,7 @@ function MiniCard({
   );
 }
 
-/**
- * "A message for every step of the card": one customer's card over four visits on a dashed rail, each step a
- * label, the default banner it sends and the card as it stands then. Down the left on a phone; from `lg` the rail
- * is centred, with the banners on its left and the cards on its right.
- */
+/** One customer's card over four visits on a dashed rail: a label, the default banner it sends and the card as it stands then; the rail is centred from `lg`. */
 export async function DaySection() {
   const design = await aurevoDesign();
   const nodes = dayNodes();

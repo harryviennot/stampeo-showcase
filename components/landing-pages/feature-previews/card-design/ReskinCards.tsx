@@ -68,11 +68,8 @@ const Slot = memo(function Slot({ card, offset, role }: SlotProps) {
 const CARDS = RESKIN_SHOPS.map(reskinCard);
 
 /**
- * The hero's wallet card, one shop at a time: the card's layout stays put while its logo, colours and
- * stamps or points change, a caption naming the shop under it. From `lg` the previous and next shops sit
- * either side of it, dimmed, and the row slides a place left at each step; on a phone the live card stands
- * alone and fades into the next. The clock runs only while the card is in view and the tab is in front; a
- * reader who asks for less motion gets the first shop standing still.
+ * The hero's wallet card, one shop at a time: the layout stays put while its logo, colours and stamps change, with a
+ * caption under it. The clock runs only while the card is in view; a reader who asks for less motion gets the first shop.
  */
 export function ReskinCards({ captions, alt }: Readonly<{ captions: readonly string[]; alt: string }>) {
   const stage = useRef<HTMLDivElement>(null);

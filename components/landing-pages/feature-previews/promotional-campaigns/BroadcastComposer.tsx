@@ -67,9 +67,9 @@ function Group({ title, children }: Readonly<{ title: string; children: ReactNod
 }
 
 /**
- * "Write it, pick who gets it, send": the dashboard's New broadcast screen on a stamped stage, and the
- * phone it sends to. Send now drops the banner on the lock screen and counts the cards it reached; it also
- * sends by itself, once, when the phone is half in view. A reader who asks for less motion finds it sent.
+ * The dashboard's New broadcast screen on a stamped stage, and the phone it sends to. Send now drops the banner and
+ * counts the cards reached; it also sends once by itself when the phone is half in view. For a reader who asks for
+ * less motion it is already sent.
  */
 export function BroadcastComposer() {
   const reducedMotion = usePrefersReducedMotion();

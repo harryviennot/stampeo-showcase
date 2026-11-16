@@ -47,7 +47,7 @@ const { DashboardDuo } = await import("@/components/landing-pages/shared/Dashboa
 describe("dashboard captures (AC9)", () => {
   /**
    * Platform shows its captures with no "Sample data" (Harry, 13 Nov: a landing page doesn't need the
-   * detail), and so do the five previews in its style; the other pages keep the caption.
+   * detail), and so do the six previews in its style; the other pages keep the caption.
    */
   const onPlatform = isPlatformStyleFile;
 

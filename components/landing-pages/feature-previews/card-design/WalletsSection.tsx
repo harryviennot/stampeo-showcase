@@ -5,11 +5,7 @@ import { GoogleWalletPhone } from "../../shared/GoogleWalletPhone";
 import { LpSection } from "../../shared/LpSection";
 import { WalletPhone } from "../../shared/WalletPhone";
 
-/**
- * "One card, ready for every phone": a grocer's card in Apple Wallet and in
- * Google Wallet side by side, sinking behind the table of what one QR code gets
- * a customer.
- */
+/** A grocer's card in Apple Wallet and Google Wallet side by side, sinking behind the table of what one QR code gets a customer. */
 export function WalletsSection() {
   const { eyebrow, title, lead, cells, phoneAlts } = CARD_DESIGN_PREVIEW.wallets;
 

@@ -3,11 +3,7 @@ import { LpSection } from "../../shared/LpSection";
 import { ToggleCard } from "../../platform/ToggleCard";
 import { GlanceTiles } from "./GlanceTiles";
 
-/**
- * "Your numbers, updated with every scan": Platform's white surface with one
- * pane, so no tabs: the every-plan dashboard tiles drawn on one side, what an
- * owner sees from day one on the other.
- */
+/** The every-plan dashboard tiles on Platform's white surface, beside what an owner sees from day one. */
 export function GlanceSection() {
   const { eyebrow, title, lead, tab } = ANALYTICS_PREVIEW.glance;
 

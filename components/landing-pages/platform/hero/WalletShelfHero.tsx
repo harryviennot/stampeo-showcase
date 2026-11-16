@@ -38,10 +38,8 @@ const TILT = "perspective(900px) rotateY(-16deg) rotateX(4deg)";
 const groupCentre = (group: number) => group * 3 * STRIDE + (2 * STRIDE + SIZE.wide) / 2;
 
 /**
- * Platform's hero section with the shelf: nine wallet cards in a straight, overlapping row, each tipped like a hand of
- * cards held flat. Stamp cards on the left, points cards in the middle, then one shop's card at Bronze, Silver
- * and Gold, each standing higher than the last. On a phone it keeps five (stamps, points, Silver, stamps, Gold)
- * and lets the row run off both edges.
+ * Platform's hero with the shelf: nine wallet cards in a straight, overlapping row (stamps, points, then one shop at
+ * Bronze, Silver and Gold); a phone keeps five of them.
  */
 export function WalletShelfHero() {
   return (

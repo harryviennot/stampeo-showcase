@@ -3,11 +3,7 @@ import { ANATOMY_DESIGNS } from "@/lib/landing-pages/previews/card-design-sample
 import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
 import { LpHeading, LpSection } from "../../shared/LpSection";
 
-/**
- * "Every part of the card is yours": a day spa's card, or a boutique's on points, with its handwritten labels
- * (numbered dots and chips on a phone), under the page's own header. The card brings its own stamps and
- * points switch.
- */
+/** A day spa's card, or a boutique's on points, with its handwritten labels under the page's own header. */
 export function AnatomySection() {
   const { eyebrow, title, lead } = CARD_DESIGN_PREVIEW.anatomy;
 

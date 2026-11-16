@@ -52,11 +52,7 @@ function Column({
   );
 }
 
-/**
- * "Live today, and what's next": one stamped two-column table that keeps what ships apart from what is coming.
- * Today carries live facts with a green check; Coming soon carries planned ones with a clock, under the Pro chip.
- * On a phone the columns stack, Today first.
- */
+/** One stamped two-column table that keeps what is live (green check) apart from what is coming (clock, under the Pro chip); the columns stack on a phone, Today first. */
 export function StatusSection() {
   const { eyebrow, title, lead, today, soon } = GEOLOCATION_PREVIEW.status;
 

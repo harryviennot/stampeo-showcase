@@ -8,10 +8,7 @@ import { StepsTable, type StepCell } from "../../platform/StepsTable";
 /** The app and the browser, each led by an icon tile. */
 const ICONS = [DevicePhoneMobileIcon, GlobeIcon];
 
-/**
- * "An app, or just a browser": two bordered cells with no phones, then the
- * trial and the way to the demo.
- */
+/** The app and the browser as two bordered cells with no phones, then the trial and the way to the demo. */
 export function WaysSection() {
   const { eyebrow, title, lead, cells } = MOBILE_SCANNER_PREVIEW.ways;
   const steps: StepCell[] = cells.map((cell, index) => {

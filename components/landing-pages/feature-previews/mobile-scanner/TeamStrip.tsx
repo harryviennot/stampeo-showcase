@@ -7,9 +7,8 @@ import { PlanChip } from "../../shared/PlanChip";
 import { ScannerReadyFrame, StaffPhoneFrame, TeamPageFrame } from "./TeamFrames";
 
 /**
- * "From a code to the counter": the owner's Team page gives out a code, the staff phone has it typed in, and the
- * Scanner is ready, three numbered frames joined by a dashed rail (down the side on a phone, across from `lg`),
- * then what the team can do. The staff only ever see the scanner, and every scan carries its maker's name.
+ * Three numbered frames joined by a dashed rail (down the side on a phone, across from `lg`): the Team page's code, the
+ * staff phone typing it in, the Scanner ready; then what the team can do.
  */
 export function TeamStrip() {
   const { eyebrow, title, lead, frames, facts } = MOBILE_SCANNER_PREVIEW.team;

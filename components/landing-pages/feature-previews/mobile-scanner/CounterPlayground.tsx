@@ -35,11 +35,8 @@ const ICONS: Record<CounterKey, ElementType> = { stamps: CheckIcon, points: Ligh
 const hidden = (active: boolean) => ({ inert: !active, "aria-hidden": active ? undefined : true }) as const;
 
 /**
- * The counter: four buttons, and the phone and the wallet card that follow them. All four screens and cards sit
- * in the page, stacked, so nothing moves when one is chosen and the choice is a cross-fade (an instant swap for a
- * reader who asks for less motion). It turns its own pages every few seconds while it is on screen, until the visitor
- * taps or presses a key, and the selected button's thin line fills as it waits. On a phone the order is the phone, the
- * buttons, then the card; from `lg` the buttons stand on the left and the phone and the card share a soft panel.
+ * Four buttons, and the phone and wallet card that follow them. All four screens and cards stay in the page, stacked, so
+ * a choice is a cross-fade and nothing moves; it turns its own pages while on screen until the visitor takes over.
  */
 export function CounterPlayground({ label, panes, fact }: Readonly<{ label: string; panes: readonly CounterPane[]; fact: string }>) {
   const reducedMotion = usePrefersReducedMotion();

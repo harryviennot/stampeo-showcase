@@ -6,11 +6,7 @@ import { LpSection } from "../../shared/LpSection";
 /** The two measured figures, each over its line. */
 const ITEMS = COPY.numbers.figures.map(({ value, text }) => ({ value, label: text }));
 
-/**
- * "Your customers keep the card": the two figures Stampeo measures, handwritten, with
- * where they come from under them and the trial offered right after. Two figures sit as a
- * centred pair, not in a row of three with an empty place.
- */
+/** The two figures Stampeo measures, handwritten, with their source under them and the trial offered after. */
 export function NumbersSection() {
   return (
     <LpSection

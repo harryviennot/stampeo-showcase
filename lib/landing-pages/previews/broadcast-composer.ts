@@ -1,7 +1,4 @@
-/**
- * The broadcast composer on the campaigns preview: the delivery fixture it counts to, the count's curve, what the
- * visitor sees first, and when the page sends by itself.
- */
+/** The campaigns preview's composer: its delivery fixture, the count's curve, the first stage and the automatic send. */
 
 import type { Scheduler } from "./scheduler";
 
@@ -59,11 +56,7 @@ export interface ComposerView {
   count: number | null;
 }
 
-/**
- * What "Send now" and "Send again" do. From the waiting phone the banner drops at once and the count runs up to
- * `target`; from the sent state the banner leaves, and drops again after a pause. A tap in the middle of either
- * starts over, and a reader who asks for less motion gets the banner and the full count with no counting.
- */
+/** What "Send now" and "Send again" do; a tap in the middle starts over, and reduced motion skips the counting. */
 export function createSender({
   reducedMotion,
   target,

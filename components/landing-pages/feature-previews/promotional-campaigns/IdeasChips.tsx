@@ -12,10 +12,8 @@ const ORDER = ["happy-hour", "new", "we-miss-you", "close"] as const;
 const IDEAS = ORDER.flatMap((key) => COPY.ideas.rows.filter((row) => row.key === key));
 
 /**
- * "Give them a reason to come in today": a row of idea chips, and under it the picked idea's message on
- * Aurevo's lock screen with the line saying who it goes to. All four stay in the page, stacked in one grid
- * cell, so the stage never changes height and switching is a 200ms cross-fade. On a phone the chips scroll
- * sideways, one snapping at a time, the next one half in view.
+ * A row of idea chips and, under it, the picked idea's message on Aurevo's lock screen with who it goes to. All four
+ * stay in the page, stacked in one grid cell, so the stage never changes height and switching is a cross-fade.
  */
 export function IdeasChips() {
   const id = useId();

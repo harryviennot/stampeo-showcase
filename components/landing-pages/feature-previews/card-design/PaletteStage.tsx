@@ -14,11 +14,8 @@ import { STAMPED_STAGE } from "../../platform/classes";
 const CARD = { width: 300, height: 385, narrow: 260 };
 
 /**
- * The stamped stage of the colour section: the logo on its tile with its label, the card in the selected
- * palette, and a button for each of the five palettes, each a circle split between the card colour and the
- * stamp colour. On a phone the palettes sit above the card, so the card stays in view as they are tapped.
- * Once the stage is in view the card tries the other four palettes in turn and settles on the first; a tap
- * stops that. A reader who asks for less motion gets the first palette and no tour.
+ * The logo, the card in the selected palette and a swatch for each of the five. Once in view the card tries the other
+ * four in turn and settles on the first; a tap stops that.
  */
 export function PaletteStage({
   logoLabel,

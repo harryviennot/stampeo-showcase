@@ -6,7 +6,7 @@ import { ARROW_LINK } from "../../platform/classes";
 import { StepsTable } from "../../platform/StepsTable";
 import { LpSection } from "../../shared/LpSection";
 
-/** "What each plan can send": Growth's cell and Pro's side by side, and the link to compare the plans. */
+/** Growth's cell and Pro's side by side, and the link to compare the plans. */
 export function PlansSection() {
   return (
     <LpSection section="plans" eyebrow={COPY.plans.eyebrow} title={COPY.plans.title} lead={COPY.plans.lead} align="center">

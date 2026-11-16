@@ -2,7 +2,7 @@ import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/pre
 import { LpSection } from "../../shared/LpSection";
 import { WalletsComposition } from "./WalletsComposition";
 
-/** "Apple Wallet and Google Wallet, both": the card on both phones with the notifications floating over them. */
+/** The card on both phones with the notifications floating over them. */
 export function WalletsSection() {
   return (
     <LpSection

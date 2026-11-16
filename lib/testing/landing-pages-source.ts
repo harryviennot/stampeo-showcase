@@ -40,7 +40,7 @@ export const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
 /** A component of a page's own folder, `components/landing-pages/<folder>/`. */
 export const pageComponent = (folder: string, name: string) => join(COMPONENTS_DIR, folder, `${name}.tsx`);
 
-/** Every component of the pages, and the page files (the four pages and the five previews). */
+/** Every component of the pages, and the page files (the four pages and the six previews). */
 export const lpFiles = () => [...sourceFiles(COMPONENTS_DIR), ...ALL_LANDING_SLUGS.map(pageFile)];
 
 /** Every file the page renders through `components/landing-pages/`, itself included. */

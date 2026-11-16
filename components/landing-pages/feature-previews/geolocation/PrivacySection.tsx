@@ -4,10 +4,7 @@ import { FactList } from "../../shared/FactList";
 import { LpSection } from "../../shared/LpSection";
 import { PrivacyDiagram } from "./PrivacyDiagram";
 
-/**
- * "Their location will stay on their phone": a stamped stage with the drawing of where a location goes (nowhere
- * past the phone) and the three facts that say the same in words, side by side from `lg`.
- */
+/** A stamped stage with the drawing of where a location goes (nowhere past the phone), beside the three facts that say it in words. */
 export function PrivacySection() {
   const { eyebrow, title, lead, facts, alt } = GEOLOCATION_PREVIEW.privacy;
 

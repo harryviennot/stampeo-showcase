@@ -3,7 +3,7 @@ import { ToggleCard } from "../../platform/ToggleCard";
 import { LpSection } from "../../shared/LpSection";
 import { DeliveryCard } from "./DeliveryCard";
 
-/** "See where every message landed": one white surface, the delivery card beside its three facts. */
+/** The delivery card beside its three facts, on one white surface. */
 export function DeliverySection() {
   const { tab } = COPY.delivery;
 

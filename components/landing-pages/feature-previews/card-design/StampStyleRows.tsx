@@ -26,11 +26,7 @@ function StampCard({ id, alt }: Readonly<{ id: string; alt: string }>) {
   );
 }
 
-/**
- * "Stamps that look like what you sell": a row for each way a stamp can look,
- * with a card that shows it: a preset icon (the pet groomer's paw), a shop's
- * own icon (the burger bar's burger) and a layout (gelato cones piling up).
- */
+/** A row for each way a stamp can look, each with a card that shows it: a preset icon, a shop's own icon, a layout. */
 export function StampStyleRows() {
   const { eyebrow, title, lead, rows, cardAlts } = CARD_DESIGN_PREVIEW.stamps;
 

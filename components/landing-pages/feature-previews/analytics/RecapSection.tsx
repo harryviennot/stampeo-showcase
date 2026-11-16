@@ -10,10 +10,7 @@ import { EMAIL_TREND } from "@/lib/landing-pages/previews/analytics-sample";
 /** One fact beside the email: an icon tile and a line. */
 const FACT_ICONS = [CalendarCheckIcon, BellIcon] as const;
 
-/**
- * "Your numbers come to you": the owner's performance email as a stamped mini, with its four figures and the
- * nudge about customers close to a reward, and the two facts that say when it comes and that it stops on request.
- */
+/** The owner's performance email as a stamped mini, with the two facts that say when it comes and that it stops on request. */
 export function RecapSection() {
   const { eyebrow, title, lead, email, facts } = ANALYTICS_PREVIEW.recap;
   const label = `An email from ${email.from} titled "${email.subject}": ${email.figures.map((figure) => `${figure.value} ${figure.label.toLowerCase()}`).join(", ")}, and a note that ${email.nudge.toLowerCase()}.`;

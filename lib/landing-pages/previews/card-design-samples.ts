@@ -1,7 +1,4 @@
-/**
- * The cards the card design page shows in its anatomy and wallets sections, so no shop is on the page twice:
- * a day spa on stamps and a boutique on points for the anatomy, a grocer on points in both wallets.
- */
+/** The cards of the card design page's anatomy and wallets sections, so no shop is on the page twice. */
 
 import { resolveFanCard } from "@/lib/hero-fan";
 import { POINTS_SAMPLES, type PointsSample } from "@/lib/loyalty-samples";

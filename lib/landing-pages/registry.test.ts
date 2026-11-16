@@ -1,5 +1,5 @@
 /**
- * The four US landing pages (`/us/landing-pages/*`) and the five feature previews
+ * The four US landing pages (`/us/landing-pages/*`) and the six feature previews
  * under `/us/landing-pages/platform/*`: one registry, one shell, one set of shared
  * sections. Which sections a page renders, where its tracking sits, which CTA
  * locations it may use and what its hero says are read from the source (pages
