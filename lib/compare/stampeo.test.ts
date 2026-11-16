@@ -5,7 +5,7 @@ import { PLAN_FACTS, PLAN_NAMES, TIERS } from "../plans/plan-facts";
 import { FALLBACK_PRICING, formatMoney, type Pricing } from "../pricing";
 import { findCurrencyAmounts } from "./body-checks";
 import { NBSP } from "./page/format";
-import { STAMPEO_FACT_IDS, buildStampeoColumn, getStampeoColumn, isStampeoFactId } from "./stampeo";
+import { COMPARED_BROADCASTS, STAMPEO_FACT_IDS, buildStampeoColumn, getStampeoColumn, isStampeoFactId } from "./stampeo";
 import { SHORT_MAX_LENGTH, STANDARD_FACT_IDS, type Market } from "./types";
 
 /** A ladder that differs from the baked one, so a match proves the amounts came from the catalog. */
@@ -51,14 +51,14 @@ describe.each(["us", "fr"] as const)("Stampeo's side on the %s market", (market)
     expect(column.rows.trial).toContain(String(TRIAL_DAYS[market]));
   });
 
-  it("states the Growth broadcast allowance and that multiple locations are Pro-only, from the plan facts", () => {
-    expect(column.rows["push.broadcasts"]).toContain(String(PLAN_FACTS.growth.broadcastsPerMonth));
+  it("states the Growth broadcast allowance as the comparison pages publish it, and that multiple locations are Pro-only", () => {
+    expect(column.rows["push.broadcasts"]).toContain(String(COMPARED_BROADCASTS.growth.broadcastsPerMonth));
     expect(column.rows["locations.multiple"]).toContain("Pro");
     expect(column.rows["locations.multiple"]).not.toMatch(/Starter|Growth/);
   });
 
   it("states the plan numbers a page quotes in prose, from the plan facts", () => {
-    expect(column.facts["stampeo.broadcasts.growth"]).toBe(String(PLAN_FACTS.growth.broadcastsPerMonth));
+    expect(column.facts["stampeo.broadcasts.growth"]).toBe(String(COMPARED_BROADCASTS.growth.broadcastsPerMonth));
     expect(column.facts["stampeo.team.starter"]).toBe(String(PLAN_FACTS.starter.teamMembers));
     expect(column.rows["program.types"]).toContain(column.facts["stampeo.levels"]);
   });
@@ -92,7 +92,7 @@ describe.each(["us", "fr"] as const)("Stampeo's at-a-glance values on the %s mar
   it("reads like the competitor's short values beside it: a monthly price written per month", () => {
     const perMonth = market === "us" ? "/month" : "/mois";
     expect(column.rowsShort["price.entry"]).toBe(`Starter, ${money(CATALOG[market].tiers.starter.month)}${perMonth}`);
-    expect(column.rowsShort["push.broadcasts"]).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth}${perMonth}`);
+    expect(column.rowsShort["push.broadcasts"]).toContain(`${COMPARED_BROADCASTS.growth.broadcastsPerMonth}${perMonth}`);
   });
 
   it("answer every standard table row in one line of at most 40 characters, with no em dash", () => {
@@ -117,7 +117,7 @@ describe.each(["us", "fr"] as const)("Stampeo's at-a-glance values on the %s mar
   });
 
   it("name the plans and numbers the plan facts give, and no other plan", () => {
-    expect(column.rowsShort["push.broadcasts"]).toContain(String(PLAN_FACTS.growth.broadcastsPerMonth));
+    expect(column.rowsShort["push.broadcasts"]).toContain(String(COMPARED_BROADCASTS.growth.broadcastsPerMonth));
     expect(column.rowsShort["push.broadcasts"]).toContain("Pro");
     expect(column.rowsShort["push.broadcasts"]).not.toContain("Starter");
     expect(column.rowsShort["locations.multiple"]).toContain("Pro");
@@ -143,6 +143,28 @@ describe("Stampeo's French values", () => {
     for (const [id, text] of [...Object.entries(column.rows), ...Object.entries(column.rowsShort)]) {
       expect({ id, spacedPunctuation: / [:;?!]/.test(text) }).toEqual({ id, spacedPunctuation: false });
     }
+  });
+});
+
+/** The broadcast allowances as the comparison pages publish them: independent of the plan facts the pricing page follows. */
+describe.each([
+  [
+    "us",
+    "Starter: none. Growth: up to 8 a month, sent right away. Pro: unlimited, scheduled, with targeting by balance, activity and location",
+    "Growth: 8/month. Pro: unlimited",
+  ],
+  [
+    "fr",
+    `Starter${NBSP}: aucune diffusion. Growth${NBSP}: jusqu'à 8 diffusions par mois, envoyées tout de suite. Pro${NBSP}: illimitées, programmables, avec ciblage par solde, activité et établissement`,
+    `Growth${NBSP}: 8/mois. Pro${NBSP}: illimitées`,
+  ],
+] as const)("Stampeo's broadcast row on the %s market", (market, full, short) => {
+  const column = buildStampeoColumn(market, CATALOG[market]);
+
+  it("reads as the published comparison pages state it, a Growth allowance of 8 included", () => {
+    expect(column.rows["push.broadcasts"]).toBe(full);
+    expect(column.rowsShort["push.broadcasts"]).toBe(short);
+    expect(column.facts["stampeo.broadcasts.growth"]).toBe("8");
   });
 });
 

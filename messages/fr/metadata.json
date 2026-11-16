@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Campagnes promotionnelles : l'alternative aux SMS",
-        "description": "Envoyez vos promotions dans Apple Wallet et Google Wallet, sans coût par message. {growthBroadcasts} diffusions par mois sur Growth, illimitées et programmables sur Pro."
+        "description": "Envoyez vos promotions dans Apple Wallet et Google Wallet, sans coût par message. {starterBroadcasts} diffusions par mois sur Starter, illimitées sur Growth et Pro."
       }
     },
     "acquisition": {

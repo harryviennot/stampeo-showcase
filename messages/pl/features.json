@@ -1039,7 +1039,8 @@
       "hero": {
         "title": "Dotrzyj do każdego klienta. Bez rachunku za SMS-y.",
         "navTitle": "Rozsyłki promocyjne: powiadomienia na karcie do wszystkich klientów",
-        "subtitle": "Wysyłaj rozsyłki prosto na kartę w Apple Wallet i Google Wallet, bez opłat za wiadomość. Plan Growth obejmuje {growthBroadcasts} rozsyłek miesięcznie z podstawową segmentacją. Pro nie ma limitu i dodaje zaawansowaną segmentację oraz planowanie.",
+        "subtitle": "Wysyłaj rozsyłki prosto na kartę w Apple Wallet i Google Wallet, bez opłat za wiadomość. Plan Starter obejmuje {starterBroadcasts, plural, one {# rozsyłkę} few {# rozsyłki} many {# rozsyłek} other {# rozsyłki}} miesięcznie z podstawową segmentacją. Growth i Pro nie mają limitu, a Pro dodaje zaawansowaną segmentację oraz planowanie.",
+        "pillStarter": "Starter",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },

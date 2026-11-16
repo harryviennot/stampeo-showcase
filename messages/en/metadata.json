@@ -41,7 +41,7 @@
       },
       "campagnes-promotionnelles": {
         "title": "Promotional Campaigns: The SMS Alternative",
-        "description": "Send promotional broadcasts to your customers' Apple Wallet and Google Wallet, with no per-message fee. {growthBroadcasts} a month on Growth, unlimited and scheduled on Pro."
+        "description": "Send promotional broadcasts to your customers' Apple Wallet and Google Wallet, with no per-message fee. {starterBroadcasts} a month on Starter, unlimited on Growth and Pro."
       }
     },
     "acquisition": {

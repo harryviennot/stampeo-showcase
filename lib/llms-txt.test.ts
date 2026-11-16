@@ -103,6 +103,16 @@ describe("llms.txt facts", () => {
     for (const tier of TIERS) expect(body).toContain(planSummary(tier));
   });
 
+  it("gives broadcasts to every plan: Starter its monthly allowance, Growth and Pro unlimited, advanced targeting on Pro only", () => {
+    const section = body.slice(body.indexOf("### Promotional campaigns"), body.indexOf("### Analytics"));
+
+    expect(section).toContain("(broadcasts): every plan");
+    expect(section).toContain("Starter = 8 campaigns / month. Growth and Pro = unlimited.");
+    expect(section).toContain("Starter and Growth: basic");
+    expect(section).toContain("Pro: advanced");
+    expect(section).not.toMatch(/Growth = \d+ campaigns/);
+  });
+
   it("gives the Analytics history of each plan and names the plan with monthly cohorts", () => {
     const analytics = body.slice(body.indexOf("### Analytics"), body.indexOf("### Integrations"));
 
