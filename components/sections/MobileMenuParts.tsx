@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { inertWhileOpen, trapStop } from "@/lib/dom/modal";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import { featureLink, isComingSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import type { Market } from "@/lib/markets";
 import { isCurrentPath, menuMotion, type MenuMotion } from "@/lib/nav/mobile-menu";
 import { TrackedLink } from "../ui/TrackedLink";
@@ -66,7 +66,7 @@ export function useFeatureEntries(featureLinks: FeatureLinks, pathname: string):
       market,
       label: t(`featuresItems.${key}.label`),
       description: t(`featuresItems.${key}.description`),
-      soon: canonicalSlug === "geolocalisation",
+      soon: isComingSoon(canonicalSlug),
       current: isCurrentPath(pathname, href),
     };
   });
@@ -170,19 +170,6 @@ export function MenuDialog({
 
 /** The small grey label over a group of the menu. */
 export const MENU_LABEL = "text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]";
-
-/** "Soon", as the homepage's feature grid says it, on a plate of its own. */
-export function SoonPill({ className = "" }: Readonly<{ className?: string }>) {
-  const t = useTranslations("common.wallet");
-
-  return (
-    <span
-      className={`rounded-full bg-white px-2 py-0.5 text-[11px] leading-4 font-semibold text-[var(--foreground)] ring-1 ring-[var(--near-black)]/30 ${className}`}
-    >
-      {t("soon")}
-    </span>
-  );
-}
 
 /**
  * Log in beside Get started (a keycap), or Sign out beside Dashboard: 48px pills in a bar that stays at the foot of

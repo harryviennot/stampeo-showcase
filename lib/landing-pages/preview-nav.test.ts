@@ -61,28 +61,9 @@ describe("the header and footer use it", () => {
     expect(shell).toMatch(/<Footer market="us" featureLinks=\{featureLinks\} \/>/);
   });
 
-  test.each(["components/sections/Header.tsx", "components/sections/Footer.tsx"])(
-    "%s builds every feature link through featureLink and defaults to today's pages",
-    (path) => {
-      const file = source(path);
-
-      expect(file).toMatch(/featureLinks = "live"/);
-      expect(file).not.toMatch(/href=\{`\/features\/\$\{slug\}`/);
-      expect(file).not.toMatch(/href: `\/features\/\$\{getLocalizedSlug/);
-      expect(file.match(/featureLink\(canonicalSlug, locale, featureLinks\)/g)?.length).toBe(
-        path.endsWith("Header.tsx") ? 2 : 1,
-      );
-    },
-  );
-
-  test("the landing shell asks the header for the redesigned phone menu, and the header is today's unless asked", () => {
-    const shell = source("components/landing-pages/shared/LandingPageShell.tsx");
-    const header = source("components/sections/Header.tsx");
-
-    expect(shell).toMatch(/<Header market="us" featureLinks=\{featureLinks\} mobileMenu="v2" \/>/);
-    expect(header).toMatch(/mobileMenu\?: "today" \| "v2"/);
-    expect(header).toMatch(/mobileMenu = "today"/);
-    expect(header).toContain('data-mobile-menu={mobileMenu === "v2" ? "v2" : undefined}');
+  // The closed header draws no Product menu, so its default cannot be read from a render.
+  test.each(["components/sections/Header.tsx", "components/sections/Footer.tsx"])("%s defaults to today's feature pages", (path) => {
+    expect(source(path)).toMatch(/featureLinks = "live"/);
   });
 
   test("no other page passes mobileMenu: the rest of the site keeps today's phone menu", () => {

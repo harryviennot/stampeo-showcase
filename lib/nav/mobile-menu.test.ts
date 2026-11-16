@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { isCurrentPath, menuMotion } from "./mobile-menu";
+import { DESKTOP_QUERY, closeWhenDesktop, isCurrentPath, menuMotion, type DesktopQuery } from "./mobile-menu";
+import { ROOT as SOURCE_ROOT, code } from "../testing/jsx-source";
 
 const ROOT = join(import.meta.dir, "..", "..");
 const catalog = (locale: string) => JSON.parse(readFileSync(join(ROOT, "messages", locale, "common.json"), "utf8")).common;
@@ -36,6 +37,71 @@ describe("which menu entry is the page you are on", () => {
 
   test("an anchor is never current", () => {
     expect(isCurrentPath("/", "#demo")).toBe(false);
+  });
+});
+
+/** A media query that a test moves between matching and not, as a window being resized does. */
+function fakeQuery(matches: boolean): DesktopQuery & { set(next: boolean): void; listeners: number } {
+  const listeners = new Set<() => void>();
+
+  return {
+    matches,
+    addEventListener: (_type, listener) => void listeners.add(listener),
+    removeEventListener: (_type, listener) => void listeners.delete(listener),
+    set(next) {
+      this.matches = next;
+      for (const listener of listeners) listener();
+    },
+    get listeners() {
+      return listeners.size;
+    },
+  };
+}
+
+describe("an open phone menu when the window grows to the desktop layout", () => {
+  test("it closes at the width where the desktop header takes over, so the page scroll and the inert page are given back", () => {
+    const query = fakeQuery(false);
+    let closed = 0;
+
+    closeWhenDesktop(query, () => closed++);
+    expect(closed).toBe(0);
+    query.set(true);
+    expect(closed).toBe(1);
+  });
+
+  test("a menu opened while the window is already that wide closes at once", () => {
+    let closed = 0;
+
+    closeWhenDesktop(fakeQuery(true), () => closed++);
+    expect(closed).toBe(1);
+  });
+
+  test("shrinking back to a phone's width leaves it as it is, and a closed menu stops listening", () => {
+    const query = fakeQuery(true);
+    let closed = 0;
+    const stop = closeWhenDesktop(query, () => closed++);
+
+    query.set(false);
+    expect(closed).toBe(1);
+    expect(query.listeners).toBe(1);
+    stop();
+    expect(query.listeners).toBe(0);
+    query.set(true);
+    expect(closed).toBe(1);
+  });
+
+  test("the width is Tailwind's lg, which hides the burger and the menu", () => {
+    const theme = readFileSync(join(SOURCE_ROOT, "node_modules", "tailwindcss", "theme.css"), "utf8");
+    const globals = readFileSync(join(SOURCE_ROOT, "app", "globals.css"), "utf8");
+
+    expect(theme).toContain("--breakpoint-lg: 64rem");
+    expect(globals).not.toContain("--breakpoint-lg");
+    expect(DESKTOP_QUERY).toBe("(min-width: 64rem)");
+  });
+
+  test("the sheet menu watches it while it is open, and only the sheet: today's accordion is left as it was", () => {
+    expect(code(join(SOURCE_ROOT, "components", "sections", "SheetMenu.tsx"))).toContain("open ? closeWhenDesktop(window.matchMedia(DESKTOP_QUERY), onClose) : undefined");
+    expect(code(join(SOURCE_ROOT, "components", "sections", "MobileMenuAccordion.tsx"))).not.toContain("closeWhenDesktop");
   });
 });
 

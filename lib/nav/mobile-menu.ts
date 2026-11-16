@@ -19,3 +19,27 @@ export function isCurrentPath(pathname: string, href: string): boolean {
   if (href.startsWith("#")) return false;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
+
+/** Tailwind's `lg`: from this width the page shows the desktop header and the phone menu is hidden. */
+export const DESKTOP_QUERY = "(min-width: 64rem)";
+
+/** The part of a `MediaQueryList` that `closeWhenDesktop` reads. */
+export interface DesktopQuery {
+  matches: boolean;
+  addEventListener(type: "change", listener: () => void): void;
+  removeEventListener(type: "change", listener: () => void): void;
+}
+
+/**
+ * Closes an open phone menu once the window is at the desktop width, so the page scroll and the inert page are
+ * given back: at once if it already is, and whenever it grows into it. Returns the function that stops watching.
+ */
+export function closeWhenDesktop(query: DesktopQuery, onClose: () => void): () => void {
+  const check = () => {
+    if (query.matches) onClose();
+  };
+
+  check();
+  query.addEventListener("change", check);
+  return () => query.removeEventListener("change", check);
+}

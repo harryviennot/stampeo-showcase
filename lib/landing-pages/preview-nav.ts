@@ -20,6 +20,12 @@ export function featureLinksFor(slug: LandingSlug): FeatureLinks {
   return slug === "platform" || slug.startsWith("platform/") ? "previews" : "live";
 }
 
+/** Geolocation is the one feature that is not live yet. */
+export const isComingSoon = (slug: FeatureSlug): boolean => slug === "geolocalisation";
+
+/** The menus that lead to the previews (Platform's) label the feature that is not live yet "Soon"; today's menus do not. */
+export const showsSoon = (slug: FeatureSlug, links: FeatureLinks): boolean => links === "previews" && isComingSoon(slug);
+
 /**
  * A feature link: a preview is a final `/us` path; today's page is localised and left for next-intl to
  * prefix. A feature with no preview opens today's page.

@@ -1,28 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
-import dynamic from "next/dynamic";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
-import { ChevronDownIcon } from "../icons";
 import { signOut, useHasSession } from "@/lib/auth/use-has-session";
 import { StampeoLogo } from "../logo";
-import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { TrackedLink } from "../ui/TrackedLink";
-import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
-import { hasBlog } from "@/lib/blog/locales";
+import type { FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { lockBodyScroll } from "@/lib/dom/body-scroll-lock";
-import { AnimatePresence, motion } from "framer-motion";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
-import { marketPath, type Market } from "@/lib/markets";
+import type { Market } from "@/lib/markets";
 import { MarketLink } from "../market/MarketLink";
-import { MenuBurger } from "./MenuBurger";
-
-/** The redesigned phone menu is a separate chunk that only the pages that ask for it (`mobileMenu="v2"`) ever load. */
-const MobileMenu = dynamic(() => import("./MobileMenu").then((module) => module.MobileMenu), { ssr: false });
+import { isCurrentPath } from "@/lib/nav/mobile-menu";
+import { pageMenuItems, productMenuItems } from "@/lib/nav/menu-items";
+import { NavDropdown } from "./NavDropdown";
+import { AccordionMenu } from "./MobileMenuAccordion";
+import { SheetMenu } from "./SheetMenu";
 
 function DesktopAuthButtons({
   signedIn,
@@ -73,185 +67,17 @@ function DesktopAuthButtons({
   );
 }
 
-export interface NavMenuItem {
-  href: string;
-  label: string;
-  description?: string;
-  /** A market path (`/us/...`) is final as written; without one, next-intl prefixes the locale. */
-  market?: Market;
-}
-
-/**
- * A nav menu that is a list of words, not a wall of icons. The label carries
- * the meaning; the description is a quiet second line for the ones that need
- * it. Opens on hover with a short fade and an 8px rise, the same motion the
- * rest of the chrome uses.
- */
-function NavDropdown({
-  label,
-  items,
-  active,
-}: {
-  label: string;
-  items: NavMenuItem[];
-  active: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setOpen(false), 150);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) setOpen(false);
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open]);
-
-  return (
-    <div
-      className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <button
-        className={`flex items-center gap-1 py-2 text-sm font-semibold transition-colors whitespace-nowrap ${
-          active
-            ? "text-[var(--accent)]"
-            : "text-[var(--foreground)] hover:text-[var(--accent)]"
-        }`}
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        {label}
-        <ChevronDownIcon
-          className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 pt-3 z-50"
-          >
-            <div
-              className="w-[264px] bg-white rounded-2xl card-stamp p-2"
-              role="menu"
-            >
-              {items.map((item) => (
-                <MarketLink
-                  key={item.href}
-                  market={item.market ?? "int"}
-                  href={item.href as "/features/design-de-carte"}
-                  className="block rounded-xl px-3 py-2.5 hover:bg-[var(--cream)] transition-colors"
-                  onClick={() => setOpen(false)}
-                  role="menuitem"
-                >
-                  <span className="block text-sm font-semibold text-[var(--foreground)]">
-                    {item.label}
-                  </span>
-                  {item.description && (
-                    <span className="block text-xs text-[var(--muted-foreground)] mt-0.5 leading-snug">
-                      {item.description}
-                    </span>
-                  )}
-                </MarketLink>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function MobileFeaturesAccordion({
-  onNavigate,
-  featureLinks,
-}: {
-  onNavigate: () => void;
-  featureLinks: FeatureLinks;
-}) {
-  const t = useTranslations("common.nav");
-  const locale = useLocale();
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div>
-      <button
-        className="flex items-center justify-between w-full px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 rounded-xl transition-colors"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        {t("product")}
-        <ChevronDownIcon
-          className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="overflow-hidden"
-          >
-            <div className="pl-4 pb-2 space-y-0.5">
-              {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-                const { href, market } = featureLink(canonicalSlug, locale, featureLinks);
-                return (
-                <MarketLink
-                  key={canonicalSlug}
-                  market={market}
-                  href={href as "/features/design-de-carte"}
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
-                  onClick={onNavigate}
-                >
-                  <Icon className="w-4 h-4 text-[var(--accent)]" />
-                  <span className="text-sm font-medium text-[var(--foreground)]">
-                    {t(`featuresItems.${key}.label`)}
-                  </span>
-                </MarketLink>);
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 /**
  * `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews).
- * `mobileMenu="v2"` marks the header as the one whose phone menu is the redesigned sheet; every other page keeps
- * today's menu.
+ * `mobileMenu` is the phone menu the bar draws: the accordion panel, or the full-screen sheet.
  */
 export function Header({
   market = "int",
   featureLinks = "live",
-  mobileMenu = "today",
-}: Readonly<{ market?: Market; featureLinks?: FeatureLinks; mobileMenu?: "today" | "v2" }>) {
+  mobileMenu = "accordion",
+}: Readonly<{ market?: Market; featureLinks?: FeatureLinks; mobileMenu?: "accordion" | "sheet" }>) {
+  const PhoneMenu = mobileMenu === "sheet" ? SheetMenu : AccordionMenu;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const burgerRef = useRef<HTMLButtonElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const signedIn = useHasSession();
   const t = useTranslations();
@@ -290,37 +116,10 @@ export function Header({
     closeMobileMenu();
   };
 
-  const isActive = (href: string) => {
-    if (href.startsWith("#")) return false;
-    return pathname === href || pathname.startsWith(href + "/");
-  };
+  const isActive = (href: string) => isCurrentPath(pathname, href);
 
-  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
-
-  /* Four short words. The old nav needed "Programmes de fidélité" to fit,
-     which is why the whole bar collapsed to a burger below 1280px and
-     laptops never saw it. */
-  const productItems: NavMenuItem[] = FEATURE_ITEMS.map(({ key, canonicalSlug }) => ({
-    ...featureLink(canonicalSlug, locale, featureLinks),
-    label: t(`common.nav.featuresItems.${key}.label`),
-  }));
-
-  // The blog only exists in the locales that have articles — a link to it from
-  // a Polish page would just bounce the reader back home.
-  const resourceItems: NavMenuItem[] = [
-    ...(hasBlog(locale) ? [{ href: "/blog", label: t("common.nav.blog") }] : []),
-    { href: "/changelog", label: t("common.nav.changelog") },
-    { href: "/about", label: t("common.nav.about") },
-    { href: "/contact", label: t("common.nav.contact") },
-  ];
-
-  // A market is a set of routes, not one landing page. /us quotes dollars, so a
-  // bare "/pricing" here walks a US visitor straight onto the euro ladder — a
-  // price checkout will not honour.
-  const navItems: Array<{ label: string; href: string; market: Market }> = [
-    { label: t("common.nav.loyalty"), href: loyaltySlug, market: "int" },
-    { label: t("common.nav.pricing"), href: marketPath(market, "/pricing"), market },
-  ];
+  const productItems = productMenuItems(t, locale, featureLinks);
+  const { navItems, resourceItems } = pageMenuItems(t, locale, market);
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
 
@@ -357,191 +156,72 @@ export function Header({
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50" data-mobile-menu={mobileMenu === "v2" ? "v2" : undefined}>
+      <header className="fixed top-0 left-0 right-0 z-50">
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
-        <div
-          className={`transition-all duration-300 border-b ${scrolled
-            ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
-            : "bg-transparent border-transparent"
-            }${mobileMenu === "v2" && mobileMenuOpen ? " max-lg:bg-[var(--cream)] max-lg:border-[var(--border)]" : ""}`}
+        <PhoneMenu
+          open={mobileMenuOpen}
+          onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClose={closeMobileMenu}
+          scrolled={scrolled}
+          featureLinks={featureLinks}
+          pathname={pathname}
+          navItems={navItems}
+          resourceItems={resourceItems}
+          signedIn={signedIn}
+          appUrl={appUrl}
+          onSignOut={handleSignOut}
         >
-          <nav className="relative flex items-center justify-between px-4 sm:px-6 lg:px-8 lg:py-5 py-3 max-w-[1360px] mx-auto">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 shrink-0">
-              <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
-                <StampeoLogo />
-                <span className="text-2xl font-bold text-[var(--foreground)]">
-                  Stampeo
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop navigation — full row only from xl: below that the FR/ES
-                labels overflow into the logo and auth buttons, so the burger
-                menu stays on through lg.
-                Absolutely centered rather than a flex child: the auth buttons
-                are wider than the logo, so justify-between would push the links
-                left of the page centre. */}
-            <div className="hidden lg:flex items-center gap-6 xl:gap-8 lg:absolute lg:inset-y-0 lg:left-1/2 lg:-translate-x-1/2">
-              <NavDropdown
-                label={t("common.nav.product")}
-                items={productItems}
-                active={pathname.startsWith("/features/")}
-              />
-              {navItems.map((item) => (
-                <MarketLink
-                  key={item.href}
-                  market={item.market}
-                  href={item.href}
-                  className={`py-2 text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
-                    ? "text-[var(--accent)]"
-                    : "text-[var(--foreground)] hover:text-[var(--accent)]"
-                    }`}
-                >
-                  {item.label}
-                </MarketLink>
-              ))}
-              <NavDropdown
-                label={t("common.nav.resources")}
-                items={resourceItems}
-                active={resourceItems.some((r) => isActive(r.href))}
-              />
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 transition-transform group-hover:scale-105">
+              <StampeoLogo />
+              <span className="text-2xl font-bold text-[var(--foreground)]">
+                Stampeo
+              </span>
             </div>
+          </Link>
 
-            {/* Desktop auth */}
-            <div className="hidden lg:flex items-center gap-3 shrink-0">
-              <DesktopAuthButtons
-                signedIn={signedIn}
-                appUrl={appUrl}
-                onSignOut={handleSignOut}
-              />
-            </div>
-
-            {/* Mobile menu button */}
-            {mobileMenu === "v2" ? (
-              <MenuBurger open={mobileMenuOpen} onToggle={() => setMobileMenuOpen(!mobileMenuOpen)} buttonRef={burgerRef} />
-            ) : (
-              <button
-                className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-expanded={mobileMenuOpen}
-                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          {/* Desktop navigation — full row only from xl: below that the FR/ES
+              labels overflow into the logo and auth buttons, so the burger
+              menu stays on through lg.
+              Absolutely centered rather than a flex child: the auth buttons
+              are wider than the logo, so justify-between would push the links
+              left of the page centre. */}
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8 lg:absolute lg:inset-y-0 lg:left-1/2 lg:-translate-x-1/2">
+            <NavDropdown
+              label={t("common.nav.product")}
+              items={productItems}
+              active={pathname.startsWith("/features/")}
+            />
+            {navItems.map((item) => (
+              <MarketLink
+                key={item.href}
+                market={item.market}
+                href={item.href}
+                className={`py-2 text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
+                  ? "text-[var(--accent)]"
+                  : "text-[var(--foreground)] hover:text-[var(--accent)]"
+                  }`}
               >
-                {mobileMenuOpen ? (
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                ) : (
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                  </svg>
-                )}
-              </button>
-            )}
-          </nav>
+                {item.label}
+              </MarketLink>
+            ))}
+            <NavDropdown
+              label={t("common.nav.resources")}
+              items={resourceItems}
+              active={resourceItems.some((r) => isActive(r.href))}
+            />
+          </div>
 
-          {/* Mobile menu */}
-          <AnimatePresence>
-            {mobileMenuOpen && mobileMenu !== "v2" && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="lg:hidden overflow-hidden border-t border-[var(--accent)]/10 bg-[var(--cream)]"
-              >
-                <div className="px-6 py-4">
-                  <div className="flex flex-col gap-1">
-                    <MobileFeaturesAccordion onNavigate={closeMobileMenu} featureLinks={featureLinks} />
-                    {navItems.map((item) => (
-                      <MarketLink
-                        key={item.href}
-                        market={item.market}
-                        href={item.href}
-                        className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
-                          ? "text-[var(--accent)] bg-[var(--accent)]/5"
-                          : "text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5"
-                          }`}
-                        onClick={closeMobileMenu}
-                      >
-                        {item.label}
-                      </MarketLink>
-                    ))}
-                    {/* Resources are a dropdown on desktop; on a phone they
-                        read better as plain rows than as a second accordion. */}
-                    {resourceItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href as "/blog"}
-                        className={`px-4 py-3 text-sm font-semibold rounded-xl transition-colors ${isActive(item.href)
-                          ? "text-[var(--accent)] bg-[var(--accent)]/5"
-                          : "text-[var(--foreground)] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5"
-                          }`}
-                        onClick={closeMobileMenu}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                    <div className="flex items-center justify-between pt-4 mt-2 border-t border-[var(--accent)]/10">
-                      <LanguageSwitcher />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      {signedIn ? (
-                        <>
-                          <button
-                            onClick={handleSignOut}
-                            className="px-4 py-3 text-sm text-left font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-                          >
-                            {t("common.auth.signOut")}
-                          </button>
-                          <Link
-                            href={appUrl}
-                            className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
-                          >
-                            {t("common.auth.dashboard")}
-                          </Link>
-                        </>
-                      ) : (
-                        <>
-                          <Link
-                            href="/login"
-                            className="px-4 py-3 text-sm font-semibold text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-                            onClick={closeMobileMenu}
-                          >
-                            {t("common.auth.logIn")}
-                          </Link>
-                          <TrackedLink
-                            trackAs="header_mobile"
-                            href="/onboarding"
-                            className="flex items-center justify-center h-12 px-5 bg-[var(--accent)] text-white text-sm font-bold rounded-xl hover:brightness-110 transition-all"
-                            onClick={closeMobileMenu}
-                          >
-                            {t("common.auth.getStarted")}
-                          </TrackedLink>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        {mobileMenu === "v2" && (
-          <MobileMenu
-            open={mobileMenuOpen}
-            onClose={closeMobileMenu}
-            burgerRef={burgerRef}
-            featureLinks={featureLinks}
-            pathname={pathname}
-            navItems={navItems}
-            resourceItems={resourceItems}
-            signedIn={signedIn}
-            appUrl={appUrl}
-            onSignOut={handleSignOut}
-            language={<LanguageSwitcher variant="row" />}
-          />
-        )}
+          {/* Desktop auth */}
+          <div className="hidden lg:flex items-center gap-3 shrink-0">
+            <DesktopAuthButtons
+              signedIn={signedIn}
+              appUrl={appUrl}
+              onSignOut={handleSignOut}
+            />
+          </div>
+        </PhoneMenu>
       </header>
       <div
         className="transition-all duration-300"

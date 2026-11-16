@@ -3,7 +3,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { buildSeoLinks } from "@/lib/seo-links";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import { featureLink, showsSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
@@ -20,6 +20,7 @@ import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
 import { FooterColumn, footerLinkGrid } from "./FooterColumn";
 import { FooterComparisons } from "./FooterComparisons";
+import { SoonPill } from "./SoonPill";
 import { footerComparisons, footerComparisonsTitle } from "@/lib/compare/footer";
 
 /** `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews). */
@@ -128,14 +129,16 @@ export async function Footer({
             <FooterColumn title={t("featuresTitle")}>
               {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
                 const { href, market: linkMarket } = featureLink(canonicalSlug, locale, featureLinks);
+                const soon = showsSoon(canonicalSlug, featureLinks);
                 return (
                 <MarketLink
                   key={canonicalSlug}
                   market={linkMarket}
                   href={href as "/features/design-de-carte"}
-                  className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
+                  className={`text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium${soon ? " flex items-center gap-2" : ""}`}
                 >
                   {tNav(`featuresItems.${key}.label`)}
+                  {soon && <SoonPill tone="dark" />}
                 </MarketLink>);
               })}
             </FooterColumn>

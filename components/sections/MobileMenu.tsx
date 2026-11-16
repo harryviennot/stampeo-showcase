@@ -13,12 +13,12 @@ import {
   MenuBottomBar,
   MenuDialog,
   MenuGroup,
-  SoonPill,
   useFeatureEntries,
   type FeatureEntry,
   type MenuLink,
   type MenuProps,
 } from "./MobileMenuParts";
+import { SoonPill } from "./SoonPill";
 
 /** A feature as a tile: its icon, its name and its one line, then Soon where the feature is coming; the current page is orange. */
 function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; first: boolean; onClose: () => void }>) {

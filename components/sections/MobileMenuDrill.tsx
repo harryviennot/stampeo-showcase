@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import { ArrowRightIcon, CaretLeftIcon, CaretRightIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
 import { marketPath } from "@/lib/markets";
-import { MenuBottomBar, MenuDialog, SoonPill, useFeatureEntries, type FeatureEntry, type MenuLink, type MenuProps } from "./MobileMenuParts";
+import { MenuBottomBar, MenuDialog, useFeatureEntries, type FeatureEntry, type MenuLink, type MenuProps } from "./MobileMenuParts";
+import { SoonPill } from "./SoonPill";
 
 /** The featured tile's card is a heavy client component and only this menu shows it, so it loads when the menu does. */
 const FeaturedCard = dynamic(() => import("./MenuFeaturedCard"), { ssr: false });
