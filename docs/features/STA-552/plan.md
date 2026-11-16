@@ -114,6 +114,16 @@ Acceptance criteria (v2):
   other page keeps today's menu byte-identically.
 - AC14: every new product claim is traced in `claims.md`; new copy passes the copy guards and `stampeo-copywriting`.
 
+### v2 decisions after the reviews (coordinator, 16 Nov; supersede older lines where they differ)
+
+- `LpFaq`: a page's own questions get Platform's centred header with no eyebrow and the stamped table (`ux-brief-v2.md` §1.3); the default `<LpFaq />` is unchanged. This replaces the eyebrow wording in AC7/AC8.
+- Contextual links (AC9): from Platform and its previews, all six features open their preview, geolocation included (its coming-soon page). Every Platform-family menu labels geolocation "Soon": the desktop Product dropdown, the phone menu and the footer column.
+- Row and strip labels (`HoverRows`, `TypeMarquee`) are grey capitals on Platform and the previews (brief §1.3).
+- The phone menu's one-liners exist in all four locales (catalog parity); only the v2 menu reads them until STA-555 ships the menu site-wide.
+- The geolocation preview's "Today" column names broadcasts without a plan chip, like the other non-campaigns previews (STA-549).
+- The keycap trial button applies to the three other US landings too (their hero, closing CTA and `LpTrialButton`), per AC10.
+- Cleanup once Harry picks: delete the losing hero variant (and `?hero=`), the losing phone menu (and `?menu=`), and, when STA-555 ships site-wide, today's accordion menu. Tracked on STA-546 (hero) and STA-555 (menu).
+
 ## Build stages
 
 1. Foundation: tests, registry entries, routes, copy modules (from the brief's draft copy, reviewed by the
