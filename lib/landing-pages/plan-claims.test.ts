@@ -124,7 +124,7 @@ const PLAN_LINES: Record<string, PlanClaim[]> = {
   "FEATURES.analytics.planLine": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "ANALYTICS_PREVIEW.glance.lead": [claim("every plan", BASIC_ANALYTICS)],
   "ANALYTICS_PREVIEW.band.sub": [claim("every plan", BASIC_ANALYTICS)],
-  "ANALYTICS_PREVIEW.ladder.title": [claim("every plan", BASIC_ANALYTICS), claim("Growth and Pro", ANALYTICS_CHARTS)],
+  "ANALYTICS_PREVIEW.ladder.title": [claim("All plans", BASIC_ANALYTICS), claim("Growth and Pro", ANALYTICS_CHARTS)],
   "ANALYTICS_PREVIEW.ladder.lead": [
     claim("Starter", ANSWERS_IN_A_SENTENCE),
     claim("Growth and Pro", ANALYTICS_CHARTS),
@@ -171,7 +171,8 @@ const PLAN_NAMES_ELSEWHERE: Record<string, string> = {
 };
 
 /** How `availability` words a chip: lower case, as the chips are written with a capital. */
-const label = (text: string) => text.trim().toLowerCase();
+/** A plan phrase as `availability` words it: a sentence may say "all plans" for "every plan". */
+const label = (text: string) => text.trim().toLowerCase().replace(/^all plans$/, "every plan");
 
 const chipAt = (path: string): string => {
   const found = Object.entries(MODULES)

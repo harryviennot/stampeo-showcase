@@ -3,7 +3,7 @@ import { LpSection } from "../../shared/LpSection";
 import { Ladder } from "./Ladder";
 
 /**
- * "Every plan answers. Growth and Pro chart it": what each plan sees of the same questions, from Starter's
+ * "All plans answer. Growth and Pro chart it": what each plan sees of the same questions, from Starter's
  * one-line sentences to Pro's cohorts, with the history each plan keeps.
  */
 export function LadderSection() {

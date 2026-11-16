@@ -230,12 +230,12 @@ describe("ladder: the same three questions, and what each plan sees of them", ()
     for (const zoom of zooms) expect(smallest * zoom * (MINI.narrowTo / MINI.width)).toBeGreaterThanOrEqual(11);
   });
 
-  test("no plan chip and no sample caption: the plans are the control, and the title is the only place that says Every plan", async () => {
+  test("no plan chip and no sample caption: the plans are the control, and the title is the only place that says All plans", async () => {
     const text = textOf(await render(<LadderSection />));
 
-    expect(text).not.toMatch(/Sample data/);
-    expect(text.match(/Every plan/g)).toHaveLength(1);
-    expect(text.indexOf("Every plan")).toBe(text.indexOf(COPY.ladder.title));
+    expect(text).not.toMatch(/Sample data|Every plan/);
+    expect(text.match(/All plans/g)).toHaveLength(1);
+    expect(text.indexOf("All plans")).toBe(text.indexOf(COPY.ladder.title));
   });
 });
 

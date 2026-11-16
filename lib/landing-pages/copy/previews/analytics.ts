@@ -85,7 +85,7 @@ export const ANALYTICS_PREVIEW = {
   /** What each plan shows, from Starter's one-line answers to Pro's cohorts, cheapest plan first; the history is `PLAN_FACTS`'. */
   ladder: {
     eyebrow: "By plan",
-    title: "Every plan answers. Growth and Pro chart it.",
+    title: "All plans answer. Growth and Pro chart it.",
     lead: "Starter answers in a sentence. Growth and Pro chart it and look further back.",
     toggleLabel: "Plan",
     /** Printed after the history's unit, under the plan's handwritten figure. */

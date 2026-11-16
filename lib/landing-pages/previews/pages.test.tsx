@@ -92,8 +92,7 @@ describe("what a Platform-style page leaves out", () => {
   test.each(PREVIEW_SLUGS)("%s: no Every plan chip, no Sample data caption, no em dash, no unfilled token, no city", async (slug) => {
     const text = textOf(await renderPreviewPage(slug));
 
-    // The analytics ladder's title ("Every plan answers.") is a sentence, not the chip.
-    expect(text).not.toMatch(/Every plan(?! answers)|Sample data|—|\{trialDays\}|\bParis\b|\bGMT\b/);
+    expect(text).not.toMatch(/Every plan|Sample data|—|\{trialDays\}|\bParis\b|\bGMT\b/);
   });
 
   test.each(PREVIEW_SLUGS)("%s: no lock screen or notification shown is sent by Stampeo", async (slug) => {
