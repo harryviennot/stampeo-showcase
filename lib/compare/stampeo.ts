@@ -2,7 +2,8 @@
  * Stampeo's side of every comparison: one value per standard table row, plus
  * the inline facts a page can cite as `<Fact id="stampeo.…" />`.
  *
- * Plan limits come from `lib/plans/plan-facts.ts`, prices from the live plan
+ * Plan limits come from `lib/plans/plan-facts.ts` (except the broadcast
+ * allowances, see `COMPARED_BROADCASTS`), prices from the live plan
  * catalog in the market's currency (the baked ladder when the backend is
  * unreachable, as /pricing does), the trial length from `lib/markets.ts`, the
  * languages from `i18n/routing.ts`. Values are plain text in the market's
@@ -53,6 +54,19 @@ export interface StampeoColumn {
 // The most levels a ladder can have: backend/app/services/programs/levels/core.py `MAX_LEVELS`.
 const MAX_LEVELS = 5;
 
+/** The facts a broadcast clause is worded from. */
+type BroadcastFacts = Pick<PlanFacts, "broadcastsPerMonth" | "scheduledBroadcasts">;
+
+/**
+ * The broadcast allowances as the published comparison pages state them
+ * (Starter none, Growth 8 a month); refreshed with the pages, not with the plan facts.
+ */
+export const COMPARED_BROADCASTS: Readonly<Record<TierId, BroadcastFacts>> = {
+  starter: { broadcastsPerMonth: 0, scheduledBroadcasts: false },
+  growth: { broadcastsPerMonth: 8, scheduledBroadcasts: false },
+  pro: { broadcastsPerMonth: "unlimited", scheduledBroadcasts: true },
+};
+
 interface Copy {
   /** Rows that do not depend on plan limits, prices, the trial or the languages. */
   fixed: Pick<
@@ -67,7 +81,7 @@ interface Copy {
   and: string;
   programTypes: (plans: string) => string;
   /** One clause per plan, cheapest first, for the promotional-message allowance. */
-  broadcasts: (plan: string, facts: PlanFacts) => string;
+  broadcasts: (plan: string, facts: BroadcastFacts) => string;
   multipleLocations: (plans: string) => string;
   /** "every plan" / "Growth and Pro", from the plan facts. */
   plans: (names: string[], all: boolean) => string;
@@ -243,7 +257,7 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     "stampeo.price.growth": price("growth"),
     "stampeo.price.pro": price("pro"),
     "stampeo.trial": trial,
-    "stampeo.broadcasts.growth": quotedNumber(PLAN_FACTS.growth.broadcastsPerMonth),
+    "stampeo.broadcasts.growth": quotedNumber(COMPARED_BROADCASTS.growth.broadcastsPerMonth),
     "stampeo.team.starter": quotedNumber(PLAN_FACTS.starter.teamMembers),
     "stampeo.levels": String(MAX_LEVELS),
   };
@@ -255,7 +269,7 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
     "push.automatic": copy.pushAutomatic(plansWhere((plan) => plan.milestoneNotifications !== 0)),
     languages: copy.languages(languageNames),
     "program.types": copy.programTypes(plansWhere((plan) => plan.loyaltyTypes.length > 1)),
-    "push.broadcasts": TIERS.map((tier) => copy.broadcasts(PLAN_NAMES[tier], PLAN_FACTS[tier])).join(". "),
+    "push.broadcasts": TIERS.map((tier) => copy.broadcasts(PLAN_NAMES[tier], COMPARED_BROADCASTS[tier])).join(". "),
     "locations.multiple": copy.multipleLocations(plansWhere((plan) => plan.multipleLocations)),
     "price.entry": copy.priceEntry(PLAN_NAMES[cheapest], facts[`stampeo.price.${cheapest}`]),
     trial: upperFirst(trial),
@@ -264,7 +278,7 @@ export function buildStampeoColumn(market: Market, pricing: Pricing): StampeoCol
   const programPlans = planNamesWhere((plan) => plan.loyaltyTypes.length > 1);
   const locationPlans = planNamesWhere((plan) => plan.multipleLocations);
   const broadcastClauses = TIERS.flatMap((tier) => {
-    const limit = PLAN_FACTS[tier].broadcastsPerMonth;
+    const limit = COMPARED_BROADCASTS[tier].broadcastsPerMonth;
     return limit === 0 ? [] : [copy.short.broadcasts(PLAN_NAMES[tier], limit)];
   });
   const rowsShort: StampeoColumn["rowsShort"] = {

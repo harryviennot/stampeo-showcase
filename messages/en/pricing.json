@@ -27,6 +27,7 @@
         "Unlimited customers and scans",
         "Stamps, points or levels",
         "Automatic notifications",
+        "8 broadcasts a month to all your customers",
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
@@ -39,7 +40,7 @@
       "tagline": "For businesses that want customers coming back",
       "featuresLabel": "Everything in Starter, plus:",
       "features": [
-        "8 broadcasts a month to all your customers",
+        "Unlimited broadcasts to all your customers",
         "Extra points on baskets above the amount you set",
         "Customise automatic notifications",
         "Unlimited saved card styles",
@@ -55,7 +56,7 @@
       "featuresLabel": "Everything in Growth, plus:",
       "features": [
         "Multiple locations, with stats for each",
-        "Unlimited broadcasts, with customer segmentation",
+        "Advanced customer segmentation (stamps or points, last visit, rewards, location)",
         "Several basket levels, each with its own boost",
         "Schedule broadcasts in advance (card styles coming soon)",
         "Notifications when customers are nearby (Apple Wallet, coming soon)",
@@ -110,6 +111,7 @@
         "Unlimited customers and scans",
         "Stamps, points or levels",
         "Automatic notifications",
+        "8 broadcasts a month to all your customers",
         "1 active card style",
         "2 team members (owner + 1)",
         "Customer list, stats and lookup",
@@ -122,7 +124,7 @@
       "name": "Growth",
       "tagline": "For businesses that want customers coming back",
       "features": [
-        "8 broadcasts a month to all your customers",
+        "Unlimited broadcasts to all your customers",
         "Extra points on baskets above the amount you set",
         "Customise automatic notifications",
         "Unlimited saved card styles",
@@ -138,7 +140,7 @@
       "tagline": "For multi-location businesses that plan ahead",
       "features": [
         "Multiple locations, with stats for each",
-        "Unlimited broadcasts, with customer segmentation",
+        "Advanced customer segmentation (stamps or points, last visit, rewards, location)",
         "Several basket levels, each with its own boost",
         "Schedule broadcasts in advance (card styles coming soon)",
         "Notifications when customers are nearby (Apple Wallet, coming soon)",
@@ -222,13 +224,14 @@
         },
         "broadcastNotifications": {
           "label": "Broadcast notifications",
-          "growth": "8/month",
+          "starter": "8/month",
+          "growth": "Unlimited",
           "pro": "Unlimited"
         },
         "segmentation": {
           "label": "Customer segmentation",
-          "starter": "—",
-          "growth": "Basic (date-based)",
+          "starter": "Basic (sign-up date, level)",
+          "growth": "Basic (sign-up date, level)",
           "pro": "Advanced (stamps, inactivity, redemptions, location)"
         },
         "scheduledSends": {

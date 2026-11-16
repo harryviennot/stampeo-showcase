@@ -11,7 +11,7 @@ import {
   tiersWhere,
 } from "./plan-facts";
 import { FEATURE_CATEGORIES } from "../pricing-features";
-import { catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
+import { catalogFiles, catalogStrings, loadCatalog, strictTranslator } from "../testing/catalogs";
 
 /**
  * Plan facts are stated once, in `lib/plans/plan-facts.ts`, mirroring
@@ -30,10 +30,11 @@ const EVERY_PLAN: Record<string, RegExp> = {
 describe("plan facts", () => {
   it("summarises each plan in plain English", () => {
     expect(planSummary("starter")).toBe(
-      "stamps or points, up to 5 levels, 2 team members (owner + 1), no broadcasts, single location, 30 days of analytics history, a visits chart and analytics highlights"
+      "stamps or points, up to 5 levels, 2 team members (owner + 1), 8 broadcasts per month, single location, 30 days of analytics history, a visits chart and analytics highlights"
     );
-    expect(planSummary("growth")).toContain("8 broadcasts per month");
+    expect(planSummary("growth")).toContain("unlimited broadcasts");
     expect(planSummary("growth")).not.toMatch(/advanced|schedul|multiple locations|geofencing/);
+    expect(planSummary("pro")).toContain("unlimited broadcasts");
     expect(planSummary("pro")).toContain("geofencing notifications (coming soon)");
     expect(planSummary("pro")).toContain("scheduled card designs (coming soon)");
   });
@@ -44,6 +45,13 @@ describe("plan facts", () => {
     expect(availability((f) => f.employeeTracking)).toBe("Growth and Pro");
     expect(availability((f) => f.scheduledBroadcasts)).toBe("Pro");
     expect(availability((f) => f.analyticsCharts)).toBe("Growth and Pro");
+    expect(availability((f) => f.broadcastsPerMonth !== 0)).toBe("every plan");
+    expect(availability((f) => f.broadcastsPerMonth === "unlimited")).toBe("Growth and Pro");
+  });
+
+  it("hands translated copy the Starter allowance, the one broadcast number the plans quote", () => {
+    expect(planMessageArgs()).toEqual({ starterBroadcasts: PLAN_FACTS.starter.broadcastsPerMonth });
+    expect(typeof planMessageArgs().starterBroadcasts).toBe("number");
   });
 });
 
@@ -59,7 +67,7 @@ describe("feature meta descriptions", () => {
     >;
 
     it(`${locale}: the broadcast quota is the plan-facts argument, not a literal`, () => {
-      expect(features["campagnes-promotionnelles"].description).toContain("{growthBroadcasts}");
+      expect(features["campagnes-promotionnelles"].description).toContain("{starterBroadcasts}");
       for (const [slug, { description }] of Object.entries(features)) {
         expect({ slug, quota: description.match(LITERAL_MONTHLY_QUOTA)?.[0] }).toEqual({
           slug,
@@ -75,8 +83,16 @@ describe("feature meta descriptions", () => {
         expect(text).not.toContain("{");
       }
       expect(t("campagnes-promotionnelles.description" as never, planMessageArgs())).toContain(
-        String(PLAN_FACTS.growth.broadcastsPerMonth)
+        String(PLAN_FACTS.starter.broadcastsPerMonth)
       );
+    });
+
+    it(`${locale}: no catalog string still asks for a Growth broadcast number`, () => {
+      const stale = catalogFiles(locale)
+        .flatMap((file) => catalogStrings(loadCatalog(locale, file), `${locale}/${file}::`))
+        .filter(({ text }) => text.includes("{growthBroadcasts}"))
+        .map(({ where }) => where);
+      expect(stale).toEqual([]);
     });
   }
 });
@@ -170,10 +186,20 @@ describe("pricing page feature lists", () => {
   // Locked vocabulary per locale (see the stampeo-copywriting skill).
   const VOCAB: Record<
     string,
-    { broadcast: RegExp; points: RegExp; nearby: RegExp; cardStyle: RegExp; schedule: RegExp }
+    {
+      broadcast: RegExp;
+      unlimited: RegExp;
+      segmentation: RegExp;
+      points: RegExp;
+      nearby: RegExp;
+      cardStyle: RegExp;
+      schedule: RegExp;
+    }
   > = {
     en: {
       broadcast: /broadcast/i,
+      unlimited: /unlimited/i,
+      segmentation: /segmentation/i,
       points: /points/i,
       nearby: /nearby/i,
       cardStyle: /card styles?/i,
@@ -181,6 +207,8 @@ describe("pricing page feature lists", () => {
     },
     fr: {
       broadcast: /diffusion/i,
+      unlimited: /illimit/i,
+      segmentation: /segmentation/i,
       points: /points/i,
       nearby: /proximité/i,
       cardStyle: /styles? de carte/i,
@@ -188,6 +216,8 @@ describe("pricing page feature lists", () => {
     },
     es: {
       broadcast: /difusi/i,
+      unlimited: /ilimitad/i,
+      segmentation: /segmentaci/i,
       points: /puntos/i,
       nearby: /cerca/i,
       cardStyle: /estilos? de tarjeta/i,
@@ -195,6 +225,8 @@ describe("pricing page feature lists", () => {
     },
     pl: {
       broadcast: /rozsył/i,
+      unlimited: /bez limitu/i,
+      segmentation: /segmentacj/i,
       points: /punkt/i,
       nearby: /pobliżu/i,
       cardStyle: /wz[oó]r\w* karty/i,
@@ -216,11 +248,29 @@ describe("pricing page feature lists", () => {
         expect(features("starter").some((item) => vocab.points.test(item))).toBe(true);
       });
 
-      it(`${locale} ${section}: broadcast counts match`, () => {
-        expect(features("starter").some((item) => vocab.broadcast.test(item))).toBe(false);
-        const growth = features("growth").filter((item) => vocab.broadcast.test(item));
+      // The bullets that quote a plan's broadcast allowance (the scheduling bullet is about timing, not volume).
+      const allowance = (tier: string) =>
+        features(tier).filter((item) => vocab.broadcast.test(item) && !vocab.schedule.test(item));
+
+      it(`${locale} ${section}: Starter lists its monthly broadcasts and Growth lists unlimited ones`, () => {
+        expect(PLAN_FACTS.starter.broadcastsPerMonth).toBe(8);
+        expect(PLAN_FACTS.growth.broadcastsPerMonth).toBe("unlimited");
+        const starter = allowance("starter");
+        expect(starter).toHaveLength(1);
+        expect(starter[0].match(/\d+/g)).toEqual([String(PLAN_FACTS.starter.broadcastsPerMonth)]);
+        const growth = allowance("growth");
         expect(growth).toHaveLength(1);
-        expect(growth[0].match(/\d+/g)).toEqual([String(PLAN_FACTS.growth.broadcastsPerMonth)]);
+        expect(growth[0]).toMatch(vocab.unlimited);
+        expect(growth[0]).not.toMatch(/\d/);
+      });
+
+      it(`${locale} ${section}: Pro sells advanced segmentation and scheduling, not unlimited broadcasts`, () => {
+        expect(features("pro").some((item) => vocab.broadcast.test(item) && vocab.unlimited.test(item))).toBe(false);
+        expect(features("pro").filter((item) => vocab.segmentation.test(item))).toHaveLength(1);
+        expect(features("pro").filter((item) => vocab.broadcast.test(item) && vocab.schedule.test(item))).toHaveLength(1);
+        for (const tier of ["starter", "growth"]) {
+          expect(features(tier).some((item) => vocab.segmentation.test(item))).toBe(false);
+        }
       });
 
       it(`${locale} ${section}: geofencing reads as coming soon on Pro`, () => {
@@ -239,13 +289,26 @@ describe("pricing page feature lists", () => {
       });
     }
 
-    it(`${locale}: the comparison table agrees on loyalty types and broadcasts`, () => {
+    it(`${locale}: the comparison table agrees on loyalty types`, () => {
       // Same loyalty types on every plan, so the row cannot differ between plans.
       const row = page.comparison.rows.loyaltyType;
       expect(new Set(TIERS.map((tier) => row[tier])).size).toBe(1);
-      expect(page.comparison.rows.broadcastNotifications.growth.match(/\d+/g)).toEqual([
-        String(PLAN_FACTS.growth.broadcastsPerMonth),
-      ]);
+    });
+
+    it(`${locale}: the comparison table gives Starter its monthly broadcasts, Growth and Pro unlimited ones`, () => {
+      const row = page.comparison.rows.broadcastNotifications;
+      expect(row.starter.match(/\d+/g)).toEqual([String(PLAN_FACTS.starter.broadcastsPerMonth)]);
+      for (const tier of ["growth", "pro"] as const) {
+        expect(PLAN_FACTS[tier].broadcastsPerMonth).toBe("unlimited");
+        expect({ tier, cell: row[tier] }).toEqual({ tier, cell: expect.stringMatching(vocab.unlimited) });
+      }
+    });
+
+    it(`${locale}: the comparison table gives Starter the same basic segmentation as Growth, and Pro the advanced one`, () => {
+      const row = page.comparison.rows.segmentation;
+      expect(row.starter).toBe(row.growth);
+      expect(row.pro).not.toBe(row.growth);
+      expect(row.starter).not.toMatch(/^[—-]$/);
     });
   }
 
@@ -254,6 +317,25 @@ describe("pricing page feature lists", () => {
       (r) => r.key === "scheduledChanges"
     );
     expect(row).toEqual({ key: "scheduledChanges", starter: "cross", growth: "cross", pro: "soon" });
+  });
+
+  describe("the notifications rows of the comparison table", () => {
+    const row = (key: string) =>
+      FEATURE_CATEGORIES.flatMap((category) => category.rows).find((r) => r.key === key)!;
+
+    it("shows broadcasts as a quantity on every plan, as the plan facts have them", () => {
+      expect(TIERS.map((tier) => row("broadcastNotifications")[tier])).toEqual(
+        TIERS.map((tier) => (PLAN_FACTS[tier].broadcastsPerMonth === 0 ? "cross" : "text"))
+      );
+      expect(TIERS.map((tier) => row("broadcastNotifications")[tier])).toEqual(["text", "text", "text"]);
+    });
+
+    it("shows segmentation as a value on every plan, and scheduling on the plans that have it", () => {
+      expect(TIERS.map((tier) => row("segmentation")[tier])).toEqual(["text", "text", "text"]);
+      expect(TIERS.map((tier) => row("scheduledSends")[tier])).toEqual(
+        TIERS.map((tier) => (PLAN_FACTS[tier].scheduledBroadcasts ? "check" : "cross"))
+      );
+    });
   });
 });
 

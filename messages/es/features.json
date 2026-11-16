@@ -818,7 +818,8 @@
       "hero": {
         "title": "Llega a todos tus clientes. Sin la factura de los SMS.",
         "navTitle": "Difusiones promocionales: avisos en Apple Wallet y Google Wallet a todos tus clientes",
-        "subtitle": "Envía difusiones directamente a Apple Wallet y Google Wallet, sin coste por mensaje. Growth incluye {growthBroadcasts} difusiones al mes con segmentación básica. Pro no tiene límite y suma segmentación avanzada y programación.",
+        "subtitle": "Envía difusiones directamente a Apple Wallet y Google Wallet, sin coste por mensaje. Starter incluye {starterBroadcasts} difusiones al mes con segmentación básica. Growth y Pro no tienen límite, y Pro suma segmentación avanzada y programación.",
+        "pillStarter": "Starter",
         "pillGrowth": "Growth",
         "pillPro": "Pro"
       },

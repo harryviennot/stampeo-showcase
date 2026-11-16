@@ -27,6 +27,7 @@
         "Clients et scans illimités",
         "Tampons, points ou niveaux",
         "Notifications automatiques",
+        "8 diffusions par mois à tous vos clients",
         "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
         "Liste clients, statistiques et recherche",
@@ -39,7 +40,7 @@
       "tagline": "Pour les commerces qui veulent faire revenir leurs clients",
       "featuresLabel": "Tout le plan Starter, plus :",
       "features": [
-        "8 diffusions par mois à tous vos clients",
+        "Diffusions illimitées à tous vos clients",
         "Des points en plus sur les paniers au-dessus du montant que vous fixez",
         "Personnalisez les notifications automatiques",
         "Styles de carte enregistrés illimités",
@@ -55,7 +56,7 @@
       "featuresLabel": "Tout le plan Growth, plus :",
       "features": [
         "Plusieurs établissements, avec les statistiques de chacun",
-        "Diffusions illimitées, avec segmentation clients",
+        "Segmentation clients avancée (tampons ou points, dernière visite, récompenses, établissement)",
         "Plusieurs paliers de panier, chacun avec son bonus",
         "Programmez vos diffusions à l'avance (styles de carte bientôt)",
         "Notifications quand vos clients sont à proximité (Apple Wallet, bientôt)",
@@ -110,6 +111,7 @@
         "Clients et scans illimités",
         "Tampons, points ou niveaux",
         "Notifications automatiques",
+        "8 diffusions par mois à tous vos clients",
         "1 style de carte actif",
         "2 membres d'équipe (propriétaire + 1)",
         "Liste clients, statistiques et recherche",
@@ -122,7 +124,7 @@
       "name": "Growth",
       "tagline": "Pour les commerces qui veulent faire revenir leurs clients",
       "features": [
-        "8 diffusions par mois à tous vos clients",
+        "Diffusions illimitées à tous vos clients",
         "Des points en plus sur les paniers au-dessus du montant que vous fixez",
         "Personnalisez les notifications automatiques",
         "Styles de carte enregistrés illimités",
@@ -138,7 +140,7 @@
       "tagline": "Pour les commerces multi-établissements qui planifient à l'avance",
       "features": [
         "Plusieurs établissements, avec les statistiques de chacun",
-        "Diffusions illimitées, avec segmentation clients",
+        "Segmentation clients avancée (tampons ou points, dernière visite, récompenses, établissement)",
         "Plusieurs paliers de panier, chacun avec son bonus",
         "Programmez vos diffusions à l'avance (styles de carte bientôt)",
         "Notifications quand vos clients sont à proximité (Apple Wallet, bientôt)",
@@ -222,13 +224,14 @@
         },
         "broadcastNotifications": {
           "label": "Notifications broadcast",
-          "growth": "8/mois",
+          "starter": "8/mois",
+          "growth": "Illimitées",
           "pro": "Illimitées"
         },
         "segmentation": {
           "label": "Segmentation client",
-          "starter": "—",
-          "growth": "Basique (par date)",
+          "starter": "Basique (date d'inscription, niveau)",
+          "growth": "Basique (date d'inscription, niveau)",
           "pro": "Avancée (tampons, inactivité, récompenses, établissement)"
         },
         "scheduledSends": {

@@ -177,6 +177,17 @@ Stampeo is a SaaS platform that helps local businesses create and manage digital
 - **How it's different**: the card lives in Apple Wallet / Google Wallet, which are already installed on every modern smartphone. No app build, no app store, no account creation.
 - **What we see**: ${pct("walletAddRate")} of customers who join add the card to their wallet, ${pct("installedDay30")} of cards are still there 30 days later, and ${pct("return30")} of customers come back within 30 days ${SOURCE}.`;
 
+/** "Starter = 8 campaigns / month. Growth and Pro = unlimited.": the plans that share an allowance are named together. */
+function broadcastQuotas(): string {
+  const plansByQuota = new Map<string, string[]>();
+  for (const tier of TIERS) {
+    const limit = PLAN_FACTS[tier].broadcastsPerMonth;
+    const quota = limit === "unlimited" ? "unlimited" : `${limit} campaigns / month`;
+    plansByQuota.set(quota, [...(plansByQuota.get(quota) ?? []), PLAN_NAMES[tier]]);
+  }
+  return [...plansByQuota].map(([quota, plans]) => `${plans.join(" and ")} = ${quota}.`).join(" ");
+}
+
 const PRODUCT = `## Product
 
 ### How it works
@@ -199,9 +210,9 @@ Promotional campaigns are one-off push notifications sent straight to customers'
 
 - **Reach**: broadcast to all loyalty-card holders, or segment.
 - **Cost**: included in the plan, with no per-message fee and no SMS carrier fees.
-- **Quotas**: Growth = ${PLAN_FACTS.growth.broadcastsPerMonth} campaigns / month. Pro = unlimited.
+- **Quotas**: ${broadcastQuotas()}
 - **Segmentation**:
-  - Growth: basic (enrollment date).
+  - Starter and Growth: basic (enrollment date, level).
   - Pro: advanced — by stamp count, last redemption, inactivity window, recent signups.
 - **Scheduling** (${availability((f) => f.scheduledBroadcasts)}): pick a local send time with timezone awareness — Thursday 5pm, Saturday noon, etc. Other plans send immediately.
 - **Multilingual delivery**: write the copy once per language you serve; each customer receives the language their device is set to. Single send, not one per language.
