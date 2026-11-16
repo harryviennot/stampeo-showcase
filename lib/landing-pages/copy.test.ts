@@ -87,7 +87,6 @@ describe("what these pages may not claim (AC10)", () => {
     "MOBILE_SCANNER_PREVIEW.counter.options[3].title": "the counter's Level button, named for the program type; the previews print no Every plan chip",
     "PUSH_NOTIFICATIONS_PREVIEW.day.lead": "the walk from a first stamp to the next level; the previews print no Every plan chip",
     "PUSH_NOTIFICATIONS_PREVIEW.day.nodes[3].label": "the step where the card moves up a level; the previews print no Every plan chip",
-    "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.ready.facts[0].text": "the ready-made messages cover level-ups; the previews print no Every plan chip",
   };
 
   const levelMentions = () =>

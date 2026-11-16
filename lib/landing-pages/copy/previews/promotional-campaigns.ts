@@ -82,16 +82,6 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       delivered: "Delivered",
     },
   },
-  how: {
-    eyebrow: "How it works",
-    title: "Write it, pick who gets it, send.",
-    lead: "Write it in your dashboard. It lands on their lock screen in seconds.",
-    cells: [
-      { title: "Write", body: "A short message: a deal, something new, a reason to drop by today." },
-      { title: "Pick who", body: "Everyone, or by when they joined. Pro adds stamps, rewards and inactivity." },
-      { title: "Send", body: "Right away, or on Pro, at any date and time you choose." },
-    ] satisfies Tile[],
-  },
   ideas: {
     eyebrow: "Ideas to send",
     title: "Give them a reason to come in today.",

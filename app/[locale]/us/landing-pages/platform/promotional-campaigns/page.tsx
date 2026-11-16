@@ -3,8 +3,8 @@ import { setRequestLocale } from "next-intl/server";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
+import { ComposerSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/ComposerSection";
 import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
-import { HowSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/HowSection";
 import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
 import { NumbersSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/NumbersSection";
 import { PlansSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/PlansSection";
@@ -46,11 +46,10 @@ export default function PromotionalCampaignsPreviewPage() {
           </PhoneCrop>
         }
       />
-      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page E) and delete this marker. */}
+      <ComposerSection />
       <Hairline />
       <NumbersSection />
       <Hairline />
-      <HowSection />
       <IdeasSection />
       <DeliverySection />
       <PlansSection />

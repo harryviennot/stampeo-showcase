@@ -58,8 +58,6 @@ const SCHEDULED_BROADCASTS: Gate = (facts) => facts.scheduledBroadcasts;
 const UNLIMITED_SCANS = pricingRow("unlimitedScans");
 /** Your own text on the stamp, milestone and reward messages: "Custom text", where Starter has the predefined ones. */
 const CUSTOM_MESSAGE_TEXT: Gate = (facts) => catalogCell("stampMilestoneReward", facts) !== "Predefined";
-/** Custom stamp-count milestones ("Halfway there!"): none on Starter. */
-const CUSTOM_MILESTONES: Gate = (facts) => facts.milestoneNotifications !== 0;
 /** Broadcast targeting by stamps, rewards and inactivity: "Advanced" on Pro, where Growth targets by date. */
 const ADVANCED_TARGETING: Gate = (facts) => catalogCell("segmentation", facts).startsWith("Advanced");
 /** A history longer than Starter's 30 days: the Analytics page looks further back on Growth and Pro. */
@@ -86,9 +84,6 @@ const CHIPPED: Record<string, Gate> = {
   "MOBILE_SCANNER_PREVIEW.team.tabs.owners.facts[2]": (facts) => facts.teamMembers === "unlimited",
   "MOBILE_SCANNER_PREVIEW.teamStrip.facts[0]": pricingRow("earningCaps"),
   "MOBILE_SCANNER_PREVIEW.teamStrip.facts[1]": (facts) => facts.teamMembers === "unlimited",
-  "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[0]": CUSTOM_MESSAGE_TEXT,
-  "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[1]": CUSTOM_MILESTONES,
-  "PUSH_NOTIFICATIONS_PREVIEW.wording.tabs.words.facts[2]": CUSTOM_MESSAGE_TEXT,
   "PUSH_NOTIFICATIONS_PREVIEW.editor.toggle": CUSTOM_MESSAGE_TEXT,
   "ANALYTICS_PREVIEW.questions.rows[1]": ANALYTICS_CHARTS,
   "ANALYTICS_PREVIEW.questions.rows[2]": ANALYTICS_CHARTS,
@@ -141,10 +136,6 @@ const PLAN_LINES: Record<string, PlanClaim[]> = {
   ],
   "ANALYTICS_PREVIEW.ladder.locked": [claim("Growth and Pro", ANALYTICS_CHARTS)],
   "MOBILE_SCANNER_PREVIEW.ways.lead": [claim("every plan", UNLIMITED_SCANS)],
-  "PUSH_NOTIFICATIONS_PREVIEW.wording.lead": [
-    claim("every plan", pricingRow("stampMilestoneReward")),
-    claim("Growth and Pro", CUSTOM_MESSAGE_TEXT),
-  ],
   "PUSH_NOTIFICATIONS_PREVIEW.editor.lead": [
     claim("every plan", pricingRow("stampMilestoneReward")),
     claim("Growth and Pro", CUSTOM_MESSAGE_TEXT),
@@ -157,8 +148,6 @@ const PLAN_LINES: Record<string, PlanClaim[]> = {
   "GEOLOCATION_PREVIEW.faq.items[1].answer": [claim("Pro", GEOFENCING_COMING_SOON)],
   "GEOLOCATION_PREVIEW.band.sub": [claim("Pro", GEOFENCING_COMING_SOON)],
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.lead": [claim("Growth and Pro", BROADCASTS)],
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.how.cells[1].body": [claim("Pro", ADVANCED_TARGETING)],
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.how.cells[2].body": [claim("Pro", SCHEDULED_BROADCASTS)],
   "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer": [
     claim("Growth", (facts) => typeof facts.broadcastsPerMonth === "number" && facts.broadcastsPerMonth > 0),
     claim("Pro", (facts) => facts.broadcastsPerMonth === "unlimited"),

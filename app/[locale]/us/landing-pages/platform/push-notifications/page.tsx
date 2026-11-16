@@ -3,10 +3,9 @@ import { setRequestLocale } from "next-intl/server";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
-import { HowSection } from "@/components/landing-pages/feature-previews/push-notifications/HowSection";
-import { MomentsSection } from "@/components/landing-pages/feature-previews/push-notifications/MomentsSection";
+import { DaySection } from "@/components/landing-pages/feature-previews/push-notifications/DaySection";
+import { EditorSection } from "@/components/landing-pages/feature-previews/push-notifications/EditorSection";
 import { WalletsSection } from "@/components/landing-pages/feature-previews/push-notifications/WalletsSection";
-import { WordingSection } from "@/components/landing-pages/feature-previews/push-notifications/WordingSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
 import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
@@ -42,11 +41,9 @@ export default function PushNotificationsPreviewPage() {
           </PhoneCrop>
         }
       />
-      {/* TODO(STA-552 v2 builder): this page still renders its first design; render the registry's section list (ux-brief-v2, page C) and delete this marker. */}
-      <HowSection />
-      <MomentsSection />
+      <DaySection />
       <WalletsSection />
-      <WordingSection />
+      <EditorSection />
       <LpDemo eyebrow={PUSH_NOTIFICATIONS_PREVIEW.demo.eyebrow} align="center" />
       <LpAccentBand copy={PUSH_NOTIFICATIONS_PREVIEW.band} />
       <RelatedPreviews slug="platform/push-notifications" />
