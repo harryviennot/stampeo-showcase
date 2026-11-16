@@ -1,18 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { NotificationPhoneDemo } from "@/components/features/notifications-push/NotificationPhoneDemo";
 import { ReducedMotion } from "@/components/ui/ReducedMotion";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import {
-  COUNT_MS,
-  REPLAY_GAP_MS,
-  countedAt,
-  deliveryOf,
-  firstStage,
-  shouldAutoPlay,
-  type ComposerStage,
-} from "@/lib/landing-pages/previews/broadcast-composer";
+import { createSender, deliveryOf, firstStage, shouldAutoPlay, type ComposerStage } from "@/lib/landing-pages/previews/broadcast-composer";
+import { browserScheduler } from "@/lib/landing-pages/previews/scheduler";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { STAMPED_STAGE } from "../../platform/classes";
 import { PhoneCrop } from "../../shared/PhoneCrop";
@@ -84,48 +77,23 @@ export function BroadcastComposer() {
   const [count, setCount] = useState<number | null>(null);
   const [filtered, setFiltered] = useState(false);
   const [joined, setJoined] = useState(false);
-  const played = useRef(false);
   const phone = useRef<HTMLDivElement>(null);
-  const frame = useRef(0);
-  const pause = useRef(0);
 
   const stage = pressed ?? firstStage(reducedMotion);
   const shown = count ?? (stage === "sent" ? DELIVERY.delivered : 0);
 
-  const stop = useCallback(() => {
-    cancelAnimationFrame(frame.current);
-    clearTimeout(pause.current);
-  }, []);
-
-  const begin = useCallback(() => {
-    setPressed("sent");
-    if (reducedMotion) {
-      setCount(null);
-      return;
-    }
-    const startedAt = performance.now();
-    const tick = (now: number) => {
-      const elapsed = now - startedAt;
-      setCount(elapsed >= COUNT_MS ? null : countedAt(elapsed, DELIVERY.delivered));
-      if (elapsed < COUNT_MS) frame.current = requestAnimationFrame(tick);
-    };
-    setCount(0);
-    frame.current = requestAnimationFrame(tick);
-  }, [reducedMotion]);
-
-  const send = useCallback(
-    (from: ComposerStage) => {
-      stop();
-      played.current = true;
-      if (from === "idle") {
-        begin();
-        return;
-      }
-      setPressed("idle");
-      setCount(0);
-      pause.current = window.setTimeout(begin, REPLAY_GAP_MS);
-    },
-    [begin, stop],
+  const sender = useMemo(
+    () =>
+      createSender({
+        reducedMotion,
+        target: DELIVERY.delivered,
+        scheduler: browserScheduler,
+        onView: (view) => {
+          setPressed(view.pressed);
+          setCount(view.count);
+        },
+      }),
+    [reducedMotion],
   );
 
   useEffect(() => {
@@ -133,17 +101,17 @@ export function BroadcastComposer() {
     if (!element || reducedMotion) return;
     const watch = new IntersectionObserver(
       ([entry]) => {
-        if (!shouldAutoPlay({ reducedMotion, played: played.current, visibleRatio: entry.intersectionRatio })) return;
-        send("idle");
+        if (!shouldAutoPlay({ reducedMotion, played: sender.played, visibleRatio: entry.intersectionRatio })) return;
+        sender.send("idle");
         watch.disconnect();
       },
       { threshold: [0, 0.25, 0.5, 0.75, 1] },
     );
     watch.observe(element);
     return () => watch.disconnect();
-  }, [reducedMotion, send]);
+  }, [reducedMotion, sender]);
 
-  useEffect(() => stop, [stop]);
+  useEffect(() => sender.stop, [sender]);
 
   return (
     <div className="mx-auto grid max-w-[1040px] gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
@@ -208,7 +176,7 @@ export function BroadcastComposer() {
 
         <button
           type="button"
-          onClick={() => send(stage)}
+          onClick={() => sender.send(stage)}
           className="keycap mt-7 mb-[3px] inline-flex h-[52px] w-full items-center justify-center rounded-full bg-[var(--accent)] px-7 text-base font-semibold text-white hover:brightness-105 sm:w-auto"
         >
           {stage === "sent" ? card.sendAgain : card.send}

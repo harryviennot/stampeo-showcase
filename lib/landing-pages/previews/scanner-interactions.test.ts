@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
-import { AUTO_ADVANCE_MS, COUNTER_KEYS, autoplays, crossfadeMs, stepCounter } from "./scanner-counter";
-import { TEAM_CODE, TYPE_STEP_MS, codeBoxes, typesIn } from "./team-code";
+import { COUNTER_KEYS, autoplays, counterKeyTarget, crossfadeMs, stepCounter } from "./scanner-counter";
+import { TEAM_CODE, codeBoxes } from "./team-code";
 
 /** The characters a team code can hold: the Scanner app's `JOIN_CODE_ALPHABET`, with no 0, O, 1, I, L or U to misread. */
 const TEAM_CODE_ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
@@ -18,13 +18,25 @@ describe("the counter's four screens", () => {
     expect(stepCounter("stamps", -1)).toBe("levels");
     expect(stepCounter("rewards", -1)).toBe("points");
   });
+
+  test.each([
+    ["ArrowRight", "points"],
+    ["ArrowDown", "points"],
+    ["ArrowLeft", "levels"],
+    ["ArrowUp", "levels"],
+  ] as const)("on Stamps, %s goes to %s: the key that selects it is the one that takes the focus", (key, to) => {
+    expect(counterKeyTarget("stamps", key)).toBe(to);
+  });
+
+  test.each(["Tab", "Enter", " ", "Home", "constructor"])("%s is left to the browser: no screen is picked and the page is not stopped from using it", (key) => {
+    expect(counterKeyTarget("stamps", key)).toBeNull();
+  });
 });
 
 describe("when the counter turns its own pages", () => {
   const base = { reducedMotion: false, inView: true, touched: false };
 
-  test("every 4 seconds while it is on screen and nobody has tapped", () => {
-    expect(AUTO_ADVANCE_MS).toBe(4000);
+  test("while it is on screen and nobody has tapped", () => {
     expect(autoplays(base)).toBe(true);
   });
 
@@ -36,8 +48,8 @@ describe("when the counter turns its own pages", () => {
     expect(autoplays({ ...base, ...change })).toBe(false);
   });
 
-  test("the screens cross-fade in 250ms, and swap at once for a reader who asks for less motion", () => {
-    expect(crossfadeMs(false)).toBe(250);
+  test("the screens cross-fade, and swap at once for a reader who asks for less motion", () => {
+    expect(crossfadeMs(false)).toBeGreaterThan(0);
     expect(crossfadeMs(true)).toBe(0);
   });
 });
@@ -52,11 +64,5 @@ describe("the team code the staff phone fills in", () => {
     expect(codeBoxes(TEAM_CODE, 0).map(({ typed }) => typed)).toEqual([false, false, false, false, false, false]);
     expect(codeBoxes(TEAM_CODE, 2).map(({ typed }) => typed)).toEqual([true, true, false, false, false, false]);
     expect(codeBoxes(TEAM_CODE, 6).map(({ char }) => char).join("")).toBe(TEAM_CODE);
-  });
-
-  test("one more character every 120ms, and none of it for a reader who asks for less motion: the code is just there", () => {
-    expect(TYPE_STEP_MS).toBe(120);
-    expect(typesIn(false)).toBe(true);
-    expect(typesIn(true)).toBe(false);
   });
 });

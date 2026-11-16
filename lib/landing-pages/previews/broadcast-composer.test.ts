@@ -5,7 +5,8 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { COUNT_MS, countedAt, deliveryOf, firstStage, shouldAutoPlay } from "./broadcast-composer";
+import { fakeScheduler } from "../../testing/fake-scheduler";
+import { COUNT_MS, REPLAY_GAP_MS, countedAt, createSender, deliveryOf, firstStage, shouldAutoPlay, type ComposerView } from "./broadcast-composer";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "../copy/previews/promotional-campaigns";
 
 describe("the sample broadcast's delivery", () => {
@@ -26,8 +27,7 @@ describe("the sample broadcast's delivery", () => {
 });
 
 describe("the count under the card", () => {
-  test("starts at 0, ends on the target after 900ms, and never goes past it or backwards", () => {
-    expect(COUNT_MS).toBe(900);
+  test("starts at 0, ends on the target when the count is over, and never goes past it or backwards", () => {
     expect(countedAt(0, 680)).toBe(0);
     expect(countedAt(COUNT_MS, 680)).toBe(680);
     expect(countedAt(5000, 680)).toBe(680);
@@ -70,5 +70,98 @@ describe("sending by itself, once, when the phone is on screen", () => {
     ["the reader asks for less motion: nothing moves without a tap", { reducedMotion: true }],
   ])("does not fire when %s", (_why, change) => {
     expect(shouldAutoPlay({ ...base, ...change })).toBe(false);
+  });
+});
+
+describe("Send now, Send again and a double tap", () => {
+  const TARGET = 680;
+  const setup = (reducedMotion: boolean) => {
+    const scheduler = fakeScheduler();
+    const views: ComposerView[] = [];
+    const sender = createSender({ reducedMotion, target: TARGET, scheduler, onView: (view) => views.push(view) });
+
+    return { scheduler, views, sender, last: () => views[views.length - 1] };
+  };
+
+  test("Send now from the waiting phone drops the banner at once and counts up to what was delivered, then rests on it", () => {
+    const { scheduler, sender, last } = setup(false);
+
+    sender.send("idle");
+    expect(last()).toEqual({ pressed: "sent", count: 0 });
+    scheduler.advance(COUNT_MS / 3);
+    expect(last().count).toBeGreaterThan(340);
+    scheduler.advance(COUNT_MS);
+    expect(last()).toEqual({ pressed: "sent", count: null });
+    expect(scheduler.pending).toBe(0);
+  });
+
+  test("Send again takes the banner off the phone, then drops it again after a short pause and counts once more", () => {
+    const { scheduler, sender, last } = setup(false);
+
+    sender.send("idle");
+    scheduler.advance(COUNT_MS + 50);
+    sender.send("sent");
+    expect(last()).toEqual({ pressed: "idle", count: 0 });
+    scheduler.advance(REPLAY_GAP_MS - 1);
+    expect(last().pressed).toBe("idle");
+    scheduler.advance(1);
+    expect(last()).toEqual({ pressed: "sent", count: 0 });
+    scheduler.advance(COUNT_MS + 50);
+    expect(last()).toEqual({ pressed: "sent", count: null });
+  });
+
+  test("a second tap in the middle of the count starts it over and ends where one tap would: one banner, the full count, nothing left running", () => {
+    const { scheduler, sender, views, last } = setup(false);
+
+    sender.send("idle");
+    scheduler.advance(300);
+    sender.send("sent");
+    expect(last()).toEqual({ pressed: "idle", count: 0 });
+    scheduler.advance(REPLAY_GAP_MS + COUNT_MS + 50);
+    expect(last()).toEqual({ pressed: "sent", count: null });
+    expect(scheduler.pending).toBe(0);
+    expect(views.filter((view) => view.count !== null && view.count > TARGET)).toEqual([]);
+  });
+
+  test("Send now during the pause of a replay does not wait for it: the banner drops at once, and the pause never fires on top", () => {
+    const { scheduler, sender, last } = setup(false);
+
+    sender.send("idle");
+    scheduler.advance(COUNT_MS + 50);
+    sender.send("sent");
+    scheduler.advance(100);
+    sender.send("idle");
+    expect(last()).toEqual({ pressed: "sent", count: 0 });
+    scheduler.advance(COUNT_MS + REPLAY_GAP_MS + 50);
+    expect(last()).toEqual({ pressed: "sent", count: null });
+    expect(scheduler.pending).toBe(0);
+  });
+
+  test("for a reader who asks for less motion the banner is there with the full count at once, and Send again is a blink, never a count", () => {
+    const { scheduler, sender, views, last } = setup(true);
+
+    sender.send("idle");
+    expect(last()).toEqual({ pressed: "sent", count: null });
+    expect(scheduler.pending).toBe(0);
+    sender.send("sent");
+    expect(last()).toEqual({ pressed: "idle", count: 0 });
+    scheduler.advance(REPLAY_GAP_MS);
+    expect(last()).toEqual({ pressed: "sent", count: null });
+    expect(views.some((view) => view.count !== null && view.count > 0)).toBe(false);
+    expect(scheduler.pending).toBe(0);
+  });
+
+  test("leaving the page stops a count and a pause in progress, and any tap counts as having played", () => {
+    const { scheduler, sender, views } = setup(false);
+
+    expect(sender.played).toBe(false);
+    sender.send("idle");
+    expect(sender.played).toBe(true);
+    scheduler.advance(200);
+    sender.stop();
+    const seen = views.length;
+    scheduler.advance(5000);
+    expect(views).toHaveLength(seen);
+    expect(scheduler.pending).toBe(0);
   });
 });

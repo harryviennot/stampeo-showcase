@@ -21,8 +21,6 @@ import {
 const START: StackState = { front: 0, phase: "rest" };
 const isLevel = (card: StackCard) => card.headerLabel !== undefined;
 const brandOf = (card: StackCard) => card.design.logo_url ?? "";
-/** What a visitor takes a card for: its level's name, else its program. */
-const kindOf = (card: StackCard) => card.headerLabel ?? card.program;
 
 describe("the nine cards of the stack", () => {
   test("are nine different shops, none of them a real one and none of them the bubble tea shop", () => {

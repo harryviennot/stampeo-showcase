@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Segmented } from "@/components/ui/Segmented";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
 import { BlindSpotCard } from "./BlindSpotCard";
-import { AUTO_FLIP, allPaper, autoFlipDue, faceShown, flipCard, flipDelayMs, flipMotion, setAll, type Face } from "../../../../lib/landing-pages/previews/analytics-flip";
-import { ANSWERS } from "../../../../lib/landing-pages/previews/analytics-sample";
+import { AUTO_FLIP, allPaper, createAutoFlip, faceShown, flipCard, flipDelayMs, flipMotion, setAll, type Face } from "@/lib/landing-pages/previews/analytics-flip";
+import { browserScheduler } from "@/lib/landing-pages/previews/scheduler";
+import { ANSWERS } from "@/lib/landing-pages/previews/analytics-sample";
 
 /**
  * The control and the six cards. Everything starts on paper; the control turns all six, a tap turns one, and a
@@ -19,56 +20,41 @@ export function BlindSpots() {
   const [flips, setFlips] = useState(() => allPaper(cards.length));
   const [cause, setCause] = useState<"control" | "tap">("control");
   const stage = useRef<HTMLDivElement>(null);
-  const touched = useRef(false);
-  const played = useRef(false);
+  const auto = useMemo(
+    () =>
+      createAutoFlip({
+        scheduler: browserScheduler,
+        onFlip: () => {
+          setCause("control");
+          setFlips(setAll(cards.length, "stampeo"));
+        },
+      }),
+    [cards.length],
+  );
 
   useEffect(() => {
     const element = stage.current;
     if (!element || !motion.auto || typeof IntersectionObserver === "undefined") return;
 
-    let ratio = 0;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const turn = () => {
-      timer = undefined;
-      const due = autoFlipDue({
-        amountVisible: ratio,
-        waitedMs: AUTO_FLIP.waitMs,
-        touched: touched.current,
-        played: played.current,
-        reduced,
-      });
-      if (!due) return;
-      played.current = true;
-      setCause("control");
-      setFlips(setAll(cards.length, "stampeo"));
-    };
     const observer = new IntersectionObserver(
-      (entries) => {
-        ratio = entries[entries.length - 1].intersectionRatio;
-        if (ratio < AUTO_FLIP.visibleAmount) {
-          clearTimeout(timer);
-          timer = undefined;
-        } else if (timer === undefined) {
-          timer = setTimeout(turn, AUTO_FLIP.waitMs);
-        }
-      },
+      (entries) => auto.report(entries[entries.length - 1].intersectionRatio, reduced),
       { threshold: [0, AUTO_FLIP.visibleAmount, 1] },
     );
 
     observer.observe(element);
     return () => {
-      clearTimeout(timer);
+      auto.stop();
       observer.disconnect();
     };
-  }, [motion.auto, reduced, cards.length]);
+  }, [auto, motion.auto, reduced]);
 
   const choose = (face: Face) => {
-    touched.current = true;
+    auto.touch();
     setCause("control");
     setFlips(setAll(cards.length, face));
   };
   const tap = (index: number) => {
-    touched.current = true;
+    auto.touch();
     setCause("tap");
     setFlips((current) => flipCard(current, index));
   };

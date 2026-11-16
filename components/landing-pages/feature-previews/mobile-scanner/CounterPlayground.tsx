@@ -7,7 +7,7 @@ import { IPhone } from "@/components/ui/IPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { iphoneLayout } from "@/lib/devices/iphone";
-import { AUTO_ADVANCE_MS, COUNTER_KEYS, autoplays, crossfadeMs, stepCounter, type CounterKey } from "@/lib/landing-pages/previews/scanner-counter";
+import { AUTO_ADVANCE_MS, COUNTER_KEYS, autoplays, counterKeyTarget, crossfadeMs, stepCounter, type CounterKey } from "@/lib/landing-pages/previews/scanner-counter";
 import { APP } from "./appColors";
 
 /** One button of the counter and what it shows: the Scanner's screen, the customer's wallet card and what the scan did to it. */
@@ -79,9 +79,8 @@ export function CounterPlayground({ label, panes, fact }: Readonly<{ label: stri
   };
 
   const onKeyDown = (event: KeyboardEvent) => {
-    const delta = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
-    if (!delta) return;
-    const next = stepCounter(selected, delta as 1 | -1);
+    const next = counterKeyTarget(selected, event.key);
+    if (!next) return;
 
     event.preventDefault();
     pick(next);

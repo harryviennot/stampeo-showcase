@@ -1,13 +1,13 @@
 /**
  * The five palettes the card designer makes from the juice bar's logo, for the card design page's "colors
- * from your logo" section. They are the output of the designer's own generator, not a hand-picked list:
- * web's `generateThemeVariants(await extractLogoPalette("/themes/pulp/logo.svg"))`, run once in a browser on
- * 16 Nov 2026 and copied here in its order (light, dark, bold, mono, soft). The "light" one is brown because
- * the logo's palette has no light muted swatch, which is what the designer does with it too.
+ * from your logo" section: the output of web's `generateThemeVariants(await extractLogoPalette("/themes/pulp/logo.svg"))`
+ * in its order (light, dark, bold, mono, soft). The "light" one is brown because the logo's palette has no light
+ * muted swatch, which is what the designer does with it too.
  */
 
 import { STAMP_SAMPLES } from "@/lib/loyalty-samples";
 import type { CardDesign } from "@/lib/types/design";
+import type { Scheduler } from "./scheduler";
 
 export interface PulpPalette {
   id: "light" | "dark" | "bold" | "mono" | "soft";
@@ -68,4 +68,36 @@ export function paletteDesign(palette: PulpPalette): Partial<CardDesign> {
  */
 export function palettePlayback(reducedMotion: boolean): number[] {
   return reducedMotion ? [] : [1, 2, 3, 4, 0];
+}
+
+/** Each palette is on show this long while the card tries them in turn, in ms. */
+export const PLAY_STEP_MS = 1200;
+
+/**
+ * The tour of the palettes and what a tap does to it: `start` (when the section is seen) tries the playback one
+ * step apart, once; `pick` shows the palette tapped and ends the tour for good; `stop` cancels what is waiting.
+ */
+export function createTour({
+  reducedMotion,
+  scheduler,
+  onSelect,
+}: Readonly<{ reducedMotion: boolean; scheduler: Scheduler; onSelect: (index: number) => void }>) {
+  let started = false;
+  const waiting: number[] = [];
+
+  const stop = () => waiting.splice(0).forEach((id) => scheduler.cancelAfter(id));
+
+  return {
+    start() {
+      if (started || reducedMotion) return;
+      started = true;
+      palettePlayback(reducedMotion).forEach((index, step) => waiting.push(scheduler.after(() => onSelect(index), (step + 1) * PLAY_STEP_MS)));
+    },
+    pick(index: number) {
+      stop();
+      started = true;
+      onSelect(index);
+    },
+    stop,
+  };
 }

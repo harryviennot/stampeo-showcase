@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { WalletCard } from "@/components/card/WalletCard";
 import { InkArrow } from "@/components/ui/InkAnnotation";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useWatching } from "@/hooks/useWatching";
-import { PULP_CARD, PULP_PALETTES, paletteDesign, palettePlayback } from "@/lib/landing-pages/previews/pulp-palettes";
+import { PULP_CARD, PULP_PALETTES, createTour, paletteDesign } from "@/lib/landing-pages/previews/pulp-palettes";
+import { browserScheduler } from "@/lib/landing-pages/previews/scheduler";
 import { STAMPED_STAGE } from "../../platform/classes";
 
 /** The card is laid out 300px wide and 1.282 tall; it is drawn at 260px on a phone. */
 const CARD = { width: 300, height: 385, narrow: 260 };
-/** Each palette is on show this long while the card tries them in turn, in ms. */
-const PLAY_STEP_MS = 1200;
 
 /**
  * The stamped stage of the colour section: the logo on its tile with its label, the card in the selected
@@ -31,26 +30,13 @@ export function PaletteStage({
   const [selected, setSelected] = useState(0);
   const reduced = usePrefersReducedMotion();
   const watching = useWatching(stage, 0.4);
-  const started = useRef(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const tour = useMemo(() => createTour({ reducedMotion: reduced, scheduler: browserScheduler, onSelect: setSelected }), [reduced]);
 
   useEffect(() => {
-    if (!watching || started.current || reduced) return;
-    started.current = true;
-    timers.current.push(...palettePlayback(reduced).map((index, step) => setTimeout(() => setSelected(index), (step + 1) * PLAY_STEP_MS)));
-  }, [watching, reduced]);
+    if (watching) tour.start();
+  }, [watching, tour]);
 
-  useEffect(() => {
-    const pending = timers.current;
-
-    return () => pending.forEach(clearTimeout);
-  }, []);
-
-  const pick = (index: number) => {
-    timers.current.splice(0).forEach(clearTimeout);
-    started.current = true;
-    setSelected(index);
-  };
+  useEffect(() => tour.stop, [tour]);
 
   return (
     <div ref={stage} className={`${STAMPED_STAGE} mx-auto max-w-4xl p-5 sm:p-8 lg:px-12 lg:py-12`}>
@@ -80,7 +66,7 @@ export function PaletteStage({
                 type="button"
                 aria-label={swatchNames[index]}
                 aria-pressed={index === selected}
-                onClick={() => pick(index)}
+                onClick={() => tour.pick(index)}
                 className={`h-11 w-11 shrink-0 rounded-full ring-offset-2 transition-shadow ${
                   index === selected ? "ring-[1.5px] ring-[var(--near-black)]" : "ring-1 ring-black/10"
                 }`}

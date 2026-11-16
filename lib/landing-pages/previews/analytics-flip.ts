@@ -3,6 +3,8 @@
  * how they move, and when the one automatic flip fires. Pure, so the component only applies them.
  */
 
+import type { Scheduler } from "./scheduler";
+
 export type Face = "paper" | "stampeo";
 
 /** The automatic flip: half the section in view, a 1.5 second wait on the paper faces, then a 500 ms turn in a 60 ms wave. */
@@ -40,13 +42,49 @@ export function flipDelayMs(index: number, motion: FlipMotion, cause: "control" 
   return cause === "control" ? index * motion.staggerMs : 0;
 }
 
-/** Whether the automatic flip fires now: seen, waited, and the visitor has done nothing else yet. */
+/** Whether the automatic flip fires now: the section is seen, and the visitor has done nothing else yet. */
 export function autoFlipDue({
   amountVisible,
-  waitedMs,
   touched,
   played,
   reduced,
-}: Readonly<{ amountVisible: number; waitedMs: number; touched: boolean; played: boolean; reduced: boolean }>): boolean {
-  return !reduced && !touched && !played && amountVisible >= AUTO_FLIP.visibleAmount && waitedMs >= AUTO_FLIP.waitMs;
+}: Readonly<{ amountVisible: number; touched: boolean; played: boolean; reduced: boolean }>): boolean {
+  return !reduced && !touched && !played && amountVisible >= AUTO_FLIP.visibleAmount;
+}
+
+/**
+ * The automatic flip's wait. `report` is told how much of the section is in view each time the observer says so:
+ * half of it starts the wait, less cancels it, and when the wait is over every card turns once, unless the visitor
+ * has touched a card or the control (`touch`). `stop` cancels a wait in progress.
+ */
+export function createAutoFlip({ scheduler, onFlip }: Readonly<{ scheduler: Scheduler; onFlip: () => void }>) {
+  let ratio = 0;
+  let reduced = false;
+  let touched = false;
+  let played = false;
+  let timer: number | undefined;
+
+  const cancel = () => {
+    if (timer !== undefined) scheduler.cancelAfter(timer);
+    timer = undefined;
+  };
+  const turn = () => {
+    timer = undefined;
+    if (!autoFlipDue({ amountVisible: ratio, touched, played, reduced })) return;
+    played = true;
+    onFlip();
+  };
+
+  return {
+    report(visibleRatio: number, reducedMotion: boolean) {
+      ratio = visibleRatio;
+      reduced = reducedMotion;
+      if (visibleRatio < AUTO_FLIP.visibleAmount) cancel();
+      else if (timer === undefined) timer = scheduler.after(turn, AUTO_FLIP.waitMs);
+    },
+    touch() {
+      touched = true;
+    },
+    stop: cancel,
+  };
 }

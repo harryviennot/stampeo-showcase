@@ -3,6 +3,8 @@
  * visitor sees first, and when the page sends by itself.
  */
 
+import type { Scheduler } from "./scheduler";
+
 /** The count under the card takes 900ms. */
 export const COUNT_MS = 900;
 
@@ -49,4 +51,66 @@ export function shouldAutoPlay({
   visibleRatio,
 }: Readonly<{ reducedMotion: boolean; played: boolean; visibleRatio: number }>): boolean {
   return !reducedMotion && !played && visibleRatio >= AUTOPLAY_RATIO;
+}
+
+/** What the composer shows: the button the visitor pressed (null before any press) and the count mid-way (null when it is not counting). */
+export interface ComposerView {
+  pressed: ComposerStage | null;
+  count: number | null;
+}
+
+/**
+ * What "Send now" and "Send again" do. From the waiting phone the banner drops at once and the count runs up to
+ * `target`; from the sent state the banner leaves, and drops again after a pause. A tap in the middle of either
+ * starts over, and a reader who asks for less motion gets the banner and the full count with no counting.
+ */
+export function createSender({
+  reducedMotion,
+  target,
+  scheduler,
+  onView,
+}: Readonly<{ reducedMotion: boolean; target: number; scheduler: Scheduler; onView: (view: ComposerView) => void }>) {
+  let frame = 0;
+  let pause = 0;
+  let played = false;
+
+  const stop = () => {
+    scheduler.cancelFrame(frame);
+    scheduler.cancelAfter(pause);
+  };
+
+  const begin = () => {
+    if (reducedMotion) {
+      onView({ pressed: "sent", count: null });
+      return;
+    }
+    const startedAt = scheduler.now();
+    const tick = (now: number) => {
+      const elapsed = now - startedAt;
+
+      onView({ pressed: "sent", count: elapsed >= COUNT_MS ? null : countedAt(elapsed, target) });
+      if (elapsed < COUNT_MS) frame = scheduler.frame(tick);
+    };
+
+    onView({ pressed: "sent", count: 0 });
+    frame = scheduler.frame(tick);
+  };
+
+  return {
+    send(from: ComposerStage) {
+      stop();
+      played = true;
+      if (from === "idle") {
+        begin();
+        return;
+      }
+      onView({ pressed: "idle", count: 0 });
+      pause = scheduler.after(begin, REPLAY_GAP_MS);
+    },
+    stop,
+    /** Whether the broadcast has been sent, by the page or by a tap: the page does not send it again by itself. */
+    get played() {
+      return played;
+    },
+  };
 }

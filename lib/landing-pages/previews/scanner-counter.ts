@@ -14,6 +14,15 @@ export function stepCounter(key: CounterKey, delta: 1 | -1): CounterKey {
   return COUNTER_KEYS[(at + delta + COUNTER_KEYS.length) % COUNTER_KEYS.length];
 }
 
+const ARROW_STEPS: Readonly<Record<string, 1 | -1>> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+
+/** The screen an arrow key picks (and takes the focus to) from `key`; null for any other key, which the browser keeps. */
+export function counterKeyTarget(key: CounterKey, pressed: string): CounterKey | null {
+  const delta = Object.hasOwn(ARROW_STEPS, pressed) ? ARROW_STEPS[pressed] : undefined;
+
+  return delta === undefined ? null : stepCounter(key, delta);
+}
+
 /** Whether the counter turns its own pages: on screen, untouched, and with motion allowed. */
 export function autoplays({ reducedMotion, inView, touched }: Readonly<{ reducedMotion: boolean; inView: boolean; touched: boolean }>): boolean {
   return inView && !touched && !reducedMotion;
