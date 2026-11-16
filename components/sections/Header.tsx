@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
@@ -18,6 +19,10 @@ import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
 import { marketPath, type Market } from "@/lib/markets";
 import { MarketLink } from "../market/MarketLink";
+import { MenuBurger } from "./MenuBurger";
+
+/** The redesigned phone menu is a separate chunk that only the pages that ask for it (`mobileMenu="v2"`) ever load. */
+const MobileMenu = dynamic(() => import("./MobileMenu").then((module) => module.MobileMenu), { ssr: false });
 
 function DesktopAuthButtons({
   signedIn,
@@ -246,6 +251,7 @@ export function Header({
   mobileMenu = "today",
 }: Readonly<{ market?: Market; featureLinks?: FeatureLinks; mobileMenu?: "today" | "v2" }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const burgerRef = useRef<HTMLButtonElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const signedIn = useHasSession();
   const t = useTranslations();
@@ -357,7 +363,7 @@ export function Header({
           className={`transition-all duration-300 border-b ${scrolled
             ? "bg-[var(--cream)]/80 backdrop-blur-md border-[var(--accent)]/10 shadow-sm"
             : "bg-transparent border-transparent"
-            }`}
+            }${mobileMenu === "v2" && mobileMenuOpen ? " max-lg:bg-[var(--cream)] max-lg:border-[var(--border)]" : ""}`}
         >
           <nav className="relative flex items-center justify-between px-4 sm:px-6 lg:px-8 lg:py-5 py-3 max-w-[1360px] mx-auto">
             {/* Logo */}
@@ -412,27 +418,31 @@ export function Header({
             </div>
 
             {/* Mobile menu button */}
-            <button
-              className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-expanded={mobileMenuOpen}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-            >
-              {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-              )}
-            </button>
+            {mobileMenu === "v2" ? (
+              <MenuBurger open={mobileMenuOpen} onToggle={() => setMobileMenuOpen(!mobileMenuOpen)} buttonRef={burgerRef} />
+            ) : (
+              <button
+                className="lg:hidden p-2 text-[var(--foreground)] hover:text-[var(--accent)] transition-colors"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-expanded={mobileMenuOpen}
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              >
+                {mobileMenuOpen ? (
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  </svg>
+                )}
+              </button>
+            )}
           </nav>
 
           {/* Mobile menu */}
           <AnimatePresence>
-            {mobileMenuOpen && (
+            {mobileMenuOpen && mobileMenu !== "v2" && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
@@ -517,6 +527,21 @@ export function Header({
             )}
           </AnimatePresence>
         </div>
+        {mobileMenu === "v2" && (
+          <MobileMenu
+            open={mobileMenuOpen}
+            onClose={closeMobileMenu}
+            burgerRef={burgerRef}
+            featureLinks={featureLinks}
+            pathname={pathname}
+            navItems={navItems}
+            resourceItems={resourceItems}
+            signedIn={signedIn}
+            appUrl={appUrl}
+            onSignOut={handleSignOut}
+            language={<LanguageSwitcher variant="row" />}
+          />
+        )}
       </header>
       <div
         className="transition-all duration-300"
