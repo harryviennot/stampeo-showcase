@@ -14,7 +14,7 @@ const CARD = { width: 240, height: 308, narrow: 128 };
 /** A row of the level's list: a small grey label, then its value; without a label the value takes the whole row. */
 function Row({ label, children }: Readonly<{ label?: string; children: ReactNode }>) {
   return (
-    <div className="grid grid-cols-[4.5rem_1fr] gap-x-3 border-t border-black/5 py-3 first:border-t-0 first:pt-0 last:pb-0">
+    <div className="grid grid-cols-[3.25rem_1fr] gap-x-3 border-t border-black/5 py-3 first:border-t-0 first:pt-0 last:pb-0">
       {label && <dt className="pt-0.5 text-xs font-semibold tracking-[0.12em] text-[var(--muted-foreground)] uppercase">{label}</dt>}
       <dd className={`min-w-0 text-base text-[var(--foreground)] ${label ? "" : "col-span-2"}`}>{children}</dd>
     </div>
@@ -58,9 +58,14 @@ export function LadderLevel({
           className="lg:flex lg:justify-center"
         >
           <div aria-hidden>
-            <ScaledBox width={CARD.width} height={CARD.height} narrowTo={CARD.narrow}>
+            <ScaledBox
+              width={CARD.width}
+              height={CARD.height}
+              narrowTo={CARD.narrow}
+              className="rounded-[7px] ring-1 ring-black/10 lg:rounded-[13px]"
+            >
               <PassFrame width={CARD.width}>
-                <WalletCard design={card.design} stamps={card.stamps} headerLabel={level.name} showQR={false} />
+                <WalletCard design={card.design} stamps={card.stamps} headerLabel={level.name} />
               </PassFrame>
             </ScaledBox>
           </div>
