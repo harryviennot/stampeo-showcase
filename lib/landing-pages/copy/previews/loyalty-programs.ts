@@ -37,7 +37,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     /** The hero's second button: it jumps to the levels. */
     secondary: "See how levels work",
     /** What the hero picture is, for a screen reader. */
-    alt: "Three loyalty cards: a café's stamp card, a salon's points card, and a dry cleaner's card at Gold level with the notification \"You've reached Gold!\"",
+    alt: "Three loyalty cards: a juice bar's stamp card, a bookstore's points card, and a dry cleaner's card at Gold level with the notification \"You've reached Gold!\"",
     /** The small label under each card of the hero, in the cards' order (left, front, right). */
     labels: ["Stamps", "Levels", "Points"],
     banner: { sender: "Wrenfold", body: "You've reached Gold! Your card has a new look." },
@@ -79,21 +79,21 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
       {
         name: "Bronze",
         reach: "Where every customer starts",
-        card: "10 stamps for a free shirt press",
+        card: "8 stamps for a free shirt press",
         perks: [],
       },
       {
         name: "Silver",
         reach: "Fill 1 card on Bronze",
-        card: "8 stamps for a free shirt press",
-        perks: ["10% off every order"],
+        card: "6 stamps for a free shirt press",
+        perks: ["Free hanger return", "Priority pickup"],
         gift: "A free tote bag",
       },
       {
         name: "Gold",
         reach: "Fill 2 cards on Silver",
-        card: "6 stamps for a free duvet clean",
-        perks: ["15% off every order", "Free pickup and delivery"],
+        card: "5 stamps for a free duvet clean",
+        perks: ["10% off every order", "Free pickup and delivery"],
         gift: "A free coat clean",
       },
     ] satisfies LadderLevel[],
@@ -103,7 +103,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     facts: [
       { title: "Up to 5 levels", body: "Name them as you like. A new ladder starts with three." },
       { title: "A card for each level", body: "Keep your own card, or give a level a Bronze, Silver, Gold, Platinum or Noir look." },
-      { title: "Up to 3 perks per level", body: "Like 10% off. The Scanner app reminds your staff at the counter." },
+      { title: "Up to 3 perks per level", body: "Like 10% off or priority pickup. The Scanner app reminds your staff at the counter." },
       { title: "A gift when they arrive", body: "A one-time reward the moment a customer reaches a level." },
     ] satisfies Tile[],
     tip: "Our tip: start with three levels, and make Silver easy to reach. A first move up within a month or two keeps regulars coming.",
@@ -154,20 +154,16 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
       body: "A notification when they move up, with their gift.",
       banner: { sender: "Wrenfold", body: "You've reached Silver! Your card has a new look. Your gift: A free tote bag." },
     },
+    /** The picture is the scanner preview's `LevelScreen`: Sophie at Silver, with the Scanner app's own wording. */
     scanner: {
       title: "In the Scanner app",
-      body: "Your staff see the customer's perks before they charge.",
-      /** The Scanner app's own wording: "{level} perk: {perk}" and its hint. */
-      perk: "Silver perk: 10% off every order",
-      hint: "Apply it at the till before charging.",
-      customer: "Sophie",
-      levelLabel: "Silver",
+      body: "Your staff see the customer's level and perks before they charge.",
     },
     /** What each picture is, for a screen reader, in the tiles' order. */
     alts: [
       "The sign-up page's levels strip: Bronze, Silver and Gold, and how to reach Silver",
       "A lock-screen notification from Wrenfold: You've reached Silver!",
-      "The Scanner app showing the perk to apply for a Silver customer",
+      "The Scanner app showing a Silver customer and the perks to apply before charging",
     ],
   },
   settings: {
