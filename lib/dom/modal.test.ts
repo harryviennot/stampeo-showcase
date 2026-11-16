@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { inertWhileOpen, trapStop } from "./modal";
+import { handleMenuKey, inertWhileOpen, menuStops, trapStop, type FocusStop } from "./modal";
 
 describe("Tab inside an open menu stays in the menu", () => {
   // The stops are the burger (now an X) first, then everything tappable in the sheet.
@@ -61,5 +61,72 @@ describe("the page behind an open menu cannot be reached", () => {
     main.inert = true;
     release();
     expect(main.inert).toBe(true);
+  });
+});
+
+/** A tab stop with a name and, if it sits in an inert screen, that flag: it records which stop took the focus. */
+function fakeMenu(names: string[], inert: string[] = []) {
+  const state: { focused: string | null; prevented: number } = { focused: null, prevented: 0 };
+  const stop = (name: string): FocusStop & { name: string } => ({
+    name,
+    focus: () => void (state.focused = name),
+    closest: (selector) => (selector === "[inert]" && inert.includes(name) ? {} : null),
+  });
+  const burger = stop("burger");
+  const stops = names.map(stop);
+  const menu = { querySelectorAll: () => stops };
+  const press = (key: string, active: FocusStop | null, shiftKey = false) =>
+    handleMenuKey({ key, shiftKey, preventDefault: () => void state.prevented++ }, burger, menu, active);
+
+  return { state, burger, stops, menu, press };
+}
+
+describe("an open menu's keyboard: Escape and Tab", () => {
+  test("Escape hands the focus to the burger, so the reader is where they opened the menu from", () => {
+    const { state, stops, press } = fakeMenu(["a", "b"]);
+
+    press("Escape", stops[1]);
+    expect(state.focused).toBe("burger");
+  });
+
+  test("Tab from the last tile wraps to the X, and Shift+Tab from the X to the last tile, each with the browser's own move prevented", () => {
+    const { state, burger, stops, press } = fakeMenu(["a", "b", "c"]);
+
+    press("Tab", stops[2]);
+    expect(state).toEqual({ focused: "burger", prevented: 1 });
+    press("Tab", burger, true);
+    expect(state).toEqual({ focused: "c", prevented: 2 });
+  });
+
+  test("in the middle Tab is left to the browser: nothing is focused or prevented", () => {
+    const { state, stops, press } = fakeMenu(["a", "b", "c"]);
+
+    press("Tab", stops[0]);
+    press("Tab", stops[1], true);
+    expect(state).toEqual({ focused: null, prevented: 0 });
+  });
+
+  test("the links of a screen that is not shown are not stops: Tab from the last shown one goes round to the X", () => {
+    const { state, stops, press } = fakeMenu(["root-a", "root-b", "product-a", "product-b"], ["product-a", "product-b"]);
+
+    press("Tab", stops[1]);
+    expect(state.focused).toBe("burger");
+  });
+
+  test("the stops are the burger then the shown links and buttons, in the menu's order", () => {
+    const { burger, menu } = fakeMenu(["a", "b", "hidden"], ["hidden"]);
+
+    expect((menuStops(burger, menu) as Array<FocusStop & { name: string }>).map((stop) => stop.name)).toEqual(["burger", "a", "b"]);
+  });
+
+  test("a focus that is on the page behind the menu comes back into it, and any other key does nothing", () => {
+    const { state, press } = fakeMenu(["a", "b"]);
+
+    press("Tab", null);
+    expect(state.focused).toBe("burger");
+    state.focused = null;
+    press("Enter", null);
+    press("ArrowDown", null);
+    expect(state.focused).toBeNull();
   });
 });

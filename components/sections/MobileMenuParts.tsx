@@ -5,7 +5,7 @@ import { motion, type Variants } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { inertWhileOpen, trapStop } from "@/lib/dom/modal";
+import { handleMenuKey, inertWhileOpen } from "@/lib/dom/modal";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { featureLink, isComingSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import type { Market } from "@/lib/markets";
@@ -77,9 +77,6 @@ export function useMotion(): MenuMotion {
   return menuMotion(usePrefersReducedMotion());
 }
 
-const focusable = (root: HTMLElement | null) =>
-  [...(root?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? [])].filter((element) => !element.closest("[inert]"));
-
 /**
  * What an open menu does besides drawing itself: the page behind it is inert, focus moves to its first
  * `data-menu-first` entry, Tab stays between the burger and the menu, and Escape hands focus back to the burger
@@ -94,17 +91,7 @@ function useMenuDialog(menu: RefObject<HTMLElement | null>, burger: RefObject<HT
   }, [menu]);
 
   useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") return burger.current?.focus();
-      if (event.key !== "Tab") return;
-
-      const stops = [burger.current, ...focusable(menu.current)].filter((stop): stop is HTMLElement => stop !== null);
-      const next = trapStop(stops.length, stops.indexOf(document.activeElement as HTMLElement), event.shiftKey);
-
-      if (next === null) return;
-      event.preventDefault();
-      stops[next].focus();
-    };
+    const onKey = (event: KeyboardEvent) => handleMenuKey(event, burger.current, menu.current, document.activeElement);
 
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);

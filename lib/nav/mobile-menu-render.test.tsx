@@ -13,6 +13,7 @@ import { LanguageRow } from "@/components/ui/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
+import { MENU_VARIANTS } from "@/lib/landing-pages/platform/variants";
 import { decodeEntities, expectInOrder, renderEn, textOf } from "../testing/render-en";
 import { renderAs } from "../testing/visitor-seams";
 
@@ -126,12 +127,6 @@ describe("the index sheet", () => {
     expect(bar[1].href).toBe("https://app.stampeo.app");
   });
 
-  test("every link and button is 44px or taller to tap", () => {
-    const small = targets(render()).filter(({ attrs }) => !TALL.test(attrs));
-
-    expect(small.map(({ name }) => name)).toEqual([]);
-  });
-
   test("the sheet scrolls by itself, so a short phone never loses the bar", () => {
     const html = render();
 
@@ -187,8 +182,28 @@ describe("the drill-down", () => {
     expect(targets(html).filter(({ name }) => name === "Log in")).toHaveLength(1);
   });
 
+  test("Log in and Get started are pinned to the foot of the menu, not left to scroll with a screen", () => {
+    const html = drill();
+    const bar = html.slice(html.lastIndexOf('<div class="border-t'));
+
+    expect(bar).toMatch(/^<div class="border-t [^"]*\babsolute inset-x-0 bottom-0\b/);
+    expect(targets(bar).map(({ name }) => name)).toEqual(["Log in", "Get started →"]);
+  });
+
+  test("the focus rules find what they look for: each opening row and each screen's way back are marked", () => {
+    const html = drill();
+
+    for (const screen of ["product", "resources"]) {
+      expect(html).toContain(`data-drill-opens="${screen}"`);
+      expect(html.slice(html.indexOf(`data-drill-screen="${screen}"`))).toMatch(/^[^]*?data-drill-first/);
+    }
+    expect(html.match(/data-menu-first/g)).toHaveLength(1);
+  });
+});
+
+describe.each(MENU_VARIANTS)("the %s menu", (variant) => {
   test("every link and button is 44px or taller to tap", () => {
-    expect(targets(drill()).filter(({ attrs }) => !TALL.test(attrs)).map(({ name }) => name)).toEqual([]);
+    expect(targets(render({ variant })).filter(({ attrs }) => !TALL.test(attrs)).map(({ name }) => name)).toEqual([]);
   });
 });
 

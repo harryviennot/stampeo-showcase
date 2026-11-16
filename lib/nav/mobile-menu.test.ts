@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { DESKTOP_QUERY, closeWhenDesktop, isCurrentPath, menuMotion, type DesktopQuery } from "./mobile-menu";
+import { DESKTOP_QUERY, closeWhenDesktop, drillFocusSelector, holdPageWhileOpen, isCurrentPath, menuMotion, type DesktopQuery } from "./mobile-menu";
 import { ROOT as SOURCE_ROOT, code } from "../testing/jsx-source";
 
 const ROOT = join(import.meta.dir, "..", "..");
@@ -102,6 +102,62 @@ describe("an open phone menu when the window grows to the desktop layout", () =>
   test("the sheet menu watches it while it is open, and only the sheet: today's accordion is left as it was", () => {
     expect(code(join(SOURCE_ROOT, "components", "sections", "SheetMenu.tsx"))).toContain("open ? closeWhenDesktop(window.matchMedia(DESKTOP_QUERY), onClose) : undefined");
     expect(code(join(SOURCE_ROOT, "components", "sections", "MobileMenuAccordion.tsx"))).not.toContain("closeWhenDesktop");
+  });
+});
+
+describe("the page while a phone menu is open", () => {
+  const setup = () => {
+    const target = new EventTarget();
+    const state = { locked: 0, released: 0, closed: 0 };
+    const stop = holdPageWhileOpen({
+      lock: () => {
+        state.locked++;
+        return () => void state.released++;
+      },
+      target,
+      onClose: () => void state.closed++,
+    });
+    const press = (key: string) => target.dispatchEvent(Object.assign(new Event("keydown"), { key }));
+
+    return { state, stop, press };
+  };
+
+  test("the page behind does not scroll: the lock is taken once, and given back when the menu closes", () => {
+    const { state, stop } = setup();
+
+    expect(state).toEqual({ locked: 1, released: 0, closed: 0 });
+    stop();
+    expect(state.released).toBe(1);
+  });
+
+  test("Escape closes the menu, and no other key does", () => {
+    const { state, press } = setup();
+
+    press("Enter");
+    press("Tab");
+    expect(state.closed).toBe(0);
+    press("Escape");
+    expect(state.closed).toBe(1);
+  });
+
+  test("once the menu is closed Escape is the page's again", () => {
+    const { state, stop, press } = setup();
+
+    stop();
+    press("Escape");
+    expect(state.closed).toBe(0);
+  });
+});
+
+describe("where the focus goes in the drill-down", () => {
+  test("opening Product or Resources takes it to that screen's way back, whichever row opened it", () => {
+    expect(drillFocusSelector("product", "product")).toBe('[data-drill-screen="product"] [data-drill-first]');
+    expect(drillFocusSelector("resources", "resources")).toBe('[data-drill-screen="resources"] [data-drill-first]');
+  });
+
+  test("going back takes it to the row that opened the screen just left, not to the top of the menu", () => {
+    expect(drillFocusSelector("root", "resources")).toBe('[data-drill-opens="resources"]');
+    expect(drillFocusSelector("root", "product")).toBe('[data-drill-opens="product"]');
   });
 });
 

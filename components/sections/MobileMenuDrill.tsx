@@ -6,14 +6,14 @@ import { useTranslations } from "next-intl";
 import { ArrowRightIcon, CaretLeftIcon, CaretRightIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
 import { marketPath } from "@/lib/markets";
+import { drillFocusSelector, type DrillScreen } from "@/lib/nav/mobile-menu";
 import { MenuBottomBar, MenuDialog, useFeatureEntries, type FeatureEntry, type MenuLink, type MenuProps } from "./MobileMenuParts";
 import { SoonPill } from "./SoonPill";
 
 /** The featured tile's card is a heavy client component and only this menu shows it, so it loads when the menu does. */
 const FeaturedCard = dynamic(() => import("./MenuFeaturedCard"), { ssr: false });
 
-/** The three screens of the drill-down: the menu, then the Product list or the resources slid in over it. */
-type Screen = "root" | "product" | "resources";
+type Screen = DrillScreen;
 
 const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]";
 
@@ -96,10 +96,7 @@ export function MobileMenuDrill({ onClose, burgerRef, featureLinks, pathname, na
   useEffect(() => {
     const root = menu.current;
     if (!root) return;
-    const target =
-      screen === "root"
-        ? root.querySelector<HTMLElement>(`[data-drill-opens="${opener.current}"]`)
-        : root.querySelector<HTMLElement>(`[data-drill-screen="${screen}"] [data-drill-first]`);
+    const target = root.querySelector<HTMLElement>(drillFocusSelector(screen, opener.current));
 
     target?.focus({ preventScroll: true });
   }, [screen]);

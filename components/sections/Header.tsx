@@ -12,7 +12,7 @@ import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
 import type { Market } from "@/lib/markets";
 import { MarketLink } from "../market/MarketLink";
-import { isCurrentPath } from "@/lib/nav/mobile-menu";
+import { holdPageWhileOpen, isCurrentPath } from "@/lib/nav/mobile-menu";
 import { pageMenuItems, productMenuItems } from "@/lib/nav/menu-items";
 import { NavDropdown } from "./NavDropdown";
 import { AccordionMenu } from "./MobileMenuAccordion";
@@ -96,20 +96,11 @@ export function Header({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Body scroll lock when mobile menu is open
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-    return lockBodyScroll();
-  }, [mobileMenuOpen]);
-
-  // Escape key closes mobile menu
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && mobileMenuOpen) closeMobileMenu();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [mobileMenuOpen, closeMobileMenu]);
+  // The open menu holds the page: no scroll behind it, and Escape closes it.
+  useEffect(
+    () => (mobileMenuOpen ? holdPageWhileOpen({ lock: lockBodyScroll, target: document, onClose: closeMobileMenu }) : undefined),
+    [mobileMenuOpen, closeMobileMenu],
+  );
 
   const handleSignOut = async () => {
     await signOut();

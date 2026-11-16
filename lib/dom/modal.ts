@@ -36,3 +36,44 @@ export function inertWhileOpen(elements: ReadonlyArray<InertTarget | null>): () 
     for (const { element, inert } of before) element.inert = inert;
   };
 }
+
+/** What an open menu moves focus between: an element that can take it, and say whether it sits in an inert screen. */
+export interface FocusStop {
+  focus(): void;
+  closest(selector: string): unknown;
+}
+
+/** Where a menu's links and buttons are looked for. */
+export interface StopContainer {
+  querySelectorAll(selector: string): Iterable<FocusStop>;
+}
+
+/** The key an open menu reacts to, as the browser's keyboard event gives it. */
+export interface MenuKeyEvent {
+  key: string;
+  shiftKey: boolean;
+  preventDefault(): void;
+}
+
+/** The tab stops of an open menu: the burger, then the menu's links and buttons that are not in an inert screen. */
+export function menuStops(burger: FocusStop | null, menu: StopContainer | null): FocusStop[] {
+  const inside = [...(menu?.querySelectorAll("a[href], button:not([disabled])") ?? [])].filter((stop) => !stop.closest("[inert]"));
+
+  return [...(burger ? [burger] : []), ...inside];
+}
+
+/**
+ * What a key does in an open menu: Escape hands the focus to the burger (the header closes the menu); Tab keeps to
+ * the stops, wrapping at both ends with the browser's own move prevented, and is otherwise left alone.
+ */
+export function handleMenuKey(event: MenuKeyEvent, burger: FocusStop | null, menu: StopContainer | null, active: unknown): void {
+  if (event.key === "Escape") return burger?.focus();
+  if (event.key !== "Tab") return;
+
+  const stops = menuStops(burger, menu);
+  const next = trapStop(stops.length, stops.indexOf(active as FocusStop), event.shiftKey);
+
+  if (next === null) return;
+  event.preventDefault();
+  stops[next].focus();
+}
