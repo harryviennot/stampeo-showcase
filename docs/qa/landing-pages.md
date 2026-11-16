@@ -14,9 +14,10 @@ This pass covers the four US ad landing pages built in STA-546 (v2, after Harry 
 > LP-04 to LP-07, LP-12 and LP-13 have v2 expectations; LP-18 to LP-27 are new. Case ids are unchanged.
 > **Amended 13 Nov 2026 (v2.1, Platform polish):** LP-28 to LP-34 are new. On Platform, LP-13's "Sample data"
 > and LP-27's turning-wheel wording are superseded: Platform shows no captions, and its hero is the fan (LP-28).
-> **Amended 16 Nov 2026 (STA-552 v3):** LP-35 to LP-41 were rewritten for the v3 previews (six pages, no plan names, Platform's clean look). They cover the five previews under
-> `/us/landing-pages/platform/<feature>`. The "broadcasts always say Growth and Pro" rule below applies to the
-> campaigns preview; the four others name no plan for broadcasts (STA-549).
+> **Amended 16 Nov 2026 (STA-552 v3):** LP-35 to LP-41 were rewritten for the six v3 previews under
+> `/us/landing-pages/platform/<feature>` (Platform's clean look, text-left heroes, no plan names). Broadcasts are on
+> every plan since STA-549, and no landing page names a plan outside its pricing section; where an older case (LP-12,
+> LP-34…) expects a "Growth and Pro" label, the v3 rule wins.
 
 Work top to bottom. Run LP-01 first: if a page doesn't render, nothing else can be tested.
 
@@ -24,7 +25,7 @@ Three things are protected throughout:
 
 1. **The pages stay out of search.** They are drafts for ad traffic. A page that is indexable, in the sitemap or linked from the site is a release blocker, even if it looks perfect.
 2. **Each page tells the truth.** Every claim must be live in the product:
-   - broadcasts always say "Growth and Pro";
+   - no plan name ("Starter", "Growth", "Pro", "every plan") outside a pricing section;
    - nothing "reminds" customers;
    - no "no credit card required";
    - each sourced figure shows its source under it.
