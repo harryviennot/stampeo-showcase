@@ -44,6 +44,18 @@ New product claims in the v2 copy (`lib/landing-pages/copy/previews/*.ts`). STAM
 | Filter chips: joined in the last month (Growth and Pro), inactive for a month (Pro); scheduling is Pro (`composer.card`) | STAMPEO.md §6 broadcasts table (Growth: joined more or less than N days ago; Pro: inactive for N days, scheduled sends) |
 | Delivered count under the composer (`composer.card.delivered`) | STAMPEO.md §6: delivery stats split by Apple and Google; the numbers are the page's delivery fixture |
 
+### Traced after the v2 review (16 Nov 2026)
+
+Claims the v2 gap report found with no row of their own. `lib/landing-pages/claims-doc.test.ts` reads the copy and this file for each.
+
+| Claim | Source |
+|---|---|
+| A weekly digest when you're busy, a monthly recap otherwise; "Unsubscribe anytime" (`ANALYTICS_PREVIEW.recap`) | STAMPEO.md line 279: "Owners also get performance emails automatically (they can unsubscribe): a weekly digest when the business was busy that week, otherwise a monthly recap" |
+| Your card is ready the day it launches (`GEOLOCATION_PREVIEW.hero.sub`) | showcase `messages/en/features.json` `geolocalisation.cta` ("your card is ready when it launches"), the live page's own line |
+| We will announce it on What's new (`GEOLOCATION_PREVIEW.faq.items[0]`) | A promise of ours, not a product claim: "What's new" is the changelog's name in the menus (`common.nav.changelog`) |
+| Every scan carries the name of who made it (`MOBILE_SCANNER_PREVIEW.team.facts[2]`) | STAMPEO.md line 155: "every scan they make is saved under their name and the business can see who scanned what" |
+| The card already in their wallet will pick it up with its next update (`GEOLOCATION_PREVIEW.faq.items[2]`) | FLAGGED, kept open on purpose: backend `pass_generator.py:39-41` says a card already in a wallet takes new `pass.json` content at its next fetch (a stamp, a broadcast or a manual refresh). That the launch design uses this path is not confirmed, so the answer stays until it is |
+
 ### Coming soon (not live)
 
 Geolocation is not live (STAMPEO.md §8: "Geofencing / 'you're nearby' notifications: coming soon. Switched off since May 2026"). Every line below is written in the future tense or sits under a "coming soon" label, names no date, and says Pro. The `WALLET_LOCATIONS_ENABLED = False` switch in `backend/app/services/pass_generator.py` is the proof it is off; `PLAN_FACTS.pro.geofencing` is `"coming_soon"` and `plan-claims.test.ts` fails if it ever changes.
