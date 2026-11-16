@@ -1,7 +1,7 @@
 /**
  * The geolocation preview (`/us/landing-pages/platform/geolocation`): what a visitor sees in each
  * section. Geolocation is not live, so every claim is in the future tense or under a "coming soon"
- * label, with no date and the Pro plan; what is live today is set apart from it. The headers, the
+ * label, with no date and no plan; what is live today is set apart from it. The headers, the
  * order and the tap targets of all six previews are in `pages.test.tsx`, and the copy's own rules
  * (no date, no wallet named for the feature) in `copy.test.ts`.
  */
@@ -89,18 +89,19 @@ describe("hero: the paper map with a customer walking in, and Aurevo's own words
 describe("status: what is live today, and what is coming", () => {
   const column = (html: string, which: "today" | "soon") => html.match(new RegExp(`<div\\b[^>]*data-column="${which}"[\\s\\S]*?</ul>`))?.[0] ?? "";
 
-  test("two columns, Today first: three live facts with a check each, the broadcasts among them with no plan chip", async () => {
+  test("two columns, Today first: three live facts with a check each, the broadcasts among them", async () => {
     const today = column(await render(<StatusSection />), "today");
 
-    expectInOrder(today, [COPY.status.today.title, ...COPY.status.today.facts.flatMap((fact) => [fact.text, ...(fact.plan ? [fact.plan] : [])])]);
+    expectInOrder(today, [COPY.status.today.title, ...COPY.status.today.facts.map((fact) => fact.text)]);
     expect(today.match(/data-mark="live"/g)).toHaveLength(3);
     expect(today).not.toContain('data-mark="planned"');
   });
 
-  test("Coming soon: three planned facts under a Pro chip, each with a clock and none with a check", async () => {
+  test("Coming soon: three planned facts with no plan beside them, each with a clock and none with a check", async () => {
     const soon = column(await render(<StatusSection />), "soon");
 
-    expectInOrder(soon, [COPY.status.soon.title, COPY.status.soon.plan, ...COPY.status.soon.facts.map((fact) => fact.text)]);
+    expectInOrder(soon, [COPY.status.soon.title, ...COPY.status.soon.facts.map((fact) => fact.text)]);
+    expect(textOf(soon)).not.toMatch(/Growth|Starter|\bPro\b/);
     expect(soon.match(/data-mark="planned"/g)).toHaveLength(3);
     expect(soon).not.toContain('data-mark="live"');
   });
@@ -131,10 +132,10 @@ describe("how: three steps in the future tense, and the lock screen they end on"
     expect(pictures(html)).toEqual([expect.stringContaining(`notification from ${COPY.banner.sender}: ${COPY.banner.body}`)]);
   });
 
-  test("the table is the stamped steps table and the phone is on the same warm lock screen as the hero's, with the site's date", async () => {
+  test("the table is the steps table and the phone is on the same warm lock screen as the hero's, with the site's date", async () => {
     const html = await render(<HowSection />);
 
-    expect(html).toContain("card-stamp");
+    expect(html).toContain("bg-white/80");
     expect(textOf(html)).toContain(COPY.banner.title);
     expect(textOf(html)).toContain(SITE_LOCK_DATE);
     expect(textOf(html)).not.toMatch(/Stampeo/);

@@ -13,10 +13,8 @@ import { ComposerSection } from "@/components/landing-pages/feature-previews/pro
 import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
 import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
 import { NumbersSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/NumbersSection";
-import { PlansSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/PlansSection";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { lpBanner } from "@/components/landing-pages/shared/banner";
-import { PLAN_FACTS } from "@/lib/plans/plan-facts";
 import { ROOT } from "../../testing/jsx-source";
 import { otherCallers, previewSource } from "../../testing/landing-pages-source";
 import { renderPreviewPage } from "../../testing/preview-page";
@@ -33,18 +31,7 @@ describe("composer: write it, pick who gets it, send", () => {
   const html = (reducedMotion = false) => renderAs({ reducedMotion }, () => renderEn(<ComposerSection />, { us: true }));
 
   test("is the dashboard's New broadcast screen, in its own words and its own order, ending on Send now", () => {
-    expectInOrder(html(), [
-      card.title,
-      "Message",
-      card.message.body,
-      card.audience.title,
-      card.audience.all,
-      card.audience.filtered,
-      card.schedule.title,
-      card.schedule.now,
-      card.schedule.later,
-      card.send,
-    ]);
+    expectInOrder(html(), [card.title, "Message", card.message.body, card.audience.title, card.audience.all, card.audience.filtered, card.send]);
   });
 
   test("the message is the happy-hour broadcast, in a field nobody can edit", () => {
@@ -56,49 +43,40 @@ describe("composer: write it, pick who gets it, send", () => {
     expect(card.message.body).toBe("Quiet afternoon? Your second coffee is half price until 5pm.");
   });
 
-  /** The radio buttons of the card, each with what it says and whether it is picked or waits on Pro. */
+  /** The radio buttons of the card, each with what it says and whether it is picked. */
   const choices = () =>
     [...html().matchAll(/<button[^>]*role="radio"[^>]*>([\s\S]*?)<\/button>/g)].map((match) => ({
       tag: match[0].slice(0, match[0].indexOf(">") + 1),
       text: textOf(match[1]).replaceAll("|", " ").trim(),
     }));
 
-  test("who gets it and when: each question names its group, and the choices follow in the dashboard's order", () => {
+  test("who gets it: the question names its group, and the choices follow in the dashboard's order", () => {
     const groups = [...html().matchAll(/<div[^>]*role="radiogroup"[^>]*aria-labelledby="([^"]+)"/g)].map(
       (match) => new RegExp(`<p id="${match[1]}"[^>]*>([^<]*)</p>`).exec(html())?.[1],
     );
 
-    expect(groups).toEqual([card.audience.title, card.schedule.title]);
-    expect(choices().map((choice) => choice.text)).toEqual([
-      card.audience.all,
-      card.audience.filtered,
-      card.schedule.now,
-      `${card.schedule.later} ${card.schedule.plan}`,
-    ]);
+    expect(groups).toEqual([card.audience.title]);
+    expect(choices().map((choice) => choice.text)).toEqual([card.audience.all, card.audience.filtered]);
   });
 
-  test("everyone and Send now are picked; Filtered audience can be picked, Schedule for later waits on Pro; every choice is at least 56px", () => {
-    const [all, filtered, now, later] = choices();
+  test("everyone is picked and Filtered audience can be picked; every choice is at least 56px", () => {
+    const [all, filtered] = choices();
 
-    expect([all, filtered, now, later].map((choice) => /aria-checked="true"/.test(choice.tag))).toEqual([true, false, true, false]);
-    expect([all, filtered, now, later].map((choice) => /\bdisabled\b/.test(choice.tag))).toEqual([false, false, false, true]);
+    expect([all, filtered].map((choice) => /aria-checked="true"/.test(choice.tag))).toEqual([true, false]);
+    expect([all, filtered].map((choice) => /\bdisabled\b/.test(choice.tag))).toEqual([false, false]);
     for (const choice of choices()) expect(choice.tag).toContain("min-h-14");
   });
 
-  test("Filtered audience opens to two chips, the second one Pro's: they wait closed, out of reach, until it is picked", () => {
+  test("Filtered audience opens to a chip that waits closed, out of reach, until it is picked", () => {
     const page = html();
 
-    expectInOrder(page, [card.audience.filters[0].label, card.audience.filters[1].label, card.audience.filters[1].plan]);
+    expect(page).toContain(card.audience.filters[0].label);
     expect(page).toMatch(/<div data-open="false" inert="" class="grid /);
-    expect(/<button[^>]*disabled[^>]*>[^<]*Inactive for a month/.test(page)).toBe(true);
     expect(/<button[^>]*aria-pressed="false"[^>]*\bh-11\b[^>]*>Joined in the last month/.test(page)).toBe(true);
   });
 
-  test("only the two things that need Pro say Pro, and nothing here says Every plan", () => {
-    const text = textOf(html());
-
-    expect(text.match(/\bPro\b/g)).toHaveLength(2);
-    expect(text).not.toMatch(/Every plan|Sample data/);
+  test("it names no plan and no sample caption", () => {
+    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|Every plan|Sample data/);
   });
 
   test("Send now is a 52px keycap in the house orange", () => {
@@ -209,14 +187,14 @@ describe("numbers: your customers keep the card", () => {
 
 describe("ideas: give them a reason to come in today", () => {
   const html = () => renderEn(<IdeasSection />);
-  /** The ideas as the page orders them: the two every plan can send first, the two that need Pro's targeting after. */
+  /** The ideas as the page orders them: the two aimed at everyone first, then the two that nudge a few. */
   const ORDER = ["Slow afternoon", "Something new", "Gone quiet", "Almost there"];
   const rowOf = (chip: string) => COPY.ideas.rows.find((row) => row.chip === chip);
 
   test("is a row of four chips, in that order, the first one picked", () => {
     const tabs = [...html().matchAll(/<button[^>]*role="tab"[^>]*>([\s\S]*?)<\/button>/g)];
 
-    expect(tabs.map((tab) => textOf(tab[1]).replace(/\|?Pro\|?$/, "").replaceAll("|", "").trim())).toEqual(ORDER);
+    expect(tabs.map((tab) => textOf(tab[1]).replaceAll("|", "").trim())).toEqual(ORDER);
     expect(tabs[0][0]).toContain('aria-selected="true"');
     for (const tab of tabs.slice(1)) expect(tab[0]).toContain('aria-selected="false"');
     expect(html().match(/role="tablist"/g)).toHaveLength(1);
@@ -231,12 +209,9 @@ describe("ideas: give them a reason to come in today", () => {
     expect(html().match(/snap-start/g)).toHaveLength(4);
   });
 
-  test("only the two ideas that need Pro's targeting say Pro, each on its own chip", () => {
-    const tabs = [...html().matchAll(/<button[^>]*role="tab"[^>]*>([\s\S]*?)<\/button>/g)].map((tab) => textOf(tab[1]));
-
-    expect(COPY.ideas.rows.filter((row) => "plan" in row).map((row) => row.chip)).toEqual(["Gone quiet", "Almost there"]);
-    expect(tabs.map((tab) => tab.includes("Pro"))).toEqual([false, false, true, true]);
-    expect(textOf(html())).not.toContain("Growth and Pro");
+  test("no idea names a plan: each one can be sent by any account", () => {
+    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b/);
+    expect(COPY.ideas.rows.filter((row) => "plan" in row)).toEqual([]);
   });
 
   test("under the chips each idea has its message on Aurevo's lock screen, all four in the page and one in view", () => {
@@ -256,10 +231,9 @@ describe("ideas: give them a reason to come in today", () => {
     const text = textOf(html());
 
     for (const chip of ORDER) expect(text).toContain(rowOf(chip)?.body ?? "missing");
-    expect(rowOf("Gone quiet")?.body).toBe("Sent only to customers who haven't been in for a month.");
   });
 
-  test("is presented by moment, never by weekday: scheduling is Pro's", () => {
+  test("is presented by moment, never by weekday: the page does not promise a send at a chosen time", () => {
     expect(textOf(html())).not.toMatch(/\b(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day\b|\bweekend\b/i);
   });
 });
@@ -290,31 +264,9 @@ describe("delivery: see where every message landed", () => {
     expect(html()).toMatch(/role="img"[^>]*aria-label="[^"]*716[^"]*Apple[^"]*412[^"]*"/);
   });
 
-  test("sits on the stamped surface, and shows no chip and no GDPR line: the plans have their own section", () => {
-    expect(html().match(/card-stamp/g)).toHaveLength(1);
-    expect(textOf(html())).not.toMatch(/Growth and Pro|GDPR/);
-  });
-});
-
-describe("plans: what each plan can send", () => {
-  const html = () => renderEn(<PlansSection />, { us: true });
-
-  test("shows Growth's and Pro's cells, side by side from lg, with no picture", () => {
-    expectInOrder(html(), COPY.plans.cells.flatMap((cell) => [cell.title, cell.body]));
-    expect(html()).toContain("lg:grid-cols-2");
-    expect(html()).not.toContain("overflow-hidden pt-6");
-  });
-
-  test("the Growth number is the plan facts', and Pro is unlimited and scheduled", () => {
-    expect(textOf(html())).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} broadcasts a month`);
-    expect(textOf(html())).toMatch(/Unlimited, scheduled/);
-  });
-
-  test("ends on a Compare plans link to the US pricing page, at least 44px to tap", () => {
-    const link = /<a [^>]*href="\/us\/pricing"[^>]*>/.exec(html())?.[0] ?? "";
-
-    expect(link).toContain("min-h-11");
-    expectInOrder(html(), [COPY.plans.cells[1].body, COPY.plans.link]);
+  test("sits on one white surface, and shows no plan and no GDPR line", () => {
+    expect(html().match(/rounded-\[32px\]/g)).toHaveLength(1);
+    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|GDPR/);
   });
 });
 
@@ -331,6 +283,13 @@ describe("questions: five, written for the US", () => {
     const text = COPY.faq.items.map((item) => `${item.question} ${item.answer}`).join(" ");
 
     expect(text).not.toMatch(/GDPR|iOS 26|unknown sender|double opt-in/i);
+  });
+
+  test("the one answer that counts campaigns says your plan sets the number each month, and names no plan", () => {
+    const cost = COPY.faq.items[0].answer;
+
+    expect(cost).toContain("Your plan sets how many broadcasts you can send each month");
+    expect(cost).not.toMatch(/Starter|Growth|\bPro\b/);
   });
 });
 

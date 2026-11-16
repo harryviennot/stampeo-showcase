@@ -11,11 +11,10 @@ import { RegularsFigure } from "@/components/landing-pages/outcomes/RegularsFigu
 import { SegmentChips } from "@/components/landing-pages/outcomes/SegmentChips";
 import { AUREVO } from "@/components/landing-pages/shared/samples";
 import { code, findTag, literalAttr, openingTags, read } from "../testing/jsx-source";
-import { pageComponent, planLineWith } from "../testing/landing-pages-source";
+import { pageComponent } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { OUTCOMES } from "./copy/outcomes";
-import { SHARED } from "./copy/shared";
 
 // The cards are async server components that ask next-intl for their words.
 await mockEnglishServerTranslations();
@@ -158,13 +157,10 @@ describe("the quiet-hours section", () => {
   const section = () => code(outcomes("QuietHoursSpotlight"));
   const visual = () => code(outcomes("QuietHoursVisual"));
 
-  test("prints the broadcast line in the paragraph that carries its Growth and Pro label", () => {
-    const line = planLineWith(section(), "OUTCOMES.slowDays.noFees");
-
-    expect(line).toContain("<PlanLine");
-    expect(line).toContain("OUTCOMES.slowDays.noFees");
+  test("prints the broadcast line in a paragraph of its own, with no plan beside it", () => {
+    expect(section()).toContain("{OUTCOMES.slowDays.noFees}");
     expect(OUTCOMES.slowDays.noFees).toMatch(/broadcast/i);
-    expect(SHARED.broadcastPlans).toBe("Growth and Pro");
+    expect(openingTags(section()).map((tag) => tag.name)).not.toContain("PlanLine");
   });
 
   test("shows the busiest-times capture, then the broadcast that fills the quiet hour, joined by an arrow", () => {
@@ -184,24 +180,22 @@ describe("the quiet-hours section", () => {
 describe("the levels section", () => {
   const section = () => code(outcomes("LevelsSpotlight"));
 
-  test("fans the level cards under the level-up banner, beside three facts and the plan chip", () => {
+  test("fans the level cards under the level-up banner, beside three facts", () => {
     const source = section();
 
     expect(findTag(source, "LevelCards")?.attrs).toMatch(/\bbanner\b/);
     expect(findTag(source, "FactList")?.attrs).toContain("OUTCOMES.levels.facts");
     expect(OUTCOMES.levels.facts).toHaveLength(3);
-    expect(findTag(source, "PlanChip")?.attrs).toContain("OUTCOMES.levels.plan");
   });
 });
 
 describe("the regulars section", () => {
-  test("lists the five customer segments in the dashboard's order, under the plan chip", () => {
+  test("lists the five customer segments in the dashboard's order", () => {
     const html = renderEn(<SegmentChips />);
     const chips = [...html.matchAll(/data-segment[^>]*>([^<]*)</g)].map((match) => match[1]);
 
     expect(chips).toEqual(["New", "Regular", "VIP", "At risk", "Ghost"]);
     expect(chips).toEqual([...OUTCOMES.regulars.segments]);
-    expect(textOf(html)).toContain(OUTCOMES.regulars.plan);
   });
 
   test("shows the Analytics capture and the labelled example", () => {

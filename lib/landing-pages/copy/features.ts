@@ -24,7 +24,7 @@ export const FEATURES = {
   },
   programTypes: {
     title: "Stamps, points or levels.",
-    lead: "Reward visits, reward spending, or let regulars climb. All three on every plan.",
+    lead: "Reward visits, reward spending, or let regulars climb.",
   } satisfies SectionCopy,
   messages: {
     title: "Reach them on their lock screen.",
@@ -34,22 +34,18 @@ export const FEATURES = {
         title: "Stamp collected",
         description: "Sent on every scan, in your customer's language.",
         banner: STAMP_BANNER,
-        plan: "Every plan",
       },
       {
         title: "Reward unlocked",
         description: "Sent the moment their card is full.",
         banner: REWARD_BANNER,
-        plan: "Every plan",
       },
       {
         title: "Broadcast",
         description: "Your own message, sent to every card.",
         banner: { sender: SAMPLE_BUSINESS, body: "Fresh cinnamon rolls just came out of the oven." },
-        plan: "Growth and Pro",
       },
     ] satisfies Moment[],
-    /** Printed with the `SHARED.broadcastPlans` label on the same line. */
     broadcast: "Send a broadcast to every card, with no texting fees.",
   },
   scanner: {
@@ -66,22 +62,15 @@ export const FEATURES = {
     lead: "Visits, new customers and your return rate, updated with every scan.",
     /** The capture's alt text. */
     alt: "The Stampeo Analytics page on a phone: visits, new customers and return rate.",
-    planLine: "More charts come with Growth and Pro.",
   },
   more: {
     title: "And everything around it.",
     lead: "The details that make a loyalty program easy to run.",
     tiles: [
-      { title: "Welcome gift", body: "Free stamps or a treat the moment they join.", plan: "Every plan" },
-      { title: "Gifts by hand", body: "Give one customer a reward, with a private note.", plan: "Every plan" },
-      { title: "Counter flyer", body: "A printable flyer with your QR code, ready to go.", plan: "Every plan" },
-      {
-        title: "Their language",
-        body: "Cards in English, Spanish, French or Polish, set by their phone.",
-        plan: "Every plan",
-      },
-      { title: "Limits and expiry", body: "Cap stamps per day and put a date on rewards.", plan: "Growth and Pro" },
-      { title: "Several locations", body: "Stats, links and staff for each location.", plan: "Pro" },
+      { title: "Welcome gift", body: "Free stamps or a treat the moment they join." },
+      { title: "Gifts by hand", body: "Give one customer a reward, with a private note." },
+      { title: "Counter flyer", body: "A printable flyer with your QR code, ready to go." },
+      { title: "Their language", body: "Cards in English, Spanish, French or Polish, set by their phone." },
     ] satisfies Tile[],
   },
   finalCta: {

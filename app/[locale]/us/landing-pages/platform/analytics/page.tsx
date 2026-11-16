@@ -5,7 +5,6 @@ import { RelatedPreviews } from "@/components/landing-pages/feature-previews/Rel
 import { ActivitySection } from "@/components/landing-pages/feature-previews/analytics/ActivitySection";
 import { GlanceSection } from "@/components/landing-pages/feature-previews/analytics/GlanceSection";
 import { BlindSpotsSection } from "@/components/landing-pages/feature-previews/analytics/BlindSpotsSection";
-import { LadderSection } from "@/components/landing-pages/feature-previews/analytics/LadderSection";
 import { RecapSection } from "@/components/landing-pages/feature-previews/analytics/RecapSection";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { DashboardDuo } from "@/components/landing-pages/shared/DashboardDuo";
@@ -30,7 +29,6 @@ export default function AnalyticsPreviewPage() {
       <PreviewHero slug="platform/analytics" secondary={null} visual={<DashboardDuo caption={false} priority />} />
       <BlindSpotsSection />
       <GlanceSection />
-      <LadderSection />
       <ActivitySection />
       <RecapSection />
       <LpAccentBand copy={ANALYTICS_PREVIEW.band} />

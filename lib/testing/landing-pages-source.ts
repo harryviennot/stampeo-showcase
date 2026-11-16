@@ -81,14 +81,6 @@ export function sectionSource(slug: LandingSlug, id: string): string {
   return file ? code(file) : "";
 }
 
-/** The `<PlanLine>…</PlanLine>` that holds `needle`: the paragraph a broadcast claim shares with its plans label. */
-export function planLineWith(source: string, needle: string): string {
-  const at = source.indexOf(needle);
-  const open = source.lastIndexOf("<PlanLine", at);
-  const close = source.indexOf("</PlanLine>", at);
-  return at === -1 || open === -1 || close === -1 ? "" : source.slice(open, close);
-}
-
 /**
  * Every opening tag of `component` (the one defined in `ownFile`, found through
  * the import that brings it in) in the site's own source, the landing pages and
@@ -118,14 +110,4 @@ export function shotViews(source: string): string[] {
     .filter((tag) => tag.name === "SampleCapture")
     .map((tag) => literalAttr(tag.attrs, "view") ?? "phone");
   return [...direct, ...samples];
-}
-
-/** Every section frame of the pages (a file with a literal `section="x"`), with the files it renders. */
-export function sectionTrees(): Array<{ id: string; file: string; tree: Set<string> }> {
-  return lpFiles().flatMap((file) => {
-    const id = openingTags(read(file))
-      .map((tag) => literalAttr(tag.attrs, "section"))
-      .find((found) => found !== null);
-    return id ? [{ id, file, tree: landingTree(file) }] : [];
-  });
 }

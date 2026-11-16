@@ -4,7 +4,7 @@ import { ANALYTICS, DASHBOARD, Kpi, VisitsOverTime } from "../../platform/Delive
 export const TRAY = "w-full max-w-[460px] rounded-[28px] bg-[var(--background-subtle)] p-3.5 sm:p-5";
 
 /**
- * The top of the dashboard's Analytics page, which every plan has, as it lays
+ * The top of the dashboard's Analytics page, as it lays
  * out on a phone: visits and new customers side by side, the 30-day return
  * rate across, then the weekly chart. The figures are Platform's `ANALYTICS`,
  * the sample café's as the dashboard captures show them.

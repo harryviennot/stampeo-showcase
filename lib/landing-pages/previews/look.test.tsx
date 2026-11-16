@@ -1,8 +1,7 @@
 /**
- * The look the US landing pages share: the site's orange pill for a section's label, a keycap for the trial
- * button, and the house ink frame (`card-stamp`) on the few objects a visitor picks up or compares. What
- * every other page of the site renders without the new props is pinned in `../default-renders.test.tsx`
- * and `../shared-sections.test.ts`.
+ * The look the US landing pages share: clean surfaces (frosted glass, hairlines, soft shadows) with the site's
+ * orange on a section's plain uppercase label, and a keycap for the trial button. What every other page of the
+ * site renders without the new props is pinned in `../default-renders.test.tsx` and `../shared-sections.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -18,12 +17,13 @@ import { StepsTable } from "@/components/landing-pages/platform/StepsTable";
 import { ToggleCard } from "@/components/landing-pages/platform/ToggleCard";
 import { TypeMarquee } from "@/components/landing-pages/platform/TypeMarquee";
 import { StepHeading } from "@/components/landing-pages/how-it-works/StepHeading";
+import { FactList } from "@/components/landing-pages/shared/FactList";
 import { IconTile } from "@/components/landing-pages/shared/IconTile";
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { LpFinalCta } from "@/components/landing-pages/shared/LpFinalCta";
 import { LpHero } from "@/components/landing-pages/shared/LpHero";
 import { LpTrialButton } from "@/components/landing-pages/shared/LpTrialButton";
-import { EYEBROW_PILL, LpHeading } from "@/components/landing-pages/shared/LpSection";
+import { EYEBROW, LpHeading } from "@/components/landing-pages/shared/LpSection";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { FAQList } from "@/components/ui/FAQList";
 import { ROOT, filesWith, read } from "../../testing/jsx-source";
@@ -99,48 +99,50 @@ describe("the keycap: a button with the house ink frame and a ledge that presses
   });
 });
 
-describe("a section's label is the site's orange pill", () => {
-  const PILL = ["rounded-full", "bg-[var(--accent)]/10", "text-[var(--accent)]", "text-sm", "font-semibold", "px-4", "py-1.5"];
-  const OLD = /uppercase|tracking-\[0\.2em\]|accent-hover/;
+describe("a section's label is plain uppercase text in the site's orange", () => {
+  const LABEL = ["uppercase", "tracking-[0.2em]", "font-semibold", "text-[var(--accent)]"];
+  const PILL = /rounded-full|bg-\[var\(--accent\)\]\/10|px-4|py-1\.5/;
   const labelTag = (html: string, text: string) => html.match(new RegExp(`<[a-z]+ class="[^"]*">${text}</[a-z]+>`))?.[0] ?? "";
 
-  test("the pill is sentence case, in the accent colour on its own tint, 14px", () => {
-    for (const token of PILL) expect(EYEBROW_PILL.split(/\s+/)).toContain(token);
-    expect(EYEBROW_PILL).not.toMatch(OLD);
+  test("the label class is the small uppercase capitals, and a section's own colour is added to it", () => {
+    for (const token of ["text-xs", "font-semibold", "uppercase", "tracking-[0.2em]"]) expect(EYEBROW.split(/\s+/)).toContain(token);
+    expect(EYEBROW).not.toMatch(PILL);
   });
 
-  test("a section header prints its label as the pill, left or centred", () => {
+  test("a section header prints its label as that text, left or centred, in the site orange and not in a pill", () => {
     for (const align of ["left", "center"] as const) {
       const label = labelTag(renderEn(<LpHeading title="Every part is yours." eyebrow="Every detail" align={align} />), "Every detail");
 
-      for (const token of PILL) expect(label).toContain(token);
-      expect(label).not.toMatch(OLD);
+      for (const token of LABEL) expect(label).toContain(token);
+      expect(label).not.toMatch(PILL);
+      expect(label).not.toContain("accent-hover");
     }
   });
 
-  test.each(["fan", "column"] as const)("a hero's label is the pill in the %s look", (look) => {
-    const label = labelTag(renderEn(<HeroWords slug="platform/mobile-scanner" look={look} />), "Scanner app");
-
-    for (const token of PILL) expect(label).toContain(token);
-    expect(label).not.toMatch(OLD);
-  });
-
-  test("a step's heading puts its number in a stamp beside the pill", () => {
+  test("a step's heading puts its number in a stamp beside the same label", () => {
     const html = renderEn(<StepHeading number={2} label="Step 2" title="Share it" lead="Anywhere." />);
+    const heading = html.match(/<p class="([^"]*)">/)?.[1] ?? "";
 
-    expect(labelTag(html, "Step 2")).toContain("bg-[var(--accent)]/10");
+    for (const token of ["uppercase", "text-[var(--accent)]", "flex", "items-center"]) expect(heading).toContain(token);
+    expect(html).not.toMatch(PILL);
     expect(html.indexOf("<svg")).toBeLessThan(html.indexOf("Step 2"));
   });
 
-  test("the labels that only name a row or a strip are the small grey capitals, not a second orange", () => {
+  test("a hero has no label above its headline", () => {
+    const html = renderEn(<HeroWords slug="platform/mobile-scanner" look="column" />);
+
+    expect(html.slice(0, html.indexOf("<h1"))).toBe("");
+    expect(html).not.toMatch(PILL);
+  });
+
+  test("the labels that name a row or a strip keep their own colours: a row's in the darker orange, the strip's in grey", () => {
     const rows = renderEn(
       <HoverRows items={[{ key: "a", eyebrow: "Reward every visit", title: "Stamps", body: "Add one." }]} visuals={{ a: <i>card</i> }} />,
     );
     const strip = renderEn(<TypeMarquee />);
 
-    expect(labelTag(rows, "Reward every visit")).toContain("text-[var(--muted-foreground)]");
     expect(labelTag(rows, "Reward every visit")).toContain("uppercase");
-    expect(labelTag(rows, "Reward every visit")).not.toContain("accent");
+    expect(labelTag(rows, "Reward every visit")).toContain("text-[var(--accent-hover)]");
     expect(strip).toMatch(/<p class="[^"]*uppercase[^"]*text-\[var\(--muted-foreground\)\]">Built for/);
   });
 });
@@ -208,64 +210,58 @@ describe("the trial button is a keycap, and the second action a quiet outline", 
     expect(hero).toContain("sm:mb-0");
     expect(closing).toContain("mb-[3px]");
   });
-
-  test("a hero can carry a plain chip beside its label, such as Coming soon", () => {
-    const html = renderEn(<PreviewHero slug="platform/mobile-scanner" visual={<i>phone</i>} eyebrowChip="Coming soon · Pro" />, { us: true });
-    const text = textOf(html);
-
-    expect(text.indexOf("Scanner app")).toBeLessThan(text.indexOf("Coming soon · Pro"));
-    expect(textOf(renderEn(<PreviewHero slug="platform/mobile-scanner" visual={<i>phone</i>} />, { us: true }))).not.toContain("Coming soon");
-  });
 });
 
-describe("the objects a visitor picks up or compares carry the house ink frame", () => {
-  const STAMPED = ["card-stamp", "bg-white"];
-  const FLAT = /backdrop-blur|ring-1|bg-white\/80|shadow-\[/;
+describe("the surfaces are clean: frosted glass, hairlines and soft shadows, with no ink frame", () => {
+  const INK = /card-stamp/;
 
-  test("a floating card is solid white with the ink frame and ledge, still drifting when asked, and no frosted glass", () => {
+  test("a floating card is translucent frosted glass with a soft shadow, still drifting when asked", () => {
     const still = renderEn(<GlassCard title="A card">body</GlassCard>);
     const floating = renderEn(<GlassCard float>body</GlassCard>);
 
-    for (const token of [...STAMPED, "rounded-[20px]"]) expect(still).toContain(token);
-    expect(still).not.toMatch(FLAT);
+    for (const token of ["rounded-[28px]", "bg-white/80", "backdrop-blur-xl", "ring-1", "ring-black/[0.06]"]) expect(still).toContain(token);
+    expect(still).not.toMatch(INK);
     expect(floating).toContain("lp-float");
     expect(still).not.toContain("lp-float");
   });
 
-  test("the steps table is one stamped object whose rows are hairlines, and the phones still sink behind it", () => {
+  test("the steps table is one frosted table with a hairline border and hairline rows, and the phones still sink behind it", () => {
     const html = renderEn(<StepsTable cells={[{ title: "Write", body: "A message." }, { title: "Send", body: "Now." }]} visual={<i>phones</i>} />);
     const table = html.match(/<ol class="([^"]*)"/)?.[1] ?? "";
 
-    for (const token of [...STAMPED, "rounded-[20px]", "divide-[var(--border)]", "relative", "-mt-10"]) expect(table.split(/\s+/)).toContain(token);
-    expect(table).not.toMatch(FLAT);
+    for (const token of ["rounded-2xl", "border", "border-[var(--border)]", "bg-white/80", "backdrop-blur-xl", "divide-[var(--border)]", "relative", "-mt-10"]) {
+      expect(table.split(/\s+/)).toContain(token);
+    }
+    expect(table).not.toMatch(INK);
   });
 
   test.each([
     ["two tabs", [{ key: "a", label: "A", title: "One", facts: [], visual: <i>a</i> }, { key: "b", label: "B", title: "Two", facts: [], visual: <i>b</i> }]],
     ["one tab", [{ key: "a", label: "A", title: "One", facts: [], visual: <i>a</i> }]],
-  ])("the toggle card's surface is stamped, %s", (_what, tabs) => {
+  ])("the toggle card's surface is a plain white card with a soft shadow, %s", (_what, tabs) => {
     const html = renderEn(<ToggleCard tabs={tabs} ariaLabel="Panes" />);
-    const surface = html.match(/<div class="([^"]*card-stamp[^"]*)"/)?.[1] ?? "";
+    const surface = html.match(/<div class="([^"]*rounded-\[32px\][^"]*)"/)?.[1] ?? "";
 
-    for (const token of [...STAMPED, "rounded-[24px]", "sm:rounded-[28px]"]) expect(surface.split(/\s+/)).toContain(token);
-    expect(surface).not.toMatch(FLAT);
+    for (const token of ["rounded-[32px]", "bg-white", "ring-1", "ring-black/5"]) expect(surface.split(/\s+/)).toContain(token);
+    expect(surface).not.toMatch(INK);
   });
 
-  test("the FAQ table is framed in ink, while the shared inked cards stay as they are", () => {
+  test("the FAQ table is one white table with a hairline border, while the shared inked cards stay as they are", () => {
     const items = [{ question: "Can I change it?", answer: "Anytime." }];
     const table = renderEn(<FAQList table items={items} />);
 
-    expect(table).toMatch(/<div class="[^"]*\bcard-stamp\b[^"]*\brounded-\[20px\]/);
-    expect(table).not.toContain("border-[var(--border)] bg-white");
+    expect(table).toContain('class="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white"');
+    expect(table).not.toMatch(INK);
     expect(renderEn(<FAQList items={items} />)).toContain("blog-card-3d");
   });
 
-  test("a page's own questions get the centred header and the stamped table, with no label above the title", () => {
+  test("a page's own questions get the centred header and the white table, with no label above the title", () => {
     const html = renderEn(<LpFaq faq={{ title: "Card styles, answered", items: [{ question: "Can I change it?", answer: "Anytime." }] }} />, { us: true });
 
     expect(html).toContain("mx-auto text-center");
-    expect(html).toContain("card-stamp");
-    expect(html).not.toMatch(/rounded-full bg-\[var\(--accent\)\]\/10/);
+    expect(html).toContain("rounded-2xl border border-[var(--border)] bg-white");
+    expect(html).not.toMatch(INK);
+    expect(html).not.toContain("uppercase");
     expect(html).toContain("min-h-14");
   });
 
@@ -276,12 +272,19 @@ describe("the objects a visitor picks up or compares carry the house ink frame",
     expect(html).toContain("blog-card-3d");
   });
 
-  test("an icon tile can take the site's orange tone, and the other tones are as they were", () => {
+  test("an icon tile can take the site's orange tone, and no other tone does", () => {
     const tile = (tone: "brand" | "white" | "subtle" | "accent") => renderEn(<IconTile tone={tone}>x</IconTile>);
 
     expect(tile("brand")).toContain("bg-[var(--accent)]/10");
     expect(tile("brand")).toContain("text-[var(--accent)]");
     for (const tone of ["white", "subtle", "accent"] as const) expect(tile(tone)).not.toContain("bg-[var(--accent)]/10");
+  });
+
+  test("a fact's check mark is the darker orange", () => {
+    const html = renderEn(<FactList facts={[{ text: "A fact" }]} />);
+
+    expect(html).toContain("text-[var(--accent-hover)]");
+    expect(html).not.toContain("text-[var(--accent)]");
   });
 });
 
@@ -289,14 +292,14 @@ describe("the links a preview closes with", () => {
   const html = (slug: "platform/card-design" | "platform/geolocation" = "platform/card-design", title?: string) =>
     renderEn(<RelatedPreviews slug={slug} title={title} />);
 
-  test("they are stamped tiles that lift on hover, each with an orange icon tile, and no label above the title", () => {
+  test("they are white tiles with a soft shadow, each with a neutral icon tile, and no label above the title", () => {
     const related = html();
-
     const tiles = [...related.matchAll(/<a [^>]*class="([^"]*)"/g)].map((tile) => tile[1].split(/\s+/));
 
     expect(tiles).toHaveLength(3);
-    for (const tile of tiles) expect(tile).toEqual(expect.arrayContaining(["card-stamp", "card-stamp-lift", "rounded-[20px]", "bg-white"]));
-    expect(related.match(/bg-\[var\(--accent\)\]\/10/g)).toHaveLength(3);
+    for (const tile of tiles) expect(tile).toEqual(expect.arrayContaining(["rounded-2xl", "bg-white", "ring-1", "ring-black/5"]));
+    expect(related).not.toMatch(/card-stamp/);
+    expect(related).not.toContain("bg-[var(--accent)]/10");
     expect(related).toContain(PREVIEW_SHARED.related.title);
     expect(textOf(related)).not.toMatch(/Keep exploring/);
     expect(related).not.toMatch(/uppercase/);

@@ -11,19 +11,15 @@ const PADDING = {
 
 const TINT = "bg-[var(--blog-bg)]";
 
-/** The small uppercase label that names a row or a strip; the caller sets its colour and spacing. */
+/** The small uppercase label above a heading or beside a row or a strip; the caller sets its colour and spacing. */
 export const EYEBROW = "text-xs font-semibold uppercase tracking-[0.2em] sm:text-[13px]";
-
-/** A section's label: the site's own orange pill, in sentence case. */
-export const EYEBROW_PILL =
-  "inline-flex items-center rounded-full bg-[var(--accent)]/10 px-4 py-1.5 text-sm font-semibold text-[var(--accent)]";
 
 /** The classes of a tinted section, for a block that brings its own `<section>`. */
 export const TINTED_BAND = `${PADDING.default} ${TINT}`;
 
 /**
  * A section title with its lead: one h2 and at most one paragraph under it,
- * with the orange pill above when the page gives a label. `align="center"` is for a
+ * with a small orange label above when the page gives one. `align="center"` is for a
  * heading over a full-width picture.
  */
 export function LpHeading({
@@ -43,7 +39,7 @@ export function LpHeading({
 
   return (
     <div className={`max-w-2xl ${centered ? "mx-auto text-center" : ""} ${className}`}>
-      {eyebrow && <p className={`mb-3 ${EYEBROW_PILL}`}>{eyebrow}</p>}
+      {eyebrow && <p className={`mb-3 ${EYEBROW} text-[var(--accent)]`}>{eyebrow}</p>}
       <h2 className="text-h2 text-balance">{title}</h2>
       {lead && (
         <p

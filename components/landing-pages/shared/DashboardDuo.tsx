@@ -64,9 +64,7 @@ export async function DashboardDuo({
         </div>
       </div>
       {caption && (
-        <figcaption className="mt-4 text-center text-sm text-[var(--muted-foreground)]">
-          {SHARED.sampleData} · {SHARED.dashboardPlans}
-        </figcaption>
+        <figcaption className="mt-4 text-center text-sm text-[var(--muted-foreground)]">{SHARED.sampleData}</figcaption>
       )}
     </figure>
   );

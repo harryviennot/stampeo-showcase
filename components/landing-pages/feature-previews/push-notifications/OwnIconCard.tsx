@@ -12,7 +12,7 @@ const TILES = SHOPS.map((shop) => ({
   src: shop.design.custom_stamp_config?.icons?.[0]?.processed_url ?? "",
 }));
 
-/** Three shops' notification icons in a row, and the line that says every plan can bring its own. */
+/** Three shops' notification icons in a row, and the line about bringing your own. */
 export function OwnIconCard() {
   return (
     <div>

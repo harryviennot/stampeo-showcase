@@ -18,7 +18,7 @@ const TRACED: Array<[copyPath: string, words: RegExp, inDoc: string]> = [
   ["GEOLOCATION_PREVIEW.hero.sub", /ready the day it launches/i, "ready the day it launches"],
   ["GEOLOCATION_PREVIEW.faq.items[0].answer", /What's new/, "What's new"],
   ["GEOLOCATION_PREVIEW.faq.items[2].answer", /next update/i, "next update"],
-  ["MOBILE_SCANNER_PREVIEW.team.facts[2].text", /name of who made it/i, "name of who made it"],
+  ["MOBILE_SCANNER_PREVIEW.team.facts[0].text", /name of who made it/i, "name of who made it"],
 ];
 
 /** The rows the doc may still mark FLAGGED, and why they stay open. */

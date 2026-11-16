@@ -86,17 +86,20 @@ export type LandingSectionId =
   | "activity"
   | "ideas"
   | "delivery"
-  | "plans"
   | "related"
   | "palettes"
   | "blind_spots"
-  | "ladder"
   | "recap"
   | "composer"
   | "day"
   | "editor"
   | "status"
-  | "privacy";
+  | "privacy"
+  | "texting"
+  | "charts"
+  | "customers"
+  | "dashboard"
+  | "types";
 
 export interface LandingPage {
   slug: LandingSlug;
@@ -104,8 +107,8 @@ export interface LandingPage {
   variant: string;
   sections: readonly LandingSectionId[];
   meta: PageMeta;
-  /** Platform's hero is a headline alone, so its `sub` is optional; a preview's has a small label above it too. */
-  hero: Omit<HeroCopy, "sub"> & { sub?: string; eyebrow?: string };
+  /** Platform's hero is a headline alone, so its `sub` is optional. */
+  hero: Omit<HeroCopy, "sub"> & { sub?: string };
   finalCta: FinalCtaCopy & { sub?: string };
   /** The three sibling previews a preview closes with. */
   related?: readonly PreviewSlug[];
@@ -226,7 +229,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/analytics": {
     slug: "platform/analytics",
     variant: "lp_platform_analytics",
-    sections: ["hero", "blind_spots", "glance", "ladder", "activity", "recap", "final_cta", "related"],
+    sections: ["hero", "blind_spots", "glance", "activity", "recap", "final_cta", "related"],
     meta: ANALYTICS_PREVIEW.meta,
     hero: ANALYTICS_PREVIEW.hero,
     finalCta: ANALYTICS_PREVIEW.band,
@@ -235,7 +238,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/promotional-campaigns": {
     slug: "platform/promotional-campaigns",
     variant: "lp_platform_promotional_campaigns",
-    sections: ["hero", "composer", "numbers", "ideas", "delivery", "plans", "faq", "final_cta", "related"],
+    sections: ["hero", "composer", "numbers", "ideas", "delivery", "faq", "final_cta", "related"],
     meta: PROMOTIONAL_CAMPAIGNS_PREVIEW.meta,
     hero: PROMOTIONAL_CAMPAIGNS_PREVIEW.hero,
     finalCta: PROMOTIONAL_CAMPAIGNS_PREVIEW.band,

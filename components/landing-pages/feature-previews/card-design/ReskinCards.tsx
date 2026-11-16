@@ -14,7 +14,7 @@ import {
   type ReskinCard,
   type ReskinRole,
 } from "@/lib/landing-pages/previews/reskin";
-import { Chip } from "../../shared/PlanChip";
+import { Chip } from "../../shared/Chip";
 
 /** A card is laid out 300px wide and 1.282 tall; it is drawn at 260px on a phone and 320px from `lg`, a neighbour at 220px. */
 const CARD_WIDTH = 300;

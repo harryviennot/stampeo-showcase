@@ -1,284 +1,71 @@
 /**
- * The plan chips of the `/us/landing-pages/*` pages are typed by hand; the
- * plans a feature comes with are decided in `lib/plans/plan-facts.ts`
- * (`PLAN_FACTS`, which mirrors the backend's `PLAN_FEATURES`). Every chip the
- * pages print is tied here to the fact that decides it, so a pricing change
- * (broadcasts opening to every plan, a fourth level cap) fails this file
- * instead of leaving a chip that is no longer true.
+ * The `/us/landing-pages/*` pages sell the product, not the plans: a plan's name, a badge saying who has a
+ * feature and "on every plan" belong to the pricing section and the pricing page. Each page is rendered as a
+ * visitor receives it and read for plan names outside its pricing section, and the copy modules are read for the
+ * same words. The number of levels, which the copy states as a fact, is tied to `PLAN_FACTS`.
  */
 
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
-import { FEATURE_CATEGORIES } from "../pricing-features";
-import { PLAN_FACTS, TIERS, availability, type PlanFacts } from "../plans/plan-facts";
-import { ALL, MODULES, inPreviews, mentions, objectsWith } from "../testing/landing-copy";
-import { ROOT, read } from "../testing/jsx-source";
-import { SHARED } from "./copy/shared";
+import { availability } from "../plans/plan-facts";
+import { filesWith } from "../testing/jsx-source";
+import { ALL } from "../testing/landing-copy";
+import { lpFiles } from "../testing/landing-pages-source";
+import { renderPreviewPage, sectionsOf } from "../testing/preview-page";
+import { ALL_LANDING_SLUGS } from "./pages";
 
-type Gate = (facts: PlanFacts) => boolean;
+/** A plan named in a line of words: its name, or a phrase that says every plan has something. */
+const PLAN_SOURCE = String.raw`\b(?:Starter|Growth|Pro)\b|\b(?:[Ee]very|[Ee]ach) plan\b|\b[Aa]ll plans\b`;
+const PLAN_WORDS = new RegExp(PLAN_SOURCE);
+const PLAN_WORDS_IN = new RegExp(PLAN_SOURCE, "g");
 
-/**
- * A feature `PLAN_FACTS` has no field for, read from the pricing page's feature table (`lib/pricing-features.ts`):
- * a plan has it when its cell is not a cross. A gate takes the facts, so it is found by the tier they belong to.
- */
-function pricingRow(...keys: string[]): Gate {
-  const rows = FEATURE_CATEGORIES.flatMap((category) => category.rows);
-  return (facts) => {
-    const tier = TIERS.find((candidate) => PLAN_FACTS[candidate] === facts);
-    return keys.every((key) => {
-      const row = rows.find((candidate) => candidate.key === key);
-      if (!tier || !row) throw new Error(`no pricing row "${key}" for ${tier}`);
-      return row[tier] !== "cross";
-    });
-  };
+/** What a visitor reads outside the pricing section: the markup of every other section, without its classes, styles and scripts. */
+function outsidePricing(html: string): string {
+  return sectionsOf(html)
+    .filter((section) => section.id !== "pricing")
+    .map((section) => section.html)
+    .join("")
+    .replace(/<(style|script)\b[\s\S]*?<\/\1>/g, "")
+    .replace(/\sclass="[^"]*"/g, "");
 }
 
-/**
- * What the pricing page's table says in a text cell, read from the English catalog (`pricingPage.comparison.rows`):
- * a feature whose cell is "Predefined" or "Basic" on one plan and something richer on another is a plan fact that
- * `PLAN_FACTS` does not have a field for.
- */
-function catalogCell(row: string, facts: PlanFacts): string {
-  const tier = TIERS.find((candidate) => PLAN_FACTS[candidate] === facts);
-  const rows = JSON.parse(read(join(ROOT, "messages", "en", "pricing.json"))).pricingPage.comparison.rows as Record<
-    string,
-    Record<string, string>
-  >;
-  if (!tier || !rows[row]) throw new Error(`no pricing cell "${row}" for ${tier}`);
-  return rows[row][tier] ?? "";
-}
+/** The plan words in `markup`, each with a few characters around it so a failure shows where. */
+const planWordsIn = (markup: string): string[] =>
+  [...markup.matchAll(PLAN_WORDS_IN)].map((match) => markup.slice(Math.max(0, match.index - 24), match.index + match[0].length + 24));
 
-const BROADCASTS: Gate = (facts) => facts.broadcastsPerMonth !== 0;
-const ANALYTICS_CHARTS: Gate = (facts) => facts.analyticsCharts;
-/** The Analytics page's visits, new customers and return rate: "basic" analytics, which Pro extends with cohorts. */
-const BASIC_ANALYTICS: Gate = (facts) => facts.analytics === "basic" || facts.analytics === "advanced";
-/** A broadcast sent at a date and time of the owner's choosing. */
-const SCHEDULED_BROADCASTS: Gate = (facts) => facts.scheduledBroadcasts;
-/** A feature on every plan that has no field of its own: scanning is unlimited on each one, whoever scans. */
-const UNLIMITED_SCANS = pricingRow("unlimitedScans");
-/** Your own text on the stamp, milestone and reward messages: "Custom text", where Starter has the predefined ones. */
-const CUSTOM_MESSAGE_TEXT: Gate = (facts) => catalogCell("stampMilestoneReward", facts) !== "Predefined";
-/** Broadcast targeting by stamps, rewards and inactivity: "Advanced" on Pro, where Growth targets by date. */
-const ADVANCED_TARGETING: Gate = (facts) => catalogCell("segmentation", facts).startsWith("Advanced");
-/** A history longer than Starter's 30 days: the Analytics page looks further back on Growth and Pro. */
-const LONGER_HISTORY: Gate = (facts) => facts.analyticsHistoryDays !== PLAN_FACTS.starter.analyticsHistoryDays;
-/** Starter's Analytics page answers in a sentence where the other plans chart it. */
-const ANSWERS_IN_A_SENTENCE: Gate = (facts) => !facts.analyticsCharts;
-/** Geofencing is gated on for Pro but sold as coming soon: the page says "coming soon" and Pro, never "live". */
-const GEOFENCING_COMING_SOON: Gate = (facts) => facts.geofencing === "coming_soon";
-
-/** Each chipped object of the copy (a Fact, Tile, Moment or program type) and the fact that decides its chip. */
-const CHIPPED: Record<string, Gate> = {
-  "PROGRAM_TYPES[0]": (facts) => facts.loyaltyTypes.includes("stamps"),
-  "PROGRAM_TYPES[1]": (facts) => facts.loyaltyTypes.includes("points"),
-  "PROGRAM_TYPES[1].facts[1]": pricingRow("basketBoost"),
-  "PROGRAM_TYPES[2]": (facts) => facts.levels > 0,
-  "OUTCOMES.levels": (facts) => facts.levels > 0,
-  "FEATURES.messages.moments[0]": pricingRow("stampMilestoneReward"),
-  "FEATURES.messages.moments[1]": pricingRow("stampMilestoneReward"),
-  "FEATURES.messages.moments[2]": BROADCASTS,
-  "FEATURES.more.tiles[4]": pricingRow("earningCaps", "rewardExpiry"),
-  "FEATURES.more.tiles[5]": (facts) => facts.multipleLocations,
-  "PLATFORM.platform.scanner.facts[2]": (facts) => facts.teamMembers === "unlimited",
-  "MOBILE_SCANNER_PREVIEW.team.facts[0]": pricingRow("earningCaps"),
-  "MOBILE_SCANNER_PREVIEW.team.facts[1]": (facts) => facts.teamMembers === "unlimited",
-  "PUSH_NOTIFICATIONS_PREVIEW.editor.toggle": CUSTOM_MESSAGE_TEXT,
-  PROMOTIONAL_CAMPAIGNS_PREVIEW: BROADCASTS,
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[1]": ADVANCED_TARGETING,
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.ideas.rows[2]": ADVANCED_TARGETING,
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.composer.card.audience.filters[1]": ADVANCED_TARGETING,
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.composer.card.schedule": SCHEDULED_BROADCASTS,
-  "GEOLOCATION_PREVIEW.status.soon": GEOFENCING_COMING_SOON,
-};
-
-/**
- * Chips on features that are on every plan because no plan gates them: neither `PLAN_FACTS` nor the pricing
- * table has a row for them. The reason sits beside each, and the chip has to stay "Every plan".
- */
-const UNGATED: Record<string, string> = {
-  "FEATURES.more.tiles[0]": "a welcome gift is part of every program",
-  "FEATURES.more.tiles[1]": "granting a reward by hand is on every tier (backend features.py, rewards.expiry's note)",
-  "FEATURES.more.tiles[2]": "the counter flyer is part of every dashboard",
-  "FEATURES.more.tiles[3]": "a card's language follows the customer's phone on every plan",
-  "OUTCOMES.regulars": "customer groups are part of the basic Analytics every plan has (analytics.basic)",
-};
-
-/** What a sentence says about a plan: the words it uses for the plans, and the fact that decides them. */
-interface PlanClaim {
-  says: string;
-  gate: Gate;
-}
-
-const claim = (says: string, gate: Gate): PlanClaim => ({ says, gate });
-
-/**
- * Lines of the copy that name a plan in a sentence rather than as a chip, each
- * with what it says about the plans. A line may say several things.
- */
-const PLAN_LINES: Record<string, PlanClaim[]> = {
-  "SHARED.broadcastPlans": [claim("Growth and Pro", BROADCASTS)],
-  "SHARED.dashboardPlans": [claim("Growth and Pro", ANALYTICS_CHARTS)],
-  "FEATURES.analytics.planLine": [claim("Growth and Pro", ANALYTICS_CHARTS)],
-  "ANALYTICS_PREVIEW.glance.lead": [claim("every plan", BASIC_ANALYTICS)],
-  "ANALYTICS_PREVIEW.band.sub": [claim("every plan", BASIC_ANALYTICS)],
-  "ANALYTICS_PREVIEW.ladder.title": [claim("All plans", BASIC_ANALYTICS), claim("Growth and Pro", ANALYTICS_CHARTS)],
-  "ANALYTICS_PREVIEW.ladder.lead": [
-    claim("Starter", ANSWERS_IN_A_SENTENCE),
-    claim("Growth and Pro", ANALYTICS_CHARTS),
-    claim("Growth and Pro", LONGER_HISTORY),
-  ],
-  "ANALYTICS_PREVIEW.ladder.locked": [claim("Growth and Pro", ANALYTICS_CHARTS)],
-  "MOBILE_SCANNER_PREVIEW.ways.lead": [claim("every plan", UNLIMITED_SCANS)],
-  "PUSH_NOTIFICATIONS_PREVIEW.editor.lead": [
-    claim("every plan", pricingRow("stampMilestoneReward")),
-    claim("Growth and Pro", CUSTOM_MESSAGE_TEXT),
-  ],
-  "PUSH_NOTIFICATIONS_PREVIEW.band.sub": [claim("every plan", pricingRow("stampMilestoneReward"))],
-  "GEOLOCATION_PREVIEW.meta.description": [claim("Pro", GEOFENCING_COMING_SOON)],
-  "GEOLOCATION_PREVIEW.hero.sub": [claim("Pro", GEOFENCING_COMING_SOON)],
-  "GEOLOCATION_PREVIEW.heroChip": [claim("Pro", GEOFENCING_COMING_SOON)],
-  "GEOLOCATION_PREVIEW.status.lead": [claim("Pro", GEOFENCING_COMING_SOON)],
-  "GEOLOCATION_PREVIEW.faq.items[1].answer": [claim("Pro", GEOFENCING_COMING_SOON)],
-  "GEOLOCATION_PREVIEW.band.sub": [claim("Pro", GEOFENCING_COMING_SOON)],
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.lead": [claim("Growth and Pro", BROADCASTS)],
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer": [
-    claim("Growth", (facts) => typeof facts.broadcastsPerMonth === "number" && facts.broadcastsPerMonth > 0),
-    claim("Pro", (facts) => facts.broadcastsPerMonth === "unlimited"),
-  ],
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[2].answer": [
-    claim("Pro", SCHEDULED_BROADCASTS),
-    claim("Growth", (facts) => BROADCASTS(facts) && !SCHEDULED_BROADCASTS(facts)),
-  ],
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[3].answer": [
-    claim("Growth", (facts) => BROADCASTS(facts) && !ADVANCED_TARGETING(facts)),
-    claim("Pro", ADVANCED_TARGETING),
-  ],
-};
-
-/**
- * Lines of the previews that name a plan and are not a sentence about what a plan has: the figures' labels
- * (checked against `PLAN_FACTS` in `copy.test.ts`) and the plans table's column heads.
- */
-const PLAN_NAMES_ELSEWHERE: Record<string, string> = {
-  "ANALYTICS_PREVIEW.ladder.plans[0].label": "the ladder's plan tabs, in the order of TIERS",
-  "ANALYTICS_PREVIEW.ladder.plans[1].label": "the ladder's plan tabs, in the order of TIERS",
-  "ANALYTICS_PREVIEW.ladder.plans[2].label": "the ladder's plan tabs, in the order of TIERS",
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells[0].title": "the plans table's column heads",
-  "PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells[1].title": "the plans table's column heads",
-};
-
-/** How `availability` words a chip: lower case, as the chips are written with a capital. */
-/** A plan phrase as `availability` words it: a sentence may say "all plans" for "every plan". */
-const label = (text: string) => text.trim().toLowerCase().replace(/^all plans$/, "every plan");
-
-const chipAt = (path: string): string => {
-  const found = Object.entries(MODULES)
-    .flatMap(([name, value]) => objectsWith(value, ["plan"], name))
-    .find((candidate) => candidate.path === path);
-  return String(found?.object.plan);
-};
-
-const lineAt = (path: string): string => ALL.find((line) => line.path === path)?.value ?? "";
-
-/** A plan, or every plan, named in a line's words. */
-const PLAN_WORDS = /\b(?:Starter|Growth|Pro|every plan)\b/i;
-
-describe("every chip is what PLAN_FACTS says (AC20)", () => {
-  test("the chips of the copy are all in the table, so a new chip fails here until its fact is named", () => {
-    const chipped = Object.entries(MODULES).flatMap(([name, value]) => objectsWith(value, ["plan"], name));
-
-    expect(chipped.map(({ path }) => path).sort()).toEqual([...Object.keys(CHIPPED), ...Object.keys(UNGATED)].sort());
+describe("a landing page names no plan outside its pricing section", () => {
+  test.each(ALL_LANDING_SLUGS)("%s", async (slug) => {
+    expect(planWordsIn(outsidePricing(await renderPreviewPage(slug)))).toEqual([]);
   });
 
-  test.each(Object.entries(CHIPPED))("%s", (path, gate) => {
-    expect({ path, chip: label(chipAt(path)) }).toEqual({ path, chip: label(availability(gate)) });
-  });
+  test("the check reads words, not class names, and leaves the pricing section to its own plans", () => {
+    const page =
+      '<div data-landing-section="hero"><i class="pro every-plan">A card.</i><p>Growth and Pro</p></div>' +
+      '<div data-landing-section="pricing"><p>Starter, Growth and Pro</p></div>' +
+      '<div data-landing-section="faq"><p>Your plan sets how many.</p></div>';
 
-  test.each(Object.entries(UNGATED))("%s stays on every plan: %s", (path) => {
-    expect({ path, chip: chipAt(path) }).toEqual({ path, chip: "Every plan" });
-  });
+    const found = planWordsIn(outsidePricing(page));
 
-  test.each(Object.entries(PLAN_LINES).flatMap(([path, claims]) => claims.map(({ says, gate }) => [path, says, gate] as const)))(
-    "%s says %s, which is what PLAN_FACTS gives it",
-    (path, says, gate) => {
-      expect({ path, uses: new RegExp(`\\b${says}\\b`, "i").test(lineAt(path)) }).toEqual({ path, uses: true });
-      expect({ path, plan: label(says) }).toEqual({ path, plan: label(availability(gate)) });
-    },
-  );
-
-  test("every sentence of the previews that names a plan is one of these lines, so a plan change fails here", () => {
-    const naming = ALL.filter(({ path, value }) => inPreviews(path) && !path.endsWith(".plan") && PLAN_WORDS.test(value)).map(({ path }) => path);
-
-    expect(naming.filter((path) => !(path in PLAN_LINES) && !(path in PLAN_NAMES_ELSEWHERE))).toEqual([]);
-    expect(Object.keys(PLAN_LINES).filter((path) => lineAt(path) === "")).toEqual([]);
-    expect(Object.keys(PLAN_NAMES_ELSEWHERE).filter((path) => !naming.includes(path))).toEqual([]);
+    expect(found).toHaveLength(2);
+    expect(found.join("")).not.toContain("Starter");
+    expect(found.join("")).not.toContain("faq");
   });
 });
 
-describe("a broadcast is labelled with the plans that have broadcasts", () => {
-  /**
-   * The Platform dashboard's broadcast fact carries no chip on purpose (Harry, 13 Nov 2026): broadcasts open to
-   * every plan right after these pages ship, so it is listed unbadged.
-   */
-  const NO_CHIP_ON_PURPOSE = ["PLATFORM.platform.dashboard.facts[2].text"];
-
-  /**
-   * The previews: the broadcasts preview states the plans of the whole page (its top-level `plan`, which every
-   * broadcast mention under it inherits). The others name broadcasts with no badge, for the same reason, in
-   * geolocation's "Today" column and in the link to the broadcasts preview.
-   */
-  const PREVIEW_NO_CHIP = ["GEOLOCATION_PREVIEW.status.today.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"];
-
-  /** The two lines printed with `SHARED.broadcastPlans` in their paragraph by `PlanLine`. */
-  const ON_A_PLAN_LINE = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
-
-  const broadcasts = () =>
-    Object.entries(MODULES)
-      .flatMap(([name, value]) => mentions(value, /broadcast/i, name))
-      .filter(({ path }) => !NO_CHIP_ON_PURPOSE.includes(path) && !inPreviews(path))
-      .map(({ path, plan }) => ({ path, plan: plan ?? (ON_A_PLAN_LINE.includes(path) ? SHARED.broadcastPlans : "no label") }));
-
-  test("every other mention carries the label PLAN_FACTS gives broadcasts, as a chip or on its plan line", () => {
-    const expected = label(availability(BROADCASTS));
-
-    expect(broadcasts().map(({ path }) => path)).toEqual([
-      "FEATURES.messages.moments[2].title",
-      "FEATURES.messages.broadcast",
-      "OUTCOMES.slowDays.noFees",
-    ]);
-    expect(broadcasts().filter(({ plan }) => label(plan) !== expected)).toEqual([]);
+describe("no landing copy names a plan or says every plan has something", () => {
+  test("there is copy to read", () => {
+    expect(ALL.length).toBeGreaterThan(150);
   });
 
-  test("every broadcast mention on the broadcasts preview inherits the label PLAN_FACTS gives broadcasts, or the narrower one it names", () => {
-    const expected = label(availability(BROADCASTS));
-    const mine = Object.entries(MODULES)
-      .filter(([name]) => name === "PROMOTIONAL_CAMPAIGNS_PREVIEW")
-      .flatMap(([name, value]) => mentions(value, /broadcast|texting fees/i, name));
-
-    expect(mine.length).toBeGreaterThan(8);
-    expect(mine.filter(({ plan }) => label(plan ?? "") !== expected && label(plan ?? "") !== "pro")).toEqual([]);
+  test("no line of any copy module says Starter, Growth, Pro, every plan or all plans", () => {
+    expect(ALL.filter((line) => PLAN_WORDS.test(line.value)).map((line) => line.path)).toEqual([]);
   });
 
-  test("on the other previews a broadcast is named, without a label, only in geolocation's Today column and the link to its preview, and PLAN_FACTS still says broadcasts are not on every plan", () => {
-    const others = Object.entries(MODULES)
-      .filter(([name]) => inPreviews(name) && name !== "PROMOTIONAL_CAMPAIGNS_PREVIEW")
-      .flatMap(([name, value]) => mentions(value, /broadcast/i, name));
-
-    expect(others.map(({ path }) => path)).toEqual(PREVIEW_NO_CHIP);
-    expect(others.filter(({ plan }) => plan !== undefined)).toEqual([]);
-    expect(availability(BROADCASTS)).not.toBe("every plan");
-  });
-
-  test("the exempt mention is the one broadcast fact that has no chip, and is still a broadcast mention", () => {
-    const exempt = Object.entries(MODULES).flatMap(([name, value]) => mentions(value, /broadcast/i, name));
-
-    expect(exempt.filter(({ path }) => NO_CHIP_ON_PURPOSE.includes(path))).toEqual([
-      { path: "PLATFORM.platform.dashboard.facts[2].text", plan: undefined },
-    ]);
+  test("no component of the pages draws a plan chip or a plan line", () => {
+    expect(filesWith(lpFiles(), /\b(?:PlanChip|PlanLine)\b/)).toEqual([]);
   });
 });
 
-describe("the number of levels is PLAN_FACTS' (AC20)", () => {
+describe("the number of levels is PLAN_FACTS'", () => {
   const FIGURES = ALL.flatMap((line) =>
     [...line.value.matchAll(/\bup to (\d+) levels\b/gi)].map((match) => ({ path: line.path, count: Number(match[1]) })),
   );
@@ -287,10 +74,7 @@ describe("the number of levels is PLAN_FACTS' (AC20)", () => {
     expect(FIGURES.map(({ path }) => path).sort()).toEqual(["OUTCOMES.levels.facts[0].text", "PROGRAM_TYPES[2].body"]);
   });
 
-  test.each(FIGURES.map((figure) => [figure.path, figure.count] as const))(
-    "%s: every plan has exactly %i levels, which is what its \"Every plan\" chip promises",
-    (_path, count) => {
-      expect(availability((facts) => facts.levels === count)).toBe("every plan");
-    },
-  );
+  test.each(FIGURES.map((figure) => [figure.path, figure.count] as const))("%s: every plan has exactly %i levels, so the line holds without a label", (_path, count) => {
+    expect(availability((facts) => facts.levels === count)).toBe("every plan");
+  });
 });

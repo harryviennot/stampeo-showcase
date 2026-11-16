@@ -7,7 +7,7 @@ import { LpSection } from "./LpSection";
 
 /**
  * The five questions every page answers, collapsed, and one contact line. A page that brings its own `faq`
- * gets Platform's look: its title centred, the questions as one white table framed in ink, and the contact
+ * gets Platform's look: its title centred, the questions as one white table, and the contact
  * line centred under it.
  */
 export function LpFaq({

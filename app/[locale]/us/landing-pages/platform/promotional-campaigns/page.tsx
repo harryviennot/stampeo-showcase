@@ -7,7 +7,6 @@ import { ComposerSection } from "@/components/landing-pages/feature-previews/pro
 import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
 import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
 import { NumbersSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/NumbersSection";
-import { PlansSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/PlansSection";
 import { Hairline } from "@/components/landing-pages/platform/Hairline";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
@@ -35,7 +34,6 @@ export default function PromotionalCampaignsPreviewPage() {
       <PreviewHero
         slug="platform/promotional-campaigns"
         secondary={null}
-        eyebrowPlan={PROMOTIONAL_CAMPAIGNS_PREVIEW.plan}
         visual={
           <PhoneCrop height={440}>
             <NotificationPhoneDemo
@@ -52,7 +50,6 @@ export default function PromotionalCampaignsPreviewPage() {
       <Hairline />
       <IdeasSection />
       <DeliverySection />
-      <PlansSection />
       <LpFaq faq={PROMOTIONAL_CAMPAIGNS_PREVIEW.faq} />
       <LpAccentBand copy={PROMOTIONAL_CAMPAIGNS_PREVIEW.band} />
       <RelatedPreviews slug="platform/promotional-campaigns" />

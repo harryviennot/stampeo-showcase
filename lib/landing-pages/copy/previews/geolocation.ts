@@ -1,5 +1,5 @@
 import { SAMPLE_BUSINESS } from "../shared";
-import type { Banner, BandCopy, EyebrowSection, FaqItem, Fact, PageMeta, PlanChip, PreviewHeroCopy, Tile } from "../types";
+import type { Banner, BandCopy, EyebrowSection, FaqItem, Fact, HeroCopy, PageMeta, Tile } from "../types";
 
 /** The notification the hero's phone shows: the one line an owner will write for a shop, under a title of its own. */
 interface NearbyBanner extends Banner {
@@ -13,21 +13,19 @@ interface StatusColumn {
 
 /**
  * The geolocation preview. Geolocation is not live: every claim about it is in the future tense or sits under a
- * "coming soon" label, with no date, and it is a Pro feature. What is live today is said as live, apart from it.
+ * "coming soon" label, with no date. What is live today is said as live, apart from it.
  */
 export const GEOLOCATION_PREVIEW = {
   meta: {
     title: "Geolocation for loyalty cards, coming soon | Stampeo",
     description:
-      "Coming soon to the Pro plan: your loyalty card will show on a customer's lock screen near your shop. Start your card today.",
+      "Coming soon: your loyalty card will show on a customer's lock screen near your shop. Start your card today.",
   } satisfies PageMeta,
   hero: {
-    eyebrow: "Geolocation",
     h1: "Soon, your card will appear when they walk by.",
     accent: "when they walk by.",
-    sub: "We're building it for the Pro plan. Make your card now and it's ready the day it launches.",
-  } satisfies PreviewHeroCopy,
-  heroChip: "Coming soon · Pro",
+    sub: "Coming soon. Make your card now and it's ready the day it launches.",
+  } satisfies HeroCopy,
   heroNote: "coming soon",
   /** The hero phone's lock screen: Aurevo's own words, never Stampeo's. */
   banner: {
@@ -38,7 +36,7 @@ export const GEOLOCATION_PREVIEW = {
   status: {
     eyebrow: "Where it stands",
     title: "Live today, and what's next.",
-    lead: "What your card does today, and what geolocation will add on Pro.",
+    lead: "What your card does today, and what geolocation will add.",
     today: {
       title: "Today",
       facts: [
@@ -49,13 +47,12 @@ export const GEOLOCATION_PREVIEW = {
     } satisfies StatusColumn,
     soon: {
       title: "Coming soon",
-      plan: "Pro" satisfies PlanChip,
       facts: [
         { text: "Your card on their lock screen near your shop" },
         { text: "Built from your shop's address" },
         { text: "Nothing for your customers to set up" },
       ],
-    } satisfies StatusColumn & { plan: PlanChip },
+    } satisfies StatusColumn,
   },
   how: {
     eyebrow: "How it will work",
@@ -87,8 +84,8 @@ export const GEOLOCATION_PREVIEW = {
         answer: "We don't have a date yet. When it's ready, we'll announce it on our What's new page.",
       },
       {
-        question: "Which plan will have it?",
-        answer: "Geolocation will come with the Pro plan.",
+        question: "What can I do today?",
+        answer: "Make your card now, with stamps or points. Geolocation will be ready for it when it launches.",
       },
       {
         question: "Will my customers need a new card?",
@@ -99,7 +96,7 @@ export const GEOLOCATION_PREVIEW = {
   band: {
     title: "Get your card ready today.",
     accent: "ready today.",
-    sub: "Start with stamps or points now. Geolocation will join Pro when it launches.",
+    sub: "Start with stamps or points now. Geolocation will join your card when it launches.",
   } satisfies BandCopy,
   /** The links under the page lead to the ways to bring customers back that are live today. */
   related: {

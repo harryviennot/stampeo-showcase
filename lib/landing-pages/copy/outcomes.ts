@@ -40,7 +40,7 @@ export const OUTCOMES = {
   } satisfies SectionCopy & { banner: Banner },
   headStart: {
     title: "A head start gets them to finish.",
-    lead: "Give new customers their first stamps on the house. It's on every plan.",
+    lead: "Give new customers their first stamps on the house.",
     toggle: { empty: "Card starts empty", headStart: "2 stamps on the house" },
     barLabel: "finished the card",
     empty: {
@@ -57,7 +57,6 @@ export const OUTCOMES = {
   slowDays: {
     title: "Fill your quiet hours.",
     lead: "See when it's slow, then send every card a reason to come in.",
-    /** Printed with the `SHARED.broadcastPlans` label on the same line: the busiest-times chart and broadcasts are both Growth and Pro. */
     noFees: "Broadcasts to every card, with no texting fees.",
     banner: {
       sender: SAMPLE_BUSINESS,
@@ -75,13 +74,11 @@ export const OUTCOMES = {
       { text: "Customers move up on what they earn, and never slip back on their own" },
     ] satisfies Fact[],
     banner: LEVEL_UP_BANNER,
-    plan: "Every plan",
   },
   regulars: {
     title: "Watch first-timers turn into regulars.",
     lead: "Your return rate, who your regulars are, and who's slipping away.",
     segments: ["New", "Regular", "VIP", "At risk", "Ghost"],
-    plan: "Every plan",
     example: {
       label: "Example",
       text: "20 customers who come back one extra time a month, at $8 a visit, bring in $160 more every month.",

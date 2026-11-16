@@ -66,8 +66,8 @@ describe("the page", () => {
 describe("one card, many shops", () => {
   const html = () => renderEn(<ReskinHero />, { us: true });
 
-  test("opens on the label, the headline and the sub, then the card, its caption and the two buttons", () => {
-    expectInOrder(html(), [COPY.hero.eyebrow, COPY.hero.accent, COPY.hero.sub, COPY.reskin.captions[0], SHARED.cta, COPY.designerLink, "14 days free"]);
+  test("opens on the headline and the sub, then the card, its caption and the two buttons", () => {
+    expectInOrder(html(), [COPY.hero.accent, COPY.hero.sub, COPY.reskin.captions[0], SHARED.cta, COPY.designerLink, "14 days free"]);
   });
 
   test("draws the card of each of the six shops, as one picture named for what it does, and names the first shop in a caption", () => {

@@ -1,6 +1,6 @@
 /**
  * What the four landing pages share and what they borrow: the hero and its
- * dashboard capture, the sectors, the plan chips, the sender on a banner, the
+ * dashboard capture, the sectors, the fact lists, the sender on a banner, the
  * tokens that must go through `RegionText`, the placard's QR, and the site
  * components the pages extend, whose other callers must not notice. Async
  * server components are read from the source; the rest are rendered.
@@ -12,7 +12,6 @@ import { join } from "node:path";
 import { createElement, type ReactElement } from "react";
 import { FactList } from "@/components/landing-pages/shared/FactList";
 import { LpHeading } from "@/components/landing-pages/shared/LpSection";
-import { PlanLine } from "@/components/landing-pages/shared/PlanLine";
 import { SampleCapture } from "@/components/landing-pages/shared/SampleCapture";
 import { WalletBadges } from "@/components/landing-pages/shared/WalletBadges";
 import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
@@ -29,7 +28,6 @@ import {
   lpFiles,
   otherCallers,
   pageComponent,
-  sectionTrees,
   shared,
   shotViews,
 } from "../testing/landing-pages-source";
@@ -147,88 +145,38 @@ describe("dashboard captures (AC9)", () => {
   );
 });
 
-describe("which plans a dashboard capture shows (AC9)", () => {
+describe("which views of the dashboard the pages draw (AC9)", () => {
   /**
    * What each capture of the Analytics page shows: `phone` is the top of the page, the visits, new customers,
-   * return rate and visits over time that every plan has; the other two phone views are scrolled to a chart
-   * that comes with Growth and Pro; the `desktop` capture shows both, so it is always printed with
-   * SHARED.dashboardPlans (Platform's toggle leaves the caption off, by Harry's call).
+   * return rate and visits over time; `phone-habits` and `phone-busiest` are scrolled to a chart; `desktop` is the
+   * whole page in a browser frame.
    */
-  const VIEW_PLANS: Record<ShotView, "every plan" | "growth and pro" | "mixed"> = {
-    phone: "every plan",
-    "phone-habits": "growth and pro",
-    "phone-busiest": "growth and pro",
-    desktop: "mixed",
-  };
+  const VIEWS: readonly ShotView[] = ["phone", "phone-habits", "phone-busiest", "desktop"];
 
-  /** A capture of a Growth and Pro chart, in a section that prints no plans label next to it. */
-  const unlabelled = (view: ShotView, sectionPrintsPlans: boolean) =>
-    VIEW_PLANS[view] === "growth and pro" && !sectionPrintsPlans;
-
-  test("the guard flags a Growth and Pro chart with no label and leaves the rest alone", () => {
-    expect(unlabelled("phone-habits", false)).toBe(true);
-    expect(unlabelled("phone-busiest", false)).toBe(true);
-    expect(unlabelled("phone-habits", true)).toBe(false);
-    expect(unlabelled("phone", false)).toBe(false);
-    expect(unlabelled("desktop", false)).toBe(false);
-  });
-
-  test("the map names every view there is", () => {
-    expect(Object.keys(VIEW_PLANS).sort()).toEqual(Object.keys(SHOT_SIZES).sort());
+  test("the list names every view there is", () => {
+    expect([...VIEWS].sort()).toEqual(Object.keys(SHOT_SIZES).sort());
   });
 
   const usages = () =>
     lpFiles().flatMap((file) => shotViews(code(file)).map((view) => ({ file, view: view as ShotView })));
 
-  test("every view a page draws is one the map knows, and the pages draw the three they use today", () => {
+  test("every view a page draws is one the list knows, and the pages draw the three they use today", () => {
     const used = [...new Set(usages().map(({ view }) => view))];
 
-    expect(used.filter((view) => !(view in VIEW_PLANS))).toEqual([]);
+    expect(used.filter((view) => !VIEWS.includes(view))).toEqual([]);
     expect(used.sort()).toEqual(["desktop", "phone", "phone-busiest"]);
   });
 
-  test("a Growth and Pro chart is drawn only in a section that prints the Growth and Pro label beside it", () => {
-    const printsPlans = (tree: Set<string>) =>
-      [...tree].some(
-        (file) =>
-          file !== shared("PlanLine") &&
-          (openingTags(read(file)).some((tag) => tag.name === "PlanLine" || tag.name === "PlanChip") ||
-            /SHARED\.broadcastPlans|Growth and Pro/.test(code(file))),
-      );
-    const gated = usages().filter(({ view }) => VIEW_PLANS[view] === "growth and pro");
-    const sections = sectionTrees();
-
-    expect(gated.length).toBeGreaterThan(0);
-    for (const { file, view } of gated) {
-      const owners = sections.filter((section) => section.tree.has(file));
-
-      expect({ file: file.replace(ROOT, ""), view, owners: owners.length > 0 }).toEqual({
-        file: file.replace(ROOT, ""),
-        view,
-        owners: true,
-      });
-      for (const owner of owners) {
-        expect({ section: owner.id, view, flagged: unlabelled(view, printsPlans(owner.tree)) }).toEqual({
-          section: owner.id,
-          view,
-          flagged: false,
-        });
-      }
-    }
-  });
-
-  test("the desktop capture is drawn only by the dashboard duo, whose caption prints SHARED.dashboardPlans", () => {
+  test("the desktop capture is drawn only by the dashboard duo", () => {
     const drawers = usages().filter(({ view }) => view === "desktop").map(({ file }) => file);
 
     expect(drawers).toEqual([shared("DashboardDuo")]);
-    expect(code(shared("DashboardDuo"))).toMatch(/\{SHARED\.sampleData\} · \{SHARED\.dashboardPlans\}/);
   });
 
-  test("Features' analytics shows the every-plan view, under the line that says more charts come with Growth and Pro", () => {
+  test("Features' analytics shows the top of the page, and its alt text describes only that", () => {
     const features = usages().filter(({ file }) => file === pageComponent("features", "AnalyticsSpotlight"));
 
     expect(features.map(({ view }) => view)).toEqual(["phone"]);
-    expect(FEATURES.analytics.planLine).toContain(SHARED.broadcastPlans);
     expect(FEATURES.analytics.alt).not.toMatch(/how often|reward progress|busiest/i);
   });
 });
@@ -276,12 +224,11 @@ describe("the hero the three argument pages share (AC18)", () => {
     expect(openingTags(duo()).filter((tag) => hides(tag.attrs)).map((tag) => tag.name)).toEqual([]);
   });
 
-  test("the duo's caption says it is sample data and that some charts come with Growth and Pro, unless a page leaves it off", async () => {
-    const text = textOf(renderEn(await DashboardDuo({})));
+  test("the duo's caption says it is sample data and nothing else, unless a page leaves it off", async () => {
+    const caption = (html: string) => html.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/)?.[1];
 
-    expect(text).toContain(`${SHARED.sampleData} · ${SHARED.dashboardPlans}`);
-    expect(SHARED.dashboardPlans).toContain(SHARED.broadcastPlans);
-    expect(textOf(renderEn(await DashboardDuo({ caption: false })))).not.toContain(SHARED.dashboardPlans);
+    expect(caption(renderEn(await DashboardDuo({})))).toBe(SHARED.sampleData);
+    expect(caption(renderEn(await DashboardDuo({ caption: false })))).toBeUndefined();
   });
 
   test("nothing the hero wraps around the badges and the duo hides them at any width", () => {
@@ -343,26 +290,12 @@ describe("the sectors every page ends on (AC19)", () => {
 });
 
 describe("the pieces the sections share", () => {
-  test("a broadcast line carries its plans in the paragraph it qualifies", () => {
-    const html = renderEn(createElement(PlanLine, null, "Broadcasts to every card."));
-    const paragraph = html.match(/<p[^>]*>[\s\S]*<\/p>/)?.[0] ?? "";
+  test("a fact list draws a check and the words of each fact, and nothing else", () => {
+    const html = renderEn(createElement(FactList, { facts: [{ text: "Points never expire" }, { text: "A welcome gift" }] }));
 
-    expect(textOf(paragraph)).toContain(SHARED.broadcastPlans);
-    expect(textOf(paragraph)).toContain("Broadcasts to every card.");
-  });
-
-  test("a fact list draws a plan chip right after each fact that has one", () => {
-    const text = textOf(
-      renderEn(
-        createElement(FactList, {
-          facts: [{ text: "Bonus points on bigger baskets", plan: "Growth and Pro" }, { text: "Points never expire" }],
-        }),
-      ),
-    );
-
-    expect(text).toContain("Bonus points on bigger baskets|Growth and Pro|");
-    expect(text).toContain("Points never expire|");
-    expect(text.match(/Growth and Pro/g)).toHaveLength(1);
+    expect(html.match(/<li\b/g)).toHaveLength(2);
+    expect(html.match(/<svg\b/g)).toHaveLength(2);
+    expect(textOf(html)).toBe("|Points never expire|A welcome gift|");
   });
 
   test("a heading takes a small label above its title and an alignment", () => {

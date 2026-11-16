@@ -132,10 +132,11 @@ describe("the hero each page opens with (AC1)", () => {
     expectInOrder(text, ["Aurevo", STAMP_BANNER.body, "Aurevo", REWARD_BANNER.body]);
   });
 
-  test("geolocation says it is coming soon beside its label, over a single trial button and no demo", async () => {
+  test("geolocation says it is coming soon in its sub, over a single trial button and no demo", async () => {
     const html = await hero("platform/geolocation");
 
-    expectInOrder(html, [GEOLOCATION_PREVIEW.hero.eyebrow, GEOLOCATION_PREVIEW.heroChip, GEOLOCATION_PREVIEW.hero.accent, GEOLOCATION_PREVIEW.hero.sub, SHARED.cta]);
+    expectInOrder(html, [GEOLOCATION_PREVIEW.hero.accent, GEOLOCATION_PREVIEW.hero.sub, SHARED.cta]);
+    expect(GEOLOCATION_PREVIEW.hero.sub).toMatch(/coming soon/i);
     expect(links(html)).toEqual(["/en/onboarding"]);
   });
 
@@ -148,10 +149,10 @@ describe("the hero each page opens with (AC1)", () => {
     expect(links(html)).toEqual(["/en/onboarding"]);
   });
 
-  test("broadcasts show Aurevo's broadcast over the stamp banner, with the plans chip beside the eyebrow", async () => {
+  test("broadcasts show Aurevo's broadcast over the stamp banner", async () => {
     const text = textOf(await hero("platform/promotional-campaigns"));
 
-    expectInOrder(text, [LANDING_PAGES["platform/promotional-campaigns"].hero.eyebrow ?? "", PROMOTIONAL_CAMPAIGNS_PREVIEW.plan, PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner.body, STAMP_BANNER.body]);
+    expectInOrder(text, [LANDING_PAGES["platform/promotional-campaigns"].hero.accent, PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner.body, STAMP_BANNER.body]);
     expect(links(await hero("platform/promotional-campaigns"))).toEqual(["/en/onboarding"]);
   });
 

@@ -2,7 +2,7 @@ import { MiniFrame } from "../MiniFrame";
 import { INK } from "./ink";
 
 /**
- * The tiles of three dashboard sections that Growth and Pro add, drawn with the figures of the
+ * The tiles of three dashboard sections (busiest times, how often they come, reward progress), drawn with the figures of the
  * sample café's captures. Their labels are the dashboard's own English strings (web
  * `messages/en/analytics.json`), and none names a city.
  */

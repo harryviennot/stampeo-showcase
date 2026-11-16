@@ -1,12 +1,4 @@
-import { PLAN_FACTS, analyticsHistoryLabel } from "../../../plans/plan-facts";
-import type { BandCopy, Fact, PageMeta, PreviewHeroCopy, SectionCopy, TabCopy } from "../types";
-
-/** A plan's history as the pair the ladder prints in handwriting: "30" over "days", "1" over "year". */
-function history(days: number | "unlimited"): { value: string; unit: string } {
-  const [value, unit = ""] = analyticsHistoryLabel(days).split(" ");
-
-  return { value, unit };
-}
+import type { BandCopy, Fact, HeroCopy, PageMeta, SectionCopy, TabCopy } from "../types";
 
 /** The analytics preview: will I see whether the card works, with nothing to type. */
 export const ANALYTICS_PREVIEW = {
@@ -16,11 +8,10 @@ export const ANALYTICS_PREVIEW = {
       "See how often your customers come back: visits, return rate and your busiest hours, filled in by every scan. Free trial, cancel anytime.",
   } satisfies PageMeta,
   hero: {
-    eyebrow: "Analytics",
     h1: "See how often your customers come back.",
     accent: "come back.",
     sub: "Visits, return rate and your busiest hours. Every scan fills it in.",
-  } satisfies PreviewHeroCopy,
+  } satisfies HeroCopy,
   /**
    * The six questions a paper card cannot answer, and what the dashboard answers. A card's number is the page's
    * sample (Platform's `ANALYTICS` and the dashboard's own sentences), so only its words are here: `line` is the
@@ -49,7 +40,7 @@ export const ANALYTICS_PREVIEW = {
   glance: {
     eyebrow: "At a glance",
     title: "Your numbers, updated with every scan.",
-    lead: "Visits, new customers and your return rate, on every plan.",
+    lead: "Visits, new customers and your return rate.",
     tab: {
       title: "What you see from day one",
       facts: [
@@ -81,29 +72,6 @@ export const ANALYTICS_PREVIEW = {
       },
     } satisfies Record<"live" | "customers", TabCopy>,
   },
-  /** What each plan shows, from Starter's one-line answers to Pro's cohorts, cheapest plan first; the history is `PLAN_FACTS`'. */
-  ladder: {
-    eyebrow: "By plan",
-    title: "All plans answer. Growth and Pro chart it.",
-    lead: "Starter answers in a sentence. Growth and Pro chart it and look further back.",
-    toggleLabel: "Plan",
-    historyLabel: "of history",
-    plans: [
-      { label: "Starter", history: history(PLAN_FACTS.starter.analyticsHistoryDays) },
-      { label: "Growth", history: history(PLAN_FACTS.growth.analyticsHistoryDays) },
-      { label: "Pro", history: history(PLAN_FACTS.pro.analyticsHistoryDays) },
-    ],
-    rows: [
-      { key: "busiest", title: "Busiest times" },
-      { key: "habits", title: "How often they come" },
-      { key: "rewards", title: "Reward progress" },
-    ],
-    proRows: [
-      { key: "cohorts", title: "Monthly cohorts" },
-      { key: "location", title: "Filter by location" },
-    ],
-    locked: "The chart is on Growth and Pro",
-  },
   /** The owner's performance email: its figures are the page's sample, like the dashboard's. */
   recap: {
     eyebrow: "In your inbox",
@@ -125,6 +93,6 @@ export const ANALYTICS_PREVIEW = {
   band: {
     title: "Stop guessing. Start knowing.",
     accent: "Start knowing.",
-    sub: "Your numbers start with your first stamp, on every plan.",
+    sub: "Your numbers start with your first stamp.",
   } satisfies BandCopy,
 } as const;

@@ -6,7 +6,6 @@ import { FEATURES } from "@/lib/landing-pages/copy/features";
 import { lpBanner } from "../shared/banner";
 import { LpSection } from "../shared/LpSection";
 import { phoneCropClass } from "../shared/PhoneCrop";
-import { PlanLine } from "../shared/PlanLine";
 import { aurevoDesign } from "../shared/AurevoCard";
 import { AUREVO } from "../shared/samples";
 
@@ -18,13 +17,12 @@ import { AUREVO } from "../shared/samples";
 const KEYS = ["stamp", "reward", "broadcast"] as const;
 const STAMPS = [5, AUREVO.design.total_stamps ?? 8, 5] as const;
 
-/** The three moments of the lock-screen demo: each banner sent by the sample café, with the plans it comes with. */
+/** The three moments of the lock-screen demo: each banner sent by the sample café. */
 export function messageMoments(): SequenceMoment[] {
   return FEATURES.messages.moments.map((moment, index) => ({
     key: KEYS[index],
     title: moment.title,
     description: moment.description,
-    planLabel: moment.plan,
     stamps: STAMPS[index],
     banner: lpBanner(moment.banner),
   }));
@@ -32,8 +30,8 @@ export function messageMoments(): SequenceMoment[] {
 
 /**
  * Reach them on their lock screen: three moments on Aurevo's whole card, each
- * banner sent by Aurevo. The phone is cut at 520px on a phone; the
- * broadcast line carries its plans.
+ * banner sent by Aurevo. The phone is cut at 520px on a phone, and a line
+ * under it says what a broadcast costs.
  */
 export async function MessagesSpotlight() {
   return (
@@ -51,7 +49,7 @@ export async function MessagesSpotlight() {
           phoneClassName={phoneCropClass(520)}
         />
         <div className="flex justify-center">
-          <PlanLine>{FEATURES.messages.broadcast}</PlanLine>
+          <p className="mt-6 max-w-xl text-pretty text-base text-[var(--foreground)]">{FEATURES.messages.broadcast}</p>
         </div>
       </div>
     </LpSection>

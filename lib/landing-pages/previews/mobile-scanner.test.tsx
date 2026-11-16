@@ -86,12 +86,12 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
     expect(text.split(COPY.counter.fact)).toHaveLength(2);
   });
 
-  test("nothing is framed in ink but the buttons: no stamped frame around the phone or a card, and no plan chip", async () => {
+  test("nothing is framed in ink but the buttons: no stamped frame around the phone or a card, and no plan named", async () => {
     const html = await render(<CounterSection />);
     const framed = [...tagsWith(html, /data-screen=/), ...tagsWith(html, /data-card=/)].filter((tag) => /card-stamp/.test(tag));
 
     expect(framed).toEqual([]);
-    expect(textOf(html)).not.toMatch(/Every plan|Growth and Pro/);
+    expect(textOf(html)).not.toMatch(/Every plan|Growth|Starter|\bPro\b/);
   });
 
   test("every screen and card has a name a screen reader can read", async () => {
@@ -182,11 +182,11 @@ describe("team: from a code to the counter, three frames on a rail", () => {
     expect(pictures(ready).join(" ")).toMatch(/Scanner.*ready/i);
   });
 
-  test("below are three facts; the two that need Growth or Pro say so, the one every plan has does not", async () => {
+  test("below is the fact every account has, with no plan beside it", async () => {
     const html = await render(<TeamStrip />);
 
     expectInOrder(html, COPY.team.facts.map((fact) => fact.text));
-    expect(textOf(html).match(/Growth and Pro/g)).toHaveLength(2);
+    expect(textOf(html)).not.toMatch(/Growth|Starter|\bPro\b/);
   });
 
   test("the staff-data guardrails hold: nothing here ranks, times or tracks a team member", async () => {

@@ -94,7 +94,7 @@ describe("wallets: Apple Wallet and Google Wallet, both", () => {
     expect(page.indexOf(COPY.wallets.iphone)).toBeGreaterThan(badges);
   });
 
-  test("three stamped cards float over the phones: the stamp banner on iPhone, the reward banner on Android, and the shop's own icon", async () => {
+  test("three floating cards sit over the phones: the stamp banner on iPhone, the reward banner on Android, and the shop's own icon", async () => {
     const page = await html();
 
     expectInOrder(page, [
@@ -105,7 +105,7 @@ describe("wallets: Apple Wallet and Google Wallet, both", () => {
       COPY.wallets.icon.title,
       COPY.wallets.icon.line,
     ]);
-    expect(page.match(/class="card-stamp /g)).toHaveLength(3);
+    expect(page.match(/class="rounded-\[28px\] bg-white\/80 /g)).toHaveLength(3);
   });
 
   test("from lg it is a 960px stage, and on a phone a column that keeps the phones first", async () => {
@@ -115,7 +115,7 @@ describe("wallets: Apple Wallet and Google Wallet, both", () => {
     expect(page).toContain("flex-col");
   });
 
-  test("the icon card shows three icon tiles of different shops, and says every plan can upload or pick one made from its logo", () => {
+  test("the icon card shows three icon tiles of different shops, and says a shop can upload one or pick one made from its logo", () => {
     const card = renderEn(<OwnIconCard />);
 
     expect(textOf(card)).toContain(COPY.wallets.icon.line);
@@ -149,8 +149,8 @@ describe("editor: use our wording, or write your own", () => {
     ]);
   });
 
-  test("Growth and Pro is said once, in the lead: the plan chip only comes with Your words", () => {
-    expect(textOf(html()).match(/Growth and Pro/g)).toHaveLength(1);
+  test("it opens on the ready-made words, with no plan named beside the choice", () => {
+    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|Every plan/);
     expect(textOf(html())).not.toContain("{first name}");
     expect(textOf(html())).not.toContain("Sophie");
   });

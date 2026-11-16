@@ -65,13 +65,11 @@ export interface WordingView {
   parts: WordingPart[];
   /** What the lock screen's notification says. */
   banner: string;
-  /** Whether the Growth and Pro chip is shown beside the control. */
-  planChip: boolean;
   /** Whether the editor is still typing: the caret shows. */
   typing: boolean;
 }
 
-/** The field, the lock screen and the chip for a mode, `steps` keystrokes into the owner's own words. */
+/** The field and the lock screen for a mode, `steps` keystrokes into the owner's own words. */
 export function wordingView({
   mode,
   steps,
@@ -79,10 +77,10 @@ export function wordingView({
   own,
   values,
 }: Readonly<{ mode: WordingMode; steps: number; ready: string; own: string; values: Readonly<Record<string, string>> }>): WordingView {
-  if (mode === "ready") return { parts: parseWording(ready), banner: ready, planChip: false, typing: false };
+  if (mode === "ready") return { parts: parseWording(ready), banner: ready, typing: false };
 
   const parts = parseWording(own);
   const typed = typedWording(parts, steps);
 
-  return { parts: typed, banner: resolveWording(typed, values), planChip: true, typing: steps < wordingSteps(parts) };
+  return { parts: typed, banner: resolveWording(typed, values), typing: steps < wordingSteps(parts) };
 }

@@ -1,7 +1,7 @@
 /**
  * The Features page's own behaviour (`/us/landing-pages/features`): the tabs
  * that switch between stamps, points and levels, the notification moments on
- * Aurevo's card, the scanner, the tiles with their plans, and the feed laid
+ * Aurevo's card, the scanner, the tiles, and the feed laid
  * over the Analytics capture. Async server components are read from source; the
  * rest are rendered under the English catalogs, as a page does.
  */
@@ -13,7 +13,7 @@ import { MoreFeaturesGrid } from "../../components/landing-pages/features/MoreFe
 import { ProgramTypeTabs } from "../../components/landing-pages/features/ProgramTypeTabs";
 import { AUREVO } from "../../components/landing-pages/shared/samples";
 import { findTag } from "../testing/jsx-source";
-import { planLineWith, sectionSource } from "../testing/landing-pages-source";
+import { sectionSource } from "../testing/landing-pages-source";
 import { renderEn as render, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { FEATURES } from "./copy/features";
@@ -41,7 +41,7 @@ describe("the Stamps, Points and Levels tabs (AC20)", () => {
   });
 
   test.each(PROGRAM_TYPES.map((type) => [type.key, type] as const))(
-    "%s has its card, its title, its words, its facts and its plan on the page",
+    "%s has its card, its title, its words and its facts on the page",
     (key, type) => {
       const text = textOf(html());
 
@@ -49,16 +49,8 @@ describe("the Stamps, Points and Levels tabs (AC20)", () => {
       expect(text).toContain(type.title);
       expect(text).toContain(type.body);
       for (const fact of type.facts) expect(text).toContain(fact.text);
-      expect(text).toContain(type.plan);
     },
   );
-
-  test("a fact that belongs to some plans carries them right after it", () => {
-    const gated = PROGRAM_TYPES.flatMap((type) => type.facts).filter((fact) => fact.plan && fact.plan !== "Every plan");
-
-    expect(gated.length).toBeGreaterThan(0);
-    for (const fact of gated) expect(textOf(html())).toContain(`${fact.text}|${fact.plan}|`);
-  });
 
   test("the first tab is open, and the other two are in the markup but invisible", () => {
     const panels = [...html().matchAll(/<div[^>]*data-panel="(\w+)"[^>]*>/g)].map((match) => ({
@@ -98,13 +90,12 @@ describe("the Stamps, Points and Levels tabs (AC20)", () => {
       for (const other of others) expect(found.filter((panel) => panel.key === other.key).every((panel) => panel.hidden)).toBe(true);
     });
 
-    test("the words in view are its own, with its plan chip, and its card is the one drawn for it", async () => {
+    test("the words in view are its own, and its card is the one drawn for it", async () => {
       const shown = panels(await open()).filter((panel) => !panel.hidden);
       const text = textOf(shown.map((panel) => panel.html).join(""));
 
       expect(text).toContain(type.title);
       expect(text).toContain(type.body);
-      expect(text).toContain(type.plan);
       for (const other of others) expect(text).not.toContain(other.body);
       if (key === "levels") {
         expect(shown.map((panel) => panel.html).join("").replaceAll("&#x27;", "'")).toContain(
@@ -147,12 +138,9 @@ describe("the notification moments (AC24)", () => {
     });
   });
 
-  test("the broadcast carries its Growth and Pro chip; the stamp and the reward say every plan", () => {
-    expect(moments.map((moment) => [moment.title, moment.planLabel])).toEqual([
-      ["Stamp collected", "Every plan"],
-      ["Reward unlocked", "Every plan"],
-      ["Broadcast", SHARED.broadcastPlans],
-    ]);
+  test("the moments name no plan: the stamp, the reward and the broadcast are told as they are", () => {
+    expect(moments.map((moment) => moment.title)).toEqual(["Stamp collected", "Reward unlocked", "Broadcast"]);
+    expect(textOf(render(<NotificationSequenceDemo moments={moments} design={AUREVO.design} />))).not.toMatch(/Growth|Starter|\bPro\b|Every plan/);
   });
 
   test("the card beside each banner has the stamps that banner counts", () => {
@@ -172,11 +160,11 @@ describe("the notification moments (AC24)", () => {
     expect(text).not.toContain("Mon Café");
   });
 
-  test("the section prints the broadcast line with its plans, beside the page's own moments", () => {
+  test("the section prints the broadcast line beside the page's own moments", () => {
     const section = sectionSource("features", "spotlight_messages");
 
     expect(findTag(section, "NotificationSequenceDemo")?.attrs).toContain("messageMoments()");
-    expect(planLineWith(section, "FEATURES.messages.broadcast")).toContain("<PlanLine");
+    expect(section).toContain("{FEATURES.messages.broadcast}");
   });
 });
 
@@ -190,19 +178,15 @@ describe("the tiles under everything else (AC20)", () => {
   const html = () => render(<MoreFeaturesGrid />);
   const rows = () => html().split("<li").slice(1);
 
-  test("one tile for each of the six features, each printing its title, its line and its plan chip", () => {
+  test("one tile for each of the four features, each printing its title and its line", () => {
     expect(rows()).toHaveLength(FEATURES.more.tiles.length);
+    expect(FEATURES.more.tiles).toHaveLength(4);
     FEATURES.more.tiles.forEach((tile, index) => {
       const text = textOf(rows()[index]);
 
       expect(text).toContain(tile.title);
       expect(text).toContain(tile.body);
-      expect(text).toContain(tile.plan ?? "never");
     });
-  });
-
-  test("every tile has a plan, and the plans are the three the pages may print", () => {
-    expect(FEATURES.more.tiles.every((tile) => ["Every plan", "Growth and Pro", "Pro"].includes(tile.plan ?? ""))).toBe(true);
   });
 
   test("closes the tour with the trial", () => {
@@ -211,13 +195,12 @@ describe("the tiles under everything else (AC20)", () => {
 });
 
 describe("the live feed over the Analytics capture (AC9)", () => {
-  test("the spotlight lays the feed over the top of Analytics, the every-plan charts, and prints Sample data and its plan line", () => {
+  test("the spotlight lays the feed over the top of Analytics, and prints Sample data", () => {
     const section = sectionSource("features", "spotlight_analytics");
 
     expect(findTag(section, "LiveActivityFeed")?.attrs).toMatch(/(?:^|\s)cardOnly(?![\w-])/);
     expect(section).toContain('landingShot("en", "phone")');
     expect(section).toContain("SHARED.sampleData");
-    expect(section).toContain("FEATURES.analytics.planLine");
   });
 });
 

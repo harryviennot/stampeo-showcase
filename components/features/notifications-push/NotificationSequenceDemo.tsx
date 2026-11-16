@@ -23,8 +23,6 @@ export interface SequenceMoment {
   key: string;
   title: string;
   description: string;
-  /** The plans it comes with, as a small chip next to the title. */
-  planLabel?: string;
   stamps: number;
   banner: ComponentProps<typeof NotificationBanner>;
 }
@@ -179,11 +177,6 @@ export function NotificationSequenceDemo({
                     >
                       {item.title}
                     </h4>
-                    {item.planLabel && (
-                      <span className="shrink-0 rounded-full bg-[var(--background-subtle)] px-3 py-1 text-xs font-semibold text-[var(--foreground)] ring-1 ring-inset ring-[var(--border)]">
-                        {item.planLabel}
-                      </span>
-                    )}
                   </div>
                   <p className="text-sm leading-relaxed text-[var(--muted-foreground)] pl-4 pt-0.5">
                     {item.description}

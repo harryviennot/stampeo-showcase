@@ -3,7 +3,6 @@ import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
 import { FactList } from "../shared/FactList";
 import { LevelCards } from "../shared/LevelCards";
 import { LpHeading, LpSection } from "../shared/LpSection";
-import { PlanChip } from "../shared/PlanChip";
 
 /**
  * Give regulars something to reach: the dry cleaner's card at three levels
@@ -29,7 +28,6 @@ export function LevelsSpotlight() {
         </ScrollReveal>
 
         <ScrollReveal delay={100} className="lg:col-start-2 lg:row-start-2 lg:self-start">
-          <PlanChip plan={OUTCOMES.levels.plan} />
           <FactList facts={OUTCOMES.levels.facts} className="mt-6" />
         </ScrollReveal>
       </div>

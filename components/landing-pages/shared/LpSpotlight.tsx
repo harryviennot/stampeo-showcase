@@ -17,7 +17,7 @@ export function LpSpotlight({
   lead: string;
   visual: ReactNode;
   tinted?: boolean;
-  /** Extra lines under the lead, e.g. a broadcast line with its plan label. */
+  /** Extra lines under the lead. */
   children?: ReactNode;
 }>) {
   return (

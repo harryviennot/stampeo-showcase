@@ -3,7 +3,6 @@ import { NumberStamp } from "@/components/stamps/StampIcons";
 import { MOBILE_SCANNER_PREVIEW } from "@/lib/landing-pages/copy/previews/mobile-scanner";
 import { DashedRail } from "../../shared/DashedRail";
 import { LpSection } from "../../shared/LpSection";
-import { PlanChip } from "../../shared/PlanChip";
 import { ScannerReadyFrame, StaffPhoneFrame, TeamPageFrame } from "./TeamFrames";
 
 /**
@@ -35,10 +34,7 @@ export function TeamStrip() {
         {facts.map((fact) => (
           <li key={fact.text} className="flex items-start gap-3 text-base text-[var(--foreground)]">
             <CheckIcon size={20} weight="bold" aria-hidden className="mt-0.5 shrink-0 text-[var(--accent)]" />
-            <span className="flex min-w-0 flex-1 flex-col items-start gap-2">
-              <span className="text-pretty">{fact.text}</span>
-              {"plan" in fact && fact.plan && <PlanChip plan={fact.plan} />}
-            </span>
+            <span className="min-w-0 flex-1 text-pretty">{fact.text}</span>
           </li>
         ))}
       </ul>

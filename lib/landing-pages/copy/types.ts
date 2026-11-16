@@ -19,11 +19,6 @@ export interface HeroCopy {
   sub: string;
 }
 
-/** The hero of a feature preview: a small label above the headline, then the headline and its sub. */
-export interface PreviewHeroCopy extends HeroCopy {
-  eyebrow: string;
-}
-
 /** The closing card of a Platform-style page: the headline, its accent words and one line under it. */
 export interface BandCopy extends FinalCtaCopy {
   sub: string;
@@ -69,20 +64,15 @@ export interface EyebrowSection extends SectionCopy {
   eyebrow: string;
 }
 
-/** Which plans a feature comes with, printed as a chip next to it. */
-export type PlanChip = "Every plan" | "Growth and Pro" | "Pro";
-
-/** A short fact with an optional plan chip. */
+/** A short fact. */
 export interface Fact {
   text: string;
-  plan?: PlanChip;
 }
 
 /** A titled tile in a grid or list. */
 export interface Tile {
   title: string;
   body: string;
-  plan?: PlanChip;
 }
 
 /** One of the three program types: stamps, points or levels. */
@@ -95,7 +85,6 @@ export interface ProgramType {
   title: string;
   body: string;
   facts: Fact[];
-  plan: PlanChip;
 }
 
 /** One moment of the notification sequence: what happened, and the banner it sends. */
@@ -103,16 +92,14 @@ export interface Moment {
   title: string;
   description: string;
   banner: Banner;
-  plan: PlanChip;
 }
 
-/** One row of the hover rows: a label, a title and its text, with a plan chip where the row belongs to some plans. */
+/** One row of the hover rows: a label, a title and its text. */
 export interface RowCopy<Key extends string = string> {
   key: Key;
   eyebrow: string;
   title: string;
   body: string;
-  plan?: PlanChip;
 }
 
 /** One tab of a toggle card: its label, the title of its pane and the facts under it. */

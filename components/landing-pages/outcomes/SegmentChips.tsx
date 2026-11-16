@@ -1,10 +1,6 @@
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
-import { PlanChip } from "../shared/PlanChip";
 
-/**
- * The five customer groups the dashboard sorts everyone into, as flat labels (they are not buttons), with the plans
- * they come with on a line of their own, so the plan never reads as a sixth group.
- */
+/** The five customer groups the dashboard sorts everyone into, as flat labels (they are not buttons). */
 export function SegmentChips() {
   return (
     <div className="flex flex-col items-start gap-3">
@@ -19,7 +15,6 @@ export function SegmentChips() {
           </span>
         ))}
       </div>
-      <PlanChip plan={OUTCOMES.regulars.plan} />
     </div>
   );
 }

@@ -75,25 +75,23 @@ describe("typing the message in", () => {
   });
 });
 
-describe("what the editor shows (field, lock screen, plan chip)", () => {
+describe("what the editor shows (field and lock screen)", () => {
   const view = (mode: "ready" | "own", steps: number) =>
     wordingView({ mode, steps, ready: COPY.editor.ready.text, own: COPY.editor.own.text, values: SAMPLE_VALUES });
 
-  test("Ready-made: the default stamp message in the field and on the lock screen, no plan chip, no caret", () => {
+  test("Ready-made: the default stamp message in the field and on the lock screen, no caret", () => {
     const shown = view("ready", 0);
 
     expect(shown.parts).toEqual([{ kind: "text", text: COPY.editor.ready.text }]);
     expect(shown.banner).toBe(COPY.editor.ready.text);
-    expect(shown.planChip).toBe(false);
     expect(shown.typing).toBe(false);
   });
 
-  test("Your words, as it starts: an empty field with a caret, and Growth and Pro already said", () => {
+  test("Your words, as it starts: an empty field with a caret", () => {
     const shown = view("own", 0);
 
     expect(shown.parts).toEqual([]);
     expect(shown.banner).toBe("");
-    expect(shown.planChip).toBe(true);
     expect(shown.typing).toBe(true);
   });
 
@@ -109,7 +107,6 @@ describe("what the editor shows (field, lock screen, plan chip)", () => {
 
     expect(shown.parts.filter((part) => part.kind === "variable").map((part) => part.name)).toEqual(["first name", "stamps left"]);
     expect(shown.banner).toBe(COPY.editor.own.preview);
-    expect(shown.planChip).toBe(true);
     expect(shown.typing).toBe(false);
   });
 });

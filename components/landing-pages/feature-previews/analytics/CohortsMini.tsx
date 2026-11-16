@@ -2,7 +2,7 @@ import { MiniFrame } from "../MiniFrame";
 import { INK } from "./ink";
 
 /**
- * The two tiles Pro adds to the dashboard's Analytics page, drawn like the charts beside them: monthly
+ * The two tiles at the foot of the dashboard's Analytics page, drawn like the charts beside them: monthly
  * cohorts and the location filter. Labels are the dashboard's own English strings (web
  * `messages/en/analytics.json`), and none names a city.
  */
@@ -28,7 +28,7 @@ const COHORTS = [
   { key: "apr", label: "Apr", steps: [2, 3, 3, 4] },
 ] as const;
 
-/** Monthly cohorts (Pro): of each month's first-time customers, the share who came back within 30, 60, 90 and 180 days. */
+/** Monthly cohorts: of each month's first-time customers, the share who came back within 30, 60, 90 and 180 days. */
 export function CohortsMini() {
   return (
     <MiniFrame
@@ -71,7 +71,7 @@ export function CohortsMini() {
 /** The locations the picker lists: made up, and named for no city. */
 const LOCATIONS = ["Main Street", "Harbor Road"];
 
-/** The location filter (Pro): one picker over every section, so each location can be read on its own. */
+/** The location filter: one picker over every section, so each location can be read on its own. */
 export function LocationMini() {
   return (
     <MiniFrame {...TILE_SURFACE} label="Filter by location: every section of the page, one location at a time.">

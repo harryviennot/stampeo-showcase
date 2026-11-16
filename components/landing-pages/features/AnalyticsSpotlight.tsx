@@ -29,7 +29,7 @@ function LayeredCapture() {
   );
 }
 
-/** See who keeps coming back: the layered capture beside its heading, and the plan line for the extra charts. */
+/** See who keeps coming back: the layered capture beside its heading. */
 export function AnalyticsSpotlight() {
   return (
     <LpSpotlight
@@ -38,8 +38,6 @@ export function AnalyticsSpotlight() {
       lead={FEATURES.analytics.lead}
       visual={<LayeredCapture />}
       tinted
-    >
-      <p className="mt-6 max-w-xl text-pretty text-sm text-[var(--muted-foreground)]">{FEATURES.analytics.planLine}</p>
-    </LpSpotlight>
+    />
   );
 }

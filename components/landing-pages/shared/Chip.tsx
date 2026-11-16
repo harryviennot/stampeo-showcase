@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
-import type { PlanChip as Plan } from "@/lib/landing-pages/copy/types";
 
-/** A small neutral pill: the one chip every plan label and every "coming soon" label is drawn with. */
+/** A small neutral pill. */
 export function Chip({ className = "", children }: Readonly<{ className?: string; children: ReactNode }>) {
   return (
     <span
@@ -10,9 +9,4 @@ export function Chip({ className = "", children }: Readonly<{ className?: string
       {children}
     </span>
   );
-}
-
-/** The plans a feature comes with, as a chip. */
-export function PlanChip({ plan, className = "" }: Readonly<{ plan: Plan; className?: string }>) {
-  return <Chip className={className}>{plan}</Chip>;
 }

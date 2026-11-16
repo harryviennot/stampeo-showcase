@@ -1,7 +1,6 @@
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { OUTCOMES } from "@/lib/landing-pages/copy/outcomes";
 import { LpHeading, LpSection } from "../shared/LpSection";
-import { PlanLine } from "../shared/PlanLine";
 import { QuietHoursVisual } from "./QuietHoursVisual";
 
 /** Fill a quiet hour: the page's second tinted band, a centred heading over the pair of phones. */
@@ -17,7 +16,7 @@ export function QuietHoursSpotlight() {
         <QuietHoursVisual />
       </ScrollReveal>
       <ScrollReveal delay={100} className="mt-2 flex justify-center text-center">
-        <PlanLine>{OUTCOMES.slowDays.noFees}</PlanLine>
+        <p className="mt-6 max-w-xl text-pretty text-base text-[var(--foreground)]">{OUTCOMES.slowDays.noFees}</p>
       </ScrollReveal>
     </LpSection>
   );

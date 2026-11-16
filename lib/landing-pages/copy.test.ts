@@ -12,45 +12,19 @@ import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
-import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
-import { PLAN_FACTS, analyticsHistoryLabel, availability } from "../plans/plan-facts";
+import { ALL, MODULES, PAGES, inPreviews, objectsWith, offenders } from "../testing/landing-copy";
+import { PLAN_FACTS, availability } from "../plans/plan-facts";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
-import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
 import { PREVIEW_SHARED } from "./copy/previews/shared";
 import * as shared from "./copy/shared";
-import { LANDING_PAGES } from "./pages";
+import { LANDING_PAGES, PREVIEW_SLUGS } from "./pages";
 
 /** A percentage ("34%") or a multiplier ("6×", "6X"): what only a sourced figure may print. */
 const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x×X](?![\p{L}\p{N}])/u;
-
-/** The plan labels a broadcast may sit under. */
-const BROADCAST_PLANS = ["Growth and Pro", "Pro"];
-
-/** The two lines that carry their plan on the same line in the page, printed with the label by their component. */
-const PLAN_LINES = ["FEATURES.messages.broadcast", "OUTCOMES.slowDays.noFees"];
-
-/**
- * Mentions that carry no plan label because broadcasts are about to open to every plan: the Platform
- * page lists them without a badge, and so do geolocation's "Today" column and the link to the broadcasts
- * preview that the other previews end on.
- */
-const UNBADGED = [
-  "PLATFORM.platform.dashboard.facts[2].text",
-  "GEOLOCATION_PREVIEW.status.today.facts[2].text",
-  "PREVIEW_SHARED.related.cards.promotionalCampaigns.title",
-];
-
-/** Mentions of `pattern` that no plan label qualifies and no plan line accounts for. */
-const unlabelled = (pattern: RegExp) =>
-  Object.entries(MODULES)
-    .flatMap(([name, value]) => mentions(value, pattern, name))
-    .filter(({ plan }) => !BROADCAST_PLANS.includes(plan ?? ""))
-    .map(({ path }) => path)
-    .sort();
 
 describe("what these pages may not claim (AC10)", () => {
   test("there is copy to check", () => {
@@ -76,52 +50,8 @@ describe("what these pages may not claim (AC10)", () => {
     expect(offenders(pattern)).toEqual([]);
   });
 
-  /**
-   * The mentions of levels that print no chip, and why. Everything else about levels sits under an "Every plan"
-   * chip: the Features tab, and the Outcomes section.
-   */
-  const LEVELS_WITHOUT_CHIP: Record<string, string> = {
-    "FEATURES.programTypes.title": "the headline over the three tabs; the Levels tab under it carries the chip",
-    "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
-    "PLATFORM.heroCards.stackAlt": "the hero cards' alt text",
-    "PLATFORM.programTypes.title": "Platform's program rows carry no chips",
-    "SHARED.levelCardsAlt": "the level cards' alt text",
-    "MOBILE_SCANNER_PREVIEW.counter.options[3].title": "the counter's Level button, named for the program type; the previews print no Every plan chip",
-    "PUSH_NOTIFICATIONS_PREVIEW.day.lead": "the walk from a first stamp to the next level; the previews print no Every plan chip",
-    "PUSH_NOTIFICATIONS_PREVIEW.day.nodes[3].label": "the step where the card moves up a level; the previews print no Every plan chip",
-  };
-
-  const levelMentions = () =>
-    Object.entries(MODULES)
-      .flatMap(([name, value]) => mentions(value, /\blevels?\b/i, name))
-      .filter(({ path }) => !path.endsWith(".key"));
-
-  test('levels are shown as live: every mention carries the "Every plan" chip, but the few that say why they do not', () => {
-    const chipped = levelMentions().filter(({ plan }) => plan !== undefined);
-
-    expect(chipped.length).toBeGreaterThanOrEqual(7);
-    expect(chipped.filter(({ plan }) => plan !== "Every plan")).toEqual([]);
-    expect(levelMentions().filter(({ plan }) => plan === undefined).map(({ path }) => path)).toEqual(
-      Object.keys(LEVELS_WITHOUT_CHIP),
-    );
-  });
-
-  test("the mentions that print no chip are true all the same: every plan has levels", () => {
+  test("levels are said as live, and every plan has them", () => {
     expect(availability((facts) => facts.levels > 0)).toBe("every plan");
-  });
-
-  test("the levels mention guard flags one with no chip and one with another plan", () => {
-    const copy = {
-      shown: { title: "Levels", plan: "Every plan" },
-      loose: { title: "Give regulars a level" },
-      gated: { title: "Levels", plan: "Pro" },
-    };
-
-    expect(mentions(copy, /\blevels?\b/i, "COPY")).toEqual([
-      { path: "COPY.shown.title", plan: "Every plan" },
-      { path: "COPY.loose.title", plan: undefined },
-      { path: "COPY.gated.title", plan: "Pro" },
-    ]);
   });
 
   test('"punch" only ever appears in "punch card"', () => {
@@ -136,33 +66,6 @@ describe("what these pages may not claim (AC10)", () => {
 
     expect(banners.length).toBeGreaterThan(0);
     expect(banners.filter(({ object }) => /stampeo/i.test(String(object.sender))).map((b) => b.path)).toEqual([]);
-  });
-
-  // A new unlabelled mention fails here until someone decides where its plan label goes.
-  test.each([
-    ["broadcast", /broadcast/i],
-    ["texting fees", /texting fees/i],
-  ])("%s is mentioned only under a Growth and Pro or Pro label, or on a plan line", (_what, pattern) => {
-    const loose = unlabelled(pattern).filter((path) => !UNBADGED.includes(path));
-
-    expect(loose.filter((path) => !PLAN_LINES.includes(path))).toEqual([]);
-    expect(loose).toEqual(PLAN_LINES);
-  });
-
-  test("the broadcast guard flags an unlabelled mention and accepts a labelled one", () => {
-    const copy = {
-      facts: [{ text: "Broadcasts to every card" }, { text: "Broadcasts to every card", plan: "Growth and Pro" }],
-      tile: { title: "Broadcast", plan: "Every plan" },
-      moment: { title: "Broadcast", banner: { body: "Hi" }, plan: "Pro" },
-    };
-    const plans = mentions(copy, /broadcast/i, "COPY").map(({ path, plan }) => [path, plan]);
-
-    expect(plans).toEqual([
-      ["COPY.facts[0].text", undefined],
-      ["COPY.facts[1].text", "Growth and Pro"],
-      ["COPY.tile.title", "Every plan"],
-      ["COPY.moment.title", "Pro"],
-    ]);
   });
 });
 
@@ -324,28 +227,9 @@ describe("the six previews' copy", () => {
     expect(previewLines().length).toBeGreaterThan(150);
   });
 
-  test("no chip says Every plan, and nothing is captioned Sample data", () => {
-    const chips = previewModules().flatMap(([name, value]) => objectsWith(value, ["plan"], name));
-
-    expect(chips.filter(({ object }) => object.plan === "Every plan").map(({ path }) => path)).toEqual([]);
+  test("nothing is captioned Sample data, and no hero has a label above its headline", () => {
     expect(previewLines().filter((line) => /sample data/i.test(line.value)).map((line) => line.path)).toEqual([]);
-  });
-
-  test("only the broadcasts preview states a plan for the whole page: Growth and Pro", () => {
-    const pageWide = previewModules()
-      .filter(([, value]) => typeof value === "object" && value !== null && "plan" in value)
-      .map(([name, value]) => [name, (value as { plan: string }).plan]);
-
-    expect(pageWide).toEqual([["PROMOTIONAL_CAMPAIGNS_PREVIEW", "Growth and Pro"]]);
-  });
-
-  test("a broadcast is named without a label in two places only: geolocation's Today column and the link to the broadcasts preview", () => {
-    const loose = previewModules()
-      .flatMap(([name, value]) => mentions(value, /broadcast|texting fees/i, name))
-      .filter(({ plan }) => !BROADCAST_PLANS.includes(plan ?? ""))
-      .map(({ path }) => path);
-
-    expect(loose).toEqual(["GEOLOCATION_PREVIEW.status.today.facts[2].text", "PREVIEW_SHARED.related.cards.promotionalCampaigns.title"]);
+    for (const slug of PREVIEW_SLUGS) expect(Object.keys(LANDING_PAGES[slug].hero)).not.toContain("eyebrow");
   });
 
   describe("the broadcasts preview's figures are Stampeo's own, each with its source", () => {
@@ -374,27 +258,6 @@ describe("the six previews' copy", () => {
   describe("every number is the product's, not typed from memory", () => {
     test("98 stamp icons, the library's own count", () => {
       expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
-    });
-
-    test("analytics history is each plan's own: 30 days, 90 days and 1 year, with monthly cohorts on Pro alone", () => {
-      const { plans } = ANALYTICS_PREVIEW.ladder;
-
-      expect(plans.map((plan) => `${plan.history.value} ${plan.history.unit}`)).toEqual(
-        (["starter", "growth", "pro"] as const).map((tier) => analyticsHistoryLabel(PLAN_FACTS[tier].analyticsHistoryDays)),
-      );
-      expect(plans.map((plan) => plan.history.value)).toEqual(["30", "90", "1"]);
-      expect([PLAN_FACTS.starter.analytics, PLAN_FACTS.growth.analytics, PLAN_FACTS.pro.analytics]).toEqual(["basic", "basic", "advanced"]);
-    });
-
-    test("the plans table gives Growth its monthly number and Pro no limit and scheduling, as PLAN_FACTS has them", () => {
-      const [growth, pro] = PROMOTIONAL_CAMPAIGNS_PREVIEW.plans.cells;
-
-      expect(growth.body).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} broadcasts a month`);
-      expect(PLAN_FACTS.pro.broadcastsPerMonth).toBe("unlimited");
-      expect(PLAN_FACTS.pro.scheduledBroadcasts).toBe(true);
-      expect(PLAN_FACTS.growth.scheduledBroadcasts).toBe(false);
-      expect(pro.body).toMatch(/^Unlimited, scheduled/);
-      expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items[0].answer).toContain(`${PLAN_FACTS.growth.broadcastsPerMonth} broadcasts a month`);
     });
   });
 
@@ -448,13 +311,12 @@ describe("the geolocation preview says it is coming (AC12)", () => {
    * new line fails here until it is written in the future or listed with its reason.
    */
   const NOT_FUTURE: Array<[path: RegExp, why: string]> = [
-    [/^hero\.eyebrow$/, "a label: the feature's name"],
     [/^hero\.accent$/, "words of the headline, which is future"],
     [/^band\.accent$/, "words of the closing line, an instruction"],
     [/^banner\./, "the sample café's own notification: the owner's words, not a claim about the product"],
     [/^status\.(?:eyebrow|title)$/, "the section's label and title, which name the two columns"],
     [/^status\.today\./, "the Today column: what is live is said as live"],
-    [/^status\.soon\.(?:plan|facts)/, "the Pro chip and noun phrases listed under the Coming soon heading"],
+    [/^status\.soon\.facts/, "noun phrases listed under the Coming soon heading"],
     [/^how\.cells\[0\]\.body$/, "a noun phrase naming where the owner adds the address"],
     [/^privacy\.eyebrow$/, "a label"],
     [/^faq\.title$/, "a label"],
@@ -488,11 +350,11 @@ describe("the geolocation preview says it is coming (AC12)", () => {
     expect(Object.entries(STEP_NAMES).filter(([path, name]) => text(path) !== name)).toEqual([]);
   });
 
-  test("the page's headline says soon, and its chip says coming soon on Pro", () => {
+  test("the headline says soon, the sub says Coming soon and no plan, and no label sits above the headline", () => {
     expect(GEOLOCATION_PREVIEW.hero.h1).toMatch(/^Soon,/);
-    expect(GEOLOCATION_PREVIEW.heroChip).toBe("Coming soon · Pro");
+    expect(GEOLOCATION_PREVIEW.hero.sub).toMatch(/^Coming soon\b/);
+    expect(Object.keys(GEOLOCATION_PREVIEW.hero)).not.toContain("eyebrow");
     expect(PLAN_FACTS.pro.geofencing).toBe("coming_soon");
-    expect(PLAN_FACTS.growth.geofencing).toBe(false);
   });
 
   test("what is live today is the only place a wallet is named", () => {

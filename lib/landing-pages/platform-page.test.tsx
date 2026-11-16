@@ -204,7 +204,7 @@ describe("how it works: Create, Share, Stamp", () => {
 describe("program types: one row each, all open until a visitor points at one (AC21)", () => {
   const VISUALS = { stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> };
 
-  test("every row is open in the server markup, with its label, title, text and card, and no plan chip", () => {
+  test("every row is open in the server markup, with its label, title, text and card", () => {
     const html = renderEn(<ProgramTypeRows visuals={VISUALS} />);
     const text = textOf(html);
 
@@ -308,11 +308,8 @@ describe("the platform: a dashboard for you, a free scanner for your team", () =
     expect(pane(other)?.attrs).toContain("opacity-0");
   });
 
-  test("everything that is a Growth and Pro thing carries its chip, and the links go to the feature pages", () => {
-    const planned = [...PLATFORM.platform.dashboard.facts, ...PLATFORM.platform.scanner.facts].filter((fact) => fact.plan);
-
-    expect(planned.length).toBeGreaterThan(0);
-    expect(textOf(html()).match(/Growth and Pro/g)).toHaveLength(planned.length);
+  test("the facts name no plan, and the links go to the feature pages", () => {
+    expect(textOf(html())).not.toMatch(/Growth|Starter|\bPro\b|Every plan/);
     expect(html()).toMatch(/href="[^"]*\/features\/analytics"/);
     expect(html()).toMatch(/href="[^"]*\/features\/mobile-scanner"/);
   });

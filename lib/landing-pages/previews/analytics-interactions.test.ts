@@ -1,7 +1,7 @@
 /**
  * What a visitor can do on the analytics preview, as the pure rules behind it: flipping the six blind-spot
- * cards (all at once from the control, or one at a time by tapping), the one automatic flip that shows a
- * scroller the answers, and which plan shows what on the ladder. What each section renders is in
+ * cards (all at once from the control, or one at a time by tapping), and the one automatic flip that shows a
+ * scroller the answers. What each section renders is in
  * `analytics.test.tsx`.
  */
 
@@ -18,8 +18,6 @@ import {
   setAll,
 } from "@/lib/landing-pages/previews/analytics-flip";
 import { fakeScheduler } from "../../testing/fake-scheduler";
-import { ladderView } from "@/lib/landing-pages/previews/analytics-ladder-view";
-import { PLAN_FACTS, TIERS, analyticsHistoryLabel } from "@/lib/plans/plan-facts";
 import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
 
 const COUNT = ANALYTICS_PREVIEW.blindSpots.cards.length;
@@ -171,37 +169,5 @@ describe("the automatic flip: a scroller sees the punchline and then the answers
       expect(flips()).toBe(0);
       expect(scheduler.pending).toBe(0);
     });
-  });
-});
-
-describe("the plan ladder: which plan shows what", () => {
-  test.each([
-    ["starter", { layer: "sentence", cohorts: false, location: false }],
-    ["growth", { layer: "chart", cohorts: false, location: false }],
-    ["pro", { layer: "chart", cohorts: true, location: true }],
-  ] as const)("%s", (tier, view) => {
-    expect(ladderView(tier)).toEqual(view);
-  });
-
-  test.each(TIERS)("%s: the view is what PLAN_FACTS says the plan has", (tier) => {
-    const facts = PLAN_FACTS[tier];
-
-    expect(ladderView(tier)).toEqual({
-      layer: facts.analyticsCharts ? "chart" : "sentence",
-      cohorts: facts.analytics === "advanced",
-      location: facts.locationAnalytics,
-    });
-  });
-
-  test("the plan tabs run Starter, Growth, Pro, each with the history of its own plan", () => {
-    const { plans } = ANALYTICS_PREVIEW.ladder;
-
-    expect(plans.map((plan) => plan.label)).toEqual(["Starter", "Growth", "Pro"]);
-    plans.forEach((plan, index) => {
-      const [value, unit] = analyticsHistoryLabel(PLAN_FACTS[TIERS[index]].analyticsHistoryDays).split(" ");
-
-      expect(plan.history).toEqual({ value, unit });
-    });
-    expect(plans.map((plan) => `${plan.history.value} ${plan.history.unit}`)).toEqual(["30 days", "90 days", "1 year"]);
   });
 });

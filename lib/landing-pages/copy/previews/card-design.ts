@@ -1,4 +1,4 @@
-import type { BandCopy, FaqItem, PageMeta, PreviewHeroCopy, RowCopy, SectionCopy, Tile } from "../types";
+import type { BandCopy, FaqItem, HeroCopy, PageMeta, RowCopy, SectionCopy, Tile } from "../types";
 
 /** The card design preview: can the card look like my shop, and can I try the designer before I sign up. */
 export const CARD_DESIGN_PREVIEW = {
@@ -8,11 +8,10 @@ export const CARD_DESIGN_PREVIEW = {
       "Design a loyalty card with your logo, your colors and your own stamps, in Apple Wallet and Google Wallet. Try the designer first. Free trial, cancel anytime.",
   } satisfies PageMeta,
   hero: {
-    eyebrow: "Card design",
     h1: "A loyalty card that looks like your shop.",
     accent: "your shop.",
     sub: "Your logo, your colors and your own stamps, in Apple Wallet and Google Wallet.",
-  } satisfies PreviewHeroCopy,
+  } satisfies HeroCopy,
   /** The hero's second button, and the one under the figures: both jump to the designer. */
   designerLink: "Try the designer",
   /** The hero's card re-skins itself across six shops; one caption names each, in the card's order. */

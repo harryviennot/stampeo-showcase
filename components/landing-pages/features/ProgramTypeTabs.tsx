@@ -5,7 +5,6 @@ import { Segmented } from "@/components/ui/Segmented";
 import { PROGRAM_SWITCH_LINE, PROGRAM_TABS_LABEL, PROGRAM_TYPES } from "@/lib/landing-pages/copy/program-types";
 import type { ProgramType } from "@/lib/landing-pages/copy/types";
 import { FactList } from "../shared/FactList";
-import { PlanChip } from "../shared/PlanChip";
 import { LpTrialButton } from "../shared/LpTrialButton";
 
 type Key = ProgramType["key"];
@@ -53,10 +52,7 @@ export function ProgramTypeTabs({
         <div className="grid">
           {PROGRAM_TYPES.map((type) => (
             <div key={type.key} data-panel={type.key} role="tabpanel" className={panelClass(type.key === active)}>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <h3 className="text-h3">{type.title}</h3>
-                <PlanChip plan={type.plan} />
-              </div>
+              <h3 className="text-h3">{type.title}</h3>
               <p className="mt-3 max-w-xl text-pretty text-base text-[var(--muted-foreground)]">{type.body}</p>
               <FactList facts={type.facts} className="mt-5" />
             </div>

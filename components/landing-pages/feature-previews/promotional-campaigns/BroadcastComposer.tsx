@@ -9,7 +9,6 @@ import { browserScheduler } from "@/lib/landing-pages/previews/scheduler";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { STAMPED_STAGE } from "../../platform/classes";
 import { PhoneCrop } from "../../shared/PhoneCrop";
-import { Chip } from "../../shared/PlanChip";
 import { lpBanner } from "../../shared/banner";
 
 const { card } = COPY.composer;
@@ -20,23 +19,21 @@ const MESSAGE_LABEL = "Message";
 
 const LABEL = "text-[13px] font-semibold text-[var(--muted-foreground)]";
 
-/** A choice in a radio group: at least 56px tall, ringed in ink when picked. A choice that needs Pro is shown but cannot be picked. */
+/** A choice in a radio group: at least 56px tall, ringed in ink when picked. */
 function Option({
   checked,
-  disabled = false,
   onSelect,
   children,
-}: Readonly<{ checked: boolean; disabled?: boolean; onSelect?: () => void; children: ReactNode }>) {
+}: Readonly<{ checked: boolean; onSelect: () => void; children: ReactNode }>) {
   return (
     <button
       type="button"
       role="radio"
       aria-checked={checked}
-      disabled={disabled}
       onClick={onSelect}
       className={`flex min-h-14 w-full items-center gap-3 rounded-xl border-[1.5px] bg-white px-4 text-left text-[15px] font-semibold transition-colors duration-200 ${
         checked ? "border-[var(--near-black)] text-[var(--foreground)]" : "border-[var(--border)] text-[var(--muted-foreground)]"
-      } ${disabled ? "opacity-70" : ""}`}
+      }`}
     >
       <span
         aria-hidden
@@ -154,25 +151,9 @@ export function BroadcastComposer() {
               >
                 {card.audience.filters[0].label}
               </button>
-              <button
-                type="button"
-                disabled
-                className="inline-flex h-11 items-center gap-2 rounded-full border-[1.5px] border-[var(--border)] bg-white px-4 text-[15px] font-semibold text-[var(--muted-foreground)] opacity-70"
-              >
-                {card.audience.filters[1].label}
-                <Chip>{card.audience.filters[1].plan}</Chip>
-              </button>
             </div>
           </div>
         </div>
-
-        <Group title={card.schedule.title}>
-          <Option checked>{card.schedule.now}</Option>
-          <Option checked={false} disabled>
-            {card.schedule.later}
-            <Chip>{card.schedule.plan}</Chip>
-          </Option>
-        </Group>
 
         <button
           type="button"

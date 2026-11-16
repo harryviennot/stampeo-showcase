@@ -1,12 +1,8 @@
-import { PLAN_FACTS } from "../../../plans/plan-facts";
 import { SAMPLE_BUSINESS } from "../shared";
-import type { Banner, BandCopy, FaqItem, Fact, PageMeta, PlanChip, PreviewHeroCopy, Tile } from "../types";
+import type { Banner, BandCopy, FaqItem, Fact, HeroCopy, PageMeta } from "../types";
 
 /** Where the two measured figures come from: the businesses on Stampeo. */
 const FIGURES_SOURCE = "Stampeo data, 86 businesses, February to October 2026";
-
-/** Growth's monthly allowance, from the plan facts: the copy never types it. */
-const growthMonthly = PLAN_FACTS.growth.broadcastsPerMonth;
 
 /** The broadcast the hero's lock screen and the first idea show: the approved Outcomes copy. */
 const HAPPY_HOUR: Banner = {
@@ -19,27 +15,21 @@ interface IdeaCopy {
   key: string;
   chip: string;
   body: string;
-  plan?: PlanChip;
   banner: Banner;
 }
 
-/**
- * The broadcasts preview. `plan` at the top is the plan availability of the whole page, which every
- * mention under it inherits; a row or cell that only Pro has says so with its own chip.
- */
+/** The broadcasts preview: one message written once, to every card. */
 export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
-  plan: "Growth and Pro" satisfies PlanChip,
   meta: {
     title: "Wallet broadcasts for loyalty cards | Stampeo",
     description:
       "Send one message to every loyalty card in Apple Wallet and Google Wallet, with no texting fees. Free trial, cancel anytime.",
   } satisfies PageMeta,
   hero: {
-    eyebrow: "Broadcasts",
     h1: "Bring customers back with one message.",
     accent: "one message.",
     sub: "A message to every card in Apple Wallet and Google Wallet. No texting fees.",
-  } satisfies PreviewHeroCopy,
+  } satisfies HeroCopy,
   /** The lock screen in the hero, over the stamp banner. */
   heroBanner: HAPPY_HOUR,
   numbers: {
@@ -73,12 +63,8 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
         title: "Who will receive this?",
         all: "All enrolled customers",
         filtered: "Filtered audience",
-        filters: [
-          { label: "Joined in the last month" },
-          { label: "Inactive for a month", plan: "Pro" },
-        ],
+        filters: [{ label: "Joined in the last month" }],
       },
-      schedule: { title: "Schedule", now: "Send now", later: "Schedule for later", plan: "Pro" },
       send: "Send now",
       sendAgain: "Send again",
       delivered: "Delivered",
@@ -97,16 +83,14 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       },
       {
         key: "we-miss-you",
-        body: "Sent only to customers who haven't been in for a month.",
+        body: "A friendly nudge for customers you haven't seen in a while.",
         chip: "Gone quiet",
-        plan: "Pro",
         banner: { sender: SAMPLE_BUSINESS, body: "We haven't seen you in a while. A free cookie is waiting for you." },
       },
       {
         key: "close",
-        body: "A nudge to customers a stamp or two from their reward.",
+        body: "A nudge to get customers to their next reward.",
         chip: "Almost there",
-        plan: "Pro",
         banner: { sender: SAMPLE_BUSINESS, body: "One more stamp and your next coffee is on us." },
       },
       {
@@ -137,22 +121,13 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       { label: "Wallet uninstalled", value: "22" },
     ],
   },
-  plans: {
-    eyebrow: "Plans",
-    title: "What each plan can send.",
-    lead: "Broadcasts come with Growth and Pro, with no texting fees on either.",
-    cells: [
-      { title: "Growth", body: `${growthMonthly} broadcasts a month, sent right away, to everyone or by when they joined.` },
-      { title: "Pro", body: "Unlimited, scheduled for any date and time, with full targeting." },
-    ] satisfies Tile[],
-    link: "Compare plans",
-  },
   faq: {
     title: "Questions we hear a lot",
     items: [
       {
         question: "How much do broadcasts cost?",
-        answer: `Nothing extra. Broadcasts come with the Growth plan, ${growthMonthly} broadcasts a month, and the Pro plan, unlimited. There is no per-message fee, unlike texting, where every message is billed.`,
+        answer:
+          "Nothing extra per message, unlike texting, where every message is billed. Your plan sets how many broadcasts you can send each month (see pricing).",
       },
       {
         question: "Do customers need to install an app?",
@@ -160,14 +135,14 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
           "No. Customers add a standard Apple Wallet or Google Wallet pass, which is the loyalty card itself. Wallet notifications are built into both, so there is no store download and no account.",
       },
       {
-        question: "Can I schedule broadcasts in advance?",
+        question: "How fast does a broadcast arrive?",
         answer:
-          'Yes, on the Pro plan. Pick a local date and time, and the send goes out at the right moment in your business hours. The Growth plan sends right away when you hit "Send", which fits most flash promotions.',
+          "Write it, tap Send, and it reaches your customers' lock screens in seconds, which suits a flash promotion.",
       },
       {
-        question: "Can I target specific customers?",
+        question: "Where does the message show up?",
         answer:
-          "Yes. On Growth you can filter by when customers joined. On Pro you can also target by stamp count, last redemption and how long it has been since their last visit, so each broadcast reaches only the customers it is meant for.",
+          "On your customer's lock screen, as a notification from your business's card in their wallet. There is nothing to download and no number to collect.",
       },
       {
         question: "Does it work with both Apple Wallet and Google Wallet?",

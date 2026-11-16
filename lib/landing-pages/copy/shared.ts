@@ -7,13 +7,13 @@ export const SAMPLE_BUSINESS = "Aurevo";
 // `tier_upgrade` in backend/app/services/programs/notification_defaults.py, with the sample's numbers and level
 // filled in. The wording has to follow that file.
 
-/** Stampeo's default stamp notification (every plan), as Aurevo's 5th of 8 stamps. */
+/** Stampeo's default stamp notification, as Aurevo's 5th of 8 stamps. */
 export const STAMP_BANNER: Banner = {
   sender: SAMPLE_BUSINESS,
   body: "Stamp collected! You have 5 of 8 stamps.",
 };
 
-/** Stampeo's default reward notification (every plan). */
+/** Stampeo's default reward notification. */
 export const REWARD_BANNER: Banner = {
   sender: SAMPLE_BUSINESS,
   body: "You unlocked your reward! Come claim it.",
@@ -22,7 +22,7 @@ export const REWARD_BANNER: Banner = {
 /** The fictional dry cleaner the level cards belong to (`WRENFOLD` in components/landing-pages/shared/samples.ts): preset icons, so its look changes per level. */
 export const LEVELS_BUSINESS = "Wrenfold";
 
-/** Stampeo's default level-up notification (every plan), with no level gift. */
+/** Stampeo's default level-up notification, with no level gift. */
 export const LEVEL_UP_BANNER: Banner = {
   sender: LEVELS_BUSINESS,
   body: "You've reached Silver! Your card has a new look.",
@@ -41,10 +41,6 @@ export const SHARED = {
     lead: "Add a sample card to your wallet, stamp it, and see what your customers see.",
   } satisfies SectionCopy,
   sampleData: "Sample data",
-  /** Said under the full dashboard capture, which shows charts that come with Growth and Pro. */
-  dashboardPlans: "Some charts come with Growth and Pro.",
-  /** The plans a broadcast comes with; printed wherever a broadcast is mentioned. */
-  broadcastPlans: "Growth and Pro",
   /** The browser bar over the desktop dashboard capture. */
   dashboardUrl: "app.stampeo.app",
   /** Alt text of the level cards: three cards of one shop, one per level. */

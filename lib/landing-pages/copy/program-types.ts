@@ -9,7 +9,6 @@ export const PROGRAM_TYPES: ProgramType[] = [
     title: "Stamps",
     body: "Every visit adds a stamp, and a full card earns the reward. Staff can add several stamps in one scan.",
     facts: [{ text: "Extra stamps can roll over to the next reward" }, { text: "A welcome gift to start them off" }],
-    plan: "Every plan",
   },
   {
     key: "points",
@@ -17,8 +16,7 @@ export const PROGRAM_TYPES: ProgramType[] = [
     eyebrow: "Reward what they spend",
     title: "Points",
     body: "Staff type in what they spent and the points add up. Customers pick from your reward menu, in any order.",
-    facts: [{ text: "Points never expire" }, { text: "Bonus points on bigger baskets", plan: "Growth and Pro" }],
-    plan: "Every plan",
+    facts: [{ text: "Points never expire" }],
   },
   {
     key: "levels",
@@ -27,7 +25,6 @@ export const PROGRAM_TYPES: ProgramType[] = [
     title: "Levels",
     body: "Up to 5 levels, like Bronze, Silver and Gold. Customers move up as they keep coming back, and their card takes on a new look.",
     facts: [{ text: "Perks for each level, shown to staff at the register" }, { text: "A gift when they move up" }],
-    plan: "Every plan",
   },
 ];
 

@@ -1,4 +1,4 @@
-import type { BandCopy, Fact, PageMeta, PreviewHeroCopy, Tile } from "../types";
+import type { BandCopy, Fact, HeroCopy, PageMeta, Tile } from "../types";
 
 /** The scanner preview: staff stamp a card in one scan, from a phone you already own. */
 export const MOBILE_SCANNER_PREVIEW = {
@@ -8,11 +8,10 @@ export const MOBILE_SCANNER_PREVIEW = {
       "Stamp a digital loyalty card with the free Scanner app for iPhone and Android, or any phone's browser. No new hardware. Free trial, cancel anytime.",
   } satisfies PageMeta,
   hero: {
-    eyebrow: "Scanner app",
     h1: "One scan, one stamp, from any phone.",
     accent: "from any phone.",
     sub: "A free app for iPhone and Android, or any phone's browser. No new hardware.",
-  } satisfies PreviewHeroCopy,
+  } satisfies HeroCopy,
   counter: {
     eyebrow: "At the counter",
     title: "One screen for every kind of visit.",
@@ -28,7 +27,7 @@ export const MOBILE_SCANNER_PREVIEW = {
   ways: {
     eyebrow: "Two ways to scan",
     title: "An app, or just a browser.",
-    lead: "Both are free on every plan. Use whatever phone or tablet is at the counter.",
+    lead: "Both are free. Use whatever phone or tablet is at the counter.",
     cells: [
       { title: "Scanner app", body: "On the App Store and Google Play. Sign in with Google or Apple in one tap." },
       { title: "Web scanner", body: "Open scan.stampeo.app in any phone or tablet browser. Nothing to install." },
@@ -40,11 +39,7 @@ export const MOBILE_SCANNER_PREVIEW = {
     title: "From a code to the counter.",
     lead: "Staff join with a 6-character code and only ever see the scanner.",
     frames: ["Copy your code", "They type it in", "Ready to scan"],
-    facts: [
-      { text: "Let a scan past a daily limit, under your name", plan: "Growth and Pro" },
-      { text: "Unlimited team members", plan: "Growth and Pro" },
-      { text: "Every scan carries the name of who made it" },
-    ] satisfies Fact[],
+    facts: [{ text: "Every scan carries the name of who made it" }] satisfies Fact[],
   },
   demo: {
     eyebrow: "Live demo",

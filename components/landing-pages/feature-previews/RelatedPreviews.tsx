@@ -12,7 +12,6 @@ import { MarketLink } from "@/components/market/MarketLink";
 import { PREVIEW_SHARED } from "@/lib/landing-pages/copy/previews/shared";
 import { LANDING_PAGES, type PreviewSlug } from "@/lib/landing-pages/pages";
 import { marketPath } from "@/lib/markets";
-import { STAMPED_CARD } from "../platform/classes";
 import { IconTile } from "../shared/IconTile";
 import { LpSection } from "../shared/LpSection";
 
@@ -30,7 +29,7 @@ const CARDS: Record<PreviewSlug, { card: Card; Icon: ComponentType<{ size?: numb
 
 /**
  * The links a feature preview closes with: its three siblings (from the
- * registry) as stamped tiles that lift on hover, each wholly a tap target at
+ * registry) as white cards, each wholly a tap target at
  * least 56px tall. They lead to the previews, not to the live feature pages, so
  * the set can be walked. A page can set its own `title`; there is no label above it.
  */
@@ -48,9 +47,9 @@ export function RelatedPreviews({ slug, title }: Readonly<{ slug: PreviewSlug; t
               <MarketLink
                 market="us"
                 href={marketPath("us", `/landing-pages/${sibling}`)}
-                className={`group flex min-h-14 items-center gap-4 p-4 card-stamp-lift ${STAMPED_CARD}`}
+                className="group flex min-h-14 items-center gap-4 rounded-2xl bg-white p-4 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_16px_40px_-24px_rgba(25,18,16,0.18)] ring-1 ring-black/5 transition-shadow hover:shadow-[0_2px_4px_rgba(25,18,16,0.06),0_24px_48px_-24px_rgba(25,18,16,0.26)]"
               >
-                <IconTile tone="brand">
+                <IconTile tone="subtle">
                   <Icon size={22} weight="duotone" aria-hidden />
                 </IconTile>
                 <span className="min-w-0 flex-1">

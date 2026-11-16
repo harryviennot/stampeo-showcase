@@ -1,5 +1,5 @@
 import { LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, STAMP_BANNER } from "../shared";
-import type { Banner, BandCopy, PageMeta, PreviewHeroCopy } from "../types";
+import type { Banner, BandCopy, HeroCopy, PageMeta } from "../types";
 
 /** What a customer sees when they claim a reward: the English default of `reward_redeemed` in the backend's notification defaults. */
 const REDEEMED_BANNER: Banner = { sender: SAMPLE_BUSINESS, body: "Reward redeemed. Enjoy!" };
@@ -15,11 +15,10 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
       "Every stamp and every reward lands on your customer's lock screen, in Apple Wallet and Google Wallet. No app, no phone number. Free trial, cancel anytime.",
   } satisfies PageMeta,
   hero: {
-    eyebrow: "Notifications",
     h1: "Every stamp lands on their lock screen.",
     accent: "their lock screen.",
     sub: "Automatic notifications in Apple Wallet and Google Wallet. No app, no phone number.",
-  } satisfies PreviewHeroCopy,
+  } satisfies HeroCopy,
   /** One customer's card over several visits: each step sends its own default message. */
   day: {
     eyebrow: "On their lock screen",
@@ -51,9 +50,9 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
   editor: {
     eyebrow: "In your voice",
     title: "Use our wording, or write your own.",
-    lead: "Ready-made messages on every plan. Growth and Pro let you rewrite them.",
-    /** The two-way control over the message; "Your words" is the one that comes with Growth and Pro. */
-    toggle: { label: "Message wording", ready: "Ready-made", own: "Your words", plan: "Growth and Pro" },
+    lead: "Ready-made messages for every stamp and reward, or your own words.",
+    /** The two-way control over the message. */
+    toggle: { label: "Message wording", ready: "Ready-made", own: "Your words" },
     messageLabel: "Message",
     previewLabel: "Preview",
     ready: { text: STAMP_BANNER.body },
@@ -67,6 +66,6 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
   band: {
     title: "Keep every customer in the loop.",
     accent: "in the loop.",
-    sub: "Notifications start with your first stamp, on every plan.",
+    sub: "Notifications start with your first stamp.",
   } satisfies BandCopy,
 } as const;

@@ -33,7 +33,6 @@ export default function GeolocationPreviewPage() {
       <PreviewHero
         slug="platform/geolocation"
         secondary={null}
-        eyebrowChip={GEOLOCATION_PREVIEW.heroChip}
         visual={
           <ScrollReveal className="mx-auto w-full max-w-[500px] xl:max-w-[600px]">
             <GeofencingHeroAnimation sender={sender} icon={lpBanner({ sender, body }).icon} title={title} body={body}>

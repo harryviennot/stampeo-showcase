@@ -16,7 +16,6 @@ import {
   type WordingPart,
 } from "@/lib/landing-pages/previews/wording-editor";
 import { STAMPED_STAGE } from "../../platform/classes";
-import { PlanChip } from "../../shared/PlanChip";
 import { LockScreenSlice } from "./LockScreenSlice";
 
 const LABEL = "text-[13px] font-semibold text-[var(--muted-foreground)]";
@@ -102,10 +101,7 @@ export function WordingEditor() {
     <div className={`mx-auto max-w-[1040px] p-5 text-left sm:p-8 lg:p-10 ${STAMPED_STAGE}`}>
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-8">
         <div className="lg:col-span-7">
-          <div className="flex min-h-7 items-center justify-between gap-3">
-            <p className={LABEL}>{toggle.label}</p>
-            {view.planChip && <PlanChip plan={toggle.plan} />}
-          </div>
+          <p className={LABEL}>{toggle.label}</p>
           <Segmented
             size="lg"
             ariaLabel={toggle.label}

@@ -4,9 +4,7 @@ import { HABITS, READY } from "@/components/landing-pages/feature-previews/analy
 
 /**
  * The sample café's answers, read from the numbers its dashboard draws: Platform's `ANALYTICS` for visits, new
- * customers and the return rate, the habits chart for the regulars and the progress chart for the rewards. Each
- * answer is something every plan's dashboard shows, a number or Starter's one-line sentence, so a card that
- * prints one is true on every plan.
+ * customers and the return rate, the habits chart for the regulars and the progress chart for the rewards.
  */
 
 type BlindSpotKey = (typeof ANALYTICS_PREVIEW.blindSpots.cards)[number]["key"];
@@ -30,18 +28,3 @@ export const ANSWERS: Record<BlindSpotKey, { figure?: string; trend?: string }> 
 
 /** The week-on-week trend the performance email prints under its stamps: the sample café's own visits trend. */
 export const EMAIL_TREND = trend(ANALYTICS.visits.change);
-
-/** Starter's one-line sentence for a question (web `analytics.teaser.*`): the words around the bold part, which is the answer. */
-interface Sentence {
-  before: string;
-  bold: string;
-  after: string;
-}
-
-const busiest = ANALYTICS_PREVIEW.blindSpots.cards.find((card) => card.key === "busiest");
-
-export const STARTER_SENTENCES: Record<"busiest" | "habits" | "rewards", Sentence> = {
-  busiest: { before: "Your busiest time: ", bold: `${busiest?.figure}, ${busiest?.line}`, after: "" },
-  habits: { before: "", bold: `${REGULARS_PERCENT}%`, after: " of the customers you saw come at least every 2 weeks" },
-  rewards: { before: "", bold: `${READY} customers`, after: " have a reward waiting" },
-};

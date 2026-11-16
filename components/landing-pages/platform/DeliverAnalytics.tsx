@@ -5,8 +5,7 @@ import { PLATFORM } from "@/lib/landing-pages/copy/platform";
  * Aurevo's analytics, drawn: the figures are illustrative and match the
  * dashboard captures (90 days: 2,770 visits up 17%, 460 new customers up 11%,
  * 83% of the visits from returning customers, a 61% 30-day return rate up 2
- * points). Every plan has all of them. The feature previews' drawn dashboards
- * read these same numbers.
+ * points). The feature previews' drawn dashboards read these same numbers.
  */
 export const ANALYTICS = {
   visits: { total: 2770, change: 17 },

@@ -2,19 +2,17 @@
  * The analytics preview (`/us/landing-pages/platform/analytics`): what a
  * visitor sees in each section below the hero. Every section is rendered under
  * the English catalogs; the hero, the headers, the order and the tap targets of
- * all six previews are in `pages.test.tsx`. How the cards flip and which plan shows
- * what are the pure rules in `analytics-interactions.test.ts`.
+ * all six previews are in `pages.test.tsx`. How the cards flip is the pure rules in
+ * `analytics-interactions.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
 import { ActivitySection } from "@/components/landing-pages/feature-previews/analytics/ActivitySection";
 import { CustomersMini } from "@/components/landing-pages/feature-previews/analytics/CustomersMini";
 import { GlanceSection } from "@/components/landing-pages/feature-previews/analytics/GlanceSection";
 import { GlanceTiles } from "@/components/landing-pages/feature-previews/analytics/GlanceTiles";
 import { BlindSpotsSection } from "@/components/landing-pages/feature-previews/analytics/BlindSpotsSection";
 import { CohortsMini, LocationMini } from "@/components/landing-pages/feature-previews/analytics/CohortsMini";
-import { LadderSection } from "@/components/landing-pages/feature-previews/analytics/LadderSection";
 import {
   BusiestMini,
   HABITS,
@@ -23,24 +21,18 @@ import {
   RewardProgressMini,
 } from "@/components/landing-pages/feature-previews/analytics/QuestionMinis";
 import { RecapSection } from "@/components/landing-pages/feature-previews/analytics/RecapSection";
-import { MINI } from "@/components/landing-pages/feature-previews/MiniFrame";
 import { ANALYTICS, DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
 import { PLAN_FACTS, TIERS } from "../../plans/plan-facts";
-import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
-import { smallestLabelPx, stackZooms } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
-import { ladderView } from "./analytics-ladder-view";
 import { OUTCOMES } from "../copy/outcomes";
-
-const FOLDER = join(COMPONENTS_DIR, "feature-previews", "analytics");
 
 describe("blind spots: six questions a paper card cannot answer, and what Stampeo answers", () => {
   const cardOf = (html: string, key: string) => html.match(new RegExp(`<li\\b[^>]*data-card="${key}"[\\s\\S]*?</li>`))?.[0] ?? "";
   const faceTag = (card: string, face: "paper" | "stampeo") => card.match(new RegExp(`<[a-z]+\\b[^>]*data-face="${face}"[^>]*>`))?.[0] ?? "";
   const returning = Math.round((100 * (HABITS[0].count + HABITS[1].count)) / HABITS.reduce((sum, habit) => sum + habit.count, 0));
 
-  /** What each card answers, from the sample café's own figures: the dashboard's numbers and its Starter sentences. */
+  /** What each card answers, from the sample café's own figures: the dashboard's numbers. */
   const ANSWERS = {
     working: [ANALYTICS.visits.total.toLocaleString("en-US"), `▲${ANALYTICS.visits.change}%`],
     return: [`${ANALYTICS.returnRate.percent}%`],
@@ -91,16 +83,9 @@ describe("blind spots: six questions a paper card cannot answer, and what Stampe
     expect(textOf(await render(<DeliverAnalytics />))).toContain(`${ANALYTICS.returnRate.percent}%`);
   });
 
-  test("every answer is one Starter's own dashboard gives: a key number of basic analytics, or the sentence its ladder row prints", async () => {
+  test("every answer is a key number of the dashboard's basic analytics: no plan, no cohort and no chart is named", async () => {
     const answers = textOf(await render(<BlindSpotsSection />));
-    const starter = textOf(await render(<LadderSection />));
-    const busiest = COPY.blindSpots.cards.find((card) => card.key === "busiest");
 
-    expect(PLAN_FACTS.starter.analytics).toBe("basic");
-    expect(ladderView("starter").layer).toBe("sentence");
-    expect(starter).toContain(`${busiest?.figure}, ${busiest?.line}`);
-    expect(starter).toContain(`${ANSWERS.regulars[0]}| of the customers you saw come at least every 2 weeks`);
-    expect(starter).toContain(`${ANSWERS.rewards[0]} customers| have a reward waiting`);
     for (const key of ["working", "return", "new"] as const) expect(answers).toContain(ANSWERS[key][0]);
     expect(answers).not.toMatch(/\b(?:Starter|Growth|Pro|Every plan)\b|cohort|chart/i);
   });
@@ -136,7 +121,7 @@ describe("blind spots: six questions a paper card cannot answer, and what Stampe
   });
 });
 
-describe("glance: the every-plan numbers, drawn as the dashboard draws them", () => {
+describe("glance: the numbers from day one, drawn as the dashboard draws them", () => {
   test("a white surface with no tabs: one thing to read", async () => {
     const html = await render(<GlanceSection />);
 
@@ -164,92 +149,14 @@ describe("glance: the every-plan numbers, drawn as the dashboard draws them", ()
     expect(preview).toEqual(figures(textOf(await render(<DeliverAnalytics />))));
   });
 
-  test("the facts follow the tiles; the lead says they are on every plan, and no fact carries a chip of its own", async () => {
+  test("the facts follow the tiles", async () => {
     const html = await render(<GlanceSection />);
 
     expectInOrder(html, [COPY.glance.tab.title, ...COPY.glance.tab.facts.map((fact) => fact.text)]);
-    expect(COPY.glance.tab.facts.filter((fact) => "plan" in fact)).toEqual([]);
   });
 });
 
-describe("ladder: the same three questions, and what each plan sees of them", () => {
-  const rowsOf = (html: string) => html.match(/<li\b[^>]*data-row="[a-z]+"[\s\S]*?<\/li>/g) ?? [];
-  const layer = (row: string, kind: "sentence" | "chart") => row.match(new RegExp(`<div\\b[^>]*data-layer="${kind}"[^>]*>`))?.[0] ?? "";
-
-  test("it opens on Starter: its tab is chosen and its history is 30 days, written by hand", async () => {
-    const html = await render(<LadderSection />);
-    const { plans, toggleLabel, historyLabel } = COPY.ladder;
-
-    expect(html).toContain(`role="tablist" aria-label="${toggleLabel}"`);
-    expect(html).toMatch(/role="tab"[^>]*aria-selected="true"[^>]*>Starter</);
-    expect(html).toMatch(/role="tab"[^>]*aria-selected="false"[^>]*>Growth</);
-    expect(html).toMatch(/role="tab"[^>]*aria-selected="false"[^>]*>Pro</);
-    expectInOrder(html, [...plans.map((plan) => plan.label), plans[0].history.value, plans[0].history.unit, historyLabel]);
-    expect(html).toMatch(/class="[^"]*\bink-figure\b[^"]*"[^>]*>30</);
-  });
-
-  test("the three questions are Busiest times, How often they come and Reward progress, in that order", async () => {
-    const html = await render(<LadderSection />);
-
-    expect(rowsOf(html)).toHaveLength(COPY.ladder.rows.length);
-    expectInOrder(html, COPY.ladder.rows.map((row) => row.title));
-  });
-
-  test("Starter answers each question in the dashboard's own sentence, then says the chart is on Growth and Pro", async () => {
-    const rows = rowsOf(await render(<LadderSection />));
-    const SENTENCES = [
-      ["Your busiest time:", "Thursday, 8 to 9 AM"],
-      [`${Math.round((100 * (HABITS[0].count + HABITS[1].count)) / HABITS.reduce((sum, habit) => sum + habit.count, 0))}%`, "of the customers you saw come at least every 2 weeks"],
-      [`${READY} customers`, "have a reward waiting"],
-    ];
-
-    rows.forEach((row, index) => {
-      expect(layer(row, "sentence")).toContain('data-active="true"');
-      expectInOrder(row, [COPY.ladder.rows[index].title, ...SENTENCES[index], COPY.ladder.locked]);
-    });
-  });
-
-  test("the charts of Growth and Pro are already on the page but out of reach, so the next tap shows them at once", async () => {
-    const rows = rowsOf(await render(<LadderSection />));
-
-    expect(rows).toHaveLength(3);
-    for (const row of rows) {
-      const chart = layer(row, "chart");
-
-      expect(chart).toContain('data-active="false"');
-      expect(chart).toContain("inert");
-      expect(chart).toContain('aria-hidden="true"');
-      expect(pictures(row).length).toBeGreaterThan(0);
-    }
-  });
-
-  test("Pro's two extras, Monthly cohorts and Filter by location, wait out of reach until Pro is chosen", async () => {
-    const html = await render(<LadderSection />);
-    const extras = html.match(/<div\b[^>]*data-extras[^>]*>[\s\S]*$/)?.[0] ?? "";
-
-    expect(extras).toMatch(/^<div\b[^>]*data-active="false"[^>]*inert/);
-    expectInOrder(extras, COPY.ladder.proRows.map((row) => row.title));
-    expect(pictures(extras)).toEqual([expect.stringMatching(/Monthly cohorts/), expect.stringMatching(/Filter by location/)]);
-  });
-
-  test("on a phone every chart goes under its title, printed large enough that its smallest label is 11px", async () => {
-    const zooms = stackZooms(await render(<LadderSection />));
-    const smallest = Math.min(smallestLabelPx(join(FOLDER, "QuestionMinis.tsx")), smallestLabelPx(join(FOLDER, "CohortsMini.tsx")));
-
-    expect(zooms).toHaveLength(COPY.ladder.rows.length + COPY.ladder.proRows.length);
-    for (const zoom of zooms) expect(smallest * zoom * (MINI.narrowTo / MINI.width)).toBeGreaterThanOrEqual(11);
-  });
-
-  test("no plan chip and no sample caption: the plans are the control, and the title is the only place that says All plans", async () => {
-    const text = textOf(await render(<LadderSection />));
-
-    expect(text).not.toMatch(/Sample data|Every plan/);
-    expect(text.match(/All plans/g)).toHaveLength(1);
-    expect(text.indexOf("All plans")).toBe(text.indexOf(COPY.ladder.title));
-  });
-});
-
-describe("the charts Growth and Pro add, drawn as the dashboard draws them", () => {
+describe("the charts of the dashboard, drawn as it draws them", () => {
   test("visit habits: the dashboard's five groups, from every week to came once, each with its count", async () => {
     const html = await render(<HabitsMini />);
 
@@ -274,7 +181,7 @@ describe("the charts Growth and Pro add, drawn as the dashboard draws them", () 
     expectInOrder(html, ["Reward progress", "Reward ready"]);
   });
 
-  test("monthly cohorts (Pro): the dashboard's grid of first-visit months against 30, 60, 90 and 180 days, a dash where a window has not passed", async () => {
+  test("monthly cohorts: the dashboard's grid of first-visit months against 30, 60, 90 and 180 days, a dash where a window has not passed", async () => {
     const html = await render(<CohortsMini />);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/Monthly cohorts.*first-time customers.*30, 60, 90 and 180 days/)]);
@@ -284,7 +191,7 @@ describe("the charts Growth and Pro add, drawn as the dashboard draws them", () 
     expect(textOf(html)).not.toMatch(/%|Paris|GMT/);
   });
 
-  test("filter by location (Pro): a location picker over one location at a time, with no city", async () => {
+  test("filter by location: a location picker over one location at a time, with no city", async () => {
     const html = await render(<LocationMini />);
 
     expect(pictures(html)).toEqual([expect.stringMatching(/Filter by location.*one location at a time/i)]);
@@ -303,7 +210,7 @@ describe("activity: live visits on one tab, the customer groups on the other", (
     expect([/\binert\b/.test(panes[0][2]), /\binert\b/.test(panes[1][2])]).toEqual([false, true]);
   });
 
-  test("each pane has its title and facts, and nothing in it is plan-gated", async () => {
+  test("each pane has its title and facts", async () => {
     const html = await render(<ActivitySection />);
 
     for (const tab of Object.values(COPY.activity.tabs)) expectInOrder(html, [tab.title, ...tab.facts.map((fact) => fact.text)]);
@@ -347,7 +254,7 @@ describe("recap: the owner's week, in their inbox", () => {
     expectInOrder(html, ["Stamps given", COPY.recap.email.figures[0].value, trend, "New customers"]);
   });
 
-  test("the two facts sit beside it with no plan: the performance email has no plan gate in PLAN_FACTS to name", async () => {
+  test("the two facts sit beside it", async () => {
     const html = await render(<RecapSection />);
 
     expectInOrder(html, [COPY.recap.email.nudge, ...COPY.recap.facts.map((fact) => fact.text)]);

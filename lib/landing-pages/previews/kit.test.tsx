@@ -25,21 +25,20 @@ import { LANDING_PAGES, PREVIEW_SLUGS } from "../pages";
 
 const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
 
-describe("StepsTable: a bordered table of steps, with phones sinking behind it when it has a visual", () => {
+describe("StepsTable: a frosted table of steps, with phones sinking behind it when it has a visual", () => {
   const CELLS = [
     { title: "Write", body: "A short message." },
-    { title: "Pick who", body: "Everyone, or by when they joined.", plan: "Pro" as const },
+    { title: "Pick who", body: "Everyone, or by when they joined." },
     { title: "Send", body: "Right away." },
   ];
 
-  test("prints each cell's title and text in order, and a plan chip only on the cell that has one", () => {
+  test("prints each cell's title and text in order", () => {
     const html = renderEn(<StepsTable cells={CELLS} />);
     const text = textOf(html);
     const at = CELLS.flatMap((cell) => [text.indexOf(cell.title), text.indexOf(cell.body)]);
 
     expect(at.every((index) => index > -1)).toBe(true);
     expect(at).toEqual([...at].sort((a, b) => a - b));
-    expect(text.match(/Pro/g)).toHaveLength(1);
     expect(html.match(/<li\b/g)).toHaveLength(3);
   });
 
@@ -79,11 +78,11 @@ describe("StepsTable: a bordered table of steps, with phones sinking behind it w
 describe("HoverRows: rows that open on hover, focus or tap, all open on the server", () => {
   const ITEMS = [
     { key: "stamps", eyebrow: "Several at once", title: "Stamps", body: "Add one, or several." },
-    { key: "levels", eyebrow: "Perks", title: "Levels", body: "Their level shows.", plan: "Growth and Pro" as const },
+    { key: "levels", eyebrow: "Perks", title: "Levels", body: "Their level shows." },
   ];
   const VISUALS = { stamps: <i>stamps mini</i>, levels: <i>levels mini</i> };
 
-  test("every row is open in the server markup with its label, title, text and visual; only a planned row has a chip", () => {
+  test("every row is open in the server markup with its label, title, text and visual", () => {
     const html = renderEn(<HoverRows items={ITEMS} visuals={VISUALS} />);
     const text = textOf(html);
 
@@ -91,8 +90,6 @@ describe("HoverRows: rows that open on hover, focus or tap, all open on the serv
     for (const line of ["Several at once", "Stamps", "Add one, or several.", "Perks", "Levels", "stamps mini", "levels mini"]) {
       expect(text).toContain(line);
     }
-    expect(text.match(/Growth and Pro/g)).toHaveLength(1);
-    expect(text.indexOf("Growth and Pro")).toBeGreaterThan(text.indexOf("Their level shows."));
   });
 
   test("a closer goes under the list, and there is none unless asked for", () => {
@@ -139,13 +136,13 @@ describe("ToggleCard: one white card, one surface per tab", () => {
       key: "owners",
       label: "Owners",
       title: "Scan, and step in",
-      facts: [{ text: "Unlimited team members", plan: "Growth and Pro" as const }],
+      facts: [{ text: "Scan from any phone" }],
       link: { label: "See the app", href: "/features/mobile-scanner" },
       visual: <i>limit screen</i>,
     },
   ];
 
-  test("two tabs: a tab per label, the first open and the second inert, each pane with its title, facts and chip", () => {
+  test("two tabs: a tab per label, the first open and the second inert, each pane with its title and facts", () => {
     const html = renderEn(<ToggleCard tabs={TABS} ariaLabel="Your team" />);
     const panes = [...html.matchAll(/<div role="tabpanel" aria-label="([^"]+)"([^>]*)>/g)];
 
@@ -154,10 +151,9 @@ describe("ToggleCard: one white card, one surface per tab", () => {
     expect(html).toMatch(/role="tab"[^>]*aria-selected="true"[^>]*>Staff</);
     expect(panes.map((pane) => pane[1])).toEqual(["Staff", "Owners"]);
     expect([/\binert\b/.test(panes[0][2]), /\binert\b/.test(panes[1][2])]).toEqual([false, true]);
-    for (const line of ["A code, then the scanner", "A 6-character code", "join screen", "Scan, and step in", "Unlimited team members", "limit screen"]) {
+    for (const line of ["A code, then the scanner", "A 6-character code", "join screen", "Scan, and step in", "Scan from any phone", "limit screen"]) {
       expect(textOf(html)).toContain(line);
     }
-    expect(textOf(html).match(/Growth and Pro/g)).toHaveLength(1);
   });
 
   test("it opens on the tab it is told to", () => {
@@ -184,27 +180,51 @@ describe("ToggleCard: one white card, one surface per tab", () => {
   });
 });
 
-describe("PreviewHero: eyebrow, headline, sub, the actions, then the visual", () => {
+describe("PreviewHero: the words and the actions on the left, the visual on the right", () => {
   const html = (props: Partial<Parameters<typeof PreviewHero>[0]> = {}) =>
     renderEn(<PreviewHero slug="platform/mobile-scanner" visual={<i>scanner phone</i>} {...props} />, { us: true });
 
-  test("prints the page's own words in that order, with its headline's accent in orange", () => {
+  test("prints the page's own words in that order, then the visual: on a phone the words come first", () => {
     const { hero } = LANDING_PAGES["platform/mobile-scanner"];
 
-    expectInOrder(html(), [hero.eyebrow ?? "", hero.accent, hero.sub ?? "", SHARED.cta, "14 days free", "scanner phone"]);
+    expectInOrder(html(), [hero.accent, hero.sub ?? "", SHARED.cta, "14 days free", "scanner phone"]);
     expect(html()).toMatch(new RegExp(`<span class="text-\\[var\\(--accent\\)\\]">${hero.accent.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</span>`));
     expect(html().match(/<h1/g)).toHaveLength(1);
+  });
+
+  test("from lg the words are the left half of a 12-column grid and the visual the right half, vertically centred", () => {
+    const markup = html();
+    const grid = markup.match(/<div class="([^"]*\blg:grid-cols-12\b[^"]*)">/)?.[1] ?? "";
+    const columns = [...markup.matchAll(/<div class="([^"]*\blg:col-span-6\b[^"]*)">/g)].map((match) => match[1]);
+
+    expect(grid.split(/\s+/)).toContain("lg:items-center");
+    expect(columns).toHaveLength(2);
+    expect(columns[0]).toContain("lg:text-left");
+    expect(columns[0]).toContain("text-center");
+    expect(markup.indexOf(columns[0])).toBeLessThan(markup.indexOf("<h1"));
+    expect(markup.indexOf(columns[1])).toBeGreaterThan(markup.indexOf("14 days free"));
+    expect(markup.indexOf(columns[1])).toBeLessThan(markup.indexOf("scanner phone"));
+  });
+
+  test("the actions are left-aligned from lg, with the trial as the keycap", () => {
+    const markup = html();
+
+    expect(markup).toContain("lg:[&amp;&gt;div]:justify-start");
+    expect(markup).toMatch(/<a [^>]*class="[^"]*\bkeycap\b[^"]*"[^>]*href="\/en\/onboarding"/);
+  });
+
+  test.each(PREVIEW_SLUGS)("%s: nothing sits above the headline, no label, no pill and no chip", (slug) => {
+    const markup = renderEn(<PreviewHero slug={slug} visual={<i>visual</i>} />, { us: true });
+    const above = markup.slice(markup.indexOf('data-landing-section="hero"'), markup.indexOf("<h1"));
+
+    expect(above).not.toMatch(/<(?:p|span)\b/);
+    expect(above).not.toMatch(/uppercase|rounded-full/);
   });
 
   test("the second action is Try it on your phone to #demo unless the page says otherwise, or says none", () => {
     expect(html()).toMatch(/<a [^>]*href="#demo"/);
     expect(html({ secondary: { label: "Try the designer", href: "#playground" } })).toMatch(/<a [^>]*href="#playground"/);
     expect(html({ secondary: null })).not.toContain('href="#');
-  });
-
-  test("a plan chip can sit beside the eyebrow", () => {
-    expect(textOf(html({ eyebrowPlan: "Growth and Pro" }))).toContain("Growth and Pro");
-    expect(textOf(html())).not.toContain("Growth and Pro");
   });
 
   test("it is the page's hero section, with a trial button tracked as the hero's", () => {

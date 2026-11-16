@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { RowCopy } from "@/lib/landing-pages/copy/types";
 import { EYEBROW } from "../shared/LpSection";
-import { PlanChip } from "../shared/PlanChip";
 
 /** How long a mouse rests on a row before the row opens. */
 export const HOVER_INTENT_MS = 90;
@@ -63,11 +62,11 @@ function Collapsible({ open, children }: Readonly<{ open: boolean; children: Rea
  * open, and a phone or a reader who asks for less motion keeps it that way. On
  * a wide screen that allows motion one row is open at a time: the one a mouse
  * rests on, the one in keyboard focus, or the one tapped. A closed row keeps
- * its title, set a little in, and its picture, so no row changes height. A
- * row's `plan` is a chip under its text; `closer` goes under the list. On a
- * phone a picture sits in a 128px column beside the words; `stackOnPhone` puts
- * it under them instead, zoomed from that thumbnail up to the width given (px),
- * for pictures with labels too small to read at 128.
+ * its title, set a little in, and its picture, so no row changes height;
+ * `closer` goes under the list. On a phone a picture sits in a 128px column
+ * beside the words; `stackOnPhone` puts it under them instead, zoomed from
+ * that thumbnail up to the width given (px), for pictures with labels too
+ * small to read at 128.
  */
 export function HoverRows<Key extends string>({
   items,
@@ -75,7 +74,7 @@ export function HoverRows<Key extends string>({
   closer,
   stackOnPhone,
 }: Readonly<{
-  items: ReadonlyArray<Pick<RowCopy<Key>, "key" | "eyebrow" | "title" | "body" | "plan">>;
+  items: ReadonlyArray<Pick<RowCopy<Key>, "key" | "eyebrow" | "title" | "body">>;
   visuals: Record<Key, ReactNode>;
   closer?: ReactNode;
   stackOnPhone?: number;
@@ -143,7 +142,6 @@ export function HoverRows<Key extends string>({
                     <p className="mt-3 max-w-md text-pretty text-base text-[var(--muted-foreground)] lg:text-lg">
                       {item.body}
                     </p>
-                    {item.plan && <PlanChip plan={item.plan} className="mt-3" />}
                   </Collapsible>
                 </div>
               </div>

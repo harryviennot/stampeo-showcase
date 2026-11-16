@@ -74,7 +74,6 @@ const MOMENTS = [
     key: "stamp",
     title: "Stamp collected",
     description: "Sent on every scan.",
-    planLabel: "Every plan",
     stamps: 5,
     banner: { appName: "Aurevo", title: "Stamp collected! You have 5 of 8 stamps." },
   },
@@ -82,7 +81,6 @@ const MOMENTS = [
     key: "broadcast",
     title: "Broadcast",
     description: "Your own message.",
-    planLabel: "Growth and Pro",
     stamps: 5,
     banner: { appName: "Aurevo", title: "Fresh rolls are out." },
   },
@@ -96,12 +94,10 @@ describe("NotificationSequenceDemo moments and design", () => {
     expect(html).toContain("Mon Café");
   });
 
-  test("with moments it lists them with their plans, and the phone shows the first banner from its sender", () => {
+  test("with moments it lists them, and the phone shows the first banner from its sender", () => {
     const html = textOf(render(<NotificationSequenceDemo moments={MOMENTS} design={{ organization_name: "Aurevo" }} />));
 
     expect(html).toContain("Stamp collected");
-    expect(html).toContain("Growth and Pro");
-    expect(html).toContain("Every plan");
     expect(html).toContain("Aurevo");
     expect(html).toContain("Stamp collected! You have 5 of 8 stamps.");
     expect(html).not.toContain("Stampeo");

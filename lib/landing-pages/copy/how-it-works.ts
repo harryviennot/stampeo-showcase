@@ -26,7 +26,7 @@ export const HOW_IT_WORKS = {
     title: "Make your card. Try it right here.",
     lead: "Pick stamps or points, your colors and your icon. The card updates as you go.",
     designHelp:
-      "Rather not design it yourself? Send us your logo and we'll make your first card for free, on every plan.",
+      "Rather not design it yourself? Send us your logo and we'll make your first card for free.",
     ctaLead: "Like it? Build yours for real.",
   },
   share: {

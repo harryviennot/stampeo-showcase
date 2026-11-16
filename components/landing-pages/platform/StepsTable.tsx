@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 import type { Tile } from "@/lib/landing-pages/copy/types";
-import { PlanChip } from "../shared/PlanChip";
 import { CELL_TITLE } from "./classes";
 
-/** A cell of the table: a titled line, with an icon above it or a plan chip under it where it needs one. */
+/** A cell of the table: a titled line, with an icon above it where it needs one. */
 export type StepCell = Tile & { icon?: ReactNode };
 
 /** Both phones of a steps table are drawn at 280px and shrunk to 160px on a phone. */
@@ -46,7 +45,6 @@ export function StepsTable({
               {cell.icon}
               <h3 className={`${CELL_TITLE}${cell.icon ? " mt-4" : ""}`}>{cell.title}</h3>
               <p className="mt-3 text-base text-pretty text-[var(--muted-foreground)]">{cell.body}</p>
-              {cell.plan && <PlanChip plan={cell.plan} className="mt-3" />}
             </li>
           ))}
         </ol>

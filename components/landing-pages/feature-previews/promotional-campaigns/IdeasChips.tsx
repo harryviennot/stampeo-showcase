@@ -3,10 +3,9 @@
 import { useId, useState } from "react";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { STAMPED_STAGE } from "../../platform/classes";
-import { Chip } from "../../shared/PlanChip";
 import { LockScreenSlice } from "../push-notifications/LockScreenSlice";
 
-/** The ideas as the page orders them: the two every plan can send first, the two that need Pro's targeting after. */
+/** The ideas as the page orders them: the two aimed at everyone first, then the two that nudge a few. */
 const ORDER = ["happy-hour", "new", "we-miss-you", "close"] as const;
 
 const IDEAS = ORDER.flatMap((key) => COPY.ideas.rows.filter((row) => row.key === key));
@@ -38,12 +37,11 @@ export function IdeasChips() {
               aria-selected={active}
               aria-controls={`${id}-${idea.key}`}
               onClick={() => setPicked(idea.key)}
-              className={`inline-flex h-11 shrink-0 snap-start items-center gap-2 rounded-full border-[1.5px] bg-white px-4 text-[15px] font-semibold transition-colors duration-200 ${
+              className={`inline-flex h-11 shrink-0 snap-start items-center rounded-full border-[1.5px] bg-white px-4 text-[15px] font-semibold transition-colors duration-200 ${
                 active ? "border-[var(--near-black)] text-[var(--foreground)]" : "border-[var(--border)] text-[var(--muted-foreground)]"
               }`}
             >
               {idea.chip}
-              {"plan" in idea && <Chip>{idea.plan}</Chip>}
             </button>
           );
         })}
