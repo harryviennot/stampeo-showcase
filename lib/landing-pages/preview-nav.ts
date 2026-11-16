@@ -1,4 +1,5 @@
 import { getLocalizedSlug, type FeatureSlug } from "@/lib/feature-slugs";
+import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { marketPath, type Market } from "@/lib/markets";
 import type { LandingSlug, PreviewSlug } from "./pages";
 
@@ -38,4 +39,10 @@ export function featureLink(
   const preview = links === "previews" ? FEATURE_PREVIEWS[slug] : undefined;
   if (preview) return { href: marketPath("us", `/landing-pages/${preview}`), market: "us" };
   return { href: `/features/${getLocalizedSlug(slug, locale)}`, market: "int" };
+}
+
+/** The loyalty programs link: its Platform-style preview from Platform and its previews, today's localised page elsewhere. */
+export function loyaltyLink(locale: string, links: FeatureLinks): { href: string; market: Market } {
+  if (links === "previews") return { href: marketPath("us", "/landing-pages/platform/loyalty-programs"), market: "us" };
+  return { href: LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr, market: "int" };
 }

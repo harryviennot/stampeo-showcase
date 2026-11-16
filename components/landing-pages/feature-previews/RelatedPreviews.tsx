@@ -7,6 +7,7 @@ import {
   MapPinIcon,
   MegaphoneIcon,
   PaletteIcon,
+  StarIcon,
 } from "@/components/icons";
 import { MarketLink } from "@/components/market/MarketLink";
 import { PREVIEW_SHARED } from "@/lib/landing-pages/copy/previews/shared";
@@ -25,6 +26,7 @@ const CARDS: Record<PreviewSlug, { card: Card; Icon: ComponentType<{ size?: numb
   "platform/analytics": { card: "analytics", Icon: ChartIcon },
   "platform/promotional-campaigns": { card: "promotionalCampaigns", Icon: MegaphoneIcon },
   "platform/geolocation": { card: "geolocation", Icon: MapPinIcon },
+  "platform/loyalty-programs": { card: "loyaltyPrograms", Icon: StarIcon },
 };
 
 /**

@@ -1,7 +1,6 @@
 import { hasBlog } from "@/lib/blog/locales";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, showsSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
-import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
+import { featureLink, loyaltyLink, showsSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { marketPath, type Market } from "@/lib/markets";
 
 /** One entry of a header menu. */
@@ -27,17 +26,17 @@ export function productMenuItems(t: (key: string) => string, locale: string, fea
 /**
  * The links of the header's other menus. A market is a set of routes, not one landing page: /us quotes dollars,
  * so Pricing is the market's own page, not the euro ladder. The blog only exists in the locales that have articles.
+ * Loyalty leads where `featureLinks` sends the feature links.
  */
 export function pageMenuItems(
   t: (key: string) => string,
   locale: string,
   market: Market,
+  featureLinks: FeatureLinks = "live",
 ): { navItems: Array<NavMenuItem & { market: Market }>; resourceItems: NavMenuItem[] } {
-  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
-
   return {
     navItems: [
-      { label: t("common.nav.loyalty"), href: loyaltySlug, market: "int" },
+      { label: t("common.nav.loyalty"), ...loyaltyLink(locale, featureLinks) },
       { label: t("common.nav.pricing"), href: marketPath(market, "/pricing"), market },
     ],
     resourceItems: [

@@ -7,6 +7,7 @@ import { PLATFORM } from "./copy/platform";
 import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
+import { LOYALTY_PROGRAMS_PREVIEW } from "./copy/previews/loyalty-programs";
 import { MOBILE_SCANNER_PREVIEW } from "./copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "./copy/previews/push-notifications";
@@ -19,14 +20,15 @@ import type { FinalCtaCopy, HeroCopy, PageMeta } from "./copy/types";
  * pages tag with `data-landing-section`, and `registry.test.ts` pins that each
  * page renders exactly these, in this order.
  *
- * Four are the pages ads point at; six are previews of the feature pages in
- * Platform's style (`platform/<feature>`), English, noindex and linked only
- * from each other and from the menus of Platform and its previews.
+ * Four are the pages ads point at; seven are previews of the feature pages and
+ * the loyalty programs page in Platform's style (`platform/<page>`), English,
+ * noindex and linked only from each other and from the menus of Platform and
+ * its previews.
  */
 
 export const LANDING_SLUGS = ["how-it-works", "features", "outcomes", "platform"] as const;
 
-/** The six previews of `/en/features/*`, in Platform's style (geolocation's says it is coming soon). */
+/** The six previews of `/en/features/*` (geolocation's says it is coming soon) and the one of `/en/loyalty-programs`, in Platform's style. */
 export const PREVIEW_SLUGS = [
   "platform/card-design",
   "platform/mobile-scanner",
@@ -34,6 +36,7 @@ export const PREVIEW_SLUGS = [
   "platform/analytics",
   "platform/promotional-campaigns",
   "platform/geolocation",
+  "platform/loyalty-programs",
 ] as const;
 
 export const ALL_LANDING_SLUGS = [...LANDING_SLUGS, ...PREVIEW_SLUGS] as const;
@@ -90,7 +93,13 @@ export type LandingSectionId =
   | "charts"
   | "customers"
   | "dashboard"
-  | "types";
+  | "types"
+  | "programs"
+  | "levels"
+  | "move_up"
+  | "moments"
+  | "settings"
+  | "picker";
 
 export interface LandingPage {
   slug: LandingSlug;
@@ -243,6 +252,27 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
     hero: GEOLOCATION_PREVIEW.hero,
     finalCta: GEOLOCATION_PREVIEW.band,
     related: ["platform/push-notifications", "platform/promotional-campaigns", "platform/analytics"],
+  },
+  "platform/loyalty-programs": {
+    slug: "platform/loyalty-programs",
+    variant: "lp_platform_loyalty_programs",
+    sections: [
+      "hero",
+      "programs",
+      "levels",
+      "move_up",
+      "moments",
+      "settings",
+      "picker",
+      "sectors",
+      "faq",
+      "final_cta",
+      "related",
+    ],
+    meta: LOYALTY_PROGRAMS_PREVIEW.meta,
+    hero: LOYALTY_PROGRAMS_PREVIEW.hero,
+    finalCta: LOYALTY_PROGRAMS_PREVIEW.band,
+    related: ["platform/card-design", "platform/push-notifications", "platform/mobile-scanner"],
   },
 };
 

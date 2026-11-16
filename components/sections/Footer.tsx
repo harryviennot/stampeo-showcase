@@ -3,11 +3,10 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { buildSeoLinks } from "@/lib/seo-links";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, showsSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import { featureLink, loyaltyLink, showsSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
-import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { storeBadges } from "@/lib/store-badges";
 import {
   APP_STORE_URL,
@@ -35,7 +34,7 @@ export async function Footer({
 
   const badges = storeBadges(locale);
 
-  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
+  const loyalty = loyaltyLink(locale, featureLinks);
   const seoLinks = buildSeoLinks(locale, market);
   const comparisons = footerComparisons(market, locale);
   const comparisonsTitle = footerComparisonsTitle(market, locale);
@@ -155,9 +154,9 @@ export async function Footer({
               <MarketLink market={market} href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {t("pricing")}
               </MarketLink>
-              <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+              <MarketLink market={loyalty.market} href={loyalty.href} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {tNav("loyaltyPrograms")}
-              </Link>
+              </MarketLink>
               <Link href="/#features" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {t("howItWorks")}
               </Link>

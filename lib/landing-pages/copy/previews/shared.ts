@@ -1,5 +1,5 @@
 /**
- * What the six feature previews share: the sibling links a page closes with. Each card names a feature and
+ * What the feature previews share: the sibling links a page closes with. Each card names a feature and
  * says in one plain line what it does; no card carries a plan.
  */
 export const PREVIEW_SHARED = {
@@ -12,6 +12,7 @@ export const PREVIEW_SHARED = {
       analytics: { title: "Analytics", line: "Visits, return rate and your busiest hours." },
       promotionalCampaigns: { title: "Promotional campaigns", line: "One message to every customer's card." },
       geolocation: { title: "Geolocation", line: "Coming soon: your card when they walk by." },
+      loyaltyPrograms: { title: "Loyalty programs", line: "Stamps, points and levels for your regulars." },
     },
   },
 } as const;
