@@ -135,7 +135,7 @@ export function ReskinCards({
         </div>
       </div>
 
-      <div aria-live="polite" className="mt-1">
+      <div aria-live="polite" className="mt-3 lg:mt-1">
         <Chip className="px-4! py-1.5! text-sm!">{captions[view.active]}</Chip>
       </div>
 
