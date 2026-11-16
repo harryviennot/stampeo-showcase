@@ -20,7 +20,7 @@ export function WaysSection() {
     return {
       ...cell,
       icon: (
-        <IconTile tone="subtle">
+        <IconTile tone="brand">
           <Icon size={22} weight="duotone" aria-hidden />
         </IconTile>
       ),

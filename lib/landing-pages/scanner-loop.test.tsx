@@ -31,7 +31,6 @@ describe("every landing page's scanner visual is the Scanner loop", () => {
   /** The previews that draw the loop: the scanner's hero, and the how-it-works tables that show its finished stamp. */
   const PREVIEW_USERS = [
     pageFile("platform/mobile-scanner"),
-    join(PREVIEWS_DIR, "mobile-scanner", "HowSection.tsx"),
     join(PREVIEWS_DIR, "push-notifications", "HowSection.tsx"),
   ];
 

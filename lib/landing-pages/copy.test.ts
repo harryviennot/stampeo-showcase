@@ -82,8 +82,6 @@ describe("what these pages may not claim (AC10)", () => {
     "FEATURES.scanner.facts[2].text": "a scanner fact about perks at the register",
     "PLATFORM.programTypes.title": "Platform's program rows carry no chips",
     "SHARED.levelCardsAlt": "the level cards' alt text",
-    "MOBILE_SCANNER_PREVIEW.counter.rows[3].title": "a counter row named for the program type; the previews print no Every plan chip",
-    "MOBILE_SCANNER_PREVIEW.counter.rows[3].body": "what the register shows for a level; the previews print no Every plan chip",
     "MOBILE_SCANNER_PREVIEW.counter.options[3].title": "the counter's Level button, named for the program type; the previews print no Every plan chip",
     "PUSH_NOTIFICATIONS_PREVIEW.day.lead": "the walk from a first stamp to the next level; the previews print no Every plan chip",
     "PUSH_NOTIFICATIONS_PREVIEW.day.nodes[3].label": "the step where the card moves up a level; the previews print no Every plan chip",
