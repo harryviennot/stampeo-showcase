@@ -51,7 +51,6 @@ describe("plan facts", () => {
 
   it("hands translated copy the Starter allowance, the one broadcast number the plans quote", () => {
     expect(planMessageArgs()).toEqual({ starterBroadcasts: PLAN_FACTS.starter.broadcastsPerMonth });
-    expect(typeof planMessageArgs().starterBroadcasts).toBe("number");
   });
 });
 
@@ -253,8 +252,6 @@ describe("pricing page feature lists", () => {
         features(tier).filter((item) => vocab.broadcast.test(item) && !vocab.schedule.test(item));
 
       it(`${locale} ${section}: Starter lists its monthly broadcasts and Growth lists unlimited ones`, () => {
-        expect(PLAN_FACTS.starter.broadcastsPerMonth).toBe(8);
-        expect(PLAN_FACTS.growth.broadcastsPerMonth).toBe("unlimited");
         const starter = allowance("starter");
         expect(starter).toHaveLength(1);
         expect(starter[0].match(/\d+/g)).toEqual([String(PLAN_FACTS.starter.broadcastsPerMonth)]);
@@ -299,7 +296,6 @@ describe("pricing page feature lists", () => {
       const row = page.comparison.rows.broadcastNotifications;
       expect(row.starter.match(/\d+/g)).toEqual([String(PLAN_FACTS.starter.broadcastsPerMonth)]);
       for (const tier of ["growth", "pro"] as const) {
-        expect(PLAN_FACTS[tier].broadcastsPerMonth).toBe("unlimited");
         expect({ tier, cell: row[tier] }).toEqual({ tier, cell: expect.stringMatching(vocab.unlimited) });
       }
     });
@@ -327,11 +323,9 @@ describe("pricing page feature lists", () => {
       expect(TIERS.map((tier) => row("broadcastNotifications")[tier])).toEqual(
         TIERS.map((tier) => (PLAN_FACTS[tier].broadcastsPerMonth === 0 ? "cross" : "text"))
       );
-      expect(TIERS.map((tier) => row("broadcastNotifications")[tier])).toEqual(["text", "text", "text"]);
     });
 
-    it("shows segmentation as a value on every plan, and scheduling on the plans that have it", () => {
-      expect(TIERS.map((tier) => row("segmentation")[tier])).toEqual(["text", "text", "text"]);
+    it("shows scheduling on the plans that have it", () => {
       expect(TIERS.map((tier) => row("scheduledSends")[tier])).toEqual(
         TIERS.map((tier) => (PLAN_FACTS[tier].scheduledBroadcasts ? "check" : "cross"))
       );

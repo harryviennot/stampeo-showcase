@@ -57,10 +57,7 @@ const MAX_LEVELS = 5;
 /** The facts a broadcast clause is worded from. */
 type BroadcastFacts = Pick<PlanFacts, "broadcastsPerMonth" | "scheduledBroadcasts">;
 
-/**
- * The broadcast allowances as the published comparison pages state them
- * (Starter none, Growth 8 a month); refreshed with the pages, not with the plan facts.
- */
+/** Broadcast allowances as the published comparison pages state them; frozen until those pages are refreshed. */
 export const COMPARED_BROADCASTS: Readonly<Record<TierId, BroadcastFacts>> = {
   starter: { broadcastsPerMonth: 0, scheduledBroadcasts: false },
   growth: { broadcastsPerMonth: 8, scheduledBroadcasts: false },
