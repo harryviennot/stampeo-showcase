@@ -126,10 +126,11 @@ describe("the automatic flip: a scroller sees the punchline and then the answers
       auto.report(0.6, false);
       scheduler.advance(1000);
       auto.report(0.3, false);
-      scheduler.advance(5000);
-      expect(flips()).toBe(0);
+      scheduler.advance(200);
       auto.report(0.7, false);
-      scheduler.advance(AUTO_FLIP.waitMs);
+      scheduler.advance(AUTO_FLIP.waitMs - 1000 + 100);
+      expect(flips()).toBe(0);
+      scheduler.advance(1000);
       expect(flips()).toBe(1);
     });
 

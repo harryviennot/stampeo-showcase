@@ -117,7 +117,9 @@ describe("Send now, Send again and a double tap", () => {
     scheduler.advance(300);
     sender.send("sent");
     expect(last()).toEqual({ pressed: "idle", count: 0 });
-    scheduler.advance(REPLAY_GAP_MS + COUNT_MS + 50);
+    scheduler.advance(REPLAY_GAP_MS - 20);
+    expect(last()).toEqual({ pressed: "idle", count: 0 });
+    scheduler.advance(20 + COUNT_MS + 50);
     expect(last()).toEqual({ pressed: "sent", count: null });
     expect(scheduler.pending).toBe(0);
     expect(views.filter((view) => view.count !== null && view.count > TARGET)).toEqual([]);
