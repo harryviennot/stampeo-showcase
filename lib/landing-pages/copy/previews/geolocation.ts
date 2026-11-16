@@ -30,6 +30,8 @@ export const GEOLOCATION_PREVIEW = {
   } satisfies PreviewHeroCopy,
   /** The plain chip beside the hero's label. */
   heroChip: "Coming soon · Pro",
+  /** The one handwritten note on the hero's stage, pointing at the lock screen. */
+  heroNote: "coming soon",
   /** The hero phone's lock screen: Aurevo's own words, never Stampeo's. */
   banner: {
     sender: SAMPLE_BUSINESS,
