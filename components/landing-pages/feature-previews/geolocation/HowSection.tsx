@@ -1,27 +1,31 @@
-import { ScaledBox } from "@/components/ui/ScaledBox";
-import { iphoneLayout } from "@/lib/devices/iphone";
+import { BellIcon, MapPinIcon, StorefrontIcon } from "@/components/icons";
 import { GEOLOCATION_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/geolocation";
-import { STEPS_PHONE, StepsTable } from "../../platform/StepsTable";
+import { StepsTable } from "../../platform/StepsTable";
+import { IconTile } from "../../shared/IconTile";
 import { LpSection } from "../../shared/LpSection";
-import { LockScreenPhone } from "./LockScreenPhone";
 
-/** Three steps in the future tense, and the lock screen they end on, sinking behind the table. */
+/** The address, the customer nearby, the card on their lock screen. */
+const ICONS = [StorefrontIcon, MapPinIcon, BellIcon];
+
+/** Three steps in the future tense, in Platform's plain table, each led by an icon tile; the hero's "See how it will work" lands here. */
 export function HowSection() {
   const { eyebrow, title, lead, cells } = COPY.how;
-  const { sender, body } = COPY.banner;
+  const steps = cells.map((cell, index) => {
+    const Icon = ICONS[index];
+
+    return {
+      ...cell,
+      icon: (
+        <IconTile tone="subtle">
+          <Icon size={22} weight="duotone" aria-hidden />
+        </IconTile>
+      ),
+    };
+  });
 
   return (
-    <LpSection section="how" eyebrow={eyebrow} title={title} lead={lead} align="center">
-      <StepsTable
-        cells={cells}
-        visual={
-          <div role="img" aria-label={`A lock screen with a notification from ${sender}: ${body}`}>
-            <ScaledBox width={STEPS_PHONE.full} height={iphoneLayout(STEPS_PHONE.full).height} narrowTo={STEPS_PHONE.narrow}>
-              <LockScreenPhone width={STEPS_PHONE.full} />
-            </ScaledBox>
-          </div>
-        }
-      />
+    <LpSection section="how" anchor eyebrow={eyebrow} title={title} lead={lead} align="center">
+      <StepsTable cells={steps} />
     </LpSection>
   );
 }

@@ -16,6 +16,7 @@ import { expectInOrder, pictures, textOf } from "../../testing/render-en";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
+import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
 import { REWARD_BANNER, SHARED, STAMP_BANNER } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
@@ -119,11 +120,11 @@ describe("the hero each page opens with (AC1)", () => {
     expect(html).toContain('id="playground"');
   });
 
-  test("the scanner shows the real Scanner loop from the first paint, the finished stamp being the only frame the rest of the page uses", async () => {
+  test("the scanner shows the real Scanner loop from the first paint beside the web scanner, the finished stamp being the only other frame the page uses", async () => {
     const html = await hero("platform/mobile-scanner");
 
     expect(html).toContain(scannerLoopFiles("en").first);
-    expect(pictures(html)).toEqual([expect.stringMatching(/Scanner app adding a stamp/)]);
+    expect(pictures(html)).toEqual([MOBILE_SCANNER_PREVIEW.hero.alt, expect.stringMatching(/Scanner app adding a stamp/)]);
   });
 
   test("notifications show Aurevo's stamp banner and reward banner from the first paint", async () => {
@@ -132,12 +133,12 @@ describe("the hero each page opens with (AC1)", () => {
     expectInOrder(text, ["Aurevo", STAMP_BANNER.body, "Aurevo", REWARD_BANNER.body]);
   });
 
-  test("geolocation says it is coming soon in its sub, over a single trial button and no demo", async () => {
+  test("geolocation says it is coming soon in its headline, over a trial button and the way to its steps, and has no demo", async () => {
     const html = await hero("platform/geolocation");
 
     expectInOrder(html, [GEOLOCATION_PREVIEW.hero.accent, GEOLOCATION_PREVIEW.hero.sub, SHARED.cta]);
-    expect(GEOLOCATION_PREVIEW.hero.sub).toMatch(/coming soon/i);
-    expect(links(html)).toEqual(["/en/onboarding"]);
+    expect(GEOLOCATION_PREVIEW.hero.h1).toMatch(/coming soon/i);
+    expect(links(html)).toEqual(["/en/onboarding", "#how"]);
   });
 
   test("analytics shows the dashboard on a computer and on a phone, with no caption, over a single trial button", async () => {

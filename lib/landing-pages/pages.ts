@@ -211,7 +211,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/mobile-scanner": {
     slug: "platform/mobile-scanner",
     variant: "lp_platform_mobile_scanner",
-    sections: ["hero", "counter", "ways", "team", "demo", "final_cta", "related"],
+    sections: ["hero", "counter", "ways", "final_cta", "related"],
     meta: MOBILE_SCANNER_PREVIEW.meta,
     hero: MOBILE_SCANNER_PREVIEW.hero,
     finalCta: MOBILE_SCANNER_PREVIEW.band,
@@ -247,7 +247,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
   "platform/geolocation": {
     slug: "platform/geolocation",
     variant: "lp_platform_geolocation",
-    sections: ["hero", "status", "how", "privacy", "faq", "final_cta", "related"],
+    sections: ["hero", "how", "privacy", "faq", "final_cta", "related"],
     meta: GEOLOCATION_PREVIEW.meta,
     hero: GEOLOCATION_PREVIEW.hero,
     finalCta: GEOLOCATION_PREVIEW.band,

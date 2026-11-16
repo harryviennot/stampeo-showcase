@@ -1,19 +1,17 @@
 /**
- * What the six feature previews share: the sibling links a page closes
- * with. The cards name a feature and say what it does in the words of that
- * feature's own hero; the broadcasts card carries no plan badge, as Platform's
- * broadcast fact does.
+ * What the six feature previews share: the sibling links a page closes with. Each card names a feature and
+ * says in one plain line what it does; no card carries a plan.
  */
 export const PREVIEW_SHARED = {
   related: {
-    title: "See the rest of the platform.",
+    title: "More Stampeo features.",
     cards: {
-      cardDesign: { title: "Card design", line: "A loyalty card that looks like your shop." },
-      mobileScanner: { title: "Scanner app", line: "One scan, one stamp, from any phone." },
-      pushNotifications: { title: "Notifications", line: "Every stamp lands on their lock screen." },
-      analytics: { title: "Analytics", line: "See how often your customers come back." },
-      promotionalCampaigns: { title: "Broadcasts", line: "Bring customers back with one message." },
-      geolocation: { title: "Geolocation", line: "Soon, your card will appear when they walk by." },
+      cardDesign: { title: "Card design", line: "Your logo, colors and stamp icons on the card." },
+      mobileScanner: { title: "Scanner app", line: "Stamp cards from the app or any web browser." },
+      pushNotifications: { title: "Push notifications", line: "Every stamp and reward on their lock screen." },
+      analytics: { title: "Analytics", line: "Visits, return rate and your busiest hours." },
+      promotionalCampaigns: { title: "Promotional campaigns", line: "One message to every customer's card." },
+      geolocation: { title: "Geolocation", line: "Coming soon: your card when they walk by." },
     },
   },
 } as const;

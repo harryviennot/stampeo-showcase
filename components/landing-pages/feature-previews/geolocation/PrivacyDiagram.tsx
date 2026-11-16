@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-const INK = "var(--near-black)";
+const INK = "var(--foreground)";
 const ACCENT = "var(--accent)";
 const GREY = "#9ca3af";
 

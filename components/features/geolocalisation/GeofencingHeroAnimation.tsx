@@ -28,16 +28,8 @@ export const LOCK_WALLPAPER =
  * The geolocation hero: a paper street map with the phone in front of it.
  * A customer walks into the shop's ring and the lock screen wakes with the
  * card's reminder. Children are positioned over the stage (the ink note).
- * A page can give the lock screen its own sender, icon, title and body;
- * without them it shows the catalog's.
  */
-export function GeofencingHeroAnimation({
-  children,
-  sender,
-  icon,
-  title,
-  body,
-}: Readonly<{ children?: ReactNode; sender?: string; icon?: ReactNode; title?: string; body?: string }>) {
+export function GeofencingHeroAnimation({ children }: Readonly<{ children?: ReactNode }>) {
   const t = useTranslations("features.geolocalisation");
   const stageRef = useRef<HTMLDivElement>(null);
   const inView = useInView(stageRef, { amount: 0.3 });
@@ -54,14 +46,6 @@ export function GeofencingHeroAnimation({
     const controls = animate(clock, LOOP, { duration: LOOP, ease: "linear", repeat: Infinity });
     return () => controls.stop();
   }, [clock, inView, reduceMotion]);
-
-  const banner = {
-    appName: sender ?? "Stampeo",
-    icon,
-    title: title ?? t("demo.notificationTitle"),
-    body: body ?? t("demo.notificationBody"),
-    timeAgo: t("demo.timeAgo"),
-  };
 
   // Asleep until the notification wakes the screen, asleep again at the end.
   const screenDim = useTransform(
@@ -126,7 +110,10 @@ export function GeofencingHeroAnimation({
             <div className="relative z-10 mt-6 px-3">
               <motion.div style={{ y: bannerY, opacity: bannerOpacity, scale: bannerScale }}>
                 <NotificationBanner
-                  {...banner}
+                  appName="Stampeo"
+                  title={t("demo.notificationTitle")}
+                  body={t("demo.notificationBody")}
+                  timeAgo={t("demo.timeAgo")}
                   // Over this smooth wallpaper a backdrop blur adds nothing, and
                   // on the scaled phone Chrome paints a ghost of text through it.
                   className="bg-white/85! backdrop-blur-none!"

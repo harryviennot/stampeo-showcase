@@ -78,7 +78,7 @@ export async function CounterSection() {
   ];
 
   return (
-    <LpSection section="counter" eyebrow={eyebrow} title={title} lead={lead} align="center">
+    <LpSection section="counter" anchor eyebrow={eyebrow} title={title} lead={lead} align="center">
       <CounterPlayground label={title} panes={panes} fact={fact} />
     </LpSection>
   );
