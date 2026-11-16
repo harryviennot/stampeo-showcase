@@ -5,7 +5,7 @@ import { STAMPED_CARD } from "../../platform/classes";
 import { IconTile } from "../../shared/IconTile";
 import { LpSection } from "../../shared/LpSection";
 import { INK } from "./ink";
-import { EMAIL_TREND } from "./sample";
+import { EMAIL_TREND } from "../../../../lib/landing-pages/previews/analytics-sample";
 
 /** One fact beside the email: an icon tile and a line. */
 const FACT_ICONS = [CalendarCheckIcon, BellIcon] as const;

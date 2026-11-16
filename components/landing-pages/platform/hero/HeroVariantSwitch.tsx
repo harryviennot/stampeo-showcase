@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore, type ReactNode } from "react";
-import { heroVariant, type HeroVariant } from "@/lib/landing-pages/variants";
+import { heroVariant, type HeroVariant } from "@/lib/landing-pages/platform/variants";
 
 /** The hero the query string asks for (`?hero=shelf`); anything else is the stack. */
 export function heroFromSearch(search: string): HeroVariant {

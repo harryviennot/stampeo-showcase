@@ -33,7 +33,7 @@ import { mockEnglishServerTranslations } from "../testing/server-intl";
 await mockEnglishServerTranslations();
 const { CardStyleGallery } = await import("@/components/features/design-de-carte/CardStyleGallery");
 const { HowTable } = await import("@/components/landing-pages/platform/HowTable");
-const { PlatformHero } = await import("@/components/landing-pages/platform/PlatformHero");
+const { PlatformHero } = await import("@/components/landing-pages/platform/hero/PlatformHero");
 
 const FAQ_ITEMS = [
   { question: "Can I use my own stamp icons?", answer: "Yes, import any image." },

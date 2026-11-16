@@ -14,7 +14,7 @@ import {
   stepAfter,
   type StackCard,
   type StackState,
-} from "@/lib/landing-pages/wallet-stack";
+} from "@/lib/landing-pages/platform/wallet-stack";
 
 /** A card is laid out 300px wide, 1.282 tall: the width the wallet card is drawn for. */
 const CARD_WIDTH = 300;

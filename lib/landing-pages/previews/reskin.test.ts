@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
+import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
 import { RESKIN_SHOPS, RESKIN_STEP_MS, nextShop, reskinCard, reskinPlacement, reskinView } from "./reskin";
 
 const CAPTIONS = CARD_DESIGN_PREVIEW.reskin.captions;

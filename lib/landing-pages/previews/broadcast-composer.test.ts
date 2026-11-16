@@ -6,7 +6,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { COUNT_MS, countedAt, deliveryOf, firstStage, shouldAutoPlay } from "./broadcast-composer";
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "./copy/previews/promotional-campaigns";
+import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "../copy/previews/promotional-campaigns";
 
 describe("the sample broadcast's delivery", () => {
   test("reached 680 of 716 cards: Apple's 412 and Google's 268, out of everyone it was sent to", () => {

@@ -14,7 +14,7 @@ import {
   wordingView,
   type WordingMode,
   type WordingPart,
-} from "@/lib/landing-pages/wording-editor";
+} from "@/lib/landing-pages/previews/wording-editor";
 import { STAMPED_STAGE } from "../../platform/classes";
 import { PlanChip } from "../../shared/PlanChip";
 import { LockScreenSlice } from "./LockScreenSlice";

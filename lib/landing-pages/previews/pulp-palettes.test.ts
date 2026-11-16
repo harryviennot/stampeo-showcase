@@ -5,8 +5,8 @@
 
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { read } from "../testing/jsx-source";
-import { ROOT } from "../testing/jsx-source";
+import { read } from "../../testing/jsx-source";
+import { ROOT } from "../../testing/jsx-source";
 import { PULP_CARD, PULP_PALETTES, palettePlayback, paletteDesign } from "./pulp-palettes";
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -41,7 +41,7 @@ describe("the five palettes", () => {
   });
 
   test("come from the designer's own generator run on the juice bar's logo, not from a hand-picked list", () => {
-    const source = read(join(ROOT, "lib", "landing-pages", "pulp-palettes.ts"));
+    const source = read(join(ROOT, "lib", "landing-pages", "previews", "pulp-palettes.ts"));
 
     expect(source).toContain("generateThemeVariants");
     expect(source).toContain("/themes/pulp/logo.svg");

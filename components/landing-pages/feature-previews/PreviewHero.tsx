@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import type { PlanChip as Plan } from "@/lib/landing-pages/copy/types";
 import type { PreviewSlug } from "@/lib/landing-pages/pages";
-import { HeroWords } from "../platform/HeroWords";
+import { HeroWords } from "../platform/hero/HeroWords";
 import { LpCtaPair, type SecondaryAction } from "../platform/LpCtaPair";
 import { LpSection } from "../shared/LpSection";
 

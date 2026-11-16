@@ -2,13 +2,13 @@
  * The cards of the Platform hero, and what they do over time. The stack (the default) is nine wallet cards
  * laid out like a phone's Wallet, one in front with the others showing as strips above it: the front card
  * plays a small moment if it has one (a stamp lands, points add up, a level is reached), leaves, and the
- * next takes its place. The shelf (`?hero=shelf`) is a straight row of nine. Everything here is pure; the
- * components only draw it.
+ * next takes its place. Everything here is pure; the components only draw it. The shelf's cards (`?hero=shelf`)
+ * are in `wallet-shelf.ts`.
  */
 
 import { WRENFOLD } from "@/components/landing-pages/shared/samples";
 import { resolveFanCard } from "@/lib/hero-fan";
-import { BRONZE_LOOK, GOLD_LOOK, NOIR_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
+import { GOLD_LOOK, NOIR_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
 /** What a card shows once its moment has played, over what it showed before. */
@@ -42,7 +42,7 @@ export interface ShownCard {
 }
 
 /** A shop's card from the brand banks, as the sample says. */
-function shop(id: string, extra: Partial<StackCard> = {}): StackCard {
+export function shop(id: string, extra: Partial<StackCard> = {}): StackCard {
   const card = resolveFanCard(id);
 
   if (card.kind === "stamps") {
@@ -59,7 +59,7 @@ function shop(id: string, extra: Partial<StackCard> = {}): StackCard {
 }
 
 /** The card in a level's look (a points card draws its progress in the look's stamp colour). */
-function inLook(card: StackCard, look: LevelLook, headerLabel: string, extra: Partial<StackCard> = {}): StackCard {
+export function inLook(card: StackCard, look: LevelLook, headerLabel: string, extra: Partial<StackCard> = {}): StackCard {
   const design: Partial<CardDesign> = { ...card.design, ...look };
 
   if (card.program === "points") design.progress_accent_color = look.stamp_filled_color;
@@ -67,7 +67,7 @@ function inLook(card: StackCard, look: LevelLook, headerLabel: string, extra: Pa
 }
 
 /** The dry cleaner the level cards belong to, as a stamp card. */
-const WRENFOLD_CARD: StackCard = { id: "wrenfold", program: "stamps", design: WRENFOLD.design, stamps: 4 };
+export const WRENFOLD_CARD: StackCard = { id: "wrenfold", program: "stamps", design: WRENFOLD.design, stamps: 4 };
 
 /**
  * The stack's nine, in the order they come to the front. The four strips on a phone show points, stamps and a
@@ -84,22 +84,6 @@ export const STACK_CARDS: readonly StackCard[] = [
   shop("restaurant"),
   inLook(shop("forme"), NOIR_LOOK, "Noir"),
 ];
-
-/** The shelf's nine: three stamp cards, three points cards, then one shop's card at Bronze, Silver and Gold. */
-export const SHELF_CARDS: readonly StackCard[] = [
-  shop("aurevo"),
-  shop("fournee"),
-  shop("lustre"),
-  shop("salon"),
-  shop("marginalia"),
-  shop("restaurant"),
-  inLook(WRENFOLD_CARD, BRONZE_LOOK, "Bronze"),
-  inLook(WRENFOLD_CARD, SILVER_LOOK, "Silver"),
-  inLook(WRENFOLD_CARD, GOLD_LOOK, "Gold"),
-];
-
-/** The five shelf cards a phone keeps, left to right: stamps, points, Silver, stamps, Gold. */
-export const SHELF_ON_PHONE = [0, 3, 7, 1, 8] as const;
 
 /** What the card shows: its own, or what it becomes once its moment has played. */
 export function showing(card: StackCard, after: boolean): ShownCard {

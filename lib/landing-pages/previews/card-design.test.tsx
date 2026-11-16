@@ -23,9 +23,9 @@ import { renderPreviewPage } from "../../testing/preview-page";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { CARD_DESIGN_PREVIEW as COPY } from "../copy/previews/card-design";
 import { SHARED } from "../copy/shared";
-import { ANATOMY_DESIGNS, WALLET_SAMPLE } from "../card-design-samples";
-import { PULP_PALETTES } from "../pulp-palettes";
-import { RESKIN_SHOPS, reskinCard } from "../reskin";
+import { ANATOMY_DESIGNS, WALLET_SAMPLE } from "./card-design-samples";
+import { PULP_PALETTES } from "./pulp-palettes";
+import { RESKIN_SHOPS, reskinCard } from "./reskin";
 import { join } from "node:path";
 
 // The wallets table holds two async phone components that ask next-intl for their words.

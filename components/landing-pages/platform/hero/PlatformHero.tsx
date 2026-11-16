@@ -1,4 +1,4 @@
-import { LpSection } from "../shared/LpSection";
+import { LpSection } from "../../shared/LpSection";
 import { HeroVariantSwitch } from "./HeroVariantSwitch";
 import { WalletShelfHero } from "./WalletShelfHero";
 import { WalletStackHero } from "./WalletStackHero";

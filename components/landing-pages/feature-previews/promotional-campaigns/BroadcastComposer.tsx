@@ -12,7 +12,7 @@ import {
   firstStage,
   shouldAutoPlay,
   type ComposerStage,
-} from "@/lib/landing-pages/broadcast-composer";
+} from "@/lib/landing-pages/previews/broadcast-composer";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
 import { STAMPED_STAGE } from "../../platform/classes";
 import { PhoneCrop } from "../../shared/PhoneCrop";

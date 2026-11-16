@@ -2,7 +2,7 @@ import { WalletCard } from "@/components/card/WalletCard";
 import { IPhone } from "@/components/ui/IPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { iphoneLayout } from "@/lib/devices/iphone";
-import type { PhoneSample } from "@/lib/landing-pages/card-design-samples";
+import type { PhoneSample } from "@/lib/landing-pages/previews/card-design-samples";
 import { POINTS_SAMPLES } from "@/lib/loyalty-samples";
 import { AurevoCard } from "./AurevoCard";
 import { PassFrame } from "./PassFrame";

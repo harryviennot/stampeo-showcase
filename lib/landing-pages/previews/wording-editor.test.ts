@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "./copy/previews/push-notifications";
+import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "../copy/previews/push-notifications";
 import {
   SAMPLE_VALUES,
   TYPING_MS,

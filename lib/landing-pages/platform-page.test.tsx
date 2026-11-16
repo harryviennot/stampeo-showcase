@@ -29,7 +29,7 @@ import { SHARED } from "./copy/shared";
 
 // The hero's wallet cards ask next-intl for their words.
 await mockEnglishServerTranslations();
-const { PlatformHero } = await import("@/components/landing-pages/platform/PlatformHero");
+const { PlatformHero } = await import("@/components/landing-pages/platform/hero/PlatformHero");
 
 const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
 const platformFile = (name: string) => join(PLATFORM_DIR, `${name}.tsx`);
@@ -90,7 +90,7 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
 });
 
 describe("the hero: the headline, the stack of cards, then the pair of actions (AC17)", () => {
-  const hero = () => code(platformFile("WalletStackHero"));
+  const hero = () => code(platformFile("hero/WalletStackHero"));
 
   test("puts the headline first, then the stack of wallet cards, then the CTA pair and its reassurance", async () => {
     const html = await renderEnAsync(<PlatformHero />);

@@ -15,8 +15,8 @@ import {
   flipDelayMs,
   flipMotion,
   setAll,
-} from "@/components/landing-pages/feature-previews/analytics/flip";
-import { ladderView } from "@/components/landing-pages/feature-previews/analytics/ladder-view";
+} from "@/lib/landing-pages/previews/analytics-flip";
+import { ladderView } from "@/lib/landing-pages/previews/analytics-ladder-view";
 import { PLAN_FACTS, TIERS, analyticsHistoryLabel } from "@/lib/plans/plan-facts";
 import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
 

@@ -8,9 +8,9 @@ import { TIERS } from "@/lib/plans/plan-facts";
 import type { TierId } from "@/lib/pricing";
 import { STAMPED_STAGE } from "../../platform/classes";
 import { CohortsMini, LocationMini } from "./CohortsMini";
-import { ladderView } from "./ladder-view";
+import { ladderView } from "../../../../lib/landing-pages/previews/analytics-ladder-view";
 import { BusiestMini, HabitsMini, RewardProgressMini } from "./QuestionMinis";
-import { STARTER_SENTENCES } from "./sample";
+import { STARTER_SENTENCES } from "../../../../lib/landing-pages/previews/analytics-sample";
 
 /** The width a chart is drawn at under its title on a phone, zoomed up from the thumbnail so its smallest label prints 11px. */
 const STACK_WIDTH = 288;

@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { HeroWords } from "./HeroWords";
-import { LpCtaPair } from "./LpCtaPair";
+import { LpCtaPair } from "../LpCtaPair";
 import { WalletStack } from "./WalletStack";
 
 /**

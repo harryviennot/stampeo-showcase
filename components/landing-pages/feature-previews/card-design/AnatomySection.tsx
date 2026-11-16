@@ -1,5 +1,5 @@
 import { AnnotatedWalletCard } from "@/components/features/design-de-carte/AnnotatedWalletCard";
-import { ANATOMY_DESIGNS } from "@/lib/landing-pages/card-design-samples";
+import { ANATOMY_DESIGNS } from "@/lib/landing-pages/previews/card-design-samples";
 import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
 import { LpHeading, LpSection } from "../../shared/LpSection";
 

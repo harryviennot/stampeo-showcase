@@ -2,7 +2,7 @@ import { RegionText } from "@/components/market/RegionText";
 import { Container } from "@/components/ui/Container";
 import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
-import { HeroWords } from "../../platform/HeroWords";
+import { HeroWords } from "../../platform/hero/HeroWords";
 import { LpCtaPair } from "../../platform/LpCtaPair";
 import { LpSection } from "../../shared/LpSection";
 import { ReskinCards } from "./ReskinCards";

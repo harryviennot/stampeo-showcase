@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { IPhone } from "@/components/ui/IPhone";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { TEAM_CODE, TYPE_STEP_MS, codeBoxes, typesIn } from "@/lib/landing-pages/team-code";
+import { TEAM_CODE, TYPE_STEP_MS, codeBoxes, typesIn } from "@/lib/landing-pages/previews/team-code";
 import { APP } from "./appColors";
 
 /**

@@ -5,8 +5,8 @@ import { Segmented } from "@/components/ui/Segmented";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
 import { BlindSpotCard } from "./BlindSpotCard";
-import { AUTO_FLIP, allPaper, autoFlipDue, faceShown, flipCard, flipDelayMs, flipMotion, setAll, type Face } from "./flip";
-import { ANSWERS } from "./sample";
+import { AUTO_FLIP, allPaper, autoFlipDue, faceShown, flipCard, flipDelayMs, flipMotion, setAll, type Face } from "../../../../lib/landing-pages/previews/analytics-flip";
+import { ANSWERS } from "../../../../lib/landing-pages/previews/analytics-sample";
 
 /**
  * The control and the six cards. Everything starts on paper; the control turns all six, a tap turns one, and a

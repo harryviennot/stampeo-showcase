@@ -6,7 +6,7 @@ import { InkArrow } from "@/components/ui/InkAnnotation";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useWatching } from "@/hooks/useWatching";
-import { PULP_CARD, PULP_PALETTES, paletteDesign, palettePlayback } from "@/lib/landing-pages/pulp-palettes";
+import { PULP_CARD, PULP_PALETTES, paletteDesign, palettePlayback } from "@/lib/landing-pages/previews/pulp-palettes";
 import { STAMPED_STAGE } from "../../platform/classes";
 
 /** The card is laid out 300px wide and 1.282 tall; it is drawn at 260px on a phone. */

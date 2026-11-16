@@ -1,6 +1,6 @@
 import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
-import { ANALYTICS } from "../../platform/DeliverAnalytics";
-import { HABITS, READY } from "./QuestionMinis";
+import { ANALYTICS } from "../../../components/landing-pages/platform/DeliverAnalytics";
+import { HABITS, READY } from "../../../components/landing-pages/feature-previews/analytics/QuestionMinis";
 
 /**
  * The sample café's answers, read from the numbers its dashboard draws: Platform's `ANALYTICS` for visits, new

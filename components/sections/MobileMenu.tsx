@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { CaretRightIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
-import { menuVariant, type MenuVariant } from "@/lib/landing-pages/variants";
+import { menuVariant, type MenuVariant } from "@/lib/landing-pages/platform/variants";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
 import { MobileMenuDrill } from "./MobileMenuDrill";
 import {

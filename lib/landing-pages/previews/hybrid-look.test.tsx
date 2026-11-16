@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
 import { GlassCard } from "@/components/landing-pages/platform/GlassCard";
-import { HeroWords } from "@/components/landing-pages/platform/HeroWords";
+import { HeroWords } from "@/components/landing-pages/platform/hero/HeroWords";
 import { HoverRows } from "@/components/landing-pages/platform/HoverRows";
 import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
 import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";

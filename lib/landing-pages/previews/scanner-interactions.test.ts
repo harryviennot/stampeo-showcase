@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { MOBILE_SCANNER_PREVIEW } from "./copy/previews/mobile-scanner";
+import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
 import { AUTO_ADVANCE_MS, COUNTER_KEYS, autoplays, crossfadeMs, stepCounter } from "./scanner-counter";
 import { TEAM_CODE, TYPE_STEP_MS, codeBoxes, typesIn } from "./team-code";
 

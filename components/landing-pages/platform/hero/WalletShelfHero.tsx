@@ -5,9 +5,10 @@ import { ScaledBox } from "@/components/ui/ScaledBox";
 import { PLATFORM } from "@/lib/landing-pages/copy/platform";
 import { PROGRAM_TYPES } from "@/lib/landing-pages/copy/program-types";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
-import { SHELF_CARDS, SHELF_ON_PHONE, showing } from "@/lib/landing-pages/wallet-stack";
+import { SHELF_CARDS, SHELF_ON_PHONE } from "@/lib/landing-pages/platform/wallet-shelf";
+import { showing } from "@/lib/landing-pages/platform/wallet-stack";
 import { HeroWords } from "./HeroWords";
-import { LpCtaPair } from "./LpCtaPair";
+import { LpCtaPair } from "../LpCtaPair";
 
 /** A card is laid out 300px wide and 1.282 tall, and drawn at 168px from `lg` (128px below it). */
 const LAYOUT = { width: 300, height: 384.6 };

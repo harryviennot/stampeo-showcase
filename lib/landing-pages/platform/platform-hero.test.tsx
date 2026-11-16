@@ -5,19 +5,20 @@
  */
 
 import { describe, expect, test } from "bun:test";
-import { WalletShelfHero } from "@/components/landing-pages/platform/WalletShelfHero";
-import { WalletStackHero } from "@/components/landing-pages/platform/WalletStackHero";
-import { HeroVariantSwitch, heroFromSearch } from "@/components/landing-pages/platform/HeroVariantSwitch";
-import { PLATFORM } from "./copy/platform";
-import { SHARED } from "./copy/shared";
-import { PROGRAM_TYPES } from "./copy/program-types";
-import { code, findTag, openingTags, read } from "../testing/jsx-source";
-import { COMPONENTS_DIR } from "../testing/landing-pages-source";
-import { expectInOrder, pictures, renderEn, textOf } from "../testing/render-en";
+import { WalletShelfHero } from "@/components/landing-pages/platform/hero/WalletShelfHero";
+import { WalletStackHero } from "@/components/landing-pages/platform/hero/WalletStackHero";
+import { HeroVariantSwitch, heroFromSearch } from "@/components/landing-pages/platform/hero/HeroVariantSwitch";
+import { PLATFORM } from "../copy/platform";
+import { SHARED } from "../copy/shared";
+import { PROGRAM_TYPES } from "../copy/program-types";
+import { code, findTag, openingTags, read } from "../../testing/jsx-source";
+import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
+import { expectInOrder, pictures, renderEn, textOf } from "../../testing/render-en";
 import { join } from "node:path";
-import { SHELF_CARDS, STACK_CARDS } from "./wallet-stack";
+import { SHELF_CARDS } from "./wallet-shelf";
+import { STACK_CARDS } from "./wallet-stack";
 
-const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
+const HERO_DIR = join(COMPONENTS_DIR, "platform", "hero");
 const stack = () => renderEn(<WalletStackHero />, { us: true });
 const shelf = () => renderEn(<WalletShelfHero />, { us: true });
 /** The shops' logos in a render, one per card. */
@@ -67,7 +68,7 @@ describe("the stack hero", () => {
     expect(html).toMatch(/<a [^>]*href="\/en\/onboarding"/);
     expect(html).toMatch(/<a [^>]*href="#demo"/);
     expectInOrder(html, [SHARED.cta, SHARED.demoLink]);
-    expect(findTag(code(join(PLATFORM_DIR, "WalletStackHero.tsx")), "LpCtaPair")?.attrs).toContain('location="hero"');
+    expect(findTag(code(join(HERO_DIR, "WalletStackHero.tsx")), "LpCtaPair")?.attrs).toContain('location="hero"');
   });
 });
 
@@ -120,10 +121,10 @@ describe("?hero= picks one of them", () => {
   });
 
   test("Platform's hero is the switch, and the page mounts it with no props", () => {
-    const hero = code(join(PLATFORM_DIR, "PlatformHero.tsx"));
+    const hero = code(join(HERO_DIR, "PlatformHero.tsx"));
 
     expect(openingTags(hero).map((tag) => tag.name)).toEqual(expect.arrayContaining(["HeroVariantSwitch", "WalletStackHero", "WalletShelfHero"]));
-    expect(read(join(PLATFORM_DIR, "HeroVariantSwitch.tsx"))).toMatch(/useSyncExternalStore/);
+    expect(read(join(HERO_DIR, "HeroVariantSwitch.tsx"))).toMatch(/useSyncExternalStore/);
   });
 });
 

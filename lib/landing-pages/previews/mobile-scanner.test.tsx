@@ -18,8 +18,8 @@ import { smallestLabelPx } from "../../testing/stacked-rows";
 import { renderAsAsync } from "../../testing/visitor-seams";
 import { MOBILE_SCANNER_PREVIEW as COPY } from "../copy/previews/mobile-scanner";
 import { SHARED } from "../copy/shared";
-import { COUNTER_KEYS } from "../scanner-counter";
-import { TEAM_CODE } from "../team-code";
+import { COUNTER_KEYS } from "./scanner-counter";
+import { TEAM_CODE } from "./team-code";
 
 // The sections hold async server components (the wallet cards) that ask next-intl for their labels.
 await mockEnglishServerTranslations();

@@ -1,8 +1,8 @@
 import { AccentText } from "@/lib/landing-pages/AccentText";
 import type { PlanChip as Plan } from "@/lib/landing-pages/copy/types";
 import { LANDING_PAGES, type LandingSlug } from "@/lib/landing-pages/pages";
-import { EYEBROW_PILL } from "../shared/LpSection";
-import { Chip, PlanChip } from "../shared/PlanChip";
+import { EYEBROW_PILL } from "../../shared/LpSection";
+import { Chip, PlanChip } from "../../shared/PlanChip";
 
 /** The classes of each element of the words, for the two heroes: plain centred paragraphs over a fan, or a column of their own. */
 const LOOK = {

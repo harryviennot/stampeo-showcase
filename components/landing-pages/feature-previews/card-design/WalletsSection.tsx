@@ -1,4 +1,4 @@
-import { WALLET_SAMPLE } from "@/lib/landing-pages/card-design-samples";
+import { WALLET_SAMPLE } from "@/lib/landing-pages/previews/card-design-samples";
 import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
 import { STEPS_PHONE, StepsTable } from "../../platform/StepsTable";
 import { GoogleWalletPhone } from "../../shared/GoogleWalletPhone";

@@ -9,7 +9,7 @@ import { InkNote } from "@/components/ui/InkAnnotation";
 import { Segmented } from "@/components/ui/Segmented";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
-import type { AnatomyDesigns } from "@/lib/landing-pages/card-design-samples";
+import type { AnatomyDesigns } from "@/lib/landing-pages/previews/card-design-samples";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
 interface Annotation {

@@ -7,7 +7,7 @@ import { IPhone } from "@/components/ui/IPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { iphoneLayout } from "@/lib/devices/iphone";
-import { AUTO_ADVANCE_MS, COUNTER_KEYS, autoplays, crossfadeMs, stepCounter, type CounterKey } from "@/lib/landing-pages/scanner-counter";
+import { AUTO_ADVANCE_MS, COUNTER_KEYS, autoplays, crossfadeMs, stepCounter, type CounterKey } from "@/lib/landing-pages/previews/scanner-counter";
 import { APP } from "./appColors";
 
 /** One button of the counter and what it shows: the Scanner's screen, the customer's wallet card and what the scan did to it. */

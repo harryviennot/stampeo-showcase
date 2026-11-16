@@ -2,7 +2,7 @@ import { GoogleWalletCard } from "@/components/card/GoogleWalletCard";
 import { AndroidPhone } from "@/components/ui/AndroidPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { androidLayout } from "@/lib/devices/android";
-import type { PhoneSample } from "@/lib/landing-pages/card-design-samples";
+import type { PhoneSample } from "@/lib/landing-pages/previews/card-design-samples";
 import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
 import { aurevoDesign } from "./AurevoCard";
 
