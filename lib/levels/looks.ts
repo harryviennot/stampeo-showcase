@@ -1,11 +1,10 @@
 import type { CardDesign } from "@/lib/types/design";
 
 /**
- * The colours a level's card takes by default: level 2 is silver, level 3
- * gold. A copy of `SKINS` in
- * backend/app/services/programs/levels/skins.py (the showcase cannot import
- * it), written as the backend stores them; `looks-values.test.ts` pins the values.
- * Keep the two in step.
+ * The colours a level's card takes by default, from bronze to noir. A copy of
+ * `SKINS` in backend/app/services/programs/levels/skins.py (the showcase
+ * cannot import it), written as the backend stores them; `looks-values.test.ts`
+ * pins the values. Keep the two in step.
  */
 export type LevelLook = Pick<
   CardDesign,
@@ -18,6 +17,18 @@ export type LevelLook = Pick<
   | "strip_background_color"
   | "icon_color"
 >;
+
+/** A warm copper brown with cream text and light-copper stamps. */
+export const BRONZE_LOOK: LevelLook = {
+  background_color: "rgb(136, 84, 44)",
+  foreground_color: "rgb(255, 242, 226)",
+  label_color: "rgb(250, 222, 188)",
+  stamp_filled_color: "rgb(238, 194, 140)",
+  stamp_empty_color: "rgb(108, 64, 32)",
+  stamp_border_color: "rgb(255, 242, 226)",
+  strip_background_color: "rgb(136, 84, 44)",
+  icon_color: "rgb(84, 46, 18)",
+};
 
 /** A light brushed metal with near-black text and slate stamps. */
 export const SILVER_LOOK: LevelLook = {
@@ -43,4 +54,34 @@ export const GOLD_LOOK: LevelLook = {
   icon_color: "rgb(255, 232, 166)",
 };
 
-export const LEVEL_LOOKS = { silver: SILVER_LOOK, gold: GOLD_LOOK } as const;
+/** A cool pale blue-grey with navy text and navy stamps. */
+export const PLATINUM_LOOK: LevelLook = {
+  background_color: "rgb(226, 232, 241)",
+  foreground_color: "rgb(16, 28, 52)",
+  label_color: "rgb(48, 66, 100)",
+  stamp_filled_color: "rgb(38, 62, 110)",
+  stamp_empty_color: "rgb(184, 198, 218)",
+  stamp_border_color: "rgb(48, 66, 100)",
+  strip_background_color: "rgb(226, 232, 241)",
+  icon_color: "rgb(234, 240, 250)",
+};
+
+/** Near-black with warm white text and gold stamps. */
+export const NOIR_LOOK: LevelLook = {
+  background_color: "rgb(20, 20, 22)",
+  foreground_color: "rgb(246, 242, 232)",
+  label_color: "rgb(214, 180, 98)",
+  stamp_filled_color: "rgb(212, 175, 55)",
+  stamp_empty_color: "rgb(54, 54, 58)",
+  stamp_border_color: "rgb(212, 175, 55)",
+  strip_background_color: "rgb(20, 20, 22)",
+  icon_color: "rgb(20, 20, 22)",
+};
+
+export const LEVEL_LOOKS = {
+  bronze: BRONZE_LOOK,
+  silver: SILVER_LOOK,
+  gold: GOLD_LOOK,
+  platinum: PLATINUM_LOOK,
+  noir: NOIR_LOOK,
+} as const;

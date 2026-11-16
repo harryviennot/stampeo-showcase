@@ -1,16 +1,29 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { GOLD_LOOK, LEVEL_LOOKS, SILVER_LOOK } from "./looks";
+import { BRONZE_LOOK, GOLD_LOOK, LEVEL_LOOKS, NOIR_LOOK, PLATINUM_LOOK, SILVER_LOOK } from "./looks";
 
 /**
- * The silver and gold palettes a level's card takes by default are a copy of
- * the backend's (`backend/app/services/programs/levels/skins.py`, `SKINS`),
+ * The five palettes a level's card takes by default are a copy of the
+ * backend's (`backend/app/services/programs/levels/skins.py`, `SKINS`),
  * which the showcase cannot import or read. This test pins the copy's values
  * as written here, so a stray edit shows up; it cannot tell that the backend
  * changed, so a change to `SKINS` is made in `looks.ts` and here by hand.
  */
-describe("the level looks keep their pinned silver and gold values", () => {
+describe("the level looks keep their pinned values", () => {
+  test("bronze is a warm copper brown with cream text and light-copper stamps", () => {
+    expect(BRONZE_LOOK).toEqual({
+      background_color: "rgb(136, 84, 44)",
+      foreground_color: "rgb(255, 242, 226)",
+      label_color: "rgb(250, 222, 188)",
+      stamp_filled_color: "rgb(238, 194, 140)",
+      stamp_empty_color: "rgb(108, 64, 32)",
+      stamp_border_color: "rgb(255, 242, 226)",
+      strip_background_color: "rgb(136, 84, 44)",
+      icon_color: "rgb(84, 46, 18)",
+    });
+  });
+
   test("silver is a light brushed metal with near-black text and slate stamps", () => {
     expect(SILVER_LOOK).toEqual({
       background_color: "rgb(212, 216, 222)",
@@ -37,10 +50,36 @@ describe("the level looks keep their pinned silver and gold values", () => {
     });
   });
 
-  test("the file names where the values were copied from", () => {
+  test("platinum is a cool pale blue-grey with navy text and navy stamps", () => {
+    expect(PLATINUM_LOOK).toEqual({
+      background_color: "rgb(226, 232, 241)",
+      foreground_color: "rgb(16, 28, 52)",
+      label_color: "rgb(48, 66, 100)",
+      stamp_filled_color: "rgb(38, 62, 110)",
+      stamp_empty_color: "rgb(184, 198, 218)",
+      stamp_border_color: "rgb(48, 66, 100)",
+      strip_background_color: "rgb(226, 232, 241)",
+      icon_color: "rgb(234, 240, 250)",
+    });
+  });
+
+  test("noir is near-black with warm white text and gold stamps", () => {
+    expect(NOIR_LOOK).toEqual({
+      background_color: "rgb(20, 20, 22)",
+      foreground_color: "rgb(246, 242, 232)",
+      label_color: "rgb(214, 180, 98)",
+      stamp_filled_color: "rgb(212, 175, 55)",
+      stamp_empty_color: "rgb(54, 54, 58)",
+      stamp_border_color: "rgb(212, 175, 55)",
+      strip_background_color: "rgb(20, 20, 22)",
+      icon_color: "rgb(20, 20, 22)",
+    });
+  });
+
+  test("the catalog lists them in the backend's order, and the file names where the values were copied from", () => {
     const source = readFileSync(join(import.meta.dir, "looks.ts"), "utf8");
 
     expect(source).toContain("backend/app/services/programs/levels/skins.py");
-    expect(Object.keys(LEVEL_LOOKS)).toEqual(["silver", "gold"]);
+    expect(Object.keys(LEVEL_LOOKS)).toEqual(["bronze", "silver", "gold", "platinum", "noir"]);
   });
 });
