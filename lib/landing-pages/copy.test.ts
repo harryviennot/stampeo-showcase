@@ -148,8 +148,6 @@ describe("figures from other people (AC12)", () => {
       "OUTCOMES.headStart.empty",
       "OUTCOMES.headStart.withHeadStart",
       "OUTCOMES.problem.figure",
-      "PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers.figures[0]",
-      "PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers.figures[1]",
     ]);
     for (const { object } of figures) {
       expect(String(object.text).trim()).not.toBe("");
@@ -233,38 +231,15 @@ describe("the six previews' copy", () => {
     for (const slug of PREVIEW_SLUGS) expect(Object.keys(LANDING_PAGES[slug].hero)).not.toContain("eyebrow");
   });
 
-  describe("the broadcasts preview's figures are Stampeo's own, each with its source", () => {
-    const { figures, sourceLine } = PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers;
-
-    test("88% and 95% carry their source line", () => {
-      expect(figures.slice(0, 2).map((figure) => figure.value)).toEqual(["88%", "95%"]);
-      for (const figure of figures.slice(0, 2)) {
-        expect((figure as { source?: string }).source).toBe("Stampeo data, 86 businesses, February to October 2026");
-      }
-      expect(sourceLine).toBe("Stampeo data, 86 businesses, February to October 2026");
-    });
-
-    test("every figure under the source line is measured: the row holds only 88% and 95%", () => {
-      expect(figures.map((figure) => figure.value)).toEqual(["88%", "95%"]);
-    });
-
-    test("the 95% line says three months, not a count of days", () => {
-      expect(figures[1].text).toMatch(/three months/);
-      const campaigns = previewLines().filter((line) => line.path.startsWith("PROMOTIONAL_CAMPAIGNS_PREVIEW"));
-
-      expect(campaigns.filter((line) => /\b90\b/.test(line.value)).map((line) => line.path)).toEqual([]);
-    });
-  });
-
   describe("every number is the product's, not typed from memory", () => {
     test("98 stamp icons, the library's own count", () => {
       expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
     });
   });
 
-  test("the FAQs are the five questions: card design's and the broadcasts page's", () => {
+  test("the FAQs: card design's five questions and the campaigns page's six", () => {
     expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(5);
-    expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(5);
+    expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(6);
   });
 
   test("each sibling link is a feature's name and one plain line of at most 50 characters, with no plan in it", () => {

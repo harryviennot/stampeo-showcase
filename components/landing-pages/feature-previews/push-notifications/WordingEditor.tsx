@@ -15,10 +15,13 @@ import {
   type WordingMode,
   type WordingPart,
 } from "@/lib/landing-pages/previews/wording-editor";
-import { STAMPED_STAGE } from "../../platform/classes";
 import { LockScreenSlice } from "./LockScreenSlice";
 
 const LABEL = "text-[13px] font-semibold text-[var(--muted-foreground)]";
+
+/** The editor's white card: a soft shadow and a hairline ring, as the toggle card's. */
+const SURFACE =
+  "rounded-[32px] bg-white shadow-[0_2px_4px_rgba(25,18,16,0.04),0_32px_72px_-32px_rgba(25,18,16,0.18)] ring-1 ring-black/5";
 
 /** The notification's height is held at its longest wording, so typing never moves what is under it. */
 const LONGEST = [COPY.editor.ready.text, COPY.editor.own.preview].reduce((longest, text) => (text.length > longest.length ? text : longest));
@@ -68,7 +71,7 @@ function Switch({ label, on, onToggle }: Readonly<{ label: string; on: boolean; 
 }
 
 /**
- * The dashboard's message editor on a stamped stage. Ready-made is the default stamp message; Your words types a
+ * The dashboard's message editor on a clean white card. Ready-made is the default stamp message; Your words types a
  * message with variables in, and the lock screen beside it follows. Three message switches, each toggled independently.
  */
 export function WordingEditor() {
@@ -98,7 +101,7 @@ export function WordingEditor() {
   const view = wordingView({ mode, steps, ready: ready.text, own: own.text, values: SAMPLE_VALUES });
 
   return (
-    <div className={`mx-auto max-w-[1040px] p-5 text-left sm:p-8 lg:p-10 ${STAMPED_STAGE}`}>
+    <div className={`mx-auto max-w-[1040px] p-6 text-left sm:p-10 lg:p-12 ${SURFACE}`}>
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-8">
         <div className="lg:col-span-7">
           <p className={LABEL}>{toggle.label}</p>

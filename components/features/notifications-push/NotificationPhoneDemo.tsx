@@ -17,8 +17,6 @@ interface NotificationPhoneDemoProps {
   eager?: boolean;
   /** The phone's width in CSS px. */
   width?: number;
-  /** When set, the banners are on the lock screen exactly while this is true and nothing cycles: they drop in and leave as the cycle's do. */
-  shown?: boolean;
 }
 
 export function NotificationPhoneDemo({
@@ -26,13 +24,9 @@ export function NotificationPhoneDemo({
   animate = true,
   eager = true,
   width = 280,
-  shown,
 }: NotificationPhoneDemoProps) {
   const t = useTranslations("features.notifications-push.demo");
-  const controlled = shown !== undefined;
-  const cycles = animate && !controlled;
   const [isVisible, setIsVisible] = useState(!animate);
-  const visible = controlled ? shown : isVisible;
 
   const banners: PhoneNotification[] = notifications ?? [
     {
@@ -44,13 +38,13 @@ export function NotificationPhoneDemo({
   ];
 
   useEffect(() => {
-    if (!cycles) return;
+    if (!animate) return;
     const initialDelay = setTimeout(() => setIsVisible(true), 2000);
     return () => clearTimeout(initialDelay);
-  }, [cycles]);
+  }, [animate]);
 
   useEffect(() => {
-    if (!cycles) return;
+    if (!animate) return;
     if (!isVisible) {
       // Gap before next notification
       const timer = setTimeout(() => setIsVisible(true), 2500);
@@ -59,7 +53,7 @@ export function NotificationPhoneDemo({
     // Notification holds — enough time to read
     const timer = setTimeout(() => setIsVisible(false), 5000);
     return () => clearTimeout(timer);
-  }, [isVisible, cycles]);
+  }, [isVisible, animate]);
 
   return (
     <IPhone statusBar="lock" eager={eager} width={width}>
@@ -91,9 +85,9 @@ export function NotificationPhoneDemo({
 
       {/* Notification area */}
       <div className={`relative z-10 px-3 mt-6${notifications ? " flex flex-col gap-2" : ""}`}>
-        {animate || controlled ? (
-          <AnimatePresence initial={controlled ? false : undefined}>
-            {visible &&
+        {animate ? (
+          <AnimatePresence>
+            {isVisible &&
               banners.map((banner, index) => (
                 <motion.div
                   key={index}

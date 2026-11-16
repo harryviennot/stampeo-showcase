@@ -10,36 +10,48 @@ const AUREVO_LEVEL_UP: Banner = { sender: SAMPLE_BUSINESS, body: LEVEL_UP_BANNER
 /** The notifications preview: every stamp and reward reaches the lock screen on its own, with no app and no phone number. */
 export const PUSH_NOTIFICATIONS_PREVIEW = {
   meta: {
-    title: "Lock-screen notifications for loyalty cards | Stampeo",
+    title: "Push notifications for your loyalty card | Stampeo",
     description:
-      "Every stamp and every reward lands on your customer's lock screen, in Apple Wallet and Google Wallet. No app, no phone number. Free trial, cancel anytime.",
+      "Every stamp and reward sends a push notification to your customer's lock screen, in Apple Wallet and Google Wallet. No app to download. Free trial.",
   } satisfies PageMeta,
   hero: {
-    h1: "Every stamp lands on their lock screen.",
-    accent: "their lock screen.",
-    sub: "Automatic notifications in Apple Wallet and Google Wallet. No app, no phone number.",
-  } satisfies HeroCopy,
-  /** One customer's card over several visits: each step sends its own default message. */
+    h1: "Push notifications for your loyalty card.",
+    accent: "Push notifications",
+    sub: "Each stamp and reward sends an automatic notification to your customer's lock screen.",
+    /** The one notification on the hero's lock screen. */
+    banner: STAMP_BANNER,
+    alt: "An iPhone lock screen with a notification from Aurevo: Stamp collected! You have 5 of 8 stamps.",
+  } satisfies HeroCopy & { banner: Banner; alt: string },
+  /** One customer's visits: each step shows the card as it stands, then the default message it sends. */
   day: {
-    eyebrow: "On their lock screen",
-    title: "A message for every step of the card.",
-    lead: "From their first stamp to their next level, each one sends itself.",
+    eyebrow: "One customer's visits",
+    title: "A notification each time their card changes.",
+    lead: "Follow one customer: the card updates first, then the message arrives.",
     nodes: [
-      { key: "stamp", label: "5th visit", banner: STAMP_BANNER },
-      { key: "reward", label: "Card full", banner: REWARD_BANNER },
-      { key: "redeemed", label: "Reward claimed", banner: REDEEMED_BANNER },
-      { key: "level", label: "Next level", banner: AUREVO_LEVEL_UP },
-    ] satisfies Array<{ key: "stamp" | "reward" | "redeemed" | "level"; label: string; banner: Banner }>,
+      { key: "stamp", label: "Stamp added", banner: STAMP_BANNER, cardAlt: "Aurevo's card at 5 of 8 stamps" },
+      { key: "reward", label: "Card full", banner: REWARD_BANNER, cardAlt: "Aurevo's card full, at 8 of 8 stamps" },
+      { key: "redeemed", label: "Reward claimed", banner: REDEEMED_BANNER, cardAlt: "Aurevo's card back to 0 of 8 after the reward" },
+      { key: "level", label: "New level", banner: AUREVO_LEVEL_UP, cardAlt: "Aurevo's card at Silver, 1 of 8 stamps" },
+    ] satisfies Array<{
+      key: "stamp" | "reward" | "redeemed" | "level";
+      label: string;
+      banner: Banner;
+      cardAlt: string;
+    }>,
   },
   wallets: {
     eyebrow: "iPhone and Android",
-    title: "Apple Wallet and Google Wallet, both.",
-    lead: "Customers get the notification whichever phone they carry.",
+    title: "Push notifications on iPhone and Android.",
+    lead: "Apple Wallet and Google Wallet both show them. Your customers download nothing.",
     iphone: "On iPhone",
     android: "On Android",
     icon: {
       title: "Your own icon",
-      line: "Upload an icon, or use one made from your logo.",
+      line: "Upload an icon, or pick one made from your logo.",
+    },
+    phoneAlts: {
+      apple: "An iPhone with Aurevo's loyalty card open in Apple Wallet",
+      google: "An Android phone with the same card open in Google Wallet",
     },
   },
   /**
@@ -48,9 +60,9 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
    * "Customer first name" and "Stamps remaining".
    */
   editor: {
-    eyebrow: "In your voice",
-    title: "Use our wording, or write your own.",
-    lead: "Ready-made messages for every stamp and reward, or your own words.",
+    eyebrow: "Your wording",
+    title: "Use our wording or write your own.",
+    lead: "Every message comes ready to send. Switch any off, or rewrite it in your words.",
     /** The two-way control over the message. */
     toggle: { label: "Message wording", ready: "Ready-made", own: "Your words" },
     messageLabel: "Message",
@@ -62,10 +74,12 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
   },
   demo: {
     eyebrow: "Live demo",
+    title: "Try it on your own phone.",
+    lead: "Add a sample card to your wallet, add a stamp, and get the notification yourself.",
   },
   band: {
-    title: "Keep every customer in the loop.",
-    accent: "in the loop.",
-    sub: "Notifications start with your first stamp.",
+    title: "Every stamp, on their lock screen.",
+    accent: "on their lock screen.",
+    sub: "Notifications start with your first stamp. Your customers install nothing.",
   } satisfies BandCopy,
 } as const;

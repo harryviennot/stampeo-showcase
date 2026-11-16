@@ -354,10 +354,10 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
   const callsOf = (file: string) =>
     openingTags(read(file)).filter((tag) => NOTIFICATIONS.includes(tag.name)).map((tag) => ({ file, tag }));
 
-  test("every lock screen, banner and moment list on a page is fed by lpBanner", () => {
+  test("every lock screen, banner and moment list on a page is fed by lpBanner (or shopBanner, its larger icon tile)", () => {
     const unfed = lpFiles()
       .flatMap(callsOf)
-      .filter(({ file }) => !/\blpBanner\b/.test(code(file)))
+      .filter(({ file }) => !/\b(?:lpBanner|shopBanner)\b/.test(code(file)))
       .map(({ file }) => file);
 
     expect(unfed).toEqual([]);

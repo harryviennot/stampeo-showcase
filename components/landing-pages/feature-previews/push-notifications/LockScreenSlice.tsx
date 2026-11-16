@@ -1,39 +1,45 @@
 import type { Banner } from "@/lib/landing-pages/copy/types";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
-import { lpBanner } from "../../shared/banner";
+import { shopBanner } from "../ShopIcon";
 
 /**
- * A sample-shop notification as one picture, on a warm grey tray under the lock screen's clock, read out
- * by who sent it and what it says. A message still being typed in passes `label`, the finished words a screen
- * reader hears, and `reserve`, the longest words it will reach, which keep the notification's height from moving.
+ * A sample-shop notification as one picture, on a warm grey tray, read out by who sent it and what it says. It
+ * sits under the lock screen's clock unless `compact` leaves the clock out. A message still being typed in passes
+ * `label`, the finished words a screen reader hears, and `reserve`, the longest words it will reach, which keep
+ * the notification's height from moving.
  */
 export function LockScreenSlice({
   banner,
   label = banner.body,
   reserve,
+  compact = false,
   className = "",
-}: Readonly<{ banner: Banner; label?: string; reserve?: string; className?: string }>) {
+}: Readonly<{ banner: Banner; label?: string; reserve?: string; compact?: boolean; className?: string }>) {
   return (
     <div
       role="img"
       aria-label={`Lock screen notification from ${banner.sender}: ${label}`}
-      className={`relative w-full overflow-hidden rounded-[20px] bg-[var(--background-subtle)] px-4 pt-6 pb-5 text-left sm:px-5 ${className}`}
+      className={`relative w-full overflow-hidden rounded-[20px] bg-[var(--background-subtle)] text-left ${
+        compact ? "flex flex-col justify-center p-3 sm:p-4" : "px-4 pt-6 pb-5 sm:px-5"
+      } ${className}`}
     >
-      <p
-        aria-hidden
-        className="mb-4 text-center text-[56px] leading-none tracking-tight text-[var(--foreground)]"
-        style={{ fontWeight: 200 }}
-      >
-        9:41
-      </p>
+      {!compact && (
+        <p
+          aria-hidden
+          className="mb-4 text-center text-[56px] leading-none tracking-tight text-[var(--foreground)]"
+          style={{ fontWeight: 200 }}
+        >
+          9:41
+        </p>
+      )}
       <div aria-hidden className="grid w-full">
         {reserve !== undefined && (
           <div className="invisible col-start-1 row-start-1">
-            <LockScreenNotification {...lpBanner({ ...banner, body: reserve })} />
+            <LockScreenNotification {...shopBanner({ ...banner, body: reserve })} />
           </div>
         )}
         <div className="col-start-1 row-start-1 self-start">
-          <LockScreenNotification {...lpBanner(banner)} />
+          <LockScreenNotification {...shopBanner(banner)} />
         </div>
       </div>
     </div>

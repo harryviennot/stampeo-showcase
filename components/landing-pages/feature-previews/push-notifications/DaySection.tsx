@@ -4,14 +4,13 @@ import { NumberStamp } from "@/components/stamps/StampIcons";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
-import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
 import type { Banner } from "@/lib/landing-pages/copy/types";
 import type { CardDesign } from "@/lib/types/design";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { aurevoDesign } from "../../shared/AurevoCard";
 import { LpSection, EYEBROW } from "../../shared/LpSection";
 import { AUREVO } from "../../shared/samples";
-import { lpBanner } from "../../shared/banner";
+import { shopBanner } from "../ShopIcon";
 
 type Key = (typeof COPY.day.nodes)[number]["key"];
 
@@ -45,13 +44,9 @@ const DOT =
 
 function Notification({ banner }: Readonly<{ banner: Banner }>) {
   return (
-    <div
-      role="img"
-      aria-label={`Lock screen notification from ${banner.sender}: ${banner.body}`}
-      className="w-full max-w-[420px] text-left lg:ml-auto"
-    >
+    <div role="img" aria-label={`Lock screen notification from ${banner.sender}: ${banner.body}`} className="w-full max-w-[420px] text-left">
       <div aria-hidden>
-        <LockScreenNotification {...lpBanner(banner)} />
+        <LockScreenNotification {...shopBanner(banner)} />
       </div>
     </div>
   );
@@ -61,11 +56,10 @@ function MiniCard({
   design,
   stamps,
   headerLabel,
-}: Readonly<{ design: Partial<CardDesign>; stamps: number; headerLabel?: string }>) {
-  const name = headerLabel ? ` at ${headerLabel}` : "";
-
+  label,
+}: Readonly<{ design: Partial<CardDesign>; stamps: number; headerLabel?: string; label: string }>) {
   return (
-    <div role="img" aria-label={`${SAMPLE_BUSINESS}'s card${name}, ${stamps} of ${TOTAL} stamps`}>
+    <div role="img" aria-label={label}>
       <ScaledBox width={CARD_LAYOUT.width} height={CARD_LAYOUT.cut} {...CARD_SHOWN}>
         <div aria-hidden className={CARD_CUT}>
           <ScaledCardWrapper baseWidth={CARD_LAYOUT.width}>
@@ -77,7 +71,11 @@ function MiniCard({
   );
 }
 
-/** One customer's card over four visits on a dashed rail: a label, the default banner it sends and the card as it stands then; the rail is centred from `lg`. */
+/**
+ * One customer's card over four visits on a dashed rail: a label, the card as it stands, then the default
+ * notification it sends. From `lg` the rail is centred with the card on its left and the notification on its right;
+ * on a phone the three stack beside the rail, the card first.
+ */
 export async function DaySection() {
   const design = await aurevoDesign();
   const nodes = dayNodes();
@@ -88,23 +86,24 @@ export async function DaySection() {
         {nodes.map((node, index) => (
           <li
             key={node.key}
-            className="relative pb-10 pl-14 last:pb-0 lg:grid lg:grid-cols-[1fr_88px_1fr] lg:items-start lg:gap-0 lg:pb-14 lg:pl-0"
+            className="relative pb-10 pl-14 last:pb-0 lg:grid lg:grid-cols-[1fr_88px_1fr] lg:items-start lg:gap-y-1 lg:pb-14 lg:pl-0"
           >
             {index < nodes.length - 1 && <span aria-hidden className={RAIL} />}
             <span aria-hidden className={DOT}>
               <NumberStamp number={index + 1} size={40} color="var(--accent)" />
             </span>
 
-            <ScrollReveal variant="right" delay={index * 60} className="lg:col-start-1 lg:row-start-1 lg:pr-4">
+            <ScrollReveal variant="left" className="lg:col-start-1 lg:row-start-1 lg:pr-4">
               <p className={`${EYEBROW} flex min-h-10 items-center text-[var(--muted-foreground)] lg:justify-end`}>{node.label}</p>
-              <div className="mt-1">
-                <Notification banner={node.banner} />
-              </div>
             </ScrollReveal>
 
-            <div className="mt-4 lg:col-start-3 lg:row-start-1 lg:mt-0 lg:pl-4">
-              <MiniCard design={design} stamps={node.stamps} headerLabel={node.headerLabel} />
-            </div>
+            <ScrollReveal variant="left" className="mt-1 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:flex lg:justify-end lg:pr-4">
+              <MiniCard design={design} stamps={node.stamps} headerLabel={node.headerLabel} label={node.cardAlt} />
+            </ScrollReveal>
+
+            <ScrollReveal variant="right" delay={250} className="mt-4 lg:col-start-3 lg:row-start-2 lg:mt-0 lg:self-center lg:pl-4">
+              <Notification banner={node.banner} />
+            </ScrollReveal>
           </li>
         ))}
       </ol>
