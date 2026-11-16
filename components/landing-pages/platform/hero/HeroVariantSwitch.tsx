@@ -10,17 +10,19 @@ export function heroFromSearch(search: string): HeroVariant {
 
 const subscribe = () => () => {};
 
+/** The variant the address asks for, read in the browser. */
+export const currentHero = (): HeroVariant => heroFromSearch(window.location.search);
+
+/** What the server and the first client render show. */
+export const serverHero = (): HeroVariant => "stack";
+
 /**
  * Shows the stack hero, or the shelf when the address says `?hero=shelf`. The server and the first client render
  * both show the stack, so the page is static and its first paint never waits for the query string; a visitor who
  * asked for the shelf gets it as soon as the page is interactive.
  */
 export function HeroVariantSwitch({ stack, shelf }: Readonly<{ stack: ReactNode; shelf: ReactNode }>) {
-  const variant = useSyncExternalStore<HeroVariant>(
-    subscribe,
-    () => heroFromSearch(window.location.search),
-    () => "stack",
-  );
+  const variant = useSyncExternalStore<HeroVariant>(subscribe, currentHero, serverHero);
 
   return variant === "shelf" ? shelf : stack;
 }

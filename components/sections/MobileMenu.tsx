@@ -120,13 +120,12 @@ function MenuSheet({ onClose, burgerRef, featureLinks, pathname, navItems, resou
 
 const subscribe = () => () => {};
 
-/** Which menu the address asks for (`?menu=drill`): the sheet on the server and until the browser answers. */
+/** The menu the address asks for (`?menu=drill`), read in the browser. */
+export const currentMenu = (): MenuVariant => menuVariant(new URLSearchParams(window.location.search));
+
+/** Which menu the address asks for: the sheet on the server and until the browser answers. */
 export function useMenuVariant(): MenuVariant {
-  return useSyncExternalStore(
-    subscribe,
-    () => menuVariant(new URLSearchParams(window.location.search)),
-    () => "sheet",
-  );
+  return useSyncExternalStore(subscribe, currentMenu, () => "sheet");
 }
 
 /**

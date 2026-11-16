@@ -7,18 +7,17 @@
 import { describe, expect, test } from "bun:test";
 import { WalletShelfHero } from "@/components/landing-pages/platform/hero/WalletShelfHero";
 import { WalletStackHero } from "@/components/landing-pages/platform/hero/WalletStackHero";
-import { HeroVariantSwitch, heroFromSearch } from "@/components/landing-pages/platform/hero/HeroVariantSwitch";
+import { HeroVariantSwitch, currentHero, heroFromSearch, serverHero } from "@/components/landing-pages/platform/hero/HeroVariantSwitch";
+import { PlatformHero } from "@/components/landing-pages/platform/hero/PlatformHero";
 import { PLATFORM } from "../copy/platform";
 import { SHARED } from "../copy/shared";
 import { PROGRAM_TYPES } from "../copy/program-types";
-import { code, findTag, openingTags, read } from "../../testing/jsx-source";
-import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
 import { expectInOrder, pictures, renderEn, textOf } from "../../testing/render-en";
-import { join } from "node:path";
+import { restoreGlobalsAfterEach } from "../../testing/restore-globals";
+import { renderAs } from "../../testing/visitor-seams";
 import { SHELF_CARDS } from "./wallet-shelf";
 import { STACK_CARDS } from "./wallet-stack";
 
-const HERO_DIR = join(COMPONENTS_DIR, "platform", "hero");
 const stack = () => renderEn(<WalletStackHero />, { us: true });
 const shelf = () => renderEn(<WalletShelfHero />, { us: true });
 /** The shops' logos in a render, one per card. */
@@ -54,21 +53,22 @@ describe("the stack hero", () => {
     expect(logos(html).join(" ")).not.toMatch(/\/themes\/(oba|barber)\//);
   });
 
-  test("shows stamps, points and a level in the first screen: the count of stamps, a points balance and a level's name", () => {
-    const text = textOf(stack());
+  test("shows stamps, points and a level in the first screen: the five cards a phone shows, not the four it hides", () => {
+    const shown = stack().split('class="wst-land"').slice(1, 6);
+    const text = textOf(shown.join(""));
 
+    expect(shown).toHaveLength(5);
     expect(text).toContain("5 / 8");
     expect(text).toContain("Points");
     expect(text).toContain("Silver");
   });
 
-  test("keeps the trial as the hero's tracked keycap and the second button on the page's demo", () => {
+  test("keeps the trial as the hero's keycap and the second button on the page's demo", () => {
     const html = stack();
 
-    expect(html).toMatch(/<a [^>]*href="\/en\/onboarding"/);
+    expect(html).toMatch(/<a [^>]*class="[^"]*\bkeycap\b[^"]*"[^>]*href="\/en\/onboarding"/);
     expect(html).toMatch(/<a [^>]*href="#demo"/);
     expectInOrder(html, [SHARED.cta, SHARED.demoLink]);
-    expect(findTag(code(join(HERO_DIR, "WalletStackHero.tsx")), "LpCtaPair")?.attrs).toContain('location="hero"');
   });
 });
 
@@ -101,7 +101,38 @@ describe("the shelf hero", () => {
   });
 });
 
+describe("a reader who asks for less motion (AC11)", () => {
+  const still = () => renderAs({ reducedMotion: true }, stack);
+  const KEYFRAMES_OFF = /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*animation: none/;
+
+  test("the stack is drawn still and complete: nine cards, Aurevo in front at its sixth stamp, none pressing or leaving", () => {
+    const html = still();
+
+    expect(logos(html)).toHaveLength(9);
+    expect(textOf(html)).toContain("6 / 8");
+    expect(textOf(html)).not.toContain("5 / 8");
+    expect(html).not.toContain('class="wst-press"');
+    expect(html).not.toMatch(/duration-300 opacity-0/);
+  });
+
+  test("the shelf is complete for them too: the same nine cards, the three groups named", () => {
+    const html = renderAs({ reducedMotion: true }, shelf);
+
+    expect(logos(html)).toHaveLength(9);
+    expect(textOf(html)).toContain("Gold");
+  });
+
+  test.each([
+    ["stack", stack],
+    ["shelf", shelf],
+  ])("the %s's own keyframes switch every animation off under prefers-reduced-motion, so nothing plays whatever the setting reads", (_name, render) => {
+    expect(render()).toMatch(KEYFRAMES_OFF);
+  });
+});
+
 describe("?hero= picks one of them", () => {
+  restoreGlobalsAfterEach("window");
+
   test("the stack is the default, and so is anything that is not the shelf", () => {
     expect(heroFromSearch("")).toBe("stack");
     expect(heroFromSearch("?hero=confetti")).toBe("stack");
@@ -118,13 +149,22 @@ describe("?hero= picks one of them", () => {
 
     expect(html).toContain("the stack");
     expect(html).not.toContain("the shelf");
+    expect(serverHero()).toBe("stack");
   });
 
-  test("Platform's hero is the switch, and the page mounts it with no props", () => {
-    const hero = code(join(HERO_DIR, "PlatformHero.tsx"));
+  test("in the browser the address decides: a visitor who followed ?hero=shelf gets the shelf, any other visitor the stack", () => {
+    Object.assign(globalThis, { window: { location: { search: "?utm_source=ads&hero=shelf" } } });
+    expect(currentHero()).toBe("shelf");
+    Object.assign(globalThis, { window: { location: { search: "" } } });
+    expect(currentHero()).toBe("stack");
+  });
 
-    expect(openingTags(hero).map((tag) => tag.name)).toEqual(expect.arrayContaining(["HeroVariantSwitch", "WalletStackHero", "WalletShelfHero"]));
-    expect(read(join(HERO_DIR, "HeroVariantSwitch.tsx"))).toMatch(/useSyncExternalStore/);
+  test("Platform's hero is one section that holds the stack on the server and not the shelf", () => {
+    const html = renderEn(<PlatformHero />, { us: true });
+
+    expect(html.match(/data-landing-section="hero"/g)).toHaveLength(1);
+    expect(html).toContain('data-href="wallet-stack"');
+    expect(html).not.toContain('data-href="wallet-shelf"');
   });
 });
 

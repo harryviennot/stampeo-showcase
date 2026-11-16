@@ -8,13 +8,14 @@
 import { describe, expect, test } from "bun:test";
 import type { ComponentProps } from "react";
 import { MenuBurger } from "@/components/sections/MenuBurger";
-import { MobileMenu } from "@/components/sections/MobileMenu";
+import { MobileMenu, currentMenu } from "@/components/sections/MobileMenu";
 import { LanguageRow } from "@/components/ui/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { MENU_VARIANTS } from "@/lib/landing-pages/platform/variants";
 import { decodeEntities, expectInOrder, renderEn, textOf } from "../testing/render-en";
+import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { renderAs } from "../testing/visitor-seams";
 
 const PREVIEW = (feature: string) => `/us/landing-pages/platform/${feature}`;
@@ -204,6 +205,21 @@ describe("the drill-down", () => {
 describe.each(MENU_VARIANTS)("the %s menu", (variant) => {
   test("every link and button is 44px or taller to tap", () => {
     expect(targets(render({ variant })).filter(({ attrs }) => !TALL.test(attrs)).map(({ name }) => name)).toEqual([]);
+  });
+});
+
+describe("which menu a visitor gets", () => {
+  restoreGlobalsAfterEach("window");
+  const at = (search: string) => {
+    Object.assign(globalThis, { window: { location: { search } } });
+    return currentMenu();
+  };
+
+  test("the sheet unless the address says ?menu=drill, in the browser as on the server", () => {
+    expect(render()).toMatch(/grid-cols-2/);
+    expect(at("")).toBe("sheet");
+    expect(at("?menu=tabs")).toBe("sheet");
+    expect(at("?utm_source=ads&menu=drill")).toBe("drill");
   });
 });
 
