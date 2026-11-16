@@ -21,8 +21,11 @@ import { REWARD_BANNER, SHARED, STAMP_BANNER } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
 import { FEATURE_PREVIEWS } from "../preview-nav";
 
+/** Sections whose copy is keyed by another word than their id: card design's `types` section is its `programs` copy. */
+const COPY_KEY_OF: Record<string, string> = { types: "programs" };
+
 /** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
-const copyKey = (id: string) => id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+const copyKey = (id: string) => COPY_KEY_OF[id] ?? id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 
 /** Each section of a preview whose copy has an eyebrow and a title: its header. */
 const HEADERS = PREVIEW_SLUGS.flatMap((slug) =>
@@ -33,11 +36,11 @@ const HEADERS = PREVIEW_SLUGS.flatMap((slug) =>
   }),
 );
 
-/** The registry sections that are not headed sections: the page's frame, the FAQ and the demo (headed on their own), and the icons strip (a figure with a label). */
-const NOT_HEADED = ["hero", "faq", "demo", "icons", "final_cta", "related"];
+/** The registry sections that are not headed sections: the page's frame, and the FAQ and the demo (headed on their own). */
+const NOT_HEADED = ["hero", "faq", "demo", "final_cta", "related"];
 
 describe("every section opens on its header", () => {
-  test.each(PREVIEW_SLUGS)("%s: every section of the registry but the frame, the FAQ, the demo and the icons strip has a header to check", (slug) => {
+  test.each(PREVIEW_SLUGS)("%s: every section of the registry but the frame, the FAQ and the demo has a header to check", (slug) => {
     expect(HEADERS.filter(([page]) => page === slug).map(([, id]) => id)).toEqual(LANDING_PAGES[slug].sections.filter((id) => !NOT_HEADED.includes(id)));
   });
 
@@ -110,13 +113,13 @@ describe("the hero each page opens with (AC1)", () => {
   const hero = async (slug: PreviewSlug) => sectionsOf(await renderPreviewPage(slug)).find(({ id }) => id === "hero")?.html ?? "";
   const links = (html: string) => [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
 
-  test("card design opens on one card that takes on the look of six shops, and sends its second button to the designer, which is on the page", async () => {
+  test("card design opens on one card that takes on the look of six shops, and sends its second button to the anatomy of the card, which is on the page", async () => {
     const html = await renderPreviewPage("platform/card-design");
 
     expect(pictures(await hero("platform/card-design"))).toEqual([CARD_DESIGN_PREVIEW.reskin.alt]);
     expect(textOf(await hero("platform/card-design"))).toContain(CARD_DESIGN_PREVIEW.reskin.captions[0]);
-    expect(links(await hero("platform/card-design"))).toContain("#playground");
-    expect(html).toContain('id="playground"');
+    expect(links(await hero("platform/card-design"))).toContain("#anatomy");
+    expect(html).toContain('id="anatomy"');
   });
 
   test("the scanner shows the real Scanner loop from the first paint, the finished stamp being the only frame the rest of the page uses", async () => {

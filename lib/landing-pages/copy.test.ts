@@ -268,29 +268,26 @@ describe("the six previews' copy", () => {
 
   describe("every number is the product's, not typed from memory", () => {
     test("98 stamp icons, the library's own count", () => {
-      expect(CARD_DESIGN_PREVIEW.icons.figure.value).toBe(String(stampIcons.length));
+      expect(CARD_DESIGN_PREVIEW.icons.lead).toContain(`${stampIcons.length} ready-made icons`);
+      expect(CARD_DESIGN_PREVIEW.icons.facts[0]).toContain(`${stampIcons.length} ready-made stamp icons`);
     });
   });
 
-  test("the FAQs are the five questions: card design's and the broadcasts page's", () => {
-    expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(5);
+  test("the FAQs are card design's six questions and the broadcasts page's five", () => {
+    expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(6);
     expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(5);
   });
 
-  test("each sibling link says what its feature is in the words its own preview's headline uses", () => {
+  test("each sibling link is a feature name and one plain line of at most 50 characters, with no plan in it", () => {
     const { cards } = PREVIEW_SHARED.related;
-    const HEROES = {
-      cardDesign: "platform/card-design",
-      mobileScanner: "platform/mobile-scanner",
-      pushNotifications: "platform/push-notifications",
-      analytics: "platform/analytics",
-      promotionalCampaigns: "platform/promotional-campaigns",
-      geolocation: "platform/geolocation",
-    } as const;
 
-    expect(Object.keys(cards).sort()).toEqual(Object.keys(HEROES).sort());
-    for (const [key, slug] of Object.entries(HEROES)) {
-      expect({ key, line: cards[key as keyof typeof cards].line }).toEqual({ key, line: LANDING_PAGES[slug].hero.h1 });
+    expect(Object.keys(cards).sort()).toEqual(
+      ["analytics", "cardDesign", "geolocation", "mobileScanner", "promotionalCampaigns", "pushNotifications"],
+    );
+    for (const [key, card] of Object.entries(cards)) {
+      expect({ key, set: card.title.length > 0 && card.line.length > 0 }).toEqual({ key, set: true });
+      expect({ key, within: card.line.length <= 50 }).toEqual({ key, within: true });
+      expect(`${card.title} ${card.line}`).not.toMatch(/\b(?:Starter|Growth|Pro)\b|\bplans?\b/);
     }
     expect(PREVIEW_SHARED.related.title.length).toBeLessThanOrEqual(44);
   });

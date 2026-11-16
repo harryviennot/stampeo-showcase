@@ -1,89 +1,73 @@
-import type { BandCopy, FaqItem, HeroCopy, PageMeta, RowCopy, SectionCopy, Tile } from "../types";
+import type { BandCopy, FaqItem, HeroCopy, PageMeta, Tile } from "../types";
 
-/** The card design preview: can the card look like my shop, and can I try the designer before I sign up. */
+/** The card design preview: can the card look like my shop, and what can I change on it. */
 export const CARD_DESIGN_PREVIEW = {
   meta: {
-    title: "A loyalty card that looks like your shop | Stampeo",
+    title: "Design your digital loyalty card | Stampeo",
     description:
-      "Design a loyalty card with your logo, your colors and your own stamps, in Apple Wallet and Google Wallet. Try the designer first. Free trial, cancel anytime.",
+      "Design a digital loyalty card with your logo, colors and stamp icons, for Apple Wallet and Google Wallet. Stamps, points or levels. Free trial.",
   } satisfies PageMeta,
   hero: {
-    h1: "A loyalty card that looks like your shop.",
-    accent: "your shop.",
-    sub: "Your logo, your colors and your own stamps, in Apple Wallet and Google Wallet.",
-  } satisfies HeroCopy,
-  /** The hero's second button, and the one under the figures: both jump to the designer. */
-  designerLink: "Try the designer",
-  /** The hero's card re-skins itself across six shops; one caption names each, in the card's order. */
+    h1: "Design your digital loyalty card.",
+    accent: "digital loyalty card.",
+    sub: "Your logo, your colors and your own stamp icons, in Apple Wallet and Google Wallet.",
+    /** The hero's second button: it jumps to the anatomy of the card. */
+    secondary: "See every part of the card",
+  } satisfies HeroCopy & { secondary: string },
+  /** The hero's card takes on the look of six shops; one caption names each, in the card's order. */
   reskin: {
     captions: ["Car wash", "Bakery", "Wine bar", "Lash studio", "Bookstore", "Pizza truck"],
+    previous: "Previous shop",
+    next: "Next shop",
+    /** The name of each dot; `{shop}` is the shop's caption. */
+    dot: "Show the {shop} card",
     /** What the card is, for a screen reader: it is decoration that the captions and the headline already say. */
-    alt: "One loyalty card taking on the look of six shops in turn: a car wash, a bakery, a wine bar, a lash studio, a bookstore and a pizza truck.",
+    alt: "One loyalty card taking on the look of six shops: a car wash, a bakery, a wine bar, a lash studio, a bookstore and a pizza truck.",
+  },
+  anatomy: {
+    eyebrow: "Every part",
+    title: "Every part of the card is yours.",
+    lead: "Change the logo, colors, stamps, reward and details. We add the QR code for you.",
+    /** The six labels of a stamp card, in the order of the card's parts (logo, count, stamps, name, reward, QR code). */
+    labels: ["Logo", "Stamp count", "Stamps", "Customer's name", "Reward", "QR code to scan"],
+    mobileLabels: ["Logo", "Count", "Stamps", "Name", "Reward", "QR code"],
+    pointsLabels: ["Logo", "Points balance", "Points display", "Customer's name", "Next reward", "QR code to scan"],
+    pointsMobileLabels: ["Logo", "Balance", "Points", "Name", "Reward", "QR code"],
+  },
+  programs: {
+    eyebrow: "Stamps, points or levels",
+    title: "A stamp card, a points card or levels.",
+    lead: "Stamps reward visits, points reward spending, and levels reward your regulars.",
+    cards: [
+      { title: "Stamp card", line: "A stamp for each visit, and a reward when the card is full." },
+      { title: "Points card", line: "Points on what they spend, and a menu of rewards to pick from." },
+      { title: "Levels", line: "Up to five levels. Regulars move up, and their card changes look." },
+    ],
+    /** What each card is, for a screen reader, in the cards' order. */
+    alts: ["A burger bar's stamp card", "A gym's points card", "A dry cleaner's card at Bronze, Silver and Gold"],
   },
   icons: {
-    figure: { value: "98", label: "stamp icons" },
-    /** What the two drifting rows of icon tiles are, for a screen reader. */
-    alt: "The designer's stamp icons, in two rows that drift past",
-  },
-  playground: {
-    eyebrow: "Try the designer",
-    title: "Design it your way.",
-    lead: "Stamps or points, colors and icons: change them and watch the card update.",
-  } satisfies SectionCopy & { eyebrow: string },
-  palettes: {
-    eyebrow: "From your logo",
-    title: "Five color palettes, made from your logo.",
-    lead: "Upload your logo and pick the one that feels like your shop.",
-    logoLabel: "Your logo",
-    /** What the logo tile and the card beside it are, for a screen reader. */
-    logoAlt: "A juice bar's logo",
-    cardAlt: "The juice bar's loyalty card, in the color palette picked from its logo",
-    swatches: ["Palette 1", "Palette 2", "Palette 3", "Palette 4", "Palette 5"],
-  } satisfies SectionCopy & { eyebrow: string; logoLabel: string; logoAlt: string; cardAlt: string; swatches: string[] },
-  anatomy: {
-    eyebrow: "Every detail",
-    title: "Every part of the card is yours.",
-    lead: "Logo, stamps, fields and reward, laid out to read at a glance in any wallet.",
-  } satisfies SectionCopy & { eyebrow: string },
-  stamps: {
-    eyebrow: "Stamp styles",
-    title: "Stamps that look like what you sell.",
-    lead: "Pick from the library, upload your own, and lay them out your way.",
-    rows: [
-      {
-        key: "library",
-        eyebrow: "Ready in a click",
-        title: "Icon library",
-        body: "Ready-made stamp icons for every trade, searchable by name in the designer.",
-      },
-      {
-        key: "own",
-        eyebrow: "Your burger, your logo",
-        title: "Your own icons",
-        body: "Upload any image. We remove the background and it becomes a stamp.",
-      },
-      {
-        key: "layout",
-        eyebrow: "Down to the last stamp",
-        title: "Your layout",
-        body: "In a row, staggered or overlapping, with a special stamp for the reward.",
-      },
-    ] satisfies RowCopy<"library" | "own" | "layout">[],
-    /** What each row's card is, for a screen reader. */
-    cardAlts: {
-      library: "A pet groomer's loyalty card with paw stamps from the icon library",
-      own: "A burger bar's loyalty card with its own burger photo as the stamp",
-      layout: "A gelato shop's loyalty card with ice cream cones piled up as stamps",
-    },
+    eyebrow: "Stamp icons",
+    title: "Use our stamp icons, or upload your own.",
+    lead: "Pick from 98 ready-made icons, or upload your logo. We remove the background.",
+    facts: [
+      "98 ready-made stamp icons, searchable by name",
+      "Upload any image: the background is removed automatically",
+      "A different icon for each stamp, and a special one for the reward",
+      "In a row, staggered or overlapping",
+      "No logo? The card shows your initials instead",
+    ],
+    /** What each of the three cards shows, in the cards' order: the caption under it and its name for a screen reader. */
+    cards: ["Pulp: its own citrus icons", "Gelo: its own cones", "A pet groomer: paws from the library"],
   },
   wallets: {
-    eyebrow: "Both wallets",
-    title: "One card, ready for every phone.",
-    lead: "The same card in Apple Wallet and Google Wallet, from one QR code.",
+    eyebrow: "iPhone and Android",
+    title: "Your digital loyalty card on any phone.",
+    lead: "The same card in Apple Wallet and Google Wallet. Customers scan one QR code.",
     cells: [
-      { title: "One QR code", body: "Customers scan it and get the right card for their phone." },
-      { title: "Live preview", body: "The designer shows both wallets while you work." },
-      { title: "Always up to date", body: "Change your style and every card already in a wallet updates." },
+      { title: "One QR code", body: "Customers scan it and get the card for their phone." },
+      { title: "Live preview", body: "See both wallets while you design." },
+      { title: "Always up to date", body: "Change your card, and every card already in a wallet updates." },
     ] satisfies Tile[],
     /** What each phone is, for a screen reader. */
     phoneAlts: {
@@ -92,32 +76,36 @@ export const CARD_DESIGN_PREVIEW = {
     },
   },
   faq: {
-    title: "Card styles, answered",
+    title: "Questions about your card",
     items: [
       {
         question: "Can I use my own stamp icons?",
         answer:
-          "Yes. Import any image (your croissant, your mascot, your logo): the background is removed automatically and it becomes a stamp. You can even use a different icon for each stamp.",
+          "Yes. Upload any image, like your croissant, your mascot or your logo. The background is removed automatically and it becomes a stamp. You can even use a different icon for each stamp.",
       },
       {
-        question: "What if I don't have a logo or brand colors?",
+        question: "What if I don't have a logo?",
         answer:
-          "The library has 98 ready-made icons, and the editor comes with a full color palette. Pick an icon, choose your colors, and the preview shows the result right away.",
+          "Your card still works. Without a logo it shows your initials in your accent color, and you can pick from 98 ready-made stamp icons.",
+      },
+      {
+        question: "Can I make a digital punch card or a points card?",
+        answer:
+          "Both. A stamp card works like a paper punch card, with a stamp for each visit. A points card rewards what they spend. Add levels to either, and switch later without your customers losing their card.",
       },
       {
         question: "Does the card work on iPhone and Android?",
         answer:
-          "Yes. The same card lives in Apple Wallet and Google Wallet, and the editor previews both while you build. Your customers scan one QR code, whatever their phone.",
+          "Yes. The same card goes into Apple Wallet and Google Wallet, and the designer shows both while you work. Customers scan one QR code, whatever their phone.",
       },
       {
-        question: "Can I change the style later?",
-        answer:
-          "Anytime. Edit your card style and the cards already in your customers' wallets update automatically.",
+        question: "Can I change the card later?",
+        answer: "Anytime. Edit your card, and the cards already in your customers' wallets update on their own.",
       },
       {
-        question: "Can you create the card for me?",
+        question: "Can you design the card for me?",
         answer:
-          "Yes. Send us your logo and your colors, and we design the card for you. Most cards are ready within 48 hours.",
+          "Yes, for free. Send us your logo and details, and we send back a card ready to use. You can still change it yourself afterwards.",
       },
     ] satisfies FaqItem[],
   },

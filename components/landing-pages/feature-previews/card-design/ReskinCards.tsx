@@ -1,18 +1,21 @@
 "use client";
 
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 import { WalletCard } from "@/components/card/WalletCard";
+import { CaretLeftIcon, CaretRightIcon } from "@/components/icons";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useWatching } from "@/hooks/useWatching";
 import {
   RESKIN_SHOPS,
   RESKIN_STEP_MS,
-  nextShop,
   reskinCard,
   reskinPlacement,
+  reskinStep,
   reskinView,
+  swipeDirection,
   type ReskinCard,
   type ReskinRole,
+  type ReskinState,
 } from "@/lib/landing-pages/previews/reskin";
 import { Chip } from "../../shared/Chip";
 
@@ -27,6 +30,10 @@ const ROLE: Record<ReskinRole, string> = {
   hidden: "opacity-0 [--s:0.8667] lg:[--s:0.7333]",
 };
 const LAYER: Record<ReskinRole, number> = { live: 30, side: 20, hidden: 10 };
+
+/** A round, 44px button. */
+const ROUND_BUTTON =
+  "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white text-[var(--foreground)] shadow-[0_1px_2px_rgba(25,18,16,0.08)] ring-1 ring-black/10 transition-colors hover:bg-[var(--background-subtle)] motion-reduce:transition-none";
 
 interface SlotProps {
   card: ReskinCard;
@@ -50,7 +57,7 @@ const Slot = memo(function Slot({ card, offset, role }: SlotProps) {
 
   return (
     <div
-      className={`absolute top-1/2 left-1/2 transition-[transform,opacity] ease-[cubic-bezier(0.2,0.8,0.2,1)] [transition-duration:450ms,300ms] ${ROLE[role]}`}
+      className={`absolute top-1/2 left-1/2 transition-[transform,opacity] ease-[cubic-bezier(0.2,0.8,0.2,1)] [transition-duration:450ms,300ms] motion-reduce:transition-none ${ROLE[role]}`}
       style={{
         width: CARD_WIDTH,
         height: CARD_HEIGHT,
@@ -69,31 +76,56 @@ const CARDS = RESKIN_SHOPS.map(reskinCard);
 
 /**
  * The hero's wallet card, one shop at a time: the layout stays put while its logo, colours and stamps change, with a
- * caption under it. The clock runs only while the card is in view; a reader who asks for less motion gets the first shop.
+ * caption and a button either side and a dot for each shop under it. The card moves on slowly by itself while it is in
+ * view, until a visitor takes over with a button, a dot or a swipe; a reader who asks for less motion never has it move.
  */
-export function ReskinCards({ captions, alt }: Readonly<{ captions: readonly string[]; alt: string }>) {
+export function ReskinCards({
+  captions,
+  alt,
+  labels,
+}: Readonly<{ captions: readonly string[]; alt: string; labels: { previous: string; next: string; dot: string } }>) {
   const stage = useRef<HTMLDivElement>(null);
-  const [clock, setClock] = useState(0);
+  const drag = useRef<{ x: number; y: number } | null>(null);
+  const [state, setState] = useState<ReskinState>({ active: 0, touched: false });
   const reduced = usePrefersReducedMotion();
   const running = useWatching(stage, 0.3);
-  const view = reskinView(clock, reduced);
+  const view = reskinView(state, reduced);
 
   useEffect(() => {
-    if (!view.animated || !running) return;
-    const timer = setTimeout(() => setClock((shop) => nextShop(shop, CARDS.length)), RESKIN_STEP_MS);
+    if (!view.autoplay || !running) return;
+    const timer = setTimeout(() => setState((now) => reskinStep(now, { type: "tick" }, CARDS.length)), RESKIN_STEP_MS);
 
     return () => clearTimeout(timer);
-  }, [clock, running, view.animated]);
+  }, [state, running, view.autoplay]);
+
+  const go = (type: "previous" | "next") => setState((now) => reskinStep(now, { type }, CARDS.length));
+  const show = (index: number) => setState((now) => reskinStep(now, { type: "show", index }, CARDS.length));
+
+  const startDrag = (event: PointerEvent) => {
+    drag.current = { x: event.clientX, y: event.clientY };
+  };
+  const endDrag = (event: PointerEvent) => {
+    const start = drag.current;
+
+    drag.current = null;
+    const direction = start && swipeDirection(event.clientX - start.x, event.clientY - start.y);
+    if (direction) go(direction);
+  };
 
   return (
-    <div className="flex flex-col items-center">
-      {/* On a phone only the top of the card shows, fading out under the fields, so the trial stays in the first screen. */}
-      <div className="w-full max-lg:h-[238px] max-lg:overflow-hidden max-lg:pt-6 max-lg:[mask-image:linear-gradient(to_bottom,#000_calc(100%-56px),transparent)]">
+    <div className="flex w-full flex-col items-center">
+      {/* A finger can still scroll the page up and down over the card; a sideways swipe turns it. */}
+      <div
+        className="w-full touch-pan-y select-none lg:[mask-image:linear-gradient(to_right,transparent,#000_14%,#000_86%,transparent)]"
+        onPointerDown={startDrag}
+        onPointerUp={endDrag}
+        onPointerCancel={() => (drag.current = null)}
+      >
         <div
           ref={stage}
           role="img"
           aria-label={alt}
-          className="relative mx-auto h-[334px] w-full max-w-[1000px] [--pitch:0px] lg:h-[411px] lg:[--pitch:294px]"
+          className="relative mx-auto h-[334px] w-full max-w-[1000px] [--pitch:0px] lg:h-[491px] lg:overflow-hidden lg:[--pitch:294px]"
         >
           <div aria-hidden>
             {CARDS.map((card, index) => (
@@ -103,18 +135,34 @@ export function ReskinCards({ captions, alt }: Readonly<{ captions: readonly str
         </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-4 lg:mt-5">
+      <div aria-live="polite" className="mt-1">
         <Chip className="px-4! py-1.5! text-sm!">{captions[view.active]}</Chip>
-        {view.animated && (
-          <div aria-hidden className="flex gap-2">
-            {CARDS.map((card, index) => (
+      </div>
+
+      <div className="mt-2 flex items-center gap-1">
+        <button type="button" aria-label={labels.previous} onClick={() => go("previous")} className={ROUND_BUTTON}>
+          <CaretLeftIcon size={18} weight="bold" aria-hidden />
+        </button>
+        <div className="flex items-center">
+          {CARDS.map((card, index) => (
+            <button
+              key={card.id}
+              type="button"
+              aria-label={labels.dot.replace("{shop}", captions[index])}
+              aria-current={index === view.active ? "true" : undefined}
+              onClick={() => show(index)}
+              className="group inline-flex h-11 w-6 items-center justify-center"
+            >
               <span
-                key={card.id}
-                className={`h-2 w-2 rounded-full transition-colors duration-300 ${index === view.active ? "bg-[var(--near-black)]" : "bg-[var(--border)]"}`}
+                aria-hidden
+                className={`h-2 w-2 rounded-full transition-colors duration-300 motion-reduce:transition-none ${index === view.active ? "bg-[var(--foreground)]" : "bg-black/20 group-hover:bg-black/40"}`}
               />
-            ))}
-          </div>
-        )}
+            </button>
+          ))}
+        </div>
+        <button type="button" aria-label={labels.next} onClick={() => go("next")} className={ROUND_BUTTON}>
+          <CaretRightIcon size={18} weight="bold" aria-hidden />
+        </button>
       </div>
     </div>
   );
