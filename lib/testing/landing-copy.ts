@@ -5,6 +5,7 @@ import * as platform from "../landing-pages/copy/platform";
 import * as analyticsPreview from "../landing-pages/copy/previews/analytics";
 import * as cardDesignPreview from "../landing-pages/copy/previews/card-design";
 import * as geolocationPreview from "../landing-pages/copy/previews/geolocation";
+import * as loyaltyProgramsPreview from "../landing-pages/copy/previews/loyalty-programs";
 import * as mobileScannerPreview from "../landing-pages/copy/previews/mobile-scanner";
 import * as promotionalCampaignsPreview from "../landing-pages/copy/previews/promotional-campaigns";
 import * as pushNotificationsPreview from "../landing-pages/copy/previews/push-notifications";
@@ -60,10 +61,11 @@ export const MODULES = {
   ...analyticsPreview,
   ...promotionalCampaignsPreview,
   ...geolocationPreview,
+  ...loyaltyProgramsPreview,
   ...previewShared,
 } as Record<string, unknown>;
 
-/** The names of the modules that are the six previews' copy: the previews' own rules apply to these. */
+/** The names of the modules that are the previews' copy: the previews' own rules apply to these. */
 export const PREVIEW_MODULES = [
   "CARD_DESIGN_PREVIEW",
   "MOBILE_SCANNER_PREVIEW",
@@ -71,6 +73,7 @@ export const PREVIEW_MODULES = [
   "ANALYTICS_PREVIEW",
   "PROMOTIONAL_CAMPAIGNS_PREVIEW",
   "GEOLOCATION_PREVIEW",
+  "LOYALTY_PROGRAMS_PREVIEW",
   "PREVIEW_SHARED",
 ] as const;
 
@@ -80,7 +83,7 @@ export const inPreviews = (path: string) => PREVIEW_MODULES.some((name) => path 
 /** Every string of every copy module. */
 export const ALL: Line[] = Object.entries(MODULES).flatMap(([name, value]) => lines(value, name));
 
-/** The four pages' own copy objects, by name, and the six previews'. */
+/** The four pages' own copy objects, by name, and the previews'. */
 export const PAGES = {
   HOW_IT_WORKS: howItWorks.HOW_IT_WORKS,
   FEATURES: features.FEATURES,
@@ -92,6 +95,7 @@ export const PAGES = {
   ANALYTICS_PREVIEW: analyticsPreview.ANALYTICS_PREVIEW,
   PROMOTIONAL_CAMPAIGNS_PREVIEW: promotionalCampaignsPreview.PROMOTIONAL_CAMPAIGNS_PREVIEW,
   GEOLOCATION_PREVIEW: geolocationPreview.GEOLOCATION_PREVIEW,
+  LOYALTY_PROGRAMS_PREVIEW: loyaltyProgramsPreview.LOYALTY_PROGRAMS_PREVIEW,
 };
 
 /** Each preview's copy object, by its slug. */
@@ -102,6 +106,7 @@ export const PREVIEW_COPY = {
   "platform/analytics": analyticsPreview.ANALYTICS_PREVIEW,
   "platform/promotional-campaigns": promotionalCampaignsPreview.PROMOTIONAL_CAMPAIGNS_PREVIEW,
   "platform/geolocation": geolocationPreview.GEOLOCATION_PREVIEW,
+  "platform/loyalty-programs": loyaltyProgramsPreview.LOYALTY_PROGRAMS_PREVIEW,
 } as const;
 
 /** The paths whose lines match `pattern`. */

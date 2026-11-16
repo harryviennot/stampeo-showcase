@@ -21,8 +21,8 @@ export type PickerProgram = "stamps" | "points" | "either";
 /**
  * The loyalty programs preview: what a loyalty program is on Stampeo (stamps
  * or points, with levels on top), how to choose, and how levels work. The
- * product word is "levels"; "tiers" is the search word, used in the head, the
- * levels lead and one question.
+ * product word is "levels"; "tiers" is the search word, used in the head and
+ * in the one question that defines it.
  */
 export const LOYALTY_PROGRAMS_PREVIEW = {
   meta: {
@@ -31,9 +31,9 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
       "Run your loyalty program in Apple Wallet and Google Wallet: a digital stamp card or points, plus loyalty tiers like Bronze, Silver and Gold. Free trial.",
   } satisfies PageMeta,
   hero: {
-    h1: "A loyalty program with stamps, points and levels.",
+    h1: "Loyalty programs: stamps, points and levels.",
     accent: "stamps, points and levels.",
-    sub: "Reward visits with a stamp card or spending with points, in Apple Wallet and Google Wallet. Add levels like Bronze, Silver and Gold for your regulars.",
+    sub: "A stamp card or points in Apple Wallet and Google Wallet, with levels for your regulars.",
     /** The hero's second button: it jumps to the levels. */
     secondary: "See how levels work",
     /** What the hero picture is, for a screen reader. */
@@ -44,8 +44,8 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
   },
   programs: {
     eyebrow: "Stamps or points",
-    title: "Reward visits with stamps, or spending with points.",
-    lead: "Both are the same card in Apple Wallet and Google Wallet. You can switch later, and your customers keep their card.",
+    title: "Stamps for visits, points for spending.",
+    lead: "Same card, same setup. Switch later, and customers keep their card.",
     stamps: {
       title: "Stamps",
       line: "A digital stamp card: one stamp for each visit, and a reward when the card is full.",
@@ -73,7 +73,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
   levels: {
     eyebrow: "Loyalty levels",
     title: "Add levels, like Bronze, Silver and Gold.",
-    lead: "A tiered loyalty program on top of your stamps or points. Customers move up as they keep coming back, and each level can have its own card, perks and gift.",
+    lead: "Regulars move up as they come back. Each level can have its own look, perks and gift.",
     /** The dry cleaner's three levels, from the bottom. */
     ladder: [
       {
@@ -93,7 +93,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
         name: "Gold",
         reach: "Fill 2 cards on Silver",
         card: "5 stamps for a free duvet clean",
-        perks: ["10% off every order", "Free pickup and delivery"],
+        perks: ["Free pickup and delivery", "Same-day service"],
         gift: "A free coat clean",
       },
     ] satisfies LadderLevel[],
@@ -103,7 +103,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     facts: [
       { title: "Up to 5 levels", body: "Name them as you like. A new ladder starts with three." },
       { title: "A card for each level", body: "Keep your own card, or give a level a Bronze, Silver, Gold, Platinum or Noir look." },
-      { title: "Up to 3 perks per level", body: "Like 10% off or priority pickup. The Scanner app reminds your staff at the counter." },
+      { title: "Up to 3 perks per level", body: "Like free delivery or priority pickup. Your staff see them in the Scanner app." },
       { title: "A gift when they arrive", body: "A one-time reward the moment a customer reaches a level." },
     ] satisfies Tile[],
     tip: "Our tip: start with three levels, and make Silver easy to reach. A first move up within a month or two keeps regulars coming.",
@@ -111,7 +111,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
   moveUp: {
     eyebrow: "Moving up",
     title: "How customers move up a level.",
-    lead: "They move up on what they earn, never on what they spend. And they never move down on their own.",
+    lead: "They move up on what they earn, not what they spend, and never move down.",
     stamps: {
       title: "On a stamp card",
       body: "Each full card counts toward the next level. One full card by default, or as many as you choose.",
@@ -143,7 +143,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
   },
   moments: {
     eyebrow: "What people see",
-    title: "Customers see their level. Your staff see their perks.",
+    title: "Where customers and staff see levels.",
     lead: "Levels show up where they matter, with nothing extra for you to do.",
     signup: {
       title: "On your sign-up page",
@@ -169,7 +169,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
   settings: {
     eyebrow: "Settings",
     title: "Settings that make a loyalty program work.",
-    lead: "You'll meet these during setup. Here are the four that matter most, with our advice for each.",
+    lead: "You'll meet these in setup. Here are the four that matter most, with our advice.",
     tipLabel: "Our tip:",
     items: [
       {
@@ -240,7 +240,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     } satisfies Record<PickerProgram, { title: string; body: string }>,
     levels: {
       yes: "Add levels too: your regulars will have something to reach.",
-      no: "Add levels later, once you have regulars: it takes a few minutes.",
+      no: "Add levels later, once you have regulars.",
     },
     restart: "Start over",
   },
@@ -301,7 +301,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     ] satisfies FaqItem[],
   },
   band: {
-    title: "Give your regulars a reason to come back.",
+    title: "Give regulars a reason to come back.",
     accent: "a reason to come back.",
     sub: "Start with stamps or points, and add levels whenever you're ready.",
   } satisfies BandCopy,

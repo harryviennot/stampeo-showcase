@@ -64,8 +64,12 @@ describe("the number of levels is PLAN_FACTS'", () => {
     [...line.value.matchAll(/\bup to (\d+) levels\b/gi)].map((match) => ({ path: line.path, count: Number(match[1]) })),
   );
 
-  test("the copy says it twice, in the program types and on the Outcomes levels", () => {
-    expect(FIGURES.map(({ path }) => path).sort()).toEqual(["OUTCOMES.levels.facts[0].text", "PROGRAM_TYPES[2].body"]);
+  test("the copy says it three times: the program types, the Outcomes levels and the loyalty page's levels", () => {
+    expect(FIGURES.map(({ path }) => path).sort()).toEqual([
+      "LOYALTY_PROGRAMS_PREVIEW.levels.facts[0].title",
+      "OUTCOMES.levels.facts[0].text",
+      "PROGRAM_TYPES[2].body",
+    ]);
   });
 
   test.each(FIGURES.map((figure) => [figure.path, figure.count] as const))("%s: every plan has exactly %i levels, so the line holds without a label", (_path, count) => {

@@ -46,9 +46,20 @@ describe("what these pages may not claim (AC10)", () => {
     ["offline", /offline/i],
     ["a number of minutes", /\bminutes?\b/i],
     ["a count of days: the trial is the {trialDays} token", DIGIT_DAYS],
-    ['tiers: the product\'s word is "levels"', /\btiers?\b/i],
   ])("no line says %s", (_what, pattern) => {
     expect(offenders(pattern)).toEqual([]);
+  });
+
+  /** "Tiers" is what owners search for: the loyalty page's head and the one question that defines the word say it. */
+  const TIERS_FOR_SEARCH = [
+    "LOYALTY_PROGRAMS_PREVIEW.meta.title",
+    "LOYALTY_PROGRAMS_PREVIEW.meta.description",
+    "LOYALTY_PROGRAMS_PREVIEW.faq.items[1].question",
+    "LOYALTY_PROGRAMS_PREVIEW.faq.items[1].answer",
+  ];
+
+  test('no other line says tiers: the product\'s word is "levels"', () => {
+    expect(offenders(/\btier(?:s|ed)?\b/i).sort()).toEqual([...TIERS_FOR_SEARCH].sort());
   });
 
   test("levels are said as live, and every plan has them", () => {
@@ -146,6 +157,7 @@ describe("figures from other people (AC12)", () => {
 
   test("every sourced figure says what it says and where it comes from", () => {
     expect(figures.map((figure) => figure.path).sort()).toEqual([
+      "LOYALTY_PROGRAMS_PREVIEW.settings.figure",
       "OUTCOMES.headStart.empty",
       "OUTCOMES.headStart.withHeadStart",
       "OUTCOMES.problem.figure",
@@ -236,11 +248,12 @@ describe("the six previews' copy", () => {
   const previewLines = () => ALL.filter((line) => inPreviews(line.path));
   const previewModules = () => Object.entries(MODULES).filter(([name]) => inPreviews(name));
 
-  test("there is copy to check, in all six pages and the shared links", () => {
+  test("there is copy to check, in all seven pages and the shared links", () => {
     expect(previewModules().map(([name]) => name).sort()).toEqual([
       "ANALYTICS_PREVIEW",
       "CARD_DESIGN_PREVIEW",
       "GEOLOCATION_PREVIEW",
+      "LOYALTY_PROGRAMS_PREVIEW",
       "MOBILE_SCANNER_PREVIEW",
       "PREVIEW_SHARED",
       "PROMOTIONAL_CAMPAIGNS_PREVIEW",
@@ -268,7 +281,7 @@ describe("the six previews' copy", () => {
 
   test("each sibling link is a feature's name and one plain line of at most 50 characters", () => {
     const { cards } = PREVIEW_SHARED.related;
-    const KEYS = ["cardDesign", "mobileScanner", "pushNotifications", "analytics", "promotionalCampaigns", "geolocation"];
+    const KEYS = ["cardDesign", "mobileScanner", "pushNotifications", "analytics", "promotionalCampaigns", "geolocation", "loyaltyPrograms"];
 
     expect(Object.keys(cards).sort()).toEqual([...KEYS].sort());
     for (const key of KEYS) {

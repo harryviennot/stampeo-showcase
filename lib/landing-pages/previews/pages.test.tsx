@@ -20,7 +20,7 @@ import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-camp
 import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
 import { SHARED, STAMP_BANNER } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
-import { FEATURE_PREVIEWS } from "../preview-nav";
+import { FEATURE_PREVIEWS, loyaltyLink } from "../preview-nav";
 
 /** Sections whose copy is keyed by another word than their id: card design's `types` section is its `programs` copy. */
 const COPY_KEY_OF: Record<string, string> = { types: "programs" };
@@ -232,8 +232,9 @@ describe("walking the previews", () => {
     return [...related.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
   };
 
-  /** Geolocation is reached from the menus of Platform and its previews, not from a sibling's closing links. */
-  const FROM_THE_MENU: readonly PreviewSlug[] = ["platform/geolocation"];
+  /** Geolocation (the Product menu) and loyalty programs (the Loyalty link) are reached from the menus of Platform and its previews, not from a sibling's closing links. */
+  const FROM_THE_MENU: readonly PreviewSlug[] = ["platform/geolocation", "platform/loyalty-programs"];
+  const MENU_LINKS = [...Object.values(FEATURE_PREVIEWS).map((slug) => `/us/landing-pages/${slug}`), loyaltyLink("en", "previews").href];
 
   test("every preview is reached from a sibling or from the menu, and every card goes to a preview's own URL", async () => {
     const links = await Promise.all(PREVIEW_SLUGS.map(async (slug) => [slug, await linksOf(slug)] as const));
@@ -249,7 +250,7 @@ describe("walking the previews", () => {
     }
     for (const slug of FROM_THE_MENU) {
       expect(reached).not.toContain(`/us/landing-pages/${slug}`);
-      expect(Object.values(FEATURE_PREVIEWS)).toContain(slug);
+      expect(MENU_LINKS).toContain(`/us/landing-pages/${slug}`);
     }
   });
 

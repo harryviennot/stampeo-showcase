@@ -1,5 +1,5 @@
 /**
- * The six feature previews under `/us/landing-pages/platform/*`: Platform-style
+ * The seven previews under `/us/landing-pages/platform/*`: Platform-style
  * pages that sit beside today's `/en/features/*`. They are English, noindex and
  * reachable by URL only, each with its own tracking variant and the sections of
  * its registry entry, ending on the cream card and the links to its siblings.
@@ -25,6 +25,19 @@ const SECTIONS: Record<PreviewSlug, string[]> = {
   "platform/analytics": ["hero", "blind_spots", "charts", "customers", "dashboard", "final_cta", "related"],
   "platform/promotional-campaigns": ["hero", "how", "texting", "ideas", "delivery", "faq", "final_cta", "related"],
   "platform/geolocation": ["hero", "how", "privacy", "faq", "final_cta", "related"],
+  "platform/loyalty-programs": [
+    "hero",
+    "programs",
+    "levels",
+    "move_up",
+    "moments",
+    "settings",
+    "picker",
+    "by_business",
+    "faq",
+    "final_cta",
+    "related",
+  ],
 };
 
 describe("the registry", () => {
@@ -43,10 +56,15 @@ describe("the registry", () => {
     expect(LANDING_PAGES[slug].sections.slice(-2)).toEqual(["final_cta", "related"]);
   });
 
-  test("only card design, campaigns and geolocation have a FAQ, and it comes right before the closing card", () => {
+  test("only card design, campaigns, geolocation and loyalty programs have a FAQ, and it comes right before the closing card", () => {
     const withFaq = PREVIEW_SLUGS.filter((slug) => LANDING_PAGES[slug].sections.includes("faq"));
 
-    expect(withFaq).toEqual(["platform/card-design", "platform/promotional-campaigns", "platform/geolocation"]);
+    expect(withFaq).toEqual([
+      "platform/card-design",
+      "platform/promotional-campaigns",
+      "platform/geolocation",
+      "platform/loyalty-programs",
+    ]);
     for (const slug of withFaq) expect(LANDING_PAGES[slug].sections.slice(-3)).toEqual(["faq", "final_cta", "related"]);
   });
 

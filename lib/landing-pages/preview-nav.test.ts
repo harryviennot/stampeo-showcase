@@ -5,7 +5,8 @@ import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { ALL_LANDING_SLUGS, LANDING_SLUGS, PREVIEW_SLUGS } from "./pages";
-import { FEATURE_PREVIEWS, featureLink, featureLinksFor } from "./preview-nav";
+import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
+import { FEATURE_PREVIEWS, featureLink, featureLinksFor, loyaltyLink } from "./preview-nav";
 
 const ROOT = join(import.meta.dir, "..", "..");
 const source = (path: string) => readFileSync(join(ROOT, path), "utf8");
@@ -19,8 +20,10 @@ describe("which feature pages a page's header and footer lead to", () => {
     expect(featureLinksFor(slug)).toBe("live");
   });
 
-  test("every preview has a feature in the menu, and no two features share one", () => {
-    expect(Object.values(FEATURE_PREVIEWS).sort()).toEqual([...PREVIEW_SLUGS].sort());
+  test("every preview but loyalty programs has a feature in the menu, and no two features share one", () => {
+    const featurePreviews = PREVIEW_SLUGS.filter((slug) => slug !== "platform/loyalty-programs");
+
+    expect(Object.values(FEATURE_PREVIEWS).sort()).toEqual([...featurePreviews].sort());
     for (const preview of Object.values(FEATURE_PREVIEWS)) {
       expect(ALL_LANDING_SLUGS).toContain(preview);
     }
@@ -49,6 +52,19 @@ describe("where each feature link goes", () => {
         market: "int",
       });
     }
+  });
+});
+
+describe("where the Loyalty link goes", () => {
+  test("from Platform and its previews, it opens the loyalty programs preview under /us", () => {
+    expect(loyaltyLink("en", "previews")).toEqual({ href: "/us/landing-pages/platform/loyalty-programs", market: "us" });
+  });
+
+  test.each(routing.locales)("everywhere else, it opens today's loyalty programs page in %s", (locale) => {
+    expect(loyaltyLink(locale, "live")).toEqual({
+      href: LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS],
+      market: "int",
+    });
   });
 });
 

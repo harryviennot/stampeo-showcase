@@ -99,7 +99,8 @@ export type LandingSectionId =
   | "move_up"
   | "moments"
   | "settings"
-  | "picker";
+  | "picker"
+  | "by_business";
 
 export interface LandingPage {
   slug: LandingSlug;
@@ -264,7 +265,7 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
       "moments",
       "settings",
       "picker",
-      "sectors",
+      "by_business",
       "faq",
       "final_cta",
       "related",
