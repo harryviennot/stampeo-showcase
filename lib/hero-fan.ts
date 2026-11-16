@@ -270,6 +270,24 @@ export function fanSlots(season: FanSeason): FanSlot[] {
 
 export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
 
+/** The cards of the Platform landing page's hero (`/us/landing-pages/platform`),
+ *  dealt into the same seven places. Aurevo, the café those pages follow, is at
+ *  the apex with a points card and a stamp card either side, so the middle
+ *  three show both engines. Light and dark alternate, no two alike in colour touch, and
+ *  the photo stamps (pizza, croissant) sit apart. Never the barbershop sample:
+ *  its name and logo belong to a real shop. */
+export const PLATFORM_FAN_CARDS: Record<number, string> = {
+  [-3]: "gelo",
+  [-2]: "rolling-slice",
+  [-1]: "salon",
+  0: "aurevo",
+  1: "fournee",
+  2: "marginalia",
+  3: "pace",
+};
+
+export const PLATFORM_FAN_SLOTS: FanSlot[] = dealCards(PLATFORM_FAN_CARDS);
+
 /** Every tier's numbers at once; CSS resolves which set is live. Rotation and
  *  position stay unitless so the stylesheet can reuse them in calc() for both
  *  the resting angle and the counter-rotation the deal-in starts from. */

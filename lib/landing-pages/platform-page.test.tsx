@@ -21,7 +21,7 @@ import { BUSINESS_TYPE_ICONS, TypeMarquee } from "@/components/landing-pages/pla
 import { getAllPosts } from "../blog";
 import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
-import { renderEn, renderEnAsync, textOf } from "../testing/render-en";
+import { expectInOrder, renderEn, renderEnAsync, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { PLATFORM } from "./copy/platform";
 import { PROGRAM_TYPES } from "./copy/program-types";
@@ -30,6 +30,7 @@ import { SHARED } from "./copy/shared";
 // The hero's wallet cards ask next-intl for their words.
 await mockEnglishServerTranslations();
 const { PlatformHero } = await import("@/components/landing-pages/platform/hero/PlatformHero");
+const { NumbersBlock } = await import("@/components/landing-pages/platform/NumbersBlock");
 
 const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
 const platformFile = (name: string) => join(PLATFORM_DIR, `${name}.tsx`);
@@ -89,10 +90,10 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
   });
 });
 
-describe("the hero: the headline, the stack of cards, then the pair of actions (AC17)", () => {
-  const hero = () => code(platformFile("hero/WalletStackHero"));
+describe("the hero: the headline, the cards, then the pair of actions (AC17)", () => {
+  const hero = () => code(platformFile("hero/PlatformHero"));
 
-  test("puts the headline first, then the stack of wallet cards, then the CTA pair and its reassurance", async () => {
+  test("puts the headline first, then the cards, then the CTA pair and its reassurance", async () => {
     const html = await renderEnAsync(<PlatformHero />);
     const order = ["<h1", 'role="img"', 'href="/en/onboarding"', "14 days free"].map((needle) => html.indexOf(needle));
 
@@ -186,10 +187,35 @@ describe("what's delivered: two phones, three glass cards and the wallet badges"
 });
 
 describe("by the numbers", () => {
+  const CATALOG = (JSON.parse(read(join(ROOT, "messages", "en", "landing.json"))) as {
+    variant: { metrics: { items: Array<{ value: string; label: string }> } };
+  }).variant.metrics.items;
+  const [measured] = PLATFORM.numbers.figures;
+  const block = () => renderEnAsync(<NumbersBlock />);
+
   test("the pair of actions follows the figures", () => {
     const source = code(platformFile("NumbersBlock"));
 
     expect(literalAttr(findTag(source, "LpCtaPair")?.attrs ?? "", "location")).toBe("feature_cta");
+  });
+
+  test("shows the site's three counts, then the measured figure of cards still in the wallet, each in the homepage's hand over its label", async () => {
+    const html = await block();
+    const figures = [...html.matchAll(/<[^>]*class="[^"]*\bink-figure\b[^"]*"[^>]*>([^<]*)</g)].map((match) => match[1]);
+
+    expect(CATALOG).toHaveLength(3);
+    expect(figures).toEqual([...CATALOG.map((item) => item.value), measured.value]);
+    expectInOrder(html, [...CATALOG.flatMap((item) => [item.value, item.label]), measured.value, measured.text]);
+  });
+
+  test("prints where the measured figure comes from right under it, before the actions, and sources no other figure", async () => {
+    const html = await block();
+    const text = textOf(html);
+
+    expect(measured.source).toMatch(/^Stampeo data: .*\d/);
+    expect(text.split(measured.source)).toHaveLength(2);
+    expectInOrder(html, [measured.value, measured.text, measured.source, SHARED.cta]);
+    expect(text.indexOf(measured.source)).toBeGreaterThan(text.indexOf(CATALOG[2].label));
   });
 });
 

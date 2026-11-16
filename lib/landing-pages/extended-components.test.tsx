@@ -257,6 +257,23 @@ describe("what a page can ask of Platform's pieces", () => {
     expect(render(<NumberFigures items={items} />)).not.toContain("Stampeo data");
   });
 
+  test("NumberFigures: a figure's own source prints under that figure and no other, and four figures sit two across, then four across", () => {
+    const items = [
+      { value: "120+", label: "businesses" },
+      { value: "20,000+", label: "stamps" },
+      { value: "25+", label: "countries" },
+      { value: "95%", label: "still in the wallet", source: "Stampeo data, 73 businesses" },
+    ];
+    const html = render(<NumberFigures items={items} />);
+    const rows = [...html.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((match) => textOf(match[1]));
+
+    expect(rows).toHaveLength(4);
+    expect(rows.map((row) => row.includes("Stampeo data"))).toEqual([false, false, false, true]);
+    expect(rows[3].indexOf("still in the wallet")).toBeLessThan(rows[3].indexOf("Stampeo data"));
+    expect(html).toMatch(/<ul class="[^"]*\bsm:grid-cols-2\b[^"]*\blg:grid-cols-4\b/);
+    expect(render(<NumberFigures items={items.slice(0, 3)} />)).toMatch(/<ul class="[^"]*\bsm:grid-cols-3\b/);
+  });
+
   describe("LpFaq", () => {
     const items = [{ question: "Can I change it?", answer: "Anytime." }];
     const faq = () => render(<LpFaq faq={{ title: "Card styles, answered", items }} />, { us: true });

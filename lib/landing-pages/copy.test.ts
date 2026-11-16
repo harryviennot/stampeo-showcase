@@ -148,6 +148,7 @@ describe("figures from other people (AC12)", () => {
       "OUTCOMES.headStart.empty",
       "OUTCOMES.headStart.withHeadStart",
       "OUTCOMES.problem.figure",
+      "PLATFORM.numbers.figures[0]",
       "PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers.figures[0]",
       "PROMOTIONAL_CAMPAIGNS_PREVIEW.numbers.figures[1]",
     ]);
@@ -178,6 +179,16 @@ describe("figures from other people (AC12)", () => {
 
     expect(ALL.filter((line) => FIGURE.test(line.value) && !allowed.has(line.path)).map((line) => line.path)).toEqual([]);
     expect(ALL.filter((line) => FIGURE.test(line.value)).length).toBeGreaterThanOrEqual(4);
+  });
+});
+
+describe("Platform's measured figure", () => {
+  const [figure] = PAGES.PLATFORM.numbers.figures;
+
+  test("is the share of cards still in the wallet three months later, with the study it comes from", () => {
+    expect(figure.value).toBe("95%");
+    expect(figure.text).toMatch(/still in the wallet three months later/);
+    expect(figure.source).toMatch(/^Stampeo data: .*businesses.*2026$/);
   });
 });
 
