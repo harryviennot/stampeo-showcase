@@ -79,7 +79,6 @@ const LEGACY_EM_DASH: ReadonlySet<string> = new Set([
   'en/about.json::about.story.paragraphs[0]',
   'fr/acquisition.json::acquisition.notReady.description',
   'en/acquisition.json::acquisition.notReady.description',
-  'en/common.json::common.nav.featuresItems.campagnesPromotionnelles.description',
   'fr/features.json::features.scanner-mobile.sections[0].description',
   'fr/features.json::features.scanner-mobile.custom.howItWorks.subtitle',
   'fr/features.json::features.scanner-mobile.custom.howItWorks.app.steps[3]',

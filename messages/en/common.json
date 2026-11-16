@@ -12,27 +12,27 @@
       "featuresItems": {
         "designDeCarte": {
           "label": "Card Design",
-          "description": "Customize your card in 5 minutes"
+          "description": "Your logo, colors and stamps"
         },
         "scannerMobile": {
           "label": "Mobile Scanner",
-          "description": "Scan in one second from your phone"
+          "description": "Stamp from any phone"
         },
         "notificationsPush": {
           "label": "Push Notifications",
-          "description": "Engage customers on their lock screen"
+          "description": "A message on every stamp"
         },
         "campagnesPromotionnelles": {
           "label": "Promotional Campaigns",
-          "description": "Reach every customer — no SMS bill"
+          "description": "One message to every card"
         },
         "analytiques": {
           "label": "Analytics",
-          "description": "Understand your customers with real data"
+          "description": "See who comes back"
         },
         "geolocalisation": {
           "label": "Geolocation",
-          "description": "Remind them you exist at the right moment"
+          "description": "Your card when they're nearby"
         }
       },
       "foundingProgram": "Founding Program",
