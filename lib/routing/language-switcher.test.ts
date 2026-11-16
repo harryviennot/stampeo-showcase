@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { hidesLanguageSwitcher } from "./language-switcher";
+import { LanguageRow } from "@/components/ui/LanguageSwitcher";
+import { routing } from "@/i18n/routing";
+import { hidesLanguageSwitcher, switchLanguage } from "./language-switcher";
 
 describe("hidesLanguageSwitcher: pages a language switch would 404 on", () => {
   test.each([
@@ -25,4 +27,23 @@ describe("hidesLanguageSwitcher: pages a language switch would 404 on", () => {
       expect(hidesLanguageSwitcher(pathname)).toBe(false);
     },
   );
+});
+
+describe("picking a language", () => {
+  test("opens the same page in that language, in place of this one in the history", () => {
+    const calls: Array<[string, { locale: string }]> = [];
+    const pick = switchLanguage({ replace: (pathname, options) => void calls.push([pathname, options]) }, "/features/card-design");
+
+    pick("fr");
+    expect(calls).toEqual([["/features/card-design", { locale: "fr" }]]);
+  });
+
+  test("a tap on a pill of the phone menu's row hands its language over, and only that one", () => {
+    const picked: string[] = [];
+    const row = LanguageRow({ locale: "en", locales: routing.locales, onPick: (locale) => void picked.push(locale) });
+    const pills = (row.props as { children: Array<{ key: string; props: { onClick: () => void } }> }).children;
+
+    pills.find((pill) => pill.key === "es")?.props.onClick();
+    expect(picked).toEqual(["es"]);
+  });
 });

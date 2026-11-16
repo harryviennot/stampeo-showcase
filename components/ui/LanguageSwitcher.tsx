@@ -4,7 +4,7 @@ import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { LanguagePicker } from "@/components/ui/LanguagePicker";
-import { hidesLanguageSwitcher } from "@/lib/routing/language-switcher";
+import { hidesLanguageSwitcher, switchLanguage } from "@/lib/routing/language-switcher";
 
 /** One 44px pill per language, the current one filled: the phone menu's language control. */
 export function LanguageRow({
@@ -47,7 +47,7 @@ export function LanguageSwitcher({ variant = "picker" }: Readonly<{ variant?: "p
   if (hidesLanguageSwitcher(pathname)) return null;
 
   if (variant === "row") {
-    return <LanguageRow locale={locale} locales={routing.locales} onPick={(l) => router.replace(pathname, { locale: l })} />;
+    return <LanguageRow locale={locale} locales={routing.locales} onPick={switchLanguage(router, pathname)} />;
   }
 
   return (
@@ -56,7 +56,7 @@ export function LanguageSwitcher({ variant = "picker" }: Readonly<{ variant?: "p
       trigger="click"
       value={locale}
       options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
-      onSelect={(l) => router.replace(pathname, { locale: l })}
+      onSelect={switchLanguage(router, pathname)}
       surfaceClassName="rounded-lg border border-[var(--border)] bg-[var(--cream)]"
       tileClassName="text-[var(--foreground)] hover:bg-[var(--muted)]"
       selectedTileClassName="bg-[var(--accent)] text-white"
