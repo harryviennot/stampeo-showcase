@@ -10,7 +10,6 @@ import { describe, expect, test } from "bun:test";
 import { LockScreenSlice } from "@/components/landing-pages/feature-previews/push-notifications/LockScreenSlice";
 import { OwnIconCard } from "@/components/landing-pages/feature-previews/push-notifications/OwnIconCard";
 import { AUREVO } from "@/components/landing-pages/shared/samples";
-import { renderPreviewPage } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEn, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "../copy/previews/push-notifications";
@@ -202,14 +201,5 @@ describe("what the page leaves out", () => {
     const sections = [await render(<DaySection />), renderEn(<EditorSection />), await render(<WalletsSection />)];
 
     expect(textOf(sections.join("\n"))).not.toMatch(/broadcast/i);
-  });
-
-  test("the v1 first-draft sections are gone: no how-it-works table, no three-moment demo, no wording toggle card", async () => {
-    const page = await renderPreviewPage("platform/push-notifications");
-    const text = textOf(page);
-
-    expect(text).not.toContain("You scan. Their phone lights up.");
-    expect(text).not.toContain("The right message at every step.");
-    expect(text).not.toContain("Say it like you would");
   });
 });

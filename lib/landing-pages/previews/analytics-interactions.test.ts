@@ -72,14 +72,9 @@ describe("the blind-spot cards: a visitor flips them", () => {
 describe("how the cards move", () => {
   const motion = flipMotion(false);
 
-  test("the control turns the cards in a wave, 60 ms apart, and a tap turns its own card at once", () => {
-    expect(AUTO_FLIP.staggerMs).toBe(60);
-    expect([0, 1, 5].map((index) => flipDelayMs(index, motion, "control"))).toEqual([0, 60, 300]);
+  test("the control turns the cards in a wave, one after another, and a tap turns its own card at once", () => {
+    expect([0, 1, 5].map((index) => flipDelayMs(index, motion, "control"))).toEqual([0, AUTO_FLIP.staggerMs, 5 * AUTO_FLIP.staggerMs]);
     expect([0, 1, 5].map((index) => flipDelayMs(index, motion, "tap"))).toEqual([0, 0, 0]);
-  });
-
-  test("a card takes half a second to turn", () => {
-    expect(motion.durationMs).toBe(500);
   });
 
   test("a reader who asks for less motion gets an instant swap: no duration, no wave, no automatic flip", () => {

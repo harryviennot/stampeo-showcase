@@ -94,6 +94,16 @@ export const PAGES = {
   GEOLOCATION_PREVIEW: geolocationPreview.GEOLOCATION_PREVIEW,
 };
 
+/** Each preview's copy object, by its slug. */
+export const PREVIEW_COPY = {
+  "platform/card-design": cardDesignPreview.CARD_DESIGN_PREVIEW,
+  "platform/mobile-scanner": mobileScannerPreview.MOBILE_SCANNER_PREVIEW,
+  "platform/push-notifications": pushNotificationsPreview.PUSH_NOTIFICATIONS_PREVIEW,
+  "platform/analytics": analyticsPreview.ANALYTICS_PREVIEW,
+  "platform/promotional-campaigns": promotionalCampaignsPreview.PROMOTIONAL_CAMPAIGNS_PREVIEW,
+  "platform/geolocation": geolocationPreview.GEOLOCATION_PREVIEW,
+} as const;
+
 /** The paths whose lines match `pattern`. */
 export const offenders = (pattern: RegExp) => ALL.filter((line) => pattern.test(line.value)).map((line) => line.path);
 

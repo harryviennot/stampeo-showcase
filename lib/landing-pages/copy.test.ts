@@ -13,7 +13,7 @@ import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
 import { ALL, MODULES, PAGES, inPreviews, mentions, objectsWith, offenders } from "../testing/landing-copy";
-import { PLAN_FACTS, analyticsHistoryLabel } from "../plans/plan-facts";
+import { PLAN_FACTS, analyticsHistoryLabel, availability } from "../plans/plan-facts";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
 import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
@@ -104,6 +104,10 @@ describe("what these pages may not claim (AC10)", () => {
     expect(levelMentions().filter(({ plan }) => plan === undefined).map(({ path }) => path)).toEqual(
       Object.keys(LEVELS_WITHOUT_CHIP),
     );
+  });
+
+  test("the mentions that print no chip are true all the same: every plan has levels", () => {
+    expect(availability((facts) => facts.levels > 0)).toBe("every plan");
   });
 
   test("the levels mention guard flags one with no chip and one with another plan", () => {

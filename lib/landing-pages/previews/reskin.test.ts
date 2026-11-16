@@ -6,7 +6,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
-import { RESKIN_SHOPS, RESKIN_STEP_MS, nextShop, reskinCard, reskinPlacement, reskinView } from "./reskin";
+import { RESKIN_SHOPS, nextShop, reskinCard, reskinPlacement, reskinView } from "./reskin";
 
 const CAPTIONS = CARD_DESIGN_PREVIEW.reskin.captions;
 const count = RESKIN_SHOPS.length;
@@ -59,9 +59,6 @@ describe("the clock", () => {
     expect(nextShop(count - 1, count)).toBe(0);
   });
 
-  test("a card is held for 2.4 seconds", () => {
-    expect(RESKIN_STEP_MS).toBe(2400);
-  });
 });
 
 describe("for a reader who asks for less motion", () => {

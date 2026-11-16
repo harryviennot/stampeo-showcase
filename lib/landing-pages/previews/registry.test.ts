@@ -13,23 +13,9 @@ import { buildSitemap } from "../../seo/sitemap";
 import { hidesLanguageSwitcher } from "../../routing/language-switcher";
 import { NOINDEX } from "../../seo/page-robots";
 import { code, findTag, literalAttr } from "../../testing/jsx-source";
+import { PREVIEW_COPY as COPY } from "../../testing/landing-copy";
 import { pageFile, renderedSections } from "../../testing/landing-pages-source";
 import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPageMetadata, type PreviewSlug } from "../pages";
-import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
-import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
-import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
-import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
-import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
-
-const COPY = {
-  "platform/card-design": CARD_DESIGN_PREVIEW,
-  "platform/mobile-scanner": MOBILE_SCANNER_PREVIEW,
-  "platform/push-notifications": PUSH_NOTIFICATIONS_PREVIEW,
-  "platform/analytics": ANALYTICS_PREVIEW,
-  "platform/promotional-campaigns": PROMOTIONAL_CAMPAIGNS_PREVIEW,
-  "platform/geolocation": GEOLOCATION_PREVIEW,
-} as const;
 
 /** The sections of each preview, in the order of the UX brief: each page opens on its hero and ends on the cream card and its links. */
 const SECTIONS: Record<PreviewSlug, string[]> = {

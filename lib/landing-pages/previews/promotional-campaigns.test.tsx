@@ -338,13 +338,4 @@ describe("what the page leaves out", () => {
   test("no unsourced channel figure or SMS table comes back", async () => {
     expect(textOf(await renderPreviewPage("platform/promotional-campaigns"))).not.toMatch(/\b(?:20|30|45|85)%|iOS 26|Unknown sender/);
   });
-
-  test("the first-draft table of three steps and the hover rows of four ideas are gone, the composer and the chips taking their place", async () => {
-    const text = textOf(await renderPreviewPage("platform/promotional-campaigns"));
-
-    expect(text).not.toContain("A short message: a deal, something new, a reason to drop by today.");
-    expect(text).not.toMatch(/Fill a quiet hour|Bring back a regular/);
-    expect(text).toContain(COPY.composer.card.title);
-    expect(text).toContain(COPY.ideas.rows[0].chip);
-  });
 });

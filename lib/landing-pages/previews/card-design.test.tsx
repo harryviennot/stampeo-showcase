@@ -18,8 +18,8 @@ import { STEPS_PHONE } from "@/components/landing-pages/platform/StepsTable";
 import { stampIcons } from "@/components/onboarding/StampIconPicker";
 import { ROOT, openingTags, read } from "../../testing/jsx-source";
 import { otherCallers, previewSource } from "../../testing/landing-pages-source";
-import { expectInOrder, pictures, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
-import { renderPreviewPage } from "../../testing/preview-page";
+import { expectInOrder, logos, pictures, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
+import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { CARD_DESIGN_PREVIEW as COPY } from "../copy/previews/card-design";
 import { SHARED } from "../copy/shared";
@@ -31,16 +31,6 @@ import { join } from "node:path";
 // The wallets table holds two async phone components that ask next-intl for their words.
 await mockEnglishServerTranslations();
 const { WalletsSection } = await import("@/components/landing-pages/feature-previews/card-design/WalletsSection");
-
-/** The shops' logos in a render, one for each card or logo tile. */
-const logos = (html: string) => [...html.matchAll(/<img[^>]*\bsrc="(\/themes\/[a-z-]+\/logo\.[a-z]+)"/g)].map((match) => match[1]);
-
-/** The page's `data-landing-section` ids in document order, and the markup of each section up to the next. */
-function sectionsOf(html: string): Array<{ id: string; html: string }> {
-  const marks = [...html.matchAll(/data-landing-section="([a-z_]+)"/g)];
-
-  return marks.map((mark, index) => ({ id: mark[1], html: html.slice(mark.index, marks[index + 1]?.index ?? html.length) }));
-}
 
 describe("the page", () => {
   test("asks the five questions of its own FAQ, and says nothing about plans: every part of it is on every plan", async () => {

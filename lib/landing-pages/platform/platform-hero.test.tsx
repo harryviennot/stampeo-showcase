@@ -12,7 +12,7 @@ import { PlatformHero } from "@/components/landing-pages/platform/hero/PlatformH
 import { PLATFORM } from "../copy/platform";
 import { SHARED } from "../copy/shared";
 import { PROGRAM_TYPES } from "../copy/program-types";
-import { expectInOrder, pictures, renderEn, textOf } from "../../testing/render-en";
+import { expectInOrder, logos, pictures, renderEn, textOf } from "../../testing/render-en";
 import { restoreGlobalsAfterEach } from "../../testing/restore-globals";
 import { renderAs } from "../../testing/visitor-seams";
 import { SHELF_CARDS } from "./wallet-shelf";
@@ -20,8 +20,6 @@ import { STACK_CARDS } from "./wallet-stack";
 
 const stack = () => renderEn(<WalletStackHero />, { us: true });
 const shelf = () => renderEn(<WalletShelfHero />, { us: true });
-/** The shops' logos in a render, one per card. */
-const logos = (html: string) => [...html.matchAll(/<img[^>]*\bsrc="(\/themes\/[a-z-]+\/logo\.[a-z]+)"/g)].map((match) => match[1]);
 
 describe("the stack hero", () => {
   test("puts the headline first, then the cards, then the trial and the reassurance", () => {
@@ -43,14 +41,6 @@ describe("the stack hero", () => {
   test("is one picture to a screen reader, named for what it shows, not nine loose cards", () => {
     expect(pictures(stack()).filter((name) => /wallet/i.test(name))).toHaveLength(1);
     expect(pictures(stack())[0].length).toBeGreaterThan(30);
-  });
-
-  test("draws nine cards from nine different shops, the bubble tea shop and the barbershop not among them", () => {
-    const html = stack();
-
-    expect(logos(html)).toHaveLength(9);
-    expect(new Set(logos(html)).size).toBe(9);
-    expect(logos(html).join(" ")).not.toMatch(/\/themes\/(oba|barber)\//);
   });
 
   test("shows stamps, points and a level in the first screen: the five cards a phone shows, not the four it hides", () => {

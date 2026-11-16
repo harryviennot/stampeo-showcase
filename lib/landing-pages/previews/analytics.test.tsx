@@ -25,10 +25,12 @@ import {
 import { RecapSection } from "@/components/landing-pages/feature-previews/analytics/RecapSection";
 import { MINI } from "@/components/landing-pages/feature-previews/MiniFrame";
 import { ANALYTICS, DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
+import { PLAN_FACTS, TIERS } from "../../plans/plan-facts";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { smallestLabelPx, stackZooms } from "../../testing/stacked-rows";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
+import { ladderView } from "./analytics-ladder-view";
 import { OUTCOMES } from "../copy/outcomes";
 
 const FOLDER = join(COMPONENTS_DIR, "feature-previews", "analytics");
@@ -89,10 +91,18 @@ describe("blind spots: six questions a paper card cannot answer, and what Stampe
     expect(textOf(await render(<DeliverAnalytics />))).toContain(`${ANALYTICS.returnRate.percent}%`);
   });
 
-  test("every answer is true on every plan: none names a plan, a chart or a cohort", async () => {
-    const text = textOf(await render(<BlindSpotsSection />));
+  test("every answer is one Starter's own dashboard gives: a key number of basic analytics, or the sentence its ladder row prints", async () => {
+    const answers = textOf(await render(<BlindSpotsSection />));
+    const starter = textOf(await render(<LadderSection />));
+    const busiest = COPY.blindSpots.cards.find((card) => card.key === "busiest");
 
-    expect(text).not.toMatch(/\b(?:Starter|Growth|Pro|Every plan)\b|cohort|chart/i);
+    expect(PLAN_FACTS.starter.analytics).toBe("basic");
+    expect(ladderView("starter").layer).toBe("sentence");
+    expect(starter).toContain(`${busiest?.figure}, ${busiest?.line}`);
+    expect(starter).toContain(`${ANSWERS.regulars[0]}| of the customers you saw come at least every 2 weeks`);
+    expect(starter).toContain(`${ANSWERS.rewards[0]} customers| have a reward waiting`);
+    for (const key of ["working", "return", "new"] as const) expect(answers).toContain(ANSWERS[key][0]);
+    expect(answers).not.toMatch(/\b(?:Starter|Growth|Pro|Every plan)\b|cohort|chart/i);
   });
 
   test("a screen reader reads the face that is showing: the question and ??? first, the answer hidden until its card is turned", async () => {
@@ -337,12 +347,13 @@ describe("recap: the owner's week, in their inbox", () => {
     expectInOrder(html, ["Stamps given", COPY.recap.email.figures[0].value, trend, "New customers"]);
   });
 
-  test("the two facts sit beside it, and no fact carries a plan: the digest is on every plan", async () => {
+  test("the two facts sit beside it with no plan: the performance email has no plan gate in PLAN_FACTS to name", async () => {
     const html = await render(<RecapSection />);
 
     expectInOrder(html, [COPY.recap.email.nudge, ...COPY.recap.facts.map((fact) => fact.text)]);
     expect(COPY.recap.facts.filter((fact) => "plan" in fact)).toEqual([]);
     expect(textOf(html)).not.toMatch(/Growth|Pro\b|Every plan/);
+    expect(TIERS.flatMap((tier) => Object.keys(PLAN_FACTS[tier])).filter((key) => /digest|recap|email/i.test(key))).toEqual([]);
   });
 
   test("the email is stamped in the house ink", async () => {

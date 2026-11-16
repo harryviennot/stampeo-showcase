@@ -35,3 +35,10 @@ export function tapTargets(html: string): Array<{ tag: string; attrs: string; na
     return { tag, attrs, name: label ?? text };
   });
 }
+
+/** The page's `data-landing-section` ids in document order, and the markup of each section up to the next. */
+export function sectionsOf(html: string): Array<{ id: string; html: string }> {
+  const marks = [...html.matchAll(/data-landing-section="([a-z_]+)"/g)];
+
+  return marks.map((mark, index) => ({ id: mark[1], html: html.slice(mark.index, marks[index + 1]?.index ?? html.length) }));
+}

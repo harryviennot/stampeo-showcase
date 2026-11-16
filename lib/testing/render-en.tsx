@@ -96,3 +96,7 @@ export function pictures(markup: string): string[] {
     return isPicture && name ? [decodeEntities(name)] : [];
   });
 }
+
+/** The shops' logos in a render, one for each card or logo tile. */
+export const logos = (html: string): string[] =>
+  [...html.matchAll(/<img[^>]*\bsrc="(\/themes\/[a-z-]+\/logo\.[a-z]+)"/g)].map((match) => match[1]);

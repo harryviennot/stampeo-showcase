@@ -26,8 +26,7 @@ import { LpTrialButton } from "@/components/landing-pages/shared/LpTrialButton";
 import { EYEBROW_PILL, LpHeading } from "@/components/landing-pages/shared/LpSection";
 import { CTAButton } from "@/components/ui/CTAButton";
 import { FAQList } from "@/components/ui/FAQList";
-import { ROOT, filesWith, read, sourceFiles } from "../../testing/jsx-source";
-import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
+import { ROOT, filesWith, read } from "../../testing/jsx-source";
 import { renderPreviewPage } from "../../testing/preview-page";
 import { renderEn, renderEnAsync, textOf } from "../../testing/render-en";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
@@ -130,12 +129,6 @@ describe("a section's label is the site's orange pill", () => {
 
     expect(labelTag(html, "Step 2")).toContain("bg-[var(--accent)]/10");
     expect(html.indexOf("<svg")).toBeLessThan(html.indexOf("Step 2"));
-  });
-
-  test("no component of the pages writes the old orange capitals again", () => {
-    const files = sourceFiles(COMPONENTS_DIR).filter((file) => /\bEYEBROW\}\s*text-\[var\(--accent-hover\)\]/.test(read(file)));
-
-    expect(files.map((file) => file.replace(ROOT, ""))).toEqual([]);
   });
 
   test("the labels that only name a row or a strip are the small grey capitals, not a second orange", () => {

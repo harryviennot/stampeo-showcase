@@ -10,34 +10,16 @@ import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { openingTags, read, sourceFiles } from "../../testing/jsx-source";
 import { PREVIEWS_DIR, pageFile } from "../../testing/landing-pages-source";
-import { renderPreviewPage, tapTargets } from "../../testing/preview-page";
+import { PREVIEW_COPY as COPY } from "../../testing/landing-copy";
+import { renderPreviewPage, sectionsOf, tapTargets } from "../../testing/preview-page";
 import { expectInOrder, pictures, textOf } from "../../testing/render-en";
 import { scannerLoopFiles } from "@/lib/videos/scanner-loop";
-import { ANALYTICS_PREVIEW } from "../copy/previews/analytics";
 import { CARD_DESIGN_PREVIEW } from "../copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
-import { MOBILE_SCANNER_PREVIEW } from "../copy/previews/mobile-scanner";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
-import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
 import { REWARD_BANNER, SHARED, STAMP_BANNER } from "../copy/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
 import { FEATURE_PREVIEWS } from "../preview-nav";
-
-/** The page's `data-landing-section` ids in document order, and the markup of each section up to the next. */
-function sectionsOf(html: string): Array<{ id: string; html: string }> {
-  const marks = [...html.matchAll(/data-landing-section="([a-z_]+)"/g)];
-
-  return marks.map((mark, index) => ({ id: mark[1], html: html.slice(mark.index, marks[index + 1]?.index ?? html.length) }));
-}
-
-const COPY: Record<PreviewSlug, object> = {
-  "platform/card-design": CARD_DESIGN_PREVIEW,
-  "platform/mobile-scanner": MOBILE_SCANNER_PREVIEW,
-  "platform/push-notifications": PUSH_NOTIFICATIONS_PREVIEW,
-  "platform/analytics": ANALYTICS_PREVIEW,
-  "platform/promotional-campaigns": PROMOTIONAL_CAMPAIGNS_PREVIEW,
-  "platform/geolocation": GEOLOCATION_PREVIEW,
-};
 
 /** A section id as its copy is keyed: `blind_spots` is `blindSpots`. */
 const copyKey = (id: string) => id.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());

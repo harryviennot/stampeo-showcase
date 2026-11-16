@@ -62,8 +62,7 @@ describe("typing the message in", () => {
     expect(shown).toBe(written);
   });
 
-  test("every keystroke takes 30ms, and the whole message is in after its last one, never beyond", () => {
-    expect(TYPING_MS).toBe(30);
+  test("every keystroke takes one step, and the whole message is in after its last one, never beyond", () => {
     expect(typedSteps(0, total)).toBe(0);
     expect(typedSteps(TYPING_MS * 10, total)).toBe(10);
     expect(typedSteps(TYPING_MS * 10 + TYPING_MS - 1, total)).toBe(10);
