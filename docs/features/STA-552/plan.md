@@ -124,6 +124,173 @@ Acceptance criteria (v2):
 - The keycap trial button applies to the three other US landings too (their hero, closing CTA and `LpTrialButton`), per AC10.
 - Cleanup once Harry picks: delete the losing hero variant (and `?hero=`), the losing phone menu (and `?menu=`), and, when STA-555 ships site-wide, today's accordion menu. Tracked on STA-546 (hero) and STA-555 (menu).
 
+## v3: Platform back to v1 (keycaps kept), feature pages in plain words (Harry, 16 Nov 2026)
+
+Supersedes the v2 design decisions where they differ (approved plan, `~/.claude/plans/hey-claude-i-would-magical-minsky.md`). Study result: `retention-study-2026-11-16.md` (95.5% at 90 days).
+
+ISSUES: STA-552 (feature previews), STA-546 (Platform hero), STA-555 (phone menu)
+BRANCH: `feat/sta-552-feature-previews` (showcase worktree `.claude/worktrees/sta-552`, HEAD 8aa6115)
+REPOS: showcase only · MIGRATION: no · prod DB: one read-only study query (below)
+
+### Context
+
+Harry reviewed the v2 round and found it worse:
+- Platform's new styling (ink borders, pills, the cycling hero) made the page feel different and less clean.
+- The feature pages are confusing:
+  - plan badges everywhere ("Why are we feature gating on the landing website?");
+  - sections that sell nothing (plan ladder, recap email, palettes, designer, team, form-like composer);
+  - centred heroes;
+  - wording that is "mysterious" instead of plain.
+
+He wants the pages to say plainly what the product is, readable at a glance and SEO-ready, while keeping the bespoke sections that work.
+
+**His answers (16 Nov):**
+- Keep only the new CTA style (keycaps). Everything else on Platform goes back to how it was.
+- Hero: the fan on desktop (as before); on phones, a still Wallet stack with the front card fully visible.
+- Card design: a full product tour.
+- Analytics: a key-numbers card at the top.
+
+### Global rules (every landing page and preview)
+
+1. **Look:** back to the pre-v2 style (Platform as of 927bf77).
+   - **Kept:** the keycap trial buttons (`CTAButton keycap`, `LpCtaPair`, `LpAccentBand`, `LpTrialButton`).
+   - **Reverted** to the clean surfaces they had:
+     - `GlassCard`, `StepsTable`, `ToggleCard`;
+     - `RelatedPreviews` tiles;
+     - the `FAQList` table frame;
+     - `HoverRows` row labels;
+     - `FactList` check marks.
+   - **Section labels:** plain uppercase text again (no pill), in the site orange `--accent`, the colour Harry asked for earlier. Note: it is under the WCAG contrast minimum, as it is on the homepage.
+2. **No plan gating on landing pages.**
+   - No `PlanChip`, no "Growth and Pro" / "Pro" / "Starter" labels, no plan comparison sections. Plans live on the pricing section and page only.
+   - Claims stay true: never "on every plan" or "free" for something gated. Plain facts only.
+   - The test guards flip:
+     - `plan-claims.test.ts` and `copy.test.ts` now assert that landing pages print no plan names outside the pricing section;
+     - the `CHIPPED` / `PLAN_LINES` machinery is deleted for the previews.
+3. **Plain words + SEO ("premier degré").**
+   - Each hero H1 and sub says what the feature is, with the page's main keyword, for example:
+     - "Push notifications for your loyalty card";
+     - "Send a promotion to every customer's phone";
+     - "Loyalty program analytics";
+     - "A loyalty card scanner app for your staff";
+     - "Design your digital loyalty card";
+     - "Geolocation notifications (coming soon)".
+   - H2s describe their section literally; no riddles.
+   - Meta title and description carry the keywords.
+   - The previews stay `noindex` until they replace today's pages.
+   - Copy goes through the `stampeo-copywriting` skill (English) and STAMPEO.md for claims.
+4. **Feature-page heroes are split:** text left, visual right on desktop (text then visual on a phone), like the landing pages' `LpHero`. No pill or eyebrow above the H1. Keycap CTA.
+5. **Phone menu = the sheet** (Harry's pick).
+   - Delete the drill-down and `?menu=`.
+   - Make the Product tiles smaller (label and line size, padding, icon tile) so they don't squash at 320 to 360px.
+   - Production keeps today's menu until STA-555 ships the sheet site-wide.
+6. **Delete the shelf hero** and `?hero=`.
+
+### Platform (`/us/landing-pages/platform`)
+
+- **Hero:**
+  - **Desktop:** restore the fan exactly as before (`HeroCardFan` + `PLATFORM_FAN_SLOTS`, which builder 1 deleted from `lib/hero-fan.ts`).
+  - **Phones:** a still Wallet stack. The front card is fully (or almost fully) visible, so the card design reads at a glance; the tops of the other cards sit behind it. No cycling, and reduced motion gives the same picture.
+  - Keycap CTAs.
+- **Back to v1 (clean, no borders):** "Straight to Apple Wallet and Google Wallet" (floating cards), "Create it, share it, stamp it" (table), "Run it from your computer or your phone" (toggle card).
+- **Stats:** re-run the STA-358 study (`docs/features/STA-358/benchmark-sources.md`, Q8 wallet retention at 90 days, plus Q-add-rate) on prod.
+  - Read-only SELECT through the Supabase MCP, same method and businesses filter, date range up to today.
+  - Add "N% of cards still in the wallet after 90 days" to "By the numbers", with its source line.
+  - The figure lives in Platform's copy module only; the shared homepage metrics catalog (`variant.metrics`) is not touched.
+- Everything else stays as it was in v1.
+
+### Feature pages
+
+**Push notifications:**
+- Split hero (lock-screen phone).
+- Timeline: card on the left, notification on the right (the card changes first, then the notification arrives).
+- iPhone and Android section: clean floating cards (no ink borders), as on Platform.
+- "Use our wording or write your own": kept, plan labels removed.
+- Live demo kept. Plain copy.
+
+**Promotional campaigns:**
+- Split hero, with nicer notification icons on the phone (the shop's real icon tile, as in `LockScreenNotification`).
+- Core message, plainly: "One message to every customer's card, shown as a notification on their lock screen in Apple Wallet and Google Wallet. No texting fees."
+- Replace the composer form with an explanation: one message written once, then the same notification landing on several customers' lock screens.
+- **Removed:** "Your customers keep the card" (the figures move to Platform's stats) and the plans section.
+- **New "Instead of texting" section:**
+  - a text costs money per message;
+  - a Stampeo campaign reaches every card, with no cost per message and no cap on how many customers it reaches.
+- **The nuance** (campaign count vs reach) goes in the FAQ: "No limit on how many customers a campaign reaches. Your plan sets how many campaigns you can send each month (see pricing)."
+- Ideas kept ("Come in today" stays). The delivery title is rewritten plainly, e.g. "See how many customers got it".
+
+**Geolocation (coming soon):**
+- Split hero. The visual is a still lock screen with the "nearby" notification banner. "Coming soon" goes in the sub, with no plan.
+- "Today / What's next" section removed.
+- How-it-works titles that read on their own: "Add your shop's address", "A customer walks nearby", "Their card appears on their lock screen".
+- Privacy section kept.
+
+**Mobile scanner:**
+- Split hero that explains the choice plainly: "The free Stampeo Scanner app for iPhone and Android, or the web scanner in any browser, on a phone, tablet or laptop."
+- **Removed:** the team section and the live demo.
+- Kept: the interactive counter and the app-or-browser section.
+
+**Analytics:**
+- Split hero with a key-numbers card: visits, return rate, new customers, visits over time.
+- Production's "What you don't know today" cards (`components/features/analytics/BlindSpotCards.tsx`, as production shows them) replace the v2 card grid.
+- Every chart shown as a product showcase (busiest times, how often they come, reward progress, cohorts, by location…).
+  - One colour family: the orange "reward ready" bar goes.
+  - No plan ladder, no plan labels.
+- A cleaner customer list that looks like the dashboard's own.
+- The dashboard on laptop and phone moves below.
+- Recap email removed.
+
+**Card design (full product tour):**
+- Hero re-skin: clickable (dots and previous/next, swipeable) and slower.
+- "Every part of the card is yours": the anatomy, fixing the wrong label (business name shown where the stamp count is).
+- Stamps, points or levels: three real cards.
+- Your own stamp icons and logo: real cards from different shops; "98 icons" becomes a plain fact.
+- On iPhone and Android, then the FAQ.
+- **Removed:** the designer playground, the 98-icons strip and the 5 palettes.
+
+### How we build it (feature-workflow)
+
+1. **Coordinator:**
+   - merge `origin/dev` (it has STA-549: broadcasts on every plan, Starter 8 a month);
+   - run the study query (read-only);
+   - update `docs/features/STA-552/plan.md` with this v3 section.
+2. **Copy stage (Opus, `stampeo-copywriting`):**
+   - new copy modules for all six previews plus Platform's stat line, written for keywords and plain meaning;
+   - the coordinator reviews the copy before any build.
+3. **Foundation (Sonnet), tests first:**
+   - global rules 1, 2, 4, 5, 6 (style revert, no-plan guard, split `PreviewHero`, sheet only with smaller tiles, shelf/drill deleted);
+   - production pages stay byte-identical.
+4. **Four builders in parallel** (Sonnet, disjoint files):
+   - Platform hero + card design;
+   - analytics;
+   - push + campaigns;
+   - scanner + geolocation.
+5. **UX polish pass on pixels (Opus):** 390, 360 and 1440, plus reduced motion.
+6. **Coverage + quality reviews, fixes, ONE build,** then shots for Harry.
+
+There is no new design pass. Harry's review gives section-level direction; the polish pass checks the pixels.
+
+### Critical files
+
+- **Look:** `components/landing-pages/platform/{GlassCard,StepsTable,ToggleCard,HoverRows,LpCtaPair}.tsx`, `components/landing-pages/shared/{LpSection,FactList,LpFaq}.tsx`, `components/ui/FAQList.tsx`, `components/landing-pages/feature-previews/RelatedPreviews.tsx`.
+- **Hero:**
+  - `components/landing-pages/platform/hero/*` (stack stays for phones; the shelf and switch are deleted);
+  - `components/landing-variant/HeroCardFan.tsx`;
+  - `lib/hero-fan.ts` (restore the Platform slots from 927bf77);
+  - `components/landing-pages/feature-previews/PreviewHero.tsx` (split layout, reusing `shared/LpHero.tsx`'s grid).
+- **Menu:** `components/sections/{SheetMenu,MobileMenu,MobileMenuParts,MobileMenuDrill}.tsx` (drill deleted), `lib/landing-pages/platform/variants.ts`.
+- **Copy:** `lib/landing-pages/copy/previews/*.ts`, `lib/landing-pages/copy/platform.ts`.
+- **Guards:** `lib/landing-pages/{plan-claims,copy}.test.ts`, `lib/landing-pages/previews/*.test.tsx`.
+- **Pages:** `components/landing-pages/feature-previews/<slug>/*`, `app/[locale]/us/landing-pages/platform/**/page.tsx`, the registry in `lib/landing-pages/pages.ts`.
+
+### Verification
+
+- `bun test lib scripts`, `bun run type-check`, `bun run lint`, then one `bun run build`.
+- SSR byte compare: `/us`, `/en`, `/`, `/es`, `/pl`, pricing and the six `/en/features/*` stay identical.
+- Platform compared against 927bf77: only the keycap CTAs, the phone hero, the stat and the label colour differ.
+- Shots at 390, 360 and 1440 (Playwright headless, cookie banner refused), and a reduced-motion pass. Harry reviews on his checkout.
+- Every new claim traced in `docs/features/STA-552/claims.md`; the study's numbers saved with their SQL.
+
 ## Build stages
 
 1. Foundation: tests, registry entries, routes, copy modules (from the brief's draft copy, reviewed by the
