@@ -3,7 +3,7 @@ import { ToggleCard } from "../../platform/ToggleCard";
 import { LpSection } from "../../shared/LpSection";
 import { DeliveryCard } from "./DeliveryCard";
 
-/** The delivery card beside its three facts, on one white surface. */
+/** The delivery card beside its three facts, on one white surface as wide as the page's other cards. */
 export function DeliverySection() {
   const { tab } = COPY.delivery;
 
@@ -15,10 +15,12 @@ export function DeliverySection() {
       lead={COPY.delivery.lead}
       align="center"
     >
-      <ToggleCard
-        ariaLabel={COPY.delivery.title}
-        tabs={[{ key: "delivery", label: tab.title, title: tab.title, facts: tab.facts, visual: <DeliveryCard /> }]}
-      />
+      <div className="mx-auto max-w-[1040px]">
+        <ToggleCard
+          ariaLabel={COPY.delivery.title}
+          tabs={[{ key: "delivery", label: tab.title, title: tab.title, facts: tab.facts, visual: <DeliveryCard /> }]}
+        />
+      </div>
     </LpSection>
   );
 }

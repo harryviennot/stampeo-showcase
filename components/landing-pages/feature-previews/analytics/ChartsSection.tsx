@@ -47,7 +47,7 @@ const FIGURES: ChartKey[] = ["returnRate", "newCustomers", "spend"];
 const TITLE = "text-[1.25rem] leading-[1.15] font-medium tracking-[-0.02em] text-balance text-[var(--foreground)] lg:text-[1.375rem]";
 
 const SURFACE =
-  "flex flex-col rounded-[24px] bg-white p-5 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_24px_48px_-28px_rgba(25,18,16,0.2)] ring-1 ring-black/[0.06] sm:rounded-[28px] sm:p-6";
+  "flex flex-col rounded-[28px] bg-white p-5 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_24px_48px_-28px_rgba(25,18,16,0.2)] ring-1 ring-black/[0.06] sm:p-6";
 
 /** Every chart of the dashboard as a card: its title and the one question it answers over the chart itself. */
 export function ChartsSection() {

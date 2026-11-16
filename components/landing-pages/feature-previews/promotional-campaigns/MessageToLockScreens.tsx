@@ -19,7 +19,7 @@ function Source() {
   const { visual } = COPY.how;
 
   return (
-    <div className="relative mx-auto w-full max-w-[460px] rounded-[24px] bg-white p-5 pr-16 text-left shadow-[0_2px_4px_rgba(25,18,16,0.04),0_24px_56px_-28px_rgba(25,18,16,0.22)] ring-1 ring-black/5 sm:p-6 sm:pr-20">
+    <div className="relative mx-auto w-full max-w-[460px] rounded-[28px] bg-white p-5 pr-16 text-left shadow-[0_2px_4px_rgba(25,18,16,0.04),0_24px_56px_-28px_rgba(25,18,16,0.22)] ring-1 ring-black/5 sm:p-6 sm:pr-20">
       <p className={`${EYEBROW} text-[var(--muted-foreground)]`}>{visual.messageLabel}</p>
       <p className="mt-2 text-lg leading-snug font-semibold text-pretty text-[var(--foreground)]">{COPY.heroBanner.body}</p>
       <span

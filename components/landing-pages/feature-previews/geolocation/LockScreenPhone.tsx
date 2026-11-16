@@ -5,11 +5,12 @@ import { LOCK_WALLPAPER } from "@/components/features/geolocalisation/Geofencing
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { IPhone } from "@/components/ui/IPhone";
 import { GEOLOCATION_PREVIEW } from "@/lib/landing-pages/copy/previews/geolocation";
-import { lpBanner } from "../../shared/banner";
+import { shopBanner } from "../ShopIcon";
 
 /**
  * The lock screen the walk ends on: the hero's wallpaper, the clock and the site's lock-screen date, and the
- * sample café's own notification. A still phone, drawn at `width`; `eager` is for the one in a hero.
+ * sample café's own notification with the shop's icon tile, as on the push and campaigns heroes. A still phone,
+ * drawn at `width`; `eager` is for the one in a hero.
  */
 export function LockScreenPhone({ width, eager = false }: Readonly<{ width: number; eager?: boolean }>) {
   const t = useTranslations("features.geolocalisation.demo");
@@ -27,7 +28,7 @@ export function LockScreenPhone({ width, eager = false }: Readonly<{ width: numb
         </div>
       </div>
       <div className="relative z-10 mt-6 px-3">
-        <NotificationBanner {...lpBanner({ sender, body })} title={title} body={body} timeAgo="now" className="bg-white/85! backdrop-blur-none!" />
+        <NotificationBanner {...shopBanner({ sender, body })} title={title} body={body} timeAgo="now" className="bg-white/85! backdrop-blur-none!" />
       </div>
     </IPhone>
   );

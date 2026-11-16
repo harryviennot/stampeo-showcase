@@ -22,7 +22,8 @@ const VISUALS = [
 
 /**
  * "A stamp card, a points card or levels": a real card of each with its title and a line under it. On a phone each
- * is a row with the card beside its words; from `lg` three columns with the card over its words.
+ * is a row with the card beside its words; from `lg` three columns with the card over its words, each picture in a
+ * card-tall box so the three titles line up.
  */
 export function TypesSection() {
   const { eyebrow, title, lead, cards, alts } = CARD_DESIGN_PREVIEW.programs;
@@ -35,7 +36,7 @@ export function TypesSection() {
             key={card.title}
             className="grid grid-cols-[144px_1fr] items-center gap-5 lg:grid-cols-1 lg:justify-items-center lg:gap-7 lg:text-center"
           >
-            <div role="img" aria-label={alts[index]} className="justify-self-center">
+            <div role="img" aria-label={alts[index]} className="justify-self-center lg:flex lg:h-[308px] lg:items-center">
               <div aria-hidden>{VISUALS[index]}</div>
             </div>
             <div>

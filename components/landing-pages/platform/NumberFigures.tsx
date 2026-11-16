@@ -12,7 +12,7 @@ interface Figure {
 
 /**
  * The figures written by hand, in the homepage's ink, each over its label: one column on a phone, a row
- * from `sm`. Four figures run two across from `sm` and four across from `lg`, at a smaller size so the widest
+ * from `sm`. Four figures run two across from `sm` and four across from `lg`, a little smaller there so the widest
  * still fits its column. A `source` on a figure prints under that figure; the `source` of the row is printed once
  * under all of them, for a row that is someone's measurement.
  */
@@ -28,7 +28,7 @@ export function NumberFigures({
       {items.map((item, index) => (
         <li
           key={item.label}
-          className={`flex flex-col items-center${four ? " [--figure:clamp(3.5rem,2.2rem+4vw,6rem)] lg:[--figure:clamp(3rem,1rem+3.5vw,4.5rem)]" : ""}`}
+          className={`flex flex-col items-center${four ? " [--figure:clamp(3.5rem,2.2rem+4vw,6rem)] lg:[--figure:clamp(3rem,5.6vw,5.5rem)]" : ""}`}
         >
           <p
             className="ink-figure whitespace-nowrap"
