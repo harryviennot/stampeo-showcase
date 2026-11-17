@@ -24,6 +24,9 @@ export const LEVEL_UP_BANNER: Shared["LEVEL_UP_BANNER"] = {
 
 export const SHARED: Shared["SHARED"] = {
   cta: "Empezar mi prueba gratis",
+  now: "ahora",
+  googleCardTitle: "Tarjeta de fidelidad",
+  levelNames: { bronze: "Bronce", silver: "Plata", gold: "Oro", platinum: "Platino", noir: "Negro" },
   reassurance: "{trialDays} días gratis · Sin compromiso",
   proof: (businesses: string, countries: string) => `Lo usan ${businesses} comercios en ${countries} países`,
   demoLink: "Pruébalo en tu teléfono",

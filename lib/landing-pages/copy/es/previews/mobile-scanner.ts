@@ -24,6 +24,51 @@ export const MOBILE_SCANNER_PREVIEW: LandingCopy["previews"]["mobileScanner"]["M
       { key: "levels", title: "Niveles", line: "Mira su nivel y sus ventajas" },
     ],
     fact: "Justo después, recibe un aviso en su pantalla de bloqueo.",
+    panes: [
+      {
+        screenAlt: "La app de escaneo añadiendo tres sellos a la tarjeta de Sophie en un solo escaneo: el selector en 3 y el botón Añadir 3 sellos.",
+        cardAlt: "La tarjeta Aurevo de Sophie, completa con 8 de 8 sellos.",
+        result: "5 → 8 sellos",
+      },
+      {
+        screenAlt: "La app de escaneo con un importe de 12,50 tecleado y los puntos que suma, unos 12, antes de confirmar.",
+        cardAlt: "La tarjeta de Sophie de Marginalia, una librería, ahora con 252 puntos.",
+        result: "240 → 252 pts",
+      },
+      {
+        screenAlt: "La lista de recompensas por canjear de la app de escaneo: tres recompensas, cada una con un botón Canjear.",
+        cardAlt: "La tarjeta Aurevo de Sophie, de vuelta a 2 de 8 sellos tras canjear su recompensa.",
+        result: "Café gratis canjeado",
+      },
+      {
+        screenAlt: "La app de escaneo con las ventajas de un cliente Plata, para aplicar en caja antes de cobrar.",
+        cardAlt: "La tarjeta de Sophie de Wrenfold, una tintorería, con su nivel Plata.",
+        result: "Nivel: Plata",
+      },
+    ],
+  },
+  screens: {
+    customer: "Sophie",
+    stamps: { detail: "5 / 8", added: "+3 sellos", completes: "Con esto la tarjeta se completa", button: "Añadir 3 sellos" },
+    points: { detail: "240 pts", amount: "12,50", earns: "≈ +12 pts", button: "Añadir puntos" },
+    rewards: {
+      detail: "8 / 8",
+      title: "Recompensas por canjear",
+      redeem: "Canjear",
+      gift: "Regalo",
+      expiresToday: "Caduca hoy",
+      expiresLater: "Caduca en 5 días",
+      held: ["Café gratis", "Bollo gratis", "Café gratis"],
+    },
+    levels: {
+      detail: "4 / 6",
+      perks: ["Entrega en percha gratis", "Recogida prioritaria"],
+      perkOne: "Ventaja {level}: {perk}",
+      perkMany: "Ventajas {level}:",
+      applyOne: "Aplícala en caja antes de cobrar.",
+      applyMany: "Aplícalas en caja antes de cobrar.",
+      button: "Añadir sello",
+    },
   },
   ways: {
     eyebrow: "App o navegador",

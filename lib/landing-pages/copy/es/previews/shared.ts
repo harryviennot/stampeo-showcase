@@ -2,6 +2,7 @@ import type { LandingCopy } from "../../bundle";
 
 /** The sibling links the Spanish previews close with: each feature's live Spanish name and one plain line. */
 export const PREVIEW_SHARED: LandingCopy["previews"]["shared"]["PREVIEW_SHARED"] = {
+  lockScreenAlt: "Notificación de {sender} en la pantalla de bloqueo: {message}",
   related: {
     title: "Más funciones de Stampeo.",
     cards: {

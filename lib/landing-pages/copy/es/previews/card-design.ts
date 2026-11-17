@@ -75,6 +75,24 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
       google: "Un teléfono Android con la misma tarjeta de fidelidad abierta en Google Wallet",
     },
   },
+  cardFields: {
+    holder: "Titular",
+    reward: "Recompensa",
+    nextReward: "Próxima recompensa",
+    shops: [
+      { holder: "Dani", reward: "Lavado gratis" },
+      { holder: "Lucía", reward: "Cruasán gratis" },
+      { holder: "Irene", reward: "Copa gratis" },
+      { holder: "Marta", reward: "Relleno gratis" },
+      { holder: "Pablo", reward: "Bolsa gratis" },
+      { holder: "Leo", reward: "Porción gratis" },
+    ],
+    anatomy: {
+      stamps: { holder: "Elena", reward: "Facial gratis" },
+      points: { holder: "Nuria", reward: "Bolsa gratis" },
+    },
+    wallets: { holder: "Rosa", reward: "-10 %" },
+  },
   faq: {
     title: "Preguntas sobre tu tarjeta",
     items: [

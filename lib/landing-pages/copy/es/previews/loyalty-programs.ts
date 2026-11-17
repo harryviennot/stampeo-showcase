@@ -57,6 +57,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         reach: "Donde empieza cada cliente",
         card: "6 sellos para un corte gratis",
         perks: [],
+        rewardName: "Corte gratis",
       },
       {
         name: "Plata",
@@ -64,6 +65,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         card: "5 sellos para un corte gratis",
         perks: ["Acabado con toalla caliente gratis"],
         gift: "Un frasco de aceite para barba",
+        rewardName: "Corte gratis",
       },
       {
         name: "Oro",
@@ -71,8 +73,10 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         card: "4 sellos para un corte y arreglo de barba",
         perks: ["Arreglo de barba gratis", "Reserva prioritaria"],
         gift: "Un afeitado con toalla caliente gratis",
+        rewardName: "Corte y arreglo de barba",
       },
     ],
+    member: { label: "Miembro", value: "Sophie" },
     labels: { card: "Tarjeta", perks: "Ventajas", gift: "Regalo", noPerks: "Aún sin ventajas", top: "Nivel máximo: suyo para siempre" },
     alt: "La tarjeta de fidelidad de una barbería en Bronce, Plata y Oro: la tarjeta cambia de color y se llena más rápido en cada nivel.",
     facts: [

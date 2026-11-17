@@ -20,6 +20,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Copy = {
     h1: "Envía una promoción al teléfono de cada cliente.",
     accent: "teléfono de cada cliente.",
     sub: "Escribe un mensaje y aparece en la pantalla de bloqueo de cada cliente. Sin coste de SMS.",
+    secondary: "Ver cómo funciona",
     alt: "La pantalla de bloqueo de un iPhone con una notificación de Aurevo: ¿Tarde tranquila? Tu segundo café, a mitad de precio hasta las 17 h.",
   },
   heroBanner: HAPPY_HOUR,
@@ -94,9 +95,11 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Copy = {
       sentAt: "Enviada a las",
       time: "14:30",
       stats: "Entrega",
-      deliveryRate: "{rate} % entregados",
+      deliveryRate: "{rate}% entregados",
+      rateLabel: "entregados",
       reachable: "localizables",
       sendAgain: "Reenviar",
+      alt: "{name}. {status}, {sentAt} {time}. {sender}: {message} {stats}: {rate}, {reached} / {reachable} {reachableLabel}. {counts}.",
     },
     delivered: [
       { label: "Apple Wallet", value: 412 },
@@ -117,6 +120,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Copy = {
   },
   faq: {
     title: "Preguntas sobre las difusiones",
+    pricingLink: "consulta los precios",
     items: [
       {
         question: "¿Cuánto cuesta enviar una difusión?",

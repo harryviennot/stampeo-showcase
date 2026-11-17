@@ -42,6 +42,7 @@ export const PUSH_NOTIFICATIONS_PREVIEW: LandingCopy["previews"]["pushNotificati
     icon: {
       title: "Tu propio icono",
       line: "Sube un icono o elige uno creado a partir de tu logo.",
+      alt: "Iconos de notificación de tres comercios de ejemplo",
     },
     phoneAlts: {
       apple: "Un iPhone con la tarjeta de fidelidad de Aurevo abierta en Apple Wallet",
@@ -58,6 +59,10 @@ export const PUSH_NOTIFICATIONS_PREVIEW: LandingCopy["previews"]["pushNotificati
     ready: { text: STAMP_BANNER.body },
     own: { text: "¡Otro sello, {nombre}! Ya solo te faltan {sellos restantes}.", preview: "¡Otro sello, Sophie! Ya solo te faltan 3." },
     switches: ["Sello conseguido", "Recompensa desbloqueada", "Recompensa canjeada"],
+    sampleValues: [
+      { name: "nombre", value: "Sophie" },
+      { name: "sellos restantes", value: "3" },
+    ],
   },
   demo: {
     eyebrow: "Demo en directo",
