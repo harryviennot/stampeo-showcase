@@ -287,7 +287,7 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
       activeTokenRef.current = newSession.session_token;
       sync.adopt(newSession.session_token, newSession);
       startSSE(newSession.session_token);
-      posthog.capture('demo_started', { session_token: newSession.session_token, card_type: cardType });
+      posthog.capture('demo_started', { card_type: cardType });
     } else {
       setStatus('error');
     }

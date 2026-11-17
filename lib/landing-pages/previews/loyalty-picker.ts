@@ -24,3 +24,22 @@ export function suggestProgram(choices: readonly number[]): PickerSuggestion {
     levels: choices[PICKER_QUESTIONS.length] === REGULARS_YES,
   };
 }
+
+/** What a pick tells PostHog: the question and the option as ids that read the same in every language, and the program the quiz settles on when this was its last question. */
+export interface QuizPick {
+  question: string;
+  answer: string;
+  result: Engine | null;
+}
+
+/** The pick of `option` as the question after `choices`; the regulars question is the one after the scored three. */
+export function quizPick(choices: readonly number[], option: number): QuizPick {
+  const asked = PICKER_QUESTIONS[choices.length];
+
+  if (asked) return { question: asked.id, answer: asked.options[option]?.id ?? "none", result: null };
+  return {
+    question: "regulars",
+    answer: option === REGULARS_YES ? "yes" : "no",
+    result: suggestProgram([...choices, option]).program,
+  };
+}

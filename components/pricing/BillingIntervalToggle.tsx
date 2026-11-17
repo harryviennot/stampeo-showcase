@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { trackPricingIntervalToggled } from "@/lib/posthog/site-events";
 import type { BillingInterval } from "@/lib/pricing";
 
 type Props = {
@@ -33,7 +34,10 @@ export function BillingIntervalToggle({ value, onChange, className = "" }: Props
               type="button"
               role="tab"
               aria-selected={selected}
-              onClick={() => onChange(interval)}
+              onClick={() => {
+                if (!selected) trackPricingIntervalToggled(interval);
+                onChange(interval);
+              }}
               className={`flex items-center gap-2 rounded-full px-5 py-2 text-sm font-bold transition-all ${
                 selected
                   ? "bg-[var(--foreground)] text-white shadow-sm"

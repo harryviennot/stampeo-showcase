@@ -1,3 +1,5 @@
+import { trackLanguageSwitched } from "../posthog/site-events";
+
 /**
  * Blog posts (slug differs per language) and comparison pages (one language)
  * would 404 on a switch. Takes the locale-stripped path, as `usePathname` from
@@ -14,5 +16,8 @@ export interface LocaleRouter {
   replace(pathname: string, options: { locale: string }): void;
 }
 
-/** What picking a language does: the same page in that language, replacing this one in the history. */
-export const switchLanguage = (router: LocaleRouter, pathname: string) => (locale: string) => router.replace(pathname, { locale });
+/** What picking a language does: the same page in that language, replacing this one in the history; a language other than the page's is reported to PostHog. */
+export const switchLanguage = (router: LocaleRouter, pathname: string) => (locale: string) => {
+  trackLanguageSwitched(locale);
+  router.replace(pathname, { locale });
+};

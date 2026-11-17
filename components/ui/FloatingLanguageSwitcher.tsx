@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { LanguagePicker } from "@/components/ui/LanguagePicker";
 import { cn } from "@/lib/utils";
-import { hidesLanguageSwitcher } from "@/lib/routing/language-switcher";
+import { hidesLanguageSwitcher, switchLanguage } from "@/lib/routing/language-switcher";
 
 function isColorDark(color: string): boolean | null {
   if (!color || color === "transparent" || color === "rgba(0, 0, 0, 0)")
@@ -141,7 +141,7 @@ export function FloatingLanguageSwitcher() {
         trigger="hover"
         value={locale}
         options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
-        onSelect={(l) => router.replace(pathname, { locale: l })}
+        onSelect={switchLanguage(router, pathname)}
         surfaceClassName={cn(
           "rounded-full backdrop-blur-md border shadow-lg transition-colors",
           onDark ? "bg-white/15 border-white/20" : "bg-white/80 border-[var(--accent)]/10"
