@@ -31,7 +31,7 @@ Open the page in a private tab, or clear the site data for the page. The session
 
 ### Known state before you start
 
-- **DEMO-01 and DEMO-04: fixed, pending re-verification on a real iPhone.** On iOS the page failed to flip to "added" (F1): it closes its event stream when the tab is hidden and opens a new one when visible, and the server gave the new stream the old stream's queue, so the install update went to a dead connection. The server now keeps one queue per connection, and the page re-reads the session when it becomes visible and polls while the install is unconfirmed. Verified with unit tests on both sides only; not yet run on a device. Test these two first.
+- **DEMO-01: fixed and verified on a real iPhone (iOS 27, 17 Nov 2026), DEMO-04: fixed, pending re-verification on a real iPhone.** On iOS the page failed to flip to "added" (F1): it closes its event stream when the tab is hidden and opens a new one when visible, and the server gave the new stream the old stream's queue, so the install update went to a dead connection. The server now keeps one queue per connection, and the page re-reads the session when it becomes visible and polls while the install is unconfirmed. DEMO-01 passed with the page half alone (the server still had one queue per token), so the page half is enough on its own. Run DEMO-04 first.
 - **Targeted re-run for this fix:** DEMO-01, DEMO-04, and DEMO-02 (same code path, must not have regressed).
 - **A desktop browser proves nothing about the iPhone cases.** Safari on a Mac does not close the Wallet sheet onto the page the way iOS 27 does.
 
