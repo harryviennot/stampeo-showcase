@@ -8,13 +8,13 @@ import { themedIcon } from "@/lib/loyalty-samples";
 import { STAMPEO_LOGO } from "@/lib/stampeo-card";
 import type { CardDesign, CustomStampConfig, PointsRewardIcons } from "@/lib/types/design";
 
-const STICKER_BASE = "/demo/stickers";
+export const STICKER_BASE = "/demo/stickers";
 
 /** Slot order: café, bakery, pizzeria, bubble tea, gelato, groomer, florist, then the Stampeo seal on the reward slot. */
-const STICKER_SLOTS = ["cafe", "croissant", "pizza", "bubble-tea", "gelato", "paw", "tulip", "seal"] as const;
+export const DEMO_STICKER_SLOTS = ["cup", "croissant", "pizza", "boba", "gelato", "paw", "tulip", "seal"] as const;
 
 export const DEMO_STAMP_CONFIG: CustomStampConfig = {
-  icons: STICKER_SLOTS.map((slot) => themedIcon(`demo-${slot}`, `${STICKER_BASE}/${slot}`, "png")),
+  icons: DEMO_STICKER_SLOTS.map((slot) => themedIcon(`demo-${slot}`, `${STICKER_BASE}/${slot}`, "png")),
   reward_icon: null,
   empty_icon: null,
   empty_mode: "greyscale",

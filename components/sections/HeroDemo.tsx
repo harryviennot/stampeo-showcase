@@ -10,7 +10,7 @@ import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
 import type { RewardTier } from "@/lib/types/design";
-import { DEMO_POINTS_DESIGN, DEMO_STAMP_DESIGN } from "@/lib/demo-card";
+import { DEMO_POINTS_DESIGN, DEMO_STAMP_DESIGN } from "@/lib/demo/card";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
