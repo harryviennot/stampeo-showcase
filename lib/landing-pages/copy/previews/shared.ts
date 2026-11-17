@@ -3,6 +3,8 @@
  * says in one plain line what it does; no card carries a plan.
  */
 export const PREVIEW_SHARED = {
+  /** What a lock-screen notification is, for a screen reader: `{sender}` is the shop, `{message}` what it says. */
+  lockScreenAlt: "Lock screen notification from {sender}: {message}",
   related: {
     title: "More Stampeo features.",
     cards: {

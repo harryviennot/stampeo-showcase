@@ -1,15 +1,12 @@
 import { CTAButton } from "@/components/ui/CTAButton";
 import { ChevronDownIcon } from "@/components/icons";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 
 /** A second action: a label, and the anchor on the page it scrolls to. */
 export interface SecondaryAction {
   label: string;
   href: string;
 }
-
-/** What the second action is unless the page says otherwise: "Try it on your phone", to the demo. */
-const DEMO: SecondaryAction = { label: SHARED.demoLink, href: "#demo" };
 
 /**
  * The two actions side by side: the trial as a keycap and, as a white outline
@@ -20,18 +17,21 @@ const DEMO: SecondaryAction = { label: SHARED.demoLink, href: "#demo" };
  */
 export function LpCtaPair({
   location,
-  secondary = DEMO,
+  secondary,
 }: Readonly<{ location: "hero" | "feature_cta"; secondary?: SecondaryAction | null }>) {
+  const { SHARED } = useLandingCopy().shared;
+  const action = secondary === undefined ? { label: SHARED.demoLink, href: "#demo" } : secondary;
+
   return (
     <div className="flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-4">
       <CTAButton label={SHARED.cta} trackAs={location} keycap className="mb-[3px] w-full sm:mb-0 sm:w-auto" />
-      {secondary && (
+      {action && (
         // A plain anchor: the click is a scroll, not a contact.
         <a
-          href={secondary.href}
+          href={action.href}
           className="keycap keycap-flat inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full border-[1.5px] border-[var(--near-black)] bg-white px-7 text-base font-semibold text-[var(--foreground)] sm:w-auto"
         >
-          {secondary.label}
+          {action.label}
           <ChevronDownIcon size={16} weight="bold" aria-hidden />
         </a>
       )}

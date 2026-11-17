@@ -20,6 +20,7 @@ export function phoneMenuProps(
     onClose: () => {},
     scrolled: false,
     featureLinks,
+    market,
     pathname,
     ...pageMenuItems(t, "en", market),
     signedIn: false,

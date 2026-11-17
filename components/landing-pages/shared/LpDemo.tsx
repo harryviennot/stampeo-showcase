@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LpHeading, LpSection } from "./LpSection";
 
 const HeroDemo = dynamic(() => import("@/components/sections/HeroDemo").then((m) => m.HeroDemo));
@@ -12,17 +12,18 @@ const HeroDemo = dynamic(() => import("@/components/sections/HeroDemo").then((m)
  */
 export function LpDemo({
   eyebrow,
-  title = SHARED.demo.title,
-  lead = SHARED.demo.lead,
+  title,
+  lead,
   align = "left",
 }: Readonly<{ eyebrow?: string; title?: string; lead?: string; align?: "left" | "center" }>) {
+  const { demo } = useLandingCopy().shared.SHARED;
   const centered = align === "center";
 
   return (
     <LpSection section="demo" anchor>
       <div className={centered ? "flex flex-col items-center gap-10" : "grid gap-10 lg:grid-cols-2 lg:gap-x-16 lg:gap-y-8"}>
         <ScrollReveal className={centered ? "" : "lg:col-start-1 lg:row-start-1 lg:self-center"}>
-          <LpHeading title={title} lead={lead} eyebrow={eyebrow} align={align} />
+          <LpHeading title={title ?? demo.title} lead={lead ?? demo.lead} eyebrow={eyebrow} align={align} />
         </ScrollReveal>
         <ScrollReveal
           delay={150}

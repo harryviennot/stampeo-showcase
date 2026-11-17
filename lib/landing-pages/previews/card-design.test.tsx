@@ -20,9 +20,10 @@ import { otherCallers } from "../../testing/landing-pages-source";
 import { expectInOrder, logos, pictures, renderEn, renderEnAsync, textOf } from "../../testing/render-en";
 import { renderPreviewPage, sectionsOf } from "../../testing/preview-page";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
+import { landingCopy } from "../copy/bundle";
 import { CARD_DESIGN_PREVIEW as COPY } from "../copy/previews/card-design";
 import { SHARED } from "../copy/shared";
-import { ANATOMY_DESIGNS, WALLET_SAMPLE } from "./card-design-samples";
+import { anatomyDesigns, walletSample } from "./card-design-samples";
 import { RESKIN_SHOPS, reskinCard } from "./reskin";
 
 // The types section holds the level cards and the wallets section two phones, all async and asking next-intl for their words.
@@ -30,14 +31,19 @@ await mockEnglishServerTranslations();
 const { WalletsSection } = await import("@/components/landing-pages/feature-previews/card-design/WalletsSection");
 const { TypesSection } = await import("@/components/landing-pages/feature-previews/card-design/TypesSection");
 
+/** What /us asks: the international questions with the US ones laid over them. */
+const US_FAQ = landingCopy("en", "us").previews.cardDesign.CARD_DESIGN_PREVIEW.faq;
+const ANATOMY_DESIGNS = anatomyDesigns(COPY.cardFields);
+const WALLET_SAMPLE = walletSample(COPY.cardFields);
+
 const DESIGN_DIR = join(ROOT, "components", "landing-pages", "feature-previews", "card-design");
 
 describe("the page", () => {
   test("asks the six questions of its own FAQ", async () => {
     const page = await renderPreviewPage("platform/card-design");
 
-    expect(COPY.faq.items).toHaveLength(6);
-    expectInOrder(page, [COPY.faq.title, ...COPY.faq.items.map((item) => item.question)]);
+    expect(US_FAQ.items).toHaveLength(6);
+    expectInOrder(page, [US_FAQ.title, ...US_FAQ.items.map((item) => item.question)]);
   });
 
   test("shows a different shop in each section: no shop's logo is in two of them, and the bubble tea shop and the barbershop are in none", async () => {
@@ -67,7 +73,7 @@ describe("one card, many shops", () => {
   });
 
   test("draws the card of each of the six shops, as one picture named for what it does, and names the first shop in a caption", () => {
-    expect(logos(html())).toEqual(expect.arrayContaining(RESKIN_SHOPS.map((id) => reskinCard(id).design.logo_url ?? "")));
+    expect(logos(html())).toEqual(expect.arrayContaining(RESKIN_SHOPS.map((id) => reskinCard(id, COPY.cardFields).design.logo_url ?? "")));
     expect(new Set(logos(html())).size).toBe(6);
     expect(pictures(html())).toEqual([COPY.reskin.alt]);
     expect(textOf(html())).toContain("Car wash");
@@ -235,9 +241,13 @@ describe("questions about your card", () => {
     expect(html()).not.toMatch(/<details[^>]*\bopen\b/);
   });
 
-  test("a visitor who asks about a digital punch card gets both kinds of card and levels", () => {
-    const answer = COPY.faq.items.find((item) => /punch card/.test(item.question))?.answer ?? "";
+  test.each([
+    ["on the international site", COPY.faq, /stamp card or a points card/, /paper loyalty card/],
+    ["on /us", US_FAQ, /punch card or a points card/, /paper punch card/],
+  ])("a visitor who asks about a stamp card or a points card %s gets both kinds of card and levels", (_where, faq, question, paper) => {
+    const answer = faq.items.find((item) => question.test(item.question))?.answer ?? "";
 
+    expect(answer).toMatch(paper);
     expect(answer).toMatch(/stamp card/);
     expect(answer).toMatch(/points card/);
     expect(answer).toMatch(/levels/);

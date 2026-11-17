@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
-import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
+import type { Market } from "@/lib/markets";
 import { CARD_TITLE } from "../../platform/classes";
 import { LpSection } from "../../shared/LpSection";
 import { BusiestChart, HabitsChart, RewardsChart } from "./HabitCharts";
@@ -7,9 +9,10 @@ import { CohortsChart, LevelsChart, LocationsChart } from "./GroupCharts";
 import { NewCustomersChart, ReturnRateChart, SpendChart } from "./NumberCharts";
 import { VisitsPicture } from "./VisitsChart";
 
-type ChartKey = (typeof ANALYTICS_PREVIEW.charts.rows)[number]["key"];
+type ChartKey = LandingCopy["previews"]["analytics"]["ANALYTICS_PREVIEW"]["charts"]["rows"][number]["key"];
 
-const CHARTS: Record<ChartKey, ReactNode> = {
+/** The chart of each card; the tracked spend is money, in the currency of the page's `market`. */
+const charts = (market: Market): Record<ChartKey, ReactNode> => ({
   visits: <VisitsPicture />,
   returnRate: <ReturnRateChart />,
   newCustomers: <NewCustomersChart />,
@@ -18,9 +21,9 @@ const CHARTS: Record<ChartKey, ReactNode> = {
   rewards: <RewardsChart />,
   cohorts: <CohortsChart />,
   levels: <LevelsChart />,
-  spend: <SpendChart />,
+  spend: <SpendChart market={market} />,
   locations: <LocationsChart />,
-};
+});
 
 /**
  * How many columns of the twelve each card takes from `lg`: the weekly chart is tall beside the two figures, and
@@ -49,8 +52,9 @@ const SURFACE =
   "flex flex-col rounded-[28px] bg-white p-5 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_24px_48px_-28px_rgba(25,18,16,0.2)] ring-1 ring-black/[0.06] sm:p-6";
 
 /** Every chart of the dashboard as a card: its title and the one question it answers over the chart itself. */
-export function ChartsSection() {
-  const { eyebrow, title, lead, rows } = ANALYTICS_PREVIEW.charts;
+export function ChartsSection({ market }: Readonly<{ market: Market }>) {
+  const { eyebrow, title, lead, rows } = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW.charts;
+  const drawn = charts(market);
 
   return (
     <LpSection section="charts" anchor eyebrow={eyebrow} title={title} lead={lead} align="center">
@@ -59,7 +63,7 @@ export function ChartsSection() {
           <li key={row.key} data-chart={row.key} className={`${SURFACE} ${SPAN[row.key]}`}>
             <h3 className={TITLE}>{row.title}</h3>
             <p className="mt-2 mb-5 text-[15px] leading-snug text-pretty text-[var(--muted-foreground)] sm:text-base">{row.line}</p>
-            <div className={`flex flex-1 flex-col ${FIGURES.includes(row.key) ? "justify-center" : ""}`}>{CHARTS[row.key]}</div>
+            <div className={`flex flex-1 flex-col ${FIGURES.includes(row.key) ? "justify-center" : ""}`}>{drawn[row.key]}</div>
           </li>
         ))}
       </ul>

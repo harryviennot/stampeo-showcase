@@ -2,11 +2,11 @@ import type { Icon } from "@phosphor-icons/react";
 import type { CSSProperties } from "react";
 import { FacebookIcon, GlobeIcon, GoogleLogoIcon, InstagramIcon, PrinterIcon, QRCodeIcon } from "@/components/icons";
 import { StampeoLogo } from "@/components/logo";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LpSection } from "../shared/LpSection";
 import { ScrollFill } from "./ScrollFill";
 
-/** One icon per channel of `PLATFORM.share.channels`, in the same order: places a link or a code goes. */
+/** One icon per channel of the copy's `share.channels`, in the same order: places a link or a code goes. */
 export const SHARE_ICONS: Icon[] = [PrinterIcon, QRCodeIcon, InstagramIcon, FacebookIcon, GlobeIcon, GoogleLogoIcon];
 
 /** The tree is drawn in a 1000 by 470 box: the root at the top, a branch to the foot of each channel. */
@@ -19,7 +19,7 @@ const branch = (toX: number) =>
   `M${BOX.width / 2} ${ROOT_Y} C${BOX.width / 2} ${ROOT_Y + 130} ${toX} ${NODE_Y - 130} ${toX} ${NODE_Y}`;
 
 /** Each channel sits in its own sixth of the width. */
-const columns = PLATFORM.share.channels.map((_, index) => ((index + 0.5) / PLATFORM.share.channels.length) * BOX.width);
+const columns = SHARE_ICONS.map((_, index) => ((index + 0.5) / SHARE_ICONS.length) * BOX.width);
 
 /** The accent part of a branch runs from the root as far as `--fill` says (strokes carry pathLength 1). */
 const FILLED: CSSProperties = { strokeDasharray: 1, strokeDashoffset: "calc(1 - var(--fill, 1))" };
@@ -35,6 +35,7 @@ const STUB_FILL = "clamp(0, (var(--fill, 1) - var(--at)) * 20, 1)";
  * the same way.
  */
 export function ShareTree() {
+  const { PLATFORM } = useLandingCopy().platform;
   const { channels } = PLATFORM.share;
 
   return (

@@ -7,7 +7,7 @@
 import { describe, expect, test } from "bun:test";
 import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "../copy/previews/push-notifications";
 import {
-  SAMPLE_VALUES,
+  sampleValues,
   TYPING_MS,
   parseWording,
   resolveWording,
@@ -18,6 +18,7 @@ import {
 } from "./wording-editor";
 
 const OWN = parseWording(COPY.editor.own.text);
+const SAMPLE_VALUES = sampleValues(COPY.editor.sampleValues);
 
 describe("a message with variables, as the dashboard's editor shows it", () => {
   test("splits into plain text and variables, in order, and puts back the same words", () => {

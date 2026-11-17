@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { Segmented } from "@/components/ui/Segmented";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
-import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
+import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { fill } from "@/lib/landing-pages/format";
 import {
-  SAMPLE_VALUES,
   TYPING_MS,
+  sampleValues,
   parseWording,
   typedSteps,
   wordingSteps,
@@ -23,10 +23,8 @@ const LABEL = "text-[13px] font-semibold text-[var(--muted-foreground)]";
 /** The editor's white card: a soft shadow and a hairline ring, as the toggle card's. */
 const SURFACE = `rounded-[32px] bg-white ${CARD_SHADOW} ring-1 ring-black/5`;
 
-/** The notification's height is held at its longest wording, so typing never moves what is under it. */
-const LONGEST = [COPY.editor.ready.text, COPY.editor.own.preview].reduce((longest, text) => (text.length > longest.length ? text : longest));
-
-const OWN_STEPS = wordingSteps(parseWording(COPY.editor.own.text));
+/** The editor's words (the notifications preview's `editor`). */
+export type EditorCopy = LandingCopy["previews"]["pushNotifications"]["PUSH_NOTIFICATIONS_PREVIEW"]["editor"];
 
 function Variable({ name }: Readonly<{ name: string }>) {
   return (
@@ -34,13 +32,13 @@ function Variable({ name }: Readonly<{ name: string }>) {
   );
 }
 
-function Field({ parts, typing }: Readonly<{ parts: WordingPart[]; typing: boolean }>) {
+function Field({ parts, typing, label }: Readonly<{ parts: WordingPart[]; typing: boolean; label: string }>) {
   return (
     <div
       role="textbox"
       aria-readonly="true"
       aria-multiline="true"
-      aria-label={COPY.editor.messageLabel}
+      aria-label={label}
       className="mt-2 min-h-[92px] rounded-xl border border-[var(--border)] bg-[var(--blog-bg)]/60 px-4 py-3 text-base leading-7 text-[var(--foreground)]"
     >
       {parts.map((part, index) =>
@@ -73,9 +71,19 @@ function Switch({ label, on, onToggle }: Readonly<{ label: string; on: boolean; 
 /**
  * The dashboard's message editor on a clean white card. Ready-made is the default stamp message; Your words types a
  * message with variables in, and the lock screen beside it follows. Three message switches, each toggled independently.
+ * `sender` is the sample shop, `timeAgo` the time on the notification and `alt` what the lock screen is for a screen
+ * reader (`{sender}` and `{message}` filled in).
  */
-export function WordingEditor() {
-  const { toggle, previewLabel, messageLabel, ready, own, switches } = COPY.editor;
+export function WordingEditor({
+  copy,
+  sender,
+  timeAgo,
+  alt,
+}: Readonly<{ copy: EditorCopy; sender: string; timeAgo: string; alt: string }>) {
+  const { toggle, previewLabel, messageLabel, ready, own, switches } = copy;
+  // The notification's height is held at its longest wording, so typing never moves what is under it.
+  const longest = [ready.text, own.preview].reduce((widest, text) => (text.length > widest.length ? text : widest));
+  const ownSteps = wordingSteps(parseWording(own.text));
   const reducedMotion = usePrefersReducedMotion();
   const [mode, setMode] = useState<WordingMode>("ready");
   const [steps, setSteps] = useState(0);
@@ -85,20 +93,20 @@ export function WordingEditor() {
     if (mode !== "own" || reducedMotion) return;
     const startedAt = performance.now();
     const timer = setInterval(() => {
-      const typed = typedSteps(performance.now() - startedAt, OWN_STEPS);
+      const typed = typedSteps(performance.now() - startedAt, ownSteps);
       setSteps(typed);
-      if (typed >= OWN_STEPS) clearInterval(timer);
+      if (typed >= ownSteps) clearInterval(timer);
     }, TYPING_MS);
     return () => clearInterval(timer);
-  }, [mode, reducedMotion]);
+  }, [mode, reducedMotion, ownSteps]);
 
   const choose = (next: WordingMode) => {
     if (next === mode) return;
     setMode(next);
-    setSteps(next === "own" ? typedSteps(0, OWN_STEPS, reducedMotion) : 0);
+    setSteps(next === "own" ? typedSteps(0, ownSteps, reducedMotion) : 0);
   };
 
-  const view = wordingView({ mode, steps, ready: ready.text, own: own.text, values: SAMPLE_VALUES });
+  const view = wordingView({ mode, steps, ready: ready.text, own: own.text, values: sampleValues(copy.sampleValues) });
 
   return (
     <div className={`mx-auto max-w-[1040px] p-6 text-left sm:p-10 lg:p-12 ${SURFACE}`}>
@@ -117,15 +125,16 @@ export function WordingEditor() {
             onChange={choose}
           />
           <p className={`mt-6 ${LABEL}`}>{messageLabel}</p>
-          <Field parts={view.parts} typing={view.typing} />
+          <Field parts={view.parts} typing={view.typing} label={messageLabel} />
         </div>
 
         <div className="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1 lg:flex lg:flex-col">
           <p className={LABEL}>{previewLabel}</p>
           <LockScreenSlice
-            banner={{ sender: SAMPLE_BUSINESS, body: view.banner }}
-            label={mode === "own" ? own.preview : ready.text}
-            reserve={LONGEST}
+            banner={{ sender, body: view.banner }}
+            alt={fill(alt, { sender, message: mode === "own" ? own.preview : ready.text })}
+            timeAgo={timeAgo}
+            reserve={longest}
             className="mt-2 lg:flex-1"
           />
         </div>

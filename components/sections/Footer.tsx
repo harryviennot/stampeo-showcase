@@ -34,7 +34,7 @@ export async function Footer({
 
   const badges = storeBadges(locale);
 
-  const loyalty = loyaltyLink(locale, featureLinks);
+  const loyalty = loyaltyLink(locale, featureLinks, market);
   const seoLinks = buildSeoLinks(locale, market);
   const comparisons = footerComparisons(market, locale);
   const comparisonsTitle = footerComparisonsTitle(market, locale);
@@ -127,7 +127,7 @@ export async function Footer({
           <div className={footerLinkGrid(hasComparisons ? 5 : 4)}>
             <FooterColumn title={t("featuresTitle")}>
               {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
-                const { href, market: linkMarket } = featureLink(canonicalSlug, locale, featureLinks);
+                const { href, market: linkMarket } = featureLink(canonicalSlug, locale, featureLinks, market);
                 const soon = showsSoon(canonicalSlug, featureLinks);
                 return (
                 <MarketLink

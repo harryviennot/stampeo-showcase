@@ -8,14 +8,14 @@ const DARK = {
   secondary: "rgba(235, 235, 245, 0.6)",
 } as const;
 
-type Banner = Pick<ComponentProps<typeof NotificationBanner>, "appName" | "title" | "icon" | "timeAgo">;
+type Banner = Pick<ComponentProps<typeof NotificationBanner>, "appName" | "title" | "icon"> & { timeAgo: string };
 
 /**
  * A wallet notification as iOS shows it in dark mode: the sender's icon, its
  * name in bold with the time on the right, and the message under it, in white
  * on the dark material.
  */
-export function LockScreenNotification({ appName, title, icon, timeAgo = "now" }: Readonly<Banner>) {
+export function LockScreenNotification({ appName, title, icon, timeAgo }: Readonly<Banner>) {
   return (
     <div
       className="flex items-center gap-3 rounded-[22px] py-3 pr-4 pl-3 shadow-[0_12px_28px_-16px_rgba(0,0,0,0.55)] ring-1 ring-white/[0.08] backdrop-blur-2xl backdrop-saturate-150"

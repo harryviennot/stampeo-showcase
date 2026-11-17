@@ -1,5 +1,5 @@
 import { ScaledBox } from "@/components/ui/ScaledBox";
-import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LevelCards } from "../../shared/LevelCards";
 import { LpSection } from "../../shared/LpSection";
 import { SampleCard } from "./SampleCard";
@@ -25,7 +25,7 @@ const VISUALS = [
  * picture sits in a card-tall box, so the three titles line up.
  */
 export function TypesSection() {
-  const { eyebrow, title, lead, cards, alts } = CARD_DESIGN_PREVIEW.programs;
+  const { eyebrow, title, lead, cards, alts } = useLandingCopy().previews.cardDesign.CARD_DESIGN_PREVIEW.programs;
 
   return (
     <LpSection section="types" eyebrow={eyebrow} title={title} lead={lead} align="center">

@@ -10,13 +10,14 @@ import {
   StarIcon,
 } from "@/components/icons";
 import { MarketLink } from "@/components/market/MarketLink";
-import { PREVIEW_SHARED } from "@/lib/landing-pages/copy/previews/shared";
+import { useLandingCopy, type LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LANDING_PAGES, type PreviewSlug } from "@/lib/landing-pages/pages";
-import { marketPath } from "@/lib/markets";
+import { previewLink } from "@/lib/landing-pages/preview-nav";
+import type { Market } from "@/lib/markets";
 import { IconTile } from "../shared/IconTile";
 import { LpSection } from "../shared/LpSection";
 
-type Card = keyof typeof PREVIEW_SHARED.related.cards;
+type Card = keyof LandingCopy["previews"]["shared"]["PREVIEW_SHARED"]["related"]["cards"];
 
 /** Each preview's card in the shared copy, and the icon on its tile. */
 const CARDS: Record<PreviewSlug, { card: Card; Icon: ComponentType<{ size?: number; weight?: "duotone"; "aria-hidden"?: boolean }> }> = {
@@ -32,23 +33,24 @@ const CARDS: Record<PreviewSlug, { card: Card; Icon: ComponentType<{ size?: numb
 /**
  * The links a feature preview closes with: its three siblings (from the
  * registry) as white cards, each wholly a tap target at
- * least 56px tall. They lead to the previews, not to the live feature pages, so
+ * least 56px tall. They lead to the previews of the page's `market`, not to the live feature pages, so
  * the set can be walked. A page can set its own `title`; there is no label above it.
  */
-export function RelatedPreviews({ slug, title }: Readonly<{ slug: PreviewSlug; title?: string }>) {
-  const { title: shared, cards } = PREVIEW_SHARED.related;
+export function RelatedPreviews({ slug, market, title }: Readonly<{ slug: PreviewSlug; market: Market; title?: string }>) {
+  const { title: shared, cards } = useLandingCopy().previews.shared.PREVIEW_SHARED.related;
 
   return (
     <LpSection section="related" title={title ?? shared} align="center">
       <ul className="mx-auto grid max-w-[1040px] gap-3 lg:grid-cols-3 lg:gap-4">
         {(LANDING_PAGES[slug].related ?? []).map((sibling) => {
           const { card, Icon } = CARDS[sibling];
+          const link = previewLink(sibling, market);
 
           return (
             <li key={sibling}>
               <MarketLink
-                market="us"
-                href={marketPath("us", `/landing-pages/${sibling}`)}
+                market={link.market}
+                href={link.href}
                 className="group flex min-h-14 items-center gap-4 rounded-2xl bg-white p-4 shadow-[0_2px_4px_rgba(25,18,16,0.04),0_16px_40px_-24px_rgba(25,18,16,0.18)] ring-1 ring-black/5 transition-shadow hover:shadow-[0_2px_4px_rgba(25,18,16,0.06),0_24px_48px_-24px_rgba(25,18,16,0.26)]"
               >
                 <IconTile tone="subtle">

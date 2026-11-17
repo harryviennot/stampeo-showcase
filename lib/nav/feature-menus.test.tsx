@@ -31,7 +31,7 @@ describe("which feature says Soon", () => {
 });
 
 describe("the desktop Product dropdown", () => {
-  const open = (featureLinks: "live" | "previews") => renderEn(<NavDropdownPanel items={productMenuItems(t, "en", featureLinks)} onNavigate={() => {}} />);
+  const open = (featureLinks: "live" | "previews") => renderEn(<NavDropdownPanel items={productMenuItems(t, "en", featureLinks, "us")} onNavigate={() => {}} />);
 
   test("on Platform and its previews Geolocation wears Soon, and no other feature does", () => {
     const entries = links(open("previews"));
@@ -51,13 +51,13 @@ describe("the desktop Product dropdown", () => {
 });
 
 describe("the shell of a US landing page: its header and footer", () => {
-  const shell = async (slug: (typeof ALL_LANDING_SLUGS)[number]) => {
+  const shell = async (slug: (typeof ALL_LANDING_SLUGS)[number], market: "us" | "int" = "us") => {
     await mockEnglishServerTranslations();
     const { LandingPageShell } = await import("@/components/landing-pages/shared/LandingPageShell");
 
-    return renderAtPathAsync(`/en/us/landing-pages/${slug}`, () =>
+    return renderAtPathAsync(market === "us" ? `/en/us/landing-pages/${slug}` : `/en/landing-pages/${slug}`, () =>
       renderEnAsync(
-        <LandingPageShell slug={slug}>
+        <LandingPageShell slug={slug} market={market}>
           <i>page</i>
         </LandingPageShell>,
       ),
@@ -75,6 +75,14 @@ describe("the shell of a US landing page: its header and footer", () => {
 
     expect(features).toHaveLength(6);
     expect(features.every(([, href]) => href.startsWith("/us/landing-pages/platform/"))).toBe(true);
+    expect(features.filter(([label]) => /Soon/.test(label)).map(([label]) => label)).toEqual(["Geolocation Soon"]);
+  });
+
+  test.each(["platform", "platform/geolocation"] as const)("%s on the international site: the footer's features lead to the previews of the visitor's language", async (slug) => {
+    const features = footerFeatures(await shell(slug, "int"));
+
+    expect(features).toHaveLength(6);
+    expect(features.every(([, href]) => href.startsWith("/en/landing-pages/platform/"))).toBe(true);
     expect(features.filter(([label]) => /Soon/.test(label)).map(([label]) => label)).toEqual(["Geolocation Soon"]);
   });
 

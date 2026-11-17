@@ -1,5 +1,7 @@
+import { useLocale } from "next-intl";
 import { AccentText } from "@/lib/landing-pages/AccentText";
-import { LANDING_PAGES, type LandingSlug } from "@/lib/landing-pages/pages";
+import { pageWords, type LandingSlug } from "@/lib/landing-pages/pages";
+import type { Market } from "@/lib/markets";
 
 /** The classes of the headline and the sub, for the two heroes: centred over a fan, or in a column of their own. */
 const LOOK = {
@@ -13,9 +15,9 @@ const LOOK = {
   },
 } as const;
 
-/** What a Platform-style hero says, from its registry entry: the headline with its accent, and the sub. A page with no sub shows none. */
-export function HeroWords({ slug, look }: Readonly<{ slug: LandingSlug; look: keyof typeof LOOK }>) {
-  const { h1, accent, sub } = LANDING_PAGES[slug].hero;
+/** What a Platform-style hero says in the page's language and market: the headline with its accent, and the sub. A page with no sub shows none. */
+export function HeroWords({ slug, market, look }: Readonly<{ slug: LandingSlug; market: Market; look: keyof typeof LOOK }>) {
+  const { h1, accent, sub } = pageWords(slug, useLocale(), market).hero;
   const classes = LOOK[look];
 
   return (

@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import { getLocale } from "next-intl/server";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
-import { MOBILE_SCANNER_PREVIEW } from "@/lib/landing-pages/copy/previews/mobile-scanner";
+import { landingCopy } from "@/lib/landing-pages/copy/bundle";
+import { MARKETS, type Market } from "@/lib/markets";
 import { SILVER_LOOK } from "@/lib/levels/looks";
 import { aurevoDesign } from "../../shared/AurevoCard";
 import { LpSection } from "../../shared/LpSection";
@@ -20,60 +22,62 @@ function Card({ children }: Readonly<{ children: ReactNode }>) {
 }
 
 /** The Scanner app's screen for stamps, points, a reward and a level on one phone, beside the customer's card showing what the scan did to it. */
-export async function CounterSection() {
-  const { eyebrow, title, lead, options, fact } = MOBILE_SCANNER_PREVIEW.counter;
+export async function CounterSection({ market }: Readonly<{ market: Market }>) {
+  const { shared, previews } = landingCopy(await getLocale());
+  const { eyebrow, title, lead, options, fact, panes: words } = previews.mobileScanner.MOBILE_SCANNER_PREVIEW.counter;
   const aurevo = await aurevoDesign();
   const line = (key: CounterPane["key"]) => options.find((option) => option.key === key) ?? options[0];
+  const [stamps, points, rewards, levels] = words;
   const wrenfold = { ...WRENFOLD.design, ...SILVER_LOOK, secondary_fields: aurevo.secondary_fields?.slice(0, 1) };
 
   const panes: CounterPane[] = [
     {
       ...line("stamps"),
-      screenLabel: "The Scanner app adding three stamps to Sophie's card in one scan: a stepper set to 3 and the Add 3 stamps button.",
+      screenLabel: stamps.screenAlt,
       screen: <StampsScreen />,
-      cardLabel: "Sophie's wallet card from Aurevo, full at 8 of 8 stamps.",
+      cardLabel: stamps.cardAlt,
       card: (
         <Card>
           <WalletCard design={aurevo} stamps={8} />
         </Card>
       ),
-      result: "5 → 8 stamps",
+      result: stamps.result,
     },
     {
       ...line("points"),
-      screenLabel: "The Scanner app taking a spend amount of 12.50 with the keypad, and the points it earns, about 12, before anyone confirms.",
-      screen: <PointsScreen />,
-      cardLabel: "Sophie's wallet card from Marginalia, a bookstore, now at 252 points.",
+      screenLabel: points.screenAlt,
+      screen: <PointsScreen currency={MARKETS[market].currency.symbol} />,
+      cardLabel: points.cardAlt,
       card: (
         <Card>
           <WalletCard design={MARGINALIA.design} pointsBalance={252} pointsRewards={MARGINALIA.pointsRewards} />
         </Card>
       ),
-      result: "240 → 252 pts",
+      result: points.result,
     },
     {
       ...line("rewards"),
-      screenLabel: "The Scanner app's list of rewards to redeem: three rewards, each with a Redeem button.",
+      screenLabel: rewards.screenAlt,
       screen: <RewardsScreen />,
-      cardLabel: "Sophie's wallet card from Aurevo, back to 2 of 8 stamps once her reward is claimed.",
+      cardLabel: rewards.cardAlt,
       card: (
         <Card>
           <WalletCard design={aurevo} stamps={2} />
         </Card>
       ),
-      result: "Free coffee redeemed",
+      result: rewards.result,
     },
     {
       ...line("levels"),
-      screenLabel: "The Scanner app showing a Silver customer's perks to apply at the till before charging.",
+      screenLabel: levels.screenAlt,
       screen: <LevelScreen />,
-      cardLabel: "Sophie's wallet card from Wrenfold, a dry cleaner, showing its Silver level.",
+      cardLabel: levels.cardAlt,
       card: (
         <Card>
-          <WalletCard design={wrenfold} stamps={4} headerLabel="Silver" />
+          <WalletCard design={wrenfold} stamps={4} headerLabel={shared.SHARED.levelNames.silver} />
         </Card>
       ),
-      result: "Level: Silver",
+      result: levels.result,
     },
   ];
 

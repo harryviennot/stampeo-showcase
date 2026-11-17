@@ -1,5 +1,4 @@
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
-import { STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { GoogleWalletPhone } from "../shared/GoogleWalletPhone";
 import { LpSection } from "../shared/LpSection";
 import { WalletBadges } from "../shared/WalletBadges";
@@ -21,6 +20,9 @@ const ANDROID = { full: 286, narrow: 166 };
  * a phone the phones and their badges come first, then the three cards.
  */
 export function DeliverComposition() {
+  const { PLATFORM } = useLandingCopy().platform;
+  const { SHARED, STAMP_BANNER } = useLandingCopy().shared;
+
   return (
     <LpSection
       section="deliver"
@@ -46,7 +48,7 @@ export function DeliverComposition() {
           title={PLATFORM.deliver.notificationsLabel}
           className="relative z-20 w-full lg:absolute lg:top-[556px] lg:left-[580px] lg:w-[380px]"
         >
-          <LockScreenNotification {...lpBanner(STAMP_BANNER)} />
+          <LockScreenNotification {...lpBanner(STAMP_BANNER)} timeAgo={SHARED.now} />
         </GlassCard>
 
         <GlassCard

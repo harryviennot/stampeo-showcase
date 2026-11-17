@@ -48,6 +48,8 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
     icon: {
       title: "Your own icon",
       line: "Upload an icon, or pick one made from your logo.",
+      /** What the three sample shops' icons are, for a screen reader. */
+      alt: "Notification icons of three sample shops",
     },
     phoneAlts: {
       apple: "An iPhone with Aurevo's loyalty card open in Apple Wallet",
@@ -71,6 +73,11 @@ export const PUSH_NOTIFICATIONS_PREVIEW = {
     own: { text: "You got stamped, {first name}! {stamps left} more to go.", preview: "You got stamped, Sophie! 3 more to go." },
     /** The messages that can be switched on or off, as the editor names them; the first is the one on screen. */
     switches: ["Stamp collected", "Reward unlocked", "Reward redeemed"],
+    /** What each variable of `own.text` stands for on the lock screen (the sample customer's first name, her stamps left); `name` is the variable as written in the text. */
+    sampleValues: [
+      { name: "first name", value: "Sophie" },
+      { name: "stamps left", value: "3" },
+    ],
   },
   demo: {
     eyebrow: "Live demo",

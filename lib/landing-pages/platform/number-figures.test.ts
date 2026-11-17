@@ -1,6 +1,7 @@
 /**
  * The row of figures under "By the numbers": the two counts Platform takes from the site's catalog, then its own
- * measured figure. The catalog is the homepage's too, so the row finds its counts by label and never edits it.
+ * measured figure. The catalog is the homepage's too, so the row finds its counts by position (the same in every
+ * language) and never edits it.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -22,13 +23,17 @@ describe("the numbers row", () => {
     ]);
   });
 
-  test("finds the counts by label, so a reordered catalog cannot swap them or bring the stamps count in", () => {
-    const row = numbersRow([...CATALOG].reverse(), MEASURED);
+  test("finds the counts by position, so a catalog in another language reads the same and the stamps count stays out", () => {
+    const french = [
+      { value: "+120", label: "commerces actifs" },
+      { value: "+20 000", label: "tampons distribués" },
+      { value: "+25", label: "pays" },
+    ];
 
-    expect(row.map((figure) => figure.label)).toEqual(["active businesses", "countries", "card retention rate"]);
+    expect(numbersRow(french, MEASURED).map((figure) => figure.label)).toEqual(["commerces actifs", "pays", "card retention rate"]);
   });
 
   test("fails when the catalog has lost a count, rather than printing a row with a hole", () => {
-    expect(() => numbersRow(CATALOG.slice(0, 2), MEASURED)).toThrow(/countr/);
+    expect(() => numbersRow(CATALOG.slice(0, 2), MEASURED)).toThrow(/countries/);
   });
 });

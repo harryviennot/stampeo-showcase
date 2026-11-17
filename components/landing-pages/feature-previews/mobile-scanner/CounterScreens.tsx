@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { fill } from "@/lib/landing-pages/format";
 import { APP } from "./appColors";
 
 /**
- * The Scanner app's four counter screens, drawn for the phone on the preview: its own English labels
- * (scanner-app `src/locales/en/stamp.json` and `points.json`) over its own colours, each in the brand of the shop
+ * The Scanner app's four counter screens, drawn for the phone on the preview: its own labels
+ * (scanner-app `src/locales/<language>/stamp.json` and `points.json`, in the page's copy) over its own colours, each in the brand of the shop
  * whose customer is being served, as the app takes the business's colour. They are the inside of a pane: the
  * pane gives them a name, and the phone gives them their frame.
  */
@@ -17,14 +19,16 @@ const PILL = "flex h-[46px] items-center justify-center rounded-full text-[15px]
 
 /** The app's customer header: the initial in the brand's colour, the name, and a line under it. */
 function CustomerRow({ brand, detail, chip }: Readonly<{ brand: Brand; detail: string; chip?: string }>) {
+  const { customer } = useLandingCopy().previews.mobileScanner.MOBILE_SCANNER_PREVIEW.screens;
+
   return (
     <div className="flex items-center gap-2.5">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[18px] font-bold text-white" style={{ backgroundColor: brand }}>
-        S
+        {customer.charAt(0)}
       </span>
       <div className="min-w-0">
         <p className="text-[16px] leading-5 font-bold" style={{ color: APP.ink }}>
-          Sophie
+          {customer}
         </p>
         <div className="mt-0.5 flex items-center gap-1.5">
           {chip && (
@@ -67,9 +71,11 @@ function StampDots() {
 
 /** Adding three stamps in one scan: the stepper set to 3, the card it completes, and the button that says so. */
 export function StampsScreen() {
+  const { stamps } = useLandingCopy().previews.mobileScanner.MOBILE_SCANNER_PREVIEW.screens;
+
   return (
     <>
-      <CustomerRow brand={SHOP_BRAND.aurevo} detail="5 / 8" />
+      <CustomerRow brand={SHOP_BRAND.aurevo} detail={stamps.detail} />
       <div className="mt-7 flex items-center justify-between">
         <StepKey />
         <span className="text-[48px] leading-[54px] font-bold tabular-nums" style={{ color: APP.ink }}>
@@ -78,16 +84,16 @@ export function StampsScreen() {
         <StepKey plus />
       </div>
       <p className="mt-2 text-center text-[14px] font-semibold" style={{ color: SHOP_BRAND.aurevo }}>
-        +3 stamps
+        {stamps.added}
       </p>
       <p className="text-center text-[12px] leading-5" style={{ color: APP.muted }}>
-        This completes the card
+        {stamps.completes}
       </p>
       <div className="mt-5">
         <StampDots />
       </div>
       <span className={`${PILL} mt-8`} style={{ backgroundColor: SHOP_BRAND.aurevo }}>
-        Add 3 stamps
+        {stamps.button}
       </span>
     </>
   );
@@ -115,20 +121,22 @@ function Key({ glyph }: Readonly<{ glyph: ReactNode }>) {
   );
 }
 
-/** Points from what they spent: the amount typed so far, the points it earns before anyone confirms, and the keypad. */
-export function PointsScreen() {
+/** Points from what they spent: the amount typed so far in the shop's `currency`, the points it earns before anyone confirms, and the keypad. */
+export function PointsScreen({ currency }: Readonly<{ currency: string }>) {
+  const { points } = useLandingCopy().previews.mobileScanner.MOBILE_SCANNER_PREVIEW.screens;
+
   return (
     <>
-      <CustomerRow brand={SHOP_BRAND.marginalia} detail="240 pts" />
+      <CustomerRow brand={SHOP_BRAND.marginalia} detail={points.detail} />
       <div className="mt-5 flex items-end justify-center gap-1.5" style={{ color: APP.ink }}>
-        <span className="text-[44px] leading-[48px] font-bold tabular-nums">12.50</span>
+        <span className="text-[44px] leading-[48px] font-bold tabular-nums">{points.amount}</span>
         <span className="mb-1 text-[20px] font-semibold" style={{ color: APP.muted }}>
-          $
+          {currency}
         </span>
       </div>
       <div className="mt-1.5 flex justify-center">
         <span className="rounded-full bg-[#e6ece8] px-3.5 py-[3px] text-[14px] font-semibold" style={{ color: SHOP_BRAND.marginalia }}>
-          ≈ +12 pts
+          {points.earns}
         </span>
       </div>
       <div className="mt-4 flex flex-col gap-[5px]">
@@ -141,7 +149,7 @@ export function PointsScreen() {
         ))}
       </div>
       <span className={`${PILL} mt-3`} style={{ backgroundColor: SHOP_BRAND.marginalia }}>
-        Add Points
+        {points.button}
       </span>
     </>
   );
@@ -149,6 +157,8 @@ export function PointsScreen() {
 
 /** One reward the customer holds: its name and when it expires, or the Gift tag, and the Redeem button. */
 function HeldReward({ name, meta }: Readonly<{ name: string; meta: ReactNode }>) {
+  const { redeem } = useLandingCopy().previews.mobileScanner.MOBILE_SCANNER_PREVIEW.screens.rewards;
+
   return (
     <div className="flex items-center gap-2 rounded-[16px] py-2.5 pr-2.5 pl-3.5" style={{ backgroundColor: "#efe9e8" }}>
       <div className="min-w-0 flex-1">
@@ -158,7 +168,7 @@ function HeldReward({ name, meta }: Readonly<{ name: string; meta: ReactNode }>)
         <p className="text-[12px] leading-4">{meta}</p>
       </div>
       <span className="flex h-[32px] items-center rounded-full px-3.5 text-[13px] font-bold text-white" style={{ backgroundColor: SHOP_BRAND.aurevo }}>
-        Redeem
+        {redeem}
       </span>
     </div>
   );
@@ -166,30 +176,32 @@ function HeldReward({ name, meta }: Readonly<{ name: string; meta: ReactNode }>)
 
 /** Redeeming a reward on the spot, or leaving it for next time: what the customer holds, one row each. */
 export function RewardsScreen() {
+  const { rewards } = useLandingCopy().previews.mobileScanner.MOBILE_SCANNER_PREVIEW.screens;
+
   return (
     <>
-      <CustomerRow brand={SHOP_BRAND.aurevo} detail="8 / 8" />
+      <CustomerRow brand={SHOP_BRAND.aurevo} detail={rewards.detail} />
       <p className="mt-6 text-[12px] font-bold tracking-[0.04em] uppercase" style={{ color: APP.muted }}>
-        Rewards to redeem
+        {rewards.title}
       </p>
       <div className="mt-2.5 flex flex-col gap-2.5">
         <HeldReward
-          name="Free coffee"
+          name={rewards.held[0]}
           meta={
             <span className="font-semibold" style={{ color: "rgb(194, 65, 12)" }}>
-              Expires today
+              {rewards.expiresToday}
             </span>
           }
         />
         <HeldReward
-          name="Free pastry"
+          name={rewards.held[1]}
           meta={
             <span className="rounded-full px-1.5 py-px text-[11px] font-bold ring-1 ring-[#492c2a]" style={{ color: APP.brand }}>
-              Gift
+              {rewards.gift}
             </span>
           }
         />
-        <HeldReward name="Free coffee" meta={<span style={{ color: APP.muted }}>Expires in 5 days</span>} />
+        <HeldReward name={rewards.held[2]} meta={<span style={{ color: APP.muted }}>{rewards.expiresLater}</span>} />
       </div>
     </>
   );
@@ -202,15 +214,19 @@ export function RewardsScreen() {
  */
 export function LevelScreen({
   brand = SHOP_BRAND.wrenfold,
-  level = "Silver",
-  detail = "4 / 6",
-  perks = ["Free hanger return", "Priority pickup"],
+  level,
+  detail,
+  perks,
 }: Readonly<{ brand?: Brand; level?: string; detail?: string; perks?: readonly string[] }>) {
-  const one = perks.length === 1;
+  const copy = useLandingCopy();
+  const words = copy.previews.mobileScanner.MOBILE_SCANNER_PREVIEW.screens.levels;
+  const name = level ?? copy.shared.SHARED.levelNames.silver;
+  const list = perks ?? words.perks;
+  const one = list.length === 1;
 
   return (
     <>
-      <CustomerRow brand={brand} detail={detail} chip={level} />
+      <CustomerRow brand={brand} detail={detail ?? words.detail} chip={name} />
       <div
         className="mt-7 flex items-start gap-2.5 rounded-[14px] px-3 py-3 ring-1"
         style={{ backgroundColor: APP.amberTint, ["--tw-ring-color" as string]: "rgba(245, 158, 11, 0.35)" }}
@@ -220,21 +236,21 @@ export function LevelScreen({
         </svg>
         <div className="min-w-0">
           <p className="text-[15px] leading-5 font-bold" style={{ color: APP.ink }}>
-            {one ? `${level} perk: ${perks[0]}` : `${level} perks:`}
+            {one ? fill(words.perkOne, { level: name, perk: list[0] }) : fill(words.perkMany, { level: name })}
           </p>
           {!one &&
-            perks.map((perk) => (
+            list.map((perk) => (
               <p key={perk} className="text-[14px] leading-5 font-semibold" style={{ color: APP.ink }}>
                 {perk}
               </p>
             ))}
           <p className="mt-1 text-[12px] leading-4" style={{ color: APP.muted }}>
-            {one ? "Apply it at the till before charging." : "Apply them at the till before charging."}
+            {one ? words.applyOne : words.applyMany}
           </p>
         </div>
       </div>
       <span className={`${PILL} mt-8`} style={{ backgroundColor: brand }}>
-        Add Stamp
+        {words.button}
       </span>
     </>
   );

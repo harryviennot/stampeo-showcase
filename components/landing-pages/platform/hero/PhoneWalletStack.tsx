@@ -17,6 +17,7 @@ import {
   stackView,
   stepAfter,
   type StackCard,
+  type StackLevel,
   type StackState,
 } from "@/lib/landing-pages/platform/phone-stack";
 
@@ -50,10 +51,14 @@ interface SlotProps {
   after: boolean;
   /** The front card is playing its moment: it presses 2px, as if stamped. */
   pressed: boolean;
+  levelNames: LevelNames;
 }
 
+/** What a level card prints over its count, by level. */
+type LevelNames = Readonly<Record<StackLevel, string>>;
+
 /** A card's face as the wallet draws it, QR code included, so a card that comes to the front has nothing left to draw. */
-function Face({ card, after }: Readonly<{ card: StackCard; after: boolean }>) {
+function Face({ card, after, levelNames }: Readonly<{ card: StackCard; after: boolean; levelNames: LevelNames }>) {
   const shown = showing(card, after);
 
   return (
@@ -62,7 +67,7 @@ function Face({ card, after }: Readonly<{ card: StackCard; after: boolean }>) {
       stamps={shown.stamps}
       pointsBalance={shown.pointsBalance}
       pointsRewards={shown.pointsRewards}
-      headerLabel={shown.headerLabel}
+      headerLabel={shown.level && levelNames[shown.level]}
     />
   );
 }
@@ -72,9 +77,9 @@ function Face({ card, after }: Readonly<{ card: StackCard; after: boolean }>) {
  * leaving card stays on top as it slides down and fades, over the card taking its place. A card with a moment
  * cross-fades into it rather than swapping its face.
  */
-const Slot = memo(function Slot({ card, slot, hidden, leaving, ready, after, pressed }: SlotProps) {
-  const before = useMemo(() => <Face card={card} after={false} />, [card]);
-  const moment = useMemo(() => (card.moment ? <Face card={card} after /> : null), [card]);
+const Slot = memo(function Slot({ card, slot, hidden, leaving, ready, after, pressed, levelNames }: SlotProps) {
+  const before = useMemo(() => <Face card={card} after={false} levelNames={levelNames} />, [card, levelNames]);
+  const moment = useMemo(() => (card.moment ? <Face card={card} after levelNames={levelNames} /> : null), [card, levelNames]);
 
   return (
     <div
@@ -109,7 +114,7 @@ const Slot = memo(function Slot({ card, slot, hidden, leaving, ready, after, pre
  * The clock runs only while someone can see the stack; a reader who asks for less motion gets the still first
  * paint, Aurevo's card in front at its fifth stamp.
  */
-export function PhoneWalletStack({ label }: Readonly<{ label: string }>) {
+export function PhoneWalletStack({ label, levelNames }: Readonly<{ label: string; levelNames: LevelNames }>) {
   const stage = useRef<HTMLDivElement>(null);
   const [clock, setClock] = useState<StackState>(FIRST_PAINT);
   const reduced = usePrefersReducedMotion();
@@ -155,6 +160,7 @@ export function PhoneWalletStack({ label }: Readonly<{ label: string }>) {
                 ready={live && view.animated && isFront}
                 after={view.after && isFront}
                 pressed={view.animated && view.phase === "moment" && isFront}
+                levelNames={levelNames}
               />
             );
           })}

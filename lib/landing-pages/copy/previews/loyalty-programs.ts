@@ -13,6 +13,8 @@ export interface LadderLevel {
   perks: readonly string[];
   /** The one-time gift for reaching the level. */
   gift?: string;
+  /** The reward of the level's stamp card, as the sign-up page lists it. */
+  rewardName: string;
 }
 
 /** A program the picker can suggest. */
@@ -81,6 +83,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
         reach: "Where every customer starts",
         card: "6 stamps for a free haircut",
         perks: [],
+        rewardName: "Free haircut",
       },
       {
         name: "Silver",
@@ -88,6 +91,7 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
         card: "5 stamps for a free haircut",
         perks: ["Free hot towel finish"],
         gift: "A bottle of beard oil",
+        rewardName: "Free haircut",
       },
       {
         name: "Gold",
@@ -95,8 +99,11 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
         card: "4 stamps for a haircut and beard trim",
         perks: ["Free beard trim", "Priority booking"],
         gift: "A free hot towel shave",
+        rewardName: "Haircut and beard trim",
       },
     ] satisfies LadderLevel[],
+    /** The member every sample card of the ladder belongs to: the label of the field, and her name. */
+    member: { label: "Member", value: "Sophie" },
     labels: { card: "Card", perks: "Perks", gift: "Gift", noPerks: "No perks yet", top: "Top level: theirs for good" },
     /** What each card of the ladder is, for a screen reader. */
     alt: "A barbershop's loyalty card at Bronze, Silver and Gold: the card changes color and fills faster at each level.",
@@ -284,9 +291,9 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
           "No. Customers never move down on their own. You can still change a customer's level by hand from their profile.",
       },
       {
-        question: "Can I make a digital punch card?",
+        question: "Can I make a digital stamp card?",
         answer:
-          "Yes. A stamp card works like a paper punch card, with a stamp for each visit, but it lives in Apple Wallet or Google Wallet and can't be lost.",
+          "Yes. A stamp card works like a paper loyalty card, with a stamp for each visit, but it lives in Apple Wallet or Google Wallet and can't be lost.",
       },
       {
         question: "Can I switch from stamps to points later?",

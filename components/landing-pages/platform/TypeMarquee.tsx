@@ -14,10 +14,10 @@ import {
   SparklesIcon,
   TruckIcon,
 } from "@/components/icons";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { EYEBROW, LpSection } from "../shared/LpSection";
 
-/** One icon per business type of `PLATFORM.marquee.types`, in the same order. */
+/** One icon per business type of the copy's `marquee.types`, in the same order. */
 export const BUSINESS_TYPE_ICONS: Icon[] = [
   CoffeeIcon,
   BreadIcon,
@@ -38,9 +38,6 @@ interface Chip {
   Icon: Icon;
 }
 
-const CHIPS: Chip[] = PLATFORM.marquee.types.map((type, index) => ({ type, Icon: BUSINESS_TYPE_ICONS[index] }));
-/** Where a phone's first row ends and its second begins. */
-const HALF = Math.ceil(CHIPS.length / 2);
 
 /**
  * One drifting row of chips. The track holds them twice and travels one
@@ -83,7 +80,10 @@ function Row({ chips, motion, className = "" }: Readonly<{ chips: Chip[]; motion
  * wrapped, at every width.
  */
 export function TypeMarquee() {
-  const { label } = PLATFORM.marquee;
+  const { label, types } = useLandingCopy().platform.PLATFORM.marquee;
+  const chips: Chip[] = types.map((type, index) => ({ type, Icon: BUSINESS_TYPE_ICONS[index] }));
+  /** Where a phone's first row ends and its second begins. */
+  const half = Math.ceil(chips.length / 2);
 
   return (
     <LpSection section="marquee" bare>
@@ -92,11 +92,11 @@ export function TypeMarquee() {
           <div className="flex flex-col items-center gap-3 motion-reduce:gap-4 sm:gap-4 sm:motion-safe:flex-row lg:gap-8">
             <p className={`shrink-0 ${EYEBROW} text-[var(--muted-foreground)]`}>{label}</p>
             <div className="-mx-4 flex flex-col gap-2 self-stretch sm:hidden motion-reduce:hidden">
-              <Row chips={CHIPS.slice(0, HALF)} motion="animate-[marquee-scroll_30s_linear_infinite]" />
-              <Row chips={CHIPS.slice(HALF)} motion="animate-[marquee-scroll_30s_linear_infinite] [animation-direction:reverse]" />
+              <Row chips={chips.slice(0, half)} motion="animate-[marquee-scroll_30s_linear_infinite]" />
+              <Row chips={chips.slice(half)} motion="animate-[marquee-scroll_30s_linear_infinite] [animation-direction:reverse]" />
             </div>
             <Row
-              chips={CHIPS}
+              chips={chips}
               motion="animate-[marquee-scroll_52s_linear_infinite]"
               className="hidden flex-1 sm:block motion-reduce:block motion-reduce:w-full"
             />

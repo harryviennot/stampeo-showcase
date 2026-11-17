@@ -3,12 +3,12 @@ import type { EyebrowSection, Fact, FinalCtaCopy, PageMeta, Tile } from "./types
 /** The platform page: a tour of the product. Every section header is an eyebrow, a centred h2 and a lead. */
 export const PLATFORM = {
   meta: {
-    title: "Digital punch cards for Apple & Google Wallet | Stampeo",
+    title: "Digital loyalty cards for Apple & Google Wallet | Stampeo",
     description:
-      "Create, share and stamp a digital punch card in Apple Wallet and Google Wallet, run from a dashboard and a free Scanner app. Free trial, cancel anytime.",
+      "Create, share and stamp a digital loyalty card in Apple Wallet and Google Wallet, run from a dashboard and a free Scanner app. Free trial, cancel anytime.",
   } satisfies PageMeta,
   hero: {
-    h1: "Digital punch cards for Apple & Google Wallet.",
+    h1: "Loyalty cards for Apple & Google Wallet.",
     accent: "Apple & Google Wallet.",
   },
   /** What the hero's cards are, for a screen reader. */
@@ -43,6 +43,19 @@ export const PLATFORM = {
     updatesFrom: "5/8",
     updatesTo: "6/8",
   } satisfies EyebrowSection & Record<string, string>,
+  /**
+   * The dashboard's own words on the analytics card (web's `analytics` catalog). `alt` fills `{visits}`,
+   * `{visitsChange}`, `{returnRate}` (the label above), `{returnRatePercent}` and `{returnRateChange}`.
+   */
+  analyticsCard: {
+    visits: "Visits",
+    returnRate: "30-day return rate",
+    overTime: "Visits over time",
+    returning: "Returning",
+    first: "First visit",
+    points: "pts",
+    alt: "Analytics: {visits} visits, up {visitsChange}%; a {returnRate} of {returnRatePercent}%, up {returnRateChange} points; and the visits over time, week by week.",
+  },
   numbers: {
     eyebrow: "By the numbers",
     title: "Where Stampeo stands today.",

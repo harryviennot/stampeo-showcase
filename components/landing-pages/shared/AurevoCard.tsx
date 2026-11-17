@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { WalletCard } from "@/components/card/WalletCard";
 import type { CardDesign } from "@/lib/types/design";
 import { PassFrame } from "./PassFrame";
@@ -16,11 +16,11 @@ export async function aurevoDesign(): Promise<Partial<CardDesign>> {
   };
 }
 
-const ORDINALS = new Intl.PluralRules("en-US", { type: "ordinal" });
 const ORDINAL_SUFFIX = { one: "st", two: "nd", few: "rd", other: "th" } as Record<string, string>;
 
-/** "10th": the card's reward field names the stamp that earns it, so it follows the card's size. */
-const ordinal = (count: number) => `${count}${ORDINAL_SUFFIX[ORDINALS.select(count)] ?? "th"}`;
+/** "10th" in English; the other languages' catalogs write the number with a mark that stays, so it is the number alone. */
+const ordinal = (count: number, locale: string) =>
+  locale === "en" ? `${count}${ORDINAL_SUFFIX[new Intl.PluralRules("en", { type: "ordinal" }).select(count)] ?? "th"}` : String(count);
 
 /** The Aurevo card at `stamps` of 8, or of `total`, with its member and reward fields; the reward field names the card's last stamp. */
 export async function AurevoCard({
@@ -29,6 +29,7 @@ export async function AurevoCard({
   total,
 }: Readonly<{ stamps: number; width: number; total?: number }>) {
   const design = await aurevoDesign();
+  const locale = await getLocale();
   const sized: Partial<CardDesign> =
     total === undefined
       ? design
@@ -36,7 +37,7 @@ export async function AurevoCard({
           ...design,
           total_stamps: total,
           secondary_fields: design.secondary_fields?.map((field) =>
-            field.key === "reward" ? { ...field, value: field.value.replace(/^\d+(?:st|nd|rd|th)/, ordinal(total)) } : field,
+            field.key === "reward" ? { ...field, value: field.value.replace(/\d+(?:st|nd|rd|th)?/, ordinal(total, locale)) } : field,
           ),
         };
 

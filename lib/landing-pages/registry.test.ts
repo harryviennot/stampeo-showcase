@@ -22,16 +22,19 @@ import { NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import {
   COMPONENTS_DIR,
   SHARED_DIR,
+  PAGE_COMPONENTS,
+  localisedRouteFile,
   lpFiles,
   pageComponent,
   pageFile,
   renderedSections,
+  routeFile,
   shared,
 } from "../testing/landing-pages-source";
 import { renderEn } from "../testing/render-en";
 import { SHARED } from "./copy/shared";
-import { ALL_LANDING_SLUGS, LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata } from "./pages";
-import { PROOF_LABELS, proofFigures } from "./proof";
+import { ALL_LANDING_SLUGS, LANDING_PAGES, LANDING_SLUGS, hasDemoSection, landingPageMetadata, pageWords } from "./pages";
+import { proofFigures } from "./proof";
 
 /** The three pages that argue one thing, and Platform, which tours the product. */
 const ARGUMENT_PAGES = ["how-it-works", "features", "outcomes"] as const;
@@ -84,10 +87,26 @@ describe("the routes (AC1, AC2, AC4)", () => {
     expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);
   });
 
-  test.each(LANDING_SLUGS)("%s prints the US pricing block", (slug) => {
+  test.each(LANDING_SLUGS)("%s prints the pricing block of its market: the US one on /us", (slug) => {
     const pricing = findTag(code(pageFile(slug)), "PricingSection");
 
-    expect(literalAttr(pricing?.attrs ?? "", "market")).toBe("us");
+    if (slug === "platform") {
+      expect(pricing?.attrs).toContain("market={market}");
+      expect(code(routeFile(slug))).toContain('<PlatformPage market="us" />');
+    } else {
+      expect(literalAttr(pricing?.attrs ?? "", "market")).toBe("us");
+    }
+  });
+
+  test.each(Object.keys(PAGE_COMPONENTS) as Array<keyof typeof PAGE_COMPONENTS>)("%s is served in every language by a route that mounts the same page for the international market", (slug) => {
+    const route = code(localisedRouteFile(slug));
+    const page = PAGE_COMPONENTS[slug];
+
+    expect(route).toContain(`<${page} market="int" />`);
+    expect(code(routeFile(slug))).toContain(`<${page} market="us" />`);
+    expect(route).toContain("routing.locales.map");
+    expect(route).toContain("setRequestLocale(locale)");
+    expect(route).toContain(`landingPageMetadata("${slug}", locale, "int")`);
   });
 
   test.each(ALL_LANDING_SLUGS)("%s mounts the shell with its own slug", (slug) => {
@@ -116,11 +135,11 @@ describe("the shell (AC4)", () => {
     const tracker = findTag(source, "LandingTracker");
 
     expect(tracker?.attrs).toContain("variant={page.variant}");
-    expect(literalAttr(tracker?.attrs ?? "", "locale")).toBe("en");
+    expect(tracker?.attrs).toContain("locale={locale}");
     expect(source.indexOf("<LandingTracker")).toBeLessThan(source.indexOf("<RegionPricingProvider"));
   });
 
-  test("puts the US header, the page and the US footer inside the provider", () => {
+  test("puts the market's header, the page and the market's footer inside the provider", () => {
     const source = shell();
     const open = source.indexOf("<RegionPricingProvider");
     const close = source.indexOf("</RegionPricingProvider>");
@@ -132,22 +151,23 @@ describe("the shell (AC4)", () => {
       expect(at).toBeLessThan(close);
     }
     for (const tag of openingTags(source).filter((t) => t.name === "Header" || t.name === "Footer")) {
-      expect(literalAttr(tag.attrs, "market")).toBe("us");
+      expect(tag.attrs).toContain("market={market}");
     }
   });
 
-  test("starts a visitor on US dollars and the US trial length, before hydration and with JavaScript off", () => {
+  test("starts a visitor on the market's currency and trial length, before hydration and with JavaScript off", () => {
     const provider = findTag(shell(), "RegionPricingProvider");
 
-    expect(literalAttr(provider?.attrs ?? "", "defaultCurrency")).toBe("usd");
-    expect(provider?.attrs).toContain("defaultTrialDays={MARKETS.us.trialDays}");
+    expect(provider?.attrs).toContain("defaultCurrency={marketCurrency}");
+    expect(provider?.attrs).toContain("defaultTrialDays={MARKETS[market].trialDays}");
+    expect(code(join(SHARED_DIR, "LandingPageShell.tsx"))).toContain('MARKETS[market].currency.code.toLowerCase() === "usd" ? "usd" : "eur"');
   });
 });
 
 describe("what the pages leave out (AC3)", () => {
   test.each(ALL_LANDING_SLUGS)("%s is noindex with an English title and description", (slug) => {
-    const metadata = landingPageMetadata(slug);
-    const { meta } = LANDING_PAGES[slug];
+    const metadata = landingPageMetadata(slug, "en", "us");
+    const { meta } = pageWords(slug, "en", "us");
 
     expect(metadata.robots).toEqual(NOINDEX);
     expect(metadata.title).toEqual({ absolute: meta.title });
@@ -157,7 +177,7 @@ describe("what the pages leave out (AC3)", () => {
   });
 
   test.each(ALL_LANDING_SLUGS)("%s declares that metadata", (slug) => {
-    expect(code(pageFile(slug))).toContain(`landingPageMetadata("${slug}")`);
+    expect(code(routeFile(slug))).toContain(`landingPageMetadata("${slug}", "en", "us")`);
   });
 
   test("the sitemap and llms.txt do not list them", () => {
@@ -258,18 +278,18 @@ describe("the hero proof line (AC6)", () => {
     variant: { metrics: { items: Array<{ value: string; label: string }> } };
   }).variant.metrics.items;
 
-  test("picks the businesses and the countries figures out of the catalog, by label", () => {
-    const businesses = CATALOG.filter((item) => PROOF_LABELS.businesses.test(item.label));
-    const countries = CATALOG.filter((item) => PROOF_LABELS.countries.test(item.label));
+  test.each(["en", "fr", "es", "pl"])("picks the businesses and the countries figures out of the %s catalog, whatever its words", (locale) => {
+    const items = (JSON.parse(read(join(ROOT, "messages", locale, "landing.json"))) as {
+      variant: { metrics: { items: Array<{ value: string; label: string }> } };
+    }).variant.metrics.items;
 
-    expect(businesses).toHaveLength(1);
-    expect(countries).toHaveLength(1);
-    expect(proofFigures(CATALOG)).toEqual({ businesses: businesses[0].value, countries: countries[0].value });
+    expect(proofFigures(items)).toEqual({ businesses: items[0].value, countries: items[2].value });
+    expect(items[0].value).toMatch(/120/);
+    expect(items[2].value).toMatch(/25/);
   });
 
-  test("does not depend on the order of the catalog, and fails loudly when a figure is gone", () => {
-    expect(proofFigures([...CATALOG].reverse())).toEqual(proofFigures(CATALOG));
-    expect(() => proofFigures(CATALOG.filter((item) => !/countr/i.test(item.label)))).toThrow();
+  test("fails loudly when a figure is gone", () => {
+    expect(() => proofFigures(CATALOG.slice(0, 2))).toThrow();
   });
 
   test("the sentence built from the catalog is the approved one, and passes the claim guards", () => {

@@ -22,7 +22,7 @@ import {
 } from "./phone-stack";
 
 const count = PHONE_DECK.length;
-const isLevel = (card: StackCard) => card.headerLabel !== undefined;
+const isLevel = (card: StackCard) => card.level !== undefined;
 const brandOf = (card: StackCard) => card.design.logo_url ?? "";
 const card = (id: string) => PHONE_DECK.find((candidate) => candidate.id === id) as StackCard;
 /** The cards in a slot from the front to the top strip, as the first paint shows them. */
@@ -77,7 +77,7 @@ describe("the moments: what the front card shows after it", () => {
 
     const [before, after] = [showing(card("gaspard-gus"), false), showing(card("gaspard-gus"), true)];
 
-    expect([before.headerLabel, after.headerLabel]).toEqual(["Silver", "Gold"]);
+    expect([before.level, after.level]).toEqual(["silver", "gold"]);
     expect(before.design.background_color).toBe(LEVEL_LOOKS.silver.background_color);
     expect(after.design.background_color).toBe(LEVEL_LOOKS.gold.background_color);
     expect(after.design.logo_url).toBe(before.design.logo_url);
