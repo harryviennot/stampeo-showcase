@@ -1,5 +1,8 @@
-import type { ReactNode } from "react";
+"use client";
+
+import type { MouseEvent, ReactNode } from "react";
 import { ChevronDownIcon } from "@/components/icons";
+import { trackFaqAnswerOpened } from "@/lib/posthog/site-events";
 
 interface FAQListProps {
   /** `answer` may be a ReactNode: the landing FAQ resolves pricing tokens
@@ -11,13 +14,21 @@ interface FAQListProps {
   table?: boolean;
 }
 
+/** A question's tap: opening a closed answer is reported with the question and its 1-based place; closing an open one is not. */
+const reportOpening = (question: string, index: number) => (event: MouseEvent<HTMLElement>) => {
+  if (!(event.currentTarget.parentElement as HTMLDetailsElement | null)?.open) trackFaqAnswerOpened(question, index + 1);
+};
+
 /** The questions as rows of one white table, each row at least 56px to tap. */
 function FAQTable({ items, defaultOpenCount }: Readonly<Required<Omit<FAQListProps, "table">>>) {
   return (
     <div className="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
       {items.map((faq, index) => (
         <details key={index} className="group px-5 lg:px-8" open={index < defaultOpenCount}>
-          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
+          <summary
+            onClick={reportOpening(faq.question, index)}
+            className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden"
+          >
             <span className="text-lg leading-snug font-semibold text-[var(--foreground)] transition-colors group-hover:text-[var(--accent-hover)]">
               {faq.question}
             </span>
@@ -48,7 +59,7 @@ export function FAQList({ items, defaultOpenCount = 0, table = false }: FAQListP
           className="group flex flex-col rounded-xl bg-white blog-card-3d px-6 py-4"
           open={index < defaultOpenCount}
         >
-          <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+          <summary onClick={reportOpening(faq.question, index)} className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
             <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
               {faq.question}
             </p>

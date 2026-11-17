@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, isComingSoon } from "@/lib/landing-pages/preview-nav";
+import { FEATURE_PREVIEWS, featureLink, isComingSoon } from "@/lib/landing-pages/preview-nav";
+import { trackNavPreviewOpened } from "@/lib/posthog/site-events";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
 import { ChevronDownIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
@@ -30,7 +31,10 @@ export function AccordionFeatureRows({ onNavigate }: { onNavigate: () => void })
             market={market}
             href={href as "/features/design-de-carte"}
             className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
-            onClick={onNavigate}
+            onClick={() => {
+              trackNavPreviewOpened(FEATURE_PREVIEWS[canonicalSlug], "mobile");
+              onNavigate();
+            }}
           >
             <Icon className="w-4 h-4 text-[var(--accent)]" />
             <span className="text-sm font-medium text-[var(--foreground)]">{t(`featuresItems.${key}.label`)}</span>

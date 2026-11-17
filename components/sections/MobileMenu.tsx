@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { CaretRightIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
+import { trackNavPreviewOpened } from "@/lib/posthog/site-events";
 import {
   MENU_LABEL,
   MenuBottomBar,
@@ -18,14 +19,17 @@ import {
 import { SoonPill } from "./SoonPill";
 
 /** A feature as a small tile: its icon, its name and its one line, then Soon where the feature is coming; the current page is orange. */
-function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; first: boolean; onClose: () => void }>) {
-  const { Icon, label, description, soon, current, href, market } = entry;
+export function FeatureTile({ entry, first, onClose }: Readonly<{ entry: FeatureEntry; first: boolean; onClose: () => void }>) {
+  const { Icon, label, description, soon, current, href, market, preview } = entry;
 
   return (
     <MarketLink
       market={market}
       href={href as "/features/design-de-carte"}
-      onClick={onClose}
+      onClick={() => {
+        trackNavPreviewOpened(preview, "mobile");
+        onClose();
+      }}
       aria-current={current ? "page" : undefined}
       data-menu-first={first ? "" : undefined}
       className={`relative flex min-h-[72px] items-start gap-2 rounded-2xl border-[1.5px] p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${

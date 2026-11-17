@@ -1,6 +1,7 @@
 import { hasBlog } from "@/lib/blog/locales";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, isComingSoon, loyaltyLink } from "@/lib/landing-pages/preview-nav";
+import { FEATURE_PREVIEWS, featureLink, isComingSoon, loyaltyLink } from "@/lib/landing-pages/preview-nav";
+import type { PreviewSlug } from "@/lib/landing-pages/pages";
 import { marketPath, type Market } from "@/lib/markets";
 
 /** One entry of a header menu. */
@@ -12,6 +13,8 @@ export interface NavMenuItem {
   market?: Market;
   /** The menu prints "Soon" beside it: the feature is not live yet. */
   soon?: boolean;
+  /** The registry page the entry opens, when it is one of the previews: opening it is reported to PostHog. */
+  preview?: PreviewSlug;
 }
 
 /** The Product menu's six features as the header's dropdown lists them: the pages of the international site, geolocation marked "Soon". */
@@ -20,6 +23,7 @@ export function productMenuItems(t: (key: string) => string, locale: string): Na
     ...featureLink(canonicalSlug, locale),
     label: t(`common.nav.featuresItems.${key}.label`),
     soon: isComingSoon(canonicalSlug),
+    preview: FEATURE_PREVIEWS[canonicalSlug],
   }));
 }
 

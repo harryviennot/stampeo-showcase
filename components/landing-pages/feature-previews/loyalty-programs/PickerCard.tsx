@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { PICKER_TOTAL, suggestProgram } from "@/lib/landing-pages/previews/loyalty-picker";
+import { trackLoyaltyQuizPick } from "@/lib/posthog/site-events";
 import { CARD_SHADOW } from "../../platform/classes";
 import { PickerQuestion, type PaneState } from "./PickerQuestion";
 import { PickerResult } from "./PickerResult";
@@ -37,6 +38,7 @@ export function PickerCard({ copy, cards, cta }: Readonly<{ copy: PickerCopy; ca
 
   const choose = (option: number) => {
     if (flash !== null) return;
+    trackLoyaltyQuizPick(choices, option);
     moved.current = true;
     setFlash(option);
     timer.current = window.setTimeout(() => {

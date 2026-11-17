@@ -7,7 +7,8 @@ import { Link } from "@/i18n/navigation";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { handleMenuKey, inertWhileOpen } from "@/lib/dom/modal";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, isComingSoon } from "@/lib/landing-pages/preview-nav";
+import { FEATURE_PREVIEWS, featureLink, isComingSoon } from "@/lib/landing-pages/preview-nav";
+import type { PreviewSlug } from "@/lib/landing-pages/pages";
 import type { Market } from "@/lib/markets";
 import { isCurrentPath, menuMotion, type MenuMotion } from "@/lib/nav/mobile-menu";
 import { TrackedLink } from "../ui/TrackedLink";
@@ -48,6 +49,8 @@ export interface FeatureEntry {
   description: string;
   soon: boolean;
   current: boolean;
+  /** The registry page the entry opens. */
+  preview: PreviewSlug;
 }
 
 /** The Product menu's six features, linked as the header links them, with their one-line descriptions. */
@@ -67,6 +70,7 @@ export function useFeatureEntries(pathname: string): FeatureEntry[] {
       description: t(`featuresItems.${key}.description`),
       soon: isComingSoon(canonicalSlug),
       current: isCurrentPath(pathname, href),
+      preview: FEATURE_PREVIEWS[canonicalSlug],
     };
   });
 }
