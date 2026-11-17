@@ -28,7 +28,7 @@ Three things are protected throughout:
    - no plan name ("Starter", "Growth", "Pro", "every plan") outside a pricing section;
    - nothing "reminds" customers;
    - no "no credit card required";
-   - each sourced figure shows its source under it.
+   - each sourced figure has its source on record (`claims.md` / the study doc); it prints under the figure except where Harry chose a bare figure (Platform's 95%, 17 Nov).
 3. **Each page is measured as itself.** Every visit and every signup carries the page's own variant name (`lp_howto`, `lp_features`, `lp_outcomes` or `lp_platform`). That name is how trials per page get counted later (STA-547). A missing or wrong variant makes the whole comparison worthless.
 
 The existing `/us` homepage is the control group. It must be byte-for-byte unchanged (LP-14).
@@ -501,7 +501,7 @@ Six previews of today's feature pages so Harry can compare them side by side. To
 | DEPENDS | LP-01 |
 | ACCOUNT | No session. |
 | STEPS | 1. Open `/us/landing-pages/platform` at 1440 and 390. 2. Open each "today's page" in the table at 1440 and 390. |
-| EXPECT | 1. At 1440 the hero is the fan of cards; at 390 it is a stack of cards with Aurevo's card fully visible in front at 5 of 8, QR code included; after about a second its sixth stamp lands, the card slides down and fades, and the next card comes to the front, one every 3.2 seconds (a points card gains points, a Silver card moves up to Gold). With reduced motion it stays still. Below the hero, the sections have no ink borders; "By the numbers" shows three figures, 120+ active businesses, 25+ countries and "95% card retention rate" with its source line; they fade in one after another as the row scrolls into view. The trial buttons carry the dark ledge. 2. Each feature page looks as it does on `dev`. You do NOT see the previews' heroes, sections or keycap buttons on any live page. |
+| EXPECT | 1. At 1440 the hero is the fan of cards; at 390 it is a stack of cards with Aurevo's card fully visible in front at 5 of 8, QR code included; after about a second its sixth stamp lands, the card slides away as the deck moves up in one smooth motion, and the next card comes to the front, one every 3.6 seconds (a points card gains points, Gaspard & Gus moves from Silver to Gold). With reduced motion it stays still. Below the hero, the sections have no ink borders; "By the numbers" shows three figures, 120+ active businesses, 25+ countries and "95% card retention rate" (no source line under it, Harry's call of 17 Nov; the study is recorded in `docs/features/STA-552/retention-study-2026-11-16.md`); they fade in one after another as the row scrolls into view. The trial buttons carry the dark ledge. 2. Each feature page looks as it does on `dev`. You do NOT see the previews' heroes, sections or keycap buttons on any live page. |
 | RESET | None. |
 
 ### LP-37: No plan names, and every claim is live [CORE]
