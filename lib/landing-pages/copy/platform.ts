@@ -46,7 +46,7 @@ export const PLATFORM = {
   numbers: {
     eyebrow: "By the numbers",
     title: "Where Stampeo stands today.",
-    /** Measured figures, after the businesses and countries counts of the site's `variant.metrics`, each with the study it comes from. */
+    /** Measured figures, after the businesses and countries counts of the site's `variant.metrics`; `source` is the study each comes from, kept as the record and not printed. */
     figures: [
       {
         value: "95%",

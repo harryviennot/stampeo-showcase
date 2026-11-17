@@ -219,14 +219,12 @@ describe("by the numbers", () => {
     expect(text).not.toMatch(/stamps issued/i);
   });
 
-  test("prints where the measured figure comes from right under it, before the actions, and sources no other figure", async () => {
-    const html = await block();
-    const text = textOf(html);
+  test("keeps the measured figure's study in the copy as its record, and prints no study line under the figures", async () => {
+    const text = textOf(await block());
 
     expect(measured.source).toMatch(/^Stampeo data: .*\d/);
-    expect(text.split(measured.source)).toHaveLength(2);
-    expectInOrder(html, [measured.value, measured.text, measured.source, SHARED.cta]);
-    expect(text.indexOf(measured.source)).toBeGreaterThan(text.indexOf(countries.label));
+    expect(text).not.toContain(measured.source);
+    expect(text).not.toMatch(/Stampeo data/);
   });
 
   test("every figure is in the server markup, each in its own reveal that waits a little longer than the one before", async () => {

@@ -14,11 +14,11 @@ const CATALOG = [
 const MEASURED = [{ value: "95%", text: "card retention rate", source: "Stampeo data: 2,786 cards from 73 businesses" }];
 
 describe("the numbers row", () => {
-  test("is the businesses and the countries of the catalog, then the measured figure with its source", () => {
+  test("is the businesses and the countries of the catalog, then the measured figure, without its study line", () => {
     expect(numbersRow(CATALOG, MEASURED)).toEqual([
       { value: "120+", label: "active businesses" },
       { value: "25+", label: "countries" },
-      { value: "95%", label: "card retention rate", source: "Stampeo data: 2,786 cards from 73 businesses" },
+      { value: "95%", label: "card retention rate" },
     ]);
   });
 

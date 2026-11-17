@@ -8,7 +8,7 @@ import { LpSection } from "../shared/LpSection";
 /**
  * "Where Stampeo stands today": the businesses and countries counts of the site's own
  * metrics (one source, shared with the proof line elsewhere), the measured card retention
- * rate with its source under it, then the pair of actions.
+ * rate, then the pair of actions.
  */
 export async function NumbersBlock() {
   const t = await getTranslations("variant.metrics");
