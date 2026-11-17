@@ -212,3 +212,72 @@ describe("a read that fails", () => {
     expect(v.applied).toEqual([installed()]);
   });
 });
+
+describe.each(["stamp", "points"] as const)("a %s demo added from the phone while the page still shows it pending", (cardType) => {
+  const extra = cardType === "points" ? { points: 0 } : {};
+
+  test("tapping Add makes the page poll until the server says the card is installed", async () => {
+    const v = visitor({ cardType, start: pending(), server: pending() });
+    expect(v.timers.size).toBe(0);
+
+    v.sync.expectInstall();
+    expect(v.timers.size).toBe(1);
+
+    // The Wallet sheet is still open: the server has nothing new yet.
+    await v.tick();
+    expect(v.timers.size).toBe(1);
+
+    v.server.state = installed(extra);
+    await v.tick();
+
+    expect(v.applied.at(-1)).toEqual(installed(extra));
+    expect(v.captured.map(({ props }) => props.step)).toEqual(["pass_installed"]);
+    expect(v.timers.size).toBe(0);
+  });
+});
+
+describe("after a tap on Add", () => {
+  test("the poll keeps going through the download and stops once the card is installed", async () => {
+    const v = visitor({ start: pending(), server: downloaded() });
+    v.sync.expectInstall();
+
+    await v.tick();
+    expect(v.timers.size).toBe(1);
+
+    v.server.state = installed();
+    await v.tick();
+    expect(v.timers.size).toBe(0);
+  });
+
+  test("a hidden page does not poll, and polls again once visible", async () => {
+    const v = visitor({ start: pending(), server: pending() });
+    v.page.hidden = true;
+
+    v.sync.expectInstall();
+    expect(v.timers.size).toBe(0);
+
+    v.page.hidden = false;
+    await v.sync.pageVisible();
+    expect(v.timers.size).toBe(1);
+  });
+
+  test("ten minutes without a change stops it", async () => {
+    const v = visitor({ start: pending(), server: pending() });
+    v.sync.expectInstall();
+
+    v.page.clock += INACTIVITY_TIMEOUT_MS + 1;
+    await v.tick();
+
+    expect(v.timers.size).toBe(0);
+  });
+
+  test("a reset forgets the tap: the next session waits for its own", () => {
+    const v = visitor({ start: pending(), server: pending() });
+    v.sync.expectInstall();
+
+    v.sync.stop();
+    v.sync.adopt("tok-2", pending());
+
+    expect(v.timers.size).toBe(0);
+  });
+});
