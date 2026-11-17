@@ -1,7 +1,7 @@
 # Plan: PostHog, from first visit to paying customer
 
 ISSUE: STA-566 · LANE: guarded (consent, personal data, migration, billing hooks) · REPOS: showcase, backend, web
-(consent version only) · BRANCH: `feat/sta-566-posthog-journey` · STATUS: DRAFT, waiting for Harry (H1–H6) and counsel (C1–C6)
+(consent version only) · BRANCH: `feat/sta-566-posthog-journey` · STATUS: APPROVED by Harry on 17 Nov 2026 ("we'll update the cookie accept version and update the privacy policy"), with the coordinator's defaults for H1, H3–H7 below; legal texts carry COUNSEL markers until signed off
 
 ## Problem
 PostHog keeps no visitor ID between page loads (`persistence: "memory"`, `instrumentation-client.ts:11`), so nobody can be
@@ -98,6 +98,14 @@ QA: `docs/qa/cookie-consent.md` on dev with a PostHog test project.
 ## Release order (Phase B)
 Backend first (dormant without keys, accepts v6) → showcase after counsel (COUNSEL markers block main) → web the same day
 → Doppler keys → PostHog replay on (masked, 30 days) → dashboard.
+
+## Decisions taken at approval (17 Nov 2026)
+- H1: `card_created` = first card made live; `first_test_stamp` = the wizard step `first-stamp:stamp` completed; churn =
+  `subscription_ended` only. H2: yes, consent v6 and the EU re-ask (Harry). H3: yes, no capture on enrollment pages and
+  click IDs stripped. H4: a separate PostHog test project for dev; the backend sends nothing without a key. H5: the two
+  secrets go to Doppler at release. H6: server events start on the Phase B release day. H7: heatmaps pinned off in Phase A.
+- Branches: showcase Phase A on `feat/sta-566-posthog-journey`; Phase B showcase on `feat/sta-566-consent-v6`;
+  backend on `feat/sta-566-posthog-journey`; web (version only) at B4.
 
 ## Open questions
 - Counsel: C1 server events about the account for people who refused analytics (pseudonymous key, no attribution): allowed
