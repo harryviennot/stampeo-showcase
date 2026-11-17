@@ -1,5 +1,5 @@
 import { routing } from "@/i18n/routing";
-import { isLegacyPath } from "@/lib/legacy-pages";
+import { isLegacyPath } from "@/lib/seo/legacy-pages";
 
 /** Paths that never serve Markdown, in every locale prefix we ship. */
 const PRIVATE_PATHS = ["/api", "/auth", "/onboarding", "/login"];

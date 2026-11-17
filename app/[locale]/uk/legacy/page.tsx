@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { VariantLanding } from "@/components/landing-variant/VariantLanding";
 import { NOINDEX } from "@/lib/seo/page-robots";
 
-/** The earlier UK homepage, served at /uk/legacy by the pilot rewrite. */
+/** The legacy UK homepage, served at /uk/legacy by the pilot rewrite. */
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: "en", namespace: "metadata.home" });
 

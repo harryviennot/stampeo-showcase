@@ -1,7 +1,7 @@
 /**
  * The Platform pages are the live pages: the homepage in every language and market, the six feature pages and the
- * loyalty programs page at the URLs the old pages had, with the head the old pages carried (canonical, hreflang,
- * Open Graph, structured data), indexable, and in the sitemap at the same URLs.
+ * loyalty programs page at their localised URLs: indexable, with canonical, hreflang, Open Graph and structured
+ * data, and in the sitemap.
  *
  * The routes are read the way Next reads them: a page's default export is called and the element it mounts is
  * inspected, its `generateMetadata` is called and the head it returns is compared with the sitemap's own cluster.

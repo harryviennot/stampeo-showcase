@@ -57,7 +57,7 @@ export const MOBILE_SCANNER_PREVIEW = {
     ],
   },
   /**
-   * The Scanner app's own words on the four screens drawn on the phone (scanner-app `locales/<language>/stamp.json`
+   * The Scanner app's own words on the four screens drawn on the phone (scanner-app `src/locales/<language>/stamp.json`
    * and `points.json`). `levels.perkOne` fills `{level}` and `{perk}`, `levels.perkMany` fills `{level}`.
    */
   screens: {

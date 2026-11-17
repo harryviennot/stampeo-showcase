@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { LoyaltyRouteView } from "@/components/loyalty/LoyaltyRouteView";
-import { legacyPath } from "@/lib/legacy-pages";
+import { legacyPath } from "@/lib/seo/legacy-pages";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { NOINDEX } from "@/lib/seo/page-robots";
 

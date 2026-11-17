@@ -3,7 +3,7 @@ import { localePath } from "@/lib/hreflang";
 import { MARKETS, type Market } from "@/lib/markets";
 
 /**
- * The segment the earlier versions of the homepage, the feature pages and the loyalty programs page live under.
+ * The segment the legacy homepage, feature pages and loyalty programs page live under.
  * They are reachable by URL and listed nowhere: no sitemap, no `llms.txt`, no hreflang cluster, no menu.
  */
 export const LEGACY_SEGMENT = "legacy";

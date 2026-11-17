@@ -19,8 +19,8 @@ import { US_WORDS } from "./us";
 import { overlaid, type Widen } from "./widen";
 
 /**
- * Every word of the Platform page and its previews in English, grouped as the modules are: a component takes
- * the names it used to import, `const { PLATFORM } = useLandingCopy().platform`.
+ * Every word of the Platform page and its previews in English, grouped as the modules are:
+ * `const { PLATFORM } = useLandingCopy().platform`.
  */
 export const EN = {
   platform,

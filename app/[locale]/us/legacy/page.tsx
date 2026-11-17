@@ -4,7 +4,7 @@ import { VariantLanding } from "@/components/landing-variant/VariantLanding";
 import { marketPriceArgs } from "@/lib/plan-catalog";
 import { NOINDEX } from "@/lib/seo/page-robots";
 
-/** The earlier US homepage, served at /us/legacy by the pilot rewrite. */
+/** The legacy US homepage, served at /us/legacy by the pilot rewrite. */
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: "en", namespace: "variant.us.meta" });
   const args = await marketPriceArgs("us", "en");

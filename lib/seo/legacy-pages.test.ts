@@ -1,15 +1,15 @@
 /**
- * The pre-launch pages live on under `/legacy`: reachable by URL for whoever has the link, and nowhere else.
+ * The legacy pages under `/legacy` can be reached by URL and from nowhere else.
  * Not in the sitemap, `llms.txt`, the markdown proxy, any hreflang cluster or any menu; never linked from a live
  * page; noindex; and `legacy` is a site segment, never a business slug.
  */
 
-import { afterAll, describe, expect, mock, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { routing } from "@/i18n/routing";
 import { FEATURE_SLUGS, getLocalizedSlug } from "../feature-slugs";
-import { LEGACY_SEGMENT, isLegacyPath, legacyPath } from "../legacy-pages";
+import { LEGACY_SEGMENT, isLegacyPath, legacyPath } from "./legacy-pages";
 import { buildLlmsTxt } from "../llms-txt";
 import { acquisitionSlug, isReservedTopSegment } from "../locale-negotiation";
 import { LOYALTY_SLUGS } from "../loyalty-routes";
@@ -18,12 +18,11 @@ import { MARKETS, isPilotPath, marketFromPath } from "../markets";
 import { productMenuItems, pageMenuItems } from "../nav/menu-items";
 import { buildSeoLinks } from "../seo-links";
 import { pagesUnder } from "../testing/app-folders";
+import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { buildSitemap } from "./sitemap";
 
-// setRequestLocale needs a Next request; the heads under test do not.
-const realIntl = await import("next-intl/server");
-mock.module("next-intl/server", () => ({ ...realIntl, setRequestLocale: () => {} }));
-afterAll(() => mock.module("next-intl/server", () => realIntl));
+// The legacy routes ask next-intl for their words and their locale.
+await mockEnglishServerTranslations();
 
 const ROOT = join(import.meta.dir, "..", "..");
 const APP = join(ROOT, "app", "[locale]");
@@ -165,7 +164,7 @@ describe("nothing that tells visitors or crawlers where the pages are lists a le
 describe("no live page links to a legacy page", () => {
   /** The source files that may name a legacy URL: the helper, the proxy lists, and the legacy routes themselves. */
   const KNOW_LEGACY = new Set([
-    "lib/legacy-pages.ts",
+    "lib/seo/legacy-pages.ts",
     "lib/markdown/eligibility.ts",
     "lib/locale-negotiation.ts",
     "lib/consent-routes.ts",

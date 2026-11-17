@@ -18,7 +18,7 @@ import {
   isCorrectSlugForLocale,
   getLocalizedSlug,
 } from "@/lib/feature-slugs";
-import { legacyPath } from "@/lib/legacy-pages";
+import { legacyPath } from "@/lib/seo/legacy-pages";
 import { planMessageArgs } from "@/lib/plans/plan-facts";
 import { NOINDEX } from "@/lib/seo/page-robots";
 
