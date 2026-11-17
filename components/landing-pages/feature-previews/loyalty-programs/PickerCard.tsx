@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { PICKER_TOTAL, suggestProgram } from "@/lib/landing-pages/previews/loyalty-picker";
+import { trackLoyaltyQuizPick } from "@/lib/posthog/site-events";
 import { CARD_SHADOW } from "../../platform/classes";
 import { PickerQuestion, type PaneState } from "./PickerQuestion";
 import { PickerResult } from "./PickerResult";
@@ -25,6 +26,8 @@ export function PickerCard({ copy, cards, cta }: Readonly<{ copy: PickerCopy; ca
   const root = useRef<HTMLDivElement>(null);
   const timer = useRef<number | undefined>(undefined);
   const moved = useRef(false);
+  // A pick is under way from the tap until its highlight commits: taps in between are ignored.
+  const picking = useRef(false);
   const step = choices.length;
   const done = step >= PICKER_TOTAL;
 
@@ -36,17 +39,21 @@ export function PickerCard({ copy, cards, cta }: Readonly<{ copy: PickerCopy; ca
   }, [step]);
 
   const choose = (option: number) => {
-    if (flash !== null) return;
+    if (picking.current) return;
+    picking.current = true;
+    trackLoyaltyQuizPick(choices, option);
     moved.current = true;
     setFlash(option);
     timer.current = window.setTimeout(() => {
       setChoices((previous) => [...previous, option]);
       setFlash(null);
+      picking.current = false;
     }, FLASH_MS);
   };
 
   const restart = () => {
     window.clearTimeout(timer.current);
+    picking.current = false;
     moved.current = true;
     setFlash(null);
     setChoices([]);

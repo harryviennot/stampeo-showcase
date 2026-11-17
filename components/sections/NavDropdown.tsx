@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDownIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
 import type { NavMenuItem } from "@/lib/nav/menu-items";
+import { navClick } from "@/lib/posthog/site-events";
 import { SoonPill } from "./SoonPill";
 
 /** The open dropdown's card: each entry's label (with Soon beside it where the feature is not live) and its quiet second line. */
@@ -17,7 +18,7 @@ export function NavDropdownPanel({ items, onNavigate }: Readonly<{ items: NavMen
           market={item.market ?? "int"}
           href={item.href as "/features/design-de-carte"}
           className="block rounded-xl px-3 py-2.5 hover:bg-[var(--cream)] transition-colors"
-          onClick={onNavigate}
+          onClick={navClick(item.preview, "desktop", onNavigate)}
           role="menuitem"
         >
           <span className={`${item.soon ? "flex items-center gap-2" : "block"} text-sm font-semibold text-[var(--foreground)]`}>

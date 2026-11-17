@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Pieczątki",
     "reward": "Nagroda",
-    "rewarded": "Masz {trialDays, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} za darmo!",
-    "rewardText": "{trialDays, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} za darmo przy 8 pieczątkach!",
+    "rewarded": "🎉 Tak poczują się twoi stali klienci",
+    "rewardText": "Klienci, którzy wracają",
     "nav": {
       "features": "Funkcje",
       "pricing": "Cennik",

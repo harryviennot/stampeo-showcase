@@ -6,7 +6,7 @@
  * their encoding.
  */
 
-type ParamNames = ReadonlySet<string>;
+export type ParamNames = ReadonlySet<string>;
 
 // Parameters that sign someone in on their own: the reset link and implicit-flow returns.
 const SESSION_TOKEN_PARAMS: ParamNames = new Set(["token_hash", "access_token", "refresh_token"]);
@@ -77,7 +77,7 @@ export function scrubUrlParams(url: string, names: ParamNames): string {
  * chain (`a:attr__href="/login?email=…"nth-child="2"`). A URL ends at
  * whitespace or a double quote; everything around it comes back as it was.
  */
-function scrubText(text: string, names: ParamNames): string {
+export function scrubText(text: string, names: ParamNames): string {
   return text.replace(/[^\s"]+/g, (word) => scrubUrl(word, names));
 }
 
@@ -90,33 +90,33 @@ export function carriesSessionToken(url: string): boolean {
   return scrubText(url, SESSION_TOKEN_PARAMS) !== url;
 }
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (typeof value !== "object" || value === null) return false;
   const prototype = Object.getPrototypeOf(value);
   return prototype === Object.prototype || prototype === null;
 }
 
-/** A copy of `value` with every string in it, keys included, scrubbed; dates and other objects are kept as they are. */
-function scrubValue(value: unknown, depth = 0): unknown {
-  if (typeof value === "string") return scrubCredentialParams(value);
+/**
+ * A copy of `value` with every string in it, keys included, run through `scrub` (credentials by default), and the
+ * entries `dropEntry` accepts left out; dates and other objects are kept as they are.
+ */
+export function scrubValue(
+  value: unknown,
+  scrub: (text: string) => string = scrubCredentialParams,
+  dropEntry: (key: string, item: unknown) => boolean = () => false,
+  depth = 0
+): unknown {
+  if (typeof value === "string") return scrub(value);
   if (depth >= MAX_DEPTH) return value;
-  if (Array.isArray(value)) return value.map((item) => scrubValue(item, depth + 1));
+  if (Array.isArray(value)) return value.map((item) => scrubValue(item, scrub, dropEntry, depth + 1));
   if (isPlainObject(value)) {
     return Object.fromEntries(
-      Object.entries(value).map(([key, item]) => [scrubCredentialParams(key), scrubValue(item, depth + 1)])
+      Object.entries(value)
+        .filter(([key, item]) => !dropEntry(key, item))
+        .map(([key, item]) => [scrub(key), scrubValue(item, scrub, dropEntry, depth + 1)])
     );
   }
   return value;
-}
-
-/**
- * A PostHog event with credentials removed from every URL it carries
- * (`$current_url`, `$referrer`, `$initial_current_url`, the element chain,
- * heatmap keys, and the same under `$set` / `$set_once`). The event itself is
- * always kept.
- */
-export function scrubPostHogEvent<T>(event: T): T {
-  return scrubValue(event) as T;
 }
 
 /** A Sentry query string is text (`a=1&b=2`), a map, or a list of pairs. */

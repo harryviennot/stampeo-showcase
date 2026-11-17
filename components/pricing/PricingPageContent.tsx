@@ -20,6 +20,7 @@ import { MarketSuggestion } from "@/components/market/MarketSuggestion";
 import { RegionText } from "@/components/market/RegionText";
 import { PriceText } from "@/components/market/PriceText";
 import { usePricingRegion } from "@/hooks/use-pricing-region";
+import { faqSummaryClick } from "@/lib/posthog/site-events";
 import type { Market } from "@/lib/markets";
 
 function PricingCard({
@@ -322,7 +323,7 @@ function FeatureComparisonTable() {
   );
 }
 
-function PricingFAQ() {
+export function PricingFAQ() {
   const t = useTranslations("pricingPage");
   const faqs = t.raw("faq.items") as Array<{ question: string; answer: string }>;
 
@@ -341,7 +342,7 @@ function PricingFAQ() {
             key={index}
             className="group flex flex-col rounded-xl bg-white border border-[var(--border)] shadow-sm px-6 py-4"
           >
-            <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+            <summary onClick={faqSummaryClick(faq.question, index + 1)} className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
               <p className="text-base font-semibold leading-normal group-hover:text-[var(--accent)] transition-colors">
                 {faq.question}
               </p>

@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Sellos",
     "reward": "Recompensa",
-    "rewarded": "¡Tienes {trialDays} días gratis!",
-    "rewardText": "¡{trialDays} días gratis con 8 sellos!",
+    "rewarded": "🎉 Así se sentirán tus clientes habituales",
+    "rewardText": "Clientes que vuelven",
     "nav": {
       "features": "Funciones",
       "pricing": "Precios",
