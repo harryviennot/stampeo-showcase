@@ -62,11 +62,17 @@ describe("events from the site", () => {
     expect(sent?.properties.$screen_width).toBe(390);
   });
 
-  test("goes out scrubbed: the ad click id and the demo token are gone", () => {
+  test("goes out scrubbed: the ad click id is gone and its platform is named", () => {
     const sent = posthogBeforeSend(pageview("https://stampeo.app/us?gclid=abc&utm_source=google"));
 
     expect(sent?.properties.$current_url).toBe("https://stampeo.app/us?utm_source=google");
     expect(sent?.properties.ad_click_vendor).toBe("google");
+  });
+
+  test("a demo_started event goes out without a session token", () => {
+    const started = { uuid: "u", event: "demo_started", properties: { $current_url: "https://stampeo.app/demo", session_token: "k3J9xQ2mWvT8", card_type: "stamps" } };
+
+    expect(posthogBeforeSend(started)?.properties).toEqual({ $current_url: "https://stampeo.app/demo", card_type: "stamps" });
   });
 
   test("an event with no address of its own goes out", () => {
