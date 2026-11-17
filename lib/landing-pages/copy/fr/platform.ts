@@ -4,7 +4,7 @@ import type { LandingCopy } from "../bundle";
 
 export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   meta: {
-    title: "Cartes de fidélité digitales Apple & Google Wallet | Stampeo",
+    title: "Carte de fidélité digitale Apple & Google Wallet | Stampeo",
     description:
       "Créez, partagez et tamponnez votre carte de fidélité dans Apple Wallet et Google Wallet, avec un tableau de bord et une application scanner gratuite.",
   },

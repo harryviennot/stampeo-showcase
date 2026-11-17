@@ -3,7 +3,7 @@ import type { LandingCopy } from "../bundle";
 /** The platform page in Spanish, for a shop owner in Spain: a tour of the product. */
 export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   meta: {
-    title: "Tarjetas de fidelidad en Apple y Google Wallet | Stampeo",
+    title: "Tarjeta de fidelidad en Apple y Google Wallet | Stampeo",
     description:
       "Crea, comparte y sella una tarjeta de fidelidad digital en Apple Wallet y Google Wallet, desde un panel y una app de escaneo gratuita. Prueba gratis.",
   },
