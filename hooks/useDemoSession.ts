@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import posthog from 'posthog-js';
+import { createSessionSync } from '@/lib/demo/session-sync';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const MAX_SSE_RETRIES = 3;
-const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes
 
 export type DemoStatus = 'loading' | 'pending' | 'pass_downloaded' | 'pass_installed' | 'error';
 export type DemoCardType = 'stamp' | 'points';
@@ -91,10 +91,6 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
   // Track current token for visibility reconnection (avoids stale closures)
   const activeTokenRef = useRef<string | null>(null);
 
-  // Inactivity tracking
-  const lastStatusChangeRef = useRef(Date.now());
-  const statusRef = useRef<DemoStatus>('loading');
-
   // Guards a single lazy init (so flipping `enabled` true can't double-create).
   const initedRef = useRef(false);
 
@@ -129,6 +125,24 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
     }
   }, []);
 
+  // Keeps the page in step with the server: every status read (SSE, polls, the re-read on return) feeds it.
+  const [sync] = useState(() =>
+    createSessionSync({
+      cardType,
+      fetchSession,
+      apply: (snapshot) => {
+        setStatus(snapshot.status as DemoStatus);
+        setStamps(snapshot.stamps);
+        if (typeof snapshot.points === 'number') setPoints(snapshot.points);
+      },
+      capture: (event, props) => posthog.capture(event, props),
+      isHidden: () => document.hidden,
+      now: () => Date.now(),
+      startTimer: (fn, ms) => setInterval(fn, ms),
+      stopTimer: (timer) => clearInterval(timer as NodeJS.Timeout),
+    })
+  );
+
   // Create new session (typed by cardType)
   const createSession = useCallback(async (): Promise<DemoSession | null> => {
     try {
@@ -160,25 +174,7 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
 
     eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
-        const newStatus = data.status as DemoStatus;
-
-        // Track actual status changes for inactivity timeout
-        if (newStatus !== statusRef.current) {
-          lastStatusChangeRef.current = Date.now();
-          posthog.capture('demo_step_reached', {
-            step: newStatus,
-            previous_step: statusRef.current,
-            stamps: data.stamps,
-            points: data.points,
-            card_type: cardType,
-          });
-          statusRef.current = newStatus;
-        }
-
-        setStatus(newStatus);
-        setStamps(data.stamps);
-        if (typeof data.points === 'number') setPoints(data.points);
+        sync.receive(JSON.parse(event.data));
 
         // SSE is working — reset retry counter
         sseRetryCountRef.current = 0;
@@ -223,7 +219,7 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
 
     const poll = async () => {
       // Inactivity check: stop polling if status hasn't changed in 10 minutes
-      if (Date.now() - lastStatusChangeRef.current > INACTIVITY_TIMEOUT_MS) {
+      if (sync.isIdle()) {
         if (pollingIntervalRef.current) {
           clearInterval(pollingIntervalRef.current);
           pollingIntervalRef.current = null;
@@ -242,17 +238,7 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
         return;
       }
 
-      const newStatus = session.status as DemoStatus;
-
-      // Track actual status changes for inactivity timeout
-      if (newStatus !== statusRef.current) {
-        lastStatusChangeRef.current = Date.now();
-        statusRef.current = newStatus;
-      }
-
-      setStatus(newStatus);
-      setStamps(session.stamps);
-      if (typeof session.points === 'number') setPoints(session.points);
+      sync.receive(session);
     };
 
     // Poll every 5 seconds (SSE preferred but falls back to polling through proxies)
@@ -275,12 +261,11 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
         // Resume session
         setSession(existingSession);
         setStatus(existingSession.status as DemoStatus);
-        statusRef.current = existingSession.status as DemoStatus;
         setStamps(existingSession.stamps);
         setPoints(existingSession.points ?? 0);
         setIsLoading(false);
         activeTokenRef.current = savedToken;
-        lastStatusChangeRef.current = Date.now();
+        sync.adopt(savedToken, existingSession);
         startSSE(savedToken);
         return;
       }
@@ -295,11 +280,10 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
       localStorage.setItem(STORAGE_KEY, newSession.session_token);
       setSession(newSession);
       setStatus(newSession.status as DemoStatus);
-      statusRef.current = newSession.status as DemoStatus;
       setStamps(newSession.stamps);
       setPoints(newSession.points ?? 0);
       activeTokenRef.current = newSession.session_token;
-      lastStatusChangeRef.current = Date.now();
+      sync.adopt(newSession.session_token, newSession);
       startSSE(newSession.session_token);
       posthog.capture('demo_started', { session_token: newSession.session_token, card_type: cardType });
     } else {
@@ -358,12 +342,12 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
   // Reset session
   const reset = useCallback(() => {
     stopAllConnections();
+    sync.stop();
 
     // Clear localStorage and state
     localStorage.removeItem(STORAGE_KEY);
     setSession(null);
     setStatus('loading');
-    statusRef.current = 'loading';
     setStamps(0);
     setPoints(0);
     setError(null);
@@ -380,26 +364,39 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
   useEffect(() => {
     if (enabled) maybeInit();
 
+    // Back on the page: re-read the session once (Wallet may have registered
+    // the pass while the stream was closed) and reopen the stream.
+    const reconnect = () => {
+      const token = activeTokenRef.current;
+      if (!token) return;
+      sseRetryCountRef.current = 0;
+      void sync.pageVisible();
+      startSSE(token);
+    };
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         // Tab hidden — stop all background traffic
         stopAllConnections();
+        sync.pageHidden();
       } else {
-        // Tab visible — reconnect
-        const token = activeTokenRef.current;
-        if (token) {
-          sseRetryCountRef.current = 0;
-          lastStatusChangeRef.current = Date.now();
-          startSSE(token);
-        }
+        reconnect();
       }
     };
 
+    // Restored from the back/forward cache: the stream was closed with the page.
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) reconnect();
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('pageshow', handlePageShow);
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('pageshow', handlePageShow);
       stopAllConnections();
+      sync.stop();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
