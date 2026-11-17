@@ -16,6 +16,7 @@ export const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000;
 
 // The pass was opened on the phone; Wallet's registration has not been seen yet.
 const AWAITING_INSTALL = "pass_downloaded";
+const INSTALLED = "pass_installed";
 
 export interface SessionSnapshot {
   status: string;
@@ -41,6 +42,11 @@ export interface SessionSync {
   adopt: (token: string, snapshot: SessionSnapshot) => void;
   /** A state reported by the event stream, a poll or a re-read. */
   receive: (snapshot: SessionSnapshot) => void;
+  /**
+   * The visitor tapped Add on this phone: poll until the card is installed, even while the page still shows it
+   * pending. iOS opens the Wallet sheet over the page without hiding it, so nothing else would start the poll.
+   */
+  expectInstall: () => void;
   /** The tab is visible again: restart the poll and re-read the session once. */
   pageVisible: () => Promise<void>;
   pageHidden: () => void;
@@ -58,6 +64,7 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
   let version = 0;
   let timer: unknown = null;
   let pollInFlight = false;
+  let addTapped = false;
 
   function stopPolling() {
     if (timer === null) return;
@@ -66,7 +73,8 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
   }
 
   function syncPolling() {
-    const wanted = token !== null && status === AWAITING_INSTALL && !deps.isHidden();
+    const awaiting = status === AWAITING_INSTALL || (addTapped && status !== INSTALLED);
+    const wanted = token !== null && awaiting && !deps.isHidden();
     if (!wanted) {
       stopPolling();
     } else if (timer === null) {
@@ -121,6 +129,7 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
   return {
     adopt(newToken, snapshot) {
       version++;
+      addTapped = false;
       token = newToken;
       status = snapshot.status;
       lastChangeAt = deps.now();
@@ -128,6 +137,11 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
       syncPolling();
     },
     receive,
+    expectInstall() {
+      addTapped = true;
+      lastChangeAt = deps.now();
+      syncPolling();
+    },
     async pageVisible() {
       lastChangeAt = deps.now();
       syncPolling();
@@ -136,6 +150,7 @@ export function createSessionSync(deps: SessionSyncDeps): SessionSync {
     pageHidden: stopPolling,
     stop() {
       version++;
+      addTapped = false;
       token = null;
       status = "loading";
       stopPolling();
