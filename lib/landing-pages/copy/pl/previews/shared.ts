@@ -2,6 +2,7 @@
 import type { LandingCopy } from "../../bundle";
 
 export const PREVIEW_SHARED: LandingCopy["previews"]["shared"]["PREVIEW_SHARED"] = {
+  lockScreenAlt: "Powiadomienie od {sender} na ekranie blokady: {message}",
   related: {
     title: "Więcej funkcji Stampeo.",
     cards: {

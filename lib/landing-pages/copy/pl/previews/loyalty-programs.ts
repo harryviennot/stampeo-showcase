@@ -56,6 +56,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         reach: "Tu zaczyna każdy klient",
         card: "6 pieczątek za darmowe strzyżenie",
         perks: [],
+        rewardName: "Darmowe strzyżenie",
       },
       {
         name: "Srebro",
@@ -63,6 +64,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         card: "5 pieczątek za darmowe strzyżenie",
         perks: ["Darmowy gorący ręcznik na koniec"],
         gift: "Butelka olejku do brody",
+        rewardName: "Darmowe strzyżenie",
       },
       {
         name: "Złoto",
@@ -70,8 +72,10 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         card: "4 pieczątki za strzyżenie i trymowanie brody",
         perks: ["Darmowe trymowanie brody", "Pierwszeństwo przy rezerwacji"],
         gift: "Darmowe golenie z gorącym ręcznikiem",
+        rewardName: "Strzyżenie i trymowanie brody",
       },
     ],
+    member: { label: "Imię", value: "Zosia" },
     labels: { card: "Karta", perks: "Korzyści", gift: "Prezent", noPerks: "Na razie bez korzyści", top: "Najwyższy poziom, już na zawsze" },
     alt: "Karta lojalnościowa barbera na poziomach Brąz, Srebro i Złoto: z każdym poziomem karta zmienia kolor i szybciej się zapełnia.",
     facts: [

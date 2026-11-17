@@ -29,6 +29,9 @@ export const LEVEL_UP_BANNER: LandingCopy["shared"]["LEVEL_UP_BANNER"] = {
 
 export const SHARED: LandingCopy["shared"]["SHARED"] = {
   cta: "Zacznij za darmo",
+  now: "teraz",
+  googleCardTitle: "Karta lojalnościowa",
+  levelNames: { bronze: "Brąz", silver: "Srebro", gold: "Złoto", platinum: "Platyna", noir: "Czerń" },
   reassurance: "{trialDays} dni za darmo · Rezygnujesz kiedy chcesz",
   proof: (businesses, countries) => `Działa już u ${atLeast(businesses)} firm w ${atLeast(countries)} krajach`,
   demoLink: "Wypróbuj na swoim telefonie",

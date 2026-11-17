@@ -3,12 +3,12 @@ import type { LandingCopy } from "../bundle";
 
 export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   meta: {
-    title: "Cyfrowa karta na pieczątki w Apple i Google Wallet | Stampeo",
+    title: "Cyfrowe karty lojalnościowe w Apple i Google Wallet | Stampeo",
     description:
-      "Cyfrowa karta na pieczątki w Apple Wallet i Google Wallet: tworzysz ją w panelu, a pieczątki dodajesz w darmowej aplikacji. Darmowy okres próbny, bez zobowiązań.",
+      "Cyfrowa karta lojalnościowa w Apple Wallet i Google Wallet: tworzysz ją w panelu, a pieczątki dodajesz w darmowej aplikacji. Darmowy okres próbny, bez zobowiązań.",
   },
   hero: {
-    h1: "Cyfrowe karty na pieczątki w Apple i Google Wallet.",
+    h1: "Karty lojalnościowe w Apple i Google Wallet.",
     accent: "Apple i Google Wallet.",
   },
   heroCards: {
@@ -41,6 +41,15 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
     updatesLabel: "Aktualizacje na żywo",
     updatesFrom: "5/8",
     updatesTo: "6/8",
+  },
+  analyticsCard: {
+    visits: "Wizyty",
+    returnRate: "Powroty w 30 dni",
+    overTime: "Wizyty w czasie",
+    returning: "Już byli",
+    first: "Pierwsza wizyta",
+    points: "pkt",
+    alt: "Statystyki. Wizyty: {visits}, wzrost o {visitsChange}%. {returnRate}: {returnRatePercent}%, wzrost o {returnRateChange} pkt. Do tego wizyty w czasie, tydzień po tygodniu.",
   },
   numbers: {
     eyebrow: "W liczbach",

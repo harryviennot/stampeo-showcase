@@ -67,6 +67,24 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
       google: "Telefon z Androidem z tą samą kartą otwartą w Google Wallet",
     },
   },
+  cardFields: {
+    holder: "Imię",
+    reward: "Nagroda",
+    nextReward: "Następna nagroda",
+    shops: [
+      { holder: "Antoni", reward: "Darmowe mycie" },
+      { holder: "Zofia", reward: "Darmowy rogalik" },
+      { holder: "Iga", reward: "Darmowy kieliszek" },
+      { holder: "Kasia", reward: "Darmowe uzupełnienie" },
+      { holder: "Filip", reward: "Darmowa torba" },
+      { holder: "Bartek", reward: "Darmowy kawałek" },
+    ],
+    anatomy: {
+      stamps: { holder: "Ania", reward: "Darmowy zabieg" },
+      points: { holder: "Lena", reward: "Darmowa torba" },
+    },
+    wallets: { holder: "Ewa", reward: "-10%" },
+  },
   faq: {
     title: "Pytania o twoją kartę",
     items: [

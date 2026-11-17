@@ -24,6 +24,53 @@ export const MOBILE_SCANNER_PREVIEW: LandingCopy["previews"]["mobileScanner"]["M
       { key: "levels", title: "Poziomy", line: "Zobacz poziom klienta i jego korzyści" },
     ],
     fact: "Zaraz potem klient dostaje powiadomienie na ekranie blokady.",
+    panes: [
+      {
+        screenAlt:
+          "Aplikacja do skanowania dodaje trzy pieczątki na kartę Zosi jednym skanem: licznik ustawiony na 3 i przycisk Dodaj 3 pieczątki.",
+        cardAlt: "Karta Zosi z Aurevo w portfelu, pełna: 8 z 8 pieczątek.",
+        result: "5 → 8 pieczątek",
+      },
+      {
+        screenAlt:
+          "Aplikacja do skanowania przyjmuje kwotę 12,50 wpisaną na klawiaturze i pokazuje punkty za nią, około 12, zanim ktokolwiek zatwierdzi.",
+        cardAlt: "Karta Zosi z księgarni Marginalia w portfelu, teraz z 252 punktami.",
+        result: "240 → 252 pkt",
+      },
+      {
+        screenAlt: "Lista nagród do odebrania w aplikacji do skanowania: trzy nagrody, każda z przyciskiem Odbierz.",
+        cardAlt: "Karta Zosi z Aurevo w portfelu, z powrotem na 2 z 8 pieczątek po odebraniu nagrody.",
+        result: "Darmowa kawa odebrana",
+      },
+      {
+        screenAlt: "Aplikacja do skanowania pokazuje przywileje klienta na poziomie Srebro do zastosowania przy kasie przed płatnością.",
+        cardAlt: "Karta Zosi z pralni Wrenfold w portfelu, na poziomie Srebro.",
+        result: "Poziom: Srebro",
+      },
+    ],
+  },
+  screens: {
+    customer: "Zosia",
+    stamps: { detail: "5 / 8", added: "+3 pieczątki", completes: "To zapełni kartę", button: "Dodaj 3 pieczątki" },
+    points: { detail: "240 pkt", amount: "12,50", earns: "≈ +12 pkt", button: "Dodaj punkty" },
+    rewards: {
+      detail: "8 / 8",
+      title: "Nagrody do odebrania",
+      redeem: "Odbierz",
+      gift: "Prezent",
+      expiresToday: "Wygasa dzisiaj",
+      expiresLater: "Wygasa za 5 dni",
+      held: ["Darmowa kawa", "Darmowe ciastko", "Darmowa kawa"],
+    },
+    levels: {
+      detail: "4 / 6",
+      perks: ["Darmowy zwrot wieszaków", "Odbiór bez kolejki"],
+      perkOne: "Przywilej {level}: {perk}",
+      perkMany: "Przywileje {level}:",
+      applyOne: "Zastosuj go przy kasie, zanim pobierzesz płatność.",
+      applyMany: "Zastosuj je przy kasie, zanim pobierzesz płatność.",
+      button: "Dodaj pieczątkę",
+    },
   },
   ways: {
     eyebrow: "Aplikacja albo przeglądarka",

@@ -14,6 +14,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: LandingCopy["previews"]["promotional
     h1: "Wyślij promocję na telefon każdego klienta.",
     accent: "na telefon każdego klienta.",
     sub: "Napisz jedną wiadomość, a pojawi się na ekranie blokady każdego klienta. Bez opłat za SMS-y.",
+    secondary: "Zobacz, jak to działa",
     alt: "Ekran blokady iPhone'a z powiadomieniem od Aurevo: Spokojne popołudnie? Druga kawa za pół ceny do 17:00.",
   },
   heroBanner: HAPPY_HOUR,
@@ -89,8 +90,10 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: LandingCopy["previews"]["promotional
       time: "14:30",
       stats: "Dostarczenie",
       deliveryRate: "{rate}% dostarczonych",
+      rateLabel: "dostarczonych",
       reachable: "osiągalnych",
       sendAgain: "Wyślij ponownie",
+      alt: "{name}. {status}. {sentAt} {time}. {sender}: {message} {stats}: {rate}, {reached} / {reachable} {reachableLabel}. {counts}.",
     },
     delivered: [
       { label: "Apple Wallet", value: 412 },
@@ -111,6 +114,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: LandingCopy["previews"]["promotional
   },
   faq: {
     title: "Pytania o rozsyłki",
+    pricingLink: "szczegóły w cenniku",
     items: [
       {
         question: "Ile kosztuje wysłanie rozsyłki?",

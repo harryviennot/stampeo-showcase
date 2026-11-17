@@ -44,6 +44,7 @@ export const PUSH_NOTIFICATIONS_PREVIEW: LandingCopy["previews"]["pushNotificati
     icon: {
       title: "Twoja własna ikona",
       line: "Wgraj ikonę albo wybierz taką, która powstała z twojego logo.",
+      alt: "Ikony powiadomień trzech przykładowych lokali",
     },
     phoneAlts: {
       apple: "iPhone z kartą lojalnościową Aurevo otwartą w Apple Wallet",
@@ -63,6 +64,10 @@ export const PUSH_NOTIFICATIONS_PREVIEW: LandingCopy["previews"]["pushNotificati
       preview: "Nowa pieczątka, Zosia! Jeszcze 3 do nagrody.",
     },
     switches: ["Pieczątka zebrana", "Nagroda odblokowana", "Nagroda odebrana"],
+    sampleValues: [
+      { name: "imię", value: "Zosia" },
+      { name: "pozostałe pieczątki", value: "3" },
+    ],
   },
   demo: {
     eyebrow: "Demo na żywo",
