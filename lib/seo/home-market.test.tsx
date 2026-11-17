@@ -5,7 +5,7 @@
  * homepage's structured data is read from the same render.
  */
 
-import { afterAll, describe, expect, mock, test } from "bun:test";
+import { beforeEach, describe, expect, test } from "bun:test";
 import { createTranslator } from "next-intl";
 import { landingCopy } from "../landing-pages/copy/bundle";
 import { FALLBACK_PRICING, formatMoney } from "../pricing";
@@ -13,16 +13,27 @@ import { loadCatalog } from "../testing/catalogs";
 import { renderAtPathAsync } from "../testing/pathname-seam";
 import { sectionsOf } from "../testing/preview-page";
 import { renderInAsync, textOf } from "../testing/render-en";
+import { restoreEnvAfterEach } from "../testing/restore-env";
+import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { inServerLocale, mockEnglishServerTranslations } from "../testing/server-intl";
 
-// The catalog the pages fetch answers with the baked ladders, as a live one (not flagged as the fallback), so the
-// structured data prints its offers.
-const realCatalog = await import("@/lib/plan-catalog");
-mock.module("@/lib/plan-catalog", () => ({
-  ...realCatalog,
-  getPlanCatalog: async (currency: string) => ({ ...FALLBACK_PRICING[currency], isFallback: false }),
-}));
-afterAll(() => mock.module("@/lib/plan-catalog", () => realCatalog));
+// The backend answers the catalog request with the baked ladders, so the pages print a live catalog (not the
+// fallback) and the structured data carries its offers. No module is mocked: a module mock outlives this file.
+restoreEnvAfterEach("NEXT_PUBLIC_API_URL");
+restoreGlobalsAfterEach("fetch");
+beforeEach(() => {
+  process.env.NEXT_PUBLIC_API_URL = "http://backend.test";
+  globalThis.fetch = (async (input: RequestInfo | URL) => {
+    const ladder = FALLBACK_PRICING[new URL(String(input)).searchParams.get("currency") ?? "eur"];
+    const tiers = Object.fromEntries(
+      Object.entries(ladder.tiers).map(([tier, { month, year }]) => [
+        tier,
+        { month: { amount: month * 100 }, year: { amount: year * 100 } },
+      ]),
+    );
+    return new Response(JSON.stringify({ currency: ladder.currency, tiers }), { status: 200 });
+  }) as typeof fetch;
+});
 await mockEnglishServerTranslations();
 
 const home = await import("@/app/[locale]/page");

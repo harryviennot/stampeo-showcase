@@ -53,7 +53,10 @@ mock.module("next-intl/server", () => ({
     return createTranslator({ locale, messages: loadCatalog(locale), namespace: namespace as never });
   },
 }));
-afterAll(() => mock.module("next-intl/server", () => realIntl));
+// Not undone, like `mockEnglishServerTranslations`: putting the real module back stops the next file's own mock.
+afterAll(() => {
+  current = "en";
+});
 
 const home = await import("@/app/[locale]/page");
 const usHome = await import("@/app/[locale]/us/page");
