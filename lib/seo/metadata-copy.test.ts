@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { generateMetadata as privacyMetadata } from "@/app/[locale]/privacy/page";
 import { generateMetadata as termsMetadata } from "@/app/[locale]/terms/page";
 import { routing } from "@/i18n/routing";
+import { pageWords } from "../landing-pages/pages";
 import { MARKETS, type Market } from "../markets";
 import { planMessageArgs } from "../plans/plan-facts";
 import { FALLBACK_PRICING, pricingMessageArgs } from "../pricing";
@@ -154,10 +155,20 @@ const CATEGORY_TERM: Record<string, string> = {
 };
 
 describe("titles and descriptions that name the category, the price and the trial", () => {
+  // The live homepages' titles are Platform's, not the catalog's `metadata.home`, which no live page prints.
   test.each(routing.locales)("%s: the homepage title names the category", (locale) => {
-    const title = loadCatalog(locale).metadata.home.title as string;
+    const { title } = pageWords("platform", locale, "int").meta;
 
     expect(title.toLowerCase()).toContain(CATEGORY_TERM[locale]);
+  });
+
+  test.each([
+    ["/us", "us"],
+    ["/uk", "uk"],
+  ] as const)("%s: the pilot's homepage title names the category in the words of its market", (_path, market) => {
+    const { title } = pageWords("platform", "en", market).meta;
+
+    expect(title.toLowerCase()).toContain(market === "us" ? "punch card" : CATEGORY_TERM.en);
   });
 
   // The starting price is interpolated per market, so no currency is typed into a catalog.

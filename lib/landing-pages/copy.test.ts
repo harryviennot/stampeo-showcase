@@ -13,7 +13,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
-import { ALL, MODULES, inPreviews, lines, objectsWith, offenders } from "../testing/landing-copy";
+import { ALL, COPIES, MODULES, inPreviews, lines, objectsWith, offenders } from "../testing/landing-copy";
 import { PLAN_FACTS, availability } from "../plans/plan-facts";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
@@ -95,12 +95,11 @@ describe("what these pages may not claim", () => {
   });
 });
 
-/** English's caps; every other language may run a fifth longer, rounded up. */
-const LOCALES = ["en", "fr", "es", "pl"] as const;
+/** English's caps; every other language may run a fifth longer, rounded up. The US English, laid over the international one, keeps English's. */
 const cap = (locale: string, english: number) => (locale === "en" ? english : Math.ceil(english * 1.2));
 
-describe.each(LOCALES)("how much each line may say in %s", (locale) => {
-  const copy = landingCopy(locale);
+describe.each(COPIES)("how much each line may say in %s (%s)", (locale, market) => {
+  const copy = landingCopy(locale, market);
   const all = lines(copy, locale);
   const over = (found: Array<{ path: string }>) => found.map((line) => `${locale}:${line.path.replace(`${locale}.`, "")}`);
 

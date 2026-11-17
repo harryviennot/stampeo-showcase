@@ -12,6 +12,7 @@ import { KeyNumbersCard } from "@/components/landing-pages/feature-previews/anal
 import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAnalytics";
 import { renderPreviewPage, sectionOf, sectionsOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
+import { landingCopy } from "../copy/bundle";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
 import { SHARED } from "../copy/shared";
 import { fill, formatSampleMoney } from "../format";
@@ -38,6 +39,13 @@ const dollars = (amount: number, cents = false) => formatSampleMoney("en", "us",
 
 /** The names the sample customer list may show: invented, none a real customer's. */
 const INVENTED_NAMES = ["Maya Chen", "Daniel Brooks", "Priya Nair", "Tom Alvarez", "Hannah Cole", "Marcus Reed", "Ellie Park"];
+/** Each language's own invented customers: a sample list never carries a real person's name. */
+const INVENTED_NAMES_BY_LANGUAGE: Record<string, string[]> = {
+  en: INVENTED_NAMES,
+  fr: ["Camille Martin", "Lucas Bernard", "Inès Moreau", "Thomas Petit", "Léa Dubois", "Hugo Laurent", "Chloé Girard"],
+  es: ["Lucía Fernández", "Javier Moreno", "Carmen Ruiz", "Álvaro Gómez", "Marta Sánchez", "Diego Navarro", "Paula Ortega"],
+  pl: ["Zofia Nowak", "Jakub Wiśniewski", "Maja Kowalczyk", "Tomasz Lewandowski", "Hanna Zielińska", "Marek Wójcik", "Ewa Kamińska"],
+};
 
 describe("the key-numbers card beside the hero: a month at a glance", () => {
   test("reads, top to bottom: visits, the return rate, new customers, then the visits over time", async () => {
@@ -254,6 +262,15 @@ describe("your customers: a list like the dashboard's own, and what its groups m
     expect(text).not.toMatch(/@|\.com/);
     for (const { name } of COPY.customers.people) expect(INVENTED_NAMES).toContain(name);
     expect(COPY.customers.people).toHaveLength(CUSTOMER_LIST.length);
+  });
+
+  test.each(Object.keys(INVENTED_NAMES_BY_LANGUAGE))("%s: the list holds that language's seven invented names, and no email or address", async (locale) => {
+    const { people } = landingCopy(locale).previews.analytics.ANALYTICS_PREVIEW.customers;
+    const text = textOf(await renderPreviewPage("platform/analytics", locale));
+
+    expect(people.map(({ name }) => name)).toEqual(INVENTED_NAMES_BY_LANGUAGE[locale]);
+    expect(people).toHaveLength(CUSTOMER_LIST.length);
+    expect(text).not.toMatch(/@|\.com/);
   });
 });
 

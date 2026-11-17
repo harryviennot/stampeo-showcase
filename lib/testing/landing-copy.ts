@@ -1,3 +1,4 @@
+import { landingCopy } from "../landing-pages/copy/bundle";
 import * as platform from "../landing-pages/copy/platform";
 import * as analyticsPreview from "../landing-pages/copy/previews/analytics";
 import * as cardDesignPreview from "../landing-pages/copy/previews/card-design";
@@ -122,3 +123,15 @@ export function mentions(value: unknown, pattern: RegExp, path: string, plan?: s
   const here = typeof own === "string" ? own : plan;
   return Object.entries(value).flatMap(([key, child]) => mentions(child, pattern, `${path}.${key}`, here));
 }
+
+/** Each language's international copy, and the US English with its overlay: what a visitor of each language and market reads. */
+export const COPIES = [
+  ["en", "int"],
+  ["fr", "int"],
+  ["es", "int"],
+  ["pl", "int"],
+  ["en", "us"],
+] as const;
+
+/** Every string of one language's copy in one market, with its path. */
+export const copyLines = (locale: string, market: "int" | "us"): Line[] => lines(landingCopy(locale, market), "");

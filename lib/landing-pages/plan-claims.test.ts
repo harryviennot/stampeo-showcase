@@ -2,13 +2,16 @@
  * The Platform page and its previews sell the product, not the plans: a plan's name, a badge saying who has a
  * feature and "on every plan" belong to the pricing section and the pricing page. Each page is rendered as a
  * visitor receives it and read for plan names outside its pricing section, and the copy modules are read for the
- * same words. The number of levels, which the copy states as a fact, is tied to `PLAN_FACTS`.
+ * same words, in every language: the names are the same words everywhere, and the phrases that say every plan has
+ * something are English ones (the other languages' are in `copy-languages.test.ts`). The number of levels, which the
+ * copy states as a fact, is tied to `PLAN_FACTS`.
  */
 
 import { describe, expect, test } from "bun:test";
 import { availability } from "../plans/plan-facts";
 import { ALL } from "../testing/landing-copy";
 import { renderPreviewPage, sectionsOf } from "../testing/preview-page";
+import { routing } from "@/i18n/routing";
 import { ALL_LANDING_SLUGS } from "./pages";
 
 /** A plan named in a line of words: its name, or a phrase that says every plan has something. */
@@ -31,8 +34,8 @@ const planWordsIn = (markup: string): string[] =>
   [...markup.matchAll(PLAN_WORDS_IN)].map((match) => markup.slice(Math.max(0, match.index - 24), match.index + match[0].length + 24));
 
 describe("a landing page names no plan outside its pricing section", () => {
-  test.each(ALL_LANDING_SLUGS)("%s", async (slug) => {
-    expect(planWordsIn(outsidePricing(await renderPreviewPage(slug)))).toEqual([]);
+  test.each(routing.locales.flatMap((locale) => ALL_LANDING_SLUGS.map((slug) => [locale, slug] as const)))("%s: %s", async (locale, slug) => {
+    expect(planWordsIn(outsidePricing(await renderPreviewPage(slug, locale)))).toEqual([]);
   });
 
   test("the check reads words, not class names, and leaves the pricing section to its own plans", () => {
