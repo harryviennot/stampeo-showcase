@@ -1,5 +1,6 @@
 import { currentConsent, readStoredConsent } from "../consent";
 import { measurementIdFromEnv } from "../google-analytics";
+import { rememberedPostHogId } from "../posthog/consent-sync";
 import { detectPolicyRow } from "../privacy/region";
 import { buildSignupBody, signupBasis } from "./signup-body";
 
@@ -58,6 +59,7 @@ async function send(options: SignupCallOptions, dispatched: () => void): Promise
     measurementId:
       options.measurementId === undefined ? measurementIdFromEnv() : options.measurementId,
     basis: signupBasis(detectPolicyRow()),
+    posthogId: rememberedPostHogId(),
   });
   const request = fetch(`${apiUrl}/account/signup-recorded`, {
     method: "POST",

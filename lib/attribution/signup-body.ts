@@ -42,6 +42,11 @@ import { parseSourceCookie, serializeSourceCarrier } from "./source";
  * not declared: a backend refusal is permanent, and GPC is read by the backend
  * from the request itself. GPC and the live row only decide what is withheld.
  *
+ * `ph` is the PostHog id of a visitor PostHog remembers, so the backend can join
+ * the visits to the account. It goes only while analytics is allowed, and the
+ * caller gives it only for a remembered visitor: a visitor PostHog counts in
+ * memory sends none.
+ *
  * Nothing here asks whether the account is new. The backend decides that.
  */
 
@@ -60,6 +65,8 @@ export function signupBasis(row: PolicyRow): SignupBasis {
 
 export interface SignupBody {
   consent_subject_id?: string;
+  /** The PostHog id of a remembered visitor. */
+  ph?: string;
   ad_attribution_v2?: { src?: object; ga?: object; ad?: object };
   /** The version-1 carrier, while a browser still holds one. */
   ad_attribution?: object;
@@ -91,8 +98,10 @@ export function buildSignupBody(input: {
   stored: { record: ConsentRecord | null; prior: PriorConsent | null };
   measurementId: string | null;
   basis: SignupBasis;
+  /** The PostHog id of a visitor PostHog remembers; null or absent for one it counts in memory. */
+  posthogId?: string | null;
 }): SignupBody {
-  const { cookieHeader: header, consent, stored, measurementId, basis } = input;
+  const { cookieHeader: header, consent, stored, measurementId, basis, posthogId } = input;
 
   const subject = readSidCookie(header) ?? readSubjectId(header);
 
@@ -134,6 +143,7 @@ export function buildSignupBody(input: {
 
   return {
     ...(subject ? { consent_subject_id: subject } : {}),
+    ...(consent.analytics && posthogId ? { ph: posthogId } : {}),
     ...(Object.keys(carriers).length > 0 ? { ad_attribution_v2: carriers } : {}),
     ...(legacy ? { ad_attribution: legacy } : {}),
     basis,

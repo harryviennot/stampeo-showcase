@@ -189,13 +189,13 @@ describe("a tab whose PostHog remembers the visitor, with no GA or Meta tag load
     stopPostHog = null;
   });
 
-  /** A tab where PostHog started for this visitor, watched the way the banner watches. */
+  /** A tab where PostHog started for this visitor and no GA or Meta tag is loaded, watched the way the banner watches. */
   function postHogTab(cookie: string) {
     browser = installFakeBrowser({ cookie, timezone: "Europe/Paris" });
     Object.defineProperty(globalThis, "localStorage", { value: fakeStorage(), configurable: true, writable: true });
     Object.defineProperty(globalThis, "sessionStorage", { value: fakeStorage(), configurable: true, writable: true });
     stopPostHog = startPostHog(fakePostHog(), "phc_testkey", "https://eu.i.posthog.com");
-    watcher = watchConsentAcrossTabs();
+    watcher = watchConsentAcrossTabs({ tagsLoaded: () => false });
     return browser;
   }
 
