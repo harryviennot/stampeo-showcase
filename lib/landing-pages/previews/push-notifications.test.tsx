@@ -15,6 +15,8 @@ import { sectionOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEn, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { mockEnglishServerTranslations } from "../../testing/server-intl";
 import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "../copy/previews/push-notifications";
+import { PREVIEW_SHARED } from "../copy/previews/shared";
+import { fill } from "../format";
 import { LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "../copy/shared";
 
 // The sections ask next-intl for the Aurevo card's labels.
@@ -55,7 +57,7 @@ describe("day: a notification each time their card changes", () => {
     expect(page.match(/<li\b/g)).toHaveLength(4);
     expectInOrder(
       page,
-      COPY.day.nodes.flatMap((node, index) => [node.label, `${dayNodes()[index].stamps} / 8`, SAMPLE_BUSINESS, node.banner.body]),
+      COPY.day.nodes.flatMap((node, index) => [node.label, `${dayNodes(COPY.day.nodes)[index].stamps} / 8`, SAMPLE_BUSINESS, node.banner.body]),
     );
   });
 
@@ -70,12 +72,12 @@ describe("day: a notification each time their card changes", () => {
   });
 
   test("the card has the count its notification announces: 5 of 8, full, claimed and fresh, then a Silver card", () => {
-    const nodes = dayNodes();
+    const nodes = dayNodes(COPY.day.nodes);
     const total = AUREVO.design.total_stamps ?? 8;
 
     expect(STAMP_BANNER.body).toContain(`5 of ${total}`);
     expect(nodes.map((node) => node.stamps)).toEqual([5, total, 0, 1]);
-    expect(nodes.map((node) => node.headerLabel)).toEqual([undefined, undefined, undefined, "Silver"]);
+    expect(nodes.map((node) => node.level)).toEqual([undefined, undefined, undefined, "silver"]);
     expect(LEVEL_UP_BANNER.body).toContain("Silver");
   });
 
@@ -184,8 +186,11 @@ describe("editor: use our wording or write your own", () => {
 });
 
 describe("a lock-screen slice", () => {
+  /** What a screen reader hears for Aurevo's notification saying `message`. */
+  const altOf = (message: string) => fill(PREVIEW_SHARED.lockScreenAlt, { sender: SAMPLE_BUSINESS, message });
+
   test("is a sample shop's notification on the lock screen, read out as one picture: who sent it and what it says", () => {
-    const html = renderEn(<LockScreenSlice banner={STAMP_BANNER} />);
+    const html = renderEn(<LockScreenSlice banner={STAMP_BANNER} alt={altOf(STAMP_BANNER.body)} timeAgo={SHARED.now} />);
 
     expect(html).toMatch(/^(?:<link[^>]*>)*<div[^>]*role="img"[^>]*aria-label="[^"]*Aurevo[^"]*Stamp collected![^"]*"/);
     expect(textOf(html)).toContain("9:41");
@@ -193,14 +198,14 @@ describe("a lock-screen slice", () => {
   });
 
   test("reads out the words it is given to read, when the ones on screen are still being typed", () => {
-    const html = renderEn(<LockScreenSlice banner={{ sender: SAMPLE_BUSINESS, body: "You got" }} label={COPY.editor.own.preview} />);
+    const html = renderEn(<LockScreenSlice banner={{ sender: SAMPLE_BUSINESS, body: "You got" }} alt={altOf(COPY.editor.own.preview)} timeAgo={SHARED.now} />);
 
     expect(html).toContain(`aria-label="Lock screen notification from Aurevo: ${COPY.editor.own.preview}"`);
     expect(textOf(html)).toContain("You got");
   });
 
   test("is never sent by Stampeo", () => {
-    expect(renderEn(<LockScreenSlice banner={STAMP_BANNER} />)).not.toMatch(/stampeo/i);
+    expect(renderEn(<LockScreenSlice banner={STAMP_BANNER} alt={altOf(STAMP_BANNER.body)} timeAgo={SHARED.now} />)).not.toMatch(/stampeo/i);
   });
 });
 

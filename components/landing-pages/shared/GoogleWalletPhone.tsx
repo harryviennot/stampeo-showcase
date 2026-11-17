@@ -3,7 +3,8 @@ import { AndroidPhone } from "@/components/ui/AndroidPhone";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { androidLayout } from "@/lib/devices/android";
 import type { PhoneSample } from "@/lib/landing-pages/previews/card-design-samples";
-import { SAMPLE_BUSINESS } from "@/lib/landing-pages/copy/shared";
+import { getLocale } from "next-intl/server";
+import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 import { aurevoDesign } from "./AurevoCard";
 
 /** The phone is drawn 320px wide, as `WalletPhone`'s iPhone. */
@@ -39,7 +40,9 @@ export async function GoogleWalletPhone({
   stamps = 4,
   sample,
 }: Readonly<{ width?: number; narrowWidth?: number; stamps?: number; sample?: PhoneSample }>) {
-  const design = sample ? { ...sample.design, logo_url: undefined } : { ...(await aurevoDesign()), logo_url: ROUND_LOGO };
+  const { SAMPLE_BUSINESS, SHARED } = landingCopy(await getLocale()).shared;
+  const look = sample ? { ...sample.design, logo_url: undefined } : { ...(await aurevoDesign()), logo_url: ROUND_LOGO };
+  const design = { ...look, description: SHARED.googleCardTitle };
 
   return (
     <ScaledBox width={DRAWN_WIDTH} height={androidLayout(DRAWN_WIDTH).height} to={width} narrowTo={narrowWidth}>

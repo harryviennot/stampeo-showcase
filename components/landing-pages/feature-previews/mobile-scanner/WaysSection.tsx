@@ -1,5 +1,5 @@
 import { DevicePhoneMobileIcon, GlobeIcon } from "@/components/icons";
-import { MOBILE_SCANNER_PREVIEW } from "@/lib/landing-pages/copy/previews/mobile-scanner";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CARD_SHADOW, CELL_TITLE } from "../../platform/classes";
 import { Chip } from "../../shared/Chip";
 import { IconTile } from "../../shared/IconTile";
@@ -13,7 +13,7 @@ const CARD = `flex flex-col rounded-[28px] bg-white p-6 ${CARD_SHADOW} ring-1 ri
 
 /** The app and the browser as two white cards, the devices each runs on, the store badges in the app's card, and the line that says both do the same job. */
 export function WaysSection() {
-  const { eyebrow, title, lead, cells, fact } = MOBILE_SCANNER_PREVIEW.ways;
+  const { eyebrow, title, lead, cells, fact } = useLandingCopy().previews.mobileScanner.MOBILE_SCANNER_PREVIEW.ways;
 
   return (
     <LpSection section="ways" eyebrow={eyebrow} title={title} lead={lead} align="center">

@@ -1,4 +1,5 @@
-import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import type { Market } from "@/lib/markets";
 import { PreviewHero } from "../PreviewHero";
 import { ReskinCards } from "./ReskinCards";
 
@@ -7,16 +8,18 @@ import { ReskinCards } from "./ReskinCards";
  * card that takes on the look of six shops in turn, with a button either side and a dot for each shop. The second
  * button jumps to the anatomy of the card.
  */
-export function ReskinHero() {
-  const { reskin, hero } = CARD_DESIGN_PREVIEW;
+export function ReskinHero({ market }: Readonly<{ market: Market }>) {
+  const { reskin, hero, cardFields } = useLandingCopy().previews.cardDesign.CARD_DESIGN_PREVIEW;
 
   return (
     <PreviewHero
       slug="platform/card-design"
+      market={market}
       secondary={{ label: hero.secondary, href: "#anatomy" }}
       visual={
         <ReskinCards
           captions={reskin.captions}
+          words={cardFields}
           alt={reskin.alt}
           labels={{ previous: reskin.previous, next: reskin.next, dot: reskin.dot }}
         />

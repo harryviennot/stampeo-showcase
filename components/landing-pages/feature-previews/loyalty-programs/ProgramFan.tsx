@@ -3,8 +3,8 @@ import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { resolveFanCard } from "@/lib/hero-fan";
-import { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
-import { GOLD_HERO_CARD } from "@/lib/landing-pages/previews/loyalty-ladder";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { goldHeroCard } from "@/lib/landing-pages/previews/loyalty-ladder";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { PassFrame } from "../../shared/PassFrame";
 import { EYEBROW } from "../../shared/LpSection";
@@ -30,7 +30,9 @@ const juice = resolveFanCard("pulp");
  * `hero.alt`.
  */
 export function ProgramFan() {
-  const { alt, banner, labels } = LOYALTY_PROGRAMS_PREVIEW.hero;
+  const copy = useLandingCopy();
+  const { alt, banner, labels } = copy.previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW.hero;
+  const gold = goldHeroCard(copy.previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW.levels.member);
 
   return (
     <ScrollReveal className="flex w-full flex-col items-center">
@@ -55,15 +57,15 @@ export function ProgramFan() {
               <FanPosition spot={CARDS.front} z={2}>
                 <PassFrame width={CARDS.front.width}>
                   <WalletCard
-                    design={GOLD_HERO_CARD.design}
-                    stamps={GOLD_HERO_CARD.stamps}
-                    headerLabel="Gold"
+                    design={gold.design}
+                    stamps={gold.stamps}
+                    headerLabel={copy.shared.SHARED.levelNames.gold}
                     showQR={false}
                   />
                 </PassFrame>
               </FanPosition>
               <div className="absolute z-[3]" style={BANNER}>
-                <LockScreenNotification {...levelShopBanner(banner)} />
+                <LockScreenNotification {...levelShopBanner(banner)} timeAgo={copy.shared.SHARED.now} />
               </div>
             </div>
           </ScaledBox>

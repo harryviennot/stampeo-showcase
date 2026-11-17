@@ -1,46 +1,19 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { HeroLockScreen } from "@/components/landing-pages/feature-previews/HeroLockScreen";
-import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
-import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
-import { shopBanner } from "@/components/landing-pages/feature-previews/ShopIcon";
-import { DeliverySection } from "@/components/landing-pages/feature-previews/promotional-campaigns/DeliverySection";
-import { HowSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/HowSection";
-import { IdeasSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/IdeasSection";
-import { TextingSection } from "@/components/landing-pages/feature-previews/promotional-campaigns/TextingSection";
-import { LpAccentBand } from "@/components/landing-pages/platform/LpAccentBand";
-import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageShell";
-import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
+import { PromotionalCampaignsPreviewPage } from "@/components/landing-pages/pages/PromotionalCampaignsPreviewPage";
 import { landingPageMetadata } from "@/lib/landing-pages/pages";
 
-// The campaigns preview of /en/features/promotional-campaigns: English only, noindex, in Platform's style.
+// The campaigns preview in US English, noindex, rewritten from /us/landing-pages/platform/promotional-campaigns.
 export function generateStaticParams() {
   return [{ locale: "en" }];
 }
 
 export function generateMetadata(): Metadata {
-  return landingPageMetadata("platform/promotional-campaigns");
+  return landingPageMetadata("platform/promotional-campaigns", "en", "us");
 }
 
-export default function PromotionalCampaignsPreviewPage() {
+export default function Page() {
   setRequestLocale("en");
-  const { heroBanner, hero } = PROMOTIONAL_CAMPAIGNS_PREVIEW;
 
-  return (
-    <LandingPageShell slug="platform/promotional-campaigns">
-      <PreviewHero
-        slug="platform/promotional-campaigns"
-        secondary={{ label: "See how it works", href: "#how" }}
-        visual={<HeroLockScreen alt={hero.alt} notification={shopBanner(heroBanner)} />}
-      />
-      <HowSection />
-      <TextingSection />
-      <IdeasSection />
-      <DeliverySection />
-      <LpFaq faq={PROMOTIONAL_CAMPAIGNS_PREVIEW.faq} answerLink={{ words: "see pricing", href: "/pricing" }} />
-      <LpAccentBand copy={PROMOTIONAL_CAMPAIGNS_PREVIEW.band} />
-      <RelatedPreviews slug="platform/promotional-campaigns" />
-    </LandingPageShell>
-  );
+  return <PromotionalCampaignsPreviewPage market="us" />;
 }

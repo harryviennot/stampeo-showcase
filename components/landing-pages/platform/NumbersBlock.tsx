@@ -1,5 +1,5 @@
-import { getTranslations } from "next-intl/server";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { getLocale, getTranslations } from "next-intl/server";
+import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 import { numbersRow } from "@/lib/landing-pages/platform/number-figures";
 import { LpCtaPair } from "./LpCtaPair";
 import { NumberFigures } from "./NumberFigures";
@@ -12,6 +12,7 @@ import { LpSection } from "../shared/LpSection";
  */
 export async function NumbersBlock() {
   const t = await getTranslations("variant.metrics");
+  const { PLATFORM } = landingCopy(await getLocale()).platform;
   const counts = t.raw("items") as Array<{ value: string; label: string }>;
   const items = numbersRow(counts, PLATFORM.numbers.figures);
 

@@ -32,22 +32,30 @@ describe("which feature pages a page's header and footer lead to", () => {
 
 describe("where each feature link goes", () => {
   test.each(Object.entries(FEATURE_PREVIEWS))("from Platform, %s opens its preview under /us", (feature, preview) => {
-    const link = featureLink(feature as (typeof FEATURE_ITEMS)[number]["canonicalSlug"], "en", "previews");
+    const link = featureLink(feature as (typeof FEATURE_ITEMS)[number]["canonicalSlug"], "en", "previews", "us");
 
     expect(link).toEqual({ href: `/us/landing-pages/${preview}`, market: "us" });
   });
 
   test("from Platform, geolocation opens its coming-soon preview too: every feature has one", () => {
-    expect(featureLink("geolocalisation", "en", "previews")).toEqual({
+    expect(featureLink("geolocalisation", "en", "previews", "us")).toEqual({
       href: "/us/landing-pages/platform/geolocation",
       market: "us",
     });
     expect(FEATURE_ITEMS.map(({ canonicalSlug }) => canonicalSlug).filter((slug) => !FEATURE_PREVIEWS[slug])).toEqual([]);
   });
 
+  test.each(Object.entries(FEATURE_PREVIEWS))("from the international Platform, %s opens its preview in the visitor's language: the path is left for next-intl to prefix", (feature, preview) => {
+    for (const locale of routing.locales) {
+      const link = featureLink(feature as (typeof FEATURE_ITEMS)[number]["canonicalSlug"], locale, "previews", "int");
+
+      expect(link).toEqual({ href: `/landing-pages/${preview}`, market: "int" });
+    }
+  });
+
   test.each(routing.locales)("everywhere else, every feature opens today's page in %s", (locale) => {
     for (const { canonicalSlug } of FEATURE_ITEMS) {
-      expect(featureLink(canonicalSlug, locale, "live")).toEqual({
+      expect(featureLink(canonicalSlug, locale, "live", "us")).toEqual({
         href: `/features/${getLocalizedSlug(canonicalSlug, locale)}`,
         market: "int",
       });
@@ -57,11 +65,15 @@ describe("where each feature link goes", () => {
 
 describe("where the Loyalty link goes", () => {
   test("from Platform and its previews, it opens the loyalty programs preview under /us", () => {
-    expect(loyaltyLink("en", "previews")).toEqual({ href: "/us/landing-pages/platform/loyalty-programs", market: "us" });
+    expect(loyaltyLink("en", "previews", "us")).toEqual({ href: "/us/landing-pages/platform/loyalty-programs", market: "us" });
+  });
+
+  test.each(routing.locales)("from the international Platform and its previews, it opens the same preview in %s", (locale) => {
+    expect(loyaltyLink(locale, "previews", "int")).toEqual({ href: "/landing-pages/platform/loyalty-programs", market: "int" });
   });
 
   test.each(routing.locales)("everywhere else, it opens today's loyalty programs page in %s", (locale) => {
-    expect(loyaltyLink(locale, "live")).toEqual({
+    expect(loyaltyLink(locale, "live", "us")).toEqual({
       href: LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS],
       market: "int",
     });
@@ -73,8 +85,8 @@ describe("the header and footer use it", () => {
     const shell = source("components/landing-pages/shared/LandingPageShell.tsx");
 
     expect(shell).toContain("const featureLinks = featureLinksFor(slug);");
-    expect(shell).toMatch(/<Header market="us" featureLinks=\{featureLinks\}/);
-    expect(shell).toMatch(/<Footer market="us" featureLinks=\{featureLinks\} \/>/);
+    expect(shell).toMatch(/<Header market=\{market\} featureLinks=\{featureLinks\}/);
+    expect(shell).toMatch(/<Footer market=\{market\} featureLinks=\{featureLinks\} \/>/);
   });
 
   // The closed header draws no Product menu, so its default cannot be read from a render.

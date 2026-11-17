@@ -1,5 +1,5 @@
 import { MegaphoneIcon, PhoneIcon, XMarkIcon } from "@/components/icons";
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { Fact } from "@/lib/landing-pages/copy/types";
 import { CARD_SHADOW, CELL_TITLE } from "../../platform/classes";
 import { FactList } from "../../shared/FactList";
@@ -24,6 +24,7 @@ function Drawbacks({ facts }: Readonly<{ facts: readonly Fact[] }>) {
 
 /** Texts against Stampeo campaigns: two white cards, the texting costs on the left and what a campaign does on the right. */
 export function TextingSection() {
+  const COPY = useLandingCopy().previews.promotionalCampaigns.PROMOTIONAL_CAMPAIGNS_PREVIEW;
   const { sms, stampeo } = COPY.texting;
 
   return (

@@ -2,6 +2,7 @@ import type { ComponentProps } from "react";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { iphoneLayout } from "@/lib/devices/iphone";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LockScreenNotification } from "../platform/LockScreenNotification";
 import { LockScreenPhone } from "./LockScreenPhone";
 
@@ -15,13 +16,15 @@ const CUT =
 export function HeroLockScreen({
   alt,
   notification,
-}: Readonly<{ alt: string; notification: ComponentProps<typeof LockScreenNotification> }>) {
+}: Readonly<{ alt: string; notification: Omit<ComponentProps<typeof LockScreenNotification>, "timeAgo"> }>) {
+  const { SHARED } = useLandingCopy().shared;
+
   return (
     <ScrollReveal className="flex w-full flex-col items-center">
       <div className={CUT}>
         <div role="img" aria-label={alt}>
           <ScaledBox width={PHONE.drawn} height={iphoneLayout(PHONE.drawn).height} narrowTo={PHONE.narrowTo}>
-            <LockScreenPhone width={PHONE.drawn} notification={notification} eager />
+            <LockScreenPhone width={PHONE.drawn} notification={{ ...notification, timeAgo: SHARED.now }} eager />
           </ScaledBox>
         </div>
       </div>

@@ -6,8 +6,9 @@ export type WordingPart = { kind: "text"; text: string } | { kind: "variable"; n
 /** One keystroke every 30ms. */
 export const TYPING_MS = 30;
 
-/** The sample customer the lock screen reads the variables for. */
-export const SAMPLE_VALUES: Readonly<Record<string, string>> = { "first name": "Sophie", "stamps left": "3" };
+/** The values the lock screen reads each variable with, by the variable's name (the sample customer's). */
+export const sampleValues = (values: ReadonlyArray<{ name: string; value: string }>): Readonly<Record<string, string>> =>
+  Object.fromEntries(values.map(({ name, value }) => [name, value]));
 
 const VARIABLE = /\{([^{}]+)\}/g;
 

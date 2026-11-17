@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ArrowRightIcon, CheckIcon, StarIcon } from "@/components/icons";
 import { ScaledBox } from "@/components/ui/ScaledBox";
-import type { LadderLevel as LevelCopy, LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
+import type { LadderLevel as LevelCopy } from "@/lib/landing-pages/copy/previews/loyalty-programs";
 import type { LadderCard } from "@/lib/landing-pages/previews/loyalty-ladder";
 import { CARD_SHADOW, CELL_TITLE } from "../../platform/classes";
 import { PassFrame } from "../../shared/PassFrame";
@@ -36,7 +37,7 @@ export function LadderLevel({
 }: Readonly<{
   level: LevelCopy;
   card: LadderCard;
-  labels: (typeof LOYALTY_PROGRAMS_PREVIEW)["levels"]["labels"];
+  labels: LandingCopy["previews"]["loyaltyPrograms"]["LOYALTY_PROGRAMS_PREVIEW"]["levels"]["labels"];
   /** The panel's top padding from `lg`, which makes the three panels a staircase. */
   rise: string;
   /** Whether the level is reached from another one (it gets the up arrow). */

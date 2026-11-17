@@ -26,6 +26,7 @@ import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { PLATFORM } from "./copy/platform";
 import { PROGRAM_TYPES } from "./copy/program-types";
 import { SHARED } from "./copy/shared";
+import { loyaltyLink } from "./preview-nav";
 
 // The hero's wallet cards ask next-intl for their words.
 await mockEnglishServerTranslations();
@@ -42,7 +43,7 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
     deliver: "PLATFORM.deliver.eyebrow",
     numbers: "PLATFORM.numbers.eyebrow",
     how: "PLATFORM.how.eyebrow",
-    demo: "PLATFORM.demo.eyebrow",
+    demo: "platform.PLATFORM.demo.eyebrow",
     program_types: "PLATFORM.programTypes.eyebrow",
     platform: "PLATFORM.platform.eyebrow",
     share: "PLATFORM.share.eyebrow",
@@ -73,7 +74,7 @@ describe("every section header is an eyebrow, a centred title and a lead", () =>
     const found = Object.fromEntries(headers().map(({ section, eyebrow }) => [section, eyebrow]));
 
     expect(found).toEqual(EYEBROWS);
-    expect(code(pageFile("platform"))).toContain("<LpSectors eyebrow={SHARED.sectorsEyebrow}");
+    expect(code(pageFile("platform"))).toContain("<LpSectors eyebrow={shared.SHARED.sectorsEyebrow}");
     expect(SHARED.sectorsEyebrow.length).toBeGreaterThan(0);
   });
 
@@ -94,7 +95,7 @@ describe("the hero: the headline, the cards, then the pair of actions", () => {
   const hero = () => code(platformFile("hero/PlatformHero"));
 
   test("puts the headline first, then the cards, then the CTA pair and its reassurance", async () => {
-    const html = await renderEnAsync(<PlatformHero />);
+    const html = await renderEnAsync(<PlatformHero market="us" />);
     const order = ["<h1", 'role="img"', 'href="/en/onboarding"', "14 days free"].map((needle) => html.indexOf(needle));
 
     expect(order.every((at) => at > -1)).toBe(true);
@@ -102,14 +103,15 @@ describe("the hero: the headline, the cards, then the pair of actions", () => {
     expect(literalAttr(findTag(hero(), "LpCtaPair")?.attrs ?? "", "location")).toBe("hero");
   });
 
-  test("the page mounts the hero and the closing card with no props, so Platform's own words and cards are what they show", () => {
+  test("the page mounts the hero with its market and the closing card with no props, so Platform's own words and cards are what they show", () => {
     const page = code(pageFile("platform"));
 
-    for (const name of ["PlatformHero", "LpAccentBand"]) expect(findTag(page, name)?.attrs).toMatch(/^\s*\/?\s*$/);
+    expect(findTag(page, "PlatformHero")?.attrs).toMatch(/^\s*market=\{market\}\s*\/?\s*$/);
+    expect(findTag(page, "LpAccentBand")?.attrs).toMatch(/^\s*\/?\s*$/);
   });
 
   test("is a headline alone: no label above it, and no sub or proof line between it and the cards", async () => {
-    const html = await renderEnAsync(<PlatformHero />);
+    const html = await renderEnAsync(<PlatformHero market="us" />);
     const title = html.indexOf("<h1");
 
     expect(html.slice(0, title)).not.toContain("<p");
@@ -248,9 +250,12 @@ describe("how it works: Create, Share, Stamp", () => {
 
 describe("program types: one row each, all open until a visitor points at one (AC21)", () => {
   const VISUALS = { stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> };
+  const ROWS = PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }));
+  const GUIDE = { label: PLATFORM.programTypes.closer, ...loyaltyLink("en", "previews", "us") };
+  const rows = () => renderEn(<ProgramTypeRows rows={ROWS} guide={GUIDE} visuals={VISUALS} />);
 
   test("every row is open in the server markup, with its label, title, text and card", () => {
-    const html = renderEn(<ProgramTypeRows visuals={VISUALS} />);
+    const html = rows();
     const text = textOf(html);
 
     expect(html.match(/data-open="(?:true|false)"/g)).toEqual(['data-open="true"', 'data-open="true"', 'data-open="true"']);
@@ -303,15 +308,25 @@ describe("program types: one row each, all open until a visitor points at one (A
   });
 
   test("the list closes on a full-width link to the choosing guide, from the copy", () => {
-    const html = renderEn(<ProgramTypeRows visuals={VISUALS} />);
+    const html = rows();
 
-    expect(html).toMatch(/<a [^>]*href="[^"]*\/loyalty-programs"/);
+    expect(html).toMatch(/<a [^>]*href="\/us\/landing-pages\/platform\/loyalty-programs"/);
     expect(textOf(html)).toContain(PLATFORM.programTypes.closer);
   });
 });
 
 describe("the platform: a dashboard for you, a free scanner for your team", () => {
-  const html = () => renderEn(<PlatformToggleCard dashboard={<i>dashboard pictures</i>} scanner={<i>scanner phone</i>} />);
+  const PAGES = { dashboard: "/features/analytics", scanner: "/features/mobile-scanner" };
+  const toggle = (initial?: "dashboard" | "scanner") => (
+    <PlatformToggleCard
+      words={PLATFORM.platform}
+      pages={PAGES}
+      dashboard={<i>dashboard pictures</i>}
+      scanner={<i>scanner phone</i>}
+      initial={initial}
+    />
+  );
+  const html = () => renderEn(toggle());
 
   test("the tabs are the copy's, the dashboard shown first, and both panes stay in the page so switching never moves it", () => {
     const text = textOf(html());
@@ -330,9 +345,7 @@ describe("the platform: a dashboard for you, a free scanner for your team", () =
     ["dashboard", "scanner"],
     ["scanner", "dashboard"],
   ] as const)("opened on %s, its pane is in view and the %s pane is inert", (open, other) => {
-    const opened = renderEn(
-      <PlatformToggleCard dashboard={<i>dashboard pictures</i>} scanner={<i>scanner phone</i>} initial={open} />,
-    );
+    const opened = renderEn(toggle(open));
     /** Each pane: its tab label, the attributes of its frame, and its markup up to the next pane. */
     const panes = [...opened.matchAll(/<div role="tabpanel" aria-label="([^"]+)"([^>]*)>/g)].map((match, index, all) => ({
       label: match[1],

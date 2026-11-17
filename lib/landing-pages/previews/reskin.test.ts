@@ -20,6 +20,7 @@ import {
 } from "./reskin";
 
 const CAPTIONS = CARD_DESIGN_PREVIEW.reskin.captions;
+const WORDS = CARD_DESIGN_PREVIEW.cardFields;
 const count = RESKIN_SHOPS.length;
 const START: ReskinState = { active: 0, touched: false };
 const step = (state: ReskinState, type: "tick" | "previous" | "next") => reskinStep(state, { type }, count);
@@ -32,7 +33,7 @@ describe("the six shops", () => {
   });
 
   test("each is a real card from the brand banks with its own logo, and none is a shop another section of the page shows", () => {
-    const logos = RESKIN_SHOPS.map((id) => reskinCard(id).design.logo_url);
+    const logos = RESKIN_SHOPS.map((id) => reskinCard(id, WORDS).design.logo_url);
 
     expect(new Set(logos).size).toBe(count);
     for (const logo of logos) expect(logo).toMatch(/^\/themes\/[a-z-]+\/logo\./);
@@ -40,7 +41,7 @@ describe("the six shops", () => {
   });
 
   test("run on stamps and on points, so the card's strip changes with the shop and its layout does not", () => {
-    const programs = new Set(RESKIN_SHOPS.map((id) => reskinCard(id).program));
+    const programs = new Set(RESKIN_SHOPS.map((id) => reskinCard(id, WORDS).program));
 
     expect(programs).toEqual(new Set(["stamps", "points"]));
   });

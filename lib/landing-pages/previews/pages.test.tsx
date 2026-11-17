@@ -19,7 +19,7 @@ import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
 import { SHARED, STAMP_BANNER } from "../copy/shared";
-import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, type PreviewSlug } from "../pages";
+import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, pageWords, type PreviewSlug } from "../pages";
 import { FEATURE_PREVIEWS, loyaltyLink } from "../preview-nav";
 
 /** Sections whose copy is keyed by another word than their id: card design's `types` section is its `programs` copy. */
@@ -164,14 +164,14 @@ describe("the hero each page opens with", () => {
   test("campaigns show Aurevo's promotion on a lock screen, and send the second button to how it works", async () => {
     const html = await hero("platform/promotional-campaigns");
 
-    expectInOrder(textOf(html), [LANDING_PAGES["platform/promotional-campaigns"].hero.accent, "Aurevo", PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner.body]);
+    expectInOrder(textOf(html), [pageWords("platform/promotional-campaigns", "en", "us").hero.accent, "Aurevo", PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner.body]);
     expect(pictures(html)).toEqual([PROMOTIONAL_CAMPAIGNS_PREVIEW.hero.alt]);
     expect(links(html)).toEqual(["/en/onboarding", "#how"]);
   });
 
   test.each(PREVIEW_SLUGS)("%s closes with its own cream card, then the links to its siblings", async (slug) => {
     const html = await renderPreviewPage(slug);
-    const { finalCta } = LANDING_PAGES[slug];
+    const { finalCta } = pageWords(slug, "en", "us");
     const closing = sectionsOf(html).filter(({ id }) => id === "final_cta" || id === "related");
 
     expect(closing.map(({ id }) => id)).toEqual(["final_cta", "related"]);
@@ -239,7 +239,7 @@ describe("walking the previews", () => {
 
   /** Geolocation (the Product menu) and loyalty programs (the Loyalty link) are reached from the menus of Platform and its previews, not from a sibling's closing links. */
   const FROM_THE_MENU: readonly PreviewSlug[] = ["platform/geolocation", "platform/loyalty-programs"];
-  const MENU_LINKS = [...Object.values(FEATURE_PREVIEWS).map((slug) => `/us/landing-pages/${slug}`), loyaltyLink("en", "previews").href];
+  const MENU_LINKS = [...Object.values(FEATURE_PREVIEWS).map((slug) => `/us/landing-pages/${slug}`), loyaltyLink("en", "previews", "us").href];
 
   test("every preview is reached from a sibling or from the menu, and every card goes to a preview's own URL", async () => {
     const links = await Promise.all(PREVIEW_SLUGS.map(async (slug) => [slug, await linksOf(slug)] as const));

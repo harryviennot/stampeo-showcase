@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { APP_STORE_URL, PLAY_STORE_URL } from "@/components/features/scanner-mobile/StoreBadges";
 import { storeBadges } from "@/lib/store-badges";
 
@@ -11,7 +11,7 @@ const LINK =
 /** The App Store and Google Play badges, each a 44px link to the Scanner app's listing in a new tab. */
 export function AppStoreLinks() {
   const t = useTranslations("features.scanner-mobile.custom");
-  const badges = storeBadges("en");
+  const badges = storeBadges(useLocale());
 
   return (
     <div className="flex flex-wrap items-center gap-3">

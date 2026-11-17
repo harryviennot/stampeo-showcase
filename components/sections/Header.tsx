@@ -109,7 +109,7 @@ export function Header({
 
   const isActive = (href: string) => isCurrentPath(pathname, href);
 
-  const productItems = productMenuItems(t, locale, featureLinks);
+  const productItems = productMenuItems(t, locale, featureLinks, market);
   const { navItems, resourceItems } = pageMenuItems(t, locale, market, featureLinks);
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
@@ -155,6 +155,7 @@ export function Header({
           onClose={closeMobileMenu}
           scrolled={scrolled}
           featureLinks={featureLinks}
+          market={market}
           pathname={pathname}
           navItems={navItems}
           resourceItems={resourceItems}

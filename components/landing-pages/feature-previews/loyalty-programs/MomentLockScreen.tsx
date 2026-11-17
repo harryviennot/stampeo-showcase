@@ -7,7 +7,7 @@ import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { levelShopBanner } from "./LevelShopIcon";
 
 /** A lock screen's top: the wallpaper, the clock and date, and the level-up notification in iOS's dark style. */
-export function MomentLockScreen({ banner }: Readonly<{ banner: Banner }>) {
+export function MomentLockScreen({ banner, timeAgo }: Readonly<{ banner: Banner; timeAgo: string }>) {
   const t = useTranslations("features.geolocalisation.demo");
 
   return (
@@ -19,7 +19,7 @@ export function MomentLockScreen({ banner }: Readonly<{ banner: Banner }>) {
         {t("lockScreenDate")}
       </p>
       <div className="mt-8 w-full max-w-[340px]">
-        <LockScreenNotification {...levelShopBanner(banner)} />
+        <LockScreenNotification {...levelShopBanner(banner)} timeAgo={timeAgo} />
       </div>
     </div>
   );

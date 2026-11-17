@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { STAMP_SAMPLES } from "@/lib/loyalty-samples";
-import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 
 /** The shops whose notification icons it shows: the sample café, the car wash and the juice bar. */
 const SHOPS = ["aurevo", "lustre", "pulp"].flatMap((id) => STAMP_SAMPLES.filter((sample) => sample.id === id));
@@ -14,9 +14,11 @@ const TILES = SHOPS.map((shop) => ({
 
 /** Three shops' notification icons in a row, and the line about bringing your own. */
 export function OwnIconCard() {
+  const { icon } = useLandingCopy().previews.pushNotifications.PUSH_NOTIFICATIONS_PREVIEW.wallets;
+
   return (
     <div>
-      <div role="img" aria-label="Notification icons of three sample shops" className="flex gap-3">
+      <div role="img" aria-label={icon.alt} className="flex gap-3">
         {TILES.map((tile) => (
           <span
             key={tile.id}
@@ -28,7 +30,7 @@ export function OwnIconCard() {
           </span>
         ))}
       </div>
-      <p className="mt-4 text-base text-pretty text-[var(--muted-foreground)]">{COPY.wallets.icon.line}</p>
+      <p className="mt-4 text-base text-pretty text-[var(--muted-foreground)]">{icon.line}</p>
     </div>
   );
 }

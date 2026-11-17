@@ -36,7 +36,7 @@ import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { FEATURES } from "./copy/features";
 import { OUTCOMES } from "./copy/outcomes";
 import { LEVELS_BUSINESS, LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
-import { LANDING_PAGES, type LandingSlug } from "./pages";
+import { pageWords, type LandingSlug } from "./pages";
 
 // The dashboard duo is an async server component that asks next-intl for its alt texts.
 await mockEnglishServerTranslations();
@@ -123,7 +123,7 @@ describe("dashboard captures (AC9)", () => {
     );
 
     expect(duos.filter(({ file }) => onPlatform(file)).map(({ file }) => file.replace(ROOT, "")).sort()).toEqual([
-      "/app/[locale]/us/landing-pages/platform/analytics/page.tsx",
+      "/components/landing-pages/pages/AnalyticsPreviewPage.tsx",
       "/components/landing-pages/platform/PlatformSection.tsx",
     ]);
     expect(duos.filter(({ file }) => !onPlatform(file)).length).toBeGreaterThan(0);
@@ -218,8 +218,8 @@ describe("the hero the three argument pages share (AC18)", () => {
   });
 
   test("the dashboard duo shows the computer and the phone capture, and never hides the computer below any breakpoint", () => {
-    expect(duo()).toContain('landingShot("en", "desktop")');
-    expect(duo()).toContain('landingShot("en", "phone")');
+    expect(duo()).toContain('landingShot(locale as Locale, "desktop")');
+    expect(duo()).toContain('landingShot(locale as Locale, "phone")');
     expect(openingTags(duo()).filter((tag) => hides(tag.attrs)).map((tag) => tag.name)).toEqual([]);
   });
 
@@ -246,27 +246,27 @@ describe("the hero the three argument pages share (AC18)", () => {
   });
 
   test("the Outcomes headline keeps its no-break hyphen, so \"first-time\" never splits across two lines", () => {
-    const { h1 } = LANDING_PAGES.outcomes.hero;
+    const { h1 } = pageWords("outcomes", "en", "us").hero;
 
     expect(h1).toContain("first‑time");
     expect(h1).not.toContain("first-time");
   });
 
   test.each(["how-it-works", "features", "outcomes"] as LandingSlug[])("%s has a sub under its headline", (slug) => {
-    expect(LANDING_PAGES[slug].hero.sub?.length ?? 0).toBeGreaterThan(0);
+    expect(pageWords(slug, "en", "us").hero.sub?.length ?? 0).toBeGreaterThan(0);
   });
 
   test("Platform's hero is a headline alone: its numbers come lower down", () => {
-    expect(LANDING_PAGES.platform.hero.sub).toBeUndefined();
+    expect(pageWords("platform", "en", "us").hero.sub).toBeUndefined();
   });
 });
 
 describe("the sectors every page ends on (AC19)", () => {
   const sectors = () => code(shared("LpSectors"));
 
-  test("reads the catalog's own heading and prices in dollars", () => {
+  test("reads the catalog's own heading and prices in the money of the page's market", () => {
     expect(sectors()).toContain("landing.sectorCards");
-    expect(sectors()).toContain("MARKETS.us");
+    expect(sectors()).toContain("MARKETS[market]");
   });
 
   test("the heading reads \"Stampeo adapts to your business\": the catalog's title with its line-break tags stripped", () => {
@@ -309,7 +309,8 @@ describe("the level cards (AC20)", () => {
   test("draw Bronze, Silver and Gold, and the default level-up notification over them when asked", () => {
     const cards = code(shared("LevelCards"));
 
-    for (const name of ["Bronze", "Silver", "Gold"]) expect(cards).toContain(name);
+    for (const level of ["bronze", "silver", "gold"]) expect(cards).toContain(`name: "${level}"`);
+    expect(cards).toContain("SHARED.levelNames[level.name]");
     expect(cards).toContain("LEVEL_UP_BANNER");
   });
 

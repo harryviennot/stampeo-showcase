@@ -24,8 +24,10 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
     h1: "Send a promotion to every customer's phone.",
     accent: "every customer's phone.",
     sub: "Write one message and it appears on every customer's lock screen. No texting fees.",
+    /** The second action, to the "how it works" section. */
+    secondary: "See how it works",
     alt: "An iPhone lock screen with a notification from Aurevo: Quiet afternoon? Your second coffee is half price until 5pm.",
-  } satisfies HeroCopy & { alt: string },
+  } satisfies HeroCopy & { secondary: string; alt: string },
   /** The notification on the hero's lock screen, and the message the "how it works" picture starts from. */
   heroBanner: HAPPY_HOUR,
   /** One message written once, then the same notification on several customers' lock screens. */
@@ -107,8 +109,16 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
       time: "2:30 PM",
       stats: "Delivery",
       deliveryRate: "{rate}% delivered",
+      /** The word under the share inside the ring. */
+      rateLabel: "delivered",
       reachable: "reachable",
       sendAgain: "Send again",
+      /**
+       * What the report is, for a screen reader. It fills `{name}` (the campaign), `{status}`, `{sentAt}`, `{time}`,
+       * `{sender}` and `{message}` (the notification), `{stats}`, `{rate}` (the delivery rate line),
+       * `{reached}`, `{reachable}` (the count), `{reachableLabel}` and `{counts}` (each wallet's and each miss's count).
+       */
+      alt: "{name}. {status}, {sentAt} {time}. {sender}: {message} {stats}: {rate}, {reached} / {reachable} {reachableLabel}. {counts}.",
     },
     /** Where it landed, in each wallet; with the two counts it missed, the customers it could reach. */
     delivered: [
@@ -130,6 +140,8 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW = {
   },
   faq: {
     title: "Questions about campaigns",
+    /** The words of the second answer that link to the pricing page. */
+    pricingLink: "see pricing",
     items: [
       {
         question: "How much does it cost to send a campaign?",

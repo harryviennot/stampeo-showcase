@@ -25,20 +25,27 @@ export const LEVELS_SHOP = {
   } satisfies Partial<CardDesign>,
 } as const;
 
-/** Sophie, the member every sample card of the levels pages belongs to. */
-const MEMBER = [{ key: "member", label: "Member", value: "Sophie" }];
+/** The member every sample card of the levels pages belongs to: the label of her field and her name (the copy's `levels.member`). */
+export interface LadderMember {
+  label: string;
+  value: string;
+}
 
 /** The shop's card in a level's look (its own white one when `look` is left out), `total` stamps big. */
-export function levelDesign(total: number, look?: LevelLook): Partial<CardDesign> {
-  return { ...LEVELS_SHOP.design, ...look, total_stamps: total, secondary_fields: MEMBER };
+export function levelDesign(member: LadderMember, total: number, look?: LevelLook): Partial<CardDesign> {
+  return { ...LEVELS_SHOP.design, ...look, total_stamps: total, secondary_fields: [{ key: "member", ...member }] };
 }
 
 /** Bronze (its own look, 6 stamps), Silver (5) and Gold (4), in the order of the ladder's copy. */
-export const LADDER_CARDS: readonly LadderCard[] = [
-  { design: levelDesign(6), stamps: 4 },
-  { design: levelDesign(5, SILVER_LOOK), stamps: 3 },
-  { design: levelDesign(4, GOLD_LOOK), stamps: 2 },
-];
+export function ladderCards(member: LadderMember): readonly LadderCard[] {
+  return [
+    { design: levelDesign(member, 6), stamps: 4 },
+    { design: levelDesign(member, 5, SILVER_LOOK), stamps: 3 },
+    { design: levelDesign(member, 4, GOLD_LOOK), stamps: 2 },
+  ];
+}
 
 /** The hero's front card: Gold, 2 of 4 stamps. */
-export const GOLD_HERO_CARD: LadderCard = { design: levelDesign(4, GOLD_LOOK), stamps: 2 };
+export function goldHeroCard(member: LadderMember): LadderCard {
+  return { design: levelDesign(member, 4, GOLD_LOOK), stamps: 2 };
+}

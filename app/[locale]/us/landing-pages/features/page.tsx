@@ -22,14 +22,14 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata(): Metadata {
-  return landingPageMetadata("features");
+  return landingPageMetadata("features", "en", "us");
 }
 
 export default function FeaturesPage() {
   setRequestLocale("en");
 
   return (
-    <LandingPageShell slug="features">
+    <LandingPageShell slug="features" market="us">
       <LpHero slug="features" />
       <LpDemo />
       <DesignSpotlight />
@@ -38,7 +38,7 @@ export default function FeaturesPage() {
       <ScannerSpotlight />
       <AnalyticsSpotlight />
       <MoreFeaturesGrid />
-      <LpSectors />
+      <LpSectors market="us" />
       <LpSection section="pricing" bare>
         <PricingSection market="us" />
       </LpSection>

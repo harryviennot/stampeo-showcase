@@ -1,5 +1,5 @@
 import { BellIcon, MapPinIcon, StorefrontIcon } from "@/components/icons";
-import { GEOLOCATION_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/geolocation";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { StepsTable } from "../../platform/StepsTable";
 import { IconTile } from "../../shared/IconTile";
 import { LpSection } from "../../shared/LpSection";
@@ -9,7 +9,7 @@ const ICONS = [StorefrontIcon, MapPinIcon, BellIcon];
 
 /** Three steps in the future tense, in Platform's plain table, each led by an icon tile; the hero's "See how it will work" lands here. */
 export function HowSection() {
-  const { eyebrow, title, lead, cells } = COPY.how;
+  const { eyebrow, title, lead, cells } = useLandingCopy().previews.geolocation.GEOLOCATION_PREVIEW.how;
   const steps = cells.map((cell, index) => {
     const Icon = ICONS[index];
 

@@ -1,9 +1,9 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { NotificationBanner } from "@/components/features/notifications-push/NotificationBanner";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { GOLD_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
-import { LEVEL_UP_BANNER, SHARED } from "@/lib/landing-pages/copy/shared";
+import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 import { PassFrame } from "./PassFrame";
 import { lpBanner } from "./banner";
 import { WRENFOLD } from "./samples";
@@ -22,7 +22,8 @@ const DEFAULT_SIZE = { narrowTo: 300, breakpoint: "sm" } as const;
 export const LEVELS_ON_A_ROW = { narrowTo: 128, to: 288, breakpoint: "lg" } as const;
 
 interface Level {
-  name: string;
+  /** The level, worded by the page's `levelNames`. */
+  name: "bronze" | "silver" | "gold";
   /** Its look over the shop's own: Bronze is the sample as it is. */
   look?: LevelLook;
   stamps: number;
@@ -34,9 +35,9 @@ interface Level {
 
 /** Bronze in front, Silver and Gold peeking out behind it to the right, so each level's name shows. */
 const LEVELS: Level[] = [
-  { name: "Bronze", stamps: 6, left: 0, top: 26, rotate: -5 },
-  { name: "Silver", look: SILVER_LOOK, stamps: 4, left: 72, top: 12, rotate: 0 },
-  { name: "Gold", look: GOLD_LOOK, stamps: 2, left: 144, top: 0, rotate: 5 },
+  { name: "bronze", stamps: 6, left: 0, top: 26, rotate: -5 },
+  { name: "silver", look: SILVER_LOOK, stamps: 4, left: 72, top: 12, rotate: 0 },
+  { name: "gold", look: GOLD_LOOK, stamps: 2, left: 144, top: 0, rotate: 5 },
 ];
 
 /**
@@ -53,6 +54,7 @@ export async function LevelCards({
   size?: { narrowTo: number; to?: number; breakpoint: "sm" | "lg" };
 }>) {
   const t = await getTranslations("features.design-de-carte.custom.playground");
+  const { SHARED, LEVEL_UP_BANNER } = landingCopy(await getLocale()).shared;
   const fields = [{ key: "member", label: t("memberLabel"), value: t("memberName") }];
 
   return (
@@ -79,7 +81,7 @@ export async function LevelCards({
               <WalletCard
                 design={{ ...WRENFOLD.design, ...level.look, secondary_fields: fields }}
                 stamps={level.stamps}
-                headerLabel={level.name}
+                headerLabel={SHARED.levelNames[level.name]}
                 showQR={false}
               />
             </PassFrame>

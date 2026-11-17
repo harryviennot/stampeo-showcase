@@ -22,7 +22,7 @@ import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
 import { PREVIEW_SHARED } from "./copy/previews/shared";
 import * as shared from "./copy/shared";
-import { LANDING_PAGES, PREVIEW_SLUGS } from "./pages";
+import { PREVIEW_SLUGS, pageWords } from "./pages";
 
 /** A percentage ("34%") or a multiplier ("6×", "6X"): what only a sourced figure may print. */
 const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x×X](?![\p{L}\p{N}])/u;
@@ -45,9 +45,16 @@ describe("what these pages may not claim (AC10)", () => {
     ["a reminder", /remind/i],
     ["offline", /offline/i],
     ["a number of minutes", /\bminutes?\b/i],
-    ["a count of days: the trial is the {trialDays} token", DIGIT_DAYS],
   ])("no line says %s", (_what, pattern) => {
     expect(offenders(pattern)).toEqual([]);
+  });
+
+  /** The dashboard's own label and the Scanner app's own line, drawn in sample screens: they count days that are not the trial. */
+  const SAMPLE_SCREEN_DAYS = ["PLATFORM.analyticsCard.returnRate", "MOBILE_SCANNER_PREVIEW.screens.rewards.expiresLater"];
+
+  test("no line says a count of days but the sample screens' own: the trial is the {trialDays} token", () => {
+    expect(offenders(DIGIT_DAYS).filter((path) => !SAMPLE_SCREEN_DAYS.includes(path))).toEqual([]);
+    expect(offenders(DIGIT_DAYS).sort()).toEqual([...SAMPLE_SCREEN_DAYS].sort());
   });
 
   /** "Tiers" is what owners search for: the loyalty page's head and the one question that defines the word say it. */
@@ -186,6 +193,8 @@ describe("figures from other people (AC12)", () => {
     const allowed = new Set([
       ...figures.flatMap(({ path }) => [`${path}.value`, `${path}.text`]),
       "OUTCOMES.regulars.example.text",
+      // The grocer's sample card, which earns 10% off.
+      "CARD_DESIGN_PREVIEW.cardFields.wallets.reward",
     ]);
 
     expect(ALL.filter((line) => FIGURE.test(line.value) && !allowed.has(line.path)).map((line) => line.path)).toEqual([]);
@@ -264,7 +273,7 @@ describe("the six previews' copy", () => {
 
   test("nothing is captioned Sample data, and no hero has a label above its headline", () => {
     expect(previewLines().filter((line) => /sample data/i.test(line.value)).map((line) => line.path)).toEqual([]);
-    for (const slug of PREVIEW_SLUGS) expect(Object.keys(LANDING_PAGES[slug].hero)).not.toContain("eyebrow");
+    for (const slug of PREVIEW_SLUGS) expect(Object.keys(pageWords(slug, "en", "int").hero)).not.toContain("eyebrow");
   });
 
   describe("every number is the product's, not typed from memory", () => {

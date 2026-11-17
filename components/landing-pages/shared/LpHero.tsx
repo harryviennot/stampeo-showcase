@@ -4,7 +4,7 @@ import { ChevronDownIcon } from "@/components/icons";
 import { RegionText } from "@/components/market/RegionText";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { AccentText } from "@/lib/landing-pages/AccentText";
-import { LANDING_PAGES, hasDemoSection, type LandingSlug } from "@/lib/landing-pages/pages";
+import { hasDemoSection, pageWords, type LandingSlug } from "@/lib/landing-pages/pages";
 import { proofFigures } from "@/lib/landing-pages/proof";
 import { DashboardDuo } from "./DashboardDuo";
 import { LpSection } from "./LpSection";
@@ -17,7 +17,7 @@ import { WalletBadges } from "./WalletBadges";
  * their words.
  */
 export async function LpHero({ slug }: Readonly<{ slug: LandingSlug }>) {
-  const { hero } = LANDING_PAGES[slug];
+  const { hero } = pageWords(slug, "en", "us");
   const metrics = await getTranslations("variant.metrics");
   const { businesses, countries } = proofFigures(
     metrics.raw("items") as Array<{ value: string; label: string }>,

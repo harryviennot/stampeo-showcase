@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import type { Market } from "@/lib/markets";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
 import { ChevronDownIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
@@ -17,9 +18,11 @@ import { HeaderBar, type PhoneMenuProps } from "./HeaderBar";
 function MobileFeaturesAccordion({
   onNavigate,
   featureLinks,
+  pageMarket,
 }: {
   onNavigate: () => void;
   featureLinks: FeatureLinks;
+  pageMarket: Market;
 }) {
   const t = useTranslations("common.nav");
   const locale = useLocale();
@@ -48,7 +51,7 @@ function MobileFeaturesAccordion({
           >
             <div className="pl-4 pb-2 space-y-0.5">
               {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-                const { href, market } = featureLink(canonicalSlug, locale, featureLinks);
+                const { href, market } = featureLink(canonicalSlug, locale, featureLinks, pageMarket);
                 return (
                 <MarketLink
                   key={canonicalSlug}
@@ -97,6 +100,7 @@ function AccordionBurger({ open, onToggle }: Readonly<{ open: boolean; onToggle:
 function AccordionPanel({
   onClose,
   featureLinks,
+  market,
   pathname,
   navItems,
   resourceItems,
@@ -121,7 +125,7 @@ function AccordionPanel({
     >
       <div className="px-6 py-4">
         <div className="flex flex-col gap-1">
-          <MobileFeaturesAccordion onNavigate={onClose} featureLinks={featureLinks} />
+          <MobileFeaturesAccordion onNavigate={onClose} featureLinks={featureLinks} pageMarket={market} />
           {navItems.map((item) => (
             <MarketLink key={item.href} market={item.market ?? "int"} href={item.href} className={row(item.href)} onClick={onClose}>
               {item.label}

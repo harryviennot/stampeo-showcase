@@ -1,9 +1,10 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { PhoneScreenshot } from "@/components/ui/PhoneScreenshot";
+import type { Locale } from "@/i18n/routing";
 import { landingShot } from "@/lib/landing/dashboard-shots";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 
 /** On a narrow screen the phone is 116px wide (237px tall) and overhangs the frame by 58px. */
 const PHONE_OVERHANG = 58;
@@ -23,8 +24,10 @@ export async function DashboardDuo({
   caption = true,
 }: Readonly<{ priority?: boolean; caption?: boolean }>) {
   const t = await getTranslations("variant.dashboard");
-  const desktop = landingShot("en", "desktop");
-  const phone = landingShot("en", "phone");
+  const locale = await getLocale();
+  const { SHARED } = landingCopy(locale).shared;
+  const desktop = landingShot(locale as Locale, "desktop");
+  const phone = landingShot(locale as Locale, "phone");
 
   return (
     <figure className="@container mx-auto w-full max-w-[1120px]">
