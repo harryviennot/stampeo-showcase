@@ -6,7 +6,7 @@ import { LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, STAMP_BANNER } from ".
 type Preview = LandingCopy["previews"]["pushNotifications"]["PUSH_NOTIFICATIONS_PREVIEW"];
 type Banner = Preview["hero"]["banner"];
 
-const REDEEMED_BANNER: Banner = { sender: SAMPLE_BUSINESS, body: "Récompense utilisée. Profitez-en !" };
+const REDEEMED_BANNER: Banner = { sender: SAMPLE_BUSINESS, body: "Récompense utilisée. Profitez-en\u00a0!" };
 
 const AUREVO_LEVEL_UP: Banner = { sender: SAMPLE_BUSINESS, body: LEVEL_UP_BANNER.body };
 
@@ -21,12 +21,12 @@ export const PUSH_NOTIFICATIONS_PREVIEW: Preview = {
     accent: "Notifications push",
     sub: "Chaque tampon et chaque récompense s'affichent sur l'écran de verrouillage de vos clients.",
     banner: STAMP_BANNER,
-    alt: "Un écran de verrouillage d'iPhone avec une notification d'Aurevo : Tampon collecté ! Vous avez 5 sur 8 tampons.",
+    alt: "Un écran de verrouillage d'iPhone avec une notification d'Aurevo\u00a0: Tampon collecté\u00a0! Vous avez 5 sur 8 tampons.",
   },
   day: {
     eyebrow: "Les visites d'un client",
     title: "Une notification dès que leur carte change.",
-    lead: "Suivez un client : la carte se met à jour, puis le message arrive.",
+    lead: "Suivez un client\u00a0: la carte se met à jour, puis le message arrive.",
     nodes: [
       { key: "stamp", label: "Tampon ajouté", banner: STAMP_BANNER, cardAlt: "La carte d'Aurevo à 5 tampons sur 8" },
       { key: "reward", label: "Carte pleine", banner: REWARD_BANNER, cardAlt: "La carte d'Aurevo pleine, à 8 tampons sur 8" },
@@ -64,8 +64,8 @@ export const PUSH_NOTIFICATIONS_PREVIEW: Preview = {
     previewLabel: "Aperçu",
     ready: { text: STAMP_BANNER.body },
     own: {
-      text: "Et un tampon de plus, {prénom} ! Encore {tampons restants} et c'est gagné.",
-      preview: "Et un tampon de plus, Sophie ! Encore 3 et c'est gagné.",
+      text: "Et un tampon de plus, {prénom}\u00a0! Encore {tampons restants} et c'est gagné.",
+      preview: "Et un tampon de plus, Sophie\u00a0! Encore 3 et c'est gagné.",
     },
     switches: ["Tampon collecté", "Récompense débloquée", "Récompense utilisée"],
     sampleValues: [

@@ -7,7 +7,7 @@ type Preview = LandingCopy["previews"]["promotionalCampaigns"]["PROMOTIONAL_CAMP
 
 const HAPPY_HOUR: Preview["heroBanner"] = {
   sender: SAMPLE_BUSINESS,
-  body: "Après-midi calme ? Votre deuxième café est à moitié prix jusqu'à 17 h.",
+  body: "Après-midi calme\u00a0? Votre deuxième café est à moitié prix jusqu'à 17 h.",
 };
 
 export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
@@ -19,15 +19,15 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
   hero: {
     h1: "Vos promotions sur le téléphone de chaque client.",
     accent: "le téléphone de chaque client.",
-    sub: "Écrivez un message : il s'affiche sur l'écran de tous vos clients. Sans la facture SMS.",
+    sub: "Écrivez un message\u00a0: il s'affiche sur l'écran de tous vos clients. Sans la facture SMS.",
     secondary: "Voir comment ça marche",
-    alt: "Un écran de verrouillage d'iPhone avec une notification d'Aurevo : Après-midi calme ? Votre deuxième café est à moitié prix jusqu'à 17 h.",
+    alt: "Un écran de verrouillage d'iPhone avec une notification d'Aurevo\u00a0: Après-midi calme\u00a0? Votre deuxième café est à moitié prix jusqu'à 17 h.",
   },
   heroBanner: HAPPY_HOUR,
   how: {
     eyebrow: "Comment ça marche",
     title: "Un message sur l'écran de tous vos clients.",
-    lead: "Une diffusion : un message écrit une fois, sur la carte de chaque client.",
+    lead: "Une diffusion\u00a0: un message écrit une fois, sur la carte de chaque client.",
     steps: [
       { title: "Rédigez votre message", body: "Écrivez-le une fois dans votre tableau de bord, avec vos mots." },
       { title: "Envoyez-le", body: "Il part vers chaque client qui a votre carte dans son téléphone." },
@@ -82,7 +82,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
         key: "new-customers",
         name: "Nouveaux clients",
         body: "Envoyé seulement aux clients inscrits depuis moins d'un mois.",
-        banner: { sender: SAMPLE_BUSINESS, body: "Merci de nous avoir rejoints ! Votre prochain café vient avec un cookie offert." },
+        banner: { sender: SAMPLE_BUSINESS, body: "Merci de nous avoir rejoints\u00a0! Votre prochain café vient avec un cookie offert." },
       },
     ],
   },
@@ -99,7 +99,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
       rateLabel: "livrés",
       reachable: "joignables",
       sendAgain: "Renvoyer",
-      alt: "{name}. {status}, {sentAt} {time}. {sender} : {message} {stats} : {rate}, {reached} / {reachable} {reachableLabel}. {counts}.",
+      alt: "{name}. {status}, {sentAt} {time}. {sender}\u00a0: {message} {stats}\u00a0: {rate}, {reached} / {reachable} {reachableLabel}. {counts}.",
     },
     delivered: [
       { label: "Apple Wallet", value: 412 },
@@ -123,32 +123,32 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
     pricingLink: "voir les tarifs",
     items: [
       {
-        question: "Combien coûte une diffusion ?",
+        question: "Combien coûte une diffusion\u00a0?",
         answer:
-          "Rien par message. Les diffusions sont comprises dans votre abonnement Stampeo : vous ne payez jamais chaque envoi, comme avec les SMS.",
+          "Rien par message. Les diffusions sont comprises dans votre abonnement Stampeo\u00a0: vous ne payez jamais chaque envoi, comme avec les SMS.",
       },
       {
-        question: "Y a-t-il une limite de diffusions ?",
+        question: "Y a-t-il une limite de diffusions\u00a0?",
         answer:
-          "Aucune limite au nombre de clients touchés : chaque diffusion part vers tous les clients qui ont votre carte dans leur téléphone. Votre plan fixe le nombre de diffusions par mois (voir les tarifs).",
+          "Aucune limite au nombre de clients touchés\u00a0: chaque diffusion part vers tous les clients qui ont votre carte dans leur téléphone. Votre plan fixe le nombre de diffusions par mois (voir les tarifs).",
       },
       {
-        question: "Mes clients ont-ils besoin d'une application ou d'un numéro de téléphone ?",
+        question: "Mes clients ont-ils besoin d'une application ou d'un numéro de téléphone\u00a0?",
         answer:
           "Non. Le message arrive sur leur carte de fidélité, dans Apple Wallet ou Google Wallet. Ils ne téléchargent aucune application, et vous n'avez besoin ni de leur numéro ni de leur e-mail.",
       },
       {
-        question: "Est-ce une alternative au marketing par SMS ?",
+        question: "Est-ce une alternative au marketing par SMS\u00a0?",
         answer:
           "Oui, pour chaque client qui a votre carte. Le message s'affiche sur son écran de verrouillage comme un SMS, sans coût par message et sans numéros à collecter.",
       },
       {
-        question: "Est-ce que ça marche sur iPhone et Android ?",
+        question: "Est-ce que ça marche sur iPhone et Android\u00a0?",
         answer:
-          "Oui. Chaque diffusion part vers Apple Wallet et Google Wallet. Google affiche jusqu'à trois notifications par carte et par jour : un client qui en a déjà reçu trois ce jour-là ne verra pas celle-ci.",
+          "Oui. Chaque diffusion part vers Apple Wallet et Google Wallet. Google affiche jusqu'à trois notifications par carte et par jour\u00a0: un client qui en a déjà reçu trois ce jour-là ne verra pas celle-ci.",
       },
       {
-        question: "Puis-je l'écrire en plusieurs langues ?",
+        question: "Puis-je l'écrire en plusieurs langues\u00a0?",
         answer:
           "Oui. Ajoutez une traduction en français, en anglais, en espagnol ou en polonais, et chaque client voit celle qui correspond à son téléphone.",
       },

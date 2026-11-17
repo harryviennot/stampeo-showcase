@@ -7,18 +7,18 @@ const HEAD_START_SOURCE = "Nunes & Drèze, Journal of Consumer Research, 2006 (c
 
 export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"]["LOYALTY_PROGRAMS_PREVIEW"] = {
   meta: {
-    title: "Programme de fidélité : tampons, points et paliers | Stampeo",
+    title: "Programme de fidélité\u00a0: tampons, points et paliers | Stampeo",
     description:
-      "Votre programme de fidélité dans Apple Wallet et Google Wallet : carte à tampons ou à points, avec des paliers de fidélité comme Bronze, Argent et Or. Essai gratuit.",
+      "Votre programme de fidélité dans Apple Wallet et Google Wallet\u00a0: carte à tampons ou à points, avec des paliers de fidélité comme Bronze, Argent et Or. Essai gratuit.",
   },
   hero: {
-    h1: "Programmes de fidélité : tampons, points et niveaux.",
+    h1: "Programmes de fidélité\u00a0: tampons, points et niveaux.",
     accent: "tampons, points et niveaux.",
     sub: "Tampons ou points dans Apple Wallet et Google Wallet, et des niveaux pour vos habitués.",
     secondary: "Découvrir les niveaux",
-    alt: "Trois cartes de fidélité : la carte à tampons d'un bar à jus, la carte à points d'une librairie, et la carte d'un barbier au niveau Or avec la notification « Vous avez atteint le niveau Or ! »",
+    alt: "Trois cartes de fidélité\u00a0: la carte à tampons d'un bar à jus, la carte à points d'une librairie, et la carte d'un barbier au niveau Or avec la notification «\u00a0Vous avez atteint le niveau Or\u00a0!\u00a0»",
     labels: ["Tampons", "Niveaux", "Points"],
-    banner: { sender: "Gaspard & Gus", body: "Vous avez atteint le niveau Or ! Votre carte a un nouveau style." },
+    banner: { sender: "Gaspard & Gus", body: "Vous avez atteint le niveau Or\u00a0! Votre carte a un nouveau style." },
   },
   programs: {
     eyebrow: "Tampons ou points",
@@ -26,13 +26,13 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
     lead: "Même carte, même mise en place. Changez plus tard, vos clients gardent leur carte.",
     stamps: {
       title: "Tampons",
-      line: "Une carte à tampons digitale : un tampon par visite, et une récompense quand elle est pleine.",
+      line: "Une carte à tampons digitale\u00a0: un tampon par visite, et une récompense quand elle est pleine.",
       facts: [
         { text: "Un scan au comptoir, aucun montant à saisir" },
         { text: "Vous choisissez la taille de la carte et la récompense" },
         { text: "Les tampons en trop peuvent passer sur la carte suivante" },
       ],
-      bestFor: "Chaque visite coûte à peu près pareil : cafés, coupes, lavages auto, boulangeries.",
+      bestFor: "Chaque visite coûte à peu près pareil\u00a0: cafés, coupes, lavages auto, boulangeries.",
       alt: "La carte à tampons d'un café, à 5 tampons sur 8",
     },
     points: {
@@ -43,14 +43,14 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         { text: "Vos clients choisissent toute récompense à leur portée" },
         { text: "Les points n'expirent jamais" },
       ],
-      bestFor: "Le panier varie : restaurants, boutiques, épiceries, commerces spécialisés.",
+      bestFor: "Le panier varie\u00a0: restaurants, boutiques, épiceries, commerces spécialisés.",
       alt: "La carte à points d'un salon de beauté, son anneau se remplissant vers la prochaine récompense",
     },
     bestForLabel: "Idéal quand",
   },
   levels: {
     eyebrow: "Niveaux de fidélité",
-    title: "Ajoutez des niveaux : Bronze, Argent, Or.",
+    title: "Ajoutez des niveaux\u00a0: Bronze, Argent, Or.",
     lead: "Vos habitués montent en revenant. À chaque niveau, son style, ses avantages, son cadeau.",
     ladder: [
       {
@@ -83,9 +83,9 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       perks: "Avantages",
       gift: "Cadeau",
       noPerks: "Pas encore d'avantages",
-      top: "Niveau maximal : acquis pour de bon",
+      top: "Niveau maximal\u00a0: acquis pour de bon",
     },
-    alt: "La carte de fidélité d'un barbier en Bronze, Argent et Or : la carte change de couleur et se remplit plus vite à chaque niveau.",
+    alt: "La carte de fidélité d'un barbier en Bronze, Argent et Or\u00a0: la carte change de couleur et se remplit plus vite à chaque niveau.",
     facts: [
       { title: "Jusqu'à 5 niveaux", body: "Nommez-les comme vous voulez. On vous en propose trois pour commencer." },
       { title: "Une carte par niveau", body: "Gardez votre carte, ou donnez à un niveau le style Bronze, Argent, Or, Platine ou Noir." },
@@ -95,7 +95,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       },
       { title: "Un cadeau à l'arrivée", body: "Une récompense unique, offerte dès qu'un client atteint un niveau." },
     ],
-    tip: "Notre conseil : commencez avec trois niveaux, et rendez Argent facile à atteindre. Une première montée rapide fait revenir vos habitués.",
+    tip: "Notre conseil\u00a0: commencez avec trois niveaux, et rendez Argent facile à atteindre. Une première montée rapide fait revenir vos habitués.",
   },
   moveUp: {
     eyebrow: "Monter de niveau",
@@ -110,7 +110,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       needed: 2,
       progress: "1 carte pleine sur 2",
       caption: "Plus qu'une carte avant Or",
-      alt: "La progression d'un client Argent : 1 carte pleine sur 2 vers Or",
+      alt: "La progression d'un client Argent\u00a0: 1 carte pleine sur 2 vers Or",
     },
     points: {
       title: "Sur une carte à points",
@@ -122,7 +122,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       progress: "320 points gagnés sur 500",
       caption: "Plus que 180 points avant Or",
       spent: "Les points dépensés en récompenses comptent aussi",
-      alt: "La progression d'un client Argent : 320 points gagnés sur 500 vers Or",
+      alt: "La progression d'un client Argent\u00a0: 320 points gagnés sur 500 vers Or",
     },
     facts: [
       {
@@ -152,7 +152,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       body: "Une notification quand ils montent, avec leur cadeau.",
       banner: {
         sender: "Gaspard & Gus",
-        body: "Vous avez atteint le niveau Argent ! Votre carte a un nouveau style. Votre cadeau : Un flacon d'huile à barbe.",
+        body: "Vous avez atteint le niveau Argent\u00a0! Votre carte a un nouveau style. Votre cadeau\u00a0: Un flacon d'huile à barbe.",
       },
     },
     scanner: {
@@ -160,8 +160,8 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       body: "Votre équipe voit le niveau du client et ses avantages avant d'encaisser.",
     },
     alts: [
-      "Le bandeau des niveaux de la page d'inscription : Bronze, Argent et Or, et comment atteindre Argent",
-      "Une notification de Gaspard & Gus sur l'écran de verrouillage : Vous avez atteint le niveau Argent !",
+      "Le bandeau des niveaux de la page d'inscription\u00a0: Bronze, Argent et Or, et comment atteindre Argent",
+      "Une notification de Gaspard & Gus sur l'écran de verrouillage\u00a0: Vous avez atteint le niveau Argent\u00a0!",
       "L'application scanner affichant un client Argent et l'avantage à appliquer avant d'encaisser",
     ],
   },
@@ -169,17 +169,17 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
     eyebrow: "Réglages",
     title: "Les réglages qui font un bon programme.",
     lead: "Vous les retrouverez à la création. Voici les quatre qui comptent, avec notre conseil.",
-    tipLabel: "Notre conseil :",
+    tipLabel: "Notre conseil\u00a0:",
     items: [
       {
         title: "Un cadeau de bienvenue",
-        body: "Offrez une longueur d'avance aux nouveaux clients : quelques tampons ou points à l'inscription, ou un petit cadeau.",
+        body: "Offrez une longueur d'avance aux nouveaux clients\u00a0: quelques tampons ou points à l'inscription, ou un petit cadeau.",
         tip: "L'élan compte. Une carte qui démarre avec 2 tampons offerts est bien plus souvent terminée.",
       },
       {
         title: "Des récompenses qui s'accumulent",
         body: "Une carte pleine garde sa récompense et une nouvelle carte démarre aussitôt. Vous choisissez combien un client peut en garder.",
-        tip: "Autorisez-en au moins deux : personne ne doit s'arrêter parce qu'une récompense l'attend déjà.",
+        tip: "Autorisez-en au moins deux\u00a0: personne ne doit s'arrêter parce qu'une récompense l'attend déjà.",
       },
       {
         title: "Une première récompense à portée",
@@ -199,25 +199,25 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
     },
   },
   picker: {
-    eyebrow: "Tampons ou points ?",
-    title: "Vous hésitez ? Répondez à quatre questions.",
+    eyebrow: "Tampons ou points\u00a0?",
+    title: "Vous hésitez\u00a0? Répondez à quatre questions.",
     lead: "On vous suggère un programme. Aucun e-mail demandé.",
     progress: "Question {current} sur {total}",
     questions: [
       {
-        question: "Vos prix changent-ils beaucoup d'un achat à l'autre ?",
+        question: "Vos prix changent-ils beaucoup d'un achat à l'autre\u00a0?",
         options: ["Non, la plupart des achats coûtent à peu près pareil", "Oui, le panier varie beaucoup"],
       },
       {
-        question: "Comment reviennent vos meilleurs clients ?",
+        question: "Comment reviennent vos meilleurs clients\u00a0?",
         options: ["Souvent, pour de petits achats", "De temps en temps, pour des montants plus élevés"],
       },
       {
-        question: "Quelle récompense plairait le plus à vos clients ?",
+        question: "Quelle récompense plairait le plus à vos clients\u00a0?",
         options: ["Un cadeau après quelques visites", "Leur choix parmi plusieurs récompenses", "Je ne sais pas encore"],
       },
       {
-        question: "Avez-vous des habitués qui reviennent chaque semaine ?",
+        question: "Avez-vous des habitués qui reviennent chaque semaine\u00a0?",
         options: ["Oui, un bon nombre", "Pas encore beaucoup"],
       },
     ],
@@ -225,11 +225,11 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
     results: {
       stamps: {
         title: "Optez pour les tampons.",
-        body: "Vos visites sont régulières et à prix proche : la carte à tampons est le choix le plus clair.",
+        body: "Vos visites sont régulières et à prix proche\u00a0: la carte à tampons est le choix le plus clair.",
       },
       points: {
         title: "Optez pour les points.",
-        body: "Vos paniers varient : récompenser ce que le client dépense est plus juste et fait revenir les plus gros paniers.",
+        body: "Vos paniers varient\u00a0: récompenser ce que le client dépense est plus juste et fait revenir les plus gros paniers.",
       },
       either: {
         title: "Les deux peuvent convenir.",
@@ -237,7 +237,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
       },
     },
     levels: {
-      yes: "Ajoutez aussi des niveaux : vos habitués auront un objectif à atteindre.",
+      yes: "Ajoutez aussi des niveaux\u00a0: vos habitués auront un objectif à atteindre.",
       no: "Ajoutez des niveaux plus tard, quand vous aurez des habitués.",
     },
     restart: "Recommencer",
@@ -262,37 +262,37 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
     title: "Les programmes de fidélité, en questions",
     items: [
       {
-        question: "Quelle différence entre tampons et points ?",
+        question: "Quelle différence entre tampons et points\u00a0?",
         answer:
-          "Les tampons comptent les visites : chaque scan ajoute un tampon, et une carte pleine donne la récompense. Les points comptent la dépense : votre équipe saisit le montant, et vos clients échangent leurs points contre les récompenses que vous fixez. Les tampons conviennent aux visites à prix proche ; les points, aux paniers qui varient.",
+          "Les tampons comptent les visites\u00a0: chaque scan ajoute un tampon, et une carte pleine donne la récompense. Les points comptent la dépense\u00a0: votre équipe saisit le montant, et vos clients échangent leurs points contre les récompenses que vous fixez. Les tampons conviennent aux visites à prix proche\u00a0; les points, aux paniers qui varient.",
       },
       {
-        question: "Qu'est-ce qu'un programme de fidélité à paliers ?",
+        question: "Qu'est-ce qu'un programme de fidélité à paliers\u00a0?",
         answer:
-          "Un programme où les clients gravissent des niveaux, qu'on appelle aussi paliers, comme Bronze, Argent et Or, à mesure qu'ils reviennent, et reçoivent un peu plus à chaque étape. Sur Stampeo, les niveaux s'ajoutent à vos tampons ou à vos points : jusqu'à 5, chacun avec son style de carte, jusqu'à 3 avantages et un cadeau à l'arrivée.",
+          "Un programme où les clients gravissent des niveaux, qu'on appelle aussi paliers, comme Bronze, Argent et Or, à mesure qu'ils reviennent, et reçoivent un peu plus à chaque étape. Sur Stampeo, les niveaux s'ajoutent à vos tampons ou à vos points\u00a0: jusqu'à 5, chacun avec son style de carte, jusqu'à 3 avantages et un cadeau à l'arrivée.",
       },
       {
-        question: "Comment les clients montent-ils de niveau ?",
+        question: "Comment les clients montent-ils de niveau\u00a0?",
         answer:
-          "Selon ce qu'ils gagnent sur leur niveau actuel : des cartes pleines sur une carte à tampons (une par défaut), ou des points gagnés sur une carte à points. Dépenser des points en récompenses ne les freine jamais, et les tampons ou points de leur cadeau de bienvenue comptent aussi.",
+          "Selon ce qu'ils gagnent sur leur niveau actuel\u00a0: des cartes pleines sur une carte à tampons (une par défaut), ou des points gagnés sur une carte à points. Dépenser des points en récompenses ne les freine jamais, et les tampons ou points de leur cadeau de bienvenue comptent aussi.",
       },
       {
-        question: "Un client peut-il perdre son niveau ?",
+        question: "Un client peut-il perdre son niveau\u00a0?",
         answer:
           "Non. Personne ne redescend tout seul. Vous pouvez toujours changer le niveau d'un client à la main, depuis sa fiche.",
       },
       {
-        question: "Puis-je créer une carte à tampons digitale ?",
+        question: "Puis-je créer une carte à tampons digitale\u00a0?",
         answer:
           "Oui. Elle fonctionne comme une carte papier, avec un tampon par visite, mais elle vit dans Apple Wallet ou Google Wallet et ne se perd jamais.",
       },
       {
-        question: "Puis-je passer des tampons aux points plus tard ?",
+        question: "Puis-je passer des tampons aux points plus tard\u00a0?",
         answer:
           "Oui, quand vous voulez. Vos clients gardent la carte qu'ils ont déjà, et ce qu'ils ont cumulé est converti dans le nouveau programme.",
       },
       {
-        question: "Mes clients doivent-ils installer une application ?",
+        question: "Mes clients doivent-ils installer une application\u00a0?",
         answer:
           "Non. La carte va dans Apple Wallet ou Google Wallet, déjà présents sur leur téléphone. Ils scannent votre QR code une fois, et elle s'ajoute.",
       },

@@ -4,16 +4,16 @@ import type { LandingCopy } from "../../bundle";
 
 export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_PREVIEW"] = {
   meta: {
-    title: "Statistiques de fidélité : visites et taux de retour | Stampeo",
+    title: "Statistiques de fidélité\u00a0: visites et taux de retour | Stampeo",
     description:
-      "Les statistiques de votre programme de fidélité : visites, taux de retour, nouveaux clients et heures de pointe, remplies à chaque scan. Essai gratuit.",
+      "Les statistiques de votre programme de fidélité\u00a0: visites, taux de retour, nouveaux clients et heures de pointe, remplies à chaque scan. Essai gratuit.",
   },
   hero: {
     h1: "Les statistiques fidélité de votre commerce.",
     accent: "statistiques",
-    sub: "Visites, taux de retour, nouveaux clients, heures de pointe : chaque scan les remplit.",
+    sub: "Visites, taux de retour, nouveaux clients, heures de pointe\u00a0: chaque scan les remplit.",
     secondary: "Voir tous les graphiques",
-    alt: "Une carte de chiffres clés du tableau de bord Stampeo : visites, taux de retour, nouveaux clients et un graphique des visites dans le temps.",
+    alt: "Une carte de chiffres clés du tableau de bord Stampeo\u00a0: visites, taux de retour, nouveaux clients et un graphique des visites dans le temps.",
   },
   numbers: {
     title: "Les trois derniers mois",
@@ -27,12 +27,12 @@ export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_
     title: "Ce que vous ne savez pas aujourd'hui.",
     lead: "Avec des cartes en carton, vous fidélisez à l'aveugle, sans données pour progresser.",
     questions: [
-      "Combien de clients réguliers ?",
-      "À quelle fréquence reviennent-ils ?",
-      "Combien ont arrêté de venir ?",
-      "Quel jour est le plus calme ?",
-      "Combien de récompenses ce mois-ci ?",
-      "Votre programme fonctionne-t-il ?",
+      "Combien de clients réguliers\u00a0?",
+      "À quelle fréquence reviennent-ils\u00a0?",
+      "Combien ont arrêté de venir\u00a0?",
+      "Quel jour est le plus calme\u00a0?",
+      "Combien de récompenses ce mois-ci\u00a0?",
+      "Votre programme fonctionne-t-il\u00a0?",
     ],
     noAnswer: "???",
   },
@@ -72,7 +72,7 @@ export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_
       {
         key: "spend",
         title: "Dépenses enregistrées",
-        line: "Sur une carte à points : ce que votre équipe saisit au comptoir, et votre panier moyen.",
+        line: "Sur une carte à points\u00a0: ce que votre équipe saisit au comptoir, et votre panier moyen.",
       },
       {
         key: "locations",
@@ -119,23 +119,23 @@ export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_
     and: "et",
   },
   chartWords: {
-    visits: { alt: "{label} : {total} visites sur {weeks} semaines, dont {share} % de clients déjà venus." },
-    returnRate: { alt: "Taux de retour : {percent} % des nouveaux clients sont revenus dans le mois." },
-    newCustomers: { alt: "Nouveaux clients : {total} inscrits." },
+    visits: { alt: "{label}\u00a0: {total} visites sur {weeks} semaines, dont {share} % de clients déjà venus." },
+    returnRate: { alt: "Taux de retour\u00a0: {percent} % des nouveaux clients sont revenus dans le mois." },
+    newCustomers: { alt: "Nouveaux clients\u00a0: {total} inscrits." },
     busiest: {
       busiest: "Le plus fréquenté",
       quietest: "Heure creuse",
       fewer: "Moins de visites",
       more: "Plus de visites",
       slot: "{day}, de {from} à {to}",
-      alt: "Heures de pointe : les visites par jour et par heure sur une semaine type. Le plus fréquenté : {busiest}. Heure creuse : {quietest}.",
+      alt: "Heures de pointe\u00a0: les visites par jour et par heure sur une semaine type. Le plus fréquenté\u00a0: {busiest}. Heure creuse\u00a0: {quietest}.",
     },
     habits: {
-      alt: "À quel rythme ils viennent : {list}.",
+      alt: "À quel rythme ils viennent\u00a0: {list}.",
       note: "Chaque client compte une seule fois, selon son propre rythme habituel entre deux visites.",
     },
     rewards: {
-      alt: "Progression des cartes : les clients selon les tampons sur leur carte, dont {ready} avec une récompense à utiliser.",
+      alt: "Progression des cartes\u00a0: les clients selon les tampons sur leur carte, dont {ready} avec une récompense à utiliser.",
       ready: "Prête",
       stamps: "Tampons sur une carte de {count}",
       stillComing: "Toujours là",
@@ -143,22 +143,22 @@ export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_
       rewardReady: "Récompense à utiliser",
     },
     cohorts: {
-      alt: "Cohortes mensuelles : pour chaque mois, la part des nouveaux clients revenus dans les {days} jours.",
+      alt: "Cohortes mensuelles\u00a0: pour chaque mois, la part des nouveaux clients revenus dans les {days} jours.",
       window: "{days}\u00a0j",
       note: "Un tiret signifie que cette durée n'est pas encore écoulée.",
     },
     levels: {
-      alt: "Niveaux : {levels}, et les clients montés de niveau chaque mois.",
+      alt: "Niveaux\u00a0: {levels}, et les clients montés de niveau chaque mois.",
       on: "{customers} clients au niveau {level}",
       moves: "Montées de niveau par mois",
     },
     spend: {
-      alt: "Dépenses enregistrées : {total}, {ticket}.",
+      alt: "Dépenses enregistrées\u00a0: {total}, {ticket}.",
       ticket: "ticket moyen {amount}",
     },
     locations: {
       all: "Tous les établissements",
-      alt: "Par établissement : un sélecteur entre {locations}.",
+      alt: "Par établissement\u00a0: un sélecteur entre {locations}.",
       item: "{name}, {visits} visites",
     },
   },

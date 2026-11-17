@@ -18,8 +18,8 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
     captions: ["Lavage auto", "Boulangerie", "Bar à vin", "Bar à cils", "Librairie", "Camion pizza"],
     previous: "Commerce précédent",
     next: "Commerce suivant",
-    dot: "Afficher la carte : {shop}",
-    alt: "Une carte de fidélité qui prend le style de six commerces : un lavage auto, une boulangerie, un bar à vin, un bar à cils, une librairie et un camion pizza.",
+    dot: "Afficher la carte\u00a0: {shop}",
+    alt: "Une carte de fidélité qui prend le style de six commerces\u00a0: un lavage auto, une boulangerie, un bar à vin, un bar à cils, une librairie et un camion pizza.",
   },
   anatomy: {
     eyebrow: "Chaque élément",
@@ -51,12 +51,12 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
     lead: "Choisissez parmi 98 icônes prêtes, ou importez votre logo. On détoure le fond.",
     facts: [
       "98 icônes de tampon prêtes à l'emploi, avec recherche par nom",
-      "Importez n'importe quelle image : le fond est détouré automatiquement",
+      "Importez n'importe quelle image\u00a0: le fond est détouré automatiquement",
       "Une icône différente par tampon, et une spéciale pour la récompense",
       "Tampons alignés, en quinconce ou superposés",
-      "Pas de logo ? La carte affiche vos initiales à la place",
+      "Pas de logo\u00a0? La carte affiche vos initiales à la place",
     ],
-    cards: ["Pulp : ses propres icônes d'agrumes", "Gelo : ses propres cornets", "Un toiletteur : des pattes de la bibliothèque"],
+    cards: ["Pulp\u00a0: ses propres icônes d'agrumes", "Gelo\u00a0: ses propres cornets", "Un toiletteur\u00a0: des pattes de la bibliothèque"],
   },
   wallets: {
     eyebrow: "iPhone et Android",
@@ -65,7 +65,7 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
     cells: [
       { title: "Un seul QR code", body: "Vos clients le scannent et reçoivent la carte adaptée à leur téléphone." },
       { title: "Aperçu en direct", body: "Voyez les deux versions de la carte pendant que vous la composez." },
-      { title: "Toujours à jour", body: "Modifiez votre carte : toutes celles déjà dans les téléphones se mettent à jour." },
+      { title: "Toujours à jour", body: "Modifiez votre carte\u00a0: toutes celles déjà dans les téléphones se mettent à jour." },
     ],
     phoneAlts: {
       apple: "Un iPhone avec la carte de fidélité ouverte dans Apple Wallet",
@@ -94,32 +94,32 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
     title: "Votre carte, en questions",
     items: [
       {
-        question: "Puis-je utiliser mes propres icônes de tampon ?",
+        question: "Puis-je utiliser mes propres icônes de tampon\u00a0?",
         answer:
           "Oui. Importez n'importe quelle image, comme votre croissant, votre mascotte ou votre logo. Le fond est détouré automatiquement et elle devient un tampon. Vous pouvez même utiliser une icône différente par tampon.",
       },
       {
-        question: "Et si je n'ai pas de logo ?",
+        question: "Et si je n'ai pas de logo\u00a0?",
         answer:
           "Votre carte fonctionne quand même. Sans logo, elle affiche vos initiales dans votre couleur d'accent, et vous pouvez choisir parmi 98 icônes de tampon prêtes à l'emploi.",
       },
       {
-        question: "Puis-je créer une carte à tampons ou une carte à points ?",
+        question: "Puis-je créer une carte à tampons ou une carte à points\u00a0?",
         answer:
           "Les deux. Une carte à tampons fonctionne comme une carte papier, avec un tampon par visite. Une carte à points récompense la dépense. Ajoutez des niveaux à l'une ou à l'autre, et changez plus tard sans que vos clients perdent leur carte.",
       },
       {
-        question: "La carte fonctionne-t-elle sur iPhone et Android ?",
+        question: "La carte fonctionne-t-elle sur iPhone et Android\u00a0?",
         answer:
           "Oui. La même carte va dans Apple Wallet et Google Wallet, et l'éditeur affiche les deux pendant que vous composez. Vos clients scannent un seul QR code, quel que soit leur téléphone.",
       },
       {
-        question: "Puis-je modifier la carte plus tard ?",
+        question: "Puis-je modifier la carte plus tard\u00a0?",
         answer:
           "Quand vous voulez. Modifiez votre carte, et celles déjà dans les téléphones de vos clients se mettent à jour automatiquement.",
       },
       {
-        question: "Vous pouvez créer la carte pour moi ?",
+        question: "Vous pouvez créer la carte pour moi\u00a0?",
         answer:
           "Oui, gratuitement. Envoyez-nous votre logo et vos informations, et on vous renvoie une carte prête à l'emploi. Vous pouvez toujours la modifier vous-même ensuite.",
       },
@@ -128,6 +128,6 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
   band: {
     title: "Créez une carte qui vous ressemble.",
     accent: "qui vous ressemble.",
-    sub: "Composez-la vous-même, ou envoyez-nous votre logo : on la crée pour vous, gratuitement.",
+    sub: "Composez-la vous-même, ou envoyez-nous votre logo\u00a0: on la crée pour vous, gratuitement.",
   },
 };

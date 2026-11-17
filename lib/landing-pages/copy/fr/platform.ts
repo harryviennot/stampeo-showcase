@@ -14,7 +14,7 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   },
   heroCards: {
     stackAlt:
-      "Des cartes de fidélité empilées comme dans un téléphone : la carte à tampons d'un café devant, et derrière, le haut de la carte à points d'un salon, de la carte à niveaux d'un toiletteur et de la carte à tampons d'une boulangerie.",
+      "Des cartes de fidélité empilées comme dans un téléphone\u00a0: la carte à tampons d'un café devant, et derrière, le haut de la carte à points d'un salon, de la carte à niveaux d'un toiletteur et de la carte à tampons d'une boulangerie.",
   },
   marquee: {
     label: "Pensé pour",
@@ -50,7 +50,7 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
     returning: "Déjà venus",
     first: "Première visite",
     points: "pts",
-    alt: "Statistiques : {visits} visites, en hausse de {visitsChange} % ; {returnRate} : {returnRatePercent} %, en hausse de {returnRateChange} points ; et les visites dans le temps, semaine par semaine.",
+    alt: "Statistiques\u00a0: {visits} visites, en hausse de {visitsChange} %\u00a0; {returnRate}\u00a0: {returnRatePercent} %, en hausse de {returnRateChange} points\u00a0; et les visites dans le temps, semaine par semaine.",
   },
   numbers: {
     eyebrow: "En chiffres",
@@ -59,16 +59,16 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
       {
         value: "95 %",
         text: "de cartes conservées",
-        source: "Données Stampeo : 2 786 cartes de 73 commerces, ajoutées de juin à août 2026",
+        source: "Données Stampeo\u00a0: 2 786 cartes de 73 commerces, ajoutées de juin à août 2026",
       },
     ],
   },
   how: {
     eyebrow: "Comment ça marche",
-    title: "Créez-la, partagez-la, tamponnez-la.",
+    title: "Créez, partagez, tamponnez.",
     lead: "Créez votre carte, affichez-la au comptoir, tamponnez avec n'importe quel téléphone.",
     cells: [
-      { title: "Créez", body: "Une carte à l'image de votre commerce : votre logo, vos couleurs, votre récompense." },
+      { title: "Créez", body: "Une carte à l'image de votre commerce\u00a0: votre logo, vos couleurs, votre récompense." },
       { title: "Partagez", body: "Vos clients scannent le QR code du comptoir ou ouvrent votre lien. Sans application, sans compte." },
       {
         title: "Tamponnez",
@@ -90,7 +90,7 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
     eyebrow: "La plateforme Stampeo",
     title: "Gérez tout sur ordinateur ou sur téléphone.",
     lead: "Un tableau de bord pour vous, une application scanner gratuite pour votre équipe.",
-    tabs: { dashboard: "Tableau de bord", scanner: "Application scanner" },
+    tabs: { dashboard: "Tableau de bord", scanner: "Scanner" },
     dashboard: {
       title: "Tout au même endroit",
       facts: [
@@ -113,7 +113,7 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   share: {
     eyebrow: "Partagez-la partout",
     title: "Mettez votre carte là où sont déjà vos clients.",
-    lead: "Un QR code et un lien : au comptoir, et partout en ligne.",
+    lead: "Un QR code et un lien\u00a0: au comptoir, et partout en ligne.",
     channels: [
       { title: "Affichette comptoir", body: "À imprimer, avec votre QR code" },
       { title: "Application scanner", body: "Affiche votre QR code à la caisse" },
