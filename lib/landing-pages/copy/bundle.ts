@@ -1,6 +1,9 @@
 import { useLocale } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 import type { Market } from "@/lib/markets";
+import { ES } from "./es";
+import { FR } from "./fr";
+import { PL } from "./pl";
 import * as platform from "./platform";
 import * as analytics from "./previews/analytics";
 import * as cardDesign from "./previews/card-design";
@@ -38,7 +41,7 @@ export const EN = {
 /** The same words in another language: the English shape, every word a string of its own. */
 export type LandingCopy = Widen<typeof EN>;
 
-const BUNDLES: Record<Locale, LandingCopy> = { en: EN, fr: EN, es: EN, pl: EN };
+const BUNDLES: Record<Locale, LandingCopy> = { en: EN, fr: FR, es: ES, pl: PL };
 
 /** The English of the US market: the international English with `US_WORDS` laid over it. */
 const EN_US = overlaid<LandingCopy>(EN, US_WORDS);
