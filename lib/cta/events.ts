@@ -31,8 +31,9 @@ export interface CtaClick {
  * The destination decides the funnel for all three: a link to the contact
  * page is a sales touch, anything else a signup, and Meta hears only the
  * signup. `pathname` is the browser path the click happened on; on a private
- * route the ad platforms hear nothing, while PostHog, which stores nothing on
- * the device, still does. `useCtaTracking` sends the result.
+ * route the ad platforms hear nothing, while PostHog, which counts in memory
+ * unless the visitor allowed audience measurement, still does. `useCtaTracking`
+ * sends the result.
  */
 export function ctaClick(input: {
   ctaLocation: CTALocation;
