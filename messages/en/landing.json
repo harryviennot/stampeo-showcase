@@ -30,8 +30,8 @@
         "demoCallout": "Try it out! Scan with your phone",
         "mobileAddWallet": "Try it, add to your Wallet",
         "mobileHint": "The pass will be added to your phone wallet",
-        "rewardMid": "-50% off your 1st month",
-        "rewardTop": "{trialDays} days free",
+        "rewardMid": "A returning customer",
+        "rewardTop": "A loyal regular",
         "rewardAllUnlocked": "Everything unlocked!"
       }
     },

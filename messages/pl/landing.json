@@ -30,8 +30,8 @@
         "demoCallout": "Wypróbuj! Zeskanuj telefonem",
         "mobileAddWallet": "Wypróbuj, dodaj do Wallet",
         "mobileHint": "Karta trafi do portfela w twoim telefonie",
-        "rewardMid": "-50% na pierwszy miesiąc",
-        "rewardTop": "{trialDays, plural, one {# dzień} few {# dni} many {# dni} other {# dni}} za darmo",
+        "rewardMid": "Klient, który wraca",
+        "rewardTop": "Stały klient",
         "rewardAllUnlocked": "Wszystko odblokowane!"
       }
     },

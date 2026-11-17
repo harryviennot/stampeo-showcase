@@ -30,8 +30,8 @@
         "demoCallout": "¡Pruébalo! Escanea con tu teléfono",
         "mobileAddWallet": "Pruébalo, añádela a tu Wallet",
         "mobileHint": "La tarjeta se añadirá a la cartera de tu teléfono",
-        "rewardMid": "-50 % en tu 1er mes",
-        "rewardTop": "{trialDays} días gratis",
+        "rewardMid": "Un cliente que vuelve",
+        "rewardTop": "Un cliente habitual",
         "rewardAllUnlocked": "¡Todo desbloqueado!"
       }
     },

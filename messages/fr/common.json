@@ -2,8 +2,8 @@
   "common": {
     "stamps": "Tampons",
     "reward": "Récompense",
-    "rewarded": "Vous avez droit à {trialDays} jours gratuits !",
-    "rewardText": "{trialDays} jours gratuits à 8 tampons !",
+    "rewarded": "🎉 Voilà ce que ressentiront vos habitués",
+    "rewardText": "Des clients qui reviennent",
     "nav": {
       "features": "Fonctionnalités",
       "pricing": "Tarifs",
