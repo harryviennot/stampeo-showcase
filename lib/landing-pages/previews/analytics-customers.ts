@@ -18,15 +18,16 @@ export const SEGMENT_LOOK: Record<SegmentKey, { color: string; background: strin
 export const CARD_STAMPS = 8;
 
 /**
- * Seven customers as the dashboard's list shows them, one in each segment: the stamps on their 8-stamp card and
- * when they last came, in the dashboard's relative words. Every segment's rule is true of its customer.
+ * Seven customers as the dashboard's list shows them, one in each segment: the stamps on their 8-stamp card (the
+ * page words their names and when they last came, in the order of the segments). Every segment's rule is true of
+ * its customer.
  */
-export const CUSTOMER_LIST: ReadonlyArray<{ name: string; stamps: number; segment: SegmentKey; lastVisit: string }> = [
-  { name: "Maya Chen", stamps: 1, segment: "new", lastVisit: "Today" },
-  { name: "Daniel Brooks", stamps: 4, segment: "regular", lastVisit: "Yesterday" },
-  { name: "Priya Nair", stamps: 3, segment: "vip", lastVisit: "2d ago" },
-  { name: "Tom Alvarez", stamps: 8, segment: "rewardReady", lastVisit: "3d ago" },
-  { name: "Hannah Cole", stamps: 6, segment: "closeToReward", lastVisit: "1w ago" },
-  { name: "Marcus Reed", stamps: 2, segment: "atRisk", lastVisit: "7w ago" },
-  { name: "Ellie Park", stamps: 0, segment: "ghost", lastVisit: "3mo ago" },
+export const CUSTOMER_LIST: ReadonlyArray<{ stamps: number; segment: SegmentKey }> = [
+  { stamps: 1, segment: "new" },
+  { stamps: 4, segment: "regular" },
+  { stamps: 3, segment: "vip" },
+  { stamps: 8, segment: "rewardReady" },
+  { stamps: 6, segment: "closeToReward" },
+  { stamps: 2, segment: "atRisk" },
+  { stamps: 0, segment: "ghost" },
 ];

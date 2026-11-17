@@ -1,16 +1,8 @@
+import { useLocale } from "next-intl";
 import { ArrowRightIcon } from "@/components/icons";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { fill, formatCount } from "@/lib/landing-pages/format";
 import { ANALYTICS, INK } from "@/lib/landing-pages/platform/analytics-figures";
-
-/** The dashboard's own labels for these figures (web's `analytics` catalog), as they appear on its tiles. */
-export const DASHBOARD = {
-  visits: "Visits",
-  newCustomers: "New customers",
-  returnRate: "30-day return rate",
-  overTime: "Visits over time",
-  returning: "Returning",
-  first: "First visit",
-} as const;
 
 /** The chart's top, as the dashboard's axis rounds it. */
 const AXIS_MAX = 260;
@@ -54,17 +46,18 @@ function Legend({ color, label }: Readonly<{ color: string; label: string }>) {
 
 /** The weekly "Visits over time" tile: returning and first visits stacked, thirteen weeks. */
 export function VisitsOverTime() {
+  const { analyticsCard } = useLandingCopy().platform.PLATFORM;
   const { weeks } = ANALYTICS;
 
   return (
     <div className={`col-span-2 ${TILE}`}>
       <div className="flex items-center justify-between gap-2">
         <p className="text-[12px] leading-4 font-semibold" style={{ color: INK.figure }}>
-          {DASHBOARD.overTime}
+          {analyticsCard.overTime}
         </p>
         <div className="flex gap-2.5 text-[10px] leading-4" style={{ color: INK.label }}>
-          <Legend color={INK.navy} label={DASHBOARD.returning} />
-          <Legend color={INK.periwinkle} label={DASHBOARD.first} />
+          <Legend color={INK.navy} label={analyticsCard.returning} />
+          <Legend color={INK.periwinkle} label={analyticsCard.first} />
         </div>
       </div>
       <div className="mt-3 flex h-[72px] items-end gap-[3%] border-b border-black/[0.07]">
@@ -89,14 +82,21 @@ export function VisitsOverTime() {
 
 /** The two figures over the weekly chart, in the dashboard's tiles; read out as one picture. */
 export function DeliverAnalytics() {
+  const { analyticsCard } = useLandingCopy().platform.PLATFORM;
   const { visits, returnRate } = ANALYTICS;
-  const total = visits.total.toLocaleString("en-US");
-  const label = `Analytics: ${total} visits, up ${visits.change}%; a ${DASHBOARD.returnRate} of ${returnRate.percent}%, up ${returnRate.change} points; and the visits over time, week by week.`;
+  const total = formatCount(useLocale(), visits.total);
+  const label = fill(analyticsCard.alt, {
+    visits: total,
+    visitsChange: visits.change,
+    returnRate: analyticsCard.returnRate,
+    returnRatePercent: returnRate.percent,
+    returnRateChange: returnRate.change,
+  });
 
   return (
     <div role="img" aria-label={label} className="grid grid-cols-2 gap-2.5">
-      <Kpi label={DASHBOARD.visits} value={total} trend={`▲${visits.change}%`} />
-      <Kpi label={DASHBOARD.returnRate} value={`${returnRate.percent}%`} trend={`▲${returnRate.change} pts`} />
+      <Kpi label={analyticsCard.visits} value={total} trend={`▲${visits.change}%`} />
+      <Kpi label={analyticsCard.returnRate} value={`${returnRate.percent}%`} trend={`▲${returnRate.change} ${analyticsCard.points}`} />
       <VisitsOverTime />
     </div>
   );
@@ -104,6 +104,8 @@ export function DeliverAnalytics() {
 
 /** Aurevo's card going from 5 to 6 stamps on a scan, in the analytics' figure type. */
 export function DeliverUpdate() {
+  const { PLATFORM } = useLandingCopy().platform;
+
   return (
     <p className="flex items-center gap-2.5">
       <Figure>{PLATFORM.deliver.updatesFrom}</Figure>

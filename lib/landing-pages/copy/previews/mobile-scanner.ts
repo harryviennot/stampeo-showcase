@@ -29,6 +29,60 @@ export const MOBILE_SCANNER_PREVIEW = {
       { key: "levels", title: "Levels", line: "See their level and its perks" },
     ] satisfies Array<{ key: "stamps" | "points" | "rewards" | "levels"; title: string; line: string }>,
     fact: "They get a notification on their lock screen right after.",
+    /**
+     * What each pane says, in the order of `options`: the phone's screen and the customer's wallet card for a
+     * screen reader, and the line under the card that says what the scan did to it.
+     */
+    panes: [
+      {
+        screenAlt: "The Scanner app adding three stamps to Sophie's card in one scan: a stepper set to 3 and the Add 3 stamps button.",
+        cardAlt: "Sophie's wallet card from Aurevo, full at 8 of 8 stamps.",
+        result: "5 → 8 stamps",
+      },
+      {
+        screenAlt: "The Scanner app taking a spend amount of 12.50 with the keypad, and the points it earns, about 12, before anyone confirms.",
+        cardAlt: "Sophie's wallet card from Marginalia, a bookstore, now at 252 points.",
+        result: "240 → 252 pts",
+      },
+      {
+        screenAlt: "The Scanner app's list of rewards to redeem: three rewards, each with a Redeem button.",
+        cardAlt: "Sophie's wallet card from Aurevo, back to 2 of 8 stamps once her reward is claimed.",
+        result: "Free coffee redeemed",
+      },
+      {
+        screenAlt: "The Scanner app showing a Silver customer's perks to apply at the till before charging.",
+        cardAlt: "Sophie's wallet card from Wrenfold, a dry cleaner, showing its Silver level.",
+        result: "Level: Silver",
+      },
+    ],
+  },
+  /**
+   * The Scanner app's own words on the four screens drawn on the phone (scanner-app `locales/<language>/stamp.json`
+   * and `points.json`). `levels.perkOne` fills `{level}` and `{perk}`, `levels.perkMany` fills `{level}`.
+   */
+  screens: {
+    customer: "Sophie",
+    stamps: { detail: "5 / 8", added: "+3 stamps", completes: "This completes the card", button: "Add 3 stamps" },
+    points: { detail: "240 pts", amount: "12.50", earns: "≈ +12 pts", button: "Add Points" },
+    rewards: {
+      detail: "8 / 8",
+      title: "Rewards to redeem",
+      redeem: "Redeem",
+      gift: "Gift",
+      expiresToday: "Expires today",
+      expiresLater: "Expires in 5 days",
+      /** The three rewards the customer holds: the first one expires today, the second is a gift, the third expires in 5 days. */
+      held: ["Free coffee", "Free pastry", "Free coffee"],
+    },
+    levels: {
+      detail: "4 / 6",
+      perks: ["Free hanger return", "Priority pickup"],
+      perkOne: "{level} perk: {perk}",
+      perkMany: "{level} perks:",
+      applyOne: "Apply it at the till before charging.",
+      applyMany: "Apply them at the till before charging.",
+      button: "Add Stamp",
+    },
   },
   ways: {
     eyebrow: "App or browser",

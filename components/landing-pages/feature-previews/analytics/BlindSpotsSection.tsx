@@ -1,10 +1,10 @@
 import { BlindSpotCards } from "@/components/features/analytics/BlindSpotCards";
-import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LpSection } from "../../shared/LpSection";
 
 /** Production's six blind-spot cards, each turning from its question to ???, under the preview's own heading. */
 export function BlindSpotsSection() {
-  const { eyebrow, title, lead, questions, noAnswer } = ANALYTICS_PREVIEW.blindSpots;
+  const { eyebrow, title, lead, questions, noAnswer } = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW.blindSpots;
 
   return (
     <LpSection section="blind_spots" tinted eyebrow={eyebrow} title={title} lead={lead} align="center">

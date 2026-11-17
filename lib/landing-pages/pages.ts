@@ -1,29 +1,24 @@
 import type { Metadata } from "next";
+import type { Market } from "@/lib/markets";
 import { NOINDEX } from "@/lib/seo/page-robots";
 import { FEATURES } from "./copy/features";
 import { HOW_IT_WORKS } from "./copy/how-it-works";
 import { OUTCOMES } from "./copy/outcomes";
-import { PLATFORM } from "./copy/platform";
-import { ANALYTICS_PREVIEW } from "./copy/previews/analytics";
-import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
-import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
-import { LOYALTY_PROGRAMS_PREVIEW } from "./copy/previews/loyalty-programs";
-import { MOBILE_SCANNER_PREVIEW } from "./copy/previews/mobile-scanner";
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
-import { PUSH_NOTIFICATIONS_PREVIEW } from "./copy/previews/push-notifications";
+import { landingCopy, type LandingCopy } from "./copy/bundle";
 import type { FinalCtaCopy, HeroCopy, PageMeta } from "./copy/types";
 
 /**
- * The ten `/us/landing-pages/*` pages, in one place: each page's variant
- * (what `LandingTracker` reports), its sections in render order, and the copy
- * every page has (head, hero, closing headline). The sections are the ids the
- * pages tag with `data-landing-section`, and `registry.test.ts` pins that each
- * page renders exactly these, in this order.
+ * The ten landing pages, in one place: each page's variant (what `LandingTracker`
+ * reports) and its sections in render order. The sections are the ids the pages tag
+ * with `data-landing-section`, and `registry.test.ts` pins that each page renders
+ * exactly these, in this order. What a page says (head, hero, closing headline) is
+ * `pageWords`.
  *
  * Four are the pages ads point at; seven are previews of the feature pages and
- * the loyalty programs page in Platform's style (`platform/<page>`), English,
- * noindex and linked only from each other and from the menus of Platform and
- * its previews.
+ * the loyalty programs page in Platform's style (`platform/<page>`), noindex and
+ * linked only from each other and from the menus of Platform and its previews.
+ * Platform and its previews are served in every language at `/landing-pages/...`
+ * and in US English at `/us/landing-pages/...`; the other three are US English only.
  */
 
 export const LANDING_SLUGS = ["how-it-works", "features", "outcomes", "platform"] as const;
@@ -107,10 +102,6 @@ export interface LandingPage {
   /** The landing variant: reaches PostHog, GA4 CTA events and `businesses.landing_variant`. */
   variant: string;
   sections: readonly LandingSectionId[];
-  meta: PageMeta;
-  /** Platform's hero is a headline alone, so its `sub` is optional. */
-  hero: Omit<HeroCopy, "sub"> & { sub?: string };
-  finalCta: FinalCtaCopy & { sub?: string };
   /** The three sibling previews a preview closes with. */
   related?: readonly PreviewSlug[];
 }
@@ -133,9 +124,6 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
       "faq",
       "final_cta",
     ],
-    meta: HOW_IT_WORKS.meta,
-    hero: HOW_IT_WORKS.hero,
-    finalCta: HOW_IT_WORKS.finalCta,
   },
   features: {
     slug: "features",
@@ -154,9 +142,6 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
       "faq",
       "final_cta",
     ],
-    meta: FEATURES.meta,
-    hero: FEATURES.hero,
-    finalCta: FEATURES.finalCta,
   },
   outcomes: {
     slug: "outcomes",
@@ -174,9 +159,6 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
       "faq",
       "final_cta",
     ],
-    meta: OUTCOMES.meta,
-    hero: OUTCOMES.hero,
-    finalCta: OUTCOMES.finalCta,
   },
   platform: {
     slug: "platform",
@@ -196,62 +178,41 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
       "sectors",
       "blog",
     ],
-    meta: PLATFORM.meta,
-    hero: PLATFORM.hero,
-    finalCta: PLATFORM.band,
   },
   "platform/card-design": {
     slug: "platform/card-design",
     variant: "lp_platform_card_design",
     sections: ["hero", "anatomy", "types", "icons", "wallets", "faq", "final_cta", "related"],
-    meta: CARD_DESIGN_PREVIEW.meta,
-    hero: CARD_DESIGN_PREVIEW.hero,
-    finalCta: CARD_DESIGN_PREVIEW.band,
     related: ["platform/mobile-scanner", "platform/push-notifications", "platform/analytics"],
   },
   "platform/mobile-scanner": {
     slug: "platform/mobile-scanner",
     variant: "lp_platform_mobile_scanner",
     sections: ["hero", "counter", "ways", "final_cta", "related"],
-    meta: MOBILE_SCANNER_PREVIEW.meta,
-    hero: MOBILE_SCANNER_PREVIEW.hero,
-    finalCta: MOBILE_SCANNER_PREVIEW.band,
     related: ["platform/card-design", "platform/push-notifications", "platform/analytics"],
   },
   "platform/push-notifications": {
     slug: "platform/push-notifications",
     variant: "lp_platform_push_notifications",
     sections: ["hero", "day", "wallets", "editor", "demo", "final_cta", "related"],
-    meta: PUSH_NOTIFICATIONS_PREVIEW.meta,
-    hero: PUSH_NOTIFICATIONS_PREVIEW.hero,
-    finalCta: PUSH_NOTIFICATIONS_PREVIEW.band,
     related: ["platform/promotional-campaigns", "platform/mobile-scanner", "platform/analytics"],
   },
   "platform/analytics": {
     slug: "platform/analytics",
     variant: "lp_platform_analytics",
     sections: ["hero", "blind_spots", "charts", "customers", "dashboard", "final_cta", "related"],
-    meta: ANALYTICS_PREVIEW.meta,
-    hero: ANALYTICS_PREVIEW.hero,
-    finalCta: ANALYTICS_PREVIEW.band,
     related: ["platform/promotional-campaigns", "platform/push-notifications", "platform/card-design"],
   },
   "platform/promotional-campaigns": {
     slug: "platform/promotional-campaigns",
     variant: "lp_platform_promotional_campaigns",
     sections: ["hero", "how", "texting", "ideas", "delivery", "faq", "final_cta", "related"],
-    meta: PROMOTIONAL_CAMPAIGNS_PREVIEW.meta,
-    hero: PROMOTIONAL_CAMPAIGNS_PREVIEW.hero,
-    finalCta: PROMOTIONAL_CAMPAIGNS_PREVIEW.band,
     related: ["platform/push-notifications", "platform/analytics", "platform/card-design"],
   },
   "platform/geolocation": {
     slug: "platform/geolocation",
     variant: "lp_platform_geolocation",
     sections: ["hero", "how", "privacy", "faq", "final_cta", "related"],
-    meta: GEOLOCATION_PREVIEW.meta,
-    hero: GEOLOCATION_PREVIEW.hero,
-    finalCta: GEOLOCATION_PREVIEW.band,
     related: ["platform/push-notifications", "platform/promotional-campaigns", "platform/analytics"],
   },
   "platform/loyalty-programs": {
@@ -270,9 +231,6 @@ export const LANDING_PAGES: Record<LandingSlug, LandingPage> = {
       "final_cta",
       "related",
     ],
-    meta: LOYALTY_PROGRAMS_PREVIEW.meta,
-    hero: LOYALTY_PROGRAMS_PREVIEW.hero,
-    finalCta: LOYALTY_PROGRAMS_PREVIEW.band,
     related: ["platform/card-design", "platform/push-notifications", "platform/mobile-scanner"],
   },
 };
@@ -282,12 +240,59 @@ export function hasDemoSection(slug: LandingSlug): boolean {
   return LANDING_PAGES[slug].sections.includes("demo");
 }
 
+/** What a page says in its head, its hero and its closing ask. Platform's hero is a headline alone, so its `sub` is optional. */
+export interface PageWords {
+  meta: PageMeta;
+  hero: Omit<HeroCopy, "sub"> & { sub?: string };
+  finalCta: FinalCtaCopy & { sub?: string };
+}
+
+/** The pages written in US English only: their words are the English modules'. */
+const US_ONLY_WORDS: Partial<Record<LandingSlug, PageWords>> = {
+  "how-it-works": { meta: HOW_IT_WORKS.meta, hero: HOW_IT_WORKS.hero, finalCta: HOW_IT_WORKS.finalCta },
+  features: { meta: FEATURES.meta, hero: FEATURES.hero, finalCta: FEATURES.finalCta },
+  outcomes: { meta: OUTCOMES.meta, hero: OUTCOMES.hero, finalCta: OUTCOMES.finalCta },
+};
+
+/** What Platform and each preview say, read from a language's copy bundle. */
+const BUNDLE_WORDS: Record<Exclude<LandingSlug, "how-it-works" | "features" | "outcomes">, (copy: LandingCopy) => PageWords> = {
+  platform: ({ platform }) => ({
+    meta: platform.PLATFORM.meta,
+    hero: platform.PLATFORM.hero,
+    finalCta: platform.PLATFORM.band,
+  }),
+  "platform/card-design": ({ previews }) => pageOf(previews.cardDesign.CARD_DESIGN_PREVIEW),
+  "platform/mobile-scanner": ({ previews }) => pageOf(previews.mobileScanner.MOBILE_SCANNER_PREVIEW),
+  "platform/push-notifications": ({ previews }) => pageOf(previews.pushNotifications.PUSH_NOTIFICATIONS_PREVIEW),
+  "platform/analytics": ({ previews }) => pageOf(previews.analytics.ANALYTICS_PREVIEW),
+  "platform/promotional-campaigns": ({ previews }) => pageOf(previews.promotionalCampaigns.PROMOTIONAL_CAMPAIGNS_PREVIEW),
+  "platform/geolocation": ({ previews }) => pageOf(previews.geolocation.GEOLOCATION_PREVIEW),
+  "platform/loyalty-programs": ({ previews }) => pageOf(previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW),
+};
+
+/** A preview's copy as the words of its page: its head, its hero and its closing band. */
+const pageOf = (preview: Pick<PageWords, "meta" | "hero"> & { band: PageWords["finalCta"] }): PageWords => ({
+  meta: preview.meta,
+  hero: preview.hero,
+  finalCta: preview.band,
+});
+
+/**
+ * What a page says, in a language and a market: the one place a page's words are resolved. The three US-only pages
+ * read their English modules whatever the locale; Platform and its previews read the copy bundle.
+ */
+export function pageWords(slug: LandingSlug, locale: string, market: Market): PageWords {
+  const usOnly = US_ONLY_WORDS[slug];
+  if (usOnly) return usOnly;
+  return BUNDLE_WORDS[slug as keyof typeof BUNDLE_WORDS](landingCopy(locale, market));
+}
+
 /**
  * The head of a landing page: its title as written (the brand is already in
  * it) and `noindex, nofollow`. The pages are ad destinations, reachable by URL
  * only.
  */
-export function landingPageMetadata(slug: LandingSlug): Metadata {
-  const { meta } = LANDING_PAGES[slug];
+export function landingPageMetadata(slug: LandingSlug, locale: string, market: Market): Metadata {
+  const { meta } = pageWords(slug, locale, market);
   return { title: { absolute: meta.title }, description: meta.description, robots: NOINDEX };
 }

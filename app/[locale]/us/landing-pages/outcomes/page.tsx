@@ -21,14 +21,14 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata(): Metadata {
-  return landingPageMetadata("outcomes");
+  return landingPageMetadata("outcomes", "en", "us");
 }
 
 export default function OutcomesPage() {
   setRequestLocale("en");
 
   return (
-    <LandingPageShell slug="outcomes">
+    <LandingPageShell slug="outcomes" market="us">
       <LpHero slug="outcomes" />
       <RegularsFigure />
       <AlwaysSpotlight />
@@ -36,7 +36,7 @@ export default function OutcomesPage() {
       <QuietHoursSpotlight />
       <LevelsSpotlight />
       <RegularsSpotlight />
-      <LpSectors />
+      <LpSectors market="us" />
       <LpSection section="pricing" bare>
         <PricingSection market="us" />
       </LpSection>

@@ -272,7 +272,7 @@ describe("what a page can ask of Platform's pieces", () => {
               { question: "Second?", answer: "Yes." },
             ],
           }}
-          answerLink={{ words: "see pricing", href: "/pricing" }}
+          answerLink={{ words: "see pricing", href: "/pricing", market: "us" }}
         />,
         { us: true },
       );

@@ -26,6 +26,8 @@ export interface MenuProps {
   /** The header's button: the first Tab stop, and where focus goes on Escape. */
   burgerRef: RefObject<HTMLButtonElement | null>;
   featureLinks: FeatureLinks;
+  /** The market of the page: a preview a feature link leads to stays inside it. */
+  market: Market;
   /** The page's path without its locale, to mark the entry you are on. */
   pathname: string;
   /** Loyalty and Pricing. */
@@ -52,12 +54,12 @@ export interface FeatureEntry {
 }
 
 /** The Product menu's six features, linked as the header links them, with their one-line descriptions. */
-export function useFeatureEntries(featureLinks: FeatureLinks, pathname: string): FeatureEntry[] {
+export function useFeatureEntries(featureLinks: FeatureLinks, pathname: string, pageMarket: Market): FeatureEntry[] {
   const t = useTranslations("common.nav");
   const locale = useLocale();
 
   return FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-    const { href, market } = featureLink(canonicalSlug, locale, featureLinks);
+    const { href, market } = featureLink(canonicalSlug, locale, featureLinks, pageMarket);
 
     return {
       key,

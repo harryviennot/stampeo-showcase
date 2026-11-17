@@ -13,10 +13,11 @@ import { DeliverAnalytics } from "@/components/landing-pages/platform/DeliverAna
 import { renderPreviewPage, sectionOf, sectionsOf } from "../../testing/preview-page";
 import { expectInOrder, pictures, renderEnAsync as render, textOf } from "../../testing/render-en";
 import { ANALYTICS_PREVIEW as COPY } from "../copy/previews/analytics";
+import { SHARED } from "../copy/shared";
+import { fill, formatSampleMoney } from "../format";
 import { ANALYTICS } from "../platform/analytics-figures";
 import { CUSTOMER_LIST } from "./analytics-customers";
 import {
-  BUSIEST,
   COHORTS,
   COHORT_DAYS,
   CUSTOMERS_SEEN,
@@ -27,8 +28,13 @@ import {
   SPEND,
   busiestSlots,
   cohortPercent,
-  dollars,
 } from "./analytics-sample";
+
+/** The sample's words and the chart words, as the page reads them in English. */
+const SAMPLE = COPY.sample;
+const WORDS = COPY.chartWords;
+const LEVEL_NAMES = [SHARED.levelNames.bronze, SHARED.levelNames.silver, SHARED.levelNames.gold];
+const dollars = (amount: number, cents = false) => formatSampleMoney("en", "us", amount, cents);
 
 /** The names the sample customer list may show: invented, none a real customer's. */
 const INVENTED_NAMES = ["Maya Chen", "Daniel Brooks", "Priya Nair", "Tom Alvarez", "Hannah Cole", "Marcus Reed", "Ellie Park"];
@@ -100,7 +106,7 @@ describe("every chart, as a card with its question under its title", () => {
   };
 
   test("ten cards in the copy's order, each with its title and its one line, under the page's header", async () => {
-    const html = await render(<ChartsSection />);
+    const html = await render(<ChartsSection market="us" />);
     const { eyebrow, title, lead, rows } = COPY.charts;
 
     expect(rows).toHaveLength(10);
@@ -111,7 +117,7 @@ describe("every chart, as a card with its question under its title", () => {
   });
 
   test("each card shows one picture of the chart, with a name that says what it shows", async () => {
-    const html = await render(<ChartsSection />);
+    const html = await render(<ChartsSection market="us" />);
 
     for (const { key, title } of COPY.charts.rows) {
       const names = pictures(cardOf(html, key));
@@ -123,67 +129,67 @@ describe("every chart, as a card with its question under its title", () => {
   });
 
   test("visits over time: the thirteen weeks on the dashboard's axis, with the dates under them", async () => {
-    const card = cardOf(await render(<ChartsSection />), "visits");
+    const card = cardOf(await render(<ChartsSection market="us" />), "visits");
 
     expect(card.match(/data-week=/g)).toHaveLength(ANALYTICS.weeks.length);
     expectInOrder(card, [...COPY.numbers.chart.legend, "260", "195", "130", "65", "Jul 28", "Oct 19"]);
   });
 
   test("return rate and new customers: the sample's figures", async () => {
-    const html = await render(<ChartsSection />);
+    const html = await render(<ChartsSection market="us" />);
 
     expectInOrder(cardOf(html, "returnRate"), [`${ANALYTICS.returnRate.percent}%`]);
     expectInOrder(cardOf(html, "newCustomers"), [String(ANALYTICS.newCustomers.total), COPY.numbers.newCustomers.line]);
   });
 
   test("busiest times: a week by day and hour, naming the busiest slot and the quietest open hour", async () => {
-    const card = cardOf(await render(<ChartsSection />), "busiest");
-    const { busiest, quietest } = busiestSlots();
+    const card = cardOf(await render(<ChartsSection market="us" />), "busiest");
+    const { busiest, quietest } = busiestSlots({ ...SAMPLE, slot: WORDS.busiest.slot });
 
     expect(busiest).toBe("Thursday, 8 AM to 9 AM");
     expect(quietest).toBe("Saturday, 7 AM to 8 AM");
-    expectInOrder(card, ["Busiest", busiest, "Quietest open hour", quietest, ...BUSIEST.days, ...BUSIEST.hours, "Fewer visits", "More visits"]);
+    expectInOrder(card, [WORDS.busiest.busiest, busiest, WORDS.busiest.quietest, quietest, ...SAMPLE.days, ...SAMPLE.hours, WORDS.busiest.fewer, WORDS.busiest.more]);
   });
 
   test("how often they come: the five groups, from every week to came once, each with its customers", async () => {
-    const card = cardOf(await render(<ChartsSection />), "habits");
+    const card = cardOf(await render(<ChartsSection market="us" />), "habits");
 
-    expectInOrder(card, HABITS.flatMap((habit) => [habit.label, String(habit.count)]));
+    expectInOrder(card, HABITS.flatMap((habit, index) => [SAMPLE.habits[index], String(habit.count)]));
   });
 
   test("reward progress: customers by stamps on their card, the fifth bar the ones with a reward ready, and what the axis counts", async () => {
-    const card = cardOf(await render(<ChartsSection />), "rewards");
+    const card = cardOf(await render(<ChartsSection market="us" />), "rewards");
 
-    expectInOrder(card, ["0-1", "2-3", "4-5", "6-7", "Ready", "Stamps on an 8-stamp card", "Reward ready", String(READY)]);
+    expectInOrder(card, ["0-1", "2-3", "4-5", "6-7", WORDS.rewards.ready, fill(WORDS.rewards.stamps, { count: 8 }), WORDS.rewards.rewardReady, String(READY)]);
   });
 
   test("monthly cohorts: six first-visit months against 30, 60, 90 and 180 days, a dash where a window has not passed", async () => {
-    const card = cardOf(await render(<ChartsSection />), "cohorts");
+    const card = cardOf(await render(<ChartsSection market="us" />), "cohorts");
     const text = textOf(card);
 
-    expectInOrder(card, [...COHORT_DAYS.map((days) => `${days} d`), ...COHORTS.map((cohort) => cohort.month)]);
+    expectInOrder(card, [...COHORT_DAYS.map((days) => `${days} d`), ...SAMPLE.cohortMonths]);
     expect(card.match(/data-cohort="[A-Za-z]+"/g)).toHaveLength(COHORTS.length);
     expect(text).toContain("–");
     expect(text).toContain(`${cohortPercent(COHORTS[5].size, COHORTS[5].back[0])}%`);
   });
 
   test("levels: the customers on each level, and the moves up month by month", async () => {
-    const card = cardOf(await render(<ChartsSection />), "levels");
+    const card = cardOf(await render(<ChartsSection market="us" />), "levels");
 
-    expectInOrder(card, LEVELS.flatMap((level) => [level.name, String(level.customers)]));
-    expect(textOf(card)).toMatch(/Moves up/);
+    expectInOrder(card, LEVELS.flatMap((level, index) => [LEVEL_NAMES[index], String(level.customers)]));
+    expect(textOf(card)).toContain(WORDS.levels.moves);
   });
 
   test("tracked spend: the total and the average ticket", async () => {
-    const card = cardOf(await render(<ChartsSection />), "spend");
+    const card = cardOf(await render(<ChartsSection market="us" />), "spend");
 
-    expectInOrder(card, [dollars(SPEND.total), `average ticket ${dollars(SPEND.ticket, true)}`]);
+    expectInOrder(card, [dollars(SPEND.total), fill(WORDS.spend.ticket, { amount: dollars(SPEND.ticket, true) })]);
   });
 
   test("by location: the picker over the locations, each with its visits", async () => {
-    const card = cardOf(await render(<ChartsSection />), "locations");
+    const card = cardOf(await render(<ChartsSection market="us" />), "locations");
 
-    expectInOrder(card, ["All locations", ...LOCATIONS.flatMap((location) => [location.name, location.visits.toLocaleString("en-US")])]);
+    expectInOrder(card, [WORDS.locations.all, ...LOCATIONS.flatMap((location, index) => [SAMPLE.locations[index], location.visits.toLocaleString("en-US")])]);
     expect(textOf(card)).not.toMatch(/Paris|GMT/);
   });
 });
@@ -222,7 +228,8 @@ describe("your customers: a list like the dashboard's own, and what its groups m
   test("each row reads: the customer, their stamps on an 8-stamp card, their segment and when they last came", async () => {
     const html = await render(<CustomersSection />);
 
-    for (const { name, stamps, segment, lastVisit } of CUSTOMER_LIST) {
+    for (const [index, { stamps, segment }] of CUSTOMER_LIST.entries()) {
+      const { name, lastVisit } = COPY.customers.people[index];
       const row = html.match(new RegExp(`<tr\\b[^>]*data-customer="${segment}"[\\s\\S]*?</tr>`))?.[0] ?? "";
       const label = COPY.customers.segments.find((candidate) => candidate.key === segment)?.label ?? "";
 
@@ -245,7 +252,8 @@ describe("your customers: a list like the dashboard's own, and what its groups m
     const text = textOf(await render(<CustomersSection />));
 
     expect(text).not.toMatch(/@|\.com/);
-    for (const { name } of CUSTOMER_LIST) expect(INVENTED_NAMES).toContain(name);
+    for (const { name } of COPY.customers.people) expect(INVENTED_NAMES).toContain(name);
+    expect(COPY.customers.people).toHaveLength(CUSTOMER_LIST.length);
   });
 });
 

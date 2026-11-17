@@ -1,5 +1,4 @@
-import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
-import { REWARD_BANNER, STAMP_BANNER } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { GlassCard } from "../../platform/GlassCard";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { GoogleWalletPhone } from "../../shared/GoogleWalletPhone";
@@ -19,6 +18,10 @@ const ANDROID = { full: 286, narrow: 166 };
  * phone the phones and their badges come first, then the three cards.
  */
 export function WalletsComposition() {
+  const copy = useLandingCopy();
+  const COPY = copy.previews.pushNotifications.PUSH_NOTIFICATIONS_PREVIEW;
+  const { SHARED, STAMP_BANNER, REWARD_BANNER } = copy.shared;
+
   return (
     <div className="relative mx-auto flex max-w-[480px] flex-col gap-4 lg:block lg:h-[700px] lg:w-[960px] lg:max-w-none">
       <div className="relative flex justify-center lg:static">
@@ -41,7 +44,7 @@ export function WalletsComposition() {
         title={COPY.wallets.iphone}
         className="relative z-20 w-full lg:absolute lg:top-[368px] lg:left-0 lg:w-[340px]"
       >
-        <LockScreenNotification {...shopBanner(STAMP_BANNER)} />
+        <LockScreenNotification {...shopBanner(STAMP_BANNER)} timeAgo={SHARED.now} />
       </GlassCard>
 
       <GlassCard
@@ -49,7 +52,7 @@ export function WalletsComposition() {
         title={COPY.wallets.android}
         className="relative z-20 w-full lg:absolute lg:top-[130px] lg:left-[640px] lg:w-[320px]"
       >
-        <LockScreenNotification {...shopBanner(REWARD_BANNER)} />
+        <LockScreenNotification {...shopBanner(REWARD_BANNER)} timeAgo={SHARED.now} />
       </GlassCard>
 
       <GlassCard

@@ -75,6 +75,30 @@ export const CARD_DESIGN_PREVIEW = {
       google: "An Android phone with the same loyalty card open in Google Wallet",
     },
   },
+  /**
+   * The two fields a sample card prints under its strip. `shops` follows the order of `reskin.captions`: who holds
+   * the card and what it earns; the labels say "Reward" unless the card is still counting toward a next one.
+   */
+  cardFields: {
+    holder: "Cardholder",
+    reward: "Reward",
+    nextReward: "Next reward",
+    shops: [
+      { holder: "Dan", reward: "Free wash" },
+      { holder: "Ava", reward: "Free croissant" },
+      { holder: "Iris", reward: "Free glass" },
+      { holder: "Maya", reward: "Free lash fill" },
+      { holder: "Elias", reward: "Free tote bag" },
+      { holder: "Leo", reward: "Free slice" },
+    ],
+    /** The anatomy section's spa (a stamp card) and boutique (a points card). */
+    anatomy: {
+      stamps: { holder: "Elena", reward: "Free facial" },
+      points: { holder: "Noor", reward: "Free tote bag" },
+    },
+    /** The wallets section's grocer. */
+    wallets: { holder: "Rosa", reward: "10% off" },
+  },
   faq: {
     title: "Questions about your card",
     items: [
@@ -89,9 +113,9 @@ export const CARD_DESIGN_PREVIEW = {
           "Your card still works. Without a logo it shows your initials in your accent color, and you can pick from 98 ready-made stamp icons.",
       },
       {
-        question: "Can I make a digital punch card or a points card?",
+        question: "Can I make a stamp card or a points card?",
         answer:
-          "Both. A stamp card works like a paper punch card, with a stamp for each visit. A points card rewards what they spend. Add levels to either, and switch later without your customers losing their card.",
+          "Both. A stamp card works like a paper loyalty card, with a stamp for each visit. A points card rewards what they spend. Add levels to either, and switch later without your customers losing their card.",
       },
       {
         question: "Does the card work on iPhone and Android?",

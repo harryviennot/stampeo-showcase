@@ -1,4 +1,4 @@
-import { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LpSection } from "../../shared/LpSection";
 import { LevelFactTiles } from "./LevelFactTiles";
 import { LevelLadder } from "./LevelLadder";
@@ -8,8 +8,9 @@ import { LevelLadder } from "./LevelLadder";
  * `#levels` is the hero's second button.
  */
 export function LevelsSection() {
-  const { eyebrow, title, lead, facts, tip } = LOYALTY_PROGRAMS_PREVIEW.levels;
-  const { tipLabel } = LOYALTY_PROGRAMS_PREVIEW.settings;
+  const copy = useLandingCopy().previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW;
+  const { eyebrow, title, lead, facts, tip } = copy.levels;
+  const { tipLabel } = copy.settings;
   const tipBody = tip.startsWith(tipLabel) ? tip.slice(tipLabel.length).trim() : tip;
 
   return (

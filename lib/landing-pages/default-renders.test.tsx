@@ -28,6 +28,9 @@ import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import { Segmented } from "@/components/ui/Segmented";
 import { renderEn, renderEnAsync } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
+import { PLATFORM } from "./copy/platform";
+import { PROGRAM_TYPES } from "./copy/program-types";
+import { loyaltyLink } from "./preview-nav";
 
 // The gallery is an async server component that asks next-intl for its words.
 await mockEnglishServerTranslations();
@@ -138,7 +141,7 @@ describe("what Platform's own pieces render when the previews' new props are lef
   });
 
   test("PlatformHero: the headline, the phone stack and the fan of seven cards, then the trial and demo buttons, with no label or sub", async () => {
-    expect(await renderEnAsync(<PlatformHero />)).toMatchSnapshot();
+    expect(await renderEnAsync(<PlatformHero market="us" />)).toMatchSnapshot();
   });
 
   test("LpFaq: the five shared questions and the contact line", () => {
@@ -150,12 +153,25 @@ describe("what Platform's own pieces render when the previews' new props are lef
   });
 
   test("PlatformToggleCard: the dashboard and scanner panes in one white card", () => {
-    expect(renderEn(<PlatformToggleCard dashboard={<i>dashboard pictures</i>} scanner={<i>scanner phone</i>} />)).toMatchSnapshot();
+    expect(renderEn(
+        <PlatformToggleCard
+          words={PLATFORM.platform}
+          pages={{ dashboard: "/features/analytics", scanner: "/features/mobile-scanner" }}
+          dashboard={<i>dashboard pictures</i>}
+          scanner={<i>scanner phone</i>}
+        />,
+      )).toMatchSnapshot();
   });
 
   test("ProgramTypeRows: every row open, the guide link under them", () => {
     expect(
-      renderEn(<ProgramTypeRows visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }} />),
+      renderEn(
+        <ProgramTypeRows
+          rows={PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }))}
+          guide={{ label: PLATFORM.programTypes.closer, ...loyaltyLink("en", "previews", "us") }}
+          visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }}
+        />,
+      ),
     ).toMatchSnapshot();
   });
 });

@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { PICKER_TOTAL, suggestProgram } from "@/lib/landing-pages/previews/loyalty-picker";
 import { CARD_SHADOW } from "../../platform/classes";
 import { PickerQuestion, type PaneState } from "./PickerQuestion";
 import { PickerResult } from "./PickerResult";
 
 /** The picker's words: its questions, the suggestions and the line about levels. */
-export type PickerCopy = Omit<typeof LOYALTY_PROGRAMS_PREVIEW.picker, "eyebrow" | "title" | "lead">;
+export type PickerCopy = Omit<LandingCopy["previews"]["loyaltyPrograms"]["LOYALTY_PROGRAMS_PREVIEW"]["picker"], "eyebrow" | "title" | "lead">;
 
 /** How long the chosen option stays highlighted before the next question comes in. */
 const FLASH_MS = 250;

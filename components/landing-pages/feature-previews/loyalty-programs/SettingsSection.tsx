@@ -1,5 +1,5 @@
 import { ArrowsClockwiseIcon, Gift, TargetIcon, WalletIcon } from "@/components/icons";
-import { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CARD_SHADOW, CARD_TITLE } from "../../platform/classes";
 import { IconTile } from "../../shared/IconTile";
 import { LpSection } from "../../shared/LpSection";
@@ -12,7 +12,7 @@ const CARD = `flex flex-col rounded-[28px] bg-white p-6 ${CARD_SHADOW} ring-1 ri
 
 /** Four settings on white cards, each with what it does and our tip, and the study that backs the welcome gift under them. */
 export function SettingsSection() {
-  const { eyebrow, title, lead, items, tipLabel, figure } = LOYALTY_PROGRAMS_PREVIEW.settings;
+  const { eyebrow, title, lead, items, tipLabel, figure } = useLandingCopy().previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW.settings;
 
   return (
     <LpSection section="settings" eyebrow={eyebrow} title={title} lead={lead} align="center">

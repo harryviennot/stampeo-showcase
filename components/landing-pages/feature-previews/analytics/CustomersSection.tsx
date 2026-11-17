@@ -1,4 +1,4 @@
-import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CARD_STAMPS, CUSTOMER_LIST, SEGMENT_LOOK, type SegmentKey } from "@/lib/landing-pages/previews/analytics-customers";
 import { FactList } from "../../shared/FactList";
 import { LpSection } from "../../shared/LpSection";
@@ -37,7 +37,7 @@ function Stamps({ count }: Readonly<{ count: number }>) {
 
 /** The customer list as the dashboard's table draws it: seven customers, one in each segment. */
 function CustomerTable() {
-  const { columns, segments } = ANALYTICS_PREVIEW.customers;
+  const { columns, segments, people } = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW.customers;
   const labels = Object.fromEntries(segments.map((segment) => [segment.key, segment.label])) as Record<SegmentKey, string>;
 
   return (
@@ -53,7 +53,10 @@ function CustomerTable() {
           </tr>
         </thead>
         <tbody>
-          {CUSTOMER_LIST.map(({ name, stamps, segment, lastVisit }) => (
+          {CUSTOMER_LIST.map(({ stamps, segment }, index) => {
+            const { name, lastVisit } = people[index];
+
+            return (
             <tr key={segment} data-customer={segment} className="border-b border-[#f8f7f5] last:border-b-0">
               <td className="px-3 py-3 sm:px-4">
                 <span className="flex items-center gap-2.5">
@@ -78,7 +81,8 @@ function CustomerTable() {
               </td>
               <td className="hidden px-3 py-3 text-sm whitespace-nowrap text-[var(--muted-foreground)] sm:table-cell sm:px-4">{lastVisit}</td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -87,7 +91,7 @@ function CustomerTable() {
 
 /** The customer list beside what each of its groups means, with the download of the whole list under them. */
 export function CustomersSection() {
-  const { eyebrow, title, lead, segments, fact } = ANALYTICS_PREVIEW.customers;
+  const { eyebrow, title, lead, segments, fact } = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW.customers;
 
   return (
     <LpSection section="customers" tinted eyebrow={eyebrow} title={title} lead={lead} align="center">

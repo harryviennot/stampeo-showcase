@@ -20,8 +20,10 @@ import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
 import { expectInOrder, renderEn, textOf } from "../../testing/render-en";
 import { stackZooms } from "../../testing/stacked-rows";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
+import { PROGRAM_TYPES } from "../copy/program-types";
 import { SHARED } from "../copy/shared";
-import { LANDING_PAGES, PREVIEW_SLUGS } from "../pages";
+import { LANDING_PAGES, PREVIEW_SLUGS, pageWords } from "../pages";
+import { previewLink } from "../preview-nav";
 
 const PLATFORM_DIR = join(COMPONENTS_DIR, "platform");
 
@@ -123,7 +125,15 @@ describe("HoverRows: rows that open on hover, focus or tap, all open on the serv
 describe("HoverRows: the rows of wallet cards keep their thumbnail column; only dense pictures stack", () => {
   test("Platform's program rows draw no stacked picture", async () => {
     expect(
-      stackZooms(renderEn(<ProgramTypeRows visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }} />)),
+      stackZooms(
+        renderEn(
+          <ProgramTypeRows
+            rows={PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }))}
+            guide={{ label: "Which one?", ...previewLink("platform/loyalty-programs", "us") }}
+            visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }}
+          />,
+        ),
+      ),
     ).toEqual([]);
   });
 });
@@ -181,10 +191,10 @@ describe("ToggleCard: one white card, one surface per tab", () => {
 
 describe("PreviewHero: the words and the actions on the left, the visual on the right", () => {
   const html = (props: Partial<Parameters<typeof PreviewHero>[0]> = {}) =>
-    renderEn(<PreviewHero slug="platform/mobile-scanner" visual={<i>scanner phone</i>} {...props} />, { us: true });
+    renderEn(<PreviewHero slug="platform/mobile-scanner" market="us" visual={<i>scanner phone</i>} {...props} />, { us: true });
 
   test("prints the page's own words in that order, then the visual: on a phone the words come first", () => {
-    const { hero } = LANDING_PAGES["platform/mobile-scanner"];
+    const { hero } = pageWords("platform/mobile-scanner", "en", "us");
 
     expectInOrder(html(), [hero.accent, hero.sub ?? "", SHARED.cta, "14 days free", "scanner phone"]);
     expect(html()).toMatch(new RegExp(`<span class="text-\\[var\\(--accent\\)\\]">${hero.accent.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}</span>`));
@@ -199,7 +209,7 @@ describe("PreviewHero: the words and the actions on the left, the visual on the 
   });
 
   test.each(PREVIEW_SLUGS)("%s: nothing sits above the headline, no label, no pill and no chip", (slug) => {
-    const markup = renderEn(<PreviewHero slug={slug} visual={<i>visual</i>} />, { us: true });
+    const markup = renderEn(<PreviewHero slug={slug} market="us" visual={<i>visual</i>} />, { us: true });
     const above = markup.slice(markup.indexOf('data-landing-section="hero"'), markup.indexOf("<h1"));
 
     expect(above).not.toMatch(/<(?:p|span)\b/);
@@ -220,7 +230,7 @@ describe("PreviewHero: the words and the actions on the left, the visual on the 
 
 describe("RelatedPreviews: three links to the page's siblings", () => {
   test.each(PREVIEW_SLUGS)("%s links to its three siblings, each a tall tap target to the sibling's own URL", (slug) => {
-    const html = renderEn(<RelatedPreviews slug={slug} />);
+    const html = renderEn(<RelatedPreviews slug={slug} market="us" />);
     const hrefs = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
 
     expect(hrefs).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => `/us/landing-pages/${sibling}`));
@@ -228,8 +238,15 @@ describe("RelatedPreviews: three links to the page's siblings", () => {
     expect(html.match(/min-h-14/g)).toHaveLength(3);
   });
 
+  test.each(PREVIEW_SLUGS)("%s on the international site links to its siblings in the visitor's language, not to /us", (slug) => {
+    const html = renderEn(<RelatedPreviews slug={slug} market="int" />);
+    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
+
+    expect(hrefs).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => `/en/landing-pages/${sibling}`));
+  });
+
   test("each card says what the sibling is, in the shared copy, and no card points at a live feature page", () => {
-    const html = renderEn(<RelatedPreviews slug="platform/card-design" />);
+    const html = renderEn(<RelatedPreviews slug="platform/card-design" market="us" />);
     const text = textOf(html);
 
     expect(text).toContain(PREVIEW_SHARED.related.title);

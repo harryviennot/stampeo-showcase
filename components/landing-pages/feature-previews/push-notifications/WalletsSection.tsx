@@ -1,9 +1,11 @@
-import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LpSection } from "../../shared/LpSection";
 import { WalletsComposition } from "./WalletsComposition";
 
 /** The card on both phones with the notifications floating over them. */
 export function WalletsSection() {
+  const COPY = useLandingCopy().previews.pushNotifications.PUSH_NOTIFICATIONS_PREVIEW;
+
   return (
     <LpSection
       section="wallets"

@@ -33,6 +33,7 @@ const PROPS: ComponentProps<typeof MobileMenu> = {
   onClose: () => {},
   burgerRef: { current: null },
   featureLinks: "previews",
+  market: "us",
   pathname: "/us/landing-pages/platform",
   navItems: [
     { label: "Loyalty", href: "/loyalty-programs", market: "int" },

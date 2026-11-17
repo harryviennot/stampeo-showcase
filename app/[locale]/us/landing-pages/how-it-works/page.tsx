@@ -22,14 +22,14 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata(): Metadata {
-  return landingPageMetadata("how-it-works");
+  return landingPageMetadata("how-it-works", "en", "us");
 }
 
 export default function HowItWorksPage() {
   setRequestLocale("en");
 
   return (
-    <LandingPageShell slug="how-it-works">
+    <LandingPageShell slug="how-it-works" market="us">
       <LpHero slug="how-it-works" />
       <StepsOverview />
       <CreateStep />
@@ -37,7 +37,7 @@ export default function HowItWorksPage() {
       <StampStep />
       <LpDemo />
       <SeeItWork />
-      <LpSectors />
+      <LpSectors market="us" />
       <FirstDayTimeline />
       <LpSection section="pricing" bare>
         <PricingSection market="us" />

@@ -109,7 +109,7 @@ describe("the updates card", () => {
 });
 
 describe("the notification card", () => {
-  const html = () => renderEn(<LockScreenNotification {...lpBanner(STAMP_BANNER)} />);
+  const html = () => renderEn(<LockScreenNotification {...lpBanner(STAMP_BANNER)} timeAgo={SHARED.now} />);
 
   /** A CSS colour as red, green, blue and alpha. */
   const rgba = (color: string) => {

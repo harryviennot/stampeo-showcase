@@ -146,7 +146,7 @@ describe("the surfaces are clean: no preview page has an ink frame", () => {
 
 describe("the links a preview closes with", () => {
   const html = (slug: "platform/card-design" | "platform/geolocation" = "platform/card-design", title?: string) =>
-    renderEn(<RelatedPreviews slug={slug} title={title} />);
+    renderEn(<RelatedPreviews slug={slug} market="us" title={title} />);
 
   test("they are three tiles under the page's own title, with no label above it", () => {
     const related = html();

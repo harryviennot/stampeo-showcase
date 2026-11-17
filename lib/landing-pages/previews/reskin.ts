@@ -15,33 +15,16 @@ export const RESKIN_STEP_MS = 4800;
 /** How far a drag has to go sideways, in px, to count as a swipe. */
 export const SWIPE_PX = 40;
 
-/** A cardholder and a reward for each card: the two fields a pass shows under its strip. */
-const FIELDS: Record<(typeof RESKIN_SHOPS)[number], PassField[]> = {
-  lustre: [
-    { key: "holder", label: "Cardholder", value: "Dan" },
-    { key: "reward", label: "Reward", value: "Free wash" },
-  ],
-  fournee: [
-    { key: "holder", label: "Cardholder", value: "Ava" },
-    { key: "reward", label: "Reward", value: "Free croissant" },
-  ],
-  ravin: [
-    { key: "holder", label: "Cardholder", value: "Iris" },
-    { key: "reward", label: "Next reward", value: "Free glass" },
-  ],
-  lashwell: [
-    { key: "holder", label: "Cardholder", value: "Maya" },
-    { key: "reward", label: "Reward", value: "Free lash fill" },
-  ],
-  marginalia: [
-    { key: "holder", label: "Cardholder", value: "Elias" },
-    { key: "reward", label: "Next reward", value: "Free tote bag" },
-  ],
-  "rolling-slice": [
-    { key: "holder", label: "Cardholder", value: "Leo" },
-    { key: "reward", label: "Reward", value: "Free slice" },
-  ],
-};
+/** The shops that are still counting toward a next reward: their field says "Next reward". */
+const COUNTING = new Set<string>(["ravin", "marginalia"]);
+
+/** The words of the two fields under each card: the labels, and each shop's cardholder and reward (the card design copy's `cardFields`). */
+export interface ReskinWords {
+  holder: string;
+  reward: string;
+  nextReward: string;
+  shops: ReadonlyArray<{ holder: string; reward: string }>;
+}
 
 export interface ReskinCard {
   id: string;
@@ -53,9 +36,14 @@ export interface ReskinCard {
 }
 
 /** A shop's card from the brand banks, with its two fields. */
-export function reskinCard(id: (typeof RESKIN_SHOPS)[number]): ReskinCard {
+export function reskinCard(id: (typeof RESKIN_SHOPS)[number], words: ReskinWords): ReskinCard {
   const card = resolveFanCard(id);
-  const design = { ...card.sample.design, secondary_fields: FIELDS[id] };
+  const shop = words.shops[RESKIN_SHOPS.indexOf(id)];
+  const secondary_fields: PassField[] = [
+    { key: "holder", label: words.holder, value: shop.holder },
+    { key: "reward", label: COUNTING.has(id) ? words.nextReward : words.reward, value: shop.reward },
+  ];
+  const design = { ...card.sample.design, secondary_fields };
 
   if (card.kind === "stamps") return { id, program: "stamps", design, stamps: card.sample.stamps };
   return { id, program: "points", design, pointsBalance: card.sample.pointsBalance, pointsRewards: card.sample.pointsRewards };

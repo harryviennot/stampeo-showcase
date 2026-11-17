@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import type { Market } from "@/lib/markets";
 import type { NavMenuItem } from "@/lib/nav/menu-items";
 
 /** What the header hands to whichever phone menu it draws. */
@@ -10,6 +11,8 @@ export interface PhoneMenuProps {
   /** Whether the page has scrolled: the bar turns to frosted cream. */
   scrolled: boolean;
   featureLinks: FeatureLinks;
+  /** The market of the page: a preview a feature link leads to stays inside it. */
+  market: Market;
   /** The page's path without its locale, to mark the entry you are on. */
   pathname: string;
   /** Loyalty and Pricing. */

@@ -1,10 +1,12 @@
+import { getLocale } from "next-intl/server";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
 import { NumberStamp } from "@/components/stamps/StampIcons";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
-import { PUSH_NOTIFICATIONS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/push-notifications";
+import { landingCopy, useLandingCopy, type LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { Banner } from "@/lib/landing-pages/copy/types";
+import { fill } from "@/lib/landing-pages/format";
 import type { CardDesign } from "@/lib/types/design";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { aurevoDesign } from "../../shared/AurevoCard";
@@ -12,21 +14,22 @@ import { LpSection, EYEBROW } from "../../shared/LpSection";
 import { AUREVO } from "../../shared/samples";
 import { shopBanner } from "../ShopIcon";
 
-type Key = (typeof COPY.day.nodes)[number]["key"];
+type Day = LandingCopy["previews"]["pushNotifications"]["PUSH_NOTIFICATIONS_PREVIEW"]["day"];
+type Key = Day["nodes"][number]["key"];
 
 const TOTAL = AUREVO.design.total_stamps ?? 8;
 
 /** What the card shows at each step: the 5th stamp the banner counts, the full card, a fresh one once the reward is claimed, and the next level's card with its name in the header. */
-const AT_STEP: Record<Key, { stamps: number; headerLabel?: string }> = {
+const AT_STEP: Record<Key, { stamps: number; level?: "silver" }> = {
   stamp: { stamps: 5 },
   reward: { stamps: TOTAL },
   redeemed: { stamps: 0 },
-  level: { stamps: 1, headerLabel: "Silver" },
+  level: { stamps: 1, level: "silver" },
 };
 
 /** The four steps of one customer's card, each with the card as it stands. */
-export function dayNodes() {
-  return COPY.day.nodes.map((node) => ({ ...node, ...AT_STEP[node.key] }));
+export function dayNodes(nodes: Day["nodes"]) {
+  return nodes.map((node) => ({ ...node, ...AT_STEP[node.key] }));
 }
 
 /** A card is laid out 300px wide and cut at 227px: its header and its stamps, as the Wallet app cuts a card. */
@@ -43,10 +46,13 @@ const DOT =
   "absolute top-0 left-0 z-10 flex rounded-full bg-[var(--cream)] lg:static lg:col-start-2 lg:row-start-1 lg:justify-self-center";
 
 function Notification({ banner }: Readonly<{ banner: Banner }>) {
+  const { SHARED } = useLandingCopy().shared;
+  const { lockScreenAlt } = useLandingCopy().previews.shared.PREVIEW_SHARED;
+
   return (
-    <div role="img" aria-label={`Lock screen notification from ${banner.sender}: ${banner.body}`} className="w-full max-w-[420px] text-left">
+    <div role="img" aria-label={fill(lockScreenAlt, { sender: banner.sender, message: banner.body })} className="w-full max-w-[420px] text-left">
       <div aria-hidden>
-        <LockScreenNotification {...shopBanner(banner)} />
+        <LockScreenNotification {...shopBanner(banner)} timeAgo={SHARED.now} />
       </div>
     </div>
   );
@@ -78,10 +84,12 @@ function MiniCard({
  */
 export async function DaySection() {
   const design = await aurevoDesign();
-  const nodes = dayNodes();
+  const copy = landingCopy(await getLocale());
+  const { day } = copy.previews.pushNotifications.PUSH_NOTIFICATIONS_PREVIEW;
+  const nodes = dayNodes(day.nodes);
 
   return (
-    <LpSection section="day" eyebrow={COPY.day.eyebrow} title={COPY.day.title} lead={COPY.day.lead} align="center">
+    <LpSection section="day" eyebrow={day.eyebrow} title={day.title} lead={day.lead} align="center">
       <ol className="mx-auto max-w-[460px] lg:max-w-[960px]">
         {nodes.map((node, index) => (
           <li
@@ -98,7 +106,12 @@ export async function DaySection() {
             </ScrollReveal>
 
             <ScrollReveal variant="left" className="mt-1 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:flex lg:justify-end lg:pr-4">
-              <MiniCard design={design} stamps={node.stamps} headerLabel={node.headerLabel} label={node.cardAlt} />
+              <MiniCard
+                design={design}
+                stamps={node.stamps}
+                headerLabel={node.level && copy.shared.SHARED.levelNames[node.level]}
+                label={node.cardAlt}
+              />
             </ScrollReveal>
 
             <ScrollReveal variant="right" delay={250} className="mt-4 lg:col-start-3 lg:row-start-2 lg:mt-0 lg:self-center lg:pl-4">
