@@ -50,6 +50,8 @@ export interface FakeBrowserOptions {
   /** An IANA zone; null makes `Intl` throw; undefined leaves the real one. */
   timezone?: string | null;
   hostname?: string;
+  /** The page's path; `/us/pricing` unless given. */
+  pathname?: string;
   /** `silent` accepts a write and drops it; `throws` refuses it. */
   cookies?: CookieMode;
   /** `route` answers with the real route handler and applies its cookies; `hang` never answers. */
@@ -101,6 +103,7 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
   const held: (() => void)[] = [];
   const cookieMode = options.cookies ?? "stores";
   const hostname = options.hostname ?? "stampeo.app";
+  const pathname = options.pathname ?? "/us/pricing";
 
   const setJar = (header: string) => {
     jar.clear();
@@ -152,7 +155,7 @@ export function installFakeBrowser(options: FakeBrowserOptions = {}): FakeBrowse
   });
 
   const window = Object.assign(new EventTarget(), {
-    location: { hostname, href: `${SITE}/us/pricing`, search: "", reload: () => void events.push("reload") },
+    location: { hostname, pathname, href: `${SITE}${pathname}`, search: "", reload: () => void events.push("reload") },
   });
   window.addEventListener(CONSENT_CHANGED_EVENT, () => events.push("consent-change"));
 

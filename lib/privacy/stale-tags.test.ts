@@ -9,6 +9,10 @@
 import { afterEach, describe, expect, test } from "bun:test";
 
 import { emitConsentChange, writeConsentRecord } from "../consent";
+import { fakePostHog } from "../posthog/__fixtures__/fake-posthog";
+import { startPostHog } from "../posthog/start";
+import { fakeStorage } from "../testing/fake-storage";
+import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { installFakeBrowser, GRANTED_COOKIE, REFUSED_COOKIE, type FakeBrowser } from "./__fixtures__/fake-browser";
 import { rowFor } from "./policy";
 import { consentChangedSince, watchConsentAcrossTabs } from "./stale-tags";
@@ -173,5 +177,41 @@ describe("a window that stayed visible beside the one where the visitor refused"
     untagged.setJar(REFUSED_COOKIE);
     focus();
     expect(untagged.events).not.toContain("reload");
+  });
+});
+
+describe("a tab whose PostHog remembers the visitor, with no GA or Meta tag loaded", () => {
+  restoreGlobalsAfterEach("localStorage", "sessionStorage");
+
+  let stopPostHog: (() => void) | null = null;
+  afterEach(() => {
+    stopPostHog?.();
+    stopPostHog = null;
+  });
+
+  /** A tab where PostHog started for this visitor, watched the way the banner watches. */
+  function postHogTab(cookie: string) {
+    browser = installFakeBrowser({ cookie, timezone: "Europe/Paris" });
+    Object.defineProperty(globalThis, "localStorage", { value: fakeStorage(), configurable: true, writable: true });
+    Object.defineProperty(globalThis, "sessionStorage", { value: fakeStorage(), configurable: true, writable: true });
+    stopPostHog = startPostHog(fakePostHog(), "phc_testkey", "https://eu.i.posthog.com");
+    watcher = watchConsentAcrossTabs();
+    return browser;
+  }
+
+  test("reloads when audience measurement is refused elsewhere: its storage is cleared and it starts again in memory", () => {
+    const b = postHogTab(GRANTED_COOKIE);
+
+    away(b, () => b.setJar(REFUSED_COOKIE));
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+
+  test("a grant made elsewhere reaches a tab that was only counting in memory without reloading it", () => {
+    const b = postHogTab("");
+
+    away(b, () => b.setJar(GRANTED_COOKIE));
+
+    expect(b.events).not.toContain("reload");
   });
 });
