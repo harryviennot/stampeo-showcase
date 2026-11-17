@@ -1,5 +1,6 @@
 import { acquisitionSlug, isSupportedLocale } from "../locale-negotiation";
-import { carriesSessionToken, scrubPostHogEvent } from "../privacy/credential-params";
+import { carriesSessionToken } from "../privacy/credential-params";
+import { scrubPostHogEvent } from "./scrub";
 
 /**
  * Which pages PostHog stays off, and what it sends from the rest. A business's

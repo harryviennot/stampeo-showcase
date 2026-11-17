@@ -1,93 +1,122 @@
 /**
  * Removes credential parameters (reset and sign-in tokens, OAuth codes) and
  * the email the sign-in page can be opened with from URLs before analytics or
- * error tracking sees them. PostHog's events lose two more things: the ad
- * platforms' click ids (their vendor is named instead) and the demo session
- * token in the wallet-select page's address. The scrubber works on the string,
- * so what is left of a URL is byte for byte what it was: the path, the other
- * parameters and their encoding.
+ * error tracking sees them. The scrubber works on the string, so what is left
+ * of a URL is byte for byte what it was: the path, the other parameters and
+ * their encoding.
  */
 
-import { AD_CLICK_PARAMS, AD_CLICK_VENDORS, adClickVendor, adClickVendorOfName, type AdClickVendor } from "./ad-click-params";
-import { dropEntries, isListed, scrubTextParams, type ParamNames } from "./url-params";
+export type ParamNames = ReadonlySet<string>;
 
 // Parameters that sign someone in on their own: the reset link and implicit-flow returns.
 const SESSION_TOKEN_PARAMS: ParamNames = new Set(["token_hash", "access_token", "refresh_token"]);
 
 const SCRUBBED_PARAMS: ParamNames = new Set([...SESSION_TOKEN_PARAMS, "token", "code", "email"]);
 
-// What PostHog's events lose from every URL: the credentials and the ad click ids.
-const POSTHOG_PARAMS: ParamNames = new Set([...SCRUBBED_PARAMS, ...AD_CLICK_PARAMS]);
-
-// The token of a demo session: the wallet-select page's path, and the pass link its buttons lead to.
-const DEMO_TOKEN_PATH = /(\/demo\/(?:wallet-select|pass)\/)[^/?#\s"]+/g;
-const DEMO_TOKEN_PLACEHOLDER = ":token";
-
 // Deeper than any PostHog or Sentry payload nests a URL; it bounds the walk on a self-referencing object.
 const MAX_DEPTH = 12;
 
+function isListed(rawName: string, names: ParamNames): boolean {
+  let name = rawName;
+  try {
+    name = decodeURIComponent(rawName);
+  } catch {
+    // A malformed escape: compare the raw name.
+  }
+  return names.has(name.toLowerCase());
+}
+
+/** `a=1&b=2` without the listed entries, or null when it held none. */
+function dropEntries(params: string, names: ParamNames): string | null {
+  const kept: string[] = [];
+  let dropped = false;
+  for (const entry of params.split("&")) {
+    if (isListed(entry.split("=")[0], names)) dropped = true;
+    else kept.push(entry);
+  }
+  return dropped ? kept.join("&") : null;
+}
+
+/** A fragment carries parameters either directly (`#a=1`) or after a route (`#/auth?a=1`). */
+function scrubFragment(fragment: string, names: ParamNames): string | null {
+  const queryAt = fragment.indexOf("?");
+  if (queryAt !== -1) {
+    const cleaned = dropEntries(fragment.slice(queryAt + 1), names);
+    if (cleaned === null) return null;
+    return cleaned ? `${fragment.slice(0, queryAt)}?${cleaned}` : fragment.slice(0, queryAt);
+  }
+  return fragment.includes("=") ? dropEntries(fragment, names) : null;
+}
+
+/** One URL without the listed parameters in its query or fragment; a word with no `?` or `#` comes back as it was. */
+function scrubUrl(url: string, names: ParamNames): string {
+  const hashAt = url.indexOf("#");
+  const beforeHash = hashAt === -1 ? url : url.slice(0, hashAt);
+  const fragment = hashAt === -1 ? null : url.slice(hashAt + 1);
+  const queryAt = beforeHash.indexOf("?");
+  const path = queryAt === -1 ? beforeHash : beforeHash.slice(0, queryAt);
+  const query = queryAt === -1 ? null : beforeHash.slice(queryAt + 1);
+
+  const cleanQuery = query === null ? null : dropEntries(query, names);
+  const cleanFragment = fragment === null ? null : scrubFragment(fragment, names);
+  if (cleanQuery === null && cleanFragment === null) return url;
+
+  const nextQuery = cleanQuery ?? query;
+  const nextFragment = cleanFragment ?? fragment;
+  return path + (nextQuery ? `?${nextQuery}` : "") + (nextFragment ? `#${nextFragment}` : "");
+}
+
+/** One URL without the listed parameters; what is left of it is byte for byte what it was. */
+export function scrubUrlParams(url: string, names: ParamNames): string {
+  return scrubUrl(url, names);
+}
+
+/**
+ * `text` without the listed parameters, whether it is a URL or text with URLs
+ * in it: a message (`GET /reset-password?token_hash=…`) or PostHog's element
+ * chain (`a:attr__href="/login?email=…"nth-child="2"`). A URL ends at
+ * whitespace or a double quote; everything around it comes back as it was.
+ */
+export function scrubText(text: string, names: ParamNames): string {
+  return text.replace(/[^\s"]+/g, (word) => scrubUrl(word, names));
+}
+
 export function scrubCredentialParams(text: string): string {
-  return scrubTextParams(text, SCRUBBED_PARAMS);
+  return scrubText(text, SCRUBBED_PARAMS);
 }
 
 /** Whether `url` carries a parameter that signs someone in on its own (the reset link's `token_hash`). */
 export function carriesSessionToken(url: string): boolean {
-  return scrubTextParams(url, SESSION_TOKEN_PARAMS) !== url;
+  return scrubText(url, SESSION_TOKEN_PARAMS) !== url;
 }
 
-function isPlainObject(value: unknown): value is Record<string, unknown> {
+export function isPlainObject(value: unknown): value is Record<string, unknown> {
   if (typeof value !== "object" || value === null) return false;
   const prototype = Object.getPrototypeOf(value);
   return prototype === Object.prototype || prototype === null;
 }
 
-/** A copy of `value` with every string in it, keys included, run through `scrub`, and the entries whose key `dropKey` accepts left out; dates and other objects are kept as they are. */
-function scrubValue(
+/**
+ * A copy of `value` with every string in it, keys included, run through `scrub` (credentials by default), and the
+ * entries `dropEntry` accepts left out; dates and other objects are kept as they are.
+ */
+export function scrubValue(
   value: unknown,
-  scrub: (text: string) => string,
-  dropKey: (key: string) => boolean = () => false,
+  scrub: (text: string) => string = scrubCredentialParams,
+  dropEntry: (key: string, item: unknown) => boolean = () => false,
   depth = 0
 ): unknown {
   if (typeof value === "string") return scrub(value);
   if (depth >= MAX_DEPTH) return value;
-  if (Array.isArray(value)) return value.map((item) => scrubValue(item, scrub, dropKey, depth + 1));
+  if (Array.isArray(value)) return value.map((item) => scrubValue(item, scrub, dropEntry, depth + 1));
   if (isPlainObject(value)) {
     return Object.fromEntries(
       Object.entries(value)
-        .filter(([key]) => !dropKey(key))
-        .map(([key, item]) => [scrub(key), scrubValue(item, scrub, dropKey, depth + 1)])
+        .filter(([key, item]) => !dropEntry(key, item))
+        .map(([key, item]) => [scrub(key), scrubValue(item, scrub, dropEntry, depth + 1)])
     );
   }
   return value;
-}
-
-/**
- * A PostHog event with credentials and ad click ids removed from every URL it
- * carries (`$current_url`, `$referrer`, `$initial_current_url`, the element
- * chain, heatmap keys, and the same under `$set` / `$set_once`), the click ids
- * PostHog copies into properties of their own (`gclid`, `$initial_fbclid`)
- * dropped, and the demo session token replaced by a placeholder. When a click
- * id was there, `properties.ad_click_vendor` names its platform (the first of
- * Google, Meta, OpenAI and TikTok when several are). The event itself is
- * always kept.
- */
-export function scrubPostHogEvent<T>(event: T): T {
-  const vendors = new Set<AdClickVendor>();
-  const scrub = (text: string) => {
-    const vendor = adClickVendor(text);
-    if (vendor) vendors.add(vendor);
-    return scrubTextParams(text, POSTHOG_PARAMS).replace(DEMO_TOKEN_PATH, `$1${DEMO_TOKEN_PLACEHOLDER}`);
-  };
-  const dropKey = (key: string) => {
-    const vendor = adClickVendorOfName(key);
-    if (vendor) vendors.add(vendor);
-    return vendor !== null;
-  };
-  const scrubbed = scrubValue(event, scrub, dropKey) as { properties?: unknown };
-  const vendor = AD_CLICK_VENDORS.find((candidate) => vendors.has(candidate));
-
-  if (vendor && isPlainObject(scrubbed) && isPlainObject(scrubbed.properties)) scrubbed.properties.ad_click_vendor = vendor;
-  return scrubbed as T;
 }
 
 /** A Sentry query string is text (`a=1&b=2`), a map, or a list of pairs. */
@@ -113,7 +142,7 @@ function scrubQueryString(queryString: unknown): unknown {
  * span data). The event itself is always kept.
  */
 export function scrubSentryEvent<T extends object>(event: T): T {
-  const scrubbed = scrubValue(event, scrubCredentialParams) as { request?: unknown };
+  const scrubbed = scrubValue(event) as { request?: unknown };
   const request = scrubbed.request;
   if (isPlainObject(request) && "query_string" in request) {
     request.query_string = scrubQueryString(request.query_string);

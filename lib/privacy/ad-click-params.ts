@@ -1,4 +1,4 @@
-import { scrubTextParams, scrubUrlParams, type ParamNames } from "./url-params";
+import { scrubText, scrubUrlParams, type ParamNames } from "./credential-params";
 
 /** The click ids each ad platform appends to a landing, in the order a visitor who carries two is credited: Google, Meta, ChatGPT ads (OpenAI), TikTok. */
 const CLICK_IDS_BY_VENDOR = {
@@ -21,14 +21,14 @@ export function stripAdClickIds(url: string): string {
   return scrubUrlParams(url, AD_CLICK_PARAMS);
 }
 
-/** The platform whose click id is named `name`: a URL parameter, or the property PostHog makes of it (`gclid`, `$initial_gclid`). */
+/** The platform whose click id is named `name`: a URL parameter, or a property PostHog makes of it (`gclid`, `$initial_gclid`, `$session_entry_gclid`). */
 export function adClickVendorOfName(name: string): AdClickVendor | null {
-  const param = name.replace(/^\$initial_/, "").toLowerCase();
+  const param = name.replace(/^\$(?:initial|session_entry)_/, "").toLowerCase();
 
   return PARAMS_OF.find(([, params]) => params.has(param))?.[0] ?? null;
 }
 
 /** The platform whose click id the text (a URL, or text with URLs in it) carries, or null: the first of `AD_CLICK_VENDORS` when it carries several. */
 export function adClickVendor(text: string): AdClickVendor | null {
-  return PARAMS_OF.find(([, params]) => scrubTextParams(text, params) !== text)?.[0] ?? null;
+  return PARAMS_OF.find(([, params]) => scrubText(text, params) !== text)?.[0] ?? null;
 }
