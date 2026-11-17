@@ -11,7 +11,7 @@ import { describe, expect, test } from "bun:test";
 
 import { describeGoldenChain } from "./__fixtures__/golden-chain";
 
-const GOOGLE_CHAIN_SHA256 = "b1cf0e456ab8d772edd54eae735c5098ccae1e8330b918f9f290a6bf97569de1";
+const GOOGLE_CHAIN_SHA256 = "a8c6a054fb8d6f6268f20f6a57d67d675bcb2e2a8e542374a5d7e82a8ae20c65";
 
 const FIXTURE = describeGoldenChain("attribution-chain.google.v1.json", GOOGLE_CHAIN_SHA256);
 
