@@ -104,10 +104,10 @@ export function CustomersSection() {
           <dl className="flex flex-col gap-3.5">
             {segments.map(({ key, label, definition }) => (
               <div key={key} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <dt className="w-[7.75rem] shrink-0">
+                <dt className="min-w-[7.75rem] shrink-0">
                   <Pill segment={key}>{label}</Pill>
                 </dt>
-                <dd className="min-w-0 flex-1 text-[15px] leading-snug text-pretty text-[var(--foreground)] sm:text-base">{definition}</dd>
+                <dd className="min-w-[10rem] flex-1 text-[15px] leading-snug text-pretty text-[var(--foreground)] sm:text-base">{definition}</dd>
               </div>
             ))}
           </dl>

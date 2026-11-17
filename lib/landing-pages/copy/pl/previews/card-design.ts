@@ -25,7 +25,7 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
     title: "Każdy element karty jest twój.",
     lead: "Zmieniasz logo, kolory, pieczątki, nagrodę i dane. Kod QR dodajemy za ciebie.",
     labels: ["Logo", "Liczba pieczątek", "Pieczątki", "Imię klienta", "Nagroda", "Kod QR do zeskanowania"],
-    mobileLabels: ["Logo", "Liczba", "Pieczątki", "Imię", "Nagroda", "Kod QR"],
+    mobileLabels: ["Logo", "Postęp", "Pieczątki", "Imię", "Nagroda", "Kod QR"],
     pointsLabels: ["Logo", "Stan punktów", "Wygląd punktów", "Imię klienta", "Następna nagroda", "Kod QR do zeskanowania"],
     pointsMobileLabels: ["Logo", "Stan", "Punkty", "Imię", "Nagroda", "Kod QR"],
   },

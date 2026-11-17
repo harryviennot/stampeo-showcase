@@ -26,7 +26,7 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
     title: "Chaque élément de la carte est à vous.",
     lead: "Changez logo, couleurs, tampons, récompense et infos. Le QR code, on s'en charge.",
     labels: ["Logo", "Nombre de tampons", "Tampons", "Nom du client", "Récompense", "QR code à scanner"],
-    mobileLabels: ["Logo", "Compteur", "Tampons", "Nom", "Récompense", "QR code"],
+    mobileLabels: ["Logo", "Progression", "Tampons", "Nom", "Récompense", "QR code"],
     pointsLabels: ["Logo", "Solde de points", "Bande de points", "Nom du client", "Prochaine récompense", "QR code à scanner"],
     pointsMobileLabels: ["Logo", "Solde", "Points", "Nom", "Récompense", "QR code"],
   },
