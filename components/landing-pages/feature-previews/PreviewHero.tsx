@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { RegionText } from "@/components/market/RegionText";
 import { Container } from "@/components/ui/Container";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { PreviewSlug } from "@/lib/landing-pages/pages";
+import type { Market } from "@/lib/markets";
 import { HeroWords } from "../platform/hero/HeroWords";
 import { LpCtaPair, type SecondaryAction } from "../platform/LpCtaPair";
 import { LpSection } from "../shared/LpSection";
@@ -15,20 +16,24 @@ import { LpSection } from "../shared/LpSection";
  */
 export function PreviewHero({
   slug,
+  market,
   visual,
   secondary,
 }: Readonly<{
   slug: PreviewSlug;
+  market: Market;
   visual: ReactNode;
   secondary?: SecondaryAction | null;
 }>) {
+  const { SHARED } = useLandingCopy().shared;
+
   return (
     <LpSection section="hero" bare>
       <section className="relative pt-24 pb-10 lg:flex lg:min-h-[100svh] lg:flex-col lg:justify-center lg:pt-28 lg:pb-14">
         <Container className="w-full">
           <div className="grid gap-y-8 lg:grid-cols-12 lg:items-center lg:gap-x-12">
             <div className="text-center lg:col-span-6 lg:text-left">
-              <HeroWords slug={slug} look="column" />
+              <HeroWords slug={slug} market={market} look="column" />
 
               <div className="mt-7 flex flex-col items-center gap-3 lg:items-start">
                 <div className="w-full lg:[&>div]:justify-start">

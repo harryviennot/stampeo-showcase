@@ -1,4 +1,4 @@
-import { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CARD_SHADOW, CELL_TITLE } from "../../platform/classes";
 import { LpSection } from "../../shared/LpSection";
 
@@ -7,7 +7,7 @@ const PROGRAMS = ["stamps", "points"] as const;
 
 /** Two white cards, one for stamps and one for points, each listing the kinds of business that most often choose it and why. */
 export function SectorsSection() {
-  const { eyebrow, title, lead, items, programLabels } = LOYALTY_PROGRAMS_PREVIEW.sectors;
+  const { eyebrow, title, lead, items, programLabels } = useLandingCopy().previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW.sectors;
 
   return (
     <LpSection section="by_business" eyebrow={eyebrow} title={title} lead={lead} align="center">

@@ -1,6 +1,8 @@
+import { useLocale } from "next-intl";
 import { ANALYTICS } from "@/lib/landing-pages/platform/analytics-figures";
-import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
-import { AXIS, WEEK_LABELS } from "@/lib/landing-pages/previews/analytics-sample";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { fill, formatCount } from "@/lib/landing-pages/format";
+import { AXIS } from "@/lib/landing-pages/previews/analytics-sample";
 import { ChartPicture } from "./ChartPicture";
 import { INK } from "./ink";
 
@@ -9,7 +11,7 @@ const PLOT = "h-[200px] lg:h-[272px]";
 
 /** The two series the chart stacks, with the words the copy gives them. */
 function Legend() {
-  const [returning, first] = ANALYTICS_PREVIEW.numbers.chart.legend;
+  const [returning, first] = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW.numbers.chart.legend;
 
   return (
     <div className="flex gap-3 text-[12px] leading-4 text-[var(--muted-foreground)]">
@@ -50,7 +52,8 @@ function Bars({ height }: Readonly<{ height: string }>) {
  * the small card beside the hero, which names the chart above it (`titled`).
  */
 export function VisitsChart({ axis = false, titled = false }: Readonly<{ axis?: boolean; titled?: boolean }>) {
-  const { chart } = ANALYTICS_PREVIEW.numbers;
+  const { numbers, sample } = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW;
+  const { chart } = numbers;
 
   return (
     <div>
@@ -84,7 +87,7 @@ export function VisitsChart({ axis = false, titled = false }: Readonly<{ axis?: 
                 <span key={index} className="relative h-4 flex-1">
                   {index % 2 === 0 && (
                     <span className="absolute left-1/2 -translate-x-1/2 text-[11px] leading-4 whitespace-nowrap text-[var(--muted-foreground)]">
-                      {WEEK_LABELS[index / 2]}
+                      {sample.weekLabels[index / 2]}
                     </span>
                   )}
                 </span>
@@ -103,14 +106,20 @@ export function VisitsChart({ axis = false, titled = false }: Readonly<{ axis?: 
 
 /** The weekly chart on its axis as a picture: the visits in all, over the weeks, and the share from returning customers. */
 export function VisitsPicture() {
+  const { numbers, chartWords } = useLandingCopy().previews.analytics.ANALYTICS_PREVIEW;
+  const locale = useLocale();
   const { weeks } = ANALYTICS;
   const total = ANALYTICS.visits.total;
   const returning = weeks.reduce((sum, week) => sum + week.returning, 0);
+  const label = fill(chartWords.visits.alt, {
+    label: numbers.chart.label,
+    total: formatCount(locale, total),
+    weeks: weeks.length,
+    share: Math.round((100 * returning) / total),
+  });
 
   return (
-    <ChartPicture
-      label={`${ANALYTICS_PREVIEW.numbers.chart.label}: ${total.toLocaleString("en-US")} visits over ${weeks.length} weeks, ${Math.round((100 * returning) / total)}% from returning customers.`}
-    >
+    <ChartPicture label={label}>
       <VisitsChart axis />
     </ChartPicture>
   );

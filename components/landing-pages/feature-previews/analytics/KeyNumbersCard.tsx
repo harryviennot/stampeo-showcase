@@ -1,5 +1,7 @@
+import { useLocale } from "next-intl";
 import { ANALYTICS } from "@/lib/landing-pages/platform/analytics-figures";
-import { ANALYTICS_PREVIEW } from "@/lib/landing-pages/copy/previews/analytics";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { fill, formatCount } from "@/lib/landing-pages/format";
 import { CUSTOMERS_SEEN } from "@/lib/landing-pages/previews/analytics-sample";
 import { GlassCard } from "../../platform/GlassCard";
 import { INK } from "./ink";
@@ -30,7 +32,10 @@ function KeyNumber({ label, line, value, trend }: Readonly<{ label: string; line
  * customers) over the weekly visits chart, with the sample café's figures. The whole card is one picture.
  */
 export function KeyNumbersCard() {
-  const { numbers, hero } = ANALYTICS_PREVIEW;
+  const copy = useLandingCopy();
+  const { numbers, hero } = copy.previews.analytics.ANALYTICS_PREVIEW;
+  const { points } = copy.platform.PLATFORM.analyticsCard;
+  const locale = useLocale();
   const { visits, returnRate, newCustomers } = ANALYTICS;
 
   return (
@@ -39,15 +44,15 @@ export function KeyNumbersCard() {
         <div aria-hidden className="flex flex-col gap-2.5">
           <KeyNumber
             label={numbers.visits.label}
-            line={numbers.visits.line.replace("{customers}", String(CUSTOMERS_SEEN))}
-            value={visits.total.toLocaleString("en-US")}
+            line={fill(numbers.visits.line, { customers: CUSTOMERS_SEEN })}
+            value={formatCount(locale, visits.total)}
             trend={`▲${visits.change}%`}
           />
           <KeyNumber
             label={numbers.returnRate.label}
             line={numbers.returnRate.line}
             value={`${returnRate.percent}%`}
-            trend={`▲${returnRate.change} pts`}
+            trend={`▲${returnRate.change} ${points}`}
           />
           <KeyNumber
             label={numbers.newCustomers.label}

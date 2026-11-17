@@ -23,10 +23,19 @@ const pointsSample = (id: string): PointsSample => {
   return sample;
 };
 
+/** The words of the sample cards' fields: the labels, and who holds each card and what it earns (the card design copy's `cardFields`). */
+export interface SampleWords {
+  holder: string;
+  reward: string;
+  nextReward: string;
+  anatomy: { stamps: { holder: string; reward: string }; points: { holder: string; reward: string } };
+  wallets: { holder: string; reward: string };
+}
+
 /** A pass's two fields: the reward first (the anatomy labels it on the left) or last. */
-const fields = (holder: string, rewardLabel: string, reward: string, rewardFirst = false): PassField[] => {
+const fields = (holderLabel: string, holder: string, rewardLabel: string, reward: string, rewardFirst = false): PassField[] => {
   const pair = [
-    { key: "holder", label: "Cardholder", value: holder },
+    { key: "holder", label: holderLabel, value: holder },
     { key: "reward", label: rewardLabel, value: reward },
   ];
 
@@ -36,17 +45,28 @@ const fields = (holder: string, rewardLabel: string, reward: string, rewardFirst
 const SPA = resolveFanCard("saltmoss");
 const BOUTIQUE = pointsSample("ode");
 
-export const ANATOMY_DESIGNS: AnatomyDesigns = {
-  stamps: {
-    design: { ...SPA.sample.design, secondary_fields: fields("Elena", "Reward", "Free facial", true) },
-    stamps: SPA.kind === "stamps" ? SPA.sample.stamps : 0,
-  },
-  points: {
-    design: { ...BOUTIQUE.design, secondary_fields: fields("Noor", "Next reward", "Free tote bag", true) },
-    pointsBalance: BOUTIQUE.pointsBalance,
-    pointsRewards: BOUTIQUE.pointsRewards,
-  },
-};
+/** The spa's stamp card and the boutique's points card, with their fields in the page's words. */
+export function anatomyDesigns(words: SampleWords): AnatomyDesigns {
+  const { anatomy } = words;
+
+  return {
+    stamps: {
+      design: {
+        ...SPA.sample.design,
+        secondary_fields: fields(words.holder, anatomy.stamps.holder, words.reward, anatomy.stamps.reward, true),
+      },
+      stamps: SPA.kind === "stamps" ? SPA.sample.stamps : 0,
+    },
+    points: {
+      design: {
+        ...BOUTIQUE.design,
+        secondary_fields: fields(words.holder, anatomy.points.holder, words.nextReward, anatomy.points.reward, true),
+      },
+      pointsBalance: BOUTIQUE.pointsBalance,
+      pointsRewards: BOUTIQUE.pointsRewards,
+    },
+  };
+}
 
 /** A business's pass as the two wallet phones draw it, in place of the café the other pages use. */
 export interface PhoneSample {
@@ -62,10 +82,13 @@ export interface PhoneSample {
 
 const GROCER = resolveFanCard("harvest-row");
 
-export const WALLET_SAMPLE: PhoneSample = {
-  name: "Harvest Row",
-  design: { ...GROCER.sample.design, secondary_fields: fields("Rosa", "Next reward", "10% off") },
-  pointsBalance: GROCER.kind === "points" ? GROCER.sample.pointsBalance : 0,
-  pointsRewards: GROCER.kind === "points" ? GROCER.sample.pointsRewards : [],
-  others: [pointsSample("salon"), pointsSample("pace")],
-};
+/** The grocer's pass as the two wallet phones open it, with its fields in the page's words. */
+export function walletSample(words: SampleWords): PhoneSample {
+  return {
+    name: "Harvest Row",
+    design: { ...GROCER.sample.design, secondary_fields: fields(words.holder, words.wallets.holder, words.nextReward, words.wallets.reward) },
+    pointsBalance: GROCER.kind === "points" ? GROCER.sample.pointsBalance : 0,
+    pointsRewards: GROCER.kind === "points" ? GROCER.sample.pointsRewards : [],
+    others: [pointsSample("salon"), pointsSample("pace")],
+  };
+}

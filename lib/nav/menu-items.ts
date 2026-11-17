@@ -14,10 +14,15 @@ export interface NavMenuItem {
   soon?: boolean;
 }
 
-/** The Product menu's six features as the header's dropdown lists them, linked as `featureLinks` says. */
-export function productMenuItems(t: (key: string) => string, locale: string, featureLinks: FeatureLinks): NavMenuItem[] {
+/** The Product menu's six features as the header's dropdown lists them, linked as `featureLinks` says from a page of `market`. */
+export function productMenuItems(
+  t: (key: string) => string,
+  locale: string,
+  featureLinks: FeatureLinks,
+  market: Market,
+): NavMenuItem[] {
   return FEATURE_ITEMS.map(({ key, canonicalSlug }) => ({
-    ...featureLink(canonicalSlug, locale, featureLinks),
+    ...featureLink(canonicalSlug, locale, featureLinks, market),
     label: t(`common.nav.featuresItems.${key}.label`),
     soon: showsSoon(canonicalSlug, featureLinks),
   }));
@@ -36,7 +41,7 @@ export function pageMenuItems(
 ): { navItems: Array<NavMenuItem & { market: Market }>; resourceItems: NavMenuItem[] } {
   return {
     navItems: [
-      { label: t("common.nav.loyalty"), ...loyaltyLink(locale, featureLinks) },
+      { label: t("common.nav.loyalty"), ...loyaltyLink(locale, featureLinks, market) },
       { label: t("common.nav.pricing"), href: marketPath(market, "/pricing"), market },
     ],
     resourceItems: [

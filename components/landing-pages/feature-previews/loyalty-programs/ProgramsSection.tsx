@@ -1,6 +1,7 @@
+import { getLocale } from "next-intl/server";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
-import { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CARD_SHADOW, CELL_TITLE } from "../../platform/classes";
 import { AurevoCard } from "../../shared/AurevoCard";
 import { FactList } from "../../shared/FactList";
@@ -18,7 +19,7 @@ const PANEL = `flex flex-col rounded-[32px] bg-white p-6 ring-1 ring-black/5 ${C
  * foot, the kind of business it suits. The two cards are as tall as each other.
  */
 export async function ProgramsSection() {
-  const { eyebrow, title, lead, stamps, points, bestForLabel } = LOYALTY_PROGRAMS_PREVIEW.programs;
+  const { eyebrow, title, lead, stamps, points, bestForLabel } = landingCopy(await getLocale()).previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW.programs;
   const programs = [
     {
       copy: stamps,

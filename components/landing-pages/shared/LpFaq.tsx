@@ -2,15 +2,16 @@ import { MarketLink } from "@/components/market/MarketLink";
 import { RegionText } from "@/components/market/RegionText";
 import { FAQList } from "@/components/ui/FAQList";
 import { TrackedLink } from "@/components/ui/TrackedLink";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { FaqItem } from "@/lib/landing-pages/copy/types";
-import { marketPath } from "@/lib/markets";
+import { marketPath, type Market } from "@/lib/markets";
 import { LpSection } from "./LpSection";
 
-/** Words in an answer that lead to a page of the US site. */
+/** Words in an answer that lead to a page of `market`. */
 export interface AnswerLink {
   words: string;
   href: string;
+  market: Market;
 }
 
 /** The tap area of an inline link reaches past its line without changing the text's layout. */
@@ -25,7 +26,7 @@ function LinkedAnswer({ item, link }: Readonly<{ item: FaqItem; link: AnswerLink
   return (
     <>
       <RegionText raw={answer.slice(0, at)} />
-      <MarketLink market="us" href={marketPath("us", link.href)} className={INLINE_LINK}>
+      <MarketLink market={link.market} href={marketPath(link.market, link.href)} className={INLINE_LINK}>
         {link.words}
       </MarketLink>
       <RegionText raw={answer.slice(at + link.words.length)} />
@@ -42,6 +43,7 @@ export function LpFaq({
   faq,
   answerLink,
 }: Readonly<{ faq?: { title: string; items: readonly FaqItem[] }; answerLink?: AnswerLink }>) {
+  const { SHARED } = useLandingCopy().shared;
   const { title, items } = faq ?? SHARED.faq;
   const own = faq !== undefined;
   const { contact } = SHARED.faq;

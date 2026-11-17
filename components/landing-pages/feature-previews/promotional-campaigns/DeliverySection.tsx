@@ -1,4 +1,4 @@
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CELL_TITLE } from "../../platform/classes";
 import { FactList } from "../../shared/FactList";
 import { LpSection } from "../../shared/LpSection";
@@ -6,6 +6,7 @@ import { DeliveryCard } from "./DeliveryCard";
 
 /** The last campaign's report on its own white card, and what every campaign shows beside it from `lg` (under it on a phone). */
 export function DeliverySection() {
+  const COPY = useLandingCopy().previews.promotionalCampaigns.PROMOTIONAL_CAMPAIGNS_PREVIEW;
   const { after } = COPY.delivery;
 
   return (

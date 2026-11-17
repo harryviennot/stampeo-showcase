@@ -1,5 +1,6 @@
 import { useLocale } from "next-intl";
 import type { Locale } from "@/i18n/routing";
+import type { Market } from "@/lib/markets";
 import * as platform from "./platform";
 import * as analytics from "./previews/analytics";
 import * as cardDesign from "./previews/card-design";
@@ -11,7 +12,8 @@ import * as pushNotifications from "./previews/push-notifications";
 import * as previewShared from "./previews/shared";
 import * as programTypes from "./program-types";
 import * as shared from "./shared";
-import type { Widen } from "./widen";
+import { US_WORDS } from "./us";
+import { overlaid, type Widen } from "./widen";
 
 /**
  * Every word of the Platform page and its previews in English, grouped as the modules are: a component takes
@@ -38,12 +40,19 @@ export type LandingCopy = Widen<typeof EN>;
 
 const BUNDLES: Record<Locale, LandingCopy> = { en: EN, fr: EN, es: EN, pl: EN };
 
-/** The copy of a locale; a locale the site does not serve reads English. */
-export function landingCopy(locale: string): LandingCopy {
+/** The English of the US market: the international English with `US_WORDS` laid over it. */
+const EN_US = overlaid<LandingCopy>(EN, US_WORDS);
+
+/**
+ * The copy of a locale; a locale the site does not serve reads English. The US market's English is the only
+ * copy that depends on the market: pass the page's `market` wherever a word it overrides is rendered.
+ */
+export function landingCopy(locale: string, market: Market = "int"): LandingCopy {
+  if (locale === "en" && market === "us") return EN_US;
   return BUNDLES[locale as Locale] ?? EN;
 }
 
-/** The copy of the locale being rendered. */
-export function useLandingCopy(): LandingCopy {
-  return landingCopy(useLocale());
+/** The copy of the locale being rendered, in the page's market. */
+export function useLandingCopy(market: Market = "int"): LandingCopy {
+  return landingCopy(useLocale(), market);
 }

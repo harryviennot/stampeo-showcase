@@ -1,42 +1,46 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { getLocalizedSlug } from "@/lib/feature-slugs";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import type { LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { ToggleCard, type ToggleTab } from "./ToggleCard";
 
-type Tab = keyof typeof PLATFORM.platform.tabs;
+/** The words of the "run it from your computer or your phone" section. */
+export type PlatformWords = LandingCopy["platform"]["PLATFORM"]["platform"];
+
+type Tab = keyof PlatformWords["tabs"];
 
 const TABS: Tab[] = ["dashboard", "scanner"];
 
-/** The feature page each tab's link leads to. */
-const FEATURE_PAGE: Record<Tab, string> = {
-  dashboard: `/features/${getLocalizedSlug("analytiques", "en")}`,
-  scanner: `/features/${getLocalizedSlug("scanner-mobile", "en")}`,
-};
-
 /**
  * Platform's toggle card: the dashboard on a computer, or the free Scanner
- * app, each with its title, facts and a link to its feature page.
+ * app, each with its title, facts and a link (`pages`) to its feature page.
  */
 export function PlatformToggleCard({
+  words,
+  pages,
   dashboard,
   scanner,
   initial = "dashboard",
-}: Readonly<{ dashboard: ReactNode; scanner: ReactNode; initial?: Tab }>) {
+}: Readonly<{
+  words: PlatformWords;
+  pages: Record<Tab, string>;
+  dashboard: ReactNode;
+  scanner: ReactNode;
+  initial?: Tab;
+}>) {
   const visuals: Record<Tab, ReactNode> = { dashboard, scanner };
   const tabs: ToggleTab<Tab>[] = TABS.map((key) => {
-    const pane = PLATFORM.platform[key];
+    const pane = words[key];
 
     return {
       key,
-      label: PLATFORM.platform.tabs[key],
+      label: words.tabs[key],
       title: pane.title,
       facts: pane.facts,
-      link: { label: pane.link, href: FEATURE_PAGE[key] },
+      link: { label: pane.link, href: pages[key] },
       visual: visuals[key],
     };
   });
 
-  return <ToggleCard tabs={tabs} ariaLabel={PLATFORM.platform.title} initial={initial} />;
+  return <ToggleCard tabs={tabs} ariaLabel={words.title} initial={initial} />;
 }

@@ -1,5 +1,5 @@
 import { ScaledBox } from "@/components/ui/ScaledBox";
-import { CARD_DESIGN_PREVIEW } from "@/lib/landing-pages/copy/previews/card-design";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { FactList } from "../../shared/FactList";
 import { LpSection } from "../../shared/LpSection";
 import { SampleCard } from "./SampleCard";
@@ -14,7 +14,7 @@ const CARD = { width: 200, height: 257, narrow: 156 };
  * facts about the icons under them.
  */
 export function IconsSection() {
-  const { eyebrow, title, lead, facts, cards } = CARD_DESIGN_PREVIEW.icons;
+  const { eyebrow, title, lead, facts, cards } = useLandingCopy().previews.cardDesign.CARD_DESIGN_PREVIEW.icons;
 
   return (
     <LpSection section="icons" eyebrow={eyebrow} title={title} lead={lead} align="center">

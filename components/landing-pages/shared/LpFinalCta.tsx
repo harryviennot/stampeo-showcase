@@ -3,12 +3,12 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { RegionText } from "@/components/market/RegionText";
 import { SHARED } from "@/lib/landing-pages/copy/shared";
 import { AccentText } from "@/lib/landing-pages/AccentText";
-import { LANDING_PAGES, type LandingSlug } from "@/lib/landing-pages/pages";
+import { pageWords, type LandingSlug } from "@/lib/landing-pages/pages";
 import { LpSection } from "./LpSection";
 
 /** The closing ask: the page's own headline, the trial keycap and its reassurance. */
 export function LpFinalCta({ slug }: Readonly<{ slug: LandingSlug }>) {
-  const { title, accent } = LANDING_PAGES[slug].finalCta;
+  const { title, accent } = pageWords(slug, "en", "us").finalCta;
 
   return (
     <LpSection section="final_cta" className="stamp-pattern text-center">

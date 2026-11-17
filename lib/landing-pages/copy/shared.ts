@@ -31,6 +31,12 @@ export const LEVEL_UP_BANNER: Banner = {
 /** The words every page shares, so the pages differ only by their argument. */
 export const SHARED = {
   cta: "Start my free trial",
+  /** The time on a lock-screen notification that has just arrived. */
+  now: "now",
+  /** What a pass is called under the shop's name in Google Wallet. */
+  googleCardTitle: "Loyalty Card",
+  /** The five looks a level can take, as the dashboard names them and a card prints them over its count. */
+  levelNames: { bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", noir: "Noir" },
   reassurance: "{trialDays} days free · Cancel anytime",
   /** The hero proof line, filled from the `variant.metrics` figures. */
   proof: (businesses: string, countries: string) =>

@@ -1,5 +1,5 @@
 import { PaperPlaneIcon } from "@/components/icons";
-import { PROMOTIONAL_CAMPAIGNS_PREVIEW as COPY } from "@/lib/landing-pages/copy/previews/promotional-campaigns";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { EYEBROW } from "../../shared/LpSection";
 import { shopBanner } from "../ShopIcon";
@@ -16,6 +16,7 @@ const DASH = "border-dashed border-[var(--near-black)]/35";
 
 /** The message as the owner wrote it, on a white card with the paper plane that sends it. */
 function Source() {
+  const COPY = useLandingCopy().previews.promotionalCampaigns.PROMOTIONAL_CAMPAIGNS_PREVIEW;
   const { visual } = COPY.how;
 
   return (
@@ -52,6 +53,8 @@ function Branch() {
 
 /** One customer's lock screen: the label above it, a wallpaper, the clock and the message as a notification from the shop. */
 function LockTile({ label, wallpaper }: Readonly<{ label: string; wallpaper: string }>) {
+  const copy = useLandingCopy();
+
   return (
     <div>
       <p className={`${EYEBROW} mb-2 text-center text-[var(--muted-foreground)]`}>{label}</p>
@@ -62,7 +65,10 @@ function LockTile({ label, wallpaper }: Readonly<{ label: string; wallpaper: str
         <p className="mb-4 text-center text-[44px] leading-none tracking-tight text-white max-sm:hidden" style={{ fontWeight: 200 }}>
           9:41
         </p>
-        <LockScreenNotification {...shopBanner(COPY.heroBanner)} />
+        <LockScreenNotification
+          {...shopBanner(copy.previews.promotionalCampaigns.PROMOTIONAL_CAMPAIGNS_PREVIEW.heroBanner)}
+          timeAgo={copy.shared.SHARED.now}
+        />
       </div>
     </div>
   );
@@ -74,6 +80,8 @@ function LockTile({ label, wallpaper }: Readonly<{ label: string; wallpaper: str
  * picture; a phone shows the three in a column, from `lg` they stand in a row under the fork.
  */
 export function MessageToLockScreens() {
+  const COPY = useLandingCopy().previews.promotionalCampaigns.PROMOTIONAL_CAMPAIGNS_PREVIEW;
+
   return (
     <div role="img" aria-label={COPY.how.alt} className="mx-auto max-w-[1040px]">
       <div aria-hidden>

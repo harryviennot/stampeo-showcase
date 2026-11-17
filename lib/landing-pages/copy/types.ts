@@ -105,5 +105,5 @@ export interface RowCopy<Key extends string = string> {
 export interface TabCopy {
   label: string;
   title: string;
-  facts: Fact[];
+  facts: readonly Fact[];
 }

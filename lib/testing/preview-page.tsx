@@ -1,6 +1,7 @@
 import type { ReactElement, ReactNode } from "react";
 import type { LandingSlug } from "../landing-pages/pages";
-import { pageFile } from "./landing-pages-source";
+import type { Market } from "../markets";
+import { PAGE_COMPONENTS, pageFile } from "./landing-pages-source";
 import { renderEnAsync } from "./render-en";
 import { mockEnglishServerTranslations } from "./server-intl";
 
@@ -8,7 +9,7 @@ const PAGES = new Map<LandingSlug, Promise<string>>();
 
 /**
  * A landing page as a visitor's browser receives it, without the shell's header and footer: the page
- * function called as Next calls it, its async sections resolved, the US dollars and trial in place.
+ * component called as Next calls it (for the US market), its async sections resolved, the US dollars and trial in place.
  */
 export function renderPreviewPage(slug: LandingSlug): Promise<string> {
   if (!PAGES.has(slug)) {
@@ -16,8 +17,9 @@ export function renderPreviewPage(slug: LandingSlug): Promise<string> {
       slug,
       (async () => {
         await mockEnglishServerTranslations();
-        const { default: Page } = await import(pageFile(slug));
-        const shell = Page() as ReactElement<{ children: ReactNode }>;
+        const page = await import(pageFile(slug));
+        const Page = slug in PAGE_COMPONENTS ? page[PAGE_COMPONENTS[slug as keyof typeof PAGE_COMPONENTS]] : page.default;
+        const shell = (await Page({ market: "us" satisfies Market })) as ReactElement<{ children: ReactNode }>;
 
         return renderEnAsync(shell.props.children);
       })(),

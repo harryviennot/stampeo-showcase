@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "@/components/icons";
 import { ScannerLoop } from "@/components/ui/ScannerLoop";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { LpSection } from "../shared/LpSection";
 import { WalletPhone } from "../shared/WalletPhone";
@@ -13,6 +13,8 @@ import { STEPS_PHONE, StepsTable } from "./StepsTable";
  * scrolls to the demo.
  */
 export function HowTable() {
+  const { PLATFORM } = useLandingCopy().platform;
+
   return (
     <LpSection
       section="how"

@@ -1,18 +1,25 @@
 import { ArrowRightIcon } from "@/components/icons";
 import { BlogCard } from "@/components/blog/BlogCard";
+import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { getAllPosts } from "@/lib/blog";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { hasBlog } from "@/lib/blog/locales";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LpHeading, LpSection } from "../shared/LpSection";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 /**
- * "Guides for shop owners": the three latest English posts as rich cards (the
- * reading time and a two-line excerpt), each linking to its post, and a link to
- * the whole blog. The header is left-aligned, with the link on its right.
+ * "Guides for shop owners": the three latest posts of the page's language as rich
+ * cards (the reading time and a two-line excerpt), each linking to its post, and a
+ * link to the whole blog. The header is left-aligned, with the link on its right.
+ * A language with no blog has no section.
  */
 export function BlogPostsSection() {
-  const posts = getAllPosts("en").slice(0, 3);
+  const locale = useLocale();
+  const { PLATFORM } = useLandingCopy().platform;
+  const posts = getAllPosts(locale).slice(0, 3);
+
+  if (!hasBlog(locale)) return null;
 
   return (
     <LpSection section="blog">

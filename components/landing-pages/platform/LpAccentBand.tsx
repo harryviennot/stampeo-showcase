@@ -3,8 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { RegionText } from "@/components/market/RegionText";
 import { AccentText } from "@/lib/landing-pages/AccentText";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
-import { SHARED } from "@/lib/landing-pages/copy/shared";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { BandCopy } from "@/lib/landing-pages/copy/types";
 import { LpSection } from "../shared/LpSection";
 
@@ -18,7 +17,11 @@ const GLOW =
  * edges, the headline in the page's ink with its accent word in orange, and the
  * orange trial keycap.
  */
-export function LpAccentBand({ copy = PLATFORM.band }: Readonly<{ copy?: BandCopy }>) {
+export function LpAccentBand({ copy }: Readonly<{ copy?: BandCopy }>) {
+  const { platform, shared } = useLandingCopy();
+  const { SHARED } = shared;
+  const band = copy ?? platform.PLATFORM.band;
+
   return (
     <LpSection section="final_cta" bare>
       <section className="py-8 lg:py-16">
@@ -28,9 +31,9 @@ export function LpAccentBand({ copy = PLATFORM.band }: Readonly<{ copy?: BandCop
               <div aria-hidden className={`absolute inset-0 -z-10 rounded-[inherit] ${GLOW}`} />
               <div className="flex flex-col items-center gap-5">
                 <h2 className="text-display max-w-[840px] text-balance">
-                  <AccentText text={copy.title} accent={copy.accent} />
+                  <AccentText text={band.title} accent={band.accent} />
                 </h2>
-                <p className="max-w-xl text-pretty text-lead text-[var(--muted-foreground)]">{copy.sub}</p>
+                <p className="max-w-xl text-pretty text-lead text-[var(--muted-foreground)]">{band.sub}</p>
                 <CTAButton label={SHARED.cta} trackAs="final_cta" keycap className="mt-2 mb-[3px] w-full sm:w-auto" />
                 <p className="text-sm font-medium text-[var(--muted-foreground)]">
                   <RegionText raw={SHARED.reassurance} />

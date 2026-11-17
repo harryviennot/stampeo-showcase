@@ -1,5 +1,7 @@
+import { useLocale } from "next-intl";
 import { ScannerLoop } from "@/components/ui/ScannerLoop";
-import { PLATFORM } from "@/lib/landing-pages/copy/platform";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import { getLocalizedSlug } from "@/lib/feature-slugs";
 import { DashboardDuo } from "../shared/DashboardDuo";
 import { LpSection } from "../shared/LpSection";
 import { PlatformToggleCard } from "./PlatformToggleCard";
@@ -16,6 +18,9 @@ const SCANNER = { full: 280, narrow: 190 };
  * above it for the phone's shadow.
  */
 export function PlatformSection() {
+  const { PLATFORM } = useLandingCopy().platform;
+  const locale = useLocale();
+
   return (
     <LpSection
       section="platform"
@@ -25,6 +30,11 @@ export function PlatformSection() {
       align="center"
     >
       <PlatformToggleCard
+        words={PLATFORM.platform}
+        pages={{
+          dashboard: `/features/${getLocalizedSlug("analytiques", locale)}`,
+          scanner: `/features/${getLocalizedSlug("scanner-mobile", locale)}`,
+        }}
         dashboard={
           <div className="flex min-h-[300px] w-full flex-col justify-center lg:min-h-0">
             <DashboardDuo caption={false} />

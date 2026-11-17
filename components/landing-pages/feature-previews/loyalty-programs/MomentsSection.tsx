@@ -1,4 +1,4 @@
-import { LOYALTY_PROGRAMS_PREVIEW } from "@/lib/landing-pages/copy/previews/loyalty-programs";
+import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { CARD_SHADOW, CARD_TITLE } from "../../platform/classes";
 import { LpSection } from "../../shared/LpSection";
 import { MomentLockScreen } from "./MomentLockScreen";
@@ -10,10 +10,11 @@ const CARD = `flex flex-col rounded-[28px] bg-white p-5 ${CARD_SHADOW} ring-1 ri
 
 /** Three white cards, each with a picture of where the levels show: the sign-up page, the lock screen and the Scanner app. */
 export function MomentsSection() {
-  const { eyebrow, title, lead, signup, lockScreen, scanner, alts } = LOYALTY_PROGRAMS_PREVIEW.moments;
+  const copy = useLandingCopy();
+  const { eyebrow, title, lead, signup, lockScreen, scanner, alts } = copy.previews.loyaltyPrograms.LOYALTY_PROGRAMS_PREVIEW.moments;
   const moments = [
     { ...signup, alt: alts[0], picture: <SignupLevels /> },
-    { ...lockScreen, alt: alts[1], picture: <MomentLockScreen banner={lockScreen.banner} /> },
+    { ...lockScreen, alt: alts[1], picture: <MomentLockScreen banner={lockScreen.banner} timeAgo={copy.shared.SHARED.now} /> },
     { ...scanner, alt: alts[2], picture: <MomentScanner /> },
   ];
 

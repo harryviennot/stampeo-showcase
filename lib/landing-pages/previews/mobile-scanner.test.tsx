@@ -62,7 +62,7 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   const buttons = (html: string) => tagsWith(html, /role="tab"/);
 
   test("the four buttons are tabs in the copy's order: Stamps, Points, Rewards, Levels, each with its line, Stamps selected first", async () => {
-    const html = await render(<CounterSection />);
+    const html = await render(<CounterSection market="us" />);
 
     expect(html).toMatch(/role="tablist"[^>]*aria-label="[^"]+"/);
     expect(buttons(html).map((tag) => /aria-selected="(true|false)"/.exec(tag)?.[1])).toEqual(["true", "false", "false", "false"]);
@@ -71,14 +71,14 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   });
 
   test("each button is a 56px tile to tap, reachable by Tab as one stop and by the arrow keys from there", async () => {
-    const tabs = buttons(await render(<CounterSection />));
+    const tabs = buttons(await render(<CounterSection market="us" />));
 
     for (const tag of tabs) expect(tag).toContain("min-h-14");
     expect(tabs.map((tag) => /tabindex="(-?\d)"/.exec(tag)?.[1])).toEqual(["0", "-1", "-1", "-1"]);
   });
 
   test("the phone and the card show the selected button's screen only; the others are in the page but out of reach", async () => {
-    const html = await render(<CounterSection />);
+    const html = await render(<CounterSection market="us" />);
     const exposed = (attribute: string) => tagsWith(html, new RegExp(`${attribute}="[a-z]+"`)).map((tag) => !/\binert\b/.test(tag));
 
     expect(exposed("data-screen")).toEqual([true, false, false, false]);
@@ -86,7 +86,7 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   });
 
   test("the phone is the Scanner app's own screens, one per button, in the app's English", async () => {
-    const text = textOf(await render(<CounterSection />));
+    const text = textOf(await render(<CounterSection market="us" />));
 
     expectInOrder(text, ["+3 stamps", "This completes the card", "Add 3 stamps"]);
     expectInOrder(text, ["12.50", "≈ +12 pts", "Add Points"]);
@@ -96,7 +96,7 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   });
 
   test("beside the phone is Sophie's wallet card with what the scan did: stamps 5 to 8, points 240 to 252, the reward claimed, the level", async () => {
-    const html = await render(<CounterSection />);
+    const html = await render(<CounterSection market="us" />);
     const text = textOf(html);
 
     expectInOrder(text, ["5 → 8 stamps", "240 → 252 pts", "Free coffee redeemed", "Level: Silver"]);
@@ -109,14 +109,14 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   });
 
   test("it ends on the one line that says what the customer gets: a notification right after", async () => {
-    const text = textOf(await render(<CounterSection />));
+    const text = textOf(await render(<CounterSection market="us" />));
 
     expect(text).toContain(COPY.counter.fact);
     expect(text.split(COPY.counter.fact)).toHaveLength(2);
   });
 
   test("every screen and card has a name a screen reader can read", async () => {
-    const html = await render(<CounterSection />);
+    const html = await render(<CounterSection market="us" />);
     const named = [...tagsWith(html, /data-screen=/), ...tagsWith(html, /data-card=/)];
 
     expect(named).toHaveLength(COUNTER_KEYS.length * 2);
@@ -124,8 +124,8 @@ describe("counter: one phone and one wallet card that follow four buttons", () =
   });
 
   test("for a reader who asks for less motion every pane is still there and none fades: a calm, complete picture", async () => {
-    const calm = await renderAsAsync({ reducedMotion: true }, () => render(<CounterSection />));
-    const moving = await render(<CounterSection />);
+    const calm = await renderAsAsync({ reducedMotion: true }, () => render(<CounterSection market="us" />));
+    const moving = await render(<CounterSection market="us" />);
 
     expect(moving).toMatch(/duration-\[250ms\]/);
     expect(calm).not.toMatch(/duration-\[250ms\]/);

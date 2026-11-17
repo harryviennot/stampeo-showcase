@@ -16,6 +16,7 @@ import {
   type ReskinCard,
   type ReskinRole,
   type ReskinState,
+  type ReskinWords,
 } from "@/lib/landing-pages/previews/reskin";
 import { Chip } from "../../shared/Chip";
 
@@ -71,8 +72,6 @@ const Slot = memo(function Slot({ card, offset, role }: SlotProps) {
   );
 });
 
-const CARDS = RESKIN_SHOPS.map(reskinCard);
-
 /**
  * The hero's wallet card, one shop at a time: the layout stays put while its logo, colours and stamps change, with a
  * caption and a button either side and a dot for each shop under it. The card moves on slowly by itself while it is in
@@ -80,9 +79,17 @@ const CARDS = RESKIN_SHOPS.map(reskinCard);
  */
 export function ReskinCards({
   captions,
+  words,
   alt,
   labels,
-}: Readonly<{ captions: readonly string[]; alt: string; labels: { previous: string; next: string; dot: string } }>) {
+}: Readonly<{
+  captions: readonly string[];
+  /** The words on each card's two fields. */
+  words: ReskinWords;
+  alt: string;
+  labels: { previous: string; next: string; dot: string };
+}>) {
+  const cards = useMemo(() => RESKIN_SHOPS.map((id) => reskinCard(id, words)), [words]);
   const stage = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; y: number } | null>(null);
   const [state, setState] = useState<ReskinState>({ active: 0, touched: false });
@@ -92,13 +99,13 @@ export function ReskinCards({
 
   useEffect(() => {
     if (!view.autoplay || !running) return;
-    const timer = setTimeout(() => setState((now) => reskinStep(now, { type: "tick" }, CARDS.length)), RESKIN_STEP_MS);
+    const timer = setTimeout(() => setState((now) => reskinStep(now, { type: "tick" }, cards.length)), RESKIN_STEP_MS);
 
     return () => clearTimeout(timer);
-  }, [state, running, view.autoplay]);
+  }, [state, running, view.autoplay, cards.length]);
 
-  const go = (type: "previous" | "next") => setState((now) => reskinStep(now, { type }, CARDS.length));
-  const show = (index: number) => setState((now) => reskinStep(now, { type: "show", index }, CARDS.length));
+  const go = (type: "previous" | "next") => setState((now) => reskinStep(now, { type }, cards.length));
+  const show = (index: number) => setState((now) => reskinStep(now, { type: "show", index }, cards.length));
 
   const startDrag = (event: PointerEvent) => {
     drag.current = { x: event.clientX, y: event.clientY };
@@ -127,8 +134,8 @@ export function ReskinCards({
           className="relative mx-auto h-[334px] w-full max-w-[1000px] [--pitch:0px] lg:h-[491px] lg:overflow-hidden lg:[--pitch:294px]"
         >
           <div aria-hidden>
-            {CARDS.map((card, index) => (
-              <Slot key={card.id} card={card} {...reskinPlacement(index, view.active, CARDS.length)} />
+            {cards.map((card, index) => (
+              <Slot key={card.id} card={card} {...reskinPlacement(index, view.active, cards.length)} />
             ))}
           </div>
         </div>
@@ -143,7 +150,7 @@ export function ReskinCards({
           <CaretLeftIcon size={18} weight="bold" aria-hidden />
         </button>
         <div className="flex items-center">
-          {CARDS.map((card, index) => (
+          {cards.map((card, index) => (
             <button
               key={card.id}
               type="button"

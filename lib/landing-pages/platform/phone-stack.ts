@@ -15,8 +15,11 @@ export interface StackMoment {
   stamps?: number;
   pointsBalance?: number;
   look?: LevelLook;
-  headerLabel?: string;
+  level?: StackLevel;
 }
+
+/** The levels a card of the deck can be on; the page words them. */
+export type StackLevel = "silver" | "gold";
 
 export interface StackCard {
   id: string;
@@ -26,7 +29,7 @@ export interface StackCard {
   pointsBalance?: number;
   pointsRewards?: RewardTier[];
   /** A level card prints its level over the count. */
-  headerLabel?: string;
+  level?: StackLevel;
   moment?: StackMoment;
 }
 
@@ -36,7 +39,7 @@ export interface ShownCard {
   stamps?: number;
   pointsBalance?: number;
   pointsRewards?: RewardTier[];
-  headerLabel?: string;
+  level?: StackLevel;
 }
 
 /** A shop's card from the brand banks. */
@@ -55,8 +58,8 @@ function shop(id: string, extra: Partial<StackCard> = {}): StackCard {
 }
 
 /** A card in a level's look, with the level's name over the count. */
-function inLook(card: StackCard, look: LevelLook, headerLabel: string, extra: Partial<StackCard> = {}): StackCard {
-  return { ...card, design: { ...card.design, ...look }, headerLabel, ...extra };
+function inLook(card: StackCard, look: LevelLook, level: StackLevel, extra: Partial<StackCard> = {}): StackCard {
+  return { ...card, design: { ...card.design, ...look }, level, ...extra };
 }
 
 /** The barbershop's 5-stamp card, the levels example of the loyalty programs page. */
@@ -75,7 +78,7 @@ const BARBER_CARD: StackCard = {
 export const PHONE_DECK: readonly StackCard[] = [
   shop("aurevo", { moment: { stamps: 6 } }),
   shop("salon"),
-  inLook(BARBER_CARD, SILVER_LOOK, "Silver", { moment: { look: GOLD_LOOK, headerLabel: "Gold" } }),
+  inLook(BARBER_CARD, SILVER_LOOK, "silver", { moment: { look: GOLD_LOOK, level: "gold" } }),
   shop("fournee"),
   shop("marginalia", { moment: { pointsBalance: 252 } }),
   shop("rolling-slice"),
@@ -90,7 +93,7 @@ export function showing(card: StackCard, after: boolean): ShownCard {
     stamps: card.stamps,
     pointsBalance: card.pointsBalance,
     pointsRewards: card.pointsRewards,
-    headerLabel: card.headerLabel,
+    level: card.level,
   };
 
   if (!after || !moment) return shown;
@@ -99,7 +102,7 @@ export function showing(card: StackCard, after: boolean): ShownCard {
     design: moment.look ? { ...card.design, ...moment.look } : card.design,
     stamps: moment.stamps ?? card.stamps,
     pointsBalance: moment.pointsBalance ?? card.pointsBalance,
-    headerLabel: moment.headerLabel ?? card.headerLabel,
+    level: moment.level ?? card.level,
   };
 }
 

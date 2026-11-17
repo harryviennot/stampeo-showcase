@@ -63,9 +63,9 @@ function BigRow({ href, label, market, onClose, active }: Readonly<MenuLink & { 
 }
 
 /** The index sheet: every feature as a tile, Loyalty and Pricing as rows, the resources in two columns; Log in and Get started stay in a bar at its foot. */
-function MenuSheet({ onClose, burgerRef, featureLinks, pathname, navItems, resourceItems, signedIn, appUrl, onSignOut, language }: MenuProps) {
+function MenuSheet({ onClose, burgerRef, featureLinks, market, pathname, navItems, resourceItems, signedIn, appUrl, onSignOut, language }: MenuProps) {
   const t = useTranslations("common.nav");
-  const entries = useFeatureEntries(featureLinks, pathname);
+  const entries = useFeatureEntries(featureLinks, pathname, market);
 
   return (
     <MenuDialog burgerRef={burgerRef} className="flex flex-col overflow-y-auto overscroll-contain">
