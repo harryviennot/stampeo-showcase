@@ -28,7 +28,7 @@ export async function PushNotificationsPreviewPage({ market }: Readonly<{ market
       <EditorSection />
       <LpDemo {...copy.demo} align="center" />
       <LpAccentBand copy={copy.band} />
-      <RelatedPreviews slug="platform/push-notifications" market={market} />
+      <RelatedPreviews slug="platform/push-notifications" />
     </LandingPageShell>
   );
 }

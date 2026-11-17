@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { useLocale } from "next-intl";
 import {
   ArrowRightIcon,
   BellIcon,
@@ -13,7 +14,6 @@ import { MarketLink } from "@/components/market/MarketLink";
 import { useLandingCopy, type LandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { LANDING_PAGES, type PreviewSlug } from "@/lib/landing-pages/pages";
 import { previewLink } from "@/lib/landing-pages/preview-nav";
-import type { Market } from "@/lib/markets";
 import { IconTile } from "../shared/IconTile";
 import { LpSection } from "../shared/LpSection";
 
@@ -31,20 +31,21 @@ const CARDS: Record<PreviewSlug, { card: Card; Icon: ComponentType<{ size?: numb
 };
 
 /**
- * The links a feature preview closes with: its three siblings (from the
+ * The links a feature page closes with: its three siblings (from the
  * registry) as white cards, each wholly a tap target at
- * least 56px tall. They lead to the previews of the page's `market`, not to the live feature pages, so
- * the set can be walked. A page can set its own `title`; there is no label above it.
+ * least 56px tall, leading to the sibling's page in the visitor's language. A page can set its own `title`;
+ * there is no label above it.
  */
-export function RelatedPreviews({ slug, market, title }: Readonly<{ slug: PreviewSlug; market: Market; title?: string }>) {
+export function RelatedPreviews({ slug, title }: Readonly<{ slug: PreviewSlug; title?: string }>) {
   const { title: shared, cards } = useLandingCopy().previews.shared.PREVIEW_SHARED.related;
+  const locale = useLocale();
 
   return (
     <LpSection section="related" title={title ?? shared} align="center">
       <ul className="mx-auto grid max-w-[1040px] gap-3 lg:grid-cols-3 lg:gap-4">
         {(LANDING_PAGES[slug].related ?? []).map((sibling) => {
           const { card, Icon } = CARDS[sibling];
-          const link = previewLink(sibling, market);
+          const link = previewLink(sibling, locale);
 
           return (
             <li key={sibling}>

@@ -1,13 +1,10 @@
 import { getLocalizedSlug, type FeatureSlug } from "@/lib/feature-slugs";
 import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
-import { marketPath, type Market } from "@/lib/markets";
-import type { LandingSlug, PreviewSlug } from "./pages";
+import type { Market } from "@/lib/markets";
+import type { PreviewSlug } from "./pages";
 
-/** Where the header and footer feature links lead: today's feature pages, or their Platform-style previews. */
-export type FeatureLinks = "live" | "previews";
-
-/** Each feature page that has a Platform-style preview, by its canonical slug. */
-export const FEATURE_PREVIEWS: Partial<Record<FeatureSlug, PreviewSlug>> = {
+/** The page of each feature: the registry slug of its Platform-style page. */
+export const FEATURE_PREVIEWS: Record<FeatureSlug, PreviewSlug> = {
   "notifications-push": "platform/push-notifications",
   "campagnes-promotionnelles": "platform/promotional-campaigns",
   "scanner-mobile": "platform/mobile-scanner",
@@ -16,43 +13,27 @@ export const FEATURE_PREVIEWS: Partial<Record<FeatureSlug, PreviewSlug>> = {
   geolocalisation: "platform/geolocation",
 };
 
-/** Platform and its previews lead to the previews; every other page to today's feature pages. */
-export function featureLinksFor(slug: LandingSlug): FeatureLinks {
-  return slug === "platform" || slug.startsWith("platform/") ? "previews" : "live";
-}
-
-/** Geolocation is the one feature that is not live yet. */
+/** Geolocation is the one feature that is not live yet: every menu prints "Soon" beside it. */
 export const isComingSoon = (slug: FeatureSlug): boolean => slug === "geolocalisation";
 
-/** The menus that lead to the previews (Platform's) label the feature that is not live yet "Soon"; today's menus do not. */
-export const showsSoon = (slug: FeatureSlug, links: FeatureLinks): boolean => links === "previews" && isComingSoon(slug);
-
 /**
- * The link to a preview, as a page of `market` leaves it: `/us/landing-pages/<preview>` is final on the US site,
- * and `/landing-pages/<preview>` on the international one is left for next-intl to prefix with the locale
- * (the preview slugs stay English in every language).
+ * A feature page's link, as every page leaves it: the localised path, for next-intl to prefix with the locale.
+ * The feature pages exist for the international site only, so the link is `int` even from a pilot's page.
  */
-export function previewLink(preview: PreviewSlug | "platform", market: Market): { href: string; market: Market } {
-  return { href: marketPath(market, `/landing-pages/${preview}`), market };
-}
-
-/**
- * A feature link: from a page of `market`, a preview stays inside that market; today's page is localised and left
- * for next-intl to prefix. A feature with no preview opens today's page.
- */
-export function featureLink(
-  slug: FeatureSlug,
-  locale: string,
-  links: FeatureLinks,
-  market: Market,
-): { href: string; market: Market } {
-  const preview = links === "previews" ? FEATURE_PREVIEWS[slug] : undefined;
-  if (preview) return previewLink(preview, market);
+export function featureLink(slug: FeatureSlug, locale: string): { href: string; market: Market } {
   return { href: `/features/${getLocalizedSlug(slug, locale)}`, market: "int" };
 }
 
-/** The loyalty programs link: its Platform-style preview from Platform and its previews, today's localised page elsewhere. */
-export function loyaltyLink(locale: string, links: FeatureLinks, market: Market): { href: string; market: Market } {
-  if (links === "previews") return previewLink("platform/loyalty-programs", market);
+/** The loyalty programs page's link: its own slug in the visitor's language. */
+export function loyaltyLink(locale: string): { href: string; market: Market } {
   return { href: LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr, market: "int" };
+}
+
+/** The link to a page of the registry that has its own URL: one of the six features, or the loyalty programs page. */
+export function previewLink(preview: PreviewSlug, locale: string): { href: string; market: Market } {
+  if (preview === "platform/loyalty-programs") return loyaltyLink(locale);
+
+  const feature = (Object.keys(FEATURE_PREVIEWS) as FeatureSlug[]).find((slug) => FEATURE_PREVIEWS[slug] === preview);
+  if (!feature) throw new Error(`No page at ${preview}`);
+  return featureLink(feature, locale);
 }

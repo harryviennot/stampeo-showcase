@@ -1,7 +1,7 @@
 /**
- * The phone menu of the US landing pages as a visitor meets it: the index sheet, rendered open under the
- * English catalogs, the way the header hands it its links. The header's own wiring (when it shows the landing
- * pages' menu, and that every other page keeps the site's) is in `lib/landing-pages/preview-nav.test.ts`.
+ * The phone menu of the Platform-style pages as a visitor meets it: the index sheet, rendered open under the
+ * English catalogs, the way the header hands it its links. The header's own wiring (which pages draw the sheet, and
+ * that every other page keeps the panel) is in `lib/landing-pages/preview-nav.test.ts`.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -16,7 +16,7 @@ import { decodeEntities, expectInOrder, renderEn, textOf } from "../testing/rend
 import { trackedBy } from "../testing/cta-recorder";
 import { renderAs } from "../testing/visitor-seams";
 
-const PREVIEW = (feature: string) => `/us/landing-pages/platform/${feature}`;
+const FEATURE = (feature: string) => `/en/features/${feature}`;
 
 const LABELS = ["Push Notifications", "Promotional Campaigns", "Geolocation", "Mobile Scanner", "Analytics", "Card Design"];
 const DESCRIPTIONS = [
@@ -32,9 +32,7 @@ const PROPS: ComponentProps<typeof MobileMenu> = {
   open: true,
   onClose: () => {},
   burgerRef: { current: null },
-  featureLinks: "previews",
-  market: "us",
-  pathname: "/us/landing-pages/platform",
+  pathname: "/us",
   navItems: [
     { label: "Loyalty", href: "/loyalty-programs", market: "int" },
     { label: "Pricing", href: "/us/pricing", market: "us" },
@@ -90,13 +88,13 @@ describe("the index sheet", () => {
     expect(FEATURE_ITEMS).toHaveLength(LABELS.length);
   });
 
-  test("the tiles lead to the previews from a Platform page, and to today's pages from anywhere else", () => {
+  test("the tiles lead to the feature pages, from a page of any market", () => {
     const hrefs = (html: string) => targets(html).flatMap(({ href, name }) => (LABELS.some((label) => name.startsWith(label)) ? [href] : []));
 
     expect(hrefs(render())).toEqual(
-      ["push-notifications", "promotional-campaigns", "geolocation", "mobile-scanner", "analytics", "card-design"].map(PREVIEW),
+      ["push-notifications", "promotional-campaigns", "geolocation", "mobile-scanner", "analytics", "card-design"].map(FEATURE),
     );
-    expect(hrefs(render({ featureLinks: "live" }))).toEqual(
+    expect(hrefs(render({ pathname: "/" }))).toEqual(
       FEATURE_ITEMS.map(({ canonicalSlug }) => `/en/features/${getLocalizedSlug(canonicalSlug, "en")}`),
     );
   });
@@ -108,7 +106,7 @@ describe("the index sheet", () => {
   });
 
   test("the tile of the page you are on is marked as current", () => {
-    const html = render({ pathname: PREVIEW("mobile-scanner") });
+    const html = render({ pathname: "/features/mobile-scanner" });
     const current = targets(html).filter(({ attrs }) => /aria-current="page"/.test(attrs));
 
     expect(current.map(({ name }) => name.split(" ")[0] + " " + name.split(" ")[1])).toEqual(["Mobile Scanner"]);

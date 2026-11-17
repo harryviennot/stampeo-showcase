@@ -26,12 +26,12 @@ describe("how the phone menu moves", () => {
 
 describe("which menu entry is the page you are on", () => {
   test("the entry whose address is the page, or a page inside it, is current", () => {
-    expect(isCurrentPath("/us/landing-pages/platform/analytics", "/us/landing-pages/platform/analytics")).toBe(true);
+    expect(isCurrentPath("/features/analytics", "/features/analytics")).toBe(true);
     expect(isCurrentPath("/features/analytiques/detail", "/features/analytiques")).toBe(true);
   });
 
   test("a sibling that only shares a prefix is not", () => {
-    expect(isCurrentPath("/us/landing-pages/platform/analytics-2", "/us/landing-pages/platform/analytics")).toBe(false);
+    expect(isCurrentPath("/features/analytics-2", "/features/analytics")).toBe(false);
     expect(isCurrentPath("/pricing", "/features/analytiques")).toBe(false);
   });
 

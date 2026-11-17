@@ -5,7 +5,6 @@ import { Footer } from "@/components/sections/Footer";
 import { LandingTracker } from "@/components/analytics/LandingTracker";
 import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
 import { LANDING_PAGES, type LandingSlug } from "@/lib/landing-pages/pages";
-import { featureLinksFor } from "@/lib/landing-pages/preview-nav";
 import { MARKETS, type Market } from "@/lib/markets";
 import { getPlanCatalog } from "@/lib/plan-catalog";
 import type { RegionCurrency } from "@/lib/region-pricing";
@@ -20,7 +19,6 @@ export async function LandingPageShell({
   children,
 }: Readonly<{ slug: LandingSlug; market: Market; children: ReactNode }>) {
   const page = LANDING_PAGES[slug];
-  const featureLinks = featureLinksFor(slug);
   const locale = await getLocale();
   const marketCurrency: RegionCurrency = MARKETS[market].currency.code.toLowerCase() === "usd" ? "usd" : "eur";
   const [eur, usd] = await Promise.all([getPlanCatalog("eur"), getPlanCatalog("usd")]);
@@ -34,9 +32,9 @@ export async function LandingPageShell({
         defaultCurrency={marketCurrency}
         defaultTrialDays={MARKETS[market].trialDays}
       >
-        <Header market={market} featureLinks={featureLinks} mobileMenu="sheet" />
+        <Header market={market} mobileMenu="sheet" />
         <main className="relative">{children}</main>
-        <Footer market={market} featureLinks={featureLinks} />
+        <Footer market={market} />
       </RegionPricingProvider>
     </div>
   );

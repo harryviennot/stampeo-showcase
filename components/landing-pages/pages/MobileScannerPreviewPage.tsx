@@ -29,7 +29,7 @@ export async function MobileScannerPreviewPage({ market }: Readonly<{ market: Ma
       <CounterSection market={market} />
       <WaysSection />
       <LpAccentBand copy={copy.band} />
-      <RelatedPreviews slug="platform/mobile-scanner" market={market} />
+      <RelatedPreviews slug="platform/mobile-scanner" />
     </LandingPageShell>
   );
 }

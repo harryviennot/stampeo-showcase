@@ -31,7 +31,7 @@ export async function AnalyticsPreviewPage({ market }: Readonly<{ market: Market
         <DashboardDuo caption={false} />
       </LpSection>
       <LpAccentBand copy={band} />
-      <RelatedPreviews slug="platform/analytics" market={market} />
+      <RelatedPreviews slug="platform/analytics" />
     </LandingPageShell>
   );
 }

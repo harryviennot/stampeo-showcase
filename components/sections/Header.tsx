@@ -6,7 +6,6 @@ import { useTranslations, useLocale } from "next-intl";
 import { signOut, useHasSession } from "@/lib/auth/use-has-session";
 import { StampeoLogo } from "../logo";
 import { TrackedLink } from "../ui/TrackedLink";
-import type { FeatureLinks } from "@/lib/landing-pages/preview-nav";
 import { lockBodyScroll } from "@/lib/dom/body-scroll-lock";
 import { PromoBanner } from "./PromoBanner";
 import { PROMO_BANNER_ENABLED } from "@/lib/pricing";
@@ -67,15 +66,11 @@ function DesktopAuthButtons({
   );
 }
 
-/**
- * `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews).
- * `mobileMenu` is the phone menu the bar draws: the accordion panel, or the full-screen sheet.
- */
+/** `mobileMenu` is the phone menu the bar draws: the accordion panel, or the full-screen sheet. */
 export function Header({
   market = "int",
-  featureLinks = "live",
   mobileMenu = "accordion",
-}: Readonly<{ market?: Market; featureLinks?: FeatureLinks; mobileMenu?: "accordion" | "sheet" }>) {
+}: Readonly<{ market?: Market; mobileMenu?: "accordion" | "sheet" }>) {
   const PhoneMenu = mobileMenu === "sheet" ? SheetMenu : AccordionMenu;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -109,8 +104,8 @@ export function Header({
 
   const isActive = (href: string) => isCurrentPath(pathname, href);
 
-  const productItems = productMenuItems(t, locale, featureLinks, market);
-  const { navItems, resourceItems } = pageMenuItems(t, locale, market, featureLinks);
+  const productItems = productMenuItems(t, locale);
+  const { navItems, resourceItems } = pageMenuItems(t, locale, market);
 
   const BANNER_STORAGE_KEY = "stampeo_promo_banner_dismissed";
 
@@ -154,8 +149,6 @@ export function Header({
           onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
           onClose={closeMobileMenu}
           scrolled={scrolled}
-          featureLinks={featureLinks}
-          market={market}
           pathname={pathname}
           navItems={navItems}
           resourceItems={resourceItems}

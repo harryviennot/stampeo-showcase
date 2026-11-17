@@ -3,7 +3,6 @@ import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledBox } from "@/components/ui/ScaledBox";
 import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
 import { loyaltyLink } from "@/lib/landing-pages/preview-nav";
-import type { Market } from "@/lib/markets";
 import { AurevoCard } from "../shared/AurevoCard";
 import { LEVELS_ON_A_ROW, LevelCards } from "../shared/LevelCards";
 import { LpSection } from "../shared/LpSection";
@@ -19,12 +18,11 @@ const CARD = { width: 200, height: 257, narrow: 128 };
  * Vanity salon's points card with its reward ring, and the three level cards.
  * The rows are one client component that opens the one a visitor points at.
  */
-export function ProgramTypeRowsSection({ market }: Readonly<{ market: Market }>) {
+export function ProgramTypeRowsSection() {
   const { platform, programTypes } = useLandingCopy();
   const { PLATFORM } = platform;
   const rows = programTypes.PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }));
-  // The guide is the loyalty programs preview, like Platform's other links.
-  const guide = { label: PLATFORM.programTypes.closer, ...loyaltyLink(useLocale(), "previews", market) };
+  const guide = { label: PLATFORM.programTypes.closer, ...loyaltyLink(useLocale()) };
 
   return (
     <LpSection

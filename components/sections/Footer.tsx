@@ -3,7 +3,7 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { buildSeoLinks } from "@/lib/seo-links";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, loyaltyLink, showsSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import { featureLink, isComingSoon, loyaltyLink } from "@/lib/landing-pages/preview-nav";
 import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
@@ -22,11 +22,7 @@ import { FooterComparisons } from "./FooterComparisons";
 import { SoonPill } from "./SoonPill";
 import { footerComparisons, footerComparisonsTitle } from "@/lib/compare/footer";
 
-/** `featureLinks="previews"` points the feature links at the Platform-style previews (Platform and its previews). */
-export async function Footer({
-  market = "int",
-  featureLinks = "live",
-}: Readonly<{ market?: Market; featureLinks?: FeatureLinks }>) {
+export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
   const t = await getTranslations("common.footer");
   const tNav = await getTranslations("common.nav");
   const locale = await getLocale();
@@ -34,7 +30,7 @@ export async function Footer({
 
   const badges = storeBadges(locale);
 
-  const loyalty = loyaltyLink(locale, featureLinks, market);
+  const loyalty = loyaltyLink(locale);
   const seoLinks = buildSeoLinks(locale, market);
   const comparisons = footerComparisons(market, locale);
   const comparisonsTitle = footerComparisonsTitle(market, locale);
@@ -127,8 +123,8 @@ export async function Footer({
           <div className={footerLinkGrid(hasComparisons ? 5 : 4)}>
             <FooterColumn title={t("featuresTitle")}>
               {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
-                const { href, market: linkMarket } = featureLink(canonicalSlug, locale, featureLinks, market);
-                const soon = showsSoon(canonicalSlug, featureLinks);
+                const { href, market: linkMarket } = featureLink(canonicalSlug, locale);
+                const soon = isComingSoon(canonicalSlug);
                 return (
                 <MarketLink
                   key={canonicalSlug}

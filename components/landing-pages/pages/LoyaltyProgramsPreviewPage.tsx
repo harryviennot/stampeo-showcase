@@ -39,7 +39,7 @@ export async function LoyaltyProgramsPreviewPage({ market }: Readonly<{ market: 
       <SectorsSection />
       <LpFaq faq={faq} />
       <LpAccentBand copy={band} />
-      <RelatedPreviews slug="platform/loyalty-programs" market={market} />
+      <RelatedPreviews slug="platform/loyalty-programs" />
     </LandingPageShell>
   );
 }

@@ -21,13 +21,17 @@ const burgerOf = (html: string) => /<button\b[^>]*aria-label="(?:Open|Close) men
 /** The class of the bar: the first `<div>` of the header, which holds the nav. */
 const barClass = (html: string) => /<header[^>]*>(?:<div[^>]*><\/div>)?<div class="([^"]*)"/.exec(html)?.[1] ?? "";
 
-describe("the header every page but the US landing pages has", () => {
+describe("the header with its phone menu closed", () => {
   test("a header asked for nothing renders as it did before the sheet menu existed, byte for byte", () => {
     expect(render(<Header />)).toMatchSnapshot();
   });
 
-  test("so does the header that links to the previews", () => {
-    expect(render(<Header market="us" featureLinks="previews" />, "/en/us/landing-pages/platform")).toMatchSnapshot();
+  test("a US page's header keeps the visitor in the US market for pricing, and leads to the live pages for the rest", () => {
+    const hrefs = [...render(<Header market="us" />, "/en/us").matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
+
+    expect(hrefs).toContain("/us/pricing");
+    expect(hrefs).toContain("/en/loyalty-programs");
+    expect(hrefs.filter((href) => href.includes("landing-pages"))).toEqual([]);
   });
 });
 
@@ -59,7 +63,7 @@ describe("the phone menu a header draws", () => {
 });
 
 describe("the bar when its phone menu is open", () => {
-  const props = phoneMenuProps("us", "previews", "/us/landing-pages/platform");
+  const props = phoneMenuProps("us", "/us");
   const open = (Menu: typeof SheetMenu | typeof AccordionMenu, overrides = {}) =>
     render(
       <header>
@@ -100,7 +104,7 @@ describe("the bar when its phone menu is open", () => {
 });
 
 describe("the sign-up buttons of the header report their clicks", () => {
-  const props = phoneMenuProps("us", "previews", "/us/landing-pages/platform");
+  const props = phoneMenuProps("us", "/us");
 
   test("the desktop bar's Get started is tracked as the header's", () => {
     expect(trackedBy(() => render(<Header />))).toContainEqual({ trackAs: "header", href: "/onboarding" });

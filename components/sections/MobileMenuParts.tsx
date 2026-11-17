@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { handleMenuKey, inertWhileOpen } from "@/lib/dom/modal";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, isComingSoon, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
+import { featureLink, isComingSoon } from "@/lib/landing-pages/preview-nav";
 import type { Market } from "@/lib/markets";
 import { isCurrentPath, menuMotion, type MenuMotion } from "@/lib/nav/mobile-menu";
 import { TrackedLink } from "../ui/TrackedLink";
@@ -25,9 +25,6 @@ export interface MenuProps {
   onClose: () => void;
   /** The header's button: the first Tab stop, and where focus goes on Escape. */
   burgerRef: RefObject<HTMLButtonElement | null>;
-  featureLinks: FeatureLinks;
-  /** The market of the page: a preview a feature link leads to stays inside it. */
-  market: Market;
   /** The page's path without its locale, to mark the entry you are on. */
   pathname: string;
   /** Loyalty and Pricing. */
@@ -54,12 +51,12 @@ export interface FeatureEntry {
 }
 
 /** The Product menu's six features, linked as the header links them, with their one-line descriptions. */
-export function useFeatureEntries(featureLinks: FeatureLinks, pathname: string, pageMarket: Market): FeatureEntry[] {
+export function useFeatureEntries(pathname: string): FeatureEntry[] {
   const t = useTranslations("common.nav");
   const locale = useLocale();
 
   return FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-    const { href, market } = featureLink(canonicalSlug, locale, featureLinks, pageMarket);
+    const { href, market } = featureLink(canonicalSlug, locale);
 
     return {
       key,

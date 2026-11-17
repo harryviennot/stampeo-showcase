@@ -5,27 +5,46 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { featureLink, type FeatureLinks } from "@/lib/landing-pages/preview-nav";
-import type { Market } from "@/lib/markets";
+import { featureLink, isComingSoon } from "@/lib/landing-pages/preview-nav";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
 import { ChevronDownIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
 import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { TrackedLink } from "../ui/TrackedLink";
 import { HeaderBar, type PhoneMenuProps } from "./HeaderBar";
+import { SoonPill } from "./SoonPill";
 
-/** The Product row of the menu: it opens a list of the features under it. */
-function MobileFeaturesAccordion({
-  onNavigate,
-  featureLinks,
-  pageMarket,
-}: {
-  onNavigate: () => void;
-  featureLinks: FeatureLinks;
-  pageMarket: Market;
-}) {
+/** The six features under the Product row, each linked to its page, geolocation marked "Soon". */
+export function AccordionFeatureRows({ onNavigate }: { onNavigate: () => void }) {
   const t = useTranslations("common.nav");
   const locale = useLocale();
+
+  return (
+    <div className="pl-4 pb-2 space-y-0.5">
+      {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
+        const { href, market } = featureLink(canonicalSlug, locale);
+
+        return (
+          <MarketLink
+            key={canonicalSlug}
+            market={market}
+            href={href as "/features/design-de-carte"}
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
+            onClick={onNavigate}
+          >
+            <Icon className="w-4 h-4 text-[var(--accent)]" />
+            <span className="text-sm font-medium text-[var(--foreground)]">{t(`featuresItems.${key}.label`)}</span>
+            {isComingSoon(canonicalSlug) && <SoonPill />}
+          </MarketLink>
+        );
+      })}
+    </div>
+  );
+}
+
+/** The Product row of the menu: it opens a list of the features under it. */
+function MobileFeaturesAccordion({ onNavigate }: { onNavigate: () => void }) {
+  const t = useTranslations("common.nav");
   const [open, setOpen] = useState(false);
 
   return (
@@ -49,24 +68,7 @@ function MobileFeaturesAccordion({
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="pl-4 pb-2 space-y-0.5">
-              {FEATURE_ITEMS.map(({ key, canonicalSlug, Icon }) => {
-                const { href, market } = featureLink(canonicalSlug, locale, featureLinks, pageMarket);
-                return (
-                <MarketLink
-                  key={canonicalSlug}
-                  market={market}
-                  href={href as "/features/design-de-carte"}
-                  className="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-[var(--accent)]/5 transition-colors"
-                  onClick={onNavigate}
-                >
-                  <Icon className="w-4 h-4 text-[var(--accent)]" />
-                  <span className="text-sm font-medium text-[var(--foreground)]">
-                    {t(`featuresItems.${key}.label`)}
-                  </span>
-                </MarketLink>);
-              })}
-            </div>
+            <AccordionFeatureRows onNavigate={onNavigate} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -99,8 +101,6 @@ function AccordionBurger({ open, onToggle }: Readonly<{ open: boolean; onToggle:
 /** The open panel under the bar: Product as an accordion, then every other link as a row, the language and the sign-in buttons. */
 function AccordionPanel({
   onClose,
-  featureLinks,
-  market,
   pathname,
   navItems,
   resourceItems,
@@ -125,7 +125,7 @@ function AccordionPanel({
     >
       <div className="px-6 py-4">
         <div className="flex flex-col gap-1">
-          <MobileFeaturesAccordion onNavigate={onClose} featureLinks={featureLinks} pageMarket={market} />
+          <MobileFeaturesAccordion onNavigate={onClose} />
           {navItems.map((item) => (
             <MarketLink key={item.href} market={item.market ?? "int"} href={item.href} className={row(item.href)} onClick={onClose}>
               {item.label}
