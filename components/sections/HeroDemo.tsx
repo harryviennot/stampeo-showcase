@@ -135,10 +135,13 @@ function MobileWalletButton({
   sessionToken,
   t,
   prefix,
+  onAdd,
 }: {
   sessionToken: string | null;
   t: ReturnType<typeof useTranslations<"landing.hero">>;
   prefix: "stamp" | "points";
+  /** The page starts waiting for Wallet's install: iOS opens its sheet over the page without hiding it. */
+  onAdd: () => void;
 }) {
   if (!sessionToken) return null;
 
@@ -149,6 +152,7 @@ function MobileWalletButton({
       <div className="bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/10">
         <a
           href={passUrl}
+          onClick={onAdd}
           className="block w-full py-4 px-4 rounded-full font-bold text-sm sm:text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
         >
           {t(`${prefix}.mobileAddWallet`)}
@@ -392,7 +396,7 @@ export function HeroDemo() {
             ) : stamp.status === "pass_downloaded" ? (
               <DemoStatusHint status={stamp.status} t={t} prefix="stamp" />
             ) : (
-              <MobileWalletButton sessionToken={stamp.sessionToken} t={t} prefix="stamp" />
+              <MobileWalletButton sessionToken={stamp.sessionToken} t={t} prefix="stamp" onAdd={stamp.expectInstall} />
             )
           ) : (
             stamp.status === "pass_installed" ? (
@@ -447,7 +451,7 @@ export function HeroDemo() {
             ) : points.status === "pass_downloaded" ? (
               <DemoStatusHint status={points.status} t={t} prefix="points" />
             ) : (
-              <MobileWalletButton sessionToken={points.sessionToken} t={t} prefix="points" />
+              <MobileWalletButton sessionToken={points.sessionToken} t={t} prefix="points" onAdd={points.expectInstall} />
             )
           ) : (
             points.status === "pass_installed" ? (

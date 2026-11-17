@@ -33,6 +33,8 @@ Open the page in a private tab, or clear the site data for the page. The session
 
 - **DEMO-01: fixed and verified on a real iPhone (iOS 27, 17 Nov 2026), DEMO-04: fixed, pending re-verification on a real iPhone.** On iOS the page failed to flip to "added" (F1): it closes its event stream when the tab is hidden and opens a new one when visible, and the server gave the new stream the old stream's queue, so the install update went to a dead connection. The server now keeps one queue per connection, and the page re-reads the session when it becomes visible and polls while the install is unconfirmed. DEMO-01 passed with the page half alone (the server still had one queue per token), so the page half is enough on its own. Run DEMO-04 first.
 - **Targeted re-run for this fix:** DEMO-01, DEMO-04, and DEMO-02 (same code path, must not have regressed).
+- **DEMO-01: failed again on 17 Nov 2026 after the STA-526 release, fixed by STA-568, pending re-verification on a real iPhone.** The page only showed the added card after a reload: it polled only once it knew the pass was opened, and the phone's Add button never told it it was tapped. The tap now starts the poll. Verified by unit tests only. Run DEMO-01 several times in a row (it passed once before and still failed later), then DEMO-04.
+
 - **A desktop browser proves nothing about the iPhone cases.** Safari on a Mac does not close the Wallet sheet onto the page the way iOS 27 does.
 
 ---
