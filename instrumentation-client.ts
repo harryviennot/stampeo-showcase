@@ -1,17 +1,16 @@
 import posthog from "posthog-js";
 import * as Sentry from "@sentry/nextjs";
-import { carriesSessionToken, scrubPostHogEvent, scrubSentryEvent } from "./lib/privacy/credential-params";
+import { scrubSentryEvent } from "./lib/privacy/credential-params";
+import { posthogEnabledFor } from "./lib/posthog/hygiene";
+import { POSTHOG_INIT_OPTIONS } from "./lib/posthog/init-options";
 
-// A page opened with a sign-in token in its URL (the reset link) gets no
-// analytics: whatever PostHog sends outside `before_send` would carry it.
-if (process.env.NEXT_PUBLIC_POSTHOG_KEY && !carriesSessionToken(window.location.href)) {
+// A page opened with a sign-in token in its URL (the reset link), or as a
+// business's enrollment page, gets no analytics: whatever PostHog sends outside
+// `before_send` would carry what is in the URL.
+if (process.env.NEXT_PUBLIC_POSTHOG_KEY && posthogEnabledFor(window.location.href)) {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    defaults: "2026-01-30",
-    persistence: "memory",
-    before_send: scrubPostHogEvent,
-    // The flags request sends the landing URL and skips `before_send`; the showcase uses no flags.
-    advanced_disable_feature_flags_on_first_load: true,
+    ...POSTHOG_INIT_OPTIONS,
   });
 }
 
