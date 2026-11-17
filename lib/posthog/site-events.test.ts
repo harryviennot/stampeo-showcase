@@ -18,7 +18,7 @@ import {
   type Capture,
 } from "./site-events";
 
-const PAGE = { locale: "fr", path: "/tarifs" };
+const PAGE = { locale: "fr", path: "/pricing" };
 
 describe("what each event carries", () => {
   test.each([
@@ -31,7 +31,7 @@ describe("what each event carries", () => {
     ["a quiz question answered", loyaltyQuizAnswered(PAGE, "price", "varies"), "loyalty_quiz_answered", { question: "price", answer: "varies" }],
     ["the quiz finished", loyaltyQuizCompleted(PAGE, "points"), "loyalty_quiz_completed", { result: "points" }],
   ])("%s", (_case, sent, event, what) => {
-    expect(sent).toEqual({ event, props: { locale: "fr", path: "/tarifs", ...what } });
+    expect(sent).toEqual({ event, props: { locale: "fr", path: "/pricing", ...what } });
   });
 
   test("picking the language the page is in sends nothing", () => {
@@ -45,7 +45,7 @@ describe("sending", () => {
 
     sendSiteEvent(pricingIntervalToggled(PAGE, "year"), capture);
 
-    expect(capture.mock.calls).toEqual([["pricing_interval_toggled", { locale: "fr", path: "/tarifs", interval: "year" }]]);
+    expect(capture.mock.calls).toEqual([["pricing_interval_toggled", { locale: "fr", path: "/pricing", interval: "year" }]]);
   });
 
   test("no event, nothing sent", () => {
@@ -66,7 +66,7 @@ describe("the page an event reports", () => {
   };
 
   test.each([
-    ["French, which has no prefix", "fr", "/tarifs", "/tarifs"],
+    ["French, which has no prefix", "fr", "/pricing", "/pricing"],
     ["another language, without its prefix", "en", "/en/features/card-design", "/features/card-design"],
     ["a language's home page", "pl", "/pl", "/"],
     ["the US pages, which keep their own prefix", "en", "/us/pricing", "/us/pricing"],
