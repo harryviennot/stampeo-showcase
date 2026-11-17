@@ -14,11 +14,13 @@ import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
 import { IconTile } from "@/components/landing-pages/shared/IconTile";
 import { LpTrialButton } from "@/components/landing-pages/shared/LpTrialButton";
 import { CTAButton } from "@/components/ui/CTAButton";
+import { localePath } from "../../hreflang";
 import { ROOT, read } from "../../testing/jsx-source";
 import { renderPreviewPage } from "../../testing/preview-page";
 import { renderEn, textOf } from "../../testing/render-en";
 import { PREVIEW_SHARED } from "../copy/previews/shared";
 import { LANDING_PAGES, PREVIEW_SLUGS } from "../pages";
+import { previewLink } from "../preview-nav";
 
 /** The body of every rule that opens with `header` (a selector or an at-rule) in a stylesheet. */
 function blocks(sheet: string, header: string): string[] {
@@ -107,22 +109,12 @@ describe("the trial button is a keycap", () => {
   });
 
   test("the trial offered between a page's sections is a keycap, not an outline pill", () => {
-    const button = trial(renderEn(<LpTrialButton />, { us: true }));
+    const button = trial(renderEn(<LpTrialButton location="platform_apps" />, { us: true }));
 
     expect(button).toMatch(/class="[^"]*\bkeycap\b/);
     expect(button).toContain("bg-[var(--accent)]");
     expect(button).not.toMatch(/border-2|bg-transparent/);
   });
-
-  test.each(["how-it-works", "features", "outcomes"] as const)(
-    "%s: every trial button of the page, hero to closing ask, is a keycap (the pricing cards' plan buttons are the pricing section's own)",
-    async (slug) => {
-      const buttons = [...(await renderPreviewPage(slug)).matchAll(/<a class="group inline-flex[^>]*href="\/en\/onboarding"[^>]*>/g)].map((match) => match[0]);
-
-      expect(buttons.length).toBeGreaterThanOrEqual(3);
-      expect(buttons.filter((button) => !/class="[^"]*\bkeycap\b/.test(button))).toEqual([]);
-    },
-  );
 });
 
 describe("the surfaces are clean: no preview page has an ink frame", () => {
@@ -146,7 +138,7 @@ describe("the surfaces are clean: no preview page has an ink frame", () => {
 
 describe("the links a preview closes with", () => {
   const html = (slug: "platform/card-design" | "platform/geolocation" = "platform/card-design", title?: string) =>
-    renderEn(<RelatedPreviews slug={slug} market="us" title={title} />);
+    renderEn(<RelatedPreviews slug={slug} title={title} />);
 
   test("they are three tiles under the page's own title, with no label above it", () => {
     const related = html();
@@ -164,12 +156,8 @@ describe("the links a preview closes with", () => {
 
     expect(textOf(geolocation)).toContain("Bring them back today.");
     expect(textOf(geolocation)).not.toContain(PREVIEW_SHARED.related.title);
-    expect(hrefs).toEqual(LANDING_PAGES["platform/geolocation"].related?.map((slug) => `/us/landing-pages/${slug}`));
-    expect(hrefs).toEqual([
-      "/us/landing-pages/platform/push-notifications",
-      "/us/landing-pages/platform/promotional-campaigns",
-      "/us/landing-pages/platform/analytics",
-    ]);
+    expect(hrefs).toEqual(LANDING_PAGES["platform/geolocation"].related?.map((slug) => localePath("en", previewLink(slug, "en").href)));
+    expect(hrefs).toEqual(["/en/features/push-notifications", "/en/features/promotional-campaigns", "/en/features/analytics"]);
   });
 
   test("the geolocation card says what it will do, and that it is coming", () => {

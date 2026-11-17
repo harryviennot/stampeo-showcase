@@ -1,9 +1,11 @@
-import { OUTCOMES } from "../outcomes";
 import { SAMPLE_BUSINESS } from "../shared";
 import type { Banner, BandCopy, FaqItem, Fact, HeroCopy, PageMeta } from "../types";
 
 /** The campaign the hero's lock screen and the first idea show. */
-const HAPPY_HOUR: Banner = OUTCOMES.slowDays.banner;
+const HAPPY_HOUR: Banner = {
+  sender: SAMPLE_BUSINESS,
+  body: "Quiet afternoon? Your second coffee is half price until 5pm.",
+};
 
 /** A campaign a café could send: its name, its sample message on the lock screen, and who gets it. */
 interface IdeaCopy {

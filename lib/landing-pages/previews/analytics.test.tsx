@@ -1,5 +1,5 @@
 /**
- * The analytics preview (`/us/landing-pages/platform/analytics`): what a visitor sees in each section. The hero's
+ * The analytics preview (`/features/analytics`): what a visitor sees in each section. The hero's
  * frame, the headers, the order and the tap targets of all six previews are in `pages.test.tsx`; production's blind-spot
  * cards, which this page borrows, are in `blind-spot-cards.test.tsx`.
  */

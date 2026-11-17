@@ -18,7 +18,7 @@ export function renderPreviewPage(slug: LandingSlug): Promise<string> {
       (async () => {
         await mockEnglishServerTranslations();
         const page = await import(pageFile(slug));
-        const Page = slug in PAGE_COMPONENTS ? page[PAGE_COMPONENTS[slug as keyof typeof PAGE_COMPONENTS]] : page.default;
+        const Page = page[PAGE_COMPONENTS[slug]];
         const shell = (await Page({ market: "us" satisfies Market })) as ReactElement<{ children: ReactNode }>;
 
         return renderEnAsync(shell.props.children);

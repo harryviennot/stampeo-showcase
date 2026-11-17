@@ -1,28 +1,20 @@
 import { join, sep } from "node:path";
-import { ALL_LANDING_SLUGS, PREVIEW_SLUGS, type LandingSlug, type PreviewSlug } from "../landing-pages/pages";
+import { PREVIEW_SLUGS, type LandingSlug, type PreviewSlug } from "../landing-pages/pages";
 import { ROOT, code, importedFiles, literalAttr, openingTags, read, sourceFiles } from "./jsx-source";
 
 /**
  * Where the landing pages live, and the walks over their source that the registry,
  * shared-section and page-visual tests share. A page is the file that holds its sections:
- * for Platform and its previews a component of `components/landing-pages/pages/` that both
- * the `/us` route and the localised route render, for the other three the `/us` route.
+ * a component of `components/landing-pages/pages/` that the routes render.
  */
 
 /** The site's own components and routes: where a shared component's other callers live. */
 export const SITE_SOURCE_DIRS = [join(ROOT, "components"), join(ROOT, "app")];
 
-export const PAGES_DIR = join(ROOT, "app", "[locale]", "us", "landing-pages");
 export const COMPONENTS_DIR = join(ROOT, "components", "landing-pages");
 export const SHARED_DIR = join(COMPONENTS_DIR, "shared");
 /** The code only the six feature previews use; the pieces they share with Platform are in `platform/` and `shared/`. */
 export const PREVIEWS_DIR = join(COMPONENTS_DIR, "feature-previews");
-
-/** The `/us` route of a page: a thin file that mounts the page for the US market. */
-export const routeFile = (slug: LandingSlug) => join(PAGES_DIR, slug, "page.tsx");
-
-/** The localised route of Platform or a preview: the same page for the international market, in every language. */
-export const localisedRouteFile = (slug: LandingSlug) => join(ROOT, "app", "[locale]", "landing-pages", slug, "page.tsx");
 
 /** The component that holds the sections of Platform and each preview, by slug. */
 export const PAGE_COMPONENTS = {
@@ -34,11 +26,10 @@ export const PAGE_COMPONENTS = {
   "platform/promotional-campaigns": "PromotionalCampaignsPreviewPage",
   "platform/geolocation": "GeolocationPreviewPage",
   "platform/loyalty-programs": "LoyaltyProgramsPreviewPage",
-} as const satisfies Partial<Record<LandingSlug, string>>;
+} as const satisfies Record<LandingSlug, string>;
 
 /** The file that holds a page's sections. */
-export const pageFile = (slug: LandingSlug) =>
-  slug in PAGE_COMPONENTS ? join(COMPONENTS_DIR, "pages", `${PAGE_COMPONENTS[slug as keyof typeof PAGE_COMPONENTS]}.tsx`) : routeFile(slug);
+export const pageFile = (slug: LandingSlug) => join(COMPONENTS_DIR, "pages", `${PAGE_COMPONENTS[slug]}.tsx`);
 
 /** A file of one of the six feature previews: its page, or a component of `feature-previews/`. */
 export const isPreviewFile = (file: string) =>
@@ -62,10 +53,8 @@ export const shared = (name: string) => join(SHARED_DIR, `${name}.tsx`);
 /** A component of a page's own folder, `components/landing-pages/<folder>/`. */
 export const pageComponent = (folder: string, name: string) => join(COMPONENTS_DIR, folder, `${name}.tsx`);
 
-/** Every component of the pages, and the routes of all of them (the four pages and the seven previews). */
-export const lpFiles = () => [
-  ...new Set([...sourceFiles(COMPONENTS_DIR), ...ALL_LANDING_SLUGS.flatMap((slug) => [routeFile(slug), ...(slug in PAGE_COMPONENTS ? [localisedRouteFile(slug)] : [])])]),
-];
+/** Every component of the pages: Platform's and the seven previews'. */
+export const lpFiles = () => sourceFiles(COMPONENTS_DIR);
 
 /** Every file the page renders through `components/landing-pages/`, itself included. */
 export function landingTree(file: string, seen = new Set<string>()): Set<string> {
@@ -107,13 +96,13 @@ export function sectionSource(slug: LandingSlug, id: string): string {
 
 /**
  * Every opening tag of `component` (the one defined in `ownFile`, found through
- * the import that brings it in) in the site's own source, the landing pages and
- * their components apart: the call sites that existed before these pages and
+ * the import that brings it in) in the site's own source, the landing pages'
+ * components apart: the call sites that existed before these pages and
  * must render as they did, whatever props the pages add.
  */
 export function otherCallers(component: string, ownFile: string): Array<{ file: string; attrs: string }> {
   return SITE_SOURCE_DIRS.flatMap((dir) => sourceFiles(dir))
-    .filter((file) => file !== ownFile && !file.startsWith(COMPONENTS_DIR) && !file.startsWith(PAGES_DIR))
+    .filter((file) => file !== ownFile && !file.startsWith(COMPONENTS_DIR))
     .flatMap((file) => {
       const source = read(file);
       const imports = importedFiles(file, source);
@@ -124,14 +113,7 @@ export function otherCallers(component: string, ownFile: string): Array<{ file: 
     });
 }
 
-/**
- * The dashboard-capture views a source asks for: `landingShot(locale, "x")`, and
- * `<SampleCapture view="x">`, which shows `phone` (the top of Analytics) when it names none.
- */
+/** The dashboard-capture views a source asks for: `landingShot(locale, "x")`. */
 export function shotViews(source: string): string[] {
-  const direct = [...source.matchAll(/\blandingShot\(\s*[^,()]+(?:\s+as\s+\w+)?\s*,\s*"([\w-]+)"/g)].map((match) => match[1]);
-  const samples = openingTags(source)
-    .filter((tag) => tag.name === "SampleCapture")
-    .map((tag) => literalAttr(tag.attrs, "view") ?? "phone");
-  return [...direct, ...samples];
+  return [...source.matchAll(/\blandingShot\(\s*[^,()]+(?:\s+as\s+\w+)?\s*,\s*"([\w-]+)"/g)].map((match) => match[1]);
 }

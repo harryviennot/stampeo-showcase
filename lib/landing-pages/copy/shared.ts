@@ -1,4 +1,4 @@
-import type { Banner, FaqItem, SectionCopy } from "./types";
+import type { Banner, SectionCopy } from "./types";
 
 /** The sample café every visual on these pages belongs to (`STAMP_SAMPLES` "aurevo"). */
 export const SAMPLE_BUSINESS = "Aurevo";
@@ -38,9 +38,6 @@ export const SHARED = {
   /** The five looks a level can take, as the dashboard names them and a card prints them over its count. */
   levelNames: { bronze: "Bronze", silver: "Silver", gold: "Gold", platinum: "Platinum", noir: "Noir" },
   reassurance: "{trialDays} days free · Cancel anytime",
-  /** The hero proof line, filled from the `variant.metrics` figures. */
-  proof: (businesses: string, countries: string) =>
-    `Used by ${businesses} businesses in ${countries} countries`,
   demoLink: "Try it on your phone",
   demo: {
     title: "Try it on your own phone.",
@@ -54,34 +51,6 @@ export const SHARED = {
   /** The heading over the sector carousel when a page gives it a small label (Platform). */
   sectorsEyebrow: "For every kind of shop",
   faq: {
-    title: "Questions owners ask",
-    items: [
-      {
-        question: "Do my customers have to download an app?",
-        answer:
-          "No. Apple Wallet and Google Wallet are already on their phone. They scan your QR code and the card is in their wallet in seconds.",
-      },
-      {
-        question: "Do I need new hardware or a new POS?",
-        answer:
-          "No. You stamp cards with our free app or from any phone's browser. Nothing changes at your register, and there's nothing to connect.",
-      },
-      {
-        question: "How do customers join?",
-        answer:
-          "They scan the QR code at your counter, or tap the link you share online, and add the card to Apple Wallet or Google Wallet. Your dashboard prints a ready-made counter flyer.",
-      },
-      {
-        question: "What happens when the free trial ends?",
-        answer:
-          "You choose whether to continue. We ask for your card to start the trial, and nothing is charged before the {trialDays} days are up. Cancel anytime before then.",
-      },
-      {
-        question: "Is there a contract?",
-        answer:
-          "No. Monthly plans have no contract and no setup fee. Cancel anytime from your dashboard.",
-      },
-    ] satisfies FaqItem[],
     contact: {
       before: "Another question?",
       link: "Contact us",

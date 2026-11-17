@@ -1,7 +1,7 @@
 /**
- * The shapes of the copy on the /us/landing-pages/* pages. These pages are
- * written in US English only, so their words live in TypeScript next to the
- * code rather than in the catalogs that every locale shares.
+ * The shapes of the copy of Platform and its seven pages. Their words live in
+ * TypeScript next to the code, in every language, rather than in the catalogs
+ * that every locale shares.
  *
  * Prices and the trial length are never written out: `{trialDays}` and the
  * price tokens are filled in by `RegionText`.

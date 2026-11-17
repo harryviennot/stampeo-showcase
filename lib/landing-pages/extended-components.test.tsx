@@ -241,7 +241,6 @@ describe("what a page can ask of Platform's pieces", () => {
       expect(text).toContain("Card styles, answered");
       expect(text).toContain("Can I change it?");
       expect(text).toContain("Anytime.");
-      expect(text).not.toContain(SHARED.faq.items[0].question);
       expect(text).toContain(SHARED.faq.contact.link);
     });
 

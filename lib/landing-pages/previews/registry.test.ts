@@ -1,21 +1,18 @@
 /**
- * The seven previews under `/us/landing-pages/platform/*`: Platform-style
- * pages that sit beside today's `/en/features/*`. They are English, noindex and
- * reachable by URL only, each with its own tracking variant and the sections of
- * its registry entry, ending on the cream card and the links to its siblings.
- * What each page renders is in `pages.test.tsx`.
+ * The seven pages in Platform's style: the six feature pages and the loyalty programs page. Each has its own
+ * tracking variant and the sections of its registry entry, ending on the cream card and the links to its
+ * siblings. Where each is served and what its head says is in `lib/seo/live-pages.test.ts`; what each page renders
+ * is in `pages.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
-import { buildLlmsTxt } from "../../llms-txt";
-import { buildSitemap } from "../../seo/sitemap";
 import { hidesLanguageSwitcher } from "../../routing/language-switcher";
-import { NOINDEX } from "../../seo/page-robots";
 import { code, findTag, literalAttr } from "../../testing/jsx-source";
 import { PREVIEW_COPY as COPY } from "../../testing/landing-copy";
-import { localisedRouteFile, pageFile, renderedSections, routeFile } from "../../testing/landing-pages-source";
-import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, hasDemoSection, landingPageMetadata, pageWords, type PreviewSlug } from "../pages";
+import { pageFile, renderedSections } from "../../testing/landing-pages-source";
+import { FEATURE_SLUGS, getLocalizedSlug } from "../../feature-slugs";
+import { LANDING_PAGES, LANDING_SLUGS, PREVIEW_SLUGS, pageWords, type PreviewSlug } from "../pages";
 
 /** The sections of each preview, in the order of the UX brief: each page opens on its hero and ends on the cream card and its links. */
 const SECTIONS: Record<PreviewSlug, string[]> = {
@@ -72,8 +69,8 @@ describe("the registry", () => {
     for (const id of ["pricing", "sectors", "blog", "marquee"]) expect(LANDING_PAGES[slug].sections).not.toContain(id);
   });
 
-  test("a live demo is on the notifications preview only", () => {
-    expect(PREVIEW_SLUGS.filter(hasDemoSection)).toEqual(["platform/push-notifications"]);
+  test("a live demo is on the notifications page only", () => {
+    expect(PREVIEW_SLUGS.filter((slug) => LANDING_PAGES[slug].sections.includes("demo"))).toEqual(["platform/push-notifications"]);
   });
 
   test.each(PREVIEW_SLUGS)("%s takes its head, hero and closing card from its copy", (slug) => {
@@ -85,7 +82,7 @@ describe("the registry", () => {
     expect(page.hero.sub?.length ?? 0).toBeGreaterThan(0);
   });
 
-  test.each(PREVIEW_SLUGS)("%s links to three of its siblings, never to itself and never to a live feature page", (slug) => {
+  test.each(PREVIEW_SLUGS)("%s links to three of its siblings, never to itself", (slug) => {
     const { related } = LANDING_PAGES[slug];
 
     expect(related).toHaveLength(3);
@@ -96,48 +93,25 @@ describe("the registry", () => {
     }
   });
 
-  test.each(LANDING_SLUGS)("the earlier page %s has no sibling links", (slug) => {
+  test.each(LANDING_SLUGS)("the homepage %s has no sibling links", (slug) => {
     expect(LANDING_PAGES[slug].related).toBeUndefined();
   });
 });
 
-describe("the routes", () => {
-  test.each(PREVIEW_SLUGS)("%s has its own page and routes next to Platform's, and no layout wraps them", (slug) => {
-    expect(existsSync(pageFile(slug))).toBe(true);
-    expect(existsSync(routeFile(slug))).toBe(true);
-    expect(existsSync(localisedRouteFile(slug))).toBe(true);
-    expect(existsSync(routeFile("platform").replace("page.tsx", "layout.tsx"))).toBe(false);
-    expect(existsSync(localisedRouteFile("platform").replace("page.tsx", "layout.tsx"))).toBe(false);
-  });
-
-  test.each(PREVIEW_SLUGS)("%s is US English on /us and every language elsewhere, with its own metadata and the shell for its slug", (slug) => {
-    const us = code(routeFile(slug));
-    const international = code(localisedRouteFile(slug));
+describe("the pages", () => {
+  test.each(PREVIEW_SLUGS)("%s has its own page, mounting the shell for its slug", (slug) => {
     const shell = findTag(code(pageFile(slug)), "LandingPageShell");
 
-    expect(us).toContain(`landingPageMetadata("${slug}", "en", "us")`);
-    expect(us).toMatch(/generateStaticParams\(\)\s*\{\s*return \[\{ locale: "en" \}\];/);
-    expect(us).toContain('setRequestLocale("en")');
-    expect(international).toContain(`landingPageMetadata("${slug}", locale, "int")`);
-    expect(international).toContain("routing.locales.map");
+    expect(existsSync(pageFile(slug))).toBe(true);
     expect(literalAttr(shell?.attrs ?? "", "slug")).toBe(slug);
   });
 
-  test.each(PREVIEW_SLUGS)("%s is noindex in every language", (slug) => {
-    for (const [locale, market] of [["en", "us"], ["fr", "int"], ["es", "int"], ["pl", "int"]] as const) {
-      expect(landingPageMetadata(slug, locale, market).robots).toEqual(NOINDEX);
-    }
-  });
-
-  test.each(PREVIEW_SLUGS)("%s is not in the sitemap or llms.txt", (slug) => {
-    expect(JSON.stringify(buildSitemap())).not.toContain(slug);
-    expect(buildLlmsTxt()).not.toContain(slug);
-  });
-
-  test.each(PREVIEW_SLUGS)("%s hides the language switcher on /us and keeps it on the international site", (slug) => {
-    expect(hidesLanguageSwitcher(`/us/landing-pages/${slug}`)).toBe(true);
-    expect(hidesLanguageSwitcher(`/landing-pages/${slug}`)).toBe(false);
-  });
+  test.each(FEATURE_SLUGS.flatMap((slug) => ["fr", "en", "es", "pl"].map((locale) => [slug, locale] as const)))(
+    "the language switcher stays on the live page of %s in %s",
+    (slug, locale) => {
+      expect(hidesLanguageSwitcher(`/features/${getLocalizedSlug(slug, locale)}`)).toBe(false);
+    },
+  );
 
   test.each(PREVIEW_SLUGS)("%s: renders every registry section once, in registry order", (slug) => {
     expect(renderedSections(pageFile(slug))).toEqual([...LANDING_PAGES[slug].sections]);

@@ -14,6 +14,7 @@ import { HoverRows } from "@/components/landing-pages/platform/HoverRows";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
 import { StepsTable } from "@/components/landing-pages/platform/StepsTable";
 import { ToggleCard } from "@/components/landing-pages/platform/ToggleCard";
+import { localePath } from "../../hreflang";
 import { code, openingTags } from "../../testing/jsx-source";
 import { trackedBy } from "../../testing/cta-recorder";
 import { COMPONENTS_DIR } from "../../testing/landing-pages-source";
@@ -129,7 +130,7 @@ describe("HoverRows: the rows of wallet cards keep their thumbnail column; only 
         renderEn(
           <ProgramTypeRows
             rows={PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }))}
-            guide={{ label: "Which one?", ...previewLink("platform/loyalty-programs", "us") }}
+            guide={{ label: "Which one?", ...previewLink("platform/loyalty-programs", "en") }}
             visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }}
           />,
         ),
@@ -230,23 +231,16 @@ describe("PreviewHero: the words and the actions on the left, the visual on the 
 
 describe("RelatedPreviews: three links to the page's siblings", () => {
   test.each(PREVIEW_SLUGS)("%s links to its three siblings, each a tall tap target to the sibling's own URL", (slug) => {
-    const html = renderEn(<RelatedPreviews slug={slug} market="us" />);
+    const html = renderEn(<RelatedPreviews slug={slug} />);
     const hrefs = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
 
-    expect(hrefs).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => `/us/landing-pages/${sibling}`));
+    expect(hrefs).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => localePath("en", previewLink(sibling, "en").href)));
     expect(html).toContain('data-landing-section="related"');
     expect(html.match(/min-h-14/g)).toHaveLength(3);
   });
 
-  test.each(PREVIEW_SLUGS)("%s on the international site links to its siblings in the visitor's language, not to /us", (slug) => {
-    const html = renderEn(<RelatedPreviews slug={slug} market="int" />);
-    const hrefs = [...html.matchAll(/<a [^>]*href="([^"]+)"/g)].map((match) => match[1]);
-
-    expect(hrefs).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => `/en/landing-pages/${sibling}`));
-  });
-
-  test("each card says what the sibling is, in the shared copy, and no card points at a live feature page", () => {
-    const html = renderEn(<RelatedPreviews slug="platform/card-design" market="us" />);
+  test("each card says what the sibling is, in the shared copy", () => {
+    const html = renderEn(<RelatedPreviews slug="platform/card-design" />);
     const text = textOf(html);
 
     expect(text).toContain(PREVIEW_SHARED.related.title);
@@ -254,7 +248,6 @@ describe("RelatedPreviews: three links to the page's siblings", () => {
       expect(text).toContain(card.title);
       expect(text).toContain(card.line);
     }
-    expect(html).not.toMatch(/href="[^"]*\/features\//);
     expect(html).not.toContain("—");
   });
 });

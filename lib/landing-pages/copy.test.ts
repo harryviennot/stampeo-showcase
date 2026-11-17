@@ -1,11 +1,11 @@
 /**
- * The words of the `/us/landing-pages/*` pages live in TypeScript, so the
+ * The words of the Platform page and its previews live in TypeScript, so the
  * catalog guards in `i18n-catalogs.test.ts` never see them. This applies the
  * same claim guards, plus the plan's own: what these pages may not say, how
- * long each line may run, and what a figure has to print under it.
+ * long each line may run (in every language), and what a figure has to print under it.
  *
  * Every string of every copy module is checked with its path, so a failure
- * names the line (`OUTCOMES.regulars.example.text`), not just the file.
+ * names the line (`PLATFORM.numbers.figures[0].text`), not just the file.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -13,10 +13,12 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DIGIT_DAYS, NO_CARD_CLAIM, WORDED_TRIAL } from "../testing/copy-claims";
 import { ROOT, code } from "../testing/jsx-source";
-import { ALL, MODULES, PAGES, inPreviews, objectsWith, offenders } from "../testing/landing-copy";
+import { ALL, MODULES, inPreviews, lines, objectsWith, offenders } from "../testing/landing-copy";
 import { PLAN_FACTS, availability } from "../plans/plan-facts";
 import { stampIcons } from "../../components/onboarding/StampIconPicker";
 import { splitAccent } from "./accent";
+import { landingCopy } from "./copy/bundle";
+import { PLATFORM } from "./copy/platform";
 import { CARD_DESIGN_PREVIEW } from "./copy/previews/card-design";
 import { GEOLOCATION_PREVIEW } from "./copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "./copy/previews/promotional-campaigns";
@@ -27,7 +29,7 @@ import { PREVIEW_SLUGS, pageWords } from "./pages";
 /** A percentage ("34%") or a multiplier ("6×", "6X"): what only a sourced figure may print. */
 const FIGURE = /\d+(?:\.\d+)?\s*%|\b\d+\s*[x×X](?![\p{L}\p{N}])/u;
 
-describe("what these pages may not claim (AC10)", () => {
+describe("what these pages may not claim", () => {
   test("there is copy to check", () => {
     expect(ALL.length).toBeGreaterThan(150);
   });
@@ -73,11 +75,16 @@ describe("what these pages may not claim (AC10)", () => {
     expect(availability((facts) => facts.levels > 0)).toBe("every plan");
   });
 
-  test('"punch" only ever appears in "punch card"', () => {
+  test('"punch" only ever appears in "punch card", and only in the US English', () => {
     const withoutCards = (value: string) => value.replace(/\bpunch cards?\b/gi, "");
+    const us = lines(landingCopy("en", "us"), "us");
 
-    expect(ALL.filter((line) => /punch/i.test(withoutCards(line.value))).map((line) => line.path)).toEqual([]);
-    expect(ALL.some((line) => /\bpunch cards?\b/i.test(line.value))).toBe(true);
+    expect(us.filter((line) => /punch/i.test(withoutCards(line.value))).map((line) => line.path)).toEqual([]);
+    expect(us.some((line) => /\bpunch cards?\b/i.test(line.value))).toBe(true);
+    expect(ALL.some((line) => /punch/i.test(line.value))).toBe(false);
+    for (const locale of ["fr", "es", "pl"]) {
+      expect(lines(landingCopy(locale), locale).some((line) => /punch/i.test(line.value))).toBe(false);
+    }
   });
 
   test("no notification is sent by Stampeo: the card carries the business's name", () => {
@@ -88,12 +95,23 @@ describe("what these pages may not claim (AC10)", () => {
   });
 });
 
-describe("how much each line may say (AC11)", () => {
-  test.each(Object.entries(PAGES))("%s: the hero fits above the fold", (_name, page) => {
-    const hero = page.hero as { h1: string; sub?: string };
+/** English's caps; every other language may run a fifth longer, rounded up. */
+const LOCALES = ["en", "fr", "es", "pl"] as const;
+const cap = (locale: string, english: number) => (locale === "en" ? english : Math.ceil(english * 1.2));
 
-    expect(hero.h1.length).toBeLessThanOrEqual(46);
-    if (hero.sub !== undefined) expect(hero.sub.length).toBeLessThanOrEqual(90);
+describe.each(LOCALES)("how much each line may say in %s", (locale) => {
+  const copy = landingCopy(locale);
+  const all = lines(copy, locale);
+  const over = (found: Array<{ path: string }>) => found.map((line) => `${locale}:${line.path.replace(`${locale}.`, "")}`);
+
+  test("the hero fits above the fold: the headline and the sub", () => {
+    const heroes = objectsWith(copy, ["h1"], locale);
+
+    expect(heroes).toHaveLength(8);
+    expect([
+      ...over(heroes.filter(({ object }) => String(object.h1).length > cap(locale, 46)).map(({ path }) => ({ path: `${path}.h1` }))),
+      ...over(heroes.filter(({ object }) => object.sub !== undefined && String(object.sub).length > cap(locale, 90)).map(({ path }) => ({ path: `${path}.sub` }))),
+    ]).toEqual([]);
   });
 
   /** The largest a `title` may be: the closing lines are shorter, a page's meta is not a heading. */
@@ -102,9 +120,9 @@ describe("how much each line may say (AC11)", () => {
     return /\.(?:finalCta|band)\.title$/.test(path) ? 36 : 44;
   };
 
-  const titles = ALL.filter((line) => /\.title$/.test(line.path) && titleBudget(line.path) !== null);
-  const leads = ALL.filter((line) => /\.lead$/.test(line.path));
-  const eyebrows = ALL.filter((line) => /\.eyebrow$/.test(line.path));
+  const titles = all.filter((line) => /\.title$/.test(line.path) && titleBudget(line.path) !== null);
+  const leads = all.filter((line) => /\.lead$/.test(line.path));
+  const eyebrows = all.filter((line) => /\.eyebrow$/.test(line.path));
 
   test("the fields are found", () => {
     expect(titles.length).toBeGreaterThan(40);
@@ -113,19 +131,29 @@ describe("how much each line may say (AC11)", () => {
   });
 
   test("every title is at most 44 characters, the closing lines 36", () => {
-    expect(titles.filter((line) => line.value.length > (titleBudget(line.path) ?? 0)).map((line) => line.path)).toEqual([]);
+    expect(over(titles.filter((line) => line.value.length > cap(locale, titleBudget(line.path) ?? 0)))).toEqual([]);
   });
 
   test("every lead is at most 85 characters", () => {
-    expect(leads.filter((line) => line.value.length > 85).map((line) => line.path)).toEqual([]);
+    expect(over(leads.filter((line) => line.value.length > cap(locale, 85)))).toEqual([]);
   });
 
   test("every eyebrow is at most 28 characters", () => {
-    expect(eyebrows.filter((line) => line.value.length > 28).map((line) => line.path)).toEqual([]);
+    expect(over(eyebrows.filter((line) => line.value.length > cap(locale, 28)))).toEqual([]);
+  });
+
+  test("each sibling link is a feature's name and one plain line of at most 50 characters, under a title of at most 44", () => {
+    const { related } = copy.previews.shared.PREVIEW_SHARED;
+    const cards = Object.entries(related.cards);
+
+    expect(cards).toHaveLength(7);
+    expect(cards.filter(([, { title, line }]) => title.length === 0 || line.length === 0).map(([key]) => key)).toEqual([]);
+    expect(cards.filter(([, { line }]) => line.length > cap(locale, 50)).map(([key]) => `${locale}:${key}.line`)).toEqual([]);
+    expect(related.title.length).toBeLessThanOrEqual(cap(locale, 44));
   });
 
   test("every accent is words of its headline", () => {
-    const accented = Object.entries(MODULES).flatMap(([name, value]) => objectsWith(value, ["accent"], name));
+    const accented = objectsWith(copy, ["accent"], locale);
 
     expect(accented.length).toBeGreaterThanOrEqual(8);
     for (const { path, object } of accented) {
@@ -159,15 +187,12 @@ describe("the accent words", () => {
   });
 });
 
-describe("figures from other people (AC12)", () => {
+describe("figures from other people", () => {
   const figures = Object.entries(MODULES).flatMap(([name, value]) => objectsWith(value, ["source"], name));
 
   test("every sourced figure says what it says and where it comes from", () => {
     expect(figures.map((figure) => figure.path).sort()).toEqual([
       "LOYALTY_PROGRAMS_PREVIEW.settings.figure",
-      "OUTCOMES.headStart.empty",
-      "OUTCOMES.headStart.withHeadStart",
-      "OUTCOMES.problem.figure",
       "PLATFORM.numbers.figures[0]",
     ]);
     for (const { object } of figures) {
@@ -189,10 +214,9 @@ describe("figures from other people (AC12)", () => {
     expect(FIGURE.test(text)).toBe(isFigure);
   });
 
-  test("a percentage or a multiplier is printed only as a sourced figure, or in the labelled example", () => {
+  test("a percentage or a multiplier is printed only as a sourced figure, or on the sample card", () => {
     const allowed = new Set([
       ...figures.flatMap(({ path }) => [`${path}.value`, `${path}.text`]),
-      "OUTCOMES.regulars.example.text",
       // The grocer's sample card, which earns 10% off.
       "CARD_DESIGN_PREVIEW.cardFields.wallets.reward",
     ]);
@@ -206,7 +230,7 @@ describe("Platform's measured figure is the retention study's", () => {
   const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const study = readFileSync(join(ROOT, "docs", "features", "STA-552", "retention-study-2026-11-16.md"), "utf8");
   const day90 = /Still in the wallet at day 90 \| \*\*(\d+(?:\.\d+)?)%\*\* \| ([\d,]+) cards, from (\d+) businesses, first added (\d{4})-(\d{2})-\d{2} to \d{4}-(\d{2})-\d{2}/.exec(study);
-  const [figure] = PAGES.PLATFORM.numbers.figures;
+  const [figure] = PLATFORM.numbers.figures;
 
   test("the study records its day-90 result with the cards, the businesses and the months it covers", () => {
     expect(day90).not.toBeNull();
@@ -221,7 +245,7 @@ describe("Platform's measured figure is the retention study's", () => {
   });
 });
 
-describe("percentages a component draws (AC12)", () => {
+describe("percentages a component draws", () => {
   /**
    * The components that print a percentage with no source line: drawn sample dashboards, not claims. Each computes
    * it from the sample it reads: Platform's `ANALYTICS`, so a preview's sample café shows the numbers Platform's does,
@@ -243,9 +267,9 @@ describe("percentages a component draws (AC12)", () => {
   });
 });
 
-describe("prices and the trial length (AC13)", () => {
-  test("a dollar amount appears only in the worked example", () => {
-    expect(offenders(/\$/)).toEqual(["OUTCOMES.regulars.example.text"]);
+describe("prices and the trial length", () => {
+  test("no line writes a dollar amount: prices are tokens", () => {
+    expect(offenders(/\$/)).toEqual([]);
   });
 
   test("the reassurance carries the token", () => {
@@ -286,20 +310,6 @@ describe("the six previews' copy", () => {
   test("the FAQs: card design's six questions and the campaigns page's six", () => {
     expect(CARD_DESIGN_PREVIEW.faq.items).toHaveLength(6);
     expect(PROMOTIONAL_CAMPAIGNS_PREVIEW.faq.items).toHaveLength(6);
-  });
-
-  test("each sibling link is a feature's name and one plain line of at most 50 characters", () => {
-    const { cards } = PREVIEW_SHARED.related;
-    const KEYS = ["cardDesign", "mobileScanner", "pushNotifications", "analytics", "promotionalCampaigns", "geolocation", "loyaltyPrograms"];
-
-    expect(Object.keys(cards).sort()).toEqual([...KEYS].sort());
-    for (const key of KEYS) {
-      const { title, line } = cards[key as keyof typeof cards];
-
-      expect({ key, set: title.length > 0 && line.length > 0 }).toEqual({ key, set: true });
-      expect({ key, short: line.length <= 50 }).toEqual({ key, short: true });
-    }
-    expect(PREVIEW_SHARED.related.title.length).toBeLessThanOrEqual(44);
   });
 
   test("no preview header has a label above the FAQ or the sibling links: they are utility, not sections", () => {

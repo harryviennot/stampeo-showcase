@@ -19,8 +19,14 @@ import { GEOLOCATION_PREVIEW } from "../copy/previews/geolocation";
 import { PROMOTIONAL_CAMPAIGNS_PREVIEW } from "../copy/previews/promotional-campaigns";
 import { PUSH_NOTIFICATIONS_PREVIEW } from "../copy/previews/push-notifications";
 import { SHARED, STAMP_BANNER } from "../copy/shared";
-import { LANDING_PAGES, PREVIEW_SLUGS, hasDemoSection, pageWords, type PreviewSlug } from "../pages";
-import { FEATURE_PREVIEWS, loyaltyLink } from "../preview-nav";
+import { localePath } from "../../hreflang";
+import { LANDING_PAGES, PREVIEW_SLUGS, pageWords, type PreviewSlug } from "../pages";
+import { FEATURE_PREVIEWS, loyaltyLink, previewLink } from "../preview-nav";
+
+/** Where a page of the registry is served, as a link on the English site writes it. */
+const livePath = (slug: PreviewSlug) => localePath("en", previewLink(slug, "en").href);
+/** Does the page have a live demo? */
+const hasDemo = (slug: PreviewSlug) => LANDING_PAGES[slug].sections.includes("demo");
 
 /** Sections whose copy is keyed by another word than their id: card design's `types` section is its `programs` copy. */
 const COPY_KEY_OF: Record<string, string> = { types: "programs", by_business: "sectors" };
@@ -89,7 +95,7 @@ describe("what a Platform-style page leaves out", () => {
     expect(plays).toHaveLength(slug === "platform/mobile-scanner" ? 1 : 0);
   });
 
-  test.each(PREVIEW_SLUGS.filter(hasDemoSection))("%s: the live demo is centred under the copy's own label", async (slug) => {
+  test.each(PREVIEW_SLUGS.filter(hasDemo))("%s: the live demo is centred under the copy's own label", async (slug) => {
     const demo = await sectionOf(slug, "demo");
 
     expectInOrder(demo, [(COPY[slug] as { demo: { eyebrow: string } }).demo.eyebrow]);
@@ -99,7 +105,7 @@ describe("what a Platform-style page leaves out", () => {
   test.each(PREVIEW_SLUGS)("%s: sends a visitor to its demo only when it has one", async (slug) => {
     const html = await renderPreviewPage(slug);
 
-    expect(/href="#demo"/.test(html)).toBe(hasDemoSection(slug) && html.includes('id="demo"'));
+    expect(/href="#demo"/.test(html)).toBe(hasDemo(slug) && html.includes('id="demo"'));
   });
 
   /** The loyalty quiz's result offers the trial under its own location (`loyalty_picker`), so quiz sign-ups can be counted. */
@@ -176,7 +182,7 @@ describe("the hero each page opens with", () => {
 
     expect(closing.map(({ id }) => id)).toEqual(["final_cta", "related"]);
     expectInOrder(closing[0].html, [finalCta.accent, finalCta.sub ?? "", SHARED.cta]);
-    expect(links(closing[1].html)).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => `/us/landing-pages/${sibling}`));
+    expect(links(closing[1].html)).toEqual((LANDING_PAGES[slug].related ?? []).map((sibling) => livePath(sibling)));
   });
 });
 
@@ -239,7 +245,7 @@ describe("walking the previews", () => {
 
   /** Geolocation (the Product menu) and loyalty programs (the Loyalty link) are reached from the menus of Platform and its previews, not from a sibling's closing links. */
   const FROM_THE_MENU: readonly PreviewSlug[] = ["platform/geolocation", "platform/loyalty-programs"];
-  const MENU_LINKS = [...Object.values(FEATURE_PREVIEWS).map((slug) => `/us/landing-pages/${slug}`), loyaltyLink("en", "previews", "us").href];
+  const MENU_LINKS = [...Object.values(FEATURE_PREVIEWS).map((slug) => livePath(slug)), localePath("en", loyaltyLink("en").href)];
 
   test("every preview is reached from a sibling or from the menu, and every card goes to a preview's own URL", async () => {
     const links = await Promise.all(PREVIEW_SLUGS.map(async (slug) => [slug, await linksOf(slug)] as const));
@@ -247,21 +253,21 @@ describe("walking the previews", () => {
 
     for (const [slug, hrefs] of links) {
       expect(hrefs).toHaveLength(3);
-      for (const href of hrefs) expect(PREVIEW_SLUGS.map((sibling) => `/us/landing-pages/${sibling}`)).toContain(href);
-      expect(hrefs).not.toContain(`/us/landing-pages/${slug}`);
+      for (const href of hrefs) expect(PREVIEW_SLUGS.map((sibling) => livePath(sibling))).toContain(href);
+      expect(hrefs).not.toContain(livePath(slug));
     }
     for (const slug of PREVIEW_SLUGS.filter((candidate) => !FROM_THE_MENU.includes(candidate))) {
-      expect(reached).toContain(`/us/landing-pages/${slug}`);
+      expect(reached).toContain(livePath(slug));
     }
     for (const slug of FROM_THE_MENU) {
-      expect(reached).not.toContain(`/us/landing-pages/${slug}`);
-      expect(MENU_LINKS).toContain(`/us/landing-pages/${slug}`);
+      expect(reached).not.toContain(livePath(slug));
+      expect(MENU_LINKS).toContain(livePath(slug));
     }
   });
 
   test("starting from any preview, a visitor can reach every other one by following the links, the menu-only ones aside", async () => {
-    const graph = new Map(await Promise.all(PREVIEW_SLUGS.map(async (slug) => [`/us/landing-pages/${slug}`, await linksOf(slug)] as const)));
-    const menuOnly = FROM_THE_MENU.map((slug) => `/us/landing-pages/${slug}`);
+    const graph = new Map(await Promise.all(PREVIEW_SLUGS.map(async (slug) => [livePath(slug), await linksOf(slug)] as const)));
+    const menuOnly = FROM_THE_MENU.map((slug) => livePath(slug));
 
     for (const start of graph.keys()) {
       const seen = new Set([start]);

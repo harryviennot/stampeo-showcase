@@ -28,7 +28,6 @@ export const SHARED: Shared["SHARED"] = {
   googleCardTitle: "Tarjeta de fidelidad",
   levelNames: { bronze: "Bronce", silver: "Plata", gold: "Oro", platinum: "Platino", noir: "Negro" },
   reassurance: "{trialDays} días gratis · Sin compromiso",
-  proof: (businesses: string, countries: string) => `Lo usan ${businesses} comercios en ${countries} países`,
   demoLink: "Pruébalo en tu teléfono",
   demo: {
     title: "Pruébalo en tu propio teléfono.",
@@ -39,33 +38,6 @@ export const SHARED: Shared["SHARED"] = {
   levelCardsAlt: "La tarjeta de fidelidad de una tintorería en tres niveles: Bronce, Plata y Oro.",
   sectorsEyebrow: "Para todo tipo de comercio",
   faq: {
-    title: "Las preguntas que nos hacen",
-    items: [
-      {
-        question: "¿Mis clientes tienen que descargar una aplicación?",
-        answer:
-          "No. Apple Wallet y Google Wallet ya están en su teléfono. Escanean tu código QR y la tarjeta queda guardada en segundos.",
-      },
-      {
-        question: "¿Necesito equipos nuevos o cambiar de caja?",
-        answer:
-          "No. Sellas las tarjetas con nuestra app gratuita o desde el navegador de cualquier teléfono. En tu caja no cambia nada y no hay nada que conectar.",
-      },
-      {
-        question: "¿Cómo se unen mis clientes?",
-        answer:
-          "Escanean el código QR de tu mostrador, o abren el enlace que compartes en internet, y añaden la tarjeta a Apple Wallet o Google Wallet. Tu panel te prepara un folleto de mostrador listo para imprimir.",
-      },
-      {
-        question: "¿Qué pasa cuando termina la prueba gratuita?",
-        answer:
-          "Eliges si sigues o no. Te pedimos una tarjeta bancaria para iniciar la prueba, pero no hay ningún cargo antes de que terminen los {trialDays} días. Puedes cancelar cuando quieras antes de esa fecha.",
-      },
-      {
-        question: "¿Hay permanencia?",
-        answer: "No. Los planes mensuales no tienen permanencia ni gastos de alta. Cancela cuando quieras desde tu panel.",
-      },
-    ],
     contact: {
       before: "¿Otra pregunta?",
       link: "Contáctanos",

@@ -1,7 +1,7 @@
 /**
  * Claim guards shared by every test that reads copy: the catalogs in
  * `messages/` (`i18n-catalogs.test.ts`) and the TypeScript copy of the
- * `/us/landing-pages/*` pages (`landing-pages/copy.test.ts`).
+ * Platform page and its previews (`landing-pages/copy.test.ts`).
  */
 
 /** What may join a number to "day": whitespace, a hyphen, or a Unicode hyphen (U+2010, and the no-break U+2011 the pages write). */

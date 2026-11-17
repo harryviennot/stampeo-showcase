@@ -1,7 +1,7 @@
 /**
- * What the four landing pages share and what they borrow: the hero and its
- * dashboard capture, the sectors, the fact lists, the sender on a banner, the
- * tokens that must go through `RegionText`, the placard's QR, and the site
+ * What Platform and its previews share and what they borrow: the dashboard
+ * capture, the sectors, the fact lists, the sender on a banner, the
+ * tokens that must go through `RegionText`, and the site
  * components the pages extend, whose other callers must not notice. Async
  * server components are read from the source; the rest are rendered.
  */
@@ -12,7 +12,6 @@ import { join } from "node:path";
 import { createElement, type ReactElement } from "react";
 import { FactList } from "@/components/landing-pages/shared/FactList";
 import { LpHeading } from "@/components/landing-pages/shared/LpSection";
-import { SampleCapture } from "@/components/landing-pages/shared/SampleCapture";
 import { WalletBadges } from "@/components/landing-pages/shared/WalletBadges";
 import { SCANNER_LOOP } from "@/lib/videos/scanner-loop";
 import { WRENFOLD } from "@/components/landing-pages/shared/samples";
@@ -27,16 +26,13 @@ import {
   isPlatformStyleFile,
   lpFiles,
   otherCallers,
-  pageComponent,
   shared,
   shotViews,
 } from "../testing/landing-pages-source";
 import { renderEn, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
-import { FEATURES } from "./copy/features";
-import { OUTCOMES } from "./copy/outcomes";
 import { LEVELS_BUSINESS, LEVEL_UP_BANNER, REWARD_BANNER, SAMPLE_BUSINESS, SHARED, STAMP_BANNER } from "./copy/shared";
-import { pageWords, type LandingSlug } from "./pages";
+import { pageWords } from "./pages";
 
 // The dashboard duo is an async server component that asks next-intl for its alt texts.
 await mockEnglishServerTranslations();
@@ -106,42 +102,27 @@ describe("dashboard captures (AC9)", () => {
     expect(loose).toEqual([]);
   });
 
-  test("the feeds the pages draw are among what the guard reads: the layered capture and the how-to feed", () => {
-    const feeds = lpFiles().filter((file) => openingTags(read(file)).some((tag) => tag.name === "LiveActivityFeed"));
-
-    expect(feeds.map((file) => file.replace(ROOT, "")).sort()).toEqual([
-      "/components/landing-pages/features/AnalyticsSpotlight.tsx",
-      "/components/landing-pages/how-it-works/SeeItWork.tsx",
-    ]);
-  });
-
-  test("the dashboard duo keeps its caption on every page but Platform and its previews, where it shows none", () => {
+  test("the dashboard duo shows no caption on Platform and its previews, and can print one", () => {
     const duos = lpFiles().flatMap((file) =>
       openingTags(read(file))
         .filter((tag) => tag.name === "DashboardDuo")
         .map((tag) => ({ file, captioned: !/(?:^|\s)caption=\{false\}/.test(tag.attrs) })),
     );
 
-    expect(duos.filter(({ file }) => onPlatform(file)).map(({ file }) => file.replace(ROOT, "")).sort()).toEqual([
+    expect(duos.map(({ file }) => file.replace(ROOT, "")).sort()).toEqual([
       "/components/landing-pages/pages/AnalyticsPreviewPage.tsx",
       "/components/landing-pages/platform/PlatformSection.tsx",
     ]);
-    expect(duos.filter(({ file }) => !onPlatform(file)).length).toBeGreaterThan(0);
     expect(duos.filter(({ file, captioned }) => captioned === onPlatform(file))).toEqual([]);
+    expect(code(shared("DashboardDuo")).includes("figcaption")).toBe(true);
     expect(code(shared("DashboardDuo"))).toMatch(/caption\s*&&\s*\(\s*<figcaption/);
   });
 
-  test.each(["phone", "phone-habits", "phone-busiest"] as const)(
-    "the %s capture exists, and the sample capture shows it with its caption under it",
-    (view) => {
-      const html = renderEn(createElement(SampleCapture, { alt: "A capture", view }));
-
-      expect(existsSync(join(ROOT, "public", landingShot("en", view).src))).toBe(true);
-      expect(html).toContain(encodeURIComponent(landingShot("en", view).src));
-      expect(html.indexOf("<figcaption")).toBeGreaterThan(html.indexOf("<img"));
-      expect(textOf(html)).toContain(SHARED.sampleData);
-    },
-  );
+  test.each(["phone", "phone-habits", "phone-busiest"] as const)("the %s capture exists in every language", (view) => {
+    for (const locale of ["fr", "en", "es", "pl"] as const) {
+      expect(existsSync(join(ROOT, "public", landingShot(locale, view).src))).toBe(true);
+    }
+  });
 });
 
 describe("which views of the dashboard the pages draw", () => {
@@ -159,11 +140,11 @@ describe("which views of the dashboard the pages draw", () => {
   const usages = () =>
     lpFiles().flatMap((file) => shotViews(code(file)).map((view) => ({ file, view: view as ShotView })));
 
-  test("every view a page draws is one the list knows, and the pages draw the three they use today", () => {
+  test("every view a page draws is one the list knows, and the pages draw the two they use today", () => {
     const used = [...new Set(usages().map(({ view }) => view))];
 
     expect(used.filter((view) => !VIEWS.includes(view))).toEqual([]);
-    expect(used.sort()).toEqual(["desktop", "phone", "phone-busiest"]);
+    expect(used.sort()).toEqual(["desktop", "phone"]);
   });
 
   test("the desktop capture is drawn only by the dashboard duo", () => {
@@ -171,42 +152,22 @@ describe("which views of the dashboard the pages draw", () => {
 
     expect(drawers).toEqual([shared("DashboardDuo")]);
   });
-
-  test("Features' analytics shows the top of the page, and its alt text describes only that", () => {
-    const features = usages().filter(({ file }) => file === pageComponent("features", "AnalyticsSpotlight"));
-
-    expect(features.map(({ view }) => view)).toEqual(["phone"]);
-    expect(FEATURES.analytics.alt).not.toMatch(/how often|reward progress|busiest/i);
-  });
 });
 
-describe("the hero the three argument pages share (AC18)", () => {
-  const hero = () => code(shared("LpHero"));
+describe("the wallet badges and the dashboard duo", () => {
   const duo = () => code(shared("DashboardDuo"));
 
-  test("shows the official wallet badges, as images and not links, then the dashboard duo", () => {
+  test("the official wallet badges are images and not links", () => {
     const html = renderEn(createElement(WalletBadges));
 
     expect(html.match(/<img /g)).toHaveLength(2);
     expect(html).toContain('alt="Apple Wallet"');
     expect(html).toContain('alt="Google Wallet"');
     expect(html).not.toMatch(/<a\b/);
-    expect(hero().indexOf("<WalletBadges")).toBeGreaterThan(-1);
-    expect(hero().indexOf("<DashboardDuo")).toBeGreaterThan(hero().indexOf("<WalletBadges"));
-    expect(findTag(hero(), "DashboardDuo")?.attrs).toMatch(/\bpriority\b/);
-    expect(hero()).toContain("SHARED.proof(");
   });
 
   /** A `hidden` class, plain or behind a breakpoint (`md:hidden`): what would take the capture off a phone. */
   const hides = (attrs: string) => /(?<![\w-])(?:[\w-]+:)?hidden(?![\w-])/.test(attrs);
-
-  /** The hero's markup under the proof line, up to the end of the dashboard duo's tag: the badges, the duo and every wrapper around them. */
-  const heroStretch = () => {
-    const source = hero();
-    const duoTag = findTag(source, "DashboardDuo");
-
-    return source.slice(source.indexOf("</p>", source.indexOf("SHARED.proof(")), duoTag?.end ?? 0);
-  };
 
   test("the guard sees a hidden class, however it is written", () => {
     for (const attrs of ['className="hidden"', 'className="mt-8 md:hidden"', 'className="lg:hidden hidden"']) {
@@ -230,30 +191,10 @@ describe("the hero the three argument pages share (AC18)", () => {
     expect(caption(renderEn(await DashboardDuo({ caption: false })))).toBeUndefined();
   });
 
-  test("nothing the hero wraps around the badges and the duo hides them at any width", () => {
-    const stretch = heroStretch();
-
-    expect(stretch.indexOf("<WalletBadges")).toBeGreaterThan(-1);
-    expect(stretch.indexOf("<DashboardDuo")).toBeGreaterThan(stretch.indexOf("<WalletBadges"));
-    expect(stretch).not.toContain("<h1");
-    expect(openingTags(stretch).filter((tag) => hides(tag.attrs)).map((tag) => tag.name)).toEqual([]);
-  });
-
   test("the duo frames the capture in a browser bar with the dashboard's address, and captions it as sample data", () => {
     expect(duo()).toContain("SHARED.dashboardUrl");
     expect(duo()).toContain("SHARED.sampleData");
     expect(duo().indexOf("<figcaption")).toBeGreaterThan(duo().indexOf("<PhoneScreenshot"));
-  });
-
-  test("the Outcomes headline keeps its no-break hyphen, so \"first-time\" never splits across two lines", () => {
-    const { h1 } = pageWords("outcomes", "en", "us").hero;
-
-    expect(h1).toContain("first‑time");
-    expect(h1).not.toContain("first-time");
-  });
-
-  test.each(["how-it-works", "features", "outcomes"] as LandingSlug[])("%s has a sub under its headline", (slug) => {
-    expect(pageWords(slug, "en", "us").hero.sub?.length ?? 0).toBeGreaterThan(0);
   });
 
   test("Platform's hero is a headline alone: its numbers come lower down", () => {
@@ -330,7 +271,7 @@ describe("the level cards (AC20)", () => {
 });
 
 describe("a notification is the sample business's, never Stampeo's (AC10, AC24)", () => {
-  const BANNERS = [STAMP_BANNER, REWARD_BANNER, OUTCOMES.slowDays.banner, ...FEATURES.messages.moments.map((m) => m.banner)];
+  const BANNERS = [STAMP_BANNER, REWARD_BANNER];
 
   test.each(BANNERS.map((banner) => [banner.body, banner] as const))("%s", (_body, banner) => {
     const props = lpBanner(banner);
@@ -386,7 +327,7 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
     /** Each card of a file that also shows the stamp banner or the loop, with the count it is given. */
     const besideBanner = (file: string) => {
       const source = code(file);
-      if (!/\bSTAMP_BANNER\b|\bOUTCOMES\.always\.banner\b|<ScannerLoop\b/.test(source)) return [];
+      if (!/\bSTAMP_BANNER\b|<ScannerLoop\b/.test(source)) return [];
       return openingTags(source)
         .filter((tag) => CARDS.includes(tag.name))
         .map((tag) => ({ file: file.replace(ROOT, ""), card: tag.name, stamps: stampsOf(tag.attrs) }));
@@ -397,7 +338,6 @@ describe("a notification is the sample business's, never Stampeo's (AC10, AC24)"
 
       expect([Number(stamp), Number(total)]).toEqual([5, 8]);
       expect([aurevo?.stamps, aurevo?.design.total_stamps]).toEqual([Number(stamp), Number(total)]);
-      expect(OUTCOMES.always.banner).toBe(STAMP_BANNER);
     });
 
     test("the guard reads a literal count and the loop's, and returns what it cannot read", () => {
@@ -423,12 +363,8 @@ describe("prices and the trial length are printed through RegionText (AC13)", ()
   const tokenPaths = ALL.filter((line) => line.value.includes("{trialDays}")).map((line) => line.path);
 
   // A new token string fails here until its print is added below.
-  test("the copy strings with the {trialDays} token are the reassurance, one FAQ answer and a first-day step", () => {
-    expect(tokenPaths.sort()).toEqual([
-      "HOW_IT_WORKS.firstDay.items[3]",
-      "SHARED.faq.items[3].answer",
-      "SHARED.reassurance",
-    ]);
+  test("the only copy string with the {trialDays} token is the reassurance", () => {
+    expect(tokenPaths.sort()).toEqual(["SHARED.reassurance"]);
   });
 
   test.each([
@@ -447,34 +383,11 @@ describe("prices and the trial length are printed through RegionText (AC13)", ()
     expect(prints.filter((print) => print.bare)).toEqual([]);
   });
 
-  test("a component that reads the first-day steps prints each one through RegionText", () => {
-    const bare = lpFiles()
-      .filter((file) => /\bfirstDay\b/.test(code(file)))
-      .flatMap((file) => {
-        const source = code(file);
-        return [...source.matchAll(/\bitems\.map\(\s*\(?\s*(\w+)/g)]
-          .map((match) => match[1])
-          .filter((param) => {
-            const throughRegionText = source.includes(`<RegionText raw={${param}}`);
-            const printedBare = source.replaceAll(`raw={${param}}`, "").includes(`{${param}}`);
-            return !throughRegionText || printedBare;
-          })
-          .map((param) => `${file}: ${param}`);
-      });
-
-    expect(bare).toEqual([]);
-  });
 });
 
-describe("the placard's QR mark (AC14)", () => {
+describe("no scannable code (AC14)", () => {
   test("no component of these pages draws a scannable code", () => {
     expect(filesWith(sourceFiles(COMPONENTS_DIR), /qrcode\.react|\bQRCodeSVG\b/)).toEqual([]);
-  });
-
-  test("the placard's QR is the still skeleton", () => {
-    const qr = findTag(read(pageComponent("how-it-works", "PlacardVisual")), "QRCodeSkeleton");
-
-    expect(qr?.attrs).toContain("animated={false}");
   });
 });
 

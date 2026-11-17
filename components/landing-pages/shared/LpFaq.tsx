@@ -35,29 +35,27 @@ function LinkedAnswer({ item, link }: Readonly<{ item: FaqItem; link: AnswerLink
 }
 
 /**
- * The five questions every page answers, collapsed, and one contact line. A page that brings its own `faq`
- * gets Platform's look: its title centred, the questions as one white table, and the contact line centred under it;
+ * A page's questions, collapsed and as one white table under a centred title, and one contact line centred under it;
  * `answerLink` turns the given words in an answer into a link.
  */
 export function LpFaq({
   faq,
   answerLink,
-}: Readonly<{ faq?: { title: string; items: readonly FaqItem[] }; answerLink?: AnswerLink }>) {
+}: Readonly<{ faq: { title: string; items: readonly FaqItem[] }; answerLink?: AnswerLink }>) {
   const { SHARED } = useLandingCopy().shared;
-  const { title, items } = faq ?? SHARED.faq;
-  const own = faq !== undefined;
+  const { title, items } = faq;
   const { contact } = SHARED.faq;
 
   return (
-    <LpSection section="faq" size="narrow" title={title} align={own ? "center" : undefined}>
+    <LpSection section="faq" size="narrow" title={title} align="center">
       <FAQList
         items={items.map((item) => ({
           question: item.question,
           answer: answerLink ? <LinkedAnswer item={item} link={answerLink} /> : <RegionText raw={item.answer} />,
         }))}
-        table={own}
+        table
       />
-      <p className={own ? "mt-6 text-center text-base text-[var(--muted-foreground)]" : "mt-8 text-base text-[var(--muted-foreground)]"}>
+      <p className="mt-6 text-center text-base text-[var(--muted-foreground)]">
         {contact.before}{" "}
         <TrackedLink href="/contact" trackAs="faq_contact" className={INLINE_LINK}>
           {contact.link}

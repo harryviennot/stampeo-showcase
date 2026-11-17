@@ -1,5 +1,5 @@
 /**
- * The geolocation preview (`/us/landing-pages/platform/geolocation`): what a visitor sees in the hero and in
+ * The geolocation preview (`/features/geolocation`): what a visitor sees in the hero and in
  * each section. Geolocation is not live, so every claim is in the future tense or under a "coming soon" label,
  * with no date, no plan and no wallet named; the copy's own rules are in `copy.test.ts`, and the headers, the
  * order and the tap targets of all six previews in `pages.test.tsx`.

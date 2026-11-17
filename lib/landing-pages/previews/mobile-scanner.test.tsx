@@ -1,5 +1,5 @@
 /**
- * The scanner preview (`/us/landing-pages/platform/mobile-scanner`): what a visitor sees in the hero and in
+ * The scanner preview (`/features/mobile-scanner`): what a visitor sees in the hero and in
  * each section. Every section is rendered under the English catalogs, async pieces included; the headers, the
  * order and the tap targets of all six previews are in `pages.test.tsx`, and the counter's own logic is in
  * `scanner-interactions.test.ts`.

@@ -1,6 +1,3 @@
-import * as features from "../landing-pages/copy/features";
-import * as howItWorks from "../landing-pages/copy/how-it-works";
-import * as outcomes from "../landing-pages/copy/outcomes";
 import * as platform from "../landing-pages/copy/platform";
 import * as analyticsPreview from "../landing-pages/copy/previews/analytics";
 import * as cardDesignPreview from "../landing-pages/copy/previews/card-design";
@@ -14,8 +11,8 @@ import * as programTypes from "../landing-pages/copy/program-types";
 import * as shared from "../landing-pages/copy/shared";
 
 /**
- * The copy of the `/us/landing-pages/*` pages as the tests walk it: every
- * string with its path (`OUTCOMES.regulars.example.text`), so a failure names
+ * The copy of the Platform page and its previews as the tests walk it: every
+ * string with its path (`PLATFORM.numbers.figures[0].text`), so a failure names
  * the line, not just the file.
  */
 
@@ -49,9 +46,6 @@ export function objectsWith(value: unknown, keys: string[], path: string): Locat
 }
 
 export const MODULES = {
-  ...howItWorks,
-  ...features,
-  ...outcomes,
   ...platform,
   ...programTypes,
   ...shared,
@@ -83,11 +77,8 @@ export const inPreviews = (path: string) => PREVIEW_MODULES.some((name) => path 
 /** Every string of every copy module. */
 export const ALL: Line[] = Object.entries(MODULES).flatMap(([name, value]) => lines(value, name));
 
-/** The four pages' own copy objects, by name, and the previews'. */
+/** Platform's own copy object and the previews', by name. */
 export const PAGES = {
-  HOW_IT_WORKS: howItWorks.HOW_IT_WORKS,
-  FEATURES: features.FEATURES,
-  OUTCOMES: outcomes.OUTCOMES,
   PLATFORM: platform.PLATFORM,
   CARD_DESIGN_PREVIEW: cardDesignPreview.CARD_DESIGN_PREVIEW,
   MOBILE_SCANNER_PREVIEW: mobileScannerPreview.MOBILE_SCANNER_PREVIEW,

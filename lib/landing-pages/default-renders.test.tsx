@@ -21,7 +21,6 @@ import { LpCtaPair } from "@/components/landing-pages/platform/LpCtaPair";
 import { NumberFigures } from "@/components/landing-pages/platform/NumberFigures";
 import { PlatformToggleCard } from "@/components/landing-pages/platform/PlatformToggleCard";
 import { ProgramTypeRows } from "@/components/landing-pages/platform/ProgramTypeRows";
-import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { FAQList } from "@/components/ui/FAQList";
 import { QRCodeSkeleton } from "@/components/ui/QRCodeSkeleton";
 import { ScannerLoop } from "@/components/ui/ScannerLoop";
@@ -144,10 +143,6 @@ describe("what Platform's own pieces render when the previews' new props are lef
     expect(await renderEnAsync(<PlatformHero market="us" />)).toMatchSnapshot();
   });
 
-  test("LpFaq: the five shared questions and the contact line", () => {
-    expect(renderEn(<LpFaq />, { us: true })).toMatchSnapshot();
-  });
-
   test("DeliverAnalytics: the two tiles and the weekly chart", () => {
     expect(renderEn(<DeliverAnalytics />)).toMatchSnapshot();
   });
@@ -168,7 +163,7 @@ describe("what Platform's own pieces render when the previews' new props are lef
       renderEn(
         <ProgramTypeRows
           rows={PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }))}
-          guide={{ label: PLATFORM.programTypes.closer, ...loyaltyLink("en", "previews", "us") }}
+          guide={{ label: PLATFORM.programTypes.closer, ...loyaltyLink("en") }}
           visuals={{ stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> }}
         />,
       ),

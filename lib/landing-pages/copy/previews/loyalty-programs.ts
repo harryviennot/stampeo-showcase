@@ -1,6 +1,6 @@
 import type { BandCopy, FaqItem, PageMeta, SourcedFigure, Tile } from "../types";
 
-/** The study behind the head-start tip, as the outcomes page cites it. */
+/** The study behind the head-start tip. */
 const HEAD_START_SOURCE = "Nunes & Drèze, Journal of Consumer Research, 2006 (car wash loyalty cards, 9 months)";
 
 /** One level of the barbershop's ladder, as the levels section shows it. */

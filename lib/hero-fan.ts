@@ -270,7 +270,7 @@ export function fanSlots(season: FanSeason): FanSlot[] {
 
 export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
 
-/** The cards of the Platform landing page's hero (`/us/landing-pages/platform`),
+/** The cards of the Platform homepage's hero,
  *  dealt into the same seven places. Aurevo, the café those pages follow, is at
  *  the apex with a points card and a stamp card either side, so the middle
  *  three show both engines. Light and dark alternate, no two alike in colour touch, and

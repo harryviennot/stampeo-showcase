@@ -1,5 +1,5 @@
 /**
- * The `/us/landing-pages/*` pages sell the product, not the plans: a plan's name, a badge saying who has a
+ * The Platform page and its previews sell the product, not the plans: a plan's name, a badge saying who has a
  * feature and "on every plan" belong to the pricing section and the pricing page. Each page is rendered as a
  * visitor receives it and read for plan names outside its pricing section, and the copy modules are read for the
  * same words. The number of levels, which the copy states as a fact, is tied to `PLAN_FACTS`.
@@ -64,10 +64,9 @@ describe("the number of levels is PLAN_FACTS'", () => {
     [...line.value.matchAll(/\bup to (\d+) levels\b/gi)].map((match) => ({ path: line.path, count: Number(match[1]) })),
   );
 
-  test("the copy says it three times: the program types, the Outcomes levels and the loyalty page's levels", () => {
+  test("the copy says it twice: the program types and the loyalty page's levels", () => {
     expect(FIGURES.map(({ path }) => path).sort()).toEqual([
       "LOYALTY_PROGRAMS_PREVIEW.levels.facts[0].title",
-      "OUTCOMES.levels.facts[0].text",
       "PROGRAM_TYPES[2].body",
     ]);
   });

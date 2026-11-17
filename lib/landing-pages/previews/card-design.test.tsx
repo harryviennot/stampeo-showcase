@@ -1,5 +1,5 @@
 /**
- * The card design preview (`/us/landing-pages/platform/card-design`): what a
+ * The card design preview (`/features/card-design`): what a
  * visitor sees in each section, from the hero's re-skinning card to the cream
  * card. Every section is rendered under the English catalogs; the headers, the
  * order and the tap targets of all six previews are in `pages.test.tsx`.

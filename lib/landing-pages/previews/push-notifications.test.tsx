@@ -1,5 +1,5 @@
 /**
- * The notifications preview (`/us/landing-pages/platform/push-notifications`):
+ * The notifications preview (`/features/push-notifications`):
  * what each section promises a visitor. Every section is rendered under the
  * English catalogs, async pieces included; the headers, the order and the tap
  * targets of all six previews are in `pages.test.tsx`, and the typing of the

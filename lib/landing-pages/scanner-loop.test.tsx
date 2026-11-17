@@ -1,5 +1,5 @@
 /**
- * The Scanner loop on the landing pages: every page's scanner visual is the
+ * The Scanner loop on Platform and its previews: every page's scanner visual is the
  * video of the Scanner app adding a stamp, and the cards beside it count the
  * stamps it ends on. The loop itself is pinned in `lib/videos/scanner-loop.test.tsx`.
  */
@@ -12,10 +12,8 @@ import { STAMP_BANNER } from "./copy/shared";
 import type { LandingSlug } from "./pages";
 
 describe("every landing page's scanner visual is the Scanner loop", () => {
-  /** Where each page shows its scanner: how-to step 3, the features spotlight, Platform's "how" and its Scanner tab. */
+  /** Where Platform shows its scanner: its "how" and its Scanner tab. */
   const VISUALS: Array<readonly [LandingSlug, folder: string, name: string]> = [
-    ["how-it-works", "how-it-works", "StampStepVisual"],
-    ["features", "features", "ScannerSpotlight"],
     ["platform", "platform", "HowTable"],
     ["platform", "platform", "PlatformSection"],
   ];
