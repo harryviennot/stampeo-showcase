@@ -1,5 +1,5 @@
 /**
- * The Platform page (`/us/landing-pages/platform`): what each of its sections
+ * The Platform page (the homepage): what each of its sections
  * promises a visitor. The server components that only compose (hero, deliver,
  * numbers, how) are read as source; the ones that carry behaviour of their own
  * (program rows, the platform toggle, the share tree, the closing band and the
@@ -21,7 +21,7 @@ import { BUSINESS_TYPE_ICONS, TypeMarquee } from "@/components/landing-pages/pla
 import { getAllPosts } from "../blog";
 import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
-import { expectInOrder, renderEn, renderEnAsync, textOf } from "../testing/render-en";
+import { expectInOrder, renderEn, renderEnAsync, renderIn, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
 import { PLATFORM } from "./copy/platform";
 import { PROGRAM_TYPES } from "./copy/program-types";
@@ -251,7 +251,7 @@ describe("how it works: Create, Share, Stamp", () => {
 describe("program types: one row each, all open until a visitor points at one (AC21)", () => {
   const VISUALS = { stamps: <i>stamps card</i>, points: <i>points card</i>, levels: <i>levels cards</i> };
   const ROWS = PROGRAM_TYPES.map(({ key, eyebrow, title, body }) => ({ key, eyebrow, title, body }));
-  const GUIDE = { label: PLATFORM.programTypes.closer, ...loyaltyLink("en", "previews", "us") };
+  const GUIDE = { label: PLATFORM.programTypes.closer, ...loyaltyLink("en") };
   const rows = () => renderEn(<ProgramTypeRows rows={ROWS} guide={GUIDE} visuals={VISUALS} />);
 
   test("every row is open in the server markup, with its label, title, text and card", () => {
@@ -310,7 +310,7 @@ describe("program types: one row each, all open until a visitor points at one (A
   test("the list closes on a full-width link to the choosing guide, from the copy", () => {
     const html = rows();
 
-    expect(html).toMatch(/<a [^>]*href="\/us\/landing-pages\/platform\/loyalty-programs"/);
+    expect(html).toMatch(/<a [^>]*href="\/en\/loyalty-programs"/);
     expect(textOf(html)).toContain(PLATFORM.programTypes.closer);
   });
 });
@@ -429,5 +429,59 @@ describe("the closing band (AC2)", () => {
     );
 
     expect(finals).toHaveLength(1);
+  });
+});
+
+describe("the trial offered again after the two middle sections (AC7)", () => {
+  /** The section each button follows, and the CTA location its click is reported under. */
+  const TRIAL_BUTTONS = [
+    { after: "program_types", location: "platform_program_types" },
+    { after: "platform", location: "platform_apps" },
+  ] as const;
+
+  test("the page places a centred trial button right after each of the two sections, each with its own location", () => {
+    const tags = openingTags(code(pageFile("platform")));
+    const names = tags.map((tag) => tag.name);
+
+    for (const { after, location } of TRIAL_BUTTONS) {
+      const section = after === "program_types" ? "ProgramTypeRowsSection" : "PlatformSection";
+      const button = tags[names.indexOf(section) + 1];
+
+      expect(button?.name).toBe("LpTrialCta");
+      expect(literalAttr(button.attrs, "location")).toBe(location);
+    }
+  });
+
+  test("the two locations are the page's alone, and no other button reports under them", () => {
+    const used = PLATFORM_FILES().flatMap((file) =>
+      openingTags(read(file))
+        .filter((tag) => tag.name === "LpTrialCta")
+        .map((tag) => literalAttr(tag.attrs, "location")),
+    );
+
+    expect(used.sort()).toEqual(TRIAL_BUTTONS.map(({ location }) => location).sort());
+    expect(new Set(used).size).toBe(2);
+  });
+
+  test("a trial button is the keycap with the trial's words, leading to the sign-up, with its reassurance centred under it", async () => {
+    const { LpTrialCta } = await import("@/components/landing-pages/shared/LpTrialCta");
+    const html = renderEn(<LpTrialCta location="platform_apps" />, { us: true });
+    const text = textOf(html);
+
+    const link = /<a [^>]*>/.exec(html)?.[0] ?? "";
+
+    expect(link).toContain('href="/en/onboarding"');
+    expect(link).toMatch(/class="[^"]*\bkeycap\b/);
+    expect(html).toMatch(/flex-col items-center/);
+    expect(text).toContain(SHARED.cta);
+    expect(html.indexOf(SHARED.cta)).toBeLessThan(html.indexOf("14 days free"));
+  });
+
+  test.each(["en", "fr", "es", "pl"])("%s: the button reads the language's own words, not the English ones", async (locale) => {
+    const { LpTrialCta } = await import("@/components/landing-pages/shared/LpTrialCta");
+    const { landingCopy } = await import("./copy/bundle");
+    const { SHARED: words } = landingCopy(locale).shared;
+
+    expect(textOf(renderIn(locale, <LpTrialCta location="platform_apps" />, { us: true }))).toContain(words.cta);
   });
 });

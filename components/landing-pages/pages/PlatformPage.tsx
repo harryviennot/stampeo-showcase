@@ -14,11 +14,12 @@ import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageS
 import { LpDemo } from "@/components/landing-pages/shared/LpDemo";
 import { LpSection } from "@/components/landing-pages/shared/LpSection";
 import { LpSectors } from "@/components/landing-pages/shared/LpSectors";
+import { LpTrialCta } from "@/components/landing-pages/shared/LpTrialCta";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { Market } from "@/lib/markets";
 
-/** The Platform landing page, a tour of the product: served in every language (`int`) and in US English (`us`). */
+/** The Platform page, a tour of the product: the homepage of every language (`int`), of the US (`us`) and of the UK (`uk`). */
 export async function PlatformPage({ market }: Readonly<{ market: Market }>) {
   const { platform, shared } = landingCopy(await getLocale(), market);
 
@@ -32,8 +33,10 @@ export async function PlatformPage({ market }: Readonly<{ market: Market }>) {
       <Hairline />
       <HowTable />
       <LpDemo eyebrow={platform.PLATFORM.demo.eyebrow} align="center" />
-      <ProgramTypeRowsSection market={market} />
+      <ProgramTypeRowsSection />
+      <LpTrialCta location="platform_program_types" />
       <PlatformSection />
+      <LpTrialCta location="platform_apps" />
       <ShareTree />
       <LpSection section="pricing" bare>
         <PricingSection market={market} />
