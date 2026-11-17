@@ -58,6 +58,8 @@ interface UseDemoSessionReturn {
   addStamp: () => Promise<void>;
   /** Reset session and start fresh */
   reset: () => void;
+  /** Call when the visitor taps Add on this phone: the page polls until Wallet's install is confirmed. */
+  expectInstall: () => void;
 }
 
 function isExpired(expiresAt: string | undefined): boolean {
@@ -422,5 +424,6 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
     scan,
     addStamp: scan,
     reset,
+    expectInstall: sync.expectInstall,
   };
 }
