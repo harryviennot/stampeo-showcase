@@ -31,7 +31,7 @@ await mockEnglishServerTranslations();
 const { WalletsSection } = await import("@/components/landing-pages/feature-previews/card-design/WalletsSection");
 const { TypesSection } = await import("@/components/landing-pages/feature-previews/card-design/TypesSection");
 
-/** What /us asks: the international questions with the US ones laid over them. */
+/** The questions the US overlay lays over the international ones: no URL serves them, the copy keeps them. */
 const US_FAQ = landingCopy("en", "us").previews.cardDesign.CARD_DESIGN_PREVIEW.faq;
 const ANATOMY_DESIGNS = anatomyDesigns(COPY.cardFields);
 const WALLET_SAMPLE = walletSample(COPY.cardFields);
@@ -42,8 +42,8 @@ describe("the page", () => {
   test("asks the six questions of its own FAQ", async () => {
     const page = await renderPreviewPage("platform/card-design");
 
-    expect(US_FAQ.items).toHaveLength(6);
-    expectInOrder(page, [US_FAQ.title, ...US_FAQ.items.map((item) => item.question)]);
+    expect(COPY.faq.items).toHaveLength(6);
+    expectInOrder(page, [COPY.faq.title, ...COPY.faq.items.map((item) => item.question)]);
   });
 
   test("shows a different shop in each section: no shop's logo is in two of them, and the bubble tea shop and the barbershop are in none", async () => {

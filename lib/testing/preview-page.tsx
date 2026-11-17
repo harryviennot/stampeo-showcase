@@ -2,30 +2,37 @@ import type { ReactElement, ReactNode } from "react";
 import type { LandingSlug } from "../landing-pages/pages";
 import type { Market } from "../markets";
 import { PAGE_COMPONENTS, pageFile } from "./landing-pages-source";
-import { renderEnAsync } from "./render-en";
-import { mockEnglishServerTranslations } from "./server-intl";
+import { renderInAsync } from "./render-en";
+import { inServerLocale, mockEnglishServerTranslations } from "./server-intl";
 
-const PAGES = new Map<LandingSlug, Promise<string>>();
+const PAGES = new Map<string, Promise<string>>();
 
 /**
  * A landing page as a visitor's browser receives it, without the shell's header and footer: the page
- * component called as Next calls it (for the US market), its async sections resolved, the US dollars and trial in place.
+ * component called as Next calls it for the language and the market, its async sections resolved, that market's
+ * ladder and trial length in place. The feature pages and the loyalty page are served for the international
+ * market only (the default); the homepage is the one page with a US version.
  */
-export function renderPreviewPage(slug: LandingSlug): Promise<string> {
-  if (!PAGES.has(slug)) {
+export function renderPreviewPage(slug: LandingSlug, locale = "en", market: Market = "int"): Promise<string> {
+  const key = `${slug}|${locale}|${market}`;
+
+  if (!PAGES.has(key)) {
     PAGES.set(
-      slug,
+      key,
       (async () => {
         await mockEnglishServerTranslations();
         const page = await import(pageFile(slug));
         const Page = page[PAGE_COMPONENTS[slug]];
-        const shell = (await Page({ market: "us" satisfies Market })) as ReactElement<{ children: ReactNode }>;
 
-        return renderEnAsync(shell.props.children);
+        return inServerLocale(locale, async () => {
+          const shell = (await Page({ market })) as ReactElement<{ children: ReactNode }>;
+
+          return renderInAsync(locale, shell.props.children, { market });
+        });
       })(),
     );
   }
-  return PAGES.get(slug) as Promise<string>;
+  return PAGES.get(key) as Promise<string>;
 }
 
 /** Every link and button of a render, with its attributes and the name a screen reader gives it. */
@@ -46,6 +53,6 @@ export function sectionsOf(html: string): Array<{ id: string; html: string }> {
 }
 
 /** The markup of one section of a landing page as a visitor receives it, or "" when the page has no such section. */
-export async function sectionOf(slug: LandingSlug, id: string): Promise<string> {
-  return sectionsOf(await renderPreviewPage(slug)).find((section) => section.id === id)?.html ?? "";
+export async function sectionOf(slug: LandingSlug, id: string, locale = "en", market: Market = "int"): Promise<string> {
+  return sectionsOf(await renderPreviewPage(slug, locale, market)).find((section) => section.id === id)?.html ?? "";
 }

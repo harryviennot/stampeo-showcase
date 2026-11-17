@@ -224,16 +224,16 @@ describe("questions: six, with the one plan sentence linked to pricing", () => {
     expectInOrder(await renderPreviewPage(PAGE), [COPY.faq.title, ...COPY.faq.items.flatMap((item, index) => [item.question, answers[index]])]);
   });
 
-  test("the limit question says there is none on reach, that the plan sets how many campaigns a month, and sends 'see pricing' to the US pricing page", async () => {
+  test("the limit question says there is none on reach, that the plan sets how many campaigns a month, and sends 'see pricing' to the pricing page", async () => {
     const faq = await section("faq");
     const answer = COPY.faq.items[1].answer;
     const link = /<a [^>]*href="([^"]+)"[^>]*>([^<]*see pricing[^<]*)<\/a>/.exec(faq);
 
     expect(answer).toContain("No limit on how many customers a campaign reaches");
     expect(answer).toContain("Your plan sets how many campaigns you can send each month (see pricing).");
-    expect(link?.[1]).toBe("/us/pricing");
+    expect(link?.[1]).toBe("/en/pricing");
     expect(textOf(faq).replaceAll("|", "")).toContain("Your plan sets how many campaigns you can send each month (see pricing).");
-    expect(faq.match(/href="\/us\/pricing"/g)).toHaveLength(1);
+    expect(faq.match(/href="\/en\/pricing"/g)).toHaveLength(1);
   });
 
   test("'Campaigns come with your Stampeo subscription' holds on every plan: each can send campaigns", () => {

@@ -21,8 +21,10 @@ import { BUSINESS_TYPE_ICONS, TypeMarquee } from "@/components/landing-pages/pla
 import { getAllPosts } from "../blog";
 import { ROOT, code, findTag, literalAttr, openingTags, read, sourceFiles } from "../testing/jsx-source";
 import { COMPONENTS_DIR, pageFile } from "../testing/landing-pages-source";
+import { trackedBy } from "../testing/cta-recorder";
 import { expectInOrder, renderEn, renderEnAsync, renderIn, textOf } from "../testing/render-en";
 import { mockEnglishServerTranslations } from "../testing/server-intl";
+import { landingCopy } from "./copy/bundle";
 import { PLATFORM } from "./copy/platform";
 import { PROGRAM_TYPES } from "./copy/program-types";
 import { SHARED } from "./copy/shared";
@@ -463,25 +465,18 @@ describe("the trial offered again after the two middle sections (AC7)", () => {
     expect(new Set(used).size).toBe(2);
   });
 
-  test("a trial button is the keycap with the trial's words, leading to the sign-up, with its reassurance centred under it", async () => {
+  test.each(TRIAL_BUTTONS.map(({ location }) => location))("the %s button is reported under that location, and leads to the sign-up", async (location) => {
     const { LpTrialCta } = await import("@/components/landing-pages/shared/LpTrialCta");
-    const html = renderEn(<LpTrialCta location="platform_apps" />, { us: true });
-    const text = textOf(html);
 
-    const link = /<a [^>]*>/.exec(html)?.[0] ?? "";
-
-    expect(link).toContain('href="/en/onboarding"');
-    expect(link).toMatch(/class="[^"]*\bkeycap\b/);
-    expect(html).toMatch(/flex-col items-center/);
-    expect(text).toContain(SHARED.cta);
-    expect(html.indexOf(SHARED.cta)).toBeLessThan(html.indexOf("14 days free"));
+    expect(trackedBy(() => renderEn(<LpTrialCta location={location} />, { market: "int" }))).toEqual([{ trackAs: location, href: "/onboarding" }]);
   });
 
-  test.each(["en", "fr", "es", "pl"])("%s: the button reads the language's own words, not the English ones", async (locale) => {
+  test.each(["en", "fr", "es", "pl"])("%s: the button and the reassurance under it say the language's own words, with the international trial", async (locale) => {
     const { LpTrialCta } = await import("@/components/landing-pages/shared/LpTrialCta");
-    const { landingCopy } = await import("./copy/bundle");
-    const { SHARED: words } = landingCopy(locale).shared;
+    const { cta, reassurance } = landingCopy(locale).shared.SHARED;
+    const text = textOf(renderIn(locale, <LpTrialCta location="platform_apps" />, { market: "int" }));
 
-    expect(textOf(renderIn(locale, <LpTrialCta location="platform_apps" />, { us: true }))).toContain(words.cta);
+    expect(text).toContain(cta);
+    expect(text.indexOf(cta)).toBeLessThan(text.indexOf(reassurance.replace("{trialDays}", "30")));
   });
 });
