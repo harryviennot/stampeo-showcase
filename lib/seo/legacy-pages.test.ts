@@ -7,8 +7,16 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { BroadcastsPage } from "@/components/features/broadcasts/BroadcastsPage";
+import { AnalyticsPageContent } from "@/components/features/analytics/AnalyticsPageContent";
+import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
+import { GeofencingPage } from "@/components/features/geolocalisation/GeofencingPage";
+import { NotificationsPushPage } from "@/components/features/notifications-push/NotificationsPushPage";
+import { ScannerMobilePage } from "@/components/features/scanner-mobile/ScannerMobilePage";
+import { VariantLanding } from "@/components/landing-variant/VariantLanding";
+import { LoyaltyRouteView } from "@/components/loyalty/LoyaltyRouteView";
 import { routing } from "@/i18n/routing";
-import { FEATURE_SLUGS, getLocalizedSlug } from "../feature-slugs";
+import { FEATURE_SLUGS, getLocalizedSlug, type FeatureSlug } from "../feature-slugs";
 import { LEGACY_SEGMENT, isLegacyPath, legacyPath } from "./legacy-pages";
 import { buildLlmsTxt } from "../llms-txt";
 import { acquisitionSlug, isReservedTopSegment } from "../locale-negotiation";
@@ -18,7 +26,8 @@ import { MARKETS, isPilotPath, marketFromPath } from "../markets";
 import { productMenuItems, pageMenuItems } from "../nav/menu-items";
 import { buildSeoLinks } from "../seo-links";
 import { pagesUnder } from "../testing/app-folders";
-import { mockEnglishServerTranslations } from "../testing/server-intl";
+import { elementsOf } from "../testing/element-tree";
+import { inServerLocale, mockEnglishServerTranslations } from "../testing/server-intl";
 import { buildSitemap } from "./sitemap";
 
 // The legacy routes ask next-intl for their words and their locale.
@@ -105,21 +114,89 @@ describe("legacy is a site segment, not a business slug", () => {
   });
 });
 
-describe("a legacy page is noindex", () => {
-  test.each(LEGACY_PAGES.map((file) => [file.replace(ROOT, "")] as const))("%s declares robots: NOINDEX", (file) => {
-    expect(readFileSync(join(ROOT, file), "utf-8")).toMatch(/robots:\s*NOINDEX\b/);
+const NOINDEX = { index: false, follow: false };
+const NOT_FOUND = { digest: expect.stringContaining("404") };
+const REDIRECT = (to: string) => ({ digest: expect.stringContaining(`;${to};308`) });
+const parent = Promise.resolve({}) as never;
+const asLocale = (locale: string) => ({ params: Promise.resolve({ locale }) });
+
+describe("the legacy homepage is the page the homepage was", () => {
+  test.each(routing.locales)("/%s/legacy mounts the earlier homepage for the international market, noindex", async (locale) => {
+    const route = await import("@/app/[locale]/legacy/page");
+    const tree = await inServerLocale(locale, async () => route.default(asLocale(locale)));
+    const pages = elementsOf(tree, VariantLanding);
+
+    expect(pages).toHaveLength(1);
+    expect(pages[0].props).toEqual({ locale });
+    expect(await route.generateMetadata()).toEqual({ robots: NOINDEX });
   });
 
   test.each([
-    ["/legacy", "@/app/[locale]/legacy/page"],
-    ["/us/legacy", "@/app/[locale]/us/legacy/page"],
-    ["/uk/legacy", "@/app/[locale]/uk/legacy/page"],
-  ])("the head of %s: no index, no canonical, no hreflang", async (_url, module) => {
-    const { generateMetadata } = await import(module);
-    const head = await generateMetadata({ params: Promise.resolve({ locale: "en" }) }, Promise.resolve({}));
+    ["us", "@/app/[locale]/us/legacy/page"],
+    ["uk", "@/app/[locale]/uk/legacy/page"],
+  ] as const)("/%s/legacy mounts the earlier homepage of that market, in English, noindex", async (market, module) => {
+    const route = await import(module);
+    const pages = elementsOf(route.default(), VariantLanding);
+    const head = await route.generateMetadata({}, parent);
 
-    expect(head.robots).toEqual({ index: false, follow: false });
+    expect(pages).toHaveLength(1);
+    expect(pages[0].props).toEqual({ locale: "en", market });
+    expect(head.robots).toEqual(NOINDEX);
     expect(head.alternates).toBeUndefined();
+  });
+});
+
+describe("the legacy feature pages are the pages the features had", () => {
+  const OLD_BODIES = {
+    "design-de-carte": CardDesignPageContent,
+    "scanner-mobile": ScannerMobilePage,
+    "notifications-push": NotificationsPushPage,
+    analytiques: AnalyticsPageContent,
+    geolocalisation: GeofencingPage,
+    "campagnes-promotionnelles": BroadcastsPage,
+  } as const satisfies Record<FeatureSlug, unknown>;
+  const params = (locale: string, slug: string) => ({ params: Promise.resolve({ locale, slug }) });
+  const CASES = routing.locales.flatMap((locale) => FEATURE_SLUGS.map((feature) => [locale, feature, getLocalizedSlug(feature, locale)] as const));
+
+  test.each(CASES)("%s: %s at /legacy/features/%s mounts the earlier page body, noindex, with no canonical or hreflang", async (locale, feature, slug) => {
+    const route = await import("@/app/[locale]/legacy/features/[slug]/page");
+    const tree = await inServerLocale(locale, async () => route.default(params(locale, slug)));
+    const head = await inServerLocale(locale, async () => route.generateMetadata(params(locale, slug)));
+
+    expect(elementsOf(tree, OLD_BODIES[feature])).toHaveLength(1);
+    expect(head.robots).toEqual(NOINDEX);
+    expect(head.alternates).toBeUndefined();
+    expect(head.openGraph).toBeUndefined();
+  });
+
+  test("a slug of another language is sent to the page's own slug, still under /legacy; an unknown slug is a 404", async () => {
+    const route = await import("@/app/[locale]/legacy/features/[slug]/page");
+
+    await expect(inServerLocale("en", async () => route.default(params("en", "design-de-carte")))).rejects.toMatchObject(REDIRECT("/en/legacy/features/card-design"));
+    await expect(inServerLocale("fr", async () => route.default(params("fr", "card-design")))).rejects.toMatchObject(REDIRECT("/legacy/features/design-de-carte"));
+    await expect(inServerLocale("en", async () => route.default(params("en", "nothing")))).rejects.toMatchObject(NOT_FOUND);
+  });
+});
+
+describe("the legacy loyalty pages are the page the loyalty programs had", () => {
+  const ROUTES = Object.entries(LOYALTY_SLUGS).map(([locale, slug]) => [locale, slug.slice(1)] as const);
+
+  test.each(ROUTES)("%s: /legacy%s mounts the earlier loyalty page, noindex, with no canonical or hreflang", async (locale, dir) => {
+    const route = await import(`@/app/[locale]/legacy/${dir}/page`);
+    const tree = await inServerLocale(locale, async () => route.default(asLocale(locale)));
+    const head = await inServerLocale(locale, async () => route.generateMetadata(asLocale(locale)));
+
+    expect(elementsOf(tree, LoyaltyRouteView).map((view) => view.props.locale)).toEqual([locale]);
+    expect(head.robots).toEqual(NOINDEX);
+    expect(head.alternates).toBeUndefined();
+  });
+
+  test.each(ROUTES)("a visitor of another language who lands on /legacy/%s is sent to their own legacy page", async (locale, dir) => {
+    const other = routing.locales.find((candidate) => candidate !== locale) as string;
+    const route = await import(`@/app/[locale]/legacy/${dir}/page`);
+
+    expect(await route.generateMetadata(asLocale(other))).toEqual({});
+    await expect(route.default(asLocale(other))).rejects.toMatchObject(REDIRECT(legacyPath(other, LOYALTY_SLUGS[other as keyof typeof LOYALTY_SLUGS])));
   });
 });
 

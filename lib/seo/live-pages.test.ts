@@ -8,7 +8,7 @@
  */
 
 import { afterAll, describe, expect, mock, test } from "bun:test";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { createTranslator } from "next-intl";
 import { JsonLd } from "@/components/JsonLd";
@@ -340,6 +340,18 @@ describe("a live head fits what a search result shows: 60 characters of title an
   test.each(heads)("%s %s: the title names Stampeo once and uses no em dash", (_locale, _slug, { title, description }) => {
     expect(title.match(/Stampeo/g)).toHaveLength(1);
     expect(`${title}\n${description}`).not.toContain("—");
+  });
+});
+
+describe("nothing is served under /landing-pages", () => {
+  /** Every folder named `landing-pages` below `dir`, however deep: a route there would answer `/landing-pages/...` in some language or market. */
+  const landingPageFolders = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .flatMap((entry) => (entry.name === "landing-pages" ? [join(dir, entry.name)] : landingPageFolders(join(dir, entry.name))));
+
+  test("no route folder of the app is named landing-pages, so those URLs are 404s in every language and market", () => {
+    expect(landingPageFolders(join(ROOT, "app")).map((folder) => folder.replace(ROOT, ""))).toEqual([]);
   });
 });
 
