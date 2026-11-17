@@ -22,6 +22,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse, TYPE } from '@formatjs/icu-messageformat-parser';
 import { routing } from '../i18n/routing';
+import { NO_CARD_CLAIM, WORDED_TRIAL } from './testing/copy-claims';
 
 const LOCALES = routing.locales;
 const MESSAGES_DIR = join(import.meta.dir, '..', 'messages');
@@ -78,7 +79,6 @@ const LEGACY_EM_DASH: ReadonlySet<string> = new Set([
   'en/about.json::about.story.paragraphs[0]',
   'fr/acquisition.json::acquisition.notReady.description',
   'en/acquisition.json::acquisition.notReady.description',
-  'en/common.json::common.nav.featuresItems.campagnesPromotionnelles.description',
   'fr/features.json::features.scanner-mobile.sections[0].description',
   'fr/features.json::features.scanner-mobile.custom.howItWorks.subtitle',
   'fr/features.json::features.scanner-mobile.custom.howItWorks.app.steps[3]',
@@ -613,21 +613,6 @@ describe('market-scoped copy', () => {
 
 // ───────────────────────── trial-length claims ─────────────────────────
 
-/**
- * A trial length written into words cannot follow the market.
- *
- * `/us` grants 14 days (`TRIAL_DAYS_BY_COUNTRY` in the backend's
- * `app/core/pricing_region.py`, mirrored by `MARKETS.us.trialDays`). Every
- * English page reachable from the /us nav that says "your free month" is
- * telling an American visitor something Stripe will not honour. The supported
- * form is the `{trialDays}` placeholder, which reads the market.
- *
- * Scoped to English: fr/es/pl genuinely get 30 days, so "1 mois gratuit" is
- * true there and stays.
- */
-const WORDED_TRIAL =
-  /\b(?:free month|month free|one month free|\d+[\s-]*(?:days?|jours?)[\s-]*(?:free|trial)|free\s+(?:for\s+)?\d+[\s-]*days?|\d+[\s-]*days?\s+for\s+free|first\s+month\s+is\s+free)\b/i;
-
 describe('English copy never writes a trial length in words', () => {
   test.each(NAMESPACES)('%s', (namespace) => {
     const offenders: string[] = [];
@@ -660,45 +645,6 @@ describe('English copy never writes a trial length in words', () => {
     }
   });
 });
-
-/**
- * The one claim on this site that would be flatly untrue.
- *
- * `requires_card_upfront` (backend migration 86) attaches a payment method
- * before the dashboard opens, so every new signup gives us a card to start the
- * trial. "No credit card required" is the single most tempting line in SaaS
- * hero copy and we are not entitled to it. "Cancel anytime" is the honest
- * reassurance and is what /us says.
- *
- * Checked in every locale, because the temptation translates.
- */
-/**
- * "Card" on this site means two different things, and only one of them is a
- * promise we cannot keep.
- *
- * The LOYALTY card is the product: "no card to lose", "sin tarjetas que
- * perder" are true and are good copy. The PAYMENT card is the one
- * `requires_card_upfront` (backend migration 86) collects before the dashboard
- * opens, so "no credit card required" would be flatly false. It is the single
- * most tempting line in SaaS hero copy and we are not entitled to it.
- *
- * So every branch below is anchored to the payment sense: an English "no card"
- * only counts when it is "required"/"needed", and the other locales must name
- * the card type. Getting this wrong in the loose direction would flag the
- * product's own tagline, which is how the first version of this guard failed.
- */
-const NO_CARD_CLAIM = new RegExp(
-  [
-    // EN: "required"/"needed" is what makes it the payment sense.
-    String.raw`no\s+(?:credit\s+|debit\s+|payment\s+)?card\s+(?:required|needed)`,
-    String.raw`no\s+payment\s+(?:details|method)\s+(?:required|needed)`,
-    // FR / ES / PL: the card type has to be named.
-    String.raw`sans\s+carte\s+(?:bancaire|de\s+cr\u00e9dit|de\s+paiement)`,
-    String.raw`sin\s+tarjeta\s+(?:de\s+cr\u00e9dito|bancaria|de\s+pago)`,
-    String.raw`bez\s+karty\s+(?:kredytowej|p\u0142atniczej)`,
-  ].join('|'),
-  'i',
-);
 
 describe('the site never promises a trial without a card', () => {
   test.each(LOCALES)('%s', (locale) => {

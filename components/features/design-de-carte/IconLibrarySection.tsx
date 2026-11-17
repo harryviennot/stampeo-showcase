@@ -22,16 +22,20 @@ const TILE_COLORS = [
   "#14432E", // Marginalia green
 ];
 
-function MarqueeRow({
+/** One row of icon tiles drifting sideways; the section above draws two, in opposite directions. */
+export function IconMarquee({
   icons,
   colorOffset,
   reverse,
   duration,
+  stillWhenReduced = false,
 }: {
   icons: StampIconType[];
   colorOffset: number;
   reverse?: boolean;
   duration: number;
+  /** Stops the drift for a reader who asks for less motion. */
+  stillWhenReduced?: boolean;
 }) {
   // Track holds the list twice; the keyframes travel exactly one list-width
   // (-50%), so the loop is seamless. Tile gap must be uniform (gap-3 both
@@ -40,7 +44,7 @@ function MarqueeRow({
   return (
     <div className="overflow-hidden">
       <div
-        className="flex w-max gap-3 py-1.5 will-change-transform"
+        className={`flex w-max gap-3 py-1.5 will-change-transform${stillWhenReduced ? " motion-reduce:animate-none!" : ""}`}
         style={{
           animation: `marquee-scroll ${duration}s linear infinite${reverse ? " reverse" : ""}`,
         }}
@@ -93,8 +97,8 @@ export function IconLibrarySection() {
         <div className="relative">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-[var(--blog-bg)] to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-[var(--blog-bg)] to-transparent" />
-          <MarqueeRow icons={rowA} colorOffset={0} duration={70} />
-          <MarqueeRow icons={rowB} colorOffset={3} reverse duration={85} />
+          <IconMarquee icons={rowA} colorOffset={0} duration={70} />
+          <IconMarquee icons={rowB} colorOffset={3} reverse duration={85} />
         </div>
       </ScrollReveal>
     </section>

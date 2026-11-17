@@ -7,3 +7,9 @@
  * depending on which file happened to load Next first.
  */
 import "next/dist/server/node-environment-baseline";
+
+/**
+ * One Supabase project for every test file, whatever the shell or CI sets. `use-has-session` reads the project ref
+ * once, when it loads, and a page test that renders the header can load it before the hook's own test does.
+ */
+process.env.NEXT_PUBLIC_SUPABASE_URL = "https://ysdpjxzldqwlmhlwzdaq.supabase.co";

@@ -34,7 +34,18 @@ function GallerySlide({
   );
 }
 
-export async function CardStyleGallery() {
+export async function CardStyleGallery({
+  showCta = true,
+  heading,
+  sectionClassName = "py-20 sm:py-28 bg-[var(--blog-bg-alt)]",
+}: Readonly<{
+  /** The "Start Free" block under the carousel. */
+  showCta?: boolean;
+  /** Replaces the title and subtitle above the carousel. */
+  heading?: { title: string; subtitle: string };
+  /** Replaces the section's padding and band colour. */
+  sectionClassName?: string;
+}>) {
   const t = await getTranslations("features.design-de-carte.gallery");
   const tc = await getTranslations("common");
   const stampCaptions = t.raw("stamps") as string[];
@@ -131,13 +142,13 @@ export async function CardStyleGallery() {
   }
 
   return (
-    <section className="py-20 sm:py-28 bg-[var(--blog-bg-alt)]">
+    <section className={sectionClassName}>
       <Container>
         <ScrollReveal className="text-center max-w-2xl mx-auto mb-14">
           <h2 className="text-h2 text-[var(--foreground)]">
-            {t("title")}
+            {heading?.title ?? t("title")}
           </h2>
-          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{t("subtitle")}</p>
+          <p className="mt-5 text-lead text-[var(--muted-foreground)]">{heading?.subtitle ?? t("subtitle")}</p>
         </ScrollReveal>
       </Container>
 
@@ -158,12 +169,14 @@ export async function CardStyleGallery() {
         />
       </ScrollReveal>
 
-      <Container>
-        <ScrollReveal delay={160} className="mt-10 flex flex-col items-center gap-4 text-center">
-          <p className="text-[var(--muted-foreground)]">{t("ctaLead")}</p>
-          <CTAButton label={tc("buttons.startFree")} size="md" trackAs="card_style_gallery" />
-        </ScrollReveal>
-      </Container>
+      {showCta && (
+        <Container>
+          <ScrollReveal delay={160} className="mt-10 flex flex-col items-center gap-4 text-center">
+            <p className="text-[var(--muted-foreground)]">{t("ctaLead")}</p>
+            <CTAButton label={tc("buttons.startFree")} size="md" trackAs="card_style_gallery" />
+          </ScrollReveal>
+        </Container>
+      )}
     </section>
   );
 }

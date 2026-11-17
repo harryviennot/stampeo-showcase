@@ -1,0 +1,8 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`the keycap: a button with the house ink frame and a ledge that presses flat CTAButton is a keycap only when asked, and every other caller keeps its soft orange button 1`] = `
+[
+  "<a class="group inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all h-[52px] px-7 text-base bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20 hover:brightness-105 " href="/en/onboarding"><span>Start</span><span class="transition-transform group-hover:translate-x-1">→</span></a>",
+  "<a class="group inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all h-12 px-6 text-[15px] bg-transparent text-[var(--foreground)] border-2 border-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white " href="/en/onboarding"><span>Start</span><span class="transition-transform group-hover:translate-x-1">→</span></a>",
+]
+`;

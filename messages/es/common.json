@@ -12,27 +12,27 @@
       "featuresItems": {
         "designDeCarte": {
           "label": "Estilo de tarjeta",
-          "description": "Personaliza tu tarjeta en 5 minutos"
+          "description": "Tu logo, tus colores y tus sellos"
         },
         "scannerMobile": {
           "label": "Escáner móvil",
-          "description": "Escanea en un segundo desde tu teléfono"
+          "description": "Sella desde cualquier teléfono"
         },
         "notificationsPush": {
           "label": "Notificaciones",
-          "description": "Conecta con tus clientes en su pantalla de bloqueo"
+          "description": "Un mensaje con cada sello"
         },
         "campagnesPromotionnelles": {
           "label": "Difusiones promocionales",
-          "description": "Llega a todos tus clientes, sin la factura de SMS"
+          "description": "Una difusión a todos tus clientes"
         },
         "analytiques": {
           "label": "Estadísticas",
-          "description": "Conoce a tus clientes con datos reales"
+          "description": "Mira quién vuelve"
         },
         "geolocalisation": {
           "label": "Geolocalización",
-          "description": "Recuérdales que existes en el momento justo"
+          "description": "Tu tarjeta cuando están cerca"
         }
       },
       "foundingProgram": "Programa fundador",
@@ -74,6 +74,9 @@
       "addToAppleWallet": "Añadir a Apple Wallet",
       "addToGoogleWallet": "Añadir a Google Wallet",
       "soon": "Pronto"
+    },
+    "scannerLoop": {
+      "label": "La app de escaneo Stampeo añade un sello a la tarjeta de Sophie"
     },
     "footer": {
       "brand": "Stampeo",

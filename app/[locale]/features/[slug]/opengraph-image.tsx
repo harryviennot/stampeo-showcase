@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { getTranslations } from "next-intl/server";
 import {
   OG_WIDTH,
   OG_HEIGHT,
@@ -10,10 +9,11 @@ import {
 } from "@/lib/og/shared";
 import {
   FEATURES,
-  isValidSlug,
+  resolveToCanonicalSlug,
   generateFeatureStaticParams,
 } from "@/lib/feature-slugs";
-import { planMessageArgs } from "@/lib/plans/plan-facts";
+import { pageWords } from "@/lib/landing-pages/pages";
+import { FEATURE_PREVIEWS } from "@/lib/landing-pages/preview-nav";
 
 export const alt = "Stampeo Feature";
 export const size = { width: OG_WIDTH, height: OG_HEIGHT };
@@ -31,18 +31,15 @@ export default async function Image({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "metadata.features" });
   const fonts = await loadFonts();
 
-  const titleRaw = t.has(`${slug}.title`)
-    ? t(`${slug}.title`).replace(STAMPEO_SUFFIX, "")
-    : slug;
-  const title = truncate(titleRaw, 60);
-  const description = t.has(`${slug}.description`)
-    ? truncate(t(`${slug}.description`, planMessageArgs()), 120)
-    : "";
+  // The page's own head words, so the share card says what the page's title says.
+  const canonical = resolveToCanonicalSlug(slug);
+  const meta = canonical ? pageWords(FEATURE_PREVIEWS[canonical], locale, "int").meta : null;
+  const title = truncate((meta?.title ?? slug).replace(STAMPEO_SUFFIX, ""), 60);
+  const description = meta ? truncate(meta.description, 120) : "";
 
-  const iconPath = isValidSlug(slug) ? FEATURES[slug].icon : undefined;
+  const iconPath = canonical ? FEATURES[canonical].icon : undefined;
 
   return new ImageResponse(
     (

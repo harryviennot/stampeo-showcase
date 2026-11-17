@@ -28,6 +28,7 @@ export {
   List as MenuIcon,
   X,
   X as XMarkIcon,
+  XCircle as XCircleIcon,
   Minus,
   FileText as DocumentIcon,
   EyeSlash as EyeSlashIcon,
@@ -51,6 +52,24 @@ export {
   Translate as TranslateIcon,
   ChartPieSlice as ChartPieSliceIcon,
   Phone as PhoneIcon,
+  // Where a card's link goes (the share tree).
+  InstagramLogo as InstagramIcon,
+  FacebookLogo as FacebookIcon,
+  Printer as PrinterIcon,
+  Storefront as StorefrontIcon,
+  GoogleLogo as GoogleLogoIcon,
+  // The kinds of shop on the "built for" marquee.
+  Coffee as CoffeeIcon,
+  Bread as BreadIcon,
+  Scissors as ScissorsIcon,
+  ForkKnife as ForkKnifeIcon,
+  Books as BooksIcon,
+  Truck as TruckIcon,
+  FlowerLotus as FlowerLotusIcon,
+  Eye as EyeIcon,
+  OrangeSlice as OrangeSliceIcon,
+  Car as CarIcon,
+  PawPrint as PawPrintIcon,
 } from "@phosphor-icons/react";
 
 interface IconProps {

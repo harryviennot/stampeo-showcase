@@ -294,7 +294,7 @@
     "scanner-mobile": {
       "hero": {
         "title": "Un scan. Un tampon. C'est tout.",
-        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en une seconde.",
+        "subtitle": "Pas de caisse connectée. Pas de matériel spécial. Votre téléphone suffit pour tamponner vos clients en quelques secondes.",
       "annotation": "l'appli de votre équipe"
       },
       "problem": {
@@ -304,7 +304,7 @@
       "sections": [
         {
           "title": "L'application dédiée",
-          "description": "L'appli Stampeo est légère et dédiée au scan. Ouvrez l'appli, pointez la caméra vers le QR code du client, et un tampon est ajouté — vibration haptique de confirmation. Temps total : 1 seconde.",
+          "description": "L'appli Stampeo est légère et dédiée au scan. Ouvrez l'appli, pointez la caméra vers le QR code du client et appuyez sur « Ajouter un tampon ». Une vibration confirme, le tout en quelques secondes.",
           "icon": "smartphone"
         },
         {
@@ -314,7 +314,7 @@
         }
       ],
       "cta": {
-        "title": "Tamponnez en une seconde",
+        "title": "Tamponnez en quelques secondes",
         "subtitle": "Application gratuite sur iOS et Android. Scanner web disponible sur tous les appareils."
       },
       "related": [
@@ -335,15 +335,11 @@
           "qrCaption": "Scannez pour installer"
         },
         "scanDemo": {
-          "customerName": "Marc D.",
-          "stampCount": "5/10 tampons",
-          "toast": "Tampon ajouté",
-          "timer": "0.8s",
           "hint": "Pointez vers le QR code du client"
         },
         "howItWorks": {
           "title": "Deux façons de scanner",
-          "subtitle": "Application dédiée ou scanner web — choisissez ce qui vous convient.",
+          "subtitle": "Application dédiée ou scanner web : choisissez ce qui vous convient.",
           "app": {
             "title": "L'application dédiée",
             "badge": "Recommandé",
@@ -351,7 +347,7 @@
               "Téléchargez l'appli Stampeo (iOS / Android)",
               "Connectez-vous avec votre compte",
               "Pointez la caméra vers le QR code client",
-              "Vibration haptique — tampon ajouté en 0.8s"
+              "Appuyez sur « Ajouter un tampon » : la carte se met à jour et le client reçoit une notification"
             ]
           },
           "web": {
@@ -361,7 +357,7 @@
               "Ouvrez le dashboard sur votre navigateur",
               "Cliquez sur « Scanner » dans le menu",
               "Autorisez l'accès à la caméra",
-              "Scannez le QR code — tampon ajouté"
+              "Scannez le QR code et ajoutez le tampon"
             ]
           }
         },
@@ -371,7 +367,7 @@
           "features": [
             {
               "title": "Zéro formation",
-              "description": "Ouvrir l'appli, scanner, c'est fait. Vos employés l'utilisent dès le premier jour."
+              "description": "Ouvrir l'appli, scanner, valider. Vos employés l'utilisent dès le premier jour."
             },
             {
               "title": "Retour haptique",

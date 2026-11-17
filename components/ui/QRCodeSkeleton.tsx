@@ -25,9 +25,11 @@ const QR_PATTERN = [
 
 interface QRCodeSkeletonProps {
   size?: number;
+  /** Pulse the squares in a wave; false draws them still, at full strength. */
+  animated?: boolean;
 }
 
-export function QRCodeSkeleton({ size = 100 }: QRCodeSkeletonProps) {
+export function QRCodeSkeleton({ size = 100, animated = true }: QRCodeSkeletonProps) {
   const scale = size / ((GRID_SIZE * SQUARE_SIZE) + ((GRID_SIZE - 1) * GAP));
   const scaledSquareSize = SQUARE_SIZE * scale;
   const scaledGap = GAP * scale;
@@ -55,8 +57,10 @@ export function QRCodeSkeleton({ size = 100 }: QRCodeSkeletonProps) {
                 style={{
                   width: scaledSquareSize,
                   height: scaledSquareSize,
-                  animation: `qr-wave 900ms ease-in-out infinite`,
-                  animationDelay: `${(rowIndex + colIndex) * 60}ms`,
+                  ...(animated && {
+                    animation: `qr-wave 900ms ease-in-out infinite`,
+                    animationDelay: `${(rowIndex + colIndex) * 60}ms`,
+                  }),
                 }}
               />
             ) : (

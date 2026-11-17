@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { InkArrow, InkNote } from "@/components/ui/InkAnnotation";
 import { CTAButton } from "@/components/ui/CTAButton";
+import { ScannerLoop } from "@/components/ui/ScannerLoop";
 import {
   CameraIcon,
   ShieldCheckIcon,
@@ -18,7 +19,6 @@ import {
   ArrowRightIcon,
   GlobeIcon,
 } from "@/components/icons";
-import { ScanDemo } from "./ScanDemo";
 import { StoreBadges } from "./StoreBadges";
 import { GetTheAppBand } from "./GetTheAppBand";
 import { RelatedFeatures } from "@/components/features/RelatedFeatures";
@@ -99,13 +99,13 @@ export function ScannerMobilePage() {
               </div>
             </ScrollReveal>
 
-            {/* Right — Scan Demo */}
+            {/* Right — the Scanner loop */}
             <ScrollReveal
               delay={200}
               className="order-1 flex justify-center lg:order-2"
             >
               <div className="relative">
-                <ScanDemo />
+                <ScannerLoop eager />
                 {/* Margin note labelling this phone as the team's side of the
                     product; the wallet card everywhere else is the customer's. */}
                 <div className="hidden lg:flex absolute -top-4 -right-28 flex-col items-start pointer-events-none">

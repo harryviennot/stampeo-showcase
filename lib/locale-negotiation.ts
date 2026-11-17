@@ -98,6 +98,7 @@ export const RESERVED_TOP_SEGMENTS: ReadonlySet<string> = new Set([
   "email-preferences",
   "features",
   "founding-partner",
+  "legacy",
   "login",
   "loyalty-programs",
   "onboarding",

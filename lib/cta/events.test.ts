@@ -42,6 +42,9 @@ const LOCATIONS: Record<string, [href: string, sends: typeof SIGNUP]> = {
   about: ["/onboarding", SIGNUP],
   feature_hero: ["/onboarding", SIGNUP],
   feature_cta: ["/onboarding", SIGNUP],
+  // The two trial buttons in the middle of the Platform homepage, kept apart from its hero and closing band.
+  platform_program_types: ["/onboarding", SIGNUP],
+  platform_apps: ["/onboarding", SIGNUP],
   card_style_gallery: ["/onboarding", SIGNUP],
   blog_cta: ["/onboarding", SIGNUP],
   pricing_final_cta: ["/onboarding", SIGNUP],

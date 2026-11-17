@@ -1,10 +1,12 @@
 import { describe, expect, it } from "bun:test";
 
+import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
   FAN_ARC_RADIUS_PCT,
   FAN_CARDS,
   FAN_SLOTS,
   HERO_FAN_SEASON,
+  PLATFORM_FAN_SLOTS,
   fanSlots,
   resolveFanCard,
   slotStyle,
@@ -236,5 +238,54 @@ describe("seasons", () => {
   // Halloween set still live in November.
   it.skipIf(new Date().getMonth() === 9)("outside October, the hero shows the year-round cards", () => {
     expect(HERO_FAN_SEASON).toBe("default");
+  });
+});
+
+describe("cards from the sector brands", () => {
+  // The brands drawn for the sector carousel, which the samples don't carry.
+  const SECTOR_ONLY = ["fournee", "lashwell", "harvest-row", "rolling-slice", "saltmoss", "smash-club"];
+
+  it.each(SECTOR_ONLY)("%s resolves to its own card, on its own engine, with its own logo", (id) => {
+    const theme = SECTOR_THEMES.find((t) => t.id === id);
+    const card = resolveFanCard(id);
+
+    expect(card.kind).toBe(theme?.engine === "points" ? "points" : "stamps");
+    expect(card.sample.design.logo_url).toBe(theme?.walletLogoUrl);
+    if (card.kind === "stamps") expect(card.sample.stamps).toBe(theme?.walletFilled ?? -1);
+    else expect(card.sample.pointsBalance).toBe(theme?.pointsBalance ?? -1);
+  });
+
+  it("a brand both banks know resolves to the sample, as the homepage fan always drew it", () => {
+    for (const id of ["aurevo", "marginalia"]) {
+      const sample = [...STAMP_SAMPLES, ...POINTS_SAMPLES].find((s) => s.id === id);
+      expect(resolveFanCard(id).sample.design).toBe(sample?.design ?? {});
+    }
+  });
+});
+
+describe("the Platform page's cards", () => {
+  const BARBER_LOGO = STAMP_SAMPLES.find((s) => s.id === "barber")?.design.logo_url;
+
+  it("sit in the homepage fan's seven places, Aurevo, the pages' sample café, at the apex", () => {
+    const places = (slots: typeof FAN_SLOTS) => slots.map((s) => ({ ...s, cardId: "" }));
+
+    expect(places(PLATFORM_FAN_SLOTS)).toEqual(places(FAN_SLOTS));
+    expect(PLATFORM_FAN_SLOTS.find((s) => s.index === 0)?.cardId).toBe("aurevo");
+  });
+
+  it("are seven different shops, and the middle three mix stamps and points", () => {
+    const ids = PLATFORM_FAN_SLOTS.map((s) => s.cardId);
+    const kinds = (slots: typeof FAN_SLOTS) => new Set(slots.map((s) => resolveFanCard(s.cardId).kind));
+
+    expect(new Set(ids).size).toBe(7);
+    expect(kinds(PLATFORM_FAN_SLOTS.filter((s) => Math.abs(s.index) <= 1))).toEqual(new Set(["stamps", "points"]));
+  });
+
+  it("never show the barbershop, whose name and logo belong to a real shop", () => {
+    expect(BARBER_LOGO).toBeDefined();
+    for (const s of PLATFORM_FAN_SLOTS) {
+      expect(s.cardId).not.toBe("barber");
+      expect(resolveFanCard(s.cardId).sample.design.logo_url).not.toBe(BARBER_LOGO);
+    }
   });
 });

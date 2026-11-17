@@ -277,6 +277,47 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
+/* The glass cards on the Platform landing page drift a few pixels; still for
+   readers who ask for less motion. */
+@keyframes lp-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.lp-float {
+  animation: lp-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-float {
+    animation: none;
+  }
+}
+
+/* The front card of the phone stack on Platform's hero presses 2px as its stamp lands. */
+@keyframes wst-press {
+  35% {
+    transform: translateY(2px);
+  }
+}
+
+.wst-press {
+  animation: wst-press 450ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wst-press {
+    animation: none;
+  }
+}
+
 /* Pulse animation for badges */
 @keyframes pulse-dot {
 
@@ -338,6 +379,20 @@ body {
 }
 
 .scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* A smaller rise than .scroll-reveal's, for a figure that fades in among others. */
+.scroll-reveal-rise {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.scroll-reveal-rise.revealed {
   opacity: 1;
   transform: translateY(0);
 }
@@ -424,6 +479,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
 
   .scroll-reveal,
+  .scroll-reveal-rise,
   .scroll-reveal-stagger>*,
   .scroll-reveal-left,
   .scroll-reveal-right,
@@ -614,6 +670,41 @@ body {
 
   .card-stamp-lift:hover {
     transform: none;
+  }
+}
+
+/* The keycap: a button in the house ink, sitting on its own ledge. A pointer
+   that can hover lifts it a pixel; pressing sinks it onto the page. The outline
+   variant (.keycap-flat) has no ledge until it is hovered or pressed. */
+.keycap {
+  border: 1.5px solid var(--near-black);
+  box-shadow: 0 3px 0 var(--near-black);
+  transition: transform 80ms ease-out, box-shadow 80ms ease-out, background-color 150ms ease, filter 150ms ease;
+}
+
+.keycap-flat {
+  box-shadow: 0 0 0 var(--near-black);
+}
+
+@media (hover: hover) {
+  .keycap:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--near-black);
+  }
+}
+
+.keycap:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--near-black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .keycap,
+  .keycap:hover,
+  .keycap:active {
+    transform: none;
+    transition: background-color 150ms ease, filter 150ms ease;
   }
 }
 

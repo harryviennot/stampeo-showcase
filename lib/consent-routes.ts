@@ -31,6 +31,8 @@ export const MARKETING_SEGMENTS: ReadonlySet<string> = new Set([
   "demo",
   "features",
   "founding-partner",
+  // Legacy pages: the same sign-up buttons, so the same measurement.
+  "legacy",
   // The loyalty-program page is four sibling folders, one per locale, rather
   // than one route with a translated slug. All four have to be listed.
   "loyalty-programs",
