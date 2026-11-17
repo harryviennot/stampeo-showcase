@@ -1,12 +1,12 @@
 /**
  * The deck of Platform's phone stack and the clock that moves it. The first four cards are the first paint: the
  * café's stamp card in front, whole, and the tops of a points card, a level card and a stamp card behind it. The
- * front card plays a small moment if it has one (a stamp, some points, a level up), leaves, and the next card
- * takes its place. Pure data and pure steps; the component only draws them.
+ * front card plays a small moment if it has one (a stamp, some points, a level up), then leaves as the rest of the
+ * deck moves up one place in the same motion. Pure data and pure steps; the component only draws them.
  */
 
-import { WRENFOLD } from "@/components/landing-pages/shared/samples";
 import { resolveFanCard } from "@/lib/hero-fan";
+import { LEVELS_SHOP } from "@/lib/landing-pages/previews/loyalty-ladder";
 import { GOLD_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
@@ -59,17 +59,27 @@ function inLook(card: StackCard, look: LevelLook, headerLabel: string, extra: Pa
   return { ...card, design: { ...card.design, ...look }, headerLabel, ...extra };
 }
 
-/** The dry cleaner's stamp card, a Silver level that moves up to Gold. */
-const WRENFOLD_CARD: StackCard = { id: "wrenfold", program: "stamps", design: WRENFOLD.design, stamps: 4 };
+/** The barbershop's 5-stamp card, the levels example of the loyalty programs page. */
+const BARBER_CARD: StackCard = {
+  id: "gaspard-gus",
+  program: "stamps",
+  design: { ...LEVELS_SHOP.design, total_stamps: 5 },
+  stamps: 3,
+};
 
-/** The cards in the order they come to the front. */
+/**
+ * The cards in the order they come to the front, the strongest first: the café of every fan's apex, the salon's
+ * points ring, the barbershop moving up from Silver to Gold, then the bakery, the bookstore, the pizza truck and
+ * the car wash, the cards the homepage and Platform fans lead with.
+ */
 export const PHONE_DECK: readonly StackCard[] = [
   shop("aurevo", { moment: { stamps: 6 } }),
   shop("salon"),
-  inLook(shop("patoune"), SILVER_LOOK, "Silver"),
+  inLook(BARBER_CARD, SILVER_LOOK, "Silver", { moment: { look: GOLD_LOOK, headerLabel: "Gold" } }),
   shop("fournee"),
   shop("marginalia", { moment: { pointsBalance: 252 } }),
-  inLook(WRENFOLD_CARD, SILVER_LOOK, "Silver", { moment: { look: GOLD_LOOK, headerLabel: "Gold" } }),
+  shop("rolling-slice"),
+  shop("lustre"),
 ];
 
 /** What the card shows, before its moment or after it. */
@@ -107,10 +117,14 @@ export interface StackState {
 /** Aurevo in front, at rest: the first paint, and what a reader who asks for less motion keeps. */
 export const FIRST_PAINT: StackState = { front: 0, phase: "rest" };
 
-/** How long the front card plays its moment and leaves, in ms; with the rest, a card holds the front for 3.2 seconds. */
-const MOMENT_MS = 600;
-const LEAVE_MS = 300;
-const CYCLE_MS = 3200;
+/**
+ * How long the front card plays its moment and how long the deck takes to move up one place, in ms; with the rest, a
+ * card holds the front for 3.6 seconds. Every card moves for `MOVE_MS`, so the leaving card has faded by the time it
+ * goes.
+ */
+const MOMENT_MS = 700;
+export const MOVE_MS = 700;
+const CYCLE_MS = 3600;
 /** The first card waits this long once the stack is in view, so a visitor sees it whole before it moves. */
 export const FIRST_REST_MS = 1200;
 
@@ -123,17 +137,19 @@ export interface Placement {
   leaving: boolean;
 }
 
-/** Where a card sits for a clock state. */
+/**
+ * Where a card sits for a clock state. While the front card leaves, it keeps the front slot and every other card
+ * already sits where the next rest puts it, so the deck moves up one place as the front card goes.
+ */
 export function placement(index: number, state: StackState, count: number): Placement {
-  const behind = (((index - state.front) % count) + count) % count;
+  const leaving = state.phase === "leaving" && index === state.front;
+  if (leaving) return { behind: 0, slot: 0, hidden: false, leaving };
+
+  const front = state.phase === "leaving" ? (state.front + 1) % count : state.front;
+  const behind = (((index - front) % count) + count) % count;
   const hidden = behind > PHONE_STRIPS;
 
-  return {
-    behind,
-    slot: hidden ? PHONE_STRIPS + 1 : behind,
-    hidden,
-    leaving: state.phase === "leaving" && index === state.front,
-  };
+  return { behind, slot: hidden ? PHONE_STRIPS + 1 : behind, hidden, leaving };
 }
 
 /**
@@ -153,11 +169,11 @@ export function stepAfter(
   if (state.phase === "rest") {
     const next: StackPhase = hasMoment ? "moment" : "leaving";
 
-    return { state: { front: state.front, phase: next }, after: CYCLE_MS - MOMENT_MS * Number(hasMoment) - LEAVE_MS };
+    return { state: { front: state.front, phase: next }, after: CYCLE_MS - MOMENT_MS * Number(hasMoment) - MOVE_MS };
   }
   if (state.phase === "moment") return { state: { front: state.front, phase: "leaving" }, after: MOMENT_MS };
 
-  return { state: { front: (state.front + 1) % cards, phase: "rest" }, after: LEAVE_MS };
+  return { state: { front: (state.front + 1) % cards, phase: "rest" }, after: MOVE_MS };
 }
 
 export interface StackView {

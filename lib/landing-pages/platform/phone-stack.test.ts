@@ -75,7 +75,7 @@ describe("the moments: what the front card shows after it", () => {
     expect([showing(card("aurevo"), false).stamps, showing(card("aurevo"), true).stamps]).toEqual([5, 6]);
     expect([showing(card("marginalia"), false).pointsBalance, showing(card("marginalia"), true).pointsBalance]).toEqual([240, 252]);
 
-    const [before, after] = [showing(card("wrenfold"), false), showing(card("wrenfold"), true)];
+    const [before, after] = [showing(card("gaspard-gus"), false), showing(card("gaspard-gus"), true)];
 
     expect([before.headerLabel, after.headerLabel]).toEqual(["Silver", "Gold"]);
     expect(before.design.background_color).toBe(LEVEL_LOOKS.silver.background_color);
@@ -87,7 +87,7 @@ describe("the moments: what the front card shows after it", () => {
   test("one moment of each kind, and the other cards have none: before and after are the same card", () => {
     const withMoment = PHONE_DECK.filter((candidate) => candidate.moment);
 
-    expect(withMoment.map((candidate) => candidate.id).sort()).toEqual(["aurevo", "marginalia", "wrenfold"]);
+    expect(withMoment.map((candidate) => candidate.id).sort()).toEqual(["aurevo", "gaspard-gus", "marginalia"]);
     for (const other of PHONE_DECK.filter((candidate) => !candidate.moment)) {
       expect(showing(other, true)).toEqual(showing(other, false));
     }
@@ -114,6 +114,16 @@ describe("where each card sits", () => {
     expect(placement(1, next, count).slot).toBe(0);
     expect(placement(2, next, count).slot).toBe(1);
     expect(placement(0, next, count).hidden).toBe(true);
+  });
+
+  test("while the front card leaves, the rest of the deck already moves up one place, so the stack advances in one motion", () => {
+    const leaving: StackState = { front: 2, phase: "leaving" };
+    const next: StackState = { front: 3, phase: "rest" };
+
+    expect(placement(2, leaving, count)).toEqual({ behind: 0, slot: 0, hidden: false, leaving: true });
+    for (const index of PHONE_DECK.keys()) {
+      if (index !== 2) expect(placement(index, leaving, count)).toEqual(placement(index, next, count));
+    }
   });
 
   test("while the front card leaves, it is the only one marked as leaving", () => {
@@ -151,7 +161,7 @@ describe("the clock", () => {
     expect(stepAfter({ front: 1, phase: "rest" }, false).state.phase).toBe("leaving");
   });
 
-  test.each([true, false])("every card holds the front for 3.2 seconds, whether or not it has a moment (%s)", (hasMoment) => {
+  test.each([true, false])("every card holds the front for 3.6 seconds, whether or not it has a moment (%s)", (hasMoment) => {
     let state: StackState = { front: 2, phase: "rest" };
     let time = 0;
 
@@ -161,7 +171,7 @@ describe("the clock", () => {
       state = step.state;
     } while (state.front === 2);
 
-    expect(time).toBe(3200);
+    expect(time).toBe(3600);
   });
 
   test("the first card is on screen a moment before it plays, shorter than a regular rest", () => {
@@ -180,7 +190,7 @@ describe("the clock", () => {
     }
 
     expect(state).toEqual(FIRST_PAINT);
-    expect(played.sort()).toEqual(["aurevo", "marginalia", "wrenfold"]);
+    expect(played.sort()).toEqual(["aurevo", "gaspard-gus", "marginalia"]);
   });
 });
 

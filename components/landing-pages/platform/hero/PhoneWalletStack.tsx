@@ -8,6 +8,7 @@ import { useWatching } from "@/hooks/useWatching";
 import {
   FIRST_PAINT,
   FIRST_REST_MS,
+  MOVE_MS,
   PHONE_DECK,
   PHONE_STRIPS,
   drawn,
@@ -26,8 +27,13 @@ const CARD_HEIGHT = Math.round(CARD_WIDTH * 1.282);
 const TOP_HEIGHT = 44;
 /** Narrower on a phone, so the buttons under the stack stay in the first screen. */
 const PHONE_WIDTH = 255;
-/** How far a leaving card slides down as it fades. */
-const LEAVE_PX = 24;
+/** How far a leaving card slides down as it fades, and how soon it has faded: well before it stops, so it never lingers over the card taking its place. */
+const LEAVE_PX = 48;
+const LEAVE_FADE_MS = 380;
+/** One soft deceleration for every move, so the deck glides rather than steps. */
+const EASE = "cubic-bezier(0.32, 0.72, 0, 1)";
+/** How long the front card's face takes to cross-fade into what its moment makes it. */
+const MOMENT_FADE_MS = 450;
 
 /** False on the server and during hydration, true once the page is live in the browser. */
 const subscribeNever = () => () => {};
@@ -38,43 +44,60 @@ interface SlotProps {
   slot: number;
   hidden: boolean;
   leaving: boolean;
-  /** The card in front shows its QR code, as a pass does when it is open. */
-  front: boolean;
+  /** The face the card's moment makes is drawn over it, ready to fade in (the front card, once the page is live). */
+  ready: boolean;
   /** The front card shows what it becomes after its moment. */
   after: boolean;
   /** The front card is playing its moment: it presses 2px, as if stamped. */
   pressed: boolean;
 }
 
-/** One card in its place: moved by `slot`, faded when hidden or leaving. Only a card whose own state changed redraws its face. */
-const Slot = memo(function Slot({ card, slot, hidden, leaving, front, after, pressed }: SlotProps) {
-  const face = useMemo(() => {
-    const shown = showing(card, after);
+/** A card's face as the wallet draws it, QR code included, so a card that comes to the front has nothing left to draw. */
+function Face({ card, after }: Readonly<{ card: StackCard; after: boolean }>) {
+  const shown = showing(card, after);
 
-    return (
-      <WalletCard
-        design={shown.design}
-        stamps={shown.stamps}
-        pointsBalance={shown.pointsBalance}
-        pointsRewards={shown.pointsRewards}
-        headerLabel={shown.headerLabel}
-        showQR={front}
-      />
-    );
-  }, [card, after, front]);
+  return (
+    <WalletCard
+      design={shown.design}
+      stamps={shown.stamps}
+      pointsBalance={shown.pointsBalance}
+      pointsRewards={shown.pointsRewards}
+      headerLabel={shown.headerLabel}
+    />
+  );
+}
+
+/**
+ * One card in its place: moved by `slot`, faded when hidden or leaving, every move on the same easing and length. A
+ * leaving card stays on top as it slides down and fades, over the card taking its place. A card with a moment
+ * cross-fades into it rather than swapping its face.
+ */
+const Slot = memo(function Slot({ card, slot, hidden, leaving, ready, after, pressed }: SlotProps) {
+  const before = useMemo(() => <Face card={card} after={false} />, [card]);
+  const moment = useMemo(() => (card.moment ? <Face card={card} after /> : null), [card]);
 
   return (
     <div
-      className={`absolute top-0 left-0 transition-[transform,opacity] ease-[cubic-bezier(0.2,0.8,0.2,1)] motion-reduce:transition-none ${leaving ? "duration-300" : "duration-[400ms]"} ${hidden || leaving ? "opacity-0" : "opacity-100"}`}
+      className={`absolute top-0 left-0 transition-[transform,opacity] will-change-transform motion-reduce:transition-none ${hidden || leaving ? "opacity-0" : "opacity-100"}`}
       style={{
         width: CARD_WIDTH,
         height: CARD_HEIGHT,
-        zIndex: 20 - slot,
+        zIndex: leaving ? 21 : 20 - slot,
+        transitionDuration: leaving ? `${MOVE_MS}ms, ${LEAVE_FADE_MS}ms` : `${MOVE_MS}ms`,
+        transitionTimingFunction: EASE,
         transform: `translate3d(0, ${(PHONE_STRIPS - slot) * TOP_HEIGHT + (leaving ? LEAVE_PX : 0)}px, 0)`,
       }}
     >
-      <div className={pressed ? "wst-press" : undefined} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
-        {face}
+      <div className={`relative ${pressed ? "wst-press" : ""}`} style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
+        {before}
+        {ready && moment && (
+          <div
+            className="absolute inset-0 transition-opacity motion-reduce:transition-none"
+            style={{ opacity: after ? 1 : 0, transitionDuration: `${MOMENT_FADE_MS}ms`, transitionTimingFunction: EASE }}
+          >
+            {moment}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -82,7 +105,7 @@ const Slot = memo(function Slot({ card, slot, hidden, leaving, front, after, pre
 
 /**
  * A phone's Wallet: the tops of three cards stacked above the front card, which is drawn whole. Once it is in
- * view the front card plays its moment if it has one, slides down and fades, and the next card takes its place.
+ * view the front card plays its moment if it has one, then slides down and fades as the deck moves up into its place.
  * The clock runs only while someone can see the stack; a reader who asks for less motion gets the still first
  * paint, Aurevo's card in front at its fifth stamp.
  */
@@ -129,7 +152,7 @@ export function PhoneWalletStack({ label }: Readonly<{ label: string }>) {
                 slot={place.slot}
                 hidden={place.hidden}
                 leaving={place.leaving}
-                front={isFront}
+                ready={live && view.animated && isFront}
                 after={view.after && isFront}
                 pressed={view.animated && view.phase === "moment" && isFront}
               />
