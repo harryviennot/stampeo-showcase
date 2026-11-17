@@ -1,6 +1,8 @@
 # Privacy Policy: Stampeo
 
-**Last updated: November 10, 2026**
+**Last updated: November 17, 2026**
+
+{/* COUNSEL: set the date at sign-off */}
 
 ## 1. Introduction
 
@@ -111,7 +113,7 @@ For all users, we may collect:
 
 - Pass type (Apple Wallet or Google Wallet)
 - Device token for pass updates
-- Usage data sent to PostHog for our internal product analytics: event name, timestamp, page viewed, visitor IP, and (after a Business account is created) the associated business identifier. No cookies are set and no identifier is persisted to browser storage (see §5)
+- Usage data sent to PostHog for our internal product analytics: event name, timestamp, page viewed and visitor IP. By default no cookie is set and no identifier is kept in browser storage. Depending on your choice about audience measurement, PostHog may also remember your browser, record how pages are used (with every form field masked) and link your visits to the account you create, through a pseudonymous key and never your email address or name. Our servers also send PostHog the main steps of each account's life. Section 5.4 describes each of these and when it applies {/* COUNSEL: C6, the PostHog summary for consent version 6. The bullet no longer names a raw business identifier: the browser never sent one, and the steps sent from our servers carry a pseudonymous business key (5.4) */}
 - Error-monitoring context sent to Sentry on exceptions: user identifier, business identifier, request path, and stack trace (no raw email, no password, no payment data)
 - For emails we send to Business Users, engagement events recorded by our email provider (Resend): delivery, open, click (including which link was clicked), bounce, and spam-complaint signals, linked to the recipient's business and user identifier. These are used only to measure and improve our own communications and to maintain list hygiene, never for advertising
 
@@ -128,10 +130,12 @@ We use the following sub-processors:
 | Apple (APNs) | Apple Wallet pass updates | United States (Data Privacy Framework) |
 | Google (Wallet API) | Google Wallet pass updates | United States (Data Privacy Framework) |
 | Google (Analytics 4): Google Ireland Limited, with Google LLC | Audience measurement and conversion reporting, subject to your cookie choice (see 5.3 and 5.5) | EU (possible US transfers under Data Privacy Framework) |
-| PostHog | Website analytics (cookieless) | EU |
+| PostHog Inc. (PostHog EU Cloud) | Product analytics and audience measurement: visit counts and, depending on your choice, session recordings, heatmaps and the steps of an account's life (see 5.4) | Frankfurt, Germany (EU) |
 | Sentry | Error monitoring | Germany (EU) |
 | Trustpilot A/S | Review invitations sent to business owners (email address, name, business identifier, language) | Denmark (EU), with possible transfers outside the EU under Standard Contractual Clauses |
 | Redis (self-hosted, via Taskiq) | Job queue and short-lived cache for pass assets and notification delivery | France (EU), same infrastructure as our VPS |
+
+{/* COUNSEL: C6, PostHog Inc. named as our processor for product analytics, on its EU Cloud in Frankfurt; confirm the contracting entity and the role */}
 
 ### Resellers (when applicable)
 
@@ -143,13 +147,13 @@ A business that is not managed by a reseller is not exposed to any reseller acce
 
 ### Transfers Outside the EU
 
-Some of our sub-processors (Stripe, Apple, Google, Trustpilot) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google Ads (Google Ireland Limited, with Google LLC in the United States), Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States) and OpenAI (ChatGPT ads), may process that data in the United States, under the same framework. Google Ads receives these reports as an independent recipient for advertising measurement, and so does OpenAI.
+Some of our sub-processors (Stripe, Apple, Google, Trustpilot) may transfer data to the United States. These transfers are governed by the EU-US Data Privacy Framework or Standard Contractual Clauses approved by the European Commission. Supabase, OVH, Resend, PostHog, Sentry, and our self-hosted Redis process data exclusively within the EU. The advertising platforms we report conversions to under §5.5, Google Ads (Google Ireland Limited, with Google LLC in the United States), Meta (Meta Platforms Ireland Limited, with Meta Platforms, Inc. in the United States) and OpenAI (ChatGPT ads), may process that data in the United States, under the same framework. Google Ads receives these reports as an independent recipient for advertising measurement, and so does OpenAI. {/* COUNSEL: PostHog Inc. is a US company whose EU Cloud keeps the data in Frankfurt. Confirm whether access from outside the EU (for example its support staff) means PostHog belongs among the sub-processors that may transfer data, as Stripe does, rather than in the EU-only sentence */}
 
 ## 5. Cookies
 
 ### 5.1 Your choice
 
-Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google or Meta, and none of their cookies is created. Refusing therefore leaves nothing behind to delete.
+Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google or Meta, and none of their cookies is created. PostHog is the one exception: its script runs whatever you choose, to count visits without cookies, and it sets its own cookie only once you accept (see 5.4). Refusing therefore leaves nothing behind to delete. {/* COUNSEL: C5, PostHog's cookie-free counting runs before, and regardless of, any choice */}
 
 Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for 6 months, after which we may ask you again. You can change it at any time through **Cookie preferences** in the footer of every page where our measurement and advertising cookies can be set. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
 
@@ -179,6 +183,9 @@ These cookies are used only if you allow them (in the United States, until you s
 |---|---|---|
 | Audience measurement | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Advertising measurement | Meta | `_fbp`, `_fbc` |
+| Audience measurement, session recordings and heatmaps | PostHog | `ph_*` (stampeo.app only, 6 months at most; see 5.4) |
+
+{/* COUNSEL: C2 and C6, the ph_* cookie under audience measurement: first-party, set for stampeo.app alone, 182 days at most (the grant lifetime); in the United States set from arrival unless switched off or under GPC */}
 
 The three cookies below are our own. Our server sets them, and they are shared between stampeo.app and the dashboard.
 
@@ -190,11 +197,27 @@ The three cookies below are our own. Our server sets them, and they are shared b
 
 The earlier `stampeo_attribution` cookie is no longer set; a browser that received it earlier may still hold it until it expires.
 
-### 5.4 Audience measurement without cookies
+### 5.4 Audience measurement with PostHog
 
-Stampeo uses PostHog (hosted in the EU) for internal product analytics and audience measurement. PostHog is configured so that **no tracking cookies are set** and **no identifier is persisted to browser storage** (cookie, localStorage, or equivalent). Events are scoped to the current browser session and are not re-associated across visits. The visitor's IP address is transmitted to the PostHog server for technical logging and event deduplication, but it is not combined with a persistent identifier, is not used for profiling or advertising, and is not shared with third parties. Hosting is entirely within the European Union.
+Stampeo uses PostHog for its internal product analytics and audience measurement: which pages are visited, which sections and buttons lead to an account, and where visitors give up. PostHog Inc. processes this data on our behalf only, as our processor, and hosts it on its EU Cloud in Frankfurt, Germany. {/* COUNSEL: C6, PostHog's role (processor) and its hosting */}
 
-Because nothing is stored on your device, this measurement falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines. It therefore runs whether you accept or refuse the cookies in 5.3, and refusing them does not leave us blind to how the site itself performs.
+**Measurement without cookies, whatever you choose.** By default PostHog sets **no cookie** and keeps **no identifier in browser storage** (cookie, localStorage, or equivalent). Events are scoped to the current browser session and are not re-associated across visits, and nothing is recorded. The visitor's IP address is transmitted to the PostHog server for technical logging and event deduplication, but in this mode it is not combined with a persistent identifier; it is not used for profiling or advertising, and it is not shared with third parties.
+
+Because nothing is stored on your device in this mode, it falls within the consent exemption for strictly necessary audience measurement described in the ePrivacy Directive and CNIL guidelines. It therefore runs whether you accept or refuse the cookies in 5.3, and refusing them does not leave us blind to how the site itself performs. The exemption covers this mode alone: what PostHog does with your consent, described next, relies on that consent. {/* COUNSEL: C5, does the cookie-free default still meet the CNIL exemption now that the same PostHog project also holds consented, account-linked data, and given C3? The exemption is no longer claimed for anything PostHog does with consent */}
+
+**With your consent to audience measurement.** If you allow audience measurement, in the banner or through **Cookie preferences**, PostHog also:
+
+- **remembers your browser:** a random identifier is kept in a `ph_*` cookie, set for stampeo.app alone (never for the dashboard or our servers), for 6 months at most, so that a visit on another day counts as the same visitor. If you accept during a visit, that visit keeps the identifier it started with, so the pages you viewed before accepting count with it;
+- **records how pages are used:** session recordings replay the pages you see, your clicks and your scrolling, with **every form field masked**, so nothing you type is recorded; heatmaps show where visitors click and how far they scroll. Neither runs on the sign-up flow, the sign-in and password reset pages, the email preferences page, the demo card pages, or the pages where customers join a business's loyalty card, and neither captures your browser's console or network requests;
+- **links your visits to the account you create:** when you confirm your account, we tell PostHog that this browser belongs to it, through a pseudonymous key that we compute from the account and that PostHog cannot turn back into it. PostHog never receives your email address, your name or our internal identifiers. {/* COUNSEL: C2, recordings and heatmaps under the audience-measurement choice rather than a toggle of their own; C3, a grant during a visit keeps the in-memory identifier, so that visit's earlier cookie-free events join the remembered visitor */}
+
+In the United States, PostHog remembers your browser from your first visit and links your visits to the account you create, unless you switch audience measurement off through **Your Privacy Choices** or your browser sends a Global Privacy Control signal. Session recordings and heatmaps run there only after you save a choice in **Your Privacy Choices** with audience measurement on, never by default. {/* COUNSEL: C2 for the United States: the browser is remembered and linked by default under the opt-out, and recordings and heatmaps need a saved grant (wiretap-style claims). A US visitor who saves the dialog with measurement on, for example to switch advertising off, also starts recordings */}
+
+**Steps sent from our servers.** If you create an account, our servers send PostHog the main steps of its life: that the account was created, that its first card went live, that a first test stamp was given, that the payment page was opened, that the free trial started, that a first invoice was paid, and that the subscription ended. With each step PostHog receives when it happened, the language and country version of Stampeo you use and, when the step concerns a plan, the plan, its billing period, the price or the amount paid, and its currency; when a subscription ends, also why it ended and whether it had been paid. If you allowed audience measurement (in the United States, as long as you have not switched it off), each step carries the pseudonymous key described above, so that it joins your visits, along with a pseudonymous key for the business and, if we kept it under 5.5, where your visit came from (campaign parameters, landing page and referring site). Otherwise PostHog only counts the step: it receives no identifier and no source, so the step cannot be joined to your visits. These reports never include your email address, name, telephone number, IP address or browser characteristics. {/* COUNSEL: C1, the steps of an account whose holder refused audience measurement are counted with no identifier and no source (the conservative version; the plan asked whether a pseudonymous key on legitimate interest is allowed) */}
+
+**Legal basis.** Your consent (GDPR Art. 6(1)(a)) for the cookie, the session recordings and heatmaps, and the link to your account. For the measurement without cookies and the steps counted without an identifier, our legitimate interest in knowing how the site and the service perform (GDPR Art. 6(1)(f)). In the United States, where prior consent is not required, notice and your right to opt out through **Your Privacy Choices** (see 5.1 and §6). {/* COUNSEL: C1 and C5, legitimate interest for the cookie-free counting and for the steps counted without an identifier */}
+
+**Withdrawing.** If you refuse audience measurement, or withdraw it later through **Cookie preferences** (in the United States, **Your Privacy Choices** or a Global Privacy Control signal), recording stops at once, the `ph_*` cookie and every `ph_*` entry in your browser's storage are deleted, and the page reloads. From then on PostHog counts your visits without cookies, under a new identifier that is never stored, and the steps of your account sent from our servers are no longer linked to you: they are only counted. A refusal made on this site after you created your account applies to that account, through the identifier described in 5.6. What PostHog already holds is kept for the periods in §8, and you can ask us to delete it at any time (§10). {/* COUNSEL: C4, withdrawal after sign-up stops recording and linking and deletes the cookie and storage; what was already linked is kept to its §8 period unless the person asks for erasure (the conservative version: nothing already collected is deleted automatically on withdrawal) */}
 
 Strictly necessary cookies may be used for authentication and session management on the business dashboard. These cookies do not require consent.
 
@@ -232,7 +255,7 @@ For each step we also keep delivery diagnostics: its status, the times we tried 
 You can withdraw each choice separately, through **Cookie preferences** or, in the United States, **Your Privacy Choices**:
 
 - Turning off advertising stops anything further being reported to Meta, Google Ads and OpenAI, and deletes the advertising identifiers we kept.
-- Turning off audience measurement does the same for Google Analytics.
+- Turning off audience measurement does the same for Google Analytics, and takes PostHog back to measurement without cookies (see 5.4). {/* COUNSEL: C4, what turning off audience measurement does to PostHog */}
 - Turning off both also deletes the stored campaign source.
 
 A refusal you make on this site after you created an account applies to your account and your businesses, through the random identifier described in 5.6. Steps already reported cannot be recalled. This data is deleted together with the business account it belongs to (see §8).
@@ -262,6 +285,7 @@ We use collected data to:
 - Send transactional and operational emails (account confirmation, pass recovery, trial notifications, plan-change confirmations, the notice sent before each yearly subscription renewal, and other billing notifications; see Terms of Service §5.7)
 - Produce, for each business, aggregate statistics on the activity of its own program (see §3.3)
 - Produce aggregate, internal product analytics to understand how the Platform is used across all businesses, detect abuse, and prioritize improvements
+- Understand how visitors use stampeo.app and which pages lead to an account, a trial or a payment, with PostHog (see 5.4) {/* COUNSEL: added purpose, the PostHog journeys described in 5.4 */}
 - Send Business Users a limited number of lifecycle and marketing emails, subject to the opt-out described in §6.1
 - Invite paying business owners to review Stampeo on Trustpilot, on the basis of our legitimate interest in collecting feedback on our service (GDPR Art. 6(1)(f); the recipient is described in §4)
 - Improve the Platform
@@ -329,6 +353,11 @@ Businesses using broadcasts must publish their own privacy notice to their custo
 | Delivery diagnostics for each step reported under §5.5 (status, attempt times, the platform's response code) | 13 months |
 | Platforms' response messages to the steps reported under §5.5 | 90 days |
 | Consent records — proof of your cookie choices (§5.6) | 3 years after the consent ends (replaced or withdrawn). **Not** deleted with the Business account: the account link is removed and the record is kept, under GDPR Art. 17(3)(b) and (e) |
+| PostHog events and visitor profiles (§5.4) | 13 months at most. When an account is deleted, we also ask PostHog to delete the profile linked to it |
+| PostHog session recordings (§5.4) | 30 days |
+| Account steps prepared on our servers for PostHog (§5.4) | 13 months at most, and deleted with the account |
+
+{/* COUNSEL: C5, PostHog retention. 13 months for events and visitor profiles is a proposal that PostHog's settings must enforce before release; 30 days for recordings is the PostHog replay setting; on account deletion we ask PostHog to delete the linked person (whether its events go too depends on that call); the queue on our servers is purged after 395 days */}
 
 The 24-month retention for support access logs is set to allow security-incident investigation while remaining proportionate to its purpose, in line with CNIL guidance on security logging.
 
