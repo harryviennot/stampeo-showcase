@@ -21,6 +21,8 @@ describe("the options PostHog starts with", () => {
 
   test("the flags request that skips the scrub is not made on load, and the SDK's defaults are the 2026-01-30 ones", () => {
     expect(POSTHOG_INIT_OPTIONS.advanced_disable_feature_flags_on_first_load).toBe(true);
+    // The site uses no flags, and the flags request carries person properties past `before_send`.
+    expect(POSTHOG_INIT_OPTIONS.advanced_disable_feature_flags).toBe(true);
     expect(POSTHOG_INIT_OPTIONS.defaults).toBe("2026-01-30");
   });
 });
