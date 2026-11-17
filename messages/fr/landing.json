@@ -7,7 +7,7 @@
       "cta": "Commencer gratuitement",
       "secondaryCta": "Voir comment ça marche",
       "stamp": {
-        "complete": "Vous avez débloqué l'accès anticipé !",
+        "complete": "Carte pleine ! À vous de créer la vôtre.",
         "ready": "Votre carte est prête ! Essayez d'ajouter un tampon.",
         "claimFree": "Commencer gratuitement →",
         "addStamp": "Ajouter un tampon",
@@ -20,7 +20,7 @@
       },
       "demoToggleLabel": "Type de carte",
       "points": {
-        "complete": "Vous avez décroché toutes les récompenses !",
+        "complete": "Toutes les récompenses débloquées ! À vous de créer la vôtre.",
         "ready": "Votre carte est prête ! Essayez d'ajouter des points.",
         "claimReward": "Commencer gratuitement →",
         "scanButton": "Ajouter 20 points",

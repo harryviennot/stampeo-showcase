@@ -7,7 +7,7 @@
       "cta": "Zacznij za darmo",
       "secondaryCta": "Zobacz, jak to działa",
       "stamp": {
-        "complete": "Wczesny dostęp odblokowany!",
+        "complete": "Karta pełna! Teraz stwórz własną.",
         "ready": "Karta gotowa! Spróbuj dodać pieczątkę.",
         "claimFree": "Zacznij za darmo →",
         "addStamp": "Dodaj pieczątkę",
@@ -20,7 +20,7 @@
       },
       "demoToggleLabel": "Rodzaj karty",
       "points": {
-        "complete": "Wszystkie nagrody zebrane!",
+        "complete": "Wszystkie nagrody odblokowane! Teraz stwórz własną.",
         "ready": "Karta gotowa! Spróbuj dodać punkty.",
         "claimReward": "Zacznij za darmo →",
         "scanButton": "Dodaj 20 punktów",

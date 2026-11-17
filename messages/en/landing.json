@@ -7,7 +7,7 @@
       "cta": "Start Free",
       "secondaryCta": "See how it works",
       "stamp": {
-        "complete": "You've unlocked early access!",
+        "complete": "Card full! Now make one for your shop.",
         "ready": "Your pass is ready! Try adding a stamp.",
         "claimFree": "Start Free →",
         "addStamp": "Add Stamp",
@@ -20,7 +20,7 @@
       },
       "demoToggleLabel": "Card type",
       "points": {
-        "complete": "You've collected every reward!",
+        "complete": "Every reward unlocked! Now make one for your shop.",
         "ready": "Your pass is ready! Try adding points.",
         "claimReward": "Start Free →",
         "scanButton": "Add 20 points",

@@ -38,11 +38,11 @@ export const DEMO_STAMP_DESIGN: Partial<CardDesign> = {
   custom_stamp_config: DEMO_STAMP_CONFIG,
 };
 
-// The points ladder: a smiley (a returning customer) at 60, a heart (a loyal
-// regular) at 120. PointsStrip draws thresholds and these icons on the track,
+// The points ladder: a waving hand (a returning customer) at 60, a heart (a
+// loyal regular) at 120. PointsStrip draws thresholds and these icons on the track,
 // not the reward names.
 export const DEMO_POINTS_REWARD_ICONS: PointsRewardIcons = {
-  r_mid: { type: "preset", ref: "smiley" },
+  r_mid: { type: "preset", ref: "hand-waving" },
   r_top: { type: "preset", ref: "heart" },
 };
 
