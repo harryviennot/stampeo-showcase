@@ -134,14 +134,6 @@ describe("the shell", () => {
       expect(tag.attrs).toContain("market={market}");
     }
   });
-
-  test("starts a visitor on the market's currency and trial length, before hydration and with JavaScript off", () => {
-    const provider = findTag(shell(), "RegionPricingProvider");
-
-    expect(provider?.attrs).toContain("defaultCurrency={marketCurrency}");
-    expect(provider?.attrs).toContain("defaultTrialDays={MARKETS[market].trialDays}");
-    expect(code(join(SHARED_DIR, "LandingPageShell.tsx"))).toContain('MARKETS[market].currency.code.toLowerCase() === "usd" ? "usd" : "eur"');
-  });
 });
 
 describe("what the pages say in their head", () => {

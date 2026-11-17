@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server";
 import { RegionPricingProvider } from "@/components/market/RegionPricingProvider";
-import { MARKETS } from "../markets";
+import { MARKETS, type Market } from "../markets";
 import { FALLBACK_PRICING } from "../pricing";
 import { loadCatalog } from "./catalogs";
 
@@ -14,8 +14,16 @@ const catalog = (locale: string) => {
   return CATALOGS.get(locale);
 };
 
-/** `node` under the locale's catalogs, and under the US dollars and trial length when `us`. */
-function inProviders(locale: string, node: ReactNode, us: boolean) {
+/** The market a render's prices and trial length are those of: the one asked for, the US when `us`, none otherwise. */
+export interface Region {
+  us?: boolean;
+  market?: Market;
+}
+
+const regionOf = ({ us, market }: Region): Market | null => market ?? (us ? "us" : null);
+
+/** `node` under the locale's catalogs, and under the ladder and trial length of `region` when there is one. */
+function inProviders(locale: string, node: ReactNode, region: Market | null) {
   return (
     <NextIntlClientProvider
       locale={locale}
@@ -25,11 +33,11 @@ function inProviders(locale: string, node: ReactNode, us: boolean) {
         throw error;
       }}
     >
-      {us ? (
+      {region ? (
         <RegionPricingProvider
           ladders={{ eur: FALLBACK_PRICING.eur, usd: FALLBACK_PRICING.usd }}
-          defaultCurrency="usd"
-          defaultTrialDays={MARKETS.us.trialDays}
+          defaultCurrency={MARKETS[region].currency.code.toLowerCase() === "usd" ? "usd" : "eur"}
+          defaultTrialDays={MARKETS[region].trialDays}
         >
           {node}
         </RegionPricingProvider>
@@ -42,28 +50,34 @@ function inProviders(locale: string, node: ReactNode, us: boolean) {
 
 /**
  * Server-renders `node` under the English catalogs, as a page does; a missing
- * message throws. `us` adds the US dollars and trial length, for what prints
- * through `RegionText`.
+ * message throws. `us` adds the US dollars and trial length, `market` the
+ * ladder and trial length of that market, for what prints through `RegionText`.
  */
-export function renderEn(node: ReactNode, { us = false }: { us?: boolean } = {}): string {
-  return renderIn("en", node, { us });
+export function renderEn(node: ReactNode, region: Region = {}): string {
+  return renderIn("en", node, region);
 }
 
 /** `renderEn` under another locale's catalogs, as that locale's page renders `node`. */
-export function renderIn(locale: string, node: ReactNode, { us = false }: { us?: boolean } = {}): string {
-  return renderToStaticMarkup(inProviders(locale, node, us));
+export function renderIn(locale: string, node: ReactNode, region: Region = {}): string {
+  return renderToStaticMarkup(inProviders(locale, node, regionOf(region)));
 }
 
 /**
  * The markup a visitor's browser receives for a tree that holds async server
- * components (call `mockEnglishServerTranslations()` first): every piece
- * resolved, the US dollars and trial in place, React's text separators removed.
+ * components (call `mockEnglishServerTranslations()` first, and render other
+ * languages inside `inServerLocale`): every piece resolved, React's text
+ * separators removed.
  */
-export async function renderEnAsync(node: ReactNode): Promise<string> {
-  const stream = await renderToReadableStream(inProviders("en", node, true));
+export async function renderInAsync(locale: string, node: ReactNode, region: Region = {}): Promise<string> {
+  const stream = await renderToReadableStream(inProviders(locale, node, regionOf(region)));
 
   await stream.allReady;
   return (await new Response(stream).text()).replace(/<!--[\s\S]*?-->/g, "");
+}
+
+/** `renderInAsync` in English, with the US dollars and trial in place unless a `region` says otherwise. */
+export function renderEnAsync(node: ReactNode, region: Region = { us: true }): Promise<string> {
+  return renderInAsync("en", node, region);
 }
 
 const ENTITIES: Record<string, string> = { "&amp;": "&", "&#x27;": "'", "&quot;": '"', "&lt;": "<", "&gt;": ">" };
