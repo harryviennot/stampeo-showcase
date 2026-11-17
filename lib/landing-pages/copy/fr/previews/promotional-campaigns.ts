@@ -20,6 +20,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
     h1: "Vos promotions sur le téléphone de chaque client.",
     accent: "le téléphone de chaque client.",
     sub: "Écrivez un message : il s'affiche sur l'écran de tous vos clients. Sans la facture SMS.",
+    secondary: "Voir comment ça marche",
     alt: "Un écran de verrouillage d'iPhone avec une notification d'Aurevo : Après-midi calme ? Votre deuxième café est à moitié prix jusqu'à 17 h.",
   },
   heroBanner: HAPPY_HOUR,
@@ -94,9 +95,11 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
       sentAt: "Envoyée à",
       time: "14:30",
       stats: "Livraison",
-      deliveryRate: "{rate} % livrés",
+      deliveryRate: "{rate} % livrés",
+      rateLabel: "livrés",
       reachable: "joignables",
       sendAgain: "Renvoyer",
+      alt: "{name}. {status}, {sentAt} {time}. {sender} : {message} {stats} : {rate}, {reached} / {reachable} {reachableLabel}. {counts}.",
     },
     delivered: [
       { label: "Apple Wallet", value: 412 },
@@ -117,6 +120,7 @@ export const PROMOTIONAL_CAMPAIGNS_PREVIEW: Preview = {
   },
   faq: {
     title: "Les diffusions, en questions",
+    pricingLink: "voir les tarifs",
     items: [
       {
         question: "Combien coûte une diffusion ?",

@@ -58,6 +58,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         reach: "Le point de départ de chaque client",
         card: "6 tampons pour une coupe offerte",
         perks: [],
+        rewardName: "Coupe offerte",
       },
       {
         name: "Argent",
@@ -65,6 +66,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         card: "5 tampons pour une coupe offerte",
         perks: ["Finition serviette chaude offerte"],
         gift: "Un flacon d'huile à barbe",
+        rewardName: "Coupe offerte",
       },
       {
         name: "Or",
@@ -72,8 +74,10 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
         card: "4 tampons pour une coupe et une taille de barbe",
         perks: ["Taille de barbe offerte", "Réservation prioritaire"],
         gift: "Un rasage à la serviette chaude offert",
+        rewardName: "Coupe et taille de barbe",
       },
     ],
+    member: { label: "Membre", value: "Sophie" },
     labels: {
       card: "Carte",
       perks: "Avantages",

@@ -3,6 +3,7 @@ import type { LandingCopy } from "../../bundle";
 // The sibling links of the French feature previews, named as the live feature pages name them.
 
 export const PREVIEW_SHARED: LandingCopy["previews"]["shared"]["PREVIEW_SHARED"] = {
+  lockScreenAlt: "Notification de {sender} sur l'écran de verrouillage : {message}",
   related: {
     title: "D'autres fonctionnalités Stampeo.",
     cards: {

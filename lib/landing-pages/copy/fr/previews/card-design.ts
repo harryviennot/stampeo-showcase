@@ -72,6 +72,24 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
       google: "Un téléphone Android avec la même carte ouverte dans Google Wallet",
     },
   },
+  cardFields: {
+    holder: "Titulaire",
+    reward: "Récompense",
+    nextReward: "Prochaine récompense",
+    shops: [
+      { holder: "Théo", reward: "Lavage offert" },
+      { holder: "Juliette", reward: "Croissant offert" },
+      { holder: "Hugo", reward: "Verre offert" },
+      { holder: "Manon", reward: "Remplissage offert" },
+      { holder: "Elias", reward: "Sac en toile offert" },
+      { holder: "Léo", reward: "Part offerte" },
+    ],
+    anatomy: {
+      stamps: { holder: "Élodie", reward: "Soin offert" },
+      points: { holder: "Inès", reward: "Sac en toile offert" },
+    },
+    wallets: { holder: "Rosa", reward: "-10 %" },
+  },
   faq: {
     title: "Votre carte, en questions",
     items: [

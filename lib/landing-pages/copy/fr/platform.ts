@@ -43,6 +43,15 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
     updatesFrom: "5/8",
     updatesTo: "6/8",
   },
+  analyticsCard: {
+    visits: "Visites",
+    returnRate: "Retour à 30 jours",
+    overTime: "Visites dans le temps",
+    returning: "Déjà venus",
+    first: "Première visite",
+    points: "pts",
+    alt: "Statistiques : {visits} visites, en hausse de {visitsChange} % ; {returnRate} : {returnRatePercent} %, en hausse de {returnRateChange} points ; et les visites dans le temps, semaine par semaine.",
+  },
   numbers: {
     eyebrow: "En chiffres",
     title: "Où en est Stampeo aujourd'hui.",

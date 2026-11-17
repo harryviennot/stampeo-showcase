@@ -48,6 +48,7 @@ export const PUSH_NOTIFICATIONS_PREVIEW: Preview = {
     icon: {
       title: "Votre propre icône",
       line: "Importez une icône, ou choisissez-en une tirée de votre logo.",
+      alt: "Les icônes de notification de trois commerces d'exemple",
     },
     phoneAlts: {
       apple: "Un iPhone avec la carte de fidélité d'Aurevo ouverte dans Apple Wallet",
@@ -67,6 +68,10 @@ export const PUSH_NOTIFICATIONS_PREVIEW: Preview = {
       preview: "Et un tampon de plus, Sophie ! Encore 3 et c'est gagné.",
     },
     switches: ["Tampon collecté", "Récompense débloquée", "Récompense utilisée"],
+    sampleValues: [
+      { name: "prénom", value: "Sophie" },
+      { name: "tampons restants", value: "3" },
+    ],
   },
   demo: {
     eyebrow: "Démo en direct",
