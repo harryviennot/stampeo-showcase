@@ -61,8 +61,9 @@ truth. Cookie-free by default; a visitor who allows analytics is remembered and 
 - AC7 A remembered visitor's account is confirmed (code, Google, Apple): `/account/signup-recorded` carries `ph`, and one
   `$identify` is queued only while the basis holds; never in memory, after a refusal, under US GPC, on v5, or for a
   malformed `ph`.
-- AC8 Each step of an account created after the start date sends exactly one event (person key, timestamp = when it
-  happened); never on a Stripe replay, a renewal, a second checkout or a re-marked step; nothing before the start date.
+- AC8 Each step of an account created after the start date sends exactly one event, timestamp = when it happened: with
+  the person key and business key while the owner's analytics basis holds, otherwise anonymous (no key, no attribution,
+  `$process_person_profile: false`); never on a Stripe replay, a renewal, a second checkout or a re-marked step; nothing before the start date.
 - AC9 Attribution properties only while analytics isn't refused and a source is stored (refusal checked at send time).
 - AC10 Backend payload keys within an allowlist; never an email, name, phone, address, IP, user agent, raw ID, click ID,
   GA ID, fbp or fbc.
@@ -106,6 +107,16 @@ Backend first (dormant without keys, accepts v6) → showcase after counsel (COU
   secrets go to Doppler at release. H6: server events start on the Phase B release day. H7: heatmaps pinned off in Phase A.
 - Branches: showcase Phase A on `feat/sta-566-posthog-journey`; Phase B showcase on `feat/sta-566-consent-v6`;
   backend on `feat/sta-566-posthog-journey`; web (version only) at B4.
+
+## Decisions taken while building (17 Nov 2026)
+- Refusers' server steps are anonymous counts (no person key, no business key, no attribution), pending counsel C1; the
+  privacy text (B3, `feat/sta-566-consent-v6`) says exactly that.
+- §6 of the privacy policy gains the purpose "understand how visitors use stampeo.app and which pages lead to an account,
+  a trial or a payment" (COUNSEL-marked).
+- Retention put to counsel: PostHog events and profiles 13 months, recordings 30 days (B5 sets them in PostHog).
+- No IP-based location anywhere: server events send `$geoip_disable: true`; the browser init sets it too (B2), and B5
+  turns GeoIP off in the project if the setting exists. The policy keeps "IP used only for technical logs and dedup".
+- B2 adds `lib/legal/posthog-copy.test.ts` pinning the new policy rows and the cards, like `chatgpt-ads-copy.test.ts`.
 
 ## Open questions
 - Counsel: C1 server events about the account for people who refused analytics (pseudonymous key, no attribution): allowed
