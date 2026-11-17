@@ -30,12 +30,9 @@ page in every language, and the "see pricing" link per locale.
 NOTEs taken (5d409d0, 0ccc5c8): legacy route bodies and heads mounted, no `**/landing-pages` folder, AC7's tracked
 location on the rendered button, `metadata-copy.test.ts` reads the live homepage titles (fr/es/pl titles moved to the
 singular search term, 7e21169), invented-names guard per locale, US overlay in the caps loop. Left for the PR
-description: legacy route bodies and the legacy feature/loyalty heads
-only checked by source regex; no check that no page lives under `**/landing-pages`; AC7's tracked location not checked
-on the rendered button; share images untested; footer `#how` / `#faq` untested; legacy redirects untested; drift (the
-`legacy` consent segment, footer anchors, proof figures by position, the unreachable US overlay of the previews' FAQs);
-`metadata-copy.test.ts` checks a homepage title no live page prints; the invented-names guard covers English only;
-"byte for byte" test names on regenerated snapshots; the US overlay outside the AC9 caps loop.
+description: share images and the footer `#how` / `#faq` links untested; drift (the `legacy` consent segment, the
+footer anchors, proof figures by position, the US overlay of the previews' FAQs that no URL serves); "byte for byte"
+test names on regenerated snapshots.
 
 ## Quality (code-quality-reviewer): BLOCKERS → fixed
 
