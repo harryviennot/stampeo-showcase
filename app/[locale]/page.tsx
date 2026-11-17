@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { PkceCallbackHandler } from "@/components/auth/PkceCallbackHandler";
-import { VariantLanding } from "@/components/landing-variant/VariantLanding";
-import { localePath } from "@/lib/hreflang";
-import { PILOT_HREFLANG } from "@/lib/markets";
-import { ogLocaleFor } from "@/lib/og/metadata";
+import { HomePage } from "@/components/landing-pages/pages/HomePage";
+import { homepageMetadata } from "@/lib/landing-pages/live-metadata";
 
 export async function generateMetadata({
   params,
@@ -12,33 +10,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "metadata.home" });
-  const title = t("title");
-  const description = t("description");
-
-  return {
-    alternates: {
-      canonical: localePath(locale, "/"),
-      // PILOT_HREFLANG, not localeAlternates: the homepage has to advertise the
-      // live country pilots back. hreflang must be RECIPROCAL — /us declares
-      // `en-US -> /us`, and if the homepage does not declare it in return Google
-      // drops the annotation and crawls /us and /en as two competing English
-      // pages.
-      languages: PILOT_HREFLANG,
-    },
-    openGraph: {
-      type: "website",
-      siteName: "Stampeo",
-      locale: ogLocaleFor(locale),
-      title,
-      description,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
+  return homepageMetadata(locale, "int");
 }
 
 export default async function Home({
@@ -52,7 +24,7 @@ export default async function Home({
   return (
     <>
       <PkceCallbackHandler />
-      <VariantLanding locale={locale} />
+      <HomePage market="int" />
     </>
   );
 }

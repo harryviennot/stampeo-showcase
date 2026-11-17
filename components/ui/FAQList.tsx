@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ChevronDownIcon } from "@/components/icons";
 
 interface FAQListProps {
   /** `answer` may be a ReactNode: the landing FAQ resolves pricing tokens
@@ -6,9 +7,39 @@ interface FAQListProps {
   items: Array<{ question: string; answer: ReactNode }>;
   /** Number of items open by default (from index 0). */
   defaultOpenCount?: number;
+  /** One white table with hairline rows (the landing pages' table look) instead of the inked cards. */
+  table?: boolean;
 }
 
-export function FAQList({ items, defaultOpenCount = 0 }: FAQListProps) {
+/** The questions as rows of one white table, each row at least 56px to tap. */
+function FAQTable({ items, defaultOpenCount }: Readonly<Required<Omit<FAQListProps, "table">>>) {
+  return (
+    <div className="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
+      {items.map((faq, index) => (
+        <details key={index} className="group px-5 lg:px-8" open={index < defaultOpenCount}>
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
+            <span className="text-lg leading-snug font-semibold text-[var(--foreground)] transition-colors group-hover:text-[var(--accent-hover)]">
+              {faq.question}
+            </span>
+            <ChevronDownIcon
+              size={18}
+              weight="bold"
+              aria-hidden
+              className="shrink-0 text-[var(--muted-foreground)] transition-transform duration-300 group-open:rotate-180 group-open:text-[var(--accent-hover)] motion-reduce:transition-none"
+            />
+          </summary>
+          <div className="pb-5">
+            <p className="max-w-[68ch] text-base leading-relaxed text-pretty text-[var(--muted-foreground)]">{faq.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  );
+}
+
+export function FAQList({ items, defaultOpenCount = 0, table = false }: FAQListProps) {
+  if (table) return <FAQTable items={items} defaultOpenCount={defaultOpenCount} />;
+
   return (
     <div className="flex flex-col gap-5">
       {items.map((faq, index) => (

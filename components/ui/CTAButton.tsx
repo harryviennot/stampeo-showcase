@@ -5,7 +5,7 @@ import type { CTALocation } from "@/lib/analytics";
 import { useCtaTracking } from "@/hooks/use-cta-tracking";
 
 type Size = "sm" | "md" | "lg";
-type Variant = "primary" | "secondary" | "outline" | "link";
+type Variant = "primary" | "secondary" | "outline" | "link" | "inverse";
 
 type CTAButtonProps = Readonly<{
   label: string;
@@ -15,6 +15,8 @@ type CTAButtonProps = Readonly<{
   className?: string;
   id?: string;
   showArrow?: boolean;
+  /** The ink frame and ledge of the landing pages' primary button, pressing flat on click. */
+  keycap?: boolean;
   /** Where the button sits; sent with the click to PostHog, GA4 and Meta. */
   trackAs: CTALocation;
 }>;
@@ -36,6 +38,9 @@ const variantStyles: Record<Variant, string> = {
   // For a secondary action next to a primary button: reads as a link, still
   // reports its click like the others.
   link: "bg-transparent text-[var(--foreground)] underline-offset-4 hover:underline",
+  // A white pill for a band that is already the accent colour.
+  inverse:
+    "bg-white text-[var(--near-black)] shadow-md shadow-black/10 hover:brightness-95",
 };
 
 export function CTAButton({
@@ -46,6 +51,7 @@ export function CTAButton({
   className = "",
   id,
   showArrow = true,
+  keycap = false,
   trackAs,
 }: CTAButtonProps) {
   const handleClick = useCtaTracking(trackAs, href);
@@ -57,7 +63,7 @@ export function CTAButton({
       id={id}
       href={href}
       onClick={handleClick}
-      className={`${base} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
+      className={`${base} ${sizeStyles[size]} ${variantStyles[variant]}${keycap ? " keycap" : ""} ${className}`}
     >
       <span>{label}</span>
       {showArrow && (

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-type RevealVariant = "default" | "left" | "right" | "scale" | "stagger";
+type RevealVariant = "default" | "rise" | "left" | "right" | "scale" | "stagger";
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -12,6 +12,7 @@ interface ScrollRevealProps {
 
 const variantClasses: Record<RevealVariant, string> = {
   default: "scroll-reveal",
+  rise: "scroll-reveal-rise",
   left: "scroll-reveal-left",
   right: "scroll-reveal-right",
   scale: "scroll-reveal-scale",

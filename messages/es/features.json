@@ -294,7 +294,7 @@
     "scanner-mobile": {
       "hero": {
         "title": "Un escaneo. Un sello. Eso es todo.",
-        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en un segundo.",
+        "subtitle": "Sin caja conectada. Sin material especial. Tu teléfono basta para sellar a tus clientes en segundos.",
       "annotation": "la aplicación de tu equipo"
       },
       "problem": {
@@ -304,7 +304,7 @@
       "sections": [
         {
           "title": "La aplicación dedicada",
-          "description": "La app de Stampeo es ligera y dedicada al escaneo. Abre la app, apunta la cámara al código QR del cliente y se añade un sello, con vibración de confirmación. Tiempo total: 1 segundo.",
+          "description": "La app de Stampeo es ligera y dedicada al escaneo. Abre la app, apunta la cámara al código QR del cliente y pulsa «Añadir sello». Una vibración lo confirma, todo en unos segundos.",
           "icon": "smartphone"
         },
         {
@@ -335,10 +335,6 @@
           "qrCaption": "Escanea para instalar"
         },
         "scanDemo": {
-          "customerName": "Marc D.",
-          "stampCount": "5/10 sellos",
-          "toast": "Sello añadido",
-          "timer": "0,8 s",
           "hint": "Apunta al código QR del cliente"
         },
         "howItWorks": {
@@ -351,7 +347,7 @@
               "Descarga la app de Stampeo (iOS / Android)",
               "Inicia sesión con tu cuenta",
               "Apunta la cámara al código QR del cliente",
-              "Vibración: sello añadido en 0,8 s"
+              "Pulsa «Añadir sello»: la tarjeta se actualiza y el cliente recibe una notificación"
             ]
           },
           "web": {
@@ -371,7 +367,7 @@
           "features": [
             {
               "title": "Cero formación",
-              "description": "Abrir la app, escanear, listo. Tus empleados la usan desde el primer día."
+              "description": "Abrir la app, escanear, confirmar. Tus empleados la usan desde el primer día."
             },
             {
               "title": "Respuesta táctil",

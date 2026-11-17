@@ -3,11 +3,10 @@ import { getTranslations, getLocale } from "next-intl/server";
 import { StampeoLogo } from "../logo";
 import { buildSeoLinks } from "@/lib/seo-links";
 import { FEATURE_ITEMS } from "@/lib/features";
-import { getLocalizedSlug } from "@/lib/feature-slugs";
+import { featureLink, isComingSoon, loyaltyLink } from "@/lib/landing-pages/preview-nav";
 import { hasBlog } from "@/lib/blog/locales";
 import { NewsletterForm } from "../ui/NewsletterForm";
 import { getPlatformVersion } from "@/lib/changelog";
-import { LOYALTY_SLUGS } from "@/lib/loyalty-routes";
 import { storeBadges } from "@/lib/store-badges";
 import {
   APP_STORE_URL,
@@ -20,6 +19,7 @@ import { ContactLink } from "../ui/ContactLink";
 import { TrackedLink } from "../ui/TrackedLink";
 import { FooterColumn, footerLinkGrid } from "./FooterColumn";
 import { FooterComparisons } from "./FooterComparisons";
+import { SoonPill } from "./SoonPill";
 import { footerComparisons, footerComparisonsTitle } from "@/lib/compare/footer";
 
 export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) {
@@ -30,7 +30,7 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
 
   const badges = storeBadges(locale);
 
-  const loyaltySlug = LOYALTY_SLUGS[locale as keyof typeof LOYALTY_SLUGS] ?? LOYALTY_SLUGS.fr;
+  const loyalty = loyaltyLink(locale);
   const seoLinks = buildSeoLinks(locale, market);
   const comparisons = footerComparisons(market, locale);
   const comparisonsTitle = footerComparisonsTitle(market, locale);
@@ -123,15 +123,18 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
           <div className={footerLinkGrid(hasComparisons ? 5 : 4)}>
             <FooterColumn title={t("featuresTitle")}>
               {FEATURE_ITEMS.map(({ key, canonicalSlug }) => {
-                const slug = getLocalizedSlug(canonicalSlug, locale);
+                const { href, market: linkMarket } = featureLink(canonicalSlug, locale);
+                const soon = isComingSoon(canonicalSlug);
                 return (
-                <Link
+                <MarketLink
                   key={canonicalSlug}
-                  href={`/features/${slug}` as "/features/design-de-carte"}
-                  className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium"
+                  market={linkMarket}
+                  href={href as "/features/design-de-carte"}
+                  className={`text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium${soon ? " flex items-center gap-2" : ""}`}
                 >
                   {tNav(`featuresItems.${key}.label`)}
-                </Link>);
+                  {soon && <SoonPill tone="dark" />}
+                </MarketLink>);
               })}
             </FooterColumn>
 
@@ -147,15 +150,15 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
               <MarketLink market={market} href={marketPath(market, "/pricing")} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {t("pricing")}
               </MarketLink>
-              <Link href={loyaltySlug} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+              <MarketLink market={loyalty.market} href={loyalty.href} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {tNav("loyaltyPrograms")}
-              </Link>
-              <Link href="/#features" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+              </MarketLink>
+              <MarketLink market={market} href={`${marketPath(market, "/")}#how`} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {t("howItWorks")}
-              </Link>
-              <Link href="/#faq" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+              </MarketLink>
+              <MarketLink market={market} href={`${marketPath(market, "/pricing")}#faq`} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 FAQ
-              </Link>
+              </MarketLink>
             </FooterColumn>
 
             <FooterComparisons market={market} title={comparisonsTitle} comparisons={comparisons} />

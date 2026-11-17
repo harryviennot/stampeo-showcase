@@ -78,6 +78,20 @@ describe("isTrackablePath — marketing surfaces", () => {
     },
   );
 
+  test.each(["/legacy", "/en/legacy", "/us/legacy", "/uk/legacy", "/legacy/features/design-de-carte", "/en/legacy/loyalty-programs?gclid=abc"])(
+    "an earlier page under /legacy is trackable: its sign-up clicks are measured as they were (%s)",
+    (path) => {
+      expect(isTrackablePath(path)).toBe(true);
+    },
+  );
+
+  test.each(["/features/design-de-carte", "/en/features/card-design", "/us", "/en/loyalty-programs"])(
+    "a live Platform page is trackable (%s)",
+    (path) => {
+      expect(isTrackablePath(path)).toBe(true);
+    },
+  );
+
   test("trailing slashes and query strings do not change the answer", () => {
     expect(isTrackablePath("/pricing/")).toBe(true);
     expect(isTrackablePath("/pricing?utm_source=meta")).toBe(true);

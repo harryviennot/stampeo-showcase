@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Container } from "@/components/ui/Container";
+import { ReducedMotion } from "@/components/ui/ReducedMotion";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { isStill, usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const FAKE_NAMES = [
   "Sophie M.",
@@ -40,10 +42,20 @@ interface FeedEvent {
   color: string;
 }
 
-export function LiveActivityFeed() {
+export function LiveActivityFeed({
+  cardOnly = false,
+  stillWhenReduced = false,
+}: Readonly<{
+  /** The feed card alone, for a page that brings its own section and heading. */
+  cardOnly?: boolean;
+  /** Stops the feed for a reader who asks for less motion: a full list that stays put. */
+  stillWhenReduced?: boolean;
+}>) {
   const t = useTranslations("features.analytiques.custom.activityFeed");
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const idRef = useRef(0);
+  const reduced = usePrefersReducedMotion();
+  const still = isStill(stillWhenReduced, reduced);
 
   // The dashboard's Activity page verbs.
   const actions = [t("stampAction"), t("rewardAction"), t("cardAction")];
@@ -63,6 +75,10 @@ export function LiveActivityFeed() {
   }, []);
 
   useEffect(() => {
+    if (still) {
+      for (let row = 0; row < MAX_VISIBLE; row += 1) generateEvent();
+      return;
+    }
     generateEvent();
     const seedTimeout = setTimeout(() => generateEvent(), 200);
 
@@ -72,7 +88,64 @@ export function LiveActivityFeed() {
       clearTimeout(seedTimeout);
       clearInterval(interval);
     };
-  }, [generateEvent]);
+  }, [generateEvent, still]);
+
+  const feed = (
+    <div className="blog-card-3d rounded-2xl bg-white overflow-hidden">
+      <div className="flex items-center justify-between gap-2 px-5 py-3 border-b border-[var(--border)]">
+        <span className="text-sm font-semibold text-[var(--foreground)]">
+          {t("title")}
+        </span>
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)]">
+          <span
+            className={
+              stillWhenReduced
+                ? "w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot motion-reduce:animate-none!"
+                : "w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot"
+            }
+          />
+          {t("live")}
+        </span>
+      </div>
+      <div
+        className="p-4 overflow-hidden"
+        style={{ height: MAX_VISIBLE * ROW_HEIGHT + 16 }}
+      >
+        <AnimatePresence initial={false}>
+          {events.slice(0, MAX_VISIBLE).map((event) => (
+            <motion.div
+              key={event.id}
+              layout
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              style={{ height: ROW_HEIGHT }}
+              className="flex items-center gap-3 px-2 rounded-xl"
+            >
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+                style={{ backgroundColor: event.color }}
+              >
+                {event.name.charAt(0)}
+              </div>
+              <div className="flex-1 min-w-0 text-sm leading-snug">
+                <span className="text-[var(--foreground)]">
+                  <span className="font-semibold">{event.name}</span>{" "}
+                  {event.action}
+                </span>
+              </div>
+              <span className="text-xs text-[var(--muted-foreground)] shrink-0">
+                {t("justNow")}
+              </span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+
+  if (cardOnly) return <ReducedMotion active={stillWhenReduced}>{feed}</ReducedMotion>;
 
   return (
     <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
@@ -80,52 +153,7 @@ export function LiveActivityFeed() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: feed */}
           <ScrollReveal variant="left">
-            <div className="blog-card-3d rounded-2xl bg-white overflow-hidden">
-              <div className="flex items-center justify-between gap-2 px-5 py-3 border-b border-[var(--border)]">
-                <span className="text-sm font-semibold text-[var(--foreground)]">
-                  {t("title")}
-                </span>
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)]">
-                  <span className="w-2 h-2 rounded-full bg-[var(--accent)] pulse-dot" />
-                  {t("live")}
-                </span>
-              </div>
-              <div
-                className="p-4 overflow-hidden"
-                style={{ height: MAX_VISIBLE * ROW_HEIGHT + 16 }}
-              >
-                <AnimatePresence initial={false}>
-                  {events.slice(0, MAX_VISIBLE).map((event) => (
-                    <motion.div
-                      key={event.id}
-                      layout
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 20 }}
-                      transition={{ duration: 0.3 }}
-                      style={{ height: ROW_HEIGHT }}
-                      className="flex items-center gap-3 px-2 rounded-xl"
-                    >
-                      <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                        style={{ backgroundColor: event.color }}
-                      >
-                        {event.name.charAt(0)}
-                      </div>
-                      <div className="flex-1 min-w-0 text-sm leading-snug">
-                        <span className="text-[var(--foreground)]">
-                          <span className="font-semibold">{event.name}</span>{" "}
-                          {event.action}
-                        </span>
-                      </div>
-                      <span className="text-xs text-[var(--muted-foreground)] shrink-0">
-                        {t("justNow")}
-                      </span>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            </div>
+            {feed}
           </ScrollReveal>
 
           {/* Right: text */}

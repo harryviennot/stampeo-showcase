@@ -18,6 +18,8 @@ export type CTALocation =
   | "about"
   | "feature_hero"
   | "feature_cta"
+  | "platform_program_types"
+  | "platform_apps"
   | "card_style_gallery"
   | "blog_cta"
   | "blog_link"

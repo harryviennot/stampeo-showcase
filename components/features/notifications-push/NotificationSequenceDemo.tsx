@@ -1,46 +1,103 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ComponentProps } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { IPhone } from "@/components/ui/IPhone";
+import { isStill, usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { NotificationBanner } from "./NotificationBanner";
 import { WalletCard } from "@/components/card/WalletCard";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
+import type { CardDesign } from "@/lib/types/design";
 
 const TABS = ["stamp", "milestone", "reward"] as const;
-type TabKey = (typeof TABS)[number];
 
-const tabStamps: Record<TabKey, number> = {
+const tabStamps: Record<(typeof TABS)[number], number> = {
   stamp: 4,
   milestone: 7,
   reward: 8,
 };
 
-export function NotificationSequenceDemo() {
+/** One moment of the sequence: what the tab says, the card at that point, and the banner it sends. */
+export interface SequenceMoment {
+  key: string;
+  title: string;
+  description: string;
+  stamps: number;
+  banner: ComponentProps<typeof NotificationBanner>;
+}
+
+const DEFAULT_DESIGN: Partial<CardDesign> = {
+  organization_name: "Mon Café",
+  total_stamps: 8,
+  background_color: "#1c1c1e",
+  stamp_filled_color: "#f97316",
+  label_color: "#fff",
+  secondary_fields: [
+    {
+      key: "reward",
+      label: "Reward",
+      value: "Café offert",
+    },
+  ],
+};
+
+export function NotificationSequenceDemo({
+  moments,
+  design = DEFAULT_DESIGN,
+  phoneClassName = "",
+  fullCard = false,
+  stillWhenReduced = false,
+}: Readonly<{
+  /** The moments listed, with their banners; the three Stampeo defaults when omitted. */
+  moments?: SequenceMoment[];
+  /** The card on the lock screen's phone. */
+  design?: Partial<CardDesign>;
+  /** A class on the phone's column, e.g. to crop it. */
+  phoneClassName?: string;
+  /** The card's fields and QR code, so it reads as a whole pass. */
+  fullCard?: boolean;
+  /** Stops the moments moving on by themselves for a reader who asks for less motion; they stay pressable. */
+  stillWhenReduced?: boolean;
+}>) {
   const t = useTranslations("features.notifications-push.notificationTypes");
-  const [activeTab, setActiveTab] = useState<TabKey>("stamp");
+  const items: SequenceMoment[] =
+    moments ??
+    TABS.map((tab) => ({
+      key: tab,
+      title: t(`${tab}.title`),
+      description: t(`${tab}.description`),
+      stamps: tabStamps[tab],
+      banner: {
+        appName: "Stampeo",
+        title: t(`${tab}.notifTitle`),
+        body: t(`${tab}.notifBody`),
+        timeAgo: t(`${tab}.timeAgo`),
+      },
+    }));
+  const keyList = items.map((item) => item.key).join("|");
+  const [activeTab, setActiveTab] = useState(items[0].key);
   const [isPaused, setIsPaused] = useState(false);
   const [progressKey, setProgressKey] = useState(0);
-  const stamps = tabStamps[activeTab];
+  const reduced = usePrefersReducedMotion();
+  const still = isStill(stillWhenReduced, reduced);
+  const active = items.find((item) => item.key === activeTab) ?? items[0];
 
-  // Auto-advance tabs every 4s
+  // Auto-advance tabs every 4s, unless the demo is asked to stand still
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || still) return;
+    const order = keyList.split("|");
     const timer = setInterval(() => {
-      setActiveTab((prev) => {
-        const idx = TABS.indexOf(prev);
-        return TABS[(idx + 1) % TABS.length];
-      });
+      setActiveTab((prev) => order[(order.indexOf(prev) + 1) % order.length]);
       setProgressKey((k) => k + 1);
     }, 4000);
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, still, keyList]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
       {/* Phone demo */}
-      <div className="flex justify-center order-1 lg:order-2">
+      <div className={["flex justify-center order-1 lg:order-2", phoneClassName].filter(Boolean).join(" ")}>
         <IPhone statusBar="light">
           {/* Light background */}
           <div className="absolute inset-0 bg-[#f2f2f7]" />
@@ -50,23 +107,10 @@ export function NotificationSequenceDemo() {
             <div className="px-3">
               <ScaledCardWrapper size="md">
                 <WalletCard
-                  design={{
-                    organization_name: "Mon Café",
-                    total_stamps: 8,
-                    background_color: "#1c1c1e",
-                    stamp_filled_color: "#f97316",
-                    label_color: "#fff",
-                    secondary_fields: [
-                      {
-                        key: "reward",
-                        label: "Reward",
-                        value: "Café offert",
-                      },
-                    ],
-                  }}
-                  stamps={stamps}
-                  showQR={false}
-                  showSecondaryFields={false}
+                  design={design}
+                  stamps={active.stamps}
+                  showQR={fullCard}
+                  showSecondaryFields={fullCard}
                 />
               </ScaledCardWrapper>
             </div>
@@ -75,18 +119,13 @@ export function NotificationSequenceDemo() {
             <div className="px-3 mt-3">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={activeTab}
+                  key={active.key}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.25, ease: "easeOut" }}
                 >
-                  <NotificationBanner
-                    appName="Stampeo"
-                    title={t(`${activeTab}.notifTitle`)}
-                    body={t(`${activeTab}.notifBody`)}
-                    timeAgo={t(`${activeTab}.timeAgo`)}
-                  />
+                  <NotificationBanner {...active.banner} />
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -97,13 +136,13 @@ export function NotificationSequenceDemo() {
       {/* Tab descriptions */}
       <div className="order-2 lg:order-1">
         <div className="space-y-2">
-          {TABS.map((tab) => {
-            const isActive = activeTab === tab;
+          {items.map((item) => {
+            const isActive = active.key === item.key;
             return (
               <button
-                key={tab}
+                key={item.key}
                 onClick={() => {
-                  setActiveTab(tab);
+                  setActiveTab(item.key);
                   setIsPaused(true);
                   setTimeout(() => setIsPaused(false), 8000);
                 }}
@@ -136,22 +175,22 @@ export function NotificationSequenceDemo() {
                           : "text-[var(--muted-foreground)]"
                       }`}
                     >
-                      {t(`${tab}.title`)}
+                      {item.title}
                     </h4>
                   </div>
                   <p className="text-sm leading-relaxed text-[var(--muted-foreground)] pl-4 pt-0.5">
-                    {t(`${tab}.description`)}
+                    {item.description}
                   </p>
 
                   {/* Progress bar */}
-                  {isActive && !isPaused && (
+                  {isActive && !isPaused && !still && (
                     <div className="mt-3 ml-4 h-[2px] rounded-full bg-gray-100 overflow-hidden">
                       <motion.div
                         className="h-full rounded-full bg-[var(--accent)]/40"
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
                         transition={{ duration: 4, ease: "linear" }}
-                        key={`progress-${tab}-${progressKey}`}
+                        key={`progress-${item.key}-${progressKey}`}
                       />
                     </div>
                   )}

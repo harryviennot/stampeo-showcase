@@ -327,7 +327,7 @@ function PricingFAQ() {
   const faqs = t.raw("faq.items") as Array<{ question: string; answer: string }>;
 
   return (
-    <div className="mt-16 lg:mt-24 max-w-[840px] mx-auto">
+    <div id="faq" className="mt-16 lg:mt-24 max-w-[840px] mx-auto scroll-mt-24">
       <ScrollReveal className="mb-12">
         <h2 className="text-h2">{t("faq.title")}</h2>
         <p className="mt-4 text-lead text-[var(--muted-foreground)]">

@@ -1,21 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { IPhone } from "@/components/ui/IPhone";
 import { NotificationBanner } from "./NotificationBanner";
 
-export function NotificationPhoneDemo() {
+type PhoneNotification = ComponentProps<typeof NotificationBanner>;
+
+interface NotificationPhoneDemoProps {
+  /** Banners to stack on the lock screen; the sample stamp notification when omitted. */
+  notifications?: PhoneNotification[];
+  /** Cycle the banners in and out; false shows them still, from the first paint. */
+  animate?: boolean;
+  /** Preload the phone, for one in a page's hero. */
+  eager?: boolean;
+  /** The phone's width in CSS px. */
+  width?: number;
+}
+
+export function NotificationPhoneDemo({
+  notifications,
+  animate = true,
+  eager = true,
+  width = 280,
+}: NotificationPhoneDemoProps) {
   const t = useTranslations("features.notifications-push.demo");
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(!animate);
+
+  const banners: PhoneNotification[] = notifications ?? [
+    {
+      appName: "Stampeo",
+      title: t("notificationTitle"),
+      body: t("notificationBody"),
+      timeAgo: t("timeAgo"),
+    },
+  ];
 
   useEffect(() => {
+    if (!animate) return;
     const initialDelay = setTimeout(() => setIsVisible(true), 2000);
     return () => clearTimeout(initialDelay);
-  }, []);
+  }, [animate]);
 
   useEffect(() => {
+    if (!animate) return;
     if (!isVisible) {
       // Gap before next notification
       const timer = setTimeout(() => setIsVisible(true), 2500);
@@ -24,10 +53,10 @@ export function NotificationPhoneDemo() {
     // Notification holds — enough time to read
     const timer = setTimeout(() => setIsVisible(false), 5000);
     return () => clearTimeout(timer);
-  }, [isVisible]);
+  }, [isVisible, animate]);
 
   return (
-    <IPhone statusBar="lock" eager>
+    <IPhone statusBar="lock" eager={eager} width={width}>
       {/* Lock screen wallpaper — deep dark gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e] via-[#16213e] to-[#0f3460]" />
 
@@ -55,29 +84,31 @@ export function NotificationPhoneDemo() {
       </div>
 
       {/* Notification area */}
-      <div className="relative z-10 px-3 mt-6">
-        <AnimatePresence>
-          {isVisible && (
-            <motion.div
-              initial={{ y: -60, opacity: 0, scale: 0.95 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: -30, opacity: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 26,
-                mass: 0.8,
-              }}
-            >
-              <NotificationBanner
-                appName="Stampeo"
-                title={t("notificationTitle")}
-                body={t("notificationBody")}
-                timeAgo={t("timeAgo")}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+      <div className={`relative z-10 px-3 mt-6${notifications ? " flex flex-col gap-2" : ""}`}>
+        {animate ? (
+          <AnimatePresence>
+            {isVisible &&
+              banners.map((banner, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ y: -60, opacity: 0, scale: 0.95 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: -30, opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 26,
+                    mass: 0.8,
+                    delay: index * 0.12,
+                  }}
+                >
+                  <NotificationBanner {...banner} />
+                </motion.div>
+              ))}
+          </AnimatePresence>
+        ) : (
+          banners.map((banner, index) => <NotificationBanner key={index} {...banner} />)
+        )}
       </div>
 
       {/* Bottom lock screen icons */}

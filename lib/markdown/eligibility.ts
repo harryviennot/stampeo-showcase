@@ -1,4 +1,5 @@
 import { routing } from "@/i18n/routing";
+import { isLegacyPath } from "@/lib/seo/legacy-pages";
 
 /** Paths that never serve Markdown, in every locale prefix we ship. */
 const PRIVATE_PATHS = ["/api", "/auth", "/onboarding", "/login"];
@@ -18,6 +19,7 @@ export function isMarkdownEligible(pathname: string): boolean {
   if (!pathname.startsWith("/")) return false;
   if (pathname.includes("..")) return false;
   if (/\.[a-z0-9]+$/i.test(pathname)) return false;
+  if (isLegacyPath(pathname)) return false;
   for (const prefix of EXCLUDED_PREFIXES) {
     if (pathname === prefix || pathname.startsWith(`${prefix}/`)) return false;
   }

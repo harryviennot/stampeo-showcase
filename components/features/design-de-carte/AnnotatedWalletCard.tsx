@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Container } from "@/components/ui/Container";
@@ -9,6 +9,7 @@ import { InkNote } from "@/components/ui/InkAnnotation";
 import { Segmented } from "@/components/ui/Segmented";
 import { ScaledCardWrapper } from "@/components/card/ScaledCardWrapper";
 import { WalletCard } from "@/components/card/WalletCard";
+import type { AnatomyDesigns, AnatomyLabels } from "@/lib/landing-pages/previews/card-design-samples";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
 
 interface Annotation {
@@ -178,16 +179,34 @@ const ANATOMY_POINTS_REWARDS: RewardTier[] = [
   { id: "r3", name: "c", threshold: 300 },
 ];
 
-export function AnnotatedWalletCard() {
+export function AnnotatedWalletCard({
+  heading,
+  sectionClassName = "py-16 sm:py-24 bg-[var(--blog-bg)]",
+  toggleSize = "md",
+  designs,
+  labels: ownLabels,
+}: Readonly<{
+  /** Replaces the title and description above the card. */
+  heading?: ReactNode;
+  /** Replaces the section's padding and band colour. */
+  sectionClassName?: string;
+  /** `lg` makes the stamps and points switch 44px tall, for a tap target on a phone. */
+  toggleSize?: "md" | "lg";
+  /** The stamps card and the points card to show in place of the sample café's. */
+  designs?: AnatomyDesigns;
+  /** The labels to use in place of the catalog's. */
+  labels?: AnatomyLabels;
+}> = {}) {
   const t = useTranslations("features.design-de-carte.custom.anatomy");
   const tc = useTranslations("common");
   const [mode, setMode] = useState<"stamps" | "points">("stamps");
   const isPoints = mode === "points";
 
-  const labels = t.raw(isPoints ? "pointsLabels" : "labels") as string[];
-  const mobileLabels = t.raw(
-    isPoints ? "pointsMobileLabels" : "mobileLabels"
-  ) as string[];
+  const own = ownLabels?.[mode];
+  const labels = own ? [...own.desktop] : (t.raw(isPoints ? "pointsLabels" : "labels") as string[]);
+  const mobileLabels = own
+    ? [...own.mobile]
+    : (t.raw(isPoints ? "pointsMobileLabels" : "mobileLabels") as string[]);
 
   const cardDesign: Partial<CardDesign> = isPoints
     ? {
@@ -220,15 +239,19 @@ export function AnnotatedWalletCard() {
       };
 
   return (
-    <section className="py-16 sm:py-24 bg-[var(--blog-bg)]">
+    <section className={sectionClassName}>
       <Container>
         <ScrollReveal className="max-w-3xl mx-auto text-center mb-10">
-          <h2 className="text-h2 text-[var(--foreground)] mb-4">
-            {t("title")}
-          </h2>
-          <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
-            {t("description")}
-          </p>
+          {heading ?? (
+            <>
+              <h2 className="text-h2 text-[var(--foreground)] mb-4">
+                {t("title")}
+              </h2>
+              <p className="text-lead text-[var(--muted-foreground)] leading-relaxed">
+                {t("description")}
+              </p>
+            </>
+          )}
         </ScrollReveal>
 
         <ScrollReveal className="max-w-3xl mx-auto">
@@ -242,6 +265,7 @@ export function AnnotatedWalletCard() {
               ]}
               value={mode}
               onChange={setMode}
+              size={toggleSize}
             />
           </div>
 
@@ -253,10 +277,10 @@ export function AnnotatedWalletCard() {
                 <MobileAnnotations />
                 <ScaledCardWrapper baseWidth={300}>
                   <WalletCard
-                    design={cardDesign}
-                    stamps={isPoints ? undefined : 5}
-                    pointsBalance={isPoints ? 120 : undefined}
-                    pointsRewards={isPoints ? ANATOMY_POINTS_REWARDS : undefined}
+                    design={designs ? (isPoints ? designs.points.design : designs.stamps.design) : cardDesign}
+                    stamps={isPoints ? undefined : (designs?.stamps.stamps ?? 5)}
+                    pointsBalance={isPoints ? (designs?.points.pointsBalance ?? 120) : undefined}
+                    pointsRewards={isPoints ? (designs?.points.pointsRewards ?? ANATOMY_POINTS_REWARDS) : undefined}
                     showQR={true}
                     interactive3D={true}
                   />
