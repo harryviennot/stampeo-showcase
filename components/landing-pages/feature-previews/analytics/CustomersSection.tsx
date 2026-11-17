@@ -101,13 +101,13 @@ export function CustomersSection() {
         </div>
 
         <div className="lg:col-span-5">
-          <dl className="flex flex-col gap-3.5">
+          <dl className="grid grid-cols-[minmax(7.75rem,auto)_1fr] items-center gap-x-3 gap-y-3.5">
             {segments.map(({ key, label, definition }) => (
-              <div key={key} className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <dt className="min-w-[7.75rem] shrink-0">
+              <div key={key} className="contents">
+                <dt>
                   <Pill segment={key}>{label}</Pill>
                 </dt>
-                <dd className="min-w-[10rem] flex-1 text-[15px] leading-snug text-pretty text-[var(--foreground)] sm:text-base">{definition}</dd>
+                <dd className="min-w-0 text-[15px] leading-snug text-pretty text-[var(--foreground)] sm:text-base">{definition}</dd>
               </div>
             ))}
           </dl>
