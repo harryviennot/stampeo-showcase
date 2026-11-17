@@ -218,10 +218,11 @@ describe("the shop's notification icon", () => {
 });
 
 describe("demo: try it on your own phone", () => {
-  test("is the live demo under its own label, title and lead, centred, with the trial offered under it", async () => {
+  test("is the live demo under its own label, title and lead, centred, with no trial button to tap instead of it", async () => {
     const demo = await section("demo");
 
-    expectInOrder(demo, ["Live demo", "Try it on your own phone.", "Add a sample card to your wallet, add a stamp, and get the notification yourself.", SHARED.cta]);
+    expectInOrder(demo, ["Live demo", "Try it on your own phone.", "Add a sample card to your wallet, add a stamp, and get the notification yourself."]);
+    expect(demo).not.toContain(SHARED.cta);
     expect(demo).toContain("text-center");
     expect(demo).toContain('id="demo"');
   });

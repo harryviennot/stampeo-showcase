@@ -119,7 +119,7 @@ describe("the trial button is a keycap", () => {
     async (slug) => {
       const buttons = [...(await renderPreviewPage(slug)).matchAll(/<a class="group inline-flex[^>]*href="\/en\/onboarding"[^>]*>/g)].map((match) => match[0]);
 
-      expect(buttons.length).toBeGreaterThanOrEqual(4);
+      expect(buttons.length).toBeGreaterThanOrEqual(3);
       expect(buttons.filter((button) => !/class="[^"]*\bkeycap\b/.test(button))).toEqual([]);
     },
   );

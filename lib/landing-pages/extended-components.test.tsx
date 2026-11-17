@@ -302,6 +302,13 @@ describe("what a page can ask of Platform's pieces", () => {
       expect(html).toContain("text-center");
     });
 
+    test("nothing to click sits under the demo but the demo itself: no trial button competes with it", () => {
+      for (const html of [demo(), demo({ align: "center", eyebrow: "Live demo" })]) {
+        expect(html).not.toContain('href="/en/onboarding"');
+        expect(textOf(html)).not.toContain(SHARED.cta);
+      }
+    });
+
     test("left out, the demo says the shared words, left-aligned beside the demo", () => {
       const html = demo();
 
