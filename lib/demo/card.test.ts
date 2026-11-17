@@ -25,7 +25,7 @@ const NOT_A_REWARD: Record<string, RegExp> = {
   tokenForATrialLength: /\{\s*trialDays/,
 };
 
-/** Every string that sits on the demo card or in the panel under it. */
+/** The reward and completion strings on the demo card and in the panel under it. */
 const CARD_WORDS = [
   "common.rewardText",
   "common.rewarded",
@@ -58,8 +58,8 @@ describe("the demo card's words", () => {
     },
   );
 
-  test("the guard catches the rewards the card used to name", () => {
-    for (const old of [
+  test("the guard catches free months, discounts and trial lengths", () => {
+    for (const text of [
       "30 days free with 8 stamps!",
       "-50% off your 1st month",
       "{trialDays} jours gratuits",
@@ -73,7 +73,7 @@ describe("the demo card's words", () => {
       "Prueba gratis",
       "Okres próbny",
     ]) {
-      expect(Object.values(NOT_A_REWARD).some((pattern) => pattern.test(old))).toBe(true);
+      expect(Object.values(NOT_A_REWARD).some((pattern) => pattern.test(text))).toBe(true);
     }
   });
 });

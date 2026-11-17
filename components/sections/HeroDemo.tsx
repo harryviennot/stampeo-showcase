@@ -14,9 +14,7 @@ import { DEMO_POINTS_DESIGN, DEMO_STAMP_DESIGN } from "@/lib/demo/card";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-// Points demo ladder: mid reward at 60, top reward at 120 (matches the backend
-// demo). PointsStrip renders thresholds + icons, not names, so the names are
-// only used off-card.
+// Points demo ladder: mid reward at 60, top reward at 120 (matches the backend demo).
 const POINTS_MID = 60;
 const POINTS_TOP = 120;
 const POINTS_STEP = 20;
