@@ -1,34 +1,32 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { Header } from "@/components/sections/Header";
-import { Footer } from "@/components/sections/Footer";
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbJsonLd } from "@/lib/structured-data";
-import { AnalyticsPageContent } from "@/components/features/analytics/AnalyticsPageContent";
-import { NotificationsPushPage } from "@/components/features/notifications-push/NotificationsPushPage";
-import { CardDesignPageContent } from "@/components/features/design-de-carte/CardDesignPageContent";
-import { ScannerMobilePage } from "@/components/features/scanner-mobile/ScannerMobilePage";
-import { GeofencingPage } from "@/components/features/geolocalisation/GeofencingPage";
-import { BroadcastsPage } from "@/components/features/broadcasts/BroadcastsPage";
+import { AnalyticsPreviewPage } from "@/components/landing-pages/pages/AnalyticsPreviewPage";
+import { CardDesignPreviewPage } from "@/components/landing-pages/pages/CardDesignPreviewPage";
+import { GeolocationPreviewPage } from "@/components/landing-pages/pages/GeolocationPreviewPage";
+import { MobileScannerPreviewPage } from "@/components/landing-pages/pages/MobileScannerPreviewPage";
+import { PromotionalCampaignsPreviewPage } from "@/components/landing-pages/pages/PromotionalCampaignsPreviewPage";
+import { PushNotificationsPreviewPage } from "@/components/landing-pages/pages/PushNotificationsPreviewPage";
 import {
   type FeatureSlug,
   generateFeatureStaticParams,
-  resolveToCanonicalSlug,
-  isCorrectSlugForLocale,
   getLocalizedSlug,
+  isCorrectSlugForLocale,
+  resolveToCanonicalSlug,
 } from "@/lib/feature-slugs";
-import { localeAlternates } from "@/lib/hreflang";
-import { planMessageArgs } from "@/lib/plans/plan-facts";
 import { routing } from "@/i18n/routing";
+import { localePath } from "@/lib/hreflang";
+import { featurePageMetadata } from "@/lib/landing-pages/live-metadata";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
 
-const FEATURE_COMPONENTS: Record<FeatureSlug, React.ComponentType> = {
-  "design-de-carte": CardDesignPageContent,
-  "scanner-mobile": ScannerMobilePage,
-  "notifications-push": NotificationsPushPage,
-  analytiques: AnalyticsPageContent,
-  geolocalisation: GeofencingPage,
-  "campagnes-promotionnelles": BroadcastsPage,
+const FEATURE_PAGES: Record<FeatureSlug, typeof CardDesignPreviewPage> = {
+  "design-de-carte": CardDesignPreviewPage,
+  "scanner-mobile": MobileScannerPreviewPage,
+  "notifications-push": PushNotificationsPreviewPage,
+  analytiques: AnalyticsPreviewPage,
+  geolocalisation: GeolocationPreviewPage,
+  "campagnes-promotionnelles": PromotionalCampaignsPreviewPage,
 };
 
 export function generateStaticParams() {
@@ -39,80 +37,34 @@ interface PageProps {
   params: Promise<{ slug: string; locale: string }>;
 }
 
-const DEFAULT_LOCALE = "fr";
-
-function featureUrl(slug: string, locale: string) {
-  return locale === DEFAULT_LOCALE
-    ? `/features/${slug}`
-    : `/${locale}/features/${slug}`;
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug, locale } = await params;
-
-  const canonical = resolveToCanonicalSlug(slug);
-  if (!canonical) return { title: "Not Found" };
-
-  // Use canonical (FR) slug for translation keys
-  const t = await getTranslations({ locale, namespace: "metadata.features" });
-  const title = t(`${canonical}.title`);
-  const description = t(`${canonical}.description`, planMessageArgs());
-
-  const localizedPaths = Object.fromEntries(
-    routing.locales.map((l) => [l, `/features/${getLocalizedSlug(canonical, l)}`])
-  );
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical: featureUrl(getLocalizedSlug(canonical, locale), locale),
-      languages: localeAlternates(`/features/${canonical}`, { overrides: localizedPaths }),
-    },
-    openGraph: {
-      title,
-      description,
-      url: featureUrl(getLocalizedSlug(canonical, locale), locale),
-      type: "website",
-    },
-  };
+  return featurePageMetadata(slug, locale);
 }
 
 export default async function FeaturePage({ params }: PageProps) {
   const { slug, locale } = await params;
 
-  const canonical = resolveToCanonicalSlug(slug);
-  if (!canonical) notFound();
+  const feature = resolveToCanonicalSlug(slug);
+  if (!feature) notFound();
 
-  // Redirect to the correct locale-specific slug (e.g., /en/features/design-de-carte → /en/features/card-design)
-  if (!isCorrectSlugForLocale(slug, locale)) {
-    const correctSlug = getLocalizedSlug(canonical, locale);
-    permanentRedirect(featureUrl(correctSlug, locale));
-  }
+  // A slug of another language redirects to this language's own (/en/features/design-de-carte -> /en/features/card-design).
+  const own = getLocalizedSlug(feature, locale);
+  if (!isCorrectSlugForLocale(slug, locale)) permanentRedirect(localePath(locale, `/features/${own}`));
 
-  const FeatureContent = FEATURE_COMPONENTS[canonical];
-
+  const Page = FEATURE_PAGES[feature];
   const t = await getTranslations({ locale, namespace: "metadata.features" });
-  const homeUrl = locale === DEFAULT_LOCALE ? "" : `/${locale}`;
+  const homeUrl = locale === routing.defaultLocale ? "" : `/${locale}`;
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
+    <>
       <JsonLd
         data={breadcrumbJsonLd([
           { name: "Stampeo", url: homeUrl },
-          {
-            name: t(`${canonical}.title`),
-            url: featureUrl(getLocalizedSlug(canonical, locale), locale),
-          },
+          { name: t(`${feature}.title`), url: localePath(locale, `/features/${own}`) },
         ])}
       />
-      <Header />
-      <main className="relative">
-        <FeatureContent />
-      </main>
-      <Footer />
-    </div>
+      <Page market="int" />
+    </>
   );
 }

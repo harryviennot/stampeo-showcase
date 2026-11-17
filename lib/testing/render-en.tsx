@@ -71,8 +71,8 @@ const ENTITIES: Record<string, string> = { "&amp;": "&", "&#x27;": "'", "&quot;"
 /** Markup's entities read back as the characters a visitor sees. */
 export const decodeEntities = (markup: string) => markup.replace(/&(?:amp|#x27|quot|lt|gt);/g, (entity) => ENTITIES[entity]);
 
-/** The text of rendered markup: tags become a bar, so adjacent elements never fuse into one word, and entities are read back. */
-export const textOf = (html: string) => decodeEntities(html.replace(/<[^>]*>/g, "|").replace(/\|+/g, "|"));
+/** The text of rendered markup a visitor reads: scripts are no text, tags become a bar so adjacent elements never fuse into one word, and entities are read back. */
+export const textOf = (html: string) => decodeEntities(html.replace(/<script\b[\s\S]*?<\/script>/g, "").replace(/<[^>]*>/g, "|").replace(/\|+/g, "|"));
 
 /** The lines are all in the text of `markup`, each one after the one before it. */
 export function expectInOrder(markup: string, lines: readonly string[]) {

@@ -78,8 +78,15 @@ describe("isTrackablePath — marketing surfaces", () => {
     },
   );
 
-  test.each(["/us/landing-pages/features", "/us/landing-pages/outcomes?gclid=abc", "/en/us/landing-pages/how-it-works"])(
-    "a US landing page is trackable: the ad click that lands there is attributed (%s)",
+  test.each(["/legacy", "/en/legacy", "/us/legacy", "/uk/legacy", "/legacy/features/design-de-carte", "/en/legacy/loyalty-programs?gclid=abc"])(
+    "an earlier page under /legacy is trackable: its sign-up clicks are measured as they were (%s)",
+    (path) => {
+      expect(isTrackablePath(path)).toBe(true);
+    },
+  );
+
+  test.each(["/features/design-de-carte", "/en/features/card-design", "/us", "/en/loyalty-programs"])(
+    "a live Platform page is trackable (%s)",
     (path) => {
       expect(isTrackablePath(path)).toBe(true);
     },

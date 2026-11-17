@@ -1,4 +1,5 @@
 import { getLocale } from "next-intl/server";
+import { JsonLd } from "@/components/JsonLd";
 import { HeroLockScreen } from "@/components/landing-pages/feature-previews/HeroLockScreen";
 import { PreviewHero } from "@/components/landing-pages/feature-previews/PreviewHero";
 import { RelatedPreviews } from "@/components/landing-pages/feature-previews/RelatedPreviews";
@@ -12,6 +13,7 @@ import { LandingPageShell } from "@/components/landing-pages/shared/LandingPageS
 import { LpFaq } from "@/components/landing-pages/shared/LpFaq";
 import { landingCopy } from "@/lib/landing-pages/copy/bundle";
 import type { Market } from "@/lib/markets";
+import { faqPageJsonLd } from "@/lib/structured-data";
 
 /** The campaigns preview: one message written once, on every customer's card. */
 export async function PromotionalCampaignsPreviewPage({ market }: Readonly<{ market: Market }>) {
@@ -19,6 +21,7 @@ export async function PromotionalCampaignsPreviewPage({ market }: Readonly<{ mar
 
   return (
     <LandingPageShell slug="platform/promotional-campaigns" market={market}>
+      <JsonLd data={faqPageJsonLd([...copy.faq.items])} />
       <PreviewHero
         slug="platform/promotional-campaigns"
         market={market}
@@ -31,7 +34,7 @@ export async function PromotionalCampaignsPreviewPage({ market }: Readonly<{ mar
       <DeliverySection />
       <LpFaq faq={copy.faq} answerLink={{ words: copy.faq.pricingLink, href: "/pricing", market }} />
       <LpAccentBand copy={copy.band} />
-      <RelatedPreviews slug="platform/promotional-campaigns" market={market} />
+      <RelatedPreviews slug="platform/promotional-campaigns" />
     </LandingPageShell>
   );
 }

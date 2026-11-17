@@ -63,17 +63,12 @@ describe("isPilotPath", () => {
   });
 
   test.each([
-    "/us/landing-pages/features",
-    "/us/landing-pages/how-it-works",
-    "/us/landing-pages/platform/card-design",
-    "/us/landing-pages/platform/promotional-campaigns",
-  ])(
-    "matches a landing page inside the US market, so an ad click gets the rewrite and the US cookie (%s)",
-    (path) => {
-      expect(isPilotPath(path)).toBe(true);
-      expect(marketFromPath(path)).toBe("us");
-    },
-  );
+    ["/us/legacy", "us"],
+    ["/uk/legacy", "uk"],
+  ] as const)("matches the earlier homepage inside a pilot, so it gets the rewrite and the market cookie (%s)", (path, market) => {
+    expect(isPilotPath(path)).toBe(true);
+    expect(marketFromPath(path)).toBe(market);
+  });
 
   test("does not swallow a business slug that merely starts with the letters", () => {
     // The reason the original was exact-match. /usual-cafe is a real shape.

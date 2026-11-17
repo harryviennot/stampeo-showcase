@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { LoyaltyRouteView } from "@/components/loyalty/LoyaltyRouteView";
-import { LOYALTY_LANGUAGES, loyaltyPath } from "@/lib/loyalty-routes";
+import { LoyaltyLivePage } from "@/components/landing-pages/pages/LoyaltyLivePage";
+import { loyaltyPageMetadata } from "@/lib/landing-pages/live-metadata";
+import { loyaltyPath } from "@/lib/loyalty-routes";
 
-const CANONICAL = "en";
+const NATIVE = "en";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -12,19 +13,14 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
-  if (locale !== CANONICAL) return {};
+  if (locale !== NATIVE) return {};
   const t = await getTranslations({ locale, namespace: "metadata.loyaltyPrograms" });
-  return {
-    title: t("title"),
-    description: t("description"),
-    keywords: t("keywords"),
-    alternates: { canonical: loyaltyPath(CANONICAL), languages: LOYALTY_LANGUAGES },
-  };
+  return loyaltyPageMetadata(locale, t("keywords"));
 }
 
 export default async function Page({ params }: PageProps) {
   const { locale } = await params;
-  // Non-EN visitors land on the EN slug → send them to their native slug.
-  if (locale !== CANONICAL) permanentRedirect(loyaltyPath(locale));
-  return <LoyaltyRouteView locale={locale} />;
+  // A visitor of another language who lands on this slug is sent to their own.
+  if (locale !== NATIVE) permanentRedirect(loyaltyPath(locale));
+  return <LoyaltyLivePage locale={locale} />;
 }
