@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { LOCK_WALLPAPER } from "@/components/features/geolocalisation/GeofencingHeroAnimation";
 import type { Banner } from "@/lib/landing-pages/copy/types";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
-import { lpBanner } from "../../shared/banner";
+import { levelShopBanner } from "./LevelShopIcon";
 
 /** A lock screen's top: the wallpaper, the clock and date, and the level-up notification in iOS's dark style. */
 export function MomentLockScreen({ banner }: Readonly<{ banner: Banner }>) {
@@ -19,7 +19,7 @@ export function MomentLockScreen({ banner }: Readonly<{ banner: Banner }>) {
         {t("lockScreenDate")}
       </p>
       <div className="mt-8 w-full max-w-[340px]">
-        <LockScreenNotification {...lpBanner(banner)} />
+        <LockScreenNotification {...levelShopBanner(banner)} />
       </div>
     </div>
   );

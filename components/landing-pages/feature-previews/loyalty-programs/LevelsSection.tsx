@@ -4,7 +4,7 @@ import { LevelFactTiles } from "./LevelFactTiles";
 import { LevelLadder } from "./LevelLadder";
 
 /**
- * "Add levels": the dry cleaner's ladder from Bronze to Gold, what levels can do in four tiles, and the tip.
+ * "Add levels": the barbershop's ladder from Bronze to Gold, what levels can do in four tiles, and the tip.
  * `#levels` is the hero's second button.
  */
 export function LevelsSection() {

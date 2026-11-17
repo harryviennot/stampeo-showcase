@@ -8,8 +8,8 @@ import { GOLD_HERO_CARD } from "@/lib/landing-pages/previews/loyalty-ladder";
 import { LockScreenNotification } from "../../platform/LockScreenNotification";
 import { PassFrame } from "../../shared/PassFrame";
 import { EYEBROW } from "../../shared/LpSection";
-import { lpBanner } from "../../shared/banner";
 import { MARGINALIA } from "../../shared/samples";
+import { levelShopBanner } from "./LevelShopIcon";
 
 /** The stage the three cards are drawn on, and the width it shrinks to on a phone. */
 const STAGE = { width: 520, height: 372, narrowTo: 340 } as const;
@@ -25,7 +25,7 @@ const BANNER = { left: 95, top: 258, width: 330 } as const;
 const juice = resolveFanCard("pulp");
 
 /**
- * The hero picture: a juice bar's stamp card and a bookstore's points card behind, the dry cleaner's card at Gold
+ * The hero picture: a juice bar's stamp card and a bookstore's points card behind, the barbershop's card at Gold
  * in front with its level-up notification over it, and the program of each named under it. Still; read out as
  * `hero.alt`.
  */
@@ -63,7 +63,7 @@ export function ProgramFan() {
                 </PassFrame>
               </FanPosition>
               <div className="absolute z-[3]" style={BANNER}>
-                <LockScreenNotification {...lpBanner(banner)} />
+                <LockScreenNotification {...levelShopBanner(banner)} />
               </div>
             </div>
           </ScaledBox>

@@ -6,7 +6,7 @@ import { LadderLevel } from "./LadderLevel";
 const RISE = ["lg:pt-24", "lg:pt-12", "lg:pt-0"] as const;
 
 /**
- * The dry cleaner's ladder: one row a level on a phone, Bronze first; from `lg` three panels that climb like a
+ * The barbershop's ladder: one row a level on a phone, Bronze first; from `lg` three panels that climb like a
  * staircase, Bronze lowest. The cards are described once, by `levels.alt`, on the first.
  */
 export function LevelLadder() {

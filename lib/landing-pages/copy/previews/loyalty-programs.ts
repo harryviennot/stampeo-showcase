@@ -3,7 +3,7 @@ import type { BandCopy, FaqItem, PageMeta, SourcedFigure, Tile } from "../types"
 /** The study behind the head-start tip, as the outcomes page cites it. */
 const HEAD_START_SOURCE = "Nunes & Drèze, Journal of Consumer Research, 2006 (car wash loyalty cards, 9 months)";
 
-/** One level of the dry cleaner's ladder, as the levels section shows it. */
+/** One level of the barbershop's ladder, as the levels section shows it. */
 export interface LadderLevel {
   name: string;
   /** How a customer gets here. */
@@ -37,10 +37,10 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     /** The hero's second button: it jumps to the levels. */
     secondary: "See how levels work",
     /** What the hero picture is, for a screen reader. */
-    alt: "Three loyalty cards: a juice bar's stamp card, a bookstore's points card, and a dry cleaner's card at Gold level with the notification \"You've reached Gold!\"",
+    alt: "Three loyalty cards: a juice bar's stamp card, a bookstore's points card, and a barbershop's card at Gold level with the notification \"You've reached Gold!\"",
     /** The small label under each card of the hero, in the cards' order (left, front, right). */
     labels: ["Stamps", "Levels", "Points"],
-    banner: { sender: "Wrenfold", body: "You've reached Gold! Your card has a new look." },
+    banner: { sender: "Gaspard & Gus", body: "You've reached Gold! Your card has a new look." },
   },
   programs: {
     eyebrow: "Stamps or points",
@@ -74,39 +74,39 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     eyebrow: "Loyalty levels",
     title: "Add levels, like Bronze, Silver and Gold.",
     lead: "Regulars move up as they come back. Each level can have its own look, perks and gift.",
-    /** The dry cleaner's three levels, from the bottom. */
+    /** The barbershop's three levels, from the bottom. */
     ladder: [
       {
         name: "Bronze",
         reach: "Where every customer starts",
-        card: "8 stamps for a free shirt press",
+        card: "6 stamps for a free haircut",
         perks: [],
       },
       {
         name: "Silver",
         reach: "Fill 1 card on Bronze",
-        card: "6 stamps for a free shirt press",
-        perks: ["Free hanger return", "Priority pickup"],
-        gift: "A free tote bag",
+        card: "5 stamps for a free haircut",
+        perks: ["Free hot towel finish"],
+        gift: "A bottle of beard oil",
       },
       {
         name: "Gold",
         reach: "Fill 2 cards on Silver",
-        card: "5 stamps for a free duvet clean",
-        perks: ["Free pickup and delivery", "Same-day service"],
-        gift: "A free coat clean",
+        card: "4 stamps for a haircut and beard trim",
+        perks: ["Free beard trim", "Priority booking"],
+        gift: "A free hot towel shave",
       },
     ] satisfies LadderLevel[],
     labels: { card: "Card", perks: "Perks", gift: "Gift", noPerks: "No perks yet", top: "Top level: theirs for good" },
     /** What each card of the ladder is, for a screen reader. */
-    alt: "A dry cleaner's loyalty card at Bronze, Silver and Gold: the card changes color and fills faster at each level.",
+    alt: "A barbershop's loyalty card at Bronze, Silver and Gold: the card changes color and fills faster at each level.",
     facts: [
       { title: "Up to 5 levels", body: "Name them as you like. A new ladder starts with three." },
       { title: "A card for each level", body: "Keep your own card, or give a level a Bronze, Silver, Gold, Platinum or Noir look." },
-      { title: "Up to 3 perks per level", body: "Like free delivery or priority pickup. Your staff see them in the Scanner app." },
+      { title: "Up to 3 perks per level", body: "Like a free beard trim or priority booking. Your staff see them in the Scanner app." },
       { title: "A gift when they arrive", body: "A one-time reward the moment a customer reaches a level." },
     ] satisfies Tile[],
-    tip: "Our tip: start with three levels, and make Silver easy to reach. A first move up within a month or two keeps regulars coming.",
+    tip: "Our tip: start with three levels, and make Silver easy to reach. An early first move up keeps regulars coming back.",
   },
   moveUp: {
     eyebrow: "Moving up",
@@ -152,9 +152,9 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     lockScreen: {
       title: "On their lock screen",
       body: "A notification when they move up, with their gift.",
-      banner: { sender: "Wrenfold", body: "You've reached Silver! Your card has a new look. Your gift: A free tote bag." },
+      banner: { sender: "Gaspard & Gus", body: "You've reached Silver! Your card has a new look. Your gift: A bottle of beard oil." },
     },
-    /** The picture is the scanner preview's `LevelScreen`: Sophie at Silver, with the Scanner app's own wording. */
+    /** The picture is the scanner preview's `LevelScreen` with the barbershop's Silver perk, in the Scanner app's own wording. */
     scanner: {
       title: "In the Scanner app",
       body: "Your staff see the customer's level and perks before they charge.",
@@ -162,8 +162,8 @@ export const LOYALTY_PROGRAMS_PREVIEW = {
     /** What each picture is, for a screen reader, in the tiles' order. */
     alts: [
       "The sign-up page's levels strip: Bronze, Silver and Gold, and how to reach Silver",
-      "A lock-screen notification from Wrenfold: You've reached Silver!",
-      "The Scanner app showing a Silver customer and the perks to apply before charging",
+      "A lock-screen notification from Gaspard & Gus: You've reached Silver!",
+      "The Scanner app showing a Silver customer and the perk to apply before charging",
     ],
   },
   settings: {

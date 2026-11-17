@@ -8,8 +8,8 @@ import { APP } from "./appColors";
  * pane gives them a name, and the phone gives them their frame.
  */
 
-/** Each shop's action colour: Aurevo's from the Scanner loop, Marginalia's and Wrenfold's from their cards. */
-export const SHOP_BRAND = { aurevo: APP.brand, marginalia: "#14432e", wrenfold: "#0b0b0b" } as const;
+/** Each shop's action colour: Aurevo's from the Scanner loop, Marginalia's, Wrenfold's and Gaspard & Gus's from their cards. */
+export const SHOP_BRAND = { aurevo: APP.brand, marginalia: "#14432e", wrenfold: "#0b0b0b", gaspardGus: "#040404" } as const;
 
 type Brand = (typeof SHOP_BRAND)[keyof typeof SHOP_BRAND];
 
@@ -195,11 +195,22 @@ export function RewardsScreen() {
   );
 }
 
-/** What the register shows for a customer on a level: their level beside their name, and the perks to apply before charging. */
-export function LevelScreen() {
+/**
+ * What the register shows for a customer on a level: their level beside their name, and the perks to apply before
+ * charging, in the app's wording ("Silver perk: …" for one, "Silver perks:" over a list for more). The dry cleaner's
+ * Silver customer unless a page passes its own shop.
+ */
+export function LevelScreen({
+  brand = SHOP_BRAND.wrenfold,
+  level = "Silver",
+  detail = "4 / 6",
+  perks = ["Free hanger return", "Priority pickup"],
+}: Readonly<{ brand?: Brand; level?: string; detail?: string; perks?: readonly string[] }>) {
+  const one = perks.length === 1;
+
   return (
     <>
-      <CustomerRow brand={SHOP_BRAND.wrenfold} detail="4 / 6" chip="Silver" />
+      <CustomerRow brand={brand} detail={detail} chip={level} />
       <div
         className="mt-7 flex items-start gap-2.5 rounded-[14px] px-3 py-3 ring-1"
         style={{ backgroundColor: APP.amberTint, ["--tw-ring-color" as string]: "rgba(245, 158, 11, 0.35)" }}
@@ -209,20 +220,20 @@ export function LevelScreen() {
         </svg>
         <div className="min-w-0">
           <p className="text-[15px] leading-5 font-bold" style={{ color: APP.ink }}>
-            Silver perks:
+            {one ? `${level} perk: ${perks[0]}` : `${level} perks:`}
           </p>
-          <p className="text-[14px] leading-5 font-semibold" style={{ color: APP.ink }}>
-            Free hanger return
-          </p>
-          <p className="text-[14px] leading-5 font-semibold" style={{ color: APP.ink }}>
-            Priority pickup
-          </p>
+          {!one &&
+            perks.map((perk) => (
+              <p key={perk} className="text-[14px] leading-5 font-semibold" style={{ color: APP.ink }}>
+                {perk}
+              </p>
+            ))}
           <p className="mt-1 text-[12px] leading-4" style={{ color: APP.muted }}>
-            Apply them at the till before charging.
+            {one ? "Apply it at the till before charging." : "Apply them at the till before charging."}
           </p>
         </div>
       </div>
-      <span className={`${PILL} mt-8`} style={{ backgroundColor: SHOP_BRAND.wrenfold }}>
+      <span className={`${PILL} mt-8`} style={{ backgroundColor: brand }}>
         Add Stamp
       </span>
     </>
