@@ -4,9 +4,9 @@ import type { LandingCopy } from "../../bundle";
 
 export const MOBILE_SCANNER_PREVIEW: LandingCopy["previews"]["mobileScanner"]["MOBILE_SCANNER_PREVIEW"] = {
   meta: {
-    title: "Scanner de carte de fidélité pour iPhone et Android | Stampeo",
+    title: "Scanner de cartes de fidélité, iPhone et Android | Stampeo",
     description:
-      "Scannez les cartes de fidélité avec l'application scanner Stampeo, gratuite sur iPhone et Android, ou le scanner web dans n'importe quel navigateur. Aucun matériel. Essai gratuit.",
+      "Scannez les cartes de fidélité avec l'application scanner gratuite sur iPhone et Android, ou dans n'importe quel navigateur. Aucun matériel. Essai gratuit.",
   },
   hero: {
     h1: "Une application scanner pour votre équipe.",

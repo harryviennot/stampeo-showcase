@@ -3,9 +3,9 @@ import type { LandingCopy } from "../../bundle";
 /** The scanner preview in Spanish: the team scans a card with the free app or the web scanner in a browser. */
 export const MOBILE_SCANNER_PREVIEW: LandingCopy["previews"]["mobileScanner"]["MOBILE_SCANNER_PREVIEW"] = {
   meta: {
-    title: "App para escanear tarjetas de fidelidad en iPhone y Android | Stampeo",
+    title: "Escáner de tarjetas de fidelidad, iPhone y Android | Stampeo",
     description:
-      "Escanea tarjetas de fidelidad con la app de escaneo gratuita de Stampeo para iPhone y Android, o con el escáner web en cualquier navegador. Sin equipos nuevos. Prueba gratis.",
+      "Escanea tarjetas de fidelidad con la app de escaneo gratuita para iPhone y Android, o en cualquier navegador. Sin equipos nuevos. Prueba gratis.",
   },
   hero: {
     h1: "La app de escaneo de tarjetas para tu equipo.",

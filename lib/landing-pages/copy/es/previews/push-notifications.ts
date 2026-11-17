@@ -13,7 +13,7 @@ export const PUSH_NOTIFICATIONS_PREVIEW: LandingCopy["previews"]["pushNotificati
   meta: {
     title: "Notificaciones para tu tarjeta de fidelidad | Stampeo",
     description:
-      "Cada sello y cada recompensa envía un aviso a la pantalla de bloqueo de tu cliente, en Apple Wallet y Google Wallet. Sin aplicación que descargar. Prueba gratis.",
+      "Cada sello y cada recompensa llega a la pantalla de bloqueo de tu cliente, en Apple Wallet y Google Wallet. Sin aplicación que descargar. Prueba gratis.",
   },
   hero: {
     h1: "Notificaciones para tu tarjeta de fidelidad.",

@@ -5,7 +5,7 @@ export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   meta: {
     title: "Tarjetas de fidelidad en Apple y Google Wallet | Stampeo",
     description:
-      "Crea, comparte y sella una tarjeta de fidelidad digital en Apple Wallet y Google Wallet, desde un panel y una app de escaneo gratuita. Prueba gratis, sin compromiso.",
+      "Crea, comparte y sella una tarjeta de fidelidad digital en Apple Wallet y Google Wallet, desde un panel y una app de escaneo gratuita. Prueba gratis.",
   },
   hero: {
     h1: "Tarjetas de fidelidad en Apple y Google Wallet.",

@@ -3,9 +3,9 @@ import type { LandingCopy } from "../bundle";
 
 export const PLATFORM: LandingCopy["platform"]["PLATFORM"] = {
   meta: {
-    title: "Cyfrowe karty lojalnościowe w Apple i Google Wallet | Stampeo",
+    title: "Karty lojalnościowe w Apple i Google Wallet | Stampeo",
     description:
-      "Cyfrowa karta lojalnościowa w Apple Wallet i Google Wallet: tworzysz ją w panelu, a pieczątki dodajesz w darmowej aplikacji. Darmowy okres próbny, bez zobowiązań.",
+      "Cyfrowa karta lojalnościowa w Apple Wallet i Google Wallet: tworzysz ją w panelu, a pieczątki dodajesz w darmowej aplikacji. Darmowy okres próbny.",
   },
   hero: {
     h1: "Karty lojalnościowe w Apple i Google Wallet.",

@@ -4,7 +4,7 @@ import type { LandingCopy } from "../../bundle";
 
 export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_PREVIEW"] = {
   meta: {
-    title: "Statistiques de fidélité\u00a0: visites et taux de retour | Stampeo",
+    title: "Statistiques de fidélité\u00a0: visites et retours | Stampeo",
     description:
       "Les statistiques de votre programme de fidélité\u00a0: visites, taux de retour, nouveaux clients et heures de pointe, remplies à chaque scan. Essai gratuit.",
   },

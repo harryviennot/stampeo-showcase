@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { getTranslations } from "next-intl/server";
 import {
   OG_WIDTH,
   OG_HEIGHT,
@@ -9,13 +8,15 @@ import {
   loadFonts,
   truncate,
 } from "@/lib/og/shared";
+import { pageWords } from "@/lib/landing-pages/pages";
 
 /** Shared OpenGraph image for the localized loyalty-programs routes. */
 export async function loyaltyOgImage(locale: string) {
-  const t = await getTranslations({ locale, namespace: "metadata.loyaltyPrograms" });
+  const { meta } = pageWords("platform/loyalty-programs", locale, "int");
   const fonts = await loadFonts();
-  const title = truncate(t("title"), 64);
-  const description = truncate(t("description"), 120);
+  // The page's own head words, so the share card says what the page's title says.
+  const title = truncate(meta.title.replace(/ [|\-–] Stampeo$/i, ""), 64);
+  const description = truncate(meta.description, 120);
 
   return new ImageResponse(
     (

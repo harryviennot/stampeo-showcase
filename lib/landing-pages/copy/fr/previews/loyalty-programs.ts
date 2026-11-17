@@ -9,7 +9,7 @@ export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"
   meta: {
     title: "Programme de fidélité\u00a0: tampons, points et paliers | Stampeo",
     description:
-      "Votre programme de fidélité dans Apple Wallet et Google Wallet\u00a0: carte à tampons ou à points, avec des paliers de fidélité comme Bronze, Argent et Or. Essai gratuit.",
+      "Votre programme de fidélité dans Apple Wallet et Google Wallet\u00a0: carte à tampons ou à points, avec des paliers comme Bronze, Argent et Or. Essai gratuit.",
   },
   hero: {
     h1: "Programmes de fidélité\u00a0: tampons, points et niveaux.",

@@ -6,7 +6,7 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
   meta: {
     title: "Créez votre carte de fidélité digitale | Stampeo",
     description:
-      "Créez une carte de fidélité digitale avec votre logo, vos couleurs et vos icônes de tampon, pour Apple Wallet et Google Wallet. Tampons, points ou niveaux. Essai gratuit.",
+      "Créez une carte de fidélité digitale avec votre logo, vos couleurs et vos icônes de tampon, pour Apple Wallet et Google Wallet. Essai gratuit.",
   },
   hero: {
     h1: "Créez votre carte de fidélité digitale.",

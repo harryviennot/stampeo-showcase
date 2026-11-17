@@ -18,6 +18,7 @@ export function HowTable() {
   return (
     <LpSection
       section="how"
+      anchor
       eyebrow={PLATFORM.how.eyebrow}
       title={PLATFORM.how.title}
       lead={PLATFORM.how.lead}

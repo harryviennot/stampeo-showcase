@@ -153,12 +153,12 @@ export async function Footer({ market = "int" }: Readonly<{ market?: Market }>) 
               <MarketLink market={loyalty.market} href={loyalty.href} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {tNav("loyaltyPrograms")}
               </MarketLink>
-              <Link href="/#features" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+              <MarketLink market={market} href={`${marketPath(market, "/")}#how`} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 {t("howItWorks")}
-              </Link>
-              <Link href="/#faq" className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
+              </MarketLink>
+              <MarketLink market={market} href={`${marketPath(market, "/pricing")}#faq`} className="text-white/60 hover:text-[var(--accent)] transition-colors text-sm font-medium">
                 FAQ
-              </Link>
+              </MarketLink>
             </FooterColumn>
 
             <FooterComparisons market={market} title={comparisonsTitle} comparisons={comparisons} />

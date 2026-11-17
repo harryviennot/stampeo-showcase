@@ -324,32 +324,6 @@ describe("a page that shows a FAQ says so in its structured data, with every pri
 });
 
 describe("a live head fits what a search result shows: 60 characters of title and 160 of description", () => {
-  /**
-   * The fields that run over, as `locale:page:field`. They stay listed until their copy is shortened, and a field
-   * that fits cannot stay on the list; no other field of any page, language or market may join it.
-   */
-  const OVER = [
-    "fr:platform:description",
-    "fr:platform/card-design:description",
-    "fr:platform/mobile-scanner:title",
-    "fr:platform/mobile-scanner:description",
-    "fr:platform/analytics:title",
-    "fr:platform/geolocation:description",
-    "fr:platform/loyalty-programs:description",
-    "es:platform:description",
-    "es:platform/card-design:description",
-    "es:platform/mobile-scanner:title",
-    "es:platform/mobile-scanner:description",
-    "es:platform/push-notifications:description",
-    "es:platform/analytics:title",
-    "es:platform/loyalty-programs:title",
-    "es:platform/loyalty-programs:description",
-    "pl:platform:title",
-    "pl:platform:description",
-    "pl:platform/card-design:description",
-    "pl:platform/analytics:title",
-  ];
-
   const heads = [
     ...routing.locales.flatMap((locale) => ALL_LANDING_SLUGS.map((slug) => [locale, slug, pageWords(slug, locale, "int").meta] as const)),
     ...(["us", "uk"] as const).map((market) => ["en", `platform (${market})`, pageWords("platform", "en", market).meta] as const),
@@ -359,12 +333,8 @@ describe("a live head fits what a search result shows: 60 characters of title an
     ...(description.length > 160 ? [`${locale}:${slug}:description`] : []),
   ]);
 
-  test("every field is within its limit, but the ones listed", () => {
-    expect(over.filter((field) => !OVER.includes(field))).toEqual([]);
-  });
-
-  test("every field listed is still over", () => {
-    expect(OVER.filter((field) => !over.includes(field))).toEqual([]);
+  test("every title and description of every page, language and market is within its limit", () => {
+    expect(over).toEqual([]);
   });
 
   test.each(heads)("%s %s: the title names Stampeo once and uses no em dash", (_locale, _slug, { title, description }) => {

@@ -7,7 +7,7 @@ export const GEOLOCATION_PREVIEW: LandingCopy["previews"]["geolocation"]["GEOLOC
   meta: {
     title: "Notifications géolocalisées, bientôt disponibles | Stampeo",
     description:
-      "Bientôt\u00a0: des notifications géolocalisées qui afficheront votre carte de fidélité sur l'écran de verrouillage de vos clients quand ils passeront près de votre commerce.",
+      "Bientôt\u00a0: des notifications géolocalisées qui afficheront votre carte de fidélité sur l'écran de verrouillage de vos clients près de votre commerce.",
   },
   hero: {
     h1: "La géolocalisation, bientôt sur votre carte.",

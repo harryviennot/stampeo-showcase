@@ -5,7 +5,7 @@ export const CARD_DESIGN_PREVIEW: LandingCopy["previews"]["cardDesign"]["CARD_DE
   meta: {
     title: "Zaprojektuj cyfrową kartę lojalnościową | Stampeo",
     description:
-      "Zaprojektuj cyfrową kartę lojalnościową z logo, kolorami i ikonami pieczątek, do Apple Wallet i Google Wallet. Pieczątki, punkty albo poziomy. Darmowy okres próbny.",
+      "Zaprojektuj cyfrową kartę lojalnościową z logo, kolorami i ikonami pieczątek, do Apple Wallet i Google Wallet. Darmowy okres próbny.",
   },
   hero: {
     h1: "Zaprojektuj cyfrową kartę lojalnościową.",

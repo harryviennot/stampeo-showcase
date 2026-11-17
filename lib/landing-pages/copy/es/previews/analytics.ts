@@ -3,7 +3,7 @@ import type { LandingCopy } from "../../bundle";
 /** The analytics preview in Spanish: a loyalty program's numbers, in the dashboard's own words. */
 export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_PREVIEW"] = {
   meta: {
-    title: "Estadísticas de fidelización: visitas y tasa de retorno | Stampeo",
+    title: "Estadísticas de fidelización: visitas y retorno | Stampeo",
     description:
       "Estadísticas de fidelización para pequeños comercios: visitas, tasa de retorno, clientes nuevos y horas punta, al día con cada escaneo. Prueba gratis.",
   },

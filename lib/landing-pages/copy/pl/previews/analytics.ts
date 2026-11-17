@@ -3,7 +3,7 @@ import type { LandingCopy } from "../../bundle";
 
 export const ANALYTICS_PREVIEW: LandingCopy["previews"]["analytics"]["ANALYTICS_PREVIEW"] = {
   meta: {
-    title: "Statystyki programu lojalnościowego: wizyty i powroty | Stampeo",
+    title: "Statystyki lojalnościowe: wizyty i powroty | Stampeo",
     description:
       "Statystyki programu lojalnościowego dla małych firm: wizyty, powroty, nowi klienci i godziny szczytu, uzupełniane przy każdym skanie. Darmowy okres próbny.",
   },

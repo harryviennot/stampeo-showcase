@@ -6,9 +6,9 @@ import type { LandingCopy } from "../../bundle";
  */
 export const LOYALTY_PROGRAMS_PREVIEW: LandingCopy["previews"]["loyaltyPrograms"]["LOYALTY_PROGRAMS_PREVIEW"] = {
   meta: {
-    title: "Programa de fidelización por niveles, sellos o puntos | Stampeo",
+    title: "Fidelización por niveles, con sellos o puntos | Stampeo",
     description:
-      "Tu programa de fidelización en Apple Wallet y Google Wallet: tarjeta de sellos digital o puntos, y un programa por niveles como Bronce, Plata y Oro. Prueba gratis.",
+      "Tu programa de fidelización en Apple Wallet y Google Wallet: sellos o puntos, y un programa por niveles como Bronce, Plata y Oro. Prueba gratis.",
   },
   hero: {
     h1: "Programas de fidelidad: sellos, puntos y niveles.",
