@@ -10,8 +10,8 @@ import { LpSection } from "../shared/LpSection";
 /**
  * The hero of a feature preview: the headline with its accent, the sub, the trial and second actions and their
  * reassurance on the left, the page's `visual` on the right. On a phone they run in that order, centred; from
- * `lg` the words are left-aligned beside the visual. The second action is "Try it on your phone" to the demo
- * unless the page names its own or passes `null`.
+ * `lg` the words are left-aligned beside the visual, and the hero fills the first screen with both centred in it.
+ * The second action is "Try it on your phone" to the demo unless the page names its own or passes `null`.
  */
 export function PreviewHero({
   slug,
@@ -24,8 +24,8 @@ export function PreviewHero({
 }>) {
   return (
     <LpSection section="hero" bare>
-      <section className="relative pt-24 pb-10 lg:pt-28 lg:pb-14">
-        <Container>
+      <section className="relative pt-24 pb-10 lg:flex lg:min-h-[100svh] lg:flex-col lg:justify-center lg:pt-28 lg:pb-14">
+        <Container className="w-full">
           <div className="grid gap-y-8 lg:grid-cols-12 lg:items-center lg:gap-x-12">
             <div className="text-center lg:col-span-6 lg:text-left">
               <HeroWords slug={slug} look="column" />
