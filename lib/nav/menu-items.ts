@@ -38,7 +38,7 @@ export function pageMenuItems(
 ): { navItems: Array<NavMenuItem & { market: Market }>; resourceItems: NavMenuItem[] } {
   return {
     navItems: [
-      { label: t("common.nav.loyalty"), ...loyaltyLink(locale) },
+      { label: t("common.nav.loyalty"), ...loyaltyLink(locale), preview: "platform/loyalty-programs" },
       { label: t("common.nav.pricing"), href: marketPath(market, "/pricing"), market },
     ],
     resourceItems: [

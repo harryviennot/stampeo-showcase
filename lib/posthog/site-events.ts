@@ -1,5 +1,6 @@
 import posthog from "posthog-js";
 import { isSupportedLocale } from "../locale-negotiation";
+import type { PreviewSlug } from "../landing-pages/pages";
 import { quizPick } from "../landing-pages/previews/loyalty-picker";
 import type { BillingInterval } from "../pricing";
 
@@ -89,6 +90,17 @@ export const trackPricingIntervalToggled = (interval: BillingInterval) => report
 export const trackFaqAnswerOpened = (faq: string, position: number) => report((page) => [faqAnswerOpened(page, faq, position)]);
 
 export const trackLanguageSwitched = (to: string) => report((page) => [languageSwitched(page, to)]);
+
+/** A menu entry's click handler: it reports the preview page the entry opens (an entry that opens none reports nothing), then runs `then`. */
+export const navClick = (preview: PreviewSlug | undefined, menu: NavMenu, then?: () => void) => () => {
+  if (preview) trackNavPreviewOpened(preview, menu);
+  then?.();
+};
+
+/** A FAQ question's click handler: opening a closed answer reports the question and its 1-based place; closing an open one reports nothing. */
+export const faqSummaryClick = (question: string, position: number) => (event: { currentTarget: HTMLElement }) => {
+  if (!(event.currentTarget.parentElement as HTMLDetailsElement | null)?.open) trackFaqAnswerOpened(question, position);
+};
 
 /** The quiz answer at `choices.length`; the last answer also finishes the quiz. */
 export function trackLoyaltyQuizPick(choices: readonly number[], option: number): void {

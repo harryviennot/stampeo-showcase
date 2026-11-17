@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { CaretRightIcon } from "../icons";
 import { MarketLink } from "../market/MarketLink";
 import { isCurrentPath } from "@/lib/nav/mobile-menu";
-import { trackNavPreviewOpened } from "@/lib/posthog/site-events";
+import { navClick } from "@/lib/posthog/site-events";
 import {
   MENU_LABEL,
   MenuBottomBar,
@@ -26,10 +26,7 @@ export function FeatureTile({ entry, first, onClose }: Readonly<{ entry: Feature
     <MarketLink
       market={market}
       href={href as "/features/design-de-carte"}
-      onClick={() => {
-        trackNavPreviewOpened(preview, "mobile");
-        onClose();
-      }}
+      onClick={navClick(preview, "mobile", onClose)}
       aria-current={current ? "page" : undefined}
       data-menu-first={first ? "" : undefined}
       className={`relative flex min-h-[72px] items-start gap-2 rounded-2xl border-[1.5px] p-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${
@@ -49,12 +46,12 @@ export function FeatureTile({ entry, first, onClose }: Readonly<{ entry: Feature
 }
 
 /** Loyalty and Pricing: a large row with a hairline under it and a chevron. */
-function BigRow({ href, label, market, onClose, active }: Readonly<MenuLink & { onClose: () => void; active: boolean }>) {
+export function BigRow({ href, label, market, preview, onClose, active }: Readonly<MenuLink & { onClose: () => void; active: boolean }>) {
   return (
     <MarketLink
       market={market ?? "int"}
       href={href as "/features/design-de-carte"}
-      onClick={onClose}
+      onClick={navClick(preview, "mobile", onClose)}
       aria-current={active ? "page" : undefined}
       className={`flex min-h-14 items-center justify-between border-b border-[var(--border)] text-xl font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] ${
         active ? "text-[var(--accent)]" : "text-[var(--foreground)] active:text-[var(--accent)]"

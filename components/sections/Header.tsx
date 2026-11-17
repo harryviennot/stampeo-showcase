@@ -13,6 +13,7 @@ import type { Market } from "@/lib/markets";
 import { MarketLink } from "../market/MarketLink";
 import { holdPageWhileOpen, isCurrentPath } from "@/lib/nav/mobile-menu";
 import { pageMenuItems, productMenuItems } from "@/lib/nav/menu-items";
+import { navClick } from "@/lib/posthog/site-events";
 import { NavDropdown } from "./NavDropdown";
 import { AccordionMenu } from "./MobileMenuAccordion";
 import { SheetMenu } from "./SheetMenu";
@@ -183,6 +184,7 @@ export function Header({
                 key={item.href}
                 market={item.market}
                 href={item.href}
+                onClick={navClick(item.preview, "desktop")}
                 className={`py-2 text-sm font-semibold transition-colors whitespace-nowrap ${isActive(item.href)
                   ? "text-[var(--accent)]"
                   : "text-[var(--foreground)] hover:text-[var(--accent)]"

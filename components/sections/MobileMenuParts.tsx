@@ -19,6 +19,8 @@ export interface MenuLink {
   href: string;
   label: string;
   market?: Market;
+  /** The registry page the link opens, when it is a preview: opening it is reported to PostHog. */
+  preview?: PreviewSlug;
 }
 
 /** What the sheet menu is given. */
