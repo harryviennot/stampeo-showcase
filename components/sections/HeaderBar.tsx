@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { NavMenuItem } from "@/lib/nav/menu-items";
 
-/** What the header hands to whichever phone menu it draws. */
+/** What the header hands to the phone menu. */
 export interface PhoneMenuProps {
   open: boolean;
   onToggle: () => void;
@@ -21,14 +21,13 @@ export interface PhoneMenuProps {
   children: ReactNode;
 }
 
-/** The header bar: the page's links and the phone menu's button on one row, and the panel under it if the menu draws one. */
+/** The header bar: the page's links and the phone menu's button on one row. */
 export function HeaderBar({
   scrolled,
   extra = "",
   burger,
-  below,
   children,
-}: Readonly<{ scrolled: boolean; extra?: string; burger: ReactNode; below?: ReactNode; children: ReactNode }>) {
+}: Readonly<{ scrolled: boolean; extra?: string; burger: ReactNode; children: ReactNode }>) {
   return (
     <div
       className={`transition-all duration-300 border-b ${scrolled
@@ -40,7 +39,6 @@ export function HeaderBar({
         {children}
         {burger}
       </nav>
-      {below}
     </div>
   );
 }

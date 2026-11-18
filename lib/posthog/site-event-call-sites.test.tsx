@@ -15,7 +15,6 @@ import { BillingIntervalToggle } from "@/components/pricing/BillingIntervalToggl
 import { PricingFAQ } from "@/components/pricing/PricingPageContent";
 import { Header } from "@/components/sections/Header";
 import { BigRow, FeatureTile } from "@/components/sections/MobileMenu";
-import { AccordionFeatureRows, AccordionPanel } from "@/components/sections/MobileMenuAccordion";
 import { useFeatureEntries } from "@/components/sections/MobileMenuParts";
 import { NavDropdownPanel } from "@/components/sections/NavDropdown";
 import { FAQList } from "@/components/ui/FAQList";
@@ -26,7 +25,6 @@ import { elementsOf } from "../testing/element-tree";
 import { inRender } from "../testing/in-render";
 import { loadCatalog } from "../testing/catalogs";
 import { renderAtPath } from "../testing/pathname-seam";
-import { phoneMenuProps } from "../testing/phone-menu-props";
 import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { trackLoyaltyQuizPick } from "./site-events";
 
@@ -75,9 +73,8 @@ const FEATURE_PREVIEWS = [
 /** The feature links of each menu, built with the handler of the menu that closes it. */
 const FEATURE_MENUS: Array<[name: string, menu: "desktop" | "mobile", links: (done: () => void) => Array<ReactElement<Record<string, unknown>>>]> = [
   ["the desktop Product dropdown", "desktop", (done) => elementsOf(NavDropdownPanel({ items: productMenuItems(t, "en"), onNavigate: done }), MarketLink)],
-  ["the phone menu's list", "mobile", (done) => elementsOf(inRender("en", () => AccordionFeatureRows({ onNavigate: done })), MarketLink)],
   [
-    "the phone menu's sheet",
+    "the phone menu",
     "mobile",
     (done) => inRender("en", () => useFeatureEntries("/")).map((entry) => FeatureTile({ entry, first: false, onClose: done })),
   ],
@@ -91,12 +88,7 @@ const PAGE_MENUS: Array<[name: string, menu: "desktop" | "mobile", links: (done:
     () => elementsOf(renderAtPath("/", () => inRender("en", () => Header({}))), MarketLink),
   ],
   [
-    "the phone menu's list",
-    "mobile",
-    (done) => elementsOf(inRender("en", () => AccordionPanel({ ...phoneMenuProps("int", "/"), onClose: done })), MarketLink),
-  ],
-  [
-    "the phone menu's sheet",
+    "the phone menu",
     "mobile",
     (done) => pageMenuItems(t, "en", "int").navItems.map((item) => BigRow({ ...item, onClose: done, active: false })),
   ],
@@ -292,16 +284,7 @@ describe("a send that fails", () => {
       },
     ],
     [
-      "a feature link of the phone menu",
-      () => {
-        const done = mock(() => {});
-        const [link] = elementsOf(inRender("en", () => AccordionFeatureRows({ onNavigate: done })), MarketLink);
-
-        return { tap: () => click(link), didIt: () => done.mock.calls.length === 1 };
-      },
-    ],
-    [
-      "a feature tile of the phone menu's sheet",
+      "a feature tile of the phone menu",
       () => {
         const done = mock(() => {});
         const [entry] = inRender("en", () => useFeatureEntries("/"));
