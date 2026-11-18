@@ -136,9 +136,12 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 
+  // While the sheet (`#mobile-menu`, its exit fade included) is mounted the header rises above the cookie banner, also z-50.
+  const headerClass = "fixed top-0 left-0 right-0 z-50 has-[#mobile-menu]:z-[60]";
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50">
+      <header className={headerClass}>
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
         <SheetMenu
           open={mobileMenuOpen}
