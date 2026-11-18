@@ -95,4 +95,8 @@ jobs:
       # GHSA-vfj7-8cjw-p6xm (braces <=3.0.3) has no patched release and reaches
       # only lint tooling (eslint-config-next > @next/eslint-plugin-next >
       # fast-glob > micromatch > braces). Drop the ignore once braces ships a fix.
-      - run: bun audit --audit-level=moderate --ignore=GHSA-vfj7-8cjw-p6xm
+      # GHSA-fc5q-39xc-vjpf (picomatch <=4.0.7) has no patched release either and
+      # reaches only build and lint tooling (next-intl > @parcel/watcher, the
+      # Sentry rollup plugin, typescript-eslint > tinyglobby), never a glob a
+      # visitor controls. Drop the ignore once picomatch ships a fix.
+      - run: bun audit --audit-level=moderate --ignore=GHSA-vfj7-8cjw-p6xm --ignore=GHSA-fc5q-39xc-vjpf
