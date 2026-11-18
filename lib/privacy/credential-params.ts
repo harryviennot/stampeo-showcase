@@ -139,13 +139,16 @@ function scrubQueryString(queryString: unknown): unknown {
 /**
  * A Sentry error event or transaction with credentials removed from every URL
  * in it (request, referrer header, breadcrumbs, transaction name, trace and
- * span data). The event itself is always kept.
+ * span data), and its user reduced to their id. The event itself is always kept.
  */
 export function scrubSentryEvent<T extends object>(event: T): T {
-  const scrubbed = scrubValue(event) as { request?: unknown };
+  const scrubbed = scrubValue(event) as { request?: unknown; user?: unknown };
   const request = scrubbed.request;
   if (isPlainObject(request) && "query_string" in request) {
     request.query_string = scrubQueryString(request.query_string);
+  }
+  if (isPlainObject(scrubbed.user)) {
+    scrubbed.user = "id" in scrubbed.user ? { id: scrubbed.user.id } : {};
   }
   return scrubbed as T;
 }

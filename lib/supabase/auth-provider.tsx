@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          Sentry.setUser({ id: session.user.id, email: session.user.email });
+          Sentry.setUser({ id: session.user.id });
         } else {
           Sentry.setUser(null);
         }
