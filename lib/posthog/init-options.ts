@@ -1,7 +1,7 @@
 import type { PostHogConfig } from "posthog-js";
 import { posthogBeforeSend } from "./hygiene";
 
-/** PostHog's init options for the site: heatmaps and recordings pinned off, the visitor in memory only, every event through `posthogBeforeSend`, no flags request at all. */
+/** The base init options: heatmaps and recordings pinned off, the visitor in memory (`postHogInitOptions` adds the cookie for a remembered visitor), every event through `posthogBeforeSend`, no flags request at all. */
 export const POSTHOG_INIT_OPTIONS = {
   defaults: "2026-01-30",
   persistence: "memory",

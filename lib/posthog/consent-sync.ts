@@ -6,9 +6,10 @@ import { posthogMode, type PostHogMode } from "./mode";
 import { purgePostHogStorage } from "./storage";
 
 /**
- * Keeps PostHog in step with what the visitor allows. PostHog starts in memory; this remembers the visitor and
- * starts recording when `posthogMode` says so, and takes both back, on a consent change, a page change, and when
- * the tab is shown or focused again (another tab's choice, Global Privacy Control).
+ * Keeps PostHog in step with what the visitor allows. PostHog starts in memory, or on its cookie for a visitor it
+ * may remember (`start.ts`); this moves to the cookie on a grant, starts recording when `posthogMode` says so, and
+ * takes both back, on a consent change, a page change, and when the tab is shown or focused again (another tab's
+ * choice, Global Privacy Control).
  *
  * Remembering keeps the id the visitor already has: switching the storage to the cookie writes the current id
  * into it. Withdrawing stops recording, returns the storage to memory before the reset so the new id has nowhere

@@ -858,10 +858,6 @@ describe("CONSENT_VERSION", () => {
     //     app/services/attribution/eligibility.py);
     //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
     //     shared cookie to notice a withdrawal.
-    //
-    // 5 -> 6: privacy policy §4, §5.3, §5.4 and §8 say PostHog remembers a
-    // visitor who allows audience measurement, records sessions with every
-    // form field masked, and links the visits to the account they create.
     expect(CONSENT_VERSION).toBe(6);
     expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A6");
   });

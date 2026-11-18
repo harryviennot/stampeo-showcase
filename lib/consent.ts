@@ -38,11 +38,12 @@ import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
  * googletagmanager.com, and Meta has no cookieless mode at all.
  * A refusal therefore has nothing to clean up, because nothing was created.
  *
- * PostHog follows the analytics choice only for what it stores. It counts in
- * memory whatever the visitor chose, which stores nothing on the device and so
- * sits outside the ePrivacy consent requirement (it keeps working for refusers,
- * which is how we can measure the refusal rate); with the choice it also keeps
- * a cookie and records sessions (see `lib/posthog/mode.ts`).
+ * PostHog runs for every visitor, in memory by default, which stores nothing on
+ * the device and so sits outside the ePrivacy consent requirement (it keeps
+ * working for refusers, which is how we can measure the refusal rate). While
+ * analytics is allowed (a current grant, or the US default) it keeps a `ph_*`
+ * cookie; it records sessions only on an explicit grant (see
+ * `lib/posthog/mode.ts`).
  */
 
 export const CONSENT_COOKIE = "stampeo_consent";
