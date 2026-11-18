@@ -26,3 +26,51 @@ legacy quiz and blog FAQs send nothing; scroll depth relies on posthog-js's `$pr
 
 ## Waivers
 None.
+
+---
+
+# STA-566 review: Phase B (consent v6, remembered visitors, server steps), 18 Nov 2026
+
+One review per reviewer across the three branches: backend `feat/sta-566-posthog-journey`, showcase
+`feat/sta-566-consent-v6`, web `feat/sta-566-consent-v6`.
+
+## Counsel
+Harry, 18 Nov: counsel signed off the v6 texts as drafted (refusers' steps counted with no identifier, recordings
+under the audience-measurement choice, the in-memory id kept at a grant, withdrawal stops linking without deleting).
+The 64 COUNSEL markers were removed and the policy dated 18 November 2026 (933d8ec). One sentence was aligned
+afterwards with the approved §5.4: §5.3 names the US exception for PostHog's cookie (6bda652).
+
+## Quality (code-quality-reviewer): 6 BLOCKs → fixed
+Five comments contradicting the code (backend `config.py` ×2, `product_analytics/__init__.py`, `queue.py`; showcase
+`consent-sync.ts`, `consent.ts`) and `tests/support/product_analytics.py` in a 40-entry folder (moved to
+`tests/product_analytics/support.py` + `conftest.py`). Fixed in showcase 3375c00 and backend b6a0a708, with the
+NOTEs on `init-options.ts`, `account_deletion.py` and `consent.test.ts`. Remaining NOTEs (test duplication across
+levels, copied setup, constant-restating tests) go to the PR description.
+
+## Security (security-reviewer): no BLOCK; 4 MED + 7 LOW
+Fixed before merge (they contradicted the signed-off text or are cheap):
+- MED an email shown on the sign-up step could reach PostHog through autocapture → `ph-no-capture` + email scrub.
+- MED unlinked steps used the outbox row id as uuid and distinct id → random event uuid, cleared at a final
+  status; unlinked timestamps rounded to the hour.
+- MED a second account in the same browser re-identified the same browser id → browser reset after sign-up and a
+  server-side one-account-per-browser-id guard.
+- MED deletions defaulted to PostHog's `@current` project → explicit numeric project id; failed deletions alert.
+- LOW GPC is a PostHog refusal whatever the GA4 setting; identify payload cleared on every final status; browser
+  ids added to Sentry's PII names.
+Follow-ups in STA-572: deletion gaps (no business, hard-delete routes, secret rotation, ops erase path), old grants
+linking, campaign fields, release order.
+
+## Coverage (coverage-auditor): 1 BLOCK → resolved
+- BLOCK the legal texts carry no COUNSEL marker although the plan requires them → resolved by counsel's sign-off
+  (above), not waived.
+Fixed as AC/policy gaps: tier and interval only on plan steps (§5.4 wording); `first_payment` from the reconcile
+sweep and `first_test_stamp` from the legacy mirror; `subscription_ended` only at the real end, dated by Stripe;
+`$identify` deferred, not dropped, when the ledger is unreadable; the cookie never outlives the grant; no reload of
+another tab for a consent change that doesn't touch PostHog; sign-up tests on `/onboarding`.
+Remaining NOTEs (PR description, STA-572 or B5 QA): the server `$identify` merge and erasure of a never-held key are
+B5 QA; once-only steps of a business older than 395 days; weekly counts not retried; lease-lost and
+`failed_permanent` paths untested; the reseller-discount quote stubbed; §8's retention figures depend on B5's
+PostHog settings, which must be set before release.
+
+## Waivers (Phase B)
+None.
