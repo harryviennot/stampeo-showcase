@@ -255,7 +255,7 @@ export function AuthenticationStep({
           <h1 className="text-h2 text-[var(--foreground)]">
             {t("verifyTitle")}
           </h1>
-          <p className="text-[var(--muted-foreground)] mt-2">
+          <p className="ph-no-capture text-[var(--muted-foreground)] mt-2">
             {t.rich("verifySubtitle", {
               email,
               strong: (chunks) => (
@@ -440,7 +440,7 @@ export function AuthenticationStep({
             placeholder={t("emailPlaceholder")}
           />
           {typoSuggestion && (
-            <p className="text-xs text-[var(--muted-foreground)]">
+            <p className="ph-no-capture text-xs text-[var(--muted-foreground)]">
               {t("emailTypoSuggestion", { suggestion: typoSuggestion })}{" "}
               <button
                 type="button"

@@ -156,7 +156,7 @@
         },
         "analytics": {
           "title": "Audience measurement",
-          "body": "Google Analytics, to see which pages bring us new businesses."
+          "body": "Google Analytics and PostHog, to see which pages bring us new businesses and how the site is used. If you turn it on, PostHog also remembers this browser with a cookie, makes session recordings with every form field masked, and links your visits to the account you create, without ever receiving your email or name. Otherwise, PostHog only counts visits, without a cookie."
         },
         "marketing": {
           "title": "Advertising",
@@ -180,7 +180,7 @@
           },
           "analytics": {
             "title": "Audience measurement",
-            "body": "Google Analytics, to see which pages bring us new businesses. Google Analytics handles this data on our behalf only."
+            "body": "Google Analytics and PostHog, to see which pages bring us new businesses and how the site is used. PostHog remembers this browser with a cookie and links your visits to the account you create, without ever receiving your email or name. Session recordings, with every form field masked, start only if you save your choice with this turned on. Google Analytics handles this data on our behalf only, and so does PostHog. Turned off, PostHog only counts visits, without a cookie."
           }
         }
       }

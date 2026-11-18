@@ -1,6 +1,6 @@
 # Politique de Confidentialité : Stampeo
 
-**Dernière mise à jour : 10 novembre 2026**
+**Dernière mise à jour : 18 novembre 2026**
 
 ## 1. Introduction
 
@@ -111,7 +111,7 @@ Pour tous les utilisateurs, nous pouvons collecter :
 
 - Type de pass (Apple Wallet ou Google Wallet)
 - Jeton d'appareil (device token) pour les mises à jour du pass
-- Données d'utilisation envoyées à PostHog pour nos statistiques internes : nom de l'événement, horodatage, page consultée, adresse IP du visiteur et, une fois le compte Business créé, l'identifiant de l'entreprise concernée. Aucun cookie n'est déposé et aucun identifiant n'est conservé dans le stockage du navigateur (voir §5)
+- Données d'utilisation envoyées à PostHog pour nos statistiques internes : nom de l'événement, horodatage, page consultée et adresse IP du visiteur. Par défaut, aucun cookie n'est déposé et aucun identifiant n'est conservé dans le stockage du navigateur. Selon votre choix en matière de mesure d'audience, PostHog peut aussi reconnaître votre navigateur, enregistrer l'utilisation des pages (tous les champs de formulaire masqués) et relier vos visites au compte que vous créez, au moyen d'une clé pseudonyme, jamais de votre adresse email ni de votre nom. Nos serveurs transmettent aussi à PostHog les principales étapes de la vie de chaque compte. Le 5.4 décrit chacun de ces traitements et les cas où il s'applique
 - Contexte de supervision des erreurs envoyé à Sentry en cas d'exception : identifiant utilisateur, identifiant d'entreprise, chemin de la requête et pile d'exécution (pas d'adresse email, pas de mot de passe, pas de données de paiement)
 - Pour les emails que nous adressons aux utilisateurs Business, les événements d'engagement enregistrés par notre prestataire d'envoi (Resend) : remise, ouverture, clic (y compris le lien cliqué), rejet (bounce) et signalement comme spam, rattachés à l'identifiant de l'entreprise et de l'utilisateur destinataire. Ils servent uniquement à mesurer et améliorer nos propres communications et à maintenir la qualité de nos listes, jamais à des fins publicitaires
 
@@ -128,7 +128,7 @@ Nous faisons appel aux sous-traitants suivants :
 | Apple (APNs) | Mises à jour des pass Apple Wallet | États-Unis (Data Privacy Framework) |
 | Google (Wallet API) | Mises à jour des pass Google Wallet | États-Unis (Data Privacy Framework) |
 | Google (Analytics 4) : Google Ireland Limited, avec Google LLC | Mesure d'audience et signalement des conversions, selon votre choix en matière de cookies (voir 5.3 et 5.5) | UE (transferts possibles vers les US sous Data Privacy Framework) |
-| PostHog | Statistiques du site (sans cookies) | UE |
+| PostHog Inc. (PostHog EU Cloud) | Statistiques internes et mesure d'audience : comptage des visites et, selon votre choix, enregistrements de session, cartes de chaleur et étapes de la vie d'un compte (voir 5.4) | Francfort, Allemagne (UE) |
 | Sentry | Supervision des erreurs | Allemagne (UE) |
 | Trustpilot A/S | Invitations à laisser un avis, envoyées aux propriétaires d'entreprise (adresse email, nom, identifiant de l'entreprise, langue) | Danemark (UE), transferts possibles hors UE sous clauses contractuelles types |
 | Redis (auto-hébergé, via Taskiq) | File d'attente de tâches et cache court terme pour les visuels de pass et la livraison des notifications | France (UE), même infrastructure que notre VPS |
@@ -149,7 +149,7 @@ Certains de nos sous-traitants (Stripe, Apple, Google, Trustpilot) peuvent trans
 
 ### 5.1 Votre choix
 
-Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google ou Meta, et aucun de leurs cookies n'est créé. Refuser ne laisse donc rien derrière soi à supprimer.
+Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google ou Meta, et aucun de leurs cookies n'est créé. PostHog est la seule exception : son script fonctionne quel que soit votre choix, pour compter les visites sans cookie, et il ne dépose son propre cookie qu'une fois que vous avez accepté ou, aux États-Unis, dès votre première visite sauf si vous le désactivez (voir 5.4). Refuser ne laisse donc rien derrière soi à supprimer.
 
 Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé 6 mois, au terme desquels nous pouvons vous le redemander. Vous pouvez le modifier à tout moment via **Préférences cookies**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
 
@@ -179,6 +179,7 @@ Ces cookies ne sont utilisés que si vous les autorisez (aux États-Unis, tant q
 |---|---|---|
 | Mesure d'audience | Google (Google Analytics 4) | `_ga`, `_ga_*`, `_gid` |
 | Mesure publicitaire | Meta | `_fbp`, `_fbc` |
+| Mesure d'audience, enregistrements de session et cartes de chaleur | PostHog | `ph_*` (stampeo.app uniquement, 6 mois au plus ; voir 5.4) |
 
 Les trois cookies ci-dessous sont les nôtres. Notre serveur les dépose, et ils sont partagés entre stampeo.app et le tableau de bord.
 
@@ -190,11 +191,27 @@ Les trois cookies ci-dessous sont les nôtres. Notre serveur les dépose, et ils
 
 L'ancien cookie `stampeo_attribution` n'est plus déposé ; un navigateur qui l'a reçu auparavant peut encore le conserver jusqu'à son expiration.
 
-### 5.4 Mesure d'audience sans cookie
+### 5.4 Mesure d'audience avec PostHog
 
-Stampeo utilise PostHog (hébergé dans l'UE) pour ses statistiques internes de mesure d'audience. PostHog est configuré de manière à ne **déposer aucun cookie de suivi** et à ne **conserver aucun identifiant dans le stockage du navigateur** (cookie, localStorage ou équivalent). Les événements sont limités à la session de navigation en cours et ne sont pas corrélés d'une visite à l'autre. L'adresse IP du visiteur est transmise au serveur PostHog pour la journalisation technique et la dédoublonnage des événements, mais elle n'est pas associée à un identifiant persistant, n'est pas utilisée à des fins de profilage ou de publicité, et n'est pas partagée avec des tiers. L'hébergement est réalisé dans l'Union européenne.
+Stampeo utilise PostHog pour ses statistiques internes et sa mesure d'audience : quelles pages sont consultées, quelles sections et quels boutons mènent à la création d'un compte, et à quel moment les visiteurs abandonnent. PostHog Inc. traite ces données uniquement pour notre compte, en tant que sous-traitant, et les héberge sur son infrastructure européenne (EU Cloud), à Francfort, en Allemagne.
 
-Rien n'étant stocké sur votre appareil, cette mesure relève de l'exemption de consentement prévue par la directive ePrivacy et les lignes directrices de la CNIL pour la mesure d'audience strictement nécessaire. Elle fonctionne donc que vous acceptiez ou refusiez les cookies du 5.3, et un refus ne nous prive pas de la mesure du site lui-même.
+**Une mesure sans cookie, quel que soit votre choix.** Par défaut, PostHog ne **dépose aucun cookie** et ne **conserve aucun identifiant dans le stockage du navigateur** (cookie, localStorage ou équivalent). Les événements sont limités à la session de navigation en cours, ne sont pas corrélés d'une visite à l'autre, et rien n'est enregistré. L'adresse IP du visiteur est transmise au serveur PostHog pour la journalisation technique et le dédoublonnage des événements, mais dans ce mode elle n'est pas associée à un identifiant persistant ; elle n'est pas utilisée à des fins de profilage ou de publicité, et n'est pas partagée avec des tiers.
+
+Rien n'étant stocké sur votre appareil dans ce mode, cette mesure relève de l'exemption de consentement prévue par la directive ePrivacy et les lignes directrices de la CNIL pour la mesure d'audience strictement nécessaire. Elle fonctionne donc que vous acceptiez ou refusiez les cookies du 5.3, et un refus ne nous prive pas de la mesure du site lui-même. L'exemption ne couvre que ce mode : ce que PostHog fait avec votre consentement, décrit ci-dessous, repose sur ce consentement.
+
+**Avec votre consentement à la mesure d'audience.** Si vous acceptez la mesure d'audience, dans le bandeau ou via **Préférences cookies**, PostHog, en plus :
+
+- **reconnaît votre navigateur** : un identifiant aléatoire est conservé dans un cookie `ph_*`, déposé pour stampeo.app uniquement (jamais pour le tableau de bord ni pour nos serveurs), pendant 6 mois au plus, afin qu'une visite un autre jour compte pour le même visiteur. Si vous acceptez en cours de visite, cette visite garde l'identifiant avec lequel elle a commencé : les pages vues avant votre accord comptent donc avec elle ;
+- **enregistre l'utilisation des pages** : les enregistrements de session restituent les pages que vous voyez, vos clics et votre défilement, avec **tous les champs de formulaire masqués**, si bien que rien de ce que vous saisissez n'est enregistré ; les cartes de chaleur montrent où les visiteurs cliquent et jusqu'où ils font défiler la page. Ni les uns ni les autres ne fonctionnent sur le parcours d'inscription, les pages de connexion et de réinitialisation du mot de passe, la page des préférences d'emails, les pages de carte de démonstration, ni les pages où les clients rejoignent la carte de fidélité d'un commerce, et ils ne capturent ni la console ni les requêtes réseau de votre navigateur ;
+- **relie vos visites au compte que vous créez** : lorsque vous confirmez votre compte, nous indiquons à PostHog que ce navigateur lui appartient, au moyen d'une clé pseudonyme que nous calculons à partir du compte et que PostHog ne peut pas reconvertir en celui-ci. PostHog ne reçoit jamais votre adresse email, votre nom ni nos identifiants internes.
+
+Aux États-Unis, PostHog reconnaît votre navigateur dès votre première visite et relie vos visites au compte que vous créez, sauf si vous désactivez la mesure d'audience via **Vos choix de confidentialité** ou si votre navigateur émet un signal Global Privacy Control. Les enregistrements de session et les cartes de chaleur n'y fonctionnent qu'une fois que vous avez validé un choix dans **Vos choix de confidentialité** avec la mesure d'audience activée, jamais par défaut.
+
+**Étapes transmises depuis nos serveurs.** Si vous créez un compte, nos serveurs transmettent à PostHog les principales étapes de sa vie : la création du compte, l'activation de sa première carte, un premier tampon test, l'ouverture de la page de paiement, le début de l'essai gratuit, le règlement d'une première facture et la fin de l'abonnement. Pour chaque étape, PostHog reçoit sa date, la langue et la version pays de Stampeo que vous utilisez et, lorsque l'étape concerne une offre, l'offre, sa périodicité de facturation, le prix ou le montant réglé, et sa devise ; à la fin d'un abonnement, il reçoit aussi le motif de cette fin et le fait que l'abonnement était payant ou non. Si vous avez accepté la mesure d'audience (aux États-Unis, tant que vous ne l'avez pas désactivée), chaque étape porte la clé pseudonyme décrite ci-dessus, afin de se rattacher à vos visites, ainsi qu'une clé pseudonyme propre au commerce et, si nous l'avons conservée au titre du 5.5, l'origine de votre visite (paramètres de campagne, page d'arrivée et site d'origine). Sinon, PostHog se contente de compter l'étape : il ne reçoit ni identifiant ni origine, et l'étape ne peut donc pas être rattachée à vos visites. Ces envois ne comportent jamais votre adresse email, votre nom, votre numéro de téléphone, votre adresse IP ni les caractéristiques de votre navigateur.
+
+**Base légale.** Votre consentement (article 6.1.a du RGPD) pour le cookie, les enregistrements de session, les cartes de chaleur et le lien avec votre compte. Pour la mesure sans cookie et pour les étapes comptées sans identifiant, notre intérêt légitime à mesurer le bon fonctionnement du site et du service (article 6.1.f du RGPD). Aux États-Unis, où le consentement préalable n'est pas exigé, l'information et votre possibilité de refus, via **Vos choix de confidentialité** (voir 5.1 et §6).
+
+**Retrait.** Si vous refusez la mesure d'audience, ou la retirez plus tard via **Préférences cookies** (aux États-Unis, via **Vos choix de confidentialité** ou un signal Global Privacy Control), l'enregistrement s'arrête aussitôt, le cookie `ph_*` et toutes les entrées `ph_*` du stockage de votre navigateur sont supprimés, et la page se recharge. PostHog compte ensuite vos visites sans cookie, sous un nouvel identifiant qui n'est jamais conservé, et les étapes de votre compte transmises par nos serveurs ne vous sont plus rattachées : elles sont seulement comptées. Un refus exprimé sur ce site après la création de votre compte s'applique à ce compte, grâce à l'identifiant décrit au 5.6. Ce que PostHog détient déjà est conservé pendant les durées indiquées au §8, et vous pouvez nous demander de le supprimer à tout moment (§10).
 
 Des cookies strictement nécessaires peuvent être utilisés pour l'authentification et la gestion de session sur le tableau de bord. Ces cookies ne requièrent pas de consentement.
 
@@ -232,7 +249,7 @@ Pour chaque étape, nous conservons aussi des éléments de diagnostic de l'envo
 Vous pouvez retirer chaque choix séparément, via **Préférences cookies** ou, aux États-Unis, via **Vos choix de confidentialité** :
 
 - Désactiver la publicité met fin à tout nouveau signalement à Meta, à Google Ads et à OpenAI, et supprime les identifiants publicitaires que nous avions conservés.
-- Désactiver la mesure d'audience produit le même effet pour Google Analytics.
+- Désactiver la mesure d'audience produit le même effet pour Google Analytics, et ramène PostHog à une mesure sans cookie (voir 5.4).
 - Désactiver les deux supprime aussi l'origine de campagne conservée.
 
 Un refus exprimé sur ce site après la création de votre compte s'applique à votre compte et à vos commerces, grâce à l'identifiant aléatoire décrit au 5.6. Les étapes déjà transmises ne peuvent pas être rappelées. Ces données sont supprimées en même temps que le compte professionnel auquel elles se rattachent (voir §8).
@@ -262,6 +279,7 @@ Nous utilisons les données collectées pour :
 - Envoyer des emails transactionnels et opérationnels (confirmation de compte, récupération de pass, notifications liées à l'essai, confirmations de changement de plan, rappel envoyé avant chaque renouvellement annuel, et autres notifications de facturation ; voir CGU §5.7)
 - Produire, pour chaque entreprise, des statistiques agrégées sur l'activité de son propre programme (voir §3.3)
 - Produire des statistiques internes agrégées sur l'utilisation de la Plateforme à travers l'ensemble des entreprises, détecter les abus et prioriser les améliorations
+- Comprendre comment les visiteurs utilisent stampeo.app et quelles pages mènent à un compte, à un essai ou à un paiement, avec PostHog (voir 5.4)
 - Adresser aux utilisateurs Business un nombre limité d'emails de cycle de vie et marketing, sous réserve de l'opposition décrite au §6.1
 - Inviter les propriétaires d'entreprise ayant un abonnement payant à laisser un avis sur Stampeo via Trustpilot, sur la base de notre intérêt légitime à recueillir des retours sur notre service (article 6.1.f du RGPD ; destinataire décrit au §4)
 - Améliorer la Plateforme
@@ -329,6 +347,9 @@ Les entreprises utilisant les broadcasts doivent publier leur propre politique d
 | Éléments de diagnostic de l'envoi de chaque étape signalée au titre du §5.5 (statut, heures des tentatives, code de réponse de la plateforme) | 13 mois |
 | Messages de réponse des plateformes aux étapes signalées au titre du §5.5 | 90 jours |
 | Enregistrements de consentement — preuve de vos choix en matière de cookies (§5.6) | 3 ans à compter de la fin du consentement (remplacement ou retrait). **Non** supprimés avec le compte Business : le lien vers le compte est retiré et l'enregistrement est conservé, au titre de l'article 17.3 b) et e) du RGPD |
+| Événements et profils de visiteurs PostHog (§5.4) | 13 mois au plus. À la suppression d'un compte, nous demandons aussi à PostHog de supprimer le profil qui lui est rattaché |
+| Enregistrements de session PostHog (§5.4) | 30 jours |
+| Étapes d'un compte préparées sur nos serveurs pour PostHog (§5.4) | 13 mois au plus, et supprimées avec le compte |
 
 La durée de conservation de 24 mois pour les journaux d'accès support est définie pour permettre l'instruction d'un éventuel incident de sécurité tout en restant proportionnée à sa finalité, conformément aux recommandations de la CNIL en matière de journalisation des accès.
 

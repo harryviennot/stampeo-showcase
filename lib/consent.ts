@@ -38,10 +38,12 @@ import { mintSubjectId, readSid, validSubjectId } from "./privacy/subject";
  * googletagmanager.com, and Meta has no cookieless mode at all.
  * A refusal therefore has nothing to clean up, because nothing was created.
  *
- * PostHog is deliberately outside all of this: it runs `persistence: "memory"`
- * (see `instrumentation-client.ts`), stores nothing on the device, and so sits
- * outside the ePrivacy consent requirement. It keeps working for refusers,
- * which is the only reason we can measure what the refusal rate is.
+ * PostHog runs for every visitor, in memory by default, which stores nothing on
+ * the device and so sits outside the ePrivacy consent requirement (it keeps
+ * working for refusers, which is how we can measure the refusal rate). While
+ * analytics is allowed (a current grant, or the US default) it keeps a `ph_*`
+ * cookie; it records sessions only on an explicit grant (see
+ * `lib/posthog/mode.ts`).
  */
 
 export const CONSENT_COOKIE = "stampeo_consent";
@@ -69,12 +71,16 @@ export const CONSENT_COOKIE = "stampeo_consent";
  * 5 — Privacy policy §4 and §5.5: OpenAI also receives three reported steps
  *     from our servers, with its click identifier and the account email
  *     hashed with SHA-256, under the advertising choice.
+ * 6 — Privacy policy §4, §5.3, §5.4 and §8: PostHog remembers a visitor who
+ *     allows audience measurement in a `ph_*` cookie, records sessions with
+ *     every form field masked, links the visits to the account they create,
+ *     and receives the steps of an account from our servers.
  *
  * The backend's `CONSENT_VERSION` mirrors this and must move with it: the
  * backend honours only the versions in `ACCEPTED_CONSENT_VERSIONS` (backend
  * `app/services/attribution/eligibility.py`).
  */
-export const CONSENT_VERSION = 5;
+export const CONSENT_VERSION = 6;
 
 export type ConsentCategory = "analytics" | "marketing";
 
@@ -157,6 +163,9 @@ export type ConsentSurface = PolicySurface;
  * Ads cookies a browser may still hold; the site loads no Ads tag. `__oppref`
  * and `__obref` do the same for OpenAI's pixel, which the site never loads.
  *
+ * `ph_*` is PostHog's cookie, kept only for a visitor who allows audience
+ * measurement; its project key is part of the name, so the prefix is matched.
+ *
  * `stampeo_ga` and `stampeo_ad` are our own carriers of each category's
  * identifiers. `stampeo_src` (campaign source) holds neither and is cleared
  * only when both categories are refused; the legacy `stampeo_attribution`
@@ -166,7 +175,7 @@ export type ConsentSurface = PolicySurface;
  * clearing them would erase the very refusal being acted on.
  */
 const COOKIE_PATTERNS: Record<ConsentCategory, readonly string[]> = {
-  analytics: ["_ga", "_ga_*", "_gid", GA_COOKIE],
+  analytics: ["_ga", "_ga_*", "_gid", "ph_*", GA_COOKIE],
   marketing: ["_fbp", "_fbc", "_ttp", "_gcl_*", "_gac_*", "__oppref", "__obref", AD_COOKIE],
 };
 
@@ -563,7 +572,7 @@ export function detectConsentRegime(): ConsentRegime {
 }
 
 /** Every cookie name currently readable by script on this document. */
-function presentCookieNames(): string[] {
+export function presentCookieNames(): string[] {
   if (typeof document === "undefined") return [];
   return document.cookie
     .split(";")
@@ -664,6 +673,16 @@ export function writeConsentRecord(state: ConsentState, row: PolicyRow): Decided
 export function clearCookiesFor(categories: readonly ConsentCategory[]): void {
   if (typeof document === "undefined") return;
 
+  for (const name of cookieNamesToClear(categories, presentCookieNames())) expireCookie(name);
+
+  const carriers = cookieNamesToClear(categories, SERVER_SET_CARRIERS);
+  if (carriers.length > 0) syncPrivacyCookies({ clear: carriers });
+}
+
+/** Expire one cookie at every Domain a script could have set it with, since a cookie is deleted only with the scope it was set with. */
+export function expireCookie(name: string): void {
+  if (typeof document === "undefined") return;
+
   const host = window.location.hostname;
   const parent = host.split(".").slice(-2).join("."); // stampeo.app
   const domains = [
@@ -674,20 +693,15 @@ export function clearCookiesFor(categories: readonly ConsentCategory[]): void {
     process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined,
   ];
 
-  for (const name of cookieNamesToClear(categories, presentCookieNames())) {
-    for (const domain of domains) {
-      let cookie = `${name}=; Max-Age=0; Path=/`;
-      if (domain) cookie += `; Domain=${domain}`;
-      try {
-        document.cookie = cookie;
-      } catch {
-        // Same as above: a refused write is not a reason to fail the click.
-      }
+  for (const domain of domains) {
+    let cookie = `${name}=; Max-Age=0; Path=/`;
+    if (domain) cookie += `; Domain=${domain}`;
+    try {
+      document.cookie = cookie;
+    } catch {
+      // A refused write is not a reason to fail the click.
     }
   }
-
-  const carriers = cookieNamesToClear(categories, SERVER_SET_CARRIERS);
-  if (carriers.length > 0) syncPrivacyCookies({ clear: carriers });
 }
 
 /** Clear these categories' cookies, but only when one is in the jar: nothing is asked of the server for nothing. */

@@ -201,7 +201,7 @@ function LoginContent() {
               <div className="space-y-5">
                 <div className="p-4 rounded-2xl bg-green-50 text-green-600 text-sm border border-green-100 dark:bg-green-950/50 dark:border-green-900/50 dark:text-green-400">
                   <p className="font-medium">{tForgot("emailSent")}</p>
-                  <p className="mt-1">{tForgot("emailSentDescription", { email })}</p>
+                  <p className="ph-no-capture mt-1">{tForgot("emailSentDescription", { email })}</p>
                   <p className="mt-2 text-xs opacity-80">{tForgot("checkSpam")}</p>
                 </div>
                 <button
@@ -264,7 +264,7 @@ function LoginContent() {
               <h1 className="text-2xl font-bold text-[var(--foreground)]">
                 {t("emailNotConfirmed")}
               </h1>
-              <p className="text-[var(--muted-foreground)] mt-2 text-sm">
+              <p className="ph-no-capture text-[var(--muted-foreground)] mt-2 text-sm">
                 {email}
               </p>
             </div>

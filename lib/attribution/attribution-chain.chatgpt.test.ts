@@ -16,7 +16,7 @@ import { describe, expect, test } from "bun:test";
 import { describeGoldenChain } from "./__fixtures__/golden-chain";
 import { readClickIds } from "./landing";
 
-const CHATGPT_CHAIN_SHA256 = "b4b4b38648c6502436b26a0e380026bf0e6cd738e70ae9675eae6cddc87c99a5";
+const CHATGPT_CHAIN_SHA256 = "cd532199ed391bfee03eddf7a95c89b2b52434b564802447e3694f53ff0193fc";
 
 const FIXTURE = describeGoldenChain<{
   account_ad_attribution: Record<string, unknown>;
@@ -48,7 +48,7 @@ describe("the ChatGPT ad landing", () => {
       vn: "openai",
       ci: OPPREF,
       ct: FIXTURE.inputs.times.landed_at,
-      cv: 5,
+      cv: 6,
       cr: "opt-out",
       ca: 0,
       g: "US",
@@ -75,7 +75,7 @@ describe("the ChatGPT ad landing", () => {
       utm_campaign: carriers.src.uc,
       referrer_host: carriers.src.rh,
     });
-    expect(row).toMatchObject({ vendor: "openai", click_id: OPPREF, consent_version: 5 });
+    expect(row).toMatchObject({ vendor: "openai", click_id: OPPREF, consent_version: 6 });
     expect(acquisition_source).toBe("chatgpt_ad");
     expect(chatgpt_ads).toEqual({ oppref: OPPREF, click_captured_at: FIXTURE.inputs.times.landed_at });
   });

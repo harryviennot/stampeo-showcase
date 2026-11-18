@@ -156,7 +156,7 @@
         },
         "analytics": {
           "title": "Statystyki",
-          "body": "Google Analytics, żeby wiedzieć, które strony przyprowadzają nowe firmy."
+          "body": "Google Analytics i PostHog, żeby wiedzieć, które strony przyprowadzają nowe firmy i jak odwiedzający korzystają z serwisu. Po włączeniu PostHog rozpoznaje też tę przeglądarkę dzięki plikowi cookie, nagrywa sesje, maskując wszystkie pola formularzy, i łączy twoje wizyty z kontem, które założysz, nigdy nie otrzymując twojego adresu e-mail ani imienia i nazwiska. W przeciwnym razie PostHog tylko liczy wizyty, bez plików cookie."
         },
         "marketing": {
           "title": "Reklama",
@@ -180,7 +180,7 @@
           },
           "analytics": {
             "title": "Statystyki",
-            "body": "Google Analytics, żeby wiedzieć, które strony przyprowadzają nowe firmy. Google Analytics przetwarza te dane wyłącznie na nasze zlecenie."
+            "body": "Google Analytics i PostHog, żeby wiedzieć, które strony przyprowadzają nowe firmy i jak odwiedzający korzystają z serwisu. PostHog rozpoznaje tę przeglądarkę dzięki plikowi cookie i łączy twoje wizyty z kontem, które założysz, nigdy nie otrzymując twojego adresu e-mail ani imienia i nazwiska. Nagrania sesji, z zamaskowanymi polami formularzy, włączają się dopiero wtedy, gdy zapiszesz swój wybór przy włączonym tym celu. Google Analytics przetwarza te dane wyłącznie na nasze zlecenie, podobnie jak PostHog. Po wyłączeniu PostHog tylko liczy wizyty, bez plików cookie."
           }
         }
       }

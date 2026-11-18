@@ -334,6 +334,13 @@ describe("cookieNamesToClear", () => {
     ].sort());
   });
 
+  test("revoking analytics clears PostHog's cookie, whatever its project key, and nothing that only starts like it", () => {
+    const posthog = ["ph_phc_Zk3Qw9_posthog", "ph_phc_other_posthog"];
+
+    expect(cookieNamesToClear(["analytics"], [...posthog, "phone", "photo_id", "NEXT_LOCALE"]).sort()).toEqual(posthog.sort());
+    expect(cookieNamesToClear(["marketing"], posthog)).toEqual([]);
+  });
+
   test("never clears our own cookies", () => {
     // Clearing the consent cookie while acting on it would erase the refusal
     // we just recorded and show the banner again on the next page.
@@ -830,7 +837,7 @@ describe("consentSnapshotKey", () => {
 });
 
 describe("CONSENT_VERSION", () => {
-  test("is 5, the wire format written into the cookie", () => {
+  test("is 6, the wire format written into the cookie", () => {
     // Every other test uses the constant, so a bump would pass them all while
     // silently invalidating every visitor's stored choice. Bumping it IS the
     // mechanism for re-consenting a new vendor or a new processing purpose, so
@@ -851,8 +858,8 @@ describe("CONSENT_VERSION", () => {
     //     app/services/attribution/eligibility.py);
     //   - `CONSENT_VERSION` in web/src/lib/consent-state.ts, which reads the
     //     shared cookie to notice a withdrawal.
-    expect(CONSENT_VERSION).toBe(5);
-    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A5");
+    expect(CONSENT_VERSION).toBe(6);
+    expect(serializeConsentCookie(GRANTED)).toContain("%22v%22%3A6");
   });
 
   test("a grant stored under version 1 is no longer honoured", () => {

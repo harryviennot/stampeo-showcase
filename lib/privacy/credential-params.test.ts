@@ -129,6 +129,13 @@ describe("scrubSentryEvent", () => {
     expect(JSON.stringify(sent)).not.toContain("pkce");
   });
 
+  test("a signed-in visitor's error reaches Sentry with their id and never their email", () => {
+    const sent = scrubSentryEvent({ ...errorEvent(), user: { id: "user-1", email: "camille@gmail.com" } });
+
+    expect(sent.user).toEqual({ id: "user-1" });
+    expect(JSON.stringify(sent)).not.toContain("camille@gmail.com");
+  });
+
   test("keeps everything that is not a credential", () => {
     const sent = scrubSentryEvent(errorEvent());
 

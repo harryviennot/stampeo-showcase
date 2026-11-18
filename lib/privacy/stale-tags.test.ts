@@ -8,7 +8,11 @@
 
 import { afterEach, describe, expect, test } from "bun:test";
 
-import { emitConsentChange, writeConsentRecord } from "../consent";
+import { CONSENT_COOKIE, CONSENT_VERSION, emitConsentChange, serializeConsentCookie, writeConsentRecord } from "../consent";
+import { fakePostHog } from "../posthog/__fixtures__/fake-posthog";
+import { startPostHog } from "../posthog/start";
+import { fakeStorage } from "../testing/fake-storage";
+import { restoreGlobalsAfterEach } from "../testing/restore-globals";
 import { installFakeBrowser, GRANTED_COOKIE, REFUSED_COOKIE, type FakeBrowser } from "./__fixtures__/fake-browser";
 import { rowFor } from "./policy";
 import { consentChangedSince, watchConsentAcrossTabs } from "./stale-tags";
@@ -21,6 +25,10 @@ afterEach(() => {
   browser?.restore();
   browser = null;
 });
+
+/** The `Cookie:` header of a European who stored this choice. */
+const choice = (analytics: boolean, marketing: boolean) =>
+  `${CONSENT_COOKIE}=${serializeConsentCookie({ v: CONSENT_VERSION, analytics, marketing, at: 1_791_240_000, regime: "opt-in", regionRow: "EEA_UK_CH" })}`;
 
 const ON = { analytics: true, marketing: true };
 const OFF = { analytics: false, marketing: false };
@@ -109,6 +117,19 @@ describe("a tab that comes back to the front", () => {
   });
 });
 
+describe("a tab with Google Analytics or the Meta pixel loaded", () => {
+  test.each([
+    ["advertising was refused", choice(true, true), choice(true, false)],
+    ["advertising was accepted", choice(true, false), choice(true, true)],
+  ])("reloads when %s elsewhere: the pixel is running or may now start", (_change, before, after) => {
+    const b = tab(before);
+
+    away(b, () => b.setJar(after));
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+});
+
 describe("a window that stayed visible beside the one where the visitor refused", () => {
   test("reloads when it is focused, though it never fired visibilitychange", () => {
     const b = tab(GRANTED_COOKIE);
@@ -173,5 +194,62 @@ describe("a window that stayed visible beside the one where the visitor refused"
     untagged.setJar(REFUSED_COOKIE);
     focus();
     expect(untagged.events).not.toContain("reload");
+  });
+});
+
+describe("a tab whose PostHog remembers the visitor, with no GA or Meta tag loaded", () => {
+  restoreGlobalsAfterEach("localStorage", "sessionStorage");
+
+  let stopPostHog: (() => void) | null = null;
+  afterEach(() => {
+    stopPostHog?.();
+    stopPostHog = null;
+  });
+
+  /** A tab where PostHog started for this visitor and no GA or Meta tag is loaded, watched the way the banner watches. */
+  function postHogTab(cookie: string, pathname?: string) {
+    browser = installFakeBrowser({ cookie, timezone: "Europe/Paris", pathname });
+    Object.defineProperty(globalThis, "localStorage", { value: fakeStorage(), configurable: true, writable: true });
+    Object.defineProperty(globalThis, "sessionStorage", { value: fakeStorage(), configurable: true, writable: true });
+    stopPostHog = startPostHog(fakePostHog(), "phc_testkey", "https://eu.i.posthog.com");
+    watcher = watchConsentAcrossTabs({ tagsLoaded: () => false });
+    return browser;
+  }
+
+  test("reloads when audience measurement is refused elsewhere: its storage is cleared and it starts again in memory", () => {
+    const b = postHogTab(GRANTED_COOKIE);
+
+    away(b, () => b.setJar(REFUSED_COOKIE));
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+
+  test.each([
+    ["advertising was refused", choice(true, true), choice(true, false)],
+    ["advertising was accepted", choice(true, false), choice(true, true)],
+  ])("stays put when %s elsewhere, even in the middle of the sign-up: what PostHog may do has not changed", (_change, before, after) => {
+    const b = postHogTab(before, "/onboarding");
+
+    away(b, () => b.setJar(after));
+    focus();
+    watcher!.recheck();
+
+    expect(b.events).not.toContain("reload");
+  });
+
+  test("reloads when audience measurement is withdrawn elsewhere, on the sign-up page too", () => {
+    const b = postHogTab(GRANTED_COOKIE, "/onboarding");
+
+    away(b, () => b.setJar(choice(false, true)));
+
+    expect(b.events.filter((event) => event === "reload")).toHaveLength(1);
+  });
+
+  test("a grant made elsewhere reaches a tab that was only counting in memory without reloading it", () => {
+    const b = postHogTab("");
+
+    away(b, () => b.setJar(GRANTED_COOKIE));
+
+    expect(b.events).not.toContain("reload");
   });
 });

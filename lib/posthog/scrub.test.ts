@@ -6,8 +6,8 @@
  * copies into properties of their own.
  *
  * Gone from every event: the ad platforms' click ids (their platform is named in `ad_click_vendor`), the credentials
- * of a sign-in link, and the token of a demo session or a team-join link in a path. Kept: every other URL
- * parameter (utm_* included) and every other property.
+ * of a sign-in link, the token of a demo session or a team-join link in a path, and any email address, wherever it
+ * is written. Kept: every other URL parameter (utm_* included) and every other property.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -272,5 +272,56 @@ describe("scrubPostHogEvent", () => {
     const clean = { uuid: "u", event: "$autocapture", properties: { $current_url: "https://stampeo.app/en" } };
     expect(scrubPostHogEvent(clean)).toEqual(clean);
     expect(scrubPostHogEvent(null)).toBeNull();
+  });
+});
+
+describe("an email address in an autocapture event", () => {
+  const EMAIL = "ines.martin+shop@gmail.com";
+  const REDACTED = "[email]";
+
+  // What posthog-js sends for a tap on the sign-up step's "Did you mean ...?" button.
+  const tapOnSuggestion = () => ({
+    event: "$autocapture",
+    properties: {
+      $event_type: "click",
+      $el_text: `Use ${EMAIL}`,
+      $current_url: "https://stampeo.app/en/onboarding",
+      $elements_chain: `button.text-sm:attr__type="button"nth-child="2"nth-of-type="1"text="Use ${EMAIL}";p.text-xs:nth-child="2"text="Did you mean ${EMAIL}?";div.space-y-2:nth-child="1"`,
+      $elements: [
+        { tag_name: "button", $el_text: `Use ${EMAIL}`, text: `Use ${EMAIL}`, attr__type: "button" },
+        { tag_name: "p", text: `Did you mean ${EMAIL}?` },
+      ],
+    },
+  });
+
+  test("is redacted from the text of the element and from every element of the chain, and nothing else changes", () => {
+    const sent = scrubPostHogEvent(tapOnSuggestion());
+
+    expect(sent.properties.$el_text).toBe(`Use ${REDACTED}`);
+    expect(sent.properties.$elements_chain).toBe(
+      `button.text-sm:attr__type="button"nth-child="2"nth-of-type="1"text="Use ${REDACTED}";p.text-xs:nth-child="2"text="Did you mean ${REDACTED}?";div.space-y-2:nth-child="1"`,
+    );
+    expect(sent.properties.$elements[0]).toEqual({ tag_name: "button", $el_text: `Use ${REDACTED}`, text: `Use ${REDACTED}`, attr__type: "button" });
+    expect(sent.properties.$elements[1].text).toBe(`Did you mean ${REDACTED}?`);
+    expect(sent.properties.$current_url).toBe("https://stampeo.app/en/onboarding");
+    expect(JSON.stringify(sent)).not.toContain("gmail");
+  });
+
+  test.each([
+    ["in a person property", { event: "$set", properties: { $set: { note: `signed up as ${EMAIL}` } } }],
+    ["in a captured error's message", { event: "$exception", properties: { $exception_list: [{ value: `Invalid login for ${EMAIL}` }] } }],
+    ["written percent-encoded in a link", { event: "$autocapture", properties: { $elements_chain: 'a:attr__href="/contact?from=ines.martin%2Bshop%40gmail.com"' } }],
+    ["in the name of a property", { event: "custom", properties: { [`for ${EMAIL}`]: 1 } }],
+  ])("is redacted %s", (_where, event) => {
+    expect(JSON.stringify(scrubPostHogEvent(event))).not.toMatch(/ines|gmail/);
+  });
+
+  test.each([
+    "Forgot password?",
+    "https://stampeo.app/en/pricing?utm_source=news@letter",
+    "Mail us at the shop, @stampeo on Instagram",
+    "ines@localhost",
+  ])("leaves text that is not an address as it was (%p)", (text) => {
+    expect(scrubPostHogEvent({ event: "$autocapture", properties: { $el_text: text } }).properties.$el_text).toBe(text);
   });
 });

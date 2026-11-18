@@ -1,5 +1,6 @@
 import { currentConsent, readStoredConsent } from "../consent";
 import { measurementIdFromEnv } from "../google-analytics";
+import { rememberedPostHogId, renewRememberedPostHogId } from "../posthog/consent-sync";
 import { detectPolicyRow } from "../privacy/region";
 import { buildSignupBody, signupBasis } from "./signup-body";
 
@@ -58,13 +59,20 @@ async function send(options: SignupCallOptions, dispatched: () => void): Promise
     measurementId:
       options.measurementId === undefined ? measurementIdFromEnv() : options.measurementId,
     basis: signupBasis(detectPolicyRow()),
+    posthogId: rememberedPostHogId(),
   });
-  const request = fetch(`${apiUrl}/account/signup-recorded`, {
-    method: "POST",
-    keepalive: true,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: JSON.stringify(body),
-  });
+  let request: Promise<Response>;
+  try {
+    request = fetch(`${apiUrl}/account/signup-recorded`, {
+      method: "POST",
+      keepalive: true,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify(body),
+    });
+  } finally {
+    // The id is on its way (or the request could not be made): the next account in this browser gets its own.
+    if (body.ph) renewRememberedPostHogId();
+  }
   dispatched();
   await request;
 }

@@ -156,7 +156,7 @@
         },
         "analytics": {
           "title": "Medición de audiencia",
-          "body": "Google Analytics, para ver qué páginas nos traen nuevos comercios."
+          "body": "Google Analytics y PostHog, para ver qué páginas nos traen nuevos comercios y cómo se usa el sitio. Si la activas, PostHog también reconoce este navegador con una cookie, graba tus sesiones con todos los campos de formulario ocultos y vincula tus visitas a la cuenta que crees, sin recibir nunca tu correo electrónico ni tu nombre. Si no, PostHog solo cuenta las visitas, sin cookies."
         },
         "marketing": {
           "title": "Publicidad",
@@ -180,7 +180,7 @@
           },
           "analytics": {
             "title": "Medición de audiencia",
-            "body": "Google Analytics, para ver qué páginas nos traen nuevos comercios. Google Analytics trata estos datos solo por cuenta nuestra."
+            "body": "Google Analytics y PostHog, para ver qué páginas nos traen nuevos comercios y cómo se usa el sitio. PostHog reconoce este navegador con una cookie y vincula tus visitas a la cuenta que crees, sin recibir nunca tu correo electrónico ni tu nombre. Las grabaciones de sesión, con todos los campos de formulario ocultos, solo empiezan si guardas tu elección con esta finalidad activada. Google Analytics trata estos datos solo por cuenta nuestra, igual que PostHog. Si la desactivas, PostHog solo cuenta las visitas, sin cookies."
           }
         }
       }

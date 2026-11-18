@@ -6,7 +6,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { posthogBeforeSend } from "./hygiene";
-import { POSTHOG_INIT_OPTIONS } from "./init-options";
+import { POSTHOG_INIT_OPTIONS, postHogInitOptions } from "./init-options";
 
 describe("the options PostHog starts with", () => {
   test("heatmaps and session recording are off whatever the project's settings say", () => {
@@ -24,5 +24,20 @@ describe("the options PostHog starts with", () => {
     // The site uses no flags, and the flags request carries person properties past `before_send`.
     expect(POSTHOG_INIT_OPTIONS.advanced_disable_feature_flags).toBe(true);
     expect(POSTHOG_INIT_OPTIONS.defaults).toBe("2026-01-30");
+  });
+});
+
+describe("the options for the visitor who is opening the page", () => {
+  test("a visitor who is not remembered starts with exactly the pinned options", () => {
+    expect(postHogInitOptions(false, 182)).toEqual(POSTHOG_INIT_OPTIONS);
+  });
+
+  test("a remembered visitor's id lives in a host-only cookie for the length of their choice, and nothing else is loosened", () => {
+    expect(postHogInitOptions(true, 182)).toEqual({
+      ...POSTHOG_INIT_OPTIONS,
+      persistence: "cookie",
+      cross_subdomain_cookie: false,
+      cookie_expiration: 182,
+    });
   });
 });
