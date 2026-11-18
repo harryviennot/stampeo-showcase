@@ -72,5 +72,13 @@ B5 QA; once-only steps of a business older than 395 days; weekly counts not retr
 `failed_permanent` paths untested; the reseller-discount quote stubbed; §8's retention figures depend on B5's
 PostHog settings, which must be set before release.
 
+## Security re-check (same reviewer, targeted)
+All 4 MED and the 3 LOW fixes RESOLVED (showcase 9212de5, 42ccbe9; backend 6d8e14da, 44d99b2b, 4ee49b18). Four new
+LOWs, fixed in backend 92d922ff: unlinked rows lose their attempt times and keep hour-cut `occurred_at`/`created_at`
+(no join by send time); nobody is linked unless their PostHog erasure could run (`deletion_configured()`);
+`event_uuid`, `distinct_id` and `uuid` added to Sentry's PII names; migration 240 adds its new columns with
+`ADD COLUMN IF NOT EXISTS` so an earlier run upgrades. Open, in STA-572: a US visitor with no choice who lands on a
+private page is never linked (less than the policy allows; fails safe).
+
 ## Waivers (Phase B)
 None.
