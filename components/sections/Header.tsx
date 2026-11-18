@@ -15,7 +15,6 @@ import { holdPageWhileOpen, isCurrentPath } from "@/lib/nav/mobile-menu";
 import { pageMenuItems, productMenuItems } from "@/lib/nav/menu-items";
 import { navClick } from "@/lib/posthog/site-events";
 import { NavDropdown } from "./NavDropdown";
-import { AccordionMenu } from "./MobileMenuAccordion";
 import { SheetMenu } from "./SheetMenu";
 
 function DesktopAuthButtons({
@@ -67,12 +66,8 @@ function DesktopAuthButtons({
   );
 }
 
-/** `mobileMenu` is the phone menu the bar draws: the accordion panel, or the full-screen sheet. */
-export function Header({
-  market = "int",
-  mobileMenu = "accordion",
-}: Readonly<{ market?: Market; mobileMenu?: "accordion" | "sheet" }>) {
-  const PhoneMenu = mobileMenu === "sheet" ? SheetMenu : AccordionMenu;
+/** The site header: the logo, the desktop links and sign-in buttons, and on a phone the burger that opens the full-screen sheet menu. */
+export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const signedIn = useHasSession();
@@ -145,7 +140,7 @@ export function Header({
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
-        <PhoneMenu
+        <SheetMenu
           open={mobileMenuOpen}
           onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
           onClose={closeMobileMenu}
@@ -208,7 +203,7 @@ export function Header({
               onSignOut={handleSignOut}
             />
           </div>
-        </PhoneMenu>
+        </SheetMenu>
       </header>
       <div
         className="transition-all duration-300"

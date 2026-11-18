@@ -26,7 +26,7 @@ export function SheetMenu({ open, onToggle, scrolled, children, ...menu }: Reado
       >
         {children}
       </HeaderBar>
-      <MobileMenu open={open} burgerRef={burger} language={<LanguageSwitcher variant="row" />} {...menu} />
+      <MobileMenu open={open} burgerRef={burger} language={<LanguageSwitcher />} {...menu} />
     </>
   );
 }
