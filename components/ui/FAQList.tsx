@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { ChevronDownIcon } from "@/components/icons";
+import { faqSummaryClick } from "@/lib/posthog/site-events";
 
 interface FAQListProps {
   /** `answer` may be a ReactNode: the landing FAQ resolves pricing tokens
@@ -17,7 +20,10 @@ function FAQTable({ items, defaultOpenCount }: Readonly<Required<Omit<FAQListPro
     <div className="divide-y divide-[var(--border)] overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
       {items.map((faq, index) => (
         <details key={index} className="group px-5 lg:px-8" open={index < defaultOpenCount}>
-          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
+          <summary
+            onClick={faqSummaryClick(faq.question, index + 1)}
+            className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden"
+          >
             <span className="text-lg leading-snug font-semibold text-[var(--foreground)] transition-colors group-hover:text-[var(--accent-hover)]">
               {faq.question}
             </span>
@@ -48,7 +54,7 @@ export function FAQList({ items, defaultOpenCount = 0, table = false }: FAQListP
           className="group flex flex-col rounded-xl bg-white blog-card-3d px-6 py-4"
           open={index < defaultOpenCount}
         >
-          <summary className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
+          <summary onClick={faqSummaryClick(faq.question, index + 1)} className="flex cursor-pointer items-center justify-between gap-6 py-2 list-none">
             <p className="text-lg font-bold leading-normal group-hover:text-[var(--accent)] transition-colors">
               {faq.question}
             </p>

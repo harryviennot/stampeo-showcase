@@ -1,7 +1,7 @@
 /**
- * The phone menu of the Platform-style pages as a visitor meets it: the index sheet, rendered open under the
- * English catalogs, the way the header hands it its links. The header's own wiring (which pages draw the sheet, and
- * that every other page keeps the panel) is in `lib/landing-pages/preview-nav.test.ts`.
+ * The phone menu of every page as a visitor meets it: the index sheet, rendered open under the English catalogs
+ * and, for the links that depend on the language, under each locale. The header's own wiring (no page chooses
+ * a menu) is in `lib/landing-pages/preview-nav.test.ts` and `lib/nav/header.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
@@ -12,8 +12,10 @@ import { LanguageRow } from "@/components/ui/LanguageSwitcher";
 import { routing } from "@/i18n/routing";
 import { FEATURE_ITEMS } from "@/lib/features";
 import { getLocalizedSlug } from "@/lib/feature-slugs";
-import { decodeEntities, expectInOrder, renderEn, textOf } from "../testing/render-en";
+import { decodeEntities, expectInOrder, renderEn, renderIn, textOf } from "../testing/render-en";
 import { trackedBy } from "../testing/cta-recorder";
+import { loadCatalog } from "../testing/catalogs";
+import { phoneMenuProps } from "../testing/phone-menu-props";
 import { renderAs } from "../testing/visitor-seams";
 
 const FEATURE = (feature: string) => `/en/features/${feature}`;
@@ -47,6 +49,9 @@ const PROPS: ComponentProps<typeof MobileMenu> = {
   appUrl: "https://app.stampeo.app",
   onSignOut: () => {},
 };
+
+/** The word the Soon plate prints in `locale`. */
+const soonIn = (locale: string): string => loadCatalog(locale).common.wallet.soon;
 
 const render = (overrides: Partial<ComponentProps<typeof MobileMenu>> = {}) => renderEn(<MobileMenu {...PROPS} {...overrides} />, { us: true });
 
@@ -99,6 +104,14 @@ describe("the index sheet", () => {
     );
   });
 
+  test.each(routing.locales)("%s: the six tiles lead to the feature pages in that language, Geolocation's alone marked Soon", (locale) => {
+    const tiles = targets(renderIn(locale, <MobileMenu {...PROPS} />, { us: true })).filter(({ href }) => href?.includes("/features/"));
+    const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+
+    expect(tiles.map(({ href }) => href)).toEqual(FEATURE_ITEMS.map(({ canonicalSlug }) => `${prefix}/features/${getLocalizedSlug(canonicalSlug, locale)}`));
+    expect(tiles.filter(({ name }) => name.includes(soonIn(locale))).map(({ href }) => href)).toEqual([`${prefix}/features/${getLocalizedSlug("geolocalisation", locale)}`]);
+  });
+
   test("Geolocation says Soon on its tile and no other tile does", () => {
     const tiles = targets(render()).filter(({ name }) => LABELS.some((label) => name.startsWith(label)));
 
@@ -114,6 +127,41 @@ describe("the index sheet", () => {
 
   test("Loyalty and Pricing are rows, then Resources: Blog, What's new, About and Contact", () => {
     expectInOrder(render(), [...LABELS.slice(-1), "Loyalty", "Pricing", "Resources", "Blog", "What's new", "About", "Contact"]);
+  });
+
+  test("fed by the header's own links, a US page's sheet leads to the US pricing and to the loyalty programs page, and to no landing-pages URL", () => {
+    const html = render({ ...phoneMenuProps("us", "/us"), burgerRef: PROPS.burgerRef });
+    const hrefs = targets(html).map(({ href }) => href);
+
+    expect(hrefs).toContain("/us/pricing");
+    expect(hrefs).toContain("/en/loyalty-programs");
+    expect(hrefs.filter((href) => href?.includes("landing-pages"))).toEqual([]);
+  });
+
+  test.each([
+    ["/loyalty-programs", "Loyalty"],
+    ["/pricing", "Pricing"],
+    ["/blog", "Blog"],
+    ["/changelog", "What's new"],
+  ])("on %s the sheet marks %s as the page you are on, and nothing else", (pathname, current) => {
+    const html = render({ ...phoneMenuProps("int", pathname), burgerRef: PROPS.burgerRef });
+
+    expect(targets(html).filter(({ attrs }) => /aria-current="page"/.test(attrs)).map(({ name }) => name)).toEqual([current]);
+  });
+
+  test.each([
+    ["/changelog", ["What's new"]],
+    ["/contact", ["Contact"]],
+    ["/", []],
+  ])("on %s the Resources entries in the accent colour, as the current Loyalty and Pricing rows are, are %j", (pathname, accent) => {
+    const accentOf = (path: string) =>
+      targets(render({ ...phoneMenuProps("int", path), burgerRef: PROPS.burgerRef }))
+        .filter(({ attrs }) => /(?<![\w:-])text-\[var\(--accent\)\]/.test(attrs))
+        .map(({ name }) => name);
+    const resources = ["Blog", "What's new", "About", "Contact"];
+
+    expect(accentOf("/loyalty-programs")).toContain("Loyalty");
+    expect(accentOf(pathname).filter((name) => resources.includes(name))).toEqual(accent);
   });
 
   test("signed out the bar at the bottom is Log in and Get started, which opens the trial's sign-up", () => {

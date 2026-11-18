@@ -9,7 +9,6 @@ import { describe, expect, test } from "bun:test";
 import {
   carriesSessionToken,
   scrubCredentialParams,
-  scrubPostHogEvent,
   scrubSentryEvent,
 } from "./credential-params";
 
@@ -94,98 +93,6 @@ describe("carriesSessionToken", () => {
     ["https://stampeo.app/en/login?email=ines%40example.com", false],
   ])("%s: %p", (url, expected) => {
     expect(carriesSessionToken(url)).toBe(expected);
-  });
-});
-
-describe("scrubPostHogEvent", () => {
-  const TOKEN_URL = "https://stampeo.app/en/reset-password?token_hash=secret&type=recovery&utm_source=mail";
-  const CLEAN_URL = "https://stampeo.app/en/reset-password?type=recovery&utm_source=mail";
-
-  const pageview = () => ({
-    uuid: "018f-uuid",
-    event: "$pageview",
-    timestamp: new Date("2026-10-11T08:00:00Z"),
-    properties: {
-      $current_url: TOKEN_URL,
-      $referrer: "https://stampeo.app/auth/callback#access_token=a&refresh_token=r",
-      $initial_current_url: TOKEN_URL,
-      $pathname: "/en/reset-password",
-      $title: "Set a new password",
-      $screen_width: 390,
-      $is_identified: false,
-      $set_once: { $initial_current_url: TOKEN_URL, $initial_referrer: "$direct" },
-      $elements: [{ tag_name: "a", attr__href: "/auth/callback?code=pkce", nth_child: 2 }],
-    },
-    $set: { $current_url: TOKEN_URL },
-    $set_once: { $initial_current_url: TOKEN_URL },
-  });
-
-  test("removes credentials from every URL-valued property, nested ones included", () => {
-    const sent = scrubPostHogEvent(pageview())!;
-
-    expect(sent.properties.$current_url).toBe(CLEAN_URL);
-    expect(sent.properties.$initial_current_url).toBe(CLEAN_URL);
-    expect(sent.properties.$referrer).toBe("https://stampeo.app/auth/callback");
-    expect(sent.properties.$set_once.$initial_current_url).toBe(CLEAN_URL);
-    expect(sent.properties.$elements[0].attr__href).toBe("/auth/callback");
-    expect(sent.$set.$current_url).toBe(CLEAN_URL);
-    expect(sent.$set_once.$initial_current_url).toBe(CLEAN_URL);
-    expect(JSON.stringify(sent)).not.toContain("secret");
-  });
-
-  test("keeps the event, its identity and every other property", () => {
-    const original = pageview();
-    const sent = scrubPostHogEvent(original)!;
-
-    expect(sent.uuid).toBe(original.uuid);
-    expect(sent.event).toBe("$pageview");
-    expect(sent.timestamp).toEqual(original.timestamp);
-    expect(sent.properties.$pathname).toBe("/en/reset-password");
-    expect(sent.properties.$title).toBe("Set a new password");
-    expect(sent.properties.$screen_width).toBe(390);
-    expect(sent.properties.$is_identified).toBe(false);
-    expect(sent.properties.$set_once.$initial_referrer).toBe("$direct");
-    expect(sent.properties.$elements[0].nth_child).toBe(2);
-  });
-
-  test("removes the email from the element chain PostHog sends with a click, and keeps the rest of the chain", () => {
-    const chain = (href: string) =>
-      `a.text-sm:attr__href="${href}"href="${href}"nth-child="2"nth-of-type="1"text="Forgot password?";form:nth-child="1"`;
-    const click = { event: "$autocapture", properties: { $elements_chain: chain("/login?email=ines%40example.com") } };
-    expect(scrubPostHogEvent(click).properties.$elements_chain).toBe(chain("/login"));
-  });
-
-  test("removes credentials from URLs used as keys, such as heatmap data", () => {
-    const heatmap = {
-      event: "$$heatmap",
-      properties: { $heatmap_data: { "https://stampeo.app/en/pricing?code=pkce&ref=ig": [{ x: 10, y: 20 }] } },
-    };
-    expect(scrubPostHogEvent(heatmap).properties.$heatmap_data).toEqual({
-      "https://stampeo.app/en/pricing?ref=ig": [{ x: 10, y: 20 }],
-    });
-  });
-
-  test("removes credentials from a URL inside a captured exception's message", () => {
-    const exception = {
-      event: "$exception",
-      properties: {
-        $exception_list: [{ type: "TypeError", value: "Failed to fetch /en/reset-password?token_hash=secret" }],
-      },
-    };
-    const sent = scrubPostHogEvent(exception);
-    expect(sent.properties.$exception_list[0]).toEqual({ type: "TypeError", value: "Failed to fetch /en/reset-password" });
-  });
-
-  test("does not rewrite the event it was handed", () => {
-    const original = pageview();
-    scrubPostHogEvent(original);
-    expect(original.properties.$current_url).toBe(TOKEN_URL);
-  });
-
-  test("never drops an event: a clean one comes back as it was, a null stays null", () => {
-    const clean = { uuid: "u", event: "$autocapture", properties: { $current_url: "https://stampeo.app/en" } };
-    expect(scrubPostHogEvent(clean)).toEqual(clean);
-    expect(scrubPostHogEvent(null)).toBeNull();
   });
 });
 

@@ -9,22 +9,15 @@ import { TrackedLink } from "../ui/TrackedLink";
 import { AppleIcon, GoogleIcon } from "../icons";
 import { useDemoSession } from "@/hooks/useDemoSession";
 import { useIsMobilePhone } from "@/hooks/useIsMobilePhone";
-import { usePricingRegion } from "@/hooks/use-pricing-region";
-import type { RewardTier, PointsRewardIcons } from "@/lib/types/design";
-import { STAMPEO_LOGO } from "@/lib/stampeo-card";
+import type { RewardTier } from "@/lib/types/design";
+import { DEMO_POINTS_DESIGN, DEMO_STAMP_DESIGN } from "@/lib/demo/card";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-// Points demo ladder: mid reward at 60, top reward at 120 (matches the backend
-// demo). PointsStrip renders thresholds + icons (percent for the mid reward,
-// crown for the top), not names, so the names are only used off-card.
+// Points demo ladder: mid reward at 60, top reward at 120 (matches the backend demo).
 const POINTS_MID = 60;
 const POINTS_TOP = 120;
 const POINTS_STEP = 20;
-const POINTS_REWARD_ICONS: PointsRewardIcons = {
-  r_mid: { type: "preset", ref: "percent" },
-  r_top: { type: "preset", ref: "crown" },
-};
 
 function StampButton({
   onClick,
@@ -140,10 +133,13 @@ function MobileWalletButton({
   sessionToken,
   t,
   prefix,
+  onAdd,
 }: {
   sessionToken: string | null;
   t: ReturnType<typeof useTranslations<"landing.hero">>;
   prefix: "stamp" | "points";
+  /** The page starts waiting for Wallet's install: iOS opens its sheet over the page without hiding it. */
+  onAdd: () => void;
 }) {
   if (!sessionToken) return null;
 
@@ -154,6 +150,7 @@ function MobileWalletButton({
       <div className="bg-white rounded-2xl shadow-xl p-6 border border-[var(--accent)]/10">
         <a
           href={passUrl}
+          onClick={onAdd}
           className="block w-full py-4 px-4 rounded-full font-bold text-sm sm:text-base transition-all text-center bg-[var(--accent)] text-white hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:scale-[0.98]"
         >
           {t(`${prefix}.mobileAddWallet`)}
@@ -277,9 +274,6 @@ export function HeroDemo() {
   const t = useTranslations("landing.hero");
   const tCommon = useTranslations("common");
   const isMobilePhone = useIsMobilePhone();
-  // The demo card's reward lines quote the trial length: the page market's on
-  // the server, the visitor's detected region's after hydration.
-  const { trialDays } = usePricingRegion();
 
   // Which engine the visitor is previewing. "stamps" is the eager, real demo;
   // "points" lazy-inits its own real session the first time it's selected, so
@@ -325,13 +319,13 @@ export function HeroDemo() {
 
   const pointsRewards: RewardTier[] = [
     { id: "r_mid", name: t("points.rewardMid"), threshold: POINTS_MID },
-    { id: "r_top", name: t("points.rewardTop", { trialDays }), threshold: POINTS_TOP },
+    { id: "r_top", name: t("points.rewardTop"), threshold: POINTS_TOP },
   ];
   const pointsRewardValue =
     displayPoints >= POINTS_TOP
       ? t("points.rewardAllUnlocked")
       : displayPoints >= POINTS_MID
-        ? t("points.rewardTop", { trialDays })
+        ? t("points.rewardTop")
         : t("points.rewardMid");
 
   return (
@@ -378,17 +372,10 @@ export function HeroDemo() {
             <ScaledCardWrapper size="lg">
               <WalletCard
                 design={{
-                  organization_name: "Stampeo",
-                  total_stamps: 8,
-                  background_color: "#1c1c1e",
-                  stamp_filled_color: "#f97316",
-                  label_color: "#fff",
-                  logo_url: STAMPEO_LOGO,
+                  ...DEMO_STAMP_DESIGN,
                   secondary_fields: [
                     { key: "reward", label: tCommon("reward"), value:
-                        displayStamps === 8
-                          ? tCommon("rewarded", { trialDays })
-                          : tCommon("rewardText", { trialDays }) }
+                        displayStamps === 8 ? tCommon("rewarded") : tCommon("rewardText") }
                   ],
                 }}
                 stamps={displayStamps}
@@ -407,7 +394,7 @@ export function HeroDemo() {
             ) : stamp.status === "pass_downloaded" ? (
               <DemoStatusHint status={stamp.status} t={t} prefix="stamp" />
             ) : (
-              <MobileWalletButton sessionToken={stamp.sessionToken} t={t} prefix="stamp" />
+              <MobileWalletButton sessionToken={stamp.sessionToken} t={t} prefix="stamp" onAdd={stamp.expectInstall} />
             )
           ) : (
             stamp.status === "pass_installed" ? (
@@ -440,14 +427,7 @@ export function HeroDemo() {
             <ScaledCardWrapper size="lg">
               <WalletCard
                 design={{
-                  organization_name: "Stampeo",
-                  card_type: "points",
-                  points_strip_style: "progress_icons",
-                  background_color: "#1c1c1e",
-                  progress_accent_color: "#f97316",
-                  label_color: "#fff",
-                  logo_url: STAMPEO_LOGO,
-                  points_reward_icons: POINTS_REWARD_ICONS,
+                  ...DEMO_POINTS_DESIGN,
                   secondary_fields: [
                     { key: "reward", label: tCommon("reward"), value: pointsRewardValue },
                   ],
@@ -469,7 +449,7 @@ export function HeroDemo() {
             ) : points.status === "pass_downloaded" ? (
               <DemoStatusHint status={points.status} t={t} prefix="points" />
             ) : (
-              <MobileWalletButton sessionToken={points.sessionToken} t={t} prefix="points" />
+              <MobileWalletButton sessionToken={points.sessionToken} t={t} prefix="points" onAdd={points.expectInstall} />
             )
           ) : (
             points.status === "pass_installed" ? (

@@ -7,7 +7,7 @@
       "cta": "Empezar gratis",
       "secondaryCta": "Ver cómo funciona",
       "stamp": {
-        "complete": "¡Has desbloqueado el acceso anticipado!",
+        "complete": "¡Tarjeta completa! Ahora crea la tuya.",
         "ready": "¡Tu tarjeta está lista! Prueba a añadir un sello.",
         "claimFree": "Empezar gratis →",
         "addStamp": "Añadir sello",
@@ -20,7 +20,7 @@
       },
       "demoToggleLabel": "Tipo de tarjeta",
       "points": {
-        "complete": "¡Has conseguido todas las recompensas!",
+        "complete": "¡Todas las recompensas desbloqueadas! Ahora crea la tuya.",
         "ready": "¡Tu tarjeta está lista! Prueba a añadir puntos.",
         "claimReward": "Empezar gratis →",
         "scanButton": "Añadir 20 puntos",
@@ -30,8 +30,8 @@
         "demoCallout": "¡Pruébalo! Escanea con tu teléfono",
         "mobileAddWallet": "Pruébalo, añádela a tu Wallet",
         "mobileHint": "La tarjeta se añadirá a la cartera de tu teléfono",
-        "rewardMid": "-50 % en tu 1er mes",
-        "rewardTop": "{trialDays} días gratis",
+        "rewardMid": "Un cliente que vuelve",
+        "rewardTop": "Un cliente habitual",
         "rewardAllUnlocked": "¡Todo desbloqueado!"
       }
     },

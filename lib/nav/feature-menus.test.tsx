@@ -1,7 +1,7 @@
 /**
  * Where the header's Product menu and the footer's features column lead, and what they say about geolocation, which
  * is not live yet: on every page they lead to the live feature pages in the visitor's language and print Soon beside
- * geolocation alone. The phone menus have their own tests (`mobile-menu-render.test.tsx`, `mobile-menu-accordion.test.tsx`).
+ * geolocation alone. The phone menu has its own tests (`mobile-menu-render.test.tsx`).
  */
 
 import { describe, expect, test } from "bun:test";

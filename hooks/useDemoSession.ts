@@ -58,6 +58,8 @@ interface UseDemoSessionReturn {
   addStamp: () => Promise<void>;
   /** Reset session and start fresh */
   reset: () => void;
+  /** Call when the visitor taps Add on this phone: the page polls until Wallet's install is confirmed. */
+  expectInstall: () => void;
 }
 
 function isExpired(expiresAt: string | undefined): boolean {
@@ -285,7 +287,7 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
       activeTokenRef.current = newSession.session_token;
       sync.adopt(newSession.session_token, newSession);
       startSSE(newSession.session_token);
-      posthog.capture('demo_started', { session_token: newSession.session_token, card_type: cardType });
+      posthog.capture('demo_started', { card_type: cardType });
     } else {
       setStatus('error');
     }
@@ -422,5 +424,6 @@ export function useDemoSession(options: UseDemoSessionOptions = {}): UseDemoSess
     scan,
     addStamp: scan,
     reset,
+    expectInstall: sync.expectInstall,
   };
 }
