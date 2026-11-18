@@ -3,7 +3,6 @@
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { LanguagePicker } from "@/components/ui/LanguagePicker";
 import { hidesLanguageSwitcher, switchLanguage } from "@/lib/routing/language-switcher";
 
 /** One 44px pill per language, the current one filled: the phone menu's language control. */
@@ -34,11 +33,8 @@ export function LanguageRow({
   );
 }
 
-/**
- * The language control. By default the picker that grows from one tile; `variant="row"` is the phone menu's
- * `LanguageRow`.
- */
-export function LanguageSwitcher({ variant = "picker" }: Readonly<{ variant?: "picker" | "row" }>) {
+/** The language control: a `LanguageRow` for the page's language, hidden where a switch would 404. */
+export function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -46,20 +42,5 @@ export function LanguageSwitcher({ variant = "picker" }: Readonly<{ variant?: "p
   // Blog posts (slug differs per language) and comparison pages (one language) would 404 on a switch.
   if (hidesLanguageSwitcher(pathname)) return null;
 
-  if (variant === "row") {
-    return <LanguageRow locale={locale} locales={routing.locales} onPick={switchLanguage(router, pathname)} />;
-  }
-
-  return (
-    <LanguagePicker
-      direction="right"
-      trigger="click"
-      value={locale}
-      options={routing.locales.map((l) => ({ value: l, label: l.toUpperCase() }))}
-      onSelect={switchLanguage(router, pathname)}
-      surfaceClassName="rounded-lg border border-[var(--border)] bg-[var(--cream)]"
-      tileClassName="text-[var(--foreground)] hover:bg-[var(--muted)]"
-      selectedTileClassName="bg-[var(--accent)] text-white"
-    />
-  );
+  return <LanguageRow locale={locale} locales={routing.locales} onPick={switchLanguage(router, pathname)} />;
 }

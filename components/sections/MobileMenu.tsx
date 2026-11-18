@@ -89,18 +89,24 @@ function MenuSheet({ onClose, burgerRef, pathname, navItems, resourceItems, sign
         <MenuGroup className="mt-6">
           <p className={MENU_LABEL}>{t("resources")}</p>
           <div className="mt-1 grid grid-cols-2 gap-x-4">
-            {resourceItems.map((item) => (
-              <MarketLink
-                key={item.href}
-                market={item.market ?? "int"}
-                href={item.href as "/blog"}
-                onClick={onClose}
-                aria-current={isCurrentPath(pathname, item.href) ? "page" : undefined}
-                className="flex min-h-12 items-center text-[17px] font-medium text-[var(--foreground)] transition-colors active:text-[var(--accent)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)]"
-              >
-                {item.label}
-              </MarketLink>
-            ))}
+            {resourceItems.map((item) => {
+              const active = isCurrentPath(pathname, item.href);
+
+              return (
+                <MarketLink
+                  key={item.href}
+                  market={item.market ?? "int"}
+                  href={item.href as "/blog"}
+                  onClick={onClose}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex min-h-12 items-center text-[17px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--accent)] ${
+                    active ? "text-[var(--accent)]" : "text-[var(--foreground)] active:text-[var(--accent)]"
+                  }`}
+                >
+                  {item.label}
+                </MarketLink>
+              );
+            })}
           </div>
         </MenuGroup>
 

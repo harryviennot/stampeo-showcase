@@ -15,7 +15,6 @@ import { holdPageWhileOpen, isCurrentPath } from "@/lib/nav/mobile-menu";
 import { pageMenuItems, productMenuItems } from "@/lib/nav/menu-items";
 import { navClick } from "@/lib/posthog/site-events";
 import { NavDropdown } from "./NavDropdown";
-import { AccordionMenu } from "./MobileMenuAccordion";
 import { SheetMenu } from "./SheetMenu";
 
 function DesktopAuthButtons({
@@ -67,12 +66,8 @@ function DesktopAuthButtons({
   );
 }
 
-/** `mobileMenu` is the phone menu the bar draws: the accordion panel, or the full-screen sheet. */
-export function Header({
-  market = "int",
-  mobileMenu = "accordion",
-}: Readonly<{ market?: Market; mobileMenu?: "accordion" | "sheet" }>) {
-  const PhoneMenu = mobileMenu === "sheet" ? SheetMenu : AccordionMenu;
+/** The site header: the logo, the desktop links and sign-in buttons, and on a phone the burger that opens the full-screen sheet menu. */
+export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const signedIn = useHasSession();
@@ -141,11 +136,14 @@ export function Header({
     localStorage.setItem(BANNER_STORAGE_KEY, Date.now().toString());
   }, []);
 
+  // While the sheet (`#mobile-menu`, its exit fade included) is mounted the header rises above the cookie banner, also z-50.
+  const headerClass = "fixed top-0 left-0 right-0 z-50 has-[#mobile-menu]:z-[60]";
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50">
+      <header className={headerClass}>
         <PromoBanner visible={bannerVisible} onDismiss={dismissBanner} />
-        <PhoneMenu
+        <SheetMenu
           open={mobileMenuOpen}
           onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
           onClose={closeMobileMenu}
@@ -167,10 +165,8 @@ export function Header({
             </div>
           </Link>
 
-          {/* Desktop navigation — full row only from xl: below that the FR/ES
-              labels overflow into the logo and auth buttons, so the burger
-              menu stays on through lg.
-              Absolutely centered rather than a flex child: the auth buttons
+          {/* Desktop navigation from lg, absolutely centered rather than a
+              flex child: the auth buttons
               are wider than the logo, so justify-between would push the links
               left of the page centre. */}
           <div className="hidden lg:flex items-center gap-6 xl:gap-8 lg:absolute lg:inset-y-0 lg:left-1/2 lg:-translate-x-1/2">
@@ -208,7 +204,7 @@ export function Header({
               onSignOut={handleSignOut}
             />
           </div>
-        </PhoneMenu>
+        </SheetMenu>
       </header>
       <div
         className="transition-all duration-300"

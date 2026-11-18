@@ -32,7 +32,7 @@ export async function LandingPageShell({
         defaultCurrency={marketCurrency}
         defaultTrialDays={MARKETS[market].trialDays}
       >
-        <Header market={market} mobileMenu="sheet" />
+        <Header market={market} />
         <main className="relative">{children}</main>
         <Footer market={market} />
       </RegionPricingProvider>
