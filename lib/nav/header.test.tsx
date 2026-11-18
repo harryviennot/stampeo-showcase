@@ -1,13 +1,12 @@
 /**
- * The header as a visitor's browser first receives it, with the phone menu closed, and the bar each phone menu
- * draws when it is open. The menus themselves are in `mobile-menu-render.test.tsx` and `mobile-menu-accordion.test.tsx`.
+ * The header as a visitor's browser first receives it, with the phone menu closed, and the bar the sheet menu
+ * draws when it is open. The sheet itself is in `mobile-menu-render.test.tsx`.
  */
 
 import { describe, expect, test } from "bun:test";
 import type { ReactElement } from "react";
 import { Header } from "@/components/sections/Header";
 import { SheetMenu } from "@/components/sections/SheetMenu";
-import { AccordionMenu } from "@/components/sections/MobileMenuAccordion";
 import { renderEn } from "../testing/render-en";
 import { trackedBy } from "../testing/cta-recorder";
 import { renderAtPath } from "../testing/pathname-seam";
@@ -22,7 +21,7 @@ const burgerOf = (html: string) => /<button\b[^>]*aria-label="(?:Open|Close) men
 const barClass = (html: string) => /<header[^>]*>(?:<div[^>]*><\/div>)?<div class="([^"]*)"/.exec(html)?.[1] ?? "";
 
 describe("the header with its phone menu closed", () => {
-  test("a header asked for nothing renders as it did before the sheet menu existed, byte for byte", () => {
+  test("a header asked for nothing is the bar with the sheet menu's button", () => {
     expect(render(<Header />)).toMatchSnapshot();
   });
 
@@ -35,46 +34,43 @@ describe("the header with its phone menu closed", () => {
   });
 });
 
-describe("the phone menu a header draws", () => {
-  const accordion = render(<Header />);
-  const sheet = render(<Header mobileMenu="sheet" />);
+describe("the phone menu every page's header draws", () => {
+  const MOUNTS: Array<[page: string, header: ReactElement, pathname: string]> = [
+    ["a page that mounts the header with nothing, as the changelog and the blog do", <Header />, "/en/changelog"],
+    ["a US page", <Header market="us" />, "/en/us"],
+    ["a UK page", <Header market="uk" />, "/en/uk"],
+  ];
 
-  test("by default the bar's button opens the accordion: a plain burger that controls nothing by id", () => {
-    const burger = burgerOf(accordion);
-
-    expect(burger).toContain('aria-expanded="false"');
-    expect(burger).toContain("Open menu");
-    expect(burger).not.toContain("aria-controls");
-  });
-
-  test("asked for the sheet, the button is the 44px burger that controls the menu it opens", () => {
-    const burger = burgerOf(sheet);
+  test.each(MOUNTS)("%s: the bar's button is the 44px burger that controls the sheet it opens", (_page, header, pathname) => {
+    const burger = burgerOf(render(header, pathname));
 
     expect(burger).toContain('aria-controls="mobile-menu"');
     expect(burger).toContain('aria-expanded="false"');
+    expect(burger).toContain("Open menu");
     expect(burger).toMatch(/\bh-11 w-11\b/);
   });
 
-  test("closed, the two bars are the same page header: only the button differs, and neither carries a marker", () => {
-    expect(sheet.replace(burgerOf(sheet), "")).toBe(accordion.replace(burgerOf(accordion), ""));
-    expect(accordion).not.toContain("data-mobile-menu");
-    expect(sheet).not.toContain("data-mobile-menu");
+  test("the bar carries no plain burger and no marker of a menu choice", () => {
+    const html = render(<Header />);
+
+    expect(html).not.toContain("lg:hidden p-2");
+    expect(html).not.toContain("data-mobile-menu");
   });
 });
 
-describe("the bar when its phone menu is open", () => {
+describe("the bar when the sheet is open", () => {
   const props = phoneMenuProps("us", "/us");
-  const open = (Menu: typeof SheetMenu | typeof AccordionMenu, overrides = {}) =>
+  const open = (overrides = {}) =>
     render(
       <header>
-        <Menu {...props} {...overrides}>
+        <SheetMenu {...props} {...overrides}>
           <span>bar</span>
-        </Menu>
+        </SheetMenu>
       </header>,
     );
 
-  test("with the sheet it turns solid cream on a phone and shows the X, so the layer under it reads as one", () => {
-    const html = open(SheetMenu);
+  test("it turns solid cream on a phone and shows the X, so the layer under it reads as one", () => {
+    const html = open();
 
     expect(barClass(html)).toContain("max-lg:bg-[var(--cream)]");
     expect(barClass(html)).toContain("max-lg:border-[var(--border)]");
@@ -82,24 +78,15 @@ describe("the bar when its phone menu is open", () => {
     expect(burgerOf(html)).toContain("Close menu");
   });
 
-  test("with the accordion the bar keeps its own look, and the panel hangs under it", () => {
-    const html = open(AccordionMenu);
-
-    expect(barClass(html)).not.toContain("max-lg:");
-    expect(burgerOf(html)).toContain("Close menu");
-    expect(html).toContain("lg:hidden overflow-hidden border-t");
-  });
-
-  test.each([SheetMenu, AccordionMenu])("a closed menu is the bar and its button alone", (Menu) => {
-    const html = open(Menu, { open: false });
+  test("a closed menu is the bar and its button alone", () => {
+    const html = open({ open: false });
 
     expect(burgerOf(html)).toContain("Open menu");
-    expect(html).not.toContain("overflow-hidden border-t");
     expect(barClass(html)).not.toContain("max-lg:");
   });
 
-  test("scrolled, the bar is frosted cream with either menu", () => {
-    for (const Menu of [SheetMenu, AccordionMenu]) expect(barClass(open(Menu, { open: false, scrolled: true }))).toContain("backdrop-blur-md");
+  test("scrolled, the bar is frosted cream", () => {
+    expect(barClass(open({ open: false, scrolled: true }))).toContain("backdrop-blur-md");
   });
 });
 
@@ -108,18 +95,6 @@ describe("the sign-up buttons of the header report their clicks", () => {
 
   test("the desktop bar's Get started is tracked as the header's", () => {
     expect(trackedBy(() => render(<Header />))).toContainEqual({ trackAs: "header", href: "/onboarding" });
-  });
-
-  test("today's open accordion has one more, the phone's Get started, tracked as the phone header's", () => {
-    const buttons = trackedBy(() =>
-      render(
-        <AccordionMenu {...props}>
-          <span>bar</span>
-        </AccordionMenu>,
-      ),
-    );
-
-    expect(buttons).toEqual([{ trackAs: "header_mobile", href: "/onboarding" }]);
   });
 
   test("the sheet's Get started is in the menu chunk, which the server does not draw: its tracking is pinned in mobile-menu-render.test.tsx", () => {

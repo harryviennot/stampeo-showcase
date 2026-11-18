@@ -56,10 +56,10 @@ describe("the header", () => {
   const source = (path: string) => readFileSync(join(ROOT, path), "utf8");
   const sources = [...new Bun.Glob("{app,components}/**/*.tsx").scanSync({ cwd: ROOT })];
 
-  test("only the Platform-style pages' shell draws the full-screen phone menu: the legacy pages keep the panel menu", () => {
-    const callers = sources.filter((path) => /<Header\b[^>]*mobileMenu=/.test(source(path)));
+  test("no page tells its header which phone menu to draw: every header draws the sheet", () => {
+    const callers = sources.filter((path) => /<Header\b[^>]*\bmobileMenu\b/.test(source(path)));
 
-    expect(callers).toEqual(["components/landing-pages/shared/LandingPageShell.tsx"]);
+    expect(callers).toEqual([]);
   });
 
   test("no header or footer is told where its feature links go: they all lead to the live pages", () => {

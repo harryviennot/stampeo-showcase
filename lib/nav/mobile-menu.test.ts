@@ -99,9 +99,8 @@ describe("an open phone menu when the window grows to the desktop layout", () =>
     expect(DESKTOP_QUERY).toBe("(min-width: 64rem)");
   });
 
-  test("the sheet menu watches it while it is open, and only the sheet: today's accordion is left as it was", () => {
+  test("the sheet menu watches it while it is open", () => {
     expect(code(join(SOURCE_ROOT, "components", "sections", "SheetMenu.tsx"))).toContain("open ? closeWhenDesktop(window.matchMedia(DESKTOP_QUERY), onClose) : undefined");
-    expect(code(join(SOURCE_ROOT, "components", "sections", "MobileMenuAccordion.tsx"))).not.toContain("closeWhenDesktop");
   });
 });
 
