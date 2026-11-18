@@ -49,7 +49,7 @@ interface AuthContextType {
   updatePassword: (password: string) => Promise<{ error: AuthError | null }>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
  * Clear all Supabase auth storage to break infinite refresh loops.

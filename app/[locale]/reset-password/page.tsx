@@ -210,7 +210,7 @@ function ResetPasswordContent() {
               {view.email && (
                 <>
                   <p className="text-[var(--muted-foreground)] mt-2 text-sm">
-                    <span className="text-[var(--foreground)] font-medium wrap-anywhere">
+                    <span className="ph-no-capture text-[var(--foreground)] font-medium wrap-anywhere">
                       {view.email}
                     </span>
                   </p>
