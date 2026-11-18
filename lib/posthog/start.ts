@@ -1,6 +1,5 @@
 import type { PostHogConfig } from "posthog-js";
-import { detectPolicyRow } from "../privacy/region";
-import { livePostHogMode, startPostHogConsent, type PostHogClient } from "./consent-sync";
+import { livePostHogCookieDays, livePostHogMode, startPostHogConsent, type PostHogClient } from "./consent-sync";
 import { postHogInitOptions } from "./init-options";
 
 /** posthog-js as the site starts it. */
@@ -15,6 +14,6 @@ export interface PostHogInstance extends PostHogClient {
  */
 export function startPostHog(posthog: PostHogInstance, token: string, apiHost: string | undefined): () => void {
   const mode = livePostHogMode();
-  posthog.init(token, { api_host: apiHost, ...postHogInitOptions(mode.remember, detectPolicyRow().grant_ttl_days) });
+  posthog.init(token, { api_host: apiHost, ...postHogInitOptions(mode.remember, livePostHogCookieDays()) });
   return startPostHogConsent(posthog, mode);
 }

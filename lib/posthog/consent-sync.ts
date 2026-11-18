@@ -2,7 +2,7 @@ import type { PostHogConfig } from "posthog-js";
 import { CONSENT_CHANGED_EVENT, detectGpc, readStoredConsent } from "../consent";
 import { detectPolicyRow } from "../privacy/region";
 import { RECORDING_CONFIG, rememberedConfig } from "./init-options";
-import { posthogMode, type PostHogMode } from "./mode";
+import { postHogCookieDays, posthogMode, type PostHogMode } from "./mode";
 import { purgePostHogStorage } from "./storage";
 
 /**
@@ -21,7 +21,7 @@ import { purgePostHogStorage } from "./storage";
 export interface PostHogClient {
   get_distinct_id(): string;
   set_config(config: Partial<PostHogConfig>): void;
-  reset(): void;
+  reset(resetDeviceId?: boolean): void;
   register(properties: Record<string, unknown>): void;
   startSessionRecording(): void;
   stopSessionRecording(): void;
@@ -45,6 +45,11 @@ let active: { client: PostHogClient; session: Session } | null = null;
 export function livePostHogMode(pathname: string = window.location.pathname): PostHogMode {
   const { record, prior } = readStoredConsent();
   return posthogMode({ row: detectPolicyRow(), record, prior, gpc: detectGpc(), pathname });
+}
+
+/** The days PostHog's cookie may live for the visitor now: until their stored grant ends. */
+export function livePostHogCookieDays(): number {
+  return postHogCookieDays({ row: detectPolicyRow(), record: readStoredConsent().record });
 }
 
 function startRecording(client: PostHogClient, session: Session): void {
@@ -81,7 +86,7 @@ function apply(mode: PostHogMode): void {
     return;
   }
   if (!session.remembering) {
-    client.set_config(rememberedConfig(detectPolicyRow().grant_ttl_days));
+    client.set_config(rememberedConfig(livePostHogCookieDays()));
     session.remembering = true;
     session.everRemembered = true;
   }
@@ -142,6 +147,20 @@ export function syncPostHogForUrl(url: string): void {
 /** Has this page stored anything for PostHog on the device, even if the choice has since been withdrawn? */
 export function isPostHogRemembering(): boolean {
   return active?.session.everRemembered ?? false;
+}
+
+/**
+ * A new PostHog id, and a new device id, for the next account created in this browser. A visitor PostHog remembers
+ * stays remembered: the storage mode is left as it is, so the new id goes to the same cookie.
+ */
+export function renewRememberedPostHogId(): void {
+  if (!active?.session.remembering) return;
+  try {
+    active.client.reset(true);
+    active.client.register(GEOIP_OFF);
+  } catch {
+    // A failed reset leaves the id as it was; the sign-up goes on.
+  }
 }
 
 /** The PostHog id to send with the account sign-up: the browser's id while PostHog remembers it, else none. */

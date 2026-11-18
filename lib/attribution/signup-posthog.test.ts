@@ -2,14 +2,17 @@
  * The sign-up call tells the backend which PostHog visitor just created the account, so it can join the visits to
  * the account. The browser sends the id as `ph` and nothing else: the backend queues the `$identify` itself, and
  * the browser never calls `identify`. The id goes only for a visitor PostHog is remembering; a visitor in memory,
- * or one who refused, sends none.
+ * or one who refused, sends none. The sign-up happens on `/onboarding`, a page PostHog does not record, usually
+ * reached from a page it does; once the id is sent the browser starts a new one, so the next account created in
+ * the same browser is never joined to this visitor.
  */
 
 import { afterEach, describe, expect, test } from "bun:test";
 
 import { CONSENT_COOKIE, CONSENT_VERSION } from "../consent";
 import { GRANTED_COOKIE, REFUSED_COOKIE, installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
-import { FIRST_ID, fakePostHog } from "../posthog/__fixtures__/fake-posthog";
+import { FIRST_ID, NEXT_ID, fakePostHog, type Call } from "../posthog/__fixtures__/fake-posthog";
+import { syncPostHogForUrl } from "../posthog/consent-sync";
 import { startPostHog } from "../posthog/start";
 import { fakeStorage } from "../testing/fake-storage";
 import { restoreGlobalsAfterEach } from "../testing/restore-globals";
@@ -37,25 +40,39 @@ const refusalUnder = (version: number, madeIn: "EEA_UK_CH" | "US") =>
     JSON.stringify({ v: version, a: 0, m: 1, t: 1_791_240_000, r: madeIn === "US" ? "opt-out" : "opt-in", g: madeIn }),
   )}`;
 
-/** The body the owner sign-up flow sends for this visitor, PostHog having started on the page the way the site starts it. */
-async function signUp(options: { cookie: string; timezone: string; gpc?: boolean; id?: string; posthog?: boolean }) {
-  browser = installFakeBrowser({ cookie: options.cookie, timezone: options.timezone, gpc: options.gpc });
+const names = (calls: Call[]) => calls.map(([name]) => name);
+
+/**
+ * A visitor who lands on a marketing page (or on `landedOn`), where PostHog starts the way the site starts it
+ * (recording, if they said yes), and moves to the sign-up page. `confirmAccount` is the sign-up flow reporting a confirmed account, and
+ * returns the body it sent.
+ */
+function visitor(options: { cookie: string; timezone: string; gpc?: boolean; id?: string; posthog?: boolean; landedOn?: string }) {
+  browser = installFakeBrowser({ cookie: options.cookie, timezone: options.timezone, gpc: options.gpc, pathname: options.landedOn ?? "/pricing" });
   Object.defineProperty(globalThis, "localStorage", { value: fakeStorage(), configurable: true, writable: true });
   Object.defineProperty(globalThis, "sessionStorage", { value: fakeStorage(), configurable: true, writable: true });
-  if (options.posthog !== false) {
-    const posthog = fakePostHog(options.id);
-    stop = startPostHog(posthog, "phc_testkey", "https://eu.i.posthog.com");
-  }
+  const posthog = fakePostHog(options.id);
+  if (options.posthog !== false) stop = startPostHog(posthog, "phc_testkey", "https://eu.i.posthog.com");
 
-  await recordAccountSignup({
-    apiUrl: "https://api.stampeo.app",
-    measurementId: null,
-    getAccessToken: async () => "user-access-token",
-    guard: { sent: false },
-  });
-  const [call] = browser.fetches.filter((fetch) => fetch.url.endsWith("/account/signup-recorded"));
-  return call.body;
+  (globalThis.window as unknown as { location: { pathname: string } }).location.pathname = "/onboarding";
+  syncPostHogForUrl("/onboarding");
+
+  return {
+    posthog,
+    async confirmAccount() {
+      await recordAccountSignup({
+        apiUrl: "https://api.stampeo.app",
+        measurementId: null,
+        getAccessToken: async () => "user-access-token",
+        guard: { sent: false },
+      });
+      return browser!.fetches.filter((fetch) => fetch.url.endsWith("/account/signup-recorded")).at(-1)!.body;
+    },
+  };
 }
+
+/** The body the owner sign-up flow sends for this visitor. */
+const signUp = (options: Parameters<typeof visitor>[0]) => visitor(options).confirmAccount();
 
 describe("the account sign-up call", () => {
   test.each([
@@ -96,6 +113,53 @@ describe("the account sign-up call", () => {
     const body = await signUp({ cookie: GRANTED_COOKIE, timezone: "Europe/Paris" });
 
     expect(Object.keys(body).sort()).toEqual(["basis", "ph", "refused"]);
+  });
+});
+
+describe("a visitor recorded on a marketing page who moves to the sign-up", () => {
+  test("recording stops there and the id still goes with the sign-up", async () => {
+    const { posthog, confirmAccount } = visitor({ cookie: GRANTED_COOKIE, timezone: "Europe/Paris" });
+
+    expect(names(posthog.calls)).toEqual(expect.arrayContaining(["startSessionRecording", "stopSessionRecording"]));
+    expect((await confirmAccount()).ph).toBe(FIRST_ID);
+  });
+});
+
+describe("a visitor returning from Google or Apple", () => {
+  test("lands on the sign-up page itself, where PostHog starts from the cookie, and the id goes with the sign-up", async () => {
+    const { posthog, confirmAccount } = visitor({ cookie: GRANTED_COOKIE, timezone: "Europe/Paris", landedOn: "/onboarding" });
+
+    expect(names(posthog.calls)).not.toContain("startSessionRecording");
+    expect((await confirmAccount()).ph).toBe(FIRST_ID);
+  });
+});
+
+describe("a second account confirmed in the same browser", () => {
+  test("carries a new id, and PostHog keeps the visitor on the cookie", async () => {
+    const { posthog, confirmAccount } = visitor({ cookie: GRANTED_COOKIE, timezone: "Europe/Paris" });
+
+    const before = posthog.calls.length;
+    const first = await confirmAccount();
+    // The id and the device id are renewed and the geoip flag registered again; the storage mode is not touched.
+    expect(posthog.calls.slice(before)).toEqual([
+      ["reset", { resetDeviceId: true }],
+      ["register", { $geoip_disable: true }],
+    ]);
+    const second = await confirmAccount();
+
+    expect(first.ph).toBe(FIRST_ID);
+    expect(second.ph).toBe(NEXT_ID);
+  });
+
+  test.each([
+    ["a European who made no choice", { cookie: "", timezone: "Europe/Paris" }],
+    ["a United States visitor whose browser sends Global Privacy Control", { cookie: "", timezone: "America/New_York", gpc: true }],
+  ])("sends no id for %s, either time, and nothing is reset", async (_who, options) => {
+    const { posthog, confirmAccount } = visitor(options);
+
+    expect(await confirmAccount()).not.toHaveProperty("ph");
+    expect(await confirmAccount()).not.toHaveProperty("ph");
+    expect(names(posthog.calls)).not.toContain("reset");
   });
 });
 

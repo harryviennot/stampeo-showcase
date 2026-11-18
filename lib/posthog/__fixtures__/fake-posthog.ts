@@ -1,5 +1,5 @@
 /**
- * A PostHog client for tests: it records what it was told, in order, and mints a new id when reset. It has none of
+ * A PostHog client for tests: it records what it was told, in order, and mints a new id when reset (once: a second reset keeps it). It has none of
  * the library's network or storage, so a test sees only what the site asked of PostHog.
  */
 
@@ -16,8 +16,8 @@ export function fakePostHog(firstId = FIRST_ID) {
     init: (key: string, config: Record<string, unknown>) => void calls.push(["init", { key, ...config }]),
     get_distinct_id: () => id,
     set_config: (config: Record<string, unknown>) => void calls.push(["set_config", config]),
-    reset: () => {
-      calls.push(["reset"]);
+    reset: (resetDeviceId?: boolean) => {
+      calls.push(resetDeviceId ? ["reset", { resetDeviceId }] : ["reset"]);
       id = NEXT_ID;
     },
     register: (props: Record<string, unknown>) => void calls.push(["register", props]),

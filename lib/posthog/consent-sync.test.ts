@@ -8,7 +8,7 @@
  * was told, a fake browser for cookies, Global Privacy Control and the timezone, and fake storages.
  */
 
-import { afterEach, describe, expect, test } from "bun:test";
+import { afterEach, beforeEach, describe, expect, setSystemTime, test } from "bun:test";
 
 import { CONSENT_COOKIE, CONSENT_VERSION, emitConsentChange, writeConsentRecord } from "../consent";
 import { GRANTED_COOKIE, REFUSED_COOKIE, installFakeBrowser, type FakeBrowser } from "../privacy/__fixtures__/fake-browser";
@@ -31,9 +31,14 @@ const ALL_OFF = { analytics: false, marketing: false };
 
 restoreGlobalsAfterEach("localStorage", "sessionStorage");
 
+// The clock stands at the moment the fixture grants were made, so a grant is as old as a test says it is.
+const GRANT_MOMENT = new Date(1_791_240_000 * 1000);
+beforeEach(() => setSystemTime(GRANT_MOMENT));
+
 let browser: FakeBrowser | null = null;
 let stop: (() => void) | null = null;
 afterEach(() => {
+  setSystemTime();
   stop?.();
   stop = null;
   browser?.restore();
@@ -106,6 +111,13 @@ describe("a page opened by a remembered visitor", () => {
     expect(names(posthog.calls)).toContain("startSessionRecording");
   });
 
+  test("the cookie ends with the grant, not six months after the last visit: 12 days left for a grant made 170 days ago", () => {
+    const { posthog } = visit({ cookie: grantMadeDaysAgo(170) });
+
+    expect(initOptions(posthog.calls)).toMatchObject({ persistence: "cookie", cross_subdomain_cookie: false });
+    expect(initOptions(posthog.calls).cookie_expiration).toBeCloseTo(12, 3);
+  });
+
   test("a United States visitor with no choice is remembered from the first page and is not recorded", () => {
     const { posthog } = visit({ timezone: "America/New_York" });
 
@@ -164,6 +176,18 @@ describe("a visitor who accepts audience measurement during a visit", () => {
 
     expect(configs(posthog.calls)[0]).toEqual(REMEMBER_182_DAYS);
     expect(rememberedPostHogId()).toBe(FIRST_ID);
+  });
+
+  test("a grant made in another tab 170 days ago gives a cookie that ends with it", () => {
+    const { posthog, browser: b } = visit();
+
+    b.setJar(grantMadeDaysAgo(170));
+    b.setVisibility("hidden");
+    b.setVisibility("visible");
+
+    const [remembering] = configs(posthog.calls).filter((config) => config.persistence === "cookie");
+    expect(remembering).toMatchObject({ cross_subdomain_cookie: false });
+    expect(remembering.cookie_expiration).toBeCloseTo(12, 3);
   });
 
   test("on a page where no tag may run they are remembered and not recorded", () => {
@@ -299,6 +323,12 @@ describe("a remembered visitor who takes the choice back", () => {
     expect(isPostHogRemembering()).toBe(true);
   });
 });
+
+/** The `Cookie:` header of a European who accepted everything this many days ago. */
+function grantMadeDaysAgo(days: number) {
+  const value = { v: CONSENT_VERSION, a: 1, m: 1, t: Math.floor(Date.now() / 1000) - days * 86_400, r: "opt-in", g: "EEA_UK_CH" };
+  return `${CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify(value))}`;
+}
 
 /** A grant stored under the previous consent text, in Europe. */
 function previousVersionGrant() {
