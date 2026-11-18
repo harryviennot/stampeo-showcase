@@ -149,7 +149,7 @@ Niektóre z podmiotów, z których korzystamy (Stripe, Apple, Google, Trustpilot
 
 ### 5.1 Twój wybór
 
-Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakceptujesz. Do tego czasu ich skrypty w ogóle nie trafiają na stronę: żadne zapytanie nie dociera do Google ani Meta i nie powstaje żaden z ich plików cookie. Jedynym wyjątkiem jest PostHog: jego skrypt działa niezależnie od Twojego wyboru, żeby liczyć wizyty bez plików cookie, a własny plik cookie zapisuje dopiero po Twojej zgodzie (zob. 5.4). Odmowa nie zostawia więc niczego do usunięcia.
+Pliki cookie do statystyk i do reklamy wczytujemy dopiero po tym, jak je zaakceptujesz. Do tego czasu ich skrypty w ogóle nie trafiają na stronę: żadne zapytanie nie dociera do Google ani Meta i nie powstaje żaden z ich plików cookie. Jedynym wyjątkiem jest PostHog: jego skrypt działa niezależnie od Twojego wyboru, żeby liczyć wizyty bez plików cookie, a własny plik cookie zapisuje dopiero po Twojej zgodzie, a w Stanach Zjednoczonych od pierwszej wizyty, chyba że to wyłączysz (zob. 5.4). Odmowa nie zostawia więc niczego do usunięcia.
 
 Odmowa to jedno kliknięcie, w tym samym banerze i równie widoczne jak akceptacja, a strona działa tak samo w obu przypadkach. Twój wybór zapisujemy na 6 miesięcy, po czym możemy zapytać ponownie. Możesz go zmienić w każdej chwili przez **Ustawienia plików cookie** w stopce każdej strony, na której mogą być zapisywane nasze pliki cookie do statystyk i do reklamy. Wycofanie zgody usuwa objęte nią pliki cookie i przeładowuje stronę, żeby skrypty przestały działać.
 

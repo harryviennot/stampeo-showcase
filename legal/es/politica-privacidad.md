@@ -149,7 +149,7 @@ Algunos de nuestros encargados del tratamiento (Stripe, Apple, Google, Trustpilo
 
 ### 5.1 Tu elección
 
-Las cookies de medición y de publicidad solo se cargan después de que las aceptes. Mientras no lo hagas, sus scripts ni siquiera se colocan en la página: ninguna petición llega a Google o Meta, y no se crea ninguna de sus cookies. PostHog es la única excepción: su script funciona elijas lo que elijas, para contar las visitas sin cookies, y solo coloca su propia cookie cuando aceptas (véase 5.4). Rechazarlas, por tanto, no deja nada que borrar.
+Las cookies de medición y de publicidad solo se cargan después de que las aceptes. Mientras no lo hagas, sus scripts ni siquiera se colocan en la página: ninguna petición llega a Google o Meta, y no se crea ninguna de sus cookies. PostHog es la única excepción: su script funciona elijas lo que elijas, para contar las visitas sin cookies, y solo coloca su propia cookie cuando aceptas o, en Estados Unidos, desde tu primera visita salvo que lo desactives (véase 5.4). Rechazarlas, por tanto, no deja nada que borrar.
 
 Rechazar cuesta un clic, en el mismo banner y con la misma visibilidad que aceptar, y el sitio funciona igual en ambos casos. Guardamos tu elección durante 6 meses, pasados los cuales podemos volver a pedírtela. Puedes cambiarla cuando quieras desde **Preferencias de cookies**, en el pie de todas las páginas donde pueden instalarse nuestras cookies de medición y de publicidad. Retirar un consentimiento borra las cookies afectadas y recarga la página para que los scripts dejen de ejecutarse.
 

@@ -149,7 +149,7 @@ Some of our sub-processors (Stripe, Apple, Google, Trustpilot) may transfer data
 
 ### 5.1 Your choice
 
-Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google or Meta, and none of their cookies is created. PostHog is the one exception: its script runs whatever you choose, to count visits without cookies, and it sets its own cookie only once you accept (see 5.4). Refusing therefore leaves nothing behind to delete.
+Measurement and advertising cookies are loaded only after you accept them. Until then their scripts are not placed on the page at all: no request reaches Google or Meta, and none of their cookies is created. PostHog is the one exception: its script runs whatever you choose, to count visits without cookies, and it sets its own cookie only once you accept, or in the United States from your first visit unless you switch it off (see 5.4). Refusing therefore leaves nothing behind to delete.
 
 Refusing takes one click, in the same banner and with the same prominence as accepting, and the site works identically either way. Your choice is kept for 6 months, after which we may ask you again. You can change it at any time through **Cookie preferences** in the footer of every page where our measurement and advertising cookies can be set. Withdrawing a consent deletes the cookies concerned and reloads the page so that the scripts stop running.
 

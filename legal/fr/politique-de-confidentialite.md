@@ -149,7 +149,7 @@ Certains de nos sous-traitants (Stripe, Apple, Google, Trustpilot) peuvent trans
 
 ### 5.1 Votre choix
 
-Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google ou Meta, et aucun de leurs cookies n'est créé. PostHog est la seule exception : son script fonctionne quel que soit votre choix, pour compter les visites sans cookie, et il ne dépose son propre cookie qu'une fois que vous avez accepté (voir 5.4). Refuser ne laisse donc rien derrière soi à supprimer.
+Les cookies de mesure et de publicité ne sont chargés qu'après votre acceptation. Tant que vous n'avez pas accepté, leurs scripts ne sont pas placés sur la page : aucune requête n'atteint Google ou Meta, et aucun de leurs cookies n'est créé. PostHog est la seule exception : son script fonctionne quel que soit votre choix, pour compter les visites sans cookie, et il ne dépose son propre cookie qu'une fois que vous avez accepté ou, aux États-Unis, dès votre première visite sauf si vous le désactivez (voir 5.4). Refuser ne laisse donc rien derrière soi à supprimer.
 
 Refuser prend un clic, dans le même bandeau et avec la même visibilité qu'accepter, et le site fonctionne à l'identique dans les deux cas. Votre choix est conservé 6 mois, au terme desquels nous pouvons vous le redemander. Vous pouvez le modifier à tout moment via **Préférences cookies**, dans le pied de page de chaque page où nos cookies de mesure et de publicité peuvent être déposés. Retirer un consentement supprime les cookies concernés et recharge la page pour que les scripts cessent de s'exécuter.
 
