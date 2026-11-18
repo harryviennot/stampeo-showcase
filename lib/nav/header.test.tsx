@@ -35,14 +35,14 @@ describe("the header with its phone menu closed", () => {
 });
 
 describe("the phone menu every page's header draws", () => {
-  const MOUNTS: Array<[page: string, header: ReactElement, pathname: string]> = [
-    ["a page that mounts the header with nothing, as the changelog and the blog do", <Header />, "/en/changelog"],
-    ["a US page", <Header market="us" />, "/en/us"],
-    ["a UK page", <Header market="uk" />, "/en/uk"],
+  const MOUNTS: Array<[page: string, header: () => ReactElement, pathname: string]> = [
+    ["a page that mounts the header with nothing, as the changelog and the blog do", () => <Header />, "/en/changelog"],
+    ["a US page", () => <Header market="us" />, "/en/us"],
+    ["a UK page", () => <Header market="uk" />, "/en/uk"],
   ];
 
   test.each(MOUNTS)("%s: the bar's button is the 44px burger that controls the sheet it opens", (_page, header, pathname) => {
-    const burger = burgerOf(render(header, pathname));
+    const burger = burgerOf(render(header(), pathname));
 
     expect(burger).toContain('aria-controls="mobile-menu"');
     expect(burger).toContain('aria-expanded="false"');
