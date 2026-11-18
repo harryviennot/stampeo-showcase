@@ -149,6 +149,21 @@ describe("the index sheet", () => {
     expect(targets(html).filter(({ attrs }) => /aria-current="page"/.test(attrs)).map(({ name }) => name)).toEqual([current]);
   });
 
+  test.each([
+    ["/changelog", ["What's new"]],
+    ["/contact", ["Contact"]],
+    ["/", []],
+  ])("on %s the Resources entries in the accent colour, as the current Loyalty and Pricing rows are, are %j", (pathname, accent) => {
+    const accentOf = (path: string) =>
+      targets(render({ ...phoneMenuProps("int", path), burgerRef: PROPS.burgerRef }))
+        .filter(({ attrs }) => /(?<![\w:-])text-\[var\(--accent\)\]/.test(attrs))
+        .map(({ name }) => name);
+    const resources = ["Blog", "What's new", "About", "Contact"];
+
+    expect(accentOf("/loyalty-programs")).toContain("Loyalty");
+    expect(accentOf(pathname).filter((name) => resources.includes(name))).toEqual(accent);
+  });
+
   test("signed out the bar at the bottom is Log in and Get started, which opens the trial's sign-up", () => {
     const bar = targets(render()).slice(-2);
 
