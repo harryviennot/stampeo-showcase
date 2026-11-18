@@ -556,7 +556,7 @@ Six previews of today's feature pages so Harry can compare them side by side. To
 | DEPENDS | LP-35 |
 | ACCOUNT | No session. |
 | STEPS | 1. On `/us/landing-pages/platform` at 1440, hover "Product" and read the links; read the footer's features column. 2. The same at 390 through the menu button. 3. Repeat on one preview, e.g. `/us/landing-pages/platform/analytics`. 4. Repeat on `/us`, `/us/landing-pages/features` and `/en/features/push-notifications`. |
-| EXPECT | 1-3. All six features (Geolocation included, labelled "Soon") open `/us/landing-pages/platform/<feature>`. 4. Every feature link opens `/en/features/<feature>`, and the phone menu on `/us` and `/en/features/*` is the full-screen sheet, the same as on every other page (there is no accordion menu any more). You do NOT see a preview link on any page outside Platform and its previews. |
+| EXPECT | 1-3. All six features (Geolocation included, labelled "Soon") open `/us/landing-pages/platform/<feature>`. 4. Every feature link opens `/en/features/<feature>`, and the phone menu on `/us` and `/en/features/*` is the full-screen sheet, the same as on every other page. You do NOT see a preview link on any page outside Platform and its previews. |
 | RESET | None. |
 
 ---

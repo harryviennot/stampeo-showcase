@@ -162,10 +162,8 @@ export function Header({ market = "int" }: Readonly<{ market?: Market }>) {
             </div>
           </Link>
 
-          {/* Desktop navigation — full row only from xl: below that the FR/ES
-              labels overflow into the logo and auth buttons, so the burger
-              menu stays on through lg.
-              Absolutely centered rather than a flex child: the auth buttons
+          {/* Desktop navigation from lg, absolutely centered rather than a
+              flex child: the auth buttons
               are wider than the logo, so justify-between would push the links
               left of the page centre. */}
           <div className="hidden lg:flex items-center gap-6 xl:gap-8 lg:absolute lg:inset-y-0 lg:left-1/2 lg:-translate-x-1/2">

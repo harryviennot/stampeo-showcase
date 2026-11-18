@@ -7,7 +7,7 @@ import { LanguageSwitcher } from "../ui/LanguageSwitcher";
 import { HeaderBar, type PhoneMenuProps } from "./HeaderBar";
 import { MenuBurger } from "./MenuBurger";
 
-/** The sheet itself is a separate chunk, loaded only by headers that draw this menu. */
+/** The sheet is a client-only chunk: the server draws the bar alone. */
 const MobileMenu = dynamic(() => import("./MobileMenu").then((module) => module.MobileMenu), { ssr: false });
 
 /** The header bar with the sheet menu: a burger that opens a full-screen layer, closed by itself at the desktop width. */
