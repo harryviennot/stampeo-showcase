@@ -274,8 +274,7 @@ export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
  *  dealt into the same seven places. Aurevo, the café those pages follow, is at
  *  the apex with a points card and a stamp card either side, so the middle
  *  three show both engines. Light and dark alternate, no two alike in colour touch, and
- *  the photo stamps (pizza, croissant) sit apart. Never the barbershop sample:
- *  its name and logo belong to a real shop. */
+ *  the photo stamps (pizza, croissant) sit apart. */
 export const PLATFORM_FAN_CARDS: Record<number, string> = {
   [-3]: "gelo",
   [-2]: "rolling-slice",

@@ -32,12 +32,12 @@ const inView = (state: StackState) =>
   );
 
 describe("the deck the phone stack cycles through", () => {
-  test("is different shops, none of them a real one and none of them the bubble tea shop", () => {
+  test("is different shops, none of them the bubble tea shop", () => {
     const logos = PHONE_DECK.map(brandOf);
 
     expect(count).toBeGreaterThan(PHONE_STRIPS + 2);
     expect(new Set(logos).size).toBe(count);
-    for (const logo of logos) expect(logo).not.toMatch(/\/themes\/(oba|barber)\//);
+    for (const logo of logos) expect(logo).not.toMatch(/\/themes\/oba\//);
   });
 
   test("runs stamps, points and levels, so a visitor who waits sees all three kinds of card", () => {

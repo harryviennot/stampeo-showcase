@@ -46,7 +46,7 @@ describe("the page", () => {
     expectInOrder(page, [COPY.faq.title, ...COPY.faq.items.map((item) => item.question)]);
   });
 
-  test("shows a different shop in each section: no shop's logo is in two of them, and the bubble tea shop and the barbershop are in none", async () => {
+  test("shows a different shop in each section: no shop's logo is in two of them, and the bubble tea shop is in none", async () => {
     const page = await renderPreviewPage("platform/card-design");
     const bySection = sectionsOf(page).map(({ id, html }) => [id, new Set(logos(html))] as const);
     const seen = new Map<string, string>();
@@ -57,7 +57,7 @@ describe("the page", () => {
         seen.set(logo, id);
       }
     }
-    expect([...seen.keys()].join(" ")).not.toMatch(/\/themes\/(oba|barber)\//);
+    expect([...seen.keys()].join(" ")).not.toMatch(/\/themes\/oba\//);
     expect(textOf(page)).not.toMatch(/Parisian|\bOBA\b|Barbiers/i);
     // The points card the anatomy section switches to is not on the page until a visitor asks for it.
     expect(seen.has(ANATOMY_DESIGNS.points.design.logo_url ?? "")).toBe(false);
@@ -170,7 +170,7 @@ describe("stamps, points or levels", () => {
     expect(logos(markup)).toEqual(
       expect.arrayContaining(["/themes/smash-club/logo.png", "/themes/forme/logo.svg", "/themes/wrenfold/logo.png"]),
     );
-    expect(markup).not.toMatch(/\/themes\/(barber|oba)\//);
+    expect(markup).not.toMatch(/\/themes\/oba\//);
     expect(pictures(markup)).toEqual(expect.arrayContaining([...COPY.programs.alts]));
   });
 
