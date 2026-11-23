@@ -53,13 +53,13 @@ const SWEATER: Partial<CardDesign> = {
 };
 
 export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
-  // Little Santas on Smash Club: navy card, a pale winter-sky band of waving
+  // Little Santas on Aurevo: navy card, a pale winter-sky band of waving
   // Santas; the last stamp is Santa's sack.
   {
     id: "christmas-little-santas",
     design: {
       organization_name: "",
-      logo_url: "/themes/smash-club/logo.png",
+      logo_url: "/themes/cafe/logo.png",
       background_color: "#101E48",
       foreground_color: "#FFFFFF",
       label_color: "#FF9696",
@@ -73,7 +73,7 @@ export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
       progress_accent_color: "#101E48",
       stamp_icon: "checkmark",
       reward_icon: "gift",
-      total_stamps: 10,
+      total_stamps: 8,
       stamp_icon_mode: "custom",
       custom_stamp_config: {
         icons: [icon("santa-wave"), icon("santa-gift"), icon("santa-cool")],
@@ -84,15 +84,15 @@ export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
         empty_opacity: 85,
       },
     },
-    stamps: 7,
+    stamps: 5,
   },
-  // Santa's Elves on Aurevo: forest-green card, gold labels, a stack of elves
-  // at the workshop bench; the last stamp is a teddy bear.
+  // Santa's Elves on Rolling Slice: forest-green card, gold labels, a stack of
+  // elves at the workshop bench; the last stamp is a teddy bear.
   {
     id: "christmas-santas-elves",
     design: {
       organization_name: "",
-      logo_url: "/themes/cafe/logo.png",
+      logo_url: "/themes/rolling-slice/logo.png",
       background_color: "#124E2E",
       foreground_color: "#FFF4DC",
       label_color: "#FFC85A",
@@ -115,7 +115,7 @@ export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
         empty_opacity: 85,
       },
     },
-    stamps: 6,
+    stamps: 5,
   },
   // Reindeer Games on Rolling Slice: plum card over a twilight snowfield, the
   // reindeer in rotation with outlines for the stamps still to earn; jingle
@@ -155,13 +155,13 @@ export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
     },
     stamps: 5,
   },
-  // Candy Cane on Forme: solid candy red over a pale pink band; canes,
+  // Candy Cane on Vanity: solid candy red over a pale pink band; canes,
   // peppermints and baubles, a wrapped present at the end.
   {
     id: "christmas-candy-cane",
     design: {
       organization_name: "",
-      logo_url: "/themes/forme/logo.svg",
+      logo_url: "/themes/salon/logo.png",
       background_color: "#C41628",
       foreground_color: "#FFFFFF",
       label_color: "#FFD0D6",
@@ -234,7 +234,7 @@ export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
       icon_color: "#0C1A38",
       stamp_icon: "checkmark",
       reward_icon: "gift",
-      total_stamps: 10,
+      total_stamps: 8,
       stamp_icon_mode: "custom",
       custom_stamp_config: {
         icons: [icon("snowman-tophat"), icon("snowman-beanie"), icon("snowman-earmuffs")],
@@ -310,13 +310,13 @@ export const CHRISTMAS_STAMP_SAMPLES: StampSample[] = [
 ];
 
 export const CHRISTMAS_POINTS_SAMPLES: PointsSample[] = [
-  // Rudolph on Ravin: plum card, a reward track across a twilight hill with
+  // Rudolph on Patoune: plum card, a reward track across a twilight hill with
   // Rudolph peeking over it.
   {
     id: "christmas-rudolph",
     design: {
       organization_name: "",
-      logo_url: "/themes/ravin/logo.svg",
+      logo_url: "/themes/patoune/logo.svg",
       card_type: "points",
       background_color: "#2C184E",
       foreground_color: "#FFECE4",
@@ -330,13 +330,13 @@ export const CHRISTMAS_POINTS_SAMPLES: PointsSample[] = [
     pointsBalance: 210,
     pointsRewards: ladder(150, 300, 600),
   },
-  // North Pole on Harvest Row: navy card, a pale polar band with the progress
+  // North Pole on Marginalia: navy card, a pale polar band with the progress
   // ring in Santa red.
   {
     id: "christmas-north-pole",
     design: {
       organization_name: "",
-      logo_url: "/themes/harvest-row/logo.png",
+      logo_url: "/themes/marginalia/logo.svg",
       card_type: "points",
       background_color: "#101E48",
       foreground_color: "#FFFFFF",
@@ -347,16 +347,16 @@ export const CHRISTMAS_POINTS_SAMPLES: PointsSample[] = [
       progress_accent_color: "#101E48",
       points_strip_style: "circle_progress",
     },
-    pointsBalance: 140,
-    pointsRewards: ladder(200, 400, 800),
+    pointsBalance: 240,
+    pointsRewards: ladder(150, 300, 600),
   },
-  // Elf Workshop on Marginalia: forest-green card, a toy-workshop band with a
+  // Elf Workshop on Pulp: forest-green card, a toy-workshop band with a
   // big gold balance.
   {
     id: "christmas-elf-workshop",
     design: {
       organization_name: "",
-      logo_url: "/themes/marginalia/logo.svg",
+      logo_url: "/themes/pulp/logo.svg",
       card_type: "points",
       background_color: "#124E2E",
       foreground_color: "#FFF4DC",

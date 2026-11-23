@@ -265,7 +265,7 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
     [-1]: "christmas-rudolph",
     0: "christmas-little-santas",
     1: "christmas-santas-elves",
-    2: "christmas-reindeer-games",
+    2: "christmas-snow-day",
     3: "christmas-elf-workshop",
   },
 };

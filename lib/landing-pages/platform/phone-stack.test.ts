@@ -230,22 +230,23 @@ describe("the Christmas deck", () => {
     for (const card of deck) expect(card.id).toStartWith("christmas-");
   });
 
-  test("opens on Little Santas' stamp card, whole, with a points card and a stamp card among the tops behind it", () => {
+  test("opens on Little Santas' stamp card on the café, whole, with a points card and a stamp card among the tops behind it", () => {
     const [front, ...behind] = opening(FIRST_PAINT);
 
     expect(front.id).toBe("christmas-little-santas");
     expect(front.program).toBe("stamps");
+    expect(brand(front)).toMatch(/\/themes\/cafe\//);
     expect(behind).toHaveLength(PHONE_STRIPS);
     expect(new Set(behind.map((card) => card.program))).toEqual(new Set(["points", "stamps"]));
     expect(deck.some(isLevel)).toBe(false);
   });
 
-  test("gives Little Santas its eighth stamp, Rudolph twelve more points and Santa's Elves their seventh stamp; the rest have no moment", () => {
+  test("gives Little Santas its sixth stamp, Rudolph twelve more points and Santa's Elves their sixth stamp; the rest have no moment", () => {
     const find = (id: string) => deck.find((card) => card.id === `christmas-${id}`) as StackCard;
 
-    expect([showing(find("little-santas"), false).stamps, showing(find("little-santas"), true).stamps]).toEqual([7, 8]);
+    expect([showing(find("little-santas"), false).stamps, showing(find("little-santas"), true).stamps]).toEqual([5, 6]);
     expect([showing(find("rudolph"), false).pointsBalance, showing(find("rudolph"), true).pointsBalance]).toEqual([210, 222]);
-    expect([showing(find("santas-elves"), false).stamps, showing(find("santas-elves"), true).stamps]).toEqual([6, 7]);
+    expect([showing(find("santas-elves"), false).stamps, showing(find("santas-elves"), true).stamps]).toEqual([5, 6]);
     expect(deck.filter((card) => card.moment)).toHaveLength(3);
   });
 

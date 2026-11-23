@@ -136,9 +136,9 @@ describe("on a phone: a Wallet stack that starts with the front card whole", () 
     const text = textOf(html);
 
     expect([...logos(html)].sort()).toEqual([...stackLogosIn("christmas")].sort());
-    expect(stackLogosIn("christmas")[0]).toMatch(/\/themes\/smash-club\//);
+    expect(stackLogosIn("christmas")[0]).toMatch(/\/themes\/cafe\//);
     expect(html).toContain("<svg");
-    expect(text).toContain("7 / 10");
+    expect(text).toContain("5 / 8");
     expect(text).toContain("Points");
     expect(text).toContain("Stamps");
     expect(text).not.toContain("Silver");

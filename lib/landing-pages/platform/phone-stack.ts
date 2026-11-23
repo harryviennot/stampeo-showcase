@@ -86,17 +86,17 @@ const DEFAULT_DECK: readonly StackCard[] = [
 ];
 
 /**
- * The Christmas cards (lib/christmas-samples.ts), character themes first: Little Santas in front, then Rudolph's
- * points card, Santa's Elves and Candy Cane's red, so the four in view are four colours and show both engines.
+ * The Christmas cards (lib/christmas-samples.ts), character themes first: Little Santas on the café in front, then
+ * Rudolph's points card, Snow Day and Candy Cane's red, so the four in view are four colours and show both engines.
  * Little Santas gets a stamp, Rudolph some points and the Elves a stamp as each takes the front.
  */
 const CHRISTMAS_DECK: readonly StackCard[] = [
-  shop("christmas-little-santas", { moment: { stamps: 8 } }),
+  shop("christmas-little-santas", { moment: { stamps: 6 } }),
   shop("christmas-rudolph", { moment: { pointsBalance: 222 } }),
-  shop("christmas-santas-elves", { moment: { stamps: 7 } }),
+  shop("christmas-snow-day"),
   shop("christmas-candy-cane"),
   shop("christmas-north-pole"),
-  shop("christmas-reindeer-games"),
+  shop("christmas-santas-elves", { moment: { stamps: 6 } }),
   shop("christmas-elf-workshop"),
 ];
 
