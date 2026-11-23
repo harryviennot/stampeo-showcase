@@ -112,9 +112,13 @@ const Slot = memo(function Slot({ card, slot, hidden, leaving, ready, after, pre
  * A phone's Wallet: the tops of three cards stacked above the front card, which is drawn whole. Once it is in
  * view the front card plays its moment if it has one, then slides down and fades as the deck moves up into its place.
  * The clock runs only while someone can see the stack; a reader who asks for less motion gets the still first
- * paint, Aurevo's card in front at its fifth stamp.
+ * paint, the deck's first card in front. `deck` is the season's cards, the page's by default.
  */
-export function PhoneWalletStack({ label, levelNames }: Readonly<{ label: string; levelNames: LevelNames }>) {
+export function PhoneWalletStack({
+  label,
+  levelNames,
+  deck = PHONE_DECK,
+}: Readonly<{ label: string; levelNames: LevelNames; deck?: readonly StackCard[] }>) {
   const stage = useRef<HTMLDivElement>(null);
   const [clock, setClock] = useState<StackState>(FIRST_PAINT);
   const reduced = usePrefersReducedMotion();
@@ -125,7 +129,7 @@ export function PhoneWalletStack({ label, levelNames }: Readonly<{ label: string
 
   useEffect(() => {
     if (!view.animated || !running) return;
-    const step = stepAfter(clock, Boolean(PHONE_DECK[clock.front].moment));
+    const step = stepAfter(clock, Boolean(deck[clock.front].moment), deck.length);
     const wait = firstRest.current ? FIRST_REST_MS : step.after;
     const timer = setTimeout(() => {
       firstRest.current = false;
@@ -133,7 +137,7 @@ export function PhoneWalletStack({ label, levelNames }: Readonly<{ label: string
     }, wait);
 
     return () => clearTimeout(timer);
-  }, [clock, running, view.animated]);
+  }, [clock, running, view.animated, deck]);
 
   return (
     <div ref={stage} role="img" aria-label={label} className="mx-auto w-fit">
@@ -145,8 +149,8 @@ export function PhoneWalletStack({ label, levelNames }: Readonly<{ label: string
         breakpoint="sm"
       >
         <div aria-hidden className="relative" style={{ width: CARD_WIDTH, height: PHONE_STRIPS * TOP_HEIGHT + CARD_HEIGHT }}>
-          {PHONE_DECK.map((card, index) => {
-            const place = placement(index, view, PHONE_DECK.length);
+          {deck.map((card, index) => {
+            const place = placement(index, view, deck.length);
             if (!drawn(place, live && view.animated)) return null;
             const isFront = index === view.front;
 

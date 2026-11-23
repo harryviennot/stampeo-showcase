@@ -6,13 +6,15 @@
  */
 
 import { describe, expect, test } from "bun:test";
+import { HERO_FAN_SEASON } from "@/lib/hero-fan";
 import { LEVEL_LOOKS } from "@/lib/levels/looks";
 import {
   FIRST_PAINT,
   FIRST_REST_MS,
-  PHONE_DECK,
+  PHONE_DECK as LIVE_DECK,
   PHONE_STRIPS,
   drawn,
+  phoneDeck,
   placement,
   showing,
   stackView,
@@ -21,6 +23,8 @@ import {
   type StackState,
 } from "./phone-stack";
 
+/** The year-round deck; the tests below describe it, and the Christmas deck has its own section at the end. */
+const PHONE_DECK = phoneDeck("default");
 const count = PHONE_DECK.length;
 const isLevel = (card: StackCard) => card.level !== undefined;
 const brandOf = (card: StackCard) => card.design.logo_url ?? "";
@@ -31,7 +35,7 @@ const inView = (state: StackState) =>
     (a, b) => placement(PHONE_DECK.indexOf(a), state, count).slot - placement(PHONE_DECK.indexOf(b), state, count).slot,
   );
 
-describe("the deck the phone stack cycles through", () => {
+describe("the deck the phone stack cycles through, in the default season", () => {
   test("is different shops, none of them the bubble tea shop", () => {
     const logos = PHONE_DECK.map(brandOf);
 
@@ -184,7 +188,7 @@ describe("the clock", () => {
 
     for (let cards = 0; cards < count; cards += 1) {
       do {
-        state = stepAfter(state, Boolean(PHONE_DECK[state.front].moment)).state;
+        state = stepAfter(state, Boolean(PHONE_DECK[state.front].moment), count).state;
         if (state.phase === "moment") played.push(PHONE_DECK[state.front].id);
       } while (state.phase !== "rest");
     }
@@ -207,5 +211,66 @@ describe("for a reader who asks for less motion", () => {
     expect(stackView(FIRST_PAINT, false)).toEqual({ ...FIRST_PAINT, after: false, animated: true });
     expect(stackView({ front: 0, phase: "moment" }, false).after).toBe(true);
     expect(stackView({ front: 0, phase: "leaving" }, false).after).toBe(true);
+  });
+});
+
+describe("the Christmas deck", () => {
+  const deck = phoneDeck("christmas");
+  const brand = (card: StackCard) => card.design.logo_url ?? "";
+  const opening = (state: StackState) =>
+    deck
+      .map((card, index) => ({ card, place: placement(index, state, deck.length) }))
+      .filter(({ place }) => !place.hidden)
+      .sort((a, b) => a.place.slot - b.place.slot)
+      .map(({ card }) => card);
+
+  test("is seven different shops in Christmas looks, with spare cards so a lap never pops one in at the back", () => {
+    expect(deck.length).toBeGreaterThan(PHONE_STRIPS + 2);
+    expect(new Set(deck.map(brand)).size).toBe(deck.length);
+    for (const card of deck) expect(card.id).toStartWith("christmas-");
+  });
+
+  test("opens on Little Santas' stamp card, whole, with a points card and a stamp card among the tops behind it", () => {
+    const [front, ...behind] = opening(FIRST_PAINT);
+
+    expect(front.id).toBe("christmas-little-santas");
+    expect(front.program).toBe("stamps");
+    expect(behind).toHaveLength(PHONE_STRIPS);
+    expect(new Set(behind.map((card) => card.program))).toEqual(new Set(["points", "stamps"]));
+    expect(deck.some(isLevel)).toBe(false);
+  });
+
+  test("gives Little Santas its eighth stamp, Rudolph twelve more points and Santa's Elves their seventh stamp; the rest have no moment", () => {
+    const find = (id: string) => deck.find((card) => card.id === `christmas-${id}`) as StackCard;
+
+    expect([showing(find("little-santas"), false).stamps, showing(find("little-santas"), true).stamps]).toEqual([7, 8]);
+    expect([showing(find("rudolph"), false).pointsBalance, showing(find("rudolph"), true).pointsBalance]).toEqual([210, 222]);
+    expect([showing(find("santas-elves"), false).stamps, showing(find("santas-elves"), true).stamps]).toEqual([6, 7]);
+    expect(deck.filter((card) => card.moment)).toHaveLength(3);
+  });
+
+  test("a lap of it plays each moment and is back at Little Santas", () => {
+    let state: StackState = FIRST_PAINT;
+    const played: string[] = [];
+
+    for (let cards = 0; cards < deck.length; cards += 1) {
+      do {
+        state = stepAfter(state, Boolean(deck[state.front].moment), deck.length).state;
+        if (state.phase === "moment") played.push(deck[state.front].id);
+      } while (state.phase !== "rest");
+    }
+
+    expect(state).toEqual(FIRST_PAINT);
+    expect(played.sort()).toEqual(["christmas-little-santas", "christmas-rudolph", "christmas-santas-elves"]);
+  });
+});
+
+describe("which deck the page shows", () => {
+  test("the stack runs the deck of the season the config names", () => {
+    expect(LIVE_DECK).toBe(phoneDeck(HERO_FAN_SEASON));
+  });
+
+  test("a season without a deck of its own keeps the year-round one", () => {
+    expect(phoneDeck("halloween")).toBe(phoneDeck("default"));
   });
 });

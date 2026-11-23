@@ -270,9 +270,10 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
   },
 };
 
-/** Which set the hero shows. The landing page is built statically, so a change
- *  here goes live with the next deploy: set it back to "default" after
- *  6 January, once Christmas is over. */
+/** Which set the homepage hero shows: the Platform fan (laptops), the phone
+ *  stack and the /legacy fan all follow it. The landing page is built
+ *  statically, so a change here goes live with the next deploy: switch it back
+ *  to "default" on 1 January, once Christmas is over. */
 export const HERO_FAN_SEASON: FanSeason = "christmas";
 
 /** The seven places of the arch, filled with `cards` (by index, 0 the apex). */
@@ -287,7 +288,7 @@ export function fanSlots(season: FanSeason): FanSlot[] {
 
 export const FAN_SLOTS: FanSlot[] = fanSlots(HERO_FAN_SEASON);
 
-/** The cards of the Platform homepage's hero,
+/** The year-round cards of the Platform homepage's hero,
  *  dealt into the same seven places. Aurevo, the café those pages follow, is at
  *  the apex with a points card and a stamp card either side, so the middle
  *  three show both engines. Light and dark alternate, no two alike in colour touch, and
@@ -302,7 +303,13 @@ export const PLATFORM_FAN_CARDS: Record<number, string> = {
   3: "pace",
 };
 
-export const PLATFORM_FAN_SLOTS: FanSlot[] = dealCards(PLATFORM_FAN_CARDS);
+/** The Platform fan for a season: the year-round cards by default, that
+ *  season's own cards otherwise. */
+export function platformFanSlots(season: FanSeason): FanSlot[] {
+  return dealCards(season === "default" ? PLATFORM_FAN_CARDS : FAN_CARDS[season]);
+}
+
+export const PLATFORM_FAN_SLOTS: FanSlot[] = platformFanSlots(HERO_FAN_SEASON);
 
 /** Every tier's numbers at once; CSS resolves which set is live. Rotation and
  *  position stay unitless so the stylesheet can reuse them in calc() for both

@@ -1,11 +1,11 @@
 /**
- * The deck of Platform's phone stack and the clock that moves it. The first four cards are the first paint: the
- * café's stamp card in front, whole, and the tops of a points card, a level card and a stamp card behind it. The
- * front card plays a small moment if it has one (a stamp, some points, a level up), then leaves as the rest of the
- * deck moves up one place in the same motion. Pure data and pure steps; the component only draws them.
+ * The deck of Platform's phone stack and the clock that moves it. The first four cards are the first paint: the first
+ * card in front, whole (year-round the café's stamp card, at Christmas Little Santas), and the tops of the next three
+ * behind it. The front card plays a small moment if it has one (a stamp, some points, a level up), then leaves as the
+ * rest of the deck moves up one place in the same motion. Pure data and pure steps; the component only draws them.
  */
 
-import { resolveFanCard } from "@/lib/hero-fan";
+import { HERO_FAN_SEASON, resolveFanCard, type FanSeason } from "@/lib/hero-fan";
 import { LEVELS_SHOP } from "@/lib/landing-pages/previews/loyalty-ladder";
 import { GOLD_LOOK, SILVER_LOOK, type LevelLook } from "@/lib/levels/looks";
 import type { CardDesign, RewardTier } from "@/lib/types/design";
@@ -71,11 +71,11 @@ const BARBER_CARD: StackCard = {
 };
 
 /**
- * The cards in the order they come to the front, the strongest first: the café of every fan's apex, the salon's
- * points ring, the barbershop moving up from Silver to Gold, then the bakery, the bookstore, the pizza truck and
- * the car wash, the cards the homepage and Platform fans lead with.
+ * The year-round cards in the order they come to the front, the strongest first: the café of every fan's apex, the
+ * salon's points ring, the barbershop moving up from Silver to Gold, then the bakery, the bookstore, the pizza truck
+ * and the car wash, the cards the homepage and Platform fans lead with.
  */
-export const PHONE_DECK: readonly StackCard[] = [
+const DEFAULT_DECK: readonly StackCard[] = [
   shop("aurevo", { moment: { stamps: 6 } }),
   shop("salon"),
   inLook(BARBER_CARD, SILVER_LOOK, "silver", { moment: { look: GOLD_LOOK, level: "gold" } }),
@@ -84,6 +84,35 @@ export const PHONE_DECK: readonly StackCard[] = [
   shop("rolling-slice"),
   shop("lustre"),
 ];
+
+/**
+ * The Christmas cards (lib/christmas-samples.ts), character themes first: Little Santas in front, then Rudolph's
+ * points card, Santa's Elves and Candy Cane's red, so the four in view are four colours and show both engines.
+ * Little Santas gets a stamp, Rudolph some points and the Elves a stamp as each takes the front.
+ */
+const CHRISTMAS_DECK: readonly StackCard[] = [
+  shop("christmas-little-santas", { moment: { stamps: 8 } }),
+  shop("christmas-rudolph", { moment: { pointsBalance: 222 } }),
+  shop("christmas-santas-elves", { moment: { stamps: 7 } }),
+  shop("christmas-candy-cane"),
+  shop("christmas-north-pole"),
+  shop("christmas-reindeer-games"),
+  shop("christmas-elf-workshop"),
+];
+
+const DECKS: Record<FanSeason, readonly StackCard[]> = {
+  default: DEFAULT_DECK,
+  halloween: DEFAULT_DECK,
+  christmas: CHRISTMAS_DECK,
+};
+
+/** The deck a season runs: its own cards at Christmas, the year-round ones otherwise. */
+export function phoneDeck(season: FanSeason): readonly StackCard[] {
+  return DECKS[season];
+}
+
+/** The deck the page runs, for the season the hero is set to. */
+export const PHONE_DECK: readonly StackCard[] = phoneDeck(HERO_FAN_SEASON);
 
 /** What the card shows, before its moment or after it. */
 export function showing(card: StackCard, after: boolean): ShownCard {
@@ -117,7 +146,7 @@ export interface StackState {
   phase: StackPhase;
 }
 
-/** Aurevo in front, at rest: the first paint, and what a reader who asks for less motion keeps. */
+/** The deck's first card in front, at rest: the first paint, and what a reader who asks for less motion keeps. */
 export const FIRST_PAINT: StackState = { front: 0, phase: "rest" };
 
 /**

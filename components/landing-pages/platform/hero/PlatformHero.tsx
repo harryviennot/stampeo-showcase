@@ -2,8 +2,9 @@ import { FanParallax } from "@/components/landing-variant/FanParallax";
 import { HeroCardFan } from "@/components/landing-variant/HeroCardFan";
 import { RegionText } from "@/components/market/RegionText";
 import { Container } from "@/components/ui/Container";
-import { PLATFORM_FAN_SLOTS } from "@/lib/hero-fan";
+import { PLATFORM_FAN_SLOTS, type FanSlot } from "@/lib/hero-fan";
 import { useLandingCopy } from "@/lib/landing-pages/copy/bundle";
+import type { StackCard } from "@/lib/landing-pages/platform/phone-stack";
 import type { Market } from "@/lib/markets";
 import { LpSection } from "../../shared/LpSection";
 import { LpCtaPair } from "../LpCtaPair";
@@ -13,9 +14,14 @@ import { PhoneWalletStack } from "./PhoneWalletStack";
 /**
  * Platform's hero: the headline, one picture of real wallet cards, then the trial and the demo link.
  * The picture is a still Wallet stack on a phone and the homepage's arch of Platform's seven cards from `lg`;
- * both are in the markup and CSS shows the one that fits the width.
+ * both are in the markup and CSS shows the one that fits the width. `slots` and `deck` are the fan's and the stack's
+ * cards, the season's own by default.
  */
-export function PlatformHero({ market }: Readonly<{ market: Market }>) {
+export function PlatformHero({
+  market,
+  slots = PLATFORM_FAN_SLOTS,
+  deck,
+}: Readonly<{ market: Market; slots?: FanSlot[]; deck?: readonly StackCard[] }>) {
   const { PLATFORM } = useLandingCopy().platform;
   const { SHARED } = useLandingCopy().shared;
 
@@ -27,13 +33,13 @@ export function PlatformHero({ market }: Readonly<{ market: Market }>) {
         </Container>
 
         <div className="mt-6 lg:hidden">
-          <PhoneWalletStack label={PLATFORM.heroCards.stackAlt} levelNames={SHARED.levelNames} />
+          <PhoneWalletStack label={PLATFORM.heroCards.stackAlt} levelNames={SHARED.levelNames} deck={deck} />
         </div>
 
         <div className="max-lg:hidden">
           <FanParallax>
             <div className="mt-8 lg:mt-6">
-              <HeroCardFan slots={PLATFORM_FAN_SLOTS} />
+              <HeroCardFan slots={slots} />
             </div>
           </FanParallax>
         </div>
