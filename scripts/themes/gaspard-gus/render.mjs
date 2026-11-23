@@ -1,11 +1,13 @@
 // Regenerates public/themes/gaspard-gus/logo.avif from logo.html: a 4x
 // transparent Chromium screenshot, downsampled to 640x216, AVIF q92 4:4:4.
-// Run from the showcase root:
-//   PLAYWRIGHT_FROM=../promo-videos/package.json node docs/features/STA-550/logo/render.mjs
+// Run from the showcase root: node scripts/themes/gaspard-gus/render.mjs
+// Playwright comes from the promo-videos checkout next to this one; set
+// PLAYWRIGHT_FROM to another package.json that has it.
 import { createRequire } from "node:module";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { chromium } = createRequire(process.env.PLAYWRIGHT_FROM ?? "../promo-videos/package.json")("playwright");
+const { chromium } = createRequire(resolve(process.env.PLAYWRIGHT_FROM ?? "../promo-videos/package.json"))("playwright");
 const sharp = createRequire(`${process.cwd()}/package.json`)("sharp");
 
 const browser = await chromium.launch();
@@ -18,4 +20,4 @@ await browser.close();
 await sharp(big)
   .resize(640, 216, { kernel: "lanczos3" })
   .avif({ quality: 92, effort: 9, chromaSubsampling: "4:4:4" })
-  .toFile(fileURLToPath(new URL("../../../../public/themes/gaspard-gus/logo.avif", import.meta.url)));
+  .toFile(fileURLToPath(new URL("../../../public/themes/gaspard-gus/logo.avif", import.meta.url)));

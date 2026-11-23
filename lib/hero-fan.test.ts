@@ -1,4 +1,6 @@
 import { describe, expect, it } from "bun:test";
+import { statSync } from "node:fs";
+import { join } from "node:path";
 
 import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
@@ -255,6 +257,20 @@ describe("cards from the sector brands", () => {
     else expect(card.sample.pointsBalance).toBe(theme?.pointsBalance ?? -1);
   });
 
+  it("the barbershop wears one logo on its sample card, its sector slide and its Halloween card", () => {
+    const logo = STAMP_SAMPLES.find((s) => s.id === "barber")?.design.logo_url;
+
+    expect(logo).toBeTruthy();
+    expect(SECTOR_THEMES.find((t) => t.id === "barber")?.walletLogoUrl).toBe(logo);
+    expect(HALLOWEEN_STAMP_SAMPLES.find((s) => s.id === "halloween-pumpkin-night")?.design.logo_url).toBe(logo);
+  });
+
+  it("the barbershop's logo is 60 KB at most", () => {
+    const logo = STAMP_SAMPLES.find((s) => s.id === "barber")?.design.logo_url ?? "-";
+
+    expect(statSync(join(import.meta.dir, "..", "public", logo)).size).toBeLessThanOrEqual(60_000);
+  });
+
   it("a brand both banks know resolves to the sample, as the homepage fan always drew it", () => {
     for (const id of ["aurevo", "marginalia"]) {
       const sample = [...STAMP_SAMPLES, ...POINTS_SAMPLES].find((s) => s.id === id);
@@ -264,8 +280,6 @@ describe("cards from the sector brands", () => {
 });
 
 describe("the Platform page's cards", () => {
-  const BARBER_LOGO = STAMP_SAMPLES.find((s) => s.id === "barber")?.design.logo_url;
-
   it("sit in the homepage fan's seven places, Aurevo, the pages' sample café, at the apex", () => {
     const places = (slots: typeof FAN_SLOTS) => slots.map((s) => ({ ...s, cardId: "" }));
 
@@ -279,13 +293,5 @@ describe("the Platform page's cards", () => {
 
     expect(new Set(ids).size).toBe(7);
     expect(kinds(PLATFORM_FAN_SLOTS.filter((s) => Math.abs(s.index) <= 1))).toEqual(new Set(["stamps", "points"]));
-  });
-
-  it("never show the barbershop, whose name and logo belong to a real shop", () => {
-    expect(BARBER_LOGO).toBeDefined();
-    for (const s of PLATFORM_FAN_SLOTS) {
-      expect(s.cardId).not.toBe("barber");
-      expect(resolveFanCard(s.cardId).sample.design.logo_url).not.toBe(BARBER_LOGO);
-    }
   });
 });
