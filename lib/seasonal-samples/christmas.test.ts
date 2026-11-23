@@ -5,13 +5,13 @@ import { join } from "node:path";
 import {
   CHRISTMAS_POINTS_SAMPLES,
   CHRISTMAS_STAMP_SAMPLES,
-} from "./christmas-samples";
-import { HALLOWEEN_POINTS_SAMPLES, HALLOWEEN_STAMP_SAMPLES } from "./halloween-samples";
-import { POINTS_SAMPLES, STAMP_SAMPLES } from "./loyalty-samples";
-import type { CardDesign } from "./types/design";
+} from "./christmas";
+import { HALLOWEEN_POINTS_SAMPLES, HALLOWEEN_STAMP_SAMPLES } from "../halloween-samples";
+import { POINTS_SAMPLES, STAMP_SAMPLES } from "../loyalty-samples";
+import type { CardDesign } from "../types/design";
 
 const ALL = [...CHRISTMAS_STAMP_SAMPLES, ...CHRISTMAS_POINTS_SAMPLES];
-const PUBLIC = join(import.meta.dir, "..", "public");
+const PUBLIC = join(import.meta.dir, "..", "..", "public");
 
 /** Every image a design points at: logo, strip, each custom icon and its grey and outline copies. */
 function assetUrls(design: Partial<CardDesign>): string[] {

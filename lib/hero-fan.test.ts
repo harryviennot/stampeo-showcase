@@ -20,7 +20,7 @@ import {
 import {
   CHRISTMAS_POINTS_SAMPLES,
   CHRISTMAS_STAMP_SAMPLES,
-} from "./christmas-samples";
+} from "./seasonal-samples/christmas";
 import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,

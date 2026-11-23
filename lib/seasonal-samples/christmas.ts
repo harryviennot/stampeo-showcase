@@ -330,8 +330,8 @@ export const CHRISTMAS_POINTS_SAMPLES: PointsSample[] = [
     pointsBalance: 210,
     pointsRewards: ladder(150, 300, 600),
   },
-  // North Pole on Marginalia: navy card, a pale polar band with the progress
-  // ring in Santa red.
+  // North Pole on Marginalia: navy card, a pale polar band with a navy
+  // progress ring.
   {
     id: "christmas-north-pole",
     design: {
@@ -351,7 +351,7 @@ export const CHRISTMAS_POINTS_SAMPLES: PointsSample[] = [
     pointsRewards: ladder(150, 300, 600),
   },
   // Elf Workshop on Pulp: forest-green card, a toy-workshop band with a
-  // big gold balance.
+  // big cream balance.
   {
     id: "christmas-elf-workshop",
     design: {

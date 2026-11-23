@@ -19,7 +19,7 @@ import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
   CHRISTMAS_POINTS_SAMPLES,
   CHRISTMAS_STAMP_SAMPLES,
-} from "@/lib/christmas-samples";
+} from "@/lib/seasonal-samples/christmas";
 import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,
@@ -236,7 +236,7 @@ export type FanSeason = "default" | "halloween" | "christmas";
  *  the colours alternate along each side so no two purples touch, and the
  *  loudest card, Pumpkin Night's solid orange, sits at the far edge (desktop
  *  only) so it never pulls the eye off the headline. Christmas is the
- *  December themes (lib/christmas-samples.ts), character themes first: Little
+ *  December themes (lib/seasonal-samples/christmas.ts), character themes first: Little
  *  Santas at the apex with Rudolph (points) and Santa's Elves either side, so
  *  a phone shows both engines; every brand's logo is light or bright enough to
  *  read on its card; and Candy Cane's solid red sits at the far edge. */
