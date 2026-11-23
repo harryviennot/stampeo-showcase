@@ -8,13 +8,19 @@ import {
   FAN_CARDS,
   FAN_SLOTS,
   HERO_FAN_SEASON,
+  PLATFORM_FAN_CARDS,
   PLATFORM_FAN_SLOTS,
   fanSlots,
+  platformFanSlots,
   resolveFanCard,
   slotStyle,
   type FanSeason,
   type FanTier,
 } from "./hero-fan";
+import {
+  CHRISTMAS_POINTS_SAMPLES,
+  CHRISTMAS_STAMP_SAMPLES,
+} from "./seasonal-samples/christmas";
 import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,
@@ -45,6 +51,8 @@ describe("FAN_SLOTS shape", () => {
         ...POINTS_SAMPLES,
         ...HALLOWEEN_STAMP_SAMPLES,
         ...HALLOWEEN_POINTS_SAMPLES,
+        ...CHRISTMAS_STAMP_SAMPLES,
+        ...CHRISTMAS_POINTS_SAMPLES,
       ].map((s) => s.id),
     );
     for (const id of ids) expect(known.has(id)).toBe(true);
@@ -236,10 +244,24 @@ describe("seasons", () => {
     expect(FAN_SLOTS).toEqual(fanSlots(HERO_FAN_SEASON));
   });
 
+  it("keeps the loudest Christmas card, Candy Cane's solid red, at the edge", () => {
+    const candy = fanSlots("christmas").find((s) => s.cardId === "christmas-candy-cane");
+    expect(Math.abs(candy?.index ?? 0)).toBe(3);
+  });
+
   // The season is a manual switch that only changes on deploy; this catches a
-  // Halloween set still live in November.
-  it.skipIf(new Date().getMonth() === 9)("outside October, the hero shows the year-round cards", () => {
-    expect(HERO_FAN_SEASON).toBe("default");
+  // seasonal set still live after its season: Halloween outside October,
+  // Christmas outside 15 November to 31 December.
+  it("shows a seasonal set only while its season runs", () => {
+    const now = new Date();
+    const month = now.getMonth();
+    const inChristmas = month === 11 || (month === 10 && now.getDate() >= 15);
+    const live: Record<FanSeason, boolean> = {
+      default: true,
+      halloween: month === 9,
+      christmas: inChristmas,
+    };
+    expect(live[HERO_FAN_SEASON]).toBe(true);
   });
 });
 
@@ -280,18 +302,40 @@ describe("cards from the sector brands", () => {
 });
 
 describe("the Platform page's cards", () => {
-  it("sit in the homepage fan's seven places, Aurevo, the pages' sample café, at the apex", () => {
-    const places = (slots: typeof FAN_SLOTS) => slots.map((s) => ({ ...s, cardId: "" }));
+  const SEASONS = Object.keys(FAN_CARDS) as FanSeason[];
+  const places = (slots: typeof FAN_SLOTS) => slots.map((s) => ({ ...s, cardId: "" }));
 
-    expect(places(PLATFORM_FAN_SLOTS)).toEqual(places(FAN_SLOTS));
-    expect(PLATFORM_FAN_SLOTS.find((s) => s.index === 0)?.cardId).toBe("aurevo");
+  it("sit in the homepage fan's seven places in every season", () => {
+    for (const season of SEASONS) expect(places(platformFanSlots(season))).toEqual(places(FAN_SLOTS));
   });
 
-  it("are seven different shops, and the middle three mix stamps and points", () => {
-    const ids = PLATFORM_FAN_SLOTS.map((s) => s.cardId);
+  it("are the year-round Platform set in the default season, Aurevo, the pages' sample café, at the apex", () => {
+    const slots = platformFanSlots("default");
+
+    expect(slots.map((s) => s.cardId)).toEqual([-3, -2, -1, 0, 1, 2, 3].map((i) => PLATFORM_FAN_CARDS[i]));
+    expect(slots.find((s) => s.index === 0)?.cardId).toBe("aurevo");
+  });
+
+  it("deal the season's own cards in any other season, Little Santas at the apex at Christmas", () => {
+    for (const season of SEASONS.filter((s) => s !== "default")) {
+      expect(platformFanSlots(season).map((s) => s.cardId)).toEqual(fanSlots(season).map((s) => s.cardId));
+    }
+    expect(platformFanSlots("christmas").find((s) => s.index === 0)?.cardId).toBe("christmas-little-santas");
+  });
+
+  it("are seven different shops in every season, and the middle three mix stamps and points", () => {
     const kinds = (slots: typeof FAN_SLOTS) => new Set(slots.map((s) => resolveFanCard(s.cardId).kind));
 
-    expect(new Set(ids).size).toBe(7);
-    expect(kinds(PLATFORM_FAN_SLOTS.filter((s) => Math.abs(s.index) <= 1))).toEqual(new Set(["stamps", "points"]));
+    for (const season of SEASONS) {
+      const slots = platformFanSlots(season);
+      const logos = slots.map((s) => resolveFanCard(s.cardId).sample.design.logo_url);
+
+      expect(new Set(logos).size).toBe(7);
+      expect(kinds(slots.filter((s) => Math.abs(s.index) <= 1))).toEqual(new Set(["stamps", "points"]));
+    }
+  });
+
+  it("show the season the config names", () => {
+    expect(PLATFORM_FAN_SLOTS).toEqual(platformFanSlots(HERO_FAN_SEASON));
   });
 });
