@@ -16,6 +16,10 @@ import {
   type FanTier,
 } from "./hero-fan";
 import {
+  CHRISTMAS_POINTS_SAMPLES,
+  CHRISTMAS_STAMP_SAMPLES,
+} from "./christmas-samples";
+import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,
 } from "./halloween-samples";
@@ -45,6 +49,8 @@ describe("FAN_SLOTS shape", () => {
         ...POINTS_SAMPLES,
         ...HALLOWEEN_STAMP_SAMPLES,
         ...HALLOWEEN_POINTS_SAMPLES,
+        ...CHRISTMAS_STAMP_SAMPLES,
+        ...CHRISTMAS_POINTS_SAMPLES,
       ].map((s) => s.id),
     );
     for (const id of ids) expect(known.has(id)).toBe(true);
@@ -236,10 +242,25 @@ describe("seasons", () => {
     expect(FAN_SLOTS).toEqual(fanSlots(HERO_FAN_SEASON));
   });
 
+  it("keeps the loudest Christmas card, Candy Cane's solid red, at the edge", () => {
+    const candy = fanSlots("christmas").find((s) => s.cardId === "christmas-candy-cane");
+    expect(Math.abs(candy?.index ?? 0)).toBe(3);
+  });
+
   // The season is a manual switch that only changes on deploy; this catches a
-  // Halloween set still live in November.
-  it.skipIf(new Date().getMonth() === 9)("outside October, the hero shows the year-round cards", () => {
-    expect(HERO_FAN_SEASON).toBe("default");
+  // seasonal set still live after its season: Halloween outside October,
+  // Christmas outside mid-November to 6 January.
+  it("shows a seasonal set only while its season runs", () => {
+    const now = new Date();
+    const month = now.getMonth();
+    const inChristmas =
+      month === 11 || (month === 10 && now.getDate() >= 15) || (month === 0 && now.getDate() <= 6);
+    const live: Record<FanSeason, boolean> = {
+      default: true,
+      halloween: month === 9,
+      christmas: inChristmas,
+    };
+    expect(live[HERO_FAN_SEASON]).toBe(true);
   });
 });
 

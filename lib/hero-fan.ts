@@ -17,6 +17,10 @@ import type { CSSProperties } from "react";
 
 import { SECTOR_THEMES } from "@/components/landing-variant/sector-themes";
 import {
+  CHRISTMAS_POINTS_SAMPLES,
+  CHRISTMAS_STAMP_SAMPLES,
+} from "@/lib/christmas-samples";
+import {
   HALLOWEEN_POINTS_SAMPLES,
   HALLOWEEN_STAMP_SAMPLES,
 } from "@/lib/halloween-samples";
@@ -224,14 +228,18 @@ const FAN_GEOMETRY: Omit<FanSlot, "cardId">[] = [
   },
 ];
 
-export type FanSeason = "default" | "halloween";
+export type FanSeason = "default" | "halloween" | "christmas";
 
 /** The card in each slot (by index, 0 the apex), per season. The year-round set
  *  is described above. Halloween is the October card themes on sector brands
  *  (lib/halloween-samples.ts): the three a phone keeps mix stamps and points,
  *  the colours alternate along each side so no two purples touch, and the
  *  loudest card, Pumpkin Night's solid orange, sits at the far edge (desktop
- *  only) so it never pulls the eye off the headline. */
+ *  only) so it never pulls the eye off the headline. Christmas is the
+ *  December themes (lib/christmas-samples.ts), character themes first: Little
+ *  Santas at the apex with Rudolph (points) and Santa's Elves either side, so
+ *  a phone shows both engines; every brand's logo is light or bright enough to
+ *  read on its card; and Candy Cane's solid red sits at the far edge. */
 export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
   default: {
     [-3]: "pace",
@@ -251,12 +259,21 @@ export const FAN_CARDS: Record<FanSeason, Record<number, string>> = {
     2: "halloween-blood-moon",
     3: "halloween-trick-or-treat",
   },
+  christmas: {
+    [-3]: "christmas-candy-cane",
+    [-2]: "christmas-north-pole",
+    [-1]: "christmas-rudolph",
+    0: "christmas-little-santas",
+    1: "christmas-santas-elves",
+    2: "christmas-reindeer-games",
+    3: "christmas-elf-workshop",
+  },
 };
 
 /** Which set the hero shows. The landing page is built statically, so a change
- *  here goes live with the next deploy: set it back to "default" once
- *  Halloween is over. */
-export const HERO_FAN_SEASON: FanSeason = "default";
+ *  here goes live with the next deploy: set it back to "default" after
+ *  6 January, once Christmas is over. */
+export const HERO_FAN_SEASON: FanSeason = "christmas";
 
 /** The seven places of the arch, filled with `cards` (by index, 0 the apex). */
 function dealCards(cards: Record<number, string>): FanSlot[] {
@@ -320,10 +337,14 @@ export type FanCard =
  *  The sample banks come first; a sector brand from the carousel
  *  (sector-themes.ts) is drawn as the carousel draws its wallet card. */
 export function resolveFanCard(cardId: string): FanCard {
-  const stamp = [...STAMP_SAMPLES, ...HALLOWEEN_STAMP_SAMPLES].find((s) => s.id === cardId);
+  const stamp = [...STAMP_SAMPLES, ...HALLOWEEN_STAMP_SAMPLES, ...CHRISTMAS_STAMP_SAMPLES].find(
+    (s) => s.id === cardId,
+  );
   if (stamp) return { kind: "stamps", sample: stamp };
 
-  const points = [...POINTS_SAMPLES, ...HALLOWEEN_POINTS_SAMPLES].find((s) => s.id === cardId);
+  const points = [...POINTS_SAMPLES, ...HALLOWEEN_POINTS_SAMPLES, ...CHRISTMAS_POINTS_SAMPLES].find(
+    (s) => s.id === cardId,
+  );
   if (points) return { kind: "points", sample: points };
 
   const theme = SECTOR_THEMES.find((t) => t.id === cardId);
